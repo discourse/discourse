@@ -348,6 +348,8 @@ export default class ChatEmojiPicker extends Component {
       }
 
       this.chatEmojiPickerManager.didSelectEmoji(emoji);
+
+      // TODO (martin) Find a way to use the live panel composer ref for this
       this.appEvents.trigger("chat:focus-composer");
     }
   }

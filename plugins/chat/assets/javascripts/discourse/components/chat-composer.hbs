@@ -6,9 +6,9 @@
   />
 {{/if}}
 
-{{#if this.livePanel.editingMessage}}
+{{#if this.livePanel.composer.editingMessage}}
   <ChatComposerMessageDetails
-    @message={{this.livePanel.editingMessage}}
+    @message={{this.livePanel.composer.editingMessage}}
     @icon="pencil-alt"
     @action={{action "cancelEditing"}}
   />
@@ -82,7 +82,7 @@
     @onUploadChanged={{this.uploadsChanged}}
     @existingUploads={{or
       this.chatChannel.draft.uploads
-      this.livePanel.editingMessage.uploads
+      this.livePanel.composer.editingMessage.uploads
     }}
   />
 {{/if}}

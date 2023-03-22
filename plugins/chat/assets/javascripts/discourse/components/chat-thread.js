@@ -26,11 +26,19 @@ export default class ChatThreadPanel extends Component {
   @tracked loading;
   @tracked loadingMorePast;
 
-  livePanel = new ChatLivePanel(getOwner(this), this);
-  messageActionsHandler = new ChatMessageActions(
-    this.livePanel,
-    this.currentUser
-  );
+  constructor() {
+    super(...arguments);
+
+    this.livePanel = new ChatLivePanel(
+      getOwner(this),
+      this,
+      this.chat.activeChannel.activeThread
+    );
+    this.messageActionsHandler = new ChatMessageActions(
+      this.livePanel,
+      this.currentUser
+    );
+  }
 
   get thread() {
     return this.channel.activeThread;

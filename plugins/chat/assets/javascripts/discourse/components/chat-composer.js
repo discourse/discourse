@@ -80,6 +80,10 @@ export default Component.extend(TextareaTextManipulation, {
       inProgressUploads: [],
       _uploads: [],
     });
+
+    this.livePanel.composer.registerFocusHandler(() => {
+      this._focusTextArea();
+    });
   },
 
   didInsertElement() {
@@ -90,7 +94,6 @@ export default Component.extend(TextareaTextManipulation, {
     this._applyUserAutocomplete(this._$textarea);
     this._applyCategoryHashtagAutocomplete(this._$textarea);
     this._applyEmojiAutocomplete(this._$textarea);
-    this.appEvents.on("chat:focus-composer", this, "_focusTextArea");
     this.appEvents.on("chat:insert-text", this, "insertText");
     this._focusTextArea();
 
@@ -140,7 +143,6 @@ export default Component.extend(TextareaTextManipulation, {
 
     cancel(this.timer);
 
-    this.appEvents.off("chat:focus-composer", this, "_focusTextArea");
     this.appEvents.off("chat:insert-text", this, "insertText");
     this.appEvents.off("chat:modify-selection", this, "_modifySelection");
     this.appEvents.off(
@@ -185,7 +187,7 @@ export default Component.extend(TextareaTextManipulation, {
     if (
       event.key === "ArrowUp" &&
       this._messageIsEmpty() &&
-      !this.livePanel.editingMessage
+      !this.livePanel.composer.editingMessage
     ) {
       event.preventDefault();
       this.onEditLastMessageRequested();
@@ -197,7 +199,7 @@ export default Component.extend(TextareaTextManipulation, {
         this.set("value", "");
         this.livePanel.setReplyTo(null);
         return false;
-      } else if (this.livePanel.editingMessage) {
+      } else if (this.livePanel.composer.editingMessage) {
         this.set("value", "");
         this.cancelEditing();
         return false;
@@ -211,7 +213,7 @@ export default Component.extend(TextareaTextManipulation, {
     this._super(...arguments);
 
     if (
-      !this.livePanel.editingMessage &&
+      !this.livePanel.composer.editingMessage &&
       this.chatChannel?.draft &&
       this.chatChannel?.canModifyMessages(this.currentUser)
     ) {
@@ -227,15 +229,15 @@ export default Component.extend(TextareaTextManipulation, {
   },
 
   // FIXME (martin) Is this okay to do?? Can't use didReceiveAttrs because now
-  // livePanel.editingMessage is changing not a scoped attribute for this component.
-  @observes("livePanel.editingMessage")
+  // livePanel.composer.editingMessage is changing not a scoped attribute for this component.
+  @observes("livePanel.composer.editingMessage")
   updateEditingMessage() {
-    if (this.livePanel.editingMessage && !this.loading) {
-      this.set("value", this.livePanel.editingMessage.message);
+    if (this.livePanel.composer.editingMessage && !this.loading) {
+      this.set("value", this.livePanel.composer.editingMessage.message);
 
       this.livePanel.setReplyTo(null);
 
-      this._syncUploads(this.livePanel.editingMessage.uploads);
+      this._syncUploads(this.livePanel.composer.editingMessage.uploads);
       this._focusTextArea({ ensureAtEnd: true, resizeTextarea: false });
     }
   },
@@ -622,7 +624,7 @@ export default Component.extend(TextareaTextManipulation, {
       return;
     }
 
-    this.livePanel.editingMessage
+    this.livePanel.composer.editingMessage
       ? this.internalEditMessage()
       : this.internalSendMessage();
   },
@@ -635,7 +637,7 @@ export default Component.extend(TextareaTextManipulation, {
   @action
   internalEditMessage() {
     return this.editMessage(
-      this.livePanel.editingMessage,
+      this.livePanel.composer.editingMessage,
       this.value,
       this._uploads
     ).then(this.reset);
@@ -691,7 +693,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @action
   cancelEditing() {
-    this.onCancelEditing();
+    this.livePanel.cancelEditing();
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
   },
 

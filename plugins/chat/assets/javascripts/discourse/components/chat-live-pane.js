@@ -52,18 +52,26 @@ export default class ChatLivePane extends Component {
   @tracked needsArrow = false;
   @tracked loadedOnce = false;
 
-  livePanel = new ChatLivePanel(getOwner(this), this);
-  messageActionsHandler = new ChatMessageActions(
-    this.livePanel,
-    this.currentUser
-  );
-
   _loadedChannelId = null;
   _scrollerEl = null;
   _lastSelectedMessage = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
+
+  constructor() {
+    super(...arguments);
+
+    this.livePanel = new ChatLivePanel(
+      getOwner(this),
+      this,
+      this.chat.activeChannel
+    );
+    this.messageActionsHandler = new ChatMessageActions(
+      this.livePanel,
+      this.currentUser
+    );
+  }
 
   @action
   setupListeners(element) {
@@ -908,8 +916,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    this.livePanel.replyToMsg = null;
-    this.livePanel.editingMessage = null;
+    this.livePanel.composer.reset();
     this.chatComposerPresenceManager.notifyState(this.args.channel.id, false);
     this.appEvents.trigger("chat-composer:reply-to-set", null);
   }
