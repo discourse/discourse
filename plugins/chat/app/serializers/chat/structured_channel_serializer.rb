@@ -30,6 +30,8 @@ module Chat
             chat_message_bus_last_ids[Chat::Publisher.new_messages_message_bus_channel(channel.id)],
           new_mentions_message_bus_last_id:
             chat_message_bus_last_ids[Chat::Publisher.new_mentions_message_bus_channel(channel.id)],
+          kick_message_bus_last_id:
+            chat_message_bus_last_ids[Chat::Publisher.kick_users_message_bus_channel(channel.id)],
         )
       end
     end
@@ -84,6 +86,7 @@ module Chat
           object[:public_channels].each do |channel|
             message_bus_channels.push(Chat::Publisher.new_messages_message_bus_channel(channel.id))
             message_bus_channels.push(Chat::Publisher.new_mentions_message_bus_channel(channel.id))
+            message_bus_channels.push(Chat::Publisher.kick_users_message_bus_channel(channel.id))
           end
 
           object[:direct_message_channels].each do |channel|

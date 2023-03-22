@@ -7,7 +7,7 @@
 # * Individual user mentions like @alfred
 # * Group mentions that include N users such as @support
 # * Global @here and @all mentions
-# * Users watching the channel via UserChatChannelMembership
+# * Users watching the channel via Chat::UserChatChannelMembership
 #
 # For various reasons a mention may not notify a user:
 #

@@ -37,7 +37,7 @@ module Jobs
 
         # Only do this if we are running auto-join for a single user, if we
         # are doing it for many then we should do it after all batches are
-        # complete for the channel in Jobs::Chat::AutoManageChannelMemberships
+        # complete for the channel in Jobs::Chat::AutoJoinChannelMemberships
         if start_user_id == end_user_id
           ::Chat::ChannelMembershipManager.new(channel).recalculate_user_count
         end
