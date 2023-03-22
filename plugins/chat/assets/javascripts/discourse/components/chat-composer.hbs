@@ -1,14 +1,14 @@
-{{#if this.livePanel.replyToMsg}}
+{{#if this.chatChannelComposer.replyToMsg}}
   <ChatComposerMessageDetails
-    @message={{this.livePanel.replyToMsg}}
+    @message={{this.chatChannelComposer.replyToMsg}}
     @icon="reply"
     @action={{action "cancelReplyTo"}}
   />
 {{/if}}
 
-{{#if this.livePanel.composer.editingMessage}}
+{{#if this.chatChannelComposer.editingMessage}}
   <ChatComposerMessageDetails
-    @message={{this.livePanel.composer.editingMessage}}
+    @message={{this.chatChannelComposer.editingMessage}}
     @icon="pencil-alt"
     @action={{action "cancelEditing"}}
   />
@@ -82,7 +82,7 @@
     @onUploadChanged={{this.uploadsChanged}}
     @existingUploads={{or
       this.chatChannel.draft.uploads
-      this.livePanel.composer.editingMessage.uploads
+      this.chatChannelComposer.editingMessage.uploads
     }}
   />
 {{/if}}

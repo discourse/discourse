@@ -1,25 +1,23 @@
 import { debounce } from "discourse-common/utils/decorators";
-import { setOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 
-export default class ChatComposerManager {
+export default class ChatChannelComposer extends Service {
   @service chat;
   @service chatApi;
   @service chatComposerPresenceManager;
 
   @tracked editingMessage = null;
   @tracked replyToMsg = null;
-
-  constructor(owner, primaryModel, linkedComponent) {
-    setOwner(this, owner);
-    this.primaryModel = primaryModel;
-    this.linkedComponent = linkedComponent;
-  }
+  @tracked linkedComponent = null;
 
   reset() {
     this.editingMessage = null;
     this.replyToMsg = null;
+  }
+
+  get #model() {
+    return this.chat.activeChannel;
   }
 
   setReplyTo(messageOrId) {
@@ -28,7 +26,7 @@ export default class ChatComposerManager {
 
       const message =
         typeof messageOrId === "number"
-          ? this.primaryModel.messagesManager.findMessage(messageOrId)
+          ? this.#model.messagesManager.findMessage(messageOrId)
           : messageOrId;
       this.replyToMsg = message;
       this.#focusComposer();
@@ -40,7 +38,7 @@ export default class ChatComposerManager {
   }
 
   editButtonClicked(messageId) {
-    const message = this.primaryModel.messagesManager.findMessage(messageId);
+    const message = this.#model.messagesManager.findMessage(messageId);
     this.editingMessage = message;
 
     // TODO (martin) Move scrollToLatestMessage to live panel.
@@ -55,9 +53,13 @@ export default class ChatComposerManager {
     replyToMsg,
     inProgressUploadsCount,
   }) {
-    if (!this.editingMessage && !this.primaryModel.isDraft) {
+    if (!this.model) {
+      return;
+    }
+
+    if (!this.editingMessage && !this.#model.isDraft) {
       if (typeof value !== "undefined") {
-        this.primaryModel.draft.message = value;
+        this.#model.draft.message = value;
       }
 
       // only save the uploads to the draft if we are not still uploading other
@@ -69,15 +71,15 @@ export default class ChatComposerManager {
         inProgressUploadsCount !== "undefined" &&
         inProgressUploadsCount === 0
       ) {
-        this.primaryModel.draft.uploads = uploads;
+        this.#model.draft.uploads = uploads;
       }
 
       if (typeof replyToMsg !== "undefined") {
-        this.primaryModel.draft.replyToMsg = replyToMsg;
+        this.#model.draft.replyToMsg = replyToMsg;
       }
     }
 
-    if (!this.primaryModel.isDraft) {
+    if (!this.#model.isDraft) {
       this.#reportReplyingPresence(value);
     }
 
@@ -101,15 +103,12 @@ export default class ChatComposerManager {
       return;
     }
 
-    if (this.primaryModel.isDraft) {
+    if (this.#model.isDraft) {
       return;
     }
 
     const replying = !this.editingMessage && !!composerValue;
-    this.chatComposerPresenceManager.notifyState(
-      this.primaryModel.id,
-      replying
-    );
+    this.chatComposerPresenceManager.notifyState(this.#model.id, replying);
   }
 
   @debounce(2000)
@@ -118,17 +117,15 @@ export default class ChatComposerManager {
       return;
     }
 
-    if (!this.primaryModel.draft) {
+    if (!this.#model.draft) {
       return;
     }
 
-    return this.chatApi.saveDraft(
-      this.primaryModel.id,
-      this.primaryModel.draft.toJSON()
-    );
+    return this.chatApi.saveDraft(this.#model.id, this.#model.draft.toJSON());
   }
 
   get #componentDeleted() {
+    // note I didn't set this in the new version, not sure yet what to do with it
     return this.linkedComponent._selfDeleted;
   }
 }

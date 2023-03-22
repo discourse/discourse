@@ -9,8 +9,6 @@ import { bind, debounce } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { inject as service } from "@ember/service";
 import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
-import ChatLivePanel from "discourse/plugins/chat/discourse/lib/chat-live-panel";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 const PAGE_SIZE = 50;
 
@@ -21,6 +19,7 @@ export default class ChatThreadPanel extends Component {
   @service router;
   @service chatApi;
   @service chatComposerPresenceManager;
+  @service chatChannelThreadComposer;
   @service appEvents;
 
   @tracked loading;
@@ -28,16 +27,7 @@ export default class ChatThreadPanel extends Component {
 
   constructor() {
     super(...arguments);
-
-    this.livePanel = new ChatLivePanel(
-      getOwner(this),
-      this,
-      this.chat.activeChannel.activeThread
-    );
-    this.messageActionsHandler = new ChatMessageActions(
-      this.livePanel,
-      this.currentUser
-    );
+    this.messageActionsHandler = new ChatMessageActions(this.currentUser);
   }
 
   get thread() {
@@ -269,8 +259,8 @@ export default class ChatThreadPanel extends Component {
       return;
     }
 
-    this.livePanel.replyToMsg = null;
-    this.livePanel.editingMessage = null;
+    this.chatChannelThreadComposer.replyToMsg = null;
+    this.chatChannelThreadComposer.editingMessage = null;
     this.chatComposerPresenceManager.notifyState(this.channel.id, false);
     this.appEvents.trigger("chat-composer:reply-to-set", null);
   }

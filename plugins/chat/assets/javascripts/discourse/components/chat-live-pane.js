@@ -3,7 +3,6 @@ import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
-import ChatLivePanel from "discourse/plugins/chat/discourse/lib/chat-live-panel";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import EmberObject, { action } from "@ember/object";
@@ -34,6 +33,7 @@ export default class ChatLivePane extends Component {
   @service chatEmojiPickerManager;
   @service chatComposerPresenceManager;
   @service chatStateManager;
+  @service chatChannelComposer;
   @service chatApi;
   @service currentUser;
   @service appEvents;
@@ -62,15 +62,7 @@ export default class ChatLivePane extends Component {
   constructor() {
     super(...arguments);
 
-    this.livePanel = new ChatLivePanel(
-      getOwner(this),
-      this,
-      this.chat.activeChannel
-    );
-    this.messageActionsHandler = new ChatMessageActions(
-      this.livePanel,
-      this.currentUser
-    );
+    this.messageActionsHandler = new ChatMessageActions(this.currentUser);
   }
 
   @action
@@ -117,7 +109,7 @@ export default class ChatLivePane extends Component {
     if (this._loadedChannelId !== this.args.channel?.id) {
       this._unsubscribeToUpdates(this._loadedChannelId);
       this.selectingMessages = false;
-      this.livePanel.cancelEditing();
+      this.chatChannelComposer.cancelEditing();
       this._loadedChannelId = this.args.channel?.id;
     }
 
@@ -791,8 +783,8 @@ export default class ChatLivePane extends Component {
       user: this.currentUser,
     });
 
-    if (this.livePanel.replyToMsg) {
-      stagedMessage.inReplyTo = this.livePanel.replyToMsg;
+    if (this.chatChannelComposer.replyToMsg) {
+      stagedMessage.inReplyTo = this.chatChannelComposer.replyToMsg;
     }
 
     this.args.channel.messagesManager.addMessages([stagedMessage]);
@@ -916,7 +908,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    this.livePanel.composer.reset();
+    this.chatChannelComposer.reset();
     this.chatComposerPresenceManager.notifyState(this.args.channel.id, false);
     this.appEvents.trigger("chat-composer:reply-to-set", null);
   }
@@ -935,7 +927,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    this.livePanel.editingMessage = lastUserMessage;
+    this.chatChannelComposer.editingMessage = lastUserMessage;
     this._focusComposer();
   }
 

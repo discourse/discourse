@@ -562,12 +562,12 @@ export default class ChatMessage extends Component {
 
   @action
   reply() {
-    this.args.livePanel.setReplyTo(this.args.message.id);
+    this.args.composerService.setReplyTo(this.args.message.id);
   }
 
   @action
   edit() {
-    this.args.livePanel.editButtonClicked(this.args.message.id);
+    this.args.composerService.editButtonClicked(this.args.message.id);
   }
 
   @action
