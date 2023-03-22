@@ -34,6 +34,25 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(sidebar).to have_link("Sidebar Tags")
   end
 
+  it "allows the user to create custom section with /my link" do
+    visit("/latest")
+    sidebar.open_new_custom_section
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("My section")
+
+    section_modal.fill_link("My preferences", "/my/preferences")
+    expect(section_modal).to have_enabled_save
+
+    section_modal.save
+
+    expect(page).to have_button("My section")
+    expect(sidebar).to have_link("My preferences")
+  end
+
   it "allows the user to create custom section with external link" do
     visit("/latest")
     sidebar.open_new_custom_section

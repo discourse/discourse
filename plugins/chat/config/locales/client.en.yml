@@ -9,6 +9,7 @@ en:
           actions:
             chat_channel_status_change: "Chat channel status changed"
             chat_channel_delete: "Chat channel deleted"
+            chat_auto_remove_membership: "Memberships automatically removed from channels"
       api:
         scopes:
           descriptions:
@@ -207,6 +208,7 @@ en:
         channels_list: "Chat channels list"
 
       no_public_channels: "You have not joined any channels."
+      kicked_from_channel: "You can no longer access this channel."
       only_chat_push_notifications:
         title: "Only send chat push notifications"
         description: "Block all non-chat push notifications from being sent"

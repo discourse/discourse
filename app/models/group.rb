@@ -65,6 +65,7 @@ class Group < ActiveRecord::Base
   after_commit :automatic_group_membership, on: %i[create update]
   after_commit :trigger_group_created_event, on: :create
   after_commit :trigger_group_updated_event, on: :update
+  before_destroy :cache_group_users_for_destroyed_event, prepend: true
   after_commit :trigger_group_destroyed_event, on: :destroy
   after_commit :set_default_notifications, on: %i[create update]
 
@@ -911,11 +912,20 @@ class Group < ActiveRecord::Base
     self.member_of(groups, user).where("gu.owner")
   end
 
-  %i[group_created group_updated group_destroyed].each do |event|
+  def cache_group_users_for_destroyed_event
+    @cached_group_user_ids = group_users.pluck(:user_id)
+  end
+
+  %i[group_created group_updated].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
       true
     end
+  end
+
+  def trigger_group_destroyed_event
+    DiscourseEvent.trigger(:group_destroyed, self, @cached_group_user_ids)
+    true
   end
 
   def flair_type

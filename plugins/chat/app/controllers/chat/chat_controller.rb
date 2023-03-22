@@ -107,6 +107,7 @@ module Chat
           content: content,
           staged_id: params[:staged_id],
           upload_ids: params[:upload_ids],
+          thread_id: params[:thread_id],
         )
 
       return render_json_error(chat_message_creator.error) if chat_message_creator.failed?
@@ -174,6 +175,7 @@ module Chat
 
       messages = preloaded_chat_message_query.where(chat_channel: @chat_channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(@chatable)
+      messages = messages.where(thread_id: params[:thread_id]) if params[:thread_id]
 
       if message_id.present?
         condition = direction == PAST ? "<" : ">"
@@ -264,6 +266,7 @@ module Chat
 
       messages = preloaded_chat_message_query.where(chat_channel: @chat_channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(@chatable)
+      messages = messages.where(thread_id: params[:thread_id]) if params[:thread_id]
 
       past_messages =
         messages

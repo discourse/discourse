@@ -990,6 +990,14 @@ class StaffActionLogger
     )
   end
 
+  def log_reset_bounce_score(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:reset_bounce_score], target_user_id: user.id),
+    )
+  end
+
   private
 
   def get_changes(changes)

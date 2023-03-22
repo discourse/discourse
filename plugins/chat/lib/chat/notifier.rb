@@ -7,7 +7,7 @@
 # * Individual user mentions like @alfred
 # * Group mentions that include N users such as @support
 # * Global @here and @all mentions
-# * Users watching the channel via UserChatChannelMembership
+# * Users watching the channel via Chat::UserChatChannelMembership
 #
 # For various reasons a mention may not notify a user:
 #
@@ -130,9 +130,11 @@ module Chat
         already_covered_ids = []
 
         expand_direct_mentions(to_notify, already_covered_ids, skip_notifications)
-        expand_group_mentions(to_notify, already_covered_ids, skip_notifications)
-        expand_here_mention(to_notify, already_covered_ids, skip_notifications)
-        expand_global_mention(to_notify, already_covered_ids, skip_notifications)
+        if !skip_notifications
+          expand_group_mentions(to_notify, already_covered_ids)
+          expand_here_mention(to_notify, already_covered_ids)
+          expand_global_mention(to_notify, already_covered_ids)
+        end
 
         filter_users_ignoring_or_muting_creator(to_notify, already_covered_ids)
 
@@ -140,10 +142,10 @@ module Chat
       end
     end
 
-    def expand_global_mention(to_notify, already_covered_ids, skip)
+    def expand_global_mention(to_notify, already_covered_ids)
       has_all_mention = @mentions.has_global_mention
 
-      if has_all_mention && @chat_channel.allow_channel_wide_mentions && !skip
+      if has_all_mention && @chat_channel.allow_channel_wide_mentions
         to_notify[:global_mentions] = @mentions
           .global_mentions
           .not_suspended
@@ -157,10 +159,10 @@ module Chat
       end
     end
 
-    def expand_here_mention(to_notify, already_covered_ids, skip)
+    def expand_here_mention(to_notify, already_covered_ids)
       has_here_mention = @mentions.has_here_mention
 
-      if has_here_mention && @chat_channel.allow_channel_wide_mentions && !skip
+      if has_here_mention && @chat_channel.allow_channel_wide_mentions
         to_notify[:here_mentions] = @mentions
           .here_mentions
           .not_suspended
@@ -212,8 +214,8 @@ module Chat
       already_covered_ids.concat(to_notify[:direct_mentions])
     end
 
-    def expand_group_mentions(to_notify, already_covered_ids, skip)
-      return [] if skip || @mentions.visible_groups.empty?
+    def expand_group_mentions(to_notify, already_covered_ids)
+      return if @mentions.visible_groups.empty?
 
       reached_by_group =
         @mentions

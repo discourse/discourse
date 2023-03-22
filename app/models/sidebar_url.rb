@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SidebarUrl < ActiveRecord::Base
+  FULL_RELOAD_LINKS_REGEX = [%r{\A/my/[a-z_\-/]+\z}, %r{\A/safe-mode\z}]
+
   validates :icon, presence: true, length: { maximum: 40 }
   validates :name, presence: true, length: { maximum: 80 }
   validates :value, presence: true, length: { maximum: 200 }
@@ -11,7 +13,7 @@ class SidebarUrl < ActiveRecord::Base
 
   def path_validator
     if external?
-      raise ActionController::RoutingError if value !~ Discourse::Utils::URI_REGEXP
+      raise ActionController::RoutingError.new("Not Found") if value !~ Discourse::Utils::URI_REGEXP
     else
       Rails.application.routes.recognize_path(value)
     end
@@ -28,6 +30,10 @@ class SidebarUrl < ActiveRecord::Base
 
   def set_external
     self.external = value.start_with?("http://", "https://")
+  end
+
+  def full_reload?
+    FULL_RELOAD_LINKS_REGEX.any? { |regex| value =~ regex }
   end
 end
 

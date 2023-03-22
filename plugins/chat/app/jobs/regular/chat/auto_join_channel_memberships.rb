@@ -3,7 +3,7 @@
 
 module Jobs
   module Chat
-    class AutoManageChannelMemberships < ::Jobs::Base
+    class AutoJoinChannelMemberships < ::Jobs::Base
       def execute(args)
         channel =
           ::Chat::Channel.includes(:chatable).find_by(
