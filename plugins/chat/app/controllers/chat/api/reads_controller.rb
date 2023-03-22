@@ -2,8 +2,7 @@
 
 class Chat::Api::ReadsController < Chat::ApiController
   def update
-    params.require(:channel_id)
-    params.require(:message_id)
+    params.require(%i[channel_id message_id])
 
     with_service(Chat::UpdateUserLastRead) do
       on_failed_policy(:ensure_message_id_recency) do
