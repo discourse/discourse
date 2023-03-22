@@ -77,7 +77,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
   def generate_transcript(messages, acting_user)
     messages = Array.wrap(messages)
-    ChatTranscriptService
+    Chat::TranscriptService
       .new(messages.first.chat_channel, acting_user, messages_or_ids: messages.map(&:id))
       .generate_markdown
       .chomp
@@ -167,7 +167,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
         expect(page).to have_selector(".chat-message", count: 2)
 
-        message = ChatMessage.find_by(user: current_user, message: clip_text.chomp)
+        message = Chat::Message.find_by(user: current_user, message: clip_text.chomp)
 
         within(chat_channel_page.message_by_id(message.id)) do
           expect(page).to have_css(".chat-transcript")

@@ -1944,6 +1944,18 @@ pl_PL:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
     too_few_topics_and_posts_notice_MF: |
       Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">dyskutować!</a> Mamy {currentTopics, plural, one {<strong>#</strong> temat}  few {<strong>#</strong> tematy} other {<strong>#</strong> tematów}} i {currentPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredTopics, plural, one {<strong>#</strong> temat} few {<strong>#</strong> tematy} other {<strong>#</strong> tematów}} i {requiredPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Tylko członkowie personelu widzą tę wiadomość.
+    too_few_topics_notice_MF: |
+      Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">dyskusję!</a> Tam { currentTopics, plural,
+          one {jest <strong>#</strong> temat}
+          few {są <strong>#</strong> tematy}
+          many {są <strong>#</strong> tematy}
+        other {są <strong>#</strong> tematy}
+      }. Odwiedzający potrzebują więcej do czytania i odpowiadania - zalecamy co najmniej { requiredTopics, plural,
+          one {<strong>#</strong> temat}
+          few {<strong>#</strong> tematy}
+          many {<strong>#</strong> tematy}
+        other {<strong>#</strong> tematy}
+      }. Tylko personel może zobaczyć tę wiadomość.
     too_few_posts_notice_MF: |
       Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">dyskutować!</a> Mamy {currentPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Tylko członkowie zespołu widzą tę wiadomość.
     logs_error_rate_notice:
@@ -5479,6 +5491,7 @@ pl_PL:
           exists: "Już istnieje"
           upload: "Dodaj z pliku"
           upload_successful: "Przesyłanie zakończone sukcesem. Słowa zostały dodane."
+          case_sensitivity_label: "Rozróżniana jest wielkość liter"
         test:
           button_label: "Sprawdź"
           modal_title: "%{action}: Testuj obserwowane słowa"
@@ -5787,6 +5800,7 @@ pl_PL:
           username: "Nazwa użytkownika"
           trust_level: "Poziom zaufania"
           read_time: "Czas czytania"
+          topics_entered: "Wprowadzone tematy"
           posts: "Postów"
         tl3_requirements:
           title: "Wymagania dla osiągnięcia 3. poziomu zaufania"

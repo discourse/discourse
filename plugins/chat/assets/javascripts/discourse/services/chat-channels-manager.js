@@ -1,4 +1,5 @@
 import Service, { inject as service } from "@ember/service";
+import { debounce } from "discourse-common/utils/decorators";
 import Promise from "rsvp";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { tracked } from "@glimmer/tracking";
@@ -80,6 +81,24 @@ export default class ChatChannelsManager extends Service {
 
       return model;
     });
+  }
+
+  @debounce(300)
+  async markAllChannelsRead() {
+    return this.chatApi.markAllChannelsAsRead().then((response) => {
+      response.updated_memberships.forEach((membership) => {
+        let channel = this.channels.findBy("id", membership.channel_id);
+        if (channel) {
+          channel.currentUserMembership.unread_count = 0;
+          channel.currentUserMembership.unread_mentions = 0;
+        }
+      });
+    });
+  }
+
+  remove(model) {
+    this.chatSubscriptionsManager.stopChannelSubscription(model);
+    delete this._cached[model.id];
   }
 
   get unreadCount() {

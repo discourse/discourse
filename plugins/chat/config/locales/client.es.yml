@@ -153,7 +153,6 @@ es:
       restore: "Restaurar mensaje eliminado"
       save: "Guardar"
       select: "Seleccionar"
-      silence: "Silenciar al usuario"
       return_to_list: "Volver a la lista de canales"
       scroll_to_bottom: "Desplazar hacia abajo"
       scroll_to_new_messages: "Ver nuevos mensajes"

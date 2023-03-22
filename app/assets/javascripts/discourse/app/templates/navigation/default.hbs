@@ -9,5 +9,7 @@
     @hasDraft={{this.currentUser.has_topic_draft}}
     @createTopic={{route-action "createTopic"}}
     @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
+    @filterQueryString={{this.discoveryFilter.queryString}}
+    @updateTopicsListQueryParams={{this.discoveryFilter.updateTopicsListQueryParams}}
   />
 </DSection>

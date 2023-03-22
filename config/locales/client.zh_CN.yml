@@ -481,6 +481,7 @@ zh_CN:
       scores:
         about: "此分数是根据举报人的信任级别、该用户以往举报的准确性以及被举报条目的优先级计算得出的。"
         score: "分数"
+        date: "举报日期"
         type: "原因"
         status: "状态"
         submitted_by: "举报人"
@@ -514,6 +515,7 @@ zh_CN:
         all:
           title: "一切"
       context_question:
+        is_this_post: "这个帖子属于 %{reviewable_human_score_types}吗？"
         delimiter: "或者"
         something_else_wrong: "这个帖子有什么问题吗？"
       types:
@@ -4860,6 +4862,9 @@ zh_CN:
             delete_group: "删除群组"
             watched_word_create: "添加关注词"
             watched_word_destroy: "删除关注词"
+            create_public_sidebar_section: "创建公共侧边栏部分"
+            update_public_sidebar_section: "更新公共侧边栏部分"
+            destroy_public_sidebar_section: "销毁公共侧边栏部分"
         screened_emails:
           title: "已屏蔽的电子邮件"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -4955,6 +4960,7 @@ zh_CN:
       form_templates:
         nav_title: "模板"
         title: "表单模板"
+        new_template: "新模板"
         list_table:
           headings:
             name: "名称"
@@ -4967,6 +4973,7 @@ zh_CN:
           close: "关闭"
           edit: "编辑"
           delete: "删除"
+          toggle_preview: "切换预览"
         new_template_form:
           submit: "保存"
           cancel: "取消"
@@ -4997,13 +5004,19 @@ zh_CN:
               description: "需要填写该字段才能提交表单。"
             minimum:
               key: "最小值"
+              type: "整数"
+              description: "在文本字段中，指定允许的最小字符数。"
             maximum:
               key: "最大值"
+              type: "整数"
+              description: "在文本字段中，指定允许的最大字符数。在多选下拉列表中，指定可以选择的最大选项数。"
             pattern:
               type: "正则表达式"
+              description: "在文本字段中，指定允许输入的正则表达式。"
         preview_modal:
           title: "预览模板"
         field_placeholders:
+          validations: "在此输入验证信息"
           label: "在此处输入标签"
           placeholder: "在此处输入占位符"
           none_label: "选择条目"

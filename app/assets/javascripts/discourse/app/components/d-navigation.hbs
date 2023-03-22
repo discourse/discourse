@@ -3,11 +3,11 @@
     <Input
       class="topic-query-filter__input"
       @value={{this.queryString}}
-      @enter={{route-action "changeQueryString" this.queryString}}
+      @enter={{action @updateTopicsListQueryParams this.queryString}}
     />
 
     <DButton
-      @action={{route-action "changeQueryString" this.queryString}}
+      @action={{action @updateTopicsListQueryParams this.queryString}}
       @icon="filter"
       @class="btn-primary topic-query-filter__button"
       @label="filters.filter.button.label"

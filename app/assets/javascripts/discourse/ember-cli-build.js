@@ -163,6 +163,16 @@ module.exports = function (defaults) {
     }
   };
 
+  // @ember/jquery introduces a shim which triggers the ember-global deprecation.
+  // We remove that shim, and re-implement ourselves in the deprecate-jquery-integration pre-initializer
+  const vendorScripts = app._scriptOutputFiles["/assets/vendor.js"];
+  const componentDollarShimIndex = vendorScripts.indexOf(
+    "vendor/jquery/component.dollar.js"
+  );
+  if (componentDollarShimIndex) {
+    vendorScripts.splice(componentDollarShimIndex, 1);
+  }
+
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");

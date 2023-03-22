@@ -19,7 +19,7 @@
     "ember-cli-babel": "^7.26.10",
     "ember-cli-htmlbars": "^6.2.0",
     "handlebars": "^4.7.6",
-    "webpack": "^5.76.1"
+    "webpack": "^5.76.2"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",

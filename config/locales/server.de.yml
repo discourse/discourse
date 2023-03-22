@@ -1734,7 +1734,7 @@ de:
     composer_media_optimization_image_bytes_optimization_threshold: "Mindestgröße der Bilddatei, um die clientseitige Optimierung auszulösen"
     composer_media_optimization_image_resize_dimensions_threshold: "Mindestbreite des Bildes, um die clientseitige Skalierung auszulösen"
     composer_media_optimization_image_resize_width_target: "Bilder, die breiter als `composer_media_optimization_image_dimensions_resize_threshold` sind, werden auf diese Breite angepasst. Muss >= `composer_media_optimization_image_dimensions_resize_threshold` sein."
-    composer_media_optimization_image_encode_quality: "JPEG-Encoding-Qualität, die im Re-Encoding-Prozess verwendet wird."
+    composer_media_optimization_image_encode_quality: "Qualität der JPG-Kodierung, die bei der Neukodierung verwendet wird."
     min_ratio_to_crop: "Seitenverhältnis zum Ausschneiden hoher Bilder. Angabe als Ergebnis von Breite geteilt durch Höhe."
     simultaneous_uploads: "Maximale Anzahl an Dateien, die per Drag-and-drop in den Editor gezogen werden können."
     default_invitee_trust_level: "Standardwert für die Vertrauensstufe eines eingeladenen Benutzers (0–4)."
@@ -4489,7 +4489,10 @@ de:
       message: "<p>Wir haben die Aktivierungs-E-Mail noch einmal an <b>%{email}</b> gesendet"
   safe_mode:
     title: "Abgesicherten Modus betreten"
+    description: "Im abgesicherten Modus kannst du deine Website testen, ohne Themes oder clientseitige Plugin-Anpassungen zu laden. Server-seitige Plugin-Anpassungen bleiben aktiviert."
     no_themes: "Themes und Theme-Komponente deaktivieren"
+    no_unofficial_plugins: "Deaktiviere inoffizielle clientseitige Plugin-Anpassungen"
+    no_plugins: "Deaktiviere alle clientseitigen Plugin-Anpassungen"
     enter: "Abgesicherten Modus betreten"
     must_select: "Du musst mindestens eine Option auswählen, um den abgesicherten Modus zu betreten."
   wizard:

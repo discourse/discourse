@@ -68,7 +68,7 @@ export default {
             }
 
             get prefixValue() {
-              return "hashtag";
+              return "d-chat";
             }
 
             get prefixColor() {

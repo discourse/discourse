@@ -213,7 +213,10 @@ task "docker:test" do
             @good &&= run_or_fail("bundle exec rspec #{params.join(" ")}".strip)
           end
 
-          @good &&= run_or_fail("bundle exec rspec spec/system".strip) if ENV["RUN_SYSTEM_TESTS"]
+          if ENV["RUN_SYSTEM_TESTS"]
+            @good &&= run_or_fail("bin/ember-cli --build")
+            @good &&= run_or_fail("bundle exec rspec spec/system")
+          end
         end
 
         unless ENV["SKIP_PLUGINS"]

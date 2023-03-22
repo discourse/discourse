@@ -243,22 +243,37 @@ module SvgSprite
     badge_icons
   end
 
-  def self.core_svg_sprites
-    @core_svg_sprites ||=
-      begin
-        CORE_SVG_SPRITES.map do |path|
-          { filename: File.basename(path, ".svg"), sprite: File.read(path) }
+  def self.symbols_for(svg_filename, sprite, strict:)
+    if strict
+      Nokogiri.XML(sprite) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
+    else
+      Nokogiri.XML(sprite)
+    end.css("symbol")
+      .filter_map do |sym|
+        icon_id = prepare_symbol(sym, svg_filename)
+        if icon_id.present?
+          sym.attributes["id"].value = icon_id
+          sym.css("title").each(&:remove)
+          [icon_id, sym.to_xml]
         end
+      end
+      .to_h
+  end
+
+  def self.core_svgs
+    @core_svgs ||=
+      CORE_SVG_SPRITES.reduce({}) do |symbols, path|
+        symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
       end
   end
 
   # Just used in tests
   def self.clear_plugin_svg_sprite_cache!
-    @plugin_svg_sprites = nil
+    @plugin_svgs = nil
   end
 
-  def self.plugin_svg_sprites
-    @plugin_svg_sprites ||=
+  def self.plugin_svgs
+    @plugin_svgs ||=
       begin
         plugin_paths = []
         Discourse
@@ -268,13 +283,13 @@ module SvgSprite
 
         custom_sprite_paths = Dir.glob(plugin_paths)
 
-        custom_sprite_paths.map do |path|
-          { filename: File.basename(path, ".svg"), sprite: File.read(path) }
+        custom_sprite_paths.reduce({}) do |symbols, path|
+          symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
         end
       end
   end
 
-  def self.theme_svg_sprites(theme_id)
+  def self.theme_svgs(theme_id)
     if theme_id.present?
       theme_ids = Theme.transform_ids(theme_id)
 
@@ -295,17 +310,25 @@ module SvgSprite
           )
         end
 
-        theme_sprites.map do |upload_id, sprite|
-          { filename: "theme_#{theme_id}_#{upload_id}.svg", sprite: sprite }
+        theme_sprites.reduce({}) do |symbols, (upload_id, sprite)|
+          begin
+            symbols.merge!(symbols_for("theme_#{theme_id}_#{upload_id}.svg", sprite, strict: false))
+          rescue => e
+            Rails.logger.warn(
+              "Bad XML in custom sprite in theme with ID=#{theme_id}. Error info: #{e.inspect}",
+            )
+          end
+
+          symbols
         end
       end
     else
-      []
+      {}
     end
   end
 
-  def self.custom_svg_sprites(theme_id)
-    plugin_svg_sprites + theme_svg_sprites(theme_id)
+  def self.custom_svgs(theme_id)
+    plugin_svgs.merge(theme_svgs(theme_id))
   end
 
   def self.all_icons(theme_id = nil)
@@ -339,34 +362,10 @@ module SvgSprite
     cache&.clear
   end
 
-  def self.sprites_for(theme_id)
-    sprites = core_svg_sprites
-    sprites += custom_svg_sprites(theme_id) if theme_id.present?
-    sprites
-  end
-
-  def self.core_svgs
-    @core_svgs ||=
-      begin
-        symbols = {}
-
-        CORE_SVG_SPRITES.each do |filename|
-          svg_filename = "#{File.basename(filename, ".svg")}"
-
-          Nokogiri
-            .XML(File.open(filename)) do |config|
-              config.options = Nokogiri::XML::ParseOptions::NOBLANKS
-            end
-            .css("symbol")
-            .each do |sym|
-              icon_id = prepare_symbol(sym, svg_filename)
-              sym.attributes["id"].value = icon_id
-              symbols[icon_id] = sym.to_xml
-            end
-        end
-
-        symbols
-      end
+  def self.svgs_for(theme_id)
+    svgs = core_svgs
+    svgs = svgs.merge(custom_svgs(theme_id)) if theme_id.present?
+    svgs
   end
 
   def self.bundle(theme_id = nil)
@@ -382,34 +381,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 " \
         "".dup
 
-    core_svgs.each { |icon_id, sym| svg_subset << sym if icons.include?(icon_id) }
-
-    custom_svg_sprites(theme_id).each do |item|
-      begin
-        svg_file =
-          Nokogiri.XML(item[:sprite]) do |config|
-            config.options = Nokogiri::XML::ParseOptions::NOBLANKS
-          end
-      rescue => e
-        Rails.logger.warn(
-          "Bad XML in custom sprite in theme with ID=#{theme_id}. Error info: #{e.inspect}",
-        )
-      end
-
-      next if !svg_file
-
-      svg_file
-        .css("symbol")
-        .each do |sym|
-          icon_id = prepare_symbol(sym, item[:filename])
-
-          if icon_id.present?
-            sym.attributes["id"].value = icon_id
-            sym.css("title").each(&:remove)
-            svg_subset << sym.to_xml
-          end
-        end
-    end
+    svg_subset << core_svgs.slice(*icons).values.join
+    svg_subset << custom_svgs(theme_id).values.join
 
     svg_subset << "</svg>"
   end
@@ -417,46 +390,16 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.search(searched_icon)
     searched_icon = process(searched_icon.dup)
 
-    sprites_for(SiteSetting.default_theme_id).each do |item|
-      svg_file = Nokogiri.XML(item[:sprite])
-
-      svg_file
-        .css("symbol")
-        .each do |sym|
-          icon_id = prepare_symbol(sym, item[:filename])
-
-          if searched_icon == icon_id
-            sym.attributes["id"].value = icon_id
-            sym.css("title").each(&:remove)
-            return sym.to_xml
-          end
-        end
-    end
-
-    false
+    svgs_for(SiteSetting.default_theme_id)[searched_icon] || false
   end
 
   def self.icon_picker_search(keyword, only_available = false)
     icons = all_icons(SiteSetting.default_theme_id) if only_available
-    results = Set.new
 
-    sprites_for(SiteSetting.default_theme_id).each do |item|
-      svg_file = Nokogiri.XML(item[:sprite])
-
-      svg_file
-        .css("symbol")
-        .each do |sym|
-          icon_id = prepare_symbol(sym, item[:filename])
-          next if only_available && !icons.include?(icon_id)
-          if keyword.empty? || icon_id.include?(keyword)
-            sym.attributes["id"].value = icon_id
-            sym.css("title").each(&:remove)
-            results.add(id: icon_id, symbol: sym.to_xml)
-          end
-        end
-    end
-
-    results.sort_by { |icon| icon[:id] }
+    symbols = svgs_for(SiteSetting.default_theme_id)
+    symbols.slice!(*icons) if only_available
+    symbols.reject! { |icon_id, sym| !icon_id.include?(keyword) } unless keyword.empty?
+    symbols.sort_by(&:first).map { |icon_id, symbol| { id: icon_id, symbol: symbol } }
   end
 
   # For use in no_ember .html.erb layouts
@@ -539,14 +482,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.custom_icons(theme_id)
     # Automatically register icons in sprites added via themes or plugins
-    icons = []
-    custom_svg_sprites(theme_id).each do |item|
-      svg_file = Nokogiri.XML(item[:sprite])
-      svg_file
-        .css("symbol")
-        .each { |sym| icons << sym.attributes["id"].value if sym.attributes["id"].present? }
-    end
-    icons
+    custom_svgs(theme_id).keys
   end
 
   def self.process(icon_name)

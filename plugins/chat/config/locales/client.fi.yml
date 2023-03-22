@@ -152,7 +152,6 @@ fi:
       restore: "Palauta poistettu viesti"
       save: "Tallenna"
       select: "Valitse"
-      silence: "Hiljennä käyttäjä"
       return_to_list: "Palaa kanavaluetteloon"
       scroll_to_bottom: "Vieritä alas"
       scroll_to_new_messages: "Katso uudet viestit"

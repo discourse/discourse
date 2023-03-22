@@ -4,11 +4,10 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cancel, schedule } from "@ember/runloop";
+import { cancel, schedule, throttle } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -64,7 +63,6 @@ export default class ChatLivePane extends Component {
   setupListeners(element) {
     this._scrollerEl = element.querySelector(".chat-messages-scroll");
 
-    window.addEventListener("resize", this.onResizeHandler);
     document.addEventListener("scroll", this._forceBodyScroll, {
       passive: true,
     });
@@ -76,12 +74,17 @@ export default class ChatLivePane extends Component {
 
   @action
   teardownListeners() {
-    window.removeEventListener("resize", this.onResizeHandler);
-    cancel(this.resizeHandler);
     document.removeEventListener("scroll", this._forceBodyScroll);
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this._unsubscribeToUpdates(this._loadedChannelId);
     this.requestedTargetMessageId = null;
+  }
+
+  @action
+  didResizePane() {
+    this.fillPaneAttempt();
+    this.computeDatesSeparators();
+    this.forceRendering();
   }
 
   @action
@@ -95,7 +98,7 @@ export default class ChatLivePane extends Component {
 
     // Technically we could keep messages to avoid re-fetching them, but
     // it's not worth the complexity for now
-    this.args.channel?.clearMessages();
+    this.args.channel?.messagesManager?.clearMessages();
 
     if (this._loadedChannelId !== this.args.channel?.id) {
       this._unsubscribeToUpdates(this._loadedChannelId);
@@ -124,17 +127,6 @@ export default class ChatLivePane extends Component {
     } else {
       this.fetchMessages({ fetchFromLastMessage: false });
     }
-  }
-
-  @bind
-  onResizeHandler() {
-    cancel(this.resizeHandler);
-    this.resizeHandler = discourseDebounce(
-      this,
-      this.fillPaneAttempt,
-      this.details,
-      250
-    );
   }
 
   @bind
@@ -221,8 +213,8 @@ export default class ChatLivePane extends Component {
     const loadingMoreKey = `loadingMore${capitalize(direction)}`;
 
     const canLoadMore = loadingPast
-      ? this.args.channel.canLoadMorePast
-      : this.args.channel.canLoadMoreFuture;
+      ? this.args.channel.messagesManager.canLoadMorePast
+      : this.args.channel.messagesManager.canLoadMoreFuture;
 
     if (
       !canLoadMore ||
@@ -272,7 +264,7 @@ export default class ChatLivePane extends Component {
         }
 
         this.args.channel.details = meta;
-        this.args.channel.addMessages(messages);
+        this.args.channel.messagesManager.addMessages(messages);
 
         // Edge case for IOS to avoid blank screens
         // and/or scrolling to bottom losing track of scroll position
@@ -286,7 +278,6 @@ export default class ChatLivePane extends Component {
       .finally(() => {
         this[loadingMoreKey] = false;
         this.fillPaneAttempt();
-        this.computeDatesSeparators();
       });
   }
 
@@ -301,7 +292,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    if (!this.args.channel?.canLoadMorePast) {
+    if (!this.args.channel?.messagesManager?.canLoadMorePast) {
       return;
     }
 
@@ -358,7 +349,7 @@ export default class ChatLivePane extends Component {
 
   @debounce(100)
   highlightOrFetchMessage(messageId) {
-    const message = this.args.channel.findMessage(messageId);
+    const message = this.#messagesManager?.findMessage(messageId);
     if (message) {
       this.scrollToMessage(message.id, {
         highlight: true,
@@ -379,7 +370,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    const message = this.args.channel.findMessage(messageId);
+    const message = this.#messagesManager?.findMessage(messageId);
     if (message?.deletedAt && opts.autoExpand) {
       message.expanded = true;
     }
@@ -486,7 +477,7 @@ export default class ChatLivePane extends Component {
         return;
       }
 
-      if (this.args.channel.canLoadMoreFuture) {
+      if (this.#messagesManager?.canLoadMoreFuture) {
         this._fetchAndScrollToLatest();
       } else if (this.args.channel.messages?.length > 0) {
         this.scrollToMessage(
@@ -525,9 +516,9 @@ export default class ChatLivePane extends Component {
   }
 
   removeMessage(msgData) {
-    const message = this.args.channel.findMessage(msgData.id);
+    const message = this.args.channel.messagesManager.findMessage(msgData.id);
     if (message) {
-      this.args.channel.removeMessage(message);
+      this.args.channel.messagesManager.removeMessage(message);
     }
   }
 
@@ -579,7 +570,7 @@ export default class ChatLivePane extends Component {
     stagedMessage.channelId = data.chat_message.chat_channel_id;
     stagedMessage.createdAt = data.chat_message.created_at;
 
-    const inReplyToMsg = this.args.channel.findMessage(
+    const inReplyToMsg = this.args.channel.messagesManager.findMessage(
       data.chat_message.in_reply_to?.id
     );
     if (inReplyToMsg && !inReplyToMsg.threadId) {
@@ -599,30 +590,36 @@ export default class ChatLivePane extends Component {
     }
 
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
-      const stagedMessage = this.args.channel.findStagedMessage(data.staged_id);
+      const stagedMessage = this.args.channel.messagesManager.findStagedMessage(
+        data.staged_id
+      );
       if (stagedMessage) {
         return this._handleStagedMessage(stagedMessage, data);
       }
     }
 
-    if (this.args.channel.canLoadMoreFuture) {
+    if (this.args.channel.messagesManager.canLoadMoreFuture) {
       // If we can load more messages, we just notice the user of new messages
       this.hasNewMessages = true;
     } else if (this.#isTowardsBottom()) {
       // If we are at the bottom, we append the message and scroll to it
       const message = ChatMessage.create(this.args.channel, data.chat_message);
-      this.args.channel.addMessages([message]);
+
+      this.args.channel.messagesManager.addMessages([message]);
       this.scrollToLatestMessage();
+      this.updateLastReadMessage();
     } else {
       // If we are almost at the bottom, we append the message and notice the user
       const message = ChatMessage.create(this.args.channel, data.chat_message);
-      this.args.channel.addMessages([message]);
+      this.args.channel.messagesManager.addMessages([message]);
       this.hasNewMessages = true;
     }
   }
 
   handleProcessedMessage(data) {
-    const message = this.args.channel.findMessage(data.chat_message.id);
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message.id
+    );
     if (message) {
       message.cooked = data.chat_message.cooked;
       this.scrollToLatestMessage();
@@ -630,14 +627,18 @@ export default class ChatLivePane extends Component {
   }
 
   handleRefreshMessage(data) {
-    const message = this.args.channel.findMessage(data.chat_message.id);
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message.id
+    );
     if (message) {
       message.incrementVersion();
     }
   }
 
   handleEditMessage(data) {
-    const message = this.args.channel.findMessage(data.chat_message.id);
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message.id
+    );
     if (message) {
       message.message = data.chat_message.message;
       message.cooked = data.chat_message.cooked;
@@ -659,7 +660,7 @@ export default class ChatLivePane extends Component {
 
   handleDeleteMessage(data) {
     const deletedId = data.deleted_id;
-    const targetMsg = this.args.channel.findMessage(deletedId);
+    const targetMsg = this.args.channel.messagesManager.findMessage(deletedId);
 
     if (!targetMsg) {
       return;
@@ -669,46 +670,54 @@ export default class ChatLivePane extends Component {
       targetMsg.deletedAt = data.deleted_at;
       targetMsg.expanded = false;
     } else {
-      this.args.channel.removeMessage(targetMsg);
+      this.args.channel.messagesManager.removeMessage(targetMsg);
     }
   }
 
   handleReactionMessage(data) {
-    if (data.user.id !== this.currentUser.id) {
-      const message = this.args.channel.findMessage(data.chat_message_id);
-      if (message) {
-        message.react(data.emoji, data.action, data.user, this.currentUser.id);
-      }
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message_id
+    );
+    if (message) {
+      message.react(data.emoji, data.action, data.user, this.currentUser.id);
     }
   }
 
   handleRestoreMessage(data) {
-    const message = this.args.channel.findMessage(data.chat_message.id);
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message.id
+    );
     if (message) {
       message.deletedAt = null;
     } else {
-      this.args.channel.addMessages([
+      this.args.channel.messagesManager.addMessages([
         ChatMessage.create(this.args.channel, data.chat_message),
       ]);
     }
   }
 
   handleMentionWarning(data) {
-    const message = this.args.channel.findMessage(data.chat_message_id);
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message_id
+    );
     if (message) {
       message.mentionWarning = EmberObject.create(data);
     }
   }
 
   handleSelfFlaggedMessage(data) {
-    const message = this.args.channel.findMessage(data.chat_message_id);
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message_id
+    );
     if (message) {
       message.userFlagStatus = data.user_flag_status;
     }
   }
 
   handleFlaggedMessage(data) {
-    const message = this.args.channel.findMessage(data.chat_message_id);
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message_id
+    );
     if (message) {
       message.reviewableId = data.reviewable_id;
     }
@@ -716,6 +725,10 @@ export default class ChatLivePane extends Component {
 
   get _selfDeleted() {
     return this.isDestroying || this.isDestroyed;
+  }
+
+  get #messagesManager() {
+    return this.args.channel?.messagesManager;
   }
 
   @action
@@ -766,8 +779,8 @@ export default class ChatLivePane extends Component {
       stagedMessage.inReplyTo = this.replyToMsg;
     }
 
-    this.args.channel.addMessages([stagedMessage]);
-    if (!this.args.channel.canLoadMoreFuture) {
+    this.args.channel.messagesManager.addMessages([stagedMessage]);
+    if (!this.args.channel.messagesManager.canLoadMoreFuture) {
       this.scrollToLatestMessage();
     }
 
@@ -816,7 +829,8 @@ export default class ChatLivePane extends Component {
   }
 
   _onSendError(id, error) {
-    const stagedMessage = this.args.channel.findStagedMessage(id);
+    const stagedMessage =
+      this.args.channel.messagesManager.findStagedMessage(id);
     if (stagedMessage) {
       if (error.jqXHR?.responseJSON?.errors?.length) {
         stagedMessage.error = error.jqXHR.responseJSON.errors[0];
@@ -895,16 +909,19 @@ export default class ChatLivePane extends Component {
   @action
   editLastMessageRequested() {
     const lastUserMessage = this.args.channel.messages.findLast(
-      (message) =>
-        message.user.id === this.currentUser.id &&
-        !message.staged &&
-        !message.error
+      (message) => message.user.id === this.currentUser.id
     );
 
-    if (lastUserMessage) {
-      this.editingMessage = lastUserMessage;
-      this._focusComposer();
+    if (!lastUserMessage) {
+      return;
     }
+
+    if (lastUserMessage.staged || lastUserMessage.error) {
+      return;
+    }
+
+    this.editingMessage = lastUserMessage;
+    this._focusComposer();
   }
 
   @action
@@ -912,7 +929,7 @@ export default class ChatLivePane extends Component {
     if (messageId) {
       this.cancelEditing();
 
-      const message = this.args.channel.findMessage(messageId);
+      const message = this.args.channel.messagesManager.findMessage(messageId);
       this.replyToMsg = message;
       this.appEvents.trigger("chat-composer:reply-to-set", message);
       this._focusComposer();
@@ -924,7 +941,8 @@ export default class ChatLivePane extends Component {
 
   @action
   replyMessageClicked(message) {
-    const replyMessageFromLookup = this.args.channel.findMessage(message.id);
+    const replyMessageFromLookup =
+      this.args.channel.messagesManager.findMessage(message.id);
     if (replyMessageFromLookup) {
       this.scrollToMessage(replyMessageFromLookup.id, {
         highlight: true,
@@ -940,7 +958,7 @@ export default class ChatLivePane extends Component {
 
   @action
   editButtonClicked(messageId) {
-    const message = this.args.channel.findMessage(messageId);
+    const message = this.args.channel.messagesManager.findMessage(messageId);
     this.editingMessage = message;
     this.scrollToLatestMessage();
     this._focusComposer();
@@ -1209,7 +1227,6 @@ export default class ChatLivePane extends Component {
       }
 
       if (this.capabilities.isIOS) {
-        this._scrollerEl.style.transform = "translateZ(0)";
         this._scrollerEl.style.overflow = "hidden";
       }
 
@@ -1222,8 +1239,6 @@ export default class ChatLivePane extends Component {
           }
 
           this._scrollerEl.style.overflow = "auto";
-          this._scrollerEl.style.transform = "unset";
-          this.computeDatesSeparators();
         }, 50);
       }
     });
@@ -1241,6 +1256,10 @@ export default class ChatLivePane extends Component {
 
   @bind
   _autoFocus(event) {
+    if (this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
     const { key, metaKey, ctrlKey, code, target } = event;
 
     if (
@@ -1274,25 +1293,48 @@ export default class ChatLivePane extends Component {
 
   @action
   computeDatesSeparators() {
+    throttle(this, this._computeDatesSeparators, 50, false);
+  }
+
+  _computeDatesSeparators() {
     schedule("afterRender", () => {
       const dates = [
         ...this._scrollerEl.querySelectorAll(".chat-message-separator-date"),
       ].reverse();
-      const scrollHeight = this._scrollerEl.scrollHeight;
+      const height = this._scrollerEl.querySelector(
+        ".chat-messages-container"
+      ).clientHeight;
 
       dates
         .map((date, index) => {
-          const item = { bottom: "0px", date };
+          const item = { bottom: 0, date };
+          const line = date.nextElementSibling;
+
           if (index > 0) {
-            item.bottom = scrollHeight - dates[index - 1].offsetTop + "px";
+            const prevDate = dates[index - 1];
+            const prevLine = prevDate.nextElementSibling;
+            item.bottom = height - prevLine.offsetTop;
           }
-          item.top = date.nextElementSibling.offsetTop + "px";
+
+          if (dates.length === 1) {
+            item.height = height;
+          } else {
+            if (index === 0) {
+              item.height = height - line.offsetTop;
+            } else {
+              const prevDate = dates[index - 1];
+              const prevLine = prevDate.nextElementSibling;
+              item.height =
+                height - line.offsetTop - (height - prevLine.offsetTop);
+            }
+          }
+
           return item;
         })
         // group all writes at the end
         .forEach((item) => {
-          item.date.style.bottom = item.bottom;
-          item.date.style.top = item.top;
+          item.date.style.bottom = item.bottom + "px";
+          item.date.style.height = item.height + "px";
         });
     });
   }
