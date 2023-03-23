@@ -91,6 +91,8 @@ export default class ChatChannelsManager extends Service {
         if (channel) {
           channel.currentUserMembership.unread_count = 0;
           channel.currentUserMembership.unread_mentions = 0;
+          channel.currentUserMembership.last_read_message_id =
+            membership.last_read_message_id;
         }
       });
     });
