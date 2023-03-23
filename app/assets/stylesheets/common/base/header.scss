@@ -446,14 +446,10 @@ $mobile-avatar-height: 1.532em;
   }
 }
 
-.d-header-mode {
-  background: var(--primary-low);
+.d-header-mode .bootstrap-mode {
   border-radius: 2em;
+  color: var(--primary-medium);
   font-size: var(--font-down-1);
   margin-left: 0.5em;
   padding: 0.25em 0.5em;
-
-  a {
-    color: var(--primary-medium);
-  }
 }
