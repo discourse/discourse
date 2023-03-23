@@ -6,6 +6,6 @@ export default class BootstrapModeNotice extends Component {
 
   get href() {
     const topicId = this.siteSettings.admin_quick_start_topic_id;
-    return `/t/-/${topicId}#bootstrap-mode-2`;
+    return `/t/-/${topicId}`;
   }
 }

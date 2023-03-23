@@ -4,9 +4,7 @@ Congratulations, you are now the proud owner of your very own [Civilized Discour
 
 If you haven't already, launch the [setup wizard](/wizard) and go through the steps to configure your site. You can run the wizard as many times as you want, it's completely safe!
 
-### Bootstrap Mode
-
-Bootstrap mode makes launching your new site easier. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when more users have joined, configurable using [site settings](/admin/site_settings/category/all_results?filter=bootstrap+mode+min+users). To make the sign up process faster, consider [sending out invites](my/invited/pending).
+> Note: To make launching your new site easier, all new members will have daily email summary emails enabled (instead of the usual weekly) and be given a higher level of trust. See below to learn more about the trust system and bootstrap mode.
 
 ### Admin Dashboard
 
@@ -95,7 +93,7 @@ All new users start out in a sandbox with restrictions for everyone's safety. **
 
 Every action a user can take is rate limited for safety, and especially so for new users. But don't worry, new users can [transition to trust level 1](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) in about 10 minutes of reading.
 
-These defaults are safe, but note that while in "bootstrap mode" after you set up your site, all new users will be granted trust level 1 until you reach 50 users.
+To make launching your new site easier, all new users will have daily email summary emails enabled (instead of the usual weekly) and be given a higher level of trust that allows them to bypass new user restrictions. Once you've reached a certain number of users (adjustable via the [Bootstrap mode admin setting](/admin/site_settings/category/all_results?filter=bootstrap)) new users will have to spend 15 minutes reading to remove new user restrictions, or be invited by another trusted user.
 
 ### Building Your Community
 
