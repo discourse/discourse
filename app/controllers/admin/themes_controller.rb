@@ -89,12 +89,9 @@ class Admin::ThemesController < Admin::AdminController
       end
     elsif remote = params[:remote]
       if remote.length > MAX_REMOTE_LENGTH
-        render_json_error I18n.t(
-                            "themes.import_error.not_allowed_theme",
-                            { repo: remote[0..MAX_REMOTE_LENGTH] },
-                          ),
-                          status: 422
-        return
+        error =
+          I18n.t("themes.import_error.not_allowed_theme", { repo: remote[0..MAX_REMOTE_LENGTH] })
+        return render_json_error(error, status: 422)
       end
 
       begin
