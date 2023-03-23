@@ -334,6 +334,23 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Flags a chat message with the notify_moderators flag type.
+   *
+   * LEGACY: This will be deprecated post-3.0
+   * TODO (roman)
+   */
+  flagMessage(messageId) {
+    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
+    return ajax("/chat/flag", {
+      method: "PUT",
+      data: {
+        chat_message_id: messageId,
+        flag_type_id: 7, // notify_moderators
+      },
+    });
+  }
+
+  /**
    * Marks messages for all of a user's chat channel memberships as read.
    *
    * @returns {Promise}

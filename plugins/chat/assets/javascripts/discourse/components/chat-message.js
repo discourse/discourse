@@ -13,8 +13,6 @@ import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
-import showModal from "discourse/lib/show-modal";
-import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "discourse-common/lib/get-owner";
 
@@ -184,7 +182,6 @@ export default class ChatMessage extends Component {
     return {
       reply: this.reply,
       edit: this.edit,
-      flag: this.flag,
       deleteMessage: this.deleteMessage,
       restore: this.restore,
       rebakeMessage: this.rebakeMessage,
@@ -471,25 +468,6 @@ export default class ChatMessage extends Component {
     return getOwner(this).lookup("capabilities:main");
   }
 
-  // TODO(roman): For backwards-compatibility.
-  //   Remove after the 3.0 release.
-  _legacyFlag() {
-    this.dialog.yesNoConfirm({
-      message: I18n.t("chat.confirm_flag", {
-        username: this.args.message.user?.username,
-      }),
-      didConfirm: () => {
-        return ajax("/chat/flag", {
-          method: "PUT",
-          data: {
-            chat_message_id: this.args.message.id,
-            flag_type_id: 7, // notify_moderators
-          },
-        }).catch(popupAjaxError);
-      },
-    });
-  }
-
   @action
   reply() {
     this.args.composerService.setReplyTo(this.args.message.id);
@@ -498,22 +476,6 @@ export default class ChatMessage extends Component {
   @action
   edit() {
     this.args.composerService.editButtonClicked(this.args.message.id);
-  }
-
-  @action
-  flag() {
-    const targetFlagSupported =
-      requirejs.entries["discourse/lib/flag-targets/flag"];
-
-    if (targetFlagSupported) {
-      const model = this.args.message;
-      model.username = model.user?.username;
-      model.user_id = model.user?.id;
-      let controller = showModal("flag", { model });
-      controller.set("flagTarget", new ChatMessageFlag());
-    } else {
-      this._legacyFlag();
-    }
   }
 
   @action
