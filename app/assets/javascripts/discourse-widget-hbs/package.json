@@ -26,7 +26,7 @@
     "@ember/optional-features": "^2.0.0",
     "@embroider/test-setup": "^2.1.1",
     "@glimmer/component": "^1.1.2",
-    "@glimmer/syntax": "^0.84.2",
+    "@glimmer/syntax": "^0.84.3",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~3.28.5",
     "ember-cli-dependency-checker": "^3.3.1",

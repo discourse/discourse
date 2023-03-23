@@ -198,7 +198,7 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: bin/rspec spec/system
+        run: bin/rspec spec/system -f d
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'

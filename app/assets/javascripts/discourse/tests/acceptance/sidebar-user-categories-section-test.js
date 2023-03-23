@@ -43,7 +43,7 @@ acceptance(
 
       assert.strictEqual(
         count(
-          ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+          ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
         ),
         1,
         "there should only be one section link under the section"
@@ -113,10 +113,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     setupUserSidebarCategories();
 
     await visit("/t/280");
-    await click(".sidebar-section-categories .sidebar-section-header");
+    await click(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header"
+    );
 
     assert.notOk(
-      exists(".sidebar-section-categories .sidebar-section-content"),
+      exists(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-content"
+      ),
       "hides the content of the section"
     );
   });
@@ -125,7 +129,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     setupUserSidebarCategories();
 
     await visit("/");
-    await click(".sidebar-section-categories .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-button"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -140,7 +146,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-categories"),
+      exists(".sidebar-section[data-section-name='categories']"),
       "categories section is not shown"
     );
   });
@@ -153,19 +159,19 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-categories"),
+      exists(".sidebar-section[data-section-name='categories']"),
       "categories section is shown"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-categories .sidebar-section-link-configure-categories"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-configure-categories"
       ),
       "section link to add categories to sidebar is displayed"
     );
 
     await click(
-      ".sidebar-section-categories .sidebar-section-link-configure-categories"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-configure-categories"
     );
 
     assert.strictEqual(
@@ -237,7 +243,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -300,7 +306,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -363,7 +369,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -391,7 +397,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       count(
-        ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
       ),
       4,
       "there should only be 4 section link under the section"
@@ -421,7 +427,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -442,7 +450,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -486,7 +496,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -526,7 +538,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -574,7 +588,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -626,7 +642,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/new`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -645,7 +663,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/unread`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -664,7 +684,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/top`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -683,7 +705,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/none`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -702,7 +726,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/all`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
