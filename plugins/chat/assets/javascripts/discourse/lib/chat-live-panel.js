@@ -26,6 +26,10 @@ export default class ChatLivePanel {
     return this.chat.activeChannel;
   }
 
+  get showMessageSeparators() {
+    return true;
+  }
+
   get messages() {
     return this.#model.messages;
   }

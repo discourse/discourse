@@ -1,7 +1,9 @@
 {{! template-lint-disable no-invalid-interactive }}
 
-<ChatMessageSeparatorDate @message={{@message}} />
-<ChatMessageSeparatorNew @message={{@message}} />
+{{#if this.livePanel.showMessageSeparators}}
+  <ChatMessageSeparatorDate @message={{@message}} />
+  <ChatMessageSeparatorNew @message={{@message}} />
+{{/if}}
 
 {{#if
   (and

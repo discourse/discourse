@@ -36,23 +36,21 @@
     </div>
   </div>
   <div class="chat-thread__messages">
-    <ul>
-      {{#each this.thread.messages key="id" as |message|}}
-        <ChatMessage
-          @message={{message}}
-          @channel={{this.channel}}
-          @selectingMessages={{this.livePanel.selectingMessages}}
-          @isHovered={{eq message.id this.livePanel.hoveredMessageId}}
-          @onHoverMessage={{this.livePanel.hoverMessage}}
-          @resendStagedMessage={{this.resendStagedMessage}}
-          @messageDidEnterViewport={{this.messageDidEnterViewport}}
-          @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
-          @messageActions={{this.messageActions}}
-          @composerService={{this.chatChannelComposer}}
-          @messageActionsHandler={{this.messageActionsHandler}}
-        />
-      {{/each}}
-    </ul>
+    {{#each this.thread.messages key="id" as |message|}}
+      <ChatMessage
+        @message={{message}}
+        @channel={{this.channel}}
+        @selectingMessages={{this.livePanel.selectingMessages}}
+        @isHovered={{eq message.id this.livePanel.hoveredMessageId}}
+        @onHoverMessage={{this.livePanel.hoverMessage}}
+        @resendStagedMessage={{this.resendStagedMessage}}
+        @messageDidEnterViewport={{this.messageDidEnterViewport}}
+        @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
+        @messageActions={{this.messageActions}}
+        @composerService={{this.chatChannelComposer}}
+        @messageActionsHandler={{this.messageActionsHandler}}
+      />
+    {{/each}}
     {{#if (or this.loading this.loadingMoreFuture)}}
       <ChatSkeleton />
     {{/if}}
