@@ -58,5 +58,5 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
           .setAttribute("style", this.categoryStyle);
       }
     });
-  }
+  },
 });

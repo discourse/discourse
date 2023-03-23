@@ -7,5 +7,5 @@ export default DropdownSelectBoxHeaderComponent.extend({
   @discourseComputed("selectKit.isExpanded")
   caretIcon(isExpanded) {
     return isExpanded ? "caret-up" : "caret-down";
-  }
+  },
 });

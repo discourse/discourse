@@ -24,5 +24,5 @@ export default Component.extend({
         classNames: "selected-tag",
       };
     });
-  })
+  }),
 });

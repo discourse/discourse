@@ -3,5 +3,5 @@ import { readOnly } from "@ember/object/computed";
 
 export default SelectKitRowComponent.extend({
   classNames: ["dropdown-select-box-row"],
-  description: readOnly("item.description")
+  description: readOnly("item.description"),
 });

@@ -42,5 +42,5 @@ export default SelectKitComponent.extend({
         return this.selectKit.noneItem;
       }
     }
-  )
+  ),
 });

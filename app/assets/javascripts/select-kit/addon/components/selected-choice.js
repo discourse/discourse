@@ -22,5 +22,5 @@ export default Component.extend(UtilsMixin, {
 
   itemName: computed("item", function () {
     return this.getName(this.item);
-  })
+  }),
 });

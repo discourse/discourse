@@ -26,5 +26,5 @@ export default SelectKitRowComponent.extend({
     } else {
       return "";
     }
-  })
+  }),
 });

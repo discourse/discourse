@@ -16,5 +16,5 @@ export default Component.extend(UtilsMixin, {
     } else {
       return this.getName(this.selectKit.noneItem);
     }
-  })
+  }),
 });

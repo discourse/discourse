@@ -28,5 +28,5 @@ export default SelectKitHeaderComponent.extend(UtilsMixin, {
     } else {
       return I18n.t("select_kit.select_to_filter");
     }
-  })
+  }),
 });

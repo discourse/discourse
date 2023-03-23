@@ -14,5 +14,5 @@ export default SelectKitRowComponent.extend({
         ? color
         : `#${color}`;
     });
-  }
+  },
 });

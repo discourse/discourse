@@ -120,5 +120,5 @@ export default Component.extend(UtilsMixin, {
     }
 
     this.selectKit.set("highlighted", null);
-  }
+  },
 });

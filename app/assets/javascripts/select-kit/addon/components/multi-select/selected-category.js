@@ -13,5 +13,5 @@ export default SelectedNameComponent.extend({
         link: false,
       })
     );
-  })
+  }),
 });

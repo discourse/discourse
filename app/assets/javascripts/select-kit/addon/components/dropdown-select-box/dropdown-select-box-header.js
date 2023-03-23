@@ -26,5 +26,5 @@ export default SingleSelectHeaderComponent.extend({
     function () {
       return this.selectKit.isExpanded ? this.caretUpIcon : this.caretDownIcon;
     }
-  )
+  ),
 });

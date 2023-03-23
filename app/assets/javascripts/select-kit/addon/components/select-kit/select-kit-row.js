@@ -203,5 +203,5 @@ export default Component.extend(UtilsMixin, {
         }
       }
     }
-  }
+  },
 });

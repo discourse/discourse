@@ -14,5 +14,5 @@ export default SelectedChoiceComponent.extend({
         link: false,
       })
     );
-  })
+  }),
 });

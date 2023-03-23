@@ -76,5 +76,5 @@ export default Component.extend(UtilsMixin, {
     }
 
     return get(content, name);
-  }
+  },
 });

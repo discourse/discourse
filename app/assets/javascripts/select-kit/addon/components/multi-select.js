@@ -191,5 +191,5 @@ export default SelectKitComponent.extend({
     }
 
     return true;
-  }
+  },
 });

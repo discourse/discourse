@@ -60,5 +60,5 @@ export default Component.extend({
     if (this.selectKit.mainElement()) {
       this.selectKit.close(event);
     }
-  }
+  },
 });
