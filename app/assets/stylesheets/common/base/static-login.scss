@@ -1,0 +1,50 @@
+body.static-login {
+  background-color: var(--primary-very-low);
+
+  .d-header {
+    display: none;
+  }
+
+  .body-page {
+    margin: 15% auto;
+  }
+
+  .logo-container {
+    border-bottom: 1px solid var(--primary-low);
+    padding-bottom: 2em;
+    margin-bottom: 2em;
+  }
+
+  .site-logo {
+    height: var(--d-logo-height);
+    width: auto;
+    max-width: 40%;
+    object-fit: contain;
+  }
+
+  .waving-hand {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 1em;
+  }
+
+  .login-welcome {
+    background-color: var(--secondary);
+    border: 1px solid var(--primary-low);
+    text-align: center;
+    padding: 2em;
+    box-shadow: shadow("card");
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+
+    &__text {
+      order: 4;
+      color: var(--primary-medium);
+    }
+
+    .body-page-button-container {
+      order: 3;
+    }
+  }
+}
