@@ -53,7 +53,7 @@ export default class ChatChannelComposer extends Service {
     replyToMsg,
     inProgressUploadsCount,
   }) {
-    if (!this.model) {
+    if (!this.#model) {
       return;
     }
 
@@ -126,6 +126,6 @@ export default class ChatChannelComposer extends Service {
 
   get #componentDeleted() {
     // note I didn't set this in the new version, not sure yet what to do with it
-    return this.linkedComponent._selfDeleted;
+    // return this.linkedComponent._selfDeleted;
   }
 }

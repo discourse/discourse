@@ -31,7 +31,6 @@ const THROTTLE_MS = 150;
 export default Component.extend(TextareaTextManipulation, {
   chatChannel: null,
   chat: service(),
-  chatChannelComposer: service(),
   classNames: ["chat-composer-container"],
   classNameBindings: ["emojiPickerVisible:with-emoji-picker"],
   userSilenced: readOnly("chatChannel.userSilenced"),
@@ -82,7 +81,7 @@ export default Component.extend(TextareaTextManipulation, {
       _uploads: [],
     });
 
-    this.chatChannelComposer.registerFocusHandler(() => {
+    this.composerService.registerFocusHandler(() => {
       this._focusTextArea();
     });
   },
@@ -188,7 +187,7 @@ export default Component.extend(TextareaTextManipulation, {
     if (
       event.key === "ArrowUp" &&
       this._messageIsEmpty() &&
-      !this.chatChannelComposer.editingMessage
+      !this.composerService.editingMessage
     ) {
       event.preventDefault();
       this.onEditLastMessageRequested();
@@ -196,11 +195,11 @@ export default Component.extend(TextareaTextManipulation, {
 
     if (event.keyCode === 27) {
       // keyCode for 'Escape'
-      if (this.chatChannelComposer.replyToMsg) {
+      if (this.composerService.replyToMsg) {
         this.set("value", "");
-        this.chatChannelComposer.setReplyTo(null);
+        this.composerService.setReplyTo(null);
         return false;
-      } else if (this.chatChannelComposer.editingMessage) {
+      } else if (this.composerService.editingMessage) {
         this.set("value", "");
         this.cancelEditing();
         return false;
@@ -214,13 +213,13 @@ export default Component.extend(TextareaTextManipulation, {
     this._super(...arguments);
 
     if (
-      !this.chatChannelComposer.editingMessage &&
+      !this.composerService.editingMessage &&
       this.chatChannel?.draft &&
       this.chatChannel?.canModifyMessages(this.currentUser)
     ) {
       // uses uploads from draft here...
       this.set("value", this.chatChannel.draft.message);
-      this.chatChannelComposer.setReplyTo(this.chatChannel.draft.replyToMsg);
+      this.composerService.setReplyTo(this.chatChannel.draft.replyToMsg);
 
       this._captureMentions();
       this._syncUploads(this.chatChannel.draft.uploads);
@@ -231,14 +230,14 @@ export default Component.extend(TextareaTextManipulation, {
 
   // FIXME (martin) Is this okay to do?? Can't use didReceiveAttrs because now
   // livePanel.composer.editingMessage is changing not a scoped attribute for this component.
-  @observes("livePanel.composer.editingMessage")
+  @observes("composerService.editingMessage")
   updateEditingMessage() {
-    if (this.chatChannelComposer.editingMessage && !this.loading) {
-      this.set("value", this.chatChannelComposer.editingMessage.message);
+    if (this.composerService.editingMessage && !this.loading) {
+      this.set("value", this.composerService.editingMessage.message);
 
-      this.chatChannelComposer.setReplyTo(null);
+      this.composerService.setReplyTo(null);
 
-      this._syncUploads(this.chatChannelComposer.editingMessage.uploads);
+      this._syncUploads(this.composerService.editingMessage.uploads);
       this._focusTextArea({ ensureAtEnd: true, resizeTextarea: false });
     }
   },
@@ -291,7 +290,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @bind
   _handleTextareaInput() {
-    this.chatChannelComposer.onComposerValueChange?.({ value: this.value });
+    this.composerService.onComposerValueChange?.({ value: this.value });
   },
 
   @bind
@@ -625,7 +624,7 @@ export default Component.extend(TextareaTextManipulation, {
       return;
     }
 
-    this.chatChannelComposer.editingMessage
+    this.composerService.editingMessage
       ? this.internalEditMessage()
       : this.internalSendMessage();
   },
@@ -638,7 +637,7 @@ export default Component.extend(TextareaTextManipulation, {
   @action
   internalEditMessage() {
     return this.editMessage(
-      this.chatChannelComposer.editingMessage,
+      this.composerService.editingMessage,
       this.value,
       this._uploads
     ).then(this.reset);
@@ -680,21 +679,21 @@ export default Component.extend(TextareaTextManipulation, {
     this._captureMentions();
     this._syncUploads([]);
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
-    this.chatChannelComposer.onComposerValueChange?.(
+    this.composerService.onComposerValueChange?.(
       this.value,
       this._uploads,
-      this.chatChannelComposer.replyToMsg
+      this.composerService.replyToMsg
     );
   },
 
   @action
   cancelReplyTo() {
-    this.chatChannelComposer.setReplyTo(null);
+    this.composerService.setReplyTo(null);
   },
 
   @action
   cancelEditing() {
-    this.chatChannelComposer.cancelEditing();
+    this.composerService.cancelEditing();
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
   },
 
@@ -712,7 +711,7 @@ export default Component.extend(TextareaTextManipulation, {
   @action
   uploadsChanged(uploads, { inProgressUploadsCount }) {
     this.set("_uploads", cloneJSON(uploads));
-    this.chatChannelComposer.onComposerValueChange?.({
+    this.composerService.onComposerValueChange?.({
       uploads: this._uploads,
       inProgressUploadsCount,
     });

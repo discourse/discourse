@@ -60,7 +60,6 @@
             @resendStagedMessage={{this.resendStagedMessage}}
             @messageDidEnterViewport={{this.messageDidEnterViewport}}
             @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
-            @livePanel={{this.livePanel}}
             @messageActions={{this.messageActions}}
             @composerService={{this.chatChannelComposer}}
           />
@@ -100,8 +99,8 @@
         @onCancelEditing={{this.cancelEditing}}
         @onEditLastMessageRequested={{this.editLastMessageRequested}}
         @chatChannel={{@channel}}
-        @livePanel={{this.livePanel}}
         @messageActions={{this.messageActions}}
+        @composerService={{this.chatChannelComposer}}
       />
     {{else}}
       <ChatChannelPreviewCard @channel={{@channel}} />
