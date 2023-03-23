@@ -37,6 +37,8 @@
     "tidy-jsdoc": "^1.4.1"
   },
   "scripts": {
+    "lint:prettier": "yarn pprettier  --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.js' 'app/assets/javascripts/**/*.hbs' 'plugins/**/assets/stylesheets/**/*.scss' 'plugins/**/assets/javascripts/**/*.js' 'plugins/**/assets/javascripts/**/*.hbs'",
+    "lint:prettier:fix": "yarn lint:prettier -w",
     "postinstall": "yarn --cwd app/assets/javascripts/discourse $(node -e 'if(JSON.parse(process.env.npm_config_argv).original.includes(`--frozen-lockfile`)){console.log(`--frozen-lockfile`)}')"
   },
   "engines": {
