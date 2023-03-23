@@ -6,10 +6,10 @@ task "hashtags:mark_old_format_for_rebake" => :environment do
   # on a schedule.
   puts "Finding posts matching old format, this could take some time..."
   posts_to_rebake = Post.where("cooked like '%class=\"hashtag\"%'")
-  STDOUT.puts(
+  puts(
     "[!] You are about to mark #{posts_to_rebake.count} posts containing hashtags in the old format to rebake. [CTRL+c] to cancel, [ENTER] to continue",
   )
   STDIN.gets.chomp if !Rails.env.test?
   posts_to_rebake.update_all(baked_version: 0)
-  puts "Done, rebakes will happen when periodal updates job runs."
+  puts "Done, rebakes will happen when periodical updates job runs."
 end
