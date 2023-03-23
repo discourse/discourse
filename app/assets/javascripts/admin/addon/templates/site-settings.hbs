@@ -39,9 +39,9 @@
           class={{category.nameKey}}
         >
           {{category.name}}
-          {{#if category.count}}<span
-              class="count"
-            >({{category.count}})</span>{{/if}}
+          {{#if category.count}}
+            <span class="count">({{category.count}})</span>
+          {{/if}}
         </LinkTo>
       </li>
     {{/each}}
