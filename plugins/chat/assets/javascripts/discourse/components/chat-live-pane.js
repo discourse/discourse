@@ -341,7 +341,7 @@ export default class ChatLivePane extends Component {
         messageData.expanded = !(messageData.hidden || messageData.deleted_at);
       }
 
-      // newest has to be in after fetcg callback as we don't want to make it
+      // newest has to be in after fetch callback as we don't want to make it
       // dynamic or it will make the pane jump around, it will disappear on reload
       if (
         !foundFirstNew &&

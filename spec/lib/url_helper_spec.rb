@@ -164,6 +164,12 @@ RSpec.describe UrlHelper do
         "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977/20200130/us-west-1/s3/aws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah+blahblah/blah//////////wEQA==&X-Amz-Signature=test"
       expect(UrlHelper.normalized_encode(presigned_url)).not_to eq(encoded_presigned_url)
     end
+
+    it "raises error if too long" do
+      expect do UrlHelper.normalized_encode("https://#{"a" * 100_000}.com") end.to raise_error(
+        ArgumentError,
+      )
+    end
   end
 
   describe "#local_cdn_url" do

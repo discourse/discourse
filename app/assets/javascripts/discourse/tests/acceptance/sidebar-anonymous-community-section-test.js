@@ -24,14 +24,14 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-community .sidebar-section-message"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-message"
       ).textContent.trim(),
       this.siteSettings.short_site_description,
       "displays the short site description under the community section"
     );
 
     const sectionLinks = queryAll(
-      ".sidebar-section-community .sidebar-section-link"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link"
     );
 
     assert.strictEqual(
@@ -45,7 +45,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
     await visit("/");
 
     const sectionLinks = queryAll(
-      ".sidebar-section-community .sidebar-section-link"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link"
     );
 
     assert.strictEqual(
@@ -79,7 +79,9 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-users"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-users"
+      ),
       "users section link is not shown in sidebar"
     );
   });
@@ -88,7 +90,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     const sectionLinks = queryAll(

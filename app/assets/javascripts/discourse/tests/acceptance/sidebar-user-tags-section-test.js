@@ -28,7 +28,7 @@ acceptance(
       await visit("/");
 
       assert.ok(
-        !exists(".sidebar-section-tags"),
+        !exists(".sidebar-section[data-section-name='tags']"),
         "does not display the tags section"
       );
     });
@@ -97,14 +97,16 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-tags"),
+      exists(".sidebar-section[data-section-name='tags']"),
       "tags section is not displayed"
     );
   });
 
   test("clicking on section header button", async function (assert) {
     await visit("/");
-    await click(".sidebar-section-tags .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-header-button"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -121,7 +123,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-tags"),
+      exists(".sidebar-section[data-section-name='tags']"),
       "tags section is not displayed"
     );
   });
@@ -135,14 +137,21 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     await visit("/");
 
-    assert.ok(exists(".sidebar-section-tags"), "tags section is shown");
+    assert.ok(
+      exists(".sidebar-section[data-section-name='tags']"),
+      "tags section is shown"
+    );
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-configure-tags"),
+      exists(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-configure-tags"
+      ),
       "section link to add tags to sidebar is displayed"
     );
 
-    await click(".sidebar-section-tags .sidebar-section-link-configure-tags");
+    await click(
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-link-configure-tags"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -155,7 +164,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit("/");
 
     const tagSectionLinks = queryAll(
-      ".sidebar-section-tags .sidebar-section-link:not(.sidebar-section-link-all-tags)"
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-link:not(.sidebar-section-link-all-tags)"
     );
 
     const tagNames = [...tagSectionLinks].map((tagSectionLink) =>
@@ -174,7 +183,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       count(
-        ".sidebar-section-tags .sidebar-section-link:not(.sidebar-section-link-all-tags)"
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link:not(.sidebar-section-link-all-tags)"
       ),
       4,
       "4 section links under the section"
@@ -207,7 +216,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -226,7 +237,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -252,7 +265,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -292,7 +307,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -332,7 +349,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -355,7 +374,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -370,7 +391,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit(`/tag/tag1/l/top`);
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -385,7 +408,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit(`/tag/tag1/l/new`);
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -400,7 +425,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit(`/tag/tag1/l/unread`);
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );

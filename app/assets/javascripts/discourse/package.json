@@ -28,7 +28,7 @@
     "@ember/render-modifiers": "^2.0.5",
     "@ember/test-helpers": "^2.9.3",
     "@glimmer/component": "^1.1.2",
-    "@glimmer/syntax": "^0.84.2",
+    "@glimmer/syntax": "^0.84.3",
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.6",
     "@uppy/aws-s3": "^3.0.4",

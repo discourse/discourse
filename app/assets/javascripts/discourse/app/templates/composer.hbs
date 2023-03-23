@@ -4,7 +4,7 @@
   @openIfDraft={{action "openIfDraft"}}
   @typed={{action "typed"}}
   @cancelled={{action "cancelled"}}
-  @save={{action "save"}}
+  @save={{this.saveAction}}
 >
   <div class="grippie"></div>
 
@@ -234,7 +234,7 @@
 
           <div class="save-or-cancel">
             <ComposerSaveButton
-              @action={{action "save"}}
+              @action={{this.saveAction}}
               @icon={{this.saveIcon}}
               @label={{this.saveLabel}}
               @forwardEvent={{true}}

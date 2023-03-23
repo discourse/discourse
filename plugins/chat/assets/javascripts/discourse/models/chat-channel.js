@@ -172,8 +172,6 @@ export default class ChatChannel extends RestModel {
     // class not to use RestModel
     return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
       method: "PUT",
-    }).then(() => {
-      this.currentUserMembership.last_read_message_id = messageId;
     });
   }
 }

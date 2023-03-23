@@ -136,11 +136,16 @@ describe "Custom sidebar sections", type: :system, js: true do
     visit("/latest")
 
     expect(page).to have_button("Public section")
-    find(".sidebar-section-public-section").hover
+
+    find(".sidebar-section[data-section-name='public-section']").hover
+
     expect(page).not_to have_css(
-      ".sidebar-section-public-section button.sidebar-section-header-button",
+      ".sidebar-section[data-section-name='public-section'] button.sidebar-section-header-button",
     )
-    expect(page).not_to have_css(".sidebar-section-public-section .d-icon-globe")
+
+    expect(page).not_to have_css(
+      ".sidebar-section[data-section-name='public-section'] .d-icon-globe",
+    )
   end
 
   it "allows the user to delete custom section" do
@@ -170,7 +175,7 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     expect(page).to have_button("Public section")
     expect(sidebar).to have_link("Sidebar Tags")
-    expect(page).to have_css(".sidebar-section-public-section .d-icon-globe")
+    expect(page).to have_css(".sidebar-section[data-section-name='public-section'] .d-icon-globe")
 
     sidebar.edit_custom_section("Public section")
     section_modal.fill_name("Edited public section")
