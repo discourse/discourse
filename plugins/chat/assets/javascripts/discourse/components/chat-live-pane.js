@@ -3,6 +3,7 @@ import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
+import ChatLivePanel from "discourse/plugins/chat/discourse/lib/chat-live-panel";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import EmberObject, { action } from "@ember/object";
@@ -62,7 +63,12 @@ export default class ChatLivePane extends Component {
   constructor() {
     super(...arguments);
 
-    this.messageActionsHandler = new ChatMessageActions(this.currentUser);
+    this.livePanel = new ChatLivePanel(getOwner(this));
+    this.messageActionsHandler = new ChatMessageActions(
+      getOwner(this),
+      this.livePanel,
+      this.currentUser
+    );
   }
 
   @action

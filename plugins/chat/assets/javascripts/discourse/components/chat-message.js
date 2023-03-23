@@ -1,4 +1,8 @@
 import Bookmark from "discourse/models/bookmark";
+import { bind } from "discourse-common/utils/decorators";
+import ChatMessageReaction, {
+  REACTIONS,
+} from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { isTesting } from "discourse-common/config/environment";
 import Component from "@glimmer/component";
@@ -17,7 +21,6 @@ import showModal from "discourse/lib/show-modal";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "discourse-common/lib/get-owner";
-import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
 let _chatMessageDecorators = [];
 
@@ -30,8 +33,6 @@ export function resetChatMessageDecorators() {
 }
 
 export const MENTION_KEYWORDS = ["here", "all"];
-
-export const REACTIONS = { add: "add", remove: "remove" };
 
 export default class ChatMessage extends Component {
   @service site;
@@ -186,10 +187,7 @@ export default class ChatMessage extends Component {
   get messageActions() {
     return {
       reply: this.reply,
-      react: this.react,
-      copyLinkToMessage: this.copyLinkToMessage,
       edit: this.edit,
-      selectMessage: this.selectMessage,
       flag: this.flag,
       deleteMessage: this.deleteMessage,
       restore: this.restore,
@@ -367,10 +365,6 @@ export default class ChatMessage extends Component {
     );
   }
 
-  get hasReactions() {
-    return Object.values(this.args.message.reactions).some((r) => r.count > 0);
-  }
-
   get mentionWarning() {
     return this.args.message.mentionWarning;
   }
@@ -465,80 +459,21 @@ export default class ChatMessage extends Component {
     );
   }
 
-  deselectReaction(emoji) {
-    if (!this.chat.userCanInteractWithChat) {
-      return;
-    }
-
-    this.react(emoji, REACTIONS.remove);
-  }
-
-  @action
+  @bind
   selectReaction(emoji) {
     if (!this.chat.userCanInteractWithChat) {
       return;
     }
 
-    this.react(emoji, REACTIONS.add);
+    this.args.messageActionsHandler.react(
+      this.args.message,
+      emoji,
+      REACTIONS.add
+    );
   }
 
   get capabilities() {
     return getOwner(this).lookup("capabilities:main");
-  }
-
-  @action
-  react(emoji, reactAction) {
-    if (!this.chat.userCanInteractWithChat) {
-      return;
-    }
-
-    if (this.reacting) {
-      return;
-    }
-
-    if (this.capabilities.canVibrate && !isTesting()) {
-      navigator.vibrate(5);
-    }
-
-    if (this.site.mobileView) {
-      this.args.onHoverMessage(null);
-    }
-
-    if (reactAction === REACTIONS.add) {
-      this.chatEmojiReactionStore.track(`:${emoji}:`);
-    }
-
-    this.reacting = true;
-
-    this.args.message.react(
-      emoji,
-      reactAction,
-      this.currentUser,
-      this.currentUser.id
-    );
-
-    return ajax(
-      `/chat/${this.args.message.channelId}/react/${this.args.message.id}`,
-      {
-        type: "PUT",
-        data: {
-          react_action: reactAction,
-          emoji,
-        },
-      }
-    )
-      .catch((errResult) => {
-        popupAjaxError(errResult);
-        this.args.message.react(
-          emoji,
-          REACTIONS.remove,
-          this.currentUser,
-          this.currentUser.id
-        );
-      })
-      .finally(() => {
-        this.reacting = false;
-      });
   }
 
   // TODO(roman): For backwards-compatibility.
@@ -653,18 +588,18 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  selectMessage() {
-    this.args.message.selected = true;
-    this.args.onStartSelectingMessages(this.args.message);
-  }
-
-  @action
-  toggleChecked(e) {
-    if (e.shiftKey) {
-      this.args.bulkSelectMessages(this.args.message, e.target.checked);
+  toggleChecked(event) {
+    if (event.shiftKey) {
+      this.args.messageActionsHandler.bulkSelectMessages(
+        this.args.message,
+        event.target.checked
+      );
     }
 
-    this.args.onSelectMessage(this.args.message);
+    this.args.messageActionsHandler.selectMessage(
+      this.args.message,
+      event.target.checked
+    );
   }
 
   @action

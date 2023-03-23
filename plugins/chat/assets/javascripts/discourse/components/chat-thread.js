@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { getOwner } from "@ember/application";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import { tracked } from "@glimmer/tracking";
@@ -9,6 +10,7 @@ import { bind, debounce } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { inject as service } from "@ember/service";
 import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
+import ChatLivePanel from "discourse/plugins/chat/discourse/lib/chat-live-panel";
 
 const PAGE_SIZE = 50;
 
@@ -27,7 +29,12 @@ export default class ChatThreadPanel extends Component {
 
   constructor() {
     super(...arguments);
-    this.messageActionsHandler = new ChatMessageActions(this.currentUser);
+    this.livePanel = new ChatLivePanel(getOwner(this));
+    this.messageActionsHandler = new ChatMessageActions(
+      getOwner(this),
+      this.livePanel,
+      this.currentUser
+    );
   }
 
   get thread() {
@@ -227,6 +234,20 @@ export default class ChatThreadPanel extends Component {
 
   @action
   editLastMessageRequested() {}
+
+  @action
+  resendStagedMessage() {}
+  // resendStagedMessage(stagedMessage) {}
+
+  @action
+  messageDidEnterViewport(message) {
+    message.visible = true;
+  }
+
+  @action
+  messageDidLeaveViewport(message) {
+    message.visible = false;
+  }
 
   #handleErrors(error) {
     switch (error?.jqXHR?.status) {

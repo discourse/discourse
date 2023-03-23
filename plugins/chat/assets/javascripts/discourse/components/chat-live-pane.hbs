@@ -51,17 +51,15 @@
           <ChatMessage
             @message={{message}}
             @channel={{@channel}}
-            @selectingMessages={{this.selectingMessages}}
-            @onStartSelectingMessages={{this.onStartSelectingMessages}}
-            @onSelectMessage={{this.onSelectMessage}}
-            @bulkSelectMessages={{this.bulkSelectMessages}}
-            @isHovered={{eq message.id this.hoveredMessageId}}
-            @onHoverMessage={{this.onHoverMessage}}
+            @selectingMessages={{this.livePanel.selectingMessages}}
+            @isHovered={{eq message.id this.livePanel.hoveredMessageId}}
+            @onHoverMessage={{this.livePanel.hoverMessage}}
             @resendStagedMessage={{this.resendStagedMessage}}
             @messageDidEnterViewport={{this.messageDidEnterViewport}}
             @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
             @messageActions={{this.messageActions}}
             @composerService={{this.chatChannelComposer}}
+            @messageActionsHandler={{this.messageActionsHandler}}
           />
         {{/each}}
       {{else}}
@@ -84,11 +82,11 @@
     @channel={{@channel}}
   />
 
-  {{#if this.selectingMessages}}
+  {{#if this.livePanel.selectingMessages}}
     <ChatSelectionManager
-      @selectedMessageIds={{this.selectedMessageIds}}
+      @selectedMessageIds={{this.livePanel.selectedMessageIds}}
       @chatChannel={{@channel}}
-      @cancelSelecting={{this.cancelSelecting}}
+      @cancelSelecting={{action this.livePanel.cancelSelecting}}
     />
   {{else}}
     {{#if (or @channel.isDraft @channel.isFollowing)}}

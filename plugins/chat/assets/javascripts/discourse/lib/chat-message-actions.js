@@ -1,9 +1,94 @@
+import getURL from "discourse-common/lib/get-url";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { isTesting } from "discourse-common/config/environment";
+import { clipboardCopy } from "discourse/lib/utilities";
+import { REACTIONS } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
+import { setOwner } from "@ember/application";
+
 export default class ChatMessageActions {
+  @service chat;
+  @service chatEmojiReactionStore;
+  @service chatApi;
+
   livePanel = null;
   currentUser = null;
 
-  constructor(livePanel, currentUser) {
+  constructor(owner, livePanel, currentUser) {
+    setOwner(this, owner);
     this.livePanel = livePanel;
     this.currentUser = currentUser;
+  }
+
+  selectMessage(message, checked) {
+    message.selected = checked;
+    this.livePanel.onSelectMessage(message);
+  }
+
+  bulkSelectMessages(message, checked) {
+    const lastSelectedIndex = this.livePanel.findIndexOfMessage(
+      this.livePanel.lastSelectedMessage
+    );
+    const newlySelectedIndex = this.livePanel.findIndexOfMessage(message);
+    const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(
+      (a, b) => a - b
+    );
+
+    for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
+      this.livePanel.messages[i].selected = checked;
+    }
+  }
+
+  copyLink(message) {
+    const { protocol, host } = window.location;
+    let url = getURL(`/chat/c/-/${message.channelId}/${message.id}`);
+    url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
+    clipboardCopy(url);
+  }
+
+  @action
+  react(message, emoji, reactAction) {
+    if (!this.chat.userCanInteractWithChat) {
+      return;
+    }
+
+    if (this.livePanel.reacting) {
+      return;
+    }
+
+    if (this.livePanel.capabilities.canVibrate && !isTesting()) {
+      navigator.vibrate(5);
+    }
+
+    if (this.livePanel.site.mobileView) {
+      this.livePanel.hoverMessage(null);
+    }
+
+    if (reactAction === REACTIONS.add) {
+      this.chatEmojiReactionStore.track(`:${emoji}:`);
+    }
+
+    this.livePanel.reacting = true;
+
+    message.react(emoji, reactAction, this.currentUser, this.currentUser.id);
+
+    return this.chatApi
+      .publishReaction(message.channelId, message.id, emoji, reactAction)
+      .then(() => {
+        this.livePanel.onReactMessage();
+      })
+      .catch((errResult) => {
+        popupAjaxError(errResult);
+        message.react(
+          emoji,
+          REACTIONS.remove,
+          this.currentUser,
+          this.currentUser.id
+        );
+      })
+      .finally(() => {
+        this.livePanel.reacting = false;
+      });
   }
 }

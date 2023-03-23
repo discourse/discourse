@@ -40,19 +40,16 @@
       {{#each this.thread.messages key="id" as |message|}}
         <ChatMessage
           @message={{message}}
-          @channel={{@channel}}
-          @selectingMessages={{this.selectingMessages}}
-          @onStartSelectingMessages={{this.onStartSelectingMessages}}
-          @onSelectMessage={{this.onSelectMessage}}
-          @bulkSelectMessages={{this.bulkSelectMessages}}
-          @isHovered={{eq message.id this.hoveredMessageId}}
-          @onHoverMessage={{this.onHoverMessage}}
+          @channel={{this.channel}}
+          @selectingMessages={{this.livePanel.selectingMessages}}
+          @isHovered={{eq message.id this.livePanel.hoveredMessageId}}
+          @onHoverMessage={{this.livePanel.hoverMessage}}
           @resendStagedMessage={{this.resendStagedMessage}}
           @messageDidEnterViewport={{this.messageDidEnterViewport}}
           @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
-          @forceRendering={{this.forceRendering}}
           @messageActions={{this.messageActions}}
-          @composerService={{this.chatChannelThreadComposer}}
+          @composerService={{this.chatChannelComposer}}
+          @messageActionsHandler={{this.messageActionsHandler}}
         />
       {{/each}}
     </ul>

@@ -37,8 +37,18 @@ export default class ChatMessageActionsMobile extends Component {
   }
 
   @action
-  actAndCloseMenu(fn) {
-    fn?.();
+  actAndCloseMenu(fnId) {
+    if (fnId === "copyLinkToMessage") {
+      this.args.messageActionsHandler.copyLink(this.args.message);
+      return this.#onCloseMenu();
+    }
+
+    if (fnId === "selectMessage") {
+      this.args.messageActionsHandler.selectMessage(this.args.message, true);
+      return this.#onCloseMenu();
+    }
+
+    this.args.messageActions[fnId]?.();
     this.#onCloseMenu();
   }
 

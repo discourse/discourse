@@ -47,6 +47,17 @@ export default class ChatMessageActionsDesktop extends Component {
 
   @action
   handleSecondaryButtons(id) {
+    if (id === "copyLinkToMessage") {
+      return this.args.messageActionsHandler.copyLink(this.args.message);
+    }
+
+    if (id === "selectMessage") {
+      return this.args.messageActionsHandler.selectMessage(
+        this.args.message,
+        true
+      );
+    }
+
     this.args.messageActions?.[id]?.();
   }
 }

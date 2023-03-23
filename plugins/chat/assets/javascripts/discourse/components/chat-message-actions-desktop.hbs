@@ -9,7 +9,8 @@
       {{#each @emojiReactions key="emoji" as |reaction|}}
         <ChatMessageReaction
           @reaction={{reaction}}
-          @react={{@messageActions.react}}
+          @messageActionsHandler={{@messageActionsHandler}}
+          @message={{@message}}
           @showCount={{false}}
         />
       {{/each}}
@@ -56,7 +57,7 @@
         @class="more-buttons"
         @options={{hash icon="ellipsis-v" placement="left"}}
         @content={{@secondaryButtons}}
-        @onChange={{action "handleSecondaryButtons"}}
+        @onChange={{action this.handleSecondaryButtons}}
       />
     {{/if}}
   </div>
