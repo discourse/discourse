@@ -23,20 +23,21 @@ export default class SectionLink {
   }
 
   @bind
-  didStartDrag(e) {
-    if (e.button === 0) {
+  didStartDrag(event) {
+    // 0 represents left button of the mouse
+    if (event.button === 0) {
       this.willDrag = true;
       setTimeout(
         () => {
-          this.delayedStart(e);
+          this.delayedStart(event);
         },
         isTesting() ? 0 : 300
       );
     }
   }
-  delayedStart(e) {
+  delayedStart(event) {
     if (this.willDrag) {
-      this.mouseY = e.screenY;
+      this.mouseY = event.screenY;
       this.linkDragCss = "drag";
       this.section.disable();
       this.drag = true;
@@ -54,11 +55,11 @@ export default class SectionLink {
   }
 
   @bind
-  dragMove(e) {
+  dragMove(event) {
     if (!this.drag) {
       return;
     }
-    const currentMouseY = e.screenY;
+    const currentMouseY = event.screenY;
     const distance = currentMouseY - this.mouseY;
     if (!this.linkHeight) {
       this.linkHeight = document.getElementsByClassName(
