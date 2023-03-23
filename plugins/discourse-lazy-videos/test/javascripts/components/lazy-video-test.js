@@ -34,12 +34,12 @@ module("Discourse Lazy Videos | Component | lazy-video", function (hooks) {
     assert.dom(".lazy-video-container.video-loaded iframe").exists();
   });
 
-  test("accepts an optional callback function", async function (assert) {
+  test("accepts an optional onLoadedVideo callback function", async function (assert) {
     this.set("foo", 1);
-    this.set("callback", () => this.set("foo", 2));
+    this.set("onLoadedVideo", () => this.set("foo", 2));
 
     await render(
-      hbs`<LazyVideo @videoAttributes={{this.attributes}} @callback={{this.callback}} />`
+      hbs`<LazyVideo @videoAttributes={{this.attributes}} @onLoadedVideo={{this.onLoadedVideo}} />`
     );
     assert.strictEqual(this.foo, 1);
 
