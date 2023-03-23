@@ -539,6 +539,10 @@ RSpec.describe Guardian do
   end
 
   describe "can_impersonate?" do
+    it "disallows impersonation when disabled globally" do
+      global_setting :allow_impersonation, false
+      expect(Guardian.new(admin).can_impersonate?(moderator)).to be_falsey
+    end
     it "allows impersonation correctly" do
       expect(Guardian.new(admin).can_impersonate?(nil)).to be_falsey
       expect(Guardian.new.can_impersonate?(user)).to be_falsey
