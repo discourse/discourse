@@ -21,7 +21,7 @@ after_initialize do
       .css(".lazy-video-container a")
       .each do |video|
         href = video["href"]
-        video.inner_html += "<p><a href=" #{href}">#{href}</a></p>"
+        video.inner_html += "<p><a href=\"#{href}\">#{href}</a></p>"
       end
   end
 end
