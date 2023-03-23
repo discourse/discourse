@@ -754,6 +754,15 @@ export default class ComposerController extends Controller {
   }
 
   @action
+  saveAction(ignore, event) {
+    this.save(false, {
+      jump:
+        !(event?.shiftKey && this.get("model.replyingToTopic")) &&
+        !this.skipJumpOnSave,
+    });
+  }
+
+  @action
   displayEditReason() {
     this.set("showEditReason", true);
   }
@@ -873,20 +882,7 @@ export default class ComposerController extends Controller {
     );
   }
 
-  @action
-  save(force, optionsOrEvent = {}) {
-    let options;
-    if (optionsOrEvent instanceof Event) {
-      // Called from `KeyEnterEscape` mixin
-      options = {
-        jump:
-          !(event?.shiftKey && this.get("model.replyingToTopic")) &&
-          !this.skipJumpOnSave,
-      };
-    } else {
-      options = optionsOrEvent;
-    }
-
+  save(force, options = {}) {
     if (this.disableSubmit) {
       return;
     }
