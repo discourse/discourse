@@ -28,7 +28,7 @@
     {{#if @messageCapabilities.canBookmark}}
       <DButton
         @class="btn-flat bookmark-btn"
-        @action={{@messageActions.toggleBookmark}}
+        @action={{action @messageActionsHandler.toggleBookmark @message}}
       >
         <BookmarkIcon @bookmark={{@message.bookmark}} />
       </DButton>

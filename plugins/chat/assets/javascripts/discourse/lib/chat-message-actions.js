@@ -1,4 +1,6 @@
 import getURL from "discourse-common/lib/get-url";
+import Bookmark from "discourse/models/bookmark";
+import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -8,6 +10,7 @@ import { REACTIONS } from "discourse/plugins/chat/discourse/models/chat-message-
 import { setOwner } from "@ember/application";
 
 export default class ChatMessageActions {
+  @service appEvents;
   @service chat;
   @service chatEmojiReactionStore;
   @service chatApi;
@@ -21,7 +24,7 @@ export default class ChatMessageActions {
     this.currentUser = currentUser;
   }
 
-  selectMessage(message, checked) {
+  selectMessage(message, checked = true) {
     message.selected = checked;
     this.livePanel.onSelectMessage(message);
   }
@@ -90,5 +93,27 @@ export default class ChatMessageActions {
       .finally(() => {
         this.livePanel.reacting = false;
       });
+  }
+
+  @action
+  toggleBookmark(message) {
+    return openBookmarkModal(
+      message.bookmark ||
+        Bookmark.createFor(this.currentUser, "Chat::Message", message.id),
+      {
+        onAfterSave: (savedData) => {
+          const bookmark = Bookmark.create(savedData);
+          message.bookmark = bookmark;
+          this.appEvents.trigger(
+            "bookmarks:changed",
+            savedData,
+            bookmark.attachedTo()
+          );
+        },
+        onAfterDelete: () => {
+          message.bookmark = null;
+        },
+      }
+    );
   }
 }

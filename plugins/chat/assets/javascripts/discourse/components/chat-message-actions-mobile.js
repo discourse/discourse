@@ -44,7 +44,12 @@ export default class ChatMessageActionsMobile extends Component {
     }
 
     if (fnId === "selectMessage") {
-      this.args.messageActionsHandler.selectMessage(this.args.message, true);
+      this.args.messageActionsHandler.selectMessage(this.args.message);
+      return this.#onCloseMenu();
+    }
+
+    if (fnId === "toggleBookmark") {
+      return this.args.messageActionsHandler.toggleBookmark(this.args.message);
       return this.#onCloseMenu();
     }
 

@@ -1,18 +1,14 @@
-import Bookmark from "discourse/models/bookmark";
 import { bind } from "discourse-common/utils/decorators";
 import ChatMessageReaction, {
   REACTIONS,
 } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { isTesting } from "discourse-common/config/environment";
 import Component from "@glimmer/component";
 import I18n from "I18n";
-import getURL from "discourse-common/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
-import { clipboardCopy } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
@@ -192,7 +188,6 @@ export default class ChatMessage extends Component {
       deleteMessage: this.deleteMessage,
       restore: this.restore,
       rebakeMessage: this.rebakeMessage,
-      toggleBookmark: this.toggleBookmark,
       openThread: this.openThread,
       startReactionForMessageActions: this.startReactionForMessageActions,
     };
@@ -542,32 +537,6 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  toggleBookmark() {
-    return openBookmarkModal(
-      this.args.message.bookmark ||
-        Bookmark.createFor(
-          this.currentUser,
-          "Chat::Message",
-          this.args.message.id
-        ),
-      {
-        onAfterSave: (savedData) => {
-          const bookmark = Bookmark.create(savedData);
-          this.args.message.bookmark = bookmark;
-          this.appEvents.trigger(
-            "bookmarks:changed",
-            savedData,
-            bookmark.attachedTo()
-          );
-        },
-        onAfterDelete: () => {
-          this.args.message.bookmark = null;
-        },
-      }
-    );
-  }
-
-  @action
   rebakeMessage() {
     return ajax(
       `/chat/${this.args.message.channelId}/${this.args.message.id}/rebake`,
@@ -600,30 +569,6 @@ export default class ChatMessage extends Component {
       this.args.message,
       event.target.checked
     );
-  }
-
-  @action
-  copyLinkToMessage() {
-    if (!this.messageContainer) {
-      return;
-    }
-
-    this.messageContainer
-      .querySelector(".link-to-message-btn")
-      ?.classList?.add("copied");
-
-    const { protocol, host } = window.location;
-    let url = getURL(
-      `/chat/c/-/${this.args.message.channelId}/${this.args.message.id}`
-    );
-    url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
-    clipboardCopy(url);
-
-    discourseLater(() => {
-      this.messageContainer
-        ?.querySelector(".link-to-message-btn")
-        ?.classList?.remove("copied");
-    }, 250);
   }
 
   get emojiReactions() {

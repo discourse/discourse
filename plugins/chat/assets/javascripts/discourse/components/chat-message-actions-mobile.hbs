@@ -69,7 +69,7 @@
         {{#if @messageCapabilities.canBookmark}}
           <DButton
             @class="btn-flat bookmark-btn"
-            @action={{@messageActions.toggleBookmark}}
+            @action={{action this.actAndCloseMenu "toggleBookmark"}}
           >
             <BookmarkIcon @bookmark={{@message.bookmark}} />
           </DButton>
