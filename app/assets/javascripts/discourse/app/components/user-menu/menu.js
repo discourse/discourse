@@ -5,7 +5,7 @@ import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
 import { inject as service } from "@ember/service";
 import getUrl from "discourse-common/lib/get-url";
-import DiscourseURL from "discourse/lib/url";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = "user-menu/notifications-list";
@@ -314,14 +314,17 @@ export default class UserMenu extends Component {
   }
 
   @action
-  handleTabClick(tab) {
-    if (this.currentTabId !== tab.id) {
-      this.currentTabId = tab.id;
-      this.currentPanelComponent = tab.panelComponent;
-      this.currentNotificationTypes = tab.notificationTypes;
-    } else if (tab.linkWhenActive) {
-      DiscourseURL.routeTo(tab.linkWhenActive);
+  handleTabClick(tab, event) {
+    if (wantsNewWindow(event) || this.currentTabId === tab.id) {
+      // Allow normal navigation to href
+      return;
     }
+
+    event.preventDefault();
+
+    this.currentTabId = tab.id;
+    this.currentPanelComponent = tab.panelComponent;
+    this.currentNotificationTypes = tab.notificationTypes;
   }
 
   @action
