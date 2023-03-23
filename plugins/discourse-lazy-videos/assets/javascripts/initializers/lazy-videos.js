@@ -16,7 +16,7 @@ function initLazyEmbed(api) {
         const videoAttributes = getVideoAttributes(container);
 
         if (siteSettings[`lazy_${videoAttributes.providerName}_enabled`]) {
-          const callback = () => {
+          const onLoadedVideo = () => {
             const postId = cooked.closest("article")?.dataset?.postId;
             if (postId) {
               api.preventCloak(parseInt(postId, 10));
@@ -25,8 +25,8 @@ function initLazyEmbed(api) {
 
           const lazyVideo = helper.renderGlimmer(
             "p.lazy-video-wrapper",
-            hbs`<LazyVideo @videoAttributes={{@data.param}} @callback={{@data.callback}}/>`,
-            { param: videoAttributes, callback }
+            hbs`<LazyVideo @videoAttributes={{@data.param}} @onLoadedVideo={{@data.onLoadedVideo}}/>`,
+            { param: videoAttributes, onLoadedVideo }
           );
 
           container.replaceWith(lazyVideo);
