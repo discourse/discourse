@@ -776,7 +776,11 @@ class TopicQuery
 
     result = apply_ordering(result, options)
 
-    all_listable_topics = @guardian.filter_allowed_categories(Topic.unscoped.listable_topics)
+    all_listable_topics =
+      @guardian.filter_allowed_categories(
+        Topic.unscoped.listable_topics,
+        category_id_column: "categories.id",
+      )
 
     if options[:include_pms] || options[:include_all_pms]
       all_pm_topics =
@@ -937,12 +941,12 @@ class TopicQuery
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 
-      list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
+      list = list.where("categories.id IN (?)", category_ids) if category_ids.present?
     else
       category_ids = SiteSetting.default_categories_muted.split("|").map(&:to_i)
       category_ids -= [category_id] if category_id.present? && category_ids.include?(category_id)
 
-      list = list.where("topics.category_id NOT IN (?)", category_ids) if category_ids.present?
+      list = list.where("categories.id NOT IN (?)", category_ids) if category_ids.present?
     end
 
     list

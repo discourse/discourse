@@ -142,7 +142,6 @@ hu:
       restore: "Törölt üzenet helyreállítása"
       save: "Mentés"
       select: "Válasszon"
-      silence: "Felhasználó némítása"
       return_to_list: "Vissza a csatornákhoz"
       scroll_to_bottom: "Görgetés lefelé"
       scroll_to_new_messages: "Új üzenetek megtekintése"

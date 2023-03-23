@@ -12,6 +12,21 @@ RSpec.describe CategoryList do
   fab!(:admin) { Fabricate(:admin) }
   let(:category_list) { CategoryList.new(Guardian.new(user), include_topics: true) }
 
+  describe "preload" do
+    it "allows preloading of data" do
+      preloaded_list = nil
+      preloader = lambda { |view| preloaded_list = view }
+
+      CategoryList.on_preload(&preloader)
+
+      expect(preloaded_list).to eq(nil)
+      category_list
+      expect(preloaded_list).to eq(preloaded_list)
+
+      CategoryList.cancel_preload(&preloader)
+    end
+  end
+
   describe "security" do
     it "properly hide secure categories" do
       cat = Fabricate(:category_with_definition)

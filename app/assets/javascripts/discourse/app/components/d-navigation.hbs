@@ -1,17 +1,14 @@
 {{#if this.isQueryFilterMode}}
   <div class="topic-query-filter">
-    <Input
-      class="topic-query-filter__input"
-      @value={{this.queryString}}
-      @enter={{action @updateTopicsListQueryParams this.queryString}}
-    />
-
-    <DButton
-      @action={{action @updateTopicsListQueryParams this.queryString}}
-      @icon="filter"
-      @class="btn-primary topic-query-filter__button"
-      @label="filters.filter.button.label"
-    />
+    <div class="topic-query-filter__input">
+      {{d-icon "filter" class="topic-query-filter__icon"}}
+      <Input
+        class="topic-query-filter__filter-term"
+        @value={{this.queryString}}
+        @enter={{action @updateTopicsListQueryParams this.queryString}}
+        @type="text"
+      />
+    </div>
   </div>
 {{else}}
   <BreadCrumbs

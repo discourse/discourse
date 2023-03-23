@@ -213,6 +213,7 @@ pl_PL:
       page_publishing_requirements: "Nie można włączyć publikowania stron, jeśli włączone są bezpieczne media."
       s3_backup_requires_s3_settings: "Nie możesz używać S3 do tworzenia kopii zapasowych bez podania \"%{setting_name}\"."
       s3_bucket_reused: "Nie możesz używać tego samego bucketu jako \"s3_upload_bucket\" i \"s3_backup_bucket\". Wybierz inny bucket albo podaj różne ścieżki dla każdego z bucketów."
+      secure_uploads_requirements: "Przed włączeniem funkcji bezpiecznego wysyłania należy włączyć wysyłanie w trybie S3."
       share_quote_facebook_requirements: "Aby włączyć udostępnianie na Facebooku, musisz ustawić identyfikator aplikacji Facebook."
       second_factor_cannot_enforce_with_socials: "Nie można wymusić 2FA z włączonym logowaniu społecznościowym. Najpierw musisz wyłączyć logowanie przez: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nie można wymusić 2FA, jeśli lokalne logowanie jest wyłączone."
@@ -248,6 +249,8 @@ pl_PL:
       <p>W przeciwnym razie <a href="%{base_url}/password-reset">zresetuj hasło</a>.</p>
     not_found_template_link: |
       <p>To zaproszenie do <a href="%{base_url}">%{site_name}</a> nie może już zostać zrealizowane. Poproś osobę, która Cię zaprosiła, aby wysłała Ci nowe zaproszenie.</p>
+    existing_user_cannot_redeem: "To zaproszenie nie może być zrealizowane. Poproś osobę, która cię zaprosiła, o wysłanie nowego zaproszenia."
+    existing_user_already_redemeed: "Już zrealizowałeś ten link z zaproszeniem."
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, ponieważ ma już konto!"
     invite_exists: "Zaprosiłeś już <b>%{email}</b>."
     invalid_email: "%{email} nie jest prawidłowym adresem e-mail."
@@ -959,6 +962,7 @@ pl_PL:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Niewłaściwe"
+      description: 'Ten wpis zawiera treści, które rozsądna osoba uznałaby za agresywne, obrażliwe lub sprzeczne z <a href="%{base_path}/guidelines">wytycznymi naszej społeczności</a>.'
       short_description: 'Naruszenie <a href="%{base_path}/guidelines">wytycznych naszej społeczności</a>.'
     notify_user:
       title: "Wyślij wiadomość do @%{username}"
@@ -1024,6 +1028,7 @@ pl_PL:
       short_description: "To jest reklama"
     inappropriate:
       title: "Niewłaściwe"
+      description: 'Ten wpis zawiera treści, które rozsądna osoba uznałaby za agresywne, obrażliwe lub sprzeczne z <a href="%{base_path}/guidelines">wytycznymi naszej społeczności</a>.'
       long_form: "oflagowano jako niewłaściwe"
       short_description: 'Naruszenie <a href="%{base_path}/guidelines">wytycznych naszej społeczności</a>.'
     notify_moderators:
@@ -1061,6 +1066,7 @@ pl_PL:
     mailing_list_mode: "Wyłącz tryb listy mailingowej"
     all: "Nie wysyłaj mi żadnych wiadomości z %{sitename}"
     different_user_description: "Jesteś zalogowany jako inny użytkownik niż ten do którego wysłano wysłaliśmy emaila. proszę wyloguj się, lub przejść do trybu incognito i spróbuj ponownie."
+    not_found_description: "Przepraszamy: nie mogliśmy Cię wypisać. Możliwe, że link wysłany w wiadomości email wygasł."
     user_not_found_description: "Przepraszamy, nie mogliśmy znaleźć użytkownika dla tej subskrypcji. Prawdopodobnie próbujesz zrezygnować z subskrypcji z konta, które już nie istnieje."
     log_out: "Wyloguj"
     submit: "Zapisz ustawienia"
@@ -1809,7 +1815,6 @@ pl_PL:
     composer_media_optimization_image_bytes_optimization_threshold: "Minimalny rozmiar pliku obrazu do uruchomienia optymalizacji po stronie klienta"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimalna szerokość obrazu, aby wywołać zmianę rozmiaru po stronie klienta"
     composer_media_optimization_image_resize_width_target: "Obrazy o szerokości większej niż `composer_media_optimization_image_dimensions_resize_threshold` zostaną przeskalowane do tej szerokości. Musi być >= niż `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "Jakość kodowania JPEG używana w procesie ponownego kodowania."
     min_ratio_to_crop: "Współczynnik stosowany do przycinania wysokich zdjęć. Wpisz wynik szerokości / wysokości."
     simultaneous_uploads: "Maksymalna liczba plików, które można przeciągnąć i upuścić w kompozytorze"
     default_invitee_trust_level: "Domyślny poziom zaufania (0-4) dla zaproszonych użytkowników."
@@ -4408,6 +4413,7 @@ pl_PL:
         fields:
           company_name:
             label: "Nazwa firmy"
+            placeholder: "Organizacja Acme"
           governing_law:
             label: "Obowiązujące prawo"
             placeholder: "Prawo kalifornijskie"
@@ -4503,21 +4509,33 @@ pl_PL:
     actions:
       agree:
         title: "Tak"
+      agree_and_keep_hidden:
+        title: "Zachowaj post ukryty"
+        description: "Zgódź się z flagą i zachowaj post ukryty."
       agree_and_suspend:
+        title: "Zawieś użytkownika"
         description: "Zgódź się z flagą i zawieś konto użytkownika."
       agree_and_silence:
+        title: "Wycisz użytkownika"
         description: "Zgódź się z flagą i wycisz użytkownika."
       agree_and_restore:
+        title: "Przywróć post"
         description: "Przywróć post, aby wszyscy użytkownicy mogli go zobaczyć."
+      agree_and_hide:
+        title: "Ukryj post"
       delete_single:
         title: "Usuń"
       delete:
         title: "Usuń..."
       delete_and_ignore_replies:
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
+      delete_and_agree:
+        title: "Usuń post"
       delete_and_agree_replies:
+        title: "Usuń post i odpowiedzi"
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
       disagree_and_restore:
+        title: "Nie, przywróć post"
         description: "Przywróć post, aby wszyscy użytkownicy mogli go zobaczyć."
       disagree:
         title: "Nie"

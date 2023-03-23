@@ -1720,7 +1720,6 @@ pt_BR:
     composer_media_optimization_image_bytes_optimization_threshold: "Tamanho mínimo de imagem para acionar a otimização do lado do cliente"
     composer_media_optimization_image_resize_dimensions_threshold: "Largura de imagem mínima para acionar o redimensionamento do lado do cliente"
     composer_media_optimization_image_resize_width_target: "Imagens com larguas maiores do que \"composer_media_optimization_image_dimensions_resize_threshold\" serão redimensionadas para esta largura. Deve ser >= do que \"composer_media_optimization_image_dimensions_resize_threshold\"."
-    composer_media_optimization_image_encode_quality: "Qualidade de codificação de JPG usada no processo de recodificação."
     min_ratio_to_crop: "Taxa usada para cortar imagens altas. Digite o resultado da largura/altura."
     simultaneous_uploads: "Quantidade máxima de arquivos que podem ser arrastados e soltos no compositor"
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários(as) convidados(as)."
