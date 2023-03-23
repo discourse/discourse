@@ -13,7 +13,7 @@ export function setEnvironment(e) {
 }
 
 export function isTesting() {
-  return environment === "testing" || environment === "test";
+  return environment === "testing";
 }
 
 // Generally means "before we migrated to Ember CLI"
