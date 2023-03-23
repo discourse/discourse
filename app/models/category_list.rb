@@ -8,19 +8,19 @@ class CategoryList
 
   attr_accessor :categories, :uncategorized
 
-  def self.on_preload(&blk)
-    (@preload ||= Set.new) << blk
+  def self.register_included_association(association)
+    @included_assocations ||= []
+    @included_assocations << association if !@included_assocations.include?(association)
   end
 
-  def self.cancel_preload(&blk)
-    if @preload
-      @preload.delete blk
-      @preload = nil if @preload.length == 0
-    end
-  end
-
-  def self.preload(category_list)
-    @preload.each { |preload| preload.call(category_list) } if @preload
+  def self.included_associations
+    [
+      :uploaded_background,
+      :uploaded_logo,
+      :uploaded_logo_dark,
+      :topic_only_relative_url,
+      subcategories: [:topic_only_relative_url],
+    ].concat(@included_assocations || [])
   end
 
   def initialize(guardian = nil, options = {})
@@ -119,18 +119,7 @@ class CategoryList
   end
 
   def find_categories
-    @categories =
-      Category.includes(
-        :uploaded_background,
-        :uploaded_logo,
-        :uploaded_logo_dark,
-        :topic_only_relative_url,
-        subcategories: [:topic_only_relative_url],
-      )
-
-    CategoryList.preload(self)
-
-    @categories = @categories.secured(@guardian)
+    @categories = Category.includes(CategoryList.included_associations).secured(@guardian)
 
     @categories =
       @categories.where(
