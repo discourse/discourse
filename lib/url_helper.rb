@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UrlHelper
+  MAX_URL_LENGTH = 100_000
+
   # At the moment this handles invalid URLs that browser address bar accepts
   # where second # is not encoded
   #
@@ -74,8 +76,9 @@ class UrlHelper
   end
 
   def self.normalized_encode(uri)
-    validated = nil
     url = uri.to_s
+
+    raise ArgumentError.new(:uri, "URL is too long") if url.length > MAX_URL_LENGTH
 
     # Ideally we will jump straight to `Addressable::URI.normalized_encode`. However,
     # that implementation has some edge-case issues like https://github.com/sporkmonger/addressable/issues/472.
