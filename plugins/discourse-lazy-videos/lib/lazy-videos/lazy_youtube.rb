@@ -13,8 +13,12 @@ class Onebox::Engine::YoutubeOnebox
       result ||= get_opengraph.data
 
       thumbnail_url = "https://img.youtube.com/vi/#{video_id}/maxresdefault.jpg"
-      thumbnail_response = Net::HTTP.get_response(URI(thumbnail_url))
-      thumbnail_url = result[:image] if !thumbnail_response.kind_of?(Net::HTTPSuccess)
+
+      begin
+        Onebox::Helpers.fetch_response(thumbnail_url)
+      rescue StandardError
+        thumbnail_url = result[:image]
+      end
 
       escaped_title = ERB::Util.html_escape(video_title)
 
