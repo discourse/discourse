@@ -124,11 +124,18 @@ class PostRevisor
           end
 
           if SiteSetting.create_small_action_post_for_tag_changes
+            added_tags = tags - prev_tags
+            removed_tags = prev_tags - tags
+
             tc.topic.add_moderator_post(
               tc.user,
-              tags_changed_raw(previous_tags: prev_tags, tags: tags),
+              tags_changed_raw(added: added_tags, removed: removed_tags),
               post_type: Post.types[:small_action],
               action_code: "tags_changed",
+              custom_fields: {
+                tags_added: added_tags,
+                tags_removed: removed_tags,
+              },
             )
           end
         end
@@ -136,10 +143,7 @@ class PostRevisor
     end
   end
 
-  def self.tags_changed_raw(previous_tags:, tags:)
-    removed = previous_tags - tags
-    added = tags - previous_tags
-
+  def self.tags_changed_raw(added:, removed:)
     if removed.present? && added.present?
       I18n.t(
         "topic_tag_changes.added_and_removed",

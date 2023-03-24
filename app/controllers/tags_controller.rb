@@ -161,7 +161,6 @@ class TagsController < ::ApplicationController
         previous_value: params[:tag_id],
         new_value: new_tag_name,
       )
-
       render json: { tag: { id: tag.name, description: tag.description } }
     else
       render_json_error tag.errors.full_messages
