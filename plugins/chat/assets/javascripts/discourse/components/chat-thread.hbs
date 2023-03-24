@@ -52,6 +52,7 @@
         @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
         @messageActionsHandler={{this.messageActionsHandler}}
         @livePanel={{this.livePanel}}
+        @context="thread"
       />
     {{/each}}
     {{#if (or this.loading this.loadingMoreFuture)}}

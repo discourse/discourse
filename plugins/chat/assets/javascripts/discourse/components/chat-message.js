@@ -23,6 +23,7 @@ export function resetChatMessageDecorators() {
 }
 
 export const MENTION_KEYWORDS = ["here", "all"];
+const THREAD_CONTEXT = "thread";
 
 export default class ChatMessage extends Component {
   @service site;
@@ -268,8 +269,9 @@ export default class ChatMessage extends Component {
 
   get hideReplyToInfo() {
     return (
+      this.args.context === THREAD_CONTEXT ||
       this.args.message?.inReplyTo?.id ===
-      this.args.message?.previousMessage?.id
+        this.args.message?.previousMessage?.id
     );
   }
 
