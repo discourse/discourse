@@ -385,6 +385,32 @@ class GroupsController < ApplicationController
     end
   end
 
+  def add_owners
+    group = Group.find_by(id: params.require(:id))
+    raise Discourse::NotFound unless group
+
+    return can_not_modify_automatic if group.automatic
+    guardian.ensure_can_edit_group!(group)
+
+    users = users_from_params
+    group_action_logger = GroupActionLogger.new(current_user, group)
+
+    users.each do |user|
+      if !group.users.include?(user)
+        group.add(user)
+        group_action_logger.log_add_user_to_group(user)
+      end
+      group.group_users.where(user_id: user.id).update_all(owner: true)
+      group_action_logger.log_make_user_group_owner(user)
+
+      group.notify_added_to_group(user, owner: true) if params[:notify_users].to_s == "true"
+    end
+
+    group.restore_user_count!
+
+    render json: success_json.merge!(usernames: users.pluck(:username))
+  end
+
   def join
     ensure_logged_in
     unless current_user.staff?
@@ -665,6 +691,12 @@ class GroupsController < ApplicationController
         render_json_error(EmailSettingsExceptionHandler.friendly_exception_message(err, email_host))
       end
     end
+  end
+
+  protected
+
+  def can_not_modify_automatic
+    render_json_error(I18n.t("groups.errors.can_not_modify_automatic"))
   end
 
   private

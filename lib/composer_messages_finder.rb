@@ -8,7 +8,7 @@ class ComposerMessagesFinder
   end
 
   def self.check_methods
-    @check_methods ||= instance_methods.find_all { |m| m =~ /^check\_/ }
+    @check_methods ||= instance_methods.find_all { |m| m =~ /\Acheck\_/ }
   end
 
   def find
@@ -197,8 +197,8 @@ class ComposerMessagesFinder
         .pluck(:reply_to_user_id)
         .find_all { |uid| uid != @user.id && uid == reply_to_user_id }
 
-    return unless last_x_replies.size == SiteSetting.get_a_room_threshold
-    return unless @topic.posts.count("distinct user_id") >= min_users_posted
+    return if last_x_replies.size != SiteSetting.get_a_room_threshold
+    return if @topic.posts.count("distinct user_id") < min_users_posted
 
     UserHistory.create!(
       action: UserHistory.actions[:notified_about_get_a_room],
@@ -206,7 +206,7 @@ class ComposerMessagesFinder
       topic_id: @details[:topic_id],
     )
 
-    reply_username = User.where(id: last_x_replies[0]).pluck_first(:username)
+    reply_username = User.where(id: last_x_replies[0]).pick(:username)
 
     {
       id: "get_a_room",

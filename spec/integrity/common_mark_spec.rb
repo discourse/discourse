@@ -5,6 +5,9 @@ RSpec.describe "CommonMark" do
     SiteSetting.enable_markdown_typographer = false
     SiteSetting.highlighted_languages = "ruby|aa"
 
+    # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+    SiteSetting.enable_experimental_hashtag_autocomplete = false
+
     html, state, md = nil
     failed = 0
 

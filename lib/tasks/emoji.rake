@@ -459,7 +459,7 @@ end
 def codepoints_to_code(codepoints, fitzpatrick_scale)
   codepoints = codepoints.map { |c| c.to_s(16).rjust(4, "0") }.join("_").downcase
 
-  codepoints.gsub!(/_fe0f$/, "") if !fitzpatrick_scale
+  codepoints.gsub!(/_fe0f\z/, "") if !fitzpatrick_scale
 
   codepoints
 end

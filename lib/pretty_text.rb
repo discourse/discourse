@@ -48,7 +48,7 @@ module PrettyText
     filename = find_file(root_path, part_name)
     if filename
       source = File.read("#{root_path}#{filename}")
-      source = ERB.new(source).result(binding) if filename =~ /\.erb$/
+      source = ERB.new(source).result(binding) if filename =~ /\.erb\z/
 
       transpiler = DiscourseJsProcessor::Transpiler.new
       transpiled = transpiler.perform(source, "#{Rails.root}/app/assets/javascripts/", part_name)
@@ -64,7 +64,7 @@ module PrettyText
   def self.ctx_load_directory(ctx, path)
     root_path = "#{Rails.root}/app/assets/javascripts/"
     Dir["#{root_path}#{path}/**/*"].sort.each do |f|
-      apply_es6_file(ctx, root_path, f.sub(root_path, "").sub(/\.js(.es6)?$/, ""))
+      apply_es6_file(ctx, root_path, f.sub(root_path, "").sub(/\.js(.es6)?\z/, ""))
     end
   end
 
@@ -116,9 +116,9 @@ module PrettyText
       to_load << a if File.file?(a) && a =~ /discourse-markdown/
     end
     to_load.uniq.each do |f|
-      if f =~ %r{^.+assets/javascripts/}
+      if f =~ %r{\A.+assets/javascripts/}
         root = Regexp.last_match[0]
-        apply_es6_file(ctx, root, f.sub(root, "").sub(/\.js(\.es6)?$/, ""))
+        apply_es6_file(ctx, root, f.sub(root, "").sub(/\.js(\.es6)?\z/, ""))
       end
     end
 
@@ -469,8 +469,19 @@ module PrettyText
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     strip_oneboxed_media(doc)
+
+    if SiteSetting.enable_experimental_hashtag_autocomplete && options[:plain_hashtags]
+      convert_hashtag_links_to_plaintext(doc)
+    end
+
     html = doc.to_html
     ExcerptParser.get_excerpt(html, max_length, options)
+  end
+
+  def self.convert_hashtag_links_to_plaintext(doc)
+    doc
+      .css("a.hashtag-cooked")
+      .each { |hashtag| hashtag.replace("##{hashtag.attributes["data-slug"]}") }
   end
 
   def self.strip_links(string)
@@ -516,7 +527,7 @@ module PrettyText
         if iframe["data-original-href"].present?
           vimeo_url = UrlHelper.normalized_encode(iframe["data-original-href"])
         else
-          vimeo_id = iframe["src"].split("/").last
+          vimeo_id = iframe["src"].split("/").last.sub("?h=", "/")
           vimeo_url = "https://vimeo.com/#{vimeo_id}"
         end
         iframe.replace Nokogiri::HTML5.fragment("<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>")

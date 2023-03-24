@@ -4,7 +4,3 @@
 .replying-text {
   @include unselectable;
 }
-
-.chat-message-container {
-  transform: translateZ(0);
-}

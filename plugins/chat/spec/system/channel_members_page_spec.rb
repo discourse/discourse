@@ -26,9 +26,7 @@ RSpec.describe "Channel - Info - Members page", type: :system, js: true do
       it "redirects to about page" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_current_path(
-          "/chat/channel/#{channel_1.id}/#{channel_1.slug}/info/about",
-        )
+        expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/about")
       end
     end
 
@@ -42,7 +40,7 @@ RSpec.describe "Channel - Info - Members page", type: :system, js: true do
       it "shows all members" do
         Jobs.run_immediately!
         channel_1.update!(user_count_stale: true)
-        Jobs::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
+        Jobs::Chat::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
 
         chat_page.visit_channel_members(channel_1)
 
@@ -61,7 +59,7 @@ RSpec.describe "Channel - Info - Members page", type: :system, js: true do
         it "filters members" do
           Jobs.run_immediately!
           channel_1.update!(user_count_stale: true)
-          Jobs::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
+          Jobs::Chat::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
 
           chat_page.visit_channel_members(channel_1)
           find(".channel-members-view__search-input").fill_in(with: "cat")

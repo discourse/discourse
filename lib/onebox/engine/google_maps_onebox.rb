@@ -96,7 +96,7 @@ module Onebox
           # Fallback for map URLs that don't resolve into an easily embeddable old-style URI
           # Roadmaps use a "z" zoomlevel, satellite maps use "m" the horizontal width in meters
           # TODO: tilted satellite maps using "a,y,t"
-          match = @url.match(/@(?<lon>[\d.-]+),(?<lat>[\d.-]+),(?<zoom>\d+)(?<mz>[mz])/)
+          match = @url.match(/@(?<lon>[\d.-]+),(?<lat>[\d.-]+),(?<zoom>\d+)(\.\d+)?(?<mz>[mz])/)
           raise "unexpected standard url #{@url}" unless match
           zoom = match[:mz] == "z" ? match[:zoom] : Math.log2(57280048.0 / match[:zoom].to_f).round
           location = "#{match[:lon]},#{match[:lat]}"

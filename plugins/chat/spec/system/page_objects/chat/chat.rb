@@ -19,6 +19,7 @@ module PageObjects
 
       def visit_channel(channel, mobile: false)
         visit(channel.url + (mobile ? "?mobile_view=1" : ""))
+        has_no_css?(".not-loaded-once")
         has_no_css?(".chat-skeleton")
       end
 
@@ -50,6 +51,14 @@ module PageObjects
         container = find(".chat-message-container[data-id=\"#{message.id}\"")
         container.has_content?(message.message)
         container.has_content?(message.user.username)
+      end
+
+      def new_channel_button
+        find(".new-channel-btn")
+      end
+
+      def has_new_channel_button?
+        has_css?(".new-channel-btn")
       end
     end
   end

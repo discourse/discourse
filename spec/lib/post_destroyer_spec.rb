@@ -94,7 +94,7 @@ RSpec.describe PostDestroyer do
       expect(reply1.deleted_at).to eq(nil)
 
       # ignore the flag, we should be able to delete the stub
-      reviewable.perform(Discourse.system_user, :ignore)
+      reviewable.perform(Discourse.system_user, :ignore_and_do_nothing)
       PostDestroyer.destroy_stubs
 
       reply1.reload
@@ -938,7 +938,7 @@ RSpec.describe PostDestroyer do
 
     it "should not send the flags_agreed_and_post_deleted message if flags were ignored" do
       expect(ReviewableFlaggedPost.pending.count).to eq(1)
-      flag_result.reviewable.perform(moderator, :ignore)
+      flag_result.reviewable.perform(moderator, :ignore_and_do_nothing)
       second_post.reload
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
 
@@ -1116,13 +1116,32 @@ RSpec.describe PostDestroyer do
       expect(post_revision.reload.persisted?).to be true
     end
 
-    it "always destroy the post when the force_destroy option is passed" do
+    it "destroys the post when force_destroy is true for soft deleted topics" do
+      post = Fabricate(:post)
+      topic = post.topic
+
+      PostDestroyer.new(moderator, post).destroy
+      post = Post.with_deleted.find_by(id: post.id)
+      expect(post).not_to eq(nil)
+
+      PostDestroyer.new(moderator, post, force_destroy: true).destroy
+      post = Post.with_deleted.find_by(id: post.id)
+      expect(post).to eq(nil)
+
+      topic = Topic.with_deleted.find_by(id: topic.id)
+      expect(topic).to eq(nil)
+    end
+
+    it "destroys the post when force_destroy is true for regular posts" do
       PostDestroyer.new(moderator, reply, force_destroy: true).destroy
       expect { reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
       regular_post = Fabricate(:post)
+      topic = regular_post.topic
+
       PostDestroyer.new(moderator, regular_post, force_destroy: true).destroy
       expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
@@ -1199,6 +1218,28 @@ RSpec.describe PostDestroyer do
       expect(stats_message.data[:last_poster]).to eq(
         BasicUserSerializer.new(expendable_reply.user, root: false).as_json,
       )
+    end
+  end
+
+  describe "mailing_list_mode emails on recovery" do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:post_1) { Fabricate(:post, topic: topic) }
+    fab!(:post_2) { Fabricate(:post, topic: topic) }
+
+    it "enqueues the notify_mailing_list_subscribers_job for the post" do
+      PostDestroyer.new(admin, post_2).destroy
+      post_2.reload
+      expect_enqueued_with(job: :notify_mailing_list_subscribers, args: { post_id: post_2.id }) do
+        PostDestroyer.new(admin, post_2).recover
+      end
+    end
+
+    it "enqueues the notify_mailing_list_subscribers_job for the op" do
+      PostDestroyer.new(admin, post_1).destroy
+      post_1.reload
+      expect_enqueued_with(job: :notify_mailing_list_subscribers, args: { post_id: post_1.id }) do
+        PostDestroyer.new(admin, post_1).recover
+      end
     end
   end
 end

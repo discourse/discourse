@@ -234,6 +234,7 @@ es:
     not_found_template_link: |
       <p>Esta invitación a <a href="%{base_url}">%{site_name}</a> ya no se puede usar. Por favor, pídele a la persona que te invitó que te vuelva a enviar una nueva invitación.</p>
     existing_user_cannot_redeem: "Esta invitación no se puede canjear. Pide a la persona que te invitó que te envíe una nueva invitación."
+    existing_user_already_redemeed: "Ya has canjeado este enlace de invitación."
     user_exists: "No hace falta que invites a <b>%{email}</b>, ¡ya tienen una cuenta!"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
     invalid_email: "%{email} no es un correo electrónico válido."
@@ -498,6 +499,7 @@ es:
       Puedes editar tu anterior respuesta para añadir una cita. Para ello, selecciona el texto que quieras citar y pulsa el botón <b>citar respuesta</b> que aparecerá.
 
       Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
+    dominating_topic: '¡Has publicado mucho en este tema! Considera la posibilidad de dar a los demás la oportunidad de responder aquí y debatir también entre ellos.'
     get_a_room: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje personal directamente?
     too_many_replies: |
       ### Has llegado al límite de respuestas en este tema
@@ -537,6 +539,7 @@ es:
               target_user_not_found: "No se pudo encontrar a uno de los usuarios a los que envías este mensaje."
               unable_to_update: "Hubo un error actualizando ese tema."
               unable_to_tag: "Hubo un error al etiquetar el tema."
+              unable_to_unlist: "Lo sentimos, no puedes crear un tema no listado."
             featured_link:
               invalid: "no es válido. La URL debería incluir http:// o https://."
         user:
@@ -584,10 +587,6 @@ es:
             duration_minutes:
               cannot_be_zero: "debe ser mayor que 0."
               exceeds_maximum: "no puede ser más de 20 años."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'La(s) siguiente(s) clave(s) de interpolación no es(son) válida(s): «%{keys}»'
         watched_word:
           attributes:
             word:
@@ -667,6 +666,7 @@ es:
       one: "%{count} me gusta"
       other: "%{count} Me gusta"
     cannot_permanently_delete:
+      many_posts: "Este tema tiene mensajes sin eliminar. Elimínalos definitivamente antes de eliminar definitivamente el tema."
       wait_or_different_admin: "Debes esperar %{time_left} antes de eliminar para siempre esta publicación, pero otra persona con permisos de administrador puede eliminarla inmediatamente."
   rate_limiter:
     slow_down: "Has realizado esta acción demasiadas veces. Inténtalo de nuevo más tarde."
@@ -767,10 +767,6 @@ es:
         other: "hace casi %{count} años"
   password_reset:
     no_token: '¡Uy! El enlace que has utilizado ya no funciona. Ahora puedes <a href="%{base_url}/login">Iniciar sesión</a>. Si has olvidado tu contraseña, puedes <a href="%{base_url}/password-reset">solicitar un enlace</a> para restablecerla.'
-    choose_new: "Escoge una nueva contraseña"
-    choose: "Escoge una contraseña"
-    update: "Actualizar contraseña"
-    save: "Establecer contraseña"
     title: "Restablecer contraseña"
     success: "Has cambiado tu contraseña correctamente y ahora has iniciado sesión."
     success_unapproved: "Has cambiado tu contraseña correctamente."
@@ -862,6 +858,7 @@ es:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropiado"
+      description: 'Esta publicación tiene contenido que una persona razonable podría considerar ofensivo, abusivo, ser una conducta de odio o una violación de <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>.'
       short_description: 'Infringe <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>'
     notify_user:
       title: "Enviar un mensaje a @%{username}"
@@ -927,6 +924,7 @@ es:
       short_description: "Esto es un anuncio"
     inappropriate:
       title: "Inapropiado"
+      description: 'Este tema tiene contenido que una persona razonable podría considerar ofensivo, abusivo, ser una conducta de odio o una violación de <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>.'
       long_form: "marcado como inapropiado"
       short_description: 'Infringe <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>'
     notify_moderators:
@@ -964,6 +962,8 @@ es:
     mailing_list_mode: "Desactivar el modo lista de correo"
     all: "No enviarme ningún correo electrónico desde %{sitename}"
     different_user_description: "Actualmente has iniciado sesión con un usuario diferente al que te hemos enviado el correo electrónico. Cierra sesión o entra en modo anónimo antes de intentarlo de nuevo."
+    not_found_description: "Lo sentimos, no hemos podido encontrar esa suscripción. ¿Es posible que el enlace del correo electrónico sea demasiado antiguo y haya caducado?"
+    user_not_found_description: "Lo sentimos, no hemos podido encontrar un usuario para esta suscripción. Probablemente estás intentando dar de baja una cuenta que ya no existe."
     log_out: "Cerrar sesión"
     submit: "Guardar preferencias"
     digest_frequency:
@@ -1000,6 +1000,7 @@ es:
       write: "Escribir todo"
       one_time_password: "Crear un código de inicio de sesión de un único uso"
       bookmarks_calendar: "Leer recordatorios de marcadores"
+      user_status: "Leer y actualizar el estado del usuario"
     invalid_public_key: "Lo sentimos, la clave pública no es válida."
     invalid_auth_redirect: "Lo sentimos, este host auth_redirect no está permitido."
     invalid_token: "El token no es válido, ha caducado o no se encuentra"
@@ -1093,10 +1094,12 @@ es:
         author: Autor
         edit_reason: Motivo
     consolidated_api_requests:
+      title: "Solicitudes de API consolidadas"
       xaxis:
         api: "API"
         user_api: "API de usuario"
       yaxis: "Día"
+      description: "Solicitudes de API para claves de API normales y claves de API de usuario."
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1419,6 +1422,11 @@ es:
     allow_duplicate_topic_titles_category: "Permitir temas con títulos iguales si la categoría es distinta. Hay que desactivar el ajuste allow_duplicate_topic_titles."
     unique_posts_mins: "Cantidad de minutos que deben pasar antes de que un usuario pueda publicar el mismo contenido de nuevo"
     educate_until_posts: "Cuando el usuario comienza a escribir sus primeras (n) publicaciones, mostrar el panel emergente de consejos para usuarios nuevos en el editor."
+    title: "El nombre de este sitio. Visible para todos los visitantes, incluidos los usuarios anónimos."
+    site_description: "Describe este sitio en una frase. Visible para todos los visitantes, incluidos los usuarios anónimos."
+    short_site_description: "Breve descripción en pocas palabras. Visible para todos los visitantes, incluidos los usuarios anónimos."
+    contact_email: "Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas, y también se muestra en <a href='%{base_path}/about' target='_blank'>/about</a>. Visible para usuarios anónimos en sitios públicos."
+    contact_url: "URL de contacto para este sitio. Cuando está presente, sustituye a la dirección de correo electrónico en <a href='%{base_path}/about' target='_blank'>/about</a> y es visible para los usuarios anónimos en los sitios públicos."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas (hotlinked) a imágenes locales descargándolas. Esto preserva el contenido incluso si las imágenes son eliminadas de su sitio remoto original en el futuro."
     download_remote_images_threshold: "Espacio mínimo en el disco necesario para descargar imágenes remotas de forma local (porcentaje)"
@@ -1434,6 +1442,8 @@ es:
     edit_history_visible_to_public: "Permitir a todos ver las versiones previas de una publicación editada. Si se desactiva, solo los miembros del equipo podrán verlas."
     delete_removed_posts_after: "Las publicaciones eliminadas por su autor se eliminarán automáticamente después de (n) horas. Si se establece este valor a 0, las publicaciones se eliminarán inmediatamente."
     notify_users_after_responses_deleted_on_flagged_post: "Al borrar una publicación reportada, notificar a los usuarios que hayan respondido y se vaya a borrar su respuesta."
+    max_image_width: "Anchura máxima de las miniaturas de las imágenes de una publicación. Las imágenes con una anchura mayor se redimensionarán y se mostrarán en lightbox."
+    max_image_height: "Altura máxima de las miniaturas de las imágenes de una entrada. Las imágenes con una altura mayor se redimensionarán y se mostrarán en lightbox."
     responsive_post_image_sizes: "Cambiar el tamaño de las imágenes de vista previa de lightbox para permitir su visualización en pantallas de alto DPI de las siguientes proporciones de píxeles. Eliminar todos los valores para desactivar las imágenes responsivas."
     fixed_category_positions: "Si está marcada, podrás organizar las categorías en un orden determinado. Si no, las categorías se mostrarán según su actividad reciente."
     fixed_category_positions_on_create: "Si está marcada, el orden de las categorías se mantendrá en el diálogo de creación de temas (requiere fixed_category_positions)."
@@ -1571,10 +1581,7 @@ es:
     max_favorite_badges: "Número máximo de insignias que el usuario puede seleccionar"
     whispers_allowed_groups: "Permitir la comunicación privada dentro de los temas para los miembros de los grupos especificados."
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
-    blocked_email_domains: "Lista de dominios de correo electrónico que no pueden ser utilizados para registrarse. Ejemplo: mailinator.com|trashmail.net"
-    allowed_email_domains: "Una lista separada con barras verticales de dominios de correo electrónico que los usuarios DEBEN usar para registrar sus cuentas. ¡CUIDADO! No se permitirá el registro de usuarios cuyo correo electrónico sea de un dominio diferente a los aquí listados"
     normalize_emails: "Comprobar si la dirección de correo normalizada es única. Para normalizar las direcciones se eliminan los puntos y todo lo que haya entre los caracteres + y @."
-    auto_approve_email_domains: "Los usuarios con direcciones de correo electrónico de esta lista de dominios serán aprobados automáticamente."
     hide_email_address_taken: "No informar a los usuarios si ya existe una cuenta con un correo electrónico al registrarse o al restablecer la contraseña. Pedir la dirección de correo completa para solicitudes de restablecimiento de contraseña."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el Discourse Hub para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard <a href='<a href='%{base_path}/admin' target='_blank'>/admin' target='_blank'>/admin</a>."
@@ -1596,7 +1603,6 @@ es:
     enable_discourse_connect: "Activar inicio de sesión a través de DiscourseConnect (antiguamente «Discourse SSO») (CUIDADO: ¡LAS DIRECCIONES DE CORREO ELECTRÓNICO *DEBEN* SER VALIDADAS POR EL SITIO EXTERNO!)"
     verbose_discourse_connect_logging: "Guardar registros detallados de diagnóstico de DiscourseConnect en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementar el proveedor de protocolo DiscourseConnect (antiguamente «Discourse SSO») en la ruta /session/sso_provider, discourse_connect_provider_secrets debe estar rellenado."
-    discourse_connect_url: "URL del endpoint de DiscourseConnect (debe incluir http:// o https://)"
     discourse_connect_secret: "Secreto usado para autenticar criptográficamente la información de DiscourseConnect, asegúrate de que tiene 10 o más caracteres de longitud"
     discourse_connect_provider_secrets: "Una lista de pares de dominio-secreto que utiliza Discourse como proveedor de SSO. Asegúrate de que la clave secreta SSO tenga de 10 caracteres o más. El símbolo de comodín * se puede usar para hacer coincidir cualquier dominio o solo una parte de él (por ejemplo, *.ejemplo.com)."
     discourse_connect_overrides_bio: "Sobrescribir la biografía del usuario y evita que los usuarios la cambien"
@@ -1638,6 +1644,7 @@ es:
     discord_trusted_guilds: 'Solo permitir iniciar sesión con Discord a miembros de estas guilds de Discord. Usa la ID numérica del guild. Para más información, mira las instrucciones <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Deja en blanco para permitir cualquier guild.'
     enable_backups: "Permitir a los administradores crear respaldos del foro"
     allow_restore: "Activar la restauración. ¡Esto puede sobrescribir TODOS los datos! Déjalo desactivado en todo momento, y actívalo solo para restaurar una copia de seguridad."
+    maximum_backups: "La cantidad máxima de copias de seguridad que se mantendrán. Las copias de seguridad más antiguas se eliminan automáticamente"
     automatic_backups_enabled: "Ejecutar respaldos automáticos definidos por la opción de frecuencia de respaldos"
     backup_frequency: "El número de días entre respaldos."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
@@ -1713,7 +1720,6 @@ es:
     composer_media_optimization_image_bytes_optimization_threshold: "Tamaño mínimo del archivo de imagen para activar la optimización del lado del cliente"
     composer_media_optimization_image_resize_dimensions_threshold: "Ancho mínimo de la imagen para activar el redimensionamiento del lado del cliente"
     composer_media_optimization_image_resize_width_target: "Las imágenes con una anchura mayor que «composer_media_optimization_image_dimensions_resize_threshold» serán redimensionadas a esta anchura. Debe ser >= que «composer_media_optimization_image_dimensions_resize_threshold»."
-    composer_media_optimization_image_encode_quality: "Calidad de codificación JPEG utilizada en el proceso de recodificación."
     min_ratio_to_crop: "Proporción utilizada para recortar imágenes altas. Introduce el resultado de anchura / altura."
     simultaneous_uploads: "Número máximo de archivos que se pueden arrastrar y soltar en el editor"
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
@@ -1812,6 +1818,7 @@ es:
     faq_url: "Si tienes un documento de preguntas frecuentes alojado en algún otro sitio y que quieras utilizar, introduce la URL completa aquí."
     tos_url: "Si tienes un documento de condiciones de servicio alojado en algún otro sitio y que quieras utilizar, introduce la URL completa aquí."
     privacy_policy_url: "Si tienes un documento de política de privacidad alojado en algún otro sitio y que quieras utilizar, introduce la URL completa aquí."
+    log_anonymizer_details: "Ya sea para mantener los detalles de un usuario en el registro después de ser anonimizados."
     newuser_spam_host_threshold: "Cantidad de veces que un usuario nuevo puede publicar un enlace al mismo host dentro del «newuser_spam_host_threshold» de sus publicaciones antes de ser considerado spam."
     allowed_spam_host_domains: "Una lista de dominios que se excluyen de las pruebas de spam. A los usuarios nuevos no se les restringirá nunca la posibilidad de crear publicaciones con enlaces a estos dominios."
     staff_like_weight: "Peso que dar a los me gusta del personal (los «Me gusta» de los demás pesan 1)."
@@ -1964,8 +1971,6 @@ es:
     automatically_unpin_topics: "Desanclar automáticamente cuando el usuario llega al final del tema."
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
     topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del título</a> de la página del tema incluye el nombre de la categoría."
-    native_app_install_banner_ios: "Muestra el banner de la aplicación DiscourseHub en dispositivos iOS a usuarios habituales (nivel de confianza 1 y superior)."
-    native_app_install_banner_android: "Muestra el banner de la aplicación DiscourseHub en dispositivos Android a usuarios habituales (nivel de confianza 1 y superior)."
     app_association_android: "Los contenidos del extremo <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilizado por la API de «Digital Asset Links» de Google."
     app_association_ios: "Los contenidos del extremo <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilizado para crear enlaces universales entre este sitio y las aplicacios iOS."
     share_anonymized_statistics: "Compartir estadísticas de uso anonimizadas."
@@ -1978,6 +1983,7 @@ es:
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus publicaciones, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
     short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias la anchura de la barra de progreso, deberías revisar este valor."
+    default_code_lang: "Lenguaje de programación predeterminado para resaltado de sintaxis en bloques de código (auto, text, ruby, python, etc.) Este valor también debe estar presente en el ajuste «highlighted languages»."
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace más tiempo que este número de días, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Establece el valor en 0 para desactivar."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) Consulta: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para un demo."
@@ -1998,11 +2004,8 @@ es:
     delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Poner a 0 para no eliminar nunca los temas pendientes."
     bootstrap_mode_min_users: "Número mínimo de usuarios requerido para desactivar el modo de arranque (establece en 0 para desactivar esta opción)"
     prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
-    secure_media: "DEPRECIADO: utiliza el ajuste secure_uploads en su lugar, se eliminará en Discourse 3.0."
     secure_uploads: 'Limita el acceso a TODAS las subidas (imágenes, vídeo, audio, texto, pdfs, zips y otros). Si se activa la opción de «inicio de sesión obligatorio», solo los usuarios que hayan iniciado sesión podrán acceder a las subidas. De lo contrario, el acceso se limitará solo a las subidas de medios en los mensajes privados y en las categorías privadas. ADVERTENCIA: Esta configuración es compleja y requiere un profundo conocimiento administrativo. Consulta <a target="_blank" href="https://meta.discourse.org/t/-/140017">el tema de subidas seguras en Meta</a> para más detalles.'
-    secure_media_allow_embed_images_in_emails: "DEPRECIADO: usar secure_uploads_allow_embed_images_in_emails, se eliminará en Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente estarían redactadas en los correos electrónicos, si su tamaño es menor que el ajuste de «tamaño máximo de la imagen incrustada en el correo electrónico»."
-    secure_media_max_email_embed_image_size_kb: "DEPRECIADO: usar secure_uploads_max_email_embed_image_size_kb, se eliminará en Discourse 3.0."
     secure_uploads_max_email_embed_image_size_kb: "El tamaño límite para las imágenes seguras que se incrustarán en los correos electrónicos si está activada la configuración «las subidas seguras permiten incrustarlas en los correos electrónicos». Sin esa configuración activada, esta configuración no tiene efecto."
     slug_generation_method: "Elegir un método de generación de slug. «encoded» generará cadenas con código porcentual. «none» desactivará completamente el slug."
     enable_emoji: "Activar emoji"
@@ -2094,6 +2097,8 @@ es:
     shared_drafts_min_trust_level: "Permitir a los usuarios ver y editar borradores compartidos."
     push_notifications_prompt: "Mostrar aviso del consentimiento del usuario."
     push_notifications_icon: "El icono de la insignia que aparece en el menú de notificaciones. Se recomienda un PNG monocromático de 96 × 96 con transparencia."
+    enable_desktop_push_notifications: "Activar las notificaciones push de escritorio"
+    push_notification_time_window_mins: "Espera (n) minutos antes de enviar la notificación automática. Ayuda a evitar que se envíen notificaciones automáticas a un usuario en línea activo."
     base_font: "Fuente base para la mayoría de texto en el sitio. Los temas lo pueden sobrescribir a través de la propiedad personalizada de CSS «--font-family»."
     heading_font: "Fuente a usar para los encabezados del sitio. Los temas lo pueden sobrescribir a través de la propiedad personalizada de CSS «--heading-font-family»."
     enable_sitemap: "Generar un sitemap para el sitio e incluirlo en el archivo robots.txt."
@@ -2115,9 +2120,10 @@ es:
     use_name_for_username_suggestions: "Usar el nombre completo para sugerir nombres de usuario"
     suggest_weekends_in_date_pickers: "Incluir fines de semana (sábados y domingos) en las sugerencias de los selectores de fecha (desactiva esto si solo usas Discourse de lunes a viernes)"
     splash_screen: "Muestra una pantalla de carga temporal mientras los archivos de la página se cargan"
+    navigation_menu: "Determina qué menú de navegación utilizar. La barra lateral y la navegación del encabezado son personalizables por los usuarios. La opción heredada está disponible para compatibilidad con versiones anteriores."
     default_sidebar_categories: "Las categorías seleccionadas aparecerán por defecto en la sección de categorías de la barra lateral."
     default_sidebar_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas de la barra lateral."
-    enable_new_user_profile_nav_groups: "EXPERIMENTAL: Los usuarios de los grupos seleccionados verán el nuevo menú de navegación del perfil de usuario"
+    enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Utiliza el nuevo sistema de autocompletado #hashtag para categorías y etiquetas que muestra el elemento seleccionado de forma diferente y ha mejorado la búsqueda"
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."
@@ -2174,7 +2180,6 @@ es:
       search_tokenize_japanese_enabled: "Debes desactivar el ajuste «search_tokenize_japanese» antes de activar este."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "No puedes activar DiscourseConnect si la autenticación de dos factores (2FA) es obligatoria."
       delete_rejected_email_after_days: "Esta configuración no puede ser menor que la configuración delete_email_logs_after_days o mayor que %{max}"
-      invalid_uncategorized_category_setting: "La categoría Sin categoría no se puede seleccionar si no está permitido permitir temas sin categoría"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
@@ -2369,7 +2374,6 @@ es:
     activated_by_staff: "Activado por el personal"
     new_user_typed_too_fast: "El nuevo usuario escribió demasiado rápido"
     content_matches_auto_silence_regex: "Contenido coincide con regex para autosilenciar"
-    content_matches_auto_block_regex: "El contenido coincide con una expresión regular de bloqueo automático"
     username:
       short: "debe tener al menos %{min} caracteres"
       long: "no puede tener más de %{max} caracteres"
@@ -2564,10 +2568,12 @@ es:
       %{notes}
   flag_reasons:
     off_topic: "Tu publicación fue denunciada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
+    inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva, una conducta de odio o que vulnera alguna de las [directrices de la comunidad](%{base_path}/guidelines)."
     spam: "Tu publicación fue denunciada como **spam**: la comunidad piensa que se trata de un anuncio, algo de naturaleza promocional, en vez de algo útil o relevante para lo que se espera del tema."
     notify_moderators: "Tu publicación fue denunciada para la **atención de un moderador**: la comunidad piensa que algo de esta publicación requiere la intervención manual de un miembro del equipo."
     responder:
       off_topic: "La publicación ha sido denunciada por **no tener relación con el tema**: la comunidad cree que no encaja con el tema, título y primer mensaje."
+      inappropriate: "La publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva, una conducta de odio o que vulnera alguna de las [directrices de la comunidad](%{base_path}/guidelines)."
       spam: "La publicación ha sido denunciada por ser **spam**: la comunidad cree que es un anuncio o algo de naturaleza promocional en vez de buscar ser útil o relevante para el tema."
       notify_moderators: "La publicación ha sido denunciada para que sea **revisada por un moderador**: la comunidad cree que algo relacionado con ella requiere de la intervención de un miembro del equipo."
   flags_dispositions:
@@ -3106,14 +3112,6 @@ es:
     user_automatically_silenced:
       title: "Usuario silenciado automáticamente"
       subject_template: "Usuario nuevo %{username} silenciado por denuncias de la comunidad"
-      text_body_template: |
-        Este es un mensaje automatizado.
-
-        El usuario nuevo [%{username}](%{user_url}) se silenció automáticamente porque múltiples usuarios han denunciado mensaje(s) de %{username}.
-
-        Por favor, [comprueba las denuncias](%{base_url}/admin/flags). Si %{username} se silenció incorrectamente, haz clic en el botón de quitar silencio en la [página de administración del usuario](%{user_url}).
-
-        Esto puede ser cambiado con el ajuste «silence_new_user» en la configuración del sitio.
     spam_post_blocked:
       title: "Publicación con spam bloqueada"
       subject_template: "Publicaciones del usuario nuevo %{username} bloqueadas debido a la repetición de enlaces."
@@ -3192,9 +3190,6 @@ es:
       one: "ADVERTENCIA: has superado el límite de %{count} correo electrónico diario. Revisa el sitio para ver las otras notificaciones que no te han llegado."
       other: "Advertencia: enviamos un máximo de %{count} correos electrónicos por día. PD: ¡Gracias por ser tan popular!"
     in_reply_to: "En respuesta a"
-    unsubscribe:
-      title: "Cancelar suscripción"
-      description: "¿No estás interesado en recibir estos correos? ¡No hay problema! Haz clic abajo para darte de baja de inmediatamente:"
     reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este correo electrónico para publicar."
     reply_by_email_pm: "[Visita el mensaje](%{base_url}%{url}) o responde a este correo electrónico para contestar a %{participants}."
     only_reply_by_email: "Responde a este correo electrónico para comentar."
@@ -3396,6 +3391,7 @@ es:
 
         %{respond_instructions}
     user_watching_category_or_tag:
+      title: "Usuario vigilando la categoría o etiqueta"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3490,7 +3486,6 @@ es:
       liked_received: "Me gusta recibidos"
       new_users: "Usuarios nuevos"
       popular_topics: "Temas populares"
-      follow_topic: "Seguir este tema"
       join_the_discussion: "Leer más"
       popular_posts: "Publicaciones populares"
       more_new: "Nuevo para ti"
@@ -3691,8 +3686,6 @@ es:
     welcome_message_invite_only: |
       ## [Te damos la bienvenida a %{title}](#welcome)
       Se necesita una cuenta para utilizar el sitio. Solicita a uno de los miembros actuales que te invite o inicia sesión para continuar.
-  deleted: "eliminado"
-  image: "imagen"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
@@ -3895,90 +3888,6 @@ es:
     title: "Términos del servicio"
   privacy_topic:
     title: "Política de privacidad"
-    body: |
-      <a name="collect"></a>
-
-      ## [¿Qué información recopilamos?](#collect)
-
-      Recopilamos información tuya cuando te registras en nuestra web y recopilamos información cuando participas en ella leyendo, escribiendo y evaluando el contenido compartido aquí.
-
-      Al registrarte en nuestra web, puede que se te pida que indiques tu nombre y tu correo electrónico. Sin embargo, puedes visitarnos sin registrarte. Tu correo electrónico será verificado a través de un mensaje que contendrá un enlace único. Si visitas ese enlace, sabremos que controlas el correo electrónico.
-
-      Cuando estés registrado y publiques, guardamos la dirección IP desde donde el mensaje fue publicado. Puede que guardemos registros que incluyan la dirección IP de cada intercambio de datos con nuestro servidor.
-
-      <a name="use"></a>
-
-      ## [¿Para qué usamos tu información?](#use)
-
-      Cualquier información recopilada puede ser usada en una de las siguientes maneras:
-
-      * Para personalizar tu experiencia &mdash; tu información nos ayuda a responder a tus necesidades individuales.
-      * Para mejorar nuestra web &mdash; intentamos continuamente mejorar nuestro sitio web ofreciéndote contenido basado en la información que recibimos de ti.
-      * Para mejorar el servicio de soporte &mdash; tu información nos ayuda a responder de una forma más efectiva a tus dudas y problemas.
-      * Para enviar correos periódicamente &mdash; la dirección de correo electrónico que nos proporciones puede ser usada para enviarte información, notificaciones que tú solicites sobre cambios en temas, respuestas a tu usuario, respuestas a consultas y/o cualquier otro tipo de solicitudes o cuestiones.
-
-      <a name="protect"></a>
-
-      ## [¿Cómo protegemos tu información?](#protect)
-
-      Tenemos implementadas varias medidas de seguridad para mantener tu información personal segura cuando la introduzcas o accedas a ella.
-
-      <a name="data-retention"></a>
-
-      ## [¿Cuál es la política de retención de datos?](#data-retention)
-
-      Hacemos un gran esfuerzo de buena fe por:
-
-      * No retener los registros de los servidores que contienen la dirección IP de todas las solicitudes durante más de 90 días.
-      * No retener las direcciones IP asociadas con usuarios registrados y sus mensajes durante más de 5 años.
-
-      <a name="cookies"></a>
-
-      ## [¿Usamos cookies?](#cookies)
-
-      Sí. Las cookies con pequeños archivos que una web o su proveedor de servicios transfiere a tu disco duro a través de tu navegador (si lo permites). Estas cookies permiten a la web reconocer tu navegador y, si tienes una cuenta registrada, asociarlo con ella.
-
-      Usamos cookies para entender y guardar tus preferencias para futuras visitas y para recolectar información sobre el tráfico y la interacción con este sitio web de modo que podamos ofrecer mejores experiencias y herramientas en un futuro. Puede que nos asociemos con terceros para que nos asistan a entender mejor a nuestros visitantes. Estos proveedores de servicios no tienen permitido usar esta información para otro propósito que no sea ayudarnos a mejorar.
-
-      <a name="disclose"></a>
-
-      ## [¿Revelamos alguna información a terceros?](#disclose)
-
-      No vendemos, intercambiamos o transferimos a terceros tu información personal. Esto no incluye a terceros que nos ayuden a operar correctamente este sitio web, a administrar nuestro negocio o a ofrecerte un servicio, siempre y cuando acepten mantener esta información confidencial.
-
-      Puede que revelemos tu información cuando creamos que sea apropiado para cumplir con la ley, hacer cumplir con nuestras políticas, derechos, propiedades o seguridad, nuestra o de terceros. Sin embargo, la información no personal de los visitantes puede que sea entregada debidamente a terceros con propósitos de marketing, publicidad u otros usos.
-
-      <a name="third-party"></a>
-
-      ## [Enlaces de terceros](#third-party)
-
-      Ocasionalmente, es posible que incluyamos u ofrezcamos enlaces a productos o servicios de terceros en esta web. Estos sitios webs de terceros tienen otras políticas de privacidad, por lo que no nos hacemos responsables del contenido y actividades de estos sitios. Sin embargo, intentamos proteger la integridad de nuestra web y aceptamos opiniones sobre estos sitios de terceros.
-
-      <a name="coppa"></a>
-
-      ## [Cumplimiento del Acta de Protección de la Privacidad Online de los Niños de 1998](#coppa)
-
-      Nuestra web, sus productos y servicios están dirigidos a personas que tengan 13 o más años de edad. Si este servidor está en EE. UU. y tienes menos de 13 años de edad, a causa del Acta de protección de la privacidad online de los niños de 1998 ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) de EEUU, no uses este sitio web.
-
-      <a name="online"></a>
-
-      ## [Política de privacidad online](#online)
-
-      Esta política de privacidad solo tiene validez para la información recopilada a través de nuestro sitio web, y no para aquella recopilada sin conexión.
-
-      <a name="consent"></a>
-
-      ## [Consentimiento](#consent)
-
-      Al usar nuestra web, aceptas esta política.
-
-      <a name="changes"></a>
-
-      ## [Cambios a nuestra política de privacidad](#changes)
-
-      Si decidimos cambiar nuestra política de privacidad, publicaremos los cambios en esta misma página.
-
-      Este documento tiene una licencia «CC-BY-SA». Última actualización: 31 de mayo del 2013.
   badges:
     mass_award:
       errors:
@@ -4283,16 +4192,15 @@ es:
       message: "<p>Hemos reenviado el correo electrónico de activación a <b>%{email}</b>"
   safe_mode:
     title: "Activar modo seguro"
-    description: "El modo seguro te permite probar tu sitio sin cargar plugins o temas."
     no_themes: "Desactivar temas y componentes de tema"
-    no_unofficial_plugins: "Desactivar plugins no oficiales"
-    no_plugins: "Desactivar todos los plugins"
     enter: "Activar modo seguro"
     must_select: "Debes escoger al menos una opción para entrar en el modo seguro."
   wizard:
     title: "Instalación de Discourse"
     step:
       introduction:
+        title: "Acerca de tu sitio"
+        description: "Se mostrarán en tu inicio de sesión y en cualquier página pública. Siempre puedes cambiarlos más adelante."
         fields:
           title:
             label: "Nombre de la comunidad"
@@ -4303,21 +4211,28 @@ es:
           default_locale:
             label: "Idioma"
       privacy:
+        title: "Experiencia del miembro"
         fields:
           login_required:
             placeholder: "Privada"
             extra_description: "Solo los usuarios con una sesión iniciada pueden acceder a esta comunidad"
           invite_only:
+            placeholder: "Solo por invitación"
             extra_description: "Los usuarios deben ser invitados por usuarios de confianza o el personal antes de que puedan registrarse."
           must_approve_users:
+            placeholder: "Requerir aprobación"
             extra_description: "Los usuarios deben ser aprobados por el personal"
           chat_enabled:
-            placeholder: "Habilitar chat"
+            placeholder: "Activar chat"
+            extra_description: "Interactúa con tus miembros en tiempo real"
           enable_sidebar:
             placeholder: "Activar barra lateral"
+            extra_description: "Accede fácilmente a tus espacios favoritos"
       ready:
+        title: "¡Tu sitio está listo!"
         description: "Ya está. Has hecho lo básico para configurar tu comunidad. Ahora puedes entrar y echar un vistazo, escribir un tema de bienvenida y enviar invitaciones.<br><br>¡Disfrútala!"
       styling:
+        title: "Aspecto y estilo"
         fields:
           color_scheme:
             label: "Paleta de colores"
@@ -4348,19 +4263,38 @@ es:
                 label: "Cajas de categorías con temas"
               subcategories_with_featured_topics:
                 label: "Subcategorías con temas destacados"
-      corporate:
+      branding:
+        title: "Logotipo del sitio"
         fields:
+          logo:
+            label: "Logotipo principal"
+            description: "Tamaño recomendado: 600 x 200"
+          logo_small:
+            label: "Logotipo cuadrado"
+            description: "Tamaño recomendado: 512 x 512. También se utiliza como icono de la aplicación de pantalla de inicio móvil y favicon."
+      corporate:
+        title: "Tu organización"
+        description: "La siguiente información se utilizará en tus páginas Términos del servicio y Acerca de. Puedes omitirla si no existe ninguna empresa."
+        fields:
+          company_name:
+            label: "Nombre de la empresa"
+            placeholder: "Organización Acme"
           governing_law:
+            label: "Ley que rige"
             placeholder: "Ley de California"
           contact_url:
+            label: "Página web"
             placeholder: "https://ejemplo.com/contacto"
           city_for_disputes:
+            label: "Ciudad para disputas"
             placeholder: "San Francisco, California"
           site_contact:
+            label: "Mensajes automatizados"
             description: "Todos los mensajes personales automatizados de Discourse serán enviados desde este usuario, tales como denuncias de advertencia y notificaciones de copias de seguridad exitosas."
           contact_email:
-            label: "Detalles de contacto"
+            label: "Punto de contacto"
             placeholder: "ejemplo@usuario.com"
+            description: "Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas y aparece en tu <a href='%{base_path}/about' target='_blank'>página «Acerca de»</a> para asuntos urgentes."
       invites:
         title: "Invitar personal"
         description: "¡Ya casi estás listo! Vamos a invitar otras personas para que ayuden a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusiones</a> con temas interesantes y respuestas para que comience tu comunidad."
@@ -4373,7 +4307,6 @@ es:
           <p>Pásalo bien, y ¡buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu nueva comunidad!</a></p>
   search_logs:
     graph_title: "Análisis de búsquedas"
-  joined: "Registrado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te mencionó en «%{topic}» - %{site_title}'
@@ -4436,50 +4369,30 @@ es:
         category: ajustes de la categoría
     actions:
       agree:
-        title: "Estar de acuerdo..."
-      agree_and_keep:
-        title: "Mantener publicación"
-        description: "Estar de acuerdo con la denuncia y mantener la publicación intacta."
-      agree_and_keep_hidden:
-        title: "Mantener la publicación oculta"
-        description: "Aceptar la denuncia y mantener la publicación oculta."
+        title: "Sí"
       agree_and_suspend:
-        title: "Suspender usuario"
         description: "Estar de acuerdo con la denuncia y suspender el usuario."
       agree_and_silence:
         title: "Silenciar al usuario"
         description: "Estar de acuerdo con la denuncia y silenciar al usuario."
       agree_and_restore:
-        title: "Restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
-      agree_and_hide:
-        title: "Ocultar publicación"
-        description: "Ocultar la publicación y enviar un mensaje automáticamente al usuario animándole a que la edite."
       delete_single:
         title: "Eliminar"
       delete:
         title: "Eliminar..."
-      delete_and_ignore:
-        title: "Eliminar publicación e ignorar"
-        description: "Eliminar publicación; si es la primera del tema, eliminar el tema también."
       delete_and_ignore_replies:
-        title: "Eliminar publicación + respuestas e ignorar"
-        description: "Eliminar publicación y todas sus respuestas; si es la primera publicación de un tema, eliminarlo también"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
-      delete_and_agree:
-        title: "Eliminar publicación y coincidir"
-        description: "Eliminar publicación; si es la primera del tema, eliminar el tema también."
       delete_and_agree_replies:
-        title: "Eliminar publicación + respuestas y coincidir"
-        description: "Eliminar publicación y todas sus respuestas; si es la primera publicación de un tema, eliminarlo también"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
       disagree_and_restore:
-        title: "Discrepar y restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
       disagree:
-        title: "Discrepar"
+        title: "No"
       ignore:
         title: "Ignorar"
+      ignore_and_do_nothing:
+        title: "No hacer nada"
       approve:
         title: "Aprobar"
       approve_post:

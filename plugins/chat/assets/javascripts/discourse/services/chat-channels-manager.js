@@ -1,4 +1,5 @@
 import Service, { inject as service } from "@ember/service";
+import { debounce } from "discourse-common/utils/decorators";
 import Promise from "rsvp";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { tracked } from "@glimmer/tracking";
@@ -42,6 +43,14 @@ export default class ChatChannelsManager extends Service {
       this.#cache(model);
     }
 
+    if (
+      channelObject.meta?.message_bus_last_ids?.channel_message_bus_last_id !==
+      undefined
+    ) {
+      model.channelMessageBusLastId =
+        channelObject.meta.message_bus_last_ids.channel_message_bus_last_id;
+    }
+
     return model;
   }
 
@@ -74,6 +83,26 @@ export default class ChatChannelsManager extends Service {
     });
   }
 
+  @debounce(300)
+  async markAllChannelsRead() {
+    return this.chatApi.markAllChannelsAsRead().then((response) => {
+      response.updated_memberships.forEach((membership) => {
+        let channel = this.channels.findBy("id", membership.channel_id);
+        if (channel) {
+          channel.currentUserMembership.unread_count = 0;
+          channel.currentUserMembership.unread_mentions = 0;
+          channel.currentUserMembership.last_read_message_id =
+            membership.last_read_message_id;
+        }
+      });
+    });
+  }
+
+  remove(model) {
+    this.chatSubscriptionsManager.stopChannelSubscription(model);
+    delete this._cached[model.id];
+  }
+
   get unreadCount() {
     let count = 0;
     this.publicMessageChannels.forEach((channel) => {
@@ -99,7 +128,7 @@ export default class ChatChannelsManager extends Service {
         (channel) =>
           channel.isCategoryChannel && channel.currentUserMembership.following
       )
-      .sort((a, b) => a.title.localeCompare(b.title));
+      .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
   }
 
   get directMessageChannels() {
@@ -117,7 +146,7 @@ export default class ChatChannelsManager extends Service {
 
   async #find(id) {
     return this.chatApi
-      .getChannel(id)
+      .channel(id)
       .catch(popupAjaxError)
       .then((channel) => {
         this.#cache(channel);
@@ -126,6 +155,10 @@ export default class ChatChannelsManager extends Service {
   }
 
   #cache(channel) {
+    if (!channel) {
+      return;
+    }
+
     this._cached[channel.id] = channel;
   }
 
@@ -138,8 +171,7 @@ export default class ChatChannelsManager extends Service {
       const unreadCountA = a.currentUserMembership.unread_count || 0;
       const unreadCountB = b.currentUserMembership.unread_count || 0;
       if (unreadCountA === unreadCountB) {
-        return new Date(a.get("last_message_sent_at")) >
-          new Date(b.get("last_message_sent_at"))
+        return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
           ? -1
           : 1;
       } else {

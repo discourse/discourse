@@ -25,8 +25,8 @@ module Middleware
     def self.compile_key_builder
       method = +"def self.__compiled_key_builder(h)\n  \""
       cache_key_segments.each do |k, v|
-        raise "Invalid key name" unless k =~ /^[a-z]+$/
-        raise "Invalid method name" unless v =~ /^key_[a-z_\?]+$/
+        raise "Invalid key name" unless k =~ /\A[a-z]+\z/
+        raise "Invalid method name" unless v =~ /\Akey_[a-z_\?]+\z/
         method << "|#{k}=#\{h.#{v}}"
       end
       method << "\"\nend"
@@ -66,6 +66,7 @@ module Middleware
           !@request.path.ends_with?("srv/status") &&
           @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
+          @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
           CrawlerDetection.is_blocked_crawler?(@env[USER_AGENT])
       end
 
@@ -184,11 +185,13 @@ module Middleware
         request = Rack::Request.new(@env)
         request.cookies["_bypass_cache"].nil? && (request.path != "/srv/status") &&
           request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
+          @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil?
       end
 
       def force_anonymous!
         @env[Auth::DefaultCurrentUserProvider::USER_API_KEY] = nil
+        @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY] = nil
         @env["HTTP_COOKIE"] = nil
         @env["HTTP_DISCOURSE_LOGGED_IN"] = nil
         @env["rack.request.cookie.hash"] = {}

@@ -34,7 +34,7 @@
               {{/if}}
               <PluginOutlet
                 @name="after-chat-channel-username"
-                @args={{hash user=user}}
+                @outletArgs={{hash user=user}}
                 @tagName=""
                 @connectorTagName=""
               />
@@ -53,13 +53,13 @@
         class="chat-channel-title__category-badge"
         style={{this.channelColorStyle}}
       >
-        {{d-icon "hashtag"}}
+        {{d-icon "d-chat"}}
         {{#if this.channel.chatable.read_restricted}}
           {{d-icon "lock" class="chat-channel-title__restricted-category-icon"}}
         {{/if}}
       </span>
       <span class="chat-channel-title__name">
-        {{replace-emoji this.channel.escapedTitle}}
+        {{replace-emoji this.channel.title}}
       </span>
 
       {{#if (has-block)}}

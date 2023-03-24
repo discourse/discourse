@@ -393,6 +393,24 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     );
   });
 
+  test("row index", async function (assert) {
+    this.setProperties({
+      content: [
+        { id: 1, name: "john" },
+        { id: 2, name: "jane" },
+      ],
+      value: null,
+    });
+
+    await render(
+      hbs`<SingleSelect @value={{this.value}} @content={{this.content}} />`
+    );
+    await this.subject.expand();
+
+    assert.dom('.select-kit-row[data-index="0"][data-value="1"]').exists();
+    assert.dom('.select-kit-row[data-index="1"][data-value="2"]').exists();
+  });
+
   test("options.verticalOffset", async function (assert) {
     setDefaultState(this, { verticalOffset: -50 });
     await render(hbs`
@@ -410,5 +428,18 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     const body = query(".select-kit-body").getBoundingClientRect();
 
     assert.ok(header.bottom > body.top, "it correctly offsets the body");
+  });
+
+  test("options.expandedOnInsert", async function (assert) {
+    setDefaultState(this);
+    await render(hbs`
+      <SingleSelect
+        @value={{this.value}}
+        @content={{this.content}}
+        @options={{hash expandedOnInsert=true}}
+      />
+    `);
+
+    assert.dom(".single-select.is-expanded").exists();
   });
 });

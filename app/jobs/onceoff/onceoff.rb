@@ -4,7 +4,7 @@ class Jobs::Onceoff < ::Jobs::Base
   sidekiq_options retry: false
 
   def self.name_for(klass)
-    klass.name.sub(/^Jobs\:\:/, "")
+    klass.name.sub(/\AJobs\:\:/, "")
   end
 
   def running_key_name

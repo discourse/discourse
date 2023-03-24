@@ -175,12 +175,9 @@ class S3Helper
           cors_rules: final_rules,
         },
       )
-    rescue Aws::S3::Errors::AccessDenied => err
-      # TODO (martin) Remove this warning log level once we are sure this new
-      # ensure_cors! rule is functioning correctly.
-      Discourse.warn_exception(
-        err,
-        message: "Could not PutBucketCors rules for #{@s3_bucket_name}, rules: #{final_rules}",
+    rescue Aws::S3::Errors::AccessDenied
+      Rails.logger.info(
+        "Could not PutBucketCors rules for #{@s3_bucket_name}, rules: #{final_rules}",
       )
       return false
     end

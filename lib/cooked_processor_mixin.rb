@@ -70,7 +70,7 @@ module CookedProcessorMixin
           found = false
           parent = img
           while parent = parent.parent
-            if parent["class"] && parent["class"].include?("allowlistedgeneric")
+            if parent["class"] && parent["class"].match?(/\b(allowlistedgeneric|discoursetopic)\b/)
               found = true
               break
             end
@@ -135,7 +135,7 @@ module CookedProcessorMixin
 
   def get_size_from_attributes(img)
     w, h = img["width"].to_i, img["height"].to_i
-    return w, h unless w <= 0 || h <= 0
+    return w, h if w > 0 && h > 0
     # if only width or height are specified attempt to scale image
     if w > 0 || h > 0
       w = w.to_f
@@ -174,7 +174,7 @@ module CookedProcessorMixin
     return @size_cache[url] if @size_cache.has_key?(url)
 
     absolute_url = url
-    absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ %r{^/[^/]}
+    absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ %r{\A/[^/]}
 
     return unless absolute_url
 
@@ -193,7 +193,7 @@ module CookedProcessorMixin
     if upload && upload.width && upload.width > 0
       @size_cache[url] = [upload.width, upload.height]
     else
-      @size_cache[url] = FastImage.size(absolute_url)
+      @size_cache[url] = FinalDestination::FastImage.size(absolute_url)
     end
   rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
     # FastImage.size raises BufError for some gifs, leave it.

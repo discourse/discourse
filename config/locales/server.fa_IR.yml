@@ -146,6 +146,7 @@ fa_IR:
     existing_user_already_redemeed: "شما قبلا این پیوند دعوتنامه را استفاده‌ کرده‌اید."
     invite_exists: "شما قبلا <b>%{email}</b> را دعوت کرده‌اید."
     invalid_email: "آدرس ایمیل %{email} معتبر نیست."
+    generic_error_response: "مشکلی در درخواست شما وجود داشت."
     disabled_errors:
       invalid_access: "شما اجازه مشاهده منبع درخواست شده را ندارید."
     max_redemptions_allowed_one: "برای دعوت‌نامه‌های ایمیل باید 1 باشد."
@@ -501,10 +502,6 @@ fa_IR:
         one: "تقریبا %{count} سال قبل"
         other: "تقریبا %{count} سال قبل"
   password_reset:
-    choose_new: "رمز‌عبور جدید را وارد کنید"
-    choose: "رمز‌عبور وارد کنید"
-    update: "به‌روز کردن رمز‌عبور"
-    save: "تنظیم رمز‌عبور"
     title: "بازیابی رمز‌عبور"
     success: "شما با موفقیت رمز‌عبورتان را تغییر دادید و الان وارد سیستم هستید. "
     success_unapproved: "شما با موفقیت رمز‌عبورتان را تغییر دادید."
@@ -629,7 +626,6 @@ fa_IR:
     unwatch_category: "موضوعات دسته‌بندی %{category} را مشاهده نکنید"
     mailing_list_mode: "غیرفعال سازی حالت فهرست ایمیل"
     different_user_description: "در حال حاضر با نام کاربری متفاوتی با آن که برایتان ایمیل شده است وارد شده‌اید. لطفا خارج شوید یا در حالت ناشناس وارد شده و دوباره تلاش کنید."
-    not_found_description: با عرض پوزش، نتوانستیم آن اشتراک را پیدا کنیم. ممکن است پیوند ایمیل شما خیلی قدیمی باشد و منقضی شده باشد؟
     log_out: "خروج"
     digest_frequency:
       never: "هیچوقت"
@@ -976,8 +972,6 @@ fa_IR:
     prioritize_username_in_ux: "نام کاربری را در ابتدا در صفحه‌ی کاربر، کارت کاربر یا نوشته‌هایش نمایش بده(وقتی غیر‌فعال باشد نام در ابتدا نمایش داده می‌شود)"
     email_token_valid_hours: "رمز عبور فراموش شده/ حساب کاربری فعال تا (n) ساعت اعتبار دارد."
     enable_badges: "فعال سازی سیستم نشان‌دهی"
-    blocked_email_domains: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه ندارند با آن حساب کاربری ثبت‌نام کنند. برای مثال: mailinator.com|trashmail.net"
-    allowed_email_domains: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه باید با آن حساب کاربری ثبت نام کنند. اخطار: کاربرانی با دامنه‌های ایمیلی به غیر از آن‌هایی که در لیست هستند اجازه ندارند. "
     log_out_strict: "وقتی از سیستم خارج می شود، کاربر را از تمام session‌ها بر روی تمام دستگاه‌ها خارج کن "
     new_version_emails: "ارسال ایمیل به contact_email address وقتی نسخه جدید Discourse موجود است. "
     invite_expiry_days: "کلید دعوتنامه فراخوان برای چه مدت اعتبار دارد، واحد روز"
@@ -1405,7 +1399,6 @@ fa_IR:
     deactivated_by_staff: "غیر‌فعال شده توسط کارمندان"
     activated_by_staff: "فعال شده توسط کارمندان"
     new_user_typed_too_fast: "کاربر جدید خیلی سریع تایپ کرده"
-    content_matches_auto_block_regex: "محتوا با الگوی regex بستن خودکار هماهنگ است"
     username:
       short: "نباید کمتر از %{min} نویسه باشد"
       long: "نباید بیشتر از %{max} نویسه باشد"
@@ -1704,9 +1697,6 @@ fa_IR:
       one: "توجه کنید: ما حداکثر %{count} ایمیل در روز ارسال می‌کنیم. برای دیدن موارد ارسال نشده سایت را بررسی کنید. پ.ن: از شما برای محبوب بودنتان تشکر می‌کنیم!"
       other: "توجه کنید: ما حداکثر %{count} ایمیل در روز ارسال می‌کنیم. برای دیدن موارد ارسال نشده سایت را بررسی کنید. پ.ن: از شما برای محبوب بودنتان تشکر می‌کنیم!"
     in_reply_to: "در پاسخ به"
-    unsubscribe:
-      title: "لغو اشتراک"
-      description: "آیا تمایلی به دریافت این ایمیل‌ها ندارید؟ مشکلی نیست! اینجا را کلیک کنید تا اشتراک آن هم‌اکنون حذف شود."
     reply_by_email: "[نمایش موضوع](%{base_url}%{url}) یا پاسخ با ارسال ایمیل."
     only_reply_by_email: "برای پاسخدهی، به این ایمیل پاسخ دهید."
     visit_link_to_respond: "[موضوع را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
@@ -1911,7 +1901,6 @@ fa_IR:
       liked_received: "پسند‌های دریافت شده"
       new_users: "کاربر جدید"
       popular_topics: "موضوعات محبوب"
-      follow_topic: "دنبال کردن موضوع"
       join_the_discussion: "بیشتر بخوانید"
       popular_posts: "نوشته‌های محبوب"
       more_new: "جدید برای شما"
@@ -2011,8 +2000,6 @@ fa_IR:
     welcome_message: |
       ## [خوش آمدید به %{title}](#welcome)
       داشتن حساب کاربری الزامی است. لطفا یک حساب کاربری بسازید یا وارد شوید.
-  deleted: "حذف شد"
-  image: "تصویر"
   upload:
     edit_reason: "کپی عکس‌های محلی دانلود شد"
     unauthorized: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید معتبر نیست ( پسوندهای معتبر عبارتند از: {authorized_extensions}% )."
@@ -2265,10 +2252,7 @@ fa_IR:
       message: "<p>ایمیل فعال‌سازی به <b>%{email}</b> ارسال شد."
   safe_mode:
     title: "ورود به حالت امن"
-    description: "حالت ایمن به شما این امکان را می‌دهد، که سایت خود را بدون بارگیری افزونه‌ها یا پوسته‌ها آزمایش کنید."
     no_themes: "غیرفعال کردن پوسته‌ها و اجزای پوسته"
-    no_unofficial_plugins: "غیر‌فعال‌سازی افزونه‌های غیر رسمی"
-    no_plugins: "غیر‌فعال‌سازی تمام افزونه‌ها"
     enter: "فعال‌سازی حالت امن"
   wizard:
     title: "راه اندازی Discourse"
@@ -2335,7 +2319,9 @@ fa_IR:
         title: "دعوت همکاران"
       finished:
         title: "Discourse شما آماده‌ست!"
-  joined: "ملحق شده"
+  onebox:
+    discourse:
+      user_joined_community: "در %{date} عضو شدن"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} در "%{topic}" - %{site_title} به شما اشاره کرد'
@@ -2361,17 +2347,24 @@ fa_IR:
       medium: "متوسط"
       high: "بالا"
     actions:
+      agree:
+        title: "بله"
       agree_and_suspend:
         title: "کاربر تعلیق شده"
+      agree_and_restore:
+        title: "بازیابی نوشته"
       delete_single:
         title: "حذف"
+      delete_and_agree:
+        title: "حذف نوشته"
       disagree:
-        title: "مخالف"
+        title: "خیر"
       ignore:
         title: "چشم پوشی"
       approve:
         title: "تایید"
       reject_user:
+        title: "حذف کاربر..."
         delete:
           title: "حذف کاربر"
       reject:

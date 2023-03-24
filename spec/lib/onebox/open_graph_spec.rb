@@ -24,4 +24,32 @@ RSpec.describe Onebox::OpenGraph do
     og = described_class.new(doc)
     expect(og.image).to eq("http://test.com/test&apos;ing.mp3")
   end
+
+  describe "Collections" do
+    subject(:graph) { described_class.new(doc) }
+
+    let(:doc) { Nokogiri.HTML(<<-HTML) }
+      <html>
+        <title>test</title>
+        <meta property="og:article:tag" content="&lt;b&gt;tag1&lt;/b&gt;" />
+        <meta property="og:article:tag" content="tag2" />
+        <meta property="og:article:section" content="category1" />
+        <meta property="og:article:section" content="category2" />
+        <meta property="og:article:section:color" content="ff0000" />
+        <meta property="og:article:section:color" content="0000ff" />
+      </html>
+      HTML
+
+    it "handles multiple article:tag tags" do
+      expect(graph.article_tags).to eq %w[tag1 tag2]
+    end
+
+    it "handles multiple article:section tags" do
+      expect(graph.article_sections).to eq %w[category1 category2]
+    end
+
+    it "handles multiple article:section:color tags" do
+      expect(graph.article_section_colors).to eq %w[ff0000 0000ff]
+    end
+  end
 end

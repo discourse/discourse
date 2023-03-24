@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
 class SearchIndexer
-  POST_INDEX_VERSION = 4
-  MIN_POST_REINDEX_VERSION = 3
-  TOPIC_INDEX_VERSION = 3
+  MIN_POST_BLURB_INDEX_VERSION = 4
+
+  POST_INDEX_VERSION = 5
+  TOPIC_INDEX_VERSION = 4
   CATEGORY_INDEX_VERSION = 3
   USER_INDEX_VERSION = 3
   TAG_INDEX_VERSION = 3
+
+  # version to apply when issuing a background reindex
   REINDEX_VERSION = 0
+  TS_VECTOR_PARSE_REGEX = /('([^']*|'')*'\:)(([0-9]+[A-D]?,?)+)/
 
   def self.disable
     @disabled = true
@@ -45,17 +49,24 @@ class SearchIndexer
     tsvector = DB.query_single("SELECT #{ranked_index}", indexed_data)[0]
     additional_lexemes = []
 
+    # we also want to index parts of a domain name
+    # that way stemmed single word searches will match
+    additional_words = []
+
     tsvector
       .scan(/'(([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+)'\:([\w+,]+)/)
       .reduce(additional_lexemes) do |array, (lexeme, _, positions)|
         count = 0
 
-        if lexeme !~ /^(\d+\.)?(\d+\.)*(\*|\d+)$/
+        if lexeme !~ /\A(\d+\.)?(\d+\.)*(\*|\d+)\z/
           loop do
             count += 1
             break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
             term, _, remaining = lexeme.partition(".")
             break if remaining.blank?
+
+            additional_words << [term, positions]
+
             array << "'#{remaining}':#{positions}"
             lexeme = remaining
           end
@@ -64,7 +75,57 @@ class SearchIndexer
         array
       end
 
-    tsvector = "#{tsvector} #{additional_lexemes.join(" ")}"
+    extra_domain_word_terms =
+      if additional_words.length > 0
+        DB
+          .query_single(
+            "SELECT to_tsvector(?, ?)",
+            stemmer,
+            additional_words.map { |term, _| term }.join(" "),
+          )
+          .first
+          .scan(TS_VECTOR_PARSE_REGEX)
+          .map do |term, _, indexes|
+            new_indexes =
+              indexes
+                .split(",")
+                .map do |index|
+                  existing_positions = additional_words[index.to_i - 1]
+                  if existing_positions
+                    existing_positions[1]
+                  else
+                    index
+                  end
+                end
+                .join(",")
+            "#{term}#{new_indexes}"
+          end
+          .join(" ")
+      end
+
+    tsvector = "#{tsvector} #{additional_lexemes.join(" ")} #{extra_domain_word_terms}"
+
+    if (max_dupes = SiteSetting.max_duplicate_search_index_terms) > 0
+      reduced = []
+      tsvector
+        .scan(TS_VECTOR_PARSE_REGEX)
+        .each do |term, _, indexes|
+          family_counts = Hash.new(0)
+          new_index_array = []
+
+          indexes
+            .split(",")
+            .each do |index|
+              family = nil
+              family = index[-1] if index[-1].match?(/[A-D]/)
+              if (family_counts[family] += 1) <= max_dupes
+                new_index_array << index
+              end
+            end
+          reduced << "#{term.strip}#{new_index_array.join(",")}"
+        end
+      tsvector = reduced.join(" ")
+    end
 
     indexed_data =
       if table.to_s == "post"

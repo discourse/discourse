@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = "7.0.3.1"
+  rails_version = "7.0.4.3"
   gem "actionmailer", rails_version
   gem "actionpack", rails_version
   gem "actionview", rails_version
@@ -32,8 +32,8 @@ end
 gem "json"
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
-# This is a desired upgrade we should get to.
-gem "sprockets", "3.7.2"
+# We intend to drop sprockets rather than upgrade to 4.x
+gem "sprockets", git: "https://github.com/rails/sprockets", branch: "3.x"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
@@ -105,7 +105,7 @@ gem "pg"
 gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
-gem "r2", require: false
+gem "rtlcss", require: false
 gem "rake"
 
 gem "thor", require: false
@@ -180,6 +180,7 @@ group :development do
   gem "better_errors", platform: :mri, require: !!ENV["BETTER_ERRORS"]
   gem "binding_of_caller"
   gem "yaml-lint"
+  gem "yard"
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
@@ -229,10 +230,9 @@ gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
 
-# NOTE: later versions of sassc are causing a segfault, possibly dependent on processer architecture
-# and until resolved should be locked at 2.0.1
-gem "sassc", "2.0.1", require: false
-gem "sassc-rails"
+# These are forks of sassc and sassc-rails with dart-sass support
+gem "dartsass-ruby"
+gem "dartsass-sprockets"
 
 gem "rotp", require: false
 
@@ -261,12 +261,7 @@ if ENV["IMPORT"] == "1"
   gem "parallel", require: false
 end
 
-# workaround for openssl 3.0, see
-# https://github.com/pushpad/web-push/pull/2
-gem "web-push",
-    require: false,
-    git: "https://github.com/xfalcox/web-push",
-    branch: "openssl-3-compat"
+gem "web-push"
 gem "colored2", require: false
 gem "maxminddb"
 
@@ -284,3 +279,5 @@ gem "webrick", require: false
 
 # Workaround until Ruby ships with cgi version 0.3.6 or higher.
 gem "cgi", ">= 0.3.6", require: false
+
+gem "tzinfo-data"

@@ -113,7 +113,7 @@ module FileStore
               end
             )
 
-          url = SiteSetting.scheme + ":" + url if url =~ %r{^//}
+          url = SiteSetting.scheme + ":" + url if url =~ %r{\A//}
           file =
             FileHelper.download(
               url,

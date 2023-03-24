@@ -251,7 +251,11 @@ class UserUpdater
         end
       end
       if attributes.key?(:seen_popups) || attributes.key?(:skip_new_user_tips)
-        MessageBus.publish("/user-tips", user.user_option.seen_popups, user_ids: [user.id])
+        MessageBus.publish(
+          "/user-tips/#{user.id}",
+          user.user_option.seen_popups,
+          user_ids: [user.id],
+        )
       end
       DiscourseEvent.trigger(:user_updated, user)
     end
@@ -347,6 +351,6 @@ class UserUpdater
 
   def format_url(website)
     return nil if website.blank?
-    website =~ /^http/ ? website : "http://#{website}"
+    website =~ /\Ahttp/ ? website : "http://#{website}"
   end
 end

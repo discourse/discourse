@@ -37,7 +37,7 @@ class IncomingLink < ActiveRecord::Base
     if host != opts[:host] && (user_id || referer)
       post_id = opts[:post_id]
       post_id ||=
-        Post.where(topic_id: opts[:topic_id], post_number: opts[:post_number] || 1).pluck_first(:id)
+        Post.where(topic_id: opts[:topic_id], post_number: opts[:post_number] || 1).pick(:id)
 
       cid = current_user ? (current_user.id) : (nil)
       ip_address = nil if cid

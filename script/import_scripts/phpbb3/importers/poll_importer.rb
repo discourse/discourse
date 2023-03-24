@@ -74,7 +74,8 @@ module ImportScripts::PhpBB3
       arguments << "close=#{poll_data.close_time.iso8601}" if poll_data.close_time
 
       if poll_data.max_options > 1
-        arguments << "type=multiple" << "max=#{[poll_data.max_options, poll_data.options.count].min}"
+        arguments << "type=multiple" <<
+          "max=#{[poll_data.max_options, poll_data.options.count].min}"
       else
         arguments << "type=regular"
       end

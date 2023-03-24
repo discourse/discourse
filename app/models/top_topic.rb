@@ -5,21 +5,25 @@ class TopTopic < ActiveRecord::Base
 
   # The top topics we want to refresh often
   def self.refresh_daily!
-    transaction do
-      remove_invisible_topics
-      add_new_visible_topics
+    DistributedMutex.synchronize("update_top_topics", validity: 5.minutes) do
+      transaction do
+        remove_invisible_topics
+        add_new_visible_topics
 
-      update_counts_and_compute_scores_for(:daily)
+        update_counts_and_compute_scores_for(:daily)
+      end
     end
   end
 
   # We don't have to refresh these as often
   def self.refresh_older!
-    older_periods = periods - %i[daily all]
+    DistributedMutex.synchronize("update_top_topics", validity: 5.minutes) do
+      older_periods = periods - %i[daily all]
 
-    transaction { older_periods.each { |period| update_counts_and_compute_scores_for(period) } }
+      transaction { older_periods.each { |period| update_counts_and_compute_scores_for(period) } }
 
-    compute_top_score_for(:all)
+      compute_top_score_for(:all)
+    end
   end
 
   def self.refresh!

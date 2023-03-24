@@ -12,6 +12,9 @@ module Discourse
   class Utils
     URI_REGEXP ||= URI.regexp(%w[http https])
 
+    # TODO: Remove this once we drop support for Ruby 2.
+    EMPTY_KEYWORDS ||= {}
+
     # Usage:
     #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
     # or with a block
@@ -188,6 +191,18 @@ module Discourse
 
   reset_job_exception_stats!
 
+  if Rails.env.test?
+    def self.catch_job_exceptions!
+      raise "tests only" if !Rails.env.test?
+      @catch_job_exceptions = true
+    end
+
+    def self.reset_catch_job_exceptions!
+      raise "tests only" if !Rails.env.test?
+      remove_instance_variable(:@catch_job_exceptions)
+    end
+  end
+
   # Log an exception.
   #
   # If your code is in a scheduled job, it is recommended to use the
@@ -217,7 +232,7 @@ module Discourse
       { current_db: cm.current_db, current_hostname: cm.current_hostname }.merge(context),
     )
 
-    raise ex if Rails.env.test?
+    raise ex if Rails.env.test? && !@catch_job_exceptions
   end
 
   # Expected less matches than what we got in a find
@@ -676,7 +691,7 @@ module Discourse
   end
 
   def self.readonly_mode?(keys = READONLY_KEYS)
-    recently_readonly? || Discourse.redis.exists?(*keys)
+    recently_readonly? || GlobalSetting.pg_force_readonly_mode || Discourse.redis.exists?(*keys)
   end
 
   def self.staff_writes_only_mode?

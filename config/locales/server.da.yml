@@ -548,10 +548,6 @@ da:
             duration_minutes:
               cannot_be_zero: "skal være større end 0."
               exceeds_maximum: "kan ikke være mere end 20 år."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Følgende interpolationsnøgle(r) er ugyldige: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -700,10 +696,6 @@ da:
         one: "næsten %{count} år siden"
         other: "næsten %{count} år siden"
   password_reset:
-    choose_new: "Vælg en ny adgangskode"
-    choose: "Vælg en adgangskode"
-    update: "Opdatér Adgangskode"
-    save: "Gem Adgangskode"
     title: "Nulstil Adgangskode"
     success: "Din adgangskode er ændret og du er nu logget ind."
     success_unapproved: "Din adgangskode er nu ændret."
@@ -1408,9 +1400,6 @@ da:
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
     enable_badges: "Aktiver emblem systemet"
     allow_index_in_robots_txt: "Angiv i robots.txt, at dette websted må indekseres af websøgemaskiner. I undtagelsestilfælde kan du permanent <a href='%{base_path}/admin/customize/robots'>tilsidesætte robots.txt</a>."
-    blocked_email_domains: "En liste, der er afgrænset via pipe (lodret steg), over e-mail-domæner, som brugere ikke har tilladelse til at registrere konti med. Eksempel: mailinator.com|trashmail.net"
-    allowed_email_domains: "En pipesepareret liste over e-mail-domæner, som brugerne SKAL registrere konti med. ADVARSEL: Brugere med andre e-mail-domæner end dem, der er angivet, vil ikke være tilladt!"
-    auto_approve_email_domains: "Brugere med e-mailadresser fra denne liste over domæner vil automatisk blive godkendt."
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     version_checks: "Ping Discourse Hub for versionopdateringer, og vis meddelelser om ny version på instrumentbrættet <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
@@ -1431,7 +1420,6 @@ da:
     enable_discourse_connect: "Aktivér loin via DiscourseConnect (tidligere 'Discourse SSO') (ADVARSEL: BRUGERNES e-mailadresser *SKAL* VALIDERES AF DEN EKSTERNE SIDE!)"
     verbose_discourse_connect_logging: "Log detaljeret DiscourseConnect relateret diagnostik til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementer DiscourseConnect (tidligere 'Discourse SSO') providerprotokollen på /session/sso_provider slutpunktet, kræver, at discourse_connect_provider_secrets indstilles"
-    discourse_connect_url: "URL til DiscourseConnect-slutpunkt (skal indeholde http:// eller https://)"
     discourse_connect_secret: "Hemmelig streng, der bruges til kryptografisk godkendelse af DiscourseConnect-oplysninger, sørg for at der er 10 tegn eller mere"
     discourse_connect_overrides_bio: "Tilsidesætter brugerbio i brugerprofilen og forhindrer brugeren i at ændre den"
     discourse_connect_overrides_groups: "Synkronisér alle manuelle gruppemedlemskaber med grupper angivet i grupper-attributten (ADVARSEL: hvis du ikke angiver grupper, vil alle manuelle gruppemedlemmer blive ryddet for brugeren)"
@@ -2375,14 +2363,6 @@ da:
         Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
     user_automatically_silenced:
       subject_template: "Ny bruger %{username} er blevet gjort tavs af fællesskabsanmeldelse"
-      text_body_template: |
-        Dette er en automatisk besked.
-
-        Den nye bruger [%{username}](%{user_url}) blev automatisk gjort lydløs, fordi flere brugere anmeldte %{username}'s indlæg.
-
-        Venligst [gennemse anmeldelsen](%{base_url}/admin/flags). Hvis %{username} fejlagtigt blev gjort lydløs pga. indlæg, skal du klikke på Mådeholdt (silenced) knappen på [admin siden for denne bruger](%{user_url}).
-
-        Denne tærskel kan ændres via webstedsindstillingerne 'silence_new_user'.
     spam_post_blocked:
       title: "Spam-indlæg blokeret"
       subject_template: "Ny bruger %{username} indlæg blokeret på grund af gentagne links"
@@ -2433,9 +2413,6 @@ da:
   user_notifications:
     previous_discussion: "Tidligere Svar"
     in_reply_to: "Som svar på"
-    unsubscribe:
-      title: "Frameld"
-      description: "Ønsker du ikke at modtage disse e-mails? Intet problem! Klik herunder for at framelde med det samme:"
     reply_by_email: "[Besøg emnet](%{base_url}%{url}) eller svar på denne email for at svare."
     reply_by_email_pm: "[Besøg Meddelelse](%{base_url}%{url}) eller svar på denne e-mail for at svare %{participants}."
     only_reply_by_email: "Besvar denne mail for at svare."
@@ -2678,6 +2655,9 @@ da:
         Du er blevet suspenderet fra forummet.
 
         Årsag - %{reason}
+    account_silenced:
+      title: "Konto gjort tavs"
+      subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
     account_silenced_forever:
       title: "Konto gjort tavs"
       subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
@@ -2713,7 +2693,6 @@ da:
       liked_received: "Modtagne \"Synes godt om\""
       new_users: "Nye Brugere"
       popular_topics: "Populære Emner"
-      follow_topic: "Følg dette emne"
       join_the_discussion: "Læs mere"
       popular_posts: "Populære Indlæg"
       more_new: "Nyt for dig"
@@ -2890,8 +2869,6 @@ da:
     welcome_message: |
       ## [Velkommen til %{title}](#welcome)
       En konto er påkrævet. Opret venligst en konto eller log ind for at fortsætte.
-  deleted: "slettet"
-  image: "billede"
   upload:
     unauthorized: "Beklager, filen, som du forsøger at overføre er ikke godkendt (godkente filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
@@ -2974,88 +2951,6 @@ da:
     title: "Vilkår"
   privacy_topic:
     title: "Privatlivspolitik"
-    body: |
-      <a name="collect"></a>
-
-      ## [Hvilke oplysninger indsamler vi?](#collect)
-
-      Vi indsamler oplysninger fra dig når du registrerer dig på vores websted og indsamler data når du deltager i forummet ved læsning, skrift, og vurdering af indhold delt her.
-
-      Når du registerer dig på vores websted, kan du blive spurgt om at indtaste dit navn og e-mail adresse. Du må dog, besøge vores websted uden registrering. Din e-mail adresse vil blive bekræftet ved at sende en e-mail, indeholdende et unikt link. Hvis dette link besøges, ved vi, at du styrer e-mail-adressen.
-
-      Når du er registreret og skriver indlæg, gemmer vi IP adressen som indlægget bliver skrevet fra. Vi kan også gemme server-logfiler, der indeholder IP adressen for hver forespørgsel til vores server.
-
-      <a name="use"></a>
-
-      ## [Hvad bruger vi dine oplysninger til?](#use)
-
-      Enhver af de oplysninger, vi indsamler fra dig, kan bruges på en af følgende måder:
-
-      * Til at personalisere din oplevelse &mdash; dine oplysninger hjælper os til bedre at reagere på dine individuelle behov.
-      * Til at forbedre vores websted &mdash; vi stræber løbende efter at forbedre vores webstedstilbud baseret på den information og feedback, vi modtager fra dig.
-      * Til at forbedre kundeservice &mdash; dine oplysninger hjælper os til mere effektiv behandling af din kundeservice forespørgsel og support behov.
-      * Til at sende periodiske e-mails &mdash; E-mail adressen du angiver, kan blive brugt til at sende dig information, notifikationer som din forespørgsel vedr. ændringer til emner eller som svar til dit brugernavn, svar på forespørgsler, og/eller andre forespørgsler eller spørgsmål.
-
-      <a name="protect"></a>
-
-      ## [Hvordan beskytter vi dine oplysninger?](#protect)
-
-      Vi implementerer en række sikkerhedsforanstaltninger for at opretholde sikkerheden af dine personlige oplysninger, når du indtaster, indsender eller får adgang til dine personlige oplysninger.
-
-      <a name="data-retention"></a>
-
-      ## [Hvad er din politik for opbevaring af data?](#data-retention)
-
-      Vi bestræber os i god tro på at:
-
-      * Gem serverlogfiler, der indeholder IP-adressen på alle anmodninger til denne server, i ikke mere end 90 dage.
-      * Beholde IP-adresserne, der er knyttet til registrerede brugere, og deres indlæg i ikke mere end 5 år.
-
-      <a name="cookies"></a>
-
-      ## [Benytter vi cookies?](#cookies)
-
-      Ja. Cookies er små filer, som et websted eller dets tjenesteudbyder overfører til din computers harddisk gennem din webbrowser (hvis du tillader det). Disse cookies gør det muligt for webstedet at genkende din browser, og hvis du har en registreret konto, knytte den til din registrerede konto.
-
-      Vi bruger cookies til at forstå og gemme dine præferencer til fremtidige besøg og samle samlede data om webstrafik og webstedsinteraktion, så vi kan tilbyde bedre webstedsoplevelser og værktøjer i fremtiden. Vi kan indgå kontrakt med tredjepartsudbydere for at hjælpe os med bedre forståelse af vores besøgende. Disse tjenesteudbydere har ikke tilladelse til at bruge de oplysninger, der er indsamlet på vores vegne, undtagen for at hjælpe os med at drive og forbedre vores forretning.
-
-      <a name="disclose"></a>
-
-      ## [Videregiver vi nogen oplysninger til eksterne parter?](#disclose)
-
-      Vi sælger, handler eller på anden måde overfører ikke dine personligt identificerbare oplysninger til eksterne parter. Dette inkluderer ikke pålidelige tredjeparter, der hjælper os med at betjene vores websted, drive vores forretning eller servicere dig, så længe disse parter er enige om at holde disse oplysninger fortrolige. Vi kan også frigive dine oplysninger, når vi mener, at frigivelse er passende for at overholde loven, håndhæve vores webstedspolitikker eller beskytte vores eller andres rettigheder, ejendom eller sikkerhed. Ikke-personligt identificerbar besøgsinformation kan dog leveres til andre parter til markedsføring, reklame eller anden anvendelse.
-
-      <a name="third-party"></a>
-
-      ## [Tredjeparts links](#third-party)
-
-      Lejlighedsvis kan vi, efter vores skøn, inkludere eller tilbyde tredjepartsprodukter eller tjenester på vores websted. Disse tredjepartswebsteder har separate og uafhængige privatlivspolitikker. Vi har derfor intet ansvar eller ansvar for indholdet og aktiviteterne på disse linkede sider. Ikke desto mindre forsøger vi at beskytte integriteten af vores websted og hilser enhver feedback om disse websteder velkommen.
-
-      <a name="coppa"></a>
-
-      ## [Overholdelse af børns online privatlivslov](#coppa)
-
-      Vores side, produkter og tjenester er alle rettet mod mennesker, der er mindst 13 år eller ældre. Hvis denne server er i USA, og du er under 13 år, i henhold til kravene i COPPA ([Children's Online Privacy Protection Act] (https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), skal du ikke bruge dette websted.
-
-      <a name="online"></a>
-
-      ## [Kun privatlivspolitik online](#online)
-
-      Denne fortrolighedspolitik online gælder kun for information indsamlet via vores websted og ikke for information indsamlet offline.
-
-      <a name="consent"></a>
-
-      ## [Dit samtykke](#consent)
-
-      Ved at bruge vores side giver du dit samtykke til vores fortrolighedspolitik for webstedet.
-
-      <a name="changes"> </a>
-
-      ## [Ændringer i vores fortrolighedspolitik](#changes)
-
-      Hvis vi beslutter at ændre vores fortrolighedspolitik, offentliggør vi disse ændringer på denne side.
-
-      Dette dokument er CC-BY-SA. Det blev sidst opdateret 31. maj 2013.
   badges:
     mass_award:
       errors:
@@ -3346,8 +3241,6 @@ da:
       message: "<p>Vi har gensendt aktiverings-e-mailen til <b>%{email}</b>"
   safe_mode:
     title: "Gå ind i fejlsikret tilstand"
-    no_unofficial_plugins: "Deaktiver uofficielle udvidelser"
-    no_plugins: "Deaktiver alle udvidelsesmoduler"
     enter: "Gå ind i fejlsikret tilstand"
     must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."
   wizard:
@@ -3402,7 +3295,6 @@ da:
         title: "Discourse er gjort klar til dig!"
   search_logs:
     graph_title: "Antal søgninger"
-  joined: "Tilmeldt"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'
@@ -3447,44 +3339,25 @@ da:
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:
       agree:
-        title: "Enig..."
-      agree_and_keep:
-        title: "Behold Indlæg"
-      agree_and_keep_hidden:
-        title: "Behold Indlæg Skjult"
-      agree_and_suspend:
-        title: "Suspendér Bruger"
-      agree_and_silence:
-        title: "Mådehold (silence) Bruger"
+        title: "Ja"
       agree_and_restore:
-        title: "Gendan Indlæg"
         description: "Gendan indlægget, så alle brugere kan se det."
-      agree_and_hide:
-        title: "Skjul Indlæg"
-        description: "Skjul dette indlæg og send automatisk brugeren en meddelelse, der opfordrer dem til at redigere det."
       delete_single:
         title: "Slet"
       delete:
         title: "Slet..."
-      delete_and_ignore:
-        title: "Slet Indlæg og Ignorer"
-        description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"
       delete_and_ignore_replies:
-        description: "Slet indlæg og alle dets svar Hvis det er første indlæg, så slet også emnet"
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
-      delete_and_agree:
-        title: "Slet Indlæg og Accepter"
-        description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"
       delete_and_agree_replies:
-        title: "Slet Indlæg + Svar og Accepter"
-        description: "Slet indlæg og alle dets svar Hvis det er første indlæg, så slet også emnet"
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       disagree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
       disagree:
-        title: "Uenig"
+        title: "Nej"
       ignore:
         title: "Ignorér"
+      ignore_and_do_nothing:
+        title: "Gøre ingenting"
       approve:
         title: "Godkend"
       approve_post:

@@ -14,11 +14,16 @@ class TopicQuery
   def self.validators
     @validators ||=
       begin
-        int = lambda { |x| Integer === x || (String === x && x.match?(/^-?[0-9]+$/)) }
-
+        int = lambda { |x| Integer === x || (String === x && x.match?(/\A-?[0-9]+\z/)) }
         zero_up_to_max_int = lambda { |x| int.call(x) && x.to_i.between?(0, PG_MAX_INT) }
+        array_or_string = lambda { |x| Array === x || String === x }
 
-        { max_posts: zero_up_to_max_int, min_posts: zero_up_to_max_int, page: zero_up_to_max_int }
+        {
+          max_posts: zero_up_to_max_int,
+          min_posts: zero_up_to_max_int,
+          page: zero_up_to_max_int,
+          tags: array_or_string,
+        }
       end
   end
 
@@ -211,6 +216,13 @@ class TopicQuery
 
     pm_params = pm_params || get_pm_params(topic)
 
+    if DiscoursePluginRegistry.list_suggested_for_providers.any?
+      DiscoursePluginRegistry.list_suggested_for_providers.each do |provider|
+        suggested = provider.call(topic, pm_params, self)
+        builder.add_results(suggested[:result]) if suggested && !suggested[:result].blank?
+      end
+    end
+
     # When logged in we start with different results
     if @user
       if topic.private_message?
@@ -255,6 +267,10 @@ class TopicQuery
     create_list(:latest, {}, latest_results)
   end
 
+  def list_filter
+    list_latest
+  end
+
   def list_read
     create_list(:read, unordered: true) do |topics|
       topics.where("tu.last_visited_at IS NOT NULL").order("tu.last_visited_at DESC")
@@ -262,7 +278,11 @@ class TopicQuery
   end
 
   def list_new
-    create_list(:new, { unordered: true }, new_results)
+    if @user&.new_new_view_enabled?
+      create_list(:new, { unordered: true }, new_and_unread_results)
+    else
+      create_list(:new, { unordered: true }, new_results)
+    end
   end
 
   def list_unread
@@ -425,7 +445,7 @@ class TopicQuery
       (pinned_topics + unpinned_topics)[0...limit] if limit
     else
       offset = (page * per_page) - pinned_topics.length
-      offset = 0 unless offset > 0
+      offset = 0 if offset <= 0
       unpinned_topics.offset(offset).to_a
     end
   end
@@ -446,7 +466,8 @@ class TopicQuery
     if options[:preload_posters]
       user_ids = []
       topics.each do |ft|
-        user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
+        user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids <<
+          ft.allowed_user_ids
       end
 
       user_lookup = UserLookup.new(user_ids)
@@ -502,21 +523,7 @@ class TopicQuery
         whisperer: @user&.whisperer?,
       ).order("CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END")
 
-    if @user
-      # micro optimisation so we don't load up all of user stats which we do not need
-      unread_at =
-        DB.query_single("select first_unread_at from user_stats where user_id = ?", @user.id).first
-
-      if max_age = options[:max_age]
-        max_age_date = max_age.days.ago
-        unread_at ||= max_age_date
-        unread_at = unread_at > max_age_date ? unread_at : max_age_date
-      end
-
-      # perf note, in the past we tried doing this in a subquery but performance was
-      # terrible, also tried with a join and it was bad
-      result = result.where("topics.updated_at >= ?", unread_at)
-    end
+    result = apply_max_age_limit(result, options)
 
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:unread, result, @user, options)
@@ -541,6 +548,28 @@ class TopicQuery
     end
 
     suggested_ordering(result, options)
+  end
+
+  def new_and_unread_results(options = {})
+    base = default_results(options.reverse_merge(unordered: true))
+
+    new_results =
+      TopicQuery.new_filter(
+        base,
+        treat_as_new_topic_start_date: @user.user_option.treat_as_new_topic_start_date,
+      )
+    new_results = remove_muted(new_results, @user, options)
+    new_results = remove_dismissed(new_results, @user)
+
+    unread_results =
+      apply_max_age_limit(TopicQuery.unread_filter(base, whisperer: @user&.whisperer?), options)
+
+    base.joins_values.concat(new_results.joins_values, unread_results.joins_values)
+    base.joins_values.uniq!
+    results = base.merge(new_results.or(unread_results))
+
+    results = results.order("CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END")
+    suggested_ordering(results, options)
   end
 
   protected
@@ -625,8 +654,7 @@ class TopicQuery
     category_id = category_id_or_slug.to_i
 
     if category_id == 0
-      category_id =
-        Category.where(slug: category_id_or_slug, parent_category_id: nil).pluck_first(:id)
+      category_id = Category.where(slug: category_id_or_slug, parent_category_id: nil).pick(:id)
     end
 
     category_id
@@ -637,12 +665,16 @@ class TopicQuery
     options.reverse_merge!(@options)
     options.reverse_merge!(per_page: per_page_setting) unless options[:limit] == false
 
-    # Whether to return visible topics
-    options[:visible] = true if @user.nil? || @user.regular?
-    options[:visible] = false if @user && @user.id == options[:filtered_to_user]
+    # Whether to include unlisted (visible = false) topics
+    viewing_own_topics = @user && @user.id == options[:filtered_to_user]
+
+    if options[:visible].nil?
+      options[:visible] = true if @user.nil? || @user.regular?
+      options[:visible] = false if @guardian.can_see_unlisted_topics? || viewing_own_topics
+    end
 
     # Start with a list of all topics
-    result = Topic.unscoped.includes(:category)
+    result = Topic.includes(:category)
 
     if @user
       result =
@@ -660,7 +692,10 @@ class TopicQuery
         result = result.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
         if !SiteSetting.show_category_definitions_in_topic_lists
           result =
-            result.where("categories.topic_id <> topics.id OR topics.category_id = ?", category_id)
+            result.where(
+              "categories.topic_id IS DISTINCT FROM topics.id OR topics.category_id = ?",
+              category_id,
+            )
         end
       end
       result = result.references(:categories)
@@ -669,7 +704,7 @@ class TopicQuery
         filter = (options[:filter] || options[:f])
         # category default sort order
         sort_order, sort_ascending =
-          Category.where(id: category_id).pluck_first(:sort_order, :sort_ascending)
+          Category.where(id: category_id).pick(:sort_order, :sort_ascending)
         if sort_order && (filter.blank? || %i[latest unseen].include?(filter))
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? "true" : "false"
@@ -680,65 +715,14 @@ class TopicQuery
       end
     end
 
-    if SiteSetting.tagging_enabled
-      result = result.preload(:tags)
-
-      tags_arg = @options[:tags]
-
-      if tags_arg && tags_arg.size > 0
-        tags_arg = tags_arg.split if String === tags_arg
-
-        tags_arg =
-          tags_arg.map do |t|
-            if String === t
-              t.downcase
-            else
-              t
-            end
-          end
-
-        tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
-        tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
-
-        if ActiveModel::Type::Boolean.new.cast(@options[:match_all_tags])
-          # ALL of the given tags:
-          if tags_arg.length == tags.length
-            tags.each_with_index do |tag, index|
-              sql_alias = ["t", index].join
-              result =
-                result.joins(
-                  "INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}",
-                )
-            end
-          else
-            result = result.none # don't return any results unless all tags exist in the database
-          end
-        else
-          # ANY of the given tags:
-          result = result.joins(:tags).where("tags.id in (?)", tags)
-        end
-
-        # TODO: this is very side-effecty and should be changed
-        # It is done cause further up we expect normalized tags
-        @options[:tags] = tags
-      elsif @options[:no_tags]
-        # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
-        result = result.where.not(id: TopicTag.distinct.pluck(:topic_id))
-      end
-
-      result = result.where(<<~SQL, name: @options[:exclude_tag]) if @options[:exclude_tag].present?
-        topics.id NOT IN (
-          SELECT topic_tags.topic_id
-          FROM topic_tags
-          INNER JOIN tags ON tags.id = topic_tags.tag_id
-          WHERE tags.name = :name
-        )
-        SQL
-    end
-
+    result = filter_by_tags(result)
     result = apply_ordering(result, options)
 
-    all_listable_topics = @guardian.filter_allowed_categories(Topic.unscoped.listable_topics)
+    all_listable_topics =
+      @guardian.filter_allowed_categories(
+        Topic.unscoped.listable_topics,
+        category_id_column: "categories.id",
+      )
 
     if options[:include_pms] || options[:include_all_pms]
       all_pm_topics =
@@ -797,8 +781,6 @@ class TopicQuery
         )
     end
 
-    require_deleted_clause = true
-
     if before = options[:before]
       if (before = before.to_i) > 0
         result = result.where("topics.created_at < ?", before.to_i.days.ago)
@@ -812,24 +794,12 @@ class TopicQuery
     end
 
     if status = options[:status]
-      case status
-      when "open"
-        result = result.where("NOT topics.closed AND NOT topics.archived")
-      when "closed"
-        result = result.where("topics.closed")
-      when "archived"
-        result = result.where("topics.archived")
-      when "listed"
-        result = result.where("topics.visible")
-      when "unlisted"
-        result = result.where("NOT topics.visible")
-      when "deleted"
-        category = Category.find_by(id: options[:category])
-        if @guardian.can_see_deleted_topics?(category)
-          result = result.where("topics.deleted_at IS NOT NULL")
-          require_deleted_clause = false
-        end
-      end
+      result =
+        TopicsFilter.new(
+          scope: result,
+          guardian: @guardian,
+          category_id: options[:category],
+        ).filter(status: options[:status])
     end
 
     if (filter = (options[:filter] || options[:f])) && @user
@@ -852,7 +822,6 @@ class TopicQuery
       result = TopicQuery.tracked_filter(result, @user.id) if filter == "tracked"
     end
 
-    result = result.where("topics.deleted_at IS NULL") if require_deleted_clause
     result = result.where("topics.posts_count <= ?", options[:max_posts]) if options[
       :max_posts
     ].present?
@@ -914,12 +883,12 @@ class TopicQuery
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 
-      list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
+      list = list.where("categories.id IN (?)", category_ids) if category_ids.present?
     else
       category_ids = SiteSetting.default_categories_muted.split("|").map(&:to_i)
       category_ids -= [category_id] if category_id.present? && category_ids.include?(category_id)
 
-      list = list.where("topics.category_id NOT IN (?)", category_ids) if category_ids.present?
+      list = list.where("categories.id NOT IN (?)", category_ids) if category_ids.present?
     end
 
     list
@@ -1011,7 +980,7 @@ class TopicQuery
           :first_unread_pm_at,
         )
       else
-        UserStat.where(user_id: @user.id).pluck_first(:first_unread_pm_at)
+        UserStat.where(user_id: @user.id).pick(:first_unread_pm_at)
       end
 
     query = query.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
@@ -1155,5 +1124,76 @@ class TopicQuery
 
     col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
     list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.#{col_name}")
+  end
+
+  def apply_max_age_limit(results, options)
+    if @user
+      # micro optimisation so we don't load up all of user stats which we do not need
+      unread_at =
+        DB.query_single("select first_unread_at from user_stats where user_id = ?", @user.id).first
+
+      if max_age = options[:max_age]
+        max_age_date = max_age.days.ago
+        unread_at ||= max_age_date
+        unread_at = unread_at > max_age_date ? unread_at : max_age_date
+      end
+
+      # perf note, in the past we tried doing this in a subquery but performance was
+      # terrible, also tried with a join and it was bad
+      results = results.where("topics.updated_at >= ?", unread_at)
+    end
+    results
+  end
+
+  def filter_by_tags(result)
+    return result if !SiteSetting.tagging_enabled
+
+    tags_arg = @options[:tags]
+
+    if tags_arg && tags_arg.size > 0
+      tags_arg = tags_arg.split if String === tags_arg
+      tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
+      tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
+
+      if ActiveModel::Type::Boolean.new.cast(@options[:match_all_tags])
+        # ALL of the given tags:
+        if tags_arg.length == tags.length
+          tags.each_with_index do |tag, index|
+            sql_alias = ["t", index].join
+
+            result =
+              result.joins(
+                "INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}",
+              )
+          end
+        else
+          result = result.none # don't return any results unless all tags exist in the database
+        end
+      else
+        # ANY of the given tags:
+        result = result.joins(:tags).where("tags.id in (?)", tags)
+      end
+
+      # TODO: this is very side-effecty and should be changed
+      # It is done cause further up we expect normalized tags
+      @options[:tags] = tags
+    elsif @options[:no_tags]
+      # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
+      result = result.where.not(id: TopicTag.distinct.select(:topic_id))
+    end
+
+    if @options[:exclude_tag].present? &&
+         !DiscourseTagging.hidden_tag_names(@guardian).include?(@options[:exclude_tag])
+      result = result.where(<<~SQL, name: @options[:exclude_tag])
+        topics.id NOT IN (
+          SELECT topic_tags.topic_id
+          FROM topic_tags
+          INNER JOIN tags ON tags.id = topic_tags.tag_id
+          WHERE tags.name = :name
+        )
+        SQL
+    end
+
+    result
   end
 end

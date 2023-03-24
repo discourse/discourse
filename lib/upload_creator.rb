@@ -57,9 +57,6 @@ class UploadCreator
         true
       end
     )
-
-    # TODO (martin) Validate @opts[:type] to make sure only blessed types are passed
-    # in, since the clientside can pass any type it wants.
   end
 
   def create_for(user_id)
@@ -78,13 +75,13 @@ class UploadCreator
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
 
-    # if this is present then it means we are creating an upload record from
+    # If this is present then it means we are creating an upload record from
     # an external_upload_stub and the file is > ExternalUploadManager::DOWNLOAD_LIMIT,
     # so we have not downloaded it to a tempfile. no modifications can be made to the
     # file in this case because it does not exist; we simply move it to its new location
     # in S3
     #
-    # TODO (martin) I've added a bunch of external_upload_too_big checks littered
+    # FIXME: I've added a bunch of external_upload_too_big checks littered
     # throughout the UploadCreator code. It would be better to have two seperate
     # classes with shared methods, rather than doing all these checks all over the
     # place. Needs a refactor.
@@ -389,7 +386,7 @@ class UploadCreator
   end
 
   def convert_heif_to_jpeg?
-    File.extname(@filename).downcase.match?(/\.hei(f|c)$/)
+    File.extname(@filename).downcase.match?(/\.hei(f|c)\z/)
   end
 
   def convert_heif!
@@ -596,7 +593,7 @@ class UploadCreator
   def should_optimize?
     # GIF is too slow (plus, we'll soon be converting them to MP4)
     # Optimizing SVG is useless
-    return false if @file.path =~ /\.(gif|svg)$/i
+    return false if @file.path =~ /\.(gif|svg)\z/i
     # Safeguard for large PNGs
     return pixels < 2_000_000 if @file.path =~ /\.png/i
     # Everything else is fine!

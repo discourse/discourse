@@ -1,8 +1,8 @@
 <DSection @pageClass="user-summary" @tagName="">
-  <div class="user-content">
+  <div class="user-content" id="user-content">
     <PluginOutlet
       @name="above-user-summary-stats"
-      @args={{hash model=this.model user=this.user}}
+      @outletArgs={{hash model=this.model user=this.user}}
     />
     {{#if this.model.can_see_summary_stats}}
       <div class="top-section stats-section">
@@ -95,7 +95,7 @@
           <PluginOutlet
             @name="user-summary-stat"
             @connectorTagName="li"
-            @args={{hash model=this.model user=this.user}}
+            @outletArgs={{hash model=this.model user=this.user}}
           />
         </ul>
       </div>
@@ -103,7 +103,7 @@
 
     <PluginOutlet
       @name="below-user-summary-stats"
-      @args={{hash model=this.model user=this.user}}
+      @outletArgs={{hash model=this.model user=this.user}}
     />
 
     <div class="top-section">
@@ -282,7 +282,7 @@
             {{/each}}
             <PluginOutlet
               @name="after-user-summary-badges"
-              @args={{hash model=this.model user=this.user}}
+              @outletArgs={{hash model=this.model user=this.user}}
             />
           </div>
         {{else}}

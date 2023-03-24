@@ -5,26 +5,10 @@
 .d-header {
   height: 3.66em;
 
-  // some protection for text-only site titles
   .title {
-    max-width: 75%;
-    @include ellipsis;
-    animation: fadein 0.5s;
-    // This acts as a placeholder if for some reason the small logo takes a while
-    // to load - prevents topic title from shifting after the small logo loads.
-    // It's hardcoded to 36px because that's the width we use inline for the small
-    // logo in the home-logo widget.
-    min-width: 36px;
-    a {
-      display: block;
-      width: 100%;
-    }
+    --d-logo-height: 2.4em;
   }
 
-  #site-logo {
-    max-height: 2.4em;
-    max-width: 100%;
-  }
   #site-text-logo {
     font-size: var(--font-up-1);
   }

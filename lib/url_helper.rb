@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UrlHelper
+  MAX_URL_LENGTH = 100_000
+
   # At the moment this handles invalid URLs that browser address bar accepts
   # where second # is not encoded
   #
@@ -48,8 +50,8 @@ class UrlHelper
   end
 
   def self.absolute(url, cdn = Discourse.asset_host)
-    cdn = "https:#{cdn}" if cdn && cdn =~ %r{^//}
-    url =~ %r{^/[^/]} ? (cdn || Discourse.base_url_no_prefix) + url : url
+    cdn = "https:#{cdn}" if cdn && cdn =~ %r{\A//}
+    url =~ %r{\A/[^/]} ? (cdn || Discourse.base_url_no_prefix) + url : url
   end
 
   def self.absolute_without_cdn(url)
@@ -57,7 +59,7 @@ class UrlHelper
   end
 
   def self.schemaless(url)
-    url.sub(/^http:/i, "")
+    url.sub(/\Ahttp:/i, "")
   end
 
   def self.secure_proxy_without_cdn(url)
@@ -74,8 +76,9 @@ class UrlHelper
   end
 
   def self.normalized_encode(uri)
-    validated = nil
     url = uri.to_s
+
+    raise ArgumentError.new(:uri, "URL is too long") if url.length > MAX_URL_LENGTH
 
     # Ideally we will jump straight to `Addressable::URI.normalized_encode`. However,
     # that implementation has some edge-case issues like https://github.com/sporkmonger/addressable/issues/472.

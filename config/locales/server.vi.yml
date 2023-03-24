@@ -145,6 +145,7 @@ vi:
       has_already_been_used: "đã được sử dụng"
       inclusion: không được bao gồm trong danh sách
       invalid: là không hợp lệ
+      is_invalid: "có vẻ không rõ ràng, nó là một câu hoàn chỉnh?"
       invalid_timezone: "'%{tz}' không phải là múi giờ hợp lệ"
       contains_censored_words: "chứa các từ được kiểm duyệt sau: %{censored_words}"
       less_than: phải nhỏ hơn %{count}
@@ -484,10 +485,6 @@ vi:
           attributes:
             execute_at:
               in_the_past: "phải ở trong tương lai."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: '(Các) khóa nội suy sau không hợp lệ: "%{keys}"'
       <<: *errors
   uncategorized_category_name: "Chưa phân loại"
   general_category_name: "Chung"
@@ -541,6 +538,8 @@ vi:
   post:
     image_placeholder:
       broken: "Hình ảnh này bị hỏng"
+    has_likes:
+      other: "%{count} Lượt thích"
   rate_limiter:
     slow_down: "Bạn đã thực hiện hành động này quá nhiều lần, vui lòng thử lại sau."
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
@@ -605,10 +604,6 @@ vi:
       almost_x_years:
         other: "gần %{count} năm trước"
   password_reset:
-    choose_new: "Chọn một mật khẩu mới"
-    choose: "Chọn một mật khẩu"
-    update: "Cập nhật mật khẩu"
-    save: "Nhập mật khẩu"
     title: "Thiết lập lại mật khẩu"
     success: "Bạn đã thay đổi mật khẩu thành công và đã được đăng nhập."
     success_unapproved: "Bạn đã thay đổi mật khẩu thành công."
@@ -847,6 +842,7 @@ vi:
       labels:
         term: Thuật ngữ
         searches: Số lần tìm kiếm
+        click_through: CTR
       description: "Các thuật ngữ tìm kiếm phổ biến nhất với tỷ lệ nhấp chuột của họ."
     emails:
       title: "Email đã gửi"
@@ -1095,8 +1091,6 @@ vi:
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
     enable_badges: "Kích hoạt hệ thống huy hiệu"
     whispers_allowed_groups: "Cho phép giao tiếp riêng tư trong các chủ đề cho các thành viên của các nhóm được chỉ định."
-    blocked_email_domains: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
-    allowed_email_domains: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với tên miền email khác trong danh sách sẽ không được phép đăng ký!"
     normalize_emails: "Kiểm tra xem email chuẩn hóa có phải là duy nhất không. Email được chuẩn hóa sẽ xóa tất cả các dấu chấm khỏi tên người dùng và mọi thứ nằm giữa ký hiệu + và @."
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
     new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
@@ -1378,7 +1372,6 @@ vi:
     dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
     dashboard_general_tab_activity_metrics: "Chọn các báo cáo sẽ được hiển thị dưới dạng chỉ số hoạt động trên tab chung."
     suggest_weekends_in_date_pickers: "Bao gồm các ngày cuối tuần (Thứ Bảy và Chủ Nhật) trong đề xuất chọn ngày (tắt tính năng này nếu bạn chỉ sử dụng Discourse vào các ngày trong tuần, thứ Hai đến thứ Sáu)."
-    enable_new_user_profile_nav_groups: "THỬ NGHIỆM: Người dùng của các nhóm đã chọn sẽ được hiển thị menu điều hướng hồ sơ người dùng mới"
     errors:
       invalid_email: "Địa chỉ email sai"
       invalid_username: "Không có thành viên với tên đăng nhập này"
@@ -1516,7 +1509,6 @@ vi:
       other: "Tự động vô hiệu hóa sau %{count} ngày không hoạt động"
     activated_by_staff: "Kích hoạt bởi nhân viên"
     new_user_typed_too_fast: "Người dùng mới nhập quá nhanh"
-    content_matches_auto_block_regex: "Nội dung khớp với regex khối tự động"
     username:
       short: "phải dài ít nhất %{min} ký tự"
       long: "không được dài hơn %{max} ký tự"
@@ -1637,8 +1629,10 @@ vi:
         ` ``
         [/details]
     flags_agreed_and_post_deleted:
+      title: "Nhân viên đã xóa bài đăng bị gắn cờ"
       subject_template: "Nhân viên đã xóa bài đăng bị gắn cờ"
     flags_agreed_and_post_deleted_for_responders:
+      title: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
       subject_template: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
     welcome_user:
       subject_template: "Chào mừng đến với %{site_name}!"
@@ -1802,9 +1796,6 @@ vi:
     reached_limit:
       other: "Lưu ý: Chúng tôi gửi tối đa %{count} email hàng ngày. Kiểm tra trang web để xem những trang có thể bị giữ lại. PS cảm ơn!"
     in_reply_to: "Trong Trả Lời Tới"
-    unsubscribe:
-      title: "Bỏ theo dõi"
-      description: "Bạn không thích nhận mail giống mail này? Nhấn vào bỏ theo dõi để bỏ đăng ký ngay lập tức:"
     reply_by_email: "[Truy cập Chủ đề] (%{base_url}%{url}) hoặc trả lời email này để phản hồi."
     reply_by_email_pm: "[Ghé thăm Tin nhắn] (%{base_url}%{url}) hoặc trả lời email này để trả lời %{participants}."
     only_reply_by_email: "Trả lời email này để phản hồi."
@@ -1958,14 +1949,13 @@ vi:
     welcome_message: |
       ## [Chào mừng tới %{title}] (#welcome)
       Một tài khoản là bắt buộc. Vui lòng tạo một tài khoản hoặc đăng nhập để tiếp tục.
-  deleted: "đã bị xóa "
-  image: "hình ảnh"
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."
     unauthorized: "Xin lỗi, tập tin của bạn tải lên không được cho phép (định dạng cho phép: %{authorized_extensions})."
     pasted_image_filename: "Hình ảnh được chèn"
     store_failure: "Tải lên lỗi #%{upload_id} cho tài khoản #%{user_id}."
     file_missing: "Xin lỗi, bạn phải cung cấp tập tin để tải lên"
+    size_zero_failure: "Rất tiếc, có vẻ như đã xảy ra sự cố, tệp bạn đang cố tải lên có dung lượng là 0 byte. Vui lòng thử lại."
     attachments:
       too_large: "Xin lỗi, tập tin bạn tải lên quá lớn (kích thước tối đa %{max_size_kb}KB)."
     images:
@@ -1989,6 +1979,8 @@ vi:
     sender_message_to_blank: "message.to rỗng"
     sender_text_part_body_blank: "text_part.body rỗng"
     sender_body_blank: "nội dung rỗng"
+    sender_post_deleted: "bài đăng đã bị xóa"
+    sender_topic_deleted: "chủ đề đã bị xóa"
     group_smtp_post_deleted: "bài đăng đã bị xóa"
     group_smtp_topic_deleted: "chủ đề đã bị xóa"
   color_schemes:
@@ -2162,6 +2154,7 @@ vi:
     aficionado:
       long_description: |
         Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
+    badge_title_metadata: "%{display_name} huy hiệu trên %{site_title}"
   admin_login:
     success: "Gửi mail lỗi"
     email_input: "Email quản trị"
@@ -2200,6 +2193,8 @@ vi:
                 label: "Các chuyên mục và chủ đề nổi bật"
               categories_and_latest_topics:
                 label: "Các chuyên mục và chủ đề mới"
+              categories_and_latest_topics_created_date:
+                label: "Danh mục và Chủ đề mới nhất (sắp xếp theo chủ đề ngày tạo)"
               categories_and_top_topics:
                 label: "Chuyên mục và Chủ đề nổi bật"
               subcategories_with_featured_topics:
@@ -2208,7 +2203,6 @@ vi:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
-  joined: "Đã tham gia"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
@@ -2241,24 +2235,20 @@ vi:
       post_count: "Một vài bài viết đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Người dùng mới nhập bài đăng đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
     actions:
-      agree_and_keep:
-        title: "Giữ bài viết"
-        description: "Đồng ý với cờ và giữ nguyên bài viết."
-      agree_and_keep_hidden:
-        title: "Giữ bài đăng ẩn"
-        description: "Đồng ý với cờ và để bài viết ẩn."
-      agree_and_suspend:
-        title: "Tạm khóa Thành viên"
-      agree_and_silence:
-        title: "Người dùng im lặng"
+      agree:
+        title: "Đồng ý"
       delete_single:
         title: "Xóa"
       delete_and_ignore_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
+      delete_and_agree_replies:
+        confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
       disagree:
-        title: "Không đồng ý"
+        title: "Không"
       ignore:
         title: "Bỏ qua"
+      ignore_and_do_nothing:
+        title: "Không làm gì cả"
       approve:
         title: "Duyệt"
       approve_post:

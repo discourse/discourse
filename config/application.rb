@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("2.7.0")
-  STDERR.puts "Discourse requires Ruby 2.7 or above"
+if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1.0")
+  STDERR.puts "Discourse requires Ruby 3.1 or above"
   exit 1
 end
 

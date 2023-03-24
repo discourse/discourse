@@ -31,8 +31,10 @@
     "chrome-launcher": "^0.15.1",
     "chrome-remote-interface": "^0.31.3",
     "eslint-config-discourse": "^3.3.0",
+    "jsdoc": "^4.0.0",
     "lefthook": "^1.2.0",
-    "puppeteer-core": "^13.7.0"
+    "puppeteer-core": "^13.7.0",
+    "tidy-jsdoc": "^1.4.1"
   },
   "scripts": {
     "postinstall": "yarn --cwd app/assets/javascripts/discourse $(node -e 'if(JSON.parse(process.env.npm_config_argv).original.includes(`--frozen-lockfile`)){console.log(`--frozen-lockfile`)}')"

@@ -145,48 +145,64 @@ let debouncedSearch = function (
   );
 };
 
+function lowerCaseIncludes(string, term) {
+  return string && term && string.toLowerCase().includes(term.toLowerCase());
+}
+
 function organizeResults(r, options) {
   if (r === CANCELLED_STATUS) {
     return r;
   }
 
-  let exclude = options.exclude || [],
-    limit = options.limit || 5,
-    users = [],
+  const exclude = options.exclude || [];
+
+  // Sometimes the term passed contains spaces, but the search is limited
+  // to the first word only.
+  const term = options.term?.trim()?.split(/\s/, 1)?.[0];
+
+  const users = [],
     emails = [],
-    groups = [],
-    results = [];
+    groups = [];
+  let resultsLength = 0;
 
   if (r.users) {
-    r.users.every(function (u) {
-      if (!exclude.includes(u.username)) {
-        users.push(u);
-        results.push(u);
+    r.users.forEach((user) => {
+      if (resultsLength < options.limit && !exclude.includes(user.username)) {
+        user.isUser = true;
+        user.isMetadataMatch =
+          !lowerCaseIncludes(user.username, term) &&
+          !lowerCaseIncludes(user.name, term);
+        users.push(user);
+        resultsLength += 1;
       }
-      return results.length <= limit;
     });
   }
 
   if (options.allowEmails && emailValid(options.term)) {
-    let e = { username: options.term };
-    emails = [e];
-    results.push(e);
+    emails.push({ username: options.term, isEmail: true });
+    resultsLength += 1;
   }
 
   if (r.groups) {
-    r.groups.every(function (g) {
+    r.groups.forEach((group) => {
       if (
-        options.term.toLowerCase() === g.name.toLowerCase() ||
-        results.length < limit
+        (options.term.toLowerCase() === group.name.toLowerCase() ||
+          resultsLength < options.limit) &&
+        !exclude.includes(group.name)
       ) {
-        if (!exclude.includes(g.name)) {
-          groups.push(g);
-          results.push(g);
-        }
+        group.isGroup = true;
+        groups.push(group);
+        resultsLength += 1;
       }
-      return true;
     });
   }
+
+  const results = [
+    ...users.filter((u) => !u.isMetadataMatch),
+    ...emails,
+    ...groups,
+    ...users.filter((u) => u.isMetadataMatch),
+  ];
 
   results.users = users;
   results.emails = emails;
@@ -277,7 +293,7 @@ export default function userSearch(options) {
       limit,
       function (r) {
         cancel(clearPromise);
-        resolve(organizeResults(r, options));
+        resolve(organizeResults(r, { ...options, limit }));
       }
     );
   });

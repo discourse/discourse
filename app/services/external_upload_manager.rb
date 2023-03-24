@@ -149,8 +149,6 @@ class ExternalUploadManager
       raise ChecksumMismatchError if external_sha1 && external_sha1 != actual_sha1
     end
 
-    # TODO (martin): See if these additional opts will be needed
-    # - check if retain_hours is needed
     opts = {
       type: external_upload_stub.upload_type,
       existing_external_upload_key: external_upload_stub.key,

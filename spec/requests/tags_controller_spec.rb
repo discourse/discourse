@@ -11,19 +11,106 @@ RSpec.describe TagsController do
   before { SiteSetting.tagging_enabled = true }
 
   describe "#index" do
-    fab!(:test_tag) { Fabricate(:tag, name: "test") }
-    fab!(:topic_tag) { Fabricate(:tag, name: "topic-test", topic_count: 1) }
+    fab!(:test_tag) { Fabricate(:tag, name: "test", description: "some description") }
+
+    fab!(:topic_tag) do
+      Fabricate(
+        :tag,
+        name: "topic-test",
+        public_topic_count: 1,
+        staff_topic_count: 1,
+        pm_topic_count: 5,
+      )
+    end
+
+    fab!(:pm_only_tag) do
+      Fabricate(:tag, public_topic_count: 0, staff_topic_count: 0, pm_topic_count: 1)
+    end
+
     fab!(:synonym) { Fabricate(:tag, name: "synonym", target_tag: topic_tag) }
 
-    shared_examples "successfully retrieve tags with topic_count > 0" do
-      it "should return the right response" do
+    shared_examples "retrieves the right tags" do
+      it "retrieves all tags as a staff user" do
+        sign_in(admin)
+
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+
+        expect(serialized_tag["count"]).to eq(0)
+        expect(serialized_tag["pm_count"]).to eq(nil)
+        expect(serialized_tag["pm_only"]).to eq(false)
+
+        serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+
+        expect(serialized_tag["count"]).to eq(1)
+        expect(serialized_tag["pm_count"]).to eq(nil)
+        expect(serialized_tag["pm_only"]).to eq(false)
+      end
+
+      it "does not include pm_count attribute when user cannot tag PM topics even if display_personal_messages_tag_counts site setting has been enabled" do
+        SiteSetting.display_personal_messages_tag_counts = true
+
+        sign_in(admin)
+
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        expect(tags[0]["name"]).to eq(test_tag.name)
+        expect(tags[0]["pm_count"]).to eq(nil)
+
+        expect(tags[1]["name"]).to eq(topic_tag.name)
+        expect(tags[1]["pm_count"]).to eq(nil)
+      end
+
+      it "includes pm_count attribute when user can tag PM topics and display_personal_messages_tag_counts site setting has been enabled" do
+        SiteSetting.display_personal_messages_tag_counts = true
+        SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:admins]
+
+        sign_in(admin)
+
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+
+        expect(serialized_tag["pm_count"]).to eq(0)
+        expect(serialized_tag["pm_only"]).to eq(false)
+
+        serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+
+        expect(serialized_tag["pm_count"]).to eq(5)
+        expect(serialized_tag["pm_only"]).to eq(false)
+
+        serialized_tag = tags.find { |t| t["id"] == pm_only_tag.name }
+
+        expect(serialized_tag["pm_count"]).to eq(1)
+        expect(serialized_tag["pm_only"]).to eq(true)
+      end
+
+      it "only retrieve tags that have been used in public topics for non-staff user" do
+        sign_in(user)
+
         get "/tags.json"
 
         expect(response.status).to eq(200)
 
         tags = response.parsed_body["tags"]
         expect(tags.length).to eq(1)
-        expect(tags[0]["text"]).to eq("topic-test")
+
+        expect(tags[0]["name"]).to eq(topic_tag.name)
+        expect(tags[0]["count"]).to eq(1)
+        expect(tags[0]["pm_count"]).to eq(nil)
       end
     end
 
@@ -41,17 +128,17 @@ RSpec.describe TagsController do
       context "when enabled" do
         before do
           SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
+          SiteSetting.display_personal_messages_tag_counts = true
           sign_in(admin)
         end
 
         it "shows topic tags and pm tags" do
           get "/tags.json"
           tags = response.parsed_body["tags"]
-          expect(tags.length).to eq(2)
 
           serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
           expect(serialized_tag["count"]).to eq(2)
-          expect(serialized_tag["pm_count"]).to eq(0)
+          expect(serialized_tag["pm_count"]).to eq(5)
 
           serialized_tag = tags.find { |t| t["id"] == test_tag.name }
           expect(serialized_tag["count"]).to eq(0)
@@ -76,13 +163,14 @@ RSpec.describe TagsController do
 
     context "with tags_listed_by_group enabled" do
       before { SiteSetting.tags_listed_by_group = true }
-      include_examples "successfully retrieve tags with topic_count > 0"
+      include_examples "retrieves the right tags"
 
       it "works for tags in groups" do
         tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
-        get "/tags.json"
-        expect(response.status).to eq(200)
 
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
         tags = response.parsed_body["tags"]
         expect(tags.length).to eq(0)
         group = response.parsed_body.dig("extras", "tag_groups")&.first
@@ -90,15 +178,56 @@ RSpec.describe TagsController do
         expect(group["tags"].length).to eq(2)
         expect(group["tags"].map { |t| t["id"] }).to contain_exactly(test_tag.name, topic_tag.name)
       end
+
+      it "does not result in N+1 queries with multiple tag_groups" do
+        tag_group1 = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
+
+        # warm up
+        get "/tags.json"
+        expect(response.status).to eq(200)
+
+        initial_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tag_groups = response.parsed_body.dig("extras", "tag_groups")
+
+            expect(tag_groups.length).to eq(1)
+            expect(tag_groups.map { |tag_group| tag_group["name"] }).to contain_exactly(
+              tag_group1.name,
+            )
+          end.length
+
+        tag_group2 = Fabricate(:tag_group, tags: [topic_tag])
+
+        new_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tag_groups = response.parsed_body.dig("extras", "tag_groups")
+
+            expect(tag_groups.length).to eq(2)
+            expect(tag_groups.map { |tag_group| tag_group["name"] }).to contain_exactly(
+              tag_group1.name,
+              tag_group2.name,
+            )
+          end.length
+
+        expect(new_sql_queries_count).to be <= initial_sql_queries_count
+      end
     end
 
     context "with tags_listed_by_group disabled" do
       before { SiteSetting.tags_listed_by_group = false }
-      include_examples "successfully retrieve tags with topic_count > 0"
-    end
+      include_examples "retrieves the right tags"
 
-    context "when user can admin tags" do
-      it "successfully retrieve all tags" do
+      it "returns the right tags and categories tags for admin user" do
+        category.update!(tags: [test_tag])
+
         sign_in(admin)
 
         get "/tags.json"
@@ -106,7 +235,85 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
 
         tags = response.parsed_body["tags"]
+
         expect(tags.length).to eq(2)
+
+        expect(tags[0]["name"]).to eq(test_tag.name)
+        expect(tags[0]["text"]).to eq(test_tag.name)
+        expect(tags[0]["description"]).to eq(test_tag.description)
+        expect(tags[0]["count"]).to eq(0)
+        expect(tags[0]["pm_count"]).to eq(nil)
+        expect(tags[0]["target_tag"]).to eq(nil)
+
+        expect(tags[1]["name"]).to eq(topic_tag.name)
+
+        categories = response.parsed_body["extras"]["categories"]
+
+        expect(categories[0]["id"]).to eq(category.id)
+        expect(categories[0]["tags"].length).to eq(1)
+        expect(categories[0]["tags"][0]["name"]).to eq(test_tag.name)
+        expect(categories[0]["tags"][0]["text"]).to eq(test_tag.name)
+        expect(categories[0]["tags"][0]["description"]).to eq(test_tag.description)
+        expect(categories[0]["tags"][0]["count"]).to eq(0)
+        expect(categories[0]["tags"][0]["pm_count"]).to eq(nil)
+        expect(categories[0]["tags"][0]["target_tag"]).to eq(nil)
+      end
+
+      it "does not result in N+1 queries when there are multiple categories configured with tags for an admin user" do
+        category.update!(tags: [test_tag])
+
+        sign_in(admin)
+
+        # warm up
+        get "/tags.json"
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        expect(tags.length).to eq(2)
+        expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+
+        initial_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tags = response.parsed_body["tags"]
+
+            expect(tags.length).to eq(2)
+            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+
+            categories = response.parsed_body["extras"]["categories"]
+
+            expect(categories.length).to eq(1)
+            expect(categories[0]["id"]).to eq(category.id)
+            expect(categories[0]["tags"].map { |tag| tag["name"] }).to eq([test_tag.name])
+          end.length
+
+        category2 = Fabricate(:category, tags: [topic_tag])
+
+        new_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tags = response.parsed_body["tags"]
+
+            expect(tags.length).to eq(2)
+            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+
+            categories = response.parsed_body["extras"]["categories"]
+
+            expect(categories.length).to eq(2)
+            expect(categories[0]["id"]).to eq(category.id)
+            expect(categories[0]["tags"].map { |tag| tag["name"] }).to eq([test_tag.name])
+            expect(categories[1]["id"]).to eq(category2.id)
+            expect(categories[1]["tags"].map { |tag| tag["name"] }).to eq([topic_tag.name])
+          end.length
+
+        expect(new_sql_queries_count).to eq(initial_sql_queries_count)
       end
     end
 
@@ -225,6 +432,28 @@ RSpec.describe TagsController do
 
       get "/tag/test"
       expect(response.status).to eq(200)
+    end
+
+    it "can handle additional tags in query params" do
+      tag2 = Fabricate(:tag)
+      topic_with_two_tags = Fabricate(:topic, tags: [tag, tag2])
+
+      get "/tag/test.json?match_all_tags=true&tags[]=#{tag2.name}"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        topic_with_two_tags.id,
+      )
+    end
+
+    it "can handle duplicate tags in query params" do
+      tag2 = Fabricate(:tag)
+      topic_with_two_tags = Fabricate(:topic, tags: [tag, tag2])
+
+      get "/tag/test.json?match_all_tags=true&tags[]=test&tags[]=#{tag2.name}"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        topic_with_two_tags.id,
+      )
     end
 
     it "handles special tag 'none'" do
@@ -622,6 +851,18 @@ RSpec.describe TagsController do
           expect(response.status).to eq(200)
         end
 
+        it "returns a 404 when tag is restricted" do
+          tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+
+          get "/tag/test/l/latest.json"
+          expect(response.status).to eq(404)
+
+          sign_in(admin)
+
+          get "/tag/test/l/latest.json"
+          expect(response.status).to eq(200)
+        end
+
         context "with muted tags" do
           before do
             TagUser.create!(
@@ -701,6 +942,18 @@ RSpec.describe TagsController do
       get "/tag/#{tag.name}/l/top.json?period=decadely"
       expect(response.status).to eq(400)
     end
+
+    it "returns a 404 if tag is restricted" do
+      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+
+      get "/tag/test/l/top.json"
+      expect(response.status).to eq(404)
+
+      sign_in(admin)
+
+      get "/tag/test/l/top.json"
+      expect(response.status).to eq(200)
+    end
   end
 
   describe "#search" do
@@ -721,10 +974,10 @@ RSpec.describe TagsController do
         expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq(%w[stuff stumped])
       end
 
-      it "returns tags ordered by topic_count, and prioritises exact matches" do
-        Fabricate(:tag, name: "tag1", topic_count: 10)
-        Fabricate(:tag, name: "tag2", topic_count: 100)
-        Fabricate(:tag, name: "tag", topic_count: 1)
+      it "returns tags ordered by public_topic_count, and prioritises exact matches" do
+        Fabricate(:tag, name: "tag1", public_topic_count: 10, staff_topic_count: 10)
+        Fabricate(:tag, name: "tag2", public_topic_count: 100, staff_topic_count: 100)
+        Fabricate(:tag, name: "tag", public_topic_count: 1, staff_topic_count: 1)
 
         get "/tags/filter/search.json", params: { q: "tag", limit: 2 }
         expect(response.status).to eq(200)
@@ -934,11 +1187,41 @@ RSpec.describe TagsController do
       context "with some tags" do
         let!(:tags) do
           [
-            Fabricate(:tag, name: "used_publically", topic_count: 2, pm_topic_count: 0),
-            Fabricate(:tag, name: "used_privately", topic_count: 0, pm_topic_count: 3),
-            Fabricate(:tag, name: "used_everywhere", topic_count: 0, pm_topic_count: 3),
-            Fabricate(:tag, name: "unused1", topic_count: 0, pm_topic_count: 0),
-            Fabricate(:tag, name: "unused2", topic_count: 0, pm_topic_count: 0),
+            Fabricate(
+              :tag,
+              name: "used_publically",
+              public_topic_count: 2,
+              staff_topic_count: 2,
+              pm_topic_count: 0,
+            ),
+            Fabricate(
+              :tag,
+              name: "used_privately",
+              public_topic_count: 0,
+              staff_topic_count: 0,
+              pm_topic_count: 3,
+            ),
+            Fabricate(
+              :tag,
+              name: "used_everywhere",
+              public_topic_count: 0,
+              staff_topic_count: 0,
+              pm_topic_count: 3,
+            ),
+            Fabricate(
+              :tag,
+              name: "unused1",
+              public_topic_count: 0,
+              staff_topic_count: 0,
+              pm_topic_count: 0,
+            ),
+            Fabricate(
+              :tag,
+              name: "unused2",
+              public_topic_count: 0,
+              staff_topic_count: 0,
+              pm_topic_count: 0,
+            ),
           ]
         end
 

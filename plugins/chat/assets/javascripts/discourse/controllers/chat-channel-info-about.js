@@ -7,8 +7,8 @@ export default class ChatChannelInfoAboutController extends Controller.extend(
   ModalFunctionality
 ) {
   @action
-  onEditChatChannelTitle() {
-    showModal("chat-channel-edit-title", { model: this.model });
+  onEditChatChannelName() {
+    showModal("chat-channel-edit-name-slug", { model: this.model });
   }
 
   @action

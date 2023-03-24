@@ -423,11 +423,15 @@ RSpec.describe Admin::ApiController do
           "users",
           "email",
           "posts",
+          "tags",
           "uploads",
           "user_status",
           "global",
           "badges",
+          "groups",
           "categories",
+          "search",
+          "invites",
           "wordpress",
         )
       end

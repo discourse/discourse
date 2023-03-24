@@ -323,16 +323,11 @@ module SiteSettingExtension
 
   def process_message(message)
     begin
-      @last_message_processed = message.global_id
       MessageBus.on_connect.call(message.site_id)
       refresh!
     ensure
       MessageBus.on_disconnect.call(message.site_id)
     end
-  end
-
-  def diags
-    { last_message_processed: @last_message_processed }
   end
 
   def process_id

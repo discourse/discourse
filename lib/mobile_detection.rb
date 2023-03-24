@@ -26,8 +26,8 @@ module MobileDetection
 
   MODERN_MOBILE_REGEX =
     %r{
-    \(.*iPhone\ OS\ 1[3-9].*\)|
-    \(.*iPad.*OS\ 1[3-9].*\)|
+    \(.*iPhone\ OS\ 1[5-9].*\)|
+    \(.*iPad.*OS\ 1[5-9].*\)|
     Chrome\/8[89]|
     Chrome\/9[0-9]|
     Chrome\/1[0-9][0-9]|
@@ -36,7 +36,9 @@ module MobileDetection
     Firefox\/1[0-9][0-9]
   }x
 
+  USER_AGENT_MAX_LENGTH = 400
+
   def self.modern_mobile_device?(user_agent)
-    user_agent.match?(MODERN_MOBILE_REGEX)
+    user_agent[0...USER_AGENT_MAX_LENGTH].match?(MODERN_MOBILE_REGEX)
   end
 end

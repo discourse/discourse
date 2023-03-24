@@ -300,6 +300,12 @@ RSpec.describe Discourse do
         Discourse.disable_readonly_mode(user_readonly_mode_key)
         expect(Discourse.readonly_mode?).to eq(false)
       end
+
+      it "returns true when forced via global setting" do
+        expect(Discourse.readonly_mode?).to eq(false)
+        global_setting :pg_force_readonly_mode, true
+        expect(Discourse.readonly_mode?).to eq(true)
+      end
     end
 
     describe ".received_postgres_readonly!" do

@@ -33,7 +33,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:delete_user)).to eq(true)
         expect(actions.has?(:delete_user_block)).to eq(true)
         expect(actions.has?(:disagree)).to eq(true)
-        expect(actions.has?(:ignore)).to eq(true)
+        expect(actions.has?(:ignore_and_do_nothing)).to eq(true)
         expect(actions.has?(:delete_and_ignore)).to eq(true)
         expect(actions.has?(:delete_and_ignore_replies)).to eq(false)
         expect(actions.has?(:delete_and_agree)).to eq(true)
@@ -67,7 +67,6 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       it "returns delete replies options if there are replies" do
         post.update(reply_count: 3)
         expect(reviewable.actions_for(guardian).has?(:delete_and_agree_replies)).to eq(true)
-        expect(reviewable.actions_for(guardian).has?(:delete_and_ignore_replies)).to eq(true)
       end
 
       it "returns appropriate actions for a hidden post" do
@@ -168,7 +167,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "ignores the flags" do
-      reviewable.perform(moderator, :ignore)
+      reviewable.perform(moderator, :ignore_and_do_nothing)
       expect(reviewable).to be_ignored
       expect(score.reload).to be_ignored
     end
@@ -273,7 +272,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.hidden).to eq(false)
       expect(post.hidden_at).to be_blank
 
-      reviewable.perform(moderator, :ignore)
+      reviewable.perform(moderator, :ignore_and_do_nothing)
       expect(pending_count).to eq(0)
 
       post.reload
@@ -340,6 +339,11 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     it "ignores flagged responses" do
       SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
       flagged_reply = Fabricate(:reviewable_flagged_post, target: reply)
+      Fabricate(
+        :post,
+        reply_to_post_number: flagged_reply.target.post_number,
+        topic: flagged_reply.target.topic,
+      )
       flagged_post.perform(moderator, :delete_and_agree_replies)
 
       expect(flagged_reply.reload).to be_ignored
@@ -366,7 +370,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     let(:reviewable) { Fabricate(:reviewable_flagged_post, score: expected_score) }
 
     it "doesn't recalculate the score after ignore" do
-      reviewable.perform(moderator, :ignore)
+      reviewable.perform(moderator, :ignore_and_do_nothing)
 
       expect(reviewable.score).to eq(expected_score)
     end

@@ -21,16 +21,13 @@ sl:
       joined: "pridružen"
       email_frequency:
         never: "Nikoli"
+      header_indicator_preference:
+        never: "Nikoli"
       flag: "Prijavi"
       join: "Pridruži se"
+      last_visit: "zadnji obisk"
       mention_warning:
         dismiss: "opusti"
-        groups:
-          users_limit:
-            one: "%{count} uporabnik"
-            two: "%{count} uporabnika"
-            few: "%{count} uporabniki"
-            other: "%{count} uporabnikov"
       reply: "Odgovori"
       edit: "Uredi"
       rebake_message: "Obnovi HTML"
@@ -51,6 +48,7 @@ sl:
         yesterday: Včeraj
       about_view:
         title: Naziv
+        name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Nazaj"

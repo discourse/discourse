@@ -98,7 +98,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       end
     when "aside"
       attributes = Hash[*attributes.flatten]
-      unless (@keep_onebox_source || @keep_onebox_body) && attributes["class"]&.include?("onebox")
+      if !(@keep_onebox_source || @keep_onebox_body) || !attributes["class"]&.include?("onebox")
         @in_quote = true
       end
 
@@ -181,10 +181,10 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "div", "span"
       throw :done if @start_excerpt
     when "svg"
-      characters("</svg>", truncate: false, count_it: false, encode: false)
+      characters("</svg>", truncate: false, count_it: false, encode: false) if @keep_svg
       @in_svg = false
     when "use"
-      characters("</use>", truncate: false, count_it: false, encode: false)
+      characters("</use>", truncate: false, count_it: false, encode: false) if @keep_svg
     end
   end
 

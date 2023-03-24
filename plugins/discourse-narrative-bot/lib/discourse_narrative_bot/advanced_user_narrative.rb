@@ -46,10 +46,20 @@ module DiscourseNarrativeBot
               slug = "#{parent_category.slug}#{CategoryHashtag::SEPARATOR}#{slug}"
             end
 
-            I18n.t(
-              "#{I18N_KEY}.category_hashtag.instructions",
-              i18n_post_args(category: "##{slug}"),
-            )
+            # TODO (martin) When enable_experimental_hashtag_autocomplete is the only option
+            # update the instructions and remove instructions_experimental, as well as the
+            # not_found translation
+            if SiteSetting.enable_experimental_hashtag_autocomplete
+              I18n.t(
+                "#{I18N_KEY}.category_hashtag.instructions_experimental",
+                i18n_post_args(category: "##{slug}"),
+              )
+            else
+              I18n.t(
+                "#{I18N_KEY}.category_hashtag.instructions",
+                i18n_post_args(category: "##{slug}"),
+              )
+            end
           end,
         recover: {
           action: :reply_to_recover,
@@ -166,7 +176,7 @@ module DiscourseNarrativeBot
         opts[:delete_removed_posts_after] = 1
 
         result = PostActionCreator.notify_moderators(self.discobot_user, post)
-        result.reviewable.perform(self.discobot_user, :ignore)
+        result.reviewable.perform(self.discobot_user, :ignore_and_do_nothing)
       end
 
       PostDestroyer.new(@user, post, opts).destroy
@@ -288,7 +298,9 @@ module DiscourseNarrativeBot
       topic_id = @post.topic_id
       return unless valid_topic?(topic_id)
 
-      if Nokogiri::HTML5.fragment(@post.cooked).css(".hashtag").size > 0
+      hashtag_css_class =
+        SiteSetting.enable_experimental_hashtag_autocomplete ? ".hashtag-cooked" : ".hashtag"
+      if Nokogiri::HTML5.fragment(@post.cooked).css(hashtag_css_class).size > 0
         raw = <<~MD
           #{I18n.t("#{I18N_KEY}.category_hashtag.reply", i18n_post_args)}
 
@@ -300,7 +312,14 @@ module DiscourseNarrativeBot
       else
         fake_delay
         unless @data[:attempted]
-          reply_to(@post, I18n.t("#{I18N_KEY}.category_hashtag.not_found", i18n_post_args))
+          if SiteSetting.enable_experimental_hashtag_autocomplete
+            reply_to(
+              @post,
+              I18n.t("#{I18N_KEY}.category_hashtag.not_found_experimental", i18n_post_args),
+            )
+          else
+            reply_to(@post, I18n.t("#{I18N_KEY}.category_hashtag.not_found", i18n_post_args))
+          end
         end
         enqueue_timeout_job(@user)
         false

@@ -305,12 +305,15 @@ html.composer-open {
     }
   }
 
+  .category-input + .mini-tag-chooser {
+    margin-left: 8px;
+  }
+
   .mini-tag-chooser {
     flex-grow: 1;
     max-width: calc(50% - 4px);
-    margin: 0 0 8px 8px;
+    margin: 0 0 8px 0px;
     z-index: z("composer", "dropdown");
-
     .select-kit-header {
       color: var(--primary-high);
     }
@@ -420,12 +423,12 @@ html.composer-open {
         padding: 0.3em 1em;
 
         @include hover {
-          background-color: var(--highlight-low);
+          background-color: var(--d-hover);
           text-decoration: none;
         }
 
         &.selected {
-          background-color: var(--tertiary-low);
+          background-color: var(--d-selected);
 
           .username,
           .name,

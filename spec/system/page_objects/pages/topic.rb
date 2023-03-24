@@ -4,17 +4,23 @@ module PageObjects
   module Pages
     class Topic < PageObjects::Pages::Base
       def initialize
-        setup_component_classes!(
-          post_show_more_actions: ".show-more-actions",
-          post_action_button_bookmark: ".bookmark.with-reminder",
-          reply_button: ".topic-footer-main-buttons > .create",
-          composer: "#reply-control",
-          composer_textarea: "#reply-control .d-editor .d-editor-input",
-        )
+        @composer_component = PageObjects::Components::Composer.new
+        @fast_edit_component = PageObjects::Components::FastEditor.new
       end
 
       def visit_topic(topic)
         page.visit "/t/#{topic.id}"
+        self
+      end
+
+      def open_new_topic
+        page.visit "/"
+        find("button#create-topic").click
+        self
+      end
+
+      def open_new_message
+        page.visit "/new-message"
         self
       end
 
@@ -85,24 +91,20 @@ module PageObjects
         has_css?("#reply-control.open")
       end
 
-      def find_composer
-        find("#reply-control .d-editor .d-editor-input")
-      end
-
       def type_in_composer(input)
-        find_composer.send_keys(input)
+        @composer_component.type_content(input)
       end
 
       def fill_in_composer(input)
-        find_composer.fill_in(with: input)
+        @composer_component.fill_content(input)
       end
 
       def clear_composer
-        fill_in_composer("")
+        @composer_component.clear_content
       end
 
       def has_composer_content?(content)
-        find_composer.value == content
+        @composer_component.has_content?(content)
       end
 
       def send_reply
@@ -110,7 +112,19 @@ module PageObjects
       end
 
       def fill_in_composer_title(title)
-        find("#reply-title").fill_in(with: title)
+        @composer_component.fill_title(title)
+      end
+
+      def fast_edit_button
+        find(".quote-button .quote-edit-label")
+      end
+
+      def click_fast_edit_button
+        find(".quote-button .quote-edit-label").click
+      end
+
+      def fast_edit_input
+        @fast_edit_component.fast_edit_input
       end
 
       private

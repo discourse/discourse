@@ -394,14 +394,9 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     report = TopicTrackingState.report(user)
-    serializer =
-      ActiveModel::ArraySerializer.new(
-        report,
-        each_serializer: TopicTrackingStateSerializer,
-        scope: guardian,
-      )
+    serializer = TopicTrackingStateSerializer.new(report, scope: guardian, root: false)
 
-    render json: MultiJson.dump(serializer)
+    render json: MultiJson.dump(serializer.as_json[:data])
   end
 
   def private_message_topic_tracking_state
@@ -473,7 +468,7 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    raise Discourse::NotFound if params[:path] !~ %r{^[a-z_\-/]+$}
+    raise Discourse::NotFound if params[:path] !~ %r{\A[a-z_\-/]+\z}
 
     if current_user.blank?
       cookies[:destination_url] = path("/my/#{params[:path]}")
@@ -1847,16 +1842,21 @@ class UsersController < ApplicationController
     if unread_notifications.size < USER_MENU_LIST_LIMIT
       exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
       limit = USER_MENU_LIST_LIMIT - unread_notifications.size
+
       messages_list =
         TopicQuery
           .new(current_user, per_page: limit)
-          .list_private_messages_direct_and_groups(current_user) do |query|
+          .list_private_messages_direct_and_groups(
+            current_user,
+            groups_messages_notification_level: :watching,
+          ) do |query|
             if exclude_topic_ids.present?
               query.where("topics.id NOT IN (?)", exclude_topic_ids)
             else
               query
             end
           end
+
       read_notifications =
         Notification
           .for_user_menu(current_user.id, limit: limit)

@@ -22,6 +22,8 @@
     border-radius: 8px;
 
     .selected-message-reply {
+      margin-left: 5px;
+
       &:not(.is-expanded) {
         @include ellipsis;
       }
@@ -75,6 +77,7 @@
 
     .chat-message-reaction,
     .reply-btn,
+    .chat-message-thread-btn,
     .react-btn,
     .bookmark-btn {
       flex-grow: 1;

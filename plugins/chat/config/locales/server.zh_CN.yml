@@ -23,6 +23,7 @@ zh_CN:
     default_emoji_reactions: "聊天消息的默认表情符号回应。最多可添加 5 个表情符号进行快速回应。"
     direct_message_enabled_groups: "允许这些群组中的用户创建用户间的个人聊天。请注意：管理人员始终可以创建个人聊天，用户将能够回复有权创建个人聊天的用户发起的个人聊天。"
     chat_message_flag_allowed_groups: "这些群组中的用户可以举报聊天消息。"
+    max_mentions_per_chat_message: "用户可以在聊天消息中使用的 @name 通知的最大数量。"
     chat_max_direct_message_users: "在创建新的直接消息时，用户无法添加超过此数量的其他用户。设置为 0 只允许给自己发送消息。管理人员不受此设置的影响。"
     chat_allow_archiving_channels: "允许管理人员在关闭频道时将消息归档到某个话题。"
     errors:
@@ -33,26 +34,27 @@ zh_CN:
     chat_channel_archive_complete:
       title: "聊天频道归档完成"
       subject_template: "聊天频道归档成功完成"
-      text_body_template: |
-        聊天频道**\#%{channel_name}**归档已成功完成。消息已被复制到话题[%{topic_title}](%{topic_url})中。
     chat_channel_archive_failed:
       title: "聊天频道归档失败"
       subject_template: "聊天频道归档失败"
-      text_body_template: |
-        聊天频道**#%{channel_name}**归档失败。%{messages_archived} 条消息已被归档。部分归档的消息已被复制到话题[%{topic_title}](%{topic_url})。请访问 %{channel_url} 下的频道以重试。
+    chat_channel_archive_failed_no_topic:
+      title: "聊天频道归档失败"
+      subject_template: "聊天频道归档失败"
   chat:
     deleted_chat_username: 已删除
     errors:
       channel_exists_for_category: "此类别和名称的频道已经存在"
-      channel_new_message_disallowed: "频道的状态为%{status}，无法发送新消息"
-      channel_modify_message_disallowed: "频道的状态为%{status}，无法编辑或删除消息"
       user_cannot_send_message: "您目前无法发送消息。"
       rate_limit_exceeded: "超过了 30 秒内可发送的聊天消息的上限"
       auto_silence_from_flags: "聊天消息被举报的分数高到足以将用户禁言。"
       channel_cannot_be_archived: "目前无法归档该频道，必须将其关闭或打开才能归档。"
       duplicate_message: "您在短时间内发布了一条相同的消息。"
       delete_channel_failed: "删除频道失败，请重试。"
-      minimum_length_not_met: "消息太短，必须至少有 %{minimum} 个字符。"
+      minimum_length_not_met:
+        other: "消息太短，必须至少有 %{count} 个字符。"
+      message_too_long:
+        other: "消息过长，最多只能包含 %{count} 个字符。"
+      draft_too_long: "草稿太长了。"
       max_reactions_limit_reached: "此消息不允许有新的回应。"
       message_move_invalid_channel: "源频道和目标频道必须是公共频道。"
       message_move_no_messages_found: "找不到带有提供的消息 ID 的消息。"
@@ -101,19 +103,14 @@ zh_CN:
         transcript_title: "%{channel_name}中以前消息的副本"
         transcript_body: "为了向您提供更多背景，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "只读"
-        archived: "已归档"
-        closed: "已关闭"
-        open: "开放"
       archive:
         first_post_raw: "此话题是[%{channel_name}](%{channel_url})聊天频道的归档。"
       messages_moved:
         other: "@%{acting_username} 将 %{count} 条消息移至[%{channel_name}](%{first_moved_message_url})频道。"
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} 和其他 %{leftover} 人"
+        single_user: "%{username}"
+        multi_user_truncated:
+          other: "%{comma_separated_usernames} 和其他 %{count} 人"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "包含非 ASCII 字符"
@@ -161,6 +158,16 @@ zh_CN:
       description:
         other: "您有新的聊天消息"
       from: "%{site_name}"
+      subject:
+        direct_message_from_1: "[%{email_prefix}] 来自 %{username} 的新消息"
+        direct_message_from_2: "[%{email_prefix}] 来自 %{username1} 和 %{username2} 的新消息"
+        direct_message_from_more:
+          other: "[%{email_prefix}] 来自 %{username} 和其他 %{count} 位用户的新消息"
+        chat_channel_1: "[%{email_prefix}] %{channel} 中的新消息"
+        chat_channel_2: "[%{email_prefix}] %{channel1} 和 %{channel2} 中的新消息"
+        chat_channel_more:
+          other: "[%{email_prefix}] %{channel} 和其他 %{count} 个频道的新消息"
+        chat_channel_and_direct_message: "[%{email_prefix}] %{channel} 中和来自 %{username} 的新消息"
       unsubscribe: "此聊天摘要在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
       unsubscribe_no_link: "此聊天摘要在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"
       view_messages:

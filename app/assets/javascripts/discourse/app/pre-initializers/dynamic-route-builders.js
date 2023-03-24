@@ -4,12 +4,20 @@ import TagShowRoute from "discourse/routes/tag-show";
 import User from "discourse/models/user";
 import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
+import { dasherize } from "@ember/string";
 
 export default {
   after: "inject-discourse-objects",
   name: "dynamic-route-builders",
 
-  initialize(registry, app) {
+  initialize(_container, app) {
+    app.register(
+      "controller:discovery.filter",
+      DiscoverySortableController.extend()
+    );
+
+    app.register("route:discovery.filter", buildTopicRoute("filter"));
+
     app.register(
       "controller:discovery.category",
       DiscoverySortableController.extend()
@@ -39,7 +47,7 @@ export default {
 
     const site = Site.current();
     site.get("filters").forEach((filter) => {
-      const filterDasherized = filter.dasherize();
+      const filterDasherized = dasherize(filter);
       app.register(
         `controller:discovery.${filterDasherized}`,
         DiscoverySortableController.extend()
@@ -106,7 +114,7 @@ export default {
     );
 
     site.get("filters").forEach(function (filter) {
-      const filterDasherized = filter.dasherize();
+      const filterDasherized = dasherize(filter);
 
       app.register(
         `route:tag.show-${filterDasherized}`,

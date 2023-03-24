@@ -1,41 +1,28 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
-  self.ignored_columns = [
-    "post_id", # TODO (martin) (2022-08-01) remove
-    "for_topic", # TODO (martin) (2022-08-01) remove
+  DEFAULT_BOOKMARKABLES = [
+    RegisteredBookmarkable.new(PostBookmarkable),
+    RegisteredBookmarkable.new(TopicBookmarkable),
   ]
 
-  cattr_accessor :registered_bookmarkables
-  self.registered_bookmarkables = []
+  def self.registered_bookmarkables
+    Set.new(DEFAULT_BOOKMARKABLES | DiscoursePluginRegistry.bookmarkables)
+  end
 
   def self.registered_bookmarkable_from_type(type)
-    Bookmark.registered_bookmarkables.find { |bm| bm.model.name == type }
-  end
+    begin
+      resolved_type = Bookmark.polymorphic_class_for(type).name
+      Bookmark.registered_bookmarkables.find { |bm| bm.model.name == resolved_type }
 
-  def self.register_bookmarkable(bookmarkable_klass)
-    return if Bookmark.registered_bookmarkable_from_type(bookmarkable_klass.model.name).present?
-    Bookmark.registered_bookmarkables << RegisteredBookmarkable.new(bookmarkable_klass)
+      # If the class cannot be found from the provided type using polymorphic_class_for,
+      # then the type is not valid and thus there will not be any registered bookmarkable.
+    rescue NameError
+    end
   end
-
-  ##
-  # This is called when the app loads, similar to AdminDashboardData.reset_problem_checks,
-  # so the default Post and Topic bookmarkables are registered on
-  # boot.
-  #
-  # This method also can be used in testing to reset bookmarkables between
-  # tests. It will also fire multiple times in development mode because
-  # classes are not cached.
-  def self.reset_bookmarkables
-    self.registered_bookmarkables = []
-
-    Bookmark.register_bookmarkable(PostBookmarkable)
-    Bookmark.register_bookmarkable(TopicBookmarkable)
-  end
-  reset_bookmarkables
 
   def self.valid_bookmarkable_types
-    Bookmark.registered_bookmarkables.map(&:model).map(&:to_s)
+    Bookmark.registered_bookmarkables.map { |bm| bm.model.to_s }
   end
 
   belongs_to :user

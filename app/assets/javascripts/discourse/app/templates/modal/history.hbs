@@ -8,7 +8,7 @@
       </LinkTo>
       <PluginOutlet
         @name="revision-user-details-after"
-        @args={{hash model=this.model}}
+        @outletArgs={{hash model=this.model}}
       />
       <span class="date">{{bound-date this.model.created_at}}</span>
       {{#if this.model.edit_reason}}
@@ -58,6 +58,7 @@
               class={{this.inlineClass}}
               {{on "click" this.displayInline}}
               title={{i18n "post.revisions.displays.inline.title"}}
+              aria-label={{i18n "post.revisions.displays.inline.title"}}
             >
               {{d-icon "far-square"}}
               {{i18n "post.revisions.displays.inline.button"}}
@@ -69,6 +70,7 @@
               class={{this.sideBySideClass}}
               {{on "click" this.displaySideBySide}}
               title={{i18n "post.revisions.displays.side_by_side.title"}}
+              aria-label={{i18n "post.revisions.displays.side_by_side.title"}}
             >
               {{d-icon "columns"}}
               {{i18n "post.revisions.displays.side_by_side.button"}}
@@ -80,6 +82,9 @@
               class={{this.sideBySideMarkdownClass}}
               {{on "click" this.displaySideBySideMarkdown}}
               title={{i18n
+                "post.revisions.displays.side_by_side_markdown.title"
+              }}
+              aria-label={{i18n
                 "post.revisions.displays.side_by_side_markdown.title"
               }}
             >
@@ -158,12 +163,13 @@
       </div>
     {{/if}}
 
-    <PluginOutlet
-      @name="post-revisions"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash model=this.model}}
-    />
+    <span>
+      <PluginOutlet
+        @name="post-revisions"
+        @connectorTagName="div"
+        @outletArgs={{hash model=this.model}}
+      />
+    </span>
 
     <LinksRedirect @class="row">
       {{html-safe this.bodyDiff}}
@@ -247,6 +253,16 @@
           @icon="far-eye"
           @label="post.revisions.controls.show"
           @class="btn-default"
+          @disabled={{this.loading}}
+        />
+      {{/if}}
+
+      {{#if this.displayPermanentlyDeleteButton}}
+        <DButton
+          @action={{action "permanentlyDeleteVersions"}}
+          @icon="far-trash-alt"
+          @label="post.revisions.controls.destroy"
+          @class="btn-danger"
           @disabled={{this.loading}}
         />
       {{/if}}

@@ -22,6 +22,9 @@ export default class DraggableModifier extends Modifier {
     this.element.addEventListener("mousedown", this.dragMove, {
       passive: false,
     });
+    this.element.addEventListener("dragenter", this.dragMove, {
+      passive: false,
+    });
   }
 
   @bind
@@ -32,12 +35,13 @@ export default class DraggableModifier extends Modifier {
       this.hasStarted = true;
 
       if (this.didStartDragCallback) {
-        this.didStartDragCallback();
+        this.didStartDragCallback(e);
       }
 
       // Register a global event to capture mouse moves when element 'clicked'.
       document.addEventListener("touchmove", this.drag, { passive: false });
       document.addEventListener("mousemove", this.drag, { passive: false });
+      document.addEventListener("dragover", this.drag, { passive: false });
       document.body.classList.add("dragging");
 
       // On leaving click, stop moving.
@@ -45,6 +49,9 @@ export default class DraggableModifier extends Modifier {
         passive: false,
       });
       document.addEventListener("mouseup", this.didEndDrag, {
+        passive: false,
+      });
+      document.addEventListener("drop", this.didEndDrag, {
         passive: false,
       });
     }
@@ -64,6 +71,7 @@ export default class DraggableModifier extends Modifier {
 
       document.removeEventListener("touchmove", this.drag);
       document.removeEventListener("mousemove", this.drag);
+      document.removeEventListener("dragover", this.drag);
 
       document.body.classList.remove("dragging");
       this.hasStarted = false;
@@ -73,10 +81,13 @@ export default class DraggableModifier extends Modifier {
   cleanup() {
     document.removeEventListener("touchstart", this.dragMove);
     document.removeEventListener("mousedown", this.dragMove);
+    document.removeEventListener("dragenter", this.dragMove);
     document.removeEventListener("touchend", this.didEndDrag);
     document.removeEventListener("mouseup", this.didEndDrag);
+    document.removeEventListener("drop", this.didEndDrag);
     document.removeEventListener("mousemove", this.drag);
     document.removeEventListener("touchmove", this.drag);
+    document.removeEventListener("dragover", this.drag);
     document.body.classList.remove("dragging");
   }
 }

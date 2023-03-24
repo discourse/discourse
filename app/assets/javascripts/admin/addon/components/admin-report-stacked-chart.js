@@ -1,3 +1,4 @@
+import { classNames } from "@ember-decorators/component";
 import Report from "admin/models/report";
 import Component from "@ember/component";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -7,32 +8,31 @@ import { number } from "discourse/lib/formatter";
 import { schedule } from "@ember/runloop";
 import { bind } from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  classNames: ["admin-report-chart", "admin-report-stacked-chart"],
-
+@classNames("admin-report-chart", "admin-report-stacked-chart")
+export default class AdminReportStackedChart extends Component {
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     window.addEventListener("resize", this._resizeHandler);
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     window.removeEventListener("resize", this._resizeHandler);
     this._resetChart();
-  },
+  }
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     discourseDebounce(this, this._scheduleChartRendering, 100);
-  },
+  }
 
   @bind
   _resizeHandler() {
     discourseDebounce(this, this._scheduleChartRendering, 500);
-  },
+  }
 
   _scheduleChartRendering() {
     schedule("afterRender", () => {
@@ -45,7 +45,7 @@ export default Component.extend({
         this.element.querySelector(".chart-canvas")
       );
     });
-  },
+  }
 
   _renderChart(model, chartCanvas) {
     if (!chartCanvas) {
@@ -79,7 +79,7 @@ export default Component.extend({
 
       this._chart = new window.Chart(context, this._buildChartConfig(data));
     });
-  },
+  }
 
   _buildChartConfig(data) {
     return {
@@ -150,10 +150,10 @@ export default Component.extend({
         },
       },
     };
-  },
+  }
 
   _resetChart() {
     this._chart?.destroy();
     this._chart = null;
-  },
-});
+  }
+}

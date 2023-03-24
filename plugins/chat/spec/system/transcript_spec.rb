@@ -25,15 +25,6 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     end
   end
 
-  def select_message_mobile(message)
-    if page.has_css?(".chat-message-container.selecting-messages")
-      chat_channel_page.message_by_id(message.id).find(".chat-message-selector").click
-    else
-      chat_channel_page.message_by_id(message.id).click(delay: 0.5)
-      find(".chat-message-action-item[data-id=\"selectMessage\"]").click
-    end
-  end
-
   def cdp_allow_clipboard_access!
     cdp_params = {
       origin: page.server_url,
@@ -62,15 +53,15 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     selector =
       case button
       when "quote"
-        "#chat-quote-btn"
+        "chat-quote-btn"
       when "copy"
-        "#chat-copy-btn"
+        "chat-copy-btn"
       when "cancel"
-        "#chat-cancel-selection-btn"
+        "chat-cancel-selection-btn"
       when "move"
-        "#chat-move-to-channel-btn"
+        "chat-move-to-channel-btn"
       end
-    within(".chat-selection-management-buttons") { find(selector).click }
+    find_button(selector, disabled: false, wait: 5).click
   end
 
   def copy_messages_to_clipboard(messages)
@@ -78,7 +69,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     messages.each { |message| select_message_desktop(message) }
     expect(chat_channel_page).to have_selection_management
     click_selection_button("copy")
-    expect(page).to have_content("Chat quote copied to clipboard")
+    expect(page).to have_selector(".chat-copy-success")
     clip_text = read_clipboard
     expect(clip_text.chomp).to eq(generate_transcript(messages, current_user))
     clip_text
@@ -86,7 +77,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
   def generate_transcript(messages, acting_user)
     messages = Array.wrap(messages)
-    ChatTranscriptService
+    Chat::TranscriptService
       .new(messages.first.chat_channel, acting_user, messages_or_ids: messages.map(&:id))
       .generate_markdown
       .chomp
@@ -101,8 +92,6 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
       it "quotes the message" do
         chat_page.visit_channel(chat_channel_1)
-
-        expect(chat_channel_page).to have_no_loading_skeleton
 
         clip_text = copy_messages_to_clipboard(message_1)
         topic_page.visit_topic_and_open_composer(post_1.topic)
@@ -125,8 +114,6 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
       it "quotes the messages" do
         chat_page.visit_channel(chat_channel_1)
-
-        expect(chat_channel_page).to have_no_loading_skeleton
 
         clip_text = copy_messages_to_clipboard([message_1, message_2])
         topic_page.visit_topic_and_open_composer(post_1.topic)
@@ -158,8 +145,6 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       it "works" do
         chat_page.visit_channel(chat_channel_1)
 
-        expect(chat_channel_page).to have_no_loading_skeleton
-
         clip_text = copy_messages_to_clipboard(message_1)
         topic_page.visit_topic_and_open_composer(post_1.topic)
         topic_page.fill_in_composer(clip_text)
@@ -176,15 +161,13 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       it "quotes the message" do
         chat_page.visit_channel(chat_channel_1)
 
-        expect(chat_channel_page).to have_no_loading_skeleton
-
         clip_text = copy_messages_to_clipboard(message_1)
         click_selection_button("cancel")
         chat_channel_page.send_message(clip_text)
 
         expect(page).to have_selector(".chat-message", count: 2)
 
-        message = ChatMessage.find_by(user: current_user, message: clip_text.chomp)
+        message = Chat::Message.find_by(user: current_user, message: clip_text.chomp)
 
         within(chat_channel_page.message_by_id(message.id)) do
           expect(page).to have_css(".chat-transcript")
@@ -199,8 +182,6 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
     it "opens the topic composer with correct state" do
       chat_page.visit_channel(chat_channel_1)
-
-      expect(chat_channel_page).to have_no_loading_skeleton
 
       select_message_desktop(message_1)
       click_selection_button("quote")
@@ -227,9 +208,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       it "first navigates to the channel's category before opening the topic composer with the quote prefilled",
          mobile: true do
         chat_page.visit_channel(chat_channel_1)
-        expect(chat_channel_page).to have_no_loading_skeleton
 
-        select_message_mobile(message_1)
+        chat_channel_page.click_message_action_mobile(message_1, "selectMessage")
         click_selection_button("quote")
 
         expect(topic_page).to have_expanded_composer

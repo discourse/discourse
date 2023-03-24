@@ -98,7 +98,8 @@
     }
   }
 
-  &__section-emojis {
+  &__section-emojis,
+  &__section.filtered {
     padding: 0.5rem;
   }
 
@@ -164,18 +165,23 @@
     &.t1 {
       background: #ffcc4d;
     }
+
     &.t2 {
       background: #f7dece;
     }
+
     &.t3 {
       background: #f3d2a2;
     }
+
     &.t4 {
       background: #d5ab88;
     }
+
     &.t5 {
       background: #af7e57;
     }
+
     &.t6 {
       background: #7c533e;
     }

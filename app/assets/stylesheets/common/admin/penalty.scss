@@ -1,5 +1,8 @@
 .silence-user-modal,
 .suspend-user-modal {
+  .modal-body {
+    padding-bottom: 0em;
+  }
   .penalty-duration,
   .penalty-suspend-forever,
   .suspend-reason-title,
@@ -86,5 +89,25 @@
         padding: 8px 0px;
       }
     }
+  }
+  .penalty-history {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--secondary);
+    padding: 0.5em 0 1em 0;
+  }
+  .penalty-history::before {
+    position: absolute;
+    content: "";
+    display: block;
+    height: 1.5em;
+    top: -1.5em;
+    width: 100%;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--secondary-rgb), 0),
+      rgba(var(--secondary-rgb), 1)
+    );
   }
 }

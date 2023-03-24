@@ -14,7 +14,10 @@ acceptance("User Directory", function () {
       document.body.classList.contains("users-page"),
       "has the body class"
     );
-    assert.ok(exists(".directory table tr"), "has a list of users");
+    assert.ok(
+      exists(".directory .directory-table .directory-table__row"),
+      "has a list of users"
+    );
   });
 
   test("Visit All Time", async function (assert) {
@@ -28,7 +31,10 @@ acceptance("User Directory", function () {
       document.body.classList.contains("users-page"),
       "has the body class"
     );
-    assert.ok(exists(".directory table tr"), "has a list of users");
+    assert.ok(
+      exists(".directory .directory-table .directory-table__row"),
+      "has a list of users"
+    );
   });
 
   test("Visit With Group Filter", async function (assert) {
@@ -37,27 +43,27 @@ acceptance("User Directory", function () {
       document.body.classList.contains("users-page"),
       "has the body class"
     );
-    assert.ok(exists(".directory table tr"), "has a list of users");
+    assert.ok(
+      exists(".directory .directory-table .directory-table__row"),
+      "has a list of users"
+    );
   });
 
   test("Custom user fields are present", async function (assert) {
     await visit("/u");
 
-    const firstRow = query(".users-directory table tr");
-    const columnData = firstRow.querySelectorAll("td");
-    const favoriteColorTd = columnData[columnData.length - 1];
-
-    assert.strictEqual(
-      favoriteColorTd.querySelector("span").textContent,
-      "Blue"
+    const firstRowUserField = query(
+      ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field"
     );
+
+    assert.strictEqual(firstRowUserField.textContent, "Blue");
   });
 
   test("Can sort table via keyboard", async function (assert) {
     await visit("/u");
 
     const secondHeading =
-      ".users-directory table th:nth-child(2) .header-contents";
+      ".users-directory .directory-table__header div:nth-child(2) .header-contents";
 
     await triggerKeyEvent(secondHeading, "keypress", "Enter");
 

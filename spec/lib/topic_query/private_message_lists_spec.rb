@@ -320,4 +320,38 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(TopicQuery.new(user_4).private_messages_for(user_4, :all)).to eq([])
     end
   end
+
+  describe "#list_private_messages_direct_and_groups" do
+    it "returns a list of all personal and group private messages for a given user" do
+      expect(
+        TopicQuery.new(user_2).list_private_messages_direct_and_groups(user_2).topics,
+      ).to contain_exactly(private_message, group_message)
+    end
+
+    it "returns a list of personal private messages and user watching group private messages for a given user when the `groups_notification_level` option is set" do
+      expect(
+        TopicQuery
+          .new(user_2)
+          .list_private_messages_direct_and_groups(
+            user_2,
+            groups_messages_notification_level: :watching,
+          )
+          .topics,
+      ).to contain_exactly(private_message, group_message)
+
+      TopicUser.find_by(user: user_2, topic: group_message).update!(
+        notification_level: NotificationLevels.topic_levels[:regular],
+      )
+
+      expect(
+        TopicQuery
+          .new(user_2)
+          .list_private_messages_direct_and_groups(
+            user_2,
+            groups_messages_notification_level: :watching,
+          )
+          .topics,
+      ).to contain_exactly(private_message)
+    end
+  end
 end

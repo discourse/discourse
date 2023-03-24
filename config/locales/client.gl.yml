@@ -262,7 +262,6 @@ gl:
       title: "Marcador"
       clear_bookmarks: "Limpar marcadores"
       help:
-        bookmark: "Prema para engadir aos marcadores a publicación inicial deste tema"
         unbookmark: "Prema para retirar todos os marcadores deste tema"
     bookmarks:
       created: "Fixou como marcador esta publicación. %{name}"
@@ -270,7 +269,6 @@ gl:
       edit: "Editar marcador"
       not_bookmarked: "marcar esta publicación"
       created_with_reminder: "Fixou como marcador esta publicación cun recordatorio %{date}. %{name}"
-      remove: "Retirar marcador"
       delete: "Eliminar marcador"
       confirm_delete: "Confirma a eliminación deste marcador? O recordatorio tamén se eliminará."
       confirm_clear: "Confirma o borrado de todos os marcadores deste tema?"
@@ -330,7 +328,6 @@ gl:
     enable: "Activar"
     disable: "Desactivar"
     continue: "Continuar"
-    undo: "Desfacer"
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
     banner:
@@ -467,11 +464,9 @@ gl:
       scores:
         about: "A puntuación calcúlase con base no nivel de fiabilidade do informador, a precisión das súas alertas anteriores e a prioridade do elemento que se recolle."
         score: "Puntuación"
-        date: "Data"
-        type: "Tipo"
+        type: "Motivo"
         status: "Estado"
-        submitted_by: "Enviado por"
-        reviewed_by: "Revisado por"
+        submitted_by: "Recollido por"
       statuses:
         pending:
           title: "Pendente"
@@ -479,14 +474,12 @@ gl:
           title: "Aprobado"
         rejected:
           title: "Rexeitado"
-        ignored:
-          title: "Ignorado"
-        deleted:
-          title: "Eliminado"
         reviewed:
-          title: "(todas revisadas)"
+          title: "Todas revisadas"
         all:
-          title: "(todo)"
+          title: "Todo"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Publicación sinalada"
@@ -615,6 +608,7 @@ gl:
         denied: "rexeitado"
         undone: "petición retirada"
         handle: "xestionar a petición de incorporación"
+        undo: "Desfacer"
       manage:
         title: "Xestionar"
         name: "Nome"
@@ -757,6 +751,7 @@ gl:
         make_all_primary_description: "Facer deste o grupo primario para todos os usuarios seleccionados"
         remove_all_primary: "Retirar como primario"
         remove_all_primary_description: "Retirar este grupo como primario"
+        status: "Estado"
         owner: "Propietario"
         primary: "Primario"
         forbidden: "Non ten permiso para ver os membros."
@@ -880,11 +875,6 @@ gl:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar preferencias"
-      download_archive:
-        button_text: "Descargar todo"
-        confirm: "Confirma a descarga das súas publicacións?"
-        success: "Iniciouse a descarga, notificarémoslle cunha mensaxe o remate do proceso."
-        rate_limit_error: "Só se poden descargar as publicacións unha vez por día. Ténteo de novo mañá."
       new_private_message: "Nova mensaxe"
       private_message: "Mensaxe"
       private_messages: "Mensaxes"
@@ -952,7 +942,6 @@ gl:
         perm_denied_expl: "Denegou o permiso para recibir notificacións no navegador. Permita as notificacións na configuración do navegador."
         disable: "Desactivar as notificacións"
         enable: "Activar as notificacións"
-        each_browser_note: 'Nota: Ten que cambiar este axuste en todos os navegadores que use. Desactivaranse todas as notificacións cando estea en «non molestar», independentemente deste axuste.'
         consent_prompt: "Quere recibir notificacións ao vivo cando a xente lea as súas publicacións?"
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
@@ -1401,6 +1390,7 @@ gl:
           edit_title: "Editar convite"
           instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
           copy_link: "copiar a ligazón"
+          expired_at_time: "Caduca o %{time}"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
           add_to_groups: "Engadir aos grupos"
@@ -1818,8 +1808,6 @@ gl:
         topic_template_not_modified: "Engada detalles e aspectos específicos ao tema editando o modelo de tema."
       save_edit: "Gardar a edición"
       overwrite_edit: "Sobrescribir a edición"
-      reply_original: "Responder no tema orixinal"
-      reply_here: "Responder aquí"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"
@@ -2129,9 +2117,11 @@ gl:
         dismiss_new: "Desbotar novas"
         toggle: "cambiar a selección en bloque dos temas"
         actions: "Accións en bloque"
+        change_category: "Estabelecer categoría..."
         close_topics: "Pechar temas"
         archive_topics: "Arquivar temas"
         move_messages_to_inbox: "Mover á caixa de entrada"
+        notification_level: "Notificacións..."
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
         selected:
@@ -2218,8 +2208,6 @@ gl:
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
-      jump_reply_up: ir a unha resposta anterior
-      jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
       slow_mode_update:
         title: "Modo lento"
@@ -2355,12 +2343,14 @@ gl:
         open: "Abrir tema"
         close: "Pechar tema"
         multi_select: "Seleccionar publicacións…"
+        slow_mode: "Estabelecer modo lento..."
         timed_update: "Estabelecer temporizador do tema..."
         pin: "Fixar tema…"
         unpin: "Desprender tema…"
         unarchive: "Desarquivar tema"
         archive: "Arquivar tema"
         reset_read: "Restabelecer datos de lecturas"
+        make_public: "Facer público o tema..."
         make_private: "Facer privada a mensaxe"
         reset_bump_date: "Restabelecer data de promoción"
       feature:
@@ -2643,6 +2633,8 @@ gl:
         rebake: "Reconstruír HTML"
         publish_page: "Publicación da páxina"
         unhide: "Non agochar"
+        change_owner: "Cambiar propietario..."
+        grant_badge: "Conceder insignia..."
         lock_post: "Bloquear publicación"
         lock_post_description: "evitar que o autor edite esta publicación"
         unlock_post: "Desbloquear a publicación"
@@ -2656,6 +2648,8 @@ gl:
         delete_topic_confirm_modal_no: "Non, manter este tema"
         delete_topic_error: "Produciuse un erro ao eliminar este tema"
         delete_topic: "eliminar tema"
+        add_post_notice: "Engadir aviso do equipo..."
+        change_post_notice: "Cambiar o aviso do equipo..."
         delete_post_notice: "Eliminar o aviso do equipo"
         remove_timer: "retirar o temporizador"
         edit_timer: "editar temporizador"
@@ -2719,7 +2713,6 @@ gl:
       bookmarks:
         create: "Crear marcador"
         edit: "Editar marcador"
-        created: "Creado"
         updated: "Actualizado"
         name: "Nome"
         name_placeholder: "Para que serve este marcador?"
@@ -2754,7 +2747,6 @@ gl:
       back: "Volver á categoría"
       general: "Xeral"
       settings: "Configuración"
-      topic_template: "Modelo para o tema"
       tags: "Etiquetas"
       tags_allowed_tags: "Restrinxir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restrinxir estes grupos de etiquetas a esta categoría:"
@@ -2808,8 +2800,6 @@ gl:
       images: "Imaxes"
       email_in: "Personalizar enderezos de mensaxes de correo entrantes:"
       email_in_allow_strangers: "Aceptar correo de usuarios anónimos sen contas"
-      email_in_disabled: "A publicación de novos temas vía correo está desactivada na configuración do sitio. Para activala, "
-      email_in_disabled_click: 'activar o axuste «correo de entrada».'
       mailinglist_mirror: "A categoría replica unha lista de correo"
       show_subcategory_list: "Amosar a lista de subcategorías por riba dos temas desta categoría."
       read_only_banner: "Texto do báner cando o usuario non poida crear un tema nesta categoría:"
@@ -2998,7 +2988,6 @@ gl:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    changed_by: "de %{author}"
     raw_email:
       title: "Correo entrante"
       not_available: "Non dispoñíbel!"
@@ -3006,6 +2995,10 @@ gl:
     filters:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Últimos"
         title_with_count:
@@ -3289,6 +3282,7 @@ gl:
         everyone_can_use: "Todos poden usar as etiquetas"
         usable_only_by_groups: "As etiquetas son visíbeis para todos, pero só os seguintes grupos poden usalas"
         visible_only_to_groups: "As etiquetas só son visíbeis para os seguintes grupos"
+        parent_tag_placeholder: "Opcional"
       topics:
         none:
           unread: "Non ten temas sen ler."
@@ -3315,13 +3309,11 @@ gl:
       enabled: "O modo seguro está activado; para saír do modo seguro peche esta xanela do navegador"
     image_removed: "(imaxe retirada)"
     pause_notifications:
-      remaining: "queda %{remaining}"
       options:
         half_hour: "30 minutos"
         one_hour: "1 hora"
         two_hours: "2 horas"
         tomorrow: "Ata mañá"
-        custom: "Personalizado"
       set_schedule: "Estabelecer un calendario de notificacións"
     trust_levels:
       names:
@@ -3340,6 +3332,13 @@ gl:
       more: "Máis"
       all_categories: "Todas as categorías"
       sections:
+        custom:
+          save: "Gardar"
+          delete: "Eliminar"
+          links:
+            icon: "Icona"
+            name: "Nome"
+            value: "Ligazón"
         about:
           header_link_text: "Verbo de"
         messages:
@@ -3365,18 +3364,19 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
+            everything:
+              content: "Todo"
             faq:
               content: "PMF"
             groups:
               content: "Grupos"
-              title: "Todos os grupos"
             users:
               content: "Usuarios"
             my_posts:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
-              title: "revisar"
+    until: "Ata:"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -3693,7 +3693,6 @@ gl:
         enabled: "Activado?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Cambiar a configuración"
         change_settings_short: "Configuración"
         howto: "Como podo instalar un complemento?"
         official: "Complemento oficial"
@@ -3772,7 +3771,6 @@ gl:
         button_title: "Enviar convites"
       customize:
         title: "Personalizar"
-        long_title: "Personalización do sitio"
         preview: "visualizar"
         explain_preview: "Ver o sitio con este tema activado"
         save: "Gardar"
@@ -3966,9 +3964,9 @@ gl:
           new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Eliminar esta paleta de cores?"
-          undo: "desfacer"
+          undo: "Desfacer"
           undo_title: "Desfai os teus cambio nesta cor desde a última vez que a gardaches."
-          revert: "reverter"
+          revert: "Reverter"
           revert_title: "Restabelece esta cor na paleta de cores predeterminada de Discourse."
           primary:
             name: "primario"
@@ -4010,6 +4008,8 @@ gl:
           love:
             name: "amor"
             description: "Cor do botón gústame."
+          selected:
+            name: "seleccionado"
         robots:
           title: "Sobrescribir o ficheiro robots.txt do sitio:"
           warning: "Isto sobrescribirá definitivamente calquera configuración relativa ao sitio."
@@ -4306,6 +4306,35 @@ gl:
           description: "Escriba texto a continuación para comprobar coincidencias con palabras observadas"
           found_matches: "Coincidencias atopadas:"
           no_matches: "Non se atoparon coincidencias"
+      form_templates:
+        nav_title: "Modelos"
+        list_table:
+          headings:
+            name: "Nome"
+            actions: "Accións"
+        view_template:
+          close: "Pechar"
+          edit: "Editar"
+          delete: "Eliminar"
+        new_template_form:
+          submit: "Gardar"
+          cancel: "Cancelar"
+          preview: "Visualizar"
+        quick_insert_fields:
+          add_new_field: "Engadir"
+          dropdown: "Despregábel"
+        validations_modal:
+          table_headers:
+            key: "Chave"
+            type: "Tipo"
+            description: "Descrición"
+          validations:
+            required:
+              key: "obrigatorio"
+            minimum:
+              key: "mínimo"
+            maximum:
+              key: "máximo"
       impersonate:
         title: "Suplantar"
         help: "Usar esta ferramenta para suplantar unha conta de usuario co obxecto de detectar e corrixir erros. Deberá saír da sesión ao rematar."
@@ -4318,6 +4347,7 @@ gl:
         not_found: "Sentímolo pero o nome do usuario non existe no sistema."
         id_not_found: "Sentímolo pero o usuario non existe no sistema."
         active: "Activado"
+        status: "Estado"
         show_emails: "Amosar correos"
         hide_emails: "Agochar correos"
         nav:
@@ -4398,7 +4428,6 @@ gl:
         staged: "Transitorio?"
         show_admin_profile: "Administración"
         show_public_profile: "Amosar o perfil público"
-        impersonate: "Suplantar"
         action_logs: "Rexistros de accións"
         ip_lookup: "Busca de IP"
         log_out: "Saír da sesión"
@@ -4706,7 +4735,8 @@ gl:
         allow_title: Permitir que se use a insignia como un título
         multiple_grant: Pode concederse múltiples veces
         listable: Amosar a insignia na páxina de insignias públicas
-        enabled: Activar a insignia
+        enabled: activado
+        disabled: desactivado
         icon: Icona
         image: Imaxe
         graphic: Gráfico
@@ -4772,7 +4802,6 @@ gl:
         confirm_delete: "Confirma a eliminación deste servidor?"
         title: "Incorporando"
         host: "Servidores permitidos"
-        class_name: "Nome da clase"
         allowed_paths: "Lista de camiños admitidos"
         edit: "editar"
         category: "Publicación na categoría"

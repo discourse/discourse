@@ -16,18 +16,20 @@ export default class AdminCustomizeColorsShowController extends Component {
   tagName = "";
   chatChannel = null;
   selectedMessageIds = null;
-  showChatQuoteSuccess = false;
+  chatCopySuccess = false;
+  showChatCopySuccess = false;
   cancelSelecting = null;
-  canModerate = false;
 
   @computed("selectedMessageIds.length")
   get anyMessagesSelected() {
     return this.selectedMessageIds.length > 0;
   }
 
-  @computed("chatChannel.isDirectMessageChannel", "canModerate")
+  @computed("chatChannel.isDirectMessageChannel", "chatChannel.canModerate")
   get showMoveMessageButton() {
-    return !this.chatChannel.isDirectMessageChannel && this.canModerate;
+    return (
+      !this.chatChannel.isDirectMessageChannel && this.chatChannel.canModerate
+    );
   }
 
   @bind
@@ -100,12 +102,15 @@ export default class AdminCustomizeColorsShowController extends Component {
   @action
   async copyMessages() {
     try {
+      this.set("chatCopySuccess", false);
+
       if (!isTesting()) {
         // clipboard API throws errors in tests
         await clipboardCopyAsync(this.generateQuote);
+        this.set("chatCopySuccess", true);
       }
 
-      this.set("showChatQuoteSuccess", true);
+      this.set("showChatCopySuccess", true);
 
       schedule("afterRender", () => {
         const element = document.querySelector(".chat-selection-message");
@@ -114,7 +119,7 @@ export default class AdminCustomizeColorsShowController extends Component {
             return;
           }
 
-          this.set("showChatQuoteSuccess", false);
+          this.set("showChatCopySuccess", false);
         });
       });
     } catch (error) {

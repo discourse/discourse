@@ -1,3 +1,4 @@
+import { classNameBindings } from "@ember-decorators/component";
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -6,12 +7,12 @@ import { action, set, setProperties } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 
-export default Component.extend({
-  classNameBindings: [":value-list", ":emoji-list"],
-  values: null,
-  validationMessage: null,
-  emojiPickerIsActive: false,
-  isEditorFocused: false,
+@classNameBindings(":value-list", ":emoji-list")
+export default class EmojiValueList extends Component {
+  values = null;
+  validationMessage = null;
+  emojiPickerIsActive = false;
+  isEditorFocused = false;
 
   @discourseComputed("values")
   collection(values) {
@@ -28,14 +29,14 @@ export default Component.extend({
           emojiUrl: emojiUrlFor(value),
         };
       });
-  },
+  }
 
   @action
   closeEmojiPicker() {
     this.collection.setEach("isEditing", false);
     this.set("emojiPickerIsActive", false);
     this.set("isEditorFocused", false);
-  },
+  }
 
   @action
   emojiSelected(code) {
@@ -65,12 +66,12 @@ export default Component.extend({
 
     this.set("emojiPickerIsActive", false);
     this.set("isEditorFocused", false);
-  },
+  }
 
   @discourseComputed("collection")
   showUpDownButtons(collection) {
     return collection.length - 1 ? true : false;
-  },
+  }
 
   _splitValues(values) {
     if (values && values.length) {
@@ -91,7 +92,7 @@ export default Component.extend({
     } else {
       return [];
     }
-  },
+  }
 
   @action
   editValue(index) {
@@ -111,12 +112,12 @@ export default Component.extend({
         }
       }, 100);
     });
-  },
+  }
 
   @action
   removeValue(value) {
     this._removeValue(value);
-  },
+  }
 
   @action
   shift(operation, index) {
@@ -133,7 +134,7 @@ export default Component.extend({
     this.collection.insertAt(futureIndex, shiftedEmoji);
 
     this._saveValues();
-  },
+  }
 
   _validateInput(input) {
     this.set("validationMessage", null);
@@ -147,12 +148,12 @@ export default Component.extend({
     }
 
     return true;
-  },
+  }
 
   _removeValue(value) {
     this.collection.removeObject(value);
     this._saveValues();
-  },
+  }
 
   _replaceValue(index, newValue) {
     const item = this.collection[index];
@@ -161,9 +162,9 @@ export default Component.extend({
     }
     set(item, "value", newValue);
     this._saveValues();
-  },
+  }
 
   _saveValues() {
     this.set("values", this.collection.mapBy("value").join("|"));
-  },
-});
+  }
+}

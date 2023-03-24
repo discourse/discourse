@@ -21,13 +21,13 @@ th:
       joined: "สมัครสมาชิกเมื่อ"
       email_frequency:
         never: "ไม่เคย"
+      header_indicator_preference:
+        never: "ไม่เคย"
       flag: "ธง"
       join: "เข้าร่วม"
+      last_visit: "เยี่ยมชมครั้งล่าสุด"
       mention_warning:
         dismiss: "ซ่อน"
-        groups:
-          users_limit:
-            other: "%{count} ผู้ใช้"
       reply: "ตอบ"
       edit: "แก้ไข"
       bookmark_message: "บุ๊คมาร์ค"
@@ -48,6 +48,7 @@ th:
         yesterday: เมื่อวาน
       about_view:
         title: ชื่อเรื่อง
+        name: ชื่อ
         description: รายละเอียด
       channel_info:
         back_to_channel: "กลับ"

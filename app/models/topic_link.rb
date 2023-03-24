@@ -175,7 +175,7 @@ class TopicLink < ActiveRecord::Base
 
     lookup = {}
     results.each do |tl|
-      normalized = tl.url.downcase.sub(%r{^https?://}, "").sub(%r{/$}, "")
+      normalized = tl.url.downcase.sub(%r{\Ahttps?://}, "").sub(%r{/\z}, "")
       lookup[normalized] = {
         domain: tl.domain,
         username: tl.user.username_lower,

@@ -750,8 +750,8 @@ RSpec.describe TopicView do
   end
 
   describe "page_title" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag, topic_count: 2) }
+    fab!(:tag1) { Fabricate(:tag, staff_topic_count: 0, public_topic_count: 0) }
+    fab!(:tag2) { Fabricate(:tag, staff_topic_count: 2, public_topic_count: 2) }
     fab!(:op_post) { Fabricate(:post, topic: topic) }
     fab!(:post1) { Fabricate(:post, topic: topic) }
     fab!(:whisper) { Fabricate(:post, topic: topic, post_type: Post.types[:whisper]) }
@@ -824,6 +824,25 @@ RSpec.describe TopicView do
             it { is_expected.to start_with(topic.title) }
             it { is_expected.not_to include(tag1.name) }
             it { is_expected.not_to include(tag2.name) }
+          end
+
+          context "with restricted tags" do
+            let(:tag_group) { Fabricate.build(:tag_group) }
+            let(:tag_group_permission) do
+              Fabricate.build(:tag_group_permission, tag_group: tag_group)
+            end
+
+            before do
+              SiteSetting.tagging_enabled = true
+              # avoid triggering a `before_create` callback in `TagGroup` which
+              # messes with permissions
+              tag_group.tag_group_permissions << tag_group_permission
+              tag_group.save!
+              tag_group_permission.tag_group.tags << tag2
+            end
+
+            it { is_expected.not_to include(tag2.name) }
+            it { is_expected.to include(tag1.name) }
           end
         end
       end

@@ -110,7 +110,7 @@
             this.model.featured_topic.id
           }}
         >
-          {{html-safe (replace-emoji this.model.featured_topic.fancy_title)}}
+          {{replace-emoji (html-safe this.model.featured_topic.fancy_title)}}
         </LinkTo>
       </label>
     {{/if}}
@@ -155,28 +155,31 @@
   </div>
 {{/if}}
 
-<PluginOutlet
-  @name="user-preferences-profile"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-profile"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
-<PluginOutlet
-  @name="user-custom-preferences"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-preferences"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 <SaveControls
   @model={{this.model}}

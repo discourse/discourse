@@ -6,22 +6,14 @@ class DiscourseJsProcessor
   class TranspileError < StandardError
   end
 
+  # To generate a list of babel plugins used by ember-cli, set
+  # babel: { debug: true } in ember-cli-build.js, then run `yarn ember build -prod`
   DISCOURSE_COMMON_BABEL_PLUGINS = [
-    "proposal-optional-chaining",
     ["proposal-decorators", { legacy: true }],
-    "transform-template-literals",
     "proposal-class-properties",
-    "proposal-class-static-block",
-    "proposal-private-property-in-object",
     "proposal-private-methods",
-    "proposal-numeric-separator",
-    "proposal-logical-assignment-operators",
-    "proposal-nullish-coalescing-operator",
-    "proposal-json-strings",
-    "proposal-optional-catch-binding",
+    "proposal-class-static-block",
     "transform-parameters",
-    "proposal-async-generator-functions",
-    "proposal-object-rest-spread",
     "proposal-export-namespace-from",
   ]
 
@@ -170,6 +162,16 @@ class DiscourseJsProcessor
       )
       load_file_in_context(
         ctx,
+        "node_modules/babel-plugin-ember-template-compilation/src/js-utils.js",
+        wrap_in_module: "babel-plugin-ember-template-compilation/js-utils",
+      )
+      load_file_in_context(
+        ctx,
+        "node_modules/babel-plugin-ember-template-compilation/src/public-types.js",
+        wrap_in_module: "babel-plugin-ember-template-compilation/public-types",
+      )
+      load_file_in_context(
+        ctx,
         "node_modules/babel-import-util/src/index.js",
         wrap_in_module: "babel-import-util",
       )
@@ -180,7 +182,10 @@ class DiscourseJsProcessor
       )
 
       # Widget HBS compiler
-      widget_hbs_compiler_source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
+      widget_hbs_compiler_source =
+        File.read(
+          "#{Rails.root}/app/assets/javascripts/discourse-widget-hbs/lib/widget-hbs-compiler.js",
+        )
       widget_hbs_compiler_source = <<~JS
         define("widget-hbs-compiler", ["exports"], function(exports){
           #{widget_hbs_compiler_source}

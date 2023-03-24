@@ -1,0 +1,79 @@
+<div class="themes-list-header">
+  <DButton
+    @action={{action "changeView"}}
+    @actionParam={{this.THEMES}}
+    @class={{concat "themes-tab " "tab " (if this.themesTabActive "active" "")}}
+    @label="admin.customize.theme.title"
+  />
+  <DButton
+    @action={{action "changeView"}}
+    @actionParam={{this.COMPONENTS}}
+    @class={{concat
+      "components-tab "
+      "tab "
+      (if this.componentsTabActive "active" "")
+    }}
+    @label="admin.customize.theme.components"
+    @icon="puzzle-piece"
+  />
+</div>
+
+<div class="themes-list-container">
+  {{#if this.showFilter}}
+    <div class="themes-list-filter themes-list-item">
+      <Input
+        class="filter-input"
+        placeholder={{i18n "admin.customize.theme.filter_placeholder"}}
+        autocomplete="off"
+        @type="search"
+        @value={{mut this.filterTerm}}
+      />
+      {{d-icon "search"}}
+    </div>
+  {{/if}}
+  {{#if this.hasThemes}}
+    {{#if this.hasActiveThemes}}
+      {{#each this.activeThemes as |theme|}}
+        <ThemesListItem
+          @theme={{theme}}
+          @navigateToTheme={{action "navigateToTheme" theme}}
+        />
+      {{/each}}
+
+      {{#if this.hasInactiveThemes}}
+        <div class="themes-list-item inactive-indicator">
+          <span class="empty">
+            {{#if this.themesTabActive}}
+              {{i18n "admin.customize.theme.inactive_themes"}}
+            {{else}}
+              {{i18n "admin.customize.theme.inactive_components"}}
+            {{/if}}
+          </span>
+        </div>
+      {{/if}}
+    {{/if}}
+
+    {{#if this.hasInactiveThemes}}
+      {{#each this.inactiveThemes as |theme|}}
+        <ThemesListItem
+          @classNames="inactive-theme"
+          @theme={{theme}}
+          @navigateToTheme={{action "navigateToTheme" theme}}
+        />
+      {{/each}}
+    {{/if}}
+  {{else}}
+    <div class="themes-list-item">
+      <span class="empty">{{i18n "admin.customize.theme.empty"}}</span>
+    </div>
+  {{/if}}
+</div>
+
+<div class="create-actions">
+  <DButton
+    @action={{this.installModal}}
+    @icon="upload"
+    @label="admin.customize.install"
+    @class="btn-primary"
+  />
+</div>

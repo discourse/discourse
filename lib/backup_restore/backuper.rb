@@ -5,13 +5,13 @@ require "file_store/s3_store"
 
 module BackupRestore
   class Backuper
-    attr_reader :success
+    attr_reader :success, :store
 
     def initialize(user_id, opts = {})
       @user_id = user_id
       @client_id = opts[:client_id]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
-      @with_uploads = opts[:with_uploads].nil? ? include_uploads? : opts[:with_uploads]
+      @with_uploads = opts[:with_uploads] == false ? false : include_uploads?
       @filename_override = opts[:filename]
       @ticket = opts[:ticket]
 
@@ -46,7 +46,6 @@ module BackupRestore
     rescue Exception => ex
       log "EXCEPTION: " + ex.message
       log ex.backtrace.join("\n")
-      @success = false
     else
       @success = true
       @backup_filename
@@ -55,7 +54,7 @@ module BackupRestore
       clean_up
       notify_user
       log "Finished!"
-      publish_completion(@success)
+      publish_completion
     end
 
     protected
@@ -337,12 +336,12 @@ module BackupRestore
     end
 
     def upload_archive
-      return unless @store.remote?
+      return unless store.remote?
 
       log "Uploading archive..."
       content_type = MiniMime.lookup_by_filename(@backup_filename).content_type
       archive_path = File.join(@archive_directory, @backup_filename)
-      @store.upload_file(@backup_filename, archive_path, content_type)
+      store.upload_file(@backup_filename, archive_path, content_type)
     end
 
     def after_create_hook
@@ -354,16 +353,16 @@ module BackupRestore
       return if Rails.env.development?
 
       log "Deleting old backups..."
-      @store.delete_old
+      store.delete_old
     rescue => ex
       log "Something went wrong while deleting old backups.", ex
     end
 
     def notify_user
-      return if @success && @user.id == Discourse::SYSTEM_USER_ID
+      return if success && @user.id == Discourse::SYSTEM_USER_ID
 
       log "Notifying '#{@user.username}' of the end of the backup..."
-      status = @success ? :backup_succeeded : :backup_failed
+      status = success ? :backup_succeeded : :backup_failed
 
       logs = Discourse::Utils.logs_markdown(@logs, user: @user)
       post = SystemMessage.create_from_system_user(@user, status, logs: logs)
@@ -378,11 +377,11 @@ module BackupRestore
       delete_uploaded_archive
       remove_tar_leftovers
       mark_backup_as_not_running
-      refresh_disk_space
+      refresh_disk_space if success
     end
 
     def delete_uploaded_archive
-      return unless @store.remote?
+      return unless store.remote?
 
       archive_path = File.join(@archive_directory, @backup_filename)
 
@@ -396,7 +395,7 @@ module BackupRestore
 
     def refresh_disk_space
       log "Refreshing disk stats..."
-      @store.reset_cache
+      store.reset_cache
     rescue => ex
       log "Something went wrong while refreshing disk stats.", ex
     end
@@ -450,7 +449,7 @@ module BackupRestore
       @logs << "[#{timestamp}] #{message}"
     end
 
-    def publish_completion(success)
+    def publish_completion
       if success
         log("[SUCCESS]")
         DiscourseEvent.trigger(:backup_complete, logs: @logs, ticket: @ticket)

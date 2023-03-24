@@ -112,7 +112,6 @@ Discourse::Application.routes.draw do
 
       resources :groups, only: [:create] do
         member do
-          put "owners" => "groups#add_owners"
           delete "owners" => "groups#remove_owner"
           put "primary" => "groups#set_primary"
         end
@@ -157,7 +156,7 @@ Discourse::Application.routes.draw do
         get "tl3_requirements"
         put "anonymize"
         post "merge"
-        post "reset_bounce_score"
+        post "reset-bounce-score"
         put "disable_second_factor"
         delete "sso_record"
       end
@@ -234,6 +233,9 @@ Discourse::Application.routes.draw do
       scope "/customize", constraints: AdminConstraint.new do
         resources :user_fields, constraints: AdminConstraint.new
         resources :emojis, constraints: AdminConstraint.new
+        resources :form_templates, constraints: AdminConstraint.new, path: "/form-templates" do
+          collection { get "preview" => "form_templates#preview" }
+        end
 
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
@@ -1052,6 +1054,7 @@ Discourse::Application.routes.draw do
 
           get "permissions" => "groups#permissions"
           put "members" => "groups#add_members"
+          put "owners" => "groups#add_owners"
           put "join" => "groups#join"
           delete "members" => "groups#remove_member"
           delete "leave" => "groups#leave"
@@ -1063,6 +1066,8 @@ Discourse::Application.routes.draw do
     end
 
     resources :associated_groups, only: %i[index], constraints: AdminConstraint.new
+
+    post "slugs", to: "slugs#generate"
 
     # aliases so old API code works
     delete "admin/groups/:id/members" => "groups#remove_member", :constraints => AdminConstraint.new
@@ -1082,6 +1087,7 @@ Discourse::Application.routes.draw do
       put "revisions/:revision/hide" => "posts#hide_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/show" => "posts#show_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/revert" => "posts#revert", :constraints => { revision: /\d+/ }
+      delete "revisions/permanently_delete" => "posts#permanently_delete_revisions"
       put "recover"
       collection do
         delete "destroy_many"
@@ -1200,6 +1206,8 @@ Discourse::Application.routes.draw do
     end
 
     Discourse.filters.each { |filter| get "#{filter}" => "list##{filter}" }
+
+    get "filter" => "list#filter"
 
     get "search/query" => "search#query"
     get "search" => "search#show"
@@ -1584,6 +1592,9 @@ Discourse::Application.routes.draw do
     get "user-status" => "user_status#get"
     put "user-status" => "user_status#set"
     delete "user-status" => "user_status#clear"
+
+    resources :sidebar_sections, only: %i[index create update destroy]
+    post "/sidebar_sections/reorder" => "sidebar_sections#reorder"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
   end

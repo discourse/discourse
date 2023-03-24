@@ -113,7 +113,7 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
     const collapseImage =
       ".chat-message-container[data-id='1'] .chat-message-collapser-opened";
 
-    await visit("/chat/channel/1/cat");
+    await visit("/chat/c/cat/1");
 
     assert.ok(visible(youtubeContainer));
     assert.ok(visible(collapseImage), "the open arrow is shown");
@@ -140,7 +140,7 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
     const collapseImage =
       ".chat-message-container[data-id='2'] .chat-message-collapser-opened";
 
-    await visit("/chat/channel/1/cat");
+    await visit("/chat/c/cat/1");
 
     await click(image);
 

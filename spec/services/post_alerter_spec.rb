@@ -45,6 +45,15 @@ RSpec.describe PostAlerter do
   fab!(:user) { Fabricate(:user) }
   fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
+  fab!(:private_category) do
+    Fabricate(
+      :private_category,
+      group: group,
+      email_in: "test@test.com",
+      email_in_allow_strangers: true,
+    )
+  end
+
   def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
     PostAlerter.post_created(post)
@@ -64,7 +73,7 @@ RSpec.describe PostAlerter do
       PostAlerter.post_created(reply2)
 
       # we get a green notification for a reply
-      expect(Notification.where(user_id: pm.user_id).pluck_first(:notification_type)).to eq(
+      expect(Notification.where(user_id: pm.user_id).pick(:notification_type)).to eq(
         Notification.types[:private_message],
       )
 
@@ -104,7 +113,7 @@ RSpec.describe PostAlerter do
       )
       PostAlerter.post_created(op)
 
-      expect(Notification.where(user_id: user.id).pluck_first(:notification_type)).to eq(
+      expect(Notification.where(user_id: user.id).pick(:notification_type)).to eq(
         Notification.types[:private_message],
       )
     end
@@ -609,22 +618,13 @@ RSpec.describe PostAlerter do
       group_member = Fabricate(:user)
       group.add(group_member)
 
-      private_category =
-        Fabricate(
-          :private_category,
-          group: group,
-          email_in: "test@test.com",
-          email_in_allow_strangers: true,
-        )
-
       staged_user_post = create_post(user: staged_user, category: private_category)
 
-      linking =
-        create_post(
-          user: group_member,
-          category: private_category,
-          raw: "my magic topic\n##{Discourse.base_url}#{staged_user_post.url}",
-        )
+      create_post(
+        user: group_member,
+        category: private_category,
+        raw: "my magic topic\n##{Discourse.base_url}#{staged_user_post.url}",
+      )
 
       staged_user.reload
       expect(
@@ -1053,10 +1053,12 @@ RSpec.describe PostAlerter do
     it "triggers :before_create_notification" do
       type = Notification.types[:private_message]
       events =
-        DiscourseEvent.track_events { PostAlerter.new.create_notification(user, type, post, {}) }
+        DiscourseEvent.track_events do
+          PostAlerter.new.create_notification(user, type, post, { revision_number: 1 })
+        end
       expect(events).to include(
         event_name: :before_create_notification,
-        params: [user, type, post, {}],
+        params: [user, type, post, { revision_number: 1 }],
       )
     end
   end
@@ -1205,6 +1207,22 @@ RSpec.describe PostAlerter do
       payload["notifications"][1].merge! changes
 
       expect(JSON.parse(body)).to eq(payload)
+    end
+
+    it "does not have invalid HTML in the excerpt when enable_experimental_hashtag_autocomplete is enabled" do
+      SiteSetting.enable_experimental_hashtag_autocomplete = true
+      Fabricate(:category, slug: "random")
+      Jobs.run_immediately!
+      body = nil
+
+      stub_request(:post, "https://site2.com/push").to_return do |request|
+        body = request.body
+        { status: 200, body: "OK" }
+      end
+      create_post_with_alerts(user: user, raw: "this, @eviltrout, is a test with #random")
+      expect(JSON.parse(body)["notifications"][0]["excerpt"]).to eq(
+        "this, @eviltrout, is a test with #random",
+      )
     end
 
     context "with push subscriptions" do
@@ -1372,6 +1390,17 @@ RSpec.describe PostAlerter do
       expect(user.notifications.where(notification_type: Notification.types[:replied]).count).to eq(
         1,
       )
+    end
+
+    it "does not notify admins when suppress_secured_categories_from_admin is enabled" do
+      SiteSetting.suppress_secured_categories_from_admin = true
+
+      topic = Fabricate(:topic, category: private_category)
+      post = Fabricate(:post, raw: "hello @#{admin.username} how are you today?", topic: topic)
+
+      PostAlerter.post_created(post)
+
+      expect(admin.notifications.count).to eq(0)
     end
 
     it "doesn't notify regular user about whispered reply" do
@@ -1620,14 +1649,6 @@ RSpec.describe PostAlerter do
 
         group.add(group_member)
         group.add(staged_member)
-
-        private_category =
-          Fabricate(
-            :private_category,
-            group: group,
-            email_in: "test@test.com",
-            email_in_allow_strangers: false,
-          )
 
         level = CategoryUser.notification_levels[:watching]
         CategoryUser.set_notification_level_for_category(group_member, level, private_category.id)

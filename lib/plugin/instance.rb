@@ -675,17 +675,17 @@ class Plugin::Instance
       DiscoursePluginRegistry.register_glob(admin_path, "hbr", admin: true)
 
       DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, "").sub(
-        %r{^/*},
+        %r{\A/*},
         "",
       )
       DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, "").sub(
-        %r{^/*},
+        %r{\A/*},
         "",
       )
 
       test_path = "#{root_dir_name}/test/javascripts"
       DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, "").sub(
-        %r{^/*},
+        %r{\A/*},
         "",
       )
     end
@@ -1129,7 +1129,17 @@ class Plugin::Instance
   # table. Some stats may be needed purely for reporting purposes and thus
   # do not need to be shown in the UI to admins/users.
   def register_about_stat_group(plugin_stat_group_name, show_in_ui: false, &block)
-    About.add_plugin_stat_group(plugin_stat_group_name, show_in_ui: show_in_ui, &block)
+    # We do not want to register and display the same group multiple times.
+    if DiscoursePluginRegistry.about_stat_groups.any? { |stat_group|
+         stat_group[:name] == plugin_stat_group_name
+       }
+      return
+    end
+
+    DiscoursePluginRegistry.register_about_stat_group(
+      { name: plugin_stat_group_name, show_in_ui: show_in_ui, block: block },
+      self,
+    )
   end
 
   ##
@@ -1209,6 +1219,16 @@ class Plugin::Instance
   # @param {Block} callback to be called with the user, guardian, and the destroyer opts as arguments
   def register_user_destroyer_on_content_deletion_callback(callback)
     DiscoursePluginRegistry.register_user_destroyer_on_content_deletion_callback(callback, self)
+  end
+
+  ##
+  # Register a class that implements [BaseBookmarkable], which represents another
+  # [ActiveRecord::Model] that may be bookmarked via the [Bookmark] model's
+  # polymorphic association. The class handles create and destroy hooks, querying,
+  # and reminders among other things.
+  def register_bookmarkable(klass)
+    return if Bookmark.registered_bookmarkable_from_type(klass.model.name).present?
+    DiscoursePluginRegistry.register_bookmarkable(RegisteredBookmarkable.new(klass), self)
   end
 
   protected
@@ -1292,10 +1312,14 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
   end
 
+  def register_search_group_query_callback(callback)
+    DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
+  end
+
   private
 
   def validate_directory_column_name(column_name)
-    match = /^[_a-z]+$/.match(column_name)
+    match = /\A[_a-z]+\z/.match(column_name)
     unless match
       raise "Invalid directory column name '#{column_name}'. Can only contain a-z and underscores"
     end

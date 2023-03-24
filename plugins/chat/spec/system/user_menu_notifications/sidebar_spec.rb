@@ -44,7 +44,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
           Jobs.run_immediately!
 
           message =
-            Chat::ChatMessageCreator.create(
+            Chat::MessageCreator.create(
               chat_channel: dm_channel_1,
               user: other_user,
               content: "this is fine @#{current_user.username}",
@@ -59,7 +59,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
           end
           expect(find("#quick-access-chat-notifications")).to have_link(
             I18n.t("js.notifications.popup.direct_message_chat_mention.direct"),
-            href: "/chat/channel/#{dm_channel_1.id}/#{other_user.username}?messageId=#{message.id}",
+            href: "/chat/c/#{other_user.username}/#{dm_channel_1.id}/#{message.id}",
           )
         end
       end
@@ -81,7 +81,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
 
         xit "shows a group mention notification" do
           message =
-            Chat::ChatMessageCreator.create(
+            Chat::MessageCreator.create(
               chat_channel: channel_1,
               user: other_user,
               content: "this is fine @#{group.name}",
@@ -100,7 +100,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
               identifier: "@#{group.name}",
               channel: channel_1.name,
             ),
-            href: "/chat/channel/#{channel_1.id}/#{channel_1.slug}?messageId=#{message.id}",
+            href: "/chat/c/#{channel_1.slug}/#{channel_1.id}/#{message.id}",
           )
         end
       end
@@ -110,7 +110,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
           Jobs.run_immediately!
 
           message =
-            Chat::ChatMessageCreator.create(
+            Chat::MessageCreator.create(
               chat_channel: channel_1,
               user: other_user,
               content: "this is fine @#{current_user.username}",
@@ -126,7 +126,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
 
           expect(find("#quick-access-chat-notifications")).to have_link(
             I18n.t("js.notifications.popup.chat_mention.direct", channel: channel_1.name),
-            href: "/chat/channel/#{channel_1.id}/#{channel_1.slug}?messageId=#{message.id}",
+            href: "/chat/c/#{channel_1.slug}/#{channel_1.id}/#{message.id}",
           )
         end
       end
@@ -134,7 +134,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
       context "when @all" do
         xit "shows a mention notification" do
           message =
-            Chat::ChatMessageCreator.create(
+            Chat::MessageCreator.create(
               chat_channel: channel_1,
               user: other_user,
               content: "this is fine @all",
@@ -153,7 +153,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
               identifier: "@all",
               channel: channel_1.name,
             ),
-            href: "/chat/channel/#{channel_1.id}/#{channel_1.slug}?messageId=#{message.id}",
+            href: "/chat/c/#{channel_1.slug}/#{channel_1.id}/#{message.id}",
           )
         end
       end

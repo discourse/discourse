@@ -122,6 +122,22 @@ RSpec.describe StaticController do
         File.delete(file_path)
       end
     end
+
+    it "can serve sourcemaps on adjacent paths" do
+      assets_path = Rails.root.join("public/assets")
+
+      FileUtils.mkdir_p(assets_path)
+
+      file_path = assets_path.join("test.map")
+      File.write(file_path, "fake source map")
+      GlobalSetting.stubs(:cdn_url).returns("https://www.example.com/")
+
+      get "/brotli_asset/test.map"
+
+      expect(response.status).to eq(200)
+    ensure
+      File.delete(file_path)
+    end
   end
 
   describe "#cdn_asset" do
@@ -170,7 +186,7 @@ RSpec.describe StaticController do
       ["tos", :tos_url, I18n.t("js.tos")],
       ["privacy", :privacy_policy_url, I18n.t("js.privacy")],
     ].each do |id, setting_name, text|
-      context "#{id}" do
+      context "with #{id}" do
         context "when #{setting_name} site setting is NOT set" do
           it "renders the #{id} page" do
             get "/#{id}"

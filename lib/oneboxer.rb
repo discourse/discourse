@@ -6,8 +6,8 @@ Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
 
 module Oneboxer
   ONEBOX_CSS_CLASS = "onebox"
-  AUDIO_REGEX = /^\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)$/i
-  VIDEO_REGEX = /^\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)$/i
+  AUDIO_REGEX = /\A\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)\z/i
+  VIDEO_REGEX = /\A\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)\z/i
 
   # keep reloaders happy
   unless defined?(Oneboxer::Result)
@@ -343,7 +343,8 @@ module Oneboxer
         end
       end
 
-    html = html.presence || "<a href='#{URI(url).to_s}'>#{URI(url).to_s}</a>"
+    normalized_url = ::Onebox::Helpers.normalize_url_for_output(URI(url).to_s)
+    html = html.presence || "<a href='#{normalized_url}'>#{normalized_url}</a>"
     { onebox: html, preview: html }
   end
 
@@ -355,18 +356,28 @@ module Oneboxer
         ""
       end
 
+    normalized_url = ::Onebox::Helpers.normalize_url_for_output(url)
     case File.extname(URI(url).path || "")
     when VIDEO_REGEX
       <<~HTML
         <div class="onebox video-onebox">
           <video #{additional_controls} width="100%" height="100%" controls="">
-            <source src='#{url}'>
-            <a href='#{url}'>#{url}</a>
+            <source src='#{normalized_url}'>
+            <a href='#{normalized_url}'>
+              #{normalized_url}
+            </a>
           </video>
         </div>
       HTML
     when AUDIO_REGEX
-      "<audio #{additional_controls} controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
+      <<~HTML
+        <audio #{additional_controls} controls>
+          <source src='#{normalized_url}'>
+          <a href='#{normalized_url}'>
+            #{normalized_url}
+          </a>
+        </audio>
+      HTML
     end
   end
 
@@ -448,8 +459,11 @@ module Oneboxer
         name: name,
         bio: user.user_profile.bio_excerpt(230),
         location: Onebox::Helpers.sanitize(user.user_profile.location),
-        joined: I18n.t("joined"),
-        created_at: user.created_at.strftime(I18n.t("datetime_formats.formats.date_only")),
+        joined:
+          I18n.t(
+            "onebox.discourse.user_joined_community",
+            date: user.created_at.strftime(I18n.t("datetime_formats.formats.date_only")),
+          ),
         website: user.user_profile.website,
         website_name: UserSerializer.new(user).website_name,
         original_url: url,

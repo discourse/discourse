@@ -131,10 +131,17 @@ RSpec.describe CategoriesController do
       category_list = response.parsed_body["category_list"]
 
       category_response = category_list["categories"].find { |c| c["id"] == category.id }
-      expect(category_response["topics"].map { |c| c["id"] }).to contain_exactly(topic1.id)
+      expect(category_response["topics"].map { |c| c["id"] }).to contain_exactly(
+        topic1.id,
+        topic2.id,
+        topic3.id,
+      )
 
       subcategory_response = category_response["subcategory_list"][0]
-      expect(subcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(topic2.id)
+      expect(subcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(
+        topic2.id,
+        topic3.id,
+      )
 
       subsubcategory_response = subcategory_response["subcategory_list"][0]
       expect(subsubcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(topic3.id)
@@ -674,6 +681,8 @@ RSpec.describe CategoriesController do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
           tag_group = Fabricate(:tag_group)
+          form_template_1 = Fabricate(:form_template)
+          form_template_2 = Fabricate(:form_template)
 
           put "/categories/#{category.id}.json",
               params: {
@@ -693,6 +702,7 @@ RSpec.describe CategoriesController do
                 minimum_required_tags: "",
                 allow_global_tags: "true",
                 required_tag_groups: [{ name: tag_group.name, min_count: 2 }],
+                form_template_ids: [form_template_1.id, form_template_2.id],
               }
 
           expect(response.status).to eq(200)
@@ -713,6 +723,7 @@ RSpec.describe CategoriesController do
           expect(category.category_required_tag_groups.count).to eq(1)
           expect(category.category_required_tag_groups.first.tag_group.id).to eq(tag_group.id)
           expect(category.category_required_tag_groups.first.min_count).to eq(2)
+          expect(category.form_template_ids).to eq([form_template_1.id, form_template_2.id])
         end
 
         it "logs the changes correctly" do
@@ -839,6 +850,7 @@ RSpec.describe CategoriesController do
           expect(category.tag_groups).to be_blank
           expect(category.category_required_tag_groups).to eq([])
           expect(category.custom_fields).to eq({ "field_1" => "hi" })
+          expect(category.form_template_ids.count).to eq(0)
         end
       end
     end

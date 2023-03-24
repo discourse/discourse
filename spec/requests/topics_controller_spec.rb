@@ -36,21 +36,7 @@ RSpec.describe TopicsController do
 
   fab!(:tag) { Fabricate(:tag) }
 
-  before do
-    [
-      user,
-      user_2,
-      post_author1,
-      post_author2,
-      post_author3,
-      post_author4,
-      post_author5,
-      post_author6,
-      trust_level_0,
-      trust_level_1,
-      trust_level_4,
-    ].each { |u| Group.user_trust_level_change!(u.id, u.trust_level) }
-  end
+  before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 
   describe "#wordpress" do
     before { sign_in(moderator) }
@@ -1035,6 +1021,99 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(200)
         expect(topic.reload.visible).to eq(true)
         expect(topic.posts.last.action_code).to eq("visible.enabled")
+      end
+    end
+
+    context "with API key" do
+      let(:api_key) { Fabricate(:api_key, user: moderator, created_by: moderator) }
+
+      context "when key scope has restricted params" do
+        before do
+          ApiKeyScope.create(
+            resource: "topics",
+            action: "update",
+            api_key_id: api_key.id,
+            allowed_parameters: {
+              "category_id" => ["#{topic.category_id}"],
+            },
+          )
+        end
+
+        it "fails to update topic status in an unpermitted category" do
+          put "/t/#{topic.id}/status.json",
+              params: {
+                status: "closed",
+                enabled: "true",
+                category_id: tracked_category.id,
+              },
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+
+          expect(response.status).to eq(403)
+          expect(response.body).to include(I18n.t("invalid_access"))
+          expect(topic.reload.closed).to eq(false)
+        end
+
+        it "fails without a category_id" do
+          put "/t/#{topic.id}/status.json",
+              params: {
+                status: "closed",
+                enabled: "true",
+              },
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+
+          expect(response.status).to eq(403)
+          expect(response.body).to include(I18n.t("invalid_access"))
+          expect(topic.reload.closed).to eq(false)
+        end
+
+        it "updates topic status in a permitted category" do
+          put "/t/#{topic.id}/status.json",
+              params: {
+                status: "closed",
+                enabled: "true",
+                category_id: topic.category_id,
+              },
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.closed).to eq(true)
+        end
+      end
+
+      context "when key scope has no param restrictions" do
+        before do
+          ApiKeyScope.create(
+            resource: "topics",
+            action: "update",
+            api_key_id: api_key.id,
+            allowed_parameters: {
+            },
+          )
+        end
+
+        it "updates topic status" do
+          put "/t/#{topic.id}/status.json",
+              params: {
+                status: "closed",
+                enabled: "true",
+              },
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.closed).to eq(true)
+        end
       end
     end
   end
@@ -2048,6 +2127,7 @@ RSpec.describe TopicsController do
     end
 
     it "does not result in N+1 queries problem when multiple topic participants have primary or flair group configured" do
+      Group.user_trust_level_change!(post_author1.id, post_author1.trust_level)
       user2 = Fabricate(:user)
       user3 = Fabricate(:user)
       post2 = Fabricate(:post, topic: topic, user: user2)
@@ -2414,6 +2494,28 @@ RSpec.describe TopicsController do
         expect(body).to have_tag(:script, src: "/assets/discourse.js")
         expect(body).to have_tag(:meta, with: { name: "fragment" })
       end
+
+      context "with restricted tags" do
+        let(:tag_group) { Fabricate.build(:tag_group) }
+        let(:tag_group_permission) { Fabricate.build(:tag_group_permission, tag_group: tag_group) }
+        let(:restricted_tag) { Fabricate(:tag) }
+        let(:public_tag) { Fabricate(:tag) }
+
+        before do
+          # avoid triggering a `before_create` callback in `TagGroup` which
+          # messes with permissions
+          tag_group.tag_group_permissions << tag_group_permission
+          tag_group.save!
+          tag_group_permission.tag_group.tags << restricted_tag
+          topic.tags << [public_tag, restricted_tag]
+        end
+
+        it "doesn’t expose restricted tags" do
+          get "/t/#{topic.slug}/#{topic.id}/print", headers: { HTTP_USER_AGENT: "Rails Testing" }
+          expect(response.body).to match(public_tag.name)
+          expect(response.body).not_to match(restricted_tag.name)
+        end
+      end
     end
 
     it "records redirects" do
@@ -2711,7 +2813,7 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
-    context "with mentions" do
+    context "when `enable_user_status` site setting is enabled" do
       fab!(:post) { Fabricate(:post, user: post_author1) }
       fab!(:topic) { post.topic }
       fab!(:post2) do
@@ -2723,7 +2825,23 @@ RSpec.describe TopicsController do
         )
       end
 
-      it "returns mentions" do
+      before { SiteSetting.enable_user_status = true }
+
+      it "does not return mentions when `enable_user_status` site setting is disabled" do
+        SiteSetting.enable_user_status = false
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+
+        expect(json["post_stream"]["posts"][1]["mentioned_users"]).to eq(nil)
+      end
+
+      it "returns mentions with status" do
+        post_author1.set_status!("off to dentist", "tooth")
+
         get "/t/#{topic.slug}/#{topic.id}.json"
 
         expect(response.status).to eq(200)
@@ -2735,39 +2853,14 @@ RSpec.describe TopicsController do
         expect(mentioned_user["id"]).to be(post_author1.id)
         expect(mentioned_user["name"]).to eq(post_author1.name)
         expect(mentioned_user["username"]).to eq(post_author1.username)
-      end
 
-      it "doesn't return status on mentions by default" do
-        post_author1.set_status!("off to dentist", "tooth")
-
-        get "/t/#{topic.slug}/#{topic.id}.json"
-
-        expect(response.status).to eq(200)
-
-        json = response.parsed_body
-        expect(json["post_stream"]["posts"][1]["mentioned_users"].length).to be(1)
-        status = json["post_stream"]["posts"][1]["mentioned_users"][0]["status"]
-        expect(status).to be_nil
-      end
-
-      it "returns mentions with status if user status is enabled" do
-        SiteSetting.enable_user_status = true
-        post_author1.set_status!("off to dentist", "tooth")
-
-        get "/t/#{topic.slug}/#{topic.id}.json"
-
-        expect(response.status).to eq(200)
-
-        json = response.parsed_body
-        expect(json["post_stream"]["posts"][1]["mentioned_users"].length).to be(1)
-
-        status = json["post_stream"]["posts"][1]["mentioned_users"][0]["status"]
+        status = mentioned_user["status"]
         expect(status).to be_present
         expect(status["emoji"]).to eq(post_author1.user_status.emoji)
         expect(status["description"]).to eq(post_author1.user_status.description)
       end
 
-      it "returns an empty list of mentioned users if there is no mentions in a post" do
+      it "returns an empty list of mentioned users if there are no mentions in a post" do
         Fabricate(:post, user: post_author2, topic: topic, raw: "Post without mentions.")
 
         get "/t/#{topic.slug}/#{topic.id}.json"
@@ -4095,6 +4188,7 @@ RSpec.describe TopicsController do
 
       it "allows a category moderator to create a delete timer" do
         user.update!(trust_level: TrustLevel[4])
+        Group.user_trust_level_change!(user.id, user.trust_level)
         topic.category.update!(reviewable_by_group: user.groups.first)
 
         sign_in(user)

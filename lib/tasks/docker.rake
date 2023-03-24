@@ -11,6 +11,7 @@
 # => SKIP_PLUGINS              set to 1 to skip plugin tests (rspec and qunit)
 # => SKIP_INSTALL_PLUGINS      comma separated list of plugins you want to skip installing
 # => INSTALL_OFFICIAL_PLUGINS  set to 1 to install all core plugins before running tests
+# => RUN_SYSTEM_TESTS          set to 1 to run the system tests as well
 # => RUBY_ONLY                 set to 1 to skip all qunit tests
 # => JS_ONLY                   set to 1 to skip all rspec tests
 # => SINGLE_PLUGIN             set to plugin name to only run plugin-specific rspec tests (you'll probably want to SKIP_CORE as well)
@@ -211,6 +212,11 @@ task "docker:test" do
           else
             @good &&= run_or_fail("bundle exec rspec #{params.join(" ")}".strip)
           end
+
+          if ENV["RUN_SYSTEM_TESTS"]
+            @good &&= run_or_fail("bin/ember-cli --build")
+            @good &&= run_or_fail("bundle exec rspec spec/system")
+          end
         end
 
         unless ENV["SKIP_PLUGINS"]
@@ -219,6 +225,10 @@ task "docker:test" do
           else
             fail_fast = "RSPEC_FAILFAST=1" unless ENV["SKIP_FAILFAST"]
             @good &&= run_or_fail("#{fail_fast} bundle exec rake plugin:spec")
+          end
+
+          if ENV["RUN_SYSTEM_TESTS"]
+            @good &&= run_or_fail("LOAD_PLUGINS=1 bundle exec rspec plugins/*/spec/system".strip)
           end
         end
       end

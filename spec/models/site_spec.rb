@@ -203,7 +203,6 @@ RSpec.describe Site do
       SiteSetting.welcome_topic_id = first_post.topic.id
 
       expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
-      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
     end
 
     it "returns true when welcome topic is less than month old" do

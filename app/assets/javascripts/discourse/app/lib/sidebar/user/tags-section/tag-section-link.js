@@ -25,7 +25,7 @@ export default class TagSectionLink extends BaseTagSectionLink {
       tagId: this.tagName,
     });
 
-    if (this.totalUnread === 0) {
+    if (this.totalUnread === 0 || this.#linkToNew) {
       this.totalNew = this.topicTrackingState.countNew({
         tagId: this.tagName,
       });
@@ -37,6 +37,13 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get route() {
+    if (this.#linkToNew) {
+      if (this.#unreadAndNewCount > 0) {
+        return "tag.showNew";
+      } else {
+        return "tag.show";
+      }
+    }
     if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
       if (this.totalUnread > 0) {
         return "tag.showUnread";
@@ -53,6 +60,13 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get badgeText() {
+    if (this.#linkToNew) {
+      if (this.#unreadAndNewCount > 0) {
+        return this.#unreadAndNewCount.toString();
+      }
+      return;
+    }
+
     if (this.hideCount) {
       return;
     }
@@ -76,8 +90,20 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get suffixValue() {
-    if (this.hideCount && (this.totalUnread || this.totalNew)) {
+    if (
+      this.hideCount &&
+      (this.totalUnread || this.totalNew) &&
+      !this.#linkToNew
+    ) {
       return "circle";
     }
+  }
+
+  get #unreadAndNewCount() {
+    return this.totalUnread + this.totalNew;
+  }
+
+  get #linkToNew() {
+    return !!this.currentUser?.new_new_view_enabled;
   }
 }

@@ -1,15 +1,24 @@
 <DModalBody @title="chat.channel_edit_description_modal.title">
-  <textarea
-    class="chat-channel-edit-description-modal__description-input"
-    placeholder={{i18n "chat.channel_edit_description_modal.input_placeholder"}}
-    {{on
-      "input"
-      (action "onChangeChatChannelDescription" value="target.value")
-    }}
-  >{{this.model.description}}</textarea>
   <span class="chat-channel-edit-description-modal__description">
     {{i18n "chat.channel_edit_description_modal.description"}}
   </span>
+  <CharCounter
+    @value={{this.editedDescription}}
+    @max={{this.descriptionMaxLength}}
+  >
+    <textarea
+      {{on
+        "input"
+        (action this.onChangeChatChannelDescription value="target.value")
+      }}
+      class="chat-channel-edit-description-modal__description-input"
+      placeholder={{i18n
+        "chat.channel_edit_description_modal.input_placeholder"
+      }}
+    >
+      {{this.editedDescription}}
+    </textarea>
+  </CharCounter>
 </DModalBody>
 
 <div class="modal-footer">

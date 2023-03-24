@@ -65,6 +65,10 @@ export default class ChatEmojiPicker extends Component {
   }
 
   get flatEmojis() {
+    if (!this.chatEmojiPickerManager.emojis) {
+      return [];
+    }
+
     // eslint-disable-next-line no-unused-vars
     let { favorites, ...rest } = this.chatEmojiPickerManager.emojis;
     return Object.values(rest).flat();
@@ -195,18 +199,13 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
-  didInputFilter(event) {
-    if (!event.target.value.length) {
+  didInputFilter(value) {
+    if (!value?.length) {
       this.filteredEmojis = null;
       return;
     }
 
-    discourseDebounce(
-      this,
-      this.debouncedDidInputFilter,
-      event.target.value,
-      INPUT_DELAY
-    );
+    discourseDebounce(this, this.debouncedDidInputFilter, value, INPUT_DELAY);
   }
 
   @action
@@ -237,6 +236,15 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
+  onSectionsKeyDown(event) {
+    if (event.key === "Enter") {
+      this.didSelectEmoji(event);
+    } else {
+      this.didNavigateSection(event);
+    }
+  }
+
+  @action
   didNavigateSection(event) {
     const sectionsEmojis = (section) => [...section.querySelectorAll(".emoji")];
     const focusSectionsLastEmoji = (section) => {
@@ -252,7 +260,7 @@ export default class ChatEmojiPicker extends Component {
     };
     const allEmojis = () => [
       ...document.querySelectorAll(
-        ".chat-emoji-picker__scrollable-content .emoji"
+        ".chat-emoji-picker__section:not(.hidden) .emoji"
       ),
     ];
 

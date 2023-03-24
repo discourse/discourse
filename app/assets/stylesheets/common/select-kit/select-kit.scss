@@ -213,15 +213,15 @@
     }
 
     &.is-highlighted {
-      background: var(--highlight-medium);
+      background: var(--d-hover);
     }
 
     &.is-selected {
-      background: var(--tertiary-low);
+      background: var(--d-selected);
     }
 
     &.is-selected.is-highlighted {
-      background: var(--highlight-medium);
+      background: var(--d-hover);
     }
 
     .discourse-tag,
@@ -245,7 +245,7 @@
     width: 100%;
 
     &:hover .select-kit-row.is-highlighted:hover {
-      background: var(--highlight-medium);
+      background: var(--d-hover);
     }
 
     .validation-message {

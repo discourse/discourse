@@ -21,14 +21,13 @@ hy:
       joined: "միացել է"
       email_frequency:
         never: "Երբեք"
+      header_indicator_preference:
+        never: "Երբեք"
       flag: "Դրոշակավորել"
       join: "Միանալ"
+      last_visit: "վերջին այցելությունը"
       mention_warning:
         dismiss: "չեղարկել"
-        groups:
-          users_limit:
-            one: "%{count} օգտատեր"
-            other: "%{count} օգտատեր"
       reply: "Պատասխանել"
       edit: "Խմբագրել"
       rebake_message: "Վերակառուցել HTML-ը"
@@ -49,6 +48,7 @@ hy:
         yesterday: Երեկվա
       about_view:
         title: Վերնագիր
+        name: Անուն
         description: Նկարագրությունը
       channel_info:
         back_to_channel: "Ետ"

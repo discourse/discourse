@@ -117,6 +117,11 @@ class ListController < ApplicationController
     end
   end
 
+  def filter
+    raise Discourse::NotFound if !SiteSetting.experimental_topics_filter
+    latest
+  end
+
   def category_default
     canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
     view_method = @category.default_view
@@ -456,7 +461,7 @@ class ListController < ApplicationController
   def self.best_period_for(previous_visit_at, category_id = nil)
     default_period =
       (
-        (category_id && Category.where(id: category_id).pluck_first(:default_top_period)) ||
+        (category_id && Category.where(id: category_id).pick(:default_top_period)) ||
           SiteSetting.top_page_default_timeframe
       ).to_sym
 

@@ -1,5 +1,4 @@
 .new-user-wrapper {
-  margin-top: -15px; // temp, can remove margin from sibling element after nav finalized
   .user-navigation {
     --user-navigation__border-width: 4px;
     border-bottom: 1px solid var(--primary-low);
@@ -174,7 +173,7 @@
 
       .discourse-no-touch & {
         &:hover {
-          background: var(--highlight-medium);
+          background: var(--highlight-bg);
           color: currentColor;
         }
       }

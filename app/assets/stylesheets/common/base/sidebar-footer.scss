@@ -11,6 +11,7 @@
     border-top: 1.5px solid var(--primary-low);
     background: var(--primary-very-low);
     padding: 0.5em 0.8em;
+    padding-bottom: max(env(safe-area-inset-bottom), 0.5em);
     &:before {
       // fade to make scroll more apparent
       position: absolute;

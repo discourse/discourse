@@ -19,8 +19,11 @@ export default Component.extend({
     "channel.archive_failed"
   )
   channelArchiveFailedMessage() {
+    const translationKey = !this.channel.archive_topic_id
+      ? "chat.channel_status.archive_failed_no_topic"
+      : "chat.channel_status.archive_failed";
     return htmlSafe(
-      I18n.t("chat.channel_status.archive_failed", {
+      I18n.t(translationKey, {
         completed: this.channel.archived_messages,
         total: this.channel.total_messages,
         topic_url: this._getTopicUrl(),
@@ -50,6 +53,9 @@ export default Component.extend({
   },
 
   _getTopicUrl() {
+    if (!this.channel.archive_topic_id) {
+      return "";
+    }
     return getURL(`/t/-/${this.channel.archive_topic_id}`);
   },
 });

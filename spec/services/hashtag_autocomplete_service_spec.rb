@@ -3,7 +3,9 @@
 RSpec.describe HashtagAutocompleteService do
   fab!(:user) { Fabricate(:user) }
   fab!(:category1) { Fabricate(:category, name: "The Book Club", slug: "the-book-club") }
-  fab!(:tag1) { Fabricate(:tag, name: "great-books", topic_count: 22) }
+  fab!(:tag1) do
+    Fabricate(:tag, name: "great-books", staff_topic_count: 22, public_topic_count: 22)
+  end
   fab!(:topic1) { Fabricate(:topic) }
   let(:guardian) { Guardian.new(user) }
 
@@ -68,7 +70,7 @@ RSpec.describe HashtagAutocompleteService do
     end
 
     it "includes the tag count" do
-      tag1.update!(topic_count: 78)
+      tag1.update!(staff_topic_count: 78, public_topic_count: 78)
       expect(subject.search("book", %w[tag category]).map(&:text)).to eq(
         ["great-books", "The Book Club"],
       )
@@ -149,8 +151,8 @@ RSpec.describe HashtagAutocompleteService do
       category6 = Fabricate(:category, name: "Book Reviews", slug: "book-reviews")
       Fabricate(:category, name: "Good Books", slug: "book", parent_category: category6)
 
-      Fabricate(:tag, name: "bookmania", topic_count: 15)
-      Fabricate(:tag, name: "awful-books", topic_count: 56)
+      Fabricate(:tag, name: "bookmania", staff_topic_count: 15, public_topic_count: 15)
+      Fabricate(:tag, name: "awful-books", staff_topic_count: 56, public_topic_count: 56)
 
       expect(subject.search("book", %w[category tag]).map(&:ref)).to eq(
         [
@@ -220,9 +222,13 @@ RSpec.describe HashtagAutocompleteService do
       end
       fab!(:category4) { Fabricate(:category, name: "Bookworld", slug: "book", topic_count: 56) }
       fab!(:category5) { Fabricate(:category, name: "Media", slug: "media", topic_count: 446) }
-      fab!(:tag2) { Fabricate(:tag, name: "mid-books", topic_count: 33) }
-      fab!(:tag3) { Fabricate(:tag, name: "terrible-books", topic_count: 2) }
-      fab!(:tag4) { Fabricate(:tag, name: "book", topic_count: 1) }
+      fab!(:tag2) do
+        Fabricate(:tag, name: "mid-books", staff_topic_count: 33, public_topic_count: 33)
+      end
+      fab!(:tag3) do
+        Fabricate(:tag, name: "terrible-books", staff_topic_count: 2, public_topic_count: 2)
+      end
+      fab!(:tag4) { Fabricate(:tag, name: "book", staff_topic_count: 1, public_topic_count: 1) }
 
       it "returns the 'most polular' categories and tags (based on topic_count) that the user can access" do
         category1.update!(read_restricted: true)

@@ -322,10 +322,6 @@ id:
       almost_x_years:
         other: "hampir %{count} tahun yang lalu"
   password_reset:
-    choose_new: "Pilih kata sandi baru"
-    choose: "Pilih kata sandi"
-    update: "Perbaharui Kata Sandi"
-    save: "Atur Kata Sandi"
     title: "Atur Ulang Kata Sandi"
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
     success_unapproved: "Anda telah mengubah kata sandi dengan sukses."
@@ -589,6 +585,7 @@ id:
       min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
   search:
+    within_post: "#%{post_number} oleh %{username}"
     types:
       category: "Kategori"
       topic: "Hasil"
@@ -643,8 +640,6 @@ id:
     page_title: "Halaman Tidak Ditemukan"
     see_more: "Selengkapnya"
     search_button: "Cari"
-  deleted: "dihapus"
-  image: "gambar"
   upload:
     images:
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"
@@ -667,6 +662,8 @@ id:
   badges:
     member:
       name: Anggota
+    regular:
+      name: Umum
     first_quote:
       name: Kutipan Pertama
     read_guidelines:
@@ -702,22 +699,29 @@ id:
                 label: "Kategori dan Topik Terbaru"
               categories_and_top_topics:
                 label: "Kategori dan Topik Teratas"
-  joined: "Joined"
   reviewables:
     priorities:
+      low: "Rendah"
       medium: "Sedang"
       high: "Tinggi"
     sensitivity:
+      disabled: "Dinonaktifkan"
+      low: "Rendah"
       medium: "Sedang"
       high: "Tinggi"
     actions:
+      agree:
+        title: "Ya"
       delete_single:
         title: "Hapus"
+      disagree:
+        title: "Tidak"
       ignore:
         title: "Abaikan"
       approve:
         title: "Terima"
       reject_user:
+        title: "Hapus Pengguna..."
         delete:
           title: "Hapus Pengguna"
       reject:

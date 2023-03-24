@@ -65,6 +65,18 @@ RSpec.describe "Archive channel", type: :system, js: true do
           expect(page).to have_css(".chat-channel-archive-status")
         end
 
+        it "shows an error when the topic is invalid" do
+          chat.visit_channel_settings(channel_1)
+          click_button(I18n.t("js.chat.channel_settings.archive_channel"))
+          find("#split-topic-name").fill_in(
+            with: "An interesting topic for cats :cat: :cat2: :smile_cat:",
+          )
+          click_button(I18n.t("js.chat.channel_archive.title"))
+
+          expect(page).not_to have_content(I18n.t("js.chat.channel_archive.process_started"))
+          expect(page).to have_content("Title can't have more than 1 emoji")
+        end
+
         context "when archived channels had unreads" do
           before { channel_1.add(current_user) }
 
@@ -73,7 +85,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
 
             other_user = Fabricate(:user)
             channel_1.add(other_user)
-            Chat::ChatMessageCreator.create(
+            Chat::MessageCreator.create(
               chat_channel: channel_1,
               user: other_user,
               content: "this is fine @#{current_user.username}",
@@ -96,7 +108,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
         before { channel_1.update!(status: :read_only) }
 
         fab!(:archive) do
-          ChatChannelArchive.create!(
+          Chat::ChannelArchive.create!(
             chat_channel: channel_1,
             archived_by: current_user,
             destination_topic_title: "This will be the archive topic",

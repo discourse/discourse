@@ -1,25 +1,30 @@
-import { COMPONENTS, THEMES } from "admin/models/theme";
+import { classNames } from "@ember-decorators/component";
+import { inject as service } from "@ember/service";
 import { equal, gt, gte } from "@ember/object/computed";
+import { COMPONENTS, THEMES } from "admin/models/theme";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
-export default Component.extend({
-  router: service(),
-  THEMES,
-  COMPONENTS,
+@classNames("themes-list")
+export default class ThemesList extends Component {
+  @service router;
 
-  classNames: ["themes-list"],
-  filterTerm: null,
+  THEMES = THEMES;
+  COMPONENTS = COMPONENTS;
+  filterTerm = null;
 
-  hasThemes: gt("themesList.length", 0),
-  hasActiveThemes: gt("activeThemes.length", 0),
-  hasInactiveThemes: gt("inactiveThemes.length", 0),
-  showFilter: gte("themesList.length", 10),
+  @gt("themesList.length", 0) hasThemes;
 
-  themesTabActive: equal("currentTab", THEMES),
-  componentsTabActive: equal("currentTab", COMPONENTS),
+  @gt("activeThemes.length", 0) hasActiveThemes;
+
+  @gt("inactiveThemes.length", 0) hasInactiveThemes;
+
+  @gte("themesList.length", 10) showFilter;
+
+  @equal("currentTab", THEMES) themesTabActive;
+
+  @equal("currentTab", COMPONENTS) componentsTabActive;
 
   @discourseComputed("themes", "components", "currentTab")
   themesList(themes, components) {
@@ -28,7 +33,7 @@ export default Component.extend({
     } else {
       return components;
     }
-  },
+  }
 
   @discourseComputed(
     "themesList",
@@ -49,7 +54,7 @@ export default Component.extend({
       );
     }
     return this._filterThemes(results, this.filterTerm);
-  },
+  }
 
   @discourseComputed(
     "themesList",
@@ -78,7 +83,7 @@ export default Component.extend({
         });
     }
     return this._filterThemes(results, this.filterTerm);
-  },
+  }
 
   _filterThemes(themes, term) {
     term = term?.trim()?.toLowerCase();
@@ -86,7 +91,7 @@ export default Component.extend({
       return themes;
     }
     return themes.filter(({ name }) => name.toLowerCase().includes(term));
-  },
+  }
 
   @action
   changeView(newTab) {
@@ -96,10 +101,10 @@ export default Component.extend({
         this.set("filterTerm", null);
       }
     }
-  },
+  }
 
   @action
   navigateToTheme(theme) {
     this.router.transitionTo("adminCustomizeThemes.show", theme);
-  },
-});
+  }
+}

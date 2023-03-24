@@ -91,7 +91,6 @@ export default function (options) {
   let autocompleteOptions = null;
   let selectedOption = null;
   let completeStart = null;
-  let completeEnd = null;
   let me = this;
   let div = null;
   let scrollElement = null;
@@ -218,6 +217,8 @@ export default function (options) {
   }
 
   let completeTerm = async function (term) {
+    let completeEnd = null;
+
     if (term) {
       if (isInput) {
         me.val("");
@@ -233,11 +234,31 @@ export default function (options) {
         if (term) {
           let text = me.val();
 
+          // After completion is done our position for completeStart may have
+          // drifted. This can happen if the TEXTAREA changed out-of-band between
+          // the time autocomplete was first displayed and the time of completion
+          // Specifically this may happen due to uploads which inject a placeholder
+          // which is later replaced with a different length string.
+          let pos = guessCompletePosition({ completeTerm: true });
+
+          if (
+            pos.completeStart !== undefined &&
+            pos.completeEnd !== undefined
+          ) {
+            completeStart = pos.completeStart;
+            completeEnd = pos.completeEnd;
+          } else {
+            completeStart = completeEnd = caretPosition(me[0]);
+          }
+
+          let space =
+            text.substring(completeEnd + 1, completeEnd + 2) === " " ? "" : " ";
+
           text =
             text.substring(0, completeStart) +
             (options.preserveKey ? options.key || "" : "") +
             term +
-            " " +
+            space +
             text.substring(completeEnd + 1, text.length);
 
           me.val(text);
@@ -385,8 +406,7 @@ export default function (options) {
     if (isInput || options.treatAsTextarea) {
       _autoCompletePopper && _autoCompletePopper.destroy();
       _autoCompletePopper = createPopper(me[0], div[0], {
-        placement: "bottom-start",
-        strategy: "fixed",
+        placement: `${Site.currentProp("mobileView") ? "top" : "bottom"}-start`,
         modifiers: [
           {
             name: "offset",
@@ -537,7 +557,6 @@ export default function (options) {
 
         if (match) {
           completeStart = cp - match[0].length;
-          completeEnd = completeStart + match[0].length - 1;
           let term = match[0].substring(1, match[0].length);
           updateAutoComplete(dataSource(term, options));
         }
@@ -551,7 +570,7 @@ export default function (options) {
           checkTriggerRule() &&
           (!prevChar || allowedLettersRegex.test(prevChar))
         ) {
-          completeStart = completeEnd = cp - 1;
+          completeStart = cp - 1;
           updateAutoComplete(dataSource("", options));
         }
       }
@@ -561,8 +580,55 @@ export default function (options) {
     }
   }
 
+  function guessCompletePosition(opts) {
+    let prev, stopFound, term;
+    let prevIsGood = true;
+    let element = me[0];
+    let backSpace = opts && opts.backSpace;
+    let completeTermOption = opts && opts.completeTerm;
+
+    let caretPos = caretPosition(element);
+
+    if (backSpace) {
+      caretPos -= 1;
+    }
+
+    let start = null;
+    let end = null;
+
+    let initialCaretPos = caretPos;
+
+    while (prevIsGood && caretPos >= 0) {
+      caretPos -= 1;
+      prev = element.value[caretPos];
+
+      stopFound = prev === options.key;
+
+      if (stopFound) {
+        prev = element.value[caretPos - 1];
+
+        if (
+          checkTriggerRule({ backSpace }) &&
+          (prev === undefined || allowedLettersRegex.test(prev))
+        ) {
+          start = caretPos;
+          term = element.value.substring(caretPos + 1, initialCaretPos);
+          end = caretPos + term.length;
+
+          break;
+        }
+      }
+      prevIsGood = !/\s/.test(prev);
+      if (completeTermOption) {
+        prevIsGood ||= prev === " ";
+      }
+    }
+
+    return { completeStart: start, completeEnd: end, term };
+  }
+
   function handleKeyDown(e) {
-    let c, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
+    let i, term, total, userToComplete;
     let cp;
 
     if (e.ctrlKey || e.altKey || e.metaKey) {
@@ -597,35 +663,12 @@ export default function (options) {
     }
 
     if (completeStart === null && e.which === keys.backSpace && options.key) {
-      c = caretPosition(me[0]);
-      c -= 1;
-      initial = c;
-      prevIsGood = true;
+      let position = guessCompletePosition({ backSpace: true });
+      completeStart = position.completeStart;
 
-      while (prevIsGood && c >= 0) {
-        c -= 1;
-        prev = me[0].value[c];
-        stopFound = prev === options.key;
-
-        if (stopFound) {
-          prev = me[0].value[c - 1];
-
-          if (
-            checkTriggerRule({ backSpace: true }) &&
-            (!prev || allowedLettersRegex.test(prev))
-          ) {
-            completeStart = c;
-            term = me[0].value.substring(c + 1, initial);
-
-            if (!completeEnd) {
-              completeEnd = c + term.length;
-            }
-
-            updateAutoComplete(dataSource(term, options));
-            return true;
-          }
-        }
-        prevIsGood = /[a-zA-Z\.-]/.test(prev);
+      if (position.completeEnd) {
+        updateAutoComplete(dataSource(position.term, options));
+        return true;
       }
     }
 
@@ -686,6 +729,11 @@ export default function (options) {
           e.preventDefault();
           return false;
         case keys.downArrow:
+          if (!autocompleteOptions) {
+            closeAutocomplete();
+            return true;
+          }
+
           total = autocompleteOptions.length;
           selectedOption = selectedOption + 1;
           if (selectedOption >= total) {
@@ -701,7 +749,6 @@ export default function (options) {
         case keys.backSpace:
           autocompleteOptions = null;
           cp--;
-          completeEnd = cp;
 
           if (cp < 0) {
             closeAutocomplete();
@@ -725,7 +772,6 @@ export default function (options) {
           return true;
         default:
           autocompleteOptions = null;
-          completeEnd = cp;
           return true;
       }
     }

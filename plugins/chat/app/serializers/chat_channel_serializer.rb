@@ -20,7 +20,12 @@ class ChatChannelSerializer < ApplicationSerializer
              :archive_topic_id,
              :memberships_count,
              :current_user_membership,
-             :meta
+             :meta,
+             :threading_enabled
+
+  def threading_enabled
+    SiteSetting.enable_experimental_chat_threaded_discussions && object.threading_enabled
+  end
 
   def initialize(object, opts)
     super(object, opts)
@@ -61,7 +66,7 @@ class ChatChannelSerializer < ApplicationSerializer
   end
 
   def include_archive_status?
-    scope.is_staff? && (object.archived? || archive&.failed?) && archive.present?
+    !object.direct_message_channel? && scope.is_staff? && archive.present?
   end
 
   def archive_completed
@@ -105,12 +110,10 @@ class ChatChannelSerializer < ApplicationSerializer
   def meta
     {
       message_bus_last_ids: {
-        new_messages:
-          @opts[:new_messages_message_bus_last_id] ||
-            MessageBus.last_id(ChatPublisher.new_messages_message_bus_channel(object.id)),
-        new_mentions:
-          @opts[:new_mentions_message_bus_last_id] ||
-            MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id)),
+        new_messages: new_messages_message_bus_id,
+        new_mentions: new_mentions_message_bus_id,
+        kick: kick_message_bus_id,
+        channel_message_bus_last_id: MessageBus.last_id("/chat/#{object.id}"),
       },
     }
   end
@@ -120,4 +123,21 @@ class ChatChannelSerializer < ApplicationSerializer
   alias_method :include_archived_messages?, :include_archive_status?
   alias_method :include_archive_failed?, :include_archive_status?
   alias_method :include_archive_completed?, :include_archive_status?
+
+  private
+
+  def new_messages_message_bus_id
+    @opts[:new_messages_message_bus_last_id] ||
+      MessageBus.last_id(Chat::Publisher.new_messages_message_bus_channel(object.id))
+  end
+
+  def new_mentions_message_bus_id
+    @opts[:new_mentions_message_bus_last_id] ||
+      MessageBus.last_id(Chat::Publisher.new_mentions_message_bus_channel(object.id))
+  end
+
+  def kick_message_bus_id
+    @opts[:kick_message_bus_last_id] ||
+      MessageBus.last_id(Chat::Publisher.kick_users_message_bus_channel(object.id))
+  end
 end

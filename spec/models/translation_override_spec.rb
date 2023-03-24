@@ -27,6 +27,7 @@ RSpec.describe TranslationOverride do
             I18n.t(
               "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
               keys: "key, omg",
+              count: 2,
             ),
           )
         end
@@ -61,6 +62,7 @@ RSpec.describe TranslationOverride do
                 I18n.t(
                   "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                   keys: "something",
+                  count: 1,
                 ),
               )
             end
@@ -78,9 +80,23 @@ RSpec.describe TranslationOverride do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "topic_title_url_encoded",
+                count: 1,
               ),
             )
           end
+        end
+      end
+
+      describe "with valid custom interpolation keys" do
+        it "works" do
+          translation_override =
+            TranslationOverride.upsert!(
+              I18n.locale,
+              "system_messages.welcome_user.text_body_template",
+              "Hello %{name} %{username} %{name_or_username} and welcome to %{site_name}!",
+            )
+
+          expect(translation_override.errors).to be_empty
         end
       end
 
@@ -119,6 +135,7 @@ RSpec.describe TranslationOverride do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "key3, key4",
+                count: 2,
               ),
             )
           end

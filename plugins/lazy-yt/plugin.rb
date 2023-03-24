@@ -21,7 +21,7 @@ class Onebox::Engine::YoutubeOnebox
   alias_method :yt_onebox_to_html, :to_html
 
   def to_html
-    if video_id && !params["list"]
+    if SiteSetting.lazy_yt_enabled && video_id && !params["list"]
       size_restricted = [params["width"], params["height"]].any?
       video_width = (params["width"] && params["width"].to_i <= 695) ? params["width"] : 690 # embed width
       video_height = (params["height"] && params["height"].to_i <= 500) ? params["height"] : 388 # embed height

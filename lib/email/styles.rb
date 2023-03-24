@@ -84,9 +84,9 @@ module Email
 
           if img["src"]
             # ensure all urls are absolute
-            img["src"] = "#{Discourse.base_url}#{img["src"]}" if img["src"][%r{^/[^/]}]
+            img["src"] = "#{Discourse.base_url}#{img["src"]}" if img["src"][%r{\A/[^/]}]
             # ensure no schemaless urls
-            img["src"] = "#{uri.scheme}:#{img["src"]}" if img["src"][%r{^//}]
+            img["src"] = "#{uri.scheme}:#{img["src"]}" if img["src"][%r{\A//}]
           end
         end
 
@@ -110,7 +110,7 @@ module Email
         .css("a.attachment")
         .each do |a|
           # ensure all urls are absolute
-          a["href"] = "#{Discourse.base_url}#{a["href"]}" if a["href"] =~ %r{^/[^/]}
+          a["href"] = "#{Discourse.base_url}#{a["href"]}" if a["href"] =~ %r{\A/[^/]}
 
           # ensure no schemaless urls
           a["href"] = "#{uri.scheme}:#{a["href"]}" if a["href"] && a["href"].starts_with?("//")
@@ -216,7 +216,7 @@ module Email
       correct_first_body_margin
       correct_footer_style
       correct_footer_style_highlight_first
-      decorate_hashtags
+      strip_hashtag_link_icons
       reset_tables
 
       html_lang = SiteSetting.default_locale.sub("_", "-")
@@ -396,7 +396,7 @@ module Email
         end
     end
 
-    def decorate_hashtags
+    def strip_hashtag_link_icons
       @fragment
         .search(".hashtag-cooked")
         .each do |hashtag|

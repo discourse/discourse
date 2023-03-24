@@ -21,14 +21,13 @@ gl:
       joined: "uniuse"
       email_frequency:
         never: "Nunca"
+      header_indicator_preference:
+        never: "Nunca"
       flag: "Sinalar"
       join: "Participar"
+      last_visit: "última visita"
       mention_warning:
         dismiss: "desbotar"
-        groups:
-          users_limit:
-            one: "%{count} usuario"
-            other: "%{count} usuarios"
       reply: "Responder"
       edit: "Editar"
       rebake_message: "Reconstruír HTML"
@@ -49,6 +48,7 @@ gl:
         yesterday: Onte
       about_view:
         title: Título
+        name: Nome
         description: Descrición
       channel_info:
         back_to_channel: "Volver"

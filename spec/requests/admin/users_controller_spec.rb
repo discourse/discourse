@@ -1777,6 +1777,26 @@ RSpec.describe Admin::UsersController do
         expect(user.username).to eq("Hokli")
       end
 
+      it "can sync up with the sso without email" do
+        sso.name = "Bob The Bob"
+        sso.username = "bob"
+        sso.email = "bob@bob.com"
+        sso.external_id = "1"
+
+        user =
+          DiscourseConnect.parse(
+            sso.payload,
+            secure_session: read_secure_session,
+          ).lookup_or_create_user
+
+        sso.name = "Bill"
+        sso.username = "Hokli$$!!"
+        sso.email = nil
+
+        post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
+        expect(response.status).to eq(200)
+      end
+
       it "should create new users" do
         sso.name = "Dr. Claw"
         sso.username = "dr_claw"
@@ -2242,6 +2262,33 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
         expect(response.parsed_body["username"]).to be_nil
+      end
+    end
+  end
+
+  describe "#reset_bounce_score" do
+    before { user.user_stat.update!(bounce_score: 10) }
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      it "will reset the bounce score" do
+        post "/admin/users/#{user.id}/reset-bounce-score.json"
+
+        expect(response.status).to eq(200)
+        expect(user.reload.user_stat.bounce_score).to eq(0)
+        expect(UserHistory.last.action).to eq(UserHistory.actions[:reset_bounce_score])
+      end
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "prevents resetting the bounce score with a 404 response" do
+        post "/admin/users/#{user.id}/reset-bounce-score.json"
+
+        expect(response.status).to eq(404)
+        expect(user.reload.user_stat.bounce_score).to eq(10)
       end
     end
   end

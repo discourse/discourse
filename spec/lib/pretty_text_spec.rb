@@ -1298,6 +1298,14 @@ RSpec.describe PrettyText do
       )
     end
 
+    it "creates a valid URL when data-original-href is missing from Vimeo link" do
+      html =
+        '<iframe src="https://player.vimeo.com/video/508864124?h=fcbbcc92fa" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>'
+      expect(PrettyText.format_for_email(html, post)).to match(
+        "https://vimeo.com/508864124/fcbbcc92fa",
+      )
+    end
+
     describe "#convert_vimeo_iframes" do
       it "converts <iframe> to <a>" do
         html = <<~HTML
@@ -1453,7 +1461,7 @@ RSpec.describe PrettyText do
 
     it "replaces some glyphs that are not in the emoji range" do
       expect(PrettyText.cook("☹")).to match(/\:frowning\:/)
-      expect(PrettyText.cook("☺")).to match(/\:relaxed\:/)
+      expect(PrettyText.cook("☺")).to match(/\:smiling_face\:/)
       expect(PrettyText.cook("☻")).to match(/\:slight_smile\:/)
       expect(PrettyText.cook("♡")).to match(/\:heart\:/)
       expect(PrettyText.cook("❤")).to match(/\:heart\:/)
@@ -1619,6 +1627,9 @@ RSpec.describe PrettyText do
   end
 
   it "produces hashtag links" do
+    # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+    SiteSetting.enable_experimental_hashtag_autocomplete = false
+
     category = Fabricate(:category, name: "testing")
     category2 = Fabricate(:category, name: "known")
     Fabricate(:topic, tags: [Fabricate(:tag, name: "known")])
@@ -1908,6 +1919,9 @@ HTML
     end
 
     it "does not replace hashtags and mentions" do
+      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+      SiteSetting.enable_experimental_hashtag_autocomplete = false
+
       Fabricate(:user, username: "test")
       category = Fabricate(:category, slug: "test")
       Fabricate(
@@ -1927,6 +1941,9 @@ HTML
     end
 
     it "does not replace hashtags and mentions when watched words are regular expressions" do
+      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+      SiteSetting.enable_experimental_hashtag_autocomplete = false
+
       SiteSetting.watched_words_regular_expressions = true
 
       Fabricate(:user, username: "test")

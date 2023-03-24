@@ -145,12 +145,12 @@ module Onebox
                  !!AllowlistedGenericOnebox.allowed_twitter_labels.find { |l|
                    d[:label2] =~ /#{l}/i
                  }
-              unless Onebox::Helpers.blank?(d[:label_1])
-                d[:label_2] = Onebox::Helpers.truncate(d[:label2])
-                d[:data_2] = Onebox::Helpers.truncate(d[:data2])
-              else
+              if Onebox::Helpers.blank?(d[:label_1])
                 d[:label_1] = Onebox::Helpers.truncate(d[:label2])
                 d[:data_1] = Onebox::Helpers.truncate(d[:data2])
+              else
+                d[:label_2] = Onebox::Helpers.truncate(d[:label2])
+                d[:data_2] = Onebox::Helpers.truncate(d[:data2])
               end
             end
 

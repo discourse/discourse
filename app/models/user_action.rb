@@ -69,7 +69,7 @@ class UserAction < ActiveRecord::Base
     UserAction
       .where(user_id: user_id, target_topic_id: topic_id, action_type: [RESPONSE, MENTION, QUOTE])
       .order("created_at DESC")
-      .pluck_first(:target_post_id)
+      .pick(:target_post_id)
   end
 
   def self.stats(user_id, guardian)
@@ -411,9 +411,7 @@ class UserAction < ActiveRecord::Base
       visible_post_types: visible_post_types,
     )
 
-    unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
-      builder.where("t.visible")
-    end
+    builder.where("t.visible") if guardian.user&.id != user_id && !guardian.is_staff?
 
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)
     filter_categories(builder, guardian)

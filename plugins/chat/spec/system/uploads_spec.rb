@@ -31,23 +31,25 @@ describe "Uploading files in chat messages", type: :system, js: true do
 
       expect(page).not_to have_css(".chat-composer-upload")
       expect(channel).to have_message(text: "upload testing")
-      expect(ChatMessage.last.uploads.count).to eq(1)
+      expect(Chat::Message.last.uploads.count).to eq(1)
     end
 
     it "allows uploading multiple files" do
       chat.visit_channel(channel_1)
+
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
       attach_file([file_path_1, file_path_2]) do
         channel.open_action_menu
         channel.click_action_button("chat-upload-btn")
       end
+
       expect(page).to have_css(".chat-composer-upload .preview .preview-img", count: 2)
       channel.send_message("upload testing")
 
       expect(page).not_to have_css(".chat-composer-upload")
       expect(channel).to have_message(text: "upload testing")
-      expect(ChatMessage.last.uploads.count).to eq(2)
+      expect(Chat::Message.last.uploads.count).to eq(2)
     end
 
     it "allows uploading a huge image file with preprocessing" do
@@ -73,21 +75,27 @@ describe "Uploading files in chat messages", type: :system, js: true do
 
       expect(page).not_to have_css(".chat-composer-upload")
       expect(channel).to have_message(text: "upload testing")
-      expect(ChatMessage.last.uploads.count).to eq(1)
+      expect(Chat::Message.last.uploads.count).to eq(1)
     end
   end
 
   context "when editing a message with uploads" do
     fab!(:message_2) { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) }
-    fab!(:chat_upload) { Fabricate(:chat_upload, chat_message: message_2, user: current_user) }
+    fab!(:upload_reference) do
+      Fabricate(
+        :upload_reference,
+        target: message_2,
+        upload: Fabricate(:upload, user: current_user),
+      )
+    end
 
     before do
       channel_1.add(current_user)
       sign_in(current_user)
 
       file = file_from_fixtures("logo-dev.png", "images")
-      url = Discourse.store.store_upload(file, chat_upload.upload)
-      chat_upload.upload.update!(url: url, sha1: Upload.generate_digest(file))
+      url = Discourse.store.store_upload(file, upload_reference.upload)
+      upload_reference.upload.update!(url: url, sha1: Upload.generate_digest(file))
     end
 
     it "allows deleting uploads" do

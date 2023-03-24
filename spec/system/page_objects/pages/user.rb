@@ -9,15 +9,15 @@ module PageObjects
       end
 
       def find(selector)
-        page.find(".user-content-wrapper #{selector}")
+        page.find(".new-user-wrapper #{selector}")
       end
 
       def active_user_primary_navigation
-        find(".user-primary-navigation li a.active")
+        find(".user-navigation-primary li a.active")
       end
 
       def active_user_secondary_navigation
-        find(".user-secondary-navigation li a.active")
+        find(".user-navigation-secondary li a.active")
       end
 
       def has_warning_messages_path?(user)

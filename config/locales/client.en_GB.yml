@@ -106,7 +106,6 @@ en_GB:
         button_title: "Send invitations"
       customize:
         title: "Customise"
-        long_title: "Site customisations"
         color: "Colour"
         theme:
           customize_desc: "Customise:"

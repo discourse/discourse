@@ -29,7 +29,7 @@ module Autospec
       # launch rspec
       Dir.chdir(Rails.root) do # rubocop:disable Discourse/NoChdir because this is not part of the app
         env = { "RAILS_ENV" => "test" }
-        if specs.split(" ").any? { |s| s =~ %r{^(./)?plugins} }
+        if specs.split(" ").any? { |s| s =~ %r{\A(./)?plugins} }
           env["LOAD_PLUGINS"] = "1"
           puts "Loading plugins while running specs"
         end

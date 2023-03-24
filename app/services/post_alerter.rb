@@ -23,7 +23,14 @@ class PostAlerter
         topic_title: post.topic.title,
         topic_id: post.topic.id,
         excerpt:
-          excerpt || post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
+          excerpt ||
+            post.excerpt(
+              400,
+              text_entities: true,
+              strip_links: true,
+              remap_emoji: true,
+              plain_hashtags: true,
+            ),
         username: username || post.username,
         post_url: post_url,
       }
@@ -378,8 +385,7 @@ class PostAlerter
     stats = (@group_stats[topic.id] ||= group_stats(topic))
     return unless stats
 
-    group_id =
-      topic.topic_allowed_groups.where(group_id: user.groups.pluck(:id)).pluck_first(:group_id)
+    group_id = topic.topic_allowed_groups.where(group_id: user.groups.pluck(:id)).pick(:group_id)
 
     stat = stats.find { |s| s[:group_id] == group_id }
     return unless stat
@@ -460,8 +466,7 @@ class PostAlerter
       return
     end
 
-    # Make sure the user can see the post
-    return unless Guardian.new(user).can_see?(post)
+    return if !Guardian.new(user).can_receive_post_notifications?(post)
 
     return if user.staged? && topic.category&.mailinglist_mirror?
 

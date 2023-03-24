@@ -23,7 +23,9 @@ fi:
     default_emoji_reactions: "Chat-viestien oletusarvoiset emoji-reaktiot. Lisää enintään 5 emojia nopeaa reagointia varten."
     direct_message_enabled_groups: "Salli näiden ryhmien käyttäjien luoda käyttäjien välisiä henkilökohtaisia chat-keskusteluja. Huomautus: henkilökunta voi aina luoda henkilökohtaisia chat-keskusteluja, ja käyttäjät voivat vastata henkilökohtaisiin chat-keskusteluihin, jotka on aloittanut käyttäjä, jolla on oikeus luoda niitä."
     chat_message_flag_allowed_groups: "Näiden ryhmien käyttäjät voivat liputtaa chat-viestejä."
+    max_mentions_per_chat_message: "Kuinka monta @nimi-ilmoitusta käyttäjä voi lisätä chat-viestiin."
     chat_max_direct_message_users: "Käyttäjät eivät voi lisätä tätä määrää enempää muita käyttäjiä luodessaan uutta yksityisviestiä. Aseta arvoksi 0, jos haluat sallia ainostaan viestit itselle. Tämä asetus ei koske henkilökuntaa."
+    chat_allow_archiving_channels: "Salli henkilökunnan arkistoida viestejä ketjuun suljettaessa kanavaa."
     errors:
       chat_default_channel: "Oletus-chat-kanavan täytyy olla julkinen kanava."
       direct_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."
@@ -32,26 +34,25 @@ fi:
     chat_channel_archive_complete:
       title: "Chat-kanavan arkistointi on valmis"
       subject_template: "Chat-kanavan arkistointi on valmis"
-      text_body_template: |
-        Chat-kanavan **\#%{channel_name}** arkistointi on valmis. Viestit kopioitiin ketjuun [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Chat-kanavan arkistointi epäonnistui"
       subject_template: "Chat-kanavan arkistointi epäonnistui"
-      text_body_template: |
-        Chat-kanavan **\#%{channel_name}** arkistointi epäonnistui. %{messages_archived} viestiä on arkistoitu. Osittain arkistoidut viestit kopioitiin ketjuun [%{topic_title}](%{topic_url}). Yritä uudelleen vierailemalla kanavalla osoitteessa %{channel_url}.
+    chat_channel_archive_failed_no_topic:
+      title: "Chat-kanavan arkistointi epäonnistui"
+      subject_template: "Chat-kanavan arkistointi epäonnistui"
   chat:
     deleted_chat_username: poistettu
     errors:
       channel_exists_for_category: "Tällä alueella ja nimellä on jo olemassa kanava"
-      channel_new_message_disallowed: "Kanava on %{status}, uusia viestejä ei voi lähettää"
-      channel_modify_message_disallowed: "Kanava on %{status}, viestejä ei voi muokata tai poistaa"
       user_cannot_send_message: "Et voi lähettää viestejä tällä hetkellä."
       rate_limit_exceeded: "Ylitti 30 sekunnin sisällä lähetettävien chat-viestien rajan"
       auto_silence_from_flags: "Chat-viesti liputettiin riittävän korkealla pistemäärällä käyttäjän hiljentämiseksi."
       channel_cannot_be_archived: "Kanavaa ei voi arkistoida tällä hetkellä, sen täytyy olla suljettu tai avoinna, jotta sen voi arkistoida."
       duplicate_message: "Lähetit identtisen viestin liian äskettäin."
       delete_channel_failed: "Kanavan poistaminen epäonnistui, yritä uudelleen."
-      minimum_length_not_met: "Viesti on liian lyhyt, siinä täytyy olla vähintään %{minimum} merkkiä."
+      message_too_long:
+        one: "Viesti on liian pitkä, viesteissä täytyy olla enintään %{count} merkkiä."
+        other: "Viesti on liian pitkä, viesteissä täytyy olla enintään %{count} merkkiä."
       max_reactions_limit_reached: "Uusia reaktioita ei sallita tässä viestissä."
       message_move_invalid_channel: "Lähde- ja kohdekanavan täytyy olla julkisia kanavia."
       message_move_no_messages_found: "Annetuilla viestitunnuksilla ei löytynyt viestejä."
@@ -62,9 +63,7 @@ fi:
       actor_disallowed_dms: "Olet päättänyt estää käyttäjiä lähettämästä sinulle yksityisviestejä, joten et voi luoda uusia yksityisviestejä."
       actor_preventing_target_user_from_dm: "Olet päättänyt estää käyttäjää %{username} lähettämästä sinulle yksityisviestejä, joten et voi luoda uusia yksityisviestejä hänelle."
       user_cannot_send_direct_messages: "Valitettavasti et voi lähettää yksityisviestejä."
-      over_chat_max_direct_message_users:
-        one: "Voit luoda yksityisviestin vain itsellesi."
-        other: "Et voi luoda yksityisviestiä useammalle kuin %{count} muulle käyttäjälle."
+      over_chat_max_direct_message_users_allow_self: "Voit luoda yksityisviestin vain itsellesi."
     reviewables:
       message_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän viestin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
       actions:
@@ -101,20 +100,16 @@ fi:
         transcript_title: "Kanavan %{channel_name} aiempien viestin transkriptio"
         transcript_body: "Antaaksemme sinulle enemmän kontekstia lisäsimme tämän keskustelun aiempien viestien transkription (enintään kymmenen):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Vain luku"
-        archived: "Arkistoitu"
-        closed: "Suljettu"
-        open: "Avoinna"
       archive:
         first_post_raw: "Tämä ketju on chat-kanavan [%{channel_name}](%{channel_url}) arkisto."
       messages_moved:
         one: "@%{acting_username} siirsi viestin kanavalle [%{channel_name}](%{first_moved_message_url})."
         other: "@%{acting_username} siirsi %{count} viestiä kanavalle [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} ja %{leftover} muuta"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} ja %{count} muu"
+          other: "%{comma_separated_usernames} ja %{count} muuta"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "sisältää muita kuin ascii-merkkejä"
@@ -167,7 +162,16 @@ fi:
       from: "%{site_name}"
       subject:
         direct_message_from_1: "[%{email_prefix}] Uusi viesti käyttäjältä %{username}"
+        direct_message_from_2: "[%{email_prefix}] Uusi viesti käyttäjältä %{username1} ja %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Uusi viesti käyttäjältä %{username} ja %{count} muulta"
+          other: "[%{email_prefix}] Uusi viesti käyttäjältä %{username} ja %{count} muulta"
         chat_channel_1: "[%{email_prefix}] Uusi viesti kanavalta %{channel}"
+        chat_channel_2: "[%{email_prefix}] Uusi viesti kanavalla %{channel1} ja %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Uusi viesti kanavalla %{channel} ja %{count} muulla"
+          other: "[%{email_prefix}] Uusi viesti kanavalla %{channel} ja %{count} muulla"
+        chat_channel_and_direct_message: "[%{email_prefix}] Uusi viesti kanavalla %{channel} ja käyttäjältä %{username}"
       unsubscribe: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link} tai %{unsubscribe_link} peruuttaaksesi tilauksen."
       unsubscribe_no_link: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link}."
       view_messages:

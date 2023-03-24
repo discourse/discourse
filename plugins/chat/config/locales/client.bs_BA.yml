@@ -21,15 +21,13 @@ bs_BA:
       joined: "pridružio se"
       email_frequency:
         never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
       flag: "Prijavi"
       join: "Učlani se"
+      last_visit: "zadnja posjeta"
       mention_warning:
         dismiss: "odbaci"
-        groups:
-          users_limit:
-            one: "%{count} korisnik"
-            few: "%{count} korisnika"
-            other: "%{count} korisnika"
       reply: "Odgovori"
       edit: "Edit"
       rebake_message: "Popravi HTML"
@@ -50,6 +48,7 @@ bs_BA:
         yesterday: Yesterday
       about_view:
         title: Naslov
+        name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Prethodno"

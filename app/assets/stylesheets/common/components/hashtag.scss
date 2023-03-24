@@ -33,6 +33,10 @@ a.hashtag-cooked {
     height: 15px;
     vertical-align: text-bottom;
   }
+
+  svg {
+    display: inline;
+  }
 }
 
 .hashtag-autocomplete {
@@ -55,7 +59,7 @@ a.hashtag-cooked {
       background: linear-gradient(
         to bottom,
         rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
+        rgba(var(--secondary-rgb), 100%)
       );
     }
   }

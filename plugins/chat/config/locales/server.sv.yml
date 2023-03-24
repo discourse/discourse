@@ -35,26 +35,46 @@ sv:
       title: "Arkivering av chattkanalen är färdigt"
       subject_template: "Arkivering av chattkanalen slutfördes framgångsrikt"
       text_body_template: |
-        Arkivering av chattkanalen **\#%{channel_name}** har slutförts. Meddelandena har kopierats till ämnet [%{topic_title}](%{topic_url}).
+        Arkiveringen av chattkanalen %{channel_hashtag_or_name} har slutförts. Meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Arkivering av chattkanalen misslyckades"
       subject_template: "Arkivering av chattkanalen misslyckades"
       text_body_template: |
-        Arkivering av chatt kanalen **\#%{channel_name}** misslyckades. %{messages_archived} meddelanden har arkiverats. Delvis arkiverade meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}). Besök kanalen på %{channel_url} för att försöka igen.
+        Arkivering av chattkanalen %{channel_hashtag_or_name} misslyckades. %{messages_archived} meddelanden har arkiverats. Delvis arkiverade meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}). Besök kanalen kl. %{channel_url} för att försöka igen.
+    chat_channel_archive_failed_no_topic:
+      title: "Arkivering av chattkanalen misslyckades"
+      subject_template: "Arkivering av chattkanalen misslyckades"
+      text_body_template: |
+        Arkivering av chattkanalen %{channel_hashtag_or_name} misslyckades. Inga meddelanden har arkiverats. Ämnet kunde inte skapas, av följande skäl:
+
+          %{topic_validation_errors}
+
+        Besök kanalen på %{channel_url} för att försöka igen.
   chat:
     deleted_chat_username: raderat
     errors:
       channel_exists_for_category: "En kanal finns redan för denna kategori och namn"
-      channel_new_message_disallowed: "Kanalen är %{status}, inga nya meddelanden kan skickas"
-      channel_modify_message_disallowed: "Kanalen är %{status}, inga meddelanden kan redigeras eller tas bort"
+      channel_new_message_disallowed:
+        archived: "Kanalen är arkiverad, inga nya meddelanden kan skickas"
+        closed: "Kanalen är stängd, inga nya meddelanden kan skickas"
+        read_only: "Kanalen är lässkyddad, inga nya meddelanden kan skickas"
+      channel_modify_message_disallowed:
+        archived: "Kanalen är arkiverad, inga meddelanden kan redigeras eller raderas"
+        closed: "Kanalen är stängd, inga meddelanden kan redigeras eller raderas"
+        read_only: "Kanalen är lässkyddad, inga meddelanden kan redigeras eller raderas"
       user_cannot_send_message: "Du kan inte skicka meddelanden just nu."
       rate_limit_exceeded: "Överskred gränsen för chattmeddelanden som kan skickas inom 30 sekunder"
       auto_silence_from_flags: "Chattmeddelande flaggat med tillräckligt hög poäng för att tysta användaren."
       channel_cannot_be_archived: "Kanalen kan inte arkiveras just nu, den måste vara antingen stängd eller öppen för arkivering."
       duplicate_message: "Du skrev också ett identiskt meddelande nyligen."
       delete_channel_failed: "Det gick inte att ta bort kanalen, försök igen."
-      minimum_length_not_met: "Meddelandet är för kort, måste ha minst %{minimum} tecken."
-      message_too_long: "Meddelandet är för långt, måste ha högst %{maximum} tecken."
+      minimum_length_not_met:
+        one: "Meddelandet är för kort. Det måste innehålla minst %{count} tecken."
+        other: "Meddelandet är för kort. Det måste innehålla minst %{count} tecken."
+      message_too_long:
+        one: "Meddelandet är för långt, måste ha högst %{count} tecken."
+        other: "Meddelandet är för långt, måste ha högst %{count} tecken."
+      draft_too_long: "Utkastet är för långt."
       max_reactions_limit_reached: "Nya reaktioner är inte tillåtna för detta meddelande."
       message_move_invalid_channel: "Käll- och destinationskanalen måste vara offentliga kanaler."
       message_move_no_messages_found: "Inga meddelanden hittades med de angivna meddelande-ID:n."
@@ -65,9 +85,11 @@ sv:
       actor_disallowed_dms: "Du har valt att hindra användare från att skicka dig privata och direkta meddelanden, så du kan inte skapa nya direkta meddelanden."
       actor_preventing_target_user_from_dm: "Du har valt att hindra %{username} från att skicka privata och direkta meddelanden, så du kan inte skapa nya direktmeddelanden till dem."
       user_cannot_send_direct_messages: "Tyvärr kan du inte skicka direktmeddelanden."
+      over_chat_max_direct_message_users_allow_self: "Du kan bara skapa ett direktmeddelande med dig själv."
       over_chat_max_direct_message_users:
-        one: "Du kan bara skapa ett direktmeddelande med dig själv."
+        one: "Du kan inte skapa ett direktmeddelande med fler än %{count} annan användare."
         other: "Du kan inte skapa ett direktmeddelande med fler än %{count} andra användare."
+      original_message_not_found: "Det första meddelandet i meddelandekedjan som du svarar på kan inte hittas eller har tagits bort."
     reviewables:
       message_already_handled: "Tack, men vi har redan granskat det här meddelandet och beslutat att det inte behöver flaggas igen."
       actions:
@@ -104,20 +126,17 @@ sv:
         transcript_title: "Avskrift av tidigare meddelanden i %{channel_name}"
         transcript_body: "För att ge dig mer sammanhang inkluderade vi en avskrift av de tidigare meddelandena i det här samtalet (upp till tio):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Endast läsning"
-        archived: "Arkiverad"
-        closed: "Stängda"
-        open: "Öppna"
       archive:
         first_post_raw: "Detta ämne är ett arkiv av chatt kanalen [%{channel_name}](%{channel_url})."
       messages_moved:
         one: "@%{acting_username} flyttade ett meddelande till kanalen [%{channel_name}](%{first_moved_message_url})."
         other: "@%{acting_username} flyttade %{count} meddelanden till kanalen [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} och %{leftover} andra"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} och %{count} andra"
+          other: "%{comma_separated_usernames} och %{count} andra"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "innehåller icke-ascii-tecken"

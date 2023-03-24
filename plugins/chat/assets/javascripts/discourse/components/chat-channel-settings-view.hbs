@@ -60,10 +60,7 @@
   {{/unless}}
   <div class="chat-retention-info">
     {{d-icon "info-circle"}}
-    {{i18n
-      "chat.settings.retention_info"
-      days=this.siteSettings.chat_channel_retention_days
-    }}
+    <ChatRetentionReminderText @channel={{this.channel}} />
   </div>
 </div>
 

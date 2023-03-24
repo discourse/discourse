@@ -3,10 +3,10 @@
 module PageObjects
   module Components
     class Composer < PageObjects::Components::Base
-      def open_new_topic
-        visit("/latest")
-        find("button#create-topic").click
-        self
+      COMPOSER_ID = "#reply-control"
+
+      def opened?
+        page.has_css?("#{COMPOSER_ID}.open")
       end
 
       def open_composer_actions
@@ -15,13 +15,26 @@ module PageObjects
       end
 
       def fill_title(title)
-        find("#reply-control #reply-title").fill_in(with: title)
+        find("#{COMPOSER_ID} #reply-title").fill_in(with: title)
         self
       end
 
       def fill_content(content)
-        find("#reply-control .d-editor-input").fill_in(with: content)
+        composer_input.fill_in(with: content)
         self
+      end
+
+      def type_content(content)
+        composer_input.send_keys(content)
+        self
+      end
+
+      def clear_content
+        fill_content("")
+      end
+
+      def has_content?(content)
+        composer_input.value == content
       end
 
       def select_action(action)
@@ -30,7 +43,7 @@ module PageObjects
       end
 
       def create
-        find("#reply-control .btn-primary").click
+        find("#{COMPOSER_ID} .btn-primary").click
       end
 
       def action(action_title)
@@ -38,7 +51,11 @@ module PageObjects
       end
 
       def button_label
-        find("#reply-control .btn-primary .d-button-label")
+        find("#{COMPOSER_ID} .btn-primary .d-button-label")
+      end
+
+      def composer_input
+        find("#{COMPOSER_ID} .d-editor .d-editor-input")
       end
     end
   end

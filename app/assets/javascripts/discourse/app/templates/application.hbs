@@ -4,7 +4,7 @@
   <PluginOutlet
     @name="above-site-header"
     @connectorTagName="div"
-    @args={{hash currentPath=this.router._router.currentPath}}
+    @outletArgs={{hash currentPath=this.router._router.currentPath}}
   />
 
   {{#if this.showSiteHeader}}
@@ -17,6 +17,7 @@
       @toggleAnonymous={{route-action "toggleAnonymous"}}
       @logout={{route-action "logout"}}
       @sidebarEnabled={{this.sidebarEnabled}}
+      @navigationMenuQueryParamOverride={{this.navigationMenuQueryParamOverride}}
       @showSidebar={{this.showSidebar}}
       @toggleSidebar={{action "toggleSidebar"}}
     />
@@ -27,7 +28,7 @@
   <PluginOutlet
     @name="below-site-header"
     @connectorTagName="div"
-    @args={{hash currentPath=this.router._router.currentPath}}
+    @outletArgs={{hash currentPath=this.router._router.currentPath}}
   />
 
   <div id="main-outlet-wrapper" class="wrap" role="main">
@@ -55,19 +56,20 @@
         <PluginOutlet
           @name="top-notices"
           @connectorTagName="div"
-          @args={{hash currentPath=this.router._router.currentPath}}
+          @outletArgs={{hash currentPath=this.router._router.currentPath}}
         />
       </div>
 
       {{outlet}}
-      {{outlet "user-card"}}
+
+      <CardContainer />
     </div>
   </div>
 
   <PluginOutlet
     @name="above-footer"
     @connectorTagName="div"
-    @args={{hash showFooter=this.showFooter}}
+    @outletArgs={{hash showFooter=this.showFooter}}
   />
   {{#if this.showFooter}}
     <CustomHtml
@@ -79,7 +81,7 @@
   <PluginOutlet
     @name="below-footer"
     @connectorTagName="div"
-    @args={{hash showFooter=this.showFooter}}
+    @outletArgs={{hash showFooter=this.showFooter}}
   />
 
   {{outlet "modal"}}

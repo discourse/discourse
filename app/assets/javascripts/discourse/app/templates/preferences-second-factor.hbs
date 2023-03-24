@@ -169,7 +169,7 @@
 
           {{#if this.model.second_factor_enabled}}
             {{#unless this.showEnforcedNotice}}
-              <div class="control-group">
+              <div class="control-group pref-second-factor-disable-all">
                 <div class="controls">
                   <DButton
                     @class="btn-danger"
@@ -203,7 +203,7 @@
           </div>
 
           <div class="control-group">
-            <div class="controls">
+            <div class="controls -actions">
               <DButton
                 @class="btn-primary"
                 @type="submit"

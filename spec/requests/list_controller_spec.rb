@@ -30,6 +30,9 @@ RSpec.describe ListController do
 
       get "/latest?page=1111111111111111111111111111111111111111"
       expect(response.status).to eq(400)
+
+      get "/latest?tags[1]=hello"
+      expect(response.status).to eq(400)
     end
 
     it "returns 200 for legit requests" do
@@ -59,10 +62,13 @@ RSpec.describe ListController do
 
       get "/latest.json?topic_ids=14583%2C14584"
       expect(response.status).to eq(200)
+
+      get "/latest?tags[]=hello"
+      expect(response.status).to eq(200)
     end
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|
-      context "#{filter}" do
+      context "with #{filter}" do
         it "succeeds" do
           get "/#{filter}"
           expect(response.status).to eq(200)
@@ -1076,6 +1082,25 @@ RSpec.describe ListController do
       parsed = response.parsed_body
       expect(parsed["topic_list"]["topics"].length).to eq(2)
       expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
+    end
+  end
+
+  describe "#filter" do
+    it "should respond with 403 response code for an anonymous user" do
+      SiteSetting.experimental_topics_filter = true
+
+      get "/filter.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "should respond with 404 response code when `experimental_topics_filter` site setting has not been enabled" do
+      SiteSetting.experimental_topics_filter = false
+      sign_in(user)
+
+      get "/filter.json"
+
+      expect(response.status).to eq(404)
     end
   end
 end

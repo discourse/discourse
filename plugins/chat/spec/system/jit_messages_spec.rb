@@ -22,7 +22,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
       channel.send_message("hi @#{other_user.username}")
 
       expect(page).to have_content(
-        I18n.t("js.chat.mention_warning.without_membership.one", username: other_user.username),
+        I18n.t("js.chat.mention_warning.without_membership", username: other_user.username),
         wait: 5,
       )
     end
@@ -44,7 +44,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
       channel.send_message("hi @#{other_user.username}")
 
       expect(page).to have_content(
-        I18n.t("js.chat.mention_warning.cannot_see.one", username: other_user.username),
+        I18n.t("js.chat.mention_warning.cannot_see", username: other_user.username),
         wait: 5,
       )
     end
@@ -61,7 +61,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
         channel.send_message("hi @#{group_1.name}")
 
         expect(page).to have_content(
-          I18n.t("js.chat.mention_warning.group_mentions_disabled.one", group_name: group_1.name),
+          I18n.t("js.chat.mention_warning.group_mentions_disabled", group_name: group_1.name),
           wait: 5,
         )
       end

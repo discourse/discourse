@@ -1,7 +1,10 @@
-import { LOREM, createPreviewComponent, drawHeader } from "wizard/lib/preview";
+import { LOREM, drawHeader } from "wizard/lib/preview";
 import { observes } from "discourse-common/utils/decorators";
+import WizardPreviewBaseComponent from "./wizard-preview-base";
 
-export default createPreviewComponent(375, 100, {
+export default WizardPreviewBaseComponent.extend({
+  width: 375,
+  height: 100,
   image: null,
 
   @observes("field.value")

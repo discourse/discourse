@@ -4,9 +4,11 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import widgetHbs from "discourse/widgets/hbs-compiler";
-import Widget from "discourse/widgets/widget";
+import Widget, { deleteFromRegistry } from "discourse/widgets/widget";
 import ClassicComponent from "@ember/component";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
+import RenderGlimmer, {
+  registerWidgetShim,
+} from "discourse/widgets/render-glimmer";
 import { bind } from "discourse-common/utils/decorators";
 
 class DemoWidget extends Widget {
@@ -126,12 +128,18 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     this.registry.register("widget:demo-widget", DemoWidget);
     this.registry.register("widget:toggle-demo-widget", ToggleDemoWidget);
     this.registry.register("component:demo-component", DemoComponent);
+    registerWidgetShim(
+      "render-glimmer-test-shim",
+      "div.my-wrapper",
+      hbs`<span class='shim-content'>{{@data.attr1}}</span>`
+    );
   });
 
   hooks.afterEach(function () {
     this.registry.unregister("widget:demo-widget");
     this.registry.unregister("widget:toggle-demo-widget");
     this.registry.unregister("component:demo-component");
+    deleteFromRegistry("render-glimmer-test-shim");
   });
 
   test("argument handling", async function (assert) {
@@ -309,5 +317,14 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     assert.strictEqual(query("div.glimmer-wrapper").innerText, "Two");
     await click(".toggleButton");
     assert.strictEqual(query("div.glimmer-wrapper").innerText, "One");
+  });
+
+  test("registerWidgetShim can register a fake widget", async function (assert) {
+    await render(
+      hbs`<MountWidget @widget="render-glimmer-test-shim" @args={{hash attr1="val1"}} />`
+    );
+
+    assert.dom("div.my-wrapper span.shim-content").exists();
+    assert.dom("div.my-wrapper span.shim-content").hasText("val1");
   });
 });

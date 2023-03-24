@@ -109,7 +109,7 @@ class SeedHelper
   def self.filter
     # Allows a plugin to exclude any specified seed data files from running
     if DiscoursePluginRegistry.seedfu_filter.any?
-      /^(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*$/
+      /\A(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*\z/
     else
       nil
     end

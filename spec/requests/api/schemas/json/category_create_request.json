@@ -39,6 +39,10 @@
     },
     "search_priority": {
       "type": "integer"
+    },
+    "form_template_ids": {
+      "type": "array",
+      "items": []
     }
   },
   "required": [

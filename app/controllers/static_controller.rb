@@ -193,7 +193,11 @@ class StaticController < ApplicationController
   def brotli_asset
     is_asset_path
 
-    serve_asset(".br") { response.headers["Content-Encoding"] = "br" }
+    if params[:path].end_with?(".map")
+      serve_asset
+    else
+      serve_asset(".br") { response.headers["Content-Encoding"] = "br" }
+    end
   end
 
   def cdn_asset

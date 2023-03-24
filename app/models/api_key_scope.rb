@@ -6,7 +6,7 @@ class ApiKeyScope < ActiveRecord::Base
 
   class << self
     def list_actions
-      actions = %w[list#category_feed]
+      actions = %w[list#category_feed list#category_default]
 
       %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
 
@@ -28,8 +28,11 @@ class ApiKeyScope < ActiveRecord::Base
             params: %i[topic_id],
           },
           update: {
-            actions: %w[topics#update],
-            params: %i[topic_id],
+            actions: %w[topics#update topics#status],
+            params: %i[topic_id category_id],
+          },
+          delete: {
+            actions: %w[topics#destroy],
           },
           read: {
             actions: %w[topics#show topics#feed topics#posts],
@@ -45,11 +48,23 @@ class ApiKeyScope < ActiveRecord::Base
               category_id: :category_slug_path_with_id,
             },
           },
+          status: {
+            actions: %w[topics#status],
+            params: %i[topic_id category_id status enabled],
+          },
         },
         posts: {
           edit: {
             actions: %w[posts#update],
             params: %i[id],
+          },
+          delete: {
+            actions: %w[posts#destroy],
+          },
+        },
+        tags: {
+          list: {
+            actions: %w[tags#index],
           },
         },
         categories: {
@@ -101,6 +116,9 @@ class ApiKeyScope < ActiveRecord::Base
           anonymize: {
             actions: %w[admin/users#anonymize],
           },
+          suspend: {
+            actions: %w[admin/users#suspend],
+          },
           delete: {
             actions: %w[admin/users#destroy],
           },
@@ -119,6 +137,11 @@ class ApiKeyScope < ActiveRecord::Base
         email: {
           receive_emails: {
             actions: %w[admin/email#handle_mail admin/email#smtp_should_reject],
+          },
+        },
+        invites: {
+          create: {
+            actions: %w[invites#create],
           },
         },
         badges: {
@@ -144,6 +167,31 @@ class ApiKeyScope < ActiveRecord::Base
           },
           revoke_badge_from_user: {
             actions: %w[user_badges#destroy],
+          },
+        },
+        groups: {
+          manage_groups: {
+            actions: %w[groups#members groups#add_members groups#remove_members],
+            params: %i[id],
+          },
+          administer_groups: {
+            actions: %w[
+              admin/groups#create
+              admin/groups#destroy
+              groups#show
+              groups#update
+              groups#index
+            ],
+          },
+        },
+        search: {
+          show: {
+            actions: %w[search#show],
+            params: %i[q page],
+          },
+          query: {
+            actions: %w[search#query],
+            params: %i[term],
           },
         },
         wordpress: {

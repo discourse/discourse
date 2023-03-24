@@ -60,7 +60,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.valid_type?(type)
-    return false unless type =~ /^Reviewable[A-Za-z]+$/
+    return false unless type =~ /\AReviewable[A-Za-z]+\z/
     type.constantize <= Reviewable
   rescue NameError
     false
@@ -129,7 +129,7 @@ class Reviewable < ActiveRecord::Base
       update_args = {
         status: statuses[:pending],
         id: target.id,
-        type: target.class.name,
+        type: target.class.sti_name,
         potential_spam: potential_spam == true ? true : nil,
       }
 

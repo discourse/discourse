@@ -153,6 +153,7 @@ sk:
       placeholder: Dátum
     share:
       close: "zatvoriť"
+      twitter: "Zdieľať na Twitteri"
     action_codes:
       public_topic: "Téma je verejná%{when}"
       private_topic: "Urobil(a) z témy osobnú správu%{when}"
@@ -284,11 +285,9 @@ sk:
       title: "Záložka"
       clear_bookmarks: "Odstrániť záložku"
       help:
-        bookmark: "Kliknutím vložíte záložku na prvý príspevok tejto témy"
         unbookmark: "Kliknutím odstánite všetky záložky v tejto téme"
     bookmarks:
       not_bookmarked: "Vytvor záložku na tento príspevok"
-      remove: "Odstrániť záložku"
       confirm_clear: "Ste si istý, že chcete odstrániť všetky záložky z tejto témy?"
       save: "Uložiť"
       search: "Hľadať"
@@ -338,7 +337,6 @@ sk:
     enable: "Zapnúť"
     disable: "Vypnúť"
     continue: "Pokračovať"
-    undo: "Späť"
     switch_to_anon: "Vstúpiť do anonymného režimu"
     switch_from_anon: "Opustiť anonymný režim"
     banner:
@@ -349,6 +347,8 @@ sk:
     choose_message:
       none_found: "Žiadne správy."
     review:
+      order_by: "Zoradiť podľa"
+      in_reply_to: "v odpovedi na"
       explain:
         total: "Celkovo"
       delete: "Odstrániť"
@@ -386,8 +386,7 @@ sk:
         refresh: "Obnoviť"
         category: "Kategória"
       scores:
-        date: "Dátum"
-        type: "Typ"
+        type: "Dôvod"
       statuses:
         pending:
           title: "Čakajúce správy"
@@ -395,6 +394,8 @@ sk:
           title: "Schválený"
         rejected:
           title: "Zamietnuté"
+      context_question:
+        delimiter: "alebo"
       types:
         reviewable_user:
           title: "Používateľ"
@@ -472,6 +473,7 @@ sk:
         usernames_placeholder: "používateľské mená"
       requests:
         reason: "Dôvod"
+        undo: "Späť"
       manage:
         title: "Spravovať"
         name: "Názov"
@@ -672,11 +674,6 @@ sk:
       profile: "Profil"
       mute: "Ignorovať"
       edit: "Upraviť nastavenia"
-      download_archive:
-        button_text: "Stiahnuť všetko"
-        confirm: "Si si istý, že si chceš uložiť svoje príspevky na disk?"
-        success: "Sťahovanie bolo spustené, o jeho ukončení budeš informovaný správou."
-        rate_limit_error: "Príspevky možu byť stiahnuté len raz za deň. Skús opäť zajtra prosím."
       new_private_message: "Nová správa"
       private_message: "Správa"
       private_messages: "Správy"
@@ -889,6 +886,7 @@ sk:
         primary: "Primárny e-mail"
         secondary: "Sekundárne e-maily"
         primary_label: "primárny"
+        resent_label: "email odoslaný"
         update_email: "Zmeniť email"
         no_secondary: "Žiadne sekundárne e-maily"
         ok: "Pošleme vám email pre potvrdenie"
@@ -1287,8 +1285,6 @@ sk:
         title_missing: "Názov je povinný"
         category_missing: "Musíte vybrať kategóriu"
       save_edit: "Uložiť úpravy"
-      reply_original: "Odpovedať na pôvodnú tému"
-      reply_here: "Odpovedať tu"
       reply: "Odpovedať"
       cancel: "Zrušiť"
       create_topic: "Vytvoriť tému"
@@ -1442,6 +1438,7 @@ sk:
         close_topics: "Uzavrieť tému"
         archive_topics: "Archivuj témy"
         move_messages_to_inbox: "Presuň do prijatej pošty"
+        notification_level: "Upozornenia..."
         choose_new_category: "Vyberte pre tému novú kategóriu:"
         selected:
           one: "Označíli ste <b>%{count}</b> tému."
@@ -1522,8 +1519,7 @@ sk:
       back_to_list: "Naspäť na zoznam tém"
       options: "Možnosti tém"
       show_links: "zobrazovať odkazy v tejto téme"
-      jump_reply_up: prejsť na predchádzajúcu odpoveď
-      jump_reply_down: prejsť na nasledujúcu odpoveď
+      suggest_create_topic: Ste pripravení <a href>začať novú konverzáciu?</a>
       deleted: "Téma bola vymazaná"
       slow_mode_update:
         enable: "Zapnúť"
@@ -1605,6 +1601,7 @@ sk:
         unarchive: "Zruš archiváciu témy"
         archive: "Archívuj tému"
         reset_read: "Zrušiť načítané údaje"
+        make_public: "Spraviť verejnou témou..."
       feature:
         pin: "Pripni tému"
         unpin: "Odopni tému"
@@ -1753,6 +1750,8 @@ sk:
         few: "zobraziť %{count} skryté odpovede"
         many: "zobraziť %{count} skrytých odpovedí"
         other: "zobraziť %{count} skrytých odpovedí"
+      notice:
+        new_user: "%{user} prispel(a) po prvýkrát — privítajme ho/ju v našej komunite!"
       unread: "Príspevok je neprečítaný."
       has_replies:
         one: "%{count} Odpoveď"
@@ -1807,6 +1806,8 @@ sk:
         revert_to_regular: "Odobrať farbu personálu"
         rebake: "Pregenerovať HTML"
         unhide: "Odokryť"
+        change_owner: "Zmeniť vlastníctvo..."
+        grant_badge: "Udeliť odznak..."
         lock_post: "Zamknúť príspevok"
         unlock_post: "Odblokovať príspevok"
         delete_topic: "odstrániť tému"
@@ -1843,7 +1844,6 @@ sk:
           text_part:
             button: "Text"
       bookmarks:
-        created: "Vytvorené"
         name: "Meno"
         options: "Možnosti"
     category:
@@ -1853,7 +1853,6 @@ sk:
       view: "Prezerať témy v kategórii"
       general: "Všeobecné"
       settings: "Nastavenia"
-      topic_template: "Formulár témy"
       tags: "Štítky"
       tags_placeholder: "(Voliteľné) zoznam povolených štítkov"
       tag_groups_placeholder: "(Voliteľné) zoznam povolených skupín štítkov"
@@ -1892,8 +1891,6 @@ sk:
       images: "Obrázky"
       email_in: "Vlastná e-mailová adresa pre príchodziu poštu:"
       email_in_allow_strangers: "Prijímať emaily od anonymných používateľov bez účtu"
-      email_in_disabled: "Vkladanie nových tém cez email je zablokované v Nastaveniach stránky. Ak chcete povoliť vkladanie nových téme cez email,"
-      email_in_disabled_click: 'povoľte nastavenie "email in"'
       allow_badges_label: "Povoliť získavanie odznakov v tejto kategórii"
       edit_permissions: "Upraviť práva"
       review_group_name: "názov skupiny"
@@ -1929,6 +1926,7 @@ sk:
     flagging:
       title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
       action: "Označ príspevok"
+      take_action: "Vykonať akciu..."
       take_action_options:
         default:
           title: "Vykonať akciu"
@@ -2032,13 +2030,16 @@ sk:
       many: "používateľov"
       other: "používateľov"
     category_title: "Kategória"
-    changed_by: "od %{author}"
     raw_email:
       not_available: "Nedostupné!"
     categories_list: "Zoznam kategórií"
     filters:
       with_topics: "%{filter} témy"
       with_category: "%{filter} %{category} témy"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Najnovšie"
         title_with_count:
@@ -2096,7 +2097,7 @@ sk:
           other: "%{categoryName} (%{count})"
         help: "najnovšie témy v kategórii %{categoryName}"
       top:
-        title: "Top"
+        title: "Najlepšie"
         help: "najaktívnejšie témy za posledný rok, mesiac, týždeň, alebo deň"
         all:
           title: "Za celú dobu"
@@ -2243,6 +2244,7 @@ sk:
         save: "Uložiť"
         delete: "Vymazať"
         confirm_delete: "Ste si istý, že chcete zmazať túto skupinu štítkov?"
+        parent_tag_placeholder: "Nepovinné"
       topics:
         none:
           unread: "Nemáte žiadnu neprečítanú tému"
@@ -2258,10 +2260,6 @@ sk:
       back: "Späť"
       share: "Zdieľať"
       dismiss: "Zahodiť"
-    pause_notifications:
-      remaining: "%{remaining} zostáva"
-      options:
-        custom: "Vlastné"
     trust_levels:
       names:
         newuser: "nový používateľ"
@@ -2283,6 +2281,12 @@ sk:
       more: "Viac"
       all_categories: "Všetky kategórie"
       sections:
+        custom:
+          save: "Uložiť"
+          delete: "Odstrániť"
+          links:
+            icon: "Ikona"
+            name: "Meno"
         about:
           header_link_text: "O stránke"
         messages:
@@ -2308,11 +2312,12 @@ sk:
               content: "Administrátor"
             badges:
               content: "Odznaky"
+            everything:
+              content: "Všetko"
             faq:
               content: "Časté otázky"
             groups:
               content: "Skupiny"
-              title: "Všetky skupiny"
             users:
               content: "Používatelia"
             my_posts:
@@ -2340,6 +2345,7 @@ sk:
         latest_version: "Najnovšie"
         new_features:
           dismiss: "Zahodiť"
+          learn_more: "Zistiť viac"
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -2428,6 +2434,7 @@ sk:
         user: "Používateľ"
         title: "API"
         created: Vytvorené
+        never_used: (nikdy)
         generate: "Generovať"
         revoke: "Zrušiť"
         all_users: "Všetci používatelia"
@@ -2462,7 +2469,6 @@ sk:
         enabled: "Povolené?"
         is_enabled: "A"
         not_enabled: "N"
-        change_settings: "Zmeniť nastavenia"
         change_settings_short: "Nastavenia"
         howto: "Ako nainštalujem pluginy?"
       backups:
@@ -2530,7 +2536,6 @@ sk:
         button_title: "Poslať pozvánky"
       customize:
         title: "Upraviť"
-        long_title: "Úpravy webu"
         preview: "náhľad"
         save: "Uložiť"
         new: "Nový"
@@ -2594,9 +2599,9 @@ sk:
         colors:
           title: "Farby"
           copy_name_prefix: "Kópia"
-          undo: "späť"
+          undo: "Späť"
           undo_title: "Zrušiť zmeny farby a vrátiť sa k predchádzajucej uloženej verzii. "
-          revert: "vrátiť zmeny"
+          revert: "Vrátiť zmeny"
           primary:
             name: "primárny"
             description: "Väčšina textov, ikony, a okraje."
@@ -2627,6 +2632,8 @@ sk:
           love:
             name: "obľúbené"
             description: "Farba tlačidla \"Páči sa\""
+          selected:
+            name: "vybraté"
         email_style:
           css: "CSS"
       email:
@@ -2796,6 +2803,30 @@ sk:
           add: "Pridať"
         test:
           button_label: "Test"
+      form_templates:
+        nav_title: "Šablóny"
+        list_table:
+          headings:
+            name: "Meno"
+            actions: "Akcie"
+        view_template:
+          close: "Zavrieť"
+          edit: "Upraviť"
+          delete: "Odstrániť"
+        new_template_form:
+          submit: "Uložiť"
+          cancel: "Zrušiť"
+          preview: "Ukážka"
+        quick_insert_fields:
+          add_new_field: "Pridať"
+          dropdown: "Zoznam"
+        validations_modal:
+          table_headers:
+            type: "Typ"
+            description: "Popis"
+          validations:
+            required:
+              key: "povinné"
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."
@@ -2848,7 +2879,6 @@ sk:
         staged: "Dočasný?"
         show_admin_profile: "Admin"
         show_public_profile: "Ukázať verejný profil"
-        impersonate: "Privlastniť"
         ip_lookup: "Vyhľadávanie IP"
         log_out: "Odhlásiť sa"
         logged_out: "Používateľ bol odhlásený na všetkých zariadeniach"
@@ -3079,7 +3109,8 @@ sk:
         allow_title: Povoliť použitie odznaku namiesto názvu
         multiple_grant: Môže byť udelené viacnásobne
         listable: Zobraziť odznak na stránke verejných odznakov
-        enabled: Povoliť odznak
+        enabled: povolené
+        disabled: vypnuté
         icon: Ikona
         image: Obrázok
         query: Požiadavka na Odznak (SQL)

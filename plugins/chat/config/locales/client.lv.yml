@@ -21,15 +21,13 @@ lv:
       joined: "pievienojās"
       email_frequency:
         never: "Nekad"
+      header_indicator_preference:
+        never: "Nekad"
       flag: "Sūdzība"
       join: "Pievienojieties"
+      last_visit: "pēdējais apmeklējums"
       mention_warning:
         dismiss: "nerādīt"
-        groups:
-          users_limit:
-            zero: "%{count} lietotāji"
-            one: "%{count} lietotājs"
-            other: "%{count} lietotāji"
       reply: "Atbilde"
       edit: "Rediģēt"
       rebake_message: "Pārbūvēt HTML"
@@ -51,6 +49,7 @@ lv:
         yesterday: Vakar
       about_view:
         title: Virsraksts
+        name: Vārds
         description: Apraksts
       channel_info:
         back_to_channel: "Atpakaļ"

@@ -24,7 +24,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.create_for(upload, width, height, opts = {})
-    return unless width > 0 && height > 0
+    return if width <= 0 || height <= 0
     return if upload.try(:sha1).blank?
 
     # no extension so try to guess it
@@ -85,6 +85,7 @@ class OptimizedImage < ActiveRecord::Base
         target_quality =
           upload.target_image_quality(original_path, SiteSetting.image_preview_jpg_quality)
         opts = opts.merge(quality: target_quality) if target_quality
+        opts = opts.merge(upload_id: upload.id)
 
         if upload.extension == "svg"
           FileUtils.cp(original_path, temp_path)
@@ -142,7 +143,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def local?
-    !(url =~ %r{^(https?:)?//})
+    !(url =~ %r{\A(https?:)?//})
   end
 
   def calculate_filesize
@@ -337,13 +338,19 @@ class OptimizedImage < ActiveRecord::Base
     else
       error = +"Failed to optimize image:"
 
-      if e.message =~ /^convert:([^`]+)/
+      if e.message =~ /\Aconvert:([^`]+)/
         error << $1
       else
         error << " unknown reason"
       end
 
-      Discourse.warn(error, location: to, error_message: e.message, instructions: instructions)
+      Discourse.warn(
+        error,
+        upload_id: opts[:upload_id],
+        location: to,
+        error_message: e.message,
+        instructions: instructions,
+      )
       false
     end
   end

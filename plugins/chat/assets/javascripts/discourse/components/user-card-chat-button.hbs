@@ -1,8 +1,8 @@
-{{#if this.chat.userCanDirectMessage}}
+{{#if (and this.chat.userCanDirectMessage (not @user.suspended))}}
   <DButton
     @class="btn-primary user-card-chat-btn"
     @action={{action "startChatting"}}
     @label="chat.title_capitalized"
-    @icon="comment"
+    @icon="d-chat"
   />
 {{/if}}

@@ -43,14 +43,14 @@ acceptance(
 
       assert.strictEqual(
         count(
-          ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+          ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
         ),
         1,
         "there should only be one section link under the section"
       );
 
       assert.ok(
-        exists(`.sidebar-section-link-${category1.slug}`),
+        exists(`.sidebar-section-link[data-category-id="${category1.id}"]`),
         `only the ${category1.slug} section link is shown`
       );
     });
@@ -113,10 +113,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     setupUserSidebarCategories();
 
     await visit("/t/280");
-    await click(".sidebar-section-categories .sidebar-section-header");
+    await click(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header"
+    );
 
     assert.notOk(
-      exists(".sidebar-section-categories .sidebar-section-content"),
+      exists(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-content"
+      ),
       "hides the content of the section"
     );
   });
@@ -125,7 +129,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     setupUserSidebarCategories();
 
     await visit("/");
-    await click(".sidebar-section-categories .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-button"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -140,7 +146,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-categories"),
+      exists(".sidebar-section[data-section-name='categories']"),
       "categories section is not shown"
     );
   });
@@ -153,19 +159,19 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-categories"),
+      exists(".sidebar-section[data-section-name='categories']"),
       "categories section is shown"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-categories .sidebar-section-link-configure-categories"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-configure-categories"
       ),
       "section link to add categories to sidebar is displayed"
     );
 
     await click(
-      ".sidebar-section-categories .sidebar-section-link-configure-categories"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-configure-categories"
     );
 
     assert.strictEqual(
@@ -187,7 +193,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(`.sidebar-section-link-${uncategorizedCategory.slug}`),
+      exists(
+        `.sidebar-section-link[data-category-id="${uncategorizedCategory.id}"]`
+      ),
       `displays the section link for ${uncategorizedCategory.slug} category`
     );
   });
@@ -235,7 +243,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -298,7 +306,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -361,7 +369,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -389,7 +397,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       count(
-        ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
       ),
       4,
       "there should only be 4 section link under the section"
@@ -397,18 +405,20 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category1.color} 50%, #${category1.color} 50%)"]`
+        `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category1.color} 50%, #${category1.color} 50%)"]`
       ),
       "category1 section link is rendered with solid prefix icon color"
     );
 
     assert.strictEqual(
-      query(`.sidebar-section-link-${category1.slug}`).textContent.trim(),
+      query(
+        `.sidebar-section-link[data-category-id="${category1.id}"]`
+      ).textContent.trim(),
       category1.name,
       "displays category1's name for the link text"
     );
 
-    await click(`.sidebar-section-link-${category1.slug}`);
+    await click(`.sidebar-section-link[data-category-id="${category1.id}"]`);
 
     assert.strictEqual(
       currentURL(),
@@ -417,17 +427,21 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}.active`),
+      exists(
+        `.sidebar-section-link[data-category-id="${category1.id}"].active`
+      ),
       "the category1 section link is marked as active"
     );
 
-    await click(`.sidebar-section-link-${category2.slug}`);
+    await click(`.sidebar-section-link[data-category-id="${category2.id}"]`);
 
     assert.strictEqual(
       currentURL(),
@@ -436,26 +450,30 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category2.slug}.active`),
+      exists(
+        `.sidebar-section-link[data-category-id="${category2.id}"].active`
+      ),
       "the category2 section link is marked as active"
     );
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category3.slug} .sidebar-section-link-prefix .prefix-badge.d-icon-lock`
+        `.sidebar-section-link[data-category-id="${category3.id}"] .sidebar-section-link-prefix .prefix-badge.d-icon-lock`
       ),
       "category3 section link is rendered with lock prefix badge icon as it is read restricted"
     );
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category4.slug} .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category4.parentCategory.color} 50%, #${category4.color} 50%)"]`
+        `.sidebar-section-link[data-category-id="${category4.id}"] .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category4.parentCategory.color} 50%, #${category4.color} 50%)"]`
       ),
       "sub category section link is rendered with double prefix color"
     );
@@ -469,7 +487,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    await click(`.sidebar-section-link-${category1.slug}`);
+    await click(`.sidebar-section-link[data-category-id="${category1.id}"]`);
 
     assert.strictEqual(
       currentURL(),
@@ -478,13 +496,17 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}.active`),
+      exists(
+        `.sidebar-section-link[data-category-id="${category1.id}"].active`
+      ),
       "the category1 section link is marked as active"
     );
   });
@@ -507,7 +529,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    await click(`.sidebar-section-link-${category1.slug}`);
+    await click(`.sidebar-section-link[data-category-id="${category1.id}"]`);
 
     assert.strictEqual(
       currentURL(),
@@ -516,13 +538,17 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}.active`),
+      exists(
+        `.sidebar-section-link[data-category-id="${category1.id}"].active`
+      ),
       "the category1 section link is marked as active"
     );
   });
@@ -553,7 +579,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    await click(`.sidebar-section-link-${category1.slug}`);
+    await click(`.sidebar-section-link[data-category-id="${category1.id}"]`);
 
     assert.strictEqual(
       currentURL(),
@@ -562,13 +588,17 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}.active`),
+      exists(
+        `.sidebar-section-link[data-category-id="${category1.id}"].active`
+      ),
       "the category1 section link is marked as active"
     );
   });
@@ -581,7 +611,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #888 50%, #888 50%)"]`
+        `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #888 50%, #888 50%)"]`
       ),
       "category1 section link is rendered with the right solid prefix icon color"
     );
@@ -600,7 +630,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     assert.strictEqual(
-      query(`.sidebar-section-link-${category.slug}`).title,
+      query(`.sidebar-section-link[data-category-id="${category.id}"]`).title,
       category.description_text,
       "category description without HTML entity is used as the link's title"
     );
@@ -612,13 +642,17 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/new`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}.active`),
+      exists(
+        `.sidebar-section-link[data-category-id="${category1.id}"].active`
+      ),
       "the category1 section link is marked as active for the new route"
     );
   });
@@ -629,13 +663,17 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/unread`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}.active`),
+      exists(
+        `.sidebar-section-link[data-category-id="${category1.id}"].active`
+      ),
       "the category1 section link is marked as active for the unread route"
     );
   });
@@ -646,13 +684,17 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/top`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}.active`),
+      exists(
+        `.sidebar-section-link[data-category-id="${category1.id}"].active`
+      ),
       "the category1 section link is marked as active for the top route"
     );
   });
@@ -663,13 +705,17 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/none`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}.active`),
+      exists(
+        `.sidebar-section-link[data-category-id="${category1.id}"].active`
+      ),
       "the category1 section link is marked as active for the none route"
     );
   });
@@ -680,13 +726,17 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/all`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}.active`),
+      exists(
+        `.sidebar-section-link[data-category-id="${category1.id}"].active`
+      ),
       "the category1 section link is marked as active for the all route"
     );
   });
@@ -725,7 +775,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-suffix`
+        `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-suffix`
       ),
       "shows suffix indicator for unread content on categories link"
     );
@@ -741,7 +791,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-suffix`
+        `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-suffix`
       ),
       "shows suffix indicator for new topics on categories link"
     );
@@ -757,7 +807,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       !exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-suffix`
+        `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-suffix`
       ),
       "hides suffix indicator when there's no new/unread content on category link"
     );
@@ -817,7 +867,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       query(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
+        `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
       ).textContent.trim(),
       I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for ${category1.slug} section link`
@@ -825,7 +875,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       query(
-        `.sidebar-section-link-${category2.slug} .sidebar-section-link-content-badge`
+        `.sidebar-section-link[data-category-id="${category2.id}"] .sidebar-section-link-content-badge`
       ).textContent.trim(),
       I18n.t("sidebar.unread_count", { count: 2 }),
       `displays 2 unread count for ${category2.slug} section link`
@@ -842,7 +892,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       query(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
+        `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
       ).textContent.trim(),
       I18n.t("sidebar.new_count", { count: 1 }),
       `displays 1 new count for ${category1.slug} section link`
@@ -859,7 +909,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       !exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
+        `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
       ),
       `does not display any badge ${category1.slug} section link`
     );
@@ -875,7 +925,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       query(
-        `.sidebar-section-link-${category2.slug} .sidebar-section-link-content-badge`
+        `.sidebar-section-link[data-category-id="${category2.id}"] .sidebar-section-link-content-badge`
       ).textContent.trim(),
       I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for ${category2.slug} section link`
@@ -923,3 +973,171 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 });
+
+acceptance(
+  "Sidebar - Logged on user - Categories Section - New new view experiment enabled",
+  function (needs) {
+    needs.settings({
+      navigation_menu: "sidebar",
+    });
+
+    needs.user({ new_new_view_enabled: true });
+
+    test("count shown next to category link", async function (assert) {
+      const categories = Site.current().categories;
+      const category1 = categories[0];
+      const category2 = categories[1];
+      const category3 = categories[2];
+
+      updateCurrentUser({
+        sidebar_category_ids: [category1.id, category2.id, category3.id],
+      });
+
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category1.id,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category1.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 15,
+          last_read_post_number: 15,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: category1.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 4,
+          highest_post_number: 10,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category2.id,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 5,
+          highest_post_number: 19,
+          last_read_post_number: 18,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: category3.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(
+          `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
+        ).textContent.trim(),
+        "2",
+        "count for category1 is 2 because it has 1 unread topic and 1 new topic"
+      );
+
+      assert.strictEqual(
+        query(
+          `.sidebar-section-link[data-category-id="${category2.id}"] .sidebar-section-link-content-badge`
+        ).textContent.trim(),
+        "1",
+        "count for category2 is 1 because it has 1 new topic"
+      );
+
+      assert.strictEqual(
+        query(
+          `.sidebar-section-link[data-category-id="${category3.id}"] .sidebar-section-link-content-badge`
+        ).textContent.trim(),
+        "1",
+        "count for category3 is 1 because it has 1 unread topic"
+      );
+    });
+
+    test("category link href", async function (assert) {
+      const categories = Site.current().categories;
+      const category1 = categories[0];
+      const category2 = categories[1];
+      const category3 = categories[2];
+
+      updateCurrentUser({
+        sidebar_category_ids: [category1.id, category2.id, category3.id],
+      });
+
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category1.id,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category2.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 4,
+          last_read_post_number: 4,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category3.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert.true(
+        query(
+          `.sidebar-section-link[data-category-id="${category1.id}"]`
+        ).href.endsWith("/c/meta/3/l/new"),
+        "links to the new topics list for the category because there's 1 new topic"
+      );
+
+      assert.true(
+        query(
+          `.sidebar-section-link[data-category-id="${category2.id}"]`
+        ).href.endsWith("/c/howto/10/l/new"),
+        "links to the new topics list for the category because there's 1 unread topic"
+      );
+
+      assert.true(
+        query(
+          `.sidebar-section-link[data-category-id="${category3.id}"]`
+        ).href.endsWith("/c/feature/spec/26"),
+        "links to the latest topics list for the category because there are no unread or new topics"
+      );
+    });
+  }
+);

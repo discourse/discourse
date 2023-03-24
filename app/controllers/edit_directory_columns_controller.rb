@@ -48,7 +48,7 @@ class EditDirectoryColumnsController < ApplicationController
         .where(directory_column: { user_field_id: nil })
         .where("show_on_profile=? OR show_on_user_card=?", true, true)
 
-    return unless user_fields_without_column.count > 0
+    return if user_fields_without_column.count <= 0
 
     next_position = DirectoryColumn.maximum("position") + 1
 

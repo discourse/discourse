@@ -29,7 +29,7 @@ RSpec.describe Chat::ChatController do
   end
 
   def flag_message(message, flagger, flag_type: ReviewableScore.types[:off_topic])
-    Chat::ChatReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
+    Chat::ReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
   end
 
   describe "#messages" do
@@ -102,6 +102,7 @@ RSpec.describe Chat::ChatController do
       score = reviewable.reviewable_scores.last
 
       get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
+
       expect(response.parsed_body["chat_messages"].last["user_flag_status"]).to eq(
         score.status_for_database,
       )
@@ -126,15 +127,17 @@ RSpec.describe Chat::ChatController do
     it "correctly marks reactions as 'reacted' for the current_user" do
       heart_emoji = ":heart:"
       smile_emoji = ":smile"
-
       last_message = chat_channel.chat_messages.last
       last_message.reactions.create(user: user, emoji: heart_emoji)
       last_message.reactions.create(user: admin, emoji: smile_emoji)
 
       get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
+
       reactions = response.parsed_body["chat_messages"].last["reactions"]
-      expect(reactions[heart_emoji]["reacted"]).to be true
-      expect(reactions[smile_emoji]["reacted"]).to be false
+      heart_reaction = reactions.find { |r| r["emoji"] == heart_emoji }
+      expect(heart_reaction["reacted"]).to be true
+      smile_reaction = reactions.find { |r| r["emoji"] == smile_emoji }
+      expect(smile_reaction["reacted"]).to be false
     end
 
     it "sends the last message bus id for the channel" do
@@ -250,7 +253,7 @@ RSpec.describe Chat::ChatController do
         Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
 
         sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "category", chatable_id: category.id }
+        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
       end
 
       # TODO: rewrite specs to ensure no exception is raised
@@ -258,7 +261,7 @@ RSpec.describe Chat::ChatController do
         Guardian.any_instance.expects(:can_join_chat_channel?)
 
         sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "category", chatable_id: category.id }
+        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
       end
     end
   end
@@ -273,7 +276,7 @@ RSpec.describe Chat::ChatController do
         Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
 
         sign_in(admin)
-        post "/chat/disable.json", params: { chatable_type: "category", chatable_id: category.id }
+        post "/chat/disable.json", params: { chatable_type: "Category", chatable_id: category.id }
       end
     end
   end
@@ -286,7 +289,11 @@ RSpec.describe Chat::ChatController do
 
       context "when current user is silenced" do
         before do
-          UserChatChannelMembership.create(user: user, chat_channel: chat_channel, following: true)
+          Chat::UserChatChannelMembership.create(
+            user: user,
+            chat_channel: chat_channel,
+            following: true,
+          )
           sign_in(user)
           UserSilencer.new(user).silence
         end
@@ -320,7 +327,7 @@ RSpec.describe Chat::ChatController do
         post "/chat/#{chat_channel.id}.json", params: { message: message }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t("chat.errors.channel_new_message_disallowed", status: chat_channel.status_name),
+          I18n.t("chat.errors.channel_new_message_disallowed.closed"),
         )
       end
 
@@ -336,19 +343,23 @@ RSpec.describe Chat::ChatController do
         post "/chat/#{chat_channel.id}.json", params: { message: message }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t("chat.errors.channel_new_message_disallowed", status: chat_channel.status_name),
+          I18n.t("chat.errors.channel_new_message_disallowed.read_only"),
         )
       end
 
       it "sends a message for regular user when staff-only is disabled and they are following channel" do
         sign_in(user)
-        UserChatChannelMembership.create(user: user, chat_channel: chat_channel, following: true)
+        Chat::UserChatChannelMembership.create(
+          user: user,
+          chat_channel: chat_channel,
+          following: true,
+        )
 
         expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
-          ChatMessage.count
+          Chat::Message.count
         }.by(1)
         expect(response.status).to eq(200)
-        expect(ChatMessage.last.message).to eq(message)
+        expect(Chat::Message.last.message).to eq(message)
       end
     end
 
@@ -361,22 +372,22 @@ RSpec.describe Chat::ChatController do
       it "forces users to follow the channel" do
         direct_message_channel.remove(user2)
 
-        ChatPublisher.expects(:publish_new_channel).once
+        Chat::Publisher.expects(:publish_new_channel).once
 
         sign_in(user1)
 
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
 
-        expect(UserChatChannelMembership.find_by(user_id: user2.id).following).to be true
+        expect(Chat::UserChatChannelMembership.find_by(user_id: user2.id).following).to be true
       end
 
       it "errors when the user is not part of the direct message channel" do
-        DirectMessageUser.find_by(user: user1, direct_message: chatable).destroy!
+        Chat::DirectMessageUser.find_by(user: user1, direct_message: chatable).destroy!
         sign_in(user1)
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
         expect(response.status).to eq(403)
 
-        UserChatChannelMembership.find_by(user_id: user2.id).update!(following: true)
+        Chat::UserChatChannelMembership.find_by(user_id: user2.id).update!(following: true)
         sign_in(user2)
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
         expect(response.status).to eq(200)
@@ -402,12 +413,12 @@ RSpec.describe Chat::ChatController do
         it "does not force them to follow the channel or send a publish_new_channel message" do
           direct_message_channel.remove(user2)
 
-          ChatPublisher.expects(:publish_new_channel).never
+          Chat::Publisher.expects(:publish_new_channel).never
 
           sign_in(user1)
           post "/chat/#{direct_message_channel.id}.json", params: { message: message }
 
-          expect(UserChatChannelMembership.find_by(user_id: user2.id).following).to be false
+          expect(Chat::UserChatChannelMembership.find_by(user_id: user2.id).following).to be false
         end
       end
     end
@@ -421,7 +432,7 @@ RSpec.describe Chat::ChatController do
         sign_in(Fabricate(:admin))
 
         expect_enqueued_with(
-          job: :process_chat_message,
+          job: Jobs::Chat::ProcessMessage,
           args: {
             chat_message_id: chat_message.id,
           },
@@ -455,7 +466,7 @@ RSpec.describe Chat::ChatController do
           chat_message.update!(message: "new content")
 
           expect_enqueued_with(
-            job: :process_chat_message,
+            job: Jobs::Chat::ProcessMessage,
             args: {
               chat_message_id: chat_message.id,
               is_dirty: true,
@@ -552,7 +563,7 @@ RSpec.describe Chat::ChatController do
     it "doesn't allow a user to delete another user's message" do
       sign_in(other_user)
 
-      delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json"
+      delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json"
       expect(response.status).to eq(403)
     end
 
@@ -567,23 +578,29 @@ RSpec.describe Chat::ChatController do
     it "Allows admin to delete others' messages" do
       sign_in(admin)
 
-      expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.to change {
-        ChatMessage.count
-      }.by(-1)
+      events = nil
+      expect do
+        events =
+          DiscourseEvent.track_events do
+            delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json"
+          end
+      end.to change { Chat::Message.count }.by(-1)
+
       expect(response.status).to eq(200)
+      expect(events.map { |event| event[:event_name] }).to include(:chat_message_trashed)
     end
 
     it "does not allow message delete when chat channel is read_only" do
-      sign_in(ChatMessage.last.user)
+      sign_in(Chat::Message.last.user)
 
       chat_channel.update!(status: :read_only)
-      expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.not_to change {
-        ChatMessage.count
+      expect { delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json" }.not_to change {
+        Chat::Message.count
       }
       expect(response.status).to eq(403)
 
       sign_in(admin)
-      delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json"
+      delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json"
       expect(response.status).to eq(403)
     end
 
@@ -591,14 +608,14 @@ RSpec.describe Chat::ChatController do
       sign_in(admin)
 
       chat_channel.update!(status: :read_only)
-      expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.not_to change {
-        ChatMessage.count
+      expect { delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json" }.not_to change {
+        Chat::Message.count
       }
       expect(response.status).to eq(403)
 
       chat_channel.update!(status: :closed)
-      expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.to change {
-        ChatMessage.count
+      expect { delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json" }.to change {
+        Chat::Message.count
       }.by(-1)
       expect(response.status).to eq(200)
     end
@@ -611,7 +628,7 @@ RSpec.describe Chat::ChatController do
     end
 
     before do
-      ChatMessage.create(user: user, message: "this is a message", chat_channel: chat_channel)
+      Chat::Message.create!(user: user, message: "this is a message", chat_channel: chat_channel)
     end
 
     describe "for category" do
@@ -624,8 +641,8 @@ RSpec.describe Chat::ChatController do
 
       it "Allows users to delete their own messages" do
         sign_in(user)
-        expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.to change {
-          ChatMessage.count
+        expect { delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json" }.to change {
+          Chat::Message.count
         }.by(-1)
         expect(response.status).to eq(200)
       end
@@ -636,14 +653,14 @@ RSpec.describe Chat::ChatController do
     it "doesn't allow a user to restore another user's message" do
       sign_in(other_user)
 
-      put "/chat/#{chat_channel.id}/restore/#{ChatMessage.unscoped.last.id}.json"
+      put "/chat/#{chat_channel.id}/restore/#{Chat::Message.unscoped.last.id}.json"
       expect(response.status).to eq(403)
     end
 
     it "allows a user to restore their own posts" do
       sign_in(user)
 
-      deleted_message = ChatMessage.unscoped.last
+      deleted_message = Chat::Message.unscoped.last
       put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
       expect(response.status).to eq(200)
       expect(deleted_message.reload.deleted_at).to be_nil
@@ -652,18 +669,18 @@ RSpec.describe Chat::ChatController do
     it "allows admin to restore others' posts" do
       sign_in(admin)
 
-      deleted_message = ChatMessage.unscoped.last
+      deleted_message = Chat::Message.unscoped.last
       put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
       expect(response.status).to eq(200)
       expect(deleted_message.reload.deleted_at).to be_nil
     end
 
     it "does not allow message restore when chat channel is read_only" do
-      sign_in(ChatMessage.last.user)
+      sign_in(Chat::Message.last.user)
 
       chat_channel.update!(status: :read_only)
 
-      deleted_message = ChatMessage.unscoped.last
+      deleted_message = Chat::Message.unscoped.last
       put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
       expect(response.status).to eq(403)
       expect(deleted_message.reload.deleted_at).not_to be_nil
@@ -678,7 +695,7 @@ RSpec.describe Chat::ChatController do
 
       chat_channel.update!(status: :read_only)
 
-      deleted_message = ChatMessage.unscoped.last
+      deleted_message = Chat::Message.unscoped.last
       put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
       expect(response.status).to eq(403)
       expect(deleted_message.reload.deleted_at).not_to be_nil
@@ -695,7 +712,7 @@ RSpec.describe Chat::ChatController do
 
     before do
       message =
-        ChatMessage.create(user: user, message: "this is a message", chat_channel: chat_channel)
+        Chat::Message.create(user: user, message: "this is a message", chat_channel: chat_channel)
       message.trash!
     end
 
@@ -704,117 +721,6 @@ RSpec.describe Chat::ChatController do
 
       it_behaves_like "chat_message_restoration" do
         let(:other_user) { second_user }
-      end
-    end
-  end
-
-  describe "#update_user_last_read" do
-    before { sign_in(user) }
-
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
-    fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
-
-    it "returns a 404 when the user is not a channel member" do
-      put "/chat/#{chat_channel.id}/read/#{message_1.id}.json"
-
-      expect(response.status).to eq(404)
-    end
-
-    it "returns a 404 when the user is not following the channel" do
-      Fabricate(
-        :user_chat_channel_membership,
-        chat_channel: chat_channel,
-        user: user,
-        following: false,
-      )
-
-      put "/chat/#{chat_channel.id}/read/#{message_1.id}.json"
-
-      expect(response.status).to eq(404)
-    end
-
-    describe "when the user is a channel member" do
-      fab!(:membership) do
-        Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: user)
-      end
-
-      context "when message_id param doesn't link to a message of the channel" do
-        it "raises a not found" do
-          put "/chat/#{chat_channel.id}/read/-999.json"
-
-          expect(response.status).to eq(404)
-        end
-      end
-
-      context "when message_id param is inferior to existing last read" do
-        before { membership.update!(last_read_message_id: message_2.id) }
-
-        it "raises an invalid request" do
-          put "/chat/#{chat_channel.id}/read/#{message_1.id}.json"
-
-          expect(response.status).to eq(400)
-          expect(response.parsed_body["errors"][0]).to match(/message_id/)
-        end
-      end
-
-      context "when message_id refers to deleted message" do
-        before { message_1.trash!(Discourse.system_user) }
-
-        it "works" do
-          put "/chat/#{chat_channel.id}/read/#{message_1.id}.json"
-
-          expect(response.status).to eq(200)
-        end
-      end
-
-      it "updates timing records" do
-        expect { put "/chat/#{chat_channel.id}/read/#{message_1.id}.json" }.not_to change {
-          UserChatChannelMembership.count
-        }
-
-        membership.reload
-        expect(membership.chat_channel_id).to eq(chat_channel.id)
-        expect(membership.last_read_message_id).to eq(message_1.id)
-        expect(membership.user_id).to eq(user.id)
-      end
-
-      def create_notification_and_mention_for(user, sender, msg)
-        Notification
-          .create!(
-            notification_type: Notification.types[:chat_mention],
-            user: user,
-            high_priority: true,
-            read: false,
-            data: {
-              message: "chat.mention_notification",
-              chat_message_id: msg.id,
-              chat_channel_id: msg.chat_channel_id,
-              chat_channel_title: msg.chat_channel.title(user),
-              chat_channel_slug: msg.chat_channel.slug,
-              mentioned_by_username: sender.username,
-            }.to_json,
-          )
-          .tap do |notification|
-            ChatMention.create!(user: user, chat_message: msg, notification: notification)
-          end
-      end
-
-      it "marks all mention notifications as read for the channel" do
-        notification = create_notification_and_mention_for(user, other_user, message_1)
-
-        put "/chat/#{chat_channel.id}/read/#{message_2.id}.json"
-        expect(response.status).to eq(200)
-        expect(notification.reload.read).to eq(true)
-      end
-
-      it "doesn't mark notifications of messages that weren't read yet" do
-        message_3 = Fabricate(:chat_message, chat_channel: chat_channel, user: other_user)
-        notification = create_notification_and_mention_for(user, other_user, message_3)
-
-        put "/chat/#{chat_channel.id}/read/#{message_2.id}.json"
-
-        expect(response.status).to eq(200)
-        expect(notification.reload.read).to eq(false)
       end
     end
   end
@@ -870,7 +776,7 @@ RSpec.describe Chat::ChatController do
               emoji: ":heart:",
               react_action: "add",
             }
-      }.to change { UserChatChannelMembership.count }.by(1)
+      }.to change { Chat::UserChatChannelMembership.count }.by(1)
       expect(response.status).to eq(200)
     end
 
@@ -897,7 +803,7 @@ RSpec.describe Chat::ChatController do
       }.not_to change { chat_message.reactions.where(user: user, emoji: emoji).count }
       expect(response.status).to eq(403)
       expect(response.parsed_body["errors"]).to include(
-        I18n.t("chat.errors.channel_modify_message_disallowed", status: chat_channel.status_name),
+        I18n.t("chat.errors.channel_modify_message_disallowed.#{chat_channel.status}"),
       )
     end
 
@@ -997,7 +903,8 @@ RSpec.describe Chat::ChatController do
     end
 
     it "doesn't invite users who cannot chat" do
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:admin]
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:admins]
+
       expect {
         put "/chat/#{chat_channel.id}/invite.json", params: { user_ids: [user.id] }
       }.not_to change {
@@ -1179,7 +1086,7 @@ RSpec.describe Chat::ChatController do
               chat_message_id: admin_chat_message.id,
               flag_type_id: ReviewableScore.types[:off_topic],
             }
-      }.to change { ReviewableChatMessage.where(target: admin_chat_message).count }.by(1)
+      }.to change { Chat::ReviewableMessage.where(target: admin_chat_message).count }.by(1)
       expect(response.status).to eq(200)
     end
 
@@ -1255,10 +1162,10 @@ RSpec.describe Chat::ChatController do
     it "can create and destroy chat drafts" do
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      }.to change { ChatDraft.count }.by(1)
+      }.to change { Chat::Draft.count }.by(1)
 
       expect { post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id } }.to change {
-        ChatDraft.count
+        Chat::Draft.count
       }.by(-1)
     end
 
@@ -1273,17 +1180,30 @@ RSpec.describe Chat::ChatController do
       GroupUser.create!(user: user, group: group)
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      }.to change { ChatDraft.count }.by(1)
+      }.to change { Chat::Draft.count }.by(1)
     end
 
     it "cannot create chat drafts for a direct message channel the user cannot access" do
       post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
       expect(response.status).to eq(403)
 
-      DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
+      Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
-      }.to change { ChatDraft.count }.by(1)
+      }.to change { Chat::Draft.count }.by(1)
+    end
+
+    it "cannot create a too long chat draft" do
+      SiteSetting.max_chat_draft_length = 100
+
+      post "/chat/drafts.json",
+           params: {
+             chat_channel_id: chat_channel.id,
+             data: { value: "a" * (SiteSetting.max_chat_draft_length + 1) }.to_json,
+           }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq([I18n.t("chat.errors.draft_too_long")])
     end
   end
 
@@ -1350,7 +1270,7 @@ RSpec.describe Chat::ChatController do
         get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
         expect(response.status).to eq(403)
 
-        DirectMessageUser.create!(user: user, direct_message: chatable)
+        Chat::DirectMessageUser.create!(user: user, direct_message: chatable)
         get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
         expect(response.status).to eq(200)
         expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)

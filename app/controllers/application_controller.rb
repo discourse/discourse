@@ -640,16 +640,21 @@ class ApplicationController < ActionController::Base
   def preload_current_user_data
     store_preloaded(
       "currentUser",
-      MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)),
+      MultiJson.dump(
+        CurrentUserSerializer.new(
+          current_user,
+          scope: guardian,
+          root: false,
+          navigation_menu_param: params[:navigation_menu],
+        ),
+      ),
     )
+
     report = TopicTrackingState.report(current_user)
-    serializer =
-      ActiveModel::ArraySerializer.new(
-        report,
-        each_serializer: TopicTrackingStateSerializer,
-        scope: guardian,
-      )
-    store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
+    serializer = TopicTrackingStateSerializer.new(report, scope: guardian, root: false)
+
+    store_preloaded("topicTrackingStates", MultiJson.dump(serializer.as_json[:data]))
+    store_preloaded("topicTrackingStateMeta", MultiJson.dump(serializer.as_json[:meta]))
   end
 
   def custom_html_json
@@ -669,7 +674,7 @@ class ApplicationController < ActionController::Base
 
     DiscoursePluginRegistry.html_builders.each do |name, _|
       if name.start_with?("client:")
-        data[name.sub(/^client:/, "")] = DiscoursePluginRegistry.build_html(name, self)
+        data[name.sub(/\Aclient:/, "")] = DiscoursePluginRegistry.build_html(name, self)
       end
     end
 

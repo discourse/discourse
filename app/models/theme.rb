@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 69
+  BASE_COMPILER_VERSION = 71
 
   attr_accessor :child_components
 
@@ -33,6 +33,7 @@ class Theme < ActiveRecord::Base
   has_many :color_schemes
   belongs_to :remote_theme, dependent: :destroy
   has_one :theme_modifier_set, dependent: :destroy
+  has_one :theme_svg_sprite, dependent: :destroy
 
   has_one :settings_field,
           -> { where(target_id: Theme.targets[:settings], name: "yaml") },

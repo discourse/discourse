@@ -539,6 +539,10 @@ RSpec.describe Guardian do
   end
 
   describe "can_impersonate?" do
+    it "disallows impersonation when disabled globally" do
+      global_setting :allow_impersonation, false
+      expect(Guardian.new(admin).can_impersonate?(moderator)).to be_falsey
+    end
     it "allows impersonation correctly" do
       expect(Guardian.new(admin).can_impersonate?(nil)).to be_falsey
       expect(Guardian.new.can_impersonate?(user)).to be_falsey
@@ -820,9 +824,50 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "can_receive_post_notifications?" do
+    it "returns false with a nil object" do
+      expect(Guardian.new.can_receive_post_notifications?(nil)).to be_falsey
+      expect(Guardian.new(user).can_receive_post_notifications?(nil)).to be_falsey
+    end
+
+    it "does not allow anonymous to be notified" do
+      expect(Guardian.new.can_receive_post_notifications?(post)).to be_falsey
+    end
+
+    it "allows public categories" do
+      expect(Guardian.new(trust_level_0).can_receive_post_notifications?(post)).to be_truthy
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+    end
+
+    it "diallows secure categories with no access" do
+      secure_category = Fabricate(:category, read_restricted: true)
+      post.topic.update!(category_id: secure_category.id)
+
+      expect(Guardian.new(trust_level_0).can_receive_post_notifications?(post)).to be_falsey
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+
+      SiteSetting.suppress_secured_categories_from_admin = true
+
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_falsey
+
+      secure_category.set_permissions(group => :write)
+      secure_category.save!
+
+      group.add(admin)
+      group.save!
+
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+    end
+  end
+
   describe "can_see?" do
     it "returns false with a nil object" do
       expect(Guardian.new.can_see?(nil)).to be_falsey
+    end
+
+    it "returns false when no visibility method is defined for the object" do
+      unguarded_object = 42
+      expect(Guardian.new.can_see?(unguarded_object)).to be_falsey
     end
 
     describe "a Category" do
@@ -1345,6 +1390,13 @@ RSpec.describe Guardian do
 
     it "returns false for a regular user" do
       expect(Guardian.new(user).can_recover_topic?(topic)).to be_falsey
+    end
+
+    it "returns true when tl4 can delete posts and topics" do
+      PostDestroyer.new(moderator, topic.first_post).destroy
+      expect(Guardian.new(trust_level_4).can_recover_topic?(topic)).to be_falsey
+      SiteSetting.tl4_delete_posts_and_topics = true
+      expect(Guardian.new(trust_level_4).can_recover_topic?(topic.reload)).to be_truthy
     end
 
     context "as a moderator" do
@@ -2195,6 +2247,12 @@ RSpec.describe Guardian do
         expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
       end
 
+      it "returns true when tl4 can delete posts and topics" do
+        expect(Guardian.new(trust_level_4).can_delete?(topic)).to be_falsey
+        SiteSetting.tl4_delete_posts_and_topics = true
+        expect(Guardian.new(trust_level_4).can_delete?(topic)).to be_truthy
+      end
+
       it "returns false if topic was created > 24h ago" do
         topic.update!(posts_count: 1, created_at: 48.hours.ago)
         expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
@@ -2239,6 +2297,12 @@ RSpec.describe Guardian do
         expect(Guardian.new(trust_level_2).can_delete?(post)).to be_falsey
         expect(Guardian.new(trust_level_3).can_delete?(post)).to be_falsey
         expect(Guardian.new(trust_level_4).can_delete?(post)).to be_falsey
+      end
+
+      it "returns true when tl4 can delete posts and topics" do
+        expect(Guardian.new(trust_level_4).can_delete?(post)).to be_falsey
+        SiteSetting.tl4_delete_posts_and_topics = true
+        expect(Guardian.new(trust_level_4).can_delete?(post)).to be_truthy
       end
 
       it "returns false when self deletions are disabled" do
@@ -2381,6 +2445,22 @@ RSpec.describe Guardian do
       it "returns true if it's yours" do
         expect(Guardian.new(user).can_delete?(post_action)).to be_truthy
       end
+    end
+  end
+
+  describe "#can_see_deleted_posts?" do
+    it "returns true if the user is an admin" do
+      expect(Guardian.new(admin).can_see_deleted_posts?(post.topic.category)).to be_truthy
+    end
+
+    it "returns true if the user is a moderator of category" do
+      expect(Guardian.new(moderator).can_see_deleted_posts?(post.topic.category)).to be_truthy
+    end
+
+    it "returns true when tl4 can delete posts and topics" do
+      expect(Guardian.new(trust_level_4).can_see_deleted_posts?(post)).to be_falsey
+      SiteSetting.tl4_delete_posts_and_topics = true
+      expect(Guardian.new(trust_level_4).can_see_deleted_posts?(post)).to be_truthy
     end
   end
 
@@ -2695,6 +2775,10 @@ RSpec.describe Guardian do
 
     it "is false for myself" do
       expect(Guardian.new(user).can_anonymize_user?(user)).to be_falsey
+    end
+
+    it "it false for an anonymized user" do
+      expect(Guardian.new(user).can_anonymize_user?(anonymous_user)).to be_falsey
     end
 
     it "is true for admin anonymizing a regular user" do
@@ -3460,6 +3544,12 @@ RSpec.describe Guardian do
 
       context "when min_trust_to_create_tag is 3" do
         before { SiteSetting.min_trust_to_create_tag = 3 }
+
+        describe "#can_see_tag?" do
+          it "is always true" do
+            expect(Guardian.new.can_see_tag?(anything)).to be_truthy
+          end
+        end
 
         describe "can_create_tag" do
           it "returns false if trust level is too low" do

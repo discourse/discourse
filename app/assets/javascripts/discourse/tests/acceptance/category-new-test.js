@@ -8,6 +8,7 @@ import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import sinon from "sinon";
 import { test } from "qunit";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Category New", function (needs) {
   needs.user();
@@ -21,12 +22,35 @@ acceptance("Category New", function (needs) {
     await fillIn("input.category-name", "testing");
     assert.strictEqual(query(".badge-category").innerText, "testing");
 
+    await click(".edit-category-nav .edit-category-topic-template a");
+    assert
+      .dom(".edit-category-tab-topic-template")
+      .isVisible("it can switch to topic template tab");
+
+    await click(".edit-category-nav .edit-category-tags a");
+    await click("button.add-required-tag-group");
+
+    const tagSelector = selectKit(
+      ".required-tag-group-row .select-kit.tag-group-chooser"
+    );
+    await tagSelector.expand();
+    await tagSelector.selectRowByValue("TagGroup1");
+
     await click("#save-category");
 
     assert.strictEqual(
       currentURL(),
       "/c/testing/edit/general",
       "it transitions to the category edit route"
+    );
+
+    await click(".edit-category-nav .edit-category-tags a");
+
+    assert.ok(
+      exists(
+        ".required-tag-group-row .select-kit-header[data-value='TagGroup1']"
+      ),
+      "it shows saved required tag group"
     );
 
     assert.strictEqual(

@@ -56,7 +56,6 @@ RSpec.describe Admin::EmbeddableHostsController do
             params: {
               embeddable_host: {
                 host: "test.com",
-                class_name: "test-class",
                 category_id: category.id,
               },
             }
@@ -67,7 +66,7 @@ RSpec.describe Admin::EmbeddableHostsController do
           UserHistory.where(
             acting_user_id: admin.id,
             action: UserHistory.actions[:embeddable_host_update],
-            new_value: "category_id: #{category.id}, class_name: test-class, host: test.com",
+            new_value: "category_id: #{category.id}, host: test.com",
           ).exists?
 
         expect(history_exists).to eq(true)
@@ -82,7 +81,6 @@ RSpec.describe Admin::EmbeddableHostsController do
             params: {
               embeddable_host: {
                 host: "test.com",
-                class_name: "test-class",
                 category_id: category.id,
               },
             }

@@ -11,6 +11,7 @@ const EMAIL_LEVELS = {
 };
 
 export default Controller.extend({
+  subpageTitle: I18n.t("user.preferences_nav.emails"),
   emailMessagesLevelAway: equal(
     "model.user_option.email_messages_level",
     EMAIL_LEVELS.ONLY_WHEN_AWAY

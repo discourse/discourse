@@ -10,7 +10,7 @@ import { findAll } from "discourse/models/login-method";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -114,29 +114,6 @@ export default Controller.extend(CanCheckEmails, {
       .finally(() => this.set("resetPasswordLoading", false));
   },
 
-  disableAllMessage() {
-    let templateElements = [I18n.t("user.second_factor.delete_confirm_header")];
-    templateElements.push("<ul>");
-    this.totps.forEach((totp) => {
-      templateElements.push(`<li>${totp.name}</li>`);
-    });
-    this.security_keys.forEach((key) => {
-      templateElements.push(`<li>${key.name}</li>`);
-    });
-    if (this.currentUser.second_factor_backup_enabled) {
-      templateElements.push(
-        `<li>${I18n.t("user.second_factor_backup.title")}</li>`
-      );
-    }
-    templateElements.push("</ul>");
-    templateElements.push(
-      I18n.t("user.second_factor.delete_confirm_instruction", {
-        confirm: I18n.t("user.second_factor.disable"),
-      })
-    );
-    return htmlSafe(templateElements.join(""));
-  },
-
   actions: {
     confirmPassword() {
       if (!this.password) {
@@ -154,9 +131,13 @@ export default Controller.extend(CanCheckEmails, {
 
       this.dialog.deleteConfirm({
         title: I18n.t("user.second_factor.disable_confirm"),
-        message: this.disableAllMessage(),
+        bodyComponent: SecondFactorConfirmPhrase,
+        bodyComponentModel: {
+          totps: this.totps,
+          security_keys: this.security_keys,
+        },
         confirmButtonLabel: "user.second_factor.disable",
-        confirmPhrase: I18n.t("user.second_factor.disable"),
+        confirmButtonDisabled: true,
         confirmButtonIcon: "ban",
         cancelButtonClass: "btn-flat",
         didConfirm: () => {
@@ -185,40 +166,61 @@ export default Controller.extend(CanCheckEmails, {
         confirmButtonIcon: "ban",
         cancelButtonClass: "btn-flat",
         didConfirm: () => {
-          this.currentUser
-            .updateSecondFactor(
-              secondFactorMethod.id,
-              secondFactorMethod.name,
-              true,
-              secondFactorMethod.method
-            )
-            .then((response) => {
-              if (response.error) {
-                return;
-              }
-              this.markDirty();
-            })
-            .catch((e) => this.handleError(e))
-            .finally(() => {
-              this.setProperties({
-                totps: this.totps.filter(
-                  (totp) =>
-                    totp.id !== secondFactorMethod.id ||
-                    totp.method !== secondFactorMethod.method
-                ),
-                security_keys: this.security_keys.filter(
-                  (key) =>
-                    key.id !== secondFactorMethod.id ||
-                    key.method !== secondFactorMethod.method
-                ),
+          if (this.totps.includes(secondFactorMethod)) {
+            this.currentUser
+              .updateSecondFactor(
+                secondFactorMethod.id,
+                secondFactorMethod.name,
+                true,
+                secondFactorMethod.method
+              )
+              .then((response) => {
+                if (response.error) {
+                  return;
+                }
+                this.markDirty();
+                this.set(
+                  "totps",
+                  this.totps.filter(
+                    (totp) =>
+                      totp.id !== secondFactorMethod.id ||
+                      totp.method !== secondFactorMethod.method
+                  )
+                );
+              })
+              .catch((e) => this.handleError(e))
+              .finally(() => {
+                this.set("loading", false);
               });
+          }
 
-              this.set("loading", false);
-            });
+          if (this.security_keys.includes(secondFactorMethod)) {
+            this.currentUser
+              .updateSecurityKey(
+                secondFactorMethod.id,
+                secondFactorMethod.name,
+                true
+              )
+              .then((response) => {
+                if (response.error) {
+                  return;
+                }
+                this.markDirty();
+                this.set(
+                  "security_keys",
+                  this.security_keys.filter(
+                    (securityKey) => securityKey.id !== secondFactorMethod.id
+                  )
+                );
+              })
+              .catch((e) => this.handleError(e))
+              .finally(() => {
+                this.set("loading", false);
+              });
+          }
         },
       });
     },
-
     disableSecondFactorBackup() {
       this.dialog.deleteConfirm({
         title: I18n.t("user.second_factor.delete_backup_codes_confirm_title"),

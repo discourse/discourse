@@ -4,7 +4,7 @@ RSpec.describe Middleware::AnonymousCache do
   let(:middleware) { Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] }) }
 
   def env(opts = {})
-    create_request_env(path: "http://test.com/path?bla=1").merge(opts)
+    create_request_env(path: opts.delete(:path) || "http://test.com/path?bla=1").merge(opts)
   end
 
   describe Middleware::AnonymousCache::Helper do
@@ -37,6 +37,18 @@ RSpec.describe Middleware::AnonymousCache do
 
       it "is false for srv/status routes" do
         expect(new_helper("PATH_INFO" => "/srv/status").cacheable?).to eq(false)
+      end
+
+      it "is false for API requests using header" do
+        expect(new_helper("HTTP_API_KEY" => "abcde").cacheable?).to eq(false)
+      end
+
+      it "is false for API requests using parameter" do
+        expect(new_helper(path: "/path?api_key=abc").cacheable?).to eq(false)
+      end
+
+      it "is false for User API requests using header" do
+        expect(new_helper("HTTP_USER_API_KEY" => "abcde").cacheable?).to eq(false)
       end
     end
 
@@ -321,6 +333,9 @@ RSpec.describe Middleware::AnonymousCache do
           headers: {
             "QUERY_STRING" => "api_key=#{api_key.key}&api_username=system",
           }
+      expect(@status).to eq(200)
+
+      get "/latest", headers: { "HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => "system" }
       expect(@status).to eq(200)
     end
 

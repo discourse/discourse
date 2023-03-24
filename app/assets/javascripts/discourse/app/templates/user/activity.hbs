@@ -1,93 +1,95 @@
-{{#if this.currentUser.redesigned_user_page_nav_enabled}}
-  <DSection @pageClass="user-activity" />
+<DSection @pageClass="user-activity" />
 
-  <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav>
-      <UserNav::ActivityNav
-        @user={{this.user}}
-        @viewingSelf={{this.viewingSelf}}
-        @model={{this.model}}
-        @siteSettings={{this.siteSettings}}
-        @draftLabel={{this.draftLabel}}
-        @pendingLabel={{this.pendingLabel}}
-      />
-    </HorizontalOverflowNav>
-  </div>
+<div class="user-navigation user-navigation-secondary">
+  <HorizontalOverflowNav @ariaLabel="User secondary - activity">
+    <DNavigationItem
+      @route="userActivity.index"
+      @class="user-nav__activity-all"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "stream"}}
+      <span>{{i18n "user.filters.all"}}</span>
+    </DNavigationItem>
 
-{{else}}
-  <DSection
-    @pageClass="user-activity"
-    @class="user-secondary-navigation"
-    @scrollTop={{false}}
-  >
-    <nav role="navigation">
-      <MobileNav
-        @class="activity-nav"
-        @desktopClass="action-list activity-list nav-stacked"
+    <DNavigationItem
+      @route="userActivity.topics"
+      @class="user-nav__activity-topics"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "list-ul"}}
+      <span>{{i18n "user_action_groups.4"}}</span>
+    </DNavigationItem>
+    <DNavigationItem
+      @route="userActivity.replies"
+      @class="user-nav__activity-replies"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "reply"}}
+      <span>{{i18n "user_action_groups.5"}}</span>
+    </DNavigationItem>
+
+    {{#if this.user.showRead}}
+      <DNavigationItem
+        @route="userActivity.read"
+        @class="user-nav__activity-read"
+        @title={{i18n "user.read_help"}}
+        @ariaCurrentContext="subNav"
       >
-        <DNavigationItem @route="userActivity.index">{{i18n
-            "user.filters.all"
-          }}</DNavigationItem>
-        <DNavigationItem @route="userActivity.topics">{{i18n
-            "user_action_groups.4"
-          }}</DNavigationItem>
-        <DNavigationItem @route="userActivity.replies">{{i18n
-            "user_action_groups.5"
-          }}</DNavigationItem>
+        {{d-icon "history"}}
+        <span>{{i18n "user.read"}}</span>
+      </DNavigationItem>
+    {{/if}}
 
-        {{#if this.user.showRead}}
-          <DNavigationItem
-            @route="userActivity.read"
-            @title={{i18n "user.read_help"}}
-          >
-            {{i18n "user.read"}}
-          </DNavigationItem>
-        {{/if}}
+    {{#if this.user.showDrafts}}
+      <DNavigationItem
+        @route="userActivity.drafts"
+        @class="user-nav__activity-drafts"
+        @ariaCurrentContext="subNav"
+      >
+        {{d-icon "pencil-alt"}}
+        <span>{{this.draftLabel}}</span>
+      </DNavigationItem>
+    {{/if}}
 
-        {{#if this.user.showDrafts}}
-          <DNavigationItem @route="userActivity.drafts">
-            {{this.draftLabel}}
-          </DNavigationItem>
-        {{/if}}
+    {{#if (gt this.model.pending_posts_count 0)}}
+      <DNavigationItem
+        @route="userActivity.pending"
+        @class="user-nav__activity-pending"
+        @ariaCurrentContext="subNav"
+      >
+        {{d-icon "clock"}}
+        <span>{{this.pendingLabel}}</span>
+      </DNavigationItem>
+    {{/if}}
 
-        {{#if (gt this.model.pending_posts_count 0)}}
-          <DNavigationItem @route="userActivity.pending">
-            {{this.pendingLabel}}
-          </DNavigationItem>
-        {{/if}}
+    <DNavigationItem
+      @route="userActivity.likesGiven"
+      @class="user-nav__activity-likes"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "heart"}}
+      <span>{{i18n "user_action_groups.1"}}</span>
+    </DNavigationItem>
 
-        <DNavigationItem @route="userActivity.likesGiven">{{i18n
-            "user_action_groups.1"
-          }}</DNavigationItem>
+    {{#if this.user.showBookmarks}}
+      <DNavigationItem
+        @route="userActivity.bookmarks"
+        @class="user-nav__activity-bookmarks"
+        @ariaCurrentContext="subNav"
+      >
+        {{d-icon "bookmark"}}
+        <span>{{i18n "user_action_groups.3"}}</span>
+      </DNavigationItem>
+    {{/if}}
 
-        {{#if this.user.showBookmarks}}
-          <DNavigationItem @route="userActivity.bookmarks">{{i18n
-              "user_action_groups.3"
-            }}</DNavigationItem>
-        {{/if}}
+    <PluginOutlet
+      @name="user-activity-bottom"
+      @connectorTagName="li"
+      @outletArgs={{hash model=this.model}}
+    />
+  </HorizontalOverflowNav>
+</div>
 
-        <PluginOutlet
-          @name="user-activity-bottom"
-          @tagName="span"
-          @connectorTagName="li"
-          @args={{hash model=this.model}}
-        />
-      </MobileNav>
-    </nav>
-  </DSection>
-
-  {{#if this.canDownloadPosts}}
-    <section class="user-additional-controls">
-      <DButton
-        @action={{action "exportUserArchive"}}
-        @class="btn-default"
-        @label="user.download_archive.button_text"
-        @icon="download"
-      />
-    </section>
-  {{/if}}
-{{/if}}
-
-<section class="user-content">
+<section class="user-content" id="user-content">
   {{outlet}}
 </section>

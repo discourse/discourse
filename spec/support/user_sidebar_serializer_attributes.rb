@@ -65,7 +65,9 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
 
   describe "#sidebar_tags" do
     fab!(:tag) { Fabricate(:tag, name: "foo") }
-    fab!(:pm_tag) { Fabricate(:tag, name: "bar", pm_topic_count: 5, topic_count: 0) }
+    fab!(:pm_tag) do
+      Fabricate(:tag, name: "bar", pm_topic_count: 5, staff_topic_count: 0, public_topic_count: 0)
+    end
     fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
     fab!(:staff_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"])
