@@ -116,7 +116,7 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     tags_link = find(".sidebar-section-link-sidebar-tags")
     categories_link = find(".sidebar-section-link-sidebar-categories")
-    tags_link.drag_to(categories_link)
+    tags_link.drag_to(categories_link, html5: true, delay: 0.4)
 
     within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(1)") do
       expect(page).to have_css(".sidebar-section-link-sidebar-categories")
