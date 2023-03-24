@@ -532,8 +532,9 @@ en:
         search_placeholder: "Search by emoji name and alias..."
         no_results: "No results"
 
+      thread:
+        label: Thread
       threads:
-        op_said: "OP said:"
         started_by: "Started by"
         open: "Open Thread"
 

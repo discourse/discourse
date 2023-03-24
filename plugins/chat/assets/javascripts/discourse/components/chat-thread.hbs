@@ -4,36 +4,14 @@
   {{did-insert this.loadMessages}}
 >
   <div class="chat-thread__header">
-    <div class="chat-thread__info">
-      <div class="chat-thread__title">
-        <h2>{{this.title}}</h2>
-
-        <LinkTo
-          class="chat-thread__close"
-          @route="chat.channel"
-          @models={{this.chat.activeChannel.routeModels}}
-        >
-          {{d-icon "times"}}
-        </LinkTo>
-      </div>
-
-      <p class="chat-thread__om">
-        {{replace-emoji this.thread.originalMessage.excerpt}}
-      </p>
-
-      <div class="chat-thread__omu">
-        <span class="chat-thread__started-by">{{i18n
-            "chat.threads.started_by"
-          }}</span>
-        <ChatMessageAvatar
-          class="chat-thread__omu-avatar"
-          @message={{this.thread.originalMessage}}
-        />
-        <span
-          class="chat-thread__omu-username"
-        >{{this.thread.originalMessageUser.username}}</span>
-      </div>
-    </div>
+    <span class="chat-thread__label">{{i18n "chat.thread.label"}}</span>
+    <LinkTo
+      class="chat-thread__close"
+      @route="chat.channel"
+      @models={{this.chat.activeChannel.routeModels}}
+    >
+      {{d-icon "times"}}
+    </LinkTo>
   </div>
 
   <div class="chat-thread__body">

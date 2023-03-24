@@ -4,6 +4,15 @@
   height: 100%;
 
   &__header {
+    height: var(--chat-header-offset);
+    min-height: var(--chat-header-offset);
+    border-bottom: 1px solid var(--primary-low);
+    border-top: 1px solid var(--primary-low);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 1.5rem;
   }
 
   &__body {
@@ -20,39 +29,5 @@
     &:visited {
       color: var(--primary-medium);
     }
-  }
-
-  &__info {
-    padding-inline: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--primary-low);
-  }
-
-  &__om {
-    margin-top: 0;
-  }
-
-  &__omu {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .chat-message-avatar {
-      width: var(--message-left-width);
-    }
-  }
-
-  &__started-by {
-    margin-right: 0.5rem;
-  }
-
-  &__title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  &__messages {
-    flex-grow: 1;
   }
 }

@@ -48,14 +48,6 @@ export default class ChatThreadPanel extends Component {
     return this.chat.activeChannel;
   }
 
-  get title() {
-    if (this.thread.title) {
-      this.thread.escapedTitle;
-    }
-
-    return I18n.t("chat.threads.op_said");
-  }
-
   @action
   loadMessages() {
     if (this.args.targetMessageId) {
