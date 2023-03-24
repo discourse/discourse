@@ -55,7 +55,7 @@ export default class ChatMessageActionsMobile extends Component {
       // by ensuring we are not hovering any message anymore
       // we also ensure the menu is fully removed
 
-      this.args.onHoverMessage?.(null);
+      this.args.livePanel.hoverMessage?.(null);
     }, 200);
   }
 

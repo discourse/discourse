@@ -18,7 +18,7 @@
       @messageActions={{this.messageActions}}
       @messageActionsHandler={{@messageActionsHandler}}
       @messageCapabilities={{this.messageCapabilities}}
-      @onHoverMessage={{@onHoverMessage}}
+      @onHoverMessage={{@livePanel.hoverMessage}}
     />
   {{/in-element}}
 {{/if}}
@@ -49,13 +49,19 @@
   {{on "touchmove" this.handleTouchMove passive=true}}
   {{on "touchstart" this.handleTouchStart passive=true}}
   {{on "touchend" this.handleTouchEnd passive=true}}
-  {{on "mouseenter" (fn @onHoverMessage @message (hash desktopOnly=true))}}
-  {{on "mousemove" (fn @onHoverMessage @message (hash desktopOnly=true))}}
-  {{on "mouseleave" (fn @onHoverMessage null (hash desktopOnly=true))}}
+  {{on
+    "mouseenter"
+    (fn @livePanel.hoverMessage @message (hash desktopOnly=true))
+  }}
+  {{on
+    "mousemove"
+    (fn @livePanel.hoverMessage @message (hash desktopOnly=true))
+  }}
+  {{on "mouseleave" (fn @livePanel.hoverMessage null (hash desktopOnly=true))}}
   class={{concat-class
     "chat-message-container"
     (if @isHovered "is-hovered")
-    (if @selectingMessages "selecting-messages")
+    (if @livePanel.selectingMessages "selecting-messages")
     (if @message.highlighted "highlighted")
   }}
   data-id={{@message.id}}
@@ -67,7 +73,7 @@
   }}
 >
   {{#if this.show}}
-    {{#if @selectingMessages}}
+    {{#if @livePanel.selectingMessages}}
       <Input
         @type="checkbox"
         class="chat-message-selector"

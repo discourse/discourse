@@ -121,7 +121,7 @@ export default class ChatMessage extends Component {
       });
     }
 
-    if (!this.args.selectingMessages) {
+    if (!this.args.livePanel.selectingMessages) {
       buttons.push({
         id: "select",
         name: I18n.t("chat.select"),
@@ -238,7 +238,7 @@ export default class ChatMessage extends Component {
     document.activeElement.blur();
     document.querySelector(".chat-composer-input")?.blur();
 
-    this.args.onHoverMessage?.(this.args.message);
+    this.args.livePanel.hoverMessage?.(this.args.message);
   }
 
   get hideUserInfo() {
