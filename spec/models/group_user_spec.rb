@@ -75,6 +75,21 @@ RSpec.describe GroupUser do
       expect(h[category5.id]).to eq(levels[:watching_first_post])
     end
 
+    it "works when site setting conflicts with group's category notifications" do
+      SiteSetting.default_categories_tracking = category4.id.to_s
+      group.watching_category_ids = [category4.id]
+      group.save!
+      trust_level_0 = Group[:trust_level_0]
+      trust_level_0.muted_category_ids = [category4.id]
+      trust_level_0.save!
+
+      user = Fabricate(:user)
+      group.add(user)
+      trust_level_0.add(user)
+      h = CategoryUser.notification_levels_for(user)
+      expect(h[category4.id]).to eq(levels[:tracking])
+    end
+
     it "only upgrades notifications" do
       CategoryUser.create!(
         user: user,
