@@ -166,6 +166,20 @@ module SiteSettingExtension
     end
   end
 
+  def remove_setting(name_arg)
+    raise if !Rails.env.test?
+
+    name = name_arg.to_sym
+
+    categories.delete(name)
+    hidden_settings.delete(name)
+    refresh_settings.delete(name)
+    client_settings.delete(name)
+    previews.delete(name)
+    secret_settings.delete(name)
+    plugins.delete(name)
+  end
+
   def settings_hash
     result = {}
     deprecated_settings = Set.new

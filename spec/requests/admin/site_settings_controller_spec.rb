@@ -633,7 +633,7 @@ RSpec.describe Admin::SiteSettingsController do
 
         after do
           Discourse.plugins_by_name.delete(plugin.name)
-          SiteSetting.plugins[:plugin_setting] = nil
+          SiteSetting.remove_setting(:plugin_setting)
         end
 
         it "allows changing settings of configurable plugins" do
