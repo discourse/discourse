@@ -1,5 +1,4 @@
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
 import showModal from "discourse/lib/show-modal";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import Bookmark from "discourse/models/bookmark";
@@ -123,32 +122,10 @@ export default class ChatMessageActions {
 
   @action
   flag(message) {
-    const targetFlagSupported =
-      requirejs.entries["discourse/lib/flag-targets/flag"];
-
-    if (targetFlagSupported) {
-      const model = message;
-      model.username = message.user?.username;
-      model.user_id = message.user?.id;
-      const controller = showModal("flag", { model });
-      controller.set("flagTarget", new ChatMessageFlag());
-    } else {
-      this.#legacyFlag(message);
-    }
-  }
-
-  // TODO(roman): For backwards-compatibility.
-  //   Remove after the 3.0 release.
-  #legacyFlag(message) {
-    this.dialog
-      .yesNoConfirm({
-        message: I18n.t("chat.confirm_flag", {
-          username: message.user?.username,
-        }),
-        didConfirm: () => {
-          return this.chatApi.flagMessage(message.id);
-        },
-      })
-      .catch(popupAjaxError);
+    const model = message;
+    model.username = message.user?.username;
+    model.user_id = message.user?.id;
+    const controller = showModal("flag", { model });
+    controller.set("flagTarget", new ChatMessageFlag());
   }
 }

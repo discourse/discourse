@@ -20,6 +20,7 @@
   role="region"
   aria-label={{i18n "chat.aria_roles.composer"}}
   class="chat-composer {{if this.disableComposer 'is-disabled'}}"
+  {{did-update this.updateEditingMessage this.composerService.editingMessage}}
 >
   {{#if
     (and

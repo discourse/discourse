@@ -4,7 +4,6 @@ import showModal from "discourse/lib/show-modal";
 import discourseComputed, {
   afterRender,
   bind,
-  observes,
 } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";
@@ -228,9 +227,7 @@ export default Component.extend(TextareaTextManipulation, {
     this.resizeTextarea();
   },
 
-  // FIXME (martin) Is this okay to do?? Can't use didReceiveAttrs because now
-  // livePanel.composer.editingMessage is changing not a scoped attribute for this component.
-  @observes("composerService.editingMessage")
+  @action
   updateEditingMessage() {
     if (this.composerService.editingMessage && !this.loading) {
       this.set("value", this.composerService.editingMessage.message);
