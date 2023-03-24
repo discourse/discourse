@@ -141,7 +141,7 @@ export default {
           "open-popup-link",
           "btn-default",
           "btn",
-          "btn-icon-text",
+          "btn-icon",
           "btn-expand-table",
           "no-text"
         );
