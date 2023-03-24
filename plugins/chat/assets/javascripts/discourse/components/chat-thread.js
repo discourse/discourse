@@ -144,7 +144,6 @@ export default class ChatThreadPanel extends Component {
   @bind
   afterFetchCallback(channel, results) {
     const messages = [];
-    let foundFirstNew = false;
 
     results.chat_messages.forEach((messageData) => {
       // If a message has been hidden it is because the current user is ignoring
@@ -160,16 +159,6 @@ export default class ChatThreadPanel extends Component {
         messageData.expanded = !messageData.hidden;
       } else {
         messageData.expanded = !(messageData.hidden || messageData.deleted_at);
-      }
-
-      // newest has to be in after fetcg callback as we don't want to make it
-      // dynamic or it will make the pane jump around, it will disappear on reload
-      if (
-        !foundFirstNew &&
-        messageData.id > channel.currentUserMembership.last_read_message_id
-      ) {
-        foundFirstNew = true;
-        messageData.newest = true;
       }
 
       messages.push(ChatMessage.create(channel, messageData));
