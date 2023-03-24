@@ -41,18 +41,6 @@ export default Controller.extend({
     return this.siteSettings.login_required && !this.currentUser;
   },
 
-  @discourseComputed(
-    "siteSettings.bootstrap_mode_enabled",
-    "router.currentRouteName"
-  )
-  showBootstrapModeNotice(bootstrapModeEnabled, currentRouteName) {
-    return (
-      this.currentUser?.get("staff") &&
-      bootstrapModeEnabled &&
-      !currentRouteName.startsWith("wizard")
-    );
-  },
-
   @discourseComputed
   showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
