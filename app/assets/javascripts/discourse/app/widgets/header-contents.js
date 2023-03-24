@@ -3,6 +3,11 @@ import hbs from "discourse/widgets/hbs-compiler";
 
 createWidget("header-contents", {
   tagName: "div.contents.clearfix",
+  transform() {
+    return {
+      staff: this.get("currentUser.staff"),
+    };
+  },
   template: hbs`
     {{#if this.site.desktopView}}
       {{#if attrs.sidebarEnabled}}
@@ -15,7 +20,7 @@ createWidget("header-contents", {
     {{#if attrs.topic}}
       {{header-topic-info attrs=attrs}}
     {{else if this.siteSettings.bootstrap_mode_enabled}}
-      {{#if this.currentUser.staff}}
+      {{#if transformed.staff}}
         {{header-bootstrap-mode attrs=attrs}}
       {{/if}}
     {{/if}}
