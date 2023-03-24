@@ -179,7 +179,7 @@ export default {
           table.parentNode.classList.add("fullscreen-table-wrapper");
           // Create a button wrapper for case of multiple buttons (i.e. table builder extension)
           const buttonWrapper = document.createElement("div");
-          buttonWrapper.classList.add("fullscreen-table-wrapper-buttons");
+          buttonWrapper.classList.add("fullscreen-table-wrapper--buttons");
           buttonWrapper.append(popupBtn);
           popupBtn.addEventListener("click", generateModal, false);
           table.parentNode.insertBefore(buttonWrapper, table);
