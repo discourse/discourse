@@ -149,4 +149,19 @@ export default class ChatMessageActions {
       .rebakeMessage(message.channelId, message.id)
       .catch(popupAjaxError);
   }
+
+  @action
+  reply(message) {
+    this.livePanel.composerService.setReplyTo(message.id);
+  }
+
+  @action
+  edit(message) {
+    this.livePanel.composerService.editButtonClicked(message.id);
+  }
+
+  @action
+  openThread(message) {
+    this.livePanel.router.transitionTo("chat.channel.thread", message.threadId);
+  }
 }

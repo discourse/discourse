@@ -63,7 +63,10 @@ export default class ChatLivePane extends Component {
   constructor() {
     super(...arguments);
 
-    this.livePanel = new ChatLivePanel(getOwner(this));
+    this.livePanel = new ChatLivePanel(
+      getOwner(this),
+      this.chatChannelComposer
+    );
     this.messageActionsHandler = new ChatMessageActions(
       getOwner(this),
       this.livePanel,

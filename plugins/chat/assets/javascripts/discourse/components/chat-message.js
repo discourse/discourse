@@ -179,9 +179,6 @@ export default class ChatMessage extends Component {
 
   get messageActions() {
     return {
-      reply: this.reply,
-      edit: this.edit,
-      openThread: this.openThread,
       startReactionForMessageActions: this.startReactionForMessageActions,
     };
   }
@@ -465,23 +462,8 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  reply() {
-    this.args.composerService.setReplyTo(this.args.message.id);
-  }
-
-  @action
-  edit() {
-    this.args.composerService.editButtonClicked(this.args.message.id);
-  }
-
-  @action
   expand() {
     this.args.message.expanded = true;
-  }
-
-  @action
-  openThread() {
-    this.router.transitionTo("chat.channel.thread", this.args.message.threadId);
   }
 
   @action

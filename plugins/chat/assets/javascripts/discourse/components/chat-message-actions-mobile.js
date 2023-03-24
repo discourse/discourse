@@ -68,6 +68,16 @@ export default class ChatMessageActionsMobile extends Component {
       return this.#onCloseMenu();
     }
 
+    if (fnId === "edit") {
+      this.args.messageActionsHandler.edit(this.args.message);
+      return this.#onCloseMenu();
+    }
+
+    if (fnId === "openThread") {
+      this.args.messageActionsHandler.openThread(this.args.message);
+      return this.#onCloseMenu();
+    }
+
     this.args.messageActions[fnId]?.();
     this.#onCloseMenu();
   }

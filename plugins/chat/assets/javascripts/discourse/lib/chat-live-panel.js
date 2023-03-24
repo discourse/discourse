@@ -18,8 +18,9 @@ export default class ChatLivePanel {
   @tracked hoveredMessageId;
   @tracked reacting;
 
-  constructor(owner) {
+  constructor(owner, composerService) {
     setOwner(this, owner);
+    this.composerService = composerService;
   }
 
   get #model() {

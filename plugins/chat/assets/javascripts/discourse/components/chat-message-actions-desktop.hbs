@@ -37,7 +37,7 @@
     {{#if @messageCapabilities.canReply}}
       <DButton
         @class="btn-flat reply-btn"
-        @action={{@messageActions.reply}}
+        @action={{action @messageActionsHandler.reply @message}}
         @icon="reply"
         @title="chat.reply"
       />
@@ -46,7 +46,7 @@
     {{#if @messageCapabilities.hasThread}}
       <DButton
         @class="btn-flat chat-message-thread-btn"
-        @action={{@messageActions.openThread}}
+        @action={{action @messageActionsHandler.openThread @message}}
         @icon="puzzle-piece"
         @title="chat.threads.open"
       />
