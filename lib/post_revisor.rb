@@ -122,9 +122,39 @@ class PostRevisor
               diff_tags: ((tags - prev_tags) | (prev_tags - tags)),
             )
           end
+
+          if SiteSetting.create_small_action_post_for_tag_changes
+            tc.topic.add_moderator_post(
+              tc.user,
+              tags_changed_raw(previous_tags: prev_tags, tags: tags),
+              post_type: Post.types[:small_action],
+              action_code: "tags_changed",
+            )
+          end
         end
       end
     end
+  end
+
+  def self.tags_changed_raw(previous_tags:, tags:)
+    removed = previous_tags - tags
+    added = tags - previous_tags
+
+    if removed.present? && added.present?
+      I18n.t(
+        "topic_tag_changes.added_and_removed",
+        added: tag_list_to_raw(added),
+        removed: tag_list_to_raw(removed),
+      )
+    elsif added.present?
+      I18n.t("topic_tag_changes.added", added: tag_list_to_raw(added))
+    elsif removed.present?
+      I18n.t("topic_tag_changes.removed", removed: tag_list_to_raw(removed))
+    end
+  end
+
+  def self.tag_list_to_raw(tag_list)
+    tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
   end
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|

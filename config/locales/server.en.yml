@@ -61,6 +61,11 @@ en:
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
 
+  topic_tag_changes:
+    added_and_removed: "Added %{added} and removed %{removed}"
+    added: "Added %{added}"
+    removed: "Removed %{removed}"
+
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -2351,6 +2356,7 @@ en:
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
+    create_small_action_post_for_tag_changes: "Create a small action post when tags change for a topic"
 
     company_name: "Company Name"
     governing_law: "Governing Law"
