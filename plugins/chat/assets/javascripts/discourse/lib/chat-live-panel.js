@@ -87,7 +87,7 @@ export default class ChatLivePanel {
       if (
         event.type === "mouseleave" &&
         (event.toElement || event.relatedTarget)?.closest(
-          ".chat-message-actions-desktop-anchor"
+          this.messageActionsAnchorClasses.desktopAnchor
         )
       ) {
         return;
@@ -96,7 +96,7 @@ export default class ChatLivePanel {
       if (
         event.type === "mouseenter" &&
         (event.fromElement || event.relatedTarget)?.closest(
-          ".chat-message-actions-desktop-anchor"
+          this.messageActionsAnchorClasses.desktopAnchor
         )
       ) {
         this.hoveredMessageId = message?.id;
@@ -110,6 +110,24 @@ export default class ChatLivePanel {
       message,
       250
     );
+  }
+
+  messageActionsAnchors() {
+    return {
+      mobileAnchor: document.querySelector(
+        this.messageActionsAnchorClasses.mobileAnchor
+      ),
+      desktopAnchor: document.querySelector(
+        this.messageActionsAnchorClasses.desktopAnchor
+      ),
+    };
+  }
+
+  get messageActionsAnchorClasses() {
+    return {
+      mobileAnchor: ".chat-message-actions-mobile-anchor--channel",
+      desktopAnchor: ".chat-message-actions-desktop-anchor--channel",
+    };
   }
 
   @action

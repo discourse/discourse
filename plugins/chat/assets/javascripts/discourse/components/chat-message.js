@@ -64,12 +64,10 @@ export default class ChatMessage extends Component {
   @action
   setMessageActionsAnchors() {
     schedule("afterRender", () => {
-      this.chatMessageActionsDesktopAnchor = document.querySelector(
-        ".chat-message-actions-desktop-anchor"
-      );
-      this.chatMessageActionsMobileAnchor = document.querySelector(
-        ".chat-message-actions-mobile-anchor"
-      );
+      const { desktopAnchor, mobileAnchor } =
+        this.args.livePanel.messageActionsAnchors();
+      this.chatMessageActionsDesktopAnchor = desktopAnchor;
+      this.chatMessageActionsMobileAnchor = mobileAnchor;
     });
   }
 

@@ -23,7 +23,9 @@
 
   <ChatMentionWarnings />
 
-  <div class="chat-message-actions-mobile-anchor"></div>
+  <div
+    class="chat-message-actions-mobile-anchor chat-message-actions-mobile-anchor--thread"
+  ></div>
 
   <div
     class={{concat-class
@@ -44,7 +46,9 @@
     {{chat/on-scroll this.resetIdle (hash delay=500)}}
     {{chat/on-scroll this.computeArrow (hash delay=150)}}
   >
-    <div class="chat-message-actions-desktop-anchor"></div>
+    <div
+      class="chat-message-actions-desktop-anchor chat-message-actions-desktop-anchor--channel"
+    ></div>
     <div class="chat-messages-container" {{chat/on-resize this.didResizePane}}>
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
@@ -58,6 +62,7 @@
             @messageDidEnterViewport={{this.messageDidEnterViewport}}
             @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
             @messageActionsHandler={{this.messageActionsHandler}}
+            @livePanel={{this.livePanel}}
           />
         {{/each}}
       {{else}}

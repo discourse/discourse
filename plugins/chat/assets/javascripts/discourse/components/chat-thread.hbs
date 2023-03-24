@@ -36,6 +36,12 @@
     </div>
   </div>
   <div class="chat-thread__messages chat-messages-container">
+    <div
+      class="chat-message-actions-mobile-anchor chat-message-actions-mobile-anchor--thread"
+    ></div>
+    <div
+      class="chat-message-actions-desktop-anchor chat-message-actions-desktop-anchor--thread"
+    ></div>
     {{#each this.thread.messages key="id" as |message|}}
       <ChatMessage
         @message={{message}}
@@ -47,6 +53,7 @@
         @messageDidEnterViewport={{this.messageDidEnterViewport}}
         @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
         @messageActionsHandler={{this.messageActionsHandler}}
+        @livePanel={{this.livePanel}}
       />
     {{/each}}
     {{#if (or this.loading this.loadingMoreFuture)}}

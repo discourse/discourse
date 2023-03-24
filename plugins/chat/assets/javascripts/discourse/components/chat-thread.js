@@ -10,7 +10,7 @@ import { bind, debounce } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { inject as service } from "@ember/service";
 import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
-import ChatLivePanel from "discourse/plugins/chat/discourse/lib/chat-live-panel";
+import ChatThreadLivePanel from "discourse/plugins/chat/discourse/lib/chat-thread-live-panel";
 
 const PAGE_SIZE = 50;
 
@@ -29,7 +29,10 @@ export default class ChatThreadPanel extends Component {
 
   constructor() {
     super(...arguments);
-    this.livePanel = new ChatLivePanel(getOwner(this));
+    this.livePanel = new ChatThreadLivePanel(
+      getOwner(this),
+      this.chatChannelThreadComposer
+    );
     this.messageActionsHandler = new ChatMessageActions(
       getOwner(this),
       this.livePanel,

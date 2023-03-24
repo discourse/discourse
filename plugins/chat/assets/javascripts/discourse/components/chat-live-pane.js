@@ -999,53 +999,6 @@ export default class ChatLivePane extends Component {
     });
   }
 
-  @action
-  onHoverMessage(message, options = {}, event) {
-    if (this.site.mobileView && options.desktopOnly) {
-      return;
-    }
-
-    if (this.isScrolling) {
-      return;
-    }
-
-    if (message?.staged) {
-      return;
-    }
-
-    if (
-      this.hoveredMessageId &&
-      message?.id &&
-      this.hoveredMessageId === message?.id
-    ) {
-      return;
-    }
-
-    if (event) {
-      if (
-        event.type === "mouseleave" &&
-        (event.toElement || event.relatedTarget)?.closest(
-          ".chat-message-actions-desktop-anchor"
-        )
-      ) {
-        return;
-      }
-
-      if (
-        event.type === "mouseenter" &&
-        (event.fromElement || event.relatedTarget)?.closest(
-          ".chat-message-actions-desktop-anchor"
-        )
-      ) {
-        this.hoveredMessageId = message?.id;
-        return;
-      }
-    }
-
-    this.hoveredMessageId =
-      message?.id && message.id !== this.hoveredMessageId ? message.id : null;
-  }
-
   _unsubscribeToUpdates(channelId) {
     if (!channelId) {
       return;
