@@ -114,19 +114,20 @@ class PostRevisor
         DB.after_commit do
           post = tc.topic.ordered_posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
+
+          added_tags = tags - prev_tags
+          removed_tags = prev_tags - tags
+
           if !SiteSetting.disable_tags_edit_notifications
             Jobs.enqueue(
               :notify_tag_change,
               post_id: post.id,
               notified_user_ids: notified_user_ids,
-              diff_tags: ((tags - prev_tags) | (prev_tags - tags)),
+              diff_tags: (added_tags | removed_tags),
             )
           end
 
           if SiteSetting.create_small_action_post_for_tag_changes
-            added_tags = tags - prev_tags
-            removed_tags = prev_tags - tags
-
             tc.topic.add_moderator_post(
               tc.user,
               tags_changed_raw(added: added_tags, removed: removed_tags),
