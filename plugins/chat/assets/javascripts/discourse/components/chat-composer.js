@@ -80,7 +80,7 @@ export default Component.extend(TextareaTextManipulation, {
       _uploads: [],
     });
 
-    this.composerService.registerFocusHandler(() => {
+    this.composerService?.registerFocusHandler(() => {
       this._focusTextArea();
     });
   },

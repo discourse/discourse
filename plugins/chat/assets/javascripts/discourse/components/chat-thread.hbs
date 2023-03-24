@@ -46,7 +46,6 @@
         @resendStagedMessage={{this.resendStagedMessage}}
         @messageDidEnterViewport={{this.messageDidEnterViewport}}
         @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
-        @messageActions={{this.messageActions}}
         @messageActionsHandler={{this.messageActionsHandler}}
       />
     {{/each}}
@@ -62,7 +61,6 @@
     @onCancelEditing={{this.cancelEditing}}
     @onEditLastMessageRequested={{this.editLastMessageRequested}}
     @chatChannel={{this.channel}}
-    @messageActions={{this.messageActions}}
     @composerService={{this.chatChannelThreadComposer}}
   />
 </div>
