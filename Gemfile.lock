@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/discourse/mail.git
-  revision: 5b700fc95ee66378e0cf2559abc73c8bc3062a4b
-  specs:
-    mail (2.8.0.edge)
-      mini_mime (>= 0.1.1)
-
-GIT
   remote: https://github.com/rails/sprockets
   revision: f4d3dae71ef29c44b75a49cfbf8032cce07b423a
   branch: 3.x
@@ -225,6 +218,11 @@ GEM
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
     lz4-ruby (0.3.3)
+    mail (2.8.1)
+      mini_mime (>= 0.1.1)
+      net-imap
+      net-pop
+      net-smtp
     matrix (0.4.2)
     maxminddb (0.1.22)
     memory_profiler (1.0.1)
@@ -592,7 +590,7 @@ DEPENDENCIES
   loofah
   lru_redux
   lz4-ruby
-  mail!
+  mail
   maxminddb
   memory_profiler
   message_bus
