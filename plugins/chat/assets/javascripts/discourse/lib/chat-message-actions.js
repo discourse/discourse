@@ -142,4 +142,11 @@ export default class ChatMessageActions {
       .restoreMessage(message.channelId, message.id)
       .catch(popupAjaxError);
   }
+
+  @action
+  rebake(message) {
+    return this.chatApi
+      .rebakeMessage(message.channelId, message.id)
+      .catch(popupAjaxError);
+  }
 }

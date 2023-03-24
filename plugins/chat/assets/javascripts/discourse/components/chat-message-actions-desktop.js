@@ -67,6 +67,10 @@ export default class ChatMessageActionsDesktop extends Component {
       return this.args.messageActionsHandler.restore(this.args.message);
     }
 
+    if (id === "rebakeMessage") {
+      return this.args.messageActionsHandler.rebake(this.args.message);
+    }
+
     this.args.messageActions?.[id]?.();
   }
 }

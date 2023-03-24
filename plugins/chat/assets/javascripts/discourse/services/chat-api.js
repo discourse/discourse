@@ -334,7 +334,7 @@ export default class ChatApi extends Service {
   }
 
   /**
-   * Deletes a single chat message for a channel.
+   * Deletes a single chat message in a channel.
    *
    * @param {number} channelId - The ID of the channel for the message being deleted.
    * @param {number} messageId - The ID of the message being deleted.
@@ -347,7 +347,7 @@ export default class ChatApi extends Service {
   }
 
   /**
-   * Restores a single deleted chat message for a channel.
+   * Restores a single deleted chat message in a channel.
    *
    * @param {number} channelId - The ID of the channel for the message being restored.
    * @param {number} messageId - The ID of the message being restored.
@@ -355,6 +355,19 @@ export default class ChatApi extends Service {
   restoreMessage(channelId, messageId) {
     // TODO (martin) Not ideal, this should have a chat API controller endpoint.
     return ajax(`/chat/${channelId}/restore/${messageId}`, {
+      type: "PUT",
+    });
+  }
+
+  /**
+   * Rebakes the cooked HTML of a single message in a channel.
+   *
+   * @param {number} channelId - The ID of the channel for the message being restored.
+   * @param {number} messageId - The ID of the message being restored.
+   */
+  rebakeMessage(channelId, messageId) {
+    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
+    return ajax(`/chat/${channelId}/${messageId}/rebake`, {
       type: "PUT",
     });
   }

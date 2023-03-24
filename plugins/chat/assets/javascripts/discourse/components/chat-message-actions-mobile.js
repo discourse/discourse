@@ -63,6 +63,11 @@ export default class ChatMessageActionsMobile extends Component {
       return this.#onCloseMenu();
     }
 
+    if (fnId === "rebakeMessage") {
+      this.args.messageActionsHandler.rebake(this.args.message);
+      return this.#onCloseMenu();
+    }
+
     this.args.messageActions[fnId]?.();
     this.#onCloseMenu();
   }

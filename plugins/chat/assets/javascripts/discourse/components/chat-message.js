@@ -10,7 +10,6 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { tracked } from "@glimmer/tracking";
@@ -182,7 +181,6 @@ export default class ChatMessage extends Component {
     return {
       reply: this.reply,
       edit: this.edit,
-      rebakeMessage: this.rebakeMessage,
       openThread: this.openThread,
       startReactionForMessageActions: this.startReactionForMessageActions,
     };
@@ -484,16 +482,6 @@ export default class ChatMessage extends Component {
   @action
   openThread() {
     this.router.transitionTo("chat.channel.thread", this.args.message.threadId);
-  }
-
-  @action
-  rebakeMessage() {
-    return ajax(
-      `/chat/${this.args.message.channelId}/${this.args.message.id}/rebake`,
-      {
-        type: "PUT",
-      }
-    ).catch(popupAjaxError);
   }
 
   @action
