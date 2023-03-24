@@ -17,6 +17,7 @@ import TopicFixtures from "discourse/tests/fixtures/topic";
 import { Promise } from "rsvp";
 import { later } from "@ember/runloop";
 import I18n from "I18n";
+import DButton from "discourse/components/d-button";
 
 acceptance("User menu", function (needs) {
   needs.user({
@@ -178,7 +179,7 @@ acceptance("User menu", function (needs) {
           }
 
           get panelComponent() {
-            return "d-button";
+            return DButton;
           }
 
           get title() {
@@ -246,7 +247,7 @@ acceptance("User menu", function (needs) {
           }
 
           get panelComponent() {
-            return "d-button";
+            return DButton;
           }
         };
       });
@@ -266,7 +267,7 @@ acceptance("User menu", function (needs) {
           }
 
           get panelComponent() {
-            return "d-button";
+            return DButton;
           }
         };
       });
@@ -680,7 +681,7 @@ acceptance("User menu", function (needs) {
           }
 
           get panelComponent() {
-            return "d-button";
+            return DButton;
           }
 
           get linkWhenActive() {
@@ -700,7 +701,7 @@ acceptance("User menu", function (needs) {
           }
 
           get panelComponent() {
-            return "d-button";
+            return DButton;
           }
         };
       });
