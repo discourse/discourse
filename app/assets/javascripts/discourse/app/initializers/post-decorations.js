@@ -141,16 +141,15 @@ export default {
           "open-popup-link",
           "btn-default",
           "btn",
-          "btn-icon-text",
-          "btn-expand-table"
+          "btn-icon",
+          "btn-expand-table",
+          "no-text"
         );
         const expandIcon = create(
           iconNode("discourse-expand", { class: "expand-table-icon" })
         );
-        const openPopupText = document.createTextNode(
-          I18n.t("fullscreen_table.expand_btn")
-        );
-        openPopupBtn.append(expandIcon, openPopupText);
+        openPopupBtn.title = I18n.t("fullscreen_table.expand_btn");
+        openPopupBtn.append(expandIcon);
         return openPopupBtn;
       }
 
