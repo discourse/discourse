@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
-import { isTesting } from "discourse-common/config/environment";
+import discourseLater from "discourse-common/lib/later";
 
 export default class SectionLink {
   @tracked linkDragCss;
@@ -27,17 +27,14 @@ export default class SectionLink {
     // 0 represents left button of the mouse
     if (event.button === 0) {
       this.willDrag = true;
-      setTimeout(
-        () => {
-          this.delayedStart(event);
-        },
-        isTesting() ? 0 : 300
-      );
+      discourseLater(() => {
+        this.delayedStart(event);
+      }, 300);
     }
   }
   delayedStart(event) {
     if (this.willDrag) {
-      this.mouseY = event.screenY;
+      this.mouseY = event.y;
       this.linkDragCss = "drag";
       this.section.disable();
       this.drag = true;
@@ -59,7 +56,7 @@ export default class SectionLink {
     if (!this.drag) {
       return;
     }
-    const currentMouseY = event.screenY;
+    const currentMouseY = event.y;
     const distance = currentMouseY - this.mouseY;
     if (!this.linkHeight) {
       this.linkHeight = document.getElementsByClassName(
