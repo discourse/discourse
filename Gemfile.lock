@@ -445,7 +445,7 @@ GEM
     sass-embedded (1.59.3)
       google-protobuf (~> 3.21)
       rake (>= 10.0.0)
-    sass-embedded (1.59.3-aarch64-linux)
+    sass-embedded (1.59.3-aarch64-linux-gnu)
       google-protobuf (~> 3.21)
     sass-embedded (1.59.3-arm64-darwin)
       google-protobuf (~> 3.21)
