@@ -17,13 +17,13 @@ acceptance("Post Table Wrapper Test", function () {
 
     assert.ok(
       exists(
-        `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper-buttons .open-popup-link`
+        `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper--buttons .open-popup-link`
       ),
       "buttons for the table wrapper appear inside a separate div"
     );
 
     const fullscreenButtonWrapper = query(
-      `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper-buttons`
+      `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper--buttons`
     );
 
     assert.strictEqual(
