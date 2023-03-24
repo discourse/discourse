@@ -334,19 +334,28 @@ export default class ChatApi extends Service {
   }
 
   /**
-   * Flags a chat message with the notify_moderators flag type.
+   * Deletes a single chat message for a channel.
    *
-   * LEGACY: This will be deprecated post-3.0
-   * TODO (roman)
+   * @param {number} channelId - The ID of the channel for the message being deleted.
+   * @param {number} messageId - The ID of the message being deleted.
    */
-  flagMessage(messageId) {
+  deleteMessage(channelId, messageId) {
     // TODO (martin) Not ideal, this should have a chat API controller endpoint.
-    return ajax("/chat/flag", {
-      method: "PUT",
-      data: {
-        chat_message_id: messageId,
-        flag_type_id: 7, // notify_moderators
-      },
+    return ajax(`/chat/${channelId}/${messageId}`, {
+      type: "DELETE",
+    });
+  }
+
+  /**
+   * Restores a single deleted chat message for a channel.
+   *
+   * @param {number} channelId - The ID of the channel for the message being restored.
+   * @param {number} messageId - The ID of the message being restored.
+   */
+  restoreMessage(channelId, messageId) {
+    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
+    return ajax(`/chat/${channelId}/restore/${messageId}`, {
+      type: "PUT",
     });
   }
 

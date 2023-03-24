@@ -27,12 +27,12 @@ export default class ChatMessageActions {
     this.currentUser = currentUser;
   }
 
-  selectMessage(message, checked = true) {
+  select(message, checked = true) {
     message.selected = checked;
     this.livePanel.onSelectMessage(message);
   }
 
-  bulkSelectMessages(message, checked) {
+  bulkSelect(message, checked) {
     const lastSelectedIndex = this.livePanel.findIndexOfMessage(
       this.livePanel.lastSelectedMessage
     );
@@ -127,5 +127,19 @@ export default class ChatMessageActions {
     model.user_id = message.user?.id;
     const controller = showModal("flag", { model });
     controller.set("flagTarget", new ChatMessageFlag());
+  }
+
+  @action
+  delete(message) {
+    return this.chatApi
+      .deleteMessage(message.channelId, message.id)
+      .catch(popupAjaxError);
+  }
+
+  @action
+  restore(message) {
+    return this.chatApi
+      .restoreMessage(message.channelId, message.id)
+      .catch(popupAjaxError);
   }
 }

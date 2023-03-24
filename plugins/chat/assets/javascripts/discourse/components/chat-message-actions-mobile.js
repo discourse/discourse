@@ -44,12 +44,22 @@ export default class ChatMessageActionsMobile extends Component {
     }
 
     if (fnId === "selectMessage") {
-      this.args.messageActionsHandler.selectMessage(this.args.message);
+      this.args.messageActionsHandler.select(this.args.message);
       return this.#onCloseMenu();
     }
 
     if (fnId === "toggleBookmark") {
-      return this.args.messageActionsHandler.toggleBookmark(this.args.message);
+      this.args.messageActionsHandler.toggleBookmark(this.args.message);
+      return this.#onCloseMenu();
+    }
+
+    if (fnId === "deleteMessage") {
+      this.args.messageActionsHandler.delete(this.args.message);
+      return this.#onCloseMenu();
+    }
+
+    if (fnId === "restore") {
+      this.args.messageActionsHandler.restore(this.args.message);
       return this.#onCloseMenu();
     }
 
@@ -69,6 +79,7 @@ export default class ChatMessageActionsMobile extends Component {
 
       // by ensuring we are not hovering any message anymore
       // we also ensure the menu is fully removed
+
       this.args.onHoverMessage?.(null);
     }, 200);
   }

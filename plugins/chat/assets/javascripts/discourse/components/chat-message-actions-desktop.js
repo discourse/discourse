@@ -52,11 +52,19 @@ export default class ChatMessageActionsDesktop extends Component {
     }
 
     if (id === "selectMessage") {
-      return this.args.messageActionsHandler.selectMessage(this.args.message);
+      return this.args.messageActionsHandler.select(this.args.message);
     }
 
     if (id === "flag") {
       return this.args.messageActionsHandler.flag(this.args.message);
+    }
+
+    if (id === "deleteMessage") {
+      return this.args.messageActionsHandler.delete(this.args.message);
+    }
+
+    if (id === "restore") {
+      return this.args.messageActionsHandler.restore(this.args.message);
     }
 
     this.args.messageActions?.[id]?.();

@@ -182,8 +182,6 @@ export default class ChatMessage extends Component {
     return {
       reply: this.reply,
       edit: this.edit,
-      deleteMessage: this.deleteMessage,
-      restore: this.restore,
       rebakeMessage: this.rebakeMessage,
       openThread: this.openThread,
       startReactionForMessageActions: this.startReactionForMessageActions,
@@ -484,16 +482,6 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  restore() {
-    return ajax(
-      `/chat/${this.args.message.channelId}/restore/${this.args.message.id}`,
-      {
-        type: "PUT",
-      }
-    ).catch(popupAjaxError);
-  }
-
-  @action
   openThread() {
     this.router.transitionTo("chat.channel.thread", this.args.message.threadId);
   }
@@ -509,25 +497,15 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  deleteMessage() {
-    return ajax(
-      `/chat/${this.args.message.channelId}/${this.args.message.id}`,
-      {
-        type: "DELETE",
-      }
-    ).catch(popupAjaxError);
-  }
-
-  @action
   toggleChecked(event) {
     if (event.shiftKey) {
-      this.args.messageActionsHandler.bulkSelectMessages(
+      this.args.messageActionsHandler.bulkSelect(
         this.args.message,
         event.target.checked
       );
     }
 
-    this.args.messageActionsHandler.selectMessage(
+    this.args.messageActionsHandler.bulkSelect(
       this.args.message,
       event.target.checked
     );
