@@ -260,19 +260,31 @@ table.api-keys {
   .instructions {
     margin-top: 5px;
   }
+
   .subscription-choice {
     margin-bottom: 10px;
+
+    label {
+      display: inline-block;
+    }
   }
 }
 
-.web-hook-direction {
-  a,
-  button {
-    margin-right: 10px;
-  }
+.admin-webhooks__summary {
+  margin-bottom: 1rem;
+}
+
+.admin-webhooks__edit-button,
+.admin-webhooks__delete-button {
+  font-size: var(--font-0-rem);
 }
 
 .web-hook-events {
+  .heading-container {
+    width: 100%;
+    background-color: var(--primary-low);
+  }
+
   li {
     padding: 2px 0;
   }
@@ -282,6 +294,13 @@ table.api-keys {
     vertical-align: top;
     overflow-y: auto;
     overflow-x: hidden;
+  }
+  .col.heading {
+    font-weight: bold;
+    padding: 4px 0;
+  }
+  .col.heading.actions {
+    padding: 4px 0;
   }
   .col.first {
     width: 90px;
@@ -296,18 +315,14 @@ table.api-keys {
     width: 250px;
   }
   .col.actions {
-    width: 455px;
     padding-top: 0;
     a {
       text-decoration: underline;
     }
   }
-  .col.heading.actions {
-    padding: 4px 0;
-  }
   .details {
     display: block;
-    margin-top: 10px;
+    margin-top: 1rem;
   }
   label {
     font-size: var(--font-0);
@@ -317,10 +332,13 @@ table.api-keys {
   }
 }
 
+.webhook-events__ping-button {
+  margin-bottom: 1rem;
+}
+
 .web-hook-events-listing {
-  margin-top: 15px;
   .alert {
-    margin: 15px 0 0 0;
+    margin: 0;
   }
 }
 

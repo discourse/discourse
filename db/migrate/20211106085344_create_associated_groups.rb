@@ -10,6 +10,9 @@ class CreateAssociatedGroups < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    add_index :associated_groups, %i[provider_name provider_id], unique: true, name: 'associated_groups_provider_id'
+    add_index :associated_groups,
+              %i[provider_name provider_id],
+              unique: true,
+              name: "associated_groups_provider_id"
   end
 end

@@ -7,20 +7,19 @@ import { action } from "@ember/object";
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default Controller.extend({
-  queryParams: [{ sidebarQueryParamOverride: "enable_sidebar" }],
+  queryParams: [{ navigationMenuQueryParamOverride: "navigation_menu" }],
 
   showTop: true,
   showFooter: false,
   router: service(),
   showSidebar: false,
-  sidebarQueryParamOverride: null,
+  navigationMenuQueryParamOverride: null,
   sidebarDisabledRouteOverride: false,
   showSiteHeader: true,
 
   init() {
     this._super(...arguments);
-    this.showSidebar =
-      this.canDisplaySidebar && !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
+    this.showSidebar = this.calculateShowSidebar();
   },
 
   @discourseComputed
@@ -42,18 +41,6 @@ export default Controller.extend({
     return this.siteSettings.login_required && !this.currentUser;
   },
 
-  @discourseComputed(
-    "siteSettings.bootstrap_mode_enabled",
-    "router.currentRouteName"
-  )
-  showBootstrapModeNotice(bootstrapModeEnabled, currentRouteName) {
-    return (
-      this.currentUser?.get("staff") &&
-      bootstrapModeEnabled &&
-      !currentRouteName.startsWith("wizard")
-    );
-  },
-
   @discourseComputed
   showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
@@ -64,14 +51,14 @@ export default Controller.extend({
   },
 
   @discourseComputed(
-    "sidebarQueryParamOverride",
-    "siteSettings.enable_sidebar",
+    "navigationMenuQueryParamOverride",
+    "siteSettings.navigation_menu",
     "canDisplaySidebar",
     "sidebarDisabledRouteOverride"
   )
   sidebarEnabled(
-    sidebarQueryParamOverride,
-    enableSidebar,
+    navigationMenuQueryParamOverride,
+    navigationMenu,
     canDisplaySidebar,
     sidebarDisabledRouteOverride
   ) {
@@ -83,11 +70,14 @@ export default Controller.extend({
       return false;
     }
 
-    if (sidebarQueryParamOverride === "1") {
+    if (navigationMenuQueryParamOverride === "sidebar") {
       return true;
     }
 
-    if (sidebarQueryParamOverride === "0") {
+    if (
+      navigationMenuQueryParamOverride === "legacy" ||
+      navigationMenuQueryParamOverride === "header_dropdown"
+    ) {
       return false;
     }
 
@@ -96,7 +86,15 @@ export default Controller.extend({
       return false;
     }
 
-    return enableSidebar;
+    return navigationMenu === "sidebar";
+  },
+
+  calculateShowSidebar() {
+    return (
+      this.canDisplaySidebar &&
+      !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY) &&
+      !this.site.narrowDesktopView
+    );
   },
 
   @action

@@ -21,6 +21,7 @@
   font-weight: normal;
   color: $text-color;
   background: $bg-color;
+  border-radius: var(--d-button-border-radius);
   cursor: pointer;
   transition: all 0.25s;
   .d-icon {
@@ -178,6 +179,7 @@
   color: #000;
   background: #fff;
   border: 1px solid transparent;
+  border-radius: var(--d-border-radius);
   &:hover,
   &:focus {
     box-shadow: shadow("card");
@@ -337,9 +339,25 @@
   border: 0;
   padding: 0;
   color: var(--tertiary);
+  .discourse-no-touch & {
+    &:hover {
+      color: var(--tertiary);
+      background: transparent;
+    }
+  }
+  &:focus {
+    color: var(--tertiary);
+    background: transparent;
+  }
+  &:focus-visible {
+    color: var(--tertiary);
+    background: transparent;
+    @include default-focus;
+  }
 }
 
 .btn-mini-toggle {
+  border-radius: var(--d-border-radius);
   padding: 0.4em 0.467em;
   .d-icon {
     color: var(--primary-high);

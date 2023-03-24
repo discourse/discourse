@@ -1,0 +1,47 @@
+.user-tip {
+  z-index: z("composer", "content") - 1;
+}
+
+.user-tip-container {
+  min-width: 300px;
+  padding: 0.5em;
+  text-align: left;
+
+  .user-tip-title {
+    font-size: $font-up-2;
+    font-weight: bold;
+  }
+
+  .user-tip-content {
+    margin-top: 0.25em;
+  }
+
+  .user-tip-buttons {
+    margin-top: 1em;
+  }
+}
+
+.tippy-box[data-theme~="user-tips"][data-placement^="left"]
+  > .tippy-svg-arrow
+  > svg {
+  left: 11px;
+}
+
+.tippy-box[data-theme~="user-tips"][data-placement^="top"]
+  > .tippy-svg-arrow
+  > svg {
+  top: 11px;
+}
+
+.tippy-box[data-theme~="user-tips"][data-placement^="bottom"]
+  > .tippy-svg-arrow
+  > svg {
+  top: -13px;
+  left: -1px;
+}
+
+.tippy-box[data-theme~="user-tips"] > .tippy-svg-arrow:after,
+.tippy-box[data-theme~="user-tips"] > .tippy-svg-arrow > svg {
+  width: 18px;
+  height: 18px;
+}

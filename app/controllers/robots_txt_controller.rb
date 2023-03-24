@@ -7,7 +7,7 @@ class RobotsTxtController < ApplicationController
   OVERRIDDEN_HEADER = "# This robots.txt file has been customized at /admin/customize/robots\n"
 
   # NOTE: order is important!
-  DISALLOWED_PATHS ||= %w{
+  DISALLOWED_PATHS ||= %w[
     /admin/
     /auth/
     /assets/browser-update*.js
@@ -16,18 +16,9 @@ class RobotsTxtController < ApplicationController
     /user-api-key
     /*?api_key*
     /*?*api_key*
-  }
+  ]
 
-  DISALLOWED_WITH_HEADER_PATHS ||= %w{
-    /badges
-    /u/
-    /my
-    /search
-    /tag/*/l
-    /g
-    /t/*/*.rss
-    /c/*.rss
-  }
+  DISALLOWED_WITH_HEADER_PATHS ||= %w[/badges /u/ /my /search /tag/*/l /g /t/*/*.rss /c/*.rss]
 
   def index
     if (overridden = SiteSetting.overridden_robots_txt.dup).present?
@@ -37,9 +28,9 @@ class RobotsTxtController < ApplicationController
     end
     if SiteSetting.allow_index_in_robots_txt?
       @robots_info = self.class.fetch_default_robots_info
-      render :index, content_type: 'text/plain'
+      render :index, content_type: "text/plain"
     else
-      render :no_index, content_type: 'text/plain'
+      render :no_index, content_type: "text/plain"
     end
   end
 
@@ -56,32 +47,37 @@ class RobotsTxtController < ApplicationController
 
   def self.fetch_default_robots_info
     deny_paths_googlebot = DISALLOWED_PATHS.map { |p| Discourse.base_path + p }
-    deny_paths = deny_paths_googlebot + DISALLOWED_WITH_HEADER_PATHS.map { |p| Discourse.base_path + p }
-    deny_all = [ "#{Discourse.base_path}/" ]
+    deny_paths =
+      deny_paths_googlebot + DISALLOWED_WITH_HEADER_PATHS.map { |p| Discourse.base_path + p }
+    deny_all = ["#{Discourse.base_path}/"]
 
     result = {
-      header: "# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file",
-      agents: []
+      header:
+        "# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file",
+      agents: [],
     }
 
     if SiteSetting.allowed_crawler_user_agents.present?
-      SiteSetting.allowed_crawler_user_agents.split('|').each do |agent|
-        paths = agent == "Googlebot" ? deny_paths_googlebot : deny_paths
-        result[:agents] << { name: agent, disallow: paths }
-      end
-
-      result[:agents] << { name: '*', disallow: deny_all }
-    else
-
-      if SiteSetting.blocked_crawler_user_agents.present?
-        SiteSetting.blocked_crawler_user_agents.split('|').each do |agent|
-          result[:agents] << { name: agent, disallow: deny_all }
+      SiteSetting
+        .allowed_crawler_user_agents
+        .split("|")
+        .each do |agent|
+          paths = agent == "Googlebot" ? deny_paths_googlebot : deny_paths
+          result[:agents] << { name: agent, disallow: paths }
         end
+
+      result[:agents] << { name: "*", disallow: deny_all }
+    else
+      if SiteSetting.blocked_crawler_user_agents.present?
+        SiteSetting
+          .blocked_crawler_user_agents
+          .split("|")
+          .each { |agent| result[:agents] << { name: agent, disallow: deny_all } }
       end
 
-      result[:agents] << { name: '*', disallow: deny_paths }
+      result[:agents] << { name: "*", disallow: deny_paths }
 
-      result[:agents] << { name: 'Googlebot', disallow: deny_paths_googlebot }
+      result[:agents] << { name: "Googlebot", disallow: deny_paths_googlebot }
     end
 
     DiscourseEvent.trigger(:robots_info, result)

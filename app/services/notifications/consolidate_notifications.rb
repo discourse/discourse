@@ -34,7 +34,14 @@
 
 module Notifications
   class ConsolidateNotifications < ConsolidationPlan
-    def initialize(from:, to:, consolidation_window: nil, unconsolidated_query_blk: nil, consolidated_query_blk: nil, threshold:)
+    def initialize(
+      from:,
+      to:,
+      consolidation_window: nil,
+      unconsolidated_query_blk: nil,
+      consolidated_query_blk: nil,
+      threshold:
+    )
       @from = from
       @to = to
       @threshold = threshold
@@ -67,15 +74,21 @@ module Notifications
       return unless can_consolidate_data?(notification)
 
       update_consolidated_notification!(notification) ||
-      create_consolidated_notification!(notification) ||
-      notification.tap(&:save!)
+        create_consolidated_notification!(notification) || notification.tap(&:save!)
     end
 
     private
 
     attr_reader(
-      :notification, :from, :to, :data, :threshold, :consolidated_query_blk,
-      :unconsolidated_query_blk, :consolidation_window, :bump_notification
+      :notification,
+      :from,
+      :to,
+      :data,
+      :threshold,
+      :consolidated_query_blk,
+      :unconsolidated_query_blk,
+      :consolidation_window,
+      :bump_notification,
     )
 
     def update_consolidated_notification!(notification)
@@ -90,18 +103,12 @@ module Notifications
       data_hash = consolidated.data_hash.merge(data)
       data_hash[:count] += 1 if data_hash[:count].present?
 
-      if @before_update_blk
-        @before_update_blk.call(consolidated, data_hash, notification)
-      end
+      @before_update_blk.call(consolidated, data_hash, notification) if @before_update_blk
 
       # Hack: We don't want to cache the old data if we're about to update it.
       consolidated.instance_variable_set(:@data_hash, nil)
 
-      consolidated.update!(
-        data: data_hash.to_json,
-        read: false,
-        updated_at: timestamp,
-      )
+      consolidated.update!(data: data_hash.to_json, read: false, updated_at: timestamp)
 
       consolidated
     end
@@ -119,22 +126,21 @@ module Notifications
       timestamp = notifications.last.created_at
       data[:count] = count_after_saving_notification
 
-      if @before_consolidation_blk
-        @before_consolidation_blk.call(notifications, data)
-      end
+      @before_consolidation_blk.call(notifications, data) if @before_consolidation_blk
 
       consolidated = nil
 
       Notification.transaction do
         notifications.destroy_all
 
-        consolidated = Notification.create!(
-          notification_type: to,
-          user_id: notification.user_id,
-          data: data.to_json,
-          updated_at: timestamp,
-          created_at: timestamp
-        )
+        consolidated =
+          Notification.create!(
+            notification_type: to,
+            user_id: notification.user_id,
+            data: data.to_json,
+            updated_at: timestamp,
+            created_at: timestamp,
+          )
       end
 
       consolidated
@@ -148,7 +154,7 @@ module Notifications
       notifications = super(notification, type)
 
       if consolidation_window.present?
-        notifications = notifications.where('created_at > ?', consolidation_window.ago)
+        notifications = notifications.where("created_at > ?", consolidation_window.ago)
       end
 
       notifications

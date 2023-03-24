@@ -55,10 +55,14 @@ import { addNavItem } from "discourse/models/nav-item";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { addPluginReviewableParam } from "discourse/components/reviewable-item";
-import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import {
+  addComposerSaveErrorCallback,
+  addPopupMenuOptionsCallback,
+} from "discourse/controllers/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
+  addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
@@ -100,17 +104,19 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { registerCustomCountable as registerUserCategorySectionLinkCountable } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
-import { registerHashtagSearchParam } from "discourse/lib/hashtag-autocomplete";
+import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.4.0";
+const PLUGIN_API_VERSION = "1.6.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -225,7 +231,15 @@ class PluginApi {
 
     if (canModify(klass, "member", resolverName, changes)) {
       delete changes.pluginId;
-      klass.class.reopen(changes);
+
+      if (klass.class.reopen) {
+        klass.class.reopen(changes);
+      } else {
+        Object.defineProperties(
+          klass.class.prototype || klass.class,
+          Object.getOwnPropertyDescriptors(changes)
+        );
+      }
     }
 
     return klass;
@@ -498,7 +512,7 @@ class PluginApi {
     ) {
       const siteSettings = this.container.lookup("service:site-settings");
 
-      if (siteSettings.enable_experimental_sidebar_hamburger) {
+      if (siteSettings.navigation_menu !== "legacy") {
         try {
           const { href, route, label, rawLabel, className } = fn();
           const textContent = rawLabel || I18n.t(label);
@@ -523,7 +537,8 @@ class PluginApi {
           this.addCommunitySectionLink(args, name.match(/footerLinks/));
         } catch {
           deprecated(
-            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`
+            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`navigation_menu\` site setting when not set to "legacy". Please use \`api.addCommunitySectionLink\` instead.`,
+            { id: "discourse.decorate-widget.hamburger-widget-links" }
           );
         }
 
@@ -790,7 +805,8 @@ class PluginApi {
 
   addFlagProperty() {
     deprecated(
-      "addFlagProperty has been removed. Use the reviewable API instead."
+      "addFlagProperty has been removed. Use the reviewable API instead.",
+      { id: "discourse.add-flag-property" }
     );
   }
 
@@ -917,6 +933,22 @@ class PluginApi {
    **/
   addGroupPostSmallActionCode(actionCode) {
     addGroupPostSmallActionCode(actionCode);
+  }
+
+  /**
+   * Adds a callback to be called before rendering any small action post
+   * that returns custom classes to add to the small action post
+   *
+   * ```javascript
+   * addPostSmallActionClassesCallback(post => {
+   *   if (post.actionCode.includes("group")) {
+   *     return ["group-small-post"];
+   *   }
+   * });
+   * ```
+   **/
+  addPostSmallActionClassesCallback(callback) {
+    addPostSmallActionClassesCallback(callback);
   }
 
   /**
@@ -1235,6 +1267,27 @@ class PluginApi {
    */
   composerBeforeSave(method) {
     Composer.reopen({ beforeSave: method });
+  }
+
+  /**
+   * Registers a callback function to handle the composer save errors.
+   * This allows you to implement custom logic that will happen before
+   * the raw error is presented to the user.
+   * The passed function is expected to return true if the error was handled,
+   * false otherwise.
+   *
+   * Example:
+   *
+   * api.addComposerSaveErrorCallback((error) => {
+   *   if (error == "my_error") {
+   *      //handle error
+   *      return true;
+   *   }
+   *   return false;
+   * })
+   */
+  addComposerSaveErrorCallback(callback) {
+    addComposerSaveErrorCallback(callback);
   }
 
   /**
@@ -1760,6 +1813,87 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
+   * Registers a new countable for section links under Sidebar Categories section on top of the default countables of
+   * unread topics count and new topics count.
+   *
+   * ```
+   * api.registerUserCategorySectionLinkCountable({
+   *   badgeTextFunction: (count) => {
+   *     return I18n.t("custom.open_count", count: count");
+   *   },
+   *   route: "discovery.openCategory",
+   *   shouldRegister: ({ category } => {
+   *     return category.custom_fields.enable_open_topics_count;
+   *   }),
+   *   refreshCountFunction: ({ _topicTrackingState, category } => {
+   *     return category.open_topics_count;
+   *   }),
+   *   prioritizeDefaults: ({ currentUser, category } => {
+   *     return category.custom_fields.show_open_topics_count_first;
+   *   })
+   * })
+   * ```
+   *
+   * @callback badgeTextFunction
+   * @param {Integer} count - The count as given by the `refreshCountFunction`.
+   * @returns {String} - Text for the badge displayed in the section link.
+   *
+   * @callback shouldRegister
+   * @param {Object} arg
+   * @param {Category} arg.category - The category model for the sidebar section link.
+   * @returns {Boolean} - Whether the countable should be registered for the sidebar section link.
+   *
+   * @callback refreshCountFunction
+   * @param {Object} arg
+   * @param {Category} arg.category - The category model for the sidebar section link.
+   * @returns {integer} - The value used to set the property for the count.
+   *
+   * @callback prioritizeOverDefaults
+   * @param {Object} arg
+   * @param {Category} arg.category - The category model for the sidebar section link.
+   * @param {User} arg.currentUser - The user model for the current user.
+   * @returns {boolean} - Whether the countable should be prioritized over the defaults.
+   *
+   * @param {Object} arg - An object
+   * @param {string} arg.badgeTextFunction - Function used to generate the text for the badge displayed in the section link.
+   * @param {string} arg.route - The Ember route name to generate the href attribute for the link.
+   * @param {Object=} arg.routeQuery - Object representing the query params that should be appended to the route generated.
+   * @param {shouldRegister} arg.shouldRegister - Function used to determine if the countable should be registered for the category.
+   * @param {refreshCountFunction} arg.refreshCountFunction - Function used to calculate the value used to set the property for the count whenever the sidebar section link refreshes.
+   * @param {prioritizeOverDefaults} args.prioritizeOverDefaults - Function used to determine whether the countable should be prioritized over the default countables of unread/new.
+   */
+  registerUserCategorySectionLinkCountable({
+    badgeTextFunction,
+    route,
+    routeQuery,
+    shouldRegister,
+    refreshCountFunction,
+    prioritizeOverDefaults,
+  }) {
+    registerUserCategorySectionLinkCountable({
+      badgeTextFunction,
+      route,
+      routeQuery,
+      shouldRegister,
+      refreshCountFunction,
+      prioritizeOverDefaults,
+    });
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Triggers a refresh of the counts for all category section links under the categories section for a logged in user.
+   */
+  refreshUserSidebarCategoriesSectionCounts() {
+    const appEvents = this._lookupContainer("service:app-events");
+
+    appEvents?.trigger(
+      REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME
+    );
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
    * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
    * class interface. See `lib/sidebar/user/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
    * interface.
@@ -1922,9 +2056,9 @@ class PluginApi {
    * ```
    * api.registerUserMenuTab((UserMenuTab) => {
    *   return class extends UserMenuTab {
-   *     get id() {
-   *       return "custom-tab-id";
-   *     }
+   *     id = "custom-tab-id";
+   *     panelComponent = MyCustomPanelGlimmerComponent;
+   *     icon = "some-fa5-icon";
    *
    *     get shouldDisplay() {
    *       return this.siteSettings.enable_custom_tab && this.currentUser.admin;
@@ -1932,14 +2066,6 @@ class PluginApi {
    *
    *     get count() {
    *       return this.currentUser.my_custom_notification_count;
-   *     }
-   *
-   *     get panelComponent() {
-   *       return "your-custom-glimmer-component";
-   *     }
-   *
-   *     get icon() {
-   *       return "some-fa5-icon";
    *     }
    *   }
    * });
@@ -1988,31 +2114,15 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
+   * Adds a row to the dropdown used on the `userPrivateMessages` route used to navigate between the different user
+   * messages pages.
    *
-   * When initiating a search inside the composer or other designated inputs
-   * with the `#` key, we search records based on params registered with
-   * this function, and order them by type using the priority here. Since
-   * there can be many different inputs that use `#` and some may need to
-   * weight different types higher in priority, we also require a context
-   * parameter.
-   *
-   * For example, the topic composer may wish to search for categories
-   * and tags, with categories appearing first in the results. The usage
-   * looks like this:
-   *
-   * api.registerHashtagSearchParam("category", "topic-composer", 100);
-   * api.registerHashtagSearchParam("tag", "topic-composer", 50);
-   *
-   * Additional types of records used for the hashtag search results
-   * can be registered via the #register_hashtag_data_source plugin API
-   * method.
-   *
-   * @param {string} param - The type of record to be fetched.
-   * @param {string} context - Where the hashtag search is being initiated using `#`
-   * @param {number} priority - Used for ordering types of records. Priority order is descending.
+   * @param {string} routeName The Ember route name to transition to when the row is selected in the dropdown
+   * @param {string} name The text displayed to represent the row in the dropdown
+   * @param {string} [icon] The name of the icon that will be used when displaying the row in the dropdown
    */
-  registerHashtagSearchParam(param, context, priority) {
-    registerHashtagSearchParam(param, context, priority);
+  addUserMessagesNavigationDropdownRow(routeName, name, icon) {
+    registerCustomUserNavMessagesDropdownRow(routeName, name, icon);
   }
 }
 

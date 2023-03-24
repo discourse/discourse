@@ -1,0 +1,336 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  js:
+    admin:
+      site_settings:
+        categories:
+          chat: گفتگو
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "وضعیت کانال گفتگو تغییر کرد"
+            chat_channel_delete: "کانال گفتگو حذف شد"
+    about:
+      chat_messages_count: "پیام‌های گفتگو"
+      chat_channels_count: "کانال‌های گفتگو"
+      chat_users_count: "کاربران گفتگو"
+    chat:
+      dates:
+        time_tiny: "HH:mm"
+      all_loaded: "نمایش همه پیام‌ها"
+      already_enabled: "گفتگو در حال حاضر در این موضوع فعال شده است. لطفا صفحه جاری را تازه‌سازی کنید."
+      disabled_for_topic: "گفتگو در این موضوع غیرفعال است."
+      bot: "ربات"
+      create: "ایجاد"
+      cancel: "انصراف"
+      cancel_reply: "لغو پاسخ"
+      chat_channels: "کانال‌ها"
+      browse_all_channels: "مرور همه کانال‌ها"
+      move_to_channel:
+        title: "انتقال پیام‌ها به کانال"
+        confirm_move: "انتقال پیام‌ها"
+      channel_settings:
+        title: "تنظیمات کانال"
+        edit: "ویرایش"
+        add: "اضافه کردن"
+        close_channel: "بستن کانال"
+        open_channel: "باز کردن کانال"
+        archive_channel: "بایگانی کانال"
+        delete_channel: "حذف کانال"
+        join_channel: "پیوستن به کانال"
+        leave_channel: "ترک کانال"
+        join: "عضو شدن"
+        leave: "ترک کردن"
+      channel_archive:
+        title: "بایگانی کانال"
+        retry: "تلاش مجدد"
+      channel_open:
+        title: "باز کردن کانال"
+        instructions: "کانال را باز می‌کند، همه کاربران قادر خواهند بود پیام جدید ارسال کنند و پیام‌های قبلی خود را ویرایش کنند."
+      channel_close:
+        title: "بستن کانال"
+        instructions: "بستن کانال از ارسال پیام‌های جدید یا ویرایش پیام‌های قبلی توسط کاربران که همکار نیستن جلوگیری می‌کند. آیا مطمئنید که می‌خواهید اين کانال رو ببنديد؟"
+      channel_delete:
+        title: "حذف کانال"
+        confirm_channel_name: "نام کانال را وارد کنید"
+      channels_list_popup:
+        browse: "مرور کانال‌ها"
+        create: "کانال جدید"
+      click_to_join: "برای مشاهده کانال‌های موجود، اینجا را کلیک کنید."
+      close: "بستن"
+      confirm_flag: "آیا برای پرچم گذاری پیام %{username} مطمئن هستید؟"
+      deleted: "یک پیام حذف شد. [view]"
+      hidden: "یک پیام پنهان شده است. [view]"
+      delete: "حذف"
+      edited: "ویرایش شده"
+      muted: "خاموش"
+      joined: "ملحق شده"
+      empty_state:
+        direct_message_cta: "شروع گفتگوی شخصی"
+        direct_message: "شما همچنین می‌توانید یک گفتگو شخصی را با یک یا چند کاربر شروع کنید."
+        title: "هیچ کانالی پیدا نشد"
+      email_frequency:
+        never: "هرگز"
+        title: "آگاه‌سازی‌های ایمیل"
+      header_indicator_preference:
+        all_new: "همه پیام‌های جدید"
+        dm_and_mentions: "پیام‌های خصوصی و اشاره شده"
+        never: "هرگز"
+      enable: "فعال کردن گفتگو"
+      flag: "پرچم"
+      flagged: "این پیام برای بررسی پرچم گذاری شده است"
+      invalid_access: "شما برای مشاهده گفتگوی این کانال دسترسی ندارید"
+      in_reply_to: "در پاسخ به"
+      heading: "گفتگو"
+      join: "عضو شدن"
+      last_visit: "آخرین بازدید"
+      mention_warning:
+        dismiss: "رد کردن"
+        invitations_sent:
+          one: "دعوت‌نامه ارسال شد"
+          other: "دعوت‌نامه‌ها ارسال شد"
+        invite: "دعوت به کانال"
+      aria_roles:
+        channels_list: "فهرست کانال‌های گفتگو"
+      no_public_channels: "شما هنوز عضو هیچ کانالی نشده‌اید."
+      open: "باز کردن گفتگو..."
+      close_full_page: "بستن گفتگو تمام صفحه"
+      open_message: "پیام را در گفتگو باز کن"
+      remove_upload: "حذف پرونده"
+      react: "واکنش با شکلک"
+      reply: "پاسخ"
+      edit: "ویرایش"
+      copy_link: "کپی پیوند"
+      rebake_message: "ساخت مجدد HTML"
+      retry_staged_message:
+        title: "خطای شبکه"
+        action: "دوباره بفرستم؟"
+      unreliable_network: "شبکه پایدار نیست، ارسال پیام‌ها و ذخیره پیش‌نویس ممکن است کار نکند"
+      bookmark_message: "نشانک"
+      bookmark_message_edit: "ویرایش نشانک"
+      restore: "بازگرداندن پیام حذف شده"
+      save: "ذخیره"
+      select: "انتخاب کنید"
+      return_to_list: "بازگشت به فهرست کانال‌ها"
+      scroll_to_bottom: "حرکت به پایین"
+      scroll_to_new_messages: "مشاهده پیام‌های جدید"
+      sound:
+        title: "صدای آگاه‌سازی گفتگوی دسکتاپ"
+      sounds:
+        none: "هیچ کدام"
+        bell: "زنگ"
+        ding: "دینگ"
+      title: "گفتگو"
+      title_capitalized: "گفتگو"
+      upload: "پیوست کردن یک پرونده"
+      uploaded_files:
+        one: "%{count} پرونده"
+        other: "%{count} پرونده"
+      you_flagged: "شما این پیام را پرچم گذاری کردید"
+      exit: "بازگشت"
+      channel_status:
+        read_only: "فقط خواندنی"
+        archived: "بایگانی شد"
+        closed_header: "کانال بسته است"
+        closed: "بسته"
+        open_header: "کانال باز است"
+        open: "باز"
+      browse:
+        back: "بازگشت"
+        title: کانال‌ها
+        filter_all: همه
+        filter_open: باز شد
+        filter_closed: بسته
+        filter_archived: بایگانی شد
+        filter_input_placeholder: کانال را با نام جستجو کنید
+      chat_message_separator:
+        today: امروز
+        yesterday: دیروز
+      members_view:
+        filter_placeholder: جستجوی اعضا
+      about_view:
+        associated_topic: موضوع مرتبط
+        associated_category: دسته‌بندی مرتبط
+        title: عنوان
+        name: نام
+        description: توضیح
+      channel_info:
+        back_to_all_channels: "همه کانال‌ها"
+        back_to_channel: "بازگشت"
+        tabs:
+          about: درباره
+          members: اعضاء
+          settings: تنظیمات
+      channel_edit_name_slug_modal:
+        title: ویرایش کانال
+        input_placeholder: افزودن نام
+        name: نام کانال
+      channel_edit_description_modal:
+        title: ویرایش توضیحات
+        input_placeholder: افزودن توضیحات
+        description: به بقیه افراد بگویید که این کانال در مورد چی هست
+      direct_message_creator:
+        title: پیام جدید
+        prefix: "به:"
+        no_results: هیج نتیجه‌ای نداشت
+      channel_selector:
+        no_channels: "هیچ کانالی با جستجوی شما مطابقت ندارد"
+      channel:
+        no_memberships: این کانال هنوز هیچ عضوی ندارد
+        no_memberships_found: هیچ عضوی یافت نشد
+        memberships_count:
+          one: "%{count} عضو"
+          other: "%{count} عضو"
+      create_channel:
+        choose_category:
+          label: "انتخاب دسته‌بندی"
+          none: "یکی را انتخاب کنید..."
+        create: "ایجاد کانال"
+        description: "توضیحات «اختیاری»"
+        name: "نام کانال"
+        title: "کانال جدید"
+        type: "نوع"
+        types:
+          category: "دسته"
+          topic: "موضوعات"
+      reviewable:
+        type: "پیام گفتگو"
+      reactions:
+        only_you: "شما با :%{emoji}: واکنش نشان دادید"
+      composer:
+        italic_text: "متن تاکید شده"
+        bold_text: "نوشته‌ی ضخیم "
+      quote:
+        copy_success: "نقل قول گفتگو در کلیپ‌بورد کپی شد"
+      notification_levels:
+        never: "هرگز"
+        mention: "فقط برای اشاره کردن"
+        always: "برای تمام فعالیت‌ها"
+      settings:
+        channel_wide_mentions_label: "اجازه داده به استفاده از اشاره @all و @here"
+        channel_wide_mentions_description: "به کاربران اجازه دهید به همه اعضای #%{channel} با @all یا فقط افرادی که در حال حاضر فعال هستند با @here، آگاه‌سازی کنند."
+        auto_join_users_label: "افزودن خودکار کاربران"
+        desktop_notification_level: "آگاه‌سازی‌های دسکتاپ"
+        follow: "عضو شدن"
+        followed: "عضو شده"
+        mute: "بی‌صدا کردن کانال"
+        muted_on: "روشن"
+        muted_off: "خاموش"
+        notifications: "اعلان‌ها"
+        preview: "پیش‌نمایش"
+        save: "ذخیره کردن"
+        saved: "ذخیره شد"
+        unfollow: "ترک کردن"
+        admin_title: "مدیر کل"
+      admin:
+        title: "گفتگو"
+      direct_messages:
+        title: "گفتگوی شخصی"
+        new: "ایجاد گفتگوی شخصی"
+        create: "برو"
+        cannot_create: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."
+      incoming_webhooks:
+        back: "بازگشت"
+        channel_placeholder: "یک کانال را انتخاب کنید"
+        current_emoji: "شکلک کنونی"
+        description: "توضیح"
+        delete: "پاک کردن"
+        emoji: "شکلک"
+        name: "نام"
+        name_placeholder: "نام..."
+        no_emoji: "هیچ شکلکی انتخاب نشده"
+        reset_emoji: "تنظیم مجدد شکلک"
+        save: "ذخیره کردن"
+        edit: "ویرایش‌"
+        select_emoji: "انتخاب شکلک"
+        system: "سیستم"
+        url: "آدرس"
+        username: "نام‌کاربری"
+      selection:
+        cancel: "انصراف"
+        quote_selection: "نقل قول در موضوع"
+        copy: "کپی"
+        move_selection_to_channel: "انتقال به کانال"
+        error: "در انتقال پیام‌های گفتگو خطایی رخ داده"
+        title: "انتقال گفتگو به موضوع"
+        new_topic:
+          title: "انتقال به موضوع جدید"
+        existing_topic:
+          title: "انتقال به موضوع موجود"
+        new_message:
+          title: "انتقال به پیام جدید"
+      replying_indicator:
+        single_user: "%{username} در حال نوشتن"
+        multiple_users: "%{commaSeparatedUsernames} و %{lastUsername} در حال نوشتن"
+      emoji_picker:
+        favorites: "اغلب استفاده می‌شه"
+        objects: "اشیا"
+        people_&_body: "مردم و بدن"
+        travel_&_places: "سفر و مکان‌ها"
+        animals_&_nature: "حیوانات و طبیعت"
+        activities: "فعالیت ها"
+        flags: "پرچم‌ها"
+        symbols: "نشانه ها"
+        no_results: "هیج نتیجه‌ای نداشت"
+      draft_channel_screen:
+        header: "پیام جدید"
+        cancel: "انصراف"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_message: "پیام گفتگو جدید"
+        chat_quoted: "%{username} پیام گفتگو شما را نقل کرد"
+      titles:
+        chat_mention: "اشاره گفتگو"
+        chat_invitation: "دعوت‌نامه گفتگو"
+    action_codes:
+      chat:
+        enabled: '%{who} فعال شد <button class="btn-link open-chat">گفتگو</button> %{when}'
+        disabled: "%{who} گفتگو بسته شد %{when}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: ارسال پیام
+          fields:
+            chat_channel_id:
+              label: شناسه کانال گفتگو
+            message:
+              label: پیام
+            sender:
+              label: فرستنده
+              description: پیش‌فرض‌های سیستم
+    review:
+      transcript:
+        view: "مشاهده رونوشت متن پیام‌های قبلی"
+      types:
+        reviewable_chat_message:
+          title: "پیام گفتگوی پرچم گذاری شده"
+          flagged_by: "پرچم شده توسط"
+    keyboard_shortcuts_help:
+      chat:
+        title: "گفتگو"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} تغییر کانال"
+          drawer_open: "%{shortcut} باز کردن کِشوی گفتگو"
+          drawer_close: "%{shortcut} بستن کِشوی گفتگو"
+    topic_statuses:
+      chat:
+        help: "گفتگو برای این موضوع فعال است"
+    user:
+      allow_private_messages: "به دیگر، کاربران اجازه دهید پیام‌های شخصی و پیام‌های مستقیم در گفتگو را برای من ارسال کنند"
+      muted_users_instructions: "همه آگاه‌سازی‌ها، پیام‌های شخصی و پیام‌های مستقیم در گفتگو از این کاربران را سرکوب کنید."
+      allowed_pm_users_instructions: "فقط پیام‌های شخصی یا پیام‌های مستقیم در گفتگو را از این کاربران اجازه دهید."
+      allow_private_messages_from_specific_users: "فقط به کاربران خاصی اجازه دهید، تا پیام‌های شخصی یا پیام‌های مستقیم در گفتگو را برای من ارسال کنند"
+      ignored_users_instructions: "تمام نوشته‌ها، آگاه‌سازی‌ها، پیام‌های شخصی و پیام‌های مستقیم در گفتگو این کاربران را سرکوب کنید."
+    user_menu:
+      no_chat_notifications_title: "شما هنوز هیچ آگاه‌سازی گفتگوی ندارید"
+      tabs:
+        chat_notifications: "آگاه‌سازی‌های گفتگو"
+        chat_notifications_with_unread:
+          one: "آگاه‌سازی‌های گفتگو - %{count} آگاه‌سازی خوانده نشده"
+          other: "آگاه‌سازی‌های گفتگو - %{count} آگاه‌سازی خوانده نشده"

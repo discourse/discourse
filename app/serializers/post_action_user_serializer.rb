@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class PostActionUserSerializer < BasicUserSerializer
-  attributes :post_url,
-             :username_lower,
-             :unknown
+  attributes :post_url, :username_lower, :unknown
 
   def id
     object.user.id
@@ -32,5 +30,4 @@ class PostActionUserSerializer < BasicUserSerializer
   def include_unknown?
     (@options[:unknown_user_ids] || []).include?(object.user.id)
   end
-
 end

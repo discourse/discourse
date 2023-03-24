@@ -1,0 +1,139 @@
+#ember-testing-container {
+  position: fixed;
+  background: #fff;
+  bottom: 0;
+  right: 0;
+  width: 640px;
+  height: 384px;
+  overflow: auto;
+  z-index: 9999;
+  border: 1px solid #ccc;
+  transform: translateZ(0);
+  box-sizing: border-box;
+  max-height: 100vh;
+}
+
+#ember-testing {
+  background-color: #fff;
+}
+
+.discourse-root {
+  background: var(--secondary);
+}
+
+#ember-testing {
+  width: 200%;
+  height: 200%;
+  transform: scale(0.5);
+  transform-origin: top left;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #222;
+  }
+
+  #qunit-banner.qunit-pass {
+    background-color: #92b01e;
+  }
+
+  #qunit-banner.qunit-fail {
+    background-color: #7e2121;
+  }
+
+  #qunit-testrunner-toolbar {
+    background: #1b1b1b;
+    color: #90ac2d;
+  }
+
+  #qunit-testrunner-toolbar button {
+    background-color: #222;
+    border-color: #444;
+    color: #f8f8f8;
+  }
+
+  #qunit-filter-input,
+  #qunit-urlconfig-qunit_single_plugin {
+    background-color: var(--primary);
+    border: 1px solid var(--secondary-medium);
+    color: var(--secondary);
+  }
+
+  #qunit-filteredTest {
+    background-color: #90ac2d;
+    color: #366097;
+  }
+
+  #qunit-testresult {
+    background-color: #366097;
+    border-color: #000;
+    color: #e2f0f7;
+  }
+
+  #qunit-testresult a {
+    color: #7eb0f2;
+  }
+
+  #qunit-tests b.counts {
+    color: #ddd;
+  }
+
+  #qunit-tests b.failed {
+    color: #ff7777;
+  }
+
+  #qunit-tests b.passed {
+    color: #90ac2d;
+  }
+
+  #qunit-tests .pass {
+    background-color: #0c3f59;
+    border-color: #000;
+    color: #edeff5;
+  }
+
+  #qunit-tests .pass .test-name {
+    color: #7eb0f2;
+  }
+
+  #qunit-tests .fail {
+    background-color: #7e2121;
+    color: #ddd;
+  }
+
+  ol.qunit-assert-list > li > table > tbody,
+  tr.test-expected,
+  tr.test-actual,
+  tr.test-source {
+    border-color: #333;
+  }
+
+  #qunit-tests li {
+    border-color: #333;
+  }
+
+  #qunit-tests li li.pass {
+    background-color: #222;
+    border-color: #92b01e;
+    color: #90ac2d;
+  }
+
+  #qunit-tests li li.fail {
+    background-color: #222;
+    border-color: #7e2121;
+    color: #ff7777;
+  }
+
+  .qunit-assert-list {
+    background-color: #222;
+  }
+
+  #ember-testing-container {
+    background-color: #000;
+    border-color: #444;
+  }
+
+  #ember-testing {
+    background: #000;
+  }
+}

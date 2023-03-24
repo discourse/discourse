@@ -12,6 +12,7 @@ import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   dialog: service(),
+  subpageTitle: I18n.t("user.preferences_nav.profile"),
   init() {
     this._super(...arguments);
     this.saveAttrNames = [
@@ -51,7 +52,7 @@ export default Controller.extend({
     });
   },
 
-  @discourseComputed("model.default_calendar")
+  @discourseComputed("model.user_option.default_calendar")
   canChangeDefaultCalendar(defaultCalendar) {
     return defaultCalendar !== "none_selected";
   },
@@ -125,12 +126,6 @@ export default Controller.extend({
       return model
         .save(this.saveAttrNames)
         .then(() => {
-          // update the timezone in memory so we can use the new
-          // one if we change routes without reloading the user
-          if (this.currentUser.id === this.model.id) {
-            this.currentUser.timezone = this.model.user_option.timezone;
-          }
-
           cookAsync(model.get("bio_raw"))
             .then(() => {
               model.set("bio_cooked");

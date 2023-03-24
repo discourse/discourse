@@ -1,48 +1,48 @@
 # frozen_string_literal: true
 
 class Auth::Result
-  ATTRIBUTES = [
-    :user,
-    :name,
-    :username,
-    :email,
-    :email_valid,
-    :extra_data,
-    :awaiting_activation,
-    :awaiting_approval,
-    :authenticated,
-    :authenticator_name,
-    :requires_invite,
-    :not_allowed_from_ip_address,
-    :admin_not_allowed_from_ip_address,
-    :skip_email_validation,
-    :destination_url,
-    :omniauth_disallow_totp,
-    :failed,
-    :failed_reason,
-    :failed_code,
-    :associated_groups,
-    :overrides_email,
-    :overrides_username,
-    :overrides_name,
+  ATTRIBUTES = %i[
+    user
+    name
+    username
+    email
+    email_valid
+    extra_data
+    awaiting_activation
+    awaiting_approval
+    authenticated
+    authenticator_name
+    requires_invite
+    not_allowed_from_ip_address
+    admin_not_allowed_from_ip_address
+    skip_email_validation
+    destination_url
+    omniauth_disallow_totp
+    failed
+    failed_reason
+    failed_code
+    associated_groups
+    overrides_email
+    overrides_username
+    overrides_name
   ]
 
   attr_accessor *ATTRIBUTES
 
   # These are stored in the session during
   # account creation. The user cannot read or modify them
-  SESSION_ATTRIBUTES = [
-    :email,
-    :username,
-    :email_valid,
-    :name,
-    :authenticator_name,
-    :extra_data,
-    :skip_email_validation,
-    :associated_groups,
-    :overrides_email,
-    :overrides_username,
-    :overrides_name,
+  SESSION_ATTRIBUTES = %i[
+    email
+    username
+    email_valid
+    name
+    authenticator_name
+    extra_data
+    skip_email_validation
+    associated_groups
+    overrides_email
+    overrides_username
+    overrides_name
   ]
 
   def [](key)
@@ -59,9 +59,7 @@ class Auth::Result
   end
 
   def email_valid=(val)
-    if !val.in? [true, false, nil]
-      raise ArgumentError, "email_valid should be boolean or nil"
-    end
+    raise ArgumentError, "email_valid should be boolean or nil" if !val.in? [true, false, nil]
     @email_valid = !!val
   end
 
@@ -83,14 +81,14 @@ class Auth::Result
 
   def apply_user_attributes!
     change_made = false
-    if (SiteSetting.auth_overrides_username? || overrides_username) && (resolved_username = resolve_username).present?
+    if (SiteSetting.auth_overrides_username? || overrides_username) &&
+         (resolved_username = resolve_username).present?
       change_made = UsernameChanger.override(user, resolved_username)
     end
 
-    if (SiteSetting.auth_overrides_email || overrides_email || user&.email&.ends_with?(".invalid")) &&
-        email_valid &&
-        email.present? &&
-        user.email != Email.downcase(email)
+    if (
+         SiteSetting.auth_overrides_email || overrides_email || user&.email&.ends_with?(".invalid")
+       ) && email_valid && email.present? && user.email != Email.downcase(email)
       user.email = email
       change_made = true
     end
@@ -109,11 +107,12 @@ class Auth::Result
 
       associated_groups.uniq.each do |associated_group|
         begin
-          associated_group = AssociatedGroup.find_or_create_by(
-            name: associated_group[:name],
-            provider_id: associated_group[:id],
-            provider_name: extra_data[:provider]
-          )
+          associated_group =
+            AssociatedGroup.find_or_create_by(
+              name: associated_group[:name],
+              provider_id: associated_group[:id],
+              provider_name: extra_data[:provider],
+            )
         rescue ActiveRecord::RecordNotUnique
           retry
         end
@@ -135,22 +134,12 @@ class Auth::Result
   end
 
   def to_client_hash
-    if requires_invite
-      return { requires_invite: true }
-    end
+    return { requires_invite: true } if requires_invite
 
-    if user&.suspended?
-      return {
-        suspended: true,
-        suspended_message: user.suspended_message
-      }
-    end
+    return { suspended: true, suspended_message: user.suspended_message } if user&.suspended?
 
     if omniauth_disallow_totp
-      return {
-        omniauth_disallow_totp: !!omniauth_disallow_totp,
-        email: email
-      }
+      return { omniauth_disallow_totp: !!omniauth_disallow_totp, email: email }
     end
 
     if user
@@ -159,7 +148,7 @@ class Auth::Result
         awaiting_activation: !!awaiting_activation,
         awaiting_approval: !!awaiting_approval,
         not_allowed_from_ip_address: !!not_allowed_from_ip_address,
-        admin_not_allowed_from_ip_address: !!admin_not_allowed_from_ip_address
+        admin_not_allowed_from_ip_address: !!admin_not_allowed_from_ip_address,
       }
 
       result[:destination_url] = destination_url if authenticated && destination_url.present?
@@ -173,7 +162,7 @@ class Auth::Result
       auth_provider: authenticator_name,
       email_valid: !!email_valid,
       can_edit_username: can_edit_username,
-      can_edit_name: can_edit_name
+      can_edit_name: can_edit_name,
     }
 
     result[:destination_url] = destination_url if destination_url.present?
@@ -190,9 +179,7 @@ class Auth::Result
 
   def staged_user
     return @staged_user if defined?(@staged_user)
-    if email.present? && email_valid
-      @staged_user = User.where(staged: true).find_by_email(email)
-    end
+    @staged_user = User.where(staged: true).find_by_email(email) if email.present? && email_valid
   end
 
   def username_suggester_attributes

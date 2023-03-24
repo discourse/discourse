@@ -10,30 +10,34 @@ class TopicThumbnail < ActiveRecord::Base
   belongs_to :upload
   belongs_to :optimized_image
 
-  def self.find_or_create_for!(original, max_width: , max_height:)
-    existing = TopicThumbnail.find_by(upload: original, max_width: max_width, max_height: max_height)
+  def self.find_or_create_for!(original, max_width:, max_height:)
+    existing =
+      TopicThumbnail.find_by(upload: original, max_width: max_width, max_height: max_height)
     return existing if existing
     return nil if !SiteSetting.create_thumbnails?
 
-    target_width, target_height = ImageSizer.resize(original.width, original.height, { max_width: max_width, max_height: max_height })
+    target_width, target_height =
+      ImageSizer.resize(
+        original.width,
+        original.height,
+        { max_width: max_width, max_height: max_height },
+      )
 
     if target_width < original.width && target_height < original.height
       optimized = OptimizedImage.create_for(original, target_width, target_height)
     end
 
     # may have been associated already, bulk insert will skip dupes
-    TopicThumbnail.insert_all([
-      upload_id: original.id,
-      max_width: max_width,
-      max_height: max_height,
-      optimized_image_id: optimized&.id
-    ])
-
-    TopicThumbnail.find_by(
-      upload: original,
-      max_width: max_width,
-      max_height: max_height
+    TopicThumbnail.insert_all(
+      [
+        upload_id: original.id,
+        max_width: max_width,
+        max_height: max_height,
+        optimized_image_id: optimized&.id,
+      ],
     )
+
+    TopicThumbnail.find_by(upload: original, max_width: max_width, max_height: max_height)
   end
 
   def self.ensure_consistency!
@@ -48,8 +52,11 @@ class TopicThumbnail < ActiveRecord::Base
       .delete_all
 
     # Delete records for sizes which are no longer needed
-    sizes = Topic.thumbnail_sizes + ThemeModifierHelper.new(theme_ids: Theme.pluck(:id)).topic_thumbnail_sizes
-    sizes_sql = sizes.map { |s| "(max_width = #{s[0].to_i} AND max_height = #{s[1].to_i})" }.join(" OR ")
+    sizes =
+      Topic.thumbnail_sizes +
+        ThemeModifierHelper.new(theme_ids: Theme.pluck(:id)).topic_thumbnail_sizes
+    sizes_sql =
+      sizes.map { |s| "(max_width = #{s[0].to_i} AND max_height = #{s[1].to_i})" }.join(" OR ")
     TopicThumbnail.where.not(sizes_sql).delete_all
   end
 end

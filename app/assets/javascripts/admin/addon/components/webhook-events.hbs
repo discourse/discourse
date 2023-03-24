@@ -1,0 +1,61 @@
+<div
+  class="web-hook-events-listing"
+  {{did-insert this.subscribe}}
+  {{will-destroy this.unsubscribe}}
+>
+  <DButton
+    @icon="paper-plane"
+    @label="admin.web_hooks.events.ping"
+    @action={{this.ping}}
+    @disabled={{not this.pingEnabled}}
+    class="webhook-events__ping-button"
+  />
+
+  {{#if this.events}}
+    <LoadMore @selector=".web-hook-events li" @action={{this.loadMore}}>
+      <div class="web-hook-events content-list">
+        <div class="heading-container">
+          <div class="col heading first status">
+            {{i18n "admin.web_hooks.events.status"}}
+          </div>
+          <div class="col heading event-id">
+            {{i18n "admin.web_hooks.events.event_id"}}
+          </div>
+          <div class="col heading timestamp">
+            {{i18n "admin.web_hooks.events.timestamp"}}
+          </div>
+          <div class="col heading completion">
+            {{i18n "admin.web_hooks.events.completion"}}
+          </div>
+          <div class="col heading actions">
+            {{i18n "admin.web_hooks.events.actions"}}
+          </div>
+        </div>
+
+        {{#if this.hasIncoming}}
+          <a
+            href
+            tabindex="0"
+            {{on "click" this.showInserted}}
+            class="alert alert-info clickable"
+          >
+            <CountI18n
+              @key="admin.web_hooks.events.incoming"
+              @count={{this.incomingCount}}
+            />
+          </a>
+        {{/if}}
+
+        <ul>
+          {{#each this.events as |event|}}
+            <WebhookEvent @event={{event}} />
+          {{/each}}
+        </ul>
+      </div>
+
+      <ConditionalLoadingSpinner @condition={{this.events.loadingMore}} />
+    </LoadMore>
+  {{else}}
+    <p>{{i18n "admin.web_hooks.events.none"}}</p>
+  {{/if}}
+</div>

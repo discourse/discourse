@@ -9,7 +9,7 @@ RSpec.describe Jobs::FeatureTopicUsers do
     Jobs::FeatureTopicUsers.new.execute(topic_id: 123)
   end
 
-  context 'with a topic' do
+  context "with a topic" do
     let!(:post) { create_post }
     let(:topic) { post.topic }
     fab!(:coding_horror) { Fabricate(:coding_horror) }

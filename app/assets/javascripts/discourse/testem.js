@@ -1,15 +1,21 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
-const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
+const { shouldLoadPluginTestJs } = require("discourse-plugins");
+const fs = require("fs");
 
 class Reporter {
   failReports = [];
+  deprecationCounts = new Map();
 
   constructor() {
     this._tapReporter = new TapReporter(...arguments);
   }
 
   reportMetadata(tag, metadata) {
-    if (tag === "summary-line") {
+    if (tag === "increment-deprecation") {
+      const id = metadata.id;
+      const currentCount = this.deprecationCounts.get(id) || 0;
+      this.deprecationCounts.set(id, currentCount + 1);
+    } else if (tag === "summary-line") {
       process.stdout.write(`\n${metadata.message}\n`);
     } else {
       this._tapReporter.reportMetadata(...arguments);
@@ -23,8 +29,45 @@ class Reporter {
     this._tapReporter.report(prefix, data);
   }
 
+  generateDeprecationTable() {
+    const maxIdLength = Math.max(
+      ...Array.from(this.deprecationCounts.keys()).map((k) => k.length)
+    );
+
+    let msg = `| ${"id".padEnd(maxIdLength)} | count |\n`;
+    msg += `| ${"".padEnd(maxIdLength, "-")} | ----- |\n`;
+
+    for (const [id, count] of this.deprecationCounts.entries()) {
+      const countString = count.toString();
+      msg += `| ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
+    }
+
+    return msg;
+  }
+
+  reportDeprecations() {
+    let deprecationMessage = "[Deprecation Counter] ";
+    if (this.deprecationCounts.size > 0) {
+      const table = this.generateDeprecationTable();
+      deprecationMessage += `Test run completed with deprecations:\n\n${table}`;
+
+      if (process.env.GITHUB_ACTIONS && process.env.GITHUB_STEP_SUMMARY) {
+        let jobSummary = `### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n`;
+        jobSummary += table;
+        jobSummary += `\n\n`;
+
+        fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, jobSummary);
+      }
+    } else {
+      deprecationMessage += "No deprecations logged";
+    }
+    process.stdout.write(`\n${deprecationMessage}\n\n`);
+  }
+
   finish() {
     this._tapReporter.finish();
+
+    this.reportDeprecations();
 
     if (this.failReports.length > 0) {
       process.stdout.write("\nFailures:\n\n");

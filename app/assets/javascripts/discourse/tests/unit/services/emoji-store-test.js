@@ -1,9 +1,12 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Service | emoji-store", function (hooks) {
+module("Unit | Service | emoji-store", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
-    this.emojiStore = this.container.lookup("service:emoji-store");
+    this.emojiStore = getOwner(this).lookup("service:emoji-store");
     this.emojiStore.reset();
   });
 

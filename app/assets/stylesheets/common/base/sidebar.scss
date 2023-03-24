@@ -1,5 +1,8 @@
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
+  @include breakpoint(large) {
+    --d-sidebar-width: #{$d-sidebar-narrow-width};
+  }
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
   --d-sidebar-row-height: 30px;
@@ -28,8 +31,11 @@
 
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
+    height: calc(
+      100vh - var(--header-offset, 0px) - var(--footer-nav-height, 0px)
+    );
   }
-  height: calc(100vh - var(--header-offset, 0));
+  height: calc(100vh - var(--header-offset, 0px));
   align-self: start;
   overflow-y: auto;
 
@@ -42,7 +48,7 @@
     padding: 0;
     overflow-x: hidden;
     // allows sidebar to scroll to the bottom when the composer is open
-    height: calc(100% - var(--composer-height, 0));
+    height: calc(100% - var(--composer-height, 0px));
   }
 
   .sidebar-sections {
@@ -86,6 +92,17 @@
       transition-delay: 0s;
     }
   }
+  .sidebar-footer-wrapper {
+    .btn-flat.add-section {
+      padding: 0.25em 0.4em;
+      &:hover {
+        background: var(--d-sidebar-highlight-color);
+        svg {
+          color: var(--primary-medium);
+        }
+      }
+    }
+  }
 }
 
 .sidebar-hamburger-dropdown {
@@ -107,6 +124,57 @@
           rgba(var(--secondary-rgb), 1)
         );
       }
+    }
+  }
+}
+
+.sidebar-section-form-modal {
+  .modal-inner-container {
+    width: var(--modal-max-width);
+  }
+  form {
+    margin-bottom: 0;
+  }
+  .input-group input {
+    width: 100%;
+  }
+  input.warning {
+    border: 1px solid var(--danger);
+  }
+  .row-wrapper {
+    display: grid;
+    grid-template-columns: auto auto auto 2em;
+    gap: 1em;
+    margin-top: 1em;
+  }
+  .delete-link {
+    height: 1em;
+    align-self: end;
+    margin-bottom: 0.75em;
+    margin-right: 1em;
+  }
+  .btn-flat.add-link {
+    margin-top: 1em;
+    margin-left: -0.65em;
+    &:active,
+    &:focus {
+      background: none;
+    }
+    svg {
+      color: var(--tertiary);
+      width: 0.75em;
+      height: 0.75em;
+    }
+    &:hover svg {
+      color: var(--tertiary-hover);
+    }
+  }
+  .modal-footer {
+    display: flex;
+    justify-content: space-between;
+
+    .delete {
+      margin-right: 0;
     }
   }
 }

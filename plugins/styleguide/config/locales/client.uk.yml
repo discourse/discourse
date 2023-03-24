@@ -92,3 +92,6 @@ uk:
           description: "Опис"
           header: "Header"
           hover_to_see: "Наведіть курсор, щоб побачити підказку"
+        char_counter:
+          title: "Лічильник символів"
+          placeholder: "Введіть свій текст тут..."

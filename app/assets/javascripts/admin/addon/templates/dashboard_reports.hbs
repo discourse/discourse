@@ -2,7 +2,12 @@
   <div class="reports-index section">
     <div class="section-title">
       <h2>{{i18n "admin.reports.title"}}</h2>
-      <Input class="filter-reports-input" placeholder={{i18n "admin.dashboard.filter_reports"}} autofocus={{true}} {{on "input" (action "filterReports" value="target.value")}} />
+      <Input
+        class="filter-reports-input"
+        placeholder={{i18n "admin.dashboard.filter_reports"}}
+        autofocus={{true}}
+        {{on "input" (action "filterReports" value="target.value")}}
+      />
     </div>
 
     <ul class="reports-list">

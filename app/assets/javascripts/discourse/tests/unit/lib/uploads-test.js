@@ -11,11 +11,18 @@ import {
 } from "discourse/lib/uploads";
 import I18n from "I18n";
 import User from "discourse/models/user";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
-import { test } from "qunit";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Utility | uploads", function () {
+module("Unit | Utility | uploads", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
+  });
+
   test("validateUploadedFiles", function (assert) {
     assert.notOk(
       validateUploadedFiles(null, { siteSettings: this.siteSettings }),
@@ -135,6 +142,38 @@ discourseModule("Unit | Utility | uploads", function () {
         skipValidation: true,
         siteSettings: this.siteSettings,
       })
+    );
+  });
+
+  test("shows error message when no extensions are authorized", function (assert) {
+    this.siteSettings.authorized_extensions = "";
+    this.siteSettings.authorized_extensions_for_staff = "";
+
+    sinon.stub(dialog, "alert");
+    assert.notOk(
+      validateUploadedFiles([{ name: "test.jpg" }], {
+        user: User.create(),
+        siteSettings: this.siteSettings,
+      })
+    );
+    assert.ok(
+      dialog.alert.calledWith(I18n.t("post.errors.no_uploads_authorized"))
+    );
+  });
+
+  test("shows error message when no extensions are authorized for staff", function (assert) {
+    this.siteSettings.authorized_extensions = "";
+    this.siteSettings.authorized_extensions_for_staff = "";
+
+    sinon.stub(dialog, "alert");
+    assert.notOk(
+      validateUploadedFiles([{ name: "test.jpg" }], {
+        user: User.create({ staff: true }),
+        siteSettings: this.siteSettings,
+      })
+    );
+    assert.ok(
+      dialog.alert.calledWith(I18n.t("post.errors.no_uploads_authorized"))
     );
   });
 

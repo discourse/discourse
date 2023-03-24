@@ -2,7 +2,6 @@
 
 class CorrectPostNumberIndex < ActiveRecord::Migration[4.2]
   def change
-
     begin
       a = execute <<SQL
       UPDATE posts SET post_number = post_number + 1
@@ -22,7 +21,7 @@ class CorrectPostNumberIndex < ActiveRecord::Migration[4.2]
 SQL
     end until a.cmdtuples == 0
 
-    remove_index :posts, [:topic_id, :post_number]
-    add_index :posts, [:topic_id, :post_number], unique: true
+    remove_index :posts, %i[topic_id post_number]
+    add_index :posts, %i[topic_id post_number], unique: true
   end
 end

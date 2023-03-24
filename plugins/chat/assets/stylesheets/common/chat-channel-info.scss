@@ -1,0 +1,164 @@
+.channel-info {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+// Info header
+.channel-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.channel-info-header__title {
+  font-size: var(--font-up-2);
+  margin: 0;
+}
+
+// About view
+.channel-info-about-view__title-input {
+  width: 100%;
+}
+
+.channel-info-about-view__description-input {
+  height: 150px;
+  width: 100%;
+}
+
+.channel-info-about-view__description__helper-text {
+  color: var(--primary-medium);
+}
+
+.channel-info-about-view__slug {
+  color: var(--primary-medium);
+  font-size: var(--font-down-2);
+}
+
+.channel-settings-view__desktop-notification-level-selector,
+.channel-settings-view__mobile-notification-level-selector,
+.channel-settings-view__muted-selector,
+.channel-settings-view__auto-join-selector,
+.channel-settings-view__channel-wide-mentions-selector {
+  width: 220px;
+}
+
+.chat-form__btn.delete-btn {
+  .d-icon {
+    color: var(--danger);
+  }
+}
+
+// Members list
+.chat-tabs__memberships-count {
+  margin-left: 0.25em;
+}
+
+.channel-members-view-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 1rem;
+}
+
+.channel-members-view__search-input-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--primary-medium);
+
+  &.is-focused {
+    border: 1px solid var(--tertiary);
+  }
+
+  .d-icon {
+    padding: 0.5rem;
+    color: var(--primary-medium);
+  }
+}
+
+input.channel-members-view__search-input {
+  border: 0;
+  margin: 0;
+  outline: 0;
+  width: 100%;
+
+  &:focus {
+    border: 0;
+    outline: 0;
+  }
+}
+
+.channel-members-view__status {
+  display: flex;
+  align-items: center;
+}
+
+.channel-members-view__list-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+  box-sizing: border-box;
+  min-height: 1px;
+  overflow-y: auto;
+  height: 100%;
+  @include chat-scrollbar(var(--secondary));
+}
+
+.channel-members-view__list-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0 0.5rem 1px;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  .chat-user-avatar {
+    margin-right: 0.5rem;
+  }
+}
+
+// Channel info edit name and slug modal
+.chat-channel-edit-name-slug-modal {
+  .modal-inner-container {
+    width: 300px;
+  }
+
+  &__name-input,
+  &__slug-input {
+    display: flex;
+    margin: 0;
+    width: 100%;
+  }
+}
+
+.chat-channel-edit-name-slug-modal__description {
+  display: flex;
+  padding: 0.5rem 0;
+  color: var(--primary-medium);
+}
+
+// Channel info edit description modal
+.chat-channel-edit-description-modal {
+  .exceeded-word-count {
+    .chat-channel-edit-description-modal__description-input {
+      outline: 1px solid var(--danger);
+      border: 1px solid var(--danger);
+    }
+  }
+}
+
+.chat-channel-edit-description-modal__description-input {
+  display: flex;
+  margin: 0;
+  min-height: 200px;
+}
+
+.chat-channel-edit-description-modal__description {
+  display: flex;
+  padding-bottom: 0.75rem;
+  color: var(--primary-medium);
+}

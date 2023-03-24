@@ -9,24 +9,47 @@
 
 <div class="control-group pref-timezone">
   <label class="control-label">{{i18n "user.timezone"}}</label>
-  <TimezoneInput @value={{this.model.user_option.timezone}} @onChange={{action (mut this.model.user_option.timezone)}} @class="input-xxlarge" />
-  <DButton @class="btn-default" @icon="globe" @label="user.use_current_timezone" @action={{action "useCurrentTimezone"}} />
+  <TimezoneInput
+    @value={{this.model.user_option.timezone}}
+    @onChange={{action (mut this.model.user_option.timezone)}}
+    @class="input-xxlarge"
+  />
+  <DButton
+    @class="btn-default"
+    @icon="globe"
+    @label="user.use_current_timezone"
+    @action={{action "useCurrentTimezone"}}
+  />
 </div>
 
 {{#if this.model.can_change_location}}
   <div class="control-group pref-location">
-    <label class="control-label" for="edit-location">{{i18n "user.location"}}</label>
+    <label class="control-label" for="edit-location">{{i18n
+        "user.location"
+      }}</label>
     <div class="controls">
-      <Input @type="text" @value={{this.model.location}} class="input-xxlarge" id="edit-location" />
+      <Input
+        @type="text"
+        @value={{this.model.location}}
+        class="input-xxlarge"
+        id="edit-location"
+      />
     </div>
   </div>
 {{/if}}
 
 {{#if this.model.can_change_website}}
   <div class="control-group pref-website">
-    <label class="control-label" for="edit-website">{{i18n "user.website"}}</label>
+    <label class="control-label" for="edit-website">{{i18n
+        "user.website"
+      }}</label>
     <div class="controls">
-      <Input @type="text" @value={{this.model.website}} class="input-xxlarge" id="edit-website"/>
+      <Input
+        @type="text"
+        @value={{this.model.website}}
+        class="input-xxlarge"
+        id="edit-website"
+      />
     </div>
   </div>
 {{/if}}
@@ -41,9 +64,15 @@
 {{#if this.siteSettings.allow_profile_backgrounds}}
   {{#if this.canUploadProfileHeader}}
     <div class="control-group pref-profile-bg">
-      <label class="control-label">{{i18n "user.change_profile_background.title"}}</label>
+      <label class="control-label">{{i18n
+          "user.change_profile_background.title"
+        }}</label>
       <div class="controls">
-        <UppyImageUploader @imageUrl={{this.model.profile_background_upload_url}} @type="profile_background" @id="profile-background-uploader" />
+        <UppyImageUploader
+          @imageUrl={{this.model.profile_background_upload_url}}
+          @type="profile_background"
+          @id="profile-background-uploader"
+        />
       </div>
       <div class="instructions">
         {{i18n "user.change_profile_background.instructions"}}
@@ -52,9 +81,15 @@
   {{/if}}
   {{#if this.canUploadUserCardBackground}}
     <div class="control-group pref-profile-bg">
-      <label class="control-label">{{i18n "user.change_card_background.title"}}</label>
+      <label class="control-label">{{i18n
+          "user.change_card_background.title"
+        }}</label>
       <div class="controls">
-        <UppyImageUploader @imageUrl={{this.model.card_background_upload_url}} @type="card_background" @id="profile-card-background-uploader" />
+        <UppyImageUploader
+          @imageUrl={{this.model.card_background_upload_url}}
+          @type="card_background"
+          @id="profile-card-background-uploader"
+        />
       </div>
       <div class="instructions">
         {{i18n "user.change_card_background.instructions"}}
@@ -68,16 +103,30 @@
     <label class="control-label">{{i18n "user.featured_topic"}}</label>
     {{#if this.model.featured_topic}}
       <label class="featured-topic-link">
-        <LinkTo @route="topic" @models={{array this.model.featured_topic.slug this.model.featured_topic.id}}>
-          {{html-safe (replace-emoji this.model.featured_topic.fancy_title)}}
+        <LinkTo
+          @route="topic"
+          @models={{array
+            this.model.featured_topic.slug
+            this.model.featured_topic.id
+          }}
+        >
+          {{replace-emoji (html-safe this.model.featured_topic.fancy_title)}}
         </LinkTo>
       </label>
     {{/if}}
 
     <div>
-      <DButton @action={{action "showFeaturedTopicModal"}} @class="btn-default feature-topic-on-profile-btn" @label="user.feature_topic_on_profile.open_search" />
+      <DButton
+        @action={{action "showFeaturedTopicModal"}}
+        @class="btn-default feature-topic-on-profile-btn"
+        @label="user.feature_topic_on_profile.open_search"
+      />
       {{#if this.model.featured_topic}}
-        <DButton @action={{action "clearFeaturedTopicFromProfile"}} @class="btn-danger clear-feature-topic-on-profile-btn" @label="user.feature_topic_on_profile.clear.title" />
+        <DButton
+          @action={{action "clearFeaturedTopicFromProfile"}}
+          @class="btn-danger clear-feature-topic-on-profile-btn"
+          @label="user.feature_topic_on_profile.clear.title"
+        />
       {{/if}}
     </div>
     <div class="instructions">
@@ -86,11 +135,19 @@
   </div>
 {{/if}}
 
-{{#if this.canChangeDefaultCalendar }}
+{{#if this.canChangeDefaultCalendar}}
   <div class="control-group">
-    <label class="control-label">{{i18n "download_calendar.default_calendar"}}</label>
+    <label class="control-label">{{i18n
+        "download_calendar.default_calendar"
+      }}</label>
     <div>
-      <ComboBox @valueProperty="value" @content={{this.calendarOptions}} @value={{this.model.user_option.default_calendar}} @id="user-default-calendar" @onChange={{action (mut this.model.user_option.default_calendar)}} />
+      <ComboBox
+        @valueProperty="value"
+        @content={{this.calendarOptions}}
+        @value={{this.model.user_option.default_calendar}}
+        @id="user-default-calendar"
+        @onChange={{action (mut this.model.user_option.default_calendar)}}
+      />
     </div>
     <div class="instructions">
       {{i18n "download_calendar.default_calendar_instruction"}}
@@ -98,12 +155,34 @@
   </div>
 {{/if}}
 
-<PluginOutlet @name="user-preferences-profile" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />
+<span>
+  <PluginOutlet
+    @name="user-preferences-profile"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
-<PluginOutlet @name="user-custom-preferences" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+<span>
+  <PluginOutlet
+    @name="user-custom-preferences"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
-<br>
+<br />
 
-<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
-<SaveControls @model={{this.model}} @action={{action "save"}} @saved={{this.saved}} />
+<SaveControls
+  @model={{this.model}}
+  @action={{action "save"}}
+  @saved={{this.saved}}
+/>

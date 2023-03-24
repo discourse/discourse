@@ -1,0 +1,116 @@
+@import "common/foundation/mixins";
+.full-page-chat {
+  overflow: hidden; //prevents double scroll
+
+  .channels-list {
+    overflow-y: overlay;
+    padding-bottom: 6rem;
+    box-sizing: border-box;
+
+    @media (hover: none) {
+      .chat-channel-row:hover {
+        background: transparent;
+      }
+
+      .chat-channel-row:active {
+        background: var(--primary-low);
+      }
+    }
+
+    .channels-list-container {
+      background: var(--secondary);
+    }
+
+    .chat-channel-row {
+      height: 4em;
+      margin: 0 1.5rem;
+      padding: 0;
+      border-radius: 0;
+      border-bottom: 1px solid var(--primary-low);
+
+      .chat-channel-metadata {
+        .chat-channel-unread-indicator {
+          font-size: var(--font-down-2);
+          margin-top: 0.25rem;
+        }
+        &__date {
+          font-size: var(--font-down-2);
+        }
+      }
+    }
+
+    .chat-channel-divider {
+      font-size: var(--font-up-1);
+
+      &:first-of-type {
+        padding-top: 1rem;
+      }
+
+      .channel-title {
+        color: var(--quaternary);
+        font-size: var(--font-down-1);
+      }
+    }
+
+    .chat-user-avatar {
+      + .chat-channel-title__usernames {
+        margin-left: 1rem;
+      }
+    }
+
+    .chat-channel-title {
+      width: 100%;
+      overflow: hidden;
+
+      &__users-count {
+        font-size: var(--font-up-2);
+        & + .chat-channel-title__name {
+          margin-left: 1rem;
+        }
+      }
+
+      &__name {
+        flex-shrink: 0;
+        margin-left: 0.75em;
+        font-size: var(--font-up-1);
+      }
+
+      &__category-badge {
+        font-size: var(--font-up-1);
+      }
+
+      &__user-status-message {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  .btn-floating.open-draft-channel-page-btn {
+    position: absolute;
+    background: var(--tertiary);
+    bottom: 2.5rem;
+    right: 2.5rem;
+    border-radius: 50%;
+    font-size: var(--font-up-4);
+    padding: 1rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    z-index: z("usercard");
+    box-shadow: 0px 5px 5px -1px rgba(0, 0, 0, 0.25);
+
+    .d-icon {
+      color: var(--primary-very-low);
+    }
+
+    &:active {
+      box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.25);
+      transform: scale(0.9);
+    }
+
+    &:focus {
+      @include default-focus;
+      border-color: var(--quaternary);
+      outline-color: var(--quaternary);
+    }
+  }
+}

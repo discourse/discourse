@@ -1,0 +1,147 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  site_settings:
+    chat_channel_retention_days: "A normál csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
+    chat_dm_retention_days: "A személyes csevegési csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
+    chat_auto_silence_duration: "A felhasználók ennyi percig lesznek némítva, ha túllépik a csevegőüzenet létrehozási korlátját. Állítsa „0”-ra, hogy letiltsa az automatikus némítást."
+    chat_allowed_messages_for_trust_level_0: "A 0-s megbízhatósági szinttel rendelkező felhasználók legfeljebb ennyi üzenetet küldhetnek 30 másodpercen belül. A korlátozás letiltásához állítsa „0”-ra."
+    chat_allowed_messages_for_other_trust_levels: "Az 1–4-es megbízhatósági szinttel rendelkező felhasználók legfeljebb ennyi üzenetet küldhetnek 30 másodpercen belül. A korlátozás letiltásához állítsa „0”-ra."
+    chat_silence_user_sensitivity: "Annak a valószínűsége, hogy a csevegésben megjelölt felhasználó automatikusan némítva lesz."
+    chat_auto_silence_from_flags_duration: "Azon percek száma, ameddig a felhasználók el lesznek némítva, ha a megjelölt csevegési üzenetek miatt automatikusan némítva lesznek."
+    chat_default_channel_id: "Az a csevegőcsatorna, amely alapértelmezés szerint megnyílik, ha a felhasználónak nincsenek olvasatlan üzenetei vagy említései más csatornákon."
+    chat_duplicate_message_sensitivity: "Annak a valószínűsége, hogy az azonos feladó által küldött ismételt üzenet rövid időn belül blokkolásra kerül. Tizedes szám 0 és 1.0 között, ahol az 1.0 a legmagasabb érték (az üzeneteket gyakrabban blokkolja rövidebb idő alatt). Az ismételt üzenetek engedélyezéséhez állítsa „0”-ra az értéket."
+    chat_minimum_message_length: "A csevegőüzenetek minimális karakterszáma."
+    chat_archive_destination_topic_status: "Az az állapot, amelyet a céltéma a csatornaarchiválás befejezése után fog kapni. Ez csak akkor érvényes, ha a céltéma egy új téma, nem pedig egy meglévő."
+    errors:
+      chat_default_channel: "Az alapértelmezett csevegőcsatornának nyilvános csatornának kell lennie."
+  system_messages:
+    chat_channel_archive_complete:
+      title: "A csevegőcsatorna archiválása kész"
+      subject_template: "A csevegőcsatorna archiválása sikeresen befejeződött"
+    chat_channel_archive_failed:
+      title: "A csevegőcsatorna archiválása sikertelen"
+      subject_template: "A csevegőcsatorna archiválása sikertelen"
+    chat_channel_archive_failed_no_topic:
+      title: "A csevegőcsatorna archiválása sikertelen"
+      subject_template: "A csevegőcsatorna archiválása sikertelen"
+  chat:
+    deleted_chat_username: törölt
+    errors:
+      channel_exists_for_category: "Már létezik csatorna ehhez a kategóriával, és ezzel a névvel"
+      user_cannot_send_message: "Jelenleg nem küldhet üzeneteket."
+      rate_limit_exceeded: "Túllépte a 30 másodpercen belül elküldhető csevegőüzenetek korlátját"
+      auto_silence_from_flags: "A csevegőüzenet elég magas pontszámmal lett megjelölve, hogy a felhasználó némítva legyen."
+      channel_cannot_be_archived: "A csatorna jelenleg nem archiválható, a csatornát vagy le kell zárni, vagy meg kell nyitni az archiváláshoz."
+      duplicate_message: "Nemrég küldött egy azonos tartalmú üzenetet."
+      delete_channel_failed: "A csatorna törlése sikertelen, próbálja meg újra."
+      message_too_long:
+        one: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
+        other: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
+      draft_too_long: "A vázlat túl hosszú."
+      max_reactions_limit_reached: "Új reakciók nem engedélyezettek ezen az üzeneten."
+      message_move_invalid_channel: "A forrás- és célcsatornának nyilvános csatornának kell lennie."
+      message_move_no_messages_found: "A megadott üzenetazonosítókkal nem találhatók üzenetek."
+    reviewables:
+      actions:
+        agree:
+          title: "Egyetértek…"
+        agree_and_keep_message:
+          title: "Üzenet megtartása"
+          description: "Egyetért a jelentéssel, és változatlanul hagyja az üzenetet."
+        agree_and_keep_deleted:
+          title: "Üzenet törölve hagyása"
+          description: "Egyetért a jelentéssel, és törölve hagyja az üzenetet."
+        agree_and_suspend:
+          title: "Felhasználó felfüggesztése"
+          description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"
+        agree_and_silence:
+          title: "Felhasználó némítása"
+          description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
+        agree_and_restore:
+          title: "Üzenet helyreállítása"
+          description: "Üzenet helyreállítása, hogy láthassák a felhasználók."
+        agree_and_delete:
+          title: "Üzenet törlése"
+          description: "Üzenet törlése, hogy a felhasználók ne láthassák."
+        delete_and_agree:
+          title: "Üzenet törlése"
+        disagree_and_restore:
+          title: "Nem ért egyet, és az üzenet helyreállítása"
+          description: "Üzenet helyreállítása, hogy az összes felhasználó láthassa."
+        disagree:
+          title: "Elutasítás"
+        ignore:
+          title: "Letiltás"
+    channel:
+      archive:
+        first_post_raw: "Ez a téma a(z) [%{channel_name}](%{channel_url}) csevegőcsatorna archívuma."
+      messages_moved:
+        one: "@%{acting_username} áthelyezett egy üzenetet a(z) [%{channel_name}](%{first_moved_message_url}) csatornába."
+        other: "@%{acting_username} áthelyezett %{count} üzenetet a(z) [%{channel_name}](%{first_moved_message_url}) csatornába."
+      dm_title:
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} és még %{count} fő"
+          other: "%{comma_separated_usernames} és még %{count} fő"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
+        is_already_in_use: "már használatban van"
+    personal_chat: "személyes csevegés"
+    onebox:
+      x_members:
+        one: "%{count} tag"
+        other: "%{count} tag"
+      and_x_others:
+        one: "és még %{count} fő"
+        other: "és még %{count} fő"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} megemlítette Önt a következő csatornán: „%{channel}”'
+        other_type: '%{username} megemlítette %{identifier} felhasználót a következő csatornán: „%{channel}”'
+      direct_message_chat_mention:
+        direct: "%{username} megemlítette Önt egy személyes csevegésben"
+        other_type: "%{username} megemlítette %{identifier} felhasználót egy személyes csevegésben"
+      new_chat_message: '%{username} üzenet küldött a következő csatornán: „%{channel}”'
+      new_direct_chat_message: "%{username} üzenetet küldött egy személyes csevegésben"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Csevegőüzenet küldése
+  reviewable_score_types:
+    needs_review:
+      title: "Felülvizsgálatra szorul"
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      deleted_user: "Törölt felhasználó"
+      description:
+        one: "Új csevegőüzenete érkezett"
+        other: "Új csevegőüzenetei érkeztek"
+      from: "%{site_name}"
+      subject:
+        direct_message_from_1: "[%{email_prefix}] Új üzenet a következőtől: %{username}"
+      view_messages:
+        one: "Üzenet megtekintése"
+        other: "%{count} üzenet megtekintése"
+      view_more:
+        one: "%{count} további üzenet megtekintése"
+        other: "%{count} további üzenet megtekintése"
+      your_chat_settings: "csevegési e-mail gyakoriságának beállítása"
+  unsubscribe:
+    chat_summary:
+      select_title: "A csevegési összefoglaló e-mailek gyakoriságának beállítása:"
+      never: Soha
+      when_away: Csak ha távol van
+  category:
+    cannot_delete:
+      has_chat_channels: "Ezt a kategóriát nem lehet törölni, mert csevegőcsatornái vannak."

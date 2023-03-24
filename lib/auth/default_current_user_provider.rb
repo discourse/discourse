@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require_relative '../route_matcher'
+require_relative "../route_matcher"
 
 # You may have seen references to v0 and v1 of our auth cookie in the codebase
 # and you're not sure how they differ, so here is an explanation:
@@ -23,7 +23,6 @@ require_relative '../route_matcher'
 # We'll drop support for v0 after Discourse 2.9 is released.
 
 class Auth::DefaultCurrentUserProvider
-
   CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER"
   USER_TOKEN_KEY ||= "_DISCOURSE_USER_TOKEN"
   API_KEY ||= "api_key"
@@ -37,7 +36,7 @@ class Auth::DefaultCurrentUserProvider
   USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID"
   API_KEY_ENV ||= "_DISCOURSE_API"
   USER_API_KEY_ENV ||= "_DISCOURSE_USER_API"
-  TOKEN_COOKIE ||= ENV['DISCOURSE_TOKEN_COOKIE'] || "_t"
+  TOKEN_COOKIE ||= ENV["DISCOURSE_TOKEN_COOKIE"] || "_t"
   PATH_INFO ||= "PATH_INFO"
   COOKIE_ATTEMPTS_PER_MIN ||= 10
   BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
@@ -59,30 +58,20 @@ class Auth::DefaultCurrentUserProvider
         "badges#show",
         "tags#tag_feed",
         "tags#show",
-        *[:latest, :unread, :new, :read, :posted, :bookmarks].map { |f| "list##{f}_feed" },
-        *[:all, :yearly, :quarterly, :monthly, :weekly, :daily].map { |p| "list#top_#{p}_feed" },
-        *[:latest, :unread, :new, :read, :posted, :bookmarks].map { |f| "tags#show_#{f}" }
+        *%i[latest unread new read posted bookmarks].map { |f| "list##{f}_feed" },
+        *%i[all yearly quarterly monthly weekly daily].map { |p| "list#top_#{p}_feed" },
+        *%i[latest unread new read posted bookmarks].map { |f| "tags#show_#{f}" },
       ],
-      formats: :rss
+      formats: :rss,
     ),
-    RouteMatcher.new(
-      methods: :get,
-      actions: "users#bookmarks",
-      formats: :ics
-    ),
-    RouteMatcher.new(
-      methods: :post,
-      actions: "admin/email#handle_mail",
-      formats: nil
-    ),
+    RouteMatcher.new(methods: :get, actions: "users#bookmarks", formats: :ics),
+    RouteMatcher.new(methods: :post, actions: "admin/email#handle_mail", formats: nil),
   ]
 
   def self.find_v0_auth_cookie(request)
     cookie = request.cookies[TOKEN_COOKIE]
 
-    if cookie&.valid_encoding? && cookie.present? && cookie.size == TOKEN_SIZE
-      cookie
-    end
+    cookie if cookie&.valid_encoding? && cookie.present? && cookie.size == TOKEN_SIZE
   end
 
   def self.find_v1_auth_cookie(env)
@@ -111,12 +100,10 @@ class Auth::DefaultCurrentUserProvider
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
 
     # bypass if we have the shared session header
-    if shared_key = @env['HTTP_X_SHARED_SESSION_KEY']
+    if shared_key = @env["HTTP_X_SHARED_SESSION_KEY"]
       uid = Discourse.redis.get("shared_session_key_#{shared_key}")
       user = nil
-      if uid
-        user = User.find_by(id: uid.to_i)
-      end
+      user = User.find_by(id: uid.to_i) if uid
       @env[CURRENT_USER_KEY] = user
       return user
     end
@@ -130,28 +117,27 @@ class Auth::DefaultCurrentUserProvider
       user_api_key ||= request[PARAMETER_USER_API_KEY]
     end
 
-    if !@env.blank? && request[API_KEY] && api_parameter_allowed?
-      api_key ||= request[API_KEY]
-    end
+    api_key ||= request[API_KEY] if !@env.blank? && request[API_KEY] && api_parameter_allowed?
 
     auth_token = find_auth_token
     current_user = nil
 
     if auth_token
-      limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN , 60)
+      limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN, 60)
 
       if limiter.can_perform?
-        @env[USER_TOKEN_KEY] = @user_token = begin
-          UserAuthToken.lookup(
-            auth_token,
-            seen: true,
-            user_agent: @env['HTTP_USER_AGENT'],
-            path: @env['REQUEST_PATH'],
-            client_ip: @request.ip
-          )
-        rescue ActiveRecord::ReadOnlyError
-          nil
-        end
+        @env[USER_TOKEN_KEY] = @user_token =
+          begin
+            UserAuthToken.lookup(
+              auth_token,
+              seen: true,
+              user_agent: @env["HTTP_USER_AGENT"],
+              path: @env["REQUEST_PATH"],
+              client_ip: @request.ip,
+            )
+          rescue ActiveRecord::ReadOnlyError
+            nil
+          end
 
         current_user = @user_token.try(:user)
       end
@@ -161,14 +147,10 @@ class Auth::DefaultCurrentUserProvider
         begin
           limiter.performed!
         rescue RateLimiter::LimitExceeded
-          raise Discourse::InvalidAccess.new(
-            'Invalid Access',
-            nil,
-            delete_cookie: TOKEN_COOKIE
-          )
+          raise Discourse::InvalidAccess.new("Invalid Access", nil, delete_cookie: TOKEN_COOKIE)
         end
       end
-    elsif @env['HTTP_DISCOURSE_LOGGED_IN']
+    elsif @env["HTTP_DISCOURSE_LOGGED_IN"]
       @env[BAD_TOKEN] = true
     end
 
@@ -177,10 +159,10 @@ class Auth::DefaultCurrentUserProvider
       current_user = lookup_api_user(api_key, request)
       if !current_user
         raise Discourse::InvalidAccess.new(
-          I18n.t('invalid_api_credentials'),
-          nil,
-          custom_message: "invalid_api_credentials"
-        )
+                I18n.t("invalid_api_credentials"),
+                nil,
+                custom_message: "invalid_api_credentials",
+              )
       end
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
       admin_api_key_limiter.performed! if !Rails.env.profile?
@@ -191,12 +173,13 @@ class Auth::DefaultCurrentUserProvider
     if user_api_key
       @hashed_user_api_key = ApiKey.hash_key(user_api_key)
 
-      user_api_key_obj = UserApiKey
-        .active
-        .joins(:user)
-        .where(key_hash: @hashed_user_api_key)
-        .includes(:user, :scopes)
-        .first
+      user_api_key_obj =
+        UserApiKey
+          .active
+          .joins(:user)
+          .where(key_hash: @hashed_user_api_key)
+          .includes(:user, :scopes)
+          .first
 
       raise Discourse::InvalidAccess unless user_api_key_obj
 
@@ -208,18 +191,14 @@ class Auth::DefaultCurrentUserProvider
       current_user = user_api_key_obj.user
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
 
-      if can_write?
-        user_api_key_obj.update_last_used(@env[USER_API_CLIENT_ID])
-      end
+      user_api_key_obj.update_last_used(@env[USER_API_CLIENT_ID]) if can_write?
 
       @env[USER_API_KEY_ENV] = true
     end
 
     # keep this rule here as a safeguard
     # under no conditions to suspended or inactive accounts get current_user
-    if current_user && (current_user.suspended? || !current_user.active)
-      current_user = nil
-    end
+    current_user = nil if current_user && (current_user.suspended? || !current_user.active)
 
     if current_user && should_update_last_seen?
       ip = request.ip
@@ -247,31 +226,40 @@ class Auth::DefaultCurrentUserProvider
     if !is_user_api? && @user_token && @user_token.user == user
       rotated_at = @user_token.rotated_at
 
-      needs_rotation = @user_token.auth_token_seen ? rotated_at < UserAuthToken::ROTATE_TIME.ago : rotated_at < UserAuthToken::URGENT_ROTATE_TIME.ago
+      needs_rotation =
+        (
+          if @user_token.auth_token_seen
+            rotated_at < UserAuthToken::ROTATE_TIME.ago
+          else
+            rotated_at < UserAuthToken::URGENT_ROTATE_TIME.ago
+          end
+        )
 
       if needs_rotation
-        if @user_token.rotate!(user_agent: @env['HTTP_USER_AGENT'],
-                               client_ip: @request.ip,
-                               path: @env['REQUEST_PATH'])
+        if @user_token.rotate!(
+             user_agent: @env["HTTP_USER_AGENT"],
+             client_ip: @request.ip,
+             path: @env["REQUEST_PATH"],
+           )
           set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)
           DiscourseEvent.trigger(:user_session_refreshed, user)
         end
       end
     end
 
-    if !user && cookie_jar.key?(TOKEN_COOKIE)
-      cookie_jar.delete(TOKEN_COOKIE)
-    end
+    cookie_jar.delete(TOKEN_COOKIE) if !user && cookie_jar.key?(TOKEN_COOKIE)
   end
 
   def log_on_user(user, session, cookie_jar, opts = {})
-    @env[USER_TOKEN_KEY] = @user_token = UserAuthToken.generate!(
-      user_id: user.id,
-      user_agent: @env['HTTP_USER_AGENT'],
-      path: @env['REQUEST_PATH'],
-      client_ip: @request.ip,
-      staff: user.staff?,
-      impersonate: opts[:impersonate])
+    @env[USER_TOKEN_KEY] = @user_token =
+      UserAuthToken.generate!(
+        user_id: user.id,
+        user_agent: @env["HTTP_USER_AGENT"],
+        path: @env["REQUEST_PATH"],
+        client_ip: @request.ip,
+        staff: user.staff?,
+        impersonate: opts[:impersonate],
+      )
 
     set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)
     user.unstage!
@@ -288,23 +276,19 @@ class Auth::DefaultCurrentUserProvider
       token: unhashed_auth_token,
       user_id: user.id,
       trust_level: user.trust_level,
-      issued_at: Time.zone.now.to_i
+      issued_at: Time.zone.now.to_i,
     }
 
-    if SiteSetting.persistent_sessions
-      expires = SiteSetting.maximum_session_age.hours.from_now
-    end
+    expires = SiteSetting.maximum_session_age.hours.from_now if SiteSetting.persistent_sessions
 
-    if SiteSetting.same_site_cookies != "Disabled"
-      same_site = SiteSetting.same_site_cookies
-    end
+    same_site = SiteSetting.same_site_cookies if SiteSetting.same_site_cookies != "Disabled"
 
     cookie_jar.encrypted[TOKEN_COOKIE] = {
       value: data,
       httponly: true,
       secure: SiteSetting.force_https,
       expires: expires,
-      same_site: same_site
+      same_site: same_site,
     }
   end
 
@@ -313,10 +297,8 @@ class Auth::DefaultCurrentUserProvider
   # for signup flow, since all admin emails are stored in
   # DISCOURSE_DEVELOPER_EMAILS for self-hosters.
   def make_developer_admin(user)
-    if  user.active? &&
-        !user.admin &&
-        Rails.configuration.respond_to?(:developer_emails) &&
-        Rails.configuration.developer_emails.include?(user.email)
+    if user.active? && !user.admin && Rails.configuration.respond_to?(:developer_emails) &&
+         Rails.configuration.developer_emails.include?(user.email)
       user.admin = true
       user.save
       Group.refresh_automatic_groups!(:staff, :admins)
@@ -347,7 +329,7 @@ class Auth::DefaultCurrentUserProvider
       @user_token.destroy
     end
 
-    cookie_jar.delete('authentication_data')
+    cookie_jar.delete("authentication_data")
     cookie_jar.delete(TOKEN_COOKIE)
   end
 
@@ -384,9 +366,7 @@ class Auth::DefaultCurrentUserProvider
     if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
 
-      if !api_key.request_allowed?(@env)
-        return nil
-      end
+      return nil if !api_key.request_allowed?(@env)
 
       user =
         if api_key.user
@@ -395,7 +375,8 @@ class Auth::DefaultCurrentUserProvider
           User.find_by(username_lower: api_username.downcase)
         elsif user_id = header_api_key? ? @env[HEADER_API_USER_ID] : request["api_user_id"]
           User.find_by(id: user_id.to_i)
-        elsif external_id = header_api_key? ? @env[HEADER_API_USER_EXTERNAL_ID] : request["api_user_external_id"]
+        elsif external_id =
+              header_api_key? ? @env[HEADER_API_USER_EXTERNAL_ID] : request["api_user_external_id"]
           SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
         end
 
@@ -435,52 +416,48 @@ class Auth::DefaultCurrentUserProvider
 
     limit = GlobalSetting.max_admin_api_reqs_per_minute.to_i
     if GlobalSetting.respond_to?(:max_admin_api_reqs_per_key_per_minute)
-      Discourse.deprecate("DISCOURSE_MAX_ADMIN_API_REQS_PER_KEY_PER_MINUTE is deprecated. Please use DISCOURSE_MAX_ADMIN_API_REQS_PER_MINUTE", drop_from: '2.9.0')
-      limit = [
-        GlobalSetting.max_admin_api_reqs_per_key_per_minute.to_i,
-        limit
-      ].max
+      Discourse.deprecate(
+        "DISCOURSE_MAX_ADMIN_API_REQS_PER_KEY_PER_MINUTE is deprecated. Please use DISCOURSE_MAX_ADMIN_API_REQS_PER_MINUTE",
+        drop_from: "2.9.0",
+      )
+      limit = [GlobalSetting.max_admin_api_reqs_per_key_per_minute.to_i, limit].max
     end
-    @admin_api_key_limiter = RateLimiter.new(
-      nil,
-      "admin_api_min",
-      limit,
-      60,
-      error_code: "admin_api_key_rate_limit"
-    )
+    @admin_api_key_limiter =
+      RateLimiter.new(nil, "admin_api_min", limit, 60, error_code: "admin_api_key_rate_limit")
   end
 
   def user_api_key_limiter_60_secs
-    @user_api_key_limiter_60_secs ||= RateLimiter.new(
-      nil,
-      "user_api_min_#{@hashed_user_api_key}",
-      GlobalSetting.max_user_api_reqs_per_minute,
-      60,
-      error_code: "user_api_key_limiter_60_secs"
-    )
+    @user_api_key_limiter_60_secs ||=
+      RateLimiter.new(
+        nil,
+        "user_api_min_#{@hashed_user_api_key}",
+        GlobalSetting.max_user_api_reqs_per_minute,
+        60,
+        error_code: "user_api_key_limiter_60_secs",
+      )
   end
 
   def user_api_key_limiter_1_day
-    @user_api_key_limiter_1_day ||= RateLimiter.new(
-      nil,
-      "user_api_day_#{@hashed_user_api_key}",
-      GlobalSetting.max_user_api_reqs_per_day,
-      86400,
-      error_code: "user_api_key_limiter_1_day"
-    )
+    @user_api_key_limiter_1_day ||=
+      RateLimiter.new(
+        nil,
+        "user_api_day_#{@hashed_user_api_key}",
+        GlobalSetting.max_user_api_reqs_per_day,
+        86_400,
+        error_code: "user_api_key_limiter_1_day",
+      )
   end
 
   def find_auth_token
     return @auth_token if defined?(@auth_token)
 
-    @auth_token = begin
-      if v0 = self.class.find_v0_auth_cookie(@request)
-        v0
-      elsif v1 = self.class.find_v1_auth_cookie(@env)
-        if v1[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
-          v1[:token]
+    @auth_token =
+      begin
+        if v0 = self.class.find_v0_auth_cookie(@request)
+          v0
+        elsif v1 = self.class.find_v1_auth_cookie(@env)
+          v1[:token] if v1[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
         end
       end
-    end
   end
 end

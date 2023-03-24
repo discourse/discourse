@@ -21,10 +21,11 @@ module HasUrl
     def get_from_url(url)
       return if url.blank?
 
-      uri = begin
-        URI(UrlHelper.unencode(url))
-      rescue URI::Error
-      end
+      uri =
+        begin
+          URI(UrlHelper.unencode(url))
+        rescue URI::Error
+        end
 
       return if uri&.path.blank?
       data = extract_url(uri.path)
@@ -52,10 +53,11 @@ module HasUrl
       upload_urls.each do |url|
         next if url.blank?
 
-        uri = begin
-          URI(UrlHelper.unencode(url))
-        rescue URI::Error
-        end
+        uri =
+          begin
+            URI(UrlHelper.unencode(url))
+          rescue URI::Error
+          end
 
         next if uri&.path.blank?
         urls << uri.path

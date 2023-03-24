@@ -45,8 +45,6 @@ zh_CN:
       trigger: "投掷"
       invalid: |-
         抱歉，数学上无法掷出该骰子组合。:confounded:
-      not_enough_dice:
-        other: "我只有 %{count} 个骰子。[Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)，我知道！"
       out_of_range: |-
         你知道数学上公平的骰子[最多有 120 个面](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)吗？
       results: |-
@@ -373,7 +371,7 @@ zh_CN:
           注意，你只有 %{deletion_after} 小时的时间可以取消删除帖子。
       category_hashtag:
         instructions: |-
-          你知道你可以在你的帖子中引用类别和标签吗？例如，你看到过%{category}类别吗？
+          你知道你可以在你的帖子中引用类别和标签吗？例如，你看到过“%{category}”类别吗？
 
           在句子中输入`#`，然后选择任意类别或标签。
         not_found: |-

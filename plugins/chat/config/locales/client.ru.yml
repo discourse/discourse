@@ -1,0 +1,452 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    admin:
+      site_settings:
+        categories:
+          chat: Чат
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Изменение статуса канала чата"
+            chat_channel_delete: "Удаление канала чата"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Создать сообщение чата в указанном канале."
+    about:
+      chat_messages_count: "Сообщения чата"
+      chat_channels_count: "Каналы чата"
+      chat_users_count: "Пользователи чата"
+    chat:
+      dates:
+        time_tiny: "ч:мм"
+      all_loaded: "Показать все сообщения"
+      already_enabled: "Чат в этой теме уже включён . Обновите страницу."
+      disabled_for_topic: "Чат в этой теме отключён."
+      bot: "Бот"
+      create: "Создать"
+      cancel: "Отмена"
+      cancel_reply: "Отменить ответ"
+      chat_channels: "Каналы"
+      browse_all_channels: "Просмотреть все каналы"
+      move_to_channel:
+        title: "Переместить сообщения в канал"
+        confirm_move: "Переместить сообщения"
+      channel_settings:
+        title: "Настройки канала"
+        edit: "Изменить"
+        add: "Добавить"
+        close_channel: "Закрыть канал"
+        open_channel: "Открыть канал"
+        archive_channel: "Архивировать канал"
+        delete_channel: "Удалить канал"
+        join_channel: "Подписаться на канал"
+        leave_channel: "Покинуть канал"
+        join: "Подписаться"
+        leave: "Отписаться"
+        save_label:
+          mute_channel: "Настройка отключения уведомлений для канала сохранена"
+          desktop_notification: "Настройка уведомлений для настольных устройств сохранена"
+          mobile_notification: "Настройка уведомлений для мобильных устройств сохранена"
+      channel_archive:
+        title: "Архивировать канал"
+        instructions: "<p>Архивация канала переводит его в режим только для чтения и перемещает все сообщения из канала в новую или существующую тему. В этом режиме нельзя отправлять новые сообщения, а существующие сообщения нельзя редактировать или удалять.</p><p>Действительно заархивировать канал <strong>%{channelTitle}</strong>?</p>"
+        process_started: "Процесс архивации запущен. Это окно закроется в ближайшее время, и вы получите личное сообщение, когда процесс архивации будет завершён."
+        retry: "Повторить"
+      channel_open:
+        title: "Открыть канал"
+        instructions: "Открытие канала; все пользователи смогут отправлять и редактировать свои сообщения."
+      channel_close:
+        title: "Закрыть канал"
+        instructions: "Закрытие канала; запрет пользователям, не являющихся сотрудниками, отправлять новые или редактировать существующие сообщения. Действительно закрыть этот канал?"
+      channel_delete:
+        title: "Удалить канал"
+        confirm: "Я понимаю последствия, удалить канал"
+        confirm_channel_name: "Введите название канала"
+        process_started: "Процесс удаления канала запущен. Это окно закроется в ближайшее время, вы больше не увидите удалённый канал."
+      channels_list_popup:
+        browse: "Просмотр каналов"
+        create: "Новый канал"
+      click_to_join: "Нажмите здесь для просмотра доступных каналов."
+      close: "Закрыть"
+      collapse: "Свернуть чат"
+      confirm_flag: "Действительно пожаловаться на сообщение пользователя %{username}?"
+      deleted: "Сообщение было удалено. [view]"
+      hidden: "Сообщение было скрыто. [view]"
+      delete: "Удалить"
+      edited: "Отредактировано"
+      muted: "Отключённый"
+      joined: "подписан"
+      empty_state:
+        direct_message_cta: "Начать личный чат"
+        direct_message: "Вы также можете начать личный чат с одним или несколькими пользователями."
+        title: "Каналы не обнаружены"
+      email_frequency:
+        description: "Мы отправим вам письмо только в том случае, если вы не были онлайн последние 15 минут."
+        never: "Никогда"
+        title: "Настройка почтовых уведомлений"
+        when_away: "Если вы находитесь офлайн"
+      header_indicator_preference:
+        never: "Никогда"
+      enable: "Включить чат"
+      flag: "Флаг"
+      emoji: "Вставить эмодзи"
+      flagged: "Эта запись была отправлена на проверку"
+      invalid_access: "У вас нет доступа для просмотра этого канала"
+      invitation_notification: "<span>Пользователь %{username}</span> <span> пригласил вас присоединиться к каналу</span>"
+      in_reply_to: "В ответ на"
+      heading: "Чат"
+      join: "Подписаться"
+      last_visit: "последнее посещение"
+      mention_warning:
+        dismiss: "Отклонить"
+        invitations_sent:
+          one: "Приглашение отправлено"
+          few: "Приглашения отправлены"
+          many: "Приглашений отправлены"
+          other: "Приглашений отправлены"
+        invite: "Пригласить в канал"
+        groups:
+          header:
+            some: "Некоторые пользователи не будут уведомлены"
+            all: "Никто не будет уведомлен"
+      aria_roles:
+        header: "Заголовок чата"
+        composer: "Редактор чата"
+        channels_list: "Список каналов чата"
+      no_public_channels: "Вы не присоединились ни к одному каналу."
+      only_chat_push_notifications:
+        title: "Отправлять только push-уведомления в чате"
+        description: "Запретить отправку всех push-уведомлений, не связанных с чатом."
+      ignore_channel_wide_mention:
+        title: "Игнорировать на канале массовые упоминания"
+        description: "Не отправлять массовые уведомления при использовании на канале переменных @here и @all."
+      open: "Открыть чат"
+      open_full_page: "Открыть полноэкранный чат"
+      close_full_page: "Закрыть полноэкранный чат"
+      open_message: "Открыть сообщение в чате"
+      placeholder_self: "Напишите что-нибудь"
+      placeholder_users: "Чат с %{commaSeparatedNames}"
+      placeholder_silenced: "В настоящее время вы не можете отправлять сообщения."
+      placeholder_start_conversation_users: "Начать беседу с пользователем %{commaSeparatedUsernames}"
+      remove_upload: "Удалить файл"
+      react: "Реакция с помощью эмодзи"
+      reply: "Ответить"
+      edit: "Изменить"
+      copy_link: "Копировать ссылку"
+      rebake_message: "Перестроить HTML"
+      retry_staged_message:
+        title: "Ошибка сети"
+        action: "Отправить ещё раз?"
+      unreliable_network: "Сеть ненадёжна, отправка сообщений и сохранение черновиков могут не работать"
+      bookmark_message: "Закладка"
+      bookmark_message_edit: "Редактировать закладку"
+      restore: "Восстановить удаленное сообщение"
+      save: "Сохранить"
+      select: "Выбрать"
+      return_to_list: "Вернуться к списку каналов"
+      scroll_to_bottom: "Прокрутка вниз"
+      scroll_to_new_messages: "Новые сообщения"
+      sound:
+        title: "Звук уведомления"
+      sounds:
+        none: "Нет"
+        bell: "Колокольчик"
+        ding: "Звонок"
+      title: "чат"
+      title_capitalized: "Чат"
+      upload: "Прикрепить файл"
+      uploaded_files:
+        one: "%{count} файл"
+        few: "%{count} файла"
+        many: "%{count} файла"
+        other: "%{count} файла"
+      you_flagged: "Вы пожаловались на это сообщение"
+      exit: "Назад"
+      channel_status:
+        read_only_header: "Канал только для чтения"
+        read_only: "Только для чтения"
+        archived_header: "Канал заархивирован"
+        archived: "Архивные"
+        archive_completed: "См. <a target=\"_blank\" href=\"%{topic_url}\">архивную тему</a>."
+        closed_header: "Канал закрыт"
+        closed: "Закрытые"
+        open_header: "Канал открыт"
+        open: "Открыт"
+      browse:
+        back: "Назад"
+        title: Каналы
+        filter_all: Все
+        filter_open: Открытые
+        filter_closed: Закрытые
+        filter_archived: Архивные
+        filter_input_placeholder: Поиск канала по названию
+      chat_message_separator:
+        today: Сегодня
+        yesterday: Вчера
+      members_view:
+        filter_placeholder: Найти участников
+      about_view:
+        associated_topic: Связанная тема
+        associated_category: Связанная категория
+        title: Название
+        name: Название
+        description: Описание
+      channel_info:
+        back_to_all_channels: "Все каналы"
+        back_to_channel: "Назад"
+        tabs:
+          about: Информация
+          members: Участники
+          settings: Настройки
+      channel_edit_name_slug_modal:
+        name: Название канала
+      channel_edit_description_modal:
+        title: Изменить описание
+        input_placeholder: Добавить описание
+        description: Расскажите, о чем этот канал
+      direct_message_creator:
+        title: Новое сообщение
+        prefix: "Кому:"
+        no_results: Нет результатов
+        selected_user_title: "Отменить выбор пользователя %{username}"
+      channel_selector:
+        title: "Перейти на канал"
+        no_channels: "Нет каналов, соответствующих вашему запросу"
+      channel:
+        no_memberships: На этом канале нет участников
+        no_memberships_found: Участники не найдены
+        memberships_count:
+          one: "%{count} участник"
+          few: "%{count} участника"
+          many: "%{count} участников"
+          other: "%{count} участников"
+      create_channel:
+        auto_join_users:
+          public_category_warning: "Раздел %{category} является общедоступным. Автоматически добавлять в этот канал всех активных пользователей?"
+        choose_category:
+          label: "Выберите раздел"
+          none: "выберите раздел…"
+          default_hint: Управляйте доступом к разделу через <a href=%{link} target="_blank">%{category}настройки безопасности</a>
+        create: "Создать канал"
+        description: "Описание (необязательно)"
+        name: "Название канала"
+        title: "Новый канал"
+        type: "Тип"
+        types:
+          category: "Категория"
+          topic: "Тема"
+      reviewable:
+        type: "Сообщение чата"
+      reactions:
+        only_you: "Вы отреагировали при помощи эмодзи :%{emoji}:"
+        single_user: "Пользователи %{username} отреагировали при помощи эмодзи %{emoji}:"
+      composer:
+        toggle_toolbar: "Переключить панель инструментов"
+        italic_text: "текст, выделенный курсивом"
+        bold_text: "Жирный"
+        code_text: "Код"
+      quote:
+        original_channel: 'Первоначально отправлено в <a href="%{channelLink}">%{channel}</a>'
+        copy_success: "Цитата из чата скопирована в буфер обмена"
+      notification_levels:
+        never: "Никогда"
+        mention: "Только для упоминаний"
+        always: "Для всех действий"
+      settings:
+        channel_wide_mentions_label: "Разрешить упоминания @all и @here"
+        channel_wide_mentions_description: "Разрешить пользователям уведомлять всех в канале #%{channel} (@all) и только активных участников (@here)"
+        auto_join_users_label: "Автоматически добавлять пользователей"
+        auto_join_users_warning: "Любой пользователь, не являющийся участником этого канала, но имеющий доступ к разделу %{category}, будет автоматически подключён. Продолжить?"
+        desktop_notification_level: "Уведомления на рабочем столе"
+        follow: "Подписаться"
+        followed: "Подписан"
+        mobile_notification_level: "Мобильные push-уведомления"
+        mute: "Отключить канал"
+        muted_on: "Включено"
+        muted_off: "Выключено"
+        notifications: "Уведомления"
+        preview: "Предпросмотр"
+        save: "Сохранить"
+        saved: "Сохранено"
+        unfollow: "Отписаться"
+        admin_title: "Администрирование"
+      admin:
+        title: "Чат"
+      direct_messages:
+        title: "Личный чат"
+        new: "Создать личный чат"
+        create: "Создать"
+        leave: "Выйти из личного чата"
+        cannot_create: "Вы не можете отправлять прямые сообщения."
+      incoming_webhooks:
+        back: "Назад"
+        channel_placeholder: "Выберите канал"
+        confirm_destroy: "Действительно удалить этот входящий вебхук? Это действие не может быть отменено."
+        current_emoji: "Текущие эмодзи"
+        description: "Описание"
+        delete: "Удалить"
+        emoji: "Эмодзи"
+        emoji_instructions: "Если оставить эмодзи пустым, будет использоваться системный аватар."
+        name: "Имя"
+        name_placeholder: "наименование…"
+        new: "Новый входящий вебхук"
+        none: "Входящие вебхуки не созданы."
+        no_emoji: "Эмодзи не выбрано"
+        post_to: "Отправить в"
+        reset_emoji: "Сброс эмодзи"
+        save: "Сохранить"
+        edit: "Изменить"
+        select_emoji: "Выберите эмодзи"
+        system: "Системный"
+        title: "Входящие вебхуки"
+        url: "URL"
+        url_instructions: "Этот URL содержит секретное значение — берегите его."
+        username: "Имя пользователя"
+        username_instructions: "Имя бота, отправляющего сообщения на канал. Если оставить поле пустым, по умолчанию используется «Системный»."
+        instructions: "Входящие вебхуки могут использоваться внешними системами для отправки сообщений в назначенный канал чата в качестве пользователя-бота через конечную точку <code>/hooks/:key</code>. Полезная нагрузка состоит из одного параметра <code>text</code>, который ограничен 2000 символами.<br><br>Мы также поддерживаем ограниченные Slack-форматированные <code>текстовые</code> параметры, извлекая ссылки и упоминания на основе формата <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, но для этого необходимо использовать конечную точку <code>/hooks/:key/slack</code>."
+      selection:
+        cancel: "Отмена"
+        quote_selection: "Цитировать в теме"
+        copy: "Копировать"
+        move_selection_to_channel: "Переместить в канал"
+        error: "При перемещении сообщений чата произошла ошибка"
+        title: "Переместить чат в тему"
+        new_topic:
+          title: "Переместить в новую тему"
+          instructions:
+            one: "Вы создадите новую тему и заполните её сообщением, которое вы выбрали."
+            few: "Вы создадите новую тему и заполните её <b>%{count}</b> сообщениями, которые вы выбрали."
+            many: "Вы создадите новую тему и заполните её <b>%{count}</b> сообщениями, которые вы выбрали."
+            other: "Вы создадите новую тему и заполните её <b>%{count}</b> сообщениями, которые вы выбрали."
+          instructions_channel_archive: "Вы создадите новую тему и заархивируете в неё сообщения канала."
+        existing_topic:
+          title: "Переместить в существующую тему"
+          instructions:
+            one: "Выберите тему, в которую нужно переместить это сообщение."
+            few: "Выберите тему, в которую нужно переместить эти <b>%{count}</b> сообщения."
+            many: "Выберите тему, в которую нужно переместить эти <b>%{count}</b> сообщений."
+            other: "Выберите тему, в которую нужно переместить эти <b>%{count}</b> сообщений."
+          instructions_channel_archive: "Выберите тему, в которую вы хотите заархивировать сообщения канала."
+        new_message:
+          title: "Переместить в новое сообщение"
+          instructions:
+            one: "Вы создадите новое сообщение и заполните её сообщением чата, которое вы выбрали."
+            few: "Вы создадите новое сообщение и заполните её <b>%{count}</b> сообщениями чата, которые вы выбрали."
+            many: "Вы создадите новое сообщение и заполните её <b>%{count}</b> сообщениями чата, которые вы выбрали."
+            other: "Вы создадите новое сообщение и заполните её <b>%{count}</b> сообщениями чата, которые вы выбрали."
+      replying_indicator:
+        single_user: "%{username} печатает"
+        multiple_users: "%{commaSeparatedUsernames} и %{lastUsername} печатают"
+        many_users:
+          one: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователь"
+          few: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователя"
+          many: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
+          other: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
+      flags:
+        off_topic: "Эта запись не имеет отношения к текущему обсуждению, как указано в названии канала, и, вероятно, ее следует переместить в другое место."
+        inappropriate: "Эта запись содержит контент, который обоснованно можно считать оскорбительным или нарушающим <a href=\"%{basePath}/guidelines\">рекомендации для сообщества</a>."
+        spam: "Это сообщение является рекламой или просто мусором. Оно не несёт полезной нагрузки или не имеет отношения к текущему каналу."
+        notify_user: "Я хочу поговорить с этим человеком напрямую и обсудить его сообщение."
+        notify_moderators: "Это сообщение требует внимания модератора по причине, не указанной выше."
+      flagging:
+        action: "Пожаловаться на сообщение"
+      emoji_picker:
+        favorites: "Часто используемые"
+        smileys_&_emotion: "Смайлики и эмоции"
+        objects: "Объекты"
+        people_&_body: "Люди и части тел"
+        travel_&_places: "Путешествия и места"
+        animals_&_nature: "Животные и природа"
+        food_&_drink: "Еда и напитки"
+        activities: "Деятельность"
+        flags: "Флаги"
+        symbols: "Символы"
+        search_placeholder: "Поиск по названию эмодзи и псевдониму…"
+        no_results: "Нет результатов"
+      draft_channel_screen:
+        header: "Новое сообщение"
+        cancel: "Отмена"
+    notifications:
+      chat_invitation: "пригласил вас присоединиться к каналу чата"
+      chat_invitation_html: "<span>Пользователь %{username}</span> <span> пригласил вас присоединиться к каналу</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_mention:
+          direct: 'упомянул вас в «%{channel}»'
+          direct_html: '<span>Пользователь %{username}</span> <span>упомянул вас на канале «%{channel}»</span>'
+          other_plain: 'упомянул(а) %{identifier} в канале «%{channel}»'
+          other_html: '<span>%{username}</span> <span>упомянул(а) %{identifier} в канале «%{channel}»</span>'
+        direct_message_chat_mention:
+          direct: "упомянул вас в личном чате"
+          direct_html: "<span>Пользователь %{username}</span> <span>упомянул вас в личном чате</span>"
+          other_plain: "упомянул(а) %{identifier} в личном чате"
+          other_html: "<span>%{username}</span> <span>упомянул(а) %{identifier} в личном чате</span>"
+        chat_message: "Новое сообщение в чате"
+        chat_quoted: "Пользователь %{username} процитировал ваше сообщение в чате"
+      titles:
+        chat_mention: "Упоминание в чате"
+        chat_invitation: "Приглашение в чат"
+        chat_quoted: "Цитирование чата"
+    action_codes:
+      chat:
+        enabled: '%{who} включил <button class="btn-link open-chat">чат</button> %{when}'
+        disabled: "%{who} закрыл чат %{when}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: Отправить сообщение в чат
+          fields:
+            chat_channel_id:
+              label: ID канала чата
+            message:
+              label: Сообщение
+            sender:
+              label: Отправитель
+              description: Системные значения по умолчанию
+    review:
+      transcript:
+        view: "Просмотр предыдущих сообщений"
+      types:
+        reviewable_chat_message:
+          title: "Сообщение на премодерации"
+          flagged_by: "Кто пожаловался"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Чат"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Переключить канал"
+          open_quick_channel_selector: "%{shortcut} Открыть переключатель каналов"
+          open_insert_link_modal: "%{shortcut} Вставить гиперссылку (только в редакторе)"
+          composer_bold: "%{shortcut} Жирный (только в редакторе)"
+          composer_italic: "%{shortcut} Курсив (только в редакторе)"
+          composer_code: "%{shortcut} Код (только в редакторе)"
+          drawer_open: "%{shortcut} Открыть панель чата"
+          drawer_close: "%{shortcut} Закрыть панель чата"
+    topic_statuses:
+      chat:
+        help: "Чат включён для этой темы"
+    user:
+      allow_private_messages: "Разрешить другим пользователям отправлять мне личные сообщения и прямые сообщения в чате"
+      muted_users_instructions: "Не показывать уведомления, личные сообщения и прямые сообщения в чате от этих пользователей."
+      allowed_pm_users_instructions: "Разрешить только личные сообщения или прямые сообщения в чате от этих пользователей."
+      allow_private_messages_from_specific_users: "Разрешить только определённым пользователям отправлять мне личные сообщения или прямые сообщения в чате"
+      ignored_users_instructions: "Не показывать сообщения, личные сообщения, уведомления, прямые и личные сообщения чата от этих пользователей."
+    user_menu:
+      no_chat_notifications_title: "У вас пока нет уведомлений чата"
+      no_chat_notifications_body: >
+        На этой панели появится уведомление, когда кто-то напишет вам напрямую или <b>@упомянет</b> вас в чате. Уведомления также будут отправлены на вашу электронную почту, если вы отсутствовали на форуме в течение некоторого времени. <br><br> Кликните заголовок в верхней части любого канала чата, чтобы настроить уведомления, которые вы будете получать в этом канале. Для получения дополнительной информации см. <a href='%{preferencesUrl}'>настройки уведомлений</a>.
+      tabs:
+        chat_notifications: "Уведомления чата"
+        chat_notifications_with_unread:
+          one: "Уведомления чата —%{count} непрочитанное уведомление"
+          few: "Уведомления чата —%{count} непрочитанных уведомления"
+          many: "Уведомления чата —%{count} непрочитанных уведомлений"
+          other: "Уведомления чата —%{count} непрочитанных уведомлений"

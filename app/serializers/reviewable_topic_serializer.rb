@@ -12,10 +12,10 @@ class ReviewableTopicSerializer < ApplicationSerializer
     :archetype,
     :relative_url,
     :stats,
-    :reviewable_score
+    :reviewable_score,
   )
 
-  has_one :claimed_by, serializer: BasicUserSerializer, root: 'users'
+  has_one :claimed_by, serializer: BasicUserSerializer, root: "users"
 
   def stats
     @options[:stats][object.id]
@@ -28,5 +28,4 @@ class ReviewableTopicSerializer < ApplicationSerializer
   def include_claimed_by?
     @options[:claimed_topics]
   end
-
 end

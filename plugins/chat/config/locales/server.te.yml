@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  chat:
+    deleted_chat_username: తొలగించారు
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "సభ్యుడిని సస్పెండు చేయి"
+        disagree:
+          title: "ఒప్పుకోకు"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"

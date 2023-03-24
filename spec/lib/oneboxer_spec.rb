@@ -10,7 +10,9 @@ RSpec.describe Oneboxer do
     stub_request(:head, "http://boom.com")
     stub_request(:get, "http://boom.com").to_return(body: "")
 
-    expect(Oneboxer.preview("http://boom.com", invalidate_oneboxes: true)).to include("Sorry, we were unable to generate a preview for this web page")
+    expect(Oneboxer.preview("http://boom.com", invalidate_oneboxes: true)).to include(
+      "Sorry, we were unable to generate a preview for this web page",
+    )
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 
@@ -32,10 +34,12 @@ RSpec.describe Oneboxer do
     end
 
     def preview(url, user = nil, category = nil, topic = nil)
-      Oneboxer.preview("#{Discourse.base_url}#{url}",
+      Oneboxer.preview(
+        "#{Discourse.base_url}#{url}",
         user_id: user&.id,
         category_id: category&.id,
-        topic_id: topic&.id).to_s
+        topic_id: topic&.id,
+      ).to_s
     end
 
     it "links to a topic/post" do
@@ -48,20 +52,29 @@ RSpec.describe Oneboxer do
 
       replier = Fabricate(:user)
 
-      public_post             = Fabricate(:post, raw: "This post has an emoji :+1:")
-      public_topic            = public_post.topic
-      public_reply            = Fabricate(:post, topic: public_topic, post_number: 2, user: replier)
-      public_hidden           = Fabricate(:post, topic: public_topic, post_number: 3, hidden: true)
-      public_moderator_action = Fabricate(:post, topic: public_topic, post_number: 4, user: staff, post_type: Post.types[:moderator_action])
+      public_post = Fabricate(:post, raw: "This post has an emoji :+1:")
+      public_topic = public_post.topic
+      public_reply = Fabricate(:post, topic: public_topic, post_number: 2, user: replier)
+      public_hidden = Fabricate(:post, topic: public_topic, post_number: 3, hidden: true)
+      public_moderator_action =
+        Fabricate(
+          :post,
+          topic: public_topic,
+          post_number: 4,
+          user: staff,
+          post_type: Post.types[:moderator_action],
+        )
 
       user = public_post.user
       public_category = public_topic.category
 
       secured_topic = Fabricate(:topic, user: staff, category: secured_category)
-      secured_post  = Fabricate(:post, user: staff, topic: secured_topic)
+      secured_post = Fabricate(:post, user: staff, topic: secured_topic)
       secured_reply = Fabricate(:post, user: staff, topic: secured_topic, post_number: 2)
 
-      expect(preview(public_topic.relative_url, user, public_category)).to include(public_topic.title)
+      expect(preview(public_topic.relative_url, user, public_category)).to include(
+        public_topic.title,
+      )
       onebox = preview(public_post.url, user, public_category)
       expect(onebox).to include(public_topic.title)
       expect(onebox).to include("/images/emoji/")
@@ -83,24 +96,46 @@ RSpec.describe Oneboxer do
       expect(onebox).not_to include(public_topic.title)
       expect(onebox).to include(replier.avatar_template_url.sub("{size}", "40"))
 
-      expect(preview(public_hidden.url, user, public_category)).to match_html(link(public_hidden.url))
-      expect(preview(secured_topic.relative_url, user, public_category)).to match_html(link(secured_topic.relative_url))
+      expect(preview(public_hidden.url, user, public_category)).to match_html(
+        link(public_hidden.url),
+      )
+      expect(preview(secured_topic.relative_url, user, public_category)).to match_html(
+        link(secured_topic.relative_url),
+      )
       expect(preview(secured_post.url, user, public_category)).to match_html(link(secured_post.url))
-      expect(preview(secured_reply.url, user, public_category)).to match_html(link(secured_reply.url))
+      expect(preview(secured_reply.url, user, public_category)).to match_html(
+        link(secured_reply.url),
+      )
 
-      expect(preview(public_topic.relative_url, user, secured_category)).to match_html(link(public_topic.relative_url))
-      expect(preview(public_reply.url, user, secured_category)).to match_html(link(public_reply.url))
-      expect(preview(secured_post.url, user, secured_category)).to match_html(link(secured_post.url))
-      expect(preview(secured_reply.url, user, secured_category)).to match_html(link(secured_reply.url))
+      expect(preview(public_topic.relative_url, user, secured_category)).to match_html(
+        link(public_topic.relative_url),
+      )
+      expect(preview(public_reply.url, user, secured_category)).to match_html(
+        link(public_reply.url),
+      )
+      expect(preview(secured_post.url, user, secured_category)).to match_html(
+        link(secured_post.url),
+      )
+      expect(preview(secured_reply.url, user, secured_category)).to match_html(
+        link(secured_reply.url),
+      )
 
-      expect(preview(public_topic.relative_url, staff, secured_category)).to include(public_topic.title)
+      expect(preview(public_topic.relative_url, staff, secured_category)).to include(
+        public_topic.title,
+      )
       expect(preview(public_post.url, staff, secured_category)).to include(public_topic.title)
       expect(preview(public_reply.url, staff, secured_category)).to include(public_reply.excerpt)
-      expect(preview(public_hidden.url, staff, secured_category)).to match_html(link(public_hidden.url))
-      expect(preview(secured_topic.relative_url, staff, secured_category)).to include(secured_topic.title)
+      expect(preview(public_hidden.url, staff, secured_category)).to match_html(
+        link(public_hidden.url),
+      )
+      expect(preview(secured_topic.relative_url, staff, secured_category)).to include(
+        secured_topic.title,
+      )
       expect(preview(secured_post.url, staff, secured_category)).to include(secured_topic.title)
       expect(preview(secured_reply.url, staff, secured_category)).to include(secured_reply.excerpt)
-      expect(preview(secured_reply.url, staff, secured_category, secured_topic)).not_to include(secured_topic.title)
+      expect(preview(secured_reply.url, staff, secured_category, secured_topic)).not_to include(
+        secured_topic.title,
+      )
     end
 
     it "links to an user profile" do
@@ -133,18 +168,24 @@ RSpec.describe Oneboxer do
 
       expect(preview("/u/#{user.username}")).not_to include("<span class=\"location\">")
 
-      profile.update!(
-        location: "<img src=x onerror=alert(document.domain)>",
-      )
+      profile.update!(location: "<img src=x onerror=alert(document.domain)>")
 
       expect(preview("/u/#{user.username}")).to include("<span class=\"location\">")
       expect(preview("/u/#{user.username}")).not_to include("<img src=x")
 
-      profile.update!(
-        location: "Thunderland",
-      )
+      profile.update!(location: "Thunderland")
 
       expect(preview("/u/#{user.username}")).to include("Thunderland")
+    end
+
+    it "includes hashtag HTML and icons" do
+      SiteSetting.enable_experimental_hashtag_autocomplete = true
+      category = Fabricate(:category, slug: "random")
+      Fabricate(:tag, name: "bug")
+      public_post = Fabricate(:post, raw: "This post has some hashtags, #random and #bug")
+      expect(preview(public_post.url).chomp).to include(<<~HTML.chomp)
+        <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="random"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>#{category.name}</a> and <a class="hashtag-cooked" href="/tag/bug" data-type="tag" data-slug="bug"><svg class="fa d-icon d-icon-tag svg-icon svg-node"><use href="#tag"></use></svg>bug</a>
+      HTML
     end
   end
 
@@ -153,7 +194,69 @@ RSpec.describe Oneboxer do
       post = Fabricate(:post, raw: Discourse.base_url + "/new?'class=black")
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
       cpp.post_process_oneboxes
-      expect(cpp.html).to eq("<p><a href=\"#{Discourse.base_url}/new?%27class=black\">http://test.localhost/new?%27class=black</a></p>")
+      expect(cpp.html).to eq(
+        "<p><a href=\"#{Discourse.base_url}/new?%27class=black\">http://test.localhost/new?%27class=black</a></p>",
+      )
+    end
+
+    it "escapes URLs of local audio uploads" do
+      result =
+        described_class.onebox_raw(
+          "#{Discourse.base_url}/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#'<>",
+        )
+      expect(result[:onebox]).to eq(<<~HTML)
+        <audio  controls>
+          <source src='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E'>
+          <a href='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E'>
+            http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E
+          </a>
+        </audio>
+      HTML
+      expect(result[:preview]).to eq(<<~HTML)
+        <audio  controls>
+          <source src='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E'>
+          <a href='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E'>
+            http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E
+          </a>
+        </audio>
+      HTML
+    end
+
+    it "escapes URLs of local video uploads" do
+      result =
+        described_class.onebox_raw(
+          "#{Discourse.base_url}/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#'<>",
+        )
+      expect(result[:onebox]).to eq(<<~HTML)
+        <div class="onebox video-onebox">
+          <video  width="100%" height="100%" controls="">
+            <source src='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E'>
+            <a href='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E'>
+              http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E
+            </a>
+          </video>
+        </div>
+      HTML
+      expect(result[:preview]).to eq(<<~HTML)
+        <div class="onebox video-onebox">
+          <video  width="100%" height="100%" controls="">
+            <source src='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E'>
+            <a href='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E'>
+              http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E
+            </a>
+          </video>
+        </div>
+      HTML
+    end
+
+    it "escapes URLs of generic local links" do
+      result = described_class.onebox_raw("#{Discourse.base_url}/g/somegroup#'onerror='")
+      expect(result[:onebox]).to eq(
+        "<a href='http://test.localhost/g/somegroup#&apos;onerror=&apos;'>http://test.localhost/g/somegroup#&apos;onerror=&apos;</a>",
+      )
+      expect(result[:preview]).to eq(
+        "<a href='http://test.localhost/g/somegroup#&apos;onerror=&apos;'>http://test.localhost/g/somegroup#&apos;onerror=&apos;</a>",
+      )
     end
   end
 
@@ -174,8 +277,20 @@ RSpec.describe Oneboxer do
       it "does not return a onebox if redirect uri final destination is in blacklist" do
         SiteSetting.blocked_onebox_domains = "kitten.com"
 
-        stub_request(:get, "http://cat.com/meow").to_return(status: 301, body: "", headers: { "location" => "https://kitten.com" })
-        stub_request(:head, "http://cat.com/meow").to_return(status: 301, body: "", headers: { "location" => "https://kitten.com" })
+        stub_request(:get, "http://cat.com/meow").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://kitten.com",
+          },
+        )
+        stub_request(:head, "http://cat.com/meow").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://kitten.com",
+          },
+        )
 
         stub_request(:get, "https://kitten.com").to_return(status: 200, body: html, headers: {})
         stub_request(:head, "https://kitten.com").to_return(status: 200, body: "", headers: {})
@@ -192,10 +307,28 @@ RSpec.describe Oneboxer do
       it "does not return onebox if anything in the redirect chain is blocked" do
         SiteSetting.blocked_onebox_domains = "middle.com"
 
-        stub_request(:get, "https://cat.com/start").to_return(status: 301, body: "a", headers: { "location" => "https://middle.com/midway" })
-        stub_request(:head, "https://cat.com/start").to_return(status: 301, body: "a", headers: { "location" => "https://middle.com/midway" })
+        stub_request(:get, "https://cat.com/start").to_return(
+          status: 301,
+          body: "a",
+          headers: {
+            "location" => "https://middle.com/midway",
+          },
+        )
+        stub_request(:head, "https://cat.com/start").to_return(
+          status: 301,
+          body: "a",
+          headers: {
+            "location" => "https://middle.com/midway",
+          },
+        )
 
-        stub_request(:head, "https://middle.com/midway").to_return(status: 301, body: "b", headers: { "location" => "https://cat.com/end" })
+        stub_request(:head, "https://middle.com/midway").to_return(
+          status: 301,
+          body: "b",
+          headers: {
+            "location" => "https://cat.com/end",
+          },
+        )
 
         stub_request(:get, "https://cat.com/end").to_return(status: 200, body: html)
         stub_request(:head, "https://cat.com/end").to_return(status: 200, body: "", headers: {})
@@ -206,10 +339,20 @@ RSpec.describe Oneboxer do
       end
 
       it "does not return onebox if the Discourse-No-Onebox header == 1" do
-        stub_request(:get, "https://website.com/discourse-no-onebox")
-          .to_return(status: 200, body: "abc", headers: { "Discourse-No-Onebox" => "1" })
-        stub_request(:head, "https://website.com/discourse-no-onebox")
-          .to_return(status: 200, body: "", headers: { "Discourse-No-Onebox" => "1" })
+        stub_request(:get, "https://website.com/discourse-no-onebox").to_return(
+          status: 200,
+          body: "abc",
+          headers: {
+            "Discourse-No-Onebox" => "1",
+          },
+        )
+        stub_request(:head, "https://website.com/discourse-no-onebox").to_return(
+          status: 200,
+          body: "",
+          headers: {
+            "Discourse-No-Onebox" => "1",
+          },
+        )
 
         result = Oneboxer.external_onebox("https://website.com/discourse-no-onebox")
         expect(result[:onebox]).to be_empty
@@ -217,23 +360,57 @@ RSpec.describe Oneboxer do
       end
 
       it "does not return onebox if the Discourse-No-Onebox header == 1 anywhere in the redirect chain" do
-        stub_request(:get, "https://website.com/redirect-no-onebox")
-          .to_return(status: 301, body: "", headers: { "Discourse-No-Onebox" => "1", "location" => "https://willneverreach.com" })
-        stub_request(:head, "https://website.com/redirect-no-onebox")
-          .to_return(status: 301, body: "", headers: { "Discourse-No-Onebox" => "1", "location" => "https://willneverreach.com" })
+        stub_request(:get, "https://website.com/redirect-no-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "Discourse-No-Onebox" => "1",
+            "location" => "https://willneverreach.com",
+          },
+        )
+        stub_request(:head, "https://website.com/redirect-no-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "Discourse-No-Onebox" => "1",
+            "location" => "https://willneverreach.com",
+          },
+        )
 
         result = Oneboxer.external_onebox("https://website.com/redirect-no-onebox")
         expect(result[:onebox]).to be_empty
         expect(result[:preview]).to be_empty
 
-        stub_request(:get, "https://website.com/redirect")
-          .to_return(status: 301, body: "", headers: { "location" => "https://website.com/redirect/dont-onebox" })
-        stub_request(:head, "https://website.com/redirect")
-          .to_return(status: 301, body: "", headers: { "location" => "https://website.com/redirect/dont-onebox" })
-        stub_request(:get, "https://website.com/redirect/dont-onebox")
-          .to_return(status: 301, body: "", headers: { "Discourse-No-Onebox" => "1", "location" => "https://wontreachme.com" })
-        stub_request(:head, "https://website.com/redirect/dont-onebox")
-          .to_return(status: 301, body: "", headers: { "Discourse-No-Onebox" => "1", "location" => "https://wontreachme.com" })
+        stub_request(:get, "https://website.com/redirect").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://website.com/redirect/dont-onebox",
+          },
+        )
+        stub_request(:head, "https://website.com/redirect").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://website.com/redirect/dont-onebox",
+          },
+        )
+        stub_request(:get, "https://website.com/redirect/dont-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "Discourse-No-Onebox" => "1",
+            "location" => "https://wontreachme.com",
+          },
+        )
+        stub_request(:head, "https://website.com/redirect/dont-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "Discourse-No-Onebox" => "1",
+            "location" => "https://wontreachme.com",
+          },
+        )
 
         result = Oneboxer.external_onebox("https://website.com/redirect")
         expect(result[:onebox]).to be_empty
@@ -254,46 +431,42 @@ RSpec.describe Oneboxer do
       end
 
       it "doesn't return onebox if the URL redirects" do
-        stub_request(:head, "https://redirects2.com/full-onebox")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects2.com/real-full-onebox" }
-          )
-        stub_request(:get, "https://redirects2.com/full-onebox")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects2.com/real-full-onebox" }
-          )
+        stub_request(:head, "https://redirects2.com/full-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects2.com/real-full-onebox",
+          },
+        )
+        stub_request(:get, "https://redirects2.com/full-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects2.com/real-full-onebox",
+          },
+        )
         result = Oneboxer.external_onebox("https://redirects2.com/full-onebox")
         expect(result[:onebox]).to be_blank
       end
 
       it "allows an initial http -> https redirect if the redirect URL is identical to the original" do
-        stub_request(:get, "http://redirects3.com/full-onebox")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects3.com/full-onebox" }
-          )
-        stub_request(:head, "http://redirects3.com/full-onebox")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects3.com/full-onebox" }
-          )
+        stub_request(:get, "http://redirects3.com/full-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects3.com/full-onebox",
+          },
+        )
+        stub_request(:head, "http://redirects3.com/full-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects3.com/full-onebox",
+          },
+        )
 
-        stub_request(:get, "https://redirects3.com/full-onebox")
-          .to_return(
-            status: 200,
-            body: html
-          )
-        stub_request(:head, "https://redirects3.com/full-onebox")
-          .to_return(
-            status: 200,
-            body: "",
-          )
+        stub_request(:get, "https://redirects3.com/full-onebox").to_return(status: 200, body: html)
+        stub_request(:head, "https://redirects3.com/full-onebox").to_return(status: 200, body: "")
         result = Oneboxer.external_onebox("http://redirects3.com/full-onebox")
         onebox = result[:onebox]
         expect(onebox).to include("https://redirects3.com/full-onebox")
@@ -302,31 +475,35 @@ RSpec.describe Oneboxer do
       end
 
       it "doesn't allow an initial http -> https redirect if the redirect URL is different to the original" do
-        stub_request(:get, "http://redirects4.com/full-onebox")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects4.com/full-onebox/2" }
-          )
-        stub_request(:head, "http://redirects4.com/full-onebox")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects4.com/full-onebox/2" }
-          )
+        stub_request(:get, "http://redirects4.com/full-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects4.com/full-onebox/2",
+          },
+        )
+        stub_request(:head, "http://redirects4.com/full-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects4.com/full-onebox/2",
+          },
+        )
 
-        stub_request(:get, "https://redirects4.com/full-onebox")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects4.com/full-onebox/2" }
-          )
-        stub_request(:head, "https://redirects4.com/full-onebox")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects4.com/full-onebox/2" }
-          )
+        stub_request(:get, "https://redirects4.com/full-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects4.com/full-onebox/2",
+          },
+        )
+        stub_request(:head, "https://redirects4.com/full-onebox").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects4.com/full-onebox/2",
+          },
+        )
         result = Oneboxer.external_onebox("http://redirects4.com/full-onebox")
         expect(result[:onebox]).to be_blank
       end
@@ -335,7 +512,7 @@ RSpec.describe Oneboxer do
     it "censors external oneboxes" do
       Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad word")
 
-      url = 'https://example.com/'
+      url = "https://example.com/"
       stub_request(:any, url).to_return(status: 200, body: <<~HTML, headers: {})
       <html>
       <head>
@@ -349,10 +526,10 @@ RSpec.describe Oneboxer do
       HTML
 
       onebox = Oneboxer.external_onebox(url)
-      expect(onebox[:onebox]).to include('title with')
-      expect(onebox[:onebox]).not_to include('bad word')
-      expect(onebox[:preview]).to include('title with')
-      expect(onebox[:preview]).not_to include('bad word')
+      expect(onebox[:onebox]).to include("title with")
+      expect(onebox[:onebox]).not_to include("bad word")
+      expect(onebox[:preview]).to include("title with")
+      expect(onebox[:preview]).not_to include("bad word")
     end
 
     it "returns onebox" do
@@ -367,19 +544,28 @@ RSpec.describe Oneboxer do
 
   it "uses the Onebox custom user agent on specified hosts" do
     SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
-    url = 'https://video.discourse.org/presentation.mp4'
+    url = "https://video.discourse.org/presentation.mp4"
 
     stub_request(:head, url).to_return(status: 403, body: "", headers: {})
     stub_request(:get, url).to_return(status: 403, body: "", headers: {})
-    stub_request(:head, url).with(headers: { "User-Agent" => Onebox.options.user_agent }).to_return(status: 200, body: "", headers: {})
-    stub_request(:get, url).with(headers: { "User-Agent" => Onebox.options.user_agent }).to_return(status: 200, body: "", headers: {})
+    stub_request(:head, url).with(headers: { "User-Agent" => Onebox.options.user_agent }).to_return(
+      status: 200,
+      body: "",
+      headers: {
+      },
+    )
+    stub_request(:get, url).with(headers: { "User-Agent" => Onebox.options.user_agent }).to_return(
+      status: 200,
+      body: "",
+      headers: {
+      },
+    )
 
     expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to be_present
   end
 
   context "with youtube stub" do
-    let(:html) do
-      <<~HTML
+    let(:html) { <<~HTML }
         <html>
         <head>
           <meta property="og:title" content="Onebox1 - ceci n'est pas un titre">
@@ -391,151 +577,197 @@ RSpec.describe Oneboxer do
         </body>
         <html>
       HTML
-    end
 
     before do
-      stub_request(:any, "https://www.youtube.com/watch?v=dQw4w9WgXcQ").to_return(status: 200, body: html)
-      stub_request(:any, "https://www.youtube.com/embed/dQw4w9WgXcQ").to_return(status: 403, body: nil)
+      stub_request(:any, "https://www.youtube.com/watch?v=dQw4w9WgXcQ").to_return(
+        status: 200,
+        body: html,
+      )
+      stub_request(:any, "https://www.youtube.com/embed/dQw4w9WgXcQ").to_return(
+        status: 403,
+        body: nil,
+      )
     end
 
     it "allows restricting engines based on the allowed_onebox_iframes setting" do
-      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      output =
+        Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
       expect(output).to include("<iframe") # Regular youtube onebox
 
       # Disable all onebox iframes:
       SiteSetting.allowed_onebox_iframes = ""
-      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      output =
+        Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
 
       expect(output).not_to include("<iframe") # Generic onebox
       expect(output).to include("allowlistedgeneric")
 
       # Just enable youtube:
       SiteSetting.allowed_onebox_iframes = "https://www.youtube.com"
-      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      output =
+        Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
       expect(output).to include("<iframe") # Regular youtube onebox
     end
 
     it "appropriately escapes youtube titles" do
-      preview = Oneboxer.preview("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      preview =
+        Oneboxer.preview("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
       expect(preview).to include("ceci n'est pas un titre")
     end
   end
 
   it "allows iframes from generic sites via the allowed_iframes setting" do
-    allowlisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://allowlist.ed/iframes.json" />'
-    blocklisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://blocklist.ed/iframes.json" />'
+    allowlisted_body =
+      '<html><head><link rel="alternate" type="application/json+oembed" href="https://allowlist.ed/iframes.json" />'
+    blocklisted_body =
+      '<html><head><link rel="alternate" type="application/json+oembed" href="https://blocklist.ed/iframes.json" />'
 
     allowlisted_oembed = {
       type: "rich",
       height: "100",
-      html: "<iframe src='https://ifram.es/foo/bar'></iframe>"
+      html: "<iframe src='https://ifram.es/foo/bar'></iframe>",
     }
 
     blocklisted_oembed = {
       type: "rich",
       height: "100",
-      html: "<iframe src='https://malicious/discourse.org/'></iframe>"
+      html: "<iframe src='https://malicious/discourse.org/'></iframe>",
     }
 
-    stub_request(:any, "https://blocklist.ed/iframes").to_return(status: 200, body: blocklisted_body)
-    stub_request(:any, "https://blocklist.ed/iframes.json").to_return(status: 200, body: blocklisted_oembed.to_json)
+    stub_request(:any, "https://blocklist.ed/iframes").to_return(
+      status: 200,
+      body: blocklisted_body,
+    )
+    stub_request(:any, "https://blocklist.ed/iframes.json").to_return(
+      status: 200,
+      body: blocklisted_oembed.to_json,
+    )
 
-    stub_request(:any, "https://allowlist.ed/iframes").to_return(status: 200, body: allowlisted_body)
-    stub_request(:any, "https://allowlist.ed/iframes.json").to_return(status: 200, body: allowlisted_oembed.to_json)
+    stub_request(:any, "https://allowlist.ed/iframes").to_return(
+      status: 200,
+      body: allowlisted_body,
+    )
+    stub_request(:any, "https://allowlist.ed/iframes.json").to_return(
+      status: 200,
+      body: allowlisted_oembed.to_json,
+    )
 
     SiteSetting.allowed_iframes = "discourse.org|https://ifram.es"
 
     expect(Oneboxer.onebox("https://blocklist.ed/iframes", invalidate_oneboxes: true)).to be_empty
-    expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match("iframe src")
+    expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match(
+      "iframe src",
+    )
   end
 
-  describe 'missing attributes' do
-    before do
-      stub_request(:head, url)
-    end
+  describe "missing attributes" do
+    before { stub_request(:head, url) }
 
     let(:url) { "https://example.com/fake-url/" }
 
-    it 'handles a missing description' do
+    it "handles a missing description" do
       stub_request(:get, url).to_return(body: response("missing_description"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description")
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+        "could not be found: description",
+      )
     end
 
-    it 'handles a missing description and image' do
+    it "handles a missing description and image" do
       stub_request(:get, url).to_return(body: response("missing_description_and_image"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description, image")
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+        "could not be found: description, image",
+      )
     end
 
-    it 'handles a missing image' do
+    it "handles a missing image" do
       # Note: If the only error is a missing image, we shouldn't return an error
       stub_request(:get, url).to_return(body: response("missing_image"))
       expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include("could not be found")
     end
 
-    it 'video with missing description returns a placeholder' do
+    it "video with missing description returns a placeholder" do
       stub_request(:get, url).to_return(body: response("video_missing_description"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("onebox-placeholder-container")
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+        "onebox-placeholder-container",
+      )
     end
   end
 
-  describe 'instagram' do
-    it 'providing a token should attempt to use new endpoint' do
+  describe "instagram" do
+    it "providing a token should attempt to use new endpoint" do
       url = "https://www.instagram.com/p/CHLkBERAiLa"
-      access_token = 'abc123'
+      access_token = "abc123"
 
       SiteSetting.facebook_app_access_token = access_token
 
       stub_request(:head, url)
-      stub_request(:get, "https://graph.facebook.com/v9.0/instagram_oembed?url=#{url}&access_token=#{access_token}").to_return(body: response("instagram_new"))
+      stub_request(
+        :get,
+        "https://graph.facebook.com/v9.0/instagram_oembed?url=#{url}&access_token=#{access_token}",
+      ).to_return(body: response("instagram_new"))
 
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('placeholder-icon image')
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("placeholder-icon image")
     end
 
-    it 'unconfigured token should attempt to use old endpoint' do
+    it "unconfigured token should attempt to use old endpoint" do
       url = "https://www.instagram.com/p/CHLkBERAiLa"
       stub_request(:head, url)
-      stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
+      stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(
+        body: response("instagram_old"),
+      )
 
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('placeholder-icon image')
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("placeholder-icon image")
     end
 
-    it 'renders result using an iframe' do
+    it "renders result using an iframe" do
       url = "https://www.instagram.com/p/CHLkBERAiLa"
       stub_request(:head, url)
-      stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
+      stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(
+        body: response("instagram_old"),
+      )
 
-      expect(Oneboxer.onebox(url, invalidate_oneboxes: true)).to include('iframe')
+      expect(Oneboxer.onebox(url, invalidate_oneboxes: true)).to include("iframe")
     end
   end
 
-  describe 'Twitter' do
-    let(:url) { 'https://twitter.com/discourse/status/1428031057186627589' }
+  describe "Twitter" do
+    let(:url) { "https://twitter.com/discourse/status/1428031057186627589" }
 
     before do
-      SiteSetting.twitter_consumer_key = 'twitter_consumer_key'
-      SiteSetting.twitter_consumer_secret = 'twitter_consumer_secret'
+      SiteSetting.twitter_consumer_key = "twitter_consumer_key"
+      SiteSetting.twitter_consumer_secret = "twitter_consumer_secret"
     end
 
-    it 'works with rate limit' do
-      stub_request(:head, "https://twitter.com/discourse/status/1428031057186627589")
-        .to_return(status: 200, body: "", headers: {})
+    it "works with rate limit" do
+      stub_request(:head, "https://twitter.com/discourse/status/1428031057186627589").to_return(
+        status: 200,
+        body: "",
+        headers: {
+        },
+      )
 
-      stub_request(:get, "https://api.twitter.com/1.1/statuses/show.json?id=1428031057186627589&tweet_mode=extended")
-        .to_return(status: 429, body: "{}", headers: {})
+      stub_request(
+        :get,
+        "https://api.twitter.com/1.1/statuses/show.json?id=1428031057186627589&tweet_mode=extended",
+      ).to_return(status: 429, body: "{}", headers: {})
 
-      stub_request(:post, "https://api.twitter.com/oauth2/token")
-        .to_return(status: 200, body: "{\"access_token\":\"token\"}", headers: {})
+      stub_request(:post, "https://api.twitter.com/oauth2/token").to_return(
+        status: 200,
+        body: "{\"access_token\":\"token\"}",
+        headers: {
+        },
+      )
 
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to eq('')
-      expect(Oneboxer.onebox(url, invalidate_oneboxes: true)).to eq('')
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to eq("")
+      expect(Oneboxer.onebox(url, invalidate_oneboxes: true)).to eq("")
     end
   end
 
-  describe '#apply' do
-    it 'generates valid HTML' do
+  describe "#apply" do
+    it "generates valid HTML" do
       raw = "Before Onebox\nhttps://example.com\nAfter Onebox"
-      cooked = Oneboxer.apply(PrettyText.cook(raw)) { '<div>onebox</div>' }
-      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      cooked = Oneboxer.apply(PrettyText.cook(raw)) { "<div>onebox</div>" }
+      doc = Nokogiri::HTML5.fragment(cooked.to_html)
       expect(doc.to_html).to match_html <<~HTML
         <p>Before Onebox</p>
         <div>onebox</div>
@@ -543,8 +775,8 @@ RSpec.describe Oneboxer do
       HTML
 
       raw = "Before Onebox\nhttps://example.com\nhttps://example.com\nAfter Onebox"
-      cooked = Oneboxer.apply(PrettyText.cook(raw)) { '<div>onebox</div>' }
-      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      cooked = Oneboxer.apply(PrettyText.cook(raw)) { "<div>onebox</div>" }
+      doc = Nokogiri::HTML5.fragment(cooked.to_html)
       expect(doc.to_html).to match_html <<~HTML
         <p>Before Onebox</p>
         <div>onebox</div>
@@ -553,11 +785,11 @@ RSpec.describe Oneboxer do
       HTML
     end
 
-    it 'does keeps SVGs valid' do
+    it "does keeps SVGs valid" do
       raw = "Onebox\n\nhttps://example.com"
       cooked = PrettyText.cook(raw)
-      cooked = Oneboxer.apply(Loofah.fragment(cooked)) { '<div><svg><path></path></svg></div>' }
-      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      cooked = Oneboxer.apply(Loofah.fragment(cooked)) { "<div><svg><path></path></svg></div>" }
+      doc = Nokogiri::HTML5.fragment(cooked.to_html)
       expect(doc.to_html).to match_html <<~HTML
         <p>Onebox</p>
         <div><svg><path></path></svg></div>
@@ -565,21 +797,21 @@ RSpec.describe Oneboxer do
     end
   end
 
-  describe '#force_get_hosts' do
+  describe "#force_get_hosts" do
     before do
       SiteSetting.cache_onebox_response_body_domains = "example.net|example.com|example.org"
     end
 
     it "includes Amazon sites" do
-      expect(Oneboxer.force_get_hosts).to include('https://www.amazon.ca')
+      expect(Oneboxer.force_get_hosts).to include("https://www.amazon.ca")
     end
 
     it "includes cache_onebox_response_body_domains" do
-      expect(Oneboxer.force_get_hosts).to include('https://www.example.com')
+      expect(Oneboxer.force_get_hosts).to include("https://www.example.com")
     end
   end
 
-  describe 'strategies' do
+  describe "strategies" do
     it "has a 'default' strategy" do
       expect(Oneboxer.strategies.keys.first).to eq(:default)
     end
@@ -592,8 +824,7 @@ RSpec.describe Oneboxer do
     context "when using a non-default strategy" do
       let(:hostname) { "my.interesting.site" }
       let(:url) { "https://#{hostname}/cool/content" }
-      let(:html) do
-        <<~HTML
+      let(:html) { <<~HTML }
           <html>
           <head>
             <meta property="og:title" content="Page Title">
@@ -604,16 +835,13 @@ RSpec.describe Oneboxer do
           </body>
           <html>
         HTML
-      end
 
       before do
         stub_request(:head, url).to_return(status: 509)
         stub_request(:get, url).to_return(status: 200, body: html)
       end
 
-      after do
-        Oneboxer.clear_preferred_strategy!(hostname)
-      end
+      after { Oneboxer.clear_preferred_strategy!(hostname) }
 
       it "uses multiple strategies" do
         default_ordered = Oneboxer.strategies.keys
@@ -621,7 +849,9 @@ RSpec.describe Oneboxer do
         expect(custom_ordered).to eq(default_ordered)
 
         expect(Oneboxer.preferred_strategy(hostname)).to eq(nil)
-        expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("Here is some cool content")
+        expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+          "Here is some cool content",
+        )
 
         custom_ordered = Oneboxer.ordered_strategies(hostname)
 
@@ -633,16 +863,14 @@ RSpec.describe Oneboxer do
     end
   end
 
-  describe 'cache_onebox_response_body' do
-    let(:html) do
-      <<~HTML
+  describe "cache_onebox_response_body" do
+    let(:html) { <<~HTML }
         <html>
         <body>
            <p>cache me if you can</p>
         </body>
         <html>
       HTML
-    end
 
     let(:url) { "https://www.example.com/my/great/content" }
     let(:url2) { "https://www.example2.com/my/great/content" }
@@ -669,12 +897,10 @@ RSpec.describe Oneboxer do
 
   describe "register_local_handler" do
     it "calls registered local handler" do
-      Oneboxer.register_local_handler('wizard') do |url, route|
-        'Custom Onebox for Wizard'
-      end
+      Oneboxer.register_local_handler("wizard") { |url, route| "Custom Onebox for Wizard" }
 
       url = "#{Discourse.base_url}/wizard"
-      expect(Oneboxer.preview(url)).to eq('Custom Onebox for Wizard')
+      expect(Oneboxer.preview(url)).to eq("Custom Onebox for Wizard")
     end
   end
 end

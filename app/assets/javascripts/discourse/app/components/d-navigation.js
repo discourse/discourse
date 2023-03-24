@@ -4,12 +4,20 @@ import NavItem from "discourse/models/nav-item";
 import discourseComputed from "discourse-common/utils/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
+import { equal } from "@ember/object/computed";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
   dialog: service(),
   tagName: "",
+  queryString: "",
+
+  init() {
+    this._super(...arguments);
+    this.queryString = this.filterQueryString;
+  },
 
   // Should be a `readOnly` instead but some themes/plugins still pass
   // the `categories` property into this component
@@ -139,6 +147,8 @@ export default Component.extend(FilterModeMixin, {
     return controller.canBulkSelect;
   },
 
+  isQueryFilterMode: equal("filterMode", "filter"),
+
   actions: {
     changeCategoryNotificationLevel(notificationLevel) {
       this.category.setNotification(notificationLevel);
@@ -157,7 +167,7 @@ export default Component.extend(FilterModeMixin, {
 
     clickCreateTopicButton() {
       if (this.categoryReadOnlyBanner && !this.hasDraft) {
-        this.dialog.alert(this.categoryReadOnlyBanner);
+        this.dialog.alert({ message: htmlSafe(this.categoryReadOnlyBanner) });
       } else {
         this.createTopic();
       }

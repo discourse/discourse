@@ -28,7 +28,7 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    this.userTimezone = this.currentUser.timezone;
+    this.userTimezone = this.currentUser.user_option.timezone;
   },
 
   didReceiveAttrs() {

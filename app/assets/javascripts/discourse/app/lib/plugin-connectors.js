@@ -1,6 +1,12 @@
 import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
 import deprecated from "discourse-common/lib/deprecated";
-import Ember from "ember";
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
+import {
+  getComponentTemplate,
+  hasInternalComponentManager,
+  setComponentTemplate,
+} from "@glimmer/manager";
+import templateOnly from "@ember/component/template-only";
 
 let _connectorCache;
 let _rawConnectorCache;
@@ -18,18 +24,11 @@ export function extraConnectorClass(name, obj) {
   _extraConnectorClasses[name] = obj;
 }
 
-const DefaultConnectorClass = {
-  actions: {},
-  shouldRender: () => true,
-  setupComponent() {},
-  teardownComponent() {},
-};
-
-function findOutlets(collection, callback) {
-  Object.keys(collection).forEach(function (res) {
-    if (res.includes("/connectors/")) {
-      const segments = res.split("/");
-      let outletName = segments[segments.length - 2];
+function findOutlets(keys, callback) {
+  keys.forEach(function (res) {
+    const segments = res.split("/");
+    if (segments.includes("connectors")) {
+      const outletName = segments[segments.length - 2];
       const uniqueName = segments[segments.length - 1];
 
       callback(outletName, res, uniqueName);
@@ -45,7 +44,7 @@ export function clearCache() {
 function findClass(outletName, uniqueName) {
   if (!_classPaths) {
     _classPaths = {};
-    findOutlets(require._eak_seen, (outlet, res, un) => {
+    findOutlets(Object.keys(require._eak_seen), (outlet, res, un) => {
       const possibleConnectorClass = requirejs(res).default;
       if (possibleConnectorClass.__id) {
         // This is the template, not the connector class
@@ -58,25 +57,103 @@ function findClass(outletName, uniqueName) {
   const id = `${outletName}/${uniqueName}`;
   let foundClass = _extraConnectorClasses[id] || _classPaths[id];
 
-  return foundClass
-    ? Object.assign({}, DefaultConnectorClass, foundClass)
-    : DefaultConnectorClass;
+  return foundClass;
+}
+
+/**
+ * Sets component template, ignoring errors if it's already set to the same template
+ */
+function safeSetComponentTemplate(template, component) {
+  try {
+    setComponentTemplate(template, component);
+  } catch (e) {
+    if (getComponentTemplate(component) !== template) {
+      throw e;
+    }
+  }
+}
+
+/**
+ * Clear the cache of connectors. Should only be used in tests when
+ * `requirejs.entries` is changed.
+ */
+export function expireConnectorCache() {
+  _connectorCache = null;
+}
+
+class ConnectorInfo {
+  #componentClass;
+  #templateOnly;
+
+  constructor(outletName, connectorName, connectorClass, template) {
+    this.outletName = outletName;
+    this.connectorName = connectorName;
+    this.connectorClass = connectorClass;
+    this.template = template;
+  }
+
+  get componentClass() {
+    return (this.#componentClass ??= this.#buildComponentClass());
+  }
+
+  get templateOnly() {
+    return (this.#templateOnly ??= this.#buildTemplateOnlyClass());
+  }
+
+  get classicClassNames() {
+    return `${this.outletName}-outlet ${this.connectorName}`;
+  }
+
+  #buildComponentClass() {
+    const klass = this.connectorClass;
+    if (klass && hasInternalComponentManager(klass)) {
+      safeSetComponentTemplate(this.template, klass);
+      this.#warnUnusableHooks();
+      return klass;
+    } else {
+      return false;
+    }
+  }
+
+  #buildTemplateOnlyClass() {
+    const component = templateOnly();
+    setComponentTemplate(this.template, component);
+    this.#warnUnusableHooks();
+    return component;
+  }
+
+  #warnUnusableHooks() {
+    for (const methodName of [
+      "actions",
+      "setupComponent",
+      "teardownComponent",
+    ]) {
+      if (this.connectorClass?.[methodName]) {
+        deprecated(
+          `actions, setupComponent and teardownComponent hooks cannot be used with Glimmer plugin outlets. Define a component class instead. (${this.outletName}/${this.connectorName}).`,
+          { id: "discourse.plugin-outlet-classic-hooks" }
+        );
+      }
+    }
+  }
 }
 
 function buildConnectorCache() {
   _connectorCache = {};
 
-  findOutlets(Ember.TEMPLATES, (outletName, resource, uniqueName) => {
-    _connectorCache[outletName] = _connectorCache[outletName] || [];
+  findOutlets(
+    DiscourseTemplateMap.keys(),
+    (outletName, resource, connectorName) => {
+      _connectorCache[outletName] ||= [];
 
-    _connectorCache[outletName].push({
-      outletName,
-      templateName: resource.replace("javascripts/", ""),
-      template: Ember.TEMPLATES[resource],
-      classNames: `${outletName}-outlet ${uniqueName}`,
-      connectorClass: findClass(outletName, uniqueName),
-    });
-  });
+      const template = require(DiscourseTemplateMap.resolve(resource)).default;
+      const connectorClass = findClass(outletName, connectorName);
+
+      _connectorCache[outletName].push(
+        new ConnectorInfo(outletName, connectorName, connectorClass, template)
+      );
+    }
+  );
 }
 
 export function connectorsFor(outletName) {
@@ -88,7 +165,8 @@ export function connectorsFor(outletName) {
 
 export function renderedConnectorsFor(outletName, args, context) {
   return connectorsFor(outletName).filter((con) => {
-    return con.connectorClass.shouldRender(args, context);
+    const shouldRender = con.connectorClass?.shouldRender;
+    return !shouldRender || shouldRender(args, context);
   });
 }
 
@@ -109,7 +187,9 @@ export function buildArgsWithDeprecations(args, deprecatedArgs) {
   Object.keys(deprecatedArgs).forEach((key) => {
     Object.defineProperty(output, key, {
       get() {
-        deprecated(`${key} is deprecated`);
+        deprecated(`${key} is deprecated`, {
+          id: "discourse.plugin-connector.deprecated-arg",
+        });
 
         return deprecatedArgs[key];
       },

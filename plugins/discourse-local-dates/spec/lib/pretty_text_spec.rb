@@ -15,94 +15,118 @@ def generate_html(text, opts = {})
 end
 
 RSpec.describe PrettyText do
-  before do
-    freeze_time
-  end
+  before { freeze_time }
 
-  describe 'emails simplified rendering' do
-    it 'works with default markup' do
+  describe "emails simplified rendering" do
+    it "works with default markup" do
       cooked = PrettyText.cook("[date=2018-05-08]")
-      cooked_mail = generate_html("2018-05-08T00:00:00Z UTC",
-        date: "2018-05-08",
-        email_preview: "2018-05-08T00:00:00Z UTC"
-      )
-
-      expect(PrettyText.format_for_email(cooked)).to match_html(cooked_mail)
-    end
-
-    it 'works with time' do
-      cooked = PrettyText.cook("[date=2018-05-08  time=20:00:00]")
-      cooked_mail = generate_html("2018-05-08T20:00:00Z UTC",
-        date: "2018-05-08",
-        email_preview: "2018-05-08T20:00:00Z UTC",
-        time: "20:00:00"
-      )
-
-      expect(PrettyText.format_for_email(cooked)).to match_html(cooked_mail)
-    end
-
-    it 'works with multiple timezones' do
-      cooked = PrettyText.cook('[date=2018-05-08 timezone="Europe/Paris" timezones="America/Los_Angeles|Pacific/Auckland"]')
-      cooked_mail = generate_html("2018-05-07T22:00:00Z UTC",
-        date: "2018-05-08",
-        email_preview: "2018-05-07T22:00:00Z UTC",
-        timezone: "Europe/Paris",
-        timezones: "America/Los_Angeles|Pacific/Auckland"
-      )
-
-      expect(PrettyText.format_for_email(cooked)).to match_html(cooked_mail)
-    end
-
-    describe 'discourse_local_dates_email_format' do
-      before do
-        SiteSetting.discourse_local_dates_email_format = "DD/MM"
-      end
-
-      it 'uses the site setting' do
-        cooked = PrettyText.cook("[date=2018-05-08]")
-        cooked_mail = generate_html("08/05 UTC",
+      cooked_mail =
+        generate_html(
+          "2018-05-08T00:00:00Z UTC",
           date: "2018-05-08",
-          email_preview: "08/05 UTC"
+          email_preview: "2018-05-08T00:00:00Z UTC",
         )
+
+      expect(PrettyText.format_for_email(cooked)).to match_html(cooked_mail)
+    end
+
+    it "works with time" do
+      cooked = PrettyText.cook("[date=2018-05-08  time=20:00:00]")
+      cooked_mail =
+        generate_html(
+          "2018-05-08T20:00:00Z UTC",
+          date: "2018-05-08",
+          email_preview: "2018-05-08T20:00:00Z UTC",
+          time: "20:00:00",
+        )
+
+      expect(PrettyText.format_for_email(cooked)).to match_html(cooked_mail)
+    end
+
+    it "works with multiple timezones" do
+      cooked =
+        PrettyText.cook(
+          '[date=2018-05-08 timezone="Europe/Paris" timezones="America/Los_Angeles|Pacific/Auckland"]',
+        )
+      cooked_mail =
+        generate_html(
+          "2018-05-07T22:00:00Z UTC",
+          date: "2018-05-08",
+          email_preview: "2018-05-07T22:00:00Z UTC",
+          timezone: "Europe/Paris",
+          timezones: "America/Los_Angeles|Pacific/Auckland",
+        )
+
+      expect(PrettyText.format_for_email(cooked)).to match_html(cooked_mail)
+    end
+
+    describe "discourse_local_dates_email_format" do
+      before { SiteSetting.discourse_local_dates_email_format = "DD/MM" }
+
+      it "uses the site setting" do
+        cooked = PrettyText.cook("[date=2018-05-08]")
+        cooked_mail = generate_html("08/05 UTC", date: "2018-05-08", email_preview: "08/05 UTC")
 
         expect(PrettyText.format_for_email(cooked)).to match_html(cooked_mail)
       end
     end
   end
 
-  describe 'excerpt simplified rendering' do
-    let(:post) { Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone="America/New_York"]') }
+  describe "excerpt simplified rendering" do
+    let(:post) do
+      Fabricate(
+        :post,
+        raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone="America/New_York"]',
+      )
+    end
 
-    it 'adds UTC' do
+    it "adds UTC" do
       excerpt = PrettyText.excerpt(post.cooked, 200)
       expect(excerpt).to eq("Wednesday, October 16, 2019 6:00 PM (UTC)")
     end
   end
 
-  describe 'special quotes' do
-    it 'converts special quotes to regular quotes' do
+  describe "special quotes" do
+    it "converts special quotes to regular quotes" do
       # german
-      post = Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=„America/New_York“]')
+      post =
+        Fabricate(
+          :post,
+          raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=„America/New_York“]',
+        )
       excerpt = PrettyText.excerpt(post.cooked, 200)
-      expect(excerpt).to eq('Wednesday, October 16, 2019 6:00 PM (UTC)')
+      expect(excerpt).to eq("Wednesday, October 16, 2019 6:00 PM (UTC)")
 
       # french
-      post = Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=«America/New_York»]')
+      post =
+        Fabricate(
+          :post,
+          raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=«America/New_York»]',
+        )
       excerpt = PrettyText.excerpt(post.cooked, 200)
-      expect(excerpt).to eq('Wednesday, October 16, 2019 6:00 PM (UTC)')
+      expect(excerpt).to eq("Wednesday, October 16, 2019 6:00 PM (UTC)")
 
-      post = Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=“America/New_York”]')
+      post =
+        Fabricate(
+          :post,
+          raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=“America/New_York”]',
+        )
       excerpt = PrettyText.excerpt(post.cooked, 200)
-      expect(excerpt).to eq('Wednesday, October 16, 2019 6:00 PM (UTC)')
+      expect(excerpt).to eq("Wednesday, October 16, 2019 6:00 PM (UTC)")
     end
   end
 
-  describe 'french quotes' do
-    let(:post) { Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=«America/New_York»]') }
+  describe "french quotes" do
+    let(:post) do
+      Fabricate(
+        :post,
+        raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=«America/New_York»]',
+      )
+    end
 
-    it 'converts french quotes to regular quotes' do
+    it "converts french quotes to regular quotes" do
       excerpt = PrettyText.excerpt(post.cooked, 200)
-      expect(excerpt).to eq('Wednesday, October 16, 2019 6:00 PM (UTC)')
+      expect(excerpt).to eq("Wednesday, October 16, 2019 6:00 PM (UTC)")
     end
   end
 end

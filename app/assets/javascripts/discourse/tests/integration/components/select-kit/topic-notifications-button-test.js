@@ -2,15 +2,14 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import I18n from "I18n";
-import Topic from "discourse/models/topic";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-const buildTopic = function (opts) {
-  return Topic.create({
+function buildTopic(opts) {
+  return this.store.createRecord("topic", {
     id: 4563,
-  }).updateFromJson({
     title: "Qunit Test Topic",
     details: {
       notification_level: opts.level,
@@ -20,7 +19,7 @@ const buildTopic = function (opts) {
     category_id: opts.category_id || null,
     tags: opts.tags || [],
   });
-};
+}
 
 const originalTranslation =
   I18n.translations.en.js.topic.notifications.tracking_pm.title;
@@ -30,13 +29,17 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    hooks.beforeEach(function () {
+      this.store = getOwner(this).lookup("service:store");
+    });
+
     hooks.afterEach(function () {
       I18n.translations.en.js.topic.notifications.tracking_pm.title =
         originalTranslation;
     });
 
     test("the header has a localized title", async function (assert) {
-      this.set("topic", buildTopic({ level: 1 }));
+      this.set("topic", buildTopic.call(this, { level: 1 }));
 
       await render(hbs`
         <TopicNotificationsButton
@@ -51,7 +54,7 @@ module(
         "it has the correct label"
       );
 
-      this.set("topic", buildTopic({ level: 2 }));
+      this.set("topic", buildTopic.call(this, { level: 2 }));
 
       assert.strictEqual(
         selectKit().header().label(),
@@ -62,7 +65,10 @@ module(
 
     test("the header has a localized title", async function (assert) {
       I18n.translations.en.js.topic.notifications.tracking_pm.title = `${originalTranslation} PM`;
-      this.set("topic", buildTopic({ level: 2, archetype: "private_message" }));
+      this.set(
+        "topic",
+        buildTopic.call(this, { level: 2, archetype: "private_message" })
+      );
 
       await render(hbs`
         <TopicNotificationsButton
@@ -79,8 +85,8 @@ module(
     });
 
     test("notification reason text - user mailing list mode", async function (assert) {
-      this.currentUser.set("mailing_list_mode", true);
-      this.set("topic", buildTopic({ level: 2 }));
+      this.currentUser.set("user_option.mailing_list_mode", true);
+      this.set("topic", buildTopic.call(this, { level: 2 }));
 
       await render(hbs`
         <TopicNotificationsButton
@@ -97,7 +103,7 @@ module(
     });
 
     test("notification reason text - bad notification reason", async function (assert) {
-      this.set("topic", buildTopic({ level: 2 }));
+      this.set("topic", buildTopic.call(this, { level: 2 }));
 
       await render(hbs`
         <TopicNotificationsButton
@@ -106,7 +112,7 @@ module(
         />
       `);
 
-      this.set("topic", buildTopic({ level: 3, reason: 999 }));
+      this.set("topic", buildTopic.call(this, { level: 3, reason: 999 }));
 
       assert.strictEqual(
         query(".topic-notifications-button .text").innerText,
@@ -117,7 +123,10 @@ module(
 
     test("notification reason text - user tracking category", async function (assert) {
       this.currentUser.set("tracked_category_ids", [88]);
-      this.set("topic", buildTopic({ level: 2, reason: 8, category_id: 88 }));
+      this.set(
+        "topic",
+        buildTopic.call(this, { level: 2, reason: 8, category_id: 88 })
+      );
 
       await render(hbs`
         <TopicNotificationsButton
@@ -135,7 +144,10 @@ module(
 
     test("notification reason text - user no longer tracking category", async function (assert) {
       this.currentUser.set("tracked_category_ids", []);
-      this.set("topic", buildTopic({ level: 2, reason: 8, category_id: 88 }));
+      this.set(
+        "topic",
+        buildTopic.call(this, { level: 2, reason: 8, category_id: 88 })
+      );
 
       await render(hbs`
         <TopicNotificationsButton
@@ -153,7 +165,10 @@ module(
 
     test("notification reason text - user watching category", async function (assert) {
       this.currentUser.set("watched_category_ids", [88]);
-      this.set("topic", buildTopic({ level: 3, reason: 6, category_id: 88 }));
+      this.set(
+        "topic",
+        buildTopic.call(this, { level: 3, reason: 6, category_id: 88 })
+      );
 
       await render(hbs`
         <TopicNotificationsButton
@@ -171,7 +186,10 @@ module(
 
     test("notification reason text - user no longer watching category", async function (assert) {
       this.currentUser.set("watched_category_ids", []);
-      this.set("topic", buildTopic({ level: 3, reason: 6, category_id: 88 }));
+      this.set(
+        "topic",
+        buildTopic.call(this, { level: 3, reason: 6, category_id: 88 })
+      );
 
       await render(hbs`
         <TopicNotificationsButton
@@ -189,7 +207,10 @@ module(
 
     test("notification reason text - user watching tag", async function (assert) {
       this.currentUser.set("watched_tags", ["test"]);
-      this.set("topic", buildTopic({ level: 3, reason: 10, tags: ["test"] }));
+      this.set(
+        "topic",
+        buildTopic.call(this, { level: 3, reason: 10, tags: ["test"] })
+      );
 
       await render(hbs`
         <TopicNotificationsButton
@@ -207,7 +228,10 @@ module(
 
     test("notification reason text - user no longer watching tag", async function (assert) {
       this.currentUser.set("watched_tags", []);
-      this.set("topic", buildTopic({ level: 3, reason: 10, tags: ["test"] }));
+      this.set(
+        "topic",
+        buildTopic.call(this, { level: 3, reason: 10, tags: ["test"] })
+      );
 
       await render(hbs`
         <TopicNotificationsButton

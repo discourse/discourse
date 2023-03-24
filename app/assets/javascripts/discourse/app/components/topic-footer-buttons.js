@@ -1,7 +1,8 @@
-import { alias, and, or } from "@ember/object/computed";
+import { alias, or } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 
@@ -11,9 +12,6 @@ export default Component.extend({
   attributeBindings: ["role"],
 
   role: "region",
-
-  // Allow us to extend it
-  layoutName: "components/topic-footer-buttons",
 
   @discourseComputed("canSendPms", "topic.isPrivateMessage")
   canArchive(canSendPms, isPM) {
@@ -46,15 +44,18 @@ export default Component.extend({
     return !isPM || this.canSendPms;
   },
 
+  @discourseComputed("topic.details.notification_level")
+  showNotificationUserTip(notificationLevel) {
+    return notificationLevel >= NotificationLevels.TRACKING;
+  },
+
   canSendPms: alias("currentUser.can_send_private_messages"),
 
   canInviteTo: alias("topic.details.can_invite_to"),
 
-  canDefer: alias("currentUser.enable_defer"),
+  canDefer: alias("currentUser.user_option.enable_defer"),
 
   inviteDisabled: or("topic.archived", "topic.closed", "topic.deleted"),
-
-  showEditOnFooter: and("topic.isPrivateMessage", "site.can_tag_pms"),
 
   @discourseComputed("topic.message_archived")
   archiveIcon: (archived) => (archived ? "envelope" : "folder"),

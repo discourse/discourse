@@ -16,7 +16,7 @@ RSpec.describe CurrentUserSerializer do
   context "when SSO is enabled" do
     let :user do
       user = Fabricate(:user)
-      SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', last_payload: '')
+      SingleSignOnRecord.create!(user_id: user.id, external_id: "12345", last_payload: "")
       user
     end
 
@@ -41,17 +41,23 @@ RSpec.describe CurrentUserSerializer do
 
     it "should include correct id in top_category_ids array" do
       _category = Category.first
-      CategoryUser.create!(user_id: user.id,
-                           category_id: category1.id,
-                           notification_level: CategoryUser.notification_levels[:tracking])
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: category1.id,
+        notification_level: CategoryUser.notification_levels[:tracking],
+      )
 
-      CategoryUser.create!(user_id: user.id,
-                           category_id: category2.id,
-                           notification_level: CategoryUser.notification_levels[:watching])
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: category2.id,
+        notification_level: CategoryUser.notification_levels[:watching],
+      )
 
-      CategoryUser.create!(user_id: user.id,
-                           category_id: category3.id,
-                           notification_level: CategoryUser.notification_levels[:regular])
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: category3.id,
+        notification_level: CategoryUser.notification_levels[:regular],
+      )
 
       payload = serializer.as_json
       expect(payload[:top_category_ids]).to eq([category2.id, category1.id])
@@ -65,11 +71,11 @@ RSpec.describe CurrentUserSerializer do
       TagUser.create!(
         user_id: user.id,
         notification_level: TagUser.notification_levels[:muted],
-        tag_id: tag.id
+        tag_id: tag.id,
       )
     end
 
-    it 'includes muted tag names' do
+    it "includes muted tag names" do
       payload = serializer.as_json
       expect(payload[:muted_tags]).to eq([tag.name])
     end
@@ -84,9 +90,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     context "when totp enabled" do
-      before do
-        User.any_instance.stubs(:totp_enabled?).returns(true)
-      end
+      before { User.any_instance.stubs(:totp_enabled?).returns(true) }
 
       it "is true" do
         expect(json[:second_factor_enabled]).to eq(true)
@@ -94,9 +98,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     context "when security_keys enabled" do
-      before do
-        User.any_instance.stubs(:security_keys_enabled?).returns(true)
-      end
+      before { User.any_instance.stubs(:security_keys_enabled?).returns(true) }
 
       it "is true" do
         expect(json[:second_factor_enabled]).to eq(true)
@@ -108,7 +110,12 @@ RSpec.describe CurrentUserSerializer do
     it "should only show visible groups" do
       Fabricate.build(:group, visibility_level: Group.visibility_levels[:public])
       hidden_group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
-      public_group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:public], name: "UppercaseGroupName")
+      public_group =
+        Fabricate.build(
+          :group,
+          visibility_level: Group.visibility_levels[:public],
+          name: "UppercaseGroupName",
+        )
       hidden_group.add(user)
       hidden_group.save!
       public_group.add(user)
@@ -116,7 +123,7 @@ RSpec.describe CurrentUserSerializer do
       payload = serializer.as_json
 
       expect(payload[:groups]).to contain_exactly(
-        { id: public_group.id, name: public_group.name, has_messages: false }
+        { id: public_group.id, name: public_group.name, has_messages: false },
       )
     end
   end
@@ -141,7 +148,6 @@ RSpec.describe CurrentUserSerializer do
       payload = serializer.as_json
       expect(payload).not_to have_key(:has_topic_draft)
     end
-
   end
 
   describe "#can_review" do
@@ -220,165 +226,124 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  describe '#sidebar_tags' do
-    fab!(:tag) { Fabricate(:tag, name: "foo") }
-    fab!(:pm_tag) { Fabricate(:tag, name: "bar", pm_topic_count: 5, topic_count: 0) }
-    fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
-    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"]) }
-    fab!(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user, linkable: tag) }
-    fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user, linkable: pm_tag) }
-    fab!(:tag_sidebar_section_link_3) { Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag) }
-
-    it "is not included when experimental sidebar has not been enabled" do
-      SiteSetting.enable_experimental_sidebar_hamburger = false
-      SiteSetting.tagging_enabled = true
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_tags]).to eq(nil)
-    end
-
-    it "is not included when tagging has not been enabled" do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
-      SiteSetting.tagging_enabled = false
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_tags]).to eq(nil)
-    end
-
-    it "serializes only the tags that the user can see when experimental sidebar and tagging has been enabled" do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
-      SiteSetting.tagging_enabled = true
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_tags]).to contain_exactly(
-        { name: tag.name, pm_only: false },
-        { name: pm_tag.name, pm_only: true }
-      )
-
-      user.update!(admin: true)
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_tags]).to contain_exactly(
-        { name: tag.name, pm_only: false },
-        { name: pm_tag.name, pm_only: true },
-        { name: hidden_tag.name, pm_only: false }
-      )
-    end
-  end
-
-  describe '#sidebar_category_ids' do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:category) { Fabricate(:category) }
-    fab!(:category_2) { Fabricate(:category) }
-    fab!(:private_category) { Fabricate(:private_category, group: group) }
-    fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user, linkable: category) }
-    fab!(:category_sidebar_section_link_2) { Fabricate(:category_sidebar_section_link, user: user, linkable: category_2) }
-    fab!(:category_sidebar_section_link_3) { Fabricate(:category_sidebar_section_link, user: user, linkable: private_category) }
-
-    it "is not included when SiteSetting.enable_experimental_sidebar_hamburger is false" do
-      category_sidebar_section_link
-      SiteSetting.enable_experimental_sidebar_hamburger = false
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_category_ids]).to eq(nil)
-    end
-
-    it "is not included when experimental sidebar has not been enabled" do
-      SiteSetting.enable_experimental_sidebar_hamburger = false
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_category_ids]).to eq(nil)
-    end
-
-    it 'serializes only the categories that the user can see when experimental sidebar and tagging has been enabled"' do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_category_ids]).to eq([
-        category.id,
-        category_2.id
-      ])
-
-      group.add(user)
-      serializer = described_class.new(user, scope: Guardian.new(user), root: false)
-      json = serializer.as_json
-
-      expect(json[:sidebar_category_ids]).to eq([
-        category.id,
-        category_2.id,
-        private_category.id
-      ])
-    end
-  end
-
   describe "#likes_notifications_disabled" do
     it "is true if the user disables likes notifications" do
-      user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:never])
-      expect(serializer.as_json[:likes_notifications_disabled]).to eq(true)
+      user.user_option.update!(
+        like_notification_frequency: UserOption.like_notification_frequency_type[:never],
+      )
+      expect(serializer.as_json[:user_option][:likes_notifications_disabled]).to eq(true)
     end
 
     it "is false if the user doesn't disable likes notifications" do
-      user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:always])
-      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
-      user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:first_time_and_daily])
-      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
-      user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:first_time])
-      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
+      user.user_option.update!(
+        like_notification_frequency: UserOption.like_notification_frequency_type[:always],
+      )
+      expect(serializer.as_json[:user_option][:likes_notifications_disabled]).to eq(false)
+      user.user_option.update!(
+        like_notification_frequency:
+          UserOption.like_notification_frequency_type[:first_time_and_daily],
+      )
+      expect(serializer.as_json[:user_option][:likes_notifications_disabled]).to eq(false)
+      user.user_option.update!(
+        like_notification_frequency: UserOption.like_notification_frequency_type[:first_time],
+      )
+      expect(serializer.as_json[:user_option][:likes_notifications_disabled]).to eq(false)
     end
   end
 
-  describe '#redesigned_user_page_nav_enabled' do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:group2) { Fabricate(:group) }
-
-    it "is false when enable_new_user_profile_nav_groups site setting has not been set" do
-      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(false)
-    end
-
-    it 'is false if user does not belong to any of the configured groups in the enable_new_user_profile_nav_groups site setting' do
-      SiteSetting.enable_new_user_profile_nav_groups = "#{group.id}|#{group2.id}"
-
-      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(false)
-    end
-
-    it 'is true if user belongs one of the configured groups in the enable_new_user_profile_nav_groups site setting' do
-      SiteSetting.enable_new_user_profile_nav_groups = "#{group.id}|#{group2.id}"
-      group.add(user)
-
-      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(true)
-    end
-  end
-
-  describe '#associated_account_ids' do
+  describe "#associated_account_ids" do
     before do
-      UserAssociatedAccount.create(user_id: user.id, provider_name: "twitter", provider_uid: "1", info: { nickname: "sam" })
+      UserAssociatedAccount.create(
+        user_id: user.id,
+        provider_name: "twitter",
+        provider_uid: "1",
+        info: {
+          nickname: "sam",
+        },
+      )
     end
 
-    it 'should not include associated account ids by default' do
+    it "should not include associated account ids by default" do
       expect(serializer.as_json[:associated_account_ids]).to be_nil
     end
 
-    it 'should include associated account ids when site setting enabled' do
+    it "should include associated account ids when site setting enabled" do
       SiteSetting.include_associated_account_ids = true
       expect(serializer.as_json[:associated_account_ids]).to eq({ "twitter" => "1" })
     end
   end
 
-  describe "#sidebar_list_destination" do
-    it "returns choosen value or default" do
-      expect(serializer.as_json[:sidebar_list_destination]).to eq(SiteSetting.default_sidebar_list_destination)
+  describe "#new_personal_messages_notifications_count" do
+    fab!(:notification) do
+      Fabricate(
+        :notification,
+        user: user,
+        read: false,
+        notification_type: Notification.types[:private_message],
+      )
+    end
 
-      user.user_option.update!(sidebar_list_destination: "unread_new")
-      expect(serializer.as_json[:sidebar_list_destination]).to eq("unread_new")
+    it "isn't included when navigation menu is legacy" do
+      SiteSetting.navigation_menu = "legacy"
+
+      expect(serializer.as_json[:new_personal_messages_notifications_count]).to be_nil
+    end
+
+    it "is included when sidebar is enabled" do
+      SiteSetting.navigation_menu = "sidebar"
+
+      expect(serializer.as_json[:new_personal_messages_notifications_count]).to eq(1)
     end
   end
 
-  include_examples "#display_sidebar_tags", described_class
+  include_examples "User Sidebar Serializer Attributes", described_class
+
+  describe "#sidebar_sections" do
+    fab!(:group) { Fabricate(:group) }
+    fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
+
+    before do
+      group.add(user)
+      SiteSetting.enable_custom_sidebar_sections = group.id
+    end
+
+    it "eager loads sidebar_urls" do
+      custom_sidebar_section_link_1 =
+        Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: sidebar_section)
+
+      # warmup
+      described_class.new(user, scope: Guardian.new(user), root: false).as_json
+
+      initial_count =
+        track_sql_queries do
+          serialized = described_class.new(user, scope: Guardian.new(user), root: false).as_json
+
+          expect(serialized[:sidebar_sections].map { |sidebar_section| sidebar_section.id }).to eq(
+            [sidebar_section.id],
+          )
+
+          expect(serialized[:sidebar_sections].first.links.map { |link| link.id }).to eq(
+            [custom_sidebar_section_link_1.linkable.id],
+          )
+        end.count
+
+      custom_sidebar_section_link_2 =
+        Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: sidebar_section)
+
+      final_count =
+        track_sql_queries do
+          serialized = described_class.new(user, scope: Guardian.new(user), root: false).as_json
+
+          expect(serialized[:sidebar_sections].map { |sidebar_section| sidebar_section.id }).to eq(
+            [sidebar_section.id],
+          )
+
+          expect(serialized[:sidebar_sections].first.links.map { |link| link.id }).to eq(
+            [custom_sidebar_section_link_1.linkable.id, custom_sidebar_section_link_2.linkable.id],
+          )
+        end.count
+
+      expect(initial_count).to eq(final_count)
+    end
+  end
 end

@@ -7,12 +7,7 @@ module Reports::TrustLevelGrowth
     def report_trust_level_growth(report)
       report.modes = [:stacked_chart]
 
-      filters = %w[
-        tl1_reached
-        tl2_reached
-        tl3_reached
-        tl4_reached
-      ]
+      filters = %w[tl1_reached tl2_reached tl3_reached tl4_reached]
 
       sql = <<~SQL
       SELECT
@@ -39,43 +34,39 @@ module Reports::TrustLevelGrowth
         OR action = #{UserHistory.actions[:auto_trust_level_change]}
       )
       GROUP BY date(created_at)
+      ORDER BY date(created_at)
       SQL
 
-      data = Hash[ filters.collect { |x| [x, []] } ]
+      data = Hash[filters.collect { |x| [x, []] }]
 
       builder = DB.build(sql)
       builder.query.each do |row|
         filters.each do |filter|
           data[filter] << {
             x: row.date.strftime("%Y-%m-%d"),
-            y: row.instance_variable_get("@#{filter}")
+            y: row.instance_variable_get("@#{filter}"),
           }
         end
       end
 
-      tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
-      quaternary = ColorScheme.hex_for_name('quaternary') || 'e45735'
+      tertiary = ColorScheme.hex_for_name("tertiary") || "0088cc"
+      quaternary = ColorScheme.hex_for_name("quaternary") || "e45735"
 
-      requests = filters.map do |filter|
-        color = report.rgba_color(quaternary)
+      requests =
+        filters.map do |filter|
+          color = report.rgba_color(quaternary)
 
-        if filter == "tl1_reached"
-          color = report.lighten_color(tertiary, 0.25)
-        end
-        if filter == "tl2_reached"
-          color = report.rgba_color(tertiary)
-        end
-        if filter == "tl3_reached"
-          color = report.lighten_color(quaternary, 0.25)
-        end
+          color = report.lighten_color(tertiary, 0.25) if filter == "tl1_reached"
+          color = report.rgba_color(tertiary) if filter == "tl2_reached"
+          color = report.lighten_color(quaternary, 0.25) if filter == "tl3_reached"
 
-        {
-          req: filter,
-          label: I18n.t("reports.trust_level_growth.xaxis.#{filter}"),
-          color: color,
-          data: data[filter]
-        }
-      end
+          {
+            req: filter,
+            label: I18n.t("reports.trust_level_growth.xaxis.#{filter}"),
+            color: color,
+            data: data[filter],
+          }
+        end
 
       report.data = requests
     end

@@ -1,0 +1,51 @@
+{{#if @model.userApiKeys}}
+  <div class="control-group pref-user-api-keys">
+    <label class="control-label pref-user-api-keys__label">{{i18n
+        "user.apps"
+      }}</label>
+
+    <div class="controls">
+      {{#each @model.userApiKeys as |key|}}
+        <div>
+          <span
+            class="pref-user-api-keys__application-name"
+          >{{key.application_name}}</span>
+
+          {{#if key.revoked}}
+            <DButton
+              @action={{route-action "undoRevokeApiKey"}}
+              @actionParam={{key}}
+              @class="btn"
+              @label="user.undo_revoke_access"
+            />
+          {{else}}
+            <DButton
+              @action={{route-action "revokeApiKey"}}
+              @actionParam={{key}}
+              @class="btn"
+              @label="user.revoke_access"
+            />
+          {{/if}}
+
+          <p>
+            <ul class="pref-user-api-keys__scopes-list">
+              {{#each key.scopes as |scope|}}
+                <li class="pref-user-api-keys__scopes-list-item">{{scope}}</li>
+              {{/each}}
+            </ul>
+          </p>
+
+          <p class="pref-user-api-keys__created-at">
+            <span>{{i18n "user.api_approved"}}</span>
+            {{bound-date key.created_at}}
+          </p>
+
+          <p class="pref-user-api-keys__last-used-at">
+            <span>{{i18n "user.api_last_used_at"}}</span>
+            {{bound-date key.last_used_at}}
+          </p>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+{{/if}}

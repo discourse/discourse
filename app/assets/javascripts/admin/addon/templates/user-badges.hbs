@@ -1,7 +1,10 @@
 <div class="admin-controls">
   <nav>
     <ul class="nav nav-pills">
-      <li><LinkTo @route="adminUser" @model={{this.user}}>{{d-icon "caret-left"}} &nbsp;{{this.user.username}}</LinkTo></li>
+      <li><LinkTo @route="adminUser" @model={{this.user}}>{{d-icon
+            "caret-left"
+          }}
+          &nbsp;{{this.user.username}}</LinkTo></li>
     </ul>
   </nav>
 </div>
@@ -9,22 +12,32 @@
 <ConditionalLoadingSpinner @condition={{this.loading}}>
   <div class="admin-container user-badges">
     <h2>{{i18n "admin.badges.grant_badge"}}</h2>
-    <br>
+    <br />
     {{#if this.noGrantableBadges}}
       <p>{{i18n "admin.badges.no_badges"}}</p>
     {{else}}
       <form class="form-horizontal">
         <div class="control-group">
           <label>{{i18n "admin.badges.badge"}}</label>
-          <ComboBox @value={{this.selectedBadgeId}} @content={{this.grantableBadges}} @onChange={{action (mut this.selectedBadgeId)}} @options={{hash
-              filterable=true
-            }} />
+          <ComboBox
+            @value={{this.selectedBadgeId}}
+            @content={{this.grantableBadges}}
+            @onChange={{action (mut this.selectedBadgeId)}}
+            @options={{hash filterable=true}}
+          />
         </div>
         <div class="control-group">
           <label>{{i18n "admin.badges.reason"}}</label>
-          <Input @type="text" @value={{this.badgeReason}} /><br><small>{{i18n "admin.badges.reason_help"}}</small>
+          <Input @type="text" @value={{this.badgeReason}} /><br /><small>{{i18n
+              "admin.badges.reason_help"
+            }}</small>
         </div>
-        <DButton @class="btn-primary" @action={{action "grantBadge"}} @type="submit" @label="admin.badges.grant" />
+        <DButton
+          @class="btn-primary"
+          @action={{this.performGrantBadge}}
+          @type="submit"
+          @label="admin.badges.grant"
+        />
       </form>
     {{/if}}
 
@@ -39,7 +52,10 @@
         </tr>
         {{#each this.groupedBadges as |userBadge|}}
           <tr>
-            <td><UserBadge @badge={{userBadge.badge}} @count={{userBadge.count}} /></td>
+            <td><UserBadge
+                @badge={{userBadge.badge}}
+                @count={{userBadge.count}}
+              /></td>
             <td>
               <LinkTo @route="adminUser" @model={{userBadge.badge.granted_by}}>
                 {{avatar userBadge.granted_by imageSize="tiny"}}
@@ -54,16 +70,26 @@
             <td>{{age-with-tooltip userBadge.granted_at}}</td>
             <td>
               {{#if userBadge.grouped}}
-                <DButton @action={{action "expandGroup" userBadge}} @label="admin.badges.expand" />
+                <DButton
+                  @action={{action "expandGroup" userBadge}}
+                  @label="admin.badges.expand"
+                />
               {{else}}
-                <DButton @class="btn-danger" @action={{action "revokeBadge" userBadge}} @label="admin.badges.revoke" />
+                <DButton
+                  @class="btn-danger"
+                  @action={{action "revokeBadge" userBadge}}
+                  @label="admin.badges.revoke"
+                />
               {{/if}}
             </td>
           </tr>
         {{else}}
           <tr>
             <td colspan="5">
-              <p>{{i18n "admin.badges.no_user_badges" name=this.user.username}}</p>
+              <p>{{i18n
+                  "admin.badges.no_user_badges"
+                  name=this.user.username
+                }}</p>
             </td>
           </tr>
         {{/each}}

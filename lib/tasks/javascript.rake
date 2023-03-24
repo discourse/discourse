@@ -17,10 +17,11 @@ def library_src
 end
 
 def html_for_section(group)
-  icons = group["icons"].map do |icon|
-    class_attr = icon["diversity"] ? " class=\"diversity\"" : ""
-    "    {{replace-emoji \":#{icon['name']}:\" (hash lazy=true#{class_attr} tabIndex=\"0\")}}"
-  end
+  icons =
+    group["icons"].map do |icon|
+      class_attr = icon["diversity"] ? " class=\"diversity\"" : ""
+      "    {{replace-emoji \":#{icon["name"]}:\" (hash lazy=true#{class_attr} tabIndex=\"0\")}}"
+    end
 
   <<~HTML
     <div class="section" data-section="#{group["name"]}">
@@ -45,7 +46,7 @@ def write_template(path, task_name, template)
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
-  %x{yarn run prettier --write #{output_path}}
+  `yarn run prettier --write #{output_path}`
   puts "#{basename} prettified"
 end
 
@@ -58,108 +59,89 @@ def write_hbs_template(path, task_name, template)
   basename = File.basename(path)
   output_path = "#{Rails.root}/app/assets/javascripts/#{path}"
   File.write(output_path, "#{header}\n#{template}")
+  `yarn run prettier --write #{output_path}`
   puts "#{basename} created"
 end
 
 def dependencies
   [
+    { source: "ace-builds/src-min-noconflict/ace.js", destination: "ace.js", public: true },
     {
-      source: 'ace-builds/src-min-noconflict/ace.js',
-      destination: 'ace.js',
-      public: true
-    }, {
-      source: '@json-editor/json-editor/dist/jsoneditor.js',
-      package_name: '@json-editor/json-editor',
-      public: true
-    }, {
-      source: 'chart.js/dist/chart.min.js',
-      public: true
-    }, {
-      source: 'chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js',
-      public: true
-    }, {
-      source: 'diffhtml/dist/diffhtml.min.js',
-      public: true
-    }, {
-      source: 'magnific-popup/dist/jquery.magnific-popup.min.js',
-      public: true
-    }, {
-      source: 'pikaday/pikaday.js',
-      public: true
-    }, {
-      source: '@highlightjs/cdn-assets/.',
-      destination: 'highlightjs'
-    }, {
-      source: 'moment/moment.js'
-    }, {
-      source: 'moment/locale/.',
-      destination: 'moment-locale',
-    }, {
-      source: 'moment-timezone/builds/moment-timezone-with-data-10-year-range.js',
-      destination: 'moment-timezone-with-data.js'
-    }, {
-      source: '@discourse/moment-timezone-names-translations/locales/.',
-      destination: 'moment-timezone-names-locale'
-    }, {
-      source: 'workbox-sw/build/.',
-      destination: 'workbox',
+      source: "@json-editor/json-editor/dist/jsoneditor.js",
+      package_name: "@json-editor/json-editor",
       public: true,
-      skip_versioning: true
-    }, {
-      source: 'workbox-routing/build/.',
-      destination: 'workbox',
+    },
+    { source: "chart.js/dist/chart.min.js", public: true },
+    { source: "chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js", public: true },
+    { source: "diffhtml/dist/diffhtml.min.js", public: true },
+    { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
+    { source: "pikaday/pikaday.js", public: true },
+    { source: "@highlightjs/cdn-assets/.", destination: "highlightjs" },
+    { source: "moment/moment.js" },
+    { source: "moment/locale/.", destination: "moment-locale" },
+    {
+      source: "moment-timezone/builds/moment-timezone-with-data-10-year-range.js",
+      destination: "moment-timezone-with-data.js",
+    },
+    {
+      source: "@discourse/moment-timezone-names-translations/locales/.",
+      destination: "moment-timezone-names-locale",
+    },
+    { source: "workbox-sw/build/.", destination: "workbox", public: true, skip_versioning: true },
+    {
+      source: "workbox-routing/build/.",
+      destination: "workbox",
       public: true,
-      skip_versioning: true
-    }, {
-      source: 'workbox-core/build/.',
-      destination: 'workbox',
-      public: true,
-      skip_versioning: true
-    }, {
-      source: 'workbox-strategies/build/.',
-      destination: 'workbox',
-      public: true,
-      skip_versioning: true
-    }, {
-      source: 'workbox-expiration/build/.',
-      destination: 'workbox',
-      public: true,
-      skip_versioning: true
-    }, {
-      source: 'workbox-cacheable-response/build/.',
-      destination: 'workbox',
       skip_versioning: true,
-      public: true
+    },
+    { source: "workbox-core/build/.", destination: "workbox", public: true, skip_versioning: true },
+    {
+      source: "workbox-strategies/build/.",
+      destination: "workbox",
+      public: true,
+      skip_versioning: true,
     },
     {
-      source: 'squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js',
-      destination: 'squoosh',
+      source: "workbox-expiration/build/.",
+      destination: "workbox",
       public: true,
-      skip_versioning: true
+      skip_versioning: true,
     },
     {
-      source: 'squoosh/codecs/mozjpeg/enc/mozjpeg_enc.wasm',
-      destination: 'squoosh',
+      source: "workbox-cacheable-response/build/.",
+      destination: "workbox",
+      skip_versioning: true,
       public: true,
-      skip_versioning: true
     },
     {
-      source: 'squoosh/codecs/resize/pkg/squoosh_resize.js',
-      destination: 'squoosh',
+      source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js",
+      destination: "squoosh",
       public: true,
-      skip_versioning: true
+      skip_versioning: true,
     },
     {
-      source: 'squoosh/codecs/resize/pkg/squoosh_resize_bg.wasm',
-      destination: 'squoosh',
+      source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.wasm",
+      destination: "squoosh",
       public: true,
-      skip_versioning: true
-    }
+      skip_versioning: true,
+    },
+    {
+      source: "squoosh/codecs/resize/pkg/squoosh_resize.js",
+      destination: "squoosh",
+      public: true,
+      skip_versioning: true,
+    },
+    {
+      source: "squoosh/codecs/resize/pkg/squoosh_resize_bg.wasm",
+      destination: "squoosh",
+      public: true,
+      skip_versioning: true,
+    },
   ]
 end
 
 def node_package_name(f)
-  f[:package_name] || f[:source].split('/').first
+  f[:package_name] || f[:source].split("/").first
 end
 
 def public_path_name(f)
@@ -174,8 +156,8 @@ def absolute_sourcemap(dest)
   end
 end
 
-task 'javascript:update_constants' => :environment do
-  task_name = 'update_constants'
+task "javascript:update_constants" => :environment do
+  task_name = "update_constants"
 
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
@@ -183,9 +165,7 @@ task 'javascript:update_constants' => :environment do
     export const SEARCH_PHRASE_REGEXP = '#{Search::PHRASE_MATCH_REGEXP_PATTERN}';
   JS
 
-  pretty_notifications = Notification.types.map do |n|
-    "  #{n[0]}: #{n[1]},"
-  end.join("\n")
+  pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
 
   write_template("discourse/tests/fixtures/concerns/notification-types.js", task_name, <<~JS)
     export const NOTIFICATION_TYPES = {
@@ -202,30 +182,53 @@ task 'javascript:update_constants' => :environment do
     export const replacements = #{Emoji.unicode_replacements_json};
   JS
 
+  langs = []
+  Dir
+    .glob("vendor/assets/javascripts/highlightjs/languages/*.min.js")
+    .each { |f| langs << File.basename(f, ".min.js") }
+  bundle = HighlightJs.bundle(langs)
+
+  ctx = MiniRacer::Context.new
+  hljs_aliases = ctx.eval(<<~JS)
+    #{bundle}
+
+    let aliases = {};
+    hljs.listLanguages().forEach((lang) => {
+      if (hljs.getLanguage(lang).aliases) {
+        aliases[lang] = hljs.getLanguage(lang).aliases;
+      }
+    });
+
+    aliases;
+  JS
+
+  write_template("pretty-text/addon/highlightjs-aliases.js", task_name, <<~JS)
+    export const HLJS_ALIASES = #{hljs_aliases.to_json};
+  JS
+
+  ctx.dispose
+
   write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
   JS
 
   groups_json = JSON.parse(File.read("lib/emoji/groups.json"))
 
-  emoji_buttons = groups_json.map do |group|
-    <<~HTML
+  emoji_buttons = groups_json.map { |group| <<~HTML }
 			<button type="button" data-section="#{group["name"]}" {{on "click" (fn this.onCategorySelection "#{group["name"]}")}} class="btn btn-default category-button emoji">
 				 {{replace-emoji ":#{group["tabicon"]}:"}}
 			</button>
     HTML
-  end
 
   emoji_sections = groups_json.map { |group| html_for_section(group) }
 
-  components_dir = "discourse/app/templates/components"
+  components_dir = "discourse/app/components"
   write_hbs_template("#{components_dir}/emoji-group-buttons.hbs", task_name, emoji_buttons.join)
   write_hbs_template("#{components_dir}/emoji-group-sections.hbs", task_name, emoji_sections.join)
-
 end
 
-task 'javascript:update' => 'clean_up' do
-  require 'uglifier'
+task "javascript:update" => "clean_up" do
+  require "uglifier"
 
   yarn = system("yarn install")
   abort('Unable to run "yarn install"') unless yarn
@@ -236,10 +239,10 @@ task 'javascript:update' => 'clean_up' do
   dependencies.each do |f|
     src = "#{library_src}/#{f[:source]}"
 
-    unless f[:destination]
-      filename = f[:source].split("/").last
-    else
+    if f[:destination]
       filename = f[:destination]
+    else
+      filename = f[:source].split("/").last
     end
 
     if src.include? "highlightjs"
@@ -247,8 +250,8 @@ task 'javascript:update' => 'clean_up' do
       system("rm -rf node_modules/@highlightjs/cdn-assets/styles")
 
       # We don't need every language for tests
-      langs = ['javascript', 'sql', 'ruby']
-      test_bundle_dest = 'vendor/assets/javascripts/highlightjs/highlight-test-bundle.min.js'
+      langs = %w[javascript sql ruby]
+      test_bundle_dest = "vendor/assets/javascripts/highlightjs/highlight-test-bundle.min.js"
       File.write(test_bundle_dest, HighlightJs.bundle(langs))
     end
 
@@ -259,7 +262,8 @@ task 'javascript:update' => 'clean_up' do
         dest = "#{public_js}/#{filename}"
       else
         package_dir_name = public_path_name(f)
-        package_version = JSON.parse(File.read("#{library_src}/#{node_package_name(f)}/package.json"))["version"]
+        package_version =
+          JSON.parse(File.read("#{library_src}/#{node_package_name(f)}/package.json"))["version"]
         versions[filename.downcase] = "#{package_dir_name}/#{package_version}/#{filename}"
 
         path = "#{public_js}/#{package_dir_name}/#{package_version}"
@@ -274,16 +278,21 @@ task 'javascript:update' => 'clean_up' do
     if src.include? "ace.js"
       versions["ace/ace.js"] = versions.delete("ace.js")
       ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
-      addtl_files = [ "ext-searchbox", "mode-html", "mode-scss", "mode-sql", "theme-chrome", "theme-chaos", "worker-html"]
-      dest_path = dest.split('/')[0..-2].join('/')
-      addtl_files.each do |file|
-        FileUtils.cp_r("#{ace_root}#{file}.js", dest_path)
-      end
+      addtl_files = %w[
+        ext-searchbox
+        mode-html
+        mode-scss
+        mode-sql
+        mode-yaml
+        theme-chrome
+        theme-chaos
+        worker-html
+      ]
+      dest_path = dest.split("/")[0..-2].join("/")
+      addtl_files.each { |file| FileUtils.cp_r("#{ace_root}#{file}.js", dest_path) }
     end
 
-    unless File.exist?(dest)
-      STDERR.puts "New dependency added: #{dest}"
-    end
+    STDERR.puts "New dependency added: #{dest}" unless File.exist?(dest)
 
     if f[:uglify]
       File.write(dest, Uglifier.new.compile(File.read(src)))
@@ -299,7 +308,7 @@ task 'javascript:update' => 'clean_up' do
   STDERR.puts "Completed copying dependencies: #{(Time.now - start).round(2)} secs"
 end
 
-task 'javascript:clean_up' do
+task "javascript:clean_up" do
   processed = []
   dependencies.each do |f|
     next unless f[:public] && !f[:skip_versioning]
@@ -307,7 +316,7 @@ task 'javascript:clean_up' do
     package_dir_name = public_path_name(f)
     next if processed.include?(package_dir_name)
 
-    versions = Dir["#{File.join(public_js, package_dir_name)}/*"].collect { |p| p.split('/').last }
+    versions = Dir["#{File.join(public_js, package_dir_name)}/*"].collect { |p| p.split("/").last }
     next unless versions.present?
 
     versions = versions.sort { |a, b| Gem::Version.new(a) <=> Gem::Version.new(b) }

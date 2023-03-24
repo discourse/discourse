@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../support/constants'
+require_relative "../support/constants"
 
 module ImportScripts::PhpBB3
   class UserImporter
@@ -29,8 +29,22 @@ module ImportScripts::PhpBB3
         password: @settings.import_passwords ? row[:user_password] : nil,
         name: @settings.username_as_name ? row[:username] : row[:name].presence,
         created_at: Time.zone.at(row[:user_regdate]),
-        last_seen_at: row[:user_lastvisit] == 0 ? Time.zone.at(row[:user_regdate]) : Time.zone.at(row[:user_lastvisit]),
-        registration_ip_address: (IPAddr.new(row[:user_ip]) rescue nil),
+        last_seen_at:
+          (
+            if row[:user_lastvisit] == 0
+              Time.zone.at(row[:user_regdate])
+            else
+              Time.zone.at(row[:user_lastvisit])
+            end
+          ),
+        registration_ip_address:
+          (
+            begin
+              IPAddr.new(row[:user_ip])
+            rescue StandardError
+              nil
+            end
+          ),
         active: is_active_user,
         trust_level: trust_level,
         manual_locked_trust_level: manual_locked_trust_level,
@@ -43,10 +57,11 @@ module ImportScripts::PhpBB3
         location: row[:user_from],
         date_of_birth: parse_birthdate(row),
         custom_fields: custom_fields(row),
-        post_create_action: proc do |user|
-          suspend_user(user, row)
-          @avatar_importer.import_avatar(user, row) if row[:user_avatar_type].present?
-        end
+        post_create_action:
+          proc do |user|
+            suspend_user(user, row)
+            @avatar_importer.import_avatar(user, row) if row[:user_avatar_type].present?
+          end,
       }
     end
 
@@ -61,18 +76,19 @@ module ImportScripts::PhpBB3
         id: @settings.prefix(username),
         email: "anonymous_#{SecureRandom.hex}@no-email.invalid",
         username: username,
-        name: @settings.username_as_name ? username : '',
+        name: @settings.username_as_name ? username : "",
         created_at: Time.zone.at(row[:first_post_time]),
         active: true,
         trust_level: TrustLevel[0],
         approved: true,
         approved_by_id: Discourse.system_user.id,
         approved_at: Time.now,
-        post_create_action: proc do |user|
-          row[:user_inactive_reason] = Constants::INACTIVE_MANUAL
-          row[:ban_reason] = 'Anonymous user from phpBB3' # TODO i18n
-          suspend_user(user, row, true)
-        end
+        post_create_action:
+          proc do |user|
+            row[:user_inactive_reason] = Constants::INACTIVE_MANUAL
+            row[:ban_reason] = "Anonymous user from phpBB3" # TODO i18n
+            suspend_user(user, row, true)
+          end,
       }
     end
 
@@ -80,25 +96,32 @@ module ImportScripts::PhpBB3
 
     def parse_birthdate(row)
       return nil if row[:user_birthday].blank?
-      birthdate = Date.strptime(row[:user_birthday].delete(' '), '%d-%m-%Y') rescue nil
+      birthdate =
+        begin
+          Date.strptime(row[:user_birthday].delete(" "), "%d-%m-%Y")
+        rescue StandardError
+          nil
+        end
       birthdate && birthdate.year > 0 ? birthdate : nil
     end
 
     def user_fields
-      @user_fields ||= begin
-        Hash[UserField.all.map { |field| [field.name, field] }]
-      end
+      @user_fields ||=
+        begin
+          Hash[UserField.all.map { |field| [field.name, field] }]
+        end
     end
 
     def field_mappings
-      @field_mappings ||= begin
-        @settings.custom_fields.map do |field|
-          {
-            phpbb_field_name: "pf_#{field[:phpbb_field_name]}".to_sym,
-            discourse_user_field: user_fields[field[:discourse_field_name]]
-          }
+      @field_mappings ||=
+        begin
+          @settings.custom_fields.map do |field|
+            {
+              phpbb_field_name: "pf_#{field[:phpbb_field_name]}".to_sym,
+              discourse_user_field: user_fields[field[:discourse_field_name]],
+            }
+          end
         end
-      end
     end
 
     def custom_fields(row)
@@ -114,7 +137,8 @@ module ImportScripts::PhpBB3
         when "confirm"
           value = value == 1 ? true : nil
         when "dropdown"
-          value = user_field.user_field_options.find { |option| option.value == value } ? value : nil
+          value =
+            user_field.user_field_options.find { |option| option.value == value } ? value : nil
         end
 
         custom_fields["user_field_#{user_field.id}"] = value if value.present?
@@ -128,7 +152,8 @@ module ImportScripts::PhpBB3
       if row[:user_inactive_reason] == Constants::INACTIVE_MANUAL
         user.suspended_at = Time.now
         user.suspended_till = 200.years.from_now
-        ban_reason = row[:ban_reason].blank? ? 'Account deactivated by administrator' : row[:ban_reason] # TODO i18n
+        ban_reason =
+          row[:ban_reason].blank? ? "Account deactivated by administrator" : row[:ban_reason] # TODO i18n
       elsif row[:ban_start].present?
         user.suspended_at = Time.zone.at(row[:ban_start])
         user.suspended_till = row[:ban_end] > 0 ? Time.zone.at(row[:ban_end]) : 200.years.from_now
@@ -148,7 +173,9 @@ module ImportScripts::PhpBB3
       if user.save
         StaffActionLogger.new(Discourse.system_user).log_user_suspend(user, ban_reason)
       else
-        Rails.logger.error("Failed to suspend user #{user.username}. #{user.errors.try(:full_messages).try(:inspect)}")
+        Rails.logger.error(
+          "Failed to suspend user #{user.username}. #{user.errors.try(:full_messages).try(:inspect)}",
+        )
       end
     end
   end

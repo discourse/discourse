@@ -157,7 +157,6 @@ export function excerpt(cooked, length) {
         resultLength += element.textContent.length;
       }
     } else if (element.tagName === "A") {
-      element.innerHTML = element.innerText;
       result += element.outerHTML;
       resultLength += element.innerText.length;
     } else if (element.tagName === "IMG") {

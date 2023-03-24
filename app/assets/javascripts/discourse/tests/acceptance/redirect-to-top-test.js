@@ -19,10 +19,12 @@ acceptance("Redirect to Top", function (needs) {
 
   test("redirects categories to weekly top", async function (assert) {
     updateCurrentUser({
-      should_be_redirected_to_top: true,
-      redirected_to_top: {
-        period: "weekly",
-        reason: "Welcome back!",
+      user_option: {
+        should_be_redirected_to_top: true,
+        redirected_to_top: {
+          period: "weekly",
+          reason: "Welcome back!",
+        },
       },
     });
 
@@ -36,10 +38,12 @@ acceptance("Redirect to Top", function (needs) {
 
   test("redirects latest to monthly top", async function (assert) {
     updateCurrentUser({
-      should_be_redirected_to_top: true,
-      redirected_to_top: {
-        period: "monthly",
-        reason: "Welcome back!",
+      user_option: {
+        should_be_redirected_to_top: true,
+        redirected_to_top: {
+          period: "monthly",
+          reason: "Welcome back!",
+        },
       },
     });
 
@@ -53,10 +57,12 @@ acceptance("Redirect to Top", function (needs) {
 
   test("redirects root to All top", async function (assert) {
     updateCurrentUser({
-      should_be_redirected_to_top: true,
-      redirected_to_top: {
-        period: null,
-        reason: "Welcome back!",
+      user_option: {
+        should_be_redirected_to_top: true,
+        redirected_to_top: {
+          period: null,
+          reason: "Welcome back!",
+        },
       },
     });
 

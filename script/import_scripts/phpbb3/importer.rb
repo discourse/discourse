@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../base'
-require_relative 'support/settings'
-require_relative 'database/database'
-require_relative 'importers/importer_factory'
+require_relative "../base"
+require_relative "support/settings"
+require_relative "database/database"
+require_relative "importers/importer_factory"
 
 module ImportScripts::PhpBB3
   class Importer < ImportScripts::Base
@@ -25,7 +25,7 @@ module ImportScripts::PhpBB3
     protected
 
     def execute
-      puts '', "importing from phpBB #{@php_config[:phpbb_version]}"
+      puts "", "importing from phpBB #{@php_config[:phpbb_version]}"
 
       SiteSetting.tagging_enabled = true if @settings.tag_mappings.present?
 
@@ -55,8 +55,14 @@ module ImportScripts::PhpBB3
       settings[:max_attachment_size_kb] = [max_file_size_kb, SiteSetting.max_attachment_size_kb].max
 
       # temporarily disable validation since we want to import all existing images and attachments
-      SiteSetting.type_supervisor.load_setting(:max_image_size_kb, max: settings[:max_image_size_kb])
-      SiteSetting.type_supervisor.load_setting(:max_attachment_size_kb, max: settings[:max_attachment_size_kb])
+      SiteSetting.type_supervisor.load_setting(
+        :max_image_size_kb,
+        max: settings[:max_image_size_kb],
+      )
+      SiteSetting.type_supervisor.load_setting(
+        :max_attachment_size_kb,
+        max: settings[:max_attachment_size_kb],
+      )
 
       settings
     end
@@ -66,7 +72,7 @@ module ImportScripts::PhpBB3
     end
 
     def import_users
-      puts '', 'creating users'
+      puts "", "creating users"
       total_count = @database.count_users
       importer = @importers.user_importer
       last_user_id = 0
@@ -88,10 +94,10 @@ module ImportScripts::PhpBB3
     end
 
     def import_anonymous_users
-      puts '', 'creating anonymous users'
+      puts "", "creating anonymous users"
       total_count = @database.count_anonymous_users
       importer = @importers.user_importer
-      last_username = ''
+      last_username = ""
 
       batches do |offset|
         rows, last_username = @database.fetch_anonymous_users(last_username)
@@ -109,26 +115,34 @@ module ImportScripts::PhpBB3
     end
 
     def import_groups
-      puts '', 'creating groups'
+      puts "", "creating groups"
       rows = @database.fetch_groups
 
       create_groups(rows) do |row|
         begin
           next if row[:group_type] == 3
 
-          group_name = if @settings.site_name.present?
-            "#{@settings.site_name}_#{row[:group_name]}"
-          else
-            row[:group_name]
-          end[0..19].gsub(/[^a-zA-Z0-9\-_. ]/, '_')
+          group_name =
+            if @settings.site_name.present?
+              "#{@settings.site_name}_#{row[:group_name]}"
+            else
+              row[:group_name]
+            end[
+              0..19
+            ].gsub(/[^a-zA-Z0-9\-_. ]/, "_")
 
-          bio_raw = @importers.text_processor.process_raw_text(row[:group_desc]) rescue row[:group_desc]
+          bio_raw =
+            begin
+              @importers.text_processor.process_raw_text(row[:group_desc])
+            rescue StandardError
+              row[:group_desc]
+            end
 
           {
             id: @settings.prefix(row[:group_id]),
             name: group_name,
             full_name: row[:group_name],
-            bio_raw: bio_raw
+            bio_raw: bio_raw,
           }
         rescue => e
           log_error("Failed to map group with ID #{row[:group_id]}", e)
@@ -137,7 +151,7 @@ module ImportScripts::PhpBB3
     end
 
     def import_user_groups
-      puts '', 'creating user groups'
+      puts "", "creating user groups"
       rows = @database.fetch_group_users
 
       rows.each do |row|
@@ -147,7 +161,11 @@ module ImportScripts::PhpBB3
         user_id = @lookup.user_id_from_imported_user_id(@settings.prefix(row[:user_id]))
 
         begin
-          GroupUser.find_or_create_by(user_id: user_id, group_id: group_id, owner: row[:group_leader])
+          GroupUser.find_or_create_by(
+            user_id: user_id,
+            group_id: group_id,
+            owner: row[:group_leader],
+          )
         rescue => e
           log_error("Failed to add user #{row[:user_id]} to group #{row[:group_id]}", e)
         end
@@ -155,7 +173,7 @@ module ImportScripts::PhpBB3
     end
 
     def import_new_categories
-      puts '', 'creating new categories'
+      puts "", "creating new categories"
 
       create_categories(@settings.new_categories) do |row|
         next if row == "SKIP"
@@ -163,13 +181,14 @@ module ImportScripts::PhpBB3
         {
           id: @settings.prefix(row[:forum_id]),
           name: row[:name],
-          parent_category_id: @lookup.category_id_from_imported_category_id(@settings.prefix(row[:parent_id]))
+          parent_category_id:
+            @lookup.category_id_from_imported_category_id(@settings.prefix(row[:parent_id])),
         }
       end
     end
 
     def import_categories
-      puts '', 'creating categories'
+      puts "", "creating categories"
       rows = @database.fetch_categories
       importer = @importers.category_importer
 
@@ -181,7 +200,7 @@ module ImportScripts::PhpBB3
     end
 
     def import_posts
-      puts '', 'creating topics and posts'
+      puts "", "creating topics and posts"
       total_count = @database.count_posts
       importer = @importers.post_importer
       last_post_id = 0
@@ -202,7 +221,7 @@ module ImportScripts::PhpBB3
     end
 
     def import_private_messages
-      puts '', 'creating private messages'
+      puts "", "creating private messages"
       total_count = @database.count_messages
       importer = @importers.message_importer
       last_msg_id = 0
@@ -223,7 +242,7 @@ module ImportScripts::PhpBB3
     end
 
     def import_bookmarks
-      puts '', 'creating bookmarks'
+      puts "", "creating bookmarks"
       total_count = @database.count_bookmarks
       importer = @importers.bookmark_importer
       last_user_id = last_topic_id = 0
@@ -243,7 +262,7 @@ module ImportScripts::PhpBB3
     end
 
     def import_likes
-      puts '', 'importing likes'
+      puts "", "importing likes"
       total_count = @database.count_likes
       last_post_id = last_user_id = 0
 
@@ -255,7 +274,7 @@ module ImportScripts::PhpBB3
           {
             post_id: @settings.prefix(row[:post_id]),
             user_id: @settings.prefix(row[:user_id]),
-            created_at: Time.zone.at(row[:thanks_time])
+            created_at: Time.zone.at(row[:thanks_time]),
           }
         end
       end

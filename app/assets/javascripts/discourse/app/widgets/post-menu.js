@@ -292,7 +292,7 @@ registerButton("replies", (attrs, state, siteSettings) => {
       ? state.filteredRepliesShown
         ? "post.view_all_posts"
         : "post.filtered_replies_hint"
-      : "post.has_replies",
+      : "",
     labelOptions: { count: replyCount },
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
     iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
@@ -300,7 +300,12 @@ registerButton("replies", (attrs, state, siteSettings) => {
     translatedAriaLabel: I18n.t("post.sr_expand_replies", {
       count: replyCount,
     }),
+    ariaExpanded:
+      !siteSettings.enable_filtered_replies_view && state.repliesShown
+        ? "true"
+        : "false",
     ariaPressed,
+    ariaControls: `embedded-posts__bottom--${attrs.post_number}`,
   };
 });
 
@@ -353,7 +358,7 @@ registerButton(
       if (attrs.bookmarkReminderAt) {
         let formattedReminder = formattedReminderTime(
           attrs.bookmarkReminderAt,
-          currentUser.timezone
+          currentUser.user_option.timezone
         );
         title = "bookmarks.created_with_reminder";
         titleOptions.date = formattedReminder;
@@ -711,6 +716,10 @@ export default createWidget("post-menu", {
   },
 
   showMoreActions() {
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
+      this.currentUser.hideUserTipForever("post_menu");
+    }
+
     this.state.collapsed = false;
     const likesPromise = !this.state.likedUsers.length
       ? this.getWhoLiked()
@@ -730,6 +739,10 @@ export default createWidget("post-menu", {
       keyValueStore &&
         keyValueStore.set({ key: "likedPostId", value: attrs.id });
       return this.sendWidgetAction("showLogin");
+    }
+
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
+      this.currentUser.hideUserTipForever("post_menu");
     }
 
     if (this.capabilities.canVibrate && !isTesting()) {

@@ -8,7 +8,7 @@ class CreatePostUploads < ActiveRecord::Migration[4.2]
     end
 
     # no support for this till rails 4
-    execute 'create unique index idx_unique_post_uploads on post_uploads(post_id, upload_id)'
+    execute "create unique index idx_unique_post_uploads on post_uploads(post_id, upload_id)"
   end
 
   def down

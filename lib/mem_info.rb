@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class MemInfo
-
   # Total memory in kb. On Mac OS uses "sysctl", elsewhere expects the system has /proc/meminfo.
   # Returns nil if it cannot be determined.
   def mem_total
@@ -15,9 +14,8 @@ class MemInfo
           s = `grep MemTotal /proc/meminfo`
           /(\d+)/.match(s)[0].try(:to_i)
         end
-      rescue
+      rescue StandardError
         nil
       end
   end
-
 end

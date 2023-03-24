@@ -19,6 +19,7 @@ export function isTesting() {
 // Generally means "before we migrated to Ember CLI"
 export function isLegacyEmber() {
   deprecated("`isLegacyEmber()` is now deprecated and always returns false", {
+    id: "discourse.is-legacy-ember",
     dropFrom: "3.0.0.beta1",
   });
   return false;

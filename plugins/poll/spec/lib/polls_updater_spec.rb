@@ -1,68 +1,54 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscoursePoll::PollsUpdater do
-
   def update(post, polls)
     DiscoursePoll::PollsUpdater.update(post, polls)
   end
 
   let(:user) { Fabricate(:user) }
 
-  let(:post) {
-    Fabricate(:post, raw: <<~RAW)
+  let(:post) { Fabricate(:post, raw: <<~RAW) }
       [poll]
       * 1
       * 2
       [/poll]
     RAW
-  }
 
-  let(:post_with_3_options) {
-    Fabricate(:post, raw: <<~RAW)
+  let(:post_with_3_options) { Fabricate(:post, raw: <<~RAW) }
       [poll]
       - a
       - b
       - c
       [/poll]
     RAW
-  }
 
-  let(:post_with_some_attributes) {
-    Fabricate(:post, raw: <<~RAW)
+  let(:post_with_some_attributes) { Fabricate(:post, raw: <<~RAW) }
       [poll close=#{1.week.from_now.to_formatted_s(:iso8601)} results=on_close]
       - A
       - B
       - C
       [/poll]
     RAW
-  }
 
-  let(:polls) {
-    DiscoursePoll::PollsValidator.new(post).validate_polls
-  }
+  let(:polls) { DiscoursePoll::PollsValidator.new(post).validate_polls }
 
-  let(:polls_with_3_options) {
+  let(:polls_with_3_options) do
     DiscoursePoll::PollsValidator.new(post_with_3_options).validate_polls
-  }
+  end
 
-  let(:polls_with_some_attributes) {
+  let(:polls_with_some_attributes) do
     DiscoursePoll::PollsValidator.new(post_with_some_attributes).validate_polls
-  }
+  end
 
   describe "update" do
-
     it "does nothing when there are no changes" do
-      message = MessageBus.track_publish("/polls/#{post.topic_id}") do
-        update(post, polls)
-      end.first
+      message = MessageBus.track_publish("/polls/#{post.topic_id}") { update(post, polls) }.first
 
       expect(message).to be(nil)
     end
 
     describe "when editing" do
-
-      let(:raw) do
-        <<~RAW
+      let(:raw) { <<~RAW }
         This is a new poll with three options.
 
         [poll type=multiple results=always min=1 max=2]
@@ -71,7 +57,6 @@ RSpec.describe DiscoursePoll::PollsUpdater do
         * third
         [/poll]
         RAW
-      end
 
       let(:post) { Fabricate(:post, raw: raw) }
 
@@ -84,11 +69,9 @@ RSpec.describe DiscoursePoll::PollsUpdater do
 
         expect(post.errors[:base].size).to equal(0)
       end
-
     end
 
     describe "deletes polls" do
-
       it "that were removed" do
         update(post, {})
 
@@ -97,19 +80,15 @@ RSpec.describe DiscoursePoll::PollsUpdater do
         expect(Poll.where(post: post).exists?).to eq(false)
         expect(post.custom_fields[DiscoursePoll::HAS_POLLS]).to eq(nil)
       end
-
     end
 
     describe "creates polls" do
-
       it "that were added" do
         post = Fabricate(:post)
 
         expect(Poll.find_by(post: post)).to_not be
 
-        message = MessageBus.track_publish("/polls/#{post.topic_id}") do
-          update(post, polls)
-        end.first
+        message = MessageBus.track_publish("/polls/#{post.topic_id}") { update(post, polls) }.first
 
         poll = Poll.find_by(post: post)
 
@@ -121,21 +100,19 @@ RSpec.describe DiscoursePoll::PollsUpdater do
         expect(message.data[:post_id]).to eq(post.id)
         expect(message.data[:polls][0][:name]).to eq(poll.name)
       end
-
     end
 
     describe "updates polls" do
-
       describe "when there are no votes" do
-
         it "at any time" do
           post # create the post
 
           freeze_time 1.month.from_now
 
-          message = MessageBus.track_publish("/polls/#{post.topic_id}") do
-            update(post, polls_with_some_attributes)
-          end.first
+          message =
+            MessageBus
+              .track_publish("/polls/#{post.topic_id}") { update(post, polls_with_some_attributes) }
+              .first
 
           poll = Poll.find_by(post: post)
 
@@ -150,11 +127,9 @@ RSpec.describe DiscoursePoll::PollsUpdater do
           expect(message.data[:post_id]).to eq(post.id)
           expect(message.data[:polls][0][:name]).to eq(poll.name)
         end
-
       end
 
       describe "when there are votes" do
-
         before do
           expect {
             DiscoursePoll::Poll.vote(user, post.id, "poll", [polls["poll"]["options"][0]["id"]])
@@ -162,11 +137,13 @@ RSpec.describe DiscoursePoll::PollsUpdater do
         end
 
         describe "inside the edit window" do
-
           it "and deletes the votes" do
-            message = MessageBus.track_publish("/polls/#{post.topic_id}") do
-              update(post, polls_with_some_attributes)
-            end.first
+            message =
+              MessageBus
+                .track_publish("/polls/#{post.topic_id}") do
+                  update(post, polls_with_some_attributes)
+                end
+                .first
 
             poll = Poll.find_by(post: post)
 
@@ -181,11 +158,9 @@ RSpec.describe DiscoursePoll::PollsUpdater do
             expect(message.data[:post_id]).to eq(post.id)
             expect(message.data[:polls][0][:name]).to eq(poll.name)
           end
-
         end
 
         describe "outside the edit window" do
-
           it "throws an error" do
             edit_window = SiteSetting.poll_edit_window_mins
 
@@ -204,17 +179,12 @@ RSpec.describe DiscoursePoll::PollsUpdater do
             expect(post.errors[:base]).to include(
               I18n.t(
                 "poll.edit_window_expired.cannot_edit_default_poll_with_votes",
-                minutes: edit_window
-              )
+                minutes: edit_window,
+              ),
             )
           end
-
         end
-
       end
-
     end
-
   end
-
 end

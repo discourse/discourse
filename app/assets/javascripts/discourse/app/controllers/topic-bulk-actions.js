@@ -62,7 +62,7 @@ addBulkButton("deletePostTiming", "defer", {
   icon: "circle",
   class: "btn-default",
   buttonVisible() {
-    return this.currentUser.enable_defer;
+    return this.currentUser.user_option.enable_defer;
   },
 });
 addBulkButton("unlistTopics", "unlist_topics", {
@@ -89,7 +89,7 @@ addBulkButton("showTagTopics", "change_tags", {
   class: "btn-default",
   enabledSetting: "tagging_enabled",
   buttonVisible() {
-    return this.currentUser.staff;
+    return this.currentUser.canManageTopic;
   },
 });
 addBulkButton("showAppendTagTopics", "append_tags", {
@@ -97,7 +97,7 @@ addBulkButton("showAppendTagTopics", "append_tags", {
   class: "btn-default",
   enabledSetting: "tagging_enabled",
   buttonVisible() {
-    return this.currentUser.staff;
+    return this.currentUser.canManageTopic;
   },
 });
 addBulkButton("removeTags", "remove_tags", {
@@ -105,7 +105,7 @@ addBulkButton("removeTags", "remove_tags", {
   class: "btn-default",
   enabledSetting: "tagging_enabled",
   buttonVisible() {
-    return this.currentUser.staff;
+    return this.currentUser.canManageTopic;
   },
 });
 addBulkButton("deleteTopics", "delete", {

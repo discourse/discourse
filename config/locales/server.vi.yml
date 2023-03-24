@@ -145,6 +145,7 @@ vi:
       has_already_been_used: "đã được sử dụng"
       inclusion: không được bao gồm trong danh sách
       invalid: là không hợp lệ
+      is_invalid: "có vẻ không rõ ràng, nó là một câu hoàn chỉnh?"
       invalid_timezone: "'%{tz}' không phải là múi giờ hợp lệ"
       contains_censored_words: "chứa các từ được kiểm duyệt sau: %{censored_words}"
       less_than: phải nhỏ hơn %{count}
@@ -182,6 +183,7 @@ vi:
       enable_s3_uploads_is_required: "Bạn không thể cho phép sử dụng kho lưu trữ S3 trừ khi bạn đã bật tính năng tải lên S3."
       page_publishing_requirements: "Không thể bật xuất bản trang nếu phương tiện bảo mật được bật."
       s3_backup_requires_s3_settings: "Bạn không thể sử dụng S3 làm vị trí sao lưu trừ khi bạn đã cung cấp '%{setting_name}'."
+      share_quote_facebook_requirements: "Bạn phải đặt id ứng dụng Facebook để bật tính năng chia sẻ báo giá cho Facebook."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Bạn không thể thực thi 2FA nếu DiscourseConnect được bật."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Bạn không thể tắt đăng nhập cục bộ nếu 2FA được thực thi. Tắt 2FA được thực thi trước khi tắt đăng nhập cục bộ."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Bạn không thể bật tải lên S3 vì tải lên S3 đã được bật trên toàn cầu và việc bật cấp trang web này có thể gây ra các vấn đề nghiêm trọng với tải lên"
@@ -536,8 +538,8 @@ vi:
   post:
     image_placeholder:
       broken: "Hình ảnh này bị hỏng"
-    cannot_permanently_delete:
-      many_posts: "Bạn không thể xóa vĩnh viễn chủ đề này vì có những bài viết khác."
+    has_likes:
+      other: "%{count} Lượt thích"
   rate_limiter:
     slow_down: "Bạn đã thực hiện hành động này quá nhiều lần, vui lòng thử lại sau."
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
@@ -602,16 +604,9 @@ vi:
       almost_x_years:
         other: "gần %{count} năm trước"
   password_reset:
-    no_token: "Xin lỗi, liên kết đổi mật khẩu đã cũ. Chọn \"Đăng nhập\" và sử dụng chức năng \"Quên mật khẩu\" để lấy liên kết mới."
-    choose_new: "Chọn một mật khẩu mới"
-    choose: "Chọn một mật khẩu"
-    update: "Cập nhật mật khẩu"
-    save: "Nhập mật khẩu"
     title: "Thiết lập lại mật khẩu"
     success: "Bạn đã thay đổi mật khẩu thành công và đã được đăng nhập."
     success_unapproved: "Bạn đã thay đổi mật khẩu thành công."
-  email_login:
-    invalid_token: "Xin lỗi, liên kết đăng nhập email đó quá cũ. Chọn nút Đăng nhập và sử dụng 'Tôi quên mật khẩu của mình' để nhận liên kết mới."
   change_email:
     confirmed: "Email của bạn đã được cập nhật."
     please_continue: "Tiếp tục đến %{site_name}"
@@ -647,6 +642,7 @@ vi:
     notify_moderators:
       title: "Một thứ khác"
       description: "Bài viết này cần được Ban quản trị chú ý. Lý do chưa được liệt kê trong danh sách."
+      short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
       email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n %{message}"
     bookmark:
@@ -657,6 +653,16 @@ vi:
       title: "Thích"
       description: "Thích bài viết này"
       short_description: "Thích bài viết này"
+  email_settings:
+    pop3_authentication_error: "Đã xảy ra sự cố với thông tin đăng nhập POP3 được cung cấp, hãy kiểm tra tên người dùng và mật khẩu rồi thử lại."
+    imap_authentication_error: "Đã xảy ra sự cố với thông tin đăng nhập IMAP được cung cấp, hãy kiểm tra tên người dùng và mật khẩu rồi thử lại."
+    smtp_authentication_error: "Đã xảy ra sự cố với thông tin đăng nhập SMTP được cung cấp, hãy kiểm tra tên người dùng và mật khẩu rồi thử lại."
+    authentication_error_gmail_app_password: 'Yêu cầu mật khẩu dành riêng cho ứng dụng. Tìm hiểu thêm tại <a target="_blank" href="https://support.google.com/accounts/answer/185833">bài viết Trợ giúp Google này</a>'
+  webauthn:
+    validation:
+      challenge_mismatch_error: "Thử thách được cung cấp không khớp với thử thách do máy chủ xác thực tạo ra."
+      invalid_origin_error: "Nguồn gốc của yêu cầu xác thực không khớp với nguồn gốc máy chủ."
+      invalid_relying_party_id_error: "ID bên tin cậy của yêu cầu xác thực không khớp với ID bên tin cậy của máy chủ."
   topic_flag_types:
     spam:
       title: "Rác"
@@ -667,7 +673,9 @@ vi:
       long_form: "đã đánh dấu bài này không phù hợp"
     notify_moderators:
       title: "Một cái khác"
+      description: 'Chủ đề này yêu cầu sự chú ý của nhân viên nói chung dựa trên <a href="%{base_path}/guidelines">nguyên tắc</a>, <a href="%{tos_url}">TOS</a>hoặc vì lý do khác không được liệt kê ở trên.'
       long_form: "đã đánh dấu cho điều hành viên xem xét"
+      short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
       email_title: 'Chủ đề "%{title}" cần được ban điều hành quan tâm'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -775,6 +783,11 @@ vi:
         editor: Biên tập
         author: Tác giả
         edit_reason: Lý do
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API người dùng"
+      yaxis: "Ngày"
     dau_by_mau:
       xaxis: "Ngày"
     daily_engaged_users:
@@ -805,6 +818,7 @@ vi:
       title: "Các đánh dấu"
       xaxis: "Ngày"
       yaxis: "Số đánh dấu mới"
+      description: "Số chủ đề và bài viết mới được đánh dấu."
     users_by_trust_level:
       title: "Người dùng trên mỗi cấp độ tin cậy"
       xaxis: "Bậc tin tưởng"
@@ -828,6 +842,7 @@ vi:
       labels:
         term: Thuật ngữ
         searches: Số lần tìm kiếm
+        click_through: CTR
       description: "Các thuật ngữ tìm kiếm phổ biến nhất với tỷ lệ nhấp chuột của họ."
     emails:
       title: "Email đã gửi"
@@ -851,6 +866,7 @@ vi:
       title: "Thông báo ban quản trị"
       xaxis: "Ngày"
       yaxis: "Số lượng tin nhắn"
+      description: "Số lần người điều hành đã được thông báo riêng bằng một lá cờ."
     notify_user_private_messages:
       title: "Thông báo người dùng"
       xaxis: "Ngày"
@@ -976,6 +992,7 @@ vi:
     queue_size_warning: "Có %{queue_size} công việc đang chờ xử lý trong hàng đợi. Điều này chứng tỏ có vấn đề đã xảy ra với tiến trình Sidekiq, hoặc bạn cần tăng số lượng Sidekiq workers ()."
     memory_warning: "Máy chủ của bạn có bộ nhớ ít hơn 1 GB. Khuyến cáo sử dụng bộ nhớ tối thiểu 1 GB ."
     google_oauth2_config_warning: 'Máy chủ được định cấu hình để cho phép đăng ký và đăng nhập bằng Google OAuth2 (enable_google_oauth2_logins), nhưng id máy khách và giá trị bí mật của máy khách không được đặt. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Xem hướng dẫn này để tìm hiểu thêm</a>.'
+    facebook_config_warning: 'Máy chủ được định cấu hình để cho phép đăng ký và đăng nhập bằng Facebook (enable_facebook_logins), nhưng giá trị id ứng dụng và bí mật ứng dụng không được đặt. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang web</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Xem hướng dẫn này để tìm hiểu thêm</a>.'
     s3_backup_config_warning: 'Máy chủ được định cấu hình để tải các bản sao lưu lên S3, nhưng ít nhất một cài đặt sau chưa được đặt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile hoặc s3_backup_bucket. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Xem "Cách thiết lập tải hình ảnh lên S3?" để tìm hiểu thêm</a>.'
     s3_cdn_warning: 'Máy chủ được cấu hình để tải lên các tập tin lên S3, nhưng không có S3 CDN cấu hình. Điều này có thể dẫn đến chi phí S3 đắt tiền và hiệu suất trang web chậm hơn. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Xem “Sử dụng lưu trữ đối tượng để tải lên” để tìm hiểu thêm</a>.'
     subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
@@ -1008,23 +1025,22 @@ vi:
     allow_duplicate_topic_titles: "Cho phép các chủ đề trùng tiêu đề."
     unique_posts_mins: "Trong bao nhiêu phút người sử dụng có thể viết bài khác với nội dung giống nhau"
     educate_until_posts: "Khi người dùng bắt đầu đăng (n) bài viết đầu tiên, hiện pop-up để hướng dẫn họ khi soạn thảo."
-    title: "Tên của trang này, sử dụng trong thẻ tiêu đề"
-    site_description: "Mô tả trang này trong một câu, nó sẽ được sử dụng trong thẻ meta description"
     crawl_images: "Lấy hình ảnh tử URL bên ngoài để thêm vào đúng chiều dài và chiều cao."
     download_remote_images_threshold: "Dung lượng tối thiểu cần để tải ảnh từ xa về lưu trữ (tính bằng phần trăm)"
     disabled_image_download_domains: "Tải ảnh từ xa sẽ không áp dụng với các tên miền sau. Phân cách bằng dấu |"
     editing_grace_period: "Trong khoảng (n) giây sau khi gửi bài, chỉnh sửa sẽ không tạo ra một phiên bản mới trong bài lịch sử bài viết."
     edit_history_visible_to_public: "Cho phép mọi người nhìn thấy phiên bản trước khi chỉnh sửa bài viết. Khi không cho phép, chỉ nhân viên có thể xem."
     delete_removed_posts_after: "Bài viết đã được xóa bởi tác giả sẽ được tự động xóa sau (n) giờ. Nếu cài là 0, bài viết sẽ được xóa ngay lập tức."
-    max_image_width: "Chiều rộng tối đa của ảnh thu nhỏ trong bài viết."
-    max_image_height: "Chiều cao tối đa của ảnh thu nhỏ trong bài viết."
+    notify_users_after_responses_deleted_on_flagged_post: "Khi một bài đăng bị gắn cờ và sau đó bị xóa, tất cả người dùng đã phản hồi bài đăng và đã xóa phản hồi của họ sẽ được thông báo."
     fixed_category_positions: "Nếu được bật, bạn sẽ có thể sắp xếp chuyên mục theo một thứ tự cố định. Nếu không bật, chuyên mục sẽ được sắp xếp theo thứ tử hoạt động."
     fixed_category_positions_on_create: "Nếu chọn, sắp xếp danh mục sẽ được thực hiện trong cửa sổ tạo chủ đề (yêu cầu fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Thêm rel=''nofollow'' cho tất cả các nội dung mà người dùng gửi, ngoại trừ các liên kết nội bộ (của tên miền chính). Nếu thay đổi, bạn phải thực hiện lại cho tất cả các bài viết với: "rake posts:rebake"'
     post_excerpt_maxlength: "Chiều dài tối đa của đoạn trích / tóm tắt chủ đề."
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
+    facebook_app_access_token: "Mã thông báo được tạo từ bí mật và ID ứng dụng Facebook của bạn. Được sử dụng để tạo hộp thư Instagram."
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
+    enforce_second_factor: "Buộc người dùng kích hoạt xác thực hai yếu tố. Chọn 'tất cả' để thực thi nó cho tất cả người dùng. Chọn 'nhân viên' để chỉ áp dụng cho người dùng là nhân viên."
     force_https: "Buộc trang web của bạn chỉ sử dụng HTTPS. CẢNH BÁO: KHÔNG kích hoạt tính năng này cho đến khi bạn xác minh HTTPS được thiết lập đầy đủ và hoạt động hoàn toàn ở mọi nơi! Bạn đã kiểm tra CDN của mình, tất cả thông tin đăng nhập xã hội và bất kỳ biểu trưng / phụ thuộc bên ngoài nào để đảm bảo tất cả chúng đều tương thích với HTTPS?"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"
@@ -1040,11 +1056,20 @@ vi:
     tl2_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 2 (thành viên) bằng cách nhân với số này"
     tl3_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 3 (bình thường) bằng cách nhân với số này"
     tl4_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 4 (dẫn đầu) bằng cách nhân với số này"
+    notify_mods_when_user_silenced: "Nếu người dùng tự động bị tắt tiếng, hãy gửi tin nhắn cho tất cả người điều hành."
     traditional_markdown_linebreaks: "Sử dụng ngắt dòng truyền thống trong Markdown, đòi hỏi hai khoảng trống kế tiếp cho một ngắt dòng."
     markdown_typographer_quotation_marks: "Danh sách các cặp thay thế dấu ngoặc kép và dấu ngoặc đơn"
     post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
+    pending_users_reminder_delay_minutes: "Thông báo cho người kiểm duyệt nếu người dùng mới đã chờ phê duyệt lâu hơn nhiều phút này. Đặt thành -1 để vô hiệu hóa thông báo."
+    ga_version: "Phiên bản Google Universal Analytics sẽ sử dụng: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "ID mã theo dõi Google Universal Analytics, ví dụ: UA-12345678-9; xem <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Tên miền Google Universal Analytics, ví dụ: mysite.com; xem <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Bật tính năng theo dõi tên miền chéo của Google Universal Analytics. Các liên kết gửi đi tới các miền này sẽ có id ứng dụng khách được thêm vào chúng. Xem <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Hướng dẫn theo dõi tên miền chéo của Google.</a>"
+    moderators_change_post_ownership: "Cho phép người kiểm duyệt thay đổi quyền sở hữu bài đăng"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
     use_admin_ip_allowlist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
+    content_security_policy: "Kích hoạt chính sách bảo mật nội dung"
+    content_security_policy_frame_ancestors: "Hạn chế người có thể nhúng trang web này vào iframe thông qua CSP. Kiểm soát các máy chủ được phép trên <a href='%{base_path}/admin/customize/embedding'>Nhúng</a>"
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
     top_menu: "Xác định các mục nào hiển thị trong thanh điều hướng trang chủ, và theo thứ tự nào. Ví dụ latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Xác định các mục nào hiển thị trên menu bài viết, và theo thứ tự nào. Ví dụ like|edit|flag|delete|share|bookmark|reply"
@@ -1062,23 +1087,51 @@ vi:
     redirect_users_to_top_page: "Tự động chuyển thành viên mới và vắng mặt lâu ngày lên trên cùng trang."
     top_page_default_timeframe: "Khung thời gian mặc định cho trang xem trên cùng."
     prioritize_username_in_ux: "Hiển thị tên người dùng đầu tiên trên trang người dùng, thẻ người dùng và bài đăng (khi tên bị vô hiệu được hiển thị trước)"
+    enable_rich_text_paste: "Bật chuyển đổi HTML sang Markdown tự động khi dán văn bản vào trình soạn thảo. (Thực nghiệm)"
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
     enable_badges: "Kích hoạt hệ thống huy hiệu"
-    blocked_email_domains: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
-    allowed_email_domains: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với tên miền email khác trong danh sách sẽ không được phép đăng ký!"
+    whispers_allowed_groups: "Cho phép giao tiếp riêng tư trong các chủ đề cho các thành viên của các nhóm được chỉ định."
+    normalize_emails: "Kiểm tra xem email chuẩn hóa có phải là duy nhất không. Email được chuẩn hóa sẽ xóa tất cả các dấu chấm khỏi tên người dùng và mọi thứ nằm giữa ký hiệu + và @."
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
     new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
     login_required: "Yêu cầu chứng thực để đọc nội dung trên trang web, không cho phép người dùng nặc danh truy cập."
     allowed_unicode_username_characters: "Biểu thức chính quy chỉ cho phép một số ký tự Unicode trong tên người dùng. Các chữ cái và số ASCII sẽ luôn được phép và không cần đưa vào danh sách cho phép."
+    reserved_usernames: "Tên người dùng không được phép đăng ký. Ký hiệu ký tự đại diện * có thể được sử dụng để khớp với bất kỳ ký tự không hoặc nhiều lần."
     min_password_length: "Chiều dài mật khẩu tối thiểu."
     min_admin_password_length: "Chiều dài mật khẩu tối thiểu đối với Admin."
     block_common_passwords: "Không cho phép mật khẩu trong danh sách 10.000 mật khẩu phổ biến."
+    auth_skip_create_confirm: Khi đăng ký qua xác thực bên ngoài, hãy bỏ qua cửa sổ bật lên tạo tài khoản. Sử dụng tốt nhất cùng với auth_overrides_email, auth_overrides_username và auth_overrides_name.
+    auth_immediately: "Tự động chuyển hướng đến hệ thống đăng nhập bên ngoài mà không cần sự tương tác của người dùng. Điều này chỉ có hiệu lực khi login_required là đúng và chỉ có một phương thức xác thực bên ngoài"
+    discourse_connect_provider_secrets: "Danh sách các cặp bí mật miền đang sử dụng DiscourseConnect. Đảm bảo bí mật DiscourseConnect có 10 ký tự trở lên. Ký hiệu đại diện * có thể được sử dụng để khớp với bất kỳ miền nào hoặc chỉ một phần của miền đó (ví dụ: *.example.com)."
+    discourse_connect_overrides_bio: "Ghi đè tiểu sử người dùng trong hồ sơ người dùng và ngăn người dùng thay đổi nó"
+    discourse_connect_overrides_groups: "Đồng bộ hóa tất cả tư cách thành viên nhóm thủ công với các nhóm được chỉ định trong thuộc tính nhóm (CẢNH BÁO: nếu bạn không chỉ định nhóm, tất cả tư cách thành viên nhóm thủ công sẽ bị xóa đối với người dùng)"
+    auth_overrides_email: "Ghi đè email cục bộ bằng email trang web bên ngoài trên mỗi lần đăng nhập và ngăn các thay đổi cục bộ. Áp dụng cho tất cả các nhà cung cấp xác thực. (CẢNH BÁO: sự khác biệt có thể xảy ra do chuẩn hóa email cục bộ)"
+    auth_overrides_username: "Ghi đè tên người dùng cục bộ bằng tên người dùng trang web bên ngoài trên mỗi lần đăng nhập và ngăn các thay đổi cục bộ. Áp dụng cho tất cả các nhà cung cấp xác thực. (CẢNH BÁO: sự khác biệt có thể xảy ra do sự khác biệt về độ dài/yêu cầu tên người dùng)"
+    auth_overrides_name: "Ghi đè tên đầy đủ cục bộ bằng tên đầy đủ của trang web bên ngoài trên mỗi lần đăng nhập và ngăn các thay đổi cục bộ. Áp dụng cho tất cả các nhà cung cấp xác thực."
+    discourse_connect_overrides_avatar: "Ghi đè hình đại diện của người dùng bằng giá trị tải từ DiscourseConnect. Nếu được bật, người dùng sẽ không được phép tải ảnh đại diện lên Discourse."
+    discourse_connect_overrides_location: "Ghi đè vị trí người dùng bằng giá trị tải từ DiscourseConnect và ngăn các thay đổi cục bộ."
+    discourse_connect_overrides_website: "Ghi đè trang web của người dùng bằng giá trị tải từ DiscourseConnect và ngăn các thay đổi cục bộ."
+    discourse_connect_overrides_profile_background: "Ghi đè nền hồ sơ người dùng bằng giá trị tải từ DiscourseConnect."
+    discourse_connect_overrides_card_background: "Ghi đè nền thẻ người dùng bằng giá trị tải từ DiscourseConnect."
     allow_new_registrations: "Cho phép đăng ký người dùng mới. Bỏ chọn để bất cứ ai cũng có thể tạo tài khoản mới."
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
+    enable_google_oauth2_logins: "Bật xác thực Google Oauth2. Đây là phương thức xác thực mà Google hiện đang hỗ trợ. Yêu cầu khóa và bí mật. Xem <a href='https://meta.discourse.org/t/15858' target='_blank'>Định cấu hình đăng nhập Google cho Discourse</a>."
     google_oauth2_client_id: "Client ID ứng dụng Google của bạn."
     google_oauth2_client_secret: "Client secret ứng dụng Google của bạn."
-    maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
+    google_oauth2_prompt: "Danh sách các giá trị chuỗi được phân tách bằng dấu cách tùy chọn chỉ định liệu máy chủ ủy quyền có nhắc người dùng xác thực lại và đồng ý hay không. Xem <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> để biết các giá trị có thể có."
+    google_oauth2_hd_groups: "(thử nghiệm) Truy xuất nhóm Google của người dùng trên miền được lưu trữ khi xác thực. Các nhóm Google đã truy xuất có thể được sử dụng để cấp quyền thành viên nhóm Discourse tự động (xem cài đặt nhóm). Để biết thêm thông tin, hãy xem https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups_service_account_admin_email: "Địa chỉ email thuộc tài khoản quản trị viên Google Workspace. Sẽ được sử dụng với thông tin đăng nhập tài khoản dịch vụ để tìm nạp thông tin nhóm."
+    google_oauth2_hd_groups_service_account_json: "Thông tin chính được định dạng JSON cho Tài khoản dịch vụ. Sẽ được sử dụng để tìm nạp thông tin nhóm."
+    enable_twitter_logins: "Bật xác thực Twitter, yêu cầu twitter_consumer_key và twitter_consumer_secret. Xem <a href='https://meta.discourse.org/t/13395' target='_blank'>Định cấu hình đăng nhập Twitter (và nhúng) cho Discourse</a>."
+    twitter_consumer_key: "Khóa người dùng để xác thực Twitter, đã đăng ký tại <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
+    twitter_consumer_secret: "Bí mật người dùng để xác thực Twitter, được đăng ký tại <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
+    enable_facebook_logins: "Bật xác thực Facebook, yêu cầu facebook_app_id và facebook_app_secret. Xem <a href='https://meta.discourse.org/t/13394' target='_blank'>Định cấu hình đăng nhập Facebook cho Facebook</a>."
+    facebook_app_id: "Id ứng dụng để xác thực và chia sẻ Facebook, đã đăng ký tại <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
+    facebook_app_secret: "Ứng dụng bí mật để xác thực Facebook, đã đăng ký tại <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
+    enable_github_logins: "Bật xác thực GitHub, yêu cầu github_client_id và github_client_secret. Xem <a href='https://meta.discourse.org/t/13745' target='_blank'>Định cấu hình đăng nhập GitHub cho Discourse</a>."
+    github_client_id: "Id ứng dụng khách để xác thực GitHub, đã đăng ký tại <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Bí mật ứng dụng khách để xác thực GitHub, đã đăng ký tại <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
     backup_time_of_day: "Thời gian theo ngày UTC khi backup."
@@ -1100,6 +1153,8 @@ vi:
     max_topics_per_day: "Số chủ đề tối đa người dùng có thể tạo mỗi ngày."
     max_invites_per_day: "Số tối đa người dùng có thể gửi lời mời mỗi ngày."
     max_topic_invitations_per_day: "Số tối đa lời mời chủ đề thành viên có thể gửi mỗi ngày."
+    max_post_deletions_per_minute: "Số bài đăng tối đa mà người dùng có thể xóa mỗi phút. Đặt thành 0 để tắt tính năng xóa bài đăng."
+    max_post_deletions_per_day: "Số lượng bài đăng tối đa mà người dùng có thể xóa mỗi ngày. Đặt thành 0 để tắt tính năng xóa bài đăng."
     alert_admins_if_errors_per_minute: "Số lỗi trong một phút để kích hoạt cảnh báo admin, điền 0 để tắt tính năng này. LƯU Ý: yêu cầu khởi động lại."
     alert_admins_if_errors_per_hour: "Số lỗi trong một giờ để kích hoạt cảnh báo admin, điền 0 để tắt tính năng này. LƯU Ý: yêu cầu khởi động lại."
     suggested_topics: "Số chủ đề gợi ý hiện ở cuối một chủ đề"
@@ -1109,6 +1164,7 @@ vi:
     purge_deleted_uploads_grace_period_days: "Thời gian gia hạn (theo ngày) trước khi upload cần xóa được xóa."
     purge_unactivated_users_grace_period_days: "Thời gian gia hạn (tính bằng ngày) trước khi người dùng chưa kích hoạt tài khoản của họ bị xóa. Đặt thành 0 để không bao giờ xóa những người dùng chưa kích hoạt."
     enable_s3_uploads: "Đặt thư mục upload trên Amazon S3. QUAN TRỌNG: yêu cầu chứng thực S3 (cả ID khóa truy cập & khóa bảo mật)."
+    s3_use_iam_profile: 'Sử dụng cấu hình phiên bản AWS EC2 <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html"></a> để cấp quyền truy cập vào bộ chứa S3. LƯU Ý: bật tính năng này yêu cầu Discourse phải chạy trong phiên bản EC2 được định cấu hình phù hợp và ghi đè cài đặt "id khóa truy cập s3" và "khóa truy cập bí mật s3".'
     s3_upload_bucket: "Tên Amazon S3 để lưu trữ các file sẽ được upload. CHÚ Ý: phải là chữ thường, không cách và không gạch dưới."
     s3_cdn_url: "CDN URL được sử dụng cho tất cả các tài nguyên S3 (vd: https://cdn.somewhere.com). CHÚ Ý: sau khi thay đổi thiết lập này bạn phải tạo lại các bài viết cũ."
     avatar_sizes: "Danh sách những kích thước hình đại diện tự động khởi tạo."
@@ -1132,6 +1188,7 @@ vi:
     tl3_requires_topics_replied_to: "Số lượng chủ đề tối thiểu mà thành viên cần phải trả lời trong (tl3) ngày để được thăng lên độ tin cậy mức 3. (0 hoặc cao hơn)"
     tl3_requires_topics_viewed: "Phần trăm số chủ đề được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy mức 3. (0 tới 100)"
     tl3_requires_posts_read: "Phần trăm số bài viết được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy mức 3. (0 tới 100)"
+    tl3_requires_posts_read_cap: "Số lượng bài đăng được yêu cầu tối đa được đọc trong (khoảng thời gian tl3) ngày qua."
     tl3_requires_topics_viewed_all_time: "Số lượng chủ đề tối thiểu mà thành viên phải xem trước khi được thăng lên độ tin cậy cấp 3."
     tl3_requires_posts_read_all_time: "Tổng số bài viết tối thiểu mà thành viên phải đọc trước khi được thăng lên độ tin cậy cấp 3."
     tl3_requires_max_flagged: "Thành viên phải không có nhiều hơn X bài viết được đánh dấu bởi X thành viên khác trong (tl3) ngày để được thăng lên độ tin cậy mức 3, khi X là giá trị thiết lập. (0 hoặc cao hơn)"
@@ -1158,6 +1215,9 @@ vi:
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
     allow_uppercase_posts: "Cho phép viết hoa tất cả các chữ trong tên chủ đề hoặc nội dung bài viết."
+    max_consecutive_replies: "Số lượng bài đăng mà người dùng phải thực hiện liên tiếp trong một chủ đề trước khi bị ngăn không cho thêm câu trả lời khác."
+    enable_filtered_replies_view: 'Nút "(n) trả lời" thu gọn tất cả các bài đăng khác và chỉ hiển thị bài đăng hiện tại và các câu trả lời của nó.'
+    title_fancy_entities: "Chuyển đổi các ký tự ASCII phổ biến thành các thực thể HTML ưa thích trong tiêu đề chủ đề, xem SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
     category_style: "Style trực quan cho phù hiệu danh mục."
@@ -1213,20 +1273,25 @@ vi:
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     pop3_polling_delete_from_server: "Xóa email khỏi máy chủ. LƯU Ý: Nếu bạn tắt tính năng này, bạn nên dọn dẹp hộp thư đến của mình theo cách thủ công"
     email_in_min_trust: "Bậc tin tưởng tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
+    email_in_authserv_id: "Mã định danh của dịch vụ đang thực hiện kiểm tra xác thực đối với các email đến. Xem <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> để biết hướng dẫn về cách định cấu hình."
+    enable_imap_idle: "Sử dụng cơ chế IMAP IDLE để chờ email mới."
     imap_polling_period_mins: "Khoảng thời gian tính bằng phút giữa việc kiểm tra tài khoản IMAP cho email."
     imap_polling_old_emails: "Số lượng email cũ tối đa (đã xử lý) được cập nhật mỗi khi hộp IMAP được thăm dò (0 cho tất cả)."
     imap_polling_new_emails: "Số lượng email mới (chưa xử lý) tối đa được cập nhật mỗi khi hộp IMAP được thăm dò ý kiến."
+    imap_batch_import_email: "Số lượng email mới tối thiểu kích hoạt chế độ nhập (tắt thông báo cho các bài đăng đã nhập)."
     email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
     email_site_title: "Tên website được sử dụng là tên người gửi email, mặc định là 'title' nếu không thiết lập. Nếu 'title' có chứa ký tự không được phép trong chuỗi người gửi email, sử dụng thiết lập này."
     minimum_topics_similar: "Có bao nhiêu chủ đề cần phải có trước các chủ đề tương tự được giới thiệu khi soạn thảo chủ đề mới."
     relative_date_duration: "Số ngày sau khi đăng bài nơi ngày của bài viết sẽ được hiển thị tương đối (7d) thay vì tuyệt đối (20 Feb)."
     delete_user_max_post_age: "Không cho phép xóa thành viên khi bài viết đầu tiên của họ cũ hơn (x) ngày."
     delete_all_posts_max: "Số lượng tối đa bài viết có thể được xóa cùng một lúc khi sử dụng nút Xóa Tất Cả Bài Viết. Nếu thành viên có nhiều hơn số lượng bài viết này, các bài viết có thể không bị xóa cùng một lúc và cũng không thể xóa được thành viên đó."
+    delete_user_self_max_post_count: "Số lượng bài đăng tối đa mà người dùng có thể có trong khi cho phép xóa tài khoản tự phục vụ. Đặt thành -1 để tắt tính năng xóa tài khoản tự phục vụ."
     email_editable: "Cho phép thành viên thay đổi địa chỉ email sau khi đăng kí"
     allow_uploaded_avatars: "Cho phép người dùng tải lên hình hồ sơ."
     default_avatars: "URL avatar mặc định được sử dụng cho các thành viên mới cho đến khi họ tự sửa đổi."
     automatically_download_gravatars: "Download Gravatar cho thành viên khi họ tạo tài khoản hoặc thay đổi email."
     digest_topics: "Số lượng tối đa các chủ đề phổ biến để hiển thị trong phần tóm tắt email."
+    digest_posts: "Số lượng bài đăng phổ biến tối đa để hiển thị trong phần tóm tắt email."
     detect_custom_avatars: "Có kiểm tra hay không việc thành viên đã upload ảnh hồ sơ của họ."
     max_daily_gravatar_crawls: "Giới hạn số lần Discourse sẽ kiểm tra Gravatar mới trong một ngày"
     enable_user_directory: "Cung cấp một danh mục thành viên để duyệt xem"
@@ -1235,8 +1300,13 @@ vi:
     anonymous_account_duration_minutes: "Để bảo vệ danh tính tạo ra một tài khoản ẩn danh mới mỗi N phút cho mỗi người dùng. Ví dụ: nếu đặt là 600, ngay sau khi 600 phút trôi qua kể từ bài viết cuối cùng VÀ lập tức tạo ra một tài khoản ẩn danh mới cho thành viên."
     hide_user_profiles_from_public: "Vô hiệu hóa thẻ thành viên, hồ sơ và thư mục người dùng với các thành viên ẩn danh."
     log_personal_messages_views: "Ghi nhật ký lượt xem tin nhắn cá nhân của Admin cho người dùng / nhóm khác."
+    ignored_users_count_message_threshold: "Thông báo cho người kiểm duyệt nếu một người dùng cụ thể bị bỏ qua bởi nhiều người dùng khác này."
+    ignored_users_message_gap_days: "Phải đợi bao lâu trước khi thông báo lại cho người kiểm duyệt về một người dùng đã bị nhiều người khác bỏ qua."
+    clean_up_inactive_users_after_days: "Số ngày trước khi người dùng không hoạt động (mức độ tin cậy 0 không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
+    clean_up_unused_staged_users_after_days: "Số ngày trước khi người dùng theo giai đoạn không sử dụng (không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     allow_profile_backgrounds: "Cho phép người dùng tải lên ảnh nền"
     sequential_replies_threshold: "Số bài viết một thành viên có thể gửi liên tiếp trong một chủ đề trước khi được nhắc nhở về hành vi trả lời liên tục quá nhiều."
+    get_a_room_threshold: "Số lượng bài viết mà người dùng phải thực hiện với cùng một người trong cùng một chủ đề trước khi bị cảnh báo."
     enable_mobile_theme: "Thiết bị di động có thể sử dụng giao diện riêng, với khả năng chuyển sang chế độ xem đầy đủ. Tắt thiết lập này nếu bạn muốn sử dụng một style tùy biến hỗ trợ responsive."
     dominating_topic_minimum_percent: "Số phần trăm bài viết mà một thành viên có thể gửi trong một chủ đề trước khi được nhắc nhở về hành vi muốn tạo ưu thế trong chủ đề."
     disable_avatar_education_message: "Tắt thông điệp hướng dẫn khi đổi avatar."
@@ -1257,6 +1327,7 @@ vi:
     embed_truncate: "Cắt ngắn các bài viết được nhúng."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
+    notify_about_flags_after: "Nếu có cờ chưa được xử lý sau nhiều giờ này, hãy gửi tin nhắn cá nhân cho người điều hành. Đặt thành 0 để tắt."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: "Xóa các bản nháp cũ hơn (n) ngày."
     bootstrap_mode_min_users: "Số thành viên tối thiểu được yêu cầu để tắt chế độ bootstrap (đặt thành 0 để tắt)"
@@ -1265,9 +1336,15 @@ vi:
     emoji_set: "Bạn thích dùng gói emoji nào?"
     approve_post_count: "Số lượng bài viết từ một thành viên mới hoặc thành viên cũ phải được duyệt"
     approve_unless_trust_level: "Bài viết của thành viên dưới cấp độ tin cậy này phải được duyệt"
+    notify_about_queued_posts_after: "Nếu có bài đăng đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả người điều hành. Đặt thành 0 để tắt các thông báo này."
+    auto_close_messages_post_count: "Số lượng bài đăng tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
+    auto_close_topics_post_count: "Số bài đăng tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"
+    enable_diffhtml_preview: "Tính năng thử nghiệm sử dụng diffHTML để đồng bộ hóa xem trước thay vì kết xuất lại đầy đủ"
     returning_user_notice_tl: "Cần có mức độ tin cậy tối thiểu để xem các thông báo về bài đăng của người dùng cũ."
     returning_users_days: "Bao nhiêu ngày sẽ trôi qua trước khi người dùng được coi là trở lại."
     review_media_unless_trust_level: "Nhân viên sẽ xem xét các bài đăng của người dùng có mức độ tin cậy thấp hơn nếu chúng chứa phương tiện được nhúng."
+    enable_page_publishing: "Cho phép nhân viên xuất bản các chủ đề lên các URL mới với phong cách riêng của họ."
+    skip_auto_delete_reply_likes: "Khi tự động xóa các trả lời cũ, bỏ qua việc xóa các bài đăng có số lượt thích này trở lên."
     default_email_mailing_list_mode: "Mặc định gửi email cho mỗi bài viết mới."
     default_email_previous_replies: "Kèm theo các trả lời trước trong email theo mặc định."
     default_email_in_reply_to: "Kèm theo trích đoạn trả lời bài viết trong email theo mặc định."
@@ -1283,8 +1360,17 @@ vi:
     default_categories_tracking: "Hiển thị danh sách chuyên mục đang theo dõi theo mặc định."
     default_categories_muted: "Hiển thị danh sách chuyên mục đang im lặng theo mặc định."
     default_categories_normal: "Danh sách các danh mục không bị tắt tiếng theo mặc định. Hữu ích khi cài đặt trang web `mute_all_categories_by_default` được bật."
+    allowed_user_api_auth_redirects: "URL được phép để chuyển hướng xác thực cho các khóa API của người dùng. Ký hiệu đại diện * có thể được sử dụng để khớp với bất kỳ phần nào của nó (ví dụ: www.example.com/*)."
+    shared_drafts_min_trust_level: "Cho phép người dùng xem và chỉnh sửa Thư nháp được chia sẻ."
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
+    enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
+    sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
+    enable_user_status: "(thử nghiệm) Cho phép người dùng đặt thông báo trạng thái tùy chỉnh (biểu tượng cảm xúc + mô tả)."
+    enable_user_tips: "(thử nghiệm) Bật mẹo người dùng mới mô tả các tính năng chính cho người dùng"
     short_title: "Tiêu đề ngắn sẽ được sử dụng trên màn hình chính, trình khởi chạy của người dùng hoặc những nơi khác mà không gian có thể bị hạn chế. Nó nên được giới hạn trong 12 ký tự."
+    dashboard_hidden_reports: "Cho phép ẩn các báo cáo đã chỉ định khỏi bảng điều khiển."
+    dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
+    dashboard_general_tab_activity_metrics: "Chọn các báo cáo sẽ được hiển thị dưới dạng chỉ số hoạt động trên tab chung."
     suggest_weekends_in_date_pickers: "Bao gồm các ngày cuối tuần (Thứ Bảy và Chủ Nhật) trong đề xuất chọn ngày (tắt tính năng này nếu bạn chỉ sử dụng Discourse vào các ngày trong tuần, thứ Hai đến thứ Sáu)."
     errors:
       invalid_email: "Địa chỉ email sai"
@@ -1322,6 +1408,7 @@ vi:
     account_not_approved: "Tài khoản của bạn chưa được BQT chấp thuận, bạn sẽ nhận được email thông báo khi được chấp nhận."
     unknown_error: "Đã có vấn đề xảy ra với tài khoản của bạn, xin hãy liên hệ với BQT."
     timeout_expired: "Đăng nhập tài khoản hết hạn, xin hãy thử đăng nhập lại."
+    missing_secret: "Xác thực không thành công do thiếu bí mật. Liên hệ với quản trị viên trang web để khắc phục sự cố này."
   original_poster: "Người viết gốc"
   most_recent_poster: "Người Gửi Mới Đây"
   frequent_poster: "Người Gửi Thường Xuyên"
@@ -1422,7 +1509,6 @@ vi:
       other: "Tự động vô hiệu hóa sau %{count} ngày không hoạt động"
     activated_by_staff: "Kích hoạt bởi nhân viên"
     new_user_typed_too_fast: "Người dùng mới nhập quá nhanh"
-    content_matches_auto_block_regex: "Nội dung khớp với regex khối tự động"
     username:
       short: "phải dài ít nhất %{min} ký tự"
       long: "không được dài hơn %{max} ký tự"
@@ -1514,9 +1600,10 @@ vi:
     subject_template: "[%{email_prefix}] có bản cập nhật"
   flag_reasons:
     off_topic: "Bài viết của bạn được đánh dấu là **off-topic**: cộng đồng cảm thấy nó không phù hợp cho chủ đề này, được xác định bởi tiêu đề và bài viết đầu tiên."
-    inappropriate: "Bài viết của bạn được đánh dấu là **inappropriate**: cộng đồng cảm thấy đó là sự xúc phạm, lăng mạ, hoặc vi phạm [nội quy diễn đàn](%{base_path}/guidelines)."
     spam: "Bài viết của bạn được đánh dấu là **spam**: cộng đồng cảm thấy đó là một quảng cáo, khuyến mại thay vì một nội dung hữu ích như mong đợi."
     notify_moderators: "Bài viết của bạn được đánh dấu là **for moderator attention**: cộng đồng cảm thấy có điều gì đó cần được BQT xét duyệt."
+    responder:
+      notify_moderators: "Bài đăng đã được gắn cờ **để người kiểm duyệt chú ý**: cộng đồng cảm thấy điều gì đó về bài đăng cần có sự can thiệp thủ công của nhân viên."
   flags_dispositions:
     agreed: "Cảm ơn đã cho chúng tôi biết. Chúng thôi đồng ý nó là một vấn đề và chúng tôi sẽ xem xét nó."
     agreed_and_deleted: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đồng ý đây là một vấn đề và chúng tôi đã xóa bài viết này."
@@ -1542,8 +1629,10 @@ vi:
         ` ``
         [/details]
     flags_agreed_and_post_deleted:
+      title: "Nhân viên đã xóa bài đăng bị gắn cờ"
       subject_template: "Nhân viên đã xóa bài đăng bị gắn cờ"
     flags_agreed_and_post_deleted_for_responders:
+      title: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
       subject_template: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
     welcome_user:
       subject_template: "Chào mừng đến với %{site_name}!"
@@ -1658,6 +1747,7 @@ vi:
 
         Hành động gửi bài không được công nhận, bạn hãy thử lại hoặc gửi thông qua website.
     email_error_notification:
+      subject_template: "[%{email_prefix}] Sự cố email -- Lỗi xác thực POP"
       text_body_template: |2
 
         Thật không may, có một lỗi xác thực trong khi polling mail từ POP server.
@@ -1706,9 +1796,6 @@ vi:
     reached_limit:
       other: "Lưu ý: Chúng tôi gửi tối đa %{count} email hàng ngày. Kiểm tra trang web để xem những trang có thể bị giữ lại. PS cảm ơn!"
     in_reply_to: "Trong Trả Lời Tới"
-    unsubscribe:
-      title: "Bỏ theo dõi"
-      description: "Bạn không thích nhận mail giống mail này? Nhấn vào bỏ theo dõi để bỏ đăng ký ngay lập tức:"
     reply_by_email: "[Truy cập Chủ đề] (%{base_url}%{url}) hoặc trả lời email này để phản hồi."
     reply_by_email_pm: "[Ghé thăm Tin nhắn] (%{base_url}%{url}) hoặc trả lời email này để trả lời %{participants}."
     only_reply_by_email: "Trả lời email này để phản hồi."
@@ -1796,6 +1883,15 @@ vi:
       title: "Người dùng đã đăng"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
+    account_second_factor_disabled:
+      title: "Xác thực hai yếu tố bị vô hiệu hóa"
+      subject_template: "[%{email_prefix}] Đã tắt Xác thực hai yếu tố"
+      text_body_template: |
+        Xác thực hai yếu tố đã bị vô hiệu hóa trên tài khoản của bạn lúc %{site_name}. Bây giờ bạn có thể đăng nhập chỉ bằng mật khẩu của mình; một mã xác thực bổ sung không còn cần thiết.
+
+        Nếu bạn không chọn tắt xác thực hai yếu tố, ai đó có thể đã xâm phạm tài khoản của bạn.
+
+        Nếu bạn có bất kỳ câu hỏi nào, [liên hệ với nhân viên thân thiện của chúng tôi](%{base_url}/about).
     digest:
       why: "Tóm tắt %{site_link} từ lần cuối truy cập %{last_seen_at}"
       since_last_visit: "Kể từ lần thăm cuối cùng của bạn"
@@ -1853,14 +1949,13 @@ vi:
     welcome_message: |
       ## [Chào mừng tới %{title}] (#welcome)
       Một tài khoản là bắt buộc. Vui lòng tạo một tài khoản hoặc đăng nhập để tiếp tục.
-  deleted: "đã bị xóa "
-  image: "hình ảnh"
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."
     unauthorized: "Xin lỗi, tập tin của bạn tải lên không được cho phép (định dạng cho phép: %{authorized_extensions})."
     pasted_image_filename: "Hình ảnh được chèn"
     store_failure: "Tải lên lỗi #%{upload_id} cho tài khoản #%{user_id}."
     file_missing: "Xin lỗi, bạn phải cung cấp tập tin để tải lên"
+    size_zero_failure: "Rất tiếc, có vẻ như đã xảy ra sự cố, tệp bạn đang cố tải lên có dung lượng là 0 byte. Vui lòng thử lại."
     attachments:
       too_large: "Xin lỗi, tập tin bạn tải lên quá lớn (kích thước tối đa %{max_size_kb}KB)."
     images:
@@ -1884,6 +1979,8 @@ vi:
     sender_message_to_blank: "message.to rỗng"
     sender_text_part_body_blank: "text_part.body rỗng"
     sender_body_blank: "nội dung rỗng"
+    sender_post_deleted: "bài đăng đã bị xóa"
+    sender_topic_deleted: "chủ đề đã bị xóa"
     group_smtp_post_deleted: "bài đăng đã bị xóa"
     group_smtp_topic_deleted: "chủ đề đã bị xóa"
   color_schemes:
@@ -2057,6 +2154,7 @@ vi:
     aficionado:
       long_description: |
         Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
+    badge_title_metadata: "%{display_name} huy hiệu trên %{site_title}"
   admin_login:
     success: "Gửi mail lỗi"
     email_input: "Email quản trị"
@@ -2081,6 +2179,8 @@ vi:
         fields:
           login_required:
             placeholder: "Riêng tư"
+          enable_sidebar:
+            placeholder: "Bật thanh bên"
       styling:
         fields:
           styling_preview:
@@ -2093,6 +2193,8 @@ vi:
                 label: "Các chuyên mục và chủ đề nổi bật"
               categories_and_latest_topics:
                 label: "Các chuyên mục và chủ đề mới"
+              categories_and_latest_topics_created_date:
+                label: "Danh mục và Chủ đề mới nhất (sắp xếp theo chủ đề ngày tạo)"
               categories_and_top_topics:
                 label: "Chuyên mục và Chủ đề nổi bật"
               subcategories_with_featured_topics:
@@ -2101,7 +2203,6 @@ vi:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
-  joined: "Đã tham gia"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
@@ -2134,24 +2235,20 @@ vi:
       post_count: "Một vài bài viết đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Người dùng mới nhập bài đăng đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
     actions:
-      agree_and_keep:
-        title: "Giữ bài viết"
-        description: "Đồng ý với cờ và giữ nguyên bài viết."
-      agree_and_keep_hidden:
-        title: "Giữ bài đăng ẩn"
-        description: "Đồng ý với cờ và để bài viết ẩn."
-      agree_and_suspend:
-        title: "Tạm khóa Thành viên"
-      agree_and_silence:
-        title: "Người dùng im lặng"
+      agree:
+        title: "Đồng ý"
       delete_single:
         title: "Xóa"
       delete_and_ignore_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
+      delete_and_agree_replies:
+        confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
       disagree:
-        title: "Không đồng ý"
+        title: "Không"
       ignore:
         title: "Bỏ qua"
+      ignore_and_do_nothing:
+        title: "Không làm gì cả"
       approve:
         title: "Duyệt"
       approve_post:
@@ -2175,6 +2272,8 @@ vi:
         title: "Giữ bài đăng bị xóa"
       approve_and_restore:
         title: "Phê duyệt và khôi phục bài đăng"
+  discord:
+    not_in_allowed_guild: "Quá trình xác thực đã thất bại. Bạn không phải là thành viên của bang hội Discord được phép."
   old_keys_reminder:
     body: |
       Xin chào! Đây là lời nhắc bảo mật hàng năm thường xuyên từ phiên bản Discourse của bạn.

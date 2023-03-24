@@ -5,7 +5,6 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { set } from "@ember/object";
 
 acceptance("Admin - Badges - Show", function (needs) {
   needs.user();
@@ -41,7 +40,7 @@ acceptance("Admin - Badges - Show", function (needs) {
 
     // SQL fields
     assert.false(exists("label[for=query]"), "sql input is hidden by default");
-    set(this.siteSettings, "enable_badge_sql", true);
+    this.siteSettings.enable_badge_sql = true;
     await settled();
     assert.true(exists("label[for=query]"), "sql input shows when enabled");
 

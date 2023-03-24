@@ -1,4 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Session from "discourse/models/session";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import {
@@ -35,6 +36,7 @@ export default Controller.extend({
   preferencesController: controller("preferences"),
   makeColorSchemeDefault: true,
   canPreviewColorScheme: propertyEqual("model.id", "currentUser.id"),
+  subpageTitle: I18n.t("user.preferences_nav.interface"),
 
   init() {
     this._super(...arguments);
@@ -61,6 +63,7 @@ export default Controller.extend({
       "seen_popups",
       "color_scheme_id",
       "dark_scheme_id",
+      "bookmark_auto_delete_preference",
     ];
 
     if (makeThemeDefault) {
@@ -102,6 +105,16 @@ export default Controller.extend({
   titleCountModes() {
     return TITLE_COUNT_MODES.map((value) => {
       return { name: I18n.t(`user.title_count_mode.${value}`), value };
+    });
+  },
+
+  @discourseComputed
+  bookmarkAfterNotificationModes() {
+    return Object.keys(AUTO_DELETE_PREFERENCES).map((key) => {
+      return {
+        value: AUTO_DELETE_PREFERENCES[key],
+        name: I18n.t(`bookmarks.auto_delete_preference.${key.toLowerCase()}`),
+      };
     });
   },
 
@@ -420,9 +433,7 @@ export default Controller.extend({
       }
     },
 
-    resetSeenPopups() {
-      this.model.set("skip_new_user_tips", false);
-      this.model.set("seen_popups", null);
+    resetSeenUserTips() {
       this.model.set("user_option.skip_new_user_tips", false);
       this.model.set("user_option.seen_popups", null);
       return this.model.save(["skip_new_user_tips", "seen_popups"]);

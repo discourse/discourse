@@ -6,5 +6,6 @@ deprecated(
   {
     since: "2.8.0.beta8",
     dropFrom: "2.9.0.beta1",
+    id: "discourse.models-store",
   }
 );

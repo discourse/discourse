@@ -1,0 +1,30 @@
+{
+  "name": "bootstrap-json",
+  "version": "1.0.0",
+  "description": "Express.js middleware that proxies ember cli requests and fetches bootstrap json",
+  "author": "Discourse",
+  "license": "GPL-2.0-only",
+  "keywords": [
+    "ember-addon"
+  ],
+  "ember-addon": {
+    "before": [
+      "serve-files-middleware",
+      "history-support-middleware",
+      "proxy-server-middleware"
+    ]
+  },
+  "engines": {
+    "node": "16.* || >= 18",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.21.1"
+  },
+  "dependencies": {
+    "clean-base-url": "^1.0.0",
+    "discourse-plugins": "1.0.0",
+    "express": "^4.18.2",
+    "html-entities": "^2.3.3",
+    "jsdom": "^21.1.1",
+    "node-fetch": "^3.3.1"
+  }
+}

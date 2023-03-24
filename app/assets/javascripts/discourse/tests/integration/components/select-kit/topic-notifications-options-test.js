@@ -2,21 +2,9 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import I18n from "I18n";
-import Topic from "discourse/models/topic";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-
-const buildTopic = function (archetype) {
-  return Topic.create({
-    id: 4563,
-  }).updateFromJson({
-    title: "Qunit Test Topic",
-    details: {
-      notification_level: 1,
-    },
-    archetype,
-  });
-};
+import { getOwner } from "discourse-common/lib/get-owner";
 
 function extractDescriptions(rows) {
   return [...rows].map((el) => el.querySelector(".desc").textContent.trim());
@@ -34,7 +22,18 @@ module(
     setupRenderingTest(hooks);
 
     test("regular topic notification level descriptions", async function (assert) {
-      this.set("topic", buildTopic("regular"));
+      const store = getOwner(this).lookup("service:store");
+      this.set(
+        "topic",
+        store.createRecord("topic", {
+          id: 4563,
+          title: "Qunit Test Topic",
+          archetype: "regular",
+          details: {
+            notification_level: 1,
+          },
+        })
+      );
 
       await render(hbs`
         <TopicNotificationsOptions
@@ -64,7 +63,18 @@ module(
     });
 
     test("PM topic notification level descriptions", async function (assert) {
-      this.set("topic", buildTopic("private_message"));
+      const store = getOwner(this).lookup("service:store");
+      this.set(
+        "topic",
+        store.createRecord("topic", {
+          id: 4563,
+          title: "Qunit Test Topic",
+          archetype: "private_message",
+          details: {
+            notification_level: 1,
+          },
+        })
+      );
 
       await render(hbs`
         <TopicNotificationsOptions

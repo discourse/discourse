@@ -10,6 +10,6 @@ class AddUniqueIndexToInvitedGroups < ActiveRecord::Migration[6.0]
         AND a.group_id = b.group_id
     SQL
 
-    add_index :invited_groups, [:group_id, :invite_id], unique: true
+    add_index :invited_groups, %i[group_id invite_id], unique: true
   end
 end

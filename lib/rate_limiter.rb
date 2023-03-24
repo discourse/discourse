@@ -2,7 +2,6 @@
 
 # A redis backed rate limiter.
 class RateLimiter
-
   attr_reader :max, :secs, :user, :key, :error_code
 
   def self.key_prefix
@@ -17,6 +16,8 @@ class RateLimiter
     @disabled = false
   end
 
+  disable if Rails.env.profile?
+
   # We don't observe rate limits in test mode
   def self.disabled?
     @disabled
@@ -28,16 +29,28 @@ class RateLimiter
   end
 
   def self.clear_all_global!
-    Discourse.redis.without_namespace.keys("GLOBAL::#{key_prefix}*").each do |k|
-      Discourse.redis.without_namespace.del k
-    end
+    Discourse
+      .redis
+      .without_namespace
+      .keys("GLOBAL::#{key_prefix}*")
+      .each { |k| Discourse.redis.without_namespace.del k }
   end
 
   def build_key(type)
     "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{type}"
   end
 
-  def initialize(user, type, max, secs, global: false, aggressive: false, error_code: nil, apply_limit_to_staff: false, staff_limit: { max: nil, secs: nil })
+  def initialize(
+    user,
+    type,
+    max,
+    secs,
+    global: false,
+    aggressive: false,
+    error_code: nil,
+    apply_limit_to_staff: false,
+    staff_limit: { max: nil, secs: nil }
+  )
     @user = user
     @type = type
     @key = build_key(type)
@@ -69,8 +82,7 @@ class RateLimiter
   end
 
   # reloader friendly
-  unless defined? PERFORM_LUA
-    PERFORM_LUA = DiscourseRedis::EvalHelper.new <<~LUA
+  PERFORM_LUA = DiscourseRedis::EvalHelper.new <<~LUA unless defined?(PERFORM_LUA)
       local now = tonumber(ARGV[1])
       local secs = tonumber(ARGV[2])
       local max = tonumber(ARGV[3])
@@ -89,9 +101,8 @@ class RateLimiter
         return 0
       end
     LUA
-  end
 
-  unless defined? PERFORM_LUA_AGGRESSIVE
+  unless defined?(PERFORM_LUA_AGGRESSIVE)
     PERFORM_LUA_AGGRESSIVE = DiscourseRedis::EvalHelper.new <<~LUA
       local now = tonumber(ARGV[1])
       local secs = tonumber(ARGV[2])
@@ -184,11 +195,13 @@ class RateLimiter
 
     # number of events in buffer less than max allowed? OR
     (redis.llen(prefixed_key) < @max) ||
-    # age bigger than sliding window size?
-    (age_of_oldest(now) >= @secs)
+      # age bigger than sliding window size?
+      (age_of_oldest(now) >= @secs)
   end
 
   def rate_unlimited?
-    !!(RateLimiter.disabled? || (@user&.staff? && !@apply_limit_to_staff && @staff_limit[:max].nil?))
+    !!(
+      RateLimiter.disabled? || (@user&.staff? && !@apply_limit_to_staff && @staff_limit[:max].nil?)
+    )
   end
 end

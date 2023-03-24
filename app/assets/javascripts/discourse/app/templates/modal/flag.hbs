@@ -1,27 +1,76 @@
-<DModalBody @class="flag-modal-body" @title={{this.title}} @submitOnEnter={{false}}>
+<DModalBody
+  @class="flag-modal-body"
+  @title={{this.title}}
+  @submitOnEnter={{false}}
+>
   <form>
-    <FlagSelection @nameKey={{this.selected.name_key}} @flags={{this.flagsAvailable}} as |f|>
-      <FlagActionType @flag={{f}} @message={{this.message}} @isWarning={{this.isWarning}} @selectedFlag={{this.selected}} @username={{this.model.username}} @staffFlagsAvailable={{this.staffFlagsAvailable}} @changePostActionType={{action "changePostActionType"}} />
+    <FlagSelection
+      @nameKey={{this.selected.name_key}}
+      @flags={{this.flagsAvailable}}
+      as |f|
+    >
+      <FlagActionType
+        @flag={{f}}
+        @message={{this.message}}
+        @isWarning={{this.isWarning}}
+        @selectedFlag={{this.selected}}
+        @username={{this.model.username}}
+        @staffFlagsAvailable={{this.staffFlagsAvailable}}
+        @changePostActionType={{action "changePostActionType"}}
+      />
     </FlagSelection>
   </form>
 
-  <PluginOutlet @name="flag-modal-bottom" @connectorTagName="div" @args={{hash post=this.model}} />
+  <PluginOutlet
+    @name="flag-modal-bottom"
+    @connectorTagName="div"
+    @outletArgs={{hash post=this.model}}
+  />
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary" @action={{action "createFlag"}} @disabled={{this.submitDisabled}} @title="flagging.submit_tooltip" @icon={{this.submitIcon}} @label={{this.submitLabel}} />
+  <DButton
+    @class="btn-primary"
+    @action={{action "createFlag"}}
+    @disabled={{this.submitDisabled}}
+    @title="flagging.submit_tooltip"
+    @icon={{this.submitIcon}}
+    @label={{this.submitLabel}}
+  />
 
   {{#if this.canSendWarning}}
-    <DButton @class="btn-danger" @action={{action "createFlagAsWarning"}} @disabled={{this.submitDisabled}} @icon="exclamation-triangle" @label="flagging.official_warning" />
+    <DButton
+      @class="btn-danger"
+      @action={{action "createFlagAsWarning"}}
+      @disabled={{this.submitDisabled}}
+      @icon="exclamation-triangle"
+      @label="flagging.official_warning"
+    />
   {{/if}}
 
   {{#if this.canTakeAction}}
-    <ReviewableBundledAction @bundle={{this.flagActions}} @performAction={{action "takeAction"}} @reviewableUpdating={{this.submitDisabled}} />
+    <ReviewableBundledAction
+      @bundle={{this.flagActions}}
+      @performAction={{action "takeAction"}}
+      @reviewableUpdating={{this.submitDisabled}}
+    />
 
-    <DButton @class="btn-danger" @action={{action "flagForReview"}} @disabled={{or this.submitDisabled this.cantFlagForReview}} @icon="exclamation-triangle" @label="flagging.flag_for_review" />
+    <DButton
+      @class="btn-danger"
+      @action={{action "flagForReview"}}
+      @disabled={{or this.submitDisabled this.cantFlagForReview}}
+      @icon="exclamation-triangle"
+      @label="flagging.flag_for_review"
+    />
   {{/if}}
 
   {{#if this.showDeleteSpammer}}
-    <DButton @class="btn-danger" @action={{action "deleteSpammer"}} @disabled={{this.submitDisabled}} @icon="exclamation-triangle" @label="flagging.delete_spammer" />
+    <DButton
+      @class="btn-danger"
+      @action={{action "deleteSpammer"}}
+      @disabled={{this.submitDisabled}}
+      @icon="exclamation-triangle"
+      @label="flagging.delete_spammer"
+    />
   {{/if}}
 </div>

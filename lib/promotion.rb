@@ -4,7 +4,6 @@
 # Check whether a user is ready for a new trust level.
 #
 class Promotion
-
   def initialize(user)
     @user = user
   end
@@ -26,7 +25,8 @@ class Promotion
 
   def review_tl0
     if Promotion.tl1_met?(@user) && change_trust_level!(TrustLevel[1])
-      if Badge.exists?(id: Badge::BasicUser, enabled: true) && !@user.badges.exists?(id: Badge::BasicUser)
+      if Badge.exists?(id: Badge::BasicUser, enabled: true) &&
+           !@user.badges.exists?(id: Badge::BasicUser)
         @user.enqueue_member_welcome_message
       end
       return true
@@ -56,10 +56,13 @@ class Promotion
       next_up = new_level + 1
       key = "tl#{next_up}_met?"
       if self.class.respond_to?(key) && self.class.public_send(key, @user)
-        raise Discourse::InvalidAccess.new, I18n.t('trust_levels.change_failed_explanation',
-             user_name: @user.name,
-             new_trust_level: new_level,
-             current_trust_level: old_level)
+        raise Discourse::InvalidAccess.new,
+              I18n.t(
+                "trust_levels.change_failed_explanation",
+                user_name: @user.name,
+                new_trust_level: new_level,
+                current_trust_level: old_level,
+              )
       end
     end
 
@@ -72,15 +75,22 @@ class Promotion
       if admin
         StaffActionLogger.new(admin).log_trust_level_change(@user, old_level, new_level)
       else
-        UserHistory.create!(action: UserHistory.actions[:auto_trust_level_change],
-                            target_user_id: @user.id,
-                            previous_value: old_level,
-                            new_value: new_level)
+        UserHistory.create!(
+          action: UserHistory.actions[:auto_trust_level_change],
+          target_user_id: @user.id,
+          previous_value: old_level,
+          new_value: new_level,
+        )
       end
       @user.save!
       @user.user_profile.recook_bio
       @user.user_profile.save!
-      DiscourseEvent.trigger(:user_promoted, user_id: @user.id, new_trust_level: new_level, old_trust_level: old_level)
+      DiscourseEvent.trigger(
+        :user_promoted,
+        user_id: @user.id,
+        new_trust_level: new_level,
+        old_trust_level: old_level,
+      )
       Group.user_trust_level_change!(@user.id, @user.trust_level)
       BadgeGranter.queue_badge_grant(Badge::Trigger::TrustLevelChange, user: @user)
     end
@@ -122,21 +132,24 @@ class Promotion
 
   # Figure out what a user's trust level should be from scratch
   def self.recalculate(user, performed_by = nil, use_previous_trust_level: false)
-    granted_trust_level = TrustLevel.calculate(
-      user, use_previous_trust_level: use_previous_trust_level
-    )
-    if granted_trust_level.present?
-      return user.update(trust_level: granted_trust_level)
-    end
+    granted_trust_level =
+      TrustLevel.calculate(user, use_previous_trust_level: use_previous_trust_level) ||
+        TrustLevel[0]
 
-    user.update_column(:trust_level, TrustLevel[0])
+    # TrustLevel.calculate always returns a value, however we added extra protection just
+    # in case this changes
+    user.update_column(:trust_level, TrustLevel[granted_trust_level])
 
-    p = Promotion.new(user)
-    p.review_tl0
-    p.review_tl1
-    p.review_tl2
-    if user.trust_level == 3 && Promotion.tl3_lost?(user)
-      user.change_trust_level!(2, log_action_for: performed_by || Discourse.system_user)
+    return if user.manual_locked_trust_level.present?
+
+    promotion = Promotion.new(user)
+
+    promotion.review_tl0 if granted_trust_level < TrustLevel[1]
+    promotion.review_tl1 if granted_trust_level < TrustLevel[2]
+    promotion.review_tl2 if granted_trust_level < TrustLevel[3]
+
+    if user.trust_level == TrustLevel[3] && Promotion.tl3_lost?(user)
+      user.change_trust_level!(TrustLevel[2], log_action_for: performed_by || Discourse.system_user)
     end
   end
 end

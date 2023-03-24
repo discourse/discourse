@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::RobotsTxtController < Admin::AdminController
-
   def show
     render json: { robots_txt: current_robots_txt, overridden: @overridden }
   end

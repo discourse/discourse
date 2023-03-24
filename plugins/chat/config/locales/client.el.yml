@@ -1,0 +1,120 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  js:
+    chat:
+      create: "Δημιουργία"
+      cancel: "Ακύρωση"
+      channel_settings:
+        edit: "Επεξεργασία"
+        add: "Προσθήκη"
+        join: "Γίνετε μέλος"
+        leave: "Αποχώρηση"
+      close: "Κλείσιμο"
+      delete: "Σβήσιμο"
+      edited: "επεξεργάστηκε"
+      muted: "σε σίγαση"
+      joined: "έγινε μέλος"
+      email_frequency:
+        never: "Ποτέ"
+      header_indicator_preference:
+        never: "Ποτέ"
+      flag: "Επισήμανση"
+      join: "Γίνετε μέλος"
+      last_visit: "τελευταία επίσκεψη"
+      mention_warning:
+        dismiss: "απόρριψη"
+      reply: "Απάντηση"
+      edit: "Επεξεργασία"
+      rebake_message: "Ανανέωση HTML"
+      bookmark_message: "Σελιδοδείκτης"
+      save: "Αποθήκευση"
+      sounds:
+        none: "Κανένα"
+      exit: "πίσω"
+      channel_status:
+        closed: "Κλειστό"
+        open: "Ξεκίνημα"
+      browse:
+        back: "Πίσω"
+        filter_all: Όλα
+        filter_closed: Κλειστό
+      chat_message_separator:
+        today: Σήμερα
+        yesterday: Χτες
+      about_view:
+        title: Τίτλος
+        name: Όνομα
+        description: Περιγραφή
+      channel_info:
+        back_to_channel: "Πίσω"
+        tabs:
+          about: Σχετικά
+          members: Μέλη
+          settings: Ρυθμίσεις
+      direct_message_creator:
+        title: Νέο Μήνυμα
+        prefix: "Προς:"
+      create_channel:
+        type: "Τύπος"
+        types:
+          category: "Κατηγορία"
+          topic: "Θέμα"
+      composer:
+        italic_text: "κείμενο σε έμφαση"
+        bold_text: "έντονη γραφή"
+      notification_levels:
+        never: "Ποτέ"
+      settings:
+        follow: "Γίνετε μέλος"
+        followed: "Έγινε μέλος"
+        notifications: "Ειδοποιήσεις"
+        preview: "Προεπισκόπηση"
+        save: "Αποθήκευση"
+        saved: "Αποθηκεύτηκε! "
+        unfollow: "Αποχώρηση"
+        admin_title: "Διαχειριστής"
+      incoming_webhooks:
+        back: "Πίσω"
+        description: "Περιγραφή"
+        delete: "Σβήσιμο"
+        emoji: "Emoji"
+        name: "Όνομα"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        system: "σύστημα"
+        url: "URL"
+        username: "Όνομα Χρήστη"
+      selection:
+        cancel: "Ακύρωση"
+        copy: "Αντιγραφή"
+        new_topic:
+          title: "Μετακίνηση σε Νέο Θέμα"
+        existing_topic:
+          title: "Μετακίνηση σε Υπάρχον Θέμα"
+        new_message:
+          title: "Μετακίνηση σε νέο μήνυμα"
+      emoji_picker:
+        objects: "Αντικείμενα"
+        activities: "Δραστηριότητες"
+        flags: "Σημάνσεις"
+        symbols: "Σύμβολα"
+      draft_channel_screen:
+        header: "Νέο Μήνυμα"
+        cancel: "Ακύρωση"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Μήνυμα
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Επισήμανση από"

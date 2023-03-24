@@ -4,21 +4,21 @@ import {
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
 import QUnit, { module, test } from "qunit";
-import Post from "discourse/models/post";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import { registerEmoji } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const rawOpts = {
   siteSettings: {
     enable_emoji: true,
     enable_emoji_shortcuts: true,
     enable_mentions: true,
-    emoji_set: "google_classic",
+    emoji_set: "twitter",
     external_emoji_url: "",
-    highlighted_languages: "json|ruby|javascript",
+    highlighted_languages: "json|ruby|javascript|xml",
     default_code_lang: "auto",
     enable_markdown_linkify: true,
     markdown_linkify_tlds: "com",
@@ -878,8 +878,8 @@ eviltrout</p>
 
     assert.cooked(
       "```text\ntext\n```",
-      '<pre><code class="lang-nohighlight">text\n</code></pre>',
-      "handles text by adding nohighlight"
+      '<pre><code class="lang-plaintext">text\n</code></pre>',
+      "handles text by adding plaintext"
     );
 
     assert.cooked(
@@ -908,7 +908,7 @@ eviltrout</p>
 
     assert.cooked(
       "```eviltrout\nhello\n```",
-      '<pre data-code-wrap="eviltrout"><code class="lang-nohighlight">hello\n</code></pre>',
+      '<pre data-code-wrap="eviltrout"><code class="lang-plaintext">hello\n</code></pre>',
       "it converts to custom block unknown code names"
     );
 
@@ -1274,7 +1274,8 @@ eviltrout</p>
   });
 
   test("quotes", function (assert) {
-    const post = Post.create({
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
       cooked: "<p><b>lorem</b> ipsum</p>",
       username: "eviltrout",
       post_number: 1,
@@ -1334,7 +1335,8 @@ eviltrout</p>
   });
 
   test("quoting a quote", function (assert) {
-    const post = Post.create({
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
       cooked: new PrettyText(defaultOpts).cook(
         '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
       ),
@@ -1524,7 +1526,7 @@ var bar = 'bar';
     assert.cookedOptions(
       ":grin: @sam",
       { featuresOverride: ["emoji"] },
-      `<p><img src="/images/emoji/google_classic/grin.png?v=${v}" title=":grin:" class="emoji" alt=":grin:" loading="lazy" width="20" height="20"> @sam</p>`,
+      `<p><img src="/images/emoji/twitter/grin.png?v=${v}" title=":grin:" class="emoji" alt=":grin:" loading="lazy" width="20" height="20"> @sam</p>`,
       "cooks emojis when only the emoji markdown engine is enabled"
     );
 
@@ -1539,15 +1541,15 @@ var bar = 'bar';
   test("emoji", function (assert) {
     assert.cooked(
       ":smile:",
-      `<p><img src="/images/emoji/google_classic/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>`
+      `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>`
     );
     assert.cooked(
       ":(",
-      `<p><img src="/images/emoji/google_classic/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:" loading="lazy" width="20" height="20"></p>`
+      `<p><img src="/images/emoji/twitter/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:" loading="lazy" width="20" height="20"></p>`
     );
     assert.cooked(
       "8-)",
-      `<p><img src="/images/emoji/google_classic/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>`
+      `<p><img src="/images/emoji/twitter/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>`
     );
   });
 
@@ -1561,7 +1563,7 @@ var bar = 'bar';
     assert.cookedOptions(
       "test:smile:test",
       { siteSettings: { enable_inline_emoji_translation: true } },
-      `<p>test<img src="/images/emoji/google_classic/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:" loading="lazy" width="20" height="20">test</p>`
+      `<p>test<img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:" loading="lazy" width="20" height="20">test</p>`
     );
   });
 
@@ -1638,6 +1640,8 @@ var bar = 'bar';
     assert.cookedOptions("a --> b", enabledTypographer, "<p>a \u2192 b</p>");
     assert.cookedOptions("-->", enabledTypographer, "<p> \u2192 </p>");
     assert.cookedOptions("<--", enabledTypographer, "<p> \u2190 </p>");
+    assert.cookedOptions("<->", enabledTypographer, "<p> \u2194 </p>");
+    assert.cookedOptions("<-->", enabledTypographer, "<p> \u2194 </p>");
 
     // Don't replace arrows
     assert.cookedOptions("<!-- an html comment -->", enabledTypographer, "");
@@ -1646,7 +1650,6 @@ var bar = 'bar';
       enabledTypographer,
       "<p>(&lt;–not an arrow)</p>"
     );
-    assert.cookedOptions("<-->", enabledTypographer, "<p>&lt;–&gt;</p>");
     assert.cookedOptions("asd-->", enabledTypographer, "<p>asd–&gt;</p>");
     assert.cookedOptions(" asd--> ", enabledTypographer, "<p>asd–&gt;</p>");
     assert.cookedOptions(" asd-->", enabledTypographer, "<p>asd–&gt;</p>");
@@ -1771,6 +1774,25 @@ var bar = 'bar';
       opts,
       `<p>${"you".repeat(maxMatches)}one</p>`,
       "does not loop infinitely"
+    );
+  });
+
+  test("highlighted aliased languages", function (assert) {
+    // "js" is an alias of "javascript"
+    assert.cooked(
+      "```js\nvar foo ='foo';\nvar bar = 'bar';\n```",
+      `<pre><code class=\"lang-js\">var foo ='foo';
+var bar = 'bar';
+</code></pre>`,
+      "code block with js alias works"
+    );
+
+    // "html" is an alias of "xml"
+    assert.cooked(
+      "```html\n<strong>fun</strong> times\n```",
+      `<pre><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
+</code></pre>`,
+      "code block with html alias work"
     );
   });
 });

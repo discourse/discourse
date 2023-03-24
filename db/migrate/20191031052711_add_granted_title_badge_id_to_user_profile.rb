@@ -2,7 +2,13 @@
 
 class AddGrantedTitleBadgeIdToUserProfile < ActiveRecord::Migration[6.0]
   def up
-    add_reference :user_profiles, :granted_title_badge, foreign_key: { to_table: :badges }, index: true, null: true
+    add_reference :user_profiles,
+                  :granted_title_badge,
+                  foreign_key: {
+                    to_table: :badges,
+                  },
+                  index: true,
+                  null: true
 
     # update all the regular badge derived titles based
     # on the normal badge name

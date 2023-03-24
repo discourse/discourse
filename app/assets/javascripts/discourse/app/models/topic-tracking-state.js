@@ -1,5 +1,5 @@
 import EmberObject, { get } from "@ember/object";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import DiscourseURL from "discourse/lib/url";
@@ -27,6 +27,10 @@ function isUnread(topic) {
   );
 }
 
+function isNewOrUnread(topic) {
+  return isUnread(topic) || isNew(topic);
+}
+
 function isUnseen(topic) {
   return !topic.is_seen;
 }
@@ -46,11 +50,31 @@ function hasMutedTags(topicTags, mutedTags, siteSettings) {
 const TopicTrackingState = EmberObject.extend({
   messageCount: 0,
 
-  @on("init")
-  _setup() {
+  init() {
+    this._super(...arguments);
+
     this.states = new Map();
     this.stateChangeCallbacks = {};
     this._trackedTopicLimit = 4000;
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+
+    this.messageBus.unsubscribe("/latest", this._processChannelPayload);
+
+    if (this.currentUser) {
+      this.messageBus.unsubscribe("/new", this._processChannelPayload);
+      this.messageBus.unsubscribe(`/unread`, this._processChannelPayload);
+      this.messageBus.unsubscribe(
+        `/unread/${this.currentUser.id}`,
+        this._processChannelPayload
+      );
+    }
+
+    this.messageBus.unsubscribe("/delete", this.onDeleteMessage);
+    this.messageBus.unsubscribe("/recover", this.onRecoverMessage);
+    this.messageBus.unsubscribe("/destroy", this.onDestroyMessage);
   },
 
   /**
@@ -63,37 +87,78 @@ const TopicTrackingState = EmberObject.extend({
    *
    * @method establishChannels
    */
-  establishChannels() {
-    this.messageBus.subscribe("/latest", this._processChannelPayload);
+  establishChannels(meta) {
+    meta ??= {};
+    const messageBusDefaultNewMessageId = -1;
+
+    this.messageBus.subscribe(
+      "/latest",
+      this._processChannelPayload,
+      meta["/latest"] || messageBusDefaultNewMessageId
+    );
+
     if (this.currentUser) {
-      this.messageBus.subscribe("/new", this._processChannelPayload);
-      this.messageBus.subscribe(`/unread`, this._processChannelPayload);
+      this.messageBus.subscribe(
+        "/new",
+        this._processChannelPayload,
+        meta["/new"] || messageBusDefaultNewMessageId
+      );
+
+      this.messageBus.subscribe(
+        `/unread`,
+        this._processChannelPayload,
+        meta["/unread"] || messageBusDefaultNewMessageId
+      );
+
       this.messageBus.subscribe(
         `/unread/${this.currentUser.id}`,
-        this._processChannelPayload
+        this._processChannelPayload,
+        meta[`/unread/${this.currentUser.id}`] || messageBusDefaultNewMessageId
       );
     }
 
-    this.messageBus.subscribe("/delete", (msg) => {
-      this.modifyStateProp(msg, "deleted", true);
-      this.incrementMessageCount();
-    });
+    this.messageBus.subscribe(
+      "/delete",
+      this.onDeleteMessage,
+      meta["/delete"] || messageBusDefaultNewMessageId
+    );
 
-    this.messageBus.subscribe("/recover", (msg) => {
-      this.modifyStateProp(msg, "deleted", false);
-      this.incrementMessageCount();
-    });
+    this.messageBus.subscribe(
+      "/recover",
+      this.onRecoverMessage,
+      meta["/recover"] || messageBusDefaultNewMessageId
+    );
 
-    this.messageBus.subscribe("/destroy", (msg) => {
-      this.incrementMessageCount();
-      const currentRoute = DiscourseURL.router.currentRoute.parent;
-      if (
-        currentRoute.name === "topic" &&
-        parseInt(currentRoute.params.id, 10) === msg.topic_id
-      ) {
-        DiscourseURL.redirectTo("/");
-      }
-    });
+    this.messageBus.subscribe(
+      "/destroy",
+      this.onDestroyMessage,
+      meta["/destroy"] || messageBusDefaultNewMessageId
+    );
+  },
+
+  @bind
+  onDeleteMessage(msg) {
+    this.modifyStateProp(msg, "deleted", true);
+    this.incrementMessageCount();
+  },
+
+  @bind
+  onRecoverMessage(msg) {
+    this.modifyStateProp(msg, "deleted", false);
+    this.incrementMessageCount();
+  },
+
+  @bind
+  onDestroyMessage(msg) {
+    this.incrementMessageCount();
+    const currentRoute = DiscourseURL.router.currentRoute.parent;
+
+    if (
+      currentRoute.name === "topic" &&
+      parseInt(currentRoute.params.id, 10) === msg.topic_id
+    ) {
+      DiscourseURL.redirectTo("/");
+    }
   },
 
   mutedTopics() {
@@ -207,7 +272,7 @@ const TopicTrackingState = EmberObject.extend({
       }
     }
 
-    if (filterTag && !data.payload.tags.includes(filterTag)) {
+    if (filterTag && !data.payload.tags?.includes(filterTag)) {
       return;
     }
 
@@ -219,11 +284,12 @@ const TopicTrackingState = EmberObject.extend({
       this._addIncoming(data.topic_id);
     }
 
+    const unreadRecipients = ["all", "unread", "unseen"];
+    if (this.currentUser?.new_new_view_enabled) {
+      unreadRecipients.push("new");
+    }
     // count an unread topic as incoming
-    if (
-      ["all", "unread", "unseen"].includes(filter) &&
-      data.message_type === "unread"
-    ) {
+    if (unreadRecipients.includes(filter) && data.message_type === "unread") {
       const old = this.findState(data);
 
       // the highest post number is equal to last read post number here
@@ -280,7 +346,7 @@ const TopicTrackingState = EmberObject.extend({
    * @param {String} filter - Valid values are all, categories, and any topic list
    *                          filters e.g. latest, unread, new. As well as this
    *                          specific category and tag URLs like tag/test/l/latest,
-   *                          c/cat/subcat/6/l/latest or tags/c/cat/subcat/6/test/l/latest.
+   *                          c/cat/sub-cat/6/l/latest or tags/c/cat/sub-cat/6/test/l/latest.
    */
   trackIncoming(filter) {
     this.newIncoming = [];
@@ -312,7 +378,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   /**
-   * Used to determine whether toshow the message at the top of the topic list
+   * Used to determine whether to show the message at the top of the topic list
    * e.g. "see 1 new or updated topic"
    *
    * @method incomingCount
@@ -491,7 +557,22 @@ const TopicTrackingState = EmberObject.extend({
     const mutedCategoryIds = this.currentUser?.muted_category_ids?.concat(
       this.currentUser.indirectly_muted_category_ids
     );
-    let filterFn = type === "new" ? isNew : isUnread;
+
+    let filterFn;
+    switch (type) {
+      case "new":
+        filterFn = isNew;
+        break;
+      case "unread":
+        filterFn = isUnread;
+        break;
+      case "new_and_unread":
+      case "unread_and_new":
+        filterFn = isNewOrUnread;
+        break;
+      default:
+        throw new Error(`Unkown filter type ${type}`);
+    }
 
     return Array.from(this.states.values()).filter((topic) => {
       if (!filterFn(topic)) {
@@ -499,6 +580,14 @@ const TopicTrackingState = EmberObject.extend({
       }
 
       if (categoryId && !subcategoryIds.has(topic.category_id)) {
+        return false;
+      }
+
+      if (
+        categoryId &&
+        topic.is_category_topic &&
+        categoryId !== topic.category_id
+      ) {
         return false;
       }
 
@@ -538,6 +627,21 @@ const TopicTrackingState = EmberObject.extend({
     });
   },
 
+  countNewAndUnread({
+    categoryId,
+    tagId,
+    noSubcategories,
+    customFilterFn,
+  } = {}) {
+    return this.countCategoryByState({
+      type: "new_and_unread",
+      categoryId,
+      tagId,
+      noSubcategories,
+      customFilterFn,
+    });
+  },
+
   /**
    * Calls the provided callback for each of the currently tracked topics
    * we have in state.
@@ -555,7 +659,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   /**
-   * Using the array of tags provided, tallys up all topics via forEachTracked
+   * Using the array of tags provided, tallies up all topics via forEachTracked
    * that we are tracking, separated into new/unread/total.
    *
    * Total is only counted if opts.includeTotal is specified.
@@ -648,12 +752,21 @@ const TopicTrackingState = EmberObject.extend({
     let categoryId = category ? get(category, "id") : null;
 
     if (type === "new") {
-      return this.countNew({
+      let count = this.countNew({
         categoryId,
         tagId,
         noSubcategories,
         customFilterFn,
       });
+      if (this.currentUser?.new_new_view_enabled) {
+        count += this.countUnread({
+          categoryId,
+          tagId,
+          noSubcategories,
+          customFilterFn,
+        });
+      }
+      return count;
     } else if (type === "unread") {
       return this.countUnread({
         categoryId,
@@ -729,8 +842,14 @@ const TopicTrackingState = EmberObject.extend({
   // for a particular seen topic has not yet reached the server.
   _fixDelayedServerState(list, filter) {
     for (let index = list.topics.length - 1; index >= 0; index--) {
-      const state = this.findState(list.topics[index].id);
-      if (state && state.last_read_post_number > 0) {
+      const topic = list.topics[index];
+      const state = this.findState(topic.id);
+      if (
+        state &&
+        state.last_read_post_number > 0 &&
+        (topic.last_read_post_number === 0 ||
+          !this.currentUser?.new_new_view_enabled)
+      ) {
         if (filter === "new") {
           list.topics.splice(index, 1);
         } else {
@@ -977,10 +1096,13 @@ const TopicTrackingState = EmberObject.extend({
 });
 
 export function startTracking(tracking) {
-  const data = PreloadStore.get("topicTrackingStates");
-  tracking.loadStates(data);
-  tracking.establishChannels();
-  PreloadStore.remove("topicTrackingStates");
+  PreloadStore.getAndRemove("topicTrackingStates").then((data) =>
+    tracking.loadStates(data)
+  );
+
+  PreloadStore.getAndRemove("topicTrackingStateMeta").then((meta) =>
+    tracking.establishChannels(meta)
+  );
 }
 
 export default TopicTrackingState;

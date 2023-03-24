@@ -3,6 +3,7 @@
 
 # source: https://github.com/svenfuchs/i18n/blob/master/test/test_data/locales/plurals.rb
 
+# stree-ignore
 {
   af: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
   am: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| [0, 1].include?(n) ? :one : :other } } } },
@@ -83,7 +84,7 @@
   pt: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| [0, 1].include?(n) ? :one : :other } } } },
   pt_BR: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
   ro: { i18n: { plural: { keys: [:one, :few, :other], rule: lambda { |n| n == 1 ? :one : n == 0 || ((n % 100) >= 1 && (n % 100) <= 19) ? :few : :other } } } },
-  ru: { i18n: { plural: { keys: [:one, :few, :other], rule: lambda { |n| n % 10 == 1 && n % 100 != 11 ? :one : [2, 3, 4].include?(n % 10) && ![12, 13, 14].include?(n % 100) ? :few : :other } } } },
+  ru: { i18n: { plural: { keys: [:one, :few, :many, :other], rule: lambda { |n| n % 10 == 1 && n % 100 != 11 ? :one : [2, 3, 4].include?(n % 10) && ![12, 13, 14].include?(n % 100) ? :few : n % 10 == 0 || [5, 6, 7, 8, 9].include?(n % 10) || [11, 12, 13, 14].include?(n % 100) ? :many : :other } } } },
   se: { i18n: { plural: { keys: [:one, :two, :other], rule: lambda { |n| n == 1 ? :one : n == 2 ? :two : :other } } } },
   sh: { i18n: { plural: { keys: [:one, :few, :many, :other], rule: lambda { |n| n % 10 == 1 && n % 100 != 11 ? :one : [2, 3, 4].include?(n % 10) && ![12, 13, 14].include?(n % 100) ? :few : n % 10 == 0 || [5, 6, 7, 8, 9].include?(n % 10) || [11, 12, 13, 14].include?(n % 100) ? :many : :other } } } },
   sk: { i18n: { plural: { keys: [:one, :few, :other], rule: lambda { |n| n == 1 ? :one : [2, 3, 4].include?(n) ? :few : :other } } } },

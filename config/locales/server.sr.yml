@@ -215,7 +215,6 @@ sr:
         few: "pre %{count} mesec dana"
         other: "pre %{count} mesec dana"
   password_reset:
-    save: "Postavi Šifru"
     title: "Resetujte Šifru"
   change_email:
     max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."
@@ -252,6 +251,7 @@ sr:
         count: Broj
     post_edits:
       labels:
+        post: Post
         editor: Urednik
         edit_reason: Razlog
     user_flagging_ratio:
@@ -265,8 +265,12 @@ sr:
         flag: Tip
     consolidated_page_views:
       labels:
+        post: Post
         editor: Urednik
         edit_reason: Razlog
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
     topics:
       title: "Teme"
     posts:
@@ -419,7 +423,6 @@ sr:
   page_not_found:
     see_more: "Više"
     search_button: "Pretraži"
-  image: "slika"
   color_schemes:
     default_theme_name: "zadato"
   csv_export:
@@ -487,11 +490,8 @@ sr:
             placeholder: "Milenino mesto za bleju"
           site_description:
             placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
-      ready:
-        title: "Vaš Discource je spreman!"
       finished:
         title: "Vaš Discource je spreman!"
-  joined: "Pridružen"
   reviewables:
     priorities:
       medium: "Srednje"
@@ -500,15 +500,16 @@ sr:
       medium: "Srednje"
       high: "Visoko"
     actions:
-      agree_and_suspend:
-        title: "Suspenduj Korisnika"
+      agree:
+        title: "Da"
       delete_single:
         title: "Obriši"
       disagree:
-        title: "Odbaci"
+        title: "Ne"
       approve:
         title: "Odobri"
       reject_user:
+        title: "Obriši Korisnika..."
         delete:
           title: "Obriši Korisnika"
       reject:

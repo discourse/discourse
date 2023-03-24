@@ -14,7 +14,8 @@ export default Component.extend({
   actions: {
     closeMessage() {
       deprecated(
-        'You should use `action=(closeMessage message)` instead of `action=(action "closeMessage")`'
+        'You should use `action=(closeMessage message)` instead of `action=(action "closeMessage")`',
+        { id: "discourse.composer-message.closeMessage" }
       );
       this.closeMessage(this.message);
     },

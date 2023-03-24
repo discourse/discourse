@@ -1,15 +1,15 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import createStore from "discourse/tests/helpers/create-store";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Unit | Controller | reorder-categories", function (hooks) {
   setupTest(hooks);
 
   test("reorder set unique position number", function (assert) {
-    const controller = this.owner.lookup("controller:reorder-categories");
-    const store = createStore();
+    const controller = getOwner(this).lookup("controller:reorder-categories");
+    const store = getOwner(this).lookup("service:store");
 
-    const site = this.owner.lookup("service:site");
+    const site = getOwner(this).lookup("service:site");
     site.set("categories", [
       store.createRecord("category", { id: 1, position: 0 }),
       store.createRecord("category", { id: 2, position: 0 }),
@@ -24,8 +24,8 @@ module("Unit | Controller | reorder-categories", function (hooks) {
   });
 
   test("reorder places subcategories after their parent categories, while maintaining the relative order", function (assert) {
-    const controller = this.owner.lookup("controller:reorder-categories");
-    const store = createStore();
+    const controller = getOwner(this).lookup("controller:reorder-categories");
+    const store = getOwner(this).lookup("service:store");
 
     const parent = store.createRecord("category", {
       id: 1,
@@ -51,7 +51,7 @@ module("Unit | Controller | reorder-categories", function (hooks) {
     });
 
     const expectedOrderSlugs = ["parent", "child2", "child1", "other"];
-    const site = this.owner.lookup("service:site");
+    const site = getOwner(this).lookup("service:site");
     site.set("categories", [child2, parent, other, child1]);
 
     controller.reorder();
@@ -63,8 +63,8 @@ module("Unit | Controller | reorder-categories", function (hooks) {
   });
 
   test("changing the position number of a category should place it at given position", function (assert) {
-    const controller = this.owner.lookup("controller:reorder-categories");
-    const store = createStore();
+    const controller = getOwner(this).lookup("controller:reorder-categories");
+    const store = getOwner(this).lookup("service:store");
 
     const elem1 = store.createRecord("category", {
       id: 1,
@@ -84,7 +84,7 @@ module("Unit | Controller | reorder-categories", function (hooks) {
       slug: "test",
     });
 
-    const site = this.owner.lookup("service:site");
+    const site = getOwner(this).lookup("service:site");
     site.set("categories", [elem1, elem2, elem3]);
 
     // Move category 'foo' from position 0 to position 2
@@ -98,8 +98,8 @@ module("Unit | Controller | reorder-categories", function (hooks) {
   });
 
   test("changing the position number of a category should place it at given position and respect children", function (assert) {
-    const controller = this.owner.lookup("controller:reorder-categories");
-    const store = createStore();
+    const controller = getOwner(this).lookup("controller:reorder-categories");
+    const store = getOwner(this).lookup("service:store");
 
     const elem1 = store.createRecord("category", {
       id: 1,
@@ -126,7 +126,7 @@ module("Unit | Controller | reorder-categories", function (hooks) {
       slug: "test",
     });
 
-    const site = this.owner.lookup("service:site");
+    const site = getOwner(this).lookup("service:site");
     site.set("categories", [elem1, child1, elem2, elem3]);
 
     controller.send("change", elem1, { target: { value: 3 } });
@@ -140,8 +140,8 @@ module("Unit | Controller | reorder-categories", function (hooks) {
   });
 
   test("changing the position through click on arrow of a category should place it at given position and respect children", function (assert) {
-    const controller = this.owner.lookup("controller:reorder-categories");
-    const store = createStore();
+    const controller = getOwner(this).lookup("controller:reorder-categories");
+    const store = getOwner(this).lookup("service:store");
 
     const child2 = store.createRecord("category", {
       id: 105,
@@ -177,7 +177,7 @@ module("Unit | Controller | reorder-categories", function (hooks) {
       slug: "test",
     });
 
-    const site = this.owner.lookup("service:site");
+    const site = getOwner(this).lookup("service:site");
     site.set("categories", [elem1, child1, child2, elem2, elem3]);
 
     controller.reorder();

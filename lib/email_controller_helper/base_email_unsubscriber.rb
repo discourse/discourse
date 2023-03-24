@@ -20,7 +20,7 @@ module EmailControllerHelper
 
       controller.instance_variable_set(
         :@unsubscribed_from_all,
-        key_owner.user_option.unsubscribed_from_all?
+        key_owner.user_option.unsubscribed_from_all?,
       )
     end
 
@@ -38,10 +38,12 @@ module EmailControllerHelper
       end
 
       if params[:unsubscribe_all]
-        key_owner.user_option.update_columns(email_digests: false,
-                                             email_level: UserOption.email_level_types[:never],
-                                             email_messages_level: UserOption.email_level_types[:never],
-                                             mailing_list_mode: false)
+        key_owner.user_option.update_columns(
+          email_digests: false,
+          email_level: UserOption.email_level_types[:never],
+          email_messages_level: UserOption.email_level_types[:never],
+          mailing_list_mode: false,
+        )
         updated = true
       end
 

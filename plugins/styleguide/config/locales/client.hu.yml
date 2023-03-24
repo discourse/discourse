@@ -90,3 +90,7 @@ hu:
         rich_tooltip:
           description: "Leírás"
           header: "Fejléc"
+          hover_to_see: "Vigye az egérmutatót az eszköztipp megtekintéséhez"
+        char_counter:
+          title: "Karakterszámláló"
+          placeholder: "Írja be a szöveget ide..."

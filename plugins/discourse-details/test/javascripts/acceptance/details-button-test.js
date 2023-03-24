@@ -14,6 +14,9 @@ acceptance("Details Button", function (needs) {
 
     await visit("/");
     await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
 
     await popupMenu.expand();
     await popupMenu.selectRowByValue("insertDetails");
@@ -115,6 +118,9 @@ acceptance("Details Button", function (needs) {
 
     await visit("/");
     await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
     await fillIn(".d-editor-input", multilineInput);
 
     const textarea = query(".d-editor-input");

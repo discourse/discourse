@@ -31,6 +31,7 @@ nb_NO:
           format_title: Datoformat
           timezone: Tidssone
           until: Inntil...
+          current_timezone: "Gjeldende tidssone:"
           recurring:
             every_day: "Hver dag"
             every_week: "Hver uke"

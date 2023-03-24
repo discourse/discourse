@@ -8,13 +8,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   let(:bookmark1) { Fabricate(:bookmark, user: user) }
   let(:bookmark2) { Fabricate(:bookmark, user: user) }
   let(:bookmark3) { Fabricate(:bookmark, user: user) }
-  let!(:bookmarks) do
-    [
-      bookmark1,
-      bookmark2,
-      bookmark3
-    ]
-  end
+  let!(:bookmarks) { [bookmark1, bookmark2, bookmark3] }
 
   before do
     # this is done to avoid model validations on Bookmark
@@ -66,10 +60,12 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     end
   end
 
-  it 'will not send notification when topic is not available' do
+  it "will not send notification when topic is not available" do
     bookmark1.bookmarkable.topic.destroy
     bookmark2.bookmarkable.topic.destroy
     bookmark3.bookmarkable.topic.destroy
-    expect { subject.execute }.not_to change { Notification.where(notification_type: Notification.types[:bookmark_reminder]).count }
+    expect { subject.execute }.not_to change {
+      Notification.where(notification_type: Notification.types[:bookmark_reminder]).count
+    }
   end
 end

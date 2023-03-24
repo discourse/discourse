@@ -4,18 +4,12 @@ module DiscourseNarrativeBot
   class TrackSelector
     include Actions
 
-    GENERIC_REPLIES_COUNT_PREFIX = 'discourse-narrative-bot:track-selector-count:'.freeze
-    PUBLIC_DISPLAY_BOT_HELP_KEY = 'discourse-narrative-bot:track-selector:display-bot-help'.freeze
+    GENERIC_REPLIES_COUNT_PREFIX = "discourse-narrative-bot:track-selector-count:".freeze
+    PUBLIC_DISPLAY_BOT_HELP_KEY = "discourse-narrative-bot:track-selector:display-bot-help".freeze
 
-    TRACKS = [
-      AdvancedUserNarrative,
-      NewUserNarrative
-    ]
+    TRACKS = [AdvancedUserNarrative, NewUserNarrative]
 
-    TOPIC_ACTIONS = [
-      :delete,
-      :topic_notification_level_changed
-    ].each(&:freeze)
+    TOPIC_ACTIONS = %i[delete topic_notification_level_changed].each(&:freeze)
 
     RESET_TRIGGER_EXACT_MATCH_LENGTH = 200
 
@@ -118,7 +112,7 @@ module DiscourseNarrativeBot
       trigger = "#{self.class.reset_trigger} #{klass.reset_trigger}"
 
       if @post.raw.length < RESET_TRIGGER_EXACT_MATCH_LENGTH && @is_pm_to_bot
-        @post.raw.match(Regexp.new("\\b\\W\?#{trigger}\\W\?\\b", 'i'))
+        @post.raw.match(Regexp.new("\\b\\W\?#{trigger}\\W\?\\b", "i"))
       else
         match_trigger?(trigger)
       end
@@ -127,7 +121,7 @@ module DiscourseNarrativeBot
     def bot_commands(hint = true)
       raw =
         if @user.manually_disabled_discobot?
-          I18n.t(self.class.i18n_key('random_mention.discobot_disabled'))
+          I18n.t(self.class.i18n_key("random_mention.discobot_disabled"))
         elsif match_data = match_trigger?("#{self.class.dice_trigger} (\\d+)d(\\d+)")
           DiscourseNarrativeBot::Dice.roll(match_data[1].to_i, match_data[2].to_i)
         elsif match_trigger?(self.class.quote_trigger)
@@ -137,20 +131,23 @@ module DiscourseNarrativeBot
         elsif match_trigger?(self.class.help_trigger)
           help_message
         elsif hint
-          message = I18n.t(self.class.i18n_key('random_mention.reply'),
-            discobot_username: self.discobot_username,
-            help_trigger: self.class.help_trigger
-          )
+          message =
+            I18n.t(
+              self.class.i18n_key("random_mention.reply"),
+              discobot_username: self.discobot_username,
+              help_trigger: self.class.help_trigger,
+            )
 
           if public_reply?
             key = "#{PUBLIC_DISPLAY_BOT_HELP_KEY}:#{@post.topic_id}"
             last_bot_help_post_number = Discourse.redis.get(key)
 
             if !last_bot_help_post_number ||
-                (last_bot_help_post_number &&
-                 @post.post_number - 10 > last_bot_help_post_number.to_i &&
-                 (1.day.to_i - Discourse.redis.ttl(key)) > 6.hours.to_i)
-
+                 (
+                   last_bot_help_post_number &&
+                     @post.post_number - 10 > last_bot_help_post_number.to_i &&
+                     (1.day.to_i - Discourse.redis.ttl(key)) > 6.hours.to_i
+                 )
               Discourse.redis.setex(key, 1.day.to_i, @post.post_number)
               message
             end
@@ -166,20 +163,24 @@ module DiscourseNarrativeBot
     end
 
     def help_message
-      message = I18n.t(
-        self.class.i18n_key('random_mention.tracks'),
-        discobot_username: self.discobot_username,
-        reset_trigger: self.class.reset_trigger,
-        tracks: [NewUserNarrative.reset_trigger, AdvancedUserNarrative.reset_trigger].join(', ')
-      )
+      message =
+        I18n.t(
+          self.class.i18n_key("random_mention.tracks"),
+          discobot_username: self.discobot_username,
+          reset_trigger: self.class.reset_trigger,
+          tracks: [NewUserNarrative.reset_trigger, AdvancedUserNarrative.reset_trigger].join(", "),
+        )
 
-      message << "\n\n#{I18n.t(self.class.i18n_key('random_mention.bot_actions'),
-        discobot_username: self.discobot_username,
-        dice_trigger: self.class.dice_trigger,
-        quote_trigger: self.class.quote_trigger,
-        quote_sample: DiscourseNarrativeBot::QuoteGenerator.generate(@user),
-        magic_8_ball_trigger: self.class.magic_8_ball_trigger
-      )}"
+      message << "\n\n#{
+        I18n.t(
+          self.class.i18n_key("random_mention.bot_actions"),
+          discobot_username: self.discobot_username,
+          dice_trigger: self.class.dice_trigger,
+          quote_trigger: self.class.quote_trigger,
+          quote_sample: DiscourseNarrativeBot::QuoteGenerator.generate(@user),
+          magic_8_ball_trigger: self.class.magic_8_ball_trigger,
+        )
+      }"
     end
 
     def generic_replies_key(user)
@@ -193,18 +194,23 @@ module DiscourseNarrativeBot
 
       case count
       when 0
-        raw = I18n.t(self.class.i18n_key('do_not_understand.first_response'))
+        raw = I18n.t(self.class.i18n_key("do_not_understand.first_response"))
 
         if state && state.to_sym != :end
-          raw = "#{raw}\n\n#{I18n.t(self.class.i18n_key('do_not_understand.track_response'), reset_trigger: reset_trigger, skip_trigger: self.class.skip_trigger)}"
+          raw =
+            "#{raw}\n\n#{I18n.t(self.class.i18n_key("do_not_understand.track_response"), reset_trigger: reset_trigger, skip_trigger: self.class.skip_trigger)}"
         end
 
         reply_to(@post, raw)
       when 1
-        reply_to(@post, I18n.t(self.class.i18n_key('do_not_understand.second_response'),
-                               base_path: Discourse.base_path,
-                               reset_trigger: self.class.reset_trigger
-        ))
+        reply_to(
+          @post,
+          I18n.t(
+            self.class.i18n_key("do_not_understand.second_response"),
+            base_path: Discourse.base_path,
+            reset_trigger: self.class.reset_trigger,
+          ),
+        )
       else
         # Stay out of the user's way
       end
@@ -218,7 +224,9 @@ module DiscourseNarrativeBot
 
     def skip_track?
       if @is_pm_to_bot
-        @post.raw.match(/((^@#{self.discobot_username} #{self.class.skip_trigger})|(^#{self.class.skip_trigger}$))/i)
+        @post.raw.match(
+          /((^@#{self.discobot_username} #{self.class.skip_trigger})|(^#{self.class.skip_trigger}$))/i,
+        )
       else
         false
       end
@@ -233,24 +241,23 @@ module DiscourseNarrativeBot
     def match_trigger?(trigger)
       # we remove the leading <p> to allow for trigger to be at the end of a paragraph
       cooked_trigger = cook(trigger)[3..-1]
-      regexp = Regexp.new(cooked_trigger, 'i')
+      regexp = Regexp.new(cooked_trigger, "i")
       match = @post.cooked.match(regexp)
 
       if @is_pm_to_bot
-        match || @post.raw.strip.match(Regexp.new("^#{trigger}$", 'i'))
+        match || @post.raw.strip.match(Regexp.new("^#{trigger}$", "i"))
       else
         match
       end
     end
 
     def like_user_post
-      if @post.raw.match(/thank/i)
-        PostActionCreator.like(self.discobot_user, @post)
-      end
+      PostActionCreator.like(self.discobot_user, @post) if @post.raw.match(/thank/i)
     end
 
     def bot_mentioned?
-      @bot_mentioned ||= PostAnalyzer.new(@post.raw, @post.topic_id).raw_mentions.include?(self.discobot_username)
+      @bot_mentioned ||=
+        PostAnalyzer.new(@post.raw, @post.topic_id).raw_mentions.include?(self.discobot_username)
     end
 
     def public_reply?

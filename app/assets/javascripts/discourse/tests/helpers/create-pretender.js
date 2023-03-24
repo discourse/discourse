@@ -100,8 +100,8 @@ export function applyDefaultHandlers(pretender) {
     return response({
       tags: [
         { id: "eviltrout", count: 1 },
-        { id: "planned", text: "planned", count: 7, pm_count: 0 },
-        { id: "private", text: "private", count: 0, pm_count: 7 },
+        { id: "planned", text: "planned", count: 7, pm_only: false },
+        { id: "private", text: "private", count: 0, pm_only: true },
       ],
       extras: {
         tag_groups: [
@@ -109,24 +109,24 @@ export function applyDefaultHandlers(pretender) {
             id: 2,
             name: "Ford Cars",
             tags: [
-              { id: "Escort", text: "Escort", count: 1, pm_count: 0 },
-              { id: "focus", text: "focus", count: 3, pm_count: 0 },
+              { id: "Escort", text: "Escort", count: 1, pm_only: false },
+              { id: "focus", text: "focus", count: 3, pm_only: false },
             ],
           },
           {
             id: 1,
             name: "Honda Cars",
             tags: [
-              { id: "civic", text: "civic", count: 4, pm_count: 0 },
-              { id: "accord", text: "accord", count: 2, pm_count: 0 },
+              { id: "civic", text: "civic", count: 4, pm_only: false },
+              { id: "accord", text: "accord", count: 2, pm_only: false },
             ],
           },
           {
             id: 1,
             name: "Makes",
             tags: [
-              { id: "ford", text: "ford", count: 5, pm_count: 0 },
-              { id: "honda", text: "honda", count: 6, pm_count: 0 },
+              { id: "ford", text: "ford", count: 5, pm_only: false },
+              { id: "honda", text: "honda", count: 6, pm_only: false },
             ],
           },
         ],
@@ -141,6 +141,8 @@ export function applyDefaultHandlers(pretender) {
       results: [
         { id: "monkey", name: "monkey", count: 1 },
         { id: "gazelle", name: "gazelle", count: 2 },
+        { id: "dog", name: "dog", count: 3 },
+        { id: "cat", name: "cat", count: 4 },
       ],
     };
 
@@ -171,12 +173,13 @@ export function applyDefaultHandlers(pretender) {
     return response({ email: "eviltrout@example.com" });
   });
 
-  pretender.get("/u/is_local_username", () =>
+  pretender.get("/composer/mentions", () =>
     response({
-      valid: [],
-      valid_groups: [],
-      mentionable_groups: [],
-      cannot_see: [],
+      users: [],
+      user_reasons: {},
+      groups: {},
+      group_reasons: {},
+      max_users_notified_per_group_mention: 100,
     })
   );
 
@@ -612,7 +615,22 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/posts", function (request) {
     const data = parsePostData(request.requestBody);
 
-    if (data.raw === "custom message") {
+    if (data.title === "this title triggers an error") {
+      return response(422, { errors: ["That title has already been taken"] });
+    }
+
+    if (data.raw === "enqueue this content please") {
+      return response(200, {
+        success: true,
+        action: "enqueued",
+        pending_post: {
+          id: 1234,
+          raw: data.raw,
+        },
+      });
+    }
+
+    if (data.raw === "custom message that is a good length") {
       return response(200, {
         success: true,
         action: "custom",

@@ -1,0 +1,199 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    admin:
+      site_settings:
+        categories:
+          chat: Čet
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Status chat kanala je promijenjen"
+            chat_channel_delete: "Chat kanal je izbrisan"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Izradite chat poruku na određenom kanalu."
+    about:
+      chat_messages_count: "Chat poruke"
+    chat:
+      dates:
+        time_tiny: "h:mm"
+      all_loaded: "Prikaz svih poruka"
+      already_enabled: "Chat je već omogućen na ovu temu. Molimo osvježite."
+      disabled_for_topic: "Chat je onemogućen na ovu temu."
+      bot: "bot"
+      create: "Kreiraj"
+      cancel: "Odustani"
+      cancel_reply: "Otkaži odgovor"
+      chat_channels: "Kanali"
+      move_to_channel:
+        title: "Premještanje poruka na kanal"
+        confirm_move: "Premjesti poruke"
+      channel_settings:
+        title: "Postavke kanala"
+        edit: "Uredi"
+        add: "Dodaj"
+        leave_channel: "Napusti kanal"
+        join: "Pridružite se"
+        leave: "Napustiti"
+      channel_archive:
+        title: "Arhiviraj kanal"
+        instructions: "<p>Arhiviranje kanala stavlja ga u način rada samo za čitanje i premješta sve poruke s kanala u novu ili postojeću temu. Ne mogu se slati nove poruke, niti se postojeće poruke ne mogu uređivati ili brisati.</p><p>Jeste li sigurni da želite arhivirati <strong>%{channelTitle}</strong> kanal?</p>"
+        process_started: "Počeo je proces arhiviranja. Ovaj način će se uskoro zatvoriti, a vi ćete dobiti osobnu poruku kada je proces arhive završen."
+        retry: "Pokušaj ponovo"
+      channel_open:
+        title: "Otvori kanal"
+        instructions: "Ponovno otvara kanal, svi korisnici će moći slati poruke i uređivati svoje postojeće poruke."
+      channel_close:
+        title: "Zatvori kanal"
+        instructions: "Zatvaranje kanala onemogućuje korisnicima koji nisu zaposlenici da šalju nove poruke ili uređuju postojeće poruke. Jeste li sigurni da želite zatvoriti ovaj kanal?"
+      channel_delete:
+        title: "Izbriši kanal"
+        confirm: "Razumijem posljedice, obriši kanal"
+        confirm_channel_name: "Unesite naziv kanala"
+        process_started: "Započeo je proces brisanja kanala. Ovaj modal će se uskoro zatvoriti, više nigdje nećete vidjeti izbrisani kanal."
+      channels_list_popup:
+        browse: "Pretražujte kanale"
+      click_to_join: "Kliknite ovdje da biste vidjeli dostupne kanale."
+      close: "Zatvori"
+      collapse: "Sažmi ladicu za chat"
+      confirm_flag: "Jeste li sigurni da želite označiti poruku korisnika %{username}?"
+      deleted: "Poruka je izbrisana. [pogledaj]"
+      delete: "Pobriši"
+      edited: "uredio"
+      muted: "utišano"
+      joined: "prijavljen"
+      empty_state:
+        direct_message: "Također možete započeti osobni razgovor s jednim ili više korisnika."
+      email_frequency:
+        never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
+      enable: "Omogući chat"
+      flag: "Označi zastavicom"
+      flagged: "Ova poruka je označena za pregled"
+      invalid_access: "Nemate pristup za pregled ovog kanala za chat"
+      invitation_notification: "<span>%{username}</span> <span>vas je pozvao da se pridružite chat kanalu</span>"
+      in_reply_to: "U odgovoru na"
+      heading: "Čet"
+      join: "Pridružite se"
+      last_visit: "posljednji posjet"
+      mention_warning:
+        dismiss: "skloni"
+        invitations_sent:
+          one: "Poziv poslan"
+          few: "Pozivnice poslane"
+          other: "Pozivnice poslane"
+        invite: "Pozovite na kanal"
+      aria_roles:
+        header: "Zaglavlje chata"
+        composer: "Skladatelj chata"
+      reply: "Odgovor"
+      edit: "Uredi"
+      rebake_message: "Popravi HTML"
+      bookmark_message: "Zabilješka"
+      bookmark_message_edit: "Uredi oznaku"
+      save: "Spremi"
+      sounds:
+        none: "Ništa"
+      title: "čet"
+      title_capitalized: "Čet"
+      exit: "natrag"
+      channel_status:
+        archive_failed: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruke su arhivirane. <a target=\"_blank\" href=\"%{topic_url}\">tema odredišta</a>. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
+        archive_failed_no_topic: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruka je arhivirano, odredišna tema nije kreirana. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
+        closed: "Zatvoreno"
+        open: "Otvori"
+      browse:
+        back: "Natrag"
+        title: Kanali
+        filter_all: Sve
+        filter_closed: Zatvoreno
+      chat_message_separator:
+        today: Danas
+        yesterday: Jučer
+      about_view:
+        title: Naslov
+        name: Ime
+        description: Opis
+      channel_info:
+        back_to_channel: "Natrag"
+        tabs:
+          about: O nama
+          members: Članovi
+          settings: Postavke
+      direct_message_creator:
+        title: Nova poruka
+        prefix: "Za:"
+      create_channel:
+        type: "Tip"
+        types:
+          category: "Kategorija"
+          topic: "Tema"
+      composer:
+        italic_text: "naglašen tekst"
+        bold_text: "jaki text"
+      notification_levels:
+        never: "Nikad"
+      settings:
+        follow: "Pridružite se"
+        followed: "Prijavljen"
+        notifications: "Obavijest"
+        preview: "Pregled"
+        save: "Spremi"
+        saved: "Spremljeno"
+        unfollow: "Napustiti"
+        admin_title: "Administrator"
+      admin:
+        title: "Čet"
+      incoming_webhooks:
+        back: "Natrag"
+        description: "Opis"
+        delete: "Pobriši"
+        emoji: "Emoji"
+        name: "Ime"
+        save: "Spremi"
+        edit: "Uredi"
+        system: "sistem"
+        url: "URL"
+        username: "Korisničko ime"
+      selection:
+        cancel: "Odustani"
+        copy: "Kopija"
+        new_topic:
+          title: "Prebaci u novu temu"
+        existing_topic:
+          title: "Prebaci u postojeću temu"
+        new_message:
+          title: "Premjestite u novu poruku"
+      emoji_picker:
+        objects: "Objekti"
+        activities: "Aktivnosti"
+        flags: "Oznake zastavicom"
+        symbols: "Simboli"
+      draft_channel_screen:
+        header: "Nova poruka"
+        cancel: "Odustani"
+    notifications:
+      chat_invitation_html: "<span>%{username}</span> <span>vas je pozvao da se pridružite chat kanalu</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Poruka
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Označio"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Čet"

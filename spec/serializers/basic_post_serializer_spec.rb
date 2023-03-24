@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe BasicPostSerializer do
-
   describe "#name" do
     let(:user) { Fabricate.build(:user) }
     let(:post) { Fabricate.build(:post, user: user) }

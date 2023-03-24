@@ -7,10 +7,11 @@ class ReviewableClaimedTopic < ActiveRecord::Base
 
   def self.claimed_hash(topic_ids)
     result = {}
-    if SiteSetting.reviewable_claiming != 'disabled'
-      ReviewableClaimedTopic.where(topic_id: topic_ids).includes(:user).each do |rct|
-        result[rct.topic_id] = rct.user
-      end
+    if SiteSetting.reviewable_claiming != "disabled"
+      ReviewableClaimedTopic
+        .where(topic_id: topic_ids)
+        .includes(:user)
+        .each { |rct| result[rct.topic_id] = rct.user }
     end
     result
   end

@@ -5,25 +5,21 @@
 # this performs a trivial operation walking all multisites and grabbing first topic / localizing
 # the expectation is that RSS will remain static no matter how many iterations run
 
-if ENV['RAILS_ENV'] != "production"
-  exec "RAILS_ENV=production ruby #{__FILE__}"
-end
+exec "RAILS_ENV=production ruby #{__FILE__}" if ENV["RAILS_ENV"] != "production"
 
-if !ENV['LD_PRELOAD']
-  exec "LD_PRELOAD=/usr/lib/libjemalloc.so.1 ruby #{__FILE__}"
-end
+exec "LD_PRELOAD=/usr/lib/libjemalloc.so.1 ruby #{__FILE__}" if !ENV["LD_PRELOAD"]
 
-if ENV['LD_PRELOAD'].include?("jemalloc")
+if ENV["LD_PRELOAD"].include?("jemalloc")
   # for 3.6.0 we need a patch jemal 1.1.0 gem (1.1.1 does not support 3.6.0)
   # however ffi is a problem so we need to patch the gem
-  require 'jemal'
+  require "jemal"
 
   $jemalloc = true
 end
 
-if ENV['LD_PRELOAD'].include?("mwrap")
+if ENV["LD_PRELOAD"].include?("mwrap")
   $mwrap = true
-  require 'mwrap'
+  require "mwrap"
 end
 
 def bin_diff(current)
@@ -39,7 +35,11 @@ end
 
 require File.expand_path("../../config/environment", __FILE__)
 
-Rails.application.routes.recognize_path('abc') rescue nil
+begin
+  Rails.application.routes.recognize_path("abc")
+rescue StandardError
+  nil
+end
 I18n.t(:posts)
 
 def rss
@@ -47,9 +47,7 @@ def rss
 end
 
 def loop_sites
-  RailsMultisite::ConnectionManagement.each_connection do
-    yield
-  end
+  RailsMultisite::ConnectionManagement.each_connection { yield }
 end
 
 def biggest_klass(klass)
@@ -57,7 +55,10 @@ def biggest_klass(klass)
 end
 
 def iter(warmup: false)
-  loop_sites { Topic.first; I18n.t('too_late_to_edit') }
+  loop_sites do
+    Topic.first
+    I18n.t("too_late_to_edit")
+  end
   if !warmup
     GC.start(full_mark: true, immediate_sweep: true)
 
@@ -75,24 +76,17 @@ def iter(warmup: false)
     array_delta = biggest_klass(Array).length - $biggest_array_length
     puts "rss: #{rss} (#{rss_delta}) #{mwrap_delta}#{jedelta} heap_delta: #{GC.stat[:heap_live_slots] - $baseline_slots} array_delta: #{array_delta}"
 
-    if $jemalloc
-      bin_diff(jemal_stats)
-    end
+    bin_diff(jemal_stats) if $jemalloc
   end
-
 end
 
 iter(warmup: true)
-4.times do
-  GC.start(full_mark: true, immediate_sweep: true)
-end
+4.times { GC.start(full_mark: true, immediate_sweep: true) }
 
 if $jemalloc
   $baseline = Jemal.stats
   $baseline_jemalloc_active = $baseline[:active]
-  4.times do
-    GC.start(full_mark: true, immediate_sweep: true)
-  end
+  4.times { GC.start(full_mark: true, immediate_sweep: true) }
 end
 
 def render_table(array)
@@ -102,33 +96,33 @@ def render_table(array)
   cols = array[0].length
 
   array.each do |row|
-    row.each_with_index do |val, i|
-      width[i] = [width[i].to_i, val.to_s.length].max
-    end
+    row.each_with_index { |val, i| width[i] = [width[i].to_i, val.to_s.length].max }
   end
 
   array[0].each_with_index do |col, i|
-    buffer << col.to_s.ljust(width[i], ' ')
+    buffer << col.to_s.ljust(width[i], " ")
     if i == cols - 1
       buffer << "\n"
     else
-      buffer << ' | '
+      buffer << " | "
     end
   end
 
   buffer << ("-" * (width.sum + width.length))
   buffer << "\n"
 
-  array.drop(1).each do |row|
-    row.each_with_index do |val, i|
-      buffer << val.to_s.ljust(width[i], ' ')
-      if i == cols - 1
-        buffer << "\n"
-      else
-        buffer << ' | '
+  array
+    .drop(1)
+    .each do |row|
+      row.each_with_index do |val, i|
+        buffer << val.to_s.ljust(width[i], " ")
+        if i == cols - 1
+          buffer << "\n"
+        else
+          buffer << " | "
+        end
       end
     end
-  end
 
   buffer
 end
@@ -141,14 +135,20 @@ def mwrap_log
     report << "\n"
 
     table = []
-    Mwrap.each(200000) do |loc, total, allocations, frees, age_sum, max_life|
-      table << [total, allocations - frees, frees == 0 ? -1 : (age_sum / frees.to_f).round(2), max_life, loc]
+    Mwrap.each(200_000) do |loc, total, allocations, frees, age_sum, max_life|
+      table << [
+        total,
+        allocations - frees,
+        frees == 0 ? -1 : (age_sum / frees.to_f).round(2),
+        max_life,
+        loc,
+      ]
     end
 
     table.sort! { |a, b| b[1] <=> a[1] }
     table = table[0..50]
 
-    table.prepend(["total", "delta", "mean_life", "max_life", "location"])
+    table.prepend(%w[total delta mean_life max_life location])
 
     report << render_table(table)
   end
@@ -158,15 +158,13 @@ end
 
 Mwrap.clear
 
-if $mwrap
-  $mwrap_baseline = Mwrap.total_bytes_allocated - Mwrap.total_bytes_freed
-end
+$mwrap_baseline = Mwrap.total_bytes_allocated - Mwrap.total_bytes_freed if $mwrap
 
 $baseline_slots = GC.stat[:heap_live_slots]
 $baseline_rss = rss
 $biggest_array_length = biggest_klass(Array).length
 
-100000.times do
+100_000.times do
   iter
   if $mwrap
     puts mwrap_log

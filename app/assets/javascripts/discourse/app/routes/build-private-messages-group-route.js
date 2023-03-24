@@ -21,9 +21,11 @@ export default (inboxType, filter) => {
       }
     },
 
-    model(params) {
+    model() {
       const username = this.modelFor("user").get("username_lower");
-      let topicListFilter = `topics/private-messages-group/${username}/${params.name}`;
+      const groupName = this.modelFor("userPrivateMessages.group");
+
+      let topicListFilter = `topics/private-messages-group/${username}/${groupName}`;
 
       if (filter !== "inbox") {
         topicListFilter = `${topicListFilter}/${filter}`;

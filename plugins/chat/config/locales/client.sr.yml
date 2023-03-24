@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  js:
+    chat:
+      dates:
+        time_tiny: "h:mm"
+      cancel: "Odustani"
+      channel_settings:
+        edit: "Izmeni"
+        add: "Dodaj"
+      close: "Zatvori"
+      delete: "Obriši"
+      muted: "utišano"
+      joined: "pridružen"
+      email_frequency:
+        never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
+      flag: "Označi Zastavom"
+      last_visit: "poslednja poseta"
+      mention_warning:
+        dismiss: "одбаци"
+      reply: "Odgovori"
+      edit: "Izmeni"
+      rebake_message: "Popravi HTML"
+      bookmark_message: "Markiraj"
+      bookmark_message_edit: "Uredi marker"
+      save: "Sačuvaj"
+      sounds:
+        none: "Ništa"
+      exit: "nazad"
+      channel_status:
+        open: "Otvori"
+      browse:
+        back: "Nazad"
+        filter_all: sve
+      chat_message_separator:
+        today: Danas
+        yesterday: Juče
+      about_view:
+        title: Naslov
+        name: Ime foruma
+        description: Opis
+      channel_info:
+        back_to_channel: "Nazad"
+        tabs:
+          about: O nama
+          members: Članovi
+          settings: Podešavanja
+      direct_message_creator:
+        title: Nova privatna poruka
+      create_channel:
+        type: "Tip"
+        types:
+          category: "Kategorija"
+          topic: "Tema"
+      composer:
+        italic_text: "italic tekst"
+        bold_text: "boldovan tekst"
+      notification_levels:
+        never: "Nikad"
+      settings:
+        followed: "Pridružio"
+        notifications: "Obaveštenja"
+        save: "Sačuvaj"
+        saved: "Sačuvano"
+        admin_title: "Admin"
+      incoming_webhooks:
+        back: "Nazad"
+        description: "Opis"
+        delete: "Obriši"
+        emoji: "Emoji"
+        name: "Ime foruma"
+        save: "Sačuvaj"
+        edit: "Izmeni"
+        system: "sistem"
+        url: "URL"
+        username: "Korisničko Ime"
+      selection:
+        cancel: "Odustani"
+        copy: "Kopija"
+        new_topic:
+          title: "Prebaci u Novu Temu"
+        existing_topic:
+          title: "Prebaci u Postojeću Temu"
+      emoji_picker:
+        flags: "Zastave"
+      draft_channel_screen:
+        header: "Nova privatna poruka"
+        cancel: "Odustani"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Privatna poruka

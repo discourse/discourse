@@ -16,10 +16,10 @@ tr_TR:
       sections:
         typography:
           title: "Tipografi"
-          example: "Forumumuza Hoş Geldiniz"
-          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut the labore et dolore magna aliqua. Enim ad minim veniam, quis nostrud egzersiz ullamco emek, ex ea commodo sonuçlarının bir kısmını kullanın. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, culpa qui officia deserunt mollit anim id est laborum."
+          example: "Discourse'a Hoş Geldiniz"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
-          title: "Tarih / Saat girişleri"
+          title: "Tarih/Saat girdileri"
         font_scale:
           title: "Yazı Tipi Sistemi"
         colors:
@@ -28,7 +28,7 @@ tr_TR:
           title: "Simgeler"
           full_list: "Font Awesome Simgelerinin tam listesine bakın"
         input_fields:
-          title: "Giriş Alanları"
+          title: "Girdi Alanları"
         buttons:
           title: "Düğmeler"
         dropdowns:
@@ -36,19 +36,19 @@ tr_TR:
         categories:
           title: "Kategoriler"
         bread_crumbs:
-          title: "Yer Göstergeçleri"
+          title: "İçerik Haritaları"
         navigation:
-          title: "Navigasyon"
+          title: "Gezinti"
         navigation_bar:
-          title: "Gezinti çubuğu"
+          title: "Gezinti Çubuğu"
         navigation_stacked:
-          title: "Yapışkan Navigasyon"
+          title: "Gezinti Yığılı"
         categories_list:
           title: "Kategori Listesi"
         topic_link:
           title: "Konu Bağlantısı"
         topic_list_item:
-          title: "Konu Listesi Öğesi"
+          title: "Konu Listesi Ögesi"
         topic_statuses:
           title: "Konu Durumları"
         topic_list:
@@ -56,17 +56,17 @@ tr_TR:
         basic_topic_list:
           title: "Temel Konu Listesi"
         footer_message:
-          title: "Altbilgi İletisi"
+          title: "Alt Bilgi Mesajı"
         signup_cta:
           title: "CTA'ya kaydolun"
         topic_timer_info:
-          title: "Konu Zamanlayıcısı"
+          title: "Konu Zamanlayıcıları"
         topic_footer_buttons:
-          title: "Konu Altbilgi Düğmeleri"
+          title: "Konu Alt Bilgi Düğmeleri"
         topic_notifications:
           title: "Konu Bildirimleri"
         post:
-          title: "İleti"
+          title: "Gönderi"
         topic_map:
           title: "Konu Haritası"
         site_header:
@@ -76,19 +76,22 @@ tr_TR:
         post_menu:
           title: "Gönderi Menüsü"
         modal:
-          title: "Açılır"
-          header: "Açılır Başlık"
-          footer: "Açılır Altbilgi"
+          title: "Kalıcı"
+          header: "Kalıcı Başlık"
+          footer: "Kalıcı Alt Bilgi"
         user_about:
           title: "Kullanıcı Hakkında Kutusu"
         header_icons:
           title: "Başlık Simgeleri"
         spinners:
-          title: "Spinners"
+          title: "Değer Değiştiriciler"
         empty_state:
           title: "Boş Durum"
         rich_tooltip:
-          title: "Detaylı ipucu"
+          title: "Zengin Araç İpucu"
           description: "Açıklama"
           header: "Başlık"
-          hover_to_see: "İpucu için fareyle üzerine gelin"
+          hover_to_see: "Araç ipucunu görmek için üzerine gidin"
+        char_counter:
+          title: "Karakter Sayacı"
+          placeholder: "Metninizi buraya girin..."

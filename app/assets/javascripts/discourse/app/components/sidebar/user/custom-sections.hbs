@@ -1,0 +1,54 @@
+<div class="sidebar-custom-sections">
+  {{#each this.sections as |section|}}
+    <Sidebar::Section
+      @sectionName={{section.slug}}
+      @headerLinkText={{section.decoratedTitle}}
+      @collapsable={{true}}
+      @headerActions={{section.headerActions}}
+      @headerActionsIcon="pencil-alt"
+      @class={{section.dragCss}}
+    >
+      {{#each section.links as |link|}}
+        {{#if link.external}}
+          <Sidebar::SectionLink
+            @linkName={{link.name}}
+            @content={{replace-emoji link.name}}
+            @prefixType="icon"
+            @prefixValue={{link.icon}}
+            @href={{link.value}}
+            @class={{link.linkDragCss}}
+            {{(if
+              this.canReorder
+              (modifier
+                "draggable"
+                didStartDrag=link.didStartDrag
+                didEndDrag=link.didEndDrag
+                dragMove=link.dragMove
+              )
+            )}}
+          />
+        {{else}}
+          <Sidebar::SectionLink
+            @linkName={{link.name}}
+            @route={{link.route}}
+            @models={{link.models}}
+            @query={{link.query}}
+            @content={{replace-emoji link.name}}
+            @prefixType="icon"
+            @prefixValue={{link.icon}}
+            @class={{link.linkDragCss}}
+            {{(if
+              this.canReorder
+              (modifier
+                "draggable"
+                didStartDrag=link.didStartDrag
+                didEndDrag=link.didEndDrag
+                dragMove=link.dragMove
+              )
+            )}}
+          />
+        {{/if}}
+      {{/each}}
+    </Sidebar::Section>
+  {{/each}}
+</div>

@@ -9,4 +9,4 @@ fr:
     discourse_local_dates_enabled: "Activer la fonctionnalité « discourse-local-dates ». Ceci ajoutera la gestion des dates locales dans les messages, en utilisant l'élément [date]."
     discourse_local_dates_default_formats: "Formats de date fréquemment utilisés, voir : <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
     discourse_local_dates_default_timezones: "Liste de fuseaux horaires <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> (page en anglais) par défaut"
-    discourse_local_dates_email_format: "Format utilisé pour les dates dans les courriels."
+    discourse_local_dates_email_format: "Format utilisé pour les dates dans les e-mails."

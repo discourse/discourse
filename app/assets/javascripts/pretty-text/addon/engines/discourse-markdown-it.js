@@ -41,6 +41,7 @@ function createHelper(
     deprecated("`whiteList` has been replaced with `allowList`", {
       since: "2.6.0.beta.4",
       dropFrom: "2.7.0",
+      id: "discourse.markdown-it.whitelist",
     });
     helper.allowList(info);
   };
@@ -385,6 +386,12 @@ function setupMarkdownEngine(opts, featureConfig) {
 
   opts.pluginCallbacks.forEach(([feature, callback]) => {
     if (featureConfig[feature]) {
+      if (callback === null || callback === undefined) {
+        // eslint-disable-next-line no-console
+        console.log("BAD MARKDOWN CALLBACK FOUND");
+        // eslint-disable-next-line no-console
+        console.log(`FEATURE IS: ${feature}`);
+      }
       opts.engine.use(callback);
     }
   });
@@ -416,6 +423,7 @@ function unhoistForCooked(hoisted, cooked) {
         found = true;
         return hoisted[key];
       });
+      delete hoisted[key];
     };
 
     while (found) {
@@ -539,6 +547,8 @@ export function setup(opts, siteSettings, state) {
     markdownTypographerQuotationMarks:
       siteSettings.markdown_typographer_quotation_marks,
     markdownLinkifyTlds: siteSettings.markdown_linkify_tlds,
+    enableExperimentalHashtagAutocomplete:
+      siteSettings.enable_experimental_hashtag_autocomplete,
   };
 
   const markdownitOpts = {
@@ -569,14 +579,16 @@ export function setup(opts, siteSettings, state) {
 
 export function cook(raw, opts) {
   // we still have to hoist html_raw nodes so they bypass the allowlister
-  // this is the case for oneboxes
-  let hoisted = {};
-  opts.discourse.hoisted = hoisted;
+  // this is the case for oneboxes and also certain plugins that require
+  // raw HTML rendering within markdown bbcode rules
+  opts.discourse.hoisted ??= {};
 
   const rendered = opts.engine.render(raw);
   let cooked = opts.discourse.sanitizer(rendered).trim();
-  cooked = unhoistForCooked(hoisted, cooked);
-  delete opts.discourse.hoisted;
+
+  // opts.discourse.hoisted guid keys will be deleted within here to
+  // keep the object empty
+  cooked = unhoistForCooked(opts.discourse.hoisted, cooked);
 
   return cooked;
 }

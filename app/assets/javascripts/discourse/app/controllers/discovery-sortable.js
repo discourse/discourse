@@ -1,4 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -27,6 +29,31 @@ export const queryParams = {
 const controllerOpts = {
   discoveryTopics: controller("discovery/topics"),
   queryParams: Object.keys(queryParams),
+
+  @discourseComputed(...Object.keys(queryParams))
+  queryString() {
+    let paramStrings = [];
+
+    this.queryParams.forEach((key) => {
+      if (this[key]) {
+        paramStrings.push(`${key}:${this[key]}`);
+      }
+    });
+
+    return paramStrings.join(" ");
+  },
+
+  @action
+  updateTopicsListQueryParams(queryString) {
+    for (const match of queryString.matchAll(/(\w+):([^:\s]+)/g)) {
+      const key = match[1];
+      const value = match[2];
+
+      if (controllerOpts.queryParams.includes(key)) {
+        this.set(key, value);
+      }
+    }
+  },
 };
 
 // Default to `undefined`

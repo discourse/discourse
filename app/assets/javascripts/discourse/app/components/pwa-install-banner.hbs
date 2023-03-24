@@ -1,0 +1,19 @@
+{{#if this.showPWAInstallBanner}}
+  <div class="row">
+    <div class="pwa-install-banner alert alert-info">
+      <span>
+        <DiscourseLinkedText
+          @action={{action "turnOn"}}
+          @text="pwa.install_banner"
+          @textParams={{hash title=this.siteSettings.title}}
+        />
+      </span>
+      <DButton
+        @icon="times"
+        @action={{action "dismiss"}}
+        @class="btn btn-flat close"
+        @title="banner.close"
+      />
+    </div>
+  </div>
+{{/if}}

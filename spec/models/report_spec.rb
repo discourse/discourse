@@ -3,43 +3,43 @@
 RSpec.describe Report do
   let(:user) { Fabricate(:user) }
   let(:c0) { Fabricate(:category, user: user) }
-  let(:c1) { Fabricate(:category, parent_category: c0, user: user) }  # id: 2
+  let(:c1) { Fabricate(:category, parent_category: c0, user: user) } # id: 2
   let(:c2) { Fabricate(:category, user: user) }
 
-  shared_examples 'no data' do
+  shared_examples "no data" do
     context "with no data" do
-      it 'returns an empty report' do
+      it "returns an empty report" do
         expect(report.data).to be_blank
       end
     end
   end
 
-  shared_examples 'category filtering' do
-    it 'returns the filtered data' do
+  shared_examples "category filtering" do
+    it "returns the filtered data" do
       expect(report.total).to eq 1
     end
   end
 
-  shared_examples 'category filtering on subcategories' do
-    it 'returns the filtered data' do
+  shared_examples "category filtering on subcategories" do
+    it "returns the filtered data" do
       expect(report.total).to eq(1)
     end
   end
 
-  shared_examples 'with data x/y' do
+  shared_examples "with data x/y" do
     it "returns today's data" do
       expect(report.data.select { |v| v[:x].today? }).to be_present
     end
 
-    it 'returns correct data for period' do
+    it "returns correct data for period" do
       expect(report.data[0][:y]).to eq 3
     end
 
-    it 'returns total' do
+    it "returns total" do
       expect(report.total).to eq 4
     end
 
-    it 'returns previous 30 day’s data' do
+    it "returns previous 30 day’s data" do
       expect(report.prev30Days).to be_present
     end
   end
@@ -47,18 +47,44 @@ RSpec.describe Report do
   describe "counting" do
     describe "requests" do
       before do
-        freeze_time DateTime.parse('2017-03-01 12:00')
+        freeze_time DateTime.parse("2017-03-01 12:00")
 
         # today, an incomplete day:
-        application_requests = [{ date: 0.days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 1 }]
+        application_requests = [
+          {
+            date: 0.days.ago.to_time,
+            req_type: ApplicationRequest.req_types["http_total"],
+            count: 1,
+          },
+        ]
 
         # 60 complete days:
-        30.times.each_with_object(application_requests) do |i|
-          application_requests.concat([{ date: (i + 1).days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 10  }])
-        end
-        30.times.each_with_object(application_requests) do |i|
-          application_requests.concat([{ date: (31 + i).days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 100 }])
-        end
+        30
+          .times
+          .each_with_object(application_requests) do |i|
+            application_requests.concat(
+              [
+                {
+                  date: (i + 1).days.ago.to_time,
+                  req_type: ApplicationRequest.req_types["http_total"],
+                  count: 10,
+                },
+              ],
+            )
+          end
+        30
+          .times
+          .each_with_object(application_requests) do |i|
+            application_requests.concat(
+              [
+                {
+                  date: (31 + i).days.ago.to_time,
+                  req_type: ApplicationRequest.req_types["http_total"],
+                  count: 100,
+                },
+              ],
+            )
+          end
 
         ApplicationRequest.insert_all(application_requests)
       end
@@ -75,20 +101,21 @@ RSpec.describe Report do
     describe "topics" do
       before do
         Report.clear_cache
-        freeze_time DateTime.parse('2017-03-01 12:00')
+        freeze_time DateTime.parse("2017-03-01 12:00")
         user = Fabricate(:user)
-        topics = ((0..32).to_a + [60, 61, 62, 63]).map do |i|
-          date = i.days.ago
-          {
-            user_id: user.id,
-            last_post_user_id: user.id,
-            title: "topic #{i}",
-            category_id: SiteSetting.uncategorized_category_id,
-            bumped_at: date,
-            created_at: date,
-            updated_at: date
-          }
-        end
+        topics =
+          ((0..32).to_a + [60, 61, 62, 63]).map do |i|
+            date = i.days.ago
+            {
+              user_id: user.id,
+              last_post_user_id: user.id,
+              title: "topic #{i}",
+              category_id: SiteSetting.uncategorized_category_id,
+              bumped_at: date,
+              created_at: date,
+              updated_at: date,
+            }
+          end
         Topic.insert_all(topics)
       end
 
@@ -98,11 +125,13 @@ RSpec.describe Report do
         expect(json[:prev30Days]).to eq(3)
 
         # lets make sure we can ask for the correct options for the report
-        json = Report.find("topics",
-          start_date: 5.days.ago.beginning_of_day,
-          end_date: 1.day.ago.end_of_day,
-          facets: [:prev_period]
-        ).as_json
+        json =
+          Report.find(
+            "topics",
+            start_date: 5.days.ago.beginning_of_day,
+            end_date: 1.day.ago.end_of_day,
+            facets: [:prev_period],
+          ).as_json
 
         expect(json[:prev_period]).to eq(5)
         expect(json[:data].length).to eq(5)
@@ -111,16 +140,16 @@ RSpec.describe Report do
     end
   end
 
-  describe 'visits report' do
-    let(:report) { Report.find('visits') }
+  describe "visits report" do
+    let(:report) { Report.find("visits") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with visits" do
       let(:user) { Fabricate(:user) }
 
       it "returns a report with data" do
-        freeze_time DateTime.parse('2000-01-01')
+        freeze_time DateTime.parse("2000-01-01")
         user.user_visits.create(visited_at: 1.hour.from_now)
         user.user_visits.create(visited_at: 1.day.ago)
         user.user_visits.create(visited_at: 2.days.ago, mobile: true)
@@ -135,16 +164,16 @@ RSpec.describe Report do
     end
   end
 
-  describe 'mobile visits report' do
-    let(:report) { Report.find('mobile_visits') }
+  describe "mobile visits report" do
+    let(:report) { Report.find("mobile_visits") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with visits" do
       let(:user) { Fabricate(:user) }
 
       it "returns a report with data" do
-        freeze_time DateTime.parse('2000-01-01')
+        freeze_time DateTime.parse("2000-01-01")
         user.user_visits.create(visited_at: 1.hour.from_now)
         user.user_visits.create(visited_at: 2.days.ago, mobile: true)
         user.user_visits.create(visited_at: 45.days.ago)
@@ -158,35 +187,50 @@ RSpec.describe Report do
     end
   end
 
-  [:signup, :topic, :post, :flag, :like, :email].each do |arg|
+  %i[signup topic post flag like email].each do |arg|
     describe "#{arg} report" do
       pluralized = arg.to_s.pluralize
 
       let(:report) { Report.find(pluralized) }
 
-      context "no #{pluralized}" do
-        it 'returns an empty report' do
+      context "with no #{pluralized}" do
+        it "returns an empty report" do
           expect(report.data).to be_blank
         end
       end
 
       context "with #{pluralized}" do
         before(:each) do
-          freeze_time DateTime.parse('2017-03-01 12:00')
+          freeze_time DateTime.parse("2017-03-01 12:00")
 
           if arg == :flag
             user = Fabricate(:user)
             topic = Fabricate(:topic, user: user)
-            builder = -> (dt) { PostActionCreator.create(user, Fabricate(:post, topic: topic, user: user), :spam, created_at: dt) }
+            builder = ->(dt) {
+              PostActionCreator.create(
+                user,
+                Fabricate(:post, topic: topic, user: user),
+                :spam,
+                created_at: dt,
+              )
+            }
           elsif arg == :signup
-            builder = -> (dt) { Fabricate(:user, created_at: dt) }
+            builder = ->(dt) { Fabricate(:user, created_at: dt) }
           else
             user = Fabricate(:user)
             factories = { email: :email_log }
-            builder = -> (dt) { Fabricate(factories[arg] || arg, created_at: dt, user: user) }
+            builder = ->(dt) { Fabricate(factories[arg] || arg, created_at: dt, user: user) }
           end
 
-          [DateTime.now, 1.hour.ago, 1.hour.ago, 1.day.ago, 2.days.ago, 30.days.ago, 35.days.ago].each(&builder)
+          [
+            DateTime.now,
+            1.hour.ago,
+            1.hour.ago,
+            1.day.ago,
+            2.days.ago,
+            30.days.ago,
+            35.days.ago,
+          ].each(&builder)
         end
 
         it "returns today's, total and previous 30 day's data" do
@@ -198,30 +242,58 @@ RSpec.describe Report do
     end
   end
 
-  [:http_total, :http_2xx, :http_background, :http_3xx, :http_4xx, :http_5xx, :page_view_crawler, :page_view_logged_in, :page_view_anon].each do |request_type|
+  %i[
+    http_total
+    http_2xx
+    http_background
+    http_3xx
+    http_4xx
+    http_5xx
+    page_view_crawler
+    page_view_logged_in
+    page_view_anon
+  ].each do |request_type|
     describe "#{request_type} request reports" do
-      let(:report) { Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now) }
+      let(:report) do
+        Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now)
+      end
 
       context "with no #{request_type} records" do
-        it 'returns an empty report' do
+        it "returns an empty report" do
           expect(report.data).to be_blank
         end
       end
 
       context "with #{request_type}" do
         before do
-          freeze_time DateTime.parse('2017-03-01 12:00')
+          freeze_time DateTime.parse("2017-03-01 12:00")
           application_requests = [
-            { date: 35.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 35 },
-            { date: 7.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 8 },
+            {
+              date: 35.days.ago.to_time,
+              req_type: ApplicationRequest.req_types[request_type.to_s],
+              count: 35,
+            },
+            {
+              date: 7.days.ago.to_time,
+              req_type: ApplicationRequest.req_types[request_type.to_s],
+              count: 8,
+            },
             { date: Time.now, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1 },
-            { date: 1.day.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 2 },
-            { date: 2.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 3 }
+            {
+              date: 1.day.ago.to_time,
+              req_type: ApplicationRequest.req_types[request_type.to_s],
+              count: 2,
+            },
+            {
+              date: 2.days.ago.to_time,
+              req_type: ApplicationRequest.req_types[request_type.to_s],
+              count: 3,
+            },
           ]
           ApplicationRequest.insert_all(application_requests)
         end
 
-        it 'returns a report with data' do
+        it "returns a report with data" do
           # expected number of records
           expect(report.data.count).to eq 4
 
@@ -244,61 +316,62 @@ RSpec.describe Report do
     end
   end
 
-  describe 'user to user private messages with replies' do
-    let(:report) { Report.find('user_to_user_private_messages_with_replies') }
+  describe "user to user private messages with replies" do
+    let(:report) { Report.find("user_to_user_private_messages_with_replies") }
     let(:user) { Fabricate(:user) }
     let(:topic) { Fabricate(:topic, created_at: 1.hour.ago, user: user) }
 
-    it 'topic report).to not include private messages' do
+    it "topic report).to not include private messages" do
       Fabricate(:private_message_topic, created_at: 1.hour.ago, user: user)
       topic
-      report = Report.find('topics')
+      report = Report.find("topics")
       expect(report.data[0][:y]).to eq(1)
       expect(report.total).to eq(1)
     end
 
-    it 'post report).to not include private messages' do
+    it "post report).to not include private messages" do
       Fabricate(:private_message_post, created_at: 1.hour.ago)
       Fabricate(:post)
-      report = Report.find('posts')
+      report = Report.find("posts")
       expect(report.data[0][:y]).to eq 1
       expect(report.total).to eq 1
     end
 
-    context 'with no private messages' do
-      it 'returns an empty report' do
+    context "with no private messages" do
+      it "returns an empty report" do
         expect(report.data).to be_blank
       end
 
-      context 'with some public posts' do
-        it 'returns an empty report' do
-          Fabricate(:post, topic: topic, user: user); Fabricate(:post, topic: topic, user: user)
+      context "with some public posts" do
+        it "returns an empty report" do
+          Fabricate(:post, topic: topic, user: user)
+          Fabricate(:post, topic: topic, user: user)
           expect(report.data).to be_blank
           expect(report.total).to eq 0
         end
       end
     end
 
-    context 'with some private messages' do
+    context "with some private messages" do
       before do
         Fabricate(:private_message_post, created_at: 25.hours.ago, user: user)
         Fabricate(:private_message_post, created_at: 1.hour.ago, user: user)
         Fabricate(:private_message_post, created_at: 1.hour.ago, user: user)
       end
 
-      it 'returns correct data' do
+      it "returns correct data" do
         expect(report.data[0][:y]).to eq 1
         expect(report.data[1][:y]).to eq 2
         expect(report.total).to eq 3
       end
 
-      context 'with some public posts' do
+      context "with some public posts" do
         before do
           Fabricate(:post, user: user, topic: topic)
           Fabricate(:post, user: user, topic: topic)
         end
 
-        it 'returns correct data' do
+        it "returns correct data" do
           expect(report.data[0][:y]).to eq 1
           expect(report.data[1][:y]).to eq 2
           expect(report.total).to eq 3
@@ -306,37 +379,37 @@ RSpec.describe Report do
       end
     end
 
-    context 'with private message from system user' do
+    context "with private message from system user" do
       before do
         Fabricate(:private_message_post, created_at: 1.hour.ago, user: Discourse.system_user)
       end
 
-      it 'does not include system users' do
+      it "does not include system users" do
         expect(report.data).to be_blank
         expect(report.total).to eq 0
       end
     end
   end
 
-  describe 'user to user private messages' do
-    let(:report) { Report.find('user_to_user_private_messages') }
+  describe "user to user private messages" do
+    let(:report) { Report.find("user_to_user_private_messages") }
 
-    context 'with private message from system user' do
+    context "with private message from system user" do
       before do
         Fabricate(:private_message_post, created_at: 1.hour.ago, user: Discourse.system_user)
       end
 
-      it 'does not include system users' do
+      it "does not include system users" do
         expect(report.data).to be_blank
         expect(report.total).to eq 0
       end
     end
   end
 
-  describe 'users by trust level report' do
-    let(:report) { Report.find('users_by_trust_level') }
+  describe "users by trust level report" do
+    let(:report) { Report.find("users_by_trust_level") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with users at different trust levels" do
       before do
@@ -351,15 +424,17 @@ RSpec.describe Report do
         expect(report.data.find { |d| d[:x] == TrustLevel[2] }[:y]).to eq 2
         expect(report.data.find { |d| d[:x] == TrustLevel[4] }[:y]).to eq 1
 
-        expect(report.data.find { |d| d[:x] == TrustLevel[0] }[:url]).to eq '/admin/users/list/newuser'
+        expect(
+          report.data.find { |d| d[:x] == TrustLevel[0] }[:url],
+        ).to eq "/admin/users/list/newuser"
       end
     end
   end
 
-  describe 'new contributors report' do
-    let(:report) { Report.find('new_contributors') }
+  describe "new contributors report" do
+    let(:report) { Report.find("new_contributors") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with contributors" do
       before do
@@ -382,10 +457,10 @@ RSpec.describe Report do
     end
   end
 
-  describe 'users by types level report' do
-    let(:report) { Report.find('users_by_type') }
+  describe "users by types level report" do
+    let(:report) { Report.find("users_by_type") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with users at different trust levels" do
       before do
@@ -407,24 +482,28 @@ RSpec.describe Report do
     end
   end
 
-  describe 'trending search report' do
-    let(:report) { Report.find('trending_search') }
+  describe "trending search report" do
+    let(:report) { Report.find("trending_search") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with different searches" do
       before do
-        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
+        SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.1")
 
-        SearchLog.create!(term: 'ruby', search_result_id: 1, search_type: 1, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
+        SearchLog.create!(
+          term: "ruby",
+          search_result_id: 1,
+          search_type: 1,
+          ip_address: "127.0.0.1",
+          user_id: Fabricate(:user).id,
+        )
 
-        SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.2')
-        SearchLog.log(term: 'php', search_type: :header, ip_address: '127.0.0.1')
+        SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.2")
+        SearchLog.log(term: "php", search_type: :header, ip_address: "127.0.0.1")
       end
 
-      after do
-        SearchLog.clear_debounce_cache!
-      end
+      after { SearchLog.clear_debounce_cache! }
 
       it "returns a report with data" do
         expect(report.data[0][:term]).to eq("ruby")
@@ -437,17 +516,17 @@ RSpec.describe Report do
     end
   end
 
-  describe 'DAU/MAU report' do
-    let(:report) { Report.find('dau_by_mau') }
+  describe "DAU/MAU report" do
+    let(:report) { Report.find("dau_by_mau") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with different users/visits" do
       before do
-        freeze_time DateTime.parse('2017-03-01 12:00')
+        freeze_time DateTime.parse("2017-03-01 12:00")
 
         arpit = Fabricate(:user)
-        arpit.user_visits.create(visited_at:  1.day.ago)
+        arpit.user_visits.create(visited_at: 1.day.ago)
 
         sam = Fabricate(:user)
         sam.user_visits.create(visited_at: 2.days.ago)
@@ -470,14 +549,14 @@ RSpec.describe Report do
     end
   end
 
-  describe 'Daily engaged users' do
-    let(:report) { Report.find('daily_engaged_users') }
+  describe "Daily engaged users" do
+    let(:report) { Report.find("daily_engaged_users") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with different activities" do
       before do
-        freeze_time DateTime.parse('2017-03-01 12:00')
+        freeze_time DateTime.parse("2017-03-01 12:00")
 
         UserActionManager.enable
 
@@ -497,33 +576,32 @@ RSpec.describe Report do
     end
   end
 
-  describe 'posts counts' do
+  describe "posts counts" do
     it "only counts regular posts" do
       post = Fabricate(:post)
       Fabricate(:moderator_post, topic: post.topic)
       Fabricate.build(:post, post_type: Post.types[:whisper], topic: post.topic)
-      post.topic.add_small_action(Fabricate(:admin), "invited_group", 'coolkids')
-      r = Report.find('posts')
+      post.topic.add_small_action(Fabricate(:admin), "invited_group", "coolkids")
+      r = Report.find("posts")
       expect(r.total).to eq(1)
       expect(r.data[0][:y]).to eq(1)
     end
   end
 
-  describe 'flags_status' do
-    let(:report) { Report.find('flags_status') }
+  describe "flags_status" do
+    let(:report) { Report.find("flags_status") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with flags" do
       let(:flagger) { Fabricate(:user) }
       let(:post) { Fabricate(:post, user: flagger) }
 
-      before do
-        freeze_time
-      end
+      before { freeze_time }
 
       it "returns a report with data" do
-        result = PostActionCreator.new(flagger, post, PostActionType.types[:spam], message: 'bad').perform
+        result =
+          PostActionCreator.new(flagger, post, PostActionType.types[:spam], message: "bad").perform
 
         expect(result.success).to eq(true)
         expect(report.data).to be_present
@@ -544,10 +622,10 @@ RSpec.describe Report do
     end
   end
 
-  describe 'post_edits' do
-    let(:report) { Report.find('post_edits') }
+  describe "post_edits" do
+    let(:report) { Report.find("post_edits") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with edits" do
       let(:editor) { Fabricate(:user) }
@@ -556,8 +634,12 @@ RSpec.describe Report do
       before do
         freeze_time
 
-        post.revise(post.user, { raw: 'updated body by author', edit_reason: 'not cool' }, force_new_version: true)
-        post.revise(editor, raw: 'updated body', edit_reason: 'not cool')
+        post.revise(
+          post.user,
+          { raw: "updated body by author", edit_reason: "not cool" },
+          force_new_version: true,
+        )
+        post.revise(editor, raw: "updated body", edit_reason: "not cool")
       end
 
       it "returns a report with data" do
@@ -583,24 +665,20 @@ RSpec.describe Report do
 
       fab!(:editor_with_two_edits) do
         Fabricate(:user).tap do |user|
-          2.times do |i|
-            posts[i].revise(user, { raw: "edit #{i + 1}" })
-          end
+          2.times { |i| posts[i].revise(user, { raw: "edit #{i + 1}" }) }
         end
       end
 
       fab!(:editor_with_one_edit) do
-        Fabricate(:user).tap do |user|
-          posts.last.revise(user, { raw: "edit 3" })
-        end
+        Fabricate(:user).tap { |user| posts.last.revise(user, { raw: "edit 3" }) }
       end
 
       let(:report_with_one_edit) do
-        Report.find('post_edits', { filters: { 'editor' => editor_with_one_edit.username } })
+        Report.find("post_edits", { filters: { "editor" => editor_with_one_edit.username } })
       end
 
       let(:report_with_two_edits) do
-        Report.find('post_edits', { filters: { 'editor' => editor_with_two_edits.username } })
+        Report.find("post_edits", { filters: { "editor" => editor_with_two_edits.username } })
       end
 
       it "returns a report for a given editor" do
@@ -610,21 +688,17 @@ RSpec.describe Report do
     end
   end
 
-  describe 'moderator activity' do
-    let(:report) {
-      Report.find('moderators_activity')
-    }
+  describe "moderator activity" do
+    let(:report) { Report.find("moderators_activity") }
 
-    let(:sam) { Fabricate(:user, moderator: true, username: 'sam') }
+    let(:sam) { Fabricate(:user, moderator: true, username: "sam") }
 
-    let(:jeff) { Fabricate(:user, moderator: true, username: 'jeff') }
+    let(:jeff) { Fabricate(:user, moderator: true, username: "jeff") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
     context "with moderators" do
-      before do
-        freeze_time(Date.today)
-      end
+      before { freeze_time(Date.today) }
 
       context "with moderators order" do
         before do
@@ -633,8 +707,8 @@ RSpec.describe Report do
         end
 
         it "returns the moderators in alphabetical order" do
-          expect(report.data[0][:username]).to eq('jeff')
-          expect(report.data[1][:username]).to eq('sam')
+          expect(report.data[0][:username]).to eq("jeff")
+          expect(report.data[1][:username]).to eq("sam")
         end
       end
 
@@ -650,9 +724,9 @@ RSpec.describe Report do
         end
 
         it "returns the correct read times" do
-          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[0][:username]).to eq("jeff")
           expect(report.data[0][:time_read]).to eq(3000)
-          expect(report.data[1][:username]).to eq('sam')
+          expect(report.data[1][:username]).to eq("sam")
           expect(report.data[1][:time_read]).to eq(300)
         end
       end
@@ -680,15 +754,13 @@ RSpec.describe Report do
 
         it "returns the correct topic count" do
           expect(report.data[0][:topic_count]).to eq(1)
-          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[0][:username]).to eq("jeff")
           expect(report.data[1][:topic_count]).to eq(2)
-          expect(report.data[1][:username]).to eq('sam')
+          expect(report.data[1][:username]).to eq("sam")
         end
 
         context "with private messages" do
-          before do
-            Fabricate(:private_message_topic, user: jeff)
-          end
+          before { Fabricate(:private_message_topic, user: jeff) }
 
           it "doesn’t count private topic" do
             expect(report.data[0][:topic_count]).to eq(1)
@@ -706,15 +778,13 @@ RSpec.describe Report do
 
         it "returns the correct topic count" do
           expect(report.data[0][:topic_count]).to eq(1)
-          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[0][:username]).to eq("jeff")
           expect(report.data[1][:topic_count]).to eq(2)
-          expect(report.data[1][:username]).to eq('sam')
+          expect(report.data[1][:username]).to eq("sam")
         end
 
         context "with private messages" do
-          before do
-            Fabricate(:private_message_post, user: jeff)
-          end
+          before { Fabricate(:private_message_post, user: jeff) }
 
           it "doesn’t count private post" do
             expect(report.data[0][:post_count]).to eq(1)
@@ -732,57 +802,54 @@ RSpec.describe Report do
 
         it "returns the correct topic count" do
           expect(report.data[0][:pm_count]).to eq(1)
-          expect(report.data[0][:username]).to eq('jeff')
+          expect(report.data[0][:username]).to eq("jeff")
           expect(report.data[1][:pm_count]).to be_blank
-          expect(report.data[1][:username]).to eq('sam')
-
+          expect(report.data[1][:username]).to eq("sam")
         end
       end
 
       context "with revisions" do
         before do
           post = Fabricate(:post)
-          post.revise(sam, raw: 'updated body', edit_reason: 'not cool')
+          post.revise(sam, raw: "updated body", edit_reason: "not cool")
         end
 
         it "returns the correct revisions count" do
           expect(report.data[0][:revision_count]).to eq(1)
-          expect(report.data[0][:username]).to eq('sam')
+          expect(report.data[0][:username]).to eq("sam")
         end
 
         context "when revising own post" do
           before do
             post = Fabricate(:post, user: sam)
-            post.revise(sam, raw: 'updated body')
+            post.revise(sam, raw: "updated body")
           end
 
           it "doesn't count a revision on your own post" do
             expect(report.data[0][:revision_count]).to eq(1)
-            expect(report.data[0][:username]).to eq('sam')
+            expect(report.data[0][:username]).to eq("sam")
           end
         end
       end
 
       context "with previous data" do
-        before do
-          Fabricate(:topic, user: sam, created_at: 1.year.ago)
-        end
+        before { Fabricate(:topic, user: sam, created_at: 1.year.ago) }
 
         it "doesn’t count old data" do
           expect(report.data[0][:topic_count]).to be_blank
-          expect(report.data[0][:username]).to eq('sam')
+          expect(report.data[0][:username]).to eq("sam")
         end
       end
     end
   end
 
-  describe 'flags' do
-    let(:report) { Report.find('flags') }
+  describe "flags" do
+    let(:report) { Report.find("flags") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
-    context 'with data' do
-      include_examples 'with data x/y'
+    context "with data" do
+      include_examples "with data x/y"
 
       before(:each) do
         user = Fabricate(:user)
@@ -798,26 +865,28 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('flags', filters: { category: c1.id }) }
+        let(:report) { Report.find("flags", filters: { category: c1.id }) }
 
-        include_examples 'category filtering'
+        include_examples "category filtering"
 
         context "with subcategories" do
-          let(:report) { Report.find('flags', filters: { category: c0.id, 'include_subcategories': true }) }
+          let(:report) do
+            Report.find("flags", filters: { category: c0.id, include_subcategories: true })
+          end
 
-          include_examples 'category filtering on subcategories'
+          include_examples "category filtering on subcategories"
         end
       end
     end
   end
 
-  describe 'topics' do
-    let(:report) { Report.find('topics') }
+  describe "topics" do
+    let(:report) { Report.find("topics") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
-    context 'with data' do
-      include_examples 'with data x/y'
+    context "with data" do
+      include_examples "with data x/y"
 
       before(:each) do
         user = Fabricate(:user)
@@ -828,14 +897,16 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('topics', filters: { category: c1.id }) }
+        let(:report) { Report.find("topics", filters: { category: c1.id }) }
 
-        include_examples 'category filtering'
+        include_examples "category filtering"
 
         context "with subcategories" do
-          let(:report) { Report.find('topics', filters: { category: c0.id, 'include_subcategories': true }) }
+          let(:report) do
+            Report.find("topics", filters: { category: c0.id, include_subcategories: true })
+          end
 
-          include_examples 'category filtering on subcategories'
+          include_examples "category filtering on subcategories"
         end
       end
     end
@@ -862,9 +933,8 @@ RSpec.describe Report do
 
       class Report
         def self.report_timeout_test(report)
-          report.error = wrap_slow_query(1) do
-            ActiveRecord::Base.connection.execute("SELECT pg_sleep(5)")
-          end
+          report.error =
+            wrap_slow_query(1) { ActiveRecord::Base.connection.execute("SELECT pg_sleep(5)") }
         end
       end
     end
@@ -881,32 +951,29 @@ RSpec.describe Report do
       Rails.logger = @fake_logger = FakeLogger.new
     end
 
-    after do
-      Rails.logger = @orig_logger
-    end
+    after { Rails.logger = @orig_logger }
 
     it "returns no report" do
-      class ReportInitError < StandardError; end
+      class ReportInitError < StandardError
+      end
 
       Report.stubs(:new).raises(ReportInitError.new("x"))
 
-      report = Report.find('signups', wrap_exceptions_in_test: true)
+      report = Report.find("signups", wrap_exceptions_in_test: true)
 
       expect(report).to be_nil
 
-      expect(@fake_logger.errors).to eq([
-        'Couldn’t create report `signups`: <ReportInitError x>'
-      ])
+      expect(@fake_logger.errors).to eq(["Couldn’t create report `signups`: <ReportInitError x>"])
     end
   end
 
-  describe 'posts' do
-    let(:report) { Report.find('posts') }
+  describe "posts" do
+    let(:report) { Report.find("posts") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
-    context 'with data' do
-      include_examples 'with data x/y'
+    context "with data" do
+      include_examples "with data x/y"
 
       before(:each) do
         user = Fabricate(:user)
@@ -919,14 +986,16 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('posts', filters: { category: c1.id }) }
+        let(:report) { Report.find("posts", filters: { category: c1.id }) }
 
-        include_examples 'category filtering'
+        include_examples "category filtering"
 
         context "with subcategories" do
-          let(:report) { Report.find('posts', filters: { category: c0.id, 'include_subcategories': true }) }
+          let(:report) do
+            Report.find("posts", filters: { category: c0.id, include_subcategories: true })
+          end
 
-          include_examples 'category filtering on subcategories'
+          include_examples "category filtering on subcategories"
         end
       end
     end
@@ -934,13 +1003,13 @@ RSpec.describe Report do
 
   # TODO: time_to_first_response
 
-  describe 'topics_with_no_response' do
-    let(:report) { Report.find('topics_with_no_response') }
+  describe "topics_with_no_response" do
+    let(:report) { Report.find("topics_with_no_response") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
-    context 'with data' do
-      include_examples 'with data x/y'
+    context "with data" do
+      include_examples "with data x/y"
 
       before(:each) do
         user = Fabricate(:user)
@@ -951,26 +1020,34 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('topics_with_no_response', filters: { category: c1.id }) }
+        let(:report) { Report.find("topics_with_no_response", filters: { category: c1.id }) }
 
-        include_examples 'category filtering'
+        include_examples "category filtering"
 
         context "with subcategories" do
-          let(:report) { Report.find('topics_with_no_response', filters: { category: c0.id, 'include_subcategories': true }) }
+          let(:report) do
+            Report.find(
+              "topics_with_no_response",
+              filters: {
+                category: c0.id,
+                include_subcategories: true,
+              },
+            )
+          end
 
-          include_examples 'category filtering on subcategories'
+          include_examples "category filtering on subcategories"
         end
       end
     end
   end
 
-  describe 'likes' do
-    let(:report) { Report.find('likes') }
+  describe "likes" do
+    let(:report) { Report.find("likes") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
-    context 'with data' do
-      include_examples 'with data x/y'
+    context "with data" do
+      include_examples "with data x/y"
 
       before(:each) do
         topic = Fabricate(:topic, category: c1)
@@ -981,32 +1058,36 @@ RSpec.describe Report do
         post = Fabricate(:post, topic: topic)
         PostActionCreator.like(Fabricate(:user), post)
         PostActionCreator.like(Fabricate(:user), post)
-        PostActionCreator.like(Fabricate(:user), post).post_action.tap do |pa|
-          pa.created_at = 45.days.ago
-        end.save!
+        PostActionCreator
+          .like(Fabricate(:user), post)
+          .post_action
+          .tap { |pa| pa.created_at = 45.days.ago }
+          .save!
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('likes', filters: { category: c1.id }) }
+        let(:report) { Report.find("likes", filters: { category: c1.id }) }
 
-        include_examples 'category filtering'
+        include_examples "category filtering"
 
         context "with subcategories" do
-          let(:report) { Report.find('likes', filters: { category: c0.id, 'include_subcategories': true }) }
+          let(:report) do
+            Report.find("likes", filters: { category: c0.id, include_subcategories: true })
+          end
 
-          include_examples 'category filtering on subcategories'
+          include_examples "category filtering on subcategories"
         end
       end
     end
   end
 
-  describe 'user_flagging_ratio' do
+  describe "user_flagging_ratio" do
     let(:joffrey) { Fabricate(:user, username: "joffrey") }
     let(:robin) { Fabricate(:user, username: "robin") }
     let(:moderator) { Fabricate(:moderator) }
     let(:user) { Fabricate(:user) }
 
-    context 'with data' do
+    context "with data" do
       it "it works" do
         topic = Fabricate(:topic, user: user)
         2.times do
@@ -1024,7 +1105,7 @@ RSpec.describe Report do
         result = PostActionCreator.off_topic(robin, post_agreed)
         result.reviewable.perform(moderator, :agree_and_keep)
 
-        report = Report.find('user_flagging_ratio')
+        report = Report.find("user_flagging_ratio")
 
         first = report.data[0]
         expect(first[:username]).to eq("joffrey")
@@ -1069,16 +1150,30 @@ RSpec.describe Report do
 
     context "with data" do
       it "works" do
-        freeze_time DateTime.parse('2017-03-01 12:00')
+        freeze_time DateTime.parse("2017-03-01 12:00")
 
         ip = [81, 2, 69, 142]
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, 'spec', 'fixtures', 'mmdb'))
-        Resolv::DNS.any_instance.stubs(:getname).with(ip.join(".")).returns("ip-#{ip.join("-")}.example.com")
+        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        Resolv::DNS
+          .any_instance
+          .stubs(:getname)
+          .with(ip.join("."))
+          .returns("ip-#{ip.join("-")}.example.com")
 
-        UserAuthToken.log(action: "generate", user_id: robin.id, client_ip: ip.join("."), created_at: 1.hour.ago)
+        UserAuthToken.log(
+          action: "generate",
+          user_id: robin.id,
+          client_ip: ip.join("."),
+          created_at: 1.hour.ago,
+        )
         UserAuthToken.log(action: "generate", user_id: joffrey.id, client_ip: "1.2.3.4")
-        UserAuthToken.log(action: "generate", user_id: joffrey.id, client_ip: ip.join("."), created_at: 2.hours.ago)
+        UserAuthToken.log(
+          action: "generate",
+          user_id: joffrey.id,
+          client_ip: ip.join("."),
+          created_at: 2.hours.ago,
+        )
         UserAuthToken.log(action: "generate", user_id: james.id)
 
         report = Report.find("staff_logins")
@@ -1101,18 +1196,24 @@ RSpec.describe Report do
 
     context "with data" do
       let!(:tarek_upload) do
-        Fabricate(:upload, user: tarek,
-                           url: "/uploads/default/original/1X/tarek.jpg",
-                           extension: "jpg",
-                           original_filename: "tarek.jpg",
-                           filesize: 1000)
+        Fabricate(
+          :upload,
+          user: tarek,
+          url: "/uploads/default/original/1X/tarek.jpg",
+          extension: "jpg",
+          original_filename: "tarek.jpg",
+          filesize: 1000,
+        )
       end
       let!(:khalil_upload) do
-        Fabricate(:upload, user: khalil,
-                           url: "/uploads/default/original/1X/khalil.png",
-                           extension: "png",
-                           original_filename: "khalil.png",
-                           filesize: 2000)
+        Fabricate(
+          :upload,
+          user: khalil,
+          url: "/uploads/default/original/1X/khalil.png",
+          extension: "png",
+          original_filename: "khalil.png",
+          filesize: 2000,
+        )
       end
 
       it "works" do
@@ -1126,7 +1227,9 @@ RSpec.describe Report do
       row = data.find { |r| r[:author_id] == user.id }
       expect(row[:author_id]).to eq(user.id)
       expect(row[:author_username]).to eq(user.username)
-      expect(row[:author_avatar_template]).to eq(User.avatar_template(user.username, user.uploaded_avatar_id))
+      expect(row[:author_avatar_template]).to eq(
+        User.avatar_template(user.username, user.uploaded_avatar_id),
+      )
       expect(row[:filesize]).to eq(upload.filesize)
       expect(row[:extension]).to eq(upload.extension)
       expect(row[:file_url]).to eq(Discourse.store.cdn_url(upload.url))
@@ -1174,7 +1277,9 @@ RSpec.describe Report do
       expect(row).to be_present
       expect(row[:ignored_user_id]).to eq(user.id)
       expect(row[:ignored_username]).to eq(user.username)
-      expect(row[:ignored_user_avatar_template]).to eq(User.avatar_template(user.username, user.uploaded_avatar_id))
+      expect(row[:ignored_user_avatar_template]).to eq(
+        User.avatar_template(user.username, user.uploaded_avatar_id),
+      )
       expect(row[:ignores_count]).to eq(ignores)
       expect(row[:mutes_count]).to eq(mutes)
     end
@@ -1188,13 +1293,11 @@ RSpec.describe Report do
       Theme.clear_default!
     end
 
-    let(:reports) { Report.find('consolidated_page_views') }
+    let(:reports) { Report.find("consolidated_page_views") }
 
     context "with no data" do
       it "works" do
-        reports.data.each do |report|
-          expect(report[:data]).to be_empty
-        end
+        reports.data.each { |report| expect(report[:data]).to be_empty }
       end
     end
 
@@ -1233,19 +1336,62 @@ RSpec.describe Report do
     end
   end
 
+  describe ".report_consolidated_api_requests" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      Theme.clear_default!
+    end
+
+    let(:reports) { Report.find("consolidated_api_requests") }
+
+    context "with no data" do
+      it "works" do
+        reports.data.each { |report| expect(report[:data]).to be_empty }
+      end
+    end
+
+    context "with data" do
+      before do
+        CachedCounting.reset
+        CachedCounting.enable
+        ApplicationRequest.enable
+      end
+
+      after do
+        ApplicationRequest.disable
+        CachedCounting.disable
+      end
+
+      it "works" do
+        2.times { ApplicationRequest.increment!(:api) }
+        ApplicationRequest.increment!(:user_api)
+
+        CachedCounting.flush
+
+        api_report = reports.data.find { |r| r[:req] == "api" }
+        user_api_report = reports.data.find { |r| r[:req] == "user_api" }
+
+        expect(api_report[:color]).to eql("rgba(0,136,204,1)")
+        expect(api_report[:data][0][:y]).to eql(2)
+
+        expect(user_api_report[:color]).to eql("rgba(200,0,1,1)")
+        expect(user_api_report[:data][0][:y]).to eql(1)
+      ensure
+      end
+    end
+  end
+
   describe "trust_level_growth" do
     before do
       freeze_time(Time.now.at_midnight)
       Theme.clear_default!
     end
 
-    let(:reports) { Report.find('trust_level_growth') }
+    let(:reports) { Report.find("trust_level_growth") }
 
     context "with no data" do
       it "works" do
-        reports.data.each do |report|
-          expect(report[:data]).to be_empty
-        end
+        reports.data.each { |report| expect(report[:data]).to be_empty }
       end
     end
 
@@ -1254,8 +1400,18 @@ RSpec.describe Report do
       fab!(:martin) { Fabricate(:user) }
 
       before do
-        UserHistory.create(action: UserHistory.actions[:auto_trust_level_change], target_user_id: gwen.id, new_value: TrustLevel[2], previous_value: 1)
-        UserHistory.create(action: UserHistory.actions[:change_trust_level], target_user_id: martin.id, new_value: TrustLevel[4], previous_value: 0)
+        UserHistory.create(
+          action: UserHistory.actions[:auto_trust_level_change],
+          target_user_id: gwen.id,
+          new_value: TrustLevel[2],
+          previous_value: 1,
+        )
+        UserHistory.create(
+          action: UserHistory.actions[:change_trust_level],
+          target_user_id: martin.id,
+          new_value: TrustLevel[4],
+          previous_value: 0,
+        )
       end
 
       it "works" do
@@ -1289,12 +1445,18 @@ RSpec.describe Report do
     end
 
     it "caches exception reports for 1 minute" do
-      Discourse.cache.expects(:write).with(Report.cache_key(exception_report), exception_report.as_json, { expires_in: 1.minute })
+      Discourse
+        .cache
+        .expects(:write)
+        .with(Report.cache_key(exception_report), exception_report.as_json, expires_in: 1.minute)
       Report.cache(exception_report)
     end
 
     it "caches valid reports for 35 minutes" do
-      Discourse.cache.expects(:write).with(Report.cache_key(valid_report), valid_report.as_json, { expires_in: 35.minutes })
+      Discourse
+        .cache
+        .expects(:write)
+        .with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 35.minutes)
       Report.cache(valid_report)
     end
   end
@@ -1328,12 +1490,12 @@ RSpec.describe Report do
     end
   end
 
-  describe 'top_users_by_likes_received' do
-    let(:report) { Report.find('top_users_by_likes_received') }
+  describe "top_users_by_likes_received" do
+    let(:report) { Report.find("top_users_by_likes_received") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
-    context 'with data' do
+    context "with data" do
       before do
         user_1 = Fabricate(:user, username: "jonah")
         user_2 = Fabricate(:user, username: "jake")
@@ -1345,7 +1507,7 @@ RSpec.describe Report do
       end
 
       it "with category filtering" do
-        report = Report.find('top_users_by_likes_received')
+        report = Report.find("top_users_by_likes_received")
 
         expect(report.data.length).to eq(3)
         expect(report.data[0][:username]).to eq("jake")
@@ -1355,12 +1517,12 @@ RSpec.describe Report do
     end
   end
 
-  describe 'top_users_by_likes_received_from_a_variety_of_people' do
-    let(:report) { Report.find('top_users_by_likes_received_from_a_variety_of_people') }
+  describe "top_users_by_likes_received_from_a_variety_of_people" do
+    let(:report) { Report.find("top_users_by_likes_received_from_a_variety_of_people") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
-    context 'with data' do
+    context "with data" do
       before do
         user_1 = Fabricate(:user, username: "jonah")
         user_2 = Fabricate(:user, username: "jake")
@@ -1377,14 +1539,31 @@ RSpec.describe Report do
         post_2 = Fabricate(:post, topic: topic_2, user: user_2)
         post_3 = Fabricate(:post, topic: topic_3, user: user_3)
 
-        3.times { UserAction.create!(user_id: user_4.id, target_post_id: post_1.id, action_type: UserAction::LIKE) }
-        6.times { UserAction.create!(user_id: user_5.id, target_post_id: post_2.id, action_type: UserAction::LIKE) }
-        9.times { UserAction.create!(user_id: user_6.id, target_post_id: post_3.id, action_type: UserAction::LIKE) }
-
+        3.times do
+          UserAction.create!(
+            user_id: user_4.id,
+            target_post_id: post_1.id,
+            action_type: UserAction::LIKE,
+          )
+        end
+        6.times do
+          UserAction.create!(
+            user_id: user_5.id,
+            target_post_id: post_2.id,
+            action_type: UserAction::LIKE,
+          )
+        end
+        9.times do
+          UserAction.create!(
+            user_id: user_6.id,
+            target_post_id: post_3.id,
+            action_type: UserAction::LIKE,
+          )
+        end
       end
 
       it "with category filtering" do
-        report = Report.find('top_users_by_likes_received_from_a_variety_of_people')
+        report = Report.find("top_users_by_likes_received_from_a_variety_of_people")
 
         expect(report.data.length).to eq(3)
         expect(report.data[0][:username]).to eq("jonah")
@@ -1394,12 +1573,12 @@ RSpec.describe Report do
     end
   end
 
-  describe 'top_users_by_likes_received_from_inferior_trust_level' do
-    let(:report) { Report.find('top_users_by_likes_received_from_inferior_trust_level') }
+  describe "top_users_by_likes_received_from_inferior_trust_level" do
+    let(:report) { Report.find("top_users_by_likes_received_from_inferior_trust_level") }
 
-    include_examples 'no data'
+    include_examples "no data"
 
-    context 'with data' do
+    context "with data" do
       before do
         user_1 = Fabricate(:user, username: "jonah", trust_level: 2)
         user_2 = Fabricate(:user, username: "jake", trust_level: 2)
@@ -1416,14 +1595,31 @@ RSpec.describe Report do
         post_2 = Fabricate(:post, topic: topic_2, user: user_2)
         post_3 = Fabricate(:post, topic: topic_3, user: user_3)
 
-        3.times { UserAction.create!(user_id: user_4.id, target_post_id: post_1.id, action_type: UserAction::LIKE) }
-        6.times { UserAction.create!(user_id: user_5.id, target_post_id: post_2.id, action_type: UserAction::LIKE) }
-        9.times { UserAction.create!(user_id: user_6.id, target_post_id: post_3.id, action_type: UserAction::LIKE) }
-
+        3.times do
+          UserAction.create!(
+            user_id: user_4.id,
+            target_post_id: post_1.id,
+            action_type: UserAction::LIKE,
+          )
+        end
+        6.times do
+          UserAction.create!(
+            user_id: user_5.id,
+            target_post_id: post_2.id,
+            action_type: UserAction::LIKE,
+          )
+        end
+        9.times do
+          UserAction.create!(
+            user_id: user_6.id,
+            target_post_id: post_3.id,
+            action_type: UserAction::LIKE,
+          )
+        end
       end
 
       it "with category filtering" do
-        report = Report.find('top_users_by_likes_received_from_inferior_trust_level')
+        report = Report.find("top_users_by_likes_received_from_inferior_trust_level")
 
         expect(report.data.length).to eq(2)
         expect(report.data[0][:username]).to eq("jake")

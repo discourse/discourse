@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'json'
+require "json"
 require "onebox/open_graph"
 
 module Onebox
@@ -11,7 +11,9 @@ module Onebox
       include HTML
 
       always_https
-      matches_regexp(/^https?:\/\/(?:www\.)?(?:smile\.)?(amazon|amzn)\.(?<tld>com|ca|de|it|es|fr|co\.jp|co\.uk|cn|in|com\.br|com\.mx|nl|pl|sa|sg|se|com\.tr|ae)\//)
+      matches_regexp(
+        %r{^https?://(?:www\.)?(?:smile\.)?(amazon|amzn)\.(?<tld>com|ca|de|it|es|fr|co\.jp|co\.uk|cn|in|com\.br|com\.mx|nl|pl|sa|sg|se|com\.tr|ae)/},
+      )
 
       def url
         @raw ||= nil
@@ -29,7 +31,8 @@ module Onebox
         end
 
         if match && match[:id]
-          id = Addressable::URI.encode_component(match[:id], Addressable::URI::CharacterClasses::PATH)
+          id =
+            Addressable::URI.encode_component(match[:id], Addressable::URI::CharacterClasses::PATH)
           return "https://www.amazon.#{tld}/dp/#{id}"
         end
 
@@ -41,15 +44,13 @@ module Onebox
       end
 
       def http_params
-        if @options && @options[:user_agent]
-          { 'User-Agent' => @options[:user_agent] }
-        end
+        { "User-Agent" => @options[:user_agent] } if @options && @options[:user_agent]
       end
 
       def to_html(ignore_errors = false)
         unless ignore_errors
           verified_data # forces a check for missing fields
-          return '' unless errors.empty?
+          return "" unless errors.empty?
         end
 
         super()
@@ -60,19 +61,20 @@ module Onebox
       end
 
       def verified_data
-        @verified_data ||= begin
-          result = data
+        @verified_data ||=
+          begin
+            result = data
 
-          required_tags = [:title, :description]
-          required_tags.each do |tag|
-            if result[tag].blank?
-              errors[tag] ||= []
-              errors[tag] << 'is blank'
+            required_tags = %i[title description]
+            required_tags.each do |tag|
+              if result[tag].blank?
+                errors[tag] ||= []
+                errors[tag] << "is blank"
+              end
             end
-          end
 
-          result
-        end
+            result
+          end
 
         @verified_data
       end
@@ -80,13 +82,13 @@ module Onebox
       private
 
       def has_cached_body
-        body_cacher&.respond_to?('cache_response_body?') &&
+        body_cacher&.respond_to?("cache_response_body?") &&
           body_cacher.cache_response_body?(uri.to_s) &&
           body_cacher.cached_response_body_exists?(uri.to_s)
       end
 
       def match
-        @match ||= @url.match(/(?:d|g)p\/(?:product\/|video\/detail\/)?(?<id>[A-Z0-9]+)(?:\/|\?|$)/mi)
+        @match ||= @url.match(%r{(?:d|g)p/(?:product/|video/detail/)?(?<id>[A-Z0-9]+)(?:/|\?|$)}mi)
       end
 
       def image
@@ -117,14 +119,16 @@ module Onebox
 
       def price
         # get item price (Amazon markup is inconsistent, deal with it)
-        if raw.css("#priceblock_ourprice .restOfPrice")[0] && raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text
+        if raw.css("#priceblock_ourprice .restOfPrice")[0] &&
+             raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text
           "#{raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text}#{raw.css("#priceblock_ourprice .buyingPrice")[0].inner_text}.#{raw.css("#priceblock_ourprice .restOfPrice")[1].inner_text}"
-        elsif raw.css("#priceblock_dealprice") && (dealprice = raw.css("#priceblock_dealprice span")[0])
+        elsif raw.css("#priceblock_dealprice") &&
+              (dealprice = raw.css("#priceblock_dealprice span")[0])
           dealprice.inner_text
         elsif !raw.css("#priceblock_ourprice").inner_text.empty?
           raw.css("#priceblock_ourprice").inner_text
         else
-          result = raw.css('#corePrice_feature_div .a-price .a-offscreen').first&.inner_text
+          result = raw.css("#corePrice_feature_div .a-price .a-offscreen").first&.inner_text
           if result.blank?
             result = raw.css(".mediaMatrixListItem.a-active .a-color-price").inner_text
           end
@@ -134,21 +138,30 @@ module Onebox
       end
 
       def multiple_authors(authors_xpath)
-        raw
-          .xpath(authors_xpath)
-          .map { |a| a.inner_text.strip }
-          .join(", ")
+        raw.xpath(authors_xpath).map { |a| a.inner_text.strip }.join(", ")
       end
 
       def data
         og = ::Onebox::OpenGraph.new(raw)
 
-        if raw.at_css('#dp.book_mobile') # printed books
+        if raw.at_css("#dp.book_mobile") # printed books
           title = raw.at("h1#title")&.inner_text
-          authors = raw.at_css('#byline_secondary_view_div') ? multiple_authors("//div[@id='byline_secondary_view_div']//span[@class='a-text-bold']") : raw.at("#byline")&.inner_text
-          rating = raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text || raw.at("#cmrsArcLink .a-icon")&.inner_text
+          authors =
+            (
+              if raw.at_css("#byline_secondary_view_div")
+                multiple_authors(
+                  "//div[@id='byline_secondary_view_div']//span[@class='a-text-bold']",
+                )
+              else
+                raw.at("#byline")&.inner_text
+              end
+            )
+          rating =
+            raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text ||
+              raw.at("#cmrsArcLink .a-icon")&.inner_text
 
-          table_xpath = "//div[@id='productDetails_secondary_view_div']//table[@id='productDetails_techSpec_section_1']"
+          table_xpath =
+            "//div[@id='productDetails_secondary_view_div']//table[@id='productDetails_techSpec_section_1']"
           isbn = raw.xpath("#{table_xpath}//tr[8]//td").inner_text.strip
 
           # if ISBN is misplaced or absent it's hard to find out which data is
@@ -167,18 +180,29 @@ module Onebox
             by_info: authors,
             image: og.image || image,
             description: raw.at("#productDescription")&.inner_text,
-            rating: "#{rating}#{', ' if rating && (!isbn&.empty? || !price&.empty?)}",
+            rating: "#{rating}#{", " if rating && (!isbn&.empty? || !price&.empty?)}",
             price: price,
             isbn_asin_text: "ISBN",
             isbn_asin: isbn,
             publisher: publisher,
-            published: "#{published}#{', ' if published && !price&.empty?}"
+            published: "#{published}#{", " if published && !price&.empty?}",
           }
-
-        elsif raw.at_css('#dp.ebooks_mobile') # ebooks
+        elsif raw.at_css("#dp.ebooks_mobile") # ebooks
           title = raw.at("#ebooksTitle")&.inner_text
-          authors = raw.at_css('#a-popover-mobile-udp-contributor-popover-id') ? multiple_authors("//div[@id='a-popover-mobile-udp-contributor-popover-id']//span[contains(@class,'a-text-bold')]") : (raw.at("#byline")&.inner_text&.strip || raw.at("#bylineInfo")&.inner_text&.strip)
-          rating = raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text || raw.at("#cmrsArcLink .a-icon")&.inner_text || raw.at("#acrCustomerReviewLink .a-icon")&.inner_text
+          authors =
+            (
+              if raw.at_css("#a-popover-mobile-udp-contributor-popover-id")
+                multiple_authors(
+                  "//div[@id='a-popover-mobile-udp-contributor-popover-id']//span[contains(@class,'a-text-bold')]",
+                )
+              else
+                (raw.at("#byline")&.inner_text&.strip || raw.at("#bylineInfo")&.inner_text&.strip)
+              end
+            )
+          rating =
+            raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text ||
+              raw.at("#cmrsArcLink .a-icon")&.inner_text ||
+              raw.at("#acrCustomerReviewLink .a-icon")&.inner_text
 
           table_xpath = "//div[@id='detailBullets_secondary_view_div']//ul"
           asin = raw.xpath("#{table_xpath}//li[4]/span/span[2]").inner_text
@@ -198,22 +222,16 @@ module Onebox
             by_info: authors,
             image: og.image || image,
             description: raw.at("#productDescription")&.inner_text,
-            rating: "#{rating}#{', ' if rating && (!asin&.empty? || !price&.empty?)}",
+            rating: "#{rating}#{", " if rating && (!asin&.empty? || !price&.empty?)}",
             price: price,
             isbn_asin_text: "ASIN",
             isbn_asin: asin,
             publisher: publisher,
-            published: "#{published}#{', ' if published && !price&.empty?}"
+            published: "#{published}#{", " if published && !price&.empty?}",
           }
-
         else
           title = og.title || CGI.unescapeHTML(raw.css("title").inner_text)
-          result = {
-            link: url,
-            title: title,
-            image: og.image || image,
-            price: price
-          }
+          result = { link: url, title: title, image: og.image || image, price: price }
 
           result[:by_info] = raw.at("#by-line")
           result[:by_info] = Onebox::Helpers.clean(result[:by_info].inner_html) if result[:by_info]
@@ -221,10 +239,10 @@ module Onebox
           summary = raw.at("#productDescription")
 
           description = og.description || summary&.inner_text&.strip
-          if description.blank?
-            description = raw.css("meta[name=description]").first&.[]("content")
-          end
-          result[:description] = CGI.unescapeHTML(Onebox::Helpers.truncate(description, 250)) if description
+          description = raw.css("meta[name=description]").first&.[]("content") if description.blank?
+          result[:description] = CGI.unescapeHTML(
+            Onebox::Helpers.truncate(description, 250),
+          ) if description
         end
 
         result[:price] = nil if result[:price].start_with?("$0") || result[:price] == 0

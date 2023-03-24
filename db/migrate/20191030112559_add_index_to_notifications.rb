@@ -4,8 +4,8 @@ class AddIndexToNotifications < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
   def up
-    if !index_exists?(:notifications, [:topic_id, :post_number])
-      add_index :notifications, [:topic_id, :post_number], algorithm: :concurrently
+    if !index_exists?(:notifications, %i[topic_id post_number])
+      add_index :notifications, %i[topic_id post_number], algorithm: :concurrently
     end
   end
 

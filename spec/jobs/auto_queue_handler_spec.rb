@@ -9,15 +9,15 @@ RSpec.describe Jobs::AutoQueueHandler do
         Fabricate(:user),
         Fabricate(:post),
         PostActionType.types[:spam],
-        message: 'this is the initial message'
+        message: "this is the initial message",
       ).perform
     end
 
     fab!(:post_action) { spam_result.post_action }
-    fab!(:old) {
+    fab!(:old) do
       spam_result.reviewable.update_column(:created_at, 61.days.ago)
       spam_result.reviewable
-    }
+    end
 
     fab!(:not_old) { Fabricate(:reviewable_flagged_post, created_at: 59.days.ago) }
 

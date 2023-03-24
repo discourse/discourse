@@ -11,6 +11,6 @@ export default class PMTagSectionLink extends BaseTagSectionLink {
   }
 
   get route() {
-    return "userPrivateMessages.tagsShow";
+    return "userPrivateMessages.tags.show";
   }
 }

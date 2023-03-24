@@ -2,14 +2,19 @@
   <Sidebar::Section
     @sectionName="categories"
     @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
-    @headerActions={{array (hash action=this.editTracked title=(i18n "sidebar.sections.categories.header_action_title"))}}
+    @headerActions={{array
+      (hash
+        action=this.editTracked
+        title=(i18n "sidebar.sections.categories.header_action_title")
+      )
+    }}
     @headerActionsIcon="pencil-alt"
-    @collapsable={{@collapsable}} >
+    @collapsable={{@collapsable}}
+  >
 
     {{#if (gt this.sectionLinks.length 0)}}
       {{#each this.sectionLinks as |sectionLink|}}
         <Sidebar::SectionLink
-          @linkName={{sectionLink.name}}
           @route={{sectionLink.route}}
           @query={{sectionLink.query}}
           @title={{sectionLink.title}}
@@ -21,8 +26,12 @@
           @prefixType={{sectionLink.prefixType}}
           @prefixValue={{sectionLink.prefixValue}}
           @prefixColor={{sectionLink.prefixColor}}
-          @prefixElementColors={{sectionLink.prefixElementColors}} >
-        </Sidebar::SectionLink>
+          @prefixElementColors={{sectionLink.prefixElementColors}}
+          @suffixCSSClass={{sectionLink.suffixCSSClass}}
+          @suffixValue={{sectionLink.suffixValue}}
+          @suffixType={{sectionLink.suffixType}}
+          data-category-id={{sectionLink.category.id}}
+        />
       {{/each}}
     {{else}}
       <Sidebar::SectionLink
@@ -31,8 +40,11 @@
         @prefixType="icon"
         @prefixValue="pencil-alt"
         @model={{this.currentUser}}
-        @content={{i18n "sidebar.sections.categories.links.add_categories.content"}}
-        @title={{i18n "sidebar.sections.categories.links.add_categories.title"}} />
+        @content={{i18n
+          "sidebar.sections.categories.links.add_categories.content"
+        }}
+        @title={{i18n "sidebar.sections.categories.links.add_categories.title"}}
+      />
     {{/if}}
 
     <Sidebar::Common::AllCategoriesSectionLink />
@@ -45,7 +57,8 @@
         @prefixValue="wrench"
         @route="adminSiteSettingsCategory"
         @model="sidebar"
-        @query={{hash filter="default_sidebar_categories"}} />
+        @query={{hash filter="default_sidebar_categories"}}
+      />
     {{/if}}
   </Sidebar::Section>
 {{/if}}

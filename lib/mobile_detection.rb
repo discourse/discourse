@@ -10,10 +10,11 @@ module MobileDetection
     return false unless SiteSetting.enable_mobile_theme
 
     session[:mobile_view] = params[:mobile_view] if params && params.has_key?(:mobile_view)
-    session[:mobile_view] = nil if params && params.has_key?(:mobile_view) && params[:mobile_view] == 'auto'
+    session[:mobile_view] = nil if params && params.has_key?(:mobile_view) &&
+      params[:mobile_view] == "auto"
 
     if session && session[:mobile_view]
-      session[:mobile_view] == '1'
+      session[:mobile_view] == "1"
     else
       mobile_device?(user_agent)
     end
@@ -23,9 +24,10 @@ module MobileDetection
     user_agent =~ /iPad|iPhone|iPod/
   end
 
-  MODERN_MOBILE_REGEX = %r{
-    \(.*iPhone\ OS\ 1[3-9].*\)|
-    \(.*iPad.*OS\ 1[3-9].*\)|
+  MODERN_MOBILE_REGEX =
+    %r{
+    \(.*iPhone\ OS\ 1[5-9].*\)|
+    \(.*iPad.*OS\ 1[5-9].*\)|
     Chrome\/8[89]|
     Chrome\/9[0-9]|
     Chrome\/1[0-9][0-9]|
@@ -34,8 +36,9 @@ module MobileDetection
     Firefox\/1[0-9][0-9]
   }x
 
-  def self.modern_mobile_device?(user_agent)
-    user_agent.match?(MODERN_MOBILE_REGEX)
-  end
+  USER_AGENT_MAX_LENGTH = 400
 
+  def self.modern_mobile_device?(user_agent)
+    user_agent[0...USER_AGENT_MAX_LENGTH].match?(MODERN_MOBILE_REGEX)
+  end
 end

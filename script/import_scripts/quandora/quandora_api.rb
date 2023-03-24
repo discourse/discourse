@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require 'base64'
-require 'json'
+require "base64"
+require "json"
 
 class QuandoraApi
-
   attr_accessor :domain, :username, :password
 
   def initialize(domain, username, password)
@@ -38,18 +37,18 @@ class QuandoraApi
 
   def list_bases
     response = request list_bases_url
-    response['data']
+    response["data"]
   end
 
   def list_questions(kb_id, limit = nil)
     url = list_questions_url(kb_id, limit)
     response = request url
-    response['data']['result']
+    response["data"]["result"]
   end
 
   def get_question(question_id)
     url = "#{base_url @domain}/q/#{question_id}"
     response = request url
-    response['data']
+    response["data"]
   end
 end

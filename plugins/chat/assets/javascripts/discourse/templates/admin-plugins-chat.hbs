@@ -1,0 +1,195 @@
+{{#if this.selectedWebhook}}
+  <DButton
+    @class="incoming-chat-webhooks-back"
+    @icon="chevron-left"
+    @label="chat.incoming_webhooks.back"
+    @title="chat.incoming_webhooks.back"
+    @action={{action (mut this.selectedWebhookId) null}}
+  />
+
+  <form class="form-vertical">
+    <div class="control-group">
+      <label class="control-label">
+        {{i18n "chat.incoming_webhooks.name"}}
+      </label>
+      <Input
+        @type="text"
+        @value={{this.selectedWebhook.name}}
+        placeholder={{i18n "chat.incoming_webhooks.name"}}
+      />
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">
+        {{i18n "chat.incoming_webhooks.description"}}
+      </label>
+      <Textarea @value={{this.selectedWebhook.description}} />
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">
+        {{i18n "chat.incoming_webhooks.username"}}
+      </label>
+      <Input
+        @type="text"
+        @value={{this.selectedWebhook.username}}
+        placeholder={{i18n "chat.incoming_webhooks.system"}}
+      />
+      <div class="control-instructions">
+        {{i18n "chat.incoming_webhooks.username_instructions"}}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">
+        {{i18n "chat.incoming_webhooks.post_to"}}
+      </label>
+      <ChatChannelChooser
+        @content={{this.model.chat_channels}}
+        @value={{this.selectedWebhook.chat_channel.id}}
+        @onChange={{action "changeChatChannel"}}
+      />
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">
+        {{#if this.selectedWebhook.emoji}}
+          {{i18n "chat.incoming_webhooks.current_emoji"}}
+
+          <span class="incoming-chat-webhooks-current-emoji">
+            {{replace-emoji this.selectedWebhook.emoji}}
+          </span>
+        {{else}}
+          {{i18n "chat.incoming_webhooks.no_emoji"}}
+        {{/if}}
+      </label>
+
+      <EmojiPicker
+        @isActive={{this.emojiPickerIsActive}}
+        @isEditorFocused={{true}}
+        @emojiSelected={{action "emojiSelected"}}
+        @onEmojiPickerClose={{action (mut this.emojiPickerIsActive) false}}
+      />
+
+      {{#unless this.emojiPickerIsActive}}
+        <DButton
+          @class="btn-primary"
+          @label="chat.incoming_webhooks.select_emoji"
+          @action={{action (mut this.emojiPickerIsActive) true}}
+        />
+        <DButton
+          @label="chat.incoming_webhooks.reset_emoji"
+          @action={{action (mut this.selectedWebhook.emoji) null}}
+          @disabled={{not this.selectedWebhook.emoji}}
+        />
+      {{/unless}}
+
+      <div class="control-instructions">
+        {{i18n "chat.incoming_webhooks.emoji_instructions"}}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">{{i18n "chat.incoming_webhooks.url"}}</label>
+      <label>{{this.selectedWebhook.url}}</label>
+      <div class="control-instructions">
+        {{i18n "chat.incoming_webhooks.url_instructions"}}
+      </div>
+    </div>
+
+    <DButton
+      @class="btn-primary"
+      @label="chat.incoming_webhooks.save"
+      @title="chat.incoming_webhooks.save"
+      @action={{action "saveEdit"}}
+      @disabled={{this.saveEditDisabled}}
+    />
+  </form>
+{{else}}
+  {{!  Index view   }}
+  <h3>{{i18n "chat.incoming_webhooks.title"}}</h3>
+
+  {{#if this.creatingNew}}
+    <div class="new-incoming-webhook-container">
+      <Input
+        @type="text"
+        @value={{this.newWebhookName}}
+        placeholder={{i18n "chat.incoming_webhooks.name_placeholder"}}
+      />
+      <ChatChannelChooser
+        @content={{this.model.chat_channels}}
+        @value={{this.newWebhookChannelId}}
+        @onChange={{action (mut this.newWebhookChannelId)}}
+      />
+      <DButton
+        @label="chat.create"
+        @title="chat.create"
+        @class="btn-primary create-new-incoming-webhook-btn"
+        @disabled={{not this.nameAndChannelValid}}
+        @action={{action "createNewWebhook"}}
+      />
+      <DButton
+        @label="chat.cancel"
+        @title="chat.cancel"
+        @action={{action "resetNewWebhook"}}
+      />
+    </div>
+  {{else}}
+    <DButton
+      @label="chat.incoming_webhooks.new"
+      @title="chat.incoming_webhooks.new"
+      @class="btn-primary"
+      @action={{action (mut this.creatingNew) true}}
+    />
+  {{/if}}
+
+  <p>{{html-safe (i18n "chat.incoming_webhooks.instructions")}}</p>
+
+  <div class="incoming-chat-webhooks">
+    {{#if this.model.incoming_chat_webhooks}}
+      {{#each this.sortedWebhooks as |webhook|}}
+        <div class="incoming-chat-webhooks--row">
+          <div class="incoming-chat-webhooks--row--details">
+            <div class="incoming-chat-webhooks--row--details--name">
+              {{webhook.name}}
+            </div>
+
+            <div>
+              {{#if webhook.emoji}}
+                {{replace-emoji webhook.emoji}}
+              {{/if}}
+
+              {{#if webhook.username}}
+                {{webhook.username}}
+              {{else}}
+                {{i18n "chat.incoming_webhooks.system"}}
+              {{/if}}
+            </div>
+
+            <div><ChatChannelTitle @channel={{webhook.chat_channel}} /></div>
+            <div>{{webhook.description}}</div>
+          </div>
+
+          <div class="incoming-chat-webhooks--row--controls">
+            <div>
+              <DButton
+                @class="btn"
+                @icon="pencil-alt"
+                @label="chat.incoming_webhooks.edit"
+                @action={{action (mut this.selectedWebhookId) webhook.id}}
+              />
+              <DButton
+                @class="btn btn-danger"
+                @icon="trash-alt"
+                @title="chat.incoming_webhooks.delete"
+                @action={{action "destroyWebhook" webhook}}
+              />
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    {{else}}
+      {{i18n "chat.incoming_webhooks.none"}}
+    {{/if}}
+  </div>
+{{/if}}

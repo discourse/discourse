@@ -1,42 +1,82 @@
 <div class="staff-action-logs-controls">
   {{#if this.filtersExists}}
     <div class="staff-action-logs-filters">
-      <a href {{on "click" this.clearAllFilters}} class="clear-filters filter btn">
-        <span class="label">{{i18n "admin.logs.staff_actions.clear_filters"}}</span>
+      <a
+        href
+        {{on "click" this.clearAllFilters}}
+        class="clear-filters filter btn"
+      >
+        <span class="label">{{i18n
+            "admin.logs.staff_actions.clear_filters"
+          }}</span>
       </a>
       {{#if this.actionFilter}}
-        <a href {{on "click" (fn this.clearFilter "actionFilter")}} class="filter btn">
-          <span class="label">{{i18n "admin.logs.action"}}</span>: {{this.actionFilter}}
+        <a
+          href
+          {{on "click" (fn this.clearFilter "actionFilter")}}
+          class="filter btn"
+        >
+          <span class="label">{{i18n "admin.logs.action"}}</span>:
+          {{this.actionFilter}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
       {{#if this.filters.acting_user}}
-        <a href {{on "click" (fn this.clearFilter "acting_user")}} class="filter btn">
-          <span class="label">{{i18n "admin.logs.staff_actions.staff_user"}}</span>: {{this.filters.acting_user}}
+        <a
+          href
+          {{on "click" (fn this.clearFilter "acting_user")}}
+          class="filter btn"
+        >
+          <span class="label">{{i18n
+              "admin.logs.staff_actions.staff_user"
+            }}</span>:
+          {{this.filters.acting_user}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
       {{#if this.filters.target_user}}
-        <a href {{on "click" (fn this.clearFilter "target_user")}} class="filter btn">
-          <span class="label">{{i18n "admin.logs.staff_actions.target_user"}}</span>: {{this.filters.target_user}}
+        <a
+          href
+          {{on "click" (fn this.clearFilter "target_user")}}
+          class="filter btn"
+        >
+          <span class="label">{{i18n
+              "admin.logs.staff_actions.target_user"
+            }}</span>:
+          {{this.filters.target_user}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
       {{#if this.filters.subject}}
-        <a href {{on "click" (fn this.clearFilter "subject")}} class="filter btn">
-          <span class="label">{{i18n "admin.logs.staff_actions.subject"}}</span>: {{this.filters.subject}}
+        <a
+          href
+          {{on "click" (fn this.clearFilter "subject")}}
+          class="filter btn"
+        >
+          <span class="label">{{i18n
+              "admin.logs.staff_actions.subject"
+            }}</span>:
+          {{this.filters.subject}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
     </div>
   {{else}}
     {{i18n "admin.logs.staff_actions.filter"}}
-    <ComboBox @content={{this.userHistoryActions}} @value={{this.filterActionId}} @onChange={{action "filterActionIdChanged"}} @options={{hash
-        none="admin.logs.staff_actions.all"
-      }} />
+    <ComboBox
+      @content={{this.userHistoryActions}}
+      @value={{this.filterActionId}}
+      @onChange={{action "filterActionIdChanged"}}
+      @options={{hash none="admin.logs.staff_actions.all"}}
+    />
   {{/if}}
 
-  <DButton @class="btn-default" @action={{action "exportStaffActionLogs"}} @label="admin.export_csv.button_text" @icon="download" />
+  <DButton
+    @class="btn-default"
+    @action={{action "exportStaffActionLogs"}}
+    @label="admin.export_csv.button_text"
+    @icon="download"
+  />
 </div>
 
 <div class="clearfix"></div>
@@ -64,35 +104,64 @@
                       {{item.acting_user.username}}
                     </LinkTo>
                   {{else}}
-                    <span class="deleted-user" title={{i18n "admin.user.deleted"}}>
+                    <span
+                      class="deleted-user"
+                      title={{i18n "admin.user.deleted"}}
+                    >
                       {{d-icon "far-trash-alt"}}
                     </span>
                   {{/if}}
                 </div>
               </td>
               <td class="col value action">
-                <a href {{on "click" (fn this.filterByAction item)}}>{{item.actionName}}</a>
+                <a
+                  href
+                  {{on "click" (fn this.filterByAction item)}}
+                >{{item.actionName}}</a>
               </td>
               <td class="col value subject">
                 <div class="subject">
                   {{#if item.target_user}}
-                    <LinkTo @route="adminUser" @model={{item.target_user}}>{{avatar item.target_user imageSize="tiny"}}</LinkTo>
-                    <a href {{on "click" (fn this.filterByTargetUser item.target_user)}}>{{item.target_user.username}}</a>
+                    <LinkTo
+                      @route="adminUser"
+                      @model={{item.target_user}}
+                    >{{avatar item.target_user imageSize="tiny"}}</LinkTo>
+                    <a
+                      href
+                      {{on
+                        "click"
+                        (fn this.filterByTargetUser item.target_user)
+                      }}
+                    >{{item.target_user.username}}</a>
                   {{/if}}
                   {{#if item.subject}}
-                    <a href {{on "click" (fn this.filterBySubject item.subject)}} title={{item.subject}}>{{item.subject}}</a>
+                    <a
+                      href
+                      {{on "click" (fn this.filterBySubject item.subject)}}
+                      title={{item.subject}}
+                    >{{item.subject}}</a>
                   {{/if}}
                 </div>
               </td>
-              <td class="col value created-at">{{age-with-tooltip item.created_at}}</td>
+              <td class="col value created-at">{{age-with-tooltip
+                  item.created_at
+                }}</td>
               <td class="col value details">
                 <div>
                   {{html-safe item.formattedDetails}}
                   {{#if item.useCustomModalForDetails}}
-                    <a href {{on "click" (fn this.showCustomDetailsModal item)}}>{{d-icon "info-circle"}} {{i18n "admin.logs.staff_actions.show"}}</a>
+                    <a
+                      href
+                      {{on "click" (fn this.showCustomDetailsModal item)}}
+                    >{{d-icon "info-circle"}}
+                      {{i18n "admin.logs.staff_actions.show"}}</a>
                   {{/if}}
                   {{#if item.useModalForDetails}}
-                    <a href {{on "click" (fn this.showDetailsModal item)}}>{{d-icon "info-circle"}} {{i18n "admin.logs.staff_actions.show"}}</a>
+                    <a
+                      href
+                      {{on "click" (fn this.showDetailsModal item)}}
+                    >{{d-icon "info-circle"}}
+                      {{i18n "admin.logs.staff_actions.show"}}</a>
                   {{/if}}
                 </div>
               </td>

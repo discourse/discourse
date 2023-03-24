@@ -139,6 +139,7 @@ export default class ScreenTrack extends Service {
 
     const highestRead = parseInt(Object.keys(timings).lastObject, 10);
     const cachedHighestRead = this.highestReadFromCache(topicId);
+
     if (!cachedHighestRead || cachedHighestRead < highestRead) {
       setHighestReadCache(topicId, highestRead);
     }

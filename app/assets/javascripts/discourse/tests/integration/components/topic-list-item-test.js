@@ -2,15 +2,16 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import Topic from "discourse/models/topic";
 import { hbs } from "ember-cli-htmlbars";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Integration | Component | topic-list-item", function (hooks) {
   setupRenderingTest(hooks);
 
   test("checkbox is rendered checked if topic is in selected array", async function (assert) {
-    const topic = Topic.create({ id: 24234 });
-    const topic2 = Topic.create({ id: 24235 });
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 24234 });
+    const topic2 = store.createRecord("topic", { id: 24235 });
     this.setProperties({
       topic,
       topic2,

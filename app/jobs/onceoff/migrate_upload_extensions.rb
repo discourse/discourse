@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Jobs
-
   class MigrateUploadExtensions < ::Jobs::Onceoff
     def execute_onceoff(args)
       Upload.find_each do |upload|

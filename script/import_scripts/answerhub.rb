@@ -5,34 +5,29 @@
 # Based on having access to a mysql dump.
 # Pass in the ENV variables listed below before running the script.
 
-require_relative 'base'
-require 'mysql2'
-require 'open-uri'
+require_relative "base"
+require "mysql2"
+require "open-uri"
 
 class ImportScripts::AnswerHub < ImportScripts::Base
-
-  DB_NAME ||= ENV['DB_NAME'] || "answerhub"
-  DB_PASS ||= ENV['DB_PASS'] || "answerhub"
-  DB_USER ||= ENV['DB_USER'] || "answerhub"
-  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "network1"
-  BATCH_SIZE ||= ENV['BATCH_SIZE'].to_i || 1000
-  ATTACHMENT_DIR = ENV['ATTACHMENT_DIR'] || ''
-  PROCESS_UPLOADS = ENV['PROCESS_UPLOADS'].to_i || 0
-  ANSWERHUB_DOMAIN = ENV['ANSWERHUB_DOMAIN']
-  AVATAR_DIR = ENV['AVATAR_DIR'] || ""
-  SITE_ID = ENV['SITE_ID'].to_i || 0
-  CATEGORY_MAP_FROM = ENV['CATEGORY_MAP_FROM'].to_i || 0
-  CATEGORY_MAP_TO = ENV['CATEGORY_MAP_TO'].to_i || 0
-  SCRAPE_AVATARS = ENV['SCRAPE_AVATARS'].to_i || 0
+  DB_NAME ||= ENV["DB_NAME"] || "answerhub"
+  DB_PASS ||= ENV["DB_PASS"] || "answerhub"
+  DB_USER ||= ENV["DB_USER"] || "answerhub"
+  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "network1"
+  BATCH_SIZE ||= ENV["BATCH_SIZE"].to_i || 1000
+  ATTACHMENT_DIR = ENV["ATTACHMENT_DIR"] || ""
+  PROCESS_UPLOADS = ENV["PROCESS_UPLOADS"].to_i || 0
+  ANSWERHUB_DOMAIN = ENV["ANSWERHUB_DOMAIN"]
+  AVATAR_DIR = ENV["AVATAR_DIR"] || ""
+  SITE_ID = ENV["SITE_ID"].to_i || 0
+  CATEGORY_MAP_FROM = ENV["CATEGORY_MAP_FROM"].to_i || 0
+  CATEGORY_MAP_TO = ENV["CATEGORY_MAP_TO"].to_i || 0
+  SCRAPE_AVATARS = ENV["SCRAPE_AVATARS"].to_i || 0
 
   def initialize
     super
-    @client = Mysql2::Client.new(
-      host: "localhost",
-      username: DB_USER,
-      password: DB_PASS,
-      database: DB_NAME
-    )
+    @client =
+      Mysql2::Client.new(host: "localhost", username: DB_USER, password: DB_PASS, database: DB_NAME)
     @skip_updates = true
     SiteSetting.tagging_enabled = true
     SiteSetting.max_tags_per_topic = 10
@@ -56,7 +51,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
   end
 
   def import_users
-    puts '', "creating users"
+    puts "", "creating users"
 
     query =
       "SELECT count(*) count
@@ -64,12 +59,13 @@ class ImportScripts::AnswerHub < ImportScripts::Base
        WHERE c_type = 'user'
        AND c_active = 1
        AND c_system <> 1;"
-    total_count = @client.query(query).first['count']
+    total_count = @client.query(query).first["count"]
     puts "Total count: #{total_count}"
     @last_user_id = -1
 
     batches(BATCH_SIZE) do |offset|
-      query = "SELECT c_id, c_creation_date, c_name, c_primaryEmail, c_last_seen, c_description
+      query =
+        "SELECT c_id, c_creation_date, c_name, c_primaryEmail, c_last_seen, c_description
       FROM #{TABLE_PREFIX}_authoritables
       WHERE c_type = 'user'
       AND c_active = 1
@@ -79,17 +75,18 @@ class ImportScripts::AnswerHub < ImportScripts::Base
 
       results = @client.query(query)
       break if results.size < 1
-      @last_user_id = results.to_a.last['c_id']
+      @last_user_id = results.to_a.last["c_id"]
 
       create_users(results, total: total_count, offset: offset) do |user|
         # puts user['c_id'].to_s + ' ' + user['c_name']
-        next if @lookup.user_id_from_imported_user_id(user['c_id'])
-        { id: user['c_id'],
+        next if @lookup.user_id_from_imported_user_id(user["c_id"])
+        {
+          id: user["c_id"],
           email: "#{SecureRandom.hex}@invalid.invalid",
-          username: user['c_name'],
-          created_at: user['c_creation_date'],
-          bio_raw: user['c_description'],
-          last_seen_at: user['c_last_seen'],
+          username: user["c_name"],
+          created_at: user["c_creation_date"],
+          bio_raw: user["c_description"],
+          last_seen_at: user["c_last_seen"],
         }
       end
     end
@@ -99,7 +96,8 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     puts "", "importing categories..."
 
     # Import parent categories first
-    query = "SELECT c_id, c_name, c_plug, c_parent
+    query =
+      "SELECT c_id, c_name, c_plug, c_parent
     FROM containers
     WHERE c_type = 'space'
     AND c_active = 1
@@ -107,15 +105,12 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     results = @client.query(query)
 
     create_categories(results) do |c|
-      {
-        id: c['c_id'],
-        name: c['c_name'],
-        parent_category_id: check_parent_id(c['c_parent']),
-      }
+      { id: c["c_id"], name: c["c_name"], parent_category_id: check_parent_id(c["c_parent"]) }
     end
 
     # Import sub-categories
-    query = "SELECT c_id, c_name, c_plug, c_parent
+    query =
+      "SELECT c_id, c_name, c_plug, c_parent
     FROM containers
     WHERE c_type = 'space'
     AND c_active = 1
@@ -125,9 +120,9 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     create_categories(results) do |c|
       # puts c.inspect
       {
-        id: c['c_id'],
-        name: c['c_name'],
-        parent_category_id: category_id_from_imported_category_id(check_parent_id(c['c_parent'])),
+        id: c["c_id"],
+        name: c["c_name"],
+        parent_category_id: category_id_from_imported_category_id(check_parent_id(c["c_parent"])),
       }
     end
   end
@@ -141,7 +136,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
        WHERE c_visibility <> 'deleted'
        AND (c_type = 'question'
          OR c_type = 'kbentry');"
-    total_count = @client.query(count_query).first['count']
+    total_count = @client.query(count_query).first["count"]
 
     @last_topic_id = -1
 
@@ -159,26 +154,25 @@ class ImportScripts::AnswerHub < ImportScripts::Base
       topics = @client.query(query)
 
       break if topics.size < 1
-      @last_topic_id = topics.to_a.last['c_id']
+      @last_topic_id = topics.to_a.last["c_id"]
 
       create_posts(topics, total: total_count, offset: offset) do |t|
-        user_id = user_id_from_imported_user_id(t['c_author']) || Discourse::SYSTEM_USER_ID
-        body = process_mentions(t['c_body'])
-        if PROCESS_UPLOADS == 1
-          body = process_uploads(body, user_id)
-        end
+        user_id = user_id_from_imported_user_id(t["c_author"]) || Discourse::SYSTEM_USER_ID
+        body = process_mentions(t["c_body"])
+        body = process_uploads(body, user_id) if PROCESS_UPLOADS == 1
         markdown_body = HtmlToMarkdown.new(body).to_markdown
         {
-          id: t['c_id'],
+          id: t["c_id"],
           user_id: user_id,
-          title: t['c_title'],
-          category: category_id_from_imported_category_id(t['c_primaryContainer']),
+          title: t["c_title"],
+          category: category_id_from_imported_category_id(t["c_primaryContainer"]),
           raw: markdown_body,
-          created_at: t['c_creation_date'],
-          post_create_action: proc do |post|
-            tag_names = t['c_topic_names'].split(',')
-            DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
-          end
+          created_at: t["c_creation_date"],
+          post_create_action:
+            proc do |post|
+              tag_names = t["c_topic_names"].split(",")
+              DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
+            end,
         }
       end
     end
@@ -194,7 +188,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
        AND (c_type = 'answer'
          OR c_type = 'comment'
          OR c_type = 'kbentry');"
-    total_count = @client.query(count_query).first['count']
+    total_count = @client.query(count_query).first["count"]
 
     @last_post_id = -1
 
@@ -210,49 +204,49 @@ class ImportScripts::AnswerHub < ImportScripts::Base
          ORDER BY c_id ASC
          LIMIT #{BATCH_SIZE};"
       posts = @client.query(query)
-      next if all_records_exist? :posts, posts.map { |p| p['c_id'] }
+      next if all_records_exist? :posts, posts.map { |p| p["c_id"] }
 
       break if posts.size < 1
-      @last_post_id = posts.to_a.last['c_id']
+      @last_post_id = posts.to_a.last["c_id"]
 
       create_posts(posts, total: total_count, offset: offset) do |p|
-        t = topic_lookup_from_imported_post_id(p['c_originalParent'])
+        t = topic_lookup_from_imported_post_id(p["c_originalParent"])
         next unless t
 
-        reply_to_post_id = post_id_from_imported_post_id(p['c_parent'])
+        reply_to_post_id = post_id_from_imported_post_id(p["c_parent"])
         reply_to_post = reply_to_post_id.present? ? Post.find(reply_to_post_id) : nil
         reply_to_post_number = reply_to_post.present? ? reply_to_post.post_number : nil
 
-        user_id = user_id_from_imported_user_id(p['c_author']) || Discourse::SYSTEM_USER_ID
+        user_id = user_id_from_imported_user_id(p["c_author"]) || Discourse::SYSTEM_USER_ID
 
-        body = process_mentions(p['c_body'])
-        if PROCESS_UPLOADS == 1
-          body = process_uploads(body, user_id)
-        end
+        body = process_mentions(p["c_body"])
+        body = process_uploads(body, user_id) if PROCESS_UPLOADS == 1
 
         markdown_body = HtmlToMarkdown.new(body).to_markdown
         {
-          id: p['c_id'],
+          id: p["c_id"],
           user_id: user_id,
           topic_id: t[:topic_id],
           reply_to_post_number: reply_to_post_number,
           raw: markdown_body,
-          created_at: p['c_creation_date'],
-          post_create_action: proc do |post_info|
-            begin
-              if p['c_type'] == 'answer' && p['c_marked'] == 1
-                post = Post.find(post_info[:id])
-                if post
-                  user_id = user_id_from_imported_user_id(p['c_author']) || Discourse::SYSTEM_USER_ID
-                  current_user = User.find(user_id)
-                  solved = DiscourseSolved.accept_answer!(post, current_user)
-                  # puts "SOLVED: #{solved}"
+          created_at: p["c_creation_date"],
+          post_create_action:
+            proc do |post_info|
+              begin
+                if p["c_type"] == "answer" && p["c_marked"] == 1
+                  post = Post.find(post_info[:id])
+                  if post
+                    user_id =
+                      user_id_from_imported_user_id(p["c_author"]) || Discourse::SYSTEM_USER_ID
+                    current_user = User.find(user_id)
+                    solved = DiscourseSolved.accept_answer!(post, current_user)
+                    # puts "SOLVED: #{solved}"
+                  end
                 end
+              rescue ActiveRecord::RecordInvalid
+                puts "SOLVED: Skipped post_id: #{post.id} because invalid"
               end
-            rescue ActiveRecord::RecordInvalid
-              puts "SOLVED: Skipped post_id: #{post.id} because invalid"
-            end
-          end
+            end,
         }
       end
     end
@@ -269,11 +263,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     groups = @client.query(query)
 
     create_groups(groups) do |group|
-      {
-        id: group["c_id"],
-        name: group["c_name"],
-        visibility_level: 1
-      }
+      { id: group["c_id"], name: group["c_name"], visibility_level: 1 }
     end
   end
 
@@ -298,11 +288,16 @@ class ImportScripts::AnswerHub < ImportScripts::Base
 
     group_members.map
     groups.each do |group|
-      dgroup = find_group_by_import_id(group['c_id'])
+      dgroup = find_group_by_import_id(group["c_id"])
 
-      next if dgroup.custom_fields['import_users_added']
+      next if dgroup.custom_fields["import_users_added"]
 
-      group_member_ids = group_members.map { |m| user_id_from_imported_user_id(m["c_members"]) if m["c_groups"] == group['c_id'] }.compact
+      group_member_ids =
+        group_members
+          .map do |m|
+            user_id_from_imported_user_id(m["c_members"]) if m["c_groups"] == group["c_id"]
+          end
+          .compact
 
       # add members
       dgroup.bulk_add(group_member_ids)
@@ -310,7 +305,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
       # reload group
       dgroup.reload
 
-      dgroup.custom_fields['import_users_added'] = true
+      dgroup.custom_fields["import_users_added"] = true
       dgroup.save
 
       progress_count += 1
@@ -362,7 +357,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
 
     avatars.each do |a|
       begin
-        user_id = user_id_from_imported_user_id(a['c_user'])
+        user_id = user_id_from_imported_user_id(a["c_user"])
         user = User.find(user_id)
         if user
           filename = "avatar-#{user_id}.png"
@@ -371,9 +366,11 @@ class ImportScripts::AnswerHub < ImportScripts::Base
 
           # Scrape Avatars - Avatars are saved in the db, but it might be easier to just scrape them
           if SCRAPE_AVATARS == 1
-            File.open(path, 'wb') { |f|
-              f << open("https://#{ANSWERHUB_DOMAIN}/forums/users/#{a['c_user']}/photo/view.html?s=240").read
-            }
+            File.open(path, "wb") do |f|
+              f << open(
+                "https://#{ANSWERHUB_DOMAIN}/forums/users/#{a["c_user"]}/photo/view.html?s=240",
+              ).read
+            end
           end
 
           upload = @uploader.create_upload(user.id, path, filename)
@@ -389,7 +386,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
           end
         end
       rescue ActiveRecord::RecordNotFound
-        puts "Could not find User for user_id: #{a['c_user']}"
+        puts "Could not find User for user_id: #{a["c_user"]}"
       end
     end
   end
@@ -438,9 +435,10 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     raw = body.dup
 
     # https://example.forum.com/forums/users/1469/XYZ_Rob.html
-    raw.gsub!(/(https:\/\/example.forum.com\/forums\/users\/\d+\/[\w_%-.]*.html)/) do
+    raw.gsub!(%r{(https://example.forum.com/forums/users/\d+/[\w_%-.]*.html)}) do
       legacy_url = $1
-      import_user_id = legacy_url.match(/https:\/\/example.forum.com\/forums\/users\/(\d+)\/[\w_%-.]*.html/).captures
+      import_user_id =
+        legacy_url.match(%r{https://example.forum.com/forums/users/(\d+)/[\w_%-.]*.html}).captures
 
       user = @lookup.find_user_by_import_id(import_user_id[0])
       if user.present?
@@ -453,9 +451,9 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     end
 
     # /forums/users/395/petrocket.html
-    raw.gsub!(/(\/forums\/users\/\d+\/[\w_%-.]*.html)/) do
+    raw.gsub!(%r{(/forums/users/\d+/[\w_%-.]*.html)}) do
       legacy_url = $1
-      import_user_id = legacy_url.match(/\/forums\/users\/(\d+)\/[\w_%-.]*.html/).captures
+      import_user_id = legacy_url.match(%r{/forums/users/(\d+)/[\w_%-.]*.html}).captures
 
       # puts raw
       user = @lookup.find_user_by_import_id(import_user_id[0])
@@ -472,7 +470,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
   end
 
   def create_permalinks
-    puts '', 'Creating redirects...', ''
+    puts "", "Creating redirects...", ""
 
     # https://example.forum.com/forums/questions/2005/missing-file.html
     Topic.find_each do |topic|
@@ -480,8 +478,12 @@ class ImportScripts::AnswerHub < ImportScripts::Base
       if pcf && pcf["import_id"]
         id = pcf["import_id"]
         slug = Slug.for(topic.title)
-        Permalink.create(url: "questions/#{id}/#{slug}.html", topic_id: topic.id) rescue nil
-        print '.'
+        begin
+          Permalink.create(url: "questions/#{id}/#{slug}.html", topic_id: topic.id)
+        rescue StandardError
+          nil
+        end
+        print "."
       end
     end
   end
@@ -496,7 +498,6 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     return CATEGORY_MAP_TO if CATEGORY_MAP_FROM > 0 && id == CATEGORY_MAP_FROM
     id
   end
-
 end
 
 ImportScripts::AnswerHub.new.perform

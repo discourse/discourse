@@ -9,12 +9,14 @@ RSpec.describe PasswordValidator do
   subject(:validate) { validator.validate_each(record, :password, @password) }
 
   describe "password required" do
-    let(:record) { u = Fabricate.build(:user, password: @password); u.password_required!; u }
+    let(:record) do
+      u = Fabricate.build(:user, password: @password)
+      u.password_required!
+      u
+    end
 
     context "when password is not common" do
-      before do
-        CommonPasswords.stubs(:common_password?).returns(false)
-      end
+      before { CommonPasswords.stubs(:common_password?).returns(false) }
 
       context "when min password length is 8" do
         before { SiteSetting.min_password_length = 8 }
@@ -32,7 +34,7 @@ RSpec.describe PasswordValidator do
         end
 
         it "adds an error when password is blank" do
-          @password = ''
+          @password = ""
           validate
           expect(record.errors[:password]).to be_present
         end
@@ -86,9 +88,7 @@ RSpec.describe PasswordValidator do
     end
 
     context "when password_unique_characters is 5" do
-      before do
-        SiteSetting.password_unique_characters = 5
-      end
+      before { SiteSetting.password_unique_characters = 5 }
 
       it "adds an error when there are too few unique characters" do
         SiteSetting.password_unique_characters = 6

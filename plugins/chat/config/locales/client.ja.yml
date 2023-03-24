@@ -1,0 +1,439 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    admin:
+      site_settings:
+        categories:
+          chat: チャット
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "チャットチャンネルのステータスが変更されました"
+            chat_channel_delete: "チャットチャンネルが削除されました"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "特定のチャンネルでチャットメッセージを作成します。"
+    about:
+      chat_messages_count: "チャットメッセージ"
+      chat_channels_count: "チャットチャンネル"
+      chat_users_count: "チャットユーザー"
+    chat:
+      dates:
+        time_tiny: "h:mm"
+      all_loaded: "すべてのメッセージを表示中"
+      already_enabled: "このトピックのチャットはすでに有効になっています。再読み込みしてください。"
+      disabled_for_topic: "このトピックのチャットは無効になっています。"
+      bot: "ボット"
+      create: "作成"
+      cancel: "キャンセル"
+      cancel_reply: "返信をキャンセルする"
+      chat_channels: "チャンネル"
+      browse_all_channels: "すべてのチャンネルを閲覧する"
+      move_to_channel:
+        title: "メッセージをチャンネルに移動する"
+        confirm_move: "メッセージを移動"
+      channel_settings:
+        title: "チャンネルの設定"
+        edit: "編集"
+        add: "追加"
+        close_channel: "チャンネルを閉鎖する"
+        open_channel: "チャンネルを開く"
+        archive_channel: "チャンネルをアーカイブする"
+        delete_channel: "チャンネルを削除する"
+        join_channel: "チャンネルに参加する"
+        leave_channel: "チャンネルから退出する"
+        join: "参加"
+        leave: "退出"
+        save_label:
+          mute_channel: "チャンネルのミュート設定を保存しました"
+          desktop_notification: "デスクトップ通知設定を保存しました"
+          mobile_notification: "モバイルプッシュ通知設定を保存しました"
+      channel_archive:
+        title: "チャンネルをアーカイブ"
+        instructions: "<p>チャンネルをアーカイブすると、チャンネルは読み取り専用モードになり、すべてのメッセージが新しいトピックまたは既存のトピックに移動されます。新しいメッセージを送信することはできません。また既存のメッセージの編集や削除も行えません。</p><p><strong>%{channelTitle}</strong> チャンネルをアーカイブしてもよろしいですか？</p>"
+        process_started: "アーカイブ処理が開始されました。このモーダルは間もなく閉じられ、アーカイブ処理が完了すると個人メッセージが送信されます。"
+        retry: "再試行"
+      channel_open:
+        title: "チャンネルを開く"
+        instructions: "チャンネルを再開すると、すべてのユーザーがメッセージの送信と既存のメッセージの編集を行えるようになります。"
+      channel_close:
+        title: "チャンネルを閉鎖"
+        instructions: "チャンネルを閉鎖すると、スタッフ以外のユーザーが新しいメッセージの送信や既存のメッセージの編集を行えなくなります。このチャンネルを閉鎖してもよろしいですか？"
+      channel_delete:
+        title: "チャンネルを削除"
+        confirm: "結果を理解し、チャンネルを削除します"
+        confirm_channel_name: "チャンネル名を入力してください"
+        process_started: "チャンネルの削除処理が開始しました。このモーダルは間もなく閉じられ、削除されたチャンネルがどこにも表示されなくなります。"
+      channels_list_popup:
+        browse: "チャンネルを閲覧する"
+        create: "新しいチャンネル"
+      click_to_join: "利用可能なチャンネルを表示するにはここをクリックします。"
+      close: "閉じる"
+      collapse: "チャットドロワーを折りたたむ"
+      confirm_flag: "%{username} のメッセージを通報してよろしいですか？"
+      deleted: "メッセージは削除されました。[view]"
+      hidden: "メッセージが非表示でした。[view]"
+      delete: "削除"
+      edited: "編集済み"
+      muted: "ミュート中"
+      joined: "参加中"
+      empty_state:
+        direct_message_cta: "パーソナルチャットを開始"
+        direct_message: "1 人または複数のユーザーとパーソナルチャットを開始することもできます。"
+        title: "チャンネルが見つかりません"
+      email_frequency:
+        description: "15 分以上アクセスがない場合にのみメールで通知します。"
+        never: "なし"
+        title: "メール通知"
+        when_away: "退席中の時のみ"
+      header_indicator_preference:
+        never: "なし"
+      enable: "チャットを有効にする"
+      flag: "通報する"
+      emoji: "絵文字を挿入する"
+      flagged: "このメッセージはレビュー目的で通報されました"
+      invalid_access: "このチャットチャンネルを表示するためのアクセス権がありません"
+      invitation_notification: "<span>%{username}</span> <span>があなたをチャットチャンネルに招待しました</span>"
+      in_reply_to: "返信先"
+      heading: "チャット"
+      join: "参加"
+      last_visit: "最後の訪問"
+      mention_warning:
+        dismiss: "閉じる"
+        invitations_sent:
+          other: "招待状を送信しました"
+        invite: "チャンネルに招待する"
+        groups:
+          header:
+            some: "一部のユーザーには通知されません"
+            all: "誰にも通知されません"
+      aria_roles:
+        header: "チャットヘッダー"
+        composer: "チャット作成ツール"
+        channels_list: "チャットのチャンネルリスト"
+      no_public_channels: "どのチャンネルにも参加していません。"
+      only_chat_push_notifications:
+        title: "チャットのプッシュ通知のみ送信する"
+        description: "チャット以外のすべてのプッシュ通知の送信をブロックします"
+      ignore_channel_wide_mention:
+        title: "チャンネル全体のメンションを無視する"
+        description: "チャット全体のメンション（@here および @all）の通知を送信しません"
+      open: "チャットを開く"
+      open_full_page: "全画面チャットを開く"
+      close_full_page: "全画面チャットを閉じる"
+      open_message: "メッセージをチャットで開く"
+      placeholder_self: "メモを書き留める"
+      placeholder_users: "%{commaSeparatedNames} とチャット"
+      placeholder_silenced: "現在、メッセージを送信できません。"
+      placeholder_start_conversation_users: "%{commaSeparatedUsernames} と会話を始める"
+      remove_upload: "ファイルを削除する"
+      react: "絵文字でリアクション"
+      reply: "返信"
+      edit: "編集"
+      copy_link: "リンクをコピーする"
+      rebake_message: "HTML を再構築"
+      retry_staged_message:
+        title: "ネットワークエラー"
+        action: "もう一度送信しますか？"
+      unreliable_network: "ネットワークが不安定です。メッセージの送信と下書きの保存が機能しない可能性があります"
+      bookmark_message: "ブックマーク"
+      bookmark_message_edit: "ブックマークを編集"
+      restore: "削除されたメッセージを復元する"
+      save: "保存"
+      select: "選択"
+      return_to_list: "チャンネルリストに戻る"
+      scroll_to_bottom: "一番下にスクロール"
+      scroll_to_new_messages: "新しいメッセージを見る"
+      sound:
+        title: "デスクトップチャットの通知音"
+      sounds:
+        none: "なし"
+        bell: "ベル"
+        ding: "ゴーン"
+      title: "チャット"
+      title_capitalized: "チャット"
+      upload: "ファイルを添付する"
+      uploaded_files:
+        other: "%{count} 個のファイル"
+      you_flagged: "このメッセージを通報しました"
+      exit: "戻る"
+      channel_status:
+        read_only_header: "チャンネルは読み取り専用です"
+        read_only: "読み取り専用"
+        archived_header: "チャンネルはアーカイブされています"
+        archived: "アーカイブ済み"
+        archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">アーカイブ済みのトピック</a>を見る"
+        closed_header: "チャンネルは閉鎖されています"
+        closed: "閉鎖"
+        open_header: "チャンネルは開いています"
+        open: "オープン"
+      browse:
+        back: "戻る"
+        title: チャンネル
+        filter_all: すべて
+        filter_open: オープン
+        filter_closed: 閉鎖
+        filter_archived: アーカイブ済み
+        filter_input_placeholder: チャンネル名で検索
+      chat_message_separator:
+        today: 今日
+        yesterday: 昨日
+      members_view:
+        filter_placeholder: メンバーを検索
+      about_view:
+        associated_topic: リンクされたトピック
+        associated_category: リンクされたカテゴリ
+        title: タイトル
+        name: 名前
+        description: 説明
+      channel_info:
+        back_to_all_channels: "すべてのチャンネル"
+        back_to_channel: "戻る"
+        tabs:
+          about: 紹介
+          members: メンバー
+          settings: 設定
+      channel_edit_name_slug_modal:
+        name: チャンネル名
+      channel_edit_description_modal:
+        title: 説明を編集する
+        input_placeholder: 説明を追加する
+        description: このチャンネルの紹介を入力します
+      direct_message_creator:
+        title: 新しいメッセージ
+        prefix: "宛先:"
+        no_results: 結果がありません
+        selected_user_title: "%{username} を選択解除"
+      channel_selector:
+        title: "チャンネルにジャンプ"
+        no_channels: "検索に一致するチャンネルはありません"
+      channel:
+        no_memberships: このチャンネルにはメンバーがいません
+        no_memberships_found: メンバーが見つかりません
+        memberships_count:
+          other: "%{count} 人のメンバー"
+      create_channel:
+        auto_join_users:
+          public_category_warning: "%{category} は公開カテゴリです。最近アクティブなすべてのユーザーをこのチャンネルに自動的に追加しますか？"
+          warning_2_groups:
+            other: "%{group1} と %{group2} から %{count} 人のユーザーを自動的に追加しますか？"
+        choose_category:
+          label: "カテゴリを選択する"
+          none: "1 つ選択してください..."
+          default_hint: <a href=%{link} target="_blank">%{category} のセキュリティ設定</a>に移動し、アクセス権を管理します
+        create: "チャンネルを作成"
+        description: "説明 (オプション)"
+        name: "チャンネル名"
+        title: "新しいチャンネル"
+        type: "タイプ"
+        types:
+          category: "カテゴリ"
+          topic: "トピック"
+      reviewable:
+        type: "チャットメッセージ"
+      reactions:
+        only_you: ":%{emoji}: でリアクションしました"
+        you_multiple_users_and_more:
+          other: "あなた、%{commaSeparatedUsernames} と他 %{count} 人が :%{emoji}: でリアクションしました"
+        single_user: "%{username} が :%{emoji}: でリアクションしました"
+        multiple_users_and_more:
+          other: "%{commaSeparatedUsernames} と他 %{count} 人が :%{emoji}: でリアクションしました"
+      composer:
+        toggle_toolbar: "ツールバーの切り替え"
+        italic_text: "強調文字"
+        bold_text: "太字"
+        code_text: "コードテキスト"
+      quote:
+        original_channel: '最初に <a href="%{channelLink}">%{channel}</a> で送信されました'
+        copy_success: "チャットの引用をクリップボードにコピーしました"
+      notification_levels:
+        never: "なし"
+        mention: "メンションのみ"
+        always: "すべてのアクティビティ"
+      settings:
+        channel_wide_mentions_label: "@all と @here メンションを許可する"
+        channel_wide_mentions_description: "@all で #%{channel} の全メンバーに通知するか、@here で現在アクティブなメンバーのみに通知することを許可します"
+        auto_join_users_label: "自動的にユーザーを追加する"
+        auto_join_users_warning: "このチャンネルのメンバーでなく、%{category} カテゴリにアクセスできるすべてのユーザーが参加します。よろしいですか？"
+        desktop_notification_level: "デスクトップ通知"
+        follow: "参加"
+        followed: "参加中"
+        mobile_notification_level: "モバイルプッシュ通知"
+        mute: "チャンネルをミュート"
+        muted_on: "オン"
+        muted_off: "オフ"
+        notifications: "通知"
+        preview: "プレビュー"
+        save: "保存"
+        saved: "保存済み"
+        unfollow: "退出"
+        admin_title: "管理者"
+      admin:
+        title: "チャット"
+      direct_messages:
+        title: "パーソナルチャット"
+        new: "パーソナルチャットを作成"
+        create: "開始"
+        leave: "このパーソナルチャットから退出する"
+        cannot_create: "ダイレクトメッセージを送信できません。"
+      incoming_webhooks:
+        back: "戻る"
+        channel_placeholder: "チャンネルを選択する"
+        confirm_destroy: "この着信 Webhook を削除してもよろしいですか？この操作は元に戻せません。"
+        current_emoji: "現在の絵文字"
+        description: "説明"
+        delete: "削除"
+        emoji: "絵文字"
+        emoji_instructions: "絵文字を空白のままにすると、システムアバターが使用されます。"
+        name: "名前"
+        name_placeholder: "名前..."
+        new: "新しい着信 Webhook"
+        none: "既存の着信 Webhook は作成されていません。"
+        no_emoji: "絵文字が選択されていません"
+        post_to: "投稿先"
+        reset_emoji: "絵文字をリセット"
+        save: "保存"
+        edit: "編集"
+        select_emoji: "絵文字を選択"
+        system: "システム"
+        title: "着信 Webhook"
+        url: "URL"
+        url_instructions: "この URL には秘密の値が含まれます。安全に保管してください。"
+        username: "ユーザー名"
+        username_instructions: "チャンネルに投稿するボットのユーザー名。空白のままにすると、デフォルトで「システム」になります。"
+        instructions: "着信 Webhook は、外部システムが <code>/hooks/:key</code> エンドポイントを介して指定されたチャットチャンネルにボットユーザーとしてメッセージを投稿する際に使用できます。ペイロードは、2000 文字に制限された単一の <code>text</code> パラメーターで構成されます。<br><br>また、Slack 形式の <code>text</code> パラメーターも制限付きでサポートしており、<a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> のフォーマットに基いてリンクとメンションが抽出されますが、これには、<code>/hooks/:key/slack</code> エンドポイントを使用する必要があります。"
+      selection:
+        cancel: "キャンセル"
+        quote_selection: "トピックで引用"
+        copy: "コピー"
+        move_selection_to_channel: "チャンネルに移動"
+        error: "チャットメッセージを移動中にエラーが発生しました"
+        title: "チャットをトピックに移動"
+        new_topic:
+          title: "新しいトピックに移動"
+          instructions:
+            other: "新しいトピックを作成し、選択した <b>%{count}</b> 件のチャットメッセージを挿入しようとしています。"
+          instructions_channel_archive: "新しいトピックを作成し、それにチャンネルメッセージをアーカイブしようとしています。"
+        existing_topic:
+          title: "既存のトピックに移動"
+          instructions:
+            other: "それらの <b>%{count}</b> 件のチャットメッセージを移動するトピックを選択してください。"
+          instructions_channel_archive: "チャンネルメッセージのアーカイブ先のトピックを選択してください。"
+        new_message:
+          title: "新しいメッセージに移動"
+          instructions:
+            other: "新しいメッセージを作成し、選択した <b>%{count}</b> 件のチャットメッセージを挿入しようとしています。"
+      replying_indicator:
+        single_user: "%{username} が入力中です"
+        multiple_users: "%{commaSeparatedUsernames} と %{lastUsername} が入力中です"
+        many_users:
+          other: "%{commaSeparatedUsernames} と他 %{count} 人が入力中です"
+      retention_reminders:
+        public:
+          other: "チャンネル履歴は %{count} 日間保持されます。"
+        dm:
+          other: "パーソナルチャット履歴は %{count} 日間保持されます。"
+      flags:
+        off_topic: "このメッセージは、チャンネルのタイトルで定義された現在のディスカッションとは関係がないため、おそらく別の場所に移動する必要があります。"
+        inappropriate: "このメッセージには、合理的な人が攻撃的、虐待的、または<a href=\"%{basePath}/guidelines\">コミュニティーガイドライン</a>に違反すると見なすコンテンツが含まれます。"
+        spam: "このメッセージは広告または荒らし行為です。現在のチャンネルに有益な内容でなく、関連性もありません。"
+        notify_user: "この人のメッセージについて、この人に直接個人的に話を聞きたいと思います。"
+        notify_moderators: "このメッセージには、上記以外の理由でスタッフの注意が必要です。"
+      flagging:
+        action: "メッセージを通報する"
+      emoji_picker:
+        favorites: "よく使用される絵文字"
+        smileys_&_emotion: "顔文字と感情"
+        objects: "物"
+        people_&_body: "人と体"
+        travel_&_places: "旅行と場所"
+        animals_&_nature: "動物と自然"
+        food_&_drink: "食べ物と飲み物"
+        activities: "活動"
+        flags: "旗"
+        symbols: "記号"
+        search_placeholder: "絵文字名とエイリアスで検索..."
+        no_results: "結果がありません"
+      draft_channel_screen:
+        header: "新しいメッセージ"
+        cancel: "キャンセル"
+    notifications:
+      chat_invitation: "があなたをチャットチャンネルに招待しました"
+      chat_invitation_html: "<span>%{username}</span> <span>があなたをチャットチャンネルに招待しました</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_mention:
+          direct: 'があなたを "%{channel}" でメンションしました'
+          direct_html: '<span>%{username}</span> <span>があなたを "%{channel}" でメンションしました</span>'
+          other_plain: 'が %{identifier} を "%{channel}" でメンションしました'
+          other_html: '<span>%{username}</span> <span>が %{identifier} を "%{channel}" でメンションしました</span>'
+        direct_message_chat_mention:
+          direct: "があなたをパーソナルチャットでメンションしました"
+          direct_html: "<span>%{username}</span> <span>があなたをパーソナルチャットでメンションしました</span>"
+          other_plain: "が %{identifier} をパーソナルチャットでメンションしました"
+          other_html: "<span>%{username}</span> <span>が %{identifier} をパーソナルチャットでメンションしました</span>"
+        chat_message: "新しいチャットメッセージ"
+        chat_quoted: "%{username} があなたのチャットメッセージを引用しました"
+      titles:
+        chat_mention: "チャットのメンション"
+        chat_invitation: "チャットの招待状"
+        chat_quoted: "チャットが引用されました"
+    action_codes:
+      chat:
+        enabled: '%{who} が<button class="btn-link open-chat">チャット</button>を有効にしました: %{when}'
+        disabled: "%{who} がチャットを閉じました: %{when}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: チャットメッセージを送信する
+          fields:
+            chat_channel_id:
+              label: チャットチャンネル ID
+            message:
+              label: メッセージ
+            sender:
+              label: 送信者
+              description: デフォルトはシステムです
+    review:
+      transcript:
+        view: "前のメッセージのトランスクリプトを表示"
+      types:
+        reviewable_chat_message:
+          title: "通報されたチャットメッセージ"
+          flagged_by: "通報者"
+    keyboard_shortcuts_help:
+      chat:
+        title: "チャット"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} チャンネルを切り替える"
+          open_quick_channel_selector: "%{shortcut} クイックチャンネルセレクターを開く"
+          open_insert_link_modal: "%{shortcut} ハイパーリンクを挿入する (作成ツールのみ)"
+          composer_bold: "%{shortcut} 太字 (作成ツールのみ)"
+          composer_italic: "%{shortcut} 斜体 (作成ツールのみ)"
+          composer_code: "%{shortcut} コード (作成ツールのみ)"
+          drawer_open: "%{shortcut} チャットドロワーを開く"
+          drawer_close: "%{shortcut} チャットドロワーを閉じる"
+    topic_statuses:
+      chat:
+        help: "このトピックのチャットは有効になっています"
+    user:
+      allow_private_messages: "他のユーザーが個人メッセージとチャットダイレクトメッセージを自分に送信することを許可する"
+      muted_users_instructions: "これらのユーザーからのすべての通知、個人メッセージ、およびチャットダイレクトメッセージを非表示にします。"
+      allowed_pm_users_instructions: "これらのユーザーからの個人メッセージまたはチャットダイレクトメッセージのみを許可します。"
+      allow_private_messages_from_specific_users: "特定のユーザーのみが個人メッセージまたはチャットダイレクトメッセージを自分に送信することを許可する"
+      ignored_users_instructions: "これらのユーザーからのすべての投稿、メッセージ、通知、個人メッセージ、およびチャットダイレクトメッセージを非表示にします。"
+    user_menu:
+      no_chat_notifications_title: "チャット通知はまだありません"
+      no_chat_notifications_body: >
+        誰かがあなたにダイレクトメッセージを送信したり、チャットであなたを <b>@メンション</b>すると、このパネルに通知されます。あなたがしばらくログインしていない場合、通知はメールでも送信されます。<br><br>チャットチャンネルの上部にあるタイトルをクリックすると、そのチャンネルでどの通知を受け取るかを構成できます。詳細については、<a href='%{preferencesUrl}'>通知設定</a>をご覧ください。
+      tabs:
+        chat_notifications: "チャット通知"
+        chat_notifications_with_unread:
+          other: "チャット通知 - %{count} 件の未読の通知"

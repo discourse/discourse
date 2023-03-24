@@ -13,13 +13,18 @@
                   {{i18n "user.private_message"}}
                 </a>
               </li>
-              <li><a href={{this.dummy.user.adminPath}} class="btn">{{d-icon "wrench"}}{{i18n "admin.user.show_admin_profile"}}</a></li>
-              <li><a href="#" class="btn">{{d-icon "angle-double-down"}}{{i18n "user.expand_profile"}}</a></li>
+              <li><a href={{this.dummy.user.adminPath}} class="btn">{{d-icon
+                    "wrench"
+                  }}{{i18n "admin.user.show_admin_profile"}}</a></li>
+              <li><a href="#" class="btn">{{d-icon "angle-double-down"}}{{i18n
+                    "user.expand_profile"
+                  }}</a></li>
             </ul>
           </section>
 
           <div class="primary-textual">
-            <h1 class="username">{{this.dummy.user.username}} {{d-icon "shield-alt"}}</h1>
+            <h1 class="username">{{this.dummy.user.username}}
+              {{d-icon "shield-alt"}}</h1>
             <h2 class="full-name">{{this.dummy.user.name}}</h2>
             <h3>{{this.dummy.user.title}}</h3>
           </div>
@@ -32,7 +37,10 @@
 
 <StyleguideExample @title=".user-main .about.collapsed-info.has-background">
   <DSection @class="user-main">
-    <section class="collapsed-info about has-background"  style={{this.dummy.user.profileBackground}}>
+    <section
+      class="collapsed-info about has-background"
+      style={{this.dummy.user.profileBackground}}
+    >
       <div class="profile-image"></div>
       <div class="details">
         <div class="primary">
@@ -45,13 +53,18 @@
                   {{i18n "user.private_message"}}
                 </a>
               </li>
-              <li><a href={{this.dummy.user.adminPath}} class="btn">{{d-icon "wrench"}}{{i18n "admin.user.show_admin_profile"}}</a></li>
-              <li><a href="#" class="btn">{{d-icon "angle-double-down"}}{{i18n "user.expand_profile"}}</a></li>
+              <li><a href={{this.dummy.user.adminPath}} class="btn">{{d-icon
+                    "wrench"
+                  }}{{i18n "admin.user.show_admin_profile"}}</a></li>
+              <li><a href="#" class="btn">{{d-icon "angle-double-down"}}{{i18n
+                    "user.expand_profile"
+                  }}</a></li>
             </ul>
           </section>
 
           <div class="primary-textual">
-            <h1 class="username">{{this.dummy.user.username}} {{d-icon "shield-alt"}}</h1>
+            <h1 class="username">{{this.dummy.user.username}}
+              {{d-icon "shield-alt"}}</h1>
             <h2 class="full-name">{{this.dummy.user.name}}</h2>
             <h3>{{this.dummy.user.title}}</h3>
           </div>
@@ -67,19 +80,39 @@
     <section class="about no-background">
 
       <div class="staff-counters">
-        <div><span class="helpful-flags">{{this.dummy.user.number_of_flags_given}}</span>&nbsp;{{i18n "user.staff_counters.flags_given"}}</div>
+        <div><span
+            class="helpful-flags"
+          >{{this.dummy.user.number_of_flags_given}}</span>&nbsp;{{i18n
+            "user.staff_counters.flags_given"
+          }}</div>
         <div>
           <a href="#">
-            <span class="flagged-posts">{{this.dummy.user.number_of_flagged_posts}}</span>&nbsp;{{i18n "user.staff_counters.flagged_posts"}}
+            <span
+              class="flagged-posts"
+            >{{this.dummy.user.number_of_flagged_posts}}</span>&nbsp;{{i18n
+              "user.staff_counters.flagged_posts"
+            }}
           </a>
         </div>
         <div>
           <a href="#">
-            <span class="deleted-posts">{{this.dummy.user.number_of_deleted_posts}}</span>&nbsp;{{i18n "user.staff_counters.deleted_posts"}}
+            <span
+              class="deleted-posts"
+            >{{this.dummy.user.number_of_deleted_posts}}</span>&nbsp;{{i18n
+              "user.staff_counters.deleted_posts"
+            }}
           </a>
         </div>
-        <div><span class="suspensions">{{this.dummy.user.number_of_suspensions}}</span>&nbsp;{{i18n "user.staff_counters.suspensions"}}</div>
-        <div><span class="warnings-received">{{this.dummy.user.warnings_received_count}}</span>&nbsp;{{i18n "user.staff_counters.warnings_received"}}</div>
+        <div><span
+            class="suspensions"
+          >{{this.dummy.user.number_of_suspensions}}</span>&nbsp;{{i18n
+            "user.staff_counters.suspensions"
+          }}</div>
+        <div><span
+            class="warnings-received"
+          >{{this.dummy.user.warnings_received_count}}</span>&nbsp;{{i18n
+            "user.staff_counters.warnings_received"
+          }}</div>
       </div>
 
       <div class="profile-image"></div>
@@ -94,25 +127,37 @@
                   {{i18n "user.private_message"}}
                 </a>
               </li>
-              <li><a href={{this.dummy.user.adminPath}} class="btn">{{d-icon "wrench"}}{{i18n "admin.user.show_admin_profile"}}</a></li>
+              <li><a href={{this.dummy.user.adminPath}} class="btn">{{d-icon
+                    "wrench"
+                  }}{{i18n "admin.user.show_admin_profile"}}</a></li>
             </ul>
           </section>
 
           <div class="primary-textual">
-            <h1 class="username">{{this.dummy.user.username}} {{d-icon "shield-alt"}}</h1>
+            <h1 class="username">{{this.dummy.user.username}}
+              {{d-icon "shield-alt"}}</h1>
             <h2 class="full-name">{{this.dummy.user.name}}</h2>
             <h3>{{this.dummy.user.title}}</h3>
             <h3>
-              {{d-icon "map-marker-alt"}} {{this.dummy.user.location}}
+              {{d-icon "map-marker-alt"}}
+              {{this.dummy.user.location}}
               {{d-icon "globe"}}
-              <a href={{this.dummy.user.website}} rel="nofollow noopener noreferrer" target="_blank">{{this.dummy.user.website_name}}</a>
+              <a
+                href={{this.dummy.user.website}}
+                rel="nofollow noopener noreferrer"
+                target="_blank"
+              >{{this.dummy.user.website_name}}</a>
             </h3>
 
             <div class="bio">
               <div class="suspended">
                 {{d-icon "ban"}}
-                <b>{{i18n "user.suspended_notice" date=this.dummy.user.suspendedTillDate}}</b><br>
-                <b>{{i18n "user.suspended_reason"}}</b> {{this.dummy.user.suspend_reason}}
+                <b>{{i18n
+                    "user.suspended_notice"
+                    date=this.dummy.user.suspendedTillDate
+                  }}</b><br />
+                <b>{{i18n "user.suspended_reason"}}</b>
+                {{this.dummy.user.suspend_reason}}
               </div>
               {{html-safe this.dummy.user.bio_cooked}}
             </div>
@@ -134,23 +179,45 @@
 
       <div class="secondary">
         <dl>
-          <dt>{{i18n "user.created"}}</dt><dd>{{bound-date this.dummy.user.created_at}}</dd>
-          <dt>{{i18n "user.last_posted"}}</dt><dd>{{bound-date this.dummy.user.last_posted_at}}</dd>
-          <dt>{{i18n "user.last_seen"}}</dt><dd>{{bound-date this.dummy.user.last_seen_at}}</dd>
-          <dt>{{i18n "views"}}</dt><dd>{{this.dummy.user.profile_view_count}}</dd>
-          <dt class="invited-by">{{i18n "user.invited_by"}}</dt><dd class="invited-by"><a href="#">{{this.dummy.user.invited_by.username}}</a></dd>
-          <dt class="trust-level">{{i18n "user.trust_level"}}</dt><dd class="trust-level">{{this.dummy.user.trustLevel.name}}</dd>
+          <dt>{{i18n "user.created"}}</dt><dd>{{bound-date
+              this.dummy.user.created_at
+            }}</dd>
+          <dt>{{i18n "user.last_posted"}}</dt><dd>{{bound-date
+              this.dummy.user.last_posted_at
+            }}</dd>
+          <dt>{{i18n "user.last_seen"}}</dt><dd>{{bound-date
+              this.dummy.user.last_seen_at
+            }}</dd>
+          <dt>{{i18n "views"}}</dt><dd
+          >{{this.dummy.user.profile_view_count}}</dd>
+          <dt class="invited-by">{{i18n "user.invited_by"}}</dt><dd
+            class="invited-by"
+          ><a href="#">{{this.dummy.user.invited_by.username}}</a></dd>
+          <dt class="trust-level">{{i18n "user.trust_level"}}</dt><dd
+            class="trust-level"
+          >{{this.dummy.user.trustLevel.name}}</dd>
           <dt>{{i18n "user.email.title"}}</dt>
           <dd title={{this.dummy.user.email}}>
-            <DButton @icon="far-envelope" @label="admin.users.check_email.text" @class="btn-primary" />
+            <DButton
+              @icon="envelope"
+              @label="admin.users.check_email.text"
+              @class="btn-primary"
+            />
           </dd>
-          <dt class="groups">{{i18n "groups.title" count=this.dummy.user.displayGroups.length}}</dt>
+          <dt class="groups">{{i18n
+              "groups.title"
+              count=this.dummy.user.displayGroups.length
+            }}</dt>
           <dd class="groups">
             {{#each this.dummy.user.displayGroups as |group|}}
               <span><a href="#" class="group-link">{{group.name}}</a></span>
             {{/each}}
           </dd>
-          <DButton @icon="exclamation-triangle" @label="user.admin_delete" @class="btn-danger" />
+          <DButton
+            @icon="exclamation-triangle"
+            @label="user.admin_delete"
+            @class="btn-danger"
+          />
         </dl>
       </div>
     </section>
@@ -159,21 +226,44 @@
 
 <StyleguideExample @title=".user-main .about.has-background">
   <DSection @class="user-main">
-    <section class="about has-background"  style={{this.dummy.user.profileBackground}}>
+    <section
+      class="about has-background"
+      style={{this.dummy.user.profileBackground}}
+    >
       <div class="staff-counters">
-        <div><span class="helpful-flags">{{this.dummy.user.number_of_flags_given}}</span>&nbsp;{{i18n "user.staff_counters.flags_given"}}</div>
+        <div><span
+            class="helpful-flags"
+          >{{this.dummy.user.number_of_flags_given}}</span>&nbsp;{{i18n
+            "user.staff_counters.flags_given"
+          }}</div>
         <div>
           <a href="#">
-            <span class="flagged-posts">{{this.dummy.user.number_of_flagged_posts}}</span>&nbsp;{{i18n "user.staff_counters.flagged_posts"}}
+            <span
+              class="flagged-posts"
+            >{{this.dummy.user.number_of_flagged_posts}}</span>&nbsp;{{i18n
+              "user.staff_counters.flagged_posts"
+            }}
           </a>
         </div>
         <div>
           <a href="#">
-            <span class="deleted-posts">{{this.dummy.user.number_of_deleted_posts}}</span>&nbsp;{{i18n "user.staff_counters.deleted_posts"}}
+            <span
+              class="deleted-posts"
+            >{{this.dummy.user.number_of_deleted_posts}}</span>&nbsp;{{i18n
+              "user.staff_counters.deleted_posts"
+            }}
           </a>
         </div>
-        <div><span class="suspensions">{{this.dummy.user.number_of_suspensions}}</span>&nbsp;{{i18n "user.staff_counters.suspensions"}}</div>
-        <div><span class="warnings-received">{{this.dummy.user.warnings_received_count}}</span>&nbsp;{{i18n "user.staff_counters.warnings_received"}}</div>
+        <div><span
+            class="suspensions"
+          >{{this.dummy.user.number_of_suspensions}}</span>&nbsp;{{i18n
+            "user.staff_counters.suspensions"
+          }}</div>
+        <div><span
+            class="warnings-received"
+          >{{this.dummy.user.warnings_received_count}}</span>&nbsp;{{i18n
+            "user.staff_counters.warnings_received"
+          }}</div>
       </div>
 
       <div class="profile-image"></div>
@@ -188,25 +278,37 @@
                   {{i18n "user.private_message"}}
                 </a>
               </li>
-              <li><a href={{this.dummy.user.adminPath}} class="btn">{{d-icon "wrench"}}{{i18n "admin.user.show_admin_profile"}}</a></li>
+              <li><a href={{this.dummy.user.adminPath}} class="btn">{{d-icon
+                    "wrench"
+                  }}{{i18n "admin.user.show_admin_profile"}}</a></li>
             </ul>
           </section>
 
           <div class="primary-textual">
-            <h1 class="username">{{this.dummy.user.username}} {{d-icon "shield-alt"}}</h1>
+            <h1 class="username">{{this.dummy.user.username}}
+              {{d-icon "shield-alt"}}</h1>
             <h2 class="full-name">{{this.dummy.user.name}}</h2>
             <h3>{{this.dummy.user.title}}</h3>
             <h3>
-              {{d-icon "map-marker-alt"}} {{this.dummy.user.location}}
+              {{d-icon "map-marker-alt"}}
+              {{this.dummy.user.location}}
               {{d-icon "globe"}}
-              <a href={{this.dummy.user.website}} rel="nofollow noopener noreferrer" target="_blank">{{this.dummy.user.website_name}}</a>
+              <a
+                href={{this.dummy.user.website}}
+                rel="nofollow noopener noreferrer"
+                target="_blank"
+              >{{this.dummy.user.website_name}}</a>
             </h3>
 
             <div class="bio">
               <div class="suspended">
                 {{d-icon "ban"}}
-                <b>{{i18n "user.suspended_notice" date=this.dummy.user.suspendedTillDate}}</b><br>
-                <b>{{i18n "user.suspended_reason"}}</b> {{this.dummy.user.suspend_reason}}
+                <b>{{i18n
+                    "user.suspended_notice"
+                    date=this.dummy.user.suspendedTillDate
+                  }}</b><br />
+                <b>{{i18n "user.suspended_reason"}}</b>
+                {{this.dummy.user.suspend_reason}}
               </div>
               {{html-safe this.dummy.user.bio_cooked}}
             </div>
@@ -229,23 +331,45 @@
 
       <div class="secondary">
         <dl>
-          <dt>{{i18n "user.created"}}</dt><dd>{{bound-date this.dummy.user.created_at}}</dd>
-          <dt>{{i18n "user.last_posted"}}</dt><dd>{{bound-date this.dummy.user.last_posted_at}}</dd>
-          <dt>{{i18n "user.last_seen"}}</dt><dd>{{bound-date this.dummy.user.last_seen_at}}</dd>
-          <dt>{{i18n "views"}}</dt><dd>{{this.dummy.user.profile_view_count}}</dd>
-          <dt class="invited-by">{{i18n "user.invited_by"}}</dt><dd class="invited-by"><a href="#">{{this.dummy.user.invited_by.username}}</a></dd>
-          <dt class="trust-level">{{i18n "user.trust_level"}}</dt><dd class="trust-level">{{this.dummy.user.trustLevel.name}}</dd>
+          <dt>{{i18n "user.created"}}</dt><dd>{{bound-date
+              this.dummy.user.created_at
+            }}</dd>
+          <dt>{{i18n "user.last_posted"}}</dt><dd>{{bound-date
+              this.dummy.user.last_posted_at
+            }}</dd>
+          <dt>{{i18n "user.last_seen"}}</dt><dd>{{bound-date
+              this.dummy.user.last_seen_at
+            }}</dd>
+          <dt>{{i18n "views"}}</dt><dd
+          >{{this.dummy.user.profile_view_count}}</dd>
+          <dt class="invited-by">{{i18n "user.invited_by"}}</dt><dd
+            class="invited-by"
+          ><a href="#">{{this.dummy.user.invited_by.username}}</a></dd>
+          <dt class="trust-level">{{i18n "user.trust_level"}}</dt><dd
+            class="trust-level"
+          >{{this.dummy.user.trustLevel.name}}</dd>
           <dt>{{i18n "user.email.title"}}</dt>
           <dd title={{this.dummy.user.email}}>
-            <DButton @icon="far-envelope" @label="admin.users.check_email.text" @class="btn-primary" />
+            <DButton
+              @icon="envelope"
+              @label="admin.users.check_email.text"
+              @class="btn-primary"
+            />
           </dd>
-          <dt class="groups">{{i18n "groups.title" count=this.dummy.user.displayGroups.length}}</dt>
+          <dt class="groups">{{i18n
+              "groups.title"
+              count=this.dummy.user.displayGroups.length
+            }}</dt>
           <dd class="groups">
             {{#each this.dummy.user.displayGroups as |group|}}
               <span><a href="#" class="group-link">{{group.name}}</a></span>
             {{/each}}
           </dd>
-          <DButton @icon="exclamation-triangle" @label="user.admin_delete" @class="btn-danger" />
+          <DButton
+            @icon="exclamation-triangle"
+            @label="user.admin_delete"
+            @class="btn-danger"
+          />
         </dl>
       </div>
     </section>

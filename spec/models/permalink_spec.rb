@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Permalink do
-
   describe "normalization" do
     it "correctly normalizes" do
       normalizer = Permalink::Normalizer.new("/(\\/hello.*)\\?.*/\\1|/(\\/bye.*)\\?.*/\\1")
@@ -25,13 +24,12 @@ RSpec.describe Permalink do
   end
 
   describe "target_url" do
-
-    let(:permalink)       { Fabricate.build(:permalink) }
-    let(:topic)           { Fabricate(:topic) }
-    let(:post)            { Fabricate(:post, topic: topic) }
-    let(:category)        { Fabricate(:category) }
-    let(:tag)             { Fabricate(:tag) }
-    subject(:target_url)  { permalink.target_url }
+    let(:permalink) { Fabricate.build(:permalink) }
+    let(:topic) { Fabricate(:topic) }
+    let(:post) { Fabricate(:post, topic: topic) }
+    let(:category) { Fabricate(:category) }
+    let(:tag) { Fabricate(:tag) }
+    subject(:target_url) { permalink.target_url }
 
     it "returns a topic url when topic_id is set" do
       permalink.topic_id = topic.id
@@ -39,7 +37,7 @@ RSpec.describe Permalink do
     end
 
     it "returns nil when topic_id is set but topic is not found" do
-      permalink.topic_id = 99999
+      permalink.topic_id = 99_999
       expect(target_url).to eq(nil)
     end
 
@@ -49,7 +47,7 @@ RSpec.describe Permalink do
     end
 
     it "returns nil when post_id is set but post is not found" do
-      permalink.post_id = 99999
+      permalink.post_id = 99_999
       expect(target_url).to eq(nil)
     end
 
@@ -65,7 +63,7 @@ RSpec.describe Permalink do
     end
 
     it "returns nil when category_id is set but category is not found" do
-      permalink.category_id = 99999
+      permalink.category_id = 99_999
       expect(target_url).to eq(nil)
     end
 
@@ -82,7 +80,7 @@ RSpec.describe Permalink do
     end
 
     it "returns nil when tag_id is set but tag is not found" do
-      permalink.tag_id = 99999
+      permalink.tag_id = 99_999
       expect(target_url).to eq(nil)
     end
 

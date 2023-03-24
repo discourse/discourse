@@ -2,4 +2,8 @@
 
 <p><TagChooser @tags={{this.tags}} @categoryId={{this.categoryId}} /></p>
 
-<DButton @action={{this.action}} @disabled={{this.emptyTags}} @label={{concat "topics.bulk." this.label}} />
+<DButton
+  @action={{action this.action}}
+  @disabled={{this.emptyTags}}
+  @label={{concat "topics.bulk." this.label}}
+/>

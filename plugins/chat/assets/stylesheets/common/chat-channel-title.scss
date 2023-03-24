@@ -1,0 +1,119 @@
+.chat-channel-title-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.chat-channel-title {
+  display: flex;
+  align-items: center;
+  @include ellipsis;
+
+  .user-status-message {
+    display: none; // we only show when in channels list
+  }
+
+  .chat-name,
+  .category-chat-name,
+  &__usernames,
+  .dm-usernames {
+    @include ellipsis;
+    font-size: var(--font-0);
+    margin: 0;
+
+    .emoji {
+      height: 1.2em;
+      vertical-align: text-bottom;
+      width: 1.2em;
+    }
+  }
+
+  .d-icon-lock {
+    margin-right: 0.25em;
+  }
+
+  .topic-chat-icon {
+    color: var(--primary-medium);
+    display: flex;
+  }
+
+  .chat-unread-count {
+    display: inline-block;
+    color: var(--secondary);
+    background-color: var(--tertiary-med-or-tertiary);
+    font-size: var(--font-down-2);
+    border-radius: 100%;
+    min-width: 1.4em;
+    min-height: 1.4em;
+    height: 1.4em;
+    width: 1.4em;
+    padding: 1px;
+    margin-left: 0.5rem;
+    text-align: center;
+  }
+}
+
+.chat-channel-title__users-count {
+  display: flex;
+  border-radius: 50%;
+  background: rgba(var(--primary-rgb), 0.1);
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  text-align: center;
+  font-weight: 700;
+  font-size: var(--font-down-1);
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+}
+
+.chat-channel-title__category-badge {
+  color: var(--primary-medium);
+  display: flex;
+  font-size: var(--font-up-1);
+  position: relative;
+}
+
+.chat-channel-title .chat-user-avatar {
+  font-size: var(--font-up-1);
+
+  + .chat-channel-title__usernames {
+    margin-left: 0.5rem;
+  }
+}
+
+.chat-channel-title__restricted-category-icon {
+  background-color: var(--secondary);
+  position: absolute;
+  border-radius: 50%;
+  padding: 2px 2px 3px;
+  color: var(--primary-high);
+  height: 0.5rem;
+  width: 0.5rem;
+  right: -0.5rem;
+  top: -0.1rem;
+}
+
+.chat-channel-title__category-title {
+  .emoji {
+    height: 1.2em;
+    vertical-align: text-bottom;
+    width: 1.2em;
+  }
+}
+
+.chat-channel-title__name {
+  @include ellipsis;
+  font-size: var(--font-0);
+  color: var(--primary);
+  margin-left: 0.5rem;
+}
+
+.channel-info {
+  .chat-channel-title__name {
+    max-width: 100%;
+  }
+}
+
+.has-unread .chat-channel-title__name {
+  font-weight: bold;
+}

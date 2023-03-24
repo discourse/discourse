@@ -1,0 +1,15 @@
+<div class="control-group form-template-field" data-field-type="multi-select">
+  {{#if @attributes.label}}
+    <label class="form-template-field__label">{{@attributes.label}}</label>
+  {{/if}}
+  <MultiSelect
+    @class="form-template-field__multi-select"
+    @content={{@choices}}
+    @nameProperty={{null}}
+    @valueProperty={{null}}
+    @options={{hash
+      translatedNone=@attributes.none_label
+      maximum=@validations.maximum
+    }}
+  />
+</div>

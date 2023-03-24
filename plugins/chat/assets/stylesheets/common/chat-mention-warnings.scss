@@ -1,0 +1,30 @@
+.chat-mention-warnings {
+  display: flex;
+  background: var(--tertiary-low);
+  padding: 0.5em 0 0.5em 1em;
+  color: var(--primary);
+  margin: 0.5em;
+
+  .chat-mention-warning__icon,
+  .chat-mention-warning__text {
+    margin: 0.5em;
+  }
+
+  .chat-mention-warnings-list__simple {
+    margin: 0.5em 0 0 0;
+    list-style: none;
+  }
+
+  .chat-mention-warnings-list__multiple {
+    margin: 0.5em 0 0 1em;
+  }
+
+  .chat-mention-warning__header,
+  .chat-mention-warning__icon {
+    font-size: var(--font-up-2);
+  }
+}
+
+.full-page-chat .chat-mention-warnings {
+  top: 4rem;
+}

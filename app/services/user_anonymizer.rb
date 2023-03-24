@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class UserAnonymizer
-
   attr_reader :user_history
+
+  EMAIL_SUFFIX = "@anonymized.invalid"
 
   # opts:
   #   anonymize_ip  - an optional new IP to update their logs with
@@ -39,7 +40,7 @@ class UserAnonymizer
       end
 
       @user.save!
-      @user.primary_email.update_attribute(:email, "#{@user.username}@anonymized.invalid")
+      @user.primary_email.update_attribute(:email, "#{@user.username}#{EMAIL_SUFFIX}")
 
       options = @user.user_option
       options.mailing_list_mode = false
@@ -55,7 +56,7 @@ class UserAnonymizer
           bio_raw: nil,
           bio_cooked: nil,
           profile_background_upload: nil,
-          card_background_upload: nil
+          card_background_upload: nil,
         )
       end
 
@@ -70,15 +71,19 @@ class UserAnonymizer
       @user_history = log_action
     end
 
-    UsernameChanger.update_username(user_id: @user.id,
-                                    old_username: @prev_username,
-                                    new_username: @user.username,
-                                    avatar_template: @user.avatar_template)
+    UsernameChanger.update_username(
+      user_id: @user.id,
+      old_username: @prev_username,
+      new_username: @user.username,
+      avatar_template: @user.avatar_template,
+    )
 
-    Jobs.enqueue(:anonymize_user,
-                 user_id: @user.id,
-                 prev_email: @prev_email,
-                 anonymize_ip: @opts[:anonymize_ip])
+    Jobs.enqueue(
+      :anonymize_user,
+      user_id: @user.id,
+      prev_email: @prev_email,
+      anonymize_ip: @opts[:anonymize_ip],
+    )
 
     DiscourseEvent.trigger(:user_anonymized, user: @user, opts: @opts)
     @user
@@ -88,7 +93,7 @@ class UserAnonymizer
 
   def make_anon_username
     100.times do
-      new_username = "anon#{(SecureRandom.random_number * 100000000).to_i}"
+      new_username = "anon#{(SecureRandom.random_number * 100_000_000).to_i}"
       return new_username unless User.where(username_lower: new_username).exists?
     end
     raise "Failed to generate an anon username"

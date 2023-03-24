@@ -2,14 +2,10 @@
 
 class DropReminderTypeIndexForBookmarks < ActiveRecord::Migration[6.1]
   def up
-    if index_exists?(:bookmarks, [:reminder_type])
-      remove_index :bookmarks, [:reminder_type]
-    end
+    remove_index :bookmarks, [:reminder_type] if index_exists?(:bookmarks, [:reminder_type])
   end
 
   def down
-    if !index_exists?(:bookmarks, [:reminder_type])
-      add_index :bookmarks, :reminder_type
-    end
+    add_index :bookmarks, :reminder_type if !index_exists?(:bookmarks, [:reminder_type])
   end
 end

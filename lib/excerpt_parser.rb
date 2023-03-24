@@ -19,6 +19,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_onebox_source = options[:keep_onebox_source] == true
     @keep_onebox_body = options[:keep_onebox_body] == true
     @keep_quotes = options[:keep_quotes] == true
+    @keep_svg = options[:keep_svg] == true
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
     @in_details_depth = 0
@@ -27,15 +28,14 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   end
 
   def self.get_excerpt(html, length, options)
-    html ||= ''
-    length = html.length if html.include?('excerpt') && CUSTOM_EXCERPT_REGEX === html
+    html ||= ""
+    length = html.length if html.include?("excerpt") && CUSTOM_EXCERPT_REGEX === html
     me = self.new(length, options)
     parser = Nokogiri::HTML::SAX::Parser.new(me)
-    catch(:done) do
-      parser.parse(html)
-    end
+    catch(:done) { parser.parse(html) }
     excerpt = me.excerpt.strip
-    excerpt = excerpt.gsub(/\s*\n+\s*/, "\n\n") if options[:keep_onebox_source] || options[:keep_onebox_body]
+    excerpt = excerpt.gsub(/\s*\n+\s*/, "\n\n") if options[:keep_onebox_source] ||
+      options[:keep_onebox_body]
     excerpt = CGI.unescapeHTML(excerpt) if options[:text_entities] == true
     excerpt
   end
@@ -52,8 +52,12 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   end
 
   def include_tag(name, attributes)
-    characters("<#{name} #{attributes.map { |k, v| "#{k}=\"#{escape_attribute(v)}\"" }.join(' ')}>",
-               truncate: false, count_it: false, encode: false)
+    characters(
+      "<#{name} #{attributes.map { |k, v| "#{k}=\"#{escape_attribute(v)}\"" }.join(" ")}>",
+      truncate: false,
+      count_it: false,
+      encode: false,
+    )
   end
 
   def start_element(name, attributes = [])
@@ -61,7 +65,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "img"
       attributes = Hash[*attributes.flatten]
 
-      if attributes["class"]&.include?('emoji')
+      if attributes["class"]&.include?("emoji")
         if @remap_emoji
           title = (attributes["alt"] || "").gsub(":", "")
           title = Emoji.lookup_unicode(title) || attributes["alt"]
@@ -82,57 +86,53 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         elsif !attributes["title"].blank?
           characters("[#{attributes["title"]}]")
         else
-          characters("[#{I18n.t 'excerpt_image'}]")
+          characters("[#{I18n.t "excerpt_image"}]")
         end
 
-        characters("(#{attributes['src']})") if @markdown_images
+        characters("(#{attributes["src"]})") if @markdown_images
       end
-
     when "a"
       unless @strip_links
         include_tag(name, attributes)
         @in_a = true
       end
-
     when "aside"
       attributes = Hash[*attributes.flatten]
-      unless (@keep_onebox_source || @keep_onebox_body) && attributes['class']&.include?('onebox')
+      if !(@keep_onebox_source || @keep_onebox_body) || !attributes["class"]&.include?("onebox")
         @in_quote = true
       end
 
-      if attributes['class']&.include?('quote')
-        if @keep_quotes || (@keep_onebox_body && attributes['data-topic'].present?)
+      if attributes["class"]&.include?("quote")
+        if @keep_quotes || (@keep_onebox_body && attributes["data-topic"].present?)
           @in_quote = false
         end
       end
-
-    when 'article'
-      if attributes.include?(['class', 'onebox-body'])
-        @in_quote = !@keep_onebox_body
-      end
-
-    when 'header'
-      if attributes.include?(['class', 'source'])
-        @in_quote = !@keep_onebox_source
-      end
-
+    when "article"
+      @in_quote = !@keep_onebox_body if attributes.include?(%w[class onebox-body])
+    when "header"
+      @in_quote = !@keep_onebox_source if attributes.include?(%w[class source])
     when "div", "span"
-      if attributes.include?(["class", "excerpt"])
+      if attributes.include?(%w[class excerpt])
         @excerpt = +""
         @current_length = 0
         @start_excerpt = true
       end
-
     when "details"
       @detail_contents = +"" if @in_details_depth == 0
       @in_details_depth += 1
-
     when "summary"
       if @in_details_depth == 1 && !@in_summary
         @summary_contents = +""
         @in_summary = true
       end
-
+    when "svg"
+      attributes = Hash[*attributes.flatten]
+      if attributes["class"]&.include?("d-icon") && @keep_svg
+        include_tag(name, attributes)
+        @in_svg = true
+      end
+    when "use"
+      include_tag(name, attributes) if @in_svg && @keep_svg
     end
   end
 
@@ -158,26 +158,33 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         @detail_contents = clean(@detail_contents)
 
         if @current_length + @summary_contents.length >= @length
-          characters(@summary_contents,
-                     encode: false,
-                     before_string: "<details class='disabled'><summary>",
-                     after_string: "</summary></details>")
+          characters(
+            @summary_contents,
+            encode: false,
+            before_string: "<details class='disabled'><summary>",
+            after_string: "</summary></details>",
+          )
         else
-          characters(@summary_contents,
-                     truncate: false,
-                     encode: false,
-                     before_string: "<details><summary>",
-                     after_string: "</summary>")
+          characters(
+            @summary_contents,
+            truncate: false,
+            encode: false,
+            before_string: "<details><summary>",
+            after_string: "</summary>",
+          )
 
-          characters(@detail_contents,
-                     encode: false,
-                     after_string: "</details>")
+          characters(@detail_contents, encode: false, after_string: "</details>")
         end
       end
     when "summary"
       @in_summary = false if @in_details_depth == 1
     when "div", "span"
       throw :done if @start_excerpt
+    when "svg"
+      characters("</svg>", truncate: false, count_it: false, encode: false) if @keep_svg
+      @in_svg = false
+    when "use"
+      characters("</use>", truncate: false, count_it: false, encode: false) if @keep_svg
     end
   end
 
@@ -185,7 +192,14 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     ERB::Util.html_escape(str.strip)
   end
 
-  def characters(string, truncate: true, count_it: true, encode: true, before_string: nil, after_string: nil)
+  def characters(
+    string,
+    truncate: true,
+    count_it: true,
+    encode: true,
+    before_string: nil,
+    after_string: nil
+  )
     return if @in_quote
 
     # we call length on this so might as well ensure we have a string

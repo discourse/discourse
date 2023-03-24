@@ -1,0 +1,116 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  js:
+    chat:
+      create: "Vytvoř"
+      cancel: "Zrušit"
+      channel_settings:
+        edit: "Upravit"
+        add: "přidat"
+        join: "Přidat se ke skupině"
+        leave: "Opustit skupinu"
+      close: "Zavřít"
+      delete: "Smazat"
+      muted: "ztišení"
+      joined: "účet vytvořen"
+      email_frequency:
+        never: "Nikdy"
+      header_indicator_preference:
+        never: "Nikdy"
+      flag: "Nahlášení"
+      join: "Přidat se ke skupině"
+      last_visit: "poslední návštěva"
+      mention_warning:
+        dismiss: "označit jako přečtené"
+      reply: "Odpověď"
+      edit: "Upravit"
+      rebake_message: "Obnovit HTML"
+      bookmark_message: "Založit"
+      bookmark_message_edit: "Upravit záložku"
+      save: "Uložit"
+      sounds:
+        none: "Žádná"
+      exit: "zpět"
+      channel_status:
+        closed: "Uzavřeno"
+        open: "Otevřít"
+      browse:
+        back: "Zpět"
+        filter_all: Celkem
+        filter_closed: Uzavřeno
+      chat_message_separator:
+        today: Dnes
+        yesterday: Včera
+      about_view:
+        title: Nadpis
+        name: Jméno
+        description: Popis
+      channel_info:
+        back_to_channel: "Zpět"
+        tabs:
+          about: O fóru
+          members: Členové
+          settings: Nastavení
+      direct_message_creator:
+        title: Nová zpráva
+        prefix: "Komu:"
+      create_channel:
+        type: "Typ"
+        types:
+          category: "Kategorie"
+          topic: "Témata"
+      composer:
+        italic_text: "text kurzívou"
+        bold_text: "tučný text"
+      notification_levels:
+        never: "Nikdy"
+      settings:
+        follow: "Přidat se ke skupině"
+        followed: "Účet vytvořen"
+        notifications: "Upozornění"
+        preview: "Náhled"
+        save: "Uložit"
+        saved: "Uloženo"
+        unfollow: "Opustit skupinu"
+        admin_title: "Administrace"
+      incoming_webhooks:
+        back: "Zpět"
+        description: "Popis"
+        delete: "Smazat"
+        emoji: "Smajlíky :)"
+        name: "Jméno"
+        save: "Uložit"
+        edit: "Upravit"
+        system: "systémové soukromé zprávy"
+        url: "URL"
+        username: "Uživatelské jméno"
+      selection:
+        cancel: "Zrušit"
+        copy: "Kopírovat"
+        new_topic:
+          title: "Rozdělit téma"
+        existing_topic:
+          title: "Sloučit téma"
+      emoji_picker:
+        objects: "Objekty"
+        flags: "Nahlášení"
+      draft_channel_screen:
+        header: "Nová zpráva"
+        cancel: "Zrušit"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Zpráva
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Nahlásil"

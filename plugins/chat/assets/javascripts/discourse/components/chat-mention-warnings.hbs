@@ -1,0 +1,24 @@
+{{#if this.show}}
+  <div class="chat-mention-warnings">
+    <div class="chat-mention-warning__icon">
+      {{d-icon "exclamation-triangle"}}
+    </div>
+    <div class="chat-mention-warning__text">
+      <div class="chat-mention-warning__header">
+        {{this.warningHeaderText}}
+      </div>
+      <ul class={{this.listStyleClass}}>
+        {{#if this.hasTooManyMentions}}
+          <li>{{this.tooManyMentionsBody}}</li>
+        {{else}}
+          {{#if this.hasUnreachableGroupMentions}}
+            <li>{{this.unreachableBody}}</li>
+          {{/if}}
+          {{#if this.hasOverMembersLimitGroupMentions}}
+            <li>{{this.overMembersLimitBody}}</li>
+          {{/if}}
+        {{/if}}
+      </ul>
+    </div>
+  </div>
+{{/if}}

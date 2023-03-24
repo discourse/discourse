@@ -1,4 +1,11 @@
-import createPMRoute from "discourse/routes/build-private-messages-group-route";
-import { INBOX_FILTER } from "discourse/routes/build-private-messages-route";
+import DiscourseRoute from "discourse/routes/discourse";
 
-export default createPMRoute("group", INBOX_FILTER);
+export default class extends DiscourseRoute {
+  model(params) {
+    return params.name;
+  }
+
+  setupController(controller, model) {
+    controller.set("groupName", model);
+  }
+}

@@ -10,6 +10,6 @@ class HostListSettingValidator
   end
 
   def error_message
-    I18n.t('site_settings.errors.invalid_domain_hostname')
+    I18n.t("site_settings.errors.invalid_domain_hostname")
   end
 end

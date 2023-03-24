@@ -27,6 +27,8 @@
 // 1. Default Settings
 ////////////////////////
 
+@use "sass:math";
+
 $overlay-color: #0b0b0b !default;
 $overlay-opacity: 0.8 !default;
 $shadow: 0 0 8px rgba(0, 0, 0, 0.6) !default; // shadow on image or iframe
@@ -46,7 +48,7 @@ $include-iframe-type: true !default;
 $iframe-padding-top: 40px !default;
 $iframe-background: #000 !default;
 $iframe-max-width: 900px !default;
-$iframe-ratio: 9/16 !default;
+$iframe-ratio: math.div(9, 16) !default;
 
 // Image-type options
 $include-image-type: true !default;

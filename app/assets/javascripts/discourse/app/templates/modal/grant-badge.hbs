@@ -4,15 +4,22 @@
       <p>{{i18n "admin.badges.no_badges"}}</p>
     {{else}}
       <p>
-        <ComboBox @value={{this.selectedBadgeId}} @content={{this.grantableBadges}} @onChange={{action (mut this.selectedBadgeId)}} @options={{hash
-            filterable=true
-            none="badges.none"
-          }} />
+        <ComboBox
+          @value={{this.selectedBadgeId}}
+          @content={{this.grantableBadges}}
+          @onChange={{action (mut this.selectedBadgeId)}}
+          @options={{hash filterable=true none="badges.none"}}
+        />
       </p>
     {{/if}}
   </ConditionalLoadingSpinner>
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary" @disabled={{this.buttonDisabled}} @action={{action "grantBadge"}} @label="admin.badges.grant" />
+  <DButton
+    @class="btn-primary"
+    @disabled={{this.buttonDisabled}}
+    @action={{action "grantBadge"}}
+    @label="admin.badges.grant"
+  />
 </div>

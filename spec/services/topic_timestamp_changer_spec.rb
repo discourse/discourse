@@ -7,19 +7,20 @@ RSpec.describe TopicTimestampChanger do
     let!(:p1) { Fabricate(:post, topic: topic, created_at: old_timestamp) }
     let!(:p2) { Fabricate(:post, topic: topic, created_at: old_timestamp + 1.day) }
 
-    context 'when new timestamp is in the future' do
+    context "when new timestamp is in the future" do
       let(:new_timestamp) { old_timestamp + 2.day }
 
-      it 'should raise the right error' do
-        expect { TopicTimestampChanger.new(topic: topic, timestamp: new_timestamp.to_f).change! }
-          .to raise_error(TopicTimestampChanger::InvalidTimestampError)
+      it "should raise the right error" do
+        expect {
+          TopicTimestampChanger.new(topic: topic, timestamp: new_timestamp.to_f).change!
+        }.to raise_error(TopicTimestampChanger::InvalidTimestampError)
       end
     end
 
-    context 'when new timestamp is in the past' do
+    context "when new timestamp is in the past" do
       let(:new_timestamp) { old_timestamp - 2.day }
 
-      it 'changes the timestamp of the topic and opening post' do
+      it "changes the timestamp of the topic and opening post" do
         freeze_time
         TopicTimestampChanger.new(topic: topic, timestamp: new_timestamp.to_f).change!
 
@@ -40,8 +41,8 @@ RSpec.describe TopicTimestampChanger do
         expect(p2.updated_at).to eq_time(new_timestamp + 1.day)
       end
 
-      context 'when posts have timestamps in the future' do
-        it 'should set the new timestamp as the default timestamp' do
+      context "when posts have timestamps in the future" do
+        it "should set the new timestamp as the default timestamp" do
           new_timestamp = freeze_time
 
           p3 = Fabricate(:post, topic: topic, created_at: new_timestamp + 3.days)
@@ -55,7 +56,7 @@ RSpec.describe TopicTimestampChanger do
       end
     end
 
-    it 'deletes the stats cache' do
+    it "deletes the stats cache" do
       Discourse.redis.set AdminDashboardData.stats_cache_key, "X"
       Discourse.redis.set About.stats_cache_key, "X"
 

@@ -1,0 +1,121 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    chat:
+      create: "Sukurti"
+      cancel: "Atšaukti"
+      channel_settings:
+        edit: "Redaguoti"
+        add: "Pridėti"
+        join: "Prisijungti"
+        leave: "Palikti"
+      close: "Uždaryti"
+      delete: "Pašalinti"
+      edited: "taisytas"
+      muted: "nutyldita"
+      joined: "prisijungė"
+      email_frequency:
+        never: "Niekada"
+      header_indicator_preference:
+        never: "Niekada"
+      flag: "Pranešti"
+      join: "Prisijungti"
+      last_visit: "paskutinis apsilankymas"
+      mention_warning:
+        dismiss: "praleisti"
+      reply: "Atsakyti"
+      edit: "Redaguoti"
+      rebake_message: "Perkurti HTML"
+      bookmark_message: "Žymės"
+      bookmark_message_edit: "Redaguoti žymę"
+      save: "Išsaugoti"
+      sounds:
+        none: "Nieko"
+      exit: "atgal"
+      channel_status:
+        closed: "Uždaryta"
+        open: "Atidaryti"
+      browse:
+        back: "Atgal"
+        filter_all: Visos
+        filter_closed: Uždaryta
+      chat_message_separator:
+        today: Šiandien
+        yesterday: Vakar
+      about_view:
+        title: Antraštė
+        name: Vardas
+        description: Aprašymas
+      channel_info:
+        back_to_channel: "Atgal"
+        tabs:
+          about: Apie
+          members: Nariai
+          settings: Nustatymai
+      direct_message_creator:
+        title: Nauja žinutė
+        prefix: "Kam:"
+      create_channel:
+        type: "Tipas"
+        types:
+          category: "Kategorija"
+          topic: "Tema"
+      composer:
+        italic_text: "pasviras tekstas"
+        bold_text: "paryškintas tekstas"
+      notification_levels:
+        never: "Niekada"
+      settings:
+        follow: "Prisijungti"
+        followed: "Prisijungė"
+        notifications: "Pranešimai"
+        preview: "Peržiūrėti"
+        save: "Išsaugoti"
+        saved: "Išsaugota"
+        unfollow: "Palikti"
+        admin_title: "Administratorius"
+      incoming_webhooks:
+        back: "Atgal"
+        description: "Aprašymas"
+        delete: "Pašalinti"
+        emoji: "Emoji"
+        name: "Vardas"
+        save: "Išsaugoti"
+        edit: "Redaguoti"
+        system: "sistema"
+        url: "Nuoroda"
+        username: "Vartotojo vardas"
+      selection:
+        cancel: "Atšaukti"
+        copy: "Kopijuoti"
+        new_topic:
+          title: "Perkelti į naują temą"
+        existing_topic:
+          title: "Perkelti į esamą temą"
+        new_message:
+          title: "Pereiti prie naujos žinutės"
+      emoji_picker:
+        objects: "Objektai"
+        activities: "Veikla"
+        flags: "Pažymėk!"
+        symbols: "Simboliai"
+      draft_channel_screen:
+        header: "Nauja žinutė"
+        cancel: "Atšaukti"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Žinutės
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Pažymėjo"

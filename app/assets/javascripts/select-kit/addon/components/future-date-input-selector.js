@@ -18,7 +18,7 @@ export default ComboBoxComponent.extend({
 
   init() {
     this._super(...arguments);
-    this.userTimezone = this.currentUser.timezone;
+    this.userTimezone = this.currentUser.user_option.timezone;
   },
 
   modifyComponentForRow() {

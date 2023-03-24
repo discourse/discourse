@@ -6,6 +6,8 @@ RSpec.describe SubscriptionMailer do
   subject { SubscriptionMailer.confirm_unsubscribe(user) }
 
   it "contains the right URL" do
-    expect(subject.body).to include("#{Discourse.base_url}/email/unsubscribe/#{UnsubscribeKey.last.key}")
+    expect(subject.body).to include(
+      "#{Discourse.base_url}/email/unsubscribe/#{UnsubscribeKey.last.key}",
+    )
   end
 end

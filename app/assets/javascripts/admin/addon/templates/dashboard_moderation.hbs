@@ -1,5 +1,10 @@
 <div class="sections">
-  <PluginOutlet @name="admin-dashboard-moderation-top" @tagName="span" @connectorTagName="div" />
+  <span>
+    <PluginOutlet
+      @name="admin-dashboard-moderation-top"
+      @connectorTagName="div"
+    />
+  </span>
 
   {{#if this.isModeratorsActivityVisible}}
     <div class="moderators-activity section">
@@ -9,22 +14,48 @@
             {{i18n "admin.dashboard.moderators_activity"}}
           </a>
         </h2>
-        <PeriodChooser @period={{this.period}} @action={{action "changePeriod"}} @content={{this.availablePeriods}} @fullDay={{false}} />
+        <PeriodChooser
+          @period={{this.period}}
+          @action={{action "changePeriod"}}
+          @content={{this.availablePeriods}}
+          @fullDay={{false}}
+        />
       </div>
 
       <div class="section-body">
-        <AdminReport @filters={{this.filters}} @showHeader={{false}} @dataSourceName="moderators_activity" />
+        <AdminReport
+          @filters={{this.filters}}
+          @showHeader={{false}}
+          @dataSourceName="moderators_activity"
+        />
       </div>
     </div>
   {{/if}}
 
   <div class="main-section">
-    <AdminReport @dataSourceName="flags_status" @reportOptions={{this.flagsStatusOptions}} @filters={{this.lastWeekfilters}} />
+    <AdminReport
+      @dataSourceName="flags_status"
+      @reportOptions={{this.flagsStatusOptions}}
+      @filters={{this.lastWeekfilters}}
+    />
 
-    <AdminReport @dataSourceName="post_edits" @filters={{this.lastWeekfilters}} />
+    <AdminReport
+      @dataSourceName="post_edits"
+      @filters={{this.lastWeekfilters}}
+    />
 
-    <AdminReport @dataSourceName="user_flagging_ratio" @filters={{this.lastWeekfilters}} @reportOptions={{this.userFlaggingRatioOptions}} />
+    <AdminReport
+      @dataSourceName="user_flagging_ratio"
+      @filters={{this.lastWeekfilters}}
+      @reportOptions={{this.userFlaggingRatioOptions}}
+    />
 
-    <PluginOutlet @name="admin-dashboard-moderation-bottom" @tagName="span" @connectorTagName="div" />
+    <span>
+      <PluginOutlet
+        @name="admin-dashboard-moderation-bottom"
+        @connectorTagName="div"
+        @outletArgs={{hash filters=this.lastWeekfilters}}
+      />
+    </span>
   </div>
 </div>

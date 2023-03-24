@@ -27,7 +27,6 @@ const SERVER_SIDE_ONLY = [
   /^\/raw\/\d+/,
   /\.rss$/,
   /\.json$/,
-  /^\/admin\/upgrade$/,
   /^\/logs($|\/)/,
   /^\/admin\/customize\/watched_words\/action\/[^\/]+\/download$/,
   /^\/pub\//,
@@ -117,15 +116,6 @@ const DiscourseURL = EmberObject.extend({
 
       if (!holder) {
         selector = holderId;
-
-        if (
-          document.getElementsByClassName(
-            `topic-post-visited-line post-${postNumber - 1}`
-          )?.length === 1
-        ) {
-          selector = ".small-action.topic-post-visited";
-        }
-
         holder = document.querySelector(selector);
       }
 
@@ -205,7 +195,7 @@ const DiscourseURL = EmberObject.extend({
       return;
     }
 
-    if (Session.currentProp("requiresRefresh")) {
+    if (Session.currentProp("requiresRefresh") && !this.isComposerOpen) {
       return this.redirectTo(path);
     }
 
@@ -225,7 +215,7 @@ const DiscourseURL = EmberObject.extend({
     const m = /^#(.+)$/.exec(path);
     if (m) {
       this.jumpToElement(m[1]);
-      return;
+      return this.replaceState(path);
     }
 
     const oldPath = this.router.currentURL;
@@ -418,6 +408,10 @@ const DiscourseURL = EmberObject.extend({
     return window.location.origin + (prefix === "/" ? "" : prefix);
   },
 
+  get isComposerOpen() {
+    return this.controllerFor("composer")?.visible;
+  },
+
   get router() {
     return this.container.lookup("router:main");
   },
@@ -511,9 +505,13 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
 
   if (category) {
     url = category.path;
-    if (subcategories && category.default_list_filter === "none") {
-      url += "/all";
-    } else if (!subcategories && category.default_list_filter === "all") {
+    if (category.default_list_filter === "none" && subcategories) {
+      if (subcategories) {
+        url += "/all";
+      } else {
+        url += "/none";
+      }
+    } else if (!subcategories) {
       url += "/none";
     }
   }

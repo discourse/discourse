@@ -1,0 +1,11 @@
+<ChatDrawer::Header>
+  <ChatDrawer::Header::LeftActions />
+  <ChatDrawer::Header::Title @title="chat.direct_message_creator.title" />
+  <ChatDrawer::Header::RightActions @drawerActions={{@drawerActions}} />
+</ChatDrawer::Header>
+
+{{#if this.chatStateManager.isDrawerExpanded}}
+  <div class="chat-drawer-content">
+    <ChatDraftChannelScreen />
+  </div>
+{{/if}}

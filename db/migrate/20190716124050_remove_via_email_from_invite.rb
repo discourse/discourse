@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
-require 'migration/column_dropper'
+require "migration/column_dropper"
 
 class RemoveViaEmailFromInvite < ActiveRecord::Migration[5.2]
-  DROPPED_COLUMNS ||= {
-    invites: %i{via_email}
-  }
+  DROPPED_COLUMNS ||= { invites: %i[via_email] }
 
   def up
-    DROPPED_COLUMNS.each do |table, columns|
-      Migration::ColumnDropper.execute_drop(table, columns)
-    end
+    DROPPED_COLUMNS.each { |table, columns| Migration::ColumnDropper.execute_drop(table, columns) }
   end
 
   def down

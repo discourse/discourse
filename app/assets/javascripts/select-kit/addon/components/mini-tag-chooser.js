@@ -98,7 +98,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (context.get("siteSettings.tags_sort_alphabetically")) {
+    if (context.siteSettings.tags_sort_alphabetically) {
       results = results.sort((a, b) => a.text.localeCompare(b.text));
     }
 

@@ -31,7 +31,6 @@ export default Mixin.create({
 
   _instrumentUploadTimings() {
     if (!this._performanceApiSupport()) {
-      // TODO (martin) (2021-01-23) Check if FireFox fixed this yet.
       warn(
         "Some browsers do not return a PerformanceMeasure when calling performance.mark, disabling instrumentation. See https://developer.mozilla.org/en-US/docs/Web/API/Performance/measure#return_value and https://bugzilla.mozilla.org/show_bug.cgi?id=1724645",
         { id: "discourse.upload-debugging" }

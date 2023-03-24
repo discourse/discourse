@@ -8,7 +8,7 @@ nl:
   js:
     styleguide:
       title: "Stijlgids"
-      welcome: "Kies een sectie in het menu aan de linkerkant om te beginnen."
+      welcome: "Kies een sectie in het menu links om te beginnen."
       categories:
         atoms: Atomen
         molecules: Moleculen
@@ -26,7 +26,7 @@ nl:
           title: "Kleuren"
         icons:
           title: "Pictogrammen"
-          full_list: "Volledige lijst met Font Awesome-pictogrammen bekijken"
+          full_list: "Zie de volledige lijst van Font Awesome-pictogrammen"
         input_fields:
           title: "Invoervelden"
         buttons:
@@ -44,15 +44,17 @@ nl:
         navigation_stacked:
           title: "Navigatie gestapeld"
         categories_list:
-          title: "Categorielijst"
+          title: "Categorieënlijst"
         topic_link:
-          title: "Topickoppeling"
+          title: "Topiclink"
         topic_list_item:
           title: "Topiclijstitem"
         topic_statuses:
           title: "Topicstatussen"
         topic_list:
           title: "Topiclijst"
+        basic_topic_list:
+          title: "Basistopicslijst"
         footer_message:
           title: "Voettekstbericht"
         signup_cta:
@@ -83,6 +85,10 @@ nl:
           title: "Koptekstpictogrammen"
         spinners:
           title: "Kringvelden"
+        empty_state:
+          title: "Lege toestand"
         rich_tooltip:
-          description: "Omschrijving"
+          title: "Rijke tooltip"
+          description: "Beschrijving"
           header: "Koptekst"
+          hover_to_see: "Plaats de aanwijzer om een tooltip te zien"

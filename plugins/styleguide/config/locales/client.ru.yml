@@ -7,7 +7,7 @@
 ru:
   js:
     styleguide:
-      title: "Styleguide"
+      title: "Руководство по стилю"
       welcome: "Чтобы начать, выберите раздел в меню слева."
       categories:
         atoms: Атомы
@@ -26,7 +26,7 @@ ru:
           title: "Цвета"
         icons:
           title: "Иконки"
-          full_list: "См. полный список иконок Font Awesome"
+          full_list: "См. полный список значков Font Awesome"
         input_fields:
           title: "Поля ввода"
         buttons:
@@ -34,7 +34,7 @@ ru:
         dropdowns:
           title: "Выпадающие списки"
         categories:
-          title: "Разделы"
+          title: "Категории"
         bread_crumbs:
           title: "Хлебные крошки"
         navigation:
@@ -44,7 +44,7 @@ ru:
         navigation_stacked:
           title: "Панель выбора настроек"
         categories_list:
-          title: "Список разделов"
+          title: "Список категорий"
         topic_link:
           title: "Ссылка на тему"
         topic_list_item:
@@ -66,7 +66,7 @@ ru:
         topic_notifications:
           title: "Уведомления темы"
         post:
-          title: "Сообщение"
+          title: "Запись"
         topic_map:
           title: "Карта темы"
         site_header:
@@ -80,7 +80,7 @@ ru:
           header: "Модальный заголовок"
           footer: "Модальный нижний колонтитул"
         user_about:
-          title: "Окно \"О пользователе\""
+          title: "Окно «О пользователе»"
         header_icons:
           title: "Значки заголовков"
         spinners:

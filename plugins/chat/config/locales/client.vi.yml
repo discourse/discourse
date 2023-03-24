@@ -1,0 +1,127 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    chat:
+      create: "Tạo"
+      cancel: "Huỷ"
+      channel_settings:
+        edit: "Sửa"
+        add: "Thêm"
+        join: "Tham gia"
+        leave: "Rời nhóm"
+      close: "Đóng"
+      delete: "Xóa"
+      edited: "đã chỉnh sửa"
+      muted: "im lặng"
+      joined: "đã tham gia"
+      email_frequency:
+        never: "Không bao giờ"
+      header_indicator_preference:
+        never: "Không bao giờ"
+      flag: "Gắn cờ"
+      join: "Tham gia"
+      last_visit: "lần thăm cuối"
+      mention_warning:
+        dismiss: "bỏ qua"
+        groups:
+          header:
+            some: "Một số người dùng sẽ không được thông báo"
+            all: "Sẽ không ai được thông báo"
+      reply: "Trả lời"
+      edit: "Sửa"
+      rebake_message: "Tạo lại HTML"
+      bookmark_message: "Đánh dấu chỉ mục"
+      bookmark_message_edit: "Chỉnh sửa Dấu trang"
+      save: "Lưu lại"
+      sounds:
+        none: "Không có gì"
+      exit: "quay lại"
+      channel_status:
+        closed: "Đã "
+        open: "Mở"
+      browse:
+        back: "Quay lại"
+        filter_all: All
+        filter_closed: Đã
+      chat_message_separator:
+        today: Hôm nay
+        yesterday: Hôm qua
+      about_view:
+        title: Tiêu đề
+        name: Tên
+        description: Mô tả
+      channel_info:
+        back_to_channel: "Quay lại"
+        tabs:
+          about: Giới thiệu
+          members: Các thành viên
+          settings: Cài đặt
+      direct_message_creator:
+        title: Tin nhắn mới
+        prefix: "Tới:"
+      create_channel:
+        type: "Loại"
+        types:
+          category: "Chuyên mục"
+          topic: "Chủ đề"
+      composer:
+        italic_text: "văn bản nhấn mạnh"
+        bold_text: "chữ in đậm"
+      notification_levels:
+        never: "Không bao giờ"
+      settings:
+        follow: "Tham gia"
+        followed: "Đã tham gia"
+        notifications: "Thông báo"
+        preview: "Xem trước"
+        save: "Lưu lại"
+        saved: "Lưu trữ"
+        unfollow: "Rời nhóm"
+        admin_title: "Quản trị"
+      incoming_webhooks:
+        back: "Quay lại"
+        description: "Mô tả"
+        delete: "Xoá"
+        emoji: "Emoji"
+        name: "T"
+        save: "Lưu lại"
+        edit: "Sửa"
+        system: "hệ thống"
+        url: "URL"
+        username: "Tên tài khoản"
+      selection:
+        cancel: "Huỷ"
+        copy: "Sao chép"
+        new_topic:
+          title: "Di chuyển tới Chủ đề mới"
+        existing_topic:
+          title: "Di chuyển tới chủ đề đang tồn tại"
+        new_message:
+          title: "Chuyển đến tin nhắn mới"
+      flags:
+        notify_moderators: "Thông báo này yêu cầu sự chú ý của nhân viên vì một lý do khác không được liệt kê ở trên."
+      emoji_picker:
+        objects: "Vật thể"
+        activities: "Hoạt động"
+        flags: "Dấu cờ - Flags"
+        symbols: "Ký hiệu"
+      draft_channel_screen:
+        header: "Tin nhắn mới"
+        cancel: "Huỷ"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Tin nhắn
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Gắn cờ bởi"

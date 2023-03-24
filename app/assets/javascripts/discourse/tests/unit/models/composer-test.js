@@ -4,34 +4,36 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import {
-  currentUser,
-  discourseModule,
-} from "discourse/tests/helpers/qunit-helpers";
+import { currentUser } from "discourse/tests/helpers/qunit-helpers";
 import AppEvents from "discourse/services/app-events";
-import EmberObject from "@ember/object";
-import Post from "discourse/models/post";
-import createStore from "discourse/tests/helpers/create-store";
-import { test } from "qunit";
+import { module, test } from "qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-function createComposer(opts) {
-  opts = opts || {};
-  opts.user = opts.user || currentUser();
+function createComposer(opts = {}) {
+  opts.user ??= currentUser();
   opts.appEvents = AppEvents.create();
-  return createStore().createRecord("composer", opts);
+  const store = getOwner(this).lookup("service:store");
+  return store.createRecord("composer", opts);
 }
 
 function openComposer(opts) {
-  const composer = createComposer(opts);
+  const composer = createComposer.call(this, opts);
   composer.open(opts);
   return composer;
 }
 
-discourseModule("Unit | Model | composer", function () {
+module("Unit | Model | composer", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
+  });
+
   test("replyLength", function (assert) {
     const replyLength = function (val, expectedLength) {
-      const composer = createComposer({ reply: val });
-      assert.strictEqual(composer.get("replyLength"), expectedLength);
+      const composer = createComposer.call(this, { reply: val });
+      assert.strictEqual(composer.replyLength, expectedLength);
     };
 
     replyLength("basic reply", 11, "basic reply length");
@@ -64,27 +66,21 @@ discourseModule("Unit | Model | composer", function () {
 
   test("missingReplyCharacters", function (assert) {
     this.siteSettings.min_first_post_length = 40;
-    const missingReplyCharacters = function (
-      val,
-      isPM,
-      isFirstPost,
-      expected,
-      message
-    ) {
-      let action = REPLY;
-      if (isPM) {
-        action = PRIVATE_MESSAGE;
-      }
+
+    function missingReplyCharacters(val, isPM, isFirstPost, expected, message) {
+      let action;
+
       if (isFirstPost) {
         action = CREATE_TOPIC;
+      } else if (isPM) {
+        action = PRIVATE_MESSAGE;
+      } else {
+        action = REPLY;
       }
-      const composer = createComposer({ reply: val, action });
-      assert.strictEqual(
-        composer.get("missingReplyCharacters"),
-        expected,
-        message
-      );
-    };
+
+      const composer = createComposer.call(this, { reply: val, action });
+      assert.strictEqual(composer.missingReplyCharacters, expected, message);
+    }
 
     missingReplyCharacters(
       "hi",
@@ -111,7 +107,7 @@ discourseModule("Unit | Model | composer", function () {
     const link = "http://imgur.com/gallery/grxX8";
     this.siteSettings.topic_featured_link_enabled = true;
     this.siteSettings.topic_featured_link_allowed_category_ids = 12345;
-    const composer = createComposer({
+    const composer = createComposer.call(this, {
       title: link,
       categoryId: 12345,
       featuredLink: link,
@@ -120,7 +116,7 @@ discourseModule("Unit | Model | composer", function () {
     });
 
     assert.strictEqual(
-      composer.get("missingReplyCharacters"),
+      composer.missingReplyCharacters,
       0,
       "don't require any post content"
     );
@@ -128,15 +124,11 @@ discourseModule("Unit | Model | composer", function () {
 
   test("missingTitleCharacters", function (assert) {
     const missingTitleCharacters = function (val, isPM, expected, message) {
-      const composer = createComposer({
+      const composer = createComposer.call(this, {
         title: val,
         action: isPM ? PRIVATE_MESSAGE : REPLY,
       });
-      assert.strictEqual(
-        composer.get("missingTitleCharacters"),
-        expected,
-        message
-      );
+      assert.strictEqual(composer.missingTitleCharacters, expected, message);
     };
 
     missingTitleCharacters(
@@ -155,7 +147,7 @@ discourseModule("Unit | Model | composer", function () {
 
   test("replyDirty", function (assert) {
     const composer = createComposer();
-    assert.ok(!composer.get("replyDirty"), "by default it's false");
+    assert.ok(!composer.replyDirty, "by default it's false");
 
     composer.setProperties({
       originalText: "hello",
@@ -163,27 +155,23 @@ discourseModule("Unit | Model | composer", function () {
     });
 
     assert.ok(
-      !composer.get("replyDirty"),
+      !composer.replyDirty,
       "it's false when the originalText is the same as the reply"
     );
     composer.set("reply", "hello world");
-    assert.ok(composer.get("replyDirty"), "it's true when the reply changes");
+    assert.ok(composer.replyDirty, "it's true when the reply changes");
   });
 
   test("appendText", function (assert) {
     const composer = createComposer();
 
-    assert.blank(composer.get("reply"), "the reply is blank by default");
+    assert.blank(composer.reply, "the reply is blank by default");
 
     composer.appendText("hello");
-    assert.strictEqual(
-      composer.get("reply"),
-      "hello",
-      "it appends text to nothing"
-    );
+    assert.strictEqual(composer.reply, "hello", "it appends text to nothing");
     composer.appendText(" world");
     assert.strictEqual(
-      composer.get("reply"),
+      composer.reply,
       "hello world",
       "it appends text to existing text"
     );
@@ -192,43 +180,39 @@ discourseModule("Unit | Model | composer", function () {
     composer.appendText("a\n\n\n\nb");
     composer.appendText("c", 3, { block: true });
 
-    assert.strictEqual(composer.get("reply"), "a\n\nc\n\nb");
+    assert.strictEqual(composer.reply, "a\n\nc\n\nb");
 
     composer.clearState();
     composer.appendText("ab");
     composer.appendText("c", 1, { block: true });
 
-    assert.strictEqual(composer.get("reply"), "a\n\nc\n\nb");
+    assert.strictEqual(composer.reply, "a\n\nc\n\nb");
 
     composer.clearState();
     composer.appendText("\nab");
     composer.appendText("c", 0, { block: true });
 
-    assert.strictEqual(composer.get("reply"), "c\n\nab");
+    assert.strictEqual(composer.reply, "c\n\nab");
   });
 
   test("prependText", function (assert) {
     const composer = createComposer();
 
-    assert.blank(composer.get("reply"), "the reply is blank by default");
+    assert.blank(composer.reply, "the reply is blank by default");
 
     composer.prependText("hello");
-    assert.strictEqual(
-      composer.get("reply"),
-      "hello",
-      "it prepends text to nothing"
-    );
+    assert.strictEqual(composer.reply, "hello", "it prepends text to nothing");
 
     composer.prependText("world ");
     assert.strictEqual(
-      composer.get("reply"),
+      composer.reply,
       "world hello",
       "it prepends text to existing text"
     );
 
     composer.prependText("before new line", { new_line: true });
     assert.strictEqual(
-      composer.get("reply"),
+      composer.reply,
       "before new line\n\nworld hello",
       "it prepends text with new line to existing text"
     );
@@ -240,92 +224,110 @@ discourseModule("Unit | Model | composer", function () {
     const composer = createComposer();
 
     composer.set("title", "asdf");
-    assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
+    assert.ok(!composer.titleLengthValid, "short titles are not valid");
 
     composer.set("title", "this is a long title");
-    assert.ok(!composer.get("titleLengthValid"), "long titles are not valid");
+    assert.ok(!composer.titleLengthValid, "long titles are not valid");
 
     composer.set("title", "just right");
-    assert.ok(composer.get("titleLengthValid"), "in the range is okay");
+    assert.ok(composer.titleLengthValid, "in the range is okay");
   });
 
   test("Title length for private messages", function (assert) {
     this.siteSettings.min_personal_message_title_length = 5;
     this.siteSettings.max_topic_title_length = 10;
-    const composer = createComposer({ action: PRIVATE_MESSAGE });
+    const composer = createComposer.call(this, { action: PRIVATE_MESSAGE });
 
     composer.set("title", "asdf");
-    assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
+    assert.ok(!composer.titleLengthValid, "short titles are not valid");
 
     composer.set("title", "this is a long title");
-    assert.ok(!composer.get("titleLengthValid"), "long titles are not valid");
+    assert.ok(!composer.titleLengthValid, "long titles are not valid");
 
     composer.set("title", "just right");
-    assert.ok(composer.get("titleLengthValid"), "in the range is okay");
+    assert.ok(composer.titleLengthValid, "in the range is okay");
   });
 
   test("Post length for private messages with non human users", function (assert) {
-    const composer = createComposer({
-      topic: EmberObject.create({ pm_with_non_human_user: true }),
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { pm_with_non_human_user: true });
+    const composer = createComposer.call(this, {
+      topic,
     });
 
-    assert.strictEqual(composer.get("minimumPostLength"), 1);
+    assert.strictEqual(composer.minimumPostLength, 1);
   });
 
   test("editingFirstPost", function (assert) {
     const composer = createComposer();
-    assert.ok(!composer.get("editingFirstPost"), "it's false by default");
+    assert.ok(!composer.editingFirstPost, "it's false by default");
 
-    const post = Post.create({ id: 123, post_number: 2 });
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", { id: 123, post_number: 2 });
     composer.setProperties({ post, action: EDIT });
     assert.ok(
-      !composer.get("editingFirstPost"),
+      !composer.editingFirstPost,
       "it's false when not editing the first post"
     );
 
     post.set("post_number", 1);
     assert.ok(
-      composer.get("editingFirstPost"),
+      composer.editingFirstPost,
       "it's true when editing the first post"
     );
   });
 
   test("clearState", function (assert) {
-    const composer = createComposer({
+    const store = getOwner(this).lookup("service:store");
+    const composer = createComposer.call(this, {
       originalText: "asdf",
       reply: "asdf2",
-      post: Post.create({ id: 1 }),
+      post: store.createRecord("post", { id: 1 }),
       title: "wat",
     });
 
     composer.clearState();
 
-    assert.blank(composer.get("originalText"));
-    assert.blank(composer.get("reply"));
-    assert.blank(composer.get("post"));
-    assert.blank(composer.get("title"));
+    assert.blank(composer.originalText);
+    assert.blank(composer.reply);
+    assert.blank(composer.post);
+    assert.blank(composer.title);
   });
 
   test("initial category when uncategorized is allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = true;
-    const composer = openComposer({
+    const composer = openComposer.call(this, {
       action: CREATE_TOPIC,
-      draftKey: "asfd",
+      draftKey: "abcd",
       draftSequence: 1,
     });
-    assert.ok(!composer.get("categoryId"), "Uncategorized by default");
+    assert.ok(!composer.categoryId, "Uncategorized by default");
   });
 
   test("initial category when uncategorized is not allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = false;
-    const composer = openComposer({
+    const composer = openComposer.call(this, {
       action: CREATE_TOPIC,
-      draftKey: "asfd",
+      draftKey: "abcd",
       draftSequence: 1,
     });
     assert.ok(
-      !composer.get("categoryId"),
+      !composer.categoryId,
       "Uncategorized by default. Must choose a category."
+    );
+  });
+
+  test("initial category when creating PM and there is a default composer category", function (assert) {
+    this.siteSettings.default_composer_category = 2;
+    const composer = openComposer.call(this, {
+      action: PRIVATE_MESSAGE,
+      draftKey: "abcd",
+      draftSequence: 1,
+    });
+    assert.strictEqual(
+      composer.categoryId,
+      null,
+      "it doesn't save the category"
     );
   });
 
@@ -333,21 +335,21 @@ discourseModule("Unit | Model | composer", function () {
     const quote =
       '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
     const newComposer = function () {
-      return openComposer({
+      return openComposer.call(this, {
         action: REPLY,
-        draftKey: "asfd",
+        draftKey: "abcd",
         draftSequence: 1,
         quote,
       });
     };
 
     assert.strictEqual(
-      newComposer().get("originalText"),
+      newComposer().originalText,
       quote,
       "originalText is the quote"
     );
     assert.strictEqual(
-      newComposer().get("replyDirty"),
+      newComposer().replyDirty,
       false,
       "replyDirty is initially false with a quote"
     );
@@ -358,7 +360,8 @@ discourseModule("Unit | Model | composer", function () {
     this.siteSettings.max_topic_title_length = 10;
     const composer = createComposer();
 
-    const post = Post.create({
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
       id: 123,
       post_number: 2,
       static_doc: true,
@@ -366,48 +369,49 @@ discourseModule("Unit | Model | composer", function () {
     composer.setProperties({ post, action: EDIT });
 
     composer.set("title", "asdf");
-    assert.ok(composer.get("titleLengthValid"), "admins can use short titles");
+    assert.ok(composer.titleLengthValid, "admins can use short titles");
 
     composer.set("title", "this is a long title");
-    assert.ok(composer.get("titleLengthValid"), "admins can use long titles");
+    assert.ok(composer.titleLengthValid, "admins can use long titles");
 
     composer.set("title", "just right");
-    assert.ok(composer.get("titleLengthValid"), "in the range is okay");
+    assert.ok(composer.titleLengthValid, "in the range is okay");
 
     composer.set("title", "");
     assert.ok(
-      !composer.get("titleLengthValid"),
+      !composer.titleLengthValid,
       "admins must set title to at least 1 character"
     );
   });
 
   test("title placeholder depends on what you're doing", function (assert) {
-    let composer = createComposer({ action: CREATE_TOPIC });
+    this.siteSettings.topic_featured_link_enabled = false;
+    let composer = createComposer.call(this, { action: CREATE_TOPIC });
     assert.strictEqual(
-      composer.get("titlePlaceholder"),
+      composer.titlePlaceholder,
       "composer.title_placeholder",
       "placeholder for normal topic"
     );
 
-    composer = createComposer({ action: PRIVATE_MESSAGE });
+    composer = createComposer.call(this, { action: PRIVATE_MESSAGE });
     assert.strictEqual(
-      composer.get("titlePlaceholder"),
+      composer.titlePlaceholder,
       "composer.title_placeholder",
       "placeholder for private message"
     );
 
     this.siteSettings.topic_featured_link_enabled = true;
 
-    composer = createComposer({ action: CREATE_TOPIC });
+    composer = createComposer.call(this, { action: CREATE_TOPIC });
     assert.strictEqual(
-      composer.get("titlePlaceholder"),
+      composer.titlePlaceholder,
       "composer.title_or_link_placeholder",
       "placeholder invites you to paste a link"
     );
 
-    composer = createComposer({ action: PRIVATE_MESSAGE });
+    composer = createComposer.call(this, { action: PRIVATE_MESSAGE });
     assert.strictEqual(
-      composer.get("titlePlaceholder"),
+      composer.titlePlaceholder,
       "composer.title_placeholder",
       "placeholder for private message with topic links enabled"
     );
@@ -416,24 +420,24 @@ discourseModule("Unit | Model | composer", function () {
   test("allows featured link before choosing a category", function (assert) {
     this.siteSettings.topic_featured_link_enabled = true;
     this.siteSettings.allow_uncategorized_topics = false;
-    let composer = createComposer({ action: CREATE_TOPIC });
+    const composer = createComposer.call(this, { action: CREATE_TOPIC });
     assert.strictEqual(
-      composer.get("titlePlaceholder"),
+      composer.titlePlaceholder,
       "composer.title_or_link_placeholder",
       "placeholder invites you to paste a link"
     );
-    assert.ok(composer.get("canEditTopicFeaturedLink"), "can paste link");
+    assert.ok(composer.canEditTopicFeaturedLink, "can paste link");
   });
 
   test("targetRecipientsArray contains types", function (assert) {
-    let composer = createComposer({
+    const composer = createComposer.call(this, {
       targetRecipients: "test,codinghorror,staff,foo@bar.com",
     });
-    assert.ok(composer.targetRecipientsArray, [
-      { type: "group", name: "test" },
-      { type: "user", name: "codinghorror" },
-      { type: "group", name: "staff" },
-      { type: "email", name: "foo@bar.com" },
+    assert.deepEqual(composer.targetRecipientsArray, [
+      { name: "test", type: "user" },
+      { name: "codinghorror", type: "user" },
+      { name: "staff", type: "group" },
+      { name: "foo@bar.com", type: "email" },
     ]);
   });
 });

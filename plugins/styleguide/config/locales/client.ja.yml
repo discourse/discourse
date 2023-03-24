@@ -80,7 +80,7 @@ ja:
           header: "モーダルタイトル"
           footer: "モーダルフッター"
         user_about:
-          title: "ユーザープロフィールボックス"
+          title: "ユーザープロファイルボックス"
         header_icons:
           title: "ヘッダーアイコン"
         spinners:

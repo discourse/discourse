@@ -10,6 +10,7 @@ import { findAll } from "discourse/models/login-method";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
+import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -130,8 +131,15 @@ export default Controller.extend(CanCheckEmails, {
 
       this.dialog.deleteConfirm({
         title: I18n.t("user.second_factor.disable_confirm"),
+        bodyComponent: SecondFactorConfirmPhrase,
+        bodyComponentModel: {
+          totps: this.totps,
+          security_keys: this.security_keys,
+        },
         confirmButtonLabel: "user.second_factor.disable",
+        confirmButtonDisabled: true,
         confirmButtonIcon: "ban",
+        cancelButtonClass: "btn-flat",
         didConfirm: () => {
           this.model
             .disableAllSecondFactors()
@@ -140,6 +148,109 @@ export default Controller.extend(CanCheckEmails, {
               DiscourseURL.redirectTo(userPath(`${usernameLower}/preferences`));
             })
             .catch((e) => this.handleError(e))
+            .finally(() => this.set("loading", false));
+        },
+      });
+    },
+    disableSingleSecondFactor(secondFactorMethod) {
+      if (this.totps.concat(this.security_keys).length === 1) {
+        this.send("disableAllSecondFactors");
+        return;
+      }
+      this.dialog.deleteConfirm({
+        title: I18n.t("user.second_factor.delete_single_confirm_title"),
+        message: I18n.t("user.second_factor.delete_single_confirm_message", {
+          name: secondFactorMethod.name,
+        }),
+        confirmButtonLabel: "user.second_factor.delete",
+        confirmButtonIcon: "ban",
+        cancelButtonClass: "btn-flat",
+        didConfirm: () => {
+          if (this.totps.includes(secondFactorMethod)) {
+            this.currentUser
+              .updateSecondFactor(
+                secondFactorMethod.id,
+                secondFactorMethod.name,
+                true,
+                secondFactorMethod.method
+              )
+              .then((response) => {
+                if (response.error) {
+                  return;
+                }
+                this.markDirty();
+                this.set(
+                  "totps",
+                  this.totps.filter(
+                    (totp) =>
+                      totp.id !== secondFactorMethod.id ||
+                      totp.method !== secondFactorMethod.method
+                  )
+                );
+              })
+              .catch((e) => this.handleError(e))
+              .finally(() => {
+                this.set("loading", false);
+              });
+          }
+
+          if (this.security_keys.includes(secondFactorMethod)) {
+            this.currentUser
+              .updateSecurityKey(
+                secondFactorMethod.id,
+                secondFactorMethod.name,
+                true
+              )
+              .then((response) => {
+                if (response.error) {
+                  return;
+                }
+                this.markDirty();
+                this.set(
+                  "security_keys",
+                  this.security_keys.filter(
+                    (securityKey) => securityKey.id !== secondFactorMethod.id
+                  )
+                );
+              })
+              .catch((e) => this.handleError(e))
+              .finally(() => {
+                this.set("loading", false);
+              });
+          }
+        },
+      });
+    },
+    disableSecondFactorBackup() {
+      this.dialog.deleteConfirm({
+        title: I18n.t("user.second_factor.delete_backup_codes_confirm_title"),
+        message: I18n.t(
+          "user.second_factor.delete_backup_codes_confirm_message"
+        ),
+        confirmButtonLabel: "user.second_factor.delete",
+        confirmButtonIcon: "ban",
+        cancelButtonClass: "btn-flat",
+        didConfirm: () => {
+          this.set("backupCodes", []);
+          this.set("loading", true);
+
+          this.model
+            .updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE)
+            .then((response) => {
+              if (response.error) {
+                this.set("errorMessage", response.error);
+                return;
+              }
+
+              this.set("errorMessage", null);
+              this.model.set("second_factor_backup_enabled", false);
+              this.markDirty();
+              this.send("closeModal");
+            })
+            .catch((error) => {
+              this.send("closeModal");
+              this.onError(error);
+            })
             .finally(() => this.set("loading", false));
         },
       });

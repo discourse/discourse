@@ -142,51 +142,51 @@ fr:
       close: "fermer"
       twitter: "Partager sur Twitter"
       facebook: "Partager sur Facebook"
-      email: "Envoyer par courriel"
+      email: "Envoyer par e-mail"
       url: "Copier et partager l'URL"
     action_codes:
-      public_topic: "a rendu ce sujet public %{when}"
-      open_topic: "a converti ceci en sujet %{when}"
-      private_topic: "a fait de ce sujet un message direct %{when}"
-      split_topic: "a scindé ce sujet %{when}"
-      invited_user: "a invité %{who} %{when}"
-      invited_group: "a invité %{who} %{when}"
+      public_topic: "A rendu ce sujet public (%{when})"
+      open_topic: "A converti ceci en sujet (%{when})"
+      private_topic: "A fait de ce sujet un message direct (%{when})"
+      split_topic: "A scindé ce sujet (%{when})"
+      invited_user: "A invité %{who} (%{when})"
+      invited_group: "A invité %{who} (%{when})"
       user_left: "%{who} a quitté cette conversation %{when}"
-      removed_user: "a retiré %{who} %{when}"
-      removed_group: "a retiré %{who} %{when}"
-      autobumped: "remonté automatiquement dans la liste %{when}"
+      removed_user: "A retiré %{who} (%{when})"
+      removed_group: "A retiré %{who} (%{when})"
+      autobumped: "Remonté automatiquement dans la liste (%{when})"
       autoclosed:
-        enabled: "fermé automatiquement %{when}"
-        disabled: "ouvert automatiquement %{when}"
+        enabled: "A fermé ce sujet (%{when})"
+        disabled: "A ouvert ce sujet (%{when})"
       closed:
-        enabled: "a fermé ce sujet %{when}"
-        disabled: "a ouvert ce sujet %{when}"
+        enabled: "A fermé ce sujet (%{when})"
+        disabled: "A ouvert ce sujet (%{when})"
       archived:
-        enabled: "a archivé ce sujet %{when}"
-        disabled: "a désarchivé ce sujet %{when}"
+        enabled: "A archivé ce sujet (%{when})"
+        disabled: "A désarchivé ce sujet (%{when})"
       pinned:
-        enabled: "a épinglé ce sujet %{when}"
-        disabled: "a désépinglé ce sujet %{when}"
+        enabled: "A épinglé ce sujet (%{when})"
+        disabled: "A désépinglé ce sujet (%{when})"
       pinned_globally:
-        enabled: "a épinglé ce sujet globalement %{when}"
-        disabled: "a désépinglé ce sujet %{when}"
+        enabled: "A épinglé ce sujet globalement (%{when})"
+        disabled: "A désépinglé ce sujet (%{when})"
       visible:
-        enabled: "a rendu ce sujet visible %{when}"
-        disabled: "a rendu ce sujet invisible %{when}"
+        enabled: "A rendu ce sujet visible (%{when})"
+        disabled: "A rendu ce sujet invisible (%{when})"
       banner:
-        enabled: "a mis à la une %{when}. Il sera affiché en haut de chaque page jusqu'à ce qu'il soit ignoré par un utilisateur."
-        disabled: "a supprimé de la une %{when}. Il ne sera plus affiché en haut de chaque page."
-      forwarded: "a transmis le courriel ci-dessus"
+        enabled: "A mis ce sujet à la une (%{when}). Il sera affiché en haut de chaque page jusqu'à ce qu'il soit ignoré par l'utilisateur."
+        disabled: "A supprimé ce sujet de la une (%{when}). Il ne sera plus affiché en haut de chaque page."
+      forwarded: "A transmis l'e-mail ci-dessus"
     topic_admin_menu: "actions du sujet"
     skip_to_main_content: "Passer au contenu principal"
-    emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification par courriel ne sera envoyée."
+    emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
       message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>actualiser cette page</span> pour éviter d'éventuels dysfonctionnements."
       dismiss: "Ignorer"
     bootstrap_mode_enabled:
-      one: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateur."
-      other: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateurs."
+      one: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par e-mail. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateur."
+      other: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par e-mail. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateurs."
     bootstrap_mode_disabled: "Le mode d'amorçage sera désactivé dans les prochaines 24 heures."
     bootstrap_invite_button_title: "Envoyer des invitations"
     bootstrap_wizard_link_title: "Terminer l'assistant de configuration"
@@ -232,6 +232,7 @@ fr:
     delete: "Supprimer"
     generic_error: "Nous sommes désolés, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue : %{error}"
+    multiple_errors: "Plusieurs erreurs se sont produites : %{errors}"
     sign_up: "S'inscrire"
     log_in: "Se connecter"
     age: "Âge"
@@ -252,7 +253,6 @@ fr:
     conduct: "Code de conduite"
     mobile_view: "Version mobile"
     desktop_view: "Version ordinateur"
-    or: "ou"
     now: "à l'instant"
     read_more: "lire la suite"
     more: "Plus"
@@ -293,7 +293,7 @@ fr:
       like_count: "J'aime"
       topic_count: "Sujets"
       post_count: "Nombre de messages"
-      user_count: "Utilisateurs"
+      user_count: "Inscriptions"
       active_user_count: "Utilisateurs actifs"
       contact: "Nous contacter"
       contact_info: "En cas de problème critique ou de sujet urgent concernant ce site, veuillez nous contacter à : %{contact_info}."
@@ -302,11 +302,9 @@ fr:
       edit_bookmark: "Modifier le signet"
       clear_bookmarks: "Retirer les signets"
       help:
-        bookmark: "Cliquez pour mettre un signet sur le premier message de ce sujet"
-        edit_bookmark: "Cliquez pour modifier le signet sur ce sujet"
         edit_bookmark_for_topic: "Cliquez pour modifier le signet associé à ce sujet"
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
-        unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet."
+        unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet"
     bookmarks:
       created: "Vous avez mis un signet à ce message. %{name}"
       created_generic: "Vous avez mis ceci en signet. %{name}"
@@ -316,7 +314,6 @@ fr:
       remove_reminder_keep_bookmark: "Supprimer le rappel et conserver le signet"
       created_with_reminder: "Vous avez mis un signet à ce message avec un rappel pour le %{date}. %{name}"
       created_with_reminder_generic: "Vous avez mis ceci en signet avec un rappel pour le %{date}. %{name}"
-      remove: "Retirer le signet"
       delete: "Supprimer le signet"
       confirm_delete: "Voulez-vous vraiment supprimer ce signet ? Le rappel sera également supprimé."
       confirm_clear: "Voulez-vous vraiment retirer tous les signets de ce sujet ?"
@@ -350,7 +347,6 @@ fr:
       remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
       new_topic: "Nouveau brouillon de sujet"
       new_private_message: "Nouveau brouillon de message direct"
-      topic_reply: "Créer un brouillon de réponse"
       abandon:
         confirm: "Vous avez un brouillon en cours pour ce sujet. Que voulez-vous en faire ?"
         yes_value: "Abandonner"
@@ -387,9 +383,6 @@ fr:
     enable: "Activer"
     disable: "Désactiver"
     continue: "Continuer"
-    undo: "Annuler"
-    revert: "Rétablir"
-    failed: "Échec"
     switch_to_anon: "Activer le mode anonyme"
     switch_from_anon: "Quitter le mode anonyme"
     banner:
@@ -469,7 +462,7 @@ fr:
         bio: "Biographie"
         website: "Site Web"
         username: "Nom d'utilisateur"
-        email: "Courriel"
+        email: "E-mail"
         name: "Nom"
         fields: "Champs"
         reject_reason: "Raison"
@@ -528,11 +521,9 @@ fr:
       scores:
         about: "Ce score est calculé en fonction du niveau de confiance de l'utilisateur qui a signalé le message, de l'exactitude de ses signalements précédents et de la priorité de l'élément signalé."
         score: "Score"
-        date: "Date"
-        type: "Type"
+        type: "Motif d'attribution"
         status: "État"
-        submitted_by: "Soumis par"
-        reviewed_by: "Examiné par"
+        submitted_by: "Signalé par"
       statuses:
         pending:
           title: "En attente"
@@ -540,14 +531,12 @@ fr:
           title: "Acceptés"
         rejected:
           title: "Rejetés"
-        ignored:
-          title: "Ignorés"
-        deleted:
-          title: "Supprimés"
         reviewed:
-          title: "(examinés)"
+          title: "Examinés"
         all:
-          title: "(tous)"
+          title: "Tout"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Message signalé"
@@ -570,7 +559,7 @@ fr:
       example_username: "nom d'utilisateur"
       reject_reason:
         title: "Pourquoi refusez-vous cet utilisateur ?"
-        send_email: "Envoyer le courriel de refus"
+        send_email: "Envoyer l'e-mail de refus"
     relative_time_picker:
       minutes:
         one: "minute"
@@ -674,7 +663,7 @@ fr:
         title: "Ajouter des utilisateurs à %{group_name}"
         description: "Saisissez une liste d'utilisateurs que vous souhaitez inviter dans le groupe ou collez-la dans une liste séparée par des virgules :"
         usernames_placeholder: "noms d'utilisateur"
-        usernames_or_emails_placeholder: "noms d'utilisateur ou courriels"
+        usernames_or_emails_placeholder: "noms d'utilisateur ou adresses e-mail"
         notify_users: "Notifications aux utilisateurs"
         set_owner: "Définir les utilisateurs comme propriétaires de ce groupe"
       requests:
@@ -686,6 +675,7 @@ fr:
         denied: "refusé"
         undone: "demande annulée"
         handle: "gérer une demande d'adhésion"
+        undo: "Annuler"
       manage:
         title: "Gérer"
         name: "Nom"
@@ -700,8 +690,8 @@ fr:
           posting: Contribution
           notification: Notification
         email:
-          title: "Courriel"
-          status: "%{old_emails}/%{total_emails} courriels synchronisés via IMAP."
+          title: "E-mail"
+          status: "%{old_emails}/%{total_emails} e-mails synchronisés via IMAP."
           enable_smtp: "Activer le SMTP"
           enable_imap: "Activer l'IMAP"
           test_settings: "Tester les paramètres"
@@ -711,10 +701,10 @@ fr:
           settings_required: "Tous les paramètres sont requis. Veuillez renseigner chaque champ avant de valider."
           smtp_settings_valid: "Paramètres SMTP valides."
           smtp_title: "SMTP"
-          smtp_instructions: "Quand le SMTP est activé au niveau du groupe, tous les courriels envoyés au nom de ce groupe seront expédiés en utilisant les paramètres SMTP indiqués ici plutôt qu'avec les paramètres SMTP globaux du site."
+          smtp_instructions: "Quand le SMTP est activé au niveau du groupe, tous les e-mails envoyés au nom de ce groupe seront expédiés en utilisant les paramètres SMTP indiqués ici plutôt qu'avec les paramètres SMTP globaux du site."
           imap_title: "IMAP"
           imap_additional_settings: "Paramètres additionnels"
-          imap_instructions: 'Quand l''IMAP est activé au niveau du groupe, les courriels sont synchronisés entre la boîte de réception de ce groupe et la boîte de réception IMAP indiquée ici. Avant de pouvoir activer l''IMAP, le SMTP doit d''abord être activé, et des paramètres SMTP valides doivent être renseignés. L''identifiant et le mot de passe du serveur SMTP seront utilisés pour l''authentification auprès du serveur IMAP. Pour en savoir plus, consultez <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">l''annonce de cette fonctionnalité sur Discourse Meta</a> (en anglais).'
+          imap_instructions: 'Quand l''IMAP est activé au niveau du groupe, les e-mails sont synchronisés entre la boîte de réception de ce groupe et la boîte de réception IMAP indiquée ici. Avant de pouvoir activer l''IMAP, le SMTP doit d''abord être activé, et des paramètres SMTP valides doivent être renseignés. L''identifiant et le mot de passe du serveur SMTP seront utilisés pour l''authentification auprès du serveur IMAP. Pour en savoir plus, consultez <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">l''annonce de cette fonctionnalité sur Discourse Meta</a> (en anglais).'
           imap_alpha_warning: "Attention : cette fonctionnalité est en test alpha. Seul Gmail est pris en charge officiellement. Son utilisation se fait à vos risques et périls !"
           imap_settings_valid: "Paramètres IMAP valides."
           smtp_disable_confirm: "En désactivant le SMTP, tous les paramètres SMTP et IMAP seront réinitialisés et ces fonctionnalités seront désactivées. Souhaitez-vous continuer ?"
@@ -736,12 +726,12 @@ fr:
           settings:
             title: "Paramètres"
             allow_unknown_sender_topic_replies: "Autoriser les réponses par un expéditeur inconnu."
-            allow_unknown_sender_topic_replies_hint: "Permet aux expéditeurs inconnus de répondre aux sujets du groupe. Si cette option n'est pas activée, les réponses provenant d'adresses courriel qui ne sont pas encore invitées dans le sujet créeront un nouveau sujet."
+            allow_unknown_sender_topic_replies_hint: "Permet aux expéditeurs inconnus de répondre aux sujets du groupe. Si cette option n'est pas activée, les réponses provenant d'adresses e-mail qui ne sont pas encore invitées dans le sujet créeront un nouveau sujet."
             from_alias: "Alias de l'expéditeur"
             from_alias_hint: "Alias à utiliser comme adresse d'expédition lors de l'envoi d'e-mails SMTP de groupe. Veuillez noter que cela peut ne pas être pris en charge par tous les prestataires de messagerie, nous vous invitons à consulter la documentation de votre prestataire."
           mailboxes:
             synchronized: "Boîte de réception à synchroniser"
-            none_found: "Aucune boîte de réception n'a été trouvée pour ce compte de courriel."
+            none_found: "Aucune boîte de réception n'a été trouvée pour ce compte d'e-mail."
             disabled: "Désactivée"
         membership:
           title: Adhésion
@@ -831,7 +821,7 @@ fr:
       activity: "Activité"
       members:
         title: "Membres"
-        filter_placeholder_admin: "nom d'utilisateur ou courriel"
+        filter_placeholder_admin: "nom d'utilisateur ou adresse e-mail"
         filter_placeholder: "nom d'utilisateur"
         remove_member: "Supprimer le membre"
         remove_member_description: "Supprimer <b>%{username}</b> de ce groupe"
@@ -853,6 +843,7 @@ fr:
         make_all_primary_description: "Attribuer le statut de groupe principal pour tous les utilisateurs sélectionnés"
         remove_all_primary: "Supprimer le statut de groupe principal"
         remove_all_primary_description: "Supprimer le statut de groupe principal de ce groupe"
+        status: "État"
         owner: "Propriétaire"
         primary: "Principal"
         forbidden: "Vous n'avez pas l'autorisation de voir les membres."
@@ -974,17 +965,12 @@ fr:
     user_fields:
       none: "(choisir une option)"
       required: 'Veuillez saisir une valeur pour « %{name} »'
-      same_as_password: 'Votre mot de passe ne doit pas être répété dans d''autres champs.'
+      same_as_password: "Votre mot de passe ne doit pas être répété dans d'autres champs."
     user:
       said: "%{username} :"
       profile: "Profil"
       mute: "Mettre en sourdine"
       edit: "Modifier les préférences"
-      download_archive:
-        button_text: "Tout télécharger"
-        confirm: "Voulez-vous vraiment télécharger vos messages ?"
-        success: "Le téléchargement a démarré ; vous recevrez une notification lorsqu'il sera terminé."
-        rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez réessayer demain."
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
       private_messages: "Messages directs"
@@ -1012,7 +998,7 @@ fr:
       notification_schedule:
         title: "Planification des notifications"
         label: "Activer la planification personnalisée des notifications"
-        tip: "Vous basculerez automatiquement en mode « Ne pas déranger » en-dehors de ces horaires."
+        tip: "En dehors de ces heures, vos notifications seront suspendues."
         midnight: "Minuit"
         none: "Jamais"
         monday: "Lundi"
@@ -1056,13 +1042,16 @@ fr:
         perm_denied_expl: "Vous n'avez pas autorisé les notifications. Autorisez-les à partir des paramètres de votre navigateur."
         disable: "Désactiver les notifications"
         enable: "Activer les notifications"
-        each_browser_note: 'Remarque : vous devez modifier ce paramètre sur chaque navigateur que vous utiliserez. Toutes les notifications seront désactivées lorsque vous serez en mode « Ne pas déranger », quel que soit la valeur de ce paramètre.'
+        each_browser_note: "Remarque : vous devez modifier ce paramètre sur chaque navigateur utilisé. Toutes les notifications seront désactivées si vous suspendez les notifications à partir du menu utilisateur, quel que soit ce paramètre."
         consent_prompt: "Souhaitez-vous recevoir des notifications en temps réel en cas de réponse à vos messages ?"
       dismiss: "Vu"
       dismiss_notifications: "Tout vu"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
       dismiss_bookmarks_tooltip: "Marquer tous les rappels de signets non lus comme lus"
       dismiss_messages_tooltip: "Marquer toutes les notifications de messages directs non lues comme lues"
+      no_likes_title: "Vous n'avez reçu aucun like pour le moment"
+      no_likes_body: >
+        Vous serez averti(e) ici chaque fois que quelqu'un aimera l'un de vos messages. Vous pourrez ainsi savoir ce qui intéresse les autres utilisateurs. Les autres utilisateurs verront la même chose lorsque vous aimerez leurs publications ! <br><br> Les notifications relatives aux likes ne vous sont jamais envoyées par e-mail, mais vous pouvez modifier la façon dont vous recevez les notifications concernant les likes sur le site dans vos <a href='%{preferencesUrl}'>préférences de notification</a>.
       no_messages_title: "Vous n'avez aucun message"
       no_messages_body: >
         Besoin d'échanger directement avec une personne en-dehors de la conversation principale ? Sélectionnez son avatar et utilisez le bouton %{icon} pour lui écrire un message.<br><br>Pour obtenir de l'aide, <a href='%{aboutUrl}'>adressez-vous à l'un des responsables du site</a>.
@@ -1072,21 +1061,17 @@ fr:
       no_bookmarks_search: "Aucun signet trouvé avec la requête de recherche fournie."
       no_notifications_title: "Vous n'avez pas encore reçu de notifications"
       no_notifications_body: >
-        Des notifications s'afficheront ici pour vous informer de l'activité qui vous concerne directement sur le forum, telle que les réponses qui vous sont adressées, les personnes qui citent vos messages ou qui mentionnent votre <b>pseudo</b>, et les nouveaux messages publiés dans les sujets que vous suivez. Si vous ne vous êtes pas connecté(e) au forum depuis un moment, vous recevrez aussi ces notifications par courriel.<br><br>Le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous souhaitez recevoir des notifications. Pour en savoir plus, consultez également vos <a href='%{preferencesUrl}'>préférences de notification</a>.
+        Des notifications s'afficheront ici pour vous informer de l'activité qui vous concerne directement sur le forum, telle que les réponses qui vous sont adressées, les personnes qui citent vos messages ou qui mentionnent votre <b>pseudo</b>, et les nouveaux messages publiés dans les sujets que vous suivez. Si vous ne vous êtes pas connecté(e) au forum depuis un moment, vous recevrez aussi ces notifications par e-mail.<br><br>Le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous souhaitez recevoir des notifications. Pour en savoir plus, consultez également vos <a href='%{preferencesUrl}'>préférences de notification</a>.
       no_other_notifications_title: "Vous n'avez pas encore reçu d'autres notifications"
       no_other_notifications_body: >
         Vous serez informé(e) dans ce panneau au sujet des autres types d'activité qui peuvent vous intéresser. Par exemple, lorsque quelqu'un crée un lien ou modifie un de vos messages.
       no_notifications_page_title: "Vous n'avez pas encore reçu de notifications"
       no_notifications_page_body: >
         Des notifications s'afficheront ici pour vous informer des activités qui vous concerne directement sur le forum, telles que les réponses qui vous sont adressées, les personnes qui citent vos messages ou qui mentionnent votre <b>pseudo</b>, et les nouveaux messages publiés dans les sujets que vous suivez. Des notifications vous seront également envoyées par e-mail si vous ne vous êtes pas connecté(e) pendant un certain temps. <br><br>Le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous souhaitez recevoir des notifications. Pour en savoir plus, consultez également vos <a href='%{preferencesUrl}'>préférences de notification</a>.
-      first_notification: "Votre première notification ! Sélectionnez-la pour commencer."
       dynamic_favicon: "Afficher un compteur de notifications sur l'icône du navigateur"
       skip_new_user_tips:
         description: "Ignorer les badges et les conseils d'intégration des nouveaux utilisateurs"
-        not_first_time: "Vous connaissez déjà ?"
-        skip_link: "Ignorer ces conseils"
-        read_later: "J'y jetterai un œil plus tard."
-      reset_seen_popups: "Afficher à nouveau les conseils d'intégration"
+      reset_seen_user_tips: "Afficher à nouveau les conseils d'utilisation"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
       color_scheme_default_on_all_devices: "Définir comme jeu(x) de couleurs par défaut sur tous mes appareils"
       color_scheme: "Jeu de couleurs"
@@ -1113,9 +1098,9 @@ fr:
         tags_section: "Section Étiquettes"
         tags_section_instruction: "Les étiquettes sélectionnées seront affichées dans la section Étiquettes de la barre latérale."
         navigation_section: "Navigation"
-        list_destination_instruction: "Lorsque je clique sur le lien d'une liste de sujets dans la barre latérale contenant des sujets nouveaux ou non lus, j'accède à"
-        list_destination_default: "Par défaut"
-        list_destination_unread_new: "Nouveau/Non lu"
+        list_destination_instruction: "Quand il y a du nouveau contenu dans la barre latérale…"
+        list_destination_default: "utiliser le lien par défaut et afficher un badge pour les nouveaux éléments"
+        list_destination_unread_new: "lien vers les éléments non lus ou nouveaux et afficher le nombre de nouveaux éléments"
       change: "modifier"
       featured_topic: "Sujet vedette"
       moderator: "%{user} a le rôle de modérateur(rice)"
@@ -1133,12 +1118,12 @@ fr:
         enabled: "Activer la liste de diffusion"
         instructions: |
           Ce paramètre remplace le résumé d'activité.<br />
-          Les sujets et catégories mis en sourdine ne sont pas inclus dans ces courriels.
-        individual: "Envoyer un courriel pour chaque nouveau message"
-        individual_no_echo: "Envoyer un courriel pour chaque nouveau message sauf les miens"
-        many_per_day: "M'envoyer un courriel pour chaque nouveau message (environ %{dailyEmailEstimate} par jour)"
-        few_per_day: "M'envoyer un courriel pour chaque nouveau message (environ 2 par jour)"
-        warning: "Mode liste de diffusion activé. Les paramètres de notification par courriel sont remplacés."
+          Les sujets et catégories mis en sourdine ne sont pas inclus dans ces e-mails.
+        individual: "Envoyer un e-mail pour chaque nouveau message"
+        individual_no_echo: "Envoyer un e-mail pour chaque nouveau message sauf les miens"
+        many_per_day: "M'envoyer un e-mail pour chaque nouveau message (environ %{dailyEmailEstimate} par jour)"
+        few_per_day: "M'envoyer un e-mail pour chaque nouveau message (environ 2 par jour)"
+        warning: "Mode liste de diffusion activé. Les paramètres de notification par e-mail sont remplacés."
       tag_settings: "Étiquettes"
       watched_tags: "Surveillées"
       watched_tags_instructions: "Vous surveillerez automatiquement tous les sujets marqués par ces étiquettes. Vous recevrez des notifications pour tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à côté du sujet."
@@ -1216,14 +1201,69 @@ fr:
         warnings: "Avertissements officiels"
         read_more_in_group: "Vous voulez en savoir plus ? Parcourez les autres messages dans %{groupLink}."
         read_more: "Vous voulez en savoir plus ? Parcourez les autres messages dans les <a href='%{basePath}/u/%{username}/messages'>messages personnels</a>."
-        read_more_group_pm_MF: "Il reste { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># message non lu</a> } other { are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># messages non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nouveau</a> message} other { {BOTH, select, true{et } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nouveaux</a> messages} }, ou vous pouvez parcourir les autres messages dans {groupLink}"
-        read_more_personal_pm_MF: "Il reste { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/unread'># message non lu</a> } other { <a href='{basePath}/u/{username}/messages/unread'># messages non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># nouveau</a> message} other { {BOTH, select, true{et } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># nouveaux</a> messages} }, ou vous pouvez parcourir les autres <a href='{basePath}/u/{username}/messages'>messages personnels</a>"
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Il y a <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># non lu</a>}
+                other {Il y a <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># non lus</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { et il reste <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nouveau</a> message, ou parcourez d'autres messages dans {groupLink}}
+                other { et il reste <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nouveaux</a> messages, ou parcourez d'autres messages dans {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Il reste <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># message</a> non lu, ou parcourez d'autres messages dans {groupLink}}
+                other {Il reste <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># messages</a> non lus, ou parcourez d'autres messages dans {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Il reste <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nouveau</a> message, ou parcourez d'autres messages dans {groupLink}}
+                other {Il reste <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nouveaux</a> messages, ou parcourez d'autres messages dans {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Il y a <a href='{basePath}/u/{username}/messages/unread'># non lu</a>}
+                other {Il y a <a href='{basePath}/u/{username}/messages/unread'># non lus</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { et il reste <a href='{basePath}/u/{username}/messages/new'># nouveau</a> message, ou parcourez les autres <a href='{basePath}/u/{username}/messages'>messages personnels</a>}
+                other { et il reste <a href='{basePath}/u/{username}/messages/new'># nouveaux</a> messages, ou parcourez les autres <a href='{basePath}/u/{username}/messages'>messages personnels</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Il reste <a href='{basePath}/u/{username}/messages/unread'># message non lu</a>, ou parcourez les autres <a href='{basePath}/u/{username}/messages'>messages personnels</a>}
+                other {Il reste <a href='{basePath}/u/{username}/messages/unread'># messages non lus</a>, ou parcourez les autres <a href='{basePath}/u/{username}/messages'>messages personnels</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Il reste <a href='{basePath}/u/{username}/messages/new'># nouveau</a> message, ou parcourez les autres <a href='{basePath}/u/{username}/messages'>messages personnels</a>}
+                other {Il reste <a href='{basePath}/u/{username}/messages/new'># nouveaux</a> messages, ou parcourez les autres <a href='{basePath}/u/{username}/messages'>messages personnels</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Compte"
         security: "Sécurité"
         profile: "Profil"
-        emails: "Courriels"
+        emails: "E-mails"
         notifications: "Notifications"
+        tracking: "Suivre"
         categories: "Catégories"
         users: "Utilisateurs"
         tags: "Étiquettes"
@@ -1231,11 +1271,11 @@ fr:
         apps: "Applications"
         sidebar: "Barre latérale"
       change_password:
-        success: "(courriel envoyé)"
-        in_progress: "(courriel en cours d'envoi)"
+        success: "(e-mail envoyé)"
+        in_progress: "(e-mail en cours d'envoi)"
         error: "(erreur)"
         emoji: "émoji de cadenas"
-        action: "Envoyer un courriel de réinitialisation du mot de passe"
+        action: "Envoyer un e-mail de réinitialisation du mot de passe"
         set_password: "Définir le mot de passe"
         choose_new: "Choisissez un nouveau mot de passe"
         choose: "Choisissez un mot de passe"
@@ -1281,7 +1321,14 @@ fr:
         use: "Utiliser l'application Authenticator"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs avant d'accéder à ce site."
         disable: "Désactiver"
-        disable_confirm: "Voulez-vous vraiment désactiver toutes les méthodes d'authentification à deux facteurs ?"
+        disable_confirm: "Voulez-vous vraiment désactiver l'authentification à deux facteurs ?"
+        delete: "Supprimer"
+        delete_confirm_header: "Ces authentificateurs basés sur des jetons et ces clés de sécurité physiques seront supprimés :"
+        delete_confirm_instruction: "Pour confirmer, saisissez <strong>%{confirm}</strong> dans la case ci-dessous."
+        delete_single_confirm_title: "Suppression d'un authentificateur"
+        delete_single_confirm_message: "Vous supprimez %{name}. Vous ne pouvez pas annuler cette action. Si vous changez d'avis, vous devrez réenregistrer cet authentificateur."
+        delete_backup_codes_confirm_title: "Suppression des codes de sauvegarde"
+        delete_backup_codes_confirm_message: "Vous supprimez des codes de sauvegarde. Vous ne pouvez pas annuler cette action. Si vous changez d'avis, vous devrez générer à nouveau les codes de sauvegarde."
         save: "Enregistrer"
         edit: "Modifier"
         edit_title: "Gérer l'application d'authentification"
@@ -1315,20 +1362,20 @@ fr:
         taken: "Nous sommes désolés, ce nom d'utilisateur est déjà utilisé."
         invalid: "Ce nom d'utilisateur est invalide. Il ne doit être composé que de lettres et de chiffres."
       add_email:
-        title: "Ajouter une adresse courriel"
+        title: "Ajouter une adresse e-mail"
         add: "ajouter"
       change_email:
-        title: "Modifier l'adresse courriel"
-        taken: "Nous sommes désolés, cette adresse courriel est indisponible."
-        error: "Une erreur est survenue lors de la modification de l'adresse courriel. Cette adresse est peut-être déjà utilisée ?"
-        success: "Nous avons envoyé un courriel à cette adresse. Merci de suivre les instructions."
-        success_via_admin: "Nous avons envoyé un courriel à cette adresse. L'utilisateur devra suivre les instructions de confirmation qui y sont indiquées."
-        success_staff: "Nous avons envoyé un courriel à votre adresse actuelle. Merci de suivre les instructions qui y figurent."
+        title: "Modifier l'adresse e-mail"
+        taken: "Nous sommes désolés, cette adresse e-mail est indisponible."
+        error: "Une erreur est survenue lors de la modification de l'adresse e-mail. Cette adresse est peut-être déjà utilisée ?"
+        success: "Nous avons envoyé un e-mail à cette adresse. Merci de suivre les instructions."
+        success_via_admin: "Nous avons envoyé un e-mail à cette adresse. L'utilisateur devra suivre les instructions de confirmation qui y sont indiquées."
+        success_staff: "Nous avons envoyé un e-mail à votre adresse actuelle. Merci de suivre les instructions qui y figurent."
       change_avatar:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, associé à"
         gravatar_title: "Modifier votre avatar sur le site de %{gravatarName}"
-        gravatar_failed: "Nous n'avons pas trouvé de %{gravatarName} associé à cette adresse courriel."
+        gravatar_failed: "Nous n'avons pas trouvé de %{gravatarName} associé à cette adresse e-mail."
         refresh_gravatar_title: "Actualiser votre %{gravatarName}"
         letter_based: "Image de profil attribuée par le système"
         uploaded_avatar: "Avatar personnalisé"
@@ -1347,32 +1394,31 @@ fr:
         title: "Sujet vedette"
         instructions: "Un lien vers ce sujet sera ajouté à votre carte d'utilisateur et votre profil."
       email:
-        title: "Courriel"
-        primary: "Adresse courriel principale"
-        secondary: "Adresses courriel secondaires"
+        title: "E-mail"
+        primary: "Adresse e-mail principale"
+        secondary: "Adresses e-mail secondaires"
         primary_label: "principale"
         unconfirmed_label: "non confirmée"
-        resend_label: "renvoyer le courriel de confirmation"
+        resend_label: "renvoyer l'e-mail de confirmation"
         resending_label: "envoi en cours…"
-        resent_label: "courriel envoyé"
-        update_email: "Modifier l'adresse courriel"
-        set_primary: "Définir comme adresse courriel principale"
-        destroy: "Supprimer l'adresse courriel"
-        add_email: "Ajouter une adresse courriel alternative"
-        auth_override_instructions: "Le courriel peut être mis à jour à partir du fournisseur d'authentification."
-        no_secondary: "Aucune adresse courriel secondaire"
+        resent_label: "e-mail envoyé"
+        update_email: "Modifier l'adresse e-mail"
+        set_primary: "Définir comme adresse e-mail principale"
+        destroy: "Supprimer l'adresse e-mail"
+        add_email: "Ajouter une adresse e-mail alternative"
+        auth_override_instructions: "L'e-mail peut être mis à jour à partir du fournisseur d'authentification."
+        no_secondary: "Aucune adresse e-mail secondaire"
         instructions: "Ne sera pas visible publiquement."
-        admin_note: "Remarque : un utilisateur administrateur modifiant l'adresse courriel d'un autre utilisateur non administrateur indique que l'utilisateur a perdu l'accès à son compte de messagerie d'origine. Un courriel de réinitialisation du mot de passe sera donc envoyé à sa nouvelle adresse. L'adresse courriel de l'utilisateur ne changera pas tant qu'il n'aura pas terminé le processus de réinitialisation du mot de passe."
-        ok: "Nous vous enverrons un courriel de confirmation"
-        required: "Veuillez saisir une adresse courriel"
-        invalid: "Veuillez saisir une adresse courriel valide"
-        authenticated: "Votre adresse courriel a été authentifiée par %{provider}"
+        admin_note: "Remarque : un utilisateur administrateur modifiant l'adresse e-mail d'un autre utilisateur non administrateur indique que l'utilisateur a perdu l'accès à son compte de messagerie d'origine. Un e-mail de réinitialisation du mot de passe sera donc envoyé à sa nouvelle adresse. L'adresse e-mail de l'utilisateur ne changera pas tant qu'il n'aura pas terminé le processus de réinitialisation du mot de passe."
+        ok: "Nous vous enverrons un e-mail de confirmation"
+        required: "Veuillez saisir une adresse e-mail"
+        invalid: "Veuillez saisir une adresse e-mail valide"
+        authenticated: "Votre adresse e-mail a été authentifiée par %{provider}"
         invite_auth_email_invalid: "Votre e-mail d'invitation ne correspond pas à l'e-mail authentifié par %{provider}"
-        authenticated_by_invite: "Votre adresse de courriel a été authentifiée par l'invitation"
-        frequency_immediately: "Nous vous enverrons un courriel immédiatement si vous n'avez pas lu le contenu en question."
+        authenticated_by_invite: "Votre adresse e-mail a été authentifiée par l'invitation"
         frequency:
-          one: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu(e) sur le site au cours de la dernière minute."
-          other: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu(e) sur le site au cours des %{count} dernières minutes."
+          one: "Nous vous enverrons des e-mails seulement si nous ne vous avons pas vu(e) sur le site au cours de la dernière minute."
+          other: "Nous vous enverrons des e-mails seulement si nous ne vous avons pas vu(e) sur le site au cours des %{count} dernières minutes."
       associated_accounts:
         title: "Comptes associés"
         connect: "Connecter"
@@ -1401,7 +1447,7 @@ fr:
         too_short: "Votre nom d'utilisateur est trop court"
         too_long: "Votre nom d'utilisateur est trop long"
         checking: "Vérification de la disponibilité du nom d'utilisateur…"
-        prefilled: "L'adresse courriel correspond à ce nom d'utilisateur enregistré"
+        prefilled: "L'adresse e-mail correspond à ce nom d'utilisateur enregistré"
         required: "Veuillez entrer un nom d'utilisateur"
         edit: "Modifier le nom d'utilisateur"
       locale:
@@ -1435,7 +1481,7 @@ fr:
       log_out: "Se déconnecter"
       location: "Localisation"
       website: "Site Web"
-      email_settings: "Courriel"
+      email_settings: "E-mail"
       hide_profile_and_presence: "Cacher mon profil public et mes statistiques"
       enable_physical_keyboard: "Activer le support du clavier physique sur iPad"
       text_size:
@@ -1449,6 +1495,8 @@ fr:
         title: "Le titre de la page en arrière-plan affiche le nombre de :"
         notifications: "Nouvelles notifications"
         contextual: "Nouveau contenu de la page"
+      bookmark_after_notification:
+        title: "Après l'envoi d'une notification de rappel de signet :"
       like_notification_frequency:
         title: "Envoyer une notification si un « J'aime » est attribué"
         always: "Toujours"
@@ -1456,12 +1504,12 @@ fr:
         first_time: "La première fois qu'un message reçoit un « J'aime »"
         never: "Jamais"
       email_previous_replies:
-        title: "Inclure les réponses précédentes en bas des courriels"
+        title: "Inclure les réponses précédentes en bas des e-mails"
         unless_emailed: "sauf si déjà envoyées"
         always: "toujours"
         never: "jamais"
       email_digests:
-        title: "Lorsque je ne visite pas le site, m'envoyer un courriel avec un résumé des sujets et réponses populaires"
+        title: "Lorsque je ne visite pas le site, m'envoyer un e-mail avec un résumé des sujets et réponses populaires"
         every_30_minutes: "toutes les 30 minutes"
         every_hour: "toutes les heures"
         daily: "tous les jours"
@@ -1474,10 +1522,11 @@ fr:
         only_when_away: "seulement en cas d'absence"
         never: "jamais"
       email_messages_level: "Envoyez-moi un e-mail lorsque je reçois un message personnel"
-      include_tl0_in_digests: "Inclure les contributions des nouveaux utilisateurs dans les résumés par courriel"
-      email_in_reply_to: "En plus du message notifié par courriel, inclure un extrait du message auquel il répond"
+      include_tl0_in_digests: "Inclure les contributions des nouveaux utilisateurs dans les résumés par e-mail"
+      email_in_reply_to: "En plus du message notifié par e-mail, inclure un extrait du message auquel il répond"
       other_settings: "Autre"
       categories_settings: "Catégories"
+      topics_settings: "Sujets"
       new_topic_duration:
         label: "Considérer les sujets comme nouveaux quand"
         not_viewed: "je ne les ai pas encore vus"
@@ -1515,7 +1564,7 @@ fr:
         edit: "Modifier"
         remove: "Supprimer"
         copy_link: "Obtenir le lien"
-        reinvite: "Renvoyer un courriel"
+        reinvite: "Renvoyer un e-mail"
         reinvited: "Invitation renvoyée"
         removed: "Supprimé"
         search: "commencez votre saisie pour rechercher vos invitations…"
@@ -1542,8 +1591,8 @@ fr:
         create: "Inviter"
         generate_link: "Créer un lien d'invitation"
         link_generated: "Voici votre lien d'invitation !"
-        valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
-        single_user: "Inviter par courriel"
+        valid_for: "Le lien d'invitation est seulement valide pour cette adresse e-mail : %{email}"
+        single_user: "Inviter par e-mail"
         multiple_user: "Inviter par lien"
         invite_link:
           title: "Lien d'invitation"
@@ -1567,7 +1616,7 @@ fr:
           invite_to_topic: "Diriger vers ce sujet"
           expires_at: "Ce lien expirera dans"
           custom_message: "Message personnel (facultatif)"
-          send_invite_email: "Enregistrer et envoyer le courriel"
+          send_invite_email: "Enregistrer et envoyer l'e-mail"
           send_invite_email_instructions: "Restreindre l'invitation à l'adresse email pour envoyer un email d'invitation"
           save_invite: "Enregistrer l'invitation"
           invite_saved: "Invitation enregistrée."
@@ -1577,7 +1626,7 @@ fr:
           instructions: |
             <p>Pour mettre votre communauté sur pied rapidement, invitez une liste d'utilisateurs : composez un <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">fichier CSV</a> contenant l'adresse de chaque personne à inviter, en disposant une adresse par ligne. Pour ajouter certaines personnes à des groupes particuliers, ou pour les diriger automatiquement vers un sujet particulier lors de leur première connexion, vous pouvez faire figurer les éléments suivants.</p>
             <pre>jean@dupont.fr,nom_dun_groupe;nom_dun_autre_groupe,identifiant_numérique_du_sujet</pre>
-            <p>Un courriel d'invitation sera envoyé à chaque adresse reprise dans ce fichier CSV, et vous pourrez modifier son contenu après l'avoir envoyé sur le serveur.</p>
+            <p>Un e-mail d'invitation sera envoyé à chaque adresse reprise dans ce fichier CSV, et vous pourrez modifier son contenu après l'avoir envoyé sur le serveur.</p>
           progress: "Envoi en cours : %{progress} %…"
           success: "Le fichier a été envoyé avec succès. Vous recevrez un message de notification lorsque le processus sera terminé."
           error: "Nous sommes désolés, le fichier doit être au format CSV."
@@ -1586,7 +1635,7 @@ fr:
         too_short: "Votre mot de passe est trop court."
         common: "Ce mot de passe est trop commun."
         same_as_username: "Votre mot de passe est identique à votre nom d'utilisateur."
-        same_as_email: "Votre mot de passe est identique à votre adresse courriel."
+        same_as_email: "Votre mot de passe est identique à votre adresse e-mail."
         ok: "Votre mot de passe semble correct."
         instructions: "au moins %{count} caractères"
         required: "Veuillez saisir un mot de passe"
@@ -1673,8 +1722,9 @@ fr:
       save: "Enregistrer"
       set_custom_status: "Définir un statut personnalisé"
       what_are_you_doing: "Que faites-vous ?"
+      pause_notifications: "Suspendre les notifications"
       remove_status: "Supprimer le statut"
-    popup:
+    user_tips:
       primary: "J'ai compris !"
       secondary: "ne me montrez pas ces conseils"
       first_notification:
@@ -1683,6 +1733,15 @@ fr:
       topic_timeline:
         title: "Chronologie du sujet"
         content: "Parcourez rapidement un article à l'aide de la chronologie des sujets."
+      post_menu:
+        title: "Menu du message"
+        content: "Découvrez comment vous pouvez interagir autrement avec le message en cliquant sur les trois points !"
+      topic_notification_levels:
+        title: "Vous suivez maintenant ce sujet"
+        content: "Recherchez cette cloche pour ajuster vos préférences de notification pour des sujets spécifiques ou des catégories entières."
+      suggested_topics:
+        title: "Continuez de lire !"
+        content: "Voici quelques sujets que vous pourriez vouloir lire ensuite."
     loading: "Chargement…"
     errors:
       prev_page: "lors du chargement de"
@@ -1717,19 +1776,46 @@ fr:
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
     staff_writes_only_mode:
       enabled: "Ce site est en mode réservé aux responsables. Vous pouvez continuer à naviguer, mais les réponses, les j'aime et les autres actions sont limitées aux responsables uniquement."
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Commençons la discussion !</a> Il y a {currentTopics, plural, one {<strong>#</strong> sujet} other {<strong>#</strong> sujets}} et {currentPosts, plural, one {<strong>#</strong> message} other {<strong>#</strong> messages}}. Il en faudrait davantage pour les visiteurs : nous recommandons au moins {requiredTopics, plural, one {<strong>#</strong> sujet} other {<strong>#</strong> sujets}} et {requiredPosts, plural, one {<strong>#</strong> message} other {<strong>#</strong> messages}}. Seuls les responsables peuvent voir ce message.
-    too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Commençons la discussion !</a> Il y a {currentTopics, plural, one {<strong>#</strong> sujet} other {<strong>#</strong> sujets}}. Il en faudrait davantage pour les visiteurs : nous recommandons au moins {requiredTopics, plural, one {<strong>#</strong> sujet} other {<strong>#</strong> sujets}}. Seuls les responsables peuvent voir ce message.
-    too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Commençons la discussion !</a> Il y a {currentPosts, plural, one {<strong>#</strong> message} other {<strong>#</strong> messages}}. Il en faudrait davantage pour les visiteurs : nous recommandons au moins {requiredPosts, plural, one {<strong>#</strong> message} other {<strong>#</strong> messages}}. Seuls les responsables peuvent voir ce message.
+    too_few_topics_and_posts_notice_MF: |
+      Commençons <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">la discussion !</a> Il y a { currentTopics, plural,
+          one {<strong>#</strong> sujet}
+        other {<strong>#</strong> sujets}
+      } et { currentPosts, plural,
+          one {<strong>#</strong> message}
+        other {<strong>#</strong> messages}
+      }. Il en faudrait davantage pour les visiteurs. Nous recommandons de proposer au moins { requiredTopics, plural,
+          one {<strong>#</strong> sujet}
+        other {<strong>#</strong> sujets}
+      } et { requiredPosts, plural,
+          one {<strong>#</strong> message}
+        other {<strong>#</strong> messages}
+      }. Seul les responsables peuvent voir ce message.
+    too_few_topics_notice_MF: |
+      Commençons <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">la discussion !</a> Il y a { currentTopics, plural,
+          one {<strong>#</strong> sujet}
+        other {<strong>#</strong> sujets}
+      }. Il en faudrait davantage pour les visiteurs. Nous recommandons de proposer au moins { requiredTopics, plural,
+          one {<strong>#</strong> sujet}
+        other {<strong>#</strong> sujets}
+      }. Seuls les responsables peuvent voir ce message.
+    too_few_posts_notice_MF: |
+      Commençons <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">la discussion !</a> Il y a { currentPosts, plural,
+          one {<strong>#</strong> message}
+        other {<strong>#</strong> messages}
+      }. Il en faudrait davantage pour les visiteurs. Nous recommandons de proposer au moins { requiredPosts, plural,
+          one {<strong>#</strong> message}
+        other {<strong>#</strong> messages}
+      }. Seuls les responsables peuvent voir ce message.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}.
     learn_more: "en savoir plus…"
-    first_post: Premier message
     mute: Mettre en sourdine
     unmute: Rétablir
     last_post: Dernier message
@@ -1754,7 +1840,8 @@ fr:
       description:
         one: "Il y a <b>%{count}</b> réponse."
         other: "Il y a <b>%{count}</b> réponses."
-      description_time_MF: "Il y a {replyCount, plural, one {<b>#</b> réponse} other {<b>#</b> réponses}} avec un temps de lecture estimé à <b>{readingTime, plural, one {# minute} other {# minutes}}</b>."
+      description_time_MF: |
+        Il y a {replyCount, plural, one {<b>#</b> réponse} other {<b>#</b> réponses}} avec un temps de lecture estimé à <b>{readingTime, plural, one {# minute} other {# minutes}}</b>.
       enable: "Résumer ce sujet"
       disable: "Afficher tous les messages"
       short_label: "Résumer"
@@ -1776,44 +1863,44 @@ fr:
       leave: "Quitter"
       remove_group: "Supprimer le groupe"
       remove_user: "Supprimer l'utilisateur"
-    email: "Courriel"
+    email: "E-mail"
     username: "Nom d'utilisateur"
     last_seen: "Vu"
     created: "Créé"
     created_lowercase: "créé"
     trust_level: "Niveau de confiance"
-    search_hint: "nom d'utilisateur, courriel ou adresse IP"
+    search_hint: "nom d'utilisateur, adresse e-mail ou adresse IP"
     create_account:
       header_title: "Bienvenue !"
       subheader_title: "Créons votre compte"
       disclaimer: "En vous inscrivant, vous acceptez la <a href='%{privacy_link}' target='blank'>politique de confidentialité</a> et les <a href='%{tos_link}' target='blank'>conditions générales d'utilisation</a>."
       title: "Créer votre compte"
-      failed: "Un problème est survenu. Cette adresse courriel est peut-être déjà enregistrée. Essayez le lien d'oubli du mot de passe."
+      failed: "Un problème est survenu. Cette adresse e-mail est peut-être déjà enregistrée. Essayez le lien d'oubli du mot de passe."
       associate: "Vous avez déjà un compte ? <a href='%{associate_link}'>Connectez-vous</a> pour lier votre compte %{provider}."
     forgot_password:
       title: "Réinitialisation du mot de passe"
       action: "J'ai oublié mon mot de passe"
-      invite: "Saisissez votre nom d'utilisateur ou votre adresse courriel et vous recevrez un nouveau mot de passe par courriel."
+      invite: "Saisissez votre nom d'utilisateur ou votre adresse e-mail et vous recevrez un nouveau mot de passe par e-mail."
       invite_no_username: "Saisissez votre adresse e-mail et nous vous enverrons un e-mail de réinitialisation du mot de passe."
       reset: "Réinitialiser votre mot de passe"
-      complete_username: "Si un compte correspond au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un courriel contenant les instructions permettant de réinitialiser votre mot de passe."
-      complete_email: "Si un compte correspond à l'adresse courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel contenant les instructions permettant de réinitialiser votre mot de passe."
-      complete_username_found: "Nous avons trouvé un compte correspondant au nom d'utilisateur <b>%{username}</b>. Vous devriez recevoir rapidement un courriel contenant les instructions permettant de réinitialiser votre mot de passe."
-      complete_email_found: "Nous avons trouvé un compte correspondant au courriel <b>%{email}</b>. Vous devriez recevoir rapidement un courriel contenant les instructions permettant de réinitialiser votre mot de passe."
+      complete_username: "Si un compte correspond au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un e-mail contenant les instructions permettant de réinitialiser votre mot de passe."
+      complete_email: "Si un compte correspond à l'adresse e-mail <b>%{email}</b>, vous devriez recevoir rapidement un e-mail contenant les instructions permettant de réinitialiser votre mot de passe."
+      complete_username_found: "Nous avons trouvé un compte correspondant au nom d'utilisateur <b>%{username}</b>. Vous devriez recevoir rapidement un e-mail contenant les instructions permettant de réinitialiser votre mot de passe."
+      complete_email_found: "Nous avons trouvé un compte correspondant à l'adresse e-mail <b>%{email}</b>. Vous devriez recevoir rapidement un e-mail contenant les instructions permettant de réinitialiser votre mot de passe."
       complete_username_not_found: "Aucun compte ne correspond au nom d'utilisateur <b>%{username}</b>"
       complete_email_not_found: "Aucun compte ne correspond à <b>%{email}</b>"
-      help: "Le courriel n'est pas arrivé ? N'oubliez pas de consulter votre dossier de courrier indésirable.<p>Vous avez des doutes concernant l'adresse courriel que vous avez utilisée ? Saisissez une adresse courriel et nous vous dirons si elle existe ici.</p><p>Si vous n'avez plus accès à l'adresse courriel de votre compte, merci de contacter <a href='%{basePath}/about'>nos responsables serviables.</a></p>"
+      help: "L'e-mail n'est pas arrivé ? N'oubliez pas de consulter votre dossier de courrier indésirable.<p>Vous avez des doutes concernant l'adresse e-mail que vous avez utilisée ? Saisissez une adresse e-mail et nous vous dirons si elle existe ici.</p><p>Si vous n'avez plus accès à l'adresse e-mail de votre compte, merci de contacter <a href='%{basePath}/about'>nos responsables serviables.</a></p>"
       button_ok: "OK"
       button_help: "Aide"
     email_login:
-      link_label: "M'envoyer un lien de connexion par courriel"
-      button_label: "par courriel"
+      link_label: "M'envoyer un lien de connexion par e-mail"
+      button_label: "par e-mail"
       login_link: "Ignorez le mot de passe ; envoyez-moi un lien de connexion"
       emoji: "émoji de cadenas"
-      complete_username: "Si un compte correspond au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un courriel contenant un lien pour vous connecter."
-      complete_email: "Si un compte correspond à l'adresse courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel contenant un lien pour vous connecter."
-      complete_username_found: "Nous avons trouvé un compte correspondant au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un courriel contenant un lien pour vous connecter."
-      complete_email_found: "Nous avons trouvé un compte correspondant au courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel contenant un lien pour vous connecter."
+      complete_username: "Si un compte correspond au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un e-mail contenant un lien pour vous connecter."
+      complete_email: "Si un compte correspond à l'adresse e-mail <b>%{email}</b>, vous devriez recevoir rapidement un e-mail contenant un lien pour vous connecter."
+      complete_username_found: "Nous avons trouvé un compte correspondant au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un e-mail contenant un lien pour vous connecter."
+      complete_email_found: "Nous avons trouvé un compte correspondant à l'adresse e-mail <b>%{email}</b>, vous devriez recevoir rapidement un e-mail contenant un lien pour vous connecter."
       complete_username_not_found: "Aucun compte ne correspond au nom d'utilisateur <b>%{username}</b>"
       complete_email_not_found: "Aucun compte ne correspond à <b>%{email}</b>"
       confirm_title: Continuer vers %{site_name}
@@ -1825,6 +1912,10 @@ fr:
       title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
+      show_password: "Afficher"
+      hide_password: "Masquer"
+      show_password_title: "Afficher le mot de passe"
+      hide_password_title: "Masquer le mot de passe"
       second_factor_title: "Authentification à deux facteurs"
       second_factor_description: "Veuillez saisir le code d'authentification généré par votre application :"
       second_factor_backup: "Se connecter avec un code de secours"
@@ -1837,34 +1928,35 @@ fr:
       security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."
       security_key_no_matching_credential_error: "Aucun identifiant correspondant n'a pu être trouvé dans la clé de sécurité donnée."
       security_key_support_missing_error: "Votre appareil ou navigateur actuel ne prend pas en charge l'utilisation des clés de sécurité. Veuillez utiliser une autre méthode."
-      email_placeholder: "Courriel ou nom d'utilisateur"
+      email_placeholder: "Adresse e-mail ou nom d'utilisateur"
       caps_lock_warning: "Majuscules verrouillées"
       error: "Erreur inconnue"
       cookies_error: "Les cookies de votre navigateur semblent désactivées. Vous ne pourrez pas vous connecter sans les activer."
       rate_limit: "Merci de patienter avant de vous reconnecter."
-      blank_username: "Veuillez saisir votre courriel ou votre nom d'utilisateur."
-      blank_username_or_password: "Veuillez saisir votre courriel ou votre nom d'utilisateur et votre mot de passe."
+      blank_username: "Veuillez saisir votre adresse e-mail ou votre nom d'utilisateur."
+      blank_username_or_password: "Veuillez saisir votre adresse e-mail ou votre nom d'utilisateur et votre mot de passe."
       reset_password: "Réinitialiser le mot de passe"
       logging_in: "Connexion en cours…"
+      previous_sign_up: "Vous avez déjà un compte ?"
       or: "ou"
       authenticating: "Authentification…"
-      awaiting_activation: "Votre compte est en attente d'activation, utilisez le lien de mot de passe oublié pour envoyer un autre courriel d'activation."
-      awaiting_approval: "Votre compte n'a pas encore été approuvé par un modérateur. Vous recevrez une confirmation par courriel lors de l'activation."
+      awaiting_activation: "Votre compte est en attente d'activation, utilisez le lien de mot de passe oublié pour envoyer un autre e-mail d'activation."
+      awaiting_approval: "Votre compte n'a pas encore été approuvé par un modérateur. Vous recevrez une confirmation par e-mail lors de l'activation."
       requires_invite: "Nous sommes désolés, l'accès à ce forum est réservé sur invitation seulement."
-      not_activated: "Vous ne pouvez pas encore vous connecter. Nous avons envoyé un courriel d'activation à <b>%{sentTo}</b>. Veuillez suivre les instructions qui y figurent afin d'activer votre compte."
+      not_activated: "Vous ne pouvez pas encore vous connecter. Nous avons envoyé un e-mail d'activation à <b>%{sentTo}</b>. Veuillez suivre les instructions qui y figurent afin d'activer votre compte."
       not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter à partir de cette adresse IP."
       admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter en tant qu'administrateur à partir de cette adresse IP."
-      resend_activation_email: "Cliquez ici pour renvoyer le courriel d'activation."
+      resend_activation_email: "Cliquez ici pour renvoyer l'e-mail d'activation."
       omniauth_disallow_totp: "L'authentification à deux facteurs est activée sur votre compte. Veuillez vous connecter avec votre mot de passe."
-      resend_title: "Renvoyer le courriel d'activation"
-      change_email: "Changer l'adresse courriel"
-      provide_new_email: "Fournissez une nouvelle adresse et nous renverrons votre courriel de confirmation."
-      submit_new_email: "Mettre à jour l'adresse courriel"
-      sent_activation_email_again: "Nous venons d'envoyer un nouveau courriel d'activation à <b>%{currentEmail}</b>. Vous devriez le recevoir dans quelques minutes. N'oubliez pas de consulter votre dossier de courrier indésirable."
-      sent_activation_email_again_generic: "Nous avons envoyé un autre courriel d'activation. Vous devriez le recevoir dans quelques minutes. N'oubliez pas de consulter votre dossier de courrier indésirable."
+      resend_title: "Renvoyer l'e-mail d'activation"
+      change_email: "Changer l'adresse e-mail"
+      provide_new_email: "Fournissez une nouvelle adresse et nous renverrons votre e-mail de confirmation."
+      submit_new_email: "Mettre à jour l'adresse e-mail"
+      sent_activation_email_again: "Nous venons d'envoyer un nouveau e-mail d'activation à <b>%{currentEmail}</b>. Vous devriez le recevoir dans quelques minutes. N'oubliez pas de consulter votre dossier de courrier indésirable."
+      sent_activation_email_again_generic: "Nous avons envoyé un autre e-mail d'activation. Vous devriez le recevoir dans quelques minutes. N'oubliez pas de consulter votre dossier de courrier indésirable."
       to_continue: "Veuillez vous connecter"
       preferences: "Vous devez être connecté(e) pour modifier vos préférences utilisateur."
-      not_approved: "Votre compte n'a pas encore été approuvé. Vous recevrez une notification par courriel lorsque vous pourrez vous connecter."
+      not_approved: "Votre compte n'a pas encore été approuvé. Vous recevrez une notification par e-mail lorsque vous pourrez vous connecter."
       google_oauth2:
         name: "Google"
         title: "Se connecter avec Google"
@@ -1899,11 +1991,12 @@ fr:
       welcome_to: "Bienvenue sur %{site_name} !"
       invited_by: "Vous avez été invité(e) par :"
       social_login_available: "Vous pourrez aussi vous connecter avec un compte de réseau social utilisant cette adresse."
-      your_email: "L'adresse courriel de votre compte est <b>%{email}</b>."
+      your_email: "L'adresse e-mail de votre compte est <b>%{email}</b>."
       accept_invite: "Accepter l'invitation"
       success: "Votre compte a été créé et vous êtes maintenant connecté(e)."
       name_label: "Nom"
       password_label: "Mot de passe"
+      existing_user_can_redeem: "Valider votre invitation à participer à un sujet ou à un groupe."
     password_reset:
       continue: "Continuer vers %{site_name}"
     emoji_set:
@@ -2017,12 +2110,19 @@ fr:
       cannot_see_mention:
         category: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car la catégorie ne lui est pas accessible. Vous devez l'ajouter à un groupe ayant accès à cette catégorie."
         private: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car ce message direct ne lui est pas visible. Vous devez l'inviter à rejoindre ce message direct."
-        muted_topic: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car il ou elle a mis ce sujet en sourdine."
+        muted_topic: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car il ou elle a désactivé ce sujet."
         not_allowed: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car il ou elle n'a pas été invité(e) à rejoindre ce sujet."
+      cannot_see_group_mention:
+        not_mentionable: "Vous ne pouvez pas mentionner le groupe @%{group}."
+        some_not_allowed:
+          one: "Vous avez mentionné @%{group}, mais seul %{count} membre sera notifié, car les autres membres ne peuvent pas voir ce message direct. Vous devrez les inviter pour qu'ils accèdent à ce message direct."
+          other: "Vous avez mentionné @%{group}, mais seuls %{count} membres seront notifiés, car les autres membres ne peuvent pas voir ce message direct. Vous devrez les inviter pour qu'ils accèdent à ce message direct."
+        not_allowed: "Vous avez mentionné @%{group}, mais aucun de ses membres ne sera notifié, car ils ne peuvent pas voir ce message direct. Vous devrez les inviter pour qu'ils accèdent à ce message direct."
       here_mention:
         one: "En mentionnant <b>@%{here}</b>, vous êtes sur le point de notifier %{count} utilisateur. Voulez-vous continuer ?"
         other: "En mentionnant <b>@%{here}</b>, vous êtes sur le point de notifier %{count} utilisateurs. Voulez-vous continuer ?"
       duplicate_link: "Il semblerait que votre lien vers <b>%{domain}</b> a déjà été publié dans le sujet par <b>@%{username}</b> dans <a href='%{post_url}'>une réponse de %{ago}</a>. Voulez-vous vraiment le publier à nouveau ?"
+      duplicate_link_same_user: "Il semble que vous avez déjà publié un lien vers <b>%{domain}</b> dans ce sujet dans <a href='%{post_url}'>une réponse le %{ago}</a>. Voulez-vous vraiment le publier à nouveau ?"
       reference_topic_title: "RE : %{title}"
       error:
         title_missing: "Le titre est requis"
@@ -2044,8 +2144,6 @@ fr:
         topic_template_not_modified: "Veuillez ajouter des détails à votre sujet en modifiant le modèle de sujet."
       save_edit: "Enregistrer les modifications"
       overwrite_edit: "Écraser la modification"
-      reply_original: "Répondre dans le sujet d'origine"
-      reply_here: "Répondre ici"
       reply: "Répondre"
       cancel: "Annuler"
       create_topic: "Créer le sujet"
@@ -2158,6 +2256,12 @@ fr:
         high_priority:
           one: "%{count} notification prioritaire non lue"
           other: "%{count} notifications prioritaires non lues"
+        new_message_notification:
+          one: "%{count} notification de nouveau message"
+          other: "%{count} notifications de nouveaux messages"
+        new_reviewable:
+          one: "%{count} nouvel élément à examiner"
+          other: "%{count} nouveaux éléments à examiner"
       title: "notifications des mentions de votre nom d'utilisateur, des réponses à vos messages et sujets, etc."
       none: "Impossible de charger les notifications pour le moment."
       empty: "Aucune notification trouvée."
@@ -2171,6 +2275,7 @@ fr:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2202,6 +2307,7 @@ fr:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - terminé"
+      new_features: "Nouvelles fonctionnalités disponibles !"
       dismiss_confirmation:
         body:
           default:
@@ -2240,6 +2346,7 @@ fr:
         invited_to_private_message: "invité au message direct"
         invitee_accepted: "invitation acceptée"
         posted: "nouveau message"
+        watching_category_or_tag: "nouveau message"
         moved_post: "message déplacé"
         linked: "lien créé"
         bookmark_reminder: "rappel de signet"
@@ -2255,6 +2362,7 @@ fr:
         membership_request_consolidated: "nouvelles demandes d'adhésion"
         reaction: "nouvelle réaction"
         votes_released: "Le vote a été publié"
+        new_features: "De nouvelles fonctionnalités de Discourse ont été publiées !"
     upload_selector:
       uploading: "En cours d'envoi"
       processing: "Traitement du téléversement"
@@ -2278,6 +2386,7 @@ fr:
         other: "<span>%{count}%{plus} résultats pour</span><span class='term'>%{term}</span>"
       title: "Recherche"
       full_page_title: "Recherche"
+      results: "résultats"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
       post_format: "#%{post_number} par %{username}"
@@ -2322,6 +2431,7 @@ fr:
         status: "filtres par statut de sujet"
         full_search: "lance la recherche en pleine page"
         full_search_key: "%{modifier} + Entrée"
+        me: "affiche uniquement vos messages"
       advanced:
         title: Filtres avancés
         posted_by:
@@ -2528,9 +2638,6 @@ fr:
       move_to_inbox:
         title: "Déplacer dans la boîte de réception"
         help: "Déplacer le message dans la boîte de réception"
-      edit_message:
-        help: "Modifier le premier message du message direct"
-        title: "Modifier"
       defer:
         help: "Marquer comme non lu"
         title: "Reporter à plus tard"
@@ -2565,17 +2672,49 @@ fr:
       show_links: "afficher les liens dans ce sujet"
       collapse_details: "masquer les détails de ce sujet"
       expand_details: "afficher les détails de ce sujet"
-      read_more_in_category: "Vous voulez continuer à lire ? Découvrez d'autres sujets dans %{catLink} ou %{latestLink}."
-      read_more: "Vous voulez continuer à lire ? %{catLink} ou %{latestLink}."
+      read_more_in_category: "Vous voulez en savoir plus ? Parcourez les autres sujets de %{categoryLink} ou <a href='%{latestLink}'>affichez les derniers sujets</a>."
+      read_more: "Vous voulez en savoir plus ? <a href='%{categoryLink}'>Parcourez toutes les catégories</a> ou <a href='%{latestLink}'>affichez les derniers sujets</a>."
       unread_indicator: "Aucun membre n'a encore lu le dernier message de ce sujet."
-      read_more_MF: "Il reste { UNREAD, plural, =0 {} one {1 sujet <a href='{basePath}/unread'>non lu</a>} other {# sujets <a href='{basePath}/unread'>non lus</a>} } { NEW, plural, =0 {} one { { BOTH, select, true { et } false {} other {} }1 <a href='{basePath}/new'>nouveau</a> sujet} other { { BOTH, select, true { et } false {} other {} } # <a href='{basePath}/new'>nouveaux</a> sujets} }, ou { CATEGORY, select, true { vous pouvez aussi consulter les autres sujets dans {catLink} } false { {latestLink} } other { } }"
-      bumped_at_title_MF: "{FIRST_POST} : {CREATED_AT}\n{LAST_POST} : {BUMPED_AT}"
-      browse_all_categories: Voir toutes les catégories
-      browse_all_tags: Parcourir toutes les étiquettes
-      view_latest_topics: consulter les sujets récents
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {Il y a <a href="{basePath}/unread"># message non lu</a>}
+              other {Il y a <a href="{basePath}/unread"># messages non lus</a>}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { et il reste <a href="{basePath}/new"># nouveau</a> sujet,}
+              other { et il reste <a href="{basePath}/new"># nouveaux</a> sujets,}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {Il reste <a href="{basePath}/unread"># sujet</a> non lu,}
+              other {Il reste <a href="{basePath}/unread"># sujets</a> non lus,}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {Il reste <a href="{basePath}/new"># nouveau</a> sujet,}
+              other {Il reste <a href="{basePath}/new"># nouveaux</a> sujets,}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { ou parcourez d'autres sujets dans {categoryLink}}
+          false { ou <a href="{basePath}/latest">consultez les derniers sujets</a>}
+          other {}
+        }
+      bumped_at_title: |
+        Premier message : %{createdAtDate}
+        Publié : %{bumpedAtDate}
+      browse_all_categories_latest: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
+      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a>, <a href='%{basePath}/latest'>consultez les derniers sujets</a> ou consultez les principaux sujets :"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Parcourez toutes les étiquettes</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
       suggest_create_topic: Prêt à <a href>démarrer une nouvelle conversation ?</a>
-      jump_reply_up: accéder aux réponses précédentes
-      jump_reply_down: accéder aux réponses ultérieures
       deleted: "Ce sujet a été supprimé"
       slow_mode_update:
         title: "Mode ralenti"
@@ -2669,7 +2808,7 @@ fr:
       notifications:
         title: modifier la fréquence des notifications concernant ce sujet
         reasons:
-          mailing_list_mode: "Vous avez activé la liste de diffusion, vous serez donc informé(e) des réponses à ce sujet par courriel."
+          mailing_list_mode: "Vous avez activé la liste de diffusion, vous serez donc informé(e) des réponses à ce sujet par e-mail."
           "3_10": "Vous recevrez des notifications car vous surveillez une étiquette de ce sujet."
           "3_10_stale": "Vous recevrez des notifications car vous surveilliez déjà une étiquette attribuée à ce sujet."
           "3_6": "Vous recevrez des notifications car vous surveillez cette catégorie."
@@ -2791,8 +2930,8 @@ fr:
       automatically_add_to_groups: "Cette invitation inclut également l'accès aux groupes suivants :"
       invite_private:
         title: "Inviter dans la discussion"
-        email_or_username: "Adresse courriel ou nom d'utilisateur de l'invité(e)"
-        email_or_username_placeholder: "adresse courriel ou nom d'utilisateur"
+        email_or_username: "Adresse e-mail ou nom d'utilisateur de l'invité(e)"
+        email_or_username_placeholder: "adresse e-mail ou nom d'utilisateur"
         action: "Inviter"
         success: "Nous avons invité cet utilisateur à participer à cette discussion."
         success_group: "Nous avons invité ce groupe à participer à cette discussion."
@@ -2804,18 +2943,18 @@ fr:
         title: "Inviter"
         username_placeholder: "nom d'utilisateur"
         action: "Envoyer une invitation"
-        help: "inviter d'autres personnes sur ce sujet par courriel ou notifications"
-        to_forum: "Votre ami(e) recevra un courriel qui lui permettra de participer avec un simple lien."
+        help: "inviter d'autres personnes sur ce sujet par e-mail ou notifications"
+        to_forum: "Votre ami(e) recevra un e-mail qui lui permettra de participer avec un simple lien."
         discourse_connect_enabled: "Saisissez le nom d'utilisateur de la personne que vous souhaitez inviter à participer."
-        to_topic_blank: "Entrez le nom d'utilisateur ou l'adresse courriel de la personne que vous souhaitez inviter sur ce sujet."
-        to_topic_email: "Vous avez saisi une adresse courriel. Nous allons envoyer une invitation à votre ami(e) pour lui permettre de répondre immédiatement à ce sujet."
+        to_topic_blank: "Entrez le nom d'utilisateur ou l'adresse e-mail de la personne que vous souhaitez inviter sur ce sujet."
+        to_topic_email: "Vous avez saisi une adresse e-mail. Nous allons envoyer une invitation à votre ami(e) pour lui permettre de répondre immédiatement à ce sujet."
         to_topic_username: "Vous avez saisi un nom d'utilisateur. Nous allons lui envoyer une notification avec un lien d'invitation dans ce sujet."
         to_username: "Saisissez le nom d'utilisateur de la personne que vous souhaitez inviter. Nous enverrons une notification avec un lien d'invitation dans ce sujet."
         email_placeholder: "nom@exemple.com"
         success_email: "Une invitation a été envoyée à <b>%{invitee}</b>. Vous recevrez une notification si cette invitation est acceptée. Pour faire le suivi de vos invitations, rendez-vous dans l'onglet « invitations » de votre page de profil."
         success_username: "Nous avons invité cet utilisateur à participer à ce sujet."
         error: "Nous sommes désolés, nous n'avons pas pu inviter cette personne. Peut-être a-t-elle déjà été invitée ? (Le nombre d'invitations est limité)"
-        success_existing_email: "Un utilisateur avec le courriel <b>%{emailOrUsername}</b> existe déjà. Nous avons invité cet utilisateur à participer à ce sujet."
+        success_existing_email: "Un utilisateur avec l'e-mail <b>%{emailOrUsername}</b> existe déjà. Nous avons invité cet utilisateur à participer à ce sujet."
       login_reply: "Se connecter pour répondre"
       filters:
         n_posts:
@@ -2940,9 +3079,6 @@ fr:
       collapse: "réduire"
       sr_collapse_replies: "Masquer les réponses"
       sr_date: "Date de publication"
-      sr_expand_replies:
-        one: "Ce message a reçu %{count} réponse. Cliquez pour développer l'affichage"
-        other: "Ce message a reçu %{count} réponses. Cliquez pour développer l'affichage"
       expand_collapse: "développer/réduire"
       sr_below_embedded_posts_description: "réponses à la publication #%{post_number}"
       sr_embedded_reply_description: "réponse de @%{username} au message #%{post_number}"
@@ -2993,6 +3129,7 @@ fr:
           one: "Nous sommes désolés, vous ne pouvez envoyer que %{count} fichier à la fois."
           other: "Nous sommes désolés, vous ne pouvez envoyer que %{count} fichiers à la fois."
         upload_not_authorized: "Nous sommes désolés, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : %{authorized_extensions})."
+        no_uploads_authorized: "Nous sommes désolés, aucun fichier ne peut être téléversé."
         image_upload_not_allowed_for_new_user: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas envoyer d'images."
         attachment_upload_not_allowed_for_new_user: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas envoyer de fichiers."
         attachment_download_requires_login: "Nous sommes désolés, vous devez être connecté(e) pour télécharger une pièce jointe."
@@ -3001,9 +3138,10 @@ fr:
         discard: "Abandonner"
         save_draft: "Enregistrer le brouillon pour plus tard"
         keep_editing: "Continuer à rédiger"
-      via_email: "ce message est arrivé par courriel"
-      via_auto_generated_email: "ce message est arrivé via un courriel généré automatiquement"
+      via_email: "ce message est arrivé par e-mail"
+      via_auto_generated_email: "ce message est arrivé via un e-mail généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
+      whisper_groups: "ce message est un murmure privé visible uniquement par %{groupNames}"
       wiki:
         about: "ce message est un wiki"
       few_likes_left: "Merci de partager votre amour ! Vous n'avez plus que quelques « J'aime » à attribuer aujourd'hui."
@@ -3115,20 +3253,19 @@ fr:
       raw_email:
         displays:
           raw:
-            title: "Afficher le courriel brut"
+            title: "Afficher l'e-mail brut"
             button: "Brut"
           text_part:
-            title: "Afficher le contenu texte du courriel"
+            title: "Afficher le contenu texte de l'e-mail"
             button: "Texte"
           html_part:
-            title: "Afficher le contenu HTML du courriel"
+            title: "Afficher le contenu HTML de l'e-mail"
             button: "HTML"
       bookmarks:
         create: "Ajouter un signet"
         create_for_topic: "Créer un signet associé à ce sujet"
         edit: "Modifier le signet"
         edit_for_topic: "Modifier le signet associé à ce sujet"
-        created: "Créé"
         updated: "Mis à jour"
         name: "Nom"
         name_placeholder: "À quoi correspond ce signet ?"
@@ -3170,7 +3307,6 @@ fr:
       back: "Retour à la catégorie"
       general: "Général"
       settings: "Paramètres"
-      topic_template: "Modèle de sujet"
       tags: "Étiquettes"
       tags_allowed_tags: "Réserver l'utilisation de ces étiquettes à cette catégorie :"
       tags_allowed_tag_groups: "Réserver l'utilisation de ces groupes d'étiquettes à cette catégorie :"
@@ -3226,10 +3362,9 @@ fr:
       uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez modifier ce comportement et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser/contenu</a>.'
       pending_permission_change_alert: "Vous n'avez pas ajouté %{group} à cette catégorie ; cliquez sur ce bouton pour l'ajouter."
       images: "Images"
-      email_in: "Adresse courriel entrant personnalisée :"
-      email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
-      email_in_disabled: "La création de nouveaux sujets par courriel est désactivée dans les paramètres. Pour activer la création de nouveaux sujets par courriel, "
-      email_in_disabled_click: 'activez le paramètre « e-mail entrant ».'
+      email_in: "Adresse e-mail entrant personnalisée :"
+      email_in_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère | ."
+      email_in_allow_strangers: "Accepter les e-mails d'utilisateurs anonymes sans compte"
       mailinglist_mirror: "La catégorie reflète une liste de diffusion"
       show_subcategory_list: "Afficher la liste des sous-catégories au-dessus des sujets dans cette catégorie."
       read_only_banner: "Texte du bandeau à afficher lorsqu'un utilisateur ne peut pas créer un sujet dans cette catégorie :"
@@ -3251,8 +3386,7 @@ fr:
       this_year: "cette année"
       position: "Position sur la page des catégories :"
       default_position: "Position par défaut"
-      position_disabled: "Les catégories seront affichées dans l'ordre d'activité. Pour contrôler l'ordre des catégories dans la liste, "
-      position_disabled_click: 'activez le paramètre « positions de catégorie fixes ».'
+      position_disabled: "Les catégories seront affichées par ordre d'activité. Pour contrôler l'ordre des catégories dans les listes, activez le paramètre <a href='%{url}'>« positions de catégorie fixes »</a> ."
       minimum_required_tags: "Nombre minimal d'étiquettes requises dans un sujet :"
       default_slow_mode: 'Activer le mode ralenti pour tous les nouveaux sujets dans cette catégorie'
       parent: "Catégorie parente"
@@ -3305,7 +3439,7 @@ fr:
         general: "Général"
         moderation: "Modération"
         appearance: "Apparence"
-        email: "Courriel"
+        email: "E-mail"
       list_filters:
         all: "tous les sujets"
         none: "aucune sous-catégorie"
@@ -3328,7 +3462,8 @@ fr:
       official_warning: "Avertissement officiel"
       delete_spammer: "Supprimer le spammeur"
       flag_for_review: "Mettre en file d'attente pour examen"
-      delete_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse courriel <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr(e) que cet utilisateur est un spammeur ?"
+      delete_confirm_MF: |
+        Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse e-mail <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr(e) que cet utilisateur est un spammeur ?
       yes_delete_spammer: "Oui, supprimer le spammeur"
       ip_address_missing: "(S.O.)"
       hidden_email_address: "(masqué)"
@@ -3430,14 +3565,17 @@ fr:
     category_title: "Catégorie"
     history_capped_revisions: "Historique des 100 dernières modifications"
     history: "Historique"
-    changed_by: "par %{author}"
     raw_email:
-      title: "Courriel entrant"
+      title: "E-mail entrant"
       not_available: "Indisponible !"
     categories_list: "Liste des catégories"
     filters:
       with_topics: "Sujets %{filter}"
       with_category: "Sujets %{filter} sur %{category}"
+      filter:
+        title: "Filtrer"
+        button:
+          label: "Filtrer"
       latest:
         title: "Récents"
         title_with_count:
@@ -3507,9 +3645,7 @@ fr:
         this_month: "Mois"
         this_week: "Semaine"
         today: "Aujourd'hui"
-        other_periods: "voir le top :"
     browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
-    safari_13_warning: Ce site va bientôt supprimer la prise en charge des versions 13 et inférieures d'iOS et de Safari. Une version simplifiée en lecture seule restera disponible. (<a href="https://meta.discourse.org/t/224747">plus d'informations</a>)
     permission_types:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
@@ -3796,16 +3932,14 @@ fr:
     safe_mode:
       enabled: "Le mode sans échec est activé ; fermez cette fenêtre de navigateur pour le quitter"
     image_removed: "(image supprimée)"
-    do_not_disturb:
-      title: "Ne pas déranger pendant…"
-      label: "Ne pas déranger"
-      remaining: "Encore %{remaining}"
+    pause_notifications:
+      title: "Suspendre les notifications pour…"
+      label: "Suspendre les notifications"
       options:
         half_hour: "30 minutes"
         one_hour: "1 heure"
         two_hours: "2 heures"
         tomorrow: "Jusqu'à demain"
-        custom: "Personnalisé"
       set_schedule: "Planifier les notifications"
     trust_levels:
       names:
@@ -3842,22 +3976,31 @@ fr:
     second_factor_auth:
       redirect_after_success: "L'authentification à deux facteurs est réussie. Redirection vers la page précédente…"
     sidebar:
+      show_sidebar: "Afficher la barre latérale"
+      hide_sidebar: "Masquer la barre latérale"
       unread_count:
         one: "%{count} non lu"
         other: "%{count} non lus"
       new_count:
         one: "%{count} nouveau"
         other: "%{count} nouveaux"
-      toggle_section: "basculer la section"
+      toggle_section: "Basculer la section"
       more: "Plus"
       all_categories: "Toutes les catégories"
       all_tags: "Toutes les étiquettes"
       sections:
+        custom:
+          save: "Enregistrer"
+          delete: "Supprimer"
+          links:
+            icon: "Icône"
+            name: "Nom"
+            value: "Insérer un lien"
         about:
           header_link_text: "À propos"
         messages:
           header_link_text: "Messages"
-          header_action_title: "créer un message direct"
+          header_action_title: "Créer un message direct"
           links:
             inbox: "Boîte de réception"
             sent: "Envoyés"
@@ -3867,54 +4010,64 @@ fr:
             unread_with_count: "Non lus (%{count})"
             archive: "Archivés"
         tags:
+          links:
+            add_tags:
+              content: "Ajouter des étiquettes"
+              title: "Vous n'avez ajouté aucune étiquette. Cliquez pour commencer."
           none: "Vous n'avez ajouté aucune étiquette."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Étiquettes"
-          header_action_title: "modifier les étiquettes de votre barre latérale"
+          header_action_title: "Modifier les étiquettes de votre barre latérale"
           configure_defaults: "Configurer les valeurs par défaut"
         categories:
+          links:
+            add_categories:
+              content: "Ajouter des catégories"
+              title: "Vous n'avez ajouté aucune catégorie. Cliquez pour commencer."
           none: "Vous n'avez ajouté aucune catégorie."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Catégories"
-          header_action_title: "modifier les catégories de votre barre latérale"
+          header_action_title: "Modifier les catégories de votre barre latérale"
           configure_defaults: "Configurer les valeurs par défaut"
         community:
           header_link_text: "Communauté"
-          header_action_title: "créer un nouveau sujet"
+          header_action_title: "Créer un sujet"
           links:
             about:
               content: "À propos"
+              title: "Plus de détails sur ce site"
             admin:
               content: "Administrateur"
+              title: "Paramètres du site et rapports"
             badges:
               content: "Badges"
+              title: "Tous les badges disponibles à gagner"
             everything:
               content: "Tout"
               title: "Tous les sujets"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Suivis"
-              title: "Tous les sujets suivis"
+              title: "Lignes directrices pour l'utilisation de ce site"
             groups:
               content: "Groupes"
-              title: "Tous les groupes"
+              title: "Liste des groupes d'utilisateurs disponibles"
             users:
               content: "Utilisateurs"
-              title: "Tous les utilisateurs"
+              title: "Liste de tous les utilisateurs"
             my_posts:
               content: "Mes messages"
-              title: "Mes publications"
+              title: "Mon activité récente sur le sujet"
+              title_drafts: "Mes brouillons non publiés"
               draft_count:
                 one: "%{count} brouillon"
                 other: "%{count} brouillons"
             review:
               content: "À examiner"
-              title: "à examiner"
+              title: "Publications signalées et autres éléments en file d'attente"
               pending_count: "%{count} en attente"
     welcome_topic_banner:
       title: "Créez votre sujet de bienvenue"
-      description: 'Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu''ils peuvent s''attendre à y trouver et ce que vous aimeriez qu''ils fassent en premier.'
+      description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."
       button_title: "Commencer l'édition"
     until: "Jusqu'à :"
   admin_js:
@@ -4036,9 +4189,9 @@ fr:
             blank: "Le nom du groupe ne peut pas être vide"
         manage:
           interaction:
-            email: Courriel
-            incoming_email: "Adresse courriel entrante personnalisée"
-            incoming_email_placeholder: "saisissez une adresse courriel"
+            email: E-mail
+            incoming_email: "Adresse e-mail entrante personnalisée"
+            incoming_email_placeholder: "saisissez une adresse e-mail"
             visibility: Visibilité
             visibility_levels:
               title: "Qui peut voir ce groupe ?"
@@ -4057,12 +4210,15 @@ fr:
             trust_levels_title: "Niveau de confiance automatiquement attribué lorsque les membres sont ajoutés :"
             effects: Effets
             trust_levels_none: "Aucun"
-            automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe :"
+            automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine de messagerie qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe :"
             automatic_membership_user_count:
-              one: "%{count} utilisateur a les nouveaux domaines de courriel et sera ajouté au groupe."
-              other: "%{count} utilisateurs ont les nouveaux domaines de courriel et seront ajoutés au groupe."
+              one: "%{count} utilisateur a les nouveaux domaines de messagerie et sera ajouté au groupe."
+              other: "%{count} utilisateurs ont les nouveaux domaines de messagerie et seront ajoutés au groupe."
             automatic_membership_associated_groups: "Les utilisateurs qui sont membres d'un groupe d'un fournisseur d'identité repris ici seront automatiquement ajoutés à ce groupe lorsqu'ils s'authentifieront avec ce fournisseur."
             primary_group: "Définir comme groupe principal automatiquement"
+          alert:
+            primary_group: "Puisqu'il s'agit d'un groupe principal, le nom « %{group_name} » sera utilisé dans les classes CSS qui peuvent être consultées par n'importe qui."
+            flair_group: "Puisque ce groupe a du flair pour ses membres, le nom « %{group_name} » sera visible par tous."
         name_placeholder: "Nom du groupe (sans espaces, mêmes règles que pour les noms d'utilisateurs)"
         primary: "Groupe principal"
         no_primary: "(pas de groupe principal)"
@@ -4072,10 +4228,6 @@ fr:
         about: "Modifier votre adhésion et les noms ici"
         group_members: "Membres du groupe"
         delete: "Supprimer"
-        delete_confirm: "Supprimer ce groupe ?"
-        delete_with_messages_confirm:
-          one: "La suppression de ce groupe rendra %{count} message orphelin, les membres du groupe n'y auront plus accès.<br><br>Voulez-vous continuer ?"
-          other: "La suppression de ce groupe rendra %{count} messages orphelins, les membres du groupe n'y auront plus accès.<br><br>Voulez-vous continuer ?"
         delete_failed: "Impossible de supprimer le groupe. S'il s'agit d'un groupe automatique, il ne peut pas être détruit."
         delete_automatic_group: Ce groupe ne peut pas être supprimé car il est constitué de façon automatique.
         delete_owner_confirm: "Retirer les privilèges de propriétaire pour %{username} ?"
@@ -4141,7 +4293,7 @@ fr:
             topics:
               read: Lire un sujet ou un message spécifique qu'il contient. Le RSS est aussi accepté.
               write: Créer un nouveau sujet ou publier sur un sujet existant.
-              update: Mettre à jour un sujet. Modifiez le titre, la catégorie, les étiquettes, etc.
+              update: Mettre à jour un sujet. Modifiez le titre, la catégorie, les étiquettes, le statut, l'archétype, le lien en vedette, etc.
               read_lists: Lire les listes de sujets comme top, nouveaux, récents, etc. Le RSS est aussi accepté.
             posts:
               edit: Modifiez n'importe quel message ou un message spécifique.
@@ -4154,14 +4306,17 @@ fr:
               bookmarks: Lister les signets des utilisateurs. Les rappels de signet sont retournés lorsque le format ICS est utilisé.
               sync_sso: Synchroniser un utilisateur en utilisant DiscourseConnect.
               show: Obtenir des informations sur un utilisateur.
-              check_emails: Lister les courriels d'utilisateurs.
+              check_emails: Lister les e-mails d'utilisateurs.
               update: Mettre à jour les informations du profil utilisateur.
               log_out: Déconnecter toutes les sessions pour un utilisateur.
               anonymize: Anonymiser les comptes utilisateurs.
               delete: Supprimer les comptes utilisateurs.
               list: Obtenir une liste d'utilisateurs.
+            user_status:
+              read: Lire le statut de l'utilisateur.
+              update: Mettre à jour le statut de l'utilisateur.
             email:
-              receive_emails: Combiner ces permissions au service de réception de courriel pour traiter les courriels entrants.
+              receive_emails: Combiner ces permissions au service de réception d'e-mail pour traiter les e-mails entrants.
             badges:
               create: Créer un nouveau badge.
               show: Obtenir des informations sur un badge.
@@ -4182,14 +4337,13 @@ fr:
         detailed_instruction: "Une requête POST sera envoyée à l'URL fournie lorsque l'événement choisi se produira."
         new: "Nouveau Webhook"
         create: "Créer"
+        edit: "Modifier"
         save: "Enregistrer"
-        destroy: "Supprimer"
-        description: "Description"
+        description_label: "Déclencheurs d'événements"
         controls: "Contrôles"
         go_back: "Retour à la liste"
         payload_url: "URL cible"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Il semble que vous essayiez de configurer le Webhook avec une URL locale. Les événements transmis à une adresse locale peuvent déclencher des effets de bord ou un fonctionnement indésirable. Souhaitez-vous continuer ?"
         secret_invalid: "La clé secrète ne doit pas contenir d'espaces."
         secret_too_short: "La clé secrète doit contenir au moins 12 caractères."
         secret_placeholder: "Une chaîne de caractères facultative pour générer la signature"
@@ -4217,7 +4371,7 @@ fr:
           details: "Lorsqu'une réponse est publiée, modifiée, supprimée ou restaurée."
         user_event:
           name: "Événement d'utilisateur"
-          details: "Lorsqu'un utilisateur se connecte, se déconnecte, confirme son adresse de courriel, est créé, approuvé ou quand ses informations sont mises à jour."
+          details: "Lorsqu'un utilisateur se connecte, se déconnecte, confirme son adresse e-mail, est créé, approuvé ou quand ses informations sont mises à jour."
         group_event:
           name: "Événement de groupe"
           details: "Lorsqu'un groupe est créé, mis à jour ou supprimé."
@@ -4266,9 +4420,6 @@ fr:
           headers: "En-têtes"
           payload: "Données"
           body: "Corps"
-          go_list: "Accéder à la liste"
-          go_details: "Modifier le Webhook"
-          go_events: "Accéder aux événements"
           ping: "Ping"
           status: "Code de retour"
           event_id: "ID"
@@ -4284,10 +4435,14 @@ fr:
         enabled: "Activée ?"
         is_enabled: "O"
         not_enabled: "N"
-        change_settings: "Changer les paramètres"
         change_settings_short: "Paramètres"
         howto: "Comment installer des extensions ?"
         official: "Extension officielle"
+        broken_route: "Impossible de configurer le lien vers « %{name} ». Assurez-vous que les bloqueurs de publicités sont désactivés et essayez de recharger la page."
+      navigation_menu:
+        sidebar: "Barre latérale"
+        header_dropdown: "Liste déroulante de l'en-tête"
+        legacy: "Héritage"
       backups:
         title: "Sauvegardes"
         menu:
@@ -4328,8 +4483,8 @@ fr:
             without_uploads: "Oui (ne pas inclure les fichiers envoyés)"
           download:
             label: "Télécharger"
-            title: "Envoyer un courriel avec un lien de téléchargement"
-            alert: "Un lien pour télécharger la sauvegarde vous a été envoyé par courriel."
+            title: "Envoyer un e-mail avec un lien de téléchargement"
+            alert: "Un lien pour télécharger la sauvegarde vous a été envoyé par e-mail."
           destroy:
             title: "Supprimer la sauvegarde"
             confirm: "Voulez-vous vraiment supprimer cette sauvegarde ?"
@@ -4353,7 +4508,7 @@ fr:
         button_title:
           user: "Exporter la liste des utilisateurs dans un fichier CSV."
           staff_action: "Exporter la liste des actions des responsables dans un fichier CSV."
-          screened_email: "Exporter la liste des adresses courriel sous surveillance dans un fichier CSV."
+          screened_email: "Exporter la liste des adresses e-mail sous surveillance dans un fichier CSV."
           screened_ip: "Exporter la liste des adresses IP sous surveillance dans un fichier CSV."
           screened_url: "Exporter toutes les URL sous surveillance vers un fichier CSV"
       export_json:
@@ -4363,7 +4518,6 @@ fr:
         button_title: "Envoyer des invitations"
       customize:
         title: "Personnaliser"
-        long_title: "Personnalisations du site"
         preview: "prévisualiser"
         explain_preview: "Voir le site avec ce thème activé"
         save: "Enregistrer"
@@ -4380,9 +4534,9 @@ fr:
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
         theme_owner: "Non modifiable, appartient à :"
         email_templates:
-          title: "Courriel"
+          title: "E-mail"
           subject: "Objet"
-          multiple_subjects: "Ce modèle de courriel a plusieurs objets."
+          multiple_subjects: "Ce modèle d'e-mail a plusieurs objets."
           body: "Corps"
           revert: "Annuler les changements"
           revert_confirm: "Voulez-vous vraiment annuler vos changements ?"
@@ -4478,7 +4632,6 @@ fr:
           last_attempt: "Le processus d'installation ne s'est pas terminé, dernière tentative :"
           remote_branch: "Nom de branche (optionnel)"
           public_key: "Accorder un accès au dépôt à la clé publique suivante :"
-          public_key_note: "Une clé SSH sera générée et affichée ici après qu'une URL valide pointant vers un dépôt logiciel privé ait été saisie ci-dessus."
           install: "Installer"
           installed: "Installé"
           install_popular: "Populaire"
@@ -4502,7 +4655,6 @@ fr:
             error: "Ce thème a été désactivé automatiquement car il n'est pas compatible avec cette version de Discourse."
             minimum: "Nécessite la version %{version} ou supérieure de Discourse."
             maximum: "Nécessite la version %{version} ou inférieure de Discourse."
-          component_of: "Composant de :"
           update_to_latest: "Mettre à jour"
           check_for_updates: "Vérifier les mises à jour"
           updating: "Mise à jour…"
@@ -4570,9 +4722,9 @@ fr:
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
           delete_confirm: "Supprimer cette palette de couleurs ?"
-          undo: "annuler"
+          undo: "Annuler"
           undo_title: "Annuler les modifications que vous avez apportées à cette couleur depuis son dernier enregistrement."
-          revert: "rétablir"
+          revert: "Rétablir"
           revert_title: "Rétablir la couleur de la palette par défaut de Discourse."
           primary:
             name: "primaire"
@@ -4614,34 +4766,36 @@ fr:
           love:
             name: "aimer"
             description: "La couleur du bouton « J'aime »."
+          selected:
+            name: "sélectionné"
         robots:
           title: "Remplacez le fichier robots.txt de votre site :"
           warning: "Cela remplacera définitivement tous les paramètres associés."
           overridden: Le fichier robots.txt par défaut de votre site est remplacé.
         email_style:
-          title: "Style du courriel"
-          heading: "Personnaliser le style du courriel"
+          title: "Style de l'e-mail"
+          heading: "Personnaliser le style de l'e-mail"
           html: "Modèle HTML"
           css: "CSS"
           reset: "Rétablir les valeurs par défaut"
           reset_confirm: "Voulez-vous vraiment rétablir la valeur par défaut de %{fieldName} et perdre toutes vos modifications ?"
           save_error_with_reason: "Vos modifications n'ont pas pu être sauvegardées. %{error}"
-          instructions: "Personnalisez le modèle depuis lequel tous les courriels HTML sont générés et stylés à l'aide de CSS."
+          instructions: "Personnalisez le modèle depuis lequel tous les e-mails HTML sont générés et stylés à l'aide de CSS."
       email:
-        title: "Courriels"
+        title: "E-mails"
         settings: "Paramètres"
         templates: "Modèles"
-        preview_digest: "Prévisualisation du courriel"
+        preview_digest: "Prévisualisation de l'e-mail"
         advanced_test:
           title: "Test avancé"
-          desc: "Vérifiez comment Discourse gère les courriels reçus. Pour que le courriel soit géré correctement, veuillez coller ci-dessous la totalité du courriel original."
+          desc: "Vérifiez comment Discourse gère les e-mails reçus. Pour que l'e-mail soit géré correctement, veuillez coller ci-dessous la totalité de l'e-mail original."
           email: "Message d'origine"
           run: "Lancer le test"
           text: "Corps de texte sélectionné"
           elided: "Texte élidé"
-        sending_test: "Envoi du courriel de test…"
+        sending_test: "Envoi de l'e-mail de test…"
         error: "<b>ERREUR</b> - %{server_error}"
-        test_error: "Un problème est survenu lors de l'envoi du courriel de test. Veuillez vérifier vos paramètres et que votre hébergeur ne bloque pas les connexions aux courriels, puis réessayez."
+        test_error: "Un problème est survenu lors de l'envoi de l'e-mail de test. Veuillez vérifier vos paramètres et que votre hébergeur ne bloque pas les connexions aux e-mails, puis réessayez."
         sent: "Envoyés"
         skipped: "Ignorés"
         bounced: "Non délivrés"
@@ -4650,22 +4804,22 @@ fr:
         sent_at: "Envoyé à"
         time: "Heure"
         user: "Utilisateur"
-        email_type: "Type de courriel"
+        email_type: "Type d'e-mail"
         details_title: "Afficher les détails de l'e-mail"
         to_address: "À l'adresse"
-        test_email_address: "adresse courriel à tester"
-        send_test: "Envoyer un courriel de test"
+        test_email_address: "adresse e-mail à tester"
+        send_test: "Envoyer un e-mail de test"
         sent_test: "envoyé !"
         delivery_method: "Méthode d'envoi"
-        preview_digest_desc: "Prévisualiser le contenu des résumés par courriel envoyés aux utilisateurs inactifs."
+        preview_digest_desc: "Prévisualiser le contenu des résumés par e-mail envoyés aux utilisateurs inactifs."
         refresh: "Actualiser"
         send_digest_label: "Envoyer ce résultat à :"
         send_digest: "Envoyer"
-        sending_email: "Courriel en cours d'envoi…"
+        sending_email: "E-mail en cours d'envoi…"
         format: "Format"
         html: "html"
         text: "texte"
-        html_preview: "Aperçu du contenu du courriel"
+        html_preview: "Aperçu du contenu de l'e-mail"
         last_seen_user: "Dernier utilisateur vu :"
         no_result: "Aucun résultat trouvé pour le résumé."
         reply_key: "Clé de réponse"
@@ -4677,14 +4831,14 @@ fr:
           cc_addresses: "Cc"
           subject: "Objet"
           error: "Erreur"
-          none: "Aucun courriel reçu."
+          none: "Aucun e-mail reçu."
           modal:
-            title: "Détails du courriel entrant"
+            title: "Détails de l'e-mail entrant"
             error: "Erreur"
             headers: "En-têtes"
             subject: "Objet"
             body: "Corps"
-            rejection_message: "Courriel de refus"
+            rejection_message: "E-mail de refus"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -4757,7 +4911,7 @@ fr:
             removed_unsuspend_user: "annuler la suspension de l'utilisateur (supprimé)"
             grant_badge: "attribuer le badge"
             revoke_badge: "retirer le badge"
-            check_email: "vérifier l'adresse courriel"
+            check_email: "vérifier l'adresse e-mail"
             delete_topic: "supprimer le sujet"
             recover_topic: "annuler la suppression du sujet"
             delete_post: "supprimer le message"
@@ -4779,7 +4933,7 @@ fr:
             deleted_tag: "étiquette supprimée"
             deleted_unused_tags: "étiquettes inutilisées supprimées"
             renamed_tag: "étiquette renommée"
-            revoke_email: "révoquer le courriel"
+            revoke_email: "révoquer l'e-mail"
             lock_trust_level: "verrouiller le niveau de confiance"
             unlock_trust_level: "déverrouiller le niveau de confiance"
             activate_user: "activer l'utilisateur"
@@ -4823,9 +4977,9 @@ fr:
             override_upload_secure_status: "passer outre le statut de téléchargement sécurisé"
             page_published: "page publiée"
             page_unpublished: "publication de la page annulée"
-            add_email: "ajouter une adresse courriel"
-            update_email: "mettre à jour une adresse courriel"
-            destroy_email: "supprimer une adresse courriel"
+            add_email: "ajouter une adresse e-mail"
+            update_email: "mettre à jour une adresse e-mail"
+            destroy_email: "supprimer une adresse e-mail"
             topic_closed: "sujet fermé"
             topic_opened: "sujet ouvert"
             topic_archived: "sujet archivé"
@@ -4836,9 +4990,9 @@ fr:
             watched_word_create: "ajouter un mot surveillé"
             watched_word_destroy: "supprimer le mot surveillé"
         screened_emails:
-          title: "Courriels sous surveillance"
-          description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
-          email: "Adresse courriel"
+          title: "E-mails filtrés"
+          description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses e-mail suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
+          email: "Adresse e-mail"
           actions:
             allow: "Autoriser"
         screened_urls:
@@ -4928,6 +5082,35 @@ fr:
           description: "Saisissez du texte dans le champ ci-dessous pour vérifier le fonctionnement des mots ou expressions surveillés"
           found_matches: "Correspondances trouvées :"
           no_matches: "Aucune correspondance trouvée"
+      form_templates:
+        nav_title: "Modèles"
+        list_table:
+          headings:
+            name: "Nom"
+            actions: "Actions"
+        view_template:
+          close: "Fermer"
+          edit: "Modifier"
+          delete: "Supprimer"
+        new_template_form:
+          submit: "Enregistrer"
+          cancel: "Annuler"
+          preview: "Aperçu"
+        quick_insert_fields:
+          add_new_field: "Ajouter"
+          dropdown: "Menu déroulant"
+        validations_modal:
+          table_headers:
+            key: "Clé"
+            type: "Type"
+            description: "Description"
+          validations:
+            required:
+              key: "obligatoire"
+            minimum:
+              key: "minimum"
+            maximum:
+              key: "maximum"
       impersonate:
         title: "Incarner"
         help: "Utilisez cet outil pour incarner un compte utilisateur à des fins de tests. Vous devrez vous déconnecter une fois que vous aurez terminé."
@@ -4936,12 +5119,13 @@ fr:
       users:
         title: "Utilisateurs"
         create: "Ajouter un administrateur"
-        last_emailed: "Dernier courriel reçu"
+        last_emailed: "Dernier e-mail reçu"
         not_found: "Nous sommes désolés, ce nom d'utilisateur n'existe pas dans notre système."
         id_not_found: "Désolé cet identifiant d'utilisateur n'existe pas dans notre système."
         active: "Activé"
-        show_emails: "Afficher les adresses courriel"
-        hide_emails: "Masquer les adresses courriel"
+        status: "État"
+        show_emails: "Afficher les adresses e-mail"
+        hide_emails: "Masquer les adresses e-mail"
         nav:
           new: "Nouveau"
           active: "Actifs"
@@ -4967,7 +5151,7 @@ fr:
           staged: "Utilisateurs distants"
         not_verified: "Non vérifié"
         check_email:
-          title: "Afficher l'adresse courriel de cet utilisateur"
+          title: "Afficher l'adresse e-mail de cet utilisateur"
           text: "Afficher"
         check_sso:
           title: "Révéler la charge utile SSO"
@@ -4975,7 +5159,7 @@ fr:
       user:
         suspend_failed: "Une erreur s'est produite lors de la suspension de cet utilisateur %{error}"
         unsuspend_failed: "Une erreur s'est produite lors de la réactivation de cet utilisateur %{error}"
-        suspend_duration: "Combien de temps l'utilisateur sera-t-il suspendu ?"
+        suspend_duration: "Suspendre l'utilisateur jusqu'à :"
         suspend_reason_label: "Pourquoi suspendez-vous cet utilisateur ? Ce texte <b>sera visible par tout le monde</b> sur la page du profil de cet utilisateur et sera affiché à l'utilisateur quand il essaiera de se connecter. Tâchez d'être concis(e)."
         suspend_reason_hidden_label: "Pourquoi suspendez-vous cet utilisateur ? Ce texte sera affiché à l'utilisateur quand il essaiera de se connecter. Tâchez d'être concis(e)."
         suspend_reason: "Raison"
@@ -4987,8 +5171,8 @@ fr:
           in_wrong_place: "Au mauvais endroit"
           no_constructive_purpose: "Aucun but constructif à ses actions autre que de créer une dissidence au sein de la communauté"
           custom: "Personnalisé…"
-        suspend_message: "Message courriel"
-        suspend_message_placeholder: "Si besoin, donnez plus d'informations au sujet de cette suspension qui seront envoyées à l'utilisateur par courriel."
+        suspend_message: "E-mail"
+        suspend_message_placeholder: "Si besoin, donnez plus d'informations au sujet de cette suspension qui seront envoyées à l'utilisateur par e-mail."
         suspended_by: "Suspendu par"
         silence_reason: "Raison"
         silenced_by: "Mis en sourdine par"
@@ -4996,10 +5180,12 @@ fr:
         silence_duration: "Combien de temps l'utilisateur sera-t-il mis en sourdine ?"
         silence_reason_label: "Pourquoi mettez-vous cet utilisateur en sourdine ?"
         silence_reason_placeholder: "Raison de la mise en sourdine"
-        silence_message: "Message courriel"
+        silence_message: "E-mail"
         silence_message_placeholder: "(laissez vide pour envoyer un message par défaut)"
         suspended_until: "(jusqu'à %{until})"
+        suspend_forever: "Suspendre pour toujours"
         cant_suspend: "Cet utilisateur ne peut pas être suspendu."
+        cant_silence: "Cet utilisateur ne peut pas être mis en sourdine."
         delete_posts_failed: "Un problème est survenu lors de la suppression des messages."
         post_edits: "Modifications de message"
         view_edits: "Afficher les modifications"
@@ -5009,11 +5195,13 @@ fr:
         penalty_post_edit: "Modifier le message"
         penalty_post_none: "Ne rien faire"
         penalty_count: "Nombre de pénalités"
-        penalty_history: "Historique des pénalités"
+        penalty_history_MF: >-
+          Au cours des 6 derniers mois, cet utilisateur a été <b>suspendu { SUSPENDED, plural, one {# fois} other {# fois} }</b> et <b>mis en sourdine { SILENCED, plural, one {# fois} other {# fois} }</b>.
         clear_penalty_history:
           title: "Effacer l'historique des pénalités"
           description: "les utilisateurs ayant des pénalités ne peuvent pas atteindre le niveau de confiance 3"
-        delete_all_posts_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {# message} other {# messages}} et {TOPICS, plural, one {# sujet} other {# sujets}}. Voulez-vous continuer ?"
+        delete_all_posts_confirm_MF: |
+          Vous êtes sur le point de supprimer {POSTS, plural, one {# message} other {# messages}} et {TOPICS, plural, one {# sujet} other {# sujets}}. Voulez-vous continuer ?
         silence: "Mettre en sourdine"
         unsilence: "Ne plus mettre en sourdine"
         silenced: "En sourdine ?"
@@ -5024,7 +5212,6 @@ fr:
         show_admin_profile: "Administration"
         manage_user: "Gérer l'utilisateur"
         show_public_profile: "Afficher le profil public"
-        impersonate: "Incarner"
         action_logs: "Journaux d'actions"
         ip_lookup: "Localiser l'adresse IP"
         log_out: "Déconnecter l'utilisateur"
@@ -5032,7 +5219,7 @@ fr:
         revoke_admin: "Révoquer les droits d'administration"
         grant_admin: "Accorder les droits d'administration"
         grant_admin_success: "Le nouvel administrateur a été confirmé."
-        grant_admin_confirm: "Nous vous avons envoyé un courriel pour vérifier le nouvel administrateur. Veuillez le lire et suivre les instructions."
+        grant_admin_confirm: "Nous vous avons envoyé un e-mail pour vérifier le nouvel administrateur. Veuillez le lire et suivre les instructions."
         revoke_moderation: "Révoquer les droits de modération"
         grant_moderation: "Accorder les droits de modération"
         unsuspend: "Annuler la suspension"
@@ -5058,12 +5245,12 @@ fr:
         flags_given_received_count: "Signalements effectués/reçus"
         approve: "Approuver"
         approved_by: "approuvé par"
-        approve_success: "Utilisateur approuvé et un courriel avec les instructions d'activation a été envoyé."
+        approve_success: "Utilisateur approuvé et un e-mail avec les instructions d'activation a été envoyé."
         approve_bulk_success: "Bravo ! Tous les utilisateurs sélectionnés ont été approuvés et notifiés."
         time_read: "Temps de lecture"
         post_edits_count: "Modifications de message"
         anonymize: "Rendre l'utilisateur anonyme"
-        anonymize_confirm: "Voulez-vous vraiment rendre ce compte anonyme ? Cela entraînera la modification du nom d'utilisateur et de l'adresse courriel, et réinitialisera les informations du profil."
+        anonymize_confirm: "Voulez-vous vraiment rendre ce compte anonyme ? Cela entraînera la modification du nom d'utilisateur et de l'adresse e-mail, et réinitialisera les informations du profil."
         anonymize_yes: "Oui, rendre ce compte anonyme"
         anonymize_failed: "Un problème est survenu lors de l'anonymisation du compte."
         delete: "Supprimer l'utilisateur"
@@ -5122,13 +5309,13 @@ fr:
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
         delete_confirm_title: "Voulez-vous VRAIMENT supprimer cet utilisateur ? Cette action est définitive !"
         delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes."
-        delete_and_block: "Supprimer et <b>bloquer</b> cette adresse courriel et adresse IP."
+        delete_and_block: "Supprimer et <b>bloquer</b> cette adresse e-mail et adresse IP."
         delete_dont_block: "Supprimer uniquement"
         deleting_user: "Suppression de l'utilisateur…"
         deleted: "L'utilisateur a été supprimé."
         delete_failed: "Une erreur s'est produite lors de la suppression de cet utilisateur. Assurez-vous que tous les messages sont supprimés avant d'essayer de supprimer l'utilisateur."
-        send_activation_email: "Envoyer le courriel d'activation"
-        activation_email_sent: "Un courriel d'activation a été envoyé."
+        send_activation_email: "Envoyer l'e-mail d'activation"
+        activation_email_sent: "Un e-mail d'activation a été envoyé."
         send_activation_email_failed: "Un problème est survenu lors de l'envoi d'un autre e-mail d'activation. %{error}"
         activate: "Activer le compte"
         activate_failed: "Un problème est survenu lors de l'activation de l'utilisateur."
@@ -5138,31 +5325,40 @@ fr:
         silence_failed: "Un problème est survenu lors de la mise en sourdine de l'utilisateur."
         silence_confirm: "Voulez-vous vraiment mettre cet utilisateur(rice) en sourdine ? Il ou elle ne pourra plus créer de nouveaux sujets ou messages."
         silence_accept: "Oui, mettre cet utilisateur en sourdine"
-        bounce_score: "Taux de courriels non délivrés"
+        bounce_score: "Taux d'e-mails non délivrés"
         reset_bounce_score:
           label: "Réinitialiser"
-          title: "Réinitialiser le taux de courriels non délivrés à 0"
+          title: "Réinitialiser le taux d'e-mails non délivrés à 0"
         visit_profile: "Visiter <a href='%{url}'>la page de préférence de cet utilisateur</a> pour modifier son profil"
-        deactivate_explanation: "Un utilisateur désactivé doit revalider son adresse courriel."
+        deactivate_explanation: "Un utilisateur désactivé doit revalider son adresse e-mail."
         suspended_explanation: "Un utilisateur suspendu ne peut pas se connecter."
         silence_explanation: "Un utilisateur mis en sourdine ne peut pas créer des messages ou sujets."
-        staged_explanation: "Un utilisateur distant ne peut envoyer des messages que par courriel et pour des sujets spécifiques."
+        staged_explanation: "Un utilisateur distant ne peut envoyer des messages que par e-mail et pour des sujets spécifiques."
         bounce_score_explanation:
-          none: "Tous les courriels envoyés à cette adresse ont été délivrés."
-          some: "Quelques courriels envoyés à cette adresse n'ont pas été délivrés."
-          threshold_reached: "Trop de courriels envoyés à cette adresse n'ont pas été délivrés."
+          none: "Tous les e-mails envoyés à cette adresse ont été délivrés."
+          some: "Quelques e-mails envoyés à cette adresse n'ont pas été délivrés."
+          threshold_reached: "Trop d'e-mails envoyés à cette adresse n'ont pas été délivrés."
         trust_level_change_failed: "Il y a eu un problème lors de la modification du niveau de confiance de l'utilisateur."
         suspend_modal_title: "Suspendre l'utilisateur"
         confirm_cancel_penalty: "Voulez-vous vraiment annuler la pénalité ?"
         trust_level_2_users: "Utilisateurs de niveau de confiance 2"
         trust_level_3_requirements: "Prérequis du niveau de confiance 3"
         trust_level_locked_tip: "le niveau de confiance est verrouillé, le système ne changera plus le niveau de confiance de cet utilisateur"
-        trust_level_unlocked_tip: "le niveau de confiance est déverrouillé, le système pourra changer le niveau de confiance de cet utilisateur"
+        trust_level_unlocked_tip: "le niveau de confiance est déverrouillé, le système peut changer le niveau de confiance de cet utilisateur"
         lock_trust_level: "Verrouiller le niveau de confiance"
         unlock_trust_level: "Déverrouiller le niveau de confiance"
         silenced_count: "En sourdine"
         suspended_count: "Suspendus"
         last_six_months: "6 derniers mois"
+        other_matches:
+          one: "Il y a <b>%{count} autre utilisateur</b> avec la même adresse IP. vérifiez et sélectionnez l'utilisateur suspect à pénaliser avec %{username}."
+          other: "Il y a <b>%{count} autres utilisateurs</b> avec la même adresse IP. vérifiez et sélectionnez les utilisateurs suspects à pénaliser avec %{username}."
+        other_matches_list:
+          username: "Nom d'utilisateur"
+          trust_level: "Niveau de confiance"
+          read_time: "Temps de lecture"
+          topics_entered: "Sujets entrés"
+          posts: "Messages"
         tl3_requirements:
           title: "Prérequis pour le niveau de confiance 3"
           table_title:
@@ -5197,7 +5393,7 @@ fr:
           external_id: "ID externe"
           external_username: "Nom d'utilisateur"
           external_name: "Nom"
-          external_email: "Courriel"
+          external_email: "E-mail"
           external_avatar_url: "URL de l'image de profil"
           last_payload: "Dernière charge utile"
           delete_sso_record: "Supprimer l'enregistrement SSO"
@@ -5217,23 +5413,23 @@ fr:
         delete_confirm: "Voulez-vous vraiment supprimer ce champ utilisateur ?"
         options: "Options"
         required:
-          title: "Obligatoire à l'inscription ?"
+          title: "Obligatoire à l'inscription "
           enabled: "obligatoire"
           disabled: "facultatif"
         editable:
-          title: "Modifiable après l'inscription ?"
+          title: "Modifiable après l'inscription "
           enabled: "modifiable"
           disabled: "non modifiable"
         show_on_profile:
-          title: "Afficher sur le profil public ?"
+          title: "Afficher sur le profil public "
           enabled: "affiché dans le profil"
           disabled: "non affiché dans le profil"
         show_on_user_card:
-          title: "Afficher sur la carte de l'utilisateur ?"
+          title: "Afficher sur la carte de l'utilisateur "
           enabled: "affiché sur la carte de l'utilisateur"
           disabled: "non affiché sur la carte de l'utilisateur"
         searchable:
-          title: "Indexable ?"
+          title: "Indexable"
           enabled: "indexable"
           disabled: "non indexable"
         field_types:
@@ -5285,7 +5481,7 @@ fr:
           basic: "Général"
           users: "Utilisateurs"
           posting: "Contribution"
-          email: "Courriel"
+          email: "E-mail"
           files: "Fichiers"
           trust: "Niveaux de confiance"
           security: "Sécurité"
@@ -5307,7 +5503,7 @@ fr:
           search: "Recherche"
           groups: "Groupes"
           dashboard: "Tableau de bord"
-          sidebar: "Barre latérale"
+          navigation: "Navigation"
         secret_list:
           invalid_input: "Les champs de saisie ne peuvent pas être vide ou contenir le caractère de la barre verticale"
         default_categories:
@@ -5352,7 +5548,8 @@ fr:
         allow_title: Permettre d'utiliser ce badge comme titre sur le profil utilisateur
         multiple_grant: Peut être attribué plusieurs fois
         listable: Afficher le badge sur la page publique des badges
-        enabled: Activer le badge
+        enabled: activée 
+        disabled: désactivée
         icon: Icône
         image: Image
         graphic: Graphique
@@ -5401,8 +5598,8 @@ fr:
           description: Attribuez le même badge à plusieurs utilisateurs à la fois.
           no_badge_selected: Veuillez sélectionner un badge pour commencer.
           perform: "Attribuer ce badge à ces utilisateurs"
-          upload_csv: Envoyez un fichier CSV contenant les adresses courriel ou les noms d'utilisateur
-          aborted: Envoyez d'abord un fichier CSV contenant des adresses de courriel ou des noms d'utilisateur
+          upload_csv: Envoyez un fichier CSV contenant les adresses e-mail ou les noms d'utilisateur
+          aborted: Envoyez d'abord un fichier CSV contenant des adresses e-mail ou des noms d'utilisateur
           success: Votre fichier CSV a été envoyé et %{count} utilisateurs obtiendront bientôt leurs badges.
           csv_has_unmatched_users: "Les entrées suivantes se trouvent dans le fichier CSV, mais elles n'ont pas pu être associées à des utilisateurs existants et ne recevront donc pas le badge :"
           csv_has_unmatched_users_truncated_list: "Il y avait %{count} entrées dans le fichier CSV qui n'ont pas pu être associées à des utilisateurs existants et qui ne recevront donc pas le badge. En raison du grand nombre d'entrées sans correspondance, seules les 100 premières sont affichées :"
@@ -5422,10 +5619,8 @@ fr:
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         confirm_delete: "Voulez-vous vraiment supprimer cet hôte ?"
-        sample: "Collez le code HTML suivant sur votre site pour créer et intégrer des sujets Discourse. Remplacez <b>REPLACE_ME</b> par l'URL canonique de la page sur laquelle vous souhaitez l'intégrer."
         title: "Intégration externe"
         host: "Hôtes autorisés"
-        class_name: "Nom de classe"
         allowed_paths: "Liste des chemins autorisés"
         edit: "modifier"
         category: "Publier dans la catégorie"
@@ -5457,6 +5652,7 @@ fr:
         destination: "Cible"
         copy_to_clipboard: "Copier le permalien dans le presse-papier"
         delete_confirm: Voulez-vous vraiment supprimer ce permalien ?
+        no_permalinks: "Vous n'avez pas encore de permaliens. Créez un nouveau permalien ci-dessus pour commencer à voir une liste de vos permaliens ici."
         form:
           label: "Nouveau :"
           add: "Ajouter"
@@ -5480,7 +5676,7 @@ fr:
       configure_more: "Configurer plus…"
       step-text: "Étape"
       step: "%{current} sur %{total}"
-      upload: "Envoi"
+      upload: "Téléverser un fichier"
       uploading: "Envoi en cours…"
       upload_error: "Nous sommes désolés, une erreur est survenue lors de l'envoi de ce fichier. Veuillez réessayer."
       staff_count:

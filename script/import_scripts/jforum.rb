@@ -1,25 +1,26 @@
 # frozen_string_literal: true
 
 require "mysql2"
-require_relative 'base'
+require_relative "base"
 
 class ImportScripts::JForum < ImportScripts::Base
   BATCH_SIZE = 1000
-  REMOTE_AVATAR_REGEX ||= /\Ahttps?:\/\//i
+  REMOTE_AVATAR_REGEX ||= %r{\Ahttps?://}i
 
   def initialize
     super
 
     @settings = YAML.safe_load(File.read(ARGV.first), symbolize_names: true)
 
-    @database_client = Mysql2::Client.new(
-      host: @settings[:database][:host],
-      port: @settings[:database][:port],
-      username: @settings[:database][:username],
-      password: @settings[:database][:password],
-      database: @settings[:database][:schema],
-      reconnect: true
-    )
+    @database_client =
+      Mysql2::Client.new(
+        host: @settings[:database][:host],
+        port: @settings[:database][:port],
+        username: @settings[:database][:username],
+        password: @settings[:database][:password],
+        database: @settings[:database][:schema],
+        reconnect: true,
+      )
   end
 
   def execute
@@ -39,7 +40,7 @@ class ImportScripts::JForum < ImportScripts::Base
   end
 
   def import_users
-    puts '', 'creating users'
+    puts "", "creating users"
     total_count = count("SELECT COUNT(1) AS count FROM jforum_users")
     last_user_id = 0
 
@@ -69,9 +70,7 @@ class ImportScripts::JForum < ImportScripts::Base
           active: row[:user_active] == 1,
           location: row[:user_from],
           custom_fields: user_custom_fields(row),
-          post_create_action: proc do |user|
-            import_avatar(user, row[:user_avatar])
-          end
+          post_create_action: proc { |user| import_avatar(user, row[:user_avatar]) },
         }
       end
     end
@@ -84,13 +83,14 @@ class ImportScripts::JForum < ImportScripts::Base
     @settings[:custom_fields].map do |field|
       columns << (field[:alias] ? "#{field[:column]} AS #{field[:alias]}" : field[:column])
     end
-    ", #{columns.join(', ')}"
+    ", #{columns.join(", ")}"
   end
 
   def user_fields
-    @user_fields ||= begin
-      Hash[UserField.all.map { |field| [field.name, field] }]
-    end
+    @user_fields ||=
+      begin
+        Hash[UserField.all.map { |field| [field.name, field] }]
+      end
   end
 
   def user_custom_fields(row)
@@ -124,7 +124,11 @@ class ImportScripts::JForum < ImportScripts::Base
     if File.file?(path)
       @uploader.create_avatar(user, path)
     elsif avatar_source.match?(REMOTE_AVATAR_REGEX)
-      UserAvatar.import_url_for_user(avatar_source, user) rescue nil
+      begin
+        UserAvatar.import_url_for_user(avatar_source, user)
+      rescue StandardError
+        nil
+      end
     end
   end
 
@@ -218,10 +222,11 @@ class ImportScripts::JForum < ImportScripts::Base
         id: "C#{row[:categories_id]}",
         name: row[:title],
         position: row[:display_order],
-        post_create_action: proc do |category|
-          url = File.join(@settings[:permalink_prefix], "forums/list/#{row[:categories_id]}.page")
-          Permalink.create(url: url, category_id: category.id) unless Permalink.find_by(url: url)
-        end
+        post_create_action:
+          proc do |category|
+            url = File.join(@settings[:permalink_prefix], "forums/list/#{row[:categories_id]}.page")
+            Permalink.create(url: url, category_id: category.id) unless Permalink.find_by(url: url)
+          end,
       }
     end
 
@@ -237,17 +242,19 @@ class ImportScripts::JForum < ImportScripts::Base
         name: row[:forum_name],
         description: row[:forum_desc],
         position: row[:forum_order],
-        parent_category_id: @lookup.category_id_from_imported_category_id("C#{row[:categories_id]}"),
-        post_create_action: proc do |category|
-          url = File.join(@settings[:permalink_prefix], "forums/show/#{row[:forum_id]}.page")
-          Permalink.create(url: url, category_id: category.id) unless Permalink.find_by(url: url)
-        end
+        parent_category_id:
+          @lookup.category_id_from_imported_category_id("C#{row[:categories_id]}"),
+        post_create_action:
+          proc do |category|
+            url = File.join(@settings[:permalink_prefix], "forums/show/#{row[:forum_id]}.page")
+            Permalink.create(url: url, category_id: category.id) unless Permalink.find_by(url: url)
+          end,
       }
     end
   end
 
   def import_posts
-    puts '', 'creating topics and posts'
+    puts "", "creating topics and posts"
     total_count = count("SELECT COUNT(1) AS count FROM jforum_posts")
     last_post_id = 0
 
@@ -286,7 +293,7 @@ class ImportScripts::JForum < ImportScripts::Base
           user_id: user_id,
           created_at: row[:post_time],
           raw: post_text,
-          import_topic_id: row[:topic_id]
+          import_topic_id: row[:topic_id],
         }
 
         if row[:topic_acceptedanswer_post_id] == row[:post_id]
@@ -312,7 +319,9 @@ class ImportScripts::JForum < ImportScripts::Base
       TopicViewItem.add(post.topic_id, row[:poster_ip], post.user_id, post.created_at, true)
     end
 
-    mapped[:tags] = @tags_by_import_forum_id[row[:forum_id]] if @settings[:import_categories_as_tags]
+    mapped[:tags] = @tags_by_import_forum_id[row[:forum_id]] if @settings[
+      :import_categories_as_tags
+    ]
     mapped[:category] = @lookup.category_id_from_imported_category_id(row[:forum_id])
 
     mapped
@@ -470,7 +479,11 @@ class ImportScripts::JForum < ImportScripts::Base
           category_id = @lookup.category_id_from_imported_category_id(row[:forum_id])
 
           if user && category_id
-            CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:watching], category_id)
+            CategoryUser.set_notification_level_for_category(
+              user,
+              NotificationLevels.all[:watching],
+              category_id,
+            )
           end
         end
 
@@ -511,7 +524,11 @@ class ImportScripts::JForum < ImportScripts::Base
         topic = @lookup.topic_lookup_from_imported_post_id(row[:topic_first_post_id])
 
         if user_id && topic
-          TopicUser.change(user_id, topic[:topic_id], notification_level: NotificationLevels.all[:watching])
+          TopicUser.change(
+            user_id,
+            topic[:topic_id],
+            notification_level: NotificationLevels.all[:watching],
+          )
         end
 
         current_index += 1
@@ -545,17 +562,17 @@ class ImportScripts::JForum < ImportScripts::Base
   end
 
   def fix_bbcode_tag!(tag:, text:)
-    text.gsub!(/\s+(\[#{tag}\].*?\[\/#{tag}\])/im, '\1')
+    text.gsub!(%r{\s+(\[#{tag}\].*?\[/#{tag}\])}im, '\1')
 
     text.gsub!(/(\[#{tag}.*?\])(?!$)/i) { "#{$1}\n" }
     text.gsub!(/((?<!^)\[#{tag}.*?\])/i) { "\n#{$1}" }
 
-    text.gsub!(/(\[\/#{tag}\])(?!$)/i) { "#{$1}\n" }
-    text.gsub!(/((?<!^)\[\/#{tag}\])/i) { "\n#{$1}" }
+    text.gsub!(%r{(\[/#{tag}\])(?!$)}i) { "#{$1}\n" }
+    text.gsub!(%r{((?<!^)\[/#{tag}\])}i) { "\n#{$1}" }
   end
 
   def fix_inline_bbcode!(tag:, text:)
-    text.gsub!(/\[(#{tag}.*?)\](.*?)\[\/#{tag}\]/im) do
+    text.gsub!(%r{\[(#{tag}.*?)\](.*?)\[/#{tag}\]}im) do
       beginning_tag = $1
       content = $2.gsub(/(\n{2,})/) { "[/#{tag}]#{$1}[#{beginning_tag}]" }
       "[#{beginning_tag}]#{content}[/#{tag}]"

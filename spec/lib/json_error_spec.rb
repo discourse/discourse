@@ -8,12 +8,11 @@ RSpec.shared_examples "a generic error" do
   end
 
   it "has a generic error message" do
-    expect(result[:errors]).to eq([I18n.t('js.generic_error')])
+    expect(result[:errors]).to eq([I18n.t("js.generic_error")])
   end
 end
 
 RSpec.describe JsonError do
-
   let(:creator) { Object.new.extend(JsonError) }
 
   describe "with a nil argument" do
@@ -49,5 +48,4 @@ RSpec.describe JsonError do
       expect(result[:errors]).not_to be_blank
     end
   end
-
 end

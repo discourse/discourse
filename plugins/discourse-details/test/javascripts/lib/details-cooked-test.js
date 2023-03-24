@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 const defaultOpts = buildOptions({
   siteSettings: {
     enable_emoji: true,
-    emoji_set: "google_classic",
+    emoji_set: "twitter",
     highlighted_languages: "json|ruby|javascript",
     default_code_lang: "auto",
   },

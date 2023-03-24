@@ -8,10 +8,9 @@ module TurboTests
       start_time = opts.fetch(:start_time) { Time.now }
       verbose = opts.fetch(:verbose, false)
       fail_fast = opts.fetch(:fail_fast, nil)
+      use_runtime_info = opts.fetch(:use_runtime_info, false)
 
-      if verbose
-        STDERR.puts "VERBOSE"
-      end
+      STDERR.puts "VERBOSE" if verbose
 
       reporter = Reporter.from_config(formatters, start_time)
 
@@ -19,8 +18,17 @@ module TurboTests
         reporter: reporter,
         files: files,
         verbose: verbose,
-        fail_fast: fail_fast
+        fail_fast: fail_fast,
+        use_runtime_info: use_runtime_info,
       ).run
+    end
+
+    def self.default_spec_folders
+      # We do not want to include system specs by default, they are quite slow.
+      Dir
+        .entries("#{Rails.root}/spec")
+        .reject { |entry| !File.directory?("spec/#{entry}") || %w[.. . system].include?(entry) }
+        .map { |entry| "spec/#{entry}" }
     end
 
     def initialize(opts)
@@ -28,6 +36,7 @@ module TurboTests
       @files = opts[:files]
       @verbose = opts[:verbose]
       @fail_fast = opts[:fail_fast]
+      @use_runtime_info = opts[:use_runtime_info]
       @failure_count = 0
 
       @messages = Queue.new
@@ -39,28 +48,21 @@ module TurboTests
       check_for_migrations
 
       @num_processes = ParallelTests.determine_number_of_processes(nil)
-      use_runtime_info = @files == ['spec']
 
       group_opts = {}
 
-      if use_runtime_info
+      if @use_runtime_info
         group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log"
       else
         group_opts[:group_by] = :filesize
       end
 
       tests_in_groups =
-        ParallelTests::RSpec::Runner.tests_in_groups(
-          @files,
-          @num_processes,
-          **group_opts,
-        )
+        ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
 
       setup_tmp_dir
 
-      subprocess_opts = {
-        record_runtime: use_runtime_info
-      }
+      subprocess_opts = { record_runtime: @use_runtime_info }
 
       start_multisite_subprocess(@files, **subprocess_opts)
 
@@ -87,7 +89,7 @@ module TurboTests
           .configuration_hash
           .merge("database" => "discourse_test_1")
 
-      ActiveRecord::Tasks::DatabaseTasks.migrations_paths = ['db/migrate', 'db/post_migrate']
+      ActiveRecord::Tasks::DatabaseTasks.migrations_paths = %w[db/migrate db/post_migrate]
 
       conn = ActiveRecord::Base.establish_connection(config).connection
 
@@ -103,39 +105,30 @@ module TurboTests
 
     def setup_tmp_dir
       begin
-        FileUtils.rm_r('tmp/test-pipes')
+        FileUtils.rm_r("tmp/test-pipes")
       rescue Errno::ENOENT
       end
 
-      FileUtils.mkdir_p('tmp/test-pipes/')
+      FileUtils.mkdir_p("tmp/test-pipes/")
     end
 
     def start_multisite_subprocess(tests, **opts)
-      start_subprocess(
-        {},
-        ["--tag", "type:multisite"],
-        tests,
-        "multisite",
-        **opts
-      )
+      start_subprocess({}, %w[--tag type:multisite], tests, "multisite", **opts)
     end
 
     def start_regular_subprocess(tests, process_id, **opts)
       start_subprocess(
-        { 'TEST_ENV_NUMBER' => process_id.to_s },
-        ["--tag", "~type:multisite"],
+        { "TEST_ENV_NUMBER" => process_id.to_s },
+        %w[--tag ~type:multisite],
         tests,
         process_id,
-        **opts
+        **opts,
       )
     end
 
     def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
       if tests.empty?
-        @messages << {
-          type: 'exit',
-          process_id: process_id
-        }
+        @messages << { type: "exit", process_id: process_id }
       else
         tmp_filename = "tmp/test-pipes/subprocess-#{process_id}"
 
@@ -144,33 +137,34 @@ module TurboTests
         rescue Errno::EEXIST
         end
 
-        env['RSPEC_SILENCE_FILTER_ANNOUNCEMENTS'] = '1'
+        env["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] = "1"
 
         record_runtime_options =
           if record_runtime
-            [
-              "--format", "ParallelTests::RSpec::RuntimeLogger",
-              "--out", "tmp/turbo_rspec_runtime.log",
-            ]
+            %w[--format ParallelTests::RSpec::RuntimeLogger --out tmp/turbo_rspec_runtime.log]
           else
             []
           end
 
         command = [
-          "bundle", "exec", "rspec",
+          "bundle",
+          "exec",
+          "rspec",
           *extra_args,
-          "--seed", rand(2**16).to_s,
-          "--format", "TurboTests::JsonRowsFormatter",
-          "--out", tmp_filename,
+          "--seed",
+          rand(2**16).to_s,
+          "--format",
+          "TurboTests::JsonRowsFormatter",
+          "--out",
+          tmp_filename,
           *record_runtime_options,
-          *tests
+          *tests,
         ]
 
         if @verbose
-          command_str = [
-            env.map { |k, v| "#{k}=#{v}" }.join(' '),
-            command.join(' ')
-          ].select { |x| x.size > 0 }.join(' ')
+          command_str =
+            [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].select { |x| x.size > 0 }
+              .join(" ")
 
           STDERR.puts "Process #{process_id}: #{command_str}"
         end
@@ -178,28 +172,23 @@ module TurboTests
         stdin, stdout, stderr, wait_thr = Open3.popen3(env, *command)
         stdin.close
 
-        @threads <<
-          Thread.new do
-            File.open(tmp_filename) do |fd|
-              fd.each_line do |line|
-                message = JSON.parse(line)
-                message = message.symbolize_keys
-                message[:process_id] = process_id
-                @messages << message
-              end
+        @threads << Thread.new do
+          File.open(tmp_filename) do |fd|
+            fd.each_line do |line|
+              message = JSON.parse(line)
+              message = message.symbolize_keys
+              message[:process_id] = process_id
+              @messages << message
             end
-
-            @messages << { type: 'exit', process_id: process_id }
           end
+
+          @messages << { type: "exit", process_id: process_id }
+        end
 
         @threads << start_copy_thread(stdout, STDOUT)
         @threads << start_copy_thread(stderr, STDERR)
 
-        @threads << Thread.new do
-          if wait_thr.value.exitstatus != 0
-            @messages << { type: 'error' }
-          end
-        end
+        @threads << Thread.new { @messages << { type: "error" } if wait_thr.value.exitstatus != 0 }
       end
     end
 
@@ -225,13 +214,13 @@ module TurboTests
         while true
           message = @messages.pop
           case message[:type]
-          when 'example_passed'
+          when "example_passed"
             example = FakeExample.from_obj(message[:example])
             @reporter.example_passed(example)
-          when 'example_pending'
+          when "example_pending"
             example = FakeExample.from_obj(message[:example])
             @reporter.example_pending(example)
-          when 'example_failed'
+          when "example_failed"
             example = FakeExample.from_obj(message[:example])
             @reporter.example_failed(example)
             @failure_count += 1
@@ -239,18 +228,16 @@ module TurboTests
               @threads.each(&:kill)
               break
             end
-          when 'message'
+          when "message"
             @reporter.message(message[:message])
-          when 'seed'
-          when 'close'
-          when 'error'
+          when "seed"
+          when "close"
+          when "error"
             @reporter.error_outside_of_examples
             @error = true
-          when 'exit'
+          when "exit"
             exited += 1
-            if exited == @num_processes + 1
-              break
-            end
+            break if exited == @num_processes + 1
           else
             STDERR.puts("Unhandled message in main process: #{message}")
           end
@@ -262,7 +249,7 @@ module TurboTests
     end
 
     def fail_fast_met
-      !@fail_fast.nil? && @fail_fast >= @failure_count
+      !@fail_fast.nil? && @failure_count >= @fail_fast
     end
   end
 end

@@ -4,6 +4,7 @@ import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
+  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -13,7 +14,7 @@ acceptance(
     needs.user();
 
     needs.settings({
-      enable_experimental_sidebar_hamburger: false,
+      navigation_menu: "legacy",
     });
 
     test("clicking header hamburger icon displays old hamburger dropdown", async function (assert) {
@@ -31,8 +32,7 @@ acceptance(
     needs.user();
 
     needs.settings({
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: false,
+      navigation_menu: "header dropdown",
     });
 
     test("showing and hiding sidebar", async function (assert) {
@@ -51,25 +51,6 @@ acceptance(
         "hides the sidebar dropdown"
       );
     });
-
-    test("'enable_sidebar' query param override to enable sidebar", async function (assert) {
-      await visit("/?enable_sidebar=1");
-
-      assert.ok(exists(".sidebar-container"), "sidebar is displayed");
-
-      await click(".btn-sidebar-toggle");
-
-      assert.notOk(
-        exists(".sidebar-hamburger-dropdown"),
-        "does not display the sidebar dropdown"
-      );
-
-      assert.notOk(exists(".sidebar-container"), "sidebar is hidden");
-
-      await click(".btn-sidebar-toggle");
-
-      assert.ok(exists(".sidebar-container"), "sidebar is displayed");
-    });
   }
 );
 
@@ -79,8 +60,7 @@ acceptance(
     needs.user();
 
     needs.settings({
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
     });
 
     test("viewing keyboard shortcuts using sidebar", async function (assert) {
@@ -133,26 +113,6 @@ acceptance(
       assert.ok(exists(".sidebar-container"), "displays the sidebar");
     });
 
-    test("'enable_sidebar' query param override to disable sidebar", async function (assert) {
-      await visit("/?enable_sidebar=0");
-
-      assert.notOk(exists(".sidebar-container"), "sidebar is not displayed");
-
-      await click(".hamburger-dropdown");
-
-      assert.ok(
-        exists(".sidebar-hamburger-dropdown"),
-        "displays the sidebar dropdown"
-      );
-
-      await click(".hamburger-dropdown");
-
-      assert.notOk(
-        exists(".sidebar-hamburger-dropdown"),
-        "hides the sidebar dropdown"
-      );
-    });
-
     test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {
       const capabilities = this.container.lookup("capabilities:main");
       capabilities.touch = true;
@@ -193,6 +153,58 @@ acceptance(
         Object.keys(topicTrackingState.stateChangeCallbacks).length,
         initialCallbackCount - 3,
         "the 3 topic tracking state change callbacks are removed"
+      );
+    });
+
+    test("accessibility of sidebar section header", async function (assert) {
+      await visit("/");
+
+      assert.ok(
+        exists(
+          ".sidebar-section[data-section-name='community'] .sidebar-section-header[aria-expanded='true'][aria-controls='sidebar-section-content-community']"
+        ),
+        "accessibility attributes are set correctly on sidebar section header when section is expanded"
+      );
+
+      await click(".sidebar-section-header");
+
+      assert.ok(
+        exists(
+          ".sidebar-section[data-section-name='community'] .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-community']"
+        ),
+        "accessibility attributes are set correctly on sidebar section header when section is collapsed"
+      );
+    });
+
+    test("accessibility of sidebar toggle", async function (assert) {
+      await visit("/");
+
+      assert.ok(
+        exists(
+          ".btn-sidebar-toggle[aria-expanded='true'][aria-controls='d-sidebar']"
+        ),
+        "has the right accessibility attributes set when sidebar is expanded"
+      );
+
+      assert.strictEqual(
+        query(".btn-sidebar-toggle").title,
+        I18n.t("sidebar.hide_sidebar"),
+        "has the right title attribute when sidebar is expanded"
+      );
+
+      await click(".btn-sidebar-toggle");
+
+      assert.ok(
+        exists(
+          ".btn-sidebar-toggle[aria-expanded='false'][aria-controls='d-sidebar']"
+        ),
+        "has the right accessibility attributes set when sidebar is collapsed"
+      );
+
+      assert.strictEqual(
+        query(".btn-sidebar-toggle").title,
+        I18n.t("sidebar.show_sidebar"),
+        "has the right title attribute when sidebar is collapsed"
       );
     });
   }

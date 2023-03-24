@@ -35,6 +35,12 @@
         "posted": {
           "type": "integer"
         },
+        "watching_category_or_tag": {
+          "type": "integer"
+        },
+        "new_features": {
+          "type": "integer"
+        },
         "moved_post": {
           "type": "integer"
         },
@@ -112,6 +118,18 @@
         },
         "question_answer_user_commented": {
           "type": "integer"
+        },
+        "following": {
+          "type": "integer"
+        },
+        "following_created_topic": {
+          "type": "integer"
+        },
+        "following_replied": {
+          "type": "integer"
+        },
+        "circles_activity": {
+          "type": "integer"
         }
       },
       "required": [
@@ -124,6 +142,7 @@
         "invited_to_private_message",
         "invitee_accepted",
         "posted",
+        "watching_category_or_tag",
         "moved_post",
         "linked",
         "granted_badge",
@@ -470,6 +489,12 @@
     "markdown_additional_options" : {
       "type": "object"
     },
+    "hashtag_configurations" : {
+      "type": "object"
+    },
+    "hashtag_icons" : {
+      "type": "array"
+    },
     "displayed_about_plugin_stat_groups" : {
       "type": "array"
     },
@@ -653,6 +678,10 @@
             },
             "parent_category_id": {
               "type": "integer"
+            },
+            "form_template_ids": {
+              "type": "array",
+              "items": []
             }
           },
           "required": [
@@ -733,6 +762,9 @@
       "items": {
 
       }
+    },
+    "whispers_allowed_groups_names" : {
+      "type": "array"
     }
   },
   "required": [

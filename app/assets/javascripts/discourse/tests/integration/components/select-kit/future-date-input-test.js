@@ -58,7 +58,11 @@ module(
 
     test("renders default options", async function (assert) {
       const monday = "2100-12-13T08:00:00";
-      this.clock = fakeTime(monday, this.currentUser.timezone, true);
+      this.clock = fakeTime(
+        monday,
+        this.currentUser.user_option.timezone,
+        true
+      );
 
       await render(hbs`<FutureDateInput />`);
 

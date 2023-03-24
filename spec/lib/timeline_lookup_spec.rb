@@ -25,7 +25,9 @@ RSpec.describe TimelineLookup do
     result = TimelineLookup.build(input, 5)
     # even if max_value is 5 we might get 6 (5 + 1)
     # to ensure the last tuple is captured
-    expect(result).to eq([[1, 99], [21, 79], [41, 59], [61, 39], [81, 19], [input.size, input.last[1]]])
+    expect(result).to eq(
+      [[1, 99], [21, 79], [41, 59], [61, 39], [81, 19], [input.size, input.last[1]]],
+    )
   end
 
   it "respects an uneven `max_values` setting" do
@@ -37,5 +39,4 @@ RSpec.describe TimelineLookup do
     expect(result.size).to eq(4)
     expect(result).to eq([[1, 99], [35, 65], [69, 31], [input.size, input.last[1]]])
   end
-
 end

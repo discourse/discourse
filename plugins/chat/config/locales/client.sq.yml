@@ -1,0 +1,100 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    chat:
+      cancel: "Anulo"
+      channel_settings:
+        edit: "Redakto"
+        add: "Shto"
+      close: "Mbyll"
+      delete: "Fshij"
+      muted: "të heshtur"
+      joined: "anëtarësuar"
+      email_frequency:
+        never: "Asnjëherë"
+      header_indicator_preference:
+        never: "Asnjëherë"
+      flag: "Sinjalizoni"
+      last_visit: "vizita e fundit"
+      mention_warning:
+        dismiss: "hiqe"
+      reply: "Përgjigju"
+      edit: "Redakto"
+      rebake_message: "Rindërtoni HTML"
+      bookmark_message: "Shto tek të preferuarat"
+      save: "Ruaj"
+      sounds:
+        none: "Asnjë"
+      exit: "kthehu mbrapa"
+      channel_status:
+        open: "Fillo"
+      browse:
+        back: "Kthehu mbrapa"
+        filter_all: Të Gjithë
+      chat_message_separator:
+        today: Sot
+        yesterday: Dje
+      about_view:
+        title: Titulli
+        name: Emri
+        description: Përshkrimi
+      channel_info:
+        back_to_channel: "Kthehu mbrapa"
+        tabs:
+          about: Rreth
+          members: Anëtarë
+          settings: Rregullimet
+      direct_message_creator:
+        title: Mesazh i ri
+        prefix: "Për:"
+      create_channel:
+        type: "Lloji"
+        types:
+          category: "Kategori"
+          topic: "Topic"
+      composer:
+        italic_text: "tekst i theksuar"
+        bold_text: "tekst i trashë"
+      notification_levels:
+        never: "Asnjëherë"
+      settings:
+        followed: "Anëtarësuar"
+        notifications: "Njoftimet"
+        preview: "Parashikimi"
+        save: "Ruaj"
+        saved: "U ruajt"
+        admin_title: "Admin"
+      incoming_webhooks:
+        back: "Kthehu mbrapa"
+        description: "Përshkrimi"
+        delete: "Fshije"
+        emoji: "Emoji"
+        name: "Emri juaj"
+        save: "Ruaj"
+        edit: "Redakto"
+        system: "sistem"
+        url: "URL"
+        username: "Emri i përdoruesit"
+      selection:
+        cancel: "Anulo"
+        copy: "Kopjo"
+        new_topic:
+          title: "Ktheje në një temë të re"
+        existing_topic:
+          title: "Transfero tek një Temë tjetër"
+      emoji_picker:
+        flags: "Sinjalizime"
+      draft_channel_screen:
+        header: "Mesazh i ri"
+        cancel: "Anulo"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Mesazh

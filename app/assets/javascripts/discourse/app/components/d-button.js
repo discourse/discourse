@@ -1,161 +1,137 @@
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 import { empty, equal, notEmpty } from "@ember/object/computed";
-import Component from "@ember/component";
+import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
+import deprecated from "discourse-common/lib/deprecated";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import { computed } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  tagName: "button",
-  // subclasses need this
-  layoutName: "components/d-button",
-  form: null,
-  type: "button",
-  title: null,
-  translatedTitle: null,
-  label: null,
-  translatedLabel: null,
-  ariaLabel: null,
-  ariaExpanded: null,
-  ariaControls: null,
-  translatedAriaLabel: null,
-  forwardEvent: false,
-  preventFocus: false,
-  onKeyDown: null,
-  router: service(),
+const ACTION_AS_STRING_DEPRECATION_ARGS = [
+  "DButton no longer supports @action as a string. Please refactor to use an closure action instead.",
+  { id: "discourse.d-button-action-string" },
+];
 
-  isLoading: computed({
-    set(key, value) {
-      this.set("forceDisabled", !!value);
-      return value;
-    },
-  }),
+export default class DButton extends GlimmerComponentWithDeprecatedParentView {
+  @service router;
 
-  classNameBindings: [
-    "isLoading:is-loading",
-    "btnLink::btn",
-    "btnLink",
-    "noText",
-    "btnType",
-  ],
-  attributeBindings: [
-    "form",
-    "isDisabled:disabled",
-    "computedTitle:title",
-    "computedAriaLabel:aria-label",
-    "computedAriaExpanded:aria-expanded",
-    "ariaControls:aria-controls",
-    "tabindex",
-    "type",
-  ],
+  @notEmpty("args.icon")
+  btnIcon;
 
-  isDisabled: computed("disabled", "forceDisabled", function () {
-    return this.forceDisabled || this.disabled;
-  }),
+  @equal("args.display", "link")
+  btnLink;
 
-  forceDisabled: false,
+  @empty("computedLabel")
+  noText;
 
-  btnIcon: notEmpty("icon"),
+  constructor() {
+    super(...arguments);
+    if (typeof this.args.action === "string") {
+      deprecated(...ACTION_AS_STRING_DEPRECATION_ARGS);
+    }
+  }
 
-  btnLink: equal("display", "link"),
+  get forceDisabled() {
+    return !!this.args.isLoading;
+  }
 
-  @discourseComputed("icon", "computedLabel")
-  btnType(icon, translatedLabel) {
-    if (icon) {
-      return translatedLabel ? "btn-icon-text" : "btn-icon";
-    } else if (translatedLabel) {
+  get isDisabled() {
+    return this.forceDisabled || this.args.disabled;
+  }
+
+  get btnType() {
+    if (this.args.icon) {
+      return this.computedLabel ? "btn-icon-text" : "btn-icon";
+    } else if (this.computedLabel) {
       return "btn-text";
     }
-  },
+  }
 
-  noText: empty("computedLabel"),
-
-  @discourseComputed("title", "translatedTitle")
-  computedTitle(title, translatedTitle) {
-    if (title) {
-      return I18n.t(title);
+  get computedTitle() {
+    if (this.args.title) {
+      return I18n.t(this.args.title);
     }
-    return translatedTitle;
-  },
+    return this.args.translatedTitle;
+  }
 
-  @discourseComputed("label", "translatedLabel")
-  computedLabel(label, translatedLabel) {
-    if (label) {
-      return I18n.t(label);
+  get computedLabel() {
+    if (this.args.label) {
+      return I18n.t(this.args.label);
     }
-    return translatedLabel;
-  },
+    return this.args.translatedLabel;
+  }
 
-  @discourseComputed("ariaLabel", "translatedAriaLabel")
-  computedAriaLabel(ariaLabel, translatedAriaLabel) {
-    if (ariaLabel) {
-      return I18n.t(ariaLabel);
+  get computedAriaLabel() {
+    if (this.args.ariaLabel) {
+      return I18n.t(this.args.ariaLabel);
     }
-    if (translatedAriaLabel) {
-      return translatedAriaLabel;
+    if (this.args.translatedAriaLabel) {
+      return this.args.translatedAriaLabel;
     }
-  },
+  }
 
-  @discourseComputed("ariaExpanded")
-  computedAriaExpanded(ariaExpanded) {
-    if (ariaExpanded === true) {
+  get computedAriaExpanded() {
+    if (this.args.ariaExpanded === true) {
       return "true";
     }
-    if (ariaExpanded === false) {
+    if (this.args.ariaExpanded === false) {
       return "false";
     }
-  },
+  }
 
+  @action
   keyDown(e) {
-    if (this.onKeyDown) {
+    if (this.args.onKeyDown) {
       e.stopPropagation();
-      this.onKeyDown(e);
+      this.args.onKeyDown(e);
     } else if (e.key === "Enter") {
       this._triggerAction(e);
-      return false;
     }
-  },
+  }
 
+  @action
   click(event) {
     return this._triggerAction(event);
-  },
+  }
 
+  @action
   mouseDown(event) {
-    if (this.preventFocus) {
+    if (this.args.preventFocus) {
       event.preventDefault();
     }
-  },
+  }
 
   _triggerAction(event) {
-    let { action, route, href } = this;
+    const { action: actionVal, route, href } = this.args;
 
-    if (action || route || href?.length) {
-      if (action) {
-        if (typeof action === "string") {
-          // Note: This is deprecated in new Embers and needs to be removed in the future.
-          // There is already a warning in the console.
-          this.sendAction("action", this.actionParam);
-        } else if (typeof action === "object" && action.value) {
-          if (this.forwardEvent) {
-            action.value(this.actionParam, event);
+    if (actionVal || route || href?.length) {
+      if (actionVal) {
+        const { actionParam, forwardEvent } = this.args;
+
+        if (typeof actionVal === "string") {
+          deprecated(...ACTION_AS_STRING_DEPRECATION_ARGS);
+          if (this._target?.send) {
+            this._target.send(actionVal, actionParam);
           } else {
-            action.value(this.actionParam);
+            throw new Error(
+              "DButton could not find a target for the action. Use a closure action instead"
+            );
           }
-        } else if (typeof this.action === "function") {
-          if (this.forwardEvent) {
-            action(this.actionParam, event);
+        } else if (typeof actionVal === "object" && actionVal.value) {
+          if (forwardEvent) {
+            actionVal.value(actionParam, event);
           } else {
-            action(this.actionParam);
+            actionVal.value(actionParam);
+          }
+        } else if (typeof actionVal === "function") {
+          if (forwardEvent) {
+            actionVal(actionParam, event);
+          } else {
+            actionVal(actionParam);
           }
         }
-      }
-
-      if (route) {
+      } else if (route) {
         this.router.transitionTo(route);
-      }
-
-      if (href?.length) {
+      } else if (href?.length) {
         DiscourseURL.routeTo(href);
       }
 
@@ -164,5 +140,5 @@ export default Component.extend({
 
       return false;
     }
-  },
-});
+  }
+}

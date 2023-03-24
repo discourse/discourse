@@ -41,4 +41,4 @@ ar:
             every_three_months: "كل ثلاثة أشهر"
             every_six_months: "كل ستة أشهر"
             every_year: "كل سنة"
-      default_title: "%{site_name} حدث"
+      default_title: "حدث %{site_name}"

@@ -1,0 +1,8 @@
+.chat-channel-title-wrapper {
+  padding: 0.25rem;
+
+  &:hover {
+    background: var(--primary-very-low);
+    border-radius: 5px;
+  }
+}

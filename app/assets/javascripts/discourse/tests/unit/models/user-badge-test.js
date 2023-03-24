@@ -2,25 +2,29 @@ import { module, test } from "qunit";
 import UserBadge from "discourse/models/user-badge";
 import badgeFixtures from "discourse/tests/fixtures/user-badges";
 import { cloneJSON } from "discourse-common/lib/object";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-module("Unit | Model | user-badge", function () {
+module("Unit | Model | user-badge", function (hooks) {
+  setupTest(hooks);
+
   test("createFromJson single", function (assert) {
     const userBadge = UserBadge.createFromJson(
       cloneJSON(badgeFixtures["/user_badges"])
     );
     assert.ok(!Array.isArray(userBadge), "does not return an array");
     assert.strictEqual(
-      userBadge.get("badge.name"),
+      userBadge.badge.name,
       "Badge 2",
       "badge reference is set"
     );
     assert.strictEqual(
-      userBadge.get("badge.badge_type.name"),
+      userBadge.badge.badge_type.name,
       "Silver 2",
       "badge.badge_type reference is set"
     );
     assert.strictEqual(
-      userBadge.get("granted_by.username"),
+      userBadge.granted_by.username,
       "anne3",
       "granted_by reference is set"
     );
@@ -32,7 +36,7 @@ module("Unit | Model | user-badge", function () {
     );
     assert.ok(Array.isArray(userBadges), "returns an array");
     assert.strictEqual(
-      userBadges[0].get("granted_by"),
+      userBadges[0].granted_by,
       undefined,
       "granted_by reference is not set when null"
     );
@@ -55,12 +59,14 @@ module("Unit | Model | user-badge", function () {
 
   test("revoke", async function (assert) {
     assert.expect(0);
-    const userBadge = UserBadge.create({ id: 1 });
+    const store = getOwner(this).lookup("service:store");
+    const userBadge = store.createRecord("user-badge", { id: 1 });
     await userBadge.revoke();
   });
 
   test("favorite", async function (assert) {
-    const userBadge = UserBadge.create({ id: 1 });
+    const store = getOwner(this).lookup("service:store");
+    const userBadge = store.createRecord("user-badge", { id: 1 });
     assert.notOk(userBadge.is_favorite);
 
     await userBadge.favorite();

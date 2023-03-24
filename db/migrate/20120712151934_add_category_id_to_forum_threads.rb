@@ -16,5 +16,4 @@ class AddCategoryIdToForumThreads < ActiveRecord::Migration[4.2]
     remove_column :forum_threads, :category_id
     add_column :forum_threads, :tag, :string, limit: 20
   end
-
 end

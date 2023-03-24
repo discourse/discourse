@@ -49,6 +49,14 @@ export const ButtonClass = {
       attributes["aria-label"] = attrs.translatedAriaLabel;
     }
 
+    if (attrs.ariaExpanded) {
+      attributes["aria-expanded"] = attrs.ariaExpanded;
+    }
+
+    if (attrs.ariaControls) {
+      attributes["aria-controls"] = attrs.ariaControls;
+    }
+
     if (attrs.ariaPressed) {
       attributes["aria-pressed"] = attrs.ariaPressed;
     }

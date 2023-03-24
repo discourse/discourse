@@ -4,6 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "discourse/*": ["./app/*"],
+      "discourse/tests/*": ["./tests/*"],
       "discourse-common/*": ["../discourse-common/addon/*"],
       "pretty-text/*": ["../pretty-text/addon/*"],
       "select-kit/*": ["../select-kit/addon/*"],

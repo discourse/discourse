@@ -25,6 +25,7 @@ import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import showModal from "discourse/lib/show-modal";
 import { nativeShare } from "discourse/lib/pwa-utils";
+import { hideUserTip } from "discourse/lib/user-tips";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -63,6 +64,7 @@ export function avatarImg(wanted, attrs) {
       title,
       "aria-label": title,
       loading: "lazy",
+      tabindex: "-1",
     },
     className,
   };
@@ -140,10 +142,19 @@ createWidget("reply-to-tab", {
     return { loading: false };
   },
 
-  buildAttributes() {
-    return {
+  buildAttributes(attrs) {
+    let result = {
       tabindex: "0",
     };
+
+    if (!this.attrs.mobileView) {
+      result["aria-controls"] = `embedded-posts__top--${attrs.post_number}`;
+      result["aria-expanded"] = this.attrs.repliesAbove.length
+        ? "true"
+        : "false";
+    }
+
+    return result;
   },
 
   html(attrs, state) {
@@ -292,11 +303,22 @@ createWidget("post-meta-data", {
     let postInfo = [];
 
     if (attrs.isWhisper) {
+      const groups = this.site.get("whispers_allowed_groups_names");
+      let title = "";
+
+      if (groups?.length > 0) {
+        title = I18n.t("post.whisper_groups", {
+          groupNames: groups.join(", "),
+        });
+      } else {
+        title = I18n.t("post.whisper");
+      }
+
       postInfo.push(
         h(
           "div.post-info.whisper",
           {
-            attributes: { title: I18n.t("post.whisper") },
+            attributes: { title },
           },
           iconNode("far-eye-slash")
         )
@@ -492,28 +514,31 @@ createWidget("post-contents", {
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
       result.push(
-        h("section.embedded-posts.bottom", [
-          repliesBelow.map((p) => {
-            return this.attach("embedded-post", p, {
-              model: p.asPost,
-              state: {
-                role: "region",
-                "aria-label": I18n.t("post.sr_embedded_reply_description", {
-                  post_number: attrs.post_number,
-                  username: p.username,
-                }),
-              },
-            });
-          }),
-          this.attach("button", {
-            title: "post.collapse",
-            icon: "chevron-up",
-            action: "toggleRepliesBelow",
-            actionParam: "true",
-            className: "btn collapse-up",
-            translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
-          }),
-        ])
+        h(
+          `section.embedded-posts.bottom#embedded-posts__bottom--${this.attrs.post_number}`,
+          [
+            repliesBelow.map((p) => {
+              return this.attach("embedded-post", p, {
+                model: p.asPost,
+                state: {
+                  role: "region",
+                  "aria-label": I18n.t("post.sr_embedded_reply_description", {
+                    post_number: attrs.post_number,
+                    username: p.username,
+                  }),
+                },
+              });
+            }),
+            this.attach("button", {
+              title: "post.collapse",
+              icon: "chevron-up",
+              action: "toggleRepliesBelow",
+              actionParam: "true",
+              className: "btn collapse-up",
+              translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
+            }),
+          ]
+        )
       );
     }
 
@@ -593,12 +618,24 @@ createWidget("post-contents", {
   },
 
   share() {
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
+      this.currentUser.hideUserTipForever("post_menu");
+    }
+
     const post = this.findAncestorModel();
     nativeShare(this.capabilities, { url: post.shareUrl }).catch(() => {
       const topic = post.topic;
       const controller = showModal("share-topic", { model: topic.category });
       controller.setProperties({ topic, post });
     });
+  },
+
+  init() {
+    this.postContentsDestroyCallbacks = [];
+  },
+
+  destroy() {
+    this.postContentsDestroyCallbacks.forEach((c) => c());
   },
 });
 
@@ -722,16 +759,19 @@ createWidget("post-article", {
       rows.push(
         h(
           "div.row",
-          h("section.embedded-posts.top.topic-body", [
-            this.attach("button", {
-              title: "post.collapse",
-              icon: "chevron-down",
-              action: "toggleReplyAbove",
-              actionParam: "true",
-              className: "btn collapse-down",
-            }),
-            replies,
-          ])
+          h(
+            `section.embedded-posts.top.topic-body#embedded-posts__top--${attrs.post_number}`,
+            [
+              this.attach("button", {
+                title: "post.collapse",
+                icon: "chevron-down",
+                action: "toggleReplyAbove",
+                actionParam: "true",
+                className: "btn collapse-down",
+              }),
+              replies,
+            ]
+          )
         )
       );
     }
@@ -743,7 +783,10 @@ createWidget("post-article", {
     rows.push(
       h("div.row", [
         this.attach("post-avatar", attrs),
-        this.attach("post-body", attrs),
+        this.attach("post-body", {
+          ...attrs,
+          repliesAbove: state.repliesAbove,
+        }),
       ])
     );
     return rows;
@@ -927,5 +970,35 @@ export default createWidget("post", {
       this.dialog.alert(I18n.t("post.few_likes_left"));
       kvs.set({ key: "lastWarnedLikes", value: Date.now() });
     }
+  },
+
+  didRenderWidget() {
+    if (!this.currentUser || !this.siteSettings.enable_user_tips) {
+      return;
+    }
+
+    const reference = document.querySelector(
+      ".post-controls .actions .show-more-actions"
+    );
+
+    this.currentUser.showUserTip({
+      id: "post_menu",
+
+      titleText: I18n.t("user_tips.post_menu.title"),
+      contentText: I18n.t("user_tips.post_menu.content"),
+
+      reference,
+      appendTo: reference?.closest(".post-controls"),
+
+      placement: "top",
+    });
+  },
+
+  destroy() {
+    hideUserTip("post_menu");
+  },
+
+  willRerenderWidget() {
+    hideUserTip("post_menu");
   },
 });

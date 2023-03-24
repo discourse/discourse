@@ -1,7 +1,6 @@
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { ajax } from "discourse/lib/ajax";
 import { avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
@@ -13,7 +12,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
-import { hidePopup } from "discourse/lib/popup";
+import { hideUserTip } from "discourse/lib/user-tips";
 
 let _extraHeaderIcons = [];
 
@@ -83,28 +82,63 @@ createWidget("header-notifications", {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
       if (this.currentUser.redesigned_user_menu_enabled) {
-        const unread = user.all_unread_notifications_count || 0;
-        const reviewables = user.unseen_reviewable_count || 0;
-        const count = unread + reviewables;
-        if (count > 0) {
-          if (this._shouldHighlightAvatar()) {
-            if (this.siteSettings.enable_onboarding_popups) {
-              contents.push(h("span.ring"));
-            } else {
-              this._addAvatarHighlight(contents);
-            }
-          }
-
+        let ringClass = null;
+        if (user.new_personal_messages_notifications_count) {
+          ringClass = "personal-messages";
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className: "badge-notification with-icon new-pms",
+              icon: "envelope",
+              omitSpan: true,
+              title: "notifications.tooltip.new_message_notification",
+              titleOptions: {
+                count: user.new_personal_messages_notifications_count,
+              },
+              attributes: {
+                "aria-label": I18n.t(
+                  "notifications.tooltip.new_message_notification",
+                  {
+                    count: user.new_personal_messages_notifications_count,
+                  }
+                ),
+              },
+            })
+          );
+        } else if (user.unseen_reviewable_count) {
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className: "badge-notification with-icon new-reviewables",
+              icon: "flag",
+              omitSpan: true,
+              title: "notifications.tooltip.new_reviewable",
+              titleOptions: { count: user.unseen_reviewable_count },
+              attributes: {
+                "aria-label": I18n.t("notifications.tooltip.new_reviewable", {
+                  count: user.unseen_reviewable_count,
+                }),
+              },
+            })
+          );
+        } else if (user.all_unread_notifications_count) {
+          ringClass = "regular-notifications";
           contents.push(
             this.attach("link", {
               action: attrs.action,
               className: "badge-notification unread-notifications",
-              rawLabel: count,
+              rawLabel: user.all_unread_notifications_count,
               omitSpan: true,
               title: "notifications.tooltip.regular",
-              titleOptions: { count },
+              titleOptions: { count: user.all_unread_notifications_count },
+              attributes: {
+                "aria-label": I18n.t("user.notifications"),
+              },
             })
           );
+        }
+        if (ringClass && this._shouldHighlightAvatar()) {
+          contents.push(h(`span.ring.revamped.${ringClass}`));
         }
       } else {
         const unreadNotifications = user.unread_notifications;
@@ -124,11 +158,7 @@ createWidget("header-notifications", {
         const unreadHighPriority = user.unread_high_priority_notifications;
         if (!!unreadHighPriority) {
           if (this._shouldHighlightAvatar()) {
-            if (this.siteSettings.enable_onboarding_popups) {
-              contents.push(h("span.ring"));
-            } else {
-              this._addAvatarHighlight(contents);
-            }
+            contents.push(h("span.ring"));
           }
 
           // add the counter for the unread high priority
@@ -155,75 +185,36 @@ createWidget("header-notifications", {
     return (
       !user.read_first_notification &&
       !user.enforcedSecondFactor &&
-      !attrs.active &&
-      attrs.ringBackdrop
-    );
-  },
-
-  _addAvatarHighlight(contents) {
-    contents.push(h("span.ring"));
-    contents.push(h("span.ring-backdrop-spotlight"));
-    contents.push(
-      h(
-        "span.ring-backdrop",
-        {},
-        h("h1.ring-first-notification", {}, [
-          h(
-            "span",
-            { className: "first-notification" },
-            I18n.t("user.first_notification")
-          ),
-          h("span", { className: "read-later" }, [
-            this.attach("link", {
-              action: "readLater",
-              className: "read-later-link",
-              label: "user.skip_new_user_tips.read_later",
-            }),
-          ]),
-          h("span", {}, [
-            I18n.t("user.skip_new_user_tips.not_first_time"),
-            " ",
-            this.attach("link", {
-              action: "skipNewUserTips",
-              className: "skip-new-user-tips",
-              label: "user.skip_new_user_tips.skip_link",
-              title: "user.skip_new_user_tips.description",
-            }),
-          ]),
-        ])
-      )
+      !attrs.active
     );
   },
 
   didRenderWidget() {
-    if (
-      !this.currentUser ||
-      !this.siteSettings.enable_onboarding_popups ||
-      !this._shouldHighlightAvatar()
-    ) {
+    if (!this.currentUser || !this._shouldHighlightAvatar()) {
       return;
     }
 
-    this.currentUser.showPopup({
+    this.currentUser.showUserTip({
       id: "first_notification",
 
-      titleText: I18n.t("popup.first_notification.title"),
-      contentText: I18n.t("popup.first_notification.content"),
+      titleText: I18n.t("user_tips.first_notification.title"),
+      contentText: I18n.t("user_tips.first_notification.content"),
 
       reference: document
-        .querySelector(".badge-notification")
+        .querySelector(".d-header .badge-notification")
         ?.parentElement?.querySelector(".avatar"),
+      appendTo: document.querySelector(".d-header .panel"),
 
       placement: "bottom-end",
     });
   },
 
   destroy() {
-    hidePopup("first_notification");
+    hideUserTip("first_notification");
   },
 
   willRerenderWidget() {
-    hidePopup("first_notification");
+    hideUserTip("first_notification");
   },
 });
 
@@ -239,7 +230,7 @@ createWidget(
 
       html(attrs) {
         return h(
-          "a.icon",
+          "button.icon.btn-flat",
           {
             attributes: {
               "aria-haspopup": true,
@@ -272,7 +263,7 @@ createWidget(
         }
 
         return h(
-          "a.icon.btn-flat",
+          "button.icon.btn-flat",
           {
             attributes: {
               "aria-expanded": attrs.active,
@@ -333,7 +324,7 @@ createWidget("header-icons", {
         let { currentUser } = this;
         if (
           currentUser?.reviewable_count &&
-          !this.currentUser.redesigned_user_menu_enabled
+          this.siteSettings.navigation_menu === "legacy"
         ) {
           return h(
             "div.badge-notification.reviewables",
@@ -348,12 +339,7 @@ createWidget("header-icons", {
       },
     });
 
-    if (
-      !this.siteSettings.enable_experimental_sidebar_hamburger ||
-      (this.siteSettings.enable_experimental_sidebar_hamburger &&
-        !attrs.sidebarEnabled) ||
-      this.site.mobileView
-    ) {
+    if (!attrs.sidebarEnabled || this.site.mobileView) {
       icons.push(hamburger);
     }
 
@@ -362,7 +348,6 @@ createWidget("header-icons", {
         this.attach("user-dropdown", {
           active: attrs.userVisible,
           action: "toggleUserMenu",
-          ringBackdrop: attrs.ringBackdrop,
           user: attrs.user,
         })
       );
@@ -484,7 +469,6 @@ export default createWidget("header", {
       searchVisible: false,
       hamburgerVisible: false,
       userVisible: false,
-      ringBackdrop: true,
       inTopicContext: false,
     };
 
@@ -507,7 +491,6 @@ export default createWidget("header", {
         hamburgerVisible: state.hamburgerVisible,
         userVisible: state.userVisible,
         searchVisible: state.searchVisible,
-        ringBackdrop: state.ringBackdrop,
         flagCount: attrs.flagCount,
         user: this.currentUser,
         sidebarEnabled: attrs.sidebarEnabled,
@@ -526,10 +509,13 @@ export default createWidget("header", {
           })
         );
       } else if (state.hamburgerVisible) {
-        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
-          if (!attrs.sidebarEnabled) {
-            panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
-          }
+        if (
+          attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
+          (attrs.navigationMenuQueryParamOverride !== "legacy" &&
+            this.siteSettings.navigation_menu !== "legacy" &&
+            (!attrs.sidebarEnabled || this.site.narrowDesktopView))
+        ) {
+          panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
         } else {
           panels.push(this.attach("hamburger-menu"));
         }
@@ -552,7 +538,7 @@ export default createWidget("header", {
         }
       });
 
-      if (this.site.mobileView) {
+      if (this.site.mobileView || this.site.narrowDesktopView) {
         panels.push(this.attach("header-cloak"));
       }
 
@@ -630,10 +616,6 @@ export default createWidget("header", {
   },
 
   toggleUserMenu() {
-    if (this.currentUser.get("read_first_notification")) {
-      this.state.ringBackdrop = false;
-    }
-
     this.state.userVisible = !this.state.userVisible;
     this.toggleBodyScrolling(this.state.userVisible);
 
@@ -645,8 +627,9 @@ export default createWidget("header", {
 
   toggleHamburger() {
     if (
-      this.siteSettings.enable_experimental_sidebar_hamburger &&
-      this.attrs.sidebarEnabled
+      this.siteSettings.navigation_menu !== "legacy" &&
+      this.attrs.sidebarEnabled &&
+      !this.site.narrowDesktopView
     ) {
       this.sendWidgetAction("toggleSidebar");
     } else {
@@ -654,9 +637,9 @@ export default createWidget("header", {
       this.toggleBodyScrolling(this.state.hamburgerVisible);
 
       schedule("afterRender", () => {
-        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
+        if (this.siteSettings.navigation_menu !== "legacy") {
           // Remove focus from hamburger toggle button
-          document.querySelector("#toggle-hamburger-menu").blur();
+          document.querySelector("#toggle-hamburger-menu")?.blur();
         } else {
           // auto focus on first link in dropdown
           document.querySelector(".hamburger-panel .menu-links a")?.focus();
@@ -681,14 +664,32 @@ export default createWidget("header", {
   },
 
   preventDefault(e) {
-    // prevent all scrolling on menu panels, except on overflow
-    const height = window.innerHeight ? window.innerHeight : $(window).height();
-    if (
-      !$(e.target).parents(".menu-panel").length ||
-      $(".menu-panel .panel-body-contents").height() <= height
-    ) {
-      e.preventDefault();
+    const windowHeight = window.innerHeight;
+
+    // allow profile menu tabs to scroll if they're taller than the window
+    if (e.target.closest(".menu-panel .menu-tabs-container")) {
+      const topTabs = document.querySelector(".menu-panel .top-tabs");
+      const bottomTabs = document.querySelector(".menu-panel .bottom-tabs");
+      const profileTabsHeight =
+        topTabs?.offsetHeight + bottomTabs?.offsetHeight || 0;
+
+      if (profileTabsHeight > windowHeight) {
+        return;
+      }
     }
+
+    // allow menu panels to scroll if contents are taller than the window
+    if (e.target.closest(".menu-panel")) {
+      const menuContentHeight =
+        document.querySelector(".menu-panel .panel-body-contents")
+          .offsetHeight || 0;
+
+      if (menuContentHeight > windowHeight) {
+        return;
+      }
+    }
+
+    e.preventDefault();
   },
 
   togglePageSearch() {
@@ -728,43 +729,6 @@ export default createWidget("header", {
     if (state.searchVisible || state.hamburgerVisible || state.userVisible) {
       this.closeAll();
     }
-  },
-
-  headerDismissFirstNotificationMask() {
-    // Dismiss notifications
-    if (document.body.classList.contains("unread-first-notification")) {
-      document.body.classList.remove("unread-first-notification");
-    }
-    this.store
-      .findStale(
-        "notification",
-        {
-          recent: true,
-          silent: this.get("currentUser.enforcedSecondFactor"),
-          limit: 5,
-        },
-        { cacheKey: "recent-notifications" }
-      )
-      .refresh();
-    // Update UI
-    this.state.ringBackdrop = false;
-    this.scheduleRerender();
-  },
-
-  readLater() {
-    this.headerDismissFirstNotificationMask();
-  },
-
-  skipNewUserTips() {
-    this.headerDismissFirstNotificationMask();
-    ajax(userPath(this.currentUser.username_lower), {
-      type: "PUT",
-      data: {
-        skip_new_user_tips: true,
-      },
-    }).then(() => {
-      this.currentUser.set("skip_new_user_tips", true);
-    });
   },
 
   headerKeyboardTrigger(msg) {

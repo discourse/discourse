@@ -1,4 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default DiscourseRoute.extend({
   beforeModel() {
@@ -6,9 +8,19 @@ export default DiscourseRoute.extend({
   },
 
   model() {
-    return this.store.findAll("pending-post", {
-      username: this.username,
-    });
+    return this.store
+      .findAll("pending-post", {
+        username: this.username,
+      })
+      .then((pendingPosts) => {
+        for (let pendingPost of pendingPosts.content) {
+          pendingPost.title = emojiUnescape(
+            escapeExpression(pendingPost.title)
+          );
+        }
+
+        return pendingPosts;
+      });
   },
 
   activate() {

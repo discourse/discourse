@@ -8,4 +8,8 @@ export default class UserMenuLikesNotificationsList extends UserMenuNotification
   dismissWarningModal() {
     return null;
   }
+
+  get emptyStateComponent() {
+    return "user-menu/likes-list-empty-state";
+  }
 }

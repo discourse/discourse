@@ -1,14 +1,14 @@
 import Route from "@ember/routing/route";
 import { action } from "@ember/object";
 
-export default Route.extend({
+export default class AdminCustomizeEmailTemplatesRoute extends Route {
   model() {
     return this.store.findAll("email-template");
-  },
+  }
 
   setupController(controller, model) {
     controller.set("emailTemplates", model);
-  },
+  }
 
   @action
   didTransition() {
@@ -22,5 +22,5 @@ export default Route.extend({
         this.controller.get("sortedTemplates.firstObject")
       );
     }
-  },
-});
+  }
+}

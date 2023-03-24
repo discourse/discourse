@@ -2,7 +2,7 @@
 
 RSpec.describe Positionable do
   def positions
-    TestItem.order('position asc, id asc').pluck(:id)
+    TestItem.order("position asc, id asc").pluck(:id)
   end
 
   describe "move_to" do
@@ -23,9 +23,7 @@ RSpec.describe Positionable do
     end
 
     it "can position stuff correctly" do
-      5.times do |i|
-        DB.exec("insert into test_items(id,position) values(#{i}, #{i})")
-      end
+      5.times { |i| DB.exec("insert into test_items(id,position) values(#{i}, #{i})") }
 
       expect(positions).to eq([0, 1, 2, 3, 4])
       TestItem.find(3).move_to(0)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'yaml'
-require 'zip'
+require "yaml"
+require "zip"
 
 class ZippedSiteStructure
   attr_reader :zip
@@ -16,9 +16,7 @@ class ZippedSiteStructure
   end
 
   def set(name, data)
-    @zip.get_output_stream("#{name}.json") do |file|
-      file.write(data.to_json)
-    end
+    @zip.get_output_stream("#{name}.json") { |file| file.write(data.to_json) }
   end
 
   def get(name)
@@ -47,8 +45,9 @@ class ZippedSiteStructure
       return @uploads[upload.id]
     end
 
-    local_path = upload.local? ? Discourse.store.path_for(upload) : Discourse.store.download(upload).path
-    zip_path = File.join('uploads', File.basename(local_path))
+    local_path =
+      upload.local? ? Discourse.store.path_for(upload) : Discourse.store.download(upload).path
+    zip_path = File.join("uploads", File.basename(local_path))
     zip_path = get_unique_path(zip_path)
 
     puts "  - Exporting upload #{upload_or_id_or_url} to #{zip_path}"
@@ -60,18 +59,20 @@ class ZippedSiteStructure
   def get_upload(upload, opts = {})
     return nil if upload.blank?
 
-    if @uploads[upload['path']].present?
-      puts "  - Already imported upload #{upload['filename']} from #{upload['path']}"
-      return @uploads[upload['path']]
+    if @uploads[upload["path"]].present?
+      puts "  - Already imported upload #{upload["filename"]} from #{upload["path"]}"
+      return @uploads[upload["path"]]
     end
 
-    puts "  - Importing upload #{upload['filename']} from #{upload['path']}"
+    puts "  - Importing upload #{upload["filename"]} from #{upload["path"]}"
 
-    tempfile = Tempfile.new(upload['filename'], binmode: true)
-    tempfile.write(@zip.get_input_stream(upload['path']).read)
+    tempfile = Tempfile.new(upload["filename"], binmode: true)
+    tempfile.write(@zip.get_input_stream(upload["path"]).read)
     tempfile.rewind
 
-    @uploads[upload['path']] ||= UploadCreator.new(tempfile, upload['filename'], opts).create_for(Discourse::SYSTEM_USER_ID)
+    @uploads[upload["path"]] ||= UploadCreator.new(tempfile, upload["filename"], opts).create_for(
+      Discourse::SYSTEM_USER_ID,
+    )
   end
 
   private
@@ -92,8 +93,8 @@ class ZippedSiteStructure
   end
 end
 
-desc 'Exports site structure (settings, groups, categories, tags, themes, etc) to a ZIP file'
-task 'site:export_structure', [:zip_path] => :environment do |task, args|
+desc "Exports site structure (settings, groups, categories, tags, themes, etc) to a ZIP file"
+task "site:export_structure", [:zip_path] => :environment do |task, args|
   if args[:zip_path].blank?
     STDERR.puts "ERROR: rake site:export_structure[<path to ZIP file>]"
     exit 1
@@ -110,19 +111,21 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
 
   settings = {}
 
-  SiteSetting.all_settings(include_hidden: true).each do |site_setting|
-    next if site_setting[:default] == site_setting[:value]
+  SiteSetting
+    .all_settings(include_hidden: true)
+    .each do |site_setting|
+      next if site_setting[:default] == site_setting[:value]
 
-    puts "- Site setting #{site_setting[:setting]} -> #{site_setting[:value].inspect}"
+      puts "- Site setting #{site_setting[:setting]} -> #{site_setting[:value].inspect}"
 
-    settings[site_setting[:setting]] = if site_setting[:type] == 'upload'
-      data.set_upload(site_setting[:value])
-    else
-      site_setting[:value]
+      settings[site_setting[:setting]] = if site_setting[:type] == "upload"
+        data.set_upload(site_setting[:value])
+      else
+        site_setting[:value]
+      end
     end
-  end
 
-  data.set('site_settings', settings)
+  data.set("site_settings", settings)
 
   puts
   puts "Exporting users"
@@ -130,19 +133,22 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
 
   users = []
 
-  User.real.where(admin: true).each do |u|
-    puts "- User #{u.username}"
+  User
+    .real
+    .where(admin: true)
+    .each do |u|
+      puts "- User #{u.username}"
 
-    users << {
-      username: u.username,
-      name: u.name,
-      email: u.email,
-      active: u.active,
-      admin: u.admin,
-    }
-  end
+      users << {
+        username: u.username,
+        name: u.name,
+        email: u.email,
+        active: u.active,
+        admin: u.admin,
+      }
+    end
 
-  data.set('users', users)
+  data.set("users", users)
 
   puts
   puts "Exporting groups"
@@ -150,38 +156,40 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
 
   groups = []
 
-  Group.where(automatic: false).each do |g|
-    puts "- Group #{g.name}"
+  Group
+    .where(automatic: false)
+    .each do |g|
+      puts "- Group #{g.name}"
 
-    groups << {
-      name: g.name,
-      automatic_membership_email_domains: g.automatic_membership_email_domains,
-      primary_group: g.primary_group,
-      title: g.title,
-      grant_trust_level: g.grant_trust_level,
-      incoming_email: g.incoming_email,
-      has_messages: g.has_messages,
-      flair_bg_color: g.flair_bg_color,
-      flair_color: g.flair_color,
-      bio_raw: g.bio_raw,
-      allow_membership_requests: g.allow_membership_requests,
-      full_name: g.full_name,
-      default_notification_level: g.default_notification_level,
-      visibility_level: g.visibility_level,
-      public_exit: g.public_exit,
-      public_admission: g.public_admission,
-      membership_request_template: g.membership_request_template,
-      messageable_level: g.messageable_level,
-      mentionable_level: g.mentionable_level,
-      publish_read_state: g.publish_read_state,
-      members_visibility_level: g.members_visibility_level,
-      flair_icon: g.flair_icon,
-      flair_upload_id: data.set_upload(g.flair_upload_id),
-      allow_unknown_sender_topic_replies: g.allow_unknown_sender_topic_replies,
-    }
-  end
+      groups << {
+        name: g.name,
+        automatic_membership_email_domains: g.automatic_membership_email_domains,
+        primary_group: g.primary_group,
+        title: g.title,
+        grant_trust_level: g.grant_trust_level,
+        incoming_email: g.incoming_email,
+        has_messages: g.has_messages,
+        flair_bg_color: g.flair_bg_color,
+        flair_color: g.flair_color,
+        bio_raw: g.bio_raw,
+        allow_membership_requests: g.allow_membership_requests,
+        full_name: g.full_name,
+        default_notification_level: g.default_notification_level,
+        visibility_level: g.visibility_level,
+        public_exit: g.public_exit,
+        public_admission: g.public_admission,
+        membership_request_template: g.membership_request_template,
+        messageable_level: g.messageable_level,
+        mentionable_level: g.mentionable_level,
+        publish_read_state: g.publish_read_state,
+        members_visibility_level: g.members_visibility_level,
+        flair_icon: g.flair_icon,
+        flair_upload_id: data.set_upload(g.flair_upload_id),
+        allow_unknown_sender_topic_replies: g.allow_unknown_sender_topic_replies,
+      }
+    end
 
-  data.set('groups', groups)
+  data.set("groups", groups)
 
   puts
   puts "Exporting categories"
@@ -229,7 +237,7 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
     }
   end
 
-  data.set('categories', categories)
+  data.set("categories", categories)
 
   puts
   puts "Exporting tag groups"
@@ -240,13 +248,10 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
   TagGroup.all.each do |tg|
     puts "- Tag group #{tg.name}"
 
-    tag_groups << {
-      name: tg.name,
-      tag_names: tg.tags.map(&:name)
-    }
+    tag_groups << { name: tg.name, tag_names: tg.tags.map(&:name) }
   end
 
-  data.set('tag_groups', tag_groups)
+  data.set("tag_groups", tag_groups)
 
   puts
   puts "Exporting tags"
@@ -263,7 +268,7 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
     tags << tag
   end
 
-  data.set('tags', tags)
+  data.set("tags", tags)
 
   puts
   puts "Exporting themes and theme components"
@@ -279,18 +284,18 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
         name: theme.name,
         url: theme.remote_theme.remote_url,
         private_key: theme.remote_theme.private_key,
-        branch: theme.remote_theme.branch
+        branch: theme.remote_theme.branch,
       }
     else
       exporter = ThemeStore::ZipExporter.new(theme)
       file_path = exporter.package_filename
-      file_zip_path = File.join('themes', File.basename(file_path))
+      file_zip_path = File.join("themes", File.basename(file_path))
       data.zip.add(file_zip_path, file_path)
       themes << { name: theme.name, filename: File.basename(file_path), path: file_zip_path }
     end
   end
 
-  data.set('themes', themes)
+  data.set("themes", themes)
 
   puts
   puts "Exporting theme settings"
@@ -301,11 +306,12 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
   ThemeSetting.find_each do |theme_setting|
     puts "- Theme setting #{theme_setting.name} -> #{theme_setting.value}"
 
-    value = if theme_setting.data_type == ThemeSetting.types[:upload]
-      data.set_upload(theme_setting.value)
-    else
-      theme_setting.value
-    end
+    value =
+      if theme_setting.data_type == ThemeSetting.types[:upload]
+        data.set_upload(theme_setting.value)
+      else
+        theme_setting.value
+      end
 
     theme_settings << {
       name: theme_setting.name,
@@ -315,7 +321,7 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
     }
   end
 
-  data.set('theme_settings', theme_settings)
+  data.set("theme_settings", theme_settings)
 
   puts
   puts "Done"
@@ -324,8 +330,8 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
   data.close
 end
 
-desc 'Imports site structure from a ZIP file exported by site:export_structure'
-task 'site:import_structure', [:zip_path] => :environment do |task, args|
+desc "Imports site structure from a ZIP file exported by site:export_structure"
+task "site:import_structure", [:zip_path] => :environment do |task, args|
   if args[:zip_path].blank?
     STDERR.puts "ERROR: rake site:import_structure[<path to ZIP file>]"
     exit 1
@@ -340,7 +346,7 @@ task 'site:import_structure', [:zip_path] => :environment do |task, args|
   puts "Importing site settings"
   puts
 
-  settings = data.get('site_settings')
+  settings = data.get("site_settings")
   imported_settings = Set.new
 
   3.times.each do |try|
@@ -373,144 +379,159 @@ task 'site:import_structure', [:zip_path] => :environment do |task, args|
   puts "Importing users"
   puts
 
-  data.get('users').each do |u|
-    puts "- User #{u['username']}"
+  data
+    .get("users")
+    .each do |u|
+      puts "- User #{u["username"]}"
 
-    begin
-      user = User.find_or_initialize_by(username: u.delete('username'))
-      user.update!(u)
-    rescue => e
-      STDERR.puts "ERROR: Cannot import user: #{e.message}"
-      puts e.backtrace
+      begin
+        user = User.find_or_initialize_by(username: u.delete("username"))
+        user.update!(u)
+      rescue => e
+        STDERR.puts "ERROR: Cannot import user: #{e.message}"
+        puts e.backtrace
+      end
     end
-  end
 
   puts
   puts "Importing groups"
   puts
 
-  data.get('groups').each do |g|
-    puts "- Group #{g['name']}"
+  data
+    .get("groups")
+    .each do |g|
+      puts "- Group #{g["name"]}"
 
-    begin
-      group = Group.find_or_initialize_by(name: g.delete('name'))
-      group.update!(g)
-    rescue => e
-      STDERR.puts "ERROR: Cannot import group: #{e.message}"
-      puts e.backtrace
+      begin
+        group = Group.find_or_initialize_by(name: g.delete("name"))
+        group.update!(g)
+      rescue => e
+        STDERR.puts "ERROR: Cannot import group: #{e.message}"
+        puts e.backtrace
+      end
     end
-  end
 
   puts
   puts "Importing categories"
   puts
 
-  data.get('categories').each do |c|
-    puts "- Category #{c['name']} (#{c['slug']})"
+  data
+    .get("categories")
+    .each do |c|
+      puts "- Category #{c["name"]} (#{c["slug"]})"
 
-    begin
-      category = Category.find_or_initialize_by(slug: c.delete('slug'))
-      category.user ||= Discourse.system_user
-      category.parent_category = Category.find_by(slug: c.delete('parent_category'))
-      category.permissions = c.delete('permissions')
-      category.update!(c)
-    rescue => e
-      STDERR.puts "ERROR: Cannot import category: #{e.message}"
-      puts e.backtrace
+      begin
+        category = Category.find_or_initialize_by(slug: c.delete("slug"))
+        category.user ||= Discourse.system_user
+        category.parent_category = Category.find_by(slug: c.delete("parent_category"))
+        category.permissions = c.delete("permissions")
+        category.update!(c)
+      rescue => e
+        STDERR.puts "ERROR: Cannot import category: #{e.message}"
+        puts e.backtrace
+      end
     end
-  end
 
   puts
   puts "Importing tag groups"
   puts
 
-  data.get('tag_groups').each do |tg|
-    puts "- Tag group #{tg['name']}"
+  data
+    .get("tag_groups")
+    .each do |tg|
+      puts "- Tag group #{tg["name"]}"
 
-    tag_group = TagGroup.find_or_initialize_by(name: tg.delete('name'))
-    tag_group.update!(tg)
-  end
+      tag_group = TagGroup.find_or_initialize_by(name: tg.delete("name"))
+      tag_group.update!(tg)
+    end
 
   puts
   puts "Importing tags"
   puts
 
-  data.get('tags').each do |t|
-    puts "- Tag #{t['name']}"
+  data
+    .get("tags")
+    .each do |t|
+      puts "- Tag #{t["name"]}"
 
-    if t['target_tag'].present?
+      if t["target_tag"].present?
+        begin
+          t["target_tag"] = Tag.find_or_create_by!(name: t.delete("target_tag"))
+        rescue => e
+          STDERR.puts "ERROR: Cannot import target tag: #{e.message}"
+          puts e.backtrace
+        end
+      end
+
       begin
-        t['target_tag'] = Tag.find_or_create_by!(name: t.delete('target_tag'))
+        tag = Tag.find_or_initialize_by(name: t.delete("name"))
+        tag.update!(t)
       rescue => e
-        STDERR.puts "ERROR: Cannot import target tag: #{e.message}"
+        STDERR.puts "ERROR: Cannot import tag: #{e.message}"
         puts e.backtrace
       end
     end
-
-    begin
-      tag = Tag.find_or_initialize_by(name: t.delete('name'))
-      tag.update!(t)
-    rescue => e
-      STDERR.puts "ERROR: Cannot import tag: #{e.message}"
-      puts e.backtrace
-    end
-  end
 
   puts
   puts "Importing themes and theme components"
   puts
 
-  data.get('themes').each do |t|
-    puts "- Theme #{t['name']}"
+  data
+    .get("themes")
+    .each do |t|
+      puts "- Theme #{t["name"]}"
 
-    begin
-      if t['url'].present?
-        next if Theme.find_by(name: t['name']).present?
+      begin
+        if t["url"].present?
+          next if Theme.find_by(name: t["name"]).present?
 
-        RemoteTheme.import_theme(
-          t['url'],
-          Discourse.system_user,
-          private_key: t['private_key'],
-          branch: t['branch']
-        )
-      elsif t['filename'].present?
-        tempfile = Tempfile.new(t['filename'], binmode: true)
-        tempfile.write(data.zip.get_input_stream(t['path']).read)
-        tempfile.flush
+          RemoteTheme.import_theme(
+            t["url"],
+            Discourse.system_user,
+            private_key: t["private_key"],
+            branch: t["branch"],
+          )
+        elsif t["filename"].present?
+          tempfile = Tempfile.new(t["filename"], binmode: true)
+          tempfile.write(data.zip.get_input_stream(t["path"]).read)
+          tempfile.flush
 
-        RemoteTheme.update_zipped_theme(
-          tempfile.path,
-          t['filename'],
-          user: Discourse.system_user,
-          theme_id: Theme.find_by(name: t['name'])&.id,
-        )
+          RemoteTheme.update_zipped_theme(
+            tempfile.path,
+            t["filename"],
+            user: Discourse.system_user,
+            theme_id: Theme.find_by(name: t["name"])&.id,
+          )
+        end
+      rescue => e
+        STDERR.puts "ERROR: Cannot import theme: #{e.message}"
+        puts e.backtrace
       end
-    rescue => e
-      STDERR.puts "ERROR: Cannot import theme: #{e.message}"
-      puts e.backtrace
     end
-  end
 
   puts
   puts "Importing theme settings"
   puts
 
-  data.get('theme_settings').each do |ts|
-    puts "- Theme setting #{ts['name']} -> #{ts['value']}"
+  data
+    .get("theme_settings")
+    .each do |ts|
+      puts "- Theme setting #{ts["name"]} -> #{ts["value"]}"
 
-    begin
-      if ts['data_type'] == ThemeSetting.types[:upload]
-        ts['value'] = data.get_upload(ts['value'], for_theme: true)
+      begin
+        if ts["data_type"] == ThemeSetting.types[:upload]
+          ts["value"] = data.get_upload(ts["value"], for_theme: true)
+        end
+
+        ThemeSetting.find_or_initialize_by(
+          name: ts["name"],
+          theme: Theme.find_by(name: ts["theme"]),
+        ).update!(data_type: ts["data_type"], value: ts["value"])
+      rescue => e
+        STDERR.puts "ERROR: Cannot import theme setting: #{e.message}"
+        puts e.backtrace
       end
-
-      ThemeSetting
-        .find_or_initialize_by(name: ts['name'], theme: Theme.find_by(name: ts['theme']))
-        .update!(data_type: ts['data_type'], value: ts['value'])
-    rescue => e
-      STDERR.puts "ERROR: Cannot import theme setting: #{e.message}"
-      puts e.backtrace
     end
-  end
 
   puts
   puts "Done"

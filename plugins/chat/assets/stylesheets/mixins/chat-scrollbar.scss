@@ -1,0 +1,28 @@
+@mixin chat-scrollbar($border: var(--primary-very-low)) {
+  --scrollbarBg: transparent;
+  --scrollbarThumbBg: var(--primary-low);
+  --scrollbarWidth: 1.2rem;
+
+  scrollbar-color: transparent var(--scrollbarBg);
+  transition: scrollbar-color 0.25s ease-in-out;
+  transition-delay: 0.5s;
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: calc(var(--scrollbarWidth) / 2);
+    border: calc(var(--scrollbarWidth) / 4) solid transparent;
+  }
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      border: calc(var(--scrollbarWidth) / 4) solid $border;
+    }
+    scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbarThumbBg);
+    }
+    transition-delay: 0s;
+  }
+  &::-webkit-scrollbar {
+    width: var(--scrollbarWidth);
+  }
+}

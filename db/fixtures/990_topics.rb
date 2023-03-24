@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 if !Rails.env.test?
-  require 'seed_data/topics'
+  require "seed_data/topics"
 
   topics_exist = Topic.where(<<~SQL).exists?
     id NOT IN (

@@ -1,30 +1,87 @@
-<DSection @tagName="" @pageClass="tags" @bodyClass={{concat "tag-" this.tag.id (if this.category.slug (concat " category-" this.category.slug)) "" (if this.additionalTags " tags-intersection")}}>
+<DSection
+  @tagName=""
+  @pageClass="tags"
+  @bodyClass={{concat
+    "tag-"
+    this.tag.id
+    (if this.category.slug (concat " category-" this.category.slug))
+    ""
+    (if this.additionalTags " tags-intersection")
+  }}
+>
   <div class="container">
     <DiscourseBanner @user={{this.currentUser}} @banner={{this.site.banner}} />
   </div>
 
-  <PluginOutlet @name="discovery-list-controls-above" @tagName="span" @connectorTagName="div" />
+  <span>
+    <PluginOutlet
+      @name="discovery-list-controls-above"
+      @connectorTagName="div"
+    />
+  </span>
 
   <div class="list-controls">
-    <PluginOutlet @name="discovery-navigation-bar-above" @connectorTagName="div" />
+    <PluginOutlet
+      @name="discovery-navigation-bar-above"
+      @connectorTagName="div"
+    />
     <div class="container">
       <section class="navigation-container tag-navigation">
-        <DNavigation @filterMode={{this.filterMode}} @canCreateTopic={{this.canCreateTopic}} @hasDraft={{this.currentUser.has_topic_draft}} @createTopic={{route-action "createTopic"}} @category={{this.category}} @editCategory={{route-action "editCategory" this.category}} @tag={{this.tag}} @noSubcategories={{this.noSubcategories}} @tagNotification={{this.tagNotification}} @additionalTags={{this.additionalTags}} @showInfo={{this.showInfo}} @canCreateTopicOnTag={{this.canCreateTopicOnTag}} @changeTagNotificationLevel={{action "changeTagNotificationLevel"}} @toggleInfo={{action "toggleInfo"}} />
+        <DNavigation
+          @filterMode={{this.filterMode}}
+          @canCreateTopic={{this.canCreateTopic}}
+          @hasDraft={{this.currentUser.has_topic_draft}}
+          @createTopic={{route-action "createTopic"}}
+          @category={{this.category}}
+          @editCategory={{route-action "editCategory" this.category}}
+          @tag={{this.tag}}
+          @noSubcategories={{this.noSubcategories}}
+          @tagNotification={{this.tagNotification}}
+          @additionalTags={{this.additionalTags}}
+          @showInfo={{this.showInfo}}
+          @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
+          @createTopicDisabled={{this.createTopicDisabled}}
+          @changeTagNotificationLevel={{action "changeTagNotificationLevel"}}
+          @toggleInfo={{action "toggleInfo"}}
+        />
 
-        <PluginOutlet @name="tag-navigation" @connectorTagName="div" @args={{hash category=this.category tag=this.tag}} />
+        <PluginOutlet
+          @name="tag-navigation"
+          @connectorTagName="div"
+          @outletArgs={{hash category=this.category tag=this.tag}}
+        />
       </section>
     </div>
   </div>
 
   {{#if this.showInfo}}
-    <TagInfo @tag={{this.tag}} @list={{this.list}} @deleteAction={{action "deleteTag"}} />
+    <TagInfo
+      @tag={{this.tag}}
+      @list={{this.list}}
+      @deleteAction={{action "deleteTag"}}
+    />
   {{/if}}
 
-  <PluginOutlet @name="discovery-list-container-top" @tagName="span" @connectorTagName="div" @args={{hash category=this.category}} />
+  <span>
+    <PluginOutlet
+      @name="discovery-list-container-top"
+      @connectorTagName="div"
+      @outletArgs={{hash category=this.category}}
+    />
+  </span>
 
-  <TopicDismissButtons @position="top" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
+  <TopicDismissButtons
+    @position="top"
+    @selectedTopics={{this.selected}}
+    @model={{this.model}}
+    @showResetNew={{this.showResetNew}}
+    @showDismissRead={{this.showDismissRead}}
+    @resetNew={{action "resetNew"}}
+  />
 
-  <PluginOutlet @name="discovery-above" @tagName="span" @connectorTagName="div" />
+  <span>
+    <PluginOutlet @name="discovery-above" @connectorTagName="div" />
+  </span>
 
   <div class="container list-container">
     <div class="row">
@@ -32,32 +89,84 @@
         <PluginOutlet @name="before-list-area" />
         <div id="list-area">
           {{#unless this.loading}}
-            <DiscoveryTopicsList @model={{this.list}} @refresh={{action "refresh"}} @autoAddTopicsToBulkSelect={{this.autoAddTopicsToBulkSelect}} @bulkSelectEnabled={{this.bulkSelectEnabled}} @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}} as |discoveryTopicList|>
+            <DiscoveryTopicsList
+              @model={{this.list}}
+              @refresh={{action "refresh"}}
+              @autoAddTopicsToBulkSelect={{this.autoAddTopicsToBulkSelect}}
+              @bulkSelectEnabled={{this.bulkSelectEnabled}}
+              @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}}
+              as |discoveryTopicList|
+            >
               {{#if this.top}}
                 <div class="top-lists">
-                  <PeriodChooser @period={{this.period}} @action={{action "changePeriod"}} @fullDay={{false}} />
+                  <PeriodChooser
+                    @period={{this.period}}
+                    @action={{action "changePeriod"}}
+                    @fullDay={{false}}
+                  />
                 </div>
               {{else}}
                 {{#if this.topicTrackingState.hasIncoming}}
-                  <div class="show-more {{if this.hasTopics "has-topics"}}">
-                    <a tabindex="0" href {{on "click" this.showInserted}} class="alert alert-info clickable">
-                      <CountI18n @key="topic_count_" @suffix={{this.topicTrackingState.filter}} @count={{this.topicTrackingState.incomingCount}} />
+                  <div class="show-more {{if this.hasTopics 'has-topics'}}">
+                    <a
+                      tabindex="0"
+                      href
+                      {{on "click" this.showInserted}}
+                      class="alert alert-info clickable"
+                    >
+                      <CountI18n
+                        @key="topic_count_"
+                        @suffix={{this.topicTrackingState.filter}}
+                        @count={{this.topicTrackingState.incomingCount}}
+                      />
                     </a>
                   </div>
                 {{/if}}
               {{/if}}
 
               {{#if this.list.topics}}
-                <TopicList @topics={{this.list.topics}} @canBulkSelect={{this.canBulkSelect}} @toggleBulkSelect={{action "toggleBulkSelect"}} @bulkSelectEnabled={{this.bulkSelectEnabled}} @bulkSelectAction={{action "refresh"}} @updateAutoAddTopicsToBulkSelect={{action "updateAutoAddTopicsToBulkSelect"}} @selected={{this.selected}} @category={{this.category}} @showPosters={{true}} @order={{this.order}} @ascending={{this.ascending}} @changeSort={{action "changeSort"}} @onScroll={{discoveryTopicList.saveScrollPosition}} @scrollOnLoad={{true}} @focusLastVisitedTopic={{true}} />
+                <TopicList
+                  @topics={{this.list.topics}}
+                  @canBulkSelect={{this.canBulkSelect}}
+                  @toggleBulkSelect={{action "toggleBulkSelect"}}
+                  @bulkSelectEnabled={{this.bulkSelectEnabled}}
+                  @bulkSelectAction={{action "refresh"}}
+                  @updateAutoAddTopicsToBulkSelect={{action
+                    "updateAutoAddTopicsToBulkSelect"
+                  }}
+                  @selected={{this.selected}}
+                  @category={{this.category}}
+                  @showPosters={{true}}
+                  @order={{this.order}}
+                  @ascending={{this.ascending}}
+                  @changeSort={{action "changeSort"}}
+                  @onScroll={{discoveryTopicList.saveScrollPosition}}
+                  @scrollOnLoad={{true}}
+                  @focusLastVisitedTopic={{true}}
+                />
               {{/if}}
             </DiscoveryTopicsList>
 
             <footer class="topic-list-bottom">
-              <TopicDismissButtons @position="bottom" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
+              <TopicDismissButtons
+                @position="bottom"
+                @selectedTopics={{this.selected}}
+                @model={{this.model}}
+                @showResetNew={{this.showResetNew}}
+                @showDismissRead={{this.showDismissRead}}
+                @resetNew={{action "resetNew"}}
+              />
 
               {{#unless this.list.canLoadMore}}
-                <FooterMessage @education={{this.footerEducation}} @message={{this.footerMessage}}>
-                  <LinkTo @route="tags"> {{i18n "topic.browse_all_tags"}}</LinkTo> {{i18n "or"}} <LinkTo @route="discovery.latest">{{i18n "topic.view_latest_topics"}}</LinkTo>.
+                <FooterMessage
+                  @education={{this.footerEducation}}
+                  @message={{this.footerMessage}}
+                >
+                  {{html-safe
+                    (i18n
+                      "topic.browse_all_tags_or_latest" basePath=(base-path)
+                    )
+                  }}
                 </FooterMessage>
               {{/unless}}
             </footer>
@@ -69,5 +178,7 @@
     </div>
   </div>
 
-  <PluginOutlet @name="discovery-below" @tagName="span" @connectorTagName="div" />
+  <span>
+    <PluginOutlet @name="discovery-below" @connectorTagName="div" />
+  </span>
 </DSection>

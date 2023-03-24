@@ -53,6 +53,10 @@ const DEFAULT_QUICK_TIPS = [
     label: I18n.t("search.tips.full_search_key", { modifier: "Ctrl" }),
     description: I18n.t("search.tips.full_search"),
   },
+  {
+    label: "@me",
+    description: I18n.t("search.tips.me"),
+  },
 ];
 
 let QUICK_TIPS = [];
@@ -89,6 +93,12 @@ class Highlighted extends RawHtml {
 function createSearchResult({ type, linkField, builder }) {
   return createWidget(`search-result-${type}`, {
     tagName: "ul.list",
+
+    buildAttributes() {
+      return {
+        "aria-label": `${type} ${I18n.t("search.results")}`,
+      };
+    },
 
     html(attrs) {
       return attrs.results.map((r) => {
@@ -354,7 +364,7 @@ createWidget("search-menu-results", {
       if (["topic"].includes(rt.type)) {
         const more = buildMoreNode(rt);
         if (more) {
-          resultNodeContents.push(h("div.show-more", more));
+          resultNodeContents.push(h("div.search-menu__show-more", more));
         }
       }
 
@@ -405,13 +415,42 @@ createWidget("search-menu-assistant", {
 
     const content = [];
     const { suggestionKeyword, term } = attrs;
-    let prefix = term?.split(suggestionKeyword)[0].trim() || "";
 
-    if (prefix.length) {
-      prefix = `${prefix} `;
+    let prefix;
+    if (suggestionKeyword !== "+") {
+      prefix = term?.split(suggestionKeyword)[0].trim() || "";
+
+      if (prefix.length) {
+        prefix = `${prefix} `;
+      }
     }
 
     switch (suggestionKeyword) {
+      case "+":
+        attrs.results.forEach((item) => {
+          if (item.additionalTags) {
+            prefix = term?.split(" ").slice(0, -1).join(" ").trim() || "";
+          } else {
+            prefix = term?.split("#")[0].trim() || "";
+          }
+
+          if (prefix.length) {
+            prefix = `${prefix} `;
+          }
+
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              prefix,
+              tag: item.tagName,
+              additionalTags: item.additionalTags,
+              category: item.category,
+              slug: term,
+              withInLabel: attrs.withInLabel,
+              isIntersection: true,
+            })
+          );
+        });
+        break;
       case "#":
         attrs.results.forEach((item) => {
           if (item.model) {
@@ -449,18 +488,6 @@ createWidget("search-menu-assistant", {
           const user = attrs.results[0];
           content.push(
             this.attach("search-menu-assistant-item", {
-              prefix,
-              user,
-              setTopicContext: true,
-              slug: `${prefix}@${user.username}`,
-              suffix: h(
-                "span.label-suffix",
-                ` ${I18n.t("search.in_this_topic")}`
-              ),
-            })
-          );
-          content.push(
-            this.attach("search-menu-assistant-item", {
               extraHint: I18n.t("search.enter_hint"),
               prefix,
               user,
@@ -468,6 +495,18 @@ createWidget("search-menu-assistant", {
               suffix: h(
                 "span.label-suffix",
                 ` ${I18n.t("search.in_topics_posts")}`
+              ),
+            })
+          );
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              prefix,
+              user,
+              setTopicContext: true,
+              slug: `${prefix}@${user.username}`,
+              suffix: h(
+                "span.label-suffix",
+                ` ${I18n.t("search.in_this_topic")}`
               ),
             })
           );
@@ -513,6 +552,10 @@ createWidget("search-menu-initial-options", {
     const content = [];
 
     if (attrs.term || ctx) {
+      if (attrs.term) {
+        content.push(this.defaultRow(attrs.term, { withLabel: true }));
+      }
+
       if (ctx) {
         const term = attrs.term || "";
         switch (ctx.type) {
@@ -562,6 +605,36 @@ createWidget("search-menu-initial-options", {
               })
             );
             break;
+          case "tagIntersection":
+            let tagTerm;
+            if (ctx.additionalTags) {
+              const tags = [ctx.tagId, ...ctx.additionalTags];
+              tagTerm = `${term} tags:${tags.join("+")}`;
+            } else {
+              tagTerm = `${term} #${ctx.tagId}`;
+            }
+            let suggestionOptions = {
+              tagName: ctx.tagId,
+              additionalTags: ctx.additionalTags,
+            };
+            if (ctx.category) {
+              const categorySlug = ctx.category.parentCategory
+                ? `#${ctx.category.parentCategory.slug}:${ctx.category.slug}`
+                : `#${ctx.category.slug}`;
+              suggestionOptions.categoryName = categorySlug;
+              suggestionOptions.category = ctx.category;
+              tagTerm = tagTerm + ` ${categorySlug}`;
+            }
+
+            content.push(
+              this.attach("search-menu-assistant", {
+                term: tagTerm,
+                suggestionKeyword: "+",
+                results: [suggestionOptions],
+                withInLabel: true,
+              })
+            );
+            break;
           case "user":
             content.push(
               this.attach("search-menu-assistant-item", {
@@ -581,9 +654,6 @@ createWidget("search-menu-initial-options", {
         }
       }
 
-      if (attrs.term) {
-        content.push(this.defaultRow(attrs.term, { withLabel: true }));
-      }
       return content;
     }
 
@@ -607,7 +677,7 @@ createWidget("search-menu-initial-options", {
       slug: term,
       extraHint: I18n.t("search.enter_hint"),
       label: [
-        h("span.keyword", `${term} `),
+        h("span.keyword", `${term}`),
         opts.withLabel
           ? h("span.label-suffix", I18n.t("search.in_topics_posts"))
           : null,
@@ -640,7 +710,13 @@ createWidget("search-menu-assistant-item", {
     const attributes = {};
     attributes.href = "#";
 
-    let content = [iconNode(attrs.icon || "search")];
+    let content = [
+      h(
+        "span",
+        { attributes: { "aria-label": I18n.t("search.title") } },
+        iconNode(attrs.icon || "search")
+      ),
+    ];
 
     if (prefix) {
       content.push(h("span.search-item-prefix", `${prefix} `));
@@ -661,11 +737,20 @@ createWidget("search-menu-assistant-item", {
           link: false,
         })
       );
-    } else if (attrs.tag) {
-      attributes.href = getURL(`/tag/${attrs.tag}`);
 
-      content.push(iconNode("tag"));
-      content.push(h("span.search-item-tag", attrs.tag));
+      // category and tag combination
+      if (attrs.tag && attrs.isIntersection) {
+        attributes.href = getURL(`/tag/${attrs.tag}`);
+        content.push(h("span.search-item-tag", [iconNode("tag"), attrs.tag]));
+      }
+    } else if (attrs.tag) {
+      if (attrs.isIntersection && attrs.additionalTags?.length) {
+        const tags = [attrs.tag, ...attrs.additionalTags];
+        content.push(h("span.search-item-tag", `tags:${tags.join("+")}`));
+      } else {
+        attributes.href = getURL(`/tag/${attrs.tag}`);
+        content.push(h("span.search-item-tag", [iconNode("tag"), attrs.tag]));
+      }
     } else if (attrs.user) {
       const userResult = [
         avatarImg("small", {

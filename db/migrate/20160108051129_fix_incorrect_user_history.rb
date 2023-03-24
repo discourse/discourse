@@ -16,17 +16,24 @@ class FixIncorrectUserHistory < ActiveRecord::Migration[4.2]
       (action = 19 AND target_user_id IS NULL AND details IS NOT NULL)
     SQL
 
-    first_wrong_id = execute("SELECT min(id) FROM user_histories WHERE #{condition}").values[0][0].to_i
-    last_wrong_id = execute("SELECT max(id) FROM user_histories WHERE #{condition}").values[0][0].to_i
+    first_wrong_id =
+      execute("SELECT min(id) FROM user_histories WHERE #{condition}").values[0][0].to_i
+    last_wrong_id =
+      execute("SELECT max(id) FROM user_histories WHERE #{condition}").values[0][0].to_i
 
     if first_wrong_id < last_wrong_id
-      msg = "Correcting user history records from id: #{first_wrong_id} to #{last_wrong_id} (see: https://meta.discourse.org/t/old-user-suspension-reasons-have-gone-missing/3730)"
+      msg =
+        "Correcting user history records from id: #{first_wrong_id} to #{last_wrong_id} (see: https://meta.discourse.org/t/old-user-suspension-reasons-have-gone-missing/3730)"
 
-      execute("UPDATE user_histories SET action = action - 1
-               WHERE action > 5 AND id >= #{first_wrong_id} AND id <= #{last_wrong_id}")
+      execute(
+        "UPDATE user_histories SET action = action - 1
+               WHERE action > 5 AND id >= #{first_wrong_id} AND id <= #{last_wrong_id}",
+      )
 
-      execute("INSERT INTO user_histories(action, acting_user_id, details, created_at, updated_at)
-               VALUES (22, -1, '#{msg}', current_timestamp, current_timestamp)")
+      execute(
+        "INSERT INTO user_histories(action, acting_user_id, details, created_at, updated_at)
+               VALUES (22, -1, '#{msg}', current_timestamp, current_timestamp)",
+      )
     end
   end
 

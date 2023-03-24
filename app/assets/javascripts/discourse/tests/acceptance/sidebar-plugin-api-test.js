@@ -1,29 +1,33 @@
 import { test } from "qunit";
 import I18n from "I18n";
-import { click, visit } from "@ember/test-helpers";
+import { click, settled, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
   query,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import Site from "discourse/models/site";
+import { resetCustomCountables } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 import { bind } from "discourse-common/utils/decorators";
 
 acceptance("Sidebar - Plugin API", function (needs) {
   needs.user();
 
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   needs.hooks.afterEach(() => {
+    linkDidInsert = undefined;
     linkDestroy = undefined;
     sectionDestroy = undefined;
   });
 
-  let linkDestroy, sectionDestroy;
+  let linkDidInsert, linkDestroy, sectionDestroy;
 
   test("Multiple header actions and links", async function (assert) {
     withPluginApi("1.3.0", (api) => {
@@ -69,6 +73,10 @@ acceptance("Sidebar - Plugin API", function (needs) {
                     return "random-channel";
                   }
 
+                  get classNames() {
+                    return "my-class-name";
+                  }
+
                   get route() {
                     return "topic";
                   }
@@ -90,7 +98,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
                   }
 
                   get prefixValue() {
-                    return "hashtag";
+                    return "d-chat";
                   }
 
                   get prefixColor() {
@@ -111,6 +119,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
                   get suffixCSSClass() {
                     return "unread";
+                  }
+
+                  @bind
+                  didInsert() {
+                    linkDidInsert = "link test";
                   }
 
                   @bind
@@ -198,27 +211,33 @@ acceptance("Sidebar - Plugin API", function (needs) {
     await visit("/");
 
     assert.strictEqual(
+      linkDidInsert,
+      "link test",
+      "calls link didInsert function"
+    );
+
+    assert.strictEqual(
       query(
-        ".sidebar-section-test-chat-channels .sidebar-section-header-text"
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
       ).textContent.trim(),
       "chat channels text",
       "displays header with correct text"
     );
 
     await click(
-      ".sidebar-section-test-chat-channels .sidebar-section-header-dropdown summary"
+      ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown summary"
     );
 
     assert.strictEqual(
       queryAll(
-        ".sidebar-section-test-chat-channels .sidebar-section-header-dropdown .select-kit-collection li"
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown .select-kit-collection li"
       ).length,
       2,
       "displays two actions"
     );
 
     const actions = queryAll(
-      ".sidebar-section-test-chat-channels .sidebar-section-header-dropdown .select-kit-collection li"
+      ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown .select-kit-collection li"
     );
 
     assert.strictEqual(
@@ -234,13 +253,18 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     const links = queryAll(
-      ".sidebar-section-test-chat-channels .sidebar-section-link"
+      ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-link"
     );
 
     assert.strictEqual(
       links[0].textContent.trim(),
       "random channel text",
       "displays first link with correct text"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-link.my-class-name"),
+      "sets the custom class name for the section link"
     );
 
     assert.strictEqual(
@@ -261,7 +285,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     assert.strictEqual(
-      links[0].children[0].children[0].classList.contains("d-icon-hashtag"),
+      links[0].children[0].children[0].classList.contains("d-icon-d-chat"),
       true,
       "displays prefix icon"
     );
@@ -378,7 +402,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-test-chat-channels .sidebar-section-header-text"
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
       ).textContent.trim(),
       "chat channels text",
       "displays header with correct text"
@@ -390,7 +414,9 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     assert.ok(
-      !exists(".sidebar-section-test-chat-channels .sidebar-section-content a"),
+      !exists(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-content a"
+      ),
       "displays no links"
     );
   });
@@ -409,11 +435,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     const myCustomTopSectionLink = query(
-      ".sidebar-section-community .sidebar-more-section-links-details-content-secondary .sidebar-section-link-my-custom-top"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content-secondary .sidebar-section-link-my-custom-top"
     );
 
     assert.ok(
@@ -475,7 +501,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     await visit("/");
 
     const customLatestSectionLink = query(
-      ".sidebar-section-community .sidebar-section-link-latest"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-latest"
     );
 
     assert.ok(
@@ -495,11 +521,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     const customUnreadSectionLink = query(
-      ".sidebar-section-community .sidebar-section-link-my-unreads"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-unreads"
     );
 
     assert.ok(
@@ -519,7 +545,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     const customTopSectionLInk = query(
-      ".sidebar-section-community .sidebar-section-link-my-custom-top"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-custom-top"
     );
 
     assert.ok(
@@ -528,7 +554,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     const openBugsSectionLink = query(
-      ".sidebar-section-community .sidebar-section-link-open-bugs"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-open-bugs"
     );
 
     assert.ok(
@@ -543,14 +569,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     // close more links
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-my-favourite-topic.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-favourite-topic.active"
       ),
       "displays my favourite topic custom section link when current route matches the link's route"
     );
@@ -559,7 +585,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section-community .sidebar-section-link-my-favourite-topic.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-favourite-topic.active"
       ),
       "does not display my favourite topic custom section link when current route does not match the link's route"
     );
@@ -605,8 +631,122 @@ acceptance("Sidebar - Plugin API", function (needs) {
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-test-chat-channels"),
+      exists(".sidebar-section[data-section-name='test-chat-channels']"),
       "does not display the section"
     );
+  });
+
+  test("Registering a custom countable for a section link in the user's sidebar categories section", async function (assert) {
+    try {
+      return await withPluginApi("1.6.0", async (api) => {
+        const categories = Site.current().categories;
+        const category1 = categories[0];
+        const category2 = categories[1];
+
+        updateCurrentUser({
+          sidebar_category_ids: [category1.id, category2.id],
+        });
+
+        // User has one unread topic
+        this.container.lookup("service:topic-tracking-state").loadStates([
+          {
+            topic_id: 2,
+            highest_post_number: 12,
+            last_read_post_number: 11,
+            created_at: "2020-02-09T09:40:02.672Z",
+            category_id: category1.id,
+            notification_level: 2,
+            created_in_new_period: false,
+            treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          },
+        ]);
+
+        api.registerUserCategorySectionLinkCountable({
+          badgeTextFunction: (count) => {
+            return `some custom ${count}`;
+          },
+          route: "discovery.latestCategory",
+          routeQuery: { status: "open" },
+          shouldRegister: ({ category }) => {
+            if (category.name === category1.name) {
+              return true;
+            } else if (category.name === category2.name) {
+              return false;
+            }
+          },
+          refreshCountFunction: ({ category }) => {
+            return category.topic_count;
+          },
+          prioritizeOverDefaults: ({ category }) => {
+            return category.topic_count > 1000;
+          },
+        });
+
+        await visit("/");
+
+        assert.ok(
+          exists(
+            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-suffix.unread`
+          ),
+          "the right suffix is displayed when custom countable is active"
+        );
+
+        assert.strictEqual(
+          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
+            .pathname,
+          `/c/${category1.name}/${category1.id}`,
+          "does not use route configured for custom countable when user has elected not to show any counts in sidebar"
+        );
+
+        assert.notOk(
+          exists(
+            `.sidebar-section-link[data-category-id="${category2.id}"] .sidebar-section-link-suffix.unread`
+          ),
+          "does not display suffix when custom countable is not registered"
+        );
+
+        updateCurrentUser({
+          sidebar_list_destination: UNREAD_LIST_DESTINATION,
+        });
+
+        assert.strictEqual(
+          query(
+            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
+          ).innerText.trim(),
+          I18n.t("sidebar.unread_count", { count: 1 }),
+          "displays the right badge text in section link when unread is present and custom countable is not prioritised over unread"
+        );
+
+        category1.set("topic_count", 2000);
+
+        api.refreshUserSidebarCategoriesSectionCounts();
+
+        await settled();
+
+        assert.strictEqual(
+          query(
+            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
+          ).innerText.trim(),
+          `some custom ${category1.topic_count}`,
+          "displays the right badge text in section link when unread is present but custom countable is prioritised over unread"
+        );
+
+        assert.strictEqual(
+          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
+            .pathname,
+          `/c/${category1.name}/${category1.id}/l/latest`,
+          "has the right pathname for section link"
+        );
+
+        assert.strictEqual(
+          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
+            .search,
+          "?status=open",
+          "has the right query params for section link"
+        );
+      });
+    } finally {
+      resetCustomCountables();
+    }
   });
 });

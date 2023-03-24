@@ -1,33 +1,138 @@
 import I18n from "I18n";
 
 import { tracked } from "@glimmer/tracking";
+import { get, set } from "@ember/object";
 
 import { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 
+const UNREAD_AND_NEW_COUNTABLE = {
+  propertyName: "unreadAndNewCount",
+  badgeTextFunction: (count) => count.toString(),
+  route: "discovery.newCategory",
+  refreshCountFunction: ({ topicTrackingState, category }) => {
+    return topicTrackingState.countNewAndUnread({
+      categoryId: category.id,
+    });
+  },
+};
+
+const DEFAULT_COUNTABLES = [
+  {
+    propertyName: "totalUnread",
+    badgeTextFunction: (count) => {
+      return I18n.t("sidebar.unread_count", { count });
+    },
+    route: "discovery.unreadCategory",
+    refreshCountFunction: ({ topicTrackingState, category }) => {
+      return topicTrackingState.countUnread({
+        categoryId: category.id,
+      });
+    },
+  },
+  {
+    propertyName: "totalNew",
+    badgeTextFunction: (count) => {
+      return I18n.t("sidebar.new_count", { count });
+    },
+    route: "discovery.newCategory",
+    refreshCountFunction: ({ topicTrackingState, category }) => {
+      return topicTrackingState.countNew({
+        categoryId: category.id,
+      });
+    },
+  },
+];
+
+const customCountables = [];
+
+export function registerCustomCountable({
+  badgeTextFunction,
+  route,
+  routeQuery,
+  shouldRegister,
+  refreshCountFunction,
+  prioritizeOverDefaults,
+}) {
+  const length = customCountables.length + 1;
+
+  customCountables.push({
+    propertyName: `customCountableProperty${length}`,
+    badgeTextFunction,
+    route,
+    routeQuery,
+    shouldRegister,
+    refreshCountFunction,
+    prioritizeOverDefaults,
+  });
+}
+
+export function resetCustomCountables() {
+  customCountables.length = 0;
+}
+
 export default class CategorySectionLink {
-  @tracked totalUnread = 0;
-  @tracked totalNew = 0;
+  @tracked activeCountable;
 
   constructor({ category, topicTrackingState, currentUser }) {
     this.category = category;
     this.topicTrackingState = topicTrackingState;
     this.currentUser = currentUser;
+    this.countables = this.#countables();
+
     this.refreshCounts();
+  }
+
+  #countables() {
+    const countables = [];
+
+    if (this.#linkToNew) {
+      countables.push(UNREAD_AND_NEW_COUNTABLE);
+    } else {
+      countables.push(...DEFAULT_COUNTABLES);
+    }
+
+    if (customCountables.length > 0) {
+      customCountables.forEach((customCountable) => {
+        if (
+          !customCountable.shouldRegister ||
+          customCountable.shouldRegister({ category: this.category })
+        ) {
+          if (
+            customCountable?.prioritizeOverDefaults({
+              category: this.category,
+              currentUser: this.currentUser,
+            })
+          ) {
+            countables.unshift(customCountable);
+          } else {
+            countables.push(customCountable);
+          }
+        }
+      });
+    }
+
+    return countables;
+  }
+
+  get hideCount() {
+    return this.currentUser?.sidebarListDestination !== UNREAD_LIST_DESTINATION;
   }
 
   @bind
   refreshCounts() {
-    this.totalUnread = this.topicTrackingState.countUnread({
-      categoryId: this.category.id,
-    });
+    this.countables = this.#countables();
 
-    if (this.totalUnread === 0) {
-      this.totalNew = this.topicTrackingState.countNew({
-        categoryId: this.category.id,
+    this.activeCountable = this.countables.find((countable) => {
+      const count = countable.refreshCountFunction({
+        topicTrackingState: this.topicTrackingState,
+        category: this.category,
       });
-    }
+
+      set(this, countable.propertyName, count);
+      return count > 0;
+    });
   }
 
   get name() {
@@ -69,26 +174,59 @@ export default class CategorySectionLink {
   }
 
   get badgeText() {
-    if (this.totalUnread > 0) {
-      return I18n.t("sidebar.unread_count", {
-        count: this.totalUnread,
-      });
-    } else if (this.totalNew > 0) {
-      return I18n.t("sidebar.new_count", {
-        count: this.totalNew,
-      });
+    if (this.hideCount && !this.#linkToNew) {
+      return;
+    }
+
+    const activeCountable = this.activeCountable;
+
+    if (activeCountable) {
+      return activeCountable.badgeTextFunction(
+        get(this, activeCountable.propertyName)
+      );
     }
   }
 
   get route() {
-    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
-      if (this.totalUnread > 0) {
-        return "discovery.unreadCategory";
-      }
-      if (this.totalNew > 0) {
-        return "discovery.newCategory";
+    if (
+      this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION ||
+      this.#linkToNew
+    ) {
+      const activeCountable = this.activeCountable;
+
+      if (activeCountable) {
+        return activeCountable.route;
       }
     }
+
     return "discovery.category";
+  }
+
+  get query() {
+    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+      const activeCountable = this.activeCountable;
+
+      if (activeCountable?.routeQuery) {
+        return activeCountable.routeQuery;
+      }
+    }
+  }
+
+  get suffixCSSClass() {
+    return "unread";
+  }
+
+  get suffixType() {
+    return "icon";
+  }
+
+  get suffixValue() {
+    if (this.hideCount && this.activeCountable && !this.#linkToNew) {
+      return "circle";
+    }
+  }
+
+  get #linkToNew() {
+    return !!this.currentUser?.new_new_view_enabled;
   }
 }

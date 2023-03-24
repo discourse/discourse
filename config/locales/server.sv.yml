@@ -67,6 +67,7 @@ sv:
       modifier_values: "about.json-modifierare innehåller ogiltiga värden: %{errors}"
       git: "Fel vid kloning av git-lagringsplats, åtkomst nekas eller lagringsplatsen finns inte"
       git_ref_not_found: "Det gick inte att ta ut git-referens: %{ref}"
+      git_unsupported_scheme: "Det går inte att klona git repo: schemat stöds inte"
       unpack_failed: "Det gick inte att packa upp filen"
       file_too_big: "Den okomprimerade filen är för stor."
       unknown_file_type: "Filen som du laddade upp verkar inte vara ett giltigt Discourse-tema."
@@ -232,9 +233,12 @@ sv:
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
     not_found_template_link: |
       <p>Denna inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>
+    existing_user_cannot_redeem: "Denna inbjudan kan inte lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig."
+    existing_user_already_redemeed: "Du har redan löst in den här inbjudningslänken."
     user_exists: "Det finns ingen anledning att bjuda in <b>%{email}</b>, de har redan ett konto!"
     invite_exists: "Du har redan bjudit in <b>%{email}</b>."
     invalid_email: "%{email} är inte en giltig e-postadress."
+    generic_error_response: "Det uppstod ett problem med din förfrågan."
     rate_limit:
       one: "Du har redan skickat %{count} inbjudan den senaste dagen, vänta %{time_left} innan du försöker igen."
       other: "Du har redan skickat %{count} inbjudningar den senaste dagen, vänta %{time_left} innan du försöker igen."
@@ -248,6 +252,7 @@ sv:
     max_redemptions_allowed_one: "för e-postinbjudningar ska vara 1."
     redemption_count_less_than_max: "bör vara mindre än %{max_redemptions_allowed}."
     email_xor_domain: "E-post- och domänfält är inte tillåtna samtidigt"
+    existing_user_success: "Inbjudan har lösts in"
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
@@ -395,6 +400,7 @@ sv:
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte längre redigeras eller tas bort."
   edit_conflict: "Det inlägget redigerades av en annan användare och dina ändringar kan inte längre sparas."
   revert_version_same: "Nuvarande version är den samma som du försöker återgå till."
+  reverted_to_version: "återställd till version nr %{version}"
   cannot_edit_on_slow_mode: "Detta ämne är i långsamt läge. För att uppmuntra eftertänksam och övervägd diskussion är det för närvarande inte tillåtet att redigera gamla inlägg i långsamt läge."
   excerpt_image: "bild"
   bookmarks:
@@ -495,7 +501,7 @@ sv:
       Du kan redigera ditt tidigare svar och lägga till ett citat genom att markera text och välja knappen <b>citera</b> som dyker upp.
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
-    dominating_topic: Du har publicerat mer än %{percent} % av svaren här. Finns det någon annan du vill höra från?
+    dominating_topic: Du har skrivit mycket i det här ämnet! Tänk på att ge andra en möjlighet att svara här och diskutera med andra också.
     get_a_room: Du har svarat @%{reply_username} %{count} gånger. Visste du att du istället kunde skicka ett personligt meddelande till henne/honom?
     too_many_replies: |
       ### Du har nått svarsgränsen för detta ämne
@@ -535,6 +541,7 @@ sv:
               target_user_not_found: "En av användarna som du skickar detta meddelande till kunde inte hittas."
               unable_to_update: "Det uppstod ett fel vid uppdatering av detta ämnet."
               unable_to_tag: "Det uppstod ett fel vid taggning av ämnet."
+              unable_to_unlist: "Tyvärr kan du inte skapa ett olistat ämne."
             featured_link:
               invalid: "är ogiltig. URL måste innehålla http:// eller http://."
         user:
@@ -585,7 +592,9 @@ sv:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'Följande interpolationsnycklar är ogiltiga: "%{keys}"'
+              invalid_interpolation_keys:
+                one: 'Följande interpolationsnyckel är ogiltig: %{keys}'
+                other: 'Följande interpolationsnycklar är ogiltiga: %{keys}'
         watched_word:
           attributes:
             word:
@@ -639,6 +648,7 @@ sv:
       disallowed_topic_tags: "Detta ämne har taggar som inte tillåts för kategorin: '%{tags}'"
       disallowed_tags_generic: "Detta ämne har otillåtna taggar."
       slug_contains_non_ascii_chars: "innehåller icke-ascii tecken"
+      is_already_in_use: "används redan"
     cannot_delete:
       uncategorized: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som inte har en kategori; den kan inte raderas."
       has_subcategories: "Du kan inte ta bort den här kategorin eftersom den har underkategorier."
@@ -664,7 +674,7 @@ sv:
       one: "%{count} gillning"
       other: "%{count} gillningar"
     cannot_permanently_delete:
-      many_posts: "Du kan inte ta bort detta ämne permanent eftersom det finns andra inlägg."
+      many_posts: "Det här ämnet har återskapade inlägg. Radera dem permanent innan du raderar ämnet permanent."
       wait_or_different_admin: "Du måste vänta %{time_left} innan du tar bort detta inlägg permanent eller så måste en annan administratör göra det."
   rate_limiter:
     slow_down: "Du har utfört den här åtgärden för många gånger, försök igen senare."
@@ -764,16 +774,12 @@ sv:
         one: "nästan %{count} år sedan"
         other: "nästan %{count} år sedan"
   password_reset:
-    no_token: "Tyvärr har din lösenordslänk löpt ut. Klicka på inloggningsknappen och välj \"jag har glömt mitt lösenord\" för att få en ny länk."
-    choose_new: "Välj ett nytt lösenord"
-    choose: "Välj ett lösenord"
-    update: "Uppdatera lösenord"
-    save: "Välj lösenord"
+    no_token: 'Hoppsan! Länken du använde fungerar inte längre. Du kan <a href="%{base_url}/login">logga in</a> nu. Om du har glömt ditt lösenord kan du <a href="%{base_url}/password-reset">begära en länk</a> för att återställa det.'
     title: "Återställ lösenord"
     success: "Du har lyckats med att byta ditt lösenord och är nu inloggad."
     success_unapproved: "Du lyckades med att byta ditt lösenord."
   email_login:
-    invalid_token: "Tyvärr har din e-postadress lösenordslänk löpt ut. Klicka på inloggningsknappen och välj \"jag har glömt mitt lösenord\" för att få en ny länk."
+    invalid_token: 'Hoppsan! Länken du använde fungerar inte längre. Du kan <a href="%{base_url}/login">logga in</a> nu. Om du har glömt ditt lösenord kan du <a href="%{base_url}/password-reset">begära en länk</a> för att återställa det.'
     title: "E-postinloggning"
   user_auth_tokens:
     browser:
@@ -860,7 +866,7 @@ sv:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Olämpligt"
-      description: 'Detta inläggs innehåll omfattar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>.'
+      description: 'Detta inlägg innehåller saker som en förnuftig person skulle anse vara stötande, kränkande, hatiskt uppförande eller en överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>.'
       short_description: 'En överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>'
     notify_user:
       title: "Skicka ett meddelande till @%{username}"
@@ -926,7 +932,7 @@ sv:
       short_description: "Detta är en annons"
     inappropriate:
       title: "Olämpligt"
-      description: 'Detta inläggs innehåll omfattar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>.'
+      description: 'Detta ämne innehåller saker som en förnuftig person skulle anse vara stötande, kränkande, hatiskt uppförande eller en överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>.'
       long_form: "flaggade detta som olämpligt"
       short_description: 'En överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>'
     notify_moderators:
@@ -964,7 +970,8 @@ sv:
     mailing_list_mode: "Stäng av utskicksläge"
     all: "Skicka mig inga fler e-postmeddelanden från %{sitename}"
     different_user_description: "Du är för tillfället inloggad som en annan användare än den som vi skickade e-post till. Logga ut, eller aktivera anonymt läge, och försök igen."
-    not_found_description: "Tyvärr kunde vi inte hitta den här avprenumerationen. Kan länken i din e-post vara för gammal och ha löpt ut?"
+    not_found_description: "Tyvärr kunde vi inte hitta den avprenumerationen. Kan länken i din e-post vara för gammal och ha löpt ut?"
+    user_not_found_description: "Tyvärr kunde vi inte hitta någon användare för den här prenumerationen. Du försöker troligen avprenumerera ett konto som inte längre finns."
     log_out: "Logga ut"
     submit: "Spara inställningar"
     digest_frequency:
@@ -1001,6 +1008,7 @@ sv:
       write: "Skriv alla"
       one_time_password: "Skapa ett engångsinloggningsbevis"
       bookmarks_calendar: "Läs påminnelser om bokmärken"
+      user_status: "Läs och uppdatera användarstatus"
     invalid_public_key: "Tyvärr är den offentliga nyckeln ogiltig."
     invalid_auth_redirect: "Tyvärr är denna auth_redirect-värd inte tillåten."
     invalid_token: "Saknat, ogiltigt eller utgånget bevis."
@@ -1093,6 +1101,13 @@ sv:
         editor: Redigerare
         author: Författare
         edit_reason: Anledning
+    consolidated_api_requests:
+      title: "Konsoliderade API-förfrågningar"
+      xaxis:
+        api: "API"
+        user_api: "Användar-API"
+      yaxis: "Dag"
+      description: "API-förfrågningar för vanliga API-nycklar och användar-API-nycklar."
     dau_by_mau:
       title: "DAA/MAA"
       xaxis: "Dag"
@@ -1409,16 +1424,17 @@ sv:
     search_ignore_accents: "Ignorera accenttecken när du söker efter text."
     category_search_priority_low_weight: "Vikt tillämpad på rangordning vid låg sökprioritet för kategori"
     category_search_priority_high_weight: "Vikt tillämpad på rangordning vid hög sökprioritet för kategori"
+    default_composer_category: "Kategorin som används för att fylla i rullgardinsmenyn för kategori när du skapar ett nytt ämne."
     allow_uncategorized_topics: "Tillåt att ämnen skapas utan en kategori. VARNING: Om det finns några okategoriserade ämnen så måste dessa omkategoriseras innan den här inställningen stängs av."
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
     allow_duplicate_topic_titles_category: "Tillåt ämnen med identiska dubblettitlar om kategorin skiljer sig åt. allow_duplicate_topic_titles måste inaktiveras."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
     educate_until_posts: "Visa hjälppanelen för nya användare tills användaren har gjort (n) nya inlägg."
-    title: "Namnet på denna webbplats som används i titel-taggen."
-    site_description: "Beskriv denna webbplats i en mening, som sedan används i metabeskrivningstaggen."
-    short_site_description: "Kort beskrivning, som används i titel-taggen på hemsidan."
-    contact_email: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även på <a href='%{base_path}/about' target='_blank'>/about</a> för brådskande ärenden."
-    contact_url: "Kontakt-URL för denna webbplats. Visas på <a href='%{base_path}/about' target='_blank'>/about</a>-sidan för brådskande ärenden."
+    title: "Namnet på denna webbplats. Synligt för alla besökare, även anonyma användare."
+    site_description: "Beskriv denna webbplats med en mening. Synligt för alla besökare, även anonyma användare."
+    short_site_description: "Kort beskrivning med några få ord. Synlig för alla besökare, även anonyma användare."
+    contact_email: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även på <a href='%{base_path}/about' target='_blank'>/about</a>. Synliga för anonyma användare på offentliga webbplatser."
+    contact_url: "Kontakt-URL för denna webbplats. När den finns ersätter den e-postadressen på <a href='%{base_path}/about' target='_blank'>/about</a> och är synlig för anonyma användare på offentliga webbplatser."
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner."
     download_remote_images_to_local: "Konvertera fjärrbilder (med aktiva länkar) till lokala bilder genom att ladda ner dem. Detta bevarar innehållet även om bilderna tas bort från den fjärranslutna webbplatsen i framtiden."
     download_remote_images_threshold: "Minimalt diskutrymme nödvändigt för att hämta hem externa bilder lokalt (i procent)"
@@ -1434,8 +1450,8 @@ sv:
     edit_history_visible_to_public: "Tillåt att alla ser tidigare versioner av ett redigerat inlägg. Om detta inaktiveras kan endast personal se detta."
     delete_removed_posts_after: "Inlägg som tagits bort av författaren kommer automatiskt att raderas efter (n) timmar. Ange 0 för att omedelbart ta bort inlägg."
     notify_users_after_responses_deleted_on_flagged_post: "När ett inlägg flaggas och sedan tas bort kommer alla användare som har svarat på inlägget och fått sina svar borttagna att meddelas."
-    max_image_width: "Maxbredd för bildikoner i ett inlägg"
-    max_image_height: "Maxhöjd för bildikoner i ett inlägg"
+    max_image_width: "Maximal miniatyrbildsbredd för bilder i ett inlägg. Bilder med större bredd kommer att ändras i storlek och \"lightboxas\"."
+    max_image_height: "Maximal miniatyrbildshöjd för bilder i ett inlägg. Bilder med högre höjd kommer att ändras i storlek och \"lightboxas\"."
     responsive_post_image_sizes: "Ändra storlek på förhandsgranskningsbilder i Lightbox för att möjliggöra höga DPI-skärmar med följande pixelkvot. Ta bort alla värden för att inaktivera responsiva bilder."
     fixed_category_positions: "Om detta aktiveras kommer du att kunna ordna kategorier i en bestämd ordning. Om detta inaktiveras sorteras kategorierna baserat på aktivitet."
     fixed_category_positions_on_create: "Kategoriordningen kommer att upprätthållas vid dialogrutan för skapandet av ämnen om den här bockas för (kräver fixed_category_positions)."
@@ -1545,6 +1561,8 @@ sv:
     content_security_policy_frame_ancestors: "Begränsa vem som kan bädda in denna webbplats i iframes via CSP. Kontrollera tillåtna värdar på <a href='%{base_path}/admin/customize/embedding'>Inbäddning</a>"
     content_security_policy_script_src: "Ytterligare vitlistade skriptkällor. Den aktuella värden och CDN ingår som standard. Se <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Minska XSS-attacker genom policy för innehållssäkerhet.</a>"
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
+    include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
+    display_personal_messages_tag_counts: "När detta är aktiverat kommer antalet personliga meddelanden som taggats med en angiven tagg att visas."
     top_menu: "Bestäm vilka objekt som visas i hemsidans navigation, och i vilken ordning. Exempel: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
@@ -1571,13 +1589,12 @@ sv:
     email_token_valid_hours: "Länkarna Glömt lösenord/aktivera konto är giltiga i (n) timmar."
     enable_badges: "Aktivera utmärkelsesystemet"
     max_favorite_badges: "Maximalt antal utmärkelser som användaren kan välja"
-    enable_whispers: "Tiliåt privat kommunikation inom ämnena."
     whispers_allowed_groups: "Tillåt privat kommunikation inom ämnen för medlemmar i specificerade grupper."
     allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
-    blocked_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare inte tillåts registrera konton med. Exempel: mailinator.com|trashmail.net"
-    allowed_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare MÅSTE registrera konton med. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
+    blocked_email_domains: "En lista över e-postdomäner, avgränsade med vertikalstreck, som användare inte får registrera konton med. Underdomäner hanteras automatiskt för de angivna domänerna. Jokertecknen * och ? stöds inte. Exempel: mailinator.com|trashmail.net"
+    allowed_email_domains: "En lista över e-postdomäner, avgränsade med vertikalstreck, som användare MÅSTE registrera konton med. Underdomäner hanteras automatiskt för de angivna domänerna. Jokertecknen * och ? stöds inte. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
     normalize_emails: "Kontrollera om normaliserad e-post är unik. Normaliserad e-post tar bort alla punkter från användarnamnet och allt mellan symbolerna + och @."
-    auto_approve_email_domains: "Användare med e-postadresser som finns i denna lista av domäner kommer automatiskt att godkännas."
+    auto_approve_email_domains: "Användare med e-postadresser från den här listan över domäner kommer automatiskt att godkännas. Underdomäner hanteras automatiskt för de angivna domänerna. Jokertecknen * och ? stöds inte."
     hide_email_address_taken: "Informera inte användarna om att det finns ett konto med en given e-postadress under registreringen eller under flödet för glömda lösenord. Kräv fullständig e-post vid begäran om \"glömt lösenord\"."
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
     version_checks: "Pinga Discourse Hub för versionuppdateringar och visa nya versionsmeddelanden på instrumentpanelen <a href='%{base_path}/admin' target='_blank'>/admin</a>"
@@ -1599,7 +1616,7 @@ sv:
     enable_discourse_connect: "Aktivera inloggning via DiscourseConnect (tidigare 'Discourse SSO') (VARNING: ANVÄNDARES E-POSTADRESSER *MÅSTE* VALIDERAS AV DEN EXTERNA WEBBPLATSEN!)"
     verbose_discourse_connect_logging: "Logga detaljerad DiscourseConnect-relaterad diagnostik i <a href='%{base_path}/logs' target='_blank'>/loggar</a>"
     enable_discourse_connect_provider: "Implementera leverantörsprotokoll för DiscourseConnect (tidigare 'Discourse SSO') vid slutpunkten /session/sso_provider, kräver att discourse_connect_provider_secrets är inställd"
-    discourse_connect_url: "URL till DiscourseConnect-slutpunkt (måste innehålla http:// eller https://)"
+    discourse_connect_url: "DiscourseConnect-slutpunktens URL (måste innehålla http:// eller https:// och får inte innehålla ett avslutande snedstreck)."
     discourse_connect_secret: "Hemlig sträng som används för att kryptografiskt autentisera DiscourseConnect-information, se till att den är 10 tecken eller längre"
     discourse_connect_provider_secrets: "En lista med domänhemliga par som använder DiscourseConnect. Se till att DiscourseConnect-hemligheten är 10 tecken eller längre. Jokertecknet * kan användas för att matcha valfri domän eller bara en del av den (t.ex. * .exempel.com)."
     discourse_connect_overrides_bio: "Åsidosätter användarbiografi i användarprofilen och hindrar användare från att ändra den"
@@ -1641,7 +1658,7 @@ sv:
     discord_trusted_guilds: 'Tillåt bara medlemmar i dessa Discord-sällskap att logga in via Discord. Använd numeriskt ID för sällskapet. För mer information, se instruktionerna <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">här</a>. Lämna tomt för att tilllåta alla sällskap.'
     enable_backups: "Tillåt att administratörer skapar säkerhetskopior av forumet"
     allow_restore: "Tillåt återställning, som kan ersätta ALL data på webbplatsen! Lämna detta inaktiverat om du inte planerar att återställa en säkerhetskopia"
-    maximum_backups: "Högsta antal säkerhetskopior att spara på disken. Äldre säkerhetskopior raderas automatiskt"
+    maximum_backups: "Högsta antal säkerhetskopior att spara. Äldre säkerhetskopior raderas automatiskt"
     automatic_backups_enabled: "Kör automatiska säkerhetskopior som definierats i säkerhetskopieringsfrekvens"
     backup_frequency: "Antalet dagar mellan säkerhetskopieringar."
     s3_backup_bucket: "Den externa behållaren för säkerhetskopieringar. VARNING: Se till att det är en privat behållare."
@@ -1661,8 +1678,6 @@ sv:
     top_topics_formula_first_post_likes_multiplier: "värde av första inläggsgillningsmultiplikatorn (n) i formeln för toppämnen: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "värde av minsta inläggsgillningsmultiplikatorn (n) i formeln för toppämnen: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Tillåt användare att gå in i säkert läge för att felsöka tillägg."
-    enable_experimental_sidebar_hamburger: "Tillåter att experimentellt sidofält och användarens hamburgarmeny aktiveras."
-    enable_sidebar: "Aktiverar experimentellt sidofält."
     rate_limit_create_topic: "Efter att ha skapat ett ämne, måste användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_create_post: "Efter att ha skrivit ett inlägg, måste användare vänta (n) sekunder innan de skriver ett nytt."
     rate_limit_new_user_create_topic: "Efter att ha skapat ett ämne, måste nya användare vänta (n) sekunder innan de kan skapa ett nytt."
@@ -1719,7 +1734,7 @@ sv:
     composer_media_optimization_image_bytes_optimization_threshold: "Minsta bildfilstorlek för att utlösa optimering på klientsidan"
     composer_media_optimization_image_resize_dimensions_threshold: "Minsta bildbredd för att utlösa storleksändring på klientsidan"
     composer_media_optimization_image_resize_width_target: "Bilder med större bredd än `composer_media_optimization_image_dimensions_resize_threshold` kommer att ändras till denna bredd. Måste vara >= än `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "JPEG-kodningskvalitet som används i omkodningsprocessen."
+    composer_media_optimization_image_encode_quality: "JPG-kodningskvalitet som används i omkodningsprocessen."
     min_ratio_to_crop: "Förhållandet används för att beskära höga bilder. Ange resultatet av bredd/höjd."
     simultaneous_uploads: "Maximalt antal filer som kan dras och släppas in i redigeraren"
     default_invitee_trust_level: "Förvald förtroendenivå (0-4) för inbjudna användare."
@@ -1748,6 +1763,7 @@ sv:
     tl3_requires_likes_given: "Minsta antalet gillningar som måste ha delats ut de senaste (tl3 time period) dagarna för att kvalificeras för en befordran till förtroendenivå 3."
     tl3_requires_likes_received: "Minsta antalet gillningar som måste ha mottagits de senaste (tl3 time period) dagarna för att kvalificeras för en befordran till förtroendenivå 3."
     tl3_links_no_follow: "Radera ej rel=nofollow från länkarna som lagts upp av användare med förtroendenivå 3."
+    tl4_delete_posts_and_topics: "Tillåt TL4-användare att ta bort inlägg och ämnen som skapats av andra användare. TL4-användare kommer också att kunna se raderade ämnen och inlägg."
     trusted_users_can_edit_others: "Låt användare med hög förtroendenivå redigera innehåll från andra användare"
     min_trust_to_create_topic: "Lägsta förtroendenivå som krävs för att skapa ett nytt ämne."
     allow_flagging_staff: "Om aktiverat kan användare flagga inlägg från personalkonton."
@@ -1818,7 +1834,7 @@ sv:
     faq_url: "Om du har en FAQ någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     tos_url: "Om du har ett eget dokument med användarvillkor någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     privacy_policy_url: "Om du har ett dokument med en integritetspolicy någon annanstans som du vill använda, skriv den fullständiga URL:en här."
-    log_anonymizer_details: "Huruvida en användares detaljer ska lagras i loggen efter att ha anonymiserats. När du följer GDPR måste du stänga av detta."
+    log_anonymizer_details: "Huruvida en användares uppgifter ska behållas i loggen efter att ha anonymiserats."
     newuser_spam_host_threshold: "Hur många gånger en ny användare kan lägga upp en länk till samma värd inom deras `newuser_spam_host_threshold`-inlägg innan det anses vara skräppost."
     allowed_spam_host_domains: "En lista över alla domäner som undantas från skräpposttest. Nya användare kommer aldrig att begränsas från att skapa inlägg med länkar till dessa domäner."
     staff_like_weight: "Hur stor vikt som personalgillningar ska få (icke-personalgillningar har vikten 1.)"
@@ -1864,6 +1880,11 @@ sv:
     block_auto_generated_emails: "Blockera inkommande e-post som identifieras som autogenererat."
     ignore_by_title: "Ignorera inkommande e-post baserat på dess rubrik."
     mailgun_api_key: "Mailgun Secret API-nyckel att använda för att verifiera webhook-meddelanden."
+    sendgrid_verification_key: "Verifieringsnyckel för Sendgrid som används för att verifiera webhook-meddelanden."
+    mailjet_webhook_token: "Token som används för att verifiera webhook-nyttolasten. Den måste skickas som frågeparametern \"t\" för webhook, till exempel: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "Mandrill-autentiseringsnyckel som används för att verifiera webhook-meddelanden."
+    postmark_webhook_token: "Token som används för att verifiera webhook-nyttolasten. Den måste skickas som frågeparametern \"t\" för webhook, till exempel: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "Token som används för att verifiera webhook-nyttolasten. Den måste skickas som frågeparametern \"t\" för webhook, till exempel: https://example.com/webhook/sparkpost?t=supersecret"
     soft_bounce_score: "Studspoäng har lagt till hos användaren när en tillfällig studs händer."
     hard_bounce_score: "Studspoäng har lagts till på användarens profil när en permanent studs sker."
     bounce_score_threshold: "Max antal studsar innan vi upphör att skicka e-post till en användare"
@@ -1935,7 +1956,7 @@ sv:
     enable_user_directory: "Tillhandahåll en bläddringsbar användarkatalog"
     enable_group_directory: "Tillhandahåll en bläddringsbar gruppkatalog"
     enable_category_group_moderation: "Tillåt att grupper modererar innehåll i specifika kategorier"
-    group_in_subject: "Ställ in %%{optional_pm} i e-postämnet till namnet på den första gruppen i PM, se: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Anpassa ämnesformat för standardmeddelanden</a>"
+    group_in_subject: "Ställ in %%{optional_pm} i e-postämnet till namnet på den första gruppen i PM, se: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Anpassa ämnesformat för standardmeddelanden</a>"
     allow_anonymous_posting: "Tillåt att användare växlar till anonymt läge"
     anonymous_posting_min_trust_level: "Lägsta förtroendenivå som krävs för att aktivera anonyma inlägg"
     anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N:e minut för varje användare för att skydda anonymiteten. Exempel: om detta ställs in till 600, så skapas ett nytt anonymt konto så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon."
@@ -1971,8 +1992,8 @@ sv:
     automatically_unpin_topics: "Ta automatiskt ned ämnen när användaren når botten."
     read_time_word_count: "Ordräknare per minut för att beräkna uppskattad lästid."
     topic_page_title_includes_category: "Ämnessidans <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>rubriktagg</a> inkluderar kategorins namn."
-    native_app_install_banner_ios: "Visar DiscourseHub-appbanderollen på iOS-enheter för regelbundna användare (förtroendenivå 1 och högre)."
-    native_app_install_banner_android: "Visar DiscourseHub-appbannern på Android-enheter för regelbundna användare (förtroendegrad 1 och uppåt)."
+    native_app_install_banner_ios: "Visar DiscourseHub-appbanderollen på iOS-enheter för grundläggande användare (förtroendenivå 1) och högre."
+    native_app_install_banner_android: "Visar DiscourseHub-appbanderollen på Android-enheter för grundläggande användare (förtroendenivå 1) och högre."
     app_association_android: "Innehåll i slutpunkten <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, används för Google's Digital Asset Links-API."
     app_association_ios: "Innehållet i slutpunkten <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, används för att skapa universella länkar mellan denna webbplats och iOS-appar."
     share_anonymized_statistics: "Dela anonymiserad användningsstatistik."
@@ -1985,7 +2006,7 @@ sv:
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
     short_progress_text_threshold: "Efter att antalet inlägg i ett ämne överstiger den här siffran kommer förloppsmätaren endast att visa nuvarande antal inlägg. Om du ändrar förloppsmätarens bredd så kanske du behöver ändra det här värdet."
-    default_code_lang: "Standard programmeringsspråks syntax markering tillämpas på kodblock (auto, nohighlight, ruby, python etc). Detta värde måste också finnas i webbplatsinställningen `highlighted languages`."
+    default_code_lang: "Standardprogrammeringsspråkets syntaxmarkering tillämpas på kodblock (auto, text, ruby, python etc). Detta värde måste också finnas i webbplatsinställningen `highlighted languages`."
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tvångstillämpa syntaxmarkering på alla förformatterade kodblock även när de inte uttryckligt har specificerat språket."
     highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -2006,11 +2027,8 @@ sv:
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
-    secure_media: 'UTFASAT: Använd inställningen secure_uploads istället, kommer att tas bort i Discourse 3.0.'
     secure_uploads: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "login required" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/-/140017">ämnet för säkra uppladdningar i Meta</a>.'
-    secure_media_allow_embed_images_in_emails: "UTFASAT: Använd secure_uploads_allow_embed_images_in_emails, kommer att tas bort i Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure uploads max email embed image size kb'."
-    secure_media_max_email_embed_image_size_kb: "UTFASAT: Använd secure_uploads_max_email_embed_image_size_kb, kommer att tas bort i Discourse 3.0."
     secure_uploads_max_email_embed_image_size_kb: "Storleksbegränsningen för säkra bilder som kommer att bäddas in i e-postmeddelanden om inställningen för att tillåta inbäddningar för säkra uppladdningar i e-post är aktiverad, 'secure uploads allow embed in emails' . Om inställningen inte är aktiverad har den här inställningen ingen effekt."
     slug_generation_method: "Välj en genereringsmetod för etiketter. Ange 'none' för att inaktivera generering av etiketter. "
     enable_emoji: "Aktivera emoji"
@@ -2049,6 +2067,7 @@ sv:
     disable_mailing_list_mode: "Tillåt inte att användare aktiverar utskicksläget för e-postlistor (förhindrar att meddelanden till e-postlistan skickas.)"
     default_email_previous_replies: "Som standard omfattas tidigare svar i e-postmeddelanden."
     default_email_in_reply_to: "Omfatta ett utdrag av svar på inlägg i e-post som standard."
+    default_hide_profile_and_presence: "Dölj användarens offentliga profil och närvarofunktioner som standard."
     default_other_new_topic_duration_minutes: "Generellt standardvillkor för när ett ämne anses nytt."
     default_other_auto_track_topics_after_msecs: "Generell standardtid innan ett ämne följs automatiskt."
     default_other_notification_level_when_replying: "Generell standardiserad bevakningssnivå när en användare svarar i ett ämne."
@@ -2101,12 +2120,14 @@ sv:
     shared_drafts_min_trust_level: "Tillåt användare att se och redigera delade utkast."
     push_notifications_prompt: "Visa användarens samtycke genast."
     push_notifications_icon: "Utmärkelseikonen som visas i aviseringshörnet. En svartvit 96 x 96 stor PNG med genomskinlighet rekommenderas."
+    enable_desktop_push_notifications: "Aktivera push-aviseringar på skrivbordet"
+    push_notification_time_window_mins: "Vänta (n) minuter innan du skickar en push-avisering. Bidrar till att förhindra att push-aviseringar skickas till en aktiv onlineanvändare."
     base_font: "Bastypsnitt att använda för de flesta texter på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--font-family`."
     heading_font: "Typsnitt som används för rubriker på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--heading-font-family`."
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
     sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
     enable_user_status: "(experimentell) Tillåt användare att ställa in anpassat statusmeddelande (emoji + beskrivning)."
-    enable_onboarding_popups: "(experimentell) Aktivera pedagogiska popup-fönster som beskriver nyckelfunktioner för användare"
+    enable_user_tips: "(experimentell) Aktivera nya användartips som beskriver nyckelfunktioner för användare"
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2122,9 +2143,13 @@ sv:
     use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
+    navigation_menu: "Bestäm vilken navigeringsmeny som ska användas. Sidofälts- och rubriknavigering kan anpassas av användare. Det äldre alternativet är tillgängligt för bakåtkompatibilitet."
     default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
-    enable_new_user_profile_nav_groups: "EXPERIMENTELL: Användare i de valda grupperna visas den nya navigeringsmenyn för användarprofiler."
+    enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn för den gamla navigeringsmenyn."
+    enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
+    experimental_new_new_view_groups: "EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken \"Allt\" i sidofältet länkar till den."
+    enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2181,6 +2206,9 @@ sv:
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
+      invalid_uncategorized_category_setting: 'Kategorin "Okategoriserade" kan inte väljas om inte "tillåt okategoriserade ämnen" har aktiverats.'
+      enable_new_notifications_menu_not_legacy_navigation_menu: "Du måste ställa in `navigation_menu` till `legacy` innan du aktiverar den här inställningen."
+      invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -2375,7 +2403,6 @@ sv:
     activated_by_staff: "Aktiverades av personalen"
     new_user_typed_too_fast: "Ny användare skrev för fort"
     content_matches_auto_silence_regex: "Innehållet matchar regelbundet uttryck för automatiskt tystande"
-    content_matches_auto_block_regex: "Innehållet matchar regelbundet uttryck för automatisk blockering"
     username:
       short: "måste vara minst %{min} tecken"
       long: "får högst vara %{max} tecken"
@@ -2388,6 +2415,7 @@ sv:
       must_not_contain_two_special_chars_in_seq: "får inte innehålla en sekvens av 2 eller fler specialtecken (.-_)"
       must_not_end_with_confusing_suffix: "får inte avslutas med ett förvirrande suffix som .json eller .png etc."
     email:
+      blank: "kan inte vara tomt."
       invalid: "är ogiltig."
       not_allowed: "är inte en tillåten e-postleverantör. Använd en annan e-postadress."
       blocked: "är inte tillåtet."
@@ -2547,12 +2575,12 @@ sv:
       %{notes}
   flag_reasons:
     off_topic: "Ditt inlägg blev flaggat som **irrelevant**. Medlemmarna i forumet kände att det inte är passande för ämnet, som definieras av rubriken och det första inlägget."
-    inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](%{base_path}/guidelines)."
+    inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande, hatiskt uppförande eller att det strider mot [våra riktlinjer](%{base_path}/guidelines)."
     spam: "Ditt inlägg blev flaggat som **skräppost**. Medlemmarna i forumet kände att det är reklam, något som är överdrivet säljande istället för att vara nyttigt eller relevant för ämnet."
     notify_moderators: "Ditt inlägg blev flaggat **för moderators uppmärksamhet**. Medlemmarna i forumet kände att något i inlägget kräver manuellt ingripande av personal."
     responder:
       off_topic: "Inlägget flaggades som **off-topic**: gemenskapen tycker inte att det passar in i ämnet, vilket för närvarande definieras av titeln samt det första inlägget."
-      inappropriate: "Inlägget flaggades som **olämpligt**: gemenskapen tycker att det är stötande, kränkande eller ett brott mot [våra riktlinjer för gemenskapen](%{base_path}/guidelines)."
+      inappropriate: "Inlägget blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande, hatiskt uppförande eller att det strider mot [våra riktlinjer](%{base_path}/guidelines)."
       spam: "Inlägget flaggades som **skräppost**: gemenskapen tycker att det är en reklam, något som är överdrivet marknadsföringsmässigt i stället för att vara användbart eller relevant för ämnet vilket förväntas."
       notify_moderators: "Inlägget flaggades **för moderators uppmärksamhet**: gemenskapen anser att något med inlägget kräver manuellt ingripande av en medarbetare."
   flags_dispositions:
@@ -3036,7 +3064,7 @@ sv:
 
         Den nya användaren [%{username}](%{user_url}) tystades automatiskt på grund av att ett flertal medlemmar flaggat användaren %{username}s inlägg.
 
-        [Granska inläggen](%{base_url}/admin/flags). Om %{username} har tystats på felaktig grund, ber vi dig klicka på otysta-knappen [på administrationssidan för den här användaren](%{user_url}).
+        [Granska inläggen](%{base_url}/review). Om %{username} har tystats på felaktig grund, ber vi dig klicka på otysta-knappen [på administrationssidan för den här användaren](%{user_url}).
 
         Detta gränsvärde kan ändras genom webbplatsens inställning av `silence_new_user`.
     spam_post_blocked:
@@ -3099,9 +3127,6 @@ sv:
       one: "Se upp: Vi skickar maximalt %{count} e-postmedd. per dag. Kontrollera webbplatsen för att se vilka andra som eventuellt hålls tillbaka."
       other: "Se upp: Vi skickar maximalt %{count} e-postmedd. per dag. Kontrollera webbplatsen för att se vilka andra som eventuellt hålls tillbaka. PS. Tack för att du är populär!"
     in_reply_to: "Som svar till"
-    unsubscribe:
-      title: "Avprenumerera"
-      description: "Inte intresserad av att få denna e-post? Inga problem! Klicka nedan för att avprenumerera."
     reply_by_email: "[Gå till ämnet](%{base_url}%{url}) eller svara på det här e-postmeddelandet för att ge ditt svar."
     reply_by_email_pm: "[Gå till meddelandet](%{base_url}%{url}) eller svara på det här e-postmeddelandet för att svara %{participants}."
     only_reply_by_email: "Besvara det här e-postmeddelandet för att ge ditt svar."
@@ -3263,6 +3288,17 @@ sv:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      title: "Användaren bevakar kategori eller tagg"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "Användare bevakar första inlägget"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3343,7 +3379,6 @@ sv:
       liked_received: "Gillanden mottagna"
       new_users: "Nya användare"
       popular_topics: "Populära ämnen"
-      follow_topic: "Glöm detta ämne"
       join_the_discussion: "Läs mer"
       popular_posts: "Populära inlägg"
       more_new: "Nytt för er"
@@ -3504,8 +3539,6 @@ sv:
     welcome_message_invite_only: |
       ##[Välkommen till %{title}](#welcome)
       Det krävs ett konto för att logga in. Be en befintlig användare om en inbjudan eller logga in för att fortsätta.
-  deleted: "raderad"
-  image: "bild"
   upload:
     edit_reason: "hämtade lokala kopior av bilder"
     unauthorized: "Tyvärr är filen som du försöker ladda upp inte tillåten (tillåtna filtyper: %{authorized_extensions})."
@@ -3517,7 +3550,7 @@ sv:
     png_to_jpg_conversion_failure_message: "Ett fel uppstod vid konvertering från PNG till JPG."
     optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
     download_failure: "Det gick inte att hämta filen från den externa leverantören."
-    size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på extern uppladdnings-stub. %{additional_detail}"
+    size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på den externa uppladdningen. %{additional_detail}"
     create_multipart_failure: "Det gick inte att skapa flerdelad uppladdning i den externa butiken."
     abort_multipart_failure: "Det gick inte att avbryta flerdelad uppladdning i den externa butiken."
     complete_multipart_failure: "Det gick inte att slutföra flerdelad uppladdning i den externa butiken."
@@ -3706,77 +3739,253 @@ sv:
       Ja, regler är tråkiga, men vi måste skydda oss själva &ndash; och i förlängningen dig och dina data &ndash; mot ovänliga människor. Vi har [Användarvillkor](%{base_path}/tos) som beskriver ditt (och vårt) beteende och rättigheter relaterade till innehåll, integritet och lagar. För att använda denna tjänst måste du gå med på att följa våra [Användarvillkor](%{base_path}/tos).
   tos_topic:
     title: "Villkor"
-    body: "Dessa villkor reglerar användningen av Internetforumet på < %{base_url}>. För att använda forumet måste du godkänna dessa villkor med %{company_name}, organisationen som driver forumet.\n\nOrganisationen kan erbjuda andra produkter och tjänster under olika villkor. Dessa villkor gäller endast för användning av forumet.\n\nHoppa till:\n\n- [Viktiga villkor](#heading--important-terms)\n- [Din tillåtelse att använda forumet](#heading--permission)\n- [Villkor för användning av forumet](#heading--conditions)\n- [Acceptabel användning](#heading--acceptable-use)\n- [Innehållsstandarder](#heading--content-standards)\n- [Verkställande](#heading--enforcement)\n- [Ditt konto](#heading--your-account)\n- [Ditt innehåll](#heading--your-content)\n- [Ditt ansvar](#heading--responsibility)\n- [Ansvarsfriskrivning](#heading--disclaimers)\n- [Ansvarsbegränsning](#heading--liability)\n- [Återkoppling](#heading--feedback)\n- [Uppsägning](#heading--termination)\n- [Tvister](#heading--disputes)\n- [Allmänna villkor](#heading--general)\n- [Kontakt](#heading--contact)\n- [Ändringar](#heading--changes)\n\n<h2 id=\"heading--important-terms\"><a href=\"#heading--important-terms\">Viktiga villkor</a></h2>\n\n***Dessa villkor omfattar ett antal viktiga bestämmelser som påverkar dina rättigheter och skyldigheter, såsom ansvarsfriskrivningar i [Ansvarsfriskrivning](#heading--disclaimers), begränsningar för organisationens ansvar gentemot dig i [Ansvarsbegränsning](#heading--liability), ditt avtal om att hålla företaget skadeslöst för följderna av ditt missbruk av forumet i [Ditt ansvar](#heading--responsibility), och ett avtal om skiljedom i tvister i [Tvister](#heading--disputes).***\n\n<h2 id=\"heading--permission\"><a href=\"#heading--permission\">Din tillåtelse att använda forumet</a></h2>\n\nMed förbehåll för dessa villkor ger organisationen dig tillåtelse att använda forumet. Alla måste gå med på dessa villkor för att få använda forumet.\n\n<h2 id=\"heading--conditions\"><a href=\"#heading--conditions\">Villkor för användning av forumet</a></h2>\n\nDin tillåtelse att använda forumet omfattas av följande villkor:\n\n1. Du måste vara minst tretton år gammal.\n\n2. Du får inte längre använda forumet om organisationen kontaktar dig direkt och har informera dig om att du inte får göra det.\n\n3. Du måste använda forumet i enlighet med [Acceptabel användning] (#heading--acceptable-use) och [Innehållsstandarder](#heading--content-standards).\n\n<h2 id=\"heading--acceptable-use\"><a href=\"#heading--acceptable-use\">Acceptabel användning</a></h2>\n\n 1. Du får inte bryta mot lagen vid användande av forumet.\n\n2. Du får inte använda eller försöka använda en annans konto på forumet utan deras specifika tillstånd.\n\n3. Du får inte köpa, sälja eller på annat sätt handla med användarnamn eller andra unika identifierare på forumet.\n\n4. Du får inte skicka annonser, kedjebrev eller andra uppmaningar genom forumet eller använda forumet för att samla in adresser eller annan personlig information för kommersiella adresslistor eller databaser.\n\n5. Du får inte automatisera åtkomst till forumet, eller övervaka forumet, till exempel med en sökmotor, webbläsarprogram eller tillägg, eller något annat datorprogram som inte är en webbläsare. Du kan genomsöka forumet för att indexera det för en allmänt tillgänglig sökmotor, om du hanterar en.\n\n6. Du får inte använda forumet för att skicka e-post till distributionslistor, nyhetsgrupper eller alias för grupp-postkonton.\n\n7. Du får inte felaktigt antyda att du är ansluten till eller godkänd av organisationen.\n\n8. Du får inte hyperlänka till bilder eller annat innehåll som inte är hypertext i forumet på andra webbsidor.\n\n9. Du får inte ta bort några märkningar som visar äganderätt från material som du laddar ner från forumet.\n\n10. Du får inte visa någon del av forumet på andra webbplatser genom `<iframe>`.\n \n11. Du får inte inaktivera, undvika eller kringgå några säkerhets- eller åtkomstbegränsningar i forumet.\n\n12. Du får inte belasta infrastrukturen i forumet med en orimlig mängd förfrågningar, eller förfrågningar som är utformade för att lägga en orimlig belastning på informationssystem som ligger till grund för forumet.\n\n13. Du får inte utge dig för att vara någon annan person genom forumet.\n\n14. Du får inte uppmuntra eller hjälpa någon som bryter mot dessa villkor.\n\n<h2 id=\"heading--content-standards\"><a href=\"#heading--content-standards\">Innehållsstandarder</a></h2>\n\n1. Du får inte skicka innehåll till forumet som är olagligt, stötande eller på annat sätt skadligt för andra. Detta inkluderar innehåll som är trakasserande, olämpligt eller missbrukande.\n\n2. Du får inte skicka innehåll till forumet som bryter mot lagen, kränker någons immateriella rättigheter, kränker någons integritet eller bryter mot avtal du har med andra.\n\n3. Du får inte skicka innehåll till forumet som innehåller skadlig datakod, t.ex. datavirus eller spionprogram.\n\n4. Du får inte skicka innehåll till forumet som enbart är en platshållare, för att inneha en viss adress, användarnamn eller annan unik identifierare.\n\n5. Du får inte använda forumet för att avslöja information som du inte har rätt att avslöja, liksom andras konfidentiella eller personliga information.\n\n<h2 id=\"heading--enforcement\"><a href=\"#heading--enforcement\">Verkställande</a></h2>\n\nOrganisationen kan utreda och åtala brott mot dessa villkor till fullo i en rättslig omfattning. Företaget kan meddela och samarbeta med brottsbekämpande myndigheter för att åtala brott mot lagen och dessa villkor.\n\nOrganisationen förbehåller sig rätten att ändra, redigera och ta bort innehåll på forumet av endera anledning. Om du tror att någon har skickat innehåll till forumet i strid med dessa villkor, [kontakta oss omedelbart](#heading--contact).\n\n<h2 id=\"heading--your-account\"><a href=\"#heading--your-account\">Ditt konto</a></h2>\n\nDu måste skapa och logga in på ett konto för att använda vissa funktioner i forumet.\n \nFör att skapa ett konto måste du ange lite information om dig själv. Om du skapar ett konto accepterar du att tillhandahålla minst en giltig e-postadress och att hålla den adressen uppdaterad. Du kan avsluta ditt konto när som helst genom att e-posta <%{contact_email}>.\n\nDu samtycker till att vara ansvarig för alla åtgärder som vidtas genom ditt konto, oavsett om de godkänts av dig eller inte, tills du antingen avslutar ditt konto eller meddelar organisationen att ditt konto har äventyrats. Du samtycker till att meddela organisationen omedelbart om du misstänker att ditt konto har äventyrats. Du samtycker till att välja ett säkert lösenord för ditt konto och hålla det hemligt.\n\nOrganisationen kan begränsa, stänga av eller avsluta ditt konto på forumet i enlighet med dess policy för hantering av upphovsrättsrelaterade borttagningsförfrågningar, eller om organisationen rimligen anser att du har brutit någon regel i dessa villkor.\n\n<h2 id=\"heading--your-content\"><a href=\"#heading--your-content\">Ditt innehåll</a></h2>\n \nIngenting i dessa villkor ger organisationen äganderätt till immateriell egendom som du delar med forumet, till exempel din kontoinformation, inlägg eller annat innehåll som du skickar till forumet. Ingenting i dessa villkor ger dig heller äganderätt till organisationens immateriella rättigheter.\n\nMellan dig och företaget förblir du ensam ansvarig för innehåll du skickar till forumet. Du samtycker till att inte felaktigt antyda att innehåll som du skickar till forumet sponsras eller godkänts av organisationen. Dessa villkor ålägger inte organisationen att lagra, underhålla eller tillhandahålla kopior av innehållet du skickar in och att ändra det enligt dessa villkor.\n\nInnehåll som du skickar till forumet tillhör dig och du bestämmer vilken tillåtelse du vill ge andra för det. Men åtminstone samtycker du att organisationen tillhandahålla innehåll som du skickar till forumet för att delas med andra användare av forumet. Det speciella samtycket gör det även möjligt för organisationen att kopiera, publicera och analysera innehåll du skickar till forumet.\n\nNär innehåll du skickat tas bort från forumet, vare sig av dig eller av organisationen, upphör organisationens medgivande när den sista kopian försvinner från organisationen säkerhetskopior, cachar eller andra system. Andra medgivanden som du givit när du medger externa funktioner, till exempel [Creative Commons](https://creativecommons.org), kan fortsätta gälla efter att ditt innehåll har tagits bort. Dessa medgivanden kan ge andra, eller själva organisationen, rätten att dela ditt innehåll igenom forumet igen.\n\nAndra som får ta del av innehåll som du skickar till forumet kan bryta mot villkoren som du medgivit för ditt innehåll. Du samtycker till att organisationen inte kommer att vara ansvarigt gentemot dig för dessa överträdelser eller deras konsekvenser.\n\n<h2 id=\"heading--responsibility\"><a href=\"#heading--responsibility\">Ditt ansvar</a></h2>\n\nDu samtycker till att ersätta organisationen från lagliga anspråk från andra relaterade till ditt brott mot dessa villkor, eller brott mot dessa villkor av andra som använder ditt konto på forumet. Både du och organisationen är överens om att meddela den andra sidan om eventuella juridiska fordringar som du kan behöva ersätta organisationen för så snart som möjligt. Om organisationen inte underrättar dig om ett juridiskt krav omedelbart, kommer du inte att behöva ersätta organisationen för skador som du kunde ha försvarat eller mildrat genom snabb upplysning. Du samtycker till att låta organisationen ta del av utredning, försvar och avveckling av juridiska fordringar som du skulle behöva ersätta organisationen för och att samarbeta genom att genomföra dessa ansträngningar. Organisationen samtycker till att inte acceptera någon lösning som medger att felet är ditt eller ålägger dig skyldigheter utan ditt medgivande.\n\n<h2 id=\"heading--disclaimers\"><a href=\"#heading--disclaimers\">Ansvarsfriskrivning</a></h2>\n\n***Du accepterar all risk med att använda forumet och för innehållet på forumet. Såvitt lagen tillåter tillhandahåller organisationen och dess leverantörer forumet som det är, utan någon garanti överhuvudtaget.*** \n\nForumet kan hyperlänka till och integrera forum och tjänster som drivs av andra. Organisationen ger inga garantier för tjänster som drivs av andra, eller innehåll de kan tillhandahålla. Användning av tjänster som drivs av andra kan regleras av andra villkor mellan dig och den som hanterar tjänsten.\n\n<h2 id=\"heading--liability\"><a href=\"#heading--liability\">Ansvarsbegränsning</a></h2>\n\n***Varken organisationen eller dess leverantörer är ansvariga gentemot dig för avtalsbrott vilka personalen inte rimligen kunde ha förutsett när du gick med på dessa villkor.***\n\n***Såvitt lagen tillåter kommer det totala ansvaret gentemot dig för fordringar av något slag som är relaterat till forumet eller innehållet på forumet att begränsas till 500 kr.***\n\n<h2 id=\"heading--feedback\"><a href=\"#heading--feedback\">Återkoppling</a></h2>\n\nOrganisationen välkomnar din feedback och förslag till forumet. Se avsnittet [Kontakt](#heading--contact) nedan för hur du kommer i kontakt med oss.\n\nDu samtycker till att organisationen kommer att vara fritt att agera på feedback och förslag du lämnar, och att organisationen inte kommer att behöva meddela dig om att din feedback användes, få ditt tillstånd att använda det eller betala dig för den. Du samtycker till att inte skicka feedback eller förslag som du tror kan vara konfidentiella eller äganderättsliga, för dig eller andra.\n\n<h2 id=\"heading--termination\"><a href=\"#heading--termination\">Uppsägning</a></h2>\n\nAntingen du eller organisationen kan när som helst avsluta avtalet som skrivs ut i dessa villkor. När vårt avtal upphör upphör din tillåtelse att använda forumet.\n\nFöljande bestämmelser fortsätter efter avslut av vårt avtal: [Ditt innehåll](#heading--your-content), [Återkoppling](#heading--feedback), [Ditt ansvar](#heading--responsibility), [Ansvarsfriskrivning](#heading--disclaimers), [Ansvarsbegränsning](#heading--liability) och [Allmänna villkor](#heading--general).\n \n<h2 id=\"heading--disputes\"><a href=\"#heading--disputes\">Tvister</a></h2>\n\n%{governing_law} kommer att styra alla tvister relaterade till dessa villkor eller din användning av forumet.\n\nDu och organisationen samtycker till att begära förelägganden relaterade till dessa villkor endast i statliga eller federala domstol i %{city_for_disputes}. Varken du eller företaget kommer att invända mot jurisdiktion, forum eller plats i domstolarna.\n\n***Annat än att begära ett föreläggande eller för anspråk enligt lagen för datorbedrägeri och missbruk, kommer du och organisationen att lösa eventuella tvister genom bindande svensk skiljedom. Skiljedom kommer att följa svenska kommersiella skiljedomsregler och kompletterande förfaranden för konsumentrelaterade tvister. Skiljedom kommer att ske i %{city_for_disputes}. Du kommer att lösa alla tvister som en individ och inte som en del av en grupphandling eller ett annat representativt förfarande, vare sig som klagande eller grupptalan. Ingen skiljedomare kommer att konsolidera någon tvist med någon annan skiljedom utan organisationens tillstånd.***\n\nAlla skiljedomar kan innehålla kostnader för skiljedom, rimliga advokatavgifter och rimliga kostnader för vittnen. Du och organisationen kan delta i skiljedomar i valfri domstol med behörighet.\n\n<h2 id=\"heading--general\"><a href=\"#heading--general\">Allmänna villkor</a></h2>\n\nOm en bestämmelse av dessa villkor inte kan verkställas som skriven, men kan ändras för att göra den verkställbar, bör den bestämmelsen ändras till den minsta utsträckning som krävs för att göra den verkställbar. Annars bör denna bestämmelse tas bort.\n\nDu får inte tilldela någon annan ditt avtal med organisationen . Organisationen kan däremot tilldela ditt avtal till alla dotterbolag i organisationen , alla andra organisationen som får kontroll över organisationen eller någon annan organisation som köper tillgångar i organisationen relaterat till forumet. Alla försök av tilldelning av dessa villkor till annan har ingen rättslig effekt.\n\nVarken utövandet av någon rättighet enligt detta avtal eller upphävelse från brott mot detta avtal upphäver någon annan överträdelse av detta avtal.\n\nDessa villkor innehåller alla avtalsvillkor mellan dig och organisationen gällande användning av forumet. Dessa villkor ersätter helt andra avtal om din användning av forumet, skriftligt eller muntligt.\n\n<h2 id=\"heading--contact\"><a href=\"#heading--contact\">Kontakt</a></h2>\n\nDu kan meddela organisationen enligt dessa villkor och skicka frågor till organisationen på <%{contact_email}>.\n\nOrganisationen kan meddela dig enligt dessa villkor med hjälp av den e-postadress du anger för ditt konto på forumet eller genom att skicka ett meddelande till startsida för forumet eller genom din kontosida.\n\n<h2 id=\"heading--changes\"><a href=\"#heading--changes\">Ändringar</a></h2>\n\nOrganisationen uppdaterade senast dessa villkor den 25 januari 2020 och kan uppdatera dessa villkor igen. Företaget kommer att publicera alla uppdateringar till forumet. För uppdateringar som innehåller väsentliga förändringar samtycker företaget till att skicka e-post till dig om du har skapat ett konto och angett en giltig e-postadress. Företaget kan också meddela uppdateringar med särskilda meddelanden eller varningar på forumet.\n\nNär du får ett meddelande om en uppdatering av dessa villkor måste du godkänna de nya villkoren för att fortsätta använda forumet.\n"
+    body: |
+      <h2 id="heading--change-me"><a href="#heading--change-me">Ändra mig</a></h2>
+
+      Forumadministratör, nedan finns ett exempel på en mall för en integritetspolicy som du bör anpassa till din webbplats.
+
+      Dessa villkor gäller inte än, men kan en dag komma att styra, användningen av Internetforumet på <%{base_url}>. Om du vill använda forumet måste du i så fall komma överens om dessa villkor med %{company_name}, det företag som driver forumet.
+
+      Företaget kan erbjuda andra produkter och tjänster på andra villkor. Dessa villkor gäller endast för användning av forumet.
+
+      Hoppa till:
+
+      - [Viktiga villkor](#heading--important-terms)
+      - [Din tillåtelse att använda forumet](#heading--permission)
+      - [Villkor för användning av forumet](#heading--conditions)
+      - [Acceptabel användning](#heading--acceptable-use)
+      - [Innehållsstandarder](#heading--content-standards)
+      - [Verkställandet](#heading--enforcement)
+      - [Ditt konto](#heading--your-account)
+      - [Ditt innehåll](#heading--your-content)
+      - [Ditt ansvar](#heading--responsibility)
+      - [Ansvarsfriskrivning](#heading--disclaimers)
+      - [Ansvarsbegränsning](#heading--liability)
+      - [Återkoppling](#heading--feedback)
+      - [Uppsägning](#heading--termination)
+      - [Tvister](#heading--disputes)
+      - [Allmänna villkor](#heading--general)
+      - [Kontakt](#heading--contact)
+      - [Ändringar](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Viktiga villkor</a></h2>
+
+      ***Dessa villkor innehåller ett antal viktiga bestämmelser som påverkar dina rättigheter och skyldigheter, såsom ansvarsfriskrivningar i [Ansvarsfriskrivningar](#heading--disclaimers), begränsningar av företagets ansvar gentemot dig i [Ansvarsbegränsningar] (#heading--liability), ditt samtycke till att hålla företaget skadeslöst för skador som orsakats av ditt missbruk av forumet i [Ditt ansvar] (#heading--responsibility) och ett avtal om skiljedom i [Tvister](#heading--disputes).***
+
+      <h2 id="heading--permission"><a href="#heading--permission">Ditt tillstånd att använda forumet</a></h2>
+
+      Med förbehåll för dessa villkor ger företaget dig tillstånd att använda forumet. Alla måste godkänna dessa villkor för att få använda forumet.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Villkor för användning av forumet</a></h2>
+
+      Ditt tillstånd att använda forumet omfattas av följande villkor:
+
+      1. Du måste vara minst tretton år gammal.
+
+      2. Du får inte längre använda forumet om företaget kontaktar dig direkt för att säga att du inte får det.
+
+      3. Du måste använda forumet i enlighet med [Acceptabel användning](#heading--acceptable-use) och [Innehållsstandarder](#heading--content-standards).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptabel användning</a></h2>
+
+      1. Du får inte bryta mot lagen genom att använda forumet.
+
+      2. Du får inte använda eller försöka använda någon annans konto på forumet utan dennes uttryckliga tillstånd.
+
+      3. Du får inte köpa, sälja eller på annat sätt handla med användarnamn eller andra unika identifierare på forumet.
+
+      4. Du får inte skicka reklam, kedjebrev eller andra uppmaningar via forumet eller använda forumet för att samla in adresser eller andra personuppgifter för kommersiella sändlistor eller databaser.
+
+      5. Du får inte automatisera åtkomsten till forumet eller övervaka forumet, till exempel med en webcrawler, en plug-in eller ett tillägg till webbläsaren eller ett annat datorprogram som inte är en webbläsare. Du får crawla forumet för att indexera det för en offentligt tillgänglig sökmotor, om du driver en sådan.
+
+      6. Du får inte använda forumet för att skicka e-post till distributionslistor, nyhetsgrupper eller gruppmailalias.
+
+      7. Du får inte falskeligen antyda att du är ansluten till eller stöds av företaget.
+
+      8. Du får inte hyperlänka till bilder eller annat innehåll som inte är hypertext på forumet på andra webbsidor.
+
+      9. Du får inte ta bort några märken som visar på äganderätt från material som du laddar ner från forumet.
+
+      10. Du får inte visa någon del av forumet på andra webbplatser med `<iframe>`.
+
+      11. Du får inte inaktivera, undvika eller kringgå några säkerhets- eller åtkomstbegränsningar i forumet.
+
+      12. Du får inte belasta forumets infrastruktur med en orimlig mängd anrop, eller anrop som har utformats för att utsätta informationssystemen som ligger till grund för forumet för orimlig belastning.
+
+      13. Du får inte utge dig för att vara någon annan via forumet.
+
+      14. Du får inte uppmuntra eller hjälpa någon som bryter mot dessa villkor.
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Innehållsstandarder</a></h2>
+
+      1. Du får inte skicka innehåll till forumet som är olagligt, stötande eller på annat sätt skadligt för andra. Detta inkluderar innehåll som är trakasserande, olämpligt, kränkande eller hatiskt beteende.
+
+      2. Du får inte skicka innehåll till forumet som bryter mot lagen, kränker någons immateriella rättigheter, kränker någons privatliv eller bryter mot avtal som du har med andra.
+
+      3. Du får inte skicka in innehåll till forumet som innehåller skadlig datorkod, till exempel datavirus eller spionprogram.
+
+      4. Du får inte skicka innehåll till forumet som en ren platshållare, för att innehålla en viss adress, ett användarnamn eller annan unik identifierare.
+
+      5. Du får inte använda forumet för att avslöja information som du inte har rätt att avslöja, t.ex. andras konfidentiella eller personliga information.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Verkställande</a></h2>
+
+      Företaget kan utreda och åtala överträdelser av dessa villkor i hela den lagliga omfattningen. Företaget kan meddela och samarbeta med brottsbekämpande myndigheter för att beivra brott mot lagen och dessa villkor.
+
+      Företaget förbehåller sig rätten att ändra, redigera och radera innehåll på forumet av vilken anledning som helst. Om du tror att någon har skickat in innehåll till forumet i strid med dessa villkor, [kontakta oss omedelbart](#heading--contact).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">Ditt konto</a></h2>
+
+      Du måste skapa och logga in på ett konto för att kunna använda vissa funktioner i forumet.
+
+      För att skapa ett konto måste du lämna viss information om dig själv. Om du skapar ett konto samtycker du till att åtminstone ange en giltig e-postadress och att hålla den adressen uppdaterad. Du kan när som helst avsluta ditt konto genom att skicka ett e-postmeddelande till <%{contact_email}>.
+
+      Du samtycker till att vara ansvarig för alla åtgärder som vidtas med hjälp av ditt konto, oavsett om de är godkända av dig eller inte, tills du antingen stänger ditt konto eller meddelar företaget att ditt konto har äventyrats. Du samtycker till att omedelbart meddela företaget om du misstänker att ditt konto har äventyrats. Du samtycker till att välja ett säkert lösenord för ditt konto och hålla det hemligt.
+
+      Företaget kan begränsa, avbryta eller stänga ditt konto på forumet i enlighet med sin policy för hantering av upphovsrättsrelaterade nedtagningsförfrågningar, eller om företaget rimligen anser att du har brutit mot någon regel i dessa villkor.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">Ditt innehåll</a></h2>
+
+      Ingenting i dessa villkor ger företaget några äganderätter till immateriella rättigheter som du delar med forumet, t.ex. din kontoinformation, dina inlägg eller annat innehåll som du skickar till forumet. Ingenting i dessa villkor ger dig heller någon äganderätt till företagets immateriella egendom.
+
+      Mellan dig och företaget förblir du ensam ansvarig för det innehåll du skickar till forumet. Du samtycker till att inte felaktigt antyda att det innehåll du skickar till forumet är sponsrat eller godkänt av företaget. Dessa villkor förpliktar inte företaget att lagra, underhålla eller tillhandahålla kopior av det innehåll du skickar in och att ändra det i enlighet med dessa villkor.
+
+      Innehåll som du skickar in till forumet tillhör dig, och du bestämmer själv vilket tillstånd du vill ge andra för det. Men som ett minimum ger du företaget tillstånd att tillhandahålla innehåll som du skickar till forumet till andra användare av forumet. Denna särskilda licens tillåter företaget att kopiera, publicera och analysera innehåll som du skickar in till forumet.
+
+      När innehåll som du skickar in tas bort från forumet, antingen av dig eller av företaget, upphör företagets särskilda licens när den sista kopian försvinner från företagets säkerhetskopior, cacheminnen och andra system. Andra licenser som du tillämpar på innehåll som du skickar in, t.ex. [Creative Commons]-licenser (https://creativecommons.org), kan fortsätta att gälla efter det att ditt innehåll har tagits bort. Dessa licenser kan ge andra, eller företaget självt, rätt att dela ditt innehåll via forumet igen.
+
+      Andra som tar emot innehåll som du skickar in till forumet kan bryta mot de villkor som du licensierar ditt innehåll enligt. Du samtycker till att företaget inte är ansvarigt gentemot dig för dessa överträdelser eller deras konsekvenser.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Ditt ansvar</a></h2>
+
+      Du samtycker till att hålla företaget skadeslöst från rättsliga anspråk från andra i samband med att du bryter mot dessa villkor, eller att andra som använder ditt konto på forumet bryter mot dessa villkor. Både du och företaget är överens om att så snart som möjligt meddela den andra sidan om eventuella rättsliga anspråk för vilka ni kan behöva ersätta företaget. Om företaget misslyckas med att snabbt meddela dig om ett rättsligt anspråk behöver du inte ersätta företaget för skador som du hade kunnat försvara dig mot eller mildra med ett snabbt meddelande. Du samtycker till att låta företaget kontrollera utredning, försvar och reglering av rättsliga anspråk för vilka du skulle behöva ersätta företaget, och att samarbeta med dessa ansträngningar. Företaget samtycker till att inte gå med på någon förlikning som erkänner ditt fel eller ålägger dig skyldigheter utan ditt förhandsgodkännande.
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Ansvarsfriskrivning</a></h2>
+
+      ***Du samtycker till alla risker med att använda forumet och innehållet på forumet. I den mån lagen tillåter tillhandahåller företaget och dess leverantörer forumet i befintligt skick, utan någon som helst garanti.***
+
+      Forumet kan hyperlänka till och integrera forum och tjänster som drivs av andra. Företaget lämnar inga garantier för tjänster som drivs av andra eller för innehåll som de kan tillhandahålla. Användning av tjänster som drivs av andra kan regleras av andra villkor mellan dig och den som driver tjänsten.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Ansvarsbegränsningar</a></h2>
+
+      ***Varken företaget eller dess leverantörer kommer att vara ansvariga gentemot dig för skador på grund av avtalsbrott som deras personal inte rimligen kunde ha förutsett när du godkände dessa villkor.***
+
+      ***Så långt lagen tillåter kommer det totala ansvaret gentemot dig för anspråk av alla slag som har samband med forumet eller innehållet i forumet att begränsas till 50 amerikanska dollar.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Återkoppling</a></h2>
+
+      Företaget välkomnar din återkoppling och dina förslag till forumet. Se avsnittet [Kontakt](#heading--contact) nedan om hur du kan komma i kontakt med oss.
+
+      Du samtycker till att företaget är fritt att agera på återkoppling och förslag som du lämnar och att företaget inte behöver meddela dig att din återkoppling har använts, få ditt tillstånd att använda den eller betala dig. Du samtycker till att inte lämna återkoppling eller förslag som du tror kan vara konfidentiella eller äganderättsligt skyddade, för dig eller andra.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Uppsägning</a></h2>
+
+      Antingen du eller företaget kan när som helst avsluta det avtal som beskrivs i dessa villkor. När vårt avtal upphör upphör även ditt tillstånd att använda forumet.
+
+      Följande bestämmelser fortsätter att gälla även när vårt avtal upphör: [Ditt innehåll](#header--din-innehåll), [Återkoppling](#rubrik--feedback), [Ditt ansvar](#header--responsibility), [Ansvarsfriskrivning](#rubrik--disclaimers), [Ansvarsbegränsning](#header--liability) och [Allmänna villkor](#header--general).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Tvister</a></h2>
+
+      %{governing_law} reglerar alla tvister som rör dessa villkor eller din användning av forumet.
+
+      Du och företaget är överens om att söka förelägganden med anknytning till dessa villkor endast i en statlig eller federal domstol i %{city_for_disputes}. Varken du eller företaget kommer att invända mot jurisdiktion, forum eller plats i dessa domstolar.
+
+      ***Annat än för att söka ett föreläggande eller för anspråk enligt Computer Fraud and Abuse Act kommer du och företaget att lösa alla tvister genom bindande skiljedom från American Arbitration Association. Skiljedomsförfarandet kommer att följa AAA:s kommersiella skiljedomsregler och kompletterande förfaranden för konsumentrelaterade tvister. Skiljedomsförfarandet kommer att äga rum i %{city_for_disputes}. Du kommer att lösa alla tvister som en enskild person och inte som en del av en grupptalan eller annat representativt förfarande, vare sig som kärande eller som gruppmedlem. Ingen skiljedomare kommer att konsolidera en tvist med något annat skiljeförfarande utan företagets tillstånd.***
+
+      Alla skiljedomar kommer att omfatta kostnader för skiljeförfarandet, rimliga advokatarvoden och rimliga kostnader för vittnen. Du och företaget kan föra skiljedomar till varje behörig domstol.
+
+      <h2 id="heading--general"><a href="#heading--general">Allmänna villkor</a></h2>
+
+      Om en bestämmelse i dessa villkor inte kan verkställas i sin nuvarande form, men kan ändras så att den kan verkställas, ska bestämmelsen ändras i den minsta utsträckning som krävs för att den ska kunna verkställas. I annat fall bör bestämmelsen tas bort.
+
+      Du får inte överlåta ditt avtal med företaget. Företaget kan överlåta ditt avtal till ett närstående företag till företaget, ett annat företag som får kontroll över företaget eller ett annat företag som köper företagets tillgångar med anknytning till forumet. Varje försök till överlåtelse som strider mot dessa villkor har ingen rättslig verkan.
+
+      Varken utövandet av någon rättighet enligt detta avtal eller ett avstående från en överträdelse av detta avtal avstår från någon annan överträdelse av detta avtal.
+
+      Dessa villkor innehåller alla avtalsvillkor mellan dig och företaget om användning av forumet. Dessa villkor ersätter helt och hållet alla andra avtal om din användning av forumet, skriftliga eller inte.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Kontakt</a></h2>
+
+      Du kan meddela företaget enligt dessa villkor och skicka frågor till företaget på <%{contact_email}>.
+
+      Företaget kan meddela dig enligt dessa villkor genom att använda den e-postadress som du anger för ditt konto på forumet, eller genom att publicera ett meddelande på forumets startsida eller på din kontosida.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Ändringar</a></h2>
+
+      Företaget uppdaterade senast dessa villkor den [INSERT LAST UPDATE DATE HERE] och kan komma att uppdatera dessa villkor igen. Företaget kommer att publicera alla uppdateringar på forumet. För uppdateringar som innehåller väsentliga ändringar går företaget med på att skicka e-post till dig, om du har skapat ett konto och angett en giltig e-postadress. Företaget kan också tillkännage uppdateringar med särskilda meddelanden eller varningar på forumet.
+
+      När du får meddelande om en uppdatering av dessa villkor måste du godkänna de nya villkoren för att fortsätta använda forumet.
   privacy_topic:
     title: "Integritetspolicy"
     body: |
+      ## [Forumadministratör, här nedan finns ett exempel på en mall för en integritetspolicy som du bör anpassa till din webbplats.]
+
       <a name="collect"></a>
 
-      ## [Vilken information samlar vi in?](#collect)
+      ## [Vilken information samlar vi in?] (#collect)
 
-      Vi samlar in information från dig när du registrerar dig på vår webbplats och samlar in data när du deltar i forumet genom att läsa, skriva och utvärdera innehållet som delas här.
-       
-      När du registrerar dig på vår webbplats kan du bli ombedd att ange ditt namn och din e-postadress. Du kan dock besöka vår webbplats utan att registrera dig. Din e-postadress kommer att verifieras med ett e-postmeddelande som innehåller en unik länk. Om den länken besöks, vet vi att du kontrollerar e-postadressen.
+      Vi samlar in information från dig när du registrerar dig på vår webbplats och samlar in data när du deltar i forumet genom att läsa, skriva och utvärdera det innehåll som delas här.
 
-      Efter registrering och publicering registrerar vi IP-adressen som data härstammar från. Vi kan också behålla serverloggar som inkluderar IP-adressen för varje begäran till vår server.
+      När du registrerar dig på vår webbplats kan du bli ombedd att ange ditt namn och din e-postadress. Du kan dock besöka vår webbplats utan att registrera dig. Din e-postadress kommer att verifieras genom ett e-postmeddelande som innehåller en unik länk. Om denna länk besöks vet vi att du kontrollerar e-postadressen.
+
+      När du är registrerad och skriver inlägg registrerar vi den IP-adress som inlägget kommer från. Vi kan också behålla serverloggar som innehåller IP-adressen för varje begäran till vår server.
 
       <a name="use"></a>
 
-      ## [Vad använder vi din information till?](#use)
+      ## [Vad använder vi din information till?] (#use)
 
-       All information som vi samlar in från dig kan användas på något av följande sätt:
-       
-      * För att anpassa din upplevelse &mdash; din information hjälper oss att bättre möta dina individuella behov.
-      * För att förbättra vår webbplats &mdash; vi strävar kontinuerligt efter att förbättra våra webbplatserbjudanden baserat på den information och feedback vi får från dig.
-      * För att förbättra kundservice &mdash; din information hjälper oss att mer effektivt svara på dina kundtjänstförfrågningar och supportbehov.
-      * För att skicka periodiska e-postmeddelanden &mdash; e-postadressen som du anger kan användas för att skicka information, aviseringar som du begär om ändringar av ämnen eller som svar på ditt användarnamn, svara på förfrågningar och/eller andra förfrågningar eller frågor.
+      All information som vi samlar in från dig kan användas på något av följande sätt:
+
+      * För att anpassa din upplevelse &mdash; din information hjälper oss att bättre svara på dina individuella behov.
+      * För att förbättra vår webbplats &mdash; vi strävar ständigt efter att förbättra vårt utbud på webbplatsen baserat på den information och feedback vi får från dig.
+      * För att förbättra kundservicen &mdash; Din information hjälper oss att mer effektivt svara på dina förfrågningar om kundservice och supportbehov.
+      * För att skicka periodiska e-postmeddelanden &mdash; Den e-postadress du anger kan användas för att skicka dig information, meddelanden som du begär om ändringar i ämnen eller som svar på ditt användarnamn, svara på förfrågningar och/eller andra förfrågningar eller frågor.
 
       <a name="protect"></a>
 
-      ## [Hur skyddar vi din information?](#protect)
+      ## [Hur skyddar vi din information?] (#protect)
 
-      Vi genomför olika säkerhetsåtgärder för att upprätthålla säkerheten för din personliga information när du skriver in, skickar in eller får åtkomst till din personliga information.
-       
+      Vi tillämpar en rad olika säkerhetsåtgärder för att upprätthålla säkerheten för din personliga information när du anger, skickar in eller får tillgång till din personliga information.
+
       <a name="data-retention"></a>
 
-      ## [Vad är vår datalagringspolicy?](#data-retention)
+      ## [Vad är er policy för datalagring?] (#data-retention)
 
       Vi anstränger oss i god tro för att:
 
-      * Spara serverloggar som innehåller IP-adressen för alla förfrågningar till denna server i högst 90 dagar.
-      * Behålla IP-adresserna som är kopplade till registrerade användare och deras inlägg i högst fem år.
+      * Bevara serverloggar med IP-adressen för alla förfrågningar till denna server i högst [NUMBER OF DAYS] dagar.
 
       <a name="cookies"></a>
 
-       ## [Använder vi cookies?](#cookies)
+      ## [Använder vi kakor?](#cookies)
 
-      Ja. Cookies är små filer som en webbplats eller dess tjänsteleverantör överför till din dators hårddisk genom din webbläsare (om du tillåter det). Dessa cookies gör det möjligt för webbplatsen att känna igen din webbläsare och koppla den till ditt registrerade konto om du har ett registrerat konto.
+      Ja. Cookies är små filer som en webbplats eller dess tjänsteleverantör överför till din dators hårddisk via din webbläsare (om du tillåter det). Dessa cookies gör det möjligt för webbplatsen att känna igen din webbläsare och, om du har ett registrerat konto, koppla den till ditt registrerade konto.
 
-      Vi använder cookies för att förstå och spara dina preferenser för framtida besök och sammanställa aggregerad information om webbplatstrafik och webbplatsinteraktion så att vi kan erbjuda bättre webbplatsupplevelser och verktyg i framtiden. Vi kan ingå avtal med tredjepartsleverantörer för att hjälpa oss att bättre förstå våra besökare på webbplatsen. Dessa tjänsteleverantörer får inte använda den information som samlas in för våra räkning förutom för att hjälpa oss att bedriva och förbättra vår verksamhet.
+      Vi använder cookies för att förstå och spara dina preferenser för framtida besök och för att sammanställa samlade uppgifter om trafiken på webbplatsen och interaktion med webbplatsen så att vi kan erbjuda bättre upplevelser och verktyg på webbplatsen i framtiden. Vi kan avtala med tredjepartsleverantörer för att hjälpa oss att bättre förstå våra webbplatsbesökare. Dessa tjänsteleverantörer får inte använda den information som samlas in för vår räkning annat än för att hjälpa oss att bedriva och förbättra vår verksamhet.
 
       <a name="disclose"></a>
 
-      ## [Visar vi någon information till externa parter?](#disclose)
-       
-      Vi säljer inte, handlar eller överför på annat sätt din personliga identifierbara information till externa parter. Detta inkluderar inte betrodda tredje parter som hjälper oss att driva vår webbplats, driva vår verksamhet eller serva dig så länge dessa parter går med på att hålla denna information konfidentiell. Vi kan också släppa din information när vi anser att utgivningen är lämplig för att följa lagen, verkställa vår webbplatspolicy eller skydda våra eller andra rättigheter, egendom eller säkerhet. Icke-personligt identifierbar besökarinformation kan emellertid tillhandahållas andra parter för marknadsföring, reklam eller annan användning.
+      ## [Lämnar vi ut någon information till utomstående?] (#disclose)
+
+      Vi säljer, byter eller överför inte på annat sätt din personligt identifierbara information till utomstående. Detta omfattar inte betrodda tredje parter som hjälper oss att driva vår webbplats, bedriva vår verksamhet eller ge dig service, så länge dessa parter samtycker till att hålla informationen konfidentiell. Vi kan också komma att lämna ut din information när vi anser att det är lämpligt att lämna ut den för att följa lagen, tillämpa vår webbplatspolicy eller skydda våra eller andras rättigheter, egendom eller säkerhet. Information om besökare som inte är personligt identifierbar kan dock lämnas till andra parter för marknadsföring, reklam eller annan användning.
 
       <a name="third-party"></a>
 
-      ## [Tredjepartslänkar](#third-party)
+      ## [Länkar till tredje part] (#third-party)
 
-      Ibland kan vi, efter eget gottfinnande, inkludera eller erbjuda tredje parts produkter eller tjänster på vår webbplats. Dessa tredje parts webbplatser har separata och oberoende sekretesspolicy. Vi har därför inget ansvar eller ansvar för innehållet och aktiviteterna på dessa länkade webbplatser. Vi försöker ändå skydda vår webbplats integritet och välkomnar all feedback om dessa webbplatser.
+      Ibland kan vi, efter eget gottfinnande, inkludera eller erbjuda produkter eller tjänster från tredje part på vår webbplats. Dessa webbplatser från tredje part har separata och oberoende sekretesspolicyer. Vi har därför inget ansvar för innehållet och verksamheten på dessa länkade webbplatser. Vi försöker ändå skydda integriteten på vår webbplats och välkomnar all återkoppling om dessa webbplatser.
 
       <a name="coppa"></a>
 
-      ## [Barnens integritetsskydd online enligt COPPA](#coppa)
-       
-      Vår webbplats, produkter och tjänster riktas till alla personer som är minst 13 år eller äldre. Om denna server finns i USA och du är under 13 år ska du enligt kraven i COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), inte använda den här webbplatsen.
+      ## [Uppfyllande av Children's Online Privacy Protection Act](#coppa)
+
+      Vår webbplats, våra produkter och tjänster riktar sig till personer som är minst 13 år eller äldre. Om den här servern finns i USA och du är under 13 år enligt kraven i COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), får du inte använda den här webbplatsen.
 
       <a name="online"></a>
 
-      ## [Endast integritetspolicy online](#online)
+      ## [Integritetspolicy endast för online](#online)
 
-      Denna integritetspolicy gäller endast information som samlas in via vår webbplats och inte för information som samlas in offline.
+      Denna integritetspolicy online gäller endast för information som samlas in via vår webbplats och inte för information som samlas in offline.
 
       <a name="consent"></a>
 
@@ -3786,11 +3995,11 @@ sv:
 
       <a name="changes"></a>
 
-      ## [Ändringar av vår integritetspolicy](#changes)
+      ## [Ändringar i vår integritetspolicy](#ändringar)
 
-      Om vi ​​beslutar att ändra vår integritetspolicy kommer vi att publicera dessa ändringar på denna sida.
+      Om vi beslutar att ändra vår integritetspolicy kommer vi att lägga ut dessa ändringar på denna sida.
 
-      Detta dokument är licensierat genom CC-BY-SA ([Creative Commons Attribution-ShareAlike](https://creativecommons.org/licenses/by-sa/4.0/deed.sv)). Det uppdaterades senast den 31 maj 2013.
+      Det här dokumentet är CC-BY-SA. Det uppdaterades senast [INSERT LAST UPDATE DATE HERE].
   badges:
     mass_award:
       errors:
@@ -4095,17 +4304,18 @@ sv:
       message: "<p>Vi har sänt om aktiveringsbrevet till <b>%{email}</b>"
   safe_mode:
     title: "Gå över i felsäkert läge"
-    description: "I felsäkert läge kan du testa din webbplats utan att ladda några tillägg eller teman."
+    description: "I Säkert läge kan du testa din webbplats utan att ladda teman eller anpassningar av plugin-program på klientsidan. Anpassningar av plugin-program på serversidan förblir aktiverade."
     no_themes: "Inaktivera teman och temakomponenter"
-    no_unofficial_plugins: "Inaktivera alla inofficiella plugins"
-    no_plugins: "Inaktivera alla plugins"
+    no_unofficial_plugins: "Inaktivera inofficiella anpassningar av plugin-program på klientsidan"
+    no_plugins: "Inaktivera alla anpassningar av plugin-program på klientsidan"
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
   wizard:
     title: "Discourse-inställningar"
     step:
       introduction:
-        title: "Berätta för oss om ditt forum"
+        title: "Om din webbplats"
+        description: "Dessa kommer att visas på din inloggningssida och eventuella offentliga sidor. Du kan alltid ändra dem senare."
         fields:
           title:
             label: "Forumets namn"
@@ -4113,14 +4323,10 @@ sv:
           site_description:
             label: "Beskriv ditt forum i en mening"
             placeholder: "Ett ställe där Jane och hennes vänner kan diskutera coola grejor"
-          contact_email:
-            label: "Kontaktpunkt"
-            placeholder: "exempel@användare.com"
-            description: "Person eller grupp som är ansvarig för detta forum. Används för kritiska uppdateringar, och listas på <a href='%{base_path}/about' target='_blank'>din Om-sida</a> för brådskande kontakt."
           default_locale:
             label: "Språk"
       privacy:
-        title: "Medlemmarnas erfarenhet"
+        title: "Medlemserfarenhet"
         fields:
           login_required:
             placeholder: "Privat"
@@ -4131,8 +4337,14 @@ sv:
           must_approve_users:
             placeholder: "Kräv godkännande"
             extra_description: "Användare måste godkännas av personalen"
+          chat_enabled:
+            placeholder: "Aktivera chatt"
+            extra_description: "Engagera dina medlemmar i realtid"
+          enable_sidebar:
+            placeholder: "Aktivera sidofältet"
+            extra_description: "Få enkelt tillgång till dina favoritutrymmen"
       ready:
-        title: "Din Discourse är redo!"
+        title: "Din webbplats är klar!"
         description: "Det var allt! Du har gjort det grundläggande för att konfigurera ditt forum. Nu kan du hoppa in och ta en titt, skriva ett välkomstämne och skicka inbjudningar!<br><br>Ha kul!"
       styling:
         title: "Utseende och känsla"
@@ -4167,42 +4379,37 @@ sv:
               subcategories_with_featured_topics:
                 label: "Underkategorier med utvalda ämnen"
       branding:
-        title: "Anpassa logotyper"
+        title: "Webbplatsens logotyp"
         fields:
           logo:
-            label: "Primär logo"
-            description: "Logotypen i din hemsidas övre vänstra hörn. Använd en bred rektangulär bild med en höjd på 120 och ett storleksförhållande som är större än 3:1"
+            label: "Primär logotyp"
+            description: "Rekommenderad storlek: 600 x 200"
           logo_small:
-            label: "Fyrkantig logga"
-            description: "En fyrkantig version av din logga. Visas i övre vänstra hörnet när du scrollar ner, samt när du delar på sociala plattformar. Helst större än 512 x 512."
-          favicon:
-            label: "Webbläsarikon"
-            description: "Ikon som används för att representera din webbplats i webbläsare och som ser bra ut i små storlekar. PNG eller JPG rekommenderas. Som standard används en fyrkantig logotyp."
-          large_icon:
-            label: "Stor ikon"
-            description: "Ikon som används för att representera din webbplats på mobila enheter och som ser bra ut i större storlekar. Helst större än 512x512. Som standard används en fyrkantig logotyp."
+            label: "Fyrkantig logotyp"
+            description: "Rekommenderad storlek: 512 x 512. Används även som favicon och appikon för mobil startskärm."
       corporate:
         title: "Din organisation"
+        description: "Följande information kommer att användas i dina användarvillkor och Om-sidor. Hoppa gärna över detta om det inte finns något företag."
         fields:
           company_name:
             label: "Företagsnamn"
-            placeholder: "Exempelorganisation"
-            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
+            placeholder: "Acme Organization"
           governing_law:
             label: "Gällande lag"
             placeholder: "Kalifornisk lag"
-            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
           contact_url:
             label: "Webbsida"
             placeholder: "https://www.exempel.se/kontakta-oss"
-            description: "Allmän kontaktsida för dig eller din organisation. Visas på din <a href='%{base_path}/about' target='_blank'>Om-sida</a>."
           city_for_disputes:
-            label: "Domstol vid tvist"
+            label: "Domstol vid tvister"
             placeholder: "San Francisco, Kalifornien"
-            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
           site_contact:
             label: "Automatiska meddelanden"
             description: "Alla automatiska personliga meddelanden från Discourse kommer att skickas från den här användaren, till exempel flaggvarningar eller meddelanden om säkerhetskopiering.\n "
+          contact_email:
+            label: "Kontaktpunkt"
+            placeholder: "exempel@användare.com"
+            description: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även i listan på <a href='%{base_path}/about' target='_blank'>din Om-sida</a> för brådskande ärenden."
       invites:
         title: "Invitera personal"
         description: "Du är nästan klar! Låt oss bjuda in lite folk som kan hjälpa till med att <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>fylla dina diskussioner</a> med intressanta ämnen och svar för att komma igång med ditt forum."
@@ -4215,7 +4422,9 @@ sv:
           <p>Ha så kul och lycka till <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>med att bygga din nya gemenskap!</a></p>
   search_logs:
     graph_title: "Sökningar"
-  joined: "Gick med"
+  onebox:
+    discourse:
+      user_joined_community: "Gick med %{date}"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nämnde dig i "%{topic}" - %{site_title}'
@@ -4278,50 +4487,53 @@ sv:
         category: kategori inställningar
     actions:
       agree:
-        title: "Godkänn..."
+        title: "Ja"
       agree_and_keep:
         title: "Behåll inlägg"
-        description: "Godkänn flaggning men lämna inlägget oförändrat."
+        description: "Godkänn flaggning men lämna det här inlägget oförändrat."
       agree_and_keep_hidden:
         title: "Fortsätt dölja inlägg"
-        description: "Godkänn flaggning och lämna inlägget som dolt."
+        description: "Godkänn flaggning och fortsätt dölja inlägget."
       agree_and_suspend:
         title: "Stäng av användare"
         description: "Godkänn flaggning och stäng av användaren."
       agree_and_silence:
-        title: "Tysta användaren"
+        title: "Tysta användare"
         description: "Godkänn flaggning och tysta användaren."
       agree_and_restore:
         title: "Återställ inlägg"
         description: "Återställ inlägget så att alla användare kan se det."
       agree_and_hide:
         title: "Dölj inlägg"
-        description: "Dölj detta inlägg och sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
+        description: "Godkänn flaggning och dölj detta inlägg + sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
       delete_single:
         title: "Radera"
       delete:
         title: "Radera..."
       delete_and_ignore:
-        title: "Radera inlägg, samt ignorera"
-        description: "Radera inlägg; om det är det första inlägget, radera även ämnet"
+        title: "Ignorera flaggning och radera inlägget"
+        description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
       delete_and_ignore_replies:
-        title: "Radera inlägg + svar, samt ignorera"
-        description: "Radera inlägg och alla dess svar; om det är det första inlägget, radera även ämnet"
+        title: "Ignorera flaggning, radera inlägg och svar"
+        description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget och alla dess svar. Om det är det första inlägget, radera ämnet också"
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       delete_and_agree:
-        title: "Radera inlägg, samt samtyck"
-        description: "Radera inlägg; om det är det första inlägget, radera även ämnet"
+        title: "Radera inlägg"
+        description: "Godkänn flaggning och radera detta inlägg. Om det är det första inlägget, radera ämnet också."
       delete_and_agree_replies:
-        title: "Radera inlägg + svar, samt samtyck"
-        description: "Radera inlägg och alla dess svar; om det är det första inlägget, radera även ämnet"
+        title: "Radera inlägg och svar"
+        description: "Godkänn flaggning och radera detta inlägg och alla dess svar. Om det är det första inlägget, radera ämnet också."
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       disagree_and_restore:
-        title: "Håll inte med och återställ inlägg"
+        title: "Nej, återställ inlägget"
         description: "Återställ inlägget så att alla användare kan se det."
       disagree:
-        title: "Håll inte med"
+        title: "Nej"
       ignore:
         title: "Ignorera"
+      ignore_and_do_nothing:
+        title: "Gör ingenting"
+        description: "Ignorera flaggningen genom att ta bort den från kön utan att vidta några åtgärder. Dolda inlägg kommer att förbli dolda och hanteras av de automatiska verktygen."
       approve:
         title: "Godkänn"
       approve_post:
@@ -4376,6 +4588,15 @@ sv:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at bör vara större än set_at."
+  webhooks:
+    payload_url:
+      blocked_or_internal: "Försändelse-URL:en kan inte användas eftersom den leder till en blockerad eller intern IP-adress."
+      unsafe: "Försändelse-URL:en kan inte användas eftersom den är osäker"
+  form_templates:
+    errors:
+      invalid_yaml: "är inte en giltig YAML-sträng"
+      invalid_type: "innehåller en ogiltig malltyp: %{type} (giltiga typer är: %{valid_types})"
+      missing_type: "saknar en fälttyp"
   activemodel:
     errors:
       <<: *errors

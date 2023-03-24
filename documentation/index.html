@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <link rel="icon" href="assets/favicon.png">
+    <link rel="apple-touch-icon" href="assets/favicon.png">
+    <meta content="en" name="language">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <title>Discourse documentation | Discourse - Civilized Discussion</title>
+    <style>
+      body { background: white; }
+
+      * , *:before, *:after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Rubik", Helvetica, Arial, sans-serif;
+      }
+
+      h1 {
+        color: #111;
+        font-weight: 700;
+      }
+
+      h1 a, h1 a:visited {
+        background-image: url(assets/highlight.png);
+        background-size: contain;
+        background-position: bottom;
+        background-repeat: no-repeat;
+        color: black;
+        text-decoration: none;
+      }
+
+      a, a:visited {
+        color: rgb(14, 118, 178);
+        text-decoration: none;
+      }
+
+
+      .site-header-navigation__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 auto;
+        padding: 0 2em;
+      }
+
+      .content-header {
+        text-align: center;
+        margin-bottom: 5em;
+      }
+
+      .content {
+        background-image: url(assets/blobs.svg);
+        background-position: top center;
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        overflow: hidden;
+        text-align: center;
+        position: relative;
+        width: 100%;
+        min-height: 600px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .content__wrapper {
+        padding: 0 2em;
+      }
+
+      .projects-list {
+        padding: 2em;
+        border-radius: 15px;
+        position: relative;
+        background-image: url(assets/blob-wide-yellow3.svg);
+        background-position: top center;
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        min-height: 400px;
+        width: 400px;
+      }
+
+      .projects-list__item {
+        list-style: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header role="banner" class="site-header-navigation">
+      <div class="site-header-navigation__container">
+        <div class="site-header-navigation__logo">
+          <a href="https://discourse.github.io/discourse">
+            <svg width="385" height="104" viewBox="0 0 300 40">
+              <use xlink:href="assets/logo.svg#logo-large"></use>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <header class="content-header">
+      <div class="content__wrapper">
+        <h1><a href="https://www.discourse.org">Discourse</a> projects documentation</h1>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="content__wrapper">
+        <ul class="projects-list">
+          <li class="projects-list__item">
+            <h4>Chat</h4>
+            <p>
+              <a href="chat/backend/index.html">Backend</a>
+              <span> - </span>
+              <a href="chat/frontend/index.html">Frontend</a>
+            </p>
+          </li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>

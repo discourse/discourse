@@ -15,6 +15,7 @@ permissions:
 
 jobs:
   build:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: run
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim
@@ -52,7 +53,7 @@ jobs:
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
         uses: actions/cache@v3

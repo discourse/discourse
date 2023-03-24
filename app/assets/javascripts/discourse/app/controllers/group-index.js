@@ -25,6 +25,10 @@ export default Controller.extend({
   bulkSelection: null,
 
   @observes("filterInput")
+  filterInputChanged() {
+    this._setFilter();
+  },
+
   @debounce(500)
   _setFilter() {
     this.set("filter", this.filterInput);
@@ -134,17 +138,17 @@ export default Controller.extend({
       case "removeMembers":
         return ajax(`/groups/${this.model.id}/members.json`, {
           type: "DELETE",
-          data: { user_ids: selection.map((u) => u.id).join(",") },
+          data: { user_ids: selection.mapBy("id").join(",") },
         }).then(() => {
           this.model.reloadMembers(this.memberParams, true);
           this.set("isBulk", false);
         });
 
       case "makeOwners":
-        return ajax(`/admin/groups/${this.model.id}/owners.json`, {
+        return ajax(`/groups/${this.model.id}/owners.json`, {
           type: "PUT",
           data: {
-            group: { usernames: selection.map((u) => u.username).join(",") },
+            usernames: selection.mapBy("username").join(","),
           },
         }).then(() => {
           selection.forEach((s) => s.set("owner", true));

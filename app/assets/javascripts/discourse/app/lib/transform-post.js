@@ -178,7 +178,7 @@ export default function transformPost(
   }
 
   const showTopicMap =
-    _additionalAttributes.includes("topicMap") ||
+    (_additionalAttributes.includes("topicMap") && post.post_number === 1) ||
     showPMMap ||
     (post.post_number === 1 &&
       topic.archetype === "regular" &&

@@ -1,0 +1,209 @@
+.channels-list {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  height: 100%;
+  padding-bottom: env(safe-area-inset-bottom);
+  position: relative;
+  @include chat-scrollbar(var(--secondary));
+
+  @include breakpoint(mobile-large) {
+    @include chat-scrollbar();
+  }
+
+  .open-browse-page-btn,
+  .open-draft-channel-page-btn,
+  .chat-channel-leave-btn {
+    position: relative;
+    padding: 0;
+    background: transparent;
+    color: var(--primary-medium);
+    font-size: var(--font-0-rem);
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+    }
+
+    &:hover {
+      background: transparent;
+
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+  }
+
+  .public-channel-empty-message {
+    margin: 0 0.5em 0.5em 0.5em;
+    padding: 0 1em;
+  }
+
+  .chat-channel-divider {
+    padding: 2.5rem 1.5rem 0.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+    font-family: var(--heading-font-family);
+    font-size: var(--font-down-1);
+    color: var(--quaternary);
+
+    .channel-title {
+      line-height: var(--line-height-medium);
+    }
+
+    &:first-of-type {
+      padding-top: 1rem;
+    }
+  }
+
+  .chat-channel-row {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    cursor: pointer;
+    color: var(--primary-high);
+    transition: opacity 50ms ease-in;
+    opacity: 1;
+
+    @media (hover: hover) {
+      &.can-leave:hover {
+        .toggle-channel-membership-button.-leave {
+          display: block;
+
+          > * {
+            pointer-events: auto;
+          }
+        }
+
+        .chat-channel-metadata {
+          display: none;
+        }
+      }
+    }
+
+    .discourse-no-touch &:hover,
+    &.active {
+      background: var(--primary-low);
+    }
+
+    &:hover,
+    &.active {
+      &.active {
+        font-weight: 600;
+      }
+
+      .chat-channel-title {
+        &,
+        .category-chat-name,
+        .dm-usernames {
+          color: var(--primary);
+        }
+
+        .d-icon-lock {
+          background-color: var(--primary-low);
+        }
+      }
+    }
+
+    &:visited {
+      color: var(--primary-high);
+    }
+
+    &.muted {
+      opacity: 0.65;
+    }
+
+    .chat-channel-title {
+      &__users-count {
+        width: var(--channel-list-avatar-size);
+        height: var(--channel-list-avatar-size);
+        padding: 0;
+        font-size: var(--font-up-1);
+        justify-content: center;
+      }
+
+      &__avatar {
+        .chat-user-avatar {
+          img {
+            width: calc(var(--channel-list-avatar-size) - 2px);
+            height: calc(var(--channel-list-avatar-size) - 2px);
+          }
+        }
+      }
+      &__user-info {
+        @include ellipsis;
+      }
+      &__usernames {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+      }
+      .user-status-message {
+        display: inline-block;
+        font-size: var(--font-down-2);
+        margin-right: 0.5rem;
+
+        &-description {
+          color: var(--primary-medium);
+        }
+      }
+    }
+
+    .chat-channel-metadata {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: column;
+      margin-left: 0.5em;
+
+      &__date {
+        color: var(--primary-high);
+        font-size: var(--font-down-2);
+        white-space: nowrap;
+      }
+
+      .chat-channel-unread-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        min-width: 14px;
+        padding: 2px;
+        font-size: var(--font-down-3);
+        border-radius: 1em;
+        background: var(--tertiary-med-or-tertiary);
+
+        &.urgent {
+          background: var(--success);
+        }
+
+        .number {
+          line-height: 1rem;
+        }
+      }
+    }
+
+    &.unfollowing {
+      opacity: 0;
+    }
+
+    .toggle-channel-membership-button.-leave {
+      display: none;
+      margin-left: auto;
+    }
+    .badge-wrapper {
+      align-items: center;
+      margin-right: 0;
+    }
+
+    .emoji {
+      margin-left: 0.3em;
+    }
+  }
+}

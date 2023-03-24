@@ -1,47 +1,24 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
-import { set } from "@ember/object";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Bootstrap Mode Notice", function (needs) {
-  needs.user();
+  needs.user({ admin: true });
   needs.site({ wizard_required: true });
   needs.settings({
     bootstrap_mode_enabled: true,
     bootstrap_mode_min_users: 50,
   });
 
-  test("Navigation", async function (assert) {
+  test("is displayed if bootstrap mode is enabled", async function (assert) {
+    this.siteSettings.bootstrap_mode_enabled = true;
     await visit("/");
-    assert.ok(
-      exists(".bootstrap-mode-notice"),
-      "has the bootstrap mode notice"
-    );
-    assert.ok(
-      exists(".bootstrap-invite-button"),
-      "bootstrap notice has invite button"
-    );
-    assert.ok(
-      exists(".bootstrap-wizard-link"),
-      "bootstrap notice has wizard link"
-    );
+    assert.ok(exists(".bootstrap-mode"));
+  });
 
-    await click(".bootstrap-invite-button");
-    assert.ok(exists(".create-invite-modal"), "opens create invite modal");
-
-    await click(".bootstrap-wizard-link");
-    assert.strictEqual(
-      currentURL(),
-      "/wizard/steps/hello-world",
-      "it transitions to the wizard page"
-    );
-
+  test("is hidden if bootstrap mode is disabled", async function (assert) {
+    this.siteSettings.bootstrap_mode_enabled = false;
     await visit("/");
-    set(this.siteSettings, "bootstrap_mode_enabled", false);
-    await settled();
-    assert.ok(
-      !exists(".bootstrap-mode-notice"),
-      "removes the notice when bootstrap mode is disabled"
-    );
+    assert.ok(!exists(".bootstrap-mode"));
   });
 });

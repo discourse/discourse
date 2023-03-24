@@ -13,7 +13,12 @@
 <StyleguideExample @title="inline-form">
   <div class="inline-form">
     <TextField @placeholder="Placeholder" />
-    <DButton @class="btn-primary" @icon="search" @type="submit" @translatedLabel="Submit" />
+    <DButton
+      @class="btn-primary"
+      @icon="search"
+      @type="submit"
+      @translatedLabel="Submit"
+    />
   </div>
 </StyleguideExample>
 
@@ -37,28 +42,51 @@
   </div>
 </StyleguideExample>
 
-<StyleguideExample @title="inline-form with combo-box" @initialValue={{this.dummy.options.[0].name}} as |value|>
+<StyleguideExample
+  @title="inline-form with <ComboBox>"
+  @initialValue={{this.dummy.options.0.name}}
+  as |value|
+>
   <div class="inline-form">
     <TextField @placeholder="Placeholder" />
-    <ComboBox @content={{this.dummy.options}} @value={{value}} @onChange={{fn (mut value)}} />
-    <DButton @class="btn-primary" @icon="search" @type="submit" @translatedLabel="Submit" />
+    <ComboBox
+      @content={{this.dummy.options}}
+      @value={{value}}
+      @onChange={{fn (mut value)}}
+    />
+    <DButton
+      @class="btn-primary"
+      @icon="search"
+      @type="submit"
+      @translatedLabel="Submit"
+    />
   </div>
 </StyleguideExample>
 
-<StyleguideExample @title="inline-form with multi-select">
+<StyleguideExample @title="inline-form with <MultiSelect>">
   <div class="inline-form">
     <TextField />
     <MultiSelect @content={{this.dummy.options}} @onChange={{action "dummy"}} />
-    <DButton @class="btn-primary" @icon="search" @type="submit" @translatedLabel="Submit" />
+    <DButton
+      @class="btn-primary"
+      @icon="search"
+      @type="submit"
+      @translatedLabel="Submit"
+    />
   </div>
 </StyleguideExample>
 
-<StyleguideExample @title="inline-form with multi-select and label">
+<StyleguideExample @title="inline-form with <MultiSelect> and label">
   <div class="inline-form">
     <label>Text:</label>
     <TextField />
     <MultiSelect @content={{this.dummy.options}} @onChange={{action "dummy"}} />
-    <DButton @class="btn-primary" @icon="search" @type="submit" @translatedLabel="Submit" />
+    <DButton
+      @class="btn-primary"
+      @icon="search"
+      @type="submit"
+      @translatedLabel="Submit"
+    />
   </div>
 </StyleguideExample>
 
@@ -68,9 +96,13 @@
   </div>
 </StyleguideExample>
 
-<StyleguideExample @title="category-notifications-button and regular button">
+<StyleguideExample @title="<CategoryNotificationsButton> and regular button">
   <div class="inline-form">
-    <CategoryNotificationsButton @category={{this.dummy.categories.[0]}} @value={{1}} @onChange={{action "dummy"}} />
+    <CategoryNotificationsButton
+      @category={{get this.dummy.categories 0}}
+      @value={{1}}
+      @onChange={{action "dummy"}}
+    />
     <DButton @icon="reply" @type="submit" @translatedLabel="Button" />
   </div>
 </StyleguideExample>

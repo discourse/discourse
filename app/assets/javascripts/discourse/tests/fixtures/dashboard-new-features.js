@@ -27,6 +27,6 @@ export default {
       },
     ],
     release_notes_link:
-      "https://meta.discourse.org/c/feature/announcements?tags=release-notes\u0026before=0",
+      "https://meta.discourse.org/c/announcements/67?tags=release-notes\u0026before=0",
   },
 };

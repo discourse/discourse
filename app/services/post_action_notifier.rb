@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class PostActionNotifier
-
   def self.disable
     @disabled = true
   end
@@ -22,11 +21,14 @@ class PostActionNotifier
   def self.refresh_like_notification(post, read)
     return unless post && post.user_id && post.topic
 
-    usernames = post.post_actions.where(post_action_type_id: PostActionType.types[:like])
-      .joins(:user)
-      .order('post_actions.created_at desc')
-      .where('post_actions.created_at > ?', 1.day.ago)
-      .pluck(:username)
+    usernames =
+      post
+        .post_actions
+        .where(post_action_type_id: PostActionType.types[:like])
+        .joins(:user)
+        .order("post_actions.created_at desc")
+        .where("post_actions.created_at > ?", 1.day.ago)
+        .pluck(:username)
 
     if usernames.length > 0
       data = {
@@ -34,7 +36,7 @@ class PostActionNotifier
         username: usernames[0],
         display_username: usernames[0],
         username2: usernames[1],
-        count: usernames.length
+        count: usernames.length,
       }
       Notification.create(
         notification_type: Notification.types[:liked],
@@ -42,7 +44,7 @@ class PostActionNotifier
         post_number: post.post_number,
         user_id: post.user_id,
         read: read,
-        data: data.to_json
+        data: data.to_json,
       )
     end
   end
@@ -54,18 +56,19 @@ class PostActionNotifier
     return if post_action.deleted_at.blank?
 
     if post_action.post_action_type_id == PostActionType.types[:like] && post_action.post
-
       read = true
 
-      Notification.where(
-        topic_id: post_action.post.topic_id,
-        user_id: post_action.post.user_id,
-        post_number: post_action.post.post_number,
-        notification_type: Notification.types[:liked]
-      ).each do |notification|
-        read = false unless notification.read
-        notification.destroy
-      end
+      Notification
+        .where(
+          topic_id: post_action.post.topic_id,
+          user_id: post_action.post.user_id,
+          post_number: post_action.post.post_number,
+          notification_type: Notification.types[:liked],
+        )
+        .each do |notification|
+          read = false unless notification.read
+          notification.destroy
+        end
 
       refresh_like_notification(post_action.post, read)
     else
@@ -89,7 +92,7 @@ class PostActionNotifier
       post,
       display_username: post_action.user.username,
       post_action_id: post_action.id,
-      user_id: post_action.user_id
+      user_id: post_action.user_id,
     )
   end
 
@@ -106,19 +109,18 @@ class PostActionNotifier
 
     user_ids = []
 
-    if post_revision.user_id != post.user_id
-      user_ids << post.user_id
-    end
+    user_ids << post.user_id if post_revision.user_id != post.user_id
 
     # Notify all users watching the topic when the OP of a wiki topic is edited
     # or if the topic category allows unlimited owner edits on the OP.
     if post.is_first_post? &&
-        (post.wiki? || post.topic.category_allows_unlimited_owner_edits_on_first_post?)
+         (post.wiki? || post.topic.category_allows_unlimited_owner_edits_on_first_post?)
       user_ids.concat(
-        TopicUser.watching(post.topic_id)
+        TopicUser
+          .watching(post.topic_id)
           .where.not(user_id: post_revision.user_id)
           .where(topic: post.topic)
-          .pluck(:user_id)
+          .pluck(:user_id),
       )
     end
 
@@ -128,10 +130,7 @@ class PostActionNotifier
 
     if user_ids.present?
       DB.after_commit do
-        Jobs.enqueue(:notify_post_revision,
-          user_ids: user_ids,
-          post_revision_id: post_revision.id
-        )
+        Jobs.enqueue(:notify_post_revision, user_ids: user_ids, post_revision_id: post_revision.id)
       end
     end
   end
@@ -145,7 +144,7 @@ class PostActionNotifier
         Notification.types[:edited],
         post,
         display_username: post.last_editor.username,
-        acting_user_id: post.last_editor.id
+        acting_user_id: post.last_editor.id,
       )
     end
   end
@@ -162,8 +161,13 @@ class PostActionNotifier
 
   def self.notification_is_disabled?(post_revision)
     modifications = post_revision.modifications
-    (SiteSetting.disable_system_edit_notifications && post_revision.user_id == Discourse::SYSTEM_USER_ID) ||
-      (SiteSetting.disable_category_edit_notifications && modifications&.dig("category_id").present?) ||
-      (SiteSetting.disable_tags_edit_notifications && modifications&.dig("tags").present?)
+    (
+      SiteSetting.disable_system_edit_notifications &&
+        post_revision.user_id == Discourse::SYSTEM_USER_ID
+    ) ||
+      (
+        SiteSetting.disable_category_edit_notifications &&
+          modifications&.dig("category_id").present?
+      ) || (SiteSetting.disable_tags_edit_notifications && modifications&.dig("tags").present?)
   end
 end

@@ -1,0 +1,9 @@
+.chat-composer-inline-button {
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+
+  & + .chat-composer-inline-button {
+    margin-left: 0.25rem;
+  }
+}

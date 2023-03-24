@@ -8,6 +8,8 @@ workbox.setConfig({
 });
 
 var authUrls = ["auth", "session/sso_login", "session/sso"].map(path => `<%= Discourse.base_path %>/${path}`);
+var chatRegex = /\/chat\/channel\/(\d+)\//;
+var inlineReplyIcon = "<%= UrlHelper.absolute("/images/push-notifications/inline_reply.png") %>";
 
 var cacheVersion = "1";
 var discourseCacheName = "discourse-" + cacheVersion;
@@ -17,11 +19,12 @@ var externalCacheName = "external-" + cacheVersion;
 // https://bugs.chromium.org/p/chromium/issues/detail?id=1286367
 var chromeVersionMatch = navigator.userAgent.match(/Chrome\/97.0.(\d+)/);
 var isBrokenChrome97 = chromeVersionMatch && parseInt(chromeVersionMatch[1]) <= 4692;
+var isApple = /iPhone|iPod|Mac OS/.test(navigator.userAgent);
 
 // Cache all GET requests, so Discourse can be used while offline
 workbox.routing.registerRoute(
   function(args) {
-    return args.url.origin === location.origin && !authUrls.some(u => args.url.pathname.startsWith(u)) && !isBrokenChrome97;
+    return args.url.origin === location.origin && !authUrls.some(u => args.url.pathname.startsWith(u)) && !isBrokenChrome97 && !isApple;
   }, // Match all except auth routes
   new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
     cacheName: discourseCacheName,
@@ -134,6 +137,16 @@ function showNotification(title, body, icon, badge, tag, baseUrl, url) {
     tag: tag
   }
 
+  if (chatRegex.test(url)) {
+    notificationOptions['actions'] = [{
+      action: "reply",
+      title: "Reply",
+      placeholder: "reply",
+      type: "text",
+      icon: inlineReplyIcon
+    }];
+  }
+
   return self.registration.showNotification(title, notificationOptions);
 }
 
@@ -163,18 +176,51 @@ self.addEventListener('notificationclick', function(event) {
   var url = event.notification.data.url;
   var baseUrl = event.notification.data.baseUrl;
 
-  // This looks to see if the current window is already open and
-  // focuses if it is
-  event.waitUntil(
-    clients.matchAll({ type: "window" })
-      .then(function(clientList) {
-        var reusedClientWindow = clientList.some(function(client) {
-          if (client.url === baseUrl + url && 'focus' in client) {
+  if (event.action === "reply") {
+    let csrf;
+    fetch("/session/csrf", {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not OK");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        csrf = data.csrf;
+
+        let chatTest = url.match(chatRegex);
+        if (chatTest.length > 0) {
+          let chatChannel = chatTest[1];
+
+          fetch(`${baseUrl}/chat/${chatChannel}.json`, {
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "X-CSRF-Token": csrf,
+            },
+            body: `message=${event.reply}`,
+            method: "POST",
+            mode: "cors",
+          });
+        }
+      });
+  } else {
+    // This looks to see if the current window is already open and
+    // focuses if it is
+    event.waitUntil(
+      clients.matchAll({ type: "window" }).then(function (clientList) {
+        var reusedClientWindow = clientList.some(function (client) {
+          if (client.url === baseUrl + url && "focus" in client) {
             client.focus();
             return true;
           }
 
-          if ('postMessage' in client && 'focus' in client) {
+          if ("postMessage" in client && "focus" in client) {
             client.focus();
             client.postMessage({ url: url });
             return true;
@@ -182,9 +228,11 @@ self.addEventListener('notificationclick', function(event) {
           return false;
         });
 
-        if (!reusedClientWindow && clients.openWindow) return clients.openWindow(baseUrl + url);
+        if (!reusedClientWindow && clients.openWindow)
+          return clients.openWindow(baseUrl + url);
       })
-  );
+    );
+  }
 });
 
 self.addEventListener('message', function(event) {

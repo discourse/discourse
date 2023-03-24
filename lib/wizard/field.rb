@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Wizard
-
   class Choice
     attr_reader :id, :label, :icon, :data, :extra_label
     attr_accessor :field
@@ -39,6 +38,5 @@ class Wizard
       @choices << choice
       choice
     end
-
   end
 end

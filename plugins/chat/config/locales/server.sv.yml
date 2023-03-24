@@ -1,0 +1,218 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  site_settings:
+    chat_enabled: "Aktivera chattillägget."
+    chat_allowed_groups: "Användare i dessa grupper kan chatta. Observera att personalen alltid har tillgång till chatten."
+    chat_channel_retention_days: "Chattmeddelanden i ordinarie kanaler kommer att behållas i så här många dagar. Sätt till '0' för att behålla meddelanden för alltid."
+    chat_dm_retention_days: "Chattmeddelanden i personliga chattkanaler kommer att behållas i så här många dagar. Sätt till '0' för att behålla meddelanden för alltid."
+    chat_auto_silence_duration: "Antal minuter som användare kommer att tystas när de överskrider antalsgränsen för skapande av chattmeddelanden. Ställ in på '0' för att inaktivera automatisk tystning."
+    chat_allowed_messages_for_trust_level_0: "Antal meddelanden som användare på förtroendenivå 0 får skicka inom 30 sekunder. Ange '0' för att inaktivera gränsen."
+    chat_allowed_messages_for_other_trust_levels: "Antal meddelanden som användare med förtroendenivå 1-4 får skicka inom 30 sekunder. Ange '0' för att inaktivera gränsen."
+    chat_silence_user_sensitivity: "Sannolikheten för att en användare som flaggas i chatten automatiskt tystas."
+    chat_auto_silence_from_flags_duration: "Antal minuter som användarna tystas i när de automatiskt tystas på grund av markerade chattmeddelanden."
+    chat_default_channel_id: "Chattkanalen som öppnas som standard när en användare inte har olästa meddelanden eller omnämnanden i andra kanaler."
+    chat_duplicate_message_sensitivity: "Sannolikheten att ett duplicerat meddelande från samma avsändare blockeras inom en kort tidsperiod. Decimaltal mellan 0 och 1,0, där 1,0 är den högsta inställningen (blockerar meddelanden oftare på kortare tid). Ställ in `0` för att tillåta dubbletter av meddelanden."
+    chat_minimum_message_length: "Minsta antal tecken för ett chattmeddelande."
+    chat_allow_uploads: "Tillåt uppladdningar i offentliga chattkanaler och direktmeddelandekanaler."
+    chat_archive_destination_topic_status: "Den status som målämnet ska ha när ett kanalarkiv är slutfört. Detta gäller endast när målämnet är ett nytt ämne, inte ett befintligt."
+    default_emoji_reactions: "Standardval av emoji-reaktioner för chattmeddelanden. Lägg till upp till 5 emojis som snabbval."
+    direct_message_enabled_groups: "Tillåt användare inom dessa grupper att skapa personliga chattar från användare till användare. Obs: personal kan alltid skapa personliga chattar och användare kommer att kunna svara på personliga chattar som initieras av användare som har tillstånd att skapa dem."
+    chat_message_flag_allowed_groups: "Användare i dessa grupper får flagga chattmeddelanden."
+    max_mentions_per_chat_message: "Maximalt antal @namnomnämnanden en användare kan göra i ett chattmeddelande."
+    chat_max_direct_message_users: "Användare kan inte lägga till fler än detta antal andra användare när de skapar ett nytt direktmeddelande. Ställ in till 0 för att endast tillåta meddelanden till sig själv. Personalen är undantagen från denna inställning."
+    chat_allow_archiving_channels: "Tillåt att personalen arkiverar meddelanden till ett ämne när en kanal stängs."
+    errors:
+      chat_default_channel: "Standardchattkanalen måste vara en offentlig kanal."
+      direct_message_enabled_groups_invalid: "Du måste ange minst en grupp för den här inställningen. Om du inte vill att någon förutom personal ska skicka direktmeddelanden, välj personalgrupp."
+      chat_upload_not_allowed_secure_uploads: "Uppladdningar via chatt tillåts inte när inställningen för säkra uppladdningar är aktiverad."
+  system_messages:
+    chat_channel_archive_complete:
+      title: "Arkivering av chattkanalen är färdigt"
+      subject_template: "Arkivering av chattkanalen slutfördes framgångsrikt"
+      text_body_template: |
+        Arkiveringen av chattkanalen %{channel_hashtag_or_name} har slutförts. Meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      title: "Arkivering av chattkanalen misslyckades"
+      subject_template: "Arkivering av chattkanalen misslyckades"
+      text_body_template: |
+        Arkivering av chattkanalen %{channel_hashtag_or_name} misslyckades. %{messages_archived} meddelanden har arkiverats. Delvis arkiverade meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}). Besök kanalen kl. %{channel_url} för att försöka igen.
+    chat_channel_archive_failed_no_topic:
+      title: "Arkivering av chattkanalen misslyckades"
+      subject_template: "Arkivering av chattkanalen misslyckades"
+      text_body_template: |
+        Arkivering av chattkanalen %{channel_hashtag_or_name} misslyckades. Inga meddelanden har arkiverats. Ämnet kunde inte skapas, av följande skäl:
+
+          %{topic_validation_errors}
+
+        Besök kanalen på %{channel_url} för att försöka igen.
+  chat:
+    deleted_chat_username: raderat
+    errors:
+      channel_exists_for_category: "En kanal finns redan för denna kategori och namn"
+      channel_new_message_disallowed:
+        archived: "Kanalen är arkiverad, inga nya meddelanden kan skickas"
+        closed: "Kanalen är stängd, inga nya meddelanden kan skickas"
+        read_only: "Kanalen är lässkyddad, inga nya meddelanden kan skickas"
+      channel_modify_message_disallowed:
+        archived: "Kanalen är arkiverad, inga meddelanden kan redigeras eller raderas"
+        closed: "Kanalen är stängd, inga meddelanden kan redigeras eller raderas"
+        read_only: "Kanalen är lässkyddad, inga meddelanden kan redigeras eller raderas"
+      user_cannot_send_message: "Du kan inte skicka meddelanden just nu."
+      rate_limit_exceeded: "Överskred gränsen för chattmeddelanden som kan skickas inom 30 sekunder"
+      auto_silence_from_flags: "Chattmeddelande flaggat med tillräckligt hög poäng för att tysta användaren."
+      channel_cannot_be_archived: "Kanalen kan inte arkiveras just nu, den måste vara antingen stängd eller öppen för arkivering."
+      duplicate_message: "Du skrev också ett identiskt meddelande nyligen."
+      delete_channel_failed: "Det gick inte att ta bort kanalen, försök igen."
+      minimum_length_not_met:
+        one: "Meddelandet är för kort. Det måste innehålla minst %{count} tecken."
+        other: "Meddelandet är för kort. Det måste innehålla minst %{count} tecken."
+      message_too_long:
+        one: "Meddelandet är för långt, måste ha högst %{count} tecken."
+        other: "Meddelandet är för långt, måste ha högst %{count} tecken."
+      draft_too_long: "Utkastet är för långt."
+      max_reactions_limit_reached: "Nya reaktioner är inte tillåtna för detta meddelande."
+      message_move_invalid_channel: "Käll- och destinationskanalen måste vara offentliga kanaler."
+      message_move_no_messages_found: "Inga meddelanden hittades med de angivna meddelande-ID:n."
+      cant_update_direct_message_channel: "Egenskaper för direktmeddelandekanal såsom namn och beskrivning kan inte uppdateras."
+      not_accepting_dms: "Tyvärr tar %{username} inte emot meddelanden för tillfället."
+      actor_ignoring_target_user: "Du ignorerar %{username}, så du kan inte skicka meddelanden till dem."
+      actor_muting_target_user: "Du har tystat %{username}, så du kan inte skicka meddelanden till dem."
+      actor_disallowed_dms: "Du har valt att hindra användare från att skicka dig privata och direkta meddelanden, så du kan inte skapa nya direkta meddelanden."
+      actor_preventing_target_user_from_dm: "Du har valt att hindra %{username} från att skicka privata och direkta meddelanden, så du kan inte skapa nya direktmeddelanden till dem."
+      user_cannot_send_direct_messages: "Tyvärr kan du inte skicka direktmeddelanden."
+      over_chat_max_direct_message_users_allow_self: "Du kan bara skapa ett direktmeddelande med dig själv."
+      over_chat_max_direct_message_users:
+        one: "Du kan inte skapa ett direktmeddelande med fler än %{count} annan användare."
+        other: "Du kan inte skapa ett direktmeddelande med fler än %{count} andra användare."
+      original_message_not_found: "Det första meddelandet i meddelandekedjan som du svarar på kan inte hittas eller har tagits bort."
+    reviewables:
+      message_already_handled: "Tack, men vi har redan granskat det här meddelandet och beslutat att det inte behöver flaggas igen."
+      actions:
+        agree:
+          title: "Godkänn..."
+        agree_and_keep_message:
+          title: "Behåll meddelande"
+          description: "Håll med flaggning men behåll meddelandet oförändrat."
+        agree_and_keep_deleted:
+          title: "Behåll meddelandet raderat"
+          description: "Håll med flaggning och behåll meddelandet raderat."
+        agree_and_suspend:
+          title: "Stäng av användaren"
+          description: "Godkänn flaggning och stäng av användaren."
+        agree_and_silence:
+          title: "Tysta användaren"
+          description: "Godkänn flaggning och tysta användaren."
+        agree_and_restore:
+          title: "Återställ meddelande"
+          description: "Återställ meddelandet så att användarna kan se det."
+        agree_and_delete:
+          title: "Radera meddelande"
+          description: "Ta bort meddelandet så att användarna inte kan se det."
+        delete_and_agree:
+          title: "Radera meddelande"
+        disagree_and_restore:
+          title: "Håll inte med och återställ meddelande"
+          description: "Återställ meddelandet så att alla användare kan se det."
+        disagree:
+          title: "Håll inte med"
+        ignore:
+          title: "Ignorera"
+      direct_messages:
+        transcript_title: "Avskrift av tidigare meddelanden i %{channel_name}"
+        transcript_body: "För att ge dig mer sammanhang inkluderade vi en avskrift av de tidigare meddelandena i det här samtalet (upp till tio):\n\n%{transcript}"
+    channel:
+      archive:
+        first_post_raw: "Detta ämne är ett arkiv av chatt kanalen [%{channel_name}](%{channel_url})."
+      messages_moved:
+        one: "@%{acting_username} flyttade ett meddelande till kanalen [%{channel_name}](%{first_moved_message_url})."
+        other: "@%{acting_username} flyttade %{count} meddelanden till kanalen [%{channel_name}](%{first_moved_message_url})."
+      dm_title:
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} och %{count} andra"
+          other: "%{comma_separated_usernames} och %{count} andra"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "innehåller icke-ascii-tecken"
+        is_already_in_use: "används redan"
+    bookmarkable:
+      notification_title: "meddelande i %{channel_name}"
+    personal_chat: "personlig chatt"
+    onebox:
+      inline_to_message: "Meddelande #%{message_id} av %{username} – #%{chat_channel}"
+      inline_to_channel: "Chatt #%{chat_channel}"
+      inline_to_topic_channel: "Chatt för ämne %{topic_title}"
+      x_members:
+        one: "%{count} medlem"
+        other: "%{count} medlemmar"
+      and_x_others:
+        one: "och %{count} annan"
+        other: "och %{count} andra"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} nämnde dig i "%{channel}"'
+        other_type: '%{username} nämnde %{identifier} i "%{channel}"'
+      direct_message_chat_mention:
+        direct: "%{username} nämnde dig i en personlig chatt"
+        other_type: "%{username} nämnde %{identifier} i personlig chatt"
+      new_chat_message: '%{username} skickade ett meddelande i "%{channel}"'
+      new_direct_chat_message: "%{username} skickade ett meddelande i personlig chatt"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Skicka chattmeddelande
+  reviewable_score_types:
+    needs_review:
+      title: "Behöver granskning"
+    notify_user:
+      chat_pm_title: 'Ditt chattmeddelande i "%{channel_name}"'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: 'Ett chattmeddelande i "%{channel_name}" kräver personalens uppmärksamhet'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "En anställd anser att detta chattmeddelande behöver granskas."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Raderad användare"
+      description:
+        one: "Du har ett nytt chattmeddelande"
+        other: "Du har nya chattmeddelanden"
+      from: "%{site_name}"
+      subject:
+        direct_message_from_1: "[%{email_prefix}] Nytt meddelande från %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nytt meddelande från %{username1} och %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nytt meddelande från %{username} och ytterligare %{count}"
+          other: "[%{email_prefix}] Nytt meddelande från %{username} och ytterligare %{count}"
+        chat_channel_1: "[%{email_prefix}] Nytt meddelande i %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nytt meddelande i %{channel1} och %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nytt meddelande i %{channel} och ytterligare %{count}"
+          other: "[%{email_prefix}] Nytt meddelande i %{channel} och ytterligare %{count}"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nytt meddelande i %{channel} och från %{username}"
+      unsubscribe: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link} eller %{unsubscribe_link} för att avsluta prenumerationen."
+      unsubscribe_no_link: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link}."
+      view_messages:
+        one: "Visa meddelande"
+        other: "Visa %{count} meddelanden"
+      view_more:
+        one: "Visa %{count} mer meddelande"
+        other: "Visa %{count} fler meddelanden"
+      your_chat_settings: "preferens för frekvens av chattmeddelanden"
+  unsubscribe:
+    chat_summary:
+      select_title: "Ställ in e-postfrekvensen för chattsammanfattningar till:"
+      never: Aldrig
+      when_away: Endast när du är borta
+  category:
+    cannot_delete:
+      has_chat_channels: "Du kan inte ta bort den här kategorin eftersom den har chattkanaler."

@@ -1,0 +1,123 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    chat:
+      create: "Opprett"
+      cancel: "Avbryt"
+      channel_settings:
+        edit: "Endre"
+        add: "Legg til"
+        join: "Bli medlem"
+        leave: "Forlat"
+      close: "Lukk"
+      delete: "Slett"
+      edited: "redigert"
+      muted: "ignorert"
+      joined: "medlem fra"
+      email_frequency:
+        never: "Aldri"
+      header_indicator_preference:
+        never: "Aldri"
+      flag: "Flagg"
+      join: "Bli medlem"
+      last_visit: "siste besøk"
+      mention_warning:
+        dismiss: "forkast"
+      reply: "Svar"
+      edit: "Endre"
+      rebake_message: "Generer HTML på nytt"
+      bookmark_message: "Bokmerke"
+      bookmark_message_edit: "Rediger bokmerke"
+      save: "Lagre"
+      sounds:
+        none: "Ingen"
+      exit: "forrige"
+      channel_status:
+        closed: "Lukket"
+        open: "Åpne"
+      browse:
+        back: "Forrige"
+        filter_all: Alle
+        filter_closed: Lukket
+      chat_message_separator:
+        today: I dag
+        yesterday: I går
+      about_view:
+        title: Tittel
+        name: Navn
+        description: Beskrivelse
+      channel_info:
+        back_to_channel: "Forrige"
+        tabs:
+          about: Om
+          members: Medlemmer
+          settings: Instillinger
+      direct_message_creator:
+        title: Ny Melding
+        prefix: "Til:"
+      create_channel:
+        type: "Type"
+        types:
+          category: "Kategori"
+          topic: "Emne"
+      composer:
+        italic_text: "kursiv tekst"
+        bold_text: "sterk tekst"
+      notification_levels:
+        never: "Aldri"
+      settings:
+        channel_wide_mentions_label: "Tillat @alle og @her omtaler"
+        channel_wide_mentions_description: "Tillat brukere å varsle alle medlemmer av #%{channel} med @alle eller bare de som er aktive i øyeblikket med @alleher"
+        follow: "Bli medlem"
+        followed: "Medlem fra"
+        notifications: "Varsler"
+        preview: "Forhåndsvis"
+        save: "Lagre"
+        saved: "Lagret"
+        unfollow: "Forlat"
+        admin_title: "Admin"
+      incoming_webhooks:
+        back: "Forrige"
+        description: "Beskrivelse"
+        delete: "Slett"
+        emoji: "Emoji"
+        name: "Navn"
+        save: "Lagre"
+        edit: "Endre"
+        system: "system"
+        url: "URL"
+        username: "Brukernavn"
+      selection:
+        cancel: "Avbryt"
+        copy: "Kopier"
+        new_topic:
+          title: "Flytt til nytt emne"
+        existing_topic:
+          title: "Flytt til eksisterende emne"
+        new_message:
+          title: "Flytt til ny melding"
+      emoji_picker:
+        objects: "Objekter"
+        activities: "Aktiviteter"
+        flags: "Flagg"
+        symbols: "Symboler"
+      draft_channel_screen:
+        header: "Ny Melding"
+        cancel: "Avbryt"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Send
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Rapportert av"

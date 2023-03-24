@@ -17,11 +17,8 @@ class UsernameCheckerService
   end
 
   def check_username_availability(username, email)
-    available = User.username_available?(
-      username,
-      email,
-      allow_reserved_username: @allow_reserved_username
-    )
+    available =
+      User.username_available?(username, email, allow_reserved_username: @allow_reserved_username)
 
     if available
       { available: true, is_developer: is_developer?(email) }
@@ -31,11 +28,11 @@ class UsernameCheckerService
   end
 
   def is_developer?(value)
-    Rails.configuration.respond_to?(:developer_emails) && Rails.configuration.developer_emails.include?(value)
+    Rails.configuration.respond_to?(:developer_emails) &&
+      Rails.configuration.developer_emails.include?(value)
   end
 
   def self.is_developer?(email)
     UsernameCheckerService.new.is_developer?(email)
   end
-
 end

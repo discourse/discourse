@@ -16,6 +16,7 @@ export function categoryHashtagTriggerRule(textarea, opts) {
     {
       since: "2.9.0.beta10",
       dropFrom: "3.0.0.beta1",
+      id: "discourse.category-hashtags.categoryHashtagTriggerRule",
     }
   );
   return hashtagTriggerRule(textarea, opts);

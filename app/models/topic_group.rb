@@ -31,10 +31,14 @@ class TopicGroup < ActiveRecord::Base
         tg.group_id
     SQL
 
-    updated_groups = DB.query(
-      update_query,
-      user_id: user.id, topic_id: topic_id, post_number: post_number, now: DateTime.now
-    )
+    updated_groups =
+      DB.query(
+        update_query,
+        user_id: user.id,
+        topic_id: topic_id,
+        post_number: post_number,
+        now: DateTime.now,
+      )
   end
 
   def self.create_topic_group(user, topic_id, post_number, updated_group_ids)
@@ -47,7 +51,7 @@ class TopicGroup < ActiveRecord::Base
         AND tag.topic_id = :topic_id
     SQL
 
-    query += 'AND NOT(tag.group_id IN (:already_updated_groups))' unless updated_group_ids.length.zero?
+    query += "AND NOT(tag.group_id IN (:already_updated_groups))" if updated_group_ids.present?
 
     query += <<~SQL
       ON CONFLICT(topic_id, group_id)
@@ -56,7 +60,11 @@ class TopicGroup < ActiveRecord::Base
 
     DB.exec(
       query,
-      user_id: user.id, topic_id: topic_id, post_number: post_number, now: DateTime.now, already_updated_groups: updated_group_ids
+      user_id: user.id,
+      topic_id: topic_id,
+      post_number: post_number,
+      now: DateTime.now,
+      already_updated_groups: updated_group_ids,
     )
   end
 end

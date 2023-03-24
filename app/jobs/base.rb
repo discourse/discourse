@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Jobs
-
   def self.queued
     Sidekiq::Stats.new.enqueued
   end
@@ -24,13 +23,13 @@ module Jobs
 
   def self.last_job_performed_at
     Sidekiq.redis do |r|
-      int = r.get('last_job_perform_at')
+      int = r.get("last_job_perform_at")
       int ? Time.at(int.to_i) : nil
     end
   end
 
   def self.num_email_retry_jobs
-    Sidekiq::RetrySet.new.count { |job| job.klass =~ /Email$/ }
+    Sidekiq::RetrySet.new.count { |job| job.klass =~ /Email\z/ }
   end
 
   class Base
@@ -82,9 +81,9 @@ module Jobs
 
           if exception.present?
             @data["exception"] = exception # Exception - if job fails a json encoded exception
-            @data["status"] = 'failed'
+            @data["status"] = "failed"
           else
-            @data["status"] = 'success' # Status - fail, success, pending
+            @data["status"] = "success" # Status - fail, success, pending
           end
 
           write_to_log
@@ -92,22 +91,27 @@ module Jobs
       end
 
       def self.raw_log(message)
-        @@logger ||= begin
-          f = File.open "#{Rails.root}/log/sidekiq.log", "a"
-          f.sync = true
-          Logger.new f
-        end
+        @@logger ||=
+          begin
+            f = File.open "#{Rails.root}/log/sidekiq.log", "a"
+            f.sync = true
+            Logger.new f
+          end
 
         @@log_queue ||= Queue.new
 
         if !defined?(@@log_thread) || !@@log_thread.alive?
-          @@log_thread = Thread.new do
-            loop do
-              @@logger << @@log_queue.pop
-            rescue Exception => e
-              Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
+          @@log_thread =
+            Thread.new do
+              loop do
+                @@logger << @@log_queue.pop
+              rescue Exception => e
+                Discourse.warn_exception(
+                  e,
+                  message: "Exception encountered while logging Sidekiq job",
+                )
+              end
             end
-          end
         end
 
         @@log_queue.push(message)
@@ -136,18 +140,22 @@ module Jobs
         interval = ENV["DISCOURSE_LOG_SIDEKIQ_INTERVAL"]
         return if !interval
         interval = interval.to_i
-        @@interval_thread ||= Thread.new do
-          begin
-            loop do
-              sleep interval
-              mutex.synchronize do
-                @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval }
+        @@interval_thread ||=
+          Thread.new do
+            begin
+              loop do
+                sleep interval
+                mutex.synchronize do
+                  @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval }
+                end
               end
+            rescue Exception => e
+              Discourse.warn_exception(
+                e,
+                message: "Sidekiq interval logging thread terminated unexpectedly",
+              )
             end
-          rescue Exception => e
-            Discourse.warn_exception(e, message: "Sidekiq interval logging thread terminated unexpectedly")
           end
-        end
       end
     end
 
@@ -189,27 +197,29 @@ module Jobs
       @db_duration || 0
     end
 
+    def perform_immediately(*args)
+      opts = args.extract_options!.with_indifferent_access
+
+      if opts.has_key?(:current_site_id) &&
+           opts[:current_site_id] != RailsMultisite::ConnectionManagement.current_db
+        raise ArgumentError.new(
+                "You can't connect to another database when executing a job synchronously.",
+              )
+      else
+        begin
+          retval = execute(opts)
+        rescue => exc
+          Discourse.handle_job_exception(exc, error_context(opts))
+        end
+
+        retval
+      end
+    end
+
     def perform(*args)
       opts = args.extract_options!.with_indifferent_access
 
-      if ::Jobs.run_later?
-        Sidekiq.redis do |r|
-          r.set('last_job_perform_at', Time.now.to_i)
-        end
-      end
-
-      if opts.delete(:sync_exec)
-        if opts.has_key?(:current_site_id) && opts[:current_site_id] != RailsMultisite::ConnectionManagement.current_db
-          raise ArgumentError.new("You can't connect to another database when executing a job synchronously.")
-        else
-          begin
-            retval = execute(opts)
-          rescue => exc
-            Discourse.handle_job_exception(exc, error_context(opts))
-          end
-          return retval
-        end
-      end
+      Sidekiq.redis { |r| r.set("last_job_perform_at", Time.now.to_i) } if ::Jobs.run_later?
 
       dbs =
         if opts[:current_site_id]
@@ -224,9 +234,11 @@ module Jobs
           exception = {}
 
           RailsMultisite::ConnectionManagement.with_connection(db) do
-            job_instrumenter = JobInstrumenter.new(job_class: self.class, opts: opts, db: db, jid: jid)
+            job_instrumenter =
+              JobInstrumenter.new(job_class: self.class, opts: opts, db: db, jid: jid)
             begin
-              I18n.locale = SiteSetting.default_locale || SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+              I18n.locale =
+                SiteSetting.default_locale || SiteSettings::DefaultsProvider::DEFAULT_LOCALE
               I18n.ensure_all_loaded!
               begin
                 logster_env = {}
@@ -256,7 +268,10 @@ module Jobs
 
       if exceptions.length > 0
         exceptions.each do |exception_hash|
-          Discourse.handle_job_exception(exception_hash[:ex], error_context(opts, exception_hash[:code], exception_hash[:other]))
+          Discourse.handle_job_exception(
+            exception_hash[:ex],
+            error_context(opts, exception_hash[:code], exception_hash[:other]),
+          )
         end
         raise HandledExceptionWrapper.new(exceptions[0][:ex])
       end
@@ -265,7 +280,6 @@ module Jobs
     ensure
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
-
   end
 
   class HandledExceptionWrapper < StandardError
@@ -280,9 +294,7 @@ module Jobs
     extend MiniScheduler::Schedule
 
     def perform(*args)
-      if (::Jobs::Heartbeat === self) || !Discourse.readonly_mode?
-        super
-      end
+      super if (::Jobs::Heartbeat === self) || !Discourse.readonly_mode?
     end
   end
 
@@ -307,40 +319,26 @@ module Jobs
 
     # Simulate the args being dumped/parsed through JSON
     parsed_opts = JSON.parse(JSON.dump(opts))
-    if opts != parsed_opts
-      Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0")
+    Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0") if opts != parsed_opts
         #{klass.name} was enqueued with argument values which do not cleanly serialize to/from JSON.
         This means that the job will be run with slightly different values than the ones supplied to `enqueue`.
         Argument values should be strings, booleans, numbers, or nil (or arrays/hashes of those value types).
       TEXT
-    end
     opts = parsed_opts
 
     if ::Jobs.run_later?
-      hash = {
-        'class' => klass,
-        'args' => [opts]
-      }
+      hash = { "class" => klass, "args" => [opts] }
 
       if delay
-        if delay.to_f > 0
-          hash['at'] = Time.now.to_f + delay.to_f
-        end
+        hash["at"] = Time.now.to_f + delay.to_f if delay.to_f > 0
       end
 
-      if queue
-        hash['queue'] = queue
-      end
+      hash["queue"] = queue if queue
 
       DB.after_commit { klass.client_push(hash) }
     else
-      # Otherwise execute the job right away
-      opts["sync_exec"] = true
-
       if Rails.env == "development"
-        Scheduler::Defer.later("job") do
-          klass.new.perform(opts)
-        end
+        Scheduler::Defer.later("job") { klass.new.perform(opts) }
       else
         # Run the job synchronously
         # But never run a job inside another job
@@ -360,7 +358,7 @@ module Jobs
           begin
             until queue.empty?
               queued_klass, queued_opts = queue.pop(true)
-              queued_klass.new.perform(queued_opts)
+              queued_klass.new.perform_immediately(queued_opts)
             end
           ensure
             Thread.current[:discourse_nested_job_queue] = nil
@@ -368,7 +366,6 @@ module Jobs
         end
       end
     end
-
   end
 
   def self.enqueue_in(secs, job_name, opts = {})

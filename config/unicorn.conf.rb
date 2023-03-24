@@ -3,9 +3,9 @@
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
 
 if (ENV["LOGSTASH_UNICORN_URI"] || "").length > 0
-  require_relative '../lib/discourse_logstash_logger'
-  require_relative '../lib/unicorn_logstash_patch'
-  logger DiscourseLogstashLogger.logger(uri: ENV['LOGSTASH_UNICORN_URI'], type: :unicorn)
+  require_relative "../lib/discourse_logstash_logger"
+  require_relative "../lib/unicorn_logstash_patch"
+  logger DiscourseLogstashLogger.logger(uri: ENV["LOGSTASH_UNICORN_URI"], type: :unicorn)
 end
 
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
@@ -16,11 +16,11 @@ worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 working_directory discourse_path
 
 # listen "#{discourse_path}/tmp/sockets/unicorn.sock"
+
+# stree-ignore
 listen ENV["UNICORN_LISTENER"] || "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:")}#{(ENV["UNICORN_PORT"] || 3000).to_i}"
 
-if !File.exist?("#{discourse_path}/tmp/pids")
-  FileUtils.mkdir_p("#{discourse_path}/tmp/pids")
-end
+FileUtils.mkdir_p("#{discourse_path}/tmp/pids") if !File.exist?("#{discourse_path}/tmp/pids")
 
 # feel free to point this anywhere accessible on the filesystem
 pid (ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
@@ -52,7 +52,6 @@ check_client_connection false
 
 initialized = false
 before_fork do |server, worker|
-
   unless initialized
     Discourse.preload_rails!
 
@@ -67,7 +66,7 @@ before_fork do |server, worker|
 
     initialized = true
 
-    supervisor = ENV['UNICORN_SUPERVISOR_PID'].to_i
+    supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
     if supervisor > 0
       Thread.new do
         while true
@@ -80,14 +79,12 @@ before_fork do |server, worker|
       end
     end
 
-    sidekiqs = ENV['UNICORN_SIDEKIQS'].to_i
+    sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
     if sidekiqs > 0
       server.logger.info "starting #{sidekiqs} supervised sidekiqs"
 
-      require 'demon/sidekiq'
-      Demon::Sidekiq.after_fork do
-        DiscourseEvent.trigger(:sidekiq_fork_started)
-      end
+      require "demon/sidekiq"
+      Demon::Sidekiq.after_fork { DiscourseEvent.trigger(:sidekiq_fork_started) }
 
       Demon::Sidekiq.start(sidekiqs)
 
@@ -98,13 +95,14 @@ before_fork do |server, worker|
 
       # Trap USR1, so we can re-issue to sidekiq workers
       # but chain the default unicorn implementation as well
-      old_handler = Signal.trap("USR1") do
-        Demon::Sidekiq.kill("USR1")
-        old_handler.call
-      end
+      old_handler =
+        Signal.trap("USR1") do
+          Demon::Sidekiq.kill("USR1")
+          old_handler.call
+        end
     end
 
-    if ENV['DISCOURSE_ENABLE_EMAIL_SYNC_DEMON'] == 'true'
+    if ENV["DISCOURSE_ENABLE_EMAIL_SYNC_DEMON"] == "true"
       server.logger.info "starting up EmailSync demon"
       Demon::EmailSync.start
       Signal.trap("SIGTSTP") do
@@ -119,13 +117,13 @@ before_fork do |server, worker|
     end
 
     class ::Unicorn::HttpServer
-      alias :master_sleep_orig :master_sleep
+      alias master_sleep_orig master_sleep
 
       def max_sidekiq_rss
-        rss = `ps -eo rss,args | grep sidekiq | grep -v grep | awk '{print $1}'`
-          .split("\n")
-          .map(&:to_i)
-          .max
+        rss =
+          `ps -eo rss,args | grep sidekiq | grep -v grep | awk '{print $1}'`.split("\n")
+            .map(&:to_i)
+            .max
 
         rss ||= 0
 
@@ -133,18 +131,24 @@ before_fork do |server, worker|
       end
 
       def max_allowed_sidekiq_rss
-        [ENV['UNICORN_SIDEKIQ_MAX_RSS'].to_i, 500].max.megabytes
+        [ENV["UNICORN_SIDEKIQ_MAX_RSS"].to_i, 500].max.megabytes
       end
 
       def force_kill_rogue_sidekiq
         info = `ps -eo pid,rss,args | grep sidekiq | grep -v grep | awk '{print $1,$2}'`
-        info.split("\n").each do |row|
-          pid, mem = row.split(" ").map(&:to_i)
-          if pid > 0 && (mem * 1024) > max_allowed_sidekiq_rss
-            Rails.logger.warn "Detected rogue Sidekiq pid #{pid} mem #{mem * 1024}, killing"
-            Process.kill("KILL", pid) rescue nil
+        info
+          .split("\n")
+          .each do |row|
+            pid, mem = row.split(" ").map(&:to_i)
+            if pid > 0 && (mem * 1024) > max_allowed_sidekiq_rss
+              Rails.logger.warn "Detected rogue Sidekiq pid #{pid} mem #{mem * 1024}, killing"
+              begin
+                Process.kill("KILL", pid)
+              rescue StandardError
+                nil
+              end
+            end
           end
-        end
       end
 
       def check_sidekiq_heartbeat
@@ -152,13 +156,15 @@ before_fork do |server, worker|
         @sidekiq_next_heartbeat_check ||= Time.now.to_i + @sidekiq_heartbeat_interval
 
         if @sidekiq_next_heartbeat_check < Time.now.to_i
-
           last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
           restart = false
 
           sidekiq_rss = max_sidekiq_rss
           if sidekiq_rss > max_allowed_sidekiq_rss
-            Rails.logger.warn("Sidekiq is consuming too much memory (using: %0.2fM) for '%s', restarting" % [(sidekiq_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]])
+            Rails.logger.warn(
+              "Sidekiq is consuming too much memory (using: %0.2fM) for '%s', restarting" %
+                [(sidekiq_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]],
+            )
             restart = true
           end
 
@@ -185,16 +191,18 @@ before_fork do |server, worker|
         email_sync_pids = Demon::EmailSync.demons.map { |uid, demon| demon.pid }
         return 0 if email_sync_pids.empty?
 
-        rss = `ps -eo pid,rss,args | grep '#{email_sync_pids.join('|')}' | grep -v grep | awk '{print $2}'`
-          .split("\n")
-          .map(&:to_i)
-          .max
+        rss =
+          `ps -eo pid,rss,args | grep '#{email_sync_pids.join("|")}' | grep -v grep | awk '{print $2}'`.split(
+            "\n",
+          )
+            .map(&:to_i)
+            .max
 
         (rss || 0) * 1024
       end
 
       def max_allowed_email_sync_rss
-        [ENV['UNICORN_EMAIL_SYNC_MAX_RSS'].to_i, 500].max.megabytes
+        [ENV["UNICORN_EMAIL_SYNC_MAX_RSS"].to_i, 500].max.megabytes
       end
 
       def check_email_sync_heartbeat
@@ -207,16 +215,22 @@ before_fork do |server, worker|
         restart = false
 
         # Restart process if it does not respond anymore
-        last_heartbeat_ago = Time.now.to_i - Discourse.redis.get(Demon::EmailSync::HEARTBEAT_KEY).to_i
+        last_heartbeat_ago =
+          Time.now.to_i - Discourse.redis.get(Demon::EmailSync::HEARTBEAT_KEY).to_i
         if last_heartbeat_ago > Demon::EmailSync::HEARTBEAT_INTERVAL.to_i
-          STDERR.puts("EmailSync heartbeat test failed (last heartbeat was #{last_heartbeat_ago}s ago), restarting")
+          STDERR.puts(
+            "EmailSync heartbeat test failed (last heartbeat was #{last_heartbeat_ago}s ago), restarting",
+          )
           restart = true
         end
 
         # Restart process if memory usage is too high
         email_sync_rss = max_email_sync_rss
         if email_sync_rss > max_allowed_email_sync_rss
-          STDERR.puts("EmailSync is consuming too much memory (using: %0.2fM) for '%s', restarting" % [(email_sync_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]])
+          STDERR.puts(
+            "EmailSync is consuming too much memory (using: %0.2fM) for '%s', restarting" %
+              [(email_sync_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]],
+          )
           restart = true
         end
 
@@ -224,25 +238,22 @@ before_fork do |server, worker|
       end
 
       def master_sleep(sec)
-        sidekiqs = ENV['UNICORN_SIDEKIQS'].to_i
+        sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
         if sidekiqs > 0
           Demon::Sidekiq.ensure_running
           check_sidekiq_heartbeat
         end
 
-        if ENV['DISCOURSE_ENABLE_EMAIL_SYNC_DEMON'] == 'true'
+        if ENV["DISCOURSE_ENABLE_EMAIL_SYNC_DEMON"] == "true"
           Demon::EmailSync.ensure_running
           check_email_sync_heartbeat
         end
 
-        DiscoursePluginRegistry.demon_processes.each do |demon_class|
-          demon_class.ensure_running
-        end
+        DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
 
         master_sleep_orig(sec)
       end
     end
-
   end
 
   Discourse.redis.close

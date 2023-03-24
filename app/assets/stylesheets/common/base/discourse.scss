@@ -67,6 +67,7 @@ body {
   background-attachment: fixed;
   background-size: cover;
   min-height: 100%;
+  box-sizing: border-box;
 
   @include clearfix;
 }
@@ -219,7 +220,7 @@ input {
     color: var(--primary);
     background-color: var(--secondary);
     border: 1px solid var(--primary-medium);
-    border-radius: 0;
+    border-radius: var(--d-input-border-radius);
     &:focus {
       @include default-focus;
     }
@@ -346,20 +347,6 @@ table {
   margin-left: 12px;
 }
 
-.top-space {
-  margin-top: 10px;
-}
-
-.message {
-  border-radius: 8px;
-  background-color: var(--secondary);
-  padding: 14px;
-
-  h2 {
-    margin-bottom: 20px;
-  }
-}
-
 .clear-transitions {
   transition: none !important;
 }
@@ -378,11 +365,6 @@ table {
   background-color: var(--secondary);
   display: inline-block;
   border-radius: 50%;
-}
-
-.flex-center-align {
-  display: flex;
-  align-items: center;
 }
 
 .unread-high-priority-notifications {
@@ -505,71 +487,6 @@ table {
   }
 }
 
-.ring-backdrop-spotlight {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  top: -18px;
-  right: -18px;
-  background-image: radial-gradient(
-    40px at 50% 50%,
-    rgba(255, 255, 255, 0.15) 95%,
-    rgba(var(--always-black-rgb), 0.65) 100%
-  );
-}
-
-.ring-backdrop {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  top: -18px !important;
-  right: -18px !important;
-  box-shadow: 0 0 0 9999px rgba(var(--always-black-rgb), 0.65);
-  z-index: z("modal", "overlay");
-}
-
-.ring-first-notification {
-  position: absolute;
-  text-align: left;
-  right: 70px;
-  top: 60px;
-  width: 230px;
-  line-height: var(--line-height-medium);
-
-  .first-notification,
-  .read-later {
-    display: block;
-    margin-bottom: 36px;
-  }
-
-  .skip-new-user-tips,
-  .read-later-link {
-    font-size: var(--font-down-1);
-    text-decoration: underline;
-  }
-
-  &,
-  .skip-new-user-tips,
-  .read-later-link {
-    color: #eee;
-  }
-}
-
-.ring {
-  $gradient-start: transparent;
-  $gradient-end: #090;
-  background: radial-gradient($gradient-start, $gradient-end);
-  top: -11px !important;
-  right: 23.5px !important;
-  border-radius: 100%;
-  width: 20px;
-  height: 20px;
-  transform-origin: center;
-  animation-iteration-count: infinite;
-  animation-duration: 3s;
-  animation-name: ping;
-}
-
 .fade {
   opacity: 0;
   transition: opacity 0.15s linear;
@@ -635,6 +552,7 @@ table {
         &.active {
           font-weight: bold;
           color: var(--primary);
+          background: var(--d-selected);
         }
       }
     }
@@ -654,9 +572,8 @@ table {
     @include clearfix;
   }
 
-  .control-label {
+  .control-label:not(.checkbox-label) {
     font-family: var(--heading-font-family);
-
     font-weight: bold;
     font-size: var(--font-up-2);
     line-height: var(--line-height-large);

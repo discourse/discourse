@@ -32,7 +32,12 @@ module BackupRestore
     def publish_log(message, timestamp)
       return unless @publish_to_message_bus
       data = { timestamp: timestamp, operation: "restore", message: message }
-      MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id], client_ids: [@client_id])
+      MessageBus.publish(
+        BackupRestore::LOGS_CHANNEL,
+        data,
+        user_ids: [@user_id],
+        client_ids: [@client_id],
+      )
     end
 
     def save_log(message, timestamp)

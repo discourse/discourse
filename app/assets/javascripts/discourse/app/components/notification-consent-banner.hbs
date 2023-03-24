@@ -1,0 +1,20 @@
+{{#if this.showNotificationPromptBanner}}
+  <div class="row">
+    <div class="consent_banner alert alert-info">
+      <span>
+        {{i18n "user.desktop_notifications.consent_prompt"}}
+        <DButton
+          @display="link"
+          @action={{action "turnon"}}
+          @label="user.desktop_notifications.enable"
+        />
+      </span>
+      <DButton
+        @icon="times"
+        @action={{action "dismiss"}}
+        @class="btn btn-flat close"
+        @title="banner.close"
+      />
+    </div>
+  </div>
+{{/if}}

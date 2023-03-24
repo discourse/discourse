@@ -10,7 +10,7 @@ nl:
     disable_discourse_narrative_bot_welcome_post: "Het Discourse Narrative Bot-welkomstbericht uitschakelen"
     discourse_narrative_bot_ignored_usernames: "Gebruikersnamen die de Discourse Narrative Bot moet negeren"
     discourse_narrative_bot_disable_public_replies: "Antwoorden door de Discourse Narrative Bot uitschakelen"
-    discourse_narrative_bot_welcome_post_type: "Type welkomstbericht dat de Discourse Narrative Bot zou moeten uitsturen"
+    discourse_narrative_bot_welcome_post_type: "Type welkomstbericht dat de Discourse Narrative Bot moet sturen"
     discourse_narrative_bot_welcome_post_delay: "(n) seconden wachten voordat de Discourse Narrative Bot het welkomstbericht uitstuurt."
     discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot-handleidingen die worden overgeslagen"
   badges:
@@ -18,20 +18,35 @@ nl:
       name: Gecertificeerd
       description: "Heeft onze handleiding voor nieuwe gebruikers afgerond"
       long_description: |
-        Deze badge wordt toegekend wanneer de interactieve handleiding voor nieuwe gebruikers met succes is doorlopen. U hebt het initiatief genomen om de basishulpmiddelen voor discussie te leren, en u bent nu gecertificeerd!
+        Deze badge wordt toegekend wanneer de interactieve tutorial voor nieuwe gebruikers is voltooid. Je hebt het initiatief genomen om de basisgereedschappen voor discussie te leren en je bent nu gecertificeerd!
     licensed:
       name: Gelicentieerd
       description: "Heeft onze handleiding voor gevorderde gebruikers afgerond"
       long_description: |
-        Deze badge wordt toegekend wanneer de interactieve handleiding voor gevorderde gebruikers met succes is doorlopen. U hebt de geavanceerde hulpmiddelen voor discussie onder de knie – en u bent nu volledig gecertificeerd!
+        Deze badge wordt toegekend wanneer de interactieve tutorial voor gevorderde gebruikers is voltooid. Je hebt de geavanceerde gereedschappen voor discussie onder de knie en je bent nu volledig gecertificeerd!
   discourse_narrative_bot:
+    bio: "Hallo, ik ben geen echte persoon. Ik ben een bot die je uitleg over deze website kan geven. Stuur me een bericht of noem me bij mijn naam."
+    tl2_promotion_message:
+      subject_template: "Nu je gepromoveerd bent, is het tijd om meer te weten te komen over enkele geavanceerde functies!"
+      text_body_template: |
+        Beantwoord dit bericht met '@%{discobot_username} %{reset_trigger}' om meer te weten te komen over wat je kunt doen.
+    timeout:
+      message: |-
+        Hé @%{username}, even informeren, omdat ik al een tijdje niets van je heb gehoord.
+
+        - Als je door wilt gaan, kun je me altijd antwoorden.
+
+        - Als je deze stap wilt overslaan, zeg dan '%{skip_trigger}'.
+
+        - Zeg '%{reset_trigger}' om opnieuw te beginnen.
+
+        Als je dat liever niet wilt, is dat ook goed. Ik ben een robot. Je kunt mijn gevoelens niet kwetsen. :sob:
     dice:
       trigger: "gooien"
       invalid: |-
         Sorry, het is wiskundig onmogelijk om die combinatie te gooien. :confounded:
-      not_enough_dice:
-        one: "Ik heb maar %{count} dobbelsteen. [Beschamend](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ik weet het!"
-        other: "Ik heb maar %{count} dobbelstenen. [Beschamend](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ik weet het!"
+      out_of_range: |-
+        Wist je dat [het maximale aantal zijden](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-Sided-dice) voor een wiskundig eerlijke dobbelstenen 120 is?
       results: |-
         > :game_die: %{results}
     quote:
@@ -40,23 +55,43 @@ nl:
         quote: "In the middle of every difficulty lies opportunity"
         author: "Albert Einstein"
       "2":
+        quote: "Vrijheid is het niet waard om te hebben als het geen vrijheid om fouten te maken inhoudt."
         author: "Mahatma Gandhi"
       "3":
+        quote: "Treur niet omdat het voorbij is, lach omdat het is gebeurd."
         author: "Dr Seuss"
       "4":
+        quote: "Als je iets goed wilt doen, doe het dan zelf."
         author: "Charles-Guillaume Étienne"
       "5":
+        quote: "Geloof dat je het kunt en je bent al halverwege."
         author: "Theodore Roosevelt"
       "6":
+        quote: "Het leven is als een doos chocolaatjes. Je weet nooit wat je krijgt."
         author: "De moeder van Forrest Gump"
       "7":
+        quote: "Dat is een kleine stap voor een man, een grote sprong voor de mensheid."
         author: "Neil Armstrong"
       "8":
+        quote: "Doe elke dag één ding waar je bang voor bent."
         author: "Eleanor Roosevelt"
       "9":
+        quote: "Fouten zijn altijd te vergeven, als men de moed heeft om ze toe te geven."
         author: "Bruce Lee"
       "10":
+        quote: "Wat de geest van de mens ook kan bedenken en geloven, hij kan het bereiken."
         author: "Napoleon Hill"
+      "11":
+        quote: "Vrede thuis, vrede in de wereld."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Onderwijs is geen manier om aan armoede te ontsnappen, het is een manier om armoede te bestrijden."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Een reis van duizend mijl moet beginnen met een enkele stap."
+        author: "Lao Tzu"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       trigger: "lot"
       answers:
@@ -64,7 +99,7 @@ nl:
         "2": "Het is zo besloten"
         "3": "Zonder twijfel"
         "4": "Ja zeker"
-        "5": "Daar kunt u van uitgaan"
+        "5": "Daar kun je van uitgaan"
         "6": "Zoals ik het zie, ja"
         "7": "Zeer waarschijnlijk"
         "8": "De vooruitzichten zijn goed"
@@ -72,9 +107,9 @@ nl:
         "10": "Alle signalen wijzen naar ja"
         "11": "Onduidelijk, probeer het nog eens"
         "12": "Vraag later nogmaals"
-        "13": "Beter om u dat nu niet te vertellen"
+        "13": "Beter om je dat nu niet te vertellen"
         "14": "Kan nu niet voorspellen"
-        "15": "Concentreer u en vraag het opnieuw"
+        "15": "Concentreer je en vraag het opnieuw"
         "16": "Reken er niet op"
         "17": "Mijn antwoord is nee"
         "18": "Mijn bronnen zeggen nee"
@@ -88,48 +123,332 @@ nl:
       help_trigger: "help weergeven"
       random_mention:
         reply: |-
-          Hallo! Zeg `@%{discobot_username} %{help_trigger}` om te ontdekken wat ik kan.
+          Hallo! Zeg '@%{discobot_username} %{help_trigger}' om te ontdekken wat ik kan.
+        tracks: |-
+          Ik weet momenteel hoe ik de volgende dingen moet doen:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Start een interactieve tutorial speciaal voor jou, in een persoonlijk bericht. '{name-of-tutorial}' kan er een zijn van: '%{tracks}'.
         bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
+          '@%{discobot_username} %{dice_trigger} 2d6'
           > :game_die: 3, 6
 
-          `@%{discobot_username} %{quote_trigger}`
+          '@%{discobot_username} %{quote_trigger}'
           %{quote_sample}
 
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: U kunt erop vertrouwen
+          '@%{discobot_username} %{magic_8_ball_trigger}'
+          > :crystal_ball: Je kunt erop vertrouwen
+        discobot_disabled: Je hebt me uitgeschakeld in je voorkeuren. Je moet onboardingtips voor nieuwe gebruikers toestaan om met mij te communiceren.
       do_not_understand:
         first_response: |-
           Hallo, bedankt voor het antwoord!
 
           Helaas kan ik dat, als slecht geprogrammeerde bot, niet helemaal begrijpen. :frowning:
-        track_response: U kunt het opnieuw proberen, of als u deze stap wilt overslaan, `%{skip_trigger}` zeggen. Zeg anders `%{reset_trigger}` om opnieuw te beginnen.
+        track_response: Je kunt het opnieuw proberen, of '%{skip_trigger}' zeggen als je deze stap wilt overslaan. Zeg anders '%{reset_trigger}' om opnieuw te beginnen.
+        second_response: |-
+          Sorry, ik snap het nog steeds niet. :anguished:
+
+          Ik ben maar een bot, maar als je een echt persoon wilt spreken, ga dan naar [onze contactpagina](%{base_path}/about).
+
+          Ondertussen zal ik uit je buurt blijven.
     new_user_narrative:
       reset_trigger: "handleiding"
       title: "Certificaat voor het voltooien van de handleiding voor nieuwe gebruikers"
       cert_title: "Als erkenning voor de succesvolle voltooiing van de handleiding voor nieuwe gebruikers"
       hello:
         title: "Gegroet!"
+        message: |-
+          Bedankt dat je je hebt geregistreerd op %{title}, welkom!
+
+          - Ik ben maar een robot, maar [onze vriendelijke medewerkers](%{base_uri}/about) zijn er ook om te helpen als je een persoon nodig hebt.
+
+          - Om veiligheidsredenen beperken we tijdelijk wat nieuwe gebruikers kunnen doen. Je krijgt [nieuwe mogelijkheden](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (en [badges](%{base_uri}/badges)) naarmate we je leren kennen.
+
+          - Wij geloven te allen tijde in [beschaafd communitygedrag](%{base_uri}/guidelines).
+      onebox:
+        instructions: |-
+          Kun je nu een van deze links met mij delen? Reageer met **een link op een afzonderlijke regel**, dan wordt deze automatisch uitgebreid met een handige samenvatting.
+
+          Om een link te kopiëren, tik je op de link op je mobiel en houd je deze ingedrukt, of rechtsklik met je aanwijsapparaat:
+
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
+        reply: |-
+          Cool! Dit werkt voor de meeste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Vergeet niet dat de link op een _afzonderlijke regel_ moet staan, met niets anders ervoor of erachter.
+        not_found: |-
+          Sorry, ik kon de link niet vinden in je antwoord! :cry:
+
+          Kun je proberen de volgende link toe te voegen, op een afzonderlijke regel, in je volgende antwoord?
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+      images:
+        instructions: |-
+          Hier is een foto van een eenhoorn:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Als je hem leuk vindt (en wie niet!) druk dan op de likeknop :heart: onder dit bericht om het me te laten weten.
+
+          Kun je **antwoorden met een foto?** Elke foto is goed! Slepen, op de uploadknop drukken of zelfs kopiëren en plakken.
+        reply: |-
+          Leuke foto. Ik heb op de likeknop :heart: gedrukt om je te laten weten hoezeer ik het waardeerde :heart_eyes:
+        like_not_found: |-
+          Ben je vergeten [bericht](%{url}) te liken :heart:? :crying_cat_face:
+        not_found: |-
+          Het lijkt erop dat je geen afbeelding hebt geüpload, dus ik heb een foto gekozen waarvan ik _zeker_ weet dat je die leuk zult vinden.
+
+          <%{image_url}>
+
+          Probeer die te uploaden, of plak de link op een afzonderlijke regel!
       likes:
+        instructions: |-
+          Hier is een foto van een eenhoorn:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Als je hem leuk vindt (en wie niet!) druk dan op de likeknop :heart: onder dit bericht om het me te laten weten.
         reply: |-
           Bedankt voor het liken van mijn bericht!
+        not_found: |-
+          Ben je vergeten [bericht](%{url}) te liken :heart:? :crying_cat_face:
       formatting:
+        instructions: |-
+          Kun je enkele woorden **vet** of _cursief_ maken in je antwoord?
+
+          - typ `**vet**` of `_cursief_`
+
+          - of druk op de knoppen <kbd><b>B</b></kbd> of <kbd><i>I</i></kbd> in de editor
         reply: |-
           Uitstekend werk! HTML en BBCode werken ook voor de opmaak – om meer te leren, [probeer deze handleiding](https://commonmark.org/help) :nerd:
         not_found: |-
-          Oh, ik vond geen opmaak in uw antwoord. :pencil2:
+          Ik heb geen opmaak gevonden in je antwoord. :pencil2:
 
-          Kan u het opnieuw proberen? Gebruik de <kbd><b>B</b></kbd> vet of <kbd><i>I</i></kbd> cursief knoppen in de editor als u vast komt te zitten.
-      search:
+          Kun je het opnieuw proberen? Gebruik de knoppen <kbd><b>B</b></kbd> (vet) of <kbd><i>I</i></kbd> (cursief) in de editor als je vast komt te zitten.
+      quoting:
+        instructions: |-
+          Kun je proberen mij te citeren als je reageert, zodat ik precies weet op welk deel je reageert?
+
+          > Als dit koffie is, breng me dan alsjeblieft thee; maar als dit thee is, breng me dan alsjeblieft koffie.
+          >
+          > Een voordeel van tegen jezelf praten is dat je weet dat er tenminste iemand luistert.
+          >
+          > Sommige mensen zijn goed met woorden, andere mensen… oh, eh, niet.
+
+          Selecteer de tekst van het &uarr; citaat dat je wilt en druk vervolgens op de knop **Citeren** die boven je selectie verschijnt – of op de knop **Beantwoorden** onderaan dit bericht.
+
+          Typ onder het citaat een paar woorden over waarom je dat citaat hebt gekozen, want ik ben nieuwsgierig :thinking:
         reply: |-
-          Joepie! U hebt het gevonden :tada:
+          Goed gedaan, je hebt mijn favoriete citaat gekozen! :left_speech_bubble:
+        not_found: |-
+          Hmm, het lijkt erop dat je mij niet hebt geciteerd in je antwoord?
 
-          - Voor meer gedetailleerde zoekopdrachten gaat u naar de [geavanceerde zoekpagina](%{search_url}).
+          Door tekst in mijn bericht te selecteren, verschijnt de knop <kbd>**Citeren**</kbd> . En op **Beantwoorden** drukken met een geselecteerde tekst werkt ook! Kun je het opnieuw proberen?
+      bookmark:
+        instructions: |-
+          Als je meer wilt weten, selecteer dan hieronder <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> en <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **maak een bladwijzer voor dit privébericht**. Als je dat doet, ligt er misschien een :gift: voor je in het verschiet!
+        reply: |-
+          Uitstekend! Je kunt nu gemakkelijk je weg terug vinden naar ons privégesprek, rechtstreeks vanaf [het bladwijzertabblad in je profiel](%{bookmark_url}). Selecteer simpelweg je profielfoto rechtsboven &#8599;
+        not_found: |-
+          Oh oh, ik zie geen bladwijzers in dit topic. Heb je de bladwijzer onder elk bericht gevonden? Gebruik Meer weergeven <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> om indien nodig aanvullende acties te onthullen.
+      emoji:
+        instructions: |-
+          Je hebt me misschien kleine plaatjes zien gebruiken in mijn antwoorden :blue_car::dash:, die heten [emoji](https://en.wikipedia.org/wiki/Emoji). Kun je **een emoji toevoegen** aan je antwoord? Elk van deze werkt:
 
-          - Om ergens in een lange discussie te springen, probeer de tijdslijnbediening aan de rechterzijde (en onderaan, op mobiele apparaten).
+          - Typ `:) ;) :D :P :O`
 
-          - Indien u een fysiek toetsenbord hebt :keyboard:, druk op <kbd>?</kbd> om onze handige snelkoppelingen te bekijken.
+          - Typ dubbele punt <kbd>:</kbd> en vul dan de emojinaam in `:tada:`
+
+          - Druk op de emojiknop <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> in de editor of op je mobiele toetsenbord
+        reply: |-
+          Dat is :sparkles: _emojitastistisch!_ :sparkles:
+        not_found: |-
+          Oeps, ik zie geen emoji in je antwoord? Oh nee! :sob:
+
+          Typ een dubbele punt <kbd>:</kbd> om de emojikiezer te openen en typ vervolgens de eerste paar letters van wat je wilt, bijvoorbeeld `:bird:`
+
+          Of druk op de emojiknop <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> in de editor.
+
+          (Als je een mobiel apparaat gebruikt, kun je emoji ook rechtstreeks vanaf je toetsenbord invoeren.)
+      mention:
+        instructions: |-
+          Soms wil je misschien iemands aandacht trekken, ook al antwoord je niet rechtstreeks op deze persoon. Typ `@` en voer de gebruikersnaam in om de persoon te vermelden.
+
+          Kun je **`@%{discobot_username}`** vermelden in je antwoord?
+        reply: |-
+          _Zei iemand mijn naam!?_ :raised_hand: Ik geloof van wel! :wave: Nou, hier ben ik! Bedankt dat je me hebt genoemd. :ok_hand:
+        not_found: |-
+          Ik zie mijn naam nergens staan. :frowning: Kun je proberen me nog een keer te noemen als `@%{discobot_username}`?
+
+          (En ja, mijn gebruikersnaam spel je _disco_, zoals in de dansgekte van de jaren '70. Ik [hou van het nachtleven!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        instructions: |-
+          We houden van vriendelijke discussies en we hebben je hulp nodig om [het beschaafd te houden](%{guidelines_url}). Als je een probleem ziet, markeer het dan om de auteur of [onze behulpzame medewerkers](%{about_url}) hiervan privé op de hoogte te stellen. Er zijn veel redenen waarom je een bericht zou willen markeren, variërend van een onschuldige suggestie om topics op te splitsen tot een duidelijke schending van de communitynormen. Als je **Iets anders** selecteert, start je een discussie over privéberichten met de moderators waar je verdere vragen kunt stellen.
+
+          > :imp: Ik heb hier iets smerigs geschreven
+
+          Ga je gang en **markeer dit bericht** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> en selecteer **Het is ongepast** als reden!
+        reply: |-
+          [Onze medewerkers](%{base_uri}/groups/staff) worden privé op de hoogte gebracht van je markering. Als genoeg communityleden een bericht markeren, wordt het uit voorzorg ook automatisch verborgen. (Omdat ik eigenlijk geen vervelend bericht :angel: heb geschreven, heb ik de markering voorlopig verwijderd.)
+        not_found: |-
+          Oh nee, mijn nare bericht is nog niet gemarkeerd als ongepast. :worried: Kun je het als ongepast markeren met behulp van de **markering** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Vergeet niet om de knop Meer weergeven <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> te gebruiken om meer acties te onthullen voor elk bericht.
+      search:
+        instructions: |-
+          _psst_ … Ik heb een verrassing verstopt in dit onderwerp. Als je klaar bent voor de uitdaging, **selecteer dan het zoekpictogram** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> rechtsboven &#8599; om ernaar te zoeken.
+
+          Probeer in dit topic te zoeken naar de term "capy&#8203;bara".
+        hidden_message: |-
+          Hoe kon je deze capibara missen? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Is het je opgevallen dat je nu weer terug bent bij het begin? Voer deze arme, hongerige capibara door te **antwoorden met de `%{search_answer}` emoji**, dan word je automatisch naar het einde gebracht.
+        reply: |-
+          Je hebt het gevonden :tada:
+
+          - Ga voor gedetailleerdere zoekopdrachten naar de [geavanceerde zoekpagina](%{search_url}).
+
+          - Probeer de tijdlijnbediening rechts (en onderaan op mobiel) om ergens in een lange discussie te springen.
+
+          - Als je een fysiek toetsenbord :keyboard: hebt, druk dan op <kbd>?</kbd> om onze handige snelkoppelingen te bekijken.
+        not_found: |-
+          Hmm… lijkt erop dat je problemen hebt. Sorry daarvoor. Heb je gezocht <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> op de term **capy&#8203;bara**?
+      end:
+        message: |-
+          Bedankt dat je bij me bent gebleven, @%{username}! Ik heb dit voor je gemaakt, ik vind dat je het verdiend hebt:
+
+          %{certificate}
+
+          Dat was alles voor nu! Bekijk [**onze nieuwste discussietopics**](%{base_uri}/latest) of [**discussiecategorieën**](%{base_uri}/categories). :sunglasses:
+
+          (Als je nog een keer met me wilt praten voor meer informatie, kun je me altijd een bericht sturen of '@%{discobot_username}' noemen!)
+      certificate:
+        alt: "Certificaat van prestatie"
     advanced_user_narrative:
       reset_trigger: "geavanceerde handleiding"
-      cert_title: "Als erkenning voor de succesvolle voltooiing van de geavanceerde gebruikershandleiding"
+      cert_title: "Als erkenning voor de succesvolle voltooiing van de tutorial voor gevorderde gebruikers"
       title: ":arrow_up: Geavanceerde gebruikersfuncties"
+      start_message: |-
+        Heb je als _gevorderde_ gebruiker [je voorkeurenpagina](%{base_uri}/my/preferences) al bezocht, @%{username}? Er zijn veel manieren om je ervaring aan te passen, zoals het selecteren van een donker of licht thema.
+
+        Maar ik dwaal af, laten we beginnen!
+      edit:
+        bot_created_post_raw: "@%{discobot_username} is verreweg de coolste bot die ik ken :wink:"
+        instructions: |-
+          Iedereen maakt fouten. Geen zorgen, je kunt je berichten altijd bewerken om ze te corrigeren!
+
+          Kun je beginnen met het **bewerken** van het bericht dat ik zojuist namens jou heb gemaakt?
+        not_found: |-
+          Het lijkt erop dat je het [bericht](%{url}) die ik voor je heb gemaakt nog moet bewerken. Kun je het opnieuw proberen?
+
+          Gebruik het pictogram <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> om de editor te openen.
+        reply: |-
+          Goed gedaan!
+
+          Houd er rekening mee dat bewerkingen die na 5 minuten zijn gemaakt, worden weergegeven als openbare bewerkingsrevisies en dat er rechtsboven een klein potloodpictogram verschijnt met het aantal revisies.
+      delete:
+        instructions: |-
+          Als je een geplaatst bericht wilt intrekken, kun je het verwijderen.
+
+          Ga je gang en **verwijder** al je berichten hierboven met de actie <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **verwijderen**. Verwijder het eerste bericht echter niet!
+        not_found: |-
+          Ik zie nog geen verwijderde berichten? Onthoud dat <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> Meer weergeven <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> Verwijderen onthult.
+        reply: |-
+          Wauw! :boom:
+
+          Om de continuïteit van discussies te behouden, worden verwijderingen niet onmiddellijk uitgevoerd, dus het bericht wordt na enige tijd verwijderd.
+      recover:
+        deleted_post_raw: "Waarom heeft @%{discobot_username} mijn bericht verwijderd? :anguished:"
+        instructions: |-
+          Oh nee! Het lijkt erop dat ik per ongeluk een nieuw bericht heb verwijderd dat ik zojuist voor je had gemaakt.
+
+          Kun je me een plezier doen en <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **de verwijdering ongedaan maken**?
+        not_found: |-
+          Ondervind je problemen? Onthoud dat <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> Meer weergeven <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> Herstellen onthult.
+        reply: |-
+          Pfoe, dat was op het nippertje! Bedankt dat je dat hebt opgelost :wink:
+
+          Houd er rekening mee dat je maar %{deletion_after} uur de tijd hebt om de verwijdering van een bericht ongedaan te maken.
+      category_hashtag:
+        instructions: |-
+          Wist je dat je in je bericht kunt verwijzen naar categorieën en tags? Heb je bijvoorbeeld categorie %{category} gezien?
+
+          Typ '#' middenin een zin en selecteer een categorie of tag.
+        not_found: |-
+          Hmm, ik zie nergens een categorie. Merk op dat '#' mag niet het eerste teken zijn. Kun je dit kopiëren in je volgende antwoord?
+
+          ```tekst
+          Ik kan een categorielink maken met #
+          ```
+        reply: |-
+          Uitstekend! Onthoud dat dit werkt voor categorieën _en_ tags, als tags zijn ingeschakeld.
+      change_topic_notification_level:
+        instructions: |-
+          Elk topic heeft een meldingsniveau. Het begint bij 'normaal', wat betekent dat je normaal gesproken alleen een melding krijgt als iemand je rechtstreeks aanspreekt.
+
+          Het meldingsniveau voor een privébericht is standaard ingesteld op het hoogste niveau , 'observeren', wat betekent dat je op de hoogte wordt gesteld van elk nieuw antwoord. Maar je kunt het meldingsniveau voor _elk_ topic overschrijven naar 'observeren', 'volgen' of 'gedempt'.
+
+          Laten we proberen het meldingsniveau voor dit topic te wijzigen. Onderaan het topic vind je een knop die aangeeft dat je dit onderwerp **observeert**. Kun je het meldingsniveau wijzigen in **volgen**?
+        not_found: |-
+          Het lijkt erop dat je dit topic nog steeds :eyes:! Als je moeite hebt het te vinden, de knop voor het meldingsniveau bevindt zich onderaan het topic.
+        reply: |-
+          Goed werk! Ik hoop dat je dit topic niet hebt gedempt, aangezien ik soms wat spraakzaam kan zijn :grin:.
+
+          Houd er rekening mee dat wanneer je op een topic reageert of een topic langer dan een paar minuten leest, het automatisch wordt ingesteld op het meldingsniveau 'volgen'. Je kunt dit wijzigen in [je gebruikersvoorkeuren](%{base_uri}/my/preferences).
+      poll:
+        instructions: |-
+          Wist je dat je aan elk bericht een poll kunt toevoegen? Probeer het <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tandwiel in de editor te gebruiken om **een poll te maken**.
+        not_found: |-
+          Oeps! Er was geen poll in uw antwoord.
+
+          Gebruik het tandwielpictogram <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> in de editor, of kopieer en plak deze poll in je volgende antwoord:
+
+          ```tekst
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
+        reply: |-
+          Hé, leuke poll! Heb ik het je goed geleerd?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        instructions: |-
+          Soms wil je misschien **details verbergen** in je antwoorden:
+
+          - Wanneer je plotpunten van een film of tv-programma bespreekt, wordt dat als een spoiler beschouwd.
+
+          - Wanneer je bericht veel optionele details nodig heeft die overweldigend kunnen zijn als je ze allemaal tegelijk leest.
+
+          [details=Selecteer dit om te zien hoe het werkt!]
+          1. Selecteer het <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tandwiel in de editor.
+          2. Selecteer "Details verbergen".
+          3. Bewerk het detailoverzicht en voeg je inhoud toe.
+          [/details]
+
+          Kun je het <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tandwiel in de editor gebruiken om een detailsectie toe te voegen aan je volgende antwoord?
+        not_found: |-
+          Heb je moeite met het maken van een detailwidget? Probeer het volgende in je volgende antwoord op te nemen:
+
+          ```tekst
+          [details=Selecteer mij voor details]
+          Hier zijn de details
+          [/details]
+          ```
+        reply: |-
+          Goed werk, je aandacht voor _detail_ is bewonderenswaardig!
+      end:
+        message: |-
+          Je hier doorheen geraasd als een _gevorderde gebruiker_ :bow:
+
+          %{certificate}
+
+          Dat is alles wat ik voor je heb.
+
+          Tot ziens! Als je me nog een keer wilt spreken, kun je me altijd een bericht sturen :sunglasses:
+      certificate:
+        alt: "Certificaat van prestatie voor gevorderde gebruikers"

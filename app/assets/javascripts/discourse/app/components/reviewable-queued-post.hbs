@@ -1,0 +1,36 @@
+<ReviewableTopicLink @reviewable={{this.reviewable}} @tagName="">
+  <div class="title-text">
+    {{d-icon "plus-square" title="review.new_topic"}}
+    {{this.reviewable.payload.title}}
+  </div>
+  {{category-badge this.reviewable.category}}
+  <ReviewableTags @tags={{this.reviewable.payload.tags}} @tagName="" />
+  {{#if this.reviewable.payload.via_email}}
+    <a href {{on "click" this.showRawEmail}} class="show-raw-email">
+      {{d-icon "envelope" title="post.via_email"}}
+    </a>
+  {{/if}}
+</ReviewableTopicLink>
+
+<div class="post-contents-wrapper">
+  <ReviewableCreatedBy @user={{this.reviewable.created_by}} @tagName="" />
+
+  <div class="post-contents">
+    <ReviewablePostHeader
+      @reviewable={{this.reviewable}}
+      @createdBy={{this.reviewable.created_by}}
+      @tagName=""
+    />
+
+    <CookText
+      @rawText={{this.reviewable.payload.raw}}
+      @class="post-body"
+      @categoryId={{this.reviewable.category_id}}
+      @topicId={{this.reviewable.topic_id}}
+      @paintOneboxes={{true}}
+      @opts={{hash removeMissing=true}}
+    />
+
+    {{yield}}
+  </div>
+</div>

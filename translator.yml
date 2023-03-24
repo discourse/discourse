@@ -3,47 +3,72 @@
 files:
   - source_path: config/locales/client.en.yml
     destination_path: client.yml
+    label: core
   - source_path: config/locales/server.en.yml
     destination_path: server.yml
+    label: core
 
   - source_path: public/403.html
     destination_path: error_pages/403.html
+    label: core
 
   - source_path: public/422.html
     destination_path: error_pages/422.html
+    label: core
 
   - source_path: public/500.html
     destination_path: error_pages/500.html
+    label: core
 
   - source_path: public/503.html
     destination_path: error_pages/503.html
+    label: core
+
+  - source_path: plugins/chat/config/locales/client.en.yml
+    destination_path: plugins/chat/client.yml
+    label: chat
+  - source_path: plugins/chat/config/locales/server.en.yml
+    destination_path: plugins/chat/server.yml
+    label: chat
 
   - source_path: plugins/discourse-details/config/locales/client.en.yml
     destination_path: plugins/details/client.yml
+    label: details
   - source_path: plugins/discourse-details/config/locales/server.en.yml
     destination_path: plugins/details/server.yml
+    label: details
 
   - source_path: plugins/discourse-local-dates/config/locales/client.en.yml
     destination_path: plugins/local-dates/client.yml
+    label: local-dates
   - source_path: plugins/discourse-local-dates/config/locales/server.en.yml
     destination_path: plugins/local-dates/server.yml
+    label: local-dates
 
   - source_path: plugins/discourse-narrative-bot/config/locales/client.en.yml
     destination_path: plugins/narrative-bot/client.yml
+    label: narrative-bot
   - source_path: plugins/discourse-narrative-bot/config/locales/server.en.yml
     destination_path: plugins/narrative-bot/server.yml
+    label: narrative-bot
 
   - source_path: plugins/discourse-presence/config/locales/client.en.yml
     destination_path: plugins/presence/client.yml
+    label: presence
   - source_path: plugins/discourse-presence/config/locales/server.en.yml
     destination_path: plugins/presence/server.yml
+    label: presence
 
   - source_path: plugins/poll/config/locales/client.en.yml
     destination_path: plugins/poll/client.yml
+    label: poll
   - source_path: plugins/poll/config/locales/server.en.yml
     destination_path: plugins/poll/server.yml
+    label: poll
 
   - source_path: plugins/styleguide/config/locales/client.en.yml
     destination_path: plugins/styleguide/client.yml
+    label: styleguide
   - source_path: plugins/styleguide/config/locales/server.en.yml
     destination_path: plugins/styleguide/server.yml
+    label: styleguide

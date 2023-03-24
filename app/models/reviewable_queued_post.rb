@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class ReviewableQueuedPost < Reviewable
-
   after_create do
     # Backwards compatibility, new code should listen for `reviewable_created`
     DiscourseEvent.trigger(:queued_post_created, self)
   end
 
   after_save do
-    if saved_change_to_payload? && self.status == Reviewable.statuses[:pending] && self.payload&.[]('raw').present?
-      upload_ids = Upload.extract_upload_ids(self.payload['raw'])
+    if saved_change_to_payload? && self.status == Reviewable.statuses[:pending] &&
+         self.payload&.[]("raw").present?
+      upload_ids = Upload.extract_upload_ids(self.payload["raw"])
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
@@ -17,51 +17,47 @@ class ReviewableQueuedPost < Reviewable
   after_commit :compute_user_stats, only: %i[create update]
 
   def build_actions(actions, guardian, args)
-
     unless approved?
-
       if topic&.closed?
         actions.add(:approve_post_closed) do |a|
-          a.icon = 'check'
+          a.icon = "check"
           a.label = "reviewables.actions.approve_post.title"
           a.confirm_message = "reviewables.actions.approve_post.confirm_closed"
         end
       else
         actions.add(:approve_post) do |a|
-          a.icon = 'check'
+          a.icon = "check"
           a.label = "reviewables.actions.approve_post.title"
         end
       end
     end
 
-    unless rejected?
+    if pending?
       actions.add(:reject_post) do |a|
-        a.icon = 'times'
+        a.icon = "times"
         a.label = "reviewables.actions.reject_post.title"
       end
     end
 
-    if pending? && guardian.can_delete_user?(created_by)
-      delete_user_actions(actions)
-    end
+    delete_user_actions(actions) if pending? && guardian.can_delete_user?(created_by)
 
     actions.add(:delete) if guardian.can_delete?(self)
   end
 
   def build_editable_fields(fields, guardian, args)
+    if pending?
+      # We can edit category / title if it's a new topic
+      if topic_id.blank?
+        # Only staff can edit category for now, since in theory a category group reviewer could
+        # post in a category they don't have access to.
+        fields.add("category_id", :category) if guardian.is_staff?
 
-    # We can edit category / title if it's a new topic
-    if topic_id.blank?
+        fields.add("payload.title", :text)
+        fields.add("payload.tags", :tags)
+      end
 
-      # Only staff can edit category for now, since in theory a category group reviewer could
-      # post in a category they don't have access to.
-      fields.add('category_id', :category) if guardian.is_staff?
-
-      fields.add('payload.title', :text)
-      fields.add('payload.tags', :tags)
+      fields.add("payload.raw", :editor)
     end
-
-    fields.add('payload.raw', :editor)
   end
 
   def create_options
@@ -74,13 +70,16 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_approve_post(performed_by, args)
     created_post = nil
+    opts =
+      create_options.merge(
+        skip_validations: true,
+        skip_jobs: true,
+        skip_events: true,
+        skip_guardian: true,
+      )
+    opts.merge!(guardian: Guardian.new(performed_by)) if performed_by.staff?
 
-    creator = PostCreator.new(created_by, create_options.merge(
-      skip_validations: true,
-      skip_jobs: true,
-      skip_events: true,
-      skip_guardian: true
-    ))
+    creator = PostCreator.new(created_by, opts)
     created_post = creator.create
 
     unless created_post && creator.errors.blank?
@@ -88,9 +87,7 @@ class ReviewableQueuedPost < Reviewable
     end
 
     self.target = created_post
-    if topic_id.nil?
-      self.topic_id = created_post.topic_id
-    end
+    self.topic_id = created_post.topic_id if topic_id.nil?
     save
 
     UserSilencer.unsilence(created_by, performed_by) if created_by.silenced?
@@ -105,17 +102,17 @@ class ReviewableQueuedPost < Reviewable
       user_id: created_by.id,
       data: { post_url: created_post.url }.to_json,
       topic_id: created_post.topic_id,
-      post_number: created_post.post_number
+      post_number: created_post.post_number,
     )
 
     create_result(:success, :approved) do |result|
       result.created_post = created_post
 
       # Do sidekiq work outside of the transaction
-      result.after_commit = -> {
+      result.after_commit = -> do
         creator.enqueue_jobs
         creator.trigger_after_events
-      }
+      end
     end
   end
 
@@ -143,9 +140,7 @@ class ReviewableQueuedPost < Reviewable
   def perform_delete_user_block(performed_by, args)
     delete_options = delete_opts
 
-    if Rails.env.production?
-      delete_options.merge!(block_email: true, block_ip: true)
-    end
+    delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
     delete_user(performed_by, delete_options)
   end
@@ -160,10 +155,10 @@ class ReviewableQueuedPost < Reviewable
 
   def delete_opts
     {
-      context: I18n.t('reviewables.actions.delete_user.reason'),
+      context: I18n.t("reviewables.actions.delete_user.reason"),
       delete_posts: true,
       block_urls: true,
-      delete_as_spammer: true
+      delete_as_spammer: true,
     }
   end
 
@@ -173,8 +168,7 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def status_changed_from_or_to_pending?
-    saved_change_to_id?(from: nil) && pending? ||
-      saved_change_to_status?(from: "pending")
+    saved_change_to_id?(from: nil) && pending? || saved_change_to_status?(from: "pending")
   end
 end
 

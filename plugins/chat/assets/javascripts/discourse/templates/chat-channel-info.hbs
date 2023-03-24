@@ -1,0 +1,65 @@
+<div class="channel-info">
+  <div class="chat-full-page-header">
+    <div class="chat-channel-header-details">
+      <div class="chat-full-page-header__left-actions">
+        {{#if this.chatChannelInfoRouteOriginManager.isBrowse}}
+          <LinkTo
+            @route="chat.browse"
+            class="chat-full-page-header__back-btn no-text btn-flat btn"
+            title={{i18n "chat.channel_info.back_to_all_channel"}}
+          >
+            {{d-icon "chevron-left"}}
+          </LinkTo>
+        {{else}}
+          <LinkTo
+            @route="chat.channel"
+            @models={{this.model.routeModels}}
+            class="chat-full-page-header__back-btn no-text btn-flat btn"
+            title={{i18n "chat.channel_info.back_to_channel"}}
+          >
+            {{d-icon "chevron-left"}}
+          </LinkTo>
+        {{/if}}
+      </div>
+
+      <ChatChannelTitle @channel={{this.model}} />
+    </div>
+  </div>
+
+  <ChatChannelStatus @channel={{this.model}} />
+
+  <div class="chat-tabs chat-info-tabs">
+    <ul class="chat-tabs-list nav-pills" role="tablist">
+      {{#each this.tabs as |tab|}}
+        <li
+          class="chat-tabs-list__item"
+          role="tab"
+          aria-controls={{concat tab "-tab"}}
+        >
+          <LinkTo
+            @route={{concat "chat.channel.info." tab}}
+            @models={{this.model.routeModels}}
+            class="chat-tabs-list__link"
+          >
+            <span>{{i18n (concat "chat.channel_info.tabs." tab)}}</span>
+            {{#if (eq tab "members")}}
+              <span class="chat-tabs__memberships-count">
+                ({{this.model.membershipsCount}})
+              </span>
+            {{/if}}
+          </LinkTo>
+        </li>
+      {{/each}}
+    </ul>
+
+    <div
+      id={{this.tab}}
+      class="chat-tabs__tabpanel"
+      aria-hidden={{notEq this.tab this.activeTab}}
+      role="tabpanel"
+      aria-labelledby={{concat this.tab "-tab"}}
+    >
+      {{outlet}}
+    </div>
+  </div>
+</div>

@@ -142,11 +142,18 @@ const Composer = RestModel.extend({
     set(categoryId) {
       const oldCategoryId = this._categoryId;
 
-      if (isEmpty(categoryId)) {
-        // Set General as the default category
-        const generalCategoryId = this.siteSettings.general_category_id;
+      if (this.privateMessage) {
+        categoryId = null;
+      } else if (isEmpty(categoryId)) {
+        // Check if there is a default composer category to set
+        const defaultComposerCategoryId = parseInt(
+          this.siteSettings.default_composer_category,
+          10
+        );
         categoryId =
-          generalCategoryId && generalCategoryId > 0 ? generalCategoryId : null;
+          defaultComposerCategoryId && defaultComposerCategoryId > 0
+            ? defaultComposerCategoryId
+            : null;
       }
       this._categoryId = categoryId;
 
@@ -772,7 +779,9 @@ const Composer = RestModel.extend({
     }
 
     if (opts.usernames) {
-      deprecated("`usernames` is deprecated, use `recipients` instead.");
+      deprecated("`usernames` is deprecated, use `recipients` instead.", {
+        id: "discourse.composer.usernames",
+      });
     }
 
     this.setProperties({

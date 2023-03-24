@@ -1,0 +1,55 @@
+.chat-composer-dropdown {
+  margin-left: 0.2rem;
+
+  .tippy-content {
+    padding: 0;
+  }
+}
+
+.chat-composer-dropdown__trigger-btn {
+  padding: 5px;
+  border-radius: 100%;
+  background: var(--primary-med-or-secondary-high);
+  border: 1px solid transparent;
+  display: flex;
+
+  .d-icon {
+    color: var(--secondary-very-high);
+  }
+
+  &:focus {
+    border-color: var(--tertiary);
+  }
+
+  .discourse-no-touch &:hover {
+    background: var(--primary-high);
+    .d-icon {
+      color: var(--primary-low);
+    }
+  }
+}
+
+.chat-composer-dropdown__list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  padding: 0.5rem;
+}
+
+.chat-composer-dropdown__item {
+  padding-bottom: 0.25rem;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.chat-composer-dropdown__action-btn {
+  background: none;
+  width: 100%;
+  justify-content: flex-start;
+
+  .d-icon {
+    color: var(--primary);
+  }
+}

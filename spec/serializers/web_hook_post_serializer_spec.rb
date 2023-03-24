@@ -8,7 +8,7 @@ RSpec.describe WebHookPostSerializer do
     WebHookPostSerializer.new(post, scope: Guardian.new(u), root: false).as_json
   end
 
-  it 'should only include the required keys' do
+  it "should only include the required keys" do
     expect(serialized_for_user(admin).keys).to contain_exactly(
       :id,
       :name,
@@ -52,7 +52,7 @@ RSpec.describe WebHookPostSerializer do
       :topic_posts_count,
       :topic_filtered_posts_count,
       :topic_archetype,
-      :category_slug
+      :category_slug,
     )
   end
 
@@ -60,7 +60,7 @@ RSpec.describe WebHookPostSerializer do
     expect(serialized_for_user(admin)[:category_id]).to eq(post.topic.category_id)
   end
 
-  it 'should only include deleted topic title for staffs' do
+  it "should only include deleted topic title for staffs" do
     topic = post.topic
     PostDestroyer.new(Discourse.system_user, post).destroy
     post.reload
