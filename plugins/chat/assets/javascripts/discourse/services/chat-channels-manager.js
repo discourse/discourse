@@ -85,17 +85,8 @@ export default class ChatChannelsManager extends Service {
 
   @debounce(300)
   async markAllChannelsRead() {
-    return this.chatApi.markAllChannelsAsRead().then((response) => {
-      response.updated_memberships.forEach((membership) => {
-        let channel = this.channels.findBy("id", membership.channel_id);
-        if (channel) {
-          channel.currentUserMembership.unread_count = 0;
-          channel.currentUserMembership.unread_mentions = 0;
-          channel.currentUserMembership.last_read_message_id =
-            membership.last_read_message_id;
-        }
-      });
-    });
+    // The user tracking state for each channel marked read will be propagated by MessageBus
+    return this.chatApi.markAllChannelsAsRead();
   }
 
   remove(model) {
