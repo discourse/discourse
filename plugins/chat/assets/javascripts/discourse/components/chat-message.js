@@ -1,7 +1,4 @@
-import { bind } from "discourse-common/utils/decorators";
-import ChatMessageReaction, {
-  REACTIONS,
-} from "discourse/plugins/chat/discourse/models/chat-message-reaction";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import { isTesting } from "discourse-common/config/environment";
 import Component from "@glimmer/component";
 import I18n from "I18n";
@@ -113,7 +110,7 @@ export default class ChatMessage extends Component {
     const buttons = [];
 
     buttons.push({
-      id: "copyLinkToMessage",
+      id: "copyLink",
       name: I18n.t("chat.copy_link"),
       icon: "link",
     });
@@ -128,7 +125,7 @@ export default class ChatMessage extends Component {
 
     if (!this.args.selectingMessages) {
       buttons.push({
-        id: "selectMessage",
+        id: "select",
         name: I18n.t("chat.select"),
         icon: "tasks",
       });
@@ -144,7 +141,7 @@ export default class ChatMessage extends Component {
 
     if (this.showDeleteButton) {
       buttons.push({
-        id: "deleteMessage",
+        id: "delete",
         name: I18n.t("chat.delete"),
         icon: "trash-alt",
       });
@@ -160,7 +157,7 @@ export default class ChatMessage extends Component {
 
     if (this.showRebakeButton) {
       buttons.push({
-        id: "rebakeMessage",
+        id: "rebake",
         name: I18n.t("chat.rebake_message"),
         icon: "sync-alt",
       });
@@ -175,12 +172,6 @@ export default class ChatMessage extends Component {
     }
 
     return buttons;
-  }
-
-  get messageActions() {
-    return {
-      startReactionForMessageActions: this.startReactionForMessageActions,
-    };
   }
 
   get messageCapabilities() {
@@ -424,37 +415,6 @@ export default class ChatMessage extends Component {
   @action
   dismissMentionWarning() {
     this.args.message.mentionWarning = null;
-  }
-
-  @action
-  startReactionForMessageActions() {
-    this.chatEmojiPickerManager.startFromMessageActions(
-      this.args.message,
-      this.selectReaction,
-      { desktop: this.site.desktopView }
-    );
-  }
-
-  @action
-  startReactionForReactionList() {
-    this.chatEmojiPickerManager.startFromMessageReactionList(
-      this.args.message,
-      this.selectReaction,
-      { desktop: this.site.desktopView }
-    );
-  }
-
-  @bind
-  selectReaction(emoji) {
-    if (!this.chat.userCanInteractWithChat) {
-      return;
-    }
-
-    this.args.messageActionsHandler.react(
-      this.args.message,
-      emoji,
-      REACTIONS.add
-    );
   }
 
   get capabilities() {

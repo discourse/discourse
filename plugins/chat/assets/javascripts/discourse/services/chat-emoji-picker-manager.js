@@ -66,7 +66,9 @@ export default class ChatEmojiPickerManager extends Service {
   }
 
   didSelectEmoji(emoji) {
-    this?.callback(emoji);
+    // NOTE: this.message will only be present if starting from reaction list
+    // or messsage actions, not the composer
+    this?.callback(emoji, this.message);
     this.callback = null;
     this.close();
   }
@@ -75,17 +77,18 @@ export default class ChatEmojiPickerManager extends Service {
     const trigger = document.querySelector(
       `.chat-message-container[data-id="${message.id}"] .chat-message-react-btn`
     );
-    this.startFromMessage(callback, trigger, options);
+    this.startFromMessage(message, callback, trigger, options);
   }
 
   startFromMessageActions(message, callback, options = {}) {
     const trigger = document.querySelector(
       `.chat-message-actions-container[data-id="${message.id}"] .chat-message-actions`
     );
-    this.startFromMessage(callback, trigger, options);
+    this.startFromMessage(message, callback, trigger, options);
   }
 
   startFromMessage(
+    message,
     callback,
     trigger,
     options = { filter: null, desktop: true }
@@ -93,6 +96,7 @@ export default class ChatEmojiPickerManager extends Service {
     this.initialFilter = options.filter;
     this.context = "chat-message";
     this.element = document.querySelector(".chat-message-emoji-picker-anchor");
+    this.message = message;
     this.open(callback);
     this._popper?.destroy();
 

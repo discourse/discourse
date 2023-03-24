@@ -38,47 +38,7 @@ export default class ChatMessageActionsMobile extends Component {
 
   @action
   actAndCloseMenu(fnId) {
-    if (fnId === "copyLinkToMessage") {
-      this.args.messageActionsHandler.copyLink(this.args.message);
-      return this.#onCloseMenu();
-    }
-
-    if (fnId === "selectMessage") {
-      this.args.messageActionsHandler.select(this.args.message);
-      return this.#onCloseMenu();
-    }
-
-    if (fnId === "toggleBookmark") {
-      this.args.messageActionsHandler.toggleBookmark(this.args.message);
-      return this.#onCloseMenu();
-    }
-
-    if (fnId === "deleteMessage") {
-      this.args.messageActionsHandler.delete(this.args.message);
-      return this.#onCloseMenu();
-    }
-
-    if (fnId === "restore") {
-      this.args.messageActionsHandler.restore(this.args.message);
-      return this.#onCloseMenu();
-    }
-
-    if (fnId === "rebakeMessage") {
-      this.args.messageActionsHandler.rebake(this.args.message);
-      return this.#onCloseMenu();
-    }
-
-    if (fnId === "edit") {
-      this.args.messageActionsHandler.edit(this.args.message);
-      return this.#onCloseMenu();
-    }
-
-    if (fnId === "openThread") {
-      this.args.messageActionsHandler.openThread(this.args.message);
-      return this.#onCloseMenu();
-    }
-
-    this.args.messageActions[fnId]?.();
+    this.args.messageActionsHandler[fnId](this.args.message);
     this.#onCloseMenu();
   }
 

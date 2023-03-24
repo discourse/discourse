@@ -19,7 +19,10 @@
     {{#if @messageCapabilities.canReact}}
       <DButton
         @class="btn-flat react-btn"
-        @action={{@messageActions.startReactionForMessageActions}}
+        @action={{action
+          @messageActionsHandler.startReactionForMessageActions
+          @message
+        }}
         @icon="discourse-emojis"
         @title="chat.react"
       />

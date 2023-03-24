@@ -1,4 +1,5 @@
 import getURL from "discourse-common/lib/get-url";
+import { bind } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import Bookmark from "discourse/models/bookmark";
@@ -16,6 +17,7 @@ export default class ChatMessageActions {
   @service dialog;
   @service chat;
   @service chatEmojiReactionStore;
+  @service chatEmojiPickerManager;
   @service chatApi;
 
   livePanel = null;
@@ -163,5 +165,32 @@ export default class ChatMessageActions {
   @action
   openThread(message) {
     this.livePanel.router.transitionTo("chat.channel.thread", message.threadId);
+  }
+
+  @action
+  startReactionForMessageActions(message) {
+    this.chatEmojiPickerManager.startFromMessageActions(
+      message,
+      this.selectReaction,
+      { desktop: this.livePanel.site.desktopView }
+    );
+  }
+
+  @action
+  startReactionForReactionList(message) {
+    this.chatEmojiPickerManager.startFromMessageReactionList(
+      message,
+      this.selectReaction,
+      { desktop: this.livePanel.site.desktopView }
+    );
+  }
+
+  @bind
+  selectReaction(emoji, message) {
+    if (!this.chat.userCanInteractWithChat) {
+      return;
+    }
+
+    this.react(message, emoji, REACTIONS.add);
   }
 }
