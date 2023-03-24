@@ -104,7 +104,7 @@ input.channel-members-view__search-input {
   min-height: 1px;
   overflow-y: auto;
   height: 100%;
-  @include chat-scrollbar(var(--secondary));
+  @include chat-scrollbar();
 }
 
 .channel-members-view__list-item {

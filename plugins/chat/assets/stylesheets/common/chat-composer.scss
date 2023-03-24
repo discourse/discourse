@@ -104,20 +104,7 @@
       white-space: nowrap;
     }
 
-    &::-webkit-scrollbar-thumb {
-      background-color: var(--primary-low-mid);
-      border-radius: 6px;
-      border: 3px solid var(--secondary);
-    }
-    &:hover {
-      scrollbar-color: var(--primary-low-mid) transparent;
-      &::-webkit-scrollbar-thumb {
-        background-color: var(--primary-low-mid);
-      }
-    }
-    &::-webkit-scrollbar {
-      width: 12px;
-    }
+    @include chat-scrollbar();
   }
 
   &__unreliable-network {

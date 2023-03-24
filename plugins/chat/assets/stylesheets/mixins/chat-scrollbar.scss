@@ -1,28 +1,33 @@
-@mixin chat-scrollbar($border: var(--primary-very-low)) {
+@mixin chat-scrollbar() {
+  // custom scrollbar styling
   --scrollbarBg: transparent;
   --scrollbarThumbBg: var(--primary-low);
-  --scrollbarWidth: 1.2rem;
+  --scrollbarWidth: 8px;
 
   scrollbar-color: transparent var(--scrollbarBg);
   transition: scrollbar-color 0.25s ease-in-out;
   transition-delay: 0.5s;
 
+  &::-webkit-scrollbar {
+    width: var(--scrollbarWidth);
+  }
+
   &::-webkit-scrollbar-thumb {
     background-color: transparent;
     border-radius: calc(var(--scrollbarWidth) / 2);
-    border: calc(var(--scrollbarWidth) / 4) solid transparent;
   }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
   &:hover {
-    &::-webkit-scrollbar-thumb {
-      border: calc(var(--scrollbarWidth) / 4) solid $border;
-    }
     scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
+
     &::-webkit-scrollbar-thumb {
       background-color: var(--scrollbarThumbBg);
     }
+
     transition-delay: 0s;
-  }
-  &::-webkit-scrollbar {
-    width: var(--scrollbarWidth);
   }
 }

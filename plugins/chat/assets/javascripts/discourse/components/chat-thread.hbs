@@ -35,38 +35,41 @@
       </div>
     </div>
   </div>
-  <div class="chat-thread__messages chat-messages-container">
-    <div
-      class="chat-message-actions-mobile-anchor chat-message-actions-mobile-anchor--thread"
-    ></div>
-    <div
-      class="chat-message-actions-desktop-anchor chat-message-actions-desktop-anchor--thread"
-    ></div>
-    {{#each this.thread.messages key="id" as |message|}}
-      <ChatMessage
-        @message={{message}}
-        @channel={{this.channel}}
-        @isHovered={{eq message.id this.livePanel.hoveredMessageId}}
-        @resendStagedMessage={{this.resendStagedMessage}}
-        @messageDidEnterViewport={{this.messageDidEnterViewport}}
-        @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
-        @messageActionsHandler={{this.messageActionsHandler}}
-        @livePanel={{this.livePanel}}
-        @context="thread"
-      />
-    {{/each}}
-    {{#if (or this.loading this.loadingMoreFuture)}}
-      <ChatSkeleton />
-    {{/if}}
-  </div>
 
-  <ChatComposer
-    @sendMessage={{this.sendMessage}}
-    @editMessage={{this.editMessage}}
-    @loading={{this.sendingLoading}}
-    @onCancelEditing={{this.cancelEditing}}
-    @onEditLastMessageRequested={{this.editLastMessageRequested}}
-    @chatChannel={{this.channel}}
-    @composerService={{this.chatChannelThreadComposer}}
-  />
+  <div class="chat-thread__body">
+    <div class="chat-thread__messages chat-messages-container">
+      <div
+        class="chat-message-actions-mobile-anchor chat-message-actions-mobile-anchor--thread"
+      ></div>
+      <div
+        class="chat-message-actions-desktop-anchor chat-message-actions-desktop-anchor--thread"
+      ></div>
+      {{#each this.thread.messages key="id" as |message|}}
+        <ChatMessage
+          @message={{message}}
+          @channel={{this.channel}}
+          @isHovered={{eq message.id this.livePanel.hoveredMessageId}}
+          @resendStagedMessage={{this.resendStagedMessage}}
+          @messageDidEnterViewport={{this.messageDidEnterViewport}}
+          @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
+          @messageActionsHandler={{this.messageActionsHandler}}
+          @livePanel={{this.livePanel}}
+          @context="thread"
+        />
+      {{/each}}
+      {{#if (or this.loading this.loadingMoreFuture)}}
+        <ChatSkeleton />
+      {{/if}}
+    </div>
+
+    <ChatComposer
+      @sendMessage={{this.sendMessage}}
+      @editMessage={{this.editMessage}}
+      @loading={{this.sendingLoading}}
+      @onCancelEditing={{this.cancelEditing}}
+      @onEditLastMessageRequested={{this.editLastMessageRequested}}
+      @chatChannel={{this.channel}}
+      @composerService={{this.chatChannelThreadComposer}}
+    />
+  </div>
 </div>
