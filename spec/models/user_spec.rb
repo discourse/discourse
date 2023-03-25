@@ -2046,6 +2046,10 @@ RSpec.describe User do
     fab!(:category3) { Fabricate(:category) }
     fab!(:category4) { Fabricate(:category) }
 
+    # UGLY but perf is horrible with this callback
+    before { User.set_callback(:create, :after, :ensure_in_trust_level_group) }
+    after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
+
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
       SiteSetting.default_email_level = UserOption.email_level_types[:never]
@@ -2095,6 +2099,16 @@ RSpec.describe User do
         [category3.id],
       )
       expect(CategoryUser.lookup(user, :regular).pluck(:category_id)).to eq([category4.id])
+    end
+
+    it "does not update category preferences if already set by group" do
+      group = Group[:trust_level_1]
+      group.regular_category_ids = [category2.id]
+      group.save!
+
+      user = Fabricate(:user, trust_level: 1)
+
+      expect(CategoryUser.lookup(user, :normal).pluck(:category_id)).to include(category2.id)
     end
 
     it "does not set category preferences for staged users" do
