@@ -30,7 +30,7 @@
     "@glimmer/component": "^1.1.2",
     "@glimmer/syntax": "^0.84.3",
     "@glimmer/tracking": "^1.1.2",
-    "@popperjs/core": "^2.11.6",
+    "@popperjs/core": "^2.11.7",
     "@uppy/aws-s3": "^3.0.4",
     "@uppy/aws-s3-multipart": "^3.1.1",
     "@uppy/core": "^3.0.4",
