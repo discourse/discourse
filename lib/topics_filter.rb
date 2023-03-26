@@ -22,6 +22,10 @@ class TopicsFilter
       @scope = @scope.where("topics.closed")
     when "archived"
       @scope = @scope.where("topics.archived")
+    when "listed"
+      @scope = @scope.where("topics.visible")
+    when "unlisted"
+      @scope = @scope.where("NOT topics.visible")
     when "deleted"
       if @guardian.can_see_deleted_topics?(@category)
         @scope = @scope.unscope(where: :deleted_at).where("topics.deleted_at IS NOT NULL")
