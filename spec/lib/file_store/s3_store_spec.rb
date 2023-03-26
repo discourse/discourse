@@ -461,12 +461,7 @@ RSpec.describe FileStore::S3Store do
 
       it "sets acl to public by default" do
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_bucket
-          .expects(:object)
-          .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.pdf}))
-          .returns(s3_object)
-        s3_object.expects(:acl).returns(s3_object)
-        s3_object.expects(:put).with(acl: "public-read").returns(s3_object)
+        expect_upload_acl_update(upload, "public-read")
 
         expect(store.update_upload_ACL(upload)).to be_truthy
       end
@@ -474,14 +469,34 @@ RSpec.describe FileStore::S3Store do
       it "sets acl to private when upload is marked secure" do
         upload.update!(secure: true)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        expect_upload_acl_update(upload, "private")
+
+        expect(store.update_upload_ACL(upload)).to be_truthy
+      end
+
+      describe "optimized images" do
+        it "sets acl to public by default" do
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          expect_upload_acl_update(upload, "public-read")
+          optimized_image = Fabricate(:optimized_image, upload: upload)
+          path = Discourse.store.get_path_for_optimized_image(optimized_image)
+
+          stub_optimized_image = stub
+          s3_bucket.expects(:object).with(path).returns(stub_optimized_image)
+          stub_optimized_image.expects(:acl).returns(stub_optimized_image)
+          stub_optimized_image.expects(:put).with(acl: "public-read").returns(stub_optimized_image)
+
+          expect(store.update_upload_ACL(upload)).to be_truthy
+        end
+      end
+
+      def expect_upload_acl_update(upload, acl)
         s3_bucket
           .expects(:object)
           .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.pdf}))
           .returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
-        s3_object.expects(:put).with(acl: "private").returns(s3_object)
-
-        expect(store.update_upload_ACL(upload)).to be_truthy
+        s3_object.expects(:put).with(acl: acl).returns(s3_object)
       end
     end
   end

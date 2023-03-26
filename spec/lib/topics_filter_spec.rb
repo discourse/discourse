@@ -17,28 +17,46 @@ RSpec.describe TopicsFilter do
     end
 
     context "when filtering by topic's status" do
-      it "should only return topics that have not been closed or archived when input is `status:open`" do
+      it "should only return topics that have not been closed or archived when status is `open`" do
         expect(
           TopicsFilter.new(guardian: Guardian.new).filter(status: "open").pluck(:id),
         ).to contain_exactly(topic.id)
       end
 
-      it "should only return topics that have been deleted when input is `status:deleted` and user can see deleted topics" do
+      it "should only return topics that have been deleted when status is `deleted` and user can see deleted topics" do
         expect(
           TopicsFilter.new(guardian: Guardian.new(admin)).filter(status: "deleted").pluck(:id),
         ).to contain_exactly(deleted_topic_id)
       end
 
-      it "should status filter when input is `status:deleted` and user cannot see deleted topics" do
+      it "should status filter when status is `deleted` and user cannot see deleted topics" do
         expect(
           TopicsFilter.new(guardian: Guardian.new).filter(status: "deleted").pluck(:id),
         ).to contain_exactly(topic.id, closed_topic.id, archived_topic.id)
       end
 
-      it "should only return topics that have been archived when input is `status:archived`" do
+      it "should only return topics that have been archived when status is `archived`" do
         expect(
           TopicsFilter.new(guardian: Guardian.new).filter(status: "archived").pluck(:id),
         ).to contain_exactly(archived_topic.id)
+      end
+
+      it "should only return topics that are visible when status is `listed`" do
+        Topic.update_all(visible: false)
+        topic.update!(visible: true)
+
+        expect(
+          TopicsFilter.new(guardian: Guardian.new).filter(status: "listed").pluck(:id),
+        ).to contain_exactly(topic.id)
+      end
+
+      it "should only return topics that are not visible when status is `unlisted`" do
+        Topic.update_all(visible: true)
+        topic.update!(visible: false)
+
+        expect(
+          TopicsFilter.new(guardian: Guardian.new).filter(status: "unlisted").pluck(:id),
+        ).to contain_exactly(topic.id)
       end
     end
   end
