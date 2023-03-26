@@ -66,6 +66,10 @@ export default class ChatChannel extends RestModel {
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
 
+  findIndexOfMessage(message) {
+    return this.messages.findIndex((m) => m.id === message.id);
+  }
+
   get messages() {
     return this.messagesManager.messages;
   }
@@ -88,6 +92,10 @@ export default class ChatChannel extends RestModel {
 
   get routeModels() {
     return [this.slugifiedTitle, this.id];
+  }
+
+  get selectedMessages() {
+    return this.messages.filter((message) => message.selected);
   }
 
   get isDirectMessageChannel() {

@@ -1,0 +1,381 @@
+import getURL from "discourse-common/lib/get-url";
+import { bind } from "discourse-common/utils/decorators";
+import showModal from "discourse/lib/show-modal";
+import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
+import Bookmark from "discourse/models/bookmark";
+import { openBookmarkModal } from "discourse/controllers/bookmark";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { isTesting } from "discourse-common/config/environment";
+import { clipboardCopy } from "discourse/lib/utilities";
+import { REACTIONS } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
+import { getOwner, setOwner } from "@ember/application";
+import { tracked } from "@glimmer/tracking";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import I18n from "I18n";
+
+export default class ChatMessageInteractor {
+  @service appEvents;
+  @service dialog;
+  @service chat;
+  @service chatEmojiReactionStore;
+  @service chatEmojiPickerManager;
+  @service chatChannelComposer;
+  @service chatChannelThreadComposer;
+  @service chatChannelPane;
+  @service chatChannelThreadPane;
+  @service chatApi;
+  @service currentUser;
+  @service site;
+  @service router;
+
+  @tracked message = null;
+  @tracked context = null;
+
+  constructor(owner, message, context) {
+    setOwner(this, owner);
+
+    this.message = message;
+    this.context = context;
+  }
+
+  get capabilities() {
+    return getOwner(this).lookup("capabilities:main");
+  }
+
+  get pane() {
+    return this.context === "thread"
+      ? this.chatChannelThreadPane
+      : this.chatChannelPane;
+  }
+
+  get canEdit() {
+    return (
+      !this.message.deletedAt &&
+      this.currentUser.id === this.message.user.id &&
+      this.message.channel?.canModifyMessages?.(this.currentUser)
+    );
+  }
+
+  get canInteractWithMessage() {
+    return (
+      !this.message?.deletedAt &&
+      this.message?.channel?.canModifyMessages(this.currentUser)
+    );
+  }
+
+  get canRestoreMessage() {
+    return (
+      this.canDelete &&
+      this.message?.deletedAt &&
+      this.message.channel?.canModifyMessages?.(this.currentUser)
+    );
+  }
+
+  get canBookmark() {
+    return this.message?.channel?.canModifyMessages?.(this.currentUser);
+  }
+
+  get canReply() {
+    return this.canInteractWithMessage && this.context !== "thread";
+  }
+
+  get canFlagMessage() {
+    return (
+      this.currentUser?.id !== this.message?.user?.id &&
+      !this.message.channel?.isDirectMessageChannel &&
+      this.message?.userFlagStatus === undefined &&
+      this.message.channel?.canFlag &&
+      !this.message?.chatWebhookEvent &&
+      !this.message?.deletedAt
+    );
+  }
+
+  get canOpenThread() {
+    return (
+      this.context !== "thread" &&
+      this.message.channel?.get("threading_enabled") &&
+      this.message?.threadId
+    );
+  }
+
+  get canRebakeMessage() {
+    return (
+      this.currentUser?.staff &&
+      this.message.channel?.canModifyMessages?.(this.currentUser)
+    );
+  }
+
+  get canDeleteMessage() {
+    return (
+      this.canDelete &&
+      !this.message?.deletedAt &&
+      this.message.channel?.canModifyMessages?.(this.currentUser)
+    );
+  }
+
+  get canDelete() {
+    return this.currentUser?.id === this.message.user.id
+      ? this.message.channel?.canDeleteSelf
+      : this.message.channel?.canDeleteOthers;
+  }
+
+  get composer() {
+    return this.context === "thread"
+      ? this.chatChannelThreadComposer
+      : this.chatChannelComposer;
+  }
+
+  get secondaryButtons() {
+    const buttons = [];
+
+    buttons.push({
+      id: "copyLink",
+      name: I18n.t("chat.copy_link"),
+      icon: "link",
+    });
+
+    if (this.canEdit) {
+      buttons.push({
+        id: "edit",
+        name: I18n.t("chat.edit"),
+        icon: "pencil-alt",
+      });
+    }
+
+    if (!this.pane.selectingMessages) {
+      buttons.push({
+        id: "select",
+        name: I18n.t("chat.select"),
+        icon: "tasks",
+      });
+    }
+
+    if (this.canFlagMessage) {
+      buttons.push({
+        id: "flag",
+        name: I18n.t("chat.flag"),
+        icon: "flag",
+      });
+    }
+
+    if (this.canDeleteMessage) {
+      buttons.push({
+        id: "delete",
+        name: I18n.t("chat.delete"),
+        icon: "trash-alt",
+      });
+    }
+
+    if (this.canRestoreMessage) {
+      buttons.push({
+        id: "restore",
+        name: I18n.t("chat.restore"),
+        icon: "undo",
+      });
+    }
+
+    if (this.canRebakeMessage) {
+      buttons.push({
+        id: "rebake",
+        name: I18n.t("chat.rebake_message"),
+        icon: "sync-alt",
+      });
+    }
+
+    if (this.canOpenThread) {
+      buttons.push({
+        id: "openThread",
+        name: I18n.t("chat.threads.open"),
+        icon: "puzzle-piece",
+      });
+    }
+
+    return buttons;
+  }
+
+  select(message, checked = true) {
+    message.selected = checked;
+    this.pane.onSelectMessage(message);
+  }
+
+  bulkSelect(checked) {
+    const channel = this.message.channel;
+    const lastSelectedIndex = channel.findIndexOfMessage(
+      this.pane.lastSelectedMessage
+    );
+    const newlySelectedIndex = channel.findIndexOfMessage(this.message);
+    const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(
+      (a, b) => a - b
+    );
+
+    for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
+      channel.messages[i].selected = checked;
+    }
+  }
+
+  copyLink(message) {
+    const { protocol, host } = window.location;
+    let url = getURL(`/chat/c/-/${message.channelId}/${message.id}`);
+    url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
+    clipboardCopy(url);
+  }
+
+  @action
+  markAsActive(state) {
+    this.chat.activeMessage = state;
+  }
+
+  @action
+  react(emoji, reactAction) {
+    if (!this.chat.userCanInteractWithChat) {
+      return;
+    }
+
+    if (this.pane.reacting) {
+      return;
+    }
+
+    if (this.capabilities.canVibrate && !isTesting()) {
+      navigator.vibrate(5);
+    }
+
+    if (this.site.mobileView) {
+      this.chat.activeMessage = null;
+    }
+
+    if (reactAction === REACTIONS.add) {
+      this.chatEmojiReactionStore.track(`:${emoji}:`);
+    }
+
+    this.pane.reacting = true;
+
+    this.message.react(
+      emoji,
+      reactAction,
+      this.currentUser,
+      this.currentUser.id
+    );
+
+    return this.chatApi
+      .publishReaction(
+        this.message.channelId,
+        this.message.id,
+        emoji,
+        reactAction
+      )
+      .catch((errResult) => {
+        popupAjaxError(errResult);
+        this.message.react(
+          emoji,
+          REACTIONS.remove,
+          this.currentUser,
+          this.currentUser.id
+        );
+      })
+      .finally(() => {
+        this.pane.reacting = false;
+      });
+  }
+
+  @action
+  toggleBookmark() {
+    return openBookmarkModal(
+      this.message.bookmark ||
+        Bookmark.createFor(this.currentUser, "Chat::Message", this.message.id),
+      {
+        onAfterSave: (savedData) => {
+          const bookmark = Bookmark.create(savedData);
+          this.message.bookmark = bookmark;
+          this.appEvents.trigger(
+            "bookmarks:changed",
+            savedData,
+            bookmark.attachedTo()
+          );
+        },
+        onAfterDelete: () => {
+          this.message.bookmark = null;
+        },
+      }
+    );
+  }
+
+  @action
+  flag() {
+    // TODO Joffrey this is broken
+    const model = new ChatMessage(this.message);
+    model.username = this.message.user?.username;
+    model.user_id = this.message.user?.id;
+    const controller = showModal("flag", { model });
+    controller.set("flagTarget", new ChatMessageFlag());
+  }
+
+  @action
+  delete(message) {
+    return this.chatApi
+      .deleteMessage(message.channelId, message.id)
+      .catch(popupAjaxError);
+  }
+
+  @action
+  restore(message) {
+    return this.chatApi
+      .restoreMessage(message.channelId, message.id)
+      .catch(popupAjaxError);
+  }
+
+  @action
+  rebake(message) {
+    return this.chatApi
+      .rebakeMessage(message.channelId, message.id)
+      .catch(popupAjaxError);
+  }
+
+  @action
+  reply() {
+    this.composer.setReplyTo(this.message.id);
+  }
+
+  @action
+  edit() {
+    this.composer.editButtonClicked(this.message.id);
+  }
+
+  @action
+  openThread() {
+    this.router.transitionTo("chat.channel.thread", this.message.threadId);
+  }
+
+  @action
+  startReactionForMessageActions() {
+    this.chatEmojiPickerManager.startFromMessageActions(
+      this.message,
+      this.selectReaction,
+      { desktop: this.site.desktopView }
+    );
+  }
+
+  @action
+  startReactionForReactionList() {
+    this.chatEmojiPickerManager.startFromMessageReactionList(
+      this.message,
+      this.selectReaction,
+      { desktop: this.site.desktopView }
+    );
+  }
+
+  @bind
+  selectReaction(emoji) {
+    if (!this.chat.userCanInteractWithChat) {
+      return;
+    }
+
+    this.react(emoji, REACTIONS.add);
+  }
+
+  @action
+  handleSecondaryButtons(id) {
+    this[id](this.message);
+  }
+}

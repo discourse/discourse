@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/application";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import { tracked } from "@glimmer/tracking";
@@ -7,10 +6,7 @@ import { action } from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind, debounce } from "discourse-common/utils/decorators";
-import I18n from "I18n";
 import { inject as service } from "@ember/service";
-import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
-import ChatThreadLivePanel from "discourse/plugins/chat/discourse/lib/chat-thread-live-panel";
 
 const PAGE_SIZE = 50;
 
@@ -26,19 +22,6 @@ export default class ChatThreadPanel extends Component {
 
   @tracked loading;
   @tracked loadingMorePast;
-
-  constructor() {
-    super(...arguments);
-    this.livePanel = new ChatThreadLivePanel(
-      getOwner(this),
-      this.chatChannelThreadComposer
-    );
-    this.messageActionsHandler = new ChatMessageActions(
-      getOwner(this),
-      this.livePanel,
-      this.currentUser
-    );
-  }
 
   get thread() {
     return this.channel.activeThread;

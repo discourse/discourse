@@ -9,8 +9,8 @@ import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import discourseLater from "discourse-common/lib/later";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
-import { tracked } from "@glimmer/tracking";
 import { getOwner } from "discourse-common/lib/get-owner";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
 let _chatMessageDecorators = [];
 
@@ -33,11 +33,10 @@ export default class ChatMessage extends Component {
   @service chat;
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
+  @service chatChannelPane;
+  @service chatChannelThreadPane;
   @service chatChannelsManager;
   @service router;
-
-  @tracked chatMessageActionsMobileAnchor = null;
-  @tracked chatMessageActionsDesktopAnchor = null;
 
   @optionalService adminTools;
 
@@ -50,6 +49,20 @@ export default class ChatMessage extends Component {
     this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
   }
 
+  get pane() {
+    return this.args.context === "thead"
+      ? this.chatChannelThreadPane
+      : this.chatChannelPane;
+  }
+
+  get messageInteractor() {
+    return new ChatMessageInteractor(
+      getOwner(this),
+      this.args.message,
+      this.args.context
+    );
+  }
+
   get deletedAndCollapsed() {
     return this.args.message?.deletedAt && this.collapsed;
   }
@@ -60,16 +73,6 @@ export default class ChatMessage extends Component {
 
   get collapsed() {
     return !this.args.message?.expanded;
-  }
-
-  @action
-  setMessageActionsAnchors() {
-    schedule("afterRender", () => {
-      const { desktopAnchor, mobileAnchor } =
-        this.args.livePanel.messageActionsAnchors();
-      this.chatMessageActionsDesktopAnchor = desktopAnchor;
-      this.chatMessageActionsMobileAnchor = mobileAnchor;
-    });
   }
 
   @action
@@ -103,74 +106,6 @@ export default class ChatMessage extends Component {
       !this.args.message?.staged &&
       this.args.isHovered
     );
-  }
-
-  get secondaryButtons() {
-    const buttons = [];
-
-    buttons.push({
-      id: "copyLink",
-      name: I18n.t("chat.copy_link"),
-      icon: "link",
-    });
-
-    if (this.showEditButton) {
-      buttons.push({
-        id: "edit",
-        name: I18n.t("chat.edit"),
-        icon: "pencil-alt",
-      });
-    }
-
-    if (!this.args.livePanel.selectingMessages) {
-      buttons.push({
-        id: "select",
-        name: I18n.t("chat.select"),
-        icon: "tasks",
-      });
-    }
-
-    if (this.canFlagMessage) {
-      buttons.push({
-        id: "flag",
-        name: I18n.t("chat.flag"),
-        icon: "flag",
-      });
-    }
-
-    if (this.showDeleteButton) {
-      buttons.push({
-        id: "delete",
-        name: I18n.t("chat.delete"),
-        icon: "trash-alt",
-      });
-    }
-
-    if (this.showRestoreButton) {
-      buttons.push({
-        id: "restore",
-        name: I18n.t("chat.restore"),
-        icon: "undo",
-      });
-    }
-
-    if (this.showRebakeButton) {
-      buttons.push({
-        id: "rebake",
-        name: I18n.t("chat.rebake_message"),
-        icon: "sync-alt",
-      });
-    }
-
-    if (this.hasThread) {
-      buttons.push({
-        id: "openThread",
-        name: I18n.t("chat.threads.open"),
-        icon: "puzzle-piece",
-      });
-    }
-
-    return buttons;
   }
 
   get messageCapabilities() {
@@ -239,7 +174,10 @@ export default class ChatMessage extends Component {
     document.activeElement.blur();
     document.querySelector(".chat-composer-input")?.blur();
 
-    this.args.livePanel.hoverMessage?.(this.args.message);
+    this.pane.hoverMessage?.({
+      context: this.args.context,
+      model: this.args.message,
+    });
   }
 
   get hideUserInfo() {
@@ -272,72 +210,6 @@ export default class ChatMessage extends Component {
       this.args.context === THREAD_CONTEXT ||
       this.args.message?.inReplyTo?.id ===
         this.args.message?.previousMessage?.id
-    );
-  }
-
-  get showEditButton() {
-    return (
-      !this.args.message?.deletedAt &&
-      this.currentUser?.id === this.args.message?.user?.id &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get canFlagMessage() {
-    return (
-      this.currentUser?.id !== this.args.message?.user?.id &&
-      !this.args.channel?.isDirectMessageChannel &&
-      this.args.message?.userFlagStatus === undefined &&
-      this.args.channel?.canFlag &&
-      !this.args.message?.chatWebhookEvent &&
-      !this.args.message?.deletedAt
-    );
-  }
-
-  get canManageDeletion() {
-    return this.currentUser?.id === this.args.message.user.id
-      ? this.args.channel?.canDeleteSelf
-      : this.args.channel?.canDeleteOthers;
-  }
-
-  get canReply() {
-    return (
-      !this.args.message?.deletedAt &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get canReact() {
-    return (
-      !this.args.message?.deletedAt &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get showDeleteButton() {
-    return (
-      this.canManageDeletion &&
-      !this.args.message?.deletedAt &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get showRestoreButton() {
-    return (
-      this.canManageDeletion &&
-      this.args.message?.deletedAt &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get showBookmarkButton() {
-    return this.args.channel?.canModifyMessages?.(this.currentUser);
-  }
-
-  get showRebakeButton() {
-    return (
-      this.currentUser?.staff &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
     );
   }
 
@@ -429,16 +301,10 @@ export default class ChatMessage extends Component {
   @action
   toggleChecked(event) {
     if (event.shiftKey) {
-      this.args.messageActionsHandler.bulkSelect(
-        this.args.message,
-        event.target.checked
-      );
+      this.messageInteractor.bulkSelect(event.target.checked);
     }
 
-    this.args.messageActionsHandler.bulkSelect(
-      this.args.message,
-      event.target.checked
-    );
+    this.messageInteractor.bulkSelect(event.target.checked);
   }
 
   get emojiReactions() {

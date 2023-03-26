@@ -1,48 +1,12 @@
 {{! template-lint-disable no-invalid-interactive }}
 
-{{#if this.livePanel.showMessageSeparators}}
+{{#unless (eq @context "thread")}}
   <ChatMessageSeparatorDate @message={{@message}} />
   <ChatMessageSeparatorNew @message={{@message}} />
-{{/if}}
-
-{{#if
-  (and
-    this.showActions this.site.mobileView this.chatMessageActionsMobileAnchor
-  )
-}}
-  {{#in-element this.chatMessageActionsMobileAnchor}}
-    <ChatMessageActionsMobile
-      @message={{@message}}
-      @emojiReactions={{this.emojiReactions}}
-      @secondaryButtons={{this.secondaryButtons}}
-      @messageActions={{this.messageActions}}
-      @messageActionsHandler={{@messageActionsHandler}}
-      @messageCapabilities={{this.messageCapabilities}}
-      @onHoverMessage={{@livePanel.hoverMessage}}
-    />
-  {{/in-element}}
-{{/if}}
-
-{{#if
-  (and
-    this.showActions this.site.desktopView this.chatMessageActionsDesktopAnchor
-  )
-}}
-  {{#in-element this.chatMessageActionsDesktopAnchor}}
-    <ChatMessageActionsDesktop
-      @message={{@message}}
-      @emojiReactions={{this.emojiReactions}}
-      @secondaryButtons={{this.secondaryButtons}}
-      @messageActions={{this.messageActions}}
-      @messageActionsHandler={{@messageActionsHandler}}
-      @messageCapabilities={{this.messageCapabilities}}
-    />
-  {{/in-element}}
-{{/if}}
+{{/unless}}
 
 <div
   {{will-destroy this.teardownChatMessage}}
-  {{did-insert this.setMessageActionsAnchors}}
   {{did-insert this.decorateCookedMessage}}
   {{did-update this.decorateCookedMessage @message.id}}
   {{did-update this.decorateCookedMessage @message.version}}
@@ -51,17 +15,15 @@
   {{on "touchend" this.handleTouchEnd passive=true}}
   {{on
     "mouseenter"
-    (fn @livePanel.hoverMessage @message (hash desktopOnly=true))
+    (fn
+      this.messageInteractor.markAsActive (hash model=@message context=@context)
+    )
   }}
-  {{on
-    "mousemove"
-    (fn @livePanel.hoverMessage @message (hash desktopOnly=true))
-  }}
-  {{on "mouseleave" (fn @livePanel.hoverMessage null (hash desktopOnly=true))}}
+  {{on "mouseleave" (fn this.messageInteractor.markAsActive null)}}
   class={{concat-class
     "chat-message-container"
     (if @isHovered "is-hovered")
-    (if @livePanel.selectingMessages "selecting-messages")
+    (if this.pane.selectingMessages "selecting-messages")
     (if @message.highlighted "highlighted")
   }}
   data-id={{@message.id}}
@@ -73,7 +35,7 @@
   }}
 >
   {{#if this.show}}
-    {{#if @livePanel.selectingMessages}}
+    {{#if this.pane.selectingMessages}}
       <Input
         @type="checkbox"
         class="chat-message-selector"
@@ -142,7 +104,7 @@
                 {{#each @message.reactions as |reaction|}}
                   <ChatMessageReaction
                     @reaction={{reaction}}
-                    @messageActionsHandler={{@messageActionsHandler}}
+                    @onReaction={{this.messageInteractor.react}}
                     @message={{@message}}
                     @showTooltip={{true}}
                   />
@@ -152,10 +114,7 @@
                   {{#unless this.site.mobileView}}
                     <DButton
                       @class="chat-message-react-btn"
-                      @action={{action
-                        @messageActionsHandler.startReactionForReactionList
-                        @message
-                      }}
+                      @action={{this.messageInteractor.startReactionForReactionList}}
                       @icon="discourse-emojis"
                       @title="chat.react"
                     />

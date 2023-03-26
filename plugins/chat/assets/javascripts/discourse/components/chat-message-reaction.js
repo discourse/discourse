@@ -47,11 +47,11 @@ export default class ChatMessageReaction extends Component {
 
   @action
   handleClick() {
-    this.args.messageActionsHandler.react?.(
-      this.args.message,
+    this.args.onReaction?.(
       this.args.reaction.emoji,
       this.args.reaction.reacted ? "remove" : "add"
     );
+
     return false;
   }
 

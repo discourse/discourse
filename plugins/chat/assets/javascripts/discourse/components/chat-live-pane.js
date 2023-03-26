@@ -2,8 +2,6 @@ import { capitalize } from "@ember/string";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
-import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
-import ChatLivePanel from "discourse/plugins/chat/discourse/lib/chat-live-panel";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import EmberObject, { action } from "@ember/object";
@@ -35,6 +33,7 @@ export default class ChatLivePane extends Component {
   @service chatComposerPresenceManager;
   @service chatStateManager;
   @service chatChannelComposer;
+  @service chatChannelPane;
   @service chatApi;
   @service currentUser;
   @service appEvents;
@@ -44,9 +43,7 @@ export default class ChatLivePane extends Component {
   @tracked loading = false;
   @tracked loadingMorePast = false;
   @tracked loadingMoreFuture = false;
-  @tracked hoveredMessageId = null;
   @tracked sendingLoading = false;
-  @tracked selectingMessages = false;
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
   @tracked hasNewMessages = false;
@@ -59,20 +56,6 @@ export default class ChatLivePane extends Component {
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
-
-  constructor() {
-    super(...arguments);
-
-    this.livePanel = new ChatLivePanel(
-      getOwner(this),
-      this.chatChannelComposer
-    );
-    this.messageActionsHandler = new ChatMessageActions(
-      getOwner(this),
-      this.livePanel,
-      this.currentUser
-    );
-  }
 
   @action
   setupListeners(element) {
@@ -117,7 +100,7 @@ export default class ChatLivePane extends Component {
 
     if (this._loadedChannelId !== this.args.channel?.id) {
       this._unsubscribeToUpdates(this._loadedChannelId);
-      this.selectingMessages = false;
+      this.chatChannelPane.selectingMessages = false;
       this.chatChannelComposer.cancelEditing();
       this._loadedChannelId = this.args.channel?.id;
     }
@@ -954,14 +937,6 @@ export default class ChatLivePane extends Component {
   onStartSelectingMessages(message) {
     this._lastSelectedMessage = message;
     this.selectingMessages = true;
-  }
-
-  @action
-  cancelSelecting() {
-    this.selectingMessages = false;
-    this.args.channel.messages.forEach((message) => {
-      message.selected = false;
-    });
   }
 
   @action

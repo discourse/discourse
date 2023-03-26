@@ -1,0 +1,12 @@
+<div
+  class="chat-message-actions-outlet-container"
+  style="z-index:5999;"
+  {{did-update this.positionContainer this.chat.activeMessage}}
+>
+  {{#if this.chat.activeMessage}}
+    <ChatMessageActionsDesktop
+      @message={{this.chat.activeMessage.model}}
+      @context={{this.chat.activeMessage.context}}
+    />
+  {{/if}}
+</div>

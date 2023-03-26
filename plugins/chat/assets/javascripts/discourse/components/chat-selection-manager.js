@@ -11,7 +11,7 @@ import { inject as service } from "@ember/service";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
 
-export default class AdminCustomizeColorsShowController extends Component {
+export default class ChatSelectionManager extends Component {
   @service router;
   tagName = "";
   chatChannel = null;

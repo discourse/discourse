@@ -1,66 +1,58 @@
-<div
-  class="chat-message-actions-container"
-  data-id={{@message.id}}
-  {{did-insert this.attachPopper}}
-  {{will-destroy this.destroyPopper}}
->
+<div class="chat-message-actions-container" data-id={{@message.id}}>
   <div class="chat-message-actions">
     {{#if this.chatStateManager.isFullPageActive}}
       {{#each @emojiReactions key="emoji" as |reaction|}}
         <ChatMessageReaction
           @reaction={{reaction}}
-          @messageActionsHandler={{@messageActionsHandler}}
+          @onReaction={{this.messageInteractor.react}}
           @message={{@message}}
           @showCount={{false}}
         />
       {{/each}}
     {{/if}}
 
-    {{#if @messageCapabilities.canReact}}
+    {{#if this.messageInteractor.canInteractWithMessage}}
       <DButton
         @class="btn-flat react-btn"
-        @action={{action
-          @messageActionsHandler.startReactionForMessageActions
-          @message
-        }}
+        @action={{this.messageInteractor.startReactionForMessageActions}}
         @icon="discourse-emojis"
         @title="chat.react"
       />
     {{/if}}
 
-    {{#if @messageCapabilities.canBookmark}}
+    {{#if this.messageInteractor.canBookmark}}
       <DButton
         @class="btn-flat bookmark-btn"
-        @action={{action @messageActionsHandler.toggleBookmark @message}}
+        @action={{this.messageInteractor.toggleBookmark}}
       >
         <BookmarkIcon @bookmark={{@message.bookmark}} />
       </DButton>
     {{/if}}
 
-    {{#if @messageCapabilities.canReply}}
+    {{#if this.messageInteractor.canReply}}
       <DButton
         @class="btn-flat reply-btn"
-        @action={{action @messageActionsHandler.reply @message}}
+        @action={{this.messageInteractor.reply}}
         @icon="reply"
         @title="chat.reply"
       />
     {{/if}}
 
-    {{#if @messageCapabilities.hasThread}}
+    {{#if this.messageInteractor.canOpenThread}}
       <DButton
         @class="btn-flat chat-message-thread-btn"
-        @action={{action @messageActionsHandler.openThread @message}}
+        @action={{this.messageInteractor.openThread}}
         @icon="puzzle-piece"
         @title="chat.threads.open"
       />
     {{/if}}
 
-    {{#if @secondaryButtons.length}}
+    {{#if this.messageInteractor.secondaryButtons.length}}
       <DropdownSelectBox
         @class="more-buttons"
         @options={{hash icon="ellipsis-v" placement="left"}}
-        @content={{@secondaryButtons}}
-        @onChange={{action this.handleSecondaryButtons}}
+        @content={{this.messageInteractor.secondaryButtons}}
+        @onChange={{action this.messageInteractor.handleSecondaryButtons}}
       />
     {{/if}}
   </div>
