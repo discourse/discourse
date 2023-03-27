@@ -4389,17 +4389,34 @@ en:
         custom:
           add: "Add custom section"
           edit: "Edit custom section"
-          name: "Section title"
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
           public: "Make this section public and visible to everyone"
           links:
-            icon: "Icon"
-            name: "Name"
-            value: "Link"
             add: "Add another link"
             delete: "Delete link"
+            icon:
+              label: "Icon"
+              validation:
+                blank: "Icon cannot be blank"
+                maximum: "Icon must be shorter than %{count} characters"
+            name: 
+              label: "Name"
+              validation:
+                blank: "Name cannot be blank"
+                maximum: "Name must be shorter than %{count} characters"
+            value: 
+              label: "Link"
+              validation:
+                blank: "Link cannot be blank"
+                maximum: "Link must be shorter than %{count} characters"
+                invalid: "Format is invalid"
+          title:
+            label: "Section title"
+            validation:
+              blank: "Title cannot be blank"
+              maximum: "Title must be shorter than %{count} characters"
         about:
           header_link_text: "About"
         messages:
