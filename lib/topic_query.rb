@@ -799,7 +799,7 @@ class TopicQuery
           scope: result,
           guardian: @guardian,
           category_id: options[:category],
-        ).filter(status: options[:status])
+        ).filter_status(status: options[:status])
     end
 
     if (filter = (options[:filter] || options[:f])) && @user
