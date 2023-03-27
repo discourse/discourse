@@ -1631,13 +1631,13 @@
   resolved "https://registry.yarnpkg.com/@types/symlink-or-copy/-/symlink-or-copy-1.2.0.tgz#4151a81b4052c80bc2becbae09f3a9ec010a9c7a"
   integrity sha512-Lja2xYuuf2B3knEsga8ShbOdsfNOtzT73GyJmZyY7eGl2+ajOqrs8yM5ze0fsSoYwvA6bw7/Qr7OZ7PEEmYwWg==
 
-"@uppy/aws-s3-multipart@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@uppy/aws-s3-multipart/-/aws-s3-multipart-3.1.1.tgz#996184d7c73122d9a33b166e2960215e482e57ab"
-  integrity sha512-vL4QtbI5T4cGJLHm2GzKIGeaiy2zbgNW0nn/3LxYQ+wrBHLJoVZ/6uzMiFdNUBNa28rRQ/qxWTmy/kD6co95cg==
+"@uppy/aws-s3-multipart@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@uppy/aws-s3-multipart/-/aws-s3-multipart-3.1.2.tgz#317d4a69f26d67ef1d8578ffae2411950f347e2b"
+  integrity sha512-lii/VZLnkN468bTEaNCKNHqW62Um9GRfNqvPZXzelYggxMv5ff2iJl1fZ6FvGEt6yI7WJ1iOeBf/fVOdERZfIg==
   dependencies:
     "@uppy/companion-client" "^3.1.1"
-    "@uppy/utils" "^5.1.1"
+    "@uppy/utils" "^5.1.2"
 
 "@uppy/aws-s3@^3.0.5":
   version "3.0.5"
