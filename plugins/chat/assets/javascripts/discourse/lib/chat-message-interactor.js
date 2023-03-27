@@ -1,5 +1,4 @@
 import getURL from "discourse-common/lib/get-url";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
@@ -249,63 +248,6 @@ export default class ChatMessageInteractor {
     let url = getURL(`/chat/c/-/${message.channelId}/${message.id}`);
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
-  }
-
-  @action
-  markAsActive(state, event) {
-    if (this.site.mobileView && state?.desktopOnly) {
-      return;
-    }
-
-    if (state?.model?.staged) {
-      return;
-    }
-
-    if (
-      this.pane.hoveredMessageId &&
-      state?.model?.id &&
-      this.pane.hoveredMessageId === state?.model?.id
-    ) {
-      return;
-    }
-
-    if (event) {
-      if (
-        event.type === "mouseleave" &&
-        (event.toElement || event.relatedTarget)?.closest(
-          ".chat-message-actions-outlet-container"
-        )
-      ) {
-        return;
-      }
-
-      if (
-        event.type === "mouseenter" &&
-        (event.fromElement || event.relatedTarget)?.closest(
-          ".chat-message-actions-outlet-container"
-        )
-      ) {
-        this.pane.hoveredMessageId = state?.model?.id;
-        this.chat.activeMessage = state;
-        return;
-      }
-    }
-
-    this._onHoverMessageDebouncedHandler = discourseDebounce(
-      this,
-      this._debouncedOnHoverMessage,
-      state,
-      250
-    );
-  }
-
-  @bind
-  _debouncedOnHoverMessage(state) {
-    this.chat.activeMessage = state;
-    this.pane.hoveredMessageId =
-      state?.model?.id && state?.model.id !== this.hoveredMessageId
-        ? state?.model.id
-        : null;
   }
 
   @action

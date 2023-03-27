@@ -1,5 +1,11 @@
-{{#if (and this.site.desktopView this.chat.activeMessage)}}
-  <div class="chat-message-actions-container" data-id={{this.message.id}}>
+{{#if (and this.site.desktopView this.chat.activeMessage.model.id)}}
+  <div
+    {{did-insert this.setupPopper}}
+    {{did-update this.setupPopper this.chat.activeMessage.model.id}}
+    {{will-destroy this.teardownPopper}}
+    class="chat-message-actions-container"
+    data-id={{this.message.id}}
+  >
     <div class="chat-message-actions">
       {{#if this.chatStateManager.isFullPageActive}}
         {{#each

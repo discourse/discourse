@@ -11,6 +11,7 @@
 
 .chat-message-actions-container {
   @include unselectable;
+  z-index: z("dropdown") - 1;
 }
 
 .chat-message-actions {

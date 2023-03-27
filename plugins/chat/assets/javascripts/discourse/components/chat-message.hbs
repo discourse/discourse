@@ -13,20 +13,8 @@
   {{on "touchmove" this.handleTouchMove passive=true}}
   {{on "touchstart" this.handleTouchStart passive=true}}
   {{on "touchend" this.handleTouchEnd passive=true}}
-  {{on
-    "mouseenter"
-    (fn
-      this.messageInteractor.markAsActive
-      (hash model=@message context=@context desktopOnly=true)
-    )
-  }}
-  {{on
-    "mouseleave"
-    (fn
-      this.messageInteractor.markAsActive
-      (hash model=null context=null desktopOnly=true)
-    )
-  }}
+  {{on "mouseenter" this.onMouseEnter}}
+  {{on "mouseleave" this.onMouseLeave}}
   class={{concat-class
     "chat-message-container"
     (if @isHovered "is-hovered")

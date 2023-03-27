@@ -73,7 +73,7 @@ export default class ChatMessageActionsMobile extends Component {
 
       // by ensuring we are not hovering any message anymore
       // we also ensure the menu is fully removed
-      this.messageInteractor.markAsActive(null);
+      this.chat.activeMessage = null;
     }, 200);
   }
 

@@ -10,6 +10,8 @@ import discourseLater from "discourse-common/lib/later";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { getOwner } from "discourse-common/lib/get-owner";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { bind } from "discourse-common/utils/decorators";
 
 let _chatMessageDecorators = [];
 
@@ -108,6 +110,55 @@ export default class ChatMessage extends Component {
   }
 
   @action
+  onMouseEnter() {
+    if (this.site.mobileView) {
+      return;
+    }
+
+    if (this.pane.hoveredMessageId === this.args.message.id) {
+      return;
+    }
+
+    this._onHoverMessageDebouncedHandler = discourseDebounce(
+      this,
+      this._debouncedOnHoverMessage,
+      250
+    );
+  }
+
+  @action
+  onMouseLeave(event) {
+    if (this.site.mobileView) {
+      return;
+    }
+
+    if (
+      (event.toElement || event.relatedTarget)?.closest(
+        ".chat-message-actions-container"
+      )
+    ) {
+      return;
+    }
+
+    cancel(this._onHoverMessageDebouncedHandler);
+
+    this.chat.activeMessage = null;
+  }
+
+  @bind
+  _debouncedOnHoverMessage() {
+    this._setActiveMessage();
+  }
+
+  _setActiveMessage() {
+    this.chat.activeMessage = {
+      model: this.args.message,
+      context: this.args.context,
+    };
+    this.pane.hoveredMessageId = this.args.message.id;
+  }
+
+  @action
   handleTouchStart() {
     // if zoomed don't track long press
     if (isZoomed()) {
@@ -149,10 +200,7 @@ export default class ChatMessage extends Component {
     document.activeElement.blur();
     document.querySelector(".chat-composer-input")?.blur();
 
-    this.messageInteractor.markAsActive?.({
-      context: this.args.context,
-      model: this.args.message,
-    });
+    this._setActiveMessage();
   }
 
   get hideUserInfo() {
