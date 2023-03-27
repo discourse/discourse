@@ -1,7 +1,7 @@
 <div class="chat-message-actions-container" data-id={{@message.id}}>
   <div class="chat-message-actions">
     {{#if this.chatStateManager.isFullPageActive}}
-      {{#each @emojiReactions key="emoji" as |reaction|}}
+      {{#each this.messageInteractor.emojiReactions key="emoji" as |reaction|}}
         <ChatMessageReaction
           @reaction={{reaction}}
           @onReaction={{this.messageInteractor.react}}

@@ -9,7 +9,9 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { isTesting } from "discourse-common/config/environment";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { REACTIONS } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
+import ChatMessageReaction, {
+  REACTIONS,
+} from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import { getOwner, setOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -34,11 +36,14 @@ export default class ChatMessageInteractor {
   @tracked message = null;
   @tracked context = null;
 
+  cachedFavoritesReactions = null;
+
   constructor(owner, message, context) {
     setOwner(this, owner);
 
     this.message = message;
     this.context = context;
+    this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
   }
 
   get capabilities() {
@@ -49,6 +54,24 @@ export default class ChatMessageInteractor {
     return this.context === MESSAGE_CONTEXT_THREAD
       ? this.chatChannelThreadPane
       : this.chatChannelPane;
+  }
+
+  get emojiReactions() {
+    let favorites = this.cachedFavoritesReactions;
+
+    // may be a {} if no defaults defined in some production builds
+    if (!favorites || !favorites.slice) {
+      return [];
+    }
+
+    return favorites.slice(0, 3).map((emoji) => {
+      return (
+        this.message.reactions.find((reaction) => reaction.emoji === emoji) ||
+        ChatMessageReaction.create({
+          emoji,
+        })
+      );
+    });
   }
 
   get canEdit() {

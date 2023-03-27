@@ -1,4 +1,3 @@
-import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import { isTesting } from "discourse-common/config/environment";
 import Component from "@glimmer/component";
 import I18n from "I18n";
@@ -39,15 +38,6 @@ export default class ChatMessage extends Component {
   @service router;
 
   @optionalService adminTools;
-
-  cachedFavoritesReactions = null;
-  reacting = false;
-
-  constructor() {
-    super(...arguments);
-
-    this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
-  }
 
   get pane() {
     return this.args.context === "thead"
@@ -303,25 +293,5 @@ export default class ChatMessage extends Component {
     }
 
     this.messageInteractor.bulkSelect(event.target.checked);
-  }
-
-  get emojiReactions() {
-    let favorites = this.cachedFavoritesReactions;
-
-    // may be a {} if no defaults defined in some production builds
-    if (!favorites || !favorites.slice) {
-      return [];
-    }
-
-    return favorites.slice(0, 3).map((emoji) => {
-      return (
-        this.args.message.reactions.find(
-          (reaction) => reaction.emoji === emoji
-        ) ||
-        ChatMessageReaction.create({
-          emoji,
-        })
-      );
-    });
   }
 }
