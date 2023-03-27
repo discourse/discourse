@@ -20,10 +20,6 @@
         <ChatMessage
           @message={{message}}
           @channel={{this.channel}}
-          @isHovered={{eq
-            message.id
-            this.chatChannelThreadPane.hoveredMessageId
-          }}
           @resendStagedMessage={{this.resendStagedMessage}}
           @messageDidEnterViewport={{this.messageDidEnterViewport}}
           @messageDidLeaveViewport={{this.messageDidLeaveViewport}}

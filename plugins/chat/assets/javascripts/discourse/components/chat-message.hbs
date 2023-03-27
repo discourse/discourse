@@ -17,7 +17,6 @@
   {{on "mouseleave" this.onMouseLeave}}
   class={{concat-class
     "chat-message-container"
-    (if @isHovered "is-hovered")
     (if this.pane.selectingMessages "selecting-messages")
     (if @message.highlighted "highlighted")
   }}
@@ -65,7 +64,6 @@
           (if this.hideUserInfo "user-info-hidden")
           (if @message.error "errored")
           (if @message.bookmark "chat-message-bookmarked")
-          (if @isHovered "chat-message-selected")
         }}
       >
         {{#unless this.hideReplyToInfo}}

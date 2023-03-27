@@ -48,7 +48,6 @@
           <ChatMessage
             @message={{message}}
             @channel={{@channel}}
-            @isHovered={{eq message.id this.chatChannelPane.hoveredMessageId}}
             @resendStagedMessage={{this.resendStagedMessage}}
             @messageDidEnterViewport={{this.messageDidEnterViewport}}
             @messageDidLeaveViewport={{this.messageDidLeaveViewport}}

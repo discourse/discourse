@@ -92,14 +92,6 @@ export default class ChatMessage extends Component {
     }
   }
 
-  get showActions() {
-    return (
-      this.chat.userCanInteractWithChat &&
-      !this.args.message?.staged &&
-      this.args.isHovered
-    );
-  }
-
   get show() {
     return (
       !this.args.message?.deletedAt ||
@@ -165,24 +157,20 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (!this.args.isHovered) {
-      // when testing this must be triggered immediately because there
-      // is no concept of "long press" there, the Ember `tap` test helper
-      // does send the touchstart/touchend events but immediately, see
-      // https://github.com/emberjs/ember-test-helpers/blob/master/API.md#tap
-      if (isTesting()) {
-        this._handleLongPress();
-      }
-
-      this._isPressingHandler = discourseLater(this._handleLongPress, 500);
+    // when testing this must be triggered immediately because there
+    // is no concept of "long press" there, the Ember `tap` test helper
+    // does send the touchstart/touchend events but immediately, see
+    // https://github.com/emberjs/ember-test-helpers/blob/master/API.md#tap
+    if (isTesting()) {
+      this._handleLongPress();
     }
+
+    this._isPressingHandler = discourseLater(this._handleLongPress, 500);
   }
 
   @action
   handleTouchMove() {
-    if (!this.args.isHovered) {
-      cancel(this._isPressingHandler);
-    }
+    cancel(this._isPressingHandler);
   }
 
   @action
