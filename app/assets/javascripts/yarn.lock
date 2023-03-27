@@ -1639,17 +1639,17 @@
     "@uppy/companion-client" "^3.1.1"
     "@uppy/utils" "^5.1.1"
 
-"@uppy/aws-s3@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@uppy/aws-s3/-/aws-s3-3.0.4.tgz#a2422a2091c57570ff99a77108296f09ba9e46a5"
-  integrity sha512-mcwRYUH1TgcCWAkmvx9SCu7A9ylgBX+b1qyVO7ZiHnSbdg1F0H9hd3KkiUHGHkuV+hHz+l4vM9tQJqhxVhpW8w==
+"@uppy/aws-s3@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@uppy/aws-s3/-/aws-s3-3.0.5.tgz#745f9bb8c57c299a19c301052395e405e300674d"
+  integrity sha512-MQol2wvF9FtY3urF0NjGwJqDHZTxQI2RSRfSZrwExftaxiSLkGekVEo281M5NV8WlEShigh43Qgap/sV+CxBfw==
   dependencies:
-    "@uppy/companion-client" "^3.0.2"
-    "@uppy/utils" "^5.0.2"
+    "@uppy/companion-client" "^3.1.1"
+    "@uppy/utils" "^5.1.2"
     "@uppy/xhr-upload" "^3.0.4"
     nanoid "^4.0.0"
 
-"@uppy/companion-client@^3.0.2", "@uppy/companion-client@^3.1.1":
+"@uppy/companion-client@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@uppy/companion-client/-/companion-client-3.1.1.tgz#8c9974f70b899a40771da9a90113941356f9842e"
   integrity sha512-S1M37vjWu8gdOgdI3Hh/1fVZ9GaLdyPQjVyUujZDTsr79b4VG7v/zjdqJ0FiOTjfGbpnj8s9kr1uyYi0Zf5VFw==
