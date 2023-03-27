@@ -954,7 +954,6 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   });
 
   test("section link to admin site settings page when default sidebar categories have not been configured", async function (assert) {
-    setupUserSidebarCategories();
     updateCurrentUser({ admin: true });
 
     await visit("/");

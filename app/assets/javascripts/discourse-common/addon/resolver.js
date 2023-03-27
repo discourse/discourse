@@ -77,6 +77,12 @@ const DEPRECATED_MODULES = new Map(
       dropFrom: "3.0.0",
       silent: true,
     },
+    "capabilities:main": {
+      newName: "service:capabilities",
+      since: "3.1.0.beta4",
+      dropFrom: "3.2.0.beta1",
+      silent: true,
+    },
     "current-user:main": {
       newName: "service:current-user",
       since: "2.9.0.beta7",

@@ -147,7 +147,7 @@ export default class Widget {
     this.site = register.lookup("service:site");
     this.siteSettings = register.lookup("service:site-settings");
     this.currentUser = register.lookup("service:current-user");
-    this.capabilities = register.lookup("capabilities:main");
+    this.capabilities = register.lookup("service:capabilities");
     this.store = register.lookup("service:store");
     this.appEvents = register.lookup("service:app-events");
     this.keyValueStore = register.lookup("service:key-value-store");

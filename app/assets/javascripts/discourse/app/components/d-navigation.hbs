@@ -1,33 +1,19 @@
-{{#if this.isQueryFilterMode}}
-  <div class="topic-query-filter">
-    <div class="topic-query-filter__input">
-      {{d-icon "filter" class="topic-query-filter__icon"}}
-      <Input
-        class="topic-query-filter__filter-term"
-        @value={{this.queryString}}
-        @enter={{action @updateTopicsListQueryParams this.queryString}}
-        @type="text"
-      />
-    </div>
-  </div>
-{{else}}
-  <BreadCrumbs
-    @categories={{this.categories}}
-    @category={{this.category}}
-    @noSubcategories={{this.noSubcategories}}
-    @tag={{this.tag}}
-    @additionalTags={{this.additionalTags}}
-  />
+<BreadCrumbs
+  @categories={{this.categories}}
+  @category={{this.category}}
+  @noSubcategories={{this.noSubcategories}}
+  @tag={{this.tag}}
+  @additionalTags={{this.additionalTags}}
+/>
 
-  {{#unless this.additionalTags}}
-    {{! nav bar doesn't work with tag intersections }}
-    <NavigationBar
-      @navItems={{this.navItems}}
-      @filterMode={{this.filterMode}}
-      @category={{this.category}}
-    />
-  {{/unless}}
-{{/if}}
+{{#unless this.additionalTags}}
+  {{! nav bar doesn't work with tag intersections }}
+  <NavigationBar
+    @navItems={{this.navItems}}
+    @filterMode={{this.filterMode}}
+    @category={{this.category}}
+  />
+{{/unless}}
 
 <div class="navigation-controls">
   {{#if (and this.notCategoriesRoute this.site.mobileView this.canBulk)}}

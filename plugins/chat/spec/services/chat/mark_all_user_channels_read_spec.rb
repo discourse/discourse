@@ -128,6 +128,13 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
           ).count
         }.by(-2)
       end
+
+      it "publishes tracking state for all affected channels" do
+        messages = MessageBus.track_publish { result }
+        expect(
+          messages.select { |m| m.channel == "/chat/user-tracking-state/#{current_user.id}" }.count,
+        ).to eq(3)
+      end
     end
   end
 end

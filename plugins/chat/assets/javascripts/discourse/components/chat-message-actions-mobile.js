@@ -1,19 +1,17 @@
 import Component from "@glimmer/component";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { tracked } from "@glimmer/tracking";
 import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
+import { inject as service } from "@ember/service";
 
 export default class ChatMessageActionsMobile extends Component {
+  @service capabilities;
+
   @tracked hasExpandedReply = false;
   @tracked showFadeIn = false;
 
   messageActions = null;
-
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
-  }
 
   @action
   fadeAndVibrate() {

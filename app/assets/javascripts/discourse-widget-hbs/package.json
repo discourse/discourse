@@ -19,14 +19,14 @@
     "ember-cli-babel": "^7.26.10",
     "ember-cli-htmlbars": "^6.2.0",
     "handlebars": "^4.7.6",
-    "webpack": "^5.76.2"
+    "webpack": "^5.76.3"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
     "@ember/optional-features": "^2.0.0",
     "@embroider/test-setup": "^2.1.1",
     "@glimmer/component": "^1.1.2",
-    "@glimmer/syntax": "^0.84.2",
+    "@glimmer/syntax": "^0.84.3",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~3.28.5",
     "ember-cli-dependency-checker": "^3.3.1",

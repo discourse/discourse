@@ -14,7 +14,7 @@
     "ember-cli-htmlbars": "^6.2.0"
   },
   "devDependencies": {
-    "webpack": "^5.76.2"
+    "webpack": "^5.76.3"
   },
   "engines": {
     "node": "16.* || >= 18",
