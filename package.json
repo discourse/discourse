@@ -41,7 +41,7 @@
   "scripts": {
     "lint:js": "INCLUDE_TODO=1 eslint --format @lint-todo/eslint-formatter-todo ./app/assets/javascripts",
     "lint:js-plugins": "INCLUDE_TODO=1 eslint --format @lint-todo/eslint-formatter-todo ./plugins",
-    "lint:hbs": "ember-template-lint app/assets/javascripts/**/* plugins/**/assets/javascripts/**/* --no-error-on-unmatched-pattern",
+    "lint:hbs": "ember-template-lint app/assets/javascripts/**/*.hbs plugins/**/assets/javascripts/**/*.hbs --no-error-on-unmatched-pattern",
     "update:lint:js": "UPDATE_TODO=1 yarn lint:js",
     "update:lint:js-plugins": "UPDATE_TODO=1 yarn lint:js-plugins",
     "update:lint:hbs": "yarn lint:hbs --update-todo",
