@@ -98,19 +98,6 @@ export default class ChatMessage extends Component {
     );
   }
 
-  get messageCapabilities() {
-    return {
-      canReact: this.canReact,
-      canReply: this.canReply,
-      canBookmark: this.showBookmarkButton,
-      hasThread: this.canReply && this.hasThread,
-    };
-  }
-
-  get hasThread() {
-    return this.args.channel?.threadingEnabled && this.args.message?.threadId;
-  }
-
   get show() {
     return (
       !this.args.message?.deletedAt ||
@@ -162,7 +149,7 @@ export default class ChatMessage extends Component {
     document.activeElement.blur();
     document.querySelector(".chat-composer-input")?.blur();
 
-    this.pane.hoverMessage?.({
+    this.messageInteractor.markAsActive?.({
       context: this.args.context,
       model: this.args.message,
     });

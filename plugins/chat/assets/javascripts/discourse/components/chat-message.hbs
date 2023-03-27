@@ -16,10 +16,17 @@
   {{on
     "mouseenter"
     (fn
-      this.messageInteractor.markAsActive (hash model=@message context=@context)
+      this.messageInteractor.markAsActive
+      (hash model=@message context=@context desktopOnly=true)
     )
   }}
-  {{on "mouseleave" (fn this.messageInteractor.markAsActive null)}}
+  {{on
+    "mouseleave"
+    (fn
+      this.messageInteractor.markAsActive
+      (hash model=null context=null desktopOnly=true)
+    )
+  }}
   class={{concat-class
     "chat-message-container"
     (if @isHovered "is-hovered")

@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { tracked } from "@glimmer/tracking";
 import discourseLater from "discourse-common/lib/later";
@@ -10,6 +11,14 @@ export default class ChatMessageActionsMobile extends Component {
   @tracked showFadeIn = false;
 
   messageActions = null;
+
+  get messageInteractor() {
+    return new ChatMessageInteractor(
+      getOwner(this),
+      this.args.message,
+      this.args.context
+    );
+  }
 
   get capabilities() {
     return getOwner(this).lookup("capabilities:main");
@@ -38,7 +47,7 @@ export default class ChatMessageActionsMobile extends Component {
 
   @action
   actAndCloseMenu(fnId) {
-    this.args.messageActionsHandler[fnId](this.args.message);
+    this.messageInteractor[fnId](this.args.message);
     this.#onCloseMenu();
   }
 
@@ -54,8 +63,7 @@ export default class ChatMessageActionsMobile extends Component {
 
       // by ensuring we are not hovering any message anymore
       // we also ensure the menu is fully removed
-
-      this.args.livePanel.hoverMessage?.(null);
+      this.messageInteractor.markAsActive(null);
     }, 200);
   }
 

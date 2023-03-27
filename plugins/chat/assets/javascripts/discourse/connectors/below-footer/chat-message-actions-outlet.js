@@ -7,9 +7,32 @@ const MSG_ACTIONS_VERTICAL_PADDING = -10;
 export default {
   setupComponent(args, component) {
     const container = getOwner(this);
-    component.chat = container.lookup("service:chat");
+    const chat = container.lookup("service:chat");
+    component.chat = chat;
+    const site = container.lookup("service:site");
+    component.siteService = site;
 
     let popper;
+
+    component.setMessageActionsMobileAnchor = (element, [activeMessage]) => {
+      if (!activeMessage) {
+        return;
+      }
+
+      if (activeMessage.context === MESSAGE_CONTEXT_THREAD) {
+        component.set(
+          "messageActionsMobileAnchor",
+          container.lookup("service:chat-channel-thread-pane")
+            .chatMessageActionsMobileAnchor
+        );
+      } else {
+        component.set(
+          "messageActionsMobileAnchor",
+          container.lookup("service:chat-channel-pane")
+            .chatMessageActionsMobileAnchor
+        );
+      }
+    };
 
     component.positionContainer = (element, [activeMessage]) => {
       popper?.destroy();

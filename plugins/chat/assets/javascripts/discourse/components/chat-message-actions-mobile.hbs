@@ -30,7 +30,7 @@
     </div>
 
     <ul class="secondary-actions">
-      {{#each @secondaryButtons as |button|}}
+      {{#each this.messageInteractor.secondaryButtons as |button|}}
         <li class="chat-message-action-item" data-id={{button.id}}>
           <DButton
             @class="chat-message-action"
@@ -43,13 +43,13 @@
       {{/each}}
     </ul>
 
-    {{#if (or @messageCapabilities.canReact @messageCapabilities.canReply)}}
+    {{#if (or this.messageInteractor.canReact this.messageInteractor.canReply)}}
       <div class="main-actions">
-        {{#if @messageCapabilities.canReact}}
-          {{#each @emojiReactions as |reaction|}}
+        {{#if this.messageInteractor.canReact}}
+          {{#each this.messageInteractor.emojiReactions as |reaction|}}
             <ChatMessageReaction
               @reaction={{reaction}}
-              @messageActionsHandler={{@messageActionsHandler}}
+              @onReaction={{this.messageInteractor.react}}
               @message={{@message}}
               @showCount={{false}}
             />
@@ -66,7 +66,7 @@
           />
         {{/if}}
 
-        {{#if @messageCapabilities.canBookmark}}
+        {{#if this.messageInteractor.canBookmark}}
           <DButton
             @class="btn-flat bookmark-btn"
             @action={{action this.actAndCloseMenu "toggleBookmark"}}
@@ -75,7 +75,7 @@
           </DButton>
         {{/if}}
 
-        {{#if @messageCapabilities.canReply}}
+        {{#if this.messageInteractor.canReply}}
           <DButton
             @class="chat-message-action reply-btn btn-flat"
             @action={{action this.actAndCloseMenu "reply"}}

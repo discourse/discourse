@@ -108,6 +108,10 @@ export default class ChatMessageInteractor {
     );
   }
 
+  get canReact() {
+    return this.canInteractWithMessage;
+  }
+
   get canFlagMessage() {
     return (
       this.currentUser?.id !== this.message?.user?.id &&
@@ -251,10 +255,9 @@ export default class ChatMessageInteractor {
 
   @action
   markAsActive(state, event) {
-    // TODO (martin) Not sure if this is still needed?
-    // if (this.site.mobileView && options.desktopOnly) {
-    //   return;
-    // }
+    if (this.site.mobileView && state?.desktopOnly) {
+      return;
+    }
 
     if (state?.model?.staged) {
       return;

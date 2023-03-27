@@ -79,6 +79,16 @@ export default class ChatLivePane extends Component {
   }
 
   @action
+  setMessageActionsAnchors() {
+    schedule("afterRender", () => {
+      this.chatChannelPane.chatMessageActionsDesktopAnchor =
+        document.querySelector(".chat-message-actions-desktop-anchor--channel");
+      this.chatChannelPane.chatMessageActionsMobileAnchor =
+        document.querySelector(".chat-message-actions-mobile-anchor--channel");
+    });
+  }
+
+  @action
   didResizePane() {
     this.fillPaneAttempt();
     this.computeDatesSeparators();

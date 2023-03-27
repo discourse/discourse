@@ -11,6 +11,7 @@
   {{did-update this.loadMessages @targetMessageId}}
   {{did-update this.updateChannel @channel.id}}
   {{did-insert this.addAutoFocusEventListener}}
+  {{did-insert this.setMessageActionsAnchors}}
   {{will-destroy this.removeAutoFocusEventListener}}
 >
   <ChatFullPageHeader
@@ -24,7 +25,7 @@
   <ChatMentionWarnings />
 
   <div
-    class="chat-message-actions-mobile-anchor chat-message-actions-mobile-anchor--thread"
+    class="chat-message-actions-mobile-anchor chat-message-actions-mobile-anchor--channel"
   >
   </div>
 

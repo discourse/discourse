@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { schedule } from "@ember/runloop";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import { tracked } from "@glimmer/tracking";
@@ -18,6 +19,7 @@ export default class ChatThreadPanel extends Component {
   @service chatApi;
   @service chatComposerPresenceManager;
   @service chatChannelThreadComposer;
+  @service chatChannelThreadPane;
   @service appEvents;
 
   @tracked loading;
@@ -29,6 +31,16 @@ export default class ChatThreadPanel extends Component {
 
   get channel() {
     return this.chat.activeChannel;
+  }
+
+  @action
+  setMessageActionsAnchors() {
+    schedule("afterRender", () => {
+      this.chatChannelThreadPane.chatMessageActionsDesktopAnchor =
+        document.querySelector(".chat-message-actions-desktop-anchor--thread");
+      this.chatChannelThreadPane.chatMessageActionsMobileAnchor =
+        document.querySelector(".chat-message-actions-mobile-anchor--thread");
+    });
   }
 
   @action
