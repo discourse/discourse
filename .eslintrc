@@ -1,9 +1,17 @@
 {
   "extends": "eslint-config-discourse",
+  "plugins": ["n"],
   "rules": {
     "discourse-ember/global-ember": 2,
     "eol-last": 2,
-    "no-restricted-globals": 0
+    "no-restricted-globals": 0,
+    "n/no-extraneous-import": [
+      "error",
+      {
+        "allowModules": ["@glimmer/env", "@glimmer/reference", "rsvp"],
+        "resolvePaths": []
+      }
+    ]
   },
   "globals": {
     "_": "off",
