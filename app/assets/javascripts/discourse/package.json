@@ -90,7 +90,7 @@
     "pretty-text": "1.0.0",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.59.3",
+    "sass": "^1.60.0",
     "select-kit": "1.0.0",
     "sinon": "^15.0.2",
     "source-map": "^0.7.4",
