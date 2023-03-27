@@ -4,9 +4,9 @@ const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
 const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
 // Lets us know about browser's capabilities
-export default Service.extend({
-  init() {
-    this._super(...arguments);
+export default class Capabilities extends Service {
+  constructor() {
+    super(...arguments);
 
     const ua = navigator.userAgent;
 
@@ -43,5 +43,5 @@ export default Service.extend({
     this.wasLaunchedFromDiscourseHub =
       window.location.search.includes("discourse_app=1");
     this.isAppWebview = window.ReactNativeWebView !== undefined;
-  },
-});
+  }
+}
