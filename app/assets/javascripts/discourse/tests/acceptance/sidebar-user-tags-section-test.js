@@ -666,7 +666,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   });
 
   test("section link to admin site settings page when default sidebar tags have not been configured", async function (assert) {
-    updateCurrentUser({ admin: true });
+    updateCurrentUser({ admin: true, sidebar_tags: [] });
+
+    updateCurrentUser({
+      sidebar_tags: [],
+    });
 
     await visit("/");
 
