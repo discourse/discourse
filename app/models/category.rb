@@ -218,7 +218,7 @@ class Category < ActiveRecord::Base
   @@subcategory_ids = DistributedCache.new("subcategory_ids")
 
   def self.subcategory_ids(category_id)
-    @@subcategory_ids[category_id] ||= begin
+    @@subcategory_ids.defer_get_set(category_id.to_s) do
       sql = <<~SQL
             WITH RECURSIVE subcategories AS (
                 SELECT :category_id id, 1 depth
