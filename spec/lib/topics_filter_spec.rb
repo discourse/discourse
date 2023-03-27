@@ -156,6 +156,13 @@ RSpec.describe TopicsFilter do
       expect(
         TopicsFilter
           .new(guardian: Guardian.new)
+          .filter_tags(tag_names: [tag.name], match_all: true, exclude: true)
+          .pluck(:id),
+      ).to contain_exactly(topic_without_tag.id, topic_with_tag2.id, topic_with_group_only_tag.id)
+
+      expect(
+        TopicsFilter
+          .new(guardian: Guardian.new)
           .filter_tags(tag_names: [tag.name, tag2.name], match_all: true, exclude: true)
           .pluck(:id),
       ).to contain_exactly(
@@ -167,6 +174,13 @@ RSpec.describe TopicsFilter do
     end
 
     it "should only return topics that are not tagged with any of the specified tags when `match_all` is `false` and `exclude` is `true`" do
+      expect(
+        TopicsFilter
+          .new(guardian: Guardian.new)
+          .filter_tags(tag_names: [tag.name], match_all: false, exclude: true)
+          .pluck(:id),
+      ).to contain_exactly(topic_without_tag.id, topic_with_group_only_tag.id, topic_with_tag2.id)
+
       expect(
         TopicsFilter
           .new(guardian: Guardian.new)

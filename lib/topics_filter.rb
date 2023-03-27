@@ -74,10 +74,10 @@ class TopicsFilter
 
   def exclude_topics_with_any_tags(tag_ids)
     @scope =
-      @scope
-        .left_joins(:topic_tags)
-        .where("topic_tags.tag_id IS NULL OR topic_tags.tag_id NOT IN (?)", tag_ids)
-        .distinct(:id)
+      @scope.where(
+        "topics.id NOT IN (SELECT DISTINCT topic_id FROM topic_tags WHERE topic_tags.tag_id IN (?))",
+        tag_ids,
+      )
   end
 
   def include_topics_with_all_tags(tag_ids)
