@@ -32,7 +32,7 @@
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.7",
     "@uppy/aws-s3": "^3.0.5",
-    "@uppy/aws-s3-multipart": "^3.1.1",
+    "@uppy/aws-s3-multipart": "^3.1.2",
     "@uppy/core": "^3.0.4",
     "@uppy/drop-target": "^2.0.1",
     "@uppy/utils": "^5.1.1",
