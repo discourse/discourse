@@ -223,9 +223,9 @@ export default class ChatMessageInteractor {
     return buttons;
   }
 
-  select(message, checked = true) {
-    message.selected = checked;
-    this.pane.onSelectMessage(message);
+  select(checked = true) {
+    this.message.selected = checked;
+    this.pane.onSelectMessage(this.message);
   }
 
   bulkSelect(checked) {

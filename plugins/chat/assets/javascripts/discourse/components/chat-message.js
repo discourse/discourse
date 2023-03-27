@@ -315,6 +315,6 @@ export default class ChatMessage extends Component {
       this.messageInteractor.bulkSelect(event.target.checked);
     }
 
-    this.messageInteractor.bulkSelect(event.target.checked);
+    this.messageInteractor.select(event.target.checked);
   }
 }
