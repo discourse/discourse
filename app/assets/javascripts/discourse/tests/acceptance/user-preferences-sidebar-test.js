@@ -109,6 +109,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
   });
 
   test("user adding categories to sidebar when default sidebar categories have not been configured", async function (assert) {
+    updateCurrentUser({ admin: false, display_sidebar_tags: false });
     await visit("/u/eviltrout/preferences/sidebar");
 
     assert.notOk(exists(".sidebar-section[data-section-name='categories']"));
