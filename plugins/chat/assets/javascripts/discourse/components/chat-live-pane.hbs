@@ -11,7 +11,6 @@
   {{did-update this.loadMessages @targetMessageId}}
   {{did-update this.updateChannel @channel.id}}
   {{did-insert this.addAutoFocusEventListener}}
-  {{did-insert this.setMessageActionsAnchors}}
   {{will-destroy this.removeAutoFocusEventListener}}
 >
   <ChatFullPageHeader
@@ -23,11 +22,6 @@
   <ChatRetentionReminder @channel={{@channel}} />
 
   <ChatMentionWarnings />
-
-  <div
-    class="chat-message-actions-mobile-anchor chat-message-actions-mobile-anchor--channel"
-  >
-  </div>
 
   <div
     class={{concat-class
@@ -48,9 +42,6 @@
     {{chat/on-scroll this.resetIdle (hash delay=500)}}
     {{chat/on-scroll this.computeArrow (hash delay=150)}}
   >
-    <div
-      class="chat-message-actions-desktop-anchor chat-message-actions-desktop-anchor--channel"
-    ></div>
     <div class="chat-messages-container" {{chat/on-resize this.didResizePane}}>
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}

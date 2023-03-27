@@ -5,18 +5,28 @@ import { tracked } from "@glimmer/tracking";
 import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
+import { inject as service } from "@ember/service";
 
 export default class ChatMessageActionsMobile extends Component {
+  @service chat;
+  @service site;
+
   @tracked hasExpandedReply = false;
   @tracked showFadeIn = false;
 
   messageActions = null;
 
+  get message() {
+    return this.chat.activeMessage.model;
+  }
+
   get messageInteractor() {
+    const activeMessage = this.chat.activeMessage;
+
     return new ChatMessageInteractor(
       getOwner(this),
-      this.args.message,
-      this.args.context
+      activeMessage.model,
+      activeMessage.context
     );
   }
 
@@ -47,7 +57,7 @@ export default class ChatMessageActionsMobile extends Component {
 
   @action
   actAndCloseMenu(fnId) {
-    this.messageInteractor[fnId](this.args.message);
+    this.messageInteractor[fnId]();
     this.#onCloseMenu();
   }
 

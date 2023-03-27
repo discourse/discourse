@@ -20,8 +20,8 @@ export default Component.extend({
   hasUnreadMessages: false,
   drawerStyle: null,
 
-  didInsertElement() {
-    this._super(...arguments);
+  @action
+  setupDrawer() {
     if (!this.chat.userCanChat) {
       return;
     }
@@ -44,8 +44,8 @@ export default Component.extend({
     this.computeDrawerStyle();
   },
 
-  willDestroyElement() {
-    this._super(...arguments);
+  @action
+  teardownDrawer() {
     if (!this.chat.userCanChat) {
       return;
     }

@@ -1,89 +1,93 @@
-<div
-  class={{concat-class
-    "chat-message-actions-backdrop"
-    (if this.showFadeIn "fade-in")
-  }}
-  {{did-insert this.fadeAndVibrate}}
->
+{{#if (and this.site.mobileView this.chat.activeMessage)}}
   <div
-    role="button"
-    class="collapse-area"
-    {{on "touchstart" this.collapseMenu passive=true}}
+    class={{concat-class
+      "chat-message-actions-backdrop"
+      (if this.showFadeIn "fade-in")
+    }}
+    {{did-insert this.fadeAndVibrate}}
   >
-  </div>
-
-  <div class="chat-message-actions">
-    <div class="selected-message-container">
-      <div class="selected-message">
-        <ChatUserAvatar @user={{@message.user}} />
-        <span
-          {{on "touchstart" this.expandReply passive=true}}
-          role="button"
-          class={{concat-class
-            "selected-message-reply"
-            (if this.hasExpandedReply "is-expanded")
-          }}
-        >
-          {{@message.message}}
-        </span>
-      </div>
+    <div
+      role="button"
+      class="collapse-area"
+      {{on "touchstart" this.collapseMenu passive=true}}
+    >
     </div>
 
-    <ul class="secondary-actions">
-      {{#each this.messageInteractor.secondaryButtons as |button|}}
-        <li class="chat-message-action-item" data-id={{button.id}}>
-          <DButton
-            @class="chat-message-action"
-            @translatedLabel={{button.name}}
-            @icon={{button.icon}}
-            @actionParam={{button.id}}
-            @action={{action this.actAndCloseMenu button.id}}
-          />
-        </li>
-      {{/each}}
-    </ul>
-
-    {{#if (or this.messageInteractor.canReact this.messageInteractor.canReply)}}
-      <div class="main-actions">
-        {{#if this.messageInteractor.canReact}}
-          {{#each this.messageInteractor.emojiReactions as |reaction|}}
-            <ChatMessageReaction
-              @reaction={{reaction}}
-              @onReaction={{this.messageInteractor.react}}
-              @message={{@message}}
-              @showCount={{false}}
-            />
-          {{/each}}
-
-          <DButton
-            @class="btn-flat react-btn"
-            @action={{action
-              this.actAndCloseMenu
-              "startReactionForMessageActions"
+    <div class="chat-message-actions">
+      <div class="selected-message-container">
+        <div class="selected-message">
+          <ChatUserAvatar @user={{this.message.user}} />
+          <span
+            {{on "touchstart" this.expandReply passive=true}}
+            role="button"
+            class={{concat-class
+              "selected-message-reply"
+              (if this.hasExpandedReply "is-expanded")
             }}
-            @icon="discourse-emojis"
-            @title="chat.react"
-          />
-        {{/if}}
-
-        {{#if this.messageInteractor.canBookmark}}
-          <DButton
-            @class="btn-flat bookmark-btn"
-            @action={{action this.actAndCloseMenu "toggleBookmark"}}
           >
-            <BookmarkIcon @bookmark={{@message.bookmark}} />
-          </DButton>
-        {{/if}}
-
-        {{#if this.messageInteractor.canReply}}
-          <DButton
-            @class="chat-message-action reply-btn btn-flat"
-            @action={{action this.actAndCloseMenu "reply"}}
-            @icon="reply"
-            @title="chat.reply"
-          />
-        {{/if}}
+            {{this.message.message}}
+          </span>
+        </div>
       </div>
-    {{/if}}
+
+      <ul class="secondary-actions">
+        {{#each this.messageInteractor.secondaryButtons as |button|}}
+          <li class="chat-message-action-item" data-id={{button.id}}>
+            <DButton
+              @class="chat-message-action"
+              @translatedLabel={{button.name}}
+              @icon={{button.icon}}
+              @actionParam={{button.id}}
+              @action={{action this.actAndCloseMenu button.id}}
+            />
+          </li>
+        {{/each}}
+      </ul>
+
+      {{#if
+        (or this.messageInteractor.canReact this.messageInteractor.canReply)
+      }}
+        <div class="main-actions">
+          {{#if this.messageInteractor.canReact}}
+            {{#each this.messageInteractor.emojiReactions as |reaction|}}
+              <ChatMessageReaction
+                @reaction={{reaction}}
+                @onReaction={{this.messageInteractor.react}}
+                this.message={{this.message}}
+                @showCount={{false}}
+              />
+            {{/each}}
+
+            <DButton
+              @class="btn-flat react-btn"
+              @action={{action
+                this.actAndCloseMenu
+                "startReactionForMessageActions"
+              }}
+              @icon="discourse-emojis"
+              @title="chat.react"
+            />
+          {{/if}}
+
+          {{#if this.messageInteractor.canBookmark}}
+            <DButton
+              @class="btn-flat bookmark-btn"
+              @action={{action this.actAndCloseMenu "toggleBookmark"}}
+            >
+              <BookmarkIcon @bookmark={{this.message.bookmark}} />
+            </DButton>
+          {{/if}}
+
+          {{#if this.messageInteractor.canReply}}
+            <DButton
+              @class="chat-message-action reply-btn btn-flat"
+              @action={{action this.actAndCloseMenu "reply"}}
+              @icon="reply"
+              @title="chat.reply"
+            />
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
   </div>
-</div>
+{{/if}}

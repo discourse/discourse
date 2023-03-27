@@ -68,9 +68,7 @@ export default class ChatMessageInteractor {
     return favorites.slice(0, 3).map((emoji) => {
       return (
         this.message.reactions.find((reaction) => reaction.emoji === emoji) ||
-        ChatMessageReaction.create({
-          emoji,
-        })
+        ChatMessageReaction.create({ emoji })
       );
     });
   }

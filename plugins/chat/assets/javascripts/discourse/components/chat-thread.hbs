@@ -2,7 +2,6 @@
   class={{concat-class "chat-thread" (if this.loading "loading")}}
   data-id={{this.thread.id}}
   {{did-insert this.loadMessages}}
-  {{did-insert this.setMessageActionsAnchors}}
 >
   <div class="chat-thread__header">
     <span class="chat-thread__label">{{i18n "chat.thread.label"}}</span>
@@ -17,12 +16,6 @@
 
   <div class="chat-thread__body">
     <div class="chat-thread__messages chat-messages-container">
-      <div
-        class="chat-message-actions-mobile-anchor chat-message-actions-mobile-anchor--thread"
-      ></div>
-      <div
-        class="chat-message-actions-desktop-anchor chat-message-actions-desktop-anchor--thread"
-      ></div>
       {{#each this.thread.messages key="id" as |message|}}
         <ChatMessage
           @message={{message}}

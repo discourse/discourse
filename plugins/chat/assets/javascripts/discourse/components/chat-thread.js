@@ -34,16 +34,6 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
-  setMessageActionsAnchors() {
-    schedule("afterRender", () => {
-      this.chatChannelThreadPane.chatMessageActionsDesktopAnchor =
-        document.querySelector(".chat-message-actions-desktop-anchor--thread");
-      this.chatChannelThreadPane.chatMessageActionsMobileAnchor =
-        document.querySelector(".chat-message-actions-mobile-anchor--thread");
-    });
-  }
-
-  @action
   loadMessages() {
     if (this.args.targetMessageId) {
       this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
