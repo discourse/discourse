@@ -6,8 +6,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
-
-  KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
+  let(:key_modifier) { RUBY_PLATFORM =~ /darwin/i ? :meta : :control }
 
   before do
     chat_system_bootstrap
@@ -25,7 +24,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       within(".chat-composer-input") do |composer|
-        composer.send_keys([KEY_MODIFIER, "b"])
+        composer.send_keys([key_modifier, "b"])
 
         expect(composer.value).to eq("**strong text**")
       end
@@ -37,7 +36,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       within(".chat-composer-input") do |composer|
-        composer.send_keys([KEY_MODIFIER, "i"])
+        composer.send_keys([key_modifier, "i"])
 
         expect(composer.value).to eq("_emphasized text_")
       end
@@ -49,7 +48,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       within(".chat-composer-input") do |composer|
-        composer.send_keys([KEY_MODIFIER, "e"])
+        composer.send_keys([key_modifier, "e"])
 
         expect(composer.value).to eq("`indent preformatted text by 4 spaces`")
       end
