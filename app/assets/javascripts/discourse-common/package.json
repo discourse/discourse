@@ -15,7 +15,7 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@uppy/aws-s3": "^3.0.4",
+    "@uppy/aws-s3": "^3.0.5",
     "@uppy/aws-s3-multipart": "^3.1.1",
     "@uppy/core": "^3.0.4",
     "@uppy/drop-target": "^2.0.1",
