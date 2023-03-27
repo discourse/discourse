@@ -2,7 +2,7 @@ plugins:
   lazy_videos_enabled:
     default: true
     client: true
-    hidden: false
+    hidden: true
   lazy_youtube_enabled:
     default: true
     client: true
