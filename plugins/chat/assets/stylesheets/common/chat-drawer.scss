@@ -1,0 +1,235 @@
+body.composer-open .chat-drawer-outlet-container {
+  bottom: 11px; // prevent height of grippie from obscuring ...is typing indicator
+}
+
+.chat-drawer-resizer {
+  position: absolute;
+  top: -5px;
+  width: 15px;
+  height: 15px;
+}
+
+html:not(.rtl) {
+  .chat-drawer-resizer {
+    cursor: nwse-resize;
+    left: -5px;
+  }
+}
+
+html.rtl {
+  .chat-drawer-resizer {
+    cursor: nesw-resize;
+    right: -5px;
+  }
+}
+
+.chat-drawer-outlet-container {
+  // higher than timeline, lower than composer, lower than user card (bump up below)
+  z-index: z("usercard");
+  position: fixed;
+  right: var(--composer-right, 20px);
+  left: 0;
+  max-height: calc(100% - var(--header-offset) - 15px);
+
+  .rtl & {
+    left: var(--composer-right, 20px);
+    right: 0;
+  }
+
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none !important;
+  bottom: 0;
+
+  > * {
+    pointer-events: auto;
+  }
+
+  .no-channel-title {
+    font-weight: bold;
+    margin-left: 0.5rem;
+  }
+
+  &.composer-draft-collapsed {
+    bottom: 40px;
+  }
+
+  box-sizing: border-box;
+  padding-bottom: var(--composer-height, 0);
+  transition: all 100ms ease-in;
+  transition-property: bottom, padding-bottom;
+}
+
+.chat-drawer {
+  align-self: flex-end;
+  width: 400px;
+  min-width: 250px !important; // important to override inline styles
+  max-width: calc(100% - var(--composer-right));
+  min-height: 300px !important; // important to override inline styles
+
+  .chat-drawer-container {
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-bottom: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.125);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &.is-expanded {
+    .chat-drawer-container {
+      height: 100%;
+    }
+  }
+
+  &:not(.is-expanded) {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  .chat-live-pane {
+    height: 100%;
+  }
+}
+
+.chat-drawer-header__left-actions {
+  display: flex;
+  height: 100%;
+}
+
+.chat-drawer-header__right-actions {
+  display: flex;
+  height: 100%;
+  margin-left: auto;
+}
+
+.chat-drawer-header__top-line {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.chat-drawer-header__bottom-line {
+  height: 1.5rem;
+  display: flex;
+  align-items: start;
+}
+
+.chat-drawer-header__title {
+  @include ellipsis;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-weight: 700;
+  padding: 0 0.5rem 0 1rem;
+  cursor: pointer;
+
+  .chat-channel-title {
+    padding: 0;
+  }
+}
+
+.chat-drawer-header {
+  box-sizing: border-box;
+  border-bottom: solid 1px var(--primary-low);
+  border-radius: 8px 8px 0 0;
+  background: var(--primary-very-low);
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+
+  .btn {
+    height: 100%;
+  }
+
+  .chat-channel-title {
+    font-weight: 700;
+    width: 100%;
+
+    .chat-name,
+    .chat-drawer-name,
+    .category-chat-name,
+    .dm-usernames {
+      color: var(--primary);
+    }
+    .category-chat-badge,
+    .chat-drawer-badge {
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      .d-icon:not(.d-icon-lock) {
+        width: 1.25em;
+        height: 1.25em;
+      }
+    }
+
+    .badge-wrapper.bullet {
+      margin-right: 0px;
+    }
+    .dm-usernames {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .d-icon:not(.d-icon-d-chat) {
+      color: var(--primary-high);
+    }
+    .category-hashtag {
+      padding: 2px 4px;
+    }
+  }
+
+  &__close-btn,
+  &__return-to-channels-btn,
+  &__full-screen-btn,
+  &__expand-btn {
+    max-height: 2.5rem;
+    height: 100%;
+    min-width: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .d-icon {
+      color: var(--primary-low-mid);
+    }
+
+    &:visited {
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+    }
+
+    &:focus {
+      outline: none;
+      background: none;
+
+      .d-icon {
+        background: none;
+        color: var(--primary-low-mid);
+      }
+    }
+
+    &:hover {
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+  }
+}
+
+.chat-drawer-content {
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 1px;
+  padding-bottom: 0.25em;
+}

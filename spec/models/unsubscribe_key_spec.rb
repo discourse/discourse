@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe UnsubscribeKey do
-
-  describe 'post unsubscribe key' do
-    it 'can generate a correct url' do
+  describe "post unsubscribe key" do
+    it "can generate a correct url" do
       post = Fabricate(:post)
       url = post.unsubscribe_url(post.user)
 
@@ -17,27 +16,22 @@ RSpec.describe UnsubscribeKey do
     end
   end
 
-  describe 'key' do
-
+  describe "key" do
     fab!(:user) { Fabricate(:user) }
     let!(:key) { UnsubscribeKey.create_key_for(user, UnsubscribeKey::DIGEST_TYPE) }
 
-    it 'has a temporary key' do
+    it "has a temporary key" do
       expect(key).to be_present
     end
 
-    describe '#user_for_key' do
-
-      it 'can be used to find the user' do
+    describe "#user_for_key" do
+      it "can be used to find the user" do
         expect(UnsubscribeKey.user_for_key(key)).to eq(user)
       end
 
-      it 'returns nil with an invalid key' do
-        expect(UnsubscribeKey.user_for_key('asdfasdf')).to be_blank
+      it "returns nil with an invalid key" do
+        expect(UnsubscribeKey.user_for_key("asdfasdf")).to be_blank
       end
-
     end
-
   end
-
 end

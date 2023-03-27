@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class ThemeJavascriptCompiler
-
-  COLOCATED_CONNECTOR_REGEX = /\A(?<prefix>.*\/?)connectors\/(?<outlet>[^\/]+)\/(?<name>[^\/\.]+)\.(?<extension>.+)\z/
+  COLOCATED_CONNECTOR_REGEX =
+    %r{\A(?<prefix>.*/?)connectors/(?<outlet>[^/]+)/(?<name>[^/\.]+)\.(?<extension>.+)\z}
 
   class CompileError < StandardError
   end
@@ -28,13 +28,14 @@ class ThemeJavascriptCompiler
     if !@compiled
       @compiled = true
       @output_tree.freeze
-      output = if !has_content?
-        { "code" => "" }
-      elsif @@terser_disabled
-        { "code" => raw_content }
-      else
-        DiscourseJsProcessor::Transpiler.new.terser(@output_tree.to_h, terser_config)
-      end
+      output =
+        if !has_content?
+          { "code" => "" }
+        elsif @@terser_disabled
+          { "code" => raw_content }
+        else
+          DiscourseJsProcessor::Transpiler.new.terser(@output_tree.to_h, terser_config)
+        end
       @content = output["code"]
       @source_map = output["map"]
     end
@@ -48,10 +49,14 @@ class ThemeJavascriptCompiler
   def terser_config
     # Based on https://github.com/ember-cli/ember-cli-terser/blob/28df3d90a5/index.js#L12-L26
     {
-      sourceMap: { includeSources: true, root: "theme-#{@theme_id}/" },
+      sourceMap: {
+        includeSources: true,
+        root: "theme-#{@theme_id}/",
+      },
       compress: {
         negate_iife: false,
         sequences: 30,
+        drop_debugger: false,
       },
       output: {
         semicolons: false,
@@ -78,7 +83,7 @@ class ThemeJavascriptCompiler
   end
 
   def prepend_settings(settings_hash)
-    @output_tree.prepend ['settings.js', <<~JS]
+    @output_tree.prepend ["settings.js", <<~JS]
       (function() {
         if ('require' in window) {
           require("discourse/lib/theme-settings-store").registerSettings(#{@theme_id}, #{settings_hash.to_json});
@@ -88,8 +93,6 @@ class ThemeJavascriptCompiler
   end
 
   def append_tree(tree, for_tests: false)
-    root_name = "discourse"
-
     # Replace legacy extensions
     tree.transform_keys! do |filename|
       if filename.ends_with? ".js.es6"
@@ -112,7 +115,7 @@ class ThemeJavascriptCompiler
       if is_template && !is_in_templates_directory
         "#{match[:prefix]}templates/connectors/#{match[:outlet]}/#{match[:name]}.#{match[:extension]}"
       elsif !is_template && is_in_templates_directory
-        "#{match[:prefix].chomp('templates/')}connectors/#{match[:outlet]}/#{match[:name]}.#{match[:extension]}"
+        "#{match[:prefix].chomp("templates/")}connectors/#{match[:outlet]}/#{match[:name]}.#{match[:extension]}"
       else
         filename
       end
@@ -120,16 +123,13 @@ class ThemeJavascriptCompiler
 
     # Handle colocated components
     tree.dup.each_pair do |filename, content|
-      is_component_template = filename.end_with?(".hbs") && filename.start_with?("#{root_name}/components/")
+      is_component_template =
+        filename.end_with?(".hbs") &&
+          filename.start_with?("discourse/components/", "admin/components/")
       next if !is_component_template
       template_contents = content
 
-      hbs_invocation_options = {
-        moduleName: filename,
-        parseOptions: {
-          srcName: filename
-        }
-      }
+      hbs_invocation_options = { moduleName: filename, parseOptions: { srcName: filename } }
       hbs_invocation = "hbs(#{template_contents.to_json}, #{hbs_invocation_options.to_json})"
 
       prefix = <<~JS
@@ -140,7 +140,8 @@ class ThemeJavascriptCompiler
       js_filename = filename.sub(/\.hbs\z/, ".js")
       js_contents = tree[js_filename] # May be nil for template-only component
       if js_contents && !js_contents.include?("export default")
-        message = "#{filename} does not contain a `default export`. Did you forget to export the component class?"
+        message =
+          "#{filename} does not contain a `default export`. Did you forget to export the component class?"
         js_contents += "throw new Error(#{message.to_json});"
       end
 
@@ -199,13 +200,14 @@ class ThemeJavascriptCompiler
   end
 
   def raw_template_name(name)
-    name = name.sub(/\.(raw|hbr)$/, '')
+    name = name.sub(/\.(raw|hbr)\z/, "")
     name.inspect
   end
 
   def append_raw_template(name, hbs_template)
-    compiled = DiscourseJsProcessor::Transpiler.new.compile_raw_template(hbs_template, theme_id: @theme_id)
-    source_for_comment = hbs_template.gsub("*/", '*\/').indent(4, ' ')
+    compiled =
+      DiscourseJsProcessor::Transpiler.new.compile_raw_template(hbs_template, theme_id: @theme_id)
+    source_for_comment = hbs_template.gsub("*/", '*\/').indent(4, " ")
     @output_tree << ["#{name}.js", <<~JS]
       (function() {
         /*
@@ -226,13 +228,13 @@ class ThemeJavascriptCompiler
 
   def append_module(script, name, include_variables: true)
     original_filename = name
-    name = "discourse/theme-#{@theme_id}/#{name.gsub(/^discourse\//, '')}"
+    name = "discourse/theme-#{@theme_id}/#{name.gsub(%r{\Adiscourse/}, "")}"
 
     script = "#{theme_settings}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new
     @output_tree << ["#{original_filename}.js", <<~JS]
       if ('define' in window) {
-      #{transpiler.perform(script, "", name).strip}
+      #{transpiler.perform(script, "", name, theme_id: @theme_id).strip}
       }
     JS
   rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex

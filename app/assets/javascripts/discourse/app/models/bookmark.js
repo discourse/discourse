@@ -89,16 +89,9 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    const firstPost = I18n.t("first_post");
-    const lastPost = I18n.t("last_post");
-    const createdAtDate = longDate(createdAt);
-    const bumpedAtDate = longDate(bumpedAt);
-
-    return I18n.messageFormat("topic.bumped_at_title_MF", {
-      FIRST_POST: firstPost,
-      CREATED_AT: createdAtDate,
-      LAST_POST: lastPost,
-      BUMPED_AT: bumpedAtDate,
+    return I18n.t("topic.bumped_at_title", {
+      createdAtDate: longDate(createdAt),
+      bumpedAtDate: longDate(bumpedAt),
     });
   },
 
@@ -130,7 +123,10 @@ const Bookmark = RestModel.extend({
   @discourseComputed("reminder_at", "currentUser")
   formattedReminder(bookmarkReminderAt, currentUser) {
     return capitalize(
-      formattedReminderTime(bookmarkReminderAt, currentUser.timezone)
+      formattedReminderTime(
+        bookmarkReminderAt,
+        currentUser.user_option.timezone
+      )
     );
   },
 
@@ -168,6 +164,15 @@ Bookmark.reopenClass({
     args.currentUser = args.currentUser || User.current();
     args.user = User.create(args.user);
     return this._super(args);
+  },
+
+  createFor(user, bookmarkableType, bookmarkableId) {
+    return Bookmark.create({
+      bookmarkable_type: bookmarkableType,
+      bookmarkable_id: bookmarkableId,
+      user_id: user.id,
+      auto_delete_preference: user.user_option.bookmark_auto_delete_preference,
+    });
   },
 
   async applyTransformations(bookmarks) {

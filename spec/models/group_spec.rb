@@ -5,42 +5,43 @@ RSpec.describe Group do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
 
-  describe 'Validations' do
-    describe '#grant_trust_level' do
-      describe 'when trust level is not valid' do
-        it 'should not be valid' do
-          group.grant_trust_level = 123456
+  describe "Validations" do
+    describe "#grant_trust_level" do
+      describe "when trust level is not valid" do
+        it "should not be valid" do
+          group.grant_trust_level = 123_456
 
           expect(group.valid?).to eq(false)
 
-          expect(group.errors.full_messages.join(",")).to eq(I18n.t(
-            'groups.errors.grant_trust_level_not_valid',
-            trust_level: 123456
-          ))
+          expect(group.errors.full_messages.join(",")).to eq(
+            I18n.t("groups.errors.grant_trust_level_not_valid", trust_level: 123_456),
+          )
         end
       end
     end
 
-    describe '#name' do
-      context 'when a user with a similar name exists' do
-        it 'should not be valid' do
+    describe "#name" do
+      context "when a user with a similar name exists" do
+        it "should not be valid" do
           new_group = Fabricate.build(:group, name: admin.username.upcase)
 
           expect(new_group).to_not be_valid
 
-          expect(new_group.errors.full_messages.first)
-            .to include(I18n.t("activerecord.errors.messages.taken"))
+          expect(new_group.errors.full_messages.first).to include(
+            I18n.t("activerecord.errors.messages.taken"),
+          )
         end
       end
 
-      context 'when a group with a similar name exists' do
-        it 'should not be valid' do
+      context "when a group with a similar name exists" do
+        it "should not be valid" do
           new_group = Fabricate.build(:group, name: group.name.upcase)
 
           expect(new_group).to_not be_valid
 
-          expect(new_group.errors.full_messages.first)
-            .to include(I18n.t("activerecord.errors.messages.taken"))
+          expect(new_group.errors.full_messages.first).to include(
+            I18n.t("activerecord.errors.messages.taken"),
+          )
         end
       end
     end
@@ -65,11 +66,9 @@ RSpec.describe Group do
     end
   end
 
-  describe '#builtin' do
+  describe "#builtin" do
     context "when verifying enum sequence" do
-      before do
-        @builtin = Group.builtin
-      end
+      before { @builtin = Group.builtin }
 
       it "'moderators' should be at 1st position" do
         expect(@builtin[:moderators]).to eq(1)
@@ -82,12 +81,8 @@ RSpec.describe Group do
   end
 
   # UGLY but perf is horrible with this callback
-  before do
-    User.set_callback(:create, :after, :ensure_in_trust_level_group)
-  end
-  after do
-    User.skip_callback(:create, :after, :ensure_in_trust_level_group)
-  end
+  before { User.set_callback(:create, :after, :ensure_in_trust_level_group) }
+  after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
 
   describe "validation" do
     let(:group) { build(:group) }
@@ -107,16 +102,16 @@ RSpec.describe Group do
       expect(group.valid?).to eq false
     end
 
-    it 'strips trailing and leading spaces' do
-      group.name = '  dragon  '
+    it "strips trailing and leading spaces" do
+      group.name = "  dragon  "
 
       expect(group.save).to eq(true)
-      expect(group.reload.name).to eq('dragon')
+      expect(group.reload.name).to eq("dragon")
     end
 
     it "is invalid for case-insensitive existing names" do
-      build(:group, name: 'this_is_a_name').save
-      group.name = 'This_Is_A_Name'
+      build(:group, name: "this_is_a_name").save
+      group.name = "This_Is_A_Name"
       expect(group.valid?).to eq false
     end
 
@@ -145,16 +140,16 @@ RSpec.describe Group do
       expect(group.valid?).to eq(true)
     end
 
-    context 'when a group has no owners' do
-      describe 'group has not been persisted' do
-        it 'should not allow membership requests' do
+    context "when a group has no owners" do
+      describe "group has not been persisted" do
+        it "should not allow membership requests" do
           group = Fabricate.build(:group, allow_membership_requests: true)
 
           expect(group.valid?).to eq(false)
 
-          expect(group.errors.full_messages).to include(I18n.t(
-            "groups.errors.cant_allow_membership_requests"
-          ))
+          expect(group.errors.full_messages).to include(
+            I18n.t("groups.errors.cant_allow_membership_requests"),
+          )
 
           group.group_users.build(user_id: user.id, owner: true)
 
@@ -162,14 +157,14 @@ RSpec.describe Group do
         end
       end
 
-      it 'should not allow membership requests' do
+      it "should not allow membership requests" do
         group.allow_membership_requests = true
 
         expect(group.valid?).to eq(false)
 
-        expect(group.errors.full_messages).to include(I18n.t(
-          "groups.errors.cant_allow_membership_requests"
-        ))
+        expect(group.errors.full_messages).to include(
+          I18n.t("groups.errors.cant_allow_membership_requests"),
+        )
 
         group.allow_membership_requests = false
         group.save!
@@ -194,41 +189,50 @@ RSpec.describe Group do
     Group[:staff].user_ids.reject { |id| id < 0 }
   end
 
-  describe '#primary_group=' do
-    before do
-      group.add(user)
-    end
+  describe "#primary_group=" do
+    before { group.add(user) }
 
     it "updates all members' #primary_group" do
-      expect { group.update(primary_group: true) }.to change { user.reload.primary_group }.from(nil).to(group)
-      expect { group.update(primary_group: false) }.to change { user.reload.primary_group }.from(group).to(nil)
+      expect { group.update(primary_group: true) }.to change { user.reload.primary_group }.from(
+        nil,
+      ).to(group)
+      expect { group.update(primary_group: false) }.to change { user.reload.primary_group }.from(
+        group,
+      ).to(nil)
     end
 
     it "updates all members' #flair_group" do
-      expect { group.update(primary_group: true) }.to change { user.reload.flair_group }.from(nil).to(group)
-      expect { group.update(primary_group: false) }.to change { user.reload.flair_group }.from(group).to(nil)
+      expect { group.update(primary_group: true) }.to change { user.reload.flair_group }.from(
+        nil,
+      ).to(group)
+      expect { group.update(primary_group: false) }.to change { user.reload.flair_group }.from(
+        group,
+      ).to(nil)
     end
   end
 
-  describe '#title=' do
+  describe "#title=" do
     it "updates the member's title only if it was blank or exact match" do
       group.add(user)
 
-      expect { group.update(title: 'Awesome') }.to change { user.reload.title }.from(nil).to('Awesome')
-      expect { group.update(title: 'Super') }.to change { user.reload.title }.from('Awesome').to('Super')
+      expect { group.update(title: "Awesome") }.to change { user.reload.title }.from(nil).to(
+        "Awesome",
+      )
+      expect { group.update(title: "Super") }.to change { user.reload.title }.from("Awesome").to(
+        "Super",
+      )
 
-      user.update(title: 'Differently Awesome')
-      expect { group.update(title: 'Awesome') }.to_not change { user.reload.title }
+      user.update(title: "Differently Awesome")
+      expect { group.update(title: "Awesome") }.to_not change { user.reload.title }
     end
 
     it "doesn't update non-member's title" do
       user.update(title: group.title)
-      expect { group.update(title: 'Super') }.to_not change { user.reload.title }
+      expect { group.update(title: "Super") }.to_not change { user.reload.title }
     end
   end
 
-  describe '.refresh_automatic_group!' do
-
+  describe ".refresh_automatic_group!" do
     it "does not include staged users in any automatic groups" do
       staged = Fabricate(:staged, trust_level: 1)
 
@@ -242,38 +246,34 @@ RSpec.describe Group do
       expect(GroupUser.where(user_id: staged.id).count).to eq(2)
     end
 
-    describe 'after updating automatic group members' do
+    describe "after updating automatic group members" do
       fab!(:user) { Fabricate(:user) }
 
-      it 'triggers an event when a user is removed from an automatic group' do
+      it "triggers an event when a user is removed from an automatic group" do
         tl3_users = Group.find(Group::AUTO_GROUPS[:trust_level_3])
         tl3_users.add(user)
 
-        events = DiscourseEvent.track_events do
-          Group.refresh_automatic_group!(:trust_level_3)
-        end
+        _events = DiscourseEvent.track_events { Group.refresh_automatic_group!(:trust_level_3) }
 
         expect(GroupUser.exists?(group: tl3_users, user: user)).to eq(false)
-        publish_event_job_args = Jobs::PublishGroupMembershipUpdates.jobs.last['args'].first
+        publish_event_job_args = Jobs::PublishGroupMembershipUpdates.jobs.last["args"].first
         expect(publish_event_job_args["user_ids"]).to include(user.id)
         expect(publish_event_job_args["group_id"]).to eq(tl3_users.id)
-        expect(publish_event_job_args["type"]).to include('remove')
+        expect(publish_event_job_args["type"]).to include("remove")
       end
 
-      it 'triggers an event when a user is added to an automatic group' do
+      it "triggers an event when a user is added to an automatic group" do
         tl0_users = Group.find(Group::AUTO_GROUPS[:trust_level_0])
 
         expect(GroupUser.exists?(group: tl0_users, user: user)).to eq(false)
 
-        events = DiscourseEvent.track_events do
-          Group.refresh_automatic_group!(:trust_level_0)
-        end
+        _events = DiscourseEvent.track_events { Group.refresh_automatic_group!(:trust_level_0) }
 
         expect(GroupUser.exists?(group: tl0_users, user: user)).to eq(true)
-        publish_event_job_args = Jobs::PublishGroupMembershipUpdates.jobs.last['args'].first
+        publish_event_job_args = Jobs::PublishGroupMembershipUpdates.jobs.last["args"].first
         expect(publish_event_job_args["user_ids"]).to include(user.id)
         expect(publish_event_job_args["group_id"]).to eq(tl0_users.id)
-        expect(publish_event_job_args["type"]).to eq('add')
+        expect(publish_event_job_args["type"]).to eq("add")
       end
     end
 
@@ -300,7 +300,7 @@ RSpec.describe Group do
 
     it "does not reset the localized name" do
       begin
-        I18n.locale = SiteSetting.default_locale = 'fi'
+        I18n.locale = SiteSetting.default_locale = "fi"
 
         group = Group.find(Group::AUTO_GROUPS[:everyone])
         group.update!(name: I18n.t("groups.default_names.everyone"))
@@ -309,7 +309,7 @@ RSpec.describe Group do
 
         expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
 
-        I18n.locale = SiteSetting.default_locale = 'en'
+        I18n.locale = SiteSetting.default_locale = "en"
 
         Group.refresh_automatic_group!(:everyone)
 
@@ -319,26 +319,26 @@ RSpec.describe Group do
 
     it "uses the localized name if name has not been taken" do
       begin
-        I18n.locale = SiteSetting.default_locale = 'de'
+        I18n.locale = SiteSetting.default_locale = "de"
 
         group = Group.refresh_automatic_group!(:staff)
 
-        expect(group.name).to_not eq('staff')
-        expect(group.name).to eq(I18n.t('groups.default_names.staff'))
+        expect(group.name).to_not eq("staff")
+        expect(group.name).to eq(I18n.t("groups.default_names.staff"))
       end
     end
 
     it "does not use the localized name if name has already been taken" do
       begin
-        I18n.locale = SiteSetting.default_locale = 'de'
+        I18n.locale = SiteSetting.default_locale = "de"
 
-        Fabricate(:group, name: I18n.t('groups.default_names.staff').upcase)
+        Fabricate(:group, name: I18n.t("groups.default_names.staff").upcase)
         group = Group.refresh_automatic_group!(:staff)
-        expect(group.name).to eq('staff')
+        expect(group.name).to eq("staff")
 
-        Fabricate(:user, username: I18n.t('groups.default_names.moderators').upcase)
+        Fabricate(:user, username: I18n.t("groups.default_names.moderators").upcase)
         group = Group.refresh_automatic_group!(:moderators)
-        expect(group.name).to eq('moderators')
+        expect(group.name).to eq("moderators")
       end
     end
 
@@ -348,8 +348,8 @@ RSpec.describe Group do
 
       group = Group.refresh_automatic_group!(:staff)
 
-      expect(group.name).to_not eq('staff')
-      expect(group.name).to eq(I18n.t('groups.default_names.staff', locale: "de"))
+      expect(group.name).to_not eq("staff")
+      expect(group.name).to eq(I18n.t("groups.default_names.staff", locale: "de"))
     end
   end
 
@@ -373,7 +373,6 @@ RSpec.describe Group do
   end
 
   it "Can update moderator/staff/admin groups correctly" do
-
     admin = Fabricate(:admin)
     moderator = Fabricate(:moderator)
 
@@ -409,10 +408,12 @@ RSpec.describe Group do
 
     # we need some work to set min username to 6
 
-    User.where('length(username) < 6').each do |u|
-      u.username = u.username + "ZZZZZZ"
-      u.save!
-    end
+    User
+      .where("length(username) < 6")
+      .each do |u|
+        u.username = u.username + "ZZZZZZ"
+        u.save!
+      end
 
     SiteSetting.min_username_length = 6
     Group.refresh_automatic_groups!(:staff)
@@ -445,6 +446,7 @@ RSpec.describe Group do
 
     DB.exec("UPDATE groups SET user_count = 0 WHERE id = #{Group::AUTO_GROUPS[:trust_level_2]}")
 
+    Group.delete_all
     Group.refresh_automatic_groups!
 
     groups = Group.includes(:users).to_a
@@ -489,10 +491,10 @@ RSpec.describe Group do
     expect(g.usernames.split(",").sort).to eq usernames.split(",").sort
   end
 
-  describe 'new' do
+  describe "new" do
     subject { Fabricate.build(:group) }
 
-    it 'triggers a extensibility event' do
+    it "triggers a extensibility event" do
       event = DiscourseEvent.track_events { subject.save! }.first
 
       expect(event[:event_name]).to eq(:group_created)
@@ -500,13 +502,11 @@ RSpec.describe Group do
     end
   end
 
-  describe 'destroy' do
+  describe "destroy" do
     fab!(:user) { Fabricate(:user) }
     fab!(:group) { Fabricate(:group, users: [user]) }
 
-    before do
-      group.add(user)
-    end
+    before { group.add(user) }
 
     it "it deleted correctly" do
       group.destroy!
@@ -514,7 +514,7 @@ RSpec.describe Group do
       expect(GroupUser.where(group_id: group.id).count).to eq 0
     end
 
-    it 'triggers a extensibility event' do
+    it "triggers a extensibility event" do
       event = DiscourseEvent.track_events { group.destroy! }.first
 
       expect(event[:event_name]).to eq(:group_destroyed)
@@ -522,7 +522,7 @@ RSpec.describe Group do
     end
 
     it "strips the user's title and unsets the user's primary group when exact match" do
-      group.update(title: 'Awesome')
+      group.update(title: "Awesome")
       user.update(primary_group: group)
 
       group.destroy!
@@ -533,19 +533,19 @@ RSpec.describe Group do
     end
 
     it "does not strip title or unset primary group when not exact match" do
-      primary_group = Fabricate(:group, primary_group: true, title: 'Different')
+      primary_group = Fabricate(:group, primary_group: true, title: "Different")
       primary_group.add(user)
-      group.update(title: 'Awesome')
+      group.update(title: "Awesome")
 
       group.destroy!
 
       user.reload
-      expect(user.title).to eq('Different')
+      expect(user.title).to eq("Different")
       expect(user.primary_group).to eq(primary_group)
     end
 
     it "doesn't fail when the user gets destroyed" do
-      group.update(title: 'Awesome')
+      group.update(title: "Awesome")
       group.add(user)
       user.reload
 
@@ -579,7 +579,7 @@ RSpec.describe Group do
     user = Fabricate(:user, trust_level: 2)
     Group.user_trust_level_change!(user.id, 2)
 
-    expect(user.groups.map(&:name).sort).to eq ["trust_level_0", "trust_level_1", "trust_level_2"]
+    expect(user.groups.map(&:name).sort).to eq %w[trust_level_0 trust_level_1 trust_level_2]
 
     Group.user_trust_level_change!(user.id, 0)
     user.reload
@@ -596,7 +596,7 @@ RSpec.describe Group do
       user = Fabricate(:user, trust_level: 2)
       Group.user_trust_level_change!(user.id, 2)
 
-      expect(called).to eq(user_id: user.id, group_id: Group.find_by(name: 'trust_level_2').id)
+      expect(called).to eq(user_id: user.id, group_id: Group.find_by(name: "trust_level_2").id)
     ensure
       DiscourseEvent.off(:user_added_to_group, &block)
     end
@@ -606,7 +606,7 @@ RSpec.describe Group do
     fab!(:group) { Fabricate(:group) }
 
     it "by default has no managers" do
-      expect(group.group_users.where('group_users.owner')).to be_empty
+      expect(group.group_users.where("group_users.owner")).to be_empty
     end
 
     it "multiple managers can be appointed" do
@@ -614,7 +614,7 @@ RSpec.describe Group do
         u = Fabricate(:user)
         group.add_owner(u)
       end
-      expect(group.group_users.where('group_users.owner').count).to eq(2)
+      expect(group.group_users.where("group_users.owner").count).to eq(2)
     end
 
     it "manager has authority to edit membership" do
@@ -625,7 +625,7 @@ RSpec.describe Group do
     end
   end
 
-  describe 'trust level management' do
+  describe "trust level management" do
     it "correctly grants a trust level to members" do
       group = Fabricate(:group, grant_trust_level: 2)
       u0 = Fabricate(:user, trust_level: 0)
@@ -638,34 +638,27 @@ RSpec.describe Group do
       expect(u3.reload.trust_level).to eq(3)
     end
 
-    describe 'when a user has qualified for trust level 1' do
-      fab!(:user) do
-        Fabricate(:user,
-          trust_level: 1,
-          created_at: Time.zone.now - 10.years
-        )
-      end
+    describe "when a user has qualified for trust level 1" do
+      fab!(:user) { Fabricate(:user, trust_level: 1, created_at: Time.zone.now - 10.years) }
 
-      fab!(:group) { Fabricate(:group, grant_trust_level: 1) }
-      fab!(:group2) { Fabricate(:group, grant_trust_level: 0) }
+      fab!(:group) { Fabricate(:group, grant_trust_level: 3) }
+      fab!(:group2) { Fabricate(:group, grant_trust_level: 2) }
 
-      before do
-        user.user_stat.update!(
-          topics_entered: 999,
-          posts_read_count: 999,
-          time_read: 999
-        )
-      end
+      before { user.user_stat.update!(topics_entered: 999, posts_read_count: 999, time_read: 999) }
 
       it "should not demote the user" do
         group.add(user)
         group2.add(user)
 
-        expect(user.reload.trust_level).to eq(1)
+        expect(user.reload.trust_level).to eq(3)
 
         group.remove(user)
 
-        expect(user.reload.trust_level).to eq(0)
+        expect(user.reload.trust_level).to eq(2)
+
+        group2.remove(user)
+
+        expect(user.reload.trust_level).to eq(1)
       end
     end
 
@@ -704,24 +697,23 @@ RSpec.describe Group do
     end
   end
 
-  it 'should cook the bio' do
+  it "should cook the bio" do
     group = Fabricate(:group)
-    group.update!(bio_raw: 'This is a group for :unicorn: lovers')
+    group.update!(bio_raw: "This is a group for :unicorn: lovers")
 
     expect(group.bio_cooked).to include("unicorn.png")
 
-    group.update!(bio_raw: '')
+    group.update!(bio_raw: "")
 
     expect(group.bio_cooked).to eq(nil)
   end
 
   describe ".visible_groups" do
-
     def can_view?(user, group)
       Group.visible_groups(user).where(id: group.id).exists?
     end
 
-    it 'correctly restricts group visibility' do
+    it "correctly restricts group visibility" do
       group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
       logged_on_user = Fabricate(:user)
       member = Fabricate(:user)
@@ -777,16 +769,14 @@ RSpec.describe Group do
       expect(can_view?(logged_on_user, group)).to eq(true)
       expect(can_view?(nil, group)).to eq(false)
     end
-
   end
 
   describe ".members_visible_groups" do
-
     def can_view?(user, group)
       Group.members_visible_groups(user).exists?(id: group.id)
     end
 
-    it 'correctly restricts group members visibility' do
+    it "correctly restricts group members visibility" do
       group = Fabricate.build(:group, members_visibility_level: Group.visibility_levels[:owners])
       logged_on_user = Fabricate(:user)
       member = Fabricate(:user)
@@ -842,27 +832,26 @@ RSpec.describe Group do
       expect(can_view?(logged_on_user, group)).to eq(true)
       expect(can_view?(nil, group)).to eq(false)
     end
-
   end
 
-  describe '#remove' do
+  describe "#remove" do
     before { group.add(user) }
 
-    context 'when stripping title' do
+    context "when stripping title" do
       it "only strips user's title if exact match" do
-        group.update!(title: 'Awesome')
-        expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to(nil)
+        group.update!(title: "Awesome")
+        expect { group.remove(user) }.to change { user.reload.title }.from("Awesome").to(nil)
 
         group.add(user)
-        user.update_columns(title: 'Different')
+        user.update_columns(title: "Different")
         expect { group.remove(user) }.to_not change { user.reload.title }
       end
 
       it "grants another title when the user has other available titles" do
-        group.update!(title: 'Awesome')
-        Fabricate(:group, title: 'Super').add(user)
+        group.update!(title: "Awesome")
+        Fabricate(:group, title: "Super").add(user)
 
-        expect { group.remove(user) }.to change { user.reload.title }.from('Awesome').to('Super')
+        expect { group.remove(user) }.to change { user.reload.title }.from("Awesome").to("Super")
       end
     end
 
@@ -871,33 +860,34 @@ RSpec.describe Group do
       expect { group.remove(user) }.to change { user.reload.primary_group }.from(group).to(nil)
     end
 
-    it 'triggers a user_removed_from_group event' do
+    it "triggers a user_removed_from_group event" do
       events = DiscourseEvent.track_events { group.remove(user) }.map { |e| e[:event_name] }
       expect(events).to include(:user_removed_from_group)
     end
   end
 
-  describe '#add' do
-    it 'grants the title only if the new member does not have title' do
-      group.update(title: 'Awesome')
-      expect { group.add(user) }.to change { user.reload.title }.from(nil).to('Awesome')
+  describe "#add" do
+    it "grants the title only if the new member does not have title" do
+      group.update(title: "Awesome")
+      expect { group.add(user) }.to change { user.reload.title }.from(nil).to("Awesome")
 
       group.remove(user)
-      user.update(title: 'Already Awesome')
+      user.update(title: "Already Awesome")
       expect { group.add(user) }.not_to change { user.reload.title }
     end
 
     it "always sets user's primary group" do
-      group.update(primary_group: true, title: 'AAAA')
+      group.update(primary_group: true, title: "AAAA")
       expect { group.add(user) }.to change { user.reload.primary_group }.from(nil).to(group)
 
-      new_group = Fabricate(:group, primary_group: true, title: 'BBBB')
+      new_group = Fabricate(:group, primary_group: true, title: "BBBB")
 
       expect {
         new_group.add(user)
         user.reload
-      }.to change { user.primary_group }.from(group).to(new_group)
-        .and change { user.title }.from('AAAA').to('BBBB')
+      }.to change { user.primary_group }.from(group).to(new_group).and change { user.title }.from(
+              "AAAA",
+            ).to("BBBB")
     end
 
     it "can send a notification to the user" do
@@ -908,14 +898,15 @@ RSpec.describe Group do
       expect(notification.user_id).to eq(user.id)
     end
 
-    it 'triggers a user_added_to_group event' do
+    it "triggers a user_added_to_group event" do
       automatic = nil
       called = false
 
-      block = Proc.new do |_u, _g, options|
-        automatic = options[:automatic]
-        called = true
-      end
+      block =
+        Proc.new do |_u, _g, options|
+          automatic = options[:automatic]
+          called = true
+        end
       begin
         DiscourseEvent.on(:user_added_to_group, &block)
 
@@ -928,7 +919,7 @@ RSpec.describe Group do
       end
     end
 
-    context 'when adding a user into a public group' do
+    context "when adding a user into a public group" do
       fab!(:category) { Fabricate(:category) }
 
       it "should publish the group's categories to the client" do
@@ -943,62 +934,63 @@ RSpec.describe Group do
 
       describe "when group belongs to more than #{Group::PUBLISH_CATEGORIES_LIMIT} categories" do
         it "should publish a message to refresh the user's client" do
-          (Group::PUBLISH_CATEGORIES_LIMIT + 1).times do
-            group.categories << Fabricate(:category)
-          end
+          (Group::PUBLISH_CATEGORIES_LIMIT + 1).times { group.categories << Fabricate(:category) }
 
           message = MessageBus.track_publish { group.add(user) }.first
 
-          expect(message.data).to eq('clobber')
-          expect(message.channel).to eq('/refresh_client')
+          expect(message.data).to eq("clobber")
+          expect(message.channel).to eq("/refresh_client")
           expect(message.user_ids).to eq([user.id])
         end
       end
     end
   end
 
-  describe '.search_groups' do
-
+  describe ".search_groups" do
     def search_group_names(name)
       Group.search_groups(name, sort: :auto).map(&:name)
     end
 
-    it 'should return the right groups' do
-      group_name = Fabricate(:group, name: 'tEsT_more_things', full_name: 'Abc something awesome').name
+    it "should return the right groups" do
+      Group.delete_all
+      Group.refresh_automatic_groups!
 
-      expect(search_group_names('te')).to eq([group_name])
-      expect(search_group_names('TE')).to eq([group_name])
-      expect(search_group_names('es')).to eq([group_name])
-      expect(search_group_names('ES')).to eq([group_name])
-      expect(search_group_names('ngs')).to eq([group_name])
-      expect(search_group_names('sOmEthi')).to eq([group_name])
-      expect(search_group_names('abc')).to eq([group_name])
-      expect(search_group_names('sOmEthi')).to eq([group_name])
-      expect(search_group_names('test2')).to eq([])
+      group_name =
+        Fabricate(:group, name: "tEsT_more_things", full_name: "Abc something awesome").name
+
+      expect(search_group_names("te")).to eq([group_name])
+      expect(search_group_names("TE")).to eq([group_name])
+      expect(search_group_names("es")).to eq([group_name])
+      expect(search_group_names("ES")).to eq([group_name])
+      expect(search_group_names("ngs")).to eq([group_name])
+      expect(search_group_names("sOmEthi")).to eq([group_name])
+      expect(search_group_names("abc")).to eq([group_name])
+      expect(search_group_names("sOmEthi")).to eq([group_name])
+      expect(search_group_names("test2")).to eq([])
     end
 
     it "should prioritize prefix matches on group's name or fullname" do
-      Fabricate(:group, name: 'pears_11', full_name: 'fred apple')
-      Fabricate(:group, name: 'apples', full_name: 'jane orange')
-      Fabricate(:group, name: 'oranges2', full_name: 'nothing')
-      Fabricate(:group, name: 'oranges1', full_name: 'ms fred')
+      Fabricate(:group, name: "pears_11", full_name: "fred apple")
+      Fabricate(:group, name: "apples", full_name: "jane orange")
+      Fabricate(:group, name: "oranges2", full_name: "nothing")
+      Fabricate(:group, name: "oranges1", full_name: "ms fred")
 
-      expect(search_group_names('ap')).to eq(['apples', 'pears_11'])
-      expect(search_group_names('fr')).to eq(['pears_11', 'oranges1'])
-      expect(search_group_names('oran')).to eq(['oranges1', 'oranges2', 'apples'])
+      expect(search_group_names("ap")).to eq(%w[apples pears_11])
+      expect(search_group_names("fr")).to eq(%w[pears_11 oranges1])
+      expect(search_group_names("oran")).to eq(%w[oranges1 oranges2 apples])
 
-      expect(search_group_names('pearsX11')).to eq([])
+      expect(search_group_names("pearsX11")).to eq([])
     end
   end
 
-  describe '#bulk_add' do
-    it 'should be able to add multiple users' do
+  describe "#bulk_add" do
+    it "should be able to add multiple users" do
       group.bulk_add([user.id, admin.id])
 
       expect(group.group_users.map(&:user_id)).to contain_exactly(user.id, admin.id)
     end
 
-    it 'updates group user count' do
+    it "updates group user count" do
       expect {
         group.bulk_add([user.id, admin.id])
         group.reload
@@ -1023,12 +1015,11 @@ RSpec.describe Group do
     expect(group.has_messages?).to eq true
   end
 
-  describe '#automatic_group_membership' do
+  describe "#automatic_group_membership" do
     let(:group) { Fabricate(:group, automatic_membership_email_domains: "example.com") }
 
     it "should be triggered on create and update" do
-      expect { group }
-        .to change { Jobs::AutomaticGroupMembership.jobs.size }.by(1)
+      expect { group }.to change { Jobs::AutomaticGroupMembership.jobs.size }.by(1)
 
       job = Jobs::AutomaticGroupMembership.jobs.last
 
@@ -1036,9 +1027,9 @@ RSpec.describe Group do
 
       Jobs::AutomaticGroupMembership.jobs.clear
 
-      expect do
-        group.update!(name: 'asdiaksjdias')
-      end.to change { Jobs::AutomaticGroupMembership.jobs.size }.by(1)
+      expect do group.update!(name: "asdiaksjdias") end.to change {
+        Jobs::AutomaticGroupMembership.jobs.size
+      }.by(1)
 
       job = Jobs::AutomaticGroupMembership.jobs.last
 
@@ -1050,16 +1041,15 @@ RSpec.describe Group do
     let(:group) { Fabricate(:group) }
 
     def mock_imap
-      @mocked_imap_provider = MockedImapProvider.new(
-        group.imap_server,
-        port: group.imap_port,
-        ssl: group.imap_ssl,
-        username: group.email_username,
-        password: group.email_password
-      )
-      Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(
-        @mocked_imap_provider
-      )
+      @mocked_imap_provider =
+        MockedImapProvider.new(
+          group.imap_server,
+          port: group.imap_port,
+          ssl: group.imap_ssl,
+          username: group.email_username,
+          password: group.email_password,
+        )
+      Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(@mocked_imap_provider)
     end
 
     def configure_imap
@@ -1069,21 +1059,21 @@ RSpec.describe Group do
         imap_ssl: true,
         imap_enabled: true,
         email_username: "test@gmail.com",
-        email_password: "testPassword1!"
+        email_password: "testPassword1!",
       )
     end
 
     def enable_imap
       SiteSetting.enable_imap = true
       @mocked_imap_provider.stubs(:connect!)
-      @mocked_imap_provider.stubs(:list_mailboxes_with_attributes).returns([stub(attr: [], name: "Inbox")])
+      @mocked_imap_provider.stubs(:list_mailboxes_with_attributes).returns(
+        [stub(attr: [], name: "Inbox")],
+      )
       @mocked_imap_provider.stubs(:list_mailboxes).returns(["Inbox"])
       @mocked_imap_provider.stubs(:disconnect!)
     end
 
-    before do
-      Discourse.redis.del("group_imap_mailboxes_#{group.id}")
-    end
+    before { Discourse.redis.del("group_imap_mailboxes_#{group.id}") }
 
     describe "#imap_mailboxes" do
       it "returns an empty array if group imap is not configured" do
@@ -1149,14 +1139,22 @@ RSpec.describe Group do
       group.tracking_category_ids = [category3.id]
       group.regular_category_ids = [category4.id]
       group.save!
-      expect(GroupCategoryNotificationDefault.lookup(group, :watching).pluck(:category_id)).to contain_exactly(category1.id, category2.id)
-      expect(GroupCategoryNotificationDefault.lookup(group, :tracking).pluck(:category_id)).to eq([category3.id])
-      expect(GroupCategoryNotificationDefault.lookup(group, :regular).pluck(:category_id)).to eq([category4.id])
+      expect(
+        GroupCategoryNotificationDefault.lookup(group, :watching).pluck(:category_id),
+      ).to contain_exactly(category1.id, category2.id)
+      expect(GroupCategoryNotificationDefault.lookup(group, :tracking).pluck(:category_id)).to eq(
+        [category3.id],
+      )
+      expect(GroupCategoryNotificationDefault.lookup(group, :regular).pluck(:category_id)).to eq(
+        [category4.id],
+      )
 
       new_group = Fabricate.build(:group)
       new_group.watching_category_ids = [category1.id, category2.id]
       new_group.save!
-      expect(GroupCategoryNotificationDefault.lookup(new_group, :watching).pluck(:category_id)).to contain_exactly(category1.id, category2.id)
+      expect(
+        GroupCategoryNotificationDefault.lookup(new_group, :watching).pluck(:category_id),
+      ).to contain_exactly(category1.id, category2.id)
     end
 
     it "can remove categories" do
@@ -1164,17 +1162,21 @@ RSpec.describe Group do
         GroupCategoryNotificationDefault.create!(
           group: group,
           category: category,
-          notification_level: GroupCategoryNotificationDefault.notification_levels[:watching]
+          notification_level: GroupCategoryNotificationDefault.notification_levels[:watching],
         )
       end
 
       group.watching_category_ids = [category2.id]
       group.save!
-      expect(GroupCategoryNotificationDefault.lookup(group, :watching).pluck(:category_id)).to eq([category2.id])
+      expect(GroupCategoryNotificationDefault.lookup(group, :watching).pluck(:category_id)).to eq(
+        [category2.id],
+      )
 
       group.watching_category_ids = []
       group.save!
-      expect(GroupCategoryNotificationDefault.lookup(group, :watching).pluck(:category_id)).to be_empty
+      expect(
+        GroupCategoryNotificationDefault.lookup(group, :watching).pluck(:category_id),
+      ).to be_empty
     end
 
     it "can set tag notifications" do
@@ -1183,23 +1185,31 @@ RSpec.describe Group do
       group.tracking_tags = [tag3.name]
       group.save!
       expect(GroupTagNotificationDefault.lookup(group, :regular).pluck(:tag_id)).to eq([tag4.id])
-      expect(GroupTagNotificationDefault.lookup(group, :watching).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id)
+      expect(
+        GroupTagNotificationDefault.lookup(group, :watching).pluck(:tag_id),
+      ).to contain_exactly(tag1.id, tag2.id)
       expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to eq([tag3.id])
 
       new_group = Fabricate.build(:group)
       new_group.watching_first_post_tags = [tag1.name, tag3.name]
       new_group.save!
-      expect(GroupTagNotificationDefault.lookup(new_group, :watching_first_post).pluck(:tag_id)).to contain_exactly(tag1.id, tag3.id)
+      expect(
+        GroupTagNotificationDefault.lookup(new_group, :watching_first_post).pluck(:tag_id),
+      ).to contain_exactly(tag1.id, tag3.id)
     end
 
     it "can take tag synonyms" do
       group.tracking_tags = [synonym1.name, synonym2.name, tag3.name]
       group.save!
-      expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id, tag3.id)
+      expect(
+        GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id),
+      ).to contain_exactly(tag1.id, tag2.id, tag3.id)
 
       group.tracking_tags = [synonym1.name, synonym2.name, tag1.name, tag2.name, tag3.name]
       group.save!
-      expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id, tag3.id)
+      expect(
+        GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id),
+      ).to contain_exactly(tag1.id, tag2.id, tag3.id)
     end
 
     it "can remove tags" do
@@ -1207,7 +1217,7 @@ RSpec.describe Group do
         GroupTagNotificationDefault.create!(
           group: group,
           tag: tag,
-          notification_level: GroupTagNotificationDefault.notification_levels[:watching]
+          notification_level: GroupTagNotificationDefault.notification_levels[:watching],
         )
       end
 
@@ -1250,7 +1260,10 @@ RSpec.describe Group do
       admins.tracking_tags = [tag2.name]
       admins.save!
       user.grant_admin!
-      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to contain_exactly(category1.id, category2.id)
+      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to contain_exactly(
+        category1.id,
+        category2.id,
+      )
       expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id)
     end
   end
@@ -1314,7 +1327,7 @@ RSpec.describe Group do
         smtp_server: "smtp.gmail.com",
         email_username: "test@gmail.com",
         email_password: "password",
-        smtp_updated_by: user
+        smtp_updated_by: user,
       )
 
       group.record_email_setting_changes!(user)
@@ -1353,7 +1366,7 @@ RSpec.describe Group do
         imap_ssl: false,
         imap_server: nil,
         email_username: nil,
-        email_password: nil
+        email_password: nil,
       )
 
       group.record_email_setting_changes!(user)

@@ -1,0 +1,10 @@
+<div class="control-group form-template-field" data-field-type="input">
+  {{#if @attributes.label}}
+    <label class="form-template-field__label">{{@attributes.label}}</label>
+  {{/if}}
+  <Input
+    class="form-template-field__input"
+    @type="text"
+    placeholder={{@attributes.placeholder}}
+  />
+</div>

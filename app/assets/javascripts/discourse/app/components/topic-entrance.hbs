@@ -1,0 +1,17 @@
+<DButton
+  @action={{action "enterTop"}}
+  @class="btn-default full jump-top"
+  @ariaLabel="topic_entrance.sr_jump_top_button"
+>
+  {{d-icon "step-backward"}}
+  {{html-safe this.topDate}}
+</DButton>
+
+<DButton
+  @action={{action "enterBottom"}}
+  @class="btn-default full jump-bottom"
+  @ariaLabel="topic_entrance.sr_jump_bottom_button"
+>
+  {{html-safe this.bottomDate}}
+  {{d-icon "step-forward"}}
+</DButton>

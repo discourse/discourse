@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class ReviewableScoreTypeSerializer < ApplicationSerializer
-  attributes :id, :title, :reviewable_priority, :icon
+  attributes :id, :title, :reviewable_priority, :icon, :type
+
+  def type
+    ReviewableScore.types[id]
+  end
 
   # Allow us to share post action type translations for backwards compatibility
   def title
@@ -20,5 +24,4 @@ class ReviewableScoreTypeSerializer < ApplicationSerializer
   def icon
     "flag"
   end
-
 end

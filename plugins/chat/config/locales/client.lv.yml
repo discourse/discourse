@@ -1,0 +1,117 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  js:
+    chat:
+      create: "Izveidot"
+      cancel: "Atcelt"
+      channel_settings:
+        edit: "Rediģēt"
+        add: "Pievienot"
+        join: "Pievienojieties"
+        leave: "Iziet"
+      close: "Aizvērt"
+      delete: "Dzēst"
+      edited: "rediģēts"
+      muted: "klusināts"
+      joined: "pievienojās"
+      email_frequency:
+        never: "Nekad"
+      header_indicator_preference:
+        never: "Nekad"
+      flag: "Sūdzība"
+      join: "Pievienojieties"
+      last_visit: "pēdējais apmeklējums"
+      mention_warning:
+        dismiss: "nerādīt"
+      reply: "Atbilde"
+      edit: "Rediģēt"
+      rebake_message: "Pārbūvēt HTML"
+      bookmark_message: "Grāmatzīmes"
+      bookmark_message_edit: "Rediģēt grāmatzīmi"
+      save: "Saglabāt"
+      sounds:
+        none: "Nav"
+      exit: "atpakaļ"
+      channel_status:
+        closed: "Slēgts"
+        open: "Atvērt"
+      browse:
+        back: "Atpakaļ"
+        filter_all: Viss
+        filter_closed: Slēgts
+      chat_message_separator:
+        today: Šodien
+        yesterday: Vakar
+      about_view:
+        title: Virsraksts
+        name: Vārds
+        description: Apraksts
+      channel_info:
+        back_to_channel: "Atpakaļ"
+        tabs:
+          about: Par
+          members: Dalībnieki
+          settings: Iestatījumi
+      direct_message_creator:
+        title: Jauns ziņa
+        prefix: "Kam:"
+      create_channel:
+        type: "Tips"
+        types:
+          category: "Sadaļa"
+          topic: "Tēmas"
+      composer:
+        italic_text: "Uzsvērts teksts"
+        bold_text: "treknrakstā"
+      notification_levels:
+        never: "Nekad"
+      settings:
+        follow: "Pievienojieties"
+        followed: "Pievienojās"
+        notifications: "Paziņojumi"
+        preview: "Priekšskatījums"
+        save: "Saglabāt"
+        saved: "Saglabāts"
+        unfollow: "Iziet"
+        admin_title: "Administrators"
+      incoming_webhooks:
+        back: "Atpakaļ"
+        description: "Apraksts"
+        delete: "Dzēst"
+        emoji: "Smaidiņi"
+        name: "Vārds"
+        save: "Saglabāt"
+        edit: "Rediģēt"
+        system: "sistēma"
+        url: "URL"
+        username: "Lietotājvārds"
+      selection:
+        cancel: "Atcelt"
+        copy: "Kopēt"
+        new_topic:
+          title: "Pārvietot uz jaunu tēmu"
+        existing_topic:
+          title: "Pārvietot uz esošu tēmu"
+      emoji_picker:
+        objects: "Priekšmeti"
+        activities: "Aktivitātes"
+        flags: "Sūdzības"
+        symbols: "Simboli"
+      draft_channel_screen:
+        header: "Jauns ziņa"
+        cancel: "Atcelt"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Ziņa
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Atzīmēja"

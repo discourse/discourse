@@ -2,16 +2,16 @@
   <div class="container invites-show clearfix">
     <div class="login-welcome-header">
       <h1 class="login-title">{{this.welcomeTitle}}</h1>
-      <img src={{this.wavingHandURL}} alt="" class="waving-hand">
+      <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
       {{#unless this.successMessage}}
-        <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
+        <p class="login-subheader">{{this.subheaderMessage}}</p>
       {{/unless}}
     </div>
 
     <div class={{if this.successMessage "invite-success" "invite-form"}}>
       <div class="two-col">
         <div class="col-image">
-          <img src={{this.inviteImageUrl}} alt={{i18n "invites.emoji"}}>
+          <img src={{this.inviteImageUrl}} alt={{i18n "invites.emoji"}} />
         </div>
 
         <div class="col-form">
@@ -42,7 +42,10 @@
               {{! authOptions are present once the user has followed the OmniAuth flow (e.g. twitter/google/etc) }}
               {{#if this.authOptions}}
                 {{#unless this.isInviteLink}}
-                  <InputTip @validation={{this.emailValidation}} @id="account-email-validation" />
+                  <InputTip
+                    @validation={{this.emailValidation}}
+                    @id="account-email-validation"
+                  />
                 {{/unless}}
               {{else}}
                 <LoginButtons @externalLogin={{action "externalLogin"}} />
@@ -50,7 +53,10 @@
             {{/if}}
 
             {{#if this.discourseConnectEnabled}}
-              <a class="btn btn-primary discourse-connect raw-link" href={{this.ssoPath}}>
+              <a
+                class="btn btn-primary discourse-connect raw-link"
+                href={{this.ssoPath}}
+              >
                 {{i18n "continue"}}
               </a>
             {{/if}}
@@ -59,29 +65,59 @@
               <form>
                 {{#if this.isInviteLink}}
                   <div class="input email-input input-group">
-                    <Input @type="email" @value={{this.email}} id="new-account-email" name="email" class={{value-entered this.email}} autofocus="autofocus" disabled={{this.externalAuthsOnly}} />
+                    <Input
+                      @type="email"
+                      @value={{this.email}}
+                      id="new-account-email"
+                      name="email"
+                      class={{value-entered this.email}}
+                      autofocus="autofocus"
+                      disabled={{this.externalAuthsOnly}}
+                    />
                     <label class="alt-placeholder" for="new-account-email">
                       {{i18n "user.email.title"}}
                       <span class="required">*</span>
                     </label>
-                    <InputTip @validation={{this.emailValidation}} @id="account-email-validation" />
-                    <div class="instructions">{{i18n "user.email.instructions"}}</div>
+                    <InputTip
+                      @validation={{this.emailValidation}}
+                      @id="account-email-validation"
+                    />
+                    <div class="instructions">{{i18n
+                        "user.email.instructions"
+                      }}</div>
                   </div>
                 {{/if}}
 
                 <div class="input username-input input-group">
-                  <Input @value={{this.accountUsername}} class={{value-entered this.accountUsername}} id="new-account-username" name="username" maxlength={{this.maxUsernameLength}} autocomplete="off" />
+                  <Input
+                    @value={{this.accountUsername}}
+                    class={{value-entered this.accountUsername}}
+                    id="new-account-username"
+                    name="username"
+                    maxlength={{this.maxUsernameLength}}
+                    autocomplete="off"
+                  />
                   <label class="alt-placeholder" for="new-account-username">
                     {{i18n "user.username.title"}}
                     <span class="required">*</span>
                   </label>
-                  <InputTip @validation={{this.usernameValidation}} @id="username-validation" />
-                  <div class="instructions">{{i18n "user.username.instructions"}}</div>
+                  <InputTip
+                    @validation={{this.usernameValidation}}
+                    @id="username-validation"
+                  />
+                  <div class="instructions">{{i18n
+                      "user.username.instructions"
+                    }}</div>
                 </div>
 
                 {{#if this.fullnameRequired}}
                   <div class="input name-input input-group">
-                    <Input @value={{this.accountName}} class={{value-entered this.accountName}} id="new-account-name" name="name" />
+                    <Input
+                      @value={{this.accountName}}
+                      class={{value-entered this.accountName}}
+                      id="new-account-name"
+                      name="name"
+                    />
                     <label class="alt-placeholder" for="new-account-name">
                       {{i18n "invites.name_label"}}
                       {{#if this.siteSettings.full_name_required}}
@@ -94,17 +130,39 @@
 
                 {{#unless this.externalAuthsOnly}}
                   <div class="input password-input input-group">
-                    <PasswordField @value={{this.accountPassword}} @class={{value-entered this.accountPassword}} @type="password" @id="new-account-password" @capsLockOn={{this.capsLockOn}} />
+                    <PasswordField
+                      @value={{this.accountPassword}}
+                      @class={{value-entered this.accountPassword}}
+                      @type={{if this.maskPassword "password" "text"}}
+                      @id="new-account-password"
+                      @capsLockOn={{this.capsLockOn}}
+                    />
                     <label class="alt-placeholder" for="new-account-password">
                       {{i18n "invites.password_label"}}
                       <span class="required">*</span>
                     </label>
-                    <InputTip @validation={{this.passwordValidation}} />
-                    <div class="instructions">
-                      {{this.passwordInstructions}}
-                      <div class="caps-lock-warning {{unless this.capsLockOn "invisible"}}">
-                        {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+                    <div class="create-account__password-info">
+                      <div class="create-account__password-tip-validation">
+                        <InputTip
+                          @validation={{this.passwordValidation}}
+                          @id="password-validation"
+                        />
+                        <span
+                          class="more-info"
+                        >{{this.passwordInstructions}}</span>
+                        <div
+                          class="caps-lock-warning
+                            {{unless this.capsLockOn 'hidden'}}"
+                        >
+                          {{d-icon "exclamation-triangle"}}
+                          {{i18n "login.caps_lock_warning"}}
+                        </div>
                       </div>
+                      <TogglePasswordMask
+                        @maskPassword={{this.maskPassword}}
+                        @togglePasswordMask={{this.togglePasswordMask}}
+                        @parentController={{"invites-show"}}
+                      />
                     </div>
                   </div>
                 {{/unless}}
@@ -113,23 +171,60 @@
                   <div class="user-fields">
                     {{#each this.userFields as |f|}}
                       <div class="input-group">
-                        <UserField @field={{f.field}} @value={{f.value}} @class={{value-entered f.value}} />
+                        <UserField
+                          @field={{f.field}}
+                          @value={{f.value}}
+                          @class={{value-entered f.value}}
+                        />
                       </div>
                     {{/each}}
                   </div>
                 {{/if}}
 
-                <DButton @class="btn-primary" @action={{action "submit"}} @type="submit" @disabled={{this.submitDisabled}} @label="invites.accept_invite" />
+                <div class="invitation-cta">
+                  <DButton
+                    @class="btn-primary invitation-cta__accept"
+                    @action={{action "submit"}}
+                    @type="submit"
+                    @disabled={{this.submitDisabled}}
+                    @label="invites.accept_invite"
+                  />
+                  <div class="invitation-cta__info">
+                    <span class="invitation-cta__signed-up">{{i18n
+                        "login.previous_sign_up"
+                      }}</span>
+                    <DButton
+                      @action={{route-action "showLogin"}}
+                      @class="btn-flat invitation-cta__sign-in"
+                      @label="log_in"
+                    />
+                  </div>
+                </div>
 
                 <div class="disclaimer">
                   {{html-safe this.disclaimerHtml}}
                 </div>
 
                 {{#if this.errorMessage}}
-                  <br><br>
+                  <br /><br />
                   <div class="alert alert-error">{{this.errorMessage}}</div>
                 {{/if}}
               </form>
+            {{/if}}
+            {{#if this.existingUserRedeeming}}
+              {{#if this.existingUserCanRedeem}}
+                <DButton
+                  @class="btn-primary"
+                  @action={{action "submit"}}
+                  @type="submit"
+                  @disabled={{this.submitDisabled}}
+                  @label="invites.accept_invite"
+                />
+              {{else}}
+                <div
+                  class="alert alert-error"
+                >{{this.existingUserCanRedeemError}}</div>
+              {{/if}}
             {{/if}}
           {{/if}}
         </div>

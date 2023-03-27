@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::PeriodicalUpdates do
-
   it "works" do
-
     # does not blow up, no mocks, everything is called
     Jobs::PeriodicalUpdates.new.execute(nil)
   end

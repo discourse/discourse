@@ -1,0 +1,239 @@
+{{! template-lint-disable no-invalid-interactive }}
+{{! template-lint-disable no-nested-interactive }}
+{{! template-lint-disable no-down-event-binding }}
+<div
+  class={{concat-class
+    "chat-emoji-picker"
+    (if this.chatEmojiPickerManager.closing "closing")
+  }}
+  {{did-insert this.addClickOutsideEventListener}}
+  {{will-destroy this.removeClickOutsideEventListener}}
+  {{on "keydown" this.trapKeyDownEvents}}
+>
+  <div class="chat-emoji-picker__filter-container">
+    <DcFilterInput
+      @class="chat-emoji-picker__filter"
+      @value={{this.chatEmojiPickerManager.initialFilter}}
+      @filterAction={{action this.didInputFilter value="target.value"}}
+      @icons={{hash left="search"}}
+      placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
+      autofocus={{true}}
+      {{did-insert this.focusFilter}}
+      {{did-insert
+        (fn this.didInputFilter this.chatEmojiPickerManager.initialFilter)
+      }}
+    >
+      <div
+        class="chat-emoji-picker__fitzpatrick-scale"
+        role="toolbar"
+        {{on "keyup" this.didNavigateFitzpatrickScale}}
+      >
+        {{#if this.isExpandedFitzpatrickScale}}
+          {{#each this.fitzpatrickModifiers as |fitzpatrick|}}
+
+            {{#if
+              (not (eq fitzpatrick.scale this.chatEmojiReactionStore.diversity))
+            }}
+              <button
+                type="button"
+                title={{concat "t" fitzpatrick.scale}}
+                tabindex="-1"
+                class={{concat-class
+                  "chat-emoji-picker__fitzpatrick-modifier-btn"
+                  (concat "t" fitzpatrick.scale)
+                }}
+                {{on
+                  "keyup"
+                  (fn this.didRequestFitzpatrickScale fitzpatrick.scale)
+                }}
+                {{on
+                  "click"
+                  (fn this.didRequestFitzpatrickScale fitzpatrick.scale)
+                }}
+              >
+                {{d-icon "check"}}
+              </button>
+            {{/if}}
+          {{/each}}
+        {{/if}}
+
+        <button
+          type="button"
+          title={{concat "t" this.fitzpatrick.scale}}
+          class={{concat-class
+            "chat-emoji-picker__fitzpatrick-modifier-btn current"
+            (concat "t" this.chatEmojiReactionStore.diversity)
+          }}
+          {{on "keyup" this.didToggleFitzpatrickScale}}
+          {{on "click" this.didToggleFitzpatrickScale}}
+        ></button>
+      </div>
+    </DcFilterInput>
+  </div>
+
+  {{#if this.chatEmojiPickerManager.sections.length}}
+    {{#if (not (gte this.filteredEmojis.length 0))}}
+      <div class="chat-emoji-picker__sections-nav">
+        <div
+          class="chat-emoji-picker__sections-nav__indicator"
+          style={{this.navIndicatorStyle}}
+        ></div>
+
+        {{#each-in this.groups as |section emojis|}}
+          <DButton
+            class={{concat-class
+              "btn-flat"
+              "chat-emoji-picker__section-btn"
+              (if
+                (eq this.chatEmojiPickerManager.lastVisibleSection section)
+                "active"
+              )
+            }}
+            tabindex="-1"
+            style={{this.navBtnStyle}}
+            @action={{fn this.didRequestSection section}}
+            data-section={{section}}
+          >
+            {{#if (eq section "favorites")}}
+              {{replace-emoji ":star:"}}
+            {{else}}
+              <img
+                width="18"
+                height="18"
+                class="emoji"
+                src={{emojis.firstObject.url}}
+              />
+            {{/if}}
+          </DButton>
+        {{/each-in}}
+      </div>
+    {{/if}}
+
+    <div
+      class="chat-emoji-picker__scrollable-content"
+      {{chat/emoji-picker-scroll-listener}}
+    >
+      <div
+        class="chat-emoji-picker__sections"
+        {{on "click" this.didSelectEmoji}}
+        {{on "keydown" this.onSectionsKeyDown}}
+        role="button"
+      >
+        {{#if (gte this.filteredEmojis.length 0)}}
+          <div class="chat-emoji-picker__section filtered">
+            {{#each this.filteredEmojis as |emoji|}}
+              <img
+                width="32"
+                height="32"
+                class="emoji"
+                src={{tonable-emoji-url
+                  emoji
+                  this.chatEmojiReactionStore.diversity
+                }}
+                tabindex="0"
+                data-emoji={{emoji.name}}
+                data-tonable={{if emoji.tonable "true"}}
+                alt={{emoji.name}}
+                title={{tonable-emoji-title
+                  emoji
+                  this.chatEmojiReactionStore.diversity
+                }}
+                loading="lazy"
+              />
+            {{else}}
+              <p class="chat-emoji-picker__no-reults">
+                {{i18n "chat.emoji_picker.no_results"}}
+              </p>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{#each-in this.groups as |section emojis|}}
+          <div
+            class={{concat-class
+              "chat-emoji-picker__section"
+              (if (gte this.filteredEmojis.length 0) "hidden")
+            }}
+            data-section={{section}}
+            role="region"
+            aria-label={{i18n
+              (concat "chat.emoji_picker." section)
+              translatedFallback=section
+            }}
+          >
+            <h2 class="chat-emoji-picker__section-title">
+              {{i18n
+                (concat "chat.emoji_picker." section)
+                translatedFallback=section
+              }}
+            </h2>
+            <div class="chat-emoji-picker__section-emojis">
+              {{! we always want the first emoji for tabbing}}
+              {{#let emojis.firstObject as |emoji|}}
+                <img
+                  width="32"
+                  height="32"
+                  class="emoji"
+                  src={{tonable-emoji-url
+                    emoji
+                    this.chatEmojiReactionStore.diversity
+                  }}
+                  tabindex="0"
+                  data-emoji={{emoji.name}}
+                  data-tonable={{if emoji.tonable "true"}}
+                  alt={{emoji.name}}
+                  title={{tonable-emoji-title
+                    emoji
+                    this.chatEmojiReactionStore.diversity
+                  }}
+                  loading="lazy"
+                  {{on "focus" this.didFocusFirstEmoji}}
+                />
+              {{/let}}
+
+              {{#if
+                (includes this.chatEmojiPickerManager.visibleSections section)
+              }}
+                {{#each emojis as |emoji index|}}
+                  {{! first emoji has already been rendered, we don't want to re render or would lose focus}}
+                  {{#if (gt index 0)}}
+                    <img
+                      width="32"
+                      height="32"
+                      class="emoji"
+                      src={{tonable-emoji-url
+                        emoji
+                        this.chatEmojiReactionStore.diversity
+                      }}
+                      tabindex="-1"
+                      data-emoji={{emoji.name}}
+                      data-tonable={{if emoji.tonable "true"}}
+                      alt={{emoji.name}}
+                      title={{tonable-emoji-title
+                        emoji
+                        this.chatEmojiReactionStore.diversity
+                      }}
+                      loading="lazy"
+                    />
+                  {{/if}}
+                {{/each}}
+              {{/if}}
+            </div>
+          </div>
+        {{/each-in}}
+      </div>
+    </div>
+  {{else}}
+    <div class="spinner medium"></div>
+  {{/if}}
+</div>
+
+{{#if
+  (and
+    this.chatEmojiPickerManager.opened
+    this.site.mobileView
+    (eq this.chatEmojiPickerManager.context "chat-message")
+  )
+}}
+  <div class="chat-emoji-picker__backdrop"></div>
+{{/if}}

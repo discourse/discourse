@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'redis'
+require "redis"
 
 module NodeBB
   class Redis
@@ -11,7 +11,7 @@ module NodeBB
     end
 
     def groups
-      group_keys = redis.zrange('groups:visible:createtime', 0, -1)
+      group_keys = redis.zrange("groups:visible:createtime", 0, -1)
 
       group_keys.map { |group_key| group(group_key) }
     end
@@ -26,7 +26,7 @@ module NodeBB
     end
 
     def users
-      user_keys = redis.zrange('users:joindate', 0, -1)
+      user_keys = redis.zrange("users:joindate", 0, -1)
 
       user_keys.map { |user_key| user(user_key) }
     end
@@ -41,13 +41,13 @@ module NodeBB
     end
 
     def categories
-      category_keys = redis.zrange('categories:cid', 0, -1)
+      category_keys = redis.zrange("categories:cid", 0, -1)
 
       {}.tap do |categories|
         category_keys.each do |category_key|
           category = redis.hgetall("category:#{category_key}")
 
-          categories[category['cid']] = category
+          categories[category["cid"]] = category
         end
       end
     end
@@ -59,7 +59,7 @@ module NodeBB
       from = offset
       to = page_size + offset
 
-      topic_keys = redis.zrange('topics:tid', from, to)
+      topic_keys = redis.zrange("topics:tid", from, to)
 
       topic_keys.map { |topic_key| topic(topic_key) }
     end
@@ -75,7 +75,7 @@ module NodeBB
     end
 
     def topic_count
-      redis.zcard('topics:tid')
+      redis.zcard("topics:tid")
     end
 
     def posts(offset = 0, page_size = 2000)
@@ -85,7 +85,7 @@ module NodeBB
       from = offset
       to = page_size + offset
 
-      post_keys = redis.zrange('posts:pid', from, to)
+      post_keys = redis.zrange("posts:pid", from, to)
 
       post_keys.map { |post_key| post(post_key) }
     end
@@ -99,7 +99,7 @@ module NodeBB
     end
 
     def post_count
-      redis.zcard('posts:pid')
+      redis.zcard("posts:pid")
     end
 
     private

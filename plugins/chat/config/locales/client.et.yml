@@ -1,0 +1,113 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    chat:
+      create: "Loo"
+      cancel: "Tühista"
+      channel_settings:
+        edit: "Muuda"
+        add: "isa"
+        join: "Liitu"
+        leave: "Lahku"
+      close: "Sulge"
+      delete: "Kustuta"
+      muted: "vaigistatud"
+      joined: "liitus"
+      email_frequency:
+        never: "Mitte kunagi"
+      header_indicator_preference:
+        never: "Mitte kunagi"
+      flag: "Tähis"
+      join: "Liitu"
+      last_visit: "viimane visiit"
+      mention_warning:
+        dismiss: "ignoreeri"
+      reply: "Vasta"
+      edit: "Muuda"
+      rebake_message: "Rekonstrueeri HTML"
+      bookmark_message: "Järjehoidja"
+      save: "Salvesta"
+      sounds:
+        none: "Pole"
+      exit: "tagasi"
+      channel_status:
+        closed: "Suletud"
+        open: "Ava"
+      browse:
+        back: "Tagasi"
+        filter_all: Kõik
+        filter_closed: Suletud
+      chat_message_separator:
+        today: Täna
+        yesterday: Eile
+      about_view:
+        title: Pealkiri
+        name: Nimi
+        description: Kirjeldus
+      channel_info:
+        back_to_channel: "Tagasi"
+        tabs:
+          about: Teave
+          members: Liikmed
+          settings: Sätted
+      direct_message_creator:
+        title: Uus sõnum
+        prefix: "Kellele:"
+      create_channel:
+        type: "Tüüp"
+        types:
+          category: "Foorum"
+          topic: "Teema"
+      composer:
+        italic_text: "esiletõstetud tekst"
+        bold_text: "rasvane tekst"
+      notification_levels:
+        never: "Mitte kunagi"
+      settings:
+        follow: "Liitu"
+        followed: "Liitus"
+        notifications: "Teavitus"
+        preview: "Eelvaade"
+        save: "Salvesta"
+        saved: "Salvestatud"
+        unfollow: "Lahku"
+        admin_title: "Admin"
+      incoming_webhooks:
+        back: "Tagasi"
+        description: "Kirjeldus"
+        delete: "Kustuta"
+        emoji: "Emotikon"
+        name: "Nimi"
+        save: "Salvesta"
+        edit: "Muuda"
+        system: "süsteem"
+        url: "URL"
+        username: "Kasutajanimi"
+      selection:
+        cancel: "Tühista"
+        copy: "Kopeeri"
+        new_topic:
+          title: "Liiguta uue teema alla"
+        existing_topic:
+          title: "Liiguta olemasolevasse teemasse"
+        new_message:
+          title: "Liiguta uude sõnumisse"
+      emoji_picker:
+        objects: "Objektid"
+        flags: "Tähised"
+      draft_channel_screen:
+        header: "Uus sõnum"
+        cancel: "Tühista"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Sõnum

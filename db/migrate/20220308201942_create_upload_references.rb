@@ -8,6 +8,9 @@ class CreateUploadReferences < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    add_index :upload_references, [:upload_id, :target_type, :target_id], unique: true, name: 'index_upload_references_on_upload_and_target'
+    add_index :upload_references,
+              %i[upload_id target_type target_id],
+              unique: true,
+              name: "index_upload_references_on_upload_and_target"
   end
 end

@@ -10,6 +10,9 @@ import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
+import { isTesting } from "discourse-common/config/environment";
+import { DEBUG } from "@glimmer/env";
+import { registerWaiter, unregisterWaiter } from "@ember/test";
 
 const SiteHeaderComponent = MountWidget.extend(
   Docking,
@@ -40,7 +43,36 @@ const SiteHeaderComponent = MountWidget.extend(
       this.queueRerender();
     },
 
+    @observes("site.narrowDesktopView")
+    narrowDesktopViewChanged() {
+      this.eventDispatched("dom:clean", "header");
+
+      if (this._dropDownHeaderEnabled()) {
+        this.appEvents.on(
+          "sidebar-hamburger-dropdown:rendered",
+          this,
+          "_animateMenu"
+        );
+      }
+    },
+
     _animateOpening(panel) {
+      let waiter;
+      if (DEBUG && isTesting()) {
+        waiter = () => false;
+        registerWaiter(waiter);
+      }
+
+      window.requestAnimationFrame(() => {
+        this._setAnimateOpeningProperties(panel);
+
+        if (DEBUG && isTesting()) {
+          unregisterWaiter(waiter);
+        }
+      });
+    },
+
+    _setAnimateOpeningProperties(panel) {
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
@@ -54,13 +86,16 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _animateClosing(panel, menuOrigin) {
-      const windowWidth = document.body.offsetWidth;
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
-      const offsetDirection = menuOrigin === "left" ? -1 : 1;
-      panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
+      if (menuOrigin === "left") {
+        panel.style.setProperty("--offset", `-100vw`);
+      } else {
+        panel.style.setProperty("--offset", `100vw`);
+      }
+
       headerCloak.style.setProperty("--opacity", 0);
       this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
@@ -217,10 +252,7 @@ const SiteHeaderComponent = MountWidget.extend(
         this.appEvents.on("user-menu:rendered", this, "_animateMenu");
       }
 
-      if (
-        this.siteSettings.enable_experimental_sidebar_hamburger &&
-        !this.sidebarEnabled
-      ) {
+      if (this._dropDownHeaderEnabled()) {
         this.appEvents.on(
           "sidebar-hamburger-dropdown:rendered",
           this,
@@ -236,43 +268,6 @@ const SiteHeaderComponent = MountWidget.extend(
 
       if (this.currentUser) {
         this.currentUser.on("status-changed", this, "queueRerender");
-      }
-
-      if (!this.siteSettings.enable_onboarding_popups) {
-        if (
-          this.currentUser &&
-          !this.get("currentUser.read_first_notification")
-        ) {
-          document.body.classList.add("unread-first-notification");
-        }
-
-        // Allow first notification to be dismissed on a click anywhere
-        if (
-          this.currentUser &&
-          !this.get("currentUser.read_first_notification") &&
-          !this.get("currentUser.enforcedSecondFactor")
-        ) {
-          this._dismissFirstNotification = (e) => {
-            if (document.body.classList.contains("unread-first-notification")) {
-              document.body.classList.remove("unread-first-notification");
-            }
-            if (
-              !e.target.closest("#current-user") &&
-              !e.target.closest(".ring-backdrop") &&
-              this.currentUser &&
-              !this.get("currentUser.read_first_notification") &&
-              !this.get("currentUser.enforcedSecondFactor")
-            ) {
-              this.eventDispatched(
-                "header:dismiss-first-notification-mask",
-                "header"
-              );
-            }
-          };
-          document.addEventListener("click", this._dismissFirstNotification, {
-            once: true,
-          });
-        }
       }
 
       const header = document.querySelector("header.d-header");
@@ -346,10 +341,7 @@ const SiteHeaderComponent = MountWidget.extend(
         this.appEvents.off("user-menu:rendered", this, "_animateMenu");
       }
 
-      if (
-        this.siteSettings.enable_experimental_sidebar_hamburger &&
-        !this.sidebarEnabled
-      ) {
+      if (this._dropDownHeaderEnabled()) {
         this.appEvents.off(
           "sidebar-hamburger-dropdown:rendered",
           this,
@@ -365,8 +357,6 @@ const SiteHeaderComponent = MountWidget.extend(
 
       this._itsatrap?.destroy();
       this._itsatrap = null;
-
-      document.removeEventListener("click", this._dismissFirstNotification);
     },
 
     buildArgs() {
@@ -374,6 +364,8 @@ const SiteHeaderComponent = MountWidget.extend(
         topic: this._topic,
         canSignUp: this.canSignUp,
         sidebarEnabled: this.sidebarEnabled,
+        showSidebar: this.showSidebar,
+        navigationMenuQueryParamOverride: this.navigationMenuQueryParamOverride,
       };
     },
 
@@ -391,21 +383,18 @@ const SiteHeaderComponent = MountWidget.extend(
       const menuPanels = document.querySelectorAll(".menu-panel");
 
       if (menuPanels.length === 0) {
-        if (this.site.mobileView) {
-          this._animate = true;
-        }
+        this._animate = this.site.mobileView || this.site.narrowDesktopView;
         return;
       }
 
-      const windowWidth = document.body.offsetWidth;
-      const viewMode = this.site.mobileView ? "slide-in" : "drop-down";
+      const viewMode =
+        this.site.mobileView || this.site.narrowDesktopView
+          ? "slide-in"
+          : "drop-down";
 
       menuPanels.forEach((panel) => {
         const headerCloak = document.querySelector(".header-cloak");
         let width = parseInt(panel.getAttribute("data-max-width"), 10) || 300;
-        if (windowWidth - width < 50) {
-          width = windowWidth - 50;
-        }
         if (this._panMenuOffset) {
           this._panMenuOffset = -width;
         }
@@ -413,83 +402,37 @@ const SiteHeaderComponent = MountWidget.extend(
         panel.classList.remove("drop-down");
         panel.classList.remove("slide-in");
         panel.classList.add(viewMode);
+
         if (this._animate || this._panMenuOffset !== 0) {
           if (
-            this.site.mobileView &&
+            (this.site.mobileView || this.site.narrowDesktopView) &&
             panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
             this._panMenuOrigin = "left";
-            panel.style.setProperty("--offset", `${-windowWidth}px`);
+            panel.style.setProperty("--offset", `-100vw`);
           } else {
             this._panMenuOrigin = "right";
-            panel.style.setProperty("--offset", `${windowWidth}px`);
+            panel.style.setProperty("--offset", `100vw`);
           }
           headerCloak.style.setProperty("--opacity", 0);
         }
 
-        const panelBody = panel.querySelector(".panel-body");
-
-        // We use a mutationObserver to check for style changes, so it's important
-        // we don't set it if it doesn't change. Same goes for the panelBody!
-
-        if (!this.site.mobileView) {
-          const buttonPanel = document.querySelectorAll("header ul.icons");
-          if (buttonPanel.length === 0) {
-            return;
-          }
-
-          // These values need to be set here, not in the css file - this is to deal with the
-          // possibility of the window being resized and the menu changing from .slide-in to .drop-down.
-          if (panel.style.top !== "100%" || panel.style.height !== "auto") {
-            panel.style.setProperty("top", "100%");
-            panel.style.setProperty("height", "auto");
-          }
-        } else {
+        if (viewMode === "slide-in") {
           headerCloak.style.display = "block";
-
-          const menuTop = headerTop();
-
-          const winHeightOffset = this.currentUser?.redesigned_user_menu_enabled
-            ? 0
-            : 16;
-          let initialWinHeight = window.innerHeight;
-          const winHeight = initialWinHeight - winHeightOffset;
-
-          let height = winHeight - menuTop;
-
-          const isIPadApp = document.body.classList.contains("footer-nav-ipad"),
-            heightProp = isIPadApp ? "max-height" : "height",
-            iPadOffset = 10;
-
-          if (isIPadApp) {
-            height = winHeight - menuTop - iPadOffset;
-          }
-
-          if (panelBody.style.height !== "100%") {
-            panelBody.style.setProperty("height", "100%");
-          }
-          if (
-            panel.style.top !== `${menuTop}px` ||
-            panel.style[heightProp] !== `${height}px`
-          ) {
-            panel.style.top = `${menuTop}px`;
-            panel.style.setProperty(heightProp, `${height}px`);
-            if (headerCloak) {
-              headerCloak.style.top = `${menuTop}px`;
-            }
-          }
-        }
-
-        // TODO: remove the if condition when redesigned_user_menu_enabled is
-        // removed
-        if (!panel.classList.contains("revamped")) {
-          panel.style.setProperty("width", `${width}px`);
         }
         if (this._animate) {
           this._animateOpening(panel);
         }
         this._animate = false;
       });
+    },
+
+    _dropDownHeaderEnabled() {
+      return (
+        (!this.sidebarEnabled &&
+          this.siteSettings.navigation_menu !== "legacy") ||
+        this.site.narrowDesktopView
+      );
     },
   }
 );
@@ -507,12 +450,22 @@ export default SiteHeaderComponent.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const header = document.querySelector(".d-header-wrap");
-    if (header) {
+    this.appEvents.on("site-header:force-refresh", this, "queueRerender");
+
+    const headerWrap = document.querySelector(".d-header-wrap");
+    let header;
+    if (headerWrap) {
       schedule("afterRender", () => {
+        header = headerWrap.querySelector("header.d-header");
+        const headerOffset = headerWrap.offsetHeight;
+        const headerTop = header.offsetTop;
         document.documentElement.style.setProperty(
           "--header-offset",
-          `${header.offsetHeight}px`
+          `${headerOffset}px`
+        );
+        document.documentElement.style.setProperty(
+          "--header-top",
+          `${headerTop}px`
         );
       });
     }
@@ -521,15 +474,21 @@ export default SiteHeaderComponent.extend({
       this._resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (entry.contentRect) {
+            const headerOffset = entry.contentRect.height;
+            const headerTop = header.offsetTop;
             document.documentElement.style.setProperty(
               "--header-offset",
-              entry.contentRect.height + "px"
+              `${headerOffset}px`
+            );
+            document.documentElement.style.setProperty(
+              "--header-top",
+              `${headerTop}px`
             );
           }
         }
       });
 
-      this._resizeObserver.observe(header);
+      this._resizeObserver.observe(headerWrap);
     }
   },
 
@@ -537,10 +496,6 @@ export default SiteHeaderComponent.extend({
     this._super(...arguments);
 
     this._resizeObserver?.disconnect();
+    this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
 });
-
-export function headerTop() {
-  const header = document.querySelector("header.d-header");
-  return header.offsetTop ? header.offsetTop : 0;
-}

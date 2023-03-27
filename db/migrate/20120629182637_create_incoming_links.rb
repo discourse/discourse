@@ -12,6 +12,6 @@ class CreateIncomingLinks < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :incoming_links, [:site_id, :forum_thread_id, :post_number], name: 'incoming_index'
+    add_index :incoming_links, %i[site_id forum_thread_id post_number], name: "incoming_index"
   end
 end

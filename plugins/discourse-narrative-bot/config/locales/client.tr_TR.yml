@@ -8,5 +8,5 @@ tr_TR:
   js:
     discourse_narrative_bot:
       welcome_post_type:
-        new_user_track: "Tüm yeni başlayan kullanıcılar için yeni kullanıcı öğreticisini başlatın"
-        welcome_message: "Hızlı başlangıç rehberi ile tüm yeni kullanıcılara hoş geldin iletisi gönder"
+        new_user_track: "Tüm yeni kullanıcılar için yeni kullanıcı öğreticisini başlatın"
+        welcome_message: "Tüm yeni kullanıcılara hızlı başlangıç kılavuzu içeren bir karşılama mesajı gönderin"

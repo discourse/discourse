@@ -21,13 +21,12 @@ module Jobs
         topic.set_or_create_timer(
           TopicTimer.types[:open],
           SiteSetting.num_hours_to_close_topic,
-          by_user: Discourse.system_user
+          by_user: Discourse.system_user,
         )
       else
-
         # autoclosed, false is just another way of saying open.
         # this handles deleting the topic timer as well, see TopicStatusUpdater
-        topic.update_status('autoclosed', false, user)
+        topic.update_status("autoclosed", false, user)
       end
 
       topic.inherit_auto_close_from_category(timer_type: :close)

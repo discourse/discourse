@@ -463,11 +463,6 @@ sk:
         many: "pred takmer %{count} rokmi"
         other: "pred takmer %{count} rokmi"
   password_reset:
-    no_token: "Ľutujeme, tento odkaz na zmenu hesla je už príliš starý. Stlačte tlačidlo Prihlásiť a použite \"Zabudol som heslo\" pre vytvorenie nového odkazu."
-    choose_new: "Napíš nové heslo"
-    choose: "Napíš heslo"
-    update: "Aktualizujte heslo"
-    save: "Nastavte heslo"
     title: "Obnoviť heslo"
     success: "Heslo bolo úspešne zmenené a ste prihlasený do systému. "
     success_unapproved: "Heslo bolo úspešne zmenené."
@@ -598,6 +593,10 @@ sk:
         post: Príspevok
         editor: Editor
         edit_reason: Dôvod
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+      yaxis: "Deň"
     dau_by_mau:
       xaxis: "Deň"
     daily_engaged_users:
@@ -787,16 +786,12 @@ sk:
     allow_duplicate_topic_titles: "Povoliť témy s rovnakými, duplikovanými názvami"
     unique_posts_mins: "Koľko minút musí byť medzi dvomi rovnakými príspevkami od jedného používateľa."
     educate_until_posts: "Ked používateľ začne písať svojich prvých (n) príspevkov, zobraz sprievodcu vzdelávania pre nového užívateľa. "
-    title: "Meno stránok, tak ako je použité v značke title."
-    site_description: "Popíšte stránky v jednej vete, tak ako sa popisujú v tagu meta."
     crawl_images: "Načítať obrázky z URL pre vloženie správnej výšky a šírky."
     download_remote_images_threshold: "Minimálne miesto na lokálnom disku potrebné na stiahnutie obrázkov zo vzdialených zdrojov (v percentách)"
     disabled_image_download_domains: "Nikdy nesťahovať obrázky z týchto domén. Zoznam oddeleny pipou \"|\"."
     editing_grace_period: "Nevytvárať nové verzie editovaných príspevkov do (n) sekúnd po odoslaní príspevku."
     edit_history_visible_to_public: "Povoliť všetkým zobrazenie predchádzajúcich verzií upraveného príspevku. Pokiaľ je to vypnuté, verzie vidí iba obslužný personál"
     delete_removed_posts_after: "Príspevky zmazané autorom budú automaticky zmazané po (n) hodinách. Pokiaľ je nastavená 0, príspevky budú zmazané okamžite."
-    max_image_width: "Maximálna šírka náhľadu obrázkov v príspevku"
-    max_image_height: "Maximálna výška náhľadu obrázkov v príspevku"
     fixed_category_positions: "Ak je to označené, budete môcť zoraďovať kategórie v pevnom poradí. Ak je neoznačené, kategórie budu zoradené podlľa aktivity."
     fixed_category_positions_on_create: "Ak je označené, triedenie kategórií bude spravované v dialógu na vytváranie témy (vyžaduje fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Pridať rel nofollow ku všetkému zaslanému používateľskému kontextu s výnimkou interných odkazov (zahrňuje rodičovskú doménu). Ak to zmeníte, musíte vykonať prípaz rebake na všetky príspevky pomocou: "rake posts:rebake"'
@@ -834,8 +829,6 @@ sk:
     top_page_default_timeframe: "Východzí interval pre presmerovanie na hlavnú stránku."
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
     enable_badges: "Povoliť systém odznakov"
-    blocked_email_domains: "Rúrou oddelený zoznam emailových domén, ktorých použitie nie je povolené pri registrácií. Napríklad: mailinator.com|trashmail.net"
-    allowed_email_domains: "Zoznam emailových domén oddelených zvislým oddelovačom \"|\", s použitím ktorých sa používateľ MUSÍ zaregistrovať. VAROVANIE: registrácia použivatelia s neuvedenými doménami nebude povolená!"
     log_out_strict: "Pri odhlasovaní odhlásiť VŠETKY sessiony používateľa, na všetkých zariadeniach."
     new_version_emails: "Poslať email na kontaktnú emailovú adresu ak je zistená nová verzia Discourse."
     invite_expiry_days: "Ako dlho je platná pozvánka pre používateľa, v dňoch"
@@ -847,7 +840,6 @@ sk:
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
     google_oauth2_client_id: "Client ID Vašej Google aplikácie."
     google_oauth2_client_secret: "Client secret Vašej Google aplikácie."
-    maximum_backups: "Maximálny počet záloh udržiavaných na disku. Staršie zálohy budu automaticky vymazané"
     automatic_backups_enabled: "Spustiť automatické zálohy podľa nastavenia intervalu záloh"
     s3_backup_bucket: "Vzdialený S3 bucket na uloženie záloh. VAROVANIE: Uistite sa, že ide o súkromný S3 bucket."
     backup_time_of_day: "Čas v UTC, kedy sa má spustiť záloha."
@@ -1139,7 +1131,6 @@ sk:
     subject_template: "Nastavte heslo pre účet na %{site_name}"
   flag_reasons:
     off_topic: "Váš príspevok bol označený ako \"mimo-témy\": komunita cíti, že nie je vhodný do témy tak, ako je definovaná nadpisom a prvým príspevkom"
-    inappropriate: "Váš príspevok bol označený ako **nevhodný**: komunita cíti, že je úrážlivý, nemiestny alebo porušuje [naše pravidlá komunity](%{base_path}/guidelines)."
     spam: "Váš príspevok bol označený ako **spam**: komunita cíti, že je to reklama, niečo čo je vo spojej podstate príliš propagačné, miesto toho, aby bolo užitočné alebo relevantné k danej téme, tak ako je očakávané."
     notify_moderators: "Váš príspevok bol označený **na kontrolu pre moderátora**: komunita cíti, že nečo v príspevku vyžaduje manuálny zásah niektorým zo zamestnancov."
   flags_dispositions:
@@ -1225,9 +1216,6 @@ sk:
   subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Prechádzajúce odpovede"
-    unsubscribe:
-      title: "Odhlásiť"
-      description: "Nezaujímajú Vás už tieto emaily? Žiadny problém! Pre okamžité odhlásenie kliknite nižšie: "
     posted_by: "Príspevok od %{username} dňa %{post_date}"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
@@ -1250,8 +1238,6 @@ sk:
     see_more: "Viac"
     search_title: "Prehľadať tieto stránky"
     search_button: "Hľadať"
-  deleted: "vymazané"
-  image: "Obrázok"
   upload:
     edit_reason: "stiahnuté lokálne kópie obrázkov"
     unauthorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu (povolené prípony sú: %{authorized_extensions})."
@@ -1297,7 +1283,6 @@ sk:
     title: "Podmienky používania"
   privacy_topic:
     title: "Ochrana súkromia"
-    body: "<a name=\"collect\"></a>\n\n## [Aký druh údajov získavame?](#collect)\n\nPo tom, ako sa zaregistrujete na tejto webovej lokalite, získavame vaše údaje, keď sa zúčastňujete fóra čítaním, prispievaním, písaním a hodnotením zdieľaného obsahu. \nPri registrácií na našej webovej lokalite vás môžeme požiadať o zadanie vášho mena a e-mailovej adresy. Našu webovú lokalitu je možné navštevovať aj bez registrácie. Vaša e-mailová adresa bude overená potvrdzovacím e-mailom, ktorý bude obsahovať jednorazový odkaz. Kliknutím naň potvrdíte, že ste používateľom zadanej e-mailovej adresy. \nPri registrácií a uverejňovaní príspevkov zaznamenávame IP adresu, z ktorej bol príspevok odoslaný. Rovnako môžeme uchovať údaje zo serverov, ktoré obsahujú IP adresu pre každú žiadosť odoslanú na náš server.\n\n<a name=\"use\"></a>\n\n## [Na čo tieto údaje využívame?](#use)\n\nAkékoľvek údaje, ktoré o vás získame, môžu byť využité nasledovne:\n\n* Na personalizáciu obsahu – údaje o vás nám pomáhajú lepšie reagovať na vaše individuálne potreby\n* Na vylepšenie webovej lokality – neustále pracujeme na zlepšovaní ponuky našej webovej lokality na základe vašich údajov a spätnej väzby\n* Na zlepšenie zákazníckych služieb – vaše údaje nám pomáhajú efektívnejšie reagovať na používateľské požiadavky a prípadnú zákaznícku podporu\n* Na odosielanie pravidelných e-mailov – vami uvedená e-mailová adresa môže byť použitá na rozposielanie informácií, vami zvolených upozornení na zmeny v obsahu jednotlivých tém, prípadne na správy smerujúce na vaše používateľské konto, odpovede na vaše otázky alebo požiadavky. \n\n<a name=\"protect\"></a>\n\n## [Ako u nás funguje ochrana údajov?](#protect)\n\nVyužívame rôzne ochranné opatrenia, aby sme zaručili ochranu vašich osobných údajov po tom, ako ich uvediete alebo si k nim vyžiadate prístup.\n\n<a name=\"data-retention\"></a>\n\n## [Ako osobné údaje uchovávame?](#data-retention)\n\nBudeme sa snažiť: \nUchovať údaje zo servera, ktoré obsahujú IP adresu všetkých žiadostí na tento server, maximálne po dobu 90 dní.\nUchovať IP adresy spojené s registrovanými používateľmi a ich príspevkami maximálne po dobu 5 rokov. \n\n<a name=\"cookies\"></a>\n\n## [Používame cookies?](#cookies)\n\nÁno. Cookies sú malé súbory, ktoré webová lokalita alebo jej poskytovateľ služieb uloží na harddisk vášho počítača pomocou internetového prehliadača (pokiaľ to povolíte). Cookies umožňujú webovej lokalite rozpoznať váš prehliadač a pokiaľ máte založený účet, tak ho s ním prepoja. \nPoužívame cookies by sme mohli identifikovať a uložiť vaše preferencie pre budúce návštevy webovej lokality a zhromaždiť súbor údajov o návštevnosti a interakciách webovej lokality, aby sme v budúcnosti mohli zabezpečiť lepšiu používateľskú skúsenosť a nástroje. Môžeme tiež kontaktovať poskytovateľa služieb, ktorý nám ako tretia strana pomôže lepšie porozumieť preferenciám návštevníkom našej webovej lokality. Takýto poskytovateľ služieb má dovolené v našom mene narábať s nami získanými údajmi výhradne za účelom zlepšenia našich služieb. \n\n<a name=\"disclose\"></a>\n\n## [Sprístupňujeme informácie tretím stranám?](#disclose)\n\nNeobchodujeme, nevymieňame a žiadnym iným spôsobom neposúvame tretím stranám informácie, ktoré je možné priradiť k vašej osobe. Výnimkou sú dôverné tretie strany, ktoré nám pomáhajú s prevádzkovaním našej webovej aktivity, našimi aktivitami alebo s poskytovaním služieb používateľom a ktoré sa zaviazali, že s týmito údajmi budú zaobchádzať dôverne. Informácie môžeme uverejniť v prípadoch, keď je to v súlade so zákonom, vymáhaním pravidiel našich stránok, s ochranou našich práv alebo práv iných, ako aj s ochranou majetku a bezpečnosti. Údaje, ktoré nemožno spojiť s konkrétnou osobou môžu byť poskytnuté tretím stranám na marketingové, reklamné alebo iné účely. \n\n<a name=\"third-party\"></a>\n\n## [Prepojenia tretích strán](#third-party)\n\nPríležitostne a podľa nášho uváženia môžeme na našej webovej lokalite uverejňovať produkty a služby tretích strán. Tieto tretie strany majú svoje vlastné, nezávislé podmienky o ochrane údajov a preto nenesieme žiadnu zodpovednosť za obsah a aktivity týchto strán. V každom prípade nám však ide o ochranu integrity našej webovej lokality a preto uvítame akúkoľvek spätnú väzbu týkajúcu sa týchto strán. \n\n<a name=\"coppa\"></a>\n\n## [Rešpektovanie zákona o ochrane súkromia detí v rámci online režimov](#coppa)\n\nVšetky produkty a služby na našej webovej lokalite sú určené osobám vo veku minimálne 13 rokov. Pokiaľ je tento server v USA a vy máte menej ako 13 rokov, vzhľadom na [Zákon o ochrane súkromia detí v rámci online režimov](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act) nesmiete používať túto webovú lokalitu. \n\n<a name=\"online\"></a>\n\n## [Súkromie je chránené len online](#online)\n\nTieto pravidlá ochrany súkromia online platia iba pre informácie, ktoré zozbierala naša webová lokalita a nevzťahuje sa na informácie zozbierané v offline režime.\n\n<a name=\"consent\"></a>\n\n## [Váš súhlas](#consent)\n\nPoužívaním našich stránok súhlasíte s našimi pravidlami o ochrane súkromia. \n\n<a name=\"changes\"></a>\n\n## [Zmeny pravidiel o ochrane súkromia](#changes)\n\nAk sa rozhodneme zaviesť akékoľvek zmeny v oblasti ochrany súkromia, uverejníme túto informáciu na našej webovej lokalite. \nTento dokument je zverejnený s licenciou CC-BY-SA. Posledná úprava bola vykonaná dňa 31. mája 2013.\n"
   badges:
     editor:
       name: Editor
@@ -1386,8 +1371,6 @@ sk:
         fields:
           login_required:
             placeholder: "Súkromné"
-          must_approve_users:
-            placeholder: "Potrebné povolenie"
       styling:
         fields:
           styling_preview:
@@ -1404,7 +1387,6 @@ sk:
             placeholder: "https://www.example.com/contact-us"
       invites:
         title: "Pozvite členov"
-  joined: "Vytvorený"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
@@ -1417,19 +1399,16 @@ sk:
     sensitivity:
       disabled: "Vypnuté"
     actions:
-      agree_and_keep:
-        title: "Ponechať príspevok"
-      agree_and_suspend:
-        title: "Suspendovaný užívateľ"
-      agree_and_silence:
-        title: "Tichý užívateľ"
+      agree:
+        title: "Áno"
       delete_single:
         title: "Odstrániť"
       disagree:
-        title: "Nesúhlasiť"
+        title: "Nie"
       approve:
         title: "Schváliť"
       reject_user:
+        title: "Odstrániť používateľa..."
         delete:
           title: "Odstrániť používateľa"
       reject:

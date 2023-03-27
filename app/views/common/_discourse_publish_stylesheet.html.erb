@@ -1,11 +1,5 @@
 <%= discourse_stylesheet_link_tag 'publish', theme_id: nil %>
 
-<%- if rtl? %>
-  <%= discourse_stylesheet_link_tag(mobile_view? ? :publish_mobile_rtl : :publish_mobile_rtl) %>
-<%- else %>
-  <%= discourse_stylesheet_link_tag(mobile_view? ? :publish_mobile : :publish_desktop) %>
-<%- end %>
-
 <%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request).each do |file| %>
   <%= discourse_stylesheet_link_tag(file) %>
 <%- end %>

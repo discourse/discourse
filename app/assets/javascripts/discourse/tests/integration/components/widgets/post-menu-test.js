@@ -75,4 +75,17 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
 
     assert.ok(!exists(".actions .reply"), "it removes reply button");
   });
+
+  test("removes button when any callback evaluates to true", async function (assert) {
+    this.set("args", {});
+
+    withPluginApi("0.14.0", (api) => {
+      api.removePostMenuButton("reply", () => true);
+      api.removePostMenuButton("reply", () => false);
+    });
+
+    await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+
+    assert.ok(!exists(".actions .reply"), "it removes reply button");
+  });
 });

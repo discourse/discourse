@@ -1,4 +1,6 @@
-<PluginOutlet @name="admin-dashboard-top" @tagName="span" @connectorTagName="div" />
+<span>
+  <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
+</span>
 
 {{#if this.showVersionChecks}}
   <div class="section-top">
@@ -8,7 +10,14 @@
   </div>
 {{/if}}
 
-<DashboardProblems @loadingProblems={{this.loadingProblems}} @foundProblems={{this.foundProblems}} @lowPriorityProblems={{this.lowPriorityProblems}} @highPriorityProblems={{this.highPriorityProblems}} @problemsTimestamp={{this.problemsTimestamp}} @refreshProblems={{action "refreshProblems"}} />
+<DashboardProblems
+  @loadingProblems={{this.loadingProblems}}
+  @foundProblems={{this.foundProblems}}
+  @lowPriorityProblems={{this.lowPriorityProblems}}
+  @highPriorityProblems={{this.highPriorityProblems}}
+  @problemsTimestamp={{this.problemsTimestamp}}
+  @refreshProblems={{action "refreshProblems"}}
+/>
 
 <ul class="navigation">
   <li class="navigation-item general">
@@ -46,4 +55,6 @@
 
 <DashboardNewFeatures @tagName="div" />
 
-<PluginOutlet @name="admin-dashboard-bottom" @tagName="span" @connectorTagName="div" />
+<span>
+  <PluginOutlet @name="admin-dashboard-bottom" @connectorTagName="div" />
+</span>

@@ -3,15 +3,11 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { count } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import Post from "discourse/models/post";
-import Topic from "discourse/models/topic";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 function postStreamTest(name, attrs) {
   test(name, async function (assert) {
-    const site = this.container.lookup("service:site");
-    let posts = attrs.posts.call(this);
-    posts.forEach((p) => p.set("site", site));
-    this.set("posts", posts);
+    this.set("posts", attrs.posts.call(this));
 
     await render(
       hbs`<MountWidget @widget="post-stream" @args={{hash posts=this.posts}} />`
@@ -26,11 +22,13 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
 
   postStreamTest("basics", {
     posts() {
-      const site = this.container.lookup("service:site");
-      const topic = Topic.create();
+      const site = getOwner(this).lookup("service:site");
+      const store = getOwner(this).lookup("service:store");
+      const topic = store.createRecord("topic");
       topic.set("details.created_by", { id: 123 });
+
       return [
-        Post.create({
+        store.createRecord("post", {
           topic,
           id: 1,
           post_number: 1,
@@ -38,27 +36,32 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
           primary_group_name: "trout",
           avatar_template: "/images/avatar.png",
         }),
-        Post.create({
+        store.createRecord("post", {
           topic,
           id: 2,
           post_number: 2,
           post_type: site.get("post_types.moderator_action"),
         }),
-        Post.create({ topic, id: 3, post_number: 3, hidden: true }),
-        Post.create({
+        store.createRecord("post", {
+          topic,
+          id: 3,
+          post_number: 3,
+          hidden: true,
+        }),
+        store.createRecord("post", {
           topic,
           id: 4,
           post_number: 4,
           post_type: site.get("post_types.whisper"),
         }),
-        Post.create({
+        store.createRecord("post", {
           topic,
           id: 5,
           post_number: 5,
           wiki: true,
           via_email: true,
         }),
-        Post.create({
+        store.createRecord("post", {
           topic,
           id: 6,
           post_number: 6,
@@ -126,10 +129,12 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
 
   postStreamTest("deleted posts", {
     posts() {
-      const topic = Topic.create();
+      const store = getOwner(this).lookup("service:store");
+      const topic = store.createRecord("topic");
       topic.set("details.created_by", { id: 123 });
+
       return [
-        Post.create({
+        store.createRecord("post", {
           topic,
           id: 1,
           post_number: 1,

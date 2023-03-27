@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class SiteCategorySerializer < BasicCategorySerializer
-
   attributes :allowed_tags,
              :allowed_tag_groups,
              :allow_global_tags,
-             :read_only_banner
+             :read_only_banner,
+             :form_template_ids
 
   has_many :category_required_tag_groups, key: :required_tag_groups, embed: :objects
 

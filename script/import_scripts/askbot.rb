@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-require 'pg'
+require "pg"
 
 class ImportScripts::MyAskBot < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
   BATCH_SIZE = 1000
 
-  OLD_SITE   = "ask.cvxr.com"
-  DB_NAME    = "cvxforum"
-  DB_USER    = "cvxforum"
-  DB_PORT    = 5432
-  DB_HOST    = "ask.cvxr.com"
-  DB_PASS    = 'yeah, right'
+  OLD_SITE = "ask.cvxr.com"
+  DB_NAME = "cvxforum"
+  DB_USER = "cvxforum"
+  DB_PORT = 5432
+  DB_HOST = "ask.cvxr.com"
+  DB_PASS = "yeah, right"
 
   # A list of categories to create. Any post with one of these tags will be
   # assigned to that category. Ties are broken by list order.
-  CATEGORIES = [ 'Nonconvex', 'TFOCS', 'MIDCP', 'FAQ' ]
+  CATEGORIES = %w[Nonconvex TFOCS MIDCP FAQ]
 
   def initialize
     super
@@ -25,13 +25,8 @@ class ImportScripts::MyAskBot < ImportScripts::Base
     @thread_parents = {}
     @tagmap = []
     @td = PG::TextDecoder::TimestampWithTimeZone.new
-    @client = PG.connect(
-      dbname: DB_NAME,
-      host: DB_HOST,
-      port: DB_PORT,
-      user: DB_USER,
-      password: DB_PASS
-    )
+    @client =
+      PG.connect(dbname: DB_NAME, host: DB_HOST, port: DB_PORT, user: DB_USER, password: DB_PASS)
   end
 
   def execute
@@ -55,18 +50,17 @@ class ImportScripts::MyAskBot < ImportScripts::Base
   def read_tags
     puts "", "reading thread tags..."
 
-    tag_count = @client.exec(<<-SQL
+    tag_count = @client.exec(<<-SQL)[0]["count"]
           SELECT COUNT(A.id)
           FROM askbot_thread_tags A
           JOIN tag B
           ON A.tag_id = B.id
           WHERE A.tag_id > 0
       SQL
-    )[0]["count"]
 
     tags_done = 0
     batches(BATCH_SIZE) do |offset|
-      tags = @client.exec(<<-SQL
+      tags = @client.exec(<<-SQL)
         SELECT A.thread_id, B.name
         FROM askbot_thread_tags A
         JOIN tag B
@@ -75,7 +69,6 @@ class ImportScripts::MyAskBot < ImportScripts::Base
         LIMIT #{BATCH_SIZE}
         OFFSET #{offset}
       SQL
-      )
       break if tags.ntuples() < 1
       tags.each do |tag|
         tid = tag["thread_id"].to_i
@@ -83,7 +76,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
         if @tagmap[tid]
           @tagmap[tid].push(tnm)
         else
-          @tagmap[tid] = [ tnm ]
+          @tagmap[tid] = [tnm]
         end
         tags_done += 1
         print_status tags_done, tag_count
@@ -94,21 +87,19 @@ class ImportScripts::MyAskBot < ImportScripts::Base
   def import_users
     puts "", "importing users"
 
-    total_count = @client.exec(<<-SQL
+    total_count = @client.exec(<<-SQL)[0]["count"]
           SELECT COUNT(id)
             FROM auth_user
       SQL
-    )[0]["count"]
 
     batches(BATCH_SIZE) do |offset|
-      users = @client.query(<<-SQL
+      users = @client.query(<<-SQL)
           SELECT id, username, email, is_staff, date_joined, last_seen, real_name, website, location, about
             FROM auth_user
         ORDER BY date_joined
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
       SQL
-      )
 
       break if users.ntuples() < 1
 
@@ -133,17 +124,16 @@ class ImportScripts::MyAskBot < ImportScripts::Base
   def import_posts
     puts "", "importing questions..."
 
-    post_count = @client.exec(<<-SQL
+    post_count = @client.exec(<<-SQL)[0]["count"]
           SELECT COUNT(A.id)
             FROM askbot_post A
             JOIN askbot_thread B
               ON A.thread_id = B.id
            WHERE NOT B.closed AND A.post_type='question'
       SQL
-    )[0]["count"]
 
     batches(BATCH_SIZE) do |offset|
-      posts = @client.exec(<<-SQL
+      posts = @client.exec(<<-SQL)
           SELECT A.id, A.author_id, A.added_at, A.text, A.thread_id, B.title
             FROM askbot_post A
             JOIN askbot_thread B
@@ -153,7 +143,6 @@ class ImportScripts::MyAskBot < ImportScripts::Base
           LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
       SQL
-      )
 
       break if posts.ntuples() < 1
 
@@ -176,7 +165,11 @@ class ImportScripts::MyAskBot < ImportScripts::Base
           id: pid,
           title: post["title"],
           category: cat,
-          custom_fields: { import_id: pid, import_thread_id: tid, import_tags: tags },
+          custom_fields: {
+            import_id: pid,
+            import_thread_id: tid,
+            import_tags: tags,
+          },
           user_id: user_id_from_imported_user_id(post["author_id"]) || Discourse::SYSTEM_USER_ID,
           created_at: Time.zone.at(@td.decode(post["added_at"])),
           raw: post["text"],
@@ -188,17 +181,16 @@ class ImportScripts::MyAskBot < ImportScripts::Base
   def import_replies
     puts "", "importing answers and comments..."
 
-    post_count = @client.exec(<<-SQL
+    post_count = @client.exec(<<-SQL)[0]["count"]
           SELECT COUNT(A.id)
             FROM askbot_post A
             JOIN askbot_thread B
               ON A.thread_id = B.id
            WHERE NOT B.closed AND A.post_type<>'question'
       SQL
-    )[0]["count"]
 
     batches(BATCH_SIZE) do |offset|
-      posts = @client.exec(<<-SQL
+      posts = @client.exec(<<-SQL)
           SELECT A.id, A.author_id, A.added_at, A.text, A.thread_id, B.title
             FROM askbot_post A
             JOIN askbot_thread B
@@ -208,7 +200,6 @@ class ImportScripts::MyAskBot < ImportScripts::Base
           LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
       SQL
-      )
 
       break if posts.ntuples() < 1
 
@@ -222,10 +213,12 @@ class ImportScripts::MyAskBot < ImportScripts::Base
         {
           id: pid,
           topic_id: parent[:topic_id],
-          custom_fields: { import_id: pid },
+          custom_fields: {
+            import_id: pid,
+          },
           user_id: user_id_from_imported_user_id(post["author_id"]) || Discourse::SYSTEM_USER_ID,
           created_at: Time.zone.at(@td.decode(post["added_at"])),
-          raw: post["text"]
+          raw: post["text"],
         }
       end
     end
@@ -240,32 +233,37 @@ class ImportScripts::MyAskBot < ImportScripts::Base
     # I am sure this is incomplete, but we didn't make heavy use of internal
     # links on our site.
     tmp = Regexp.quote("http://#{OLD_SITE}")
-    r1 = /"(#{tmp})?\/question\/(\d+)\/[a-zA-Z-]*\/?"/
-    r2 = /\((#{tmp})?\/question\/(\d+)\/[a-zA-Z-]*\/?\)/
-    r3 = /<?#tmp\/question\/(\d+)\/[a-zA-Z-]*\/?>?/
+    r1 = %r{"(#{tmp})?/question/(\d+)/[a-zA-Z-]*/?"}
+    r2 = %r{\((#{tmp})?/question/(\d+)/[a-zA-Z-]*/?\)}
+    r3 = %r{<?#tmp/question/(\d+)/[a-zA-Z-]*/?>?}
     Post.find_each do |post|
-      raw = post.raw.gsub(r1) do
-        if topic = topic_lookup_from_imported_post_id($2)
-          "\"#{topic[:url]}\""
-        else
-          $&
+      raw =
+        post
+          .raw
+          .gsub(r1) do
+            if topic = topic_lookup_from_imported_post_id($2)
+              "\"#{topic[:url]}\""
+            else
+              $&
+            end
+          end
+      raw =
+        raw.gsub(r2) do
+          if topic = topic_lookup_from_imported_post_id($2)
+            "(#{topic[:url]})"
+          else
+            $&
+          end
         end
-      end
-      raw = raw.gsub(r2) do
-        if topic = topic_lookup_from_imported_post_id($2)
-          "(#{topic[:url]})"
-        else
-          $&
+      raw =
+        raw.gsub(r3) do
+          if topic = topic_lookup_from_imported_post_id($1)
+            trec = Topic.find_by(id: topic[:topic_id])
+            "[#{trec.title}](#{topic[:url]})"
+          else
+            $&
+          end
         end
-      end
-      raw = raw.gsub(r3) do
-        if topic = topic_lookup_from_imported_post_id($1)
-          trec = Topic.find_by(id: topic[:topic_id])
-          "[#{trec.title}](#{topic[:url]})"
-        else
-          $&
-        end
-      end
 
       if raw != post.raw
         post.raw = raw

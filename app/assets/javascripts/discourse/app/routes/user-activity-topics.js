@@ -50,6 +50,10 @@ export default UserTopicListRoute.extend({
     return { title, body };
   },
 
+  titleToken() {
+    return I18n.t("user_action_groups.4");
+  },
+
   @action
   triggerRefresh() {
     this.refresh();

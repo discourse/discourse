@@ -5,20 +5,22 @@ import { bind } from "discourse-common/utils/decorators";
 export default Component.extend({
   classNames: ["create-account-body"],
 
+  // used for animating the label inside of inputs
   userInputFocus(event) {
-    let label = event.target.parentElement.previousElementSibling;
-    if (!label.classList.contains("value-entered")) {
-      label.classList.toggle("value-entered");
+    const userField = event.target.parentElement.parentElement;
+    if (!userField.classList.contains("value-entered")) {
+      userField.classList.toggle("value-entered");
     }
   },
 
+  // used for animating the label inside of inputs
   userInputFocusOut(event) {
-    let label = event.target.parentElement.previousElementSibling;
+    const userField = event.target.parentElement.parentElement;
     if (
       event.target.value.length === 0 &&
-      label.classList.contains("value-entered")
+      userField.classList.contains("value-entered")
     ) {
-      label.classList.toggle("value-entered");
+      userField.classList.toggle("value-entered");
     }
   },
 

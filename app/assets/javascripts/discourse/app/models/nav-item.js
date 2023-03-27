@@ -243,11 +243,16 @@ NavItem.reopenClass({
       deprecated("You must supply `buildList` with a `siteSettings` object", {
         since: "2.6.0",
         dropFrom: "2.7.0",
+        id: "discourse.nav-item.built-list-site-settings",
       });
       args.siteSettings = getOwner(this).lookup("service:site-settings");
     }
     let items = args.siteSettings.top_menu.split("|");
 
+    const user = getOwner(this).lookup("service:current-user");
+    if (user?.new_new_view_enabled) {
+      items = items.reject((item) => item === "unread");
+    }
     const filterType = (args.filterMode || "").split("/").pop();
 
     if (!items.some((i) => filterType === i)) {

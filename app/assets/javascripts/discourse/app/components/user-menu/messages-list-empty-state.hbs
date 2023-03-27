@@ -4,7 +4,13 @@
   </span>
   <div class="empty-state-body">
     <p>
-      {{html-safe (i18n "user.no_messages_body" icon=(d-icon "envelope") aboutUrl=(get-url "/about"))}}
+      {{html-safe
+        (i18n
+          "user.no_messages_body"
+          icon=(d-icon "envelope")
+          aboutUrl=(get-url "/about")
+        )
+      }}
     </p>
   </div>
 </div>

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::DashboardController < Admin::AdminController
+class Admin::DashboardController < Admin::StaffController
   def index
     data = AdminDashboardIndexData.fetch_cached_stats
 
@@ -11,9 +11,12 @@ class Admin::DashboardController < Admin::AdminController
     render json: data
   end
 
-  def moderation; end
-  def security; end
-  def reports; end
+  def moderation
+  end
+  def security
+  end
+  def reports
+  end
 
   def general
     render json: AdminDashboardGeneralData.fetch_cached_stats
@@ -24,10 +27,16 @@ class Admin::DashboardController < Admin::AdminController
   end
 
   def new_features
+    new_features = DiscourseUpdates.new_features
+
+    if current_user.admin? && most_recent = new_features&.first
+      DiscourseUpdates.bump_last_viewed_feature_date(current_user.id, most_recent["created_at"])
+    end
+
     data = {
-      new_features: DiscourseUpdates.new_features,
+      new_features: new_features,
       has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id),
-      release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"]
+      release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"],
     }
     render json: data
   end

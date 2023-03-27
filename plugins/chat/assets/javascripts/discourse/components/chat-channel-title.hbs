@@ -1,0 +1,70 @@
+{{#if this.channel.isDraft}}
+  <div class="chat-channel-title is-draft">
+    <span class="chat-channel-title__name">{{this.channel.title}}</span>
+    {{#if (has-block)}}
+      {{yield}}
+    {{/if}}
+  </div>
+{{else}}
+  {{#if this.channel.isDirectMessageChannel}}
+    <div class="chat-channel-title is-dm">
+
+      <div class="chat-channel-title__avatar">
+        {{#if this.multiDm}}
+          <span class="chat-channel-title__users-count">
+            {{this.channel.chatable.users.length}}
+          </span>
+        {{else}}
+          <ChatUserAvatar @user={{this.channel.chatable.users.firstObject}} />
+        {{/if}}
+      </div>
+
+      <div class="chat-channel-title__user-info">
+        <div class="chat-channel-title__usernames">
+          {{#if this.multiDm}}
+            <span class="chat-channel-title__name">{{this.usernames}}</span>
+          {{else}}
+            {{#let this.channel.chatable.users.firstObject as |user|}}
+              <span class="chat-channel-title__name">{{user.username}}</span>
+              {{#if this.showUserStatus}}
+                <UserStatusMessage
+                  @status={{this.channel.chatable.users.firstObject.status}}
+                  @showDescription={{if this.site.mobileView "true"}}
+                />
+              {{/if}}
+              <PluginOutlet
+                @name="after-chat-channel-username"
+                @outletArgs={{hash user=user}}
+                @tagName=""
+                @connectorTagName=""
+              />
+            {{/let}}
+          {{/if}}
+        </div>
+      </div>
+
+      {{#if (has-block)}}
+        {{yield}}
+      {{/if}}
+    </div>
+  {{else if this.channel.isCategoryChannel}}
+    <div class="chat-channel-title is-category">
+      <span
+        class="chat-channel-title__category-badge"
+        style={{this.channelColorStyle}}
+      >
+        {{d-icon "d-chat"}}
+        {{#if this.channel.chatable.read_restricted}}
+          {{d-icon "lock" class="chat-channel-title__restricted-category-icon"}}
+        {{/if}}
+      </span>
+      <span class="chat-channel-title__name">
+        {{replace-emoji this.channel.title}}
+      </span>
+
+      {{#if (has-block)}}
+        {{yield}}
+      {{/if}}
+    </div>
+  {{/if}}
+{{/if}}

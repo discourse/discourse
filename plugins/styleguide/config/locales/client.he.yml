@@ -92,3 +92,6 @@ he:
           description: "תיאור"
           header: "כותרת"
           hover_to_see: "יש לעבור מעל כדי לראות חלונית תיאור"
+        char_counter:
+          title: "מונה תווים"
+          placeholder: "נא להקליד כאן טקסט…"

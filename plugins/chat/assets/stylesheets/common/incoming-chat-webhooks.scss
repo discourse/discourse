@@ -1,0 +1,53 @@
+.incoming-chat-webhooks {
+  margin-top: 1em;
+
+  &--row {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--primary-very-low);
+    padding: 1em;
+    border-radius: 6px;
+    margin-bottom: 1em;
+
+    &--details {
+      display: inline-block;
+      vertical-align: top;
+      max-width: calc(100% - 120px - 1em);
+
+      &--name {
+        font-weight: bold;
+        font-size: var(--font-up-1);
+      }
+    }
+    &--controls {
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+}
+
+.incoming-chat-webhooks-back {
+  margin-bottom: 1em;
+}
+
+.incoming-chat-webhooks-current-emoji {
+  padding-left: 0.5em;
+}
+
+.new-incoming-webhook-container {
+  display: flex;
+  align-items: center;
+
+  input {
+    margin: 0;
+  }
+
+  input,
+  details {
+    margin-right: 0.5em;
+  }
+
+  .create-new-incoming-webhook-btn {
+    margin-right: 0.25em;
+  }
+}

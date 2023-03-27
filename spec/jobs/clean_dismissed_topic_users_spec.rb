@@ -5,13 +5,13 @@ RSpec.describe Jobs::CleanDismissedTopicUsers do
   fab!(:topic) { Fabricate(:topic, created_at: 5.hours.ago) }
   fab!(:dismissed_topic_user) { Fabricate(:dismissed_topic_user, user: user, topic: topic) }
 
-  describe '#delete_overdue_dismissals!' do
-    it 'does not delete when new_topic_duration_minutes is set to always' do
+  describe "#delete_overdue_dismissals!" do
+    it "does not delete when new_topic_duration_minutes is set to always" do
       user.user_option.update(new_topic_duration_minutes: User::NewTopicDuration::ALWAYS)
       expect { described_class.new.execute({}) }.not_to change { DismissedTopicUser.count }
     end
 
-    it 'deletes when new_topic_duration_minutes is set to since last visit' do
+    it "deletes when new_topic_duration_minutes is set to since last visit" do
       user.user_option.update(new_topic_duration_minutes: User::NewTopicDuration::LAST_VISIT)
       expect { described_class.new.execute({}) }.not_to change { DismissedTopicUser.count }
 
@@ -19,7 +19,7 @@ RSpec.describe Jobs::CleanDismissedTopicUsers do
       expect { described_class.new.execute({}) }.to change { DismissedTopicUser.count }.by(-1)
     end
 
-    it 'deletes when new_topic_duration_minutes is set to created in the last day' do
+    it "deletes when new_topic_duration_minutes is set to created in the last day" do
       user.user_option.update(new_topic_duration_minutes: 1440)
       expect { described_class.new.execute({}) }.not_to change { DismissedTopicUser.count }
 
@@ -28,7 +28,7 @@ RSpec.describe Jobs::CleanDismissedTopicUsers do
     end
   end
 
-  describe '#delete_over_the_limit_dismissals!' do
+  describe "#delete_over_the_limit_dismissals!" do
     fab!(:user2) { Fabricate(:user, created_at: 1.days.ago, previous_visit_at: 1.days.ago) }
     fab!(:topic2) { Fabricate(:topic, created_at: 6.hours.ago) }
     fab!(:topic3) { Fabricate(:topic, created_at: 2.hours.ago) }
@@ -41,7 +41,7 @@ RSpec.describe Jobs::CleanDismissedTopicUsers do
       user2.user_option.update(new_topic_duration_minutes: User::NewTopicDuration::ALWAYS)
     end
 
-    it 'deletes over the limit dismissals' do
+    it "deletes over the limit dismissals" do
       described_class.new.execute({})
       expect(dismissed_topic_user.reload).to be_present
       expect(dismissed_topic_user2.reload).to be_present

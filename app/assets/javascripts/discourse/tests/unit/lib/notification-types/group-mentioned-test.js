@@ -1,9 +1,9 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { deepMerge } from "discourse-common/lib/object";
 import { createRenderDirector } from "discourse/tests/helpers/notification-types-helper";
 import Notification from "discourse/models/notification";
+import { setupTest } from "ember-qunit";
 
 function getNotification(overrides = {}) {
   return Notification.create(
@@ -34,7 +34,9 @@ function getNotification(overrides = {}) {
   );
 }
 
-discourseModule("Unit | Notification Types | group-mentioned", function () {
+module("Unit | Notification Types | group-mentioned", function (hooks) {
+  setupTest(hooks);
+
   test("label", function (assert) {
     const notification = getNotification();
     const director = createRenderDirector(

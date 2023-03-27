@@ -4,24 +4,14 @@ class UserSecondFactor < ActiveRecord::Base
   include SecondFactorManager
   belongs_to :user
 
-  scope :backup_codes, -> do
-    where(method: UserSecondFactor.methods[:backup_codes], enabled: true)
-  end
+  scope :backup_codes, -> { where(method: UserSecondFactor.methods[:backup_codes], enabled: true) }
 
-  scope :totps, -> do
-    where(method: UserSecondFactor.methods[:totp], enabled: true)
-  end
+  scope :totps, -> { where(method: UserSecondFactor.methods[:totp], enabled: true) }
 
-  scope :all_totps, -> do
-    where(method: UserSecondFactor.methods[:totp])
-  end
+  scope :all_totps, -> { where(method: UserSecondFactor.methods[:totp]) }
 
   def self.methods
-    @methods ||= Enum.new(
-      totp: 1,
-      backup_codes: 2,
-      security_key: 3,
-    )
+    @methods ||= Enum.new(totp: 1, backup_codes: 2, security_key: 3)
   end
 
   def totp_object
@@ -31,7 +21,6 @@ class UserSecondFactor < ActiveRecord::Base
   def totp_provisioning_uri
     totp_object.provisioning_uri(user.email)
   end
-
 end
 
 # == Schema Information

@@ -458,16 +458,10 @@ sl:
         few: "skoraj %{count} leta nazaj"
         other: "skoraj %{count} let nazaj"
   password_reset:
-    no_token: "Povezava za zamenjavo gesla je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo.."
-    choose_new: "Vnesite novo geslo"
-    choose: "Vnesite geslo"
-    update: "Spremenite geslo"
-    save: "Nastavi geslo"
     title: "Zamenjaj geslo"
     success: "Uspešno ste zamenjali geslo in ste sedaj prijavljeni."
     success_unapproved: "Uspešno ste zamenjali geslo."
   email_login:
-    invalid_token: "Povezava za prijavo je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo."
     title: "Prijava z e-naslovom"
   user_auth_tokens:
     browser:
@@ -522,7 +516,6 @@ sl:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprimerno"
-      description: 'Prispevek vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
     notify_user:
       title: "Pošlji uporabniku @%{username} ZS"
@@ -545,7 +538,6 @@ sl:
       short_description: "To je oglas"
     inappropriate:
       title: "Neprimerno"
-      description: 'Tema vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
       long_form: "prijavljeno kot neprimerno"
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
     notify_moderators:
@@ -624,6 +616,10 @@ sl:
         post: Prispevek
         editor: Urednik
         edit_reason: Razlog
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Uporabniški API"
     topics:
       title: "Tem"
     posts:
@@ -971,7 +967,6 @@ sl:
       (Če je zgornja povezava potekla, izberite "Pozabil sem geslo" pri prijavi z e-naslovom.)
   flag_reasons:
     off_topic: "Vaš prispevek je prijavljen kot **ne ustreza**: skupnost je mnenja, da ne ustreza temi kakor je določena z naslovom in prvim prispevkom."
-    inappropriate: "Vaš prispevek je bil prijavljen kot **ni primeren**: skupnost meni da je žaljiv, nesramen ali krši [pravila skupnosti](%{base_path}/guidelines)."
     spam: "Vaš prispevek je bil prijavljen kot **nezaželen**: skupnost meni da je prispevek oglas ali vsebuje preveč oglaševalske vsebine, da bi bil uporaben in bistven za temo."
     notify_moderators: "Vaš prispevek je bil prijavljen za **pregled osebja**: skupnost meni, da prispevek zahteva poseg člana osebja foruma."
   flags_dispositions:
@@ -1273,14 +1268,6 @@ sl:
     user_automatically_silenced:
       title: "Uporabnik samodejno utišan"
       subject_template: "Nov uporabnik %{username} je utišan zaradi prijav skupnosti"
-      text_body_template: |
-        To je samodejno sporočilo.
-
-        Novi uporabnik [%{username}](%{user_url}) je bil samodejno utišan, ker je več uporabnikov prijavilo prispevke od %{username}.
-
-        [Preverite prijave](%{base_url}/admin/flags). Če je bil uporabnik %{username} po nepotrebnem utišan, kliknite gumb Ukini utišanje uporabnika na [admin strani uporabnika](%{user_url}).
-
-        Ta nastavitev se lahko sprememni preko `silence_new_user` nastavitve.
     spam_post_blocked:
       title: "Neželen prispevek blokiran"
       subject_template: "Prispevek novega uporabnika %{username} je blokiran zaradi ponovljenih povezav"
@@ -1340,9 +1327,6 @@ sl:
       few: "Opozorilo: na dan vam pošljemo največ %{count} e-sporočila. Preverite na forumu tudi preostale, ki vam jih nismo poslali. P.S. Čestitamo za popularnost!"
       other: "Opozorilo: na dan vam pošljemo največ %{count} e-sporočil. Preverite na forumu tudi preostale, ki vam jih nismo poslali. P.S. Čestitamo za popularnost!"
     in_reply_to: "V odgovor na"
-    unsubscribe:
-      title: "Odjavi"
-      description: "Nočete prejemati takšnih e-sporočil? Ni problema! Kliknite spodaj za takojšno odjavo:"
     reply_by_email: "[Pojdi na temo](%{base_url}%{url}) ali odgovori na to e-sporočilo za odgovor."
     reply_by_email_pm: "[Pojdi na sporočilo](%{base_url}%{url}) ali odgovori na to e-sporočilo za odgovor %{participants}."
     only_reply_by_email: "Odgovori na to e-sporočilo za odgovor."
@@ -1495,6 +1479,16 @@ sl:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "Uporabnik opazuje prvi prispevek"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -1554,7 +1548,6 @@ sl:
       liked_received: "Prejeti všečki"
       new_users: "Novi uporabniki"
       popular_topics: "Zanimive teme"
-      follow_topic: "Sledi tej temi"
       join_the_discussion: "Preberi več"
       popular_posts: "Zanimivi prispevki"
       more_new: "Novo za vas"
@@ -1691,8 +1684,6 @@ sl:
     welcome_message_invite_only: |
       ## [Dobrodošli na %{title}](#welcome)
       Za dostop potrebujete uporabniški račun. Prosite obstoječega uporabnika, da vas povabi ali pa se prijavite za nadaljevanje.
-  deleted: "izbrisano"
-  image: "slika"
   upload:
     edit_reason: "prenos slik v lokalno kopijo"
     unauthorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."
@@ -1983,8 +1974,6 @@ sl:
         fields:
           login_required:
             placeholder: "Zasebno"
-          must_approve_users:
-            placeholder: "Zahtevaj odobritev"
       styling:
         fields:
           styling_preview:
@@ -2001,7 +1990,6 @@ sl:
                 label: "Kategorije in najboljše teme"
       invites:
         disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
-  joined: "Pridružen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je omenil v "%{topic}" - %{site_title}'
@@ -2036,47 +2024,29 @@ sl:
     conflict: "Prišlo je do konflikta, ki to preprečuje. "
     actions:
       agree:
-        title: "Strinjam se..."
-      agree_and_keep:
-        title: "Ohrani prispevek"
-        description: "Strinjam se z prijavo in pusti prispevek nespremenjen."
+        title: "Ja"
       agree_and_suspend:
-        title: "Suspendiraj uporabnika"
         description: "Strinjam se z prijavo in suspendiraj uporabnika."
       agree_and_silence:
-        title: "Utišaj uporabnika/co"
         description: "Potrdi prijavo in utišaj uporabnika"
       agree_and_restore:
-        title: "Povrni prispevek"
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
-      agree_and_hide:
-        title: "Skrij prispevek"
-        description: "Skrij prispevek in samodejno pošlji zasebno sporočilo uporabniku, kjer ga prosiš, da naj spremenijo prispevek."
       delete_single:
         title: "Izbriši"
       delete:
         title: "Izbriši..."
-      delete_and_ignore:
-        title: "Izbriši prispevek in prezri"
-        description: "Izbriši prispevek; če je prvi prispevek, izbriši tudi temo"
       delete_and_ignore_replies:
-        title: "Izbriši prispevek + odgovore in prezri"
-        description: "Izbriši prispevek in vse odgovore; če je prvi prispevek, izbriši tudi temo"
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
-      delete_and_agree:
-        title: "Izbriši prispevek in se strinjam"
-        description: "Izbriši prispevek; če je prvi prispevek, izbriši tudi temo"
       delete_and_agree_replies:
-        title: "Izbriši prispevek + odgovore in se strinjam"
-        description: "Izbriši prispevek in vse odgovore; če je prvi prispevek, izbriši tudi temo"
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
       disagree_and_restore:
-        title: "Se ne strinjam in povrni prispevek"
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
       disagree:
-        title: "Se ne strinjam"
+        title: "Ne"
       ignore:
         title: "Prezri"
+      ignore_and_do_nothing:
+        title: "Ne naredi nič"
       approve:
         title: "Odobri"
       approve_post:

@@ -19,27 +19,21 @@ export PARENT_FIELD="parent_id" # "parent" in some versions
 =end
 
 class ImportScripts::Kunena < ImportScripts::Base
-
-  DB_HOST ||= ENV['DB_HOST'] || "localhost"
-  DB_NAME ||= ENV['DB_NAME'] || "kunena"
-  DB_USER ||= ENV['DB_USER'] || "kunena"
-  DB_PW   ||= ENV['DB_PW'] || "kunena"
-  KUNENA_PREFIX ||= ENV['KUNENA_PREFIX'] || "jos_" # "iff_" sometimes
-  IMAGE_PREFIX ||= ENV['IMAGE_PREFIX'] || "http://EXAMPLE.com/media/kunena/attachments"
-  PARENT_FIELD ||= ENV['PARENT_FIELD'] || "parent_id" # "parent" in some versions
+  DB_HOST ||= ENV["DB_HOST"] || "localhost"
+  DB_NAME ||= ENV["DB_NAME"] || "kunena"
+  DB_USER ||= ENV["DB_USER"] || "kunena"
+  DB_PW ||= ENV["DB_PW"] || "kunena"
+  KUNENA_PREFIX ||= ENV["KUNENA_PREFIX"] || "jos_" # "iff_" sometimes
+  IMAGE_PREFIX ||= ENV["IMAGE_PREFIX"] || "http://EXAMPLE.com/media/kunena/attachments"
+  PARENT_FIELD ||= ENV["PARENT_FIELD"] || "parent_id" # "parent" in some versions
 
   def initialize
-
     super
 
     @users = {}
 
-    @client = Mysql2::Client.new(
-      host: DB_HOST,
-      username: DB_USER,
-      password: DB_PW,
-      database: DB_NAME
-    )
+    @client =
+      Mysql2::Client.new(host: DB_HOST, username: DB_USER, password: DB_PW, database: DB_NAME)
   end
 
   def execute
@@ -48,7 +42,8 @@ class ImportScripts::Kunena < ImportScripts::Base
     puts "creating users"
 
     create_users(@users) do |id, user|
-      { id: id,
+      {
+        id: id,
         email: user[:email],
         username: user[:username],
         created_at: user[:created_at],
@@ -56,15 +51,25 @@ class ImportScripts::Kunena < ImportScripts::Base
         moderator: user[:moderator] ? true : false,
         admin: user[:admin] ? true : false,
         suspended_at: user[:suspended] ? Time.zone.now : nil,
-        suspended_till: user[:suspended] ? 100.years.from_now : nil }
+        suspended_till: user[:suspended] ? 100.years.from_now : nil,
+      }
     end
 
     @users = nil
 
-    create_categories(@client.query("SELECT id, #{PARENT_FIELD} as parent_id, name, description, ordering FROM #{KUNENA_PREFIX}kunena_categories ORDER BY #{PARENT_FIELD}, id;")) do |c|
-      h = { id: c['id'], name: c['name'], description: c['description'], position: c['ordering'].to_i }
-      if c['parent_id'].to_i > 0
-        h[:parent_category_id] = category_id_from_imported_category_id(c['parent_id'])
+    create_categories(
+      @client.query(
+        "SELECT id, #{PARENT_FIELD} as parent_id, name, description, ordering FROM #{KUNENA_PREFIX}kunena_categories ORDER BY #{PARENT_FIELD}, id;",
+      ),
+    ) do |c|
+      h = {
+        id: c["id"],
+        name: c["name"],
+        description: c["description"],
+        position: c["ordering"].to_i,
+      }
+      if c["parent_id"].to_i > 0
+        h[:parent_category_id] = category_id_from_imported_category_id(c["parent_id"])
       end
       h
     end
@@ -72,9 +77,9 @@ class ImportScripts::Kunena < ImportScripts::Base
     import_posts
 
     begin
-      create_admin(email: 'CHANGE@ME.COM', username: UserNameSuggester.suggest('CHAMGEME'))
+      create_admin(email: "CHANGE@ME.COM", username: UserNameSuggester.suggest("CHAMGEME"))
     rescue => e
-      puts '', "Failed to create admin user"
+      puts "", "Failed to create admin user"
       puts e.message
     end
   end
@@ -83,38 +88,54 @@ class ImportScripts::Kunena < ImportScripts::Base
     # Need to merge data from joomla with kunena
 
     puts "fetching Joomla users data from mysql"
-    results = @client.query("SELECT id, username, email, registerDate FROM #{KUNENA_PREFIX}users;", cache_rows: false)
+    results =
+      @client.query(
+        "SELECT id, username, email, registerDate FROM #{KUNENA_PREFIX}users;",
+        cache_rows: false,
+      )
     results.each do |u|
-      next unless u['id'].to_i > (0) && u['username'].present? && u['email'].present?
-      username = u['username'].gsub(' ', '_').gsub(/[^A-Za-z0-9_]/, '')[0, User.username_length.end]
+      next unless u["id"].to_i > (0) && u["username"].present? && u["email"].present?
+      username = u["username"].gsub(" ", "_").gsub(/[^A-Za-z0-9_]/, "")[0, User.username_length.end]
       if username.length < User.username_length.first
         username = username * User.username_length.first
       end
-      @users[u['id'].to_i] = { id: u['id'].to_i, username: username, email: u['email'], created_at: u['registerDate'] }
+      @users[u["id"].to_i] = {
+        id: u["id"].to_i,
+        username: username,
+        email: u["email"],
+        created_at: u["registerDate"],
+      }
     end
 
     puts "fetching Kunena user data from mysql"
-    results = @client.query("SELECT userid, signature, moderator, banned FROM #{KUNENA_PREFIX}kunena_users;", cache_rows: false)
+    results =
+      @client.query(
+        "SELECT userid, signature, moderator, banned FROM #{KUNENA_PREFIX}kunena_users;",
+        cache_rows: false,
+      )
     results.each do |u|
-      next unless u['userid'].to_i > 0
-      user = @users[u['userid'].to_i]
+      next if u["userid"].to_i <= 0
+      user = @users[u["userid"].to_i]
       if user
-        user[:bio] = u['signature']
-        user[:moderator] = (u['moderator'].to_i == 1)
-        user[:suspended] = u['banned'].present?
+        user[:bio] = u["signature"]
+        user[:moderator] = (u["moderator"].to_i == 1)
+        user[:suspended] = u["banned"].present?
       end
     end
   end
 
   def import_posts
-    puts '', "creating topics and posts"
+    puts "", "creating topics and posts"
 
-    total_count = @client.query("SELECT COUNT(*) count FROM #{KUNENA_PREFIX}kunena_messages m;").first['count']
+    total_count =
+      @client.query("SELECT COUNT(*) count FROM #{KUNENA_PREFIX}kunena_messages m;").first["count"]
 
     batch_size = 1000
 
     batches(batch_size) do |offset|
-      results = @client.query("
+      results =
+        @client.query(
+          "
         SELECT m.id id,
                m.thread thread,
                m.parent parent,
@@ -129,33 +150,38 @@ class ImportScripts::Kunena < ImportScripts::Base
         ORDER BY m.id
         LIMIT #{batch_size}
         OFFSET #{offset};
-      ", cache_rows: false)
+      ",
+          cache_rows: false,
+        )
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map { |p| p['id'].to_i }
+      next if all_records_exist? :posts, results.map { |p| p["id"].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false
         mapped = {}
 
-        mapped[:id] = m['id']
-        mapped[:user_id] = user_id_from_imported_user_id(m['userid']) || -1
+        mapped[:id] = m["id"]
+        mapped[:user_id] = user_id_from_imported_user_id(m["userid"]) || -1
 
-        id = m['userid']
-        mapped[:raw] = m["message"].gsub(/\[attachment=[0-9]+\](.+?)\[\/attachment\]/, "\n#{IMAGE_PREFIX}/#{id}/\\1")
-        mapped[:created_at] = Time.zone.at(m['time'])
+        id = m["userid"]
+        mapped[:raw] = m["message"].gsub(
+          %r{\[attachment=[0-9]+\](.+?)\[/attachment\]},
+          "\n#{IMAGE_PREFIX}/#{id}/\\1",
+        )
+        mapped[:created_at] = Time.zone.at(m["time"])
 
-        if m['parent'] == 0
-          mapped[:category] = category_id_from_imported_category_id(m['catid'])
-          mapped[:title] = m['subject']
+        if m["parent"] == 0
+          mapped[:category] = category_id_from_imported_category_id(m["catid"])
+          mapped[:title] = m["subject"]
         else
-          parent = topic_lookup_from_imported_post_id(m['parent'])
+          parent = topic_lookup_from_imported_post_id(m["parent"])
           if parent
             mapped[:topic_id] = parent[:topic_id]
             mapped[:reply_to_post_number] = parent[:post_number] if parent[:post_number] > 1
           else
-            puts "Parent post #{m['parent']} doesn't exist. Skipping #{m["id"]}: #{m["subject"][0..40]}"
+            puts "Parent post #{m["parent"]} doesn't exist. Skipping #{m["id"]}: #{m["subject"][0..40]}"
             skip = true
           end
         end

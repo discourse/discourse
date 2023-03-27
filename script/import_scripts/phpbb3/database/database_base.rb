@@ -39,9 +39,7 @@ module ImportScripts::PhpBB3
     def find_last_row(rows)
       last_index = rows.size - 1
 
-      rows.each_with_index do |row, index|
-        return row if index == last_index
-      end
+      rows.each_with_index { |row, index| return row if index == last_index }
 
       nil
     end

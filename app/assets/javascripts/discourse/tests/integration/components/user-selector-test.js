@@ -3,6 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 
 function paste(element, text) {
   let e = new Event("paste");
@@ -16,8 +17,13 @@ module("Integration | Component | user-selector", function (hooks) {
   test("pasting a list of usernames", async function (assert) {
     this.set("usernames", "evil,trout");
 
-    await render(
-      hbs`<UserSelector @usernames={{this.usernames}} class="test-selector" />`
+    await withSilencedDeprecationsAsync(
+      "discourse.user-selector-component",
+      async () => {
+        await render(
+          hbs`<UserSelector @usernames={{this.usernames}} class="test-selector" />`
+        );
+      }
     );
 
     let element = query(".test-selector");
@@ -45,8 +51,13 @@ module("Integration | Component | user-selector", function (hooks) {
     this.set("usernames", "mark");
     this.set("excludedUsernames", ["jeff", "sam", "robin"]);
 
-    await render(
-      hbs`<UserSelector @usernames={{this.usernames}} @excludedUsernames={{this.excludedUsernames}} class="test-selector" />`
+    await withSilencedDeprecationsAsync(
+      "discourse.user-selector-component",
+      async () => {
+        await render(
+          hbs`<UserSelector @usernames={{this.usernames}} @excludedUsernames={{this.excludedUsernames}} class="test-selector" />`
+        );
+      }
     );
 
     let element = query(".test-selector");

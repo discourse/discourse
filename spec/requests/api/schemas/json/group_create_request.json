@@ -7,6 +7,82 @@
       "properties": {
         "name": {
           "type": "string"
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "bio_raw": {
+          "type": "string",
+          "description": "About Group"
+        },
+        "usernames": {
+          "type": "string",
+          "description": "comma,separated"
+        },
+        "owner_usernames": {
+          "type": "string",
+          "description": "comma,separated"
+        },
+        "automatic_membership_email_domains": {
+          "type": "string",
+          "description": "pipe|separated"
+        },
+        "visibility_level": {
+          "type": "integer"
+        },
+        "primary_group": {
+          "type": "boolean"
+        },
+        "flair_icon": {
+          "type": "string"
+        },
+        "flair_upload_id": {
+          "type": "integer"
+        },
+        "flair_bg_color": {
+          "type": "string"
+        },
+        "public_admission": {
+          "type": "boolean"
+        },
+        "public_exit": {
+          "type": "boolean"
+        },
+        "public_exit": {
+          "type": "boolean"
+        },
+        "default_notification_level": {
+          "type": "integer"
+        },
+        "muted_category_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "regular_category_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "watching_category_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "tracking_category_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "watching_first_post_category_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
         }
       },
       "required": [

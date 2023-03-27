@@ -363,8 +363,10 @@ acceptance(
 
       assert.strictEqual(
         query(".dialog-body").innerText.trim(),
-        "There was an issue with the SMTP credentials provided, check the username and password and try again.",
-        "shows a dialogue with the error message from the server"
+        I18n.t("generic_error_with_reason", {
+          error:
+            "There was an issue with the SMTP credentials provided, check the username and password and try again.",
+        })
       );
       await click(".dialog-footer .btn-primary");
     });

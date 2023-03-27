@@ -1,9 +1,13 @@
 import { module, test } from "qunit";
-import Bookmark from "discourse/models/bookmark";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-module("Unit | Model | bookmark", function () {
+module("Unit | Model | bookmark", function (hooks) {
+  setupTest(hooks);
+
   test("topicForList - Topic bookmarkable", function (assert) {
-    let bookmark = Bookmark.create({
+    const store = getOwner(this).lookup("service:store");
+    const bookmark = store.createRecord("bookmark", {
       id: 1,
       bookmarkable_type: "Topic",
       bookmarkable_id: 999,
@@ -22,7 +26,8 @@ module("Unit | Model | bookmark", function () {
   });
 
   test("topicForList - Post bookmarkable", function (assert) {
-    let bookmark = Bookmark.create({
+    const store = getOwner(this).lookup("service:store");
+    const bookmark = store.createRecord("bookmark", {
       id: 1,
       bookmarkable_type: "Post",
       bookmarkable_id: 999,

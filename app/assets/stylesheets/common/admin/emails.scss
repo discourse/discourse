@@ -129,3 +129,31 @@
     }
   }
 }
+
+//specific email admin modal styling
+.admin-incoming-email-modal {
+  .modal-inner-container {
+    width: var(--modal-max-width);
+  }
+  .incoming-emails {
+    label {
+      float: none;
+      margin: 0;
+      width: unset;
+    }
+    .control-group {
+      textarea {
+        height: 200px;
+      }
+      &:last-of-type textarea {
+        height: 40px;
+      }
+    }
+    .controls {
+      margin: 0;
+    }
+    p {
+      margin: 5px 0;
+    }
+  }
+}

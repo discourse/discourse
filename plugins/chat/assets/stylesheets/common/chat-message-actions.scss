@@ -1,0 +1,173 @@
+.chat-message-actions-desktop-anchor {
+  position: relative;
+  z-index: z("dropdown");
+}
+
+.chat-message-actions {
+  .chat-message-reaction {
+    @include chat-reaction;
+  }
+}
+
+.chat-message-actions-container {
+  @include unselectable;
+  position: relative;
+}
+
+.chat-message-actions {
+  border-radius: 0.25em;
+  background-color: var(--secondary);
+  display: flex;
+  box-shadow: 0 0.75px 0px rgba(0, 0, 0, 0.15);
+
+  .emoji-picker-anchor {
+    position: absolute;
+    height: 34px;
+  }
+
+  .link-to-message-btn {
+    .d-icon {
+      transition: all 0.25s ease-in-out;
+    }
+
+    &.copied {
+      .d-icon {
+        transform: scale(1.1);
+        color: var(--tertiary);
+      }
+    }
+  }
+
+  .react-btn,
+  .reply-btn,
+  .chat-message-thread-btn,
+  .bookmark-btn {
+    margin-right: -1px;
+    padding: 0.5em 0;
+    width: 2.5em;
+    transition: background 0.2s, border-color 0.2s;
+
+    &:focus {
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+
+    &:first-child {
+      border-bottom-left-radius: 0.25em;
+      border-top-left-radius: 0.25em;
+    }
+
+    &:first-child:not(:hover) {
+      border-color: var(--primary-low);
+      border-right-color: transparent;
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+
+      &.bookmark-icon__bookmarked {
+        color: var(--tertiary);
+      }
+    }
+  }
+
+  .more-buttons.dropdown-select-box {
+    .select-kit-header {
+      background: none;
+      border: 1px solid var(--primary-low);
+      border-left-color: transparent;
+      border-radius: 0 0.25em 0.25em 0;
+      padding: 0.5em 0;
+      width: 2.5em;
+      transition: background 0.2s, border-color 0.2s;
+
+      &:focus {
+        border-color: var(--primary-low);
+        border-left-color: transparent;
+
+        .select-kit-header-wrapper .d-icon {
+          color: var(--primary);
+        }
+      }
+
+      .select-kit-header-wrapper {
+        justify-content: center;
+
+        .d-icon {
+          color: var(--primary-medium);
+          margin: 0;
+        }
+      }
+
+      &:hover {
+        background: var(--primary-low);
+        border-color: var(--primary-low-mid);
+
+        .select-kit-header-wrapper {
+          .d-icon {
+            color: var(--primary);
+          }
+        }
+      }
+    }
+
+    .select-kit-body {
+      padding: 0.5rem;
+      box-shadow: shadow("card");
+      border: 1px solid var(--primary-low);
+    }
+
+    .select-kit-row {
+      .texts .name {
+        font-size: var(--font-0);
+        font-weight: 500;
+      }
+
+      .icons .d-icon {
+        font-size: var(--font-0);
+        color: var(--primary-medium);
+      }
+    }
+  }
+
+  .chat-message-reaction {
+    align-items: center;
+    border-radius: 0;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    box-sizing: border-box;
+    font-size: var(--font-0);
+    justify-content: center;
+    margin: 0;
+    margin-right: -1px;
+    padding: 0.5em 0;
+    width: 2.5em;
+
+    &:focus {
+      background: var(--primary-low);
+      outline: none;
+    }
+
+    &:first-child {
+      border-bottom-left-radius: 0.25em;
+      border-left-color: var(--primary-low);
+      border-top-left-radius: 0.25em;
+    }
+
+    &.reacted {
+      border-left-color: var(--tertiary-medium);
+      z-index: 1;
+
+      &:focus {
+        background: var(--tertiary-low);
+      }
+    }
+
+    .emoji {
+      height: 15px;
+      width: auto;
+      margin: 0;
+    }
+  }
+}

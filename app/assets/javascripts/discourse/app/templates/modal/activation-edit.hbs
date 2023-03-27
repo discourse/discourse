@@ -3,6 +3,11 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @action={{action "changeEmail"}} @label="login.submit_new_email" @disabled={{this.submitDisabled}} @class="btn-primary" />
+  <DButton
+    @action={{action "changeEmail"}}
+    @label="login.submit_new_email"
+    @disabled={{this.submitDisabled}}
+    @class="btn-primary"
+  />
   <DButton @action={{route-action "closeModal"}} @label="close" />
 </div>

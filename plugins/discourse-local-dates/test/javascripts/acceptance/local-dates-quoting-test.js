@@ -49,7 +49,7 @@ acceptance("Local Dates - quoting", function (needs) {
     await click(".insert-quote");
     assert.strictEqual(
       query(".d-editor-input").value.trim(),
-      `[quote=\"Uwe Keim, post:1, topic:280, username:uwe_keim\"]
+      `[quote=\"uwe_keim, post:1, topic:280\"]
 This is a test [date=2022-06-17 time=10:00:00 timezone="Australia/Brisbane" displayedTimezone="Australia/Perth"]
 [/quote]`,
       "converts the date to markdown with all options correctly"
@@ -88,7 +88,7 @@ acceptance("Local Dates - quoting range", function (needs) {
     await click(".insert-quote");
     assert.strictEqual(
       query(".d-editor-input").value.trim(),
-      `[quote=\"Uwe Keim, post:1, topic:280, username:uwe_keim\"]
+      `[quote=\"uwe_keim, post:1, topic:280\"]
 Some text [date-range from=2022-06-17T09:30:00 to=2022-06-18T10:30:00 format="LL" timezone="Australia/Brisbane" timezones="Africa/Accra|Australia/Brisbane|Europe/Paris"]
 [/quote]`,
       "converts the date range to markdown with all options correctly"
@@ -130,7 +130,7 @@ acceptance(
       await click(".insert-quote");
       assert.strictEqual(
         query(".d-editor-input").value.trim(),
-        `[quote=\"Uwe Keim, post:1, topic:280, username:uwe_keim\"]
+        `[quote=\"uwe_keim, post:1, topic:280\"]
 Testing countdown [date=2022-06-21 time=09:30:00 format="LL" timezone="Australia/Brisbane" countdown="true"]
 
 Testing recurring [date=2022-06-22 timezone="Australia/Brisbane" recurring="2.weeks"]

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class MessageBusDiags
-
   @host_info = {}
 
   def self.my_id
@@ -21,7 +20,6 @@ class MessageBusDiags
   end
 
   unless @subscribed
-
     MessageBus.subscribe "/server-name-reply/#{my_id}" do |msg|
       MessageBusDiags.seen_host(msg.data)
     end

@@ -1,0 +1,120 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  js:
+    chat:
+      create: "Crear"
+      cancel: "Cancelar"
+      channel_settings:
+        edit: "Editar"
+        add: "Engadir"
+        join: "Participar"
+        leave: "Abandonar"
+      close: "Pechar"
+      delete: "Eliminar"
+      edited: "editado"
+      muted: "silenciado"
+      joined: "uniuse"
+      email_frequency:
+        never: "Nunca"
+      header_indicator_preference:
+        never: "Nunca"
+      flag: "Sinalar"
+      join: "Participar"
+      last_visit: "última visita"
+      mention_warning:
+        dismiss: "desbotar"
+      reply: "Responder"
+      edit: "Editar"
+      rebake_message: "Reconstruír HTML"
+      bookmark_message: "Marcador"
+      save: "Gardar"
+      sounds:
+        none: "Ningunha"
+      exit: "volver"
+      channel_status:
+        closed: "Pechado"
+        open: "Abrir"
+      browse:
+        back: "Volver"
+        filter_all: Todas
+        filter_closed: Pechado
+      chat_message_separator:
+        today: Hoxe
+        yesterday: Onte
+      about_view:
+        title: Título
+        name: Nome
+        description: Descrición
+      channel_info:
+        back_to_channel: "Volver"
+        tabs:
+          about: Verbo de
+          members: Membros
+          settings: Configuración
+      direct_message_creator:
+        title: Nova mensaxe
+        prefix: "A:"
+      create_channel:
+        type: "Tipo"
+        types:
+          category: "Categoría"
+          topic: "Tema"
+      composer:
+        italic_text: "texto recalcado"
+        bold_text: "texto groso"
+      notification_levels:
+        never: "Nunca"
+      settings:
+        follow: "Participar"
+        followed: "Uniuse"
+        notifications: "Notificacións"
+        preview: "Visualizar"
+        save: "Gardar"
+        saved: "Gardado"
+        unfollow: "Abandonar"
+        admin_title: "Administrador"
+      incoming_webhooks:
+        back: "Volver"
+        description: "Descrición"
+        delete: "Eliminar"
+        emoji: "Emoji"
+        name: "Nome"
+        save: "Gardar"
+        edit: "Editar"
+        system: "sistema"
+        url: "URL"
+        username: "Nome de usuario"
+      selection:
+        cancel: "Cancelar"
+        copy: "Copiar"
+        new_topic:
+          title: "Mover ao tema novo"
+        existing_topic:
+          title: "Mover a un tema existente"
+        new_message:
+          title: "Mover a Nova mensaxe"
+      emoji_picker:
+        objects: "Obxectos"
+        activities: "Actividades"
+        flags: "Alertas"
+        symbols: "Símbolos"
+      draft_channel_screen:
+        header: "Nova mensaxe"
+        cancel: "Cancelar"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Mensaxe
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Sinalado por"

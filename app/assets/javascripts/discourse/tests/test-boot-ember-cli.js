@@ -5,6 +5,7 @@ import loadEmberExam from "ember-exam/test-support/load";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
 import Ember from "ember";
+import setupTests from "discourse/tests/setup-tests";
 
 setEnvironment("testing");
 
@@ -23,7 +24,6 @@ document.addEventListener("discourse-booted", () => {
     );
   }
 
-  let setupTests = require("discourse/tests/setup-tests").default;
   const params = new URLSearchParams(window.location.search);
   const skipCore = params.get("qunit_skip_core") === "1";
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";

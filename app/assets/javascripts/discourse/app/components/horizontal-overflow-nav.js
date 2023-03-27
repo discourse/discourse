@@ -12,10 +12,8 @@ export default class HorizontalOverflowNav extends Component {
   scrollInterval;
 
   @bind
-  scrollToActive() {
-    const activeElement = document.querySelector(
-      ".user-navigation-secondary a.active"
-    );
+  scrollToActive(element) {
+    const activeElement = element.querySelector("a.active");
 
     activeElement?.scrollIntoView({
       block: "nearest",
@@ -24,14 +22,13 @@ export default class HorizontalOverflowNav extends Component {
   }
 
   @bind
-  checkScroll(element) {
+  checkScroll(event) {
     if (this.site.mobileView) {
       return;
     }
 
-    this.watchScroll(element);
-    return (this.hasScroll =
-      element.target.scrollWidth > element.target.offsetWidth);
+    this.watchScroll(event);
+    this.hasScroll = event.target.scrollWidth > event.target.offsetWidth;
   }
 
   @bind
@@ -40,14 +37,14 @@ export default class HorizontalOverflowNav extends Component {
   }
 
   @bind
-  watchScroll(element) {
+  watchScroll(event) {
     if (this.site.mobileView) {
       return;
     }
 
     if (
-      element.target.offsetWidth + element.target.scrollLeft ===
-      element.target.scrollWidth
+      event.target.offsetWidth + event.target.scrollLeft ===
+      event.target.scrollWidth
     ) {
       this.hideRightScroll = true;
       clearInterval(this.scrollInterval);
@@ -55,7 +52,7 @@ export default class HorizontalOverflowNav extends Component {
       this.hideRightScroll = false;
     }
 
-    if (element.target.scrollLeft === 0) {
+    if (event.target.scrollLeft === 0) {
       this.hideLeftScroll = true;
       clearInterval(this.scrollInterval);
     } else {
@@ -63,21 +60,60 @@ export default class HorizontalOverflowNav extends Component {
     }
   }
 
-  @action
-  horizScroll(element) {
-    let scrollSpeed = 100;
-    let siblingTarget = element.target.previousElementSibling;
-
-    if (element.target.dataset.direction === "left") {
-      scrollSpeed = scrollSpeed * -1;
-      siblingTarget = element.target.nextElementSibling;
+  @bind
+  scrollDrag(event) {
+    if (this.site.mobileView || !this.hasScroll) {
+      return;
     }
+
+    event.preventDefault();
+
+    const navPills = event.target.closest(".nav-pills");
+
+    const position = {
+      left: navPills.scrollLeft, // current scroll
+      x: event.clientX, // mouse position
+    };
+
+    const mouseDragScroll = function (e) {
+      let mouseChange = e.clientX - position.x;
+      navPills.scrollLeft = position.left - mouseChange;
+    };
+
+    navPills.querySelectorAll("a").forEach((a) => {
+      a.style.cursor = "grabbing";
+    });
+
+    const removeDragScroll = function () {
+      document.removeEventListener("mousemove", mouseDragScroll);
+      navPills.querySelectorAll("a").forEach((a) => {
+        a.style.cursor = "pointer";
+      });
+    };
+
+    document.addEventListener("mousemove", mouseDragScroll);
+    document.addEventListener("mouseup", removeDragScroll, { once: true });
+  }
+
+  @action
+  horizontalScroll(event) {
+    // Do nothing if it is not left mousedown
+    if (event.which !== 1) {
+      return;
+    }
+
+    let scrollSpeed = 175;
+    let siblingTarget = event.target.previousElementSibling;
+
+    if (event.target.dataset.direction === "left") {
+      scrollSpeed = scrollSpeed * -1;
+      siblingTarget = event.target.nextElementSibling;
+    }
+
+    siblingTarget.scrollLeft += scrollSpeed;
 
     this.scrollInterval = setInterval(function () {
       siblingTarget.scrollLeft += scrollSpeed;
     }, 50);
-
-    element.target.addEventListener("mouseup", this.stopScroll);
-    element.target.addEventListener("mouseleave", this.stopScroll);
   }
 }

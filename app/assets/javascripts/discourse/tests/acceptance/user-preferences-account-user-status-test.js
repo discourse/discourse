@@ -61,6 +61,15 @@ acceptance("User Profile - Account - User Status", function (needs) {
     );
   });
 
+  test("doesn't show the pause notifications control group on the user status modal", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+
+    await visit(`/u/${username}/preferences/account`);
+    await openUserStatusModal();
+
+    assert.dom(".pause-notifications").doesNotExist();
+  });
+
   test("the status modal sets status", async function (assert) {
     this.siteSettings.enable_user_status = true;
     updateCurrentUser({ status: null });

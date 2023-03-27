@@ -1,10 +1,10 @@
 import EmailPreview, { oneWeekAgo } from "admin/models/email-preview";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
+export default class AdminEmailPreviewDigestRoute extends DiscourseRoute {
   model() {
     return EmailPreview.findDigest(this.currentUser.get("username"));
-  },
+  }
 
   afterModel(model) {
     const controller = this.controllerFor("adminEmailPreviewDigest");
@@ -14,5 +14,5 @@ export default DiscourseRoute.extend({
       lastSeen: oneWeekAgo(),
       showHtml: true,
     });
-  },
-});
+  }
+}

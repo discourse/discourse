@@ -9,14 +9,13 @@ Discourse::Application.configure do
   config.cache_classes = false
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  # Log error messages when you accidentally call methods on nil.
-  config.eager_load = false
+  config.eager_load = ENV["DISCOURSE_ZEITWERK_EAGER_LOAD"] == "1"
 
   # Use the schema_cache.yml file generated during db:migrate (via db:schema:cache:dump)
   config.active_record.use_schema_cache_dump = true
 
   # Show full error reports and disable caching
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
 
   config.action_controller.asset_host = GlobalSetting.cdn_url
@@ -32,29 +31,23 @@ Discourse::Application.configure do
 
   config.assets.debug = false
 
-  config.public_file_server.headers = {
-    'Access-Control-Allow-Origin' => '*'
-  }
+  config.public_file_server.headers = { "Access-Control-Allow-Origin" => "*" }
 
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
-  config.watchable_dirs['lib'] = [:rb]
-
-  config.handlebars.precompile = true
+  config.watchable_dirs["lib"] = [:rb]
 
   # we recommend you use mailhog https://github.com/mailhog/MailHog
   config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 
   config.action_mailer.raise_delivery_errors = true
 
-  config.log_level = ENV['DISCOURSE_DEV_LOG_LEVEL'] if ENV['DISCOURSE_DEV_LOG_LEVEL']
+  config.log_level = ENV["DISCOURSE_DEV_LOG_LEVEL"] if ENV["DISCOURSE_DEV_LOG_LEVEL"]
 
-  if ENV['RAILS_VERBOSE_QUERY_LOGS'] == "1"
-    config.active_record.verbose_query_logs = true
-  end
+  config.active_record.verbose_query_logs = true if ENV["RAILS_VERBOSE_QUERY_LOGS"] == "1"
 
   if defined?(BetterErrors)
-    BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
+    BetterErrors::Middleware.allow_ip! ENV["TRUSTED_IP"] if ENV["TRUSTED_IP"]
 
     if defined?(Unicorn) && ENV["UNICORN_WORKERS"].to_i != 1
       # BetterErrors doesn't work with multiple unicorn workers. Disable it to avoid confusion
@@ -62,51 +55,44 @@ Discourse::Application.configure do
     end
   end
 
-  if !ENV["DISABLE_MINI_PROFILER"]
-    config.load_mini_profiler = true
-  end
+  config.load_mini_profiler = true if !ENV["DISABLE_MINI_PROFILER"]
 
-  if hosts = ENV['DISCOURSE_DEV_HOSTS']
+  if hosts = ENV["DISCOURSE_DEV_HOSTS"]
     Discourse.deprecate("DISCOURSE_DEV_HOSTS is deprecated. Use RAILS_DEVELOPMENT_HOSTS instead.")
     config.hosts.concat(hosts.split(","))
   end
 
-  require 'middleware/turbo_dev'
+  require "middleware/turbo_dev"
   config.middleware.insert 0, Middleware::TurboDev
-  require 'middleware/missing_avatars'
+  require "middleware/missing_avatars"
   config.middleware.insert 1, Middleware::MissingAvatars
 
   config.enable_anon_caching = false
-  if RUBY_ENGINE == "ruby"
-    require 'rbtrace'
-  end
+  require "rbtrace" if RUBY_ENGINE == "ruby"
 
   if emails = GlobalSetting.developer_emails
     config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)
   end
 
-  if ENV["DISCOURSE_SKIP_CSS_WATCHER"] != "1" && (defined?(Rails::Server) || defined?(Puma) || defined?(Unicorn))
-    require 'stylesheet/watcher'
+  if ENV["DISCOURSE_SKIP_CSS_WATCHER"] != "1" &&
+       (defined?(Rails::Server) || defined?(Puma) || defined?(Unicorn))
+    require "stylesheet/watcher"
     STDERR.puts "Starting CSS change watcher"
     @watcher = Stylesheet::Watcher.watch
   end
 
   config.after_initialize do
-    if ENV["RAILS_COLORIZE_LOGGING"] == "1"
-      config.colorize_logging = true
-    end
+    config.colorize_logging = true if ENV["RAILS_COLORIZE_LOGGING"] == "1"
 
     if ENV["RAILS_VERBOSE_QUERY_LOGS"] == "1"
       ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
-        line =~ /lib\/freedom_patches/
+        line =~ %r{lib/freedom_patches}
       end
     end
 
-    if ENV["RAILS_DISABLE_ACTIVERECORD_LOGS"] == "1"
-      ActiveRecord::Base.logger = nil
-    end
+    ActiveRecord::Base.logger = nil if ENV["RAILS_DISABLE_ACTIVERECORD_LOGS"] == "1"
 
-    if ENV['BULLET']
+    if ENV["BULLET"]
       Bullet.enable = true
       Bullet.rails_logger = true
     end

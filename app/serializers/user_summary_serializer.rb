@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UserSummarySerializer < ApplicationSerializer
-
   class TopicSerializer < BasicTopicSerializer
     attributes :category_id, :like_count, :created_at
   end
@@ -65,9 +64,15 @@ class UserSummarySerializer < ApplicationSerializer
   end
 
   class CategoryWithCountsSerializer < ApplicationSerializer
-    attributes :topic_count, :post_count,
-      :id, :name, :color, :text_color, :slug,
-      :read_restricted, :parent_category_id
+    attributes :topic_count,
+               :post_count,
+               :id,
+               :name,
+               :color,
+               :text_color,
+               :slug,
+               :read_restricted,
+               :parent_category_id
   end
 
   has_many :topics, serializer: TopicSerializer

@@ -3,49 +3,12 @@
     throw "Unsupported browser detected";
   }
 
-  // TODO: Remove this and have resolver find the templates
-  const discoursePrefix = "discourse/templates/";
-  const adminPrefix = "admin/templates/";
-  const wizardPrefix = "wizard/templates/";
-  const discoursePrefixLength = discoursePrefix.length;
-
-  const pluginRegex = /^discourse\/plugins\/([^\/]+)\//;
-  const themeRegex = /^discourse\/theme-([^\/]+)\//;
-
-  Object.keys(requirejs.entries).forEach(function (key) {
-    let templateKey;
-    let pluginName;
-    let themeId;
-    if (key.startsWith(discoursePrefix)) {
-      templateKey = key.slice(discoursePrefixLength);
-    } else if (key.startsWith(adminPrefix) || key.startsWith(wizardPrefix)) {
-      templateKey = key;
-    } else if (
-      (pluginName = key.match(pluginRegex)?.[1]) &&
-      key.includes("/templates/") &&
-      require(key).default.__id // really is a template
-    ) {
-      // This logic mimics the old sprockets compilation system which used to
-      // output templates directly to `Ember.TEMPLATES` with this naming logic
-      templateKey = key.slice(`discourse/plugins/${pluginName}/`.length);
-      templateKey = templateKey.replace("discourse/templates/", "");
-      templateKey = `javascripts/${templateKey}`;
-    } else if (
-      (themeId = key.match(themeRegex)?.[1]) &&
-      key.includes("/templates/")
-    ) {
-      // And likewise for themes - this mimics the old logic
-      templateKey = key.slice(`discourse/theme-${themeId}/`.length);
-      templateKey = templateKey.replace("discourse/templates/", "");
-      if (!templateKey.startsWith("javascripts/")) {
-        templateKey = `javascripts/${templateKey}`;
-      }
-    }
-
-    if (templateKey) {
-      Ember.TEMPLATES[templateKey] = require(key).default;
-    }
-  });
+  // In Ember 3.28, the `ember` package is responsible for configuring `Helper.helper`,
+  // so we need to require('ember') before setting up any helpers.
+  // https://github.com/emberjs/ember.js/blob/744e536d37/packages/ember/index.js#L493-L493
+  // In modern Ember, the Helper.helper definition has moved to the helper module itself
+  // https://github.com/emberjs/ember.js/blob/0c5518ea7b/packages/%40ember/-internals/glimmer/lib/helper.ts#L134-L138
+  require("ember");
 
   window.__widget_helpers = require("discourse-widget-hbs/helpers").default;
 

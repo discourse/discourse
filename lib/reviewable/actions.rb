@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'reviewable/collection'
+require "reviewable/collection"
 
 class Reviewable < ActiveRecord::Base
   class Actions < Reviewable::Collection
@@ -15,9 +15,9 @@ class Reviewable < ActiveRecord::Base
     # one off, add it manually.
     def self.common_actions
       {
-        approve: Action.new(:approve, 'thumbs-up', 'reviewables.actions.approve.title'),
-        reject: Action.new(:reject, 'thumbs-down', 'reviewables.actions.reject.title'),
-        delete: Action.new(:delete, 'trash-alt', 'reviewables.actions.delete_single.title')
+        approve: Action.new(:approve, "thumbs-up", "reviewables.actions.approve.title"),
+        reject: Action.new(:reject, "thumbs-down", "reviewables.actions.reject.title"),
+        delete: Action.new(:delete, "trash-alt", "reviewables.actions.delete_single.title"),
       }
     end
 
@@ -33,7 +33,14 @@ class Reviewable < ActiveRecord::Base
     end
 
     class Action < Item
-      attr_accessor :icon, :button_class, :label, :description, :confirm_message, :client_action, :require_reject_reason, :custom_modal
+      attr_accessor :icon,
+                    :button_class,
+                    :label,
+                    :description,
+                    :confirm_message,
+                    :client_action,
+                    :require_reject_reason,
+                    :custom_modal
 
       def initialize(id, icon = nil, button_class = nil, label = nil)
         super(id)
@@ -55,6 +62,5 @@ class Reviewable < ActiveRecord::Base
       bundle ||= add_bundle(id)
       bundle.actions << action
     end
-
   end
 end

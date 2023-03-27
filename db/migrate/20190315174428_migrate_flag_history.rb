@@ -2,7 +2,6 @@
 
 class MigrateFlagHistory < ActiveRecord::Migration[5.2]
   def up
-
     # Migrate Created History
     execute(<<~SQL)
       INSERT INTO reviewable_histories (

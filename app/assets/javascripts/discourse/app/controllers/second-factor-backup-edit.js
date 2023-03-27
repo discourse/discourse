@@ -40,30 +40,6 @@ export default Controller.extend(ModalFunctionality, {
       this._hideCopyMessage();
     },
 
-    disableSecondFactorBackup() {
-      this.set("backupCodes", []);
-      this.set("loading", true);
-
-      this.model
-        .updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE)
-        .then((response) => {
-          if (response.error) {
-            this.set("errorMessage", response.error);
-            return;
-          }
-
-          this.set("errorMessage", null);
-          this.model.set("second_factor_backup_enabled", false);
-          this.markDirty();
-          this.send("closeModal");
-        })
-        .catch((error) => {
-          this.send("closeModal");
-          this.onError(error);
-        })
-        .finally(() => this.set("loading", false));
-    },
-
     generateSecondFactorCodes() {
       this.set("loading", true);
       this.model

@@ -1,13 +1,16 @@
 <div class="sidebar-sections">
-  <Sidebar::User::CommunitySection @collapsable={{@collapsableSections}}/>
-  <Sidebar::User::CategoriesSection @collapsable={{@collapsableSections}}/>
+  <Sidebar::User::CommunitySection @collapsable={{@collapsableSections}} />
+  {{#if this.currentUser.custom_sidebar_sections_enabled}}
+    <Sidebar::User::CustomSections />
+  {{/if}}
+  <Sidebar::User::CategoriesSection @collapsable={{@collapsableSections}} />
 
   {{#if this.currentUser.display_sidebar_tags}}
-    <Sidebar::User::TagsSection @collapsable={{@collapsableSections}}/>
+    <Sidebar::User::TagsSection @collapsable={{@collapsableSections}} />
   {{/if}}
 
   {{#if this.enableMessagesSection}}
-    <Sidebar::User::MessagesSection @collapsable={{@collapsableSections}}/>
+    <Sidebar::User::MessagesSection @collapsable={{@collapsableSections}} />
   {{/if}}
 
   {{#each this.customSections as |customSection|}}
@@ -19,11 +22,13 @@
       @headerActions={{customSection.actions}}
       @willDestroy={{customSection.willDestroy}}
       @collapsable={{@collapsableSections}}
-      @displaySection={{customSection.displaySection}}>
+      @displaySection={{customSection.displaySection}}
+    >
 
       {{#each customSection.links as |link|}}
         <Sidebar::SectionLink
           @linkName={{link.name}}
+          @class={{link.classNames}}
           @route={{link.route}}
           @model={{link.model}}
           @models={{link.models}}
@@ -42,8 +47,10 @@
           @hoverAction={{link.hoverAction}}
           @hoverTitle={{link.hoverTitle}}
           @currentWhen={{link.currentWhen}}
+          @didInsert={{link.didInsert}}
           @willDestroy={{link.willDestroy}}
-          @content={{link.text}} />
+          @content={{link.text}}
+        />
       {{/each}}
     </Sidebar::Section>
   {{/each}}

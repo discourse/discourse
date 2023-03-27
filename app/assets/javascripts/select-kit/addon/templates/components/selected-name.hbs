@@ -1,5 +1,12 @@
 {{#if this.selectKit.options.showFullTitle}}
-  <div lang={{this.lang}} title={{this.title}} data-value={{this.value}} data-name={{this.name}} role="option" class="select-kit-selected-name selected-name choice">
+  <div
+    lang={{this.lang}}
+    title={{this.title}}
+    data-value={{this.value}}
+    data-name={{this.name}}
+    role="option"
+    class="select-kit-selected-name selected-name choice"
+  >
     {{#if this.item.icon}}
       {{d-icon this.item.icon}}
     {{/if}}
@@ -9,12 +16,22 @@
     </span>
 
     {{#if this.shouldDisplayClearableButton}}
-      <DButton @class="btn-clear" @icon="times" @action={{this.selectKit.deselect}} @actionParam={{this.item}} @ariaLabel="clear_input" />
+      <DButton
+        @class="btn-clear"
+        @icon="times"
+        @action={{this.selectKit.deselect}}
+        @actionParam={{this.item}}
+        @ariaLabel="clear_input"
+      />
     {{/if}}
   </div>
 {{else}}
   {{#if this.item.icon}}
-    <div role="option" lang={{this.lang}} class="select-kit-selected-name selected-name choice">
+    <div
+      role="option"
+      lang={{this.lang}}
+      class="select-kit-selected-name selected-name choice"
+    >
       {{d-icon this.item.icon}}
     </div>
   {{/if}}

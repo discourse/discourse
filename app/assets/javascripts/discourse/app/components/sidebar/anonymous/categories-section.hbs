@@ -1,11 +1,11 @@
 <Sidebar::Section
   @sectionName="categories"
   @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
-  @collapsable={{@collapsable}} >
+  @collapsable={{@collapsable}}
+>
 
   {{#each this.sectionLinks as |sectionLink|}}
     <Sidebar::SectionLink
-      @linkName={{sectionLink.name}}
       @route={{sectionLink.route}}
       @title={{sectionLink.title}}
       @content={{sectionLink.text}}
@@ -14,8 +14,9 @@
       @prefixType={{sectionLink.prefixType}}
       @prefixValue={{sectionLink.prefixValue}}
       @prefixColor={{sectionLink.prefixColor}}
-      @prefixElementColors={{sectionLink.prefixElementColors}} >
-    </Sidebar::SectionLink>
+      @prefixElementColors={{sectionLink.prefixElementColors}}
+      data-category-id={{sectionLink.category.id}}
+    />
   {{/each}}
 
   <Sidebar::Common::AllCategoriesSectionLink />

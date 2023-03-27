@@ -1,5 +1,6 @@
 sources:
   bundler: true
+
 allowed:
   - 0bsd
   - apache-2.0
@@ -12,8 +13,20 @@ allowed:
 
 ignored:
   bundler:
-    - rchardet # Ruby terms
-    - strscan # Ruby
+    - cgi # Ruby (default gem)
+    - date # Ruby (default gem)
+    - digest # Ruby (default gem)
+    - io-wait # Ruby (default gem)
+    - json # Ruby (default gem)
+    - net-http # Ruby (default gem)
+    - net-protocol # Ruby (default gem)
+    - openssl # Ruby (default gem)
+    - racc # Ruby (default gem)
+    - rchardet # LGPL
+    - ruby2_keywords # Ruby (default gem)
+    - strscan # Ruby (default gem)
+    - timeout # Ruby (default gem)
+    - uri # Ruby (default gem)
 
 reviewed:
   bundler:
@@ -26,32 +39,24 @@ reviewed:
     - faraday-em_synchrony # MIT
     - faraday-excon # MIT
     - faraday-httpclient # MIT
-    - faraday-patron # MIT
     - faraday-net_http # MIT
+    - faraday-patron # MIT
     - faraday-rack # MIT
-    - highline # GPL-2.0 OR Ruby terms
+    - highline # Ruby or GPL-2.0
     - htmlentities # MIT
     - image_size # MIT
-    - io-wait # Ruby terms
-    - json # Ruby terms
     - jwt # MIT
     - kgio # LGPL-2.1+
     - logstash-event # Apache-2.0
-    - net-http # Ruby
-    - net-imap # Ruby
-    - net-pop # Ruby
-    - net-protocol # Ruby
-    - net-smtp # Ruby
+    - net-imap # Ruby (bundled gem)
+    - net-pop # Ruby (bundled gem)
+    - net-smtp # Ruby (bundled gem)
     - omniauth # MIT
-    - openssl # Ruby terms
-    - pg # Ruby terms
+    - pg # Ruby
     - r2 # Apache-2.0 (Twitter)
-    - racc # Ruby terms
     - raindrops # LGPL-2.1+
-    - rubyzip # Ruby terms
+    - rubyzip # Ruby
     - sidekiq # LGPL (Sidekiq)
-    - tilt
-    - timeout # Ruby
+    - tilt # MIT
     - unf # BSD-2-Clause
-    - unicorn
-    - uri # Ruby
+    - unicorn # Ruby or GPLv2/GPLv3

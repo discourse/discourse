@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 class SiteSerializer < ApplicationSerializer
-
   attributes(
     :default_archetype,
     :notification_types,
     :post_types,
-    :onboarding_popup_types,
+    :user_tips,
     :trust_levels,
     :groups,
     :filters,
@@ -35,9 +34,12 @@ class SiteSerializer < ApplicationSerializer
     :watched_words_link,
     :categories,
     :markdown_additional_options,
+    :hashtag_configurations,
+    :hashtag_icons,
     :displayed_about_plugin_stat_groups,
     :show_welcome_topic_banner,
-    :anonymous_default_sidebar_tags
+    :anonymous_default_sidebar_tags,
+    :whispers_allowed_groups_names,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -46,19 +48,29 @@ class SiteSerializer < ApplicationSerializer
 
   def user_themes
     cache_fragment("user_themes") do
-      Theme.where('id = :default OR user_selectable',
-                    default: SiteSetting.default_theme_id)
+      Theme
+        .where("id = :default OR user_selectable", default: SiteSetting.default_theme_id)
         .order("lower(name)")
         .pluck(:id, :name, :color_scheme_id)
-        .map { |id, n, cs| { theme_id: id, name: n, default: id == SiteSetting.default_theme_id, color_scheme_id: cs } }
+        .map do |id, n, cs|
+          {
+            theme_id: id,
+            name: n,
+            default: id == SiteSetting.default_theme_id,
+            color_scheme_id: cs,
+          }
+        end
         .as_json
     end
   end
 
   def user_color_schemes
     cache_fragment("user_color_schemes") do
-      schemes = ColorScheme.includes(:color_scheme_colors).where('user_selectable').order(:name)
-      ActiveModel::ArraySerializer.new(schemes, each_serializer: ColorSchemeSelectableSerializer).as_json
+      schemes = ColorScheme.includes(:color_scheme_colors).where("user_selectable").order(:name)
+      ActiveModel::ArraySerializer.new(
+        schemes,
+        each_serializer: ColorSchemeSelectableSerializer,
+      ).as_json
     end
   end
 
@@ -68,7 +80,9 @@ class SiteSerializer < ApplicationSerializer
 
   def groups
     cache_anon_fragment("group_names") do
-      object.groups.order(:name)
+      object
+        .groups
+        .order(:name)
         .select(:id, :name, :flair_icon, :flair_upload_id, :flair_bg_color, :flair_color)
         .map do |g|
           {
@@ -78,7 +92,8 @@ class SiteSerializer < ApplicationSerializer
             flair_bg_color: g.flair_bg_color,
             flair_color: g.flair_color,
           }
-        end.as_json
+        end
+        .as_json
     end
   end
 
@@ -104,12 +119,12 @@ class SiteSerializer < ApplicationSerializer
     Post.types
   end
 
-  def onboarding_popup_types
-    OnboardingPopup.types
+  def user_tips
+    User.user_tips
   end
 
-  def include_onboarding_popup_types?
-    SiteSetting.enable_onboarding_popups
+  def include_user_tips?
+    SiteSetting.enable_user_tips
   end
 
   def filters
@@ -220,6 +235,14 @@ class SiteSerializer < ApplicationSerializer
     Site.markdown_additional_options
   end
 
+  def hashtag_configurations
+    HashtagAutocompleteService.contexts_with_ordered_types
+  end
+
+  def hashtag_icons
+    HashtagAutocompleteService.data_source_icons
+  end
+
   def displayed_about_plugin_stat_groups
     About.displayed_plugin_stat_groups
   end
@@ -229,11 +252,20 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def anonymous_default_sidebar_tags
-    User.new.sidebar_tags.pluck(:name)
+    SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
   end
 
   def include_anonymous_default_sidebar_tags?
-    scope.anonymous? && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
+    scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled &&
+      SiteSetting.default_sidebar_tags.present?
+  end
+
+  def whispers_allowed_groups_names
+    Group.where(id: SiteSetting.whispers_allowed_groups_map).pluck(:name)
+  end
+
+  def include_whispers_allowed_groups_names?
+    scope.can_see_whispers?
   end
 
   private

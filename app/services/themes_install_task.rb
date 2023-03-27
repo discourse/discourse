@@ -48,20 +48,27 @@ class ThemesInstallTask
   end
 
   def repo_name
-    @url.gsub(Regexp.union('git@github.com:', 'https://github.com/', '.git'), '')
+    @url.gsub(Regexp.union("git@github.com:", "https://github.com/", ".git"), "")
   end
 
   def theme_exists?
-    @remote_theme = RemoteTheme
-      .where("remote_url like ?", "%#{repo_name}%")
-      .where(branch: @options.fetch(:branch, nil))
-      .first
+    @remote_theme =
+      RemoteTheme
+        .where("remote_url like ?", "%#{repo_name}%")
+        .where(branch: @options.fetch(:branch, nil))
+        .first
     @theme = @remote_theme&.theme
     @theme.present?
   end
 
   def install
-    @theme = RemoteTheme.import_theme(@url, Discourse.system_user, private_key: @options[:private_key], branch: @options[:branch])
+    @theme =
+      RemoteTheme.import_theme(
+        @url,
+        Discourse.system_user,
+        private_key: @options[:private_key],
+        branch: @options[:branch],
+      )
     @theme.set_default! if @options.fetch(:default, false)
     add_component_to_all_themes
   end
@@ -76,9 +83,13 @@ class ThemesInstallTask
   def add_component_to_all_themes
     return if (!@options.fetch(:add_to_all_themes, false) || !@theme.component)
 
-    Theme.where(component: false).each do |parent_theme|
-      next if ChildTheme.where(parent_theme_id: parent_theme.id, child_theme_id: @theme.id).exists?
-      parent_theme.add_relative_theme!(:child, @theme)
-    end
+    Theme
+      .where(component: false)
+      .each do |parent_theme|
+        if ChildTheme.where(parent_theme_id: parent_theme.id, child_theme_id: @theme.id).exists?
+          next
+        end
+        parent_theme.add_relative_theme!(:child, @theme)
+      end
   end
 end

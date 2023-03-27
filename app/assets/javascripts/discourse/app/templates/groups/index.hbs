@@ -3,44 +3,80 @@
 <DSection @pageClass="groups">
   <div class="groups-header">
     {{#if this.currentUser.can_create_group}}
-      <DButton @action={{action "new"}} @class="btn-default groups-header-new pull-right" @icon="plus" @label="admin.groups.new.title" />
+      <DButton
+        @action={{action "new"}}
+        @class="btn-default groups-header-new pull-right"
+        @icon="plus"
+        @label="admin.groups.new.title"
+      />
     {{/if}}
 
     <div class="groups-header-filters">
-      <Input @value={{readonly this.filter}} placeholder={{i18n "groups.index.all"}} class="groups-header-filters-name no-blur" {{on "input" (action "onFilterChanged" value="target.value")}} @type="search" aria-description={{i18n "groups.index.search_results"}} />
+      <Input
+        @value={{readonly this.filter}}
+        placeholder={{i18n "groups.index.all"}}
+        class="groups-header-filters-name no-blur"
+        {{on "input" (action "onFilterChanged" value="target.value")}}
+        @type="search"
+        aria-description={{i18n "groups.index.search_results"}}
+      />
 
-      <ComboBox @value={{this.type}} @content={{this.types}} @class="groups-header-filters-type" @onChange={{action (mut this.type)}} @options={{hash
-          clearable=true
-          none="groups.index.filter"
-        }} />
+      <ComboBox
+        @value={{this.type}}
+        @content={{this.types}}
+        @class="groups-header-filters-type"
+        @onChange={{action (mut this.type)}}
+        @options={{hash clearable=true none="groups.index.filter"}}
+      />
     </div>
   </div>
 
   <ConditionalLoadingSpinner @condition={{this.isLoading}}>
     {{#if this.groups}}
-      <LoadMore @selector=".groups-boxes .group-box" @action={{action "loadMore"}}>
+      <LoadMore
+        @selector=".groups-boxes .group-box"
+        @action={{action "loadMore"}}
+      >
         <div class="container">
           <div class="groups-boxes">
             {{#each this.groups as |group|}}
-              <LinkTo @route="group.members" @model={{group.name}} class={{concat "group-box " group.name}}>
+              <LinkTo
+                @route="group.members"
+                @model={{group.name}}
+                class="group-box"
+                data-group-name={{group.name}}
+              >
                 <div class="group-box-inner">
                   <div class="group-info-wrapper">
                     {{#if group.flair_url}}
                       <span class="group-avatar-flair">
-                        <AvatarFlair @flairName={{group.name}} @flairUrl={{group.flair_url}} @flairBgColor={{group.flair_bg_color}} @flairColor={{group.flair_color}} />
+                        <AvatarFlair
+                          @flairName={{group.name}}
+                          @flairUrl={{group.flair_url}}
+                          @flairBgColor={{group.flair_bg_color}}
+                          @flairColor={{group.flair_color}}
+                        />
                       </span>
                     {{/if}}
 
                     <span class="group-info">
                       <GroupsInfo @group={{group}} />
-                      <div class="group-user-count">{{d-icon "user"}}{{group.user_count}}</div>
+                      <div class="group-user-count">{{d-icon
+                          "user"
+                        }}{{group.user_count}}</div>
                     </span>
                   </div>
 
-                  <div class="group-description">{{html-safe group.bio_excerpt}}</div>
+                  <div class="group-description">{{html-safe
+                      group.bio_excerpt
+                    }}</div>
 
                   <div class="group-membership">
-                    <GroupMembershipButton @tagName="" @model={{group}} @showLogin={{route-action "showLogin"}}>
+                    <GroupMembershipButton
+                      @tagName=""
+                      @model={{group}}
+                      @showLogin={{route-action "showLogin"}}
+                    >
                       {{#if group.is_group_owner}}
                         <span class="is-group-owner">
                           {{d-icon "shield-alt"}}
@@ -66,7 +102,13 @@
                       {{/if}}
                     </GroupMembershipButton>
 
-                    <PluginOutlet @name="group-index-box-after" @tagName="span" @connectorTagName="div" @args={{hash model=group}} />
+                    <span>
+                      <PluginOutlet
+                        @name="group-index-box-after"
+                        @connectorTagName="div"
+                        @outletArgs={{hash model=group}}
+                      />
+                    </span>
                   </div>
                 </div>
               </LinkTo>

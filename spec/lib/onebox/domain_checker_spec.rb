@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::DomainChecker do
-  describe '.is_blocked?' do
-    before do
-      SiteSetting.blocked_onebox_domains = "api.cat.org|kitten.cloud"
-    end
+  describe ".is_blocked?" do
+    before { SiteSetting.blocked_onebox_domains = "api.cat.org|kitten.cloud" }
 
     describe "returns true when entirely matched" do
       it { expect(described_class.is_blocked?("api.cat.org")).to be(true) }

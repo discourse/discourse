@@ -5,7 +5,11 @@ describe BasicReviewableFlaggedPostSerializer do
   fab!(:post) { Fabricate(:post, topic: topic) }
 
   fab!(:reviewable) do
-    ReviewableFlaggedPost.needs_review!(target: post, topic: topic, created_by: Discourse.system_user)
+    ReviewableFlaggedPost.needs_review!(
+      target: post,
+      topic: topic,
+      created_by: Discourse.system_user,
+    )
   end
 
   subject { described_class.new(reviewable, root: false).as_json }

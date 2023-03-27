@@ -25,7 +25,8 @@ class PostJobsEnqueuer
   private
 
   def enqueue_post_alerts
-    Jobs.enqueue(:post_alert,
+    Jobs.enqueue(
+      :post_alert,
       post_id: @post.id,
       new_record: true,
       options: @opts[:post_alert_options],
@@ -43,13 +44,11 @@ class PostJobsEnqueuer
   def make_visible
     return if @topic.private_message?
     return unless SiteSetting.embed_unlisted?
-    return unless @post.post_number > 1
+    return if @post.post_number == 1
     return if @topic.visible?
     return if @post.post_type != Post.types[:regular]
 
-    if @topic.topic_embed.present?
-      Jobs.enqueue(:make_embedded_topic_visible, topic_id: @topic.id)
-    end
+    Jobs.enqueue(:make_embedded_topic_visible, topic_id: @topic.id) if @topic.topic_embed.present?
   end
 
   def after_post_create
@@ -83,8 +82,7 @@ class PostJobsEnqueuer
   end
 
   def skip_after_create?
-    @opts[:import_mode] ||
-      @post.post_type == Post.types[:moderator_action] ||
+    @opts[:import_mode] || @post.post_type == Post.types[:moderator_action] ||
       @post.post_type == Post.types[:small_action]
   end
 end

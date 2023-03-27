@@ -18,7 +18,6 @@ import {
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import Site from "discourse/models/site";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance("Sidebar - Logged on user - Community Section", function (needs) {
@@ -29,8 +28,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   });
 
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   needs.pretender((server, helper) => {
@@ -49,14 +47,18 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("clicking on section header button", async function (assert) {
     await visit("/");
-    await click(".sidebar-section-community .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-header-button"
+    );
 
     assert.ok(exists("#reply-control"), "it opens the composer");
   });
 
   test("clicking on section header button while viewing a category", async function (assert) {
     await visit("/c/bug");
-    await click(".sidebar-section-community .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-header-button"
+    );
 
     assert.ok(exists("#reply-control"), "it opens the composer");
 
@@ -71,27 +73,39 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/t/280");
 
     assert.ok(
-      exists(".sidebar-section-community .sidebar-section-content"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-content"
+      ),
       "shows content section"
     );
 
     assert.strictEqual(
-      query(".sidebar-section-community .sidebar-section-header").title,
+      query(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-header"
+      ).title,
       I18n.t("sidebar.toggle_section"),
       "caret has the right title"
     );
 
-    await click(".sidebar-section-community .sidebar-section-header");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-header"
+    );
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-content"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-content"
+      ),
       "hides the content of the section"
     );
 
-    await click(".sidebar-section-community .sidebar-section-header");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-header"
+    );
 
     assert.ok(
-      exists(".sidebar-section-community .sidebar-section-content"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-content"
+      ),
       "shows content section"
     );
   });
@@ -101,36 +115,36 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-more-section-links-details-content"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content"
       ),
       "additional section links are displayed"
     );
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     assert.notOk(
       exists(
-        ".sidebar-section-community .sidebar-more-section-links-details-content"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content"
       ),
       "additional section links are hidden"
     );
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     await click("#main-outlet");
 
     assert.notOk(
       exists(
-        ".sidebar-section-community .sidebar-more-section-links-details-content"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content"
       ),
       "additional section links are hidden when clicking outside"
     );
@@ -138,7 +152,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("clicking on everything link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-link-everything");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -147,14 +163,16 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
       ),
       "the everything link is marked as active"
     );
@@ -166,7 +184,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
 
     await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-link-everything");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+    );
     assert.strictEqual(
       currentURL(),
       "/latest",
@@ -174,14 +194,16 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
       ),
       "the everything link is marked as active"
     );
@@ -202,7 +224,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       sidebar_list_destination: "unread_new",
     });
     await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-link-everything");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -211,14 +235,16 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
       ),
       "the everything link is marked as active"
     );
@@ -247,7 +273,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       sidebar_list_destination: "unread_new",
     });
     await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-link-everything");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -256,149 +284,18 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
       ),
       "the everything link is marked as active"
-    );
-  });
-
-  test("clicking on tracked link", async function (assert) {
-    await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-link-tracked");
-
-    assert.strictEqual(
-      currentURL(),
-      "/latest?f=tracked",
-      "it should transition to the tracked url"
-    );
-
-    assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
-      1,
-      "only one link is marked as active"
-    );
-
-    assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
-      "the tracked link is marked as active"
-    );
-  });
-
-  test("clicking on tracked link - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
-    updateCurrentUser({
-      sidebar_list_destination: "unread_new",
-    });
-
-    await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-link-tracked");
-    assert.strictEqual(
-      currentURL(),
-      "/latest?f=tracked",
-      "it should transition to the latest tracked url"
-    );
-
-    assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
-      "the tracked link is marked as active"
-    );
-
-    assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
-      1,
-      "only one link is marked as active"
-    );
-  });
-
-  test("clicking on tracked link - sidebar_list_destination set to unread/new with new topics", async function (assert) {
-    const categories = Site.current().categories;
-    const category = categories.find((c) => c.id === 1001);
-    category.set("notification_level", NotificationLevels.TRACKING);
-
-    const topicTrackingState = this.container.lookup(
-      "service:topic-tracking-state"
-    );
-    topicTrackingState.states.set("t112", {
-      last_read_post_number: null,
-      id: 112,
-      notification_level: NotificationLevels.TRACKING,
-      category_id: 1001,
-      created_in_new_period: true,
-    });
-    updateCurrentUser({
-      sidebar_list_destination: "unread_new",
-    });
-    await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-link-tracked");
-
-    assert.strictEqual(
-      currentURL(),
-      "/new?f=tracked",
-      "it should transition to the tracked new page"
-    );
-
-    assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
-      "the tracked link is marked as active"
-    );
-
-    assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
-      1,
-      "only one link is marked as active"
-    );
-  });
-
-  test("clicking on tracked link - sidebar_list_destination set to unread/new with new and unread topics", async function (assert) {
-    const categories = Site.current().categories;
-    const category = categories.find((c) => c.id === 1001);
-    category.set("notification_level", NotificationLevels.TRACKING);
-
-    const topicTrackingState = this.container.lookup(
-      "service:topic-tracking-state"
-    );
-    topicTrackingState.states.set("t112", {
-      last_read_post_number: null,
-      id: 112,
-      notification_level: NotificationLevels.TRACKING,
-      category_id: 1001,
-      created_in_new_period: true,
-    });
-    topicTrackingState.states.set("t113", {
-      last_read_post_number: 1,
-      highest_post_number: 2,
-      id: 113,
-      notification_level: NotificationLevels.TRACKING,
-      category_id: 1001,
-      created_in_new_period: true,
-    });
-    updateCurrentUser({
-      sidebar_list_destination: "unread_new",
-    });
-    await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-link-tracked");
-
-    assert.strictEqual(
-      currentURL(),
-      "/unread?f=tracked",
-      "it should transition to the tracked unread page"
-    );
-
-    assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
-      "the tracked link is marked as active"
-    );
-
-    assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
-      1,
-      "only one link is marked as active"
     );
   });
 
@@ -406,15 +303,19 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/t/280");
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-users"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-users"
+      ),
       "users link is not displayed in sidebar when it is not the active route"
     );
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    await click(".sidebar-section-community .sidebar-section-link-users");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-users"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -423,19 +324,23 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-users.active"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-users.active"
+      ),
       "the users link is marked as active"
     );
 
     assert.strictEqual(
       query(
-        ".sidebar-section-community .sidebar-more-section-links-details-summary"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
       ).textContent.trim(),
       I18n.t("sidebar.more"),
       "displays the right count as users link is currently active"
@@ -444,7 +349,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/u");
 
     assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-users.active"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-users.active"
+      ),
       "users link is displayed in sidebar when it is the active route"
     );
   });
@@ -455,11 +362,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-users"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-users"
+      ),
       "users section link is not displayed in sidebar"
     );
   });
@@ -468,10 +377,12 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    await click(".sidebar-section-community .sidebar-section-link-badges");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-badges"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -486,11 +397,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-badges"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-badges"
+      ),
       "badges section link is not shown in sidebar"
     );
   });
@@ -499,15 +412,19 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/t/280");
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-groups"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-groups"
+      ),
       "groups link is not displayed in sidebar when it is not the active route"
     );
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    await click(".sidebar-section-community .sidebar-section-link-groups");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-groups"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -516,19 +433,23 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-groups.active"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-groups.active"
+      ),
       "the groups link is marked as active"
     );
 
     assert.strictEqual(
       query(
-        ".sidebar-section-community .sidebar-more-section-links-details-summary"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
       ).textContent.trim(),
       I18n.t("sidebar.more"),
       "displays the right count as groups link is currently active"
@@ -537,7 +458,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/g");
 
     assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-groups.active"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-groups.active"
+      ),
       "groups link is displayed in sidebar when it is the active route"
     );
   });
@@ -548,11 +471,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-groups"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-groups"
+      ),
       "groups section link is not shown in sidebar"
     );
   });
@@ -561,10 +486,12 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    await click(".sidebar-section-community .sidebar-section-link-about");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-about"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -573,7 +500,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-about.active"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-about.active"
+      ),
       "about section link link is displayed in the main section and marked as active"
     );
   });
@@ -582,10 +511,12 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    await click(".sidebar-section-community .sidebar-section-link-faq");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-faq"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -600,11 +531,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     assert.strictEqual(
-      query(".sidebar-section-community .sidebar-section-link-faq").href,
+      query(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-faq"
+      ).href,
       "http://some.faq.url/",
       "href attribute is set to custom FAQ URL on the section link"
     );
@@ -612,7 +545,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("navigating to admin from sidebar", async function (assert) {
     await visit("/");
-    await click(".sidebar-section-community .sidebar-section-link-admin");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-admin"
+    );
 
     assert.strictEqual(currentRouteName(), "admin.dashboard.general");
   });
@@ -623,13 +558,17 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-admin")
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-admin"
+      )
     );
   });
 
   test("clicking on my posts link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-link-my-posts");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -638,14 +577,16 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts.active"
       ),
       "the my posts link is marked as active"
     );
@@ -654,7 +595,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts.active"
       ),
       "the my posts link is not marked as active when user has no drafts and visiting the user activity drafts URL"
     );
@@ -667,7 +608,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       draft_count: 1,
     });
 
-    await click(".sidebar-section-community .sidebar-section-link-my-posts");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -676,14 +619,16 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts.active"
       ),
       "the my posts link is marked as active"
     );
@@ -692,9 +637,62 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts.active"
       ),
       "the my posts link is marked as active"
+    );
+  });
+
+  test("my posts title changes when drafts are present", async function (assert) {
+    await visit("/");
+
+    assert.strictEqual(
+      query(".sidebar-section-link-my-posts").title,
+      I18n.t("sidebar.sections.community.links.my_posts.title"),
+      "displays the default title when no drafts are present"
+    );
+
+    await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
+      draft_count: 1,
+    });
+
+    assert.strictEqual(
+      query(".sidebar-section-link-my-posts").title,
+      I18n.t("sidebar.sections.community.links.my_posts.title_drafts"),
+      "displays the draft title when drafts are present"
+    );
+  });
+
+  test("my posts changes its text when drafts are present and new new view experiment is enabled", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+      new_new_view_enabled: true,
+    });
+    await visit("/");
+
+    assert.strictEqual(
+      query(".sidebar-section-link-my-posts").textContent.trim(),
+      I18n.t("sidebar.sections.community.links.my_posts.content"),
+      "displays the default text when no drafts are present"
+    );
+
+    await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
+      draft_count: 1,
+    });
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section-link-my-posts .sidebar-section-link-content-text"
+      ).textContent.trim(),
+      I18n.t("sidebar.sections.community.links.my_posts.content_drafts"),
+      "displays the text that's appropriate for when drafts are present"
+    );
+    assert.strictEqual(
+      query(
+        ".sidebar-section-link-my-posts .sidebar-section-link-content-badge"
+      ).textContent.trim(),
+      "1",
+      "displays the draft count with no text"
     );
   });
 
@@ -702,14 +700,16 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/top");
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
       ),
       "the everything link is marked as active"
     );
@@ -719,14 +719,16 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/unread");
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
       ),
       "the everything link is marked as active"
     );
@@ -736,20 +738,94 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/new");
 
     assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
       ),
       "the everything link is marked as active"
     );
   });
 
+  test("show suffix indicator for unread and new content on everything link", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "default",
+    });
+
+    this.container.lookup("service:topic-tracking-state").loadStates([
+      {
+        topic_id: 1,
+        highest_post_number: 1,
+        last_read_post_number: null,
+        created_at: "2022-05-11T03:09:31.959Z",
+        category_id: 1,
+        notification_level: null,
+        created_in_new_period: true,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+      },
+      {
+        topic_id: 2,
+        highest_post_number: 12,
+        last_read_post_number: 11,
+        created_at: "2020-02-09T09:40:02.672Z",
+        category_id: 2,
+        notification_level: 2,
+        created_in_new_period: false,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+      },
+    ]);
+
+    await visit("/");
+
+    assert.ok(
+      exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
+      "shows suffix indicator for unread posts on everything link"
+    );
+
+    // simulate reading topic 2
+    await publishToMessageBus("/unread", {
+      topic_id: 2,
+      message_type: "read",
+      payload: {
+        last_read_post_number: 12,
+        highest_post_number: 12,
+        notification_level: 2,
+      },
+    });
+
+    assert.ok(
+      exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
+      "shows suffix indicator for new topics on categories link"
+    );
+
+    // simulate reading topic 1
+    await publishToMessageBus("/unread", {
+      topic_id: 1,
+      message_type: "read",
+      payload: {
+        last_read_post_number: 1,
+        highest_post_number: 1,
+        notification_level: 2,
+      },
+    });
+
+    assert.ok(
+      !exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
+      "it removes the suffix indicator when all topics are read"
+    );
+  });
+
   test("new and unread count for everything link", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
     this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
@@ -870,67 +946,26 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
-  test("visiting top route with tracked filter", async function (assert) {
-    await visit("/top?f=tracked");
-
-    assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
-      1,
-      "only one link is marked as active"
-    );
-
-    assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
-      "the tracked link is marked as active"
-    );
-  });
-
-  test("visiting unread route with tracked filter", async function (assert) {
-    await visit("/unread?f=tracked");
-
-    assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
-      1,
-      "only one link is marked as active"
-    );
-
-    assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
-      "the tracked link is marked as active"
-    );
-  });
-
-  test("visiting new route with tracked filter", async function (assert) {
-    await visit("/new?f=tracked");
-
-    assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
-      1,
-      "only one link is marked as active"
-    );
-
-    assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
-      "the tracked link is marked as active"
-    );
-  });
-
   test("review link is not shown when user cannot review", async function (assert) {
     updateCurrentUser({ can_review: false, reviewable_count: 0 });
 
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-review"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review"
+      ),
       "review link is not shown"
     );
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-review"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review"
+      ),
       "review link is not shown"
     );
   });
@@ -944,24 +979,28 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/reivew");
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-review.active"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review.active"
+      ),
       "review link is shown as active when visiting the review route even if there are no pending reviewables"
     );
 
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-community .sidebar-section-link-review"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review"
+      ),
       "review link is not shown as part of the main section links"
     );
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-more-section-links-details-content .sidebar-section-link-review"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content .sidebar-section-link-review"
       ),
       "review link is displayed in the more drawer"
     );
@@ -971,172 +1010,29 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
 
     assert.ok(
-      exists(".sidebar-section-community .sidebar-section-link-review"),
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review"
+      ),
       "review link is shown as part of the main section links"
     );
 
     assert.strictEqual(
       query(
-        ".sidebar-section-community .sidebar-section-link-review .sidebar-section-link-content-badge"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "34 pending",
       "displays the pending reviewable count"
     );
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     assert.notOk(
       exists(
-        ".sidebar-section-community .sidebar-more-section-links-details-content .sidebar-section-link-review"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content .sidebar-section-link-review"
       ),
       "review link is not displayed in the more drawer"
-    );
-  });
-
-  test("new and unread count for tracked link", async function (assert) {
-    const categories = Site.current().categories;
-
-    // Category id 1001 has two subcategories
-    const category = categories.find((c) => c.id === 1001);
-    category.set("notification_level", NotificationLevels.TRACKING);
-
-    this.container.lookup("service:topic-tracking-state").loadStates([
-      {
-        topic_id: 1,
-        highest_post_number: 1,
-        last_read_post_number: null,
-        created_at: "2022-05-11T03:09:31.959Z",
-        category_id: category.id,
-        notification_level: NotificationLevels.TRACKING,
-        created_in_new_period: true,
-        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-      },
-      {
-        topic_id: 2,
-        highest_post_number: 12,
-        last_read_post_number: 11,
-        created_at: "2020-02-09T09:40:02.672Z",
-        category_id: category.subcategories[0].id,
-        notification_level: NotificationLevels.TRACKING,
-        created_in_new_period: false,
-        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-      },
-      {
-        topic_id: 3,
-        highest_post_number: 12,
-        last_read_post_number: 11,
-        created_at: "2020-02-09T09:40:02.672Z",
-        category_id: category.subcategories[0].subcategories[0].id,
-        notification_level: NotificationLevels.TRACKING,
-        created_in_new_period: false,
-        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-      },
-      {
-        topic_id: 4,
-        highest_post_number: 15,
-        last_read_post_number: 14,
-        created_at: "2021-06-14T12:41:02.477Z",
-        category_id: 3,
-        notification_level: NotificationLevels.TRACKING,
-        created_in_new_period: false,
-        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-      },
-      {
-        topic_id: 5,
-        highest_post_number: 1,
-        last_read_post_number: null,
-        created_at: "2021-06-14T12:41:02.477Z",
-        category_id: 3,
-        notification_level: null,
-        created_in_new_period: true,
-        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-      },
-      {
-        topic_id: 6,
-        highest_post_number: 17,
-        last_read_post_number: 16,
-        created_at: "2020-10-31T03:41:42.257Z",
-        category_id: 1234,
-        notification_level: NotificationLevels.TRACKING,
-        created_in_new_period: false,
-        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag3"],
-      },
-    ]);
-
-    await visit("/");
-
-    assert.strictEqual(
-      query(
-        ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
-      ).textContent.trim(),
-      "3 unread",
-      "it displays the right unread count"
-    );
-
-    // simulate reading topic id 2
-    await publishToMessageBus("/unread", {
-      topic_id: 2,
-      message_type: "read",
-      payload: {
-        last_read_post_number: 12,
-        highest_post_number: 12,
-      },
-    });
-
-    assert.strictEqual(
-      query(
-        ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
-      ).textContent.trim(),
-      "2 unread",
-      "it updates the unread count"
-    );
-
-    // simulate reading topic id 3
-    await publishToMessageBus("/unread", {
-      topic_id: 3,
-      message_type: "read",
-      payload: {
-        last_read_post_number: 17,
-        highest_post_number: 17,
-      },
-    });
-
-    // simulate reading topic id 6
-    await publishToMessageBus("/unread", {
-      topic_id: 6,
-      message_type: "read",
-      payload: {
-        last_read_post_number: 17,
-        highest_post_number: 17,
-      },
-    });
-
-    assert.strictEqual(
-      query(
-        ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
-      ).textContent.trim(),
-      "1 new",
-      "it displays the new count once there are no tracked unread topics"
-    );
-
-    // simulate reading topic id 1
-    await publishToMessageBus("/unread", {
-      topic_id: 1,
-      message_type: "read",
-      payload: {
-        last_read_post_number: 1,
-        highest_post_number: 1,
-      },
-    });
-
-    assert.ok(
-      !exists(
-        ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
-      ),
-      "it removes new count once there are no tracked new topics"
     );
   });
 
@@ -1153,7 +1049,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     assert.strictEqual(
@@ -1209,7 +1105,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
     await click(".sidebar-section-link-user-summary");
@@ -1237,3 +1133,143 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.ok(teardownCalled, "section link teardown callback was called");
   });
 });
+
+acceptance(
+  "Sidebar - Logged on user - Community Section - New new view experiment enabled",
+  function (needs) {
+    needs.user({
+      new_new_view_enabled: true,
+    });
+
+    needs.settings({
+      navigation_menu: "sidebar",
+    });
+
+    test("count shown next to the everything link", async function (assert) {
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 12,
+          last_read_post_number: 12,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything .sidebar-section-link-content-badge"
+        ).textContent.trim(),
+        "2",
+        "count is 2 because there's 1 unread topic and 1 new topic"
+      );
+    });
+
+    test("everything link href", async function (assert) {
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert.true(
+        query(
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+        ).href.endsWith("/new"),
+        "links to /new because there are 1 new and 1 unread topics"
+      );
+
+      await publishToMessageBus("/unread", {
+        topic_id: 1,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 3,
+          highest_post_number: 3,
+        },
+      });
+
+      assert.true(
+        query(
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+        ).href.endsWith("/new"),
+        "links to /new because there is 1 unread topic"
+      );
+
+      await publishToMessageBus("/unread", {
+        topic_id: 2,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 12,
+          highest_post_number: 12,
+        },
+      });
+
+      assert.true(
+        query(
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+        ).href.endsWith("/latest"),
+        "links to /latest because there are no unread or new topics"
+      );
+
+      await publishToMessageBus("/unread", {
+        topic_id: 1,
+        message_type: "read",
+        payload: {
+          last_read_post_number: null,
+          highest_post_number: 34,
+        },
+      });
+
+      assert.true(
+        query(
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+        ).href.endsWith("/new"),
+        "links to /new because there is 1 new topic"
+      );
+    });
+  }
+);

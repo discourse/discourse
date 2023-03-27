@@ -4,10 +4,16 @@ skip_output:
 
 pre-commit:
   parallel: true
+  skip:
+    - merge
+    - rebase
   commands:
     rubocop:
       glob: "*.rb"
       run: bundle exec rubocop --parallel --force-exclusion {staged_files}
+    syntax_tree:
+      glob: "*.{rb,rake}"
+      run: bundle exec stree check Gemfile {staged_files}
     prettier:
       glob: "*.js"
       include: "app/assets/javascripts|plugins/.+?/assets/javascripts"

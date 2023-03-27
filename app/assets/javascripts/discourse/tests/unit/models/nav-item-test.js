@@ -2,13 +2,17 @@ import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import NavItem from "discourse/models/nav-item";
 import Site from "discourse/models/site";
-import createStore from "discourse/tests/helpers/create-store";
 import { run } from "@ember/runloop";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
 module("Unit | Model | nav-item", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     run(function () {
-      const fooCategory = Category.create({
+      const store = getOwner(this).lookup("service:store");
+      const fooCategory = store.createRecord("category", {
         slug: "foo",
         id: 123,
       });
@@ -20,11 +24,7 @@ module("Unit | Model | nav-item", function (hooks) {
     assert.expect(4);
 
     function href(text, opts, expected, label) {
-      assert.strictEqual(
-        NavItem.fromText(text, opts).get("href"),
-        expected,
-        label
-      );
+      assert.strictEqual(NavItem.fromText(text, opts).href, expected, label);
     }
 
     href("latest", {}, "/latest", "latest");
@@ -39,27 +39,28 @@ module("Unit | Model | nav-item", function (hooks) {
   });
 
   test("count", function (assert) {
-    const navItem = createStore().createRecord("nav-item", { name: "new" });
+    const store = getOwner(this).lookup("service:store");
+    const navItem = store.createRecord("nav-item", { name: "new" });
 
-    assert.strictEqual(navItem.get("count"), 0, "it has no count by default");
+    assert.strictEqual(navItem.count, 0, "it has no count by default");
 
-    const tracker = navItem.get("topicTrackingState");
-    tracker.modifyState("t1", {
+    navItem.topicTrackingState.modifyState("t1", {
       topic_id: 1,
       last_read_post_number: null,
       created_in_new_period: true,
     });
-    tracker.incrementMessageCount();
+    navItem.topicTrackingState.incrementMessageCount();
 
     assert.strictEqual(
-      navItem.get("count"),
+      navItem.count,
       1,
       "it updates when a new message arrives"
     );
   });
 
   test("displayName", function (assert) {
-    const navItem = createStore().createRecord("nav-item", {
+    const store = getOwner(this).lookup("service:store");
+    const navItem = store.createRecord("nav-item", {
       name: "something",
     });
 
@@ -73,7 +74,8 @@ module("Unit | Model | nav-item", function (hooks) {
   });
 
   test("title", function (assert) {
-    const navItem = createStore().createRecord("nav-item", {
+    const store = getOwner(this).lookup("service:store");
+    const navItem = store.createRecord("nav-item", {
       name: "something",
     });
 

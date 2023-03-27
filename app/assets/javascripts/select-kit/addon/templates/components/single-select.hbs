@@ -1,5 +1,6 @@
 {{#unless this.selectKit.isHidden}}
-  {{component this.selectKit.options.headerComponent
+  {{component
+    this.selectKit.options.headerComponent
     tabindex=this.tabindex
     value=this.value
     selectedContent=this.selectedContent
@@ -7,8 +8,12 @@
     id=(concat this.selectKit.uniqueID "-header")
   }}
 
-  <SelectKit::SelectKitBody @selectKit={{this.selectKit}} @id={{concat this.selectKit.uniqueID "-body"}}>
-    {{component this.selectKit.options.filterComponent
+  <SelectKit::SelectKitBody
+    @selectKit={{this.selectKit}}
+    @id={{concat this.selectKit.uniqueID "-body"}}
+  >
+    {{component
+      this.selectKit.options.filterComponent
       selectKit=this.selectKit
       id=(concat this.selectKit.uniqueID "-filter")
     }}
@@ -21,7 +26,8 @@
       </span>
     {{else}}
       {{#each this.collections as |collection|}}
-        {{component (component-for-collection collection.identifier this.selectKit)
+        {{component
+          (component-for-collection collection.identifier this.selectKit)
           collection=collection
           selectKit=this.selectKit
           value=this.value

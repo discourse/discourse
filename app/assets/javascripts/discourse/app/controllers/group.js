@@ -4,6 +4,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { capitalize } from "@ember/string";
 import { inject as service } from "@ember/service";
+import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
 
 const Tab = EmberObject.extend({
   init() {
@@ -91,10 +92,10 @@ export default Controller.extend({
   @discourseComputed(
     "model.has_messages",
     "model.is_group_user",
-    "currentUser.allowPersonalMessages"
+    "currentUser.can_send_private_messages"
   )
   showMessages(hasMessages, isGroupUser) {
-    if (!this.currentUser?.allowPersonalMessages) {
+    if (!this.currentUser?.can_send_private_messages) {
       return false;
     }
 
@@ -137,16 +138,11 @@ export default Controller.extend({
     this.set("destroying", true);
 
     const model = this.model;
-    let message = I18n.t("admin.groups.delete_confirm");
 
-    if (model.has_messages && model.message_count > 0) {
-      message = I18n.t("admin.groups.delete_with_messages_confirm", {
-        count: model.message_count,
-      });
-    }
-
-    this.dialog.yesNoConfirm({
-      message,
+    this.dialog.deleteConfirm({
+      title: I18n.t("admin.groups.delete_confirm", { group: model.name }),
+      bodyComponent: GroupDeleteDialog,
+      bodyComponentModel: model,
       didConfirm: () => {
         model
           .destroy()

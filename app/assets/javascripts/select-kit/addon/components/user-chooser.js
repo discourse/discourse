@@ -57,6 +57,9 @@ export default MultiSelectComponent.extend({
     filter = filter || "";
     filter = filter.replace(/^@/, "");
     const options = this.selectKit.options;
+    if (filter === "" && options?.customSearchOptions?.defaultSearchResults) {
+      return Promise.resolve(options.customSearchOptions.defaultSearchResults);
+    }
 
     // prevents doing ajax request for nothing
     const skippedSearch = skipSearch(filter, options.allowEmails);

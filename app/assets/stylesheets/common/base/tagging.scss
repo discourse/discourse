@@ -131,7 +131,8 @@
 .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
-  a {
+  a,
+  span {
     margin-right: 0.25em;
   }
 }
@@ -144,20 +145,6 @@
   .discourse-tags {
     font-weight: normal;
     font-size: var(--font-down-1);
-  }
-}
-
-.mobile-view .topic-list-item .discourse-tags {
-  display: inline-flex;
-  flex-wrap: wrap;
-  font-size: var(--font-down-1);
-  margin-top: 0;
-  .discourse-tag {
-    margin-right: 0.2em;
-  }
-  .discourse-tag.box {
-    position: relative;
-    top: 0;
   }
 }
 
@@ -200,24 +187,6 @@ header .discourse-tag {
     padding-right: 5px;
     vertical-align: middle;
     height: 0.9em;
-  }
-}
-
-.hashtag-autocomplete {
-  .hashtag-autocomplete__option {
-    .hashtag-autocomplete__link {
-      align-items: center;
-      color: var(--primary-medium);
-      display: flex;
-
-      .d-icon {
-        padding-right: 0.5em;
-      }
-
-      .hashtag-autocomplete__text {
-        flex: 1;
-      }
-    }
   }
 }
 

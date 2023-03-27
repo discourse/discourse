@@ -60,7 +60,10 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
       @link = "https://twitter.com/metallica/status/1128068672289890305"
       @onebox_fixture = "twitterstatus_quoted"
 
-      stub_request(:get, @link.downcase).to_return(status: 200, body: onebox_response(@onebox_fixture))
+      stub_request(:get, @link.downcase).to_return(
+        status: 200,
+        body: onebox_response(@onebox_fixture),
+      )
     end
 
     let(:full_name) { "Metallica" }
@@ -77,7 +80,10 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
       @link = "https://twitter.com/codinghorror/status/1409351083177046020"
       @onebox_fixture = "twitterstatus_featured_image"
 
-      stub_request(:get, @link.downcase).to_return(status: 200, body: onebox_response(@onebox_fixture))
+      stub_request(:get, @link.downcase).to_return(
+        status: 200,
+        body: onebox_response(@onebox_fixture),
+      )
     end
 
     let(:full_name) { "Jeff Atwood" }
@@ -90,8 +96,10 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
   end
 
   shared_examples "includes quoted tweet data" do
-    it 'includes quoted tweet' do
-      expect(html).to include("If you bought a ticket for tonight’s @Metallica show at Stade de France, you have helped")
+    it "includes quoted tweet" do
+      expect(html).to include(
+        "If you bought a ticket for tonight’s @Metallica show at Stade de France, you have helped",
+      )
     end
 
     it "includes quoted tweet name" do
@@ -117,37 +125,43 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
     end
 
     it "logs a warn message if rate limited" do
-      SiteSetting.twitter_consumer_key = 'twitter_consumer_key'
-      SiteSetting.twitter_consumer_secret = 'twitter_consumer_secret'
+      SiteSetting.twitter_consumer_key = "twitter_consumer_key"
+      SiteSetting.twitter_consumer_secret = "twitter_consumer_secret"
 
-      stub_request(:post, "https://api.twitter.com/oauth2/token")
-        .to_return(status: 200, body: "{\"access_token\":\"token\"}", headers: {})
+      stub_request(:post, "https://api.twitter.com/oauth2/token").to_return(
+        status: 200,
+        body: "{\"access_token\":\"token\"}",
+        headers: {
+        },
+      )
 
-      stub_request(:get, "https://api.twitter.com/1.1/statuses/show.json?id=1428031057186627589&tweet_mode=extended")
-        .to_return(status: 429, body: "{}", headers: {})
+      stub_request(
+        :get,
+        "https://api.twitter.com/1.1/statuses/show.json?id=1428031057186627589&tweet_mode=extended",
+      ).to_return(status: 429, body: "{}", headers: {})
 
       Rails.logger.expects(:warn).with(regexp_matches(/rate limit/)).at_least_once
 
-      expect(html).to eq('')
+      expect(html).to eq("")
     end
   end
 
   context "with twitter client" do
     before do
-      @twitter_client = stub("TwitterClient",
-        status: api_response,
-        prettify_tweet: tweet_content,
-        twitter_credentials_missing?: false,
-        prettify_number: favorite_count
-      )
+      @twitter_client =
+        stub(
+          "TwitterClient",
+          status: api_response,
+          prettify_tweet: tweet_content,
+          twitter_credentials_missing?: false,
+          prettify_number: favorite_count,
+        )
 
       @previous_options = Onebox.options.to_h
       Onebox.options = { twitter_client: @twitter_client }
     end
 
-    after do
-      Onebox.options = @previous_options
-    end
+    after { Onebox.options = @previous_options }
 
     context "with a standard tweet" do
       let(:tweet_content) do
@@ -157,58 +171,46 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
       let(:api_response) do
         {
           created_at: "Fri Aug 02 01:59:30 +0000 2013",
-          id: 363116819147538400,
+          id: 363_116_819_147_538_400,
           id_str: "363116819147538433",
           text: "I'm a sucker for pledges. @Peers Pledge #sharingeconomy http://t.co/T4Sc47KAzh",
           truncated: false,
           entities: {
-            hashtags: [
-              {
-                text: "sharingeconomy",
-                indices: [
-                  41,
-                  56
-                ]
-              }
-            ],
+            hashtags: [{ text: "sharingeconomy", indices: [41, 56] }],
             symbols: [],
             user_mentions: [
               {
                 screen_name: "peers",
                 name: "Peers",
-                id: 1428357889,
+                id: 1_428_357_889,
                 id_str: "1428357889",
-                indices: [
-                  27,
-                  33
-                ]
-              }
+                indices: [27, 33],
+              },
             ],
             urls: [
               {
                 url: "http://t.co/T4Sc47KAzh",
                 expanded_url: "http://www.peers.org/action/peers-pledgea/",
                 display_url: "peers.org/action/peers-p…",
-                indices: [
-                  57,
-                  79
-                ]
-              }
-            ]
+                indices: [57, 79],
+              },
+            ],
           },
-          source: "<a href=\"https://dev.twitter.com/docs/tfw\" rel=\"nofollow\">Twitter for Websites</a>",
+          source:
+            "<a href=\"https://dev.twitter.com/docs/tfw\" rel=\"nofollow\">Twitter for Websites</a>",
           in_reply_to_status_id: nil,
           in_reply_to_status_id_str: nil,
           in_reply_to_user_id: nil,
           in_reply_to_user_id_str: nil,
           in_reply_to_screen_name: nil,
           user: {
-            id: 1087064150,
+            id: 1_087_064_150,
             id_str: "1087064150",
             name: "Vyki Englert",
             screen_name: "vyki_e",
             location: "Los Angeles, CA",
-            description: "Rides bikes, writes code, likes maps. @CompilerLA / @CityGrows / Brigade Captain @HackforLA",
+            description:
+              "Rides bikes, writes code, likes maps. @CompilerLA / @CityGrows / Brigade Captain @HackforLA",
             url: "http://t.co/YCAP3asRG1",
             entities: {
               url: {
@@ -217,16 +219,13 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
                     url: "http://t.co/YCAP3asRG1",
                     expanded_url: "http://www.compiler.la",
                     display_url: "compiler.la",
-                    indices: [
-                      0,
-                      22
-                    ]
-                  }
-                ]
+                    indices: [0, 22],
+                  },
+                ],
               },
               description: {
-                urls: []
-              }
+                urls: [],
+              },
             },
             protected: false,
             followers_count: 1128,
@@ -234,7 +233,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
             listed_count: 83,
             created_at: "Sun Jan 13 19:53:00 +0000 2013",
             favourites_count: 2928,
-            utc_offset: -25200,
+            utc_offset: -25_200,
             time_zone: "Pacific Time (US & Canada)",
             geo_enabled: true,
             verified: false,
@@ -245,10 +244,13 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
             is_translation_enabled: false,
             profile_background_color: "ACDED6",
             profile_background_image_url: "http://abs.twimg.com/images/themes/theme18/bg.gif",
-            profile_background_image_url_https: "https://abs.twimg.com/images/themes/theme18/bg.gif",
+            profile_background_image_url_https:
+              "https://abs.twimg.com/images/themes/theme18/bg.gif",
             profile_background_tile: false,
-            profile_image_url: "http://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm_normal.jpg",
-            profile_image_url_https: "https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm_normal.jpg",
+            profile_image_url:
+              "http://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm_normal.jpg",
+            profile_image_url_https:
+              "https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm_normal.jpg",
             profile_banner_url: "https://pbs.twimg.com/profile_banners/1087064150/1424315468",
             profile_link_color: "4E99D1",
             profile_sidebar_border_color: "EEEEEE",
@@ -260,7 +262,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
             default_profile_image: false,
             following: false,
             follow_request_sent: false,
-            notifications: false
+            notifications: false,
           },
           geo: nil,
           coordinates: nil,
@@ -273,7 +275,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
           retweeted: false,
           possibly_sensitive: false,
           possibly_sensitive_appealable: false,
-          lang: "en"
+          lang: "en",
         }
       end
 
@@ -292,51 +294,43 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
       let(:api_response) do
         {
           created_at: "Mon May 13 22:45:04 +0000 2019",
-          id: 1128068672289890305,
+          id: 1_128_068_672_289_890_305,
           id_str: "1128068672289890305",
-          full_text: "Thank you to everyone who came out for #MetInParis last night for helping us support @EMMAUSolidarite &amp; @PompiersParis. #AWMH #MetalicaGivesBack https://t.co/gLtZSdDFmN",
+          full_text:
+            "Thank you to everyone who came out for #MetInParis last night for helping us support @EMMAUSolidarite &amp; @PompiersParis. #AWMH #MetalicaGivesBack https://t.co/gLtZSdDFmN",
           truncated: false,
           display_text_range: [0, 148],
           entities: {
             hashtags: [
-              {
-                text: "MetInParis",
-                indices: [39, 50]
-              },
-              {
-                text: "AWMH",
-                indices: [124, 129]
-              },
-              {
-                text: "MetalicaGivesBack",
-                indices: [130, 148]
-              }
+              { text: "MetInParis", indices: [39, 50] },
+              { text: "AWMH", indices: [124, 129] },
+              { text: "MetalicaGivesBack", indices: [130, 148] },
             ],
             symbols: [],
             user_mentions: [
               {
                 screen_name: "EMMAUSolidarite",
                 name: "EMMAÜS Solidarité",
-                id: 2912493406,
+                id: 2_912_493_406,
                 id_str: "2912493406",
-                indices: [85, 101]
+                indices: [85, 101],
               },
               {
                 screen_name: "PompiersParis",
                 name: "Pompiers de Paris",
-                id: 1342191438,
+                id: 1_342_191_438,
                 id_str: "1342191438",
-                indices: [108, 122]
-              }
+                indices: [108, 122],
+              },
             ],
             urls: [
               {
                 url: "https://t.co/gLtZSdDFmN",
                 expanded_url: "https://twitter.com/AWMHFoundation/status/1127646016931487744",
                 display_url: "twitter.com/AWMHFoundation…",
-                indices: [149, 172]
-              }
-            ]
+                indices: [149, 172],
+              },
+            ],
           },
           source: "<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client</a>",
           in_reply_to_status_id: nil,
@@ -345,7 +339,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
           in_reply_to_user_id_str: nil,
           in_reply_to_screen_name: nil,
           user: {
-            id: 238475531,
+            id: 238_475_531,
             id_str: "238475531",
             name: "Metallica",
             screen_name: "Metallica",
@@ -359,9 +353,9 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
                     url: "http://t.co/kVxaQpmqSI",
                     expanded_url: "http://www.metallica.com",
                     display_url: "metallica.com",
-                    indices: [0, 22]
-                  }
-                ]
+                    indices: [0, 22],
+                  },
+                ],
               },
               description: {
                 urls: [
@@ -369,21 +363,21 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
                     url: "http://t.co/EAkqroM0OA",
                     expanded_url: "http://metallica.com",
                     display_url: "metallica.com",
-                    indices: [0, 22]
+                    indices: [0, 22],
                   },
                   {
                     url: "http://t.co/BEu6OVRhKG",
                     expanded_url: "http://livemetallica.com",
                     display_url: "livemetallica.com",
-                    indices: [25, 47]
-                  }
-                ]
-              }
+                    indices: [25, 47],
+                  },
+                ],
+              },
             },
             protected: false,
-            followers_count: 5760661,
+            followers_count: 5_760_661,
             friends_count: 31,
-            listed_count: 12062,
+            listed_count: 12_062,
             created_at: "Sat Jan 15 07:34:59 +0000 2011",
             favourites_count: 567,
             utc_offset: nil,
@@ -399,8 +393,10 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
             profile_background_image_url: "http://abs.twimg.com/images/themes/theme9/bg.gif",
             profile_background_image_url_https: "https://abs.twimg.com/images/themes/theme9/bg.gif",
             profile_background_tile: false,
-            profile_image_url: "http://pbs.twimg.com/profile_images/766360293953802240/kt0hiSmv_normal.jpg",
-            profile_image_url_https: "https://pbs.twimg.com/profile_images/766360293953802240/kt0hiSmv_normal.jpg",
+            profile_image_url:
+              "http://pbs.twimg.com/profile_images/766360293953802240/kt0hiSmv_normal.jpg",
+            profile_image_url_https:
+              "https://pbs.twimg.com/profile_images/766360293953802240/kt0hiSmv_normal.jpg",
             profile_banner_url: "https://pbs.twimg.com/profile_banners/238475531/1479538295",
             profile_link_color: "2FC2EF",
             profile_sidebar_border_color: "000000",
@@ -413,167 +409,167 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
             following: false,
             follow_request_sent: false,
             notifications: false,
-            translator_type: "regular"
+            translator_type: "regular",
           },
           geo: nil,
           coordinates: nil,
           place: nil,
           contributors: nil,
           is_quote_status: true,
-          quoted_status_id: 1127646016931487744,
+          quoted_status_id: 1_127_646_016_931_487_744,
           quoted_status_id_str: "1127646016931487744",
           quoted_status_permalink: {
             url: "https://t.co/gLtZSdDFmN",
             expanded: "https://twitter.com/AWMHFoundation/status/1127646016931487744",
-            display: "twitter.com/AWMHFoundation…"
+            display: "twitter.com/AWMHFoundation…",
           },
           quoted_status: {
             created_at: "Sun May 12 18:45:35 +0000 2019",
-            id: 1127646016931487744,
+            id: 1_127_646_016_931_487_744,
             id_str: "1127646016931487744",
-            full_text: "If you bought a ticket for tonight’s @Metallica show at Stade de France, you have helped contribute to @EMMAUSolidarite &amp; @PompiersParis. #MetallicaGivesBack #AWMH #MetInParis https://t.co/wlUtDQbQEK",
+            full_text:
+              "If you bought a ticket for tonight’s @Metallica show at Stade de France, you have helped contribute to @EMMAUSolidarite &amp; @PompiersParis. #MetallicaGivesBack #AWMH #MetInParis https://t.co/wlUtDQbQEK",
             truncated: false,
             display_text_range: [0, 179],
             entities: {
               hashtags: [
-                {
-                  text: "MetallicaGivesBack",
-                  indices: [142, 161]
-                }, {
-                  text: "AWMH",
-                  indices: [162, 167]
-                }, {
-                  text: "MetInParis",
-                  indices: [168, 179]
-                }
+                { text: "MetallicaGivesBack", indices: [142, 161] },
+                { text: "AWMH", indices: [162, 167] },
+                { text: "MetInParis", indices: [168, 179] },
               ],
               symbols: [],
               user_mentions: [
                 {
                   screen_name: "Metallica",
                   name: "Metallica",
-                  id: 238475531,
+                  id: 238_475_531,
                   id_str: "238475531",
-                  indices: [37, 47]
-                }, {
+                  indices: [37, 47],
+                },
+                {
                   screen_name: "EMMAUSolidarite",
                   name: "EMMAÜS Solidarité",
-                  id: 2912493406,
+                  id: 2_912_493_406,
                   id_str: "2912493406",
-                  indices: [103, 119]
-                }, {
+                  indices: [103, 119],
+                },
+                {
                   screen_name: "PompiersParis",
                   name: "Pompiers de Paris",
-                  id: 1342191438,
+                  id: 1_342_191_438,
                   id_str: "1342191438",
-                  indices: [126, 140]
-                }
+                  indices: [126, 140],
+                },
               ],
               urls: [],
               media: [
                 {
-                  id: 1127645176183250944,
+                  id: 1_127_645_176_183_250_944,
                   id_str: "1127645176183250944",
                   indices: [180, 203],
                   media_url: "http://pbs.twimg.com/media/D6YzUC8V4AApDdF.jpg",
                   media_url_https: "https://pbs.twimg.com/media/D6YzUC8V4AApDdF.jpg",
                   url: "https://t.co/wlUtDQbQEK",
                   display_url: "pic.twitter.com/wlUtDQbQEK",
-                  expanded_url: "https://twitter.com/AWMHFoundation/status/1127646016931487744/photo/1",
+                  expanded_url:
+                    "https://twitter.com/AWMHFoundation/status/1127646016931487744/photo/1",
                   type: "photo",
                   sizes: {
                     large: {
                       w: 2048,
                       h: 1498,
-                      resize: "fit"
+                      resize: "fit",
                     },
                     thumb: {
                       w: 150,
                       h: 150,
-                      resize: "crop"
+                      resize: "crop",
                     },
                     medium: {
                       w: 1200,
                       h: 877,
-                      resize: "fit"
+                      resize: "fit",
                     },
                     small: {
                       w: 680,
                       h: 497,
-                      resize: "fit"
-                    }
-                  }
-                }
-              ]
+                      resize: "fit",
+                    },
+                  },
+                },
+              ],
             },
             extended_entities: {
               media: [
                 {
-                  id: 1127645176183250944,
+                  id: 1_127_645_176_183_250_944,
                   id_str: "1127645176183250944",
                   indices: [180, 203],
                   media_url: "http://pbs.twimg.com/media/D6YzUC8V4AApDdF.jpg",
                   media_url_https: "https://pbs.twimg.com/media/D6YzUC8V4AApDdF.jpg",
                   url: "https://t.co/wlUtDQbQEK",
                   display_url: "pic.twitter.com/wlUtDQbQEK",
-                  expanded_url: "https://twitter.com/AWMHFoundation/status/1127646016931487744/photo/1",
+                  expanded_url:
+                    "https://twitter.com/AWMHFoundation/status/1127646016931487744/photo/1",
                   type: "photo",
                   sizes: {
                     large: {
                       w: 2048,
                       h: 1498,
-                      resize: "fit"
+                      resize: "fit",
                     },
                     thumb: {
                       w: 150,
                       h: 150,
-                      resize: "crop"
+                      resize: "crop",
                     },
                     medium: {
                       w: 1200,
                       h: 877,
-                      resize: "fit"
+                      resize: "fit",
                     },
                     small: {
                       w: 680,
                       h: 497,
-                      resize: "fit"
-                    }
-                  }
-                }, {
-                  id: 1127645195384774657,
+                      resize: "fit",
+                    },
+                  },
+                },
+                {
+                  id: 1_127_645_195_384_774_657,
                   id_str: "1127645195384774657",
                   indices: [180, 203],
                   media_url: "http://pbs.twimg.com/media/D6YzVKeV4AEPpSQ.jpg",
                   media_url_https: "https://pbs.twimg.com/media/D6YzVKeV4AEPpSQ.jpg",
                   url: "https://t.co/wlUtDQbQEK",
                   display_url: "pic.twitter.com/wlUtDQbQEK",
-                  expanded_url: "https://twitter.com/AWMHFoundation/status/1127646016931487744/photo/1",
+                  expanded_url:
+                    "https://twitter.com/AWMHFoundation/status/1127646016931487744/photo/1",
                   type: "photo",
                   sizes: {
                     thumb: {
                       w: 150,
                       h: 150,
-                      resize: "crop"
+                      resize: "crop",
                     },
                     medium: {
                       w: 1200,
                       h: 922,
-                      resize: "fit"
+                      resize: "fit",
                     },
                     small: {
                       w: 680,
                       h: 522,
-                      resize: "fit"
+                      resize: "fit",
                     },
                     large: {
                       w: 2048,
                       h: 1574,
-                      resize: "fit"
-                    }
-                  }
-                }
-              ]
+                      resize: "fit",
+                    },
+                  },
+                },
+              ],
             },
             source: "<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client</a>",
             in_reply_to_status_id: nil,
@@ -582,7 +578,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
             in_reply_to_user_id_str: nil,
             in_reply_to_screen_name: nil,
             user: {
-              id: 886959980254871552,
+              id: 886_959_980_254_871_552,
               id_str: "886959980254871552",
               name: "All Within My Hands Foundation",
               screen_name: "AWMHFoundation",
@@ -596,13 +592,13 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
                       url: "https://t.co/KgwIPrVVhg",
                       expanded_url: "http://allwithinmyhands.org",
                       display_url: "allwithinmyhands.org",
-                      indices: [0, 23]
-                    }
-                  ]
+                      indices: [0, 23],
+                    },
+                  ],
                 },
                 description: {
-                  urls: []
-                }
+                  urls: [],
+                },
               },
               protected: false,
               followers_count: 5962,
@@ -621,11 +617,15 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
               is_translation_enabled: false,
               profile_background_color: "000000",
               profile_background_image_url: "http://abs.twimg.com/images/themes/theme1/bg.png",
-              profile_background_image_url_https: "https://abs.twimg.com/images/themes/theme1/bg.png",
+              profile_background_image_url_https:
+                "https://abs.twimg.com/images/themes/theme1/bg.png",
               profile_background_tile: false,
-              profile_image_url: "http://pbs.twimg.com/profile_images/935181032185241600/D8FoOIRJ_normal.jpg",
-              profile_image_url_https: "https://pbs.twimg.com/profile_images/935181032185241600/D8FoOIRJ_normal.jpg",
-              profile_banner_url: "https://pbs.twimg.com/profile_banners/886959980254871552/1511799663",
+              profile_image_url:
+                "http://pbs.twimg.com/profile_images/935181032185241600/D8FoOIRJ_normal.jpg",
+              profile_image_url_https:
+                "https://pbs.twimg.com/profile_images/935181032185241600/D8FoOIRJ_normal.jpg",
+              profile_banner_url:
+                "https://pbs.twimg.com/profile_banners/886959980254871552/1511799663",
               profile_link_color: "000000",
               profile_sidebar_border_color: "000000",
               profile_sidebar_fill_color: "000000",
@@ -637,7 +637,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
               following: false,
               follow_request_sent: false,
               notifications: false,
-              translator_type: "none"
+              translator_type: "none",
             },
             geo: nil,
             coordinates: nil,
@@ -650,7 +650,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
             retweeted: false,
             possibly_sensitive: false,
             possibly_sensitive_appealable: false,
-            lang: "en"
+            lang: "en",
           },
           retweet_count: 201,
           favorite_count: 1664,
@@ -658,7 +658,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
           retweeted: false,
           possibly_sensitive: false,
           possibly_sensitive_appealable: false,
-          lang: "en"
+          lang: "en",
         }
       end
 
@@ -666,7 +666,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
       include_context "with engines"
 
       it_behaves_like "an engine"
-      it_behaves_like '#to_html'
+      it_behaves_like "#to_html"
       it_behaves_like "includes quoted tweet data"
     end
   end

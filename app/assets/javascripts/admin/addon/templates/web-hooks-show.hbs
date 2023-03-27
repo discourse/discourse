@@ -3,90 +3,32 @@
   {{i18n "admin.web_hooks.go_back"}}
 </LinkTo>
 
-<div class="web-hook-container">
-  <p>{{i18n "admin.web_hooks.detailed_instruction"}}</p>
-  <form class="web-hook form-horizontal">
-    <div class="control-group">
-      <label for="payload-url">{{i18n "admin.web_hooks.payload_url"}}</label>
-      <TextField @name="payload-url" @value={{this.model.payload_url}} @placeholderKey="admin.web_hooks.payload_url_placeholder" />
-      <InputTip @validation={{this.urlValidation}} />
-    </div>
+<div class="admin-webhooks__summary">
+  <h1>
+    {{this.model.payload_url}}
 
-    <div class="control-group">
-      <label for="content-type">{{i18n "admin.web_hooks.content_type"}}</label>
-      <ComboBox @content={{this.contentTypes}} @name="content-type" @value={{this.model.content_type}} @onChange={{action (mut this.model.content_type)}} />
-    </div>
+    <DButton
+      @action={{this.edit}}
+      @icon="far-edit"
+      title={{i18n "admin.web_hooks.edit"}}
+      class="btn no-text admin-webhooks__edit-button"
+    />
 
-    <div class="control-group">
-      <label for="secret">{{i18n "admin.web_hooks.secret"}}</label>
-      <TextField @name="secret" @value={{this.model.secret}} @placeholderKey="admin.web_hooks.secret_placeholder" />
-      <InputTip @validation={{this.secretValidation}} />
-    </div>
+    <DButton
+      @action={{this.destroy}}
+      @icon="times"
+      @title="delete"
+      class="destroy btn-danger admin-webhooks__delete-button"
+    />
+  </h1>
 
-    <div class="control-group">
-      <label>{{i18n "admin.web_hooks.event_chooser"}}</label>
-      <div>
-        <RadioButton @class="subscription-choice" @name="subscription-choice" @value="individual" @selection={{this.model.webHookType}} />
-        {{i18n "admin.web_hooks.individual_event"}}
-        <InputTip @validation={{this.eventTypeValidation}} />
-      </div>
-      {{#unless this.model.wildcard_web_hook}}
-        <div class="event-selector">
-          {{#each this.eventTypes as |type|}}
-            <AdminWebHookEventChooser @type={{type}} @model={{this.model.web_hook_event_types}} />
-          {{/each}}
-        </div>
-      {{/unless}}
-      <div>
-        <RadioButton @class="subscription-choice" @name="subscription-choice" @value="wildcard" @selection={{this.model.webHookType}} />
-        {{i18n "admin.web_hooks.wildcard_event"}}
-      </div>
-    </div>
+  <div>
+    <span class="admin-webhooks__description-label">
+      {{i18n "admin.web_hooks.description_label"}}:
+    </span>
 
-    <div class="filters control-group">
-      <div class="filter">
-        <label>{{d-icon "circle" class="tracking"}}{{i18n "admin.web_hooks.categories_filter"}}</label>
-        <CategorySelector @categories={{this.model.categories}} @onChange={{action (mut this.model.categories)}} />
-        <div class="instructions">{{i18n "admin.web_hooks.categories_filter_instructions"}}</div>
-      </div>
-      {{#if this.showTagsFilter}}
-        <div class="filter">
-          <label>{{d-icon "circle" class="tracking"}}{{i18n "admin.web_hooks.tags_filter"}}</label>
-          <TagChooser @tags={{this.model.tag_names}} @everyTag={{true}} @excludeSynonyms={{true}} />
-          <div class="instructions">{{i18n "admin.web_hooks.tags_filter_instructions"}}</div>
-        </div>
-      {{/if}}
-      <div class="filter">
-        <label>{{d-icon "circle" class="tracking"}}{{i18n "admin.web_hooks.groups_filter"}}</label>
-        <GroupSelector @groupNames={{this.model.groupsFilterInName}} @groupFinder={{this.model.groupFinder}} />
-        <div class="instructions">{{i18n "admin.web_hooks.groups_filter_instructions"}}</div>
-      </div>
-    </div>
-
-    <PluginOutlet @name="web-hook-fields" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
-
-    <div>
-      <Input @type="checkbox" name="verify_certificate" @checked={{this.model.verify_certificate}} /> {{i18n "admin.web_hooks.verify_certificate"}}
-    </div>
-    <div>
-      <div>
-        <Input @type="checkbox" name="active" @checked={{this.model.active}} /> {{i18n "admin.web_hooks.active"}}
-      </div>
-      {{#if this.model.active}}
-        <div class="instructions">{{i18n "admin.web_hooks.active_notice"}}</div>
-      {{/if}}
-    </div>
-  </form>
-
-  <div class="controls">
-    <DButton @class="btn-default" @translatedLabel={{this.saveButtonText}} @action={{action "save"}} @disabled={{this.saveButtonDisabled}} />
-
-    {{#unless this.model.isNew}}
-      <DButton @class="btn-danger" @label="admin.web_hooks.destroy" @action={{action "destroy"}} />
-      <LinkTo @route="adminWebHooks.showEvents" @model={{this.model.id}} class="btn">
-        {{i18n "admin.web_hooks.events.go_events"}}
-      </LinkTo>
-    {{/unless}}
-    <span class="saving">{{this.savingStatus}}</span>
+    {{this.model.description}}
   </div>
 </div>
+
+<WebhookEvents @webhookId={{this.model.id}} />

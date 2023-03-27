@@ -9,7 +9,7 @@ module ImportScripts::PhpBB3
     def map_bookmark(row)
       {
         user_id: @settings.prefix(row[:user_id]),
-        post_id: @settings.prefix(row[:topic_first_post_id])
+        post_id: @settings.prefix(row[:topic_first_post_id]),
       }
     end
   end

@@ -150,7 +150,8 @@ $topic-progress-height: 42px;
   &.docked {
     position: initial;
     .topic-admin-popup-menu.right-side {
-      bottom: -150px; // Prevents menu from being too high when a topic is very short
+      bottom: unset;
+      right: 10px;
     }
   }
 
@@ -217,7 +218,10 @@ $topic-progress-height: 42px;
 .topic-timer-info {
   border-top: 1px solid var(--primary-low);
   margin: 0;
-  max-width: 758px;
+  max-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
+  );
   &:empty {
     padding: 0;
   }
@@ -291,9 +295,12 @@ a.badge-category {
     display: flex;
     flex-wrap: wrap;
     box-sizing: border-box;
-    max-width: 758px;
+    max-width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+        var(--topic-avatar-width)
+    );
     #edit-title {
-      flex: 1 1 auto;
+      flex: 1 1 100%;
     }
     .category-chooser,
     .mini-tag-chooser {
@@ -304,10 +311,13 @@ a.badge-category {
       }
     }
     .mini-tag-chooser {
-      margin-left: 2%;
+      margin-left: 2%; // category/tag chooser are 49% wide, so this is 1% * 2
       @media all and (max-width: 500px) {
         margin-left: 0;
       }
+    }
+    .edit-controls {
+      flex: 1 1 100%;
     }
     .select-kit .category-row {
       max-width: unset;
@@ -354,7 +364,7 @@ a.badge-category {
   justify-content: space-between;
 
   padding: 0.5em;
-  background-color: var(--highlight-medium);
+  background-color: var(--highlight-bg);
   margin-top: 1em;
   max-width: 757px;
 }
@@ -464,8 +474,8 @@ a.topic-featured-link {
 .topic-area {
   .pending-posts {
     max-width: calc(
-      #{$topic-body-width} + #{$topic-avatar-width} + #{$topic-body-width-padding *
-        2}
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+        var(--topic-avatar-width)
     );
     .reviewable-item {
       .post-body {
@@ -480,8 +490,8 @@ a.topic-featured-link {
   justify-content: space-between;
   padding-bottom: 1em;
   max-width: calc(
-    #{$topic-body-width} + #{$topic-avatar-width} + #{$topic-body-width-padding *
-      2}
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
   );
   align-items: center;
 

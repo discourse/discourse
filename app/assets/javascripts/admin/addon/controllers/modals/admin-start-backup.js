@@ -1,22 +1,39 @@
+import { action } from "@ember/object";
 import Controller, { inject as controller } from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Controller.extend(ModalFunctionality, {
-  adminBackupsLogs: controller(),
+export default class AdminStartBackupController extends Controller.extend(
+  ModalFunctionality
+) {
+  @controller adminBackupsLogs;
 
-  actions: {
-    startBackupWithUploads() {
-      this.send("closeModal");
-      this.send("startBackup", true);
-    },
+  @discourseComputed
+  warningMessage() {
+    // this is never shown here, but we may want to show different
+    // messages in plugins
+    return "";
+  }
 
-    startBackupWithoutUploads() {
-      this.send("closeModal");
-      this.send("startBackup", false);
-    },
+  @discourseComputed
+  yesLabel() {
+    return "yes_value";
+  }
 
-    cancel() {
-      this.send("closeModal");
-    },
-  },
-});
+  @action
+  startBackupWithUploads() {
+    this.send("closeModal");
+    this.send("startBackup", true);
+  }
+
+  @action
+  startBackupWithoutUploads() {
+    this.send("closeModal");
+    this.send("startBackup", false);
+  }
+
+  @action
+  cancel() {
+    this.send("closeModal");
+  }
+}

@@ -12,7 +12,7 @@ export default Component.extend(LoadMore, {
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
-  canDoBulkActions: and("currentUser.staff", "selected.length"),
+  canDoBulkActions: and("currentUser.canManageTopic", "selected.length"),
 
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),

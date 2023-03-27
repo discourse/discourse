@@ -9,10 +9,10 @@
 # - posts.csv (posts in Zendesk are topics in Discourse)
 # - comments.csv (comments in Zendesk are posts in Discourse)
 
-require 'csv'
-require 'reverse_markdown'
-require_relative 'base'
-require_relative 'base/generic_database'
+require "csv"
+require "reverse_markdown"
+require_relative "base"
+require_relative "base/generic_database"
 
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/zendesk.rb DIRNAME
@@ -45,7 +45,7 @@ class ImportScripts::Zendesk < ImportScripts::Base
         name: row[:name],
         description: row[:description],
         position: row[:position],
-        url: row[:htmlurl]
+        url: row[:htmlurl],
       )
     end
 
@@ -56,7 +56,7 @@ class ImportScripts::Zendesk < ImportScripts::Base
         name: row[:name],
         created_at: parse_datetime(row[:createdat]),
         last_seen_at: parse_datetime(row[:lastloginat]),
-        active: true
+        active: true,
       )
     end
 
@@ -69,7 +69,7 @@ class ImportScripts::Zendesk < ImportScripts::Base
         closed: row[:closed] == "TRUE",
         user_id: row[:authorid],
         created_at: parse_datetime(row[:createdat]),
-        url: row[:htmlurl]
+        url: row[:htmlurl],
       )
     end
 
@@ -80,7 +80,7 @@ class ImportScripts::Zendesk < ImportScripts::Base
         topic_id: row[:postid],
         user_id: row[:authorid],
         created_at: parse_datetime(row[:createdat]),
-        url: row[:htmlurl]
+        url: row[:htmlurl],
       )
     end
 
@@ -99,14 +99,15 @@ class ImportScripts::Zendesk < ImportScripts::Base
 
     create_categories(rows) do |row|
       {
-        id: row['id'],
-        name: row['name'],
-        description: row['description'],
-        position: row['position'],
-        post_create_action: proc do |category|
-          url = remove_domain(row['url'])
-          Permalink.create(url: url, category_id: category.id) unless permalink_exists?(url)
-        end
+        id: row["id"],
+        name: row["name"],
+        description: row["description"],
+        position: row["position"],
+        post_create_action:
+          proc do |category|
+            url = remove_domain(row["url"])
+            Permalink.create(url: url, category_id: category.id) unless permalink_exists?(url)
+          end,
       }
     end
   end
@@ -118,22 +119,22 @@ class ImportScripts::Zendesk < ImportScripts::Base
   def import_users
     puts "", "creating users"
     total_count = @db.count_users
-    last_id = ''
+    last_id = ""
 
     batches do |offset|
       rows, last_id = @db.fetch_users(last_id)
       break if rows.empty?
 
-      next if all_records_exist?(:users, rows.map { |row| row['id'] })
+      next if all_records_exist?(:users, rows.map { |row| row["id"] })
 
       create_users(rows, total: total_count, offset: offset) do |row|
         {
-          id: row['id'],
-          email: row['email'],
-          name: row['name'],
-          created_at: row['created_at'],
-          last_seen_at: row['last_seen_at'],
-          active: row['active'] == 1
+          id: row["id"],
+          email: row["email"],
+          name: row["name"],
+          created_at: row["created_at"],
+          last_seen_at: row["last_seen_at"],
+          active: row["active"] == 1,
         }
       end
     end
@@ -142,27 +143,28 @@ class ImportScripts::Zendesk < ImportScripts::Base
   def import_topics
     puts "", "creating topics"
     total_count = @db.count_topics
-    last_id = ''
+    last_id = ""
 
     batches do |offset|
       rows, last_id = @db.fetch_topics(last_id)
       break if rows.empty?
 
-      next if all_records_exist?(:posts, rows.map { |row| import_topic_id(row['id']) })
+      next if all_records_exist?(:posts, rows.map { |row| import_topic_id(row["id"]) })
 
       create_posts(rows, total: total_count, offset: offset) do |row|
         {
-          id: import_topic_id(row['id']),
-          title: row['title'].present? ? row['title'].strip[0...255] : "Topic title missing",
-          raw: normalize_raw(row['raw']),
-          category: category_id_from_imported_category_id(row['category_id']),
-          user_id: user_id_from_imported_user_id(row['user_id']) || Discourse.system_user.id,
-          created_at: row['created_at'],
-          closed: row['closed'] == 1,
-          post_create_action: proc do |post|
-            url = remove_domain(row['url'])
-            Permalink.create(url: url, topic_id: post.topic.id) unless permalink_exists?(url)
-          end
+          id: import_topic_id(row["id"]),
+          title: row["title"].present? ? row["title"].strip[0...255] : "Topic title missing",
+          raw: normalize_raw(row["raw"]),
+          category: category_id_from_imported_category_id(row["category_id"]),
+          user_id: user_id_from_imported_user_id(row["user_id"]) || Discourse.system_user.id,
+          created_at: row["created_at"],
+          closed: row["closed"] == 1,
+          post_create_action:
+            proc do |post|
+              url = remove_domain(row["url"])
+              Permalink.create(url: url, topic_id: post.topic.id) unless permalink_exists?(url)
+            end,
         }
       end
     end
@@ -181,34 +183,35 @@ class ImportScripts::Zendesk < ImportScripts::Base
       rows, last_row_id = @db.fetch_sorted_posts(last_row_id)
       break if rows.empty?
 
-      next if all_records_exist?(:posts, rows.map { |row| row['id'] })
+      next if all_records_exist?(:posts, rows.map { |row| row["id"] })
 
       create_posts(rows, total: total_count, offset: offset) do |row|
-        topic = topic_lookup_from_imported_post_id(import_topic_id(row['topic_id']))
+        topic = topic_lookup_from_imported_post_id(import_topic_id(row["topic_id"]))
 
         if topic.nil?
-          p "MISSING TOPIC #{row['topic_id']}"
+          p "MISSING TOPIC #{row["topic_id"]}"
           p row
           next
         end
 
         {
-          id: row['id'],
-          raw: normalize_raw(row['raw']),
-          user_id: user_id_from_imported_user_id(row['user_id']) || Discourse.system_user.id,
+          id: row["id"],
+          raw: normalize_raw(row["raw"]),
+          user_id: user_id_from_imported_user_id(row["user_id"]) || Discourse.system_user.id,
           topic_id: topic[:topic_id],
-          created_at: row['created_at'],
-          post_create_action: proc do |post|
-            url = remove_domain(row['url'])
-            Permalink.create(url: url, post_id: post.id) unless permalink_exists?(url)
-          end
+          created_at: row["created_at"],
+          post_create_action:
+            proc do |post|
+              url = remove_domain(row["url"])
+              Permalink.create(url: url, post_id: post.id) unless permalink_exists?(url)
+            end,
         }
       end
     end
   end
 
   def normalize_raw(raw)
-    raw = raw.gsub('\n', '')
+    raw = raw.gsub('\n', "")
     raw = ReverseMarkdown.convert(raw)
     raw
   end
@@ -222,11 +225,13 @@ class ImportScripts::Zendesk < ImportScripts::Base
   end
 
   def csv_parse(table_name)
-    CSV.foreach(File.join(@path, "#{table_name}.csv"),
-                headers: true,
-                header_converters: :symbol,
-                skip_blanks: true,
-                encoding: 'bom|utf-8') { |row| yield row }
+    CSV.foreach(
+      File.join(@path, "#{table_name}.csv"),
+      headers: true,
+      header_converters: :symbol,
+      skip_blanks: true,
+      encoding: "bom|utf-8",
+    ) { |row| yield row }
   end
 end
 

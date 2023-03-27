@@ -4,7 +4,7 @@ RSpec.describe FoundUserSerializer do
   fab!(:user) { Fabricate(:user) }
   let(:serializer) { described_class.new(user, root: false) }
 
-  describe '#name' do
+  describe "#name" do
     it "returns name if enabled in site settings" do
       SiteSetting.enable_names = true
       json = serializer.as_json

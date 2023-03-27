@@ -110,7 +110,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed
   timeShortcuts() {
-    const timezone = this.currentUser.timezone;
+    const timezone = this.currentUser.user_option.timezone;
     const shortcuts = timeShortcuts(timezone);
 
     const nextWeek = shortcuts.monday();

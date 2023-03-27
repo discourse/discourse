@@ -1,9 +1,12 @@
 // --------------------------------------------------
 // Variables used throughout the theme
+// this file is injected into every theme CSS file
 // --------------------------------------------------
 
 // Layout dimensions
 // --------------------------------------------------
+
+@use "sass:math";
 
 $small-width: 800px !default;
 $medium-width: 995px !default;
@@ -15,6 +18,7 @@ $topic-avatar-width: 45px;
 $reply-area-max-width: 1475px !default;
 
 $d-sidebar-width: 16em !default;
+$d-sidebar-narrow-width: 14em !default;
 
 // Brand color variables
 // --------------------------------------------------
@@ -137,6 +141,7 @@ $box-shadow: (
   "menu-panel": 0 12px 12px rgba(0, 0, 0, 0.15),
   "card": 0 4px 14px rgba(0, 0, 0, 0.15),
   "dropdown": 0 2px 3px 0 rgba(0, 0, 0, 0.2),
+  "dropdown-lite": 0px 2px 12px 0px rgba(0, 0, 0, 0.1),
   "header": 0 2px 4px -1px rgba(0, 0, 0, 0.25),
   "footer-nav": 0 0 2px 0 rgba(0, 0, 0, 0.25),
   "kbd": (
@@ -163,7 +168,7 @@ $box-shadow: (
 
 // Uses an approximation of sRGB blending, GAMMA=2 instead of GAMMA=2.2
 @function srgb-scale($foreground, $background, $percent) {
-  $ratio: ($percent / 100%);
+  $ratio: math.div($percent, 100%);
   $iratio: 1 - $ratio;
   $f_r2: red($foreground) * red($foreground);
   $f_g2: green($foreground) * green($foreground);

@@ -1,20 +1,23 @@
 <div class="container invites-show">
   <div class="login-welcome-header">
     <h1 class="login-title">{{this.welcomeTitle}}</h1>
-    <img src={{this.wavingHandURL}} alt="" class="waving-hand">
+    <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
   </div>
 
   <div class="ac-page">
     <div class="two-col">
       <div class="col-image">
-        <img src={{this.envelopeImageUrl}} alt={{i18n "invites.emoji"}}>
+        <img src={{this.envelopeImageUrl}} alt={{i18n "invites.emoji"}} />
       </div>
       <div class="col-form">
         <div class="success-info">
           {{html-safe this.accountCreated.message}}
         </div>
         {{#if this.accountCreated.show_controls}}
-          <ActivationControls @sendActivationEmail={{action "sendActivationEmail"}} @editActivationEmail={{action "editActivationEmail"}} />
+          <ActivationControls
+            @sendActivationEmail={{action "sendActivationEmail"}}
+            @editActivationEmail={{action "editActivationEmail"}}
+          />
         {{/if}}
       </div>
     </div>

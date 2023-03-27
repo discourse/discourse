@@ -36,6 +36,7 @@ module("Integration | Component | user-menu", function (hooks) {
   });
 
   test("the menu has a group of tabs at the top", async function (assert) {
+    this.currentUser.set("can_send_private_messages", true);
     await render(template);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 6);
@@ -52,6 +53,7 @@ module("Integration | Component | user-menu", function (hooks) {
   });
 
   test("the menu has a group of tabs at the bottom", async function (assert) {
+    this.currentUser.set("can_send_private_messages", true);
     await render(template);
     const tabs = queryAll(".bottom-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 1);
@@ -62,7 +64,8 @@ module("Integration | Component | user-menu", function (hooks) {
   });
 
   test("likes tab is hidden if current user's like notifications frequency is 'never'", async function (assert) {
-    this.currentUser.set("likes_notifications_disabled", true);
+    this.currentUser.set("user_option.likes_notifications_disabled", true);
+    this.currentUser.set("can_send_private_messages", true);
     await render(template);
     assert.ok(!exists("#user-menu-button-likes"));
 
@@ -79,6 +82,7 @@ module("Integration | Component | user-menu", function (hooks) {
   test("reviewables tab is shown if current user can review and there are pending reviewables", async function (assert) {
     this.currentUser.set("can_review", true);
     this.currentUser.set("reviewable_count", 1);
+    this.currentUser.set("can_send_private_messages", true);
     await render(template);
     const tab = query("#user-menu-button-review-queue");
     assert.strictEqual(tab.dataset.tabNumber, "5");
@@ -100,11 +104,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.notOk(exists("#user-menu-button-review-queue"));
   });
 
-  test("messages tab isn't shown if current user isn't staff and user does not belong to personal_message_enabled_groups", async function (assert) {
+  test("messages tab isn't shown if current user does not have can_send_private_messages permission", async function (assert) {
     this.currentUser.set("moderator", false);
     this.currentUser.set("admin", false);
     this.currentUser.set("groups", []);
-    this.siteSettings.personal_message_enabled_groups = "13"; // trust_level_3 auto group ID;
+    this.currentUser.set("can_send_private_messages", false);
 
     await render(template);
 
@@ -120,11 +124,11 @@ module("Integration | Component | user-menu", function (hooks) {
     );
   });
 
-  test("messages tab is shown if current user is staff even if they do not belong to personal_message_enabled_groups", async function (assert) {
+  test("messages tab is shown if user has can_send_private_messages permission", async function (assert) {
     this.currentUser.set("moderator", true);
     this.currentUser.set("admin", false);
     this.currentUser.set("groups", []);
-    this.siteSettings.personal_message_enabled_groups = "999";
+    this.currentUser.set("can_send_private_messages", true);
 
     await render(template);
 
@@ -218,8 +222,7 @@ module("Integration | Component | user-menu", function (hooks) {
           },
         ];
       } else if (
-        queryParams.filter_by_types ===
-        "mentioned,posted,quoted,replied,watching_first_post"
+        queryParams.filter_by_types === "mentioned,posted,quoted,replied"
       ) {
         data = [
           {
@@ -277,8 +280,8 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(exists("#quick-access-replies.quick-access-panel"));
     assert.strictEqual(
       queryParams.filter_by_types,
-      "mentioned,posted,quoted,replied,watching_first_post",
-      "request params has filter_by_types set to `mentioned`, `posted`, `quoted`, `replied` and `watching_first_post`"
+      "mentioned,posted,quoted,replied",
+      "request params has filter_by_types set to `mentioned`, `posted`, `quoted` and `replied`"
     );
     assert.strictEqual(queryParams.silent, "true");
     activeTabs = queryAll(".top-tabs .btn.active");

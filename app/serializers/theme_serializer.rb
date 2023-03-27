@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'base64'
+require "base64"
 
 class ThemeFieldSerializer < ApplicationSerializer
   attributes :name, :target, :value, :error, :type_id, :upload_id, :url, :filename
@@ -47,9 +47,23 @@ class BasicThemeSerializer < ApplicationSerializer
 end
 
 class RemoteThemeSerializer < ApplicationSerializer
-  attributes :id, :remote_url, :remote_version, :local_version, :commits_behind, :branch,
-             :remote_updated_at, :updated_at, :github_diff_link, :last_error_text, :is_git?,
-             :license_url, :about_url, :authors, :theme_version, :minimum_discourse_version, :maximum_discourse_version
+  attributes :id,
+             :remote_url,
+             :remote_version,
+             :local_version,
+             :commits_behind,
+             :branch,
+             :remote_updated_at,
+             :updated_at,
+             :github_diff_link,
+             :last_error_text,
+             :is_git?,
+             :license_url,
+             :about_url,
+             :authors,
+             :theme_version,
+             :minimum_discourse_version,
+             :maximum_discourse_version
 
   # wow, AMS has some pretty nutty logic where it tries to find the path here
   # from action dispatch, tell it not to
@@ -63,9 +77,17 @@ class RemoteThemeSerializer < ApplicationSerializer
 end
 
 class ThemeSerializer < BasicThemeSerializer
-  attributes :color_scheme, :color_scheme_id, :user_selectable, :auto_update,
-             :remote_theme_id, :settings, :errors, :supported?, :description,
-             :enabled?, :disabled_at
+  attributes :color_scheme,
+             :color_scheme_id,
+             :user_selectable,
+             :auto_update,
+             :remote_theme_id,
+             :settings,
+             :errors,
+             :supported?,
+             :description,
+             :enabled?,
+             :disabled_at
 
   has_one :user, serializer: UserNameSerializer, embed: :object
   has_one :disabled_by, serializer: UserNameSerializer, embed: :object
@@ -80,9 +102,7 @@ class ThemeSerializer < BasicThemeSerializer
     super
     @errors = []
 
-    object.theme_fields.each do |o|
-      @errors << o.error if o.error
-    end
+    object.theme_fields.each { |o| @errors << o.error if o.error }
   end
 
   def child_themes
@@ -113,7 +133,7 @@ class ThemeSerializer < BasicThemeSerializer
   end
 
   def description
-    object.internal_translations.find  { |t| t.key == "theme_metadata.description" } &.value
+    object.internal_translations.find { |t| t.key == "theme_metadata.description" }&.value
   end
 
   def include_disabled_at?

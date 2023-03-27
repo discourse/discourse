@@ -1,5 +1,9 @@
 <DSection @pageClass="search" @class="search-container">
-  <ScrollTracker @name="full-page-search" @tag={{this.searchTerm}} @class="hidden" />
+  <ScrollTracker
+    @name="full-page-search"
+    @tag={{this.searchTerm}}
+    @class="hidden"
+  />
 
   <div class="search-header" role="search">
     <h1 class="search-page-heading">
@@ -12,24 +16,53 @@
       {{/if}}
     </h1>
     <div class="search-bar">
-      <SearchTextField @value={{this.searchTerm}} @class="full-page-search search no-blur search-query" @aria-label={{i18n "search.search_term_label"}} @enter={{action "search" (hash collapseFilters=true)}} @hasAutofocus={{this.hasAutofocus}} @aria-controls="search-result-count" />
-      <ComboBox @id="search-type" @value={{this.search_type}} @content={{this.searchTypes}} @onChange={{action (mut this.search_type)}} @options={{hash
-          castInteger=true
-        }} />
-      <DButton @action={{action "search" (hash collapseFilters=true)}} @icon="search" @label="search.search_button" @class="btn-primary search-cta" @ariaLabel="search.search_button" @disabled={{this.searchButtonDisabled}} />
+      <SearchTextField
+        @value={{this.searchTerm}}
+        @class="full-page-search search no-blur search-query"
+        @aria-label={{i18n "search.search_term_label"}}
+        @enter={{action "search" (hash collapseFilters=true)}}
+        @hasAutofocus={{this.hasAutofocus}}
+        @aria-controls="search-result-count"
+      />
+      <ComboBox
+        @id="search-type"
+        @value={{this.search_type}}
+        @content={{this.searchTypes}}
+        @onChange={{action (mut this.search_type)}}
+        @options={{hash castInteger=true}}
+      />
+      <DButton
+        @action={{action "search" (hash collapseFilters=true)}}
+        @icon="search"
+        @label="search.search_button"
+        @class="btn-primary search-cta"
+        @ariaLabel="search.search_button"
+        @disabled={{this.searchButtonDisabled}}
+      />
     </div>
     {{#if this.usingDefaultSearchType}}
-      {{!-- context is only provided when searching from mobile view --}}
+      {{! context is only provided when searching from mobile view }}
       {{#if this.context}}
         <div class="search-context">
           <label>
-            <Input @type="checkbox" name="searchContext" @checked={{this.searchContextEnabled}} /> {{this.searchContextDescription}}
+            <Input
+              @type="checkbox"
+              name="searchContext"
+              @checked={{this.searchContextEnabled}}
+            />
+            {{this.searchContextDescription}}
           </label>
         </div>
       {{/if}}
 
       <div class="search-filters">
-        <SearchAdvancedOptions @searchTerm={{readonly this.searchTerm}} @onChangeSearchTerm={{action (mut this.searchTerm)}} @search={{action "search" (hash collapseFilters=true)}} @searchButtonDisabled={{this.searchButtonDisabled}} @expandFilters={{this.expandFilters}} />
+        <SearchAdvancedOptions
+          @searchTerm={{readonly this.searchTerm}}
+          @onChangeSearchTerm={{action (mut this.searchTerm)}}
+          @search={{action "search" (hash collapseFilters=true)}}
+          @searchButtonDisabled={{this.searchButtonDisabled}}
+          @expandFilters={{this.expandFilters}}
+        />
       </div>
     {{/if}}
 
@@ -46,21 +79,45 @@
   <div class="search-advanced">
     {{#if this.hasResults}}
       {{#if this.usingDefaultSearchType}}
-        <div class={{this.searchInfoClassNames}} role="region" ariaLabel={{i18n "search.sort_or_bulk_actions"}}>
+        <div
+          class={{this.searchInfoClassNames}}
+          role="region"
+          ariaLabel={{i18n "search.sort_or_bulk_actions"}}
+        >
           {{#if this.canBulkSelect}}
-            <DButton @icon="list" @class="btn-default bulk-select" @title="topics.bulk.toggle" @action={{action "toggleBulkSelect"}} />
+            <DButton
+              @icon="list"
+              @class="btn-default bulk-select"
+              @title="topics.bulk.toggle"
+              @action={{action "toggleBulkSelect"}}
+            />
             {{#if this.selected}}
-              <DButton @class="btn-default bulk-select-btn" @selected={{this.selected}} @action={{action "showBulkActions"}} @icon="wrench" />
+              <DButton
+                @class="btn-default bulk-select-btn"
+                @selected={{this.selected}}
+                @action={{action "showBulkActions"}}
+                @icon="wrench"
+              />
             {{/if}}
           {{/if}}
 
           {{#if this.bulkSelectEnabled}}
             {{#if this.hasUnselectedResults}}
-              <DButton @icon="check-square" @class="btn-default" @action={{action "selectAll"}} @label="search.select_all" />
+              <DButton
+                @icon="check-square"
+                @class="btn-default"
+                @action={{action "selectAll"}}
+                @label="search.select_all"
+              />
             {{/if}}
 
             {{#if this.hasSelection}}
-              <DButton @icon="far-square" @class="btn-default" @action={{action "clearAll"}} @label="search.clear_all" />
+              <DButton
+                @icon="far-square"
+                @class="btn-default"
+                @action={{action "clearAll"}}
+                @label="search.clear_all"
+              />
             {{/if}}
           {{/if}}
 
@@ -68,15 +125,25 @@
             <label>
               {{i18n "search.sort_by"}}
             </label>
-            <ComboBox @value={{this.sortOrder}} @content={{this.sortOrders}} @onChange={{action (mut this.sortOrder)}} @id="search-sort-by" @options={{hash
-                castInteger=true
-              }} />
+            <ComboBox
+              @value={{this.sortOrder}}
+              @content={{this.sortOrders}}
+              @onChange={{action (mut this.sortOrder)}}
+              @id="search-sort-by"
+              @options={{hash castInteger=true}}
+            />
           </div>
         </div>
       {{/if}}
     {{/if}}
 
-    <PluginOutlet @name="full-page-search-below-search-info" @tagName="span" @connectorTagName="div" @args={{hash search=this.searchTerm}} />
+    <span>
+      <PluginOutlet
+        @name="full-page-search-below-search-info"
+        @connectorTagName="div"
+        @outletArgs={{hash search=this.searchTerm}}
+      />
+    </span>
 
     {{#if this.searching}}
       {{loading-spinner size="medium"}}
@@ -84,24 +151,33 @@
       <div class="search-results" role="region">
         <LoadMore @selector=".fps-result" @action={{action "loadMore"}}>
           {{#if this.usingDefaultSearchType}}
-            <SearchResultEntries @posts={{this.model.posts}} @bulkSelectEnabled={{this.bulkSelectEnabled}} @selected={{this.selected}} @highlightQuery={{this.highlightQuery}} @searchLogId={{this.model.grouped_search_result.search_log_id}} />
+            <SearchResultEntries
+              @posts={{this.model.posts}}
+              @bulkSelectEnabled={{this.bulkSelectEnabled}}
+              @selected={{this.selected}}
+              @highlightQuery={{this.highlightQuery}}
+              @searchLogId={{this.model.grouped_search_result.search_log_id}}
+            />
 
             <ConditionalLoadingSpinner @condition={{this.loading}}>
+              {{#if this.error}}
+                <div class="warning">
+                  {{this.error}}
+                </div>
+              {{/if}}
+
               {{#unless this.hasResults}}
                 {{#if this.searchActive}}
                   <h3>{{i18n "search.no_results"}}</h3>
-
-                  {{#if this.model.grouped_search_result.error}}
-                    <div class="warning">
-                      {{this.model.grouped_search_result.error}}
-                    </div>
-                  {{/if}}
 
                   {{#if this.showSuggestion}}
                     <div class="no-results-suggestion">
                       {{i18n "search.cant_find"}}
                       {{#if this.canCreateTopic}}
-                        <a href {{on "click" (fn this.createTopic this.searchTerm)}}>{{i18n "search.start_new_topic"}}</a>
+                        <a
+                          href
+                          {{on "click" (fn this.createTopic this.searchTerm)}}
+                        >{{i18n "search.start_new_topic"}}</a>
                         {{#unless this.siteSettings.login_required}}
                           {{i18n "search.or_search_google"}}
                         {{/unless}}
@@ -117,7 +193,9 @@
 
               {{#if this.hasResults}}
                 <h3 class="search-footer">
-                  {{#if this.model.grouped_search_result.more_full_page_results}}
+                  {{#if
+                    this.model.grouped_search_result.more_full_page_results
+                  }}
                     {{#if this.isLastPage}}
                       {{i18n "search.more_results"}}
                     {{/if}}
@@ -136,7 +214,10 @@
                   </h4>
                   <div class="category-items">
                     {{#each this.model.categories as |category|}}
-                      {{category-link category extraClasses="fps-category-item"}}
+                      {{category-link
+                        category
+                        extraClasses="fps-category-item"
+                      }}
                     {{/each}}
                   </div>
                 {{/if}}

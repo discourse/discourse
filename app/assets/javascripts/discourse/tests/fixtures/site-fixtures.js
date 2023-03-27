@@ -697,7 +697,9 @@ export default {
           can_revoke: true,
         },
       ],
-      displayed_about_plugin_stat_groups: ["chat_messages"]
+      displayed_about_plugin_stat_groups: ["chat_messages"],
+      hashtag_configurations: { "topic-composer": ["category", "tag"] },
+      hashtag_icons: ["folder", "tag"]
     },
   },
 };

@@ -1,0 +1,63 @@
+<div
+  class="chat-message-actions-container"
+  data-id={{@message.id}}
+  {{did-insert this.attachPopper}}
+  {{will-destroy this.destroyPopper}}
+>
+  <div class="chat-message-actions">
+    {{#if this.chatStateManager.isFullPageActive}}
+      {{#each @emojiReactions key="emoji" as |reaction|}}
+        <ChatMessageReaction
+          @reaction={{reaction}}
+          @react={{@messageActions.react}}
+          @showCount={{false}}
+        />
+      {{/each}}
+    {{/if}}
+
+    {{#if @messageCapabilities.canReact}}
+      <DButton
+        @class="btn-flat react-btn"
+        @action={{@messageActions.startReactionForMessageActions}}
+        @icon="discourse-emojis"
+        @title="chat.react"
+      />
+    {{/if}}
+
+    {{#if @messageCapabilities.canBookmark}}
+      <DButton
+        @class="btn-flat bookmark-btn"
+        @action={{@messageActions.toggleBookmark}}
+      >
+        <BookmarkIcon @bookmark={{@message.bookmark}} />
+      </DButton>
+    {{/if}}
+
+    {{#if @messageCapabilities.canReply}}
+      <DButton
+        @class="btn-flat reply-btn"
+        @action={{@messageActions.reply}}
+        @icon="reply"
+        @title="chat.reply"
+      />
+    {{/if}}
+
+    {{#if @messageCapabilities.hasThread}}
+      <DButton
+        @class="btn-flat chat-message-thread-btn"
+        @action={{@messageActions.openThread}}
+        @icon="puzzle-piece"
+        @title="chat.threads.open"
+      />
+    {{/if}}
+
+    {{#if @secondaryButtons.length}}
+      <DropdownSelectBox
+        @class="more-buttons"
+        @options={{hash icon="ellipsis-v" placement="left"}}
+        @content={{@secondaryButtons}}
+        @onChange={{action "handleSecondaryButtons"}}
+      />
+    {{/if}}
+  </div>
+</div>

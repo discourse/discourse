@@ -1,8 +1,24 @@
 <DModalBody @class="feature-topic-on-profile" @id="choosing-topic">
-  <ChooseTopic @currentTopicId={{this.model.featured_topic.id}} @selectedTopicId={{this.newFeaturedTopicId}} @additionalFilters="status:public" @label="user.feature_topic_on_profile.search_label" @topicChangedCallback={{action "newTopicSelected"}} @loadOnInit={{true}} />
+  <ChooseTopic
+    @currentTopicId={{this.model.featured_topic.id}}
+    @selectedTopicId={{this.newFeaturedTopicId}}
+    @additionalFilters="status:public"
+    @label="user.feature_topic_on_profile.search_label"
+    @topicChangedCallback={{action "newTopicSelected"}}
+    @loadOnInit={{true}}
+  />
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @action={{action "save"}} @class="btn-primary save-featured-topic-on-profile" @disabled={{this.noTopicSelected}} @label="user.feature_topic_on_profile.save" />
-  <DButton @action={{route-action "closeModal" }} @label="cancel" @class="btn-flat" />
+  <DButton
+    @action={{action "save"}}
+    @class="btn-primary save-featured-topic-on-profile"
+    @disabled={{this.noTopicSelected}}
+    @label="user.feature_topic_on_profile.save"
+  />
+  <DButton
+    @action={{route-action "closeModal"}}
+    @label="cancel"
+    @class="btn-flat"
+  />
 </div>

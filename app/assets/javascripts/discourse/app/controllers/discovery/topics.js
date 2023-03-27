@@ -22,21 +22,7 @@ const controllerOpts = {
 
   canStar: alias("currentUser.id"),
   showTopicPostBadges: not("new"),
-  redirectedReason: alias("currentUser.redirected_to_top.reason"),
-
-  @discourseComputed(
-    "model.filter",
-    "site.show_welcome_topic_banner",
-    "model.listParams.f"
-  )
-  showEditWelcomeTopicBanner(filter, showWelcomeTopicBanner, hasListParams) {
-    return (
-      this.currentUser?.staff &&
-      filter === "latest" &&
-      showWelcomeTopicBanner &&
-      !hasListParams
-    );
-  },
+  redirectedReason: alias("currentUser.user_option.redirected_to_top.reason"),
 
   expandGloballyPinned: false,
   expandAllPinned: false,
@@ -85,7 +71,11 @@ const controllerOpts = {
     changeSort() {
       deprecated(
         "changeSort has been changed from an (action) to a (route-action)",
-        { since: "2.6.0", dropFrom: "2.7.0" }
+        {
+          since: "2.6.0",
+          dropFrom: "2.7.0",
+          id: "discourse.topics.change-sort",
+        }
       );
       return routeAction("changeSort", this.router._router, ...arguments)();
     },
@@ -160,13 +150,17 @@ const controllerOpts = {
   hasTopics: gt("model.topics.length", 0),
   allLoaded: empty("model.more_topics_url"),
   latest: endWith("model.filter", "latest"),
-  new: endWith("model.filter", "new"),
   top: endWith("model.filter", "top"),
   yearly: equal("period", "yearly"),
   quarterly: equal("period", "quarterly"),
   monthly: equal("period", "monthly"),
   weekly: equal("period", "weekly"),
   daily: equal("period", "daily"),
+
+  @discourseComputed("model.filter")
+  new(filter) {
+    return filter?.endsWith("new") && !this.currentUser?.new_new_view_enabled;
+  },
 
   @discourseComputed("allLoaded", "model.topics.length")
   footerMessage(allLoaded, topicsLength) {

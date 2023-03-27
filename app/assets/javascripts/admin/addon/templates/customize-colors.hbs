@@ -5,7 +5,11 @@
     {{#each this.model as |scheme|}}
       {{#unless scheme.is_base}}
         <li>
-          <LinkTo @route="adminCustomize.colors.show" @model={{scheme}} @replace={{true}}>
+          <LinkTo
+            @route="adminCustomize.colors.show"
+            @model={{scheme}}
+            @replace={{true}}
+          >
             {{d-icon "paint-brush"}}
             {{scheme.description}}
           </LinkTo>
@@ -14,7 +18,12 @@
     {{/each}}
   </ul>
 
-  <DButton @class="btn-default" @action={{action "newColorScheme"}} @icon="plus" @label="admin.customize.new" />
+  <DButton
+    @class="btn-default"
+    @action={{action "newColorScheme"}}
+    @icon="plus"
+    @label="admin.customize.new"
+  />
 </div>
 
 {{outlet}}

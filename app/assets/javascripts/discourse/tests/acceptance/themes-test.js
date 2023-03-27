@@ -188,7 +188,6 @@ acceptance("Theme", function (needs) {
       "git@github.com:discourse/discourse-inexistent-theme.git"
     );
     await click(".install-theme-content button.advanced-repo");
-    await click(".install-theme-content .check-private input");
 
     assert.notOk(
       exists(".admin-install-theme-modal .modal-footer .install-theme-warning"),

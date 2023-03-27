@@ -1,5 +1,3 @@
-$quote-share-maxwidth: 150px;
-
 .button-count.has-pending {
   span {
     background-color: var(--danger);
@@ -35,9 +33,9 @@ $quote-share-maxwidth: 150px;
 }
 
 .placeholder-text {
-  margin-left: 11px;
+  margin-left: var(--topic-body-width-padding);
   display: inline-block;
-  width: calc(100% - 11px);
+  width: calc(100% - var(--topic-body-width-padding));
   height: 1.5em;
   margin-bottom: 0.6em;
 }
@@ -196,6 +194,7 @@ $quote-share-maxwidth: 150px;
   img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {
     max-width: 100%;
     height: auto;
+    display: inline-block; // Ensure dimensions are maintained even after load error
 
     @supports not (aspect-ratio: 1) {
       // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
@@ -207,13 +206,13 @@ $quote-share-maxwidth: 150px;
 // add staff color
 .moderator {
   .regular > .cooked {
-    background-color: var(--highlight-low-or-medium);
+    background-color: var(--highlight-bg);
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
       color: var(--primary-high-or-secondary-low);
       a {
-        background-color: var(--highlight-low-or-medium);
+        background-color: var(--highlight-bg);
         padding-left: 4px;
         padding-right: 4px;
       }
@@ -554,8 +553,9 @@ aside.quote {
   display: none;
   position: absolute;
   z-index: z("dropdown");
-  opacity: 0.9;
-  background-color: var(--secondary-high);
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-low);
+  box-shadow: shadow("card");
   flex-direction: column;
 
   &.animated {
@@ -564,10 +564,6 @@ aside.quote {
 
   &.visible {
     display: flex;
-  }
-
-  &.fast-editing {
-    opacity: 1;
   }
 
   .buttons {
@@ -598,22 +594,19 @@ aside.quote {
     }
   }
 
-  .btn,
-  .btn:hover,
-  .d-icon,
-  .btn:hover .d-icon {
-    color: var(--secondary-or-primary);
-  }
-
-  .btn-primary,
-  .btn-primary:hover,
-  .btn-primary .d-icon,
-  .btn-primary:hover .d-icon {
-    color: var(--secondary);
-  }
-
   .insert-quote + .quote-sharing {
     border-left: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-flat {
+    .d-icon {
+      color: var(--primary-high);
+    }
+    .discourse-no-touch & {
+      &:hover {
+        background-color: var(--tertiary-low);
+      }
+    }
   }
 
   .quote-sharing {
@@ -628,16 +621,34 @@ aside.quote {
 
     .quote-share-label {
       opacity: 1;
-      max-width: $quote-share-maxwidth;
-      transition: opacity 0.3s ease-in-out, max-width 0.3s ease-in-out,
-        padding 0.3s ease-in-out;
+      transition: opacity 0.3s ease-in-out;
     }
 
-    &:hover .quote-share-label {
-      background: transparent;
-      opacity: 0;
-      max-width: 0px;
-      padding: 6px 0px;
+    &:hover {
+      .quote-share-label {
+        background: transparent;
+        opacity: 0;
+        max-width: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      .quote-share-label + .quote-share-buttons {
+        max-width: 10em;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+      }
+      // this psuedo element creates a transition buffer zone
+      // without it, the width change on hover can cause transition jitter
+      // the width is roughly wide enough to cover long translations of "share"
+      &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        background: transparent;
+        height: 100%;
+        padding: 0.5em 4em;
+        z-index: -1; // below the buttons
+      }
     }
 
     .quote-share-label + .quote-share-buttons {
@@ -645,12 +656,7 @@ aside.quote {
       overflow: hidden;
       max-width: 0;
       display: inline-flex;
-      transition: opacity 0.3s ease-in-out, max-width 0.3s ease-in-out;
-    }
-
-    &:hover .quote-share-label + .quote-share-buttons {
-      max-width: $quote-share-maxwidth;
-      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
     }
   }
 }
@@ -802,10 +808,11 @@ aside.quote {
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
-        border-radius: 0 0.25em 0.25em 0;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
         padding-top: 0;
         padding-bottom: 0;
-        height: 100%;
+        height: calc(100% + 0.25em);
+        margin-right: -4px;
       }
     }
   }
@@ -1015,15 +1022,7 @@ pre {
 
   .codeblock-button-wrapper {
     position: absolute;
-    right: 0;
     display: flex;
-
-    .copy-cmd {
-      right: 0;
-    }
-    .copy-fullscreen {
-      right: 28px;
-    }
   }
 
   .copy-cmd,
@@ -1035,8 +1034,10 @@ pre {
     min-height: 0;
     font-size: var(--font-down-2);
     opacity: 0.7;
+    cursor: pointer;
 
     &.action-complete {
+      cursor: auto;
       .d-icon {
         color: var(--tertiary);
       }
@@ -1058,6 +1059,7 @@ kbd {
   box-sizing: border-box;
   color: var(--primary);
   display: inline-flex;
+  gap: 0 0.5em; // space between text and images/emoji
   font-size: var(--font-down-1);
   justify-content: center;
   line-height: var(--line-height-large);
@@ -1084,7 +1086,8 @@ blockquote > *:last-child {
 }
 
 .gap {
-  padding: 0.25em 0 0.5em 56px; // 45px (topic avatar) + 11px (margin) = 56px
+  padding: 0.25em 0 0.5em
+    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
   color: var(--primary-med-or-secondary-high);
   cursor: pointer;
   text-transform: uppercase;
@@ -1120,107 +1123,108 @@ blockquote > *:last-child {
 .small-action {
   display: flex;
   align-items: center;
-  max-width: 758px;
-  border-top: 1px solid var(--primary-low);
-  .topic-avatar {
-    align-self: flex-start;
-    padding: 0.7em 0;
-    border-top: none;
-    margin-right: 11px;
-    flex: 0 0 auto;
-    .d-icon {
-      font-size: 2em;
-      width: 45px;
-      text-align: center;
-      color: var(--primary-low-mid);
-    }
-  }
 
   &.deleted {
     background-color: var(--danger-low-mid);
   }
 
-  .small-action-desc.timegap {
-    color: var(--primary-medium);
+  .topic-avatar,
+  .small-action-desc {
+    border-top: 1px solid var(--primary-low);
+  }
+
+  .topic-avatar {
+    display: flex;
+    align-self: stretch;
+    flex: 0 0 auto;
+    margin: 0;
+    padding-top: 1em;
+    width: var(--topic-avatar-width);
+    justify-content: center;
+    .d-icon {
+      font-size: var(--font-up-3);
+      width: var(--topic-avatar-width);
+      color: var(--primary-low-mid);
+    }
   }
 
   .small-action-desc {
+    box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
-    flex: 1 1 100%;
-    align-items: center;
-    padding: 1em 0;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--primary-700);
+    padding: 1em 0 1em var(--topic-body-width-padding);
+    width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+    );
     min-width: 0; // Allows flex container to shrink
 
-    button {
-      align-self: flex-start;
-      font-size: var(--font-up-1);
-      .d-icon {
-        font-size: var(--font-down-1);
-      }
-    }
-
-    .custom-message {
-      flex: 1 1 100%;
-      text-transform: none;
-      font-weight: normal;
-      font-size: var(--font-up-1);
-      order: 12;
-      word-break: break-word;
-      min-width: 0; // Allows content like oneboxes to shrink
-      p {
-        margin-bottom: 0;
-      }
-    }
-    a.trigger-user-card {
-      align-self: stretch;
-    }
     .avatar {
-      margin-right: 0.8em;
+      margin-right: 0.5em;
       float: left;
     }
 
-    > p {
+    p {
       margin: 0;
       padding-right: 0.5em;
-      line-height: var(--line-height-medium);
-      flex: 1 1;
+    }
+  }
+
+  .small-action-contents {
+    flex: 1 1 auto;
+  }
+
+  .small-action-buttons {
+    margin-left: auto;
+  }
+
+  .small-action-custom-message {
+    flex: 1 1 100%;
+    font-weight: normal;
+    margin-top: 0.5em;
+    word-break: break-word;
+    min-width: 0; // Allows content like oneboxes to shrink
+    color: var(--primary);
+    p {
+      margin-bottom: 0;
     }
   }
 
   button {
     background: transparent;
-    border: 0;
-    order: 9;
-    &:last-of-type {
-      margin-left: auto;
-      order: 8;
+    font-size: var(--font-down-1);
+    .d-icon {
+      color: var(--primary-500);
+    }
+
+    .discourse-no-touch & {
+      &:hover,
+      &:focus {
+        background: var(--primary-200);
+        .d-icon {
+          color: var(--primary);
+        }
+      }
     }
   }
 
   &.topic-post-visited {
-    border-top: none;
-
-    + .small-action {
-      border-top: none;
-    }
-
     .topic-post-visited-line {
       text-align: center;
       border-bottom: 1px solid var(--danger-medium);
-      line-height: 0.1em;
-      margin: 1rem 0px;
-      width: 100%;
-
+      z-index: z("base") + 2; // ensures last visit border is on top of post borders
+      line-height: 0;
+      margin: 0;
+      margin-bottom: -1px;
+      color: var(--danger-medium);
+      font-size: var(--font-down-1);
+      width: calc(
+        var(--topic-body-width) + var(--topic-avatar-width) +
+          (var(--topic-body-width-padding) * 2)
+      );
       .topic-post-visited-message {
         background-color: var(--secondary);
-        color: var(--danger-medium);
-        font-size: var(--font-down-1);
-        padding: 0 8px;
+        padding: 0 0.5em;
       }
     }
   }
@@ -1238,35 +1242,21 @@ blockquote > *:last-child {
   }
 }
 
-a.mention {
-  display: inline-block; // https://bugzilla.mozilla.org/show_bug.cgi?id=1656119
-  font-weight: bold;
-  font-size: 0.93em;
-  color: var(--primary-high-or-secondary-low);
-  padding: 0 4px 1px;
-  background: var(--primary-low);
-  border-radius: 8px;
+a.mention,
+a.mention-group {
+  // linked
+  @include mention;
+}
+
+.mention .emoji {
+  margin-left: 0.3em;
+  width: 15px;
+  height: 15px;
 }
 
 span.mention {
-  font-weight: bold;
-  font-size: 0.93em;
-  color: var(--primary);
-}
-
-a.mention-group {
-  display: inline-block;
-  font-weight: bold;
-  font-size: 0.93em;
-  color: var(--primary);
-
-  &.notify,
-  .small-action-desc & {
-    color: var(--primary-high-or-secondary-low);
-    padding: 2px 4px;
-    background: var(--primary-low);
-    border-radius: 8px;
-  }
+  // unlinked, invalid mention
+  color: var(--primary-high);
 }
 
 .suggested-topics {
@@ -1408,8 +1398,9 @@ a.mention-group {
 
 .signup-cta {
   box-sizing: border-box;
-  max-width: calc(#{$topic-body-width} + 4.5em);
-  padding: 3em 5em 2em 56px; // 45px (topic avatar) + 11px (margin) = 56px
+  max-width: calc(var(--topic-body-width) + 4.5em);
+  padding: 3em 5em 2em
+    calc(var(--topic-avatar-width + var(--topic-body-width-padding)));
   @include breakpoint(mobile-extra-large) {
     padding: 1.5em 1.5em 0.25em;
   }
@@ -1447,17 +1438,18 @@ a.mention-group {
 }
 
 .post-notice {
+  box-sizing: border-box;
   align-items: center;
   background-color: var(--tertiary-low);
   border-top: 1px solid var(--primary-low);
   display: flex;
   width: 100%;
   max-width: calc(
-    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
-      (0.8em * 2)
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
   );
-  padding: 0.8em;
-
+  padding: var(--topic-body-width-padding);
+  padding-left: 0;
   &.old {
     background-color: unset;
     color: var(--primary-medium);
@@ -1473,8 +1465,9 @@ a.mention-group {
 
   .d-icon {
     font-size: 2em;
+    width: var(--topic-avatar-width);
     color: var(--primary-high);
-    margin-right: 0.65em;
+    margin-right: var(--topic-body-width-padding);
   }
 }
 
@@ -1558,8 +1551,8 @@ a.mention-group {
   justify-content: center;
   align-items: center;
   max-width: calc(
-    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
-      (0.8em * 2)
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
   );
 
   .filtered-avatar {
@@ -1640,20 +1633,21 @@ a.mention-group {
 
 .open-popup-link {
   position: sticky;
-  left: 0.5rem;
-  top: 0.5rem;
+  left: 1rem;
   opacity: 0%;
   white-space: nowrap;
-  display: block;
 }
 
 .fullscreen-table-wrapper {
   transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: block;
-}
+  position: relative;
 
-.expand-table-icon {
-  margin-right: 4px;
+  &--buttons {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+  }
 }
 
 .fullscreen-table-modal .modal-inner-container,

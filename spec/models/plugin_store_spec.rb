@@ -52,15 +52,12 @@ RSpec.describe PluginStore do
     set("hello_int", 1)
     set("hello_bool", true)
 
-    expect(get_all(["hello_str", "hello_int", "hello_bool"])).to eq({
-      "hello_str": "world",
-      "hello_int": 1,
-      "hello_bool": true,
-    }.stringify_keys)
+    expect(get_all(%w[hello_str hello_int hello_bool])).to eq(
+      { hello_str: "world", hello_int: 1, hello_bool: true }.stringify_keys,
+    )
   end
 
   it "handles hashes correctly" do
-
     val = { "hi" => "there", "1" => 1 }
     set("hello", val)
     result = get("hello")
@@ -72,7 +69,6 @@ RSpec.describe PluginStore do
   end
 
   it "handles nested hashes correctly" do
-
     val = { "hi" => "there", "nested" => { "a" => "b", "with list" => ["a", "b", 3] } }
     set("hello", val)
     result = get("hello")
@@ -86,7 +82,6 @@ RSpec.describe PluginStore do
   end
 
   it "handles arrays correctly" do
-
     val = ["a", "b", { "hash" => "inside", "c" => 1 }]
     set("hello", val)
     result = get("hello")
@@ -96,7 +91,6 @@ RSpec.describe PluginStore do
     # ensure indiff access holds
     expect(result[2][:hash]).to eq("inside")
     expect(result[2]["c"]).to eq(1)
-
   end
 
   it "removes correctly" do
@@ -104,5 +98,4 @@ RSpec.describe PluginStore do
     remove_row("hello")
     expect(get("hello")).to eq(nil)
   end
-
 end

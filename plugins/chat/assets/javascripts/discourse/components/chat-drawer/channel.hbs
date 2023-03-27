@@ -1,0 +1,25 @@
+<ChatDrawer::Header>
+  <ChatDrawer::Header::LeftActions />
+
+  <ChatDrawer::Header::ChannelTitle
+    @channel={{this.chat.activeChannel}}
+    @drawerActions={{@drawerActions}}
+  />
+
+  <ChatDrawer::Header::RightActions @drawerActions={{@drawerActions}} />
+</ChatDrawer::Header>
+
+{{#if this.chatStateManager.isDrawerExpanded}}
+  <div
+    class="chat-drawer-content"
+    {{did-insert this.fetchChannel}}
+    {{did-update this.fetchChannel @params.channelId}}
+  >
+    {{#if this.chat.activeChannel}}
+      <ChatLivePane
+        @targetMessageId={{readonly @params.messageId}}
+        @channel={{this.chat.activeChannel}}
+      />
+    {{/if}}
+  </div>
+{{/if}}

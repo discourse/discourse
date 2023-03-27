@@ -13,23 +13,22 @@ class AddDescriptionToCategories < ActiveRecord::Migration[4.2]
     # some ancient installs may have bad category descriptions
     # attempt to fix
     if !DB.query_single("SELECT 1 FROM categories limit 1").empty?
-
       # Reaching into post revisor is not ideal here, but this code
       # should almost never run, so bypass it
       Discourse.reset_active_record_cache
 
-      Category.order('id').each do |c|
-        post = c.topic.ordered_posts.first
-        PostRevisor.new(post).update_category_description
-      end
+      Category
+        .order("id")
+        .each do |c|
+          post = c.topic.ordered_posts.first
+          PostRevisor.new(post).update_category_description
+        end
 
       Discourse.reset_active_record_cache
     end
-
   end
 
   def down
     remove_column :categories, :description
   end
-
 end

@@ -13,21 +13,23 @@ module Onebox
     private
 
     def extract(doc)
-      return {} if Onebox::Helpers::blank?(doc)
+      return {} if Onebox::Helpers.blank?(doc)
 
-      doc.css('script[type="application/ld+json"]').each do |element|
-        parsed_json = parse_json(element.text)
+      doc
+        .css('script[type="application/ld+json"]')
+        .each do |element|
+          parsed_json = parse_json(element.text)
 
-        if parsed_json.kind_of?(Array)
-          parsed_json = parsed_json.detect { |x| SUPPORTED_TYPES.include?(x["@type"]) }
-          return {} if !parsed_json
+          if parsed_json.kind_of?(Array)
+            parsed_json = parsed_json.detect { |x| SUPPORTED_TYPES.include?(x["@type"]) }
+            return {} if !parsed_json
+          end
+
+          case parsed_json["@type"]
+          when MOVIE_JSON_LD_TYPE
+            return Onebox::Movie.new(parsed_json).to_h
+          end
         end
-
-        case parsed_json["@type"]
-        when MOVIE_JSON_LD_TYPE
-          return Onebox::Movie.new(parsed_json).to_h
-        end
-      end
 
       {}
     end

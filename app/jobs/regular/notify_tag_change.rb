@@ -9,10 +9,12 @@ module Jobs
 
       if post&.topic&.visible?
         post_alerter = PostAlerter.new
-        post_alerter.notify_post_users(post, User.where(id: args[:notified_user_ids]),
+        post_alerter.notify_post_users(
+          post,
+          User.where(id: args[:notified_user_ids]),
           group_ids: all_tags_in_hidden_groups?(args) ? tag_group_ids(args) : nil,
           include_topic_watchers: !post.topic.private_message?,
-          include_category_watchers: false
+          include_category_watchers: false,
         )
         post_alerter.notify_first_post_watchers(post, post_alerter.tag_watchers(post.topic))
       end
@@ -32,7 +34,10 @@ module Jobs
     end
 
     def tag_group_ids(args)
-      Tag.where(name: args[:diff_tags]).joins(tag_groups: :tag_group_permissions).pluck("tag_group_permissions.group_id")
+      Tag
+        .where(name: args[:diff_tags])
+        .joins(tag_groups: :tag_group_permissions)
+        .pluck("tag_group_permissions.group_id")
     end
   end
 end

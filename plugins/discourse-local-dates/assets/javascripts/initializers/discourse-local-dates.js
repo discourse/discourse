@@ -124,18 +124,24 @@ function _rangeElements(element) {
     return [];
   }
 
-  // TODO: element.parentElement.children.length !== 2 is a fallback to old solution for ranges
-  // Condition can be removed after migration to [date-range]
-  if (
-    element.dataset.range !== "true" &&
-    element.parentElement.children.length !== 2
-  ) {
-    return [element];
+  if (element.dataset.range) {
+    return _partitionedRanges(element).find((pair) => pair.includes(element));
   }
 
-  return Array.from(element.parentElement.children).filter(
-    (span) => span.dataset.date
+  return [element];
+}
+
+function _partitionedRanges(element) {
+  const partitions = [];
+  const ranges = Array.from(element.parentElement.children).filter(
+    (span) => span.dataset.range
   );
+
+  while (ranges.length > 0) {
+    partitions.push(ranges.splice(0, 2));
+  }
+
+  return partitions;
 }
 
 function initializeDiscourseLocalDates(api) {

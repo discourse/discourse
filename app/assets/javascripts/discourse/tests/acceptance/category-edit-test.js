@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import {
   acceptance,
   count,
@@ -75,6 +76,8 @@ acceptance("Category Edit", function (needs) {
 
   test("Editing required tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
+
+    assert.ok(exists(".minimum-required-tags"));
 
     assert.ok(exists(".required-tag-groups"));
     assert.strictEqual(count(".required-tag-group-row"), 0);
@@ -166,7 +169,9 @@ acceptance("Category Edit", function (needs) {
 
     assert.strictEqual(
       query(".dialog-body").textContent.trim(),
-      "duplicate email"
+      I18n.t("generic_error_with_reason", {
+        error: "duplicate email",
+      })
     );
 
     await click(".dialog-footer .btn-primary");

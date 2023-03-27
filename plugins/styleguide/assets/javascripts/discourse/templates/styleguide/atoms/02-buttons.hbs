@@ -1,83 +1,165 @@
 <StyleguideExample @title=".btn-icon - sizes (large, default, small)">
   {{#each this.dummy.buttonSizes as |bs|}}
-    <DButton @icon="times" @translatedTitle={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
+    <DButton
+      @icon="times"
+      @translatedTitle={{bs.text}}
+      @class={{bs.class}}
+      @disabled={{bs.disabled}}
+    />
   {{/each}}
 </StyleguideExample>
 
 <StyleguideExample @title=".btn-icon - states">
   {{#each this.dummy.buttonStates as |bs|}}
-    <DButton @icon="times" @translatedTitle={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
+    <DButton
+      @icon="times"
+      @translatedTitle={{bs.text}}
+      @class={{bs.class}}
+      @disabled={{bs.disabled}}
+    />
   {{/each}}
 </StyleguideExample>
 
 <StyleguideExample @title=".btn-text - sizes (large, default, small)">
   {{#each this.dummy.buttonSizes as |bs|}}
-    <DButton @translatedLabel={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
+    <DButton
+      @translatedLabel={{bs.text}}
+      @class={{bs.class}}
+      @disabled={{bs.disabled}}
+    />
   {{/each}}
 </StyleguideExample>
 
 <StyleguideExample @title=".btn-text - states">
   {{#each this.dummy.buttonStates as |bs|}}
-    <DButton @translatedLabel={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
+    <DButton
+      @translatedLabel={{bs.text}}
+      @class={{bs.class}}
+      @disabled={{bs.disabled}}
+    />
   {{/each}}
 </StyleguideExample>
 
-<StyleguideExample @title=".btn-default .btn-icon-text - sizes (large, default, small)">
+<StyleguideExample
+  @title=".btn-default .btn-icon-text - sizes (large, default, small)"
+>
   {{#each this.dummy.buttonSizes as |bs|}}
-    <DButton @icon="plus" @translatedLabel={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
+    <DButton
+      @icon="plus"
+      @translatedLabel={{bs.text}}
+      @class={{bs.class}}
+      @disabled={{bs.disabled}}
+    />
   {{/each}}
 </StyleguideExample>
 
 <StyleguideExample @title=".btn-default .btn-icon-text - states">
   {{#each this.dummy.buttonStates as |bs|}}
-    <DButton @icon="plus" @translatedLabel={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
+    <DButton
+      @icon="plus"
+      @translatedLabel={{bs.text}}
+      @class={{bs.class}}
+      @disabled={{bs.disabled}}
+    />
   {{/each}}
 </StyleguideExample>
 
-<StyleguideExample @title=".btn-primary .btn-icon-text - sizes (large, default, small)">
+<StyleguideExample
+  @title=".btn-primary .btn-icon-text - sizes (large, default, small)"
+>
   {{#each this.dummy.buttonSizes as |bs|}}
-    <DButton @class={{concat "btn-primary " bs.class}} @icon="plus" @translatedLabel={{bs.text}} @disabled={{bs.disabled}} />
+    <DButton
+      @class={{concat "btn-primary " bs.class}}
+      @icon="plus"
+      @translatedLabel={{bs.text}}
+      @disabled={{bs.disabled}}
+    />
   {{/each}}
 </StyleguideExample>
 
 <StyleguideExample @title=".btn-primary .btn-icon-text - states">
   {{#each this.dummy.buttonStates as |bs|}}
-    <DButton @class={{concat "btn-primary " bs.class}} @icon="plus" @translatedLabel={{bs.text}} @disabled={{bs.disabled}} />
+    <DButton
+      @class={{concat "btn-primary " bs.class}}
+      @icon="plus"
+      @translatedLabel={{bs.text}}
+      @disabled={{bs.disabled}}
+    />
   {{/each}}
 </StyleguideExample>
 
-<StyleguideExample @title=".btn-danger .btn-icon-text - sizes (large, default, small)">
+<StyleguideExample
+  @title=".btn-danger .btn-icon-text - sizes (large, default, small)"
+>
   {{#each this.dummy.buttonSizes as |bs|}}
-    <DButton @class={{concat "btn-danger " bs.class}} @icon="trash-alt" @translatedLabel={{bs.text}} @disabled={{bs.disabled}} />
+    <DButton
+      @class={{concat "btn-danger " bs.class}}
+      @icon="trash-alt"
+      @translatedLabel={{bs.text}}
+      @disabled={{bs.disabled}}
+    />
   {{/each}}
 </StyleguideExample>
 
 <StyleguideExample @title=".btn-danger .btn-icon-text - states">
   {{#each this.dummy.buttonStates as |bs|}}
-    <DButton @class={{concat "btn-danger " bs.class}} @icon="trash-alt" @translatedLabel={{bs.text}} @disabled={{bs.disabled}} />
+    <DButton
+      @class={{concat "btn-danger " bs.class}}
+      @icon="trash-alt"
+      @translatedLabel={{bs.text}}
+      @disabled={{bs.disabled}}
+    />
   {{/each}}
 </StyleguideExample>
 
 <StyleguideExample @title=".btn-flat - sizes (large, default, small)">
   {{#each this.dummy.buttonSizes as |bs|}}
-    <FlatButton @icon="trash-alt" @disabled={{bs.disabled}} @translatedTitle={{bs.title}} />
+    <FlatButton
+      @icon="trash-alt"
+      @disabled={{bs.disabled}}
+      @translatedTitle={{bs.title}}
+    />
   {{/each}}
 </StyleguideExample>
 
 <StyleguideExample @title=".btn-flat - states">
   {{#each this.dummy.buttonStates as |bs|}}
-    <FlatButton @icon="trash-alt" @disabled={{bs.disabled}} @translatedTitle={{bs.title}} />
+    <FlatButton
+      @icon="trash-alt"
+      @disabled={{bs.disabled}}
+      @translatedTitle={{bs.title}}
+    />
   {{/each}}
 </StyleguideExample>
 
-<StyleguideExample @title="dbutton btn-flat btn-text - sizes (large, default, small)">
+<StyleguideExample
+  @title="<DButton> btn-flat btn-text - sizes (large, default, small)"
+>
   {{#each this.dummy.buttonSizes as |bs|}}
-    <DButton @class={{concat "btn-flat " bs.class}} @disabled={{bs.disabled}} @translatedLabel={{bs.text}} />
+    <DButton
+      @class={{concat "btn-flat " bs.class}}
+      @disabled={{bs.disabled}}
+      @translatedLabel={{bs.text}}
+    />
   {{/each}}
 </StyleguideExample>
 
-<StyleguideExample @title="dbutton btn-flat btn-text - states">
+<StyleguideExample @title="<DButton> btn-flat btn-text - states">
   {{#each this.dummy.buttonStates as |bs|}}
-    <DButton @class={{concat "btn-flat " bs.class}} @disabled={{bs.disabled}} @translatedLabel={{bs.text}} />
+    <DButton
+      @class={{concat "btn-flat " bs.class}}
+      @disabled={{bs.disabled}}
+      @translatedLabel={{bs.text}}
+    />
   {{/each}}
+</StyleguideExample>
+
+<StyleguideExample @title="<DToggleSwitch>">
+  <DToggleSwitch
+    @state={{this.dummy.toggleSwitchState}}
+    {{on
+      "click"
+      (fn (mut this.dummy.toggleSwitchState) (not this.dummy.toggleSwitchState))
+    }}
+  />
 </StyleguideExample>

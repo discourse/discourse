@@ -2,17 +2,14 @@
 
 require File.expand_path("../../config/environment", __FILE__)
 
-queues = %w{default low ultra_low critical}.map { |name| Sidekiq::Queue.new(name) }.lazy.flat_map(&:lazy)
+queues =
+  %w[default low ultra_low critical].map { |name| Sidekiq::Queue.new(name) }.lazy.flat_map(&:lazy)
 
 stats = Hash.new(0)
 
-queues.each do |j|
-  stats[j.klass] += 1
-end
+queues.each { |j| stats[j.klass] += 1 }
 
-stats.sort_by { |a, b| -b }.each do |name, count|
-  puts "#{name}: #{count}"
-end
+stats.sort_by { |a, b| -b }.each { |name, count| puts "#{name}: #{count}" }
 
 dupes = Hash.new([])
 queues.each do |j|

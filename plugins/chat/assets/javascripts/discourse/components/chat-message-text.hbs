@@ -1,0 +1,17 @@
+<div class="chat-message-text">
+  {{#if this.isCollapsible}}
+    <ChatMessageCollapser
+      @cooked={{@cooked}}
+      @uploads={{@uploads}}
+      @onToggleCollapse={{@onToggleCollapse}}
+    />
+  {{else}}
+    {{html-safe @cooked}}
+  {{/if}}
+
+  {{#if this.isEdited}}
+    <span class="chat-message-edited">({{i18n "chat.edited"}})</span>
+  {{/if}}
+
+  {{yield}}
+</div>

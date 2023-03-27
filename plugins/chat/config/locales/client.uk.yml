@@ -1,0 +1,148 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Статус каналу чату змінено"
+            chat_channel_delete: "Канал чату видалено"
+    chat:
+      create: "Створити"
+      cancel: "Скасувати"
+      channel_settings:
+        edit: "Редагувати"
+        add: "Додати"
+        join: "Приєднатися"
+        leave: "Покинути"
+      channel_close:
+        instructions: "Закриття каналу забороняє стороннім користувачам надсилати нові повідомлення або редагувати наявні повідомлення. Ви впевнені, що хочете закрити цей канал?"
+      close: "Закрити"
+      delete: "Видалити"
+      edited: "відредагований"
+      muted: "ігноровані"
+      joined: "приєднався(лась)"
+      email_frequency:
+        never: "Ніколи"
+      header_indicator_preference:
+        never: "Ніколи"
+      flag: "Поскаржитися"
+      join: "Приєднатися"
+      last_visit: "останнє відвідування"
+      mention_warning:
+        dismiss: "відкласти"
+      reply: "Відповідь"
+      edit: "Редагувати"
+      rebake_message: "Перебудувати HTML"
+      bookmark_message: "Додати закладку"
+      bookmark_message_edit: "Редагувати закладку"
+      save: "Зберегти"
+      sounds:
+        none: "Немає"
+      exit: "назад"
+      channel_status:
+        closed: "Закриті"
+        open: "Відкрити"
+      browse:
+        back: "Назад"
+        filter_all: Все
+        filter_closed: Закриті
+      chat_message_separator:
+        today: Сьогодні
+        yesterday: Вчора
+      about_view:
+        title: Назва
+        name: Імʼя
+        description: Опис
+      channel_info:
+        back_to_channel: "Назад"
+        tabs:
+          about: Про
+          members: Учасники
+          settings: Налаштування
+      channel_edit_name_slug_modal:
+        title: Редагувати канал
+        input_placeholder: Додайте назву
+        slug_description: Замість назви каналу в URL-адресі використовується slug каналу
+        name: Назва каналу
+        slug: Slug каналу (опціонально)
+      direct_message_creator:
+        title: Нове повідомлення
+        prefix: "До:"
+      create_channel:
+        auto_join_users:
+          warning_1_group:
+            one: "Автоматично додати %{count} користувача з %{group}?"
+            few: "Автоматично додати %{count} користувачі із %{group}?"
+            many: "Автоматично додати %{count} користувачів із %{group}?"
+            other: "Автоматично додати %{count} користувачів із %{group}?"
+          warning_2_groups:
+            one: "Автоматично додати %{count} користувача з %{group1} та %{group2}?"
+            few: "Автоматично додати %{count} користувачі з %{group1} та %{group2}?"
+            many: "Автоматично додати %{count} користувачів з %{group1} та %{group2}?"
+            other: "Автоматично додати %{count} користувачів з %{group1} та %{group2}?"
+        type: "Тип"
+        types:
+          category: "Розділ"
+          topic: "Тема"
+      composer:
+        italic_text: "виділення тексту курсивом"
+        bold_text: "Сильне виділення тексту"
+      notification_levels:
+        never: "Ніколи"
+      settings:
+        follow: "Приєднатися"
+        followed: "Приєднався(лась)"
+        notifications: "Сповіщення"
+        preview: "Попередній перегляд"
+        save: "Зберегти"
+        saved: "Збережено"
+        unfollow: "Покинути"
+        admin_title: "Адміністратор"
+      incoming_webhooks:
+        back: "Назад"
+        description: "Опис"
+        delete: "Видалити"
+        emoji: "Смайли"
+        name: "Назва"
+        save: "Зберегти"
+        edit: "Редагувати"
+        system: "системні"
+        url: "Посилання"
+        username: "Ім’я користувача"
+      selection:
+        cancel: "Скасувати"
+        copy: "Копіювати"
+        new_topic:
+          title: "Перенесення до нової теми"
+        existing_topic:
+          title: "Перенесення до наявної теми"
+        new_message:
+          title: "Перейти до нового повідомленням"
+      flags:
+        notify_moderators: "Це повідомлення вимагає уваги модераторів з іншої причини, не зазначеної вище."
+      emoji_picker:
+        objects: "Objects"
+        activities: "Діяльність"
+        flags: "Скарги"
+        symbols: "Атрибутика"
+      draft_channel_screen:
+        header: "Нове повідомлення"
+        cancel: "Скасувати"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Повідомлення
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Позначено"

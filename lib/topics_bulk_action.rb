@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopicsBulkAction
-
   def initialize(user, topic_ids, operation, options = {})
     @user = user
     @topic_ids = topic_ids
@@ -11,10 +10,24 @@ class TopicsBulkAction
   end
 
   def self.operations
-    @operations ||= %w(change_category close archive change_notification_level
-                       destroy_post_timing dismiss_posts delete unlist archive_messages
-                       move_messages_to_inbox change_tags append_tags remove_tags
-                       relist dismiss_topics reset_bump_dates)
+    @operations ||= %w[
+      change_category
+      close
+      archive
+      change_notification_level
+      destroy_post_timing
+      dismiss_posts
+      delete
+      unlist
+      archive_messages
+      move_messages_to_inbox
+      change_tags
+      append_tags
+      remove_tags
+      relist
+      dismiss_topics
+      reset_bump_dates
+    ]
   end
 
   def self.register_operation(name, &block)
@@ -23,7 +36,9 @@ class TopicsBulkAction
   end
 
   def perform!
-    raise Discourse::InvalidParameters.new(:operation) unless TopicsBulkAction.operations.include?(@operation[:type])
+    unless TopicsBulkAction.operations.include?(@operation[:type])
+      raise Discourse::InvalidParameters.new(:operation)
+    end
     # careful these are private methods, we need send
     send(@operation[:type])
     @changed_ids.sort
@@ -34,7 +49,7 @@ class TopicsBulkAction
   def find_group
     return unless @options[:group]
 
-    group = Group.where('name ilike ?', @options[:group]).first
+    group = Group.where("name ilike ?", @options[:group]).first
     raise Discourse::InvalidParameters.new(:group) unless group
     unless group.group_users.where(user_id: @user.id).exists?
       raise Discourse::InvalidParameters.new(:group)
@@ -69,7 +84,8 @@ class TopicsBulkAction
   end
 
   def dismiss_posts
-    highest_number_source_column = @user.whisperer? ? 'highest_staff_post_number' : 'highest_post_number'
+    highest_number_source_column =
+      @user.whisperer? ? "highest_staff_post_number" : "highest_post_number"
     sql = <<~SQL
       UPDATE topic_users tu
       SET last_read_post_number = t.#{highest_number_source_column}
@@ -82,18 +98,17 @@ class TopicsBulkAction
   end
 
   def dismiss_topics
-    rows = Topic.where(id: @topic_ids)
-      .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{@user.id}")
-      .where("topics.created_at >= ?", dismiss_topics_since_date)
-      .where("topic_users.last_read_post_number IS NULL")
-      .order("topics.created_at DESC")
-      .limit(SiteSetting.max_new_topics).map do |topic|
-      {
-        topic_id: topic.id,
-        user_id: @user.id,
-        created_at: Time.zone.now
-      }
-    end
+    rows =
+      Topic
+        .where(id: @topic_ids)
+        .joins(
+          "LEFT JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{@user.id}",
+        )
+        .where("topics.created_at >= ?", dismiss_topics_since_date)
+        .where("topic_users.last_read_post_number IS NULL")
+        .order("topics.created_at DESC")
+        .limit(SiteSetting.max_new_topics)
+        .map { |topic| { topic_id: topic.id, user_id: @user.id, created_at: Time.zone.now } }
     DismissedTopicUser.insert_all(rows) if rows.present?
     @changed_ids = rows.map { |row| row[:topic_id] }
   end
@@ -109,11 +124,7 @@ class TopicsBulkAction
     updatable_topics = topics.where.not(category_id: @operation[:category_id])
 
     if SiteSetting.create_revision_on_bulk_topic_moves
-      opts = {
-        bypass_bump: true,
-        validate_post: false,
-        bypass_rate_limiter: true
-      }
+      opts = { bypass_bump: true, validate_post: false, bypass_rate_limiter: true }
 
       updatable_topics.each do |t|
         if guardian.can_edit?(t)
@@ -142,7 +153,7 @@ class TopicsBulkAction
   def close
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status('closed', true, @user)
+        t.update_status("closed", true, @user)
         @changed_ids << t.id
       end
     end
@@ -151,7 +162,7 @@ class TopicsBulkAction
   def unlist
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status('visible', false, @user)
+        t.update_status("visible", false, @user)
         @changed_ids << t.id
       end
     end
@@ -160,7 +171,7 @@ class TopicsBulkAction
   def relist
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status('visible', true, @user)
+        t.update_status("visible", true, @user)
         @changed_ids << t.id
       end
     end
@@ -178,7 +189,7 @@ class TopicsBulkAction
   def archive
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status('archived', true, @user)
+        t.update_status("archived", true, @user)
         @changed_ids << t.id
       end
     end
@@ -215,9 +226,7 @@ class TopicsBulkAction
 
     topics.each do |t|
       if guardian.can_edit?(t)
-        if tags.present?
-          DiscourseTagging.tag_topic_by_names(t, guardian, tags, append: true)
-        end
+        DiscourseTagging.tag_topic_by_names(t, guardian, tags, append: true) if tags.present?
         @changed_ids << t.id
       end
     end
@@ -241,7 +250,9 @@ class TopicsBulkAction
   end
 
   def dismiss_topics_since_date
-    new_topic_duration_minutes = @user.user_option&.new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes
+    new_topic_duration_minutes =
+      @user.user_option&.new_topic_duration_minutes ||
+        SiteSetting.default_other_new_topic_duration_minutes
     setting_date =
       case new_topic_duration_minutes
       when User::NewTopicDuration::LAST_VISIT
@@ -253,5 +264,4 @@ class TopicsBulkAction
       end
     [setting_date, @user.created_at, Time.at(SiteSetting.min_new_topics_time).to_datetime].max
   end
-
 end

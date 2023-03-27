@@ -1,5 +1,5 @@
 import { observes, on } from "discourse-common/utils/decorators";
-import TextArea from "@ember/component/text-area";
+import { TextArea } from "@ember/legacy-built-in-components";
 import autosize from "discourse/lib/autosize";
 import { schedule } from "@ember/runloop";
 

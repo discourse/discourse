@@ -2,16 +2,14 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
+export default class TagList extends Component {
   @discourseComputed("value")
-  selectedTags: {
-    get(value) {
-      return value.split("|").filter(Boolean);
-    },
-  },
+  selectedTags(value) {
+    return value.split("|").filter(Boolean);
+  }
 
   @action
   changeSelectedTags(tags) {
     this.set("value", tags.join("|"));
-  },
-});
+  }
+}

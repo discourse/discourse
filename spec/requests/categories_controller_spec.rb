@@ -5,12 +5,12 @@ RSpec.describe CategoriesController do
   let!(:category) { Fabricate(:category, user: admin) }
   fab!(:user) { Fabricate(:user) }
 
-  describe '#index' do
-    it 'web crawler view has correct urls for subfolder install' do
+  describe "#index" do
+    it "web crawler view has correct urls for subfolder install" do
       set_subfolder "/forum"
-      get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
-      html = Nokogiri::HTML5(response.body)
-      expect(html.css('body.crawler')).to be_present
+      get "/categories", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+      html = Nokogiri.HTML5(response.body)
+      expect(html.css("body.crawler")).to be_present
       expect(html.css("a[href=\"/forum/c/#{category.slug}/#{category.id}\"]")).to be_present
     end
 
@@ -20,8 +20,8 @@ RSpec.describe CategoriesController do
       get "/categories"
 
       expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-        expect(json['topic_list']).to include(%{"more_topics_url":"/latest"})
+        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(json["topic_list"]).to include(%{"more_topics_url":"/latest"})
       end
     end
 
@@ -51,7 +51,7 @@ RSpec.describe CategoriesController do
       expect(response.body).to include(category.slug)
     end
 
-    it 'returns the right response for a normal user' do
+    it "returns the right response for a normal user" do
       sign_in(user)
 
       get "/categories.json"
@@ -61,12 +61,13 @@ RSpec.describe CategoriesController do
       category_list = response.parsed_body["category_list"]
 
       expect(category_list["categories"].map { |c| c["id"] }).to contain_exactly(
-        SiteSetting.get(:uncategorized_category_id), category.id
+        SiteSetting.get(:uncategorized_category_id),
+        category.id,
       )
     end
 
-    it 'does not returns subcatgories without permission' do
-      subcategory = Fabricate(:category,  user: admin, parent_category: category)
+    it "does not returns subcatgories without permission" do
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
       subcategory.set_permissions(admins: :full)
       subcategory.save!
 
@@ -82,7 +83,7 @@ RSpec.describe CategoriesController do
       expect(subcategories_for_category).to eq(nil)
     end
 
-    it 'returns the right subcategory response with permission' do
+    it "returns the right subcategory response with permission" do
       subcategory = Fabricate(:category, user: admin, parent_category: category)
 
       sign_in(user)
@@ -99,7 +100,7 @@ RSpec.describe CategoriesController do
       expect(subcategories_for_category.first["id"]).to eq(subcategory.id)
     end
 
-    it 'does not return subcategories without query param' do
+    it "does not return subcategories without query param" do
       subcategory = Fabricate(:category, user: admin, parent_category: category)
 
       sign_in(user)
@@ -114,7 +115,7 @@ RSpec.describe CategoriesController do
       expect(subcategories_for_category).to eq(nil)
     end
 
-    it 'includes topics for categories, subcategories and subsubcategories when requested' do
+    it "includes topics for categories, subcategories and subsubcategories when requested" do
       SiteSetting.max_category_nesting = 3
       subcategory = Fabricate(:category, user: admin, parent_category: category)
       subsubcategory = Fabricate(:category, user: admin, parent_category: subcategory)
@@ -130,25 +131,30 @@ RSpec.describe CategoriesController do
       category_list = response.parsed_body["category_list"]
 
       category_response = category_list["categories"].find { |c| c["id"] == category.id }
-      expect(category_response["topics"].map { |c| c['id'] }).to contain_exactly(topic1.id)
+      expect(category_response["topics"].map { |c| c["id"] }).to contain_exactly(
+        topic1.id,
+        topic2.id,
+        topic3.id,
+      )
 
       subcategory_response = category_response["subcategory_list"][0]
-      expect(subcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic2.id)
+      expect(subcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(
+        topic2.id,
+        topic3.id,
+      )
 
       subsubcategory_response = subcategory_response["subcategory_list"][0]
-      expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic3.id)
+      expect(subsubcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(topic3.id)
     end
 
-    describe 'topics filtered by tag for categories when requested' do
+    describe "topics filtered by tag for categories when requested" do
       fab!(:tag) { Fabricate(:tag, name: "test-tag") }
       fab!(:tag_2) { Fabricate(:tag, name: "second-test-tag") }
       let(:topics_with_filter_tag) { [] }
 
-      before do
-        SiteSetting.max_category_nesting = 3
-      end
+      before { SiteSetting.max_category_nesting = 3 }
 
-      it 'includes filtered topics for categories' do
+      it "includes filtered topics for categories" do
         2.times do |i|
           topics_with_filter_tag << Fabricate(:topic, category: category, tags: [tag])
           Fabricate(:topic, category: category, tags: [tag_2])
@@ -161,10 +167,12 @@ RSpec.describe CategoriesController do
         category_list = response.parsed_body["category_list"]
         category_response = category_list["categories"].find { |c| c["id"] == category.id }
 
-        expect(category_response["topics"].map { |c| c['id'] }).to contain_exactly(*topics_with_filter_tag.map(&:id))
+        expect(category_response["topics"].map { |c| c["id"] }).to contain_exactly(
+          *topics_with_filter_tag.map(&:id),
+        )
       end
 
-      it 'includes filtered topics for subcategories' do
+      it "includes filtered topics for subcategories" do
         subcategory = Fabricate(:category, user: admin, parent_category: category)
 
         2.times do |i|
@@ -180,10 +188,12 @@ RSpec.describe CategoriesController do
         category_response = category_list["categories"].find { |c| c["id"] == category.id }
         subcategory_response = category_response["subcategory_list"][0]
 
-        expect(subcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(*topics_with_filter_tag.map(&:id))
+        expect(subcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(
+          *topics_with_filter_tag.map(&:id),
+        )
       end
 
-      it 'includes filtered topics for subsubcategories' do
+      it "includes filtered topics for subsubcategories" do
         subcategory = Fabricate(:category, user: admin, parent_category: category)
         subsubcategory = Fabricate(:category, user: admin, parent_category: subcategory)
 
@@ -200,42 +210,126 @@ RSpec.describe CategoriesController do
         category_response = category_list["categories"].find { |c| c["id"] == category.id }
         subsubcategory_response = category_response["subcategory_list"][0]["subcategory_list"][0]
 
-        expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(*topics_with_filter_tag.map(&:id))
+        expect(subsubcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(
+          *topics_with_filter_tag.map(&:id),
+        )
       end
     end
 
-    describe 'categories and latest topics - ordered by created date' do
+    describe "categories and latest topics - ordered by created date" do
       fab!(:category) { Fabricate(:category) }
-      fab!(:topic1) { Fabricate(:topic, category: category, created_at: 5.days.ago, updated_at: Time.now, bumped_at: Time.now) }
-      fab!(:topic2) { Fabricate(:topic, category: category, created_at: 2.days.ago, bumped_at: 2.days.ago) }
-      fab!(:topic3) { Fabricate(:topic, category: category, created_at: 1.day.ago, bumped_at: 1.day.ago) }
+      fab!(:topic1) do
+        Fabricate(
+          :topic,
+          category: category,
+          created_at: 5.days.ago,
+          updated_at: Time.now,
+          bumped_at: Time.now,
+        )
+      end
+      fab!(:topic2) do
+        Fabricate(:topic, category: category, created_at: 2.days.ago, bumped_at: 2.days.ago)
+      end
+      fab!(:topic3) do
+        Fabricate(:topic, category: category, created_at: 1.day.ago, bumped_at: 1.day.ago)
+      end
 
-      context 'when order is not set to created date' do
-        before do
-          SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
-        end
+      context "when order is not set to created date" do
+        before { SiteSetting.desktop_category_page_style = "categories_and_latest_topics" }
 
-        it 'sorts topics by the default bump date' do
+        it "sorts topics by the default bump date" do
           get "/categories_and_latest.json"
           expect(response.status).to eq(200)
-          expect(response.parsed_body['topic_list']['topics'].map { |t| t["id"] }).to eq([topic1.id, topic3.id, topic2.id])
+          expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to eq(
+            [topic1.id, topic3.id, topic2.id],
+          )
         end
       end
 
-      context 'when order is set to created' do
+      context "when order is set to created" do
         before do
           SiteSetting.desktop_category_page_style = "categories_and_latest_topics_created_date"
         end
 
-        it 'sorts topics by crated at date' do
+        it "sorts topics by crated at date" do
           get "/categories_and_latest.json"
           expect(response.status).to eq(200)
-          expect(response.parsed_body['topic_list']['topics'].map { |t| t["id"] }).to eq([topic3.id, topic2.id, topic1.id])
+          expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to eq(
+            [topic3.id, topic2.id, topic1.id],
+          )
         end
       end
     end
 
-    it 'includes subcategories and topics by default when view is subcategories_with_featured_topics' do
+    describe "welcome topic" do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:topic1) do
+        Fabricate(
+          :topic,
+          category: category,
+          created_at: 5.days.ago,
+          updated_at: Time.now,
+          bumped_at: Time.now,
+        )
+      end
+      fab!(:topic2) do
+        Fabricate(:topic, category: category, created_at: 2.days.ago, bumped_at: 2.days.ago)
+      end
+      fab!(:topic3) do
+        Fabricate(:topic, category: category, created_at: 1.day.ago, bumped_at: 1.day.ago)
+      end
+      fab!(:welcome_topic) { Fabricate(:topic) }
+      fab!(:post) { Fabricate(:post, topic: welcome_topic) }
+
+      before do
+        SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
+        SiteSetting.welcome_topic_id = welcome_topic.id
+        SiteSetting.editing_grace_period = 1.minute.to_i
+        SiteSetting.bootstrap_mode_enabled = true
+      end
+
+      it "is hidden for non-admins" do
+        get "/categories_and_latest.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).not_to include(
+          welcome_topic.id,
+        )
+      end
+
+      it "is shown to non-admins when there is an edit" do
+        post.revise(post.user, { raw: "#{post.raw}2" }, revised_at: post.updated_at + 2.minutes)
+        post.reload
+        expect(post.version).to eq(2)
+
+        get "/categories_and_latest.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to include(
+          welcome_topic.id,
+        )
+      end
+
+      it "is hidden to admins" do
+        sign_in(admin)
+
+        get "/categories_and_latest.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).not_to include(
+          welcome_topic.id,
+        )
+      end
+
+      it "is shown to users when bootstrap mode is disabled" do
+        SiteSetting.bootstrap_mode_enabled = false
+
+        get "/categories_and_latest.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to include(
+          welcome_topic.id,
+        )
+      end
+    end
+
+    it "includes subcategories and topics by default when view is subcategories_with_featured_topics" do
       SiteSetting.max_category_nesting = 3
       subcategory = Fabricate(:category, user: admin, parent_category: category)
 
@@ -249,15 +343,17 @@ RSpec.describe CategoriesController do
       category_list = response.parsed_body["category_list"]
 
       category_response = category_list["categories"].find { |c| c["id"] == category.id }
-      expect(category_response["topics"].map { |c| c['id'] }).to contain_exactly(topic1.id)
+      expect(category_response["topics"].map { |c| c["id"] }).to contain_exactly(topic1.id)
 
       expect(category_response["subcategory_list"][0]["id"]).to eq(subcategory.id)
     end
 
-    it "does not n+1 with multiple topics" do
+    it "does not result in N+1 queries problem with multiple topics" do
       category1 = Fabricate(:category)
       category2 = Fabricate(:category)
+      upload = Fabricate(:upload)
       topic1 = Fabricate(:topic, category: category1)
+      topic2 = Fabricate(:topic, category: category1, image_upload: upload)
 
       CategoryFeaturedTopic.feature_topics
       SiteSetting.desktop_category_page_style = "categories_with_featured_topics"
@@ -266,31 +362,37 @@ RSpec.describe CategoriesController do
       get "/categories.json"
       expect(response.status).to eq(200)
 
-      first_request_queries = track_sql_queries do
-        get "/categories.json"
-        expect(response.status).to eq(200)
-      end
+      first_request_queries =
+        track_sql_queries do
+          get "/categories.json"
+          expect(response.status).to eq(200)
+        end
 
-      category_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
-      expect(category_response["topics"].count).to eq(1)
+      category_response =
+        response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
+      expect(category_response["topics"].count).to eq(2)
 
-      topic2 = Fabricate(:topic, category: category2)
+      upload = Fabricate(:upload)
+      topic3 = Fabricate(:topic, category: category2, image_upload: upload)
       CategoryFeaturedTopic.feature_topics
 
-      second_request_queries = track_sql_queries do
-        get "/categories.json"
-        expect(response.status).to eq(200)
-      end
+      second_request_queries =
+        track_sql_queries do
+          get "/categories.json"
+          expect(response.status).to eq(200)
+        end
 
-      category1_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
-      category2_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category2.id }
-      expect(category1_response["topics"].size).to eq(1)
+      category1_response =
+        response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
+      category2_response =
+        response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category2.id }
+      expect(category1_response["topics"].size).to eq(2)
       expect(category2_response["topics"].size).to eq(1)
 
       expect(first_request_queries.count).to eq(second_request_queries.count)
     end
 
-    it 'does not show uncategorized unless allow_uncategorized_topics' do
+    it "does not show uncategorized unless allow_uncategorized_topics" do
       SiteSetting.desktop_category_page_style = "categories_boxes_with_topics"
 
       uncategorized = Category.find(SiteSetting.uncategorized_category_id)
@@ -300,30 +402,34 @@ RSpec.describe CategoriesController do
       SiteSetting.allow_uncategorized_topics = false
 
       get "/categories.json"
-      expect(response.parsed_body["category_list"]["categories"].map { |x| x['id'] }).not_to include(uncategorized.id)
+      expect(
+        response.parsed_body["category_list"]["categories"].map { |x| x["id"] },
+      ).not_to include(uncategorized.id)
     end
   end
 
-  describe 'extensibility event' do
-    before do
-      sign_in(admin)
-    end
+  describe "extensibility event" do
+    before { sign_in(admin) }
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events {
-        put "/categories/#{category.id}.json", params: {
-          name: 'hello',
-          color: 'ff0',
-          text_color: 'fff'
-        }
-      }.last
+      event =
+        DiscourseEvent
+          .track_events do
+            put "/categories/#{category.id}.json",
+                params: {
+                  name: "hello",
+                  color: "ff0",
+                  text_color: "fff",
+                }
+          end
+          .last
 
       expect(event[:event_name]).to eq(:category_updated)
       expect(event[:params].first).to eq(category)
     end
   end
 
-  describe '#create' do
+  describe "#create" do
     it "requires the user to be logged in" do
       post "/categories.json"
       expect(response.status).to eq(403)
@@ -337,9 +443,7 @@ RSpec.describe CategoriesController do
 
       it "raises an exception when they don't have permission to create it" do
         sign_in(Fabricate(:user))
-        post "/categories.json", params: {
-          name: 'hello', color: 'ff0', text_color: 'fff'
-        }
+        post "/categories.json", params: { name: "hello", color: "ff0", text_color: "fff" }
 
         expect(response).to be_forbidden
       end
@@ -353,9 +457,7 @@ RSpec.describe CategoriesController do
         it "returns errors on a duplicate category name" do
           category = Fabricate(:category, user: admin)
 
-          post "/categories.json", params: {
-            name: category.name, color: "ff0", text_color: "fff"
-          }
+          post "/categories.json", params: { name: category.name, color: "ff0", text_color: "fff" }
 
           expect(response.status).to eq(422)
         end
@@ -364,12 +466,18 @@ RSpec.describe CategoriesController do
           category = Fabricate(:category, user: admin)
           readonly = CategoryGroup.permission_types[:readonly]
 
-          post "/categories.json", params: {
-            name: category.name, color: "ff0", text_color: "fff", permissions: { "invalid_group" => readonly }
-          }
+          post "/categories.json",
+               params: {
+                 name: category.name,
+                 color: "ff0",
+                 text_color: "fff",
+                 permissions: {
+                   "invalid_group" => readonly,
+                 },
+               }
 
           expect(response.status).to eq(422)
-          expect(response.parsed_body['errors']).to be_present
+          expect(response.parsed_body["errors"]).to be_present
         end
       end
 
@@ -381,41 +489,42 @@ RSpec.describe CategoriesController do
           create_post = CategoryGroup.permission_types[:create_post]
           group = Fabricate(:group)
 
-          post "/categories.json", params: {
-            name: "hello",
-            color: "ff0",
-            text_color: "fff",
-            slug: "hello-cat",
-            auto_close_hours: 72,
-            search_priority: Searchable::PRIORITIES[:ignore],
-            reviewable_by_group_name: group.name,
-            permissions: {
-              "everyone" => readonly,
-              "staff" => create_post
-            }
-          }
+          post "/categories.json",
+               params: {
+                 name: "hello",
+                 color: "ff0",
+                 text_color: "fff",
+                 slug: "hello-cat",
+                 auto_close_hours: 72,
+                 search_priority: Searchable::PRIORITIES[:ignore],
+                 reviewable_by_group_name: group.name,
+                 permissions: {
+                   "everyone" => readonly,
+                   "staff" => create_post,
+                 },
+               }
 
           expect(response.status).to eq(200)
-          cat_json = response.parsed_body['category']
+          cat_json = response.parsed_body["category"]
           expect(cat_json).to be_present
-          expect(cat_json['reviewable_by_group_name']).to eq(group.name)
-          expect(cat_json['name']).to eq('hello')
-          expect(cat_json['slug']).to eq('hello-cat')
-          expect(cat_json['color']).to eq('ff0')
-          expect(cat_json['auto_close_hours']).to eq(72)
-          expect(cat_json['search_priority']).to eq(Searchable::PRIORITIES[:ignore])
+          expect(cat_json["reviewable_by_group_name"]).to eq(group.name)
+          expect(cat_json["name"]).to eq("hello")
+          expect(cat_json["slug"]).to eq("hello-cat")
+          expect(cat_json["color"]).to eq("ff0")
+          expect(cat_json["auto_close_hours"]).to eq(72)
+          expect(cat_json["search_priority"]).to eq(Searchable::PRIORITIES[:ignore])
 
-          category = Category.find(cat_json['id'])
-          expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq([
-            [Group[:everyone].id, readonly], [Group[:staff].id, create_post]
-          ])
+          category = Category.find(cat_json["id"])
+          expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq(
+            [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
+          )
           expect(UserHistory.count).to eq(4) # 1 + 3 (bootstrap mode)
         end
       end
     end
   end
 
-  describe '#show' do
+  describe "#show" do
     before do
       category.set_permissions(admins: :full)
       category.save!
@@ -442,7 +551,7 @@ RSpec.describe CategoriesController do
     end
   end
 
-  describe '#destroy' do
+  describe "#destroy" do
     it "requires the user to be logged in" do
       delete "/categories/category.json"
       expect(response.status).to eq(403)
@@ -461,9 +570,7 @@ RSpec.describe CategoriesController do
 
         id = Fabricate(:topic_timer, category: category).id
 
-        expect do
-          delete "/categories/#{category.slug}.json"
-        end.to change(Category, :count).by(-1)
+        expect do delete "/categories/#{category.slug}.json" end.to change(Category, :count).by(-1)
         expect(response.status).to eq(200)
         expect(UserHistory.count).to eq(1)
         expect(TopicTimer.where(id: id).exists?).to eq(false)
@@ -471,7 +578,7 @@ RSpec.describe CategoriesController do
     end
   end
 
-  describe '#reorder' do
+  describe "#reorder" do
     it "reorders the categories" do
       sign_in(admin)
 
@@ -480,7 +587,9 @@ RSpec.describe CategoriesController do
       c3 = Fabricate(:category)
       c4 = Fabricate(:category)
       if c3.id < c2.id
-        tmp = c3; c2 = c3; c3 = tmp
+        tmp = c3
+        c2 = c3
+        c3 = tmp
       end
       c1.position = 8
       c2.position = 6
@@ -498,20 +607,14 @@ RSpec.describe CategoriesController do
       SiteSetting.fixed_category_positions = true
       list = CategoryList.new(Guardian.new(admin))
 
-      expect(list.categories).to eq([
-        Category.find(SiteSetting.uncategorized_category_id),
-        c1,
-        c4,
-        c2,
-        c3
-      ])
+      expect(list.categories).to eq(
+        [Category.find(SiteSetting.uncategorized_category_id), c1, c4, c2, c3],
+      )
     end
   end
 
-  describe '#update' do
-    before do
-      Jobs.run_immediately!
-    end
+  describe "#update" do
+    before { Jobs.run_immediately! }
 
     it "requires the user to be logged in" do
       put "/categories/category.json"
@@ -519,37 +622,42 @@ RSpec.describe CategoriesController do
     end
 
     describe "logged in" do
-      before do
-        sign_in(admin)
-      end
+      before { sign_in(admin) }
 
       it "raises an exception if they don't have permission to edit it" do
         sign_in(Fabricate(:user))
-        put "/categories/#{category.slug}.json", params: {
-          name: 'hello',
-          color: 'ff0',
-          text_color: 'fff'
-        }
+        put "/categories/#{category.slug}.json",
+            params: {
+              name: "hello",
+              color: "ff0",
+              text_color: "fff",
+            }
         expect(response).to be_forbidden
       end
 
       it "returns errors on a duplicate category name" do
         other_category = Fabricate(:category, name: "Other", user: admin)
-        put "/categories/#{category.id}.json", params: {
-          name: other_category.name,
-          color: "ff0",
-          text_color: "fff",
-        }
+        put "/categories/#{category.id}.json",
+            params: {
+              name: other_category.name,
+              color: "ff0",
+              text_color: "fff",
+            }
         expect(response.status).to eq(422)
       end
 
       it "returns errors when there is a name conflict while moving a category into another" do
         parent_category = Fabricate(:category, name: "Parent", user: admin)
-        other_category = Fabricate(:category, name: category.name, user: admin, parent_category: parent_category, slug: "a-different-slug")
+        other_category =
+          Fabricate(
+            :category,
+            name: category.name,
+            user: admin,
+            parent_category: parent_category,
+            slug: "a-different-slug",
+          )
 
-        put "/categories/#{category.id}.json", params: {
-          parent_category_id: parent_category.id,
-        }
+        put "/categories/#{category.id}.json", params: { parent_category_id: parent_category.id }
 
         expect(response.status).to eq(422)
       end
@@ -557,12 +665,13 @@ RSpec.describe CategoriesController do
       it "returns 422 if email_in address is already in use for other category" do
         _other_category = Fabricate(:category, name: "Other", email_in: "mail@example.com")
 
-        put "/categories/#{category.id}.json", params: {
-          name: "Email",
-          email_in: "mail@example.com",
-          color: "ff0",
-          text_color: "fff",
-        }
+        put "/categories/#{category.id}.json",
+            params: {
+              name: "Email",
+              email_in: "mail@example.com",
+              color: "ff0",
+              text_color: "fff",
+            }
         expect(response.status).to eq(422)
       end
 
@@ -572,63 +681,73 @@ RSpec.describe CategoriesController do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
           tag_group = Fabricate(:tag_group)
+          form_template_1 = Fabricate(:form_template)
+          form_template_2 = Fabricate(:form_template)
 
-          put "/categories/#{category.id}.json", params: {
-            name: "hello",
-            color: "ff0",
-            text_color: "fff",
-            slug: "hello-category",
-            auto_close_hours: 72,
-            permissions: {
-              "everyone" => readonly,
-              "staff" => create_post
-            },
-            custom_fields: {
-              "dancing" => "frogs",
-              "running" => ["turtle", "salamander"]
-            },
-            minimum_required_tags: "",
-            allow_global_tags: 'true',
-            required_tag_groups: [{
-              name: tag_group.name,
-              min_count: 2
-            }]
-          }
+          put "/categories/#{category.id}.json",
+              params: {
+                name: "hello",
+                color: "ff0",
+                text_color: "fff",
+                slug: "hello-category",
+                auto_close_hours: 72,
+                permissions: {
+                  "everyone" => readonly,
+                  "staff" => create_post,
+                },
+                custom_fields: {
+                  "dancing" => "frogs",
+                  "running" => %w[turtle salamander],
+                },
+                minimum_required_tags: "",
+                allow_global_tags: "true",
+                required_tag_groups: [{ name: tag_group.name, min_count: 2 }],
+                form_template_ids: [form_template_1.id, form_template_2.id],
+              }
 
           expect(response.status).to eq(200)
           category.reload
-          expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq([
-            [Group[:everyone].id, readonly], [Group[:staff].id, create_post]
-          ])
+          expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq(
+            [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
+          )
           expect(category.name).to eq("hello")
           expect(category.slug).to eq("hello-category")
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
-          expect(category.custom_fields).to eq("dancing" => "frogs", "running" => ["turtle", "salamander"])
+          expect(category.custom_fields).to eq(
+            "dancing" => "frogs",
+            "running" => %w[turtle salamander],
+          )
           expect(category.minimum_required_tags).to eq(0)
           expect(category.allow_global_tags).to eq(true)
           expect(category.category_required_tag_groups.count).to eq(1)
           expect(category.category_required_tag_groups.first.tag_group.id).to eq(tag_group.id)
           expect(category.category_required_tag_groups.first.min_count).to eq(2)
+          expect(category.form_template_ids).to eq([form_template_1.id, form_template_2.id])
         end
 
-        it 'logs the changes correctly' do
-          category.update!(permissions: { "admins" => CategoryGroup.permission_types[:create_post] })
-
-          put "/categories/#{category.id}.json", params: {
-            name: 'new name',
-            color: category.color,
-            text_color: category.text_color,
-            slug: category.slug,
+        it "logs the changes correctly" do
+          category.update!(
             permissions: {
-              "everyone" => CategoryGroup.permission_types[:create_post]
+              "admins" => CategoryGroup.permission_types[:create_post],
             },
-          }
+          )
+
+          put "/categories/#{category.id}.json",
+              params: {
+                name: "new name",
+                color: category.color,
+                text_color: category.text_color,
+                slug: category.slug,
+                permissions: {
+                  "everyone" => CategoryGroup.permission_types[:create_post],
+                },
+              }
           expect(response.status).to eq(200)
           expect(UserHistory.count).to eq(5) # 2 + 3 (bootstrap mode)
         end
 
-        it 'updates per-category settings correctly' do
+        it "updates per-category settings correctly" do
           category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
           category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = false
           category.custom_fields[Category::NUM_AUTO_BUMP_DAILY] = 0
@@ -636,17 +755,18 @@ RSpec.describe CategoriesController do
           category.navigate_to_first_post_after_read = false
           category.save!
 
-          put "/categories/#{category.id}.json", params: {
-            name: category.name,
-            color: category.color,
-            text_color: category.text_color,
-            navigate_to_first_post_after_read: true,
-            custom_fields: {
-              require_reply_approval: true,
-              require_topic_approval: true,
-              num_auto_bump_daily: 10
-            }
-          }
+          put "/categories/#{category.id}.json",
+              params: {
+                name: category.name,
+                color: category.color,
+                text_color: category.text_color,
+                navigate_to_first_post_after_read: true,
+                custom_fields: {
+                  require_reply_approval: true,
+                  require_topic_approval: true,
+                  num_auto_bump_daily: 10,
+                },
+              }
 
           category.reload
           expect(category.require_topic_approval?).to eq(true)
@@ -657,15 +777,20 @@ RSpec.describe CategoriesController do
 
         it "can remove required tag group" do
           SiteSetting.tagging_enabled = true
-          category.update!(category_required_tag_groups: [ CategoryRequiredTagGroup.new(tag_group: Fabricate(:tag_group)) ])
-          put "/categories/#{category.id}.json", params: {
-            name: category.name,
-            color: category.color,
-            text_color: category.text_color,
-            allow_global_tags: 'false',
-            min_tags_from_required_group: 1,
-            required_tag_groups: []
-          }
+          category.update!(
+            category_required_tag_groups: [
+              CategoryRequiredTagGroup.new(tag_group: Fabricate(:tag_group)),
+            ],
+          )
+          put "/categories/#{category.id}.json",
+              params: {
+                name: category.name,
+                color: category.color,
+                text_color: category.text_color,
+                allow_global_tags: "false",
+                min_tags_from_required_group: 1,
+                required_tag_groups: [],
+              }
 
           expect(response.status).to eq(200)
           category.reload
@@ -678,10 +803,13 @@ RSpec.describe CategoriesController do
           tag_group_2 = Fabricate(:tag_group)
 
           category.update!(
-            allowed_tags: ["hello", "world"],
+            allowed_tags: %w[hello world],
             allowed_tag_groups: [tag_group_1.name],
-            category_required_tag_groups: [ CategoryRequiredTagGroup.new(tag_group: tag_group_2) ],
-            custom_fields: { field_1: 'hello', field_2: 'hello' }
+            category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group_2)],
+            custom_fields: {
+              field_1: "hello",
+              field_2: "hello",
+            },
           )
 
           put "/categories/#{category.id}.json"
@@ -690,117 +818,129 @@ RSpec.describe CategoriesController do
           expect(category.tags.pluck(:name)).to contain_exactly("hello", "world")
           expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
           expect(category.category_required_tag_groups.first.tag_group).to eq(tag_group_2)
-          expect(category.custom_fields).to eq({ 'field_1' => 'hello', 'field_2' => 'hello' })
+          expect(category.custom_fields).to eq({ "field_1" => "hello", "field_2" => "hello" })
 
-          put "/categories/#{category.id}.json", params: { allowed_tags: [], custom_fields: { field_1: nil } }
+          put "/categories/#{category.id}.json",
+              params: {
+                allowed_tags: [],
+                custom_fields: {
+                  field_1: nil,
+                },
+              }
           expect(response.status).to eq(200)
           category.reload
           expect(category.tags).to be_blank
           expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
           expect(category.category_required_tag_groups.first.tag_group).to eq(tag_group_2)
-          expect(category.custom_fields).to eq({ 'field_2' => 'hello' })
+          expect(category.custom_fields).to eq({ "field_2" => "hello" })
 
-          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_groups: [], custom_fields: { field_1: 'hi', field_2: nil } }
+          put "/categories/#{category.id}.json",
+              params: {
+                allowed_tags: [],
+                allowed_tag_groups: [],
+                required_tag_groups: [],
+                custom_fields: {
+                  field_1: "hi",
+                  field_2: nil,
+                },
+              }
           expect(response.status).to eq(200)
           category.reload
           expect(category.tags).to be_blank
           expect(category.tag_groups).to be_blank
           expect(category.category_required_tag_groups).to eq([])
-          expect(category.custom_fields).to eq({ 'field_1' => 'hi' })
+          expect(category.custom_fields).to eq({ "field_1" => "hi" })
+          expect(category.form_template_ids.count).to eq(0)
         end
       end
     end
   end
 
-  describe '#update_slug' do
-    it 'requires the user to be logged in' do
+  describe "#update_slug" do
+    it "requires the user to be logged in" do
       put "/category/category/slug.json"
       expect(response.status).to eq(403)
     end
 
-    describe 'logged in' do
-      before do
-        sign_in(admin)
-      end
+    describe "logged in" do
+      before { sign_in(admin) }
 
-      it 'rejects blank' do
-        put "/category/#{category.id}/slug.json", params: { slug: '   ' }
+      it "rejects blank" do
+        put "/category/#{category.id}/slug.json", params: { slug: "   " }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to eq(["Slug can't be blank"])
       end
 
-      it 'accepts valid custom slug' do
-        put "/category/#{category.id}/slug.json", params: { slug: 'valid-slug' }
+      it "accepts valid custom slug" do
+        put "/category/#{category.id}/slug.json", params: { slug: "valid-slug" }
 
         expect(response.status).to eq(200)
-        expect(category.reload.slug).to eq('valid-slug')
+        expect(category.reload.slug).to eq("valid-slug")
       end
 
-      it 'accepts not well formed custom slug' do
-        put "/category/#{category.id}/slug.json", params: { slug: ' valid slug' }
+      it "accepts not well formed custom slug" do
+        put "/category/#{category.id}/slug.json", params: { slug: " valid slug" }
 
         expect(response.status).to eq(200)
-        expect(category.reload.slug).to eq('valid-slug')
+        expect(category.reload.slug).to eq("valid-slug")
       end
 
-      it 'accepts and sanitize custom slug when the slug generation method is not ascii' do
-        SiteSetting.slug_generation_method = 'none'
-        put "/category/#{category.id}/slug.json", params: { slug: ' another !_ slug @' }
+      it "accepts and sanitize custom slug when the slug generation method is not ascii" do
+        SiteSetting.slug_generation_method = "none"
+        put "/category/#{category.id}/slug.json", params: { slug: " another !_ slug @" }
 
         expect(response.status).to eq(200)
-        expect(category.reload.slug).to eq('another-slug')
-        SiteSetting.slug_generation_method = 'ascii'
+        expect(category.reload.slug).to eq("another-slug")
+        SiteSetting.slug_generation_method = "ascii"
       end
 
-      it 'rejects invalid custom slug' do
-        put "/category/#{category.id}/slug.json", params: { slug: '.' }
+      it "rejects invalid custom slug" do
+        put "/category/#{category.id}/slug.json", params: { slug: "." }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to eq(["Slug is invalid"])
       end
     end
   end
 
-  describe '#categories_and_topics' do
-    before do
-      10.times.each { Fabricate(:topic) }
-    end
+  describe "#categories_and_topics" do
+    before { 10.times.each { Fabricate(:topic) } }
 
-    it 'works when SiteSetting.categories_topics is non-null' do
+    it "works when SiteSetting.categories_topics is non-null" do
       SiteSetting.categories_topics = 5
 
-      get '/categories_and_latest.json'
-      expect(response.parsed_body['topic_list']['topics'].size).to eq(5)
+      get "/categories_and_latest.json"
+      expect(response.parsed_body["topic_list"]["topics"].size).to eq(5)
     end
 
-    it 'works when SiteSetting.categories_topics is null' do
+    it "works when SiteSetting.categories_topics is null" do
       SiteSetting.categories_topics = 0
 
-      get '/categories_and_latest.json'
+      get "/categories_and_latest.json"
       json = response.parsed_body
 
-      category_list = json['category_list']
-      topic_list = json['topic_list']
+      category_list = json["category_list"]
+      topic_list = json["topic_list"]
 
-      expect(category_list['categories'].size).to eq(2) # 'Uncategorized' and category
-      expect(topic_list['topics'].size).to eq(5)
+      expect(category_list["categories"].size).to eq(2) # 'Uncategorized' and category
+      expect(topic_list["topics"].size).to eq(5)
 
       Fabricate(:category, parent_category: category)
 
-      get '/categories_and_latest.json'
+      get "/categories_and_latest.json"
       json = response.parsed_body
-      expect(json['category_list']['categories'].size).to eq(2)
-      expect(json['topic_list']['topics'].size).to eq(5)
+      expect(json["category_list"]["categories"].size).to eq(2)
+      expect(json["topic_list"]["topics"].size).to eq(5)
 
       Fabricate(:category)
       Fabricate(:category)
 
-      get '/categories_and_latest.json'
+      get "/categories_and_latest.json"
       json = response.parsed_body
-      expect(json['category_list']['categories'].size).to eq(4)
-      expect(json['topic_list']['topics'].size).to eq(6)
+      expect(json["category_list"]["categories"].size).to eq(4)
+      expect(json["topic_list"]["topics"].size).to eq(6)
     end
 
-    it 'does not show uncategorized unless allow_uncategorized_topics' do
+    it "does not show uncategorized unless allow_uncategorized_topics" do
       uncategorized = Category.find(SiteSetting.uncategorized_category_id)
       Fabricate(:topic, category: uncategorized)
       CategoryFeaturedTopic.feature_topics
@@ -808,11 +948,13 @@ RSpec.describe CategoriesController do
       SiteSetting.allow_uncategorized_topics = false
 
       get "/categories_and_latest.json"
-      expect(response.parsed_body["category_list"]["categories"].map { |x| x['id'] }).not_to include(uncategorized.id)
+      expect(
+        response.parsed_body["category_list"]["categories"].map { |x| x["id"] },
+      ).not_to include(uncategorized.id)
     end
 
-    describe 'Showing top topics from private categories' do
-      it 'returns the top topic from the private category when the user is a member' do
+    describe "Showing top topics from private categories" do
+      it "returns the top topic from the private category when the user is a member" do
         restricted_group = Fabricate(:group)
         private_cat = Fabricate(:private_category, group: restricted_group)
         private_topic = Fabricate(:topic, category: private_cat, like_count: 1000, posts_count: 100)
@@ -821,21 +963,29 @@ RSpec.describe CategoriesController do
         sign_in(user)
 
         get "/categories_and_top.json"
-        parsed_topic = response.parsed_body.dig('topic_list', 'topics').detect do |t|
-          t.dig('id') == private_topic.id
-        end
+        parsed_topic =
+          response
+            .parsed_body
+            .dig("topic_list", "topics")
+            .detect { |t| t.dig("id") == private_topic.id }
 
         expect(parsed_topic).to be_present
       end
     end
   end
 
-  describe '#visible_groups' do
-    fab!(:public_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:public], name: 'aaa') }
-    fab!(:private_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:staff], name: 'bbb') }
-    fab!(:user_only_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:members], name: 'ccc') }
+  describe "#visible_groups" do
+    fab!(:public_group) do
+      Fabricate(:group, visibility_level: Group.visibility_levels[:public], name: "aaa")
+    end
+    fab!(:private_group) do
+      Fabricate(:group, visibility_level: Group.visibility_levels[:staff], name: "bbb")
+    end
+    fab!(:user_only_group) do
+      Fabricate(:group, visibility_level: Group.visibility_levels[:members], name: "ccc")
+    end
 
-    it 'responds with 404 when id param is invalid' do
+    it "responds with 404 when id param is invalid" do
       get "/c/-9999/visible_groups.json"
 
       expect(response.status).to eq(404)
@@ -864,7 +1014,9 @@ RSpec.describe CategoriesController do
       get "/c/#{category.id}/visible_groups.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["groups"]).to eq([public_group.name, private_group.name, user_only_group.name])
+      expect(response.parsed_body["groups"]).to eq(
+        [public_group.name, private_group.name, user_only_group.name],
+      )
     end
 
     it "returns the names of the groups that are visible to a user and excludes the everyone group" do

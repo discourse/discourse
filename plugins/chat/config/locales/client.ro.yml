@@ -1,0 +1,116 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    chat:
+      create: "Creează"
+      cancel: "Anulare"
+      channel_settings:
+        edit: "Modifică"
+        add: "Adaugă"
+        join: "Alătură-te"
+        leave: "Părăsește"
+      close: "Închide sondajul"
+      delete: "Șterge"
+      muted: "silențios"
+      joined: "înscris"
+      email_frequency:
+        never: "Niciodată"
+      header_indicator_preference:
+        never: "Niciodată"
+      flag: "Marchează cu marcaj de avertizare"
+      join: "Alătură-te"
+      last_visit: "ultima vizită"
+      mention_warning:
+        dismiss: "renunță"
+      reply: "Răspunde"
+      edit: "Modifică"
+      rebake_message: "Reconstruieşte HTML"
+      bookmark_message: "Semn de carte"
+      bookmark_message_edit: "Editați marcajul"
+      save: "Salvare"
+      sounds:
+        none: "Nimeni"
+      exit: "înapoi"
+      channel_status:
+        closed: "Închis"
+        open: "Deschide sondajul"
+      browse:
+        back: "Înapoi"
+        filter_all: Toate
+        filter_closed: Închis
+      chat_message_separator:
+        today: Astăzi
+        yesterday: Ieri
+      about_view:
+        title: Titlu
+        name: Nume
+        description: Descriere
+      channel_info:
+        back_to_channel: "Înapoi"
+        tabs:
+          about: Despre
+          members: Membri
+          settings: Opțiuni
+      direct_message_creator:
+        title: Mesaj nou
+        prefix: "Către:"
+      create_channel:
+        type: "Tip"
+        types:
+          category: "Categorie"
+          topic: "Discuție"
+      composer:
+        italic_text: "text italic"
+        bold_text: "text aldin"
+      notification_levels:
+        never: "Niciodată"
+      settings:
+        follow: "Alătură-te"
+        followed: "Înscris"
+        notifications: "Notificări"
+        preview: "Previzualizează"
+        save: "Salvare"
+        saved: "Salvat"
+        unfollow: "Părăsește"
+        admin_title: "Administrator"
+      incoming_webhooks:
+        back: "Înapoi"
+        description: "Descriere"
+        delete: "Șterge"
+        emoji: "Emoji"
+        name: "Nume"
+        save: "Salvare"
+        edit: "Modifică"
+        system: "sistem"
+        url: "URL"
+        username: "Nume utilizator"
+      selection:
+        cancel: "Anulare"
+        copy: "Copiază"
+        new_topic:
+          title: "Mutare în subiect nou."
+        existing_topic:
+          title: "Mută în subiect deja existent"
+      emoji_picker:
+        objects: "Obiecte"
+        flags: "Marcaje de avertizare"
+      draft_channel_screen:
+        header: "Mesaj nou"
+        cancel: "Anulare"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Mesaj
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Semnalat de"

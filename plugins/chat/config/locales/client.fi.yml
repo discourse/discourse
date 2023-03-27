@@ -1,0 +1,439 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  js:
+    admin:
+      site_settings:
+        categories:
+          chat: Chat
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Chat-kanavan tila muuttui"
+            chat_channel_delete: "Chat-kanava poistettu"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Luo chat-viesti tietyllä kanavalla."
+    about:
+      chat_messages_count: "Chat-viestit"
+      chat_channels_count: "Chat-kanavat"
+      chat_users_count: "Chat-käyttäjät"
+    chat:
+      dates:
+        time_tiny: "t:mm"
+      all_loaded: "Näytetään kaikki viestit"
+      already_enabled: "Chat on jo käytössä tässä ketjussa. Päivitä."
+      disabled_for_topic: "Chat on poistettu käytöstä tässä ketjussa."
+      bot: "botti"
+      create: "Luo"
+      cancel: "Peruuta"
+      cancel_reply: "Peruuta vastaus"
+      chat_channels: "Kanavat"
+      browse_all_channels: "Selaa kaikkia kanavia"
+      move_to_channel:
+        title: "Siirrä viestit kanavalle"
+        confirm_move: "Siirrä viestit"
+      channel_settings:
+        title: "Kanavan asetukset"
+        edit: "Muokkaa"
+        add: "Lisää"
+        close_channel: "Sulje kanava"
+        open_channel: "Avaa kanava"
+        archive_channel: "Arkistoi kanava"
+        delete_channel: "Poista kanava"
+        join_channel: "Liity kanavalle"
+        leave_channel: "Poistu kanavalta"
+        join: "Liity"
+        leave: "Poistu"
+        save_label:
+          mute_channel: "Kanavan vaimennusasetus on tallennettu"
+          desktop_notification: "Työpöytäilmoitusasetus on tallennettu"
+          mobile_notification: "Mobiililaitteiden push-ilmoitusasetus on tallennettu"
+      channel_archive:
+        title: "Arkistoi kanava"
+        instructions: "<p>Kanavan arkistointi asettaa sen vain luku -tilaan ja siirtää kaikki kanavan viestit uuteen tai olemassa olevaan ketjuun. Uusia viestejä ei voi lähettää, eikä olemassa olevia viestejä voi muokata tai poistaa.</p><p>Oletko varma, että haluat arkistoida kanavan <strong>%{channelTitle}</strong>?</p>"
+        process_started: "Arkistointiprosessi on alkanut. Tämä modaalinen ikkuna sulkeutuu pian, ja saat henkilökohtaisen viestin, kun arkistointiprosessi on valmis."
+        retry: "Yritä uudelleen"
+      channel_open:
+        title: "Avaa kanava"
+        instructions: "Avaa kanavan uudelleen; kaikki käyttäjät voivat lähettää viestejä ja muokata olemassa olevia viestejään."
+      channel_close:
+        title: "Sulje kanava"
+        instructions: "Kanavan sulkeminen estää muita kuin henkilökunnan käyttäjiä lähettämästä uusia viestejä tai muokkaamasta olemassa olevia viestejä. Haluatko varmasti sulkea tämän kanavan?"
+      channel_delete:
+        title: "Poista kanava"
+        confirm: "Ymmärrän seuraukset, poista kanava"
+        confirm_channel_name: "Anna kanavan nimi"
+        process_started: "Kanavan poistoprosessi on alkanut. Tämä modaalinen ikkuna sulkeutuu pian, etkä näe enää poistettua kanavaa missään."
+      channels_list_popup:
+        browse: "Selaa kanavia"
+        create: "Uusi kanava"
+      click_to_join: "Näytä saatavilla olevat kanavat napsauttamalla tätä."
+      close: "Sulje"
+      collapse: "Tiivistä chat-laatikko"
+      confirm_flag: "Haluatko varmasti liputtaa käyttäjän %{username} viestin?"
+      deleted: "Viesti poistettiin. [näytä]"
+      hidden: "Viesti piilotettiin. [näytä]"
+      delete: "Poista"
+      edited: "muokattu"
+      muted: "vaimennettu"
+      joined: "liittyi"
+      empty_state:
+        direct_message_cta: "Aloita henkilökohtainen chat"
+        direct_message: "Voit myös aloittaa henkilökohtaisen chatin yhden tai useamman käyttäjän kanssa."
+        title: "Kanavia ei löytynyt"
+      email_frequency:
+        description: "Lähetämme sinulle sähköpostia vain, jos emme ole nähneet sinua viimeisen 15 minuutin aikana."
+        never: "Ei koskaan"
+        title: "Sähköposti-ilmoitukset"
+        when_away: "Vain poissa ollessa"
+      header_indicator_preference:
+        never: "Ei koskaan"
+      enable: "Ota chat käyttöön"
+      flag: "Liputa"
+      emoji: "Lisää emoji"
+      flagged: "Tämä viesti on liputettu käsiteltäväksi"
+      invalid_access: "Sinulla ei ole tämän chat-kanavan katseluoikeutta"
+      invitation_notification: "<span>%{username}</span> <span>kutsui sinut liittymään chat-kanavalle</span>"
+      in_reply_to: "Vastauksena:"
+      heading: "Chat"
+      join: "Liity"
+      last_visit: "edellinen vierailu"
+      mention_warning:
+        dismiss: "hylkää"
+        invitations_sent:
+          one: "Kutsu lähetetty"
+          other: "Kutsut lähetettiin"
+        invite: "Kutsu kanavalle"
+        without_membership: "%{username} ei ole liittynyt tälle kanavalle."
+        group_mentions_disabled: "%{group_name} ei salli mainintoja."
+        groups:
+          header:
+            some: "Osa käyttäjistä ei saa ilmoitusta"
+            all: "Kukaan ei saa ilmoitusta"
+          unreachable_1: "@%{group} ei salli mainintoja."
+      aria_roles:
+        header: "Chatin ylätunniste"
+        composer: "Chatin tekstieditori"
+        channels_list: "Chat-kanavien luettelo"
+      no_public_channels: "Et ole liittynyt kanaville."
+      only_chat_push_notifications:
+        title: "Lähetä vain chatin push-ilmoituksia"
+        description: "Estä kaikkien muiden kuin chatin push-ilmoitusten lähettäminen"
+      ignore_channel_wide_mention:
+        title: "Ohita kanavanlaajuiset maininnat"
+        description: "Älä lähetä ilmoituksia kanavanlaajuisista maininnoista (@here ja @all)"
+      open: "Avaa chat"
+      open_full_page: "Avaa koko näytön chat"
+      close_full_page: "Sulje koko näytön chat"
+      open_message: "Avaa viesti chatissa"
+      placeholder_self: "Kirjoita jotakin"
+      placeholder_users: "Chat-keskustelu käyttäjän %{commaSeparatedNames} kanssa"
+      placeholder_silenced: "Et voi lähettää viestejä tällä hetkellä."
+      placeholder_start_conversation_users: "Aloita keskustelu käyttäjän %{commaSeparatedUsernames} kanssa"
+      remove_upload: "Poista tiedosto"
+      react: "Reagoi emojilla"
+      reply: "Vastaa"
+      edit: "Muokkaa"
+      copy_link: "Kopioi linkki"
+      rebake_message: "Kokoa HTML uudelleen"
+      retry_staged_message:
+        title: "Verkkovirhe"
+        action: "Lähetetäänkö uudelleen?"
+      unreliable_network: "Verkko on epäluotettava, viestien lähettäminen ja luonnoksen tallentaminen ei ehkä toimi"
+      bookmark_message: "Kirjanmerkki"
+      bookmark_message_edit: "Muokkaa kirjanmerkkiä"
+      restore: "Palauta poistettu viesti"
+      save: "Tallenna"
+      select: "Valitse"
+      return_to_list: "Palaa kanavaluetteloon"
+      scroll_to_bottom: "Vieritä alas"
+      scroll_to_new_messages: "Katso uudet viestit"
+      sound:
+        title: "Työpöytälaitteen chat-ilmoitusääni"
+      sounds:
+        none: "Ei mitään"
+        bell: "Kello"
+        ding: "Ding"
+      title: "chat"
+      title_capitalized: "Chat"
+      upload: "Liitä tiedosto"
+      uploaded_files:
+        one: "%{count} tiedosto"
+        other: "%{count} tiedostoa"
+      you_flagged: "Liputit tämän viestin"
+      exit: "takaisin"
+      channel_status:
+        read_only_header: "Kanava on vain luettavissa"
+        read_only: "Vain luku"
+        archived_header: "Kanava on arkistoitu"
+        archived: "Arkistoitu"
+        archive_completed: "Katso <a target=\"_blank\" href=\"%{topic_url}\">arkistoketju</a>"
+        closed_header: "Kanava on suljettu"
+        closed: "Suljettu"
+        open_header: "Kanava on avoinna"
+        open: "Avoinna"
+      browse:
+        back: "Takaisin"
+        title: Kanavat
+        filter_all: Kaikki
+        filter_open: Avattu
+        filter_closed: Suljettu
+        filter_archived: Arkistoitu
+        filter_input_placeholder: Hae kanavaa nimellä
+      chat_message_separator:
+        today: Tänään
+        yesterday: Eilen
+      members_view:
+        filter_placeholder: Etsi jäseniä
+      about_view:
+        associated_topic: Linkitetty ketju
+        associated_category: Linkitetty alue
+        title: Otsikko
+        name: Nimi
+        description: Kuvaus
+      channel_info:
+        back_to_all_channels: "Kaikki kanavat"
+        back_to_channel: "Takaisin"
+        tabs:
+          about: Tietoja
+          members: Jäsenet
+          settings: Asetukset
+      channel_edit_name_slug_modal:
+        name: Kanavan nimi
+      channel_edit_description_modal:
+        title: Muokkaa kuvausta
+        input_placeholder: Lisää kuvaus
+        description: Kerro ihmisille, mistä tässä kanavassa on kyse
+      direct_message_creator:
+        title: Uusi viesti
+        prefix: "Vastaanottaja:"
+        no_results: Ei tuloksia
+        selected_user_title: "Poista käyttäjän %{username} valinta"
+      channel_selector:
+        title: "Siirry kanavalle"
+        no_channels: "Hakuasi vastaavia kanavia ei ole"
+      channel:
+        no_memberships: Tällä kanavalla ei ole jäseniä
+        no_memberships_found: Jäseniä ei löytynyt
+        memberships_count:
+          one: "%{count} jäsen"
+          other: "%{count} jäsentä"
+      create_channel:
+        auto_join_users:
+          public_category_warning: "%{category} on julkinen alue. Lisätäänkö kaikki hiljattain aktiiviset käyttäjät automaattisesti tälle kanavalle?"
+        choose_category:
+          label: "Valitse alue"
+          none: "valitse yksi..."
+          default_hint: Hallinnoi käyttöoikeutta <a href=%{link} target="_blank">alueen %{category} turvallisuusasetuksissa</a>
+        create: "Luo kanava"
+        description: "Kuvaus (valinnainen)"
+        name: "Kanavan nimi"
+        title: "Uusi kanava"
+        type: "Tyyppi"
+        types:
+          category: "Alue"
+          topic: "Ketju"
+      reviewable:
+        type: "Chat-viesti"
+      reactions:
+        only_you: "Reagoit emojilla :%{emoji}:"
+        single_user: "%{username} reagoivat emojilla :%{emoji}:"
+      composer:
+        toggle_toolbar: "Vaihda työkalupalkki"
+        italic_text: "korostettu teksti"
+        bold_text: "lihavoitu teksti"
+        code_text: "kooditeksti"
+      quote:
+        original_channel: 'Lähetetty alun perin kanavalla <a href="%{channelLink}">%{channel}</a>'
+        copy_success: "Chat-lainaus kopioitiin leikepöydälle"
+      notification_levels:
+        never: "Ei koskaan"
+        mention: "Vain maininnoissa"
+        always: "Kaikessa toiminnassa"
+      settings:
+        channel_wide_mentions_label: "Salli @all- ja @here-maininnat"
+        channel_wide_mentions_description: "Salli käyttäjien ilmoittaa kaikille kanavan #%{channel} käyttäjille @all-maininnalla tai niille, jotka ovat aktiivisia kyseisellä hetkellä, @here-maininnalla"
+        auto_join_users_label: "Lisää käyttäjiä automaattisesti"
+        auto_join_users_warning: "Jokainen käyttäjä, joka ei ole tämän kanavan jäsen ja jolla on pääsy alueelle %{category}, liittyy. Oletko varma?"
+        desktop_notification_level: "Työpöytäilmoitukset"
+        follow: "Liity"
+        followed: "Liittyi"
+        mobile_notification_level: "Mobiili-push-ilmoitukset"
+        mute: "Vaimenna kanava"
+        muted_on: "Käytössä"
+        muted_off: "Pois käytöstä"
+        notifications: "Ilmoitukset"
+        preview: "Esikatselu"
+        save: "Tallenna"
+        saved: "Tallennettu"
+        unfollow: "Poistu"
+        admin_title: "Ylläpitäjä"
+      admin:
+        title: "Chat"
+      direct_messages:
+        title: "Henkilökohtainen chat"
+        new: "Luo yksityis-chat"
+        create: "Siirry"
+        leave: "Poistu tästä henkilökohtaisesta chatista"
+        cannot_create: "Valitettavasti et voi lähettää yksityisviestejä."
+      incoming_webhooks:
+        back: "Takaisin"
+        channel_placeholder: "Valitse kanava"
+        confirm_destroy: "Haluatko varmasti poistaa tämän saapuvan webhookin? Tätä ei voi peruuttaa."
+        current_emoji: "Nykyinen emoji"
+        description: "Kuvaus"
+        delete: "Poista"
+        emoji: "Emoji"
+        emoji_instructions: "Järjestelmän avataria käytetään, jos emoji jätetään tyhjäksi."
+        name: "Nimi"
+        name_placeholder: "nimi..."
+        new: "Uusi saapuva webhook"
+        none: "Olemassa olevia saapuvia webhookeja ei ole luotu."
+        no_emoji: "Emojia ei ole valittu"
+        post_to: "Lähetä kohteeseen"
+        reset_emoji: "Nollaa emoji"
+        save: "Tallenna"
+        edit: "Muokkaa"
+        select_emoji: "Valitse emoji"
+        system: "järjestelmä"
+        title: "Saapuvat webhookit"
+        url: "URL"
+        url_instructions: "Tämä URL-osoite sisältää salaisen arvon – pidä se turvassa."
+        username: "Käyttäjätunnus"
+        username_instructions: "Kanavalle lähettävän botin käyttäjätunnus. Oletus on \"järjestelmä\", kun tämä jätetään tyhjäksi."
+        instructions: "Ulkoiset järjestelmät voivat käyttää saapuvia webhookeja viestien lähettämiseen määrätylle chat-kanavalle bot-käyttäjänä <code>/hooks/:key</code>-päätepisteen kautta. Hyötykuorma koostuu yhdestä <code>text</code>-parametrista, joka on rajoitettu 2 000 merkkiin.<br><br>Tuemme myös rajoitettuja Slack-muotoiltuja <code>text</code>-parametreja, linkkien ja mainintojen poimimista osoitteessa <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> kuvatun muodon perusteella, mutta tähän täytyy käyttää <code>/hooks/:key/slack</code>-päätepistettä."
+      selection:
+        cancel: "Peruuta"
+        quote_selection: "Lainaus ketjussa"
+        copy: "Kopioi"
+        move_selection_to_channel: "Siirrä kanavalle"
+        error: "Chat-viestien siirtämisessä tapahtui virhe"
+        title: "Siirrä chat ketjuun"
+        new_topic:
+          title: "Siirrä uuteen ketjuun"
+          instructions:
+            one: "Olet luomassa uutta ketjua ja lisäämässä valitsemasi chat-viestin siihen."
+            other: "Olet luomassa uutta ketjua ja lisäämässä <b>%{count}</b> valitsemaasi chat-viestiä siihen."
+          instructions_channel_archive: "Olet luomassa uutta ketjua ja arkistoimassa kanavan viestit siihen."
+        existing_topic:
+          title: "Siirrä olemassa olevaan ketjuun"
+          instructions:
+            one: "Valitse ketju, johon haluat siirtää tämän chat-viestin."
+            other: "Valitse ketju, johon haluat siirtää nämä <b>%{count}</b> chat-viestiä."
+          instructions_channel_archive: "Valitse ketju, johon haluat arkistoida kanavan viestit."
+        new_message:
+          title: "Siirrä uuteen viestiin"
+          instructions:
+            one: "Olet luomassa uutta viestiä ja lisäämässä valitsemasi chat-viestin siihen."
+            other: "Olet luomassa uutta viestiä ja lisäämässä <b>%{count}</b> valitsemaasi chat-viestiä siihen."
+      replying_indicator:
+        single_user: "%{username} kirjoittaa"
+        multiple_users: "%{commaSeparatedUsernames} ja %{lastUsername} kirjoittavat"
+        many_users:
+          one: "%{commaSeparatedUsernames} ja %{count} muu kirjoittavat"
+          other: "%{commaSeparatedUsernames} ja %{count} muuta kirjoittavat"
+      flags:
+        off_topic: "Tämä viesti ei liity nykyiseen keskusteluun kanavan otsikon mukaan, ja se pitäisi todennäköisesti siirtää muualle."
+        inappropriate: "Tämä viesti sisältää sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href=\"%{basePath}/guidelines\">yhteisömme ohjeiden vastaisena</a>."
+        spam: "Tämä viesti on mainos tai ilkivaltaa. Se ei ole hyödyllinen tai olennainen nykyiselle kanavalle."
+        notify_user: "Haluan keskustella tämän henkilön kanssa suoraan ja henkilökohtaisesti hänen viestistään."
+        notify_moderators: "Tämä viesti vaatii henkilökunnan huomion muusta syystä, jota ei ole mainittu edellä."
+      flagging:
+        action: "Liputa viesti"
+      emoji_picker:
+        favorites: "Usein käytetyt"
+        smileys_&_emotion: "Hymiöt ja tunteet"
+        objects: "Esineet"
+        people_&_body: "Ihmiset ja keho"
+        travel_&_places: "Matkailu ja paikat"
+        animals_&_nature: "Eläimet ja luonto"
+        food_&_drink: "Ruoka ja juoma"
+        activities: "Aktiviteetit"
+        flags: "Liput"
+        symbols: "Symbolit"
+        search_placeholder: "Hae emojin nimen ja aliaksen mukaan..."
+        no_results: "Ei tuloksia"
+      draft_channel_screen:
+        header: "Uusi viesti"
+        cancel: "Peruuta"
+    notifications:
+      chat_invitation: "kutsui sinut liittymään chat-kanavalle"
+      chat_invitation_html: "<span>%{username}</span> <span>kutsui sinut liittymään chat-kanavalle</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_mention:
+          direct: 'mainitsi sinut kanavalla "%{channel}"'
+          direct_html: '<span>%{username}</span> <span>mainitsi sinut kanavalla "%{channel}"</span>'
+          other_plain: 'mainitsi kohteen %{identifier} kanavalla "%{channel}"'
+          other_html: '<span>%{username}</span> <span>mainitsi kohteen %{identifier} kanavalla "%{channel}"</span>'
+        direct_message_chat_mention:
+          direct: "mainitsi sinut henkilökohtaisessa chatissa"
+          direct_html: "<span>%{username}</span> <span>mainitsi sinut henkilökohtaisessa chatissa</span>"
+          other_plain: "mainitsi kohteen %{identifier} henkilökohtaisessa chatissa"
+          other_html: "<span>%{username}</span> <span>mainitsi kohteen %{identifier} henkilökohtaisessa chatissa</span>"
+        chat_message: "Uusi chat-viesti"
+        chat_quoted: "%{username} lainasi chat-viestiäsi"
+      titles:
+        chat_mention: "Chat-maininta"
+        chat_invitation: "Chat-kutsu"
+        chat_quoted: "Chat-keskustelua lainattu"
+    action_codes:
+      chat:
+        enabled: '%{who} otti <button class="btn-link open-chat">chatin</button> käyttöön %{when}'
+        disabled: "%{who} sulki chatin %{when}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: Lähetä chat-viesti
+          fields:
+            chat_channel_id:
+              label: Chat-kanavan tunnus
+            message:
+              label: Viesti
+            sender:
+              label: Lähettäjä
+              description: Oletuksena järjestelmä
+    review:
+      transcript:
+        view: "Näytä aiempien viestien transkriptio"
+      types:
+        reviewable_chat_message:
+          title: "Liputettu chat-viesti"
+          flagged_by: "Liputtanut"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Chat"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Vaihda kanavaa"
+          open_quick_channel_selector: "%{shortcut} Avaa kanavan pikavalitsin"
+          open_insert_link_modal: "%{shortcut} Lisää hyperlinkki (vain tekstieditori)"
+          composer_bold: "%{shortcut} Lihavointi (vain tekstieditori)"
+          composer_italic: "%{shortcut} Kursiivi (vain tekstieditori)"
+          composer_code: "%{shortcut} Koodi (vain tekstieditori)"
+          drawer_open: "%{shortcut} Avaa chat-laatikko"
+          drawer_close: "%{shortcut} Sulje chat-laatikko"
+    topic_statuses:
+      chat:
+        help: "Chat on käytössä tässä ketjussa"
+    user:
+      allow_private_messages: "Salli muiden käyttäjien lähettää minulle yksityisviestejä ja chat-yksityisviestejä"
+      muted_users_instructions: "Estä kaikki ilmoitukset, yksityisviestit ja chat-yksityisviestit näiltä käyttäjiltä."
+      allowed_pm_users_instructions: "Salli vain näiden käyttäjien yksityisviestit tai chat-yksityisviestit."
+      allow_private_messages_from_specific_users: "Salli vain tiettyjen käyttäjien lähettää minulle yksityisviestejä tai chat-yksityisviestejä"
+      ignored_users_instructions: "Estä kaikki viestit, ilmoitukset, yksityisviestit ja chat-yksityisviestit näiltä käyttäjiltä."
+    user_menu:
+      no_chat_notifications_title: "Sinulla ei ole vielä chat-ilmoituksia"
+      no_chat_notifications_body: >
+        Saat ilmoituksen tässä paneelissa, kun joku lähettää sinulle viestin tai <b>@mainitsee</b> sinut chatissa. Ilmoitukset lähetetään myös sähköpostiisi, jos et ole kirjautunut sisään vähään aikaan. <br><br> Klikkaa minkä tahansa chat-kanavan yläosassa olevaa otsikkoa määrittääksesi, mitä ilmoituksia saat kyseisellä kanavalla. Katso lisätietoja <a href='%{preferencesUrl}'>ilmoitusasetuksistasi</a>.
+      tabs:
+        chat_notifications: "Chat-ilmoitukset"
+        chat_notifications_with_unread:
+          one: "Chat-ilmoitukset – %{count} lukematon ilmoitus"
+          other: "Chat-ilmoitukset – %{count} lukematonta ilmoitusta"

@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 module DiscourseUpdates
-
   class << self
-
     def check_version
       attrs = {
         installed_version: Discourse::VERSION::STRING,
-        installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
+        installed_sha: (Discourse.git_version == "unknown" ? nil : Discourse.git_version),
         installed_describe: Discourse.full_version,
         git_branch: Discourse.git_branch,
         updated_at: updated_at,
@@ -17,7 +15,7 @@ module DiscourseUpdates
         attrs.merge!(
           latest_version: latest_version,
           critical_updates: critical_updates_available?,
-          missing_versions_count: missing_versions_count
+          missing_versions_count: missing_versions_count,
         )
       end
 
@@ -25,19 +23,24 @@ module DiscourseUpdates
 
       # replace -commit_count with +commit_count
       if version_info.installed_describe =~ /-(\d+)-/
-        version_info.installed_describe = version_info.installed_describe.gsub(/-(\d+)-.*/, " +#{$1}")
+        version_info.installed_describe =
+          version_info.installed_describe.gsub(/-(\d+)-.*/, " +#{$1}")
       end
 
       if SiteSetting.version_checks?
         is_stale_data =
-          (version_info.missing_versions_count == 0 && version_info.latest_version != version_info.installed_version) ||
-          (version_info.missing_versions_count != 0 && version_info.latest_version == version_info.installed_version)
+          (
+            version_info.missing_versions_count == 0 &&
+              version_info.latest_version != version_info.installed_version
+          ) ||
+            (
+              version_info.missing_versions_count != 0 &&
+                version_info.latest_version == version_info.installed_version
+            )
 
         # Handle cases when version check data is old so we report something that makes sense
-        if version_info.updated_at.nil? || # never performed a version check
-           last_installed_version != Discourse::VERSION::STRING || # upgraded since the last version check
-           is_stale_data
-
+        if version_info.updated_at.nil? || last_installed_version != Discourse::VERSION::STRING || # never performed a version check # upgraded since the last version check
+             is_stale_data
           Jobs.enqueue(:version_check, all_sites: true)
           version_info.version_check_pending = true
 
@@ -48,9 +51,8 @@ module DiscourseUpdates
         end
 
         version_info.stale_data =
-          version_info.version_check_pending ||
-          (updated_at && updated_at < 48.hours.ago) ||
-          is_stale_data
+          version_info.version_check_pending || (updated_at && updated_at < 48.hours.ago) ||
+            is_stale_data
       end
 
       version_info
@@ -82,7 +84,7 @@ module DiscourseUpdates
     end
 
     def critical_updates_available?
-      (Discourse.redis.get(critical_updates_available_key) || false) == 'true'
+      (Discourse.redis.get(critical_updates_available_key) || false) == "true"
     end
 
     def critical_updates_available=(arg)
@@ -110,7 +112,7 @@ module DiscourseUpdates
         # store the list in redis
         version_keys = []
         versions[0, 5].each do |v|
-          key = "#{missing_versions_key_prefix}:#{v['version']}"
+          key = "#{missing_versions_key_prefix}:#{v["version"]}"
           Discourse.redis.mapped_hmset key, v
           version_keys << key
         end
@@ -140,11 +142,21 @@ module DiscourseUpdates
     end
 
     def new_features
-      entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
+      entries =
+        begin
+          JSON.parse(Discourse.redis.get(new_features_key))
+        rescue StandardError
+          nil
+        end
       return nil if entries.nil?
 
       entries.select! do |item|
-        item["discourse_version"].nil? || Discourse.has_needed_version?(current_version, item["discourse_version"]) rescue nil
+        begin
+          item["discourse_version"].nil? ||
+            Discourse.has_needed_version?(current_version, item["discourse_version"])
+        rescue StandardError
+          nil
+        end
       end
 
       entries.sort_by { |item| Time.zone.parse(item["created_at"]).to_i }.reverse
@@ -170,52 +182,86 @@ module DiscourseUpdates
     end
 
     def mark_new_features_as_seen(user_id)
-      entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
+      entries =
+        begin
+          JSON.parse(Discourse.redis.get(new_features_key))
+        rescue StandardError
+          nil
+        end
       return nil if entries.nil?
       last_seen = entries.max_by { |x| x["created_at"] }
       Discourse.redis.set(new_features_last_seen_key(user_id), last_seen["created_at"])
     end
 
+    def get_last_viewed_feature_date(user_id)
+      date = Discourse.redis.hget(last_viewed_feature_dates_for_users_key, user_id.to_s)
+      return if date.blank?
+      Time.zone.parse(date)
+    end
+
+    def bump_last_viewed_feature_date(user_id, feature_date)
+      Discourse.redis.hset(last_viewed_feature_dates_for_users_key, user_id.to_s, feature_date)
+    end
+
+    def clean_state
+      Discourse.redis.del(
+        last_installed_version_key,
+        latest_version_key,
+        critical_updates_available_key,
+        missing_versions_count_key,
+        updated_at_key,
+        missing_versions_list_key,
+        new_features_key,
+        last_viewed_feature_dates_for_users_key,
+        *Discourse.redis.keys("#{missing_versions_key_prefix}*"),
+        *Discourse.redis.keys(new_features_last_seen_key("*")),
+      )
+    end
+
     private
 
     def last_installed_version_key
-      'last_installed_version'
+      "last_installed_version"
     end
 
     def latest_version_key
-      'discourse_latest_version'
+      "discourse_latest_version"
     end
 
     def critical_updates_available_key
-      'critical_updates_available'
+      "critical_updates_available"
     end
 
     def missing_versions_count_key
-      'missing_versions_count'
+      "missing_versions_count"
     end
 
     def updated_at_key
-      'last_version_check_at'
+      "last_version_check_at"
     end
 
     def missing_versions_list_key
-      'missing_versions'
+      "missing_versions"
     end
 
     def missing_versions_key_prefix
-      'missing_version'
+      "missing_version"
     end
 
     def new_features_endpoint
-      'https://meta.discourse.org/new-features.json'
+      "https://meta.discourse.org/new-features.json"
     end
 
     def new_features_key
-      'new_features'
+      "new_features"
     end
 
     def new_features_last_seen_key(user_id)
       "new_features_last_seen_user_#{user_id}"
+    end
+
+    def last_viewed_feature_dates_for_users_key
+      "last_viewed_feature_dates_for_users_hash"
     end
   end
 end

@@ -1,0 +1,120 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  js:
+    chat:
+      create: "napravi"
+      cancel: "Odustani"
+      channel_settings:
+        edit: "Edit"
+        add: "Add"
+        join: "Učlani se"
+        leave: "Napusti"
+      close: "Zatvori"
+      delete: "Delete"
+      edited: "promjenjeno"
+      muted: "utišani"
+      joined: "pridružio se"
+      email_frequency:
+        never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
+      flag: "Prijavi"
+      join: "Učlani se"
+      last_visit: "zadnja posjeta"
+      mention_warning:
+        dismiss: "odbaci"
+      reply: "Odgovori"
+      edit: "Edit"
+      rebake_message: "Popravi HTML"
+      bookmark_message: "Sačuvaj"
+      save: "Save"
+      sounds:
+        none: "Ništa"
+      exit: "prethodno"
+      channel_status:
+        closed: "Zatvoreno"
+        open: "Otvori"
+      browse:
+        back: "Prethodno"
+        filter_all: All
+        filter_closed: Zatvoreno
+      chat_message_separator:
+        today: Today
+        yesterday: Yesterday
+      about_view:
+        title: Naslov
+        name: Ime
+        description: Opis
+      channel_info:
+        back_to_channel: "Prethodno"
+        tabs:
+          about: O nama
+          members: Članovi
+          settings: Postavke
+      direct_message_creator:
+        title: Nova poruka
+        prefix: "Za:"
+      create_channel:
+        type: "Tip"
+        types:
+          category: "Kategorija"
+          topic: "Topic"
+      composer:
+        italic_text: "ukošen tekst"
+        bold_text: "bold tekst"
+      notification_levels:
+        never: "Nikad"
+      settings:
+        follow: "Učlani se"
+        followed: "Pridružio se"
+        notifications: "Obavijest"
+        preview: "Pregled"
+        save: "Save"
+        saved: "Spašeno"
+        unfollow: "Napusti"
+        admin_title: "Admin"
+      incoming_webhooks:
+        back: "Prethodno"
+        description: "Opis"
+        delete: "Delete"
+        emoji: "Emoji"
+        name: "Ime"
+        save: "Save"
+        edit: "Edit"
+        system: "system"
+        url: "URL"
+        username: "Nadimak"
+      selection:
+        cancel: "Odustani"
+        copy: "Copy"
+        new_topic:
+          title: "Move to New Topic"
+        existing_topic:
+          title: "Move to Existing Topic"
+        new_message:
+          title: "Premjesti u novu poruku"
+      emoji_picker:
+        objects: "Objekti"
+        activities: "Aktivnosti"
+        flags: "Flags"
+        symbols: "Simboli"
+      draft_channel_screen:
+        header: "Nova poruka"
+        cancel: "Odustani"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Privatna Poruka
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Kaznio je"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'post_item_excerpt'
+require_relative "post_item_excerpt"
 
 class AdminUserActionSerializer < ApplicationSerializer
   include PostItemExcerpt
@@ -24,7 +24,7 @@ class AdminUserActionSerializer < ApplicationSerializer
     :deleted_at,
     :deleted_by,
     :reply_to_post_number,
-    :action_type
+    :action_type,
   )
 
   def post_id
@@ -52,19 +52,20 @@ class AdminUserActionSerializer < ApplicationSerializer
   end
 
   def slug
-    object.topic&.slug
+    topic&.slug
   end
 
   def title
-    object.topic&.title
+    topic&.title
   end
 
   def category_id
-    object.topic&.category_id
+    topic&.category_id
   end
 
   def moderator_action
-    object.post_type == Post.types[:moderator_action] || object.post_type == Post.types[:small_action]
+    object.post_type == Post.types[:moderator_action] ||
+      object.post_type == Post.types[:small_action]
   end
 
   def deleted_by
@@ -76,8 +77,21 @@ class AdminUserActionSerializer < ApplicationSerializer
   end
 
   def action_type
-    object.user_actions.select { |ua| ua.user_id = object.user_id }
+    object
+      .user_actions
+      .select { |ua| ua.user_id = object.user_id }
       .select { |ua| [UserAction::REPLY, UserAction::RESPONSE].include? ua.action_type }
-      .first.try(:action_type)
+      .first
+      .try(:action_type)
+  end
+
+  # we need this to handle deleted topics which aren't loaded via
+  # Topic.unscoped do
+  #   Post.includes(:topic)
+  # end
+  # because Rails 4 "unscoped" support is still bugged (cf. https://github.com/rails/rails/issues/13775)
+  def topic
+    return @topic if @topic
+    @topic = object.topic || Topic.with_deleted.find_by_id(object.topic_id)
   end
 end

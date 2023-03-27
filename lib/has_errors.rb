@@ -33,11 +33,8 @@ module HasErrors
   def add_errors_from(obj)
     return if obj.blank?
 
-    if obj.is_a?(StandardError)
-      return add_error(obj.message)
-    end
+    return add_error(obj.message) if obj.is_a?(StandardError)
 
     obj.errors.full_messages.each { |msg| add_error(msg) }
   end
-
 end

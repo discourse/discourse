@@ -1,0 +1,66 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    chat_allowed_groups: "Користувачі в цих групах можуть спілкуватися в чаті. Зауважте, що команда обслуговування завжди має доступ до чату."
+    direct_message_enabled_groups: "Дозволити користувачам у цих групах створювати особисті чати між користувачами. Примітка: команда обслуговування завжди може створювати особисті чати, і користувачі зможуть відповідати на особисті чати, ініційовані користувачами, які мають дозвіл на їх створення."
+    errors:
+      direct_message_enabled_groups_invalid: "Ви повинні вказати принаймні одну групу для цього параметра. Якщо ви не хочете, щоб хтось, крім членів команди обслуговування, надсилав приватні повідомлення, виберіть групу команди обслуговування."
+  chat:
+    deleted_chat_username: видалено
+    errors:
+      auto_silence_from_flags: "Повідомлення чату, позначене достатньо високим балом, щоб заблокувати користувача."
+      not_accepting_dms: "На жаль, %{username} в даний момент не приймає повідомлення."
+    reviewables:
+      actions:
+        agree:
+          title: "Погодитися…"
+        agree_and_suspend:
+          title: "Призупинити користувача"
+          description: "Погодитися з прапором та заморозити користувача."
+        agree_and_silence:
+          title: "Заблокувати користувача"
+          description: "Погодитися з прапором та відключити користувача."
+        disagree:
+          title: "Відмовити"
+        ignore:
+          title: "Ігнорувати"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} і ще %{count}"
+          few: "%{comma_separated_usernames} і ще %{count}"
+          many: "%{comma_separated_usernames} і ще %{count}"
+          other: "%{comma_separated_usernames} і ще %{count}"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "містить символи, які не є ASCII"
+        is_already_in_use: "вже використовується"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} згадав вас у "%{channel}"'
+  reviewable_score_types:
+    needs_review:
+      title: "Потребує розгляду"
+    notify_user:
+      chat_pm_title: 'Ваше повідомлення в чаті "%{channel_name}"'
+      chat_pm_body: "%{link}\n\n%{message}\n"
+    notify_moderators:
+      chat_pm_title: 'Повідомлення чату в "%{channel_name}" вимагає уваги команди обслуговування'
+      chat_pm_body: "%{link}\n\n%{message}\n"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Член команди обслуговування вважає, що це повідомлення чату потребує перевірки."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Видалений користувач"
+      from: "%{site_name}"
+  unsubscribe:
+    chat_summary:
+      never: Ніколи

@@ -80,7 +80,6 @@ export default DiscourseRoute.extend({
       enteredAt: Date.now().toString(),
       userLastReadPostNumber: topic.last_read_post_number,
       highestPostNumber: topic.highest_post_number,
-      controllerReady: true,
     });
 
     this.appEvents.trigger("page:topic-loaded", topic);

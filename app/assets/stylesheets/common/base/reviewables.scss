@@ -76,6 +76,7 @@
 }
 
 .reviewable-user-info {
+  max-width: 100%;
   margin: 0.5em 0;
   .reviewable-user-fields {
     margin-bottom: 2em;
@@ -209,8 +210,8 @@
 }
 
 .reviewable-item {
-  padding-top: 2em;
-  border-top: 1px solid var(--primary-low);
+  background: var(--primary-very-low);
+  padding: 1.5rem;
 
   .topic-statuses {
     font-size: var(--font-up-2);
@@ -225,6 +226,22 @@
     align-items: baseline;
     .reviewable-type {
       margin-right: 0.25em;
+      padding: 0.25em 0.5em;
+      text-transform: uppercase;
+      font-size: var(--font-down-2);
+      color: var(--secondary);
+      border-radius: 8px;
+      &.-flagged-post,
+      &.-flagged-chat-message,
+      &.-akismet-flagged-post,
+      &.-akismet-flagged-user {
+        background-color: var(--danger-medium);
+      }
+      &.-queued-post,
+      &.-queued-topic,
+      &.-user {
+        background-color: var(--tertiary);
+      }
     }
     .reply-count {
       margin-left: 1em;
@@ -244,16 +261,28 @@
   .reviewable-contents {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 2em;
+    margin: 1.5rem 0 1rem;
+    background: var(--secondary);
+    padding: 1rem;
   }
 
   .reviewable-actions {
     display: flex;
     flex-wrap: wrap;
+    gap: 0.5rem;
     width: 100%;
 
     button {
       white-space: nowrap;
+
+      &.approve-post {
+        background-color: var(--success);
+        color: var(--secondary);
+      }
+      &.reject-post {
+        background-color: var(--danger);
+        color: var(--secondary);
+      }
     }
 
     .reviewable-action,
@@ -285,8 +314,17 @@
 }
 
 .reviewable-scores {
+  margin-top: 1.5rem;
   min-width: 50%;
   color: var(--primary-high);
+
+  &__table-wrapper {
+    overflow-x: scroll;
+  }
+
+  th {
+    white-space: nowrap;
+  }
 
   .reviewed-by {
     .date {
@@ -313,6 +351,16 @@
     vertical-align: text-top;
   }
 
+  .approved,
+  .approved svg {
+    color: var(--success);
+  }
+
+  .rejected,
+  .rejected svg {
+    color: var(--danger);
+  }
+
   tbody {
     border-width: 1px;
     td {
@@ -324,33 +372,25 @@
         @include ellipsis;
       }
     }
-
-    td:last-of-type {
-      width: 100%;
-      white-space: normal;
-    }
     > tr > th {
       text-align: left;
     }
     > tr > th,
     > tr > td {
       &:not(:empty) {
-        padding: 0.5em 1em 0.5em 0;
+        padding: 0.5em;
       }
       @include breakpoint("mobile-large") {
         @include ellipsis;
         padding-right: 0.5em;
       }
     }
-    .reviewable-score-spacer {
-      padding-right: 1em;
-    }
   }
 }
 
 .reviewable-score-reason {
   margin: 0.5em 0;
-  max-width: $topic-body-width;
+  max-width: var(--topic-body-width);
   margin-bottom: 0.5em;
 }
 
@@ -358,7 +398,7 @@
   margin: 0.5em 0;
 
   .reviewable-conversation-post {
-    max-width: $topic-body-width;
+    max-width: var(--topic-body-width);
     margin-bottom: 0.5em;
 
     .username {
@@ -373,6 +413,7 @@
 }
 
 .reviewable-item {
+  margin-block: 3rem;
   .show-raw-email {
     color: var(--primary-medium);
     font-size: var(--font-down-2);
@@ -405,9 +446,9 @@
   .reviewable-post-header {
     display: flex;
     justify-content: space-between;
-    max-width: $topic-body-width;
-    width: $topic-body-width;
+    width: var(--topic-body-width);
     align-items: center;
+    max-width: 100%;
 
     .reviewable-reply-to {
       display: flex;
@@ -426,14 +467,35 @@
   }
 
   .post-body {
-    max-width: $topic-body-width;
-    max-height: 300px;
+    position: relative;
+    max-width: var(--topic-body-width);
     margin-top: 0.5em;
-    overflow-y: auto;
+
+    &__scroll {
+      max-height: 300px;
+      overflow-y: auto;
+      &:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 1.5em;
+        background: linear-gradient(
+          to bottom,
+          rgba(var(--secondary-rgb), 0),
+          rgba(var(--secondary-rgb), 100%)
+        );
+      }
+    }
 
     p,
     aside {
       margin: 0 0 1em 0;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
     }
 
     pre,
@@ -453,6 +515,10 @@
       font-size: var(--font-up-2);
       margin-right: 0.75em;
     }
+  }
+
+  &__context-question {
+    margin-block: 1rem;
   }
 }
 
@@ -486,29 +552,4 @@
 
 .flag-modal .modal-inner-container .select-kit.reviewable-action-dropdown {
   width: initial;
-}
-
-@media screen and (max-width: 1000px) {
-  table.reviewable-scores {
-    width: 100%;
-    display: block;
-    tbody {
-      width: calc(100% - 5px);
-      display: block;
-      clear: both;
-    }
-  }
-  tr.reviewable-score {
-    display: grid;
-    grid-template-columns: auto auto 1fr;
-  }
-  td.reviewable-score-spacer {
-    display: none;
-  }
-}
-
-@include breakpoint("mobile-large") {
-  tr.reviewable-score {
-    grid-template-columns: auto auto auto;
-  }
 }

@@ -1,0 +1,35 @@
+<div
+  class={{concat-class "timeline-container" this.classes}}
+  {{did-insert this.addShowClass}}
+>
+  <div class="topic-timeline" {{did-insert this.addUserTip}}>
+    <TopicTimeline::Container
+      @model={{@model}}
+      @enteredIndex={{this.enteredIndex}}
+      @jumpTop={{@jumpTop}}
+      @jumpBottom={{@jumpBottom}}
+      @jumpEnd={{@jumpEnd}}
+      @jumpToIndex={{@jumpToIndex}}
+      @jumpToPostPrompt={{@jumpToPostPrompt}}
+      @fullscreen={{@fullscreen}}
+      @mobileView={{@mobileView}}
+      @toggleMultiSelect={{@toggleMultiSelect}}
+      @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
+      @showSummary={{@showSummary}}
+      @deleteTopic={{@deleteTopic}}
+      @recoverTopic={{@recoverTopic}}
+      @toggleClosed={{@toggleClosed}}
+      @toggleArchived={{@toggleArchived}}
+      @toggleVisibility={{@toggleVisibility}}
+      @showTopicTimerModal={{@showTopicTimerModal}}
+      @showFeatureTopic={{@showFeatureTopic}}
+      @showChangeTimestamp={{@showChangeTimestamp}}
+      @resetBumpDate={{@resetBumpDate}}
+      @convertToPublicTopic={{@convertToPublicTopic}}
+      @convertToPrivateMessage={{@convertToPrivateMessage}}
+      @replyToPost={{@replyToPost}}
+      @setDocked={{this.setDocked}}
+      @setDockedBottom={{this.setDockedBottom}}
+    />
+  </div>
+</div>

@@ -19,7 +19,6 @@ export function resetWidgetCleanCallbacks() {
 }
 
 export default Component.extend({
-  layoutName: "components/mount-widget",
   _tree: null,
   _rootNode: null,
   _timeout: null,

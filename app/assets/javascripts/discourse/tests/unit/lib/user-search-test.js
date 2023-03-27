@@ -174,4 +174,9 @@ module("Unit | Utility | user-search", function (hooks) {
     });
     assert.strictEqual(results.length, 1);
   });
+
+  test("it uses limit option", async function (assert) {
+    const results = await userSearch({ term: "te", limit: 2 });
+    assert.strictEqual(results.length, 2);
+  });
 });

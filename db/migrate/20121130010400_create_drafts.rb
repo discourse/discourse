@@ -8,6 +8,6 @@ class CreateDrafts < ActiveRecord::Migration[4.2]
       t.text :data, null: false
       t.timestamps null: false
     end
-    add_index :drafts, [:user_id, :draft_key]
+    add_index :drafts, %i[user_id draft_key]
   end
 end

@@ -9,6 +9,5 @@ class AddPercentRankToPosts < ActiveRecord::Migration[4.2]
                     OVER (PARTITION BY topic_id ORDER BY SCORE DESC)
                     FROM posts) AS x
               WHERE x.id = posts.id"
-
   end
 end

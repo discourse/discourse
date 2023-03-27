@@ -4,7 +4,7 @@ import { render } from "@ember/test-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import Category from "discourse/models/category";
-import Topic from "discourse/models/topic";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const createArgs = (topic) => {
   return {
@@ -36,8 +36,13 @@ module(
         moderator: true,
         id: 123,
       });
-      const topic = Topic.create({ user_id: this.currentUser.id });
+
+      const store = getOwner(this).lookup("service:store");
+      const topic = store.createRecord("topic", {
+        user_id: this.currentUser.id,
+      });
       topic.set("category_id", Category.create({ read_restricted: true }).id);
+
       this.siteSettings.allow_featured_topic_on_user_profiles = true;
       this.set("args", createArgs(topic));
 
@@ -54,8 +59,13 @@ module(
         moderator: false,
         id: 123,
       });
-      const topic = Topic.create({ user_id: this.currentUser.id });
+
+      const store = getOwner(this).lookup("service:store");
+      const topic = store.createRecord("topic", {
+        user_id: this.currentUser.id,
+      });
       topic.set("category_id", Category.create({ read_restricted: true }).id);
+
       this.siteSettings.allow_featured_topic_on_user_profiles = true;
       this.set("args", createArgs(topic));
 

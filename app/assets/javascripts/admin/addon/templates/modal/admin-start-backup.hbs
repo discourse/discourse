@@ -1,5 +1,16 @@
 <DModalBody @title="admin.backups.operations.backup.confirm">
-  <DButton @class="btn-primary backup-with-uploads" @action={{action "startBackupWithUploads"}} @label="yes_value" />
-  <DButton @class="backup-no-uploads" @action={{action "startBackupWithoutUploads"}} @label="admin.backups.operations.backup.without_uploads" />
+  {{#if this.warningMessage}}
+    <div class="alert alert-warning">{{html-safe this.warningMessage}}</div>
+  {{/if}}
+  <DButton
+    @class="btn-primary backup-with-uploads"
+    @action={{action "startBackupWithUploads"}}
+    @label={{this.yesLabel}}
+  />
+  <DButton
+    @class="backup-no-uploads"
+    @action={{action "startBackupWithoutUploads"}}
+    @label="admin.backups.operations.backup.without_uploads"
+  />
   <DButton @class="btn-default" @action={{action "cancel"}} @label="no_value" />
 </DModalBody>

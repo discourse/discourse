@@ -8,6 +8,7 @@ const fs = require("fs");
 const concat = require("broccoli-concat");
 const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 const DiscoursePluginColocatedTemplateProcessor = require("./colocated-template-compiler");
+const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 
 function fixLegacyExtensions(tree) {
   return new Funnel(tree, {
@@ -35,7 +36,7 @@ function unColocateConnectors(tree) {
       if (
         match &&
         match.groups.extension === "hbs" &&
-        !match.groups.prefix.endsWith("/templates")
+        match.groups.prefix.split("/").pop() !== "templates"
       ) {
         const { prefix, outlet, name } = match.groups;
         return `${prefix}/templates/connectors/${outlet}/${name}.hbs`;
@@ -43,7 +44,7 @@ function unColocateConnectors(tree) {
       if (
         match &&
         match.groups.extension === "js" &&
-        match.groups.prefix.endsWith("/templates")
+        match.groups.prefix.split("/").pop() === "templates"
       ) {
         // Some plugins are colocating connector JS under `/templates`
         const { prefix, outlet, name } = match.groups;
@@ -55,10 +56,10 @@ function unColocateConnectors(tree) {
   });
 }
 
-function namespaceModules(tree, pluginDirectoryName) {
+function namespaceModules(tree, pluginName) {
   return new Funnel(tree, {
     getDestinationPath: function (relativePath) {
-      return `discourse/plugins/${pluginDirectoryName}/${relativePath}`;
+      return `discourse/plugins/${pluginName}/${relativePath}`;
     },
   });
 }
@@ -113,18 +114,22 @@ module.exports = {
         directoryName,
         "test/javascripts"
       );
+      const configDirectory = path.resolve(root, directoryName, "config");
       const hasJs = fs.existsSync(jsDirectory);
       const hasAdminJs = fs.existsSync(adminJsDirectory);
       const hasTests = fs.existsSync(testDirectory);
+      const hasConfig = fs.existsSync(configDirectory);
       return {
         pluginName,
         directoryName,
         jsDirectory,
         adminJsDirectory,
         testDirectory,
+        configDirectory,
         hasJs,
         hasAdminJs,
         hasTests,
+        hasConfig,
       };
     });
   },
@@ -171,7 +176,15 @@ module.exports = {
 
     tree = RawHandlebarsCompiler(tree);
 
-    tree = new DiscoursePluginColocatedTemplateProcessor(tree);
+    const colocateBase = `discourse/plugins/${pluginName}`;
+    tree = new DiscoursePluginColocatedTemplateProcessor(
+      tree,
+      `${colocateBase}/discourse`
+    );
+    tree = new DiscoursePluginColocatedTemplateProcessor(
+      tree,
+      `${colocateBase}/admin`
+    );
     tree = this.compileTemplates(tree);
 
     tree = this.processedAddonJsFiles(tree);
@@ -212,5 +225,9 @@ module.exports = {
   treeFor() {
     // This addon doesn't contribute any 'real' trees to the app
     return;
+  },
+
+  shouldLoadPluginTestJs() {
+    return EmberApp.env() === "development" || process.env.LOAD_PLUGINS === "1";
   },
 };

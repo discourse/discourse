@@ -16,16 +16,9 @@ const SCROLL_DELAY = 500;
 const TopicRoute = DiscourseRoute.extend({
   screenTrack: service(),
 
-  init() {
-    this._super(...arguments);
-
-    this.setProperties({
-      isTransitioning: false,
-      scheduledReplace: null,
-      lastScrollPos: null,
-      controllerReady: true,
-    });
-  },
+  scheduledReplace: null,
+  lastScrollPos: null,
+  isTransitioning: false,
 
   redirect() {
     return this.redirectIfLoginRequired();
@@ -120,13 +113,11 @@ const TopicRoute = DiscourseRoute.extend({
   showTopicTimerModal() {
     const model = this.modelFor("topic");
 
-    const topicTimer = model.get("topic_timer");
-    if (!topicTimer) {
+    if (!model.get("topic_timer")) {
       model.set("topic_timer", {});
     }
 
     showModal("edit-topic-timer", { model });
-    this.controllerFor("modal").set("modalClass", "edit-topic-timer-modal");
   },
 
   @action
@@ -146,11 +137,10 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showFeatureTopic() {
-    showModal("featureTopic", {
+    showModal("feature-topic", {
       model: this.modelFor("topic"),
       title: "topic.feature_topic.title",
     });
-    this.controllerFor("modal").set("modalClass", "feature-topic-modal");
     this.controllerFor("feature_topic").reset();
   },
 
@@ -335,7 +325,6 @@ const TopicRoute = DiscourseRoute.extend({
     this._super(...arguments);
 
     this.searchService.set("searchContext", null);
-    this.controllerFor("user-card").set("visible", false);
 
     const topicController = this.controllerFor("topic");
     const postStream = topicController.get("model.postStream");

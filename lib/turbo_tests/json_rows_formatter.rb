@@ -10,7 +10,7 @@ module TurboTests
       :example_passed,
       :example_pending,
       :message,
-      :seed
+      :seed,
     )
 
     attr_reader :output
@@ -25,7 +25,7 @@ module TurboTests
           class_name: exception.class.name.to_s,
           backtrace: exception.backtrace,
           message: exception.message,
-          cause: exception_to_json(exception.cause)
+          cause: exception_to_json(exception.cause),
         }
       end
     end
@@ -42,10 +42,7 @@ module TurboTests
     end
 
     def stack_frame_to_json(frame)
-      {
-        shared_group_name: frame.shared_group_name,
-        inclusion_location: frame.inclusion_location
-      }
+      { shared_group_name: frame.shared_group_name, inclusion_location: frame.inclusion_location }
     end
 
     def example_to_json(example)
@@ -55,53 +52,35 @@ module TurboTests
         full_description: example.full_description,
         metadata: {
           shared_group_inclusion_backtrace:
-            example
-              .metadata[:shared_group_inclusion_backtrace]
-              .map(&method(:stack_frame_to_json))
+            example.metadata[:shared_group_inclusion_backtrace].map(&method(:stack_frame_to_json)),
+          extra_failure_lines: example.metadata[:extra_failure_lines],
         },
-        location_rerun_argument: example.location_rerun_argument
+        location_rerun_argument: example.location_rerun_argument,
       }
     end
 
     def example_passed(notification)
-      output_row(
-        type: :example_passed,
-        example: example_to_json(notification.example)
-      )
+      output_row(type: :example_passed, example: example_to_json(notification.example))
     end
 
     def example_pending(notification)
-      output_row(
-        type: :example_pending,
-        example: example_to_json(notification.example)
-      )
+      output_row(type: :example_pending, example: example_to_json(notification.example))
     end
 
     def example_failed(notification)
-      output_row(
-        type: :example_failed,
-        example: example_to_json(notification.example)
-      )
+      output_row(type: :example_failed, example: example_to_json(notification.example))
     end
 
     def seed(notification)
-      output_row(
-        type: :seed,
-        seed: notification.seed,
-      )
+      output_row(type: :seed, seed: notification.seed)
     end
 
     def close(notification)
-      output_row(
-        type: :close,
-      )
+      output_row(type: :close)
     end
 
     def message(notification)
-      output_row(
-        type: :message,
-        message: notification.message
-      )
+      output_row(type: :message, message: notification.message)
     end
 
     private

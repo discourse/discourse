@@ -45,11 +45,6 @@ pl_PL:
       trigger: "przewiń"
       invalid: |-
         Przykro mi, ale jest to matematycznie niemożliwe, aby rzucić taką kombinacją kostki. :confounded:
-      not_enough_dice:
-        one: "Mam tylko %{count} kość. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Ja wiem!"
-        few: "Mam tylko %{count} kości. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Ja wiem!"
-        many: "Mam tylko %{count} kości. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Ja wiem!"
-        other: "Mam tylko %{count} kości. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Ja wiem!"
       out_of_range: |-
         Czy wiesz, że [maksymalna ilość ścian](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) na sprawiedliwej kostce do gry to 120?
       results: |-

@@ -3,9 +3,7 @@
 require "import_export"
 
 RSpec.describe ImportExport::Importer do
-  before do
-    STDOUT.stubs(:write)
-  end
+  before { STDOUT.stubs(:write) }
 
   let(:import_data) do
     import_file = Rack::Test::UploadedFile.new(file_from_fixtures("import-export.json", "json"))
@@ -16,93 +14,79 @@ RSpec.describe ImportExport::Importer do
     ImportExport::Importer.new(data).perform
   end
 
-  describe '.perform' do
-    it 'topics and users' do
+  describe ".perform" do
+    it "topics and users" do
       data = import_data.dup
       data[:categories] = nil
       data[:groups] = nil
 
-      expect {
-        import(data)
-      }.to not_change { Category.count }
-        .and not_change { Group.count }
-        .and change { Topic.count }.by(2)
-        .and change { User.count }.by(2)
+      expect { import(data) }.to not_change { Category.count }.and not_change {
+              Group.count
+            }.and change { Topic.count }.by(2).and change { User.count }.by(2)
     end
 
-    context 'with categories and groups' do
-      it 'works' do
+    context "with categories and groups" do
+      it "works" do
         data = import_data.dup
         data[:topics] = nil
         data[:users] = nil
 
-        expect {
-          import(data)
-        }.to change { Category.count }.by(6)
-          .and change { Group.count }.by(2)
-          .and change { Topic.count }.by(6)
-          .and not_change { User.count }
+        expect { import(data) }.to change { Category.count }.by(6).and change { Group.count }.by(
+                2,
+              ).and change { Topic.count }.by(6).and not_change { User.count }
       end
 
-      it 'works with sub-sub-categories' do
+      it "works with sub-sub-categories" do
         data = import_data.dup
 
         # 11 -> 10 -> 15
         data[:categories].find { |c| c[:id] == 10 }[:parent_category_id] = 11
         data[:categories].find { |c| c[:id] == 15 }[:parent_category_id] = 10
 
-        expect { import(data) }
-          .to change { Category.count }.by(6)
-          .and change { SiteSetting.max_category_nesting }.from(2).to(3)
+        expect { import(data) }.to change { Category.count }.by(6).and change {
+                SiteSetting.max_category_nesting
+              }.from(2).to(3)
       end
 
-      it 'fixes permissions' do
+      it "fixes permissions" do
         data = import_data.dup
         data[:categories].find { |c| c[:id] == 10 }[:permissions_params] = { custom_group: 1 }
         data[:categories].find { |c| c[:id] == 15 }[:permissions_params] = { staff: 1 }
 
         permissions = data[:categories].find { |c| c[:id] == 10 }[:permissions_params]
 
-        expect { import(data) }
-          .to change { Category.count }.by(6)
-          .and change { permissions[:staff] }.from(nil).to(1)
+        expect { import(data) }.to change { Category.count }.by(6).and change {
+                permissions[:staff]
+              }.from(nil).to(1)
       end
     end
 
-    it 'categories, groups and users' do
+    it "categories, groups and users" do
       data = import_data.dup
       data[:topics] = nil
 
-      expect {
-        import(data)
-      }.to change { Category.count }.by(6)
-        .and change { Group.count }.by(2)
-        .and change { Topic.count }.by(6)
-        .and change { User.count }.by(2)
+      expect { import(data) }.to change { Category.count }.by(6).and change { Group.count }.by(
+              2,
+            ).and change { Topic.count }.by(6).and change { User.count }.by(2)
     end
 
-    it 'groups' do
+    it "groups" do
       data = import_data.dup
       data[:categories] = nil
       data[:topics] = nil
       data[:users] = nil
 
-      expect {
-        import(data)
-      }.to not_change { Category.count }
-        .and change { Group.count }.by(2)
-        .and not_change { Topic.count }
-        .and not_change { User.count }
+      expect { import(data) }.to not_change { Category.count }.and change { Group.count }.by(
+              2,
+            ).and not_change { Topic.count }.and not_change { User.count }
     end
 
-    it 'all' do
-      expect {
-        import(import_data)
-      }.to change { Category.count }.by(6)
-        .and change { Group.count }.by(2)
-        .and change { Topic.count }.by(8)
-        .and change { User.count }.by(2)
-        .and change { TranslationOverride.count }.by(1)
+    it "all" do
+      expect { import(import_data) }.to change { Category.count }.by(6).and change {
+              Group.count
+            }.by(2).and change { Topic.count }.by(8).and change { User.count }.by(2).and change {
+                                TranslationOverride.count
+                              }.by(1)
     end
   end
 end

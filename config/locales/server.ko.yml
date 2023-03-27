@@ -364,6 +364,7 @@ ko:
       too_many: "북마크를 %{limit}개 이상 추가할 수 없습니다. <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>에서 일부를 제거하세요."
       cannot_set_past_reminder: "북마크 미리 알림을 과거로 설정할 수 없습니다."
       cannot_set_reminder_in_distant_future: "북마크 미리 알림을 10년 이후로 설정할 수 없습니다."
+      time_must_be_provided: "모든 알림은 시간이 설정되어야합니다."
     reminders:
       at_desktop: "다음 데스크톱 접속 시"
       later_today: "오늘 중"
@@ -535,10 +536,6 @@ ko:
             duration_minutes:
               cannot_be_zero: "0보다 커야 합니다."
               exceeds_maximum: "20년을 초과할 수 없습니다."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: '다음 보간 키가 유효하지 않습니다. "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -586,6 +583,7 @@ ko:
       disallowed_topic_tags: "이 주제에는 이 카테고리에서 허용하지 않는 태그가 있습니다. '%{tags}'"
       disallowed_tags_generic: "이 주제는 태그를 허용하지 않습니다."
       slug_contains_non_ascii_chars: "비 ASCII 문자 포함"
+      is_already_in_use: "이미 사용 중"
     cannot_delete:
       uncategorized: "특수 카테고리입니다. 카테고리가 없는 주제의 보관 영역으로 사용되므로 삭제할 수 없습니다."
       has_subcategories: "서브카테고리가 있기 때문에 이 카테고리를 삭제할 수 없습니다."
@@ -600,10 +598,13 @@ ko:
   post:
     image_placeholder:
       broken: "이미지 깨짐"
+      blocked_hotlinked_title: "이미지는 다른 사이트에서 호스팅됩니다. 새 탭에서 열려면 클릭하세요."
+      blocked_hotlinked: "외부 이미지"
+    media_placeholder:
+      blocked_hotlinked: "외부 미디어"
     has_likes:
       other: "%{count}개의 좋아요"
     cannot_permanently_delete:
-      many_posts: "다른 게시물이 있어 이 주제를 영구적으로 삭제할 수 없습니다."
       wait_or_different_admin: "이 게시물을 영구적으로 삭제하려면 %{time_left} 동안 기다리거나 다른 관리자가 삭제해야 합니다."
   rate_limiter:
     slow_down: "이 작업을 너무 많이 수행했습니다. 나중에 다시 시도하세요."
@@ -679,16 +680,10 @@ ko:
       almost_x_years:
         other: "약 %{count}년 전"
   password_reset:
-    no_token: "이 비밀번호 변경 링크는 너무 오래됐습니다. 로그인 버튼을 눌러서 '비밀번호가 기억나지 않습니다'를 사용하여 새 링크를 받으세요."
-    choose_new: "새 비밀번호를 입력하세요"
-    choose: "비밀번호를 입력하세요"
-    update: "비밀번호 업데이트"
-    save: "비밀번호 설정"
     title: "비밀번호 리셋"
     success: "비밀번호를 변경했으며, 로그인되었습니다."
     success_unapproved: "비밀번호를 변경했습니다."
   email_login:
-    invalid_token: "이 이메일 로그인 링크는 너무 오래됐습니다. 로그인 버튼을 눌러서 '비밀번호가 기억나지 않습니다'를 사용하여 새 링크를 받으세요."
     title: "이메일 로그인"
   user_auth_tokens:
     browser:
@@ -775,7 +770,6 @@ ko:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "부적절함"
-      description: '이 게시물에는 합리적인 판단하에 불쾌하거나 모욕적이거나 <a href="%{base_path}/guidelines">커뮤니티 가이드라인</a> 위반으로 간주할 수 있는 콘텐츠가 포함되어 있습니다.'
       short_description: '<a href="%{base_path}/guidelines">커뮤니티 가이드라인</a> 위반'
     notify_user:
       title: "@%{username} 님에게 메시지 전송"
@@ -841,7 +835,6 @@ ko:
       short_description: "광고입니다"
     inappropriate:
       title: "부적절함"
-      description: '이 주제에는 합리적인 판단하에 불쾌하거나 모욕적이거나 <a href="%{base_path}/guidelines">커뮤니티 가이드라인</a> 위반으로 간주할 수 있는 콘텐츠가 포함되어 있습니다.'
       long_form: "부적절한 것으로 신고됨"
       short_description: '<a href="%{base_path}/guidelines">커뮤니티 가이드라인</a> 위반'
     notify_moderators:
@@ -879,7 +872,6 @@ ko:
     mailing_list_mode: "메일링 리스트 모드 끄기"
     all: "%{sitename}의 메일 전송 중지"
     different_user_description: "이메일이 전송되는 사용자가 아닌 계정으로 로그인했습니다. 로그아웃한 후 익명 모드를 시작하고 다시 시도하세요."
-    not_found_description: "이 구독 해제를 찾을 수 없습니다. 이메일의 링크가 너무 오래되어 만료되었을 수 있습니다."
     log_out: "로그아웃"
     submit: "환경설정 저장"
     digest_frequency:
@@ -1008,6 +1000,11 @@ ko:
         editor: 에디터
         author: 작성자
         edit_reason: 사유
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "사용자 API"
+      yaxis: "일"
     dau_by_mau:
       title: "DAU / MAU"
       xaxis: "일"
@@ -1250,6 +1247,7 @@ ko:
       labels:
         user: 사용자
         qtt_like: 받은 좋아요 수
+      description: "좋아요를 받은 상위 10명의 사용자"
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: 사용자
@@ -1321,11 +1319,6 @@ ko:
     allow_duplicate_topic_titles_category: "카테고리가 다른 경우 동일한 중복 제목을 가진 주제를 허용합니다. allow_duplicate_topic_titles를 비활성화해야 합니다."
     unique_posts_mins: "사용자가 동일한 콘텐츠로 다시 게시물을 작성하기 위해 필요한 시간(분)"
     educate_until_posts: "사용자가 첫 (n)개의 새 게시물을 작성하기 시작하면 작성기에 신규 사용자 교육 패널 팝업을 표시합니다."
-    title: "이 사이트의 이름입니다(제목 태그에 사용)."
-    site_description: "이 사이트를 한 문장으로 설명하세요(설명 태그에 사용)."
-    short_site_description: "간단한 설명입니다(홈페이지의 제목 태그에 사용)."
-    contact_email: "이 사이트의 담당자 이메일 주소입니다. 중요 알림뿐만 아니라 긴급 상황에 대비하여 <a href='%{base_path}/about' target='_blank'>정보</a>에 표시됩니다."
-    contact_url: "이 사이트의 연락처 URL입니다. 긴급 상황에 대비하여 <a href='%{base_path}/about' target='_blank'>정보</a> 페이지에 표시됩니다."
     crawl_images: "원격 URL에서 이미지를 가져와 올바른 너비 및 높이 치수를 삽입합니다."
     download_remote_images_threshold: "원격 이미지를 로컬에 다운로드하기 위한 최소 디스크 공간(%)"
     disabled_image_download_domains: "이 도메인에서 원격 이미지를 다운로드하지 않습니다. 목록은 | 기호를 사용하여 구분하세요."
@@ -1338,8 +1331,6 @@ ko:
     edit_history_visible_to_public: "모든 사용자가 편집된 게시물의 기존 버전을 보도록 허용합니다. 비활성화하면 운영진만 볼 수 있습니다."
     delete_removed_posts_after: "작성자가 제거한 게시물은 (n)시간 뒤 자동으로 삭제됩니다. 0으로 설정 시 즉시 삭제됩니다."
     notify_users_after_responses_deleted_on_flagged_post: "게시물이 신고되어 제거되면 게시물에 반응을 보였거나 반응이 제거된 모든 사용자에게 알림이 전송됩니다."
-    max_image_width: "게시물의 최대 섬네일 이미지 너비"
-    max_image_height: "게시물의 최대 섬네일 이미지 높이"
     responsive_post_image_sizes: "라이트 박스 미리보기 이미지의 크기를 조정하여 다음 픽셀 비율의 높은 DPI 화면을 허용합니다. 반응형 이미지를 비활성화하려면 모든 값을 제거하세요."
     fixed_category_positions: "체크하면 고정된 순서로 카테고리를 정렬할 수 있습니다. 체크하지 않으면 카테고리는 활동 순으로 나열됩니다."
     fixed_category_positions_on_create: "체크하면 주제 생성 대화창의 카테고리 순서가 유지됩니다(fixed_category_positions 필요)."
@@ -1465,11 +1456,7 @@ ko:
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화 토큰은 (n)시간 유효합니다."
     enable_badges: "배지 시스템 활성화"
     max_favorite_badges: "사용자가 선택할 수 있는 최대 배지 수"
-    enable_whispers: "주제 내 운영진 비공개 커뮤니케이션을 허용합니다."
     allow_index_in_robots_txt: "웹 검색 엔진에서 이 사이트의 색인을 생성할 수 있도록 robots.txt에 지정합니다. 예외적인 경우 영구적으로 <a href='%{base_path}/admin/customize/robots'>robots.txt를 오버라이드</a>할 수 있습니다."
-    blocked_email_domains: "사용자가 계정을 등록할 수 없는 파이프(|)로 구분된 이메일 도메인 목록입니다. 예: mailinator.com|trashmail.net"
-    allowed_email_domains: "사용자가 계정을 등록해야 하는 파이프(|)로 구분된 이메일 도메인 목록입니다. 경고: 나열된 것과 다른 이메일 도메인을 가진 사용자는 허용되지 않습니다!"
-    auto_approve_email_domains: "이 도메인 목록의 이메일 주소를 가진 사용자는 자동으로 승인됩니다."
     hide_email_address_taken: "가입하는 동안 또는 비밀번호 찾기 과정에서 제공한 이메일 주소를 사용한 계정이 존재한다는 것을 사용자에게 알리지 마세요. '비밀번호 찾기' 요청에는 전체 이메일이 필요합니다."
     log_out_strict: "로그아웃 시, 모든 디바이스에서 사용자의 모든 세션을 로그아웃합니다"
     version_checks: "버전 업데이트를 위해 Discourse Hub를 Ping하고 <a href='%{base_path}/admin' target='_blank'>/admin</a> 대시보드에 새 버전 메시지를 표시합니다"
@@ -1491,7 +1478,6 @@ ko:
     enable_discourse_connect: "DiscourseConnect(기존 'Discourse SSO')를 통한 로그인을 활성화합니다(경고: 사용자의 이메일 주소는 *반드시* 외부 사이트에서 검증되어야 합니다!)"
     verbose_discourse_connect_logging: "자세한 DiscourseConnect 관련 진단을 <a href='%{base_path}/logs' target='_blank'>/log</a>에 기록합니다."
     enable_discourse_connect_provider: "/session/sso_provider 엔드포인트에서 DiscourseConnect(기존 'Discourse SSO') 공급자 프로토콜을 구현하려면 discourse_connect_provider_secrets를 설정해야 합니다."
-    discourse_connect_url: "DiscourseConnect 엔드포인트의 URL(반드시 http:// 또는 https://를 포함해야 함)"
     discourse_connect_secret: "DiscourseConnect 정보를 암호화 방식으로 인증하는 데 사용되는 암호 문자열이며, 10자 이상이어야 합니다."
     discourse_connect_provider_secrets: "DiscourseConnect를 사용하는 도메인 암호 쌍의 목록입니다. DiscourseConnect 암호가 10자 이상인지 확인하세요. 와일드카드 기호 *는 모든 도메인 또는 그 일부(예: *.example.com)와 일치하는 데 사용할 수 있습니다."
     discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능를 오버라이드하고 사용자가 변경할 수 없도록 합니다"
@@ -1526,7 +1512,6 @@ ko:
     discord_trusted_guilds: '이 Discord 길드 회원만 Discord를 통해 로그인할 수 있습니다. 길드에 숫자 ID를 사용하세요. 자세한 내용은 <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">여기</a>에서 지침을 확인하세요. 모든 길드를 허용하려면 공백으로 두세요.'
     enable_backups: "관리자가 포럼 백업을 생성하도록 허용"
     allow_restore: "모든 사이트 데이터를 대체할 수 있는 복원을 허용합니다! 백업을 복원할 계획이 아니라면 비활성화된 상태로 두세요."
-    maximum_backups: "디스크에 유지할 최대 백업 수입니다. 오래된 백업 순으로 자동으로 삭제됩니다"
     automatic_backups_enabled: "백업 주기에 정의된 대로 자동 백업 실행"
     backup_frequency: "백업 주기(일)입니다."
     s3_backup_bucket: "백업을 보관할 원격 버킷입니다. 경고: 비공개 버킷인지 확인하세요."
@@ -1600,7 +1585,6 @@ ko:
     composer_media_optimization_image_bytes_optimization_threshold: "클라이언트 측 최적화를 트리거하기 위한 최소 이미지 파일 크기"
     composer_media_optimization_image_resize_dimensions_threshold: "클라이언트 측 크기 조정을 트리거하는 최소 이미지 너비"
     composer_media_optimization_image_resize_width_target: "너비가 `composer_media_optimization_image_dimensions_resize_threshold` 보다 큰 이미지는 이 너비로 크기가 조정됩니다. `composer_media_optimization_image_dimensions_resize_threshold` 보다 크거나 같아야 합니다."
-    composer_media_optimization_image_encode_quality: "재인코딩 프로세스에 사용되는 JPEG 인코딩 퀄리티입니다."
     min_ratio_to_crop: "큰 이미지를 자르는 데 사용되는 비율입니다. 너비 / 높이의 결과를 입력하세요."
     simultaneous_uploads: "작성기에서 드래그 앤 드롭할 수 있는 최대 파일 수"
     default_invitee_trust_level: "초대된 사용자의 디폴트 신뢰 레벨(0~4)입니다."
@@ -1695,7 +1679,6 @@ ko:
     faq_url: "사용하려는 다른 곳의 호스팅된 FAQ가 있는 경우 여기에 전체 URL을 입력하세요."
     tos_url: "사용하려는 다른 곳의 호스팅된 이용약관 문서가 있는 경우 여기에 전체 URL을 입력하세요."
     privacy_policy_url: "사용하려는 다른 곳의 호스팅된 개인정보 취급방침 문서가 있는 경우 여기에 전체 URL을 입력하세요."
-    log_anonymizer_details: "익명화된 후 사용자의 상세 정보를 로그에 유지할지 여부입니다. GDPR을 준수하면 이 기능을 꺼야 합니다."
     newuser_spam_host_threshold: "신규 사용자가 스팸으로 간주되기 전에 `newuser_spam_host_threshold` 게시물 내에서 동일한 호스트로의 링크를 게시할 수 있는 횟수입니다."
     allowed_spam_host_domains: "스팸 호스트 테스트에서 제외된 도메인 목록입니다. 신규 사용자는 이러한 도메인으로의 링크가 있는 게시물을 작성하는 데 제한을 받지 않습니다."
     staff_like_weight: "운영진의 좋아요에 부여할 가중치(일반 회원의 가중치는 1임)"
@@ -1752,14 +1735,14 @@ ko:
     raw_rejected_email_max_length: "거부된 수신 이메일에 저장해야 하는 문자 수입니다."
     delete_rejected_email_after_days: "(n)일 지난 거부된 이메일을 삭제합니다."
     manual_polling_enabled: "이메일 답장을 위해 API를 사용하여 이메일을 푸시합니다."
-    pop3_polling_enabled: "이메일 답장을 위해 POP3로 폴링합니다."
+    pop3_polling_enabled: "POP3로 이메일 응답 가져오기"
     pop3_polling_ssl: "POP3 서버 연결 중 SSL을 사용합니다. (추천)"
     pop3_polling_openssl_verify: "TLS 서버 인증서 검증(디폴트: 활성화됨)"
     pop3_polling_period_mins: "POP3 계정에서 이메일을 확인하는 간격(분)입니다. 참고: 재시작해야 합니다."
-    pop3_polling_port: "POP3 계정을 폴링할 포트입니다. "
-    pop3_polling_host: "POP3를 통해 이메일을 폴링할 호스트입니다."
-    pop3_polling_username: "이메일을 폴링할 POP3 계정의 아이디입니다."
-    pop3_polling_password: "이메일을 폴링할 POP3 계정의 비밀번호입니다."
+    pop3_polling_port: "POP3 계정을 연결할 포트 번호"
+    pop3_polling_host: "POP3 계정을 연결할 서버명"
+    pop3_polling_username: "이메일을 가져올 POP3 계정의 사용자 이름"
+    pop3_polling_password: "이메일을 가져올 POP3 계정의 비밀번호"
     pop3_polling_delete_from_server: "서버에서 이메일을 삭제하세요. 참고: 이 기능을 비활성화하면 받은 편지함을 수동으로 정리해야 합니다."
     log_mail_processing_failures: "모든 이메일 처리 실패를 <a href='%{base_path}/logs' target='_blank'>/logs</a>에 기록"
     email_in: '사용자가 이메일을 통해 새 주제를 게시할 수 있도록 허용합니다(수동 또는 pop3 폴링 필요). 각 카테고리의 ''설정'' 탭에서 주소를 환경설정합니다.'
@@ -1806,7 +1789,7 @@ ko:
     enable_user_directory: "탐색을 위해 사용자의 디렉터리 제공"
     enable_group_directory: "탐색을 위해 그룹의 디렉터리 제공"
     enable_category_group_moderation: "그룹이 특정 카테고리의 콘텐츠를 관리하도록 허용"
-    group_in_subject: "PM의 첫 번째 그룹 이름으로 이메일 제목의 %%{optional_pm} 설정. 참조: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>표준 이메일의 제목 형식 사용자 지정</a>"
+    group_in_subject: "PM의 첫 번째 그룹 이름으로 이메일 제목에 %%{optional_pm} 을 설정합니다. 참조: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>표준 이메일의 제목 형식 사용자 지정</a>"
     allow_anonymous_posting: "사용자의 익명 모드 전환 허용"
     anonymous_posting_min_trust_level: "익명 게시를 활성화하기 위한 최소 신뢰 레벨"
     anonymous_account_duration_minutes: "익명성을 보호하기 위해 각 사용자에 대해 N분마다 새 익명 계정을 만듭니다. 예: 600으로 설정하면 마지막 게시물로부터 600분이 경과하고 사용자가 익명으로 전환하는 즉시 새 익명 계정이 생성됩니다."
@@ -1841,8 +1824,6 @@ ko:
     automatically_unpin_topics: "주제 하단에 도달하면 주제를 자동으로 고정 해제합니다."
     read_time_word_count: "추정 읽은 시간 계산을 위한 1분당 워드 카운트입니다."
     topic_page_title_includes_category: "주제 페이지 <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>제목 태그</a>에는 카테고리 이름이 포함됩니다."
-    native_app_install_banner_ios: "iOS 디바이스의 DiscourseHub 앱 배너를 일반 사용자(신뢰 레벨 1 이상)에게 표시합니다."
-    native_app_install_banner_android: "일반 사용자(신뢰 레벨 1 이상)에게 Android 디바이스에 DiscourseHub 앱 배너를 표시합니다."
     app_association_android: "Google의 Digital Asset Links API에 사용되는 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 엔드포인트의 콘텐츠입니다."
     app_association_ios: "이 사이트와 iOS 앱 간의 범용 링크를 만드는 데 사용되는 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> 엔드포인트의 콘텐츠입니다."
     share_anonymized_statistics: "익명화된 사용 통계 공유"
@@ -2021,6 +2002,7 @@ ko:
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안 됩니다."
       unicode_usernames_avatars: "내부 시스템 아바타는 유니코드 아이디를 지원하지 않습니다."
       list_value_count: "목록에 정확히 %{count} 값을 포함해야 합니다."
+      markdown_linkify_tlds: "'*' 값을 포함할 수 없습니다."
       search_tokenize_chinese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_chinese'를 비활성화해야 합니다."
       search_tokenize_japanese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_japanese'를 비활성화해야 합니다."
     placeholder:
@@ -2188,7 +2170,6 @@ ko:
     activated_by_staff: "운영진에 의해 활성화됨"
     new_user_typed_too_fast: "입력이 너무 빠른 신규 사용자"
     content_matches_auto_silence_regex: "콘텐츠가 자동 차단 정규식과 일치합니다"
-    content_matches_auto_block_regex: "콘텐츠가 자동 차단 정규식과 일치합니다"
     username:
       short: "최소 %{min}자 이상이어야 합니다"
       long: "%{max}자 이하여야 합니다"
@@ -2368,7 +2349,6 @@ ko:
       %{notes}
   flag_reasons:
     off_topic: "내 게시물이 **주제에 벗어남** 으로 신고되었습니다. 커뮤니티에서 이 게시물이 현재 제목 및 첫 게시물로 지정된 이 주제와 맞지 않는다고 생각하는 것 같습니다. "
-    inappropriate: "내 게시물이 **부적절** 로 신고되었습니다. 커뮤니티에서 이 게시물이 불쾌하거나 모욕적이거나 [커뮤니티 가이드라인](%{base_path}/guidelines)을 위반했다고 생각하는 것 같습니다."
     spam: "내 게시물이 **스팸** 으로 신고되었습니다. 커뮤니티에서 이 게시물이 유용하거나 주제와 관련되지 않고 생각보다 너무 프로모션 성격을 갖고 있어 광고라고 생각하는 것 같습니다."
     notify_moderators: "내 게시물이 **운영자 확인 필요** 로 신고되었습니다. 커뮤니티에서 이 게시물이 운영진의 직접적인 개입이 필요하다고 생각하는 것 같습니다."
   flags_dispositions:
@@ -2843,14 +2823,6 @@ ko:
     user_automatically_silenced:
       title: "사용자가 자동 차단됨"
       subject_template: "커뮤니티 신고로 신규 유저 %{username} 님이 차단됨"
-      text_body_template: |
-        자동 메시지입니다.
-
-        여러 사용자가 %{username} 님의 게시물을 신고하여 신규 사용자 [%{username}](%{user_url})님이 자동 차단되었습니다.
-
-        [신고를 검토](%{base_url}/admin/flags)하고, %{username} 님의 게시 차단이 잘못되었다고 판단되는 경우 [이 사용자의 관리 페이지](%{user_url})에서 차단 해제 버튼을 클릭하세요.
-
-        한계치는 `silence_new_user` 사이트 설정에서 변경할 수 있습니다.
     spam_post_blocked:
       title: "스팸 게시글 차단됨"
       subject_template: "신규 사용자 %{username} 님의 게시물이 연속된 링크로 인해 차단됨"
@@ -2925,9 +2897,6 @@ ko:
     reached_limit:
       other: "주의: 매일 최대 %{count}개의 이메일을 전송합니다. 사이트를 확인하여 보류될 수 있는 사이트가 있는지 확인하세요. 활발한 활동에 감사드립니다!"
     in_reply_to: "답장 대상"
-    unsubscribe:
-      title: "구독 해제"
-      description: "이 이메일에 관심이 없나요? 아래 구독 해제를 눌러서 바로 구독을 해제할 수 있습니다."
     reply_by_email: "[주제를 방문](%{base_url}%{url})하거나 이 이메일에 답장하여 응답하세요."
     reply_by_email_pm: "[주제를 방문](%{base_url}%{url})하거나 이 이메일에 답장하여 %{participants}에 응답하세요."
     only_reply_by_email: "이 이메일에 답장하여 응답하세요."
@@ -3133,6 +3102,17 @@ ko:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "사용자가 첫 게시물을 구독함"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3220,7 +3200,6 @@ ko:
       liked_received: "받은 좋아요 수"
       new_users: "신규 사용자"
       popular_topics: "인기 주제"
-      follow_topic: "이 주제 팔로우"
       join_the_discussion: "더 보기"
       popular_posts: "인기 게시물"
       more_new: "맞춤 신규 항목"
@@ -3411,8 +3390,6 @@ ko:
     welcome_message_invite_only: |
       ## [%{title}에 오신 것을 환영합니다](#welcome)
       계정이 필요합니다. 계속하려면 기존 회원에게 초대를 요청하거나 로그인하세요.
-  deleted: "삭제되었습니다"
-  image: "이미지"
   upload:
     edit_reason: "이미지 로컬 사본 다운로드됨"
     unauthorized: "업로드하려는 파일 확장자는 허용되지 않습니다(허용 확장자: %{authorized_extensions})."
@@ -3508,178 +3485,6 @@ ko:
     title: "FAQ/가이드라인"
   tos_topic:
     title: "이용약관"
-    body: |
-      이 약관은 <%{base_url}>의 인터넷 포럼 사용에 적용됩니다. 포럼을 사용하려면 포럼을 운영하는 회사인 %{company_name}의 약관에 동의해야 합니다.
-
-      회사는 다른 조건으로 다른 제품 및 서비스를 제공할 수 있습니다. 이 약관은 포럼 사용에만 적용됩니다.
-
-      건너뛰기:
-
-      - [중요 용어](#heading--important-terms)
-      - [포럼 이용 권한](#heading--permission)
-      - [포럼 이용 조건](#heading--conditions)
-      - [허용되는 사용](#heading--acceptable-use)
-      - [콘텐츠 표준](#heading--content-standards)
-      - [Enforcement](#heading--enforcement)
-      - [Your Account](#heading--your-account)
-      - [Your Content](#heading--your-content)
-      - [Your Responsibility](#heading--responsibility)
-      - [Disclaimers](#heading--disclaimers)
-      - [Limits on Liability](#heading--liability)
-      - [Feedback](#heading--feedback)
-      - [Termination](#heading--termination)
-      - [Disputes](#heading--disputes)
-      - [General Terms](#heading--general)
-      - [Contact](#heading--contact)
-      - [Changes](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">중요 용어</a></h2>
-
-      ***본 약관은 사용자의 권리와 책임에 영향을 주는 여러 중요 조항을 포함합니다. 예를 들면 다음과 같습니다. [면책 조항](#heading--disclaimers)의 면책 조항, [책임 제한](#heading--liability)의 사용자에 대한 회사의 책임 제한, [사용자의 사용에 대한 책임](#heading--responsibility)의 포럼 오용으로 인해 발생한 손해에 대해 회사에 보상하는 것에 동의, [분쟁](#heading--disputes)의 분쟁을 중재하기로 동의***
-
-      <h2 id="heading--permission"><a href="#heading--permission">포럼 이용 권한</a></h2>
-
-      본 약관에 따라 회사는 사용자에게 포럼 이용 권한을 부여합니다. 포럼을 이용하려면 모든 사람이 이 약관에 동의해야 합니다.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">포럼 이용 조건</a></h2>
-
-      포럼 이용 권한에는 다음 조건이 적용됩니다.
-
-      1. 13세 이상이어야 합니다.
-
-      2. 회사가 사용자에게 직접 연락하여 이용 불가를 통지하면 더 이상 포럼을 이용할 수 없습니다.
-
-      3. [허용되는 사용](#heading--acceptable-use) 및 [콘텐츠 표준](#heading--content-standards)에 따라 포럼을 이용해야 합니다.
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">허용되는 사용</a></h2>
-
-      1. 포럼을 이용하여 법을 어길 수 없습니다.
-
-      2. 특정 권한 없이 포럼에서 다른 사람의 계정을 사용하거나 사용하려고 시도할 수 없습니다.
-
-      3. 포럼에서 아이디 또는 기타 고유 ID를 구매, 판매 또는 거래할 수 없습니다.
-
-      4. 포럼을 통해 광고, 행운의 편지 또는 기타 권유를 보내거나 상업적 메일링 리스트 또는 데이터베이스를 위한 주소 또는 기타 개인 데이터를 수집하기 위해 포럼을 사용할 수 없습니다.
-
-      5. 웹 크롤러, 브라우저 플러그인, 애드온 또는 웹 브라우저가 아닌 기타 컴퓨터 프로그램을 사용하여 포럼 액세스를 자동화하거나 포럼을 모니터링할 수 없습니다. 포럼을 크롤링하여 공개적으로 사용 가능한 검색 엔진을 위해 색인을 생성할 수는 있습니다.
-
-      6. 포럼을 사용하여 배포 목록, 뉴스그룹 또는 그룹 메일 별칭으로 이메일을 전송할 수 없습니다.
-
-      7. 이 회사와 제휴하거나 보증을 받는다고 허위로 암시할 수 없습니다.
-
-      8. 다른 웹페이지의 포럼에 있는 이미지 또는 기타 비하이퍼텍스트 콘텐츠에 하이퍼링크할 수 없습니다.
-
-      9. 포럼에서 다운로드한 자료의 소유권을 나타내는 표시를 제거할 수 없습니다.
-
-      10. '<iframe>' 을 사용하여 포럼의 어떤 부분도 다른 웹사이트에 표시할 수 없습니다.
-
-      11. 포럼의 보안 또는 액세스 제한을 비활성화, 회피 또는 우회할 수 없습니다.
-
-      12. 부당한 양의 요청 또는 포럼의 기반이 되는 정보 시스템이 과부하되도록 설계된 요청으로 포럼의 인프라에 부담을 줄 수 없습니다.
-
-      13. 포럼을 통해 다른 사람을 가장할 수 없습니다.
-
-      14. 이 약관을 위반하는 사용자를 독려하거나 도울 수 없습니다.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">콘텐츠 표준</a></h2>
-
-      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, or abusive.
-
-      2. You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
-
-      3. You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
-
-      4. You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
-
-      5. You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Enforcement</a></h2>
-
-      The company may investigate and prosecute violations of these terms to the fullest legal extent. The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
-
-      The company reserves the right to change, redact, and delete content on the forum for any reason. If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Your Account</a></h2>
-
-      You must create and log into an account to use some features of the forum.
-
-      To create an account, you must provide some information about yourself. If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date. You may close your account at any time by e-mailing <%{contact_email}>.
-
-      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised. You agree to notify the company immediately if you suspect your account has been compromised. You agree to select a secure password for your account, and keep it secret.
-
-      The company may restrict, suspend, or close your account on the forum according to its policy for handling copyright-related takedown requests, or if the company reasonably believes that you've broken any rule in these terms.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Your Content</a></h2>
-
-      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum. Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
-
-      Between you and the company, you remain solely responsible for content you submit to the forum. You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company. These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
-
-      Content you submit to the forum belongs to you, and you decide what permission to give others for it. But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum. That special license allows the company to copy, publish, and analyze content you submit to the forum.
-
-      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems. Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed. Those licenses may give others, or the company itself, the right to share your content through the forum again.
-
-      Others who receive content you submit to the forum may violate the terms on which you license your content. You agree that the company will not be liable to you for those violations or their consequences.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Your Responsibility</a></h2>
-
-      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum. Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible. If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice. You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts. The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
-
-      ***You accept all risk of using the forum and content on the forum. As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
-
-      The forum may hyperlink to and integrate forums and services run by others. The company does not make any warranty about services run by others, or content they may provide. Use of services run by others may be governed by other terms between you and the one running service.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Limits on Liability</a></h2>
-
-      ***Neither the company nor its suppliers will be liable to you for breach-of-contract damages their personnel could not have reasonably foreseen when you agreed to these terms.***
-
-      ***As far as the law allows, the total liability to you for claims of any kind that are related to the forum or content on the forum will be limited to $50.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
-
-      The company welcomes your feedback and suggestions for the forum. See the [Contact](#heading--contact) section below for ways to get in touch with us.
-
-      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you. You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Termination</a></h2>
-
-      Either you or the company may end the agreement written out in these terms at any time. When our agreement ends, your permission to use the forum also ends.
-
-      The following provisions survive the end of our agreement: [Your Content](#heading--your-content), [Feedback](#heading--feedback), [Your Responsibility](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Limits on Liability](#heading--liability), and [General Terms](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Disputes</a></h2>
-
-      %{governing_law} will govern any dispute related to these terms or your use of the forum.
-
-      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}. Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
-
-      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration. Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes. Arbitration will happen in %{city_for_disputes}. You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member. No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
-
-      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses. You and the company may enter arbitration awards in any court with jurisdiction.
-
-      <h2 id="heading--general"><a href="#heading--general">General Terms</a></h2>
-
-      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable. Otherwise, that provision should be removed.
-
-      You may not assign your agreement with the company. The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum. Any attempted assignment against these terms has no legal effect.
-
-      Neither the exercise of any right under this Agreement, nor waiver of any breach of this Agreement, waives any other breach of this Agreement.
-
-      These terms embody all the terms of agreement between you and the company about use of the forum. These terms entirely replace any other agreements about your use of the forum, written or not.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
-
-      You may notify the company under these terms, and send questions to the company, at <%{contact_email}>.
-
-      The company may notify you under these terms using the e-mail address you provide for your account on the forum, or by posting a message to the homepage of the forum or your account page.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
-
-      The company last updated these terms on July 12, 2018, and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
-
-      Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
   privacy_topic:
     title: "개인정보 취급방침"
   badges:
@@ -3987,35 +3792,30 @@ ko:
       message: "<p>활성화 이메일을 <b>%{email}</b> 주소로 재전송했습니다."
   safe_mode:
     title: "안전 모드 시작"
-    description: "안전 모드를 사용하면 플러그인이나 사이트 사용자 정의를 로드하지 않고도 사이트를 테스트할 수 있습니다."
-    no_unofficial_plugins: "비공식 플러그인 해제하기"
-    no_plugins: "모든 플러그인 비활성화"
     enter: "안전 모드 시작"
     must_select: "안전 모드를 시작하려면 옵션을 하나 이상 선택하세요."
   wizard:
     title: "Discourse Setup"
     step:
       introduction:
-        title: "소개"
         fields:
           title:
+            label: "커뮤니티 이름"
             placeholder: "빠오 소굴"
           site_description:
             placeholder: "빠오가 친구와 함께 재밌는 일들에 대하여 이야기나누는 곳"
           default_locale:
             label: "언어"
       privacy:
-        title: "액세스"
         fields:
           login_required:
             placeholder: "비공개"
             extra_description: "로그인 한 사용자 만이 커뮤니티에 액세스 할 수 있습니다"
-          must_approve_users:
-            placeholder: "승인 필요"
-      ready:
-        title: "당신의 Discourse가 준비되었습니다!"
+          chat_enabled:
+            placeholder: "채팅 활성화"
+          enable_sidebar:
+            placeholder: "사이드바 활성화"
       styling:
-        title: "스타일링"
         fields:
           color_scheme:
             label: "색상 구성표"
@@ -4038,33 +3838,21 @@ ko:
                 label: "카테고리 및 최신 주제"
               categories_and_top_topics:
                 label: "카테고리 및 주요 주제"
-      branding:
-        fields:
-          logo:
-            label: "기본 로고"
-          logo_small:
-            label: "스퀘어 로고"
-          favicon:
-            label: "브라우저 아이콘"
-          large_icon:
-            label: "큰 아이콘"
+              categories_boxes:
+                label: "카테고리 박스"
+              categories_boxes_with_topics:
+                label: "글이 있는 카테고리 상자"
+              subcategories_with_featured_topics:
+                label: "추천 글이 포함된 하위 카테고리"
       corporate:
         fields:
-          company_name:
-            label: "회사 이름"
-            placeholder: "조직 예시"
           governing_law:
-            label: "준거법"
             placeholder: "캘리포니아 법"
           contact_url:
-            label: "웹 페이지"
             placeholder: "https://www.example.com/contact-us"
-            description: "당신 또는 당신의 조직을 위한 Contact 웹페이지입니다. <a href='%{base_path}/about' target='_blank'>about 페이지</a>에 나타나게 됩니다."
           city_for_disputes:
-            label: "분쟁 도시"
             placeholder: "캘리포니아주 샌프란시스코"
           site_contact:
-            label: "자동화된 메시지"
             description: "신고 알림 및 백업 완료 알림과 같은 모든 자동화 된 Discourse 메시지가 이 사용자의 아이디로 전송됩니다."
       invites:
         title: "운영진 초대"
@@ -4078,7 +3866,6 @@ ko:
           <p>즐거운 시간 보내세요! <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>새로운 커뮤니티 구축에 행운을 빕니다!</a></p>
   search_logs:
     graph_title: "검색 횟수"
-  joined: "가입일"
   discourse_push_notifications:
     popup:
       mentioned: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 멘션했습니다'
@@ -4135,50 +3922,29 @@ ko:
         category: 카테고리 설정
     actions:
       agree:
-        title: "동의..."
-      agree_and_keep:
-        title: "게시물 유지"
-        description: "신고에 동의하고 게시물을 변경하지 않습니다."
-      agree_and_keep_hidden:
-        title: "게시물 숨김 유지"
-        description: "신고에 동의하고 게시물 숨김을 유지합니다."
+        title: "예"
       agree_and_suspend:
-        title: "사용자 정지"
         description: "신고에 동의하고 사용자를 정지합니다."
       agree_and_silence:
-        title: "사용자 차단"
         description: "신고에 동의하고 사용자를 차단합니다."
       agree_and_restore:
-        title: "게시물 복원"
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
-      agree_and_hide:
-        title: "게시물 숨기기"
-        description: "이 게시물을 숨기고 사용자에게 편집을 요청하는 메시지를 자동으로 전송합니다."
       delete_single:
         title: "삭제"
       delete:
         title: "삭제..."
-      delete_and_ignore:
-        title: "게시물 삭제 및 무시"
-        description: "게시물 삭제, 첫 게시물인 경우 주제도 삭제합니다."
       delete_and_ignore_replies:
-        title: "게시물 + 댓글 삭제 및 무시"
-        description: "게시물과 모든 댓글을 삭제합니다. 첫 게시물인 경우 주제도 삭제합니다."
         confirm: "게시물에 대한 댓글도 삭제할까요?"
-      delete_and_agree:
-        title: "게시물 삭제 및 동의"
-        description: "게시물 삭제, 첫 게시물인 경우 주제도 삭제합니다."
       delete_and_agree_replies:
-        title: "게시물 + 댓글 삭제 및 동의"
-        description: "게시물과 모든 댓글을 삭제합니다. 첫 게시물인 경우 주제도 삭제합니다."
         confirm: "게시물에 대한 댓글도 삭제할까요?"
       disagree_and_restore:
-        title: "동의하지 않고 게시물 복원"
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
       disagree:
-        title: "동의하지 않음"
+        title: "아니오"
       ignore:
         title: "무시"
+      ignore_and_do_nothing:
+        title: "아무것도하지 않음"
       approve:
         title: "승인"
       approve_post:

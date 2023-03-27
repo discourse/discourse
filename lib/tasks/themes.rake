@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'yaml'
+require "yaml"
 
 #
 # 2 different formats are accepted:
@@ -26,15 +26,16 @@ require 'yaml'
 #
 desc "Install themes & theme components"
 task "themes:install" => :environment do |task, args|
-  theme_args = (STDIN.tty?) ? '' : STDIN.read
-  use_json = theme_args == ''
+  theme_args = (STDIN.tty?) ? "" : STDIN.read
+  use_json = theme_args == ""
 
-  theme_args = begin
-                 use_json ? JSON.parse(ARGV.last.gsub('--', '')) : YAML::safe_load(theme_args)
-               rescue
-                 puts use_json ? "Invalid JSON input. \n#{ARGV.last}" : "Invalid YML: \n#{theme_args}"
-                 exit 1
-               end
+  theme_args =
+    begin
+      use_json ? JSON.parse(ARGV.last.gsub("--", "")) : YAML.safe_load(theme_args)
+    rescue StandardError
+      puts use_json ? "Invalid JSON input. \n#{ARGV.last}" : "Invalid YML: \n#{theme_args}"
+      exit 1
+    end
 
   log, counts = ThemesInstallTask.install(theme_args)
 
@@ -47,45 +48,52 @@ task "themes:install" => :environment do |task, args|
   puts " Errors:    #{counts[:errors]}"
   puts " Skipped:   #{counts[:skipped]}"
 
-  if counts[:errors] > 0
-    exit 1
-  end
+  exit 1 if counts[:errors] > 0
+end
+
+desc "Install themes & theme components from an archive"
+task "themes:install:archive" => :environment do |task, args|
+  filename = ENV["THEME_ARCHIVE"]
+  RemoteTheme.update_zipped_theme(filename, File.basename(filename))
 end
 
 def update_themes
-  Theme.includes(:remote_theme).where(enabled: true, auto_update: true).find_each do |theme|
-    begin
-      remote_theme = theme.remote_theme
-      next if remote_theme.blank? || remote_theme.remote_url.blank?
+  Theme
+    .includes(:remote_theme)
+    .where(enabled: true, auto_update: true)
+    .find_each do |theme|
+      begin
+        remote_theme = theme.remote_theme
+        next if remote_theme.blank? || remote_theme.remote_url.blank?
 
-      print "Checking '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'... "
-      remote_theme.update_remote_version
-      if remote_theme.out_of_date?
-        puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
-        remote_theme.update_from_remote
-        theme.save!
-      else
-        puts "up to date"
+        print "Checking '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'... "
+        remote_theme.update_remote_version
+        if remote_theme.out_of_date?
+          puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
+          remote_theme.update_from_remote
+          theme.save!
+        else
+          puts "up to date"
+        end
+
+        if remote_theme.last_error_text.present?
+          raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
+        end
+      rescue => e
+        STDERR.puts "Failed to update '#{theme.name}': #{e}"
+        raise if ENV["RAISE_THEME_ERRORS"] == "1"
       end
-
-      raise RemoteTheme::ImportError.new(remote_theme.last_error_text) if remote_theme.last_error_text.present?
-    rescue => e
-      STDERR.puts "Failed to update '#{theme.name}': #{e}"
-      raise if ENV["RAISE_THEME_ERRORS"] == "1"
     end
-  end
 
   true
 end
 
 desc "Update themes & theme components"
 task "themes:update" => :environment do
-  if ENV['RAILS_DB'].present?
+  if ENV["RAILS_DB"].present?
     update_themes
   else
-    RailsMultisite::ConnectionManagement.each_connection do
-      update_themes
-    end
+    RailsMultisite::ConnectionManagement.each_connection { update_themes }
   end
 end
 
@@ -95,30 +103,29 @@ task "themes:audit" => :environment do
   puts "Selectable themes"
   puts "-----------------"
 
-  Theme.where("(enabled OR user_selectable) AND NOT component").each do |theme|
-    puts theme.remote_theme&.remote_url || theme.name
-    theme.child_themes.each do |child|
-      if child.enabled
-        repo = child.remote_theme&.remote_url || child.name
-        components << repo
+  Theme
+    .where("(enabled OR user_selectable) AND NOT component")
+    .each do |theme|
+      puts theme.remote_theme&.remote_url || theme.name
+      theme.child_themes.each do |child|
+        if child.enabled
+          repo = child.remote_theme&.remote_url || child.name
+          components << repo
+        end
       end
     end
-  end
 
   puts
   puts "Selectable components"
   puts "---------------------"
-  components.each do |repo|
-    puts repo
-  end
+  components.each { |repo| puts repo }
 end
 
 desc "Run QUnit tests of a theme/component"
 task "themes:qunit", :type, :value do |t, args|
   type = args[:type]
   value = args[:value]
-  if !%w(name url id).include?(type) || value.blank?
-    raise <<~TEXT
+  raise <<~TEXT if !%w[name url id].include?(type) || value.blank?
       Wrong arguments type:#{type.inspect}, value:#{value.inspect}"
       Usage:
         `bundle exec rake "themes:qunit[url,<theme_url>]"`
@@ -127,11 +134,10 @@ task "themes:qunit", :type, :value do |t, args|
         OR
         `bundle exec rake "themes:qunit[id,<theme_id>]"`
     TEXT
-  end
   ENV["THEME_#{type.upcase}"] = value.to_s
-  ENV["QUNIT_RAILS_ENV"] ||= 'development' # qunit:test will switch to `test` by default
+  ENV["QUNIT_RAILS_ENV"] ||= "development" # qunit:test will switch to `test` by default
   Rake::Task["qunit:test"].reenable
-  Rake::Task["qunit:test"].invoke(1200000, "/theme-qunit")
+  Rake::Task["qunit:test"].invoke(1_200_000, "/theme-qunit")
 end
 
 desc "Install a theme/component on a temporary DB and run QUnit tests"
@@ -143,7 +149,7 @@ task "themes:isolated_test" => :environment do |t, args|
   # Make this behavior opt-in to make it very obvious.
   if ENV["UNSET_DISCOURSE_ENV_VARS"] == "1"
     ENV.keys.each do |key|
-      next if !key.start_with?('DISCOURSE_')
+      next if !key.start_with?("DISCOURSE_")
       next if ENV["DONT_UNSET_#{key}"] == "1"
       ENV[key] = nil
     end
@@ -156,10 +162,10 @@ task "themes:isolated_test" => :environment do |t, args|
   db.start
   db.migrate
   ActiveRecord::Base.establish_connection(
-    adapter: 'postgresql',
-    database: 'discourse',
+    adapter: "postgresql",
+    database: "discourse",
     port: db.pg_port,
-    host: 'localhost'
+    host: "localhost",
   )
 
   seeded_themes = Theme.pluck(:id)

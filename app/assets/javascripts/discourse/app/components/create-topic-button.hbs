@@ -1,0 +1,11 @@
+{{#if this.canCreateTopic}}
+  <DButton
+    @class={{this.btnClass}}
+    @id="create-topic"
+    @action={{this.action}}
+    @icon="plus"
+    @disabled={{this.disabled}}
+    @label={{this.label}}
+  />
+  {{yield}}
+{{/if}}

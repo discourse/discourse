@@ -1,0 +1,121 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    chat:
+      create: "بنائیں"
+      cancel: "منسوخ"
+      channel_settings:
+        edit: "ترمیم کریں"
+        add: "اضافہ کریں"
+        join: "شمولیت اختیار کریں"
+        leave: "چھوڑ دیں"
+      close: "بند کریں"
+      delete: "مٹائیں"
+      edited: "ترمیم کردہ"
+      muted: "خاموش کِیا ہوا"
+      joined: "شمولیت اختیار کی"
+      email_frequency:
+        never: "کبھی نہیں"
+      header_indicator_preference:
+        never: "کبھی نہیں"
+      flag: "فلَیگ"
+      join: "شمولیت اختیار کریں"
+      last_visit: "آخری وزٹ"
+      mention_warning:
+        dismiss: "بر خاست کریں"
+      reply: "جواب"
+      edit: "ترمیم کریں"
+      rebake_message: "HTML دوبارہ بِلڈ کریں"
+      bookmark_message: "بُک مارک"
+      bookmark_message_edit: "بک مارک میں ترمیم کریں"
+      save: "محفوظ کریں"
+      sounds:
+        none: "کوئی نہیں"
+      exit: "واپس"
+      channel_status:
+        closed: "بند"
+        open: "کھولیں"
+      browse:
+        back: "واپس"
+        filter_all: تمام
+        filter_closed: بند
+      chat_message_separator:
+        today: آج
+        yesterday: کَل
+      about_view:
+        title: عنوان
+        name: نام
+        description: تفصیل
+      channel_info:
+        back_to_channel: "واپس"
+        tabs:
+          about: بارے میں
+          members: ممبران
+          settings: ترتیبات
+      direct_message_creator:
+        title: نیا پیغام
+        prefix: "کے لئے:"
+      create_channel:
+        type: "قِسم"
+        types:
+          category: "زمرہ"
+          topic: "ٹاپک"
+      composer:
+        italic_text: "زور دیا گیا ٹَیکسٹ"
+        bold_text: "گہرا ٹَیکسٹ"
+      notification_levels:
+        never: "کبھی نہیں"
+      settings:
+        follow: "شمولیت اختیار کریں"
+        followed: "شمولیت اختیار کی"
+        notifications: "اطلاعات"
+        preview: "پیشگی دیکھیں"
+        save: "محفوظ کریں"
+        saved: "محفوظ کر لیا گیا"
+        unfollow: "چھوڑ دیں"
+        admin_title: "منتظم"
+      incoming_webhooks:
+        back: "واپس"
+        description: "تفصیل"
+        delete: "مٹائیں"
+        emoji: "اِیمَوجی"
+        name: "نام"
+        save: "محفوظ کریں"
+        edit: "ترمیم کریں"
+        system: "سِسٹَم"
+        url: "URL"
+        username: "صارف نام"
+      selection:
+        cancel: "منسوخ"
+        copy: "کاپی"
+        new_topic:
+          title: "نئے ٹاپک پر منتقل کریں"
+        existing_topic:
+          title: "موجودہ ٹاپک میں منتقل کریں"
+        new_message:
+          title: "نئے پیغام پر منتقل کریں"
+      emoji_picker:
+        objects: "اشیاء"
+        activities: "سرگرمیاں"
+        flags: "فلَیگز"
+        symbols: "علامات"
+      draft_channel_screen:
+        header: "نیا پیغام"
+        cancel: "منسوخ"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: پیغام
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "کی طرف سے فلَیگ کردہ"

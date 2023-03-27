@@ -1,10 +1,8 @@
 .new-user-wrapper {
-  margin-top: -15px; // temp, can remove margin from sibling element after nav finalized
   .user-navigation {
     --user-navigation__border-width: 4px;
-    &.user-navigation-primary {
-      border-bottom: 1px solid var(--primary-low);
-    }
+    border-bottom: 1px solid var(--primary-low);
+
     .nav-pills {
       width: 100%;
       margin: 0;
@@ -37,7 +35,6 @@
       li {
         flex: 1 1 auto;
         margin: 0;
-        overflow: hidden;
         display: flex;
 
         a {
@@ -80,28 +77,47 @@
     }
   }
 
+  .user-navigation-primary {
+    [class*="horizontal-overflow-nav__scroll"] {
+      font-size: var(--font-up-1);
+      .d-icon {
+        margin-top: 0.15em; // minor alignment
+      }
+    }
+  }
+
   .user-navigation-secondary {
     --user-navigation__border-width: 2px;
+    --navigation-secondary-padding-top: 0.5em;
     position: relative;
     display: flex;
     min-width: 0;
-    margin: 0.5em 0;
+    margin: 0;
     gap: 0 0.5em;
     border-bottom: 1px solid var(--primary-low);
-
-    .horizontal-overflow-nav {
-      position: relative;
-      min-width: 0;
-      width: 100%;
-    }
 
     .select-kit .select-kit-header {
       height: 100%;
       padding: 0.5em 1em;
     }
 
+    .user-nav-messages-dropdown {
+      // manage long group names
+      max-width: 20vw;
+      min-width: 7em;
+      .select-kit-selected-name,
+      .name {
+        @include ellipsis;
+      }
+      .name {
+        min-width: 0;
+      }
+    }
+
     .category-breadcrumb {
-      @include breakpoint(large) {
+      width: auto;
+      padding-top: var(--navigation-secondary-padding-top);
+      @include breakpoint(extra-large) {
         font-size: var(--font-down-1);
       }
       > li {
@@ -110,63 +126,10 @@
     }
 
     .navigation-controls {
+      padding-top: var(--navigation-secondary-padding-top);
       flex-wrap: nowrap;
-      @include breakpoint(large) {
+      @include breakpoint(extra-large) {
         font-size: var(--font-down-1);
-      }
-    }
-
-    .nav-overflow__scroll-right,
-    .nav-overflow__scroll-left {
-      --fade-width: 20px;
-      opacity: 1;
-      position: absolute;
-      z-index: 2;
-      background-color: var(--secondary);
-      top: 0;
-      bottom: 0;
-      display: flex;
-      align-items: center;
-      transition: opacity 0.25s;
-      .d-icon {
-        pointer-events: none;
-        margin-bottom: 0.2em;
-        color: var(--quaternary);
-      }
-      &.transparent {
-        // hiding with opacity so we can transition visibility
-        opacity: 0;
-        pointer-events: none;
-      }
-    }
-
-    .nav-overflow__scroll-right {
-      right: 0;
-      &:before {
-        content: "";
-        margin-left: -1.5em;
-        height: 100%;
-        width: 1.5em;
-        background: linear-gradient(
-          to left,
-          rgba(var(--secondary-rgb), 1),
-          rgba(var(--secondary-rgb), 0)
-        );
-      }
-    }
-
-    .nav-overflow__scroll-left {
-      left: 0;
-      &:after {
-        content: "";
-        margin-right: -1.5em;
-        height: 100%;
-        width: 1.5em;
-        background: linear-gradient(
-          to right,
-          rgba(var(--secondary-rgb), 1),
-          rgba(var(--secondary-rgb), 0)
-        );
       }
     }
 
@@ -174,15 +137,7 @@
       flex: 1 1 auto;
       font-size: var(--font-down-1);
       justify-content: flex-start;
-      overflow: auto;
-      position: relative;
-      scroll-behavior: smooth;
-
-      // hides scrollbars, but allows mouse scrolling
-      scrollbar-width: none;
-      &::-webkit-scrollbar {
-        height: 0;
-      }
+      padding-top: var(--navigation-secondary-padding-top);
 
       li {
         flex: 1 0 auto;
@@ -196,6 +151,10 @@
           }
         }
       }
+    }
+
+    [class*="horizontal-overflow-nav__scroll"] {
+      padding-top: var(--navigation-secondary-padding-top);
     }
   }
 
@@ -214,7 +173,7 @@
 
       .discourse-no-touch & {
         &:hover {
-          background: var(--highlight-medium);
+          background: var(--highlight-bg);
           color: currentColor;
         }
       }
@@ -236,5 +195,28 @@
   .empty-state {
     padding: 0;
     margin: 1em 0;
+  }
+}
+
+.user-preferences-tracking-page {
+  .user-preferences .form-vertical {
+    width: 100%;
+  }
+}
+
+.user-preferences__tracking-topics-wrapper {
+  margin-bottom: 3em;
+  .control-label {
+    margin-bottom: 1em;
+  }
+}
+
+.user-preferences__tracking-categories-tags-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
+  gap: 2em;
+  .control-group {
+    width: 100%;
+    min-width: 16em;
   }
 }

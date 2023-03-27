@@ -2,10 +2,10 @@
 
 class SetPmTagsAllowedForGroupsDefault < ActiveRecord::Migration[7.0]
   def up
-
     # if the old SiteSetting of `allow_staff_to_tag_pms` was set to true, update the new SiteSetting of
     # `pm_tags_allowed_for_groups` default to include the staff group
-    allow_staff_to_tag_pms = DB.query_single("SELECT value FROM site_settings WHERE name = 'allow_staff_to_tag_pms'").first
+    allow_staff_to_tag_pms =
+      DB.query_single("SELECT value FROM site_settings WHERE name = 'allow_staff_to_tag_pms'").first
 
     # Dynamically sets the default value
     if allow_staff_to_tag_pms == "t"

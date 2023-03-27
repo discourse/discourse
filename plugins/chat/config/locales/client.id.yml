@@ -1,0 +1,92 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  js:
+    chat:
+      cancel: "Batal"
+      channel_settings:
+        edit: "Ubah"
+        add: "Menambahkan"
+        join: "Gabung"
+        leave: "Keluar"
+      close: "Tutup"
+      delete: "Hapus"
+      muted: "diredam"
+      joined: "joined"
+      email_frequency:
+        never: "Tidak pernah"
+      header_indicator_preference:
+        never: "Tidak pernah"
+      join: "Gabung"
+      mention_warning:
+        dismiss: "bubar"
+      reply: "Balas"
+      edit: "Ubah"
+      bookmark_message: "Penandaan"
+      bookmark_message_edit: "Edit Bookmark"
+      save: "Simpan"
+      sounds:
+        none: "Tidak ada"
+      channel_status:
+        closed: "Tertutup"
+        open: "Buka"
+      browse:
+        filter_all: Semua
+        filter_closed: Tertutup
+      about_view:
+        title: Judul
+        name: Nama
+      channel_info:
+        tabs:
+          about: Tentang
+          members: Anggota
+          settings: Pengaturan
+      direct_message_creator:
+        title: Pesan Baru
+        prefix: "Kepada:"
+      create_channel:
+        type: "Tipe"
+        types:
+          category: "Kategori"
+          topic: "Topik"
+      notification_levels:
+        never: "Tidak pernah"
+      settings:
+        follow: "Gabung"
+        followed: "Joined"
+        notifications: "Pemberitahuan"
+        save: "Simpan"
+        saved: "Tersimpan"
+        unfollow: "Keluar"
+        admin_title: "Admin"
+      incoming_webhooks:
+        delete: "Hapus"
+        name: "Name"
+        save: "Simpan"
+        edit: "Ubah"
+        system: "sistem"
+        username: "Nama Pengguna"
+      selection:
+        cancel: "Batal"
+        new_topic:
+          title: "Pindahkan sebagai Topik Baru"
+      emoji_picker:
+        objects: "Objek"
+        flags: "Flags"
+      draft_channel_screen:
+        header: "Pesan Baru"
+        cancel: "Batal"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: pesan
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Dipanji Oleh"

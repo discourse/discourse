@@ -1,10 +1,8 @@
-app/assets/javascripts/browser-update.js
 app/assets/javascripts/locales/i18n.js
 app/assets/javascripts/ember-addons/
-app/assets/javascripts/discourse/lib/autosize.js
 lib/javascripts/locale/
 lib/javascripts/messageformat.js
-lib/highlight_js/
+lib/javascripts/messageformat-lookup.js
 lib/pretty_text/
 plugins/**/lib/javascripts/locale
 public/
@@ -14,3 +12,4 @@ node_modules/
 spec/
 dist/
 tmp/
+documentation/

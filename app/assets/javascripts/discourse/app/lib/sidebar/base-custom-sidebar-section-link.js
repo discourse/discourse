@@ -10,6 +10,13 @@ export default class BaseCustomSidebarSectionLink {
   }
 
   /**
+   * @returns {string} The classnames of the section link.
+   */
+  get classNames() {
+    return "";
+  }
+
+  /**
    * @returns {string} The Ember route which the section link should link to.
    */
   get route() {

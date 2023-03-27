@@ -1,0 +1,136 @@
+$radius: 3px;
+
+.chat-skeleton {
+  height: auto;
+
+  &__body {
+    padding: 0.5em 1em;
+  }
+
+  &__message {
+    display: grid;
+    grid-template:
+      "avatar poster"
+      "avatar content"
+      ". content";
+    grid-template-columns: auto 1fr;
+
+    &:not(:first-of-type):not(:last-of-type) {
+      margin-top: 1.5em;
+      margin-bottom: 1.5em;
+    }
+  }
+
+  &__message-avatar {
+    grid-area: avatar;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+
+    .chat-skeleton__body:nth-of-type(odd) & {
+      background-color: var(--primary-100);
+    }
+    .chat-skeleton__body:nth-of-type(even) & {
+      background-color: var(--primary-200);
+    }
+  }
+
+  &__message-poster {
+    grid-area: poster;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    width: 70px;
+    height: 20px;
+    border-radius: $radius;
+
+    .chat-skeleton__body:nth-of-type(odd) & {
+      background-color: var(--primary-100);
+    }
+    .chat-skeleton__body:nth-of-type(even) & {
+      background-color: var(--primary-200);
+    }
+  }
+
+  &__message-content {
+    grid-area: content;
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  &__message-reactions {
+    display: flex;
+    padding: 5px 0 0 0;
+  }
+
+  &__message-reaction {
+    background-color: var(--primary-100);
+    width: 32px;
+    height: 18px;
+    border-radius: $radius;
+
+    & + & {
+      margin-left: 0.5rem;
+    }
+  }
+
+  &__message-text {
+    display: flex;
+    padding: 0;
+    flex-direction: column;
+  }
+
+  &__message-msg {
+    height: 10px;
+    border-radius: $radius;
+    margin: 2px 0;
+
+    .chat-skeleton__body:nth-of-type(odd) & {
+      background-color: var(--primary-100);
+    }
+    .chat-skeleton__body:nth-of-type(even) & {
+      background-color: var(--primary-200);
+    }
+  }
+
+  &__message-img {
+    height: 80px;
+    border-radius: $radius;
+    margin: 2px 0;
+    width: 200px;
+    background-color: var(--primary-100);
+  }
+
+  *[class^="chat-skeleton__message-"] {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &.-animation {
+    position: relative;
+    overflow: hidden;
+
+    *[class^="chat-skeleton__message-"]:not(.chat-skeleton__message-content):not(.chat-skeleton__message-text):not(.chat-skeleton__message-reactions):after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(
+        90deg,
+        rgba(var(--chat-skeleton-animation-rgb), 0) 0,
+        rgba(var(--chat-skeleton-animation-rgb), 0.3) 50%,
+        rgba(var(--chat-skeleton-animation-rgb), 0.5) 100%
+      );
+      animation: shimmer 1.25s infinite;
+      content: "";
+    }
+
+    @keyframes shimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+  }
+}

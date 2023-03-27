@@ -3,13 +3,13 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import createStore from "discourse/tests/helpers/create-store";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Integration | Component | pending-post", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders", async function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     store.createRecord("category", { id: 2 });
     const post = store.createRecord("pending-post", {
       id: 1,

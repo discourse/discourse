@@ -112,10 +112,12 @@ export default Controller.extend(CanCheckEmails, {
   @discourseComputed(
     "viewingSelf",
     "currentUser.admin",
-    "currentUser.allowPersonalMessages"
+    "currentUser.can_send_private_messages"
   )
   showPrivateMessages(viewingSelf, isAdmin) {
-    return this.currentUser?.allowPersonalMessages && (viewingSelf || isAdmin);
+    return (
+      this.currentUser?.can_send_private_messages && (viewingSelf || isAdmin)
+    );
   },
 
   @discourseComputed("viewingSelf", "currentUser.admin")
@@ -192,11 +194,8 @@ export default Controller.extend(CanCheckEmails, {
     if (!this.currentUser?.staff) {
       return false;
     }
-    if (this.currentUser?.redesigned_user_page_nav_enabled) {
-      return this.site.desktopView;
-    } else {
-      return true;
-    }
+
+    return this.site.desktopView;
   },
 
   @action

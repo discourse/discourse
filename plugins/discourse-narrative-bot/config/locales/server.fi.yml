@@ -45,9 +45,6 @@ fi:
       trigger: "heitä"
       invalid: |-
         Pahoittelen, mutta on matemaattinen mahdottomuus heittää noppia pyytämälläsi tavalla. :confounded:
-      not_enough_dice:
-        one: "Minulla on vain %{count} noppa. [Häpeällistä](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tiedän!"
-        other: "Minulla on vain %{count} noppaa. [Häpeällistä](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tiedän!"
       out_of_range: |-
         Tiesitkö, että [suurin mahdollinen määrä sivuja](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matemaattisesti tasapuolisessa nopassa on 120?
       results: |-
@@ -84,6 +81,15 @@ fi:
       "10":
         quote: "Joskus pitää laittaa viatonkin vankilaan. Joskus täytyy poliisin laittaa viaton lusimaan. Arvovalta säilyy. Pelote säilyy. Aina siellä muutama viaton istuu, viaton pulmunen istuu siellä."
         author: "Rauno Repomies televisiosarjassa Pasila"
+      "11":
+        quote: "Rauha kotona, rauha maailmassa."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Koulutus ei ole keino paeta köyhyyttä, se on keino taistella sitä vastaan."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Tuhannen mailin matka alkaa yhdestä askeleesta."
+        author: "Laozi"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

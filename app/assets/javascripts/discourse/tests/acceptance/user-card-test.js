@@ -12,14 +12,9 @@ import { cloneJSON } from "discourse-common/lib/object";
 acceptance("User Card - Show Local Time", function (needs) {
   needs.user();
   needs.settings({ display_local_time_in_user_card: true });
-  needs.pretender((server, helper) => {
-    const cardResponse = cloneJSON(userFixtures["/u/charlie/card.json"]);
-    delete cardResponse.user.timezone;
-    server.get("/u/charlie/card.json", () => helper.response(cardResponse));
-  });
 
   test("user card local time - does not update timezone for another user", async function (assert) {
-    User.current().timezone = "Australia/Brisbane";
+    User.current().user_option.timezone = "Australia/Brisbane";
 
     await visit("/t/internationalization-localization/280");
     await click('a[data-user-card="charlie"]');

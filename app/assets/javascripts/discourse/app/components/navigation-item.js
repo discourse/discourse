@@ -13,7 +13,6 @@ export default Component.extend(FilterModeMixin, {
   ],
   attributeBindings: ["content.title:title"],
   hidden: false,
-  rerenderTriggers: ["content.count"],
   activeClass: "",
   hrefLink: null,
 

@@ -1,9 +1,17 @@
 import I18n from "I18n";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { query } from "discourse/tests/helpers/qunit-helpers";
+import GroupDeleteDialogMessage from "discourse/components/dialog-messages/group-delete";
+import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 
 module("Integration | Component | dialog-holder", function (hooks) {
   setupRenderingTest(hooks);
@@ -386,6 +394,43 @@ module("Integration | Component | dialog-holder", function (hooks) {
     assert.notOk(
       query(".dialog-footer .btn-primary"),
       ".btn-primary element is not present in the dialog"
+    );
+  });
+
+  test("delete confirm with confirmation phrase component", async function (assert) {
+    await render(hbs`<DialogHolder />`);
+
+    this.dialog.deleteConfirm({
+      bodyComponent: SecondFactorConfirmPhrase,
+      confirmButtonDisabled: true,
+    });
+    await settled();
+
+    assert.strictEqual(query(".btn-danger").disabled, true);
+    await fillIn("#confirm-phrase", "Disa");
+    assert.strictEqual(query(".btn-danger").disabled, true);
+    await fillIn("#confirm-phrase", "Disable");
+    assert.strictEqual(query(".btn-danger").disabled, false);
+  });
+
+  test("delete confirm with a component and model", async function (assert) {
+    await render(hbs`<DialogHolder />`);
+    const message_count = 5;
+
+    this.dialog.deleteConfirm({
+      bodyComponent: GroupDeleteDialogMessage,
+      bodyComponentModel: {
+        message_count,
+      },
+    });
+    await settled();
+
+    assert.strictEqual(
+      query(".dialog-body p:first-child").innerText.trim(),
+      I18n.t("admin.groups.delete_with_messages_confirm", {
+        count: message_count,
+      }),
+      "correct message is shown in dialog"
     );
   });
 });

@@ -7,17 +7,16 @@ require "http_language_parser"
 
 module Middleware
   class AnonymousCache
-
     def self.cache_key_segments
       @@cache_key_segments ||= {
-        m: 'key_is_mobile?',
-        c: 'key_is_crawler?',
-        o: 'key_is_old_browser?',
-        d: 'key_is_modern_mobile_device?',
-        b: 'key_has_brotli?',
-        t: 'key_cache_theme_ids',
-        ca: 'key_compress_anon',
-        l: 'key_locale'
+        m: "key_is_mobile?",
+        c: "key_is_crawler?",
+        o: "key_is_old_browser?",
+        d: "key_is_modern_mobile_device?",
+        b: "key_has_brotli?",
+        t: "key_cache_theme_ids",
+        ca: "key_compress_anon",
+        l: "key_locale",
       }
     end
 
@@ -26,8 +25,8 @@ module Middleware
     def self.compile_key_builder
       method = +"def self.__compiled_key_builder(h)\n  \""
       cache_key_segments.each do |k, v|
-        raise "Invalid key name" unless k =~ /^[a-z]+$/
-        raise "Invalid method name" unless v =~ /^key_[a-z_\?]+$/
+        raise "Invalid key name" unless k =~ /\A[a-z]+\z/
+        raise "Invalid method name" unless v =~ /\Akey_[a-z_\?]+\z/
         method << "|#{k}=#\{h.#{v}}"
       end
       method << "\"\nend"
@@ -46,9 +45,9 @@ module Middleware
 
     # This gives us an API to insert anonymous cache segments
     class Helper
-      RACK_SESSION     = "rack.session"
-      USER_AGENT       = "HTTP_USER_AGENT"
-      ACCEPT_ENCODING  = "HTTP_ACCEPT_ENCODING"
+      RACK_SESSION = "rack.session"
+      USER_AGENT = "HTTP_USER_AGENT"
+      ACCEPT_ENCODING = "HTTP_ACCEPT_ENCODING"
       DISCOURSE_RENDER = "HTTP_DISCOURSE_RENDER"
 
       REDIS_STORE_SCRIPT = DiscourseRedis::EvalHelper.new <<~LUA
@@ -63,13 +62,12 @@ module Middleware
       end
 
       def blocked_crawler?
-        @request.get? &&
-        !@request.xhr? &&
-        !@request.path.ends_with?('robots.txt') &&
-        !@request.path.ends_with?('srv/status') &&
-        @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
-        @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
-        CrawlerDetection.is_blocked_crawler?(@env[USER_AGENT])
+        @request.get? && !@request.xhr? && !@request.path.ends_with?("robots.txt") &&
+          !@request.path.ends_with?("srv/status") &&
+          @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
+          @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
+          @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
+          CrawlerDetection.is_blocked_crawler?(@env[USER_AGENT])
       end
 
       def is_mobile=(val)
@@ -112,10 +110,16 @@ module Middleware
           begin
             user_agent = @env[USER_AGENT]
 
-            if @env[DISCOURSE_RENDER] == "crawler" || CrawlerDetection.crawler?(user_agent, @env["HTTP_VIA"])
+            if @env[DISCOURSE_RENDER] == "crawler" ||
+                 CrawlerDetection.crawler?(user_agent, @env["HTTP_VIA"])
               :true
             else
-              user_agent.downcase.include?("discourse") && !user_agent.downcase.include?("mobile") ? :true : :false
+              if user_agent.downcase.include?("discourse") &&
+                   !user_agent.downcase.include?("mobile")
+                :true
+              else
+                :false
+              end
             end
           end
         @is_crawler == :true
@@ -133,13 +137,14 @@ module Middleware
       def cache_key
         return @cache_key if defined?(@cache_key)
 
-        @cache_key = +"ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env[Rack::RACK_URL_SCHEME]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
+        @cache_key =
+          +"ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env[Rack::RACK_URL_SCHEME]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
         @cache_key << AnonymousCache.build_cache_key(self)
         @cache_key
       end
 
       def key_cache_theme_ids
-        theme_ids.join(',')
+        theme_ids.join(",")
       end
 
       def key_compress_anon
@@ -147,7 +152,7 @@ module Middleware
       end
 
       def theme_ids
-        ids, _ = @request.cookies['theme_ids']&.split('|')
+        ids, _ = @request.cookies["theme_ids"]&.split("|")
         id = ids&.split(",")&.map(&:to_i)&.first
         if id && Guardian.new.allow_themes?([id])
           Theme.transform_ids(id)
@@ -178,31 +183,33 @@ module Middleware
 
       def no_cache_bypass
         request = Rack::Request.new(@env)
-        request.cookies['_bypass_cache'].nil? &&
-          (request.path != '/srv/status') &&
+        request.cookies["_bypass_cache"].nil? && (request.path != "/srv/status") &&
           request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
+          @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil?
       end
 
       def force_anonymous!
         @env[Auth::DefaultCurrentUserProvider::USER_API_KEY] = nil
-        @env['HTTP_COOKIE'] = nil
-        @env['HTTP_DISCOURSE_LOGGED_IN'] = nil
-        @env['rack.request.cookie.hash'] = {}
-        @env['rack.request.cookie.string'] = ''
-        @env['_bypass_cache'] = nil
+        @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY] = nil
+        @env["HTTP_COOKIE"] = nil
+        @env["HTTP_DISCOURSE_LOGGED_IN"] = nil
+        @env["rack.request.cookie.hash"] = {}
+        @env["rack.request.cookie.string"] = ""
+        @env["_bypass_cache"] = nil
         request = Rack::Request.new(@env)
-        request.delete_param('api_username')
-        request.delete_param('api_key')
+        request.delete_param("api_username")
+        request.delete_param("api_key")
       end
 
       def logged_in_anon_limiter
-        @logged_in_anon_limiter ||= RateLimiter.new(
-          nil,
-          "logged_in_anon_cache_#{@env["HTTP_HOST"]}/#{@env["REQUEST_URI"]}",
-          GlobalSetting.force_anonymous_min_per_10_seconds,
-          10
-        )
+        @logged_in_anon_limiter ||=
+          RateLimiter.new(
+            nil,
+            "logged_in_anon_cache_#{@env["HTTP_HOST"]}/#{@env["REQUEST_URI"]}",
+            GlobalSetting.force_anonymous_min_per_10_seconds,
+            10,
+          )
       end
 
       def check_logged_in_rate_limit!
@@ -213,13 +220,11 @@ module Middleware
       ADP = "action_dispatch.request.parameters"
 
       def should_force_anonymous?
-        if (queue_time = @env['REQUEST_QUEUE_SECONDS']) && get?
+        if (queue_time = @env["REQUEST_QUEUE_SECONDS"]) && get?
           if queue_time > GlobalSetting.force_anonymous_min_queue_seconds
             return check_logged_in_rate_limit!
           elsif queue_time >= MIN_TIME_TO_CHECK
-            if !logged_in_anon_limiter.can_perform?
-              return check_logged_in_rate_limit!
-            end
+            return check_logged_in_rate_limit! if !logged_in_anon_limiter.can_perform?
           end
         end
 
@@ -233,7 +238,7 @@ module Middleware
       def compress(val)
         if val && GlobalSetting.compress_anon_cache
           require "lz4-ruby" if !defined?(LZ4)
-          LZ4::compress(val)
+          LZ4.compress(val)
         else
           val
         end
@@ -242,7 +247,7 @@ module Middleware
       def decompress(val)
         if val && GlobalSetting.compress_anon_cache
           require "lz4-ruby" if !defined?(LZ4)
-          LZ4::uncompress(val)
+          LZ4.uncompress(val)
         else
           val
         end
@@ -273,7 +278,6 @@ module Middleware
         status, headers, response = result
 
         if status == 200 && cache_duration
-
           if GlobalSetting.anon_cache_store_threshold > 1
             count = REDIS_STORE_SCRIPT.eval(Discourse.redis, [cache_key_count], [cache_duration])
 
@@ -281,25 +285,24 @@ module Middleware
             # prudent here, hence the to_i
             if count.to_i < GlobalSetting.anon_cache_store_threshold
               headers["X-Discourse-Cached"] = "skip"
-              return [status, headers, response]
+              return status, headers, response
             end
           end
 
-          headers_stripped = headers.dup.delete_if { |k, _| ["Set-Cookie", "X-MiniProfiler-Ids"].include? k }
+          headers_stripped =
+            headers.dup.delete_if { |k, _| %w[Set-Cookie X-MiniProfiler-Ids].include? k }
           headers_stripped["X-Discourse-Cached"] = "true"
           parts = []
-          response.each do |part|
-            parts << part
-          end
+          response.each { |part| parts << part }
 
           if req_params = env[ADP]
             headers_stripped[ADP] = {
               "action" => req_params["action"],
-              "controller" => req_params["controller"]
+              "controller" => req_params["controller"],
             }
           end
 
-          Discourse.redis.setex(cache_key_body,  cache_duration, compress(parts.join))
+          Discourse.redis.setex(cache_key_body, cache_duration, compress(parts.join))
           Discourse.redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
 
           headers["X-Discourse-Cached"] = "store"
@@ -314,20 +317,18 @@ module Middleware
         Discourse.redis.del(cache_key_body)
         Discourse.redis.del(cache_key_other)
       end
-
     end
 
     def initialize(app, settings = {})
       @app = app
     end
 
-    PAYLOAD_INVALID_REQUEST_METHODS = ["GET", "HEAD"]
+    PAYLOAD_INVALID_REQUEST_METHODS = %w[GET HEAD]
 
     def call(env)
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
-        env[Rack::RACK_INPUT].size > 0
-
-        return [413, { "Cache-Control" => "private, max-age=0, must-revalidate" }, []]
+           env[Rack::RACK_INPUT].size > 0
+        return 413, { "Cache-Control" => "private, max-age=0, must-revalidate" }, []
       end
 
       helper = Helper.new(env)
@@ -335,7 +336,7 @@ module Middleware
 
       if helper.blocked_crawler?
         env["discourse.request_tracker.skip"] = true
-        return [403, {}, ["Crawler is not allowed!"]]
+        return 403, {}, ["Crawler is not allowed!"]
       end
 
       if helper.should_force_anonymous?
@@ -348,15 +349,15 @@ module Middleware
         if max_time > 0 && queue_time.to_f > max_time
           return [
             429,
-            {
-              "content-type" => "application/json; charset=utf-8"
-            },
-            [{
-              errors: I18n.t("rate_limiter.slow_down"),
-              extras: {
-                wait_seconds: 5 + (5 * rand).round(2)
-              }
-            }.to_json]
+            { "content-type" => "application/json; charset=utf-8" },
+            [
+              {
+                errors: I18n.t("rate_limiter.slow_down"),
+                extras: {
+                  wait_seconds: 5 + (5 * rand).round(2),
+                },
+              }.to_json,
+            ]
           ]
         end
       end
@@ -368,13 +369,9 @@ module Middleware
           @app.call(env)
         end
 
-      if force_anon
-        result[1]["Set-Cookie"] = "dosp=1; Path=/"
-      end
+      result[1]["Set-Cookie"] = "dosp=1; Path=/" if force_anon
 
       result
     end
-
   end
-
 end

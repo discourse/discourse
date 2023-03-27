@@ -75,7 +75,7 @@
             <% else %>
               <meta itemprop='dateModified' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
             <% end %>
-          <span itemprop='position'>#<%= post.post_number %></span>
+          <span itemprop='position'><%= post.post_number %></span>
           </span>
         </div>
         <div class='post' itemprop='articleBody'>
@@ -103,10 +103,7 @@
               <% @topic_view.link_counts[post.id].each_with_index do |link, i| %>
                 <% if link[:reflection] && link[:title].present? %>
                   <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-                    <a href="<%=link[:url]%>" itemscope itemtype='http://schema.org/DiscussionForumPosting' itemprop='item'>
-                      <meta itemprop='url' content='<%=link[:url]%>'>
-                      <span itemprop='name'><%=link[:title]%></span>
-                    </a>
+                    <a itemprop='url' href="<%=link[:url]%>"><%=link[:title]%></a>
                     <meta itemprop='position' content='<%= i+1 %>'>
                   </div>
                 <% end %>
@@ -132,7 +129,7 @@
 
   <% content_for :head do %>
     <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, rel: 'alternate nofollow', title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
-    <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, ignore_canonical: true, published_time: @topic_view.published_time) %>
+    <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, ignore_canonical: true, published_time: @topic_view.published_time, breadcrumbs: @breadcrumbs, tags: @tags.map(&:name)) %>
 
     <% if @topic_view.prev_page || @topic_view.next_page %>
       <% if @topic_view.prev_page %>

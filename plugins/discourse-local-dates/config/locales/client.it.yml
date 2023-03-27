@@ -23,7 +23,7 @@ it:
           timezones_title: Fusi orari da visualizzare
           timezones_description: I fusi orari verranno utilizzati per visualizzare le date nell'anteprima e nel fallback.
           recurring_title: Ricorrenza
-          recurring_description: "Definisci la ricorrenza di un evento. Puoi anche modificare manualmente l'opzione di ricorrenza generata dal modulo e usare una delle seguenti chiavi: anni, trimestri, mesi, settimane, giorni, ore, minuti, secondi, millisecondi."
+          recurring_description: "Definisci la ricorrenza di un evento. Puoi anche modificare manualmente l'opzione di ricorrenza generata dal modulo e usare una delle seguenti chiavi: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
           recurring_none: Nessuna ricorrenza
           invalid_date: Data non valida, accertati che la data e l'ora siano corrette
           date_title: Data

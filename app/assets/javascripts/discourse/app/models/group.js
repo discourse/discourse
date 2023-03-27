@@ -148,9 +148,9 @@ const Group = RestModel.extend({
   },
 
   async addOwners(usernames, filter, notifyUsers) {
-    const response = await ajax(`/admin/groups/${this.id}/owners.json`, {
+    const response = await ajax(`/groups/${this.id}/owners.json`, {
       type: "PUT",
-      data: { group: { usernames, notify_users: notifyUsers } },
+      data: { usernames, notify_users: notifyUsers },
     });
 
     if (filter) {

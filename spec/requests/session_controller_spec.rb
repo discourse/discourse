@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rotp'
+require "rotp"
 
 RSpec.describe SessionController do
   let(:user) { Fabricate(:user) }
@@ -9,19 +9,19 @@ RSpec.describe SessionController do
   fab!(:admin) { Fabricate(:admin) }
   let(:admin_email_token) { Fabricate(:email_token, user: admin) }
 
-  shared_examples 'failed to continue local login' do
-    it 'should return the right response' do
+  shared_examples "failed to continue local login" do
+    it "should return the right response" do
       expect(response).not_to be_successful
       expect(response.status).to eq(403)
     end
   end
 
-  describe '#email_login_info' do
-    let(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login]) }
-
-    before do
-      SiteSetting.enable_local_logins_via_email = true
+  describe "#email_login_info" do
+    let(:email_token) do
+      Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login])
     end
+
+    before { SiteSetting.enable_local_logins_via_email = true }
 
     context "when local logins via email disabled" do
       before { SiteSetting.enable_local_logins_via_email = false }
@@ -33,7 +33,7 @@ RSpec.describe SessionController do
         user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).not_to be_present
+        expect(response.parsed_body["error"]).not_to be_present
       end
     end
 
@@ -50,19 +50,19 @@ RSpec.describe SessionController do
         user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).not_to be_present
+        expect(response.parsed_body["error"]).not_to be_present
       end
     end
 
-    context 'with missing token' do
-      it 'returns the right response' do
+    context "with missing token" do
+      it "returns the right response" do
         get "/session/email-login"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'with valid token' do
-      it 'returns information' do
+    context "with valid token" do
+      it "returns information" do
         get "/session/email-login/#{email_token.token}.json"
 
         expect(response.parsed_body["can_login"]).to eq(true)
@@ -72,7 +72,7 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to be_nil
       end
 
-      it 'fails when local logins via email is disabled' do
+      it "fails when local logins via email is disabled" do
         SiteSetting.enable_local_logins_via_email = false
 
         get "/session/email-login/#{email_token.token}.json"
@@ -80,7 +80,7 @@ RSpec.describe SessionController do
         expect(response.status).to eq(403)
       end
 
-      it 'fails when local logins is disabled' do
+      it "fails when local logins is disabled" do
         SiteSetting.enable_local_logins = false
 
         get "/session/email-login/#{email_token.token}.json"
@@ -88,7 +88,7 @@ RSpec.describe SessionController do
         expect(response.status).to eq(403)
       end
 
-      context 'when user has 2-factor logins' do
+      context "when user has 2-factor logins" do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
@@ -102,7 +102,7 @@ RSpec.describe SessionController do
         end
       end
 
-      context 'when user has security key enabled' do
+      context "when user has security key enabled" do
         let!(:user_security_key) { Fabricate(:user_security_key, user: user) }
 
         it "includes that information in the response" do
@@ -113,7 +113,9 @@ RSpec.describe SessionController do
           expect(response_body_parsed["security_key_required"]).to eq(true)
           expect(response_body_parsed["second_factor_required"]).to eq(nil)
           expect(response_body_parsed["backup_codes_enabled"]).to eq(nil)
-          expect(response_body_parsed["allowed_credential_ids"]).to eq([user_security_key.credential_id])
+          expect(response_body_parsed["allowed_credential_ids"]).to eq(
+            [user_security_key.credential_id],
+          )
           secure_session = SecureSession.new(session["secure_session_id"])
           expect(response_body_parsed["challenge"]).to eq(Webauthn.challenge(user, secure_session))
           expect(Webauthn.rp_id(user, secure_session)).to eq(Discourse.current_hostname)
@@ -122,19 +124,17 @@ RSpec.describe SessionController do
     end
   end
 
-  describe '#email_login' do
-    let(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login]) }
-
-    before do
-      SiteSetting.enable_local_logins_via_email = true
+  describe "#email_login" do
+    let(:email_token) do
+      Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login])
     end
+
+    before { SiteSetting.enable_local_logins_via_email = true }
 
     context "when in staff writes only mode" do
       use_redis_snapshotting
 
-      before do
-        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
-      end
+      before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
 
       it "allows admins to login" do
         user.update!(admin: true)
@@ -160,30 +160,30 @@ RSpec.describe SessionController do
         user.update(admin: true)
         post "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).not_to be_present
+        expect(response.parsed_body["error"]).not_to be_present
         expect(session[:current_user_id]).to eq(user.id)
       end
     end
 
-    context 'with missing token' do
-      it 'returns the right response' do
+    context "with missing token" do
+      it "returns the right response" do
         post "/session/email-login"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'with invalid token' do
-      it 'returns the right response' do
+    context "with invalid token" do
+      it "returns the right response" do
         post "/session/email-login/adasdad.json"
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).to eq(
-          I18n.t('email_login.invalid_token')
+          I18n.t("email_login.invalid_token", base_url: Discourse.base_url),
         )
       end
 
-      context 'when token has expired' do
-        it 'should return the right response' do
+      context "when token has expired" do
+        it "should return the right response" do
           email_token.update!(created_at: 999.years.ago)
 
           post "/session/email-login/#{email_token.token}.json"
@@ -191,21 +191,21 @@ RSpec.describe SessionController do
           expect(response.status).to eq(200)
 
           expect(response.parsed_body["error"]).to eq(
-            I18n.t('email_login.invalid_token')
+            I18n.t("email_login.invalid_token", base_url: Discourse.base_url),
           )
         end
       end
     end
 
-    context 'with valid token' do
-      it 'returns success' do
+    context "with valid token" do
+      it "returns success" do
         post "/session/email-login/#{email_token.token}.json"
 
         expect(response.parsed_body["success"]).to eq("OK")
         expect(session[:current_user_id]).to eq(user.id)
       end
 
-      it 'fails when local logins via email is disabled' do
+      it "fails when local logins via email is disabled" do
         SiteSetting.enable_local_logins_via_email = false
 
         post "/session/email-login/#{email_token.token}.json"
@@ -214,7 +214,7 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to eq(nil)
       end
 
-      it 'fails when local logins is disabled' do
+      it "fails when local logins is disabled" do
         SiteSetting.enable_local_logins = false
 
         post "/session/email-login/#{email_token.token}.json"
@@ -235,38 +235,40 @@ RSpec.describe SessionController do
 
       context "when admin IP address is not valid" do
         before do
-          Fabricate(:screened_ip_address,
+          Fabricate(
+            :screened_ip_address,
             ip_address: "111.111.11.11",
-            action_type: ScreenedIpAddress.actions[:allow_admin]
+            action_type: ScreenedIpAddress.actions[:allow_admin],
           )
 
           SiteSetting.use_admin_ip_allowlist = true
           user.update!(admin: true)
         end
 
-        it 'returns the right response' do
+        it "returns the right response" do
           post "/session/email-login/#{email_token.token}.json"
 
           expect(response.status).to eq(200)
 
           expect(response.parsed_body["error"]).to eq(
-            I18n.t("login.admin_not_allowed_from_ip_address", username: user.username)
+            I18n.t("login.admin_not_allowed_from_ip_address", username: user.username),
           )
           expect(session[:current_user_id]).to eq(nil)
         end
       end
 
       context "when IP address is blocked" do
-        let(:permitted_ip_address) { '111.234.23.11' }
+        let(:permitted_ip_address) { "111.234.23.11" }
 
         before do
-          Fabricate(:screened_ip_address,
+          Fabricate(
+            :screened_ip_address,
             ip_address: permitted_ip_address,
-            action_type: ScreenedIpAddress.actions[:block]
+            action_type: ScreenedIpAddress.actions[:block],
           )
         end
 
-        it 'returns the right response' do
+        it "returns the right response" do
           ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(permitted_ip_address)
 
           post "/session/email-login/#{email_token.token}.json"
@@ -274,7 +276,7 @@ RSpec.describe SessionController do
           expect(response.status).to eq(200)
 
           expect(response.parsed_body["error"]).to eq(
-            I18n.t("login.not_allowed_from_ip_address", username: user.username)
+            I18n.t("login.not_allowed_from_ip_address", username: user.username),
           )
           expect(session[:current_user_id]).to eq(nil)
         end
@@ -282,83 +284,87 @@ RSpec.describe SessionController do
 
       context "when timezone param is provided" do
         it "sets the user_option timezone for the user" do
-          post "/session/email-login/#{email_token.token}.json", params: { timezone: "Australia/Melbourne" }
+          post "/session/email-login/#{email_token.token}.json",
+               params: {
+                 timezone: "Australia/Melbourne",
+               }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
           expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
         end
       end
 
       it "fails when user is suspended" do
-        user.update!(
-          suspended_till: 2.days.from_now,
-          suspended_at: Time.zone.now
-        )
+        user.update!(suspended_till: 2.days.from_now, suspended_at: Time.zone.now)
 
         post "/session/email-login/#{email_token.token}.json"
 
         expect(response.status).to eq(200)
 
         expect(response.parsed_body["error"]).to eq(
-          I18n.t("login.suspended", date: I18n.l(user.suspended_till, format: :date_only)
-        ))
+          I18n.t("login.suspended", date: I18n.l(user.suspended_till, format: :date_only)),
+        )
         expect(session[:current_user_id]).to eq(nil)
       end
 
-      context 'when user has 2-factor logins' do
+      context "when user has 2-factor logins" do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
-        describe 'errors on incorrect 2-factor' do
-          context 'when using totp method' do
-            it 'does not log in with incorrect two factor' do
-              post "/session/email-login/#{email_token.token}.json", params: {
-                second_factor_token: "0000",
-                second_factor_method: UserSecondFactor.methods[:totp]
-              }
+        describe "errors on incorrect 2-factor" do
+          context "when using totp method" do
+            it "does not log in with incorrect two factor" do
+              post "/session/email-login/#{email_token.token}.json",
+                   params: {
+                     second_factor_token: "0000",
+                     second_factor_method: UserSecondFactor.methods[:totp],
+                   }
 
               expect(response.status).to eq(200)
 
               expect(response.parsed_body["error"]).to eq(
-                I18n.t("login.invalid_second_factor_code")
+                I18n.t("login.invalid_second_factor_code"),
               )
               expect(session[:current_user_id]).to eq(nil)
             end
           end
-          context 'when using backup code method' do
-            it 'does not log in with incorrect backup code' do
-              post "/session/email-login/#{email_token.token}.json", params: {
-                second_factor_token: "0000",
-                second_factor_method: UserSecondFactor.methods[:backup_codes]
-              }
+          context "when using backup code method" do
+            it "does not log in with incorrect backup code" do
+              post "/session/email-login/#{email_token.token}.json",
+                   params: {
+                     second_factor_token: "0000",
+                     second_factor_method: UserSecondFactor.methods[:backup_codes],
+                   }
 
               expect(response.status).to eq(200)
               expect(response.parsed_body["error"]).to eq(
-                I18n.t("login.invalid_second_factor_code")
+                I18n.t("login.invalid_second_factor_code"),
               )
               expect(session[:current_user_id]).to eq(nil)
             end
           end
         end
 
-        describe 'allows successful 2-factor' do
-          context 'when using totp method' do
-            it 'logs in correctly' do
-              post "/session/email-login/#{email_token.token}.json", params: {
-                second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-                second_factor_method: UserSecondFactor.methods[:totp]
-              }
+        describe "allows successful 2-factor" do
+          context "when using totp method" do
+            it "logs in correctly" do
+              post "/session/email-login/#{email_token.token}.json",
+                   params: {
+                     second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+                     second_factor_method: UserSecondFactor.methods[:totp],
+                   }
 
               expect(response.parsed_body["success"]).to eq("OK")
               expect(session[:current_user_id]).to eq(user.id)
             end
           end
-          context 'when using backup code method' do
-            it 'logs in correctly' do
-              post "/session/email-login/#{email_token.token}.json", params: {
-                second_factor_token: "iAmValidBackupCode",
-                second_factor_method: UserSecondFactor.methods[:backup_codes]
-              }
+          context "when using backup code method" do
+            it "logs in correctly" do
+              post "/session/email-login/#{email_token.token}.json",
+                   params: {
+                     second_factor_token: "iAmValidBackupCode",
+                     second_factor_method: UserSecondFactor.methods[:backup_codes],
+                   }
 
               expect(response.parsed_body["success"]).to eq("OK")
               expect(session[:current_user_id]).to eq(user.id)
@@ -368,16 +374,15 @@ RSpec.describe SessionController do
 
         context "if the security_key_param is provided but only TOTP is enabled" do
           it "does not log in the user" do
-            post "/session/email-login/#{email_token.token}.json", params: {
-              second_factor_token: 'foo',
-              second_factor_method: UserSecondFactor.methods[:totp]
-            }
+            post "/session/email-login/#{email_token.token}.json",
+                 params: {
+                   second_factor_token: "foo",
+                   second_factor_method: UserSecondFactor.methods[:totp],
+                 }
 
             expect(response.status).to eq(200)
 
-            expect(response.parsed_body["error"]).to eq(
-              I18n.t("login.invalid_second_factor_code")
-            )
+            expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
             expect(session[:current_user_id]).to eq(nil)
           end
         end
@@ -389,7 +394,7 @@ RSpec.describe SessionController do
             :user_security_key,
             user: user,
             credential_id: valid_security_key_data[:credential_id],
-            public_key: valid_security_key_data[:public_key]
+            public_key: valid_security_key_data[:public_key],
           )
         end
 
@@ -402,54 +407,50 @@ RSpec.describe SessionController do
 
         context "when the security key params are blank and a random second factor token is provided" do
           it "shows an error message and denies login" do
-
-            post "/session/email-login/#{email_token.token}.json", params: {
-              second_factor_token: "XXXXXXX",
-              second_factor_method: UserSecondFactor.methods[:totp]
-            }
+            post "/session/email-login/#{email_token.token}.json",
+                 params: {
+                   second_factor_token: "XXXXXXX",
+                   second_factor_method: UserSecondFactor.methods[:totp],
+                 }
 
             expect(response.status).to eq(200)
             expect(session[:current_user_id]).to eq(nil)
             response_body = response.parsed_body
-            expect(response_body['error']).to eq(I18n.t(
-              'login.not_enabled_second_factor_method'
-            ))
+            expect(response_body["error"]).to eq(I18n.t("login.not_enabled_second_factor_method"))
           end
         end
         context "when the security key params are invalid" do
           it "shows an error message and denies login" do
-
-            post "/session/email-login/#{email_token.token}.json", params: {
-              second_factor_token: {
-                signature: 'bad_sig',
-                clientData: 'bad_clientData',
-                credentialId: 'bad_credential_id',
-                authenticatorData: 'bad_authenticator_data'
-              },
-              second_factor_method: UserSecondFactor.methods[:security_key]
-            }
+            post "/session/email-login/#{email_token.token}.json",
+                 params: {
+                   second_factor_token: {
+                     signature: "bad_sig",
+                     clientData: "bad_clientData",
+                     credentialId: "bad_credential_id",
+                     authenticatorData: "bad_authenticator_data",
+                   },
+                   second_factor_method: UserSecondFactor.methods[:security_key],
+                 }
 
             expect(response.status).to eq(200)
             expect(session[:current_user_id]).to eq(nil)
             response_body = response.parsed_body
             expect(response_body["failed"]).to eq("FAILED")
-            expect(response_body['error']).to eq(I18n.t(
-              'webauthn.validation.not_found_error'
-            ))
+            expect(response_body["error"]).to eq(I18n.t("webauthn.validation.not_found_error"))
           end
         end
         context "when the security key params are valid" do
           it "logs the user in" do
-
-            post "/session/email-login/#{email_token.token}.json", params: {
-              login: user.username,
-              password: 'myawesomepassword',
-              second_factor_token: valid_security_key_auth_post_data,
-              second_factor_method: UserSecondFactor.methods[:security_key]
-            }
+            post "/session/email-login/#{email_token.token}.json",
+                 params: {
+                   login: user.username,
+                   password: "myawesomepassword",
+                   second_factor_token: valid_security_key_auth_post_data,
+                   second_factor_method: UserSecondFactor.methods[:security_key],
+                 }
 
             expect(response.status).to eq(200)
-            expect(response.parsed_body['error']).not_to be_present
+            expect(response.parsed_body["error"]).not_to be_present
             user.reload
 
             expect(session[:current_user_id]).to eq(user.id)
@@ -464,56 +465,54 @@ RSpec.describe SessionController do
             :user_security_key,
             user: user,
             credential_id: valid_security_key_data[:credential_id],
-            public_key: valid_security_key_data[:public_key]
+            public_key: valid_security_key_data[:public_key],
           )
         end
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
         it "doesnt allow logging in if the 2fa params are garbled" do
-          post "/session/email-login/#{email_token.token}.json", params: {
-            second_factor_method: UserSecondFactor.methods[:totp],
-            second_factor_token: "blah"
-          }
+          post "/session/email-login/#{email_token.token}.json",
+               params: {
+                 second_factor_method: UserSecondFactor.methods[:totp],
+                 second_factor_token: "blah",
+               }
 
           expect(response.status).to eq(200)
           expect(session[:current_user_id]).to eq(nil)
           response_body = response.parsed_body
-          expect(response_body['error']).to eq(I18n.t(
-            'login.invalid_second_factor_code'
-          ))
+          expect(response_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
         end
 
         it "doesnt allow login if both of the 2fa params are blank" do
-          post "/session/email-login/#{email_token.token}.json", params: {
-            second_factor_method: UserSecondFactor.methods[:totp],
-            second_factor_token: ""
-          }
+          post "/session/email-login/#{email_token.token}.json",
+               params: {
+                 second_factor_method: UserSecondFactor.methods[:totp],
+                 second_factor_token: "",
+               }
 
           expect(response.status).to eq(200)
           expect(session[:current_user_id]).to eq(nil)
           response_body = response.parsed_body
-          expect(response_body['error']).to eq(I18n.t(
-            'login.invalid_second_factor_code'
-          ))
+          expect(response_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
         end
       end
     end
   end
 
-  describe 'logoff support' do
-    it 'can log off users cleanly' do
+  describe "logoff support" do
+    it "can log off users cleanly" do
       user = Fabricate(:user)
       sign_in(user)
 
       UserAuthToken.destroy_all
 
       # we need a route that will call current user
-      post '/drafts.json', params: {}
-      expect(response.headers['Discourse-Logged-Out']).to eq("1")
+      post "/drafts.json", params: {}
+      expect(response.headers["Discourse-Logged-Out"]).to eq("1")
     end
   end
 
-  describe '#become' do
+  describe "#become" do
     let!(:user) { Fabricate(:user) }
 
     it "does not work when in production mode" do
@@ -533,7 +532,7 @@ RSpec.describe SessionController do
     end
   end
 
-  describe '#sso' do
+  describe "#sso" do
     before do
       SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
       SiteSetting.enable_discourse_connect = true
@@ -547,7 +546,7 @@ RSpec.describe SessionController do
     end
   end
 
-  describe '#sso_login' do
+  describe "#sso_login" do
     before do
       @sso_url = "http://example.com/discourse_sso"
       @sso_secret = "shjkfdhsfkjh"
@@ -573,19 +572,17 @@ RSpec.describe SessionController do
       sso
     end
 
-    context 'when in staff writes only mode' do
+    context "when in staff writes only mode" do
       use_redis_snapshotting
 
-      before do
-        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
-      end
+      before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
 
-      it 'allows staff to login' do
-        sso = get_sso('/a/')
-        sso.external_id = '666'
-        sso.email = 'bob@bob.com'
-        sso.name = 'Bob Bobson'
-        sso.username = 'bob'
+      it "allows staff to login" do
+        sso = get_sso("/a/")
+        sso.external_id = "666"
+        sso.email = "bob@bob.com"
+        sso.name = "Bob Bobson"
+        sso.username = "bob"
         sso.admin = true
 
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -595,11 +592,11 @@ RSpec.describe SessionController do
       end
 
       it 'doesn\'t allow non-staff to login' do
-        sso = get_sso('/a/')
-        sso.external_id = '666'
-        sso.email = 'bob@bob.com'
-        sso.name = 'Bob Bobson'
-        sso.username = 'bob'
+        sso = get_sso("/a/")
+        sso.external_id = "666"
+        sso.email = "bob@bob.com"
+        sso.name = "Bob Bobson"
+        sso.username = "bob"
 
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
@@ -608,103 +605,105 @@ RSpec.describe SessionController do
       end
     end
 
-    it 'does not create superfluous auth tokens when already logged in' do
+    it "does not create superfluous auth tokens when already logged in" do
       user = Fabricate(:user)
       sign_in(user)
 
       sso = get_sso("/")
       sso.email = user.email
-      sso.external_id = 'abc'
-      sso.username = 'sam'
+      sso.external_id = "abc"
+      sso.username = "sam"
 
       expect do
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
         expect(logged_on_user.id).to eq(user.id)
       end.not_to change { UserAuthToken.count }
-
     end
 
-    it 'will never redirect back to /session/sso path' do
+    it "will never redirect back to /session/sso path" do
       sso = get_sso("/session/sso?bla=1")
       sso.email = user.email
-      sso.external_id = 'abc'
-      sso.username = 'sam'
+      sso.external_id = "abc"
+      sso.username = "sam"
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to('/')
+      expect(response).to redirect_to("/")
 
       sso = get_sso("http://#{Discourse.current_hostname}/session/sso?bla=1")
       sso.email = user.email
-      sso.external_id = 'abc'
-      sso.username = 'sam'
+      sso.external_id = "abc"
+      sso.username = "sam"
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to('/')
-
+      expect(response).to redirect_to("/")
     end
 
-    it 'can handle invalid sso external ids due to blank' do
+    it "can handle invalid sso external ids due to blank" do
       sso = get_sso("/")
       sso.email = "test@test.com"
-      sso.external_id = '   '
-      sso.username = 'sam'
+      sso.external_id = "   "
+      sso.username = "sam"
 
-      logger = track_log_messages do
-        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      end
+      logger =
+        track_log_messages do
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        end
 
       expect(logger.warnings.length).to eq(0)
       expect(logger.errors.length).to eq(0)
       expect(logger.fatals.length).to eq(0)
       expect(response.status).to eq(500)
-      expect(response.body).to include(I18n.t('discourse_connect.blank_id_error'))
+      expect(response.body).to include(I18n.t("discourse_connect.blank_id_error"))
     end
 
-    it 'can handle invalid sso email validation errors' do
+    it "can handle invalid sso email validation errors" do
       SiteSetting.blocked_email_domains = "test.com"
       sso = get_sso("/")
       sso.email = "test@test.com"
-      sso.external_id = '123'
-      sso.username = 'sam'
+      sso.external_id = "123"
+      sso.username = "sam"
 
-      logger = track_log_messages do
-        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      end
+      logger =
+        track_log_messages do
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        end
 
       expect(logger.warnings.length).to eq(0)
       expect(logger.errors.length).to eq(0)
       expect(logger.fatals.length).to eq(0)
       expect(response.status).to eq(500)
-      expect(response.body).to include(I18n.t("discourse_connect.email_error", email: ERB::Util.html_escape("test@test.com")))
+      expect(response.body).to include(
+        I18n.t("discourse_connect.email_error", email: ERB::Util.html_escape("test@test.com")),
+      )
     end
 
-    it 'can handle invalid sso external ids due to banned word' do
+    it "can handle invalid sso external ids due to banned word" do
       sso = get_sso("/")
       sso.email = "test@test.com"
-      sso.external_id = 'nil'
-      sso.username = 'sam'
+      sso.external_id = "nil"
+      sso.username = "sam"
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
       expect(response.status).to eq(500)
     end
 
-    it 'can take over an account' do
-      user = Fabricate(:user, email: 'bill@bill.com')
+    it "can take over an account" do
+      user = Fabricate(:user, email: "bill@bill.com")
 
       sso = get_sso("/")
       sso.email = user.email
-      sso.external_id = 'abc'
-      sso.username = 'sam'
+      sso.external_id = "abc"
+      sso.username = "sam"
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
-      expect(response).to redirect_to('/')
+      expect(response).to redirect_to("/")
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user.email).to eq(user.email)
       expect(logged_on_user.single_sign_on_record.external_id).to eq("abc")
-      expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+      expect(logged_on_user.single_sign_on_record.external_username).to eq("sam")
 
       # we are updating the email ... ensure auto group membership works
 
@@ -713,32 +712,37 @@ RSpec.describe SessionController do
       SiteSetting.email_editable = false
       SiteSetting.auth_overrides_email = true
 
-      group = Fabricate(:group, name: :bob, automatic_membership_email_domains: 'jane.com')
+      group = Fabricate(:group, name: :bob, automatic_membership_email_domains: "jane.com")
       sso = get_sso("/")
       sso.email = "hello@jane.com"
-      sso.external_id = 'abc'
+      sso.external_id = "abc"
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
-      expect(logged_on_user.email).to eq('hello@jane.com')
+      expect(logged_on_user.email).to eq("hello@jane.com")
       expect(group.users.count).to eq(1)
     end
 
     def sso_for_ip_specs
-      sso = get_sso('/a/')
-      sso.external_id = '666'
-      sso.email = 'bob@bob.com'
-      sso.name = 'Sam Saffron'
-      sso.username = 'sam'
+      sso = get_sso("/a/")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
       sso
     end
 
-    it 'respects IP restrictions on create' do
+    it "respects IP restrictions on create" do
       ScreenedIpAddress.all.destroy_all
       get "/"
-      _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
+      _screened_ip =
+        Fabricate(
+          :screened_ip_address,
+          ip_address: request.remote_ip,
+          action_type: ScreenedIpAddress.actions[:block],
+        )
 
       sso = sso_for_ip_specs
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -747,40 +751,48 @@ RSpec.describe SessionController do
       expect(logged_on_user).to eq(nil)
     end
 
-    it 'respects IP restrictions on login' do
+    it "respects IP restrictions on login" do
       ScreenedIpAddress.all.destroy_all
       get "/"
       sso = sso_for_ip_specs
-      DiscourseConnect.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user(request.remote_ip)
+      DiscourseConnect.parse(
+        sso.payload,
+        secure_session: read_secure_session,
+      ).lookup_or_create_user(request.remote_ip)
 
       sso = sso_for_ip_specs
-      _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
+      _screened_ip =
+        Fabricate(
+          :screened_ip_address,
+          ip_address: request.remote_ip,
+          action_type: ScreenedIpAddress.actions[:block],
+        )
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user).to be_blank
     end
 
-    it 'respects email restrictions' do
-      sso = get_sso('/a/')
-      sso.external_id = '666'
-      sso.email = 'bob@bob.com'
-      sso.name = 'Sam Saffron'
-      sso.username = 'sam'
+    it "respects email restrictions" do
+      sso = get_sso("/a/")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
 
-      ScreenedEmail.block('bob@bob.com')
+      ScreenedEmail.block("bob@bob.com")
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user).to eq(nil)
     end
 
-    it 'allows you to create an admin account' do
-      sso = get_sso('/a/')
-      sso.external_id = '666'
-      sso.email = 'bob@bob.com'
-      sso.name = 'Sam Saffron'
-      sso.username = 'sam'
+    it "allows you to create an admin account" do
+      sso = get_sso("/a/")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
       sso.custom_fields["shop_url"] = "http://my_shop.com"
       sso.custom_fields["shop_name"] = "Sam"
       sso.admin = true
@@ -791,80 +803,82 @@ RSpec.describe SessionController do
       expect(logged_on_user.admin).to eq(true)
     end
 
-    it 'does not redirect offsite' do
+    it "does not redirect offsite" do
       sso = get_sso("#{Discourse.base_url}//site.com/xyz")
-      sso.external_id = '666'
-      sso.email = 'bob@bob.com'
-      sso.name = 'Sam Saffron'
-      sso.username = 'sam'
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       expect(response).to redirect_to("#{Discourse.base_url}//site.com/xyz")
     end
 
-    it 'redirects to a non-relative url' do
+    it "redirects to a non-relative url" do
       sso = get_sso("#{Discourse.base_url}/b/")
-      sso.external_id = '666'
-      sso.email = 'bob@bob.com'
-      sso.name = 'Sam Saffron'
-      sso.username = 'sam'
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to('/b/')
+      expect(response).to redirect_to("/b/")
     end
 
-    it 'redirects to random url if it is allowed' do
+    it "redirects to random url if it is allowed" do
       SiteSetting.discourse_connect_allows_all_return_paths = true
 
-      sso = get_sso('https://gusundtrout.com')
-      sso.external_id = '666'
-      sso.email = 'bob@bob.com'
-      sso.name = 'Sam Saffron'
-      sso.username = 'sam'
+      sso = get_sso("https://gusundtrout.com")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to('https://gusundtrout.com')
+      expect(response).to redirect_to("https://gusundtrout.com")
     end
 
-    it 'redirects to root if the host of the return_path is different' do
-      sso = get_sso('//eviltrout.com')
-      sso.external_id = '666'
-      sso.email = 'bob@bob.com'
-      sso.name = 'Sam Saffron'
-      sso.username = 'sam'
+    it "redirects to root if the host of the return_path is different" do
+      sso = get_sso("//eviltrout.com")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to('/')
+      expect(response).to redirect_to("/")
     end
 
-    it 'redirects to root if the host of the return_path is different' do
-      sso = get_sso('http://eviltrout.com')
-      sso.external_id = '666'
-      sso.email = 'bob@bob.com'
-      sso.name = 'Sam Saffron'
-      sso.username = 'sam'
+    it "redirects to root if the host of the return_path is different" do
+      sso = get_sso("http://eviltrout.com")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to('/')
+      expect(response).to redirect_to("/")
     end
 
-    it 'creates a user but ignores auto_approve_email_domains site setting when must_approve_users site setting is not enabled' do
+    it "creates a user but ignores auto_approve_email_domains site setting when must_approve_users site setting is not enabled" do
       SiteSetting.auto_approve_email_domains = "discourse.com"
 
-      sso = get_sso('/a/')
-      sso.external_id = '666'
-      sso.email = 'sam@discourse.com'
-      sso.name = 'Sam Saffron'
-      sso.username = 'sam'
+      sso = get_sso("/a/")
+      sso.external_id = "666"
+      sso.email = "sam@discourse.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
 
-      events = DiscourseEvent.track_events do
-        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      events =
+        DiscourseEvent.track_events do
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
-        expect(response).to redirect_to('/a/')
-      end
+          expect(response).to redirect_to("/a/")
+        end
 
       expect(events.map { |event| event[:event_name] }).to include(
-       :user_logged_in, :user_first_logged_in
+        :user_logged_in,
+        :user_first_logged_in,
       )
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
@@ -873,29 +887,27 @@ RSpec.describe SessionController do
       logged_on_user = User.find(logged_on_user.id)
 
       expect(logged_on_user.admin).to eq(false)
-      expect(logged_on_user.email).to eq('sam@discourse.com')
-      expect(logged_on_user.name).to eq('Sam Saffron')
-      expect(logged_on_user.username).to eq('sam')
+      expect(logged_on_user.email).to eq("sam@discourse.com")
+      expect(logged_on_user.name).to eq("Sam Saffron")
+      expect(logged_on_user.username).to eq("sam")
       expect(logged_on_user.approved).to eq(false)
       expect(logged_on_user.active).to eq(true)
 
       expect(logged_on_user.single_sign_on_record.external_id).to eq("666")
-      expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+      expect(logged_on_user.single_sign_on_record.external_username).to eq("sam")
     end
 
-    context 'when must_approve_users site setting has been enabled' do
-      before do
-        SiteSetting.must_approve_users = true
-      end
+    context "when must_approve_users site setting has been enabled" do
+      before { SiteSetting.must_approve_users = true }
 
       it "creates a user but does not approve when user's email domain does not match a domain in auto_approve_email_domains site settings" do
         SiteSetting.auto_approve_email_domains = "discourse.com"
 
-        sso = get_sso('/a/')
-        sso.external_id = '666'
-        sso.email = 'sam@discourse.org'
-        sso.name = 'Sam Saffron'
-        sso.username = 'sam'
+        sso = get_sso("/a/")
+        sso.external_id = "666"
+        sso.email = "sam@discourse.org"
+        sso.name = "Sam Saffron"
+        sso.username = "sam"
 
         expect do
           get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -911,33 +923,35 @@ RSpec.describe SessionController do
         user = User.last
 
         expect(user.admin).to eq(false)
-        expect(user.email).to eq('sam@discourse.org')
-        expect(user.name).to eq('Sam Saffron')
-        expect(user.username).to eq('sam')
+        expect(user.email).to eq("sam@discourse.org")
+        expect(user.name).to eq("Sam Saffron")
+        expect(user.username).to eq("sam")
         expect(user.approved).to eq(false)
         expect(user.active).to eq(true)
 
         expect(user.single_sign_on_record.external_id).to eq("666")
-        expect(user.single_sign_on_record.external_username).to eq('sam')
+        expect(user.single_sign_on_record.external_username).to eq("sam")
       end
 
       it "creates and approves a user when user's email domain matches a domain in auto_approve_email_domains site settings" do
         SiteSetting.auto_approve_email_domains = "discourse.com"
 
-        sso = get_sso('/a/')
-        sso.external_id = '666'
-        sso.email = 'sam@discourse.com'
-        sso.name = 'Sam Saffron'
-        sso.username = 'sam'
+        sso = get_sso("/a/")
+        sso.external_id = "666"
+        sso.email = "sam@discourse.com"
+        sso.name = "Sam Saffron"
+        sso.username = "sam"
 
-        events = DiscourseEvent.track_events do
-          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        events =
+          DiscourseEvent.track_events do
+            get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
-          expect(response).to redirect_to('/a/')
-        end
+            expect(response).to redirect_to("/a/")
+          end
 
         expect(events.map { |event| event[:event_name] }).to include(
-         :user_logged_in, :user_first_logged_in
+          :user_logged_in,
+          :user_first_logged_in,
         )
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
@@ -946,38 +960,39 @@ RSpec.describe SessionController do
         logged_on_user = User.find(logged_on_user.id)
 
         expect(logged_on_user.admin).to eq(false)
-        expect(logged_on_user.email).to eq('sam@discourse.com')
-        expect(logged_on_user.name).to eq('Sam Saffron')
-        expect(logged_on_user.username).to eq('sam')
+        expect(logged_on_user.email).to eq("sam@discourse.com")
+        expect(logged_on_user.name).to eq("Sam Saffron")
+        expect(logged_on_user.username).to eq("sam")
         expect(logged_on_user.approved).to eq(true)
         expect(logged_on_user.active).to eq(true)
 
         expect(logged_on_user.single_sign_on_record.external_id).to eq("666")
-        expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+        expect(logged_on_user.single_sign_on_record.external_username).to eq("sam")
       end
-
     end
 
-    it 'allows you to create an account' do
-      group = Fabricate(:group, name: :bob, automatic_membership_email_domains: 'bob.com')
+    it "allows you to create an account" do
+      group = Fabricate(:group, name: :bob, automatic_membership_email_domains: "bob.com")
 
-      sso = get_sso('/a/')
-      sso.external_id = '666'
-      sso.email = 'bob@bob.com'
-      sso.name = 'Sam Saffron'
-      sso.username = 'sam'
+      sso = get_sso("/a/")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
       sso.custom_fields["shop_url"] = "http://my_shop.com"
       sso.custom_fields["shop_name"] = "Sam"
 
-      events = DiscourseEvent.track_events do
-        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      end
+      events =
+        DiscourseEvent.track_events do
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        end
 
       expect(events.map { |event| event[:event_name] }).to include(
-       :user_logged_in, :user_first_logged_in
+        :user_logged_in,
+        :user_first_logged_in,
       )
 
-      expect(response).to redirect_to('/a/')
+      expect(response).to redirect_to("/a/")
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
@@ -987,12 +1002,12 @@ RSpec.describe SessionController do
       logged_on_user = User.find(logged_on_user.id)
 
       expect(logged_on_user.admin).to eq(false)
-      expect(logged_on_user.email).to eq('bob@bob.com')
-      expect(logged_on_user.name).to eq('Sam Saffron')
-      expect(logged_on_user.username).to eq('sam')
+      expect(logged_on_user.email).to eq("bob@bob.com")
+      expect(logged_on_user.name).to eq("Sam Saffron")
+      expect(logged_on_user.username).to eq("sam")
 
       expect(logged_on_user.single_sign_on_record.external_id).to eq("666")
-      expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+      expect(logged_on_user.single_sign_on_record.external_username).to eq("sam")
       expect(logged_on_user.active).to eq(true)
       expect(logged_on_user.custom_fields["shop_url"]).to eq("http://my_shop.com")
       expect(logged_on_user.custom_fields["shop_name"]).to eq("Sam")
@@ -1035,7 +1050,13 @@ RSpec.describe SessionController do
         invite.update!(max_redemptions_allowed: 1, redemption_count: 1)
         login_with_sso_and_invite
         expect(response.status).to eq(400)
-        expect(response.body).to include(I18n.t("invite.not_found_template", site_name: SiteSetting.title, base_url: Discourse.base_url))
+        expect(response.body).to include(
+          I18n.t(
+            "invite.not_found_template",
+            site_name: SiteSetting.title,
+            base_url: Discourse.base_url,
+          ),
+        )
         expect(invite.reload.redeemed?).to eq(true)
         expect(User.find_by_email("bob@bob.com")).to eq(nil)
       end
@@ -1044,7 +1065,9 @@ RSpec.describe SessionController do
         invite.update!(email: "someotheremail@dave.com")
         login_with_sso_and_invite
         expect(response.status).to eq(400)
-        expect(response.body).to include(I18n.t("invite.not_matching_email", base_url: Discourse.base_url))
+        expect(response.body).to include(
+          I18n.t("invite.not_matching_email", base_url: Discourse.base_url),
+        )
         expect(invite.reload.redeemed?).to eq(false)
         expect(User.find_by_email("bob@bob.com")).to eq(nil)
       end
@@ -1095,14 +1118,14 @@ RSpec.describe SessionController do
       end
     end
 
-    context 'when sso emails are not trusted' do
-      context 'if you have not activated your account' do
-        it 'does not log you in' do
-          sso = get_sso('/a/')
-          sso.external_id = '666'
-          sso.email = 'bob@bob.com'
-          sso.name = 'Sam Saffron'
-          sso.username = 'sam'
+    context "when sso emails are not trusted" do
+      context "if you have not activated your account" do
+        it "does not log you in" do
+          sso = get_sso("/a/")
+          sso.external_id = "666"
+          sso.email = "bob@bob.com"
+          sso.name = "Sam Saffron"
+          sso.username = "sam"
           sso.require_activation = true
 
           get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -1111,12 +1134,12 @@ RSpec.describe SessionController do
           expect(logged_on_user).to eq(nil)
         end
 
-        it 'sends an activation email' do
-          sso = get_sso('/a/')
-          sso.external_id = '666'
-          sso.email = 'bob@bob.com'
-          sso.name = 'Sam Saffron'
-          sso.username = 'sam'
+        it "sends an activation email" do
+          sso = get_sso("/a/")
+          sso.external_id = "666"
+          sso.email = "bob@bob.com"
+          sso.name = "Sam Saffron"
+          sso.username = "sam"
           sso.require_activation = true
 
           get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -1124,15 +1147,15 @@ RSpec.describe SessionController do
         end
       end
 
-      context 'if you have activated your account' do
-        it 'allows you to log in' do
-          sso = get_sso('/hello/world')
-          sso.external_id = '997'
+      context "if you have activated your account" do
+        it "allows you to log in" do
+          sso = get_sso("/hello/world")
+          sso.external_id = "997"
           sso.sso_url = "http://somewhere.over.com/sso_login"
           sso.require_activation = true
 
           user = Fabricate(:user)
-          user.create_single_sign_on_record(external_id: '997', last_payload: '')
+          user.create_single_sign_on_record(external_id: "997", last_payload: "")
           user.stubs(:active?).returns(true)
 
           get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -1143,20 +1166,20 @@ RSpec.describe SessionController do
       end
     end
 
-    it 'allows login to existing account with valid nonce' do
-      sso = get_sso('/hello/world')
-      sso.external_id = '997'
+    it "allows login to existing account with valid nonce" do
+      sso = get_sso("/hello/world")
+      sso.external_id = "997"
       sso.sso_url = "http://somewhere.over.com/sso_login"
 
       user = Fabricate(:user)
-      user.create_single_sign_on_record(external_id: '997', last_payload: '')
+      user.create_single_sign_on_record(external_id: "997", last_payload: "")
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
       user.single_sign_on_record.reload
       expect(user.single_sign_on_record.last_payload).to eq(sso.unsigned_payload)
 
-      expect(response).to redirect_to('/hello/world')
+      expect(response).to redirect_to("/hello/world")
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
       expect(user.id).to eq(logged_on_user.id)
@@ -1166,13 +1189,13 @@ RSpec.describe SessionController do
       expect(response.status).to eq(419)
     end
 
-    it 'associates the nonce with the current session' do
-      sso = get_sso('/hello/world')
-      sso.external_id = '997'
+    it "associates the nonce with the current session" do
+      sso = get_sso("/hello/world")
+      sso.external_id = "997"
       sso.sso_url = "http://somewhere.over.com/sso_login"
 
       user = Fabricate(:user)
-      user.create_single_sign_on_record(external_id: '997', last_payload: '')
+      user.create_single_sign_on_record(external_id: "997", last_payload: "")
 
       # Establish a fresh session
       cookies.to_hash.keys.each { |k| cookies.delete(k) }
@@ -1184,56 +1207,60 @@ RSpec.describe SessionController do
     context "when sso provider is enabled" do
       before do
         SiteSetting.enable_discourse_connect_provider = true
-        SiteSetting.discourse_connect_provider_secrets = [
-          "*|secret,forAll",
-          "*.rainbow|wrongSecretForOverRainbow",
-          "www.random.site|secretForRandomSite",
-          "somewhere.over.rainbow|secretForOverRainbow",
+        SiteSetting.discourse_connect_provider_secrets = %w[
+          *|secret,forAll
+          *.rainbow|wrongSecretForOverRainbow
+          www.random.site|secretForRandomSite
+          somewhere.over.rainbow|secretForOverRainbow
         ].join("\n")
       end
 
       it "doesn't break" do
-        sso = get_sso('/hello/world')
-        sso.external_id = '997'
+        sso = get_sso("/hello/world")
+        sso.external_id = "997"
         sso.sso_url = "http://somewhere.over.com/sso_login"
         sso.return_sso_url = "http://someurl.com"
 
         user = Fabricate(:user)
-        user.create_single_sign_on_record(external_id: '997', last_payload: '')
+        user.create_single_sign_on_record(external_id: "997", last_payload: "")
 
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
         user.single_sign_on_record.reload
         expect(user.single_sign_on_record.last_payload).to eq(sso.unsigned_payload)
 
-        expect(response).to redirect_to('/hello/world')
+        expect(response).to redirect_to("/hello/world")
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
         expect(user.id).to eq(logged_on_user.id)
       end
     end
 
-    it 'returns the correct error code for invalid signature' do
-      sso = get_sso('/hello/world')
-      sso.external_id = '997'
+    it "returns the correct error code for invalid signature" do
+      sso = get_sso("/hello/world")
+      sso.external_id = "997"
       sso.sso_url = "http://somewhere.over.com/sso_login"
 
       correct_params = Rack::Utils.parse_query(sso.payload)
-      get "/session/sso_login", params: correct_params.merge("sig": "thisisnotthesigyouarelookingfor"), headers: headers
+      get "/session/sso_login",
+          params: correct_params.merge(sig: "thisisnotthesigyouarelookingfor"),
+          headers: headers
       expect(response.status).to eq(422)
       expect(response.body).not_to include(correct_params["sig"]) # Check we didn't send the real sig back to the client
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user).to eq(nil)
 
       correct_params = Rack::Utils.parse_query(sso.payload)
-      get "/session/sso_login", params: correct_params.merge("sig": "thisisasignaturewith@special!characters"), headers: headers
+      get "/session/sso_login",
+          params: correct_params.merge(sig: "thisisasignaturewith@special!characters"),
+          headers: headers
       expect(response.status).to eq(422)
       expect(response.body).not_to include(correct_params["sig"]) # Check we didn't send the real sig back to the client
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user).to eq(nil)
     end
 
-    describe 'local attribute override from SSO payload' do
+    describe "local attribute override from SSO payload" do
       before do
         SiteSetting.email_editable = false
         SiteSetting.auth_overrides_email = true
@@ -1242,8 +1269,8 @@ RSpec.describe SessionController do
 
         @user = Fabricate(:user)
 
-        @sso = get_sso('/hello/world')
-        @sso.external_id = '997'
+        @sso = get_sso("/hello/world")
+        @sso.external_id = "997"
 
         @reversed_username = @user.username.reverse
         @sso.username = @reversed_username
@@ -1253,10 +1280,10 @@ RSpec.describe SessionController do
 
         @suggested_username = UserNameSuggester.suggest(@sso.username || @sso.name || @sso.email)
         @suggested_name = User.suggest_name(@sso.name || @sso.username || @sso.email)
-        @user.create_single_sign_on_record(external_id: '997', last_payload: '')
+        @user.create_single_sign_on_record(external_id: "997", last_payload: "")
       end
 
-      it 'stores the external attributes' do
+      it "stores the external attributes" do
         get "/session/sso_login", params: Rack::Utils.parse_query(@sso.payload), headers: headers
         @user.single_sign_on_record.reload
         expect(@user.single_sign_on_record.external_username).to eq(@sso.username)
@@ -1264,7 +1291,7 @@ RSpec.describe SessionController do
         expect(@user.single_sign_on_record.external_name).to eq(@sso.name)
       end
 
-      it 'overrides attributes' do
+      it "overrides attributes" do
         get "/session/sso_login", params: Rack::Utils.parse_query(@sso.payload), headers: headers
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
@@ -1273,7 +1300,7 @@ RSpec.describe SessionController do
         expect(logged_on_user.name).to eq(@sso.name)
       end
 
-      it 'does not change matching attributes for an existing account' do
+      it "does not change matching attributes for an existing account" do
         @sso.username = @user.username
         @sso.name = @user.name
         @sso.email = @user.email
@@ -1290,9 +1317,7 @@ RSpec.describe SessionController do
     context "when in readonly mode" do
       use_redis_snapshotting
 
-      before do
-        Discourse.enable_readonly_mode
-      end
+      before { Discourse.enable_readonly_mode }
 
       it "disallows requests" do
         get "/session/sso_login"
@@ -1302,27 +1327,27 @@ RSpec.describe SessionController do
     end
   end
 
-  describe '#sso_provider' do
+  describe "#sso_provider" do
     let(:headers) { { host: Discourse.current_hostname } }
     let(:logo_fixture) { "http://#{Discourse.current_hostname}/uploads/logo.png" }
     fab!(:user) { Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true) }
 
     before do
-      stub_request(:any, /#{Discourse.current_hostname}\/uploads/).to_return(
+      stub_request(:any, %r{#{Discourse.current_hostname}/uploads}).to_return(
         status: 200,
-        body: lambda { |request| file_from_fixtures("logo.png") }
+        body: lambda { |request| file_from_fixtures("logo.png") },
       )
 
       SiteSetting.enable_discourse_connect_provider = true
       SiteSetting.enable_discourse_connect = false
       SiteSetting.enable_local_logins = true
-      SiteSetting.discourse_connect_provider_secrets = [
-        "*|secret,forAll",
-        "*.rainbow|wrongSecretForOverRainbow",
-        "www.random.site|secretForRandomSite",
-        "somewhere.over.rainbow|oldSecretForOverRainbow",
-        "somewhere.over.rainbow|secretForOverRainbow",
-        "somewhere.over.rainbow|newSecretForOverRainbow",
+      SiteSetting.discourse_connect_provider_secrets = %w[
+        *|secret,forAll
+        *.rainbow|wrongSecretForOverRainbow
+        www.random.site|secretForRandomSite
+        somewhere.over.rainbow|oldSecretForOverRainbow
+        somewhere.over.rainbow|secretForOverRainbow
+        somewhere.over.rainbow|newSecretForOverRainbow
       ].join("\n")
 
       @sso = DiscourseConnectProvider.new
@@ -1344,18 +1369,24 @@ RSpec.describe SessionController do
       EmailToken.update_all(confirmed: true)
     end
 
-    describe 'can act as an SSO provider' do
+    describe "can act as an SSO provider" do
       it "successfully logs in and redirects user to return_sso_url when the user is not logged in" do
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
 
         expect(response).to redirect_to("/login")
 
         post "/session.json",
-          params: { login: @user.username, password: "myfrogs123ADMIN" }, xhr: true, headers: headers
+             params: {
+               login: @user.username,
+               password: "myfrogs123ADMIN",
+             },
+             xhr: true,
+             headers: headers
 
         location = response.cookies["sso_destination_url"]
         # javascript code will handle redirection of user to return_sso_url
-        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+        expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
 
         payload = location.split("?")[1]
         sso2 = DiscourseConnectProvider.parse(payload)
@@ -1382,25 +1413,30 @@ RSpec.describe SessionController do
       it "correctly logs in for secondary domain secrets" do
         sign_in @user
 
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("newSecretForOverRainbow"))
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("newSecretForOverRainbow"))
         expect(response.status).to eq(302)
         redirect_uri = URI.parse(response.location)
         expect(redirect_uri.host).to eq("somewhere.over.rainbow")
         redirect_query = CGI.parse(redirect_uri.query)
-        expected_sig = DiscourseConnectBase.sign(redirect_query["sso"][0], "newSecretForOverRainbow")
+        expected_sig =
+          DiscourseConnectBase.sign(redirect_query["sso"][0], "newSecretForOverRainbow")
         expect(redirect_query["sig"][0]).to eq(expected_sig)
 
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("oldSecretForOverRainbow"))
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("oldSecretForOverRainbow"))
         expect(response.status).to eq(302)
         redirect_uri = URI.parse(response.location)
         expect(redirect_uri.host).to eq("somewhere.over.rainbow")
         redirect_query = CGI.parse(redirect_uri.query)
-        expected_sig = DiscourseConnectBase.sign(redirect_query["sso"][0], "oldSecretForOverRainbow")
+        expected_sig =
+          DiscourseConnectBase.sign(redirect_query["sso"][0], "oldSecretForOverRainbow")
         expect(redirect_query["sig"][0]).to eq(expected_sig)
       end
 
       it "it fails to log in if secret is wrong" do
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
         expect(response.status).to eq(422)
       end
 
@@ -1423,10 +1459,11 @@ RSpec.describe SessionController do
       it "successfully redirects user to return_sso_url when the user is logged in" do
         sign_in(@user)
 
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
 
         location = response.header["Location"]
-        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+        expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
 
         payload = location.split("?")[1]
         sso2 = DiscourseConnectProvider.parse(payload)
@@ -1450,22 +1487,33 @@ RSpec.describe SessionController do
         expect(sso2.no_2fa_methods).to eq(nil)
       end
 
-      it 'handles non local content correctly' do
+      it "handles non local content correctly" do
         SiteSetting.avatar_sizes = "100|49"
         setup_s3
         SiteSetting.s3_cdn_url = "http://cdn.com"
 
-        stub_request(:any, /s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/).to_return(status: 200, body: "", headers: { referer: "fgdfds" })
+        stub_request(:any, /s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/).to_return(
+          status: 200,
+          body: "",
+          headers: {
+            referer: "fgdfds",
+          },
+        )
 
         @user.create_user_avatar!
-        upload = Fabricate(:upload, url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/something")
+        upload =
+          Fabricate(
+            :upload,
+            url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/something",
+          )
 
-        Fabricate(:optimized_image,
+        Fabricate(
+          :optimized_image,
           sha1: SecureRandom.hex << "A" * 8,
           upload: upload,
           width: 98,
           height: 98,
-          url: "//s3-upload-bucket.s3.amazonaws.com/something/else"
+          url: "//s3-upload-bucket.s3.amazonaws.com/something/else",
         )
 
         @user.update_columns(uploaded_avatar_id: upload.id)
@@ -1475,7 +1523,7 @@ RSpec.describe SessionController do
 
         @user.user_profile.update!(
           profile_background_upload: upload1,
-          card_background_upload: upload2
+          card_background_upload: upload2,
         )
 
         @user.reload
@@ -1485,14 +1533,15 @@ RSpec.describe SessionController do
         sign_in(@user)
 
         stub_request(:get, "http://cdn.com/something/else").to_return(
-          body: lambda { |request| File.new(Rails.root + 'spec/fixtures/images/logo.png') }
+          body: lambda { |request| File.new(Rails.root + "spec/fixtures/images/logo.png") },
         )
 
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
 
         location = response.header["Location"]
         # javascript code will handle redirection of user to return_sso_url
-        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+        expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
 
         payload = location.split("?")[1]
         sso2 = DiscourseConnectProvider.parse(payload)
@@ -1512,10 +1561,11 @@ RSpec.describe SessionController do
         sign_in(@user)
 
         @sso.logout = true
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
 
         location = response.header["Location"]
-        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso$/)
+        expect(location).to match(%r{^http://somewhere.over.rainbow/sso$})
 
         expect(response.status).to eq(302)
         expect(session[:current_user_id]).to be_blank
@@ -1524,10 +1574,11 @@ RSpec.describe SessionController do
 
       it "successfully logs out and redirects user to return_sso_url when the user is not logged in" do
         @sso.logout = true
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
 
         location = response.header["Location"]
-        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso$/)
+        expect(location).to match(%r{^http://somewhere.over.rainbow/sso$})
 
         expect(response.status).to eq(302)
         expect(session[:current_user_id]).to be_blank
@@ -1535,13 +1586,14 @@ RSpec.describe SessionController do
       end
     end
 
-    describe 'can act as a 2FA provider' do
+    describe "can act as a 2FA provider" do
       fab!(:user_totp) { Fabricate(:user_second_factor_totp, user: user) }
       before { @sso.require_2fa = true }
 
-      it 'requires the user to confirm 2FA before they are redirected to the SSO return URL' do
+      it "requires the user to confirm 2FA before they are redirected to the SSO return URL" do
         sign_in(user)
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
         uri = URI(response.location)
         expect(uri.hostname).to eq(Discourse.current_hostname)
         expect(uri.path).to eq("/session/2fa")
@@ -1549,38 +1601,36 @@ RSpec.describe SessionController do
         expect(nonce).to be_present
 
         # attempt no. 1 to bypass 2fa
-        get "/session/sso_provider", params: {
-          second_factor_nonce: nonce
-        }
+        get "/session/sso_provider", params: { second_factor_nonce: nonce }
         expect(response.status).to eq(401)
         expect(response.parsed_body["error"]).to eq(
-          I18n.t("second_factor_auth.challenge_not_completed")
+          I18n.t("second_factor_auth.challenge_not_completed"),
         )
 
         # attempt no. 2 to bypass 2fa
-        get "/session/sso_provider", params: {
-          second_factor_nonce: nonce
-        }.merge(Rack::Utils.parse_query(@sso.payload("secretForOverRainbow")))
+        get "/session/sso_provider",
+            params: { second_factor_nonce: nonce }.merge(
+              Rack::Utils.parse_query(@sso.payload("secretForOverRainbow")),
+            )
         expect(response.status).to eq(401)
         expect(response.parsed_body["error"]).to eq(
-          I18n.t("second_factor_auth.challenge_not_completed")
+          I18n.t("second_factor_auth.challenge_not_completed"),
         )
 
         # confirm 2fa
-        post "/session/2fa.json", params: {
-          nonce: nonce,
-          second_factor_token: ROTP::TOTP.new(user_totp.data).now,
-          second_factor_method: UserSecondFactor.methods[:totp]
-        }
+        post "/session/2fa.json",
+             params: {
+               nonce: nonce,
+               second_factor_token: ROTP::TOTP.new(user_totp.data).now,
+               second_factor_method: UserSecondFactor.methods[:totp],
+             }
         expect(response.status).to eq(200)
         expect(response.parsed_body["ok"]).to eq(true)
         expect(response.parsed_body["callback_method"]).to eq("GET")
         expect(response.parsed_body["callback_path"]).to eq("/session/sso_provider")
         expect(response.parsed_body["redirect_url"]).to be_blank
 
-        get "/session/sso_provider", params: {
-          second_factor_nonce: nonce
-        }
+        get "/session/sso_provider", params: { second_factor_nonce: nonce }
         expect(response.status).to eq(200)
         expect(response.parsed_body["success"]).to eq("OK")
         redirect_url = response.parsed_body["redirect_url"]
@@ -1595,34 +1645,38 @@ RSpec.describe SessionController do
       it "doesn't accept backup codes" do
         backup_codes = user.generate_backup_codes
         sign_in(user)
-        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
         uri = URI(response.location)
         expect(uri.hostname).to eq(Discourse.current_hostname)
         expect(uri.path).to eq("/session/2fa")
         nonce = uri.query.match(/\Anonce=([A-Za-z0-9]{32})\Z/)[1]
         expect(nonce).to be_present
 
-        post "/session/2fa.json", params: {
-          nonce: nonce,
-          second_factor_token: backup_codes.sample,
-          second_factor_method: UserSecondFactor.methods[:backup_codes]
-        }
+        post "/session/2fa.json",
+             params: {
+               nonce: nonce,
+               second_factor_token: backup_codes.sample,
+               second_factor_method: UserSecondFactor.methods[:backup_codes],
+             }
         expect(response.status).to eq(403)
-        get "/session/sso_provider", params: {
-          second_factor_nonce: nonce
-        }
+        get "/session/sso_provider", params: { second_factor_nonce: nonce }
         expect(response.status).to eq(401)
         expect(response.parsed_body["error"]).to eq(
-          I18n.t("second_factor_auth.challenge_not_completed")
+          I18n.t("second_factor_auth.challenge_not_completed"),
         )
       end
 
-      context 'when the user has no 2fa methods' do
-        before { user_totp.destroy!; user.reload }
+      context "when the user has no 2fa methods" do
+        before do
+          user_totp.destroy!
+          user.reload
+        end
 
-        it 'redirects the user back to the SSO return url and indicates in the payload that they do not have 2fa methods' do
+        it "redirects the user back to the SSO return url and indicates in the payload that they do not have 2fa methods" do
           sign_in(user)
-          get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+          get "/session/sso_provider",
+              params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
 
           expect(response.status).to eq(302)
           redirect_url = response.location
@@ -1635,22 +1689,27 @@ RSpec.describe SessionController do
         end
       end
 
-      context 'when there is no logged in user' do
+      context "when there is no logged in user" do
         it "redirects the user to login first" do
-          get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+          get "/session/sso_provider",
+              params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
           expect(response.status).to eq(302)
           expect(response.location).to eq("http://#{Discourse.current_hostname}/login")
         end
 
         it "doesn't make the user confirm 2fa twice if they've just logged in and confirmed 2fa while doing so" do
-          get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+          get "/session/sso_provider",
+              params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
 
-          post "/session.json", params: {
-            login: user.username,
-            password: "myfrogs123ADMIN",
-            second_factor_token: ROTP::TOTP.new(user_totp.data).now,
-            second_factor_method: UserSecondFactor.methods[:totp]
-          }, xhr: true, headers: headers
+          post "/session.json",
+               params: {
+                 login: user.username,
+                 password: "myfrogs123ADMIN",
+                 second_factor_token: ROTP::TOTP.new(user_totp.data).now,
+                 second_factor_method: UserSecondFactor.methods[:totp],
+               },
+               xhr: true,
+               headers: headers
           expect(response.status).to eq(204)
           # the frontend will take care of actually redirecting the user
           redirect_url = response.cookies["sso_destination_url"]
@@ -1665,12 +1724,16 @@ RSpec.describe SessionController do
         it "doesn't indicate the user has confirmed 2fa after they've logged in if they have no 2fa methods" do
           user_totp.destroy!
           user.reload
-          get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+          get "/session/sso_provider",
+              params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
 
-          post "/session.json", params: {
-            login: user.username,
-            password: "myfrogs123ADMIN",
-          }, xhr: true, headers: headers
+          post "/session.json",
+               params: {
+                 login: user.username,
+                 password: "myfrogs123ADMIN",
+               },
+               xhr: true,
+               headers: headers
           redirect_url = response.cookies["sso_destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
           sso = DiscourseConnectProvider.parse(URI(redirect_url).query)
@@ -1683,8 +1746,8 @@ RSpec.describe SessionController do
     end
   end
 
-  describe '#create' do
-    context 'when read only mode' do
+  describe "#create" do
+    context "when read only mode" do
       use_redis_snapshotting
 
       before do
@@ -1693,22 +1756,18 @@ RSpec.describe SessionController do
         EmailToken.confirm(admin_email_token.token)
       end
 
-      it 'prevents login by regular users' do
-        post "/session.json", params: {
-          login: user.username, password: 'myawesomepassword'
-        }
+      it "prevents login by regular users" do
+        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         expect(response.status).not_to eq(200)
       end
 
-      it 'prevents login by admins' do
-        post "/session.json", params: {
-          login: user.username, password: 'myawesomepassword'
-        }
+      it "prevents login by admins" do
+        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         expect(response.status).not_to eq(200)
       end
     end
 
-    context 'when in staff writes only mode' do
+    context "when in staff writes only mode" do
       use_redis_snapshotting
 
       before do
@@ -1717,155 +1776,144 @@ RSpec.describe SessionController do
         EmailToken.confirm(admin_email_token.token)
       end
 
-      it 'allows admin login' do
-        post "/session.json", params: {
-          login: admin.username, password: 'myawesomepassword'
-        }
+      it "allows admin login" do
+        post "/session.json", params: { login: admin.username, password: "myawesomepassword" }
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).not_to be_present
+        expect(response.parsed_body["error"]).not_to be_present
       end
 
-      it 'prevents login by regular users' do
-        post "/session.json", params: {
-          login: user.username, password: 'myawesomepassword'
-        }
+      it "prevents login by regular users" do
+        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         expect(response.status).not_to eq(200)
       end
     end
 
-    context 'when local login is disabled' do
+    context "when local login is disabled" do
       before do
         SiteSetting.enable_local_logins = false
 
-        post "/session.json", params: {
-          login: user.username, password: 'myawesomepassword'
-        }
+        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
       end
       it_behaves_like "failed to continue local login"
     end
 
-    context 'when SSO is enabled' do
+    context "when SSO is enabled" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
         SiteSetting.enable_discourse_connect = true
 
-        post "/session.json", params: {
-          login: user.username, password: 'myawesomepassword'
-        }
+        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
       end
       it_behaves_like "failed to continue local login"
     end
 
-    context 'when local login via email is disabled' do
+    context "when local login via email is disabled" do
       before do
         SiteSetting.enable_local_logins_via_email = false
         EmailToken.confirm(email_token.token)
       end
-      it 'doesnt matter, logs in correctly' do
-        post "/session.json", params: {
-          login: user.username, password: 'myawesomepassword'
-        }
+      it "doesnt matter, logs in correctly" do
+        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).not_to be_present
+        expect(response.parsed_body["error"]).not_to be_present
       end
     end
 
-    context 'when email is confirmed' do
-      before do
-        EmailToken.confirm(email_token.token)
-      end
+    context "when email is confirmed" do
+      before { EmailToken.confirm(email_token.token) }
 
       it "raises an error when the login isn't present" do
         post "/session.json"
         expect(response.status).to eq(400)
       end
 
-      describe 'invalid password' do
+      describe "invalid password" do
         it "should return an error with an invalid password" do
-          post "/session.json", params: {
-            login: user.username, password: 'sssss'
-          }
+          post "/session.json", params: { login: user.username, password: "sssss" }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).to eq(
-            I18n.t("login.incorrect_username_email_or_password")
+          expect(response.parsed_body["error"]).to eq(
+            I18n.t("login.incorrect_username_email_or_password"),
           )
         end
       end
 
-      describe 'invalid password' do
+      describe "invalid password" do
         it "should return an error with an invalid password if too long" do
           User.any_instance.expects(:confirm_password?).never
-          post "/session.json", params: {
-            login: user.username, password: ('s' * (User.max_password_length + 1))
-          }
+          post "/session.json",
+               params: {
+                 login: user.username,
+                 password: ("s" * (User.max_password_length + 1)),
+               }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).to eq(
-            I18n.t("login.incorrect_username_email_or_password")
+          expect(response.parsed_body["error"]).to eq(
+            I18n.t("login.incorrect_username_email_or_password"),
           )
         end
       end
 
-      describe 'suspended user' do
-        it 'should return an error' do
+      describe "suspended user" do
+        it "should return an error" do
           user.suspended_till = 2.days.from_now
           user.suspended_at = Time.now
           user.save!
           StaffActionLogger.new(user).log_user_suspend(user, "<strike>banned</strike>")
 
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
-          expected_message = I18n.t('login.suspended_with_reason',
-                                    date: I18n.l(user.suspended_till, format: :date_only),
-                                    reason: Rack::Utils.escape_html(user.suspend_reason))
+          expected_message =
+            I18n.t(
+              "login.suspended_with_reason",
+              date: I18n.l(user.suspended_till, format: :date_only),
+              reason: Rack::Utils.escape_html(user.suspend_reason),
+            )
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).to eq(expected_message)
+          expect(response.parsed_body["error"]).to eq(expected_message)
         end
 
-        it 'when suspended forever should return an error without suspended till date' do
+        it "when suspended forever should return an error without suspended till date" do
           user.suspended_till = 101.years.from_now
           user.suspended_at = Time.now
           user.save!
           StaffActionLogger.new(user).log_user_suspend(user, "<strike>banned</strike>")
 
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
-          expected_message = I18n.t('login.suspended_with_reason_forever', reason: Rack::Utils.escape_html(user.suspend_reason))
-          expect(response.parsed_body['error']).to eq(expected_message)
+          expected_message =
+            I18n.t(
+              "login.suspended_with_reason_forever",
+              reason: Rack::Utils.escape_html(user.suspend_reason),
+            )
+          expect(response.parsed_body["error"]).to eq(expected_message)
         end
       end
 
-      describe 'deactivated user' do
-        it 'should return an error' do
+      describe "deactivated user" do
+        it "should return an error" do
           user.active = false
           user.save!
 
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).to eq(I18n.t('login.not_activated'))
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.not_activated"))
         end
       end
 
-      describe 'success by username' do
-        it 'logs in correctly' do
-          events = DiscourseEvent.track_events do
-            post "/session.json", params: {
-              login: user.username, password: 'myawesomepassword'
-            }
-          end
+      describe "success by username" do
+        it "logs in correctly" do
+          events =
+            DiscourseEvent.track_events do
+              post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+            end
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
           expect(events.map { |event| event[:event_name] }).to contain_exactly(
-            :user_logged_in, :user_first_logged_in
+            :user_logged_in,
+            :user_first_logged_in,
           )
 
           user.reload
@@ -1873,16 +1921,21 @@ RSpec.describe SessionController do
           expect(session[:current_user_id]).to eq(user.id)
           expect(user.user_auth_tokens.count).to eq(1)
           unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
-          expect(UserAuthToken.hash_token(unhashed_token)).to eq(user.user_auth_tokens.first.auth_token)
+          expect(UserAuthToken.hash_token(unhashed_token)).to eq(
+            user.user_auth_tokens.first.auth_token,
+          )
         end
 
         context "when timezone param is provided" do
           it "sets the user_option timezone for the user" do
-            post "/session.json", params: {
-              login: user.username, password: 'myawesomepassword', timezone: "Australia/Melbourne"
-            }
+            post "/session.json",
+                 params: {
+                   login: user.username,
+                   password: "myawesomepassword",
+                   timezone: "Australia/Melbourne",
+                 }
             expect(response.status).to eq(200)
-            expect(response.parsed_body['error']).not_to be_present
+            expect(response.parsed_body["error"]).not_to be_present
             expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
           end
         end
@@ -1894,7 +1947,7 @@ RSpec.describe SessionController do
             :user_security_key,
             user: user,
             credential_id: valid_security_key_data[:credential_id],
-            public_key: valid_security_key_data[:public_key]
+            public_key: valid_security_key_data[:public_key],
           )
         end
 
@@ -1902,68 +1955,62 @@ RSpec.describe SessionController do
           simulate_localhost_webauthn_challenge
 
           # store challenge in secure session by failing login once
-          post "/session.json", params: {
-            login: user.username,
-            password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         end
 
         context "when the security key params are blank and a random second factor token is provided" do
           it "shows an error message and denies login" do
-
-            post "/session.json", params: {
-              login: user.username,
-              password: 'myawesomepassword',
-              second_factor_token: '99999999',
-              second_factor_method: UserSecondFactor.methods[:security_key]
-            }
+            post "/session.json",
+                 params: {
+                   login: user.username,
+                   password: "myawesomepassword",
+                   second_factor_token: "99999999",
+                   second_factor_method: UserSecondFactor.methods[:security_key],
+                 }
 
             expect(response.status).to eq(200)
             expect(session[:current_user_id]).to eq(nil)
             response_body = response.parsed_body
             expect(response_body["failed"]).to eq("FAILED")
-            expect(response_body['error']).to eq(I18n.t(
-              'login.invalid_security_key'
-            ))
+            expect(response_body["error"]).to eq(I18n.t("login.invalid_security_key"))
           end
         end
 
         context "when the security key params are invalid" do
           it "shows an error message and denies login" do
-
-            post "/session.json", params: {
-              login: user.username,
-              password: 'myawesomepassword',
-              second_factor_token: {
-                signature: 'bad_sig',
-                clientData: 'bad_clientData',
-                credentialId: 'bad_credential_id',
-                authenticatorData: 'bad_authenticator_data'
-              },
-              second_factor_method: UserSecondFactor.methods[:security_key]
-            }
+            post "/session.json",
+                 params: {
+                   login: user.username,
+                   password: "myawesomepassword",
+                   second_factor_token: {
+                     signature: "bad_sig",
+                     clientData: "bad_clientData",
+                     credentialId: "bad_credential_id",
+                     authenticatorData: "bad_authenticator_data",
+                   },
+                   second_factor_method: UserSecondFactor.methods[:security_key],
+                 }
 
             expect(response.status).to eq(200)
             expect(session[:current_user_id]).to eq(nil)
             response_body = response.parsed_body
             expect(response_body["failed"]).to eq("FAILED")
-            expect(response_body['error']).to eq(I18n.t(
-              'webauthn.validation.not_found_error'
-            ))
+            expect(response_body["error"]).to eq(I18n.t("webauthn.validation.not_found_error"))
           end
         end
 
         context "when the security key params are valid" do
           it "logs the user in" do
-            post "/session.json", params: {
-              login: user.username,
-              password: 'myawesomepassword',
-              second_factor_token: valid_security_key_auth_post_data,
-              second_factor_method: UserSecondFactor.methods[:security_key]
-            }
+            post "/session.json",
+                 params: {
+                   login: user.username,
+                   password: "myawesomepassword",
+                   second_factor_token: valid_security_key_auth_post_data,
+                   second_factor_method: UserSecondFactor.methods[:security_key],
+                 }
 
             expect(response.status).to eq(200)
-            expect(response.parsed_body['error']).not_to be_present
+            expect(response.parsed_body["error"]).not_to be_present
             user.reload
 
             expect(session[:current_user_id]).to eq(user.id)
@@ -1978,295 +2025,291 @@ RSpec.describe SessionController do
           end
 
           it "shows an error message and denies login" do
-            post "/session.json", params: {
-              login: user.username,
-              password: 'myawesomepassword',
-              second_factor_token: valid_security_key_auth_post_data,
-              second_factor_method: UserSecondFactor.methods[:security_key]
-            }
+            post "/session.json",
+                 params: {
+                   login: user.username,
+                   password: "myawesomepassword",
+                   second_factor_token: valid_security_key_auth_post_data,
+                   second_factor_method: UserSecondFactor.methods[:security_key],
+                 }
 
             expect(response.status).to eq(200)
             expect(session[:current_user_id]).to eq(nil)
             response_body = response.parsed_body
             expect(response_body["failed"]).to eq("FAILED")
-            expect(response.parsed_body['error']).to eq(I18n.t(
-              'login.not_enabled_second_factor_method'
-            ))
+            expect(response.parsed_body["error"]).to eq(
+              I18n.t("login.not_enabled_second_factor_method"),
+            )
           end
         end
       end
 
-      context 'when user has TOTP-only 2FA login' do
+      context "when user has TOTP-only 2FA login" do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
-        describe 'when second factor token is missing' do
-          it 'should return the right response' do
-            post "/session.json", params: {
-              login: user.username,
-              password: 'myawesomepassword'
-            }
+        describe "when second factor token is missing" do
+          it "should return the right response" do
+            post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
             expect(response.status).to eq(200)
-            expect(response.parsed_body['error']).to eq(I18n.t(
-              'login.invalid_second_factor_method'
-            ))
+            expect(response.parsed_body["error"]).to eq(
+              I18n.t("login.invalid_second_factor_method"),
+            )
           end
         end
 
-        describe 'when second factor token is invalid' do
-          context 'when using totp method' do
-            it 'should return the right response' do
-              post "/session.json", params: {
-                login: user.username,
-                password: 'myawesomepassword',
-                second_factor_token: '00000000',
-                second_factor_method: UserSecondFactor.methods[:totp]
-              }
+        describe "when second factor token is invalid" do
+          context "when using totp method" do
+            it "should return the right response" do
+              post "/session.json",
+                   params: {
+                     login: user.username,
+                     password: "myawesomepassword",
+                     second_factor_token: "00000000",
+                     second_factor_method: UserSecondFactor.methods[:totp],
+                   }
 
               expect(response.status).to eq(200)
-              expect(response.parsed_body['error']).to eq(I18n.t(
-                'login.invalid_second_factor_code'
-              ))
+              expect(response.parsed_body["error"]).to eq(
+                I18n.t("login.invalid_second_factor_code"),
+              )
             end
           end
 
-          context 'when using backup code method' do
-            it 'should return the right response' do
-              post "/session.json", params: {
-                login: user.username,
-                password: 'myawesomepassword',
-                second_factor_token: '00000000',
-                second_factor_method: UserSecondFactor.methods[:backup_codes]
-              }
+          context "when using backup code method" do
+            it "should return the right response" do
+              post "/session.json",
+                   params: {
+                     login: user.username,
+                     password: "myawesomepassword",
+                     second_factor_token: "00000000",
+                     second_factor_method: UserSecondFactor.methods[:backup_codes],
+                   }
 
               expect(response.status).to eq(200)
-              expect(response.parsed_body['error']).to eq(I18n.t(
-                'login.invalid_second_factor_code'
-              ))
+              expect(response.parsed_body["error"]).to eq(
+                I18n.t("login.invalid_second_factor_code"),
+              )
             end
           end
         end
 
-        describe 'when second factor token is valid' do
-          context 'when using totp method' do
-            it 'should log the user in' do
-              post "/session.json", params: {
-                login: user.username,
-                password: 'myawesomepassword',
-                second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-                second_factor_method: UserSecondFactor.methods[:totp]
-              }
+        describe "when second factor token is valid" do
+          context "when using totp method" do
+            it "should log the user in" do
+              post "/session.json",
+                   params: {
+                     login: user.username,
+                     password: "myawesomepassword",
+                     second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+                     second_factor_method: UserSecondFactor.methods[:totp],
+                   }
               expect(response.status).to eq(200)
-              expect(response.parsed_body['error']).not_to be_present
+              expect(response.parsed_body["error"]).not_to be_present
               user.reload
 
               expect(session[:current_user_id]).to eq(user.id)
               expect(user.user_auth_tokens.count).to eq(1)
 
               unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
-              expect(UserAuthToken.hash_token(unhashed_token))
-                .to eq(user.user_auth_tokens.first.auth_token)
+              expect(UserAuthToken.hash_token(unhashed_token)).to eq(
+                user.user_auth_tokens.first.auth_token,
+              )
             end
           end
 
-          context 'when using backup code method' do
-            it 'should log the user in' do
-              post "/session.json", params: {
-                login: user.username,
-                password: 'myawesomepassword',
-                second_factor_token: 'iAmValidBackupCode',
-                second_factor_method: UserSecondFactor.methods[:backup_codes]
-              }
+          context "when using backup code method" do
+            it "should log the user in" do
+              post "/session.json",
+                   params: {
+                     login: user.username,
+                     password: "myawesomepassword",
+                     second_factor_token: "iAmValidBackupCode",
+                     second_factor_method: UserSecondFactor.methods[:backup_codes],
+                   }
               expect(response.status).to eq(200)
-              expect(response.parsed_body['error']).not_to be_present
+              expect(response.parsed_body["error"]).not_to be_present
               user.reload
 
               expect(session[:current_user_id]).to eq(user.id)
               expect(user.user_auth_tokens.count).to eq(1)
 
               unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
-              expect(UserAuthToken.hash_token(unhashed_token))
-                .to eq(user.user_auth_tokens.first.auth_token)
+              expect(UserAuthToken.hash_token(unhashed_token)).to eq(
+                user.user_auth_tokens.first.auth_token,
+              )
             end
           end
         end
       end
 
-      describe 'with a blocked IP' do
+      describe "with a blocked IP" do
         it "doesn't log in" do
           ScreenedIpAddress.all.destroy_all
           get "/"
           _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip)
-          post "/session.json", params: {
-            login: "@" + user.username, password: 'myawesomepassword'
-          }
+          post "/session.json",
+               params: {
+                 login: "@" + user.username,
+                 password: "myawesomepassword",
+               }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).to be_present
+          expect(response.parsed_body["error"]).to be_present
           user.reload
 
           expect(session[:current_user_id]).to be_nil
         end
       end
 
-      describe 'strips leading @ symbol' do
-        it 'sets a session id' do
-          post "/session.json", params: {
-            login: "@" + user.username, password: 'myawesomepassword'
-          }
+      describe "strips leading @ symbol" do
+        it "sets a session id" do
+          post "/session.json",
+               params: {
+                 login: "@" + user.username,
+                 password: "myawesomepassword",
+               }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
           user.reload
 
           expect(session[:current_user_id]).to eq(user.id)
         end
       end
 
-      describe 'also allow login by email' do
-        it 'sets a session id' do
-          post "/session.json", params: {
-            login: user.email, password: 'myawesomepassword'
-          }
+      describe "also allow login by email" do
+        it "sets a session id" do
+          post "/session.json", params: { login: user.email, password: "myawesomepassword" }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
           expect(session[:current_user_id]).to eq(user.id)
         end
       end
 
-      context 'when login has leading and trailing space' do
+      context "when login has leading and trailing space" do
         let(:username) { " #{user.username} " }
         let(:email) { " #{user.email} " }
 
         it "strips spaces from the username" do
-          post "/session.json", params: {
-            login: username, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: username, password: "myawesomepassword" }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
         end
 
         it "strips spaces from the email" do
-          post "/session.json", params: {
-            login: email, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: email, password: "myawesomepassword" }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
         end
       end
 
       describe "when the site requires approval of users" do
-        before do
-          SiteSetting.must_approve_users = true
-        end
+        before { SiteSetting.must_approve_users = true }
 
-        context 'with an unapproved user' do
+        context "with an unapproved user" do
           before do
             user.update_columns(approved: false)
-            post "/session.json", params: {
-              login: user.email, password: 'myawesomepassword'
-            }
+            post "/session.json", params: { login: user.email, password: "myawesomepassword" }
           end
 
           it "doesn't log in the user" do
             expect(response.status).to eq(200)
-            expect(response.parsed_body['error']).to be_present
+            expect(response.parsed_body["error"]).to be_present
             expect(session[:current_user_id]).to be_blank
           end
 
           it "shows the 'not approved' error message" do
             expect(response.status).to eq(200)
-            expect(response.parsed_body['error']).to eq(
-              I18n.t('login.not_approved')
-            )
+            expect(response.parsed_body["error"]).to eq(I18n.t("login.not_approved"))
           end
         end
 
         context "with an unapproved user who is an admin" do
-          it 'sets a session id' do
+          it "sets a session id" do
             user.admin = true
             user.save!
 
-            post "/session.json", params: {
-              login: user.email, password: 'myawesomepassword'
-            }
+            post "/session.json", params: { login: user.email, password: "myawesomepassword" }
             expect(response.status).to eq(200)
-            expect(response.parsed_body['error']).not_to be_present
+            expect(response.parsed_body["error"]).not_to be_present
             expect(session[:current_user_id]).to eq(user.id)
           end
         end
       end
 
-      context 'when admins are restricted by ip address' do
+      context "when admins are restricted by ip address" do
         before do
           SiteSetting.use_admin_ip_allowlist = true
           ScreenedIpAddress.all.destroy_all
         end
 
-        it 'is successful for admin at the ip address' do
+        it "is successful for admin at the ip address" do
           get "/"
-          Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:allow_admin])
+          Fabricate(
+            :screened_ip_address,
+            ip_address: request.remote_ip,
+            action_type: ScreenedIpAddress.actions[:allow_admin],
+          )
 
           user.admin = true
           user.save!
 
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
           expect(session[:current_user_id]).to eq(user.id)
         end
 
-        it 'returns an error for admin not at the ip address' do
-          Fabricate(:screened_ip_address, ip_address: "111.234.23.11", action_type: ScreenedIpAddress.actions[:allow_admin])
+        it "returns an error for admin not at the ip address" do
+          Fabricate(
+            :screened_ip_address,
+            ip_address: "111.234.23.11",
+            action_type: ScreenedIpAddress.actions[:allow_admin],
+          )
           user.admin = true
           user.save!
 
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).to be_present
+          expect(response.parsed_body["error"]).to be_present
           expect(session[:current_user_id]).not_to eq(user.id)
         end
 
-        it 'is successful for non-admin not at the ip address' do
-          Fabricate(:screened_ip_address, ip_address: "111.234.23.11", action_type: ScreenedIpAddress.actions[:allow_admin])
+        it "is successful for non-admin not at the ip address" do
+          Fabricate(
+            :screened_ip_address,
+            ip_address: "111.234.23.11",
+            action_type: ScreenedIpAddress.actions[:allow_admin],
+          )
           user.admin = false
           user.save!
 
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
           expect(session[:current_user_id]).to eq(user.id)
         end
       end
     end
 
-    context 'when email has not been confirmed' do
+    context "when email has not been confirmed" do
       def post_login
-        post "/session.json", params: {
-          login: user.email, password: 'myawesomepassword'
-        }
+        post "/session.json", params: { login: user.email, password: "myawesomepassword" }
       end
 
       it "doesn't log in the user" do
         post_login
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).to be_present
+        expect(response.parsed_body["error"]).to be_present
         expect(session[:current_user_id]).to be_blank
       end
 
       it "shows the 'not activated' error message" do
         post_login
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).to eq(
-          I18n.t 'login.not_activated'
-        )
+        expect(response.parsed_body["error"]).to eq(I18n.t "login.not_activated")
       end
 
       context "when the 'must approve users' site setting is enabled" do
@@ -2275,89 +2318,97 @@ RSpec.describe SessionController do
         it "shows the 'not approved' error message" do
           post_login
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).to eq(
-            I18n.t 'login.not_approved'
-          )
+          expect(response.parsed_body["error"]).to eq(I18n.t "login.not_approved")
         end
       end
     end
 
-    context 'when rate limited' do
-      it 'rate limits login' do
+    context "when rate limited" do
+      it "rate limits login" do
         SiteSetting.max_logins_per_ip_per_hour = 2
         RateLimiter.enable
         RateLimiter.clear_all!
         EmailToken.confirm(email_token.token)
 
         2.times do
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
         end
 
-        post "/session.json", params: {
-          login: user.username, password: 'myawesomepassword'
-        }
+        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
         expect(response.status).to eq(429)
         json = response.parsed_body
         expect(json["error_type"]).to eq("rate_limit")
       end
 
-      it 'rate limits second factor attempts by IP' do
+      it "rate limits second factor attempts by IP" do
         RateLimiter.enable
         RateLimiter.clear_all!
 
         6.times do |x|
-          post "/session.json", params: {
-            login: "#{user.username}#{x}",
-            password: 'myawesomepassword',
-            second_factor_token: '000000',
-            second_factor_method: UserSecondFactor.methods[:totp]
-          }
+          post "/session.json",
+               params: {
+                 login: "#{user.username}#{x}",
+                 password: "myawesomepassword",
+                 second_factor_token: "000000",
+                 second_factor_method: UserSecondFactor.methods[:totp],
+               }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).to be_present
+          expect(response.parsed_body["error"]).to be_present
         end
 
-        post "/session.json", params: {
-          login: user.username,
-          password: 'myawesomepassword',
-          second_factor_token: '000000',
-          second_factor_method: UserSecondFactor.methods[:totp]
-        }
+        post "/session.json",
+             params: {
+               login: user.username,
+               password: "myawesomepassword",
+               second_factor_token: "000000",
+               second_factor_method: UserSecondFactor.methods[:totp],
+             }
 
         expect(response.status).to eq(429)
         json = response.parsed_body
         expect(json["error_type"]).to eq("rate_limit")
       end
 
-      it 'rate limits second factor attempts by login' do
+      it "rate limits second factor attempts by login" do
         RateLimiter.enable
         RateLimiter.clear_all!
         EmailToken.confirm(email_token.token)
 
         6.times do |x|
-          post "/session.json", params: {
-            login: user.username,
-            password: 'myawesomepassword',
-            second_factor_token: '000000',
-            second_factor_method: UserSecondFactor.methods[:totp]
-          }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
+          post "/session.json",
+               params: {
+                 login: user.username,
+                 password: "myawesomepassword",
+                 second_factor_token: "000000",
+                 second_factor_method: UserSecondFactor.methods[:totp],
+               },
+               env: {
+                 REMOTE_ADDR: "1.2.3.#{x}",
+               }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
         end
 
-        [user.username + " ", user.username.capitalize, user.username].each_with_index do |username , x|
-          post "/session.json", params: {
-            login: username,
-            password: 'myawesomepassword',
-            second_factor_token: '000000',
-            second_factor_method: UserSecondFactor.methods[:totp]
-          }, env: { "REMOTE_ADDR": "1.2.4.#{x}" }
+        [
+          user.username + " ",
+          user.username.capitalize,
+          user.username,
+        ].each_with_index do |username, x|
+          post "/session.json",
+               params: {
+                 login: username,
+                 password: "myawesomepassword",
+                 second_factor_token: "000000",
+                 second_factor_method: UserSecondFactor.methods[:totp],
+               },
+               env: {
+                 REMOTE_ADDR: "1.2.4.#{x}",
+               }
 
           expect(response.status).to eq(429)
           json = response.parsed_body
@@ -2367,8 +2418,8 @@ RSpec.describe SessionController do
     end
   end
 
-  describe '#destroy' do
-    it 'removes the session variable and the auth token cookies' do
+  describe "#destroy" do
+    it "removes the session variable and the auth token cookies" do
       user = sign_in(Fabricate(:user))
       delete "/session/#{user.username}.json"
 
@@ -2377,40 +2428,38 @@ RSpec.describe SessionController do
       expect(response.cookies["_t"]).to be_blank
     end
 
-    it 'returns the redirect URL in the body for XHR requests' do
+    it "returns the redirect URL in the body for XHR requests" do
       user = sign_in(Fabricate(:user))
       delete "/session/#{user.username}.json", xhr: true
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body['error']).not_to be_present
+      expect(response.parsed_body["error"]).not_to be_present
       expect(session[:current_user_id]).to be_blank
       expect(response.cookies["_t"]).to be_blank
 
       expect(response.parsed_body["redirect_url"]).to eq("/")
     end
 
-    it 'redirects to /login when SSO and login_required' do
+    it "redirects to /login when SSO and login_required" do
       SiteSetting.discourse_connect_url = "https://example.com/sso"
       SiteSetting.enable_discourse_connect = true
 
       user = sign_in(Fabricate(:user))
       delete "/session/#{user.username}.json", xhr: true
       expect(response.status).to eq(200)
-      expect(response.parsed_body['error']).not_to be_present
+      expect(response.parsed_body["error"]).not_to be_present
       expect(response.parsed_body["redirect_url"]).to eq("/")
 
       SiteSetting.login_required = true
       user = sign_in(Fabricate(:user))
       delete "/session/#{user.username}.json", xhr: true
       expect(response.status).to eq(200)
-      expect(response.parsed_body['error']).not_to be_present
+      expect(response.parsed_body["error"]).not_to be_present
       expect(response.parsed_body["redirect_url"]).to eq("/login")
     end
 
-    it 'allows plugins to manipulate redirect URL' do
-      callback = -> (data) do
-        data[:redirect_url] = "/myredirect/#{data[:user].username}"
-      end
+    it "allows plugins to manipulate redirect URL" do
+      callback = ->(data) { data[:redirect_url] = "/myredirect/#{data[:user].username}" }
 
       DiscourseEvent.on(:before_session_destroy, &callback)
 
@@ -2418,39 +2467,42 @@ RSpec.describe SessionController do
       delete "/session/#{user.username}.json", xhr: true
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body['error']).not_to be_present
+      expect(response.parsed_body["error"]).not_to be_present
       expect(response.parsed_body["redirect_url"]).to eq("/myredirect/#{user.username}")
     ensure
       DiscourseEvent.off(:before_session_destroy, &callback)
     end
 
-    it 'includes ip and user agent in the before_session_destroy event params' do
+    it "includes ip and user agent in the before_session_destroy event params" do
       callback_params = {}
-      callback = -> (data) { callback_params = data }
+      callback = ->(data) { callback_params = data }
 
       DiscourseEvent.on(:before_session_destroy, &callback)
 
       user = sign_in(Fabricate(:user))
-      delete "/session/#{user.username}.json", xhr: true, headers: { HTTP_USER_AGENT: 'AwesomeBrowser' }
+      delete "/session/#{user.username}.json",
+             xhr: true,
+             headers: {
+               HTTP_USER_AGENT: "AwesomeBrowser",
+             }
 
-      expect(callback_params[:user_agent]).to eq('AwesomeBrowser')
-      expect(callback_params[:client_ip]).to eq('127.0.0.1')
+      expect(callback_params[:user_agent]).to eq("AwesomeBrowser")
+      expect(callback_params[:client_ip]).to eq("127.0.0.1")
     ensure
       DiscourseEvent.off(:before_session_destroy, &callback)
     end
-
   end
 
-  describe '#one_time_password' do
-    context 'with missing token' do
-      it 'returns the right response' do
+  describe "#one_time_password" do
+    context "with missing token" do
+      it "returns the right response" do
         get "/session/otp"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'with invalid token' do
-      it 'returns the right response' do
+    context "with invalid token" do
+      it "returns the right response" do
         get "/session/otp/asd1231dasd123"
 
         expect(response.status).to eq(404)
@@ -2460,7 +2512,7 @@ RSpec.describe SessionController do
         expect(response.status).to eq(404)
       end
 
-      context 'when token is valid' do
+      context "when token is valid" do
         it "should display the form for GET" do
           token = SecureRandom.hex
           Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
@@ -2468,9 +2520,9 @@ RSpec.describe SessionController do
           get "/session/otp/#{token}"
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
           expect(response.body).to include(
-            I18n.t("user_api_key.otp_confirmation.logging_in_as", username: user.username)
+            I18n.t("user_api_key.otp_confirmation.logging_in_as", username: user.username),
           )
           expect(Discourse.redis.get("otp_#{token}")).to eq(user.username)
 
@@ -2489,7 +2541,7 @@ RSpec.describe SessionController do
           expect(session[:current_user_id]).to eq(user.id)
         end
 
-        it 'should authenticate user and delete token' do
+        it "should authenticate user and delete token" do
           user = Fabricate(:user)
 
           get "/session/current.json"
@@ -2506,71 +2558,67 @@ RSpec.describe SessionController do
 
           get "/session/current.json"
           expect(response.status).to eq(200)
-          expect(response.parsed_body['error']).not_to be_present
+          expect(response.parsed_body["error"]).not_to be_present
         end
       end
     end
-
   end
 
-  describe '#forgot_password' do
+  describe "#forgot_password" do
+    context "when hide_email_address_taken is set" do
+      before { SiteSetting.hide_email_address_taken = true }
 
-    context 'when hide_email_address_taken is set' do
-      before do
-        SiteSetting.hide_email_address_taken = true
-      end
-
-      it 'denies for username' do
-        post "/session/forgot_password.json",
-          params: { login: user.username }
+      it "denies for username" do
+        post "/session/forgot_password.json", params: { login: user.username }
 
         expect(response.status).to eq(400)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
 
-      it 'allows for username when staff' do
+      it "allows for username when staff" do
         sign_in(Fabricate(:admin))
 
-        post "/session/forgot_password.json",
-          params: { login: user.username }
+        post "/session/forgot_password.json", params: { login: user.username }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).not_to be_present
+        expect(response.parsed_body["error"]).not_to be_present
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
       end
 
-      it 'allows for email' do
-        post "/session/forgot_password.json",
-          params: { login: user.email }
+      it "allows for email" do
+        post "/session/forgot_password.json", params: { login: user.email }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).not_to be_present
+        expect(response.parsed_body["error"]).not_to be_present
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
       end
     end
 
-    it 'raises an error without a username parameter' do
+    it "raises an error without a username parameter" do
       post "/session/forgot_password.json"
       expect(response.status).to eq(400)
     end
 
-    it 'should correctly screen ips' do
+    it "should correctly screen ips" do
       ScreenedIpAddress.create!(
-        ip_address: '100.0.0.1',
-        action_type: ScreenedIpAddress.actions[:block]
+        ip_address: "100.0.0.1",
+        action_type: ScreenedIpAddress.actions[:block],
       )
 
       post "/session/forgot_password.json",
-        params: { login: 'made_up' },
-        headers: { 'REMOTE_ADDR' => '100.0.0.1'  }
+           params: {
+             login: "made_up",
+           },
+           headers: {
+             "REMOTE_ADDR" => "100.0.0.1",
+           }
 
-      expect(response.parsed_body).to eq({
-        "errors" => [I18n.t("login.reset_not_allowed_from_ip_address")]
-      })
-
+      expect(response.parsed_body).to eq(
+        { "errors" => [I18n.t("login.reset_not_allowed_from_ip_address")] },
+      )
     end
 
-    it 'should correctly rate limits' do
+    it "should correctly rate limits" do
       RateLimiter.enable
       RateLimiter.clear_all!
 
@@ -2579,7 +2627,7 @@ RSpec.describe SessionController do
       3.times do
         post "/session/forgot_password.json", params: { login: user.username }
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).not_to be_present
+        expect(response.parsed_body["error"]).not_to be_present
       end
 
       post "/session/forgot_password.json", params: { login: user.username }
@@ -2587,35 +2635,42 @@ RSpec.describe SessionController do
 
       3.times do
         post "/session/forgot_password.json",
-          params: { login: user.username },
-          headers: { 'REMOTE_ADDR' => '10.1.1.1'  }
+             params: {
+               login: user.username,
+             },
+             headers: {
+               "REMOTE_ADDR" => "10.1.1.1",
+             }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).not_to be_present
+        expect(response.parsed_body["error"]).not_to be_present
       end
 
       post "/session/forgot_password.json",
-        params: { login: user.username },
-        headers: { 'REMOTE_ADDR' => '100.1.1.1'  }
+           params: {
+             login: user.username,
+           },
+           headers: {
+             "REMOTE_ADDR" => "100.1.1.1",
+           }
 
       # not allowed, max 6 a day
       expect(response.status).to eq(422)
-
     end
 
-    context 'for a non existant username' do
+    context "for a non existant username" do
       it "doesn't generate a new token for a made up username" do
         expect do
-          post "/session/forgot_password.json", params: { login: 'made_up' }
+          post "/session/forgot_password.json", params: { login: "made_up" }
         end.not_to change(EmailToken, :count)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
     end
 
-    context 'for an existing username' do
+    context "for an existing username" do
       fab!(:user) { Fabricate(:user) }
 
-      context 'when local login is disabled' do
+      context "when local login is disabled" do
         before do
           SiteSetting.enable_local_logins = false
           post "/session/forgot_password.json", params: { login: user.username }
@@ -2623,14 +2678,12 @@ RSpec.describe SessionController do
         it_behaves_like "failed to continue local login"
       end
 
-      context 'when SSO is enabled' do
+      context "when SSO is enabled" do
         before do
           SiteSetting.discourse_connect_url = "https://www.example.com/sso"
           SiteSetting.enable_discourse_connect = true
 
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         end
         it_behaves_like "failed to continue local login"
       end
@@ -2639,17 +2692,13 @@ RSpec.describe SessionController do
         before do
           SiteSetting.enable_local_logins = false
 
-          post "/session.json", params: {
-            login: user.username, password: 'myawesomepassword'
-          }
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         end
         it_behaves_like "failed to continue local login"
       end
 
       context "when local logins via email are disabled" do
-        before do
-          SiteSetting.enable_local_logins_via_email = false
-        end
+        before { SiteSetting.enable_local_logins_via_email = false }
         it "does not matter, generates a new token for a made up username" do
           expect do
             post "/session/forgot_password.json", params: { login: user.username }
@@ -2669,38 +2718,38 @@ RSpec.describe SessionController do
       end
     end
 
-    context 'when doing nothing to system username' do
+    context "when doing nothing to system username" do
       let(:system) { Discourse.system_user }
 
-      it 'generates no token for system username' do
+      it "generates no token for system username" do
         expect do
           post "/session/forgot_password.json", params: { login: system.username }
         end.not_to change(EmailToken, :count)
       end
 
-      it 'enqueues no email' do
+      it "enqueues no email" do
         post "/session/forgot_password.json", params: { login: system.username }
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
     end
 
-    context 'for a staged account' do
+    context "for a staged account" do
       let!(:staged) { Fabricate(:staged) }
 
-      it 'generates no token for staged username' do
+      it "generates no token for staged username" do
         expect do
           post "/session/forgot_password.json", params: { login: staged.username }
         end.not_to change(EmailToken, :count)
       end
 
-      it 'enqueues no email' do
+      it "enqueues no email" do
         post "/session/forgot_password.json", params: { login: staged.username }
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
     end
   end
 
-  describe '#current' do
+  describe "#current" do
     context "when not logged in" do
       it "returns 404" do
         get "/session/current.json"
@@ -2714,40 +2763,38 @@ RSpec.describe SessionController do
       it "returns the JSON for the user" do
         get "/session/current.json"
         expect(response.status).to eq(200)
-        expect(response.parsed_body['error']).not_to be_present
+        expect(response.parsed_body["error"]).not_to be_present
         json = response.parsed_body
-        expect(json['current_user']).to be_present
-        expect(json['current_user']['id']).to eq(user.id)
+        expect(json["current_user"]).to be_present
+        expect(json["current_user"]["id"]).to eq(user.id)
       end
     end
   end
 
-  describe '#second_factor_auth_show' do
+  describe "#second_factor_auth_show" do
     let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
-    before do
-      sign_in(user)
-    end
+    before { sign_in(user) }
 
-    it 'returns 404 if there is no challenge for the given nonce' do
-      get "/session/2fa.json", params: { nonce: 'asdasdsadsad' }
+    it "returns 404 if there is no challenge for the given nonce" do
+      get "/session/2fa.json", params: { nonce: "asdasdsadsad" }
       expect(response.status).to eq(404)
       expect(response.parsed_body["error"]).to eq(I18n.t("second_factor_auth.challenge_not_found"))
     end
 
-    it 'returns 404 if the nonce does not match the challenge nonce' do
+    it "returns 404 if the nonce does not match the challenge nonce" do
       post "/session/2fa/test-action"
-      get "/session/2fa.json", params: { nonce: 'wrongnonce' }
+      get "/session/2fa.json", params: { nonce: "wrongnonce" }
       expect(response.status).to eq(404)
       expect(response.parsed_body["error"]).to eq(I18n.t("second_factor_auth.challenge_not_found"))
     end
 
-    it 'returns 401 if the challenge nonce has expired' do
+    it "returns 401 if the challenge nonce has expired" do
       post "/session/2fa/test-action", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       get "/session/2fa.json", params: { nonce: nonce }
       expect(response.status).to eq(200)
-      expect(response.parsed_body['error']).not_to be_present
+      expect(response.parsed_body["error"]).not_to be_present
 
       freeze_time (SecondFactor::AuthManager::MAX_CHALLENGE_AGE + 1.minute).from_now
       get "/session/2fa.json", params: { nonce: nonce }
@@ -2755,12 +2802,12 @@ RSpec.describe SessionController do
       expect(response.parsed_body["error"]).to eq(I18n.t("second_factor_auth.challenge_expired"))
     end
 
-    it 'responds with challenge data' do
+    it "responds with challenge data" do
       post "/session/2fa/test-action", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       get "/session/2fa.json", params: { nonce: nonce }
       expect(response.status).to eq(200)
-      expect(response.parsed_body['error']).not_to be_present
+      expect(response.parsed_body["error"]).not_to be_present
       challenge_data = response.parsed_body
       expect(challenge_data["totp_enabled"]).to eq(true)
       expect(challenge_data["backup_enabled"]).to eq(false)
@@ -2774,15 +2821,15 @@ RSpec.describe SessionController do
       Fabricate(
         :user_security_key_with_random_credential,
         user: user,
-        name: 'Enabled YubiKey',
-        enabled: true
+        name: "Enabled YubiKey",
+        enabled: true,
       )
       Fabricate(:user_second_factor_backup, user: user)
       post "/session/2fa/test-action", params: { allow_backup_codes: true }, xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       get "/session/2fa.json", params: { nonce: nonce }
       expect(response.status).to eq(200)
-      expect(response.parsed_body['error']).not_to be_present
+      expect(response.parsed_body["error"]).not_to be_present
       challenge_data = response.parsed_body
       expect(challenge_data["totp_enabled"]).to eq(true)
       expect(challenge_data["backup_enabled"]).to eq(true)
@@ -2797,65 +2844,67 @@ RSpec.describe SessionController do
     end
   end
 
-  describe '#second_factor_auth_perform' do
+  describe "#second_factor_auth_perform" do
     let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
-    before do
-      sign_in(user)
-    end
+    before { sign_in(user) }
 
-    it 'returns 401 if the challenge nonce has expired' do
+    it "returns 401 if the challenge nonce has expired" do
       post "/session/2fa/test-action", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
 
       freeze_time (SecondFactor::AuthManager::MAX_CHALLENGE_AGE + 1.minute).from_now
       token = ROTP::TOTP.new(user_second_factor.data).now
-      post "/session/2fa.json", params: {
-        nonce: nonce,
-        second_factor_method: UserSecondFactor.methods[:totp],
-        second_factor_token: token
-      }
+      post "/session/2fa.json",
+           params: {
+             nonce: nonce,
+             second_factor_method: UserSecondFactor.methods[:totp],
+             second_factor_token: token,
+           }
       expect(response.status).to eq(401)
       expect(response.parsed_body["error"]).to eq(I18n.t("second_factor_auth.challenge_expired"))
     end
 
-    it 'returns 403 if the 2FA method is not allowed' do
+    it "returns 403 if the 2FA method is not allowed" do
       Fabricate(:user_second_factor_backup, user: user)
       post "/session/2fa/test-action", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
-      post "/session/2fa.json", params: {
-        nonce: nonce,
-        second_factor_method: UserSecondFactor.methods[:backup_codes],
-        second_factor_token: "iAmValidBackupCode"
-      }
+      post "/session/2fa.json",
+           params: {
+             nonce: nonce,
+             second_factor_method: UserSecondFactor.methods[:backup_codes],
+             second_factor_token: "iAmValidBackupCode",
+           }
       expect(response.status).to eq(403)
     end
 
-    it 'returns 403 if the user disables the 2FA method in the middle of the 2FA process' do
+    it "returns 403 if the user disables the 2FA method in the middle of the 2FA process" do
       post "/session/2fa/test-action", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       token = ROTP::TOTP.new(user_second_factor.data).now
       user_second_factor.destroy!
-      post "/session/2fa.json", params: {
-        nonce: nonce,
-        second_factor_method: UserSecondFactor.methods[:totp],
-        second_factor_token: token
-      }
+      post "/session/2fa.json",
+           params: {
+             nonce: nonce,
+             second_factor_method: UserSecondFactor.methods[:totp],
+             second_factor_token: token,
+           }
       expect(response.status).to eq(403)
     end
 
-    it 'marks the challenge as successful if the 2fa succeeds' do
+    it "marks the challenge as successful if the 2fa succeeds" do
       post "/session/2fa/test-action", params: { redirect_url: "/ggg" }, xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
 
       token = ROTP::TOTP.new(user_second_factor.data).now
-      post "/session/2fa.json", params: {
-        nonce: nonce,
-        second_factor_method: UserSecondFactor.methods[:totp],
-        second_factor_token: token
-      }
+      post "/session/2fa.json",
+           params: {
+             nonce: nonce,
+             second_factor_method: UserSecondFactor.methods[:totp],
+             second_factor_token: token,
+           }
       expect(response.status).to eq(200)
-      expect(response.parsed_body['error']).not_to be_present
+      expect(response.parsed_body["error"]).not_to be_present
       expect(response.parsed_body["ok"]).to eq(true)
       expect(response.parsed_body["callback_method"]).to eq("POST")
       expect(response.parsed_body["callback_path"]).to eq("/session/2fa/test-action")
@@ -2863,21 +2912,22 @@ RSpec.describe SessionController do
 
       post "/session/2fa/test-action", params: { second_factor_nonce: nonce }
       expect(response.status).to eq(200)
-      expect(response.parsed_body['error']).not_to be_present
+      expect(response.parsed_body["error"]).not_to be_present
       expect(response.parsed_body["result"]).to eq("second_factor_auth_completed")
     end
 
-    it 'does not mark the challenge as successful if the 2fa fails' do
+    it "does not mark the challenge as successful if the 2fa fails" do
       post "/session/2fa/test-action", params: { redirect_url: "/ggg" }, xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
 
       token = ROTP::TOTP.new(user_second_factor.data).now.to_i
-      token += token == 999999 ? -1 : 1
-      post "/session/2fa.json", params: {
-        nonce: nonce,
-        second_factor_method: UserSecondFactor.methods[:totp],
-        second_factor_token: token.to_s
-      }
+      token += token == 999_999 ? -1 : 1
+      post "/session/2fa.json",
+           params: {
+             nonce: nonce,
+             second_factor_method: UserSecondFactor.methods[:totp],
+             second_factor_token: token.to_s,
+           }
       expect(response.status).to eq(400)
       expect(response.parsed_body["ok"]).to eq(false)
       expect(response.parsed_body["reason"]).to eq("invalid_second_factor")
@@ -2888,7 +2938,7 @@ RSpec.describe SessionController do
     end
   end
 
-  describe '#scopes' do
+  describe "#scopes" do
     context "when not a valid api request" do
       it "returns 404" do
         get "/session/scopes.json"
@@ -2898,21 +2948,24 @@ RSpec.describe SessionController do
 
     context "when a valid api request" do
       let(:admin) { Fabricate(:admin) }
-      let(:scope) { ApiKeyScope.new(resource: 'topics', action: 'read', allowed_parameters: { topic_id: '3' }) }
+      let(:scope) do
+        ApiKeyScope.new(resource: "topics", action: "read", allowed_parameters: { topic_id: "3" })
+      end
       let(:api_key) { Fabricate(:api_key, user: admin, api_key_scopes: [scope]) }
 
       it "returns the scopes of the api key" do
-        get "/session/scopes.json", headers: {
-          "Api-Key": api_key.key,
-          "Api-Username": admin.username
-        }
+        get "/session/scopes.json",
+            headers: {
+              "Api-Key": api_key.key,
+              "Api-Username": admin.username,
+            }
         expect(response.status).to eq(200)
 
         json = response.parsed_body
-        expect(json['scopes'].size).to eq(1)
-        expect(json['scopes'].first["resource"]).to eq("topics")
-        expect(json['scopes'].first["action"]).to eq("read")
-        expect(json['scopes'].first["allowed_parameters"]).to eq({ "topic_id": "3" }.as_json)
+        expect(json["scopes"].size).to eq(1)
+        expect(json["scopes"].first["resource"]).to eq("topics")
+        expect(json["scopes"].first["action"]).to eq("read")
+        expect(json["scopes"].first["allowed_parameters"]).to eq({ topic_id: "3" }.as_json)
       end
     end
   end

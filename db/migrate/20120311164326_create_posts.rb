@@ -11,6 +11,6 @@ class CreatePosts < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :posts, [:forum_thread_id, :created_at]
+    add_index :posts, %i[forum_thread_id created_at]
   end
 end

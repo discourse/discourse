@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/(replit\.com|repl\.it)\/.+/)
+      matches_regexp(%r{^https?://(replit\.com|repl\.it)/.+})
       always_https
 
       def placeholder_html

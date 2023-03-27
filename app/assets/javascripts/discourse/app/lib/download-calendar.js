@@ -8,7 +8,7 @@ export function downloadCalendar(title, dates) {
   const formattedDates = formatDates(dates);
   title = title.trim();
 
-  switch (currentUser.default_calendar) {
+  switch (currentUser.user_option.default_calendar) {
     case "none_selected":
       _displayModal(title, formattedDates);
       break;

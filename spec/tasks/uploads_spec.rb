@@ -8,18 +8,11 @@ RSpec.describe "tasks/uploads" do
   end
 
   describe "uploads:secure_upload_analyse_and_update" do
-    let!(:uploads) do
-      [
-        multi_post_upload1,
-        upload1,
-        upload2,
-        upload3
-      ]
-    end
+    let!(:uploads) { [multi_post_upload1, upload1, upload2, upload3] }
     let(:multi_post_upload1) { Fabricate(:upload_s3) }
     let(:upload1) { Fabricate(:upload_s3) }
     let(:upload2) { Fabricate(:upload_s3) }
-    let(:upload3) { Fabricate(:upload_s3, original_filename: 'test.pdf', extension: 'pdf') }
+    let(:upload3) { Fabricate(:upload_s3, original_filename: "test.pdf", extension: "pdf") }
 
     let!(:post1) { Fabricate(:post) }
     let!(:post2) { Fabricate(:post) }
@@ -34,9 +27,7 @@ RSpec.describe "tasks/uploads" do
     end
 
     def invoke_task
-      capture_stdout do
-        Rake::Task['uploads:secure_upload_analyse_and_update'].invoke
-      end
+      capture_stdout { Rake::Task["uploads:secure_upload_analyse_and_update"].invoke }
     end
 
     context "when the store is internal" do
@@ -53,9 +44,7 @@ RSpec.describe "tasks/uploads" do
       end
 
       context "when secure upload is enabled" do
-        before do
-          SiteSetting.secure_uploads = true
-        end
+        before { SiteSetting.secure_uploads = true }
 
         it "sets an access_control_post for each post upload, using the first linked post in the case of multiple links" do
           invoke_task
@@ -92,7 +81,7 @@ RSpec.describe "tasks/uploads" do
         end
 
         it "sets the upload in the PM topic to secure" do
-          post3.topic.update(archetype: 'private_message', category: nil)
+          post3.topic.update(archetype: "private_message", category: nil)
           invoke_task
           expect(upload2.reload.secure).to eq(true)
           expect(upload1.reload.secure).to eq(false)
@@ -115,7 +104,7 @@ RSpec.describe "tasks/uploads" do
 
         context "for an upload that is already secure and does not need to change" do
           before do
-            post3.topic.update(archetype: 'private_message', category: nil)
+            post3.topic.update(archetype: "private_message", category: nil)
             upload2.update(access_control_post: post3)
             upload2.update_secure_status
             upload3.update(access_control_post: post3)
@@ -157,9 +146,7 @@ RSpec.describe "tasks/uploads" do
 
   describe "uploads:disable_secure_uploads" do
     def invoke_task
-      capture_stdout do
-        Rake::Task['uploads:disable_secure_uploads'].invoke
-      end
+      capture_stdout { Rake::Task["uploads:disable_secure_uploads"].invoke }
     end
 
     before do
@@ -173,11 +160,7 @@ RSpec.describe "tasks/uploads" do
       UploadReference.create(target: post2, upload: upload4)
     end
 
-    let!(:uploads) do
-      [
-        upload1, upload2, upload3, upload4, upload5
-      ]
-    end
+    let!(:uploads) { [upload1, upload2, upload3, upload4, upload5] }
     let(:post1) { Fabricate(:post) }
     let(:post2) { Fabricate(:post) }
     let(:upload1) { Fabricate(:upload_s3, secure: true, access_control_post: post1) }
@@ -193,9 +176,7 @@ RSpec.describe "tasks/uploads" do
 
     it "updates all secure uploads to secure: false" do
       invoke_task
-      [upload1, upload2, upload3, upload4].each do |upl|
-        expect(upl.reload.secure).to eq(false)
-      end
+      [upload1, upload2, upload3, upload4].each { |upl| expect(upl.reload.secure).to eq(false) }
     end
 
     it "rebakes the associated posts" do
@@ -209,13 +190,34 @@ RSpec.describe "tasks/uploads" do
       expect(post2.reload.baked_at).not_to eq_time(1.week.ago)
     end
 
-    it "updates the affected ACLs" do
-      expect_enqueued_with(
-        job: :sync_acls_for_uploads,
-        args: { upload_ids: [upload1.id, upload2.id, upload3.id, upload4.id] },
-      ) do
-        invoke_task
-      end
+    it "updates the affected ACLs via the SyncAclsForUploads job" do
+      invoke_task
+      expect(Jobs::SyncAclsForUploads.jobs.last["args"][0]["upload_ids"]).to match_array(
+        [upload1.id, upload2.id, upload3.id, upload4.id],
+      )
+    end
+  end
+
+  describe "uploads:downsize" do
+    def invoke_task
+      capture_stdout { Rake::Task["uploads:downsize"].invoke }
+    end
+
+    before { STDIN.stubs(:beep) }
+
+    fab!(:upload) { Fabricate(:image_upload, width: 200, height: 200) }
+
+    it "corrects upload attributes" do
+      upload.update!(thumbnail_height: 0)
+
+      expect { invoke_task }.to change { upload.reload.thumbnail_height }.to(200)
+    end
+
+    it "updates attributes of uploads that are over the size limit" do
+      upload.update!(thumbnail_height: 0)
+      SiteSetting.max_image_size_kb = 0.001 # 1 byte
+
+      expect { invoke_task }.to change { upload.reload.thumbnail_height }.to(200)
     end
   end
 end

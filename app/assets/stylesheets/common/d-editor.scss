@@ -25,6 +25,7 @@
   background-color: var(--secondary);
   position: relative;
   border: 1px solid var(--primary-medium);
+  border-radius: var(--d-input-border-radius);
   min-height: 0;
 
   textarea {

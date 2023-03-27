@@ -4,67 +4,73 @@ RSpec.describe PostActionsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
-  before do
-    Group.refresh_automatic_groups!
-  end
+  before { Group.refresh_automatic_groups! }
 
-  describe '#destroy' do
+  describe "#destroy" do
     fab!(:post) { Fabricate(:post, user: coding_horror) }
 
-    it 'requires you to be logged in' do
+    it "requires you to be logged in" do
       delete "/post_actions/#{post.id}.json"
       expect(response.status).to eq(403)
     end
 
-    context 'when logged in' do
-      before do
-        sign_in(user)
-      end
+    context "when logged in" do
+      before { sign_in(user) }
 
-      it 'raises an error when the post_action_type_id is missing' do
+      it "raises an error when the post_action_type_id is missing" do
         delete "/post_actions/#{post.id}.json"
         expect(response.status).to eq(400)
       end
 
       it "returns 404 when the post action type doesn't exist for that user" do
-        delete "/post_actions/#{post.id}.json", params: { post_action_type_id: PostActionType.types[:like] }
+        delete "/post_actions/#{post.id}.json",
+               params: {
+                 post_action_type_id: PostActionType.types[:like],
+               }
         expect(response.status).to eq(404)
       end
 
-      context 'with a post_action record ' do
+      context "with a post_action record " do
         let!(:post_action) do
           PostAction.create!(
             user_id: user.id,
             post_id: post.id,
-            post_action_type_id: PostActionType.types[:like]
+            post_action_type_id: PostActionType.types[:like],
           )
         end
 
-        it 'returns success' do
-          delete "/post_actions/#{post.id}.json", params: { post_action_type_id: PostActionType.types[:like] }
+        it "returns success" do
+          delete "/post_actions/#{post.id}.json",
+                 params: {
+                   post_action_type_id: PostActionType.types[:like],
+                 }
           expect(response.status).to eq(200)
         end
 
-        it 'deletes the action' do
-          delete "/post_actions/#{post.id}.json", params: {
-            post_action_type_id: PostActionType.types[:like]
-          }
+        it "deletes the action" do
+          delete "/post_actions/#{post.id}.json",
+                 params: {
+                   post_action_type_id: PostActionType.types[:like],
+                 }
 
           expect(response.status).to eq(200)
-          expect(PostAction.exists?(
-            user_id: user.id,
-            post_id: post.id,
-            post_action_type_id: PostActionType.types[:like],
-            deleted_at: nil
-          )).to eq(false)
+          expect(
+            PostAction.exists?(
+              user_id: user.id,
+              post_id: post.id,
+              post_action_type_id: PostActionType.types[:like],
+              deleted_at: nil,
+            ),
+          ).to eq(false)
         end
 
         it "isn't deleted when the user doesn't have permission" do
           post_action.update!(created_at: 1.day.ago)
 
-          delete "/post_actions/#{post.id}.json", params: {
-            post_action_type_id: PostActionType.types[:like]
-          }
+          delete "/post_actions/#{post.id}.json",
+                 params: {
+                   post_action_type_id: PostActionType.types[:like],
+                 }
 
           expect(response).to be_forbidden
         end
@@ -72,69 +78,69 @@ RSpec.describe PostActionsController do
     end
   end
 
-  describe '#create' do
-    it 'requires you to be logged in' do
-      post '/post_actions.json'
+  describe "#create" do
+    it "requires you to be logged in" do
+      post "/post_actions.json"
       expect(response.status).to eq(403)
     end
 
-    it 'fails when the user does not have permission to see the post' do
+    it "fails when the user does not have permission to see the post" do
       sign_in(user)
       pm = Fabricate(:private_message_post, user: coding_horror)
 
-      post "/post_actions.json", params: {
-        id: pm.id,
-        post_action_type_id: PostActionType.types[:like]
-      }
+      post "/post_actions.json",
+           params: {
+             id: pm.id,
+             post_action_type_id: PostActionType.types[:like],
+           }
 
       expect(response.status).to eq(403)
     end
 
-    it 'fails when the user tries to notify user that has disabled PM' do
+    it "fails when the user tries to notify user that has disabled PM" do
       sign_in(user)
       user2 = Fabricate(:user)
 
       post = Fabricate(:post, user: user2)
       user2.user_option.update!(allow_private_messages: false)
 
-      post "/post_actions.json", params: {
-        id: post.id,
-        post_action_type_id: PostActionType.types[:notify_user],
-        message: 'testing',
-        flag_topic: false
-      }
+      post "/post_actions.json",
+           params: {
+             id: post.id,
+             post_action_type_id: PostActionType.types[:notify_user],
+             message: "testing",
+             flag_topic: false,
+           }
 
       expect(response.status).to eq(422)
 
-      expect(response.parsed_body["errors"].first).to eq(I18n.t(
-        :not_accepting_pms, username: user2.username
-      ))
+      expect(response.parsed_body["errors"].first).to eq(
+        I18n.t(:not_accepting_pms, username: user2.username),
+      )
     end
 
-    describe 'as a moderator' do
+    describe "as a moderator" do
       fab!(:user) { Fabricate(:moderator) }
       fab!(:post_1) { Fabricate(:post, user: coding_horror) }
 
-      before do
-        sign_in(user)
-      end
+      before { sign_in(user) }
 
-      it 'raises an error when the id is missing' do
-        post "/post_actions.json", params: {
-          post_action_type_id: PostActionType.types[:like]
-        }
+      it "raises an error when the id is missing" do
+        post "/post_actions.json", params: { post_action_type_id: PostActionType.types[:like] }
         expect(response.status).to eq(400)
       end
 
-      it 'fails when the id is invalid' do
-        post "/post_actions.json", params: {
-          post_action_type_id: PostActionType.types[:like], id: -1
-        }
+      it "fails when the id is invalid" do
+        post "/post_actions.json",
+             params: {
+               post_action_type_id: PostActionType.types[:like],
+               id: -1,
+             }
 
         expect(response.status).to eq(404)
       end
 
-      it 'raises an error when the post_action_type_id index is missing' do
+      it "raises an error when the post_action_type_id index is missing" do
         post "/post_actions.json", params: { id: post_1.id }
         expect(response.status).to eq(400)
       end
@@ -142,18 +148,22 @@ RSpec.describe PostActionsController do
       it "fails when the user doesn't have permission to see the post" do
         post_1 = Fabricate(:private_message_post, user: Fabricate(:user))
 
-        post "/post_actions.json", params: {
-          id: post_1.id, post_action_type_id: PostActionType.types[:like]
-        }
+        post "/post_actions.json",
+             params: {
+               id: post_1.id,
+               post_action_type_id: PostActionType.types[:like],
+             }
 
         expect(response).to be_forbidden
       end
 
-      it 'allows us to create an post action on a post' do
+      it "allows us to create an post action on a post" do
         expect do
-          post "/post_actions.json", params: {
-            id: post_1.id, post_action_type_id: PostActionType.types[:like]
-          }
+          post "/post_actions.json",
+               params: {
+                 id: post_1.id,
+                 post_action_type_id: PostActionType.types[:like],
+               }
         end.to change { PostAction.count }.by(1)
 
         post_action = PostAction.last
@@ -167,39 +177,43 @@ RSpec.describe PostActionsController do
         PostAction.create!(
           post_id: post_1.id,
           user_id: user.id,
-          post_action_type_id: PostActionType.types[:inappropriate]
+          post_action_type_id: PostActionType.types[:inappropriate],
         )
 
-        post "/post_actions.json", params: {
-          id: post_1.id, post_action_type_id: PostActionType.types[:off_topic]
-        }
+        post "/post_actions.json",
+             params: {
+               id: post_1.id,
+               post_action_type_id: PostActionType.types[:off_topic],
+             }
 
         expect(response).to be_forbidden
       end
 
-      it 'passes the message through' do
-        message = 'action message goes here'
+      it "passes the message through" do
+        message = "action message goes here"
 
-        post "/post_actions.json", params: {
-          id: post_1.id,
-          post_action_type_id: PostActionType.types[:notify_user],
-          message: message
-        }
+        post "/post_actions.json",
+             params: {
+               id: post_1.id,
+               post_action_type_id: PostActionType.types[:notify_user],
+               message: message,
+             }
 
         expect(response.status).to eq(200)
         expect(PostAction.last.post_id).to eq(post_1.id)
         expect(Post.last.raw).to include(message)
       end
 
-      it 'passes the message through as warning' do
-        message = 'action message goes here'
+      it "passes the message through as warning" do
+        message = "action message goes here"
 
-        post "/post_actions.json", params: {
-          id: post_1.id,
-          post_action_type_id: PostActionType.types[:notify_user],
-          message: message,
-          is_warning: true
-        }
+        post "/post_actions.json",
+             params: {
+               id: post_1.id,
+               post_action_type_id: PostActionType.types[:notify_user],
+               message: message,
+               is_warning: true,
+             }
 
         expect(response.status).to eq(200)
         expect(PostAction.last.post_id).to eq(post_1.id)
@@ -213,22 +227,24 @@ RSpec.describe PostActionsController do
       it "doesn't create message as a warning if the user isn't staff" do
         sign_in(Fabricate(:user))
 
-        post "/post_actions.json", params: {
-          id: post_1.id,
-          post_action_type_id: PostActionType.types[:notify_user],
-          message: 'action message goes here',
-          is_warning: true
-        }
+        post "/post_actions.json",
+             params: {
+               id: post_1.id,
+               post_action_type_id: PostActionType.types[:notify_user],
+               message: "action message goes here",
+               is_warning: true,
+             }
 
         expect(response.status).to eq(403)
       end
 
-      it 'passes take_action through' do
-        post "/post_actions.json", params: {
-          id: post_1.id,
-          post_action_type_id: PostActionType.types[:spam],
-          take_action: 'true'
-        }
+      it "passes take_action through" do
+        post "/post_actions.json",
+             params: {
+               id: post_1.id,
+               post_action_type_id: PostActionType.types[:spam],
+               take_action: "true",
+             }
 
         expect(response.status).to eq(200)
 
@@ -243,10 +259,11 @@ RSpec.describe PostActionsController do
       it "doesn't pass take_action through if the user isn't staff" do
         sign_in(Fabricate(:user))
 
-        post "/post_actions.json", params: {
-          id: post_1.id,
-          post_action_type_id: PostActionType.types[:inappropriate]
-        }
+        post "/post_actions.json",
+             params: {
+               id: post_1.id,
+               post_action_type_id: PostActionType.types[:inappropriate],
+             }
 
         expect(response.status).to eq(200)
 
@@ -259,5 +276,4 @@ RSpec.describe PostActionsController do
       end
     end
   end
-
 end

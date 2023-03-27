@@ -1,0 +1,84 @@
+<div class="summary-email">
+  <table class="chat-summary-header text-header with-dir" style="background-color:#<%= @header_bgcolor -%>;width:100%;min-width:100%;">
+    <tr>
+      <td align="center" style="text-align: center;padding: 20px 0; font-family:Arial,sans-serif;">
+
+        <a href="<%= Discourse.base_url %>" style="color:#<%= @header_color -%>;font-size:22px;text-decoration:none;">
+          <%- if logo_url.blank? %>
+            <%= SiteSetting.title %>
+          <%- else %>
+            <img src="<%= logo_url %>" height="40" style="clear:both;display:block;height:40px;margin:auto;max-width:100%;outline:0;text-decoration:none;" alt="<%= SiteSetting.title %>">
+          <%- end %>
+        </a>
+
+      </td>
+    </tr>
+    <tr>
+      <td align="center" style="font-weight:bold;font-size:22px;color:#0a0a0a">
+        <%= I18n.t("user_notifications.chat_summary.description", count: @messages.size) %>
+      </td>
+    </tr>
+  </table>
+
+  <%- @grouped_messages.each do |chat_channel, messages| %>
+    <%- other_messages_count = messages.size - 2 %>
+    <table class="chat-summary-content" style="padding:1em;margin-top:20px;width:100%;min-width:100%;background-color:#f7f7f7;">
+      <tbody>
+        <tr>
+          <td colspan="100%">
+            <h5 style="margin:0.5em 0 0.5em 0;font-size:0.9em;"><%= chat_channel.title(@user) %></h5>
+          </td>
+        </tr>
+        <%- messages.take(2).each do |chat_message| %>
+          <%- sender = chat_message.user %>
+          <%- sender_name = @display_usernames ? sender.username : sender.name %>
+
+          <tr class="message-row">
+            <td style="white-space:nowrap;vertical-align:top;padding:<%= rtl? ? '1em 2em 0 0' : '1em 0 0 2em' %>">
+              <img src="<%= sender.small_avatar_url -%>" style="height:20px;width:20px;margin:<%= rtl? ? '0 0 5px 0' : '0 5px 0 0' %>;border-radius:50%;clear:both;display:inline-block;outline:0;text-decoration:none;vertical-align:top;" alt="<%= sender_name -%>">
+              <span style="display:inline-block;color:#0a0a0a;vertical-align:top;font-weight:bold;">
+                <%= sender_name -%>
+              </span>
+              <span style="display:inline-block;color:#0a0a0a;font-size:0.8em;">
+                <%= I18n.l(@user_tz.to_local(chat_message.created_at), format: :long) -%>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td style="width:99%;margin:0;padding:<%= rtl? ? '0 2em 0 0' : '0 0 0 2em' %>;vertical-align:top;">
+              <%= email_excerpt(chat_message.cooked_for_excerpt) %>
+            </td>
+          </tr>
+        <%- end %>
+        <tr>
+          <td colspan="100%" style="padding:<%= rtl? ? '2em 2em 0 0' : '2em 0 0 2em' %>">
+            <a class="more-messages-link" href="<%= messages.first.full_url %>">
+              <%- if other_messages_count <= 0 %>
+                <%= I18n.t("user_notifications.chat_summary.view_messages", count: messages.size)%>
+              <%- else %>
+                <%= I18n.t("user_notifications.chat_summary.view_more", count: other_messages_count)%>
+              <%- end %>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  <%- end %>
+</div>
+
+<table class='summary-footer with-dir' style="margin-top:2em;width:100%">
+  <tr>
+    <td align="center">
+      <%- if @unsubscribe_link %>
+        <%= raw(t 'user_notifications.chat_summary.unsubscribe',
+                site_link: html_site_link,
+                email_preferences_link: link_to(t('user_notifications.chat_summary.your_chat_settings'), @preferences_path),
+                unsubscribe_link: link_to(t('user_notifications.digest.click_here'), @unsubscribe_link)) %>
+      <%- else %>
+         <%= raw(t 'user_notifications.chat_summary.unsubscribe_no_link',
+                site_link: html_site_link,
+                email_preferences_link: link_to(t('user_notifications.chat_summary.your_chat_settings'), @preferences_path)) %>
+      <%- end %>
+    </td>
+  </tr>
+</table>

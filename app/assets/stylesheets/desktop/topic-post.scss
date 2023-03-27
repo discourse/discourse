@@ -36,11 +36,11 @@
 
 section.post-menu-area {
   position: relative;
-  padding-left: 11px;
+  padding-left: var(--topic-body-width-padding);
 }
 
 .post-links-container {
-  margin-left: 11px;
+  margin-left: var(--topic-body-width-padding);
 }
 
 nav.post-controls {
@@ -103,7 +103,9 @@ nav.post-controls {
     }
   }
   .show-replies {
-    margin-left: -11px; // negates padding-left on .cooked, for visual alignment
+    margin-left: calc(
+      var(--topic-body-width-padding) * -1
+    ); // negates padding-left on .cooked, for visual alignment
     .d-icon {
       margin-right: var(--control-icon-space);
     }
@@ -176,7 +178,6 @@ pre.codeblock-buttons:hover {
   &.bottom {
     border-top: none;
     margin-bottom: 20px;
-    margin-left: 11px;
     &.hidden {
       display: block;
       opacity: 0;
@@ -199,8 +200,11 @@ pre.codeblock-buttons:hover {
     .collapse-down {
       transform: translate(-50%, 55%);
     }
-    margin-left: 56px;
-    width: 699px;
+    margin-left: var(--topic-avatar-width);
+    width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+        var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
+    ); // 2px accounts for left and right borders
     .row {
       border-bottom: none;
       .topic-avatar,
@@ -249,7 +253,7 @@ pre.codeblock-buttons:hover {
 }
 
 .topic-map {
-  margin: 20px 0 20px 11px;
+  margin: 20px 0 20px var(--topic-body-width-padding);
   .map {
     .secondary {
       text-align: center;
@@ -324,7 +328,10 @@ pre.codeblock-buttons:hover {
 }
 
 #topic-footer-buttons {
-  max-width: calc(690px + (11px * 2) + 45px);
+  max-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
+  );
 
   @media screen and (max-width: 924px) {
     .topic-footer-main-buttons {
@@ -363,7 +370,7 @@ span.post-count {
 
 button.expand-post {
   margin-top: 10px;
-  margin-left: $topic-body-width-padding;
+  margin-left: var(--topic-body-width-padding);
 }
 
 iframe {
@@ -459,23 +466,26 @@ blockquote {
 
 // variables are used to calculate the width of .gap
 .topic-body {
-  width: calc(#{$topic-body-width} + (#{$topic-body-width-padding} * 2));
+  width: calc(var(--topic-body-width) + (var(--topic-body-width-padding) * 2));
   float: left;
   min-width: 0; // prevents some elements, like <pre>, from blowing out the width
   position: relative;
   border-top: 1px solid var(--primary-low);
   padding: 12px 0 0 0;
   .topic-meta-data {
-    padding: 0 $topic-body-width-padding 0.25em $topic-body-width-padding;
+    padding: 0 var(--topic-body-width-padding) 0.25em
+      var(--topic-body-width-padding);
   }
   .cooked {
-    padding: 1em $topic-body-width-padding 0.25em $topic-body-width-padding;
+    padding: 1em var(--topic-body-width-padding) 0.25em
+      var(--topic-body-width-padding);
   }
   .group-request {
-    padding: 0.5em $topic-body-width-padding 0 $topic-body-width-padding;
+    padding: 0.5em var(--topic-body-width-padding) 0
+      var(--topic-body-width-padding);
   }
   a.expand-hidden {
-    padding-left: $topic-body-width-padding;
+    padding-left: var(--topic-body-width-padding);
   }
 }
 
@@ -495,14 +505,10 @@ blockquote {
 .topic-area > .loading-container {
   // loader needs to be same width as posts
   width: calc(
-    #{$topic-avatar-width} + #{$topic-body-width} +
-      (#{$topic-body-width-padding} * 2)
+    var(--topic-body-width) + var(--topic-avatar-width) +
+      (var(--topic-body-width-padding) * 2)
   );
   max-width: 100%;
-  @media all and (max-width: 790px) {
-    // 32px is (left + right padding * 2) from .wrap in common/base/discourse.scss
-    max-width: calc(100vw - 32px);
-  }
 }
 
 /* hide the reply border above the time gap notices */

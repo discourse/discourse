@@ -21,8 +21,7 @@
     "line-stream": "0.0.0",
     "regenerator-transform": "0.10.1",
     "source-map": "0.1.43",
-    "sourcemap-validator": "1.1.1",
-    "xmldom": "0.1.31"
+    "sourcemap-validator": "1.1.1"
   },
   "corrections": true,
   "ignore": [

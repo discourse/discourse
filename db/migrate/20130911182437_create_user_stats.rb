@@ -13,5 +13,4 @@ class CreateUserStats < ActiveRecord::Migration[4.2]
   def down
     drop_table :user_stats
   end
-
 end

@@ -11,15 +11,13 @@
     "@highlightjs/cdn-assets": "^11.6.0",
     "@json-editor/json-editor": "^2.6.1",
     "ace-builds": "1.4.13",
-    "bootbox": "3.2.0",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",
     "diffhtml": "^1.0.0-beta.20",
-    "eslint-config-discourse": "^3.3.0",
     "magnific-popup": "1.1.0",
     "moment": "2.29.4",
-    "moment-timezone": "0.5.31",
-    "pikaday": "1.8.0",
+    "moment-timezone": "0.5.39",
+    "pikaday": "1.8.2",
     "squoosh": "discourse/squoosh#dc9649d",
     "workbox-cacheable-response": "^4.3.1",
     "workbox-core": "^4.3.1",
@@ -29,11 +27,14 @@
     "workbox-sw": "^4.3.1"
   },
   "devDependencies": {
-    "@arkweid/lefthook": "^0.7.7",
-    "@mixer/parallel-prettier": "^2.0.1",
-    "chrome-launcher": "^0.15.0",
-    "chrome-remote-interface": "^0.31.2",
-    "puppeteer-core": "^13.7.0"
+    "@mixer/parallel-prettier": "^2.0.3",
+    "chrome-launcher": "^0.15.1",
+    "chrome-remote-interface": "^0.31.3",
+    "eslint-config-discourse": "^3.3.0",
+    "jsdoc": "^4.0.0",
+    "lefthook": "^1.2.0",
+    "puppeteer-core": "^13.7.0",
+    "tidy-jsdoc": "^1.4.1"
   },
   "scripts": {
     "postinstall": "yarn --cwd app/assets/javascripts/discourse $(node -e 'if(JSON.parse(process.env.npm_config_argv).original.includes(`--frozen-lockfile`)){console.log(`--frozen-lockfile`)}')"

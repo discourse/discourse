@@ -23,27 +23,24 @@ class CategoryUser < ActiveRecord::Base
     changed = false
 
     # Update pre-existing category users
-    if category_ids.present? && CategoryUser
-        .where(user_id: user.id, category_id: category_ids)
-        .where.not(notification_level: level_num)
-        .update_all(notification_level: level_num) > 0
-
+    if category_ids.present? &&
+         CategoryUser
+           .where(user_id: user.id, category_id: category_ids)
+           .where.not(notification_level: level_num)
+           .update_all(notification_level: level_num) > 0
       changed = true
     end
 
     # Remove extraneous category users
-    if CategoryUser.where(user_id: user.id, notification_level: level_num)
-        .where.not(category_id: category_ids)
-        .delete_all > 0
-
+    if CategoryUser
+         .where(user_id: user.id, notification_level: level_num)
+         .where.not(category_id: category_ids)
+         .delete_all > 0
       changed = true
     end
 
     if category_ids.present?
-      params = {
-        user_id: user.id,
-        level_num: level_num,
-      }
+      params = { user_id: user.id, level_num: level_num }
 
       sql = <<~SQL
         INSERT INTO category_users (user_id, category_id, notification_level)
@@ -55,11 +52,8 @@ class CategoryUser < ActiveRecord::Base
       # into the query, plus it is a bit of a micro optimisation
       category_ids.each do |category_id|
         params[:category_id] = category_id
-        if DB.exec(sql, params) > 0
-          changed = true
-        end
+        changed = true if DB.exec(sql, params) > 0
       end
-
     end
 
     if changed
@@ -91,7 +85,6 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.auto_track(opts = {})
-
     builder = DB.build <<~SQL
       UPDATE topic_users tu
       SET notification_level = :tracking,
@@ -100,11 +93,13 @@ class CategoryUser < ActiveRecord::Base
       /*where*/
     SQL
 
-    builder.where("tu.topic_id = t.id AND
+    builder.where(
+      "tu.topic_id = t.id AND
                   cu.category_id = t.category_id AND
                   cu.user_id = tu.user_id AND
                   cu.notification_level = :tracking AND
-                  tu.notification_level = :regular")
+                  tu.notification_level = :regular",
+    )
 
     if category_id = opts[:category_id]
       builder.where("t.category_id = :category_id", category_id: category_id)
@@ -121,12 +116,11 @@ class CategoryUser < ActiveRecord::Base
     builder.exec(
       tracking: notification_levels[:tracking],
       regular: notification_levels[:regular],
-      auto_track_category: TopicUser.notification_reasons[:auto_track_category]
+      auto_track_category: TopicUser.notification_reasons[:auto_track_category],
     )
   end
 
   def self.auto_watch(opts = {})
-
     builder = DB.build <<~SQL
       UPDATE topic_users tu
       SET notification_level =
@@ -181,9 +175,8 @@ class CategoryUser < ActiveRecord::Base
       watching: notification_levels[:watching],
       tracking: notification_levels[:tracking],
       regular: notification_levels[:regular],
-      auto_watch_category: TopicUser.notification_reasons[:auto_watch_category]
+      auto_watch_category: TopicUser.notification_reasons[:auto_watch_category],
     )
-
   end
 
   def self.ensure_consistency!
@@ -198,25 +191,30 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.default_notification_level
-    SiteSetting.mute_all_categories_by_default ? notification_levels[:muted] : notification_levels[:regular]
+    if SiteSetting.mute_all_categories_by_default
+      notification_levels[:muted]
+    else
+      notification_levels[:regular]
+    end
   end
 
   def self.notification_levels_for(user)
     # Anonymous users have all default categories set to regular tracking,
     # except for default muted categories which stay muted.
     if user.blank?
-      notification_levels = [
-        SiteSetting.default_categories_watching.split("|"),
-        SiteSetting.default_categories_tracking.split("|"),
-        SiteSetting.default_categories_watching_first_post.split("|"),
-        SiteSetting.default_categories_normal.split("|")
-      ].flatten.map do |id|
-        [id.to_i, self.notification_levels[:regular]]
-      end
+      notification_levels =
+        [
+          SiteSetting.default_categories_watching.split("|"),
+          SiteSetting.default_categories_tracking.split("|"),
+          SiteSetting.default_categories_watching_first_post.split("|"),
+          SiteSetting.default_categories_normal.split("|"),
+        ].flatten.map { |id| [id.to_i, self.notification_levels[:regular]] }
 
-      notification_levels += SiteSetting.default_categories_muted.split("|").map do |id|
-        [id.to_i, self.notification_levels[:muted]]
-      end
+      notification_levels +=
+        SiteSetting
+          .default_categories_muted
+          .split("|")
+          .map { |id| [id.to_i, self.notification_levels[:muted]] }
     else
       notification_levels = CategoryUser.where(user: user).pluck(:category_id, :notification_level)
     end
@@ -238,22 +236,32 @@ class CategoryUser < ActiveRecord::Base
   def self.muted_category_ids_query(user, include_direct: false)
     query = Category
     query = query.where.not(parent_category_id: nil) if !include_direct
-    query = query
-      .joins("LEFT JOIN categories categories2 ON categories2.id = categories.parent_category_id")
-      .joins("LEFT JOIN category_users ON category_users.category_id = categories.id AND category_users.user_id = #{user.id}")
-      .joins("LEFT JOIN category_users category_users2 ON category_users2.category_id = categories2.id AND category_users2.user_id = #{user.id}")
+    query =
+      query
+        .joins("LEFT JOIN categories categories2 ON categories2.id = categories.parent_category_id")
+        .joins(
+          "LEFT JOIN category_users ON category_users.category_id = categories.id AND category_users.user_id = #{user.id}",
+        )
+        .joins(
+          "LEFT JOIN category_users category_users2 ON category_users2.category_id = categories2.id AND category_users2.user_id = #{user.id}",
+        )
 
-    direct_category_muted_sql = "COALESCE(category_users.notification_level, #{CategoryUser.default_notification_level}) = #{CategoryUser.notification_levels[:muted]}"
+    direct_category_muted_sql =
+      "COALESCE(category_users.notification_level, #{CategoryUser.default_notification_level}) = #{CategoryUser.notification_levels[:muted]}"
     parent_category_muted_sql =
       "(category_users.id IS NULL AND COALESCE(category_users2.notification_level, #{CategoryUser.default_notification_level}) = #{notification_levels[:muted]})"
 
     conditions = [parent_category_muted_sql]
     conditions.push(direct_category_muted_sql) if include_direct
     if SiteSetting.max_category_nesting === 3
-      query = query
-        .joins("LEFT JOIN categories categories3 ON categories3.id = categories2.parent_category_id")
-        .joins("LEFT JOIN category_users category_users3 ON category_users3.category_id = categories3.id AND category_users3.user_id = #{user.id}")
-      grandparent_category_muted_sql = "(category_users.id IS NULL AND category_users2.id IS NULL AND COALESCE(category_users3.notification_level, #{CategoryUser.default_notification_level}) = #{notification_levels[:muted]})"
+      query =
+        query.joins(
+          "LEFT JOIN categories categories3 ON categories3.id = categories2.parent_category_id",
+        ).joins(
+          "LEFT JOIN category_users category_users3 ON category_users3.category_id = categories3.id AND category_users3.user_id = #{user.id}",
+        )
+      grandparent_category_muted_sql =
+        "(category_users.id IS NULL AND category_users2.id IS NULL AND COALESCE(category_users3.notification_level, #{CategoryUser.default_notification_level}) = #{notification_levels[:muted]})"
       conditions.push(grandparent_category_muted_sql)
     end
 

@@ -4,32 +4,41 @@ class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
 
-  RESERVED_TAGS = [
-    'none',
-    'constructor' # prevents issues with javascript's constructor of objects
+  self.ignored_columns = [
+    "topic_count", # TODO(tgxworld): Remove on 1 July 2023
   ]
 
-  validates :name,
-    presence: true,
-    uniqueness: { case_sensitive: false }
+  RESERVED_TAGS = [
+    "none",
+    "constructor", # prevents issues with javascript's constructor of objects
+  ]
 
-  validate :target_tag_validator, if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
+
+  validate :target_tag_validator,
+           if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
   validate :name_validator
   validates :description, length: { maximum: 280 }
 
-  scope :where_name, ->(name) do
-    name = Array(name).map(&:downcase)
-    where("lower(tags.name) IN (?)", name)
-  end
+  scope :where_name,
+        ->(name) {
+          name = Array(name).map(&:downcase)
+          where("lower(tags.name) IN (?)", name)
+        }
 
   # tags that have never been used and don't belong to a tag group
-  scope :unused, -> do
-    where(topic_count: 0, pm_topic_count: 0)
-      .joins("LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id")
-      .where("tgm.tag_id IS NULL")
-  end
+  scope :unused,
+        -> {
+          where(staff_topic_count: 0, pm_topic_count: 0).joins(
+            "LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id",
+          ).where("tgm.tag_id IS NULL")
+        }
+
+  scope :used_tags_in_regular_topics,
+        ->(guardian) { where("tags.#{Tag.topic_count_column(guardian)} > 0") }
 
   scope :base_tags, -> { where(target_tag_id: nil) }
+  scope :visible, ->(guardian = nil) { merge(DiscourseTagging.visible_tags(guardian)) }
 
   has_many :tag_users, dependent: :destroy # notification settings
 
@@ -61,7 +70,7 @@ class Tag < ActiveRecord::Base
   def self.update_topic_counts
     DB.exec <<~SQL
       UPDATE tags t
-         SET topic_count = x.topic_count
+         SET staff_topic_count = x.topic_count
         FROM (
              SELECT COUNT(topics.id) AS topic_count, tags.id AS tag_id
                FROM tags
@@ -72,7 +81,31 @@ class Tag < ActiveRecord::Base
            GROUP BY tags.id
         ) x
        WHERE x.tag_id = t.id
-         AND x.topic_count <> t.topic_count
+         AND x.topic_count <> t.staff_topic_count
+    SQL
+
+    DB.exec <<~SQL
+      UPDATE tags t
+      SET public_topic_count = x.topic_count
+      FROM (
+        WITH tags_with_public_topics AS (
+          SELECT
+            COUNT(topics.id) AS topic_count,
+            tags.id AS tag_id
+          FROM tags
+          INNER JOIN topic_tags ON tags.id = topic_tags.tag_id
+          INNER JOIN topics ON topics.id = topic_tags.topic_id AND topics.deleted_at IS NULL AND topics.archetype != 'private_message'
+          INNER JOIN categories ON categories.id = topics.category_id AND NOT categories.read_restricted
+          GROUP BY tags.id
+        )
+        SELECT
+          COALESCE(tags_with_public_topics.topic_count, 0 ) AS topic_count,
+          tags.id AS tag_id
+        FROM tags
+        LEFT JOIN tags_with_public_topics ON tags_with_public_topics.tag_id = tags.id
+      ) x
+      WHERE x.tag_id = t.id
+      AND x.topic_count <> t.public_topic_count;
     SQL
 
     DB.exec <<~SQL
@@ -93,28 +126,32 @@ class Tag < ActiveRecord::Base
   end
 
   def self.find_by_name(name)
-    self.find_by('lower(name) = ?', name.downcase)
+    self.find_by("lower(name) = ?", name.downcase)
   end
 
-  def self.top_tags(limit_arg: nil, category: nil, guardian: nil)
+  def self.top_tags(limit_arg: nil, category: nil, guardian: Guardian.new)
     # we add 1 to max_tags_in_filter_list to efficiently know we have more tags
     # than the limit. Frontend is responsible to enforce limit.
     limit = limit_arg || (SiteSetting.max_tags_in_filter_list + 1)
-    scope_category_ids = (guardian || Guardian.new).allowed_category_ids
-
-    if category
-      scope_category_ids &= ([category.id] + category.subcategories.pluck(:id))
-    end
+    scope_category_ids = guardian.allowed_category_ids
+    scope_category_ids &= ([category.id] + category.subcategories.pluck(:id)) if category
 
     return [] if scope_category_ids.empty?
 
-    filter_sql = guardian&.is_staff? ? '' : " AND tags.id NOT IN (#{DiscourseTagging.hidden_tags_query.select(:id).to_sql})"
+    filter_sql =
+      (
+        if guardian.is_staff?
+          ""
+        else
+          " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
+        end
+      )
 
     tag_names_with_counts = DB.query <<~SQL
       SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
         FROM category_tag_stats stats
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
-       WHERE stats.category_id in (#{scope_category_ids.join(',')})
+       WHERE stats.category_id in (#{scope_category_ids.join(",")})
        #{filter_sql}
     GROUP BY tags.name
     ORDER BY sum_topic_count DESC, tag_name ASC
@@ -122,6 +159,14 @@ class Tag < ActiveRecord::Base
     SQL
 
     tag_names_with_counts.map { |row| row.tag_name }
+  end
+
+  def self.topic_count_column(guardian)
+    if guardian&.is_staff? || SiteSetting.include_secure_categories_in_tag_counts
+      "staff_topic_count"
+    else
+      "public_topic_count"
+    end
   end
 
   def self.pm_tags(limit: 1000, guardian: nil, allowed_user: nil)
@@ -181,16 +226,16 @@ class Tag < ActiveRecord::Base
 
   def update_synonym_associations
     if target_tag_id && saved_change_to_target_tag_id?
-      target_tag.tag_groups.each { |tag_group| tag_group.tags << self unless tag_group.tags.include?(self) }
-      target_tag.categories.each { |category| category.tags << self unless category.tags.include?(self) }
+      target_tag.tag_groups.each do |tag_group|
+        tag_group.tags << self unless tag_group.tags.include?(self)
+      end
+      target_tag.categories.each do |category|
+        category.tags << self unless category.tags.include?(self)
+      end
     end
   end
 
-  %i{
-    tag_created
-    tag_updated
-    tag_destroyed
-  }.each do |event|
+  %i[tag_created tag_updated tag_destroyed].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
       true
@@ -200,9 +245,7 @@ class Tag < ActiveRecord::Base
   private
 
   def name_validator
-    if name.present? && RESERVED_TAGS.include?(self.name.strip.downcase)
-      errors.add(:name, :invalid)
-    end
+    errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(self.name.strip.downcase)
   end
 end
 
@@ -210,14 +253,15 @@ end
 #
 # Table name: tags
 #
-#  id             :integer          not null, primary key
-#  name           :string           not null
-#  topic_count    :integer          default(0), not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  pm_topic_count :integer          default(0), not null
-#  target_tag_id  :integer
-#  description    :string
+#  id                 :integer          not null, primary key
+#  name               :string           not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  pm_topic_count     :integer          default(0), not null
+#  target_tag_id      :integer
+#  description        :string
+#  public_topic_count :integer          default(0), not null
+#  staff_topic_count  :integer          default(0), not null
 #
 # Indexes
 #

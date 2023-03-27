@@ -1,25 +1,24 @@
 # frozen_string_literal: true
 
-require 'faker'
+require "faker"
 
 module Faker
   class Discourse < Base
     class << self
-
       def tag
-        fetch('discourse.tags')
+        fetch("discourse.tags")
       end
 
       def category
-        fetch('discourse.categories')
+        fetch("discourse.categories")
       end
 
       def group
-        fetch('discourse.groups')
+        fetch("discourse.groups")
       end
 
       def topic
-        fetch('discourse.topics')
+        fetch("discourse.topics")
       end
     end
   end

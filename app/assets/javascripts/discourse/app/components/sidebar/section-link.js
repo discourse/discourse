@@ -1,9 +1,18 @@
 import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
 
 export default class SectionLink extends Component {
+  @service currentUser;
+
   willDestroy() {
     if (this.args.willDestroy) {
       this.args.willDestroy();
+    }
+  }
+
+  didInsert(_element, [args]) {
+    if (args.didInsert) {
+      args.didInsert();
     }
   }
 
@@ -16,17 +25,29 @@ export default class SectionLink extends Component {
   }
 
   get classNames() {
-    let classNames = [
-      "sidebar-section-link",
-      `sidebar-section-link-${this.args.linkName}`,
-      "sidebar-row",
-    ];
+    let classNames = ["sidebar-section-link", "sidebar-row"];
+
+    if (this.args.linkName) {
+      classNames.push(
+        `sidebar-section-link-${this.args.linkName
+          .split(" ")
+          .filter((s) => s)
+          .join("-")
+          .toLowerCase()}`
+      );
+    }
 
     if (this.args.class) {
       classNames.push(this.args.class);
     }
 
     return classNames.join(" ");
+  }
+
+  get target() {
+    return this.currentUser?.user_option?.external_links_in_new_tab
+      ? "_blank"
+      : "_self";
   }
 
   get models() {

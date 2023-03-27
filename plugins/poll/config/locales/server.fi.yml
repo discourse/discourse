@@ -40,6 +40,13 @@ fi:
     user_cant_post_in_topic: "Et voi äänestää, koska sinulla ei ole oikeutta kirjoittaa ketjuun."
     topic_must_be_open_to_vote: "Vain avoimessa ketjussa voi äänestää."
     poll_must_be_open_to_vote: "Vain avoimessa kyselyssä voi äänestää."
+    one_vote_per_user: "Tähän kyselyyn voi antaa vain yhden äänen."
+    max_vote_per_user:
+      one: Tähän kyselyyn voi antaa vain %{count} äänen.
+      other: Tähän kyselyyn voi antaa enintään %{count} ääntä.
+    min_vote_per_user:
+      one: Tähän kyselyyn vaaditaan vähintään %{count} ääni.
+      other: Tähän kyselyyn vaaditaan vähintään %{count} ääntä.
     topic_must_be_open_to_toggle_status: "Vain avoimessa ketjussa voi muuttaa kyselyn tilaa."
     only_staff_or_op_can_toggle_status: "Vain henkilökunta tai kyselyn laatija voi muuttaa kyselyn tilaa."
     insufficient_rights_to_create: "Sinulla ei ole oikeutta luoda kyselyitä."

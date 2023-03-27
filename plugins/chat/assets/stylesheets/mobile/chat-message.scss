@@ -1,0 +1,6 @@
+.chat-message *,
+.chat-composer-row,
+.chat-reply,
+.replying-text {
+  @include unselectable;
+}

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TopicView
-  MEGA_TOPIC_POSTS_COUNT = 10000
+  MEGA_TOPIC_POSTS_COUNT = 10_000
   MIN_POST_READ_TIME = 4.0
 
   def self.on_preload(&blk)
@@ -11,16 +11,12 @@ class TopicView
   def self.cancel_preload(&blk)
     if @preload
       @preload.delete blk
-      if @preload.length == 0
-        @preload = nil
-      end
+      @preload = nil if @preload.length == 0
     end
   end
 
   def self.preload(topic_view)
-    if @preload
-      @preload.each { |preload| preload.call(topic_view) }
-    end
+    @preload.each { |preload| preload.call(topic_view) } if @preload
   end
 
   attr_reader(
@@ -34,7 +30,7 @@ class TopicView
     :queued_posts_enabled,
     :personal_message,
     :can_review_topic,
-    :page
+    :page,
   )
   alias queued_posts_enabled? queued_posts_enabled
 
@@ -44,7 +40,7 @@ class TopicView
     :draft_sequence,
     :user_custom_fields,
     :post_custom_fields,
-    :post_number
+    :post_number,
   )
 
   delegate :category, to: :topic, allow_nil: true, private: true
@@ -71,7 +67,8 @@ class TopicView
   end
 
   def self.allowed_post_custom_fields(user, topic)
-    wpcf = default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user, topic) }
+    wpcf =
+      default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user, topic) }
     wpcf.flatten.uniq
   end
 
@@ -112,9 +109,7 @@ class TopicView
 
     @message_bus_last_id = MessageBus.last_id("/topic/#{@topic.id}")
 
-    options.each do |key, value|
-      self.instance_variable_set("@#{key}".to_sym, value)
-    end
+    options.each { |key, value| self.instance_variable_set("@#{key}".to_sym, value) }
 
     @post_number = [@post_number.to_i, 1].max
 
@@ -123,8 +118,10 @@ class TopicView
 
     @chunk_size =
       case
-      when @print then TopicView.print_chunk_size
-      else TopicView.chunk_size
+      when @print
+        TopicView.print_chunk_size
+      else
+        TopicView.chunk_size
       end
 
     @limit ||= @chunk_size
@@ -137,11 +134,11 @@ class TopicView
 
     if @posts && !@skip_custom_fields
       if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
-        @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
+        @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
       end
 
       if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
-        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
+        @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), allowed_fields)
       end
     end
 
@@ -158,9 +155,7 @@ class TopicView
   def show_read_indicator?
     return false if !@user || !topic.private_message?
 
-    topic.allowed_groups.any? do |group|
-      group.publish_read_state? && group.users.include?(@user)
-    end
+    topic.allowed_groups.any? { |group| group.publish_read_state? && group.users.include?(@user) }
   end
 
   def canonical_path
@@ -180,13 +175,14 @@ class TopicView
   def gaps
     return unless @contains_gaps
 
-    @gaps ||= begin
-      if is_mega_topic?
-        nil
-      else
-        Gaps.new(filtered_post_ids, apply_default_scope(unfiltered_posts).pluck(:id))
+    @gaps ||=
+      begin
+        if is_mega_topic?
+          nil
+        else
+          Gaps.new(filtered_post_ids, apply_default_scope(unfiltered_posts).pluck(:id))
+        end
       end
-    end
   end
 
   def last_post
@@ -199,11 +195,12 @@ class TopicView
   end
 
   def next_page
-    @next_page ||= begin
-      if last_post && highest_post_number && (highest_post_number > last_post.post_number)
-        @page + 1
+    @next_page ||=
+      begin
+        if last_post && highest_post_number && (highest_post_number > last_post.post_number)
+          @page + 1
+        end
       end
-    end
   end
 
   def prev_page_path
@@ -223,7 +220,7 @@ class TopicView
   end
 
   def relative_url
-    "#{@topic.relative_url}#{@print ? '/print' : ''}"
+    "#{@topic.relative_url}#{@print ? "/print" : ""}"
   end
 
   def page_title
@@ -233,23 +230,23 @@ class TopicView
       post = @topic.posts.find_by(post_number: @post_number)
       author = post&.user
       if author && @guardian.can_see_post?(post)
-        title += I18n.t(
-          "inline_oneboxer.topic_page_title_post_number_by_user",
-          post_number: @post_number,
-          username: author.username
-        )
+        title +=
+          I18n.t(
+            "inline_oneboxer.topic_page_title_post_number_by_user",
+            post_number: @post_number,
+            username: author.username,
+          )
       else
-        title += I18n.t(
-          "inline_oneboxer.topic_page_title_post_number",
-          post_number: @post_number
-        )
+        title += I18n.t("inline_oneboxer.topic_page_title_post_number", post_number: @post_number)
       end
     end
     if SiteSetting.topic_page_title_includes_category
-      if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id && @topic.category
+      if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id &&
+           @topic.category
         title += " - #{@topic.category.name}"
-      elsif SiteSetting.tagging_enabled && @topic.tags.exists?
-        title += " - #{@topic.tags.order('tags.topic_count DESC').first.name}"
+      elsif SiteSetting.tagging_enabled && visible_tags.exists?
+        title +=
+          " - #{visible_tags.order("tags.#{Tag.topic_count_column(@guardian)} DESC").first.name}"
       end
     end
     title
@@ -272,7 +269,7 @@ class TopicView
     return nil if desired_post.blank?
     # TODO, this is actually quite slow, should be cached in the post table
     excerpt = desired_post.excerpt(500, opts.merge(strip_links: true, text_entities: true))
-    (excerpt || "").gsub(/\n/, ' ').strip
+    (excerpt || "").gsub(/\n/, " ").strip
   end
 
   def read_time
@@ -281,7 +278,7 @@ class TopicView
     if @topic.word_count && SiteSetting.read_time_word_count > 0
       [
         @topic.word_count / SiteSetting.read_time_word_count,
-        @topic.posts_count * MIN_POST_READ_TIME / 60
+        @topic.posts_count * MIN_POST_READ_TIME / 60,
       ].max.ceil
     end
   end
@@ -294,15 +291,15 @@ class TopicView
   def published_time
     return nil if desired_post.blank?
     if desired_post.wiki && desired_post.post_number == 1 && desired_post.revisions.size > 0
-      desired_post.revisions.last.updated_at.strftime('%FT%T%:z')
+      desired_post.revisions.last.updated_at.strftime("%FT%T%:z")
     else
-      desired_post.created_at.strftime('%FT%T%:z')
+      desired_post.created_at.strftime("%FT%T%:z")
     end
   end
 
   def image_url
-    url = desired_post&.image_url if @post_number > 1
-    url || @topic.image_url
+    return @topic.image_url if @post_number == 1
+    desired_post&.image_url
   end
 
   def filter_posts(opts = {})
@@ -331,9 +328,7 @@ class TopicView
 
     result = {}
     unless primary_group_ids.empty?
-      Group.where(id: primary_group_ids.to_a).pluck(:id, :name).each do |g|
-        result[g[0]] = g[1]
-      end
+      Group.where(id: primary_group_ids.to_a).pluck(:id, :name).each { |g| result[g[0]] = g[1] }
     end
 
     @group_names = result
@@ -345,22 +340,29 @@ class TopicView
     posts_before = 1 if posts_before.zero?
     sort_order = get_sort_order(post_number)
 
-    before_post_ids = @filtered_posts.reverse_order
-      .where("posts.sort_order < ?", sort_order)
-      .limit(posts_before)
-      .pluck(:id)
+    before_post_ids =
+      @filtered_posts
+        .reverse_order
+        .where("posts.sort_order < ?", sort_order)
+        .limit(posts_before)
+        .pluck(:id)
 
-    post_ids = before_post_ids + @filtered_posts
-      .where("posts.sort_order >= ?", sort_order)
-      .limit(@limit - before_post_ids.length)
-      .pluck(:id)
+    post_ids =
+      before_post_ids +
+        @filtered_posts
+          .where("posts.sort_order >= ?", sort_order)
+          .limit(@limit - before_post_ids.length)
+          .pluck(:id)
 
     if post_ids.length < @limit
-      post_ids = post_ids + @filtered_posts.reverse_order
-        .where("posts.sort_order < ?", sort_order)
-        .offset(before_post_ids.length)
-        .limit(@limit - post_ids.length)
-        .pluck(:id)
+      post_ids =
+        post_ids +
+          @filtered_posts
+            .reverse_order
+            .where("posts.sort_order < ?", sort_order)
+            .offset(before_post_ids.length)
+            .limit(@limit - post_ids.length)
+            .pluck(:id)
     end
 
     filter_posts_by_ids(post_ids)
@@ -373,12 +375,7 @@ class TopicView
     # Sometimes we don't care about the OP, for example when embedding comments
     min = 1 if min == 0 && @exclude_first
 
-    filter_posts_by_ids(
-      @filtered_posts
-        .offset(min)
-        .limit(@limit)
-        .pluck(:id)
-    )
+    filter_posts_by_ids(@filtered_posts.offset(min).limit(@limit).pluck(:id))
   end
 
   def filter_best(max, opts = {})
@@ -393,39 +390,49 @@ class TopicView
   end
 
   def has_deleted?
-    @predelete_filtered_posts.with_deleted
+    @predelete_filtered_posts
+      .with_deleted
       .where("posts.deleted_at IS NOT NULL")
       .where("posts.post_number > 1")
       .exists?
   end
 
   def topic_user
-    @topic_user ||= begin
-      return nil if @user.blank?
-      @topic.topic_users.find_by(user_id: @user.id)
-    end
+    @topic_user ||=
+      begin
+        return nil if @user.blank?
+        @topic.topic_users.find_by(user_id: @user.id)
+      end
   end
 
   def has_bookmarks?
-    return false if @user.blank?
-    return false if @topic.trashed?
     bookmarks.any?
   end
 
   def bookmarks
-    @bookmarks ||= Bookmark.for_user_in_topic(@user, @topic.id).select(
-      :id, :bookmarkable_id, :bookmarkable_type, :reminder_at, :name, :auto_delete_preference
-    )
+    return [] if @user.blank?
+    return [] if @topic.trashed?
+
+    @bookmarks ||=
+      Bookmark.for_user_in_topic(@user, @topic.id).select(
+        :id,
+        :bookmarkable_id,
+        :bookmarkable_type,
+        :reminder_at,
+        :name,
+        :auto_delete_preference,
+      )
   end
 
   MAX_PARTICIPANTS = 24
 
   def post_counts_by_user
-    @post_counts_by_user ||= begin
-      if is_mega_topic?
-        {}
-      else
-        sql = <<~SQL
+    @post_counts_by_user ||=
+      begin
+        if is_mega_topic?
+          {}
+        else
+          sql = <<~SQL
             SELECT user_id, count(*) AS count_all
               FROM posts
              WHERE topic_id = :topic_id
@@ -438,9 +445,15 @@ class TopicView
              LIMIT #{MAX_PARTICIPANTS}
         SQL
 
-        Hash[*DB.query_single(sql, topic_id: @topic.id, post_types: Topic.visible_post_types(@guardian&.user))]
+          Hash[
+            *DB.query_single(
+              sql,
+              topic_id: @topic.id,
+              post_types: Topic.visible_post_types(@guardian&.user),
+            )
+          ]
+        end
       end
-    end
   end
 
   # if a topic has more that N posts no longer attempt to
@@ -470,38 +483,49 @@ class TopicView
   end
 
   def participants
-    @participants ||= begin
-      participants = {}
-      User.where(id: post_counts_by_user.keys).includes(:primary_group).each { |u| participants[u.id] = u }
-      participants
-    end
+    @participants ||=
+      begin
+        participants = {}
+        User
+          .where(id: post_counts_by_user.keys)
+          .includes(:primary_group, :flair_group)
+          .each { |u| participants[u.id] = u }
+        participants
+      end
   end
 
   def topic_allowed_group_ids
-    @topic_allowed_group_ids ||= begin
-      @topic.allowed_groups.map(&:id)
-    end
+    @topic_allowed_group_ids ||=
+      begin
+        @topic.allowed_groups.map(&:id)
+      end
   end
 
   def group_allowed_user_ids
     return @group_allowed_user_ids unless @group_allowed_user_ids.nil?
 
-    @group_allowed_user_ids = GroupUser
-      .where(group_id: topic_allowed_group_ids)
-      .pluck('distinct user_id')
+    @group_allowed_user_ids =
+      GroupUser.where(group_id: topic_allowed_group_ids).pluck("distinct user_id")
   end
 
   def category_group_moderator_user_ids
-    @category_group_moderator_user_ids ||= begin
-      if SiteSetting.enable_category_group_moderation? && @topic.category&.reviewable_by_group.present?
-        posts_user_ids = Set.new(@posts.map(&:user_id))
-        Set.new(
-          @topic.category.reviewable_by_group.group_users.where(user_id: posts_user_ids).pluck('distinct user_id')
-        )
-      else
-        Set.new
+    @category_group_moderator_user_ids ||=
+      begin
+        if SiteSetting.enable_category_group_moderation? &&
+             @topic.category&.reviewable_by_group.present?
+          posts_user_ids = Set.new(@posts.map(&:user_id))
+          Set.new(
+            @topic
+              .category
+              .reviewable_by_group
+              .group_users
+              .where(user_id: posts_user_ids)
+              .pluck("distinct user_id"),
+          )
+        else
+          Set.new
+        end
       end
-    end
   end
 
   def all_post_actions
@@ -513,8 +537,9 @@ class TopicView
   end
 
   def reviewable_counts
-    @reviewable_counts ||= begin
-      sql = <<~SQL
+    @reviewable_counts ||=
+      begin
+        sql = <<~SQL
         SELECT
           target_id,
           MAX(r.id) reviewable_id,
@@ -532,26 +557,25 @@ class TopicView
           target_id
       SQL
 
-      counts = {}
+        counts = {}
 
-      DB.query(
-        sql,
-        pending: ReviewableScore.statuses[:pending],
-        post_ids: @posts.map(&:id)
-      ).each do |row|
-        counts[row.target_id] = {
-          total: row.total,
-          pending: row.pending,
-          reviewable_id: row.reviewable_id
-        }
+        DB
+          .query(sql, pending: ReviewableScore.statuses[:pending], post_ids: @posts.map(&:id))
+          .each do |row|
+            counts[row.target_id] = {
+              total: row.total,
+              pending: row.pending,
+              reviewable_id: row.reviewable_id,
+            }
+          end
+
+        counts
       end
-
-      counts
-    end
   end
 
   def pending_posts
-    @pending_posts ||= ReviewableQueuedPost.pending.where(created_by: @user, topic: @topic).order(:created_at)
+    @pending_posts ||=
+      ReviewableQueuedPost.pending.where(created_by: @user, topic: @topic).order(:created_at)
   end
 
   def actions_summary
@@ -564,7 +588,7 @@ class TopicView
         id: id,
         count: 0,
         hidden: false,
-        can_act: @guardian.post_can_act?(post, sym)
+        can_act: @guardian.post_can_act?(post, sym),
       }
     end
 
@@ -611,26 +635,28 @@ class TopicView
   # Returns an array of [id, days_ago] tuples.
   # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
-    @filtered_post_stream ||= begin
-      posts = @filtered_posts
-      columns = [:id]
+    @filtered_post_stream ||=
+      begin
+        posts = @filtered_posts
+        columns = [:id]
 
-      if !is_mega_topic?
-        columns << '(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - posts.created_at) / 86400)::INT AS days_ago'
+        if !is_mega_topic?
+          columns << "(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - posts.created_at) / 86400)::INT AS days_ago"
+        end
+
+        posts.pluck(*columns)
       end
-
-      posts.pluck(*columns)
-    end
   end
 
   def filtered_post_ids
-    @filtered_post_ids ||= filtered_post_stream.map do |tuple|
-      if is_mega_topic?
-        tuple
-      else
-        tuple[0]
+    @filtered_post_ids ||=
+      filtered_post_stream.map do |tuple|
+        if is_mega_topic?
+          tuple
+        else
+          tuple[0]
+        end
       end
-    end
   end
 
   def unfiltered_post_ids
@@ -645,7 +671,7 @@ class TopicView
   end
 
   def filtered_post_id(post_number)
-    @filtered_posts.where(post_number: post_number).pluck_first(:id)
+    @filtered_posts.where(post_number: post_number).pick(:id)
   end
 
   def is_mega_topic?
@@ -653,7 +679,7 @@ class TopicView
   end
 
   def last_post_id
-    @filtered_posts.reverse_order.pluck_first(:id)
+    @filtered_posts.reverse_order.pick(:id)
   end
 
   def current_post_number
@@ -670,28 +696,48 @@ class TopicView
     @topic.published_page
   end
 
+  def mentioned_users
+    @mentioned_users ||=
+      begin
+        mentions = @posts.to_h { |p| [p.id, p.mentions] }.reject { |_, v| v.empty? }
+        usernames = mentions.values
+        usernames.flatten!
+        usernames.uniq!
+
+        users = User.where(username: usernames).includes(:user_status).index_by(&:username)
+
+        mentions.reduce({}) do |hash, (post_id, post_mentioned_usernames)|
+          hash[post_id] = post_mentioned_usernames.map { |username| users[username] }.compact
+          hash
+        end
+      end
+  end
+
   protected
 
   def read_posts_set
-    @read_posts_set ||= begin
-      result = Set.new
-      return result unless @user.present?
-      return result unless topic_user.present?
+    @read_posts_set ||=
+      begin
+        result = Set.new
+        return result unless @user.present?
+        return result unless topic_user.present?
 
-      post_numbers = PostTiming
-        .where(topic_id: @topic.id, user_id: @user.id)
-        .where(post_number: @posts.pluck(:post_number))
-        .pluck(:post_number)
+        post_numbers =
+          PostTiming
+            .where(topic_id: @topic.id, user_id: @user.id)
+            .where(post_number: @posts.pluck(:post_number))
+            .pluck(:post_number)
 
-      post_numbers.each { |pn| result << pn }
-      result
-    end
+        post_numbers.each { |pn| result << pn }
+        result
+      end
   end
 
   private
 
   def calculate_page
-    posts_count = is_mega_topic? ? @post_number : unfiltered_posts.where("post_number <= ?", @post_number).count
+    posts_count =
+      is_mega_topic? ? @post_number : unfiltered_posts.where("post_number <= ?", @post_number).count
     ((posts_count - 1) / @limit) + 1
   end
 
@@ -750,14 +796,13 @@ class TopicView
   end
 
   def filter_posts_by_ids(post_ids)
-    @posts = Post.where(id: post_ids, topic_id: @topic.id)
-      .includes(
-        { user: :primary_group },
+    @posts =
+      Post.where(id: post_ids, topic_id: @topic.id).includes(
+        { user: %i[primary_group flair_group] },
         :reply_to_user,
         :deleted_by,
         :incoming_email,
-        :topic,
-        :image_upload
+        :image_upload,
       )
 
     @posts = @posts.includes({ user: :user_status }) if SiteSetting.enable_user_status
@@ -769,13 +814,9 @@ class TopicView
   end
 
   def find_topic(topic_or_topic_id)
-    if topic_or_topic_id.is_a?(Topic)
-      topic_or_topic_id
-    else
-      # with_deleted covered in #check_and_raise_exceptions
-      finder = Topic.with_deleted.where(id: topic_or_topic_id).includes(:category)
-      finder.first
-    end
+    return topic_or_topic_id if topic_or_topic_id.is_a?(Topic)
+    # with_deleted covered in #check_and_raise_exceptions
+    Topic.with_deleted.includes(:category).find_by(id: topic_or_topic_id)
   end
 
   def unfiltered_posts
@@ -789,9 +830,7 @@ class TopicView
   def apply_default_scope(scope)
     scope = scope.order(sort_order: :asc)
 
-    self.class.custom_default_scopes.each do |block|
-      scope = block.call(scope, self)
-    end
+    self.class.custom_default_scopes.each { |block| scope = block.call(scope, self) }
 
     scope
   end
@@ -815,23 +854,24 @@ class TopicView
       ignored_user_ids = DB.query_single(sql, current_user_id: @user.id)
 
       if ignored_user_ids.present?
-        @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND posts.post_number != 1", ignored_user_ids)
+        @filtered_posts =
+          @filtered_posts.where.not("user_id IN (?) AND posts.post_number != 1", ignored_user_ids)
         @contains_gaps = true
       end
     end
 
     # Filters
-    if @filter == 'summary'
+    if @filter == "summary"
       @filtered_posts = @filtered_posts.summary(@topic.id)
       @contains_gaps = true
     end
 
-    if @filter.present? && @filter.to_s != 'summary' && TopicView.custom_filters[@filter].present?
+    if @filter.present? && @filter.to_s != "summary" && TopicView.custom_filters[@filter].present?
       @filtered_posts = TopicView.custom_filters[@filter].call(@filtered_posts, self)
     end
 
     if @best.present?
-      @filtered_posts = @filtered_posts.where('posts.post_type = ?', Post.types[:regular])
+      @filtered_posts = @filtered_posts.where("posts.post_type = ?", Post.types[:regular])
       @contains_gaps = true
     end
 
@@ -839,10 +879,14 @@ class TopicView
     if @username_filters.present?
       usernames = @username_filters.map { |u| u.downcase }
 
-      @filtered_posts = @filtered_posts.where('
+      @filtered_posts =
+        @filtered_posts.where(
+          "
         posts.post_number = 1
         OR posts.user_id IN (SELECT u.id FROM users u WHERE u.username_lower IN (?))
-      ', usernames)
+      ",
+          usernames,
+        )
 
       @contains_gaps = true
     end
@@ -850,21 +894,28 @@ class TopicView
     # Filter replies
     if @replies_to_post_number.present?
       post_id = filtered_post_id(@replies_to_post_number.to_i)
-      @filtered_posts = @filtered_posts.where('
+      @filtered_posts =
+        @filtered_posts.where(
+          "
         posts.post_number = 1
         OR posts.post_number = :post_number
         OR posts.reply_to_post_number = :post_number
-        OR posts.id IN (SELECT pr.reply_post_id FROM post_replies pr WHERE pr.post_id = :post_id)', { post_number: @replies_to_post_number.to_i, post_id: post_id })
+        OR posts.id IN (SELECT pr.reply_post_id FROM post_replies pr WHERE pr.post_id = :post_id)",
+          { post_number: @replies_to_post_number.to_i, post_id: post_id },
+        )
 
       @contains_gaps = true
     end
 
     # Show Only Top Level Replies
     if @filter_top_level_replies.present?
-      @filtered_posts = @filtered_posts.where('
+      @filtered_posts =
+        @filtered_posts.where(
+          "
         posts.post_number > 1
         AND posts.reply_to_post_number IS NULL
-      ')
+      ",
+        )
     end
 
     # Filtering upwards
@@ -887,10 +938,14 @@ class TopicView
       post_ids = (post_ids[(0 - SiteSetting.max_reply_history)..-1] || post_ids)
       post_ids.push(post.id)
 
-      @filtered_posts = @filtered_posts.where('
+      @filtered_posts =
+        @filtered_posts.where(
+          "
         posts.post_number = 1
         OR posts.id IN (:post_ids)
-        OR posts.id > :max_post_id', { post_ids: post_ids, max_post_id: post_ids.max })
+        OR posts.id > :max_post_id",
+          { post_ids: post_ids, max_post_id: post_ids.max },
+        )
 
       @contains_gaps = true
     end
@@ -901,9 +956,7 @@ class TopicView
     @predelete_filtered_posts = @filtered_posts.spawn
 
     if @guardian.can_see_deleted_posts?(@topic.category) && !@show_deleted && has_deleted?
-      @filtered_posts = @filtered_posts.where(
-        "posts.deleted_at IS NULL OR posts.post_number = 1"
-      )
+      @filtered_posts = @filtered_posts.where("posts.deleted_at IS NULL OR posts.post_number = 1")
 
       @contains_gaps = true
     end
@@ -913,16 +966,28 @@ class TopicView
     raise Discourse::NotFound if @topic.blank?
     # Special case: If the topic is private and the user isn't logged in, ask them
     # to log in!
-    if @topic.present? && @topic.private_message? && @user.blank?
-      raise Discourse::NotLoggedIn.new
-    end
+    raise Discourse::NotLoggedIn.new if @topic.present? && @topic.private_message? && @user.blank?
     # can user see this topic?
-    raise Discourse::InvalidAccess.new("can't see #{@topic}", @topic) unless @guardian.can_see?(@topic)
+    unless @guardian.can_see?(@topic)
+      raise Discourse::InvalidAccess.new("can't see #{@topic}", @topic)
+    end
     # log personal message views
-    if SiteSetting.log_personal_messages_views && !skip_staff_action && @topic.present? && @topic.private_message? && @topic.all_allowed_users.where(id: @user.id).blank?
-      unless UserHistory.where(acting_user_id: @user.id, action: UserHistory.actions[:check_personal_message], topic_id: @topic.id).where("created_at > ?", 1.hour.ago).exists?
+    if SiteSetting.log_personal_messages_views && !skip_staff_action && @topic.present? &&
+         @topic.private_message? && @topic.all_allowed_users.where(id: @user.id).blank?
+      unless UserHistory
+               .where(
+                 acting_user_id: @user.id,
+                 action: UserHistory.actions[:check_personal_message],
+                 topic_id: @topic.id,
+               )
+               .where("created_at > ?", 1.hour.ago)
+               .exists?
         StaffActionLogger.new(@user).log_check_personal_message(@topic)
       end
     end
+  end
+
+  def visible_tags
+    @visible_tags ||= topic.tags.visible(guardian)
   end
 end

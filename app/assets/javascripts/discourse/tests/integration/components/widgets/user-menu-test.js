@@ -92,8 +92,11 @@ module("Integration | Component | Widget | user-menu", function (hooks) {
   });
 
   test("private messages - disabled", async function (assert) {
-    this.currentUser.setProperties({ admin: false, moderator: false });
-    this.siteSettings.personal_message_enabled_groups = "13"; // trust_level_3 auto group ID;
+    this.currentUser.setProperties({
+      admin: false,
+      moderator: false,
+      can_send_private_messages: false,
+    });
 
     await render(hbs`<MountWidget @widget="user-menu" />`);
 
@@ -101,7 +104,11 @@ module("Integration | Component | Widget | user-menu", function (hooks) {
   });
 
   test("private messages - enabled", async function (assert) {
-    this.siteSettings.personal_message_enabled_groups = "11"; // trust_level_1 auto group ID;
+    this.currentUser.setProperties({
+      admin: false,
+      moderator: false,
+      can_send_private_messages: true,
+    });
 
     await render(hbs`<MountWidget @widget="user-menu" />`);
 

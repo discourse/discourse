@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ThemeField < ActiveRecord::Base
-
   belongs_to :upload
   has_one :javascript_cache, dependent: :destroy
   has_one :upload_reference, as: :target, dependent: :destroy
@@ -12,45 +11,55 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
-  scope :find_by_theme_ids, ->(theme_ids) {
-    return none unless theme_ids.present?
+  scope :find_by_theme_ids,
+        ->(theme_ids) {
+          return none unless theme_ids.present?
 
-    where(theme_id: theme_ids)
-      .joins(
-        "JOIN (
+          where(theme_id: theme_ids).joins(
+            "JOIN (
           SELECT #{theme_ids.map.with_index { |id, idx| "#{id.to_i} AS theme_id, #{idx} AS theme_sort_column" }.join(" UNION ALL SELECT ")}
-        ) as X ON X.theme_id = theme_fields.theme_id")
-      .order("theme_sort_column")
-  }
+        ) as X ON X.theme_id = theme_fields.theme_id",
+          ).order("theme_sort_column")
+        }
 
-  scope :filter_locale_fields, ->(locale_codes) {
-    return none unless locale_codes.present?
+  scope :filter_locale_fields,
+        ->(locale_codes) {
+          return none unless locale_codes.present?
 
-    where(target_id: Theme.targets[:translations], name: locale_codes)
-      .joins(DB.sql_fragment(
-      "JOIN (
+          where(target_id: Theme.targets[:translations], name: locale_codes).joins(
+            DB.sql_fragment(
+              "JOIN (
         SELECT * FROM (VALUES #{locale_codes.map { "(?)" }.join(",")}) as Y (locale_code, locale_sort_column)
       ) as Y ON Y.locale_code = theme_fields.name",
-      *locale_codes.map.with_index { |code, index| [code, index] }
-    ))
-      .order("Y.locale_sort_column")
-  }
+              *locale_codes.map.with_index { |code, index| [code, index] },
+            ),
+          ).order("Y.locale_sort_column")
+        }
 
-  scope :find_first_locale_fields, ->(theme_ids, locale_codes) {
-    find_by_theme_ids(theme_ids)
-      .filter_locale_fields(locale_codes)
-      .reorder("X.theme_sort_column", "Y.locale_sort_column")
-      .select("DISTINCT ON (X.theme_sort_column) *")
-  }
+  scope :find_first_locale_fields,
+        ->(theme_ids, locale_codes) {
+          find_by_theme_ids(theme_ids)
+            .filter_locale_fields(locale_codes)
+            .reorder("X.theme_sort_column", "Y.locale_sort_column")
+            .select("DISTINCT ON (X.theme_sort_column) *")
+        }
+
+  scope :svg_sprite_fields,
+        -> {
+          where(type_id: ThemeField.theme_var_type_ids, name: SvgSprite.theme_sprite_variable_name)
+        }
 
   def self.types
-    @types ||= Enum.new(html: 0,
-                        scss: 1,
-                        theme_upload_var: 2,
-                        theme_color_var: 3, # No longer used
-                        theme_var: 4, # No longer used
-                        yaml: 5,
-                        js: 6)
+    @types ||=
+      Enum.new(
+        html: 0,
+        scss: 1,
+        theme_upload_var: 2,
+        theme_color_var: 3, # No longer used
+        theme_var: 4, # No longer used
+        yaml: 5,
+        js: 6,
+      )
   end
 
   def self.theme_var_type_ids
@@ -68,8 +77,11 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
-  validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
-                   if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
+  validates :name,
+            format: {
+              with: /\A[a-z_][a-z0-9_-]*\z/i,
+            },
+            if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
   belongs_to :theme
 
@@ -83,36 +95,38 @@ class ThemeField < ActiveRecord::Base
 
     doc = Nokogiri::HTML5.fragment(html)
 
-    doc.css('script[type="text/x-handlebars"]').each do |node|
-      name = node["name"] || node["data-template-name"] || "broken"
-      is_raw = name =~ /\.(raw|hbr)$/
-      hbs_template = node.inner_html
+    doc
+      .css('script[type="text/x-handlebars"]')
+      .each do |node|
+        name = node["name"] || node["data-template-name"] || "broken"
+        is_raw = name =~ /\.(raw|hbr)\z/
+        hbs_template = node.inner_html
 
-      begin
-        if is_raw
-          js_compiler.append_raw_template(name, hbs_template)
-        else
-          js_compiler.append_ember_template("discourse/templates/#{name}", hbs_template)
+        begin
+          if is_raw
+            js_compiler.append_raw_template(name, hbs_template)
+          else
+            js_compiler.append_ember_template("discourse/templates/#{name}", hbs_template)
+          end
+        rescue ThemeJavascriptCompiler::CompileError => ex
+          js_compiler.append_js_error("discourse/templates/#{name}", ex.message)
+          errors << ex.message
         end
-      rescue ThemeJavascriptCompiler::CompileError => ex
-        js_compiler.append_js_error("discourse/templates/#{name}", ex.message)
-        errors << ex.message
+
+        node.remove
       end
 
-      node.remove
-    end
+    doc
+      .css('script[type="text/discourse-plugin"]')
+      .each_with_index do |node, index|
+        version = node["version"]
+        next if version.blank?
 
-    doc.css('script[type="text/discourse-plugin"]').each_with_index do |node, index|
-      version = node['version']
-      next if version.blank?
-
-      initializer_name = "theme-field" +
-        "-#{self.id}" +
-        "-#{Theme.targets[self.target_id]}" +
-        "-#{ThemeField.types[self.type_id]}" +
-        "-script-#{index + 1}"
-      begin
-        js = <<~JS
+        initializer_name =
+          "theme-field" + "-#{self.id}" + "-#{Theme.targets[self.target_id]}" +
+            "-#{ThemeField.types[self.type_id]}" + "-script-#{index + 1}"
+        begin
+          js = <<~JS
           import { withPluginApi } from "discourse/lib/plugin-api";
 
           export default {
@@ -127,36 +141,60 @@ class ThemeField < ActiveRecord::Base
           };
         JS
 
-        js_compiler.append_module(js, "discourse/initializers/#{initializer_name}", include_variables: true)
-      rescue ThemeJavascriptCompiler::CompileError => ex
-        js_compiler.append_js_error("discourse/initializers/#{initializer_name}", ex.message)
-        errors << ex.message
+          js_compiler.append_module(
+            js,
+            "discourse/initializers/#{initializer_name}",
+            include_variables: true,
+          )
+        rescue ThemeJavascriptCompiler::CompileError => ex
+          js_compiler.append_js_error("discourse/initializers/#{initializer_name}", ex.message)
+          errors << ex.message
+        end
+
+        node.remove
       end
 
-      node.remove
-    end
-
-    doc.css('script').each_with_index do |node, index|
-      next unless inline_javascript?(node)
-      js_compiler.append_raw_script("_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js", node.inner_html)
-      node.remove
-    end
+    doc
+      .css("script")
+      .each_with_index do |node, index|
+        next unless inline_javascript?(node)
+        js_compiler.append_raw_script(
+          "_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js",
+          node.inner_html,
+        )
+        node.remove
+      end
 
     settings_hash = theme.build_settings_hash
-    js_compiler.prepend_settings(settings_hash) if js_compiler.has_content? && settings_hash.present?
+    if js_compiler.has_content? && settings_hash.present?
+      js_compiler.prepend_settings(settings_hash)
+    end
     javascript_cache.content = js_compiler.content
     javascript_cache.source_map = js_compiler.source_map
     javascript_cache.save!
 
-    doc.add_child("<script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>") if javascript_cache.content.present?
+    doc.add_child(<<~HTML.html_safe) if javascript_cache.content.present?
+          <link rel="preload" href="#{javascript_cache.url}" as="script">
+          <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>
+        HTML
     [doc.to_s, errors&.join("\n")]
   end
 
   def validate_svg_sprite_xml
-    upload = Upload.find(self.upload_id) rescue nil
+    upload =
+      begin
+        Upload.find(self.upload_id)
+      rescue StandardError
+        nil
+      end
 
     if Discourse.store.external?
-      external_copy = Discourse.store.download(upload) rescue nil
+      external_copy =
+        begin
+          Discourse.store.download(upload)
+        rescue StandardError
+          nil
+        end
       path = external_copy.try(:path)
     else
       path = Discourse.store.path_for(upload)
@@ -166,9 +204,7 @@ class ThemeField < ActiveRecord::Base
 
     begin
       content = File.read(path)
-      Nokogiri::XML(content) do |config|
-        config.options = Nokogiri::XML::ParseOptions::NOBLANKS
-      end
+      Nokogiri.XML(content) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
     rescue => e
       error = "Error with #{self.name}: #{e.inspect}"
     end
@@ -183,16 +219,17 @@ class ThemeField < ActiveRecord::Base
   def translation_data(with_overrides: true, internal: false, fallback_fields: nil)
     fallback_fields ||= theme.theme_fields.filter_locale_fields(I18n.fallbacks[name])
 
-    fallback_data = fallback_fields.each_with_index.map do |field, index|
-      begin
-        field.raw_translation_data(internal: internal)
-      rescue ThemeTranslationParser::InvalidYaml
-        # If this is the locale with the error, raise it.
-        # If not, let the other theme_field raise the error when it processes itself
-        raise if field.id == id
-        {}
+    fallback_data =
+      fallback_fields.each_with_index.map do |field, index|
+        begin
+          field.raw_translation_data(internal: internal)
+        rescue ThemeTranslationParser::InvalidYaml
+          # If this is the locale with the error, raise it.
+          # If not, let the other theme_field raise the error when it processes itself
+          raise if field.id == id
+          {}
+        end
       end
-    end
 
     # TODO: Deduplicate the fallback data in the same way as JSLocaleHelper#load_translations_merged
     #       this would reduce the size of the payload, without affecting functionality
@@ -232,7 +269,11 @@ class ThemeField < ActiveRecord::Base
         };
       JS
 
-      js_compiler.append_module(js, "discourse/pre-initializers/theme-#{theme_id}-translations", include_variables: false)
+      js_compiler.append_module(
+        js,
+        "discourse/pre-initializers/theme-#{theme_id}-translations",
+        include_variables: false,
+      )
     rescue ThemeTranslationParser::InvalidYaml => e
       errors << e.message
     end
@@ -241,7 +282,10 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.source_map = js_compiler.source_map
     javascript_cache.save!
     doc = ""
-    doc = "<script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>" if javascript_cache.content.present?
+    doc = <<~HTML.html_safe if javascript_cache.content.present?
+          <link rel="preload" href="#{javascript_cache.url}" as="script">
+          <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>
+        HTML
     [doc, errors&.join("\n")]
   end
 
@@ -250,32 +294,32 @@ class ThemeField < ActiveRecord::Base
 
     errors = []
     begin
-      ThemeSettingsParser.new(self).load do |name, default, type, opts|
-        setting = ThemeSetting.new(name: name, data_type: type, theme: theme)
-        translation_key = "themes.settings_errors"
+      ThemeSettingsParser
+        .new(self)
+        .load do |name, default, type, opts|
+          setting = ThemeSetting.new(name: name, data_type: type, theme: theme)
+          translation_key = "themes.settings_errors"
 
-        if setting.invalid?
-          setting.errors.details.each_pair do |attribute, _errors|
-            _errors.each do |hash|
-              errors << I18n.t("#{translation_key}.#{attribute}_#{hash[:error]}", name: name)
+          if setting.invalid?
+            setting.errors.details.each_pair do |attribute, _errors|
+              _errors.each do |hash|
+                errors << I18n.t("#{translation_key}.#{attribute}_#{hash[:error]}", name: name)
+              end
             end
           end
-        end
 
-        if default.nil?
-          errors << I18n.t("#{translation_key}.default_value_missing", name: name)
-        end
+          errors << I18n.t("#{translation_key}.default_value_missing", name: name) if default.nil?
 
-        if (min = opts[:min]) && (max = opts[:max])
-          unless ThemeSetting.value_in_range?(default, (min..max), type)
-            errors << I18n.t("#{translation_key}.default_out_range", name: name)
+          if (min = opts[:min]) && (max = opts[:max])
+            unless ThemeSetting.value_in_range?(default, (min..max), type)
+              errors << I18n.t("#{translation_key}.default_out_range", name: name)
+            end
+          end
+
+          unless ThemeSetting.acceptable_value_for_type?(default, type)
+            errors << I18n.t("#{translation_key}.default_not_match_type", name: name)
           end
         end
-
-        unless ThemeSetting.acceptable_value_for_type?(default, type)
-          errors << I18n.t("#{translation_key}.default_not_match_type", name: name)
-        end
-      end
     rescue ThemeSettingsParser::InvalidYaml => e
       errors << e.message
     end
@@ -298,15 +342,15 @@ class ThemeField < ActiveRecord::Base
   end
 
   def self.html_fields
-    @html_fields ||= %w(body_tag head_tag header footer after_header)
+    @html_fields ||= %w[body_tag head_tag header footer after_header embedded_header]
   end
 
   def self.scss_fields
-    @scss_fields ||= %w(scss embedded_scss color_definitions)
+    @scss_fields ||= %w[scss embedded_scss color_definitions]
   end
 
   def self.basic_targets
-    @basic_targets ||= %w(common desktop mobile)
+    @basic_targets ||= %w[common desktop mobile]
   end
 
   def basic_html_field?
@@ -340,7 +384,8 @@ class ThemeField < ActiveRecord::Base
   end
 
   def svg_sprite_field?
-    ThemeField.theme_var_type_ids.include?(self.type_id) && self.name == SvgSprite.theme_sprite_variable_name
+    ThemeField.theme_var_type_ids.include?(self.type_id) &&
+      self.name == SvgSprite.theme_sprite_variable_name
   end
 
   def ensure_baked!
@@ -348,7 +393,8 @@ class ThemeField < ActiveRecord::Base
     return unless needs_baking
 
     if basic_html_field? || translation_field?
-      self.value_baked, self.error = translation_field? ? process_translation : process_html(self.value)
+      self.value_baked, self.error =
+        translation_field? ? process_translation : process_html(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = Theme.compiler_version
       DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
@@ -372,13 +418,13 @@ class ThemeField < ActiveRecord::Base
       self.compiler_version = Theme.compiler_version
     end
 
-    if self.will_save_change_to_value_baked? ||
-        self.will_save_change_to_compiler_version? ||
-        self.will_save_change_to_error?
-
-      self.update_columns(value_baked: value_baked,
-                          compiler_version: compiler_version,
-                          error: error)
+    if self.will_save_change_to_value_baked? || self.will_save_change_to_compiler_version? ||
+         self.will_save_change_to_error?
+      self.update_columns(
+        value_baked: value_baked,
+        compiler_version: compiler_version,
+        error: error,
+      )
     end
   end
 
@@ -386,23 +432,25 @@ class ThemeField < ActiveRecord::Base
     prepended_scss ||= Stylesheet::Importer.new({}).prepended_scss
 
     self.theme.with_scss_load_paths do |load_paths|
-      Stylesheet::Compiler.compile("#{prepended_scss} #{self.theme.scss_variables.to_s} #{self.value}",
+      Stylesheet::Compiler.compile(
+        "#{prepended_scss} #{self.theme.scss_variables.to_s} #{self.value}",
         "#{Theme.targets[self.target_id]}.scss",
         theme: self.theme,
-        load_paths: load_paths
+        load_paths: load_paths,
       )
     end
   end
 
   def compiled_css(prepended_scss)
-    css, _source_map = begin
-      compile_scss(prepended_scss)
-    rescue SassC::SyntaxError => e
-      # We don't want to raise a blocking error here
-      # admin theme editor or discourse_theme CLI will show it nonetheless
-      Rails.logger.error "SCSS compilation error: #{e.message}"
-      ["", nil]
-    end
+    css, _source_map =
+      begin
+        compile_scss(prepended_scss)
+      rescue SassC::SyntaxError => e
+        # We don't want to raise a blocking error here
+        # admin theme editor or discourse_theme CLI will show it nonetheless
+        Rails.logger.error "SCSS compilation error: #{e.message}"
+        ["", nil]
+      end
     css
   end
 
@@ -417,7 +465,7 @@ class ThemeField < ActiveRecord::Base
       else
         self.error = nil unless error.nil?
       end
-    rescue SassC::SyntaxError => e
+    rescue SassC::SyntaxError, SassC::NotRenderedError => e
       self.error = e.message unless self.destroyed?
     end
     self.compiler_version = Theme.compiler_version
@@ -437,7 +485,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   class ThemeFileMatcher
-    OPTIONS = %i{name type target}
+    OPTIONS = %i[name type target]
     # regex: used to match file names to fields (import).
     #        can contain named capture groups for name/type/target
     # canonical: a lambda which converts name/type/target
@@ -467,55 +515,100 @@ class ThemeField < ActiveRecord::Base
     end
 
     def filename_from_opts(opts)
-      is_match = OPTIONS.all? do |option|
-        plural = :"#{option}s"
-        next true if @allowed_values[plural] == nil # Allows any value
-        next true if @allowed_values[plural].include?(opts[option]) # Value is allowed
-      end
+      is_match =
+        OPTIONS.all? do |option|
+          plural = :"#{option}s"
+          next true if @allowed_values[plural] == nil # Allows any value
+          next true if @allowed_values[plural].include?(opts[option]) # Value is allowed
+        end
       is_match ? @canonical.call(opts) : nil
     end
   end
 
   FILE_MATCHERS = [
-    ThemeFileMatcher.new(regex: /^(?<target>(?:mobile|desktop|common))\/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html$/,
-                         targets: [:mobile, :desktop, :common], names: ["head_tag", "header", "after_header", "body_tag", "footer"], types: :html,
-                         canonical: -> (h) { "#{h[:target]}/#{h[:name]}.html" }),
-    ThemeFileMatcher.new(regex: /^(?<target>(?:mobile|desktop|common))\/(?:\k<target>)\.scss$/,
-                         targets: [:mobile, :desktop, :common], names: "scss", types: :scss,
-                         canonical: -> (h) { "#{h[:target]}/#{h[:target]}.scss" }),
-    ThemeFileMatcher.new(regex: /^common\/embedded\.scss$/,
-                         targets: :common, names: "embedded_scss", types: :scss,
-                         canonical: -> (h) { "common/embedded.scss" }),
-    ThemeFileMatcher.new(regex: /^common\/color_definitions\.scss$/,
-                         targets: :common, names: "color_definitions", types: :scss,
-                         canonical: -> (h) { "common/color_definitions.scss" }),
-    ThemeFileMatcher.new(regex: /^(?:scss|stylesheets)\/(?<name>.+)\.scss$/,
-                         targets: :extra_scss, names: nil, types: :scss,
-                         canonical: -> (h) { "stylesheets/#{h[:name]}.scss" }),
-    ThemeFileMatcher.new(regex: /^javascripts\/(?<name>.+)$/,
-                         targets: :extra_js, names: nil, types: :js,
-                         canonical: -> (h) { "javascripts/#{h[:name]}" }),
-    ThemeFileMatcher.new(regex: /^test\/(?<name>.+)$/,
-                         targets: :tests_js, names: nil, types: :js,
-                         canonical: -> (h) { "test/#{h[:name]}" }),
-    ThemeFileMatcher.new(regex: /^settings\.ya?ml$/,
-                         names: "yaml", types: :yaml, targets: :settings,
-                         canonical: -> (h) { "settings.yml" }),
-    ThemeFileMatcher.new(regex: /^locales\/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml$/,
-                         names: I18n.available_locales.map(&:to_s), types: :yaml, targets: :translations,
-                         canonical: -> (h) { "locales/#{h[:name]}.yml" }),
-    ThemeFileMatcher.new(regex: /(?!)/, # Never match uploads by filename, they must be named in about.json
-                         names: nil, types: :theme_upload_var, targets: :common,
-                         canonical: -> (h) { "assets/#{h[:name]}#{File.extname(h[:filename])}" }),
+    ThemeFileMatcher.new(
+      regex:
+        %r{\A(?<target>(?:mobile|desktop|common))/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html\z},
+      targets: %i[mobile desktop common],
+      names: %w[head_tag header after_header body_tag footer],
+      types: :html,
+      canonical: ->(h) { "#{h[:target]}/#{h[:name]}.html" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\A(?<target>(?:mobile|desktop|common))/(?:\k<target>)\.scss\z},
+      targets: %i[mobile desktop common],
+      names: "scss",
+      types: :scss,
+      canonical: ->(h) { "#{h[:target]}/#{h[:target]}.scss" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Acommon/embedded\.scss\z},
+      targets: :common,
+      names: "embedded_scss",
+      types: :scss,
+      canonical: ->(h) { "common/embedded.scss" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Acommon/color_definitions\.scss\z},
+      targets: :common,
+      names: "color_definitions",
+      types: :scss,
+      canonical: ->(h) { "common/color_definitions.scss" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\A(?:scss|stylesheets)/(?<name>.+)\.scss\z},
+      targets: :extra_scss,
+      names: nil,
+      types: :scss,
+      canonical: ->(h) { "stylesheets/#{h[:name]}.scss" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Ajavascripts/(?<name>.+)\z},
+      targets: :extra_js,
+      names: nil,
+      types: :js,
+      canonical: ->(h) { "javascripts/#{h[:name]}" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Atest/(?<name>.+)\z},
+      targets: :tests_js,
+      names: nil,
+      types: :js,
+      canonical: ->(h) { "test/#{h[:name]}" },
+    ),
+    ThemeFileMatcher.new(
+      regex: /\Asettings\.ya?ml\z/,
+      names: "yaml",
+      types: :yaml,
+      targets: :settings,
+      canonical: ->(h) { "settings.yml" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Alocales/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml\z},
+      names: I18n.available_locales.map(&:to_s),
+      types: :yaml,
+      targets: :translations,
+      canonical: ->(h) { "locales/#{h[:name]}.yml" },
+    ),
+    ThemeFileMatcher.new(
+      regex: /(?!)/, # Never match uploads by filename, they must be named in about.json
+      names: nil,
+      types: :theme_upload_var,
+      targets: :common,
+      canonical: ->(h) { "assets/#{h[:name]}#{File.extname(h[:filename])}" },
+    ),
   ]
 
   # For now just work for standard fields
   def file_path
     FILE_MATCHERS.each do |matcher|
-      if filename = matcher.filename_from_opts(target: target_name.to_sym,
-                                               name: name,
-                                               type: ThemeField.types[type_id],
-                                               filename: upload&.original_filename)
+      if filename =
+           matcher.filename_from_opts(
+             target: target_name.to_sym,
+             name: name,
+             type: ThemeField.types[type_id],
+             filename: upload&.original_filename,
+           )
         return filename
       end
     end
@@ -533,11 +626,19 @@ class ThemeField < ActiveRecord::Base
 
   def dependent_fields
     if extra_scss_field?
-      return theme.theme_fields.where(target_id: ThemeField.basic_targets.map { |t| Theme.targets[t.to_sym] },
-                                      name: ThemeField.scss_fields)
+      return(
+        theme.theme_fields.where(
+          target_id: ThemeField.basic_targets.map { |t| Theme.targets[t.to_sym] },
+          name: ThemeField.scss_fields,
+        )
+      )
     elsif settings_field?
-      return theme.theme_fields.where(target_id: ThemeField.basic_targets.map { |t| Theme.targets[t.to_sym] },
-                                      name: ThemeField.scss_fields + ThemeField.html_fields)
+      return(
+        theme.theme_fields.where(
+          target_id: ThemeField.basic_targets.map { |t| Theme.targets[t.to_sym] },
+          name: ThemeField.scss_fields + ThemeField.html_fields,
+        )
+      )
     end
     ThemeField.none
   end
@@ -548,7 +649,8 @@ class ThemeField < ActiveRecord::Base
   end
 
   before_save do
-    if (will_save_change_to_value? || will_save_change_to_upload_id?) && !will_save_change_to_value_baked?
+    if (will_save_change_to_value? || will_save_change_to_upload_id?) &&
+         !will_save_change_to_value_baked?
       self.value_baked = nil
     end
     if upload && upload.extension == "js"
@@ -559,29 +661,51 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
+  def upsert_svg_sprite!
+    begin
+      content = upload.content
+    rescue => e
+      Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
+    else
+      if content.length > 4 * 1024**2
+        Rails.logger.warn(
+          "can't store theme svg sprite for theme #{theme_id} and upload #{upload_id}, sprite too big",
+        )
+      else
+        ThemeSvgSprite.upsert(
+          { theme_id: theme_id, upload_id: upload_id, sprite: content },
+          unique_by: :theme_id,
+        )
+      end
+    end
+  end
+
   after_save do
     dependent_fields.each(&:invalidate_baked!)
+
+    if upload && svg_sprite_field?
+      upsert_svg_sprite!
+      DB.after_commit { SvgSprite.expire_cache }
+    end
   end
 
   after_destroy do
     if svg_sprite_field?
+      ThemeSvgSprite.where(theme_id: theme_id).delete_all
+
       DB.after_commit { SvgSprite.expire_cache }
     end
   end
 
   private
 
-  JAVASCRIPT_TYPES = %w(
-    text/javascript
-    application/javascript
-    application/ecmascript
-  )
+  JAVASCRIPT_TYPES = %w[text/javascript application/javascript application/ecmascript]
 
   def inline_javascript?(node)
-    if node['src'].present?
+    if node["src"].present?
       false
-    elsif node['type'].present?
-      JAVASCRIPT_TYPES.include?(node['type'].downcase)
+    elsif node["type"].present?
+      JAVASCRIPT_TYPES.include?(node["type"].downcase)
     else
       true
     end

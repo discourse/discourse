@@ -45,9 +45,6 @@ fr:
       trigger: "jet"
       invalid: |-
         Je regrette, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
-      not_enough_dice:
-        one: "Je n'ai que %{count} dé. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
-        other: "Je n'ai que %{count} dés. [Honteux](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
       out_of_range: |-
         Saviez-vous que [le nombre maximal de faces](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) d'un dé non truqué est de 120 ?
       results: |-
@@ -85,7 +82,7 @@ fr:
         quote: "Tout ce que l'esprit de l'homme peut concevoir et croire peut être atteint."
         author: "Napoleon Hill"
       "11":
-        quote: "Paix dans le pays, paix dans le monde."
+        quote: "La paix chez nous, la paix dans le monde."
         author: "Mustafa Kemal Atatürk"
       "12":
         quote: "L'éducation n'est pas un moyen d'échapper à la pauvreté. Elle est un\nmoyen de la combattre."
@@ -236,15 +233,15 @@ fr:
           >
           > L'avantage de se parler à soi-même, c'est que l'on est sûr que quelqu'un nous écoute.
           >
-          > Certaines personnes ont du talent avec des mots, et d'autres personnes... oh, euh, n'en ont pas.
+          > Certaines personnes ont du talent avec les mots, tandis que d'autres… eh bien, n'en ont pas.
 
-          Sélectionnez le texte de votre &uarr; citation préférée, et appuyez sur le bouton **Citer** qui apparaît sur votre sélection ou sur le bouton **Répondre** sous ce message.
+          Sélectionnez le texte de votre &uarr; citation préférée et appuyez sur le bouton **Citer** qui apparaît sur votre sélection ou sur le bouton **Répondre** sous ce message.
 
           Sous cette citation, ajoutez un ou deux mots pour expliquer votre choix, je suis curieux ! :thinking:
         reply: |-
           Bon travail, vous avez choisi ma citation préférée ! :left_speech_bubble:
         not_found: |-
-          Hum... je n'ai pas l'impression que vous m'ayez cité dans votre réponse ?
+          Hum… je n'ai pas l'impression que vous m'ayez cité dans votre réponse ?
 
           La sélection de n'importe quel texte dans mon message fera apparaître le bouton <kbd>**Citer**</kbd>. L'utilisation de la fonction « Répondre » avec le texte sélectionné fonctionnera également ! Pouvez-vous réessayer ?
       bookmark:
@@ -316,7 +313,7 @@ fr:
 
           - Si vous avez un clavier physique :keyboard:, appuyez sur <kbd>?</kbd> pour voir nos raccourcis clavier pratiques.
         not_found: |-
-          Hum... Il semble que vous rencontrez des difficultés. J'en suis désolé. Avez-vous cherché <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> le mot **capy&#8203;bara** ?
+          Hum… Il semble que vous rencontrez des difficultés. J'en suis désolé. Avez-vous cherché <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> le mot **capy&#8203;bara** ?
       end:
         message: |-
           Merci d'être resté(e) avec moi @%{username} ! J'ai fait ça pour vous, je pense que vous l'avez mérité :
@@ -378,12 +375,22 @@ fr:
           Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple, avez-vous vu la catégorie %{category} ?
 
           Saisissez « # » au milieu d'une phrase et sélectionnez n'importe quelle catégorie ou étiquette.
+        instructions_experimental: |-
+          Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple, avez-vous vu la catégorie %{category} ?
+
+          Saisissez « # » dans une phrase et sélectionnez la catégorie ou l'étiquette de votre choix.
         not_found: |-
           Hum, je ne vois de catégorie nulle part. Notez que « # » ne peut pas être le premier caractère. Pouvez-vous copier ceci dans votre prochaine réponse ?
 
           « texte
           Je peux créer un lien de catégorie via #
           »
+        not_found_experimental: |-
+          Hum, je ne vois aucune catégorie ici. Pouvez-vous copier ceci dans votre prochaine réponse ?
+
+          ```text
+          Je peux créer un lien de catégorie via #
+          ```
         reply: |-
           Excellent ! Retenez que ceci fonctionne pour les catégories _et_ les étiquettes, si les étiquettes sont activées.
       change_topic_notification_level:

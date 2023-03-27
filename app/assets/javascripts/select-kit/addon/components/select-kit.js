@@ -188,6 +188,14 @@ export default Component.extend(
       this.handleDeprecations();
     },
 
+    didInsertElement() {
+      this._super(...arguments);
+
+      if (this.selectKit.options.expandedOnInsert) {
+        this._open();
+      }
+    },
+
     click(event) {
       event.preventDefault();
       event.stopPropagation();
@@ -207,10 +215,16 @@ export default Component.extend(
     didReceiveAttrs() {
       this._super(...arguments);
 
+      const deprecatedOptions = this._resolveDeprecatedOptions();
       const mergedOptions = Object.assign({}, ...this.selectKitOptions);
       Object.keys(mergedOptions).forEach((key) => {
         if (isPresent(this.options[key])) {
           this.selectKit.options.set(key, this.options[key]);
+          return;
+        }
+
+        if (isPresent(deprecatedOptions[`options.${key}`])) {
+          this.selectKit.options.set(key, deprecatedOptions[`options.${key}`]);
           return;
         }
 
@@ -283,6 +297,7 @@ export default Component.extend(
       closeOnChange: true,
       limitMatches: null,
       placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
+      verticalOffset: 3,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
       selectedChoiceComponent: "selected-choice",
@@ -295,6 +310,7 @@ export default Component.extend(
       desktopPlacementStrategy: null,
       hiddenValues: null,
       disabled: false,
+      expandedOnInsert: false,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -898,7 +914,7 @@ export default Component.extend(
             {
               name: "offset",
               options: {
-                offset: [0, 3],
+                offset: [0, this.selectKit.options.verticalOffset],
               },
             },
             {
@@ -1045,7 +1061,7 @@ export default Component.extend(
     handleDeprecations() {
       this._deprecateValueAttribute();
       this._deprecateMutations();
-      this._deprecateOptions();
+      this._handleDeprecatdArgs();
     },
 
     _computePlacementStrategy() {
@@ -1072,7 +1088,11 @@ export default Component.extend(
         discourseSetup &&
         discourseSetup.getAttribute("data-environment") === "development"
       ) {
-        deprecated(text, { since: "v2.4.0", dropFrom: "2.9.0.beta1" });
+        deprecated(text, {
+          since: "v2.4.0",
+          dropFrom: "2.9.0.beta1",
+          id: "discourse.select-kit",
+        });
       }
     },
 
@@ -1102,11 +1122,8 @@ export default Component.extend(
       }
     },
 
-    _deprecateOptions() {
+    _resolveDeprecatedOptions() {
       const migrations = {
-        headerIcon: "icon",
-        onExpand: "onOpen",
-        onCollapse: "onClose",
         allowAny: "options.allowAny",
         allowCreate: "options.allowAny",
         filterable: "options.filterable",
@@ -1125,6 +1142,29 @@ export default Component.extend(
         i18nPostfix: "options.i18nPostfix",
         i18nPrefix: "options.i18nPrefix",
         castInteger: "options.castInteger",
+      };
+
+      const resolvedDeprecations = {};
+
+      Object.keys(migrations).forEach((from) => {
+        const to = migrations[from];
+        if (this.get(from) && !this.get(to)) {
+          this._deprecated(
+            `The \`${from}\` attribute is deprecated. Use \`${to}\` instead`
+          );
+
+          resolvedDeprecations[(to, this.get(from))];
+        }
+      });
+
+      return resolvedDeprecations;
+    },
+
+    _handleDeprecatdArgs() {
+      const migrations = {
+        headerIcon: "icon",
+        onExpand: "onOpen",
+        onCollapse: "onClose",
       };
 
       Object.keys(migrations).forEach((from) => {

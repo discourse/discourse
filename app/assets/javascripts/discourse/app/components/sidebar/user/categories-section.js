@@ -1,45 +1,53 @@
-import I18n from "I18n";
-
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { cached } from "@glimmer/tracking";
 
-import { canDisplayCategory } from "discourse/lib/sidebar/helpers";
+import { debounce } from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
 import SidebarCommonCategoriesSection from "discourse/components/sidebar/common/categories-section";
+
+export const REFRESH_COUNTS_APP_EVENT_NAME =
+  "sidebar:refresh-categories-section-counts";
 
 export default class SidebarUserCategoriesSection extends SidebarCommonCategoriesSection {
   @service router;
   @service currentUser;
+  @service appEvents;
 
   constructor() {
     super(...arguments);
 
     this.callbackId = this.topicTrackingState.onStateChange(() => {
-      this.sectionLinks.forEach((sectionLink) => {
-        sectionLink.refreshCounts();
-      });
+      this._refreshCounts();
     });
+
+    this.appEvents.on(REFRESH_COUNTS_APP_EVENT_NAME, this, this._refreshCounts);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
 
     this.topicTrackingState.offStateChange(this.callbackId);
+
+    this.appEvents.off(
+      REFRESH_COUNTS_APP_EVENT_NAME,
+      this,
+      this._refreshCounts
+    );
   }
 
-  get categories() {
-    return this.currentUser.sidebarCategories.filter((category) => {
-      return canDisplayCategory(category, this.siteSettings);
+  // TopicTrackingState changes or plugins can trigger this function so we debounce to ensure we're not refreshing
+  // unnecessarily.
+  @debounce(300)
+  _refreshCounts() {
+    this.sectionLinks.forEach((sectionLink) => {
+      sectionLink.refreshCounts();
     });
   }
 
-  get noCategoriesText() {
-    const url = `/u/${this.currentUser.username}/preferences/sidebar`;
-
-    return `${I18n.t(
-      "sidebar.sections.categories.none"
-    )} <a href="${url}">${I18n.t(
-      "sidebar.sections.categories.click_to_get_started"
-    )}</a>`;
+  @cached
+  get categories() {
+    return Category.findByIds(this.currentUser.sidebarCategoryIds);
   }
 
   /**
@@ -54,6 +62,10 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
     } else {
       return this.categories.length > 0;
     }
+  }
+
+  get shouldDisplayDefaultConfig() {
+    return this.currentUser.admin && !this.hasDefaultSidebarCategories;
   }
 
   get hasDefaultSidebarCategories() {

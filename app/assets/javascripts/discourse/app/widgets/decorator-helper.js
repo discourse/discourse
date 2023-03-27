@@ -2,6 +2,7 @@ import Connector from "discourse/widgets/connector";
 import PostCooked from "discourse/widgets/post-cooked";
 import RawHtml from "discourse/widgets/raw-html";
 import { h } from "virtual-dom";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 
 class DecoratorHelper {
   constructor(widget, attrs, state) {
@@ -105,6 +106,51 @@ class DecoratorHelper {
    **/
   connect(details) {
     return new Connector(this.widget, details);
+  }
+
+  /**
+   * Returns an element containing a rendered glimmer template. For full usage instructions,
+   * see `widgets/render-glimmer.js`.
+   *
+   * Example usage:
+   *
+   * ```
+   * import { hbs } from "ember-cli-htmlbars";
+   *
+   * api.decorateCookedElement((cooked, helper) => {
+   *   // Generate a new element with glimmer rendered inside
+   *   const glimmerElement = helper.renderGlimmer(
+   *     "div.my-wrapper-class",
+   *     hbs`<DButton @icon={{@data.param}} @translatedLabel="Hello world from Glimmer Component"/>`,
+   *     { param: "user-plus" }
+   *   );
+   *   cooked.appendChild(glimmerElement);
+   *
+   *   // Or append to an existing element
+   *   helper.renderGlimmer(
+   *     cooked.querySelector(".some-container"),
+   *     hbs`I will be appended to some-container`
+   *   );
+   * }, { onlyStream: true, id: "my-id" });
+   * ```
+   *
+   */
+  renderGlimmer(renderInto, template, data) {
+    if (!this.widget.postContentsDestroyCallbacks) {
+      throw "renderGlimmer can only be used in the context of a post";
+    }
+
+    const renderGlimmer = new RenderGlimmer(
+      this.widget,
+      renderInto,
+      template,
+      data
+    );
+    renderGlimmer.init();
+    this.widget.postContentsDestroyCallbacks.push(
+      renderGlimmer.destroy.bind(renderGlimmer)
+    );
+    return renderGlimmer.element;
   }
 }
 DecoratorHelper.prototype.h = h;

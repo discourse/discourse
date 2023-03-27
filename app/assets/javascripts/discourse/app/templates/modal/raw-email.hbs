@@ -1,13 +1,32 @@
-<DModalBody @title="raw_email.title" @class="incoming-email-modal" @maxHeight="80%">
+<DModalBody
+  @title="raw_email.title"
+  @class="incoming-email-modal"
+  @maxHeight="80%"
+>
   <div class="incoming-email-tabs">
-    <DButton @action={{action "displayRaw"}} @label="post.raw_email.displays.raw.button" @title="post.raw_email.displays.raw.title" @class={{if this.showRawEmail "active"}} />
+    <DButton
+      @action={{action "displayRaw"}}
+      @label="post.raw_email.displays.raw.button"
+      @title="post.raw_email.displays.raw.title"
+      @class={{if this.showRawEmail "active"}}
+    />
 
     {{#if this.textPart}}
-      <DButton @action={{action "displayTextPart"}} @label="post.raw_email.displays.text_part.button" @title="post.raw_email.displays.text_part.title" @class={{if this.showTextPart "active"}} />
+      <DButton
+        @action={{action "displayTextPart"}}
+        @label="post.raw_email.displays.text_part.button"
+        @title="post.raw_email.displays.text_part.title"
+        @class={{if this.showTextPart "active"}}
+      />
     {{/if}}
 
     {{#if this.htmlPart}}
-      <DButton @action={{action "displayHtmlPart"}} @label="post.raw_email.displays.html_part.button" @title="post.raw_email.displays.html_part.title" @class={{if this.showHtmlPart "active"}} />
+      <DButton
+        @action={{action "displayHtmlPart"}}
+        @label="post.raw_email.displays.html_part.button"
+        @title="post.raw_email.displays.html_part.title"
+        @class={{if this.showHtmlPart "active"}}
+      />
     {{/if}}
   </div>
 
@@ -23,7 +42,10 @@
       <Textarea @value={{this.textPart}} />
     {{/if}}
     {{#if this.showHtmlPart}}
-      <IframedHtml @html={{this.htmlPart}} @className="incoming-email-html-part" />
+      <IframedHtml
+        @html={{this.htmlPart}}
+        @className="incoming-email-html-part"
+      />
     {{/if}}
   </div>
 </DModalBody>

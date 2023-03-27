@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-require 'excon'
+require "excon"
 Excon::DEFAULTS[:omit_default_port] = true

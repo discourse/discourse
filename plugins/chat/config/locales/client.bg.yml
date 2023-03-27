@@ -1,0 +1,114 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  js:
+    chat:
+      cancel: "Прекрати"
+      channel_settings:
+        edit: "Редактирай"
+        add: "Добави "
+        join: "Влизане"
+        leave: "Напусни"
+      close: "Затвори"
+      delete: "Изтрий"
+      muted: "заглуши"
+      joined: "присъединен"
+      email_frequency:
+        never: "Никога"
+      header_indicator_preference:
+        never: "Никога"
+      flag: "Сигнализиране"
+      join: "Влизане"
+      last_visit: "последно посещение"
+      mention_warning:
+        dismiss: "отмени"
+      reply: "Отговорете"
+      edit: "Редактирай"
+      rebake_message: "Прегенерирай HTML "
+      bookmark_message: "Отметка"
+      bookmark_message_edit: "Редактиране на отметка"
+      save: "Запази "
+      sounds:
+        none: "Без"
+      exit: "назад"
+      channel_status:
+        closed: "Затворена"
+        open: "Отвори"
+      browse:
+        back: "Назад"
+        filter_all: Всички
+        filter_closed: Затворена
+      chat_message_separator:
+        today: Днес
+        yesterday: Вчера
+      about_view:
+        title: Заглавие
+        name: Име
+        description: Описание
+      channel_info:
+        back_to_channel: "Назад"
+        tabs:
+          about: Относно
+          members: Членове
+          settings: Настройки
+      direct_message_creator:
+        title: Ново Съобщение
+        prefix: "До:"
+      create_channel:
+        type: "Тип"
+        types:
+          category: "Категория"
+          topic: "Тема"
+      composer:
+        italic_text: "Подчертан текст"
+        bold_text: "удебелен текст"
+      notification_levels:
+        never: "Никога"
+      settings:
+        follow: "Влизане"
+        followed: "Присъединен"
+        notifications: "Известия"
+        save: "Запази "
+        saved: "Запазено"
+        unfollow: "Напусни"
+        admin_title: "Администратор"
+      incoming_webhooks:
+        back: "Назад"
+        description: "Описание"
+        delete: "Изтрий"
+        emoji: "Емотикони"
+        name: "Име"
+        save: "Запази "
+        edit: "Редактирай"
+        system: "система"
+        url: "URL"
+        username: "Потребителско име"
+      selection:
+        cancel: "Прекрати"
+        copy: "Копирай"
+        new_topic:
+          title: "Премести в нова тема"
+        existing_topic:
+          title: "Преместете в съществуваща тема."
+      emoji_picker:
+        objects: "Обекти"
+        activities: "Дейности"
+        flags: "Сигнали"
+        symbols: "Символи"
+      draft_channel_screen:
+        header: "Ново Съобщение"
+        cancel: "Прекрати"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Съобщение
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Означено от"

@@ -8,6 +8,6 @@ class AddApplicationRequests < ActiveRecord::Migration[4.2]
       t.integer :count, null: false, default: 0
     end
 
-    add_index :application_requests, [:date, :req_type], unique: true
+    add_index :application_requests, %i[date req_type], unique: true
   end
 end

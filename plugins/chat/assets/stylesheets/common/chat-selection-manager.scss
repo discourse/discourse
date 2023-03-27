@@ -1,0 +1,39 @@
+.chat-selection-management {
+  border-top: 1px solid var(--primary-low);
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+
+  .chat-drawer-content & {
+    flex-direction: column;
+  }
+
+  .chat-selection-management-buttons {
+    display: flex;
+    gap: 0.5rem;
+
+    .chat-drawer-content & {
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+
+  .chat-selection-message {
+    animation: chat-quote-message-background-fade-highlight 2s ease-out 3s;
+    animation-fill-mode: forwards;
+    background-color: var(--success-low);
+    color: var(--primary);
+    flex: 1;
+    line-height: normal;
+    padding: 0.5rem 0.65rem;
+  }
+
+  @keyframes chat-quote-message-background-fade-highlight {
+    0% {
+    }
+    100% {
+      background-color: transparent;
+      color: transparent;
+    }
+  }
+}

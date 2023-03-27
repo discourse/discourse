@@ -13,11 +13,10 @@ from
 ) as c
 where pp.id = c.id and pp.post_number <> c.real_number"
 
-    remove_index "posts", ["forum_thread_id", "post_number"]
+    remove_index "posts", %w[forum_thread_id post_number]
 
     # this needs to be unique if it is not we can not use post_number to identify a post
-    add_index "posts", ["forum_thread_id", "post_number"], unique: true
-
+    add_index "posts", %w[forum_thread_id post_number], unique: true
   end
 
   def down

@@ -2,12 +2,18 @@
 
 #mixin for all guardian methods dealing with tagging permissions
 module TagGuardian
+  def can_see_tag?(_tag)
+    true
+  end
+
   def can_create_tag?
-    SiteSetting.tagging_enabled && @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_create_tag)
+    SiteSetting.tagging_enabled &&
+      @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_create_tag)
   end
 
   def can_tag_topics?
-    SiteSetting.tagging_enabled && @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_to_tag_topics)
+    SiteSetting.tagging_enabled &&
+      @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_to_tag_topics)
   end
 
   def can_tag_pms?
@@ -15,9 +21,9 @@ module TagGuardian
     return false if @user.blank?
     return true if @user == Discourse.system_user
 
-    # TODO (martin) Change to pm_tags_allowed_for_groups_map
-    group_ids = SiteSetting.pm_tags_allowed_for_groups.to_s.split("|").map(&:to_i)
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || @user.group_users.exists?(group_id: group_ids)
+    group_ids = SiteSetting.pm_tags_allowed_for_groups_map
+    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+      @user.group_users.exists?(group_id: group_ids)
   end
 
   def can_admin_tags?
@@ -29,12 +35,13 @@ module TagGuardian
   end
 
   def hidden_tag_names
-    @hidden_tag_names ||= begin
-      if SiteSetting.tagging_enabled && !is_staff?
-        DiscourseTagging.hidden_tag_names(self)
-      else
-        []
+    @hidden_tag_names ||=
+      begin
+        if SiteSetting.tagging_enabled && !is_staff?
+          DiscourseTagging.hidden_tag_names(self)
+        else
+          []
+        end
       end
-    end
   end
 end

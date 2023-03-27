@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'email/message_builder'
+require "email/message_builder"
 
 RSpec.describe Email::MessageBuilder do
   let(:to_address) { "jake@adventuretime.ooo" }
@@ -28,22 +28,24 @@ RSpec.describe Email::MessageBuilder do
   end
 
   it "ask politely not to receive automated responses" do
-    expect(header_args['X-Auto-Response-Suppress']).to eq("All")
+    expect(header_args["X-Auto-Response-Suppress"]).to eq("All")
   end
 
   describe "reply by email" do
     context "without allow_reply_by_email" do
       it "does not have a X-Discourse-Reply-Key" do
-        expect(header_args['X-Discourse-Reply-Key']).to be_blank
+        expect(header_args["X-Discourse-Reply-Key"]).to be_blank
       end
 
       it "returns a Reply-To header that's the same as From" do
-        expect(header_args['Reply-To']).to eq(build_args[:from])
+        expect(header_args["Reply-To"]).to eq(build_args[:from])
       end
     end
 
     context "with allow_reply_by_email" do
-      let(:reply_by_email_builder) { Email::MessageBuilder.new(to_address, allow_reply_by_email: true) }
+      let(:reply_by_email_builder) do
+        Email::MessageBuilder.new(to_address, allow_reply_by_email: true)
+      end
 
       context "with the SiteSetting enabled" do
         before do
@@ -52,45 +54,44 @@ RSpec.describe Email::MessageBuilder do
         end
 
         it "returns a Reply-To header with the reply key" do
-          expect(reply_by_email_builder.header_args['Reply-To'])
-            .to eq("\"#{SiteSetting.title}\" <r+%{reply_key}@reply.myforum.com>")
+          expect(reply_by_email_builder.header_args["Reply-To"]).to eq(
+            "\"#{SiteSetting.title}\" <r+%{reply_key}@reply.myforum.com>",
+          )
 
-          expect(reply_by_email_builder.header_args[allow_reply_header])
-            .to eq(true)
+          expect(reply_by_email_builder.header_args[allow_reply_header]).to eq(true)
         end
 
         it "cleans up the site title" do
           SiteSetting.stubs(:title).returns(">>>Obnoxious Title: Deal, \"With\" It<<<")
 
-          expect(reply_by_email_builder.header_args['Reply-To'])
-            .to eq("\"Obnoxious Title Deal With It\" <r+%{reply_key}@reply.myforum.com>")
+          expect(reply_by_email_builder.header_args["Reply-To"]).to eq(
+            "\"Obnoxious Title Deal With It\" <r+%{reply_key}@reply.myforum.com>",
+          )
 
-          expect(reply_by_email_builder.header_args[allow_reply_header])
-            .to eq(true)
+          expect(reply_by_email_builder.header_args[allow_reply_header]).to eq(true)
         end
       end
 
       context "with the SiteSetting disabled" do
-        before do
-          SiteSetting.stubs(:reply_by_email_enabled?).returns(false)
-        end
+        before { SiteSetting.stubs(:reply_by_email_enabled?).returns(false) }
 
         it "returns a Reply-To header that's the same as From" do
-          expect(reply_by_email_builder.header_args['Reply-To'])
-            .to eq(reply_by_email_builder.build_args[:from])
+          expect(reply_by_email_builder.header_args["Reply-To"]).to eq(
+            reply_by_email_builder.build_args[:from],
+          )
 
-          expect(reply_by_email_builder.header_args[allow_reply_header])
-            .to eq(nil)
+          expect(reply_by_email_builder.header_args[allow_reply_header]).to eq(nil)
         end
       end
     end
 
     context "with allow_reply_by_email" do
       let(:reply_by_email_builder) do
-        Email::MessageBuilder.new(to_address,
+        Email::MessageBuilder.new(
+          to_address,
           allow_reply_by_email: true,
           private_reply: true,
-          from_alias: "Username"
+          from_alias: "Username",
         )
       end
 
@@ -98,42 +99,48 @@ RSpec.describe Email::MessageBuilder do
         before do
           SiteSetting.stubs(:reply_by_email_enabled?).returns(true)
 
-          SiteSetting.stubs(:reply_by_email_address)
-            .returns("r+%{reply_key}@reply.myforum.com")
+          SiteSetting.stubs(:reply_by_email_address).returns("r+%{reply_key}@reply.myforum.com")
         end
 
         it "returns a Reply-To header with the reply key" do
-          expect(reply_by_email_builder.header_args['Reply-To'])
-            .to eq("\"Username\" <r+%{reply_key}@reply.myforum.com>")
+          expect(reply_by_email_builder.header_args["Reply-To"]).to eq(
+            "\"Username\" <r+%{reply_key}@reply.myforum.com>",
+          )
 
-          expect(reply_by_email_builder.header_args[allow_reply_header])
-            .to eq(true)
+          expect(reply_by_email_builder.header_args[allow_reply_header]).to eq(true)
         end
       end
 
       context "with the SiteSetting disabled" do
-        before do
-          SiteSetting.stubs(:reply_by_email_enabled?).returns(false)
-        end
+        before { SiteSetting.stubs(:reply_by_email_enabled?).returns(false) }
 
         it "returns a Reply-To header that's the same as From" do
-          expect(reply_by_email_builder.header_args['Reply-To'])
-            .to eq(reply_by_email_builder.build_args[:from])
+          expect(reply_by_email_builder.header_args["Reply-To"]).to eq(
+            reply_by_email_builder.build_args[:from],
+          )
 
-          expect(reply_by_email_builder.header_args[allow_reply_header])
-            .to eq(nil)
+          expect(reply_by_email_builder.header_args[allow_reply_header]).to eq(nil)
         end
       end
     end
-
   end
 
   describe "custom headers" do
-    let(:custom_headers_string) { " Precedence : bulk | :: | No-colon | No-Value: | Multi-colon : : value : : | Auto-Submitted : auto-generated " }
-    let(:custom_headers_result) { { "Precedence" => "bulk", "Multi-colon" => ": value : :", "Auto-Submitted" => "auto-generated" } }
+    let(:custom_headers_string) do
+      " Precedence : bulk | :: | No-colon | No-Value: | Multi-colon : : value : : | Auto-Submitted : auto-generated "
+    end
+    let(:custom_headers_result) do
+      {
+        "Precedence" => "bulk",
+        "Multi-colon" => ": value : :",
+        "Auto-Submitted" => "auto-generated",
+      }
+    end
 
     it "custom headers builder" do
-      expect(Email::MessageBuilder.custom_headers(custom_headers_string)).to eq(custom_headers_result)
+      expect(Email::MessageBuilder.custom_headers(custom_headers_string)).to eq(
+        custom_headers_result,
+      )
     end
 
     it "empty headers builder" do
@@ -143,7 +150,6 @@ RSpec.describe Email::MessageBuilder do
     it "null headers builder" do
       expect(Email::MessageBuilder.custom_headers(nil)).to eq({})
     end
-
   end
 
   describe "header args" do
@@ -152,23 +158,35 @@ RSpec.describe Email::MessageBuilder do
       Email::MessageBuilder.new(
         to_address,
         {
-        body: 'hello world',
-        topic_id: 1234,
-        post_id: 4567,
-        }.merge(additional_opts)
+          body: "hello world",
+          topic_id: 1234,
+          post_id: 4567,
+          show_tags_in_subject: "foo bar baz",
+          show_category_in_subject: "random",
+        }.merge(additional_opts),
       )
     end
 
     it "passes through a post_id" do
-      expect(message_with_header_args.header_args['X-Discourse-Post-Id']).to eq('4567')
+      expect(message_with_header_args.header_args["X-Discourse-Post-Id"]).to eq("4567")
     end
 
     it "passes through a topic_id" do
-      expect(message_with_header_args.header_args['X-Discourse-Topic-Id']).to eq('1234')
+      expect(message_with_header_args.header_args["X-Discourse-Topic-Id"]).to eq("1234")
     end
 
     it "uses the default reply-to header" do
-      expect(message_with_header_args.header_args['Reply-To']).to eq("\"Discourse\" <#{SiteSetting.notification_email}>")
+      expect(message_with_header_args.header_args["Reply-To"]).to eq(
+        "\"Discourse\" <#{SiteSetting.notification_email}>",
+      )
+    end
+
+    it "passes through the topic tags" do
+      expect(message_with_header_args.header_args["X-Discourse-Tags"]).to eq("foo bar baz")
+    end
+
+    it "passes through the topic category" do
+      expect(message_with_header_args.header_args["X-Discourse-Category"]).to eq("random")
     end
 
     context "when allow_reply_by_email is enabled " do
@@ -178,7 +196,9 @@ RSpec.describe Email::MessageBuilder do
         SiteSetting.manual_polling_enabled = true
         SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
         SiteSetting.reply_by_email_enabled = true
-        expect(message_with_header_args.header_args['Reply-To']).to eq("\"Discourse\" <test+%{reply_key}@test.com>")
+        expect(message_with_header_args.header_args["Reply-To"]).to eq(
+          "\"Discourse\" <test+%{reply_key}@test.com>",
+        )
       end
     end
 
@@ -189,18 +209,22 @@ RSpec.describe Email::MessageBuilder do
         SiteSetting.manual_polling_enabled = true
         SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
         SiteSetting.reply_by_email_enabled = true
-        expect(message_with_header_args.header_args['Reply-To']).to eq("\"Discourse\" <#{SiteSetting.notification_email}>")
+        expect(message_with_header_args.header_args["Reply-To"]).to eq(
+          "\"Discourse\" <#{SiteSetting.notification_email}>",
+        )
       end
     end
 
     context "when allow_reply_by_email is enabled and use_from_address_for_reply_to is enabled and from is specified" do
-      let(:additional_opts) { { allow_reply_by_email: true, use_from_address_for_reply_to: true, from: "team@test.com" } }
+      let(:additional_opts) do
+        { allow_reply_by_email: true, use_from_address_for_reply_to: true, from: "team@test.com" }
+      end
 
       it "removes the reply-to header because it is identical to the from header" do
         SiteSetting.manual_polling_enabled = true
         SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
         SiteSetting.reply_by_email_enabled = true
-        expect(message_with_header_args.header_args['Reply-To']).to eq(nil)
+        expect(message_with_header_args.header_args["Reply-To"]).to eq(nil)
       end
     end
   end
@@ -208,37 +232,39 @@ RSpec.describe Email::MessageBuilder do
   describe "unsubscribe link" do
     context "with add_unsubscribe_link false" do
       it "has no unsubscribe header by default" do
-        expect(builder.header_args['List-Unsubscribe']).to be_blank
+        expect(builder.header_args["List-Unsubscribe"]).to be_blank
       end
 
       it "doesn't have the user preferences url in the body" do
         expect(builder.body).not_to match(builder.template_args[:user_preferences_url])
       end
-
     end
 
     context "with add_unsubscribe_link true" do
-
-      let(:message_with_unsubscribe) { Email::MessageBuilder.new(to_address,
-                                                                body: 'hello world',
-                                                                add_unsubscribe_link: true,
-                                                                url: "/t/1234",
-                                                                unsubscribe_url: "/t/1234/unsubscribe") }
+      let(:message_with_unsubscribe) do
+        Email::MessageBuilder.new(
+          to_address,
+          body: "hello world",
+          add_unsubscribe_link: true,
+          url: "/t/1234",
+          unsubscribe_url: "/t/1234/unsubscribe",
+        )
+      end
 
       it "has an List-Unsubscribe header" do
-        expect(message_with_unsubscribe.header_args['List-Unsubscribe']).to be_present
+        expect(message_with_unsubscribe.header_args["List-Unsubscribe"]).to be_present
       end
 
       it "has the unsubscribe url in the body" do
-        expect(message_with_unsubscribe.body).to match('/t/1234/unsubscribe')
+        expect(message_with_unsubscribe.body).to match("/t/1234/unsubscribe")
       end
 
       it "does not add unsubscribe via email link without site setting set" do
-        expect(message_with_unsubscribe.body).to_not match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)
+        expect(message_with_unsubscribe.body).to_not match(
+          /mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/,
+        )
       end
-
     end
-
   end
 
   describe "template_args" do
@@ -249,7 +275,7 @@ RSpec.describe Email::MessageBuilder do
     end
 
     it "has email prefix as email_prefix when `SiteSetting.email_prefix` is present" do
-      SiteSetting.email_prefix = 'some email prefix'
+      SiteSetting.email_prefix = "some email prefix"
       expect(template_args[:email_prefix]).to eq(SiteSetting.email_prefix)
     end
 
@@ -264,51 +290,66 @@ RSpec.describe Email::MessageBuilder do
 
   describe "email prefix in subject" do
     context "when use_site_subject is true" do
-      let(:message_with_email_prefix) { Email::MessageBuilder.new(to_address,
-                                                                  body: 'hello world',
-                                                                  use_site_subject: true) }
+      let(:message_with_email_prefix) do
+        Email::MessageBuilder.new(to_address, body: "hello world", use_site_subject: true)
+      end
 
       it "when email_prefix is set it should be present in subject" do
-        SiteSetting.email_prefix = 'some email prefix'
+        SiteSetting.email_prefix = "some email prefix"
         expect(message_with_email_prefix.subject).to match(SiteSetting.email_prefix)
       end
     end
   end
 
   describe "subject_template" do
-    let(:templated_builder) { Email::MessageBuilder.new(to_address, template: 'mystery') }
+    let(:templated_builder) { Email::MessageBuilder.new(to_address, template: "mystery") }
     let(:rendered_template) { "rendered template" }
 
     it "has the body rendered from a template" do
-      I18n.expects(:t).with("mystery.text_body_template", templated_builder.template_args).returns(rendered_template)
+      I18n
+        .expects(:t)
+        .with("mystery.text_body_template", templated_builder.template_args)
+        .returns(rendered_template)
       expect(templated_builder.body).to eq(rendered_template)
     end
 
     it "has the subject rendered from a template" do
-      I18n.expects(:t).with("mystery.subject_template", templated_builder.template_args).returns(rendered_template)
+      I18n
+        .expects(:t)
+        .with("mystery.subject_template", templated_builder.template_args)
+        .returns(rendered_template)
       expect(templated_builder.subject).to eq(rendered_template)
     end
 
     context "when use_site_subject is true" do
-      let(:templated_builder) { Email::MessageBuilder.new(to_address, template: 'user_notifications.user_replied', use_site_subject: true, topic_title: "Topic Title") }
+      let(:templated_builder) do
+        Email::MessageBuilder.new(
+          to_address,
+          template: "user_notifications.user_replied",
+          use_site_subject: true,
+          topic_title: "Topic Title",
+        )
+      end
 
       it "can use subject override" do
-        override = TranslationOverride.upsert!(
-          I18n.locale,
-          "user_notifications.user_replied.subject_template",
-          "my customized subject"
-        )
+        override =
+          TranslationOverride.upsert!(
+            I18n.locale,
+            "user_notifications.user_replied.subject_template",
+            "my customized subject",
+          )
         override.save!
         expect(templated_builder.subject).to eq(override.value)
       end
 
       it "can use interpolation arguments in the override" do
-        SiteSetting.email_prefix = 'some email prefix'
-        override = TranslationOverride.upsert!(
-          I18n.locale,
-          "user_notifications.user_replied.subject_template",
-          "[%{site_name}] %{topic_title} my customized subject"
-        ).save!
+        SiteSetting.email_prefix = "some email prefix"
+        override =
+          TranslationOverride.upsert!(
+            I18n.locale,
+            "user_notifications.user_replied.subject_template",
+            "[%{site_name}] %{topic_title} my customized subject",
+          ).save!
         expect(templated_builder.subject).to match("some email prefix")
         expect(templated_builder.subject).to match("customized subject")
       end
@@ -326,7 +367,7 @@ RSpec.describe Email::MessageBuilder do
       expect(build_args[:from]).to eq("\"Dog Talk\" <#{SiteSetting.notification_email}>")
     end
 
-    let(:finn_email) { 'finn@adventuretime.ooo' }
+    let(:finn_email) { "finn@adventuretime.ooo" }
     let(:custom_from) { Email::MessageBuilder.new(to_address, from: finn_email).build_args }
 
     it "allows us to override from" do
@@ -336,12 +377,14 @@ RSpec.describe Email::MessageBuilder do
     let(:aliased_from) { Email::MessageBuilder.new(to_address, from_alias: "Finn the Dog") }
 
     it "allows us to alias the from address" do
-      expect(aliased_from.build_args[:from]).to eq("\"Finn the Dog\" <#{SiteSetting.notification_email}>")
+      expect(aliased_from.build_args[:from]).to eq(
+        "\"Finn the Dog\" <#{SiteSetting.notification_email}>",
+      )
     end
 
-    let(:custom_aliased_from) { Email::MessageBuilder.new(to_address,
-                                                          from_alias: "Finn the Dog",
-                                                          from: finn_email) }
+    let(:custom_aliased_from) do
+      Email::MessageBuilder.new(to_address, from_alias: "Finn the Dog", from: finn_email)
+    end
 
     it "allows us to alias a custom from address" do
       expect(custom_aliased_from.build_args[:from]).to eq("\"Finn the Dog\" <#{finn_email}>")
@@ -359,13 +402,16 @@ RSpec.describe Email::MessageBuilder do
     end
 
     it "cleans up aliases in the from_alias arg" do
-      builder = Email::MessageBuilder.new(to_address, from_alias: "Finn: the Dog, <3", from: finn_email)
+      builder =
+        Email::MessageBuilder.new(to_address, from_alias: "Finn: the Dog, <3", from: finn_email)
       expect(builder.build_args[:from]).to eq("\"Finn the Dog 3\" <#{finn_email}>")
     end
 
     it "cleans up the email_site_title" do
       SiteSetting.stubs(:email_site_title).returns("::>>>Best \"Forum\", EU: Award Winning<<<")
-      expect(build_args[:from]).to eq("\"Best Forum EU Award Winning\" <#{SiteSetting.notification_email}>")
+      expect(build_args[:from]).to eq(
+        "\"Best Forum EU Award Winning\" <#{SiteSetting.notification_email}>",
+      )
     end
   end
 end

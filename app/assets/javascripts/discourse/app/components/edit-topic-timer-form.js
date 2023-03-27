@@ -84,7 +84,7 @@ export default Component.extend({
 
   @discourseComputed()
   timeOptions() {
-    const timezone = this.currentUser.timezone;
+    const timezone = this.currentUser.user_option.timezone;
     const shortcuts = timeShortcuts(timezone);
 
     return [

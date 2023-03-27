@@ -1,0 +1,35 @@
+.chat-onebox {
+  .chat-onebox-body {
+    .chat-onebox-title {
+      margin-bottom: 3px;
+    }
+
+    .chat-onebox-description {
+      color: var(--primary-medium);
+    }
+
+    .chat-onebox-members-count {
+      color: var(--primary-medium);
+      margin-top: 1em;
+      margin-bottom: 3px;
+    }
+
+    .chat-onebox-members {
+      align-items: center;
+      color: var(--primary-medium);
+      display: flex;
+      flex-wrap: wrap;
+
+      .avatar {
+        aspect-ratio: 30 / 30;
+        margin-right: 0.25rem;
+      }
+    }
+  }
+}
+
+.chat-transcript {
+  .chat-transcript-user-avatar .avatar {
+    aspect-ratio: 20 / 20;
+  }
+}

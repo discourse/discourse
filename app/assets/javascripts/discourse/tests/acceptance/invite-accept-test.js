@@ -3,7 +3,7 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 import I18n from "I18n";
 import { test } from "qunit";
@@ -111,6 +111,16 @@ acceptance("Invite accept", function (needs) {
       "submit is disabled because name and email is not filled"
     );
 
+    assert.ok(
+      exists("#new-account-password[type='password']"),
+      "password is masked by default"
+    );
+    await click(".toggle-password-mask");
+    assert.ok(
+      exists("#new-account-password[type='text']"),
+      "password is unmasked when toggle is clicked"
+    );
+
     await fillIn("#new-account-name", "John Doe");
     assert.ok(
       exists(".invites-show .btn-primary:disabled"),
@@ -123,7 +133,7 @@ acceptance("Invite accept", function (needs) {
       "submit is disabled because password is not filled"
     );
 
-    await fillIn("#new-account-password", "top$ecret");
+    await fillIn("#new-account-password", "top$ecretzz");
     assert.notOk(
       exists(".invites-show .btn-primary:disabled"),
       "submit is enabled"

@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 module Jobs
-
   class CleanUpCrawlerStats < ::Jobs::Scheduled
     every 1.day
 
     def execute(args)
-      WebCrawlerRequest.where('date < ?', WebCrawlerRequest.max_record_age.ago).delete_all
+      WebCrawlerRequest.where("date < ?", WebCrawlerRequest.max_record_age.ago).delete_all
 
       # keep count of only the top user agents
       DB.exec <<~SQL
@@ -24,5 +23,4 @@ module Jobs
       SQL
     end
   end
-
 end

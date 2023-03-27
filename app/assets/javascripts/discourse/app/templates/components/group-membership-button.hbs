@@ -1,9 +1,0 @@
-{{#if this.canJoinGroup}}
-  <DButton @action={{action "joinGroup"}} @class="btn-default group-index-join" @icon="user-plus" @label="groups.join" @disabled={{this.updatingMembership}} />
-{{else if this.canLeaveGroup}}
-  <DButton @action={{action "leaveGroup"}} @class="btn-danger group-index-leave" @icon="user-times" @label="groups.leave" @disabled={{this.updatingMembership}} />
-{{else if this.canRequestMembership}}
-  <DButton @action={{action "showRequestMembershipForm"}} @class="btn-default group-index-request" @disabled={{this.loading}} @icon="user-plus" @label="groups.request" />
-{{else}}
-  {{yield}}
-{{/if}}

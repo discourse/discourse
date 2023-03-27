@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class EmailStyleUpdater
-
   attr_reader :errors
 
   def initialize(user)
@@ -10,11 +9,8 @@ class EmailStyleUpdater
   end
 
   def update(attrs)
-    if attrs.has_key?(:html) && !attrs[:html].include?('%{email_content}')
-      @errors << I18n.t(
-        'email_style.html_missing_placeholder',
-        placeholder: '%{email_content}'
-      )
+    if attrs.has_key?(:html) && !attrs[:html].include?("%{email_content}")
+      @errors << I18n.t("email_style.html_missing_placeholder", placeholder: "%{email_content}")
     end
 
     if attrs.has_key?(:css)

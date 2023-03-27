@@ -1,0 +1,40 @@
+.chat-channel-preview-card {
+  margin: 1rem 1rem 2rem 1rem;
+  padding: 1.5rem 1rem;
+  background-color: var(--secondary-very-high);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+
+  &.-no-description {
+    .chat-channel-title {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  &__description {
+    color: var(--primary-600);
+    text-align: center;
+  }
+
+  .chat-channel-title__name {
+    font-size: var(--font-up-2);
+  }
+
+  &__join-channel-btn {
+    font-size: var(--font-up-2);
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    line-height: normal;
+    box-sizing: border-box;
+    padding: 0.5em 0.65em;
+    font-weight: normal;
+    cursor: pointer;
+  }
+
+  &__browse-all {
+    margin-top: 1rem;
+    font-size: var(--font-down-1);
+  }
+}

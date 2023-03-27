@@ -3,7 +3,7 @@
 RSpec.describe WebHookUserSerializer do
   let(:user) do
     user = Fabricate(:user)
-    SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', last_payload: '')
+    SingleSignOnRecord.create!(user_id: user.id, external_id: "12345", last_payload: "")
     user
   end
 
@@ -13,13 +13,18 @@ RSpec.describe WebHookUserSerializer do
     WebHookUserSerializer.new(user, scope: Guardian.new(admin), root: false)
   end
 
+  before do
+    SiteSetting.navigation_menu = "legacy"
+    SiteSetting.chat_enabled = false if defined?(::Chat)
+  end
+
   it "should include relevant user info" do
     payload = serializer.as_json
     expect(payload[:email]).to eq(user.email)
-    expect(payload[:external_id]).to eq('12345')
+    expect(payload[:external_id]).to eq("12345")
   end
 
-  it 'should only include the required keys' do
+  it "should only include the required keys" do
     expect(serializer.as_json.keys).to contain_exactly(
       :id,
       :username,
@@ -73,7 +78,7 @@ RSpec.describe WebHookUserSerializer do
       :featured_user_badge_ids,
       :invited_by,
       :groups,
-      :user_option
+      :user_option,
     )
   end
 end

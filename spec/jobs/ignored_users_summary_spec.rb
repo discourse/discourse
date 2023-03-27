@@ -27,9 +27,7 @@ RSpec.describe Jobs::IgnoredUsersSummary do
 
     context "when no system message exists for the ignored users" do
       context "when threshold is not hit" do
-        before do
-          SiteSetting.ignored_users_count_message_threshold = 5
-        end
+        before { SiteSetting.ignored_users_count_message_threshold = 5 }
 
         it "does nothing" do
           subject
@@ -40,10 +38,13 @@ RSpec.describe Jobs::IgnoredUsersSummary do
       context "when threshold is hit" do
         it "creates a system message" do
           subject
-          posts = Post.joins(:topic).where(topics: {
-            archetype: Archetype.private_message,
-            subtype: TopicSubtype.system_message
-          })
+          posts =
+            Post.joins(:topic).where(
+              topics: {
+                archetype: Archetype.private_message,
+                subtype: TopicSubtype.system_message,
+              },
+            )
           expect(posts.count).to eq(2)
           expect(posts.find { |post| post.raw.include?(matt.username) }).to be_present
           expect(posts.find { |post| post.raw.include?(john.username) }).to be_present
@@ -53,9 +54,7 @@ RSpec.describe Jobs::IgnoredUsersSummary do
 
     context "when a system message already exists for the ignored users" do
       context "when threshold is not hit" do
-        before do
-          SiteSetting.ignored_users_count_message_threshold = 5
-        end
+        before { SiteSetting.ignored_users_count_message_threshold = 5 }
 
         it "does nothing" do
           subject

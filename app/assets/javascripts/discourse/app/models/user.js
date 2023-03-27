@@ -1,4 +1,5 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
+import { camelize } from "@ember/string";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import {
@@ -43,13 +44,32 @@ import Evented from "@ember/object/evented";
 import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
-import { hidePopup, showNextPopup, showPopup } from "discourse/lib/popup";
+import {
+  hideAllUserTips,
+  hideUserTip,
+  showNextUserTip,
+  showUserTip,
+} from "discourse/lib/user-tips";
+import { dependentKeyCompat } from "@ember/object/compat";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
   BACKUP_CODE: 2,
   SECURITY_KEY: 3,
 };
+
+const TEXT_SIZE_COOKIE_NAME = "text_size";
+const COOKIE_EXPIRY_DAYS = 365;
+
+export function extendTextSizeCookie() {
+  const currentValue = cookie(TEXT_SIZE_COOKIE_NAME);
+  if (currentValue) {
+    cookie(TEXT_SIZE_COOKIE_NAME, currentValue, {
+      path: "/",
+      expires: COOKIE_EXPIRY_DAYS,
+    });
+  }
+}
 
 const isForever = (dt) => moment().diff(dt, "years") < -100;
 
@@ -124,14 +144,64 @@ export function addSaveableUserOptionField(fieldName) {
   userOptionFields.push(fieldName);
 }
 
+function userOption(userOptionKey) {
+  return computed(`user_option.${userOptionKey}`, {
+    get(key) {
+      deprecated(
+        `Getting ${key} property of user object is deprecated. Use user_option object instead`,
+        {
+          id: "discourse.user.userOptions",
+          since: "2.9.0.beta12",
+          dropFrom: "3.0.0.beta1",
+        }
+      );
+
+      return this.get(`user_option.${key}`);
+    },
+
+    set(key, value) {
+      deprecated(
+        `Setting ${key} property of user object is deprecated. Use user_option object instead`,
+        {
+          id: "discourse.user.userOptions",
+          since: "2.9.0.beta12",
+          dropFrom: "3.0.0.beta1",
+        }
+      );
+
+      if (!this.user_option) {
+        this.set("user_option", {});
+      }
+
+      return this.set(`user_option.${key}`, value);
+    },
+  });
+}
+
 const User = RestModel.extend({
+  mailing_list_mode: userOption("mailing_list_mode"),
+  external_links_in_new_tab: userOption("external_links_in_new_tab"),
+  enable_quoting: userOption("enable_quoting"),
+  dynamic_favicon: userOption("dynamic_favicon"),
+  automatically_unpin_topics: userOption("automatically_unpin_topics"),
+  likes_notifications_disabled: userOption("likes_notifications_disabled"),
+  hide_profile_and_presence: userOption("hide_profile_and_presence"),
+  title_count_mode: userOption("title_count_mode"),
+  enable_defer: userOption("enable_defer"),
+  timezone: userOption("timezone"),
+  skip_new_user_tips: userOption("skip_new_user_tips"),
+  default_calendar: userOption("default_calendar"),
+  bookmark_auto_delete_preference: userOption(
+    "bookmark_auto_delete_preference"
+  ),
+  seen_popups: userOption("seen_popups"),
+  should_be_redirected_to_top: userOption("should_be_redirected_to_top"),
+  redirected_to_top: userOption("redirected_to_top"),
+  treat_as_new_topic_start_date: userOption("treat_as_new_topic_start_date"),
+
   hasPMs: gt("private_messages_stats.all", 0),
   hasStartedPMs: gt("private_messages_stats.mine", 0),
   hasUnreadPMs: gt("private_messages_stats.unread", 0),
-
-  redirected_to_top: {
-    reason: null,
-  },
 
   @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
@@ -298,9 +368,9 @@ const User = RestModel.extend({
   },
 
   isBasic: equal("trust_level", 0),
-  isLeader: equal("trust_level", 3),
-  isElder: equal("trust_level", 4),
-  canManageTopic: or("staff", "isElder"),
+  isRegular: equal("trust_level", 3),
+  isLeader: equal("trust_level", 4),
+  canManageTopic: or("staff", "isLeader"),
 
   @discourseComputed("previous_visit_at")
   previousVisitAt(previous_visit_at) {
@@ -337,19 +407,9 @@ const User = RestModel.extend({
     });
   },
 
+  sidebarSections: alias("sidebar_sections"),
+
   sidebarTagNames: mapBy("sidebarTags", "name"),
-
-  @discourseComputed("sidebar_category_ids.[]")
-  sidebarCategories(sidebarCategoryIds) {
-    if (!sidebarCategoryIds || sidebarCategoryIds.length === 0) {
-      return [];
-    }
-
-    return Site.current().categoriesList.filter((category) =>
-      sidebarCategoryIds.includes(category.id)
-    );
-  },
-
   sidebarListDestination: readOnly("sidebar_list_destination"),
 
   changeUsername(new_username) {
@@ -382,38 +442,33 @@ const User = RestModel.extend({
       userFields.filter((uf) => !fields || fields.includes(uf))
     );
 
-    let filteredUserOptionFields = [];
-    if (fields) {
-      filteredUserOptionFields = userOptionFields.filter((uo) =>
-        fields.includes(uo)
-      );
-    } else {
-      filteredUserOptionFields = userOptionFields;
-    }
+    const filteredUserOptionFields = fields
+      ? userOptionFields.filter((uo) => fields.includes(uo))
+      : userOptionFields;
 
     filteredUserOptionFields.forEach((s) => {
       data[s] = this.get(`user_option.${s}`);
     });
 
-    let updatedState = {};
+    const updatedState = {};
 
     ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
-      (s) => {
-        if (fields === undefined || fields.includes(s + "_category_ids")) {
-          let prop =
-            s === "watched_first_post"
-              ? "watchedFirstPostCategories"
-              : s + "Categories";
-          let cats = this.get(prop);
-          if (cats) {
-            let cat_ids = cats.map((c) => c.get("id"));
-            updatedState[s + "_category_ids"] = cat_ids;
+      (categoryNotificationLevel) => {
+        if (
+          fields === undefined ||
+          fields.includes(`${categoryNotificationLevel}_category_ids`)
+        ) {
+          const categories = this.get(
+            `${camelize(categoryNotificationLevel)}Categories`
+          );
 
-            // HACK: denote lack of categories
-            if (cats.length === 0) {
-              cat_ids = [-1];
-            }
-            data[s + "_category_ids"] = cat_ids;
+          if (categories) {
+            const ids = categories.map((c) => c.get("id"));
+            updatedState[`${categoryNotificationLevel}_category_ids`] = ids;
+            // HACK: Empty arrays are not sent in the request, we use [-1],
+            // an invalid category ID, that will be ignored by the server.
+            data[`${categoryNotificationLevel}_category_ids`] =
+              ids.length === 0 ? [-1] : ids;
           }
         }
       }
@@ -436,10 +491,6 @@ const User = RestModel.extend({
       }
     });
 
-    return this._saveUserData(data, updatedState);
-  },
-
-  _saveUserData(data, updatedState) {
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
@@ -447,16 +498,8 @@ const User = RestModel.extend({
       type: "PUT",
     })
       .then((result) => {
-        this.set("bio_excerpt", result.user.bio_excerpt);
-        const userProps = getProperties(
-          this.user_option,
-          "enable_quoting",
-          "enable_defer",
-          "external_links_in_new_tab",
-          "dynamic_favicon"
-        );
-        User.current()?.setProperties(userProps);
         this.setProperties(updatedState);
+        this.setProperties(getProperties(result.user, "bio_excerpt"));
         return result;
       })
       .finally(() => {
@@ -640,6 +683,8 @@ const User = RestModel.extend({
     return filteredGroups.length > numGroupsToDisplay;
   },
 
+  // NOTE: This only includes groups *visible* to the user via the serializer,
+  // so be wary when using this.
   isInAnyGroups(groupIds) {
     if (!this.groups) {
       return;
@@ -802,29 +847,59 @@ const User = RestModel.extend({
     });
   },
 
-  @discourseComputed("muted_category_ids")
-  mutedCategories(mutedCategoryIds) {
-    return Category.findByIds(mutedCategoryIds);
+  @dependentKeyCompat
+  get mutedCategories() {
+    return Category.findByIds(this.get("muted_category_ids"));
+  },
+  set mutedCategories(categories) {
+    this.set(
+      "muted_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("regular_category_ids")
-  regularCategories(regularCategoryIds) {
-    return Category.findByIds(regularCategoryIds);
+  @dependentKeyCompat
+  get regularCategories() {
+    return Category.findByIds(this.get("regular_category_ids"));
+  },
+  set regularCategories(categories) {
+    this.set(
+      "regular_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("tracked_category_ids")
-  trackedCategories(trackedCategoryIds) {
-    return Category.findByIds(trackedCategoryIds);
+  @dependentKeyCompat
+  get trackedCategories() {
+    return Category.findByIds(this.get("tracked_category_ids"));
+  },
+  set trackedCategories(categories) {
+    this.set(
+      "tracked_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("watched_category_ids")
-  watchedCategories(watchedCategoryIds) {
-    return Category.findByIds(watchedCategoryIds);
+  @dependentKeyCompat
+  get watchedCategories() {
+    return Category.findByIds(this.get("watched_category_ids"));
+  },
+  set watchedCategories(categories) {
+    this.set(
+      "watched_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("watched_first_post_category_ids")
-  watchedFirstPostCategories(watchedFirstPostCategoryIds) {
-    return Category.findByIds(watchedFirstPostCategoryIds);
+  @dependentKeyCompat
+  get watchedFirstPostCategories() {
+    return Category.findByIds(this.get("watched_first_post_category_ids"));
+  },
+  set watchedFirstPostCategories(categories) {
+    this.set(
+      "watched_first_post_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
   @discourseComputed("can_delete_account")
@@ -993,8 +1068,8 @@ const User = RestModel.extend({
 
   @discourseComputed("user_option.text_size_seq", "user_option.text_size")
   currentTextSize(serverSeq, serverSize) {
-    if (cookie("text_size")) {
-      const [cookieSize, cookieSeq] = cookie("text_size").split("|");
+    if (cookie(TEXT_SIZE_COOKIE_NAME)) {
+      const [cookieSize, cookieSeq] = cookie(TEXT_SIZE_COOKIE_NAME).split("|");
       if (cookieSeq >= serverSeq) {
         return cookieSize;
       }
@@ -1005,12 +1080,12 @@ const User = RestModel.extend({
   updateTextSizeCookie(newSize) {
     if (newSize) {
       const seq = this.get("user_option.text_size_seq");
-      cookie("text_size", `${newSize}|${seq}`, {
+      cookie(TEXT_SIZE_COOKIE_NAME, `${newSize}|${seq}`, {
         path: "/",
-        expires: 9999,
+        expires: COOKIE_EXPIRY_DAYS,
       });
     } else {
-      removeCookie("text_size", { path: "/", expires: 1 });
+      removeCookie(TEXT_SIZE_COOKIE_NAME, { path: "/" });
     }
   },
 
@@ -1023,9 +1098,17 @@ const User = RestModel.extend({
     );
   },
 
-  // obsolete, just call "user.timezone" instead
   resolvedTimezone() {
-    return this.timezone;
+    deprecated(
+      "user.resolvedTimezone() has been deprecated. Use user.user_option.timezone instead",
+      {
+        id: "discourse.user.resolved-timezone",
+        since: "2.9.0.beta12",
+        dropFrom: "3.0.0.beta1",
+      }
+    );
+
+    return this.user_option.timezone;
   },
 
   calculateMutedIds(notificationLevel, id, type) {
@@ -1094,72 +1177,78 @@ const User = RestModel.extend({
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
   },
 
-  @discourseComputed("staff", "groups.[]")
-  allowPersonalMessages() {
-    return (
-      this.staff ||
-      this.isInAnyGroups(
-        this.siteSettings.personal_message_enabled_groups
-          .split("|")
-          .map((groupId) => parseInt(groupId, 10))
-      )
-    );
-  },
-
-  showPopup(options) {
-    const popupTypes = Site.currentProp("onboarding_popup_types");
-    if (!popupTypes[options.id]) {
-      // eslint-disable-next-line no-console
-      console.warn("Cannot display popup with type =", options.id);
+  showUserTip(options) {
+    const userTips = Site.currentProp("user_tips");
+    if (!userTips || this.user_option?.skip_new_user_tips) {
       return;
     }
 
-    const seenPopups = this.seen_popups || [];
-    if (seenPopups.includes(popupTypes[options.id])) {
+    if (!userTips[options.id]) {
+      if (!isTesting()) {
+        // eslint-disable-next-line no-console
+        console.warn("Cannot show user tip with type =", options.id);
+      }
       return;
     }
 
-    showPopup({
+    const seenUserTips = this.user_option?.seen_popups || [];
+    if (
+      seenUserTips.includes(-1) ||
+      seenUserTips.includes(userTips[options.id])
+    ) {
+      return;
+    }
+
+    showUserTip({
       ...options,
-      onDismiss: () => this.hidePopupForever(options.id),
-      onDismissAll: () => this.hidePopupForever(),
+      onDismiss: () => this.hideUserTipForever(options.id),
+      onDismissAll: () => this.hideUserTipForever(),
     });
   },
 
-  hidePopupForever(popupId) {
-    // Empty popupId means all popups.
-    const popupTypes = Site.currentProp("onboarding_popup_types");
-    if (popupId && !popupTypes[popupId]) {
-      // eslint-disable-next-line no-console
-      console.warn("Cannot hide popup with type =", popupId);
+  hideUserTipForever(userTipId) {
+    const userTips = Site.currentProp("user_tips");
+    if (!userTips || this.user_option?.skip_new_user_tips) {
       return;
     }
 
-    // Hide any shown popups.
-    let seenPopups = this.seen_popups || [];
-    if (popupId) {
-      hidePopup(popupId);
-      if (!seenPopups.includes(popupTypes[popupId])) {
-        seenPopups.push(popupTypes[popupId]);
-      }
-    } else {
-      Object.keys(popupTypes).forEach(hidePopup);
-      seenPopups = Object.values(popupTypes);
+    // Empty userTipId means all user tips.
+    if (userTipId && !userTips[userTipId]) {
+      // eslint-disable-next-line no-console
+      console.warn("Cannot hide user tip with type =", userTipId);
+      return;
     }
 
-    // Show next popup in queue.
-    showNextPopup();
+    // Hide user tips and maybe show the next one.
+    if (userTipId) {
+      hideUserTip(userTipId);
+      showNextUserTip();
+    } else {
+      hideAllUserTips();
+    }
 
-    // Save seen popups on the server.
+    // Update list of seen user tips.
+    let seenUserTips = this.user_option?.seen_popups || [];
+    if (userTipId) {
+      if (seenUserTips.includes(userTips[userTipId])) {
+        return;
+      }
+      seenUserTips.push(userTips[userTipId]);
+    } else {
+      if (seenUserTips.includes(-1)) {
+        return;
+      }
+      seenUserTips = [-1];
+    }
+
+    // Save seen user tips on the server.
     if (!this.user_option) {
       this.set("user_option", {});
     }
-    this.set("seen_popups", seenPopups);
-    this.set("user_option.seen_popups", seenPopups);
-    if (popupId) {
+    this.set("user_option.seen_popups", seenUserTips);
+    if (userTipId) {
       return this.save(["seen_popups"]);
     } else {
-      this.set("skip_new_user_tips", true);
       this.set("user_option.skip_new_user_tips", true);
       return this.save(["seen_popups", "skip_new_user_tips"]);
     }
@@ -1188,8 +1277,8 @@ User.reopenClass(Singleton, {
         }
       }
 
-      if (!userJson.timezone) {
-        userJson.timezone = moment.tz.guess();
+      if (!userJson.user_option.timezone) {
+        userJson.user_option.timezone = moment.tz.guess();
         this._saveTimezone(userJson);
       }
 
@@ -1274,7 +1363,7 @@ User.reopenClass(Singleton, {
     ajax(userPath(user.username + ".json"), {
       type: "PUT",
       dataType: "json",
-      data: { timezone: user.timezone },
+      data: { timezone: user.user_option.timezone },
     });
   },
 });
@@ -1393,6 +1482,7 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the User class instead of using Discourse.User", {
           since: "2.4.0",
+          id: "discourse.globals.user",
         });
         warned = true;
       }

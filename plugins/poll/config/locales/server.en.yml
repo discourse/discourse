@@ -37,7 +37,7 @@ en:
 
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "You cannot change a poll after the first %{minutes} minutes."
-      cannot_edit_named_poll_with_votes: "You cannot change the poll name <strong>${name}</strong> after the first %{minutes} minutes."
+      cannot_edit_named_poll_with_votes: "You cannot change the poll named <strong>${name}</strong> after the first %{minutes} minutes."
 
     no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."
 

@@ -1,0 +1,54 @@
+{{#if this.showBackupStats}}
+  <div class="backups">
+    <h3 class="storage-stats-title">
+      <a href={{get-url "/admin/backups"}}>{{d-icon "archive"}}
+        {{i18n "admin.dashboard.backups"}}</a>
+    </h3>
+    <p>
+      {{#if this.backupStats.free_bytes}}
+        {{i18n
+          "admin.dashboard.space_used_and_free"
+          usedSize=this.usedBackupSpace
+          freeSize=this.freeBackupSpace
+        }}
+      {{else}}
+        {{i18n "admin.dashboard.space_used" usedSize=this.usedBackupSpace}}
+      {{/if}}
+
+      <br />
+      {{i18n
+        "admin.dashboard.backup_count"
+        count=this.backupStats.count
+        location=this.backupLocationName
+      }}
+
+      {{#if this.backupStats.last_backup_taken_at}}
+        <br />
+        {{html-safe
+          (i18n
+            "admin.dashboard.lastest_backup"
+            date=(format-date
+              this.backupStats.last_backup_taken_at leaveAgo="true"
+            )
+          )
+        }}
+      {{/if}}
+    </p>
+  </div>
+{{/if}}
+
+<div class="uploads">
+  <h3 class="storage-stats-title">{{d-icon "upload"}}
+    {{i18n "admin.dashboard.uploads"}}</h3>
+  <p>
+    {{#if this.uploadStats.free_bytes}}
+      {{i18n
+        "admin.dashboard.space_used_and_free"
+        usedSize=this.usedUploadSpace
+        freeSize=this.freeUploadSpace
+      }}
+    {{else}}
+      {{i18n "admin.dashboard.space_used" usedSize=this.usedUploadSpace}}
+    {{/if}}
+  </p>
+</div>

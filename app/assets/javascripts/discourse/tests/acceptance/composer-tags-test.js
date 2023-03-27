@@ -18,6 +18,7 @@ acceptance("Composer - Tags", function (needs) {
     });
   });
   needs.site({ can_tag_topics: true });
+  needs.settings({ allow_uncategorized_topics: true });
 
   test("staff bypass tag validation rule", async function (assert) {
     await visit("/");

@@ -6,13 +6,13 @@ RSpec.describe Jobs::ReindexSearch do
     Jobs.run_immediately!
   end
 
-  let(:locale) { 'fr' }
+  let(:locale) { "fr" }
   # This works since test db has a small record less than limit.
   # Didn't check `topic` because topic doesn't have posts in fabrication
   # thus no search data
-  %w(post category user).each do |m|
+  %w[post category user].each do |m|
     it "should rebuild `#{m}` when default_locale changed" do
-      SiteSetting.default_locale = 'en'
+      SiteSetting.default_locale = "en"
       model = Fabricate(m.to_sym)
       SiteSetting.default_locale = locale
       subject.execute({})
@@ -27,12 +27,13 @@ RSpec.describe Jobs::ReindexSearch do
       model.reload
 
       subject.execute({})
-      expect(model.public_send("#{m}_search_data").version)
-        .to eq("SearchIndexer::#{m.upcase}_INDEX_VERSION".constantize)
+      expect(model.public_send("#{m}_search_data").version).to eq(
+        "SearchIndexer::#{m.upcase}_INDEX_VERSION".constantize,
+      )
     end
   end
 
-  describe 'rebuild_posts' do
+  describe "rebuild_posts" do
     class FakeIndexer
       def self.index(post, force:)
         get_posts.push(post)
@@ -53,9 +54,7 @@ RSpec.describe Jobs::ReindexSearch do
       end
     end
 
-    after do
-      FakeIndexer.reset
-    end
+    after { FakeIndexer.reset }
 
     it "should not reindex posts that belong to a deleted topic or have been trashed" do
       post = Fabricate(:post)
@@ -70,22 +69,19 @@ RSpec.describe Jobs::ReindexSearch do
       expect(FakeIndexer.posts).to contain_exactly(post)
     end
 
-    it 'should not reindex posts with a developmental version' do
-      post = Fabricate(:post, version: SearchIndexer::MIN_POST_REINDEX_VERSION + 1)
+    it "should not reindex posts with a developmental version" do
+      Fabricate(:post, version: SearchIndexer::POST_INDEX_VERSION + 1)
 
       subject.rebuild_posts(indexer: FakeIndexer)
 
       expect(FakeIndexer.posts).to eq([])
     end
 
-    it 'should not reindex posts with empty raw' do
+    it "should not reindex posts with empty raw" do
       post = Fabricate(:post)
       post.post_search_data.destroy!
 
-      post2 = Fabricate.build(:post,
-        raw: "",
-        post_type: Post.types[:small_action]
-      )
+      post2 = Fabricate.build(:post, raw: "", post_type: Post.types[:small_action])
 
       post2.save!(validate: false)
 
@@ -95,7 +91,7 @@ RSpec.describe Jobs::ReindexSearch do
     end
   end
 
-  describe '#execute' do
+  describe "#execute" do
     it "should clean up topic_search_data of trashed topics" do
       topic = Fabricate(:post).topic
       topic2 = Fabricate(:post).topic
@@ -107,9 +103,7 @@ RSpec.describe Jobs::ReindexSearch do
       expect { subject.execute({}) }.to change { TopicSearchData.count }.by(-1)
       expect(Topic.pluck(:id)).to contain_exactly(topic2.id)
 
-      expect(TopicSearchData.pluck(:topic_id)).to contain_exactly(
-        topic2.topic_search_data.topic_id
-      )
+      expect(TopicSearchData.pluck(:topic_id)).to contain_exactly(topic2.topic_search_data.topic_id)
     end
 
     it "should clean up post_search_data of posts with empty raw or posts from trashed topics" do
@@ -132,13 +126,9 @@ RSpec.describe Jobs::ReindexSearch do
 
       expect { subject.execute({}) }.to change { PostSearchData.count }.by(-3)
 
-      expect(Post.pluck(:id)).to contain_exactly(
-        post.id, post2.id, post3.id, post4.id, post5.id
-      )
+      expect(Post.pluck(:id)).to contain_exactly(post.id, post2.id, post3.id, post4.id, post5.id)
 
-      expect(PostSearchData.pluck(:post_id)).to contain_exactly(
-        post.id, post3.id, post5.id
-      )
+      expect(PostSearchData.pluck(:post_id)).to contain_exactly(post.id, post3.id, post5.id)
     end
   end
 end

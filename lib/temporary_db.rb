@@ -15,7 +15,7 @@ class TemporaryDb
   def pg_bin_path
     return @pg_bin_path if @pg_bin_path
 
-    ["13", "12", "11", "10"].each do |v|
+    %w[13 12 11 10].each do |v|
       bin_path = "/usr/lib/postgresql/#{v}/bin"
       if File.exist?("#{bin_path}/pg_ctl")
         @pg_bin_path = bin_path
@@ -24,9 +24,7 @@ class TemporaryDb
     end
     if !@pg_bin_path
       bin_path = "/Applications/Postgres.app/Contents/Versions/latest/bin"
-      if File.exist?("#{bin_path}/pg_ctl")
-        @pg_bin_path = bin_path
-      end
+      @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
     end
     if !@pg_bin_path
       puts "Can not find postgres bin path"
@@ -39,30 +37,24 @@ class TemporaryDb
     return @initdb_path if @initdb_path
 
     @initdb_path = `which initdb 2> /dev/null`.strip
-    if @initdb_path.length == 0
-      @initdb_path = "#{pg_bin_path}/initdb"
-    end
+    @initdb_path = "#{pg_bin_path}/initdb" if @initdb_path.length == 0
 
     @initdb_path
   end
 
   def find_free_port(range)
-    range.each do |port|
-      return port if port_available?(port)
-    end
+    range.each { |port| return port if port_available?(port) }
   end
 
   def pg_port
-    @pg_port ||= find_free_port(11000..11900)
+    @pg_port ||= find_free_port(11_000..11_900)
   end
 
   def pg_ctl_path
     return @pg_ctl_path if @pg_ctl_path
 
     @pg_ctl_path = `which pg_ctl 2> /dev/null`.strip
-    if @pg_ctl_path.length == 0
-      @pg_ctl_path = "#{pg_bin_path}/pg_ctl"
-    end
+    @pg_ctl_path = "#{pg_bin_path}/pg_ctl" if @pg_ctl_path.length == 0
 
     @pg_ctl_path
   end
@@ -76,16 +68,12 @@ class TemporaryDb
     File.write(PG_CONF, conf + "\nport = #{pg_port}\nunix_socket_directories = '#{PG_SOCK_PATH}'")
 
     puts "Starting postgres on port: #{pg_port}"
-    ENV['DISCOURSE_PG_PORT'] = pg_port.to_s
+    ENV["DISCOURSE_PG_PORT"] = pg_port.to_s
 
-    Thread.new do
-      `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' start`
-    end
+    Thread.new { `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' start` }
 
     puts "Waiting for PG server to start..."
-    while !`#{pg_ctl_path} -D '#{PG_TEMP_PATH}' status`.include?('server is running')
-      sleep 0.1
-    end
+    sleep 0.1 while !`#{pg_ctl_path} -D '#{PG_TEMP_PATH}' status`.include?("server is running")
     @started = true
 
     `createuser -h localhost -p #{pg_port} -s -D -w discourse 2> /dev/null`
@@ -127,22 +115,20 @@ class TemporaryDb
   end
 
   def migrate
-    if !@started
-      raise "Error: the database must be started before it can be migrated."
-    end
+    raise "Error: the database must be started before it can be migrated." if !@started
     ActiveRecord::Base.establish_connection(
-      adapter: 'postgresql',
-      database: 'discourse',
+      adapter: "postgresql",
+      database: "discourse",
       port: pg_port,
-      host: 'localhost'
+      host: "localhost",
     )
 
     puts "Running migrations on blank database!"
 
     old_stdout = $stdout.clone
     old_stderr = $stderr.clone
-    $stdout.reopen(File.new('/dev/null', 'w'))
-    $stderr.reopen(File.new('/dev/null', 'w'))
+    $stdout.reopen(File.new("/dev/null", "w"))
+    $stderr.reopen(File.new("/dev/null", "w"))
 
     SeedFu.quiet = true
     Rake::Task["db:migrate"].invoke

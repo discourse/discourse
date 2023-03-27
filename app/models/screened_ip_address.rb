@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
-require 'screening_model'
+require "screening_model"
 
 # A ScreenedIpAddress record represents an IP address or subnet that is being watched,
 # and possibly blocked from creating accounts.
 class ScreenedIpAddress < ActiveRecord::Base
-
   include ScreeningModel
 
   default_action :block
 
   validates :ip_address, ip_address_format: true, presence: true
-  after_validation :check_for_match
+  after_validation :check_for_match, if: :will_save_change_to_ip_address?
 
   ROLLED_UP_BLOCKS = [
     # IPv4
@@ -25,7 +24,8 @@ class ScreenedIpAddress < ActiveRecord::Base
   ]
 
   def self.watch(ip_address, opts = {})
-    match_for_ip_address(ip_address) || create(opts.slice(:action_type).merge(ip_address: ip_address))
+    match_for_ip_address(ip_address) ||
+      create(opts.slice(:action_type).merge(ip_address: ip_address))
   end
 
   def check_for_match
@@ -60,8 +60,8 @@ class ScreenedIpAddress < ActiveRecord::Base
 
     write_attribute(:ip_address, v)
 
-  # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
-  # handle both exceptions
+    # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
+    # handle both exceptions
   rescue ArgumentError, IPAddr::InvalidAddressError
     self.errors.add(:ip_address, :invalid)
   end
@@ -79,7 +79,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     #   http://www.postgresql.org/docs/9.1/static/datatype-net-types.html
     #   http://www.postgresql.org/docs/9.1/static/functions-net.html
     ip_address = IPAddr === ip_address ? ip_address.to_cidr_s : ip_address.to_s
-    order('masklen(ip_address) DESC').find_by("? <<= ip_address", ip_address)
+    order("masklen(ip_address) DESC").find_by("? <<= ip_address", ip_address)
   end
 
   def self.should_block?(ip_address)
@@ -134,31 +134,33 @@ class ScreenedIpAddress < ActiveRecord::Base
 
   def self.roll_up(current_user = Discourse.system_user)
     ROLLED_UP_BLOCKS.each do |family, from_masklen, to_masklen|
-      ScreenedIpAddress.subnets(family, from_masklen, to_masklen).map do |subnet|
-        next if ScreenedIpAddress.where("? <<= ip_address", subnet).exists?
+      ScreenedIpAddress
+        .subnets(family, from_masklen, to_masklen)
+        .map do |subnet|
+          next if ScreenedIpAddress.where("? <<= ip_address", subnet).exists?
 
-        old_ips = ScreenedIpAddress
-          .where(action_type: ScreenedIpAddress.actions[:block])
-          .where("ip_address << ?", subnet)
-          .where("family(ip_address) = ?", family)
-          .where("masklen(ip_address) IN (?)", from_masklen)
+          old_ips =
+            ScreenedIpAddress
+              .where(action_type: ScreenedIpAddress.actions[:block])
+              .where("ip_address << ?", subnet)
+              .where("family(ip_address) = ?", family)
+              .where("masklen(ip_address) IN (?)", from_masklen)
 
-        sum_match_count, max_last_match_at, min_created_at =
-          old_ips.pluck_first('SUM(match_count), MAX(last_match_at), MIN(created_at)')
+          sum_match_count, max_last_match_at, min_created_at =
+            old_ips.pick("SUM(match_count), MAX(last_match_at), MIN(created_at)")
 
-        ScreenedIpAddress.create!(
-          ip_address: subnet,
-          match_count: sum_match_count,
-          last_match_at: max_last_match_at,
-          created_at: min_created_at,
-        )
+          ScreenedIpAddress.create!(
+            ip_address: subnet,
+            match_count: sum_match_count,
+            last_match_at: max_last_match_at,
+            created_at: min_created_at,
+          )
 
-        StaffActionLogger.new(current_user).log_roll_up(subnet, old_ips.map(&:ip_address))
-        old_ips.delete_all
-      end
+          StaffActionLogger.new(current_user).log_roll_up(subnet, old_ips.map(&:ip_address))
+          old_ips.delete_all
+        end
     end
   end
-
 end
 
 # == Schema Information

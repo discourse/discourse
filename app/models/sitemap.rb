@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Sitemap < ActiveRecord::Base
-  RECENT_SITEMAP_NAME = 'recent'
-  NEWS_SITEMAP_NAME = 'news'
+  RECENT_SITEMAP_NAME = "recent"
+  NEWS_SITEMAP_NAME = "news"
 
   class << self
     def regenerate_sitemaps
@@ -26,10 +26,7 @@ class Sitemap < ActiveRecord::Base
 
     def touch(name)
       find_or_initialize_by(name: name).tap do |sitemap|
-        sitemap.update!(
-          last_posted_at: sitemap.last_posted_topic || 3.days.ago,
-          enabled: true
-        )
+        sitemap.update!(last_posted_at: sitemap.last_posted_topic || 3.days.ago, enabled: true)
       end
     end
   end
@@ -55,15 +52,13 @@ class Sitemap < ActiveRecord::Base
   private
 
   def sitemap_topics
-    indexable_topics = Topic
-      .where(visible: true)
-      .joins(:category)
-      .where(categories: { read_restricted: false })
+    indexable_topics =
+      Topic.where(visible: true).joins(:category).where(categories: { read_restricted: false })
 
     if name == RECENT_SITEMAP_NAME
-      indexable_topics.where('bumped_at > ?', 3.days.ago).order(bumped_at: :desc)
+      indexable_topics.where("bumped_at > ?", 3.days.ago).order(bumped_at: :desc)
     elsif name == NEWS_SITEMAP_NAME
-      indexable_topics.where('bumped_at > ?', 72.hours.ago).order(bumped_at: :desc)
+      indexable_topics.where("bumped_at > ?", 72.hours.ago).order(bumped_at: :desc)
     else
       offset = (name.to_i - 1) * max_page_size
 

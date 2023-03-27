@@ -43,9 +43,8 @@
 
 .category-boxes,
 .category-boxes-with-topics {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  display: grid;
+  gap: 1.5em;
   margin-top: 1em;
   margin-bottom: 1em;
   width: 100%;
@@ -117,9 +116,8 @@
 }
 
 .category-boxes {
+  grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
   .category-box {
-    width: 23%;
-    margin: 0 1% 1.5em 1%;
     > a {
       width: 100%;
       padding: 0;
@@ -253,9 +251,8 @@
 }
 
 .category-boxes-with-topics {
+  grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
   .category-box {
-    width: 31%;
-    margin: 0 1% 1.5em 1%;
     padding: 0;
   }
 
@@ -275,6 +272,9 @@
 
   .featured-topics {
     margin-bottom: 1em;
+    // we absolutely position the parent category's link so the whole box is clickable
+    // to prevent this covering topic links, we need to raise the z-index
+    z-index: 1;
     ul {
       color: var(--primary-medium);
       list-style: none;

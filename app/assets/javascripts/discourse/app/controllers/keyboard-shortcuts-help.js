@@ -194,6 +194,10 @@ export default Controller.extend(ModalFunctionality, {
             keys1: [SHIFT, "F11"],
             keysDelimiter: PLUS,
           }),
+          insertCurrentTime: buildShortcut("composing.insert_current_time", {
+            keys1: [META, SHIFT, "."],
+            keysDelimiter: PLUS,
+          }),
         },
       },
       bookmarks: {
@@ -201,35 +205,27 @@ export default Controller.extend(ModalFunctionality, {
           enter: buildShortcut("bookmarks.enter", { keys1: [ENTER] }),
           later_today: buildShortcut("bookmarks.later_today", {
             keys1: ["l", "t"],
-            shortcutsDelimiter: "space",
           }),
           later_this_week: buildShortcut("bookmarks.later_this_week", {
             keys1: ["l", "w"],
-            shortcutsDelimiter: "space",
           }),
           tomorrow: buildShortcut("bookmarks.tomorrow", {
             keys1: ["n", "d"],
-            shortcutsDelimiter: "space",
           }),
           next_business_week: buildShortcut("bookmarks.next_business_week", {
             keys1: ["n", "b", "w"],
-            shortcutsDelimiter: "space",
           }),
           next_business_day: buildShortcut("bookmarks.next_business_day", {
             keys1: ["n", "b", "d"],
-            shortcutsDelimiter: "space",
           }),
           custom: buildShortcut("bookmarks.custom", {
             keys1: ["c", "r"],
-            shortcutsDelimiter: "space",
           }),
           none: buildShortcut("bookmarks.none", {
             keys1: ["n", "r"],
-            shortcutsDelimiter: "space",
           }),
           delete: buildShortcut("bookmarks.delete", {
             keys1: ["d", "d"],
-            shortcutsDelimiter: "space",
           }),
         },
       },
@@ -326,7 +322,7 @@ export default Controller.extend(ModalFunctionality, {
       bookmarks: buildShortcut("jump_to.bookmarks", { keys1: ["g", "b"] }),
       profile: buildShortcut("jump_to.profile", { keys1: ["g", "p"] }),
     };
-    if (this.currentUser?.allowPersonalMessages) {
+    if (this.currentUser?.can_send_private_messages) {
       shortcuts.messages = buildShortcut("jump_to.messages", {
         keys1: ["g", "m"],
       });

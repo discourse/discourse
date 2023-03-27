@@ -1,0 +1,109 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    chat:
+      create: "Vytvoriť"
+      cancel: "Zrušiť"
+      channel_settings:
+        edit: "Upraviť"
+        add: "Pridať"
+        join: "Pridať sa"
+        leave: "Opustiť"
+      close: "Zavrieť"
+      delete: "Odstrániť"
+      muted: "ignorovaní"
+      joined: "vytvorený"
+      email_frequency:
+        never: "Nikdy"
+      header_indicator_preference:
+        never: "Nikdy"
+      flag: "Označenie"
+      join: "Pridať sa"
+      last_visit: "posledná návševa"
+      mention_warning:
+        dismiss: "zahodiť"
+      reply: "Odpoveď"
+      edit: "Upraviť"
+      rebake_message: "Pregenerovať HTML"
+      bookmark_message: "Záložka"
+      save: "Uložiť"
+      sounds:
+        none: "Žiadny"
+      exit: "späť"
+      channel_status:
+        closed: "Zatvorené"
+        open: "Zahájiť"
+      browse:
+        back: "Späť"
+        filter_all: Všetky
+        filter_closed: Zatvorené
+      chat_message_separator:
+        today: Dnes
+        yesterday: Včera
+      about_view:
+        title: Názov
+        name: Meno
+        description: Popis
+      channel_info:
+        back_to_channel: "Späť"
+        tabs:
+          about: O stránke
+          members: Členovia
+          settings: Nastavenia
+      direct_message_creator:
+        title: Nová správa
+        prefix: "Komu:"
+      create_channel:
+        type: "Typ"
+        types:
+          category: "Kategória"
+          topic: "Témy"
+      composer:
+        italic_text: "zdôraznený text"
+        bold_text: "výrazný text"
+      notification_levels:
+        never: "Nikdy"
+      settings:
+        follow: "Pridať sa"
+        followed: "Vytvorený"
+        notifications: "Upozornenia"
+        preview: "Ukážka"
+        save: "Uložiť"
+        saved: "Uložené"
+        unfollow: "Opustiť"
+        admin_title: "Admin"
+      incoming_webhooks:
+        back: "Späť"
+        description: "Popis"
+        delete: "Odstrániť"
+        emoji: "Emoji"
+        name: "Meno"
+        save: "Uložiť"
+        edit: "Upraviť"
+        system: "systém"
+        url: "URL"
+        username: "Používateľské meno"
+      selection:
+        cancel: "Zrušiť"
+        copy: "Kopírovať"
+        new_topic:
+          title: "Presuň na novú tému"
+        existing_topic:
+          title: "Presuň do existujúcej témy."
+      emoji_picker:
+        objects: "Objekty"
+        flags: "Označenia"
+      draft_channel_screen:
+        header: "Nová správa"
+        cancel: "Zrušiť"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Správa

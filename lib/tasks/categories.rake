@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-task "categories:move_topics", [:from_category, :to_category] => [:environment] do |_, args|
+task "categories:move_topics", %i[from_category to_category] => [:environment] do |_, args|
   from_category_id = args[:from_category]
   to_category_id = args[:to_category]
 
@@ -49,8 +49,10 @@ task "categories:list" => :environment do
   puts "-- -----------------"
   categories.each do |c|
     puts "#{c[0]} #{c[1]}"
-    Category.where(parent_category_id: c[0]).order(:slug).pluck(:id, :slug).each do |s|
-      puts "     #{s[0]} #{s[1]}"
-    end
+    Category
+      .where(parent_category_id: c[0])
+      .order(:slug)
+      .pluck(:id, :slug)
+      .each { |s| puts "     #{s[0]} #{s[1]}" }
   end
 end

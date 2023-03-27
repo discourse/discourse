@@ -13,24 +13,24 @@ tr_TR:
         yesterday: Dün %{time}
         countdown:
           passed: tarih geçti
-      title: Tarih/saat ekle
+      title: Tarih / saat ekleyin
       create:
         form:
           insert: Ekle
           advanced_mode: Gelişmiş mod
           simple_mode: Basit mod
-          format_description: "Tarihi kullanıcıya göstermek için kullanılan format. Saat dilimi adı için uzaklığı ve zz'yi göstermek için Z'yi kullanın."
-          timezones_title: Görüntülenecek zaman dilimleri
-          timezones_description: Saat dilimleri önizleme ve geri dönüş tarihlerini görüntülemek için kullanılacaktır.
-          recurring_title: Yinelenme
-          recurring_description: "Bu olayın ne kadar sürede tekrar edeceğini belirleyin.Bu seçeneği el ile düzenleyebilir veya aşağıdaki anahtarlardan birini kullanabilirsiniz: yıllar, aylar, haftalar, günler, saatler, dakikalar, saniyeler, milisaniyeler."
+          format_description: "Tarihi kullanıcıya göstermek için kullanılan format. Ofseti göstermek için Z ve saat dilimi adı için zz kullanın."
+          timezones_title: Gösterilecek saat dilimleri
+          timezones_description: Ön izleme ve geri dönüşte tarihleri göstermek için saat dilimleri kullanılır.
+          recurring_title: Tekrarlama
+          recurring_description: "Bir olayın tekrarlamasını tanımlayın. Form tarafından oluşturulan tekrarlama seçeneğini manuel olarak da düzenleyebilir ve şu anahtarlardan birini kullanabilirsiniz: yıl, çeyrek, ay, hafta, gün, saat, dakika, saniye, milisaniye."
           recurring_none: Tekrarlama yok
-          invalid_date: 'Geçersiz tarih: Tarih ve saatin doğru olduğundan emin olun!'
+          invalid_date: Geçersiz tarih, tarih ve saatin doğru olduğundan emin olun
           date_title: Tarih
           time_title: Saat
           format_title: Tarih formatı
           timezone: Saat dilimi
-          until: A kadar...
+          until: Şu zamana kadar...
           current_timezone: "Geçerli saat dilimi:"
           recurring:
             every_day: "Her gün"

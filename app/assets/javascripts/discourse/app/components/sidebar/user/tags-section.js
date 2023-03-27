@@ -1,5 +1,3 @@
-import I18n from "I18n";
-
 import { cached } from "@glimmer/tracking";
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
@@ -57,14 +55,6 @@ export default class SidebarUserTagsSection extends Component {
     return links;
   }
 
-  get noTagsText() {
-    const url = `/u/${this.currentUser.username}/preferences/sidebar`;
-
-    return `${I18n.t("sidebar.sections.tags.none")} <a href="${url}">${I18n.t(
-      "sidebar.sections.tags.click_to_get_started"
-    )}</a>`;
-  }
-
   /**
    * If a site has no default sidebar tags configured, show tags section if the user has personal sidebar tags configured.
    * Otherwise, hide the tags section from the sidebar for the user.
@@ -77,6 +67,10 @@ export default class SidebarUserTagsSection extends Component {
     } else {
       return this.currentUser.sidebarTags.length > 0;
     }
+  }
+
+  get shouldDisplayDefaultConfig() {
+    return this.currentUser.admin && !this.hasDefaultSidebarTags;
   }
 
   get hasDefaultSidebarTags() {

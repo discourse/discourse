@@ -4,6 +4,7 @@ import NavItem from "discourse/models/nav-item";
 import discourseComputed from "discourse-common/utils/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
 
 export default Component.extend(FilterModeMixin, {
@@ -157,7 +158,7 @@ export default Component.extend(FilterModeMixin, {
 
     clickCreateTopicButton() {
       if (this.categoryReadOnlyBanner && !this.hasDraft) {
-        this.dialog.alert(this.categoryReadOnlyBanner);
+        this.dialog.alert({ message: htmlSafe(this.categoryReadOnlyBanner) });
       } else {
         this.createTopic();
       }

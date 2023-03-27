@@ -1,0 +1,63 @@
+{{#if this.showWarningsWarning}}
+  <div class="alert alert-info">{{html-safe
+      (i18n "admin.user.warnings_list_warning")
+    }}</div>
+{{/if}}
+
+<UserNav::MessagesSecondaryNav>
+  <DNavigationItem
+    @route="userPrivateMessages.user.index"
+    @class="user-nav__messages-latest"
+    @model={{this.model}}
+    @ariaCurrentContext="subNav"
+  >
+    {{d-icon "envelope"}}
+    <span>{{i18n "categories.latest"}}</span>
+  </DNavigationItem>
+
+  <DNavigationItem
+    @route="userPrivateMessages.user.sent"
+    @class="user-nav__messages-sent"
+    @model={{this.model}}
+    @ariaCurrentContext="subNav"
+  >
+    {{d-icon "reply"}}
+    <span>{{i18n "user.messages.sent"}}</span>
+  </DNavigationItem>
+
+  {{#if this.viewingSelf}}
+    <DNavigationItem
+      @route="userPrivateMessages.user.new"
+      @class="user-nav__messages-new"
+      @model={{this.model}}
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "exclamation-circle"}}
+      <span>{{this.newLinkText}}</span>
+    </DNavigationItem>
+
+    <DNavigationItem
+      @route="userPrivateMessages.user.unread"
+      @class="user-nav__messages-unread"
+      @model={{this.model}}
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "plus-circle"}}
+      <span>{{this.unreadLinkText}}</span>
+    </DNavigationItem>
+
+  {{/if}}
+
+  <DNavigationItem
+    @route="userPrivateMessages.user.archive"
+    @class="user-nav__messages-archive"
+    @model={{this.model}}
+    @ariaCurrentContext="subNav"
+  >
+    {{d-icon "archive"}}
+    <span>{{i18n "user.messages.archive"}}</span>
+  </DNavigationItem>
+
+</UserNav::MessagesSecondaryNav>
+
+{{outlet}}

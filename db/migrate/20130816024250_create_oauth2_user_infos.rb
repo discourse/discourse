@@ -11,6 +11,6 @@ class CreateOauth2UserInfos < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :oauth2_user_infos, [:uid, :provider], unique: true
+    add_index :oauth2_user_infos, %i[uid provider], unique: true
   end
 end

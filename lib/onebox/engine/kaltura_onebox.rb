@@ -7,7 +7,7 @@ module Onebox
       include StandardEmbed
 
       always_https
-      matches_regexp(/^https?:\/\/[a-z0-9]+\.kaltura\.com\/id\/[a-zA-Z0-9]+/)
+      matches_regexp(%r{^https?://[a-z0-9]+\.kaltura\.com/id/[a-zA-Z0-9]+})
       requires_iframe_origins "https://*.kaltura.com"
 
       def preview_html

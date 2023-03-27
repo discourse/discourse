@@ -5,26 +5,28 @@ import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
 import { inject as service } from "@ember/service";
 import getUrl from "discourse-common/lib/get-url";
-import DiscourseURL from "discourse/lib/url";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import UserMenuNotificationsList from "./notifications-list";
+import UserMenuRepliesNotificationsList from "./replies-notifications-list";
+import UserMenuLikesNotificationsList from "./likes-notifications-list";
+import UserMenuMessagesList from "./messages-list";
+import UserMenuBookmarksList from "./bookmarks-list";
+import UserMenuReviewablesList from "./reviewables-list";
+import UserMenuProfileTabContent from "./profile-tab-content";
+import UserMenuOtherNotificationsList from "./other-notifications-list";
+import deprecated from "discourse-common/lib/deprecated";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const DEFAULT_TAB_ID = "all-notifications";
-const DEFAULT_PANEL_COMPONENT = "user-menu/notifications-list";
+const DEFAULT_PANEL_COMPONENT = UserMenuNotificationsList;
 
 const REVIEW_QUEUE_TAB_ID = "review-queue";
 
 const CORE_TOP_TABS = [
   class extends UserMenuTab {
-    get id() {
-      return DEFAULT_TAB_ID;
-    }
-
-    get icon() {
-      return "bell";
-    }
-
-    get panelComponent() {
-      return DEFAULT_PANEL_COMPONENT;
-    }
+    id = DEFAULT_TAB_ID;
+    icon = "bell";
+    panelComponent = DEFAULT_PANEL_COMPONENT;
 
     get linkWhenActive() {
       return `${this.currentUser.path}/notifications`;
@@ -32,36 +34,18 @@ const CORE_TOP_TABS = [
   },
 
   class extends UserMenuTab {
-    get id() {
-      return "replies";
-    }
-
-    get icon() {
-      return "reply";
-    }
-
-    get panelComponent() {
-      return "user-menu/replies-notifications-list";
-    }
+    id = "replies";
+    icon = "reply";
+    panelComponent = UserMenuRepliesNotificationsList;
+    notificationTypes = ["mentioned", "posted", "quoted", "replied"];
 
     get count() {
       return (
         this.getUnreadCountForType("mentioned") +
         this.getUnreadCountForType("posted") +
         this.getUnreadCountForType("quoted") +
-        this.getUnreadCountForType("replied") +
-        this.getUnreadCountForType("watching_first_post")
+        this.getUnreadCountForType("replied")
       );
-    }
-
-    get notificationTypes() {
-      return [
-        "mentioned",
-        "posted",
-        "quoted",
-        "replied",
-        "watching_first_post",
-      ];
     }
 
     get linkWhenActive() {
@@ -70,20 +54,12 @@ const CORE_TOP_TABS = [
   },
 
   class extends UserMenuTab {
-    get id() {
-      return "likes";
-    }
-
-    get icon() {
-      return "heart";
-    }
-
-    get panelComponent() {
-      return "user-menu/likes-notifications-list";
-    }
+    id = "likes";
+    icon = "heart";
+    panelComponent = UserMenuLikesNotificationsList;
 
     get shouldDisplay() {
-      return !this.currentUser.likes_notifications_disabled;
+      return !this.currentUser.user_option.likes_notifications_disabled;
     }
 
     get count() {
@@ -103,28 +79,17 @@ const CORE_TOP_TABS = [
   },
 
   class extends UserMenuTab {
-    get id() {
-      return "messages";
-    }
-
-    get icon() {
-      return "notification.private_message";
-    }
-
-    get panelComponent() {
-      return "user-menu/messages-list";
-    }
+    id = "messages";
+    icon = "notification.private_message";
+    panelComponent = UserMenuMessagesList;
+    notificationTypes = ["private_message", "group_message_summary"];
 
     get count() {
       return this.getUnreadCountForType("private_message");
     }
 
     get shouldDisplay() {
-      return this.currentUser?.allowPersonalMessages;
-    }
-
-    get notificationTypes() {
-      return ["private_message", "group_message_summary"];
+      return this.currentUser?.can_send_private_messages;
     }
 
     get linkWhenActive() {
@@ -133,24 +98,13 @@ const CORE_TOP_TABS = [
   },
 
   class extends UserMenuTab {
-    get id() {
-      return "bookmarks";
-    }
-
-    get icon() {
-      return NO_REMINDER_ICON;
-    }
-
-    get panelComponent() {
-      return "user-menu/bookmarks-list";
-    }
+    id = "bookmarks";
+    icon = NO_REMINDER_ICON;
+    panelComponent = UserMenuBookmarksList;
+    notificationTypes = ["bookmark_reminder"];
 
     get count() {
       return this.getUnreadCountForType("bookmark_reminder");
-    }
-
-    get notificationTypes() {
-      return ["bookmark_reminder"];
     }
 
     get linkWhenActive() {
@@ -159,17 +113,10 @@ const CORE_TOP_TABS = [
   },
 
   class extends UserMenuTab {
-    get id() {
-      return REVIEW_QUEUE_TAB_ID;
-    }
-
-    get icon() {
-      return "flag";
-    }
-
-    get panelComponent() {
-      return "user-menu/reviewables-list";
-    }
+    id = REVIEW_QUEUE_TAB_ID;
+    icon = "flag";
+    panelComponent = UserMenuReviewablesList;
+    linkWhenActive = getUrl("/review");
 
     get shouldDisplay() {
       return (
@@ -180,26 +127,14 @@ const CORE_TOP_TABS = [
     get count() {
       return this.currentUser.get("reviewable_count");
     }
-
-    get linkWhenActive() {
-      return getUrl("/review");
-    }
   },
 ];
 
 const CORE_BOTTOM_TABS = [
   class extends UserMenuTab {
-    get id() {
-      return "profile";
-    }
-
-    get icon() {
-      return "user";
-    }
-
-    get panelComponent() {
-      return "user-menu/profile-tab-content";
-    }
+    id = "profile";
+    icon = "user";
+    panelComponent = UserMenuProfileTabContent;
 
     get linkWhenActive() {
       return `${this.currentUser.path}/summary`;
@@ -208,21 +143,13 @@ const CORE_BOTTOM_TABS = [
 ];
 
 const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
+  id = "other-notifications";
+  icon = "discourse-other-tab";
+  panelComponent = UserMenuOtherNotificationsList;
+
   constructor(currentUser, siteSettings, site, otherNotificationTypes) {
     super(...arguments);
     this.otherNotificationTypes = otherNotificationTypes;
-  }
-
-  get id() {
-    return "other-notifications";
-  }
-
-  get icon() {
-    return "discourse-other-tab";
-  }
-
-  get panelComponent() {
-    return "user-menu/other-notifications-list";
   }
 
   get count() {
@@ -235,6 +162,18 @@ const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
     return this.otherNotificationTypes;
   }
 };
+
+function resolvePanelComponent(owner, panelComponent) {
+  if (typeof panelComponent === "string") {
+    const nameForConsole = JSON.stringify(panelComponent);
+    deprecated(
+      `user-menu tab panelComponent must be passed as a component class (passed ${nameForConsole})`,
+      { id: "discourse.user-menu.panel-component-class" }
+    );
+    return owner.resolveRegistration(`component:${panelComponent}`);
+  }
+  return panelComponent;
+}
 
 export default class UserMenu extends Component {
   @service currentUser;
@@ -321,14 +260,20 @@ export default class UserMenu extends Component {
   }
 
   @action
-  handleTabClick(tab) {
-    if (this.currentTabId !== tab.id) {
-      this.currentTabId = tab.id;
-      this.currentPanelComponent = tab.panelComponent;
-      this.currentNotificationTypes = tab.notificationTypes;
-    } else if (tab.linkWhenActive) {
-      DiscourseURL.routeTo(tab.linkWhenActive);
+  handleTabClick(tab, event) {
+    if (wantsNewWindow(event) || this.currentTabId === tab.id) {
+      // Allow normal navigation to href
+      return;
     }
+
+    event.preventDefault();
+
+    this.currentTabId = tab.id;
+    this.currentPanelComponent = resolvePanelComponent(
+      getOwner(this),
+      tab.panelComponent
+    );
+    this.currentNotificationTypes = tab.notificationTypes;
   }
 
   @action

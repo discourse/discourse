@@ -1,10 +1,11 @@
 import LinkLookup from "discourse/lib/link-lookup";
 import { module, test } from "qunit";
-import Post from "discourse/models/post";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Unit | Utility | link-lookup", function (hooks) {
   hooks.beforeEach(function () {
-    this.post = Post.create();
+    const store = getOwner(this).lookup("service:store");
+    this.post = store.createRecord("post");
     this.linkLookup = new LinkLookup({
       "en.wikipedia.org/wiki/handheld_game_console": {
         post_number: 1,

@@ -1,0 +1,36 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  chat:
+    deleted_chat_username: șters
+    errors:
+      not_accepting_dms: "%{username} nu acceptă mesaje în acest moment."
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "Suspendă Utilizator"
+        agree_and_silence:
+          title: "Suspendă utilizatorul"
+        disagree:
+          title: "Nu sunt de acord"
+        ignore:
+          title: "Ignoră"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} te-a menționat în discuția "%{channel}"'
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  unsubscribe:
+    chat_summary:
+      never: Niciodată

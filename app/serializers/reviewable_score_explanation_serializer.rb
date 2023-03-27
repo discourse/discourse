@@ -10,6 +10,6 @@ class ReviewableScoreExplanationSerializer < ApplicationSerializer
     :flags_disagreed,
     :flags_ignored,
     :user_accuracy_bonus,
-    :score
+    :score,
   )
 end
