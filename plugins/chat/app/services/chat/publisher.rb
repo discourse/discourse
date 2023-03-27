@@ -129,13 +129,37 @@ module Chat
     end
 
     def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
-      data = { chat_channel_id: chat_channel_id, chat_message_id: chat_message_id }.merge(
-        Chat::ChannelUnreadsQuery.call(channel_id: chat_channel_id, user_id: user.id),
+      data = { channel_id: chat_channel_id, last_read_message_id: chat_message_id }.merge(
+        Chat::ChannelUnreadsQuery.call(channel_ids: [chat_channel_id], user_id: user.id).first.to_h,
       )
 
       MessageBus.publish(
         self.user_tracking_state_message_bus_channel(user.id),
         data.as_json,
+        user_ids: [user.id],
+      )
+    end
+
+    def self.bulk_user_tracking_state_message_bus_channel(user_id)
+      "/chat/bulk-user-tracking-state/#{user_id}"
+    end
+
+    def self.publish_bulk_user_tracking_state(user, channel_last_read_map)
+      unread_data =
+        Chat::ChannelUnreadsQuery.call(
+          channel_ids: channel_last_read_map.keys,
+          user_id: user.id,
+        ).map(&:to_h)
+
+      channel_last_read_map.each do |key, value|
+        channel_last_read_map[key] = value.merge(
+          unread_data.find { |data| data[:channel_id] == key }.except(:channel_id),
+        )
+      end
+
+      MessageBus.publish(
+        self.bulk_user_tracking_state_message_bus_channel(user.id),
+        channel_last_read_map.as_json,
         user_ids: [user.id],
       )
     end

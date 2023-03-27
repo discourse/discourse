@@ -213,6 +213,11 @@ export default class ChatSubscriptionsManager extends Service {
       this._onUserTrackingStateUpdate,
       lastId
     );
+    this.messageBus.subscribe(
+      `/chat/bulk-user-tracking-state/${this.currentUser.id}`,
+      this._onBulkUserTrackingStateUpdate,
+      lastId
+    );
   }
 
   _stopUserTrackingStateSubscription() {
@@ -224,20 +229,38 @@ export default class ChatSubscriptionsManager extends Service {
       `/chat/user-tracking-state/${this.currentUser.id}`,
       this._onUserTrackingStateUpdate
     );
+
+    this.messageBus.unsubscribe(
+      `/chat/bulk-user-tracking-state/${this.currentUser.id}`,
+      this._onBulkUserTrackingStateUpdate
+    );
+  }
+
+  @bind
+  _onBulkUserTrackingStateUpdate(busData) {
+    Object.keys(busData).forEach((channelId) => {
+      this._updateChannelTrackingData(channelId, busData[channelId]);
+    });
   }
 
   @bind
   _onUserTrackingStateUpdate(busData) {
-    this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
+    this._updateChannelTrackingData(busData.channel_id, busData);
+  }
+
+  @bind
+  _updateChannelTrackingData(channelId, trackingData) {
+    this.chatChannelsManager.find(channelId).then((channel) => {
       if (
         !channel?.currentUserMembership?.last_read_message_id ||
         parseInt(channel?.currentUserMembership?.last_read_message_id, 10) <=
-          busData.chat_message_id
+          trackingData.last_read_message_id
       ) {
         channel.currentUserMembership.last_read_message_id =
-          busData.chat_message_id;
-        channel.currentUserMembership.unread_count = busData.unread_count;
-        channel.currentUserMembership.unread_mentions = busData.unread_mentions;
+          trackingData.last_read_message_id;
+        channel.currentUserMembership.unread_count = trackingData.unread_count;
+        channel.currentUserMembership.unread_mentions =
+          trackingData.mention_count;
       }
     });
   }

@@ -54,13 +54,14 @@ module Chat
     end
 
     def publish_user_tracking_state(guardian:, updated_memberships:, **)
-      updated_memberships.each do |membership|
-        Chat::Publisher.publish_user_tracking_state(
-          guardian.user,
-          membership.channel_id,
-          membership.last_read_message_id,
-        )
-      end
+      data =
+        updated_memberships.each_with_object({}) do |membership, data_hash|
+          data_hash[membership.channel_id] = {
+            last_read_message_id: membership.last_read_message_id,
+            membership_id: membership.membership_id,
+          }
+        end
+      Chat::Publisher.publish_bulk_user_tracking_state(guardian.user, data)
     end
   end
 end
