@@ -28,7 +28,7 @@ export default class ChatMessageInReplyToIndicator extends Component {
 
   get hasThread() {
     return (
-      this.args.message?.channel?.get("threading_enabled") &&
+      this.args.message?.channel?.threadingEnabled &&
       this.args.message?.threadId
     );
   }

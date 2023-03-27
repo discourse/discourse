@@ -194,6 +194,7 @@ ChatChannel.reopenClass({
     this._remapKey(args, "chatable_type", "chatableType");
     this._remapKey(args, "memberships_count", "membershipsCount");
     this._remapKey(args, "last_message_sent_at", "lastMessageSentAt");
+    this._remapKey(args, "threading_enabled", "threadingEnabled");
 
     return this._super(args);
   },

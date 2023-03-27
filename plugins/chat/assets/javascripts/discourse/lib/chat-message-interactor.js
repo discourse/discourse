@@ -13,6 +13,7 @@ import { REACTIONS } from "discourse/plugins/chat/discourse/models/chat-message-
 import { getOwner, setOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import I18n from "I18n";
 
 export default class ChatMessageInteractor {
@@ -45,7 +46,7 @@ export default class ChatMessageInteractor {
   }
 
   get pane() {
-    return this.context === "thread"
+    return this.context === MESSAGE_CONTEXT_THREAD
       ? this.chatChannelThreadPane
       : this.chatChannelPane;
   }
@@ -78,7 +79,9 @@ export default class ChatMessageInteractor {
   }
 
   get canReply() {
-    return this.canInteractWithMessage && this.context !== "thread";
+    return (
+      this.canInteractWithMessage && this.context !== MESSAGE_CONTEXT_THREAD
+    );
   }
 
   get canFlagMessage() {
@@ -94,8 +97,8 @@ export default class ChatMessageInteractor {
 
   get canOpenThread() {
     return (
-      this.context !== "thread" &&
-      this.message.channel?.get("threading_enabled") &&
+      this.context !== MESSAGE_CONTEXT_THREAD &&
+      this.message.channel?.threadingEnabled &&
       this.message?.threadId
     );
   }
@@ -122,7 +125,7 @@ export default class ChatMessageInteractor {
   }
 
   get composer() {
-    return this.context === "thread"
+    return this.context === MESSAGE_CONTEXT_THREAD
       ? this.chatChannelThreadComposer
       : this.chatChannelComposer;
   }
