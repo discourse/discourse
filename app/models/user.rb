@@ -1968,9 +1968,7 @@ class User < ActiveRecord::Base
       end
     end
 
-    if values.present?
-      CategoryUser.insert_all(values, unique_by: :idx_category_users_user_id_category_id)
-    end
+    CategoryUser.insert_all(values, unique_by: %i[user_id category_id]) if values.present?
   end
 
   def set_default_tags_preferences
