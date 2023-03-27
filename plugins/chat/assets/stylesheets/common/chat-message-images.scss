@@ -27,7 +27,8 @@ $max_image_height: 150px;
     width: calc(#{$max_image_height} / 9 * 16);
   }
 
-  // Prevent overflow of lazy-yt images
+  // Prevent overflow of old lazy-yt images
+  // TODO: remove in December 2023
   .lazyYT.lazyYT-container {
     border: none;
     a {
