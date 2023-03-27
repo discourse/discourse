@@ -8,6 +8,7 @@ import I18n from "I18n";
 import { sanitize } from "discourse/lib/text";
 import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
+import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 
 const FULL_RELOAD_LINKS_REGEX = [/^\/my\/[a-z_\-\/]+$/, /^\/safe-mode$/];
 
@@ -40,7 +41,9 @@ class Section {
       return I18n.t("sidebar.sections.custom.title.validation.blank");
     }
     if (this.#tooLongTitle) {
-      return I18n.t("sidebar.sections.custom.title.validation.maximum");
+      return I18n.t("sidebar.sections.custom.title.validation.maximum", {
+        count: SIDEBAR_SECTION.max_title_length,
+      });
     }
   }
 
@@ -53,7 +56,7 @@ class Section {
   }
 
   get #tooLongTitle() {
-    return this.title.length > 30;
+    return this.title.length > SIDEBAR_SECTION.max_title_length;
   }
 }
 
@@ -98,7 +101,9 @@ class SectionLink {
       return I18n.t("sidebar.sections.custom.links.icon.validation.blank");
     }
     if (this.#tooLongIcon) {
-      return I18n.t("sidebar.sections.custom.links.icon.validation.maximum");
+      return I18n.t("sidebar.sections.custom.links.icon.validation.maximum", {
+        count: SIDEBAR_URL.max_icon_length,
+      });
     }
   }
 
@@ -110,7 +115,9 @@ class SectionLink {
       return I18n.t("sidebar.sections.custom.links.name.validation.blank");
     }
     if (this.#tooLongName) {
-      return I18n.t("sidebar.sections.custom.links.name.validation.maximum");
+      return I18n.t("sidebar.sections.custom.links.name.validation.maximum", {
+        count: SIDEBAR_URL.max_name_length,
+      });
     }
   }
 
@@ -122,7 +129,9 @@ class SectionLink {
       return I18n.t("sidebar.sections.custom.links.value.validation.blank");
     }
     if (this.#tooLongValue) {
-      return I18n.t("sidebar.sections.custom.links.value.validation.maximum");
+      return I18n.t("sidebar.sections.custom.links.value.validation.maximum", {
+        count: SIDEBAR_URL.max_value_length,
+      });
     }
     if (this.#invalidValue) {
       return I18n.t("sidebar.sections.custom.links.value.validation.invalid");
@@ -157,7 +166,7 @@ class SectionLink {
   }
 
   get #tooLongIcon() {
-    return this.icon.length > 40;
+    return this.icon.length > SIDEBAR_URL.max_icon_length;
   }
 
   get #blankName() {
@@ -165,7 +174,7 @@ class SectionLink {
   }
 
   get #tooLongName() {
-    return this.name.length > 80;
+    return this.name.length > SIDEBAR_URL.max_name_length;
   }
 
   get #blankValue() {
@@ -173,7 +182,7 @@ class SectionLink {
   }
 
   get #tooLongValue() {
-    return this.value.length > 200;
+    return this.value.length > SIDEBAR_URL.max_value_length;
   }
 
   get #invalidValue() {

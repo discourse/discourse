@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SidebarSection < ActiveRecord::Base
+  MAX_TITLE_LENGTH = 30
+
   belongs_to :user
   has_many :sidebar_section_links, -> { order("position") }, dependent: :destroy
   has_many :sidebar_urls,
@@ -10,7 +12,14 @@ class SidebarSection < ActiveRecord::Base
 
   accepts_nested_attributes_for :sidebar_urls, allow_destroy: true
 
-  validates :title, presence: true, uniqueness: { scope: %i[user_id] }, length: { maximum: 30 }
+  validates :title,
+            presence: true,
+            uniqueness: {
+              scope: %i[user_id],
+            },
+            length: {
+              maximum: MAX_TITLE_LENGTH,
+            }
 end
 
 # == Schema Information

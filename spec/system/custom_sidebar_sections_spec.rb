@@ -194,8 +194,8 @@ describe "Custom sidebar sections", type: :system, js: true do
     visit("/latest")
     sidebar.open_new_custom_section
 
-    section_modal.fill_name("A" * 31)
-    section_modal.fill_link("B" * 81, "/wrong-url")
+    section_modal.fill_name("A" * (SidebarSection::MAX_TITLE_LENGTH + 1))
+    section_modal.fill_link("B" * (SidebarUrl::MAX_NAME_LENGTH + 1), "/wrong-url")
 
     expect(page.find(".title.warning")).to have_content("Title must be shorter than 30 characters")
     expect(page.find(".name.warning")).to have_content("Name must be shorter than 80 characters")

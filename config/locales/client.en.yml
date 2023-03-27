@@ -4400,22 +4400,23 @@ en:
               label: "Icon"
               validation:
                 blank: "Icon cannot be blank"
+                maximum: "Icon must be shorter than %{count} characters"
             name: 
               label: "Name"
               validation:
                 blank: "Name cannot be blank"
-                maximum: "Name must be shorter than 80 characters"
+                maximum: "Name must be shorter than %{count} characters"
             value: 
               label: "Link"
               validation:
                 blank: "Link cannot be blank"
-                maximum: "Link must be shorter than 200 characters"
+                maximum: "Link must be shorter than %{count} characters"
                 invalid: "Format is invalid"
           title:
             label: "Section title"
             validation:
               blank: "Title cannot be blank"
-              maximum: "Title must be shorter than 30 characters"
+              maximum: "Title must be shorter than %{count} characters"
         about:
           header_link_text: "About"
         messages:
