@@ -204,11 +204,11 @@ class Category < ActiveRecord::Base
   @topic_id_cache = DistributedCache.new("category_topic_ids")
 
   def self.topic_ids
-    @topic_id_cache["ids"] || reset_topic_ids_cache
+    @topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache["ids"] = Set.new(Category.pluck(:topic_id).compact)
+    @topic_id_cache.clear
   end
 
   def reset_topic_ids_cache
