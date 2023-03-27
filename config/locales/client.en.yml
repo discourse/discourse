@@ -176,6 +176,7 @@ en:
       removed_group: "Removed %{who} %{when}"
       autobumped: "Automatically bumped %{when}"
       tags_changed: "Tags updated %{when}"
+      category_changed: "Category updated %{when}"
       autoclosed:
         enabled: "Closed %{when}"
         disabled: "Opened %{when}"

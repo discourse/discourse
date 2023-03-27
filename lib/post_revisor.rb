@@ -79,25 +79,34 @@ class PostRevisor
     track_and_revise topic_changes, :archetype, attribute
   end
 
-  track_topic_field(:category_id) do |tc, category_id, fields|
-    if category_id == 0 && tc.topic.private_message?
-      tc.record_change("category_id", tc.topic.category_id, nil)
+  track_topic_field(:category_id) do |tc, new_category_id, fields|
+    current_category = tc.topic.category
+    new_category =
+      (new_category_id.nil? || new_category_id.zero?) ? nil : Category.find(new_category_id)
+
+    if new_category.nil? && tc.topic.private_message?
+      tc.record_change("category_id", current_category.id, nil)
       tc.topic.category_id = nil
-    elsif category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
+    elsif new_category.nil? || tc.guardian.can_move_topic_to_category?(new_category_id)
       tags = fields[:tags] || tc.topic.tags.map(&:name)
-      if category_id != 0 &&
+      if new_category &&
            !DiscourseTagging.validate_min_required_tags_for_category(
              tc.guardian,
              tc.topic,
-             Category.find(category_id),
+             new_category,
              tags,
            )
         tc.check_result(false)
         next
       end
 
-      tc.record_change("category_id", tc.topic.category_id, category_id)
-      tc.check_result(tc.topic.change_category_to_id(category_id))
+      tc.record_change("category_id", current_category&.id, new_category&.id)
+      tc.check_result(tc.topic.change_category_to_id(new_category_id))
+      create_small_action_for_category_change(
+        topic_changes: tc,
+        old_category: current_category,
+        new_category: new_category,
+      )
     end
   end
 
@@ -127,39 +136,14 @@ class PostRevisor
             )
           end
 
-          if SiteSetting.create_small_action_post_for_tag_changes
-            tc.topic.add_moderator_post(
-              tc.user,
-              tags_changed_raw(added: added_tags, removed: removed_tags),
-              post_type: Post.types[:small_action],
-              action_code: "tags_changed",
-              custom_fields: {
-                tags_added: added_tags,
-                tags_removed: removed_tags,
-              },
-            )
-          end
+          create_small_action_for_tag_changes(
+            topic_changes: tc,
+            added_tags: added_tags,
+            removed_tags: removed_tags,
+          )
         end
       end
     end
-  end
-
-  def self.tags_changed_raw(added:, removed:)
-    if removed.present? && added.present?
-      I18n.t(
-        "topic_tag_changes.added_and_removed",
-        added: tag_list_to_raw(added),
-        removed: tag_list_to_raw(removed),
-      )
-    elsif added.present?
-      I18n.t("topic_tag_changes.added", added: tag_list_to_raw(added))
-    elsif removed.present?
-      I18n.t("topic_tag_changes.removed", removed: tag_list_to_raw(removed))
-    end
-  end
-
-  def self.tag_list_to_raw(tag_list)
-    tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
   end
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
@@ -170,6 +154,58 @@ class PostRevisor
       topic_changes.record_change("featured_link", topic_changes.topic.featured_link, featured_link)
       topic_changes.topic.featured_link = featured_link
     end
+  end
+
+  def self.create_small_action_for_category_change(topic_changes:, old_category:, new_category:)
+    return if !SiteSetting.create_post_for_category_and_tag_changes
+
+    topic_changes.topic.add_moderator_post(
+      topic_changes.user,
+      I18n.t(
+        "topic_category_changed",
+        from: category_name_raw(old_category),
+        to: category_name_raw(new_category),
+      ),
+      post_type: Post.types[:small_action],
+      action_code: "category_changed",
+    )
+  end
+
+  def self.category_name_raw(category)
+    "##{CategoryHashtagDataSource.category_to_hashtag_item(category).ref}"
+  end
+
+  def self.create_small_action_for_tag_changes(topic_changes:, added_tags:, removed_tags:)
+    return if !SiteSetting.create_post_for_category_and_tag_changes
+
+    topic_changes.topic.add_moderator_post(
+      topic_changes.user,
+      tags_changed_raw(added: added_tags, removed: removed_tags),
+      post_type: Post.types[:small_action],
+      action_code: "tags_changed",
+      custom_fields: {
+        tags_added: added_tags,
+        tags_removed: removed_tags,
+      },
+    )
+  end
+
+  def self.tags_changed_raw(added:, removed:)
+    if removed.present? && added.present?
+      I18n.t(
+        "topic_tag_changed.added_and_removed",
+        added: tag_list_to_raw(added),
+        removed: tag_list_to_raw(removed),
+      )
+    elsif added.present?
+      I18n.t("topic_tag_changed.added", added: tag_list_to_raw(added))
+    elsif removed.present?
+      I18n.t("topic_tag_changed.removed", removed: tag_list_to_raw(removed))
+    end
+  end
+
+  def self.tag_list_to_raw(tag_list)
+    tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
   end
 
   # AVAILABLE OPTIONS:

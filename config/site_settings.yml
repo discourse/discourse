@@ -2783,7 +2783,7 @@ tags:
   force_lowercase_tags:
     default: true
     client: true
-  create_small_action_post_for_tag_changes:
+  create_post_for_category_and_tag_changes:
     default: false
 
 dashboard:
