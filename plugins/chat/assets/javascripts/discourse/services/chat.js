@@ -24,14 +24,19 @@ export default class Chat extends Service {
   @service router;
   @service site;
   @service chatChannelsManager;
+  @service chatChannelPane;
+  @service chatChannelThreadPane;
+
   @tracked activeChannel = null;
-  @tracked activeMessage = null;
+
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
   isNetworkUnreliable = false;
 
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
+
+  @tracked _activeMessage = null;
 
   @computed("currentUser.staff", "currentUser.groups.[]")
   get userCanDirectMessage() {
@@ -51,6 +56,27 @@ export default class Chat extends Service {
 
   get userCanInteractWithChat() {
     return !this.activeChannel?.userSilenced;
+  }
+
+  get activeMessage() {
+    return this._activeMessage;
+  }
+
+  set activeMessage(hash) {
+    this.chatChannelPane.hoveredMessageId = null;
+    this.chatChannelThreadPane.hoveredMessageId = null;
+
+    if (hash) {
+      this._activeMessage = hash;
+
+      if (hash.context === "thread") {
+        this.chatChannelThreadPane.hoveredMessageId = hash.model.id;
+      } else {
+        this.chatChannelPane.hoveredMessageId = hash.model.id;
+      }
+    } else {
+      this._activeMessage = null;
+    }
   }
 
   init() {
