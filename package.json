@@ -27,6 +27,7 @@
     "workbox-sw": "^4.3.1"
   },
   "devDependencies": {
+    "@lint-todo/eslint-formatter-todo": "^4.0.3",
     "@mixer/parallel-prettier": "^2.0.3",
     "chrome-launcher": "^0.15.1",
     "chrome-remote-interface": "^0.31.3",
@@ -38,6 +39,10 @@
     "tidy-jsdoc": "^1.4.1"
   },
   "scripts": {
+    "lint:js": "eslint --format @lint-todo/eslint-formatter-todo app/assets/javascripts",
+    "update:lint:js": "COMPACT_TODO=1 UPDATE_TODO=1 yarn lint:js",
+    "lint:hbs": "ember-template-lint app/assets/javascripts/**/* plugins/**/assets/javascripts/**/* --no-error-on-unmatched-pattern",
+    "update:lint:hbs": "yarn lint:hbs --update-todo --compact-todo",
     "postinstall": "yarn --cwd app/assets/javascripts/discourse $(node -e 'if(JSON.parse(process.env.npm_config_argv).original.includes(`--frozen-lockfile`)){console.log(`--frozen-lockfile`)}')"
   },
   "engines": {
