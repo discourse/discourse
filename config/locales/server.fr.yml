@@ -3697,12 +3697,7 @@ fr:
     title: "Impossible de charger l'application"
     offline_page_message: "Il semble que vous n'êtes pas connecté(e) à Internet ! Veuillez vérifier votre connexion réseau et réessayez."
   login_required:
-    welcome_message: |
-      ## [Bienvenue sur %{title}](#welcome)
-      Un compte est nécessaire. Veuillez en créer un ou connectez-vous pour continuer.
-    welcome_message_invite_only: |
-      ## [Bienvenue sur %{title}](#welcome)
-      Un compte est nécessaire. Veuillez demander une invitation à un membre ou connectez-vous pour continuer.
+    welcome_message: "## [Bienvenue sur %{title}](#welcome)"
   upload:
     edit_reason: "téléchargement de copies locales des images distantes"
     unauthorized: "Nous sommes désolés, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : %{authorized_extensions})."

@@ -2549,12 +2549,7 @@ zh_TW:
     title: "無法載入App"
     offline_page_message: "你似乎離線了！請檢查您的網路連接狀態，並重試。"
   login_required:
-    welcome_message: |
-      ## [歡迎來到 %{title}](#welcome)
-      你需要一個帳號。請創設一個帳號，或者登入以繼續。
-    welcome_message_invite_only: |
-      ## [歡迎來到 %{title}](#welcome)
-      必須要有一個帳戶，請向現有會員請求邀請或登入以繼續。
+    welcome_message: "## [歡迎來到 %{title}](#welcome)"
   upload:
     edit_reason: "下載外部圖片留做存檔"
     unauthorized: "抱歉，你沒有上傳檔案的權限（驗證擴展：%{authorized_extensions}）。"

@@ -2557,12 +2557,7 @@ ca:
     title: "No es pot carregar l'aplicació"
     offline_page_message: "Sembla que esteu fora de línia! Comproveu la connexió de xarxa i torneu-ho a provar."
   login_required:
-    welcome_message: |
-      ## [Benvingut a %{title}](#welcome)
-      Cal tenir un compte. Creeu un compte o inicieu sessió per a continuar.
-    welcome_message_invite_only: |
-      ## [Benvingut a %{title}](#welcome)
-      Cal tenir un compte. Demaneu a un membre existent una invitació o inicieu sessió per a continuar.
+    welcome_message: "## [Benvingut a %{title}](#welcome)"
   upload:
     edit_reason: "còpia local d'imatges descarregada"
     unauthorized: "El fitxer que intenteu carregar no està autoritzat (extensions permeses: %{authorized_extensions})."

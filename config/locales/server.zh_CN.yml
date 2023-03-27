@@ -3632,12 +3632,7 @@ zh_CN:
     title: "无法加载应用"
     offline_page_message: "您好像离线了！请检查您的网络连接，然后重试。"
   login_required:
-    welcome_message: |
-      ## [欢迎来到%{title}](#welcome)
-      需要一个帐户。请创建帐户或登录以继续。
-    welcome_message_invite_only: |
-      ## [欢迎来到%{title}](#welcome)
-      需要一个帐户。请向现有成员请求邀请或登录以继续。
+    welcome_message: "## [欢迎来到%{title}](#welcome)"
   upload:
     edit_reason: "下载图片的本地副本"
     unauthorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"

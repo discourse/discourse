@@ -2344,9 +2344,7 @@ lt:
     title: "Nepavyko įkelti programos"
     offline_page_message: "Atrodo, kad esate neprisijungę! Patikrinkite tinklo ryšį ir bandykite dar kartą."
   login_required:
-    welcome_message: |
-      ## [Sveiki atvykę į %{title}] (#sveiki atvykę)
-      Būtina paskyra. Jei norite tęsti, sukurkite paskyrą arba prisijunkite.
+    welcome_message: "## [Sveiki atvykę į %{title}] (#sveiki atvykę)"
   upload:
     edit_reason: "atsiųsti mano pranešimų archyvą"
     unauthorized: "Atsiprašome, failas, kurį bandote įkelti, nėra autorizuotas (įgalioti plėtiniai: %{authorized_extensions})."

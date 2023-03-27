@@ -3862,12 +3862,7 @@ he:
     title: "לא ניתן לטעון את היישום"
     offline_page_message: "נראה כאילו אין לך תקשורת לאינטרנט! נא לבדוק את חיבור הרשת שלך ולנסות שוב."
   login_required:
-    welcome_message: |
-      ## [ברוך בואך אל %{title}](#welcome)
-      נדרש חשבון. נא ליצור חשבון או להיכנס כדי להמשיך.
-    welcome_message_invite_only: |
-      ## [ברוך בואך אל %{title}](#welcome)
-      נדרש חשבון. נא לבקש מחבר קיים לשלוח לך הזמנה או להיכנס כדי להמשיך.
+    welcome_message: "## [ברוך בואך אל %{title}](#welcome)"
   upload:
     edit_reason: "עותקים מקומיים של תמונות שהורדו"
     unauthorized: "הקובץ שמועמד להעלאה אינו מורשה (סיומות מורשות: %{authorized_extensions}), עמך הסליחה."

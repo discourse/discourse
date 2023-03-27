@@ -3585,12 +3585,7 @@ ja:
     title: "アプリを読み込めません"
     offline_page_message: "オフラインになっているようです！ネットワーク接続を確認して、もう一度お試しください。"
   login_required:
-    welcome_message: |
-      ## [%{title} へようこそ](#welcome)
-      アカウントが必要です。続行するには、アカウントを作成するかログインしてください。
-    welcome_message_invite_only: |
-      ## [%{title} へようこそ](#welcome)
-      アカウントが必要です。続行するには、既存のメンバーに招待をリクエストするかログインしてください。
+    welcome_message: "## [%{title} へようこそ](#welcome)"
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
