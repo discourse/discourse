@@ -1,4 +1,4 @@
-{{#if this.shouldDisplay}}
+{{#if (or this.shouldDisplay this.shouldDisplayDefaultConfig)}}
   <Sidebar::Section
     @sectionName="tags"
     @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
@@ -12,38 +12,40 @@
     @collapsable={{@collapsable}}
   >
 
-    {{#if (gt this.sectionLinks.length 0)}}
-      {{#each this.sectionLinks as |sectionLink|}}
+    {{#if this.shouldDisplay}}
+      {{#if (gt this.sectionLinks.length 0)}}
+        {{#each this.sectionLinks as |sectionLink|}}
+          <Sidebar::SectionLink
+            @route={{sectionLink.route}}
+            @title={{sectionLink.title}}
+            @content={{sectionLink.text}}
+            @currentWhen={{sectionLink.currentWhen}}
+            @prefixType={{sectionLink.prefixType}}
+            @prefixValue={{sectionLink.prefixValue}}
+            @badgeText={{sectionLink.badgeText}}
+            @models={{sectionLink.models}}
+            @suffixCSSClass={{sectionLink.suffixCSSClass}}
+            @suffixValue={{sectionLink.suffixValue}}
+            @suffixType={{sectionLink.suffixType}}
+            data-tag-name={{sectionLink.tagName}}
+          />
+        {{/each}}
+      {{else}}
         <Sidebar::SectionLink
-          @route={{sectionLink.route}}
-          @title={{sectionLink.title}}
-          @content={{sectionLink.text}}
-          @currentWhen={{sectionLink.currentWhen}}
-          @prefixType={{sectionLink.prefixType}}
-          @prefixValue={{sectionLink.prefixValue}}
-          @badgeText={{sectionLink.badgeText}}
-          @models={{sectionLink.models}}
-          @suffixCSSClass={{sectionLink.suffixCSSClass}}
-          @suffixValue={{sectionLink.suffixValue}}
-          @suffixType={{sectionLink.suffixType}}
-          data-tag-name={{sectionLink.tagName}}
+          @linkName="configure-tags"
+          @route="preferences.sidebar"
+          @prefixType="icon"
+          @prefixValue="pencil-alt"
+          @model={{this.currentUser}}
+          @content={{i18n "sidebar.sections.tags.links.add_tags.content"}}
+          @title={{i18n "sidebar.sections.tags.links.add_tags.title"}}
         />
-      {{/each}}
-    {{else}}
-      <Sidebar::SectionLink
-        @linkName="configure-tags"
-        @route="preferences.sidebar"
-        @prefixType="icon"
-        @prefixValue="pencil-alt"
-        @model={{this.currentUser}}
-        @content={{i18n "sidebar.sections.tags.links.add_tags.content"}}
-        @title={{i18n "sidebar.sections.tags.links.add_tags.title"}}
-      />
+      {{/if}}
+
+      <Sidebar::Common::AllTagsSectionLink />
     {{/if}}
 
-    <Sidebar::Common::AllTagsSectionLink />
-
-    {{#if (and this.currentUser.admin (not this.hasDefaultSidebarTags))}}
+    {{#if this.shouldDisplayDefaultConfig}}
       <Sidebar::SectionLink
         @linkName="configure-default-sidebar-tags"
         @content={{i18n "sidebar.sections.tags.configure_defaults"}}
