@@ -1,5 +1,4 @@
 import Controller, { inject as controller } from "@ember/controller";
-import getUrl from "discourse-common/lib/get-url";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal, or } from "@ember/object/computed";
