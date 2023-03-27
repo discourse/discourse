@@ -79,11 +79,11 @@ jobs:
 
       - name: ESLint (core)
         if: ${{ !cancelled() }}
-        run: yarn eslint app/assets/javascripts
+        run: yarn lint:js
 
       - name: ESLint (core plugins)
         if: ${{ !cancelled() }}
-        run: yarn eslint plugins
+        run: yarn lint:js-plugins
 
       - name: Prettier
         if: ${{ !cancelled() }}
@@ -99,11 +99,7 @@ jobs:
 
       - name: Ember template lint
         if: ${{ !cancelled() }}
-        run: |
-          yarn ember-template-lint \
-            --no-error-on-unmatched-pattern \
-            "app/assets/javascripts/**/*.hbs" \
-            "plugins/**/assets/javascripts/**/*.hbs"
+        run: yarn lint:hbs
 
       - name: English locale lint (core)
         if: ${{ !cancelled() }}
