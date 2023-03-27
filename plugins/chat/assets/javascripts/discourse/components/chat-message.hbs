@@ -1,9 +1,9 @@
 {{! template-lint-disable no-invalid-interactive }}
 
-{{#unless (eq @context "thread")}}
+{{#if (eq @context "channel")}}
   <ChatMessageSeparatorDate @message={{@message}} />
   <ChatMessageSeparatorNew @message={{@message}} />
-{{/unless}}
+{{/if}}
 
 <div
   {{will-destroy this.teardownChatMessage}}
