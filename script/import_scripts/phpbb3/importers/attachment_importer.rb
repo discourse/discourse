@@ -28,7 +28,10 @@ module ImportScripts::PhpBB3
           puts "Failed to upload #{path}"
           puts upload.errors.inspect if upload
         else
-          attachments << @uploader.html_for_upload(upload, filename)
+          attachment = @uploader.html_for_upload(upload, filename) + "\n"
+          attachment += !row[:attach_comment].empty? && !row[:attach_comment].nil? ?
+            "_#{row[:attach_comment]}_\n\n" : "\n"
+          attachments << attachment
         end
       end
 

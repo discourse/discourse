@@ -173,7 +173,7 @@ module ImportScripts::PhpBB3
 
     def fetch_attachments(topic_id, post_id)
       query(<<-SQL)
-        SELECT physical_filename, real_filename
+        SELECT physical_filename, real_filename, attach_comment
         FROM #{@table_prefix}attachments
         WHERE topic_id = #{topic_id} AND post_msg_id = #{post_id}
         ORDER BY filetime DESC, post_msg_id
