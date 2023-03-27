@@ -39,10 +39,10 @@
     "tidy-jsdoc": "^1.4.1"
   },
   "scripts": {
-    "lint:js": "eslint --format @lint-todo/eslint-formatter-todo app/assets/javascripts",
-    "update:lint:js": "COMPACT_TODO=1 UPDATE_TODO=1 yarn lint:js",
+    "lint:js": "INCLUDE_TODO=1 eslint --format @lint-todo/eslint-formatter-todo app/assets/javascripts",
+    "update:lint:js": "UPDATE_TODO=1 yarn lint:js",
     "lint:hbs": "ember-template-lint app/assets/javascripts/**/* plugins/**/assets/javascripts/**/* --no-error-on-unmatched-pattern",
-    "update:lint:hbs": "yarn lint:hbs --update-todo --compact-todo",
+    "update:lint:hbs": "yarn lint:hbs --update-todo",
     "postinstall": "yarn --cwd app/assets/javascripts/discourse $(node -e 'if(JSON.parse(process.env.npm_config_argv).original.includes(`--frozen-lockfile`)){console.log(`--frozen-lockfile`)}')"
   },
   "engines": {
