@@ -129,7 +129,14 @@ module Chat
     end
 
     def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
-      data = { channel_id: chat_channel_id, last_read_message_id: chat_message_id }.merge(
+      data = {
+        channel_id: chat_channel_id,
+        last_read_message_id: chat_message_id,
+        # TODO (martin) Remove old chat_channel_id and chat_message_id keys here once deploys have cycled,
+        # this will prevent JS errors from clients that are looking for the old payload.
+        chat_channel_id: chat_channel_id,
+        chat_message_id: chat_message_id,
+      }.merge(
         Chat::ChannelUnreadsQuery.call(channel_ids: [chat_channel_id], user_id: user.id).first.to_h,
       )
 
