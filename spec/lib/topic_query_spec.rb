@@ -1379,6 +1379,11 @@ RSpec.describe TopicQuery do
       it "should return the new topic" do
         expect(TopicQuery.new.list_suggested_for(topic).topics).to eq([new_topic])
       end
+
+      it "should return the nothing when random topics excluded" do
+        # this API was added so plugins can generate a suggested topics list without the random topics
+        expect(TopicQuery.new.list_suggested_for(topic, include_random: false).topics).to eq([])
+      end
     end
 
     context "when anonymously browsing with invisible, closed and archived" do

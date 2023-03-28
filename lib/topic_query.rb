@@ -204,7 +204,7 @@ class TopicQuery
   end
 
   # Return a list of suggested topics for a topic
-  def list_suggested_for(topic, pm_params: nil)
+  def list_suggested_for(topic, pm_params: nil, include_random: true)
     # Don't suggest messages unless we have a user, and private messages are
     # enabled.
     if topic.private_message? &&
@@ -250,7 +250,7 @@ class TopicQuery
     end
 
     if !topic.private_message?
-      unless builder.full?
+      if include_random && !builder.full?
         builder.add_results(
           random_suggested(topic, builder.results_left, builder.excluded_topic_ids),
         )
