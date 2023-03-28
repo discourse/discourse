@@ -56,19 +56,20 @@ export default class ChatMessage {
     this.firstOfResults = args.firstOfResults;
     this.staged = args.staged;
     this.edited = args.edited;
-    this.availableFlags = args.available_flags;
+    this.availableFlags = args.availableFlags || args.available_flags;
     this.hidden = args.hidden;
-    this.threadId = args.thread_id;
-    this.channelId = args.chat_channel_id;
-    this.chatWebhookEvent = args.chat_webhook_event;
-    this.createdAt = args.created_at;
-    this.deletedAt = args.deleted_at;
+    this.threadId = args.threadId || args.thread_id;
+    this.channelId = args.channelId || args.chat_channel_id;
+    this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
+    this.createdAt = args.createdAt || args.created_at;
+    this.deletedAt = args.deletedAt || args.deleted_at;
     this.excerpt = args.excerpt;
-    this.reviewableId = args.reviewable_id;
-    this.userFlagStatus = args.user_flag_status;
-    this.inReplyTo = args.in_reply_to
-      ? ChatMessage.create(channel, args.in_reply_to)
-      : null;
+    this.reviewableId = args.reviewableId || args.reviewable_id;
+    this.userFlagStatus = args.userFlagStatus || args.user_flag_status;
+    this.inReplyTo =
+      args.inReplyTo || args.in_reply_to
+        ? ChatMessage.create(channel, args.in_reply_to)
+        : null;
     this.message = args.message;
     this.cooked = args.cooked || ChatMessage.cookFunction(this.message);
     this.reactions = this.#initChatMessageReactionModel(

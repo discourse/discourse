@@ -326,8 +326,7 @@ export default class ChatMessageInteractor {
 
   @action
   flag() {
-    // TODO Joffrey this is broken
-    const model = new ChatMessage(this.message);
+    const model = new ChatMessage(this.message.channel, this.message);
     model.username = this.message.user?.username;
     model.user_id = this.message.user?.id;
     const controller = showModal("flag", { model });
