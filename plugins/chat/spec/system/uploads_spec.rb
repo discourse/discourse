@@ -79,54 +79,54 @@ describe "Uploading files in chat messages", type: :system, js: true do
     end
   end
 
-  # context "when editing a message with uploads" do
-  #   fab!(:message_2) { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) }
-  #   fab!(:upload_reference) do
-  #     Fabricate(
-  #       :upload_reference,
-  #       target: message_2,
-  #       upload: Fabricate(:upload, user: current_user),
-  #     )
-  #   end
+  context "when editing a message with uploads" do
+    fab!(:message_2) { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) }
+    fab!(:upload_reference) do
+      Fabricate(
+        :upload_reference,
+        target: message_2,
+        upload: Fabricate(:upload, user: current_user),
+      )
+    end
 
-  #   before do
-  #     channel_1.add(current_user)
-  #     sign_in(current_user)
+    before do
+      channel_1.add(current_user)
+      sign_in(current_user)
 
-  #     file = file_from_fixtures("logo-dev.png", "images")
-  #     url = Discourse.store.store_upload(file, upload_reference.upload)
-  #     upload_reference.upload.update!(url: url, sha1: Upload.generate_digest(file))
-  #   end
+      file = file_from_fixtures("logo-dev.png", "images")
+      url = Discourse.store.store_upload(file, upload_reference.upload)
+      upload_reference.upload.update!(url: url, sha1: Upload.generate_digest(file))
+    end
 
-  #   it "allows deleting uploads" do
-  #     chat.visit_channel(channel_1)
-  #     channel.open_edit_message(message_2)
-  #     find(".chat-composer-upload").find(".remove-upload").click
-  #     channel.click_send_message
-  #     expect(channel.message_by_id(message_2.id)).not_to have_css(".chat-uploads")
-  #     expect(message_2.reload.uploads).to be_empty
-  #   end
+    it "allows deleting uploads" do
+      chat.visit_channel(channel_1)
+      channel.open_edit_message(message_2)
+      find(".chat-composer-upload").find(".remove-upload").click
+      channel.click_send_message
+      expect(channel.message_by_id(message_2.id)).not_to have_css(".chat-uploads")
+      expect(message_2.reload.uploads).to be_empty
+    end
 
-  #   it "allows adding more uploads" do
-  #     chat.visit_channel(channel_1)
-  #     channel.open_edit_message(message_2)
+    it "allows adding more uploads" do
+      chat.visit_channel(channel_1)
+      channel.open_edit_message(message_2)
 
-  #     file_path = file_from_fixtures("logo.png", "images").path
-  #     attach_file(file_path) do
-  #       channel.open_action_menu
-  #       channel.click_action_button("chat-upload-btn")
-  #     end
+      file_path = file_from_fixtures("logo.png", "images").path
+      attach_file(file_path) do
+        channel.open_action_menu
+        channel.click_action_button("chat-upload-btn")
+      end
 
-  #     expect(page).to have_css(".chat-composer-upload .preview .preview-img", count: 2)
-  #     expect(page).to have_content(File.basename(file_path))
+      expect(page).to have_css(".chat-composer-upload .preview .preview-img", count: 2)
+      expect(page).to have_content(File.basename(file_path))
 
-  #     channel.click_send_message
+      channel.click_send_message
 
-  #     expect(page).not_to have_css(".chat-composer-upload")
-  #     expect(page).to have_css(".chat-img-upload", count: 2)
-  #     expect(message_2.reload.uploads.count).to eq(2)
-  #   end
-  # end
+      expect(page).not_to have_css(".chat-composer-upload")
+      expect(page).to have_css(".chat-img-upload", count: 2)
+      expect(message_2.reload.uploads.count).to eq(2)
+    end
+  end
 
   context "when uploads are not allowed" do
     fab!(:user_2) { Fabricate(:user) }
