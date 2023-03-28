@@ -205,6 +205,8 @@ class TopicQuery
 
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic, pm_params: nil, include_random: true)
+    # The include_random param was added so plugins can generate a suggested topics list without the random topics
+
     # Don't suggest messages unless we have a user, and private messages are
     # enabled.
     if topic.private_message? &&

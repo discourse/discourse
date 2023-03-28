@@ -1381,7 +1381,6 @@ RSpec.describe TopicQuery do
       end
 
       it "should return the nothing when random topics excluded" do
-        # this API was added so plugins can generate a suggested topics list without the random topics
         expect(TopicQuery.new.list_suggested_for(topic, include_random: false).topics).to eq([])
       end
     end
