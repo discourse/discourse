@@ -3685,12 +3685,7 @@ nl:
     title: "Kan app niet laden"
     offline_page_message: "Het lijkt erop dat je offline bent! Controleer je netwerkverbinding en probeer het opnieuw."
   login_required:
-    welcome_message: |
-      ## [Welkom bij %{title}](#welkom)
-      Een account is vereist. Maak een account of meld je aan om verder te gaan.
-    welcome_message_invite_only: |
-      ## [Welkom bij %{title}](#welkom)
-      Een account is vereist. Vraag een bestaand lid om een uitnodiging of meld je aan om verder te gaan.
+    welcome_message: "## [Welkom bij %{title}](#welkom)"
   upload:
     edit_reason: "lokale kopieën van afbeeldingen gedownload"
     unauthorized: "Sorry, het bestand dat je probeert te uploaden is niet toegestaan (toegestane extensies: %{authorized_extensions})."

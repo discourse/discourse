@@ -1,8 +1,19 @@
-<% if SiteSetting.login_required %>
-  <div class='login-required'>
-    <%= PrettyText.cook(I18n.t("login_required.#{SiteSetting.invite_only? ? "welcome_message_invite_only" : "welcome_message"}", title: SiteSetting.title)).html_safe %>
-  </div>
-<% end %>
+<%- if application_logo_url.present? %>
+  <picture class="logo-container">
+    <%- if application_logo_dark_url.present? %>
+      <source srcset="<%= application_logo_dark_url %>" media="(prefers-color-scheme: dark)" />
+    <%- end %>
+    <img src="<%= application_logo_url %>" alt="<%= SiteSetting.title %>" class="site-logo" />
+  </picture>
+<%- else %>
+  <img src="<%= waving_hand_url %>" alt="" class="waving-hand" />
+<%- end %>
+
+<div class='login-welcome__title'>
+  <%= PrettyText.cook(I18n.t("login_required.welcome_message", title: SiteSetting.title)).html_safe %>
+
+  <p><%= SiteSetting.site_description %></p>
+</div>
 
 <% content_for :title do %><%= @title %><% end %>
 <% content_for :head do %>

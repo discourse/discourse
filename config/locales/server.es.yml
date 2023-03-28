@@ -3680,12 +3680,7 @@ es:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
   login_required:
-    welcome_message: |
-      ## [Te damos la bienvenida a %{title}](#welcome)
-      Se necesita una cuenta para utilizar el sitio. Crea una o inicia sesión para continuar.
-    welcome_message_invite_only: |
-      ## [Te damos la bienvenida a %{title}](#welcome)
-      Se necesita una cuenta para utilizar el sitio. Solicita a uno de los miembros actuales que te invite o inicia sesión para continuar.
+    welcome_message: "## [Te damos la bienvenida a %{title}](#welcome)"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."

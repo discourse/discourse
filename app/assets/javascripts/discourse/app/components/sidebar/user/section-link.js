@@ -25,7 +25,8 @@ export default class SectionLink {
   @bind
   didStartDrag(event) {
     // 0 represents left button of the mouse
-    if (event.button === 0) {
+    if (event.button === 0 || event.targetTouches) {
+      this.startMouseY = this.#calcMouseY(event);
       this.willDrag = true;
       discourseLater(() => {
         this.delayedStart(event);
@@ -34,10 +35,15 @@ export default class SectionLink {
   }
   delayedStart(event) {
     if (this.willDrag) {
-      this.mouseY = event.y;
-      this.linkDragCss = "drag";
-      this.section.disable();
-      this.drag = true;
+      const currentMouseY = this.#calcMouseY(event);
+      if (currentMouseY === this.startMouseY) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.mouseY = this.#calcMouseY(event);
+        this.linkDragCss = "drag";
+        this.section.disable();
+        this.drag = true;
+      }
     }
   }
 
@@ -53,10 +59,13 @@ export default class SectionLink {
 
   @bind
   dragMove(event) {
+    this.startMouseY = this.#calcMouseY(event);
     if (!this.drag) {
       return;
     }
-    const currentMouseY = event.y;
+    event.stopPropagation();
+    event.preventDefault();
+    const currentMouseY = this.#calcMouseY(event);
     const distance = currentMouseY - this.mouseY;
     if (!this.linkHeight) {
       this.linkHeight = document.getElementsByClassName(
@@ -75,5 +84,11 @@ export default class SectionLink {
         this.mouseY = currentMouseY;
       }
     }
+  }
+
+  #calcMouseY(event) {
+    return Math.round(
+      event.targetTouches ? event.targetTouches[0].clientY : event.y
+    );
   }
 }

@@ -3676,12 +3676,7 @@ fi:
     title: "Sovellusta ei voida ladata"
     offline_page_message: "Yhteydessäsi vaikuttaa olevan vikaa! Tarkista verkkoyhteytesi ja yritä uudelleen."
   login_required:
-    welcome_message: |
-      ## [Tervetuloa sivustolle %{title}](#welcome)
-      Käyttäjätili tarvitaan. Luo tili tai kirjaudu sisään.
-    welcome_message_invite_only: |
-      ## [Tervetuloa sivustolle %{title}](#welcome)
-      Käyttäjätili vaaditaan. Pyydä yhteisön jäsentä kutsumaan sinut tai kirjaudu sisään.
+    welcome_message: "## [Tervetuloa sivustolle %{title}](#welcome)"
   upload:
     edit_reason: "lataa kuvista paikalliset kopiot"
     unauthorized: "Tiedosto, jota yrität ladata, ei ole sallittu (sallitut päätteet: %{authorized_extensions})."

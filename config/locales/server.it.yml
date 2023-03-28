@@ -3539,10 +3539,7 @@ it:
     title: "Impossibile caricare l'app"
     offline_page_message: "Sembra che tu sia offline! Controlla la tua connessione di rete e riprova."
   login_required:
-    welcome_message: |
-      ## [Benvenuto su %{title}](#welcome)
-      E' richiesto un account. Per continuare, crea un nuovo account oppure accedi.
-    welcome_message_invite_only: "## [Benvenuto su %{title}](#benvenuto) \nÈ richiesto un account. Per favore, chiedi a un membro esistente un invito o accedi per continuare.\n"
+    welcome_message: "## [Benvenuto su %{title}](#welcome)"
   upload:
     edit_reason: "copie locali delle immagini scaricate"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."

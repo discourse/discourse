@@ -3533,12 +3533,7 @@ sv:
     title: "Det går inte att ladda appen"
     offline_page_message: "Det ser ut som om du är offline! Kontrollera din nätverksanslutning och försök igen."
   login_required:
-    welcome_message: |
-      ##[Välkommen till %{title}](#welcome)
-      Ett konto krävs för att logga in. Skapa ett konto eller logga in för att fortsätta.
-    welcome_message_invite_only: |
-      ##[Välkommen till %{title}](#welcome)
-      Det krävs ett konto för att logga in. Be en befintlig användare om en inbjudan eller logga in för att fortsätta.
+    welcome_message: "##[Välkommen till %{title}](#welcome)"
   upload:
     edit_reason: "hämtade lokala kopior av bilder"
     unauthorized: "Tyvärr är filen som du försöker ladda upp inte tillåten (tillåtna filtyper: %{authorized_extensions})."
