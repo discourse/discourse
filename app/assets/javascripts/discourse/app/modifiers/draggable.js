@@ -29,8 +29,6 @@ export default class DraggableModifier extends Modifier {
 
   @bind
   dragMove(e) {
-    e.stopPropagation();
-    e.preventDefault();
     if (!this.hasStarted) {
       this.hasStarted = true;
 

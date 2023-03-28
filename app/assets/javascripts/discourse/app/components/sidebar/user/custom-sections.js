@@ -28,12 +28,6 @@ export default class SidebarUserCustomSections extends Component {
     });
   }
 
-  get canReorder() {
-    return document
-      .getElementsByTagName("html")[0]
-      .classList.contains("no-touch");
-  }
-
   @bind
   _refresh() {
     return ajax("/sidebar_sections.json", {}).then((json) => {

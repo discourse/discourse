@@ -17,15 +17,11 @@
             @prefixValue={{link.icon}}
             @href={{link.value}}
             @class={{link.linkDragCss}}
-            {{(if
-              this.canReorder
-              (modifier
-                "draggable"
-                didStartDrag=link.didStartDrag
-                didEndDrag=link.didEndDrag
-                dragMove=link.dragMove
-              )
-            )}}
+            {{draggable
+              didStartDrag=link.didStartDrag
+              didEndDrag=link.didEndDrag
+              dragMove=link.dragMove
+            }}
           />
         {{else}}
           <Sidebar::SectionLink
@@ -37,15 +33,11 @@
             @prefixType="icon"
             @prefixValue={{link.icon}}
             @class={{link.linkDragCss}}
-            {{(if
-              this.canReorder
-              (modifier
-                "draggable"
-                didStartDrag=link.didStartDrag
-                didEndDrag=link.didEndDrag
-                dragMove=link.dragMove
-              )
-            )}}
+            {{draggable
+              didStartDrag=link.didStartDrag
+              didEndDrag=link.didEndDrag
+              dragMove=link.dragMove
+            }}
           />
         {{/if}}
       {{/each}}
