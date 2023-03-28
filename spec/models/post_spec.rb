@@ -1532,8 +1532,6 @@ RSpec.describe Post do
   end
 
   describe "video_thumbnails" do
-    before { SiteSetting.enable_diffhtml_preview = true }
-
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
     fab!(:image_upload) { Fabricate(:upload) }
     fab!(:image_upload_2) { Fabricate(:upload) }
