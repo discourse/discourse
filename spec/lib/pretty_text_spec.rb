@@ -1530,7 +1530,8 @@ RSpec.describe PrettyText do
       it "prepends the subfolder path even if it is part of the emoji url" do
         set_subfolder "/info"
 
-        expected = "src=\"/info/images/emoji/twitter/information_source.png?v=#{Emoji::EMOJI_VERSION}\""
+        expected =
+          "src=\"/info/images/emoji/twitter/information_source.png?v=#{Emoji::EMOJI_VERSION}\""
 
         expect(PrettyText.cook("ℹ️")).to include(expected)
         expect(PrettyText.cook(":information_source:")).to include(expected)
