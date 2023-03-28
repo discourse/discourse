@@ -113,7 +113,7 @@ export default class ChatChannelComposer extends Service {
 
   @debounce(2000)
   _persistDraft() {
-    if (this.#componentDeleted) {
+    if (this.#componentDeleted || !this.#model) {
       return;
     }
 
