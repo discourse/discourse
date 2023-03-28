@@ -75,13 +75,13 @@ module PageObjects
       def select_message(message)
         hover_message(message)
         click_more_button
-        find("[data-value='selectMessage']").click
+        find("[data-value='select']").click
       end
 
       def delete_message(message)
         hover_message(message)
         click_more_button
-        find("[data-value='deleteMessage']").click
+        find("[data-value='delete']").click
       end
 
       def open_edit_message(message)

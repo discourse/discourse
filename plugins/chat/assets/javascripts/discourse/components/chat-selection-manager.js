@@ -30,7 +30,7 @@ export default class ChatSelectionManager extends Component {
   @computed("chatChannel.isDirectMessageChannel", "chatChannel.canModerate")
   get showMoveMessageButton() {
     return (
-      !this.context === MESSAGE_CONTEXT_THREAD &&
+      this.context !== MESSAGE_CONTEXT_THREAD &&
       !this.chatChannel.isDirectMessageChannel &&
       this.chatChannel.canModerate
     );

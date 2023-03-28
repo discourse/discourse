@@ -30,6 +30,10 @@ module PageObjects
       def maximize
         find("#{VISIBLE_DRAWER} .chat-drawer-header__full-screen-btn").click
       end
+
+      def has_open_thread?(thread)
+        has_css?("#{VISIBLE_DRAWER} .chat-thread[data-id='#{thread.id}']")
+      end
     end
   end
 end

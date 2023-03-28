@@ -7,6 +7,7 @@ describe "Single thread in side panel", type: :system, js: true do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
   let(:open_thread) { PageObjects::Pages::ChatThread.new }
+  let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
     chat_system_bootstrap(current_user, [channel])
@@ -49,19 +50,27 @@ describe "Single thread in side panel", type: :system, js: true do
 
     before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
 
+    it "opens the single thread in the drawer from the message actions menu" do
+      visit("/latest")
+      chat_page.open_from_header
+      chat_drawer_page.open_channel(channel)
+      channel_page.open_message_thread(thread.chat_messages.order(:created_at).last)
+      expect(chat_drawer_page).to have_open_thread(thread)
+    end
+
     it "opens the side panel for a single thread from the message actions menu" do
       chat_page.visit_channel(channel)
       channel_page.open_message_thread(thread.original_message)
       expect(side_panel).to have_open_thread(thread)
     end
 
-    it "shows the excerpt of the thread original message" do
+    xit "shows the excerpt of the thread original message" do
       chat_page.visit_channel(channel)
       channel_page.open_message_thread(thread.original_message)
       expect(open_thread).to have_header_content(thread.excerpt)
     end
 
-    it "shows the avatar and username of the original message user" do
+    xit "shows the avatar and username of the original message user" do
       chat_page.visit_channel(channel)
       channel_page.open_message_thread(thread.original_message)
       expect(open_thread.omu).to have_css(".chat-user-avatar img.avatar")

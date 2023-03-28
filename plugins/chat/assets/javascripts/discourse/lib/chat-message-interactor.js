@@ -367,7 +367,11 @@ export default class ChatMessageInteractor {
 
   @action
   openThread() {
-    this.router.transitionTo("chat.channel.thread", this.message.threadId);
+    this.router.transitionTo(
+      "chat.channel.thread",
+      ...this.message.channel.routeModels,
+      this.message.threadId
+    );
   }
 
   @action
