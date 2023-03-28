@@ -874,10 +874,8 @@ export default class ChatLivePane extends Component {
       new_message: newContent,
       upload_ids: (uploads || []).map((upload) => upload.id),
     };
-    return ajax(`/chat/${this.args.channel.id}/edit/${chatMessage.id}`, {
-      type: "PUT",
-      data,
-    })
+    return this.chatApi
+      .editMessage(this.args.channel.id, chatMessage.id, data)
       .then(() => {
         this._resetAfterSend();
       })

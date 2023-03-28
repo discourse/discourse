@@ -197,8 +197,25 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
-  editMessage() {}
-  // editMessage(chatMessage, newContent, uploads) {}
+  editMessage(chatMessage, newContent, uploads) {
+    this.sendingLoading = true;
+    let data = {
+      new_message: newContent,
+      upload_ids: (uploads || []).map((upload) => upload.id),
+    };
+    return this.chatApi
+      .editMessage(this.channel.id, chatMessage.id, data)
+      .then(() => {
+        this.#resetAfterSend();
+      })
+      .catch(popupAjaxError)
+      .finally(() => {
+        if (this._selfDeleted) {
+          return;
+        }
+        this.sendingLoading = false;
+      });
+  }
 
   @action
   editLastMessageRequested() {}
@@ -248,8 +265,7 @@ export default class ChatThreadPanel extends Component {
       return;
     }
 
-    this.chatChannelThreadComposer.replyToMsg = null;
-    this.chatChannelThreadComposer.editingMessage = null;
+    this.chatChannelThreadComposer.reset();
     this.chatComposerPresenceManager.notifyState(this.channel.id, false);
     this.appEvents.trigger("chat-composer:reply-to-set", null);
   }

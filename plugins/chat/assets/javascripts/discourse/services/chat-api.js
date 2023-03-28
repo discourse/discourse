@@ -373,6 +373,23 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Saves an edit to a message's contents in a channel.
+   *
+   * @param {number} channelId - The ID of the channel for the message being edited.
+   * @param {number} messageId - The ID of the message being edited.
+   * @param {object} data - Params of the edit.
+   * @param {string} data.new_message - The edited content of the message.
+   * @param {Array<number>} data.upload_ids - The uploads attached to the message after editing.
+   */
+  editMessage(channelId, messageId, data) {
+    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
+    return ajax(`/chat/${channelId}/edit/${messageId}`, {
+      type: "PUT",
+      data,
+    });
+  }
+
+  /**
    * Marks messages for all of a user's chat channel memberships as read.
    *
    * @returns {Promise}
