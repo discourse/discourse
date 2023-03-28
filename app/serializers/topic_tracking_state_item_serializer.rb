@@ -28,4 +28,8 @@ class TopicTrackingStateItemSerializer < ApplicationSerializer
   def include_is_category_topic?
     object.respond_to?(:category_topic_id)
   end
+
+  def object=(value)
+    @object = value
+  end
 end
