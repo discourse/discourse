@@ -128,7 +128,8 @@ module Chat
     private
 
     def channel_message_bus_last_id
-      @opts[:channel_message_bus_last_id] || Chat::Publisher.root_message_bus_channel(object.id)
+      @opts[:channel_message_bus_last_id] ||
+        MessageBus.last_id(Chat::Publisher.root_message_bus_channel(object.id))
     end
 
     def new_messages_message_bus_id
