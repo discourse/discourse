@@ -10,6 +10,7 @@ import { inject as service } from "@ember/service";
 export default class ChatMessageActionsMobile extends Component {
   @service chat;
   @service site;
+  @service capabilities;
 
   @tracked hasExpandedReply = false;
   @tracked showFadeIn = false;
@@ -28,10 +29,6 @@ export default class ChatMessageActionsMobile extends Component {
       activeMessage.model,
       activeMessage.context
     );
-  }
-
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
   }
 
   @action

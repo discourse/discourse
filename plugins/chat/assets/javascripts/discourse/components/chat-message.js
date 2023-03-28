@@ -31,6 +31,7 @@ export default class ChatMessage extends Component {
   @service dialog;
   @service currentUser;
   @service appEvents;
+  @service capabilities;
   @service chat;
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
@@ -298,23 +299,5 @@ export default class ChatMessage extends Component {
   @action
   dismissMentionWarning() {
     this.args.message.mentionWarning = null;
-  }
-
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
-  }
-
-  @action
-  expand() {
-    this.args.message.expanded = true;
-  }
-
-  @action
-  toggleChecked(event) {
-    if (event.shiftKey) {
-      this.messageInteractor.bulkSelect(event.target.checked);
-    }
-
-    this.messageInteractor.select(event.target.checked);
   }
 }

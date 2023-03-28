@@ -18,7 +18,6 @@ import {
 } from "discourse/lib/user-presence";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 const PAGE_SIZE = 50;
 const PAST = "past";
@@ -26,6 +25,7 @@ const FUTURE = "future";
 const READ_INTERVAL_MS = 1000;
 
 export default class ChatLivePane extends Component {
+  @service capabilities;
   @service chat;
   @service chatChannelsManager;
   @service router;
@@ -132,10 +132,6 @@ export default class ChatLivePane extends Component {
     if (present) {
       this.updateLastReadMessage();
     }
-  }
-
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
   }
 
   @debounce(100)

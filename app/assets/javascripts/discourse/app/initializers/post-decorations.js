@@ -58,7 +58,7 @@ export default {
         { id: "discourse-audio" }
       );
 
-      const caps = container.lookup("capabilities:main");
+      const caps = container.lookup("service:capabilities");
       if (caps.isSafari || caps.isIOS) {
         api.decorateCookedElement(
           (elem) => {
