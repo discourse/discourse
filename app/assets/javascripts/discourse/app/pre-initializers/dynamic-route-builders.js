@@ -12,13 +12,6 @@ export default {
 
   initialize(_container, app) {
     app.register(
-      "controller:discovery.filter",
-      DiscoverySortableController.extend()
-    );
-
-    app.register("route:discovery.filter", buildTopicRoute("filter"));
-
-    app.register(
       "controller:discovery.category",
       DiscoverySortableController.extend()
     );

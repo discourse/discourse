@@ -16,7 +16,6 @@ import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import showModal from "discourse/lib/show-modal";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "discourse-common/lib/get-owner";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
 let _chatMessageDecorators = [];
@@ -38,6 +37,7 @@ export default class ChatMessage extends Component {
   @service dialog;
   @service currentUser;
   @service appEvents;
+  @service capabilities;
   @service chat;
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
@@ -480,10 +480,6 @@ export default class ChatMessage extends Component {
     }
 
     this.react(emoji, REACTIONS.add);
-  }
-
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
   }
 
   @action

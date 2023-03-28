@@ -189,4 +189,24 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     expect(page).not_to have_button("Edited public section")
   end
+
+  it "validates custom section fields" do
+    visit("/latest")
+    sidebar.open_new_custom_section
+
+    section_modal.fill_name("A" * (SidebarSection::MAX_TITLE_LENGTH + 1))
+    section_modal.fill_link("B" * (SidebarUrl::MAX_NAME_LENGTH + 1), "/wrong-url")
+
+    expect(page.find(".title.warning")).to have_content("Title must be shorter than 30 characters")
+    expect(page.find(".name.warning")).to have_content("Name must be shorter than 80 characters")
+    expect(page.find(".value.warning")).to have_content("Format is invalid")
+
+    section_modal.fill_name("")
+    section_modal.fill_link("", "")
+    expect(page.find(".title.warning")).to have_content("Title cannot be blank")
+    expect(page.find(".name.warning")).to have_content("Name cannot be blank")
+    expect(page.find(".value.warning")).to have_content("Link cannot be blank")
+
+    expect(section_modal).to have_disabled_save
+  end
 end

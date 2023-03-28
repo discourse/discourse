@@ -20,7 +20,7 @@ export function autoLoadModules(container, registry) {
   let context = {
     siteSettings: container.lookup("service:site-settings"),
     keyValueStore: container.lookup("service:key-value-store"),
-    capabilities: container.lookup("capabilities:main"),
+    capabilities: container.lookup("service:capabilities"),
     currentUser: container.lookup("service:current-user"),
     site: container.lookup("service:site"),
     session: container.lookup("service:session"),

@@ -209,12 +209,7 @@ en:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
       dismiss: "Dismiss"
 
-    bootstrap_mode_enabled:
-      one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
-      other: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} users have joined."
-    bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
-    bootstrap_invite_button_title: "Send Invites"
-    bootstrap_wizard_link_title: "Finish setup wizard"
+    bootstrap_mode: "Bootstrap mode"
 
     themes:
       default_description: "Default"
@@ -4409,17 +4404,34 @@ en:
         custom:
           add: "Add custom section"
           edit: "Edit custom section"
-          name: "Section title"
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
           public: "Make this section public and visible to everyone"
           links:
-            icon: "Icon"
-            name: "Name"
-            value: "Link"
             add: "Add another link"
             delete: "Delete link"
+            icon:
+              label: "Icon"
+              validation:
+                blank: "Icon cannot be blank"
+                maximum: "Icon must be shorter than %{count} characters"
+            name: 
+              label: "Name"
+              validation:
+                blank: "Name cannot be blank"
+                maximum: "Name must be shorter than %{count} characters"
+            value: 
+              label: "Link"
+              validation:
+                blank: "Link cannot be blank"
+                maximum: "Link must be shorter than %{count} characters"
+                invalid: "Format is invalid"
+          title:
+            label: "Section title"
+            validation:
+              blank: "Title cannot be blank"
+              maximum: "Title must be shorter than %{count} characters"
         about:
           header_link_text: "About"
         messages:

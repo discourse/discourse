@@ -204,11 +204,11 @@ class Category < ActiveRecord::Base
   @topic_id_cache = DistributedCache.new("category_topic_ids")
 
   def self.topic_ids
-    @topic_id_cache["ids"] || reset_topic_ids_cache
+    @topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache["ids"] = Set.new(Category.pluck(:topic_id).compact)
+    @topic_id_cache.clear
   end
 
   def reset_topic_ids_cache
@@ -218,7 +218,7 @@ class Category < ActiveRecord::Base
   @@subcategory_ids = DistributedCache.new("subcategory_ids")
 
   def self.subcategory_ids(category_id)
-    @@subcategory_ids[category_id] ||= begin
+    @@subcategory_ids.defer_get_set(category_id.to_s) do
       sql = <<~SQL
             WITH RECURSIVE subcategories AS (
                 SELECT :category_id id, 1 depth

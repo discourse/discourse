@@ -324,7 +324,7 @@ createWidget("header-icons", {
         let { currentUser } = this;
         if (
           currentUser?.reviewable_count &&
-          !this.currentUser.redesigned_user_menu_enabled
+          this.siteSettings.navigation_menu === "legacy"
         ) {
           return h(
             "div.badge-notification.reviewables",

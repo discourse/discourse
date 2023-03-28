@@ -31,6 +31,19 @@ RSpec.describe "Chat composer", type: :system, js: true do
         text: message_1.user.username,
       )
     end
+
+    context "with HTML tags" do
+      before { message_1.update!(message: "<mark>not marked</mark>") }
+
+      it "renders text in the details" do
+        chat.visit_channel(channel_1)
+        channel.reply_to(message_1)
+
+        expect(
+          find(".chat-composer-message-details .chat-reply__excerpt")["innerHTML"].strip,
+        ).to eq("not marked")
+      end
+    end
   end
 
   context "when editing a message" do

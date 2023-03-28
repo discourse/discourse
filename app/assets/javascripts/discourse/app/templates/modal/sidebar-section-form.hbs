@@ -6,7 +6,9 @@
 <DModalBody @title={{this.header}}>
   <form class="form-horizontal">
     <div class="input-group">
-      <label for="section-name">{{i18n "sidebar.sections.custom.name"}}</label>
+      <label for="section-name">{{i18n
+          "sidebar.sections.custom.title.label"
+        }}</label>
       <Input
         name="section-name"
         @type="text"
@@ -14,12 +16,17 @@
         class={{this.model.titleCssClass}}
         {{on "input" (action (mut this.model.title) value="target.value")}}
       />
+      {{#if this.model.invalidTitleMessage}}
+        <div class="title warning">
+          {{this.model.invalidTitleMessage}}
+        </div>
+      {{/if}}
     </div>
     {{#each this.activeLinks as |link|}}
       <div class="row-wrapper">
         <div class="input-group">
           <label for="link-name">{{i18n
-              "sidebar.sections.custom.links.icon"
+              "sidebar.sections.custom.links.icon.label"
             }}</label>
           <IconPicker
             @name="icon"
@@ -29,10 +36,15 @@
             @onlyAvailable={{true}}
             @onChange={{action (mut link.icon)}}
           />
+          {{#if link.invalidIconMessage}}
+            <div class="icon warning">
+              {{link.invalidIconMessage}}
+            </div>
+          {{/if}}
         </div>
         <div class="input-group">
           <label for="link-name">{{i18n
-              "sidebar.sections.custom.links.name"
+              "sidebar.sections.custom.links.name.label"
             }}</label>
           <Input
             name="link-name"
@@ -41,10 +53,15 @@
             class={{link.nameCssClass}}
             {{on "input" (action (mut link.name) value="target.value")}}
           />
+          {{#if link.invalidNameMessage}}
+            <div class="name warning">
+              {{link.invalidNameMessage}}
+            </div>
+          {{/if}}
         </div>
         <div class="input-group">
           <label for="link-url">{{i18n
-              "sidebar.sections.custom.links.value"
+              "sidebar.sections.custom.links.value.label"
             }}</label>
           <Input
             name="link-url"
@@ -53,6 +70,11 @@
             class={{link.valueCssClass}}
             {{on "input" (action (mut link.value) value="target.value")}}
           />
+          {{#if link.invalidValueMessage}}
+            <div class="value warning">
+              {{link.invalidValueMessage}}
+            </div>
+          {{/if}}
         </div>
         <DButton
           @icon="trash-alt"

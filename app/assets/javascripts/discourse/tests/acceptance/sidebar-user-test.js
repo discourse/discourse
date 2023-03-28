@@ -114,7 +114,7 @@ acceptance(
     });
 
     test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {
-      const capabilities = this.container.lookup("capabilities:main");
+      const capabilities = this.container.lookup("service:capabilities");
       capabilities.touch = true;
 
       await visit("/");

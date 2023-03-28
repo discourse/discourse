@@ -17,6 +17,7 @@ module Chat
     transaction do
       step :update_last_read_message_ids
       step :mark_associated_mentions_as_read
+      step :publish_user_tracking_state
     end
 
     private
@@ -50,6 +51,17 @@ module Chat
         guardian.user,
         channel_ids: updated_memberships.map(&:channel_id),
       )
+    end
+
+    def publish_user_tracking_state(guardian:, updated_memberships:, **)
+      data =
+        updated_memberships.each_with_object({}) do |membership, data_hash|
+          data_hash[membership.channel_id] = {
+            last_read_message_id: membership.last_read_message_id,
+            membership_id: membership.membership_id,
+          }
+        end
+      Chat::Publisher.publish_bulk_user_tracking_state(guardian.user, data)
     end
   end
 end

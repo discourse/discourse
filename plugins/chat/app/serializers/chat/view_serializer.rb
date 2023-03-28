@@ -24,7 +24,8 @@ module Chat
         can_moderate: scope.can_moderate_chat?(object.chat_channel.chatable),
         can_delete_self: scope.can_delete_own_chats?(object.chat_channel.chatable),
         can_delete_others: scope.can_delete_other_chats?(object.chat_channel.chatable),
-        channel_message_bus_last_id: MessageBus.last_id("/chat/#{object.chat_channel.id}"),
+        channel_message_bus_last_id:
+          MessageBus.last_id(Chat::Publisher.root_message_bus_channel(object.chat_channel.id)),
       }
       meta_hash[
         :can_load_more_past

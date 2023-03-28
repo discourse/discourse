@@ -69,6 +69,10 @@ export default class SidebarUserTagsSection extends Component {
     }
   }
 
+  get shouldDisplayDefaultConfig() {
+    return this.currentUser.admin && !this.hasDefaultSidebarTags;
+  }
+
   get hasDefaultSidebarTags() {
     return this.siteSettings.default_sidebar_tags.length > 0;
   }

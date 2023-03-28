@@ -6,6 +6,10 @@ module Chat
       "/chat/#{chat_channel_id}/new-messages"
     end
 
+    def self.root_message_bus_channel(chat_channel_id)
+      "/chat/#{chat_channel_id}"
+    end
+
     def self.publish_new!(chat_channel, chat_message, staged_id)
       content =
         Chat::MessageSerializer.new(
@@ -16,7 +20,7 @@ module Chat
       content[:staged_id] = staged_id
       permissions = permissions(chat_channel)
 
-      MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions)
+      MessageBus.publish(root_message_bus_channel(chat_channel.id), content.as_json, permissions)
 
       MessageBus.publish(
         self.new_messages_message_bus_channel(chat_channel.id),
@@ -40,7 +44,11 @@ module Chat
           cooked: chat_message.cooked,
         },
       }
-      MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions(chat_channel))
+      MessageBus.publish(
+        root_message_bus_channel(chat_channel.id),
+        content.as_json,
+        permissions(chat_channel),
+      )
     end
 
     def self.publish_edit!(chat_channel, chat_message)
@@ -50,7 +58,11 @@ module Chat
           { scope: anonymous_guardian, root: :chat_message },
         ).as_json
       content[:type] = :edit
-      MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions(chat_channel))
+      MessageBus.publish(
+        root_message_bus_channel(chat_channel.id),
+        content.as_json,
+        permissions(chat_channel),
+      )
     end
 
     def self.publish_refresh!(chat_channel, chat_message)
@@ -60,7 +72,11 @@ module Chat
           { scope: anonymous_guardian, root: :chat_message },
         ).as_json
       content[:type] = :refresh
-      MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions(chat_channel))
+      MessageBus.publish(
+        root_message_bus_channel(chat_channel.id),
+        content.as_json,
+        permissions(chat_channel),
+      )
     end
 
     def self.publish_reaction!(chat_channel, chat_message, action, user, emoji)
@@ -71,7 +87,11 @@ module Chat
         type: :reaction,
         chat_message_id: chat_message.id,
       }
-      MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions(chat_channel))
+      MessageBus.publish(
+        root_message_bus_channel(chat_channel.id),
+        content.as_json,
+        permissions(chat_channel),
+      )
     end
 
     def self.publish_presence!(chat_channel, user, typ)
@@ -80,7 +100,7 @@ module Chat
 
     def self.publish_delete!(chat_channel, chat_message)
       MessageBus.publish(
-        "/chat/#{chat_channel.id}",
+        root_message_bus_channel(chat_channel.id),
         { type: "delete", deleted_id: chat_message.id, deleted_at: chat_message.deleted_at },
         permissions(chat_channel),
       )
@@ -88,7 +108,7 @@ module Chat
 
     def self.publish_bulk_delete!(chat_channel, deleted_message_ids)
       MessageBus.publish(
-        "/chat/#{chat_channel.id}",
+        root_message_bus_channel(chat_channel.id),
         { typ: "bulk_delete", deleted_ids: deleted_message_ids, deleted_at: Time.zone.now },
         permissions(chat_channel),
       )
@@ -101,7 +121,11 @@ module Chat
           { scope: anonymous_guardian, root: :chat_message },
         ).as_json
       content[:type] = :restore
-      MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions(chat_channel))
+      MessageBus.publish(
+        root_message_bus_channel(chat_channel.id),
+        content.as_json,
+        permissions(chat_channel),
+      )
     end
 
     def self.publish_flag!(chat_message, user, reviewable, score)
@@ -129,13 +153,44 @@ module Chat
     end
 
     def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
-      data = { chat_channel_id: chat_channel_id, chat_message_id: chat_message_id }.merge(
-        Chat::ChannelUnreadsQuery.call(channel_id: chat_channel_id, user_id: user.id),
+      data = {
+        channel_id: chat_channel_id,
+        last_read_message_id: chat_message_id,
+        # TODO (martin) Remove old chat_channel_id and chat_message_id keys here once deploys have cycled,
+        # this will prevent JS errors from clients that are looking for the old payload.
+        chat_channel_id: chat_channel_id,
+        chat_message_id: chat_message_id,
+      }.merge(
+        Chat::ChannelUnreadsQuery.call(channel_ids: [chat_channel_id], user_id: user.id).first.to_h,
       )
 
       MessageBus.publish(
         self.user_tracking_state_message_bus_channel(user.id),
         data.as_json,
+        user_ids: [user.id],
+      )
+    end
+
+    def self.bulk_user_tracking_state_message_bus_channel(user_id)
+      "/chat/bulk-user-tracking-state/#{user_id}"
+    end
+
+    def self.publish_bulk_user_tracking_state(user, channel_last_read_map)
+      unread_data =
+        Chat::ChannelUnreadsQuery.call(
+          channel_ids: channel_last_read_map.keys,
+          user_id: user.id,
+        ).map(&:to_h)
+
+      channel_last_read_map.each do |key, value|
+        channel_last_read_map[key] = value.merge(
+          unread_data.find { |data| data[:channel_id] == key }.except(:channel_id),
+        )
+      end
+
+      MessageBus.publish(
+        self.bulk_user_tracking_state_message_bus_channel(user.id),
+        channel_last_read_map.as_json,
         user_ids: [user.id],
       )
     end

@@ -109,14 +109,14 @@ module Chat
     end
 
     def meta
-      {
-        message_bus_last_ids: {
-          channel_message_bus_last_id: MessageBus.last_id("/chat/#{object.id}"),
-          new_messages: new_messages_message_bus_id,
-          new_mentions: new_mentions_message_bus_id,
-          kick: kick_message_bus_id,
-        },
+      ids = {
+        channel_message_bus_last_id: channel_message_bus_last_id,
+        new_messages: new_messages_message_bus_id,
+        new_mentions: new_mentions_message_bus_id,
       }
+
+      ids[:kick] = kick_message_bus_id if !object.direct_message_channel?
+      { message_bus_last_ids: ids }
     end
 
     alias_method :include_archive_topic_id?, :include_archive_status?
@@ -126,6 +126,11 @@ module Chat
     alias_method :include_archive_completed?, :include_archive_status?
 
     private
+
+    def channel_message_bus_last_id
+      @opts[:channel_message_bus_last_id] ||
+        MessageBus.last_id(Chat::Publisher.root_message_bus_channel(object.id))
+    end
 
     def new_messages_message_bus_id
       @opts[:new_messages_message_bus_last_id] ||

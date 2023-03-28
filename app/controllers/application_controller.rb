@@ -686,16 +686,15 @@ class ApplicationController < ActionController::Base
   end
 
   def banner_json
-    json = ApplicationController.banner_json_cache["json"]
     return "{}" if !current_user && SiteSetting.login_required?
 
-    unless json
-      topic = Topic.where(archetype: Archetype.banner).first
-      banner = topic.present? ? topic.banner : {}
-      ApplicationController.banner_json_cache["json"] = json = MultiJson.dump(banner)
-    end
-
-    json
+    ApplicationController
+      .banner_json_cache
+      .defer_get_set("json") do
+        topic = Topic.where(archetype: Archetype.banner).first
+        banner = topic.present? ? topic.banner : {}
+        MultiJson.dump(banner)
+      end
   end
 
   def custom_emoji
