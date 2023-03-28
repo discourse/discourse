@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { schedule } from "@ember/runloop";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import { tracked } from "@glimmer/tracking";
