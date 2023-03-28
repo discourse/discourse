@@ -55,6 +55,7 @@ export default class Chat extends Service {
     );
   }
 
+  @computed("activeChannel.userSilenced")
   get userCanInteractWithChat() {
     return !this.activeChannel?.userSilenced;
   }

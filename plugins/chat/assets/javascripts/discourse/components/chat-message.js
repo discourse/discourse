@@ -154,6 +154,9 @@ export default class ChatMessage extends Component {
 
   @bind
   _debouncedOnHoverMessage() {
+    if (!this.chat.userCanInteractWithChat) {
+      return;
+    }
     this._setActiveMessage();
   }
 

@@ -15,7 +15,7 @@ import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor } from "discourse/lib/text";
 import { inject as service } from "@ember/service";
-import { readOnly, reads } from "@ember/object/computed";
+import { reads } from "@ember/object/computed";
 import { SKIP } from "discourse/lib/autocomplete";
 import { Promise } from "rsvp";
 import { translations } from "pretty-text/emoji/data";
@@ -32,7 +32,6 @@ export default Component.extend(TextareaTextManipulation, {
   chat: service(),
   classNames: ["chat-composer-container"],
   classNameBindings: ["emojiPickerVisible:with-emoji-picker"],
-  userSilenced: readOnly("chatChannel.userSilenced"),
   chatEmojiReactionStore: service("chat-emoji-reaction-store"),
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
   chatStateManager: service("chat-state-manager"),
@@ -537,17 +536,23 @@ export default Component.extend(TextareaTextManipulation, {
     this.set("emojiPickerIsActive", false);
   },
 
-  @discourseComputed("chatChannel.{id,chatable.users.[]}")
-  disableComposer(channel) {
+  @discourseComputed(
+    "chatChannel.{id,chatable.users.[]}",
+    "chat.userCanInteractWithChat"
+  )
+  disableComposer(channel, userCanInteractWithChat) {
     return (
       (channel.isDraft && isEmpty(channel?.chatable?.users)) ||
-      !this.chat.userCanInteractWithChat ||
+      !userCanInteractWithChat ||
       !channel.canModifyMessages(this.currentUser)
     );
   },
 
-  @discourseComputed("userSilenced", "chatChannel.{chatable.users.[],id}")
-  placeholder(userSilenced, chatChannel) {
+  @discourseComputed(
+    "chatChannel.{chatable.users.[],id}",
+    "chat.userCanInteractWithChat"
+  )
+  placeholder(chatChannel, userCanInteractWithChat) {
     if (!chatChannel.canModifyMessages(this.currentUser)) {
       return I18n.t(
         `chat.placeholder_new_message_disallowed.${chatChannel.status}`
@@ -566,7 +571,7 @@ export default Component.extend(TextareaTextManipulation, {
       }
     }
 
-    if (userSilenced) {
+    if (!userCanInteractWithChat) {
       return I18n.t("chat.placeholder_silenced");
     } else {
       return this.messageRecipient(chatChannel);
