@@ -4148,12 +4148,7 @@ en:
     offline_page_message: "It looks like you are offline! Please check your network connection and try again."
 
   login_required:
-    welcome_message: |
-      ## [Welcome to %{title}](#welcome)
-      An account is required. Please create an account or log in to continue.
-    welcome_message_invite_only: |
-      ## [Welcome to %{title}](#welcome)
-      An account is required. Please ask an existing member for an invite or log in to continue.
+    welcome_message: "# [Welcome to %{title}](#welcome)"
 
   upload:
     edit_reason: "downloaded local copies of images"

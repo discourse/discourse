@@ -3678,12 +3678,7 @@ pt_BR:
     title: "Não é possível carregar o aplicativo"
     offline_page_message: "Parece que você está off-line! Verifique sua conexão de rede e tente novamente."
   login_required:
-    welcome_message: |
-      ## [Boas-vindas ao %{title}](#boas-vindas)
-      É preciso ter uma conta. Crie ou entre com uma para continuar.
-    welcome_message_invite_only: |
-      ## [Boas-vindas ao %{title}](#boas-vindas)
-      É preciso ter uma conta. Peça que a um membro um convite ou entre com uma conta para continuar.
+    welcome_message: "## [Boas-vindas ao %{title}](#boas-vindas)"
   upload:
     edit_reason: "cópias locais de imagens baixadas"
     unauthorized: "Desculpe, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."

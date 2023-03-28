@@ -1997,9 +1997,7 @@ fa_IR:
     search_title: "جستجو در سایت"
     search_button: "جستجو"
   login_required:
-    welcome_message: |
-      ## [خوش آمدید به %{title}](#welcome)
-      داشتن حساب کاربری الزامی است. لطفا یک حساب کاربری بسازید یا وارد شوید.
+    welcome_message: "## [خوش آمدید به %{title}](#welcome)"
   upload:
     edit_reason: "کپی عکس‌های محلی دانلود شد"
     unauthorized: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید معتبر نیست ( پسوندهای معتبر عبارتند از: {authorized_extensions}% )."

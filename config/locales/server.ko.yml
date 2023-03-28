@@ -3384,12 +3384,7 @@ ko:
     title: "앱을 로드할 수 없음"
     offline_page_message: "오프라인 상태인 것 같습니다. 네트워크 연결을 확인하고 다시 시도하세요."
   login_required:
-    welcome_message: |
-      ## [%{title}에 오신 것을 환영합니다](#welcome)
-      계정이 필요합니다. 계속하려면 계정을 만들거나 로그인하세요.
-    welcome_message_invite_only: |
-      ## [%{title}에 오신 것을 환영합니다](#welcome)
-      계정이 필요합니다. 계속하려면 기존 회원에게 초대를 요청하거나 로그인하세요.
+    welcome_message: "## [%{title}에 오신 것을 환영합니다](#welcome)"
   upload:
     edit_reason: "이미지 로컬 사본 다운로드됨"
     unauthorized: "업로드하려는 파일 확장자는 허용되지 않습니다(허용 확장자: %{authorized_extensions})."
