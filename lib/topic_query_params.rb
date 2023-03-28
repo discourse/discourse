@@ -4,6 +4,7 @@ module TopicQueryParams
   def build_topic_list_options
     options = {}
     params[:tags] = [params[:tag_id], *Array(params[:tags])].uniq if params[:tag_id].present?
+    params[:exclude_tags] = [params[:exlude_tag]] if params[:exclude_tag].present?
 
     TopicQuery.public_valid_options.each do |key|
       if params.key?(key)

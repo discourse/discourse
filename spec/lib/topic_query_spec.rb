@@ -415,12 +415,12 @@ RSpec.describe TopicQuery do
       let(:synonym) { Fabricate(:tag, target_tag: tag, name: "synonym") }
 
       it "excludes a tag if desired" do
-        topics = TopicQuery.new(moderator, exclude_tag: tag.name).list_latest.topics
+        topics = TopicQuery.new(moderator, exclude_tags: [tag.name]).list_latest.topics
         expect(topics.any? { |t| t.tags.include?(tag) }).to eq(false)
       end
 
       it "does not exclude a tagged topic without permission" do
-        topics = TopicQuery.new(user, exclude_tag: other_tag.name).list_latest.topics
+        topics = TopicQuery.new(user, exclude_tags: [other_tag.name]).list_latest.topics
         expect(topics.map(&:id)).to include(tagged_topic2.id)
       end
 

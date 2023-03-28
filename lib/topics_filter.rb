@@ -21,6 +21,8 @@ class TopicsFilter
     tag_ids.uniq!
     tag_ids.compact!
 
+    yield tag_ids if block_given?
+
     return @scope.none if match_all && tag_ids.length != tag_names.length
     return @scope if tag_ids.empty?
 

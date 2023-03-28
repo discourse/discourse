@@ -7,6 +7,9 @@ import { action } from "@ember/object";
 export default class extends DiscourseRoute {
   queryParams = {
     status: { replace: true, refreshModel: true },
+    tags: { replace: true, refreshModel: true, type: "customArray" },
+    exclude_tags: { replace: true, refreshModel: true, type: "customArray" },
+    match_all_tags: { replace: true, refreshModel: true },
   };
 
   model(data) {
@@ -32,6 +35,17 @@ export default class extends DiscourseRoute {
       controller: "discovery/topics",
       outlet: "list-container",
     });
+  }
+
+  // This is required because by default Ember router will serialize Array type query param with JSON.stringify which
+  // results in a query param like `tags=tag1,tag2` which is not what we want. By doing nothing here, the query param
+  // will be serialized as `tags[]=tag1&tags[]=tag2`.
+  serializeQueryParam(value, urlKey, type) {
+    if (type === "customArray") {
+      return value;
+    } else {
+      return super.serializeQueryParam(value, urlKey, type);
+    }
   }
 
   // TODO(tgxworld): This action is required by the `discovery/topics` controller which is not necessary for this route.

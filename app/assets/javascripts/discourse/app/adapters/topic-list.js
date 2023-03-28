@@ -12,7 +12,13 @@ export function finderFor(filter, params) {
 
       for (const [key, value] of Object.entries(params)) {
         if (typeof value !== "undefined") {
-          urlSearchParams.set(key, value);
+          if (Array.isArray(value)) {
+            value.forEach((v) => {
+              urlSearchParams.append(`${key}[]`, v);
+            });
+          } else {
+            urlSearchParams.set(key, value);
+          }
         }
       }
 
