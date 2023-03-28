@@ -32,13 +32,24 @@
     </div>
   </div>
 
-  <ChatComposer
-    @sendMessage={{this.sendMessage}}
-    @editMessage={{this.editMessage}}
-    @loading={{this.sendingLoading}}
-    @onCancelEditing={{this.cancelEditing}}
-    @onEditLastMessageRequested={{this.editLastMessageRequested}}
-    @chatChannel={{this.channel}}
-    @composerService={{this.chatChannelThreadComposer}}
-  />
+  {{#if this.chatChannelThreadPane.selectingMessages}}
+    <ChatSelectionManager
+      @selectedMessageIds={{this.chatChannelThreadPane.selectedMessageIds}}
+      @chatChannel={{this.chat.activeChannel}}
+      @cancelSelecting={{action
+        this.chatChannelThreadPane.cancelSelecting
+        this.chat.activeChannel.selectedMessages
+      }}
+    />
+  {{else}}
+    <ChatComposer
+      @sendMessage={{this.sendMessage}}
+      @editMessage={{this.editMessage}}
+      @loading={{this.sendingLoading}}
+      @onCancelEditing={{this.cancelEditing}}
+      @onEditLastMessageRequested={{this.editLastMessageRequested}}
+      @chatChannel={{this.channel}}
+      @composerService={{this.chatChannelThreadComposer}}
+    />
+  {{/if}}
 </div>

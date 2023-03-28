@@ -69,6 +69,20 @@ export default class ChatMessage extends Component {
   }
 
   @action
+  expand() {
+    this.args.message.expanded = true;
+  }
+
+  @action
+  toggleChecked(event) {
+    if (event.shiftKey) {
+      this.messageInteractor.bulkSelect(event.target.checked);
+    }
+
+    this.messageInteractor.select(event.target.checked);
+  }
+
+  @action
   teardownChatMessage() {
     cancel(this._invitationSentTimer);
   }
