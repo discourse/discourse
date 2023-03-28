@@ -9,6 +9,7 @@ import { and } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import discourseLater from "discourse-common/lib/later";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -69,7 +70,7 @@ export default class Chat extends Service {
     if (hash) {
       this._activeMessage = hash;
 
-      if (hash.context === "thread") {
+      if (hash.context === MESSAGE_CONTEXT_THREAD) {
         this.chatChannelThreadPane.hoveredMessageId = hash.model.id;
       } else {
         this.chatChannelPane.hoveredMessageId = hash.model.id;

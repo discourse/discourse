@@ -52,7 +52,6 @@ export default class ChatLivePane extends Component {
 
   _loadedChannelId = null;
   _scrollerEl = null;
-  _lastSelectedMessage = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
@@ -921,42 +920,6 @@ export default class ChatLivePane extends Component {
 
   get chatProgressBarContainer() {
     return document.querySelector("#chat-progress-bar-container");
-  }
-
-  get selectedMessageIds() {
-    return this.args.channel?.messages
-      ?.filter((m) => m.selected)
-      ?.map((m) => m.id);
-  }
-
-  @action
-  onStartSelectingMessages(message) {
-    this._lastSelectedMessage = message;
-    this.selectingMessages = true;
-  }
-
-  @action
-  onSelectMessage(message) {
-    this._lastSelectedMessage = message;
-  }
-
-  @action
-  bulkSelectMessages(message, checked) {
-    const lastSelectedIndex = this._findIndexOfMessage(
-      this._lastSelectedMessage
-    );
-    const newlySelectedIndex = this._findIndexOfMessage(message);
-    const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(
-      (a, b) => a - b
-    );
-
-    for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
-      this.args.channel.messages[i].selected = checked;
-    }
-  }
-
-  _findIndexOfMessage(message) {
-    return this.args.channel.messages.findIndex((m) => m.id === message.id);
   }
 
   @action

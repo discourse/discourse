@@ -46,9 +46,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       ),
       chatChannel,
       afterExpand: () => {},
-      onStartSelectingMessages: () => {},
-      onSelectMessage: () => {},
-      bulkSelectMessages: () => {},
       onHoverMessage: () => {},
       messageDidEnterViewport: () => {},
       messageDidLeaveViewport: () => {},
@@ -59,9 +56,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     <ChatMessage
       @message={{this.message}}
       @channel={{this.chatChannel}}
-      @onStartSelectingMessages={{this.onStartSelectingMessages}}
-      @onSelectMessage={{this.onSelectMessage}}
-      @bulkSelectMessages={{this.bulkSelectMessages}}
       @messageDidEnterViewport={{this.messageDidEnterViewport}}
       @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
     />

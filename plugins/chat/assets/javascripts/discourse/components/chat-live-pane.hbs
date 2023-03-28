@@ -82,6 +82,7 @@
         this.chatChannelPane.cancelSelecting
         @channel.selectedMessages
       }}
+      @context="channel"
     />
   {{else}}
     {{#if (or @channel.isDraft @channel.isFollowing)}}

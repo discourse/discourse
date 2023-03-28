@@ -43,7 +43,7 @@ export default class ChatMessage extends Component {
   @optionalService adminTools;
 
   get pane() {
-    return this.args.context === "thread"
+    return this.args.context === MESSAGE_CONTEXT_THREAD
       ? this.chatChannelThreadPane
       : this.chatChannelPane;
   }

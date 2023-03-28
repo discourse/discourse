@@ -11,7 +11,7 @@ export default class ChatChannelPane extends Service {
   @tracked lastSelectedMessage = null;
 
   get selectedMessageIds() {
-    return this.chat.activeChannel.selectedMessages.map((m) => m.id);
+    return this.chat.activeChannel.selectedMessages.mapBy("id");
   }
 
   @action
