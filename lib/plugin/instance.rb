@@ -110,6 +110,7 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def add_to_serializer(serializer, attr, define_include_method = true, &block)
+    is_include_method = attr.to_s.start_with?("include_")
     reloadable_patch do |plugin|
       base =
         begin
@@ -118,19 +119,44 @@ class Plugin::Instance
           "#{serializer.to_s}Serializer".constantize
         end
 
-      # we have to work through descendants cause serializers may already be baked and cached
-      ([base] + base.descendants).each do |klass|
-        unless attr.to_s.start_with?("include_")
-          klass.attributes(attr)
+      include_method_name = "include_#{attr}?"
 
-          if define_include_method
-            # Don't include serialized methods if the plugin is disabled
-            klass.public_send(:define_method, "include_#{attr}?") { plugin.enabled? }
+      if !is_include_method
+        # we have to work through descendants cause serializers may already be baked and cached
+        ([base] + base.descendants).each do |klass|
+          # tricky code but we need to disable by default if this is a new attribute
+          # module we prepend will forward
+          if !klass.method_defined?(include_method_name)
+            klass.define_method(include_method_name) { false }
           end
+          klass.define_method(attr) { nil } if !klass.method_defined?(attr)
+          klass.attribute(attr)
         end
-
-        klass.public_send(:define_method, attr, &block)
       end
+
+      @plugin_module_serializers ||= {}
+      mod = @plugin_module_serializers[base]
+      if !mod
+        mod = @plugin_module_serializers[base] = Module.new
+        base.prepend(mod)
+      end
+
+      if !is_include_method && define_include_method
+        mod.define_method include_method_name do
+          # super is defined in AM serializer unconditionally
+          plugin.enabled? || super()
+        end
+      end
+
+      mod.define_method(attr) do
+        if plugin.enabled?
+          instance_exec(&block)
+        else
+          super()
+        end
+      end
+
+      true
     end
   end
 

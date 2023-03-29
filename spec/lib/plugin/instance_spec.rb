@@ -31,9 +31,14 @@ RSpec.describe Plugin::Instance do
 
       class TroutSerializer < ApplicationSerializer
         attribute :name
+        attribute :description
 
         def name
           "a trout"
+        end
+
+        def description
+          "a trout, described"
         end
       end
       class TroutJuniorSerializer < TroutSerializer
@@ -57,6 +62,7 @@ RSpec.describe Plugin::Instance do
 
       before do
         @plugin = TroutPlugin.new
+
         @trout = Trout.new
 
         poison = TroutSerializer.new(@trout)
@@ -75,6 +81,12 @@ RSpec.describe Plugin::Instance do
 
         # Serializer
         @plugin.add_to_serializer(:trout, :scales) { 1024 }
+        @plugin.add_to_serializer(:trout, :description) do
+          # a bit awkward cause of the way block is invoked
+          # the alternative is handling custom dispatch constantly by mixing in
+          # an extra module, but that would cause uneeded cost when plugin is disabled
+          "was: #{self.method(:description).super_method.call} is: no longer a trout"
+        end
 
         @serializer = TroutSerializer.new(@trout)
         @child_serializer = TroutJuniorSerializer.new(@trout)
@@ -91,6 +103,9 @@ RSpec.describe Plugin::Instance do
         expect(@serializer.scales).to eq(1024)
         expect(@serializer.include_scales?).to eq(true)
 
+        expect(@serializer.description).to eq("was: a trout, described is: no longer a trout")
+        expect(@child_serializer.description).to eq("was: a trout, described is: no longer a trout")
+
         expect(@child_serializer.attributes[:scales]).to eq(1024)
 
         # When a plugin is disabled
@@ -98,16 +113,21 @@ RSpec.describe Plugin::Instance do
         expect(@trout.status?).to eq(nil)
         DiscourseEvent.trigger(:hello)
         expect(@hello_count).to eq(1)
-        expect(@serializer.scales).to eq(1024)
+
+        expect(@serializer.scales).to eq(nil)
         expect(@serializer.include_scales?).to eq(false)
+
         expect(@serializer.name).to eq("a trout")
 
-        expect(@child_serializer.scales).to eq(1024)
+        expect(@child_serializer.scales).to eq(nil)
         expect(@child_serializer.include_scales?).to eq(false)
         expect(@child_serializer.name).to eq("a trout jr")
-      end
 
-      it "only returns HTML if enabled" do
+        expect(@serializer.description).to eq("a trout, described")
+        expect(@child_serializer.description).to eq("a trout, described")
+        expect(@serializer.include_description?).to eq(true)
+        expect(@child_serializer.include_description?).to eq(true)
+
         ctx = Trout.new
         ctx.data = "hello"
 
