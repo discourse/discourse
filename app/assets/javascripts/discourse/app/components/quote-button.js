@@ -200,6 +200,10 @@ export default Component.extend(KeyEnterEscape, {
 
     // change the position of the button
     schedule("afterRender", () => {
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       this.rangeRef = new RangeRef(".cooked");
 
       this._popper = createPopper(this.rangeRef, this.element, {
@@ -219,10 +223,6 @@ export default Component.extend(KeyEnterEscape, {
           },
         ],
       });
-
-      if (!this.element || this.isDestroying || this.isDestroyed) {
-        return;
-      }
 
       if (!this.animated) {
         // We only enable CSS transitions after the initial positioning
