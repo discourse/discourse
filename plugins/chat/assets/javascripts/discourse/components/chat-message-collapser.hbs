@@ -13,7 +13,13 @@
     {{#each this.cookedBodies as |cooked|}}
       {{#if cooked.needsCollapser}}
         <Collapser @header={{cooked.header}} @onToggle={{@onToggleCollapse}}>
-          {{cooked.body}}
+          {{#if cooked.videoAttributes}}
+            <div class="chat-message-collapser-lazy-video">
+              <LazyVideo @videoAttributes={{cooked.videoAttributes}} />
+            </div>
+          {{else}}
+            {{cooked.body}}
+          {{/if}}
         </Collapser>
       {{else}}
         {{cooked.body}}
