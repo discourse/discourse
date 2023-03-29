@@ -200,10 +200,9 @@ export default Component.extend(KeyEnterEscape, {
 
     // change the position of the button
     schedule("afterRender", () => {
-      const quoteButton = document.querySelector(".quote-button");
       this.rangeRef = new RangeRef(".cooked");
 
-      this._popper = createPopper(this.rangeRef, quoteButton, {
+      this._popper = createPopper(this.rangeRef, this.element, {
         placement: this.placement,
         modifiers: [
           {
