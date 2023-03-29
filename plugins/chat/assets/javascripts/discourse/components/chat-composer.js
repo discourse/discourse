@@ -185,7 +185,7 @@ export default Component.extend(TextareaTextManipulation, {
     if (
       event.key === "ArrowUp" &&
       this._messageIsEmpty() &&
-      !this.composerService.editingMessage
+      !this.composerService?.editingMessage
     ) {
       event.preventDefault();
       this.onEditLastMessageRequested();
@@ -193,11 +193,11 @@ export default Component.extend(TextareaTextManipulation, {
 
     if (event.keyCode === 27) {
       // keyCode for 'Escape'
-      if (this.composerService.replyToMsg) {
+      if (this.composerService?.replyToMsg) {
         this.set("value", "");
-        this.composerService.setReplyTo(null);
+        this.composerService?.setReplyTo(null);
         return false;
-      } else if (this.composerService.editingMessage) {
+      } else if (this.composerService?.editingMessage) {
         this.set("value", "");
         this.cancelEditing();
         return false;
@@ -211,13 +211,13 @@ export default Component.extend(TextareaTextManipulation, {
     this._super(...arguments);
 
     if (
-      !this.composerService.editingMessage &&
+      !this.composerService?.editingMessage &&
       this.chatChannel?.draft &&
       this.chatChannel?.canModifyMessages(this.currentUser)
     ) {
       // uses uploads from draft here...
       this.set("value", this.chatChannel.draft.message);
-      this.composerService.setReplyTo(this.chatChannel.draft.replyToMsg);
+      this.composerService?.setReplyTo(this.chatChannel.draft.replyToMsg);
 
       this._captureMentions();
       this._syncUploads(this.chatChannel.draft.uploads);
@@ -228,12 +228,12 @@ export default Component.extend(TextareaTextManipulation, {
 
   @action
   updateEditingMessage() {
-    if (this.composerService.editingMessage && !this.loading) {
-      this.set("value", this.composerService.editingMessage.message);
+    if (this.composerService?.editingMessage && !this.loading) {
+      this.set("value", this.composerService?.editingMessage.message);
 
-      this.composerService.setReplyTo(null);
+      this.composerService?.setReplyTo(null);
 
-      this._syncUploads(this.composerService.editingMessage.uploads);
+      this._syncUploads(this.composerService?.editingMessage.uploads);
       this._focusTextArea({ ensureAtEnd: true, resizeTextarea: false });
     }
   },
@@ -286,7 +286,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @bind
   _handleTextareaInput() {
-    this.composerService.onComposerValueChange?.({ value: this.value });
+    this.composerService?.onComposerValueChange?.({ value: this.value });
   },
 
   @bind
@@ -626,7 +626,7 @@ export default Component.extend(TextareaTextManipulation, {
       return;
     }
 
-    this.composerService.editingMessage
+    this.composerService?.editingMessage
       ? this.internalEditMessage()
       : this.internalSendMessage();
   },
@@ -639,7 +639,7 @@ export default Component.extend(TextareaTextManipulation, {
   @action
   internalEditMessage() {
     return this.editMessage(
-      this.composerService.editingMessage,
+      this.composerService?.editingMessage,
       this.value,
       this._uploads
     ).then(this.reset);
@@ -681,21 +681,21 @@ export default Component.extend(TextareaTextManipulation, {
     this._captureMentions();
     this._syncUploads([]);
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
-    this.composerService.onComposerValueChange?.(
+    this.composerService?.onComposerValueChange?.(
       this.value,
       this._uploads,
-      this.composerService.replyToMsg
+      this.composerService?.replyToMsg
     );
   },
 
   @action
   cancelReplyTo() {
-    this.composerService.setReplyTo(null);
+    this.composerService?.setReplyTo(null);
   },
 
   @action
   cancelEditing() {
-    this.composerService.cancelEditing();
+    this.composerService?.cancelEditing();
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
   },
 
@@ -713,7 +713,7 @@ export default Component.extend(TextareaTextManipulation, {
   @action
   uploadsChanged(uploads, { inProgressUploadsCount }) {
     this.set("_uploads", cloneJSON(uploads));
-    this.composerService.onComposerValueChange?.({
+    this.composerService?.onComposerValueChange?.({
       uploads: this._uploads,
       inProgressUploadsCount,
     });
