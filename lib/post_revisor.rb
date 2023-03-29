@@ -103,7 +103,8 @@ class PostRevisor
       tc.record_change("category_id", current_category&.id, new_category&.id)
       tc.check_result(tc.topic.change_category_to_id(new_category_id))
       create_small_action_for_category_change(
-        topic_changes: tc,
+        topic: tc.topic,
+        user: tc.user,
         old_category: current_category,
         new_category: new_category,
       )
@@ -137,7 +138,8 @@ class PostRevisor
           end
 
           create_small_action_for_tag_changes(
-            topic_changes: tc,
+            topic: tc.topic,
+            user: tc.user,
             added_tags: added_tags,
             removed_tags: removed_tags,
           )
@@ -156,11 +158,11 @@ class PostRevisor
     end
   end
 
-  def self.create_small_action_for_category_change(topic_changes:, old_category:, new_category:)
+  def self.create_small_action_for_category_change(topic:, user:, old_category:, new_category:)
     return if !SiteSetting.create_post_for_category_and_tag_changes
 
-    topic_changes.topic.add_moderator_post(
-      topic_changes.user,
+    topic.add_moderator_post(
+      user,
       I18n.t(
         "topic_category_changed",
         from: category_name_raw(old_category),
@@ -175,11 +177,11 @@ class PostRevisor
     "##{CategoryHashtagDataSource.category_to_hashtag_item(category).ref}"
   end
 
-  def self.create_small_action_for_tag_changes(topic_changes:, added_tags:, removed_tags:)
+  def self.create_small_action_for_tag_changes(topic:, user:, added_tags:, removed_tags:)
     return if !SiteSetting.create_post_for_category_and_tag_changes
 
-    topic_changes.topic.add_moderator_post(
-      topic_changes.user,
+    topic.add_moderator_post(
+      user,
       tags_changed_raw(added: added_tags, removed: removed_tags),
       post_type: Post.types[:small_action],
       action_code: "tags_changed",

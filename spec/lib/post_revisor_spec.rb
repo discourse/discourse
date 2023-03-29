@@ -153,18 +153,18 @@ RSpec.describe PostRevisor do
       expect { subject.revise!(admin, tags: ["new-tag"]) }.not_to change { Post.count }
     end
 
-    describe "SiteSetting.create_post_for_category_and_tag_changes enabled" do
+    describe "when `create_post_for_category_and_tag_changes` site setting is enabled" do
       fab!(:tag1) { Fabricate(:tag, name: "First tag") }
       fab!(:tag2) { Fabricate(:tag, name: "Second tag") }
 
       before { SiteSetting.create_post_for_category_and_tag_changes = true }
 
       it "Creates a small_action post with correct translation when both adding and removing tags" do
-        post.topic.update(tags: [tag1])
+        post.topic.update!(tags: [tag1])
 
         expect { subject.revise!(admin, tags: [tag2.name]) }.to change {
-          Post.where(topic_id: post.topic_id, action_code: "tags_changed")
-        }
+          Post.where(topic_id: post.topic_id, action_code: "tags_changed").count
+        }.by(1)
 
         expect(post.topic.ordered_posts.last.raw).to eq(
           I18n.t(
@@ -176,11 +176,11 @@ RSpec.describe PostRevisor do
       end
 
       it "Creates a small_action post with correct translation when adding tags" do
-        post.topic.update(tags: [])
+        post.topic.update!(tags: [])
 
         expect { subject.revise!(admin, tags: [tag1.name]) }.to change {
-          Post.where(topic_id: post.topic_id, action_code: "tags_changed")
-        }
+          Post.where(topic_id: post.topic_id, action_code: "tags_changed").count
+        }.by(1)
 
         expect(post.topic.ordered_posts.last.raw).to eq(
           I18n.t("topic_tag_changed.added", added: "##{tag1.name}"),
@@ -188,11 +188,11 @@ RSpec.describe PostRevisor do
       end
 
       it "Creates a small_action post with correct translation when removing tags" do
-        post.topic.update(tags: [tag1, tag2])
+        post.topic.update!(tags: [tag1, tag2])
 
         expect { subject.revise!(admin, tags: []) }.to change {
-          Post.where(topic_id: post.topic_id, action_code: "tags_changed")
-        }
+          Post.where(topic_id: post.topic_id, action_code: "tags_changed").count
+        }.by(1)
 
         expect(post.topic.ordered_posts.last.raw).to eq(
           I18n.t("topic_tag_changed.removed", removed: "##{tag1.name}, ##{tag2.name}"),
@@ -204,8 +204,8 @@ RSpec.describe PostRevisor do
         category = Fabricate(:category)
 
         expect { subject.revise!(admin, category_id: category.id) }.to change {
-          Post.where(topic_id: post.topic_id, action_code: "category_changed")
-        }
+          Post.where(topic_id: post.topic_id, action_code: "category_changed").count
+        }.by(1)
 
         expect(post.topic.ordered_posts.last.raw).to eq(
           I18n.t(
