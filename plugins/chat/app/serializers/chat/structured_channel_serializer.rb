@@ -58,11 +58,12 @@ module Chat
           chat_message_bus_last_ids[Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL],
       }
 
-      if id =
-           chat_message_bus_last_ids[
-             Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id)
-           ]
-        last_ids[:user_tracking_state] = id
+      if !scope.anonymous? &&
+           user_tracking_state_last_id =
+             chat_message_bus_last_ids[
+               Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id)
+             ]
+        last_ids[:user_tracking_state] = user_tracking_state_last_id
       end
 
       { message_bus_last_ids: last_ids }
