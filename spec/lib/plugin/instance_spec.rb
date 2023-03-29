@@ -19,6 +19,39 @@ RSpec.describe Plugin::Instance do
     end
   end
 
+  describe "api safety" do
+    class ApiSafetyPlugin < Plugin::Instance
+      attr_accessor :enabled
+      def enabled?
+        @enabled
+      end
+    end
+
+    class ApiSafetySerializer < ApplicationSerializer
+      attribute :name
+    end
+
+    it "logs a deprecation when attempting to override a core attribute" do
+      Discourse.expects(:deprecate).with(
+        "Overriding the name attribute in serializer ApiSafetySerializer from a plugin is no longer supported",
+        drop_from: "3.1",
+      )
+      Discourse.expects(:deprecate).with(
+        "Overriding the include_name? method in serializer ApiSafetySerializer from a plugin is no longer supported",
+        drop_from: "3.1",
+      )
+      ApiSafetyPlugin.new.add_to_serializer(:api_safety, :name) { "new name" }
+    end
+
+    it "logs a deprecation when attempting to override a core include_attribute?" do
+      Discourse.expects(:deprecate).with(
+        "Overriding the include_name? method in serializer ApiSafetySerializer from a plugin is no longer supported",
+        drop_from: "3.1",
+      )
+      ApiSafetyPlugin.new.add_to_serializer(:api_safety, :include_name?) { true }
+    end
+  end
+
   describe "enabling/disabling" do
     it "is enabled by default" do
       expect(Plugin::Instance.new.enabled?).to eq(true)
