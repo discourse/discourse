@@ -24,6 +24,7 @@ import { next, schedule } from "@ember/runloop";
 import toMarkdown from "discourse/lib/to-markdown";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
 import { createPopper } from "@popperjs/core";
+import RangeRef from "discourse/lib/range-ref";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -56,6 +57,7 @@ export default Component.extend(KeyEnterEscape, {
   animated: false,
   privateCategory: alias("topic.category.read_restricted"),
   editPost: null,
+  placement: "top-start",
 
   _isFastEditable: false,
   _displayFastEditInput: false,
@@ -79,44 +81,6 @@ export default Component.extend(KeyEnterEscape, {
     this.set("_displayFastEditInput", false);
     this.set("_fastEditInitalSelection", null);
     this.set("_fastEditNewSelection", null);
-  },
-
-  _getRangeBoundaryRect(range, atEnd) {
-    // Don't mess with the original range as it results in weird behaviours
-    // where certain browsers will deselect the selection
-    const clone = range.cloneRange(range);
-
-    // create a marker element containing a single invisible character
-    const markerElement = document.createElement("span");
-    markerElement.appendChild(document.createTextNode("\ufeff"));
-
-    // on mobile, collapse the range at the end of the selection
-    if (atEnd) {
-      clone.collapse();
-    }
-    // insert the marker
-    clone.insertNode(markerElement);
-
-    // retrieve the position of the marker
-    const boundaryRect = markerElement.getBoundingClientRect();
-    boundaryRect.x += document.documentElement.scrollLeft;
-    boundaryRect.y += document.documentElement.scrollTop;
-
-    // remove the marker
-    const parent = markerElement.parentNode;
-    parent.removeChild(markerElement);
-
-    // merge back all text nodes so they don't get messed up
-    parent.normalize();
-
-    // work around Safari that would sometimes lose the selection
-    if (this.capabilities.isSafari) {
-      this._reselected = true;
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
-    }
-
-    return boundaryRect;
   },
 
   _selectionChanged() {
@@ -230,109 +194,36 @@ export default Component.extend(KeyEnterEscape, {
     const { isIOS, isAndroid, isOpera } = this.capabilities;
     const showAtEnd = isMobileDevice || isIOS || isAndroid || isOpera;
 
-    const boundaryPosition = this._getRangeBoundaryRect(firstRange, showAtEnd);
+    if (showAtEnd) {
+      this.placement = "bottom-start";
+    }
 
     // change the position of the button
     schedule("afterRender", () => {
-      // const popperAnchor = document.selection.createRange().parentElement();
       const quoteButton = document.querySelector(".quote-button");
-      const rangeRef = new RangeRef();
+      this.rangeRef = new RangeRef(".cooked");
 
-      this._popper = createPopper(rangeRef, quoteButton, {
-        placement: "top",
+      this._popper = createPopper(this.rangeRef, quoteButton, {
+        placement: this.placement,
+        modifiers: [
+          {
+            name: "computeStyles",
+            options: {
+              adaptive: false,
+            },
+          },
+          {
+            name: "offset",
+            options: {
+              offset: [0, 3],
+            },
+          },
+        ],
       });
 
-      // rangeRef.rectChangedCallback = ({ width }) => {
-      //   if (width > 0) {
-      //     this._popper.scheduleUpdate();
-      //     quoteButton.firstElementChild.classList.add("visible");
-      //   } else {
-      //     quoteButton.firstElementChild.classList.remove("visible");
-      //   }
-      // };
       if (!this.element || this.isDestroying || this.isDestroyed) {
         return;
       }
-
-      let top = 0;
-      let left = 0;
-      const pxFromSelection = 5;
-
-      if (showAtEnd) {
-        // The selection-handles on iOS have a hit area of ~50px radius
-        // so we need to make sure our buttons are outside that radius
-        // Apply the same logic on all mobile devices for consistency
-
-        top = boundaryPosition.bottom + pxFromSelection;
-        left = boundaryPosition.left;
-
-        const safeRadius = 50;
-
-        const topicArea = document
-          .querySelector(".topic-area")
-          .getBoundingClientRect();
-        topicArea.x += document.documentElement.scrollLeft;
-        topicArea.y += document.documentElement.scrollTop;
-
-        const endHandlePosition = boundaryPosition;
-        const width = this.element.clientWidth;
-
-        const possiblePositions = [
-          {
-            // move to left
-            top,
-            left: left - width - safeRadius,
-          },
-          {
-            // move to right
-            top,
-            left: left + safeRadius,
-          },
-          {
-            // centered below end handle
-            top: top + safeRadius,
-            left: left - width / 2,
-          },
-        ];
-
-        for (const pos of possiblePositions) {
-          // Ensure buttons are entirely within the .topic-area
-          pos.left = Math.max(topicArea.left, pos.left);
-          pos.left = Math.min(topicArea.right - width, pos.left);
-
-          let clearOfStartHandle = true;
-          if (isAndroid) {
-            // On android, the start-selection handle extends below the line, so we need to avoid it as well:
-            const startHandlePosition = this._getRangeBoundaryRect(
-              firstRange,
-              false
-            );
-
-            clearOfStartHandle =
-              pos.top - startHandlePosition.bottom >= safeRadius ||
-              pos.left + width <= startHandlePosition.left - safeRadius ||
-              pos.left >= startHandlePosition.left + safeRadius;
-          }
-
-          const clearOfEndHandle =
-            pos.top - endHandlePosition.top >= safeRadius ||
-            pos.left + width <= endHandlePosition.left - safeRadius ||
-            pos.left >= endHandlePosition.left + safeRadius;
-
-          if (clearOfStartHandle && clearOfEndHandle) {
-            left = pos.left;
-            top = pos.top;
-            break;
-          }
-        }
-      } else {
-        // Desktop
-        top =
-          boundaryPosition.top - this.element.clientHeight - pxFromSelection;
-        left = boundaryPosition.left;
-      }
-
-      Object.assign(this.element.style, { top: `${top}px`, left: `${left}px` });
 
       if (!this.animated) {
         // We only enable CSS transitions after the initial positioning
@@ -562,58 +453,3 @@ export default Component.extend(KeyEnterEscape, {
     });
   },
 });
-
-class RangeRef {
-  constructor() {
-    this.updateRect();
-
-    const update = (event, hide) => {
-      let selection = document.getSelection();
-
-      this.range = selection && selection.rangeCount && selection.getRangeAt(0);
-
-      this.updateRect(hide);
-    };
-    document.querySelector(".cooked").addEventListener("mouseup", update);
-    document.querySelector(".cooked").addEventListener("input", update);
-    document
-      .querySelector(".cooked")
-      .addEventListener("keydown", (event) => update(event, true));
-
-    window.addEventListener("scroll", update);
-    document.scrollingElement.addEventListener("scroll", update);
-  }
-
-  updateRect(hide) {
-    if (!hide && this.range) {
-      this.rect = this.range.getBoundingClientRect();
-    } else {
-      this.rect = {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: 0,
-        height: 0,
-      };
-    }
-
-    this.rectChangedCallback(this.rect);
-  }
-
-  rectChangedCallback() {
-    // Abstract to be implemented
-  }
-
-  getBoundingClientRect() {
-    return this.rect;
-  }
-
-  get clientWidth() {
-    return this.rect.width;
-  }
-
-  get clientHeight() {
-    return this.rect.height;
-  }
-}
