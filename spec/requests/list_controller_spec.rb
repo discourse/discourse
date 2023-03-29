@@ -1086,9 +1086,14 @@ RSpec.describe ListController do
   end
 
   describe "#filter" do
-    it "should respond with 403 response code for an anonymous user" do
-      SiteSetting.experimental_topics_filter = true
+    fab!(:category) { Fabricate(:category) }
+    fab!(:tag) { Fabricate(:tag, name: "tag1") }
+    fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
+    fab!(:topic2_with_tag) { Fabricate(:topic, tags: [tag]) }
 
+    before { SiteSetting.experimental_topics_filter = true }
+
+    it "should respond with 403 response code for an anonymous user" do
       get "/filter.json"
 
       expect(response.status).to eq(403)
@@ -1096,11 +1101,83 @@ RSpec.describe ListController do
 
     it "should respond with 404 response code when `experimental_topics_filter` site setting has not been enabled" do
       SiteSetting.experimental_topics_filter = false
+
       sign_in(user)
 
       get "/filter.json"
 
       expect(response.status).to eq(404)
+    end
+
+    it "returns category definition topics if `show_category_definitions_in_topic_lists` site setting is enabled" do
+      category_topic = Fabricate(:topic, category: category)
+      category.update!(topic: category_topic)
+
+      SiteSetting.show_category_definitions_in_topic_lists = true
+
+      sign_in(user)
+
+      get "/filter.json"
+
+      expect(response.status).to eq(200)
+
+      parsed = response.parsed_body
+
+      expect(parsed["topic_list"]["topics"].length).to eq(4)
+
+      expect(parsed["topic_list"]["topics"].map { |topic| topic["id"] }).to contain_exactly(
+        topic.id,
+        topic_with_tag.id,
+        topic2_with_tag.id,
+        category_topic.id,
+      )
+    end
+
+    it "does not return category definition topics if `show_category_definitions_in_topic_lists` site setting is disabled" do
+      category_topic = Fabricate(:topic, category: category)
+      category.update!(topic: category_topic)
+
+      SiteSetting.show_category_definitions_in_topic_lists = false
+
+      sign_in(user)
+
+      get "/filter.json"
+
+      expect(response.status).to eq(200)
+
+      parsed = response.parsed_body
+
+      expect(parsed["topic_list"]["topics"].length).to eq(3)
+
+      expect(parsed["topic_list"]["topics"].map { |topic| topic["id"] }).to contain_exactly(
+        topic.id,
+        topic_with_tag.id,
+        topic2_with_tag.id,
+      )
+    end
+
+    it "should accept the `page` query parameter" do
+      stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+        sign_in(user)
+
+        get "/filter.json?q=tags:tag1"
+
+        expect(response.status).to eq(200)
+
+        parsed = response.parsed_body
+
+        expect(parsed["topic_list"]["topics"].length).to eq(1)
+        expect(parsed["topic_list"]["topics"].first["id"]).to eq(topic2_with_tag.id)
+
+        get "/filter.json?q=tags:tag1&page=1"
+
+        expect(response.status).to eq(200)
+
+        parsed = response.parsed_body
+
+        expect(parsed["topic_list"]["topics"].length).to eq(1)
+        expect(parsed["topic_list"]["topics"].first["id"]).to eq(topic_with_tag.id)
+      end
     end
   end
 end
