@@ -112,5 +112,20 @@ RSpec.describe CategorySerializer do
       json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
       expect(json[:available_groups]).to eq(Group.order(:name).pluck(:name) - ["everyone"])
     end
+
+    describe "with query modifier" do
+      fab!(:other_group) { Fabricate(:group) }
+
+      it "Evaluates the added modifiers for an admin" do
+        CategorySerializer.add_available_groups_query_modifier(
+          Proc.new { |query, _| query.where(id: other_group.id) },
+        )
+
+        json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+        expect(json[:available_groups]).to eq([other_group.name])
+
+        CategorySerializer.reset_available_groups_query_modifiers
+      end
+    end
   end
 end

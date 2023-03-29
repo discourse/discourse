@@ -31,6 +31,27 @@ class CategorySerializer < SiteCategorySerializer
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
 
+  def self.add_available_groups_query_modifier(query_modifier)
+    available_groups_query_modifiers << query_modifier
+  end
+
+  def self.reset_available_groups_query_modifiers
+    @available_groups_query_modifiers = []
+  end
+
+  def self.available_groups_query_modifiers
+    @available_groups_query_modifiers ||= []
+  end
+
+  def self.available_groups_query(object)
+    query = Group
+
+    available_groups_query_modifiers.each do |query_modifier|
+      query = query_modifier.call(query, object)
+    end
+    query
+  end
+
   def reviewable_by_group_name
     object.reviewable_by_group.name
   end
@@ -74,7 +95,8 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def available_groups
-    Group.order(:name).pluck(:name) - group_permissions.map { |g| g[:group_name] }
+    CategorySerializer.available_groups_query(object).order(:name).pluck(:name) -
+      group_permissions.map { |g| g[:group_name] }
   end
 
   def can_delete
