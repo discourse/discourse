@@ -4,7 +4,7 @@ directory "plugins"
 
 desc "install all official plugins (use GIT_WRITE=1 to pull with write access)"
 task "plugin:install_all_official" do
-  skip = Set.new(%w[customer-flair lazy-yt poll])
+  skip = Set.new(%w[customer-flair poll])
 
   map = { "Canned Replies" => "https://github.com/discourse/discourse-canned-replies" }
 

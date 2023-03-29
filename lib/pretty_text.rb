@@ -433,13 +433,19 @@ module PrettyText
 
     # extract Youtube links
     doc
-      .css("div[data-youtube-id]")
+      .css("div[data-video-id]")
       .each do |div|
-        if div["data-youtube-id"].present?
-          links << DetectedLink.new(
-            "https://www.youtube.com/watch?v=#{div["data-youtube-id"]}",
-            false,
-          )
+        if div["data-video-id"].present? && div["data-provider-name"].present?
+          base_url =
+            case div["data-provider-name"]
+            when "youtube"
+              "https://www.youtube.com/watch?v="
+            when "vimeo"
+              "https://vimeo.com/"
+            when "tiktok"
+              "https://m.tiktok.com/v/"
+            end
+          links << DetectedLink.new(base_url + div["data-video-id"], false)
         end
       end
 
