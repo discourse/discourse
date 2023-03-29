@@ -23,6 +23,7 @@ import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { next, schedule } from "@ember/runloop";
 import toMarkdown from "discourse/lib/to-markdown";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
+import { createPopper } from "@popperjs/core";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -233,6 +234,22 @@ export default Component.extend(KeyEnterEscape, {
 
     // change the position of the button
     schedule("afterRender", () => {
+      // const popperAnchor = document.selection.createRange().parentElement();
+      const quoteButton = document.querySelector(".quote-button");
+      const rangeRef = new RangeRef();
+
+      this._popper = createPopper(rangeRef, quoteButton, {
+        placement: "top",
+      });
+
+      // rangeRef.rectChangedCallback = ({ width }) => {
+      //   if (width > 0) {
+      //     this._popper.scheduleUpdate();
+      //     quoteButton.firstElementChild.classList.add("visible");
+      //   } else {
+      //     quoteButton.firstElementChild.classList.remove("visible");
+      //   }
+      // };
       if (!this.element || this.isDestroying || this.isDestroyed) {
         return;
       }
@@ -545,3 +562,58 @@ export default Component.extend(KeyEnterEscape, {
     });
   },
 });
+
+class RangeRef {
+  constructor() {
+    this.updateRect();
+
+    const update = (event, hide) => {
+      let selection = document.getSelection();
+
+      this.range = selection && selection.rangeCount && selection.getRangeAt(0);
+
+      this.updateRect(hide);
+    };
+    document.querySelector(".cooked").addEventListener("mouseup", update);
+    document.querySelector(".cooked").addEventListener("input", update);
+    document
+      .querySelector(".cooked")
+      .addEventListener("keydown", (event) => update(event, true));
+
+    window.addEventListener("scroll", update);
+    document.scrollingElement.addEventListener("scroll", update);
+  }
+
+  updateRect(hide) {
+    if (!hide && this.range) {
+      this.rect = this.range.getBoundingClientRect();
+    } else {
+      this.rect = {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: 0,
+        height: 0,
+      };
+    }
+
+    this.rectChangedCallback(this.rect);
+  }
+
+  rectChangedCallback() {
+    // Abstract to be implemented
+  }
+
+  getBoundingClientRect() {
+    return this.rect;
+  }
+
+  get clientWidth() {
+    return this.rect.width;
+  }
+
+  get clientHeight() {
+    return this.rect.height;
+  }
+}
