@@ -49,6 +49,7 @@ class CategorySerializer < SiteCategorySerializer
     available_groups_query_modifiers.each do |query_modifier|
       query = query_modifier.call(query, object)
     end
+
     query
   end
 
