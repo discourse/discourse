@@ -269,13 +269,12 @@ class TopicQuery
   end
 
   def list_filter
-    create_list(
-      :filter,
-      {},
+    results =
       TopicsFilter.new(guardian: @guardian, scope: latest_results).filter_from_query_string(
         @options[:q],
-      ),
-    )
+      )
+
+    create_list(:filter, {}, results)
   end
 
   def list_read
