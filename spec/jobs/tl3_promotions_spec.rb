@@ -133,5 +133,19 @@ RSpec.describe Jobs::Tl3Promotions do
       run_job
       expect(user.reload.trust_level).to eq(TrustLevel[3])
     end
+
+    it "doesn't error if user is missing email records" do
+      user = nil
+
+      freeze_time 4.days.ago do
+        user = create_leader_user
+      end
+      user.user_emails.delete_all
+
+      TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
+      TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)
+      run_job
+      expect(user.reload.trust_level).to eq(TrustLevel[2])
+    end
   end
 end
