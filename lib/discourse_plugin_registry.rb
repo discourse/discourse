@@ -259,15 +259,15 @@ class DiscoursePluginRegistry
   def self.apply_filter(name, arg, *more_args)
     return arg if !@filters
 
-    filters = @filters[name]
-    return arg if !filters
+    registered_filters = @filters[name]
+    return arg if !registered_filters
 
     # iterate as fast as possible to minimize cost (avoiding each)
     # also erases one stack frame
-    length = filters.length
+    length = registered_filters.length
     index = 0
     while index < length
-      plugin_instance, block = filters[index]
+      plugin_instance, block = registered_filters[index]
       arg = block.call(arg, *more_args) if plugin_instance.enabled?
 
       index += 1
