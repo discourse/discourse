@@ -213,6 +213,14 @@ class TopicQuery
       return
     end
 
+    options =
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_query_suggested_options,
+        { include_random: include_random },
+        self,
+      )
+    include_random = options[:include_random]
+
     builder = SuggestedTopicsBuilder.new(topic)
 
     pm_params = pm_params || get_pm_params(topic)
