@@ -2,6 +2,7 @@
 
 RSpec.describe TopicsFilter do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:group) { Fabricate(:group) }
 
   describe "#filter_from_query_string" do
     describe "when filtering with multiple filters" do
@@ -86,6 +87,22 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("status:unlisted")
             .pluck(:id),
         ).to contain_exactly(topic.id)
+      end
+
+      it "should only return topics that are not in any read-restricted category when query string is `status:public`" do
+        private_category = Fabricate(:private_category, group: group)
+        topic_in_private_category = Fabricate(:topic, category: private_category)
+
+        expect(
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("").pluck(:id),
+        ).to include(topic_in_private_category.id)
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("status:public")
+            .pluck(:id),
+        ).not_to include(topic_in_private_category.id)
       end
     end
 

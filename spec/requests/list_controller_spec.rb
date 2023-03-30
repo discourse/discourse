@@ -1179,5 +1179,25 @@ RSpec.describe ListController do
         expect(parsed["topic_list"]["topics"].first["id"]).to eq(topic_with_tag.id)
       end
     end
+
+    describe "when filtering by status" do
+      fab!(:group) { Fabricate(:group) }
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+      fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
+
+      it "does not return topics from read restricted categories when `q` query param is `status:public`" do
+        group.add(user)
+
+        sign_in(user)
+
+        get "/filter.json?q=status:public"
+
+        expect(response.status).to eq(200)
+
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+        ).to contain_exactly(topic.id, topic_with_tag.id, topic2_with_tag.id)
+      end
+    end
   end
 end
