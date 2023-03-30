@@ -1391,6 +1391,9 @@ RSpec.describe TopicsController do
         put "/t/#{topic.id}.json", params: { category_id: category.id }
 
         expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("category.errors.move_topic_to_category_disallowed"),
+        )
         expect(topic.reload.category_id).not_to eq(category.id)
       end
 
