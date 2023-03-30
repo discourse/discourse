@@ -705,6 +705,7 @@ en:
       disallowed_tags_generic: "This topic has disallowed tags."
       slug_contains_non_ascii_chars: "contains non-ascii characters"
       is_already_in_use: "is already in use"
+      move_topic_to_category_disallowed: "You can't move this topic to a category you cannot create topics on."
     cannot_delete:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
