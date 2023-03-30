@@ -46,3 +46,20 @@ if (glimmerTracking.cached) {
     get: () => require("ember-cached-decorator-polyfill").cached,
   });
 }
+
+/**
+ * Provide AMD/requirejs entrypoint for the custom virtual-dom fork.
+ *
+ * In order for this to work, the app/app.js must be evaluated before any other
+ * modules try to reach for 'virtual-dom'.
+ *
+ * And note that app/app.js uses the real module name, `@discourse/virtual-dom`.
+ */
+define("virtual-dom", ["exports"], function (exports) {
+  "use strict";
+
+  return {
+    default: window.virtualDom,
+    __esModule: true,
+  };
+});

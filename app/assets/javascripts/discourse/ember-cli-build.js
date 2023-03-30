@@ -48,6 +48,15 @@ module.exports = function (defaults) {
           moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
         },
         resolve: {
+          alias: {
+            /**
+             * This doesn't actually alias the code, but allows webpack to think virtual-dom exists.
+             * We've defined an AMD/requirejs entrypoint that defines virtual-dom, and points at @discourse/virtual-dom
+             *
+             * (important for embroider compatibility)
+             */
+            "virtual-dom": "@discourse/virtual-dom",
+          },
           fallback: {
             // Sinon needs a `util` polyfill
             util: require.resolve("util/"),
