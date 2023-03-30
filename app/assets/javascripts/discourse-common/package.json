@@ -15,6 +15,7 @@
     "start": "ember serve"
   },
   "dependencies": {
+    "@discourse/virtual-dom": "^2.1.2-0",
     "@uppy/aws-s3": "^3.0.5",
     "@uppy/aws-s3-multipart": "^3.1.2",
     "@uppy/core": "^3.0.4",
