@@ -1534,6 +1534,27 @@ RSpec.describe PrettyText do
     it "replaces Emoji from Unicode 14.0" do
       expect(PrettyText.cook("🫣")).to match(/\:face_with_peeking_eye\:/)
     end
+
+    context "with subfolder" do
+      it "prepends the subfolder path to the emoji url" do
+        set_subfolder "/forum"
+
+        expected = "src=\"/forum/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}\""
+
+        expect(PrettyText.cook("😀")).to include(expected)
+        expect(PrettyText.cook(":grinning:")).to include(expected)
+      end
+
+      it "prepends the subfolder path even if it is part of the emoji url" do
+        set_subfolder "/info"
+
+        expected =
+          "src=\"/info/images/emoji/twitter/information_source.png?v=#{Emoji::EMOJI_VERSION}\""
+
+        expect(PrettyText.cook("ℹ️")).to include(expected)
+        expect(PrettyText.cook(":information_source:")).to include(expected)
+      end
+    end
   end
 
   describe "custom emoji" do
