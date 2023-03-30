@@ -243,6 +243,13 @@ class Emoji
   end
 
   def self.lookup_unicode(name)
+    # ignore denied emojis and their aliases
+    if SiteSetting.emoji_deny_list.present?
+      denied_emoji = SiteSetting.emoji_deny_list.split("|")
+      denied_emoji += denied_emoji.map { |e| Emoji.aliases[e] }.flatten.compact
+      return "" if denied_emoji.include?(name)
+    end
+
     @reverse_map ||=
       begin
         map = {}
