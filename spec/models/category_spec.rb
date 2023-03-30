@@ -220,7 +220,7 @@ RSpec.describe Category do
       expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
     end
 
-    context "SiteSetting.enable_category_group_moderation" do
+    context "for SiteSetting.enable_category_group_moderation" do
       fab!(:category) { Fabricate(:category_with_definition) }
       fab!(:reviewable_group_user) { Fabricate(:group_user) }
 
@@ -229,10 +229,10 @@ RSpec.describe Category do
         category.save
       end
 
-      context "enabled" do
+      context "when enabled" do
         before { SiteSetting.enable_category_group_moderation = true }
 
-        context "require_topic_approval present" do
+        context "when require_topic_approval present" do
           before do
             category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
             category.save
@@ -251,10 +251,10 @@ RSpec.describe Category do
         end
       end
 
-      context "disabled" do
+      context "when disabled" do
         before { SiteSetting.enable_category_group_moderation = false }
 
-        context "require_topic_approvals" do
+        describe "#require_topic_approval" do
           it "will allow normal users to create topics regardless" do
             category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
             category.save
