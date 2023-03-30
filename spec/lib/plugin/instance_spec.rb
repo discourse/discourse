@@ -827,4 +827,17 @@ RSpec.describe Plugin::Instance do
       expect(callback_called).to eq(false)
     end
   end
+
+  describe "#register_filter" do
+    let(:plugin) { Plugin::Instance.new }
+
+    after { DiscoursePluginRegistry.clear_filters! }
+
+    it "allows filter registration" do
+      plugin.register_filter(:magic_sum_filter) { |a, b| a + b }
+
+      sum = DiscoursePluginRegistry.apply_filter(:magic_sum_filter, 1, 2)
+      expect(sum).to eq(3)
+    end
+  end
 end
