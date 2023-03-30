@@ -1,6 +1,7 @@
 {{#if (and @reaction this.emojiUrl)}}
   <button
     type="button"
+    {{on "touchstart" this.handleTouchStart}}
     {{on "click" this.handleClick}}
     tabindex="0"
     class={{concat-class
