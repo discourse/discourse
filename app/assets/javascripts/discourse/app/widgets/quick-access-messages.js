@@ -1,6 +1,6 @@
 import RawHtml from "discourse/widgets/raw-html";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { postUrl } from "discourse/lib/utilities";

@@ -12,7 +12,7 @@ import PostCooked from "discourse/widgets/post-cooked";
 import { Promise } from "rsvp";
 import RawHtml from "discourse/widgets/raw-html";
 import { dateNode } from "discourse/helpers/node";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";

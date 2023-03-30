@@ -4,7 +4,7 @@ import I18n from "I18n";
 import RawHtml from "discourse/widgets/raw-html";
 import { avatarImg } from "discourse/widgets/post";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTags from "discourse/lib/render-tags";
 import { topicFeaturedLinkNode } from "discourse/lib/render-topic-featured-link";

@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { dateNode } from "discourse/helpers/node";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import showModal from "discourse/lib/show-modal";
 import DoNotDisturb from "discourse/lib/do-not-disturb";

@@ -4,7 +4,7 @@ import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import discourseLater from "discourse-common/lib/later";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 

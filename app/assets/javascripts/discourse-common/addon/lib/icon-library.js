@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import attributeHook from "discourse-common/lib/attribute-hook";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { isDevelopment } from "discourse-common/config/environment";
 import escape from "discourse-common/lib/escape";
 import deprecated from "discourse-common/lib/deprecated";

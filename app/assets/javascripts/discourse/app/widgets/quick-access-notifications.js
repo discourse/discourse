@@ -4,7 +4,7 @@ import getURL from "discourse-common/lib/get-url";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { ajax } from "discourse/lib/ajax";
 import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import I18n from "I18n";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";

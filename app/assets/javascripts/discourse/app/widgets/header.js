@@ -4,7 +4,7 @@ import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";

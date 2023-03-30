@@ -9,7 +9,7 @@ import { Promise } from "rsvp";
 import { createWidget } from "discourse/widgets/widget";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 
 module("Integration | Component | Widget | base", function (hooks) {
   setupRenderingTest(hooks);

@@ -2,7 +2,7 @@ import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import I18n from "I18n";
 import { formatUsername } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 

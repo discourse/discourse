@@ -7,7 +7,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { ajax } from "discourse/lib/ajax";
 import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { postUrl } from "discourse/lib/utilities";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";

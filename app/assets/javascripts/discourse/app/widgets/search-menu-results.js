@@ -7,7 +7,7 @@ import { createWidget } from "discourse/widgets/widget";
 import { dateNode } from "discourse/helpers/node";
 import { emojiUnescape } from "discourse/lib/text";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";

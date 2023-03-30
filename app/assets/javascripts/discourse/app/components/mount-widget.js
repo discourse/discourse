@@ -1,5 +1,5 @@
 import { cancel, scheduleOnce } from "@ember/runloop";
-import { diff, patch } from "virtual-dom";
+import { diff, patch } from "@discourse/virtual-dom";
 import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
 import Component from "@ember/component";
 import DirtyKeys from "discourse/lib/dirty-keys";

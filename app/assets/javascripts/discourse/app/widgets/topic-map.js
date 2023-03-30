@@ -2,7 +2,7 @@ import { avatarFor, avatarImg } from "discourse/widgets/post";
 import { dateNode, numberNode } from "discourse/helpers/node";
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { replaceEmoji } from "discourse/widgets/emoji";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { userPath } from "discourse/lib/url";

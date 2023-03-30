@@ -21,7 +21,7 @@ import I18n from "I18n";
 import { Promise } from "rsvp";
 import { deepMerge } from "discourse-common/lib/object";
 import { get } from "@ember/object";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { isProduction } from "discourse-common/config/environment";
 
 const _registry = {};

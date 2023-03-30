@@ -2,7 +2,7 @@ import DiscourseURL from "discourse/lib/url";
 import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 

@@ -4,7 +4,7 @@ import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { avatarFor } from "discourse/widgets/post";
 import { computed } from "@ember/object";
 import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";

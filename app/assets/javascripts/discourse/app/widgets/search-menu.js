@@ -7,7 +7,7 @@ import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { isiPad, translateModKey } from "discourse/lib/utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";

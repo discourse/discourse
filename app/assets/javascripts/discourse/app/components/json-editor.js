@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import Component from "@ember/component";
-import { create } from "virtual-dom";
+import { create } from "@discourse/virtual-dom";
 import discourseComputed from "discourse-common/utils/decorators";
 import { iconNode } from "discourse-common/lib/icon-library";
 import loadScript from "discourse/lib/load-script";

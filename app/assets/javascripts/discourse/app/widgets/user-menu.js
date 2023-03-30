@@ -1,6 +1,6 @@
 import discourseLater from "discourse-common/lib/later";
 import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 

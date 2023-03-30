@@ -77,7 +77,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { includeAttributes } from "discourse/lib/transform-post";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { on } from "@ember/object/evented";

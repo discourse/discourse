@@ -2,7 +2,7 @@ import { avatarFor, avatarImg } from "discourse/widgets/post";
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
 import { makeArray } from "discourse-common/lib/helpers";
 

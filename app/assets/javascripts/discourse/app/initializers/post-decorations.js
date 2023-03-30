@@ -7,7 +7,7 @@ import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { create } from "virtual-dom";
+import { create } from "@discourse/virtual-dom";
 import showModal from "discourse/lib/show-modal";
 
 export default {

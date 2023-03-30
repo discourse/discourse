@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 
 export default createWidget("topic-post-visited-line", {
   tagName: "div.small-action.topic-post-visited",

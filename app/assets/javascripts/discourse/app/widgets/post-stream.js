@@ -5,7 +5,7 @@ import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { avatarFor } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { h } from "virtual-dom";
+import { h } from "@discourse/virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import transformPost from "discourse/lib/transform-post";
 
