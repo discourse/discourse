@@ -246,28 +246,28 @@ class DiscoursePluginRegistry
     asset
   end
 
-  def self.clear_filters!
-    @filters = nil
+  def self.clear_modifiers!
+    @modifiers = nil
   end
 
-  def self.register_filter(plugin_instance, name, &blk)
-    @filters ||= {}
-    filters = @filters[name] ||= []
-    filters << [plugin_instance, blk]
+  def self.register_modifier(plugin_instance, name, &blk)
+    @modifiers ||= {}
+    modifiers = @modifiers[name] ||= []
+    modifiers << [plugin_instance, blk]
   end
 
-  def self.apply_filter(name, arg, *more_args)
-    return arg if !@filters
+  def self.apply_modifier(name, arg, *more_args)
+    return arg if !@modifiers
 
-    registered_filters = @filters[name]
-    return arg if !registered_filters
+    registered_modifiers = @modifiers[name]
+    return arg if !registered_modifiers
 
     # iterate as fast as possible to minimize cost (avoiding each)
     # also erases one stack frame
-    length = registered_filters.length
+    length = registered_modifiers.length
     index = 0
     while index < length
-      plugin_instance, block = registered_filters[index]
+      plugin_instance, block = registered_modifiers[index]
       arg = block.call(arg, *more_args) if plugin_instance.enabled?
 
       index += 1
@@ -278,7 +278,7 @@ class DiscoursePluginRegistry
 
   def self.reset!
     @@register_names.each { |name| instance_variable_set(:"@#{name}", nil) }
-    clear_filters!
+    clear_modifiers!
   end
 
   def self.reset_register!(register_name)

@@ -828,15 +828,15 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  describe "#register_filter" do
+  describe "#register_modifier" do
     let(:plugin) { Plugin::Instance.new }
 
-    after { DiscoursePluginRegistry.clear_filters! }
+    after { DiscoursePluginRegistry.clear_modifiers! }
 
-    it "allows filter registration" do
-      plugin.register_filter(:magic_sum_filter) { |a, b| a + b }
+    it "allows modifier registration" do
+      plugin.register_modifier(:magic_sum_modifier) { |a, b| a + b }
 
-      sum = DiscoursePluginRegistry.apply_filter(:magic_sum_filter, 1, 2)
+      sum = DiscoursePluginRegistry.apply_modifier(:magic_sum_modifier, 1, 2)
       expect(sum).to eq(3)
     end
   end

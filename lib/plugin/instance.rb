@@ -134,8 +134,8 @@ class Plugin::Instance
     end
   end
 
-  def register_filter(filter_name, &blk)
-    DiscoursePluginRegistry.register_filter(self, filter_name, &blk)
+  def register_modifier(modifier_name, &blk)
+    DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
