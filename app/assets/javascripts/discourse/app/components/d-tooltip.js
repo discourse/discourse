@@ -33,6 +33,8 @@ export default class DiscourseTooltip extends Component {
         theme: "d-tooltip",
         arrow: false,
         placement: "bottom-start",
+        onTrigger: this.onTrigger,
+        onUntrigger: this.onUntrigger,
       });
     });
   }
