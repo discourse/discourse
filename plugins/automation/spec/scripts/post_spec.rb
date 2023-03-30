@@ -37,6 +37,16 @@ describe "Post" do
         }.to change { topic_1.posts.count }.by(1)
       end
     end
+
+    context "when topic is deleted" do
+      before { topic_1.trash! }
+
+      it "does nothing and does not error" do
+        freeze_time 6.hours.from_now do
+          expect { Jobs::DiscourseAutomationTracker.new.execute }.not_to change { Post.count }
+        end
+      end
+    end
   end
 
   context "when using recurring trigger" do

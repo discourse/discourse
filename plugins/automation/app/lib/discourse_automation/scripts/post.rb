@@ -15,15 +15,14 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::POST) do
 
   script do |context, fields, automation|
     creator_username = fields.dig("creator", "value") || Discourse.system_user.username
+    topic_id = fields.dig("topic", "value")
+    post_raw = fields.dig("post", "value")
 
     placeholders = { creator_username: creator_username }.merge(context["placeholders"] || {})
 
-    creator = User.find_by!(username: creator_username)
+    creator = User.find_by(username: creator_username)
+    topic = Topic.find_by(id: topic_id)
 
-    PostCreator.new(
-      creator,
-      topic_id: fields.dig("topic", "value"),
-      raw: fields.dig("post", "value"),
-    ).create!
+    PostCreator.new(creator, topic_id: topic_id, raw: post_raw).create! if creator && topic
   end
 end
