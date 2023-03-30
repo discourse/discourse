@@ -279,7 +279,6 @@ export default Component.extend(KeyEnterEscape, {
   },
 
   willDestroyElement() {
-    this.rangeRef.clearListeners();
     $(document)
       .off("mousedown.quote-button")
       .off("mouseup.quote-button")
