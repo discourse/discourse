@@ -1,5 +1,5 @@
 import { buildEmojiUrl, isCustomEmoji } from "pretty-text/emoji";
-import { translations } from "pretty-text/emoji/data";
+import { aliases, translations } from "pretty-text/emoji/data";
 
 const MAX_NAME_LENGTH = 60;
 
@@ -196,7 +196,8 @@ function applyEmoji(
   enableShortcuts,
   inlineEmoji,
   customEmojiTranslation,
-  watchedWordsReplacer
+  watchedWordsReplacer,
+  emojiDenyList
 ) {
   let result = null;
   let start = 0;
@@ -221,6 +222,23 @@ function applyEmoji(
           }
         });
       }
+    });
+  }
+
+  if (emojiDenyList) {
+    emojiDenyList.split("|").forEach((emoji) => {
+      let regex = new RegExp(`:${emoji}:`, "g");
+      content = content.replace(regex, "");
+
+      // remove any aliases of denied emoji
+      Object.entries(aliases).forEach(([key, list]) => {
+        if (key === emoji) {
+          list.forEach((alias) => {
+            regex = new RegExp(`:${alias}:`, "g");
+            content = content.replace(regex, "");
+          });
+        }
+      });
     });
   }
 
@@ -346,6 +364,7 @@ export function setup(helper) {
     opts.emojiSet = siteSettings.emoji_set || "";
     opts.customEmoji = state.customEmoji;
     opts.emojiCDNUrl = siteSettings.external_emoji_url;
+    opts.emojiDenyList = siteSettings.emoji_deny_list || "";
   });
 
   helper.registerPlugin((md) => {
@@ -358,7 +377,8 @@ export function setup(helper) {
           md.options.discourse.features.emojiShortcuts,
           md.options.discourse.features.inlineEmoji,
           md.options.discourse.customEmojiTranslation,
-          md.options.discourse.watchedWordsReplace
+          md.options.discourse.watchedWordsReplace,
+          md.options.discourse.emojiDenyList
         )
       )
     );

@@ -202,6 +202,7 @@ module PrettyText
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
+        __optInput.emojiDenyList = #{SiteSetting.emoji_deny_list.to_json};
         __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor).to_json};
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
@@ -276,7 +277,8 @@ module PrettyText
           emojiCDNUrl: "#{SiteSetting.external_emoji_url.blank? ? "" : SiteSetting.external_emoji_url}",
           customEmoji: #{custom},
           enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts},
-          inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}
+          inlineEmoji: #{SiteSetting.enable_inline_emoji_translation},
+          emojiDenyList: "#{SiteSetting.emoji_deny_list}"
         });
       JS
   end
