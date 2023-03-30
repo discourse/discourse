@@ -1,0 +1,13 @@
+diff --git a/node_modules/@ember/jquery/vendor/jquery/component.dollar.js b/node_modules/@ember/jquery/vendor/jquery/component.dollar.js
+index 8c0cfd5..b8935fc 100644
+--- a/node_modules/@ember/jquery/vendor/jquery/component.dollar.js
++++ b/node_modules/@ember/jquery/vendor/jquery/component.dollar.js
+@@ -28,6 +28,8 @@ import Component from '@ember/component';
+       );
+ 
+       if (this.element) {
++        // same technique the shim uses
++        let jQuery = self['jQuery'];
+         return sel ? jQuery(sel, this.element) : jQuery(this.element);
+       }
+     }
