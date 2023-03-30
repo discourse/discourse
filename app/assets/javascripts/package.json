@@ -1,5 +1,8 @@
 {
   "private": true,
+  "scripts": {
+    "postinstall": "patch-package"
+  },
   "workspaces": [
     "admin",
     "bootstrap-json",
@@ -18,6 +21,10 @@
   ],
   "resolutions": {
     "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1"
+  },
+  "devDependencies": {
+    "patch-package": "^6.5.1",
+    "postinstall-postinstall": "^2.1.0"
   },
   "dependencies": {}
 }
