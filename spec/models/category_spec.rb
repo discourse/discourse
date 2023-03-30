@@ -219,6 +219,56 @@ RSpec.describe Category do
       # anonymous has permission to create no topics
       expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
     end
+
+    context "SiteSetting.enable_category_group_moderation" do
+      fab!(:category) { Fabricate(:category_with_definition) }
+      fab!(:reviewable_group_user) { Fabricate(:group_user) }
+
+      before do
+        category.reviewable_by_group_id = reviewable_group_user.group.id
+        category.save
+      end
+
+      context "enabled" do
+        before { SiteSetting.enable_category_group_moderation = true }
+
+        context "require_topic_approval present" do
+          before do
+            category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+            category.save
+          end
+
+          it "disallows normal users from creating topics" do
+            expect(Category.topic_create_allowed(user_guardian)).not_to include(category)
+          end
+
+          it "allows category moderators to create topics" do
+            reviewable_group_user_guardian = Guardian.new(reviewable_group_user.user)
+            expect(Category.topic_create_allowed(reviewable_group_user_guardian)).to include(
+              category,
+            )
+          end
+        end
+      end
+
+      context "disabled" do
+        before { SiteSetting.enable_category_group_moderation = false }
+
+        context "require_topic_approvals" do
+          it "will allow normal users to create topics regardless" do
+            category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+            category.save
+
+            expect(Category.topic_create_allowed(user_guardian)).to include(category)
+
+            category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
+            category.save
+
+            expect(Category.topic_create_allowed(user_guardian)).to include(category)
+          end
+        end
+      end
+    end
   end
 
   describe "security" do

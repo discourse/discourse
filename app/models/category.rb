@@ -181,6 +181,10 @@ class Category < ActiveRecord::Base
             scoped = scoped.where.not(id: SiteSetting.uncategorized_category_id)
           end
 
+          if SiteSetting.enable_category_group_moderation
+            scoped = scoped.where(reviewable_by_group_id: guardian.user.groups.select(:id) + [nil])
+          end
+
           scoped
         }
 
