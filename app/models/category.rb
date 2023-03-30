@@ -181,7 +181,7 @@ class Category < ActiveRecord::Base
             scoped = scoped.where.not(id: SiteSetting.uncategorized_category_id)
           end
 
-          if !guardian.is_staff?
+          if !guardian.is_staff? && guardian.user&.groups
             user_in_reviewable_group = <<~SQL
               (
                 category_custom_fields.name = '#{REQUIRE_TOPIC_APPROVAL}'
