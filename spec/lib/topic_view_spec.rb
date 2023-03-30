@@ -1091,4 +1091,30 @@ RSpec.describe TopicView do
       end
     end
   end
+
+  describe "with topic_view_suggested_topics_options modifier" do
+    let!(:topic1) { Fabricate(:topic) }
+    let!(:topic2) { Fabricate(:topic) }
+
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "allows disabling of random suggested" do
+      topic_view = TopicView.new(topic1)
+
+      Plugin::Instance
+        .new
+        .register_modifier(
+          :topic_view_suggested_topics_options,
+        ) do |suggested_options, inner_topic_view|
+          expect(inner_topic_view).to eq(topic_view)
+          suggested_options.merge(include_random: false)
+        end
+
+      expect(topic_view.suggested_topics.topics.count).to eq(0)
+
+      DiscoursePluginRegistry.clear_modifiers!
+
+      expect(TopicView.new(topic1).suggested_topics.topics.count).to be > 0
+    end
+  end
 end

@@ -605,7 +605,13 @@ class TopicView
 
   def suggested_topics
     if @include_suggested
-      @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic, pm_params: pm_params)
+      kwargs =
+        DiscoursePluginRegistry.apply_modifier(
+          :topic_view_suggested_topics_options,
+          { include_random: true, pm_params: pm_params },
+          self,
+        )
+      @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic, **kwargs)
     else
       nil
     end

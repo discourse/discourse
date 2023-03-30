@@ -1433,27 +1433,6 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context "with topic_query_suggested_params modifier" do
-      let!(:topic1) { Fabricate(:topic) }
-      let!(:topic2) { Fabricate(:topic) }
-      after { DiscoursePluginRegistry.clear_modifiers! }
-
-      it "allows disabling of random suggested" do
-        topic_query = TopicQuery.new
-
-        Plugin::Instance
-          .new
-          .register_modifier(
-            :topic_query_suggested_options,
-          ) do |suggested_options, inner_topic_query|
-            expect(inner_topic_query).to eq(topic_query)
-            suggested_options.merge(include_random: false)
-          end
-
-        expect(topic_query.list_suggested_for(topic1).topics.count).to eq(0)
-      end
-    end
-
     context "when logged in" do
       def suggested_for(topic)
         topic_query.list_suggested_for(topic)&.topics&.map { |t| t.id }
