@@ -7,6 +7,6 @@ export default class extends Controller {
 
   constructor() {
     super(...arguments);
-    this.queryString = this.discoveryFilter.queryString;
+    this.queryString = this.discoveryFilter.q;
   }
 }
