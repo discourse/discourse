@@ -22,9 +22,9 @@
   "resolutions": {
     "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1"
   },
-  "devDependencies": {},
-  "dependencies": {
+  "devDependencies": {
     "patch-package": "^6.5.1",
     "postinstall-postinstall": "^2.1.0"
-  }
+  },
+  "dependencies": {}
 }
