@@ -151,18 +151,23 @@ export default class ChatMessage {
         }
         existingReaction.users.pushObject(actor);
       } else {
-        existingReaction.count = existingReaction.count - 1;
+        const existingUserReaction = existingReaction.users.find(
+          (user) => user.id === actor.id
+        );
+
+        if (!existingUserReaction) {
+          return;
+        }
 
         if (selfReaction) {
           existingReaction.reacted = false;
         }
 
-        if (existingReaction.count === 0) {
+        if (existingReaction.count === 1) {
           this.reactions.removeObject(existingReaction);
         } else {
-          existingReaction.users.removeObject(
-            existingReaction.users.find((user) => user.id === actor.id)
-          );
+          existingReaction.count = existingReaction.count - 1;
+          existingReaction.users.removeObject(existingUserReaction);
         }
       }
     } else {
