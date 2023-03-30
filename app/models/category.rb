@@ -181,39 +181,32 @@ class Category < ActiveRecord::Base
             scoped = scoped.where.not(id: SiteSetting.uncategorized_category_id)
           end
 
-          if SiteSetting.enable_category_group_moderation
-            # requires topic approval and the user is in the reviewable group
-            # OR doesn't require topic approval
-            # OR require topic approval isn't set
-            user_group_ids = guardian.user.groups.pluck(:id).join(",")
-            topic_approval_clause = <<~SQL
+          if !guardian.is_staff? # && SiteSetting.enable_category_group_moderation
+            user_in_reviewable_group = <<~SQL
               (
                 category_custom_fields.name = '#{REQUIRE_TOPIC_APPROVAL}'
                 AND
-                (
-                  (
-                    category_custom_fields.value = 't'
-                    AND (
-                      categories.reviewable_by_group_id IN (#{user_group_ids})
-                      OR categories.reviewable_by_group_id IS NULL
-                    )
-                  )
-                  OR
-                  (
-                    category_custom_fields.name = '#{REQUIRE_TOPIC_APPROVAL}'
-                    AND category_custom_fields.value = 'f'
-                  )
+                category_custom_fields.value = 't'
+                AND (
+                  categories.reviewable_by_group_id IN (#{guardian.user.groups.pluck(:id).join(",")})
                 )
               )
-              OR
+            SQL
+            categories_without_topic_approval = <<~SQL
               (
-                categories.id NOT IN (SELECT category_id FROM category_custom_fields WHERE name = '#{REQUIRE_TOPIC_APPROVAL}')
+                categories.id NOT IN (
+                  SELECT category_id
+                  FROM category_custom_fields
+                  WHERE name = '#{REQUIRE_TOPIC_APPROVAL}' AND value = 't'
+                )
               )
             SQL
+            clause = [categories_without_topic_approval]
+            clause << user_in_reviewable_group if SiteSetting.enable_category_group_moderation
             scoped =
               scoped.joins(
                 "left outer join category_custom_fields on (categories.id = category_custom_fields.category_id)",
-              ).where(topic_approval_clause)
+              ).where(clause.join(" OR "))
           end
 
           scoped

@@ -220,74 +220,58 @@ RSpec.describe Category do
       expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
     end
 
-    describe "SiteSetting.enable_category_group_moderation" do
+    describe "require_topic_approval" do
       fab!(:category) { Fabricate(:category_with_definition) }
       fab!(:reviewable_group_user) { Fabricate(:group_user) }
 
-      before do
-        category.reviewable_by_group_id = reviewable_group_user.group.id
-        category.save
-      end
+      context "when true" do
+        before do
+          category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+          category.save
+        end
 
-      context "when enabled" do
-        before { SiteSetting.enable_category_group_moderation = true }
+        it "disallows normal users from creating topics" do
+          expect(Category.topic_create_allowed(user_guardian)).not_to include(category)
+        end
 
-        context "when require_topic_approval present" do
+        describe "SiteSetting.enable_category_group_moderation" do
           before do
-            category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+            category.reviewable_by_group_id = reviewable_group_user.group.id
             category.save
           end
 
-          it "disallows normal users from creating topics" do
-            expect(Category.topic_create_allowed(user_guardian)).not_to include(category)
-          end
+          it "allows category moderators to create topics when true" do
+            SiteSetting.enable_category_group_moderation = true
 
-          it "allows category moderators to create topics" do
             reviewable_group_user_guardian = Guardian.new(reviewable_group_user.user)
             expect(Category.topic_create_allowed(reviewable_group_user_guardian)).to include(
               category,
             )
           end
-        end
 
-        context "when require_topic_approval absent" do
-          it "allows normal users to create topics" do
-            category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
-            category.save
-
-            expect(Category.topic_create_allowed(user_guardian)).to include(category)
-
-            CategoryCustomField.find_by(
-              name: Category::REQUIRE_TOPIC_APPROVAL,
-              category: category,
-            ).destroy!
-
-            expect(Category.topic_create_allowed(user_guardian)).to include(category)
+          it "disallows category moderators to create topics when false" do
+            SiteSetting.enable_category_group_moderation = false
+            reviewable_group_user_guardian = Guardian.new(reviewable_group_user.user)
+            expect(Category.topic_create_allowed(reviewable_group_user_guardian)).not_to include(
+              category,
+            )
           end
         end
       end
 
-      context "when disabled" do
-        before { SiteSetting.enable_category_group_moderation = false }
+      context "when false or absent" do
+        it "allows normal users to create topics" do
+          category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
+          category.save
 
-        describe "#require_topic_approval" do
-          it "will allow normal users to create topics regardless" do
-            category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
-            category.save
+          expect(Category.topic_create_allowed(user_guardian)).to include(category)
 
-            expect(Category.topic_create_allowed(user_guardian)).to include(category)
+          CategoryCustomField.find_by(
+            name: Category::REQUIRE_TOPIC_APPROVAL,
+            category: category,
+          ).destroy!
 
-            category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
-            category.save
-
-            expect(Category.topic_create_allowed(user_guardian)).to include(category)
-
-            CategoryCustomField.find_by(
-              name: Category::REQUIRE_TOPIC_APPROVAL,
-              category: category,
-            ).destroy!
-            expect(Category.topic_create_allowed(user_guardian)).to include(category)
-          end
+          expect(Category.topic_create_allowed(user_guardian)).to include(category)
         end
       end
     end
