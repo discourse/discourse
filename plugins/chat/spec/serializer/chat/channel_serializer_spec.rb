@@ -47,4 +47,70 @@ describe Chat::ChannelSerializer do
       end
     end
   end
+
+  describe "#meta" do
+    context "for category channels" do
+      fab!(:chat_channel) { Fabricate(:chat_channel) }
+
+      it "has the required message_bus_last_ids keys and calls MessageBus" do
+        MessageBus.expects(:last_id).with(Chat::Publisher.root_message_bus_channel(chat_channel.id))
+        MessageBus.expects(:last_id).with(
+          Chat::Publisher.new_messages_message_bus_channel(chat_channel.id),
+        )
+        MessageBus.expects(:last_id).with(
+          Chat::Publisher.new_mentions_message_bus_channel(chat_channel.id),
+        )
+        MessageBus.expects(:last_id).with(
+          Chat::Publisher.kick_users_message_bus_channel(chat_channel.id),
+        )
+        expect(subject.as_json.dig(:meta, :message_bus_last_ids).keys).to eq(
+          %i[channel_message_bus_last_id new_messages new_mentions kick],
+        )
+      end
+
+      it "gets the kick_message_bus_last_id" do
+        MessageBus.expects(:last_id).at_least_once
+        MessageBus.expects(:last_id).with(
+          Chat::Publisher.kick_users_message_bus_channel(chat_channel.id),
+        )
+        expect(subject.as_json[:meta][:message_bus_last_ids].key?(:kick)).to eq(true)
+      end
+
+      it "does not call MessageBus for last_id if all the last IDs are already passed in" do
+        MessageBus.expects(:last_id).never
+        described_class.new(
+          chat_channel,
+          scope: guardian,
+          root: nil,
+          channel_message_bus_last_id: 1,
+          new_messages_message_bus_last_id: 1,
+          new_mentions_message_bus_last_id: 1,
+          kick_message_bus_last_id: 1,
+        ).as_json
+      end
+    end
+
+    context "for direct message channels" do
+      fab!(:chat_channel) { Fabricate(:direct_message_channel) }
+
+      it "has the required message_bus_last_ids keys and calls MessageBus" do
+        MessageBus.expects(:last_id).with(Chat::Publisher.root_message_bus_channel(chat_channel.id))
+        MessageBus.expects(:last_id).with(
+          Chat::Publisher.new_messages_message_bus_channel(chat_channel.id),
+        )
+        MessageBus.expects(:last_id).with(
+          Chat::Publisher.new_mentions_message_bus_channel(chat_channel.id),
+        )
+        expect(subject.as_json.dig(:meta, :message_bus_last_ids).keys).to eq(
+          %i[channel_message_bus_last_id new_messages new_mentions],
+        )
+      end
+
+      it "does not get the kick_message_bus_last_id" do
+        MessageBus.expects(:last_id).at_least_once
+        MessageBus.expects(:last_id).never
+        expect(subject.as_json[:meta][:message_bus_last_ids].key?(:kick)).to eq(false)
+      end
+    end
+  end
 end
