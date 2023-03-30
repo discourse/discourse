@@ -11,6 +11,7 @@ export default Service.extend({
     this._super(...arguments);
 
     this.store = new KeyValueStore(STORE_NAMESPACE);
+    this.denied_emoji = this.siteSettings.emoji_deny_list;
 
     if (!this.store.getObject(EMOJI_USAGE)) {
       this.favorites = [];
@@ -27,7 +28,9 @@ export default Service.extend({
   },
 
   get favorites() {
-    return this.store.getObject(EMOJI_USAGE) || [];
+    return (this.store.getObject(EMOJI_USAGE) || []).filter(
+      (f) => !this.denied_emoji.includes(f)
+    );
   },
 
   set favorites(value) {
