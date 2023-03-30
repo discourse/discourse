@@ -364,7 +364,10 @@ class TopicsController < ApplicationController
           begin
             guardian.ensure_can_move_topic_to_category!(category)
           rescue Discourse::InvalidAccess
-            return render_json_error I18n.t("category.errors.move_topic_to_category_disallowed"), status: :forbidden
+            return(
+              render_json_error I18n.t("category.errors.move_topic_to_category_disallowed"),
+                                status: :forbidden
+            )
           end
         else
           return render_json_error(I18n.t("category.errors.not_found"))
