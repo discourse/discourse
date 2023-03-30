@@ -220,7 +220,7 @@ RSpec.describe Category do
       expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
     end
 
-    context "for SiteSetting.enable_category_group_moderation" do
+    describe "SiteSetting.enable_category_group_moderation" do
       fab!(:category) { Fabricate(:category_with_definition) }
       fab!(:reviewable_group_user) { Fabricate(:group_user) }
 
@@ -249,6 +249,22 @@ RSpec.describe Category do
             )
           end
         end
+
+        context "when require_topic_approval absent" do
+          it "allows normal users to create topics" do
+            category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
+            category.save
+
+            expect(Category.topic_create_allowed(user_guardian)).to include(category)
+
+            CategoryCustomField.find_by(
+              name: Category::REQUIRE_TOPIC_APPROVAL,
+              category: category,
+            ).destroy!
+
+            expect(Category.topic_create_allowed(user_guardian)).to include(category)
+          end
+        end
       end
 
       context "when disabled" do
@@ -264,6 +280,12 @@ RSpec.describe Category do
             category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
             category.save
 
+            expect(Category.topic_create_allowed(user_guardian)).to include(category)
+
+            CategoryCustomField.find_by(
+              name: Category::REQUIRE_TOPIC_APPROVAL,
+              category: category,
+            ).destroy!
             expect(Category.topic_create_allowed(user_guardian)).to include(category)
           end
         end

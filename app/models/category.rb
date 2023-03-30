@@ -182,7 +182,38 @@ class Category < ActiveRecord::Base
           end
 
           if SiteSetting.enable_category_group_moderation
-            scoped = scoped.where(reviewable_by_group_id: guardian.user.groups.select(:id) + [nil])
+            # requires topic approval and the user is in the reviewable group
+            # OR doesn't require topic approval
+            # OR require topic approval isn't set
+            user_group_ids = guardian.user.groups.pluck(:id).join(",")
+            topic_approval_clause = <<~SQL
+              (
+                category_custom_fields.name = '#{REQUIRE_TOPIC_APPROVAL}'
+                AND
+                (
+                  (
+                    category_custom_fields.value = 't'
+                    AND (
+                      categories.reviewable_by_group_id IN (#{user_group_ids})
+                      OR categories.reviewable_by_group_id IS NULL
+                    )
+                  )
+                  OR
+                  (
+                    category_custom_fields.name = '#{REQUIRE_TOPIC_APPROVAL}'
+                    AND category_custom_fields.value = 'f'
+                  )
+                )
+              )
+              OR
+              (
+                categories.id NOT IN (SELECT category_id FROM category_custom_fields WHERE name = '#{REQUIRE_TOPIC_APPROVAL}')
+              )
+            SQL
+            scoped =
+              scoped.joins(
+                "left outer join category_custom_fields on (categories.id = category_custom_fields.category_id)",
+              ).where(topic_approval_clause)
           end
 
           scoped

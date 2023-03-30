@@ -71,7 +71,7 @@ module TopicGuardian
         end
       )
 
-    is_staff? || (can_create_topic_on_category?(category) && !category.require_topic_approval?)
+    is_staff? || can_create_topic_on_category?(category)
   end
 
   def can_create_post_on_topic?(topic)

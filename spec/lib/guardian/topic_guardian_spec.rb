@@ -195,6 +195,57 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_create_topic?" do
+    before { SiteSetting.uncategorized_category_id = category.id }
+
+    context "when staff" do
+      it "always returns true and defaults to uncategorized if absent" do
+        expect(Guardian.new(moderator).can_create_topic?(category)).to eq(true)
+        expect(Guardian.new(moderator).can_create_topic?(nil)).to eq(true)
+      end
+    end
+
+    context "when trust level met" do
+      before { SiteSetting.min_trust_to_create_topic = 3 }
+
+      it "does not allow user to create the topic if they cannot create posts" do
+        guardian = Guardian.new(tl3_user)
+        guardian.stubs(:can_create_post?).with(topic).returns(false)
+
+        expect(guardian.can_create_topic?(topic)).to eq(false)
+      end
+
+      it "does not allow user to create the topic if they cannot post to the topic's category" do
+        guardian = Guardian.new(tl3_user)
+        guardian.stubs(:can_create_post?).with(topic).returns(true)
+        Category
+          .stubs(:topic_create_allowed)
+          .with(guardian)
+          .returns(Category.where.not(id: topic.category_id))
+
+        expect(guardian.can_create_topic?(topic)).to eq(false)
+      end
+
+      it "allows user to create the topic if they can create posts and in the topic's category" do
+        guardian = Guardian.new(tl3_user)
+        guardian.stubs(:can_create_post?).with(topic).returns(true)
+        Category
+          .stubs(:topic_create_allowed)
+          .with(guardian)
+          .returns(Category.where(id: topic.category_id))
+
+        expect(guardian.can_create_topic?(topic)).to eq(true)
+      end
+    end
+
+    context "when trust level not met" do
+      it "returns false" do
+        SiteSetting.min_trust_to_create_topic = 4
+        expect(Guardian.new(tl3_user).can_create_topic?(nil)).to eq(false)
+      end
+    end
+  end
+
   describe "#can_see_unlisted_topics?" do
     it "is allowed for staff users" do
       expect(Guardian.new(moderator).can_see_unlisted_topics?).to eq(true)
