@@ -26,8 +26,8 @@ export default class RangeRef {
   clearListeners() {
     const update = () => this.#updateRect();
     document
-      .querySelector(this.selector)
-      .removeEventListener("mouseup", update);
+      .querySelectorAll(this.selector)
+      .forEach((element) => element.removeEventListener("mouseup", update));
     window.removeEventListener("scroll", update);
     document.scrollingElement.removeEventListener("scroll", update);
   }
