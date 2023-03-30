@@ -1,4 +1,4 @@
-export default class RangeRef {
+export default class VirtualElementFromTextRange {
   constructor(selector) {
     this.selector = selector;
     this.#updateRect();
