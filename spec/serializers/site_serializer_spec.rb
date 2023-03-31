@@ -192,6 +192,75 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "#anonymous_sidebar_sections" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:public_sidebar_section) do
+      Fabricate(:sidebar_section, title: "Public section", user: user, public: true)
+    end
+    fab!(:private_sidebar_section) do
+      Fabricate(:sidebar_section, title: "Private section", user: user, public: false)
+    end
+
+    it "is not included in the serialised object when user is not anonymous" do
+      guardian = Guardian.new(user)
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+    end
+
+    it "includes only public sidebar sections serialised object when user is anonymous" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:anonymous_sidebar_sections].map(&:title)).to eq(["Public section"])
+    end
+
+    it "eager loads sidebar_urls" do
+      public_section_link =
+        Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: public_sidebar_section)
+      # warmup
+      described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      initial_count =
+        track_sql_queries do
+          serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+          expect(
+            serialized[:anonymous_sidebar_sections].map do |sidebar_section|
+              private_sidebar_section.id
+            end,
+          ).to eq([private_sidebar_section.id])
+
+          expect(serialized[:anonymous_sidebar_sections].first.links.map { |link| link.id }).to eq(
+            [public_section_link.linkable.id],
+          )
+        end.count
+
+      public_section_link_2 =
+        Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: public_sidebar_section)
+      public_section_link_3 =
+        Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: public_sidebar_section)
+
+      final_count =
+        track_sql_queries do
+          serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+          expect(
+            serialized[:anonymous_sidebar_sections].map do |sidebar_section|
+              private_sidebar_section.id
+            end,
+          ).to eq([private_sidebar_section.id])
+
+          expect(serialized[:anonymous_sidebar_sections].first.links.map { |link| link.id }).to eq(
+            [
+              public_section_link.linkable.id,
+              public_section_link_2.linkable.id,
+              public_section_link_3.linkable.id,
+            ],
+          )
+        end.count
+
+      expect(final_count < initial_count).to be true
+    end
+  end
+
   describe "#top_tags" do
     fab!(:tag) { Fabricate(:tag) }
 

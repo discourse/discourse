@@ -12,10 +12,10 @@ describe "Custom sidebar sections", type: :system, js: true do
     Fabricate(:group_user, group: group, user: user)
     Fabricate(:group_user, group: group, user: admin)
     SiteSetting.enable_custom_sidebar_sections = group.id.to_s
-    sign_in user
   end
 
   it "allows the user to create custom section" do
+    sign_in user
     visit("/latest")
     sidebar.open_new_custom_section
 
@@ -30,11 +30,12 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     section_modal.save
 
-    expect(page).to have_button("My section")
+    expect(sidebar).to have_section("My section")
     expect(sidebar).to have_link("Sidebar Tags")
   end
 
   it "allows the user to create custom section with /my link" do
+    sign_in user
     visit("/latest")
     sidebar.open_new_custom_section
 
@@ -49,11 +50,12 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     section_modal.save
 
-    expect(page).to have_button("My section")
+    expect(sidebar).to have_section("My section")
     expect(sidebar).to have_link("My preferences")
   end
 
   it "allows the user to create custom section with external link" do
+    sign_in user
     visit("/latest")
     sidebar.open_new_custom_section
 
@@ -71,7 +73,7 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     section_modal.save
 
-    expect(page).to have_button("My section")
+    expect(sidebar).to have_section("My section")
     expect(sidebar).to have_link("Discourse Homepage", href: "https://discourse.org")
   end
 
@@ -82,6 +84,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     sidebar_url_2 = Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories")
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
 
+    sign_in user
     visit("/latest")
 
     sidebar.edit_custom_section("My section")
@@ -93,7 +96,7 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     section_modal.save
 
-    expect(page).to have_button("Edited section")
+    expect(sidebar).to have_section("Edited section")
     expect(sidebar).to have_link("Edited Tag")
 
     expect(page).not_to have_link("Sidebar Categories")
@@ -106,6 +109,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     sidebar_url_2 = Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories")
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
 
+    sign_in user
     visit("/latest")
     within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(1)") do
       expect(page).to have_css(".sidebar-section-link-sidebar-tags")
@@ -127,15 +131,16 @@ describe "Custom sidebar sections", type: :system, js: true do
   end
 
   it "does not allow the user to edit public section" do
-    sidebar_section = Fabricate(:sidebar_section, title: "Public section", user: user, public: true)
+    sidebar_section = Fabricate(:sidebar_section, title: "Public section", public: true)
     sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
     sidebar_url_2 = Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories")
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
 
+    sign_in user
     visit("/latest")
 
-    expect(page).to have_button("Public section")
+    expect(sidebar).to have_section("Public section")
 
     find(".sidebar-section[data-section-name='public-section']").hover
 
@@ -153,6 +158,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     sidebar_url_1 = Fabricate(:sidebar_url, name: "tags", value: "/tags")
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
 
+    sign_in user
     visit("/latest")
 
     sidebar.edit_custom_section("My section")
@@ -160,7 +166,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.delete
     section_modal.confirm_delete
 
-    expect(page).not_to have_button("My section")
+    expect(sidebar).not_to have_section("My section")
   end
 
   it "allows admin to create, edit and delete public section" do
@@ -173,7 +179,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.mark_as_public
     section_modal.save
 
-    expect(page).to have_button("Public section")
+    expect(sidebar).to have_section("Public section")
     expect(sidebar).to have_link("Sidebar Tags")
     expect(page).to have_css(".sidebar-section[data-section-name='public-section'] .d-icon-globe")
 
@@ -181,16 +187,30 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.fill_name("Edited public section")
     section_modal.save
 
-    expect(page).to have_button("Edited public section")
+    expect(sidebar).to have_section("Edited public section")
 
     sidebar.edit_custom_section("Edited public section")
     section_modal.delete
     section_modal.confirm_delete
 
-    expect(page).not_to have_button("Edited public section")
+    expect(sidebar).not_to have_section("Edited public section")
+  end
+
+  it "shows anonymous public sections" do
+    sidebar_section = Fabricate(:sidebar_section, title: "Public section", public: true)
+    sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
+    sidebar_url_2 = Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories")
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+
+    visit("/latest")
+    expect(sidebar).to have_section("Public section")
+    expect(sidebar).to have_link("Sidebar Tags")
+    expect(sidebar).to have_link("Sidebar Categories")
   end
 
   it "validates custom section fields" do
+    sign_in user
     visit("/latest")
     sidebar.open_new_custom_section
 
