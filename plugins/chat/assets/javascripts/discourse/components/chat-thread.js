@@ -86,9 +86,6 @@ export default class ChatThreadPanel extends Component {
         const [messages, meta] = this.afterFetchCallback(this.channel, results);
         this.thread.messagesManager.addMessages(messages);
 
-        // TODO (martin) ECHO MODE
-        this.channel.messagesManager.addMessages(messages);
-
         // TODO (martin) details needed for thread??
         this.thread.details = meta;
 
