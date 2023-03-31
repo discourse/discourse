@@ -730,11 +730,11 @@ export default class ChatLivePane extends Component {
   sendMessage(message, uploads = []) {
     resetIdle();
 
-    if (this.sendingLoading) {
+    if (this.chatChannelPane.sendingLoading) {
       return;
     }
 
-    this.sendingLoading = true;
+    this.chatChannelPane.sendingLoading = true;
     this.args.channel.draft = ChatMessageDraft.create();
 
     // TODO: all send message logic is due for massive refactoring
@@ -757,7 +757,7 @@ export default class ChatLivePane extends Component {
           return;
         }
         this.loading = false;
-        this.sendingLoading = false;
+        this.chatChannelPane.sendingLoading = false;
         this._resetAfterSend();
         this.scrollToLatestMessage();
       });
@@ -796,7 +796,7 @@ export default class ChatLivePane extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.sendingLoading = false;
+        this.chatChannelPane.sendingLoading = false;
         this._resetAfterSend();
       });
   }
@@ -840,7 +840,7 @@ export default class ChatLivePane extends Component {
 
   @action
   resendStagedMessage(stagedMessage) {
-    this.sendingLoading = true;
+    this.chatChannelPane.sendingLoading = true;
 
     stagedMessage.error = null;
 
@@ -863,57 +863,8 @@ export default class ChatLivePane extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.sendingLoading = false;
+        this.chatChannelPane.sendingLoading = false;
       });
-  }
-
-  @action
-  editMessage(chatMessage, newContent, uploads) {
-    this.sendingLoading = true;
-    let data = {
-      new_message: newContent,
-      upload_ids: (uploads || []).map((upload) => upload.id),
-    };
-    return this.chatApi
-      .editMessage(this.args.channel.id, chatMessage.id, data)
-      .then(() => {
-        this._resetAfterSend();
-      })
-      .catch(popupAjaxError)
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.sendingLoading = false;
-      });
-  }
-
-  _resetAfterSend() {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    this.chatChannelComposer.reset();
-    this.chatComposerPresenceManager.notifyState(this.args.channel.id, false);
-    this.appEvents.trigger("chat-composer:reply-to-set", null);
-  }
-
-  @action
-  editLastMessageRequested() {
-    const lastUserMessage = this.args.channel.messages.findLast(
-      (message) => message.user.id === this.currentUser.id
-    );
-
-    if (!lastUserMessage) {
-      return;
-    }
-
-    if (lastUserMessage.staged || lastUserMessage.error) {
-      return;
-    }
-
-    this.chatChannelComposer.editingMessage = lastUserMessage;
-    this._focusComposer();
   }
 
   get chatProgressBarContainer() {

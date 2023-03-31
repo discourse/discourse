@@ -45,12 +45,10 @@
   {{else}}
     <ChatComposer
       @sendMessage={{this.sendMessage}}
-      @editMessage={{this.editMessage}}
-      @loading={{this.sendingLoading}}
       @onCancelEditing={{this.cancelEditing}}
-      @onEditLastMessageRequested={{this.editLastMessageRequested}}
       @chatChannel={{this.channel}}
       @composerService={{this.chatChannelThreadComposer}}
+      @paneService={{this.chatChannelThreadPane}}
     />
   {{/if}}
 </div>

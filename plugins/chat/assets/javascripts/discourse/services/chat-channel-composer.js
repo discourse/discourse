@@ -29,7 +29,7 @@ export default class ChatChannelComposer extends Service {
           ? this.#model.messagesManager.findMessage(messageOrId)
           : messageOrId;
       this.replyToMsg = message;
-      this.#focusComposer();
+      this.focusComposer();
     } else {
       this.replyToMsg = null;
     }
@@ -44,7 +44,7 @@ export default class ChatChannelComposer extends Service {
     // TODO (martin) Move scrollToLatestMessage to live panel.
     // this.scrollToLatestMessage();
 
-    this.#focusComposer();
+    this.focusComposer();
   }
 
   onComposerValueChange({
@@ -94,7 +94,7 @@ export default class ChatChannelComposer extends Service {
     this.focusHandler = handlerFn;
   }
 
-  #focusComposer() {
+  focusComposer() {
     this.focusHandler();
   }
 

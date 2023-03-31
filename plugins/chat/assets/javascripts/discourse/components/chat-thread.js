@@ -144,11 +144,11 @@ export default class ChatThreadPanel extends Component {
   sendMessage(message, uploads = []) {
     // TODO (martin) For desktop notifications
     // resetIdle()
-    if (this.sendingLoading) {
+    if (this.chatChannelThreadPane.sendingLoading) {
       return;
     }
 
-    this.sendingLoading = true;
+    this.chatChannelThreadPane.sendingLoading = true;
     this.channel.draft = ChatMessageDraft.create();
 
     // TODO (martin) Handling case when channel is not followed???? IDK if we
@@ -188,34 +188,10 @@ export default class ChatThreadPanel extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.sendingLoading = false;
-        this.#resetAfterSend();
+        this.chatChannelThreadPane.sendingLoading = false;
+        this.chatChannelThreadPane.resetAfterSend();
       });
   }
-
-  @action
-  editMessage(chatMessage, newContent, uploads) {
-    this.sendingLoading = true;
-    let data = {
-      new_message: newContent,
-      upload_ids: (uploads || []).map((upload) => upload.id),
-    };
-    return this.chatApi
-      .editMessage(this.channel.id, chatMessage.id, data)
-      .then(() => {
-        this.#resetAfterSend();
-      })
-      .catch(popupAjaxError)
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.sendingLoading = false;
-      });
-  }
-
-  @action
-  editLastMessageRequested() {}
 
   @action
   resendStagedMessage() {}
@@ -254,16 +230,6 @@ export default class ChatThreadPanel extends Component {
       }
     }
 
-    this.#resetAfterSend();
-  }
-
-  #resetAfterSend() {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    this.chatChannelThreadComposer.reset();
-    this.chatComposerPresenceManager.notifyState(this.channel.id, false);
-    this.appEvents.trigger("chat-composer:reply-to-set", null);
+    this.chatChannelThreadPane.resetAfterSend();
   }
 }

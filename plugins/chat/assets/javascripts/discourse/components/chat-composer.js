@@ -188,7 +188,7 @@ export default Component.extend(TextareaTextManipulation, {
       !this.composerService?.editingMessage
     ) {
       event.preventDefault();
-      this.onEditLastMessageRequested();
+      this.paneService?.editLastMessageRequested();
     }
 
     if (event.keyCode === 27) {
@@ -228,7 +228,10 @@ export default Component.extend(TextareaTextManipulation, {
 
   @action
   updateEditingMessage() {
-    if (this.composerService?.editingMessage && !this.loading) {
+    if (
+      this.composerService?.editingMessage &&
+      !this.paneService?.sendingLoading
+    ) {
       this.set("value", this.composerService?.editingMessage.message);
 
       this.composerService?.setReplyTo(null);
@@ -602,7 +605,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @discourseComputed(
     "value",
-    "loading",
+    "paneService.sendingLoading",
     "disableComposer",
     "inProgressUploads.[]"
   )
@@ -638,11 +641,9 @@ export default Component.extend(TextareaTextManipulation, {
 
   @action
   internalEditMessage() {
-    return this.editMessage(
-      this.composerService?.editingMessage,
-      this.value,
-      this._uploads
-    ).then(this.reset);
+    return this.paneService
+      ?.editMessage(this.value, this._uploads)
+      .then(this.reset);
   },
 
   _messageIsValid() {
