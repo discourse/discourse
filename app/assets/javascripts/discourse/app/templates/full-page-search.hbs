@@ -150,7 +150,7 @@
     {{else}}
       <div class="search-results" role="region">
         <LoadMore @selector=".fps-result" @action={{action "loadMore"}}>
-          {{#if this.usingDefaultSearchType}}
+          {{#if (or this.usingDefaultSearchType this.customSearchType)}}
             <SearchResultEntries
               @posts={{this.model.posts}}
               @bulkSelectEnabled={{this.bulkSelectEnabled}}
