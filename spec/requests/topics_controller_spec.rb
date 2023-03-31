@@ -1391,6 +1391,9 @@ RSpec.describe TopicsController do
         put "/t/#{topic.id}.json", params: { category_id: category.id }
 
         expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("category.errors.move_topic_to_category_disallowed"),
+        )
         expect(topic.reload.category_id).not_to eq(category.id)
       end
 
@@ -4544,7 +4547,7 @@ RSpec.describe TopicsController do
   describe "crawler" do
     context "when not a crawler" do
       it "renders with the application layout" do
-        get topic.url
+        get topic.relative_url
 
         body = response.body
 
@@ -4577,7 +4580,7 @@ RSpec.describe TopicsController do
 
         user_agent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 
-        get topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+        get topic.relative_url, env: { "HTTP_USER_AGENT" => user_agent }
 
         body = response.body
 
@@ -4590,7 +4593,7 @@ RSpec.describe TopicsController do
 
         expect(response.headers["Last-Modified"]).to eq(page1_time.httpdate)
 
-        get topic.url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
+        get topic.relative_url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
         body = response.body
 
         expect(response.headers["Last-Modified"]).to eq(page2_time.httpdate)
@@ -4601,7 +4604,7 @@ RSpec.describe TopicsController do
         expect(body).to include('<link rel="prev" href="' + topic.relative_url)
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")
 
-        get topic.url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
+        get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
         body = response.body
 
         expect(response.headers["Last-Modified"]).to eq(page3_time.httpdate)
@@ -4628,7 +4631,7 @@ RSpec.describe TopicsController do
 
       context "with wayback machine" do
         it "renders crawler layout" do
-          get topic.url,
+          get topic.relative_url,
               env: {
                 "HTTP_USER_AGENT" =>
                   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",

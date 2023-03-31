@@ -258,4 +258,55 @@ RSpec.describe DiscoursePluginRegistry do
       )
     end
   end
+
+  context "with filters" do
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    class TestFilterPlugInstance < Plugin::Instance
+      def enabled?
+        !@disabled
+      end
+
+      def enabled=(value)
+        @disabled = !value
+      end
+    end
+
+    let(:plugin_instance) { TestFilterPlugInstance.new }
+    let(:plugin_instance2) { TestFilterPlugInstance.new }
+
+    it "handles modifiers with multiple parameters" do
+      DiscoursePluginRegistry.register_modifier(plugin_instance, :magic_sum_modifier) do |a, b|
+        a + b
+      end
+
+      sum = DiscoursePluginRegistry.apply_modifier(:magic_sum_modifier, 1, 2)
+      expect(sum).to eq(3)
+    end
+
+    it "handles modifier stacking" do
+      # first in, first called
+      DiscoursePluginRegistry.register_modifier(plugin_instance, :stacking) { |x| x == 1 ? 2 : 1 }
+      DiscoursePluginRegistry.register_modifier(plugin_instance2, :stacking) { |x| x + 1 }
+
+      expect(DiscoursePluginRegistry.apply_modifier(:stacking, 1)).to eq(3)
+    end
+
+    it "handles disabled plugins" do
+      plugin_instance.enabled = false
+      DiscoursePluginRegistry.register_modifier(plugin_instance, :magic_sum_modifier) do |a, b|
+        a + b
+      end
+
+      sum = DiscoursePluginRegistry.apply_modifier(:magic_sum_modifier, 1, 2)
+      expect(sum).to eq(1)
+    end
+
+    it "can handle arity mismatch" do
+      DiscoursePluginRegistry.register_modifier(plugin_instance, :magic_sum_modifier) { 42 }
+
+      sum = DiscoursePluginRegistry.apply_modifier(:magic_sum_modifier, 1, 2)
+      expect(sum).to eq(42)
+    end
+  end
 end

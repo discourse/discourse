@@ -1,18 +1,17 @@
 import I18n from "I18n";
 
 import DiscourseRoute from "discourse/routes/discourse";
-import { isEmpty } from "@ember/utils";
 import { action } from "@ember/object";
 
 export default class extends DiscourseRoute {
   queryParams = {
-    status: { replace: true, refreshModel: true },
+    q: { replace: true, refreshModel: true },
   };
 
   model(data) {
     return this.store.findFiltered("topicList", {
       filter: "filter",
-      params: this.#filterQueryParams(data),
+      params: { q: data.q },
     });
   }
 
@@ -38,16 +37,4 @@ export default class extends DiscourseRoute {
   // Figure out a way to remove this.
   @action
   changeSort() {}
-
-  #filterQueryParams(data) {
-    const params = {};
-
-    Object.keys(this.queryParams).forEach((key) => {
-      if (!isEmpty(data[key])) {
-        params[key] = data[key];
-      }
-    });
-
-    return params;
-  }
 }

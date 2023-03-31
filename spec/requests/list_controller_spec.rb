@@ -1086,9 +1086,12 @@ RSpec.describe ListController do
   end
 
   describe "#filter" do
-    it "should respond with 403 response code for an anonymous user" do
-      SiteSetting.experimental_topics_filter = true
+    fab!(:category) { Fabricate(:category) }
+    fab!(:tag) { Fabricate(:tag, name: "tag1") }
 
+    before { SiteSetting.experimental_topics_filter = true }
+
+    it "should respond with 403 response code for an anonymous user" do
       get "/filter.json"
 
       expect(response.status).to eq(403)
@@ -1096,11 +1099,147 @@ RSpec.describe ListController do
 
     it "should respond with 404 response code when `experimental_topics_filter` site setting has not been enabled" do
       SiteSetting.experimental_topics_filter = false
+
       sign_in(user)
 
       get "/filter.json"
 
       expect(response.status).to eq(404)
+    end
+
+    it "returns category definition topics if `show_category_definitions_in_topic_lists` site setting is enabled" do
+      category_topic = Fabricate(:topic, category: category)
+      category.update!(topic: category_topic)
+
+      SiteSetting.show_category_definitions_in_topic_lists = true
+
+      sign_in(user)
+
+      get "/filter.json"
+
+      expect(response.status).to eq(200)
+
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+      ).to contain_exactly(topic.id, category_topic.id)
+    end
+
+    it "does not return category definition topics if `show_category_definitions_in_topic_lists` site setting is disabled" do
+      category_topic = Fabricate(:topic, category: category)
+      category.update!(topic: category_topic)
+
+      SiteSetting.show_category_definitions_in_topic_lists = false
+
+      sign_in(user)
+
+      get "/filter.json"
+
+      expect(response.status).to eq(200)
+
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+      ).to contain_exactly(topic.id)
+    end
+
+    it "should accept the `page` query parameter" do
+      topic_with_tag = Fabricate(:topic, tags: [tag])
+      topic2_with_tag = Fabricate(:topic, tags: [tag])
+
+      stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+        sign_in(user)
+
+        get "/filter.json", params: { q: "tags:tag1" }
+
+        expect(response.status).to eq(200)
+
+        parsed = response.parsed_body
+
+        expect(parsed["topic_list"]["topics"].length).to eq(1)
+        expect(parsed["topic_list"]["topics"].first["id"]).to eq(topic2_with_tag.id)
+
+        get "/filter.json", params: { q: "tags:tag1", page: 1 }
+
+        expect(response.status).to eq(200)
+
+        parsed = response.parsed_body
+
+        expect(parsed["topic_list"]["topics"].length).to eq(1)
+        expect(parsed["topic_list"]["topics"].first["id"]).to eq(topic_with_tag.id)
+      end
+    end
+
+    describe "when filtering by status" do
+      fab!(:group) { Fabricate(:group) }
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+      fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
+
+      it "does not return topics that are unlisted when `q` query param is `status:unlisted` for a user that cannot view unlisted topics" do
+        Topic.update_all(deleted_at: true)
+        topic.update!(visible: false)
+
+        sign_in(user)
+
+        get "/filter.json", params: { q: "status:unlisted" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }).to eq([])
+      end
+
+      it "returns topics that are unlisted when `q` query param is `status:unlisted` for a user that can view unlisted topics" do
+        Topic.update_all(visible: true)
+        topic.update!(visible: false)
+
+        sign_in(admin)
+
+        get "/filter.json", params: { q: "status:unlisted" }
+
+        expect(response.status).to eq(200)
+
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+        ).to contain_exactly(topic.id)
+      end
+
+      it "ignores the `status` filter for a user that cannot view deleted topics when `q` query param is `status:deleted`" do
+        Topic.update_all(deleted_at: nil)
+        topic.update!(deleted_at: Time.zone.now)
+
+        sign_in(user)
+
+        get "/filter.json", params: { q: "status:deleted" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }).to eq([])
+      end
+
+      it "returns topics that are deleted when `q` query param is `status:deleted` for a user that can view deleted topics" do
+        Topic.update_all(deleted_at: nil)
+        topic.update!(deleted_at: Time.zone.now)
+
+        sign_in(admin)
+
+        get "/filter.json", params: { q: "status:deleted" }
+
+        expect(response.status).to eq(200)
+
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+        ).to contain_exactly(topic.id)
+      end
+
+      it "does not return topics from read restricted categories when `q` query param is `status:public`" do
+        group.add(user)
+
+        sign_in(user)
+
+        get "/filter.json", params: { q: "status:public" }
+
+        expect(response.status).to eq(200)
+
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+        ).to contain_exactly(topic.id)
+      end
     end
   end
 end

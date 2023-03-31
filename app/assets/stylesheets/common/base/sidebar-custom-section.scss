@@ -20,11 +20,7 @@
 
   a {
     -webkit-touch-callout: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    -o-user-select: none !important;
-    user-select: none;
+    @include unselectable;
   }
 
   .sidebar-section-wrapper.disabled {
