@@ -224,14 +224,6 @@ module Chat
       render json: success_json
     end
 
-    def delete
-      guardian.ensure_can_delete_chat!(@message, @chatable)
-
-      Chat::MessageDestroyer.new.trash_message(@message, current_user)
-
-      head :ok
-    end
-
     def restore
       chat_channel = @message.chat_channel
       guardian.ensure_can_restore_chat!(@message, chat_channel.chatable)

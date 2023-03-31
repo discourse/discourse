@@ -39,6 +39,7 @@ export default class ChatMessage extends Component {
   @service appEvents;
   @service capabilities;
   @service chat;
+  @service chatApi;
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
   @service chatChannelsManager;
@@ -640,12 +641,9 @@ export default class ChatMessage extends Component {
 
   @action
   deleteMessage() {
-    return ajax(
-      `/chat/${this.args.message.channelId}/${this.args.message.id}`,
-      {
-        type: "DELETE",
-      }
-    ).catch(popupAjaxError);
+    return this.chatApi
+      .trashMessage(this.args.message.id)
+      .catch(popupAjaxError);
   }
 
   @action
