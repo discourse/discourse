@@ -57,7 +57,7 @@ export default Component.extend(KeyEnterEscape, {
   animated: false,
   privateCategory: alias("topic.category.read_restricted"),
   editPost: null,
-  placement: "top-start",
+  popperPlacement: "top-start",
 
   _isFastEditable: false,
   _displayFastEditInput: false,
@@ -195,7 +195,7 @@ export default Component.extend(KeyEnterEscape, {
     const showAtEnd = isMobileDevice || isIOS || isAndroid || isOpera;
 
     if (showAtEnd) {
-      this.placement = "bottom-start";
+      this.popperPlacement = "bottom-start";
     }
 
     // change the position of the button
@@ -207,7 +207,7 @@ export default Component.extend(KeyEnterEscape, {
       this.textRange = virtualElementFromTextRange(".cooked");
 
       this._popper = createPopper(this.textRange, this.element, {
-        placement: this.placement,
+        placement: this.popperPlacement,
         modifiers: [
           {
             name: "computeStyles",
