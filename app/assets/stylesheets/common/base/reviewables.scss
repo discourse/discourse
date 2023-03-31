@@ -236,7 +236,8 @@
       &.-flagged-chat-message,
       &.-akismet-flagged-post,
       &.-akismet-flagged-user,
-      &.-ai-flagged-post {
+      &.-ai-flagged-post,
+      &.-ai-flagged-chat-message {
         background-color: var(--danger-medium);
       }
       &.-queued-post,
