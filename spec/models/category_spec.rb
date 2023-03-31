@@ -219,62 +219,6 @@ RSpec.describe Category do
       # anonymous has permission to create no topics
       expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
     end
-
-    describe "require_topic_approval" do
-      fab!(:category) { Fabricate(:category_with_definition) }
-      fab!(:reviewable_group_user) { Fabricate(:group_user) }
-
-      context "when true" do
-        before do
-          category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
-          category.save
-        end
-
-        it "disallows normal users from creating topics" do
-          expect(Category.topic_create_allowed(user_guardian)).not_to include(category)
-        end
-
-        describe "SiteSetting.enable_category_group_moderation" do
-          before do
-            category.reviewable_by_group_id = reviewable_group_user.group.id
-            category.save
-          end
-
-          it "allows category moderators to create topics when true" do
-            SiteSetting.enable_category_group_moderation = true
-
-            reviewable_group_user_guardian = Guardian.new(reviewable_group_user.user)
-            expect(Category.topic_create_allowed(reviewable_group_user_guardian)).to include(
-              category,
-            )
-          end
-
-          it "disallows category moderators to create topics when false" do
-            SiteSetting.enable_category_group_moderation = false
-            reviewable_group_user_guardian = Guardian.new(reviewable_group_user.user)
-            expect(Category.topic_create_allowed(reviewable_group_user_guardian)).not_to include(
-              category,
-            )
-          end
-        end
-      end
-
-      context "when false or absent" do
-        it "allows normal users to create topics" do
-          category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
-          category.save
-
-          expect(Category.topic_create_allowed(user_guardian)).to include(category)
-
-          CategoryCustomField.find_by(
-            name: Category::REQUIRE_TOPIC_APPROVAL,
-            category: category,
-          ).destroy!
-
-          expect(Category.topic_create_allowed(user_guardian)).to include(category)
-        end
-      end
-    end
   end
 
   describe "security" do

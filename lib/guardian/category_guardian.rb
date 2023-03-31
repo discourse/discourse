@@ -78,4 +78,13 @@ module CategoryGuardian
     @topic_featured_link_allowed_category_ids =
       Category.where(topic_featured_link_allowed: true).pluck(:id)
   end
+
+  def topics_need_approval?(category)
+    return false if is_admin?
+    return category.require_topic_approval? if !SiteSetting.enable_category_group_moderation
+    return category.require_topic_approval? if category.reviewable_by_group_id.nil?
+    if category.reviewable_by_group_id
+      !self.user.belonging_to_group_ids.include?(category.reviewable_by_group_id)
+    end
+  end
 end

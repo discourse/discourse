@@ -180,35 +180,6 @@ class Category < ActiveRecord::Base
           if !SiteSetting.allow_uncategorized_topics && !guardian.is_staff?
             scoped = scoped.where.not(id: SiteSetting.uncategorized_category_id)
           end
-
-          if !guardian.is_staff? && guardian.user&.groups
-            user_in_reviewable_group = <<~SQL
-              (
-                category_custom_fields.name = '#{REQUIRE_TOPIC_APPROVAL}'
-                AND
-                category_custom_fields.value = 't'
-                AND (
-                  categories.reviewable_by_group_id IN (#{guardian.user.groups.pluck(:id).join(",")})
-                )
-              )
-            SQL
-            categories_without_topic_approval = <<~SQL
-              (
-                categories.id NOT IN (
-                  SELECT category_id
-                  FROM category_custom_fields
-                  WHERE name = '#{REQUIRE_TOPIC_APPROVAL}' AND value = 't'
-                )
-              )
-            SQL
-            clause = [categories_without_topic_approval]
-            clause << user_in_reviewable_group if SiteSetting.enable_category_group_moderation
-            scoped =
-              scoped.joins(
-                "left outer join category_custom_fields on (categories.id = category_custom_fields.category_id)",
-              ).where(clause.join(" OR "))
-          end
-
           scoped
         }
 

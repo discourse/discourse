@@ -70,8 +70,7 @@ module TopicGuardian
           Category.find(category || SiteSetting.uncategorized_category_id)
         end
       )
-
-    is_staff? || can_create_topic_on_category?(category)
+    is_staff? || can_create_topic_on_category?(category) && !topics_need_approval?(category)
   end
 
   def can_create_post_on_topic?(topic)

@@ -218,10 +218,7 @@ RSpec.describe TopicGuardian do
       it "does not allow user to create the topic if they cannot post to the topic's category" do
         guardian = Guardian.new(tl3_user)
         guardian.stubs(:can_create_post?).with(topic).returns(true)
-        Category
-          .stubs(:topic_create_allowed)
-          .with(guardian)
-          .returns(Category.where.not(id: topic.category_id))
+        Category.stubs(:topic_create_allowed).with(guardian).returns(Category.where("1 = 0"))
 
         expect(guardian.can_create_topic?(topic)).to eq(false)
       end
@@ -242,6 +239,47 @@ RSpec.describe TopicGuardian do
       it "returns false" do
         SiteSetting.min_trust_to_create_topic = 4
         expect(Guardian.new(tl3_user).can_create_topic?(nil)).to eq(false)
+      end
+    end
+  end
+
+  describe "#can_move_topic_to_category?" do
+    let(:admin_guardian) { Guardian.new(admin) }
+
+    it "returns true if staff" do
+      expect(admin_guardian.can_move_topic_to_category?(category)).to eq(true)
+      expect(admin_guardian.can_move_topic_to_category?(category.id)).to eq(true)
+    end
+
+    context "when not staff" do
+      let(:user_guardian) { Guardian.new(user) }
+
+      it "returns false when the user cannot create a topic" do
+        user_guardian.stubs(:can_create_topic_on_category?).returns(false)
+
+        expect(user_guardian.can_move_topic_to_category?(category)).to eq(false)
+      end
+
+      it "returns false when the user needs approval in the category" do
+        user_guardian.stubs(:can_create_topic_on_category?).returns(true)
+        user_guardian.stubs(:topics_need_approval?).returns(true)
+
+        expect(user_guardian.can_move_topic_to_category?(category)).to eq(false)
+      end
+
+      it "returns true when the user can create topic and does not need approval in the category" do
+        user_guardian.stubs(:can_create_topic_on_category?).returns(true)
+        user_guardian.stubs(:topics_need_approval?).returns(false)
+
+        expect(user_guardian.can_move_topic_to_category?(category)).to eq(true)
+      end
+
+      it "defaults to uncategorized_category_id if no category provided" do
+        category = Fabricate(:category, id: 123)
+        SiteSetting.uncategorized_category_id = 123
+        user_guardian.stubs(:can_create_topic_on_category?).with(category)
+
+        user_guardian.can_move_topic_to_category?(nil)
       end
     end
   end
