@@ -57,6 +57,7 @@ export default Component.extend(KeyEnterEscape, {
   animated: false,
   privateCategory: alias("topic.category.read_restricted"),
   editPost: null,
+  _popper: null,
   popperPlacement: "top-start",
 
   _isFastEditable: false,
@@ -279,6 +280,7 @@ export default Component.extend(KeyEnterEscape, {
   },
 
   willDestroyElement() {
+    this._popper?.destroy();
     $(document)
       .off("mousedown.quote-button")
       .off("mouseup.quote-button")
