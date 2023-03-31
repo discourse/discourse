@@ -155,6 +155,10 @@ RSpec.describe Chat::Api::ChatablesController do
 
         GroupUser.create(user: other_user, group: group)
         get "/chat/api/chatables", params: { filter: "janemay" }
+        if response.status == 500
+          puts "ERROR in ChatablesController spec:\n"
+          puts response.body
+        end
         expect(response.status).to eq(200)
         expect(response.parsed_body["direct_message_channels"][0]["id"]).to eq(dm_chat_channel_2.id)
       end
