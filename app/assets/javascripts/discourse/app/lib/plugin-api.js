@@ -111,6 +111,7 @@ import { registerNotificationTypeRenderer } from "discourse/lib/notification-typ
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
+import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -2123,6 +2124,18 @@ class PluginApi {
    */
   addUserMessagesNavigationDropdownRow(routeName, name, icon) {
     registerCustomUserNavMessagesDropdownRow(routeName, name, icon);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a new search type which can be selected when visiting the full page search UI.
+   *
+   * @param {string} translationKey
+   * @param {string} searchTypeId
+   * @param {function} searchFunc - Available arguments: fullPage controller, search args, searchKey.
+   */
+  addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
+    registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
   }
 }
 
