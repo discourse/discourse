@@ -24,7 +24,7 @@ import { next, schedule } from "@ember/runloop";
 import toMarkdown from "discourse/lib/to-markdown";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
 import { createPopper } from "@popperjs/core";
-import VirtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
+import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -204,7 +204,7 @@ export default Component.extend(KeyEnterEscape, {
         return;
       }
 
-      this.textRange = new VirtualElementFromTextRange(".cooked");
+      this.textRange = virtualElementFromTextRange(".cooked");
 
       this._popper = createPopper(this.textRange, this.element, {
         placement: this.placement,

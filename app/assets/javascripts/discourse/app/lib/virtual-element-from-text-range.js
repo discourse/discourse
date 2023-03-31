@@ -1,4 +1,4 @@
-export default class VirtualElementFromTextRange {
+class VirtualElementFromTextRange {
   constructor(selector) {
     this.selector = selector;
     this.#updateRect();
@@ -39,4 +39,8 @@ export default class VirtualElementFromTextRange {
   get clientHeight() {
     return this.rect.height;
   }
+}
+
+export default function virtualElementFromTextRange(selector) {
+  return new VirtualElementFromTextRange(selector);
 }
