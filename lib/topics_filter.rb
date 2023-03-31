@@ -9,14 +9,18 @@ class TopicsFilter
   def filter_from_query_string(query_string)
     return @scope if query_string.blank?
 
-    query_string.scan(/(?<exclude>-)?(?<key>\w+):(?<value>[^:\s]+)/) do |exclude, key, value|
+    query_string.scan(
+      /(?<key_prefix>[-=])?(?<key>\w+):(?<value>[^:\s]+)/,
+    ) do |key_prefix, key, value|
       case key
       when "status"
         @scope = filter_status(status: value)
       when "tags"
         value.scan(
-          /^(?<tags>([a-zA-Z0-9\-]+)(?<delimiter>[,+])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)$/,
-        ) do |value, delimiter|
+          /^(?<tag_names>([a-zA-Z0-9\-]+)(?<delimiter>[,+])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)$/,
+        ) do |tag_names, delimiter|
+          break if key_prefix && key_prefix != "-"
+
           match_all =
             if delimiter == ","
               false
@@ -25,7 +29,23 @@ class TopicsFilter
             end
 
           @scope =
-            filter_tags(tag_names: value.split(delimiter), exclude: exclude, match_all: match_all)
+            filter_tags(
+              tag_names: tag_names.split(delimiter),
+              exclude: key_prefix.presence,
+              match_all: match_all,
+            )
+        end
+      when "category", "categories"
+        value.scan(
+          /^(?<category_slugs>([a-zA-Z0-9\-]+)(?<delimiter>[,])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)$/,
+        ) do |category_slugs, delimiter|
+          break if key_prefix && key_prefix != "="
+
+          @scope =
+            filter_categories(
+              category_slugs: category_slugs.split(delimiter),
+              exclude_subcategories: key_prefix.presence,
+            )
         end
       end
     end
@@ -59,6 +79,22 @@ class TopicsFilter
   end
 
   private
+
+  def filter_categories(category_slugs:, exclude_subcategories: false)
+    category_ids =
+      Category
+        .where(slug: category_slugs)
+        .filter { |category| @guardian.can_see_category?(category) }
+        .map(&:id)
+
+    return @scope.none if category_ids.length != category_slugs.length
+
+    if !exclude_subcategories
+      category_ids = category_ids.flat_map { |category_id| Category.subcategory_ids(category_id) }
+    end
+
+    @scope = @scope.joins(:category).where("categories.id IN (?)", category_ids)
+  end
 
   def filter_tags(tag_names:, match_all: true, exclude: false)
     return @scope if !SiteSetting.tagging_enabled?
