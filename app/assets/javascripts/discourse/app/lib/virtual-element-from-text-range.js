@@ -1,11 +1,9 @@
 class VirtualElementFromTextRange {
-  constructor(selector) {
-    this.selector = selector;
-    this.#updateRect();
-    this.setupListeners(selector);
+  constructor() {
+    this.updateRect();
   }
 
-  #updateRect() {
+  updateRect() {
     const selection = document.getSelection();
     this.range = selection && selection.rangeCount && selection.getRangeAt(0);
     this.rect = this.range.getBoundingClientRect();
@@ -14,22 +12,6 @@ class VirtualElementFromTextRange {
 
   getBoundingClientRect() {
     return this.rect;
-  }
-
-  setupListeners(selector) {
-    const update = () => this.#updateRect();
-    document.querySelector(selector).addEventListener("mouseup", update);
-    window.addEventListener("scroll", update);
-    document.scrollingElement.addEventListener("scroll", update);
-  }
-
-  clearListeners() {
-    const update = () => this.#updateRect();
-    document
-      .querySelectorAll(this.selector)
-      .forEach((element) => element.removeEventListener("mouseup", update));
-    window.removeEventListener("scroll", update);
-    document.scrollingElement.removeEventListener("scroll", update);
   }
 
   get clientWidth() {
@@ -41,6 +23,6 @@ class VirtualElementFromTextRange {
   }
 }
 
-export default function virtualElementFromTextRange(selector) {
-  return new VirtualElementFromTextRange(selector);
+export default function virtualElementFromTextRange() {
+  return new VirtualElementFromTextRange();
 }

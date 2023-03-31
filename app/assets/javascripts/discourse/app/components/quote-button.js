@@ -205,7 +205,8 @@ export default Component.extend(KeyEnterEscape, {
         return;
       }
 
-      this.textRange = virtualElementFromTextRange(".cooked");
+      this.textRange = virtualElementFromTextRange();
+      this._setupSelectionListeners();
 
       this._popper = createPopper(this.textRange, this.element, {
         placement: this.popperPlacement,
@@ -231,6 +232,22 @@ export default Component.extend(KeyEnterEscape, {
         next(() => this.set("animated", true));
       }
     });
+  },
+
+  _setupSelectionListeners() {
+    const updateRect = () => this.textRange.updateRect();
+    document.querySelector(".cooked").addEventListener("mouseup", updateRect);
+    window.addEventListener("scroll", updateRect);
+    document.scrollingElement.addEventListener("scroll", updateRect);
+  },
+
+  _teardownSelectionListeners() {
+    const updateRect = () => this.textRange.updateRect();
+    document
+      .querySelectorAll(".cooked")
+      .forEach((element) => element.removeEventListener("mouseup", updateRect));
+    window.removeEventListener("scroll", updateRect);
+    document.scrollingElement.removeEventListener("scroll", updateRect);
   },
 
   didInsertElement() {
@@ -287,6 +304,7 @@ export default Component.extend(KeyEnterEscape, {
       .off("selectionchange.quote-button");
     this.appEvents.off("quote-button:quote", this, "insertQuote");
     this.appEvents.off("quote-button:edit", this, "_toggleFastEditForm");
+    this._teardownSelectionListeners();
   },
 
   @discourseComputed("topic.{isPrivateMessage,invisible,category}")
