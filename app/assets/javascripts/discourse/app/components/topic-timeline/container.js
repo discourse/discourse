@@ -287,8 +287,10 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   @bind
-  dragMove(e) {
-    this.updatePercentage(e);
+  dragMove(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.updatePercentage(event);
   }
 
   @bind

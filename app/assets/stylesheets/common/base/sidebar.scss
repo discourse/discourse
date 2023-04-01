@@ -29,6 +29,8 @@
   position: sticky;
   top: var(--header-offset);
 
+  @include unselectable;
+
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
     height: calc(

@@ -594,6 +594,8 @@ module Discourse
     alias_method :base_url_no_path, :base_url_no_prefix
   end
 
+  LAST_POSTGRES_READONLY_KEY = "postgres:last_readonly"
+
   READONLY_MODE_KEY_TTL ||= 60
   READONLY_MODE_KEY ||= "readonly_mode"
   PG_READONLY_MODE_KEY ||= "readonly_mode:postgres"
@@ -704,7 +706,7 @@ module Discourse
 
   # Shared between processes
   def self.postgres_last_read_only
-    @postgres_last_read_only ||= DistributedCache.new("postgres_last_read_only", namespace: false)
+    @postgres_last_read_only ||= DistributedCache.new("postgres_last_read_only")
   end
 
   # Per-process
@@ -712,20 +714,33 @@ module Discourse
     @redis_last_read_only ||= {}
   end
 
+  def self.postgres_recently_readonly?
+    timestamp =
+      postgres_last_read_only.defer_get_set("timestamp") do
+        seconds = redis.get(LAST_POSTGRES_READONLY_KEY)
+        Time.zone.at(seconds.to_i) if seconds
+      end
+
+    timestamp.present? && timestamp > 15.seconds.ago
+  end
+
   def self.recently_readonly?
-    postgres_read_only = postgres_last_read_only[Discourse.redis.namespace]
     redis_read_only = redis_last_read_only[Discourse.redis.namespace]
 
-    (redis_read_only.present? && redis_read_only > 15.seconds.ago) ||
-      (postgres_read_only.present? && postgres_read_only > 15.seconds.ago)
+    (redis_read_only.present? && redis_read_only > 15.seconds.ago) || postgres_recently_readonly?
   end
 
   def self.received_postgres_readonly!
-    postgres_last_read_only[Discourse.redis.namespace] = Time.zone.now
+    time = Time.zone.now
+    redis.set(LAST_POSTGRES_READONLY_KEY, time.to_i.to_s)
+    postgres_last_read_only.clear
+
+    time
   end
 
   def self.clear_postgres_readonly!
-    postgres_last_read_only[Discourse.redis.namespace] = nil
+    redis.del(LAST_POSTGRES_READONLY_KEY)
+    postgres_last_read_only.clear
   end
 
   def self.received_redis_readonly!

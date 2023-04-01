@@ -793,20 +793,24 @@ class Group < ActiveRecord::Base
     group_user = self.group_users.find_by(user: user)
     return false if group_user.blank?
 
-    has_webhooks = WebHook.active_web_hooks(:group_user)
-    payload =
-      WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer) if has_webhooks
     group_user.destroy
     trigger_user_removed_event(user)
-    if has_webhooks
-      WebHook.enqueue_hooks(
-        :group_user,
-        :user_removed_from_group,
-        id: group_user.id,
-        payload: payload,
-      )
-    end
+    enqueue_user_removed_from_group_webhook_events(group_user)
+
     true
+  end
+
+  def enqueue_user_removed_from_group_webhook_events(group_user)
+    return if !WebHook.active_web_hooks(:group_user)
+
+    payload = WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer)
+
+    WebHook.enqueue_hooks(
+      :group_user,
+      :user_removed_from_group,
+      id: group_user.id,
+      payload: payload,
+    )
   end
 
   def trigger_user_added_event(user, automatic)
@@ -866,14 +870,7 @@ class Group < ActiveRecord::Base
       User.where(id: user_ids).update_all(user_attributes) if user_attributes.present?
 
       # update group user count
-      DB.exec <<~SQL
-        UPDATE groups g
-        SET user_count =
-          (SELECT COUNT(gu.user_id)
-           FROM group_users gu
-           WHERE gu.group_id = g.id)
-        WHERE g.id = #{self.id};
-      SQL
+      recalculate_user_count
     end
 
     if self.grant_trust_level.present?
@@ -881,6 +878,31 @@ class Group < ActiveRecord::Base
     end
 
     self
+  end
+
+  def bulk_remove(user_ids)
+    Group.transaction do
+      group_users_to_be_destroyed = group_users.includes(:user).where(user_id: user_ids).destroy_all
+      group_users_to_be_destroyed.each do |group_user|
+        trigger_user_removed_event(group_user.user)
+        enqueue_user_removed_from_group_webhook_events(group_user)
+      end
+    end
+
+    recalculate_user_count
+
+    true
+  end
+
+  def recalculate_user_count
+    DB.exec <<~SQL
+      UPDATE groups g
+      SET user_count =
+        (SELECT COUNT(gu.user_id)
+         FROM group_users gu
+         WHERE gu.group_id = g.id)
+      WHERE g.id = #{self.id};
+    SQL
   end
 
   def add_automatically(user, subject: nil)

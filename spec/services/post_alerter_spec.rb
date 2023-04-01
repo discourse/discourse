@@ -1238,6 +1238,18 @@ RSpec.describe PostAlerter do
         expect(Jobs::SendPushNotification.jobs[0]["at"]).not_to be_nil
       end
 
+      it "delays sending push notification for active online user for the correct delay ammount" do
+        evil_trout.update!(last_seen_at: 5.minutes.ago)
+
+        # SiteSetting.push_notification_time_window_mins is 10
+        # last_seen_at is 5 minutes ago
+        # 10 minutes from now - 5 minutes ago = 5 minutes
+        delay = 5.minutes.from_now.to_f
+
+        expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
+        expect(Jobs::SendPushNotification.jobs[0]["at"]).to be_within(30.second).of(delay)
+      end
+
       it "does not delay push notification for inactive offline user" do
         evil_trout.update!(last_seen_at: 40.minutes.ago)
 

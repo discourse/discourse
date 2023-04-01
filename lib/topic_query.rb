@@ -269,7 +269,12 @@ class TopicQuery
   end
 
   def list_filter
-    list_latest
+    results =
+      TopicsFilter.new(guardian: @guardian, scope: latest_results).filter_from_query_string(
+        @options[:q],
+      )
+
+    create_list(:filter, {}, results)
   end
 
   def list_read
@@ -796,11 +801,10 @@ class TopicQuery
 
     if status = options[:status]
       result =
-        TopicsFilter.new(
-          scope: result,
-          guardian: @guardian,
+        TopicsFilter.new(scope: result, guardian: @guardian).filter_status(
+          status: options[:status],
           category_id: options[:category],
-        ).filter_status(status: options[:status])
+        )
     end
 
     if (filter = (options[:filter] || options[:f])) && @user

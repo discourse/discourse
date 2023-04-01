@@ -83,6 +83,7 @@ class ListController < ApplicationController
 
       list.more_topics_url = construct_url_with(:next, list_opts)
       list.prev_topics_url = construct_url_with(:prev, list_opts)
+
       if Discourse.anonymous_filters.include?(filter)
         @description = SiteSetting.site_description
         @rss = filter
@@ -91,12 +92,14 @@ class ListController < ApplicationController
         # Note the first is the default and we don't add a title
         if (filter.to_s != current_homepage) && use_crawler_layout?
           filter_title = I18n.t("js.filters.#{filter.to_s}.title", count: 0)
+
           if list_opts[:category] && @category
             @title =
               I18n.t("js.filters.with_category", filter: filter_title, category: @category.name)
           else
             @title = I18n.t("js.filters.with_topics", filter: filter_title)
           end
+
           @title << " - #{SiteSetting.title}"
         elsif @category.blank? && (filter.to_s == current_homepage) &&
               SiteSetting.short_site_description.present?
@@ -119,7 +122,23 @@ class ListController < ApplicationController
 
   def filter
     raise Discourse::NotFound if !SiteSetting.experimental_topics_filter
-    latest
+
+    topic_query_opts = { no_definitions: !SiteSetting.show_category_definitions_in_topic_lists }
+
+    %i[page q].each do |key|
+      if params.key?(key.to_s)
+        value = params[key]
+        raise Discourse::InvalidParameters.new(key) if !TopicQuery.validate?(key, value)
+        topic_query_opts[key] = value
+      end
+    end
+
+    user = list_target_user
+    list = TopicQuery.new(user, topic_query_opts).list_filter
+    list.more_topics_url = construct_url_with(:next, topic_query_opts)
+    list.prev_topics_url = construct_url_with(:prev, topic_query_opts)
+
+    respond_with_list(list)
   end
 
   def category_default

@@ -1752,9 +1752,7 @@ sw:
     title: "Haiwezi kupakia programu-tumizi"
     offline_page_message: "Inaonekana kuwa hauko hewani! Tafadhali angalia muunganisho wa mtandao na jaribu tena."
   login_required:
-    welcome_message: |
-      ## [Karibu kwenye %{title}](#karibu)
-      Akaunti inahitajika. Tafadhali tengeneza akaunti au ingia kuendelea.
+    welcome_message: "## [Karibu kwenye %{title}](#karibu)"
   upload:
     unauthorized: "Samahani, faili unalo jaribu kupakia halina kibali (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Picha Iliyobandikwa"

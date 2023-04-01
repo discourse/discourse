@@ -3718,12 +3718,7 @@ de:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
   login_required:
-    welcome_message: |
-      ## [Willkommen bei %{title}](#welcome)
-      Ein Konto ist erforderlich. Bitte erstelle ein Konto oder melde dich an, um fortzufahren.
-    welcome_message_invite_only: |
-      ## [Willkommen bei %{title}](#welcome)
-      Ein Konto ist erforderlich. Bitte frage ein existierendes Mitglied nach einer Einladung oder melde dich an, um fortzufahren.
+    welcome_message: "## [Willkommen bei %{title}](#welcome)"
   upload:
     edit_reason: "lokale Kopien von Bildern heruntergeladen"
     unauthorized: "Entschuldige, die Datei, die du hochladen möchtest, ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."

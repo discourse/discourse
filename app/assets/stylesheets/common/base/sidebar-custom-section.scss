@@ -18,6 +18,11 @@
     cursor: move;
   }
 
+  a {
+    -webkit-touch-callout: none !important;
+    @include unselectable;
+  }
+
   .sidebar-section-wrapper.disabled {
     a {
       pointer-events: none;
@@ -35,6 +40,13 @@
           color: var(--primary-high);
         }
       }
+    }
+  }
+}
+.discourse-touch {
+  .sidebar-custom-sections {
+    a:hover {
+      background: none !important;
     }
   }
 }
