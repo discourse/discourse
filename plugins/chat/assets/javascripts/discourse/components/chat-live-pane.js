@@ -485,7 +485,7 @@ export default class ChatLivePane extends Component {
 
   @action
   computeArrow() {
-    this.needsArrow = Math.abs(this._scrollerEl.scrollTop) >= 100;
+    this.needsArrow = Math.abs(this._scrollerEl.scrollTop) >= 250;
   }
 
   @action
