@@ -231,10 +231,13 @@
       font-size: var(--font-down-2);
       color: var(--secondary);
       border-radius: 8px;
+      background-color: var(--secondary-high);
       &.-flagged-post,
       &.-flagged-chat-message,
       &.-akismet-flagged-post,
-      &.-akismet-flagged-user {
+      &.-akismet-flagged-user,
+      &.-ai-flagged-post,
+      &.-ai-flagged-chat-message {
         background-color: var(--danger-medium);
       }
       &.-queued-post,

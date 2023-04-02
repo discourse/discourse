@@ -68,7 +68,12 @@
     {{/if}}
   </div>
 
-  {{#if (eq this.reviewable.type "ReviewableFlaggedPost")}}
+  {{#if
+    (or
+      (eq this.reviewable.type "ReviewableFlaggedPost")
+      (eq this.reviewable.type "ReviewableChatMessage")
+    )
+  }}
     {{#if (eq this.reviewable.status 0)}}
       <h3 class="reviewable-item__context-question">
         {{this.reviewable.flaggedPostContextQuestion}}
