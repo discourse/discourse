@@ -7,7 +7,8 @@ class Onebox::Engine::VimeoOnebox
   alias_method :default_onebox_to_html, :to_html
 
   def to_html
-    if SiteSetting.lazy_videos_enabled && SiteSetting.lazy_vimeo_enabled
+    if SiteSetting.lazy_videos_enabled && SiteSetting.lazy_vimeo_enabled &&
+         !oembed_data[:uri].match(%r{videos/\d+:(.)+})
       video_id = oembed_data[:video_id]
       thumbnail_url = "https://vumbnail.com/#{oembed_data[:video_id]}.jpg"
       escaped_title = ERB::Util.html_escape(og_data.title)
