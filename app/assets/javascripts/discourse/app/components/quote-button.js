@@ -58,7 +58,7 @@ export default Component.extend(KeyEnterEscape, {
 
   _isFastEditable: false,
   _displayFastEditInput: false,
-  _fastEditInitalSelection: null,
+  _fastEditInitialSelection: null,
   _fastEditNewSelection: null,
   _isSavingFastEdit: false,
   _canEditPost: false,
@@ -76,7 +76,7 @@ export default Component.extend(KeyEnterEscape, {
 
     this.set("_isFastEditable", false);
     this.set("_displayFastEditInput", false);
-    this.set("_fastEditInitalSelection", null);
+    this.set("_fastEditInitialSelection", null);
     this.set("_fastEditNewSelection", null);
   },
 
@@ -205,11 +205,11 @@ export default Component.extend(KeyEnterEscape, {
           matches?.length > 1 // duplicates are too complex
         ) {
           this.set("_isFastEditable", false);
-          this.set("_fastEditInitalSelection", null);
+          this.set("_fastEditInitialSelection", null);
           this.set("_fastEditNewSelection", null);
         } else if (matches?.length === 1) {
           this.set("_isFastEditable", true);
-          this.set("_fastEditInitalSelection", quoteState.buffer);
+          this.set("_fastEditInitialSelection", quoteState.buffer);
           this.set("_fastEditNewSelection", quoteState.buffer);
         }
       }
@@ -429,7 +429,7 @@ export default Component.extend(KeyEnterEscape, {
   },
 
   _saveFastEditDisabled: propertyEqual(
-    "_fastEditInitalSelection",
+    "_fastEditInitialSelection",
     "_fastEditNewSelection"
   ),
 
@@ -509,7 +509,7 @@ export default Component.extend(KeyEnterEscape, {
     return ajax(`/posts/${postModel.id}`, { type: "GET", cache: false })
       .then((result) => {
         const newRaw = result.raw.replace(
-          fixQuotes(this._fastEditInitalSelection),
+          fixQuotes(this._fastEditInitialSelection),
           fixQuotes(this._fastEditNewSelection)
         );
 

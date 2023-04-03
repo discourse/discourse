@@ -637,7 +637,7 @@ aside.quote {
         opacity: 1;
         transition: opacity 0.3s ease-in-out;
       }
-      // this psuedo element creates a transition buffer zone
+      // this pseudo element creates a transition buffer zone
       // without it, the width change on hover can cause transition jitter
       // the width is roughly wide enough to cover long translations of "share"
       &:after {
