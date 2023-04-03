@@ -5,7 +5,7 @@ module Onebox
     class VideoOnebox
       include Engine
 
-      matches_regexp(/^(https?:)?\/\/.*\.(mov|mp4|webm|ogv)(\?.*)?$/i)
+      matches_regexp(%r{^(https?:)?//.*\.(mov|mp4|webm|ogv)(\?.*)?$}i)
 
       def always_https?
         AllowlistedGenericOnebox.host_matches(uri, AllowlistedGenericOnebox.https_hosts)
@@ -13,7 +13,7 @@ module Onebox
 
       def to_html
         # Fix Dropbox image links
-        if @url[/^https:\/\/www.dropbox.com\/s\//]
+        if @url[%r{^https://www.dropbox.com/s/}]
           @url.sub!("https://www.dropbox.com", "https://dl.dropboxusercontent.com")
         end
 

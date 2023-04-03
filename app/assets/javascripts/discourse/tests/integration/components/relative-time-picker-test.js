@@ -20,6 +20,14 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     assert.strictEqual(prefilledDuration, "5");
   });
 
+  test("prefills and preselects null minutes", async function (assert) {
+    await render(hbs`<RelativeTimePicker @durationMinutes={{null}} />`);
+
+    const prefilledDuration = query(".relative-time-duration").value;
+    assert.strictEqual(this.subject.header().value(), "mins");
+    assert.strictEqual(prefilledDuration, "");
+  });
+
   test("prefills and preselects hours based on translated minutes", async function (assert) {
     await render(hbs`<RelativeTimePicker @durationMinutes="90" />`);
 
@@ -58,6 +66,14 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     const prefilledDuration = query(".relative-time-duration").value;
     assert.strictEqual(this.subject.header().value(), "hours");
     assert.strictEqual(prefilledDuration, "5");
+  });
+
+  test("prefills and preselects null hours", async function (assert) {
+    await render(hbs`<RelativeTimePicker @durationHours={{null}} />`);
+
+    const prefilledDuration = query(".relative-time-duration").value;
+    assert.strictEqual(this.subject.header().value(), "hours");
+    assert.strictEqual(prefilledDuration, "");
   });
 
   test("prefills and preselects minutes based on translated hours", async function (assert) {

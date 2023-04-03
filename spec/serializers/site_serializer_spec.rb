@@ -4,19 +4,17 @@ RSpec.describe SiteSerializer do
   let(:guardian) { Guardian.new }
   let(:category) { Fabricate(:category) }
 
-  after do
-    Site.clear_cache
-  end
+  after { Site.clear_cache }
 
-  describe '#user_tips' do
-    it 'is included if enable_user_tips' do
+  describe "#user_tips" do
+    it "is included if enable_user_tips" do
       SiteSetting.enable_user_tips = true
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:user_tips]).to eq(User.user_tips)
     end
 
-    it 'is not included if enable_user_tips is disabled' do
+    it "is not included if enable_user_tips is disabled" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:user_tips]).to eq(nil)
     end
@@ -49,7 +47,11 @@ RSpec.describe SiteSerializer do
 
     category.tags << tag
     category.tag_groups << tag_group
-    category.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group_2, min_count: 1)])
+    category.update!(
+      category_required_tag_groups: [
+        CategoryRequiredTagGroup.new(tag_group: tag_group_2, min_count: 1),
+      ],
+    )
 
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     c1 = serialized[:categories].find { |c| c[:id] == category.id }
@@ -63,7 +65,7 @@ RSpec.describe SiteSerializer do
     tag = Fabricate(:tag)
     tag_group = Fabricate(:tag_group)
     crtg = CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)
-    category.update!(category_required_tag_groups: [ crtg ])
+    category.update!(category_required_tag_groups: [crtg])
 
     tag_group.delete # Bypassing hooks like this should never happen in the app
 
@@ -109,25 +111,25 @@ RSpec.describe SiteSerializer do
     scheme = ColorScheme.last
     SiteSetting.default_dark_mode_color_scheme_id = scheme.id
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    default_dark_scheme =
-    expect(serialized[:default_dark_color_scheme]["name"]).to eq(scheme.name)
+    default_dark_scheme = expect(serialized[:default_dark_color_scheme]["name"]).to eq(scheme.name)
 
     SiteSetting.default_dark_mode_color_scheme_id = -1
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     expect(serialized[:default_dark_color_scheme]).to eq(nil)
   end
 
-  it 'does not include shared_drafts_category_id if the category is Uncategorized' do
+  it "does not include shared_drafts_category_id if the category is Uncategorized" do
     admin = Fabricate(:admin)
     admin_guardian = Guardian.new(admin)
 
     SiteSetting.shared_drafts_category = SiteSetting.uncategorized_category_id
 
-    serialized = described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+    serialized =
+      described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
     expect(serialized[:shared_drafts_category_id]).to eq(nil)
   end
 
-  it 'includes show_welcome_topic_banner' do
+  it "includes show_welcome_topic_banner" do
     admin = Fabricate(:admin)
     admin_guardian = Guardian.new(admin)
     UserAuthToken.generate!(user_id: admin.id)
@@ -135,24 +137,27 @@ RSpec.describe SiteSerializer do
     first_post = Fabricate(:post, created_at: 25.days.ago)
     SiteSetting.welcome_topic_id = first_post.topic.id
 
-    serialized = described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+    serialized =
+      described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
     expect(serialized[:show_welcome_topic_banner]).to eq(true)
   end
 
-  describe '#anonymous_default_sidebar_tags' do
+  describe "#anonymous_default_sidebar_tags" do
     fab!(:user) { Fabricate(:user) }
-    fab!(:tag) { Fabricate(:tag, name: 'dev') }
-    fab!(:tag2) { Fabricate(:tag, name: 'random') }
+    fab!(:tag) { Fabricate(:tag, name: "dev") }
+    fab!(:tag2) { Fabricate(:tag, name: "random") }
     fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
-    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+    fab!(:staff_tag_group) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+    end
 
     before do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.navigation_menu = "sidebar"
       SiteSetting.tagging_enabled = true
       SiteSetting.default_sidebar_tags = "#{tag.name}|#{tag2.name}|#{hidden_tag.name}"
     end
 
-    it 'is not included in the serialised object when tagging is not enabled' do
+    it "is not included in the serialised object when tagging is not enabled" do
       SiteSetting.tagging_enabled = false
       guardian = Guardian.new(user)
 
@@ -160,57 +165,53 @@ RSpec.describe SiteSerializer do
       expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
     end
 
-    it 'is not included in the serialised object when experimental sidebar has not been enabled' do
-      SiteSetting.enable_experimental_sidebar_hamburger = false
+    it "is not included in the serialised object when navigation menu is legacy" do
+      SiteSetting.navigation_menu = "legacy"
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
     end
 
-    it 'is not included in the serialised object when user is not anonymous' do
+    it "is not included in the serialised object when user is not anonymous" do
       guardian = Guardian.new(user)
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
     end
 
-    it 'is not included in the serialisd object when default sidebar tags have not been configured' do
+    it "is not included in the serialisd object when default sidebar tags have not been configured" do
       SiteSetting.default_sidebar_tags = ""
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
     end
 
-    it 'includes only tags user can see in the serialised object when user is anonymous' do
+    it "includes only tags user can see in the serialised object when user is anonymous" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(["dev", "random"])
+      expect(serialized[:anonymous_default_sidebar_tags]).to eq(%w[dev random])
     end
   end
 
-  describe '#top_tags' do
+  describe "#top_tags" do
     fab!(:tag) { Fabricate(:tag) }
 
-    describe 'when tagging is not enabled' do
-      before do
-        SiteSetting.tagging_enabled = false
-      end
+    describe "when tagging is not enabled" do
+      before { SiteSetting.tagging_enabled = false }
 
-      it 'is not included in the serialised object' do
+      it "is not included in the serialised object" do
         serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
         expect(serialized[:top_tags]).to eq(nil)
       end
     end
 
-    describe 'when tagging is enabled' do
+    describe "when tagging is enabled" do
       fab!(:tag2) { Fabricate(:tag) }
       fab!(:tag3) { Fabricate(:tag) }
 
-      before do
-        SiteSetting.tagging_enabled = true
-      end
+      before { SiteSetting.tagging_enabled = true }
 
-      it 'is not included in the serialised object when there are no tags' do
+      it "is not included in the serialised object when there are no tags" do
         tag.destroy!
 
         serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
@@ -218,20 +219,87 @@ RSpec.describe SiteSerializer do
         expect(serialized[:top_tags]).to eq([])
       end
 
-      it 'is included in the serialised object containing the top tags' do
+      it "is included in the serialised object containing the top tags" do
         tag2 = Fabricate(:tag)
         tag2 = Fabricate(:tag)
 
         SiteSetting.max_tags_in_filter_list = 1
 
-        CategoryTagStat.create!(category_id: SiteSetting.uncategorized_category_id, tag_id: tag2.id, topic_count: 2)
-        CategoryTagStat.create!(category_id: SiteSetting.uncategorized_category_id, tag_id: tag.id, topic_count: 1)
-        CategoryTagStat.create!(category_id: SiteSetting.uncategorized_category_id, tag_id: tag3.id, topic_count: 5)
+        CategoryTagStat.create!(
+          category_id: SiteSetting.uncategorized_category_id,
+          tag_id: tag2.id,
+          topic_count: 2,
+        )
+        CategoryTagStat.create!(
+          category_id: SiteSetting.uncategorized_category_id,
+          tag_id: tag.id,
+          topic_count: 1,
+        )
+        CategoryTagStat.create!(
+          category_id: SiteSetting.uncategorized_category_id,
+          tag_id: tag3.id,
+          topic_count: 5,
+        )
 
         serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
         expect(serialized[:top_tags]).to eq([tag3.name, tag2.name])
       end
+    end
+  end
+
+  describe "#whispers_allowed_groups_names" do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:allowed_user) { Fabricate(:user) }
+    fab!(:not_allowed_user) { Fabricate(:user) }
+    fab!(:group1) { Fabricate(:group, name: "whisperers1", users: [allowed_user]) }
+    fab!(:group2) { Fabricate(:group, name: "whisperers2", users: [allowed_user]) }
+
+    it "returns correct group names for created groups" do
+      admin_guardian = Guardian.new(admin)
+      SiteSetting.whispers_allowed_groups = "#{group1.id}|#{group2.id}"
+
+      serialized =
+        described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      expect(serialized[:whispers_allowed_groups_names]).to contain_exactly(
+        "whisperers1",
+        "whisperers2",
+      )
+    end
+
+    it "returns correct group names for automatic groups" do
+      admin_guardian = Guardian.new(admin)
+      SiteSetting.whispers_allowed_groups =
+        "#{Group::AUTO_GROUPS[:staff]}|#{Group::AUTO_GROUPS[:trust_level_4]}"
+
+      serialized =
+        described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      expect(serialized[:whispers_allowed_groups_names]).to contain_exactly(
+        "trust_level_4",
+        "staff",
+      )
+    end
+
+    it "returns group names when user is allowed to whisper" do
+      user_guardian = Guardian.new(allowed_user)
+      SiteSetting.whispers_allowed_groups = "#{group1.id}|#{group2.id}"
+
+      serialized =
+        described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+      expect(serialized[:whispers_allowed_groups_names]).to contain_exactly(
+        "whisperers1",
+        "whisperers2",
+      )
+    end
+
+    it "returns nil when user is not allowed to whisper" do
+      user_guardian = Guardian.new(not_allowed_user)
+      SiteSetting.whispers_allowed_groups =
+        "#{Group::AUTO_GROUPS[:staff]}|#{Group::AUTO_GROUPS[:trust_level_4]}"
+
+      serialized =
+        described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+      expect(serialized[:whispers_allowed_groups_names]).to eq(nil)
     end
   end
 end

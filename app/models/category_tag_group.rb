@@ -4,9 +4,7 @@ class CategoryTagGroup < ActiveRecord::Base
   belongs_to :category
   belongs_to :tag_group
 
-  after_commit do
-    Site.clear_cache
-  end
+  after_commit { Site.clear_cache }
 end
 
 # == Schema Information

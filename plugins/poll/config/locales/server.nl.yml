@@ -8,7 +8,7 @@ nl:
   site_settings:
     poll_enabled: "Polls toestaan?"
     poll_maximum_options: "Maximale aantal toegestane opties in een poll."
-    poll_edit_window_mins: "Aantal minuten na het aanmaken van een bericht waarin polls kunnen worden bewerkt."
+    poll_edit_window_mins: "Aantal minuten na het maken van een bericht waarin polls kunnen worden bewerkt."
     poll_minimum_trust_level_to_create: "Het minimale vertrouwensniveau dat nodig is om polls te maken."
     poll_groupable_user_fields: "Een aantal gebruikersveldnamen die voor het groeperen en filteren van pollresultaten kunnen worden gebruikt."
     poll_export_data_explorer_query_id: "ID van de te gebruiken gegevensverkennerquery voor het exporteren van pollresultaten (0 voor uitschakelen)."

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
-require 'swagger_helper'
+require "swagger_helper"
 
-RSpec.describe 'user_badges' do
-
+RSpec.describe "user_badges" do
   let(:admin) { Fabricate(:admin) }
 
   before do
@@ -10,18 +9,17 @@ RSpec.describe 'user_badges' do
     sign_in(admin)
   end
 
-  path '/user-badges/{username}.json' do
-
-    get 'List badges for a user' do
-      tags 'Badges', 'Users'
-      operationId 'listUserBadges'
-      consumes 'application/json'
+  path "/user-badges/{username}.json" do
+    get "List badges for a user" do
+      tags "Badges", "Users"
+      operationId "listUserBadges"
+      consumes "application/json"
       expected_request_schema = nil
       parameter name: :username, in: :path, schema: { type: :string }
 
-      produces 'application/json'
-      response '200', 'success response' do
-        expected_response_schema = load_spec_schema('user_badges_response')
+      produces "application/json"
+      response "200", "success response" do
+        expected_response_schema = load_spec_schema("user_badges_response")
         schema expected_response_schema
 
         let(:username) { admin.username }

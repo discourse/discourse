@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rails'
-require 'highline/import'
+require "rails"
+require "highline/import"
 
 module DiscourseDev
   class Config
@@ -10,10 +10,11 @@ module DiscourseDev
     def initialize
       default_file_path = File.join(Rails.root, "config", "dev_defaults.yml")
       @file_path = File.join(Rails.root, "config", "dev.yml")
-      default_config = YAML.load_file(default_file_path)
+      # https://stackoverflow.com/questions/71332602/upgrading-to-ruby-3-1-causes-psychdisallowedclass-exception-when-using-yaml-lo
+      default_config = YAML.load_file(default_file_path, permitted_classes: [Date])
 
       if File.exist?(file_path)
-        user_config = YAML.load_file(file_path)
+        user_config = YAML.load_file(file_path, permitted_classes: [Date])
       else
         puts "I did no detect a custom `config/dev.yml` file, creating one for you where you can amend defaults."
         FileUtils.cp(default_file_path, file_path)
@@ -63,10 +64,11 @@ module DiscourseDev
       if settings.present?
         email = settings[:email] || "new_user@example.com"
 
-        new_user = ::User.create!(
-          email: email,
-          username: settings[:username] || UserNameSuggester.suggest(email)
-        )
+        new_user =
+          ::User.create!(
+            email: email,
+            username: settings[:username] || UserNameSuggester.suggest(email),
+          )
         new_user.email_tokens.update_all confirmed: true
         new_user.activate
       end
@@ -88,15 +90,14 @@ module DiscourseDev
     def create_admin_user_from_settings(settings)
       email = settings[:email]
 
-      admin = ::User.with_email(email).first_or_create!(
-        email: email,
-        username: settings[:username] || UserNameSuggester.suggest(email),
-        password: settings[:password]
-      )
+      admin =
+        ::User.with_email(email).first_or_create!(
+          email: email,
+          username: settings[:username] || UserNameSuggester.suggest(email),
+          password: settings[:password],
+        )
       admin.grant_admin!
-      if admin.trust_level < 1
-        admin.change_trust_level!(1)
-      end
+      admin.change_trust_level!(1) if admin.trust_level < 1
       admin.email_tokens.update_all confirmed: true
       admin.activate
     end
@@ -107,10 +108,7 @@ module DiscourseDev
         password = ask("Password (optional, press ENTER to skip):  ")
         username = UserNameSuggester.suggest(email)
 
-        admin = ::User.new(
-          email: email,
-          username: username
-        )
+        admin = ::User.new(email: email, username: username)
 
         if password.present?
           admin.password = password
@@ -122,7 +120,7 @@ module DiscourseDev
         saved = admin.save
 
         if saved
-          File.open(file_path, 'a') do | file|
+          File.open(file_path, "a") do |file|
             file.puts("admin:")
             file.puts("  username: #{admin.username}")
             file.puts("  email: #{admin.email}")
@@ -137,9 +135,7 @@ module DiscourseDev
       admin.save
 
       admin.grant_admin!
-      if admin.trust_level < 1
-        admin.change_trust_level!(1)
-      end
+      admin.change_trust_level!(1) if admin.trust_level < 1
       admin.email_tokens.update_all confirmed: true
       admin.activate
 

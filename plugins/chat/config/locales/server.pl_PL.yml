@@ -7,14 +7,19 @@
 pl_PL:
   site_settings:
     chat_enabled: "Włącz wtyczkę czatu."
+    chat_allowed_groups: "Użytkownicy w tych grupach mogą rozmawiać. Pamiętaj, że personel zawsze ma dostęp do czatu."
+    chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
+    chat_dm_retention_days: "Wiadomości czatu w osobistych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
   chat:
     deleted_chat_username: usunięte
     errors:
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
       user_cannot_send_message: "W tej chwili nie możesz wysyłać wiadomości."
       rate_limit_exceeded: "Przekroczono limit wiadomości na czacie, które można wysłać w ciągu 30 sekund"
+      draft_too_long: "Wersja robocza jest za długa."
       max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
       not_accepting_dms: "Przepraszamy, ale użytkownik %{username} nie akceptuje w tej chwili wiadomości "
+      user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
     reviewables:
       actions:
         agree:
@@ -40,20 +45,23 @@ pl_PL:
         ignore:
           title: "Ignoruj"
     channel:
-      statuses:
-        read_only: "Tylko do odczytu"
-        archived: "Zarchiwizowany"
-        closed: "Zamknięta"
-        open: "Otwórz"
       dm_title:
-        multi_user_truncated: "%{users} i %{leftover} innych"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} i %{count} inny"
+          few: "%{comma_separated_usernames} i %{count} inni"
+          many: "%{comma_separated_usernames} i %{count} innych"
+          other: "%{comma_separated_usernames} i %{count} innych"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"
+        is_already_in_use: "jest już w użyciu"
     bookmarkable:
       notification_title: "wiadomość w %{channel_name}"
     personal_chat: "czat osobisty"
     onebox:
+      inline_to_channel: "Czat #%{chat_channel}"
+      inline_to_topic_channel: "Czat dla tematu %{topic_title}"
       x_members:
         one: "%{count} członek"
         few: "%{count} członków"
@@ -68,6 +76,9 @@ pl_PL:
     popup:
       chat_mention:
         direct: '%{username} wspomniał(a) o Tobie w "%{channel}"'
+        other_type: '%{username} wspomniał %{identifier} w "%{channel}"'
+      direct_message_chat_mention:
+        other_type: "%{username} oznaczył %{identifier} na czacie osobistym"
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -94,16 +105,37 @@ pl_PL:
         other: "Masz nowe wiadomości na czacie"
       from: "%{site_name}"
       subject:
-        other_direct_message: "od %{message_title}"
-        others: "%{count} inni"
+        direct_message_from_1: "[%{email_prefix}] Nowa wiadomość od %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nowa wiadomość od %{username1} i %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innego"
+          few: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innych"
+          many: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innych"
+          other: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innych"
+        chat_channel_1: "[%{email_prefix}] Nowa wiadomość w %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nowa wiadomość w %{channel1} i %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innym"
+          few: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innych"
+          many: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innych"
+          other: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innych"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nowa wiadomość w %{channel} i od %{username}"
+      unsubscribe: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}, lub %{unsubscribe_link}, aby zrezygnować z subskrypcji."
+      unsubscribe_no_link: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}."
       view_messages:
         one: "Zobacz wiadomość"
+        few: "Zobacz %{count} wiadomości"
+        many: "Zobacz %{count} wiadomości"
+        other: "Zobacz %{count} wiadomości"
+      view_more:
+        one: "Zobacz %{count} wiadomość"
         few: "Zobacz %{count} wiadomości"
         many: "Zobacz %{count} wiadomości"
         other: "Zobacz %{count} wiadomości"
   unsubscribe:
     chat_summary:
       never: Nigdy
+      when_away: Tylko gdy jesteś daleko
   category:
     cannot_delete:
       has_chat_channels: "Nie można usunąć tej kategorii, ponieważ zawiera ona kanały czatu."

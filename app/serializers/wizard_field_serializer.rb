@@ -1,7 +1,17 @@
 # frozen_string_literal: true
 
 class WizardFieldSerializer < ApplicationSerializer
-  attributes :id, :type, :required, :value, :label, :placeholder, :description, :extra_description, :icon, :disabled, :show_in_sidebar
+  attributes :id,
+             :type,
+             :required,
+             :value,
+             :label,
+             :placeholder,
+             :description,
+             :extra_description,
+             :icon,
+             :disabled,
+             :show_in_sidebar
   has_many :choices, serializer: WizardFieldChoiceSerializer, embed: :objects
 
   def id

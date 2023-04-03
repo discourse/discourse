@@ -27,6 +27,7 @@ export default class SidebarUserMessagesSection extends Component {
   @service appEvents;
   @service pmTopicTrackingState;
   @service currentUser;
+  @service router;
 
   constructor() {
     super(...arguments);
@@ -36,10 +37,6 @@ export default class SidebarUserMessagesSection extends Component {
       this,
       this._refreshSectionLinksDisplayState
     );
-
-    this.pmTopicTrackingState
-      .startTracking()
-      .then(this._refreshSectionLinkCounts);
 
     this._pmTopicTrackingStateKey = "messages-section";
 
@@ -69,13 +66,13 @@ export default class SidebarUserMessagesSection extends Component {
     );
   }
 
-  _refreshSectionLinksDisplayState({
-    currentRouteName,
-    currentRouteParentName,
-    currentRouteParams,
-  }) {
+  _refreshSectionLinksDisplayState() {
+    const currentRouteName = this.router.currentRoute.name;
+    const currentRouteParentName = this.router.currentRoute.parent.name;
+    const currentRouteParentParams = this.router.currentRoute.parent.params;
+
     if (
-      currentRouteParentName !== "userPrivateMessages" &&
+      !currentRouteParentName.includes("userPrivateMessages") &&
       currentRouteParentName !== "topic"
     ) {
       for (const sectionLink of this.allSectionLinks) {
@@ -84,7 +81,7 @@ export default class SidebarUserMessagesSection extends Component {
     } else {
       const attrs = {
         currentRouteName,
-        currentRouteParams,
+        currentRouteParentParams,
       };
 
       if (currentRouteParentName === "topic") {

@@ -33,7 +33,7 @@ const chatNotificationItem = {
     const title = this.notificationTitle(notificationName, data);
     const text = this.text(notificationName, data);
     const html = new RawHtml({ html: `<div>${text}</div>` });
-    const contents = [iconNode("comment"), html];
+    const contents = [iconNode("d-chat"), html];
     const href = this.url(data);
 
     return h(
@@ -48,7 +48,7 @@ const chatNotificationItem = {
       title: data.chat_channel_title,
       slug: data.chat_channel_slug,
     });
-    return `/chat/channel/${data.chat_channel_id}/${slug || "-"}?messageId=${
+    return `/chat/c/${slug || "-"}/${data.chat_channel_id}/${
       data.chat_message_id
     }`;
   },

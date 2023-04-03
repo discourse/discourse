@@ -28,10 +28,8 @@ import QUnit from "qunit";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
-import Site from "discourse/models/site";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
-import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/services/store";
 import sinon from "sinon";
@@ -41,6 +39,7 @@ import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/inde
 import SiteSettingService from "discourse/services/site-settings";
 import jQuery from "jquery";
 import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
+import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -305,17 +304,6 @@ export default function setupTests(config) {
     }
     User.resetCurrent();
 
-    createHelperContext({
-      get siteSettings() {
-        return app.__container__.lookup("service:site-settings");
-      },
-      capabilities: {},
-      get site() {
-        return app.__container__.lookup("service:site") || Site.current();
-      },
-      registry: app.__registry__,
-    });
-
     PreloadStore.reset();
     resetSite();
 
@@ -399,6 +387,13 @@ export default function setupTests(config) {
   setupToolbar();
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
+
+  const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
+  const hasThemeJs = !!document.querySelector("script[data-theme-id]");
+
+  if (!hasPluginJs && !hasThemeJs) {
+    configureRaiseOnDeprecation();
+  }
 }
 
 function getUrlParameter(name) {

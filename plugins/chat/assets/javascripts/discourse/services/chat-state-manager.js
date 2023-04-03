@@ -9,8 +9,21 @@ const PREFERRED_MODE_STORE_NAMESPACE = "discourse_chat_";
 const FULL_PAGE_CHAT = "FULL_PAGE_CHAT";
 const DRAWER_CHAT = "DRAWER_CHAT";
 
+let chatDrawerStateCallbacks = [];
+
+export function addChatDrawerStateCallback(callback) {
+  chatDrawerStateCallbacks.push(callback);
+}
+
+export function resetChatDrawerStateCallbacks() {
+  chatDrawerStateCallbacks = [];
+}
 export default class ChatStateManager extends Service {
+  @service chat;
   @service router;
+  isDrawerExpanded = false;
+  isDrawerActive = false;
+  isSidePanelExpanded = false;
   @tracked _chatURL = null;
   @tracked _appURL = null;
 
@@ -30,6 +43,51 @@ export default class ChatStateManager extends Service {
     this._store.setObject({ key: PREFERRED_MODE_KEY, value: DRAWER_CHAT });
   }
 
+  openSidePanel() {
+    this.set("isSidePanelExpanded", true);
+  }
+
+  closeSidePanel() {
+    this.set("isSidePanelExpanded", false);
+  }
+
+  didOpenDrawer(url = null) {
+    this.set("isDrawerActive", true);
+    this.set("isDrawerExpanded", true);
+
+    if (url) {
+      this.storeChatURL(url);
+    }
+
+    this.chat.updatePresence();
+    this.#publishStateChange();
+  }
+
+  didCloseDrawer() {
+    this.set("isDrawerActive", false);
+    this.set("isDrawerExpanded", false);
+    this.chat.updatePresence();
+    this.#publishStateChange();
+  }
+
+  didExpandDrawer() {
+    this.set("isDrawerActive", true);
+    this.set("isDrawerExpanded", true);
+    this.chat.updatePresence();
+  }
+
+  didCollapseDrawer() {
+    this.set("isDrawerActive", true);
+    this.set("isDrawerExpanded", false);
+    this.#publishStateChange();
+  }
+
+  didToggleDrawer() {
+    this.set("isDrawerExpanded", !this.isDrawerExpanded);
+    this.set("isDrawerActive", true);
+    this.#publishStateChange();
+  }
+
   get isFullPagePreferred() {
     return !!(
       Site.currentProp("mobileView") ||
@@ -46,16 +104,20 @@ export default class ChatStateManager extends Service {
     );
   }
 
-  get isFullPage() {
+  get isFullPageActive() {
     return this.router.currentRouteName?.startsWith("chat");
   }
 
-  storeAppURL(URL = null) {
-    this._appURL = URL || this.router.currentURL;
+  get isActive() {
+    return this.isFullPageActive || this.isDrawerActive;
   }
 
-  storeChatURL(URL = null) {
-    this._chatURL = URL || this.router.currentURL;
+  storeAppURL(url = null) {
+    this._appURL = url || this.router.currentURL;
+  }
+
+  storeChatURL(url = null) {
+    this._chatURL = url || this.router.currentURL;
   }
 
   get lastKnownAppURL() {
@@ -69,5 +131,14 @@ export default class ChatStateManager extends Service {
 
   get lastKnownChatURL() {
     return this._chatURL || "/chat";
+  }
+
+  #publishStateChange() {
+    const state = {
+      isDrawerActive: this.isDrawerActive,
+      isDrawerExpanded: this.isDrawerExpanded,
+    };
+
+    chatDrawerStateCallbacks.forEach((callback) => callback(state));
   }
 }

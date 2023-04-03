@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
 RSpec.describe SimilarTopicsController do
-  describe 'similar_to' do
-    let(:title) { 'this title is long enough to search for' }
-    let(:raw) { 'this body is long enough to search for' }
+  describe "similar_to" do
+    let(:title) { "this title is long enough to search for" }
+    let(:raw) { "this body is long enough to search for" }
 
     let(:topic) { Fabricate(:topic, title: title) }
     let(:post) { Fabricate(:post, topic: topic, raw: raw, post_number: 1) }
 
     let(:private_post) { Fabricate(:post, raw: raw, topic: private_topic, post_number: 1) }
     let(:private_topic) do
-      Fabricate(:topic, title: "#{title} 02", category: Fabricate(:private_category, group: Group[:staff]))
+      Fabricate(
+        :topic,
+        title: "#{title} 02",
+        category: Fabricate(:private_category, group: Group[:staff]),
+      )
     end
 
     def reindex_posts
@@ -36,9 +40,7 @@ RSpec.describe SimilarTopicsController do
     end
 
     describe "minimum_topics_similar" do
-      before do
-        SiteSetting.minimum_topics_similar = 30
-      end
+      before { SiteSetting.minimum_topics_similar = 30 }
 
       context "with enough topics" do
         it "deletes to Topic.similar_to if there are more topics than `minimum_topics_similar`" do
@@ -56,7 +58,8 @@ RSpec.describe SimilarTopicsController do
 
         context "with a logged in user" do
           before do
-            private_post; post
+            private_post
+            post
             reindex_posts
             Topic.stubs(:count).returns(50)
             sign_in(Fabricate(:moderator))
@@ -67,7 +70,8 @@ RSpec.describe SimilarTopicsController do
             get "/topics/similar_to.json", params: { title: title, raw: raw }
 
             expect(response.status).to eq(200)
-            similar_topics = response.parsed_body["similar_topics"].map { |topic| topic["topic_id"] }
+            similar_topics =
+              response.parsed_body["similar_topics"].map { |topic| topic["topic_id"] }
             expect(similar_topics.size).to eq(2)
             expect(similar_topics).to include(topic.id)
             expect(similar_topics).to include(private_topic.id)

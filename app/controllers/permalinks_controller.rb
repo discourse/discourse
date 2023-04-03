@@ -33,12 +33,8 @@ class PermalinksController < ApplicationController
 
       render json: MultiJson.dump(data)
     rescue Discourse::NotFound
-      data = {
-        found: false,
-        html: build_not_found_page(status: 200),
-      }
+      data = { found: false, html: build_not_found_page(status: 200) }
       render json: MultiJson.dump(data)
     end
   end
-
 end

@@ -11,6 +11,7 @@ export default {
   name: "chat-decorators",
 
   initializeWithPluginApi(api, container) {
+    const siteSettings = container.lookup("service:site-settings");
     api.decorateChatMessage((element) => decorateGithubOneboxBody(element), {
       id: "onebox-github-body",
     });
@@ -44,7 +45,6 @@ export default {
       }
     );
 
-    const siteSettings = container.lookup("service:site-settings");
     api.decorateChatMessage(
       (element) =>
         highlightSyntax(
@@ -147,8 +147,10 @@ export default {
   },
 
   initialize(container) {
-    withPluginApi("0.8.42", (api) =>
-      this.initializeWithPluginApi(api, container)
-    );
+    if (container.lookup("service:chat").userCanChat) {
+      withPluginApi("0.8.42", (api) =>
+        this.initializeWithPluginApi(api, container)
+      );
+    }
   },
 };

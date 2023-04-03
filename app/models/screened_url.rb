@@ -6,7 +6,6 @@
 # For now, nothing is done. We're just collecting the data and will decide
 # what to do with it later.
 class ScreenedUrl < ActiveRecord::Base
-
   include ScreeningModel
 
   default_action :do_nothing
@@ -18,7 +17,7 @@ class ScreenedUrl < ActiveRecord::Base
 
   def normalize
     self.url = ScreenedUrl.normalize_url(self.url) if self.url
-    self.domain = self.domain.downcase.sub(/^www\./, '') if self.domain
+    self.domain = self.domain.downcase.sub(/\Awww\./, "") if self.domain
   end
 
   def self.watch(url, domain, opts = {})
@@ -30,9 +29,9 @@ class ScreenedUrl < ActiveRecord::Base
   end
 
   def self.normalize_url(url)
-    normalized = url.gsub(/http(s?):\/\//i, '')
-    normalized.gsub!(/(\/)+$/, '') # trim trailing slashes
-    normalized.gsub!(/^([^\/]+)(?:\/)?/) { |m| m.downcase } # downcase the domain part of the url
+    normalized = url.gsub(%r{http(s?)://}i, "")
+    normalized.gsub!(%r{(/)+\z}, "") # trim trailing slashes
+    normalized.gsub!(%r{\A([^/]+)(?:/)?}) { |m| m.downcase } # downcase the domain part of the url
     normalized
   end
 end

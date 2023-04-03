@@ -6,9 +6,7 @@ class DoNotDisturbTiming < ActiveRecord::Base
   validate :ends_at_greater_than_starts_at
 
   def ends_at_greater_than_starts_at
-    if starts_at > ends_at
-      errors.add(:ends_at, :invalid)
-    end
+    errors.add(:ends_at, :invalid) if starts_at > ends_at
   end
 end
 

@@ -20,9 +20,7 @@ RSpec.describe ApplicationRequest do
     freeze_time
     d1 = Time.now.utc.to_date
 
-    4.times do
-      inc("http_2xx")
-    end
+    4.times { inc("http_2xx") }
 
     inc("http_background")
 
@@ -39,7 +37,5 @@ RSpec.describe ApplicationRequest do
 
     expect(ApplicationRequest.find_by(date: d2, req_type: "page_view_crawler").count).to eq(1)
     expect(ApplicationRequest.find_by(date: d2, req_type: "http_2xx").count).to eq(1)
-
   end
-
 end

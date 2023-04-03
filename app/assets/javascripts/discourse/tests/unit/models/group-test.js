@@ -1,12 +1,19 @@
 import { module, test } from "qunit";
-import Group from "discourse/models/group";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-module("Unit | Model | group", function () {
+module("Unit | Model | group", function (hooks) {
+  setupTest(hooks);
+
   test("displayName", function (assert) {
-    const group = Group.create({ name: "test", display_name: "donkey" });
+    const store = getOwner(this).lookup("service:store");
+    const group = store.createRecord("group", {
+      name: "test",
+      display_name: "donkey",
+    });
 
     assert.strictEqual(
-      group.get("displayName"),
+      group.displayName,
       "donkey",
       "it should return the display name"
     );
@@ -14,7 +21,7 @@ module("Unit | Model | group", function () {
     group.set("display_name", null);
 
     assert.strictEqual(
-      group.get("displayName"),
+      group.displayName,
       "test",
       "it should return the group's name"
     );

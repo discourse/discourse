@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'benchmark/ips'
-require File.expand_path('../../../../config/environment', __FILE__)
+require "benchmark/ips"
+require File.expand_path("../../../../config/environment", __FILE__)
 
 # set any flags here
 # MiniRacer::Platform.set_flags! :noturbo
@@ -10,7 +10,7 @@ tests = [
   ["tiny post", "**hello**"],
   ["giant post", File.read("giant_post.md")],
   ["most features", File.read("most_features.md")],
-  ["lots of mentions", File.read("lots_of_mentions.md")]
+  ["lots of mentions", File.read("lots_of_mentions.md")],
 ]
 
 PrettyText.cook("")
@@ -31,9 +31,7 @@ PrettyText.v8.eval("window.commonmark = window.markdownit('commonmark')")
 Benchmark.ips do |x|
   [true, false].each do |sanitize|
     tests.each do |test, text|
-      x.report("#{test} sanitize: #{sanitize}") do
-        PrettyText.markdown(text, sanitize: sanitize)
-      end
+      x.report("#{test} sanitize: #{sanitize}") { PrettyText.markdown(text, sanitize: sanitize) }
     end
   end
 

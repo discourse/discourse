@@ -1,9 +1,10 @@
 import RestAdapter from "discourse/adapters/rest";
 
-export default RestAdapter.extend({
+export default class Theme extends RestAdapter {
+  jsonMode = true;
   basePath() {
     return "/admin/";
-  },
+  }
 
   afterFindAll(results) {
     let map = {};
@@ -20,7 +21,5 @@ export default RestAdapter.extend({
       theme.set("parentThemes", mappedParents);
     });
     return results;
-  },
-
-  jsonMode: true,
-});
+  }
+}

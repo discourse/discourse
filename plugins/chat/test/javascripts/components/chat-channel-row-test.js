@@ -1,117 +1,175 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import fabricators from "../helpers/fabricators";
-import { module } from "qunit";
 
 module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("with leaveButton", {
-    template: hbs`{{chat-channel-row channel=channel options=(hash leaveButton=true)}}`,
+  hooks.beforeEach(function () {
+    this.categoryChatChannel = fabricators.chatChannel();
+    this.directMessageChatChannel = fabricators.directMessageChatChannel();
+  });
 
-    beforeEach() {
-      this.set(
-        "channel",
-        fabricators.chatChannel({
-          current_user_membership: { following: true },
-        })
+  test("links to correct channel", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert
+      .dom(".chat-channel-row")
+      .hasAttribute(
+        "href",
+        `/chat/c/${this.categoryChatChannel.slugifiedTitle}/${this.categoryChatChannel.id}`
       );
-    },
-
-    async test(assert) {
-      assert.ok(exists(".toggle-channel-membership-button.-leave"));
-    },
   });
 
-  componentTest("without leaveButton", {
-    template: hbs`{{chat-channel-row channel=channel}}`,
+  test("allows tabbing", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
-    beforeEach() {
-      this.set("channel", fabricators.chatChannel());
-    },
-
-    async test(assert) {
-      assert.notOk(exists(".chat-channel-leave-btn"));
-    },
+    assert.dom(".chat-channel-row").hasAttribute("tabindex", "0");
   });
 
-  componentTest(
-    "a row is active when the associated channel is active and visible",
-    {
-      template: hbs`{{chat-channel-row switchChannel=switchChannel channel=channel chat=chat router=router}}`,
+  test("channel data attrite tabbing", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
-      beforeEach() {
-        this.set("channel", fabricators.chatChannel());
-        this.set("chat", { activeChannel: this.channel });
-        this.set("router", { currentRouteName: "chat.channel" });
-      },
-
-      async test(assert) {
-        assert.ok(exists(".chat-channel-row.active"));
-
-        this.set("router.currentRouteName", "chat.browse");
-
-        assert.notOk(exists(".chat-channel-row.active"));
-
-        this.set("router.currentRouteName", "chat.channel");
-        this.set("chat.activeChannel", null);
-
-        assert.notOk(exists(".chat-channel-row.active"));
-      },
-    }
-  );
-
-  componentTest("can receive a tab event", {
-    template: hbs`{{chat-channel-row channel=channel}}`,
-
-    beforeEach() {
-      this.set("channel", fabricators.chatChannel());
-    },
-
-    async test(assert) {
-      assert.ok(exists(".chat-channel-row[tabindex=0]"));
-    },
+    assert
+      .dom(".chat-channel-row")
+      .hasAttribute(
+        "data-chat-channel-id",
+        this.categoryChatChannel.id.toString()
+      );
   });
 
-  componentTest("shows user status on the direct message channel", {
-    template: hbs`{{chat-channel-row channel=channel}}`,
+  test("renders correct channel title", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
-    beforeEach() {
-      const status = { description: "Off to dentist", emoji: "tooth" };
-      const channel = fabricators.directMessageChatChannel();
-      channel.chatable.users[0].status = status;
-      this.set("channel", channel);
-    },
-
-    async test(assert) {
-      assert.ok(exists(".user-status-message"));
-    },
+    assert.dom(".chat-channel-title").hasText(this.categoryChatChannel.title);
   });
 
-  componentTest(
-    "doesn't show user status on a direct message channel with multiple users",
-    {
-      template: hbs`{{chat-channel-row channel=channel}}`,
+  test("renders correct channel metadata", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
-      beforeEach() {
-        const status = { description: "Off to dentist", emoji: "tooth" };
-        const channel = fabricators.directMessageChatChannel();
-        channel.chatable.users[0].status = status;
-        channel.chatable.users.push({
-          id: 2,
-          username: "bill",
-          name: null,
-          avatar_template: "/letter_avatar_proxy/v3/letter/t/31188e/{size}.png",
-        });
-        this.set("channel", channel);
-      },
+    assert
+      .dom(".chat-channel-metadata")
+      .hasText(moment(this.categoryChatChannel.lastMessageSentAt).format("l"));
+  });
 
-      async test(assert) {
-        assert.notOk(exists(".user-status-message"));
-      },
-    }
-  );
+  test("renders membership toggling button when necessary", async function (assert) {
+    this.site.desktopView = false;
+
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}}/>`);
+
+    assert.dom(".toggle-channel-membership-button").doesNotExist();
+
+    this.categoryChatChannel.currentUserMembership.following = true;
+
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".toggle-channel-membership-button").doesNotExist();
+
+    this.site.desktopView = true;
+
+    await render(
+      hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} @options={{hash leaveButton=true}}/>`
+    );
+
+    assert.dom(".toggle-channel-membership-button").exists();
+  });
+
+  test("focused channel has correct class", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".chat-channel-row").doesNotHaveClass("focused");
+
+    this.categoryChatChannel.focused = true;
+
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".chat-channel-row").hasClass("focused");
+  });
+
+  test("muted channel has correct class", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".chat-channel-row").doesNotHaveClass("muted");
+
+    this.categoryChatChannel.currentUserMembership.muted = true;
+
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".chat-channel-row").hasClass("muted");
+  });
+
+  test("leaveButton options adds correct class", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".chat-channel-row").doesNotHaveClass("can-leave");
+
+    await render(
+      hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} @options={{hash leaveButton=true}} />`
+    );
+
+    assert.dom(".chat-channel-row").hasClass("can-leave");
+  });
+
+  test("active channel adds correct class", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".chat-channel-row").doesNotHaveClass("active");
+
+    this.owner
+      .lookup("service:chat")
+      .set("activeChannel", { id: this.categoryChatChannel.id });
+
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".chat-channel-row").hasClass("active");
+  });
+
+  test("unreads adds correct class", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".chat-channel-row").doesNotHaveClass("has-unread");
+
+    this.categoryChatChannel.currentUserMembership.unread_count = 1;
+
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".chat-channel-row").hasClass("has-unread");
+  });
+
+  test("user status with category channel", async function (assert) {
+    await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
+
+    assert.dom(".user-status-message").doesNotExist();
+  });
+
+  test("user status with direct message channel", async function (assert) {
+    const status = { description: "Off to dentist", emoji: "tooth" };
+    this.directMessageChatChannel.chatable.users[0].status = status;
+
+    await render(
+      hbs`<ChatChannelRow @channel={{this.directMessageChatChannel}} />`
+    );
+
+    assert.dom(".user-status-message").exists();
+  });
+
+  test("user status with direct message channel and multiple users", async function (assert) {
+    const status = { description: "Off to dentist", emoji: "tooth" };
+    this.directMessageChatChannel.chatable.users[0].status = status;
+
+    this.directMessageChatChannel.chatable.users.push({
+      id: 2,
+      username: "bill",
+      name: null,
+      avatar_template: "/letter_avatar_proxy/v3/letter/t/31188e/{size}.png",
+    });
+
+    await render(
+      hbs`<ChatChannelRow @channel={{this.directMessageChatChannel}} />`
+    );
+
+    assert.dom(".user-status-message").doesNotExist();
+  });
 });

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReplyByEmailEnabledValidator
-
   def initialize(opts = {})
     @opts = opts
   end
@@ -10,8 +9,7 @@ class ReplyByEmailEnabledValidator
     # only validate when enabling reply by email
     return true if val == "f"
     # ensure reply_by_email_address is configured && polling is working
-    SiteSetting.reply_by_email_address.present? &&
-    SiteSetting.email_polling_enabled?
+    SiteSetting.reply_by_email_address.present? && SiteSetting.email_polling_enabled?
   end
 
   def error_message
@@ -21,5 +19,4 @@ class ReplyByEmailEnabledValidator
       I18n.t("site_settings.errors.email_polling_disabled")
     end
   end
-
 end

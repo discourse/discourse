@@ -1,38 +1,36 @@
 # frozen_string_literal: true
 
 # using this script to try figure out why Ruby 2 is slower than 1.9
-require 'flamegraph'
+require "flamegraph"
 
-Flamegraph.generate('test.html', fidelity: 2) do
+Flamegraph.generate("test.html", fidelity: 2) do
   require File.expand_path("../../config/environment", __FILE__)
 end
 exit
 
-require 'memory_profiler'
+require "memory_profiler"
 
-result = MemoryProfiler.report do
-  require File.expand_path("../../config/environment", __FILE__)
-end
+result = MemoryProfiler.report { require File.expand_path("../../config/environment", __FILE__) }
 result.pretty_print
 
 exit
 
-require 'benchmark'
+require "benchmark"
 
 def profile_allocations(name)
   GC.disable
   initial_size = ObjectSpace.count_objects
   yield
   changes = ObjectSpace.count_objects
-  changes.each do |k, _|
-    changes[k] -= initial_size[k]
-  end
+  changes.each { |k, _| changes[k] -= initial_size[k] }
   puts "#{name} changes"
-  changes.sort { |a, b| b[1] <=> a[1] }.each do |a, b|
-    next if b <= 0
-    # 1 extra hash for tracking
-    puts "#{a} #{a == :T_HASH ? b - 1 : b}"
-  end
+  changes
+    .sort { |a, b| b[1] <=> a[1] }
+    .each do |a, b|
+      next if b <= 0
+      # 1 extra hash for tracking
+      puts "#{a} #{a == :T_HASH ? b - 1 : b}"
+    end
   GC.enable
 end
 
@@ -47,9 +45,7 @@ def profile(name, &block)
   ObjectSpace.trace_object_allocations do
     block.call
 
-    ObjectSpace.each_object do |o|
-      objs << o
-    end
+    ObjectSpace.each_object { |o| objs << o }
 
     objs.each do |o|
       g = ObjectSpace.allocation_generation(o)
@@ -63,9 +59,10 @@ def profile(name, &block)
     end
   end
 
-  items.group_by { |x| x }.sort { |a, b| b[1].length <=> a[1].length }.each do |row, group|
-    puts "#{row} x #{group.length}"
-  end
+  items
+    .group_by { |x| x }
+    .sort { |a, b| b[1].length <=> a[1].length }
+    .each { |row, group| puts "#{row} x #{group.length}" }
 
   GC.enable
   profile_allocations(name, &block)

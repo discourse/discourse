@@ -138,6 +138,33 @@ acceptance("Admin - Watched Words", function (needs) {
   });
 });
 
+acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {
+  needs.user();
+  needs.site({
+    watched_words_replace: {
+      "(?:\\W|^)(betis)(?=\\W|$)": {
+        replacement: ":poop:",
+        case_sensitive: false,
+      },
+    },
+  });
+
+  test("emoji renders successfully after replacement", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("button.reply-to-post");
+    await fillIn(".d-editor-input", "betis betis betis");
+    const cooked = query(".d-editor-preview p");
+    const cookedChildren = Array.from(cooked.children);
+    const emojis = cookedChildren.filter((child) => child.nodeName === "IMG");
+    assert.strictEqual(emojis.length, 3, "three emojis have been rendered");
+    assert.strictEqual(
+      emojis.every((emoji) => emoji.title === ":poop:"),
+      true,
+      "all emojis are :poop:"
+    );
+  });
+});
+
 acceptance("Admin - Watched Words - Bad regular expressions", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {

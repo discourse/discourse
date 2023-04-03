@@ -38,6 +38,10 @@ export default DiscourseRoute.extend({
     this.appEvents.off("draft:destroyed", this, this.refresh);
   },
 
+  titleToken() {
+    return I18n.t("user_action_groups.15");
+  },
+
   @action
   didTransition() {
     this.controllerFor("user-activity")._showFooter();

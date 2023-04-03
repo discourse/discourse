@@ -34,25 +34,14 @@ export default {
         }
       );
     }
-
-    api.decorateChatMessage(
-      (element) => {
-        element
-          .querySelectorAll(".lazyYT:not(.lazyYT-video-loaded)")
-          .forEach((iframe) => {
-            $(iframe).lazyYT();
-          });
-      },
-      {
-        id: "lazy-yt",
-      }
-    );
   },
 
   initialize(container) {
-    const siteSettings = container.lookup("service:site-settings");
-    withPluginApi("0.8.42", (api) =>
-      this.initializeWithPluginApi(api, siteSettings)
-    );
+    if (container.lookup("service:chat").userCanChat) {
+      const siteSettings = container.lookup("service:site-settings");
+      withPluginApi("0.8.42", (api) => {
+        this.initializeWithPluginApi(api, siteSettings);
+      });
+    }
   },
 };

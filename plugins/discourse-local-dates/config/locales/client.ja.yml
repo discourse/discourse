@@ -23,6 +23,7 @@ ja:
           timezones_title: 表示するタイムゾーン
           timezones_description: タイムゾーンは、プレビューとフォールバックで日付を表示するために使用されます。
           recurring_title: 繰り返し
+          recurring_description: "イベントの繰り返し条件を定義します。フォームによって生成された繰り返しオプションは、次のいずれかのキーを使用して編集できます: years、quarters、months、weeks、days、hours、minutes、seconds、milliseconds"
           recurring_none: 繰り返しなし
           invalid_date: 日付が無効です。日付と時刻が正しいことを確認してください。
           date_title: 日付

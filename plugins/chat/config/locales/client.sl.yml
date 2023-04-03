@@ -21,8 +21,11 @@ sl:
       joined: "pridružen"
       email_frequency:
         never: "Nikoli"
+      header_indicator_preference:
+        never: "Nikoli"
       flag: "Prijavi"
       join: "Pridruži se"
+      last_visit: "zadnji obisk"
       mention_warning:
         dismiss: "opusti"
       reply: "Odgovori"
@@ -45,6 +48,7 @@ sl:
         yesterday: Včeraj
       about_view:
         title: Naziv
+        name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Nazaj"
@@ -73,6 +77,7 @@ sl:
         save: "Shrani"
         saved: "Shranjeno"
         unfollow: "Zapusti"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Nazaj"
         description: "Opis"

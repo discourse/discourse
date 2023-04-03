@@ -12,6 +12,13 @@ export default class extends Controller {
   @tracked saved = false;
   @tracked selectedSidebarCategories = [];
   @tracked selectedSidebarTagNames = [];
+  subpageTitle = I18n.t("user.preferences_nav.sidebar");
+
+  saveAttrNames = [
+    "sidebar_category_ids",
+    "sidebar_tag_names",
+    "sidebar_list_destination",
+  ];
 
   sidebarListDestinations = [
     {
@@ -42,7 +49,7 @@ export default class extends Controller {
     );
 
     this.model
-      .save()
+      .save(this.saveAttrNames)
       .then((result) => {
         if (result.user.sidebar_tags) {
           this.model.set("sidebar_tags", result.user.sidebar_tags);

@@ -1,6 +1,5 @@
 import {
   acceptance,
-  count,
   exists,
   query,
   updateCurrentUser,
@@ -12,19 +11,10 @@ import {
   fillIn,
   visit,
 } from "@ember/test-helpers";
-import I18n from "I18n";
-import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 
 function preferencesPretender(server, helper) {
-  server.post("/u/second_factors.json", () => {
-    return helper.response({
-      success: "OK",
-      password_required: "true",
-    });
-  });
-
   server.post("/u/create_second_factor_totp.json", () => {
     return helper.response({
       key: "rcyryaqage3jexfj",
@@ -32,41 +22,9 @@ function preferencesPretender(server, helper) {
     });
   });
 
-  server.post("/u/create_second_factor_security_key.json", () => {
-    return helper.response({
-      challenge: "a6d393d12654c130b2273e68ca25ca232d1d7f4c2464c2610fb8710a89d4",
-      rp_id: "localhost",
-      rp_name: "Discourse",
-      supported_algorithms: [-7, -257],
-    });
-  });
-
-  server.post("/u/enable_second_factor_totp.json", () => {
-    return helper.response({ error: "invalid token" });
-  });
-
   server.put("/u/second_factors_backup.json", () => {
     return helper.response({
       backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"],
-    });
-  });
-
-  server.post("/u/eviltrout/preferences/revoke-account", () => {
-    return helper.response({
-      success: true,
-    });
-  });
-
-  server.put("/u/eviltrout/preferences/email", () => {
-    return helper.response({
-      success: true,
-    });
-  });
-
-  server.post("/user_avatar/eviltrout/refresh_gravatar.json", () => {
-    return helper.response({
-      gravatar_upload_id: 6543,
-      gravatar_avatar_template: "/images/avatar.png",
     });
   });
 
@@ -86,11 +44,13 @@ acceptance("User Preferences", function (needs) {
       document.body.classList.contains("user-preferences-page"),
       "has the body class"
     );
+
     assert.strictEqual(
       currentURL(),
       "/u/eviltrout/preferences/account",
       "defaults to account tab"
     );
+
     assert.ok(exists(".user-preferences"), "it shows the preferences");
 
     const savePreferences = async () => {
@@ -103,377 +63,53 @@ acceptance("User Preferences", function (needs) {
     await fillIn(".pref-name input[type=text]", "Jon Snow");
     await savePreferences();
 
-    await click(".preferences-nav .nav-profile a");
+    await click(".user-nav__preferences-profile a");
     await fillIn("#edit-location", "Westeros");
     await savePreferences();
 
-    await click(".preferences-nav .nav-emails a");
+    await click(".user-nav__preferences-emails a");
     await click(".pref-activity-summary input[type=checkbox]");
     await savePreferences();
 
-    await click(".preferences-nav .nav-notifications a");
+    await click(".user-nav__preferences-tracking a");
+
     await selectKit(
-      ".control-group.notifications .combo-box.duration"
+      ".user-preferences_tracking-topics-controls .combo-box.duration"
     ).expand();
+
     await selectKit(
-      ".control-group.notifications .combo-box.duration"
+      ".user-preferences_tracking-topics-controls .combo-box.duration"
     ).selectRowByValue(1440);
+
     await savePreferences();
 
-    await click(".preferences-nav .nav-categories a");
+    await click(".user-nav__preferences-tracking a");
+
     const categorySelector = selectKit(
       ".tracking-controls .category-selector "
     );
+
     await categorySelector.expand();
     await categorySelector.fillInFilter("faq");
+
+    const tagSelector = selectKit(".tracking-controls .tag-chooser");
+    await tagSelector.expand();
+    await tagSelector.fillInFilter("monkey");
+
     await savePreferences();
 
     this.siteSettings.tagging_enabled = false;
-    await visit("/");
-    await visit("/u/eviltrout/preferences");
-    assert.ok(
-      !exists(".preferences-nav .nav-tags a"),
-      "tags tab isn't there when tags are disabled"
+
+    await visit("/u/eviltrout/preferences/tracking");
+
+    assert.notOk(
+      exists(".tag-notifications"),
+      "updating tags tracking preferences isn't visible when tags are disabled"
     );
 
-    await click(".preferences-nav .nav-interface a");
+    await click(".user-nav__preferences-interface a");
     await click(".control-group.other input[type=checkbox]:nth-of-type(1)");
     await savePreferences();
-
-    assert.ok(
-      !exists(".preferences-nav .nav-apps a"),
-      "apps tab isn't there when you have no authorized apps"
-    );
-  });
-
-  test("username", async function (assert) {
-    await visit("/u/eviltrout/preferences/username");
-    assert.ok(exists("#change_username"), "it has the input element");
-  });
-
-  test("email", async function (assert) {
-    await visit("/u/eviltrout/preferences/email");
-
-    assert.ok(exists("#change-email"), "it has the input element");
-
-    await fillIn("#change-email", "invalid-email");
-
-    assert.strictEqual(
-      query(".tip.bad").innerText.trim(),
-      I18n.t("user.email.invalid"),
-      "it should display invalid email tip"
-    );
-  });
-
-  test("email field always shows up", async function (assert) {
-    await visit("/u/eviltrout/preferences/email");
-
-    assert.ok(exists("#change-email"), "it has the input element");
-
-    await fillIn("#change-email", "eviltrout@discourse.org");
-    await click(".user-preferences button.btn-primary");
-
-    await visit("/u/eviltrout/preferences");
-    await visit("/u/eviltrout/preferences/email");
-
-    assert.ok(exists("#change-email"), "it has the input element");
-  });
-
-  test("connected accounts", async function (assert) {
-    await visit("/u/eviltrout/preferences/account");
-
-    assert.ok(
-      exists(".pref-associated-accounts"),
-      "it has the connected accounts section"
-    );
-    assert.ok(
-      query(
-        ".pref-associated-accounts table tr:nth-of-type(1) td:nth-of-type(1)"
-      ).innerHTML.includes("Facebook"),
-      "it lists facebook"
-    );
-
-    await click(
-      ".pref-associated-accounts table tr:nth-of-type(1) td:last-child button"
-    );
-
-    assert.ok(
-      query(
-        ".pref-associated-accounts table tr:nth-of-type(1) td:last-of-type"
-      ).innerHTML.includes("Connect")
-    );
-  });
-
-  test("second factor totp", async function (assert) {
-    await visit("/u/eviltrout/preferences/second-factor");
-
-    assert.ok(exists("#password"), "it has a password input");
-
-    await fillIn("#password", "secrets");
-    await click(".user-preferences .btn-primary");
-    assert.notOk(exists("#password"), "it hides the password input");
-
-    await click(".new-totp");
-    assert.ok(exists(".qr-code img"), "shows qr code image");
-
-    await click(".add-totp");
-
-    assert.ok(
-      query(".alert-error").innerHTML.includes("provide a name and the code"),
-      "shows name/token missing error message"
-    );
-  });
-
-  test("second factor security keys", async function (assert) {
-    await visit("/u/eviltrout/preferences/second-factor");
-
-    assert.ok(exists("#password"), "it has a password input");
-
-    await fillIn("#password", "secrets");
-    await click(".user-preferences .btn-primary");
-    assert.notOk(exists("#password"), "it hides the password input");
-
-    await click(".new-security-key");
-    assert.ok(exists("#security-key-name"), "shows security key name input");
-
-    await fillIn("#security-key-name", "");
-
-    // The following tests can only run when Webauthn is enabled. This is not
-    // always the case, for example on a browser running on a non-standard port
-    if (typeof PublicKeyCredential !== "undefined") {
-      await click(".add-security-key");
-
-      assert.ok(
-        query(".alert-error").innerHTML.includes("provide a name"),
-        "shows name missing error message"
-      );
-    }
-  });
-
-  test("default avatar selector", async function (assert) {
-    await visit("/u/eviltrout/preferences");
-
-    await click(".pref-avatar .btn");
-    assert.ok(exists(".avatar-choice", "opens the avatar selection modal"));
-
-    await click(".avatar-selector-refresh-gravatar");
-
-    assert.strictEqual(
-      User.currentProp("gravatar_avatar_upload_id"),
-      6543,
-      "it should set the gravatar_avatar_upload_id property"
-    );
-  });
-});
-
-acceptance("Second Factor Backups", function (needs) {
-  needs.user();
-  needs.pretender((server, helper) => {
-    server.post("/u/second_factors.json", () => {
-      return helper.response({
-        success: "OK",
-        totps: [{ id: 1, name: "one of them" }],
-      });
-    });
-
-    server.put("/u/second_factors_backup.json", () => {
-      return helper.response({
-        backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"],
-      });
-    });
-
-    server.get("/u/eviltrout/activity.json", () => {
-      return helper.response({});
-    });
-  });
-
-  test("second factor backup", async function (assert) {
-    updateCurrentUser({ second_factor_enabled: true });
-    await visit("/u/eviltrout/preferences/second-factor");
-    await click(".edit-2fa-backup");
-    assert.ok(
-      exists(".second-factor-backup-preferences"),
-      "shows the 2fa backup panel"
-    );
-    await click(".second-factor-backup-preferences .btn-primary");
-
-    assert.ok(exists(".backup-codes-area"), "shows backup codes");
-  });
-});
-
-acceptance(
-  "Avatar selector when selectable avatars is enabled",
-  function (needs) {
-    needs.user();
-    needs.settings({ selectable_avatars_mode: "no_one" });
-    needs.pretender((server, helper) => {
-      server.get("/site/selectable-avatars.json", () =>
-        helper.response([
-          "https://www.discourse.org",
-          "https://meta.discourse.org",
-        ])
-      );
-    });
-
-    test("selectable avatars", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.notOk(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal does not include option to upload"
-        )
-      );
-    });
-  }
-);
-
-acceptance(
-  "Avatar selector when selectable avatars allows staff to upload",
-  function (needs) {
-    needs.user();
-    needs.settings({ selectable_avatars_mode: "staff" });
-    needs.pretender((server, helper) => {
-      server.get("/site/selectable-avatars.json", () =>
-        helper.response([
-          "https://www.discourse.org",
-          "https://meta.discourse.org",
-        ])
-      );
-    });
-
-    test("allows staff to upload", async function (assert) {
-      updateCurrentUser({
-        trust_level: 3,
-        moderator: true,
-        admin: false,
-      });
-      await visit("/u/eviltrout/preferences");
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.ok(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal includes option to upload"
-        )
-      );
-    });
-
-    test("disallow non-staff", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      updateCurrentUser({
-        trust_level: 3,
-        moderator: false,
-        admin: false,
-      });
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.notOk(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal does not include option to upload"
-        )
-      );
-    });
-  }
-);
-acceptance(
-  "Avatar selector when selectable avatars allows trust level 3+ to upload",
-  function (needs) {
-    needs.user();
-    needs.settings({ selectable_avatars_mode: "tl3" });
-    needs.pretender((server, helper) => {
-      server.get("/site/selectable-avatars.json", () =>
-        helper.response([
-          "https://www.discourse.org",
-          "https://meta.discourse.org",
-        ])
-      );
-    });
-
-    test("with a tl3 user", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      updateCurrentUser({
-        trust_level: 3,
-        moderator: false,
-        admin: false,
-      });
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.ok(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal does includes option to upload"
-        )
-      );
-    });
-
-    test("with a tl2 user", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      updateCurrentUser({
-        trust_level: 2,
-        moderator: false,
-        admin: false,
-      });
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.notOk(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal does not include option to upload"
-        )
-      );
-    });
-
-    test("always allow staff to upload", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      updateCurrentUser({
-        trust_level: 2,
-        moderator: true,
-        admin: false,
-      });
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.ok(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal includes option to upload"
-        )
-      );
-    });
-  }
-);
-
-acceptance("User Preferences when badges are disabled", function (needs) {
-  needs.user();
-  needs.settings({ enable_badges: false });
-  needs.pretender(preferencesPretender);
-
-  test("visit my preferences", async function (assert) {
-    await visit("/u/eviltrout/preferences");
-    assert.ok(
-      document.body.classList.contains("user-preferences-page"),
-      "has the body class"
-    );
-    assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/preferences/account",
-      "defaults to account tab"
-    );
-    assert.ok(exists(".user-preferences"), "it shows the preferences");
   });
 });
 
@@ -561,56 +197,6 @@ acceptance("Ignored users", function (needs) {
     await visit(`/u/eviltrout/preferences/users`);
     updateCurrentUser({ moderator: true });
     assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
-  });
-});
-
-acceptance("Security", function (needs) {
-  needs.user();
-  needs.pretender(preferencesPretender);
-
-  test("recently connected devices", async function (assert) {
-    await visit("/u/eviltrout/preferences/security");
-
-    assert.strictEqual(
-      query(
-        ".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device"
-      ).innerText.trim(),
-      "Linux Computer",
-      "it should display active token first"
-    );
-
-    assert.strictEqual(
-      query(".pref-auth-tokens > a:nth-of-type(1)").innerText.trim(),
-      I18n.t("user.auth_tokens.show_all", { count: 3 }),
-      "it should display two tokens"
-    );
-    assert.strictEqual(
-      count(".pref-auth-tokens .auth-token"),
-      2,
-      "it should display two tokens"
-    );
-
-    await click(".pref-auth-tokens > a:nth-of-type(1)");
-
-    assert.strictEqual(
-      count(".pref-auth-tokens .auth-token"),
-      3,
-      "it should display three tokens"
-    );
-
-    const authTokenDropdown = selectKit(".auth-token-dropdown");
-    await authTokenDropdown.expand();
-    await authTokenDropdown.selectRowByValue("notYou");
-
-    assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
-
-    await click(".modal-footer .btn-primary");
-
-    assert.strictEqual(
-      count(".pref-password.highlighted"),
-      1,
-      "it should highlight password preferences"
-    );
   });
 });
 

@@ -1,63 +1,37 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import Promise from "rsvp";
-import EmberObject, { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
+import withChatChannel from "./chat-channel-decorator";
 import { inject as service } from "@ember/service";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
-import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
+import { action } from "@ember/object";
 
+@withChatChannel
 export default class ChatChannelRoute extends DiscourseRoute {
   @service chat;
-  @service router;
-
-  async model(params) {
-    let [chatChannel, channels] = await Promise.all([
-      this.getChannel(params.channelId),
-      this.chat.getChannels(),
-    ]);
-
-    return EmberObject.create({
-      chatChannel,
-      channels,
-    });
-  }
-
-  async getChannel(id) {
-    let channel = await this.chat.getChannelBy("id", id);
-    if (!channel || this.forceRefetchChannel) {
-      channel = await this.getChannelFromServer(id);
-    }
-    return channel;
-  }
-
-  async getChannelFromServer(id) {
-    return ajax(`/chat/chat_channels/${id}`)
-      .then((response) => ChatChannel.create(response))
-      .catch(() => this.replaceWith("/404"));
-  }
-
-  afterModel(model) {
-    this.chat.setActiveChannel(model?.chatChannel);
-
-    const queryParams = this.paramsFor(this.routeName);
-    const slug = slugifyChannel(model.chatChannel);
-    if (queryParams?.channelTitle !== slug) {
-      this.router.replaceWith("chat.channel.index", model.chatChannel.id, slug);
-    }
-  }
-
-  setupController(controller) {
-    super.setupController(...arguments);
-
-    if (controller.messageId) {
-      this.chat.set("messageId", controller.messageId);
-      this.controller.set("messageId", null);
-    }
-  }
+  @service chatStateManager;
 
   @action
-  refreshModel(forceRefetchChannel = false) {
-    this.forceRefetchChannel = forceRefetchChannel;
-    this.refresh();
+  willTransition(transition) {
+    this.#closeThread();
+
+    if (transition?.to?.name === "chat.channel.index") {
+      const targetChannelId = transition?.to?.parent?.params?.channelId;
+      if (
+        targetChannelId &&
+        parseInt(targetChannelId, 10) !== this.chat.activeChannel.id
+      ) {
+        this.chat.activeChannel.messagesManager.clearMessages();
+      }
+    }
+
+    if (!transition?.to?.name?.startsWith("chat.")) {
+      this.chatStateManager.storeChatURL();
+      this.chat.activeChannel = null;
+      this.chat.updatePresence();
+    }
+  }
+
+  #closeThread() {
+    this.chat.activeChannel.activeThread?.messagesManager?.clearMessages();
+    this.chat.activeChannel.activeThread = null;
+    this.chatStateManager.closeSidePanel();
   }
 }

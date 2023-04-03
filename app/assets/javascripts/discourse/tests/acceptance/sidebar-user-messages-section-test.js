@@ -22,15 +22,14 @@ acceptance(
     });
 
     needs.settings({
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
     });
 
     test("clicking on section header button", async function (assert) {
       await visit("/");
 
       assert.ok(
-        !exists(".sidebar-section-messages"),
+        !exists(".sidebar-section[data-section-name='messages']"),
         "does not display messages section in sidebar"
       );
     });
@@ -43,8 +42,7 @@ acceptance(
     needs.user({ can_send_private_messages: true });
 
     needs.settings({
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
     });
 
     needs.pretender((server, helper) => {
@@ -76,7 +74,9 @@ acceptance(
 
     test("clicking on section header button", async function (assert) {
       await visit("/");
-      await click(".sidebar-section-messages .sidebar-section-header-button");
+      await click(
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-header-button"
+      );
 
       assert.ok(
         exists("#reply-control.private-message"),
@@ -86,10 +86,14 @@ acceptance(
 
     test("clicking on section header link", async function (assert) {
       await visit("/");
-      await click(".sidebar-section-messages .sidebar-section-header");
+      await click(
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-header"
+      );
 
       assert.notOk(
-        exists(".sidebar-section-messages .sidebar-section-content"),
+        exists(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-content"
+        ),
         "hides the content of the section"
       );
     });
@@ -99,30 +103,34 @@ acceptance(
 
       assert.ok(
         exists(
-          ".sidebar-section-messages .sidebar-section-link-personal-messages-inbox"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox"
         ),
         "displays the personal message inbox link"
       );
 
       assert.strictEqual(
-        count(".sidebar-section-messages .sidebar-section-link"),
+        count(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
+        ),
         1,
         "only displays the personal message inbox link"
       );
 
       await click(
-        ".sidebar-section-messages .sidebar-section-link-personal-messages-inbox"
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox"
       );
 
       assert.ok(
         exists(
-          ".sidebar-section-messages .sidebar-section-link-personal-messages-inbox.active"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox.active"
         ),
         "personal message inbox link is marked as active"
       );
 
       assert.strictEqual(
-        count(".sidebar-section-messages .sidebar-section-link"),
+        count(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
+        ),
         5,
         "expands and displays the links for personal messages"
       );
@@ -133,11 +141,11 @@ acceptance(
         await visit("/");
 
         await click(
-          ".sidebar-section-messages .sidebar-section-link-personal-messages-inbox"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox"
         );
 
         await click(
-          `.sidebar-section-messages .sidebar-section-link-personal-messages-${type}`
+          `.sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-${type}`
         );
 
         assert.strictEqual(
@@ -147,28 +155,30 @@ acceptance(
         );
 
         assert.strictEqual(
-          count(".sidebar-section-messages .sidebar-section-link.active"),
+          count(
+            ".sidebar-section[data-section-name='messages'] .sidebar-section-link.active"
+          ),
           2,
           "only two links are marked as active in the sidebar"
         );
 
         assert.ok(
           exists(
-            ".sidebar-section-messages .sidebar-section-link-personal-messages-inbox.active"
+            ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox.active"
           ),
           "personal message inbox link is marked as active"
         );
 
         assert.ok(
           exists(
-            `.sidebar-section-messages .sidebar-section-link-personal-messages-${type}.active`
+            `.sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-${type}.active`
           ),
           `personal message ${type} link is marked as active`
         );
 
         assert.notOk(
           exists(
-            `.sidebar-section-messages .sidebar-section-link-personal-messages-${type} .sidebar-section-link-prefix`
+            `.sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-${type} .sidebar-section-link-prefix`
           ),
           `prefix is not displayed for ${type} personal message section link`
         );
@@ -196,7 +206,7 @@ acceptance(
       await visit("/");
 
       const groupSectionLinks = queryAll(
-        ".sidebar-section-messages .sidebar-section-link"
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
       );
 
       assert.deepEqual(
@@ -210,29 +220,37 @@ acceptance(
       await visit("/u/eviltrout/messages/group/GrOuP1");
 
       assert.strictEqual(
-        count(".sidebar-section-messages .sidebar-section-link"),
+        count(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
+        ),
         6,
         "expands and displays the links for group1 group messages"
       );
 
       assert.strictEqual(
-        count(".sidebar-section-messages .sidebar-section-link.group1"),
+        count(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link.group1"
+        ),
         4,
         "expands the links for group1 group messages"
       );
 
       await click(
-        ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group3"
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-inbox.group3"
       );
 
       assert.strictEqual(
-        count(".sidebar-section-messages .sidebar-section-link.group1"),
+        count(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link.group1"
+        ),
         1,
         "collapses the links for group1 group messages"
       );
 
       assert.strictEqual(
-        count(".sidebar-section-messages .sidebar-section-link.group3"),
+        count(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link.group3"
+        ),
         4,
         "expands the links for group3 group messages"
       );
@@ -260,11 +278,11 @@ acceptance(
         await visit("/");
 
         await click(
-          `.sidebar-section-messages .sidebar-section-link-group-messages-inbox.group1`
+          `.sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-inbox.group1`
         );
 
         await click(
-          `.sidebar-section-messages .sidebar-section-link-group-messages-${type}.group1`
+          `.sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-${type}.group1`
         );
 
         assert.strictEqual(
@@ -274,21 +292,23 @@ acceptance(
         );
 
         assert.strictEqual(
-          count(".sidebar-section-messages .sidebar-section-link.active"),
+          count(
+            ".sidebar-section[data-section-name='messages'] .sidebar-section-link.active"
+          ),
           2,
           "only two links are marked as active in the sidebar"
         );
 
         assert.ok(
           exists(
-            ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group1.active"
+            ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-inbox.group1.active"
           ),
           "group1 group message inbox link is marked as active"
         );
 
         assert.ok(
           exists(
-            `.sidebar-section-messages .sidebar-section-link-group-messages-${type}.group1.active`
+            `.sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-${type}.group1.active`
           ),
           `group1 group message ${type} link is marked as active`
         );
@@ -308,21 +328,25 @@ acceptance(
       await visit("/t/130");
 
       assert.strictEqual(
-        count(".sidebar-section-messages .sidebar-section-link"),
+        count(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
+        ),
         5,
         "5 section links are displayed"
       );
 
       assert.strictEqual(
         count(
-          ".sidebar-section-messages .sidebar-section-link.personal-messages"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link.personal-messages"
         ),
         1,
         "personal messages inbox filter links are not shown"
       );
 
       assert.strictEqual(
-        count(".sidebar-section-messages .sidebar-section-link.foo_group"),
+        count(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link.foo_group"
+        ),
         4,
         "foo_group messages inbox filter links are shown"
       );
@@ -341,21 +365,25 @@ acceptance(
       await visit("/t/34");
 
       assert.strictEqual(
-        count(".sidebar-section-messages .sidebar-section-link"),
+        count(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
+        ),
         6,
         "6 section links are displayed"
       );
 
       assert.strictEqual(
         count(
-          ".sidebar-section-messages .sidebar-section-link.personal-messages"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link.personal-messages"
         ),
         5,
         "personal messages inbox filter links are shown"
       );
 
       assert.strictEqual(
-        count(".sidebar-section-messages .sidebar-section-link.foo_group"),
+        count(
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link.foo_group"
+        ),
         1,
         "foo_group messages inbox filter links are not shown"
       );
@@ -378,6 +406,10 @@ acceptance(
         "service:pm-topic-tracking-state"
       );
 
+      await click(
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-inbox.group1"
+      );
+
       await publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
         topic_id: 1,
         message_type: "unread",
@@ -400,13 +432,9 @@ acceptance(
         },
       });
 
-      await click(
-        ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group1"
-      );
-
       assert.strictEqual(
         query(
-          ".sidebar-section-messages .sidebar-section-link-group-messages-unread.group1"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-unread.group1"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.unread_with_count", {
           count: 1,
@@ -416,7 +444,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section-messages .sidebar-section-link-group-messages-new.group1"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-new.group1"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.new_with_count", {
           count: 1,
@@ -437,7 +465,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section-messages .sidebar-section-link-group-messages-new.group1"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-new.group1"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.new"),
         "removes count for group1 new inbox filter link"
@@ -451,6 +479,10 @@ acceptance(
         "service:pm-topic-tracking-state"
       );
 
+      await click(
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox"
+      );
+
       await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 1,
         message_type: "unread",
@@ -462,13 +494,9 @@ acceptance(
         },
       });
 
-      await click(
-        ".sidebar-section-messages .sidebar-section-link-personal-messages-inbox"
-      );
-
       assert.strictEqual(
         query(
-          ".sidebar-section-messages .sidebar-section-link-personal-messages-unread"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-unread"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.unread_with_count", {
           count: 1,
@@ -489,7 +517,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section-messages .sidebar-section-link-personal-messages-unread"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-unread"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.unread_with_count", {
           count: 2,
@@ -510,7 +538,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section-messages .sidebar-section-link-personal-messages-new"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-new"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.new_with_count", {
           count: 1,
@@ -531,7 +559,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section-messages .sidebar-section-link-personal-messages-new"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-new"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.new"),
         "removes the count from the new inbox filter link"

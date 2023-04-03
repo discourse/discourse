@@ -1,9 +1,10 @@
+import { tagName } from "@ember-decorators/component";
 import Component from "@ember/component";
 import loadScript from "discourse/lib/load-script";
 
-export default Component.extend({
-  tagName: "canvas",
-  type: "line",
+@tagName("canvas")
+export default class AdminGraph extends Component {
+  type = "line";
 
   refreshChart() {
     const ctx = this.element.getContext("2d");
@@ -49,11 +50,11 @@ export default Component.extend({
     };
 
     this._chart = new window.Chart(ctx, config);
-  },
+  }
 
   didInsertElement() {
     loadScript("/javascripts/Chart.min.js").then(() =>
       this.refreshChart.apply(this)
     );
-  },
-});
+  }
+}

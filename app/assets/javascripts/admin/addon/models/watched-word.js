@@ -2,34 +2,8 @@ import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 
-const WatchedWord = EmberObject.extend({
-  save() {
-    return ajax(
-      "/admin/customize/watched_words" +
-        (this.id ? "/" + this.id : "") +
-        ".json",
-      {
-        type: this.id ? "PUT" : "POST",
-        data: {
-          word: this.word,
-          replacement: this.replacement,
-          action_key: this.action,
-          case_sensitive: this.isCaseSensitive,
-        },
-        dataType: "json",
-      }
-    );
-  },
-
-  destroy() {
-    return ajax("/admin/customize/watched_words/" + this.id + ".json", {
-      type: "DELETE",
-    });
-  },
-});
-
-WatchedWord.reopenClass({
-  findAll() {
+export default class WatchedWord extends EmberObject {
+  static findAll() {
     return ajax("/admin/customize/watched_words.json").then((list) => {
       const actions = {};
 
@@ -50,7 +24,29 @@ WatchedWord.reopenClass({
         });
       });
     });
-  },
-});
+  }
 
-export default WatchedWord;
+  save() {
+    return ajax(
+      "/admin/customize/watched_words" +
+        (this.id ? "/" + this.id : "") +
+        ".json",
+      {
+        type: this.id ? "PUT" : "POST",
+        data: {
+          word: this.word,
+          replacement: this.replacement,
+          action_key: this.action,
+          case_sensitive: this.isCaseSensitive,
+        },
+        dataType: "json",
+      }
+    );
+  }
+
+  destroy() {
+    return ajax("/admin/customize/watched_words/" + this.id + ".json", {
+      type: "DELETE",
+    });
+  }
+}

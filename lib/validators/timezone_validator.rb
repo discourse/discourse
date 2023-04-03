@@ -13,10 +13,6 @@ class TimezoneValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
     return if value.blank? || TimezoneValidator.valid?(value)
-    record.errors.add(
-      attribute,
-      :timezone,
-      message: TimezoneValidator.error_message(value)
-    )
+    record.errors.add(attribute, :timezone, message: TimezoneValidator.error_message(value))
   end
 end

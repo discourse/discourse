@@ -40,13 +40,13 @@ export default {
     // to register a null value for anon
     app.register("service:current-user", currentUser, { instantiate: false });
 
-    const topicTrackingState = TopicTrackingState.create({
+    this.topicTrackingState = TopicTrackingState.create({
       messageBus: container.lookup("service:message-bus"),
       siteSettings,
       currentUser,
     });
 
-    app.register("service:topic-tracking-state", topicTrackingState, {
+    app.register("service:topic-tracking-state", this.topicTrackingState, {
       instantiate: false,
     });
 
@@ -57,6 +57,9 @@ export default {
     app.register("service:session", session, { instantiate: false });
 
     app.register("location:discourse-location", DiscourseLocation);
+
+    app.inject("controller", "capabilities", "service:capabilities");
+    app.inject("component", "capabilities", "service:capabilities");
 
     ALL_TARGETS.forEach((t) => {
       app.inject(t, "appEvents", "service:app-events");
@@ -108,6 +111,11 @@ export default {
       });
     }
 
-    startTracking(topicTrackingState);
+    startTracking(this.topicTrackingState);
+  },
+
+  teardown() {
+    // Manually call `willDestroy` as this isn't an actual `Service`
+    this.topicTrackingState.willDestroy();
   },
 };

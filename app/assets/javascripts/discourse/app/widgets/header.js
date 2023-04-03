@@ -82,24 +82,63 @@ createWidget("header-notifications", {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
       if (this.currentUser.redesigned_user_menu_enabled) {
-        const unread = user.all_unread_notifications_count || 0;
-        const reviewables = user.unseen_reviewable_count || 0;
-        const count = unread + reviewables;
-        if (count > 0) {
-          if (this._shouldHighlightAvatar()) {
-            contents.push(h("span.ring"));
-          }
-
+        let ringClass = null;
+        if (user.new_personal_messages_notifications_count) {
+          ringClass = "personal-messages";
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className: "badge-notification with-icon new-pms",
+              icon: "envelope",
+              omitSpan: true,
+              title: "notifications.tooltip.new_message_notification",
+              titleOptions: {
+                count: user.new_personal_messages_notifications_count,
+              },
+              attributes: {
+                "aria-label": I18n.t(
+                  "notifications.tooltip.new_message_notification",
+                  {
+                    count: user.new_personal_messages_notifications_count,
+                  }
+                ),
+              },
+            })
+          );
+        } else if (user.unseen_reviewable_count) {
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className: "badge-notification with-icon new-reviewables",
+              icon: "flag",
+              omitSpan: true,
+              title: "notifications.tooltip.new_reviewable",
+              titleOptions: { count: user.unseen_reviewable_count },
+              attributes: {
+                "aria-label": I18n.t("notifications.tooltip.new_reviewable", {
+                  count: user.unseen_reviewable_count,
+                }),
+              },
+            })
+          );
+        } else if (user.all_unread_notifications_count) {
+          ringClass = "regular-notifications";
           contents.push(
             this.attach("link", {
               action: attrs.action,
               className: "badge-notification unread-notifications",
-              rawLabel: count,
+              rawLabel: user.all_unread_notifications_count,
               omitSpan: true,
               title: "notifications.tooltip.regular",
-              titleOptions: { count },
+              titleOptions: { count: user.all_unread_notifications_count },
+              attributes: {
+                "aria-label": I18n.t("user.notifications"),
+              },
             })
           );
+        }
+        if (ringClass && this._shouldHighlightAvatar()) {
+          contents.push(h(`span.ring.revamped.${ringClass}`));
         }
       } else {
         const unreadNotifications = user.unread_notifications;
@@ -191,7 +230,7 @@ createWidget(
 
       html(attrs) {
         return h(
-          "a.icon",
+          "button.icon.btn-flat",
           {
             attributes: {
               "aria-haspopup": true,
@@ -224,7 +263,7 @@ createWidget(
         }
 
         return h(
-          "a.icon.btn-flat",
+          "button.icon.btn-flat",
           {
             attributes: {
               "aria-expanded": attrs.active,
@@ -285,7 +324,7 @@ createWidget("header-icons", {
         let { currentUser } = this;
         if (
           currentUser?.reviewable_count &&
-          !this.currentUser.redesigned_user_menu_enabled
+          this.siteSettings.navigation_menu === "legacy"
         ) {
           return h(
             "div.badge-notification.reviewables",
@@ -300,12 +339,7 @@ createWidget("header-icons", {
       },
     });
 
-    if (
-      !this.siteSettings.enable_experimental_sidebar_hamburger ||
-      (this.siteSettings.enable_experimental_sidebar_hamburger &&
-        !attrs.sidebarEnabled) ||
-      this.site.mobileView
-    ) {
+    if (!attrs.sidebarEnabled || this.site.mobileView) {
       icons.push(hamburger);
     }
 
@@ -475,10 +509,13 @@ export default createWidget("header", {
           })
         );
       } else if (state.hamburgerVisible) {
-        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
-          if (!attrs.sidebarEnabled) {
-            panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
-          }
+        if (
+          attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
+          (attrs.navigationMenuQueryParamOverride !== "legacy" &&
+            this.siteSettings.navigation_menu !== "legacy" &&
+            (!attrs.sidebarEnabled || this.site.narrowDesktopView))
+        ) {
+          panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
         } else {
           panels.push(this.attach("hamburger-menu"));
         }
@@ -501,7 +538,7 @@ export default createWidget("header", {
         }
       });
 
-      if (this.site.mobileView) {
+      if (this.site.mobileView || this.site.narrowDesktopView) {
         panels.push(this.attach("header-cloak"));
       }
 
@@ -590,8 +627,9 @@ export default createWidget("header", {
 
   toggleHamburger() {
     if (
-      this.siteSettings.enable_experimental_sidebar_hamburger &&
-      this.attrs.sidebarEnabled
+      this.siteSettings.navigation_menu !== "legacy" &&
+      this.attrs.sidebarEnabled &&
+      !this.site.narrowDesktopView
     ) {
       this.sendWidgetAction("toggleSidebar");
     } else {
@@ -599,9 +637,9 @@ export default createWidget("header", {
       this.toggleBodyScrolling(this.state.hamburgerVisible);
 
       schedule("afterRender", () => {
-        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
+        if (this.siteSettings.navigation_menu !== "legacy") {
           // Remove focus from hamburger toggle button
-          document.querySelector("#toggle-hamburger-menu").blur();
+          document.querySelector("#toggle-hamburger-menu")?.blur();
         } else {
           // auto focus on first link in dropdown
           document.querySelector(".hamburger-panel .menu-links a")?.focus();
@@ -626,14 +664,32 @@ export default createWidget("header", {
   },
 
   preventDefault(e) {
-    // prevent all scrolling on menu panels, except on overflow
-    const height = window.innerHeight ? window.innerHeight : $(window).height();
-    if (
-      !$(e.target).parents(".menu-panel").length ||
-      $(".menu-panel .panel-body-contents").height() <= height
-    ) {
-      e.preventDefault();
+    const windowHeight = window.innerHeight;
+
+    // allow profile menu tabs to scroll if they're taller than the window
+    if (e.target.closest(".menu-panel .menu-tabs-container")) {
+      const topTabs = document.querySelector(".menu-panel .top-tabs");
+      const bottomTabs = document.querySelector(".menu-panel .bottom-tabs");
+      const profileTabsHeight =
+        topTabs?.offsetHeight + bottomTabs?.offsetHeight || 0;
+
+      if (profileTabsHeight > windowHeight) {
+        return;
+      }
     }
+
+    // allow menu panels to scroll if contents are taller than the window
+    if (e.target.closest(".menu-panel")) {
+      const menuContentHeight =
+        document.querySelector(".menu-panel .panel-body-contents")
+          .offsetHeight || 0;
+
+      if (menuContentHeight > windowHeight) {
+        return;
+      }
+    }
+
+    e.preventDefault();
   },
 
   togglePageSearch() {

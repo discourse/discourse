@@ -3,9 +3,15 @@ import bootbox from "bootbox";
 import { getOwner } from "discourse-common/lib/get-owner";
 import deprecated from "discourse-common/lib/deprecated";
 
+let jqueryPluginsConfigured = false;
+
 export default {
   name: "jquery-plugins",
   initialize() {
+    if (jqueryPluginsConfigured) {
+      return;
+    }
+
     // Settings for bootbox
     bootbox.animate(false);
     bootbox.backdrop(true);
@@ -46,5 +52,7 @@ export default {
 
     // Initialize the autocomplete tool
     $.fn.autocomplete = autocomplete;
+
+    jqueryPluginsConfigured = true;
   },
 };

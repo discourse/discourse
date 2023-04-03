@@ -524,7 +524,7 @@ acceptance("Search - Full Page", function (needs) {
     await click(".search-cta");
 
     assert.ok(!exists(".search-filters"), "has no filters");
-    assert.strictEqual(count(".fps-tag-item"), 2, "has two tag results");
+    assert.strictEqual(count(".fps-tag-item"), 4, "has four tag results");
 
     await typeSelector.expand();
     await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);

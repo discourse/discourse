@@ -4,10 +4,10 @@ require "addressable"
 
 module Onebox
   module Helpers
+    class DownloadTooLarge < StandardError
+    end
 
-    class DownloadTooLarge < StandardError; end
-
-    IGNORE_CANONICAL_DOMAINS ||= ['www.instagram.com', 'medium.com', 'youtube.com']
+    IGNORE_CANONICAL_DOMAINS ||= %w[www.instagram.com medium.com youtube.com]
 
     def self.symbolize_keys(hash)
       return {} if hash.nil?
@@ -21,26 +21,47 @@ module Onebox
     end
 
     def self.clean(html)
-      html.gsub(/<[^>]+>/, ' ').gsub(/\n/, '')
+      html.gsub(/<[^>]+>/, " ").gsub(/\n/, "")
     end
 
     def self.fetch_html_doc(url, headers = nil, body_cacher = nil)
-      response = (fetch_response(url, headers: headers, body_cacher: body_cacher) rescue nil)
-      doc = Nokogiri::HTML(response)
+      response =
+        (
+          begin
+            fetch_response(url, headers: headers, body_cacher: body_cacher)
+          rescue StandardError
+            nil
+          end
+        )
+      doc = Nokogiri.HTML(response)
       uri = Addressable::URI.parse(url)
 
       ignore_canonical_tag = doc.at('meta[property="og:ignore_canonical"]')
-      should_ignore_canonical = IGNORE_CANONICAL_DOMAINS.map { |hostname| uri.hostname.match?(hostname) }.any?
+      should_ignore_canonical =
+        IGNORE_CANONICAL_DOMAINS.map { |hostname| uri.hostname.match?(hostname) }.any?
 
-      unless (ignore_canonical_tag && ignore_canonical_tag['content'].to_s == 'true') || should_ignore_canonical
+      if !(ignore_canonical_tag && ignore_canonical_tag["content"].to_s == "true") &&
+           !should_ignore_canonical
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
         canonical_uri = Addressable::URI.parse(canonical_link)
-        if canonical_link && canonical_uri && "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
-          uri = FinalDestination.new(canonical_link, Oneboxer.get_final_destination_options(canonical_link)).resolve
+        if canonical_link && canonical_uri &&
+             "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
+          uri =
+            FinalDestination.new(
+              canonical_link,
+              Oneboxer.get_final_destination_options(canonical_link),
+            ).resolve
           if uri.present?
-            response = (fetch_response(uri.to_s, headers: headers, body_cacher: body_cacher) rescue nil)
-            doc = Nokogiri::HTML(response) if response
+            response =
+              (
+                begin
+                  fetch_response(uri.to_s, headers: headers, body_cacher: body_cacher)
+                rescue StandardError
+                  nil
+                end
+              )
+            doc = Nokogiri.HTML(response) if response
           end
         end
       end
@@ -48,32 +69,42 @@ module Onebox
       doc
     end
 
-    def self.fetch_response(location, redirect_limit: 5, domain: nil, headers: nil, body_cacher: nil)
-      redirect_limit = Onebox.options.redirect_limit if redirect_limit > Onebox.options.redirect_limit
+    def self.fetch_response(
+      location,
+      redirect_limit: 5,
+      domain: nil,
+      headers: nil,
+      body_cacher: nil
+    )
+      redirect_limit = Onebox.options.redirect_limit if redirect_limit >
+        Onebox.options.redirect_limit
 
-      raise Net::HTTPError.new('HTTP redirect too deep', location) if redirect_limit == 0
+      raise Net::HTTPError.new("HTTP redirect too deep", location) if redirect_limit == 0
 
       uri = Addressable::URI.parse(location)
       uri = Addressable::URI.join(domain, uri) if !uri.host
 
-      use_body_cacher = body_cacher && body_cacher.respond_to?('fetch_cached_response_body')
+      use_body_cacher = body_cacher && body_cacher.respond_to?("fetch_cached_response_body")
       if use_body_cacher
         response_body = body_cacher.fetch_cached_response_body(uri.to_s)
 
-        if response_body.present?
-          return response_body
-        end
+        return response_body if response_body.present?
       end
 
       result = StringIO.new
-      FinalDestination::HTTP.start(uri.host, uri.port, open_timeout: Onebox.options.connect_timeout, use_ssl: uri.normalized_scheme == 'https') do |http|
+      FinalDestination::HTTP.start(
+        uri.host,
+        uri.port,
+        open_timeout: Onebox.options.connect_timeout,
+        use_ssl: uri.normalized_scheme == "https",
+      ) do |http|
         http.read_timeout = Onebox.options.timeout
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE  # Work around path building bugs
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE # Work around path building bugs
 
         headers ||= {}
 
-        if Onebox.options.user_agent && !headers['User-Agent']
-          headers['User-Agent'] = Onebox.options.user_agent
+        if Onebox.options.user_agent && !headers["User-Agent"]
+          headers["User-Agent"] = Onebox.options.user_agent
         end
 
         request = Net::HTTP::Get.new(uri.request_uri, headers)
@@ -81,11 +112,10 @@ module Onebox
 
         size_bytes = Onebox.options.max_download_kb * 1024
         http.request(request) do |response|
-
-          if cookie = response.get_fields('set-cookie')
+          if cookie = response.get_fields("set-cookie")
             # HACK: If this breaks again in the future, use HTTP::CookieJar from gem 'http-cookie'
             # See test: it "does not send cookies to the wrong domain"
-            redir_header = { 'Cookie' => cookie.join('; ') }
+            redir_header = { "Cookie" => cookie.join("; ") }
           end
 
           redir_header = nil unless redir_header.is_a? Hash
@@ -94,11 +124,13 @@ module Onebox
           unless code === 200
             response.error! unless [301, 302, 303, 307, 308].include?(code)
 
-            return fetch_response(
-              response['location'],
-              redirect_limit: redirect_limit - 1,
-              domain: "#{uri.scheme}://#{uri.host}",
-              headers: redir_header
+            return(
+              fetch_response(
+                response["location"],
+                redirect_limit: redirect_limit - 1,
+                domain: "#{uri.scheme}://#{uri.host}",
+                headers: redir_header,
+              )
             )
           end
 
@@ -120,7 +152,12 @@ module Onebox
     def self.fetch_content_length(location)
       uri = URI(location)
 
-      FinalDestination::HTTP.start(uri.host, uri.port, open_timeout: Onebox.options.connect_timeout, use_ssl: uri.is_a?(URI::HTTPS)) do |http|
+      FinalDestination::HTTP.start(
+        uri.host,
+        uri.port,
+        open_timeout: Onebox.options.connect_timeout,
+        use_ssl: uri.is_a?(URI::HTTPS),
+      ) do |http|
         http.read_timeout = Onebox.options.timeout
         if uri.is_a?(URI::HTTPS)
           http.use_ssl = true
@@ -129,30 +166,24 @@ module Onebox
 
         http.request_head([uri.path, uri.query].join("?")) do |response|
           code = response.code.to_i
-          unless code === 200 || Onebox::Helpers.blank?(response.content_length)
-            return nil
-          end
+          return nil unless code === 200 || Onebox::Helpers.blank?(response.content_length)
           return response.content_length
         end
       end
     end
 
     def self.pretty_filesize(size)
-      conv = [ 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB' ]
+      conv = %w[B KB MB GB TB PB EB]
       scale = 1024
 
       ndx = 1
-      if (size < 2 * (scale**ndx)) then
-        return "#{(size)} #{conv[ndx - 1]}"
-      end
+      return "#{(size)} #{conv[ndx - 1]}" if (size < 2 * (scale**ndx))
       size = size.to_f
       [2, 3, 4, 5, 6, 7].each do |i|
-        if (size < 2 * (scale**i)) then
-          return "#{'%.2f' % (size / (scale**(i - 1)))} #{conv[i - 1]}"
-        end
+        return "#{"%.2f" % (size / (scale**(i - 1)))} #{conv[i - 1]}" if (size < 2 * (scale**i))
       end
       ndx = 7
-      "#{'%.2f' % (size / (scale**(ndx - 1)))} #{conv[ndx - 1]}"
+      "#{"%.2f" % (size / (scale**(ndx - 1)))} #{conv[ndx - 1]}"
     end
 
     def self.click_to_scroll_div(width = 690, height = 400)
@@ -187,7 +218,7 @@ module Onebox
       return "" unless url
       url = url.dup
       # expect properly encoded url, remove any unsafe chars
-      url.gsub!(' ', '%20')
+      url.gsub!(" ", "%20")
       url.gsub!("'", "&apos;")
       url.gsub!('"', "&quot;")
       url.gsub!(/[^\w\-`.~:\/?#\[\]@!$&'\(\)*+,;=%\p{M}’]/, "")
@@ -212,13 +243,34 @@ module Onebox
 
       uri = Addressable::URI.parse(url)
 
-      encoded_uri = Addressable::URI.new(
-        scheme: Addressable::URI.encode_component(uri.scheme, Addressable::URI::CharacterClasses::SCHEME),
-        authority: Addressable::URI.encode_component(uri.authority, Addressable::URI::CharacterClasses::AUTHORITY),
-        path: Addressable::URI.encode_component(uri.path, Addressable::URI::CharacterClasses::PATH + "\\%"),
-        query: Addressable::URI.encode_component(uri.query, "a-zA-Z0-9\\-\\.\\_\\~\\$\\&\\*\\,\\=\\:\\@\\?\\%"),
-        fragment: Addressable::URI.encode_component(uri.fragment, "a-zA-Z0-9\\-\\.\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:\\/\\?\\%")
-      )
+      encoded_uri =
+        Addressable::URI.new(
+          scheme:
+            Addressable::URI.encode_component(
+              uri.scheme,
+              Addressable::URI::CharacterClasses::SCHEME,
+            ),
+          authority:
+            Addressable::URI.encode_component(
+              uri.authority,
+              Addressable::URI::CharacterClasses::AUTHORITY,
+            ),
+          path:
+            Addressable::URI.encode_component(
+              uri.path,
+              Addressable::URI::CharacterClasses::PATH + "\\%",
+            ),
+          query:
+            Addressable::URI.encode_component(
+              uri.query,
+              "a-zA-Z0-9\\-\\.\\_\\~\\$\\&\\*\\,\\=\\:\\@\\?\\%",
+            ),
+          fragment:
+            Addressable::URI.encode_component(
+              uri.fragment,
+              "a-zA-Z0-9\\-\\.\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:\\/\\?\\%",
+            ),
+        )
 
       encoded_uri.to_s
     end

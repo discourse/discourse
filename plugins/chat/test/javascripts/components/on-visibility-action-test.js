@@ -15,15 +15,17 @@ module("Discourse Chat | Component | on-visibility-action", function (hooks) {
 
     this.set("root", document.querySelector("#ember-testing"));
 
-    await render(
-      hbs`{{#if display}}{{on-visibility-action action=action root=root}}{{/if}}`
-    );
+    await render(hbs`
+      {{#if display}}
+        <OnVisibilityAction @action={{this.action}} @root={{this.root}} />
+      {{/if}}
+    `);
 
-    assert.equal(this.value, null);
+    assert.strictEqual(this.value, null);
 
     this.set("display", true);
     await waitUntil(() => this.value !== null);
 
-    assert.equal(this.value, "foo");
+    assert.strictEqual(this.value, "foo");
   });
 });

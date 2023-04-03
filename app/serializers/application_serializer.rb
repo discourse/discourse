@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'distributed_cache'
+require "distributed_cache"
 
 class ApplicationSerializer < ActiveModel::Serializer
   embed :ids, include: true
@@ -19,7 +19,9 @@ class ApplicationSerializer < ActiveModel::Serializer
     when String
       fragment_cache.delete(name_or_regexp)
     when Regexp
-      fragment_cache.hash.keys
+      fragment_cache
+        .hash
+        .keys
         .select { |k| k =~ name_or_regexp }
         .each { |k| fragment_cache.delete(k) }
     end

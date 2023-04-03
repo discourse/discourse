@@ -26,12 +26,14 @@ module SuggestedTopicsMixin
     return if object.topic.topic_allowed_users.exists?(user_id: scope.user.id)
 
     if object.topic_allowed_group_ids.present?
-      Group.joins(:group_users)
+      Group
+        .joins(:group_users)
         .where(
           "group_users.group_id IN (?) AND group_users.user_id = ?",
-          object.topic_allowed_group_ids, scope.user.id
+          object.topic_allowed_group_ids,
+          scope.user.id,
         )
-        .pluck_first(:name)
+        .pick(:name)
     end
   end
 

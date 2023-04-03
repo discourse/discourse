@@ -22,7 +22,10 @@ tr_TR:
     chat_archive_destination_topic_status: "Kanal arşivi tamamlandıktan sonra hedef konunun olması gereken durum. Bu, yalnızca hedef konu mevcut bir konu değil, yeni bir konu olduğunda geçerlidir."
     default_emoji_reactions: "Sohbet mesajları için varsayılan emoji tepkileri. Hızlı tepki için en fazla 5 emoji ekleyin."
     direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
-    chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir."
+    chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarına bayrak eklemelerine izin verilir."
+    max_mentions_per_chat_message: "Bir kullanıcının bir sohbet mesajında kullanabileceği maksimum @name bildirimi sayısı."
+    chat_max_direct_message_users: "Kullanıcılar, yeni bir doğrudan mesaj oluştururken bu sayıdan daha fazla kullanıcı ekleyemez. Yalnızca kendisine mesaj gönderilmesine izin vermek için 0 olarak ayarlayın. Personel bu ayardan muaftır."
+    chat_allow_archiving_channels: "Personelin bir kanalı kapatırken mesajları bir konuya arşivlemesine izin verin."
     errors:
       chat_default_channel: "Varsayılan sohbet kanalı genel bir kanal olmalıdır."
       direct_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin doğrudan mesaj göndermesini istemiyorsanız personel grubunu seçin."
@@ -31,86 +34,82 @@ tr_TR:
     chat_channel_archive_complete:
       title: "Sohbet Kanalı Arşivlemesi Tamamlandı"
       subject_template: "Sohbet kanalı arşivlemesi başarıyla tamamlandı"
-      text_body_template: |
-        **\#%{channel_name}** sohbet kanalının arşivlenmesi başarıyla tamamlandı. Mesajlar [%{topic_title}](%{topic_url}) konusuna kopyalandı.
     chat_channel_archive_failed:
       title: "Sohbet Kanalı Arşivleme Başarısız"
       subject_template: "Sohbet kanalı arşivleme başarısız"
-      text_body_template: |
-        **\#%{channel_name}** sohbet kanalının arşivlenmesi başarısız oldu. %{messages_archived} mesaj arşivlendi. Kısmen arşivlenen mesajlar [%{topic_title}](%{topic_url}) konusuna kopyalandı. Yeniden denemek için %{channel_url} adresinden kanalı ziyaret edin.
+    chat_channel_archive_failed_no_topic:
+      title: "Sohbet Kanalı Arşivlenemedi"
+      subject_template: "Sohbet kanalı arşivlenemedi"
   chat:
     deleted_chat_username: silindi
     errors:
-      channel_exists_for_category: "Bu kategori ve ad için zaten bir kanal var"
-      channel_new_message_disallowed: "Kanal %{status}, yeni mesaj gönderilemiyor"
-      channel_modify_message_disallowed: "Kanal %{status}, mesaj düzenlenemez veya silinemez"
+      channel_exists_for_category: "Bu kategori ve ada sahip bir kanal zaten var"
       user_cannot_send_message: "Şu anda mesaj gönderemezsiniz."
       rate_limit_exceeded: "30 saniye içinde gönderilebilecek sohbet mesajı limiti aşıldı"
-      auto_silence_from_flags: "Kullanıcıyı susturmaya yetecek kadar yüksek puanla işaretlenmiş sohbet mesajı."
+      auto_silence_from_flags: "Kullanıcıyı susturmaya yetecek kadar yüksek puanla bayrak eklenen sohbet mesajı."
       channel_cannot_be_archived: "Kanal şu anda arşivlenemez, arşivlemek için kapalı veya açık olmalı."
       duplicate_message: "Çok yakın zamanda aynı mesajı gönderdiniz."
       delete_channel_failed: "Kanal silinemedi, lütfen tekrar deneyin."
-      minimum_length_not_met: "Mesaj çok kısa, en az %{minimum} karakter içermeli."
+      message_too_long:
+        one: "Mesaj çok uzun, mesajlar maksimum %{count} karakter olmalı."
+        other: "Mesaj çok uzun, mesajlar maksimum %{count} karakter olmalı."
       max_reactions_limit_reached: "Bu mesajda yeni tepkilere izin verilmiyor."
-      message_move_invalid_channel: "Kaynak ve hedef kanal genel kanallar olmalıdır."
+      message_move_invalid_channel: "Kaynak ve hedef kanal herkese açık kanallar olmalıdır."
       message_move_no_messages_found: "Sağlanan mesaj kimlikleriyle mesaj bulunamadı."
       cant_update_direct_message_channel: "Ad ve açıklama gibi doğrudan mesaj kanalı özellikleri güncellenemiyor."
-      not_accepting_dms: "Üzgünüz, %{username} şu anda ileti kabul etmiyor."
+      not_accepting_dms: "Üzgünüz, %{username} şu anda mesaj kabul etmiyor."
       actor_ignoring_target_user: "%{username} adlı kullanıcıyı yok sayıyorsunuz, bu nedenle ona mesaj gönderemezsiniz."
       actor_muting_target_user: "%{username} adlı kullanıcıyı sessize aldınız, bu nedenle ona mesaj gönderemezsiniz."
       actor_disallowed_dms: "Kullanıcıların size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla yeni doğrudan mesaj oluşturamazsınız."
       actor_preventing_target_user_from_dm: "%{username} adlı kullanıcının size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla ona yeni doğrudan mesaj oluşturamazsınız."
       user_cannot_send_direct_messages: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
+      over_chat_max_direct_message_users_allow_self: "Yalnızca kendinizle bir doğrudan mesaj oluşturabilirsiniz."
     reviewables:
-      message_already_handled: "Teşekkürler, ancak bu mesajı daha önce inceledik ve yeniden işaretlenmesi gerekmediğine karar verdik."
+      message_already_handled: "Teşekkürler, ancak bu mesajı daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
       actions:
         agree:
-          title: "Kabul..."
+          title: "Kabul et..."
         agree_and_keep_message:
-          title: "Mesajı sakla"
-          description: "İşaretle aynı fikirde ol ve mesajı değiştirmemiş tut."
+          title: "Mesajı Sakla"
+          description: "Bayrağı kabul edin ve mesajı değiştirmeyin."
         agree_and_keep_deleted:
           title: "Mesajı Silinmiş Tut"
-          description: "İşaretle aynı fikirde ol ve mesajı silinmiş tut."
+          description: "Bayrağı kabul edin ve mesajı silinmiş olarak bırakın."
         agree_and_suspend:
           title: "Kullanıcıyı Askıya Al"
-          description: "Bayrakla işaretle ve kullanıcıyı askıya al."
+          description: "Bayrağı kabul edin ve kullanıcıyı askıya alın."
         agree_and_silence:
-          title: "Kullanıcıyı Sessize Al"
-          description: "Bayrakla işaretle ve kullanıcıyı sessize al."
+          title: "Kullanıcıyı Sustur"
+          description: "Bayrağı kabul edin ve kullanıcıyı susturun."
         agree_and_restore:
           title: "Mesajı Geri Yükle"
-          description: "Kullanıcıların görebilmesi için mesajı geri yükle."
+          description: "Kullanıcıların görebilmesi için mesajı geri yükleyin."
         agree_and_delete:
           title: "Mesajı sil"
-          description: "Kullanıcıların görememesi için mesajı sil."
+          description: "Kullanıcıların görememesi için mesajı silin."
         delete_and_agree:
           title: "Mesajı sil"
         disagree_and_restore:
-          title: "Kabul Etme ve Mesajı Geri Yükle"
+          title: "Katılma ve Mesajı Geri Yükle"
           description: "Tüm kullanıcıların görebilmesi için mesajı geri yükle."
         disagree:
-          title: "Onaylama"
+          title: "Katılma"
         ignore:
           title: "Yok say"
       direct_messages:
         transcript_title: "%{channel_name} adlı kanaldaki önceki mesajların dökümü"
         transcript_body: "Size daha fazla bağlam sağlamak için bu konuşmadaki önceki mesajların bir dökümünü ekledik (en fazla on):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Salt Okunur"
-        archived: "Arşivlendi"
-        closed: "Kapanmış"
-        open: "Başlat"
       archive:
         first_post_raw: "Bu konu, [%{channel_name}](%{channel_url}) sohbet kanalının bir arşividir."
       messages_moved:
         one: "@%{acting_username} bir mesajı [%{channel_name}](%{first_moved_message_url}) kanalına taşıdı."
         other: "@%{acting_username} , %{count} mesajı [%{channel_name}](%{first_moved_message_url}) kanalına taşıdı."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} ve diğer %{leftover}"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} ve %{count} kişi daha"
+          other: "%{comma_separated_usernames} ve %{count} kişi daha"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"
@@ -126,14 +125,16 @@ tr_TR:
         one: "%{count} üye"
         other: "%{count} üye"
       and_x_others:
-        one: "ve %{count} daha"
-        other: "ve %{count} daha"
+        one: "ve %{count} üye daha"
+        other: "ve %{count} üye daha"
   discourse_push_notifications:
     popup:
       chat_mention:
-        direct: '%{username} sizden bahsetti "%{channel}"'
+        direct: '%{username} "%{channel}" adlı kanalda sizden bahsetti'
+        other_type: '%{username} "%{channel}" adlı kanalda şundan bahsetti: %{identifier}'
       direct_message_chat_mention:
         direct: "%{username} kişisel sohbette sizden bahsetti"
+        other_type: "%{username} kişisel sohbette %{identifier} adlı kullanıcıdan bahsetti"
       new_chat_message: '%{username} "%{channel}" adlı kanalda bir mesaj gönderdi'
       new_direct_chat_message: "%{username} kişisel sohbette bir mesaj gönderdi"
   discourse_automation:
@@ -160,10 +161,17 @@ tr_TR:
         other: "Yeni sohbet mesajlarınız var"
       from: "%{site_name}"
       subject:
-        direct_message:
-          one: "[%{email_prefix}] %{message_title} adlı kullanıcıdan yeni mesaj"
-          other: "[%{email_prefix}] %{message_title} ve %{others} kişiden daha yeni mesajlar"
-        others: "%{count} daha"
+        direct_message_from_1: "[%{email_prefix}] %{username} adlı kullanıcıdan yeni mesaj"
+        direct_message_from_2: "[%{email_prefix}] %{username1} ve %{username2} adlı kullanıcılardan yeni mesaj"
+        direct_message_from_more:
+          one: "[%{email_prefix}] %{username} ve %{count} kullanıcıdan daha yeni mesaj"
+          other: "[%{email_prefix}] %{username} ve %{count} kullanıcıdan daha yeni mesaj"
+        chat_channel_1: "[%{email_prefix}] %{channel} başlıklı mesajda yeni mesaj"
+        chat_channel_2: "[%{email_prefix}] %{channel1} ve %{channel2} adlı kanallarda yeni mesaj"
+        chat_channel_more:
+          one: "[%{email_prefix}] %{channel} ve %{count} kanalda daha yeni mesaj"
+          other: "[%{email_prefix}] %{channel} ve %{count} kanaldan daha yeni mesaj"
+        chat_channel_and_direct_message: "[%{email_prefix}] %{channel} adlı kanalda ve %{username} adlı kullanıcıdan yeni mesaj"
       unsubscribe: "Bu sohbet özeti siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin veya abonelikten çıkmak için %{unsubscribe_link} bağlantısını kullanın."
       unsubscribe_no_link: "Bu sohbet özeti, siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin."
       view_messages:
@@ -172,7 +180,7 @@ tr_TR:
       view_more:
         one: "%{count} mesaj daha görüntüle"
         other: "%{count} mesaj daha görüntüle"
-      your_chat_settings: "sohbet e-posta sıklığı tercihi"
+      your_chat_settings: "sohbet e-postası sıklığı tercihi"
   unsubscribe:
     chat_summary:
       select_title: "Özet sohbet e-posta sıklığını şu şekilde ayarla:"

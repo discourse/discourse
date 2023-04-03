@@ -34,7 +34,7 @@ acceptance("Topic Notifications button", function (needs) {
     );
 
     const timelineNotificationOptions = selectKit(
-      ".topic-timeline .widget-component-connector .topic-notifications-options"
+      ".topic-timeline .topic-notifications-options"
     );
 
     assert.strictEqual(

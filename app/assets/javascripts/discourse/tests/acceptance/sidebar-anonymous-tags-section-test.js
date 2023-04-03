@@ -9,8 +9,7 @@ import Site from "discourse/models/site";
 
 acceptance("Sidebar - Anonymous Tags Section", function (needs) {
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
     suppress_uncategorized_badge: false,
     tagging_enabled: true,
   });
@@ -23,7 +22,7 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section-tags .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper"
     );
 
     assert.strictEqual(categories.length, 4);
@@ -44,7 +43,7 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section-tags .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper"
     );
     assert.strictEqual(categories.length, 3);
     assert.strictEqual(categories[0].textContent.trim(), "random");
@@ -61,7 +60,10 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
 
     await visit("/");
 
-    assert.ok(!exists(".sidebar-section-tags"), "section is not visible");
+    assert.ok(
+      !exists(".sidebar-section[data-section-name='tags']"),
+      "section is not visible"
+    );
   });
 
   test("tag section is hidden when anonymous has no visible top tags and site has not default sidebar tags configured", async function (assert) {
@@ -74,6 +76,9 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
 
     await visit("/");
 
-    assert.ok(!exists(".sidebar-section-tags"), "section is not visible");
+    assert.ok(
+      !exists(".sidebar-section[data-section-name='tags']"),
+      "section is not visible"
+    );
   });
 });

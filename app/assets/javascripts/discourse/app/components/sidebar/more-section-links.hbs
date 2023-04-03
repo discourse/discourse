@@ -2,8 +2,11 @@
   <Sidebar::MoreSectionLink @sectionLink={{this.activeSectionLink}} />
 {{/if}}
 
-<details class="sidebar-more-section-links-details" {{on "toggle" this.toggleSectionLinks}}>
-  <summary class="sidebar-more-section-links-details-summary sidebar-row" >
+<details
+  class="sidebar-more-section-links-details"
+  {{on "toggle" this.toggleSectionLinks}}
+>
+  <summary class="sidebar-more-section-links-details-summary sidebar-row">
     <span class="sidebar-more-section-links-icon-wrapper">
       {{d-icon "ellipsis-v"}}
     </span>
@@ -12,9 +15,11 @@
   </summary>
 
   {{#if this.shouldDisplaySectionLinks}}
-    <div class="sidebar-more-section-links-details-content-wrapper"
+    <div
+      class="sidebar-more-section-links-details-content-wrapper"
       {{did-insert this.registerClickListener}}
-      {{will-destroy this.unregisterClickListener}} >
+      {{will-destroy this.unregisterClickListener}}
+    >
 
       <div class="sidebar-more-section-links-details-content">
         <div class="sidebar-more-section-links-details-content-main">

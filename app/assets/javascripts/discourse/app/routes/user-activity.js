@@ -1,4 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   model() {
@@ -18,5 +19,9 @@ export default DiscourseRoute.extend({
 
   setupController(controller, user) {
     this.controllerFor("user-activity").set("model", user);
+  },
+
+  titleToken() {
+    return I18n.t("user.activity_stream");
   },
 });

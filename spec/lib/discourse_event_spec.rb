@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseEvent do
-
   describe "#events" do
     it "defaults to {}" do
       begin
@@ -20,86 +19,74 @@ RSpec.describe DiscourseEvent do
     end
   end
 
-  context 'when calling events' do
+  context "when calling events" do
+    let(:harvey) { OpenStruct.new(name: "Harvey Dent", job: "District Attorney") }
 
-    let(:harvey) {
-      OpenStruct.new(
-        name: 'Harvey Dent',
-        job: 'District Attorney'
-      )
-    }
+    let(:event_handler) { Proc.new { |user| user.name = "Two Face" } }
 
-    let(:event_handler) do
-      Proc.new { |user| user.name = 'Two Face' }
-    end
+    before { DiscourseEvent.on(:acid_face, &event_handler) }
 
-    before do
-      DiscourseEvent.on(:acid_face, &event_handler)
-    end
+    after { DiscourseEvent.off(:acid_face, &event_handler) }
 
-    after do
-      DiscourseEvent.off(:acid_face, &event_handler)
-    end
-
-    context 'when event does not exist' do
-
+    context "when event does not exist" do
       it "does not raise an error" do
         DiscourseEvent.trigger(:missing_event)
       end
-
     end
 
-    context 'when single event exists' do
-
+    context "when single event exists" do
       it "doesn't raise an error" do
         DiscourseEvent.trigger(:acid_face, harvey)
       end
 
       it "changes the name" do
         DiscourseEvent.trigger(:acid_face, harvey)
-        expect(harvey.name).to eq('Two Face')
+        expect(harvey.name).to eq("Two Face")
       end
-
     end
 
-    context 'when multiple events exist' do
-
-      let(:event_handler_2) do
-        Proc.new { |user| user.job = 'Supervillain' }
-      end
+    context "when multiple events exist" do
+      let(:event_handler_2) { Proc.new { |user| user.job = "Supervillain" } }
 
       before do
         DiscourseEvent.on(:acid_face, &event_handler_2)
         DiscourseEvent.trigger(:acid_face, harvey)
       end
 
-      after do
-        DiscourseEvent.off(:acid_face, &event_handler_2)
-      end
+      after { DiscourseEvent.off(:acid_face, &event_handler_2) }
 
-      it 'triggers both events' do
-        expect(harvey.job).to eq('Supervillain')
-        expect(harvey.name).to eq('Two Face')
+      it "triggers both events" do
+        expect(harvey.job).to eq("Supervillain")
+        expect(harvey.name).to eq("Two Face")
       end
     end
 
-    describe '#all_off' do
+    describe "#all_off" do
+      let(:event_handler_2) { Proc.new { |user| user.job = "Supervillain" } }
 
-      let(:event_handler_2) do
-        Proc.new { |user| user.job = 'Supervillain' }
-      end
+      before { DiscourseEvent.on(:acid_face, &event_handler_2) }
 
-      before do
-        DiscourseEvent.on(:acid_face, &event_handler_2)
-      end
-
-      it 'removes all handlers with a key' do
-        harvey.job = 'gardening'
+      it "removes all handlers with a key" do
+        harvey.job = "gardening"
         DiscourseEvent.all_off(:acid_face)
         DiscourseEvent.trigger(:acid_face, harvey) # Doesn't change anything
-        expect(harvey.job).to eq('gardening')
+        expect(harvey.job).to eq("gardening")
       end
+    end
+  end
 
+  it "allows using kwargs" do
+    begin
+      handler =
+        Proc.new do |name:, message:|
+          expect(name).to eq("Supervillain")
+          expect(message).to eq("Two Face")
+        end
+
+      DiscourseEvent.on(:acid_face, &handler)
+      DiscourseEvent.trigger(:acid_face, name: "Supervillain", message: "Two Face")
+    ensure
+      DiscourseEvent.off(:acid_face, &handler)
     end
   end
 end

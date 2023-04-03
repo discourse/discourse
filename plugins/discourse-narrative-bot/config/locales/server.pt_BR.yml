@@ -45,9 +45,6 @@ pt_BR:
       trigger: "rolar"
       invalid: |-
         Sinto muito, é matematicamente impossível rolar essa combinação de dados. :confounded:
-      not_enough_dice:
-        one: "Eu só tenho %{count} dado. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), eu sei!"
-        other: "Eu só tenho %{count} dados. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), eu sei!"
       out_of_range: |-
         Você sabia que [a quantidade máxima de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para um dado matematicamente justo é 120?
       results: |-
@@ -376,8 +373,18 @@ pt_BR:
           Você sabia que pode se referir a categorias e etiquetas em sua postagem? Por exemplo, viu a categoria %{category}?
 
           Digite "#" no meio de uma frase e selecione qualquer categoria ou etiqueta.
+        instructions_experimental: |-
+          Você sabia que pode se referir a categorias e etiquetas na sua postagem? Por exemplo, você viu a categoria %{category}?
+
+          Digite "#" dentro de uma frase e selecione qualquer categoria ou etiqueta.
         not_found: |-
           Hmm, eu não vejo uma categoria em nenhum lugar. Observe que "#' não pode ser o primeiro caractere. Você pode copiar isso na sua próxima resposta?
+
+          ```text
+          Eu posso criar um link de categoria via #
+          ```
+        not_found_experimental: |-
+          Hmm, não vejo uma categoria em lugar algum. Você poderia copiar isto na sua próxima resposta?
 
           ```text
           Eu posso criar um link de categoria via #

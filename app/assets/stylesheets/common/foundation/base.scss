@@ -1,3 +1,17 @@
+// These CSS custom properties are added here instead of in variables.scss
+// because variables.scss is injected into every theme CSS file
+// which causes problems when overriding custom properties in themes
+
+:root {
+  --topic-body-width: #{$topic-body-width};
+  --topic-body-width-padding: #{$topic-body-width-padding};
+  --topic-avatar-width: #{$topic-avatar-width};
+  --d-border-radius: initial;
+  --d-nav-pill-border-radius: var(--d-border-radius);
+  --d-button-border-radius: var(--d-border-radius);
+  --d-input-border-radius: var(--d-border-radius);
+}
+
 // --------------------------------------------------
 // Base styles for HTML elements
 // --------------------------------------------------

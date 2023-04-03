@@ -64,7 +64,7 @@ module("Integration | Component | user-menu", function (hooks) {
   });
 
   test("likes tab is hidden if current user's like notifications frequency is 'never'", async function (assert) {
-    this.currentUser.set("likes_notifications_disabled", true);
+    this.currentUser.set("user_option.likes_notifications_disabled", true);
     this.currentUser.set("can_send_private_messages", true);
     await render(template);
     assert.ok(!exists("#user-menu-button-likes"));
@@ -222,8 +222,7 @@ module("Integration | Component | user-menu", function (hooks) {
           },
         ];
       } else if (
-        queryParams.filter_by_types ===
-        "mentioned,posted,quoted,replied,watching_first_post"
+        queryParams.filter_by_types === "mentioned,posted,quoted,replied"
       ) {
         data = [
           {
@@ -281,8 +280,8 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(exists("#quick-access-replies.quick-access-panel"));
     assert.strictEqual(
       queryParams.filter_by_types,
-      "mentioned,posted,quoted,replied,watching_first_post",
-      "request params has filter_by_types set to `mentioned`, `posted`, `quoted`, `replied` and `watching_first_post`"
+      "mentioned,posted,quoted,replied",
+      "request params has filter_by_types set to `mentioned`, `posted`, `quoted` and `replied`"
     );
     assert.strictEqual(queryParams.silent, "true");
     activeTabs = queryAll(".top-tabs .btn.active");

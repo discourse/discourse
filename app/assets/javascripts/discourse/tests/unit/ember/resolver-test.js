@@ -1,8 +1,8 @@
 import { buildResolver, setResolverOption } from "discourse-common/resolver";
 import { module, test } from "qunit";
-import Ember from "ember";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
-let originalTemplates;
 let resolver;
 
 function lookupTemplate(assert, name, expectedTemplate, message) {
@@ -11,57 +11,71 @@ function lookupTemplate(assert, name, expectedTemplate, message) {
   assert.strictEqual(result, expectedTemplate, message);
 }
 
-function setTemplates(lookupTemplateStrings) {
-  lookupTemplateStrings.forEach(function (lookupTemplateString) {
-    Ember.TEMPLATES[lookupTemplateString] = lookupTemplateString;
-  });
+function setTemplates(templateModuleNames) {
+  for (const name of templateModuleNames) {
+    registerTemporaryModule(name, name);
+  }
 }
 
 const DiscourseResolver = buildResolver("discourse");
 
 module("Unit | Ember | resolver", function (hooks) {
   hooks.beforeEach(function () {
-    originalTemplates = Ember.TEMPLATES;
-    Ember.TEMPLATES = {};
-
+    DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
     resolver = DiscourseResolver.create({
       namespace: { modulePrefix: "discourse" },
     });
   });
 
-  hooks.afterEach(function () {
-    Ember.TEMPLATES = originalTemplates;
-  });
-
   test("finds templates in top level dir", function (assert) {
-    setTemplates(["foobar", "fooBar", "foo_bar", "foo.bar"]);
+    setTemplates([
+      "discourse/templates/foobar",
+      "discourse/templates/fooBar",
+      "discourse/templates/foo_bar",
+      "discourse/templates/foo.bar",
+    ]);
 
     // Default unmodified behavior
-    lookupTemplate(assert, "template:foobar", "foobar", "by lowcased name");
+    lookupTemplate(
+      assert,
+      "template:foobar",
+      "discourse/templates/foobar",
+      "by lowcased name"
+    );
 
     // Default unmodified behavior
-    lookupTemplate(assert, "template:fooBar", "fooBar", "by camel cased name");
+    lookupTemplate(
+      assert,
+      "template:fooBar",
+      "discourse/templates/fooBar",
+      "by camel cased name"
+    );
 
     // Default unmodified behavior
     lookupTemplate(
       assert,
       "template:foo_bar",
-      "foo_bar",
+      "discourse/templates/foo_bar",
       "by underscored name"
     );
 
     // Default unmodified behavior
-    lookupTemplate(assert, "template:foo.bar", "foo.bar", "by dotted name");
+    lookupTemplate(
+      assert,
+      "template:foo.bar",
+      "discourse/templates/foo.bar",
+      "by dotted name"
+    );
   });
 
   test("finds templates in first-level subdir", function (assert) {
-    setTemplates(["foo/bar_baz"]);
+    setTemplates(["discourse/templates/foo/bar_baz"]);
 
     // Default unmodified behavior
     lookupTemplate(
       assert,
       "template:foo/bar_baz",
-      "foo/bar_baz",
+      "discourse/templates/foo/bar_baz",
       "with subdir defined by slash"
     );
 
@@ -69,7 +83,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo.bar_baz",
-      "foo/bar_baz",
+      "discourse/templates/foo/bar_baz",
       "with subdir defined by dot"
     );
 
@@ -77,7 +91,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo-bar_baz",
-      "foo/bar_baz",
+      "discourse/templates/foo/bar_baz",
       "with subdir defined by dash"
     );
 
@@ -85,7 +99,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:fooBarBaz",
-      "foo/bar_baz",
+      "discourse/templates/foo/bar_baz",
       "with subdir defined by first camel case and the rest of camel cases converted to underscores"
     );
 
@@ -93,19 +107,25 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo_bar_baz",
-      "foo/bar_baz",
+      "discourse/templates/foo/bar_baz",
       "with subdir defined by first underscore"
     );
   });
 
   test("resolves precedence between overlapping top level dir and first level subdir templates", function (assert) {
-    setTemplates(["fooBar", "foo_bar", "foo.bar", "foo/bar", "baz/qux"]);
+    setTemplates([
+      "discourse/templates/fooBar",
+      "discourse/templates/foo_bar",
+      "discourse/templates/foo.bar",
+      "discourse/templates/foo/bar",
+      "discourse/templates/baz/qux",
+    ]);
 
     // Directories are prioritized when dotted
     lookupTemplate(
       assert,
       "template:foo.bar",
-      "foo/bar",
+      "discourse/templates/foo/bar",
       "preferring first level subdir for dotted name"
     );
 
@@ -113,7 +133,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo-bar",
-      "foo/bar",
+      "discourse/templates/foo/bar",
       "preferring first level subdir for dotted name"
     );
 
@@ -121,7 +141,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:fooBar",
-      "fooBar",
+      "discourse/templates/fooBar",
       "preferring top level dir for camel cased name"
     );
 
@@ -129,7 +149,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo_bar",
-      "foo_bar",
+      "discourse/templates/foo_bar",
       "preferring top level dir for underscored name"
     );
 
@@ -137,19 +157,19 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:baz-qux",
-      "baz/qux",
+      "discourse/templates/baz/qux",
       "fallback subdir for dashed name"
     );
   });
 
   test("finds templates in subdir deeper than one level", function (assert) {
-    setTemplates(["foo/bar/baz/qux"]);
+    setTemplates(["discourse/templates/foo/bar/baz/qux"]);
 
     // Default unmodified
     lookupTemplate(
       assert,
       "template:foo/bar/baz/qux",
-      "foo/bar/baz/qux",
+      "discourse/templates/foo/bar/baz/qux",
       "for subdirs defined by slashes"
     );
 
@@ -157,7 +177,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo.bar.baz.qux",
-      "foo/bar/baz/qux",
+      "discourse/templates/foo/bar/baz/qux",
       "for subdirs defined by dots"
     );
 
@@ -165,7 +185,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo/bar/bazQux",
-      "foo/bar/baz/qux",
+      "discourse/templates/foo/bar/baz/qux",
       "for subdirs defined by slashes plus one camel case"
     );
 
@@ -173,7 +193,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo/bar/baz_qux",
-      "foo/bar/baz/qux",
+      "discourse/templates/foo/bar/baz/qux",
       "for subdirs defined by slashes plus one underscore"
     );
 
@@ -211,7 +231,12 @@ module("Unit | Ember | resolver", function (hooks) {
   });
 
   test("resolves mobile templates to 'mobile/' namespace", function (assert) {
-    setTemplates(["mobile/foo", "bar", "mobile/bar", "baz"]);
+    setTemplates([
+      "discourse/templates/mobile/foo",
+      "discourse/templates/bar",
+      "discourse/templates/mobile/bar",
+      "discourse/templates/baz",
+    ]);
 
     setResolverOption("mobileView", true);
 
@@ -219,7 +244,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo",
-      "mobile/foo",
+      "discourse/templates/mobile/foo",
       "finding mobile version even if normal one is not present"
     );
 
@@ -227,7 +252,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:bar",
-      "mobile/bar",
+      "discourse/templates/mobile/bar",
       "preferring mobile version when both mobile and normal versions are present"
     );
 
@@ -235,71 +260,87 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:baz",
-      "baz",
+      "discourse/templates/baz",
       "falling back to a normal version when mobile version is not present"
     );
   });
 
-  test("resolves plugin templates to 'javascripts/' namespace", function (assert) {
-    setTemplates(["javascripts/foo", "bar", "javascripts/bar", "baz"]);
+  test("resolves templates to plugin and theme namespaces", function (assert) {
+    setTemplates([
+      "discourse/plugins/my-plugin/discourse/templates/foo",
+      "discourse/templates/bar",
+      "discourse/plugins/my-plugin/discourse/templates/bar",
+      "discourse/templates/baz",
+      "discourse/plugins/my-plugin/discourse/templates/baz",
+      "discourse/theme-12/discourse/templates/baz",
+      "discourse/templates/qux",
+    ]);
 
-    // Default with javascripts/ added
+    // Defined in plugin only
     lookupTemplate(
       assert,
       "template:foo",
-      "javascripts/foo",
+      "discourse/plugins/my-plugin/discourse/templates/foo",
       "finding plugin version even if normal one is not present"
     );
 
-    // Default with javascripts/ added, takes precedence
+    // Defined in core and plugin
     lookupTemplate(
       assert,
       "template:bar",
-      "javascripts/bar",
-      "preferring plugin version when both versions are present"
+      "discourse/plugins/my-plugin/discourse/templates/bar",
+      "prefers plugin version over core"
     );
 
-    // Default when javascripts version not present
+    // Defined in core and plugin and theme
     lookupTemplate(
       assert,
       "template:baz",
-      "baz",
-      "falling back to a normal version when plugin version is not present"
+      "discourse/theme-12/discourse/templates/baz",
+      "prefers theme version over plugin and core"
+    );
+
+    // Defined in core only
+    lookupTemplate(
+      assert,
+      "template:qux",
+      "discourse/templates/qux",
+      "uses core if there are no theme/plugin definitions"
     );
   });
 
-  test("resolves plugin mobile templates to 'javascripts/mobile/' namespace", function (assert) {
+  test("resolves plugin mobile templates", function (assert) {
     setTemplates([
-      "javascripts/mobile/foo",
-      "javascripts/mobile/bar",
-      "javascripts/bar",
-      "javascripts/mobile/baz",
-      "mobile/baz",
+      "discourse/plugins/my-plugin/discourse/templates/mobile/foo",
+      "discourse/plugins/my-plugin/discourse/templates/mobile/bar",
+      "discourse/plugins/my-plugin/discourse/templates/bar",
+      "discourse/plugins/my-plugin/discourse/templates/mobile/baz",
+      "discourse/templates/mobile/baz",
     ]);
 
     setResolverOption("mobileView", true);
 
-    // Default with javascripts/mobile/ added
+    // Default with plugin template override
     lookupTemplate(
       assert,
       "template:foo",
-      "javascripts/mobile/foo",
+      "discourse/plugins/my-plugin/discourse/templates/mobile/foo",
       "finding plugin version even if normal one is not present"
     );
 
-    // Default with javascripts/mobile added, takes precedence over non-mobile
+    // Default with plugin mobile added, takes precedence over non-mobile
     lookupTemplate(
       assert,
       "template:bar",
-      "javascripts/mobile/bar",
+      "discourse/plugins/my-plugin/discourse/templates/mobile/bar",
       "preferring plugin mobile version when both non-mobile plugin version is also present"
     );
 
-    // Default with javascripts/mobile when non-plugin mobile version is present
+    // Default with when non-plugin mobile version is present
     lookupTemplate(
       assert,
       "template:baz",
-      "javascripts/mobile/baz",
+      "discourse/plugins/my-plugin/discourse/templates/mobile/baz",
       "preferring plugin mobile version over non-plugin mobile version"
     );
   });
@@ -307,13 +348,13 @@ module("Unit | Ember | resolver", function (hooks) {
   test("resolves templates with 'admin' prefix", function (assert) {
     setTemplates([
       "admin/templates/foo",
-      "adminBar",
-      "admin_bar",
-      "admin.bar",
+      "discourse/templates/adminBar",
+      "discourse/templates/admin_bar",
+      "discourse/templates/admin.bar",
       "admin/templates/bar",
       "admin/templates/dashboard_general",
-      "admin-baz-qux",
-      "javascripts/admin/plugin-template",
+      "discourse/templates/admin-baz-qux",
+      "discourse/plugins/my-plugin/discourse/templates/admin/plugin-template",
       "admin/templates/components/my-admin-component",
     ]);
 
@@ -353,7 +394,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:adminBar",
-      "adminBar",
+      "discourse/templates/adminBar",
       "but not when template with the exact camel cased name exists"
     );
 
@@ -361,7 +402,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:admin_bar",
-      "admin_bar",
+      "discourse/templates/admin_bar",
       "but not when template with the exact underscored name exists"
     );
 
@@ -369,7 +410,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:admin.bar",
-      "admin.bar",
+      "discourse/templates/admin.bar",
       "but not when template with the exact dotted name exists"
     );
 
@@ -383,14 +424,14 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:admin-baz/qux",
-      "admin-baz-qux",
+      "discourse/templates/admin-baz-qux",
       "also tries dasherized"
     );
 
     lookupTemplate(
       assert,
       "template:admin-plugin/template",
-      "javascripts/admin/plugin-template",
+      "discourse/plugins/my-plugin/discourse/templates/admin/plugin-template",
       "looks up templates in plugins"
     );
 
@@ -412,7 +453,7 @@ module("Unit | Ember | resolver", function (hooks) {
   test("resolves component templates with 'admin' prefix to 'admin/templates/' namespace", function (assert) {
     setTemplates([
       "admin/templates/components/foo",
-      "components/bar",
+      "discourse/templates/components/bar",
       "admin/templates/components/bar",
     ]);
 
@@ -428,7 +469,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:components/bar",
-      "components/bar",
+      "discourse/templates/components/bar",
       "uses standard match when both exist"
     );
   });
@@ -437,54 +478,59 @@ module("Unit | Ember | resolver", function (hooks) {
   // close to Ember's default behavior.
   // See https://guides.emberjs.com/release/routing/loading-and-error-substates/
   test("resolves loading templates", function (assert) {
-    setTemplates(["fooloading", "foo/loading", "foo_loading", "loading"]);
+    setTemplates([
+      "discourse/templates/fooloading",
+      "discourse/templates/foo/loading",
+      "discourse/templates/foo_loading",
+      "discourse/templates/loading",
+    ]);
 
     lookupTemplate(
       assert,
       "template:fooloading",
-      "fooloading",
+      "discourse/templates/fooloading",
       "exact match without separator"
     );
 
     lookupTemplate(
       assert,
       "template:foo/loading",
-      "foo/loading",
+      "discourse/templates/foo/loading",
       "exact match with slash"
     );
 
     lookupTemplate(
       assert,
       "template:foo_loading",
-      "foo_loading",
+      "discourse/templates/foo_loading",
       "exact match underscore"
     );
 
     lookupTemplate(
       assert,
       "template:barloading",
-      "loading",
+      "discourse/templates/loading",
       "fallback without separator"
     );
 
     lookupTemplate(
       assert,
       "template:bar/loading",
-      "loading",
+      "discourse/templates/loading",
       "fallback with slash"
     );
 
     lookupTemplate(
       assert,
       "template:bar.loading",
-      "loading",
+      "discourse/templates/loading",
       "fallback with dot"
     );
 
     lookupTemplate(
       assert,
       "template:bar_loading",
-      "loading",
+      "discourse/templates/loading",
       "fallback underscore"
     );
 
@@ -493,61 +539,66 @@ module("Unit | Ember | resolver", function (hooks) {
 
   test("resolves connector templates", function (assert) {
     setTemplates([
-      "javascripts/foo",
-      "javascripts/connectors/foo-bar/baz_qux",
-      "javascripts/connectors/foo-bar/camelCase",
+      "discourse/plugins/my-plugin/discourse/templates/foo",
+      "discourse/plugins/my-plugin/discourse/templates/connectors/foo-bar/baz_qux",
+      "discourse/plugins/my-plugin/discourse/templates/connectors/foo-bar/camelCase",
     ]);
 
     lookupTemplate(
       assert,
       "template:connectors/foo",
-      "javascripts/foo",
-      "looks up in javascripts/ namespace"
+      "discourse/plugins/my-plugin/discourse/templates/foo",
+      "looks up in plugin namespace"
     );
 
     lookupTemplate(
       assert,
       "template:connectors/components/foo",
-      "javascripts/foo",
+      "discourse/plugins/my-plugin/discourse/templates/foo",
       "removes components segment"
     );
 
     lookupTemplate(
       assert,
       "template:connectors/foo-bar/baz-qux",
-      "javascripts/connectors/foo-bar/baz_qux",
+      "discourse/plugins/my-plugin/discourse/templates/connectors/foo-bar/baz_qux",
       "underscores last segment"
     );
 
     lookupTemplate(
       assert,
       "template:connectors/foo-bar/camelCase",
-      "javascripts/connectors/foo-bar/camelCase",
+      "discourse/plugins/my-plugin/discourse/templates/connectors/foo-bar/camelCase",
       "handles camelcase file names"
     );
 
     lookupTemplate(
       assert,
       resolver.normalize("template:connectors/foo-bar/camelCase"),
-      "javascripts/connectors/foo-bar/camelCase",
+      "discourse/plugins/my-plugin/discourse/templates/connectors/foo-bar/camelCase",
       "handles camelcase file names when normalized"
     );
   });
 
   test("returns 'not_found' template when template name cannot be resolved", function (assert) {
-    setTemplates(["not_found"]);
+    setTemplates(["discourse/templates/not_found"]);
 
-    lookupTemplate(assert, "template:foo/bar/baz", "not_found", "");
+    lookupTemplate(
+      assert,
+      "template:foo/bar/baz",
+      "discourse/templates/not_found",
+      ""
+    );
   });
 
   test("resolves templates with 'wizard' prefix", function (assert) {
     setTemplates([
       "wizard/templates/foo",
-      "wizard_bar",
-      "wizard.bar",
+      "discourse/templates/wizard_bar",
+      "discourse/templates/wizard.bar",
       "wizard/templates/bar",
       "wizard/templates/dashboard_general",
-      "wizard-baz-qux",
+      "discourse/templates/wizard-baz-qux",
       "javascripts/wizard/plugin-template",
     ]);
 
@@ -579,7 +630,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:wizard_bar",
-      "wizard_bar",
+      "discourse/templates/wizard_bar",
       "but not when template with the exact underscored name exists"
     );
 
@@ -587,7 +638,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:wizard.bar",
-      "wizard.bar",
+      "discourse/templates/wizard.bar",
       "but not when template with the exact dotted name exists"
     );
 
@@ -601,7 +652,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:wizard-baz/qux",
-      "wizard-baz-qux",
+      "discourse/templates/wizard-baz-qux",
       "also tries dasherized"
     );
   });
@@ -609,7 +660,7 @@ module("Unit | Ember | resolver", function (hooks) {
   test("resolves component templates with 'wizard' prefix to 'wizard/templates/' namespace", function (assert) {
     setTemplates([
       "wizard/templates/components/foo",
-      "components/bar",
+      "discourse/templates/components/bar",
       "wizard/templates/components/bar",
     ]);
 
@@ -625,7 +676,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:components/bar",
-      "components/bar",
+      "discourse/templates/components/bar",
       "uses standard match when both exist"
     );
   });

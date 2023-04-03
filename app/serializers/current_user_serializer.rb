@@ -2,7 +2,7 @@
 
 class CurrentUserSerializer < BasicUserSerializer
   include UserTagNotificationsMixin
-  include UserSidebarTagsMixin
+  include UserSidebarMixin
 
   attributes :name,
              :unread_notifications,
@@ -17,10 +17,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :whisperer?,
              :title,
              :any_posts,
-             :enable_quoting,
-             :enable_defer,
-             :external_links_in_new_tab,
-             :dynamic_favicon,
              :trust_level,
              :can_send_private_email_messages,
              :can_send_private_messages,
@@ -28,8 +24,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_invite_to_forum,
              :no_password,
              :can_delete_account,
-             :should_be_redirected_to_top,
-             :redirected_to_top,
              :custom_fields,
              :muted_category_ids,
              :indirectly_muted_category_ids,
@@ -46,10 +40,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :is_anonymous,
              :reviewable_count,
              :unseen_reviewable_count,
+             :new_personal_messages_notifications_count,
              :read_faq?,
-             :automatically_unpin_topics,
-             :mailing_list_mode,
-             :treat_as_new_topic_start_date,
              :previous_visit_at,
              :seen_notification_id,
              :primary_group_id,
@@ -60,41 +52,50 @@ class CurrentUserSerializer < BasicUserSerializer
              :external_id,
              :associated_account_ids,
              :top_category_ids,
-             :hide_profile_and_presence,
              :groups,
              :second_factor_enabled,
              :ignored_users,
-             :title_count_mode,
-             :timezone,
              :featured_topic,
-             :skip_new_user_tips,
-             :seen_popups,
              :do_not_disturb_until,
              :has_topic_draft,
              :can_review,
              :draft_count,
-             :default_calendar,
-             :bookmark_auto_delete_preference,
              :pending_posts_count,
              :status,
-             :sidebar_category_ids,
-             :likes_notifications_disabled,
              :grouped_unread_notifications,
              :redesigned_user_menu_enabled,
-             :redesigned_user_page_nav_enabled,
-             :sidebar_list_destination
+             :display_sidebar_tags,
+             :sidebar_tags,
+             :sidebar_category_ids,
+             :sidebar_list_destination,
+             :sidebar_sections,
+             :custom_sidebar_sections_enabled,
+             :new_new_view_enabled?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
+  has_one :user_option, embed: :object, serializer: CurrentUserOptionSerializer
+
+  def sidebar_sections
+    SidebarSection
+      .includes(sidebar_section_links: :linkable)
+      .where("public OR user_id = ?", object.id)
+      .order("(public IS TRUE) DESC")
+      .map { |section| SidebarSectionSerializer.new(section, root: false) }
+  end
+
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
 
-    object.visible_groups.pluck(:id, :name, :has_messages).map do |id, name, has_messages|
-      group = { id: id, name: name, has_messages: has_messages }
-      group[:owner] = true if owned_group_ids.include?(id)
-      group
-    end
+    object
+      .visible_groups
+      .pluck(:id, :name, :has_messages)
+      .map do |id, name, has_messages|
+        group = { id: id, name: name, has_messages: has_messages }
+        group[:owner] = true if owned_group_ids.include?(id)
+        group
+      end
   end
 
   def link_posting_access
@@ -111,58 +112,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_create_group?
     scope.can_create_group?
-  end
-
-  def hide_profile_and_presence
-    object.user_option.hide_profile_and_presence
-  end
-
-  def enable_quoting
-    object.user_option.enable_quoting
-  end
-
-  def enable_defer
-    object.user_option.enable_defer
-  end
-
-  def external_links_in_new_tab
-    object.user_option.external_links_in_new_tab
-  end
-
-  def dynamic_favicon
-    object.user_option.dynamic_favicon
-  end
-
-  def title_count_mode
-    object.user_option.title_count_mode
-  end
-
-  def automatically_unpin_topics
-    object.user_option.automatically_unpin_topics
-  end
-
-  def should_be_redirected_to_top
-    object.user_option.should_be_redirected_to_top
-  end
-
-  def redirected_to_top
-    object.user_option.redirected_to_top
-  end
-
-  def timezone
-    object.user_option.timezone
-  end
-
-  def default_calendar
-    object.user_option.default_calendar
-  end
-
-  def bookmark_auto_delete_preference
-    object.user_option.bookmark_auto_delete_preference
-  end
-
-  def sidebar_list_destination
-    object.user_option.sidebar_list_none_selected? ? SiteSetting.default_sidebar_list_destination : object.user_option.sidebar_list_destination
   end
 
   def can_send_private_email_messages
@@ -201,14 +150,10 @@ class CurrentUserSerializer < BasicUserSerializer
     true
   end
 
-  def include_redirected_to_top?
-    object.user_option.redirected_to_top.present?
-  end
-
   def custom_fields
     fields = nil
     if SiteSetting.public_user_custom_fields.present?
-      fields = SiteSetting.public_user_custom_fields.split('|')
+      fields = SiteSetting.public_user_custom_fields.split("|")
     end
     DiscoursePluginRegistry.serialized_current_user_fields.each do |f|
       fields ||= []
@@ -251,15 +196,21 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def top_category_ids
-    omitted_notification_levels = [CategoryUser.notification_levels[:muted], CategoryUser.notification_levels[:regular]]
-    CategoryUser.where(user_id: object.id)
+    omitted_notification_levels = [
+      CategoryUser.notification_levels[:muted],
+      CategoryUser.notification_levels[:regular],
+    ]
+    CategoryUser
+      .where(user_id: object.id)
       .where.not(notification_level: omitted_notification_levels)
-      .order("
+      .order(
+        "
         CASE
           WHEN notification_level = 3 THEN 1
           WHEN notification_level = 2 THEN 2
           WHEN notification_level = 4 THEN 3
-        END")
+        END",
+      )
       .pluck(:category_id)
       .slice(0, SiteSetting.header_dropdown_category_count)
   end
@@ -274,26 +225,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_review
     scope.can_see_review_queue?
-  end
-
-  def mailing_list_mode
-    object.user_option.mailing_list_mode
-  end
-
-  def treat_as_new_topic_start_date
-    object.user_option.treat_as_new_topic_start_date
-  end
-
-  def skip_new_user_tips
-    object.user_option.skip_new_user_tips
-  end
-
-  def seen_popups
-    object.user_option.seen_popups
-  end
-
-  def include_seen_popups?
-    SiteSetting.enable_user_tips
   end
 
   def include_primary_group_id?
@@ -323,7 +254,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def second_factor_enabled
-    object.totp_enabled? || object.security_keys_enabled? || object.backup_codes_enabled?
+    object.totp_enabled? || object.security_keys_enabled?
   end
 
   def featured_topic
@@ -338,14 +269,6 @@ class CurrentUserSerializer < BasicUserSerializer
     Draft.has_topic_draft(object)
   end
 
-  def sidebar_category_ids
-    object.category_sidebar_section_links.pluck(:linkable_id) & scope.allowed_category_ids
-  end
-
-  def include_sidebar_category_ids?
-    SiteSetting.enable_experimental_sidebar_hamburger
-  end
-
   def include_status?
     SiteSetting.enable_user_status && object.has_status?
   end
@@ -354,12 +277,12 @@ class CurrentUserSerializer < BasicUserSerializer
     UserStatusSerializer.new(object.user_status, root: false)
   end
 
-  def redesigned_user_menu_enabled
-    object.redesigned_user_menu_enabled?
+  def unseen_reviewable_count
+    Reviewable.unseen_reviewable_count(object)
   end
 
-  def likes_notifications_disabled
-    object.user_option&.likes_notifications_disabled?
+  def redesigned_user_menu_enabled
+    object.redesigned_user_menu_enabled?
   end
 
   def include_all_unread_notifications_count?
@@ -374,9 +297,13 @@ class CurrentUserSerializer < BasicUserSerializer
     redesigned_user_menu_enabled
   end
 
-  def redesigned_user_page_nav_enabled
-    if SiteSetting.enable_new_user_profile_nav_groups.present?
-      object.in_any_groups?(SiteSetting.enable_new_user_profile_nav_groups_map)
+  def include_new_personal_messages_notifications_count?
+    redesigned_user_menu_enabled
+  end
+
+  def custom_sidebar_sections_enabled
+    if SiteSetting.enable_custom_sidebar_sections.present?
+      object.in_any_groups?(SiteSetting.enable_custom_sidebar_sections_map)
     else
       false
     end

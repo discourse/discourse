@@ -8,8 +8,14 @@ module DiscourseNarrativeBot
 
     def self.values
       @values ||= [
-        { name: 'discourse_narrative_bot.welcome_post_type.new_user_track', value: 'new_user_track' },
-        { name: 'discourse_narrative_bot.welcome_post_type.welcome_message', value: 'welcome_message' }
+        {
+          name: "discourse_narrative_bot.welcome_post_type.new_user_track",
+          value: "new_user_track",
+        },
+        {
+          name: "discourse_narrative_bot.welcome_post_type.welcome_message",
+          value: "welcome_message",
+        },
       ]
     end
 

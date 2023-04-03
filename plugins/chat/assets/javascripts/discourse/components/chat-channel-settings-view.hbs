@@ -1,0 +1,170 @@
+<div class="chat-form__section">
+  <div class="chat-form__field">
+    <label class="chat-form__label">
+      <span>{{i18n "chat.settings.mute"}}</span>
+      <ChatChannelSettingsSavedIndicator
+        @property={{this.channel.currentUserMembership.muted}}
+      />
+    </label>
+    <div class="chat-form__control">
+      <ComboBox
+        @content={{this.mutedOptions}}
+        @value={{this.channel.currentUserMembership.muted}}
+        @valueProperty="value"
+        @class="channel-settings-view__muted-selector"
+        @onChange={{action (fn this.saveNotificationSettings "muted")}}
+      />
+    </div>
+  </div>
+
+  {{#unless this.channel.currentUserMembership.muted}}
+    <div class="chat-form__field">
+      <label class="chat-form__label">
+        <span>{{i18n "chat.settings.desktop_notification_level"}}</span>
+        <ChatChannelSettingsSavedIndicator
+          @property={{this.channel.currentUserMembership.desktop_notification_level}}
+        />
+      </label>
+      <div class="chat-form__control">
+        <ComboBox
+          @content={{this.notificationLevels}}
+          @value={{this.channel.currentUserMembership.desktop_notification_level}}
+          @valueProperty="value"
+          @class="channel-settings-view__desktop-notification-level-selector"
+          @onChange={{action
+            (fn this.saveNotificationSettings "desktop_notification_level")
+          }}
+        />
+      </div>
+    </div>
+
+    <div class="chat-form__field">
+      <label class="chat-form__label">
+        <span>{{i18n "chat.settings.mobile_notification_level"}}</span>
+        <ChatChannelSettingsSavedIndicator
+          @property={{this.channel.currentUserMembership.mobile_notification_level}}
+        />
+      </label>
+      <div class="chat-form__control">
+        <ComboBox
+          @content={{this.notificationLevels}}
+          @value={{this.channel.currentUserMembership.mobile_notification_level}}
+          @valueProperty="value"
+          @class="channel-settings-view__mobile-notification-level-selector"
+          @onChange={{action
+            (fn this.saveNotificationSettings "mobile_notification_level")
+          }}
+        />
+      </div>
+    </div>
+  {{/unless}}
+  <div class="chat-retention-info">
+    {{d-icon "info-circle"}}
+    <ChatRetentionReminderText @channel={{this.channel}} />
+  </div>
+</div>
+
+{{#if this.adminSectionAvailable}}
+  <h3 class="chat-form__section-admin-title">
+    {{i18n "chat.settings.admin_title"}}
+  </h3>
+  {{#if this.autoJoinAvailable}}
+    <div class="chat-form__section">
+      <div class="chat-form__field">
+        <label class="chat-form__label">
+          <span>{{i18n "chat.settings.auto_join_users_label"}}</span>
+          <ChatChannelSettingsSavedIndicator
+            @property={{this.channel.auto_join_users}}
+          />
+        </label>
+        <ComboBox
+          @content={{this.autoAddUsersOptions}}
+          @value={{this.channel.auto_join_users}}
+          @valueProperty="value"
+          @class="channel-settings-view__auto-join-selector"
+          @onChange={{action
+            (fn this.onToggleAutoJoinUsers this.channel.auto_join_users)
+          }}
+        />
+        <p class="chat-form__description -autojoin">
+          {{i18n
+            "chat.settings.auto_join_users_info"
+            category=this.channel.chatable.name
+          }}
+        </p>
+      </div>
+    </div>
+  {{/if}}
+
+  {{#if this.togglingChannelWideMentionsAvailable}}
+    <div class="chat-form__section">
+      <div class="chat-form__field">
+        <label class="chat-form__label">
+          <span>{{i18n "chat.settings.channel_wide_mentions_label"}}</span>
+          <ChatChannelSettingsSavedIndicator
+            @property={{this.channel.allow_channel_wide_mentions}}
+          />
+        </label>
+        <ComboBox
+          @content={{this.channelWideMentionsOptions}}
+          @value={{this.channel.allow_channel_wide_mentions}}
+          @valueProperty="value"
+          @class="channel-settings-view__channel-wide-mentions-selector"
+          @onChange={{this.onToggleChannelWideMentions}}
+        />
+        <p class="chat-form__description -channel-wide-mentions">
+          {{i18n
+            "chat.settings.channel_wide_mentions_description"
+            channel=this.channel.title
+          }}
+        </p>
+      </div>
+    </div>
+  {{/if}}
+{{/if}}
+
+{{#unless this.channel.isDirectMessageChannel}}
+  <div class="chat-form__section">
+    {{#if (chat-guardian "can-edit-chat-channel")}}
+      {{#if (chat-guardian "can-archive-channel" this.channel)}}
+        <div class="chat-form__field">
+          <DButton
+            @action={{action "onArchiveChannel"}}
+            @label="chat.channel_settings.archive_channel"
+            @class="archive-btn chat-form__btn btn-flat"
+            @icon="archive"
+          />
+        </div>
+      {{/if}}
+
+      {{#if this.channel.isClosed}}
+        <div class="chat-form__field">
+          <DButton
+            @action={{action "onToggleChannelState"}}
+            @label="chat.channel_settings.open_channel"
+            @class="open-btn chat-form__btn btn-flat"
+            @icon="unlock"
+          />
+        </div>
+      {{else}}
+        <div class="chat-form__field">
+          <DButton
+            @action={{action "onToggleChannelState"}}
+            @label="chat.channel_settings.close_channel"
+            @class="close-btn chat-form__btn btn-flat"
+            @icon="lock"
+          />
+        </div>
+      {{/if}}
+
+      <div class="chat-form__field">
+        <DButton
+          @action={{action "onDeleteChannel"}}
+          @label="chat.channel_settings.delete_channel"
+          @class="delete-btn chat-form__btn btn-flat"
+          @icon="trash-alt"
+        />
+      </div>
+    {{/if}}
+  </div>
+{{/unless}}

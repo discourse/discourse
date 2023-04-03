@@ -11,6 +11,5 @@ SQL
     execute <<SQL
       DROP INDEX index_post_custom_fields_on_name_and_value
 SQL
-
   end
 end

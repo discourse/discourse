@@ -266,6 +266,19 @@ I18n.toHumanSize = function (number, options) {
   return number;
 };
 
+I18n.listJoiner = function (listOfStrings, delimiter) {
+  if (listOfStrings.length === 1) {
+    return listOfStrings[0];
+  }
+
+  if (listOfStrings.length === 2) {
+    return listOfStrings[0] + " " + delimiter + " " + listOfStrings[1];
+  }
+
+  var lastString = listOfStrings.pop();
+  return listOfStrings.concat(delimiter).join(`, `) + " " + lastString;
+};
+
 I18n.pluralizer = function (locale) {
   var pluralizer = this.pluralizationRules[locale];
   if (pluralizer !== undefined) return pluralizer;

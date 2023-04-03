@@ -2,20 +2,9 @@
 
 if GlobalSetting.skip_redis?
   Rails.application.reloader.to_prepare do
-    if Rails.logger.respond_to? :chained
-      Rails.logger = Rails.logger.chained.first
-    end
+    Rails.logger = Rails.logger.chained.first if Rails.logger.respond_to? :chained
   end
   return
-end
-
-if Rails.env.development? && RUBY_VERSION.match?(/^2\.5\.[23]/)
-  STDERR.puts "WARNING: Discourse development environment runs slower on Ruby 2.5.3 or below"
-  STDERR.puts "We recommend you upgrade to the latest Ruby 2.x for the optimal development performance"
-
-  # we have to used to older and slower version of the logger cause the new one exposes a Ruby bug in
-  # the Queue class which causes segmentation faults
-  Logster::Scheduler.disable
 end
 
 if Rails.env.development? && !Sidekiq.server? && ENV["RAILS_LOGS_STDOUT"] == "1"
@@ -39,9 +28,7 @@ if Rails.env.production?
     # https://github.com/rails/rails/blob/f2caed1e/actionpack/lib/action_dispatch/middleware/exception_wrapper.rb#L39-L42
     /^ActionController::RoutingError \(No route matches/,
     /^ActionDispatch::Http::MimeNegotiation::InvalidType/,
-
     /^PG::Error: ERROR:\s+duplicate key/,
-
     /^ActionController::UnknownFormat/,
     /^ActionController::UnknownHttpMethod/,
     /^AbstractController::ActionNotFound/,
@@ -51,29 +38,21 @@ if Rails.env.production?
     # Column:
     #
     /(?m).*?Line: (?:\D|0).*?Column: (?:\D|0)/,
-
     # suppress empty JS errors (covers MSIE 9, etc)
     /^(Syntax|Script) error.*Line: (0|1)\b/m,
-
     # CSRF errors are not providing enough data
     # suppress unconditionally for now
     /^Can't verify CSRF token authenticity.$/,
-
     # Yandex bot triggers this JS error a lot
     /^Uncaught ReferenceError: I18n is not defined/,
-
     # related to browser plugins somehow, we don't care
     /Error calling method on NPObject/,
-
     # 404s can be dealt with elsewhere
     /^ActiveRecord::RecordNotFound/,
-
     # bad asset requested, no need to log
     /^ActionController::BadRequest/,
-
     # we can't do anything about invalid parameters
     /Rack::QueryParser::InvalidParameterError/,
-
     # we handle this cleanly in the message bus middleware
     # no point logging to logster
     /RateLimiter::LimitExceeded.*/m,
@@ -98,33 +77,37 @@ store.redis_raw_connection = redis.without_namespace
 severities = [Logger::WARN, Logger::ERROR, Logger::FATAL, Logger::UNKNOWN]
 
 RailsMultisite::ConnectionManagement.each_connection do
-  error_rate_per_minute = SiteSetting.alert_admins_if_errors_per_minute rescue 0
+  error_rate_per_minute =
+    begin
+      SiteSetting.alert_admins_if_errors_per_minute
+    rescue StandardError
+      0
+    end
 
   if (error_rate_per_minute || 0) > 0
     store.register_rate_limit_per_minute(severities, error_rate_per_minute) do |rate|
-      MessageBus.publish("/logs_error_rate_exceeded",
-                          {
-                            rate: rate,
-                            duration: 'minute',
-                            publish_at: Time.current.to_i
-                          },
-                          group_ids: [Group::AUTO_GROUPS[:admins]]
-                        )
+      MessageBus.publish(
+        "/logs_error_rate_exceeded",
+        { rate: rate, duration: "minute", publish_at: Time.current.to_i },
+        group_ids: [Group::AUTO_GROUPS[:admins]],
+      )
     end
   end
 
-  error_rate_per_hour = SiteSetting.alert_admins_if_errors_per_hour rescue 0
+  error_rate_per_hour =
+    begin
+      SiteSetting.alert_admins_if_errors_per_hour
+    rescue StandardError
+      0
+    end
 
   if (error_rate_per_hour || 0) > 0
     store.register_rate_limit_per_hour(severities, error_rate_per_hour) do |rate|
-      MessageBus.publish("/logs_error_rate_exceeded",
-                          {
-                            rate: rate,
-                            duration: 'hour',
-                            publish_at: Time.current.to_i,
-                          },
-                          group_ids: [Group::AUTO_GROUPS[:admins]]
-                        )
+      MessageBus.publish(
+        "/logs_error_rate_exceeded",
+        { rate: rate, duration: "hour", publish_at: Time.current.to_i },
+        group_ids: [Group::AUTO_GROUPS[:admins]],
+      )
     end
   end
 end
@@ -137,13 +120,13 @@ if Rails.configuration.multisite
 end
 
 Logster.config.project_directories = [
-  { path: Rails.root.to_s, url: "https://github.com/discourse/discourse", main_app: true }
+  { path: Rails.root.to_s, url: "https://github.com/discourse/discourse", main_app: true },
 ]
 Discourse.plugins.each do |plugin|
   next if !plugin.metadata.url
 
   Logster.config.project_directories << {
     path: "#{Rails.root.to_s}/plugins/#{plugin.directory_name}",
-    url: plugin.metadata.url
+    url: plugin.metadata.url,
   }
 end

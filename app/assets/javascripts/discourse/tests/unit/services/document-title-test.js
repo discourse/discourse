@@ -34,7 +34,7 @@ module("Unit | Service | document-title", function (hooks) {
 
   test("it displays notification counts for logged in users", function (assert) {
     this.documentTitle.currentUser = currentUser();
-    this.documentTitle.currentUser.dynamic_favicon = false;
+    this.documentTitle.currentUser.user_option.dynamic_favicon = false;
     this.documentTitle.setTitle("test notifications");
     this.documentTitle.updateNotificationCount(5);
     assert.strictEqual(document.title, "test notifications");
@@ -52,7 +52,7 @@ module("Unit | Service | document-title", function (hooks) {
     date.setHours(date.getHours() + 1);
     this.documentTitle.currentUser.do_not_disturb_until = date.toUTCString();
 
-    this.documentTitle.currentUser.dynamic_favicon = false;
+    this.documentTitle.currentUser.user_option.dynamic_favicon = false;
     this.documentTitle.setTitle("test notifications");
     this.documentTitle.updateNotificationCount(5);
     assert.strictEqual(document.title, "test notifications");

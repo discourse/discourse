@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'maxminddb'
-require 'resolv'
+require "maxminddb"
+require "resolv"
 
 class DiscourseIpInfo
   include Singleton
@@ -11,13 +11,13 @@ class DiscourseIpInfo
   end
 
   def open_db(path)
-    @loc_mmdb = mmdb_load(File.join(path, 'GeoLite2-City.mmdb'))
-    @asn_mmdb = mmdb_load(File.join(path, 'GeoLite2-ASN.mmdb'))
+    @loc_mmdb = mmdb_load(File.join(path, "GeoLite2-City.mmdb"))
+    @asn_mmdb = mmdb_load(File.join(path, "GeoLite2-ASN.mmdb"))
     @cache = LruRedux::ThreadSafeCache.new(2000)
   end
 
   def self.path
-    @path ||= File.join(Rails.root, 'vendor', 'data')
+    @path ||= File.join(Rails.root, "vendor", "data")
   end
 
   def self.mmdb_path(name)
@@ -25,7 +25,6 @@ class DiscourseIpInfo
   end
 
   def self.mmdb_download(name)
-
     if GlobalSetting.maxmind_license_key.blank?
       STDERR.puts "MaxMind IP database updates require a license"
       STDERR.puts "Please set DISCOURSE_MAXMIND_LICENSE_KEY to one you generated at https://www.maxmind.com"
@@ -34,41 +33,29 @@ class DiscourseIpInfo
 
     FileUtils.mkdir_p(path)
 
-    url = "https://download.maxmind.com/app/geoip_download?license_key=#{GlobalSetting.maxmind_license_key}&edition_id=#{name}&suffix=tar.gz"
+    url =
+      "https://download.maxmind.com/app/geoip_download?license_key=#{GlobalSetting.maxmind_license_key}&edition_id=#{name}&suffix=tar.gz"
 
-    gz_file = FileHelper.download(
-      url,
-      max_file_size: 100.megabytes,
-      tmp_file_name: "#{name}.gz",
-      validate_uri: false,
-      follow_redirect: false
-    )
+    gz_file =
+      FileHelper.download(
+        url,
+        max_file_size: 100.megabytes,
+        tmp_file_name: "#{name}.gz",
+        validate_uri: false,
+        follow_redirect: false,
+      )
 
     filename = File.basename(gz_file.path)
 
     dir = "#{Dir.tmpdir}/#{SecureRandom.hex}"
 
-    Discourse::Utils.execute_command(
-      "mkdir", "-p", dir
-    )
+    Discourse::Utils.execute_command("mkdir", "-p", dir)
 
-    Discourse::Utils.execute_command(
-      "cp",
-      gz_file.path,
-      "#{dir}/#{filename}"
-    )
+    Discourse::Utils.execute_command("cp", gz_file.path, "#{dir}/#{filename}")
 
-    Discourse::Utils.execute_command(
-      "tar",
-      "-xzvf",
-      "#{dir}/#{filename}",
-      chdir: dir
-    )
+    Discourse::Utils.execute_command("tar", "-xzvf", "#{dir}/#{filename}", chdir: dir)
 
-    Dir["#{dir}/**/*.mmdb"].each do |f|
-      FileUtils.mv(f, mmdb_path(name))
-    end
-
+    Dir["#{dir}/**/*.mmdb"].each { |f| FileUtils.mv(f, mmdb_path(name)) }
   ensure
     FileUtils.rm_r(dir, force: true) if dir
     gz_file&.close!
@@ -96,7 +83,8 @@ class DiscourseIpInfo
         if result&.found?
           ret[:country] = result.country.name(locale) || result.country.name
           ret[:country_code] = result.country.iso_code
-          ret[:region] = result.subdivisions.most_specific.name(locale) || result.subdivisions.most_specific.name
+          ret[:region] = result.subdivisions.most_specific.name(locale) ||
+            result.subdivisions.most_specific.name
           ret[:city] = result.city.name(locale) || result.city.name
           ret[:latitude] = result.location.latitude
           ret[:longitude] = result.location.longitude
@@ -104,13 +92,18 @@ class DiscourseIpInfo
 
           # used by plugins or API to locate users more accurately
           ret[:geoname_ids] = [
-            result.continent.geoname_id, result.country.geoname_id, result.city.geoname_id,
-            *result.subdivisions.map(&:geoname_id)
+            result.continent.geoname_id,
+            result.country.geoname_id,
+            result.city.geoname_id,
+            *result.subdivisions.map(&:geoname_id),
           ]
           ret[:geoname_ids].compact!
         end
       rescue => e
-        Discourse.warn_exception(e, message: "IP #{ip} could not be looked up in MaxMind GeoLite2-City database.")
+        Discourse.warn_exception(
+          e,
+          message: "IP #{ip} could not be looked up in MaxMind GeoLite2-City database.",
+        )
       end
     end
 
@@ -123,7 +116,10 @@ class DiscourseIpInfo
           ret[:organization] = result["autonomous_system_organization"]
         end
       rescue => e
-        Discourse.warn_exception(e, message: "IP #{ip} could not be looked up in MaxMind GeoLite2-ASN database.")
+        Discourse.warn_exception(
+          e,
+          message: "IP #{ip} could not be looked up in MaxMind GeoLite2-ASN database.",
+        )
       end
     end
 
@@ -142,10 +138,13 @@ class DiscourseIpInfo
 
   def get(ip, locale: :en, resolve_hostname: false)
     ip = ip.to_s
-    locale = locale.to_s.sub('_', '-')
+    locale = locale.to_s.sub("_", "-")
 
-    @cache["#{ip}-#{locale}-#{resolve_hostname}"] ||=
-      lookup(ip, locale: locale, resolve_hostname: resolve_hostname)
+    @cache["#{ip}-#{locale}-#{resolve_hostname}"] ||= lookup(
+      ip,
+      locale: locale,
+      resolve_hostname: resolve_hostname,
+    )
   end
 
   def self.open_db(path)

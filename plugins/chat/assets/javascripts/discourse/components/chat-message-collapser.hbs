@@ -1,0 +1,29 @@
+<div class="chat-message-collapser">
+  {{#if this.hasUploads}}
+    {{html-safe @cooked}}
+
+    <Collapser @header={{this.uploadsHeader}} @onToggle={{@onToggleCollapse}}>
+      <div class="chat-uploads">
+        {{#each @uploads as |upload|}}
+          <ChatUpload @upload={{upload}} />
+        {{/each}}
+      </div>
+    </Collapser>
+  {{else}}
+    {{#each this.cookedBodies as |cooked|}}
+      {{#if cooked.needsCollapser}}
+        <Collapser @header={{cooked.header}} @onToggle={{@onToggleCollapse}}>
+          {{#if cooked.videoAttributes}}
+            <div class="chat-message-collapser-lazy-video">
+              <LazyVideo @videoAttributes={{cooked.videoAttributes}} />
+            </div>
+          {{else}}
+            {{cooked.body}}
+          {{/if}}
+        </Collapser>
+      {{else}}
+        {{cooked.body}}
+      {{/if}}
+    {{/each}}
+  {{/if}}
+</div>

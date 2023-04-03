@@ -8,7 +8,7 @@ export default Component.extend({
   click(event) {
     if (event?.target?.tagName === "A") {
       if (shouldOpenInNewTab(event.target.href)) {
-        openLinkInNewTab(event.target);
+        openLinkInNewTab(event, event.target);
       }
     }
   },

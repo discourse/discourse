@@ -4,7 +4,6 @@ class AddTopicThumbnailInformation < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
   def up
-
     # tables are huge ... avoid holding on to large number of locks by doing one at a time
     execute <<~SQL
       ALTER TABLE posts
@@ -36,7 +35,10 @@ class AddTopicThumbnailInformation < ActiveRecord::Migration[6.0]
         t.integer :max_height, null: false
       end
 
-      add_index :topic_thumbnails, [:upload_id, :max_width, :max_height], name: :unique_topic_thumbnails, unique: true
+      add_index :topic_thumbnails,
+                %i[upload_id max_width max_height],
+                name: :unique_topic_thumbnails,
+                unique: true
     end
   end
 

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe FreedomPatches::SchemaMigrationDetails do
-
   # we usually don't really need this model so lets not clutter up with it
   class SchemaMigrationDetail < ActiveRecord::Base
   end

@@ -2,7 +2,9 @@
   <section class="styleguide-menu">
     {{#each this.categories as |c|}}
       <ul>
-        <li class="styleguide-heading">{{i18n (concat "styleguide.categories." c.id)}}</li>
+        <li class="styleguide-heading">{{i18n
+            (concat "styleguide.categories." c.id)
+          }}</li>
         {{#each c.sections as |s|}}
           <li><StyleguideLink @section={{s}} /></li>
         {{/each}}

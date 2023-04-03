@@ -17,9 +17,10 @@ permissions:
 
 jobs:
   build:
-    name: ${{ matrix.target }} ${{ matrix.build_type }}
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
+    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
-    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
+    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
 
     env:
@@ -28,7 +29,8 @@ jobs:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
-      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' }}
+      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
+      CAPBYARA_DEFAULT_MAX_WAIT_TIME: 4
 
     strategy:
       fail-fast: false
@@ -36,6 +38,7 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins]
+        ruby: ['3.2']
         exclude:
           - build_type: annotations
             target: plugins
@@ -43,6 +46,9 @@ jobs:
             target: core # Handled by core_frontend_tests job (below)
 
     steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
@@ -66,9 +72,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-gem-
+            ${{ runner.os }}-${{ matrix.ruby }}-gem-
 
       - name: Setup gems
         run: |
@@ -153,6 +159,22 @@ jobs:
           path: tmp/turbo_rspec_runtime.log
           key: rspec-runtime-backend-core
 
+      - name: Run Zeitwerk check
+        if: matrix.build_type == 'backend'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
+        run: |
+          if ! bin/rails zeitwerk:check --trace; then
+            echo
+            echo "---------------------------------------------"
+            echo
+            echo "::error::'bin/rails zeitwerk:check' failed - the app will fail to boot with 'eager_load=true' (e.g. in production)."
+            echo "To reproduce locally, run 'bin/rails zeitwerk:check'."
+            echo "Alternatively, you can run your local server/tests with the 'DISCOURSE_ZEITWERK_EAGER_LOAD=1' environment variable."
+            echo
+            exit 1
+          fi
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --verbose
@@ -170,20 +192,24 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
+      - name: Setup Webdriver
+        if: matrix.build_type == 'system'
+        run: bin/rails runner "require 'webdrivers'; Webdrivers::Chromedriver.update"
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: bin/system_rspec
+        run: bin/rspec spec/system -f d
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 bin/system_rspec plugins/*/spec/system
+        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
         if: matrix.build_type == 'system' && failure()
         with:
           name: failed-system-test-screenshots
-          path: tmp/screenshots/*.png
+          path: tmp/capybara/*.png
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
@@ -203,6 +229,7 @@ jobs:
         timeout-minutes: 30
 
   core_frontend_tests:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: core frontend (${{ matrix.browser }})
     runs-on: ubuntu-20.04-8core
     container:

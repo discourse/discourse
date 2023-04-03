@@ -11,13 +11,23 @@ RSpec.describe PostOwnerChanger do
 
     it "raises an error with a parameter missing" do
       expect {
-        PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: nil, acting_user: editor)
+        PostOwnerChanger.new(
+          post_ids: [p1.id],
+          topic_id: topic.id,
+          new_owner: nil,
+          acting_user: editor,
+        )
       }.to raise_error(ArgumentError, /new_owner/)
     end
 
     it "calls PostRevisor" do
       PostRevisor.any_instance.expects(:revise!)
-      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      PostOwnerChanger.new(
+        post_ids: [p1.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+      ).change_owner!
     end
 
     it "changes the user" do
@@ -31,7 +41,12 @@ RSpec.describe PostOwnerChanger do
       expect(p1.topic.like_count).to eq(1)
 
       freeze_time(now)
-      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      PostOwnerChanger.new(
+        post_ids: [p1.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+      ).change_owner!
       p1.reload
       expect(p1.topic.like_count).to eq(0)
       expect(p1.topic.bumped_at).to eq_time(bumped_at)
@@ -41,16 +56,28 @@ RSpec.describe PostOwnerChanger do
     end
 
     it "changes multiple posts" do
-      PostOwnerChanger.new(post_ids: [p1.id, p2.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
-      p1.reload; p2.reload
+      PostOwnerChanger.new(
+        post_ids: [p1.id, p2.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+      ).change_owner!
+      p1.reload
+      p2.reload
       expect(p1.user).not_to eq(nil)
       expect(p1.user).to eq(user_a)
       expect(p1.user).to eq(p2.user)
     end
 
     it "ignores posts in other topics" do
-      PostOwnerChanger.new(post_ids: [p1.id, p3.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
-      p1.reload; p3.reload
+      PostOwnerChanger.new(
+        post_ids: [p1.id, p3.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+      ).change_owner!
+      p1.reload
+      p3.reload
       expect(p1.user).to eq(user_a)
 
       expect(p3.topic_id).not_to eq(p1.topic_id)
@@ -58,22 +85,39 @@ RSpec.describe PostOwnerChanger do
     end
 
     it "skips creating new post revision if skip_revision is true" do
-      PostOwnerChanger.new(post_ids: [p1.id, p2.id], topic_id: topic.id, new_owner: user_a, acting_user: editor, skip_revision: true).change_owner!
-      p1.reload; p2.reload
+      PostOwnerChanger.new(
+        post_ids: [p1.id, p2.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+        skip_revision: true,
+      ).change_owner!
+      p1.reload
+      p2.reload
       expect(p1.revisions.size).to eq(0)
       expect(p2.revisions.size).to eq(0)
     end
 
     it "changes the user even when the post does not pass validation" do
       p1.update_attribute(:raw, "foo")
-      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      PostOwnerChanger.new(
+        post_ids: [p1.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+      ).change_owner!
       expect(p1.reload.user).to eq(user_a)
     end
 
     it "changes the user even when the topic does not pass validation" do
       topic.update_column(:title, "short")
 
-      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      PostOwnerChanger.new(
+        post_ids: [p1.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+      ).change_owner!
       expect(p1.reload.user).to eq(user_a)
     end
 
@@ -81,12 +125,22 @@ RSpec.describe PostOwnerChanger do
       p4 = Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number)
       PostDestroyer.new(editor, p4).destroy
 
-      PostOwnerChanger.new(post_ids: [p4.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      PostOwnerChanger.new(
+        post_ids: [p4.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+      ).change_owner!
       expect(p4.reload.user).to eq(user_a)
     end
 
     it "sets 'posted' for TopicUser to true" do
-      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      PostOwnerChanger.new(
+        post_ids: [p1.id],
+        topic_id: topic.id,
+        new_owner: user_a,
+        acting_user: editor,
+      ).change_owner!
       expect(TopicUser.find_by(topic_id: topic.id, user_id: user_a.id).posted).to eq(true)
     end
 
@@ -94,13 +148,23 @@ RSpec.describe PostOwnerChanger do
       let(:p4) { create_post(post_number: 2, topic: topic) }
 
       it "'watching' if the first post gets a new owner" do
-        PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+        PostOwnerChanger.new(
+          post_ids: [p1.id],
+          topic_id: topic.id,
+          new_owner: user_a,
+          acting_user: editor,
+        ).change_owner!
         tu = TopicUser.find_by(user_id: user_a.id, topic_id: topic.id)
         expect(tu.notification_level).to eq(3)
       end
 
       it "'tracking' if other than the first post gets a new owner" do
-        PostOwnerChanger.new(post_ids: [p4.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+        PostOwnerChanger.new(
+          post_ids: [p4.id],
+          topic_id: topic.id,
+          new_owner: user_a,
+          acting_user: editor,
+        ).change_owner!
         tu = TopicUser.find_by(user_id: user_a.id, topic_id: topic.id)
         expect(tu.notification_level).to eq(2)
       end
@@ -125,10 +189,22 @@ RSpec.describe PostOwnerChanger do
           first_post_created_at: p2.created_at,
         )
 
-        UserAction.create!(action_type: UserAction::NEW_TOPIC, user_id: p1user.id, acting_user_id: p1user.id,
-                           target_post_id: -1, target_topic_id: p1.topic_id, created_at: p1.created_at)
-        UserAction.create!(action_type: UserAction::REPLY, user_id: p2user.id, acting_user_id: p2user.id,
-                           target_post_id: p2.id, target_topic_id: p2.topic_id, created_at: p2.created_at)
+        UserAction.create!(
+          action_type: UserAction::NEW_TOPIC,
+          user_id: p1user.id,
+          acting_user_id: p1user.id,
+          target_post_id: -1,
+          target_topic_id: p1.topic_id,
+          created_at: p1.created_at,
+        )
+        UserAction.create!(
+          action_type: UserAction::REPLY,
+          user_id: p2user.id,
+          acting_user_id: p2user.id,
+          target_post_id: p2.id,
+          target_topic_id: p2.topic_id,
+          created_at: p2.created_at,
+        )
 
         UserActionManager.enable
       end
@@ -138,7 +214,7 @@ RSpec.describe PostOwnerChanger do
           post_ids: [p1.id, p2.id],
           topic_id: topic.id,
           new_owner: user_a,
-          acting_user: editor
+          acting_user: editor,
         ).change_owner!
       end
 
@@ -148,7 +224,9 @@ RSpec.describe PostOwnerChanger do
 
         change_owners
 
-        p1user.reload; p2user.reload; user_a.reload
+        p1user.reload
+        p2user.reload
+        user_a.reload
         expect(p1user.topic_count).to eq(0)
         expect(p1user.post_count).to eq(0)
         expect(p2user.topic_count).to eq(0)
@@ -172,13 +250,14 @@ RSpec.describe PostOwnerChanger do
       end
 
       it "handles whispers" do
-        whisper = PostCreator.new(
-          editor,
-          topic_id: p1.topic_id,
-          reply_to_post_number: 1,
-          post_type: Post.types[:whisper],
-          raw: 'this is a whispered reply'
-        ).create
+        whisper =
+          PostCreator.new(
+            editor,
+            topic_id: p1.topic_id,
+            reply_to_post_number: 1,
+            post_type: Post.types[:whisper],
+            raw: "this is a whispered reply",
+          ).create
 
         user_stat = editor.user_stat
 
@@ -187,18 +266,13 @@ RSpec.describe PostOwnerChanger do
             post_ids: [whisper.id],
             topic_id: topic.id,
             new_owner: Fabricate(:admin),
-            acting_user: editor
+            acting_user: editor,
           ).change_owner!
         }.to_not change { user_stat.reload.post_count }
       end
 
-      context 'with private message topic' do
-        let(:pm) do
-          create_post(
-            archetype: 'private_message',
-            target_usernames: [p2user.username]
-          )
-        end
+      context "with private message topic" do
+        let(:pm) { create_post(archetype: "private_message", target_usernames: [p2user.username]) }
         let(:pm_poster) { pm.user }
 
         it "should update users' counts" do
@@ -209,7 +283,7 @@ RSpec.describe PostOwnerChanger do
               post_ids: [pm.id],
               topic_id: pm.topic_id,
               new_owner: user_a,
-              acting_user: editor
+              acting_user: editor,
             ).change_owner!
           }.to_not change { pm_poster.user_stat.post_count }
 
@@ -239,11 +313,29 @@ RSpec.describe PostOwnerChanger do
       end
 
       it "updates reply_to_user_id" do
-        p4 = Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, reply_to_user_id: p1.user_id)
-        p5 = Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, reply_to_user_id: p2.user_id)
+        p4 =
+          Fabricate(
+            :post,
+            topic: topic,
+            reply_to_post_number: p1.post_number,
+            reply_to_user_id: p1.user_id,
+          )
+        p5 =
+          Fabricate(
+            :post,
+            topic: topic,
+            reply_to_post_number: p2.post_number,
+            reply_to_user_id: p2.user_id,
+          )
 
-        PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
-        p4.reload; p5.reload
+        PostOwnerChanger.new(
+          post_ids: [p1.id],
+          topic_id: topic.id,
+          new_owner: user_a,
+          acting_user: editor,
+        ).change_owner!
+        p4.reload
+        p5.reload
 
         expect(p4.reply_to_user_id).to eq(user_a.id)
         expect(p5.reply_to_user_id).to eq(p2.user_id)

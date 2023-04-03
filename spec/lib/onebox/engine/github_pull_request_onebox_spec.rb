@@ -5,7 +5,10 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
     @link = "https://github.com/discourse/discourse/pull/1253/"
     @uri = "https://api.github.com/repos/discourse/discourse/pulls/1253"
 
-    stub_request(:get, @uri).to_return(status: 200, body: onebox_response(described_class.onebox_name))
+    stub_request(:get, @uri).to_return(
+      status: 200,
+      body: onebox_response(described_class.onebox_name),
+    )
   end
 
   include_context "with engines"
@@ -52,16 +55,23 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
 
   context "with commit links" do
     before do
-      @link = "https://github.com/discourse/discourse/pull/1253/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
-      @uri = "https://api.github.com/repos/discourse/discourse/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
+      @link =
+        "https://github.com/discourse/discourse/pull/1253/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
+      @uri =
+        "https://api.github.com/repos/discourse/discourse/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
 
-      stub_request(:get, @uri).to_return(status: 200, body: onebox_response(described_class.onebox_name + "_commit"))
+      stub_request(:get, @uri).to_return(
+        status: 200,
+        body: onebox_response(described_class.onebox_name + "_commit"),
+      )
     end
 
     it "includes commit name" do
-      doc = Nokogiri::HTML5(html)
-      expect(doc.css('h4').text.strip).to eq("Add audio onebox")
-      expect(doc.css('.github-body-container').text).to include("http://meta.discourse.org/t/audio-html5-tag/8168")
+      doc = Nokogiri.HTML5(html)
+      expect(doc.css("h4").text.strip).to eq("Add audio onebox")
+      expect(doc.css(".github-body-container").text).to include(
+        "http://meta.discourse.org/t/audio-html5-tag/8168",
+      )
     end
   end
 
@@ -70,7 +80,10 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
       @link = "https://github.com/discourse/discourse/pull/1253/#issuecomment-21597425"
       @uri = "https://api.github.com/repos/discourse/discourse/issues/comments/21597425"
 
-      stub_request(:get, @uri).to_return(status: 200, body: onebox_response(described_class.onebox_name + "_comment"))
+      stub_request(:get, @uri).to_return(
+        status: 200,
+        body: onebox_response(described_class.onebox_name + "_comment"),
+      )
     end
 
     it "includes comment" do

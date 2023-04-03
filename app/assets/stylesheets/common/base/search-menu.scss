@@ -39,6 +39,7 @@ $search-pad-horizontal: 0.5em;
     .btn.search-context {
       margin: 2px;
       margin-right: 0;
+      white-space: nowrap;
     }
     &:focus-within {
       @include default-focus;
@@ -194,23 +195,31 @@ $search-pad-horizontal: 0.5em;
     .search-item-user img.avatar {
       width: 20px;
       height: 20px;
-      margin-right: 5px;
+      margin-right: 0.5em;
     }
 
     .label-suffix {
       color: var(--primary-medium);
+      margin-right: 0.33em;
+    }
+
+    .search-item-tag {
+      color: var(--primary-high);
     }
 
     .extra-hint {
       color: var(--primary-low-mid);
       font-size: var(--font-down-1);
-      float: right;
-      margin-top: 2px;
     }
 
-    .search-item-slug .badge-wrapper {
-      font-size: var(--font-0);
-      margin-left: 2px;
+    .search-item-slug {
+      .keyword {
+        margin-right: 0.33em;
+      }
+      .badge-wrapper {
+        font-size: var(--font-0);
+        margin-left: 2px;
+      }
     }
 
     .search-menu-initial-options {
@@ -225,10 +234,20 @@ $search-pad-horizontal: 0.5em;
     .search-menu-initial-options,
     .search-result-tag,
     .search-menu-assistant {
+      .search-item-prefix {
+        margin-right: 0.33em;
+      }
+      .badge-wrapper {
+        font-size: var(--font-0);
+        margin-right: 0.5em;
+      }
       .search-link {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
         @include ellipsis;
         .d-icon {
-          margin-right: 5px;
+          margin-right: 0.33em;
           vertical-align: middle;
         }
         .d-icon-tag {
@@ -325,7 +344,7 @@ $search-pad-horizontal: 0.5em;
     // and the focus/hover styles from the header in those cases wouldn't follow
     &:focus,
     &:hover {
-      background-color: var(--highlight-medium);
+      background-color: var(--highlight-bg);
     }
 
     .topic {

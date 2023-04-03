@@ -1,0 +1,33 @@
+<DModalBody @rawTitle={{this.model.name}}>
+  <div class="control-group">
+    <DToggleSwitch
+      class="form-templates__preview-toggle"
+      @state={{this.showPreview}}
+      @label="admin.form_templates.view_template.toggle_preview"
+      {{on "click" this.togglePreview}}
+    />
+  </div>
+  {{#if this.showPreview}}
+    <FormTemplateField::Wrapper @content={{this.model.template}} />
+  {{else}}
+    <HighlightedCode @lang="yaml" @code={{this.model.template}} />
+  {{/if}}
+</DModalBody>
+<div class="modal-footer">
+  <DButton
+    class="btn-primary"
+    @action={{this.editTemplate}}
+    @icon="pencil-alt"
+    @label="admin.form_templates.view_template.edit"
+  />
+  <DButton
+    @action={{route-action "closeModal"}}
+    @label="admin.form_templates.view_template.close"
+  />
+  <DButton
+    class="btn-danger"
+    @action={{this.deleteTemplate}}
+    @icon="trash-alt"
+    @label="admin.form_templates.view_template.delete"
+  />
+</div>

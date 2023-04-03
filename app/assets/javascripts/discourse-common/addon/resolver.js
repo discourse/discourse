@@ -1,10 +1,10 @@
-import Ember from "ember";
 import { dasherize, decamelize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import SuffixTrie from "discourse-common/lib/suffix-trie";
 import Resolver from "ember-resolver";
 import { buildResolver as buildLegacyResolver } from "discourse-common/lib/legacy-resolver";
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
 let _options = {};
 let moduleSuffixTrie = null;
@@ -75,6 +75,12 @@ const DEPRECATED_MODULES = new Map(
       newName: "service:site-settings",
       since: "2.9.0.beta7",
       dropFrom: "3.0.0",
+      silent: true,
+    },
+    "capabilities:main": {
+      newName: "service:capabilities",
+      since: "3.1.0.beta4",
+      dropFrom: "3.2.0.beta1",
       silent: true,
     },
     "current-user:main": {
@@ -287,21 +293,19 @@ export function buildResolver(baseName) {
 
     resolveTemplate(parsedName) {
       return (
-        this.findPluginMobileTemplate(parsedName) ||
-        this.findPluginTemplate(parsedName) ||
         this.findMobileTemplate(parsedName) ||
         this.findTemplate(parsedName) ||
         this.findAdminTemplate(parsedName) ||
         this.findWizardTemplate(parsedName) ||
         this.findLoadingTemplate(parsedName) ||
         this.findConnectorTemplate(parsedName) ||
-        Ember.TEMPLATES.not_found
+        this.discourseTemplateModule("not_found")
       );
     }
 
     findLoadingTemplate(parsedName) {
       if (parsedName.fullNameWithoutType.match(/loading$/)) {
-        return Ember.TEMPLATES.loading;
+        return this.discourseTemplateModule("loading");
       }
     }
 
@@ -312,17 +316,7 @@ export function buildResolver(baseName) {
             .replace("template:connectors/", "template:")
             .replace("components/", "")
         );
-        return this.findTemplate(connectorParsedName, "javascripts/");
-      }
-    }
-
-    findPluginTemplate(parsedName) {
-      return this.findTemplate(parsedName, "javascripts/");
-    }
-
-    findPluginMobileTemplate(parsedName) {
-      if (_options.mobileView) {
-        return this.findTemplate(parsedName, "javascripts/mobile/");
+        return this.findTemplate(connectorParsedName);
       }
     }
 
@@ -332,31 +326,43 @@ export function buildResolver(baseName) {
       }
     }
 
+    /**
+     * Given a template path, this function will return a template, taking into account
+     * priority rules for theme and plugin overrides. See `lib/discourse-template-map.js`
+     */
+    discourseTemplateModule(name) {
+      const resolvedName = DiscourseTemplateMap.resolve(name);
+      if (resolvedName) {
+        return require(resolvedName).default;
+      }
+    }
+
     findTemplate(parsedName, prefix) {
       prefix = prefix || "";
 
       const withoutType = parsedName.fullNameWithoutType,
         underscored = decamelize(withoutType).replace(/-/g, "_"),
-        segments = withoutType.split("/"),
-        templates = Ember.TEMPLATES;
+        segments = withoutType.split("/");
 
       return (
         // Convert dots and dashes to slashes
-        templates[prefix + withoutType.replace(/[\.-]/g, "/")] ||
+        this.discourseTemplateModule(
+          prefix + withoutType.replace(/[\.-]/g, "/")
+        ) ||
         // Default unmodified behavior of original resolveTemplate.
-        templates[prefix + withoutType] ||
+        this.discourseTemplateModule(prefix + withoutType) ||
         // Underscored without namespace
-        templates[prefix + underscored] ||
+        this.discourseTemplateModule(prefix + underscored) ||
         // Underscored with first segment as directory
-        templates[prefix + underscored.replace("_", "/")] ||
+        this.discourseTemplateModule(prefix + underscored.replace("_", "/")) ||
         // Underscore only the last segment
-        templates[
+        this.discourseTemplateModule(
           `${prefix}${segments.slice(0, -1).join("/")}/${segments[
             segments.length - 1
           ].replace(/-/g, "_")}`
-        ] ||
+        ) ||
         // All dasherized
-        templates[prefix + withoutType.replace(/\//g, "-")]
+        this.discourseTemplateModule(prefix + withoutType.replace(/\//g, "-"))
       );
     }
 
@@ -364,17 +370,15 @@ export function buildResolver(baseName) {
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
       if (parsedName.fullNameWithoutType === "admin") {
-        return Ember.TEMPLATES["admin/templates/admin"];
+        return this.discourseTemplateModule("admin/templates/admin");
       }
 
       let namespaced, match;
 
       if (parsedName.fullNameWithoutType.startsWith("components/")) {
         return (
-          // Built-in
           this.findTemplate(parsedName, "admin/templates/") ||
-          // Plugin
-          this.findTemplate(parsedName, "javascripts/admin/")
+          this.findTemplate(parsedName, "admin/") // Nested under discourse/templates/admin (e.g. from plugins)
         );
       } else if (/^admin[_\.-]/.test(parsedName.fullNameWithoutType)) {
         namespaced = parsedName.fullNameWithoutType.slice(6);
@@ -389,11 +393,9 @@ export function buildResolver(baseName) {
       if (namespaced) {
         let adminParsedName = this.parseName(`template:${namespaced}`);
         resolved =
-          // Built-in
           this.findTemplate(adminParsedName, "admin/templates/") ||
           this.findTemplate(parsedName, "admin/templates/") ||
-          // Plugin
-          this.findTemplate(adminParsedName, "javascripts/admin/");
+          this.findTemplate(adminParsedName, "admin/"); // Nested under discourse/templates/admin (e.g. from plugin)
       }
 
       return resolved;
@@ -401,7 +403,7 @@ export function buildResolver(baseName) {
 
     findWizardTemplate(parsedName) {
       if (parsedName.fullNameWithoutType === "wizard") {
-        return Ember.TEMPLATES["wizard/templates/wizard"];
+        return this.discourseTemplateModule("wizard/templates/wizard");
       }
 
       let namespaced;
@@ -415,10 +417,10 @@ export function buildResolver(baseName) {
       }
 
       if (namespaced) {
-        let adminParsedName = this.parseName(
+        let wizardParsedName = this.parseName(
           `template:wizard/templates/${namespaced}`
         );
-        return this.findTemplate(adminParsedName);
+        return this.findTemplate(wizardParsedName);
       }
     }
   };

@@ -9,8 +9,7 @@ import Site from "discourse/models/site";
 
 acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   test("category section links ordered by category's topic count when default_sidebar_categories has not been configured and site setting to fix categories positions is disabled", async function (assert) {
@@ -19,7 +18,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     const sidebarCategories = Site.current()
@@ -65,7 +64,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     const siteCategories = Site.current().categories;
@@ -110,7 +109,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     assert.strictEqual(categories.length, 4);
@@ -139,7 +138,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
 
     assert.notOk(
       exists(
-        `.sidebar-section-categories .sidebar-section-link-${firstCategory.slug}`
+        `.sidebar-section[data-section-name='categories'] .sidebar-section-link-${firstCategory.slug}`
       ),
       "category section link is not shown in sidebar after being marked as uncategorized"
     );

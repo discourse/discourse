@@ -394,7 +394,6 @@
 }
 
 .password-reset,
-.email-login,
 .invites-show {
   .col-form {
     padding: 0.5em 2em 1em;
@@ -422,8 +421,7 @@
   }
 }
 
-.password-reset,
-.email-login {
+.password-reset {
   .col-form {
     padding-top: 40px;
   }
@@ -474,5 +472,12 @@
     .login-right-side {
       padding: 1em;
     }
+  }
+}
+
+.email-login {
+  width: 550px;
+  .password-reset-img {
+    height: 150px;
   }
 }

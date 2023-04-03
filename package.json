@@ -14,7 +14,6 @@
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",
     "diffhtml": "^1.0.0-beta.20",
-    "eslint-config-discourse": "^3.3.0",
     "magnific-popup": "1.1.0",
     "moment": "2.29.4",
     "moment-timezone": "0.5.39",
@@ -29,13 +28,16 @@
   },
   "devDependencies": {
     "@mixer/parallel-prettier": "^2.0.3",
-    "chrome-launcher": "^0.15.0",
-    "chrome-remote-interface": "^0.31.2",
+    "chrome-launcher": "^0.15.1",
+    "chrome-remote-interface": "^0.31.3",
     "ember-cli-htmlbars": "^6.0.0",
     "ember-template-lint": "^4.18.1",
     "ember-template-lint-plugin-discourse": "^2.0.0",
+    "eslint-config-discourse": "^3.3.0",
+    "jsdoc": "^4.0.0",
     "lefthook": "^1.2.0",
-    "puppeteer-core": "^13.7.0"
+    "puppeteer-core": "^13.7.0",
+    "tidy-jsdoc": "^1.4.1"
   },
   "scripts": {
     "postinstall": "pnpm --dir app/assets/javascripts/discourse install"

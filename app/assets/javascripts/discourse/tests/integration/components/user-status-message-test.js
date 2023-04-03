@@ -12,7 +12,7 @@ module("Integration | Component | user-status-message", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.currentUser.timezone = "UTC";
+    this.currentUser.user_option.timezone = "UTC";
   });
 
   hooks.afterEach(function () {
@@ -49,7 +49,7 @@ module("Integration | Component | user-status-message", function (hooks) {
   test("it shows the until TIME on the tooltip if status will expire today", async function (assert) {
     this.clock = fakeTime(
       "2100-02-01T08:00:00.000Z",
-      this.currentUser.timezone,
+      this.currentUser.user_option.timezone,
       true
     );
     this.set("status", {
@@ -72,7 +72,7 @@ module("Integration | Component | user-status-message", function (hooks) {
   test("it shows the until DATE on the tooltip if status will expire tomorrow", async function (assert) {
     this.clock = fakeTime(
       "2100-02-01T08:00:00.000Z",
-      this.currentUser.timezone,
+      this.currentUser.user_option.timezone,
       true
     );
     this.set("status", {
@@ -95,7 +95,7 @@ module("Integration | Component | user-status-message", function (hooks) {
   test("it doesn't show until datetime on the tooltip if status doesn't have expiration date", async function (assert) {
     this.clock = fakeTime(
       "2100-02-01T08:00:00.000Z",
-      this.currentUser.timezone,
+      this.currentUser.user_option.timezone,
       true
     );
     this.set("status", {
@@ -140,5 +140,18 @@ module("Integration | Component | user-status-message", function (hooks) {
     assert.notOk(
       document.querySelector("[data-tippy-root] .user-status-message-tooltip")
     );
+  });
+
+  test("doesn't blow up with an anonymous user", async function (assert) {
+    this.owner.unregister("service:current-user");
+    this.set("status", {
+      emoji: "tooth",
+      description: "off to dentist",
+      ends_at: "2100-02-02T12:30:00.000Z",
+    });
+
+    await render(hbs`<UserStatusMessage @status={{this.status}} />`);
+
+    assert.dom(".user-status-message").exists();
   });
 });

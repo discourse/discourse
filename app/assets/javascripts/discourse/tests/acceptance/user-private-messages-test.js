@@ -12,6 +12,14 @@ import {
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import selectKit from "../helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import {
+  resetHighestReadCache,
+  setHighestReadCache,
+} from "discourse/lib/topic-list-tracker";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 acceptance(
   "User Private Messages - user with no group messages",
@@ -80,7 +88,7 @@ acceptance(
 
     needs.pretender((server, helper) => {
       server.get("/tags/personal_messages/:username.json", () => {
-        return helper.response({ tags: [] });
+        return helper.response({ tags: [{ id: "tag1" }] });
       });
 
       server.get("/t/13.json", () => {
@@ -93,9 +101,22 @@ acceptance(
         return helper.response({
           topic_list: {
             topics: [
-              { id: 1, posters: [] },
-              { id: 2, posters: [] },
-              { id: 3, posters: [] },
+              {
+                id: 1,
+                posters: [],
+                notification_level: NotificationLevels.TRACKING,
+                unread_posts: 1,
+                last_read_post_number: 1,
+                highest_post_number: 2,
+              },
+              {
+                id: 2,
+                posters: [],
+              },
+              {
+                id: 3,
+                posters: [],
+              },
             ],
           },
         });
@@ -108,6 +129,7 @@ acceptance(
         "/topics/private-messages-group/:username/:group_name/new.json",
         "/topics/private-messages-group/:username/:group_name/unread.json",
         "/topics/private-messages-group/:username/:group_name/archive.json",
+        "/topics/private-messages-tags/:username/:tag_name",
       ].forEach((url) => {
         server.get(url, () => {
           let topics;
@@ -278,16 +300,6 @@ acceptance(
       );
     };
 
-    test("viewing messages filtered by tags", async function (assert) {
-      await visit("/u/charlie/messages/tags");
-
-      assert.strictEqual(
-        count(".action-list li"),
-        3,
-        "it does not expand personal or group inbox"
-      );
-    });
-
     test("incoming group archive message acted by current user", async function (assert) {
       await visit("/u/charlie/messages");
 
@@ -340,13 +352,13 @@ acceptance(
       await publishNewToMessageBus({ topicId: 2 });
 
       assert.strictEqual(
-        query(".messages-nav li a.new").innerText.trim(),
+        query(".user-nav__messages-new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
 
       assert.strictEqual(
-        query(".messages-nav li a.unread").innerText.trim(),
+        query(".user-nav__messages-unread").innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
@@ -358,7 +370,7 @@ acceptance(
       await publishNewToMessageBus({ topicId: 1 });
 
       assert.strictEqual(
-        query(".messages-nav li a.new").innerText.trim(),
+        query(".messages-nav .user-nav__messages-new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
@@ -372,7 +384,7 @@ acceptance(
       await publishUnreadToMessageBus();
 
       assert.strictEqual(
-        query(".messages-nav li a.unread").innerText.trim(),
+        query(".messages-nav .user-nav__messages-unread").innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
@@ -387,13 +399,15 @@ acceptance(
       await publishNewToMessageBus({ groupIds: [14], topicId: 2 });
 
       assert.strictEqual(
-        query(".messages-nav li a.unread").innerText.trim(),
+        query(
+          ".messages-nav .user-nav__messages-group-unread"
+        ).innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
 
       assert.strictEqual(
-        query(".messages-nav li a.new").innerText.trim(),
+        query(".messages-nav .user-nav__messages-group-new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
@@ -403,13 +417,13 @@ acceptance(
       await visit("/u/charlie/messages/unread");
 
       assert.strictEqual(
-        query(".messages-nav li a.unread").innerText.trim(),
+        query(".messages-nav .user-nav__messages-unread").innerText.trim(),
         I18n.t("user.messages.unread"),
         "displays the right count"
       );
 
       assert.strictEqual(
-        query(".messages-nav li a.new").innerText.trim(),
+        query(".messages-nav .user-nav__messages-new").innerText.trim(),
         I18n.t("user.messages.new"),
         "displays the right count"
       );
@@ -446,7 +460,7 @@ acceptance(
       await click("#dismiss-read-confirm");
 
       assert.strictEqual(
-        query(".messages-nav li a.unread").innerText.trim(),
+        query(".user-nav__messages-unread").innerText.trim(),
         I18n.t("user.messages.unread"),
         "displays the right count"
       );
@@ -512,7 +526,7 @@ acceptance(
       await click(".btn.dismiss-read");
 
       assert.strictEqual(
-        query(".messages-nav li a.new").innerText.trim(),
+        query(".messages-nav .user-nav__messages-new").innerText.trim(),
         I18n.t("user.messages.new"),
         "displays the right count"
       );
@@ -560,6 +574,22 @@ acceptance(
       );
     });
 
+    test("viewing messages when highest read cache has been set for a topic", async function (assert) {
+      try {
+        setHighestReadCache(1, 2);
+
+        await visit("/u/charlie/messages");
+
+        assert.strictEqual(
+          query(".topic-post-badges").textContent.trim(),
+          "",
+          "does not display unread posts count badge"
+        );
+      } finally {
+        resetHighestReadCache();
+      }
+    });
+
     test("viewing messages", async function (assert) {
       await visit("/u/charlie/messages");
 
@@ -567,6 +597,12 @@ acceptance(
         count(".topic-list-item"),
         3,
         "displays the right topic list"
+      );
+
+      assert.strictEqual(
+        query(`tr[data-topic-id="1"] .topic-post-badges`).textContent.trim(),
+        "1",
+        "displays the right unread posts count badge"
       );
 
       await visit("/u/charlie/messages/group/awesome_group");
@@ -658,6 +694,96 @@ acceptance(
           ),
         "displays the right browse more message"
       );
+    });
+
+    test("navigating between user messages route with dropdown", async function (assert) {
+      await visit("/u/Charlie/messages");
+
+      const messagesDropdown = selectKit(".user-nav-messages-dropdown");
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        I18n.t("user.messages.inbox"),
+        "User personal inbox is selected in dropdown"
+      );
+
+      await click(".user-nav__messages-sent");
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        I18n.t("user.messages.inbox"),
+        "User personal inbox is still selected when viewing sent messages"
+      );
+
+      await messagesDropdown.expand();
+      await messagesDropdown.selectRowByName("awesome_group");
+
+      assert.strictEqual(
+        currentURL(),
+        "/u/charlie/messages/group/awesome_group",
+        "routes to the right URL when selecting awesome_group in the dropdown"
+      );
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        "awesome_group",
+        "Group inbox is selected in dropdown"
+      );
+
+      await click(".user-nav__messages-group-new");
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        "awesome_group",
+        "Group inbox is still selected in dropdown"
+      );
+
+      await messagesDropdown.expand();
+      await messagesDropdown.selectRowByName(I18n.t("user.messages.tags"));
+
+      assert.strictEqual(
+        currentURL(),
+        "/u/charlie/messages/tags",
+        "routes to the right URL when selecting tags in the dropdown"
+      );
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        I18n.t("user.messages.tags"),
+        "All tags is selected in dropdown"
+      );
+
+      await click(".discourse-tag[data-tag-name='tag1']");
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        I18n.t("user.messages.tags"),
+        "All tags is still selected in dropdown"
+      );
+    });
+
+    test("addUserMessagesNavigationDropdownRow plugin api", async function (assert) {
+      try {
+        withPluginApi("1.5.0", (api) => {
+          api.addUserMessagesNavigationDropdownRow(
+            "preferences",
+            "test nav",
+            "arrow-left"
+          );
+        });
+
+        await visit("/u/eviltrout/messages");
+
+        const messagesDropdown = selectKit(".user-nav-messages-dropdown");
+        await messagesDropdown.expand();
+
+        const row = messagesDropdown.rowByName("test nav");
+
+        assert.strictEqual(row.value(), "/u/eviltrout/preferences");
+        assert.ok(row.icon().classList.contains("d-icon-arrow-left"));
+      } finally {
+        resetCustomUserNavMessagesDropdownRows();
+      }
     });
   }
 );
@@ -821,6 +947,29 @@ acceptance(
       await visit("/u/eviltrout/messages");
       await click(".new-private-message");
       assert.ok(!exists("#reply-control .mini-tag-chooser"));
+    });
+  }
+);
+
+acceptance(
+  "User Private Messages - user with uppercase username",
+  function (needs) {
+    needs.user();
+
+    needs.pretender((server, helper) => {
+      const response = cloneJSON(userFixtures["/u/charlie.json"]);
+      response.user.username = "chArLIe";
+      server.get("/u/charlie.json", () => helper.response(response));
+    });
+
+    test("viewing inbox", async function (assert) {
+      await visit("/u/charlie/messages");
+
+      assert.strictEqual(
+        query(".user-nav-messages-dropdown .selected-name").textContent.trim(),
+        "Inbox",
+        "menu defaults to Inbox"
+      );
     });
   }
 );

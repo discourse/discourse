@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-task 'assets:precompile:before' do
-  require 'uglifier'
-  require 'open3'
+task "assets:precompile:before" do
+  require "uglifier"
+  require "open3"
 
-  unless %w{profile production}.include? Rails.env
+  unless %w[profile production].include? Rails.env
     raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
   end
 
@@ -35,9 +35,9 @@ task 'assets:precompile:before' do
   # is recompiled
   Emoji.clear_cache
 
-  $node_compress = `which terser`.present? && !ENV['SKIP_NODE_UGLIFY']
+  $node_compress = `which terser`.present? && !ENV["SKIP_NODE_UGLIFY"]
 
-  unless ENV['USE_SPROCKETS_UGLIFY']
+  unless ENV["USE_SPROCKETS_UGLIFY"]
     $bypass_sprockets_uglify = true
     Rails.configuration.assets.js_compressor = nil
     Rails.configuration.assets.gzip = false
@@ -49,16 +49,16 @@ task 'assets:precompile:before' do
   # leaving very complicated build issues
   # https://github.com/rails/sprockets-rails/issues/49
 
-  require 'sprockets'
-  require 'digest/sha1'
+  require "sprockets"
+  require "digest/sha1"
 
   # Add ember cli chunks
   Rails.configuration.assets.precompile.push(
-    *EmberCli.script_chunks.values.flatten.flat_map { |name| ["#{name}.js", "#{name}.map"] }
+    *EmberCli.script_chunks.values.flatten.flat_map { |name| ["#{name}.js", "#{name}.map"] },
   )
 end
 
-task 'assets:precompile:css' => 'environment' do
+task "assets:precompile:css" => "environment" do
   if ENV["DONT_PRECOMPILE_CSS"] == "1"
     STDERR.puts "Skipping CSS precompilation, ensure CSS lives in a shared directory across hosts"
   else
@@ -84,7 +84,7 @@ task 'assets:precompile:css' => 'environment' do
   end
 end
 
-task 'assets:flush_sw' => 'environment' do
+task "assets:flush_sw" => "environment" do
   begin
     hostname = Discourse.current_hostname
     default_port = SiteSetting.force_https? ? 443 : 80
@@ -92,13 +92,14 @@ task 'assets:flush_sw' => 'environment' do
     STDERR.puts "Flushing service worker script"
     `curl -s -m 1 --resolve '#{hostname}:#{port}:127.0.0.1' #{Discourse.base_url}/service-worker.js > /dev/null`
     STDERR.puts "done"
-  rescue
+  rescue StandardError
     STDERR.puts "Warning: unable to flush service worker script"
   end
 end
 
 def check_node_heap_size_limit
-  output, status = Open3.capture2("node", "-e", "console.log(v8.getHeapStatistics().heap_size_limit/1024/1024)")
+  output, status =
+    Open3.capture2("node", "-e", "console.log(v8.getHeapStatistics().heap_size_limit/1024/1024)")
   raise "Failed to fetch node memory limit" if status != 0
   output.to_f
 end
@@ -108,9 +109,7 @@ def assets_path
 end
 
 def global_path_klass
-  @global_path_klass ||= Class.new do
-    extend GlobalPath
-  end
+  @global_path_klass ||= Class.new { extend GlobalPath }
 end
 
 def cdn_path(p)
@@ -146,13 +145,14 @@ end
 def compress_ruby(from, to)
   data = File.read("#{assets_path}/#{from}")
 
-  uglified, map = Uglifier.new(comments: :none,
-                               source_map: {
-                                 filename: File.basename(from),
-                                 output_filename: File.basename(to)
-                               }
-                              )
-    .compile_with_map(data)
+  uglified, map =
+    Uglifier.new(
+      comments: :none,
+      source_map: {
+        filename: File.basename(from),
+        output_filename: File.basename(to),
+      },
+    ).compile_with_map(data)
   dest = "#{assets_path}/#{to}"
 
   File.write(dest, uglified << "\n//# sourceMappingURL=#{cdn_path "/assets/#{to}.map"}")
@@ -204,7 +204,11 @@ def concurrent?
   if ENV["SPROCKETS_CONCURRENT"] == "1"
     concurrent_compressors = []
     executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
-    yield(Proc.new { |&block| concurrent_compressors << Concurrent::Future.execute(executor: executor) { block.call } })
+    yield(
+      Proc.new do |&block|
+        concurrent_compressors << Concurrent::Future.execute(executor: executor) { block.call }
+      end
+    )
     concurrent_compressors.each(&:wait!)
   else
     yield(Proc.new { |&block| block.call })
@@ -223,10 +227,7 @@ def log_task_duration(task_description, &task)
 end
 
 def geolite_dbs
-  @geolite_dbs ||= %w{
-    GeoLite2-City
-    GeoLite2-ASN
-  }
+  @geolite_dbs ||= %w[GeoLite2-City GeoLite2-ASN]
 end
 
 def get_mmdb_time(root_path)
@@ -255,11 +256,10 @@ def copy_maxmind(from_path, to_path)
   end
 end
 
-task 'assets:precompile' => 'assets:precompile:before' do
+task "assets:precompile" => "assets:precompile:before" do
   refresh_days = GlobalSetting.refresh_maxmind_db_during_precompile_days
 
   if refresh_days.to_i > 0
-
     mmdb_time = get_mmdb_time(DiscourseIpInfo.path)
 
     backup_mmdb_time =
@@ -275,23 +275,25 @@ task 'assets:precompile' => 'assets:precompile:before' do
 
     if !mmdb_time || mmdb_time < refresh_days.days.ago
       puts "Downloading MaxMindDB..."
-      mmdb_thread = Thread.new do
-        begin
-          geolite_dbs.each do |db|
-            DiscourseIpInfo.mmdb_download(db)
-          end
+      mmdb_thread =
+        Thread.new do
+          name = "unknown"
+          begin
+            geolite_dbs.each do |db|
+              name = db
+              DiscourseIpInfo.mmdb_download(db)
+            end
 
-          if GlobalSetting.maxmind_backup_path.present?
-            copy_maxmind(DiscourseIpInfo.path, GlobalSetting.maxmind_backup_path)
+            if GlobalSetting.maxmind_backup_path.present?
+              copy_maxmind(DiscourseIpInfo.path, GlobalSetting.maxmind_backup_path)
+            end
+          rescue OpenURI::HTTPError => e
+            STDERR.puts("*" * 100)
+            STDERR.puts("MaxMindDB (#{name}) could not be downloaded: #{e}")
+            STDERR.puts("*" * 100)
+            Rails.logger.warn("MaxMindDB (#{name}) could not be downloaded: #{e}")
           end
-
-        rescue OpenURI::HTTPError => e
-          STDERR.puts("*" * 100)
-          STDERR.puts("MaxMindDB (#{name}) could not be downloaded: #{e}")
-          STDERR.puts("*" * 100)
-          Rails.logger.warn("MaxMindDB (#{name}) could not be downloaded: #{e}")
         end
-      end
     end
   end
 
@@ -305,13 +307,13 @@ task 'assets:precompile' => 'assets:precompile:before' do
       locales.add(SiteSetting.default_locale)
     end
 
-    log_task_duration('Done compressing all JS files') {
+    log_task_duration("Done compressing all JS files") do
       concurrent? do |proc|
-        manifest.files
-          .select { |k, v| k =~ /\.js$/ }
+        manifest
+          .files
+          .select { |k, v| k =~ /\.js\z/ }
           .each do |file, info|
-
-          path = "#{assets_path}/#{file}"
+            path = "#{assets_path}/#{file}"
             _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
             _path = "#{assets_path}/#{_file}"
             max_compress = max_compress?(info["logical_path"], locales)
@@ -321,7 +323,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
               STDERR.puts "Skipping: #{file}"
             else
               proc.call do
-                log_task_duration(file) {
+                log_task_duration(file) do
                   STDERR.puts "Compressing: #{file}"
 
                   if max_compress
@@ -333,12 +335,12 @@ task 'assets:precompile' => 'assets:precompile:before' do
                   info["mtime"] = File.mtime(path).iso8601
                   gzip(path)
                   brotli(path, max_compress)
-                }
+                end
               end
             end
-        end
+          end
       end
-    }
+    end
 
     # protected
     manifest.send :save

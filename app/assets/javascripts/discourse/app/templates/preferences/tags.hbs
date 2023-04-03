@@ -1,50 +1,12 @@
-{{#if this.siteSettings.tagging_enabled}}
-  <div class="control-group tag-notifications">
-    <label class="control-label">{{i18n "user.tag_settings"}}</label>
+<UserPreferences::Tags
+  @model={{this.model}}
+  @selectedTags={{this.selectedTags}}
+  @save={{action "save"}}
+  @siteSettings={{this.siteSettings}}
+/>
 
-    <div class="controls tracking-controls">
-      <label>{{d-icon "d-watching" class="icon watching"}} {{i18n "user.watched_tags"}}</label>
-      <TagChooser @tags={{this.model.watched_tags}} @blockedTags={{this.selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
-          allowAny=false
-        }} />
-    </div>
-
-    <div class="instructions">{{i18n "user.watched_tags_instructions"}}</div>
-
-    <div class="controls tracking-controls">
-      <label>{{d-icon "d-tracking" class="icon tracking"}} {{i18n "user.tracked_tags"}}</label>
-      <TagChooser @tags={{this.model.tracked_tags}} @blockedTags={{this.selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
-          allowAny=false
-        }} />
-    </div>
-
-    <div class="instructions">{{i18n "user.tracked_tags_instructions"}}</div>
-
-    <div class="controls tracking-controls">
-      <label>{{d-icon "d-watching-first" class="icon watching-first-post"}} {{i18n "user.watched_first_post_tags"}}</label>
-      <TagChooser @tags={{this.model.watching_first_post_tags}} @blockedTags={{this.selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
-          allowAny=false
-        }} />
-    </div>
-
-    <div class="instructions">
-      {{i18n "user.watched_first_post_tags_instructions"}}
-    </div>
-
-    <div class="controls tracking-controls">
-      <label>{{d-icon "d-muted" class="icon muted"}} {{i18n "user.muted_tags"}}</label>
-      <TagChooser @tags={{this.model.muted_tags}} @blockedTags={{this.selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
-          allowAny=false
-        }} />
-    </div>
-    <div class="instructions">{{i18n "user.muted_tags_instructions"}}</div>
-  </div>
-
-  <PluginOutlet @name="user-preferences-tags" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />
-
-  <br>
-
-  <PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
-
-  <SaveControls @model={{this.model}} @action={{action "save"}} @saved={{this.saved}} />
-{{/if}}
+<SaveControls
+  @model={{this.model}}
+  @action={{action "save"}}
+  @saved={{this.saved}}
+/>

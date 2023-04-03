@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class DirectoryColumn < ActiveRecord::Base
-
   # TODO(2021-06-18): Remove automatic column
   self.ignored_columns = ["automatic"]
   self.inheritance_column = nil
@@ -9,17 +8,23 @@ class DirectoryColumn < ActiveRecord::Base
   enum type: { automatic: 0, user_field: 1, plugin: 2 }, _scopes: false
 
   def self.automatic_column_names
-    @automatic_column_names ||= [:likes_received,
-                   :likes_given,
-                   :topics_entered,
-                   :topic_count,
-                   :post_count,
-                   :posts_read,
-                   :days_visited]
+    @automatic_column_names ||= %i[
+      likes_received
+      likes_given
+      topics_entered
+      topic_count
+      post_count
+      posts_read
+      days_visited
+    ]
   end
 
   def self.active_column_names
-    DirectoryColumn.where(type: [:automatic, :plugin]).where(enabled: true).pluck(:name).map(&:to_sym)
+    DirectoryColumn
+      .where(type: %i[automatic plugin])
+      .where(enabled: true)
+      .pluck(:name)
+      .map(&:to_sym)
   end
 
   @@plugin_directory_columns = []
@@ -35,14 +40,15 @@ class DirectoryColumn < ActiveRecord::Base
   end
 
   def self.find_or_create_plugin_directory_column(attrs)
-    directory_column = find_or_create_by(
-      name: attrs[:column_name],
-      icon: attrs[:icon],
-      type: DirectoryColumn.types[:plugin]
-    ) do |column|
-      column.position = DirectoryColumn.maximum("position") + 1
-      column.enabled = false
-    end
+    directory_column =
+      find_or_create_by(
+        name: attrs[:column_name],
+        icon: attrs[:icon],
+        type: DirectoryColumn.types[:plugin],
+      ) do |column|
+        column.position = DirectoryColumn.maximum("position") + 1
+        column.enabled = false
+      end
 
     unless @@plugin_directory_columns.include?(directory_column.name)
       @@plugin_directory_columns << directory_column.name

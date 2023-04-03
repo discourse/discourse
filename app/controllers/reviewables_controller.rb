@@ -5,7 +5,7 @@ class ReviewablesController < ApplicationController
 
   PER_PAGE = 10
 
-  before_action :version_required, only: [:update, :perform]
+  before_action :version_required, only: %i[update perform]
   before_action :ensure_can_see, except: [:destroy]
 
   def index
@@ -15,20 +15,21 @@ class ReviewablesController < ApplicationController
       raise Discourse::InvalidParameters.new(:type) unless Reviewable.valid_type?(params[:type])
     end
 
-    status = (params[:status] || 'pending').to_sym
+    status = (params[:status] || "pending").to_sym
     raise Discourse::InvalidParameters.new(:status) unless allowed_statuses.include?(status)
 
     topic_id = params[:topic_id] ? params[:topic_id].to_i : nil
     category_id = params[:category_id] ? params[:category_id].to_i : nil
 
     custom_keys = Reviewable.custom_filters.map(&:first)
-    additional_filters = JSON.parse(params.fetch(:additional_filters, {}), symbolize_names: true).slice(*custom_keys)
+    additional_filters =
+      JSON.parse(params.fetch(:additional_filters, {}), symbolize_names: true).slice(*custom_keys)
     filters = {
       ids: params[:ids],
       status: status,
       category_id: category_id,
       topic_id: topic_id,
-      additional_filters: additional_filters.reject { |_, v| v.blank? }
+      additional_filters: additional_filters.reject { |_, v| v.blank? },
     }
 
     %i[priority username reviewed_by from_date to_date type sort_order].each do |filter_key|
@@ -36,7 +37,8 @@ class ReviewablesController < ApplicationController
     end
 
     total_rows = Reviewable.list_for(current_user, **filters).count
-    reviewables = Reviewable.list_for(current_user, **filters.merge(limit: PER_PAGE, offset: offset)).to_a
+    reviewables =
+      Reviewable.list_for(current_user, **filters.merge(limit: PER_PAGE, offset: offset)).to_a
 
     claimed_topics = ReviewableClaimedTopic.claimed_hash(reviewables.map { |r| r.topic_id }.uniq)
 
@@ -44,23 +46,25 @@ class ReviewablesController < ApplicationController
     # is mutated by the serializer and contains the side loaded records which must be merged in the end.
     hash = {}
     json = {
-      reviewables: reviewables.map! do |r|
-        result = r.serializer.new(
-          r,
-          root: nil,
-          hash: hash,
-          scope: guardian,
-          claimed_topics: claimed_topics
-        ).as_json
-        hash[:bundled_actions].uniq!
-        (hash['actions'] || []).uniq!
-        result
-      end,
-      meta: filters.merge(
-        total_rows_reviewables: total_rows, types: meta_types, reviewable_types: Reviewable.types,
-        reviewable_count: current_user.reviewable_count,
-        unseen_reviewable_count: current_user.unseen_reviewable_count
-      )
+      reviewables:
+        reviewables.map! do |r|
+          result =
+            r
+              .serializer
+              .new(r, root: nil, hash: hash, scope: guardian, claimed_topics: claimed_topics)
+              .as_json
+          hash[:bundled_actions].uniq!
+          (hash["actions"] || []).uniq!
+          result
+        end,
+      meta:
+        filters.merge(
+          total_rows_reviewables: total_rows,
+          types: meta_types,
+          reviewable_types: Reviewable.types,
+          reviewable_count: current_user.reviewable_count,
+          unseen_reviewable_count: Reviewable.unseen_reviewable_count(current_user),
+        ),
     }
     if (offset + PER_PAGE) < total_rows
       json[:meta][:load_more_reviewables] = review_path(filters.merge(offset: offset + PER_PAGE))
@@ -72,10 +76,12 @@ class ReviewablesController < ApplicationController
 
   def user_menu_list
     json = {
-      reviewables: Reviewable.basic_serializers_for_list(
-        Reviewable.user_menu_list_for(current_user),
-        current_user
-      ).as_json
+      reviewables:
+        Reviewable.basic_serializers_for_list(
+          Reviewable.user_menu_list_for(current_user),
+          current_user,
+        ).as_json,
+      reviewable_count: current_user.reviewable_count,
     }
     render_json_dump(json, rest_serializer: true)
   end
@@ -108,17 +114,17 @@ class ReviewablesController < ApplicationController
       meta[:unique_users] = users.size
     end
 
-    topics = Topic.where(id: topic_ids).order('reviewable_score DESC')
+    topics = Topic.where(id: topic_ids).order("reviewable_score DESC")
     render_serialized(
       topics,
       ReviewableTopicSerializer,
-      root: 'reviewable_topics',
+      root: "reviewable_topics",
       stats: stats,
       claimed_topics: ReviewableClaimedTopic.claimed_hash(topic_ids),
       rest_serializer: true,
       meta: {
-        types: meta_types
-      }
+        types: meta_types,
+      },
     )
   end
 
@@ -129,7 +135,7 @@ class ReviewablesController < ApplicationController
       { reviewable: reviewable, scores: reviewable.explain_score },
       ReviewableExplanationSerializer,
       rest_serializer: true,
-      root: 'reviewable_explanation'
+      root: "reviewable_explanation",
     )
   end
 
@@ -141,10 +147,10 @@ class ReviewablesController < ApplicationController
       reviewable.serializer,
       rest_serializer: true,
       claimed_topics: ReviewableClaimedTopic.claimed_hash([reviewable.topic_id]),
-      root: 'reviewable',
+      root: "reviewable",
       meta: {
-        types: meta_types
-      }
+        types: meta_types,
+      },
     )
   end
 
@@ -186,7 +192,7 @@ class ReviewablesController < ApplicationController
         render_json_error(reviewable.errors)
       end
     rescue Reviewable::UpdateConflict
-      render_json_error(I18n.t('reviewables.conflict'), status: 409)
+      render_json_error(I18n.t("reviewables.conflict"), status: 409)
     end
   end
 
@@ -201,23 +207,32 @@ class ReviewablesController < ApplicationController
         return render_json_error(error)
       end
 
-      args.merge!(reject_reason: params[:reject_reason], send_email: params[:send_email] != "false") if reviewable.type == 'ReviewableUser'
-
-      plugin_params = DiscoursePluginRegistry.reviewable_params.select do |reviewable_param|
-        reviewable.type == reviewable_param[:type].to_s.classify
+      if reviewable.type == "ReviewableUser"
+        args.merge!(
+          reject_reason: params[:reject_reason],
+          send_email: params[:send_email] != "false",
+        )
       end
+
+      plugin_params =
+        DiscoursePluginRegistry.reviewable_params.select do |reviewable_param|
+          reviewable.type == reviewable_param[:type].to_s.classify
+        end
       args.merge!(params.slice(*plugin_params.map { |pp| pp[:param] }).permit!)
 
       result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e
-      if reviewable.type == 'ReviewableUser' && !reviewable.pending? && reviewable.target.blank?
-        raise Discourse::NotFound.new(e.message, custom_message: "reviewables.already_handled_and_user_not_exist")
+      if reviewable.type == "ReviewableUser" && !reviewable.pending? && reviewable.target.blank?
+        raise Discourse::NotFound.new(
+                e.message,
+                custom_message: "reviewables.already_handled_and_user_not_exist",
+              )
       else
         # Consider InvalidAction an InvalidAccess
         raise Discourse::InvalidAccess.new(e.message)
       end
     rescue Reviewable::UpdateConflict
-      return render_json_error(I18n.t('reviewables.conflict'), status: 409)
+      return render_json_error(I18n.t("reviewables.conflict"), status: 409)
     end
 
     if result.success?
@@ -230,7 +245,7 @@ class ReviewablesController < ApplicationController
   def settings
     raise Discourse::InvalidAccess.new unless current_user.admin?
 
-    post_action_types = PostActionType.where(id: PostActionType.flag_types.values).order('id')
+    post_action_types = PostActionType.where(id: PostActionType.flag_types.values).order("id")
 
     if request.put?
       params[:reviewable_priorities].each do |id, priority|
@@ -239,7 +254,7 @@ class ReviewablesController < ApplicationController
           # to calculate it a different way.
           PostActionType.where(id: id).update_all(
             reviewable_priority: priority.to_i,
-            score_bonus: priority.to_f
+            score_bonus: priority.to_f,
           )
         end
       end
@@ -249,7 +264,7 @@ class ReviewablesController < ApplicationController
     render_serialized(data, ReviewableSettingsSerializer, rest_serializer: true)
   end
 
-protected
+  protected
 
   def claim_error?(reviewable)
     return if SiteSetting.reviewable_claiming == "disabled" || reviewable.topic_id.blank?
@@ -257,9 +272,9 @@ protected
     claimed_by_id = ReviewableClaimedTopic.where(topic_id: reviewable.topic_id).pluck(:user_id)[0]
 
     if SiteSetting.reviewable_claiming == "required" && claimed_by_id.blank?
-      I18n.t('reviewables.must_claim')
+      I18n.t("reviewables.must_claim")
     elsif claimed_by_id.present? && claimed_by_id != current_user.id
-      I18n.t('reviewables.user_claimed')
+      I18n.t("reviewables.user_claimed")
     end
   end
 
@@ -274,18 +289,11 @@ protected
   end
 
   def version_required
-    if params[:version].blank?
-      render_json_error(I18n.t('reviewables.missing_version'), status: 422)
-    end
+    render_json_error(I18n.t("reviewables.missing_version"), status: 422) if params[:version].blank?
   end
 
   def meta_types
-    {
-      created_by: 'user',
-      target_created_by: 'user',
-      reviewed_by: 'user',
-      claimed_by: 'user'
-    }
+    { created_by: "user", target_created_by: "user", reviewed_by: "user", claimed_by: "user" }
   end
 
   def ensure_can_see

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'topic_view'
+require "topic_view"
 
 RSpec.describe TopicView do
   fab!(:user) { Fabricate(:user) }
@@ -16,9 +16,7 @@ RSpec.describe TopicView do
   describe "preload" do
     it "allows preloading of data" do
       preloaded_topic_view = nil
-      preloader = lambda do |view|
-        preloaded_topic_view = view
-      end
+      preloader = lambda { |view| preloaded_topic_view = view }
 
       TopicView.on_preload(&preloader)
 
@@ -31,7 +29,7 @@ RSpec.describe TopicView do
   end
 
   it "raises a not found error if the topic doesn't exist" do
-    expect { TopicView.new(1231232, evil_trout) }.to raise_error(Discourse::NotFound)
+    expect { TopicView.new(1_231_232, evil_trout) }.to raise_error(Discourse::NotFound)
   end
 
   it "accepts a topic or a topic id" do
@@ -70,26 +68,23 @@ RSpec.describe TopicView do
     end
   end
 
-  describe 'custom filters' do
+  describe "custom filters" do
     fab!(:p0) { Fabricate(:post, topic: topic) }
     fab!(:p1) { Fabricate(:post, topic: topic, wiki: true) }
 
-    it 'allows to register custom filters' do
-      tv = TopicView.new(topic.id, evil_trout, { filter: 'wiki' })
+    it "allows to register custom filters" do
+      tv = TopicView.new(topic.id, evil_trout, { filter: "wiki" })
       expect(tv.filter_posts({ filter: "wiki" })).to eq([p0, p1])
 
-      TopicView.add_custom_filter("wiki") do |posts, topic_view|
-        posts.where(wiki: true)
-      end
+      TopicView.add_custom_filter("wiki") { |posts, topic_view| posts.where(wiki: true) }
 
-      tv = TopicView.new(topic.id, evil_trout, { filter: 'wiki' })
+      tv = TopicView.new(topic.id, evil_trout, { filter: "wiki" })
       expect(tv.filter_posts).to eq([p1])
 
-      tv = TopicView.new(topic.id, evil_trout, { filter: 'whatever' })
+      tv = TopicView.new(topic.id, evil_trout, { filter: "whatever" })
       expect(tv.filter_posts).to eq([p0, p1])
-
-      ensure
-        TopicView.instance_variable_set(:@custom_filters, {})
+    ensure
+      TopicView.instance_variable_set(:@custom_filters, {})
     end
   end
 
@@ -139,7 +134,9 @@ RSpec.describe TopicView do
 
       context "when a staff user is ignored" do
         let!(:admin) { Fabricate(:user, admin: true) }
-        let!(:admin_ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: admin) }
+        let!(:admin_ignored_user) do
+          Fabricate(:ignored_user, user: evil_trout, ignored_user: admin)
+        end
         let!(:post4) { Fabricate(:post, topic: topic, user: admin) }
 
         it "filters out ignored user excluding the staff user" do
@@ -172,7 +169,7 @@ RSpec.describe TopicView do
       expect(best2.posts[0].id).to eq(p2.id)
       expect(best2.posts[1].id).to eq(p3.id)
 
-      topic.update_status('closed', true, admin)
+      topic.update_status("closed", true, admin)
       expect(topic.posts.count).to eq(4)
 
       # should not get the status post
@@ -196,11 +193,25 @@ RSpec.describe TopicView do
       # should punch through posts if the score is high enough
       p2.update_column(:score, 100)
 
-      best = TopicView.new(topic.id, nil, best: 99, bypass_trust_level_score: 100, min_trust_level: evil_trout.trust_level + 1)
+      best =
+        TopicView.new(
+          topic.id,
+          nil,
+          best: 99,
+          bypass_trust_level_score: 100,
+          min_trust_level: evil_trout.trust_level + 1,
+        )
       expect(best.posts.count).to eq(1)
 
       # 0 means ignore
-      best = TopicView.new(topic.id, nil, best: 99, bypass_trust_level_score: 0, min_trust_level: evil_trout.trust_level + 1)
+      best =
+        TopicView.new(
+          topic.id,
+          nil,
+          best: 99,
+          bypass_trust_level_score: 0,
+          min_trust_level: evil_trout.trust_level + 1,
+        )
       expect(best.posts.count).to eq(0)
 
       # If we restrict to posts a moderator liked, return none
@@ -223,7 +234,7 @@ RSpec.describe TopicView do
       expect { TopicView.new(topic.id, nil) }.to raise_error(Discourse::NotLoggedIn)
     end
 
-    context 'when log_check_personal_message is enabled' do
+    context "when log_check_personal_message is enabled" do
       fab!(:group) { Fabricate(:group) }
       fab!(:private_message) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
@@ -235,37 +246,51 @@ RSpec.describe TopicView do
       it "logs view if Admin views personal message for other user/group" do
         allowed_user = private_message.topic_allowed_users.first.user
         TopicView.new(private_message.id, allowed_user)
-        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(
+          0,
+        )
 
         TopicView.new(private_message.id, evil_trout)
-        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(1)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(
+          1,
+        )
       end
 
       it "does not log personal message view for group he belongs to" do
         group.users << evil_trout
         TopicView.new(private_message.id, evil_trout)
-        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(
+          0,
+        )
       end
 
       it "does not log personal message view for his own personal message" do
         private_message.allowed_users << evil_trout
         TopicView.new(private_message.id, evil_trout)
-        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(
+          0,
+        )
       end
 
       it "does not log personal message view if user can't see the message" do
         expect { TopicView.new(private_message.id, user) }.to raise_error(Discourse::InvalidAccess)
-        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(
+          0,
+        )
       end
 
       it "does not log personal message view if there exists a similar log in previous hour" do
         2.times { TopicView.new(private_message.id, evil_trout) }
-        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(1)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(
+          1,
+        )
 
         freeze_time (2.hours.from_now)
 
         TopicView.new(private_message.id, evil_trout)
-        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(2)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(
+          2,
+        )
       end
     end
 
@@ -273,10 +298,12 @@ RSpec.describe TopicView do
       expect(topic_view.absolute_url).to eq("http://test.localhost/t/#{topic.slug}/#{topic.id}")
     end
 
-    context 'with subfolder' do
+    context "with subfolder" do
       it "provides the correct absolute url" do
         set_subfolder "/forum"
-        expect(topic_view.absolute_url).to eq("http://test.localhost/forum/t/#{topic.slug}/#{topic.id}")
+        expect(topic_view.absolute_url).to eq(
+          "http://test.localhost/forum/t/#{topic.slug}/#{topic.id}",
+        )
       end
     end
 
@@ -301,8 +328,9 @@ RSpec.describe TopicView do
       it "generates a canonical correctly for paged results" do
         5.times { |i| Fabricate(:post, post_number: i + 1, topic: topic) }
 
-        expect(TopicView.new(1234, user, post_number: 5, limit: 2)
-          .canonical_path).to eql("/1234?page=3")
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2).canonical_path).to eql(
+          "/1234?page=3",
+        )
       end
 
       it "generates canonical path correctly by skipping whisper posts" do
@@ -310,8 +338,9 @@ RSpec.describe TopicView do
         2.times { |i| Fabricate(:whisper, post_number: i + 3, topic: topic) }
         Fabricate(:post, post_number: 5, topic: topic)
 
-        expect(TopicView.new(1234, user, post_number: 5, limit: 2)
-          .canonical_path).to eql("/1234?page=2")
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2).canonical_path).to eql(
+          "/1234?page=2",
+        )
       end
 
       it "generates canonical path correctly for mega topics" do
@@ -319,8 +348,9 @@ RSpec.describe TopicView do
         2.times { |i| Fabricate(:whisper, post_number: i + 3, topic: topic) }
         Fabricate(:post, post_number: 5, topic: topic)
 
-        expect(TopicView.new(1234, user, post_number: 5, limit: 2, is_mega_topic: true)
-          .canonical_path).to eql("/1234?page=3")
+        expect(
+          TopicView.new(1234, user, post_number: 5, limit: 2, is_mega_topic: true).canonical_path,
+        ).to eql("/1234?page=3")
       end
     end
 
@@ -331,25 +361,33 @@ RSpec.describe TopicView do
       let!(:post4) { Fabricate(:post, topic: topic, user: user) }
       let!(:post5) { Fabricate(:post, topic: topic, user: user) }
 
-      before do
-        TopicView.stubs(:chunk_size).returns(2)
-      end
+      before { TopicView.stubs(:chunk_size).returns(2) }
 
       it "should return the next page" do
         expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eql(3)
       end
     end
 
-    describe '.post_counts_by_user' do
-      it 'returns the two posters with their appropriate counts' do
-        SiteSetting.enable_whispers = true
+    describe ".post_counts_by_user" do
+      it "returns the two posters with their appropriate counts" do
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
         # Should not be counted
-        Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper], action_code: 'assign')
+        Fabricate(
+          :post,
+          topic: topic,
+          user: evil_trout,
+          post_type: Post.types[:whisper],
+          action_code: "assign",
+        )
 
-        expect(TopicView.new(topic.id, admin).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 2]])
+        expect(TopicView.new(topic.id, admin).post_counts_by_user.to_a).to match_array(
+          [[first_poster.id, 2], [evil_trout.id, 2]],
+        )
 
-        expect(TopicView.new(topic.id, first_poster).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 1]])
+        expect(TopicView.new(topic.id, first_poster).post_counts_by_user.to_a).to match_array(
+          [[first_poster.id, 2], [evil_trout.id, 1]],
+        )
       end
 
       it "doesn't return counts for posts with authors who have been deleted" do
@@ -360,25 +398,27 @@ RSpec.describe TopicView do
       end
     end
 
-    describe '.participants' do
-      it 'returns the two participants hashed by id' do
-        expect(topic_view.participants.to_a).to match_array([[first_poster.id, first_poster], [evil_trout.id, evil_trout]])
+    describe ".participants" do
+      it "returns the two participants hashed by id" do
+        expect(topic_view.participants.to_a).to match_array(
+          [[first_poster.id, first_poster], [evil_trout.id, evil_trout]],
+        )
       end
     end
 
-    describe '.all_post_actions' do
-      it 'is blank at first' do
+    describe ".all_post_actions" do
+      it "is blank at first" do
         expect(topic_view.all_post_actions).to be_blank
       end
 
-      it 'returns the like' do
+      it "returns the like" do
         PostActionCreator.like(evil_trout, p1)
         expect(topic_view.all_post_actions[p1.id][PostActionType.types[:like]]).to be_present
       end
     end
 
-    describe '.read?' do
-      it 'tracks correctly' do
+    describe ".read?" do
+      it "tracks correctly" do
         # anon is assumed to have read everything
         expect(TopicView.new(topic.id).read?(1)).to eq(true)
 
@@ -396,13 +436,17 @@ RSpec.describe TopicView do
 
     describe "#bookmarks" do
       let!(:user) { Fabricate(:user) }
-      let!(:bookmark1) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user) }
-      let!(:bookmark2) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user) }
+      let!(:bookmark1) do
+        Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
+      end
+      let!(:bookmark2) do
+        Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
+      end
       let!(:bookmark3) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic)) }
 
       it "returns all the bookmarks in the topic for a user" do
         expect(TopicView.new(topic.id, user).bookmarks.pluck(:id)).to match_array(
-          [bookmark1.id, bookmark2.id]
+          [bookmark1.id, bookmark2.id],
         )
       end
 
@@ -413,8 +457,16 @@ RSpec.describe TopicView do
 
     describe "#bookmarks" do
       let!(:user) { Fabricate(:user) }
-      let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.first_post, user: user) }
-      let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.posts.order(:post_number)[1], user: user) }
+      let!(:bookmark1) do
+        Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.first_post, user: user)
+      end
+      let!(:bookmark2) do
+        Fabricate(
+          :bookmark_next_business_day_reminder,
+          bookmarkable: topic.posts.order(:post_number)[1],
+          user: user,
+        )
+      end
 
       it "gets the first post bookmark reminder at for the user" do
         topic_view = TopicView.new(topic.id, user)
@@ -451,20 +503,20 @@ RSpec.describe TopicView do
       end
     end
 
-    describe '.topic_user' do
-      it 'returns nil when there is no user' do
+    describe ".topic_user" do
+      it "returns nil when there is no user" do
         expect(TopicView.new(topic.id, nil).topic_user).to be_blank
       end
     end
 
-    describe '#recent_posts' do
+    describe "#recent_posts" do
       before do
         24.times do |t| # our let()s have already created 3
           Fabricate(:post, topic: topic, user: first_poster, created_at: t.seconds.from_now)
         end
       end
 
-      it 'returns at most 25 recent posts ordered newest first' do
+      it "returns at most 25 recent posts ordered newest first" do
         recent_posts = topic_view.recent_posts
 
         # count
@@ -478,9 +530,9 @@ RSpec.describe TopicView do
     end
   end
 
-  describe 'whispers' do
+  describe "whispers" do
     it "handles their visibility properly" do
-      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       p1 = Fabricate(:post, topic: topic, user: evil_trout)
       p2 = Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
       p3 = Fabricate(:post, topic: topic, user: evil_trout)
@@ -496,7 +548,7 @@ RSpec.describe TopicView do
     end
   end
 
-  describe '#posts' do
+  describe "#posts" do
     # Create the posts in a different order than the sort_order
     let!(:p5) { Fabricate(:post, topic: topic, user: evil_trout) }
     let!(:p2) { Fabricate(:post, topic: topic, user: evil_trout) }
@@ -523,9 +575,11 @@ RSpec.describe TopicView do
         # does not contain contains_gaps with default filtering
         expect(topic_view.contains_gaps?).to eq(false)
         # contains contains_gaps when filtered by username" do
-        expect(TopicView.new(topic.id, evil_trout, username_filters: ['eviltrout']).contains_gaps?).to eq(true)
+        expect(
+          TopicView.new(topic.id, evil_trout, username_filters: ["eviltrout"]).contains_gaps?,
+        ).to eq(true)
         # contains contains_gaps when filtered by summary
-        expect(TopicView.new(topic.id, evil_trout, filter: 'summary').contains_gaps?).to eq(true)
+        expect(TopicView.new(topic.id, evil_trout, filter: "summary").contains_gaps?).to eq(true)
         # contains contains_gaps when filtered by best
         expect(TopicView.new(topic.id, evil_trout, best: 5).contains_gaps?).to eq(true)
       end
@@ -541,18 +595,17 @@ RSpec.describe TopicView do
       topic.category_id = category.id
       topic.save!
 
-      expect {
-        TopicView.new(topic.id, evil_trout).posts.count
-      }.to raise_error(Discourse::InvalidAccess)
+      expect { TopicView.new(topic.id, evil_trout).posts.count }.to raise_error(
+        Discourse::InvalidAccess,
+      )
 
       expect(TopicView.new(t2.id, evil_trout, post_ids: [p1.id, p2.id]).posts.count).to eq(0)
-
     end
 
-    describe '#filter_posts_paged' do
+    describe "#filter_posts_paged" do
       before { TopicView.stubs(:chunk_size).returns(2) }
 
-      it 'returns correct posts for all pages' do
+      it "returns correct posts for all pages" do
         expect(topic_view.filter_posts_paged(1)).to eq([p1, p2])
         expect(topic_view.filter_posts_paged(2)).to eq([p3, p5])
         expect(topic_view.filter_posts_paged(3)).to eq([])
@@ -560,20 +613,15 @@ RSpec.describe TopicView do
       end
     end
 
-    describe '#filter_posts_by_post_number' do
+    describe "#filter_posts_by_post_number" do
       def create_topic_view(post_number)
-        TopicView.new(
-          topic.id,
-          evil_trout,
-          filter_post_number: post_number,
-          asc: asc
-        )
+        TopicView.new(topic.id, evil_trout, filter_post_number: post_number, asc: asc)
       end
 
-      describe 'ascending' do
+      describe "ascending" do
         let(:asc) { true }
 
-        it 'should return the right posts' do
+        it "should return the right posts" do
           topic_view = create_topic_view(p3.post_number)
 
           expect(topic_view.posts).to eq([p5])
@@ -583,10 +631,10 @@ RSpec.describe TopicView do
         end
       end
 
-      describe 'descending' do
+      describe "descending" do
         let(:asc) { false }
 
-        it 'should return the right posts' do
+        it "should return the right posts" do
           topic_view = create_topic_view(p7.post_number)
 
           expect(topic_view.posts).to eq([p5, p3, p2])
@@ -600,7 +648,12 @@ RSpec.describe TopicView do
 
     describe "filter_posts_near" do
       def topic_view_near(post, show_deleted = false)
-        TopicView.new(topic.id, evil_trout, post_number: post.post_number, show_deleted: show_deleted)
+        TopicView.new(
+          topic.id,
+          evil_trout,
+          post_number: post.post_number,
+          show_deleted: show_deleted,
+        )
       end
 
       it "snaps to the lower boundary" do
@@ -624,11 +677,9 @@ RSpec.describe TopicView do
         expect(near_view.contains_gaps?).to eq(false)
       end
 
-      describe 'when post_number is too large' do
+      describe "when post_number is too large" do
         it "snaps to the lower boundary" do
-          near_view = TopicView.new(topic.id, evil_trout,
-            post_number: 99999999,
-          )
+          near_view = TopicView.new(topic.id, evil_trout, post_number: 99_999_999)
 
           expect(near_view.desired_post).to eq(p2)
           expect(near_view.posts).to eq([p2, p3, p5])
@@ -674,13 +725,13 @@ RSpec.describe TopicView do
       context "when 'posts per page' exceeds the number of posts" do
         before { TopicView.stubs(:chunk_size).returns(100) }
 
-        it 'returns all the posts' do
+        it "returns all the posts" do
           near_view = topic_view_near(p5)
           expect(near_view.posts).to eq([p1, p2, p3, p5])
           expect(near_view.contains_gaps?).to eq(false)
         end
 
-        it 'gaps deleted posts to admins' do
+        it "gaps deleted posts to admins" do
           evil_trout.admin = true
           near_view = topic_view_near(p5)
           expect(near_view.posts).to eq([p1, p2, p3, p5])
@@ -688,7 +739,7 @@ RSpec.describe TopicView do
           expect(near_view.gaps.after).to eq(p5.id => [p6.id, p7.id])
         end
 
-        it 'returns deleted posts to admins' do
+        it "returns deleted posts to admins" do
           evil_trout.admin = true
           near_view = topic_view_near(p5, true)
           expect(near_view.posts).to eq([p1, p2, p3, p4, p5, p6, p7])
@@ -699,8 +750,8 @@ RSpec.describe TopicView do
   end
 
   describe "page_title" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag, topic_count: 2) }
+    fab!(:tag1) { Fabricate(:tag, staff_topic_count: 0, public_topic_count: 0) }
+    fab!(:tag2) { Fabricate(:tag, staff_topic_count: 2, public_topic_count: 2) }
     fab!(:op_post) { Fabricate(:post, topic: topic) }
     fab!(:post1) { Fabricate(:post, topic: topic) }
     fab!(:whisper) { Fabricate(:post, topic: topic, post_type: Post.types[:whisper]) }
@@ -774,6 +825,25 @@ RSpec.describe TopicView do
             it { is_expected.not_to include(tag1.name) }
             it { is_expected.not_to include(tag2.name) }
           end
+
+          context "with restricted tags" do
+            let(:tag_group) { Fabricate.build(:tag_group) }
+            let(:tag_group_permission) do
+              Fabricate.build(:tag_group_permission, tag_group: tag_group)
+            end
+
+            before do
+              SiteSetting.tagging_enabled = true
+              # avoid triggering a `before_create` callback in `TagGroup` which
+              # messes with permissions
+              tag_group.tag_group_permissions << tag_group_permission
+              tag_group.save!
+              tag_group_permission.tag_group.tags << tag2
+            end
+
+            it { is_expected.not_to include(tag2.name) }
+            it { is_expected.to include(tag1.name) }
+          end
         end
       end
     end
@@ -808,34 +878,26 @@ RSpec.describe TopicView do
     end
   end
 
-  describe '#filtered_post_stream' do
+  describe "#filtered_post_stream" do
     let!(:post) { Fabricate(:post, topic: topic, user: first_poster, created_at: 18.hours.ago) }
     let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout, created_at: 6.hours.ago) }
     let!(:post3) { Fabricate(:post, topic: topic, user: first_poster) }
 
-    it 'should return the right columns' do
-      expect(topic_view.filtered_post_stream).to eq([
-        [post.id, 1],
-        [post2.id, 0],
-        [post3.id, 0]
-      ])
+    it "should return the right columns" do
+      expect(topic_view.filtered_post_stream).to eq([[post.id, 1], [post2.id, 0], [post3.id, 0]])
     end
 
-    describe 'for mega topics' do
-      it 'should return the right columns' do
+    describe "for mega topics" do
+      it "should return the right columns" do
         stub_const(TopicView, "MEGA_TOPIC_POSTS_COUNT", 2) do
-          expect(topic_view.filtered_post_stream).to eq([
-            post.id,
-            post2.id,
-            post3.id
-          ])
+          expect(topic_view.filtered_post_stream).to eq([post.id, post2.id, post3.id])
         end
       end
     end
   end
 
-  describe '#filtered_post_id' do
-    it 'should return the right id' do
+  describe "#filtered_post_id" do
+    it "should return the right id" do
       post = Fabricate(:post, topic: topic)
 
       expect(topic_view.filtered_post_id(nil)).to eq(nil)
@@ -843,31 +905,31 @@ RSpec.describe TopicView do
     end
   end
 
-  describe '#last_post_id' do
+  describe "#last_post_id" do
     let!(:p3) { Fabricate(:post, topic: topic) }
     let!(:p2) { Fabricate(:post, topic: topic) }
     let!(:p1) { Fabricate(:post, topic: topic) }
 
-    before do
-      [p1, p2, p3].each_with_index do |post, index|
-        post.update!(sort_order: index + 1)
-      end
-    end
+    before { [p1, p2, p3].each_with_index { |post, index| post.update!(sort_order: index + 1) } }
 
-    it 'should return the right id' do
+    it "should return the right id" do
       expect(topic_view.last_post_id).to eq(p3.id)
     end
   end
 
-  describe '#read_time' do
+  describe "#read_time" do
     let!(:post) { Fabricate(:post, topic: topic) }
 
     before do
-      PostCreator.create!(Discourse.system_user, topic_id: topic.id, raw: "![image|100x100](upload://upload.png)")
+      PostCreator.create!(
+        Discourse.system_user,
+        topic_id: topic.id,
+        raw: "![image|100x100](upload://upload.png)",
+      )
       topic_view.topic.reload
     end
 
-    it 'should return the right read time' do
+    it "should return the right read time" do
       SiteSetting.read_time_word_count = 500
       expect(topic_view.read_time).to eq(1)
 
@@ -876,13 +938,17 @@ RSpec.describe TopicView do
     end
   end
 
-  describe '#image_url' do
+  describe "#image_url" do
     fab!(:op_upload) { Fabricate(:image_upload) }
     fab!(:post3_upload) { Fabricate(:image_upload) }
 
     fab!(:post1) { Fabricate(:post, topic: topic) }
     fab!(:post2) { Fabricate(:post, topic: topic) }
-    fab!(:post3) { Fabricate(:post, topic: topic).tap { |p| p.update_column(:image_upload_id, post3_upload.id) }.reload }
+    fab!(:post3) do
+      Fabricate(:post, topic: topic)
+        .tap { |p| p.update_column(:image_upload_id, post3_upload.id) }
+        .reload
+    end
 
     def topic_view_for_post(post_number)
       TopicView.new(topic.id, evil_trout, post_number: post_number)
@@ -910,7 +976,7 @@ RSpec.describe TopicView do
     end
   end
 
-  describe '#show_read_indicator?' do
+  describe "#show_read_indicator?" do
     let(:topic) { Fabricate(:topic) }
     let(:pm_topic) { Fabricate(:private_message_topic) }
 
@@ -936,17 +1002,18 @@ RSpec.describe TopicView do
     end
   end
 
-  describe '#reviewable_counts' do
-    it 'exclude posts queued because the category needs approval' do
+  describe "#reviewable_counts" do
+    it "exclude posts queued because the category needs approval" do
       category = Fabricate.build(:category, user: admin)
       category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
       category.save!
-      manager = NewPostManager.new(
-        user,
-        raw: 'to the handler I say enqueue me!',
-        title: 'this is the title of the queued post',
-        category: category.id
-      )
+      manager =
+        NewPostManager.new(
+          user,
+          raw: "to the handler I say enqueue me!",
+          title: "this is the title of the queued post",
+          category: category.id,
+        )
       result = manager.perform
       reviewable = result.reviewable
       reviewable.perform(admin, :approve_post)
@@ -956,13 +1023,14 @@ RSpec.describe TopicView do
       expect(topic_view.reviewable_counts).to be_empty
     end
 
-    it 'include posts queued for other reasons' do
+    it "include posts queued for other reasons" do
       Fabricate(:watched_word, word: "darn", action: WatchedWord.actions[:require_approval])
-      manager = NewPostManager.new(
-        user,
-        raw: 'this is darn new post content',
-        title: 'this is the title of the queued post'
-      )
+      manager =
+        NewPostManager.new(
+          user,
+          raw: "this is darn new post content",
+          title: "this is the title of the queued post",
+        )
       result = manager.perform
       reviewable = result.reviewable
       reviewable.perform(admin, :approve_post)
@@ -973,15 +1041,13 @@ RSpec.describe TopicView do
     end
   end
 
-  describe '.apply_custom_default_scope' do
+  describe ".apply_custom_default_scope" do
     fab!(:post) { Fabricate(:post, topic: topic, created_at: 2.hours.ago) }
     fab!(:post_2) { Fabricate(:post, topic: topic, created_at: 1.hour.ago) }
 
-    after do
-      TopicView.reset_custom_default_scopes
-    end
+    after { TopicView.reset_custom_default_scopes }
 
-    it 'allows a custom default scope to be configured' do
+    it "allows a custom default scope to be configured" do
       topic_view = TopicView.new(topic, admin)
 
       expect(topic_view.filtered_post_ids).to eq([post.id, post_2.id])
@@ -1003,9 +1069,7 @@ RSpec.describe TopicView do
     let(:user) { Fabricate(:user) }
     let(:category) { topic.category }
 
-    before do
-      NewPostManager.stubs(:queue_enabled?).returns(queue_enabled)
-    end
+    before { NewPostManager.stubs(:queue_enabled?).returns(queue_enabled) }
 
     context "when queue is enabled globally" do
       let(:queue_enabled) { true }
@@ -1017,9 +1081,7 @@ RSpec.describe TopicView do
       let(:queue_enabled) { false }
 
       context "when category is moderated" do
-        before do
-          category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
-        end
+        before { category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true }
 
         it { expect(topic_view.queued_posts_enabled?).to be(true) }
       end
@@ -1027,6 +1089,32 @@ RSpec.describe TopicView do
       context "when category is not moderated" do
         it { expect(topic_view.queued_posts_enabled?).to be(nil) }
       end
+    end
+  end
+
+  describe "with topic_view_suggested_topics_options modifier" do
+    let!(:topic1) { Fabricate(:topic) }
+    let!(:topic2) { Fabricate(:topic) }
+
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "allows disabling of random suggested" do
+      topic_view = TopicView.new(topic1)
+
+      Plugin::Instance
+        .new
+        .register_modifier(
+          :topic_view_suggested_topics_options,
+        ) do |suggested_options, inner_topic_view|
+          expect(inner_topic_view).to eq(topic_view)
+          suggested_options.merge(include_random: false)
+        end
+
+      expect(topic_view.suggested_topics.topics.count).to eq(0)
+
+      DiscoursePluginRegistry.clear_modifiers!
+
+      expect(TopicView.new(topic1).suggested_topics.topics.count).to be > 0
     end
   end
 end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::EmojisController < Admin::AdminController
-
   def index
     render_serialized(Emoji.custom, EmojiSerializer, root: false)
   end
@@ -17,15 +16,12 @@ class Admin::EmojisController < Admin::AdminController
     hijack do
       # fix the name
       name = File.basename(name, ".*")
-      name = name.gsub(/[^a-z0-9]+/i, '_')
-        .gsub(/_{2,}/, '_')
-        .downcase
+      name = name.gsub(/[^a-z0-9]+/i, "_").gsub(/_{2,}/, "_").downcase
 
-      upload = UploadCreator.new(
-        file.tempfile,
-        file.original_filename,
-        type: 'custom_emoji'
-      ).create_for(current_user.id)
+      upload =
+        UploadCreator.new(file.tempfile, file.original_filename, type: "custom_emoji").create_for(
+          current_user.id,
+        )
 
       good = true
 
@@ -61,5 +57,4 @@ class Admin::EmojisController < Admin::AdminController
 
     render json: success_json
   end
-
 end

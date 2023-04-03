@@ -8,16 +8,11 @@ def library_src
   "#{Rails.root}/node_modules"
 end
 
-task 'svgicons:update' do
+task "svgicons:update" do
   pnpm = system("pnpm install")
   abort('Unable to run "pnpm install"') unless pnpm
 
-  dependencies = [
-    {
-      source: '@fortawesome/fontawesome-free/sprites',
-      destination: 'fontawesome',
-    }
-  ]
+  dependencies = [{ source: "@fortawesome/fontawesome-free/sprites", destination: "fontawesome" }]
 
   start = Time.now
 

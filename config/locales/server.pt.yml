@@ -456,10 +456,6 @@ pt:
             duration_minutes:
               cannot_be_zero: "deve ser maior que 0."
               exceeds_maximum: "não pode ter mais de 20 anos."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'As seguintes chaves de interpolação são inválidas: "%{keys}”'
         watched_word:
           attributes:
             word:
@@ -591,13 +587,14 @@ pt:
         one: "há quase %{count} ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    choose_new: "Escolha uma nova palavra-passe"
-    choose: "Escolha uma palavra-passe"
-    update: "Atualizar Palavra-passe"
-    save: "Definir Palavra-passe"
     title: "Redefinir Palavra-passe"
     success: "A sua palavra-passe foi alterada com sucesso e está agora ligado."
     success_unapproved: "Palavra-passe modificada com sucesso."
+  user_auth_tokens:
+    device:
+      iphone: "iPhone"
+    os:
+      android: "Android"
   change_email:
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar para %{site_name}"
@@ -658,6 +655,7 @@ pt:
       long_form: "sinalizou isto como spam"
     inappropriate:
       title: "Inapropriado"
+      description: 'Este tópico contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, uma conduta odiosa ou uma violação de <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: "sinalizou isto como inapropriado"
     notify_moderators:
       title: "Algo Mais"
@@ -756,6 +754,11 @@ pt:
         post: Publicação
         editor: Editor
         edit_reason: Motivo
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API de Utlizador"
+      yaxis: "Dia"
     dau_by_mau:
       xaxis: "Dia"
     daily_engaged_users:
@@ -973,16 +976,12 @@ pt:
     allow_duplicate_topic_titles: "Permitir tópicos com títulos idênticos e duplicados."
     unique_posts_mins: "Quantos minutos antes que um utilizador possa criar uma mensagem com o mesmo conteúdo outra vez?"
     educate_until_posts: "Quando um utilizador começar a escrever as primeiras (n) novas mensagens, mostrar o painel pop-up de educação do novo utilizador no editor."
-    title: "O nome deste sítio, tal como usado na etiqueta do título."
-    site_description: "Descrever este sítio em uma frase, tal como usado na etiqueta de descrição meta."
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir as imagens remotas localmente (em percentagem)"
     disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. Lista delimitada por canal."
     editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
-    max_image_width: "Largura máxima de miniaturas de imagens numa mensagem."
-    max_image_height: "Altura máxima de miniaturas de imagens numa mensagem."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
     fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: 'Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: "rake posts:rebake"'
@@ -1013,6 +1012,7 @@ pt:
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
     use_admin_ip_allowlist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
+    include_secure_categories_in_tag_counts: "Quando ativada, a contagem de tópicos para uma tag incluirá tópicos que estão em categorias restritas de leitura para todos os utilizadores. Quando desabilitada, os utilizadores normais visualizam apenas uma contagem de tópicos para uma tag em que todos os tópicos estão em categorias públicas."
     top_menu: "Determinar que elementos aparecem na navegação da página principal, e em que ordem. Exemplo últimos|novos|não lidos|categorias|topo|lidos|publicados|marcadores"
     post_menu: "Determine que itens irão aparecer no menu de mensagens, e em que ordem. Exemplo\ngostar|editar|sinalizar|eliminar|partilhar|marcar|responder"
     post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
@@ -1030,9 +1030,7 @@ pt:
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     enable_badges: "Ativar o sistema de distintivos"
-    enable_whispers: "Permitir à equipa de apio comunicar de forma privada dentro de tópicos."
-    blocked_email_domains: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
-    allowed_email_domains: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
+    blocked_email_domains: "Uma lista delimitada de domínios de correio electrónico com os quais os utilizadores não estão autorizados a registar contas. Os subdomínios são automaticamente tratados para os domínios especificados. Os símbolos wildcard * e ? não são suportados. Exemplo: mailinator.com|trashmail.net"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
@@ -1045,7 +1043,6 @@ pt:
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
     google_oauth2_client_secret: "Chave do cliente da sua aplicação Google."
-    maximum_backups: "O número máximo de cópias de segurança a manter no disco. As cópias de segurança antigas são eliminadas automaticamente."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
     backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
@@ -1291,6 +1288,7 @@ pt:
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
     create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
+    enable_new_notifications_menu: "Permite o novo menu de notificações para o menu de navegação antigo."
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1316,6 +1314,7 @@ pt:
       invalid_regex: "A expressão regular não é válida ou permitida."
       min_username_length_range: "Não pode definir o mínimo acima do máximo."
       max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
+      enable_new_notifications_menu_not_legacy_navigation_menu: "Deve definir \"menu_navegação\" para \"legado\" antes de permitir esta definição."
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1418,6 +1417,7 @@ pt:
       must_not_contain_two_special_chars_in_seq: "não deve conter uma sequência de 2 ou mais caracteres especiais (.-_)"
       must_not_end_with_confusing_suffix: "não deve terminar com um sufixo que confunda tal como .json ou .png etc."
     email:
+      blank: "não pode estar em branco."
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
       revoked: "Emails não serão enviados a '%{email}' até %{date}."
@@ -1450,7 +1450,6 @@ pt:
     subject_template: "[%{email_prefix}] disponível atualização"
   flag_reasons:
     off_topic: "A sua mensagem foi marcada como **fora do contexto**: a comunidade sente que não se enquadra neste tópico, conforme o seu título e a sua primeira mensagem."
-    inappropriate: "A sua mensagem foi sinalizada como **inapropriada**: a comunidade sente que é ofensiva, abusiva ou que é uma violação das [orientações da nossa comunidade](%{base_path}/guidelines)."
     spam: "A sua mensagem foi marcada como **spam**: a comunidade sente que é um anúncio, algo que é excecionalmente promocional na sua natureza em vez de ser útil ou relevante para o tópico tal como seria esperado."
     notify_moderators: "A sua mensagem foi marcada **para atenção do moderador**: a comunidade sente que algo na sua mensagem requer intervenção manual de um membro do pessoal."
   flags_dispositions:
@@ -1627,9 +1626,6 @@ pt:
   user_notifications:
     previous_discussion: "Respostas Anteriores"
     in_reply_to: "Em Resposta A"
-    unsubscribe:
-      title: "Cancelar a Subscrição"
-      description: "Não está interessado em receber estes emails? Não há problema! Clique em baixo para cancelar a subscrição instantaneamente:"
     reply_by_email: "[Visitar Tópico](%{base_url}%{url}) ou responda a este email para responder."
     only_reply_by_email: "Responda a este email para responder."
     visit_link_to_respond: "[Visitar Tópico](%{base_url}%{url}) para responder."
@@ -1766,6 +1762,16 @@ pt:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       text_body_template: |2
 
@@ -1799,7 +1805,6 @@ pt:
       liked_received: "Gostos Recebidos"
       new_users: "Novos Utilizadores"
       popular_topics: "Tópicos Populares"
-      follow_topic: "Acompanhar este tópico"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
       click_here: "clique aqui"
@@ -1832,8 +1837,6 @@ pt:
     see_more: "Mais"
     search_title: "Pesquisar neste sítio"
     search_button: "Pesquisar"
-  deleted: "eliminado"
-  image: "imagem"
   upload:
     edit_reason: "cópias das imagens locais transferidas"
     unauthorized: "Pedimos desculpa, o ficheiro que está a tentar carregar não está autorizado (extensões autorizadas: %{authorized_extensions})."
@@ -1885,93 +1888,6 @@ pt:
     title: "Termos de Serviço"
   privacy_topic:
     title: "Política de Privacidade"
-    body: |2
-
-      <a name="collect"></a>
-
-      ## [Que informações reunimos?](#reunião)
-
-      Reunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aqui partilhado.
-
-      Ao inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email.
-
-      Ao inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor.
-
-      <a name="use"></a>
-
-      ## [Para que usamos as suas informações?](#usar)
-
-      Todas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras:
-
-      * Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais.
-
-      * Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si.
-
-      * Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte.
-
-      * Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões.
-
-      <a name="protect"></a>
-
-      ## [Como protegemos a sua informação?](#protect)
-
-      Implementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal.
-
-      <a name="data-retention"></a>
-
-      ## [Qual é a sua política de retenção de dados?](#retenção-dados)
-
-      Iremos fazer um esforço de boa fé para:
-
-      * Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor não mais que 90 dias.
-
-      * Reter endereços IP associados a utilizadores registados e às suas publicações por não mais que 5 anos.
-
-      <a name="cookies"></a>
-
-      ## [Usamos cookies?](#cookies)
-
-      Sim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa.
-
-      Usamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio.
-
-      <a name="disclose"></a>
-
-      ## [Divulgamos informação com partes exteriores?](#divulgar)
-
-      Não vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos.
-
-      <a name="third-party"></a>
-
-      ## [Hiperligações de Terceiras Partes](#terceira-parte)
-
-      Ocasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios.
-
-      <a name="coppa"></a>
-
-      ## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa)
-
-      O nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio.
-
-      <a name="online"></a>
-
-      ## [Política de Privacidade Online](#online)
-
-      Estas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline.
-
-      <a name="consent"></a>
-
-      ## [O seu consentimento](#consentimento)
-
-      Ao utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio.
-
-      <a name="changes"></a>
-
-      ## [Mudanças à nossa Política de Privacidade](#mudanças)
-
-      Se decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página.
-
-      Este documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.
   badges:
     mass_award:
       errors:
@@ -2161,8 +2077,6 @@ pt:
       message: "<p>Reenviamos o email de ativação para <b>%{email}</b>"
   safe_mode:
     title: "Entrar em modo de segurança"
-    no_unofficial_plugins: "Desativar plugins não-oficiais"
-    no_plugins: "Desativar todos os plugins"
     enter: "Entrar em Modo de Segurança"
   wizard:
     title: "Configuração do Discourse"
@@ -2177,8 +2091,6 @@ pt:
         fields:
           login_required:
             placeholder: "Privado"
-      ready:
-        title: "O seu Discourse está Pronto!"
       styling:
         fields:
           styling_preview:
@@ -2195,25 +2107,14 @@ pt:
                 label: "Categorias e Tópicos Recentes"
               categories_and_top_topics:
                 label: "Categorias e Melhores Tópicos"
-      branding:
-        fields:
-          logo:
-            label: "Logo Primário"
-          large_icon:
-            label: "Ícone Grande"
       corporate:
         fields:
           contact_url:
-            label: "Página da Internet"
             placeholder: "https://www.example.com/contact-us"
-            description: "Página da internet com informação geral sobre si ou a sua organização. Será mostrada na <a href='%{base_path}/about' target='_blank'>sua página de descrição</a>."
-          site_contact:
-            label: "Mensagens Automatizadas"
       invites:
         title: "Convidar Equipa de Apoio"
       finished:
         title: "O seu Discourse está Pronto!"
-  joined: "Juntou-se"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
@@ -2242,19 +2143,20 @@ pt:
     reasons:
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
-      agree_and_suspend:
-        title: "Utilizador Suspenso"
+      agree:
+        title: "Sim"
       agree_and_silence:
-        title: "Silenciar Usuário"
+        title: "Silenciar utilizador"
       delete_single:
         title: "Eliminar"
       disagree:
-        title: "Discordar"
+        title: "Não"
       ignore:
         title: "Ignorar"
       approve:
         title: "Aprovar"
       reject_user:
+        title: "Eliminar Utilizador..."
         delete:
           title: "Eliminar Utilizador"
       reject:

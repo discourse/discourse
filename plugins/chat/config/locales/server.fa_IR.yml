@@ -12,10 +12,18 @@ fa_IR:
     chat_message_flag_allowed_groups: "کاربران در این گروه‌ها مجاز به گزارش دادن، پیام‌های گفتگو هستند."
     errors:
       chat_upload_not_allowed_secure_uploads: "وقتی که در تنظیمات سایت آپلودهای ایمن فعال باشد، آپلود گفتگو مجاز نیست."
+  system_messages:
+    chat_channel_archive_complete:
+      text_body_template: |
+        بایگانی کانال گفتگو %{channel_hashtag_or_name} با موفقیت انجام شد. پیام‌ها در موضوع [%{topic_title}](%{topic_url}) کپی شده‌اند.
   chat:
     deleted_chat_username: حذف شد
     errors:
       channel_exists_for_category: "یک کانال دیگر از قبل برای این دسته‌بندی و نام وجود دارد"
+      message_too_long:
+        one: "پیام خیلی طولانی است، پیام‌ها باید حداکثر %{count} کاراکتر داشته باشند."
+        other: "پیام خیلی طولانی است، پیام‌ها باید حداکثر %{count} کاراکتر داشته باشند."
+      draft_too_long: "پیش‌نویس خیلی طولانی است."
       cant_update_direct_message_channel: "ویژگی پیام مستقیم کانال مانند نام و توضیحات را نمی‌توان به‌روز کرد."
       not_accepting_dms: "با عرض پوزش، کاربر %{username} در حال حاضر پیام نمی‌پذیرد."
       actor_ignoring_target_user: "شما در حال نادیده گرفتن %{username} هستید، بنابراین نمی‌توانید پیامی را برای او ارسال کنید."
@@ -46,15 +54,11 @@ fa_IR:
         transcript_title: "رونوشت پیام‌های قبلی در %{channel_name}"
         transcript_body: "برای ارائه متن بیشتر به شما، رونوشتی از پیام‌های قبلی را در این گفتگو (حداکثر ده مورد) قرار دادیم:\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "فقط خواندنی"
-        archived: "بایگانی شد"
-        closed: "بسته"
-        open: "باز"
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} و %{leftover} نفر دیگر"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} و %{count} نفر دیگر"
+          other: "%{comma_separated_usernames} و %{count} نفر دیگر"
     bookmarkable:
       notification_title: "پیام در %{channel_name}"
     personal_chat: "گفتگوی شخصی"
@@ -86,14 +90,17 @@ fa_IR:
         other: "شما پیام‌های گفتگو جدیدی دارید"
       from: "%{site_name}"
       subject:
-        direct_message:
-          one: "[%{email_prefix}] پیام جدید از %{message_title}"
-          other: "[%{email_prefix}] پیام جدید %{message_title} و %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] پیام جدید در %{message_title}"
-          other: "[%{email_prefix}] پیام جدید در %{message_title} و %{others}"
-        other_direct_message: "از %{message_title}"
-        others: "%{count} نفر دیگر"
+        direct_message_from_1: "[%{email_prefix}] پیام جدید از %{username}"
+        direct_message_from_2: "[%{email_prefix}] پیام جدید از %{username1} و %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] پیام جدید از %{username} و %{count} نفر دیگر"
+          other: "[%{email_prefix}] پیام جدید از %{username} و %{count} نفر دیگر"
+        chat_channel_1: "[%{email_prefix}] پیام جدید در %{channel}"
+        chat_channel_2: "[%{email_prefix}] پیام جدید در %{channel1} و %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] پیام جدید در %{channel} و %{count} نفر دیگر"
+          other: "[%{email_prefix}] پیام جدید در %{channel} و %{count} نفر دیگر"
+        chat_channel_and_direct_message: "[%{email_prefix}] پیام جدید در %{channel} و از %{username}"
       view_messages:
         one: "مشاهده پیام"
         other: "مشاهده %{count} پیام"

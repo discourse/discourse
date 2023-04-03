@@ -7,31 +7,25 @@ RSpec.describe "DiscoursePoll endpoints" do
     fab!(:user) { Fabricate(:user) }
     fab!(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
 
-    fab!(:post_with_multiple_poll) do
-      Fabricate(:post, raw: <<~SQL)
+    fab!(:post_with_multiple_poll) { Fabricate(:post, raw: <<~SQL) }
       [poll type=multiple public=true min=1 max=2]
       - A
       - B
       - C
       [/poll]
       SQL
-    end
 
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
     it "should return the right response" do
-      DiscoursePoll::Poll.vote(
-        user,
-        post.id,
-        DiscoursePoll::DEFAULT_POLL_NAME,
-        [option_a]
-      )
+      DiscoursePoll::Poll.vote(user, post.id, DiscoursePoll::DEFAULT_POLL_NAME, [option_a])
 
-      get "/polls/voters.json", params: {
-        post_id: post.id,
-        poll_name: DiscoursePoll::DEFAULT_POLL_NAME
-      }
+      get "/polls/voters.json",
+          params: {
+            post_id: post.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+          }
 
       expect(response.status).to eq(200)
 
@@ -43,19 +37,20 @@ RSpec.describe "DiscoursePoll endpoints" do
       expect(option.first["username"]).to eq(user.username)
     end
 
-    it 'should return the right response for a single option' do
+    it "should return the right response for a single option" do
       DiscoursePoll::Poll.vote(
         user,
         post_with_multiple_poll.id,
         DiscoursePoll::DEFAULT_POLL_NAME,
-        [option_a, option_b]
+        [option_a, option_b],
       )
 
-      get "/polls/voters.json", params: {
-        post_id: post_with_multiple_poll.id,
-        poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
-        option_id: option_b
-      }
+      get "/polls/voters.json",
+          params: {
+            post_id: post_with_multiple_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            option_id: option_b,
+          }
 
       expect(response.status).to eq(200)
 
@@ -70,56 +65,60 @@ RSpec.describe "DiscoursePoll endpoints" do
       expect(option.first["username"]).to eq(user.username)
     end
 
-    describe 'when post_id is blank' do
-      it 'should raise the right error' do
+    describe "when post_id is blank" do
+      it "should raise the right error" do
         get "/polls/voters.json", params: { poll_name: DiscoursePoll::DEFAULT_POLL_NAME }
         expect(response.status).to eq(400)
       end
     end
 
-    describe 'when post_id is not valid' do
-      it 'should raise the right error' do
-        get "/polls/voters.json", params: {
-          post_id: -1,
-          poll_name: DiscoursePoll::DEFAULT_POLL_NAME
-        }
+    describe "when post_id is not valid" do
+      it "should raise the right error" do
+        get "/polls/voters.json",
+            params: {
+              post_id: -1,
+              poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            }
         expect(response.status).to eq(400)
-        expect(response.body).to include('post_id')
+        expect(response.body).to include("post_id")
       end
     end
 
-    describe 'when poll_name is blank' do
-      it 'should raise the right error' do
+    describe "when poll_name is blank" do
+      it "should raise the right error" do
         get "/polls/voters.json", params: { post_id: post.id }
         expect(response.status).to eq(400)
       end
     end
 
-    describe 'when poll_name is not valid' do
-      it 'should raise the right error' do
-        get "/polls/voters.json", params: { post_id: post.id, poll_name: 'wrongpoll' }
+    describe "when poll_name is not valid" do
+      it "should raise the right error" do
+        get "/polls/voters.json", params: { post_id: post.id, poll_name: "wrongpoll" }
         expect(response.status).to eq(400)
-        expect(response.body).to include('poll_name')
+        expect(response.body).to include("poll_name")
       end
     end
 
     context "with number poll" do
-      let(:post) { Fabricate(:post, raw: "[poll type=number min=1 max=20 step=1 public=true]\n[/poll]") }
+      let(:post) do
+        Fabricate(:post, raw: "[poll type=number min=1 max=20 step=1 public=true]\n[/poll]")
+      end
 
-      it 'should return the right response' do
+      it "should return the right response" do
         post
 
         DiscoursePoll::Poll.vote(
           user,
           post.id,
           DiscoursePoll::DEFAULT_POLL_NAME,
-          ["4d8a15e3cc35750f016ce15a43937620"]
+          ["4d8a15e3cc35750f016ce15a43937620"],
         )
 
-        get "/polls/voters.json", params: {
-          post_id: post.id,
-          poll_name: DiscoursePoll::DEFAULT_POLL_NAME
-        }
+        get "/polls/voters.json",
+            params: {
+              post_id: post.id,
+              poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            }
 
         expect(response.status).to eq(200)
 
@@ -137,31 +136,25 @@ RSpec.describe "DiscoursePoll endpoints" do
     fab!(:user3) { Fabricate(:user) }
     fab!(:user4) { Fabricate(:user) }
 
-    fab!(:post) do
-      Fabricate(:post, raw: <<~SQL)
+    fab!(:post) { Fabricate(:post, raw: <<~SQL) }
       [poll type=multiple public=true min=1 max=2]
       - A
       - B
       [/poll]
       SQL
-    end
 
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
     before do
-      user_votes = {
-        user_0: option_a,
-        user_1: option_a,
-        user_2: option_b,
-      }
+      user_votes = { user_0: option_a, user_1: option_a, user_2: option_b }
 
       [user1, user2, user3].each_with_index do |user, index|
         DiscoursePoll::Poll.vote(
           user,
           post.id,
           DiscoursePoll::DEFAULT_POLL_NAME,
-          [user_votes["user_#{index}".to_sym]]
+          [user_votes["user_#{index}".to_sym]],
         )
         UserCustomField.create(user_id: user.id, name: "something", value: "value#{index}")
       end
@@ -171,7 +164,7 @@ RSpec.describe "DiscoursePoll endpoints" do
         user4,
         post.id,
         DiscoursePoll::DEFAULT_POLL_NAME,
-        [option_a, option_b]
+        [option_a, option_b],
       )
       UserCustomField.create(user_id: user4.id, name: "something", value: "value1")
     end
@@ -179,32 +172,52 @@ RSpec.describe "DiscoursePoll endpoints" do
     it "returns grouped poll results based on user field" do
       SiteSetting.poll_groupable_user_fields = "something"
 
-      get "/polls/grouped_poll_results.json", params: {
-        post_id: post.id,
-        poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
-        user_field_name: "something"
-      }
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
 
       expect(response.status).to eq(200)
       expect(response.parsed_body.deep_symbolize_keys).to eq(
         grouped_results: [
-          { group: "Value0", options: [{ digest: option_a, html: "A", votes: 1 }, { digest: option_b, html: "B", votes: 0 }] },
-          { group: "Value1", options: [{ digest: option_a, html: "A", votes: 2 }, { digest: option_b, html: "B", votes: 1 }] },
-          { group: "Value2", options: [{ digest: option_a, html: "A", votes: 0 }, { digest: option_b, html: "B", votes: 1 }] },
-        ]
+          {
+            group: "Value0",
+            options: [
+              { digest: option_a, html: "A", votes: 1 },
+              { digest: option_b, html: "B", votes: 0 },
+            ],
+          },
+          {
+            group: "Value1",
+            options: [
+              { digest: option_a, html: "A", votes: 2 },
+              { digest: option_b, html: "B", votes: 1 },
+            ],
+          },
+          {
+            group: "Value2",
+            options: [
+              { digest: option_a, html: "A", votes: 0 },
+              { digest: option_b, html: "B", votes: 1 },
+            ],
+          },
+        ],
       )
     end
 
     it "returns an error when poll_groupable_user_fields is empty" do
       SiteSetting.poll_groupable_user_fields = ""
-      get "/polls/grouped_poll_results.json", params: {
-        post_id: post.id,
-        poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
-        user_field_name: "something"
-      }
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
 
       expect(response.status).to eq(400)
-      expect(response.body).to include('user_field_name')
+      expect(response.body).to include("user_field_name")
     end
   end
 end

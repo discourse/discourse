@@ -1,61 +1,72 @@
 # frozen_string_literal: true
 
-require 'discourse'
+require "discourse"
 
 RSpec.describe Discourse do
-  before do
-    RailsMultisite::ConnectionManagement.stubs(:current_hostname).returns('foo.com')
-  end
+  before { RailsMultisite::ConnectionManagement.stubs(:current_hostname).returns("foo.com") }
 
-  describe 'current_hostname' do
-    it 'returns the hostname from the current db connection' do
-      expect(Discourse.current_hostname).to eq('foo.com')
+  describe "current_hostname" do
+    it "returns the hostname from the current db connection" do
+      expect(Discourse.current_hostname).to eq("foo.com")
     end
   end
 
-  describe 'avatar_sizes' do
-    it 'returns a list of integers' do
-      expect(Discourse.avatar_sizes).to contain_exactly(20, 25, 30, 32, 37, 40, 45, 48, 50, 60, 64, 67, 75, 90, 96, 120, 135, 180, 240, 360)
+  describe "avatar_sizes" do
+    it "returns a list of integers" do
+      expect(Discourse.avatar_sizes).to contain_exactly(
+        20,
+        25,
+        30,
+        32,
+        37,
+        40,
+        45,
+        48,
+        50,
+        60,
+        64,
+        67,
+        75,
+        90,
+        96,
+        120,
+        135,
+        180,
+        240,
+        360,
+      )
     end
   end
 
-  describe 'running_in_rack' do
-    after do
-      ENV.delete("DISCOURSE_RUNNING_IN_RACK")
-    end
+  describe "running_in_rack" do
+    after { ENV.delete("DISCOURSE_RUNNING_IN_RACK") }
 
-    it 'should not be running in rack' do
+    it "should not be running in rack" do
       expect(Discourse.running_in_rack?).to eq(false)
       ENV["DISCOURSE_RUNNING_IN_RACK"] = "1"
       expect(Discourse.running_in_rack?).to eq(true)
     end
   end
 
-  describe 'base_url' do
-    context 'when https is off' do
-      before do
-        SiteSetting.force_https = false
-      end
+  describe "base_url" do
+    context "when https is off" do
+      before { SiteSetting.force_https = false }
 
-      it 'has a non https base url' do
+      it "has a non https base url" do
         expect(Discourse.base_url).to eq("http://foo.com")
       end
     end
 
-    context 'when https is on' do
-      before do
-        SiteSetting.force_https = true
-      end
+    context "when https is on" do
+      before { SiteSetting.force_https = true }
 
-      it 'has a non-ssl base url' do
+      it "has a non-ssl base url" do
         expect(Discourse.base_url).to eq("https://foo.com")
       end
     end
 
-    context 'with a non standard port specified' do
-      before do
-        SiteSetting.port = 3000
-      end
+    context "with a non standard port specified" do
+      before { SiteSetting.port = 3000 }
 
       it "returns the non standart port in the base url" do
         expect(Discourse.base_url).to eq("http://foo.com:3000")
@@ -76,7 +87,7 @@ RSpec.describe Discourse do
     end
   end
 
-  describe 'plugins' do
+  describe "plugins" do
     let(:plugin_class) do
       Class.new(Plugin::Instance) do
         attr_accessor :enabled
@@ -86,12 +97,20 @@ RSpec.describe Discourse do
       end
     end
 
-    let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true; p.path = "my-plugin-1" } }
-    let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false; p.path = "my-plugin-1" } }
-
-    before do
-      Discourse.plugins.append(plugin1, plugin2)
+    let(:plugin1) do
+      plugin_class.new.tap do |p|
+        p.enabled = true
+        p.path = "my-plugin-1"
+      end
     end
+    let(:plugin2) do
+      plugin_class.new.tap do |p|
+        p.enabled = false
+        p.path = "my-plugin-1"
+      end
+    end
+
+    before { Discourse.plugins.append(plugin1, plugin2) }
 
     after do
       Discourse.plugins.delete plugin1
@@ -104,7 +123,7 @@ RSpec.describe Discourse do
       plugin_class.any_instance.stubs(:js_asset_exists?).returns(true)
     end
 
-    it 'can find plugins correctly' do
+    it "can find plugins correctly" do
       expect(Discourse.plugins).to include(plugin1, plugin2)
 
       # Exclude disabled plugins by default
@@ -114,86 +133,80 @@ RSpec.describe Discourse do
       expect(Discourse.find_plugins(include_disabled: true)).to include(plugin1, plugin2)
     end
 
-    it 'can find plugin assets' do
+    it "can find plugin assets" do
       plugin2.enabled = true
 
       expect(Discourse.find_plugin_css_assets({}).length).to eq(2)
       expect(Discourse.find_plugin_js_assets({}).length).to eq(2)
-      plugin1.register_asset_filter do |type, request, opts|
-        false
-      end
+      plugin1.register_asset_filter { |type, request, opts| false }
       expect(Discourse.find_plugin_css_assets({}).length).to eq(1)
       expect(Discourse.find_plugin_js_assets({}).length).to eq(1)
     end
-
   end
 
-  describe 'authenticators' do
-    it 'returns inbuilt authenticators' do
+  describe "authenticators" do
+    it "returns inbuilt authenticators" do
       expect(Discourse.authenticators).to match_array(Discourse::BUILTIN_AUTH.map(&:authenticator))
     end
 
-    context 'with authentication plugin installed' do
+    context "with authentication plugin installed" do
       let(:plugin_auth_provider) do
-        authenticator_class = Class.new(Auth::Authenticator) do
-          def name
-            'pluginauth'
-          end
+        authenticator_class =
+          Class.new(Auth::Authenticator) do
+            def name
+              "pluginauth"
+            end
 
-          def enabled?
-            true
+            def enabled?
+              true
+            end
           end
-        end
 
         provider = Auth::AuthProvider.new
         provider.authenticator = authenticator_class.new
         provider
       end
 
-      before do
-        DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
-      end
+      before { DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider) }
 
-      after do
-        DiscoursePluginRegistry.reset!
-      end
+      after { DiscoursePluginRegistry.reset! }
 
-      it 'returns inbuilt and plugin authenticators' do
+      it "returns inbuilt and plugin authenticators" do
         expect(Discourse.authenticators).to match_array(
-          Discourse::BUILTIN_AUTH.map(&:authenticator) + [plugin_auth_provider.authenticator])
+          Discourse::BUILTIN_AUTH.map(&:authenticator) + [plugin_auth_provider.authenticator],
+        )
       end
-
     end
   end
 
-  describe 'enabled_authenticators' do
-    it 'only returns enabled authenticators' do
+  describe "enabled_authenticators" do
+    it "only returns enabled authenticators" do
       expect(Discourse.enabled_authenticators.length).to be(0)
-      expect { SiteSetting.enable_twitter_logins = true }
-        .to change { Discourse.enabled_authenticators.length }.by(1)
+      expect { SiteSetting.enable_twitter_logins = true }.to change {
+        Discourse.enabled_authenticators.length
+      }.by(1)
       expect(Discourse.enabled_authenticators.length).to be(1)
       expect(Discourse.enabled_authenticators.first).to be_instance_of(Auth::TwitterAuthenticator)
     end
   end
 
-  describe '#site_contact_user' do
+  describe "#site_contact_user" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:another_admin) { Fabricate(:admin) }
 
-    it 'returns the user specified by the site setting site_contact_username' do
+    it "returns the user specified by the site setting site_contact_username" do
       SiteSetting.site_contact_username = another_admin.username
       expect(Discourse.site_contact_user).to eq(another_admin)
     end
 
-    it 'returns the system user otherwise' do
+    it "returns the system user otherwise" do
       SiteSetting.site_contact_username = nil
       expect(Discourse.site_contact_user.username).to eq("system")
     end
-
   end
 
-  describe '#system_user' do
-    it 'returns the system user' do
+  describe "#system_user" do
+    it "returns the system user" do
       expect(Discourse.system_user.id).to eq(-1)
     end
   end
@@ -212,7 +225,7 @@ RSpec.describe Discourse do
     end
   end
 
-  describe 'readonly mode' do
+  describe "readonly mode" do
     let(:readonly_mode_key) { Discourse::READONLY_MODE_KEY }
     let(:readonly_mode_ttl) { Discourse::READONLY_MODE_KEY_TTL }
     let(:user_readonly_mode_key) { Discourse::USER_READONLY_MODE_KEY }
@@ -240,7 +253,7 @@ RSpec.describe Discourse do
         expect(Discourse.redis.get(readonly_mode_key)).to eq(nil)
       end
 
-      context 'when user enabled readonly mode' do
+      context "when user enabled readonly mode" do
         it "adds a key in redis and publish a message through the message bus" do
           expect(Discourse.redis.get(user_readonly_mode_key)).to eq(nil)
         end
@@ -248,9 +261,12 @@ RSpec.describe Discourse do
     end
 
     describe ".disable_readonly_mode" do
-      context 'when user disabled readonly mode' do
+      context "when user disabled readonly mode" do
         it "removes readonly key in redis and publish a message through the message bus" do
-          message = MessageBus.track_publish { Discourse.disable_readonly_mode(user_readonly_mode_key) }.first
+          message =
+            MessageBus
+              .track_publish { Discourse.disable_readonly_mode(user_readonly_mode_key) }
+              .first
           assert_readonly_mode_disabled(message, user_readonly_mode_key)
         end
       end
@@ -284,19 +300,25 @@ RSpec.describe Discourse do
         Discourse.disable_readonly_mode(user_readonly_mode_key)
         expect(Discourse.readonly_mode?).to eq(false)
       end
+
+      it "returns true when forced via global setting" do
+        expect(Discourse.readonly_mode?).to eq(false)
+        global_setting :pg_force_readonly_mode, true
+        expect(Discourse.readonly_mode?).to eq(true)
+      end
     end
 
     describe ".received_postgres_readonly!" do
       it "sets the right time" do
         time = Discourse.received_postgres_readonly!
-        expect(Discourse.postgres_last_read_only['default']).to eq(time)
+        expect(Discourse.redis.get(Discourse::LAST_POSTGRES_READONLY_KEY).to_i).to eq(time.to_i)
       end
     end
 
     describe ".received_redis_readonly!" do
       it "sets the right time" do
         time = Discourse.received_redis_readonly!
-        expect(Discourse.redis_last_read_only['default']).to eq(time)
+        expect(Discourse.redis_last_read_only["default"]).to eq(time)
       end
     end
 
@@ -305,12 +327,11 @@ RSpec.describe Discourse do
         Discourse.received_postgres_readonly!
         messages = []
 
-        expect do
-          messages = MessageBus.track_publish { Discourse.clear_readonly! }
-        end.to change { Discourse.postgres_last_read_only['default'] }.to(nil)
+        expect do messages = MessageBus.track_publish { Discourse.clear_readonly! } end.to change {
+          Discourse.redis.get(Discourse::LAST_POSTGRES_READONLY_KEY)
+        }.to(nil)
 
-        expect(messages.any? { |m| m.channel == Site::SITE_JSON_CHANNEL })
-          .to eq(true)
+        expect(messages.any? { |m| m.channel == Site::SITE_JSON_CHANNEL }).to eq(true)
       end
     end
   end
@@ -327,25 +348,17 @@ RSpec.describe Discourse do
 
     let!(:logger) { TempSidekiqLogger.new }
 
-    before do
-      Sidekiq.error_handlers << logger
-    end
+    before { Sidekiq.error_handlers << logger }
 
-    after do
-      Sidekiq.error_handlers.delete(logger)
-    end
+    after { Sidekiq.error_handlers.delete(logger) }
 
     describe "#job_exception_stats" do
       class FakeTestError < StandardError
       end
 
-      before do
-        Discourse.reset_job_exception_stats!
-      end
+      before { Discourse.reset_job_exception_stats! }
 
-      after do
-        Discourse.reset_job_exception_stats!
-      end
+      after { Discourse.reset_job_exception_stats! }
 
       it "should not fail on incorrectly shaped hash" do
         expect do
@@ -354,42 +367,48 @@ RSpec.describe Discourse do
       end
 
       it "should collect job exception stats" do
-
         # see MiniScheduler Manager which reports it like this
         # https://github.com/discourse/mini_scheduler/blob/2b2c1c56b6e76f51108c2a305775469e24cf2b65/lib/mini_scheduler/manager.rb#L95
         exception_context = {
           message: "Running a scheduled job",
-          job: { "class" => Jobs::ReindexSearch }
+          job: {
+            "class" => Jobs::ReindexSearch,
+          },
         }
 
         # re-raised unconditionally in test env
         2.times do
-          expect { Discourse.handle_job_exception(FakeTestError.new, exception_context) }.to raise_error(FakeTestError)
+          expect {
+            Discourse.handle_job_exception(FakeTestError.new, exception_context)
+          }.to raise_error(FakeTestError)
         end
 
         exception_context = {
           message: "Running a scheduled job",
-          job: { "class" => Jobs::PollMailbox }
+          job: {
+            "class" => Jobs::PollMailbox,
+          },
         }
 
-        expect { Discourse.handle_job_exception(FakeTestError.new, exception_context) }.to raise_error(FakeTestError)
+        expect {
+          Discourse.handle_job_exception(FakeTestError.new, exception_context)
+        }.to raise_error(FakeTestError)
 
-        expect(Discourse.job_exception_stats).to eq({
-          Jobs::PollMailbox => 1,
-          Jobs::ReindexSearch => 2,
-        })
+        expect(Discourse.job_exception_stats).to eq(
+          { Jobs::PollMailbox => 1, Jobs::ReindexSearch => 2 },
+        )
       end
     end
 
     it "should not fail when called" do
       exception = StandardError.new
 
-      expect do
-        Discourse.handle_job_exception(exception, nil, nil)
-      end.to raise_error(StandardError) # Raises in test mode, catch it
+      expect do Discourse.handle_job_exception(exception, nil, nil) end.to raise_error(
+        StandardError,
+      ) # Raises in test mode, catch it
 
       expect(logger.exception).to eq(exception)
-      expect(logger.context.keys).to eq([:current_db, :current_hostname])
+      expect(logger.context.keys).to eq(%i[current_db current_hostname])
     end
 
     it "correctly passes extra context" do
@@ -400,11 +419,11 @@ RSpec.describe Discourse do
       end.to raise_error(StandardError) # Raises in test mode, catch it
 
       expect(logger.exception).to eq(exception)
-      expect(logger.context.keys.sort).to eq([:current_db, :current_hostname, :message, :post_id].sort)
+      expect(logger.context.keys.sort).to eq(%i[current_db current_hostname message post_id].sort)
     end
   end
 
-  describe '#deprecate' do
+  describe "#deprecate" do
     def old_method(m)
       Discourse.deprecate(m)
     end
@@ -418,11 +437,9 @@ RSpec.describe Discourse do
       Rails.logger = @fake_logger = FakeLogger.new
     end
 
-    after do
-      Rails.logger = @orig_logger
-    end
+    after { Rails.logger = @orig_logger }
 
-    it 'can deprecate usage' do
+    it "can deprecate usage" do
       k = SecureRandom.hex
       expect(old_method_caller(k)).to include("old_method_caller")
       expect(old_method_caller(k)).to include("discourse_spec")
@@ -431,29 +448,31 @@ RSpec.describe Discourse do
       expect(@fake_logger.warnings).to eq([old_method_caller(k)])
     end
 
-    it 'can report the deprecated version' do
+    it "can report the deprecated version" do
       Discourse.deprecate(SecureRandom.hex, since: "2.1.0.beta1")
 
       expect(@fake_logger.warnings[0]).to include("(deprecated since Discourse 2.1.0.beta1)")
     end
 
-    it 'can report the drop version' do
+    it "can report the drop version" do
       Discourse.deprecate(SecureRandom.hex, drop_from: "2.3.0")
 
       expect(@fake_logger.warnings[0]).to include("(removal in Discourse 2.3.0)")
     end
 
-    it 'can raise deprecation error' do
-      expect {
-        Discourse.deprecate(SecureRandom.hex, raise_error: true)
-      }.to raise_error(Discourse::Deprecation)
+    it "can raise deprecation error" do
+      expect { Discourse.deprecate(SecureRandom.hex, raise_error: true) }.to raise_error(
+        Discourse::Deprecation,
+      )
     end
   end
 
   describe "Utils.execute_command" do
     it "works for individual commands" do
       expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
-      expect(Discourse::Utils.execute_command("pwd", chdir: "plugins").strip).to eq("#{Rails.root.to_s}/plugins")
+      expect(Discourse::Utils.execute_command("pwd", chdir: "plugins").strip).to eq(
+        "#{Rails.root.to_s}/plugins",
+      )
     end
 
     it "supports timeouts" do
@@ -462,7 +481,12 @@ RSpec.describe Discourse do
       end.to raise_error(RuntimeError)
 
       expect do
-        Discourse::Utils.execute_command({ "MYENV" => "MYVAL" }, "sleep", "999999999999", timeout: 0.001)
+        Discourse::Utils.execute_command(
+          { "MYENV" => "MYVAL" },
+          "sleep",
+          "999999999999",
+          timeout: 0.001,
+        )
       end.to raise_error(RuntimeError)
     end
 
@@ -471,10 +495,11 @@ RSpec.describe Discourse do
         expect(runner.exec("pwd").strip).to eq(Rails.root.to_s)
       end
 
-      result = Discourse::Utils.execute_command(chdir: "plugins") do |runner|
-        expect(runner.exec("pwd").strip).to eq("#{Rails.root.to_s}/plugins")
-        runner.exec("pwd")
-      end
+      result =
+        Discourse::Utils.execute_command(chdir: "plugins") do |runner|
+          expect(runner.exec("pwd").strip).to eq("#{Rails.root.to_s}/plugins")
+          runner.exec("pwd")
+        end
 
       # Should return output of block
       expect(result.strip).to eq("#{Rails.root.to_s}/plugins")
@@ -484,12 +509,13 @@ RSpec.describe Discourse do
       has_done_chdir = false
       has_checked_chdir = false
 
-      thread = Thread.new do
-        Discourse::Utils.execute_command(chdir: "plugins") do
-          has_done_chdir = true
-          sleep(0.01) until has_checked_chdir
+      thread =
+        Thread.new do
+          Discourse::Utils.execute_command(chdir: "plugins") do
+            has_done_chdir = true
+            sleep(0.01) until has_checked_chdir
+          end
         end
-      end
 
       sleep(0.01) until has_done_chdir
       expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
@@ -500,16 +526,16 @@ RSpec.describe Discourse do
     it "raises error for unsafe shell" do
       expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
 
-      expect do
-        Discourse::Utils.execute_command("echo a b c")
-      end.to raise_error(RuntimeError)
+      expect do Discourse::Utils.execute_command("echo a b c") end.to raise_error(RuntimeError)
 
       expect do
         Discourse::Utils.execute_command({ "ENV1" => "VAL" }, "echo a b c")
       end.to raise_error(RuntimeError)
 
       expect(Discourse::Utils.execute_command("echo", "a", "b", "c").strip).to eq("a b c")
-      expect(Discourse::Utils.execute_command("echo a b c", unsafe_shell: true).strip).to eq("a b c")
+      expect(Discourse::Utils.execute_command("echo a b c", unsafe_shell: true).strip).to eq(
+        "a b c",
+      )
     end
   end
 
@@ -540,7 +566,7 @@ RSpec.describe Discourse do
         type_id: ThemeField.types[:html],
         target_id: Theme.targets[:common],
         name: "head_tag",
-        value: <<~HTML
+        value: <<~HTML,
           <script type="text/discourse-plugin" version="0.1">
             console.log(settings.uploads.imajee);
           </script>
@@ -554,7 +580,7 @@ RSpec.describe Discourse do
         type_id: ThemeField.types[:js],
         target_id: Theme.targets[:extra_js],
         name: "somefile.js",
-        value: <<~JS
+        value: <<~JS,
           console.log(settings.uploads.imajee);
         JS
       )
@@ -566,7 +592,7 @@ RSpec.describe Discourse do
         type_id: ThemeField.types[:scss],
         target_id: Theme.targets[:common],
         name: "scss",
-        value: <<~SCSS
+        value: <<~SCSS,
           .something { background: url($imajee); }
         SCSS
       )
@@ -577,62 +603,77 @@ RSpec.describe Discourse do
 
       old_upload_url = Discourse.store.cdn_url(upload.url)
 
-      head_tag_script = Nokogiri::HTML5.fragment(
-        Theme.lookup_field(theme.id, :desktop, "head_tag")
-      ).css('script').first
+      head_tag_script =
+        Nokogiri::HTML5
+          .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
+          .css("script")
+          .first
       head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
       expect(head_tag_js).to include(old_upload_url)
 
-      js_file_script = Nokogiri::HTML5.fragment(
-        Theme.lookup_field(theme.id, :extra_js, nil)
-      ).css('script').first
+      js_file_script =
+        Nokogiri::HTML5.fragment(Theme.lookup_field(theme.id, :extra_js, nil)).css("script").first
       file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
       expect(file_js).to include(old_upload_url)
 
-      css_link_tag = Nokogiri::HTML5.fragment(
-        Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, 'all')
-      ).css('link').first
+      css_link_tag =
+        Nokogiri::HTML5
+          .fragment(
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+          )
+          .css("link")
+          .first
       css = StylesheetCache.find_by(digest: css_link_tag[:href][/\h{40}/]).content
       expect(css).to include("url(#{old_upload_url})")
 
       SiteSetting.s3_cdn_url = "https://new.s3.cdn.com/gg"
       new_upload_url = Discourse.store.cdn_url(upload.url)
 
-      head_tag_script = Nokogiri::HTML5.fragment(
-        Theme.lookup_field(theme.id, :desktop, "head_tag")
-      ).css('script').first
+      head_tag_script =
+        Nokogiri::HTML5
+          .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
+          .css("script")
+          .first
       head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
       expect(head_tag_js).to include(old_upload_url)
 
-      js_file_script = Nokogiri::HTML5.fragment(
-        Theme.lookup_field(theme.id, :extra_js, nil)
-      ).css('script').first
+      js_file_script =
+        Nokogiri::HTML5.fragment(Theme.lookup_field(theme.id, :extra_js, nil)).css("script").first
       file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
       expect(file_js).to include(old_upload_url)
 
-      css_link_tag = Nokogiri::HTML5.fragment(
-        Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, 'all')
-      ).css('link').first
+      css_link_tag =
+        Nokogiri::HTML5
+          .fragment(
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+          )
+          .css("link")
+          .first
       css = StylesheetCache.find_by(digest: css_link_tag[:href][/\h{40}/]).content
       expect(css).to include("url(#{old_upload_url})")
 
       Discourse.clear_all_theme_cache!
 
-      head_tag_script = Nokogiri::HTML5.fragment(
-        Theme.lookup_field(theme.id, :desktop, "head_tag")
-      ).css('script').first
+      head_tag_script =
+        Nokogiri::HTML5
+          .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
+          .css("script")
+          .first
       head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
       expect(head_tag_js).to include(new_upload_url)
 
-      js_file_script = Nokogiri::HTML5.fragment(
-        Theme.lookup_field(theme.id, :extra_js, nil)
-      ).css('script').first
+      js_file_script =
+        Nokogiri::HTML5.fragment(Theme.lookup_field(theme.id, :extra_js, nil)).css("script").first
       file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
       expect(file_js).to include(new_upload_url)
 
-      css_link_tag = Nokogiri::HTML5.fragment(
-        Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, 'all')
-      ).css('link').first
+      css_link_tag =
+        Nokogiri::HTML5
+          .fragment(
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+          )
+          .css("link")
+          .first
       css = StylesheetCache.find_by(digest: css_link_tag[:href][/\h{40}/]).content
       expect(css).to include("url(#{new_upload_url})")
     end

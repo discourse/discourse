@@ -16,7 +16,7 @@ export default class FAQSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("sidebar.sections.community.links.faq.content");
+    return I18n.t("sidebar.sections.community.links.faq.title");
   }
 
   get text() {

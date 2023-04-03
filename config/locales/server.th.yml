@@ -159,9 +159,6 @@ th:
       x_months:
         other: "%{count}เดือนที่แล้ว"
   password_reset:
-    choose_new: "เลือกรหัสผู้ใช้ใหม่"
-    choose: "เลือกรหัสผู้ใช้"
-    save: "ตั้งรหัสผ่าน"
     title: "รีเซ็ทรหัสผ่าน"
   change_email:
     please_continue: "ดำเนินการต่อไปยัง %{site_name}"
@@ -221,6 +218,9 @@ th:
       labels:
         post: โพส
         edit_reason: เหตุผล
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
     topics:
       title: "หัวข้อ"
     posts:
@@ -411,6 +411,15 @@ th:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       text_body_template: |
         %{header_instructions}
@@ -448,8 +457,6 @@ th:
     see_more: "อื่น"
     search_title: "ค้นหาเว็บไซต์นี้"
     search_button: "ค้นหา"
-  deleted: "ลบ"
-  image: "รูปภาพ"
   color_schemes:
     default_theme_name: "ค่าเริ่มต้น"
   csv_export:
@@ -484,8 +491,6 @@ th:
         fields:
           login_required:
             placeholder: "ส่วนตัว"
-          must_approve_users:
-            placeholder: "ต้องได้รับการอนุมัติ"
       styling:
         fields:
           styling_preview:
@@ -500,7 +505,6 @@ th:
                 label: "หมวดหมู่และกระทู้ล่าสุด"
               categories_and_top_topics:
                 label: "หมวดหมู่และกระทู้ยอดนิยม"
-  joined: "สมัครสมาชิกเมื่อ"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} พูดถึงคุณใน "%{topic}" - %{site_title}'
@@ -524,10 +528,12 @@ th:
       medium: "ปานกลาง"
       high: "สูง"
     actions:
+      agree:
+        title: "ใช่"
       delete_single:
         title: "ลบ"
       disagree:
-        title: "ไม่เห็นด้วย"
+        title: "ไม่ใช่"
       ignore:
         title: "ไม่สนใจ"
       approve:

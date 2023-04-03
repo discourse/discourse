@@ -1,12 +1,10 @@
-import { test } from "qunit";
+import { module, test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import {
-  discourseModule,
-  publishToMessageBus,
-} from "discourse/tests/helpers/qunit-helpers";
+import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import MessageBus from "message-bus-client";
 import PrivateMessageTopicTrackingState from "discourse/services/pm-topic-tracking-state";
-import User from "discourse/models/user";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 function setupPretender() {
   pretender.get(`/u/test/private-message-topic-tracking-state`, () => {
@@ -22,49 +20,47 @@ function setupPretender() {
   });
 }
 
-discourseModule(
-  "Unit | Model | private-message-topic-tracking-state",
-  function (hooks) {
-    let pmTopicTrackingState;
+module("Unit | Model | private-message-topic-tracking-state", function (hooks) {
+  setupTest(hooks);
 
-    hooks.beforeEach(function () {
-      pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
-        messageBus: MessageBus,
-        currentUser: User.create({ id: 77889, username: "test" }),
-      });
+  test("modifying state calls onStateChange callbacks", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
+      messageBus: MessageBus,
+      currentUser: store.createRecord("user", { id: 77889, username: "test" }),
     });
 
-    test("modifying state calls onStateChange callbacks", function (assert) {
-      let callbackCalled = false;
+    let callbackCalled = false;
 
-      pmTopicTrackingState.onStateChange("testing", () => {
-        callbackCalled = true;
-      });
-
-      pmTopicTrackingState.set("isTracking", true);
-      pmTopicTrackingState.removeTopics([]);
-
-      assert.ok(callbackCalled);
+    pmTopicTrackingState.onStateChange("testing", () => {
+      callbackCalled = true;
     });
-  }
-);
 
-discourseModule(
+    pmTopicTrackingState.set("isTracking", true);
+    pmTopicTrackingState.removeTopics([]);
+
+    assert.ok(callbackCalled);
+  });
+});
+
+module(
   "Unit | Model | private-message-topic-tracking-state | processing new_topic message",
   function (hooks) {
-    let pmTopicTrackingState;
-
-    hooks.beforeEach(async function () {
-      setupPretender();
-      pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
-        messageBus: MessageBus,
-        currentUser: User.create({ id: 77889, username: "test" }),
-      });
-      await pmTopicTrackingState.startTracking();
-    });
+    setupTest(hooks);
 
     test("modifies the topic state only if the topic was not created by the current user", async function (assert) {
-      let payload = {
+      setupPretender();
+      const store = getOwner(this).lookup("service:store");
+      const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
+        messageBus: MessageBus,
+        currentUser: store.createRecord("user", {
+          id: 77889,
+          username: "test",
+        }),
+      });
+      await pmTopicTrackingState.startTracking();
+
+      const payload = {
         last_read_post_number: null,
         highest_post_number: 1,
         group_ids: [],
@@ -84,7 +80,7 @@ discourseModule(
         "the new topic created by a different user is loaded into state"
       );
 
-      payload = {
+      const payload2 = {
         last_read_post_number: null,
         highest_post_number: 1,
         group_ids: [],
@@ -95,10 +91,10 @@ discourseModule(
         {
           message_type: "new_topic",
           topic_id: 4400,
-          payload,
+          payload: payload2,
         }
       );
-      assert.deepEqual(
+      assert.strictEqual(
         pmTopicTrackingState.findState(4400),
         undefined,
         "the new topic created by the current user is not loaded into state"
@@ -107,22 +103,24 @@ discourseModule(
   }
 );
 
-discourseModule(
+module(
   "Unit | Model | private-message-topic-tracking-state | processing unread message",
   function (hooks) {
-    let pmTopicTrackingState;
-
-    hooks.beforeEach(async function () {
-      setupPretender();
-      pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
-        messageBus: MessageBus,
-        currentUser: User.create({ id: 77889, username: "test" }),
-      });
-      await pmTopicTrackingState.startTracking();
-    });
+    setupTest(hooks);
 
     test("modifies the last_read_post_number and highest_post_number", async function (assert) {
-      let payload = {
+      setupPretender();
+      const store = getOwner(this).lookup("service:store");
+      const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
+        messageBus: MessageBus,
+        currentUser: store.createRecord("user", {
+          id: 77889,
+          username: "test",
+        }),
+      });
+      await pmTopicTrackingState.startTracking();
+
+      const payload = {
         last_read_post_number: 12,
         highest_post_number: 13,
         notification_level: 3,
@@ -138,19 +136,19 @@ discourseModule(
         }
       );
 
-      let state = pmTopicTrackingState.findState(123);
-      assert.deepEqual(
+      const state = pmTopicTrackingState.findState(123);
+      assert.strictEqual(
         state.highest_post_number,
         13,
         "the unread payload triggered by a different user creating a new post updates the state with the correct highest_post_number"
       );
-      assert.deepEqual(
+      assert.strictEqual(
         state.last_read_post_number,
         12,
         "the unread payload triggered by a different user creating a new post updates the state with the correct last_read_post_number"
       );
 
-      payload = {
+      const payload2 = {
         last_read_post_number: 14,
         highest_post_number: 14,
         notification_level: 3,
@@ -162,18 +160,18 @@ discourseModule(
         {
           message_type: "unread",
           topic_id: 123,
-          payload,
+          payload: payload2,
         }
       );
 
-      state = pmTopicTrackingState.findState(123);
-      assert.deepEqual(
-        state.highest_post_number,
+      const state2 = pmTopicTrackingState.findState(123);
+      assert.strictEqual(
+        state2.highest_post_number,
         14,
         "the unread payload triggered by the current user creating a new post updates the state with the correct highest_post_number"
       );
-      assert.deepEqual(
-        state.last_read_post_number,
+      assert.strictEqual(
+        state2.last_read_post_number,
         14,
         "the unread payload triggered by the current user creating a new post updates the state with the correct last_read_post_number"
       );

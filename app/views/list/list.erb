@@ -38,7 +38,7 @@
   <% end %>
 <% end %>
 
-<div itemscope itemtype='http://schema.org/ItemList'>
+<div class="topic-list-container" itemscope itemtype='http://schema.org/ItemList'>
   <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
 
   <table class='topic-list'>
@@ -57,14 +57,9 @@
       <% @list.topics.each_with_index do |t,i| %>
         <tr class="topic-list-item">
           <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-            <meta itemprop='name' content='<%= t.title %>'>
-            <meta itemprop='url' content='<%= t.url %>'>
-            <% if t.image_url.present? %>
-              <meta itemprop='image' content='<%= t.image_url %>'>
-            <% end %>
             <meta itemprop='position' content='<%= i + 1 %>'>
             <span class="link-top-line">
-              <a href='<%= t.url %>' class='title raw-link raw-topic-link'><%= t.title %></a>
+              <a itemprop='url' href='<%= t.url %>' class='title raw-link raw-topic-link'><%= t.title %></a>
             </span>
             <div class="link-bottom-line">
               <% if (!@category || @category.has_children?) && t.category && !t.category.uncategorized? %>
@@ -114,7 +109,7 @@
 </div>
 
 <% if @list.topics.length > 0 && @list.more_topics_url %>
-  <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
+  <div class="navigation" role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
     <% if params[:page].to_i > 0 %>
       <span itemprop='name'><a href='<%= @list.prev_topics_url %>' rel='prev' itemprop='url'><%= t 'prev_page' %></a> &nbsp;</span>
     <% end %>

@@ -21,8 +21,11 @@ gl:
       joined: "uniuse"
       email_frequency:
         never: "Nunca"
+      header_indicator_preference:
+        never: "Nunca"
       flag: "Sinalar"
       join: "Participar"
+      last_visit: "última visita"
       mention_warning:
         dismiss: "desbotar"
       reply: "Responder"
@@ -45,6 +48,7 @@ gl:
         yesterday: Onte
       about_view:
         title: Título
+        name: Nome
         description: Descrición
       channel_info:
         back_to_channel: "Volver"
@@ -73,6 +77,7 @@ gl:
         save: "Gardar"
         saved: "Gardado"
         unfollow: "Abandonar"
+        admin_title: "Administrador"
       incoming_webhooks:
         back: "Volver"
         description: "Descrición"

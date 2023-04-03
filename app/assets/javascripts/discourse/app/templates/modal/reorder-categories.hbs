@@ -1,4 +1,7 @@
-<DModalBody @class="reorder-categories full-height-modal" @title="categories.reorder.title">
+<DModalBody
+  @class="reorder-categories full-height-modal"
+  @title="categories.reorder.title"
+>
   <div id="rc-scroll-anchor"></div>
   <table>
     <thead>
@@ -15,9 +18,23 @@
           </td>
 
           <td>
-            <NumberField @number={{readonly cat.position}} @change={{action "change" cat}} />
-            <DButton @class="btn-default no-text" @action={{action "moveUp"}} @actionParam={{cat}} @icon="arrow-up" />
-            <DButton @class="btn-default no-text" @action={{action "moveDown"}} @actionParam={{cat}} @icon="arrow-down" />
+            <NumberField
+              @number={{readonly cat.position}}
+              @change={{action "change" cat}}
+              @min="0"
+            />
+            <DButton
+              @class="btn-default no-text"
+              @action={{action "moveUp"}}
+              @actionParam={{cat}}
+              @icon="arrow-up"
+            />
+            <DButton
+              @class="btn-default no-text"
+              @action={{action "moveDown"}}
+              @actionParam={{cat}}
+              @icon="arrow-down"
+            />
           </td>
         </tr>
       {{/each}}
@@ -27,5 +44,9 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary" @action={{action "save"}} @label="categories.reorder.save" />
+  <DButton
+    @class="btn-primary"
+    @action={{action "save"}}
+    @label="categories.reorder.save"
+  />
 </div>

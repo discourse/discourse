@@ -1,67 +1,147 @@
 <DSection @pageClass="user-summary" @tagName="">
-  <div class="user-content">
-    <PluginOutlet @name="above-user-summary-stats" @args={{hash model=this.model user=this.user}} />
+  <div class="user-content" id="user-content">
+    <PluginOutlet
+      @name="above-user-summary-stats"
+      @outletArgs={{hash model=this.model user=this.user}}
+    />
     {{#if this.model.can_see_summary_stats}}
       <div class="top-section stats-section">
         <h3 class="stats-title">{{i18n "user.summary.stats"}}</h3>
         <ul>
           <li class="stats-days-visited">
-            <UserStat @value={{this.model.days_visited}} @label="user.summary.days_visited" />
+            <UserStat
+              @value={{this.model.days_visited}}
+              @label="user.summary.days_visited"
+            />
           </li>
           <li class="stats-time-read">
-            <UserStat @value={{this.timeRead}} @label="user.summary.time_read" @rawTitle={{i18n "user.summary.time_read_title" duration=this.timeReadMedium}} @type="string" />
+            <UserStat
+              @value={{this.timeRead}}
+              @label="user.summary.time_read"
+              @rawTitle={{i18n
+                "user.summary.time_read_title"
+                duration=this.timeReadMedium
+              }}
+              @type="string"
+            />
           </li>
           {{#if this.showRecentTimeRead}}
             <li class="stats-recent-read">
-              <UserStat @value={{this.recentTimeRead}} @label="user.summary.recent_time_read" @rawTitle={{i18n "user.summary.recent_time_read_title" duration=this.recentTimeReadMedium}} @type="string" />
+              <UserStat
+                @value={{this.recentTimeRead}}
+                @label="user.summary.recent_time_read"
+                @rawTitle={{i18n
+                  "user.summary.recent_time_read_title"
+                  duration=this.recentTimeReadMedium
+                }}
+                @type="string"
+              />
             </li>
           {{/if}}
           <li class="stats-topics-entered">
-            <UserStat @value={{this.model.topics_entered}} @label="user.summary.topics_entered" />
+            <UserStat
+              @value={{this.model.topics_entered}}
+              @label="user.summary.topics_entered"
+            />
           </li>
           <li class="stats-posts-read">
-            <UserStat @value={{this.model.posts_read_count}} @label="user.summary.posts_read" />
+            <UserStat
+              @value={{this.model.posts_read_count}}
+              @label="user.summary.posts_read"
+            />
           </li>
           <li class="stats-likes-given linked-stat">
             <LinkTo @route="userActivity.likesGiven">
-              <UserStat @value={{this.model.likes_given}} @icon="heart" @label="user.summary.likes_given" />
+              <UserStat
+                @value={{this.model.likes_given}}
+                @icon="heart"
+                @label="user.summary.likes_given"
+              />
             </LinkTo>
           </li>
           <li class="stats-likes-received">
-            <UserStat @value={{this.model.likes_received}} @icon="heart" @label="user.summary.likes_received" />
+            <UserStat
+              @value={{this.model.likes_received}}
+              @icon="heart"
+              @label="user.summary.likes_received"
+            />
           </li>
           {{#if this.model.bookmark_count}}
             <li class="stats-bookmark-count linked-stat">
               <LinkTo @route="userActivity.bookmarks">
-                <UserStat @value={{this.model.bookmark_count}} @label="user.summary.bookmark_count" />
+                <UserStat
+                  @value={{this.model.bookmark_count}}
+                  @label="user.summary.bookmark_count"
+                />
               </LinkTo>
             </li>
           {{/if}}
           <li class="stats-topic-count linked-stat">
             <LinkTo @route="userActivity.topics">
-              <UserStat @value={{this.model.topic_count}} @label="user.summary.topic_count" />
+              <UserStat
+                @value={{this.model.topic_count}}
+                @label="user.summary.topic_count"
+              />
             </LinkTo>
           </li>
           <li class="stats-post-count linked-stat">
             <LinkTo @route="userActivity.replies">
-              <UserStat @value={{this.model.post_count}} @label="user.summary.post_count" />
+              <UserStat
+                @value={{this.model.post_count}}
+                @label="user.summary.post_count"
+              />
             </LinkTo>
           </li>
-          <PluginOutlet @name="user-summary-stat" @connectorTagName="li" @args={{hash model=this.model user=this.user}} />
+          <PluginOutlet
+            @name="user-summary-stat"
+            @connectorTagName="li"
+            @outletArgs={{hash model=this.model user=this.user}}
+          />
         </ul>
       </div>
     {{/if}}
 
+    <PluginOutlet
+      @name="below-user-summary-stats"
+      @outletArgs={{hash model=this.model user=this.user}}
+    />
+
     <div class="top-section">
-      <UserSummarySection @title="top_replies" @class="replies-section pull-left">
-        <UserSummaryTopicsList @type="replies" @items={{this.model.replies}} @user={{this.user}} as |reply|>
-          <UserSummaryTopic @createdAt={{reply.createdAt}} @topic={{reply.topic}} @likes={{reply.like_count}} @url={{reply.url}} />
+      <UserSummarySection
+        @title="top_replies"
+        @class="replies-section pull-left"
+      >
+        <UserSummaryTopicsList
+          @type="replies"
+          @items={{this.model.replies}}
+          @user={{this.user}}
+          as |reply|
+        >
+          <UserSummaryTopic
+            @createdAt={{reply.createdAt}}
+            @topic={{reply.topic}}
+            @likes={{reply.like_count}}
+            @url={{reply.url}}
+          />
         </UserSummaryTopicsList>
       </UserSummarySection>
 
-      <UserSummarySection @title="top_topics" @class="topics-section pull-right">
-        <UserSummaryTopicsList @type="topics" @items={{this.model.topics}} @user={{this.user}} as |topic|>
-          <UserSummaryTopic @createdAt={{topic.created_at}} @topic={{topic}} @likes={{topic.like_count}} @url={{topic.url}} />
+      <UserSummarySection
+        @title="top_topics"
+        @class="topics-section pull-right"
+      >
+        <UserSummaryTopicsList
+          @type="topics"
+          @items={{this.model.topics}}
+          @user={{this.user}}
+          as |topic|
+        >
+          <UserSummaryTopic
+            @createdAt={{topic.created_at}}
+            @topic={{topic}}
+            @likes={{topic.like_count}}
+            @url={{topic.url}}
+          />
         </UserSummaryTopicsList>
       </UserSummarySection>
     </div>
@@ -70,19 +150,29 @@
       <UserSummarySection @title="top_links" @class="links-section pull-left">
         {{#if this.model.links.length}}
           <ul>
-            {{!-- template-lint-disable --}}
+            {{! template-lint-disable }}
             {{#each this.model.links as |link|}}
               <li>
-                <a class='domain'
-                   href={{link.url}}
-                   title={{link.title}}
-                   rel='noopener {{unless this.user.removeNoFollow 'nofollow ugc'}}'
-                   target='_blank'>
+                <a
+                  class="domain"
+                  href={{link.url}}
+                  title={{link.title}}
+                  rel="noopener {{unless
+                    this.user.removeNoFollow
+                    'nofollow ugc'
+                  }}"
+                  target="_blank"
+                >
                   {{shorten-url link.url}}
                 </a>
-                <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=link.clicks}}'>{{number link.clicks}}</span>
-                <br>
-                <a href="{{link.post_url}}">{{html-safe link.topic.fancyTitle}}</a>
+                <span
+                  class="badge badge-notification clicks"
+                  title="{{i18n 'topic_map.clicks' count=link.clicks}}"
+                >{{number link.clicks}}</span>
+                <br />
+                <a href="{{link.post_url}}">{{html-safe
+                    link.topic.fancyTitle
+                  }}</a>
               </li>
             {{/each}}
           </ul>
@@ -91,22 +181,43 @@
         {{/if}}
       </UserSummarySection>
 
-      <UserSummarySection @title="most_replied_to_users" @class="summary-user-list replied-section pull-right">
-        <UserSummaryUsersList @none="no_replies" @users={{this.model.most_replied_to_users}} as |user|>
+      <UserSummarySection
+        @title="most_replied_to_users"
+        @class="summary-user-list replied-section pull-right"
+      >
+        <UserSummaryUsersList
+          @none="no_replies"
+          @users={{this.model.most_replied_to_users}}
+          as |user|
+        >
           <UserSummaryUser @user={{user}} @icon="reply" @countClass="replies" />
         </UserSummaryUsersList>
       </UserSummarySection>
     </div>
 
     <div class="top-section most-liked-section">
-      <UserSummarySection @title="most_liked_by" @class="summary-user-list liked-by-section pull-left">
-        <UserSummaryUsersList @none="no_likes" @users={{this.model.most_liked_by_users}} as |user|>
+      <UserSummarySection
+        @title="most_liked_by"
+        @class="summary-user-list liked-by-section pull-left"
+      >
+        <UserSummaryUsersList
+          @none="no_likes"
+          @users={{this.model.most_liked_by_users}}
+          as |user|
+        >
           <UserSummaryUser @user={{user}} @icon="heart" @countClass="likes" />
         </UserSummaryUsersList>
       </UserSummarySection>
 
-      <UserSummarySection @title="most_liked_users" @class="summary-user-list liked-section pull-right">
-        <UserSummaryUsersList @none="no_likes" @users={{this.model.most_liked_users}} as |user|>
+      <UserSummarySection
+        @title="most_liked_users"
+        @class="summary-user-list liked-section pull-right"
+      >
+        <UserSummaryUsersList
+          @none="no_likes"
+          @users={{this.model.most_liked_users}}
+          as |user|
+        >
           <UserSummaryUser @user={{user}} @icon="heart" @countClass="likes" />
         </UserSummaryUsersList>
       </UserSummarySection>
@@ -114,7 +225,10 @@
 
     {{#if this.model.top_categories.length}}
       <div class="top-section top-categories-section">
-        <UserSummarySection @title="top_categories" @class="summary-category-list pull-left">
+        <UserSummarySection
+          @title="top_categories"
+          @class="summary-category-list pull-left"
+        >
           <table>
             <thead>
               <th class="category-link"></th>
@@ -125,13 +239,25 @@
               {{#each this.model.top_categories as |category|}}
                 <tr>
                   <td class="category-link">
-                    {{category-link category allowUncategorized="true" hideParent=false}}
+                    {{category-link
+                      category
+                      allowUncategorized="true"
+                      hideParent=false
+                    }}
                   </td>
                   <td class="topic-count">
-                    <UserSummaryCategorySearch @user={{this.user}} @category={{category}} @count={{category.topic_count}} />
+                    <UserSummaryCategorySearch
+                      @user={{this.user}}
+                      @category={{category}}
+                      @count={{category.topic_count}}
+                    />
                   </td>
                   <td class="reply-count">
-                    <UserSummaryCategorySearch @user={{this.user}} @category={{category}} @count={{category.post_count}} />
+                    <UserSummaryCategorySearch
+                      @user={{this.user}}
+                      @category={{category}}
+                      @count={{category.post_count}}
+                    />
                   </td>
                 </tr>
               {{/each}}
@@ -148,9 +274,16 @@
         {{#if this.model.badges}}
           <div class="badge-group-list">
             {{#each this.model.badges as |badge|}}
-              <BadgeCard @badge={{badge}} @count={{badge.count}} @username={{this.user.username_lower}} />
+              <BadgeCard
+                @badge={{badge}}
+                @count={{badge.count}}
+                @username={{this.user.username_lower}}
+              />
             {{/each}}
-            <PluginOutlet @name="after-user-summary-badges" @args={{hash model=this.model user=this.user}} />
+            <PluginOutlet
+              @name="after-user-summary-badges"
+              @outletArgs={{hash model=this.model user=this.user}}
+            />
           </div>
         {{else}}
           <p>{{i18n "user.summary.no_badges"}}</p>

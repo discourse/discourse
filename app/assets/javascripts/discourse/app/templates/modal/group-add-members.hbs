@@ -3,19 +3,29 @@
     <p>{{i18n "groups.add_members.description"}}</p>
 
     <div class="input-group">
-      <EmailGroupUserChooser @value={{this.usernamesAndEmails}} @onChange={{action "setUsernamesAndEmails"}} @options={{hash
+      <EmailGroupUserChooser
+        @value={{this.usernamesAndEmails}}
+        @onChange={{action "setUsernamesAndEmails"}}
+        @options={{hash
           allowEmails=this.currentUser.can_invite_to_forum
-          filterPlaceholder=(if this.currentUser.can_invite_to_forum
-                             "groups.add_members.usernames_or_emails_placeholder"
-                             "groups.add_members.usernames_placeholder"
-                            )
-        }} />
+          filterPlaceholder=(if
+            this.currentUser.can_invite_to_forum
+            "groups.add_members.usernames_or_emails_placeholder"
+            "groups.add_members.usernames_placeholder"
+          )
+        }}
+      />
     </div>
 
     {{#if this.model.can_admin_group}}
       <div class="input-group">
         <label>
-          <Input id="set-owner" @type="checkbox" @checked={{this.setOwner}} disabled={{this.emails}} />
+          <Input
+            id="set-owner"
+            @type="checkbox"
+            @checked={{this.setOwner}}
+            disabled={{this.emails}}
+          />
           {{i18n "groups.add_members.set_owner"}}
         </label>
       </div>
@@ -23,7 +33,11 @@
 
     <div class="input-group">
       <label>
-        <Input @type="checkbox" @checked={{this.notifyUsers}} disabled={{and (not this.usernames) this.emails}} />
+        <Input
+          @type="checkbox"
+          @checked={{this.notifyUsers}}
+          disabled={{and (not this.usernames) this.emails}}
+        />
         {{i18n "groups.add_members.notify_users"}}
       </label>
     </div>
@@ -31,5 +45,11 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @action={{action "addMembers"}} @class="add btn-primary" @icon="plus" @disabled={{or this.loading (not this.usernamesAndEmails)}} @label="groups.add" />
+  <DButton
+    @action={{action "addMembers"}}
+    @class="add btn-primary"
+    @icon="plus"
+    @disabled={{or this.loading (not this.usernamesAndEmails)}}
+    @label="groups.add"
+  />
 </div>

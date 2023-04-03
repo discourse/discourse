@@ -59,10 +59,10 @@ da:
         title: "Luk Kanal"
       channel_delete:
         title: "Slet Kanal"
-        instructions: "<p>Sletter <strong>%{name}</strong>-kanalen og chathistorikken. Alle beskeder og relaterede data, såsom reaktioner og uploads, slettes permanent. Hvis du vil bevare kanalhistorikken og nedlægge den, kan du i stedet for arkivere kanalen.</p> <p>Er du sikker på, at du vil slette <strong>kanalen</strong>? Skriv navnet på kanalen i boksen nedenfor for at bekræfte.</p>"
         confirm_channel_name: "Indtast kanalnavn"
       channels_list_popup:
         browse: "Gennemse kanaler"
+        create: "Ny kanal"
       click_to_join: "Klik her for at se tilgængelige kanaler."
       close: "Luk"
       delete: "Slet"
@@ -71,6 +71,8 @@ da:
       joined: "tilmeldt"
       email_frequency:
         never: "Aldrig"
+      header_indicator_preference:
+        never: "Aldrig"
       enable: "Aktiver chat"
       flag: "Rapportér"
       invalid_access: "Du har ikke adgang til at se denne chatkanal"
@@ -78,7 +80,7 @@ da:
       in_reply_to: "Som svar til"
       heading: "Chat"
       join: "Tilslut"
-      new_messages: "nye beskeder"
+      last_visit: "sidste besøg"
       mention_warning:
         dismiss: "afvis"
       reply: "Svar"
@@ -118,6 +120,7 @@ da:
         yesterday: I går
       about_view:
         title: Titel
+        name: Navn
         description: Beskrivelse
       channel_info:
         back_to_channel: "Tilbage"
@@ -138,6 +141,7 @@ da:
         create: "Opret kanal"
         description: "Beskrivelse (valgfrit)"
         name: "Kanal navn"
+        title: "Ny kanal"
         type: "Type"
         types:
           category: "Kategori"
@@ -146,10 +150,6 @@ da:
         type: "Chatbesked"
       reactions:
         only_you: "Du reagerede med :%{emoji}:"
-        and_others: "Du, %{usernames} reagerede med :%{emoji}:"
-        only_others: "%{usernames} reagerede med :%{emoji}:"
-        others_and_more: "%{usernames} og %{more} andre reagerede med :%{emoji}:"
-        you_others_and_more: "Du, %{usernames} og %{more} andre reagerede med :%{emoji}:"
       composer:
         italic_text: "kursiv skrift"
         bold_text: "fed skrift"
@@ -166,6 +166,7 @@ da:
         save: "Gem"
         saved: "Gemt"
         unfollow: "Forlad"
+        admin_title: "Admin"
       admin:
         title: "Chat"
       incoming_webhooks:
@@ -193,9 +194,6 @@ da:
           title: "Flyt til ny besked"
       replying_indicator:
         single_user: "%{username} skriver"
-      retention_reminders:
-        public: "Kanalhistorikken gemmes i %{days} dage."
-        dm: "Personlig chathistorik gemmes i %{days} dage."
       emoji_picker:
         objects: "Objekter"
         activities: "Aktiviteter"

@@ -4,26 +4,14 @@ import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import User from "discourse/models/user";
 
-registerUnbound("format-chat-date", function (message, details, mode) {
-  let currentUser = User.current();
+registerUnbound("format-chat-date", function (message, mode) {
+  const currentUser = User.current();
+  const tz = currentUser ? currentUser.user_option.timezone : moment.tz.guess();
+  const date = moment(new Date(message.createdAt), tz);
+  const url = getURL(`/chat/c/-/${message.channelId}/${message.id}`);
+  const title = date.format(I18n.t("dates.long_with_year"));
 
-  let tz = currentUser
-    ? currentUser.resolvedTimezone(currentUser)
-    : moment.tz.guess();
-
-  let date = moment(new Date(message.created_at), tz);
-
-  let url = "";
-
-  if (details) {
-    url = getURL(
-      `/chat/channel/${details.chat_channel_id}/-?messageId=${message.id}`
-    );
-  }
-
-  let title = date.format(I18n.t("dates.long_with_year"));
-
-  let display =
+  const display =
     mode === "tiny"
       ? date.format(I18n.t("chat.dates.time_tiny"))
       : date.format(I18n.t("dates.time"));

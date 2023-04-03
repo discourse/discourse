@@ -10,7 +10,11 @@ RSpec.describe RegexpListValidator do
   it "does not allow lists of invalid regular expressions do" do
     expect(subject.valid_value?('\d+|[0-9?|\w+')).to eq(false)
     expect(subject.error_message).to eq(
-      I18n.t("site_settings.errors.invalid_regex_with_message", regex: '[0-9?', message: 'premature end of char-class: /[0-9?/')
+      I18n.t(
+        "site_settings.errors.invalid_regex_with_message",
+        regex: "[0-9?",
+        message: "premature end of char-class: /[0-9?/",
+      ),
     )
   end
 end

@@ -44,12 +44,6 @@ const RESPONSES = {
     security_keys_enabled: true,
     allowed_methods: [BACKUP_CODE],
   },
-  ok010010: {
-    totp_enabled: false,
-    backup_enabled: true,
-    security_keys_enabled: false,
-    allowed_methods: [BACKUP_CODE],
-  },
 };
 
 Object.keys(RESPONSES).forEach((k) => {
@@ -184,14 +178,6 @@ acceptance("Second Factor Auth Page", function (needs) {
       !exists(".toggle-second-factor-method"),
       "no alternative methods are shown if only 1 method is allowed"
     );
-
-    // only backup codes
-    await visit("/session/2fa?nonce=ok010010");
-    assert.ok(exists("form.backup-code-token"), "backup code form is shown");
-    assert.ok(
-      !exists(".toggle-second-factor-method"),
-      "no alternative methods are shown if only 1 method is allowed"
-    );
   });
 
   test("switching 2FA methods", async function (assert) {
@@ -299,8 +285,7 @@ acceptance("Second Factor Auth Page", function (needs) {
   });
 
   test("sidebar is disabled on 2FA route", async function (assert) {
-    this.siteSettings.enable_experimental_sidebar_hamburger = true;
-    this.siteSettings.enable_sidebar = true;
+    this.siteSettings.navigation_menu = "sidebar";
 
     await visit("/session/2fa?nonce=ok110111");
 

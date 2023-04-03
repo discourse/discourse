@@ -127,6 +127,10 @@
           margin-bottom: 0.5em;
         }
 
+        .topic-admin-menu-button-container {
+          display: flex;
+        }
+
         .topic-admin-menu-button {
           display: flex;
         }
@@ -234,6 +238,9 @@
       .widget-dragging & {
         transition: none;
       }
+      .dragging & {
+        transition: none;
+      }
     }
 
     .timeline-handle {
@@ -244,6 +251,7 @@
       float: left;
       z-index: z("base") + 1;
       outline: 1px solid transparent;
+      margin-left: 0.5px;
     }
 
     .timeline-scroller-content {
@@ -252,6 +260,7 @@
       overflow: hidden;
       padding-left: 1em;
       position: absolute; // prevents text length from impacting width
+      max-height: 3em; // this hides the date when the count + date would wrap to more than 2 lines
     }
 
     .timeline-ago {

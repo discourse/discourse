@@ -21,8 +21,11 @@ el:
       joined: "έγινε μέλος"
       email_frequency:
         never: "Ποτέ"
+      header_indicator_preference:
+        never: "Ποτέ"
       flag: "Επισήμανση"
       join: "Γίνετε μέλος"
+      last_visit: "τελευταία επίσκεψη"
       mention_warning:
         dismiss: "απόρριψη"
       reply: "Απάντηση"
@@ -45,6 +48,7 @@ el:
         yesterday: Χτες
       about_view:
         title: Τίτλος
+        name: Όνομα
         description: Περιγραφή
       channel_info:
         back_to_channel: "Πίσω"
@@ -59,7 +63,7 @@ el:
         type: "Τύπος"
         types:
           category: "Κατηγορία"
-          topic: "Νήμα"
+          topic: "Θέμα"
       composer:
         italic_text: "κείμενο σε έμφαση"
         bold_text: "έντονη γραφή"
@@ -73,6 +77,7 @@ el:
         save: "Αποθήκευση"
         saved: "Αποθηκεύτηκε! "
         unfollow: "Αποχώρηση"
+        admin_title: "Διαχειριστής"
       incoming_webhooks:
         back: "Πίσω"
         description: "Περιγραφή"
@@ -88,9 +93,9 @@ el:
         cancel: "Ακύρωση"
         copy: "Αντιγραφή"
         new_topic:
-          title: "Μεταφορά σε Νέο Νήμα "
+          title: "Μετακίνηση σε Νέο Θέμα"
         existing_topic:
-          title: "Μεταφορά σε Υφιστάμενο Νήμα"
+          title: "Μετακίνηση σε Υπάρχον Θέμα"
         new_message:
           title: "Μετακίνηση σε νέο μήνυμα"
       emoji_picker:

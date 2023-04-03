@@ -2,14 +2,10 @@
 
 module ImportExport
   class CategoryStructureExporter < BaseExporter
-
     def initialize(include_group_users = false)
       @include_group_users = include_group_users
 
-      @export_data = {
-        groups: [],
-        categories: []
-      }
+      @export_data = { groups: [], categories: [] }
       @export_data[:users] = [] if @include_group_users
     end
 
@@ -25,6 +21,5 @@ module ImportExport
     def default_filename_prefix
       "category-structure-export"
     end
-
   end
 end

@@ -22,7 +22,7 @@
     "discourse-plugins": "workspace:*",
     "express": "^4.18.2",
     "html-entities": "^2.3.3",
-    "jsdom": "^20.0.2",
-    "node-fetch": "^3.3.0"
+    "jsdom": "^21.1.1",
+    "node-fetch": "^3.3.1"
   }
 }

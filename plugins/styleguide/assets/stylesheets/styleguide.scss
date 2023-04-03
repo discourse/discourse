@@ -144,6 +144,12 @@
     color: var(--primary-medium);
     margin: 0 0 0 10px;
   }
+
+  &--char-counter {
+    display: block;
+    width: 100%;
+    margin-bottom: 0;
+  }
 }
 
 .buttons-examples {
@@ -183,6 +189,7 @@
     }
     span {
       font-size: var(--font-down-1);
+      word-wrap: break-word;
     }
   }
 }

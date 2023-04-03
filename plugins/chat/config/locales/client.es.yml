@@ -7,6 +7,9 @@
 es:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Chat
       logs:
         staff_actions:
           actions:
@@ -32,17 +35,14 @@ es:
       cancel: "Cancelar"
       cancel_reply: "Cancelar respuesta"
       chat_channels: "Canales"
-      browse_all_channels: "Buscar todos los canales"
+      browse_all_channels: "Examinar todos los canales"
       move_to_channel:
         title: "Mover los mensajes al canal"
-        instructions:
-          one: "Estás moviendo <strong>%{count}</strong> mensaje. Selecciona un canal de destino. Se creará un mensaje marcador de posición en el canal <strong>%{channelTitle}</strong> para indicar que se ha movido este mensaje."
-          other: "Estás moviendo <strong>%{count}</strong> mensajes. Selecciona un canal de destino. Se creará un mensaje marcador de posición en el canal <strong>%{channelTitle}</strong> para indicar que se han movido estos mensajes."
         confirm_move: "Mover mensajes"
       channel_settings:
         title: "Ajustes del canal"
         edit: "Editar"
-        add: "Añade"
+        add: "Añadir"
         close_channel: "Cerrar canal"
         open_channel: "Abrir canal"
         archive_channel: "Archivar canal"
@@ -51,6 +51,10 @@ es:
         leave_channel: "Abandonar canal"
         join: "Unirse"
         leave: "Abandonar"
+        save_label:
+          mute_channel: "Preferencia de silencio de canal guardada"
+          desktop_notification: "Preferencia de notificación de escritorio guardada"
+          mobile_notification: "Preferencia de notificación móvil guardada"
       channel_archive:
         title: "Archivar canal"
         instructions: "<p>Archivar un canal lo pone en modo de solo lectura y mueve todos los mensajes del canal a un tema nuevo o existente. No se pueden enviar mensajes nuevos y no se pueden editar ni eliminar mensajes existentes.</p><p>¿Seguro que desea archivar el canal <strong>%{channelTitle}</strong> ?</p>"
@@ -64,7 +68,6 @@ es:
         instructions: "El cierre del canal impide que los usuarios que no son del personal envíen nuevos mensajes o editen los existentes. ¿Seguro que quieres cerrar este canal?"
       channel_delete:
         title: "Eliminar canal"
-        instructions: "<p>Elimina el canal de <strong>%{name}</strong> y el historial de chat. Todos los mensajes y datos relacionados, como las reacciones y las subidas, se eliminarán permanentemente. Si quieres conservar el historial del canal y descomponerlo, quizá quieras archivar el canal en su lugar.</p> <p>¿Seguro que quieres <strong>eliminar permanentemente</strong> el canal? Para confirmarlo, escribe el nombre del canal en la casilla de abajo.</p>"
         confirm: "Comprendo las consecuencias, eliminar el canal"
         confirm_channel_name: "Introduce el nombre del canal"
         process_started: "Se ha iniciado el proceso de eliminación del canal. Este modal se cerrará en breve, ya no verás el canal eliminado en ninguna parte."
@@ -75,7 +78,7 @@ es:
       close: "Cerrar"
       collapse: "Contraer contenedor del chat"
       confirm_flag: "¿Seguro que quieres denunciar el mensaje de %{username}?"
-      deleted: "Se eliminó un mensaje. [view]"
+      deleted: "Se eliminó un mensaje. [ver]"
       hidden: "Se ha ocultado un mensaje. [ver]"
       delete: "Eliminar"
       edited: "editado"
@@ -90,6 +93,8 @@ es:
         never: "Nunca"
         title: "Notificaciones por correo electrónico"
         when_away: "Solo cuando estés ausente"
+      header_indicator_preference:
+        never: "Nunca"
       enable: "Habilitar chat"
       flag: "Denunciar"
       emoji: "Insertar emoji"
@@ -99,19 +104,21 @@ es:
       in_reply_to: "En respuesta a"
       heading: "Chat"
       join: "Unirse"
-      new_messages: "nuevos mensajes"
+      last_visit: "última visita"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} no puede acceder a este canal y no fue notificado."
-          other: "%{usernames} no pueden acceder a este canal y no fueron notificados."
         dismiss: "descartar"
         invitations_sent:
           one: "Invitación enviada"
           other: "Invitaciones enviadas"
         invite: "Invitar al canal"
-        without_membership:
-          one: "%{usernames} no se ha unido a este canal."
-          other: "%{usernames} no se han unido a este canal."
+        without_membership: "%{username} no se ha unido a este canal."
+        group_mentions_disabled: "%{group_name} no permite menciones."
+        too_many_members: "%{group_name} tiene demasiados miembros. No se notificó a nadie."
+        groups:
+          header:
+            some: "Algunos usuarios no serán notificados"
+            all: "No se notificará a nadie"
+          unreachable_1: "@%{group} no permite menciones."
       aria_roles:
         header: "Encabezado del chat"
         composer: "Compositor del chat"
@@ -122,16 +129,15 @@ es:
         description: "Bloquear el envío de todas las notificaciones que no sean de chat"
       ignore_channel_wide_mention:
         title: "Ignorar las menciones de todo el canal"
-        description: "No enviar notificaciones para las menciones de todo el canal (@aquí y @todos)"
+        description: "No enviar notificaciones para las menciones de todo el canal (@here y @all)"
       open: "Abrir chat"
       open_full_page: "Abrir chat en pantalla completa"
       close_full_page: "Cerrar el chat a pantalla completa"
       open_message: "Abrir mensaje en el chat"
       placeholder_self: "Anota algo"
-      placeholder_others: "Chatear con %{messageRecipient}"
-      placeholder_new_message_disallowed: "El canal es %{status}, no puedes enviar nuevos mensajes en este momento."
+      placeholder_users: "Chatear con %{commaSeparatedNames}"
       placeholder_silenced: "No puedes enviar mensajes en este momento."
-      placeholder_start_conversation: Inicia una conversación con %{usernames}
+      placeholder_start_conversation_users: "Inicia una conversación con %{commaSeparatedUsernames}"
       remove_upload: "Eliminar archivo"
       react: "Reaccionar con emojis"
       reply: "Responder"
@@ -147,7 +153,6 @@ es:
       restore: "Restaurar mensaje eliminado"
       save: "Guardar"
       select: "Seleccionar"
-      silence: "Silencio usuario"
       return_to_list: "Volver a la lista de canales"
       scroll_to_bottom: "Desplazar hacia abajo"
       scroll_to_new_messages: "Ver nuevos mensajes"
@@ -170,19 +175,19 @@ es:
         read_only: "Solo lectura"
         archived_header: "El canal está archivado"
         archived: "Archivado"
-        archive_failed: "El canal de archivo ha fallado. Se han archivado %{completed}/%{total} mensajes en <a target=\"_blank\" href=\"%{topic_url}\">el tema de destino</a>. Pulsa reintentar para intentar completar el archivo."
         archive_completed: "Ver <a target=\"_blank\" href=\"%{topic_url}\">el tema del archivo</a>"
         closed_header: "El canal está cerrado"
         closed: "Cerrado"
         open_header: "El canal está abierto"
         open: "Abierto"
       browse:
+        back: "Atrás"
         title: Canales
         filter_all: Todos
         filter_open: Abierto
         filter_closed: Cerrado
         filter_archived: Archivado
-        filter_input_placeholder: Busca el canal por su nombre
+        filter_input_placeholder: Buscar canal por nombre
       chat_message_separator:
         today: Hoy
         yesterday: Ayer
@@ -192,6 +197,7 @@ es:
         associated_topic: Tema vinculado
         associated_category: Categoría vinculada
         title: Título
+        name: Nombre
         description: Descripción
       channel_info:
         back_to_all_channels: "Todos los canales"
@@ -200,10 +206,8 @@ es:
           about: Acerca de
           members: Miembros
           settings: Ajustes
-      channel_edit_title_modal:
-        title: Editar título
-        input_placeholder: Añade un título
-        description: Pon un título corto y descriptivo a tu canal
+      channel_edit_name_slug_modal:
+        name: Nombre del canal
       channel_edit_description_modal:
         title: Editar descripción
         input_placeholder: Añade una descripción
@@ -225,18 +229,10 @@ es:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} es una categoría pública. ¿Añadir automáticamente a este canal a todos los usuarios activos recientemente?"
-          warning_groups:
-            one: '¿Añadir automáticamente %{members_count} usuarios de %{group}?'
-            other: '¿Añadir automáticamente %{members_count} usuarios de %{group} y %{group_2}?'
-          warning_multiple_groups: '¿Añadir automáticamente %{members_count} usuarios de %{group_1} y %{count} otros?'
         choose_category:
           label: "Elige una categoría"
           none: "selecciona una..."
           default_hint: Administra el acceso visitando la <a href=%{link} target="_blank">%{category} configuración de seguridad</a>
-          hint_groups:
-            one: Los usuarios de %{hint} tendrán acceso a este canal según la <a href=%{link} target="_blank">configuración de seguridad</a>
-            other: Los usuarios de %{hint} y %{hint_2} tendrán acceso a este canal según la <a href=%{link} target="_blank">configuración de seguridad</a>
-          hint_multiple_groups: Los usuarios de %{hint_1} y %{count} otros grupos tendrán acceso a este canal según la <a href=%{link} target="_blank">configuración de seguridad</a>.
         create: "Crear canal"
         description: "Descripción (opcional)"
         name: "Nombre del canal"
@@ -249,10 +245,7 @@ es:
         type: "Mensaje de chat"
       reactions:
         only_you: "Has reaccionado con :%{emoji}:"
-        and_others: "Tú, %{usernames} reaccionaste con :%{emoji}:"
-        only_others: "%{usernames} reaccionó con :%{emoji}:"
-        others_and_more: "%{usernames} y %{more} personas más reaccionaron con :%{emoji}:"
-        you_others_and_more: "Tú, %{usernames} y %{more} personas más reaccionasteis con :%{emoji}:"
+        single_user: "%{username} reaccionó con :%{emoji}:"
       composer:
         toggle_toolbar: "Alternar barra de herramientas"
         italic_text: "texto enfatizado"
@@ -266,8 +259,9 @@ es:
         mention: "Solo para menciones"
         always: "Para toda actividad"
       settings:
-        enable_auto_join_users: "Añade automáticamente todos los usuarios activos recientemente"
-        disable_auto_join_users: "Dejar de añadir usuarios automáticamente"
+        channel_wide_mentions_label: "Permitir menciones @all y @here"
+        channel_wide_mentions_description: "Permite a los usuarios notificar a todos los miembros de #%{channel} con @all o solo a los que estén activos en ese momento con @here"
+        auto_join_users_label: "Añadir usuarios automáticamente"
         auto_join_users_warning: "Todos los usuarios que no sean miembros de este canal y tengan acceso a la categoría %{category} se unirán. ¿Estás seguro/a?"
         desktop_notification_level: "Notificaciones de escritorio"
         follow: "Unirse"
@@ -281,11 +275,12 @@ es:
         save: "Guardar"
         saved: "Guardado"
         unfollow: "Abandonar"
+        admin_title: "Administrador"
       admin:
         title: "Chat"
       direct_messages:
         title: "Chat personal"
-        new: "Nuevo chat personal"
+        new: "Crear un chat personal"
         create: "Ir"
         leave: "Abandonar este chat personal"
         cannot_create: "Lo sentimos, no puedes enviar mensajes directos."
@@ -318,8 +313,8 @@ es:
       selection:
         cancel: "Cancelar"
         quote_selection: "Cita en el Tema"
-        copy: "Copia"
-        move_selection_to_channel: "Pasar al canal"
+        copy: "Copiar"
+        move_selection_to_channel: "Mover al canal"
         error: "Se ha producido un error al mover los mensajes de chat"
         title: "Mover chat a tema"
         new_topic:
@@ -345,9 +340,6 @@ es:
         many_users:
           one: "%{commaSeparatedUsernames} y %{count} más está escribiendo"
           other: "%{commaSeparatedUsernames} y %{count} más están escribiendo"
-      retention_reminders:
-        public: "El historial del canal se conserva durante %{days} días."
-        dm: "El historial de chat personal se conserva durante %{days} días."
       flags:
         off_topic: "Este mensaje no es relevante para la discusión actual, tal y como se define en el título del canal, y probablemente debería moverse a otro lugar."
         inappropriate: "Este mensaje tiene un contenido que una persona razonable consideraría ofensivo, abusivo o que viola las <a href=\"%{basePath}/guidelines\">directrices de nuestra comunidad</a>."
@@ -380,13 +372,13 @@ es:
         chat_mention:
           direct: 'te ha mencionado en «%{channel}»'
           direct_html: '<span>%{username}</span> <span>te mencionó en «%{channel}»</span>'
-          other_plain: 'mencionó %{identifier} en «%{channel}»'
-          other_html: '<span>%{username}</span> <span>mencionó %{identifier} en «%{channel}»</span>'
+          other_plain: 'mencionó a %{identifier} en «%{channel}»'
+          other_html: '<span>%{username}</span> <span>mencionó a %{identifier} en «%{channel}»</span>'
         direct_message_chat_mention:
           direct: "te mencionó en el chat personal"
           direct_html: "<span>%{username}</span> <span>te mencionó en el chat personal</span>"
-          other_plain: "mencionó %{identifier} en el chat personal"
-          other_html: "<span>%{username}</span> <span>mencionó %{identifier} en el chat personal</span>"
+          other_plain: "mencionó a %{identifier} en el chat personal"
+          other_html: "<span>%{username}</span> <span>mencionó a %{identifier} en el chat personal</span>"
         chat_message: "Nuevo mensaje de chat"
         chat_quoted: "%{username} citó tu mensaje de chat"
       titles:

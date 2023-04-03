@@ -6,23 +6,14 @@
 .chat-channel-title {
   display: flex;
   align-items: center;
+  @include ellipsis;
 
-  .category-chat-private .d-icon {
-    background-color: var(--secondary);
-    position: absolute;
-    border-radius: 5px;
-    padding: 2px 2px 3px;
-    color: var(--primary-high);
-    height: 0.5em;
-    width: 0.5em;
-    left: calc(0.6125em + 3px);
-    top: -4px;
+  .user-status-message {
+    display: none; // we only show when in channels list
   }
 
   .chat-name,
   .category-chat-name,
-  .topic-chat-name,
-  .tag-chat-name,
   &__usernames,
   .dm-usernames {
     @include ellipsis;
@@ -73,10 +64,6 @@
   font-size: var(--font-down-1);
   align-items: center;
   padding: 0.25rem 0.5rem;
-
-  & + .chat-channel-title__name {
-    margin-left: 0.5rem;
-  }
 }
 
 .chat-channel-title__category-badge {
@@ -84,10 +71,6 @@
   display: flex;
   font-size: var(--font-up-1);
   position: relative;
-
-  + .chat-channel-title__name {
-    margin-left: 0.5rem;
-  }
 }
 
 .chat-channel-title .chat-user-avatar {
@@ -122,10 +105,15 @@
   @include ellipsis;
   font-size: var(--font-0);
   color: var(--primary);
+  margin-left: 0.5rem;
 }
 
 .channel-info {
   .chat-channel-title__name {
     max-width: 100%;
   }
+}
+
+.has-unread .chat-channel-title__name {
+  font-weight: bold;
 }

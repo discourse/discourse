@@ -41,6 +41,7 @@ export default Controller.extend(ModalFunctionality, {
   showLoginButtons: true,
   showSecondFactor: false,
   awaitingApproval: false,
+  maskPassword: true,
 
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
@@ -58,6 +59,7 @@ export default Controller.extend(ModalFunctionality, {
       showSecurityKey: false,
       showLoginButtons: true,
       awaitingApproval: false,
+      maskPassword: true,
     });
   },
 
@@ -188,6 +190,11 @@ export default Controller.extend(ModalFunctionality, {
     this.send("showForgotPassword");
   },
 
+  @action
+  togglePasswordMask() {
+    this.toggleProperty("maskPassword");
+  },
+
   actions: {
     forgotPassword() {
       this.handleForgotPassword();
@@ -223,30 +230,22 @@ export default Controller.extend(ModalFunctionality, {
             this.clearFlash();
 
             if (
-              (result.security_key_enabled ||
-                result.totp_enabled ||
-                result.backup_enabled) &&
+              (result.security_key_enabled || result.totp_enabled) &&
               !this.secondFactorRequired
             ) {
-              let secondFactorMethod;
-              if (result.security_key_enabled) {
-                secondFactorMethod = SECOND_FACTOR_METHODS.SECURITY_KEY;
-              } else if (result.totp_enabled) {
-                secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
-              } else {
-                secondFactorMethod = SECOND_FACTOR_METHODS.BACKUP_CODE;
-              }
               this.setProperties({
                 otherMethodAllowed: result.multiple_second_factor_methods,
                 secondFactorRequired: true,
                 showLoginButtons: false,
                 backupEnabled: result.backup_enabled,
                 totpEnabled: result.totp_enabled,
-                showSecondFactor: result.totp_enabled || result.backup_enabled,
+                showSecondFactor: result.totp_enabled,
                 showSecurityKey: result.security_key_enabled,
+                secondFactorMethod: result.security_key_enabled
+                  ? SECOND_FACTOR_METHODS.SECURITY_KEY
+                  : SECOND_FACTOR_METHODS.TOTP,
                 securityKeyChallenge: result.challenge,
                 securityKeyAllowedCredentialIds: result.allowed_credential_ids,
-                secondFactorMethod,
               });
 
               // only need to focus the 2FA input for TOTP
@@ -438,10 +437,9 @@ export default Controller.extend(ModalFunctionality, {
       return;
     }
 
-    const skipConfirmation =
-      options && this.siteSettings.auth_skip_create_confirm;
-
+    const skipConfirmation = this.siteSettings.auth_skip_create_confirm;
     const createAccountController = this.createAccount;
+
     createAccountController.setProperties({
       accountEmail: options.email,
       accountUsername: options.username,
@@ -451,7 +449,7 @@ export default Controller.extend(ModalFunctionality, {
     });
 
     next(() => {
-      showModal("createAccount", {
+      showModal("create-account", {
         modalClass: "create-account",
         titleAriaElementId: "create-account-title",
       });

@@ -21,8 +21,11 @@ ca:
       joined: "registrat"
       email_frequency:
         never: "Mai"
+      header_indicator_preference:
+        never: "Mai"
       flag: "Bandera"
       join: "Registre"
+      last_visit: "darrera visita"
       mention_warning:
         dismiss: "descarta-ho"
       reply: "Respon"
@@ -46,6 +49,7 @@ ca:
         yesterday: Ahir
       about_view:
         title: Títol
+        name: Nom
         description: Descripció
       channel_info:
         back_to_channel: "Enrere"
@@ -74,6 +78,7 @@ ca:
         save: "Desa"
         saved: "Desat"
         unfollow: "Abandona"
+        admin_title: "Administració"
       incoming_webhooks:
         back: "Enrere"
         description: "Descripció"

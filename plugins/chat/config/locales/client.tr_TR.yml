@@ -7,6 +7,9 @@
 tr_TR:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Sohbet
       logs:
         staff_actions:
           actions:
@@ -26,7 +29,7 @@ tr_TR:
         time_tiny: "h:mm"
       all_loaded: "Tüm mesajlar gösteriliyor"
       already_enabled: "Bu konuda sohbet zaten etkin. Lütfen yenileyin."
-      disabled_for_topic: "Bu konuda sohbet devre dışı bırakıldı."
+      disabled_for_topic: "Bu konuda sohbet devre dışı bırakılmış."
       bot: "bot"
       create: "Oluştur"
       cancel: "İptal et"
@@ -35,9 +38,6 @@ tr_TR:
       browse_all_channels: "Tüm kanallara göz atın"
       move_to_channel:
         title: "Mesajları kanala taşı"
-        instructions:
-          one: "<strong>%{count}</strong> mesajı taşıyorsunuz. Bir hedef kanal seçin. Bu mesajın taşındığını belirtmek için <strong>%{channelTitle}</strong> adlı kanalda bir yer tutucu mesaj oluşturulacak."
-          other: "<strong>%{count}</strong> mesajı taşıyorsunuz. Bir hedef kanal seçin. Bu mesajın taşındığını belirtmek için <strong>%{channelTitle}</strong> adlı kanalda bir yer tutucu mesaj oluşturulacak."
         confirm_move: "Mesajları Taşı"
       channel_settings:
         title: "Kanal ayarları"
@@ -57,7 +57,7 @@ tr_TR:
           mobile_notification: "Mobil anlık bildirim tercihi kaydedildi"
       channel_archive:
         title: "Kanalı arşivle"
-        instructions: "<p>Bir kanalı arşivlemek, onu salt okunur moda geçirir ve kanaldaki tüm mesajları yeni veya mevcut bir konuya taşır. Yeni mesaj gönderilemez ve mevcut mesajlar düzenlenemez veya silinemez.</p><p> <strong>%{channelTitle}</strong> kanalını arşivlemek istediğinizden emin misiniz?</p>"
+        instructions: "<p>Bir kanalı arşivlemek, onu salt okunur moda geçirir ve kanaldaki tüm mesajları yeni veya mevcut bir konuya taşır. Yeni mesaj gönderilemez ve mevcut mesajlar düzenlenemez veya silinemez.</p><p> <strong>%{channelTitle}</strong> adlı kanalı arşivlemek istediğinizden emin misiniz?</p>"
         process_started: "Arşivleme süreci başladı. Bu mod kısa süre içinde kapanır ve arşivleme işlemi tamamlandığında kişisel bir mesaj alırsınız."
         retry: "Tekrar Dene"
       channel_open:
@@ -68,7 +68,6 @@ tr_TR:
         instructions: "Kanalın kapatılması, personel olmayan kullanıcıların yeni mesaj göndermesini veya mevcut mesajları düzenlemesini engeller. Bu kanalı kapatmak istediğinizden emin misiniz?"
       channel_delete:
         title: "Kanalı Sil"
-        instructions: "<p> <strong>%{name}</strong> adlı kanalı ve sohbet geçmişini siler. Tepkiler ve yüklemeler gibi tüm mesajlar ve ilgili veriler kalıcı olarak silinir. Kanal geçmişini korumak ve kullanımdan kaldırmak istiyorsanız bunun yerine kanalı arşivlemek isteyebilirsiniz.</p> <p> Kanalı </strong> kalıcı olarak silmek<strong> istediğinizden emin misiniz? Onaylamak için aşağıdaki kutuya kanalın adını yazın.</p>"
         confirm: "Sonuçları anlıyorum, kanalı sil"
         confirm_channel_name: "Kanal adı girin"
         process_started: "Kanalı silme işlemi başladı. Bu mod kısa bir süre sonra kapanacak, silinen kanalı artık hiçbir yerde görmeyeceksiniz."
@@ -76,46 +75,53 @@ tr_TR:
         browse: "Kanallara göz atın"
         create: "Yeni kanal"
       click_to_join: "Mevcut kanalları görüntülemek için buraya tıklayın."
-      close: "Bitir"
+      close: "Kapat"
       collapse: "Sohbet Çekmecesini Daralt"
-      confirm_flag: "%{username} adlı kullanıcının mesajını işaretlemek istediğinizden emin misiniz?"
-      deleted: "Bir mesaj silindi. [view]"
-      hidden: "Bir mesaj gizlendi. [view]"
+      confirm_flag: "%{username} adlı kullanıcının mesajına bayrak eklemek istediğinizden emin misiniz?"
+      deleted: "Bir mesaj silindi. [görüntüleyin]"
+      hidden: "Bir mesaj gizlendi. [görüntüleyin]"
       delete: "Sil"
       edited: "düzenlendi"
-      muted: "sessiz"
-      joined: "katılma Tarihi"
+      muted: "sessize alındı"
+      joined: "katıldı"
       empty_state:
         direct_message_cta: "Kişisel bir Sohbet başlatın"
         direct_message: "Bir veya daha fazla kullanıcıyla da kişisel sohbet başlatabilirsiniz."
         title: "Kanal bulunamadı"
       email_frequency:
-        description: "Size yalnızca sizi son 15 dakika içinde görmediğimiz takdirde e-posta göndeririz."
+        description: "Yalnızca sizi son 15 dakika içinde görmediğimiz takdirde size e-posta göndeririz."
         never: "Asla"
         title: "E-posta Bildirimleri"
         when_away: "Sadece uzaktayken"
+      header_indicator_preference:
+        title: "Etkinlik göstergesini başlıkta göster"
+        all_new: "Tüm Yeni Mesajlar"
+        dm_and_mentions: "Direkt Mesajlar ve Bahsetmeler"
+        never: "Asla"
       enable: "Sohbeti etkinleştir"
-      flag: "Bayrak Koy"
+      flag: "Bayrak ekle"
       emoji: "Emoji ekle"
-      flagged: "Bu mesaj incelenmek üzere işaretlendi"
-      invalid_access: "Bu sohbet kanalını görüntüleme erişiminiz yok"
+      flagged: "Bu mesaja incelenmek üzere bayrak eklendi"
+      invalid_access: "Bu sohbet kanalını görüntülemek için erişiminiz yok"
       invitation_notification: "<span>%{username}</span> <span>sizi bir sohbet kanalına katılmaya davet etti</span>"
-      in_reply_to: "Yanıt olarak"
+      in_reply_to: "Şuna yanıt olarak:"
       heading: "Sohbet"
       join: "Katıl"
-      new_messages: "yeni mesajlar"
+      last_visit: "son ziyaret"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} bu kanala erişemiyor ve bildirim gönderilmedi."
-          other: "%{usernames} bu kanala erişemiyor ve bildirim gönderilmedi."
         dismiss: "kapat"
         invitations_sent:
-          one: "Davetiye gönderildi"
-          other: "Davetiye gönderildi"
+          one: "Davet gönderildi"
+          other: "Davet gönderildi"
         invite: "Kanala davet et"
-        without_membership:
-          one: "%{usernames} bu kanala katılmadı."
-          other: "%{usernames} bu kanala katılmadı."
+        without_membership: "%{username} bu kanala katılmadı."
+        group_mentions_disabled: "%{group_name} bahsetmeye izin vermiyor."
+        too_many_members: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi."
+        groups:
+          header:
+            some: "Bazı kullanıcılara bildirim gönderilmeyecek"
+            all: "Kimseye bildirim gönderilmeyecek"
+          unreachable_1: "@%{group} bahsetmeye izin vermiyor."
       aria_roles:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
@@ -131,17 +137,17 @@ tr_TR:
       open_full_page: "Tam ekran sohbeti aç"
       close_full_page: "Tam ekran sohbeti kapat"
       open_message: "Mesajı sohbette aç"
-      placeholder_self: "Bir şeyler karala"
-      placeholder_others: "%{messageRecipient} ile sohbet et"
-      placeholder_new_message_disallowed: "Kanal %{status}, şu anda yeni mesaj gönderemezsiniz."
+      placeholder_self: "Bir şeyler not edin"
+      placeholder_users: "%{commaSeparatedNames} ile sohbet et"
       placeholder_silenced: "Şu anda mesaj gönderemezsiniz."
-      placeholder_start_conversation: '%{usernames} ile bir konuşma başlat'
+      placeholder_start_conversation: "Şu kişi ile bir sohbet başlatın:"
+      placeholder_start_conversation_users: "%{commaSeparatedUsernames} ile bir konuşma başlat"
       remove_upload: "Dosyayı kaldır"
       react: "Emoji ile tepki ver"
       reply: "Yanıtla"
       edit: "Düzenle"
       copy_link: "Bağlantıyı kopyala"
-      rebake_message: "HTML'i Yeniden Yapılandır"
+      rebake_message: "HTML'yi yeniden oluştur"
       retry_staged_message:
         title: "Ağ hatası"
         action: "Tekrar gönderilsin mi?"
@@ -151,14 +157,13 @@ tr_TR:
       restore: "Silinen mesajı geri yükle"
       save: "Kaydet"
       select: "Seç"
-      silence: "Kullanıcıyı sustur"
       return_to_list: "Kanal listesine dön"
       scroll_to_bottom: "En alta kaydır"
       scroll_to_new_messages: "Yeni mesajlara bak"
       sound:
         title: "Masaüstü sohbet bildirim sesi"
       sounds:
-        none: "Yok"
+        none: "Hiçbiri"
         bell: "Zil"
         ding: "Ding"
       title: "sohbet"
@@ -167,25 +172,24 @@ tr_TR:
       uploaded_files:
         one: "%{count} dosya"
         other: "%{count} dosya"
-      you_flagged: "Bu mesajı işaretlediniz"
+      you_flagged: "Bu mesaja bayrak eklediniz"
       exit: "geri"
       channel_status:
         read_only_header: "Kanal salt okunur"
         read_only: "Salt Okunur"
         archived_header: "Kanal arşivlendi"
         archived: "Arşivlendi"
-        archive_failed: "Kanal arşivlemesi başarısız oldu. %{completed}/%{total} mesaj <a target=\"_blank\" href=\"%{topic_url}\">hedef konuya</a> arşivlendi. Arşivi tamamlamayı denemek için tekrar deneye basın."
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">Arşiv konusuna</a> bakın"
         closed_header: "Kanal kapalı"
-        closed: "Kapanmış"
+        closed: "Kapalı"
         open_header: "Kanal açık"
-        open: "Başlat"
+        open: "Aç"
       browse:
         back: "Geri"
         title: Kanallar
-        filter_all: Hepsi
+        filter_all: Tümü
         filter_open: Açıldı
-        filter_closed: Kapanmış
+        filter_closed: Kapalı
         filter_archived: Arşivlendi
         filter_input_placeholder: Ada göre kanal ara
       chat_message_separator:
@@ -197,6 +201,7 @@ tr_TR:
         associated_topic: Bağlantılı konu
         associated_category: Bağlantılı kategori
         title: Başlık
+        name: Ad
         description: Açıklama
       channel_info:
         back_to_all_channels: "Tüm kanallar"
@@ -205,16 +210,16 @@ tr_TR:
           about: Hakkında
           members: Üyeler
           settings: Ayarlar
-      channel_edit_title_modal:
-        title: Başlığı düzenle
-        input_placeholder: Başlık ekle
-        description: Kanalınıza kısa bir açıklayıcı başlık verin
+      channel_edit_name_slug_modal:
+        title: Kanalı düzenle
+        input_placeholder: Bir isim ekle
+        name: Kanal adı
       channel_edit_description_modal:
         title: Açıklamayı düzenle
         input_placeholder: Açıklama ekle
         description: İnsanlara bu kanalın neyle ilgili olduğunu söyleyin
       direct_message_creator:
-        title: Yeni İleti
+        title: Yeni Mesaj
         prefix: "Kime:"
         no_results: Sonuç yok
         selected_user_title: "%{username} seçimini kaldır"
@@ -229,11 +234,7 @@ tr_TR:
           other: "%{count} üye"
       create_channel:
         auto_join_users:
-          public_category_warning: "%{category} genel bir kategoridir. Son zamanlarda etkin olan tüm kullanıcılar bu kanala otomatik olarak eklensin mi?"
-          warning_groups:
-            one: '%{group} grubundaki %{members_count} kullanıcı otomatik olarak eklensin mi?'
-            other: '%{group} ve %{group_2} gruplarındaki %{members_count} kullanıcı otomatik olarak eklensin mi?'
-          warning_multiple_groups: '%{group_1} ve %{count} diğer gruptaki %{members_count} kullanıcı otomatik olarak eklensin mi?'
+          public_category_warning: "%{category} herkese açık bir kategori. Son zamanlarda aktif olan tüm kullanıcılar bu kanala otomatik olarak eklensin mi?"
         choose_category:
           label: "Kategori seçin"
           none: "birini seçin..."
@@ -250,12 +251,9 @@ tr_TR:
         type: "Sohbet mesajı"
       reactions:
         only_you: ":%{emoji}: ile tepki verdiniz"
-        and_others: "Siz, %{usernames} :%{emoji}: ile tepki verdiniz"
-        only_others: "%{usernames} :%{emoji}: ile tepki verdi"
-        others_and_more: "%{usernames} ve %{more} kişi daha :%{emoji}: ile tepki verdi"
-        you_others_and_more: "Siz, %{usernames} ve %{more} kişi daha :%{emoji}: ile tepki verdiniz"
+        single_user: "%{username} :%{emoji}: ile tepki verdi"
       composer:
-        toggle_toolbar: "Geçiş yapma araç çubuğu"
+        toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
         bold_text: "güçlü metin"
         code_text: "kod metni"
@@ -267,26 +265,28 @@ tr_TR:
         mention: "Sadece bahsetmeler için"
         always: "Tüm aktiviteler için"
       settings:
-        enable_auto_join_users: "Son zamanlarda aktif olan tüm kullanıcıları otomatik olarak ekle"
-        disable_auto_join_users: "Otomatik olarak kullanıcı eklemeyi durdur"
-        auto_join_users_warning: "Bu kanala üye olmayan ve %{category} kategorisine erişimi olan her kullanıcı katılacak. Emin misiniz?"
+        channel_wide_mentions_label: "@all ve @here bahsetmelerine izin ver"
+        channel_wide_mentions_description: "Kullanıcıların @all ile #%{channel} kanalının tüm üyelerine veya @here ile yalnızca o anda aktif olanlara bildirim göndermelerine izin verin"
+        auto_join_users_label: "Kullanıcıları otomatik olarak ekle"
+        auto_join_users_warning: "Bu kanala üye olmayan ve %{category} adlı kategoriye erişimi olan her kullanıcı katılacak. Emin misiniz?"
         desktop_notification_level: "Masaüstü bildirimleri"
         follow: "Katıl"
-        followed: "Katılma Tarihi"
+        followed: "Katıldı"
         mobile_notification_level: "Mobil anlık bildirimleri"
         mute: "Kanalı sessize al"
         muted_on: "Açık"
         muted_off: "Kapalı"
         notifications: "Bildirimler"
-        preview: "Önizleme"
+        preview: "Ön izleme"
         save: "Kaydet"
         saved: "Kaydedildi"
         unfollow: "Ayrıl"
+        admin_title: "Yönetici"
       admin:
         title: "Sohbet"
       direct_messages:
         title: "Kişisel sohbet"
-        new: "Yeni kişisel sohbet"
+        new: "Kişisel sohbet oluşturun"
         create: "Git"
         leave: "Bu kişisel sohbetten ayrıl"
         cannot_create: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
@@ -312,31 +312,31 @@ tr_TR:
         system: "sistem"
         title: "Gelen web kancaları"
         url: "URL"
-        url_instructions: "Bu URL gizli bir değer içeriyor, onu emniyette tutun."
+        url_instructions: "Bu URL gizli bir değer içerir, onu güvende tutun."
         username: "Kullanıcı Adı"
         username_instructions: "Kanala gönderi yapan botun kullanıcı adı. Boş bırakıldığında varsayılan olarak \"sistem\" olur."
-        instructions: "Gelen web kancaları, <code>/hooks/:key</code> uç noktası aracılığıyla bot kullanıcısı olarak belirlenmiş bir sohbet kanalına mesaj göndermek için harici sistemler tarafından kullanılabilir. Yük, 2000 karakterle sınırlı tek bir <code>metin</code> parametresinden oluşur.<br><br>Ayrıca, <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>adresindeki biçime dayalı olarak bağlantıları ve bahsetmeleri çıkaran sınırlı Slack biçimli <code>metin</code> parametrelerini de destekliyoruz, ancak bunun için <code>/hooks/:key/slack</code> uç noktası kullanılmalıdır."
+        instructions: "Gelen web kancaları, <code>/hooks/:key</code> uç noktası aracılığıyla bot kullanıcısı olarak belirlenmiş bir sohbet kanalına mesaj göndermek için harici sistemler tarafından kullanılabilir. Yük, 2000 karakterle sınırlı tek bir <code>metin</code> parametresinden oluşur.<br><br>Ayrıca, <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> adresindeki biçime dayalı olarak bağlantıları ve bahsetmeleri çıkaran sınırlı Slack biçimli <code>metin</code> parametrelerini de destekliyoruz, ancak bunun için <code>/hooks/:key/slack</code> uç noktası kullanılmalıdır."
       selection:
         cancel: "İptal et"
-        quote_selection: "Konudaki Alıntı"
+        quote_selection: "Konu İçinde Alıntı Yap"
         copy: "Kopyala"
         move_selection_to_channel: "Kanala Taşı"
         error: "Sohbet mesajlarını taşırken bir hata oluştu"
         title: "Sohbeti Konuya Taşı"
         new_topic:
-          title: "Yeni Konuya Geç"
+          title: "Yeni Konuya Taşı"
           instructions:
             one: "Yeni bir konu oluşturmak ve onu seçtiğiniz sohbet mesajıyla doldurmak üzeresiniz."
             other: "Yeni bir konu oluşturmak ve onu seçtiğiniz <b>%{count}</b> sohbet mesajıyla doldurmak üzeresiniz."
           instructions_channel_archive: "Yeni bir konu oluşturmak ve kanal mesajlarını oraya arşivlemek üzeresiniz."
         existing_topic:
-          title: "Var Olan Bir Konuya Taşı"
+          title: "Mevcut Konuya Taşı"
           instructions:
             one: "Lütfen o sohbet mesajını taşımak istediğiniz konuyu seçin."
             other: "Lütfen bu <b>%{count}</b> sohbet mesajını taşımak istediğiniz konuyu seçin."
           instructions_channel_archive: "Lütfen kanal mesajlarını arşivlemek istediğiniz konuyu seçin."
         new_message:
-          title: "Yeni Mesajlara Taşı"
+          title: "Yeni Mesaja Taşı"
           instructions:
             one: "Yeni bir mesaj oluşturmak ve onu seçtiğiniz sohbet mesajıyla doldurmak üzeresiniz."
             other: "Yeni bir mesaj oluşturmak ve onu seçtiğiniz <b>%{count}</b> sohbet mesajıyla doldurmak üzeresiniz."
@@ -346,17 +346,14 @@ tr_TR:
         many_users:
           one: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
           other: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
-      retention_reminders:
-        public: "Kanal geçmişi %{days} gün boyunca saklanır."
-        dm: "Kişisel sohbet geçmişi %{days} gün boyunca saklanır."
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."
-        spam: "Bu mesaj bir reklam veya vandalizm. Kullanışlı veya mevcut kanalla ilgili değil."
+        spam: "Bu mesaj bir reklam veya vandalizm içerikli. Kullanışlı veya mevcut kanalla ilgili değil."
         notify_user: "Bu kişiyle doğrudan ve kişisel olarak mesajı hakkında konuşmak istiyorum."
         notify_moderators: "Bu mesaj, yukarıda listelenmeyen başka bir nedenden dolayı personelin dikkatini gerektiriyor."
       flagging:
-        action: "Mesajı işaretle"
+        action: "Mesaja bayrak ekle"
       emoji_picker:
         favorites: "Sık kullanılan"
         smileys_&_emotion: "İfadeler ve duygu"
@@ -365,13 +362,13 @@ tr_TR:
         travel_&_places: "Seyahat ve yerler"
         animals_&_nature: "Hayvanlar ve doğa"
         food_&_drink: "Yiyecek ve içecek"
-        activities: "Faaliyetler"
-        flags: "Bildirilenler"
+        activities: "Aktiviteler"
+        flags: "Bayraklar"
         symbols: "Semboller"
-        search_placeholder: "Emoji adı ve takma ad ile ara..."
+        search_placeholder: "Emoji adına ve takma ada göre arama yapın..."
         no_results: "Sonuç yok"
       draft_channel_screen:
-        header: "Yeni İleti"
+        header: "Yeni Mesaj"
         cancel: "İptal et"
     notifications:
       chat_invitation: "sizi bir sohbet kanalına katılmaya davet etti"
@@ -382,15 +379,17 @@ tr_TR:
           direct: '"%{channel}" adlı kanalda sizden bahsetti'
           direct_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda sizden bahsetti</span>'
           other_plain: '"%{channel}" adlı kanalda %{identifier} bahsetti'
-          other_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda %{identifier} bahsetti</span>'
+          other_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda şundan bahsetti: %{identifier}</span>'
         direct_message_chat_mention:
           direct: "kişisel sohbette sizden bahsetti"
           direct_html: "<span>%{username}</span> <span>kişisel sohbette sizden bahsetti</span>"
+          other_plain: "kişisel sohbette %{identifier} adlı kullanıcıdan bahsetti"
+          other_html: "<span>%{username}</span> <span>kişisel sohbette şundan bahsetti: %{identifier}</span>"
         chat_message: "Yeni sohbet mesajı"
         chat_quoted: "%{username} sohbet mesajınızı alıntıladı"
       titles:
         chat_mention: "Sohbette bahsetme"
-        chat_invitation: "Sohbet davetiyesi"
+        chat_invitation: "Sohbet daveti"
         chat_quoted: "Sohbet alıntılandı"
     action_codes:
       chat:
@@ -404,7 +403,7 @@ tr_TR:
             chat_channel_id:
               label: Sohbet kanalı kimliği
             message:
-              label: İleti
+              label: Mesaj
             sender:
               label: Gönderen
               description: Varsayılan olarak sisteme ayarlar
@@ -413,8 +412,8 @@ tr_TR:
         view: "Önceki mesajların dökümünü görüntüle"
       types:
         reviewable_chat_message:
-          title: "İşaretli Sohbet Mesajı"
-          flagged_by: "Bildiren"
+          title: "Bayrak Eklenen Sohbet Mesajı"
+          flagged_by: "Bayrak Ekleyen Kişi"
     keyboard_shortcuts_help:
       chat:
         title: "Sohbet"
@@ -431,13 +430,15 @@ tr_TR:
       chat:
         help: "Bu konu için sohbet etkinleştirildi"
     user:
-      allow_private_messages: "Diğer kullanıcıların bana kişisel mesajlar ve sohbet doğrudan mesajları göndermesine izin ver"
+      allow_private_messages: "Diğer kullanıcıların bana kişisel mesaj ve sohbet doğrudan mesajları göndermesine izin ver"
       muted_users_instructions: "Bu kullanıcılardan gelen tüm bildirimleri, kişisel mesajları ve sohbet doğrudan mesajlarını gizle."
       allowed_pm_users_instructions: "Yalnızca bu kullanıcılardan gelen kişisel mesajlara veya sohbet doğrudan mesajlarına izin ver."
       allow_private_messages_from_specific_users: "Yalnızca belirli kullanıcıların bana kişisel mesaj veya sohbet doğrudan mesajları göndermesine izin ver"
       ignored_users_instructions: "Bu kullanıcılardan gelen tüm gönderileri, mesajları, bildirimleri, kişisel mesajları ve sohbet doğrudan mesajlarını gizle."
     user_menu:
       no_chat_notifications_title: "Henüz sohbet bildiriminiz yok"
+      no_chat_notifications_body: >
+        Biri size doğrudan mesaj gönderdiğinde veya sohbette sizden <b>@bahsettiğinde</b> bu panelde bildirim alırsınız. Bir süredir giriş yapmadıysanız bildirimler e-postanıza da gönderilir. <br><br>Sohbet kanalında hangi bildirimleri alacağınızı yapılandırmak için o kanalın üst kısmındaki başlığa tıklayın. Daha fazla bilgi için <a href='%{preferencesUrl}'>bildirim tercihlerinizi</a> inceleyin.
       tabs:
         chat_notifications: "Sohbet bildirimleri"
         chat_notifications_with_unread:

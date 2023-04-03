@@ -45,9 +45,6 @@ hu:
       trigger: "kockadobás"
       invalid: |-
         Sajnálom, matematikailag lehetetlen ezt a kockakombinációt dobni. :confounded:
-      not_enough_dice:
-        one: "Csak %{count} kockám van. [Szégyenletes](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tudom!"
-        other: "Csak %{count} kockám van. [Szégyenletes](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tudom!"
       out_of_range: |-
         Tudta, hogy a [legtöbb oldallal rendelkező](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matematikailag fair kocka 120 oldalas?
       results: |-
@@ -277,7 +274,7 @@ hu:
         instructions: |-
           Néha fel akarhatja hívni valaki figyelmét a válaszára, még akkor is, ha nem kifejezetten neki válaszol. Ilyenkor írjon be egy „@”-ot, majd adja meg a felhasználónevét, hogy megemlítse.
 
-          Meg tudnád említeni a válaszában a következőt **`@%{discobot_username}`**?
+          Meg tudná említeni a válaszában a következőt **`@%{discobot_username}`**?
         reply: |-
           _Kimondta valaki a nevemet!?_ :raised_hand: Azt hiszem, Ön volt az! :wave: Nos, itt vagyok! Köszönöm, hogy megemlített. :ok_hand:
         not_found: |-
@@ -286,7 +283,7 @@ hu:
           (És igen, _disco_ van a nevemben, mint a 70-es évekbeli táncőrület. Tényleg [imádom az éjszakai életet!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          A barátságos beszélgetéseket szeretjük, és szükségünk van a segítségére, hogy a dolgok civilizáltak maradjanak](%{guidelines_url}). Ha problémát lát, akkor tudassa privát módon a szerzővel vagy a [segítőkész stábunkkal](%{about_url}). Számos oka lehet, amiért jelentene egy bejegyzést, közdve az ártatlan, új témát szóba hozó javaslatokkal, egészen a közösségi szabályok egyértelmű megsértéséig. Ha a **Valami más** lehetőséget választja, akkor privát beszélgetést kezd a moderátorokkal, ahol további kérdéseket tehet fel.
+          A barátságos beszélgetéseket szeretjük, és szükségünk van a segítségére, hogy a dolgok civilizáltak maradjanak (%{guidelines_url}). Ha problémát lát, akkor tudassa privát módon a szerzővel vagy a [segítőkész stábunkkal] (%{about_url}). Számos oka lehet, amiért jelentene egy bejegyzést, közdve az ártatlan, új témát szóba hozó javaslatokkal, egészen a közösségi szabályok egyértelmű megsértéséig. Ha a **Valami más** lehetőséget választja, akkor privát beszélgetést kezd a moderátorokkal, ahol további kérdéseket tehet fel.
 
           > :imp: Valami csúnyát írtam ide
 
@@ -389,9 +386,9 @@ hu:
         instructions: |-
           Minden témának van egy értesítési szintje. Kezdetben „normál”, ami azt jelenti, hogy csak akkor kap értesítést, ha valaki közvetlenül Önhöz beszél.
 
-          Alapértelmezés szerint a privát üzenetek a legmagasabb szintre, „figyelésre” vannak állítva, ami azt jelenti, hogy minden új választól értesítve lesz. De felülírhatja _bármely_ téma értesítési szintjét a következőkre: „figyelés”, „követés” vagy „némított”.
+          Alapértelmezés szerint a privát üzenetek a legmagasabb szintre, „figyelésre” vannak állítva, ami azt jelenti, hogy minden új válaszról értesítve lesz. De módosíthatja _bármely_ téma értesítési szintjét a következőkre: „figyelés”, „követés” vagy „némított”.
 
-          Próbálja ki e téma értesítési szintjének módosítását. A téma alján talál egy gombot, amely azt mutatja, hogy **figyeli** ezt a témát. Át tudja állítani arra, hogy **követi**?
+          Próbálja ki e téma értesítési szintjének módosítását. A téma alján talál egy gombot, amely azt mutatja, hogy **figyeli** azt a témát. Át tudja állítani arra, hogy **követi**?
         not_found: |-
           Új néz ki, hogy még mindig figyeli :eyes: ezt a témát! Ha nem találja, akkor az értesítési szint gombja a téma alján található.
         reply: "Nagyszerű munka! Remélem, hogy nem némította le ezt a témát, sajnos néha kicsit fecsegős vagyok :grin:. \n\nNe feledje, hogy amikor egy témára válaszol, vagy egy témát néhány percnél tovább olvas, akkor azt automatikusan elkezdi követni is. Ezt megváltoztathatja a [felhasználói beállításokban](%{base_uri}/my/preferences)."

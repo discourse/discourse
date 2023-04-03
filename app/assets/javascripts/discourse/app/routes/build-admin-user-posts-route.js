@@ -33,7 +33,7 @@ export default function (filter) {
     },
 
     renderTemplate() {
-      this.render("user/posts", { into: "user" });
+      this.render("user/posts");
     },
   });
 }

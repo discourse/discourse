@@ -39,9 +39,9 @@ function getQuoteTitle(element) {
 }
 
 function fixQuotes(str) {
-  // u+201c “
-  // u+201d ”
-  return str.replace(/[\u201C\u201D]/g, '"');
+  // u+201c, u+201d = “ ”
+  // u+2018, u+2019 = ‘ ’
+  return str.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
 }
 
 export default Component.extend(KeyEnterEscape, {
@@ -424,7 +424,7 @@ export default Component.extend(KeyEnterEscape, {
   embedQuoteButton(canCreatePost, canReplyAsNewTopic) {
     return (
       (canCreatePost || canReplyAsNewTopic) &&
-      this.currentUser?.get("enable_quoting")
+      this.currentUser?.get("user_option.enable_quoting")
     );
   },
 

@@ -7,7 +7,7 @@ class CreateReviewableHistories < ActiveRecord::Migration[5.2]
       t.integer :reviewable_history_type, null: false
       t.integer :status, null: false
       t.integer :created_by_id, null: false
-      t.json    :edited, null: true
+      t.json :edited, null: true
       t.timestamps
     end
 

@@ -6,7 +6,6 @@ import {
 } from "discourse/models/composer";
 import { currentUser } from "discourse/tests/helpers/qunit-helpers";
 import AppEvents from "discourse/services/app-events";
-import EmberObject from "@ember/object";
 import { module, test } from "qunit";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { setupTest } from "ember-qunit";
@@ -34,7 +33,7 @@ module("Unit | Model | composer", function (hooks) {
   test("replyLength", function (assert) {
     const replyLength = function (val, expectedLength) {
       const composer = createComposer.call(this, { reply: val });
-      assert.strictEqual(composer.get("replyLength"), expectedLength);
+      assert.strictEqual(composer.replyLength, expectedLength);
     };
 
     replyLength("basic reply", 11, "basic reply length");
@@ -67,27 +66,21 @@ module("Unit | Model | composer", function (hooks) {
 
   test("missingReplyCharacters", function (assert) {
     this.siteSettings.min_first_post_length = 40;
-    const missingReplyCharacters = function (
-      val,
-      isPM,
-      isFirstPost,
-      expected,
-      message
-    ) {
-      let action = REPLY;
-      if (isPM) {
-        action = PRIVATE_MESSAGE;
-      }
+
+    function missingReplyCharacters(val, isPM, isFirstPost, expected, message) {
+      let action;
+
       if (isFirstPost) {
         action = CREATE_TOPIC;
+      } else if (isPM) {
+        action = PRIVATE_MESSAGE;
+      } else {
+        action = REPLY;
       }
+
       const composer = createComposer.call(this, { reply: val, action });
-      assert.strictEqual(
-        composer.get("missingReplyCharacters"),
-        expected,
-        message
-      );
-    };
+      assert.strictEqual(composer.missingReplyCharacters, expected, message);
+    }
 
     missingReplyCharacters(
       "hi",
@@ -123,7 +116,7 @@ module("Unit | Model | composer", function (hooks) {
     });
 
     assert.strictEqual(
-      composer.get("missingReplyCharacters"),
+      composer.missingReplyCharacters,
       0,
       "don't require any post content"
     );
@@ -135,11 +128,7 @@ module("Unit | Model | composer", function (hooks) {
         title: val,
         action: isPM ? PRIVATE_MESSAGE : REPLY,
       });
-      assert.strictEqual(
-        composer.get("missingTitleCharacters"),
-        expected,
-        message
-      );
+      assert.strictEqual(composer.missingTitleCharacters, expected, message);
     };
 
     missingTitleCharacters(
@@ -158,7 +147,7 @@ module("Unit | Model | composer", function (hooks) {
 
   test("replyDirty", function (assert) {
     const composer = createComposer();
-    assert.ok(!composer.get("replyDirty"), "by default it's false");
+    assert.ok(!composer.replyDirty, "by default it's false");
 
     composer.setProperties({
       originalText: "hello",
@@ -166,27 +155,23 @@ module("Unit | Model | composer", function (hooks) {
     });
 
     assert.ok(
-      !composer.get("replyDirty"),
+      !composer.replyDirty,
       "it's false when the originalText is the same as the reply"
     );
     composer.set("reply", "hello world");
-    assert.ok(composer.get("replyDirty"), "it's true when the reply changes");
+    assert.ok(composer.replyDirty, "it's true when the reply changes");
   });
 
   test("appendText", function (assert) {
     const composer = createComposer();
 
-    assert.blank(composer.get("reply"), "the reply is blank by default");
+    assert.blank(composer.reply, "the reply is blank by default");
 
     composer.appendText("hello");
-    assert.strictEqual(
-      composer.get("reply"),
-      "hello",
-      "it appends text to nothing"
-    );
+    assert.strictEqual(composer.reply, "hello", "it appends text to nothing");
     composer.appendText(" world");
     assert.strictEqual(
-      composer.get("reply"),
+      composer.reply,
       "hello world",
       "it appends text to existing text"
     );
@@ -195,43 +180,39 @@ module("Unit | Model | composer", function (hooks) {
     composer.appendText("a\n\n\n\nb");
     composer.appendText("c", 3, { block: true });
 
-    assert.strictEqual(composer.get("reply"), "a\n\nc\n\nb");
+    assert.strictEqual(composer.reply, "a\n\nc\n\nb");
 
     composer.clearState();
     composer.appendText("ab");
     composer.appendText("c", 1, { block: true });
 
-    assert.strictEqual(composer.get("reply"), "a\n\nc\n\nb");
+    assert.strictEqual(composer.reply, "a\n\nc\n\nb");
 
     composer.clearState();
     composer.appendText("\nab");
     composer.appendText("c", 0, { block: true });
 
-    assert.strictEqual(composer.get("reply"), "c\n\nab");
+    assert.strictEqual(composer.reply, "c\n\nab");
   });
 
   test("prependText", function (assert) {
     const composer = createComposer();
 
-    assert.blank(composer.get("reply"), "the reply is blank by default");
+    assert.blank(composer.reply, "the reply is blank by default");
 
     composer.prependText("hello");
-    assert.strictEqual(
-      composer.get("reply"),
-      "hello",
-      "it prepends text to nothing"
-    );
+    assert.strictEqual(composer.reply, "hello", "it prepends text to nothing");
 
     composer.prependText("world ");
     assert.strictEqual(
-      composer.get("reply"),
+      composer.reply,
       "world hello",
       "it prepends text to existing text"
     );
 
     composer.prependText("before new line", { new_line: true });
     assert.strictEqual(
-      composer.get("reply"),
+      composer.reply,
       "before new line\n\nworld hello",
       "it prepends text with new line to existing text"
     );
@@ -243,13 +224,13 @@ module("Unit | Model | composer", function (hooks) {
     const composer = createComposer();
 
     composer.set("title", "asdf");
-    assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
+    assert.ok(!composer.titleLengthValid, "short titles are not valid");
 
     composer.set("title", "this is a long title");
-    assert.ok(!composer.get("titleLengthValid"), "long titles are not valid");
+    assert.ok(!composer.titleLengthValid, "long titles are not valid");
 
     composer.set("title", "just right");
-    assert.ok(composer.get("titleLengthValid"), "in the range is okay");
+    assert.ok(composer.titleLengthValid, "in the range is okay");
   });
 
   test("Title length for private messages", function (assert) {
@@ -258,38 +239,40 @@ module("Unit | Model | composer", function (hooks) {
     const composer = createComposer.call(this, { action: PRIVATE_MESSAGE });
 
     composer.set("title", "asdf");
-    assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
+    assert.ok(!composer.titleLengthValid, "short titles are not valid");
 
     composer.set("title", "this is a long title");
-    assert.ok(!composer.get("titleLengthValid"), "long titles are not valid");
+    assert.ok(!composer.titleLengthValid, "long titles are not valid");
 
     composer.set("title", "just right");
-    assert.ok(composer.get("titleLengthValid"), "in the range is okay");
+    assert.ok(composer.titleLengthValid, "in the range is okay");
   });
 
   test("Post length for private messages with non human users", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { pm_with_non_human_user: true });
     const composer = createComposer.call(this, {
-      topic: EmberObject.create({ pm_with_non_human_user: true }),
+      topic,
     });
 
-    assert.strictEqual(composer.get("minimumPostLength"), 1);
+    assert.strictEqual(composer.minimumPostLength, 1);
   });
 
   test("editingFirstPost", function (assert) {
     const composer = createComposer();
-    assert.ok(!composer.get("editingFirstPost"), "it's false by default");
+    assert.ok(!composer.editingFirstPost, "it's false by default");
 
     const store = getOwner(this).lookup("service:store");
     const post = store.createRecord("post", { id: 123, post_number: 2 });
     composer.setProperties({ post, action: EDIT });
     assert.ok(
-      !composer.get("editingFirstPost"),
+      !composer.editingFirstPost,
       "it's false when not editing the first post"
     );
 
     post.set("post_number", 1);
     assert.ok(
-      composer.get("editingFirstPost"),
+      composer.editingFirstPost,
       "it's true when editing the first post"
     );
   });
@@ -305,32 +288,46 @@ module("Unit | Model | composer", function (hooks) {
 
     composer.clearState();
 
-    assert.blank(composer.get("originalText"));
-    assert.blank(composer.get("reply"));
-    assert.blank(composer.get("post"));
-    assert.blank(composer.get("title"));
+    assert.blank(composer.originalText);
+    assert.blank(composer.reply);
+    assert.blank(composer.post);
+    assert.blank(composer.title);
   });
 
   test("initial category when uncategorized is allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = true;
     const composer = openComposer.call(this, {
       action: CREATE_TOPIC,
-      draftKey: "asfd",
+      draftKey: "abcd",
       draftSequence: 1,
     });
-    assert.ok(!composer.get("categoryId"), "Uncategorized by default");
+    assert.ok(!composer.categoryId, "Uncategorized by default");
   });
 
   test("initial category when uncategorized is not allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = false;
     const composer = openComposer.call(this, {
       action: CREATE_TOPIC,
-      draftKey: "asfd",
+      draftKey: "abcd",
       draftSequence: 1,
     });
     assert.ok(
-      !composer.get("categoryId"),
+      !composer.categoryId,
       "Uncategorized by default. Must choose a category."
+    );
+  });
+
+  test("initial category when creating PM and there is a default composer category", function (assert) {
+    this.siteSettings.default_composer_category = 2;
+    const composer = openComposer.call(this, {
+      action: PRIVATE_MESSAGE,
+      draftKey: "abcd",
+      draftSequence: 1,
+    });
+    assert.strictEqual(
+      composer.categoryId,
+      null,
+      "it doesn't save the category"
     );
   });
 
@@ -340,19 +337,19 @@ module("Unit | Model | composer", function (hooks) {
     const newComposer = function () {
       return openComposer.call(this, {
         action: REPLY,
-        draftKey: "asfd",
+        draftKey: "abcd",
         draftSequence: 1,
         quote,
       });
     };
 
     assert.strictEqual(
-      newComposer().get("originalText"),
+      newComposer().originalText,
       quote,
       "originalText is the quote"
     );
     assert.strictEqual(
-      newComposer().get("replyDirty"),
+      newComposer().replyDirty,
       false,
       "replyDirty is initially false with a quote"
     );
@@ -372,17 +369,17 @@ module("Unit | Model | composer", function (hooks) {
     composer.setProperties({ post, action: EDIT });
 
     composer.set("title", "asdf");
-    assert.ok(composer.get("titleLengthValid"), "admins can use short titles");
+    assert.ok(composer.titleLengthValid, "admins can use short titles");
 
     composer.set("title", "this is a long title");
-    assert.ok(composer.get("titleLengthValid"), "admins can use long titles");
+    assert.ok(composer.titleLengthValid, "admins can use long titles");
 
     composer.set("title", "just right");
-    assert.ok(composer.get("titleLengthValid"), "in the range is okay");
+    assert.ok(composer.titleLengthValid, "in the range is okay");
 
     composer.set("title", "");
     assert.ok(
-      !composer.get("titleLengthValid"),
+      !composer.titleLengthValid,
       "admins must set title to at least 1 character"
     );
   });
@@ -391,14 +388,14 @@ module("Unit | Model | composer", function (hooks) {
     this.siteSettings.topic_featured_link_enabled = false;
     let composer = createComposer.call(this, { action: CREATE_TOPIC });
     assert.strictEqual(
-      composer.get("titlePlaceholder"),
+      composer.titlePlaceholder,
       "composer.title_placeholder",
       "placeholder for normal topic"
     );
 
     composer = createComposer.call(this, { action: PRIVATE_MESSAGE });
     assert.strictEqual(
-      composer.get("titlePlaceholder"),
+      composer.titlePlaceholder,
       "composer.title_placeholder",
       "placeholder for private message"
     );
@@ -407,14 +404,14 @@ module("Unit | Model | composer", function (hooks) {
 
     composer = createComposer.call(this, { action: CREATE_TOPIC });
     assert.strictEqual(
-      composer.get("titlePlaceholder"),
+      composer.titlePlaceholder,
       "composer.title_or_link_placeholder",
       "placeholder invites you to paste a link"
     );
 
     composer = createComposer.call(this, { action: PRIVATE_MESSAGE });
     assert.strictEqual(
-      composer.get("titlePlaceholder"),
+      composer.titlePlaceholder,
       "composer.title_placeholder",
       "placeholder for private message with topic links enabled"
     );
@@ -423,24 +420,24 @@ module("Unit | Model | composer", function (hooks) {
   test("allows featured link before choosing a category", function (assert) {
     this.siteSettings.topic_featured_link_enabled = true;
     this.siteSettings.allow_uncategorized_topics = false;
-    let composer = createComposer.call(this, { action: CREATE_TOPIC });
+    const composer = createComposer.call(this, { action: CREATE_TOPIC });
     assert.strictEqual(
-      composer.get("titlePlaceholder"),
+      composer.titlePlaceholder,
       "composer.title_or_link_placeholder",
       "placeholder invites you to paste a link"
     );
-    assert.ok(composer.get("canEditTopicFeaturedLink"), "can paste link");
+    assert.ok(composer.canEditTopicFeaturedLink, "can paste link");
   });
 
   test("targetRecipientsArray contains types", function (assert) {
-    let composer = createComposer.call(this, {
+    const composer = createComposer.call(this, {
       targetRecipients: "test,codinghorror,staff,foo@bar.com",
     });
-    assert.ok(composer.targetRecipientsArray, [
-      { type: "group", name: "test" },
-      { type: "user", name: "codinghorror" },
-      { type: "group", name: "staff" },
-      { type: "email", name: "foo@bar.com" },
+    assert.deepEqual(composer.targetRecipientsArray, [
+      { name: "test", type: "user" },
+      { name: "codinghorror", type: "user" },
+      { name: "staff", type: "group" },
+      { name: "foo@bar.com", type: "email" },
     ]);
   });
 });

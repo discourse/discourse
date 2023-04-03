@@ -19,8 +19,11 @@ bg:
       joined: "присъединен"
       email_frequency:
         never: "Никога"
+      header_indicator_preference:
+        never: "Никога"
       flag: "Сигнализиране"
       join: "Влизане"
+      last_visit: "последно посещение"
       mention_warning:
         dismiss: "отмени"
       reply: "Отговорете"
@@ -44,6 +47,7 @@ bg:
         yesterday: Вчера
       about_view:
         title: Заглавие
+        name: Име
         description: Описание
       channel_info:
         back_to_channel: "Назад"
@@ -71,6 +75,7 @@ bg:
         save: "Запази "
         saved: "Запазено"
         unfollow: "Напусни"
+        admin_title: "Администратор"
       incoming_webhooks:
         back: "Назад"
         description: "Описание"

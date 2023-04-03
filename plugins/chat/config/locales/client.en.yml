@@ -9,6 +9,7 @@ en:
           actions:
             chat_channel_status_change: "Chat channel status changed"
             chat_channel_delete: "Chat channel deleted"
+            chat_auto_remove_membership: "Memberships automatically removed from channels"
       api:
         scopes:
           descriptions:
@@ -34,8 +35,8 @@ en:
       move_to_channel:
         title: "Move messages to channel"
         instructions:
-          one: "You are moving <strong>%{count}</strong> message. Select a destination channel. A placeholder message will be created in the <strong>%{channelTitle}</strong> channel to indicate that this message has been moved."
-          other: "You are moving <strong>%{count}</strong> messages. Select a destination channel. A placeholder message will be created in the <strong>%{channelTitle}</strong> channel to indicate that these messages have been moved."
+          one: "You are moving <strong>%{count}</strong> message. Select a destination channel. A placeholder message will be created in the <strong>%{channelTitle}</strong> channel to indicate that this message has been moved. Note that reply chains will not be preserved in the new channel, and messages in the old channel will no longer show as replying to any moved messages."
+          other: "You are moving <strong>%{count}</strong> messages. Select a destination channel. A placeholder message will be created in the <strong>%{channelTitle}</strong> channel to indicate that these messages have been moved. Note that reply chains will not be preserved in the new channel, and messages in the old channel will no longer show as replying to any moved messages."
         confirm_move: "Move Messages"
       channel_settings:
         title: "Channel settings"
@@ -49,7 +50,7 @@ en:
         leave_channel: "Leave channel"
         join: "Join"
         leave: "Leave"
-        save_label: 
+        save_label:
           mute_channel: "Mute channel preference saved"
           desktop_notification: "Desktop notification preference saved"
           mobile_notification: "Mobile push notification preference saved"
@@ -66,7 +67,7 @@ en:
         instructions: "Closing the channel prevents non-staff users from sending new messages or editing existing messages. Are you sure you want to close this channel?"
       channel_delete:
         title: "Delete Channel"
-        instructions: "<p>Deletes the <strong>%{name}</strong> channel and chat history. All messages and related data, such as reactions and uploads, will be permanently deleted. If you want to preserve the channel history and decomission it, you may want to archive the channel instead.</p>
+        instructions: "<p>Deletes the <strong>%{name}</strong> channel and chat history. All messages and related data, such as reactions and uploads, will be permanently deleted. If you want to preserve the channel history and decommission it, you may want to archive the channel instead.</p>
         <p>Are you sure you want to <strong>permanently delete</strong> the channel? To confirm, type the name of the channel in the box below.</p>"
         confirm: "I understand the consequences, delete the channel"
         confirm_channel_name: "Enter channel name"
@@ -94,6 +95,11 @@ en:
         never: "Never"
         title: "Email Notifications"
         when_away: "Only when away"
+      header_indicator_preference:
+        title: "Show activity indicator in header"
+        all_new: "All New Messages"
+        dm_and_mentions: "Direct Messages and Mentions"
+        never: "Never"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"
@@ -103,25 +109,106 @@ en:
       in_reply_to: "In reply to"
       heading: "Chat"
       join: "Join"
-      new_messages: "new messages"
+      last_visit: "last visit"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} cannot access this channel and was not notified."
-          other: "%{usernames} cannot access this channel and were not notified."
         dismiss: "dismiss"
+        cannot_see: "%{username} can't access this channel and was not notified."
+        cannot_see_multiple:
+          one: "%{username} and %{count} other user cannot access this channel and were not notified."
+          other: "%{username} and %{count} other users cannot access this channel and were not notified."
         invitations_sent:
           one: "Invitation sent"
           other: "Invitations sent"
         invite: "Invite to channel"
-        without_membership:
-          one: "%{usernames} has not joined this channel."
-          other: "%{usernames} have not joined this channel."
+        without_membership: "%{username} has not joined this channel."
+        without_membership_multiple:
+          one: "%{username} and %{count} other user have not joined this channel."
+          other: "%{username} and %{count} other users have not joined this channel."
+        group_mentions_disabled: "%{group_name} doesn't allow mentions."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} and %{count} other group don't allow mentions."
+          other: "%{group_name} and %{count} other groups don't allow mentions."
+        too_many_members: "%{group_name} has too many members. No one was notified."
+        too_many_members_multiple:
+          one: "%{group_name} and %{count} other group have too many members. No one was notified."
+          other: "%{group_name} and %{count} other groups have too many members. No one was notified."
+        groups:
+          header:
+            some: "Some users won't be notified"
+            all: "Nobody will be notified"
+          unreachable_1: "@%{group} doesn't allow mentions."
+          unreachable_2: "@%{group1} and @%{group2} don't allow mentions."
+          unreachable_multiple:
+            one: "@%{group} and %{count} other group don't allow mentions."
+            other: "@%{group} and %{count} other groups don't allow mentions."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                              other {Mentioning @{group1} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} exceeds the notification limit of # user.}
+                              other {Mentioning @{group1} exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} and @{group2} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                            other {Mentioning @{group1} and @{group2} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} and @{group2} exceeds the notification limit of # user.}
+                            other {Mentioning @{group1} and @{group2} exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning these {groupCount} groups exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                            other {Mentioning these {groupCount} groups exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning these {groupCount} groups exceeds the notification limit of # user.}
+                            other {Mentioning these {groupCount} groups exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          one: "This message exceeds the notification limit of %{count} mention."
+          other: "This message exceeds the notification limit of %{count} mentions."
+        too_many_mentions_admin:
+          one: 'This message exceeds the <a href="%{siteSettingUrl}" target="_blank">notification limit</a> of %{count} mention.'
+          other: 'This message exceeds the <a href="%{siteSettingUrl}" target="_blank">notification limit</a> of %{count} mentions.'
+
       aria_roles:
         header: "Chat header"
         composer: "Chat composer"
         channels_list: "Chat channels list"
 
       no_public_channels: "You have not joined any channels."
+      kicked_from_channel: "You can no longer access this channel."
       only_chat_push_notifications:
         title: "Only send chat push notifications"
         description: "Block all non-chat push notifications from being sent"
@@ -133,10 +220,15 @@ en:
       close_full_page: "Close full-screen chat"
       open_message: "Open message in chat"
       placeholder_self: "Jot something down"
-      placeholder_others: "Chat with %{messageRecipient}"
-      placeholder_new_message_disallowed: "Channel is %{status}, you cannot send new messages right now."
+      placeholder_channel: "Chat with %{channelName}"
+      placeholder_users: "Chat with %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "Channel is archived, you cannot send new messages right now."
+        closed: "Channel is closed, you cannot send new messages right now."
+        read_only: "Channel is read only, you cannot send new messages right now."
       placeholder_silenced: "You cannot send messages at this time."
-      placeholder_start_conversation: Start a conversation with %{usernames}
+      placeholder_start_conversation: "Start a conversation with ..."
+      placeholder_start_conversation_users: "Start a conversation with %{commaSeparatedUsernames}"
       remove_upload: "Remove file"
       react: "React with emoji"
       reply: "Reply"
@@ -152,7 +244,6 @@ en:
       restore: "Restore deleted message"
       save: "Save"
       select: "Select"
-      silence: "Silence user"
       return_to_list: "Return to channels list"
       scroll_to_bottom: "Scroll to bottom"
       scroll_to_new_messages: "See new messages"
@@ -175,7 +266,8 @@ en:
         read_only: "Read Only"
         archived_header: "Channel is archived"
         archived: "Archived"
-        archive_failed: "Archive channel failed. %{completed}/%{total} messages have been archived in <a target=\"_blank\" href=\"%{topic_url}\">the destination topic</a>. Press retry to attempt to complete the archive."
+        archive_failed: "Archive channel failed. %{completed}/%{total} messages have been archived. <a target=\"_blank\" href=\"%{topic_url}\">the destination topic</a>. Press retry to attempt to complete the archive."
+        archive_failed_no_topic: "Archive channel failed. %{completed}/%{total} messages have been archived, the destination topic was not created. Press retry to attempt to complete the archive."
         archive_completed: "See <a target=\"_blank\" href=\"%{topic_url}\">the archive topic</a>"
         closed_header: "Channel is closed"
         closed: "Closed"
@@ -202,6 +294,7 @@ en:
         associated_topic: Linked topic
         associated_category: Linked category
         title: Title
+        name: Name
         description: Description
 
       channel_info:
@@ -212,10 +305,12 @@ en:
           members: Members
           settings: Settings
 
-      channel_edit_title_modal:
-        title: Edit title
-        input_placeholder: Add a title
-        description: Give a short descriptive title to your channel
+      channel_edit_name_slug_modal:
+        title: Edit channel
+        input_placeholder: Add a name
+        slug_description: A channel slug is used in the URL instead of the channel name
+        name: Channel name
+        slug: Channel slug (optional)
 
       channel_edit_description_modal:
         title: Edit description
@@ -242,21 +337,40 @@ en:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} is a public category. Automatically add all recently active users to this channel?"
-          warning_groups:
-            one: Automatically add %{members_count} users from %{group}?
-            other: Automatically add %{members_count} users from %{group} and %{group_2}?
-          warning_multiple_groups: Automatically add %{members_count} users from %{group_1} and %{count} others?
+          warning_1_group:
+            one: "Automatically add %{count} user from %{group}?"
+            other: "Automatically add %{count} users from %{group}?"
+          warning_2_groups:
+            one: "Automatically add %{count} user from %{group1} and %{group2}?"
+            other: "Automatically add %{count} users from %{group1} and %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Automatically add {userCount} user from {groupName} and {groupCount} other group?}
+                        other {Automatically add {userCount} users from {groupName} and {groupCount} other group?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Automatically add {userCount} user from {groupName} and {groupCount} other groups?}
+                        other {Automatically add {userCount} users from {groupName} and {groupCount} other groups?}
+                      }
+                    }
+            }
         choose_category:
           label: "Choose a category"
           none: "select one..."
           default_hint: Manage access by visiting <a href=%{link} target="_blank">%{category} security settings</a>
-          hint_groups:
-            one: Users in %{hint} will have access to this channel per the <a href=%{link} target="_blank">security settings</a>
-            other: Users in %{hint} and %{hint_2} will have access to this channel per the <a href=%{link} target="_blank">security settings</a>
-          hint_multiple_groups: Users in %{hint_1} and %{count} other groups will have access to this channel per the <a href=%{link} target="_blank">security settings</a>
+          hint_1_group: 'Users in %{group} will have access to this channel per the <a href="%{settingLink}" target="_blank">security settings</a>'
+          hint_2_groups: 'Users in %{group1} and %{group2} will have access to this channel per the <a href="%{settingLink}" target="_blank">security settings</a>'
+          hint_multiple_groups:
+            one: 'Users in %{group} and %{count} other group will have access to this channel per the <a href="%{settingLink}" target="_blank">security settings</a>'
+            other: 'Users in %{group} and %{count} other groups will have access to this channel per the <a href="%{settingLink}" target="_blank">security settings</a>'
         create: "Create channel"
         description: "Description (optional)"
         name: "Channel name"
+        slug: "Channel slug (optional)"
         title: "New channel"
         type: "Type"
         types:
@@ -268,10 +382,16 @@ en:
 
       reactions:
         only_you: "You reacted with :%{emoji}:"
-        and_others: "You, %{usernames} reacted with :%{emoji}:"
-        only_others: "%{usernames} reacted with :%{emoji}:"
-        others_and_more: "%{usernames} and %{more} others reacted with :%{emoji}:"
-        you_others_and_more: "You, %{usernames} and %{more} others reacted with :%{emoji}:"
+        you_and_single_user: "You and %{username} reacted with :%{emoji}:"
+        you_and_multiple_users: "You, %{commaSeparatedUsernames} and %{username} reacted with :%{emoji}:"
+        you_multiple_users_and_more:
+          one: "You, %{commaSeparatedUsernames} and %{count} other reacted with :%{emoji}:"
+          other: "You, %{commaSeparatedUsernames} and %{count} others reacted with :%{emoji}:"
+        single_user: "%{username} reacted with :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} and %{username} reacted with :%{emoji}:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} and %{count} other reacted with :%{emoji}:"
+          other: "%{commaSeparatedUsernames} and %{count} others reacted with :%{emoji}:"
 
       composer:
         toggle_toolbar: "Toggle toolbar"
@@ -289,10 +409,11 @@ en:
         always: "For all activity"
 
       settings:
+        channel_wide_mentions_label: "Allow @all and @here mentions"
+        channel_wide_mentions_description: "Allow users to notify all members of #%{channel} with @all or only those who are active in the moment with @here"
         auto_join_users_label: "Automatically add users"
-        auto_join_users_info: "Check hourly which users have been active in the last 3 months and, if they have access to the %{category} category, add them to this channel."
-        enable_auto_join_users: "Yes"
-        disable_auto_join_users: "No"
+        auto_join_users_info: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the %{category} category."
+        auto_join_users_info_no_category: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the selected category."
         auto_join_users_warning: "Every user who isn't a member of this channel and has access to the %{category} category will join. Are you sure?"
         desktop_notification_level: "Desktop notifications"
         follow: "Join"
@@ -307,14 +428,13 @@ en:
         saved: "Saved"
         unfollow: "Leave"
         admin_title: "Admin"
-        retention_info: "Chat history will be saved for %{days} days."
 
       admin:
         title: "Chat"
 
       direct_messages:
         title: "Personal chat"
-        new: "New personal chat"
+        new: "Create a personal chat"
         create: "Go"
         leave: "Leave this personal chat"
         cannot_create: "Sorry, you cannot send direct messages."
@@ -379,8 +499,14 @@ en:
           other: "%{commaSeparatedUsernames} and %{count} others are typing"
 
       retention_reminders:
-        public: "Channel history is retained for %{days} days."
-        dm: "Personal chat history is retained for %{days} days."
+        public_none: "Channel history is retained indefinitely."
+        public:
+          one: "Channel history is retained for %{count} day."
+          other: "Channel history is retained for %{count} days."
+        dm_none: "Personal chat history is retained indefinitely."
+        dm:
+          one: "Personal chat history is retained for %{count} day."
+          other: "Personal chat history is retained for %{count} days."
 
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."
@@ -406,6 +532,11 @@ en:
         search_placeholder: "Search by emoji name and alias..."
         no_results: "No results"
 
+      threads:
+        op_said: "OP said:"
+        started_by: "Started by"
+        open: "Open Thread"
+
       draft_channel_screen:
         header: "New Message"
         cancel: "Cancel"
@@ -419,11 +550,13 @@ en:
           direct: 'mentioned you in "%{channel}"'
           direct_html: '<span>%{username}</span> <span>mentioned you in "%{channel}"</span>'
           other_plain: 'mentioned %{identifier} in "%{channel}"'
+          # %{identifier} is either @here or @all
           other_html: '<span>%{username}</span> <span>mentioned %{identifier} in "%{channel}"</span>'
         direct_message_chat_mention:
           direct: "mentioned you in personal chat"
           direct_html: "<span>%{username}</span> <span>mentioned you in personal chat</span>"
           other_plain: "mentioned %{identifier} in personal chat"
+          # %{identifier} is either @here or @all
           other_html: "<span>%{username}</span> <span>mentioned %{identifier} in personal chat</span>"
         chat_message: "New chat message"
         chat_quoted: "%{username} quoted your chat message"
@@ -467,6 +600,7 @@ en:
           composer_code: "%{shortcut} Code (composer only)"
           drawer_open: "%{shortcut} Open chat drawer"
           drawer_close: "%{shortcut} Close chat drawer"
+          mark_all_channels_read: "%{shortcut} Mark all channels read"
     topic_statuses:
       chat:
         help: "Chat is enabled for this topic"

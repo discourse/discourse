@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
 class EnablePrivateEmailMessagesValidator
-
   def initialize(opts = {})
     @opts = opts
   end
 
   def valid_value?(val)
     return true if val == "f"
-    SiteSetting.enable_staged_users &&
-    SiteSetting.reply_by_email_enabled
+    SiteSetting.enable_staged_users && SiteSetting.reply_by_email_enabled
   end
 
   def error_message

@@ -1,5 +1,7 @@
 <DModalBody>
-  <section class="user-preferences solo-preference second-factor-backup-preferences">
+  <section
+    class="user-preferences solo-preference second-factor-backup-preferences"
+  >
     <form class="form-horizontal">
       {{#if this.successMessage}}
         <div class="alert alert-success">
@@ -14,15 +16,32 @@
       {{/if}}
 
       {{#if this.backupEnabled}}
-        {{html-safe (i18n "user.second_factor_backup.remaining_codes" count=this.remainingCodes)}}
+        {{html-safe
+          (i18n
+            "user.second_factor_backup.remaining_codes"
+            count=this.remainingCodes
+          )
+        }}
       {{/if}}
 
       <div class="actions">
         {{#if this.backupEnabled}}
-          <DButton @class="btn-primary" @icon="redo" @action={{action "generateSecondFactorCodes"}} @type="submit" @isLoading={{this.loading}} @label="user.second_factor_backup.regenerate" />
-          <DButton @class="btn-danger" @icon="ban" @action={{action "disableSecondFactorBackup"}} @disabled={{this.loading}} @label="user.second_factor_backup.disable" />
+          <DButton
+            @class="btn-primary"
+            @icon="redo"
+            @action={{action "generateSecondFactorCodes"}}
+            @type="submit"
+            @isLoading={{this.loading}}
+            @label="user.second_factor_backup.regenerate"
+          />
         {{else}}
-          <DButton @class="btn-primary" @action={{action "generateSecondFactorCodes"}} @type="submit" @disabled={{this.loading}} @label="user.second_factor_backup.enable" />
+          <DButton
+            @class="btn-primary"
+            @action={{action "generateSecondFactorCodes"}}
+            @type="submit"
+            @disabled={{this.loading}}
+            @label="user.second_factor_backup.enable"
+          />
         {{/if}}
       </div>
 
@@ -34,7 +53,10 @@
             {{i18n "user.second_factor_backup.codes.description"}}
           </p>
 
-          <BackupCodes @copyBackupCode={{action "copyBackupCode"}} @backupCodes={{this.backupCodes}} />
+          <BackupCodes
+            @copyBackupCode={{action "copyBackupCode"}}
+            @backupCodes={{this.backupCodes}}
+          />
         {{/if}}
       </ConditionalLoadingSection>
     </form>

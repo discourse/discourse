@@ -3,17 +3,21 @@ import A11yDialog from "a11y-dialog";
 import { bind } from "discourse-common/utils/decorators";
 
 export default Service.extend({
-  message: null,
-  type: null,
   dialogInstance: null,
-
+  message: null,
   title: null,
   titleElementId: null,
+  type: null,
+
+  bodyComponent: null,
+  bodyComponentModel: null,
 
   confirmButtonIcon: null,
   confirmButtonLabel: null,
   confirmButtonClass: null,
+  confirmButtonDisabled: false,
   cancelButtonLabel: null,
+  cancelButtonClass: null,
   shouldDisplayCancel: null,
 
   didConfirm: null,
@@ -25,12 +29,17 @@ export default Service.extend({
   dialog(params) {
     const {
       message,
+      bodyComponent,
+      bodyComponentModel,
       type,
       title,
 
+      confirmButtonClass = "btn-primary",
       confirmButtonIcon,
       confirmButtonLabel = "ok_value",
-      confirmButtonClass = "btn-primary",
+      confirmButtonDisabled = false,
+
+      cancelButtonClass = "btn-default",
       cancelButtonLabel = "cancel_value",
       shouldDisplayCancel,
 
@@ -43,6 +52,8 @@ export default Service.extend({
 
     this.setProperties({
       message,
+      bodyComponent,
+      bodyComponentModel,
       type,
       dialogInstance: new A11yDialog(element),
 
@@ -50,8 +61,11 @@ export default Service.extend({
       titleElementId: title !== null ? "dialog-title" : null,
 
       confirmButtonClass,
-      confirmButtonLabel,
+      confirmButtonDisabled,
       confirmButtonIcon,
+      confirmButtonLabel,
+
+      cancelButtonClass,
       cancelButtonLabel,
       shouldDisplayCancel,
 
@@ -122,14 +136,19 @@ export default Service.extend({
   reset() {
     this.setProperties({
       message: null,
+      bodyComponent: null,
+      bodyComponentModel: null,
       type: null,
       dialogInstance: null,
 
       title: null,
       titleElementId: null,
 
-      confirmButtonLabel: null,
+      confirmButtonDisabled: false,
       confirmButtonIcon: null,
+      confirmButtonLabel: null,
+
+      cancelButtonClass: null,
       cancelButtonLabel: null,
       shouldDisplayCancel: null,
 
@@ -159,5 +178,10 @@ export default Service.extend({
   @bind
   cancel() {
     this.dialogInstance.hide();
+  },
+
+  @bind
+  enableConfirmButton() {
+    this.set("confirmButtonDisabled", false);
   },
 });

@@ -19,7 +19,10 @@ sr:
       joined: "pridružen"
       email_frequency:
         never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
       flag: "Označi Zastavom"
+      last_visit: "poslednja poseta"
       mention_warning:
         dismiss: "одбаци"
       reply: "Odgovori"
@@ -41,6 +44,7 @@ sr:
         yesterday: Juče
       about_view:
         title: Naslov
+        name: Ime foruma
         description: Opis
       channel_info:
         back_to_channel: "Nazad"
@@ -65,6 +69,7 @@ sr:
         notifications: "Obaveštenja"
         save: "Sačuvaj"
         saved: "Sačuvano"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Nazad"
         description: "Opis"

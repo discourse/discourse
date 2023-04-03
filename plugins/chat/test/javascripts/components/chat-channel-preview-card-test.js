@@ -24,24 +24,24 @@ module(
     });
 
     test("channel title", async function (assert) {
-      await render(hbs`{{chat-channel-preview-card channel=channel}}`);
+      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.equal(
+      assert.strictEqual(
         query(".chat-channel-title__name").innerText,
         this.channel.title,
         "it shows the channel title"
       );
 
-      assert.ok(
+      assert.true(
         exists(query(".chat-channel-title__category-badge")),
         "it shows the category hashtag badge"
       );
     });
 
     test("channel description", async function (assert) {
-      await render(hbs`{{chat-channel-preview-card channel=channel}}`);
+      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.equal(
+      assert.strictEqual(
         query(".chat-channel-preview-card__description").innerText,
         this.channel.description,
         "the channel description is shown"
@@ -51,32 +51,32 @@ module(
     test("no channel description", async function (assert) {
       this.channel.set("description", null);
 
-      await render(hbs`{{chat-channel-preview-card channel=channel}}`);
+      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.notOk(
+      assert.false(
         exists(".chat-channel-preview-card__description"),
         "no line is left for the channel description if there is none"
       );
 
-      assert.ok(
+      assert.true(
         exists(".chat-channel-preview-card.-no-description"),
         "it adds a modifier class for styling"
       );
     });
 
     test("join", async function (assert) {
-      await render(hbs`{{chat-channel-preview-card channel=channel}}`);
+      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.ok(
+      assert.true(
         exists(".toggle-channel-membership-button.-join"),
         "it shows the join channel button"
       );
     });
 
     test("browse all", async function (assert) {
-      await render(hbs`{{chat-channel-preview-card channel=channel}}`);
+      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.ok(
+      assert.true(
         exists(".chat-channel-preview-card__browse-all"),
         "it shows a link to browse all channels"
       );
@@ -84,9 +84,9 @@ module(
 
     test("closed channel", async function (assert) {
       this.channel.set("status", "closed");
-      await render(hbs`{{chat-channel-preview-card channel=channel}}`);
+      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.notOk(
+      assert.false(
         exists(".chat-channel-preview-card__join-channel-btn"),
         "it does not show the join channel button"
       );

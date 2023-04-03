@@ -13,9 +13,6 @@ export default Component.extend({
 
   role: "region",
 
-  // Allow us to extend it
-  layoutName: "components/topic-footer-buttons",
-
   @discourseComputed("canSendPms", "topic.isPrivateMessage")
   canArchive(canSendPms, isPM) {
     return canSendPms && isPM;
@@ -56,7 +53,7 @@ export default Component.extend({
 
   canInviteTo: alias("topic.details.can_invite_to"),
 
-  canDefer: alias("currentUser.enable_defer"),
+  canDefer: alias("currentUser.user_option.enable_defer"),
 
   inviteDisabled: or("topic.archived", "topic.closed", "topic.deleted"),
 

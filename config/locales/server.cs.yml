@@ -526,10 +526,6 @@ cs:
         many: "téměř před %{count} roky"
         other: "téměř před %{count} roky"
   password_reset:
-    choose_new: "Vyberte si nové heslo"
-    choose: "Vybrat heslo"
-    update: "změnit heslo"
-    save: "Nastavit heslo"
     title: "Resetovat heslo"
     success: "Heslo bylo úspěšně změněno a nyní jste přihlášeni."
     success_unapproved: "Heslo bylo úšpěšně změněno."
@@ -651,6 +647,11 @@ cs:
         post: Příspěvek
         editor: Editor
         edit_reason: Reason
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Uživatelské API"
+      yaxis: "Den"
     dau_by_mau:
       xaxis: "Den"
     daily_engaged_users:
@@ -962,9 +963,6 @@ cs:
     Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
   user_notifications:
     previous_discussion: "Předchozí diskuze"
-    unsubscribe:
-      title: "Odhlásit z odběru emailů"
-      description: "Nechcete již od nás dostávat emaily? Žádný problém! Klikněte na odkaz níže pro okamžité odhlášení z odběru emailů:"
     reply_by_email: "K odpovědi [navštivte téma](%{base_url}%{url}) nebo odepište na tento email."
     visit_link_to_respond: "K odpovědi [navštivte téma](%{base_url}%{url})."
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
@@ -1003,8 +1001,6 @@ cs:
     see_more: "Více"
     search_title: "Hledat na tomto webu"
     search_button: "Vyhledat"
-  deleted: "smazáno"
-  image: "obrázek"
   upload:
     unauthorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: %{authorized_extensions})."
     pasted_image_filename: "Vložený obrázek"
@@ -1121,10 +1117,6 @@ cs:
         fields:
           login_required:
             placeholder: "Soukromé"
-          must_approve_users:
-            placeholder: "Vyžádat schválení"
-      ready:
-        title: "Váš Discourse je připraven!"
       styling:
         fields:
           styling_preview:
@@ -1141,12 +1133,6 @@ cs:
                 label: "Kategorie a nejnovější témata"
               categories_and_top_topics:
                 label: "Kategorie a populární témata"
-      branding:
-        fields:
-          logo:
-            label: "Primární loga"
-          large_icon:
-            label: "Velká ikona"
       corporate:
         fields:
           contact_url:
@@ -1155,7 +1141,6 @@ cs:
         title: "Pozvi redakci"
       finished:
         title: "Váš Discourse je připraven!"
-  joined: "Účet vytvořen"
   discourse_push_notifications:
     popup:
       mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'
@@ -1174,31 +1159,28 @@ cs:
       medium: "Střední"
       high: "Vysoká"
     actions:
-      agree_and_keep:
-        title: "Uchovat příspěvek"
-        description: "Schválit nahlášení a zanechat příspěvek nepozměněný. "
+      agree:
+        title: "Ano"
       agree_and_suspend:
-        title: "Zakázat uživatele"
         description: "Schválit nahlášení a pozastavit uživatele."
       agree_and_silence:
-        title: "Ztišit uživatele"
         description: "Schválit nahlášení a ztišit uživatele."
       agree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
-      agree_and_hide:
-        title: "Schovat příspěvek"
-        description: "Schovat tento příspěvek a automaticky poslat uživateli zprávu, aby ho urychleně upravil."
       delete_single:
         title: "Smazat"
       disagree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
       disagree:
-        title: "Neschvaluji"
+        title: "Ne"
       ignore:
         title: "ignorovat"
+      ignore_and_do_nothing:
+        title: "Nic nedělat"
       approve:
         title: "Schválit"
       reject_user:
+        title: "Smazat uživatele..."
         delete:
           title: "Smazat uživatele"
       reject:

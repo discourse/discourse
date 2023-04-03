@@ -4,10 +4,13 @@ import { ajax } from "discourse/lib/ajax";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { isValidLink } from "discourse/lib/click-track";
-import { number } from "discourse/lib/formatter";
+import { number, until } from "discourse/lib/formatter";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { escape } from "pretty-text/sanitizer";
 import domFromString from "discourse-common/lib/dom-from-string";
+import getURL from "discourse-common/lib/get-url";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -57,14 +60,23 @@ export default class PostCooked {
 
   init() {
     this.originalQuoteContents = null;
+    // todo should be a better way of detecting if it is composer preview
+    this._isInComposerPreview = !this.decoratorHelper;
+
     const cookedDiv = this._computeCooked();
+    this.cookedDiv = cookedDiv;
 
     this._insertQuoteControls(cookedDiv);
     this._showLinkCounts(cookedDiv);
     this._applySearchHighlight(cookedDiv);
+    this._initUserStatusOnMentions();
     this._decorateAndAdopt(cookedDiv);
 
     return cookedDiv;
+  }
+
+  destroy() {
+    this._stopTrackingMentionedUsersStatus();
   }
 
   _decorateAndAdopt(cooked) {
@@ -200,7 +212,7 @@ export default class PostCooked {
       try {
         const result = await ajax(`/posts/by_number/${topicId}/${postId}`);
 
-        const post = this.decoratorHelper.getModel();
+        const post = this._post();
         const quotedPosts = post.quoted || {};
         quotedPosts[result.id] = result;
         post.set("quoted", quotedPosts);
@@ -360,6 +372,79 @@ export default class PostCooked {
     }
 
     return cookedDiv;
+  }
+
+  _initUserStatusOnMentions() {
+    if (!this._isInComposerPreview) {
+      this._trackMentionedUsersStatus();
+      this._rerenderUserStatusOnMentions();
+    }
+  }
+
+  _rerenderUserStatusOnMentions() {
+    this._post()?.mentioned_users?.forEach((user) =>
+      this._rerenderUserStatusOnMention(this.cookedDiv, user)
+    );
+  }
+
+  _rerenderUserStatusOnMention(postElement, user) {
+    const href = getURL(`/u/${user.username.toLowerCase()}`);
+    const mentions = postElement.querySelectorAll(`a.mention[href="${href}"]`);
+
+    mentions.forEach((mention) => {
+      this._updateUserStatus(mention, user.status);
+    });
+  }
+
+  _updateUserStatus(mention, status) {
+    this._removeUserStatus(mention);
+    if (status) {
+      this._insertUserStatus(mention, status);
+    }
+  }
+
+  _insertUserStatus(mention, status) {
+    const emoji = escapeExpression(`:${status.emoji}:`);
+    const statusHtml = emojiUnescape(emoji, {
+      class: "user-status",
+      title: this._userStatusTitle(status),
+    });
+    mention.insertAdjacentHTML("beforeend", statusHtml);
+  }
+
+  _removeUserStatus(mention) {
+    mention.querySelector("img.user-status")?.remove();
+  }
+
+  _userStatusTitle(status) {
+    if (!status.ends_at) {
+      return status.description;
+    }
+
+    const timezone = this.currentUser
+      ? this.currentUser.user_option?.timezone
+      : moment.tz.guess();
+
+    const until_ = until(status.ends_at, timezone, this.currentUser?.locale);
+    return escapeExpression(`${status.description} ${until_}`);
+  }
+
+  _trackMentionedUsersStatus() {
+    this._post()?.mentioned_users?.forEach((user) => {
+      user.trackStatus?.();
+      user.on?.("status-changed", this, "_rerenderUserStatusOnMentions");
+    });
+  }
+
+  _stopTrackingMentionedUsersStatus() {
+    this._post()?.mentioned_users?.forEach((user) => {
+      user.stopTrackingStatus?.();
+      user.off?.("status-changed", this, "_rerenderUserStatusOnMentions");
+    });
+  }
+
+  _post() {
+    return this.decoratorHelper?.getModel?.();
   }
 }
 

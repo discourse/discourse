@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "discourse-presence" do
-  describe 'PresenceChannel configuration' do
+  describe "PresenceChannel configuration" do
     fab!(:user) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
@@ -16,25 +16,21 @@ RSpec.describe "discourse-presence" do
     fab!(:private_topic) { Fabricate(:topic, category: category) }
     fab!(:public_topic) { Fabricate(:topic, first_post: Fabricate(:post)) }
 
-    fab!(:private_message) do
-      Fabricate(:private_message_topic,
-        allowed_groups: [group]
-      )
-    end
+    fab!(:private_message) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
     before { PresenceChannel.clear_all! }
 
-    it 'handles invalid topic IDs' do
-      expect do
-        PresenceChannel.new('/discourse-presence/reply/-999').config
-      end.to raise_error(PresenceChannel::NotFound)
+    it "handles invalid topic IDs" do
+      expect do PresenceChannel.new("/discourse-presence/reply/-999").config end.to raise_error(
+        PresenceChannel::NotFound,
+      )
 
-      expect do
-        PresenceChannel.new('/discourse-presence/reply/blah').config
-      end.to raise_error(PresenceChannel::NotFound)
+      expect do PresenceChannel.new("/discourse-presence/reply/blah").config end.to raise_error(
+        PresenceChannel::NotFound,
+      )
     end
 
-    it 'handles deleted topics' do
+    it "handles deleted topics" do
       public_topic.trash!
 
       expect do
@@ -50,7 +46,7 @@ RSpec.describe "discourse-presence" do
       end.to raise_error(PresenceChannel::NotFound)
     end
 
-    it 'handles secure category permissions for reply' do
+    it "handles secure category permissions for reply" do
       c = PresenceChannel.new("/discourse-presence/reply/#{private_topic.id}")
       expect(c.can_view?(user_id: user.id)).to eq(true)
       expect(c.can_enter?(user_id: user.id)).to eq(true)
@@ -62,14 +58,14 @@ RSpec.describe "discourse-presence" do
       expect(c.can_enter?(user_id: user.id)).to eq(false)
     end
 
-    it 'handles secure category permissions for edit' do
+    it "handles secure category permissions for edit" do
       p = Fabricate(:post, topic: private_topic, user: private_topic.user)
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.can_view?(user_id: user.id)).to eq(false)
       expect(c.can_view?(user_id: private_topic.user.id)).to eq(true)
     end
 
-    it 'handles category moderators for edit' do
+    it "handles category moderators for edit" do
       SiteSetting.trusted_users_can_edit_others = false
       p = Fabricate(:post, topic: private_topic, user: private_topic.user)
 
@@ -83,25 +79,25 @@ RSpec.describe "discourse-presence" do
       expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff], group.id)
     end
 
-    it 'handles permissions for a public topic' do
+    it "handles permissions for a public topic" do
       c = PresenceChannel.new("/discourse-presence/reply/#{public_topic.id}")
       expect(c.config.public).to eq(false)
       expect(c.config.allowed_group_ids).to contain_exactly(::Group::AUTO_GROUPS[:trust_level_0])
     end
 
-    it 'handles permissions for secure category topics' do
+    it "handles permissions for secure category topics" do
       c = PresenceChannel.new("/discourse-presence/reply/#{private_topic.id}")
       expect(c.config.public).to eq(false)
       expect(c.config.allowed_group_ids).to contain_exactly(group.id, Group::AUTO_GROUPS[:admins])
       expect(c.config.allowed_user_ids).to eq(nil)
     end
 
-    it 'handles permissions for private messages' do
+    it "handles permissions for private messages" do
       c = PresenceChannel.new("/discourse-presence/reply/#{private_message.id}")
       expect(c.config.public).to eq(false)
       expect(c.config.allowed_group_ids).to contain_exactly(group.id, Group::AUTO_GROUPS[:staff])
       expect(c.config.allowed_user_ids).to contain_exactly(
-        *private_message.topic_allowed_users.pluck(:user_id)
+        *private_message.topic_allowed_users.pluck(:user_id),
       )
     end
 
@@ -112,7 +108,7 @@ RSpec.describe "discourse-presence" do
       expect(c.config.allowed_user_ids).to eq(nil)
     end
 
-    it 'only allows staff when editing whispers' do
+    it "only allows staff when editing whispers" do
       p = Fabricate(:whisper, topic: public_topic, user: admin)
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)
@@ -120,7 +116,7 @@ RSpec.describe "discourse-presence" do
       expect(c.config.allowed_user_ids).to eq(nil)
     end
 
-    it 'only allows staff when editing a locked post' do
+    it "only allows staff when editing a locked post" do
       p = Fabricate(:post, topic: public_topic, user: admin, locked_by_id: Discourse.system_user.id)
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)
@@ -134,7 +130,7 @@ RSpec.describe "discourse-presence" do
       expect(c.config.public).to eq(false)
       expect(c.config.allowed_group_ids).to contain_exactly(
         Group::AUTO_GROUPS[:trust_level_4],
-        Group::AUTO_GROUPS[:staff]
+        Group::AUTO_GROUPS[:staff],
       )
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
@@ -145,9 +141,7 @@ RSpec.describe "discourse-presence" do
       p = Fabricate(:post, topic: public_topic, user: user)
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(
-        Group::AUTO_GROUPS[:staff]
-      )
+      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
 
@@ -160,7 +154,7 @@ RSpec.describe "discourse-presence" do
       expect(c.config.public).to eq(false)
       expect(c.config.allowed_group_ids).to contain_exactly(
         Group::AUTO_GROUPS[:staff],
-        Group::AUTO_GROUPS[:trust_level_1]
+        Group::AUTO_GROUPS[:trust_level_1],
       )
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
@@ -170,9 +164,7 @@ RSpec.describe "discourse-presence" do
 
       c = PresenceChannel.new("/discourse-presence/edit/#{post.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(
-        Group::AUTO_GROUPS[:staff]
-      )
+      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
 
@@ -183,9 +175,12 @@ RSpec.describe "discourse-presence" do
       expect(c.config.public).to eq(false)
       expect(c.config.allowed_group_ids).to contain_exactly(
         Group::AUTO_GROUPS[:staff],
-        *private_message.allowed_groups.pluck(:id)
+        *private_message.allowed_groups.pluck(:id),
       )
-      expect(c.config.allowed_user_ids).to contain_exactly(user.id, *private_message.allowed_users.pluck(:id))
+      expect(c.config.allowed_user_ids).to contain_exactly(
+        user.id,
+        *private_message.allowed_users.pluck(:id),
+      )
     end
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'email'
+require "email"
 
 RSpec.describe Enum do
   let(:array_enum) { Enum.new(:jake, :finn, :princess_bubblegum, :peppermint_butler) }

@@ -2,11 +2,20 @@
   {{#each this.notificationLevels as |level|}}
     <div class="controls">
       <label class="radio notification-level-radio">
-        <RadioButton @value={{level.id}} @name="notification_level" @selection={{this.notificationLevelId}} /> <strong>{{level.name}}</strong>
+        <RadioButton
+          @value={{level.id}}
+          @name="notification_level"
+          @selection={{this.notificationLevelId}}
+        />
+        <strong>{{level.name}}</strong>
         <div class="description">{{html-safe level.description}}</div>
       </label>
     </div>
   {{/each}}
 </div>
 
-<DButton @disabled={{this.disabled}} @action={{action "changeNotificationLevel"}} @label="topics.bulk.change_notification_level" />
+<DButton
+  @disabled={{this.disabled}}
+  @action={{action "changeNotificationLevel"}}
+  @label="topics.bulk.change_notification_level"
+/>

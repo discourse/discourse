@@ -7,6 +7,9 @@
 ar:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: الدردشة
       logs:
         staff_actions:
           actions:
@@ -35,13 +38,6 @@ ar:
       browse_all_channels: "استعراض كل القنوات"
       move_to_channel:
         title: "نقل الرسائل إلى القناة"
-        instructions:
-          zero: "أنت تنقل <strong>%{count}</strong> رسائل. حدِّد القناة المستهدفة. سيتم إنشاء رسالة كعنصر نائب في قناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسالة قد تم نقلها."
-          one: "أنت تنقل رسالة واحدة (<strong>%{count}</strong>). حدِّد القناة المستهدفة. سيتم إنشاء رسالة كعنصر نائب في قناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسالة قد تم نقلها."
-          two: "أنت تنقل رسالتين (<strong>%{count}</strong>). حدِّد القناة المستهدفة. سيتم إنشاء رسالة كعنصر نائب في قناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسالة قد تم نقلها."
-          few: "أنت تنقل <strong>%{count}</strong> رسائل. حدِّد القناة المستهدفة. سيتم إنشاء رسالة كعنصر نائب في قناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسالة قد تم نقلها."
-          many: "أنت تنقل <strong>%{count}</strong> رسائل. حدِّد القناة المستهدفة. سيتم إنشاء رسالة كعنصر نائب في قناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسالة قد تم نقلها."
-          other: "أنت تنقل <strong>%{count}</strong> رسائل. حدِّد القناة المستهدفة. سيتم إنشاء رسالة كعنصر نائب في قناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسالة قد تم نقلها."
         confirm_move: "نقل الرسائل"
       channel_settings:
         title: "إعدادات القناة"
@@ -55,6 +51,10 @@ ar:
         leave_channel: "مغادرة القناة"
         join: "الانضمام"
         leave: "مغادرة"
+        save_label:
+          mute_channel: "تم حفظ تفضيل كتم صوت القناة"
+          desktop_notification: "تم حفظ تفضيل إشعارات سطح المكتب"
+          mobile_notification: "تم حفظ تفضيل الإشعارات الفورية للجوَّال"
       channel_archive:
         title: "أرشفة القناة"
         instructions: "<p>تؤدي أرشفة القناة إلى وضعها في وضع القراءة فقط ونقل جميع الرسائل من القناة إلى موضوع جديد أو موجود. لا يمكن إرسال رسائل جديدة، ولا يمكن تعديل أو حذف أي رسائل حالية.</p><p>هل أنت متأكد أنك تريد أرشفة قناة <strong>%{channelTitle}</strong>؟</p>"
@@ -68,7 +68,6 @@ ar:
         instructions: "يمنع إغلاق القناة المستخدمين من غير فريق العمل من إرسال رسائل جديدة أو تعديل الرسائل الحالية. هل تريد بالتأكيد إغلاق هذه القناة؟"
       channel_delete:
         title: "حذف القناة"
-        instructions: "<p>يحذف قناة <strong>%{name}</strong> وسجل الدردشة. سيتم حذف جميع الرسائل والبيانات ذات الصلة، مثل التفاعلات والتحميلات نهائيًا. إذا كنت ترغب في الحفاظ على سجل القناة وإيقاف تشغيلها، فقد ترغب في أرشفة القناة بدلًا من ذلك.</p> <p>هل تريد بالتأكيد المتابعة إلى <strong>الحذف النهائي</strong> للقناة؟ للتأكيد، اكتب اسم القناة في المربع أدناه.</p>"
         confirm: "أتفهم العواقب، احذف القناة"
         confirm_channel_name: "أدخل اسم القناة"
         process_started: "لقد بدأت عملية حذف القناة. سيتم إغلاق هذا النموذج بعد قليل، ولن يصبح بإمكانك رؤية القناة المحذوفة في أي مكان."
@@ -94,6 +93,8 @@ ar:
         never: "أبدًا"
         title: "إشعارات البريد الإلكتروني"
         when_away: "عندما أكون غائبًا فقط"
+      header_indicator_preference:
+        never: "أبدًا"
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
       emoji: "إدراج رمز تعبيري"
@@ -103,15 +104,8 @@ ar:
       in_reply_to: "ردًا على"
       heading: "الدردشة"
       join: "الانضمام"
-      new_messages: "رسائل جديدة"
+      last_visit: "آخر زيارة"
       mention_warning:
-        cannot_see:
-          zero: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليهم."
-          one: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليه."
-          two: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليهما."
-          few: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليهم."
-          many: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليهم."
-          other: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليهم."
         dismiss: "تجاهل"
         invitations_sent:
           zero: "تم إرسال دعوات"
@@ -121,13 +115,10 @@ ar:
           many: "تم إرسال دعوات"
           other: "تم إرسال دعوات"
         invite: "دعوة إلى القناة"
-        without_membership:
-          zero: "لم ينضم %{usernames} إلى هذه القناة."
-          one: "لم ينضم %{usernames} إلى هذه القناة."
-          two: "لم ينضم %{usernames} إلى هذه القناة."
-          few: "لم ينضم %{usernames} إلى هذه القناة."
-          many: "لم ينضم %{usernames} إلى هذه القناة."
-          other: "لم ينضم %{usernames} إلى هذه القناة."
+        groups:
+          header:
+            some: "لن يتلقى بعض المستخدمين الإشعارات"
+            all: "لن يتلقى أحد الإشعارات"
       aria_roles:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
@@ -144,10 +135,7 @@ ar:
       close_full_page: "إغلاق الدردشة في وضع الشاشة الكاملة"
       open_message: "فتح رسالة في الدردشة"
       placeholder_self: "تدوين شيء ما"
-      placeholder_others: "الدردشة مع %{messageRecipient}"
-      placeholder_new_message_disallowed: "القناة %{status}، لا يمكنك إرسال رسائل جديدة الآن."
       placeholder_silenced: "لا يمكنك إرسال رسائل في الوقت الحالي."
-      placeholder_start_conversation: ابدأ محادثة مع %{usernames}
       remove_upload: "إزالة ملف"
       react: "التفاعل برمز تعبيري"
       reply: "رد"
@@ -163,7 +151,6 @@ ar:
       restore: "استعادة الرسالة المحذوفة"
       save: "حفظ"
       select: "تحديد"
-      silence: "كتم المستخدم"
       return_to_list: "العودة إلى قائمة القنوات"
       scroll_to_bottom: "التمرير إلى الأسفل"
       scroll_to_new_messages: "عرض الرسائل الجديدة"
@@ -190,7 +177,8 @@ ar:
         read_only: "للقراءة فقط"
         archived_header: "القناة مؤرشفة"
         archived: "مؤرشفة"
-        archive_failed: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل في <a target=\"_blank\" href=\"%{topic_url}\">الموضوع المستهدف</a>. اضغط على إعادة المحاولة لمحاولة إكمال الأرشيف."
+        archive_failed: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل. <a target=\"_blank\" href=\"%{topic_url}\">موضوع الوجهة</a>. اضغط على \"إعادة المحاولة\" لمحاولة إكمال الأرشيف."
+        archive_failed_no_topic: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل، ولم يتم إنشاء موضوع الوجهة. اضغط على \"إعادة المحاولة\" لمحاولة إكمال الأرشيف."
         archive_completed: "راجع <a target=\"_blank\" href=\"%{topic_url}\">موضوع الأرشيف</a>"
         closed_header: "القناة مغلقة"
         closed: "مغلقة"
@@ -213,6 +201,7 @@ ar:
         associated_topic: الموضوع المرتبط
         associated_category: الفئة المرتبطة
         title: العنوان
+        name: الاسم
         description: الوصف
       channel_info:
         back_to_all_channels: "كل القنوات"
@@ -221,10 +210,6 @@ ar:
           about: نبذة
           members: الأعضاء
           settings: الإعدادات
-      channel_edit_title_modal:
-        title: تعديل العنوان
-        input_placeholder: إضافة عنوان
-        description: أعط عنوانًا وصفيًا قصيرًا لقناتك
       channel_edit_description_modal:
         title: تعديل الوصف
         input_placeholder: أضِف وصفًا
@@ -250,26 +235,10 @@ ar:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} هي فئة عامة. هل تريد إضافة كل المستخدمين النشطين مؤخرًا إلى هذه القناة؟"
-          warning_groups:
-            zero: هل تريد إضافة %{members_count} مستخدمًا نشطًا مؤخرًا من %{group} و%{group_2}؟
-            one: هل تريد إضافة مستخدم واحد (%{members_count}) نشط مؤخرًا من %{group}؟
-            two: هل تريد إضافة مستخدمين (%{members_count}) نشطين مؤخرًا من %{group} و%{group_2}؟
-            few: هل تريد إضافة %{members_count} مستخدمين نشطين مؤخرًا من %{group} و%{group_2}؟
-            many: هل تريد إضافة %{members_count} مستخدمًا نشطًا مؤخرًا من %{group} و%{group_2}؟
-            other: هل تريد إضافة %{members_count} مستخدمًا نشطًا مؤخرًا من %{group} و%{group_2}؟
-          warning_multiple_groups: هل تريد إضافة %{members_count} من المستخدمين من %{group_1} و%{count} أخرى؟
         choose_category:
           label: "اختيار فئة"
           none: "اختر واحدة..."
           default_hint: إدارة الوصول بالانتقال إلى <a href=%{link} target="_blank">%{category} إعدادات الأمان</a>
-          hint_groups:
-            zero: سيحظى المستخدمون في %{hint} و%{hint_2} بإمكانية الوصول إلى هذه القناة حسب <a href=%{link} target="_blank">إعدادات الأمان</a>
-            one: سيحظى المستخدمون في %{hint} بإمكانية الوصول إلى هذه القناة حسب <a href=%{link} target="_blank">إعدادات الأمان</a>
-            two: سيحظى المستخدمون في %{hint} و%{hint_2} بإمكانية الوصول إلى هذه القناة حسب <a href=%{link} target="_blank">إعدادات الأمان</a>
-            few: سيحظى المستخدمون في %{hint} و%{hint_2} بإمكانية الوصول إلى هذه القناة حسب <a href=%{link} target="_blank">إعدادات الأمان</a>
-            many: سيحظى المستخدمون في %{hint} و%{hint_2} بإمكانية الوصول إلى هذه القناة حسب <a href=%{link} target="_blank">إعدادات الأمان</a>
-            other: سيحظى المستخدمون في %{hint} و%{hint_2} بإمكانية الوصول إلى هذه القناة حسب <a href=%{link} target="_blank">إعدادات الأمان</a>
-          hint_multiple_groups: سيحظى المستخدمون في %{hint_1} و%{count} من المجموعات الأخرى بإمكانية الوصول إلى هذه القناة حسب <a href=%{link} target="_blank">إعدادات الأمان</a>
         create: "إنشاء قناة"
         description: "الوصف (اختياري)"
         name: "اسم القناة"
@@ -282,10 +251,6 @@ ar:
         type: "رسالة دردشة"
       reactions:
         only_you: "لقد تفاعلت باستخدام :%{emoji}:"
-        and_others: "لقد تفاعلت أنت و%{usernames} باستخدام :%{emoji}:"
-        only_others: "لقد تفاعل %{usernames} باستخدام :%{emoji}:"
-        others_and_more: "تفاعل %{usernames} و%{more} من المستخدمين باستخدام :%{emoji}:"
-        you_others_and_more: "لقد تفاعلت أنت و%{usernames} و%{more} من المستخدمين الآخرين باستخدام :%{emoji}:"
       composer:
         toggle_toolbar: "تشغيل شريط الأدوات"
         italic_text: "نص بارز"
@@ -299,8 +264,9 @@ ar:
         mention: "للإشارات فقط"
         always: "للنشاط بأكمله"
       settings:
-        enable_auto_join_users: "إضافة كل المستخدمين النشطين مؤخرًا تلقائيًا"
-        disable_auto_join_users: "إيقاف إضافة المستخدمين تلقائيًا"
+        channel_wide_mentions_label: "السماح بإشارات @الكل و@هنا"
+        channel_wide_mentions_description: "السماح للمستخدمين بإرسال إشعارات إلى جميع أعضاء #%{channel} باستخدام @الكل، أو المستخدمين النشطين في الوقت الحالي فقط باستخدام @هنا"
+        auto_join_users_label: "إضافة المستخدمين تلقائيًا"
         auto_join_users_warning: "سينضم كل المستخدمين الذين ليسوا أعضاءً في هذه القناة ولديهم وصول إلى فئة %{category}. هل أنت متأكد؟"
         desktop_notification_level: "إشعارات سطح المكتب"
         follow: "الانضمام"
@@ -314,11 +280,12 @@ ar:
         save: "حفظ"
         saved: "تم الحفظ"
         unfollow: "مغادرة"
+        admin_title: "مسؤول"
       admin:
         title: "الدردشة"
       direct_messages:
         title: "الدردشة الشخصية"
-        new: "دردشة شخصية جديدة"
+        new: "إنشاء دردشة شخصية"
         create: "إنشاء"
         leave: "مغادرة هذه الدردشة الشخصية"
         cannot_create: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."
@@ -337,7 +304,7 @@ ar:
         none: "لم يتم إنشاء خطافات ويب واردة حالية."
         no_emoji: "لم يتم تحديد رمز تعبيري"
         post_to: "نشر إلى"
-        reset_emoji: "إعادة ضبط الرمز التعبيري"
+        reset_emoji: "إعادة تعيين الرمز التعبيري"
         save: "حفظ"
         edit: "تعديل"
         select_emoji: "اختيار الرمز التعبيري"
@@ -346,7 +313,7 @@ ar:
         url: "عنوان URL"
         url_instructions: "يحتوي عنوان URL هذا على قيمة سرية - احتفظ بها في مكانٍ آمن."
         username: "اسم المستخدم"
-        username_instructions: "اسم المستخدم لبرنامج الروبوت الذي ينشر على القناة. يتم ضبطه افتراضيًا على \"النظام\" عند تركه فارغة."
+        username_instructions: "اسم المستخدم لبرنامج الروبوت الذي ينشر على القناة. يتم تعيينه افتراضيًا إلى \"النظام\" عند تركه فارغة."
         instructions: "يمكن استخدام خطافات الويب الواردة بواسطة أنظمة خارجية لنشر الرسائل في قناة دردشة مخصَّصة كمستخدم برنامج روبوت عبر نقطة النهاية <code>/hooks/:key</code>. يتألف الحمل من معلمة <code>نصية</code> فردية، وهي مقيَّدة إلى 2000 حرف.<br><br>نحن ندعم أيضًا المعلمات <code>النصية</code> بتنسيق Slack، مع استخراج الروابط والإشارات بناءً على التنسيق في <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>، لكن يجب استخدام نقطة النهاية <code>/hooks/:key/slack</code> من أجل ذلك."
       selection:
         cancel: "إلغاء"
@@ -394,9 +361,6 @@ ar:
           few: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
           many: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
           other: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
-      retention_reminders:
-        public: "يتم الاحتفاظ بسجل القناة لمدة %{days} من الأيام."
-        dm: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة %{days} من الأيام."
       flags:
         off_topic: "هذه الرسالة ليست ذات صلة بالمناقشة الحالية كما هو محدَّد في عنوان القناة، وربما ينبغي نقلها إلى مكانٍ آخر."
         inappropriate: "تحتوي هذه الرسالة على محتوى قد يعتبره الشخص العاقل مسيئًا أو مهينًا أو ينتهك <a href=\"%{basePath}/guidelines\">إرشادات المجتمع</a> لدينا."
@@ -457,7 +421,7 @@ ar:
               label: رسالة
             sender:
               label: المرسل
-              description: يتم ضبطه افتراضيًا على النظام
+              description: يتم تعيينه افتراضيًا إلى النظام
     review:
       transcript:
         view: "عرض نص الرسائل السابقة"
@@ -489,7 +453,7 @@ ar:
     user_menu:
       no_chat_notifications_title: "ليس لديك أي إشعارات دردشة حتى الآن"
       no_chat_notifications_body: >
-        سيتم إرسال إشعار إليك في هذه اللوحة عندما يراسلك أحدهم مباشرةً أو يشير إليك <b>@mention</b> في الدردشة. سيتم أيضًا إرسال الإشعارات إلى بريدك الإلكتروني في حال عدم تسجيلك الدخول لفترة من الوقت. <br><br> انقر على العنوان الموجود أعلى أي قناة دردشة لضبط التنبيهات التي تتلقاها في تلك القناة. للمزيد من المعلومات، راجع <a href='%{preferencesUrl}'>تفضيلات الإشعارات</a>.
+        سيتم إرسال إشعار إليك في هذه اللوحة عندما يراسلك أحدهم مباشرةً أو يشير إليك <b>@mention</b> في الدردشة. سيتم أيضًا إرسال الإشعارات إلى بريدك الإلكتروني في حال عدم تسجيلك الدخول لفترة من الوقت. <br><br> انقر على العنوان الموجود أعلى أي قناة دردشة لتعيين التنبيهات التي تتلقاها في تلك القناة. للمزيد من المعلومات، راجع <a href='%{preferencesUrl}'>تفضيلات الإشعارات</a>.
       tabs:
         chat_notifications: "إشعارات الدردشة"
         chat_notifications_with_unread:

@@ -5,7 +5,6 @@ import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -14,13 +13,15 @@ import {
 } from "discourse/plugins/chat/discourse/components/chat-to-topic-selector";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 import { htmlSafe } from "@ember/template";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Component.extend({
+export default Component.extend(ModalFunctionality, {
   chat: service(),
+  chatApi: service(),
   tagName: "",
   chatChannel: null,
 
-  selection: "newTopic",
+  selection: NEW_TOPIC_SELECTION,
   newTopic: equal("selection", NEW_TOPIC_SELECTION),
   existingTopic: equal("selection", EXISTING_TOPIC_SELECTION),
 
@@ -34,17 +35,11 @@ export default Component.extend({
   @action
   archiveChannel() {
     this.set("saving", true);
-    return ajax({
-      url: `/chat/chat_channels/${this.chatChannel.id}/archive.json`,
-      type: "PUT",
-      data: this._data(),
-    })
-      .then(() => {
-        this.appEvents.trigger("modal-body:flash", {
-          text: I18n.t("chat.channel_archive.process_started"),
-          messageClass: "success",
-        });
 
+    return this.chatApi
+      .createChannelArchive(this.chatChannel.id, this._data())
+      .then(() => {
+        this.flash(I18n.t("chat.channel_archive.process_started"), "success");
         this.chatChannel.set("status", CHANNEL_STATUSES.archived);
 
         discourseLater(() => {
@@ -58,7 +53,6 @@ export default Component.extend({
   _data() {
     const data = {
       type: this.selection,
-      chat_channel_id: this.chatChannel.id,
     };
     if (this.newTopic) {
       data.title = this.topicTitle;

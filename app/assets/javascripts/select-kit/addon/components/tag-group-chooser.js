@@ -31,7 +31,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
   search(query) {
     const data = {
       q: query,
-      limit: this.get("siteSettings.max_tag_search_results"),
+      limit: this.siteSettings.max_tag_search_results,
     };
 
     return this.searchTags(

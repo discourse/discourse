@@ -13,6 +13,6 @@ class AlternativeReplyByEmailAddressesValidator
   end
 
   def error_message
-    I18n.t('site_settings.errors.invalid_alternative_reply_by_email_addresses')
+    I18n.t("site_settings.errors.invalid_alternative_reply_by_email_addresses")
   end
 end

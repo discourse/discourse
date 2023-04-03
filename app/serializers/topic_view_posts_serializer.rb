@@ -21,5 +21,4 @@ class TopicViewPostsSerializer < ApplicationSerializer
   def include_timeline_lookup?
     false
   end
-
 end

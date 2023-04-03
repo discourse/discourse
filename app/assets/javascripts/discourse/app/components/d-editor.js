@@ -258,7 +258,7 @@ export default Component.extend(TextareaTextManipulation, {
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
     this._applyEmojiAutocomplete(this._$textarea);
-    this._applyCategoryHashtagAutocomplete(this._$textarea);
+    this._applyHashtagAutocomplete(this._$textarea);
 
     scheduleOnce("afterRender", this, this._readyNow);
 
@@ -275,6 +275,11 @@ export default Component.extend(TextareaTextManipulation, {
 
     this._itsatrap.bind("tab", () => this.indentSelection("right"));
     this._itsatrap.bind("shift+tab", () => this.indentSelection("left"));
+
+    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const mod = mac ? "meta" : "ctrl";
+
+    this._itsatrap.bind(`${mod}+shift+.`, () => this.send("insertCurrentTime"));
 
     // disable clicking on links in the preview
     this.element
@@ -459,14 +464,16 @@ export default Component.extend(TextareaTextManipulation, {
     }
   },
 
-  _applyCategoryHashtagAutocomplete() {
+  _applyHashtagAutocomplete() {
     setupHashtagAutocomplete(
-      "topic-composer",
+      this.site.hashtag_configurations["topic-composer"],
       this._$textarea,
       this.siteSettings,
-      (value) => {
-        this.set("value", value);
-        schedule("afterRender", this, this.focusTextArea);
+      {
+        afterComplete: (value) => {
+          this.set("value", value);
+          schedule("afterRender", this, this.focusTextArea);
+        },
       }
     );
   },
@@ -759,6 +766,15 @@ export default Component.extend(TextareaTextManipulation, {
           );
         }
       }
+    },
+
+    insertCurrentTime() {
+      const sel = this.getSelected("", { lineVal: true });
+      const timezone = this.currentUser.user_option.timezone;
+      const time = moment().format("HH:mm:ss");
+      const date = moment().format("YYYY-MM-DD");
+
+      this.addText(sel, `[date=${date} time=${time} timezone="${timezone}"]`);
     },
 
     focusIn() {

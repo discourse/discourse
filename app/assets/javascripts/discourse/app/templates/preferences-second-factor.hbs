@@ -5,7 +5,9 @@
         {{#if this.showEnforcedNotice}}
           <div class="control-group">
             <div class="controls">
-              <div class="alert alert-error">{{i18n "user.second_factor.enforced_notice"}}</div>
+              <div class="alert alert-error">{{i18n
+                  "user.second_factor.enforced_notice"
+                }}</div>
             </div>
           </div>
         {{/if}}
@@ -30,67 +32,152 @@
           <div class="control-group totp">
             <div class="controls">
               <h2>{{i18n "user.second_factor.totp.title"}}</h2>
-              <DButton @action={{action "createTotp"}} @class="btn-primary new-totp" @icon="plus" @disabled={{this.loading}} @label="user.second_factor.totp.add" />
               {{#each this.totps as |totp|}}
-                <div class="second-factor-item">
-                  {{#if totp.name}}
-                    {{totp.name}}
-                  {{else}}
-                    {{i18n "user.second_factor.totp.default_name"}}
-                  {{/if}}
+                <div class="second-factor-item row">
+                  <div class="details">
+                    {{#if totp.name}}
+                      {{totp.name}}
+                    {{else}}
+                      {{i18n "user.second_factor.totp.default_name"}}
+                    {{/if}}
+                  </div>
 
                   {{#if this.isCurrentUser}}
-                    <DButton @action={{action "editSecondFactor" totp}} @class="btn-default btn-small btn-icon pad-left no-text edit" @disabled={{this.loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
+                    <div class="actions">
+                      <DButton
+                        @action={{action "editSecondFactor" totp}}
+                        @class="btn-default btn-flat btn-small btn-icon pad-left no-text edit"
+                        @disabled={{this.loading}}
+                        @icon="pencil-alt"
+                        @aria-label="user.second_factor.edit"
+                        @title="user.second_factor.edit"
+                      />
+                      <DButton
+                        @action={{action "disableSingleSecondFactor" totp}}
+                        @class="btn-danger btn-flat no-text"
+                        @icon="trash-alt"
+                        @aria-label="user.second_factor.disable"
+                        @title="user.second_factor.disable"
+                      />
+                    </div>
                   {{/if}}
                 </div>
               {{/each}}
+              <DButton
+                @action={{action "createTotp"}}
+                @class="btn-primary new-totp"
+                @icon="plus"
+                @disabled={{this.loading}}
+                @label="user.second_factor.totp.add"
+              />
             </div>
           </div>
 
           <div class="control-group security-key">
             <div class="controls">
               <h2>{{i18n "user.second_factor.security_key.title"}}</h2>
-              <DButton @action={{action "createSecurityKey"}} @class="btn-primary new-security-key" @icon="plus" @disabled={{this.loading}} @label="user.second_factor.security_key.add" />
               {{#each this.security_keys as |security_key|}}
-                <div class="second-factor-item">
-                  {{#if security_key.name}}
-                    {{security_key.name}}
-                  {{else}}
-                    {{i18n "user.second_factor.security_key.default_name"}}
-                  {{/if}}
+                <div class="second-factor-item row">
+                  <div class="details">
+                    {{#if security_key.name}}
+                      {{security_key.name}}
+                    {{else}}
+                      {{i18n "user.second_factor.security_key.default_name"}}
+                    {{/if}}
+                  </div>
 
                   {{#if this.isCurrentUser}}
-                    <DButton @action={{action "editSecurityKey" security_key}} @class="btn-default btn-small btn-icon pad-left no-text edit" @disabled={{this.loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
+                    <div class="actions">
+                      <DButton
+                        @action={{action "editSecurityKey" security_key}}
+                        @class="btn-default btn-flat btn-small btn-icon pad-left no-text edit"
+                        @disabled={{this.loading}}
+                        @icon="pencil-alt"
+                        @aria-label="user.second_factor.edit"
+                        @title="user.second_factor.edit"
+                      />
+                      <DButton
+                        @action={{action
+                          "disableSingleSecondFactor"
+                          security_key
+                        }}
+                        @class="btn-danger btn-flat no-text"
+                        @icon="trash-alt"
+                        @aria-label="user.second_factor.disable"
+                        @title="user.second_factor.disable"
+                      />
+                    </div>
                   {{/if}}
                 </div>
               {{/each}}
+              <DButton
+                @action={{action "createSecurityKey"}}
+                @class="btn-primary new-security-key"
+                @icon="plus"
+                @disabled={{this.loading}}
+                @label="user.second_factor.security_key.add"
+              />
             </div>
           </div>
 
           <div class="control-group pref-second-factor-backup">
             <div class="controls pref-second-factor-backup">
               <h2>{{i18n "user.second_factor_backup.title"}}</h2>
-              {{#if this.model.second_factor_enabled}}
-                {{#if this.model.second_factor_backup_enabled}}
-                  {{html-safe (i18n "user.second_factor_backup.manage" count=this.model.second_factor_remaining_backup_codes)}}
-                {{else}}
-                  {{i18n "user.second_factor_backup.enable_long"}}
-                {{/if}}
+              <div class="second-factor-item row">
+                {{#if this.model.second_factor_enabled}}
+                  <div class="details">
+                    {{#if this.model.second_factor_backup_enabled}}
+                      {{html-safe
+                        (i18n
+                          "user.second_factor_backup.manage"
+                          count=this.model.second_factor_remaining_backup_codes
+                        )
+                      }}
+                    {{else}}
+                      {{i18n "user.second_factor_backup.enable_long"}}
+                    {{/if}}
+                  </div>
 
-                {{#if this.isCurrentUser}}
-                  <DButton @action={{action "editSecondFactorBackup"}} @class="btn-default btn-small btn-icon pad-left no-text edit edit-2fa-backup" @disabled={{this.loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
+                  {{#if this.isCurrentUser}}
+                    <div class="actions">
+                      <DButton
+                        @action={{action "editSecondFactorBackup"}}
+                        @class="btn-default btn-flat btn-small btn-icon pad-left no-text edit edit-2fa-backup"
+                        @disabled={{this.loading}}
+                        @icon="pencil-alt"
+                        @aria-label="user.second_factor.edit"
+                        @title="user.second_factor.edit"
+                      />
+
+                      {{#if this.model.second_factor_backup_enabled}}
+                        <DButton
+                          @action={{action "disableSecondFactorBackup"}}
+                          @class="btn-danger btn-flat no-text"
+                          @icon="trash-alt"
+                          @aria-label="user.second_factor.disable"
+                          @title="user.second_factor.disable"
+                        />
+                      {{/if}}
+                    </div>
+                  {{/if}}
+                {{else}}
+                  {{i18n "user.second_factor_backup.enable_prerequisites"}}
                 {{/if}}
-              {{else}}
-                {{i18n "user.second_factor_backup.enable_prerequisites"}}
-              {{/if}}
+              </div>
             </div>
           </div>
 
           {{#if this.model.second_factor_enabled}}
             {{#unless this.showEnforcedNotice}}
-              <div class="control-group">
+              <div class="control-group pref-second-factor-disable-all">
                 <div class="controls">
-                  <DButton @class="btn-danger" @icon="ban" @action={{action "disableAllSecondFactors"}} @disabled={{this.loading}} @label="user.second_factor.disable_all" />
+                  <DButton
+                    @class="btn-danger"
+                    @icon="ban"
+                    @action={{action "disableAllSecondFactors"}}
+                    @disabled={{this.loading}}
+                    @label="user.second_factor.disable_all"
+                  />
                 </div>
               </div>
             {{/unless}}
@@ -101,7 +188,13 @@
 
             <div class="controls">
               <div>
-                <TextField @value={{this.password}} @id="password" @type="password" @classNames="input-large" @autofocus="autofocus" />
+                <TextField
+                  @value={{this.password}}
+                  @id="password"
+                  @type="password"
+                  @classNames="input-large"
+                  @autofocus="autofocus"
+                />
               </div>
               <div class="instructions">
                 {{i18n "user.second_factor.confirm_password_description"}}
@@ -110,17 +203,30 @@
           </div>
 
           <div class="control-group">
-            <div class="controls">
-              <DButton @class="btn-primary" @type="submit" @action={{action "confirmPassword"}} @disabled={{this.loading}} @label="continue" />
+            <div class="controls -actions">
+              <DButton
+                @class="btn-primary"
+                @type="submit"
+                @action={{action "confirmPassword"}}
+                @disabled={{this.loading}}
+                @label="continue"
+              />
 
               {{#unless this.showEnforcedNotice}}
-                <CancelLink @route="preferences.account" @args={{this.model.username}} />
+                <CancelLink
+                  @route="preferences.account"
+                  @args={{this.model.username}}
+                />
               {{/unless}}
             </div>
             <div class="controls" style="margin-top: 5px">
               {{this.resetPasswordProgress}}
               {{#unless this.resetPasswordLoading}}
-                <a href class="instructions" {{on "click" this.resetPassword}}>{{ i18n "user.second_factor.forgot_password" }}</a>
+                <a
+                  href
+                  class="instructions"
+                  {{on "click" this.resetPassword}}
+                >{{i18n "user.second_factor.forgot_password"}}</a>
               {{/unless}}
             </div>
           </div>

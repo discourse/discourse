@@ -1,23 +1,29 @@
 <div class="control-group preferences-sidebar-categories">
-  <legend class="control-label">{{i18n "user.experimental_sidebar.categories_section"}}</legend>
+  <legend class="control-label">{{i18n
+      "user.experimental_sidebar.categories_section"
+    }}</legend>
 
   <div class="controls">
     <CategorySelector
-        @categories={{this.selectedSidebarCategories}}
-        @onChange={{action (mut this.selectedSidebarCategories)}}
-        @options={{hash
-          allowUncategorized=(not this.siteSettings.suppress_uncategorized_badge)
-          displayCategoryDescription=true
-        }}
+      @categories={{this.selectedSidebarCategories}}
+      @onChange={{action (mut this.selectedSidebarCategories)}}
+      @options={{hash
+        allowUncategorized=(not this.siteSettings.suppress_uncategorized_badge)
+        displayCategoryDescription=true
+      }}
     />
   </div>
 
-  <div class="instructions">{{i18n "user.experimental_sidebar.categories_section_instruction"}}</div>
+  <div class="instructions">{{i18n
+      "user.experimental_sidebar.categories_section_instruction"
+    }}</div>
 </div>
 
 {{#if this.model.display_sidebar_tags}}
   <div class="control-group preferences-sidebar-tags">
-    <legend class="control-label">{{i18n "user.experimental_sidebar.tags_section"}}</legend>
+    <legend class="control-label">{{i18n
+        "user.experimental_sidebar.tags_section"
+      }}</legend>
 
     <div class="controls">
       <TagChooser
@@ -25,23 +31,37 @@
         @everyTag={{true}}
         @unlimitedTagCount={{true}}
         @onChange={{action (mut this.selectedSidebarTagNames)}}
-        @options={{hash
-          allowAny=false
-        }}
+        @options={{hash allowAny=false}}
       />
     </div>
 
-    <div class="instructions">{{i18n "user.experimental_sidebar.tags_section_instruction"}}</div>
+    <div class="instructions">{{i18n
+        "user.experimental_sidebar.tags_section_instruction"
+      }}</div>
   </div>
 {{/if}}
 
 <div class="control-group preferences-sidebar-navigation">
-  <legend class="control-label">{{i18n "user.experimental_sidebar.navigation_section"}}</legend>
+  <legend class="control-label">{{i18n
+      "user.experimental_sidebar.navigation_section"
+    }}</legend>
 
   <div class="controls controls-dropdown">
-    <label>{{i18n "user.experimental_sidebar.list_destination_instruction"}}</label>
-    <ComboBox @valueProperty="value" @content={{this.sidebarListDestinations}} @value={{this.newSidebarListDestination}} @onChange={{action (mut this.newSidebarListDestination)}} />
+    <label>{{i18n
+        "user.experimental_sidebar.list_destination_instruction"
+      }}</label>
+    <ComboBox
+      @class="preferences-sidebar-navigation__list-destination-selector"
+      @valueProperty="value"
+      @content={{this.sidebarListDestinations}}
+      @value={{this.newSidebarListDestination}}
+      @onChange={{action (mut this.newSidebarListDestination)}}
+    />
   </div>
 </div>
 
-<SaveControls @model={{this.model}} @action={{action "save"}} @saved={{this.saved}} />
+<SaveControls
+  @model={{this.model}}
+  @action={{action "save"}}
+  @saved={{this.saved}}
+/>

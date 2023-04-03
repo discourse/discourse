@@ -6,10 +6,16 @@
       <label for="last-seen">{{i18n "admin.email.last_seen_user"}}</label>
       <DatePickerPast @value={{this.lastSeen}} @id="last-seen" />
       <label>{{i18n "admin.email.user"}}:</label>
-      <EmailGroupUserChooser @value={{this.username}} @onChange={{action "updateUsername"}} @options={{hash
-          maximum=1
-        }} />
-      <DButton @class="btn-primary digest-refresh-button" @action={{action "refresh"}} @label="admin.email.refresh" />
+      <EmailGroupUserChooser
+        @value={{this.username}}
+        @onChange={{action "updateUsername"}}
+        @options={{hash maximum=1}}
+      />
+      <DButton
+        @class="btn-primary digest-refresh-button"
+        @action={{action "refresh"}}
+        @label="admin.email.refresh"
+      />
       <div class="toggle">
         <label>{{i18n "admin.email.format"}}</label>
         {{#if this.showHtml}}
@@ -19,7 +25,10 @@
             {{i18n "admin.email.text"}}
           </a>
         {{else}}
-          <a href {{on "click" this.toggleShowHtml}}>{{i18n "admin.email.html"}}</a> |
+          <a href {{on "click" this.toggleShowHtml}}>{{i18n
+              "admin.email.html"
+            }}</a>
+          |
           <span>{{i18n "admin.email.text"}}</span>
         {{/if}}
       </div>
@@ -37,10 +46,20 @@
             {{i18n "admin.email.sending_test"}}
           {{else}}
             <label>{{i18n "admin.email.send_digest_label"}}</label>
-            <TextField @value={{this.email}} @placeholderKey="admin.email.test_email_address" />
-            <DButton @class="btn-default" @action={{action "sendEmail"}} @disabled={{this.sendEmailDisabled}} @label="admin.email.send_digest" />
+            <TextField
+              @value={{this.email}}
+              @placeholderKey="admin.email.test_email_address"
+            />
+            <DButton
+              @class="btn-default"
+              @action={{action "sendEmail"}}
+              @disabled={{this.sendEmailDisabled}}
+              @label="admin.email.send_digest"
+            />
             {{#if this.sentEmail}}
-              <span class="result-message">{{i18n "admin.email.sent_test"}}</span>
+              <span class="result-message">{{i18n
+                  "admin.email.sent_test"
+                }}</span>
             {{/if}}
           {{/if}}
         </div>
@@ -52,7 +71,10 @@
         {{#if this.htmlEmpty}}
           <p>{{i18n "admin.email.no_result"}}</p>
         {{else}}
-          <iframe title={{i18n "admin.email.html_preview"}} srcdoc={{this.model.html_content}} />
+          <iframe
+            title={{i18n "admin.email.html_preview"}}
+            srcdoc={{this.model.html_content}}
+          ></iframe>
         {{/if}}
       {{else}}
         <pre>{{html-safe this.model.text_content}}</pre>

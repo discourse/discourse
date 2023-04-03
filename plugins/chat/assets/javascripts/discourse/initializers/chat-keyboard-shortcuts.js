@@ -17,6 +17,9 @@ export default {
     const router = container.lookup("service:router");
     const appEvents = container.lookup("service:app-events");
     const chatStateManager = container.lookup("service:chat-state-manager");
+    const chatChannelsManager = container.lookup(
+      "service:chat-channels-manager"
+    );
     const openChannelSelector = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -49,12 +52,6 @@ export default {
       }
       return true;
     };
-    const isDrawerExpanded = () => {
-      return document.querySelector(".topic-chat-float-container:not(.hidden)")
-        ? true
-        : false;
-    };
-
     const modifyComposerSelection = (event, type) => {
       if (!isChatComposer(event.target)) {
         return;
@@ -85,7 +82,7 @@ export default {
     };
 
     const closeChatDrawer = (event) => {
-      if (!isDrawerExpanded()) {
+      if (!chatStateManager.isDrawerActive) {
         return;
       }
 
@@ -96,6 +93,15 @@ export default {
       event.preventDefault();
       event.stopPropagation();
       appEvents.trigger("chat:toggle-close", event);
+    };
+
+    const markAllChannelsRead = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (chatStateManager.isActive) {
+        chatChannelsManager.markAllChannelsRead();
+      }
     };
 
     withPluginApi("0.12.1", (api) => {
@@ -207,6 +213,21 @@ export default {
           },
         },
       });
+      api.addKeyboardShortcut(
+        `shift+esc`,
+        (event) => markAllChannelsRead(event),
+        {
+          global: true,
+          help: {
+            category: "chat",
+            name: "chat.keyboard_shortcuts.mark_all_channels_read",
+            definition: {
+              keys1: ["shift", "esc"],
+              keysDelimiter: "plus",
+            },
+          },
+        }
+      );
     });
   },
 };

@@ -2,10 +2,9 @@
   {{#if this.embedding.embeddable_hosts}}
     <table class="embedding grid">
       <thead>
-        <th style="width: 25%">{{i18n "admin.embedding.host"}}</th>
-        <th style="width: 15%">{{i18n "admin.embedding.class_name"}}</th>
-        <th style="width: 25%">{{i18n "admin.embedding.allowed_paths"}}</th>
-        <th style="width: 25%">{{i18n "admin.embedding.category"}}</th>
+        <th style="width: 30%">{{i18n "admin.embedding.host"}}</th>
+        <th style="width: 30%">{{i18n "admin.embedding.allowed_paths"}}</th>
+        <th style="width: 30%">{{i18n "admin.embedding.category"}}</th>
         <th style="width: 10%">&nbsp;</th>
       </thead>
       <tbody>
@@ -18,40 +17,80 @@
     <p>{{i18n "admin.embedding.get_started"}}</p>
   {{/if}}
 
-  <DButton @label="admin.embedding.add_host" @action={{action "addHost"}} @icon="plus" @class="btn-primary add-host" />
+  <DButton
+    @label="admin.embedding.add_host"
+    @action={{action "addHost"}}
+    @icon="plus"
+    @class="btn-primary add-host"
+  />
 </div>
 
 {{#if this.showSecondary}}
   <div class="embedding-secondary">
-    <p>{{html-safe (i18n "admin.embedding.sample")}}</p>
+    {{html-safe (i18n "admin.embedding.sample")}}
     <HighlightedCode @code={{this.embeddingCode}} @lang="html" />
   </div>
 
-  <hr>
+  <hr />
 
   <div class="embedding-secondary">
     <h3>{{i18n "admin.embedding.settings"}}</h3>
 
-    <EmbeddingSetting @field="embed_by_username" @value={{this.embedding.embed_by_username}} />
-    <EmbeddingSetting @field="embed_post_limit" @value={{this.embedding.embed_post_limit}} />
-    <EmbeddingSetting @field="embed_title_scrubber" @value={{this.embedding.embed_title_scrubber}} @placeholder="- site.com$" />
-    <EmbeddingSetting @field="embed_truncate" @value={{this.embedding.embed_truncate}} @type="checkbox" />
-    <EmbeddingSetting @field="embed_unlisted" @value={{this.embedding.embed_unlisted}} @type="checkbox" />
+    <EmbeddingSetting
+      @field="embed_by_username"
+      @value={{this.embedding.embed_by_username}}
+    />
+    <EmbeddingSetting
+      @field="embed_post_limit"
+      @value={{this.embedding.embed_post_limit}}
+    />
+    <EmbeddingSetting
+      @field="embed_title_scrubber"
+      @value={{this.embedding.embed_title_scrubber}}
+      @placeholder="- site.com$"
+    />
+    <EmbeddingSetting
+      @field="embed_truncate"
+      @value={{this.embedding.embed_truncate}}
+      @type="checkbox"
+    />
+    <EmbeddingSetting
+      @field="embed_unlisted"
+      @value={{this.embedding.embed_unlisted}}
+      @type="checkbox"
+    />
   </div>
 
   <div class="embedding-secondary">
     <h3>{{i18n "admin.embedding.crawling_settings"}}</h3>
     <p class="description">{{i18n "admin.embedding.crawling_description"}}</p>
 
-    <EmbeddingSetting @field="allowed_embed_selectors" @value={{this.embedding.allowed_embed_selectors}} @placeholder="article, #story, .post" />
+    <EmbeddingSetting
+      @field="allowed_embed_selectors"
+      @value={{this.embedding.allowed_embed_selectors}}
+      @placeholder="article, #story, .post"
+    />
 
-    <EmbeddingSetting @field="blocked_embed_selectors" @value={{this.embedding.blocked_embed_selectors}} @placeholder=".ad-unit, header" />
+    <EmbeddingSetting
+      @field="blocked_embed_selectors"
+      @value={{this.embedding.blocked_embed_selectors}}
+      @placeholder=".ad-unit, header"
+    />
 
-    <EmbeddingSetting @field="allowed_embed_classnames" @value={{this.embedding.allowed_embed_classnames}} @placeholder="emoji, classname" />
+    <EmbeddingSetting
+      @field="allowed_embed_classnames"
+      @value={{this.embedding.allowed_embed_classnames}}
+      @placeholder="emoji, classname"
+    />
   </div>
 
   <div class="embedding-secondary">
-    <DButton @label="admin.embedding.save" @action={{action "saveChanges"}} @class="btn-primary embed-save" @disabled={{this.embedding.isSaving}} />
+    <DButton
+      @label="admin.embedding.save"
+      @action={{action "saveChanges"}}
+      @class="btn-primary embed-save"
+      @disabled={{this.embedding.isSaving}}
+    />
 
     {{#if this.saved}}{{i18n "saved"}}{{/if}}
   </div>

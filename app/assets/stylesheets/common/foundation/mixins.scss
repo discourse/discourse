@@ -5,6 +5,8 @@
 // Media queries
 // --------------------------------------------------
 
+@use "sass:math";
+
 $breakpoints: (
   mobile-small: 320px,
   mobile-medium: 350px,
@@ -162,7 +164,7 @@ $hpad: 0.65em;
   $encoded: "";
   $slice: 2000;
   $index: 0;
-  $loops: ceil(str-length($svg) / $slice);
+  $loops: ceil(math.div(str-length($svg), $slice));
 
   @for $i from 1 through $loops {
     $chunk: str-slice($svg, $index, $index + $slice - 1);
@@ -234,4 +236,15 @@ $hpad: 0.65em;
   } @else {
     @return url("#{$path}");
   }
+}
+
+@mixin mention() {
+  display: inline-block; // https://bugzilla.mozilla.org/show_bug.cgi?id=1656119
+  font-size: 0.93em;
+  font-weight: normal;
+  color: var(--primary);
+  padding: 0 0.3em 0.07em;
+  background: var(--primary-low);
+  border-radius: 0.6em;
+  text-decoration: none;
 }

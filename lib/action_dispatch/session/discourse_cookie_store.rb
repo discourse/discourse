@@ -9,9 +9,7 @@ class ActionDispatch::Session::DiscourseCookieStore < ActionDispatch::Session::C
 
   def set_cookie(request, session_id, cookie)
     if Hash === cookie
-      if SiteSetting.force_https
-        cookie[:secure] = true
-      end
+      cookie[:secure] = true if SiteSetting.force_https
       unless SiteSetting.same_site_cookies == "Disabled"
         cookie[:same_site] = SiteSetting.same_site_cookies
       end

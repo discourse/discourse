@@ -5,9 +5,8 @@ task "annotate" => :environment do |task, args|
   raise if !system "bin/annotate --models"
   STDERR.puts "Annotate executed successfully"
 
-  non_core_plugins = Dir["plugins/*"].filter do |plugin_path|
-    `git check-ignore #{plugin_path}`.present?
-  end
+  non_core_plugins =
+    Dir["plugins/*"].filter { |plugin_path| `git check-ignore #{plugin_path}`.present? }
   if non_core_plugins.length > 0
     STDERR.puts "Warning: you have non-core plugins installed which may affect the annotations"
     STDERR.puts "For core annotations, consider running `bin/rake annotate:clean`"

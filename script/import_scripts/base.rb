@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if ARGV.include?('bbcode-to-md')
+if ARGV.include?("bbcode-to-md")
   # Replace (most) bbcode with markdown before creating posts.
   # This will dramatically clean up the final posts in Discourse.
   #
@@ -10,17 +10,17 @@ if ARGV.include?('bbcode-to-md')
   # cd ruby-bbcode-to-md
   # gem build ruby-bbcode-to-md.gemspec
   # gem install ruby-bbcode-to-md-*.gem
-  require 'ruby-bbcode-to-md'
+  require "ruby-bbcode-to-md"
 end
 
-require_relative '../../config/environment'
-require_relative 'base/lookup_container'
-require_relative 'base/uploader'
+require_relative "../../config/environment"
+require_relative "base/lookup_container"
+require_relative "base/uploader"
 
-module ImportScripts; end
+module ImportScripts
+end
 
 class ImportScripts::Base
-
   def initialize
     preload_i18n
 
@@ -62,15 +62,14 @@ class ImportScripts::Base
     end
 
     elapsed = Time.now - @start_times[:import]
-    puts '', '', 'Done (%02dh %02dmin %02dsec)' % [elapsed / 3600, elapsed / 60 % 60, elapsed % 60]
-
+    puts "", "", "Done (%02dh %02dmin %02dsec)" % [elapsed / 3600, elapsed / 60 % 60, elapsed % 60]
   ensure
     reset_site_settings
   end
 
   def get_site_settings_for_import
     {
-      blocked_email_domains: '',
+      blocked_email_domains: "",
       min_topic_title_length: 1,
       min_post_length: 1,
       min_first_post_length: 1,
@@ -78,21 +77,23 @@ class ImportScripts::Base
       min_personal_message_title_length: 1,
       allow_duplicate_topic_titles: true,
       allow_duplicate_topic_titles_category: false,
-      disable_emails: 'yes',
-      max_attachment_size_kb: 102400,
-      max_image_size_kb: 102400,
-      authorized_extensions: '*',
+      disable_emails: "yes",
+      max_attachment_size_kb: 102_400,
+      max_image_size_kb: 102_400,
+      authorized_extensions: "*",
       clean_up_inactive_users_after_days: 0,
       clean_up_unused_staged_users_after_days: 0,
       clean_up_uploads: false,
-      clean_orphan_uploads_grace_period_hours: 1800
+      clean_orphan_uploads_grace_period_hours: 1800,
     }
   end
 
   def change_site_settings
     if SiteSetting.bootstrap_mode_enabled
-      SiteSetting.default_trust_level = TrustLevel[0] if SiteSetting.default_trust_level == TrustLevel[1]
-      SiteSetting.default_email_digest_frequency = 10080 if SiteSetting.default_email_digest_frequency == 1440
+      SiteSetting.default_trust_level = TrustLevel[0] if SiteSetting.default_trust_level ==
+        TrustLevel[1]
+      SiteSetting.default_email_digest_frequency =
+        10_080 if SiteSetting.default_email_digest_frequency == 1440
       SiteSetting.bootstrap_mode_enabled = false
     end
 
@@ -115,7 +116,7 @@ class ImportScripts::Base
   def reset_site_settings
     @old_site_settings.each do |key, value|
       current_value = SiteSetting.get(key)
-      SiteSetting.set(key, value) unless current_value != @site_settings_during_import[key]
+      SiteSetting.set(key, value) if current_value == @site_settings_during_import[key]
     end
 
     RateLimiter.enable
@@ -131,7 +132,7 @@ class ImportScripts::Base
     raise NotImplementedError
   end
 
-  %i{
+  %i[
     add_category
     add_group
     add_post
@@ -146,9 +147,7 @@ class ImportScripts::Base
     topic_lookup_from_imported_post_id
     user_already_imported?
     user_id_from_imported_user_id
-  }.each do |method_name|
-    delegate method_name, to: :@lookup
-  end
+  ].each { |method_name| delegate method_name, to: :@lookup }
 
   def create_admin(opts = {})
     admin = User.new
@@ -196,7 +195,11 @@ class ImportScripts::Base
         end
       end
 
-      print_status(created + skipped + failed + (opts[:offset] || 0), total, get_start_time("groups"))
+      print_status(
+        created + skipped + failed + (opts[:offset] || 0),
+        total,
+        get_start_time("groups"),
+      )
     end
 
     [created, skipped]
@@ -224,23 +227,22 @@ class ImportScripts::Base
     ActiveRecord::Base.transaction do
       begin
         connection = ActiveRecord::Base.connection.raw_connection
-        connection.exec('CREATE TEMP TABLE import_ids(val text PRIMARY KEY)')
+        connection.exec("CREATE TEMP TABLE import_ids(val text PRIMARY KEY)")
 
-        import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
+        import_id_clause =
+          import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
 
         connection.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
 
         existing = "#{type.to_s.classify}CustomField".constantize
-        existing = existing.where(name: 'import_id')
-          .joins('JOIN import_ids ON val = value')
-          .count
+        existing = existing.where(name: "import_id").joins("JOIN import_ids ON val = value").count
 
         if existing == import_ids.length
           puts "Skipping #{import_ids.length} already imported #{type}"
           true
         end
       ensure
-        connection.exec('DROP TABLE import_ids') unless connection.nil?
+        connection.exec("DROP TABLE import_ids") unless connection.nil?
       end
     end
   end
@@ -292,7 +294,11 @@ class ImportScripts::Base
         end
       end
 
-      print_status(created + skipped + failed + (opts[:offset] || 0), total, get_start_time("users"))
+      print_status(
+        created + skipped + failed + (opts[:offset] || 0),
+        total,
+        get_start_time("users"),
+      )
     end
 
     [created, skipped]
@@ -305,7 +311,9 @@ class ImportScripts::Base
     post_create_action = opts.delete(:post_create_action)
 
     existing = find_existing_user(opts[:email], opts[:username])
-    return existing if existing && (merge || existing.custom_fields["import_id"].to_s == import_id.to_s)
+    if existing && (merge || existing.custom_fields["import_id"].to_s == import_id.to_s)
+      return existing
+    end
 
     bio_raw = opts.delete(:bio_raw)
     website = opts.delete(:website)
@@ -316,8 +324,11 @@ class ImportScripts::Base
     original_name = opts[:name]
     original_email = opts[:email] = opts[:email].downcase
 
-    if !UsernameValidator.new(opts[:username]).valid_format? || !User.username_available?(opts[:username])
-      opts[:username] = UserNameSuggester.suggest(opts[:username].presence || opts[:name].presence || opts[:email])
+    if !UsernameValidator.new(opts[:username]).valid_format? ||
+         !User.username_available?(opts[:username])
+      opts[:username] = UserNameSuggester.suggest(
+        opts[:username].presence || opts[:name].presence || opts[:email],
+      )
     end
 
     if !EmailAddressValidator.valid_value?(opts[:email])
@@ -339,7 +350,8 @@ class ImportScripts::Base
     u = User.new(opts)
     (opts[:custom_fields] || {}).each { |k, v| u.custom_fields[k] = v }
     u.custom_fields["import_id"] = import_id
-    u.custom_fields["import_username"] = original_username if original_username.present? && original_username != opts[:username]
+    u.custom_fields["import_username"] = original_username if original_username.present? &&
+      original_username != opts[:username]
     u.custom_fields["import_avatar_url"] = avatar_url if avatar_url.present?
     u.custom_fields["import_pass"] = opts[:password] if opts[:password].present?
     u.custom_fields["import_email"] = original_email if original_email != opts[:email]
@@ -359,9 +371,7 @@ class ImportScripts::Base
         end
       end
 
-      if opts[:active] && opts[:password].present?
-        u.activate
-      end
+      u.activate if opts[:active] && opts[:password].present?
     rescue => e
       # try based on email
       if e.try(:record).try(:errors).try(:messages).try(:[], :primary_email).present?
@@ -377,7 +387,7 @@ class ImportScripts::Base
       end
     end
 
-    if u.custom_fields['import_email']
+    if u.custom_fields["import_email"]
       u.suspended_at = Time.zone.at(Time.now)
       u.suspended_till = 200.years.from_now
       u.save!
@@ -388,11 +398,15 @@ class ImportScripts::Base
       user_option.email_messages_level = UserOption.email_level_types[:never]
       user_option.save!
       if u.save
-        StaffActionLogger.new(Discourse.system_user).log_user_suspend(u, 'Invalid email address on import')
+        StaffActionLogger.new(Discourse.system_user).log_user_suspend(
+          u,
+          "Invalid email address on import",
+        )
       else
-        Rails.logger.error("Failed to suspend user #{u.username}. #{u.errors.try(:full_messages).try(:inspect)}")
+        Rails.logger.error(
+          "Failed to suspend user #{u.username}. #{u.errors.try(:full_messages).try(:inspect)}",
+        )
       end
-
     end
 
     post_create_action.try(:call, u) if u.persisted?
@@ -402,7 +416,8 @@ class ImportScripts::Base
 
   def find_existing_user(email, username)
     # Force the use of the index on the 'user_emails' table
-    UserEmail.where("lower(email) = ?", email.downcase).first&.user || User.where(username: username).first
+    UserEmail.where("lower(email) = ?", email.downcase).first&.user ||
+      User.where(username: username).first
   end
 
   def created_category(category)
@@ -435,7 +450,8 @@ class ImportScripts::Base
         # make sure categories don't go more than 2 levels deep
         if params[:parent_category_id]
           top = Category.find_by_id(params[:parent_category_id])
-          top = top.parent_category while (top&.height_of_ancestors || -1) + 1 >= SiteSetting.max_category_nesting
+          top = top.parent_category while (top&.height_of_ancestors || -1) + 1 >=
+            SiteSetting.max_category_nesting
           params[:parent_category_id] = top.id if top
         end
 
@@ -471,15 +487,16 @@ class ImportScripts::Base
 
     post_create_action = opts.delete(:post_create_action)
 
-    new_category = Category.new(
-      name: opts[:name],
-      user_id: opts[:user_id] || opts[:user].try(:id) || Discourse::SYSTEM_USER_ID,
-      position: opts[:position],
-      parent_category_id: opts[:parent_category_id],
-      color: opts[:color] || category_color(opts[:parent_category_id]),
-      text_color: opts[:text_color] || "FFF",
-      read_restricted: opts[:read_restricted] || false,
-    )
+    new_category =
+      Category.new(
+        name: opts[:name],
+        user_id: opts[:user_id] || opts[:user].try(:id) || Discourse::SYSTEM_USER_ID,
+        position: opts[:position],
+        parent_category_id: opts[:parent_category_id],
+        color: opts[:color] || category_color(opts[:parent_category_id]),
+        text_color: opts[:text_color] || "FFF",
+        read_restricted: opts[:read_restricted] || false,
+      )
 
     new_category.custom_fields["import_id"] = import_id if import_id
     new_category.save!
@@ -498,10 +515,16 @@ class ImportScripts::Base
   end
 
   def category_color(parent_category_id)
-    @category_colors ||= SiteSetting.category_colors.split('|')
+    @category_colors ||= SiteSetting.category_colors.split("|")
 
     index = @next_category_color_index[parent_category_id].presence || 0
-    @next_category_color_index[parent_category_id] = index + 1 >= @category_colors.count ? 0 : index + 1
+    @next_category_color_index[parent_category_id] = (
+      if index + 1 >= @category_colors.count
+        0
+      else
+        index + 1
+      end
+    )
 
     @category_colors[index]
   end
@@ -571,7 +594,7 @@ class ImportScripts::Base
     opts = opts.merge(skip_validations: true)
     opts[:import_mode] = true
     opts[:custom_fields] ||= {}
-    opts[:custom_fields]['import_id'] = import_id
+    opts[:custom_fields]["import_id"] = import_id
 
     unless opts[:topic_id]
       opts[:meta_data] = meta_data = {}
@@ -582,7 +605,11 @@ class ImportScripts::Base
 
     opts[:guardian] = STAFF_GUARDIAN
     if @bbcode_to_md
-      opts[:raw] = opts[:raw].bbcode_to_md(false, {}, :disable, :quote) rescue opts[:raw]
+      opts[:raw] = begin
+        opts[:raw].bbcode_to_md(false, {}, :disable, :quote)
+      rescue StandardError
+        opts[:raw]
+      end
     end
 
     post_creator = PostCreator.new(user, opts)
@@ -628,7 +655,7 @@ class ImportScripts::Base
 
             created += 1 if manager.errors.none?
             skipped += 1 if manager.errors.any?
-          rescue
+          rescue StandardError
             skipped += 1
           end
         end
@@ -671,14 +698,14 @@ class ImportScripts::Base
 
   def close_inactive_topics(opts = {})
     num_days = opts[:days] || 30
-    puts '', "Closing topics that have been inactive for more than #{num_days} days."
+    puts "", "Closing topics that have been inactive for more than #{num_days} days."
 
-    query = Topic.where('last_posted_at < ?', num_days.days.ago).where(closed: false)
+    query = Topic.where("last_posted_at < ?", num_days.days.ago).where(closed: false)
     total_count = query.count
     closed_count = 0
 
     query.find_each do |topic|
-      topic.update_status('closed', true, Discourse.system_user)
+      topic.update_status("closed", true, Discourse.system_user)
       closed_count += 1
       print_status(closed_count, total_count, get_start_time("close_inactive_topics"))
     end
@@ -790,7 +817,9 @@ class ImportScripts::Base
 
     puts "", "Updating user digest_attempted_at..."
 
-    DB.exec("UPDATE user_stats SET digest_attempted_at = now() - random() * interval '1 week' WHERE digest_attempted_at IS NULL")
+    DB.exec(
+      "UPDATE user_stats SET digest_attempted_at = now() - random() * interval '1 week' WHERE digest_attempted_at IS NULL",
+    )
   end
 
   # scripts that are able to import last_seen_at from the source data should override this method
@@ -854,13 +883,15 @@ class ImportScripts::Base
     count = 0
     total = User.count
 
-    User.includes(:user_stat).find_each do |user|
-      begin
-        user.update_columns(trust_level: 0) if user.trust_level > 0 && user.post_count == 0
-      rescue Discourse::InvalidAccess
+    User
+      .includes(:user_stat)
+      .find_each do |user|
+        begin
+          user.update_columns(trust_level: 0) if user.trust_level > 0 && user.post_count == 0
+        rescue Discourse::InvalidAccess
+        end
+        print_status(count += 1, total, get_start_time("update_tl0"))
       end
-      print_status(count += 1, total, get_start_time("update_tl0"))
-    end
   end
 
   def update_user_signup_date_based_on_first_post
@@ -870,7 +901,7 @@ class ImportScripts::Base
     total = User.count
 
     User.find_each do |user|
-      if first = user.posts.order('created_at ASC').first
+      if first = user.posts.order("created_at ASC").first
         user.created_at = first.created_at
         user.save!
       end
@@ -893,16 +924,16 @@ class ImportScripts::Base
   def print_status(current, max, start_time = nil)
     if start_time.present?
       elapsed_seconds = Time.now - start_time
-      elements_per_minute = '[%.0f items/min]  ' % [current / elapsed_seconds.to_f * 60]
+      elements_per_minute = "[%.0f items/min]  " % [current / elapsed_seconds.to_f * 60]
     else
-      elements_per_minute = ''
+      elements_per_minute = ""
     end
 
     print "\r%9d / %d (%5.1f%%)  %s" % [current, max, current / max.to_f * 100, elements_per_minute]
   end
 
   def print_spinner
-    @spinner_chars ||= %w{ | / - \\ }
+    @spinner_chars ||= %w[| / - \\]
     @spinner_chars.push @spinner_chars.shift
     print "\b#{@spinner_chars[0]}"
   end

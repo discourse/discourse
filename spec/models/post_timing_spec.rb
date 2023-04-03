@@ -6,7 +6,7 @@ RSpec.describe PostTiming do
   it { is_expected.to validate_presence_of :post_number }
   it { is_expected.to validate_presence_of :msecs }
 
-  describe 'pretend_read' do
+  describe "pretend_read" do
     fab!(:p1) { Fabricate(:post) }
     fab!(:p2) { Fabricate(:post, topic: p1.topic, user: p1.user) }
     fab!(:p3) { Fabricate(:post, topic: p1.topic, user: p1.user) }
@@ -21,13 +21,13 @@ RSpec.describe PostTiming do
 
     def topic_user(user_id, last_read_post_number)
       TopicUser.create!(
-                        topic_id: topic_id,
-                        user_id: user_id,
-                        last_read_post_number: last_read_post_number,
-                       )
+        topic_id: topic_id,
+        user_id: user_id,
+        last_read_post_number: last_read_post_number,
+      )
     end
 
-    it 'works correctly' do
+    it "works correctly" do
       timing(1, 1)
       timing(2, 1)
       timing(2, 2)
@@ -53,11 +53,10 @@ RSpec.describe PostTiming do
 
       tu = TopicUser.find_by(topic_id: topic_id, user_id: 3)
       expect(tu.last_read_post_number).to eq(3)
-
     end
   end
 
-  describe 'safeguard' do
+  describe "safeguard" do
     it "doesn't store timings that are larger than the account lifetime" do
       user = Fabricate(:user, created_at: 3.minutes.ago)
 
@@ -65,23 +64,24 @@ RSpec.describe PostTiming do
       msecs = PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(:msecs)[0]
       expect(msecs).to eq(123)
 
-      PostTiming.process_timings(user, post.topic_id, 1, [[post.post_number, 10.minutes.to_i * 1000]])
+      PostTiming.process_timings(
+        user,
+        post.topic_id,
+        1,
+        [[post.post_number, 10.minutes.to_i * 1000]],
+      )
       msecs = PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(:msecs)[0]
       expect(msecs).to eq(123 + PostTiming::MAX_READ_TIME_PER_BATCH)
     end
-
   end
 
-  describe 'process_timings' do
-
+  describe "process_timings" do
     # integration tests
 
-    it 'processes timings correctly' do
+    it "processes timings correctly" do
       PostActionNotifier.enable
 
-      (2..5).each do |i|
-        Fabricate(:post, topic: post.topic, post_number: i)
-      end
+      (2..5).each { |i| Fabricate(:post, topic: post.topic, post_number: i) }
       user2 = Fabricate(:coding_horror, created_at: 1.day.ago)
 
       PostActionCreator.like(user2, post)
@@ -95,7 +95,7 @@ RSpec.describe PostTiming do
 
       PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 1.day]])
 
-      user_visit = post.user.user_visits.order('id DESC').first
+      user_visit = post.user.user_visits.order("id DESC").first
       expect(user_visit.posts_read).to eq(1)
 
       # Skip to bottom
@@ -109,13 +109,11 @@ RSpec.describe PostTiming do
       expect(user_visit.reload.posts_read).to eq(5)
     end
 
-    it 'does not count private message posts read' do
+    it "does not count private message posts read" do
       pm = Fabricate(:private_message_topic, user: Fabricate(:admin))
       user1, user2 = pm.topic_allowed_users.map(&:user)
 
-      (1..3).each do |i|
-        Fabricate(:post, topic: pm, user: user1)
-      end
+      (1..3).each { |i| Fabricate(:post, topic: pm, user: user1) }
 
       PostTiming.process_timings(user2, pm.id, 10, [[1, 100]])
       user_visit = user2.user_visits.last
@@ -126,14 +124,19 @@ RSpec.describe PostTiming do
     end
   end
 
-  describe 'recording' do
+  describe "recording" do
     before do
       @topic = post.topic
       @coding_horror = Fabricate(:coding_horror)
-      @timing_attrs = { msecs: 1234, topic_id: post.topic_id, user_id: @coding_horror.id, post_number: post.post_number }
+      @timing_attrs = {
+        msecs: 1234,
+        topic_id: post.topic_id,
+        user_id: @coding_horror.id,
+        post_number: post.post_number,
+      }
     end
 
-    it 'adds a view to the post' do
+    it "adds a view to the post" do
       expect {
         PostTiming.record_timing(@timing_attrs)
         post.reload
@@ -149,45 +152,46 @@ RSpec.describe PostTiming do
       expect(@coding_horror.user_stat.posts_read_count).to eq(0)
     end
 
-    describe 'multiple calls' do
-      it 'correctly works' do
+    describe "multiple calls" do
+      it "correctly works" do
         PostTiming.record_timing(@timing_attrs)
         PostTiming.record_timing(@timing_attrs)
-        timing = PostTiming.find_by(topic_id: post.topic_id, user_id: @coding_horror.id, post_number: post.post_number)
+        timing =
+          PostTiming.find_by(
+            topic_id: post.topic_id,
+            user_id: @coding_horror.id,
+            post_number: post.post_number,
+          )
 
         expect(timing).to be_present
         expect(timing.msecs).to eq(2468)
 
         expect(@coding_horror.user_stat.posts_read_count).to eq(1)
       end
-
     end
-
   end
 
-  describe 'decrementing posts read count when destroying post timings' do
+  describe "decrementing posts read count when destroying post timings" do
     let(:initial_read_count) { 0 }
     let(:post) { Fabricate(:post, reads: initial_read_count) }
 
-    before do
-      PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
-    end
+    before { PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]]) }
 
-    it '#destroy_last_for decrements the reads count for a post' do
+    it "#destroy_last_for decrements the reads count for a post" do
       PostTiming.destroy_last_for(post.user, topic_id: post.topic_id)
 
       expect(post.reload.reads).to eq initial_read_count
     end
 
-    it '#destroy_for decrements the reads count for a post' do
+    it "#destroy_for decrements the reads count for a post" do
       PostTiming.destroy_for(post.user, [post.topic_id])
 
       expect(post.reload.reads).to eq initial_read_count
     end
   end
 
-  describe '.destroy_last_for' do
-    it 'updates first unread for a user correctly when topic is public' do
+  describe ".destroy_last_for" do
+    it "updates first unread for a user correctly when topic is public" do
       post.topic.update!(updated_at: 10.minutes.ago)
       PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
 
@@ -196,7 +200,7 @@ RSpec.describe PostTiming do
       expect(post.user.user_stat.reload.first_unread_at).to eq_time(post.topic.updated_at)
     end
 
-    it 'updates first unread for a user correctly when topic is a pm' do
+    it "updates first unread for a user correctly when topic is a pm" do
       post = Fabricate(:private_message_post)
       post.topic.update!(updated_at: 10.minutes.ago)
       PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
@@ -206,7 +210,7 @@ RSpec.describe PostTiming do
       expect(post.user.user_stat.reload.first_unread_pm_at).to eq_time(post.topic.updated_at)
     end
 
-    it 'updates first unread for a user correctly when topic is a group pm' do
+    it "updates first unread for a user correctly when topic is a group pm" do
       topic = Fabricate(:private_message_topic, updated_at: 10.minutes.ago)
       post = Fabricate(:post, topic: topic)
       user = Fabricate(:user)
@@ -217,8 +221,9 @@ RSpec.describe PostTiming do
 
       PostTiming.destroy_last_for(user, topic_id: topic.id)
 
-      expect(GroupUser.find_by(user: user, group: group).first_unread_pm_at)
-        .to eq_time(post.topic.updated_at)
+      expect(GroupUser.find_by(user: user, group: group).first_unread_pm_at).to eq_time(
+        post.topic.updated_at,
+      )
     end
   end
 end

@@ -12,7 +12,7 @@ RSpec.describe CommonPasswords do
 
     it "returns false if password isn't in the common passwords list" do
       described_class.stubs(:password_list).returns(stub_everything(include?: false))
-      @password = 'uncommonPassword'
+      @password = "uncommonPassword"
       expect(subject).to eq(false)
     end
 
@@ -35,19 +35,19 @@ RSpec.describe CommonPasswords do
     end
   end
 
-  describe '#password_list' do
+  describe "#password_list" do
     before { Discourse.redis.flushdb }
     after { Discourse.redis.flushdb }
 
     it "loads the passwords file if redis doesn't have it" do
       Discourse.redis.without_namespace.stubs(:scard).returns(0)
-      described_class.expects(:load_passwords).returns(['password'])
+      described_class.expects(:load_passwords).returns(["password"])
       list = described_class.password_list
       expect(list).to respond_to(:include?)
     end
 
     it "doesn't load the passwords file if redis has it" do
-      Discourse.redis.without_namespace.stubs(:scard).returns(10000)
+      Discourse.redis.without_namespace.stubs(:scard).returns(10_000)
       described_class.expects(:load_passwords).never
       list = described_class.password_list
       expect(list).to respond_to(:include?)
@@ -55,7 +55,7 @@ RSpec.describe CommonPasswords do
 
     it "loads the passwords file if redis has an empty list" do
       Discourse.redis.without_namespace.stubs(:scard).returns(0)
-      described_class.expects(:load_passwords).returns(['password'])
+      described_class.expects(:load_passwords).returns(["password"])
       list = described_class.password_list
       expect(list).to respond_to(:include?)
     end

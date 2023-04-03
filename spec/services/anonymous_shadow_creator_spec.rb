@@ -40,7 +40,6 @@ RSpec.describe AnonymousShadowCreator do
       expect(shadow3.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
 
       expect(shadow2.id).not_to eq(shadow3.id)
-
     end
 
     it "returns a shadow for a legit user" do

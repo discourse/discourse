@@ -10,8 +10,8 @@ import {
 import { test } from "qunit";
 
 acceptance("Composer - Image Preview", function (needs) {
-  needs.user();
-  needs.settings({ enable_whispers: true, allow_uncategorized_topics: true });
+  needs.user({});
+  needs.settings({ allow_uncategorized_topics: true });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
@@ -20,12 +20,12 @@ acceptance("Composer - Image Preview", function (needs) {
     server.get("/posts/419", () => {
       return helper.response({ id: 419 });
     });
-    server.get("/u/is_local_username", () => {
+    server.get("/composer/mentions", () => {
       return helper.response({
-        valid: [],
-        valid_groups: ["staff"],
-        mentionable_groups: [{ name: "staff", user_count: 30 }],
-        cannot_see: [],
+        users: [],
+        user_reasons: {},
+        groups: { staff: { user_count: 30 } },
+        group_reasons: {},
         max_users_notified_per_group_mention: 100,
       });
     });

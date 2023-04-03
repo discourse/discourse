@@ -7,7 +7,7 @@
 ru:
   js:
     styleguide:
-      title: "Styleguide"
+      title: "Руководство по стилю"
       welcome: "Чтобы начать, выберите раздел в меню слева."
       categories:
         atoms: Атомы
@@ -34,7 +34,7 @@ ru:
         dropdowns:
           title: "Выпадающие списки"
         categories:
-          title: "Разделы"
+          title: "Категории"
         bread_crumbs:
           title: "Хлебные крошки"
         navigation:
@@ -44,7 +44,7 @@ ru:
         navigation_stacked:
           title: "Панель выбора настроек"
         categories_list:
-          title: "Список разделов"
+          title: "Список категорий"
         topic_link:
           title: "Ссылка на тему"
         topic_list_item:

@@ -78,8 +78,5 @@ export default {
         value: "",
       },
     ],
-    diags: {
-      last_message_processed: null,
-    },
   },
 };

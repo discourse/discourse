@@ -1,11 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
-  renderTemplate() {
-    this.render("admin/templates/logs/screened-urls", { into: "adminLogs" });
-  },
-
+export default class AdminLogsScreenedUrlsRoute extends DiscourseRoute {
   setupController() {
     return this.controllerFor("adminLogsScreenedUrls").show();
-  },
-});
+  }
+}

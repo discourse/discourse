@@ -1,9 +1,8 @@
 import { module, test } from "qunit";
-import Site from "discourse/models/site";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import sinon from "sinon";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { setupTest } from "ember-qunit";
+import { helperContext } from "discourse-common/lib/helpers";
 
 module("Unit | Utility | category-badge", function (hooks) {
   setupTest(hooks);
@@ -76,10 +75,8 @@ module("Unit | Utility | category-badge", function (hooks) {
       id: 345,
     });
 
-    sinon
-      .stub(Site, "currentProp")
-      .withArgs("uncategorized_category_id")
-      .returns(345);
+    const { site } = helperContext();
+    site.set("uncategorized_category_id", 345);
 
     assert.blank(
       categoryBadgeHTML(uncategorized),

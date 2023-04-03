@@ -23,18 +23,19 @@ module DiscourseNarrativeBot
           topic_id: post.topic_id,
           reply_to_post_number: post.post_number,
           post_alert_options: defaut_post_alert_opts,
-          skip_validations: true
+          skip_validations: true,
         }
 
         new_post = PostCreator.create!(self.discobot_user, default_opts.merge(opts))
         reset_rate_limits(post) if new_post
         new_post
       else
-        PostCreator.create!(self.discobot_user, {
-          post_alert_options: defaut_post_alert_opts,
-          raw: raw,
-          skip_validations: true
-        }.merge(opts))
+        PostCreator.create!(
+          self.discobot_user,
+          { post_alert_options: defaut_post_alert_opts, raw: raw, skip_validations: true }.merge(
+            opts,
+          ),
+        )
       end
     end
 
@@ -48,12 +49,13 @@ module DiscourseNarrativeBot
           SiteSetting.rate_limit_create_post
         end
 
-      return unless duration > 0
+      return if duration <= 0
 
       data = DiscourseNarrativeBot::Store.get(user.id.to_s)
       return unless data
 
-      key = "#{DiscourseNarrativeBot::PLUGIN_NAME}:reset-rate-limit:#{post.topic_id}:#{data['state']}"
+      key =
+        "#{DiscourseNarrativeBot::PLUGIN_NAME}:reset-rate-limit:#{post.topic_id}:#{data["state"]}"
 
       if !(count = Discourse.redis.get(key))
         count = 0
@@ -76,12 +78,14 @@ module DiscourseNarrativeBot
 
       valid = false
 
-      doc.css(".mention").each do |mention|
-        if User.normalize_username(mention.text) == "@#{self.discobot_username}"
-          valid = true
-          break
+      doc
+        .css(".mention")
+        .each do |mention|
+          if User.normalize_username(mention.text) == "@#{self.discobot_username}"
+            valid = true
+            break
+          end
         end
-      end
 
       valid
     end
@@ -94,8 +98,7 @@ module DiscourseNarrativeBot
       topic = post.topic
       return false if !topic
 
-      topic.pm_with_non_human_user? &&
-        topic.topic_allowed_users.where(user_id: -2).exists?
+      topic.pm_with_non_human_user? && topic.topic_allowed_users.where(user_id: -2).exists?
     end
 
     def cancel_timeout_job(user)
@@ -107,9 +110,11 @@ module DiscourseNarrativeBot
 
       cancel_timeout_job(user)
 
-      Jobs.enqueue_in(TIMEOUT_DURATION, :narrative_timeout,
+      Jobs.enqueue_in(
+        TIMEOUT_DURATION,
+        :narrative_timeout,
         user_id: user.id,
-        klass: self.class.to_s
+        klass: self.class.to_s,
       )
     end
   end

@@ -2,25 +2,24 @@
 
 # cdn related tasks
 #
-desc 'pre-stage assets on cdn'
-task 'assets:prestage' => :environment do |t|
+desc "pre-stage assets on cdn"
+task "assets:prestage" => :environment do |t|
   require "net/https"
   require "uri"
 
   def get_assets(path)
-    Dir.glob("#{Rails.root}/public/assets/#{path}*").map do |f|
-      if f =~ /[a-f0-9]{16}\.(css|js)$/
-        "/assets/#{path}#{f.split('/')[-1]}"
-      end
-    end.compact
+    Dir
+      .glob("#{Rails.root}/public/assets/#{path}*")
+      .map { |f| "/assets/#{path}#{f.split("/")[-1]}" if f =~ /[a-f0-9]{16}\.(css|js)\z/ }
+      .compact
   end
 
   # pre-stage css/js only for now
   assets = get_assets("locales/") + get_assets("")
-  puts "pre staging: #{assets.join(' ')}"
+  puts "pre staging: #{assets.join(" ")}"
 
   # makes testing simpler leaving this here
-  config = YAML::safe_load(File.open("#{Rails.root}/config/cdn.yml"))
+  config = YAML.safe_load(File.open("#{Rails.root}/config/cdn.yml"))
 
   start = Time.now
 
@@ -36,14 +35,12 @@ task 'assets:prestage' => :environment do |t|
       "id" => config["id"],
       "login" => config["login"],
       "passwd" => config["password"],
-      "json" => { "prefetch_paths" => asset }.to_json
+      "json" => { "prefetch_paths" => asset }.to_json,
     )
 
     response = http.request(request)
     json = JSON.parse(response.body)
-    if json["status"] != "ok"
-      failed_assets.push(asset)
-    end
+    failed_assets.push(asset) if json["status"] != "ok"
   end
 
   if failed_assets.length > 0

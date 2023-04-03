@@ -12,10 +12,10 @@ export default class UserStatusMessage extends Component {
       return null;
     }
 
-    return until(
-      this.status.ends_at,
-      this.currentUser.timezone,
-      this.currentUser.locale
-    );
+    const timezone = this.currentUser
+      ? this.currentUser.user_option?.timezone
+      : moment.tz.guess();
+
+    return until(this.status.ends_at, timezone, this.currentUser?.locale);
   }
 }

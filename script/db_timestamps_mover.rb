@@ -12,20 +12,18 @@ class TimestampsUpdater
   def initialize(schema, ignore_tables)
     @schema = schema
     @ignore_tables = ignore_tables
-    @raw_connection = PG.connect(
-      host: ENV['DISCOURSE_DB_HOST'] || 'localhost',
-      port: ENV['DISCOURSE_DB_PORT'] || 5432,
-      dbname: ENV['DISCOURSE_DB_NAME'] || 'discourse_development',
-      user: ENV['DISCOURSE_DB_USERNAME'] || 'postgres',
-      password: ENV['DISCOURSE_DB_PASSWORD'] || '')
+    @raw_connection =
+      PG.connect(
+        host: ENV["DISCOURSE_DB_HOST"] || "localhost",
+        port: ENV["DISCOURSE_DB_PORT"] || 5432,
+        dbname: ENV["DISCOURSE_DB_NAME"] || "discourse_development",
+        user: ENV["DISCOURSE_DB_USERNAME"] || "postgres",
+        password: ENV["DISCOURSE_DB_PASSWORD"] || "",
+      )
   end
 
   def move_by(days)
-    postgresql_date_types = [
-      "timestamp without time zone",
-      "timestamp with time zone",
-      "date"
-    ]
+    postgresql_date_types = ["timestamp without time zone", "timestamp with time zone", "date"]
 
     postgresql_date_types.each do |data_type|
       columns = all_columns_of_type(data_type)
@@ -118,11 +116,19 @@ class TimestampsUpdater
 end
 
 def is_i?(string)
-  true if Integer(string) rescue false
+  begin
+    true if Integer(string)
+  rescue StandardError
+    false
+  end
 end
 
 def is_date?(string)
-  true if Date.parse(string) rescue false
+  begin
+    true if Date.parse(string)
+  rescue StandardError
+    false
+  end
 end
 
 def create_updater

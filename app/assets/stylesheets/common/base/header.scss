@@ -43,17 +43,32 @@
   }
 
   .title {
+    --d-logo-height: 2.667em;
     display: flex;
     align-items: center;
     height: 100%;
+    animation: fadein 0.5s;
+    // min-width acts as a placeholder if the small logo takes a while to load
+    // it prevents topic title from shifting after the small logo loads
+    // it's set to match the #site-logo height so square small logos don't resize when titles dock
+    min-width: var(--d-logo-height);
     a,
     a:visited {
       color: var(--header_primary);
     }
+
+    &:not(.title--minimized) {
+      // allows large logos to be hidden if there are too many other header elements
+      // this prioritizes nav elements, especially in cases of high zoom levels
+      overflow: hidden;
+    }
   }
 
   #site-logo {
+    height: var(--d-logo-height);
     width: auto;
+    max-width: 100%;
+    object-fit: contain;
   }
 
   #site-text-logo {
@@ -110,13 +125,15 @@
 
 .d-header-icons {
   text-align: center;
-  margin: 0 0 0 5px;
+  margin: 0 0 0 0.5em;
   list-style: none;
 
   > li {
     float: left;
   }
   .icon {
+    box-sizing: content-box;
+    appearance: none;
     position: relative;
     display: flex;
     align-items: center;
@@ -126,9 +143,7 @@
     padding: 0.2143em;
     text-decoration: none;
     cursor: pointer;
-    border-top: 1px solid transparent;
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
+    border: 1px solid transparent;
     transition: all linear 0.15s;
     outline: none;
     img.avatar {
@@ -141,7 +156,7 @@
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
-      .d-icon {
+      > .d-icon {
         color: var(--primary-medium);
       }
     }
@@ -158,7 +173,7 @@
       border-top: 1px solid var(--primary-low);
       border-left: 1px solid var(--primary-low);
       border-right: 1px solid var(--primary-low);
-      .d-icon {
+      > .d-icon {
         color: var(--primary-medium);
       }
       &:after {
@@ -185,14 +200,36 @@
     display: inline-block;
     color: var(--header_primary-low-mid);
   }
+
   .notifications {
     position: relative;
   }
   .ring {
     position: absolute;
-    top: -9px;
+    top: -11px;
+    right: 23.5px;
     z-index: z("base");
     margin-left: 0;
+    background: radial-gradient(transparent, var(--success));
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    transform-origin: center;
+    animation-iteration-count: infinite;
+    animation-duration: 3s;
+    animation-name: ping;
+
+    &.revamped {
+      right: -4px;
+      top: -6px;
+
+      &.regular-notifications {
+        background: radial-gradient(
+          transparent,
+          var(--tertiary-med-or-tertiary)
+        );
+      }
+    }
   }
   .header-dropdown-toggle {
     position: relative;
@@ -203,10 +240,24 @@
     left: 0;
     top: -4px;
     min-width: 0.6em;
-  }
-  .unread-notifications {
     left: auto;
     right: -3px;
+
+    &.with-icon {
+      &.new-pms {
+        background-color: var(--success);
+      }
+      &.new-reviewables {
+        background-color: var(--danger);
+      }
+      .d-icon {
+        color: var(--secondary);
+        font-size: var(--font-down-1);
+        width: 1em;
+      }
+    }
+  }
+  .unread-notifications {
     background-color: var(--tertiary-med-or-tertiary);
   }
   .unread-high-priority-notifications,
@@ -241,12 +292,9 @@
   }
 }
 
-.highlight-strong {
-  background-color: var(--highlight-medium);
-}
-
 // topic info in the header
 .extra-info-wrapper {
+  flex: 1 0 0;
   display: flex;
   align-items: center;
   height: 100%;
@@ -396,4 +444,12 @@ $mobile-avatar-height: 1.532em;
     color: var(--header_primary-high);
     margin-left: 5px;
   }
+}
+
+.d-header-mode .bootstrap-mode {
+  border-radius: 2em;
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  margin-left: 0.5em;
+  padding: 0.25em 0.5em;
 }

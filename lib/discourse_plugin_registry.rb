@@ -4,12 +4,16 @@
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
-
+  # Plugins often need to be able to register additional handlers, data, or
+  # classes that will be used by core classes. This should be used if you
+  # need to control which type the registry is, and if it doesn't need to
+  # be removed if the plugin is disabled.
+  #
   # Shortcut to create new register in the plugin registry
   #   - Register is created in a class variable using the specified name/type
   #   - Defines singleton method to access the register
   #   - Defines instance method as a shortcut to the singleton method
-  #   - Automatically deletes the register on ::clear!
+  #   - Automatically deletes the register on registry.reset!
   def self.define_register(register_name, type)
     @@register_names ||= Set.new
     @@register_names << register_name
@@ -19,16 +23,18 @@ class DiscoursePluginRegistry
         instance_variable_set(:"@#{register_name}", type.new)
     end
 
-    define_method(register_name) do
-      self.class.public_send(register_name)
-    end
+    define_method(register_name) { self.class.public_send(register_name) }
   end
 
+  # Plugins often need to add values to a list, and we need to filter those
+  # lists at runtime to ignore values from disabled plugins. Unlike define_register,
+  # the type of the register cannot be defined, and is always Array.
+  #
   # Create a new register (see `define_register`) with some additions:
   #   - Register is created in a class variable using the specified name/type
   #   - Defines singleton method to access the register
   #   - Defines instance method as a shortcut to the singleton method
-  #   - Automatically deletes the register on ::clear!
+  #   - Automatically deletes the register on registry.reset!
   def self.define_filtered_register(register_name)
     define_register(register_name, Array)
 
@@ -36,10 +42,7 @@ class DiscoursePluginRegistry
 
     define_singleton_method(register_name) do
       unfiltered = public_send(:"_raw_#{register_name}")
-      unfiltered
-        .filter { |v| v[:plugin].enabled? }
-        .map { |v| v[:value] }
-        .uniq
+      unfiltered.filter { |v| v[:plugin].enabled? }.map { |v| v[:value] }.uniq
     end
 
     define_singleton_method("register_#{register_name.to_s.singularize}") do |value, plugin|
@@ -80,6 +83,7 @@ class DiscoursePluginRegistry
   define_filtered_register :group_params
 
   define_filtered_register :topic_thumbnail_sizes
+  define_filtered_register :topic_preloader_associations
 
   define_filtered_register :api_parameter_routes
   define_filtered_register :api_key_scope_mappings
@@ -96,6 +100,18 @@ class DiscoursePluginRegistry
   define_filtered_register :notification_consolidation_plans
 
   define_filtered_register :email_unsubscribers
+
+  define_filtered_register :user_destroyer_on_content_deletion_callbacks
+
+  define_filtered_register :hashtag_autocomplete_data_sources
+  define_filtered_register :hashtag_autocomplete_contextual_type_priorities
+
+  define_filtered_register :search_groups_set_query_callbacks
+
+  define_filtered_register :about_stat_groups
+  define_filtered_register :bookmarkables
+
+  define_filtered_register :list_suggested_for_providers
 
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
@@ -143,14 +159,12 @@ class DiscoursePluginRegistry
         next if each_options[:admin]
       end
 
-      Dir.glob("#{root}/**/*.#{ext}") do |f|
-        yield f
-      end
+      Dir.glob("#{root}/**/*.#{ext}") { |f| yield f }
     end
   end
 
-  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6$/
-  HANDLEBARS_REGEX = /\.(hb[rs]|js\.handlebars)$/
+  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6\z/
+  HANDLEBARS_REGEX = /\.(hb[rs]|js\.handlebars)\z/
 
   def self.register_asset(asset, opts = nil, plugin_directory_name = nil)
     if asset =~ JS_REGEX
@@ -163,7 +177,7 @@ class DiscoursePluginRegistry
       else
         self.javascripts << asset
       end
-    elsif asset =~ /\.css$|\.scss$/
+    elsif asset =~ /\.css$|\.scss\z/
       if opts == :mobile
         self.mobile_stylesheets[plugin_directory_name] ||= Set.new
         self.mobile_stylesheets[plugin_directory_name] << asset
@@ -212,7 +226,7 @@ class DiscoursePluginRegistry
 
   def self.seed_paths
     result = SeedFu.fixture_paths.dup
-    unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+    unless Rails.env.test? && ENV["LOAD_PLUGINS"] != "1"
       seed_path_builders.each { |b| result += b.call }
     end
     result.uniq
@@ -224,7 +238,7 @@ class DiscoursePluginRegistry
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {
     "moment.js" => "vendor/assets/javascripts/moment.js",
-    "moment-timezone.js" => "vendor/assets/javascripts/moment-timezone-with-data.js"
+    "moment-timezone.js" => "vendor/assets/javascripts/moment-timezone-with-data.js",
   }
   def self.core_asset_for_name(name)
     asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
@@ -232,17 +246,44 @@ class DiscoursePluginRegistry
     asset
   end
 
-  def self.reset!
-    @@register_names.each do |name|
-      instance_variable_set(:"@#{name}", nil)
+  def self.clear_modifiers!
+    @modifiers = nil
+  end
+
+  def self.register_modifier(plugin_instance, name, &blk)
+    @modifiers ||= {}
+    modifiers = @modifiers[name] ||= []
+    modifiers << [plugin_instance, blk]
+  end
+
+  def self.apply_modifier(name, arg, *more_args)
+    return arg if !@modifiers
+
+    registered_modifiers = @modifiers[name]
+    return arg if !registered_modifiers
+
+    # iterate as fast as possible to minimize cost (avoiding each)
+    # also erases one stack frame
+    length = registered_modifiers.length
+    index = 0
+    while index < length
+      plugin_instance, block = registered_modifiers[index]
+      arg = block.call(arg, *more_args) if plugin_instance.enabled?
+
+      index += 1
     end
+
+    arg
+  end
+
+  def self.reset!
+    @@register_names.each { |name| instance_variable_set(:"@#{name}", nil) }
+    clear_modifiers!
   end
 
   def self.reset_register!(register_name)
     found_register = @@register_names.detect { |name| name == register_name }
 
-    if found_register
-      instance_variable_set(:"@#{found_register}", nil)
-    end
+    instance_variable_set(:"@#{found_register}", nil) if found_register
   end
 end

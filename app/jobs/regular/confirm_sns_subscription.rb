@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Jobs
-
   class ConfirmSnsSubscription < ::Jobs::Base
     sidekiq_options retry: false
 
@@ -13,15 +12,14 @@ module Jobs
       require "aws-sdk-sns"
       return unless Aws::SNS::MessageVerifier.new.authentic?(raw)
 
-      uri = begin
-        URI.parse(subscribe_url)
-      rescue URI::Error
-        return
-      end
+      uri =
+        begin
+          URI.parse(subscribe_url)
+        rescue URI::Error
+          return
+        end
 
       Net::HTTP.get(uri)
     end
-
   end
-
 end

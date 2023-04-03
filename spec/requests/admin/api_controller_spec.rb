@@ -9,7 +9,7 @@ RSpec.describe Admin::ApiController do
   fab!(:key2, refind: false) { Fabricate(:api_key, user: admin) }
   fab!(:key3, refind: false) { Fabricate(:api_key, user: admin) }
 
-  describe '#index' do
+  describe "#index" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -24,12 +24,18 @@ RSpec.describe Admin::ApiController do
         get "/admin/api/keys.json?offset=0&limit=2"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["keys"].map { |x| x["id"] }).to contain_exactly(key3.id, key2.id)
+        expect(response.parsed_body["keys"].map { |x| x["id"] }).to contain_exactly(
+          key3.id,
+          key2.id,
+        )
 
         get "/admin/api/keys.json?offset=1&limit=2"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["keys"].map { |x| x["id"] }).to contain_exactly(key2.id, key1.id)
+        expect(response.parsed_body["keys"].map { |x| x["id"] }).to contain_exactly(
+          key2.id,
+          key1.id,
+        )
 
         get "/admin/api/keys.json?offset=2&limit=2"
 
@@ -55,13 +61,13 @@ RSpec.describe Admin::ApiController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "keys inaccessible"
     end
   end
 
-  describe '#show' do
+  describe "#show" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -100,19 +106,20 @@ RSpec.describe Admin::ApiController do
     end
   end
 
-  describe '#update' do
+  describe "#update" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
       it "allows updating the description" do
         original_key = key1.key
 
-        put "/admin/api/keys/#{key1.id}.json", params: {
-          key: {
-            description: "my new description",
-            key: "overridekey"
-          }
-        }
+        put "/admin/api/keys/#{key1.id}.json",
+            params: {
+              key: {
+                description: "my new description",
+                key: "overridekey",
+              },
+            }
         expect(response.status).to eq(200)
 
         key1.reload
@@ -124,9 +131,7 @@ RSpec.describe Admin::ApiController do
       end
 
       it "returns 400 for invalid payloads" do
-        put "/admin/api/keys/#{key1.id}.json", params: {
-          key: "string not a hash"
-        }
+        put "/admin/api/keys/#{key1.id}.json", params: { key: "string not a hash" }
         expect(response.status).to eq(400)
 
         put "/admin/api/keys/#{key1.id}.json", params: {}
@@ -140,12 +145,13 @@ RSpec.describe Admin::ApiController do
         original_key = key1.key
         original_description = key1.description
 
-        put "/admin/api/keys/#{key1.id}.json", params: {
-          key: {
-            description: "my new description",
-            key: "overridekey"
-          }
-        }
+        put "/admin/api/keys/#{key1.id}.json",
+            params: {
+              key: {
+                description: "my new description",
+                key: "overridekey",
+              },
+            }
 
         key1.reload
         expect(response.status).to eq(404)
@@ -215,21 +221,17 @@ RSpec.describe Admin::ApiController do
       before { sign_in(admin) }
 
       it "can create a master key" do
-        post "/admin/api/keys.json", params: {
-          key: {
-            description: "master key description"
-          }
-        }
+        post "/admin/api/keys.json", params: { key: { description: "master key description" } }
         expect(response.status).to eq(200)
 
         data = response.parsed_body
 
-        expect(data['key']['description']).to eq("master key description")
-        expect(data['key']['user']).to eq(nil)
-        expect(data['key']['key']).to_not eq(nil)
-        expect(data['key']['last_used_at']).to eq(nil)
+        expect(data["key"]["description"]).to eq("master key description")
+        expect(data["key"]["user"]).to eq(nil)
+        expect(data["key"]["key"]).to_not eq(nil)
+        expect(data["key"]["last_used_at"]).to eq(nil)
 
-        key = ApiKey.find(data['key']['id'])
+        key = ApiKey.find(data["key"]["id"])
         expect(key.description).to eq("master key description")
         expect(key.user).to eq(nil)
 
@@ -239,22 +241,23 @@ RSpec.describe Admin::ApiController do
 
       it "can create a user-specific key" do
         user = Fabricate(:user)
-        post "/admin/api/keys.json", params: {
-          key: {
-            description: "restricted key description",
-            username: user.username
-          }
-        }
+        post "/admin/api/keys.json",
+             params: {
+               key: {
+                 description: "restricted key description",
+                 username: user.username,
+               },
+             }
         expect(response.status).to eq(200)
 
         data = response.parsed_body
 
-        expect(data['key']['description']).to eq("restricted key description")
-        expect(data['key']['user']['username']).to eq(user.username)
-        expect(data['key']['key']).to_not eq(nil)
-        expect(data['key']['last_used_at']).to eq(nil)
+        expect(data["key"]["description"]).to eq("restricted key description")
+        expect(data["key"]["user"]["username"]).to eq(user.username)
+        expect(data["key"]["key"]).to_not eq(nil)
+        expect(data["key"]["last_used_at"]).to eq(nil)
 
-        key = ApiKey.find(data['key']['id'])
+        key = ApiKey.find(data["key"]["id"])
         expect(key.description).to eq("restricted key description")
         expect(key.user.id).to eq(user.id)
 
@@ -262,63 +265,67 @@ RSpec.describe Admin::ApiController do
         expect(UserHistory.last.subject).to eq(key.truncated_key)
       end
 
-      describe 'Scopes' do
-        it 'creates an scope with allowed parameters' do
-          post "/admin/api/keys.json", params: {
-            key: {
-              description: "master key description",
-              scopes: [{ scope_id: 'topics:write', topic_id: '55' }]
-            }
-          }
+      describe "Scopes" do
+        it "creates an scope with allowed parameters" do
+          post "/admin/api/keys.json",
+               params: {
+                 key: {
+                   description: "master key description",
+                   scopes: [{ scope_id: "topics:write", topic_id: "55" }],
+                 },
+               }
           expect(response.status).to eq(200)
 
           data = response.parsed_body
-          scope = ApiKeyScope.find_by(api_key_id: data.dig('key', 'id'))
+          scope = ApiKeyScope.find_by(api_key_id: data.dig("key", "id"))
 
-          expect(scope.resource).to eq('topics')
-          expect(scope.action).to eq('write')
-          expect(scope.allowed_parameters['topic_id']).to contain_exactly('55')
+          expect(scope.resource).to eq("topics")
+          expect(scope.action).to eq("write")
+          expect(scope.allowed_parameters["topic_id"]).to contain_exactly("55")
         end
 
-        it 'allows multiple parameters separated by a comma' do
-          post "/admin/api/keys.json", params: {
-            key: {
-              description: "master key description",
-              scopes: [{ scope_id: 'topics:write', topic_id: '55,33' }]
-            }
-          }
+        it "allows multiple parameters separated by a comma" do
+          post "/admin/api/keys.json",
+               params: {
+                 key: {
+                   description: "master key description",
+                   scopes: [{ scope_id: "topics:write", topic_id: "55,33" }],
+                 },
+               }
           expect(response.status).to eq(200)
 
           data = response.parsed_body
-          scope = ApiKeyScope.find_by(api_key_id: data.dig('key', 'id'))
+          scope = ApiKeyScope.find_by(api_key_id: data.dig("key", "id"))
 
-          expect(scope.allowed_parameters['topic_id']).to contain_exactly('55', '33')
+          expect(scope.allowed_parameters["topic_id"]).to contain_exactly("55", "33")
         end
       end
 
-      it 'ignores invalid parameters' do
-        post "/admin/api/keys.json", params: {
-          key: {
-            description: "master key description",
-            scopes: [{ scope_id: 'topics:write', fake_id: '55' }]
-          }
-        }
+      it "ignores invalid parameters" do
+        post "/admin/api/keys.json",
+             params: {
+               key: {
+                 description: "master key description",
+                 scopes: [{ scope_id: "topics:write", fake_id: "55" }],
+               },
+             }
 
         expect(response.status).to eq(200)
 
         data = response.parsed_body
-        scope = ApiKeyScope.find_by(api_key_id: data.dig('key', 'id'))
+        scope = ApiKeyScope.find_by(api_key_id: data.dig("key", "id"))
 
-        expect(scope.allowed_parameters['fake_id']).to be_nil
+        expect(scope.allowed_parameters["fake_id"]).to be_nil
       end
 
-      it 'fails when the scope is invalid' do
-        post "/admin/api/keys.json", params: {
-          key: {
-            description: "master key description",
-            scopes: [{ scope_id: 'something:else' }]
-          }
-        }
+      it "fails when the scope is invalid" do
+        post "/admin/api/keys.json",
+             params: {
+               key: {
+                 description: "master key description",
+                 scopes: [{ scope_id: "something:else" }],
+               },
+             }
 
         expect(response.status).to eq(400)
       end
@@ -326,11 +333,7 @@ RSpec.describe Admin::ApiController do
 
     shared_examples "key creation not allowed" do
       it "prevents key creation with a 404 response" do
-        post "/admin/api/keys.json", params: {
-          key: {
-            description: "master key description"
-          }
-        }
+        post "/admin/api/keys.json", params: { key: { description: "master key description" } }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -420,11 +423,16 @@ RSpec.describe Admin::ApiController do
           "users",
           "email",
           "posts",
+          "tags",
           "uploads",
+          "user_status",
           "global",
           "badges",
+          "groups",
           "categories",
-          "wordpress"
+          "search",
+          "invites",
+          "wordpress",
         )
       end
     end

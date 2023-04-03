@@ -44,27 +44,7 @@
     margin: 0 calc(var(--d-sidebar-row-horizontal-padding) * 2 / 3);
 
     .sidebar-row {
-      // the multiplication by 1 here is a workaround for a bug in the R2 gem
-      // that we use to generate RTL CSS.
-      // the gem generates RTL CSS by converting anything left to right and
-      // vice versa. for example, a `padding-right: 1px;` property becomes
-      // `padding-left: 1px;` when it goes through the gem.
-      // the gem also handles the `padding` property (and similar properties)
-      // when it's in the 4-sides form, e.g. `padding: 1px 2px 3px 4px;` which
-      // gets converted to `padding: 1px 4px 3px 2px;`.
-      // however, the problem is that the gem detects 4-sides properties pretty
-      // naively - it splits the property value on /\s+/ and if it has 4 parts,
-      // it swaps the second and fourth parts.
-      // if you remove the by 1 multiplication in our rule below, we end up
-      // with a value that can be split into 4 parts and that causes the R2 gem
-      // to convert the rule to this:
-      //   padding: 0.33rem 3) / calc(var(--d-sidebar-row-horizontal-padding);
-      // which is clearly invalid and breaks all the rules that come after this
-      // one in the application CSS bundle.
-      // in the long term we should probably find (or write ourselves)
-      // something that's smarter than R2, but for now let's workaround the bug
-      // in R2.
-      padding: 0.33rem calc(1 * var(--d-sidebar-row-horizontal-padding) / 3);
+      padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
     }
   }
 

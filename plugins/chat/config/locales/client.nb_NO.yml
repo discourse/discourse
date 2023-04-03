@@ -21,8 +21,11 @@ nb_NO:
       joined: "medlem fra"
       email_frequency:
         never: "Aldri"
+      header_indicator_preference:
+        never: "Aldri"
       flag: "Flagg"
       join: "Bli medlem"
+      last_visit: "siste besøk"
       mention_warning:
         dismiss: "forkast"
       reply: "Svar"
@@ -46,6 +49,7 @@ nb_NO:
         yesterday: I går
       about_view:
         title: Tittel
+        name: Navn
         description: Beskrivelse
       channel_info:
         back_to_channel: "Forrige"
@@ -67,6 +71,8 @@ nb_NO:
       notification_levels:
         never: "Aldri"
       settings:
+        channel_wide_mentions_label: "Tillat @alle og @her omtaler"
+        channel_wide_mentions_description: "Tillat brukere å varsle alle medlemmer av #%{channel} med @alle eller bare de som er aktive i øyeblikket med @alleher"
         follow: "Bli medlem"
         followed: "Medlem fra"
         notifications: "Varsler"
@@ -74,6 +80,7 @@ nb_NO:
         save: "Lagre"
         saved: "Lagret"
         unfollow: "Forlat"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Forrige"
         description: "Beskrivelse"

@@ -10,36 +10,16 @@ const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
-
-const SILENCED_WARN_PREFIXES = [
-  "Setting the `jquery-integration` optional feature flag",
-  "The Ember Classic edition has been deprecated",
-  "Setting the `template-only-glimmer-components` optional feature flag to `false`",
-  "DEPRECATION: Invoking the `<LinkTo>` component with positional arguments is deprecated",
-];
+const DeprecationSilencer = require("./lib/deprecation-silencer");
 
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
-  // Silence the warnings listed in SILENCED_WARN_PREFIXES
+  // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
   const ui = defaults.project.ui;
-  const oldWriteWarning = ui.writeWarnLine.bind(ui);
-  ui.writeWarnLine = (message, ...args) => {
-    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
-      return oldWriteWarning(message, ...args);
-    }
-  };
-
-  // Silence warnings which go straight to console.warn (e.g. template compiler deprecations)
-  /* eslint-disable no-console */
-  const oldConsoleWarn = console.warn.bind(console);
-  console.warn = (message, ...args) => {
-    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
-      return oldConsoleWarn(message, ...args);
-    }
-  };
-  /* eslint-enable no-console */
+  DeprecationSilencer.silenceUiWarn(ui);
+  DeprecationSilencer.silenceConsoleWarn();
 
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
@@ -56,6 +36,9 @@ module.exports = function (defaults) {
       enabled: true,
     },
     autoImport: {
+      alias: {
+        "virtual-dom": "@discourse/virtual-dom",
+      },
       forbidEval: true,
       insertScriptsAt: "ember-auto-import-scripts",
       webpack: {
@@ -63,6 +46,29 @@ module.exports = function (defaults) {
         devtool: isProduction ? false : "source-map", // Sourcemaps contain reference to the ephemeral broccoli cache dir, which changes on every deploy
         optimization: {
           moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
+        },
+        resolve: {
+          fallback: {
+            // Sinon needs a `util` polyfill
+            util: require.resolve("util/"),
+          },
+        },
+        module: {
+          rules: [
+            // Sinon/`util` polyfill accesses the `process` global,
+            // so we need to provide a mock
+            {
+              test: require.resolve("util/"),
+              use: [
+                {
+                  loader: "imports-loader",
+                  options: {
+                    additionalCode: "var process = { env: {} };",
+                  },
+                },
+              ],
+            },
+          ],
         },
       },
     },
@@ -83,6 +89,14 @@ module.exports = function (defaults) {
         "**/highlightjs/*",
         "**/javascripts/*",
       ],
+    },
+
+    "ember-cli-babel": {
+      throwUnlessParallelizable: true,
+    },
+
+    babel: {
+      plugins: [DeprecationSilencer.generateBabelPlugin()],
     },
 
     // We need to build tests in prod for theme tests
@@ -138,12 +152,26 @@ module.exports = function (defaults) {
       return mergeTrees([
         tests,
         testHelpers,
-        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
+        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+        discourseScss(
+          `${discourseRoot}/app/assets/stylesheets`,
+          "qunit-custom.scss"
+        ),
       ]);
     } else {
       return mergeTrees([tests, testHelpers]);
     }
   };
+
+  // @ember/jquery introduces a shim which triggers the ember-global deprecation.
+  // We remove that shim, and re-implement ourselves in the deprecate-jquery-integration pre-initializer
+  const vendorScripts = app._scriptOutputFiles["/assets/vendor.js"];
+  const componentDollarShimIndex = vendorScripts.indexOf(
+    "vendor/jquery/component.dollar.js"
+  );
+  if (componentDollarShimIndex) {
+    vendorScripts.splice(componentDollarShimIndex, 1);
+  }
 
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.

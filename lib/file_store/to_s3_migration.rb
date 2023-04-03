@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
-require 'aws-sdk-s3'
+require "aws-sdk-s3"
 
 module FileStore
   ToS3MigrationError = Class.new(RuntimeError)
 
   class ToS3Migration
-    MISSING_UPLOADS_RAKE_TASK_NAME ||= 'posts:missing_uploads'
+    MISSING_UPLOADS_RAKE_TASK_NAME ||= "posts:missing_uploads"
     UPLOAD_CONCURRENCY ||= 20
 
-    def initialize(s3_options:, dry_run: false, migrate_to_multisite: false, skip_etag_verify: false)
-
+    def initialize(
+      s3_options:,
+      dry_run: false,
+      migrate_to_multisite: false,
+      skip_etag_verify: false
+    )
       @s3_bucket = s3_options[:bucket]
       @s3_client_options = s3_options[:client_options]
       @dry_run = dry_run
@@ -22,20 +26,18 @@ module FileStore
     def self.s3_options_from_site_settings
       {
         client_options: S3Helper.s3_options(SiteSetting),
-        bucket: SiteSetting.Upload.s3_upload_bucket
+        bucket: SiteSetting.Upload.s3_upload_bucket,
       }
     end
 
     def self.s3_options_from_env
-      unless ENV["DISCOURSE_S3_BUCKET"].present? &&
-        ENV["DISCOURSE_S3_REGION"].present? &&
-        (
-          (
-            ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
-            ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
-          ) || ENV["DISCOURSE_S3_USE_IAM_PROFILE"].present?
-        )
-
+      if ENV["DISCOURSE_S3_BUCKET"].blank? || ENV["DISCOURSE_S3_REGION"].blank? ||
+           !(
+             (
+               ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
+                 ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+             ) || ENV["DISCOURSE_S3_USE_IAM_PROFILE"].present?
+           )
         raise ToS3MigrationError.new(<<~TEXT)
           Please provide the following environment variables:
             - DISCOURSE_S3_BUCKET
@@ -53,13 +55,10 @@ module FileStore
 
       if ENV["DISCOURSE_S3_USE_IAM_PROFILE"].blank?
         opts[:access_key_id] = ENV["DISCOURSE_S3_ACCESS_KEY_ID"]
-        opts[:secret_access_key] =  ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"]
+        opts[:secret_access_key] = ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"]
       end
 
-      {
-        client_options: opts,
-        bucket: ENV["DISCOURSE_S3_BUCKET"]
-      }
+      { client_options: opts, bucket: ENV["DISCOURSE_S3_BUCKET"] }
     end
 
     def migrate
@@ -75,7 +74,8 @@ module FileStore
       base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
       count = Upload.by_users.where("url NOT LIKE '#{base_url}%'").count
       if count > 0
-        error_message = "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}"
+        error_message =
+          "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}"
         raise_or_log(error_message, should_raise)
         success = false
       end
@@ -88,7 +88,9 @@ module FileStore
         success = false
       end
 
-      Discourse::Application.load_tasks unless Rake::Task.task_defined?(MISSING_UPLOADS_RAKE_TASK_NAME)
+      unless Rake::Task.task_defined?(MISSING_UPLOADS_RAKE_TASK_NAME)
+        Discourse::Application.load_tasks
+      end
       Rake::Task[MISSING_UPLOADS_RAKE_TASK_NAME]
       count = DB.query_single(<<~SQL, Post::MISSING_UPLOADS, Post::MISSING_UPLOADS_IGNORED).first
         SELECT COUNT(1)
@@ -109,10 +111,14 @@ module FileStore
         success = false
       end
 
-      count = Post.where('baked_version <> ? OR baked_version IS NULL', Post::BAKED_VERSION).count
+      count = Post.where("baked_version <> ? OR baked_version IS NULL", Post::BAKED_VERSION).count
       if count > 0
         log("#{count} posts still require rebaking and will be rebaked during regular job")
-        log("To speed up migrations of posts we recommend you run 'rake posts:rebake_uncooked_posts'") if count > 100
+        if count > 100
+          log(
+            "To speed up migrations of posts we recommend you run 'rake posts:rebake_uncooked_posts'",
+          )
+        end
         success = false
       else
         log("No posts require rebaking")
@@ -153,8 +159,10 @@ module FileStore
         Upload.migrate_to_new_scheme
 
         if !uploads_migrated_to_new_scheme?
-          raise ToS3MigrationError.new("Some uploads could not be migrated to the new scheme. " \
-            "You need to fix this manually.")
+          raise ToS3MigrationError.new(
+                  "Some uploads could not be migrated to the new scheme. " \
+                    "You need to fix this manually.",
+                )
         end
       end
 
@@ -174,10 +182,12 @@ module FileStore
       log " - Listing local files"
 
       local_files = []
-      IO.popen("cd #{public_directory} && find uploads/#{@current_db}/original -type f").each do |file|
-        local_files << file.chomp
-        putc "." if local_files.size % 1000 == 0
-      end
+      IO
+        .popen("cd #{public_directory} && find uploads/#{@current_db}/original -type f")
+        .each do |file|
+          local_files << file.chomp
+          putc "." if local_files.size % 1000 == 0
+        end
 
       log " => #{local_files.size} files"
       log " - Listing S3 files"
@@ -203,19 +213,20 @@ module FileStore
       failed = []
 
       lock = Mutex.new
-      upload_threads = UPLOAD_CONCURRENCY.times.map do
-        Thread.new do
-          while obj = queue.pop
-            if s3.put_object(obj[:options]).etag[obj[:etag]]
-              putc "."
-              lock.synchronize { synced += 1 }
-            else
-              putc "X"
-              lock.synchronize { failed << obj[:path] }
+      upload_threads =
+        UPLOAD_CONCURRENCY.times.map do
+          Thread.new do
+            while obj = queue.pop
+              if s3.put_object(obj[:options]).etag[obj[:etag]]
+                putc "."
+                lock.synchronize { synced += 1 }
+              else
+                putc "X"
+                lock.synchronize { failed << obj[:path] }
+              end
             end
           end
         end
-      end
 
       local_files.each do |file|
         path = File.join(public_directory, file)
@@ -242,17 +253,17 @@ module FileStore
 
           if upload&.original_filename
             options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-              disposition: "attachment", filename: upload.original_filename
+              disposition: "attachment",
+              filename: upload.original_filename,
             )
           end
 
-          if upload&.secure
-            options[:acl] = "private"
-          end
+          options[:acl] = "private" if upload&.secure
         elsif !FileHelper.is_inline_image?(name)
           upload = Upload.find_by(url: "/#{file}")
           options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-            disposition: "attachment", filename: upload&.original_filename || name
+            disposition: "attachment",
+            filename: upload&.original_filename || name,
           )
         end
 
@@ -292,26 +303,25 @@ module FileStore
         [
           [
             "src=\"/uploads/#{@current_db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
-            "src=\"#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+            "src=\"#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1",
           ],
           [
             "src='/uploads/#{@current_db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
-            "src='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+            "src='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1",
           ],
           [
             "href=\"/uploads/#{@current_db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
-            "href=\"#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+            "href=\"#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1",
           ],
           [
             "href='/uploads/#{@current_db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
-            "href='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+            "href='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1",
           ],
           [
             "\\[img\\]/uploads/#{@current_db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)\\[/img\\]",
-            "[img]#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1[/img]"
-          ]
+            "[img]#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1[/img]",
+          ],
         ].each do |from_url, to_url|
-
           if @dry_run
             log "REPLACING '#{from_url}' WITH '#{to_url}'"
           else
@@ -321,16 +331,22 @@ module FileStore
 
         unless @dry_run
           # Legacy inline image format
-          Post.where("raw LIKE '%![](/uploads/default/original/%)%'").each do |post|
-            regexp = /!\[\](\/uploads\/#{@current_db}\/original\/(\dX\/(?:[a-f0-9]\/)*[a-f0-9]{40}[a-z0-9\.]*))/
+          Post
+            .where("raw LIKE '%![](/uploads/default/original/%)%'")
+            .each do |post|
+              regexp =
+                /!\[\](\/uploads\/#{@current_db}\/original\/(\dX\/(?:[a-f0-9]\/)*[a-f0-9]{40}[a-z0-9\.]*))/
 
-            post.raw.scan(regexp).each do |upload_url, _|
-              upload = Upload.get_from_url(upload_url)
-              post.raw = post.raw.gsub("![](#{upload_url})", "![](#{upload.short_url})")
+              post
+                .raw
+                .scan(regexp)
+                .each do |upload_url, _|
+                  upload = Upload.get_from_url(upload_url)
+                  post.raw = post.raw.gsub("![](#{upload_url})", "![](#{upload.short_url})")
+                end
+
+              post.save!(validate: false)
             end
-
-            post.save!(validate: false)
-          end
         end
 
         if Discourse.asset_host.present?
@@ -373,7 +389,6 @@ module FileStore
       migration_successful?(should_raise: true)
 
       log "Done!"
-
     ensure
       Jobs.run_later!
     end

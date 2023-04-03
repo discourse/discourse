@@ -7,7 +7,7 @@ RSpec.describe Admin::UsersController do
 
   before { sign_in(admin) }
 
-  describe '#destroy' do
+  describe "#destroy" do
     let(:delete_me) { Fabricate(:user) }
 
     context "when user has voted" do

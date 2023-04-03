@@ -15,7 +15,7 @@ class AddUniqueIndexToDevelopers < ActiveRecord::Migration[6.0]
         d1.id <> d2.id
     SQL
 
-    add_index :developers, %i(user_id), unique: true
+    add_index :developers, %i[user_id], unique: true
   end
 
   def down

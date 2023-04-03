@@ -18,7 +18,10 @@ be:
       joined: "рэгістрацыя"
       email_frequency:
         never: "ніколі"
+      header_indicator_preference:
+        never: "ніколі"
       flag: "Пазначыць"
+      last_visit: "апошні візыт"
       reply: "Адказаць"
       edit: "рэдагаваць"
       bookmark_message: "закладка"
@@ -35,6 +38,7 @@ be:
         yesterday: учора
       about_view:
         title: Загаловак
+        name: імя
         description: Апісанне
       channel_info:
         back_to_channel: "Назад"
@@ -61,6 +65,7 @@ be:
         preview: "папярэдні прагляд"
         save: "захаваць"
         saved: "Захавана"
+        admin_title: "адміністратар"
       incoming_webhooks:
         back: "Назад"
         description: "Апісанне"

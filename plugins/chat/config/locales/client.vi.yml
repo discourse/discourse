@@ -21,10 +21,17 @@ vi:
       joined: "đã tham gia"
       email_frequency:
         never: "Không bao giờ"
+      header_indicator_preference:
+        never: "Không bao giờ"
       flag: "Gắn cờ"
       join: "Tham gia"
+      last_visit: "lần thăm cuối"
       mention_warning:
         dismiss: "bỏ qua"
+        groups:
+          header:
+            some: "Một số người dùng sẽ không được thông báo"
+            all: "Sẽ không ai được thông báo"
       reply: "Trả lời"
       edit: "Sửa"
       rebake_message: "Tạo lại HTML"
@@ -46,6 +53,7 @@ vi:
         yesterday: Hôm qua
       about_view:
         title: Tiêu đề
+        name: Tên
         description: Mô tả
       channel_info:
         back_to_channel: "Quay lại"
@@ -74,6 +82,7 @@ vi:
         save: "Lưu lại"
         saved: "Lưu trữ"
         unfollow: "Rời nhóm"
+        admin_title: "Quản trị"
       incoming_webhooks:
         back: "Quay lại"
         description: "Mô tả"
@@ -94,6 +103,8 @@ vi:
           title: "Di chuyển tới chủ đề đang tồn tại"
         new_message:
           title: "Chuyển đến tin nhắn mới"
+      flags:
+        notify_moderators: "Thông báo này yêu cầu sự chú ý của nhân viên vì một lý do khác không được liệt kê ở trên."
       emoji_picker:
         objects: "Vật thể"
         activities: "Hoạt động"

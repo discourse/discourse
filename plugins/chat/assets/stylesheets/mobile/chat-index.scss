@@ -1,42 +1,40 @@
 @import "common/foundation/mixins";
+
 .full-page-chat {
   overflow: hidden; //prevents double scroll
+
   .channels-list {
     overflow-y: overlay;
     padding-bottom: 6rem;
     box-sizing: border-box;
 
-    .direct-message-channels {
-      .chat-channel-title {
-        padding: 0.6rem 0; //minor adjustment for visual consistency with channels which dont have avatars
-      }
-    }
-
-    @media (hover: none) {
-      .chat-channel-row:hover {
-        background: transparent;
-      }
-
-      .chat-channel-row:active {
-        background: var(--primary-low);
-      }
+    .channels-list-container {
+      background: var(--secondary);
     }
 
     .chat-channel-row {
-      margin: 0 1.5rem;
-      padding: 0;
+      height: 4em;
+      margin: 0;
+      padding: 0 1.5rem;
       border-radius: 0;
       border-bottom: 1px solid var(--primary-low);
+
+      .chat-channel-metadata {
+        .chat-channel-unread-indicator {
+          font-size: var(--font-down-2);
+          margin-top: 0.25rem;
+        }
+        &__date {
+          font-size: var(--font-down-2);
+        }
+      }
     }
 
     .chat-channel-divider {
-      background-color: var(--secondary);
-      padding: 2.5rem 1.5rem 0.5rem 1.5rem;
       font-size: var(--font-up-1);
 
       &:first-of-type {
         padding-top: 1rem;
-        padding-bottom: 0; //visual compensation
       }
 
       .channel-title {
@@ -45,49 +43,36 @@
       }
     }
 
-    .channels-list-container {
-      background: var(--secondary);
-    }
-
-    .chat-user-avatar-container {
-      padding-left: 1px; //for is-online boxshadow effect
-    }
-
     .chat-user-avatar {
-      img {
-        width: calc(var(--chat-mobile-avatar-size) - 2px);
-        height: calc(var(--chat-mobile-avatar-size) - 2px);
-      }
-
       + .chat-channel-title__usernames {
         margin-left: 1rem;
       }
     }
 
     .chat-channel-title {
-      padding: 1rem 0;
       width: 100%;
       overflow: hidden;
 
       &__users-count {
-        width: var(--chat-mobile-avatar-size);
-        height: var(--chat-mobile-avatar-size);
-        padding: 0;
         font-size: var(--font-up-2);
-        font-weight: normal;
-        justify-content: center;
-
         & + .chat-channel-title__name {
           margin-left: 1rem;
         }
       }
 
       &__name {
+        flex-shrink: 0;
+        margin-left: 0.75em;
         font-size: var(--font-up-1);
       }
 
       &__category-badge {
         font-size: var(--font-up-1);
+      }
+
+      &__user-status-message {
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }

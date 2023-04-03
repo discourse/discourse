@@ -15,6 +15,7 @@ import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
 import TopicList from "discourse/models/topic-list";
 import { action } from "@ember/object";
+import PreloadStore from "discourse/lib/preload-store";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
@@ -59,6 +60,8 @@ export default (filterArg, params) => {
         filterArg === "default" &&
         modelParams
       ) {
+        // TODO: avoid throwing away preload data by redirecting on the server
+        PreloadStore.getAndRemove("topic_list");
         return this.replaceWith("discovery.categoryNone", {
           category,
           category_slug_path_with_id: modelParams.category_slug_path_with_id,

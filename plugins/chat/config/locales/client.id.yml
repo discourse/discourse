@@ -19,6 +19,8 @@ id:
       joined: "joined"
       email_frequency:
         never: "Tidak pernah"
+      header_indicator_preference:
+        never: "Tidak pernah"
       join: "Gabung"
       mention_warning:
         dismiss: "bubar"
@@ -37,6 +39,7 @@ id:
         filter_closed: Tertutup
       about_view:
         title: Judul
+        name: Nama
       channel_info:
         tabs:
           about: Tentang
@@ -59,6 +62,7 @@ id:
         save: "Simpan"
         saved: "Tersimpan"
         unfollow: "Keluar"
+        admin_title: "Admin"
       incoming_webhooks:
         delete: "Hapus"
         name: "Name"

@@ -33,6 +33,7 @@ export default Controller.extend(PasswordValidation, {
   successMessage: null,
   requiresApproval: false,
   redirected: false,
+  maskPassword: true,
 
   @discourseComputed()
   continueButtonText() {
@@ -56,6 +57,11 @@ export default Controller.extend(PasswordValidation, {
     event?.preventDefault();
     this.set("redirected", true);
     DiscourseURL.redirectTo(this.redirectTo || "/");
+  },
+
+  @action
+  togglePasswordMask() {
+    this.toggleProperty("maskPassword");
   },
 
   actions: {

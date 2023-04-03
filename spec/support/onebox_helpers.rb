@@ -6,7 +6,7 @@ module OneboxHelpers
     File.exist?(file) ? File.read(file) : ""
   end
 
-  def inspect_html_fragment(raw_fragment, tag_name, attribute = 'src')
+  def inspect_html_fragment(raw_fragment, tag_name, attribute = "src")
     preview = Nokogiri::HTML::DocumentFragment.parse(raw_fragment)
     preview.css(tag_name).first[attribute]
   end
@@ -14,7 +14,10 @@ module OneboxHelpers
   RSpec.shared_context "with engines" do
     before do
       fixture = defined?(@onebox_fixture) ? @onebox_fixture : described_class.onebox_name
-      stub_request(:get, defined?(@uri) ? @uri : @link).to_return(status: 200, body: onebox_response(fixture))
+      stub_request(:get, defined?(@uri) ? @uri : @link).to_return(
+        status: 200,
+        body: onebox_response(fixture),
+      )
     end
 
     let(:onebox) { described_class.new(link) }

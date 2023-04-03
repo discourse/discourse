@@ -21,8 +21,11 @@ ur:
       joined: "شمولیت اختیار کی"
       email_frequency:
         never: "کبھی نہیں"
+      header_indicator_preference:
+        never: "کبھی نہیں"
       flag: "فلَیگ"
       join: "شمولیت اختیار کریں"
+      last_visit: "آخری وزٹ"
       mention_warning:
         dismiss: "بر خاست کریں"
       reply: "جواب"
@@ -46,6 +49,7 @@ ur:
         yesterday: کَل
       about_view:
         title: عنوان
+        name: نام
         description: تفصیل
       channel_info:
         back_to_channel: "واپس"
@@ -74,6 +78,7 @@ ur:
         save: "محفوظ کریں"
         saved: "محفوظ کر لیا گیا"
         unfollow: "چھوڑ دیں"
+        admin_title: "منتظم"
       incoming_webhooks:
         back: "واپس"
         description: "تفصیل"

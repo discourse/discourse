@@ -1,7 +1,17 @@
 {{#if this.shouldDisplay}}
-  <div class="sidebar-section-link-wrapper" {{did-insert this.didInsert this.args}}>
+  <li
+    class="sidebar-section-link-wrapper"
+    {{did-insert this.didInsert this.args}}
+  >
     {{#if @href}}
-      <a href={{@href}} rel="noopener noreferrer" target="_blank" class={{this.classNames}} title={{@title}}>
+      <a
+        href={{@href}}
+        rel="noopener noreferrer"
+        target={{this.target}}
+        class={{this.classNames}}
+        title={{@title}}
+        ...attributes
+      >
         <Sidebar::SectionLinkPrefix
           @prefixType={{@prefixType}}
           @prefixValue={{@prefixValue}}
@@ -16,13 +26,14 @@
         </span>
       </a>
     {{else}}
-      <Sidebar::SectionLinkTo
-        @class={{this.classNames}}
+      <LinkTo
+        class={{this.classNames}}
         @route={{@route}}
-        @query={{@query}}
+        @query={{or @query (hash)}}
         @models={{this.models}}
         @current-when={{@currentWhen}}
-        @title={{@title}}
+        title={{@title}}
+        ...attributes
       >
 
         <Sidebar::SectionLinkPrefix
@@ -34,7 +45,12 @@
           @prefixBadge={{@prefixBadge}}
         />
 
-        <span class={{concat-class "sidebar-section-link-content-text" @contentCSSClass}}>
+        <span
+          class={{concat-class
+            "sidebar-section-link-content-text"
+            @contentCSSClass
+          }}
+        >
           {{@content}}
         </span>
 
@@ -45,7 +61,13 @@
         {{/if}}
 
         {{#if @suffixValue}}
-          <span class={{concat-class "sidebar-section-link-suffix" @suffixType @suffixCSSClass}}>
+          <span
+            class={{concat-class
+              "sidebar-section-link-suffix"
+              @suffixType
+              @suffixCSSClass
+            }}
+          >
             {{#if (eq @suffixType "icon")}}
               {{d-icon @suffixValue}}
             {{/if}}
@@ -59,14 +81,14 @@
               title={{@hoverTitle}}
               class="sidebar-section-hover-button"
               {{on "click" @hoverAction}}
-              >
+            >
               {{#if (eq @hoverType "icon")}}
                 {{d-icon @hoverValue class="hover-icon"}}
               {{/if}}
             </button>
           </span>
         {{/if}}
-      </Sidebar::SectionLinkTo>
+      </LinkTo>
     {{/if}}
-  </div>
+  </li>
 {{/if}}

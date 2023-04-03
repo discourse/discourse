@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import WidgetGlue from "discourse/widgets/glue";
 import { getRegister } from "discourse-common/lib/get-owner";
-import { observes } from "discourse-common/utils/decorators";
+import { bind, observes } from "discourse-common/utils/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 const PLUGIN_ID = "discourse-poll";
@@ -34,15 +34,18 @@ function initializePolls(api) {
 
     subscribe() {
       this._super(...arguments);
-      this.messageBus.subscribe(`/polls/${this.model.id}`, (msg) => {
-        const post = this.get("model.postStream").findLoadedPost(msg.post_id);
-        post?.set("polls", msg.polls);
-      });
+      this.messageBus.subscribe(`/polls/${this.model.id}`, this._onPollMessage);
     },
 
     unsubscribe() {
-      this.messageBus.unsubscribe("/polls/*");
+      this.messageBus.unsubscribe("/polls/*", this._onPollMessage);
       this._super(...arguments);
+    },
+
+    @bind
+    _onPollMessage(msg) {
+      const post = this.get("model.postStream").findLoadedPost(msg.post_id);
+      post?.set("polls", msg.polls);
     },
   });
 
@@ -131,6 +134,11 @@ function initializePolls(api) {
     id: "discourse-poll",
   });
   api.cleanupStream(cleanUpPolls);
+
+  const siteSettings = api.container.lookup("site-settings:main");
+  if (siteSettings.poll_enabled) {
+    api.addSearchSuggestion("in:polls");
+  }
 }
 
 export default {

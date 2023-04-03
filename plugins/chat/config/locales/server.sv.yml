@@ -23,6 +23,9 @@ sv:
     default_emoji_reactions: "Standardval av emoji-reaktioner för chattmeddelanden. Lägg till upp till 5 emojis som snabbval."
     direct_message_enabled_groups: "Tillåt användare inom dessa grupper att skapa personliga chattar från användare till användare. Obs: personal kan alltid skapa personliga chattar och användare kommer att kunna svara på personliga chattar som initieras av användare som har tillstånd att skapa dem."
     chat_message_flag_allowed_groups: "Användare i dessa grupper får flagga chattmeddelanden."
+    max_mentions_per_chat_message: "Maximalt antal @namnomnämnanden en användare kan göra i ett chattmeddelande."
+    chat_max_direct_message_users: "Användare kan inte lägga till fler än detta antal andra användare när de skapar ett nytt direktmeddelande. Ställ in till 0 för att endast tillåta meddelanden till sig själv. Personalen är undantagen från denna inställning."
+    chat_allow_archiving_channels: "Tillåt att personalen arkiverar meddelanden till ett ämne när en kanal stängs."
     errors:
       chat_default_channel: "Standardchattkanalen måste vara en offentlig kanal."
       direct_message_enabled_groups_invalid: "Du måste ange minst en grupp för den här inställningen. Om du inte vill att någon förutom personal ska skicka direktmeddelanden, välj personalgrupp."
@@ -32,25 +35,46 @@ sv:
       title: "Arkivering av chattkanalen är färdigt"
       subject_template: "Arkivering av chattkanalen slutfördes framgångsrikt"
       text_body_template: |
-        Arkivering av chattkanalen **\#%{channel_name}** har slutförts. Meddelandena har kopierats till ämnet [%{topic_title}](%{topic_url}).
+        Arkiveringen av chattkanalen %{channel_hashtag_or_name} har slutförts. Meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Arkivering av chattkanalen misslyckades"
       subject_template: "Arkivering av chattkanalen misslyckades"
       text_body_template: |
-        Arkivering av chatt kanalen **\#%{channel_name}** misslyckades. %{messages_archived} meddelanden har arkiverats. Delvis arkiverade meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}). Besök kanalen på %{channel_url} för att försöka igen.
+        Arkivering av chattkanalen %{channel_hashtag_or_name} misslyckades. %{messages_archived} meddelanden har arkiverats. Delvis arkiverade meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}). Besök kanalen kl. %{channel_url} för att försöka igen.
+    chat_channel_archive_failed_no_topic:
+      title: "Arkivering av chattkanalen misslyckades"
+      subject_template: "Arkivering av chattkanalen misslyckades"
+      text_body_template: |
+        Arkivering av chattkanalen %{channel_hashtag_or_name} misslyckades. Inga meddelanden har arkiverats. Ämnet kunde inte skapas, av följande skäl:
+
+          %{topic_validation_errors}
+
+        Besök kanalen på %{channel_url} för att försöka igen.
   chat:
-    deleted_chat_username: raderad
+    deleted_chat_username: raderat
     errors:
       channel_exists_for_category: "En kanal finns redan för denna kategori och namn"
-      channel_new_message_disallowed: "Kanalen är %{status}, inga nya meddelanden kan skickas"
-      channel_modify_message_disallowed: "Kanalen är %{status}, inga meddelanden kan redigeras eller tas bort"
+      channel_new_message_disallowed:
+        archived: "Kanalen är arkiverad, inga nya meddelanden kan skickas"
+        closed: "Kanalen är stängd, inga nya meddelanden kan skickas"
+        read_only: "Kanalen är lässkyddad, inga nya meddelanden kan skickas"
+      channel_modify_message_disallowed:
+        archived: "Kanalen är arkiverad, inga meddelanden kan redigeras eller raderas"
+        closed: "Kanalen är stängd, inga meddelanden kan redigeras eller raderas"
+        read_only: "Kanalen är lässkyddad, inga meddelanden kan redigeras eller raderas"
       user_cannot_send_message: "Du kan inte skicka meddelanden just nu."
       rate_limit_exceeded: "Överskred gränsen för chattmeddelanden som kan skickas inom 30 sekunder"
       auto_silence_from_flags: "Chattmeddelande flaggat med tillräckligt hög poäng för att tysta användaren."
       channel_cannot_be_archived: "Kanalen kan inte arkiveras just nu, den måste vara antingen stängd eller öppen för arkivering."
       duplicate_message: "Du skrev också ett identiskt meddelande nyligen."
       delete_channel_failed: "Det gick inte att ta bort kanalen, försök igen."
-      minimum_length_not_met: "Meddelandet är för kort, måste ha minst %{minimum} tecken."
+      minimum_length_not_met:
+        one: "Meddelandet är för kort. Det måste innehålla minst %{count} tecken."
+        other: "Meddelandet är för kort. Det måste innehålla minst %{count} tecken."
+      message_too_long:
+        one: "Meddelandet är för långt, måste ha högst %{count} tecken."
+        other: "Meddelandet är för långt, måste ha högst %{count} tecken."
+      draft_too_long: "Utkastet är för långt."
       max_reactions_limit_reached: "Nya reaktioner är inte tillåtna för detta meddelande."
       message_move_invalid_channel: "Käll- och destinationskanalen måste vara offentliga kanaler."
       message_move_no_messages_found: "Inga meddelanden hittades med de angivna meddelande-ID:n."
@@ -61,6 +85,11 @@ sv:
       actor_disallowed_dms: "Du har valt att hindra användare från att skicka dig privata och direkta meddelanden, så du kan inte skapa nya direkta meddelanden."
       actor_preventing_target_user_from_dm: "Du har valt att hindra %{username} från att skicka privata och direkta meddelanden, så du kan inte skapa nya direktmeddelanden till dem."
       user_cannot_send_direct_messages: "Tyvärr kan du inte skicka direktmeddelanden."
+      over_chat_max_direct_message_users_allow_self: "Du kan bara skapa ett direktmeddelande med dig själv."
+      over_chat_max_direct_message_users:
+        one: "Du kan inte skapa ett direktmeddelande med fler än %{count} annan användare."
+        other: "Du kan inte skapa ett direktmeddelande med fler än %{count} andra användare."
+      original_message_not_found: "Det första meddelandet i meddelandekedjan som du svarar på kan inte hittas eller har tagits bort."
     reviewables:
       message_already_handled: "Tack, men vi har redan granskat det här meddelandet och beslutat att det inte behöver flaggas igen."
       actions:
@@ -97,23 +126,20 @@ sv:
         transcript_title: "Avskrift av tidigare meddelanden i %{channel_name}"
         transcript_body: "För att ge dig mer sammanhang inkluderade vi en avskrift av de tidigare meddelandena i det här samtalet (upp till tio):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Endast läsning"
-        archived: "Arkiverad"
-        closed: "Stängd"
-        open: "Öppna"
       archive:
         first_post_raw: "Detta ämne är ett arkiv av chatt kanalen [%{channel_name}](%{channel_url})."
       messages_moved:
         one: "@%{acting_username} flyttade ett meddelande till kanalen [%{channel_name}](%{first_moved_message_url})."
         other: "@%{acting_username} flyttade %{count} meddelanden till kanalen [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} och %{leftover} andra"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} och %{count} andra"
+          other: "%{comma_separated_usernames} och %{count} andra"
     category_channel:
       errors:
-        slug_contains_non_ascii_chars: "innehåller icke-ascii tecken"
+        slug_contains_non_ascii_chars: "innehåller icke-ascii-tecken"
         is_already_in_use: "används redan"
     bookmarkable:
       notification_title: "meddelande i %{channel_name}"
@@ -162,14 +188,17 @@ sv:
         other: "Du har nya chattmeddelanden"
       from: "%{site_name}"
       subject:
-        direct_message:
-          one: "[%{email_prefix}] Nytt meddelande från %{message_title}"
-          other: "[%{email_prefix}] Nya meddelanden från %{message_title} och %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] Nytt meddelande i %{message_title}"
-          other: "[%{email_prefix}] Nya meddelanden i %{message_title} och %{others}"
-        other_direct_message: "från %{message_title}"
-        others: "%{count} andra"
+        direct_message_from_1: "[%{email_prefix}] Nytt meddelande från %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nytt meddelande från %{username1} och %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nytt meddelande från %{username} och ytterligare %{count}"
+          other: "[%{email_prefix}] Nytt meddelande från %{username} och ytterligare %{count}"
+        chat_channel_1: "[%{email_prefix}] Nytt meddelande i %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nytt meddelande i %{channel1} och %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nytt meddelande i %{channel} och ytterligare %{count}"
+          other: "[%{email_prefix}] Nytt meddelande i %{channel} och ytterligare %{count}"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nytt meddelande i %{channel} och från %{username}"
       unsubscribe: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link} eller %{unsubscribe_link} för att avsluta prenumerationen."
       unsubscribe_no_link: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link}."
       view_messages:

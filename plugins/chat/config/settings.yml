@@ -1,12 +1,12 @@
 chat:
   chat_enabled:
-    default: false
+    default: true
     client: true
   chat_allowed_groups:
     client: true
     type: group_list
     list_type: compact
-    default: "3" # 3 is staff group id
+    default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
   needs_chat_seeded:
@@ -48,7 +48,6 @@ chat:
     min: 0
   chat_allow_archiving_channels:
     default: false
-    hidden: true
     client: true
   chat_archive_destination_topic_status:
     type: enum
@@ -60,7 +59,7 @@ chat:
   chat_default_channel_id:
     default: ""
     client: true
-    validator: "ChatDefaultChannelValidator"
+    validator: "Chat::DefaultChannelValidator"
   chat_duplicate_message_sensitivity:
     type: float
     default: 0.5
@@ -76,25 +75,45 @@ chat:
     min: 1
     max: 50
     client: true
+  chat_maximum_message_length:
+    type: integer
+    default: 6000
+    client: true
+    hidden: true
+    min: 100
+    max: 12000
   chat_allow_uploads:
     default: true
     client: true
-    validator: "ChatAllowUploadsValidator"
+    validator: "Chat::AllowUploadsValidator"
   max_chat_auto_joined_users:
     min: 0
     default: 10000
     hidden: true
     client: true
   direct_message_enabled_groups:
-    default: "11" # auto group trust_level_1
+    default: "11" # @trust_level_1
     type: group_list
     client: true
     allow_any: false
     refresh: true
-    validator: "DirectMessageEnabledGroupsValidator"
+    validator: "Chat::DirectMessageEnabledGroupsValidator"
   chat_message_flag_allowed_groups:
-    default: "11" # auto group trust_level_1
+    default: "11" # @trust_level_1
     type: group_list
     client: true
     allow_any: false
     refresh: true
+  max_mentions_per_chat_message:
+    client: true
+    type: integer
+    default: 5
+    max: 10
+    min: 0
+  max_chat_draft_length:
+    default: 50_000
+    hidden: true
+  enable_experimental_chat_threaded_discussions:
+    default: false
+    hidden: true
+    client: true

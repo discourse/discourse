@@ -19,7 +19,6 @@ import { readOnly, reads } from "@ember/object/computed";
 import { SKIP } from "discourse/lib/autocomplete";
 import { Promise } from "rsvp";
 import { translations } from "pretty-text/emoji/data";
-import { channelStatusName } from "discourse/plugins/chat/discourse/models/chat-channel";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import {
   chatComposerButtons,
@@ -30,11 +29,10 @@ const THROTTLE_MS = 150;
 
 export default Component.extend(TextareaTextManipulation, {
   chatChannel: null,
-  lastChatChannelId: null,
   chat: service(),
   classNames: ["chat-composer-container"],
   classNameBindings: ["emojiPickerVisible:with-emoji-picker"],
-  userSilenced: readOnly("details.user_silenced"),
+  userSilenced: readOnly("chatChannel.userSilenced"),
   chatEmojiReactionStore: service("chat-emoji-reaction-store"),
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
   chatStateManager: service("chat-state-manager"),
@@ -47,6 +45,8 @@ export default Component.extend(TextareaTextManipulation, {
   composerFocusSelector: ".chat-composer-input",
   canAttachUploads: reads("siteSettings.chat_allow_uploads"),
   isNetworkUnreliable: reads("chat.isNetworkUnreliable"),
+  typingMention: false,
+  chatComposerWarningsTracker: service(),
 
   @discourseComputed(...chatComposerButtonsDependentKeys())
   inlineButtons() {
@@ -63,7 +63,7 @@ export default Component.extend(TextareaTextManipulation, {
     return picker.opened && picker.context === "chat-composer";
   },
 
-  @discourseComputed("chatStateManager.isFullPage")
+  @discourseComputed("chatStateManager.isFullPageActive")
   fileUploadElementId(fullPage) {
     return fullPage ? "chat-full-page-uploader" : "chat-widget-uploader";
   },
@@ -89,6 +89,7 @@ export default Component.extend(TextareaTextManipulation, {
 
     this._textarea = this.element.querySelector(".chat-composer-input");
     this._$textarea = $(this._textarea);
+    this._applyUserAutocomplete(this._$textarea);
     this._applyCategoryHashtagAutocomplete(this._$textarea);
     this._applyEmojiAutocomplete(this._$textarea);
     this.appEvents.on("chat:focus-composer", this, "_focusTextArea");
@@ -144,10 +145,7 @@ export default Component.extend(TextareaTextManipulation, {
       "_inProgressUploadsChanged"
     );
 
-    if (this.timer) {
-      cancel(this.timer);
-      this.timer = null;
-    }
+    cancel(this.timer);
 
     this.appEvents.off("chat:focus-composer", this, "_focusTextArea");
     this.appEvents.off("chat:insert-text", this, "insertText");
@@ -221,17 +219,18 @@ export default Component.extend(TextareaTextManipulation, {
 
     if (
       !this.editingMessage &&
-      this.draft &&
+      this.chatChannel?.draft &&
       this.chatChannel?.canModifyMessages(this.currentUser)
     ) {
       // uses uploads from draft here...
       this.setProperties({
-        value: this.draft.value,
-        replyToMsg: this.draft.replyToMsg,
+        value: this.chatChannel.draft.message,
+        replyToMsg: this.chatChannel.draft.replyToMsg,
       });
 
-      this._syncUploads(this.draft.uploads);
-      this.setInReplyToMsg(this.draft.replyToMsg);
+      this._captureMentions();
+      this._syncUploads(this.chatChannel.draft.uploads);
+      this.setInReplyToMsg(this.chatChannel.draft.replyToMsg);
     }
 
     if (this.editingMessage && !this.loading) {
@@ -244,7 +243,6 @@ export default Component.extend(TextareaTextManipulation, {
       this._focusTextArea({ ensureAtEnd: true, resizeTextarea: false });
     }
 
-    this.set("lastChatChannelId", this.chatChannel.id);
     this.resizeTextarea();
   },
 
@@ -271,7 +269,6 @@ export default Component.extend(TextareaTextManipulation, {
     }
 
     this.set("_uploads", cloneJSON(newUploads));
-    this.appEvents.trigger("chat-composer:load-uploads", this._uploads);
   },
 
   _inProgressUploadsChanged(inProgressUploads) {
@@ -286,7 +283,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   _replyToMsgChanged(replyToMsg) {
     this.set("replyToMsg", replyToMsg);
-    this.onValueChange?.(this.value, this._uploads, replyToMsg);
+    this.onValueChange?.({ replyToMsg });
   },
 
   @action
@@ -294,14 +291,22 @@ export default Component.extend(TextareaTextManipulation, {
     this.set("value", value);
     this.resizeTextarea();
 
+    this._captureMentions();
+
     // throttle, not debounce, because we do eventually want to react during the typing
     this.timer = throttle(this, this._handleTextareaInput, THROTTLE_MS);
   },
 
   @bind
   _handleTextareaInput() {
-    this._applyUserAutocomplete();
-    this.onValueChange?.(this.value, this._uploads, this.replyToMsg);
+    this.onValueChange?.({ value: this.value });
+  },
+
+  @bind
+  _captureMentions() {
+    if (this.value) {
+      this.chatComposerWarningsTracker.trackMentions(this.value);
+    }
   },
 
   @bind
@@ -337,19 +342,33 @@ export default Component.extend(TextareaTextManipulation, {
     this.resizeTextarea();
   },
 
-  _applyUserAutocomplete() {
+  _applyUserAutocomplete($textarea) {
     if (this.siteSettings.enable_mentions) {
-      $(this._textarea).autocomplete({
+      $textarea.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
         key: "@",
         width: "100%",
         treatAsTextarea: true,
         autoSelectFirstSuggestion: true,
         transformComplete: (v) => v.username || v.name,
-        dataSource: (term) => userSearch({ term, includeGroups: true }),
+        dataSource: (term) => {
+          return userSearch({ term, includeGroups: true }).then((result) => {
+            if (result?.users?.length > 0) {
+              const presentUserNames =
+                this.chat.presenceChannel.users?.mapBy("username");
+              result.users.forEach((user) => {
+                if (presentUserNames.includes(user.username)) {
+                  user.cssClasses = "is-online";
+                }
+              });
+            }
+            return result;
+          });
+        },
         afterComplete: (text) => {
           this.set("value", text);
           this._focusTextArea();
+          this._captureMentions();
         },
       });
     }
@@ -357,12 +376,15 @@ export default Component.extend(TextareaTextManipulation, {
 
   _applyCategoryHashtagAutocomplete($textarea) {
     setupHashtagAutocomplete(
-      "chat-composer",
+      this.site.hashtag_configurations["chat-composer"],
       $textarea,
       this.siteSettings,
-      (value) => {
-        this.set("value", value);
-        return this._focusTextArea();
+      {
+        treatAsTextarea: true,
+        afterComplete: (value) => {
+          this.set("value", value);
+          return this._focusTextArea();
+        },
       }
     );
   },
@@ -398,7 +420,9 @@ export default Component.extend(TextareaTextManipulation, {
           return `${v.code}:`;
         } else {
           $textarea.autocomplete({ cancel: true });
-          this.set("emojiPickerIsActive", true);
+          this.chatEmojiPickerManager.startFromComposer(this.emojiSelected, {
+            filter: v.term,
+          });
           return "";
         }
       },
@@ -540,17 +564,21 @@ export default Component.extend(TextareaTextManipulation, {
   @discourseComputed("userSilenced", "chatChannel.{chatable.users.[],id}")
   placeholder(userSilenced, chatChannel) {
     if (!chatChannel.canModifyMessages(this.currentUser)) {
-      return I18n.t("chat.placeholder_new_message_disallowed", {
-        status: channelStatusName(chatChannel.status).toLowerCase(),
-      });
+      return I18n.t(
+        `chat.placeholder_new_message_disallowed.${chatChannel.status}`
+      );
     }
 
     if (chatChannel.isDraft) {
-      return I18n.t("chat.placeholder_start_conversation", {
-        usernames: chatChannel?.chatable?.users?.length
-          ? chatChannel.chatable.users.mapBy("username").join(", ")
-          : "...",
-      });
+      if (chatChannel?.chatable?.users?.length) {
+        return I18n.t("chat.placeholder_start_conversation_users", {
+          commaSeparatedUsernames: chatChannel.chatable.users
+            .mapBy("username")
+            .join(I18n.t("word_connector.comma")),
+        });
+      } else {
+        return I18n.t("chat.placeholder_start_conversation");
+      }
     }
 
     if (userSilenced) {
@@ -570,14 +598,14 @@ export default Component.extend(TextareaTextManipulation, {
         return I18n.t("chat.placeholder_self");
       }
 
-      return I18n.t("chat.placeholder_others", {
-        messageRecipient: directMessageRecipients
+      return I18n.t("chat.placeholder_users", {
+        commaSeparatedNames: directMessageRecipients
           .map((u) => u.name || `@${u.username}`)
-          .join(", "),
+          .join(I18n.t("word_connector.comma")),
       });
     } else {
-      return I18n.t("chat.placeholder_others", {
-        messageRecipient: `#${chatChannel.title}`,
+      return I18n.t("chat.placeholder_channel", {
+        channelName: `#${chatChannel.title}`,
       });
     }
   },
@@ -660,6 +688,7 @@ export default Component.extend(TextareaTextManipulation, {
       value: "",
       inReplyMsg: null,
     });
+    this._captureMentions();
     this._syncUploads([]);
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
     this.onValueChange?.(this.value, this._uploads, this.replyToMsg);
@@ -669,7 +698,7 @@ export default Component.extend(TextareaTextManipulation, {
   cancelReplyTo() {
     this.set("replyToMsg", null);
     this.setInReplyToMsg(null);
-    this.onValueChange?.(this.value, this._uploads, this.replyToMsg);
+    this.onValueChange?.({ replyToMsg: null });
   },
 
   @action
@@ -690,9 +719,9 @@ export default Component.extend(TextareaTextManipulation, {
   },
 
   @action
-  uploadsChanged(uploads) {
+  uploadsChanged(uploads, { inProgressUploadsCount }) {
     this.set("_uploads", cloneJSON(uploads));
-    this.onValueChange?.(this.value, this._uploads, this.replyToMsg);
+    this.onValueChange?.({ uploads: this._uploads, inProgressUploadsCount });
   },
 
   @action

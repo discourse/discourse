@@ -15,12 +15,11 @@
 # this makes it harder to reason about the API
 
 class Cache
-
   # nothing is cached for longer than 1 day EVER
   # there is no reason to have data older than this clogging redis
   # it is dangerous cause if we rename keys we will be stuck with
   # pointless data
-  MAX_CACHE_AGE = 1.day unless defined? MAX_CACHE_AGE
+  MAX_CACHE_AGE = 1.day unless defined?(MAX_CACHE_AGE)
 
   attr_reader :namespace
 
@@ -47,9 +46,7 @@ class Cache
   end
 
   def clear
-    keys.each do |k|
-      redis.del(k)
-    end
+    keys.each { |k| redis.del(k) }
   end
 
   def normalize_key(key)
@@ -80,9 +77,7 @@ class Cache
       key = normalize_key(name)
       raw = nil
 
-      if !force
-        raw = redis.get(key)
-      end
+      raw = redis.get(key) if !force
 
       if raw
         begin
@@ -96,7 +91,8 @@ class Cache
         val
       end
     elsif force
-      raise ArgumentError, "Missing block: Calling `Cache#fetch` with `force: true` requires a block."
+      raise ArgumentError,
+            "Missing block: Calling `Cache#fetch` with `force: true` requires a block."
     else
       read(name)
     end
@@ -105,7 +101,7 @@ class Cache
   protected
 
   def log_first_exception(e)
-    if !defined? @logged_a_warning
+    if !defined?(@logged_a_warning)
       @logged_a_warning = true
       Discourse.warn_exception(e, "Corrupt cache... skipping entry for key #{key}")
     end
@@ -129,5 +125,4 @@ class Cache
     redis.setex(key, expiry, dumped)
     true
   end
-
 end

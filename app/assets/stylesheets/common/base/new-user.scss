@@ -1,5 +1,4 @@
 .new-user-wrapper {
-  margin-top: -15px; // temp, can remove margin from sibling element after nav finalized
   .user-navigation {
     --user-navigation__border-width: 4px;
     border-bottom: 1px solid var(--primary-low);
@@ -102,8 +101,23 @@
       padding: 0.5em 1em;
     }
 
+    .user-nav-messages-dropdown {
+      // manage long group names
+      max-width: 20vw;
+      min-width: 7em;
+      .select-kit-selected-name,
+      .name {
+        @include ellipsis;
+      }
+      .name {
+        min-width: 0;
+      }
+    }
+
     .category-breadcrumb {
-      @include breakpoint(large) {
+      width: auto;
+      padding-top: var(--navigation-secondary-padding-top);
+      @include breakpoint(extra-large) {
         font-size: var(--font-down-1);
       }
       > li {
@@ -112,8 +126,9 @@
     }
 
     .navigation-controls {
+      padding-top: var(--navigation-secondary-padding-top);
       flex-wrap: nowrap;
-      @include breakpoint(large) {
+      @include breakpoint(extra-large) {
         font-size: var(--font-down-1);
       }
     }
@@ -158,7 +173,7 @@
 
       .discourse-no-touch & {
         &:hover {
-          background: var(--highlight-medium);
+          background: var(--highlight-bg);
           color: currentColor;
         }
       }
@@ -180,5 +195,28 @@
   .empty-state {
     padding: 0;
     margin: 1em 0;
+  }
+}
+
+.user-preferences-tracking-page {
+  .user-preferences .form-vertical {
+    width: 100%;
+  }
+}
+
+.user-preferences__tracking-topics-wrapper {
+  margin-bottom: 3em;
+  .control-label {
+    margin-bottom: 1em;
+  }
+}
+
+.user-preferences__tracking-categories-tags-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
+  gap: 2em;
+  .control-group {
+    width: 100%;
+    min-width: 16em;
   }
 }

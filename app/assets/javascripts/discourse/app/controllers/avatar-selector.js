@@ -6,6 +6,9 @@ import { allowsImages } from "discourse/lib/uploads";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { setting } from "discourse/lib/computed";
+import { isTesting } from "discourse-common/config/environment";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { tracked } from "@glimmer/tracking";
 
 export default Controller.extend(ModalFunctionality, {
   gravatarName: setting("gravatar_name"),
@@ -55,23 +58,34 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed(
-    "user.use_logo_small_as_avatar",
-    "user.avatar_template",
-    "user.system_avatar_template",
-    "user.gravatar_avatar_template"
-  )
-  selected(
-    useLogo,
-    avatarTemplate,
-    systemAvatarTemplate,
-    gravatarAvatarTemplate
-  ) {
-    if (useLogo) {
+  @tracked _selected: null,
+
+  @dependentKeyCompat
+  get selected() {
+    return this._selected ?? this.defaultSelection;
+  },
+
+  set selected(value) {
+    this._selected = value;
+  },
+
+  @action
+  onSelectedChanged(value) {
+    this._selected = value;
+  },
+
+  get defaultSelection() {
+    if (this.get("user.use_logo_small_as_avatar")) {
       return "logo";
-    } else if (avatarTemplate === systemAvatarTemplate) {
+    } else if (
+      this.get("user.avatar_template") ===
+      this.get("user.system_avatar_template")
+    ) {
       return "system";
-    } else if (avatarTemplate === gravatarAvatarTemplate) {
+    } else if (
+      this.get("user.avatar_template") ===
+      this.get("user.gravatar_avatar_template")
+    ) {
       return "gravatar";
     } else {
       return "custom";
@@ -175,7 +189,11 @@ export default Controller.extend(ModalFunctionality, {
 
       this.user
         .pickAvatar(selectedUploadId, type)
-        .then(() => window.location.reload())
+        .then(() => {
+          if (!isTesting()) {
+            window.location.reload();
+          }
+        })
         .catch(popupAjaxError);
     },
   },

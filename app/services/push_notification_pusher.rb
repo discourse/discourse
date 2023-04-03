@@ -8,30 +8,36 @@ class PushNotificationPusher
     message = nil
     I18n.with_locale(user.effective_locale) do
       notification_icon_name = Notification.types[payload[:notification_type]]
-      if !File.exist?(File.expand_path("../../app/assets/images/push-notifications/#{notification_icon_name}.png", __dir__))
+      if !File.exist?(
+           File.expand_path(
+             "../../app/assets/images/push-notifications/#{notification_icon_name}.png",
+             __dir__,
+           ),
+         )
         notification_icon_name = "discourse"
       end
-      notification_icon = ActionController::Base.helpers.image_url("push-notifications/#{notification_icon_name}.png")
+      notification_icon =
+        ActionController::Base.helpers.image_url("push-notifications/#{notification_icon_name}.png")
 
       message = {
-        title: payload[:translated_title] || I18n.t(
-          "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
-          site_title: SiteSetting.title,
-          topic: payload[:topic_title],
-          username: payload[:username]
-        ),
+        title:
+          payload[:translated_title] ||
+            I18n.t(
+              "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
+              site_title: SiteSetting.title,
+              topic: payload[:topic_title],
+              username: payload[:username],
+            ),
         body: payload[:excerpt],
         badge: get_badge,
         icon: notification_icon,
         tag: payload[:tag] || "#{Discourse.current_hostname}-#{payload[:topic_id]}",
         base_url: Discourse.base_url,
         url: payload[:post_url],
-        hide_when_active: true
+        hide_when_active: true,
       }
 
-      subscriptions(user).each do |subscription|
-        send_notification(user, subscription, message)
-      end
+      subscriptions(user).each { |subscription| send_notification(user, subscription, message) }
     end
 
     message
@@ -50,21 +56,22 @@ class PushNotificationPusher
     subscriptions = PushSubscription.where(user: user, data: data)
     subscriptions_count = subscriptions.count
 
-    new_subscription = if subscriptions_count > 1
-      subscriptions.destroy_all
-      PushSubscription.create!(user: user, data: data)
-    elsif subscriptions_count == 0
-      PushSubscription.create!(user: user, data: data)
-    end
+    new_subscription =
+      if subscriptions_count > 1
+        subscriptions.destroy_all
+        PushSubscription.create!(user: user, data: data)
+      elsif subscriptions_count == 0
+        PushSubscription.create!(user: user, data: data)
+      end
 
     if send_confirmation == "true"
       message = {
-        title: I18n.t("discourse_push_notifications.popup.confirm_title",
-                      site_title: SiteSetting.title),
+        title:
+          I18n.t("discourse_push_notifications.popup.confirm_title", site_title: SiteSetting.title),
         body: I18n.t("discourse_push_notifications.popup.confirm_body"),
         icon: ActionController::Base.helpers.image_url("push-notifications/check.png"),
         badge: get_badge,
-        tag: "#{Discourse.current_hostname}-subscription"
+        tag: "#{Discourse.current_hostname}-subscription",
       }
 
       send_notification(user, new_subscription, message)
@@ -84,7 +91,7 @@ class PushNotificationPusher
   end
 
   MAX_ERRORS ||= 3
-  MIN_ERROR_DURATION ||= 86400 # 1 day
+  MIN_ERROR_DURATION ||= 86_400 # 1 day
 
   def self.handle_generic_error(subscription, error, user, endpoint, message)
     subscription.error_count += 1
@@ -103,8 +110,8 @@ class PushNotificationPusher
       env: {
         user_id: user.id,
         endpoint: endpoint,
-        message: message.to_json
-      }
+        message: message.to_json,
+      },
     )
   end
 
@@ -121,7 +128,7 @@ class PushNotificationPusher
     end
 
     begin
-      Webpush.payload_send(
+      WebPush.payload_send(
         endpoint: endpoint,
         message: message.to_json,
         p256dh: p256dh,
@@ -130,19 +137,19 @@ class PushNotificationPusher
           subject: Discourse.base_url,
           public_key: SiteSetting.vapid_public_key,
           private_key: SiteSetting.vapid_private_key,
-          expiration: TOKEN_VALID_FOR_SECONDS
+          expiration: TOKEN_VALID_FOR_SECONDS,
         },
         open_timeout: CONNECTION_TIMEOUT_SECONDS,
         read_timeout: CONNECTION_TIMEOUT_SECONDS,
-        ssl_timeout: CONNECTION_TIMEOUT_SECONDS
+        ssl_timeout: CONNECTION_TIMEOUT_SECONDS,
       )
 
       if subscription.first_error_at || subscription.error_count != 0
         subscription.update_columns(error_count: 0, first_error_at: nil)
       end
-    rescue Webpush::ExpiredSubscription
+    rescue WebPush::ExpiredSubscription
       subscription.destroy!
-    rescue Webpush::ResponseError => e
+    rescue WebPush::ResponseError => e
       if e.response.message == "MismatchSenderId"
         subscription.destroy!
       else
@@ -155,5 +162,4 @@ class PushNotificationPusher
 
   private_class_method :send_notification
   private_class_method :handle_generic_error
-
 end

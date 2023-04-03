@@ -67,6 +67,7 @@ body {
   background-attachment: fixed;
   background-size: cover;
   min-height: 100%;
+  box-sizing: border-box;
 
   @include clearfix;
 }
@@ -346,20 +347,6 @@ table {
   margin-left: 12px;
 }
 
-.top-space {
-  margin-top: 10px;
-}
-
-.message {
-  border-radius: 8px;
-  background-color: var(--secondary);
-  padding: 14px;
-
-  h2 {
-    margin-bottom: 20px;
-  }
-}
-
 .clear-transitions {
   transition: none !important;
 }
@@ -378,11 +365,6 @@ table {
   background-color: var(--secondary);
   display: inline-block;
   border-radius: 50%;
-}
-
-.flex-center-align {
-  display: flex;
-  align-items: center;
 }
 
 .unread-high-priority-notifications {
@@ -505,21 +487,6 @@ table {
   }
 }
 
-.ring {
-  $gradient-start: transparent;
-  $gradient-end: #090;
-  background: radial-gradient($gradient-start, $gradient-end);
-  top: -11px !important;
-  right: 23.5px !important;
-  border-radius: 100%;
-  width: 20px;
-  height: 20px;
-  transform-origin: center;
-  animation-iteration-count: infinite;
-  animation-duration: 3s;
-  animation-name: ping;
-}
-
 .fade {
   opacity: 0;
   transition: opacity 0.15s linear;
@@ -585,6 +552,7 @@ table {
         &.active {
           font-weight: bold;
           color: var(--primary);
+          background: var(--d-selected);
         }
       }
     }
@@ -604,9 +572,8 @@ table {
     @include clearfix;
   }
 
-  .control-label {
+  .control-label:not(.checkbox-label) {
     font-family: var(--heading-font-family);
-
     font-weight: bold;
     font-size: var(--font-up-2);
     line-height: var(--line-height-large);

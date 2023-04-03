@@ -47,14 +47,25 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("sidebar.sections.community.links.my_posts.title");
+    if (this._hasDraft) {
+      return I18n.t("sidebar.sections.community.links.my_posts.title_drafts");
+    } else {
+      return I18n.t("sidebar.sections.community.links.my_posts.title");
+    }
   }
 
   get text() {
-    return I18n.t("sidebar.sections.community.links.my_posts.content");
+    if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
+      return I18n.t("sidebar.sections.community.links.my_posts.content_drafts");
+    } else {
+      return I18n.t("sidebar.sections.community.links.my_posts.content");
+    }
   }
 
   get badgeText() {
+    if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
+      return this.draftCount.toString();
+    }
     if (this._hasDraft && !this.hideCount) {
       return I18n.t("sidebar.sections.community.links.my_posts.draft_count", {
         count: this.draftCount,
@@ -67,6 +78,9 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get prefixValue() {
+    if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
+      return "pencil-alt";
+    }
     return "user";
   }
 

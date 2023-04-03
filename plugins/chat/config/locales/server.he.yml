@@ -23,6 +23,9 @@ he:
     default_emoji_reactions: "רגשות אמוג׳י כברירת מחדל להודעות צ׳אט. ניתן להוסיף עד 5 אמוג׳ים לתגובה מהירה."
     direct_message_enabled_groups: "לאפשר למשתמשים בקבוצות אלה ליצור צ׳אטים אישיים בין המשתמשים לבין עצמם. הערה: הסגל תמיד יכול ליצור צ׳אטים אישיים, ומשתמשים יוכלו להשיב לצ׳אטים אישיים שיזמו משתמשים שיש להם הרשאה ליצור אותם."
     chat_message_flag_allowed_groups: "משתמשים בקבוצות אלו רשאים לסמן הודעות צ׳אט בדגל."
+    max_mentions_per_chat_message: "מספר התראות מרבי של @שם בהן יכול להשתמש משתמש בהודעת צ׳אט."
+    chat_max_direct_message_users: "משתמשים לא יכולים להוסיף יותר מכמות זו של משתמשים אחרים בעת יצירת הודעה ישירה חדשה. יש להגדיר ל־0 כדי לאפשר הודעות עצמיות. הסגל מוחרג מההגדרה הזאת."
+    chat_allow_archiving_channels: "לאפשר לסגל להעביר הודעות לארכיון בנושא בעת סגירת ערוץ."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
       direct_message_enabled_groups_invalid: "יש לציין לפחות קבוצה אחת בהגדרה הזאת. כדי למנוע מכולם לשלוח הודעות ישירות למעט הסגל, יש לבחור בקבוצת הסגל."
@@ -32,25 +35,50 @@ he:
       title: "העברת ערוץ הצ׳אט לארכיון הושלמה"
       subject_template: "העברת ערוץ הצ׳אט לארכיון הושלמה בהצלחה"
       text_body_template: |
-        העברת ערוץ הצ׳אט **‎\#%{channel_name}** לארכיון הושלמה בהצלחה. ההודעות הועתקו לנושא [%{topic_title}](%{topic_url}).
+        העברת הערוץ %{channel_hashtag_or_name} לארכיון הושלמה בהצלחה. ההודעות הועתקו לנושא [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "העברת הצ׳אט לארכיון נכשלה"
       subject_template: "העברת הצ׳אט לארכיון נכשלה"
       text_body_template: |
-        העברת ערוץ הצ׳אט **‎\#%{channel_name}** לארכיון נכשלה. %{messages_archived} הודעות הועברו לארכיון. הודעות שהועברו לארכיון באופן חלקי הועתקו לנושא [%{topic_title}](%{topic_url}). יש לבקר בכתובת הערוץ %{channel_url} כדי לנסות שוב.
+        העברת הערוץ %{channel_hashtag_or_name} לארכיון נכשלה. %{messages_archived} הודעות הועברו לארכיון. הודעות שהועברו לארכיון למחצה הועתקו לנושא [%{topic_title}](%{topic_url}). יש לבקר בערוץ דרך %{channel_url} כדי לנסות שוב.
+    chat_channel_archive_failed_no_topic:
+      title: "העברת הצ׳אט לארכיון נכשלה"
+      subject_template: "העברת הצ׳אט לארכיון נכשלה"
+      text_body_template: |
+        העברת ערוץ הצ׳אט %{channel_hashtag_or_name} לארכיון נכשלה. אף הודעה לא הועברה לארכיון. הנושא לא נוצר כראוי מהסיבות הבאות:
+
+          %{topic_validation_errors}
+
+        ניתן לבקר בערוץ דרך %{channel_url} כדי לנסות שוב.
   chat:
     deleted_chat_username: נמחק
     errors:
       channel_exists_for_category: "כבר קיים ערוץ לקטגוריה ולשם האלו"
-      channel_new_message_disallowed: "הערוץ %{status}, לא ניתן לשלוח הודעות חדשות"
-      channel_modify_message_disallowed: "הערוץ %{status}, לא ניתן לערוך או למחוק הודעות"
+      channel_new_message_disallowed:
+        archived: "הערוץ נמצא בארכיון, לא ניתן לשלוח הודעות חדשות"
+        closed: "הערוץ סגור, לא ניתן לשלוח הודעות חדשות"
+        read_only: "הערוץ הוא לקריאה בלבד, לא ניתן לשלוח הודעות חדשות"
+      channel_modify_message_disallowed:
+        archived: "הערוץ שמור בארכיון, אין אפשרות לערוך או למחוק הודעות"
+        closed: "הערוץ סגור, אין אפשרות לערוך או למחוק הודעות"
+        read_only: "הערוץ הוא לקריאה בלבד, אין אפשרות לערוך או למחוק הודעות"
       user_cannot_send_message: "אין לך אפשרות לשלוח הודעות כרגע."
       rate_limit_exceeded: "חריגה ממגבלת הודעות הצ׳אט שניתן לשלוח תוך 30 שניות"
       auto_silence_from_flags: "הודעת צ׳אט שסומנה בציון גבוה מספיק כדי להשתיק את המשתמש."
       channel_cannot_be_archived: "אי אפשר להעביר את הערוץ לארכיון כרגע, הוא חייב להיות סגור או פתוח להעברה לארכיון."
       duplicate_message: "פרסמת הודעה זהה לפני זמן קצר מדי."
       delete_channel_failed: "מחיקת הערוץ נכשלה, נא לנסות שוב."
-      minimum_length_not_met: "ההודעה קצרה מדי, היא חייבת להיות ארוכה מ־%{minimum} תווים"
+      minimum_length_not_met:
+        one: "ההודעה קצרה מדי, חייבת להיות באורך של תו %{count} לפחות."
+        two: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
+        many: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
+        other: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
+      message_too_long:
+        one: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
+        two: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
+        many: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
+        other: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
+      draft_too_long: "הטיוטה ארוכה מדי."
       max_reactions_limit_reached: "רגשות חדשים אסורים בהודעה זו."
       message_move_invalid_channel: "ערוצי המקור והיעד חייבים להיות ערוצים ציבוריים."
       message_move_no_messages_found: "לא נמצאו הודעות עם מזהי ההודעות שסופקו."
@@ -61,6 +89,13 @@ he:
       actor_disallowed_dms: "בחרת למנוע ממשתמשים לשלוח אליך הודעות פרטיות וישירות כך שאין לך אפשרות ליצור הודעות ישירות חדשות."
       actor_preventing_target_user_from_dm: "בחרת למנוע מ־%{username} לשלוח אליך הודעות פרטיות וישירות כך שאין לך אפשרות ליצור הודעות ישירות חדשות אליהם."
       user_cannot_send_direct_messages: "מחילה, אין לך אפשרות לשלוח הודעות ישירות."
+      over_chat_max_direct_message_users_allow_self: "אין לך אפשרות ליצור הודעות ישירות מול עצמך."
+      over_chat_max_direct_message_users:
+        one: "אין לך אפשרות ליצור הודעות ישירות מול למעלה ממשתמש %{count} נוסף."
+        two: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
+        many: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
+        other: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
+      original_message_not_found: "מקור ההודעה אליה ניסית להגיב לא נמצא או שנמחק."
     reviewables:
       message_already_handled: "תודה, אבל כבר סקרנו הודעה זו וקבענו שאין צורך לסמן אותה שוב."
       actions:
@@ -97,11 +132,6 @@ he:
         transcript_title: "תמלול הודעות קודמות בערוץ %{channel_name}"
         transcript_body: "כדי לתת לך יותר הקשר, הוספנו תמליל של (עד עשר) ההודעות הקודמות בשיחה זו:\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "לקריאה בלבד"
-        archived: "בארכיון"
-        closed: "סגורה"
-        open: "פתיחה"
       archive:
         first_post_raw: "הנושא הזה הוא הארכיון של ערוץ הצ׳אט [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -110,9 +140,13 @@ he:
         many: "%{count} הודעות הועברו על ידי ‎@%{acting_username} לערוץ [%{channel_name}](%{first_moved_message_url})."
         other: "%{count} הודעות הועברו על ידי ‎@%{acting_username} לערוץ [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} ועוד %{leftover}"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} ועוד %{count}"
+          two: "%{comma_separated_usernames} ועוד %{count}"
+          many: "%{comma_separated_usernames} ועוד %{count}"
+          other: "%{comma_separated_usernames} ועוד %{count}"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"
@@ -170,18 +204,21 @@ he:
         other: "יש לך הודעות חדשות בצ׳אט"
       from: "%{site_name}"
       subject:
-        direct_message:
-          one: "[%{email_prefix}] הודעה חדשה מאת %{message_title}"
-          two: "[%{email_prefix}] הודעה חדשה מאת %{message_title} ועוד %{others}"
-          many: "[%{email_prefix}] הודעה חדשה מאת %{message_title} ועוד %{others}"
-          other: "[%{email_prefix}] הודעה חדשה מאת %{message_title} ועוד %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] הודעה חדשה תחת %{message_title}"
-          two: "[%{email_prefix}] הודעה חדשה תחת %{message_title} ועוד %{others}"
-          many: "[%{email_prefix}] הודעה חדשה תחת %{message_title} ועוד %{others}"
-          other: "[%{email_prefix}] הודעה חדשה תחת %{message_title} ועוד %{others}"
-        other_direct_message: "מאת %{message_title}"
-        others: "%{count} נוספים"
+        direct_message_from_1: "[%{email_prefix}] הודעה חדשה מאת %{username}"
+        direct_message_from_2: "[%{email_prefix}] הודעה חדשה שנשלחה מאת %{username1} וגם %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] הודעה חדשה מאת %{username} ועוד %{count}"
+          two: "[%{email_prefix}] הודעה חדשה מאת %{username} ועוד %{count}"
+          many: "[%{email_prefix}] הודעה חדשה מאת %{username} ועוד %{count}"
+          other: "[%{email_prefix}] הודעה חדשה מאת %{username} ועוד %{count}"
+        chat_channel_1: "[%{email_prefix}] הודעה חדשה תחת %{channel}"
+        chat_channel_2: "[%{email_prefix}] הודעה חדשה בערוץ %{channel1} וגם בערוץ %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] הודעה חדשה בערוץ %{channel} ובעוד %{count}"
+          two: "[%{email_prefix}] הודעה חדשה בערוץ %{channel} ובעוד %{count}"
+          many: "[%{email_prefix}] הודעה חדשה בערוץ %{channel} ובעוד %{count}"
+          other: "[%{email_prefix}] הודעה חדשה בערוץ %{channel} ובעוד %{count}"
+        chat_channel_and_direct_message: "[%{email_prefix}] הודעה חדשה בערוץ %{channel} וגם מאת %{username}"
       unsubscribe: "סיכום צ׳אט זה נשלח מהאתר %{site_link} כשנעדרת ממנו. ניתן לשנות את %{email_preferences_link} שלך או %{unsubscribe_link} כדי להפסיק לקבל הודעות."
       unsubscribe_no_link: "סיכום צ׳אט זה נשלח מהאתר %{site_link} כשנעדרת ממנו. ניתן לשנות את %{email_preferences_link} שלך."
       view_messages:

@@ -1,6 +1,4 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import {
   count,
@@ -8,9 +6,8 @@ import {
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { click, settled, waitFor } from "@ember/test-helpers";
-import { module } from "qunit";
-import { run } from "@ember/runloop";
+import { click, render, settled, waitFor } from "@ember/test-helpers";
+import { module, test } from "qunit";
 
 const fakeUpload = {
   type: ".png",
@@ -48,116 +45,100 @@ function setupUploadPretender() {
 module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest(
-    "loading uploads from an outside source (e.g. draft or editing message)",
-    {
-      template: hbs`{{chat-composer-uploads fileUploadElementId="chat-widget-uploader"}}`,
+  test("loading uploads from an outside source (e.g. draft or editing message)", async function (assert) {
+    this.existingUploads = [fakeUpload];
 
-      async test(assert) {
-        this.appEvents = this.container.lookup("service:appEvents");
-        this.appEvents.trigger("chat-composer:load-uploads", [fakeUpload]);
-        await settled();
+    await render(hbs`
+      <ChatComposerUploads @existingUploads={{this.existingUploads}} @fileUploadElementId="chat-widget-uploader" />
+    `);
+    await settled();
 
-        assert.strictEqual(count(".chat-composer-upload"), 1);
-        assert.strictEqual(exists(".chat-composer-upload"), true);
-      },
-    }
-  );
-
-  componentTest("upload starts and completes", {
-    template: hbs`{{chat-composer-uploads fileUploadElementId="chat-widget-uploader" onUploadChanged=onUploadChanged}}`,
-
-    beforeEach() {
-      setupUploadPretender();
-      this.set("changedUploads", null);
-      this.set("onUploadChanged", (uploads) => {
-        this.set("changedUploads", uploads);
-      });
-    },
-
-    async test(assert) {
-      const done = assert.async();
-      this.appEvents = this.container.lookup("service:appEvents");
-      this.appEvents.on(
-        "upload-mixin:chat-composer-uploader:upload-success",
-        (fileName, upload) => {
-          assert.strictEqual(fileName, "avatar.png");
-          assert.deepEqual(upload, mockUploadResponse);
-          done();
-        }
-      );
-
-      this.appEvents.trigger(
-        "upload-mixin:chat-composer-uploader:add-files",
-        createFile("avatar.png")
-      );
-
-      await waitFor(".chat-composer-upload");
-      assert.strictEqual(count(".chat-composer-upload"), 1);
-    },
+    assert.strictEqual(count(".chat-composer-upload"), 1);
+    assert.strictEqual(exists(".chat-composer-upload"), true);
   });
 
-  componentTest("removing a completed upload", {
-    template: hbs`{{chat-composer-uploads fileUploadElementId="chat-widget-uploader" onUploadChanged=onUploadChanged}}`,
+  test("upload starts and completes", async function (assert) {
+    setupUploadPretender();
+    this.set("onUploadChanged", () => {});
 
-    beforeEach() {
-      this.set("changedUploads", null);
-      this.set("onUploadChanged", (uploads) => {
-        this.set("changedUploads", uploads);
-      });
-    },
+    await render(hbs`
+      <ChatComposerUploads @fileUploadElementId="chat-widget-uploader" @onUploadChanged={{this.onUploadChanged}} />
+    `);
 
-    async test(assert) {
-      this.appEvents = this.container.lookup("service:appEvents");
-      run(() =>
-        this.appEvents.trigger("chat-composer:load-uploads", [fakeUpload])
-      );
-      assert.strictEqual(count(".chat-composer-upload"), 1);
+    const done = assert.async();
+    this.appEvents = this.container.lookup("service:appEvents");
+    this.appEvents.on(
+      "upload-mixin:chat-composer-uploader:upload-success",
+      (fileName, upload) => {
+        assert.strictEqual(fileName, "avatar.png");
+        assert.deepEqual(upload, mockUploadResponse);
+        done();
+      }
+    );
+    this.appEvents.trigger(
+      "upload-mixin:chat-composer-uploader:add-files",
+      createFile("avatar.png")
+    );
 
-      await click(".remove-upload");
-      assert.strictEqual(count(".chat-composer-upload"), 0);
-    },
+    await waitFor(".chat-composer-upload");
+
+    assert.dom(".chat-composer-upload").exists({ count: 1 });
   });
 
-  componentTest("cancelling in progress upload", {
-    template: hbs`{{chat-composer-uploads fileUploadElementId="chat-widget-uploader" onUploadChanged=onUploadChanged}}`,
+  test("removing a completed upload", async function (assert) {
+    this.set("changedUploads", null);
+    this.set("onUploadChanged", () => {});
 
-    beforeEach() {
-      setupUploadPretender();
+    this.existingUploads = [fakeUpload];
 
-      this.set("changedUploads", null);
-      this.set("onUploadChanged", (uploads) => {
-        this.set("changedUploads", uploads);
-      });
-    },
+    await render(hbs`
+      <ChatComposerUploads @existingUploads={{this.existingUploads}} @fileUploadElementId="chat-widget-uploader" @onUploadChanged={{this.onUploadChanged}} />
+    `);
 
-    async test(assert) {
-      const image = createFile("avatar.png");
-      const done = assert.async();
-      this.appEvents = this.container.lookup("service:appEvents");
+    assert.dom(".chat-composer-upload").exists({ count: 1 });
 
-      this.appEvents.on(
-        `upload-mixin:chat-composer-uploader:upload-cancelled`,
-        (fileId) => {
-          assert.strictEqual(
-            fileId.includes("uppy-avatar/"),
-            true,
-            "upload was cancelled"
-          );
-          done();
-        }
-      );
+    await click(".remove-upload");
 
-      this.appEvents.trigger(
-        "upload-mixin:chat-composer-uploader:add-files",
-        image
-      );
+    assert.dom(".chat-composer-upload").exists({ count: 0 });
+  });
 
-      await waitFor(".chat-composer-upload");
-      assert.strictEqual(count(".chat-composer-upload"), 1);
+  test("cancelling in progress upload", async function (assert) {
+    setupUploadPretender();
 
-      await click(".remove-upload");
-      assert.strictEqual(count(".chat-composer-upload"), 0);
-    },
+    this.set("changedUploads", null);
+    this.set("onUploadChanged", (uploads) => {
+      this.set("changedUploads", uploads);
+    });
+
+    await render(hbs`
+      <ChatComposerUploads @fileUploadElementId="chat-widget-uploader" @onUploadChanged={{this.onUploadChanged}} />
+    `);
+
+    const image = createFile("avatar.png");
+    const done = assert.async();
+    this.appEvents = this.container.lookup("service:appEvents");
+
+    this.appEvents.on(
+      `upload-mixin:chat-composer-uploader:upload-cancelled`,
+      (fileId) => {
+        assert.strictEqual(
+          fileId.includes("uppy-avatar/"),
+          true,
+          "upload was cancelled"
+        );
+        done();
+      }
+    );
+
+    this.appEvents.trigger(
+      "upload-mixin:chat-composer-uploader:add-files",
+      image
+    );
+
+    await waitFor(".chat-composer-upload");
+    assert.strictEqual(count(".chat-composer-upload"), 1);
+
+    await click(".remove-upload");
+    assert.strictEqual(count(".chat-composer-upload"), 0);
   });
 });

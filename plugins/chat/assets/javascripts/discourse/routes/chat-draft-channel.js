@@ -11,6 +11,6 @@ export default class ChatDraftChannelRoute extends DiscourseRoute {
   }
 
   activate() {
-    this.chat.setActiveChannel(null);
+    this.chat.activeChannel = null;
   }
 }

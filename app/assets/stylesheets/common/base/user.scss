@@ -80,7 +80,7 @@
 .user-main {
   .about {
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 0;
 
     &.has-background {
       .user-profile-image {
@@ -104,7 +104,7 @@
 
       dl {
         margin: 0;
-        padding: 5px 10px;
+        padding: 0.25em 0;
         div {
           display: inline-flex;
           align-items: baseline;
@@ -148,28 +148,6 @@
       background: rgba(var(--secondary-rgb), 0.8);
       border-bottom: 1px solid var(--primary-low);
 
-      h1 {
-        font-size: var(--font-up-5);
-        font-weight: normal;
-        .d-icon {
-          font-size: 0.8em;
-        }
-      }
-
-      h2 {
-        font-weight: normal;
-        max-width: 100%;
-        @include ellipsis;
-      }
-
-      h3 {
-        font-weight: normal;
-        margin-bottom: 0.5em;
-        .d-icon:not(:first-of-type) {
-          margin-left: 10px;
-        }
-      }
-
       .groups {
         display: inline;
       }
@@ -185,18 +163,11 @@
       .primary {
         width: 100%;
         position: relative;
-
-        h1 {
-          font-weight: bold;
-        }
+        display: flex;
 
         .bio {
           max-height: 300px;
           overflow: auto;
-
-          a[href] {
-            text-decoration: underline;
-          }
 
           img {
             max-width: 100%;
@@ -206,7 +177,7 @@
 
       .user-profile-avatar {
         position: relative;
-        float: left;
+        align-self: flex-start;
         .avatar-flair {
           bottom: 8px;
           right: 16px;
@@ -215,6 +186,7 @@
     }
 
     .controls {
+      margin-left: auto;
       ul {
         list-style-type: none;
         margin-top: 0;
@@ -239,15 +211,17 @@
             height: 45px;
           }
 
-          h1 {
+          .user-profile-names__primary {
             font-size: var(--font-up-3);
           }
 
-          h2 {
+          .user-profile-names__secondary {
             font-size: var(--font-up-1);
           }
-          h3,
-          h3.location-and-website {
+
+          .user-profile-names__title,
+          .user-profile__location-and-website,
+          .user-profile__featured-topic {
             display: none;
           }
         }
@@ -315,10 +289,11 @@
     margin-bottom: 10px;
 
     .controls {
-      label {
+      label:not(.checkbox-label) {
         width: auto;
         text-align: left;
         font-weight: normal;
+        font-weight: bold;
       }
 
       .instructions {
@@ -762,15 +737,78 @@
   }
   .second-factor-item {
     margin-top: 0.75em;
+    width: 500px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    margin: 5px 0px;
+    align-items: center;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+    .btn-danger .d-icon {
+      color: var(--danger);
+    }
   }
   .btn.edit {
     min-height: auto;
   }
 }
 
+.primary-textual {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .primary-textual .staged,
 .user-card .staged {
   font-style: italic;
+}
+
+.user-profile-names__primary,
+.user-profile-names__secondary {
+  max-width: 100%;
+  margin: 0;
+  @include ellipsis;
+}
+
+.user-profile-names__primary {
+  font-weight: bold;
+  font-size: var(--font-up-5);
+  line-height: var(--line-height-small);
+  .d-icon {
+    font-size: 0.8em;
+    vertical-align: baseline;
+  }
+  .user-status-message {
+    display: inline-flex;
+    vertical-align: baseline;
+  }
+}
+
+.user-profile-names__secondary {
+  font-size: var(--font-up-3);
+}
+
+.user-profile__featured-topic,
+.user-profile__location-and-website {
+  font-size: var(--font-0);
+  margin-top: 0.5em;
+  @include ellipsis;
+  .d-icon {
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    margin-right: 0.33em;
+  }
+}
+
+.user-profile__location-and-website {
+  display: flex;
+  max-width: 100%;
+  .user-profile-location {
+    margin-right: 1em;
+  }
 }
 
 .selectable-avatars {

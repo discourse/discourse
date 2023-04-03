@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::AutomaticGroupMembership do
-
   it "raises an error when the group id is missing" do
-    expect { Jobs::AutomaticGroupMembership.new.execute({}) }.to raise_error(Discourse::InvalidParameters)
+    expect { Jobs::AutomaticGroupMembership.new.execute({}) }.to raise_error(
+      Discourse::InvalidParameters,
+    )
   end
 
   it "updates the membership" do
@@ -14,19 +15,28 @@ RSpec.describe Jobs::AutomaticGroupMembership do
     user4 = Fabricate(:user, email: "yes@wat.com")
     EmailToken.confirm(Fabricate(:email_token, user: user4).token)
     user5 = Fabricate(:user, email: "sso@wat.com")
-    user5.create_single_sign_on_record(external_id: 123, external_email: "hacker@wat.com", last_payload: "")
+    user5.create_single_sign_on_record(
+      external_id: 123,
+      external_email: "hacker@wat.com",
+      last_payload: "",
+    )
     user6 = Fabricate(:user, email: "sso2@wat.com")
-    user6.create_single_sign_on_record(external_id: 456, external_email: "sso2@wat.com", last_payload: "")
+    user6.create_single_sign_on_record(
+      external_id: 456,
+      external_email: "sso2@wat.com",
+      last_payload: "",
+    )
 
     group = Fabricate(:group, automatic_membership_email_domains: "wat.com")
 
     automatic = nil
     called = false
 
-    blk = Proc.new do |_u, _g, options|
-      automatic = options[:automatic]
-      called = true
-    end
+    blk =
+      Proc.new do |_u, _g, options|
+        automatic = options[:automatic]
+        called = true
+      end
 
     begin
       DiscourseEvent.on(:user_added_to_group, &blk)
@@ -45,6 +55,6 @@ RSpec.describe Jobs::AutomaticGroupMembership do
     expect(group.users.include?(user4)).to eq(true)
     expect(group.users.include?(user5)).to eq(false)
     expect(group.users.include?(user6)).to eq(true)
+    expect(group.user_count).to eq(2)
   end
-
 end

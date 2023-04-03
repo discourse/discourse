@@ -25,7 +25,7 @@ acceptance("User Preferences - Categories", function (needs) {
     await visit("/u/eviltrout/preferences/categories");
 
     const trackedCategoriesSelector = selectKit(
-      ".tracking-controls--tracked-categories .category-selector"
+      ".tracking-controls__tracked-categories .category-selector"
     );
 
     await trackedCategoriesSelector.expand();
@@ -36,7 +36,7 @@ acceptance("User Preferences - Categories", function (needs) {
     );
 
     const regularCategoriesSelector = selectKit(
-      ".tracking-controls--regular-categories .category-selector"
+      ".tracking-controls__regular-categories .category-selector"
     );
 
     await regularCategoriesSelector.expand();
@@ -57,7 +57,7 @@ acceptance("User Preferences - Categories", function (needs) {
     await visit("/u/eviltrout/preferences/categories");
 
     const categorySelector = selectKit(
-      ".tracking-controls--tracked-categories .category-selector"
+      ".tracking-controls__tracked-categories .category-selector"
     );
 
     await categorySelector.expand();

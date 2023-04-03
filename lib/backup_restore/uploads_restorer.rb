@@ -11,11 +11,12 @@ module BackupRestore
     def self.s3_regex_string(s3_base_url)
       clean_url = s3_base_url.sub(S3_ENDPOINT_REGEX, ".s3.amazonaws.com")
 
-      regex_string = clean_url
-        .split(".s3.amazonaws.com")
-        .map { |s| Regexp.escape(s) }
-        .insert(1, S3_ENDPOINT_REGEX.source)
-        .join("")
+      regex_string =
+        clean_url
+          .split(".s3.amazonaws.com")
+          .map { |s| Regexp.escape(s) }
+          .insert(1, S3_ENDPOINT_REGEX.source)
+          .join("")
 
       [regex_string, clean_url]
     end
@@ -25,12 +26,16 @@ module BackupRestore
     end
 
     def restore(tmp_directory)
-      upload_directories = Dir.glob(File.join(tmp_directory, "uploads", "*"))
-        .reject { |path| File.basename(path).start_with?("PaxHeaders") }
+      upload_directories =
+        Dir
+          .glob(File.join(tmp_directory, "uploads", "*"))
+          .reject { |path| File.basename(path).start_with?("PaxHeaders") }
 
       if upload_directories.count > 1
-        raise UploadsRestoreError.new("Could not find uploads, because the uploads " \
-          "directory contains multiple folders.")
+        raise UploadsRestoreError.new(
+                "Could not find uploads, because the uploads " \
+                  "directory contains multiple folders.",
+              )
       end
 
       @tmp_uploads_path = upload_directories.first
@@ -55,7 +60,9 @@ module BackupRestore
       if !store.respond_to?(:copy_from)
         # a FileStore implementation from a plugin might not support this method, so raise a helpful error
         store_name = Discourse.store.class.name
-        raise UploadsRestoreError.new("The current file store (#{store_name}) does not support restoring uploads.")
+        raise UploadsRestoreError.new(
+                "The current file store (#{store_name}) does not support restoring uploads.",
+              )
       end
 
       log "Restoring uploads, this may take a while..."
@@ -89,13 +96,17 @@ module BackupRestore
         remap(old_base_url, Discourse.base_url)
       end
 
-      current_s3_base_url = SiteSetting::Upload.enable_s3_uploads ? SiteSetting::Upload.s3_base_url : nil
-      if (old_s3_base_url = BackupMetadata.value_for("s3_base_url")) && old_s3_base_url != current_s3_base_url
+      current_s3_base_url =
+        SiteSetting::Upload.enable_s3_uploads ? SiteSetting::Upload.s3_base_url : nil
+      if (old_s3_base_url = BackupMetadata.value_for("s3_base_url")) &&
+           old_s3_base_url != current_s3_base_url
         remap_s3("#{old_s3_base_url}/", uploads_folder)
       end
 
-      current_s3_cdn_url = SiteSetting::Upload.enable_s3_uploads ? SiteSetting::Upload.s3_cdn_url : nil
-      if (old_s3_cdn_url = BackupMetadata.value_for("s3_cdn_url")) && old_s3_cdn_url != current_s3_cdn_url
+      current_s3_cdn_url =
+        SiteSetting::Upload.enable_s3_uploads ? SiteSetting::Upload.s3_cdn_url : nil
+      if (old_s3_cdn_url = BackupMetadata.value_for("s3_cdn_url")) &&
+           old_s3_cdn_url != current_s3_cdn_url
         base_url = current_s3_cdn_url || Discourse.base_url
         remap("#{old_s3_cdn_url}/", UrlHelper.schemaless("#{base_url}#{uploads_folder}"))
 
@@ -113,10 +124,7 @@ module BackupRestore
         remap(old_host, new_host) if old_host != new_host
       end
 
-      if @previous_db_name != @current_db_name
-        remap("/uploads/#{@previous_db_name}/", upload_path)
-      end
-
+      remap("/uploads/#{@previous_db_name}/", upload_path) if @previous_db_name != @current_db_name
     rescue => ex
       log "Something went wrong while remapping uploads.", ex
     end
@@ -130,7 +138,12 @@ module BackupRestore
       if old_s3_base_url.include?("amazonaws.com")
         from_regex, from_clean_url = self.class.s3_regex_string(old_s3_base_url)
         log "Remapping with regex from '#{from_clean_url}' to '#{uploads_folder}'"
-        DbHelper.regexp_replace(from_regex, uploads_folder, verbose: true, excluded_tables: ["backup_metadata"])
+        DbHelper.regexp_replace(
+          from_regex,
+          uploads_folder,
+          verbose: true,
+          excluded_tables: ["backup_metadata"],
+        )
       else
         remap(old_s3_base_url, uploads_folder)
       end
@@ -141,13 +154,15 @@ module BackupRestore
       DB.exec("TRUNCATE TABLE optimized_images")
       SiteIconManager.ensure_optimized!
 
-      User.where("uploaded_avatar_id IS NOT NULL").find_each do |user|
-        Jobs.enqueue(:create_avatar_thumbnails, upload_id: user.uploaded_avatar_id)
-      end
+      User
+        .where("uploaded_avatar_id IS NOT NULL")
+        .find_each do |user|
+          Jobs.enqueue(:create_avatar_thumbnails, upload_id: user.uploaded_avatar_id)
+        end
     end
 
     def rebake_posts_with_uploads
-      log 'Posts will be rebaked by a background job in sidekiq. You will see missing images until that has completed.'
+      log "Posts will be rebaked by a background job in sidekiq. You will see missing images until that has completed."
       log 'You can expedite the process by manually running "rake posts:rebake_uncooked_posts"'
 
       DB.exec(<<~SQL)

@@ -6,8 +6,22 @@ class CategoryList
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
-  attr_accessor :categories,
-                :uncategorized
+  attr_accessor :categories, :uncategorized
+
+  def self.register_included_association(association)
+    @included_assocations ||= []
+    @included_assocations << association if !@included_assocations.include?(association)
+  end
+
+  def self.included_associations
+    [
+      :uploaded_background,
+      :uploaded_logo,
+      :uploaded_logo_dark,
+      :topic_only_relative_url,
+      subcategories: [:topic_only_relative_url],
+    ].concat(@included_assocations || [])
+  end
 
   def initialize(guardian = nil, options = {})
     @guardian = guardian || Guardian.new
@@ -28,13 +42,9 @@ class CategoryList
       displayable_topics.compact!
 
       if displayable_topics.present?
-        Topic.preload_custom_fields(
-          displayable_topics,
-          preloaded_topic_custom_fields
-        )
+        Topic.preload_custom_fields(displayable_topics, preloaded_topic_custom_fields)
       end
     end
-
   end
 
   def preload_key
@@ -46,11 +56,12 @@ class CategoryList
       categories.order(:position, :id)
     else
       allowed_category_ids = categories.pluck(:id) << nil # `nil` is necessary to include categories without any associated topics
-      categories.left_outer_joins(:featured_topics)
+      categories
+        .left_outer_joins(:featured_topics)
         .where(topics: { category_id: allowed_category_ids })
-        .group('categories.id')
+        .group("categories.id")
         .order("max(topics.bumped_at) DESC NULLS LAST")
-        .order('categories.id ASC')
+        .order("categories.id ASC")
     end
   end
 
@@ -60,16 +71,27 @@ class CategoryList
     @topics_by_id = {}
     @topics_by_category_id = {}
 
-    category_featured_topics = CategoryFeaturedTopic.select([:category_id, :topic_id]).order(:rank)
+    category_featured_topics = CategoryFeaturedTopic.select(%i[category_id topic_id]).order(:rank)
 
-    @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id)).includes(:shared_draft, :category)
+    @all_topics =
+      Topic.where(id: category_featured_topics.map(&:topic_id)).includes(
+        :shared_draft,
+        :category,
+        { topic_thumbnails: %i[optimized_image upload] },
+      )
 
-    @all_topics = @all_topics.joins(:tags).where(tags: { name: @options[:tag] }) if @options[:tag].present?
+    @all_topics = @all_topics.joins(:tags).where(tags: { name: @options[:tag] }) if @options[
+      :tag
+    ].present?
 
     if @guardian.authenticated?
-      @all_topics = @all_topics
-        .joins("LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}")
-        .where('COALESCE(tu.notification_level,1) > :muted', muted: TopicUser.notification_levels[:muted])
+      @all_topics =
+        @all_topics.joins(
+          "LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
+        ).where(
+          "COALESCE(tu.notification_level,1) > :muted",
+          muted: TopicUser.notification_levels[:muted],
+        )
     end
 
     @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user).includes(:last_poster)
@@ -88,7 +110,8 @@ class CategoryList
 
   def dismissed_topic?(topic)
     if @guardian.current_user
-      @dismissed_topic_users_lookup ||= DismissedTopicUser.lookup_for(@guardian.current_user, @all_topics)
+      @dismissed_topic_users_lookup ||=
+        DismissedTopicUser.lookup_for(@guardian.current_user, @all_topics)
       @dismissed_topic_users_lookup.include?(topic.id)
     else
       false
@@ -96,15 +119,13 @@ class CategoryList
   end
 
   def find_categories
-    @categories = Category.includes(
-      :uploaded_background,
-      :uploaded_logo,
-      :uploaded_logo_dark,
-      :topic_only_relative_url,
-      subcategories: [:topic_only_relative_url]
-    ).secured(@guardian)
+    @categories = Category.includes(CategoryList.included_associations).secured(@guardian)
 
-    @categories = @categories.where("categories.parent_category_id = ?", @options[:parent_category_id].to_i) if @options[:parent_category_id].present?
+    @categories =
+      @categories.where(
+        "categories.parent_category_id = ?",
+        @options[:parent_category_id].to_i,
+      ) if @options[:parent_category_id].present?
 
     @categories = self.class.order_categories(@categories)
 
@@ -132,17 +153,18 @@ class CategoryList
       end
       @categories.each do |c|
         c.subcategory_ids = subcategory_ids[c.id] || []
-        if include_subcategories
-          c.subcategory_list = subcategory_list[c.id] || []
-        end
+        c.subcategory_list = subcategory_list[c.id] || [] if include_subcategories
       end
       @categories.delete_if { |c| to_delete.include?(c) }
     end
 
     allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
+
     categories_with_descendants.each do |category|
       category.notification_level = notification_levels[category.id] || default_notification_level
-      category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
+      category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(
+        category.id,
+      )
       category.has_children = category.subcategories.present?
     end
 
@@ -186,9 +208,7 @@ class CategoryList
         c.displayable_topics.each do |t|
           unpinned << t if t.pinned_at && PinnedCheck.unpinned?(t, t.user_data)
         end
-        unless unpinned.empty?
-          c.displayable_topics = (c.displayable_topics - unpinned) + unpinned
-        end
+        c.displayable_topics = (c.displayable_topics - unpinned) + unpinned unless unpinned.empty?
       end
     end
   end
@@ -210,9 +230,7 @@ class CategoryList
     return @categories_with_children if @categories_with_children && (categories == @categories)
     return nil if categories.nil?
 
-    result = categories.flat_map do |c|
-      [c, *categories_with_descendants(c.subcategory_list)]
-    end
+    result = categories.flat_map { |c| [c, *categories_with_descendants(c.subcategory_list)] }
 
     @categories_with_children = result if categories == @categories
 

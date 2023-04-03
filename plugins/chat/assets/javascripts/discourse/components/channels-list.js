@@ -1,24 +1,42 @@
 import { bind } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import { action, computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { and, empty, reads } from "@ember/object/computed";
-
+import { tracked } from "@glimmer/tracking";
 export default class ChannelsList extends Component {
   @service chat;
   @service router;
   @service chatStateManager;
-  tagName = "";
-  inSidebar = false;
-  toggleSection = null;
-  @reads("chat.publicChannels.[]") publicChannels;
-  @reads("chat.directMessageChannels.[]") directMessageChannels;
-  @empty("publicChannels") publicChannelsEmpty;
-  @and("site.mobileView", "showDirectMessageChannels")
-  showMobileDirectMessageButton;
+  @service chatChannelsManager;
+  @service site;
+  @service session;
+  @service currentUser;
 
-  @computed("canCreateDirectMessageChannel")
+  @tracked hasScrollbar = false;
+
+  @action
+  computeHasScrollbar(element) {
+    this.hasScrollbar = element.scrollHeight > element.clientHeight;
+  }
+
+  @action
+  computeResizedEntries(entries) {
+    this.computeHasScrollbar(entries[0].target);
+  }
+
+  get showMobileDirectMessageButton() {
+    return this.site.mobileView && this.showDirectMessageChannels;
+  }
+
+  get inSidebar() {
+    return this.args.inSidebar ?? false;
+  }
+
+  get publicMessageChannelsEmpty() {
+    return this.chatChannelsManager.publicMessageChannels?.length === 0;
+  }
+
   get createDirectMessageChannelLabel() {
     if (!this.canCreateDirectMessageChannel) {
       return "chat.direct_messages.cannot_create";
@@ -27,11 +45,10 @@ export default class ChannelsList extends Component {
     return "chat.direct_messages.new";
   }
 
-  @computed("canCreateDirectMessageChannel", "directMessageChannels")
   get showDirectMessageChannels() {
     return (
       this.canCreateDirectMessageChannel ||
-      this.directMessageChannels?.length > 0
+      this.chatChannelsManager.directMessageChannels?.length > 0
     );
   }
 
@@ -39,30 +56,14 @@ export default class ChannelsList extends Component {
     return this.chat.userCanDirectMessage;
   }
 
-  @computed("directMessageChannels.@each.last_message_sent_at")
-  get sortedDirectMessageChannels() {
-    if (!this.directMessageChannels?.length) {
-      return [];
-    }
-
-    return this.chat.truncateDirectMessageChannels(
-      this.chat.sortDirectMessageChannels(this.directMessageChannels)
-    );
-  }
-
-  @computed("inSidebar")
   get publicChannelClasses() {
     return `channels-list-container public-channels ${
       this.inSidebar ? "collapsible-sidebar-section" : ""
     }`;
   }
 
-  @computed(
-    "publicChannelsEmpty",
-    "currentUser.{staff,has_joinable_public_channels}"
-  )
   get displayPublicChannels() {
-    if (this.publicChannelsEmpty) {
+    if (this.publicMessageChannelsEmpty) {
       return (
         this.currentUser?.staff ||
         this.currentUser?.has_joinable_public_channels
@@ -72,7 +73,6 @@ export default class ChannelsList extends Component {
     return true;
   }
 
-  @computed("inSidebar")
   get directMessageChannelClasses() {
     return `channels-list-container direct-message-channels ${
       this.inSidebar ? "collapsible-sidebar-section" : ""
@@ -81,7 +81,7 @@ export default class ChannelsList extends Component {
 
   @action
   toggleChannelSection(section) {
-    this.toggleSection(section);
+    this.args.toggleSection(section);
   }
 
   didRender() {
@@ -92,13 +92,21 @@ export default class ChannelsList extends Component {
 
   @action
   storeScrollPosition() {
+    if (this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
     const scrollTop = document.querySelector(".channels-list")?.scrollTop || 0;
     this.session.channelsListPosition = scrollTop;
   }
 
   @bind
   _applyScrollPosition() {
-    const position = this.chatStateManager.isFullPage
+    if (this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
+    const position = this.chatStateManager.isFullPageActive
       ? this.session.channelsListPosition || 0
       : 0;
     const scroller = document.querySelector(".channels-list");

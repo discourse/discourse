@@ -53,9 +53,7 @@ module CachedCounting
 
       @last_ensure_thread = now
 
-      if !@thread&.alive?
-        @thread = nil
-      end
+      @thread = nil if !@thread&.alive?
       @thread ||= Thread.new { thread_loop }
     end
   end
@@ -74,26 +72,20 @@ module CachedCounting
       end
       iterations += 1
     end
-
   rescue => ex
     if Redis::CommandError === ex && ex.message =~ /READONLY/
       # do not warn for Redis readonly mode
     elsif PG::ReadOnlySqlTransaction === ex
       # do not warn for PG readonly mode
     else
-      Discourse.warn_exception(
-        ex,
-        message: 'Unexpected error while processing cached counts'
-      )
+      Discourse.warn_exception(ex, message: "Unexpected error while processing cached counts")
     end
   end
 
   def self.flush
     @flush = true
     @thread.wakeup
-    while @flush
-      sleep 0.001
-    end
+    sleep 0.001 while @flush
   end
 
   COUNTER_REDIS_HASH = "CounterCacheHash"
@@ -122,25 +114,23 @@ module CachedCounting
     redis = Discourse.redis.without_namespace
     DistributedMutex.synchronize("flush_counters_to_db", redis: redis, validity: 5.minutes) do
       if allowed_to_flush_to_db?
-        redis.hkeys(COUNTER_REDIS_HASH).each do |key|
+        redis
+          .hkeys(COUNTER_REDIS_HASH)
+          .each do |key|
+            val = LUA_HGET_DEL.eval(redis, [COUNTER_REDIS_HASH, key]).to_i
 
-          val = LUA_HGET_DEL.eval(
-            redis,
-            [COUNTER_REDIS_HASH, key]
-          ).to_i
+            # unlikely (protected by mutex), but protect just in case
+            # could be a race condition in test
+            if val > 0
+              klass_name, db, date, local_key = key.split(",", 4)
+              date = Date.strptime(date, "%Y%m%d")
+              klass = Module.const_get(klass_name)
 
-          # unlikely (protected by mutex), but protect just in case
-          # could be a race condition in test
-          if val > 0
-            klass_name, db, date, local_key = key.split(",", 4)
-            date = Date.strptime(date, "%Y%m%d")
-            klass = Module.const_get(klass_name)
-
-            RailsMultisite::ConnectionManagement.with_connection(db) do
-              klass.write_cache!(local_key, val, date)
+              RailsMultisite::ConnectionManagement.with_connection(db) do
+                klass.write_cache!(local_key, val, date)
+              end
             end
           end
-        end
       end
     end
   end
@@ -154,7 +144,12 @@ module CachedCounting
   end
 
   def self.allowed_to_flush_to_db?
-    Discourse.redis.without_namespace.set(DB_COOLDOWN_KEY, "1", ex: DB_FLUSH_COOLDOWN_SECONDS, nx: true)
+    Discourse.redis.without_namespace.set(
+      DB_COOLDOWN_KEY,
+      "1",
+      ex: DB_FLUSH_COOLDOWN_SECONDS,
+      nx: true,
+    )
   end
 
   def self.queue(key, klass)
@@ -176,6 +171,5 @@ module CachedCounting
     def write_cache!(key, count, date)
       raise NotImplementedError
     end
-
   end
 end

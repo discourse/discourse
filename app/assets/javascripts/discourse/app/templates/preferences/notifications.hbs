@@ -2,51 +2,59 @@
   <label class="control-label">{{i18n "user.notifications"}}</label>
 
   <div class="controls controls-dropdown">
-    <label>{{i18n "user.new_topic_duration.label"}}</label>
-    <ComboBox @class="duration" @valueProperty="value" @content={{this.considerNewTopicOptions}} @value={{this.model.user_option.new_topic_duration_minutes}} @onChange={{action (mut this.model.user_option.new_topic_duration_minutes)}} />
-  </div>
-
-  <div class="controls controls-dropdown">
-    <label>{{i18n "user.auto_track_topics"}}</label>
-    <ComboBox @valueProperty="value" @content={{this.autoTrackDurations}} @value={{this.model.user_option.auto_track_topics_after_msecs}} @onChange={{action (mut this.model.user_option.auto_track_topics_after_msecs)}} />
-  </div>
-
-  <div class="controls controls-dropdown">
-    <label>{{i18n "user.notification_level_when_replying"}}</label>
-    <ComboBox @valueProperty="value" @content={{this.notificationLevelsForReplying}} @value={{this.model.user_option.notification_level_when_replying}} @onChange={{action (mut this.model.user_option.notification_level_when_replying)}} />
-  </div>
-
-  <div class="controls controls-dropdown">
     <label>{{i18n "user.like_notification_frequency.title"}}</label>
-    <ComboBox @valueProperty="value" @content={{this.likeNotificationFrequencies}} @value={{this.model.user_option.like_notification_frequency}} @onChange={{action (mut this.model.user_option.like_notification_frequency)}} />
+    <ComboBox
+      @valueProperty="value"
+      @content={{this.likeNotificationFrequencies}}
+      @value={{this.model.user_option.like_notification_frequency}}
+      @onChange={{action
+        (mut this.model.user_option.like_notification_frequency)
+      }}
+    />
   </div>
 </div>
 
-{{#unless this.capabilities.isIOS}}
+{{#unless this.capabilities.isAppWebview}}
   <div class="control-group desktop-notifications">
-    <label class="control-label">{{i18n "user.desktop_notifications.label"}}</label>
+    <label class="control-label">{{i18n
+        "user.desktop_notifications.label"
+      }}</label>
     <DesktopNotificationConfig />
-    <div class="instructions">{{i18n "user.desktop_notifications.each_browser_note"}}</div>
-    <PluginOutlet @name="user-preferences-desktop-notifications" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />
+    <div class="instructions">{{i18n
+        "user.desktop_notifications.each_browser_note"
+      }}</div>
+    <span>
+      <PluginOutlet
+        @name="user-preferences-desktop-notifications"
+        @connectorTagName="div"
+        @outletArgs={{hash model=this.model save=(action "save")}}
+      />
+    </span>
   </div>
 {{/unless}}
 
 <UserNotificationSchedule @model={{this.model}} />
 
-{{#if this.showMessageSettings}}
-  <div class="control-group private-messages">
-    <label class="control-label">{{i18n "user.private_messages"}}</label>
+<span>
+  <PluginOutlet
+    @name="user-preferences-notifications"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
-    <div class="controls">
-      <PreferenceCheckbox @labelKey="user.allow_private_messages" @checked={{this.model.user_option.allow_private_messages}} />
-    </div>
-  </div>
-{{/if}}
+<br />
 
-<PluginOutlet @name="user-preferences-notifications" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
-<br>
-
-<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
-
-<SaveControls @model={{this.model}} @action={{action "save"}} @saved={{this.saved}} />
+<SaveControls
+  @model={{this.model}}
+  @action={{action "save"}}
+  @saved={{this.saved}}
+/>

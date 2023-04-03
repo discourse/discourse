@@ -141,7 +141,7 @@ aside.onebox {
       color: var(--tertiary);
     }
 
-    img {
+    img:not(.avatar, .onebox-avatar-inline) {
       max-height: 170px;
       max-width: 20%;
       @media all and (max-width: 600px) {
@@ -406,7 +406,7 @@ pre.onebox code ol.lines li {
 }
 
 pre.onebox code li.selected {
-  background-color: var(--highlight-low-or-medium);
+  background-color: var(--highlight-bg);
 }
 
 pre.onebox code {
@@ -738,7 +738,8 @@ aside.onebox.xkcd .onebox-body img {
 
 // allowlistedgeneric twitter labels
 .onebox.allowlistedgeneric,
-.onebox.whitelistedgeneric {
+.onebox.whitelistedgeneric,
+.onebox.discoursetopic {
   .label1,
   .label2 {
     color: var(--primary-med-or-secondary-med);
@@ -752,20 +753,33 @@ aside.onebox.xkcd .onebox-body img {
 }
 
 .onebox {
-  &.allowlistedgeneric,
-  &.whitelistedgeneric,
-  &.gfycat,
-  &.githubfolder {
-    .site-icon {
-      width: 16px;
-      height: 16px;
-      margin-right: 0.5em;
-    }
+  .site-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 0.5em;
   }
   &.category-onebox {
     border: 1px solid var(--primary-low);
     padding-left: calc(1em - 5px);
     margin-left: 5px;
+  }
+}
+
+.onebox.discoursetopic {
+  h3 {
+    width: 100%;
+    margin-bottom: 0.2rem !important;
+  }
+
+  .discourse-tags {
+    vertical-align: bottom;
+    .d-icon-tag {
+      font-size: var(--font-down-1);
+      margin-right: 0.35em;
+      margin-top: 0.15em;
+      color: var(--primary-medium);
+      align-self: center;
+    }
   }
 }
 
@@ -901,7 +915,7 @@ iframe.vimeo-onebox {
 
 .video-container {
   .notice {
-    background-color: var(--highlight-medium);
+    background-color: var(--highlight-bg);
     padding: 10px 20px;
     position: absolute;
     width: calc(100% - 40px);

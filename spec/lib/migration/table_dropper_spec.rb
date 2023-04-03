@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Migration::TableDropper do
-
   def table_exists?(table_name)
     DB.exec(<<~SQL) > 0
       SELECT 1
@@ -11,7 +10,7 @@ RSpec.describe Migration::TableDropper do
     SQL
   end
 
-  def function_exists?(function_name, schema_name = 'public')
+  def function_exists?(function_name, schema_name = "public")
     DB.exec(<<~SQL) > 0
       SELECT 1
       FROM information_schema.routines
@@ -21,7 +20,7 @@ RSpec.describe Migration::TableDropper do
     SQL
   end
 
-  let(:table_name) { 'table_with_old_name' }
+  let(:table_name) { "table_with_old_name" }
 
   before do
     DB.exec "CREATE TABLE #{table_name} (topic_id INTEGER)"
@@ -40,9 +39,7 @@ RSpec.describe Migration::TableDropper do
   end
 
   describe ".readonly_only_table" do
-    before do
-      Migration::TableDropper.read_only_table(table_name)
-    end
+    before { Migration::TableDropper.read_only_table(table_name) }
 
     after do
       ActiveRecord::Base.connection.reset!
@@ -53,12 +50,10 @@ RSpec.describe Migration::TableDropper do
       SQL
     end
 
-    it 'should be droppable' do
+    it "should be droppable" do
       Migration::TableDropper.execute_drop(table_name)
 
-      expect(has_trigger?(Migration::BaseDropper.readonly_trigger_name(
-        table_name
-      ))).to eq(false)
+      expect(has_trigger?(Migration::BaseDropper.readonly_trigger_name(table_name))).to eq(false)
 
       expect(table_exists?(table_name)).to eq(false)
     end
@@ -66,14 +61,13 @@ RSpec.describe Migration::TableDropper do
     it "should drop the read_only function" do
       Migration::TableDropper.execute_drop(table_name)
 
-      schema_name, function_name = Migration::BaseDropper
-        .readonly_function_name(table_name)
-        .delete_suffix('()').split('.')
+      schema_name, function_name =
+        Migration::BaseDropper.readonly_function_name(table_name).delete_suffix("()").split(".")
 
       expect(function_exists?(function_name, schema_name)).to eq(false)
     end
 
-    it 'should prevent insertions to the table' do
+    it "should prevent insertions to the table" do
       begin
         DB.exec <<~SQL
           INSERT INTO #{table_name} (topic_id) VALUES (2)
@@ -81,10 +75,8 @@ RSpec.describe Migration::TableDropper do
       rescue PG::RaiseException => e
         [
           "Discourse: #{table_name} is read only",
-          'discourse_functions.raise_table_with_old_name_readonly()'
-        ].each do |message|
-          expect(e.message).to include(message)
-        end
+          "discourse_functions.raise_table_with_old_name_readonly()",
+        ].each { |message| expect(e.message).to include(message) }
       end
     end
   end

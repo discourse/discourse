@@ -15,12 +15,18 @@ class Stylesheet::Manager::Builder
       if File.exist?(stylesheet_fullpath)
         if !StylesheetCache.where(target: qualified_target, digest: digest).exists?
           begin
-            source_map = begin
-              File.read(source_map_fullpath)
-            rescue Errno::ENOENT
-            end
+            source_map =
+              begin
+                File.read(source_map_fullpath)
+              rescue Errno::ENOENT
+              end
 
-            StylesheetCache.add(qualified_target, digest, File.read(stylesheet_fullpath), source_map)
+            StylesheetCache.add(
+              qualified_target,
+              digest,
+              File.read(stylesheet_fullpath),
+              source_map,
+            )
           rescue => e
             Rails.logger.warn "Completely unexpected error adding contents of '#{stylesheet_fullpath}' to cache #{e}"
           end
@@ -29,41 +35,36 @@ class Stylesheet::Manager::Builder
       end
     end
 
-    rtl = @target.to_s =~ /_rtl$/
-    css, source_map = with_load_paths do |load_paths|
-      Stylesheet::Compiler.compile_asset(
-        @target,
-         rtl: rtl,
-         theme_id: theme&.id,
-         theme_variables: theme&.scss_variables.to_s,
-         source_map_file: source_map_url_relative_from_stylesheet,
-         color_scheme_id: @color_scheme&.id,
-         load_paths: load_paths
-      )
-    rescue SassC::SyntaxError => e
-      if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
-        # no special errors for theme, handled in theme editor
-        ["", nil]
-      elsif @target.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
-        # log error but do not crash for errors in color definitions SCSS
-        Rails.logger.error "SCSS compilation error: #{e.message}"
-        ["", nil]
-      else
-        raise Discourse::ScssError, e.message
+    rtl = @target.to_s =~ /_rtl\z/
+    css, source_map =
+      with_load_paths do |load_paths|
+        Stylesheet::Compiler.compile_asset(
+          @target,
+          rtl: rtl,
+          theme_id: theme&.id,
+          theme_variables: theme&.scss_variables.to_s,
+          source_map_file: source_map_url_relative_from_stylesheet,
+          color_scheme_id: @color_scheme&.id,
+          load_paths: load_paths,
+        )
+      rescue SassC::SyntaxError, SassC::NotRenderedError => e
+        if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
+          # no special errors for theme, handled in theme editor
+          ["", nil]
+        elsif @target.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
+          # log error but do not crash for errors in color definitions SCSS
+          Rails.logger.error "SCSS compilation error: #{e.message}"
+          ["", nil]
+        else
+          raise Discourse::ScssError, e.message
+        end
       end
-    end
 
     FileUtils.mkdir_p(cache_fullpath)
 
-    File.open(stylesheet_fullpath, "w") do |f|
-      f.puts css
-    end
+    File.open(stylesheet_fullpath, "w") { |f| f.puts css }
 
-    if source_map.present?
-      File.open(source_map_fullpath, "w") do |f|
-        f.puts source_map
-      end
-    end
+    File.open(source_map_fullpath, "w") { |f| f.puts source_map } if source_map.present?
 
     begin
       StylesheetCache.add(qualified_target, digest, css, source_map)
@@ -146,20 +147,21 @@ class Stylesheet::Manager::Builder
   end
 
   def scheme_slug
-    Slug.for(ActiveSupport::Inflector.transliterate(@color_scheme.name), 'scheme')
+    Slug.for(ActiveSupport::Inflector.transliterate(@color_scheme.name), "scheme")
   end
 
   # digest encodes the things that trigger a recompile
   def digest
-    @digest ||= begin
-      if is_theme?
-        theme_digest
-      elsif is_color_scheme?
-        color_scheme_digest
-      else
-        default_digest
+    @digest ||=
+      begin
+        if is_theme?
+          theme_digest
+        elsif is_color_scheme?
+          color_scheme_digest
+        else
+          default_digest
+        end
       end
-    end
   end
 
   def with_load_paths
@@ -171,7 +173,7 @@ class Stylesheet::Manager::Builder
   end
 
   def scss_digest
-    if [:mobile_theme, :desktop_theme].include?(@target)
+    if %i[mobile_theme desktop_theme].include?(@target)
       resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
     elsif @target == :embedded_theme
       resolve_baked_field(:common, :embedded_scss)
@@ -181,7 +183,10 @@ class Stylesheet::Manager::Builder
   end
 
   def theme_digest
-    Digest::SHA1.hexdigest(scss_digest.to_s + color_scheme_digest.to_s + settings_digest + uploads_digest + current_hostname)
+    Digest::SHA1.hexdigest(
+      scss_digest.to_s + color_scheme_digest.to_s + settings_digest + uploads_digest +
+        current_hostname,
+    )
   end
 
   # this protects us from situations where new versions of a plugin removed a file
@@ -205,13 +210,15 @@ class Stylesheet::Manager::Builder
         [@manager.get_theme(theme.id)]
       end
 
-    fields = themes.each_with_object([]) do |theme, array|
-      array.concat(theme.yaml_theme_fields.map(&:updated_at))
-    end
+    fields =
+      themes.each_with_object([]) do |theme, array|
+        array.concat(theme.yaml_theme_fields.map(&:updated_at))
+      end
 
-    settings = themes.each_with_object([]) do |theme, array|
-      array.concat(theme.theme_settings.map(&:updated_at))
-    end
+    settings =
+      themes.each_with_object([]) do |theme, array|
+        array.concat(theme.theme_settings.map(&:updated_at))
+      end
 
     timestamps = fields.concat(settings).map!(&:to_f).sort!.join(",")
 
@@ -221,9 +228,7 @@ class Stylesheet::Manager::Builder
   def uploads_digest
     sha1s = []
 
-    (theme&.upload_fields || []).map do |upload_field|
-      sha1s << upload_field.upload&.sha1
-    end
+    (theme&.upload_fields || []).map { |upload_field| sha1s << upload_field.upload&.sha1 }
 
     Digest::SHA1.hexdigest(sha1s.compact.sort!.join("\n"))
   end
@@ -235,20 +240,20 @@ class Stylesheet::Manager::Builder
   def color_scheme_digest
     cs = @color_scheme || theme&.color_scheme
 
-    categories_updated = Stylesheet::Manager.cache.defer_get_set("categories_updated") do
-      Category
-        .where("uploaded_background_id IS NOT NULL")
-        .pluck(:updated_at)
-        .map(&:to_i)
-        .sum
-    end
+    categories_updated =
+      Stylesheet::Manager
+        .cache
+        .defer_get_set("categories_updated") do
+          Category.where("uploaded_background_id IS NOT NULL").pluck(:updated_at).map(&:to_i).sum
+        end
 
     fonts = "#{SiteSetting.base_font}-#{SiteSetting.heading_font}"
 
     digest_string = "#{current_hostname}-"
     if cs || categories_updated > 0
       theme_color_defs = resolve_baked_field(:common, :color_definitions)
-      digest_string += "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{categories_updated}-#{fonts}"
+      digest_string +=
+        "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{categories_updated}-#{fonts}"
     else
       digest_string += "defaults-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
 
@@ -274,17 +279,21 @@ class Stylesheet::Manager::Builder
     baked_fields = []
     targets = [Theme.targets[target.to_sym], Theme.targets[:common]]
 
-    @manager.load_themes(theme_ids).each do |theme|
-      theme.builder_theme_fields.each do |theme_field|
-        if theme_field.name == name.to_s && targets.include?(theme_field.target_id)
-          baked_fields << theme_field
+    @manager
+      .load_themes(theme_ids)
+      .each do |theme|
+        theme.builder_theme_fields.each do |theme_field|
+          if theme_field.name == name.to_s && targets.include?(theme_field.target_id)
+            baked_fields << theme_field
+          end
         end
       end
-    end
 
-    baked_fields.map do |f|
-      f.ensure_baked!
-      f.value_baked || f.value
-    end.join("\n")
+    baked_fields
+      .map do |f|
+        f.ensure_baked!
+        f.value_baked || f.value
+      end
+      .join("\n")
   end
 end

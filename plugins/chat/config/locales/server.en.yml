@@ -17,7 +17,9 @@ en:
     default_emoji_reactions: "Default emoji reactions for chat messages. Add up to 5 emojis for quick reaction."
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
     chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages."
+    max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
+    chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
@@ -27,26 +29,47 @@ en:
       title: "Chat Channel Archive Complete"
       subject_template: "Chat channel archive completed successfully"
       text_body_template: |
-        Archiving the chat channel **\#%{channel_name}** has been completed successfully. The messages were copied into the topic [%{topic_title}](%{topic_url}).
+        Archiving the chat channel %{channel_hashtag_or_name} has been completed successfully. The messages were copied into the topic [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Chat Channel Archive Failed"
       subject_template: "Chat channel archive failed"
       text_body_template: |
-        Archiving the chat channel **\#%{channel_name}** has failed. %{messages_archived} messages have been archived. Partially archived messages were copied into the topic [%{topic_title}](%{topic_url}). Visit the channel at %{channel_url} to retry.
+        Archiving the chat channel %{channel_hashtag_or_name} has failed. %{messages_archived} messages have been archived. Partially archived messages were copied into the topic [%{topic_title}](%{topic_url}). Visit the channel at %{channel_url} to retry.
+    chat_channel_archive_failed_no_topic:
+      title: "Chat Channel Archive Failed"
+      subject_template: "Chat channel archive failed"
+      text_body_template: |
+        Archiving the chat channel %{channel_hashtag_or_name} has failed. No messages have been archived. The topic was not created successfully for the following reasons:
+
+          %{topic_validation_errors}
+
+        Visit the channel at %{channel_url} to retry.
 
   chat:
     deleted_chat_username: deleted
     errors:
       channel_exists_for_category: "A channel already exists for this category and name"
-      channel_new_message_disallowed: "The channel is %{status}, no new messages can be sent"
-      channel_modify_message_disallowed: "The channel is %{status}, no messages can be edited or deleted"
+      channel_new_message_disallowed:
+        archived: "The channel is archived, no new messages can be sent"
+        closed: "The channel is closed, no new messages can be sent"
+        read_only: "The channel is read only, no new messages can be sent"
+      channel_modify_message_disallowed:
+        archived: "The channel is archived, no messages can be edited or deleted"
+        closed: "The channel is closed, no messages can be edited or deleted"
+        read_only: "The channel is read only, no messages can be edited or deleted"
       user_cannot_send_message: "You cannot send messages at this time."
       rate_limit_exceeded: "Exceeded the limit of chat messages that can be sent within 30 seconds"
       auto_silence_from_flags: "Chat message flagged with score high enough to silence user."
       channel_cannot_be_archived: "The channel cannot be archived at this time, it must be either closed or open to archive."
       duplicate_message: "You posted an identical message too recently."
       delete_channel_failed: "Delete channel failed, please try again."
-      minimum_length_not_met: "Message is too short, must have a minimum of %{minimum} characters."
+      minimum_length_not_met:
+        one: "Message is too short, must have a minimum of %{count} character."
+        other: "Message is too short, must have a minimum of %{count} characters."
+      message_too_long:
+        one: "Message is too long, messages must be a maximum of %{count} characters."
+        other: "Message is too long, messages must be a maximum of %{count} characters."
+      draft_too_long: "Draft is too long."
       max_reactions_limit_reached: "New reactions are not allowed on this message."
       message_move_invalid_channel: "The source and destination channel must be public channels."
       message_move_no_messages_found: "No messages were found with the provided message IDs."
@@ -57,9 +80,11 @@ en:
       actor_disallowed_dms: "You have chosen to prevent users from sending you private and direct messages, so you cannot create new direct messages."
       actor_preventing_target_user_from_dm: "You have chosen to prevent %{username} from sending you private and direct messages, so you cannot create new direct messages to them."
       user_cannot_send_direct_messages: "Sorry, you cannot send direct messages."
+      over_chat_max_direct_message_users_allow_self: "You can only create a direct message with yourself."
       over_chat_max_direct_message_users:
-        one: "You can only create a direct message with yourself."
+        one: "You can't create a direct message with more than %{count} other user."
         other: "You can't create a direct message with more than %{count} other users."
+      original_message_not_found: "The ancestor of the message you are replying cannot be found or has been deleted."
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:
@@ -96,20 +121,17 @@ en:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Read Only"
-        archived: "Archived"
-        closed: "Closed"
-        open: "Open"
       archive:
         first_post_raw: "This topic is an archive of the [%{channel_name}](%{channel_url}) chat channel."
       messages_moved:
         one: "@%{acting_username} moved a message to the [%{channel_name}](%{first_moved_message_url}) channel."
         other: "@%{acting_username} moved %{count} messages to the [%{channel_name}](%{first_moved_message_url}) channel."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} and %{leftover} others"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} and %{count} other"
+          other: "%{comma_separated_usernames} and %{count} others"
 
     category_channel:
       errors:
@@ -159,7 +181,7 @@ en:
     notify_moderators:
       chat_pm_title: 'A chat message in "%{channel_name}" requires staff attention'
       chat_pm_body: "%{link}\n\n%{message}"
-  
+
   reviewables:
     reasons:
       chat_message_queued_by_staff: "A staff member thinks this chat message needs review."
@@ -171,14 +193,17 @@ en:
         other: "You have new chat messages"
       from: "%{site_name}"
       subject:
-        direct_message:
-          one: "[%{email_prefix}] New message from %{message_title}"
-          other: "[%{email_prefix}] New messages from %{message_title} and %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] New message in %{message_title}"
-          other: "[%{email_prefix}] New messages in %{message_title} and %{others}"
-        other_direct_message: "from %{message_title}"
-        others: "%{count} others"
+        direct_message_from_1: "[%{email_prefix}] New message from %{username}"
+        direct_message_from_2: "[%{email_prefix}] New message from %{username1} and %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] New message from %{username} and %{count} other"
+          other: "[%{email_prefix}] New message from %{username} and %{count} others"
+        chat_channel_1: "[%{email_prefix}] New message in %{channel}"
+        chat_channel_2: "[%{email_prefix}] New message in %{channel1} and %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] New message in %{channel} and %{count} other"
+          other: "[%{email_prefix}] New message in %{channel} and %{count} others"
+        chat_channel_and_direct_message: "[%{email_prefix}] New message in %{channel} and from %{username}"
       unsubscribe: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       unsubscribe_no_link: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}."
       view_messages:

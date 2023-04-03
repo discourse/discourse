@@ -10,7 +10,7 @@ RSpec.describe UrlValidator do
     "http://google/",
     "ftp://ftp.google.com",
     "http:///what.is.this",
-    'http://meta.discourse.org TEST'
+    "http://meta.discourse.org TEST",
   ].each do |invalid_url|
     it "#{invalid_url} should not be valid" do
       record.website = invalid_url
@@ -19,11 +19,11 @@ RSpec.describe UrlValidator do
     end
   end
 
-  [
-    "http://discourse.productions",
-    "https://google.com",
-    'http://xn--nw2a.xn--j6w193g/',
-    "http://見.香港/",
+  %w[
+    http://discourse.productions
+    https://google.com
+    http://xn--nw2a.xn--j6w193g/
+    http://見.香港/
   ].each do |valid_url|
     it "#{valid_url} should be valid" do
       record.website = valid_url

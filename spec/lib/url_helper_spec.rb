@@ -73,14 +73,18 @@ RSpec.describe UrlHelper do
   describe "#absolute_without_cdn" do
     it "changes a relative url to an absolute one using base url even when cdn is enabled" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      expect(UrlHelper.absolute_without_cdn("/path/to/file")).to eq("http://test.localhost/path/to/file")
+      expect(UrlHelper.absolute_without_cdn("/path/to/file")).to eq(
+        "http://test.localhost/path/to/file",
+      )
     end
   end
 
   describe "#schemaless" do
     it "removes http schemas only" do
       expect(UrlHelper.schemaless("http://www.discourse.org")).to eq("//www.discourse.org")
-      expect(UrlHelper.schemaless("https://secure.discourse.org")).to eq("https://secure.discourse.org")
+      expect(UrlHelper.schemaless("https://secure.discourse.org")).to eq(
+        "https://secure.discourse.org",
+      )
       expect(UrlHelper.schemaless("ftp://ftp.discourse.org")).to eq("ftp://ftp.discourse.org")
     end
   end
@@ -97,27 +101,28 @@ RSpec.describe UrlHelper do
     end
 
     it "doesn't escape simple URL" do
-      url = UrlHelper.normalized_encode('http://example.com/foo/bar')
-      expect(url).to eq('http://example.com/foo/bar')
+      url = UrlHelper.normalized_encode("http://example.com/foo/bar")
+      expect(url).to eq("http://example.com/foo/bar")
     end
 
     it "escapes unsafe chars" do
       url = UrlHelper.normalized_encode("http://example.com/?a=\11\15")
-      expect(url).to eq('http://example.com/?a=%09%0D')
+      expect(url).to eq("http://example.com/?a=%09%0D")
     end
 
     it "escapes non-ascii chars" do
-      url = UrlHelper.normalized_encode('http://example.com/ماهی')
-      expect(url).to eq('http://example.com/%D9%85%D8%A7%D9%87%DB%8C')
+      url = UrlHelper.normalized_encode("http://example.com/ماهی")
+      expect(url).to eq("http://example.com/%D9%85%D8%A7%D9%87%DB%8C")
     end
 
     it "doesn't escape already escaped chars (space)" do
-      url = UrlHelper.normalized_encode('http://example.com/foo%20bar/foo bar/')
-      expect(url).to eq('http://example.com/foo%20bar/foo%20bar/')
+      url = UrlHelper.normalized_encode("http://example.com/foo%20bar/foo bar/")
+      expect(url).to eq("http://example.com/foo%20bar/foo%20bar/")
     end
 
     it "doesn't escape already escaped chars (hash)" do
-      url = 'https://calendar.google.com/calendar/embed?src=en.uk%23holiday@group.v.calendar.google.com&ctz=Europe%2FLondon'
+      url =
+        "https://calendar.google.com/calendar/embed?src=en.uk%23holiday@group.v.calendar.google.com&ctz=Europe%2FLondon"
       escaped = UrlHelper.normalized_encode(url)
       expect(escaped).to eq(url)
     end
@@ -153,9 +158,17 @@ RSpec.describe UrlHelper do
     it "doesn't escape S3 presigned URLs" do
       # both of these were originally real presigned URLs and have had all
       # sensitive information stripped
-      presigned_url = "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977%2F20200130%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah%2Bblahblah%2Fblah%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAR&X-Amz-Signature=test"
-      encoded_presigned_url = "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977/20200130/us-west-1/s3/aws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah+blahblah/blah//////////wEQA==&X-Amz-Signature=test"
+      presigned_url =
+        "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977%2F20200130%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah%2Bblahblah%2Fblah%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAR&X-Amz-Signature=test"
+      encoded_presigned_url =
+        "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977/20200130/us-west-1/s3/aws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah+blahblah/blah//////////wEQA==&X-Amz-Signature=test"
       expect(UrlHelper.normalized_encode(presigned_url)).not_to eq(encoded_presigned_url)
+    end
+
+    it "raises error if too long" do
+      expect do UrlHelper.normalized_encode("https://#{"a" * 100_000}.com") end.to raise_error(
+        ArgumentError,
+      )
     end
   end
 
@@ -172,22 +185,24 @@ RSpec.describe UrlHelper do
 
   describe "#rails_route_from_url" do
     it "recognizes a user path" do
-      result = UrlHelper.rails_route_from_url('http://example.com/u/john_smith')
+      result = UrlHelper.rails_route_from_url("http://example.com/u/john_smith")
       expect(result[:controller]).to eq("users")
       expect(result[:action]).to eq("show")
       expect(result[:username]).to eq("john_smith")
     end
 
     it "recognizes a user path with unicode characters in the username" do
-      result = UrlHelper.rails_route_from_url('http://example.com/u/björn_ulvaeus')
+      result = UrlHelper.rails_route_from_url("http://example.com/u/björn_ulvaeus")
       expect(result[:controller]).to eq("users")
       expect(result[:action]).to eq("show")
-      expect(result[:username].force_encoding('UTF-8')).to eq("björn_ulvaeus")
+      expect(result[:username].force_encoding("UTF-8")).to eq("björn_ulvaeus")
     end
   end
 
   describe "#cook_url" do
-    let(:url) { "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg" }
+    let(:url) do
+      "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
+    end
 
     before do
       setup_s3
@@ -209,7 +224,7 @@ RSpec.describe UrlHelper do
 
       it "returns the secure_proxy_without_cdn url, with no asset host URL change" do
         expect(cooked).to eq(
-          "//test.localhost/secure-uploads/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
+          "//test.localhost/secure-uploads/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg",
         )
       end
 
@@ -218,7 +233,7 @@ RSpec.describe UrlHelper do
 
         it "returns the local_cdn_url" do
           expect(cooked).to eq(
-            "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
+            "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg",
           )
         end
       end
@@ -229,19 +244,19 @@ RSpec.describe UrlHelper do
 
       it "returns the local_cdn_url" do
         expect(cooked).to eq(
-          "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
+          "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg",
         )
       end
     end
 
-    after do
-      Rails.configuration.action_controller.asset_host = nil
-    end
+    after { Rails.configuration.action_controller.asset_host = nil }
   end
 
   describe "rails_route_from_url" do
     it "returns a rails route from the path" do
-      expect(described_class.rails_route_from_url("/u")).to eq({ controller: "users", action: "index" })
+      expect(described_class.rails_route_from_url("/u")).to eq(
+        { controller: "users", action: "index" },
+      )
     end
 
     it "does not raise for invalid URLs" do

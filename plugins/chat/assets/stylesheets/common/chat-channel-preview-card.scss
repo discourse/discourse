@@ -1,10 +1,11 @@
 .chat-channel-preview-card {
   margin: 1rem 1rem 2rem 1rem;
   padding: 1.5rem 1rem;
-  background-color: var(--primary-50);
+  background-color: var(--secondary-very-high);
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 3;
 
   &.-no-description {
     .chat-channel-title {

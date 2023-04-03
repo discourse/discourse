@@ -2,8 +2,10 @@
   <DButton
     @title="sidebar.toggle_section"
     @class="sidebar-section-header sidebar-section-header-collapsable btn-flat"
-    @action={{@toggleSectionDisplay}} >
-
+    @action={{@toggleSectionDisplay}}
+    @ariaExpanded={{@isExpanded}}
+    @ariaControls={{@sidebarSectionContentID}}
+  >
     {{yield}}
   </DButton>
 {{else}}

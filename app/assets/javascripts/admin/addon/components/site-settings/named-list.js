@@ -1,13 +1,13 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 
-export default Component.extend({
-  tokenSeparator: "|",
+export default class NamedList extends Component {
+  tokenSeparator = "|";
 
   @computed("value")
   get settingValue() {
     return this.value.toString().split(this.tokenSeparator).filter(Boolean);
-  },
+  }
 
   @computed("setting.choices.[]", "settingValue")
   get settingChoices() {
@@ -24,10 +24,10 @@ export default Component.extend({
     }
 
     return choices;
-  },
+  }
 
   @action
   onChangeListSetting(value) {
     this.set("value", value.join(this.tokenSeparator));
-  },
-});
+  }
+}

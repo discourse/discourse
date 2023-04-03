@@ -1,0 +1,22 @@
+<div
+  class={{concat-class
+    "chat-channel-preview-card"
+    (unless this.hasDescription "-no-description")
+  }}
+>
+  <ChatChannelTitle @channel={{@channel}} />
+  {{#if this.hasDescription}}
+    <p class="chat-channel-preview-card__description">
+      {{@channel.description}}
+    </p>
+  {{/if}}
+  {{#if this.showJoinButton}}
+    <ToggleChannelMembershipButton
+      @channel={{@channel}}
+      @options={{hash joinClass="btn-primary"}}
+    />
+  {{/if}}
+  <LinkTo @route="chat.browse" class="chat-channel-preview-card__browse-all">
+    {{i18n "chat.browse_all_channels"}}
+  </LinkTo>
+</div>

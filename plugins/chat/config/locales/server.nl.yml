@@ -5,34 +5,65 @@
 # https://translate.discourse.org/
 
 nl:
+  site_settings:
+    chat_enabled: "Schakel de chatplug-in in."
+    chat_allowed_groups: "Gebruikers in deze groepen kunnen chatten. Houd er rekening mee dat medewerkers altijd toegang hebben tot de chat."
+    chat_channel_retention_days: "Chatberichten in reguliere kanalen worden dit aantal dagen bewaard. Stel dit in op '0' om berichten voor altijd te bewaren."
+    chat_dm_retention_days: "Chatberichten in privéchatkanalen worden dit aantal dagen bewaard. Stel dit in op '0' om berichten voor altijd te bewaren."
+    chat_auto_silence_duration: "Het aantal minuten dat gebruikers worden gedempt wanneer ze de limiet voor het maken van chatberichten overschrijden. Stel dit in op '0' om automatisch dempen uit te schakelen."
+    chat_allowed_messages_for_trust_level_0: "Aantal berichten dat gebruikers met vertrouwensniveau 0 binnen 30 seconden mogen sturen. Stel dit in op '0' om de limiet uit te schakelen."
+    chat_allowed_messages_for_other_trust_levels: "Aantal berichten dat gebruikers met vertrouwensniveau 1-4 binnen 30 seconden mogen sturen. Stel dit in op '0' om de limiet uit te schakelen."
+    chat_silence_user_sensitivity: "De waarschijnlijkheid dat een in een chat gemarkeerde gebruiker automatisch wordt gedempt."
+    chat_auto_silence_from_flags_duration: "Het aantal minuten dat gebruikers worden gedempt wanneer ze automatisch worden gedempt vanwege gemarkeerde chatberichten."
+    chat_default_channel_id: "Het chatkanaal dat standaard wordt geopend wanneer een gebruiker geen ongelezen berichten of vermeldingen in andere kanalen heeft."
+    chat_duplicate_message_sensitivity: "De waarschijnlijkheid dat een dubbel bericht van dezelfde afzender in korte tijd wordt geblokkeerd. Decimaal getal tussen 0 en 1,0, waarbij 1,0 de hoogste instelling is (blokkeert vaker berichten in een kortere tijd). Stel in op '0' om dubbele berichten toe te staan."
+    chat_minimum_message_length: "Minimumaantal tekens voor een chatbericht."
+    chat_allow_uploads: "Sta uploads toe in openbare chatkanalen en kanalen voor directe berichten."
+    chat_archive_destination_topic_status: "De status die het bestemmingstopic moet hebben zodra een kanaalarchivering is voltooid. Dit is alleen van toepassing als het bestemmingstopic een nieuw onderwerp is en geen bestaand topic."
+    default_emoji_reactions: "Standaard emojireacties voor chatberichten. Voeg maximaal 5 emoji's toe voor een snelle reactie."
+    direct_message_enabled_groups: "Sta gebruikers binnen deze groepen toe privéchats van gebruiker tot gebruiker te maken. Opmerking: medewerkers kunnen altijd privéchats maken en gebruikers kunnen reageren op privéchats die zijn gestart door gebruikers die toestemming hebben om ze te maken."
+    chat_message_flag_allowed_groups: "Gebruikers in deze groepen mogen chatberichten markeren."
+    max_mentions_per_chat_message: "Maximale aantal @naam-vermeldingen dat een gebruiker in een chatbericht kan gebruiken."
+    chat_max_direct_message_users: "Gebruikers kunnen niet meer dan dit aantal andere gebruikers toevoegen bij het maken van een nieuw direct bericht. Stel dit in op 0 om alleen berichten aan een gebruiker zelf toe te staan. Medewerkers zijn uitgezonderd van deze instelling."
+    chat_allow_archiving_channels: "Medewerkers toestaan om berichten in een topic te archiveren bij het sluiten van een kanaal."
+    errors:
+      chat_default_channel: "Het standaard chatkanaal moet een openbaar kanaal zijn."
+      direct_message_enabled_groups_invalid: "Je moet ten minste één groep opgeven voor deze instelling. Als je niet wilt dat iemand behalve medewerkers directe berichten stuurt, kies dan de medewerkersgroep."
+      chat_upload_not_allowed_secure_uploads: "Chatuploads zijn niet toegestaan als de website-instelling voor beveiligde uploads is ingeschakeld."
   system_messages:
     chat_channel_archive_complete:
+      title: "Archiveren van chatkanaal voltooid"
       subject_template: "Archiveren van chatkanaal voltooid"
     chat_channel_archive_failed:
       title: "Archiveren van chatkanaal mislukt"
       subject_template: "Archiveren van chatkanaal mislukt"
+    chat_channel_archive_failed_no_topic:
+      title: "Archiveren van kanaal mislukt"
+      subject_template: "Chatkanaal archiveren mislukt"
   chat:
     deleted_chat_username: verwijderd
     errors:
       channel_exists_for_category: "Er bestaat al een kanaal voor deze categorie en naam"
-      channel_new_message_disallowed: "Het kanaal is %{status}, er kunnen geen nieuwe berichten worden gestuurd"
-      channel_modify_message_disallowed: "Het kanaal is %{status}, er kunnen geen berichten worden bewerkt of verwijderd"
       user_cannot_send_message: "Je kunt op dit moment geen berichten sturen."
-      rate_limit_exceeded: "De limiet van chatberichten die binnen 30 seconden kunnen worden gestuud is overschreden"
+      rate_limit_exceeded: "De limiet van chatberichten die binnen 30 seconden kunnen worden gestuurd is overschreden"
       auto_silence_from_flags: "Chatbericht gemarkeerd met een score die hoog genoeg is om de gebruiker te dempen."
       channel_cannot_be_archived: "Het kanaal kan op dit moment niet worden gearchiveerd, het moet gesloten zijn of open voor archivering."
       duplicate_message: "Je hebt te kort geleden een identiek bericht geplaatst."
       delete_channel_failed: "Kanaal verwijderen mislukt, probeer het opnieuw."
-      minimum_length_not_met: "Bericht is te kort, moet minimaal %{minimum} tekens bevatten."
+      message_too_long:
+        one: "Bericht is te lang, berichten mogen maximaal %{count} tekens lang zijn."
+        other: "Bericht is te lang, berichten mogen maximaal %{count} tekens lang zijn."
       max_reactions_limit_reached: "Nieuwe reacties op dit bericht zijn niet toegestaan."
       message_move_invalid_channel: "Het bron- en bestemmingskanaal moeten openbare kanalen zijn."
       message_move_no_messages_found: "Er zijn geen berichten gevonden met de opgegeven bericht-ID's."
+      cant_update_direct_message_channel: "Eigenschappen voor directe-berichtenkanalen zoals naam en beschrijving kunnen niet worden bijgewerkt."
       not_accepting_dms: "Sorry, %{username} accepteert momenteel geen berichten."
       actor_ignoring_target_user: "Je negeert %{username}, dus je kunt geen berichten sturen."
       actor_muting_target_user: "Je dempt %{username}, dus je kunt geen berichten sturen."
       actor_disallowed_dms: "Je hebt ervoor gekozen om te voorkomen dat gebruikers je privé- en directe berichten sturen, dus je kunt geen nieuwe directe berichten maken."
       actor_preventing_target_user_from_dm: "Je hebt ervoor gekozen om te voorkomen dat %{username} je privé- en directe berichten stuurt, dus je kunt geen nieuwe directe berichten maken."
       user_cannot_send_direct_messages: "Sorry, je kunt geen directe berichten sturen."
+      over_chat_max_direct_message_users_allow_self: "Je kunt alleen een direct bericht met jezelf maken."
     reviewables:
       message_already_handled: "Bedankt, maar we hebben dat bericht al beoordeeld en vastgesteld dat het niet opnieuw hoeft te worden gemarkeerd."
       actions:
@@ -69,20 +100,16 @@ nl:
         transcript_title: "Transcript van eerdere berichten in %{channel_name}"
         transcript_body: "Om je meer context te geven, hebben we een transcript van de vorige berichten opgenomen in deze conversatie (maximaal tien):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Alleen-lezen"
-        archived: "Gearchiveerd"
-        closed: "Gesloten"
-        open: "Openen"
       archive:
         first_post_raw: "Dit topic is een archief van het chatkanaal [%{channel_name}](%{channel_url})."
       messages_moved:
         one: "@%{acting_username} heeft een bericht verplaatst naar het kanaal [%{channel_name}](%{first_moved_message_url})."
         other: "@%{acting_username} heeft %{count} berichten verplaatst naar het kanaal [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} en %{leftover} anderen"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} en %{count} ander"
+          other: "%{comma_separated_usernames} en %{count} anderen"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "bevat niet-ASCII-tekens"
@@ -92,14 +119,73 @@ nl:
     personal_chat: "privéchat"
     onebox:
       inline_to_message: "Bericht %{message_id} van %{username} – #%{chat_channel}"
+      inline_to_channel: "Chat #%{chat_channel}"
+      inline_to_topic_channel: "Chat voor topic %{topic_title}"
+      x_members:
+        one: "%{count} lid"
+        other: "%{count} leden"
+      and_x_others:
+        one: "en %{count} ander"
+        other: "en %{count} anderen"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} heeft je genoemd in "%{channel}"'
+        other_type: '%{username} heeft %{identifier} genoemd in "%{channel}"'
+      direct_message_chat_mention:
+        direct: "%{username} heeft je genoemd in een privéchat"
+        other_type: "%{username} heeft %{identifier} genoemd in een privéchat"
+      new_chat_message: '%{username} heeft een bericht gestuurd in "%{channel}"'
+      new_direct_chat_message: "%{username} heeft een bericht gestuurd in een privéchat"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Chatbericht sturen
   reviewable_score_types:
+    needs_review:
+      title: "Beoordeling nodig"
     notify_user:
+      chat_pm_title: 'Je chatbericht in "%{channel_name}"'
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
+      chat_pm_title: 'Een chatbericht in "%{channel_name}" vereist aandacht van een medewerker'
       chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Een medewerker vindt dat dit chatbericht moet worden beoordeeld."
   user_notifications:
     chat_summary:
+      deleted_user: "Verwijderde gebruiker"
+      description:
+        one: "Je hebt een nieuw chatbericht"
+        other: "Je hebt nieuwe chatberichten"
       from: "%{site_name}"
+      subject:
+        direct_message_from_1: "[%{email_prefix}] Nieuw bericht van %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nieuw bericht van %{username1} en %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nieuw bericht van %{username} en %{count} ander"
+          other: "[%{email_prefix}] Nieuw bericht van %{username} en %{count} anderen"
+        chat_channel_1: "[%{email_prefix}] Nieuw bericht in %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nieuw bericht in %{channel1} en %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nieuw bericht in %{channel} en %{count} andere groep"
+          other: "[%{email_prefix}] Nieuw bericht in %{channel} en %{count} andere groepen"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nieuw bericht in %{channel} en van %{username}"
+      unsubscribe: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}, of %{unsubscribe_link} om je af te melden."
+      unsubscribe_no_link: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}."
+      view_messages:
+        one: "Bericht weergeven"
+        other: "%{count} berichten weergeven"
+      view_more:
+        one: "Nog %{count} bericht weergeven"
+        other: "Nog %{count} berichten weergeven"
+      your_chat_settings: "voorkeur voor chat-e-mailfrequentie"
   unsubscribe:
     chat_summary:
+      select_title: "Stel de frequentie van e-mails met chatsamenvattingen in op:"
       never: Nooit
+      when_away: Alleen wanneer afwezig
+  category:
+    cannot_delete:
+      has_chat_channels: "Kan deze categorie niet verwijderen omdat deze chatkanalen heeft."

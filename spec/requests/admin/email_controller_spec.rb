@@ -6,25 +6,21 @@ RSpec.describe Admin::EmailController do
   fab!(:user) { Fabricate(:user) }
   fab!(:email_log) { Fabricate(:email_log) }
 
-  describe '#index' do
+  describe "#index" do
     context "when logged in as an admin" do
       before do
         sign_in(admin)
-        Admin::EmailController.any_instance
+        Admin::EmailController
+          .any_instance
           .expects(:action_mailer_settings)
-          .returns(
-            username: 'username',
-            password: 'secret'
-          )
+          .returns(username: "username", password: "secret")
       end
 
-      it 'does not include the password in the response' do
+      it "does not include the password in the response" do
         get "/admin/email.json"
-        mail_settings = response.parsed_body['settings']
+        mail_settings = response.parsed_body["settings"]
 
-        expect(
-          mail_settings.select { |setting| setting['name'] == 'password' }
-        ).to be_empty
+        expect(mail_settings.select { |setting| setting["name"] == "password" }).to be_empty
       end
     end
 
@@ -45,19 +41,17 @@ RSpec.describe Admin::EmailController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "email settings inaccessible"
     end
   end
 
-  describe '#sent' do
+  describe "#sent" do
     fab!(:post) { Fabricate(:post) }
     fab!(:email_log) { Fabricate(:email_log, post: post) }
 
-    let(:post_reply_key) do
-      Fabricate(:post_reply_key, post: post, user: email_log.user)
-    end
+    let(:post_reply_key) { Fabricate(:post_reply_key, post: post, user: email_log.user) }
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -81,22 +75,19 @@ RSpec.describe Admin::EmailController do
         expect(log["reply_key"]).to eq(post_reply_key.reply_key)
       end
 
-      it 'should be able to filter by reply key' do
+      it "should be able to filter by reply key" do
         email_log_2 = Fabricate(:email_log, post: post)
 
-        post_reply_key_2 = Fabricate(:post_reply_key,
-          post: post,
-          user: email_log_2.user,
-          reply_key: "2d447423-c625-4fb9-8717-ff04ac60eee8"
-        )
+        post_reply_key_2 =
+          Fabricate(
+            :post_reply_key,
+            post: post,
+            user: email_log_2.user,
+            reply_key: "2d447423-c625-4fb9-8717-ff04ac60eee8",
+          )
 
-        [
-          "17ff04",
-          "2d447423c6254fb98717ff04ac60eee8"
-        ].each do |reply_key|
-          get "/admin/email/sent.json", params: {
-            reply_key: reply_key
-          }
+        %w[17ff04 2d447423c6254fb98717ff04ac60eee8].each do |reply_key|
+          get "/admin/email/sent.json", params: { reply_key: reply_key }
 
           expect(response.status).to eq(200)
 
@@ -107,14 +98,12 @@ RSpec.describe Admin::EmailController do
         end
       end
 
-      it 'should be able to filter by smtp_transaction_response' do
+      it "should be able to filter by smtp_transaction_response" do
         email_log_2 = Fabricate(:email_log, smtp_transaction_response: <<~RESPONSE)
         250 Ok: queued as pYoKuQ1aUG5vdpgh-k2K11qcpF4C1ZQ5qmvmmNW25SM=@mailhog.example
         RESPONSE
 
-        get "/admin/email/sent.json", params: {
-          smtp_transaction_response: "pYoKu"
-        }
+        get "/admin/email/sent.json", params: { smtp_transaction_response: "pYoKu" }
 
         expect(response.status).to eq(200)
 
@@ -141,13 +130,13 @@ RSpec.describe Admin::EmailController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "sent emails inaccessible"
     end
   end
 
-  describe '#skipped' do
+  describe "#skipped" do
     # fab!(:user) { Fabricate(:user) }
     fab!(:log1) { Fabricate(:skipped_email_log, user: user, created_at: 20.minutes.ago) }
     fab!(:log2) { Fabricate(:skipped_email_log, created_at: 10.minutes.ago) }
@@ -167,10 +156,8 @@ RSpec.describe Admin::EmailController do
       end
 
       context "when filtered by username" do
-        it 'should return the right response' do
-          get "/admin/email/skipped.json", params: {
-            user: user.username
-          }
+        it "should return the right response" do
+          get "/admin/email/skipped.json", params: { user: user.username }
 
           expect(response.status).to eq(200)
 
@@ -198,77 +185,73 @@ RSpec.describe Admin::EmailController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "skipped emails inaccessible"
     end
   end
 
-  describe '#test' do
+  describe "#test" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'raises an error without the email parameter' do
+      it "raises an error without the email parameter" do
         post "/admin/email/test.json"
         expect(response.status).to eq(400)
       end
 
-      context 'with an email address' do
-        it 'enqueues a test email job' do
-          post "/admin/email/test.json", params: { email_address: 'eviltrout@test.domain' }
+      context "with an email address" do
+        it "enqueues a test email job" do
+          post "/admin/email/test.json", params: { email_address: "eviltrout@test.domain" }
 
           expect(response.status).to eq(200)
-          expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include('eviltrout@test.domain')
+          expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(
+            "eviltrout@test.domain",
+          )
         end
       end
 
-      context 'with SiteSetting.disable_emails' do
+      context "with SiteSetting.disable_emails" do
         fab!(:eviltrout) { Fabricate(:evil_trout) }
         fab!(:admin) { Fabricate(:admin) }
 
         it 'bypasses disable when setting is "yes"' do
-          SiteSetting.disable_emails = 'yes'
+          SiteSetting.disable_emails = "yes"
           post "/admin/email/test.json", params: { email_address: admin.email }
 
-          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
-            admin.email
-          )
+          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(admin.email)
 
           incoming = response.parsed_body
-          expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
+          expect(incoming["sent_test_email_message"]).to eq(I18n.t("admin.email.sent_test"))
         end
 
         it 'bypasses disable when setting is "non-staff"' do
-          SiteSetting.disable_emails = 'non-staff'
+          SiteSetting.disable_emails = "non-staff"
 
           post "/admin/email/test.json", params: { email_address: eviltrout.email }
 
-          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
-            eviltrout.email
-          )
+          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(eviltrout.email)
 
           incoming = response.parsed_body
-          expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
+          expect(incoming["sent_test_email_message"]).to eq(I18n.t("admin.email.sent_test"))
         end
 
         it 'works when setting is "no"' do
-          SiteSetting.disable_emails = 'no'
+          SiteSetting.disable_emails = "no"
 
           post "/admin/email/test.json", params: { email_address: eviltrout.email }
 
-          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
-            eviltrout.email
-          )
+          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(eviltrout.email)
 
           incoming = response.parsed_body
-          expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
+          expect(incoming["sent_test_email_message"]).to eq(I18n.t("admin.email.sent_test"))
         end
       end
     end
 
     shared_examples "email tests not allowed" do
       it "prevents email tests with a 404 response" do
-        post "/admin/email/test.json", params: { email_address: 'eviltrout@test.domain' }
+        post "/admin/email/test.json", params: { email_address: "eviltrout@test.domain" }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -282,42 +265,48 @@ RSpec.describe Admin::EmailController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "email tests not allowed"
     end
   end
 
-  describe '#preview_digest' do
+  describe "#preview_digest" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'raises an error without the last_seen_at parameter' do
+      it "raises an error without the last_seen_at parameter" do
         get "/admin/email/preview-digest.json"
         expect(response.status).to eq(400)
       end
 
       it "returns the right response when username is invalid" do
-        get "/admin/email/preview-digest.json", params: {
-          last_seen_at: 1.week.ago, username: "somerandomeusername"
-        }
+        get "/admin/email/preview-digest.json",
+            params: {
+              last_seen_at: 1.week.ago,
+              username: "somerandomeusername",
+            }
 
         expect(response.status).to eq(400)
       end
 
       it "previews the digest" do
-        get "/admin/email/preview-digest.json", params: {
-          last_seen_at: 1.week.ago, username: admin.username
-        }
+        get "/admin/email/preview-digest.json",
+            params: {
+              last_seen_at: 1.week.ago,
+              username: admin.username,
+            }
         expect(response.status).to eq(200)
       end
     end
 
     shared_examples "preview digest inaccessible" do
       it "denies access with a 404 response" do
-        get "/admin/email/preview-digest.json", params: {
-          last_seen_at: 1.week.ago, username: moderator.username
-        }
+        get "/admin/email/preview-digest.json",
+            params: {
+              last_seen_at: 1.week.ago,
+              username: moderator.username,
+            }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -331,13 +320,29 @@ RSpec.describe Admin::EmailController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "preview digest inaccessible"
     end
   end
 
-  describe '#handle_mail' do
+  describe "#send_digest" do
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "sends the digest" do
+        post "/admin/email/send-digest.json",
+             params: {
+               last_seen_at: 1.week.ago,
+               username: admin.username,
+               email: email("previous_replies"),
+             }
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+
+  describe "#handle_mail" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -347,30 +352,44 @@ RSpec.describe Admin::EmailController do
         expect(response.body).to include("param is missing")
       end
 
-      it 'should enqueue the right job, and show a deprecation warning (email_encoded param should be used)' do
+      it "should enqueue the right job, and show a deprecation warning (email_encoded param should be used)" do
         expect_enqueued_with(
           job: :process_email,
-          args: { mail: email('cc'), retry_on_rate_limit: true, source: :handle_mail }
-        ) do
-          post "/admin/email/handle_mail.json", params: { email: email('cc') }
-        end
+          args: {
+            mail: email("cc"),
+            retry_on_rate_limit: true,
+            source: :handle_mail,
+          },
+        ) { post "/admin/email/handle_mail.json", params: { email: email("cc") } }
         expect(response.status).to eq(200)
-        expect(response.body).to eq("warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded email_encoded parameter instead. email has been received and is queued for processing")
+        expect(response.body).to eq(
+          "warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded email_encoded parameter instead. email has been received and is queued for processing",
+        )
       end
 
-      it 'should enqueue the right job, decoding the raw email param' do
+      it "should enqueue the right job, decoding the raw email param" do
         expect_enqueued_with(
           job: :process_email,
-          args: { mail: email('cc'), retry_on_rate_limit: true, source: :handle_mail }
+          args: {
+            mail: email("cc"),
+            retry_on_rate_limit: true,
+            source: :handle_mail,
+          },
         ) do
-          post "/admin/email/handle_mail.json", params: { email_encoded: Base64.strict_encode64(email('cc')) }
+          post "/admin/email/handle_mail.json",
+               params: {
+                 email_encoded: Base64.strict_encode64(email("cc")),
+               }
         end
         expect(response.status).to eq(200)
         expect(response.body).to eq("email has been received and is queued for processing")
       end
 
       it "retries enqueueing with forced UTF-8 encoding when encountering Encoding::UndefinedConversionError" do
-        post "/admin/email/handle_mail.json", params: { email_encoded: Base64.strict_encode64(email('encoding_undefined_conversion')) }
+        post "/admin/email/handle_mail.json",
+             params: {
+               email_encoded: Base64.strict_encode64(email("encoding_undefined_conversion")),
+             }
         expect(response.status).to eq(200)
         expect(response.body).to eq("email has been received and is queued for processing")
       end
@@ -378,7 +397,10 @@ RSpec.describe Admin::EmailController do
 
     shared_examples "email handling not allowed" do
       it "prevents email handling with a 404 response" do
-        post "/admin/email/handle_mail.json", params: { email_encoded: Base64.strict_encode64(email('cc')) }
+        post "/admin/email/handle_mail.json",
+             params: {
+               email_encoded: Base64.strict_encode64(email("cc")),
+             }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -392,22 +414,22 @@ RSpec.describe Admin::EmailController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "email handling not allowed"
     end
   end
 
-  describe '#rejected' do
+  describe "#rejected" do
     context "when logged in as an admin" do
-      before  { sign_in(admin) }
+      before { sign_in(admin) }
 
-      it 'should provide a string for a blank error' do
+      it "should provide a string for a blank error" do
         Fabricate(:incoming_email, error: "")
         get "/admin/email/rejected.json"
         expect(response.status).to eq(200)
         rejected = response.parsed_body
-        expect(rejected.first['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
+        expect(rejected.first["error"]).to eq(I18n.t("emails.incoming.unrecognized_error"))
       end
     end
 
@@ -427,22 +449,22 @@ RSpec.describe Admin::EmailController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "rejected emails inaccessible"
     end
   end
 
-  describe '#incoming' do
+  describe "#incoming" do
     context "when logged in as an admin" do
-      before  { sign_in(admin) }
+      before { sign_in(admin) }
 
-      it 'should provide a string for a blank error' do
+      it "should provide a string for a blank error" do
         incoming_email = Fabricate(:incoming_email, error: "")
         get "/admin/email/incoming/#{incoming_email.id}.json"
         expect(response.status).to eq(200)
         incoming = response.parsed_body
-        expect(incoming['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
+        expect(incoming["error"]).to eq(I18n.t("emails.incoming.unrecognized_error"))
       end
     end
 
@@ -464,17 +486,17 @@ RSpec.describe Admin::EmailController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "incoming emails inaccessible"
     end
   end
 
-  describe '#incoming_from_bounced' do
+  describe "#incoming_from_bounced" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'raises an error when the email log entry does not exist' do
+      it "raises an error when the email log entry does not exist" do
         get "/admin/email/incoming_from_bounced/12345.json"
         expect(response.status).to eq(404)
 
@@ -482,7 +504,7 @@ RSpec.describe Admin::EmailController do
         expect(json["errors"]).to include("Discourse::InvalidParameters")
       end
 
-      it 'raises an error when the email log entry is not marked as bounced' do
+      it "raises an error when the email log entry is not marked as bounced" do
         get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
         expect(response.status).to eq(404)
 
@@ -490,17 +512,18 @@ RSpec.describe Admin::EmailController do
         expect(json["errors"]).to include("Discourse::InvalidParameters")
       end
 
-      context 'when bounced email log entry exists' do
+      context "when bounced email log entry exists" do
         fab!(:email_log) { Fabricate(:email_log, bounced: true, bounce_key: SecureRandom.hex) }
         let(:error_message) { "Email::Receiver::BouncedEmailError" }
 
-        it 'returns an incoming email sent to the reply_by_email_address' do
+        it "returns an incoming email sent to the reply_by_email_address" do
           SiteSetting.reply_by_email_address = "replies+%{reply_key}@example.com"
 
-          Fabricate(:incoming_email,
-                    is_bounce: true,
-                    error: error_message,
-                    to_addresses: Email::Sender.bounce_address(email_log.bounce_key)
+          Fabricate(
+            :incoming_email,
+            is_bounce: true,
+            error: error_message,
+            to_addresses: Email::Sender.bounce_address(email_log.bounce_key),
           )
 
           get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
@@ -510,11 +533,12 @@ RSpec.describe Admin::EmailController do
           expect(json["error"]).to eq(error_message)
         end
 
-        it 'returns an incoming email sent to the notification_email address' do
-          Fabricate(:incoming_email,
-                    is_bounce: true,
-                    error: error_message,
-                    to_addresses: SiteSetting.notification_email.sub("@", "+verp-#{email_log.bounce_key}@")
+        it "returns an incoming email sent to the notification_email address" do
+          Fabricate(
+            :incoming_email,
+            is_bounce: true,
+            error: error_message,
+            to_addresses: SiteSetting.notification_email.sub("@", "+verp-#{email_log.bounce_key}@"),
           )
 
           get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
@@ -524,12 +548,13 @@ RSpec.describe Admin::EmailController do
           expect(json["error"]).to eq(error_message)
         end
 
-        it 'returns an incoming email sent to the notification_email address' do
+        it "returns an incoming email sent to the notification_email address" do
           SiteSetting.reply_by_email_address = "replies+%{reply_key}@subdomain.example.com"
-          Fabricate(:incoming_email,
-                    is_bounce: true,
-                    error: error_message,
-                    to_addresses: "subdomain+verp-#{email_log.bounce_key}@example.com"
+          Fabricate(
+            :incoming_email,
+            is_bounce: true,
+            error: error_message,
+            to_addresses: "subdomain+verp-#{email_log.bounce_key}@example.com",
           )
 
           get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
@@ -539,7 +564,7 @@ RSpec.describe Admin::EmailController do
           expect(json["error"]).to eq(error_message)
         end
 
-        it 'raises an error if the bounce_key is blank' do
+        it "raises an error if the bounce_key is blank" do
           email_log.update(bounce_key: nil)
 
           get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
@@ -549,7 +574,7 @@ RSpec.describe Admin::EmailController do
           expect(json["errors"]).to include("Discourse::InvalidParameters")
         end
 
-        it 'raises an error if there is no incoming email' do
+        it "raises an error if there is no incoming email" do
           get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
           expect(response.status).to eq(404)
 
@@ -565,10 +590,11 @@ RSpec.describe Admin::EmailController do
         error_message = "Email::Receiver::BouncedEmailError"
         SiteSetting.reply_by_email_address = "replies+%{reply_key}@example.com"
 
-        Fabricate(:incoming_email,
-                  is_bounce: true,
-                  error: error_message,
-                  to_addresses: Email::Sender.bounce_address(email_log.bounce_key)
+        Fabricate(
+          :incoming_email,
+          is_bounce: true,
+          error: error_message,
+          to_addresses: Email::Sender.bounce_address(email_log.bounce_key),
         )
 
         get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
@@ -585,15 +611,14 @@ RSpec.describe Admin::EmailController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "bounced incoming emails inaccessible"
     end
   end
 
-  describe '#advanced_test' do
-    let(:email) do
-      <<~EMAIL
+  describe "#advanced_test" do
+    let(:email) { <<~EMAIL }
           From: "somebody" <somebody@example.com>
           To: someone@example.com
           Date: Mon, 3 Dec 2018 00:00:00 -0000
@@ -606,19 +631,18 @@ RSpec.describe Admin::EmailController do
 
           This part should be elided.
         EMAIL
-    end
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'should ...' do
+      it "should ..." do
         post "/admin/email/advanced-test.json", params: { email: email }
 
         expect(response.status).to eq(200)
         incoming = response.parsed_body
-        expect(incoming['format']).to eq(1)
-        expect(incoming['text']).to eq("Hello, this is a test!")
-        expect(incoming['elided']).to eq("---\n\nThis part should be elided.")
+        expect(incoming["format"]).to eq(1)
+        expect(incoming["text"]).to eq("Hello, this is a test!")
+        expect(incoming["elided"]).to eq("---\n\nThis part should be elided.")
       end
     end
 
@@ -638,7 +662,7 @@ RSpec.describe Admin::EmailController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "advanced email tests not allowed"
     end

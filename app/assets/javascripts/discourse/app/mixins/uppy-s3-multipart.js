@@ -76,7 +76,7 @@ export default Mixin.create({
       {
         type: "POST",
         data: {
-          part_numbers: partData.partNumbers,
+          part_numbers: partData.parts.map((part) => part.number),
           unique_identifier: file.meta.unique_identifier,
         },
       }

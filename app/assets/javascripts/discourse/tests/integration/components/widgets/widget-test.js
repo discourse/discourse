@@ -9,6 +9,7 @@ import { Promise } from "rsvp";
 import { createWidget } from "discourse/widgets/widget";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { h } from "virtual-dom";
 
 module("Integration | Component | Widget | base", function (hooks) {
   setupRenderingTest(hooks);
@@ -393,5 +394,76 @@ module("Integration | Component | Widget | base", function (hooks) {
       exists("section.override"),
       "renders container with overridden tagName"
     );
+  });
+
+  test("avoids rerendering on prepend", async function (assert) {
+    createWidget("prepend-test", {
+      tagName: "div.test",
+      html(attrs) {
+        const result = [];
+        result.push(
+          this.attach("button", {
+            label: "rerender",
+            className: "rerender",
+            action: "dummyAction",
+          })
+        );
+        result.push(
+          h(
+            "div",
+            attrs.array.map((val) => h(`span.val.${val}`, { key: val }, val))
+          )
+        );
+        return result;
+      },
+      dummyAction() {},
+    });
+
+    const array = ["ElementOne", "ElementTwo"];
+    this.set("args", { array });
+
+    await render(
+      hbs`<MountWidget @widget="prepend-test" @args={{this.args}} />`
+    );
+
+    const startElements = Array.from(document.querySelectorAll("span.val"));
+    assert.deepEqual(
+      startElements.map((e) => e.innerText),
+      ["ElementOne", "ElementTwo"]
+    );
+    const elementOneBefore = startElements[0];
+
+    const parent = elementOneBefore.parentNode;
+    const observer = new MutationObserver(function (mutations) {
+      assert.notOk(
+        mutations.some((m) =>
+          Array.from(m.addedNodes).includes(elementOneBefore)
+        )
+      );
+    });
+    observer.observe(parent, { childList: true });
+
+    array.unshift(
+      "PrependedElementOne",
+      "PrependedElementTwo",
+      "PrependedElementThree"
+    );
+
+    await click(".rerender");
+
+    const endElements = Array.from(document.querySelectorAll("span.val"));
+    assert.deepEqual(
+      endElements.map((e) => e.innerText),
+      [
+        "PrependedElementOne",
+        "PrependedElementTwo",
+        "PrependedElementThree",
+        "ElementOne",
+        "ElementTwo",
+      ]
+    );
+    const elementOneAfter = endElements[3];
+
+    assert.strictEqual(elementOneBefore, elementOneAfter);
   });
 });

@@ -21,8 +21,11 @@ hy:
       joined: "միացել է"
       email_frequency:
         never: "Երբեք"
+      header_indicator_preference:
+        never: "Երբեք"
       flag: "Դրոշակավորել"
       join: "Միանալ"
+      last_visit: "վերջին այցելությունը"
       mention_warning:
         dismiss: "չեղարկել"
       reply: "Պատասխանել"
@@ -45,6 +48,7 @@ hy:
         yesterday: Երեկվա
       about_view:
         title: Վերնագիր
+        name: Անուն
         description: Նկարագրությունը
       channel_info:
         back_to_channel: "Ետ"
@@ -73,6 +77,7 @@ hy:
         save: "Պահպանել"
         saved: "Պահված է"
         unfollow: "Լքել"
+        admin_title: "Ադմին"
       incoming_webhooks:
         back: "Ետ"
         description: "Նկարագրությունը"

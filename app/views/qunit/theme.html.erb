@@ -3,6 +3,8 @@
   <head>
     <title>Theme QUnit Test Runner</title>
     <%= discourse_color_scheme_stylesheets %>
+    <meta name="color-scheme" content="light dark">
+
     <%- if !@suggested_themes %>
       <%= preload_script "locales/#{I18n.locale}" %>
       <%= preload_script "vendor" %>
@@ -24,10 +26,12 @@
       <meta property="og:url" content="">
       <meta name="discourse/config/environment" content="<%=u discourse_config_environment(testing: true) %>" />
 
-      <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
       <style>
-        <%= File.read("#{Rails.root}/app/assets/javascripts/discourse/node_modules/qunit/qunit/qunit.css") %>
+        <%= File.read("#{Rails.root}/app/assets/javascripts/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
       </style>
+
+      <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
+      <%= discourse_stylesheet_link_tag("qunit-custom", theme_id: nil) %>
     <%- else %>
       <style>
         html {

@@ -19,9 +19,13 @@ module("Unit | Model | pending-post", function (hooks) {
     // pending-post initializer performs async operations
     await settled();
 
-    assert.equal(post.postUrl, "topic-url", "topic_url is aliased to postUrl");
-    assert.equal(post.truncated, false, "truncated is always false");
-    assert.equal(
+    assert.strictEqual(
+      post.postUrl,
+      "topic-url",
+      "topic_url is aliased to postUrl"
+    );
+    assert.false(post.truncated, "truncated is always false");
+    assert.strictEqual(
       post.userUrl,
       "/u/username",
       "it returns user URL from the username"
@@ -42,7 +46,7 @@ module("Unit | Model | pending-post", function (hooks) {
     // pending-post initializer performs async operations
     await settled();
 
-    assert.equal(
+    assert.strictEqual(
       post.expandedExcerpt.string,
       "<p><strong>bold text</strong></p>"
     );

@@ -19,11 +19,12 @@ var externalCacheName = "external-" + cacheVersion;
 // https://bugs.chromium.org/p/chromium/issues/detail?id=1286367
 var chromeVersionMatch = navigator.userAgent.match(/Chrome\/97.0.(\d+)/);
 var isBrokenChrome97 = chromeVersionMatch && parseInt(chromeVersionMatch[1]) <= 4692;
+var isApple = /iPhone|iPod|Mac OS/.test(navigator.userAgent);
 
 // Cache all GET requests, so Discourse can be used while offline
 workbox.routing.registerRoute(
   function(args) {
-    return args.url.origin === location.origin && !authUrls.some(u => args.url.pathname.startsWith(u)) && !isBrokenChrome97;
+    return args.url.origin === location.origin && !authUrls.some(u => args.url.pathname.startsWith(u)) && !isBrokenChrome97 && !isApple;
   }, // Match all except auth routes
   new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
     cacheName: discourseCacheName,

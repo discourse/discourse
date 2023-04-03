@@ -130,7 +130,6 @@ te:
     tos: "సేవా నిబంధనలు"
     mobile_view: "చర సందర్శనం"
     desktop_view: "డెస్క్ టాప్ సందర్శనం"
-    or: "లేదా"
     now: "ఇప్పుడే"
     read_more: "మరింత చదువు"
     more: "మరింత"
@@ -163,11 +162,9 @@ te:
       title: "పేజీక"
       clear_bookmarks: "పేజీక లను తుడిచివేయి"
       help:
-        bookmark: "ఈ అంశంపై మొదటి టపాకి పేజీకలను పెట్టండి"
         unbookmark: "ఈ అంశంపై అన్ని పేజీకలను తొలగించడానికి నొక్కండి"
     bookmarks:
       not_bookmarked: "ఈ టపాకు పేజీక ఉంచు"
-      remove: "పేజీక తొలగించండి"
       save: "భద్రపరచు"
       search: "వెతుకు"
     drafts:
@@ -182,9 +179,6 @@ te:
     uploaded: "ఎగుమతైంది!"
     enable: "చేతనం"
     disable: "అచేతనం"
-    undo: "రద్దు"
-    revert: "తిద్దు"
-    failed: "విఫలం"
     banner:
       edit: "సవరించు"
     choose_topic:
@@ -215,10 +209,12 @@ te:
         refresh: "తాజా పరుచు"
         category: "వర్గం"
       scores:
-        type: "రకం"
+        type: "కారణం"
       statuses:
         pending:
           title: "పెండింగు"
+      context_question:
+        delimiter: "లేదా"
       types:
         reviewable_user:
           title: "సభ్యుడు"
@@ -263,6 +259,7 @@ te:
     groups:
       requests:
         reason: "కారణం"
+        undo: "రద్దు"
       manage:
         name: "పేరు"
         full_name: "పూర్తి పేరు"
@@ -382,9 +379,6 @@ te:
       profile: "ప్రవర"
       mute: "నిశ్శబ్దం"
       edit: "అభిరుచులు సవరించు"
-      download_archive:
-        confirm: "మీరు నిజంగా మీ టపాల దిగుమతి కోరుకుంటున్నారా ?"
-        rate_limit_error: "టపాలు కేవలం రోజుకు ఒకసారి మాత్రమే దిగుమతించుకోగలరు. దయచేసి రేపు ప్రయత్నించండి."
       private_messages: "సందేశాలు"
       user_notifications:
         filters:
@@ -455,6 +449,7 @@ te:
         security: "సంరక్షణ"
         profile: "ప్రవర"
         notifications: "ప్రకటనలు"
+        tracking: "గమనిస్తున్నారు"
         categories: "వర్గాలు"
         users: "వాడుకరులు"
         tags: "ట్యాగులు"
@@ -471,6 +466,7 @@ te:
       second_factor:
         name: "పేరు"
         disable: "అచేతనం"
+        delete: "తొలగించు"
         save: "భద్రపరచు"
         edit: "సవరించు"
         security_key:
@@ -500,11 +496,11 @@ te:
       email:
         title: "ఈమెయిల్"
         primary_label: "ప్రాథమిక"
+        resent_label: "ఈమెయిల్ పంపిన"
         update_email: "ఈమెయిల్ మార్చు"
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
         authenticated: "మీ ఈమెయిల్ %{provider} చేత ద్రువీకరించబడింది"
-        frequency_immediately: "మీకు వెంటనే ఈమెయిల్ చేసాము, మీరు ఈమెయిల్ విషయం చదవకపోతే. "
       associated_accounts:
         revoke: "రివోక్"
         cancel: "రద్దుచేయి"
@@ -552,6 +548,7 @@ te:
         never: "ఎప్పటికీ వద్దు"
       other_settings: "ఇతర"
       categories_settings: "వర్గాలు"
+      topics_settings: "విషయాలు"
       new_topic_duration:
         label: "విషయాలు కొత్తగా భావించు, ఎప్పుడంటే"
         not_viewed: "నేను వాటిని ఇంకా చూడనప్పుడు"
@@ -642,7 +639,6 @@ te:
     read_only_mode:
       login_disabled: "సేటు కేవలం చదివే రీతిలో ఉన్నప్పుడు లాగిన్ వీలవదు."
     learn_more: "మరింత తెలుసుకోండి..."
-    first_post: తొలి టపా
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
     time_read: చదివిన
@@ -686,6 +682,7 @@ te:
     login:
       username: "వాడుకరి"
       password: "సంకేతపదం"
+      show_password: "చూపు"
       caps_lock_warning: "క్యాప్స్ లాక్ ఆన్ అయి ఉంది"
       error: "తెలీని దోషం"
       blank_username_or_password: "దయచేసి మీ ఈమెయిల్ లేదా సభ్యనామం మరియు సంకేతపదం రాయండి"
@@ -734,8 +731,6 @@ te:
         title_missing: "శీర్షిక తప్పనిసరి"
         category_missing: "మీరు ఒక వర్గాన్ని ఎంచుకోవాలి"
       save_edit: "దాచి సవరించు"
-      reply_original: "మూల విషయంకు జవాబివ్వు"
-      reply_here: "ఇక్కడ జవాబివ్వు"
       reply: "జవాబు"
       cancel: "రద్దుచేయి"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
@@ -783,6 +778,7 @@ te:
     search:
       title: "వెతుకు"
       full_page_title: "వెతుకు"
+      results: "ఫలితాలు"
       no_results: "ఎటువంటి ఫలితాలు దొరకలేదు."
       post_format: "%{username} నుండి #%{post_number}"
       search_google_button: "గూగుల్"
@@ -879,12 +875,6 @@ te:
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
       show_links: "ఈ విషయంలో లంకెలు చూపు"
-      read_more_in_category: "మరింత చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink} లో ఇతర విషయాలు చూడు."
-      read_more: "మరిన్ని చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink}."
-      browse_all_categories: అన్ని వర్గాలూ జల్లించు
-      view_latest_topics: తాజా విషయాలు చూడు
-      jump_reply_up: పాత జవాబుకు వెళ్లు
-      jump_reply_down: తరువాతి జవాబుకు వెళ్లు
       deleted: "ఈ విషయం తొలగించబడింది"
       slow_mode_update:
         enable: "చేతనం"
@@ -1071,7 +1061,6 @@ te:
           side_by_side_markdown:
             title: "ముడి మూల తేడాను పక్కపక్కన చూపు"
       bookmarks:
-        created: "సృష్టించిన"
         name: "పేరు"
         options: "ఎంపికలు"
     category:
@@ -1113,8 +1102,6 @@ te:
       images: "బొమ్మలు"
       email_in: "అనురూప లోపలికి వచ్చే ఈమెయిల్ చిరునామా:"
       email_in_allow_strangers: "ఎటువంటి ఖాతాలు లేని అనామక సభ్యుల నుండి వచ్చే ఈమెయిల్లు అంగీకరించు"
-      email_in_disabled: "సైటు అమరికల్లో ఈమెయిల్ ద్వారా కొత్త విషయాలు రాయుడ అచేతనమైంది. ఈమెయిల్ ద్వారా కొత్త విషయాలు రాయుట చేతనం చేయుటకు,"
-      email_in_disabled_click: '"ఈమెయిల్ ఇన్" అమరికను చేతనం చేయి.'
       allow_badges_label: "ఈ వర్గంలో బ్యాడ్జిలు బహూకరించుట అనుమతించు"
       edit_permissions: "అనుమతులు సవరించు"
       review_group_name: "గుంపు పేరు"
@@ -1204,13 +1191,16 @@ te:
       one: "వాడుకరి"
       other: "వాడుకరులు"
     category_title: "వర్గం"
-    changed_by: " %{author} రాసిన"
     raw_email:
       not_available: "అందుబాటులో లేదు!"
     categories_list: "వర్గాల జాబితా"
     filters:
       with_topics: "%{filter} విషయాలు"
       with_category: "%{filter} %{category} విషయాలు"
+      filter:
+        title: "జల్లెడ"
+        button:
+          label: "జల్లెడ"
       latest:
         title: "తాజా"
         help: "ఇటీవలి టపాలతోని విషయాలు"
@@ -1344,9 +1334,6 @@ te:
     footer_nav:
       back: "వెనుకకు"
       share: "పంచు"
-    do_not_disturb:
-      options:
-        custom: "అనురూప"
     trust_levels:
       names:
         newuser: "కొత్త సభ్యుడు"
@@ -1363,6 +1350,12 @@ te:
         other: "%{count} కొత్త"
       more: "ఇంకా"
       sections:
+        custom:
+          save: "భద్రపరుచు"
+          delete: "తొలగించు"
+          links:
+            icon: "ఐకాన్"
+            name: "పేరు"
         about:
           header_link_text: "గురించి"
         messages:
@@ -1387,8 +1380,6 @@ te:
               content: "బ్యాడ్జీలు"
             faq:
               content: "తవసం"
-            tracked:
-              content: "గమనించారు"
             groups:
               content: "గుంపులు"
             users:
@@ -1463,7 +1454,6 @@ te:
         about: "మీ గుంపు మెంబర్షిప్పు మరియు పేర్లు ఇక్కడ సవరించండి"
         group_members: "గుంపు సభ్యులు"
         delete: "తొలగించు"
-        delete_confirm: "ఈ గుంపును తొలగించాలనుకుంటున్నారా? "
         delete_failed: "గుంపును తొలగించలేకున్నాము. ఇది స్వీయ గుంపు అయితే దీన్ని నాశనం చేయలేరు."
         add: "కలుపు"
         custom: "అనురూప"
@@ -1483,9 +1473,8 @@ te:
         scopes:
           action: చర్య
       web_hooks:
+        edit: "సవరణ"
         save: "భద్రపరచు"
-        destroy: "తొలగించు"
-        description: "వివరణ"
         active: "క్రియాశీల"
         delivery_status:
           failed: "విఫలం"
@@ -1500,7 +1489,6 @@ te:
         none_installed: "ఎటువంటి చొప్పింతలు ప్రతిష్టించిలేవు."
         version: "సంచిక"
         enabled: "చేతమైందా?"
-        change_settings: "అమరికలు మార్చు"
         change_settings_short: "అమరికలు"
         howto: "పొడిగింతలు నేను ఎలా ప్రతిష్టించగలను?"
       backups:
@@ -1562,7 +1550,6 @@ te:
         button_title: "ఆహ్వానాలు పంపు"
       customize:
         title: "కస్టమైజ్"
-        long_title: "సైట్ కస్టమైజేషనులు"
         preview: "మునుజూపు"
         save: "భద్రపరుచు"
         new: "కొత్త"
@@ -1760,6 +1747,27 @@ te:
           flag: "కేతనం"
         form:
           add: "కలుపు"
+      form_templates:
+        list_table:
+          headings:
+            name: "పేరు"
+            actions: "చర్యలు"
+        view_template:
+          close: "మూసివేయి"
+          edit: "సవరణ"
+          delete: "తొలగించు"
+        new_template_form:
+          submit: "భద్రపరుచు"
+          cancel: "రద్దుచేయి"
+        quick_insert_fields:
+          add_new_field: "కలుపు"
+        validations_modal:
+          table_headers:
+            type: "రకం"
+            description: "వివరణ"
+          validations:
+            required:
+              key: "కావాలి"
       impersonate:
         title: "పరకాయప్రవేశించు"
         help: "అనుకరించిన వినియోగదారుని ఖాతా దోషవిశ్లేషణ ప్రయోజనాలకు ఈ ఉపకరణం వినియోగించండి.పూర్తి అయిన తర్వాత మీరు లాగవుట్ చేయండి."
@@ -1798,7 +1806,6 @@ te:
       user:
         suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది. %{error}"
         unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది %{error}"
-        suspend_duration: "వినియోగదారు ఎంతకాలం నిలిపివేయబడ్డాడు?"
         suspend_reason_label: "మీరు ఎందుకు తొలగించబడ్డారు? ఈ పాఠ్యం <b> వినియోగదారును ప్రొఫైల్ పుట మీద ప్రతివారికి </b> కనబడుతుంది, మరియు వినియోగదారుడు లాగిన్‌కు ప్రయత్నించినపుడు చూస్తారు.చిన్నదిగా ఉంచండి."
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
@@ -1808,7 +1815,6 @@ te:
         suspended: "సస్పెండయ్యాడా? "
         show_admin_profile: "అధికారి"
         show_public_profile: "ప్రజా ప్రవర చూపు"
-        impersonate: "పరకాయప్రవేశం చేయి"
         ip_lookup: "ఐపీ లుకప్"
         log_out: "లాగవుట్"
         logged_out: "వినియోగదారుడు అన్ని పరికరాలు లాగవుట్ చేశారు"
@@ -1869,6 +1875,11 @@ te:
         lock_trust_level: "నమ్మకపు స్థాయి ని బంధించు"
         unlock_trust_level: "నమ్మకపు స్థాయిని వదిలేయి"
         suspended_count: "సస్పెడయ్యాడు"
+        other_matches_list:
+          username: "సభ్యనామం"
+          trust_level: "నమ్మకం స్థాయి"
+          read_time: "చదువు సమయం"
+          posts: "టపాలు"
         tl3_requirements:
           title: "నమ్మకపు స్థాయి 3 అవసరాలు"
           value_heading: "విలువ"
@@ -1966,6 +1977,7 @@ te:
           search: "వెతుకు"
           groups: "గుంపులు"
           dashboard: "రంగస్థలం"
+          navigation: "నావిగేషను"
         default_categories:
           modal_yes: "అవును"
       badges:
@@ -1999,7 +2011,6 @@ te:
         allow_title: చిహ్నాన్ని శీర్షికగా వాడుకోవడానికి అనుమతి ఇవ్వండి.
         multiple_grant: అనేకసార్లు మంజూరు చేయవచ్చు
         listable: బహిరంగ చిహ్నాల పుటలో చూపండి
-        enabled: బ్యాడ్జి చేతనం చేయి
         icon: ఐకాన్
         image: బొమ్మ
         target_posts: టపాలు లక్ష్యంగా ప్రశ్న
@@ -2049,7 +2060,6 @@ te:
     wizard:
       back: "వెనుకకు"
       next: "తదుపరి"
-      upload: "ఎక్కించు"
       uploading: "ఎగుమతవుతోంది..."
       upload_error: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
       invites:

@@ -21,8 +21,11 @@ lt:
       joined: "prisijungė"
       email_frequency:
         never: "Niekada"
+      header_indicator_preference:
+        never: "Niekada"
       flag: "Pranešti"
       join: "Prisijungti"
+      last_visit: "paskutinis apsilankymas"
       mention_warning:
         dismiss: "praleisti"
       reply: "Atsakyti"
@@ -46,6 +49,7 @@ lt:
         yesterday: Vakar
       about_view:
         title: Antraštė
+        name: Vardas
         description: Aprašymas
       channel_info:
         back_to_channel: "Atgal"
@@ -74,6 +78,7 @@ lt:
         save: "Išsaugoti"
         saved: "Išsaugota"
         unfollow: "Palikti"
+        admin_title: "Administratorius"
       incoming_webhooks:
         back: "Atgal"
         description: "Aprašymas"

@@ -14,7 +14,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
   test("with reminder", async function (assert) {
     this.setProperties({
       bookmark: Bookmark.create({
-        reminder_at: tomorrow(this.currentUser.timezone),
+        reminder_at: tomorrow(this.currentUser.user_option.timezone),
         name: "some name",
       }),
     });
@@ -29,7 +29,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
       I18n.t("bookmarks.created_with_reminder_generic", {
         date: formattedReminderTime(
           this.bookmark.reminder_at,
-          this.currentUser.timezone
+          this.currentUser.user_option.timezone
         ),
         name: "some name",
       })

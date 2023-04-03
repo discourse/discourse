@@ -2,23 +2,36 @@
   <WatchRead @action={{action "markFaqRead"}} @path={{this.model.path}}>
     <div class="contents clearfix body-page">
 
-      <PluginOutlet @name="above-static" @tagName="span" @connectorTagName="div" />
+      <span>
+        <PluginOutlet @name="above-static" @connectorTagName="div" />
+      </span>
 
-      {{html-safe this.model.html}}
+      <div class="login-welcome">
+        {{html-safe this.model.html}}
 
-      <PluginOutlet @name="below-static" @connectorTagName="div" />
+        <PluginOutlet @name="below-static" @connectorTagName="div" />
 
-      {{#if this.anyButtons}}
-        <div class="body-page-button-container">
-          {{#if this.showSignupButton}}
-            <DButton @action={{route-action "showCreateAccount"}} @class="btn-primary sign-up-button" @label="sign_up" />
-          {{/if}}
+        {{#if this.anyButtons}}
+          <div class="body-page-button-container">
+            {{#if this.showSignupButton}}
+              <DButton
+                @action={{route-action "showCreateAccount"}}
+                @class="btn-primary sign-up-button"
+                @label="sign_up"
+              />
+            {{/if}}
 
-          {{#if this.showLoginButton}}
-            <DButton @action={{route-action "showLogin"}} @class="btn-primary login-button" @icon="user" @label="log_in" />
-          {{/if}}
-        </div>
-      {{/if}}
+            {{#if this.showLoginButton}}
+              <DButton
+                @action={{route-action "showLogin"}}
+                @class="btn-primary login-button"
+                @icon="user"
+                @label="log_in"
+              />
+            {{/if}}
+          </div>
+        {{/if}}
+      </div>
     </div>
   </WatchRead>
 </DSection>

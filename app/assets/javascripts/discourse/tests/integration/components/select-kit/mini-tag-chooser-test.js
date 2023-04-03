@@ -34,12 +34,12 @@ module(
       await this.subject.fillInFilter("mon");
       assert.deepEqual(
         [...queryAll(".select-kit-row")].map((el) => el.textContent.trim()),
-        ["monkey x1", "gazelle x2"]
+        ["monkey x1", "gazelle x2", "dog x3", "cat x4"]
       );
       await this.subject.fillInFilter("key");
       assert.deepEqual(
         [...queryAll(".select-kit-row")].map((el) => el.textContent.trim()),
-        ["monkey x1", "gazelle x2"]
+        ["monkey x1", "gazelle x2", "dog x3", "cat x4"]
       );
       await this.subject.selectRowByValue("monkey");
 

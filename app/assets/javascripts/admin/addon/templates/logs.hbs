@@ -1,8 +1,20 @@
 <AdminNav>
-  <NavItem @route="adminLogs.staffActionLogs" @label="admin.logs.staff_actions.title" />
-  <NavItem @route="adminLogs.screenedEmails" @label="admin.logs.screened_emails.title" />
-  <NavItem @route="adminLogs.screenedIpAddresses" @label="admin.logs.screened_ips.title" />
-  <NavItem @route="adminLogs.screenedUrls" @label="admin.logs.screened_urls.title" />
+  <NavItem
+    @route="adminLogs.staffActionLogs"
+    @label="admin.logs.staff_actions.title"
+  />
+  <NavItem
+    @route="adminLogs.screenedEmails"
+    @label="admin.logs.screened_emails.title"
+  />
+  <NavItem
+    @route="adminLogs.screenedIpAddresses"
+    @label="admin.logs.screened_ips.title"
+  />
+  <NavItem
+    @route="adminLogs.screenedUrls"
+    @label="admin.logs.screened_urls.title"
+  />
   <NavItem @route="adminSearchLogs" @label="admin.logs.search_logs.title" />
   {{#if this.currentUser.admin}}
     <NavItem @path="/logs" @label="admin.logs.logster.title" />

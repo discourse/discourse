@@ -20,8 +20,11 @@ sk:
       joined: "vytvorený"
       email_frequency:
         never: "Nikdy"
+      header_indicator_preference:
+        never: "Nikdy"
       flag: "Označenie"
       join: "Pridať sa"
+      last_visit: "posledná návševa"
       mention_warning:
         dismiss: "zahodiť"
       reply: "Odpoveď"
@@ -44,6 +47,7 @@ sk:
         yesterday: Včera
       about_view:
         title: Názov
+        name: Meno
         description: Popis
       channel_info:
         back_to_channel: "Späť"
@@ -72,6 +76,7 @@ sk:
         save: "Uložiť"
         saved: "Uložené"
         unfollow: "Opustiť"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Späť"
         description: "Popis"

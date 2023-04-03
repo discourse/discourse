@@ -252,6 +252,11 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
       url.searchParams.append("safe_mode", reqUrlSafeMode);
     }
 
+    const navigationMenu = forUrlSearchParams.get("navigation_menu");
+    if (navigationMenu) {
+      url.searchParams.append("navigation_menu", navigationMenu);
+    }
+
     const reqUrlPreviewThemeId = forUrlSearchParams.get("preview_theme_id");
     if (reqUrlPreviewThemeId) {
       url.searchParams.append("preview_theme_id", reqUrlPreviewThemeId);
@@ -319,7 +324,13 @@ async function handleRequest(proxy, baseURL, req, res) {
   });
 
   response.headers.forEach((value, header) => {
-    res.set(header, value);
+    if (header === "set-cookie") {
+      // Special handling to get array of multiple Set-Cookie header values
+      // per https://github.com/node-fetch/node-fetch/issues/251#issuecomment-428143940
+      res.set("set-cookie", response.headers.raw()["set-cookie"]);
+    } else {
+      res.set(header, value);
+    }
   });
   res.set("content-encoding", null);
 
@@ -452,6 +463,13 @@ to serve API requests. For example:
     baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
     const rawMiddleware = express.raw({ type: () => true, limit: "100mb" });
+    const pathRestrictedRawMiddleware = (req, res, next) => {
+      if (this.shouldHandleRequest(req, baseURL)) {
+        return rawMiddleware(req, res, next);
+      } else {
+        return next();
+      }
+    };
 
     app.use(
       "/favicon.ico",
@@ -463,9 +481,9 @@ to serve API requests. For example:
       )
     );
 
-    app.use(rawMiddleware, async (req, res, next) => {
+    app.use(pathRestrictedRawMiddleware, async (req, res, next) => {
       try {
-        if (this.shouldForwardRequest(req)) {
+        if (this.shouldHandleRequest(req, baseURL)) {
           await handleRequest(proxy, baseURL, req, res);
         } else {
           // Fixes issues when using e.g. "localhost" instead of loopback IP address
@@ -486,19 +504,23 @@ to serve API requests. For example:
     });
   },
 
-  shouldForwardRequest(request) {
+  shouldHandleRequest(request, baseURL) {
     if (
       [
-        "/tests/index.html",
-        "/ember-cli-live-reload.js",
-        "/testem.js",
-        "/assets/test-i18n.js",
+        `${baseURL}tests/index.html`,
+        `${baseURL}ember-cli-live-reload.js`,
+        `${baseURL}testem.js`,
+        `${baseURL}assets/test-i18n.js`,
       ].includes(request.path)
     ) {
       return false;
     }
 
     if (request.path.startsWith("/_lr/")) {
+      return false;
+    }
+
+    if (request.path.startsWith(`${baseURL}message-bus/`)) {
       return false;
     }
 

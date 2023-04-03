@@ -12,12 +12,10 @@ module Jobs
 
       alerter = PostAlerter.new
 
-      group.users.where(
-        "group_users.notification_level = :level",
-        level: NotificationLevels.all[:tracking]
-      ).find_each do |u|
-        alerter.notify_group_summary(u, topic)
-      end
+      group
+        .users
+        .where("group_users.notification_level = :level", level: NotificationLevels.all[:tracking])
+        .find_each { |u| alerter.notify_group_summary(u, topic) }
 
       notification_data = {
         notification_type: Notification.types[:invited_to_private_message],
@@ -26,17 +24,18 @@ module Jobs
         data: {
           topic_title: topic.title,
           display_username: user.username,
-          group_id: group.id
-        }.to_json
+          group_id: group.id,
+        }.to_json,
       }
 
-      group.users.where(
-        "group_users.notification_level in (:levels) AND user_id != :id",
-        levels: [NotificationLevels.all[:watching], NotificationLevels.all[:watching_first_post]],
-        id: user.id
-      ).find_each do |u|
-        u.notifications.create!(notification_data)
-      end
+      group
+        .users
+        .where(
+          "group_users.notification_level in (:levels) AND user_id != :id",
+          levels: [NotificationLevels.all[:watching], NotificationLevels.all[:watching_first_post]],
+          id: user.id,
+        )
+        .find_each { |u| u.notifications.create!(notification_data) }
     end
   end
 end

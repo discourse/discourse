@@ -17,7 +17,7 @@ RSpec.describe PostReply do
       expect(post_reply).to_not be_valid
 
       expect(post_reply.errors[:base]).to include(
-        I18n.t("activerecord.errors.models.post_reply.base.different_topic")
+        I18n.t("activerecord.errors.models.post_reply.base.different_topic"),
       )
     end
   end

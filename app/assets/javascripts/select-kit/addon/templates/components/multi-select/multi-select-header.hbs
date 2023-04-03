@@ -3,7 +3,10 @@
     {{d-icon icon}}
   {{/each}}
 
-  <MultiSelect::FormatSelectedContent @content={{or this.selectedContent this.selectKit.noneItem}} @selectKit={{this.selectKit}} />
+  <MultiSelect::FormatSelectedContent
+    @content={{or this.selectedContent this.selectKit.noneItem}}
+    @selectKit={{this.selectKit}}
+  />
 
   {{d-icon this.caretIcon class="caret-icon"}}
 </div>

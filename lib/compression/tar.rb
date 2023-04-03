@@ -1,23 +1,31 @@
 # frozen_string_literal: true
 
-require 'rubygems/package'
+require "rubygems/package"
 
 module Compression
   class Tar < Strategy
     def extension
-      '.tar'
+      ".tar"
     end
 
     def compress(path, target_name)
       tar_filename = sanitize_filename("#{target_name}.tar")
-      Discourse::Utils.execute_command('tar', '--create', '--file', tar_filename, target_name, failure_message: "Failed to tar file.")
+      Discourse::Utils.execute_command(
+        "tar",
+        "--create",
+        "--file",
+        tar_filename,
+        target_name,
+        failure_message: "Failed to tar file.",
+      )
 
       sanitize_path("#{path}/#{tar_filename}")
     end
 
     private
 
-    def extract_folder(_entry, _entry_path); end
+    def extract_folder(_entry, _entry_path)
+    end
 
     def get_compressed_file_stream(compressed_file_path)
       file_stream = IO.new(IO.sysopen(compressed_file_path))

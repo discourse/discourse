@@ -332,7 +332,7 @@ pre.codeblock-buttons code {
 }
 
 span.highlighted {
-  background-color: var(--highlight-low);
+  background-color: var(--highlight-bg);
 }
 
 .topic-avatar {
@@ -340,18 +340,6 @@ span.highlighted {
   margin-right: 10px;
   z-index: z("base") + 1;
   /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
-}
-
-.small-action .topic-avatar {
-  display: flex;
-  align-self: stretch;
-  align-items: flex-start;
-  margin-right: 0;
-  float: unset;
-  height: auto;
-  .d-icon {
-    font-size: 1.8em;
-  }
 }
 
 .topic-meta-data {

@@ -6,7 +6,14 @@ RSpec.describe UploadMarkdown do
     video = Fabricate(:upload, original_filename: "test_video.mp4", extension: "mp4")
     audio = Fabricate(:upload, original_filename: "test_audio.mp3", extension: "mp3")
     attachment = Fabricate(:upload, original_filename: "test_file.pdf", extension: "pdf")
-    image = Fabricate(:upload, width: 100, height: 200, original_filename: "test_img.jpg", extension: "jpg")
+    image =
+      Fabricate(
+        :upload,
+        width: 100,
+        height: 200,
+        original_filename: "test_img.jpg",
+        extension: "jpg",
+      )
 
     expect(UploadMarkdown.new(video).to_markdown).to eq(<<~MD.chomp)
     ![test_video.mp4|video](#{video.short_url})

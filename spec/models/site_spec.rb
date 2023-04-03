@@ -1,19 +1,25 @@
 # frozen_string_literal: true
 
 RSpec.describe Site do
-  after do
-    Site.clear_cache
-  end
+  after { Site.clear_cache }
 
   def expect_correct_themes(guardian)
     json = Site.json_for(guardian)
     parsed = JSON.parse(json)
 
-    expected = Theme.where('id = :default OR user_selectable',
-                    default: SiteSetting.default_theme_id)
-      .order(:name)
-      .pluck(:id, :name, :color_scheme_id)
-      .map { |id, n, cs| { "theme_id" => id, "name" => n, "default" => id == SiteSetting.default_theme_id, "color_scheme_id" => cs } }
+    expected =
+      Theme
+        .where("id = :default OR user_selectable", default: SiteSetting.default_theme_id)
+        .order(:name)
+        .pluck(:id, :name, :color_scheme_id)
+        .map do |id, n, cs|
+          {
+            "theme_id" => id,
+            "name" => n,
+            "default" => id == SiteSetting.default_theme_id,
+            "color_scheme_id" => cs,
+          }
+        end
 
     expect(parsed["user_themes"]).to eq(expected)
   end
@@ -59,20 +65,21 @@ RSpec.describe Site do
     expect(Site.new(guardian).categories.last[:notification_level]).to eq(1)
   end
 
-  describe '#categories' do
+  describe "#categories" do
     fab!(:category) { Fabricate(:category) }
     fab!(:user) { Fabricate(:user) }
     let(:guardian) { Guardian.new(user) }
 
     it "omits read restricted categories" do
       expect(Site.new(guardian).categories.map { |c| c[:id] }).to contain_exactly(
-        SiteSetting.uncategorized_category_id, category.id
+        SiteSetting.uncategorized_category_id,
+        category.id,
       )
 
       category.update!(read_restricted: true)
 
       expect(Site.new(guardian).categories.map { |c| c[:id] }).to contain_exactly(
-        SiteSetting.uncategorized_category_id
+        SiteSetting.uncategorized_category_id,
       )
     end
 
@@ -82,13 +89,14 @@ RSpec.describe Site do
       category.groups << group
 
       expect(Site.new(guardian).categories.map { |c| c[:id] }).to contain_exactly(
-        SiteSetting.uncategorized_category_id
+        SiteSetting.uncategorized_category_id,
       )
 
       group.add(user)
 
       expect(Site.new(Guardian.new(user)).categories.map { |c| c[:id] }).to contain_exactly(
-        SiteSetting.uncategorized_category_id, category.id
+        SiteSetting.uncategorized_category_id,
+        category.id,
       )
     end
 
@@ -100,11 +108,9 @@ RSpec.describe Site do
 
       guardian = Guardian.new(user)
 
-      expect(Site.new(guardian)
-          .categories
-          .keep_if { |c| c[:name] == category.name }
-          .first[:permission])
-        .not_to eq(CategoryGroup.permission_types[:full])
+      expect(
+        Site.new(guardian).categories.keep_if { |c| c[:name] == category.name }.first[:permission],
+      ).not_to eq(CategoryGroup.permission_types[:full])
 
       # If a parent category is not visible, the child categories should not be returned
       category.set_permissions(staff: :full)
@@ -114,7 +120,7 @@ RSpec.describe Site do
       expect(Site.new(guardian).categories).not_to include(sub_category)
     end
 
-    it 'should clear the cache when custom fields are updated' do
+    it "should clear the cache when custom fields are updated" do
       Site.preloaded_category_custom_fields << "enable_marketplace"
       categories = Site.new(Guardian.new).categories
 
@@ -125,18 +131,18 @@ RSpec.describe Site do
 
       categories = Site.new(Guardian.new).categories
 
-      expect(categories.last[:custom_fields]["enable_marketplace"]).to eq('t')
+      expect(categories.last[:custom_fields]["enable_marketplace"]).to eq("t")
 
       category.upsert_custom_fields(enable_marketplace: false)
 
       categories = Site.new(Guardian.new).categories
 
-      expect(categories.last[:custom_fields]["enable_marketplace"]).to eq('f')
+      expect(categories.last[:custom_fields]["enable_marketplace"]).to eq("f")
     ensure
       Site.reset_preloaded_category_custom_fields
     end
 
-    it 'sets the can_edit field for categories correctly' do
+    it "sets the can_edit field for categories correctly" do
       categories = Site.new(Guardian.new).categories
 
       expect(categories.map { |c| c[:can_edit] }).to contain_exactly(false, false)
@@ -172,7 +178,7 @@ RSpec.describe Site do
     SiteSetting.enable_twitter_logins = true
     SiteSetting.enable_facebook_logins = true
     data = JSON.parse(Site.json_for(Guardian.new))
-    expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly('facebook', 'twitter')
+    expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")
   end
 
   it "includes all enabled authentication providers for anon when login_required" do
@@ -180,7 +186,7 @@ RSpec.describe Site do
     SiteSetting.enable_twitter_logins = true
     SiteSetting.enable_facebook_logins = true
     data = JSON.parse(Site.json_for(Guardian.new))
-    expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly('facebook', 'twitter')
+    expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")
   end
 
   describe ".show_welcome_topic_banner?" do
@@ -197,7 +203,6 @@ RSpec.describe Site do
       SiteSetting.welcome_topic_id = first_post.topic.id
 
       expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
-      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
     end
 
     it "returns true when welcome topic is less than month old" do
@@ -245,5 +250,4 @@ RSpec.describe Site do
       expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
     end
   end
-
 end

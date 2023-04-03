@@ -12,9 +12,7 @@ RSpec.describe "auto reject reviewable users" do
       Jobs::AutoQueueHandler.new.execute({})
 
       expect(old_user.reload.rejected?).to eq(true)
-      expect(UserHistory.last.context).to eq(
-        I18n.t("user.destroy_reasons.reviewable_reject_auto")
-      )
+      expect(UserHistory.last.context).to eq(I18n.t("user.destroy_reasons.reviewable_reject_auto"))
     end
   end
 end

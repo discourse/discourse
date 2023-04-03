@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .groups-header {
   display: flex;
   flex-wrap: wrap;
@@ -114,7 +116,7 @@
     }
 
     $size: 40px;
-    $icon-size: $size / 1.8;
+    $icon-size: math.div($size, 1.8);
 
     .group-avatar-flair {
       display: inline-block;

@@ -10,6 +10,7 @@ da:
   chat:
     deleted_chat_username: slettet
     errors:
+      duplicate_message: "Det er for kort tid siden, at du oprettede en identisk besked."
       max_reactions_limit_reached: "Nye reaktioner er ikke tilladt på denne besked."
       not_accepting_dms: "Beklager, %{username} accepterer ikke meddelelser i øjeblikket."
     reviewables:
@@ -33,13 +34,10 @@ da:
         ignore:
           title: "Ignorér"
     channel:
-      statuses:
-        read_only: "Kun læsning"
-        archived: "Arkiveret"
-        closed: "Lukket"
-        open: "Åbn"
       archive:
         first_post_raw: "Dette emne er et arkiv af chatkanalen [%{channel_name}] (%{channel_url})."
+      dm_title:
+        single_user: "%{username}"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "indeholder ikke-ascii- tegn"
@@ -69,6 +67,7 @@ da:
       chat_pm_body: "%{link}\n\n%{message}"
   user_notifications:
     chat_summary:
+      deleted_user: "Slettet bruger"
       from: "%{site_name}"
   unsubscribe:
     chat_summary:

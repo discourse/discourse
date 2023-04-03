@@ -14,7 +14,7 @@ class UpdateUsersCaseInsensitiveEmails < ActiveRecord::Migration[4.2]
 SQL
 
     results.each do |row|
-      execute "UPDATE users SET email = '#{row['email'].downcase}#{row['count']}' WHERE id = #{row['id']}"
+      execute "UPDATE users SET email = '#{row["email"].downcase}#{row["count"]}' WHERE id = #{row["id"]}"
     end
 
     execute "UPDATE users SET email = lower(email)"

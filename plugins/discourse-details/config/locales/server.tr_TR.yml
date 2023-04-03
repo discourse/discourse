@@ -6,6 +6,6 @@
 
 tr_TR:
   site_settings:
-    details_enabled: 'Bir gönderiye genişletilebilir ayrıntılar ekleme özelliğini açın. Bu özelliğe, oluşturucunun araç çubuğundaki açılır menüden ulaşılabilir. Bu ayarı değiştirirseniz, tüm gönderileri "rake posts:rebake" komutu ile yeniden düzenlemeniz gerekir.'
+    details_enabled: 'Bir gönderiye genişletilebilir ayrıntılar ekleme özelliğini dahil edin. Bu özellik, bestecinin araç çubuğu açılır menüsünde bulunabilir. Bu ayarı değiştirirseniz tüm gönderileri "rake posts:rebake" ile yeniden oluşturmanız gerekir.'
   details:
-    excerpt_details: "(daha fazla ayrıntı için tıklayın)"
+    excerpt_details: "(daha fazla bilgi için tıklayın)"

@@ -3,6 +3,7 @@ import ChatChannel, {
 } from "discourse/plugins/chat/discourse/models/chat-channel";
 import EmberObject from "@ember/object";
 import { Fabricator } from "./fabricator";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const userFabricator = Fabricator(EmberObject, {
   id: 1,
@@ -31,9 +32,14 @@ export default {
     name: "My category name",
     chatable: categoryChatableFabricator(),
     last_message_sent_at: "2021-11-08T21:26:05.710Z",
+    allow_channel_wide_mentions: true,
+    message_bus_last_ids: {
+      new_mentions: 0,
+      new_messages: 0,
+    },
   }),
 
-  chatChannelMessage: Fabricator(EmberObject, {
+  chatChannelMessage: Fabricator(ChatMessage, {
     id: 1,
     chat_channel_id: 1,
     user_id: 1,
@@ -46,5 +52,9 @@ export default {
     status: "open",
     chatable: directChannelChatableFabricator(),
     last_message_sent_at: "2021-11-08T21:26:05.710Z",
+    message_bus_last_ids: {
+      new_mentions: 0,
+      new_messages: 0,
+    },
   }),
 };

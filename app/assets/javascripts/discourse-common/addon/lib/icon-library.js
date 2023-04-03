@@ -11,7 +11,7 @@ let _renderers = [];
 let warnMissingIcons = true;
 let _iconList;
 
-const REPLACEMENTS = {
+export const REPLACEMENTS = {
   "d-tracking": "bell",
   "d-muted": "discourse-bell-slash",
   "d-regular": "far-bell",
@@ -28,14 +28,15 @@ const REPLACEMENTS = {
   "notification.quoted": "quote-right",
   "notification.replied": "reply",
   "notification.posted": "discourse-bell-exclamation",
+  "notification.watching_category_or_tag": "discourse-bell-exclamation",
   "notification.edited": "pencil-alt",
   "notification.bookmark_reminder": "discourse-bookmark-clock",
   "notification.liked": "heart",
   "notification.liked_2": "heart",
   "notification.liked_many": "heart",
   "notification.liked_consolidated": "heart",
-  "notification.private_message": "far-envelope",
-  "notification.invited_to_private_message": "far-envelope",
+  "notification.private_message": "envelope",
+  "notification.invited_to_private_message": "envelope",
   "notification.invited_to_topic": "hand-point-right",
   "notification.invitee_accepted": "user",
   "notification.moved_post": "sign-out-alt",
@@ -65,16 +66,19 @@ export function enableMissingIconWarning() {
 }
 
 export function renderIcon(renderType, id, params) {
-  for (let i = 0; i < _renderers.length; i++) {
-    let renderer = _renderers[i];
-    let rendererForType = renderer[renderType];
+  params ||= {};
 
-    if (rendererForType) {
-      const icon = { id, replacementId: REPLACEMENTS[id] };
-      let result = rendererForType(icon, params || {});
-      if (result) {
-        return result;
-      }
+  for (const renderer of _renderers) {
+    const rendererForType = renderer[renderType];
+    if (!rendererForType) {
+      continue;
+    }
+
+    const icon = { id, replacementId: REPLACEMENTS[id] };
+    const result = rendererForType(icon, params);
+
+    if (result) {
+      return result;
     }
   }
 }

@@ -17,7 +17,10 @@ sq:
       joined: "anëtarësuar"
       email_frequency:
         never: "Asnjëherë"
+      header_indicator_preference:
+        never: "Asnjëherë"
       flag: "Sinjalizoni"
+      last_visit: "vizita e fundit"
       mention_warning:
         dismiss: "hiqe"
       reply: "Përgjigju"
@@ -38,6 +41,7 @@ sq:
         yesterday: Dje
       about_view:
         title: Titulli
+        name: Emri
         description: Përshkrimi
       channel_info:
         back_to_channel: "Kthehu mbrapa"
@@ -64,6 +68,7 @@ sq:
         preview: "Parashikimi"
         save: "Ruaj"
         saved: "U ruajt"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Kthehu mbrapa"
         description: "Përshkrimi"

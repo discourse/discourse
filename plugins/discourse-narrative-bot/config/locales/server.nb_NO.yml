@@ -45,9 +45,6 @@ nb_NO:
       trigger: "rull"
       invalid: |-
         Jeg beklager, det er matematisk umulig å rulle den kombinasjonen av terninger. :confounded:
-      not_enough_dice:
-        one: "Jeg har bare %{count} terninger. Jeg vet det er [Shameful] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)!"
-        other: "Jeg har bare %{count} terninger. Jeg vet det er [flaut] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)!"
       out_of_range: |-
         Visste du at [maksimalt antall sider](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) på en matematisk rettferdig terning er 120?
       results: |-

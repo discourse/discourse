@@ -98,9 +98,7 @@ module BackupRestore
 
     def flush_redis
       redis = Discourse.redis
-      redis.scan_each(match: "*") do |key|
-        redis.del(key) unless key == SidekiqPauser::PAUSED_KEY
-      end
+      redis.scan_each(match: "*") { |key| redis.del(key) unless key == SidekiqPauser::PAUSED_KEY }
     end
 
     def clear_sidekiq_queues

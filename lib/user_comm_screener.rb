@@ -35,8 +35,11 @@ class UserCommScreener
   attr_reader :acting_user, :preferences
 
   class UserCommPref
-    attr_accessor :user_id, :is_muting, :is_ignoring, :is_disallowing_all_pms,
-      :is_disallowing_pms_from_acting_user
+    attr_accessor :user_id,
+                  :is_muting,
+                  :is_ignoring,
+                  :is_disallowing_all_pms,
+                  :is_disallowing_pms_from_acting_user
 
     def initialize(preferences)
       @user_id = preferences[:user_id]
@@ -59,45 +62,42 @@ class UserCommScreener
     end
   end
 
-  UserCommPrefs = Struct.new(:acting_user, :user_preference_map) do
-    def acting_user_staff?
-      acting_user.staff?
-    end
+  UserCommPrefs =
+    Struct.new(:acting_user, :user_preference_map) do
+      def acting_user_staff?
+        acting_user.staff?
+      end
 
-    def user_ids
-      user_preference_map.keys
-    end
+      def user_ids
+        user_preference_map.keys
+      end
 
-    def for_user(user_id)
-      user_preference_map[user_id]
-    end
+      def for_user(user_id)
+        user_preference_map[user_id]
+      end
 
-    def allowing_actor_communication
-      return user_preference_map.values if acting_user_staff?
-      user_preference_map.reject do |user_id, pref|
-        pref.communication_prevented?
-      end.values
-    end
+      def allowing_actor_communication
+        return user_preference_map.values if acting_user_staff?
+        user_preference_map.reject { |user_id, pref| pref.communication_prevented? }.values
+      end
 
-    def preventing_actor_communication
-      return [] if acting_user_staff?
-      user_preference_map.select do |user_id, pref|
-        pref.communication_prevented?
-      end.values
-    end
+      def preventing_actor_communication
+        return [] if acting_user_staff?
+        user_preference_map.select { |user_id, pref| pref.communication_prevented? }.values
+      end
 
-    def ignoring_or_muting?(user_id)
-      return false if acting_user_staff?
-      pref = for_user(user_id)
-      pref.present? && pref.ignoring_or_muting?
-    end
+      def ignoring_or_muting?(user_id)
+        return false if acting_user_staff?
+        pref = for_user(user_id)
+        pref.present? && pref.ignoring_or_muting?
+      end
 
-    def disallowing_pms?(user_id)
-      return false if acting_user_staff?
-      pref = for_user(user_id)
-      pref.present? && pref.disallowing_pms?
+      def disallowing_pms?(user_id)
+        return false if acting_user_staff?
+        pref = for_user(user_id)
+        pref.present? && pref.disallowing_pms?
+      end
     end
-  end
   private_constant :UserCommPref
   private_constant :UserCommPrefs
 
@@ -148,7 +148,10 @@ class UserCommScreener
   end
 
   def actor_preventing_communication
-    (actor_preferences[:ignoring] + actor_preferences[:muting] + actor_preferences[:disallowed_pms_from]).uniq
+    (
+      actor_preferences[:ignoring] + actor_preferences[:muting] +
+        actor_preferences[:disallowed_pms_from]
+    ).uniq
   end
 
   ##
@@ -204,7 +207,7 @@ class UserCommScreener
         is_muting: user.is_muting,
         is_ignoring: user.is_ignoring,
         is_disallowing_all_pms: user.is_disallowing_all_pms,
-        is_disallowing_pms_from_acting_user: false
+        is_disallowing_pms_from_acting_user: false,
       )
     end
 
@@ -214,22 +217,25 @@ class UserCommScreener
 
     if users_with_allowed_pms.any?
       user_ids_with_allowed_pms = users_with_allowed_pms.map(&:id)
-      user_ids_acting_can_pm = AllowedPmUser.where(
-        allowed_pm_user_id: acting_user.id, user_id: user_ids_with_allowed_pms
-      ).pluck(:user_id).uniq
+      user_ids_acting_can_pm =
+        AllowedPmUser
+          .where(allowed_pm_user_id: acting_user.id, user_id: user_ids_with_allowed_pms)
+          .pluck(:user_id)
+          .uniq
 
       # If not in the list mark them as not accepting communication.
       user_ids_acting_cannot_pm = user_ids_with_allowed_pms - user_ids_acting_can_pm
       user_ids_acting_cannot_pm.each do |user_id|
         if resolved_user_communication_preferences[user_id]
-          resolved_user_communication_preferences[user_id].is_disallowing_pms_from_acting_user = true
+          resolved_user_communication_preferences[user_id].is_disallowing_pms_from_acting_user =
+            true
         else
           resolved_user_communication_preferences[user_id] = UserCommPref.new(
             user_id: user_id,
             is_muting: false,
             is_ignoring: false,
             is_disallowing_all_pms: false,
-            is_disallowing_pms_from_acting_user: true
+            is_disallowing_pms_from_acting_user: true,
           )
         end
       end
@@ -239,28 +245,31 @@ class UserCommScreener
   end
 
   def actor_preferences
-    @actor_preferences ||= begin
-      user_ids_by_preference_type = actor_communication_preferences.reduce({}) do |hash, pref|
-        hash[pref.preference_type] ||= []
-        hash[pref.preference_type] << pref.target_user_id
-        hash
+    @actor_preferences ||=
+      begin
+        user_ids_by_preference_type =
+          actor_communication_preferences.reduce({}) do |hash, pref|
+            hash[pref.preference_type] ||= []
+            hash[pref.preference_type] << pref.target_user_id
+            hash
+          end
+        disallowed_pms_from =
+          if acting_user.user_option.enable_allowed_pm_users
+            (user_ids_by_preference_type["disallowed_pm"] || [])
+          else
+            []
+          end
+        {
+          muting: user_ids_by_preference_type["muted"] || [],
+          ignoring: user_ids_by_preference_type["ignored"] || [],
+          disallowed_pms_from: disallowed_pms_from,
+        }
       end
-      disallowed_pms_from = \
-        if acting_user.user_option.enable_allowed_pm_users
-          (user_ids_by_preference_type["disallowed_pm"] || [])
-        else
-          []
-        end
-      {
-        muting: user_ids_by_preference_type["muted"] || [],
-        ignoring: user_ids_by_preference_type["ignored"] || [],
-        disallowed_pms_from: disallowed_pms_from
-      }
-    end
   end
 
   def user_communication_preferences
-    @user_communication_preferences ||= DB.query(<<~SQL, acting_user_id: acting_user.id, target_user_ids: @target_users.keys)
+    @user_communication_preferences ||=
+      DB.query(<<~SQL, acting_user_id: acting_user.id, target_user_ids: @target_users.keys)
       SELECT users.id,
       CASE WHEN muted_users.muted_user_id IS NOT NULL THEN true ELSE false END AS is_muting,
       CASE WHEN ignored_users.ignored_user_id IS NOT NULL THEN true ELSE false END AS is_ignoring,
@@ -281,7 +290,8 @@ class UserCommScreener
   end
 
   def actor_communication_preferences
-    @actor_communication_preferences ||= DB.query(<<~SQL, acting_user_id: acting_user.id, target_user_ids: @target_users.keys)
+    @actor_communication_preferences ||=
+      DB.query(<<~SQL, acting_user_id: acting_user.id, target_user_ids: @target_users.keys)
       SELECT users.id AS target_user_id, 'disallowed_pm' AS preference_type FROM users
       LEFT JOIN allowed_pm_users ON allowed_pm_users.allowed_pm_user_id = users.id
       WHERE users.id IN (:target_user_ids)
