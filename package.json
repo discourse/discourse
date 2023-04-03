@@ -2,7 +2,7 @@
   "name": "discourse",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:discourse/discourse.git",
+  "repository": "https://github.com/discourse/discourse",
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "dependencies": {
