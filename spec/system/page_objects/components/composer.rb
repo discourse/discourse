@@ -14,6 +14,11 @@ module PageObjects
         self
       end
 
+      def click_toolbar_button(number)
+        find(".d-editor-button-bar button:nth-child(#{number})").click
+        self
+      end
+
       def fill_title(title)
         find("#{COMPOSER_ID} #reply-title").fill_in(with: title)
         self
@@ -52,6 +57,26 @@ module PageObjects
 
       def button_label
         find("#{COMPOSER_ID} .btn-primary .d-button-label")
+      end
+
+      def emoji_picker
+        find("#{COMPOSER_ID} .emoji-picker")
+      end
+
+      def emoji_autocomplete
+        find(".autocomplete.ac-emoji")
+      end
+
+      def has_emoji_autocomplete?
+        has_css?(".autocomplete.ac-emoji")
+      end
+
+      def has_emoji_suggestion?(emoji)
+        has_css?(".autocomplete.ac-emoji .emoji-shortname", text: emoji)
+      end
+
+      def has_emoji_preview?(emoji)
+        page.has_css?(".d-editor-preview .emoji[title=':#{emoji}:']")
       end
 
       def composer_input
