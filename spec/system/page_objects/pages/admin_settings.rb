@@ -29,7 +29,9 @@ module PageObjects
       def values_in_list(setting_name)
         vals = []
         setting = find(".admin-detail .row.setting[data-setting='#{setting_name}']")
-        setting.all(:css, '.setting-value .values .value .value-input span').map { |e| vals << e.text }
+        setting
+          .all(:css, ".setting-value .values .value .value-input span")
+          .map { |e| vals << e.text }
         vals
       end
     end

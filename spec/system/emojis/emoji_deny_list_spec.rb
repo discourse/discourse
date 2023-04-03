@@ -6,10 +6,10 @@ describe "Emoji deny list", type: :system, js: true do
   let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
   fab!(:admin) { Fabricate(:admin) }
 
-  before {
+  before do
     SiteSetting.emoji_deny_list = "fu|pancakes|poop|monkey"
     sign_in(admin)
-  }
+  end
 
   describe "when editing admin settings" do
     before { SiteSetting.emoji_deny_list = "" }
@@ -73,10 +73,10 @@ describe "Emoji deny list", type: :system, js: true do
 
     it "should not show denied emoji in preview" do
       topic_page.visit_topic_and_open_composer(topic)
-      
+
       composer.fill_content(":wave:")
       expect(composer).to have_emoji_preview("wave")
-      
+
       composer.clear_content
 
       composer.fill_content(":fu:")
@@ -85,7 +85,9 @@ describe "Emoji deny list", type: :system, js: true do
   end
 
   describe "when using private messages" do
-    fab!(:topic) { Fabricate(:private_message_topic, title: "Want to catch up for :pancakes: today?") }
+    fab!(:topic) do
+      Fabricate(:private_message_topic, title: "Want to catch up for :pancakes: today?")
+    end
     fab!(:post) { Fabricate(:post, topic: topic, raw: "Can we use the :pancakes: emoji here?") }
 
     it "should remove denied emojis from message title" do
