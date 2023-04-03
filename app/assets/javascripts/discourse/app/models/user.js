@@ -20,7 +20,6 @@ import Group from "discourse/models/group";
 import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import Singleton from "discourse/mixins/singleton";
 import Site from "discourse/models/site";

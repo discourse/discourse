@@ -1,7 +1,6 @@
 import { filter, gt, lt, not, or } from "@ember/object/computed";
 import Group from "discourse/models/group";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
