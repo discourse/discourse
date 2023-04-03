@@ -471,7 +471,7 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.14.2)
-    uri (0.11.0)
+    uri (0.11.1)
     uri_template (0.7.0)
     webmock (3.14.0)
       addressable (>= 2.8.0)
