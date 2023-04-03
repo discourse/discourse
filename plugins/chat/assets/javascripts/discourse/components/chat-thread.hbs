@@ -2,6 +2,7 @@
   class={{concat-class "chat-thread" (if this.loading "loading")}}
   data-id={{this.thread.id}}
   {{did-insert this.loadMessages}}
+  {{did-update this.thread.id this.loadMessages}}
 >
   <div class="chat-thread__header">
     <span class="chat-thread__label">{{i18n "chat.thread.label"}}</span>
