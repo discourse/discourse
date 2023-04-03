@@ -18,7 +18,6 @@ class Onebox::Engine::VimeoOnebox
       end
 
       thumbnail_url = "https://vumbnail.com/#{oembed_data[:video_id]}.jpg"
-      puts thumbnail_url
       escaped_title = ERB::Util.html_escape(og_data.title)
 
       <<~HTML
