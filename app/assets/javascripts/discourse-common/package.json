@@ -30,7 +30,7 @@
     "webpack": "^5.76.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.3",
+    "@babel/core": "^7.21.4",
     "@ember/optional-features": "^2.0.0",
     "@embroider/test-setup": "^2.1.1",
     "@glimmer/component": "^1.1.2",
