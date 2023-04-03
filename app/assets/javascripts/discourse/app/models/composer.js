@@ -749,115 +749,114 @@ const Composer = RestModel.extend({
       @param {Number} [opts.destinationCategoryId]
       @param {String} [opts.title]
   **/
-  open(opts) {
-    let promise = Promise.resolve();
-
-    if (!opts) {
-      opts = {};
-    }
+  async open(opts) {
+    opts ||= {};
 
     this.set("loading", true);
 
-    if (
-      !isEmpty(this.reply) &&
-      (opts.reply || isEdit(opts.action)) &&
-      this.replyDirty
-    ) {
-      return promise;
-    }
+    try {
+      if (
+        !isEmpty(this.reply) &&
+        (opts.reply || isEdit(opts.action)) &&
+        this.replyDirty
+      ) {
+        return;
+      }
 
-    if (opts.action === REPLY && isEdit(this.action)) {
-      this.set("reply", "");
-    }
+      if (opts.action === REPLY && isEdit(this.action)) {
+        this.set("reply", "");
+      }
 
-    if (!opts.draftKey) {
-      throw new Error("draft key is required");
-    }
+      if (!opts.draftKey) {
+        throw new Error("draft key is required");
+      }
 
-    if (opts.draftSequence === null) {
-      throw new Error("draft sequence is required");
-    }
+      if (opts.draftSequence === null) {
+        throw new Error("draft sequence is required");
+      }
 
-    if (opts.usernames) {
-      deprecated("`usernames` is deprecated, use `recipients` instead.", {
-        id: "discourse.composer.usernames",
-      });
-    }
+      if (opts.usernames) {
+        deprecated("`usernames` is deprecated, use `recipients` instead.", {
+          id: "discourse.composer.usernames",
+        });
+      }
 
-    this.setProperties({
-      draftKey: opts.draftKey,
-      draftSequence: opts.draftSequence,
-      composeState: opts.composerState || OPEN,
-      action: opts.action,
-      topic: opts.topic,
-      targetRecipients: opts.usernames || opts.recipients,
-      composerTotalOpened: opts.composerTime,
-      typingTime: opts.typingTime,
-      whisper: opts.whisper,
-      tags: opts.tags,
-      noBump: opts.noBump,
-    });
-
-    if (opts.post) {
       this.setProperties({
-        post: opts.post,
-        whisper: opts.post.post_type === this.site.post_types.whisper,
+        draftKey: opts.draftKey,
+        draftSequence: opts.draftSequence,
+        composeState: opts.composerState || OPEN,
+        action: opts.action,
+        topic: opts.topic,
+        targetRecipients: opts.usernames || opts.recipients,
+        composerTotalOpened: opts.composerTime,
+        typingTime: opts.typingTime,
+        whisper: opts.whisper,
+        tags: opts.tags,
+        noBump: opts.noBump,
       });
 
-      if (!this.topic) {
-        this.set("topic", opts.post.topic);
+      this.setProperties({
+        archetypeId: opts.archetypeId || this.site.default_archetype,
+        metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
+        reply: opts.reply || this.reply || "",
+      });
+
+      if (opts.post) {
+        this.setProperties({
+          post: opts.post,
+          whisper: opts.post.post_type === this.site.post_types.whisper,
+        });
+
+        if (!this.topic) {
+          this.set("topic", opts.post.topic);
+        }
+      } else if (opts.postId) {
+        const post = await this.store.find("post", opts.postId);
+        this.set("post", post);
+
+        if (post) {
+          this.set("topic", post.topic);
+        }
+      } else {
+        this.set("post", null);
       }
-    } else if (opts.postId) {
-      promise = promise.then(() =>
-        this.store.find("post", opts.postId).then((post) => {
-          this.set("post", post);
-          if (post) {
-            this.set("topic", post.topic);
-          }
-        })
+
+      // We set the category id separately for topic templates on opening of composer
+      this.set("categoryId", opts.categoryId || this.get("topic.category.id"));
+
+      if (
+        this.creatingTopic &&
+        !this.categoryId &&
+        this.site.categories.length === 1
+      ) {
+        this.set("categoryId", this.site.categories[0].id);
+      }
+
+      this._hasTopicTemplates = this.site.categories.some(
+        (c) => c.topic_template
       );
-    } else {
-      this.set("post", null);
-    }
 
-    this.setProperties({
-      archetypeId: opts.archetypeId || this.site.default_archetype,
-      metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
-      reply: opts.reply || this.reply || "",
-    });
-
-    // We set the category id separately for topic templates on opening of composer
-    this.set("categoryId", opts.categoryId || this.get("topic.category.id"));
-
-    if (!this.categoryId && this.creatingTopic) {
-      const categories = this.site.categories;
-      if (categories.length === 1) {
-        this.set("categoryId", categories[0].id);
+      if (opts.title) {
+        this.set("title", opts.title);
       }
-    }
 
-    this._hasTopicTemplates = this.site.categories.some(
-      (c) => c.topic_template
-    );
+      // If we are editing a post, load it.
+      if (isEdit(opts.action) && this.post) {
+        const topicProps = this.serialize(_edit_topic_serializer);
+        topicProps.loading = true;
 
-    // If we are editing a post, load it.
-    if (isEdit(opts.action) && this.post) {
-      const topicProps = this.serialize(_edit_topic_serializer);
-      topicProps.loading = true;
+        // When editing a shared draft, use its category
+        if (opts.action === EDIT_SHARED_DRAFT && opts.destinationCategoryId) {
+          topicProps.categoryId = opts.destinationCategoryId;
+        }
 
-      // When editing a shared draft, use its category
-      if (opts.action === EDIT_SHARED_DRAFT && opts.destinationCategoryId) {
-        topicProps.categoryId = opts.destinationCategoryId;
-      }
-      this.setProperties(topicProps);
+        this.setProperties(topicProps);
 
-      promise = promise.then(() => {
-        let rawPromise = this.store.find("post", opts.post.id).then((post) => {
-          this.setProperties({
-            post,
-            reply: post.raw,
-            originalText: post.raw,
-          });
+        const post = await this.store.find("post", opts.post.id);
+        this.setProperties({
+          post,
+          reply: post.raw,
+          originalText: post.raw,
         });
 
         // edge case ... make a post then edit right away
@@ -865,52 +864,42 @@ const Composer = RestModel.extend({
         if (this.topic && this.topic.id === this.post.topic_id) {
           // nothing to do ... we have the right topic
         } else {
-          rawPromise = this.store
-            .find("topic", this.post.topic_id)
-            .then((topic) => {
-              this.set("topic", topic);
-            });
+          const topic = await this.store.find("topic", this.post.topic_id);
+          this.set("topic", topic);
         }
 
-        return rawPromise.then(() => {
-          this.appEvents.trigger("composer:reply-reloaded", this);
-        });
-      });
-    } else if (opts.action === REPLY && opts.quote) {
-      this.setProperties({
-        reply: opts.quote,
-        originalText: opts.quote,
-      });
-    }
-
-    if (opts.title) {
-      this.set("title", opts.title);
-    }
-
-    const isDraft = opts.draft || opts.skipDraftCheck;
-    this.set("originalText", isDraft ? "" : this.reply);
-
-    if (this.canEditTitle) {
-      if (isEmpty(this.title) && this.title !== "") {
-        this.set("title", "");
+        this.appEvents.trigger("composer:reply-reloaded", this);
+        return;
       }
-      this.set("originalTitle", this.title);
-    }
 
-    if (!isEdit(opts.action) || !opts.post) {
-      promise = promise.then(() =>
-        this.appEvents.trigger("composer:reply-reloaded", this)
-      );
-    }
+      if (opts.action === REPLY && opts.quote) {
+        this.setProperties({
+          reply: opts.quote,
+          originalText: opts.quote,
+        });
+      }
 
-    // Ensure additional draft fields are set
-    Object.keys(_add_draft_fields).forEach((f) => {
-      this.set(_add_draft_fields[f], opts[f]);
-    });
+      const isDraft = opts.draft || opts.skipDraftCheck;
+      this.set("originalText", isDraft ? "" : this.reply);
 
-    return promise.finally(() => {
+      if (this.canEditTitle) {
+        if (isEmpty(this.title) && this.title !== "") {
+          this.set("title", "");
+        }
+        this.set("originalTitle", this.title);
+      }
+
+      // Ensure additional draft fields are set
+      Object.keys(_add_draft_fields).forEach((f) => {
+        this.set(_add_draft_fields[f], opts[f]);
+      });
+
+      if (!isEdit(opts.action) || !opts.post) {
+        this.appEvents.trigger("composer:reply-reloaded", this);
+      }
+    } finally {
       this.set("loading", false);
-    });
+    }
   },
 
   // Overwrite to implement custom logic
