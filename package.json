@@ -39,6 +39,11 @@
     "puppeteer-core": "^13.7.0",
     "tidy-jsdoc": "^1.4.1"
   },
+  "pnpm": {
+    "overrides": {
+      "babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1"
+    }
+  },
   "scripts": {
     "postinstall": "pnpm --dir app/assets/javascripts/discourse install"
   },

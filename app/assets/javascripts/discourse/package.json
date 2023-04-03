@@ -47,7 +47,6 @@
     "deepmerge": "^4.3.1",
     "dialog-holder": "workspace:*",
     "discourse-common": "workspace:*",
-    "discourse-ensure-deprecation-order": "workspace:*",
     "discourse-hbr": "workspace:*",
     "discourse-plugins": "workspace:*",
     "discourse-widget-hbs": "workspace:*",
