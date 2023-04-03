@@ -1475,6 +1475,7 @@ en:
     out_of_date_themes: "Updates are available for the following themes:"
     unreachable_themes: "We were unable to check for updates on the following themes:"
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
+    v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
