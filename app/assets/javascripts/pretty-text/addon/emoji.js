@@ -197,7 +197,7 @@ let toSearch;
 export function emojiSearch(term, options) {
   const maxResults = options?.maxResults;
   const diversity = options?.diversity;
-  const exclude = options?.exclude;
+  const exclude = options?.exclude || [];
   if (maxResults === 0) {
     return [];
   }

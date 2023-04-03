@@ -556,7 +556,8 @@ export default Component.extend(TextareaTextManipulation, {
           }
 
           const emojiDenied =
-            this.siteSettings.emoji_deny_list.split("|") || [];
+            this.siteSettings?.emoji_deny_list.split("|") || [];
+
           const match = term.match(/^:?(.*?):t([2-6])?$/);
           if (match) {
             const name = match[1];
