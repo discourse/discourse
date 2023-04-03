@@ -6,10 +6,7 @@ describe "Emoji deny list", type: :system, js: true do
   let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
   fab!(:admin) { Fabricate(:admin) }
 
-  before do
-    SiteSetting.emoji_deny_list = "fu|pancakes|poop|monkey"
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   describe "when editing admin settings" do
     before { SiteSetting.emoji_deny_list = "" }
@@ -26,6 +23,7 @@ describe "Emoji deny list", type: :system, js: true do
   end
 
   describe "when visiting topics" do
+    before { SiteSetting.emoji_deny_list = "monkey" }
     fab!(:topic) { Fabricate(:topic, title: "Time for :monkey: business") }
     fab!(:post) { Fabricate(:post, topic: topic, raw: "We have no time to :monkey: around!") }
 
@@ -46,6 +44,7 @@ describe "Emoji deny list", type: :system, js: true do
   end
 
   describe "when using composer" do
+    before { SiteSetting.emoji_deny_list = "fu|poop" }
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -85,10 +84,11 @@ describe "Emoji deny list", type: :system, js: true do
   end
 
   describe "when using private messages" do
+    before { SiteSetting.emoji_deny_list = "pancakes|monkey" }
     fab!(:topic) do
       Fabricate(:private_message_topic, title: "Want to catch up for :pancakes: today?")
     end
-    fab!(:post) { Fabricate(:post, topic: topic, raw: "Can we use the :pancakes: emoji here?") }
+    fab!(:post) { Fabricate(:post, topic: topic, raw: "Can we use the :monkey: emoji here?") }
 
     it "should remove denied emojis from message title" do
       topic_page.visit_topic(topic)
@@ -97,7 +97,7 @@ describe "Emoji deny list", type: :system, js: true do
 
     it "should remove denied emojis from message body" do
       topic_page.visit_topic(topic)
-      expect(post.cooked).to have_content(":pancakes:") # not converted to emoji
+      expect(topic_page).not_to have_css("img.emoji[title=':monkey:']")
     end
   end
 end
