@@ -146,6 +146,9 @@ class DiscourseJsProcessor
 
       # Terser
       load_file_in_context(ctx, "discourse/node_modules/source-map/dist/source-map.js")
+      ctx.eval <<~JS
+        globalThis.sourceMap = window.sourceMap
+      JS
       load_file_in_context(ctx, "discourse/node_modules/terser/dist/bundle.min.js")
 
       # Template Compiler
