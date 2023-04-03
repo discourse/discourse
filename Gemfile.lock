@@ -241,7 +241,7 @@ GEM
     minitest (5.18.0)
     mocha (2.0.2)
       ruby2_keywords (>= 0.0.5)
-    msgpack (1.6.1)
+    msgpack (1.7.0)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     mustache (1.1.1)
