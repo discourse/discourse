@@ -22,8 +22,7 @@ export default class ChannelsList extends Component {
 
   @action
   computeResizedEntries(entries) {
-    const element = entries[0].target;
-    this.hasScrollbar = element.scrollHeight > element.clientHeight;
+    this.computeHasScrollbar(entries[0].target);
   }
 
   get showMobileDirectMessageButton() {
