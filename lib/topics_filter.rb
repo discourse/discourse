@@ -10,7 +10,7 @@ class TopicsFilter
     return @scope if query_string.blank?
 
     query_string.scan(
-      /(?<key_prefix>[-=])?(?<key>\w+):(?<value>[^:\s]+)/,
+      /(?<key_prefix>[-=])?(?<key>\w+):(?<value>[^\s]+)/,
     ) do |key_prefix, key, value|
       case key
       when "status"
@@ -37,7 +37,7 @@ class TopicsFilter
         end
       when "category", "categories"
         value.scan(
-          /^(?<category_slugs>([a-zA-Z0-9\-]+)(?<delimiter>[,])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)$/,
+          /^(?<category_slugs>([a-zA-Z0-9\-:]+)(?<delimiter>[,])?([a-zA-Z0-9\-:]+)?(\k<delimiter>[a-zA-Z0-9\-:]+)*)$/,
         ) do |category_slugs, delimiter|
           break if key_prefix && key_prefix != "="
 
@@ -81,13 +81,16 @@ class TopicsFilter
   private
 
   def filter_categories(category_slugs:, exclude_subcategories: false)
+    category_ids = Category.ids_from_slugs(category_slugs)
+
     category_ids =
       Category
-        .where(slug: category_slugs)
+        .where(id: category_ids)
         .filter { |category| @guardian.can_see_category?(category) }
         .map(&:id)
 
-    return @scope.none if category_ids.length != category_slugs.length
+    # Don't return any records if the user does not have access to any of the categories
+    return @scope.none if category_ids.length < category_slugs.length
 
     if !exclude_subcategories
       category_ids = category_ids.flat_map { |category_id| Category.subcategory_ids(category_id) }
