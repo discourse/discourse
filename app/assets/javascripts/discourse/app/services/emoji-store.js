@@ -27,7 +27,7 @@ export default Service.extend({
   },
 
   get favorites() {
-    return this.store.getObject(EMOJI_USAGE);
+    return this.store.getObject(EMOJI_USAGE) || [];
   },
 
   set favorites(value) {
