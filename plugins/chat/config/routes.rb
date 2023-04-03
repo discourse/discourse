@@ -30,7 +30,7 @@ Chat::Engine.routes.draw do
 
     get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
 
-    delete "/messages/:message_id" => "messages#delete"
+    delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
   end
 
   # direct_messages_controller routes

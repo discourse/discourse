@@ -2,17 +2,18 @@
 
 module Chat
   # Service responsible for trashing a chat message
-  # and ensuring that the client and read state is
+  # for a channel and ensuring that the client and read state is
   # updated.
   #
   # @example
-  #  Chat::TrashMessage.call(message_id: 2, guardian: guardian)
+  #  Chat::TrashMessage.call(message_id: 2, channel_id: 1, guardian: guardian)
   #
   class TrashMessage
     include Service::Base
 
-    # @!method call(message_id:, guardian:)
+    # @!method call(message_id:, channel_id:, guardian:)
     #   @param [Integer] message_id
+    #   @param [Integer] channel_id
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
@@ -29,13 +30,18 @@ module Chat
     # @!visibility private
     class Contract
       attribute :message_id, :integer
+      attribute :channel_id, :integer
       validates :message_id, presence: true
+      validates :channel_id, presence: true
     end
 
     private
 
     def fetch_message(contract:, **)
-      Chat::Message.includes(chat_channel: :chatable).find_by(id: contract.message_id)
+      Chat::Message.includes(chat_channel: :chatable).find_by(
+        id: contract.message_id,
+        chat_channel_id: contract.channel_id,
+      )
     end
 
     def invalid_access(guardian:, message:, **)

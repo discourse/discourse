@@ -642,7 +642,7 @@ export default class ChatMessage extends Component {
   @action
   deleteMessage() {
     return this.chatApi
-      .trashMessage(this.args.message.id)
+      .trashMessage(this.args.message.channelId, this.args.message.id)
       .catch(popupAjaxError);
   }
 

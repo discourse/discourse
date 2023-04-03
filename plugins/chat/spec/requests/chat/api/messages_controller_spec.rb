@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::Api::MessagesController do
+RSpec.describe Chat::Api::ChannelMessagesController do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
 
@@ -14,7 +14,7 @@ RSpec.describe Chat::Api::MessagesController do
       it "doesn't allow a user to delete another user's message" do
         sign_in(other_user)
 
-        delete "/chat/api/messages/#{message.id}.json"
+        delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{message.id}.json"
         expect(response.status).to eq(403)
       end
 
@@ -22,16 +22,16 @@ RSpec.describe Chat::Api::MessagesController do
         sign_in(other_user)
         UserSilencer.new(other_user).silence
 
-        delete "/chat/api/messages/#{other_user_message.id}.json"
+        delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{other_user_message.id}.json"
         expect(response.status).to eq(403)
       end
 
       it "allows admin to delete others' messages" do
         sign_in(admin)
 
-        expect { delete "/chat/api/messages/#{message.id}.json" }.to change {
-          Chat::Message.count
-        }.by(-1)
+        expect {
+          delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{message.id}.json"
+        }.to change { Chat::Message.count }.by(-1)
         expect(response.status).to eq(200)
       end
 
@@ -39,13 +39,13 @@ RSpec.describe Chat::Api::MessagesController do
         sign_in(message.user)
 
         chat_channel.update!(status: :read_only)
-        expect { delete "/chat/api/messages/#{message.id}.json" }.not_to change {
-          Chat::Message.count
-        }
+        expect {
+          delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{message.id}.json"
+        }.not_to change { Chat::Message.count }
         expect(response.status).to eq(403)
 
         sign_in(admin)
-        delete "/chat/api/messages/#{message.id}.json"
+        delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{message.id}.json"
         expect(response.status).to eq(403)
       end
 
@@ -53,15 +53,15 @@ RSpec.describe Chat::Api::MessagesController do
         sign_in(admin)
 
         chat_channel.update!(status: :read_only)
-        expect { delete "/chat/api/messages/#{message.id}.json" }.not_to change {
-          Chat::Message.count
-        }
+        expect {
+          delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{message.id}.json"
+        }.not_to change { Chat::Message.count }
         expect(response.status).to eq(403)
 
         chat_channel.update!(status: :closed)
-        expect { delete "/chat/api/messages/#{message.id}.json" }.to change {
-          Chat::Message.count
-        }.by(-1)
+        expect {
+          delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{message.id}.json"
+        }.to change { Chat::Message.count }.by(-1)
         expect(response.status).to eq(200)
       end
     end
@@ -79,9 +79,9 @@ RSpec.describe Chat::Api::MessagesController do
 
       it "allows users to delete their own messages" do
         sign_in(current_user)
-        expect { delete "/chat/api/messages/#{message.id}.json" }.to change {
-          Chat::Message.count
-        }.by(-1)
+        expect {
+          delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{message.id}.json"
+        }.to change { Chat::Message.count }.by(-1)
         expect(response.status).to eq(200)
       end
     end
@@ -99,9 +99,9 @@ RSpec.describe Chat::Api::MessagesController do
 
       it "allows users to delete their own messages" do
         sign_in(current_user)
-        expect { delete "/chat/api/messages/#{message.id}.json" }.to change {
-          Chat::Message.count
-        }.by(-1)
+        expect {
+          delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{message.id}.json"
+        }.to change { Chat::Message.count }.by(-1)
         expect(response.status).to eq(200)
       end
     end

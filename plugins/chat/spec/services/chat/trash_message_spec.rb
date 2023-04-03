@@ -15,12 +15,22 @@ RSpec.describe Chat::TrashMessage do
     end
 
     context "when params are valid" do
-      let(:params) { { guardian: guardian, message_id: message.id } }
+      let(:params) do
+        { guardian: guardian, message_id: message.id, channel_id: message.chat_channel_id }
+      end
 
       context "when the user does not have permission to delete" do
         before { message.update!(user: Fabricate(:admin)) }
 
         it { is_expected.to fail_a_policy(:invalid_access) }
+      end
+
+      context "when the channel does not match the message" do
+        let(:params) do
+          { guardian: guardian, message_id: message.id, channel_id: Fabricate(:chat_channel).id }
+        end
+
+        it { is_expected.to fail_to_find_a_model(:message) }
       end
 
       context "when the user has permission to delete" do
