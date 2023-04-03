@@ -8,8 +8,8 @@ import { bind } from "discourse-common/utils/decorators";
 import { later, schedule } from "@ember/runloop";
 import { makeArray } from "discourse-common/lib/helpers";
 import { Promise } from "rsvp";
-import { computed } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
+import { action } from "@ember/object";
 
 const TRANSITION_TIME = isTesting() ? 0 : 125; // CSS transition time
 const DEFAULT_VISIBLE_SECTIONS = ["favorites", "smileys_&_emotion"];
@@ -27,7 +27,6 @@ export default class ChatEmojiPickerManager extends Service {
   @tracked element = null;
   @tracked callback;
 
-  @computed("emojis.[]", "loading")
   get sections() {
     return !this.loading && this.emojis ? Object.keys(this.emojis) : [];
   }
@@ -35,7 +34,6 @@ export default class ChatEmojiPickerManager extends Service {
   @bind
   closeExisting() {
     this.callback = null;
-    this.opened = false;
     this.initialFilter = null;
     this.visibleSections = DEFAULT_VISIBLE_SECTIONS;
     this.lastVisibleSection = DEFAULT_LAST_SECTION;
@@ -43,7 +41,7 @@ export default class ChatEmojiPickerManager extends Service {
 
   @bind
   close() {
-    this.callback = null;
+    this.context = null;
     this.closing = true;
 
     later(() => {
@@ -55,6 +53,7 @@ export default class ChatEmojiPickerManager extends Service {
       this.lastVisibleSection = DEFAULT_LAST_SECTION;
       this.initialFilter = null;
       this.closing = false;
+
       this.opened = false;
     }, TRANSITION_TIME);
   }
@@ -63,14 +62,6 @@ export default class ChatEmojiPickerManager extends Service {
     this.visibleSections = makeArray(this.visibleSections)
       .concat(makeArray(sections))
       .uniq();
-  }
-
-  didSelectEmoji(emoji) {
-    // NOTE: this.message will only be present if starting from reaction list
-    // or messsage actions, not the composer
-    this?.callback(emoji, this.message);
-    this.callback = null;
-    this.close();
   }
 
   startFromMessageReactionList(message, callback, options = {}) {
@@ -95,7 +86,6 @@ export default class ChatEmojiPickerManager extends Service {
   ) {
     this.initialFilter = options.filter;
     this.context = "chat-message";
-    this.element = document.querySelector(".chat-message-emoji-picker-anchor");
     this.message = message;
     this.open(callback);
     this._popper?.destroy();
@@ -124,25 +114,22 @@ export default class ChatEmojiPickerManager extends Service {
     }
   }
 
-  startFromComposer(callback, options = { filter: null }) {
+  startFromComposer(context, options = { filter: null }) {
     this.initialFilter = options.filter;
-    this.context = "chat-composer";
-    this.element = document.querySelector(".chat-composer-emoji-picker-anchor");
-    this.open(callback);
+    this.context = context;
+    this.open();
   }
 
-  open(callback) {
+  open() {
     if (this.opened) {
       this.closeExisting();
     }
 
-    this._loadEmojisData();
-
-    this.callback = callback;
     this.opened = true;
   }
 
-  _loadEmojisData() {
+  @action
+  loadEmojis() {
     if (this.emojis) {
       return Promise.resolve();
     }

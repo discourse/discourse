@@ -24,19 +24,6 @@
   <ChatMentionWarnings />
 
   <div
-    class={{concat-class
-      "chat-message-emoji-picker-anchor"
-      (if
-        (and
-          this.chatEmojiPickerManager.opened
-          (eq this.chatEmojiPickerManager.context "chat-message")
-        )
-        "-opened"
-      )
-    }}
-  ></div>
-
-  <div
     class="chat-messages-scroll chat-messages-container"
     {{on "scroll" this.computeScrollState passive=true}}
     {{chat/on-scroll this.resetIdle (hash delay=500)}}
@@ -92,6 +79,7 @@
         @chatChannel={{@channel}}
         @composerService={{this.chatChannelComposer}}
         @paneService={{this.chatChannelPane}}
+        @context="channel"
       />
     {{else}}
       <ChatChannelPreviewCard @channel={{@channel}} />

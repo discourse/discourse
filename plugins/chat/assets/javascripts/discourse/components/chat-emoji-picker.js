@@ -1,4 +1,4 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -40,9 +40,10 @@ export default class ChatEmojiPicker extends Component {
   @service chatEmojiPickerManager;
   @service emojiPickerScrollObserver;
   @service chatEmojiReactionStore;
+  @service capabilities;
+
   @tracked filteredEmojis = null;
   @tracked isExpandedFitzpatrickScale = false;
-  tagName = "";
 
   fitzpatrickModifiers = FITZPATRICK_MODIFIERS;
 
@@ -347,10 +348,7 @@ export default class ChatEmojiPicker extends Component {
         emoji = `${emoji}:t${diversity}`;
       }
 
-      this.chatEmojiPickerManager.didSelectEmoji(emoji);
-
-      // TODO (martin) Find a way to use the live panel composer ref for this
-      this.appEvents.trigger("chat:focus-composer");
+      this.args.didSelectEmoji?.(emoji);
     }
   }
 

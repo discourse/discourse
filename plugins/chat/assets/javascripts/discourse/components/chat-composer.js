@@ -314,6 +314,13 @@ export default Component.extend(TextareaTextManipulation, {
     const code = `:${emoji}:`;
     this.chatEmojiReactionStore.track(code);
     this.addText(this.getSelected(), code);
+    this._focusTextArea();
+  },
+
+  @action
+  closeComposerDropdown() {
+    this.chatEmojiPickerManager.close();
+    this.appEvents.trigger("d-popover:close");
   },
 
   @action
@@ -410,6 +417,7 @@ export default Component.extend(TextareaTextManipulation, {
           return `${v.code}:`;
         } else {
           $textarea.autocomplete({ cancel: true });
+          this.appEvents.trigger("d-popover:close");
           this.chatEmojiPickerManager.startFromComposer(this.emojiSelected, {
             filter: v.term,
           });

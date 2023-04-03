@@ -64,9 +64,12 @@ export default class ChatChannelPane extends Service {
   }
 
   resetAfterSend() {
-    const channelId = this.composerService.editingMessage.channelId;
+    const channelId = this.composerService.editingMessage?.channelId;
+    if (channelId) {
+      this.chatComposerPresenceManager.notifyState(channelId, false);
+    }
+
     this.composerService.reset();
-    this.chatComposerPresenceManager.notifyState(channelId, false);
     this.appEvents.trigger("chat-composer:reply-to-set", null);
   }
 

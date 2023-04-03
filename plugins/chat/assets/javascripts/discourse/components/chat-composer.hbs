@@ -14,33 +14,18 @@
   />
 {{/if}}
 
-<div class="chat-composer-emoji-picker-anchor"></div>
-
 <div
   role="region"
   aria-label={{i18n "chat.aria_roles.composer"}}
   class="chat-composer {{if this.disableComposer 'is-disabled'}}"
   {{did-update this.updateEditingMessage this.composerService.editingMessage}}
 >
-  {{#if
-    (and
-      this.chatEmojiPickerManager.opened
-      (eq this.chatEmojiPickerManager.context "chat-composer")
-    )
-  }}
-    <DButton
-      @icon="times"
-      @action={{this.chatEmojiPickerManager.close}}
-      @class="chat-composer__close-emoji-picker-btn btn-flat"
-    />
-  {{else}}
-    {{#unless this.disableComposer}}
-      <ChatComposerDropdown
-        @buttons={{this.dropdownButtons}}
-        @isDisabled={{this.disableComposer}}
-      />
-    {{/unless}}
-  {{/if}}
+  <ChatComposerDropdown
+    @buttons={{this.dropdownButtons}}
+    @isDisabled={{this.disableComposer}}
+    @isActive={{this.chatEmojiPickerManager.opened}}
+    @onCloseComposerDropdown={{this.closeComposerDropdown}}
+  />
 
   <DTextarea
     @value={{readonly this.value}}
@@ -93,3 +78,8 @@
     <ChatReplyingIndicator @chatChannel={{this.chatChannel}} />
   </div>
 {{/unless}}
+
+<ChatEmojiPicker
+  @context={{@context}}
+  @didSelectEmoji={{this.didSelectEmoji}}
+/>

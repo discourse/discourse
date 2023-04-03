@@ -383,12 +383,8 @@ export default class ChatMessageInteractor {
   }
 
   @action
-  startReactionForReactionList() {
-    this.chatEmojiPickerManager.startFromMessageReactionList(
-      this.message,
-      this.selectReaction,
-      { desktop: this.site.desktopView }
-    );
+  openChatEmojiPicker() {
+    alert(1);
   }
 
   @bind

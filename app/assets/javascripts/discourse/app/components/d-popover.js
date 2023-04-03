@@ -1,30 +1,46 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import tippy from "tippy.js";
 import { guidFor } from "@ember/object/internals";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { hideOnEscapePlugin } from "discourse/lib/d-popover";
+import { isPresent } from "@ember/utils";
+import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
 
 export default class DiscoursePopover extends Component {
-  tagName = "";
+  @tracked isExpanded = false;
 
-  isExpanded = false;
+  @service appEvents;
 
-  options = null;
+  constructor() {
+    super(...arguments);
 
-  class = null;
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    this._tippyInstance = this._setupTippy();
+    this.appEvents.on("d-popover:close", this, this.close);
   }
 
-  willDestroyElement() {
-    this._super(...arguments);
+  willDestroy() {
+    super.willDestroy(...arguments);
 
+    this.appEvents.off("d-popover:close", this, this.close);
+  }
+
+  @action
+  setupTippy(element) {
+    this._tippyInstance = this._setupTippy(element);
+  }
+
+  @action
+  teardownTippy() {
     this._tippyInstance?.destroy();
+  }
+
+  @action
+  computeIsExpanded() {
+    if (isPresent(this.args.isExpanded)) {
+      this.isExpanded = this.args.isExpanded;
+    }
   }
 
   get componentId() {
@@ -33,16 +49,11 @@ export default class DiscoursePopover extends Component {
 
   @action
   close(event) {
-    event.preventDefault();
-
-    if (!this.isExpanded) {
-      return;
-    }
-
+    event?.preventDefault();
     this._tippyInstance?.hide();
   }
 
-  _setupTippy() {
+  _setupTippy(element) {
     const baseOptions = {
       trigger: "click",
       zIndex: 1400,
@@ -54,18 +65,16 @@ export default class DiscoursePopover extends Component {
       plugins: [hideOnEscapePlugin],
       content:
         this.options?.content ||
-        document
-          .getElementById(this.componentId)
-          .querySelector(
-            ":scope > .d-popover-content, :scope > div, :scope > ul"
-          ),
+        element.querySelector(
+          ":scope > .d-popover-content, :scope > div, :scope > ul"
+        ),
       onShow: () => {
         next(() => {
           if (this.isDestroyed || this.isDestroying) {
             return;
           }
 
-          this.set("isExpanded", true);
+          this.isExpanded = true;
         });
         return true;
       },
@@ -74,17 +83,15 @@ export default class DiscoursePopover extends Component {
           if (this.isDestroyed || this.isDestroying) {
             return;
           }
-          this.set("isExpanded", false);
+          this.isExpanded = false;
         });
         return true;
       },
     };
 
-    const target = document
-      .getElementById(this.componentId)
-      .querySelector(
-        ':scope > .d-popover-trigger, :scope > .btn, :scope > [role="button"]'
-      );
+    const target = element.querySelector(
+      ':scope > .d-popover-trigger, :scope > .btn, :scope > [role="button"]'
+    );
 
     if (!target) {
       return null;

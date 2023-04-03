@@ -8,13 +8,19 @@
       @disabled={{@isDisabled}}
       @class="chat-composer-dropdown__trigger-btn d-popover-trigger"
       @title="chat.composer.toggle_toolbar"
-      @icon={{if state.isExpanded "times" "plus"}}
+      @icon={{if this.isActive "times" "plus"}}
+      {{on "click" (if @isActive @onCloseComposerDropdown (noop))}}
+      {{did-update this.computeIsActive state}}
+      {{did-update this.computeIsActive @isActive}}
     />
     <ul class="chat-composer-dropdown__list">
       {{#each @buttons as |button|}}
-        <li class="chat-composer-dropdown__item {{button.id}}">
+        <li class={{concat-class "chat-composer-dropdown__item" button.id}}>
           <DButton
-            @class={{concat "chat-composer-dropdown__action-btn " button.id}}
+            @class={{concat-class
+              "chat-composer-dropdown__action-btn"
+              button.id
+            }}
             @icon={{button.icon}}
             @action={{button.action}}
             @label={{button.label}}

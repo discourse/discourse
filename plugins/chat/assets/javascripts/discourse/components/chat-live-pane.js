@@ -758,7 +758,7 @@ export default class ChatLivePane extends Component {
         }
         this.loading = false;
         this.chatChannelPane.sendingLoading = false;
-        this._resetAfterSend();
+        this.chatChannelPane.resetAfterSend();
         this.scrollToLatestMessage();
       });
     }
@@ -797,7 +797,7 @@ export default class ChatLivePane extends Component {
           return;
         }
         this.chatChannelPane.sendingLoading = false;
-        this._resetAfterSend();
+        this.chatChannelPane.resetAfterSend();
       });
   }
 
@@ -835,7 +835,7 @@ export default class ChatLivePane extends Component {
       }
     }
 
-    this._resetAfterSend();
+    this.chatChannelPane.resetAfterSend();
   }
 
   @action
