@@ -287,9 +287,7 @@ RSpec.configure do |config|
     end
 
     Capybara.register_driver :selenium_chrome_headless do |app|
-      chrome_browser_options.add_argument("--headless")
       chrome_browser_options.add_argument("--headless=new")
-
       Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_browser_options)
     end
 
@@ -309,7 +307,6 @@ RSpec.configure do |config|
     end
 
     Capybara.register_driver :selenium_mobile_chrome_headless do |app|
-      mobile_chrome_browser_options.add_argument("--headless")
       mobile_chrome_browser_options.add_argument("--headless=new")
       Capybara::Selenium::Driver.new(app, browser: :chrome, options: mobile_chrome_browser_options)
     end
