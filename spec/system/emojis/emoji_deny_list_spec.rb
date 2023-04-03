@@ -97,7 +97,7 @@ describe "Emoji deny list", type: :system, js: true do
 
     it "should remove denied emojis from message body" do
       topic_page.visit_topic(topic)
-      expect(topic_page).not_to have_css(".emoji[title=':pancakes:'")
+      expect(topic_page).not_to have_css(".emoji[title=':pancakes:']")
     end
   end
 end
