@@ -159,6 +159,152 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_in_category.id, topic_in_category2.id)
         end
       end
+
+      describe "when multiple categories have subcategories with the same name" do
+        fab!(:category_subcategory) do
+          Fabricate(:category, parent_category: category, name: "subcategory")
+        end
+
+        fab!(:category2_subcategory) do
+          Fabricate(:category, parent_category: category2, name: "subcategory")
+        end
+
+        fab!(:topic_in_category_subcategory) { Fabricate(:topic, category: category_subcategory) }
+        fab!(:topic_in_category2_subcategory) { Fabricate(:topic, category: category2_subcategory) }
+
+        describe "when query string is `category:subcategory`" do
+          it "should return topics from subcategories of both categories" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("category:subcategory")
+                .pluck(:id),
+            ).to contain_exactly(
+              topic_in_category_subcategory.id,
+              topic_in_category2_subcategory.id,
+            )
+          end
+        end
+
+        describe "when query string is `category:category:subcategory`" do
+          it "should return topics from subcategories of the specified category" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("category:category:subcategory")
+                .pluck(:id),
+            ).to contain_exactly(topic_in_category_subcategory.id)
+          end
+        end
+
+        describe "when query string is `category:category2:subcategory`" do
+          it "should return topics from subcategories of the specified category" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("category:category2:subcategory")
+                .pluck(:id),
+            ).to contain_exactly(topic_in_category2_subcategory.id)
+          end
+        end
+
+        describe "when query string is `category:category:subcategory,category2:subcategory`" do
+          it "should return topics from either subcategory" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("category:category:subcategory,category2:subcategory")
+                .pluck(:id),
+            ).to contain_exactly(
+              topic_in_category_subcategory.id,
+              topic_in_category2_subcategory.id,
+            )
+          end
+        end
+
+        describe "when max category nesting is 3" do
+          fab!(:category_subcategory_subcategory) do
+            SiteSetting.max_category_nesting = 3
+            Fabricate(:category, parent_category: category_subcategory, name: "sub-subcategory")
+          end
+
+          fab!(:category2_subcategory_subcategory) do
+            SiteSetting.max_category_nesting = 3
+            Fabricate(:category, parent_category: category2_subcategory, name: "sub-subcategory")
+          end
+
+          fab!(:topic_in_category_subcategory_subcategory) do
+            Fabricate(:topic, category: category_subcategory_subcategory)
+          end
+
+          fab!(:topic_in_category2_subcategory_subcategory) do
+            Fabricate(:topic, category: category2_subcategory_subcategory)
+          end
+
+          before { SiteSetting.max_category_nesting = 3 }
+
+          describe "when query string is `category:category:subcategory:sub-subcategory`" do
+            it "return topics from category with slug 'sub-subcategory' with the category ancestor chain of 'subcategory' and 'category'" do
+              expect(
+                TopicsFilter
+                  .new(guardian: Guardian.new)
+                  .filter_from_query_string("category:category:subcategory:sub-subcategory")
+                  .pluck(:id),
+              ).to contain_exactly(topic_in_category_subcategory_subcategory.id)
+            end
+          end
+
+          describe "when query string is `=category:category2:subcategory`" do
+            it "return topics from category with slug 'subcategory' with the category ancestor chain of 'category2'" do
+              expect(
+                TopicsFilter
+                  .new(guardian: Guardian.new)
+                  .filter_from_query_string("=category:category2:subcategory")
+                  .pluck(:id),
+              ).to contain_exactly(topic_in_category2_subcategory.id)
+            end
+          end
+
+          describe "when query string is `category:category2:subcategory`" do
+            it "return topics and subcategories topics from category with slug 'subcategory' with the category ancestor chain of 'category2'" do
+              category2_subcategory_subcategory2 =
+                Fabricate(
+                  :category,
+                  parent_category: category2_subcategory,
+                  name: "sub-subcategory2",
+                )
+
+              topic_in_category2_subcategory_subcategory2 =
+                Fabricate(:topic, category: category2_subcategory_subcategory2)
+
+              expect(
+                TopicsFilter
+                  .new(guardian: Guardian.new)
+                  .filter_from_query_string("category:category2:subcategory")
+                  .pluck(:id),
+              ).to contain_exactly(
+                topic_in_category2_subcategory.id,
+                topic_in_category2_subcategory_subcategory.id,
+                topic_in_category2_subcategory_subcategory2.id,
+              )
+            end
+          end
+
+          describe "when query string is `category:sub-subcategory`" do
+            it "return topics from either category with slug 'sub-subcategory'" do
+              expect(
+                TopicsFilter
+                  .new(guardian: Guardian.new)
+                  .filter_from_query_string("category:sub-subcategory")
+                  .pluck(:id),
+              ).to contain_exactly(
+                topic_in_category_subcategory_subcategory.id,
+                topic_in_category2_subcategory_subcategory.id,
+              )
+            end
+          end
+        end
+      end
     end
 
     describe "when filtering by status" do
