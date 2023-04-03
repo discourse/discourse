@@ -145,6 +145,16 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Trashes (soft deletes) a chat message.
+   * @param {number} channelId - ID of the channel.
+   * @param {number} messageId - ID of the message.
+   * @returns {Promise}
+   */
+  trashMessage(channelId, messageId) {
+    return this.#deleteRequest(`/channels/${channelId}/messages/${messageId}`);
+  }
+
+  /**
    * Creates a channel archive.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - Params of the archive.
