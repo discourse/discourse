@@ -112,6 +112,7 @@ import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
+import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -2136,6 +2137,17 @@ class PluginApi {
    */
   addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
     registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
+  }
+
+  /**
+   * Registers a hastag type and its corresponding class.
+   * This is used when generating CSS classes in the hashtag-css-generator.
+   *
+   * @param {string} type - The type of the hashtag.
+   * @param {Class} typeClass - The class of the hashtag type.
+   */
+  registerHashtagType(type, typeClass) {
+    registerHashtagType(type, typeClass);
   }
 }
 

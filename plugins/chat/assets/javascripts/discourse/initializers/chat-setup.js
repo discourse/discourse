@@ -13,6 +13,7 @@ replaceIcon("d-chat", "comment");
 
 export default {
   name: "chat-setup",
+  before: "hashtag-css-generator",
 
   initialize(container) {
     this.chatService = container.lookup("service:chat");
