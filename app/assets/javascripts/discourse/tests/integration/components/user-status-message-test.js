@@ -154,4 +154,14 @@ module("Integration | Component | user-status-message", function (hooks) {
 
     assert.dom(".user-status-message").exists();
   });
+
+  test("accepts a custom css class", async function (assert) {
+    this.set("status", { emoji: "tooth", description: "off to dentist" });
+
+    await render(
+      hbs`<UserStatusMessage @status={{this.status}} @class="foo" />`
+    );
+
+    assert.dom(".user-status-message.foo").exists();
+  });
 });
