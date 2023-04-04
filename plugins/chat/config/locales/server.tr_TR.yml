@@ -54,6 +54,7 @@ tr_TR:
       delete_channel_failed: "Kanal silinemedi, lütfen tekrar deneyin."
       minimum_length_not_met: "Mesaj çok kısa, en az %{minimum} karakter içermeli."
       message_too_long: "Mesaj çok uzun, mesajlar maksimum %{maximum} karakter olmalı."
+      draft_too_long: "Taslak pek uzun."
       max_reactions_limit_reached: "Bu mesajda yeni tepkilere izin verilmiyor."
       message_move_invalid_channel: "Kaynak ve hedef kanal herkese açık kanallar olmalıdır."
       message_move_no_messages_found: "Sağlanan mesaj kimlikleriyle mesaj bulunamadı."

@@ -9,25 +9,51 @@ bg:
     poll:
       voters:
         one: "гласуващ"
-        other: "Гласуващи "
+        other: "гласуващи"
       total_votes:
         one: "общ брой гласове"
-        other: "общо гласове"
+        other: "общ брой гласове"
       average_rating: "Средна отценка: <strong>%{average}</strong>."
       public:
-        title: "Гласовете са публични,"
+        title: "Гласовете са <strong>публични</strong>."
       results:
         groups:
-          title: "Трябва да сте член на %{groups} за да гласувате."
+          title: "Трябва да сте член на %{groups} , за да гласувате в тази анкета."
+        vote:
+          title: "Резултатите ще бъдат показани при <strong>гласуване</strong>."
+        closed:
+          title: "Резултатите ще бъдат показани при <strong>затваряне</strong>."
+        staff:
+          title: "Резултатите се показват само на членове на <strong>екипа</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Изберете поне <strong>%{count}</strong> опция."
+            other: "Изберете поне <strong>%{count}</strong> опции."
+          up_to_max_options:
+            one: "Изберете <strong>%{count}</strong> опция."
+            other: "Изберете до <strong>%{count}</strong> опции."
+          x_options:
+            one: "Изберете <strong>%{count}</strong> опция."
+            other: "Изберете <strong>%{count}</strong> опции."
+          between_min_and_max_options: "Изберете между <strong>%{min}</strong> и <strong>%{max}</strong> опции."
       cast-votes:
         title: "Изчислете вашите гласове"
         label: "Гласувай сега!"
       show-results:
         title: "Покажи резултатите от гласуването"
         label: "Покажи резултатите"
+      remove-vote:
+        title: "Премахнете гласа си"
+        label: "Премахване на гласуването"
       hide-results:
         title: "Обратно към вашите гласове"
+        label: "Покажи гласуването"
+      group-results:
+        title: "Групиране на гласовете по потребител"
+        label: "Показване на разбивка"
       export-results:
+        title: "Експортирайте резултатите от анкетата"
         label: "Експорт "
       open:
         title: "Отвори гласуването"
@@ -37,13 +63,58 @@ bg:
         title: "Затвори гласуването"
         label: "Затвори"
         confirm: "Сигурни ли сте, че искате да затворите гласуването?"
+      automatic_close:
+        closes_in: "Затваряне след <strong>%{timeLeft}</strong>."
+        age: "Затворена преди <strong>%{age}</strong>"
       breakdown:
+        title: "Резултати от анкетата"
+        votes: "%{count} гласа"
+        breakdown: "Разбивка"
+        percentage: "Процент"
         count: "Брой"
       error_while_toggling_status: "Съжаляваме, получи се грешка при превключване статуса на тази анкета."
       error_while_casting_votes: "Получи се грешка при подаването на гласа ви."
       error_while_fetching_voters: "Получи се грешка при показването на гласовете."
+      error_while_exporting_results: "Съжаляваме, възникна грешка при експортирането на резултатите от анкетата."
       ui_builder:
+        title: Създаване на анкета
+        insert: Вмъкване на анкета
+        help:
+          options_min_count: Въведете поне 1 опция.
+          options_max_count: Въведете най-много %{count} опции.
+          invalid_min_value: Минималната стойност трябва да бъде поне 1.
+          invalid_max_value: Максималната стойност трябва да бъде поне 1, но по-малка или равна на броя на опциите.
+          invalid_values: Минималната стойност трябва да е по-малка от максималната стойност.
+          min_step_value: Минималната стойност на стъпката е 1
         poll_type:
           label: Тип
+          regular: Единичен избор
+          multiple: Множествен избор
+          number: Числен Рейтинг
+        poll_result:
+          label: Покажи резултатите...
+          always: Винаги видими
+          vote: Само след гласуване
+          closed: Когато анкетата е затворена
+          staff: Само за екипа
+        poll_groups:
+          label: Ограничаване на гласуването до тези групи
+        poll_chart_type:
+          label: Диаграма на резултатите
+          bar: Стълб
+          pie: Пай
         poll_config:
+          max: Максимален брой избори
+          min: Минимален брой избори
           step: Стъпка
+        poll_public:
+          label: Покажи кой е гласувал
+        poll_title:
+          label: Заглавие (по избор)
+        poll_options:
+          label: Опции (по една на ред)
+          add: Добавяне на опция
+        automatic_close:
+          label: Автоматично затваряне на анкетата
+        show_advanced: "Покажи разширените опции"
+        hide_advanced: "Скрий разширените опции"
