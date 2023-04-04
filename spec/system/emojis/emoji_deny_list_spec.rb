@@ -90,10 +90,14 @@ describe "Emoji deny list", type: :system, js: true do
     end
     fab!(:post) { Fabricate(:post, topic: topic, raw: "Can we use the :monkey: emoji here?") }
 
-    it "should remove denied emojis from topic title and post" do
+    it "should remove denied emojis from message title" do
       topic_page.visit_topic(topic)
       expect(topic_page).to have_topic_title("Want to catch up for today?")
-      expect(topic_page).not_to have_css("img.emoji[title=':monkey:']")
+    end
+
+    it "should remove denied emojis from message body" do
+      topic_page.visit_topic(topic)
+      expect(post).not_to have_css(".emoji[title=':monkey:']")
     end
   end
 end
