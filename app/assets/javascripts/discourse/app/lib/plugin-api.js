@@ -54,7 +54,10 @@ import { addGlobalNotice } from "discourse/components/global-notice";
 import { addNavItem } from "discourse/models/nav-item";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import { addPluginReviewableParam } from "discourse/components/reviewable-item";
+import {
+  addPluginReviewableParam,
+  registerContextQuestionReviewableType,
+} from "discourse/components/reviewable-item";
 import {
   addComposerSaveErrorCallback,
   addPopupMenuOptionsCallback,
@@ -1597,8 +1600,16 @@ class PluginApi {
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }
+
   addPluginReviewableParam(reviewableType, param) {
     addPluginReviewableParam(reviewableType, param);
+  }
+
+  /**
+   * Add documentation for Plugin API
+   */
+  registerContextQuestionReviewableType(reviewableType) {
+    registerContextQuestionReviewableType(reviewableType);
   }
 
   /**

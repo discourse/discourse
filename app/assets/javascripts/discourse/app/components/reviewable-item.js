@@ -21,6 +21,12 @@ export function addPluginReviewableParam(reviewableType, param) {
     : (pluginReviewableParams[reviewableType] = [param]);
 }
 
+const CONTEXT_REQUEST_REVIEWABLE_TYPES = ["ReviewableFlaggedPost"];
+
+export function registerContextQuestionReviewableType(reviewableType) {
+  CONTEXT_REQUEST_REVIEWABLE_TYPES.push(reviewableType);
+}
+
 export default Component.extend({
   adminTools: optionalService(),
   dialog: service(),
@@ -210,6 +216,14 @@ export default Component.extend({
         before: performAction,
       });
     }
+  },
+
+  @discourseComputed("reviewable.type", "reviewable.status")
+  shouldDisplayContextQuestion(reviewableType, reviewableStatus) {
+    return (
+      CONTEXT_REQUEST_REVIEWABLE_TYPES.includes(reviewableType) &&
+      reviewableStatus === 0
+    );
   },
 
   @action
