@@ -721,7 +721,11 @@ class TopicQuery
       end
     end
 
-    result = filter_by_tags(result)
+    if SiteSetting.tagging_enabled
+      result = result.includes(:tags)
+      result = filter_by_tags(result)
+    end
+
     result = apply_ordering(result, options)
 
     all_listable_topics =
@@ -1151,8 +1155,6 @@ class TopicQuery
   end
 
   def filter_by_tags(result)
-    return result if !SiteSetting.tagging_enabled
-
     tags_arg = @options[:tags]
 
     if tags_arg && tags_arg.size > 0

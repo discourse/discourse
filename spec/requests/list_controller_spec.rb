@@ -106,6 +106,50 @@ RSpec.describe ListController do
       expect(first_item.css('[itemprop="url"]')[0]["href"]).to eq(topic.url)
     end
 
+    it "does not result in N+1 queries when topics have tags and tagging_enabled site setting is enabled" do
+      SiteSetting.tagging_enabled = true
+      tag = Fabricate(:tag)
+      topic.tags << tag
+
+      # warm up
+      get "/latest.json"
+      expect(response.status).to eq(200)
+
+      initial_sql_queries_count =
+        track_sql_queries do
+          get "/latest.json"
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(topic.id)
+          expect(body["topic_list"]["topics"][0]["tags"]).to contain_exactly(tag.name)
+        end.count
+
+      tag2 = Fabricate(:tag)
+      topic2 = Fabricate(:topic, tags: [tag2])
+
+      new_sql_queries_count =
+        track_sql_queries do
+          get "/latest.json"
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+            topic.id,
+            topic2.id,
+          )
+
+          expect(body["topic_list"]["topics"][0]["tags"]).to contain_exactly(tag2.name)
+          expect(body["topic_list"]["topics"][1]["tags"]).to contain_exactly(tag.name)
+        end.count
+
+      expect(new_sql_queries_count).to eq(initial_sql_queries_count)
+    end
+
     it "does not N+1 queries when topic featured users have different primary groups" do
       user.update!(primary_group: group)
 
