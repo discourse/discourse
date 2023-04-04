@@ -641,6 +641,7 @@ tr_TR:
       disallowed_tags_generic: "Bu konu izin verilmeyen etiketlere sahip."
       slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"
       is_already_in_use: "zaten kullanımda"
+      move_topic_to_category_disallowed: "Bu konuyu, yeni konu oluşturma izninizin olmadığı bir kategoriye taşıyamazsınız."
     cannot_delete:
       uncategorized: "Bu kategori özeldir. Kategorisi olmayan konular için bir tutma alanı olarak tasarlanmıştır; silinemez."
       has_subcategories: "Alt kategorileri olduğu için bu kategori silinemiyor."
@@ -1104,7 +1105,7 @@ tr_TR:
       title: "Günlük Aktif Kullanıcı/Aylık Aktif Kullanıcı"
       xaxis: "Gün"
       yaxis: "Günlük Aktif Kullanıcı/Aylık Aktif Kullanıcı"
-      description: "Son gün giriş yapan üye sayısı, son ay giriş yapan üye sayısına bölündüğünde topluluk \"yapışkanlığını\" gösteren bir % elde edilir. Hedefiniz >%30 olsun."
+      description: "Son gün giriş yapan üye sayısı, son ay giriş yapan üye sayısına bölündüğünde topluluk \"yapışkanlığını\" gösteren bir % elde edilir. Hedefiniz >%20 olsun."
     daily_engaged_users:
       title: "Günlük Etkileşimli Kullanıcılar"
       xaxis: "Gün"
@@ -1472,7 +1473,7 @@ tr_TR:
     manifest_icon: "Android'de logo/splash görüntüsü olarak kullanılan görüntü. Otomatik olarak 512 × 512 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
     manifest_screenshots: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
     favicon: "Siteniz için bir favicon, bkz. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. CDN üzerinden düzgün çalışması için png olmalıdır. 32x32 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
-    apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Otomatik olarak 180x180 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
+    apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Şeffaf bir arka plan önerilmez. Otomatik olarak 180x180 olarak yeniden boyutlandırılacaktır. Boş bırakılırsa, large_icon kullanılacaktır."
     opengraph_image: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır"
     twitter_summary_large_image: "Twitter kartı \"özet büyük resmi\" (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa .svg olmadığı sürece opengraph_image kullanılarak normal kart meta verileri oluşturulur"
     notification_email: "Tüm temel sistem e-postalarını gönderirken kullanılan kimden: e-posta adresi. Burada belirtilen alan adının, e-postanın ulaşması için SPF, DKIM ve ters PTR kayıtlarının doğru şekilde ayarlanmış olması gerekir."
@@ -3646,8 +3647,6 @@ tr_TR:
   offline:
     title: "Uygulama yüklenemiyor"
     offline_page_message: "Görünüşe göre çevrimdışısınız! Lütfen ağ bağlantınızı kontrol edip tekrar deneyin."
-  login_required:
-    welcome_message: "##[%{title} başlığına hoş geldiniz](#hoşgeldiniz)"
   upload:
     edit_reason: "görüntülerin yerel kopyaları indirildi"
     unauthorized: "Üzgünüz, yüklemeye çalıştığınız dosyaya izin verilmiyor (izin verilen uzantılar: %{authorized_extensions})."

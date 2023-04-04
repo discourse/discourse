@@ -2145,14 +2145,6 @@ el:
   offline:
     title: "Cannot load app"
     offline_page_message: "Πιθανώς βρίσκεσαι εκτός σύνδεσης! Έλεγξε την σύνδεσή σου και δοκίμασε ξανά."
-  login_required:
-    welcome_message: |2
-
-      ## [Καλώς ήρθατε στην %{title}](#welcome)
-
-      Είναι απαραίτητο να έχετε λογαριασμό χρήστη.
-
-      Παρακαλούμε δημιουργήστε έναν λογαριασμό ή συνδεθείτε για να συνεχίσετε..
   upload:
     edit_reason: "λήψη τοπικών αντιγράφων των εικόνων"
     unauthorized: "Λυπούμαστε, το αρχείο που προσπαθείτε να ανεβάσετε δεν είναι εγκεκριμένο (authorized extensions: %{authorized_extensions})."

@@ -1207,7 +1207,7 @@ pl_PL:
       title: "DAU / MAU"
       xaxis: "Dzień"
       yaxis: "DAU / MAU"
-      description: "Liczba członków zalogowanych w ostatnim dniu podzielona przez liczbę członków zalogowanych w ostatnim miesiącu - zwraca % wskazujący 'lepkość' społeczności. Celuj na >30%."
+      description: "Liczba członków zalogowanych w ostatnim dniu podzielona przez liczbę członków zalogowanych w ostatnim miesiącu - zwraca % wskazujący 'lepkość' społeczności. Celuj na >20%."
     daily_engaged_users:
       title: "Zaangażowani użytkownicy dziennie"
       xaxis: "Dzień"
@@ -1574,7 +1574,6 @@ pl_PL:
     manifest_icon: "Obraz używany jako logo / obraz powitalny na Androidzie. Zostanie automatycznie przeskalowany do rozmiaru 512 × 512. Jeśli pozostanie puste, zostanie użyty large_icon."
     manifest_screenshots: "Zrzuty ekranu, które pokazują możliwości i funkcjonalność Twojej instancji na stronie instalacyjnej. Wszystkie obrazy powinny być przesłane lokalnie i o tych samych wymiarach."
     favicon: "Favicona dla Twojej strony, zobacz <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby działała poprawnie poprzez CDN, musi to być w formacie png. Zostanie przeskalowana do 32x32. Jeśli pozostanie pusta, zostanie użyte large_icon."
-    apple_touch_icon: "Ikona używana dla urządzeń Apple Touch. Zostanie automatycznie przeskalowany do rozmiaru 180x180. Jeśli pozostanie puste, zostanie użyty large_icon."
     opengraph_image: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon"
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -3813,8 +3812,6 @@ pl_PL:
   offline:
     title: "Nie można załadować aplikacji"
     offline_page_message: "Wygląda na to, że jesteś offline! Sprawdź połączenie sieciowe i spróbuj ponownie."
-  login_required:
-    welcome_message: "#[Witamy na %{title}](#welcome)"
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."

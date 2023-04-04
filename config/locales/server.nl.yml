@@ -1104,7 +1104,7 @@ nl:
       title: "DAU/MAU"
       xaxis: "Dag"
       yaxis: "DAU/MAU"
-      description: "Aantal leden dat de afgelopen dag was aangemeld, gedeeld door het aantal leden dat de afgelopen maand was aangemeld – geeft een % terug dat 'plakkerigheid' in de community aangeeft. Het streven is >30%."
+      description: "Aantal leden dat de afgelopen dag was aangemeld, gedeeld door het aantal leden dat de afgelopen maand was aangemeld – geeft een % terug dat 'plakkerigheid' in de community aangeeft. Het streven is >20%."
     daily_engaged_users:
       title: "Dagelijkse actieve gebruikers"
       xaxis: "Dag"
@@ -1472,7 +1472,6 @@ nl:
     manifest_icon: "Afbeelding die als logo/splashafbeelding op Android wordt gebruikt. Wordt automatisch verkleind naar 512 x 512. Bij leeg laten wordt large_icon gebruikt."
     manifest_screenshots: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
     favicon: "Een favicon voor je website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>.  Om goed via een CDN te werken, moet dit een png zijn. Wordt verkleind naar 32x32. Bij leeg laten wordt large_icon gebruikt."
-    apple_touch_icon: "Pictogram dat voor Apple touch-apparaten wordt gebruikt. Wordt automatisch verkleind naar 180x180. Bij leeg laten wordt large_icon gebruikt."
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     twitter_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
@@ -3684,8 +3683,6 @@ nl:
   offline:
     title: "Kan app niet laden"
     offline_page_message: "Het lijkt erop dat je offline bent! Controleer je netwerkverbinding en probeer het opnieuw."
-  login_required:
-    welcome_message: "## [Welkom bij %{title}](#welkom)"
   upload:
     edit_reason: "lokale kopieën van afbeeldingen gedownload"
     unauthorized: "Sorry, het bestand dat je probeert te uploaden is niet toegestaan (toegestane extensies: %{authorized_extensions})."

@@ -1104,7 +1104,7 @@ es:
       title: "UAD/UAM"
       xaxis: "Día"
       yaxis: "UAD/UAM"
-      description: "Número de miembros que han iniciado sesión durante el último día dividido entre el número de miembros que han iniciado sesión durante el último mes – resulta en un % que indica el grado de «permanencia» de la comunidad. Apuntar a >30%."
+      description: "Número de miembros que han iniciado sesión durante el último día dividido entre el número de miembros que han iniciado sesión durante el último mes – resulta en un % que indica el grado de «permanencia» de la comunidad. Apuntar a >20%."
     daily_engaged_users:
       title: "Usuarios involucrados a diario"
       xaxis: "Día"
@@ -1472,7 +1472,6 @@ es:
     manifest_icon: "Imagen utilizada como logo/imagen de bienvenida en Android. Se cambiará automáticamente el tamaño a 512 × 512. Si se deja en blanco, se utilizará large_icon."
     manifest_screenshots: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
     favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para que funcione correctamente sobre un CDN debe ser un png. Se cambiará automáticamente el tamaño a 32x32. Si se deja en blanco, se utilizará large_icon."
-    apple_touch_icon: "Icono utilizado para dispositivos táctiles de Apple. Se redimensionará automáticamente a 180x180. Si se deja en blanco, se utilizará el icono grande."
     opengraph_image: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon"
     twitter_summary_large_image: "\"Imagen grande de resumen\" de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de alto, no puede ser .svg). Si se deja en blanco, los metadatos de la tarjeta normal se generan utilizando opengraph_image, siempre que no sea también un .svg, mientras no sea un .svg"
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
@@ -3679,8 +3678,6 @@ es:
   offline:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
-  login_required:
-    welcome_message: "## [Te damos la bienvenida a %{title}](#welcome)"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."

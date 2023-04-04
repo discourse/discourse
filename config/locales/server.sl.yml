@@ -1677,8 +1677,6 @@ sl:
     see_more: "Več"
     search_title: "Išči na tem spletnem mestu"
     search_button: "Išči"
-  login_required:
-    welcome_message: "## [Dobrodošli na %{title}](#welcome)"
   upload:
     edit_reason: "prenos slik v lokalno kopijo"
     unauthorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."

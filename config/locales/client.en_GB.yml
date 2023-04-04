@@ -30,7 +30,6 @@ en_GB:
         date_year: "MMM 'YY"
       medium:
         date_year: "D MMM 'YY"
-    bootstrap_invite_button_title: "Send invitations"
     groups:
       manage:
         email:

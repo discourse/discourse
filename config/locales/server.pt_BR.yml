@@ -1104,7 +1104,7 @@ pt_BR:
       title: "DAU/MAU"
       xaxis: "Dia"
       yaxis: "DAU/MAU"
-      description: "Quantidade de membros que entraram com a conta no último dia dividida pela quantidade de membros que entraram com a conta no último mês. Retorna uma % que indica a \"adesão\" à comunidade. Tente alcançar >30%."
+      description: "Quantidade de membros que entraram com a conta no último dia dividida pela quantidade de membros que entraram com a conta no último mês. Retorna uma % que indica a \"adesão\" à comunidade. Tente alcançar >20%."
     daily_engaged_users:
       title: "Usuários(as) envolvidos(as) diariamente"
       xaxis: "Dia"
@@ -1472,7 +1472,6 @@ pt_BR:
     manifest_icon: "Imagem usada como logotipo/splash no Android. Será redimensionada automaticamente para 512×512. Se for deixada em branco, large_icon será usado."
     manifest_screenshots: "Capturas de tela que mostram os recursos e funcionalidades da sua instância na sua página de alerta de instalação. Todas as imagens devem ser envios locais e devem ter as mesmas dimensões."
     favicon: "Um favicon para o seu site, consulte <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar corretamente em um CDN, precisa ser um png, que será redimensionado para 32x32. Se for deixado em branco, large_icon será usado."
-    apple_touch_icon: "Ícone usado para dispositivos Apple touch, que será automaticamente redimensionado para 180x180. Se for deixado em branco, large_icon será usado."
     opengraph_image: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
     twitter_summary_large_image: "Cartão do Twitter 'resumo de imagem grande' (deve ter pelo menos 280 de largura e pelo menos 150 de altura, não pode ser .svg). Se for deixado em branco, os metadados comuns do cartão são gerados usando o opengraph_image, desde que também não sejam um .svg."
     notification_email: "O endereço de e-mail utilizado ao enviar e-mails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR devidamente configurados para que os e-mails funcionem corretamente."
@@ -3677,8 +3676,6 @@ pt_BR:
   offline:
     title: "Não é possível carregar o aplicativo"
     offline_page_message: "Parece que você está off-line! Verifique sua conexão de rede e tente novamente."
-  login_required:
-    welcome_message: "## [Boas-vindas ao %{title}](#boas-vindas)"
   upload:
     edit_reason: "cópias locais de imagens baixadas"
     unauthorized: "Desculpe, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."

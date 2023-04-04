@@ -1104,7 +1104,7 @@ it:
       title: "DAU/MAU"
       xaxis: "Giorno"
       yaxis: "DAU/MAU"
-      description: "Numero di utenti che hanno effettuato l'accesso nell'ultimo giorno diviso per il numero di utenti che hanno effettuato l'accesso nell'ultimo mese: restituisce una % che rappresenta 'l'attaccamento' alla comunità. Obiettivo > 30%."
+      description: "Numero di utenti che hanno effettuato l'accesso nell'ultimo giorno diviso per il numero di utenti che hanno effettuato l'accesso nell'ultimo mese: restituisce una % che rappresenta 'l'attaccamento' alla comunità. Obiettivo > 20%."
     daily_engaged_users:
       title: "Utenti Impegnati Giornalmente"
       xaxis: "Giorno"
@@ -1472,7 +1472,6 @@ it:
     manifest_icon: "Immagine utilizzata come immagine logo / splash su Android. Verrà automaticamente ridimensionato a 512 × 512. Se lasciato vuoto, verrà utilizzato large_icon."
     manifest_screenshots: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
     favicon: "Una favicon per il tuo sito, vedi <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> . Per funzionare correttamente su un CDN deve essere un'immagine PNG. Verrà ridimensionata a 32x32. Se lasciato vuoto, verrà usato large_icon."
-    apple_touch_icon: "Icona utilizzata per i dispositivi touch Apple. Verrà automaticamente ridimensionato a 180x180. Se lasciato vuoto, verrà usato large_icon."
     opengraph_image: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon"
     twitter_summary_large_image: "Opzione 'Summary large image' di una scheda Twitter (deve misurare almeno 280 di larghezza e almeno 150 di altezza e non può essere un'imagine .svg). Se lasciato vuoto, i normali metadati delle schede vengono generati utilizzando l'opzione opengraph_image, a meno che l'immagine non sia un file .svg."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
@@ -3538,8 +3537,6 @@ it:
   offline:
     title: "Impossibile caricare l'app"
     offline_page_message: "Sembra che tu sia offline! Controlla la tua connessione di rete e riprova."
-  login_required:
-    welcome_message: "## [Benvenuto su %{title}](#welcome)"
   upload:
     edit_reason: "copie locali delle immagini scaricate"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."

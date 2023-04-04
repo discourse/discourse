@@ -1104,7 +1104,7 @@ fr:
       title: "DAU/MAU"
       xaxis: "Jour"
       yaxis: "DAU/MAU"
-      description: "Nombre d'utilisateurs qui se sont connectés au cours de la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés au cours du dernier mois. Valeur exprimée en % qui représente le taux d'adhésion de la communauté. Viser > 30 %."
+      description: "Nombre d'utilisateurs qui se sont connectés au cours de la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés au cours du dernier mois. Valeur exprimée en % qui représente le taux d'adhésion de la communauté. Viser > 20 %."
     daily_engaged_users:
       title: "Utilisateurs impliqués au quotidien"
       xaxis: "Jour"
@@ -1472,7 +1472,6 @@ fr:
     manifest_icon: "Image utilisée comme logo/image de démarrage sur Android. Elle sera automatiquement redimensionnée au format 512 × 512. Si vous laissez ce champ vide, « large_icon » sera utilisée."
     manifest_screenshots: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
     favicon: "Un favicon pour votre site, voir <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://fr.wikipedia.org/wiki/Favicon</a> . Pour fonctionner correctement sur un CDN, il doit être au format PNG. Il sera redimensionné en 32x32. Si vous laissez ce champ vide, « large_icon » sera utilisée."
-    apple_touch_icon: "Icône utilisée pour les appareils Apple touch. Elle sera automatiquement redimensionnée en 180x180. Si vous laissez ce champ vide, « large_icon » sera utilisée."
     opengraph_image: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée"
     twitter_summary_large_image: "Carte Twitter « Summary Card with Large Image » (sa taille doit être d'au moins 280 en largeur et d'au moins 150 en hauteur et ne peut pas être au format .svg). Si vous laissez ce champ vide, les métadonnées normales de carte sont générées à l'aide d'« opengraph_image » tant que celle-ci n'est pas au format .svg également."
     notification_email: "L'adresse e-mail utilisée pour envoyer les e-mails systèmes essentiels et affichée dans le champ « De ». Le nom de domaine spécifié doit comprendre les informations SPF, DKIM et PTR inversé correctement renseignées pour que l'e-mail arrive à destination."
@@ -3696,8 +3695,6 @@ fr:
   offline:
     title: "Impossible de charger l'application"
     offline_page_message: "Il semble que vous n'êtes pas connecté(e) à Internet ! Veuillez vérifier votre connexion réseau et réessayez."
-  login_required:
-    welcome_message: "## [Bienvenue sur %{title}](#welcome)"
   upload:
     edit_reason: "téléchargement de copies locales des images distantes"
     unauthorized: "Nous sommes désolés, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : %{authorized_extensions})."
