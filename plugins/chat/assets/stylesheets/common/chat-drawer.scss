@@ -153,6 +153,10 @@ html.rtl {
     font-weight: 700;
     width: 100%;
 
+    &__user-info {
+      overflow: hidden;
+    }
+
     .chat-name,
     .chat-drawer-name,
     .category-chat-name,

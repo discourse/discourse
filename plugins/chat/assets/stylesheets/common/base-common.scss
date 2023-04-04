@@ -262,6 +262,7 @@ $float-height: 530px;
   width: 100%;
   min-height: 1px;
   position: relative;
+  overflow: hidden;
 
   .open-drawer-btn {
     color: var(--primary-low-mid);
@@ -479,6 +480,7 @@ body.has-full-page-chat {
     display: flex;
     align-items: stretch;
     flex: 1;
+    max-width: 100%;
 
     .chat-channel-archive-status {
       text-align: right;
@@ -616,6 +618,7 @@ html.has-full-page-chat {
 
       .main-chat-outlet {
         min-height: 0;
+        overflow: hidden;
       }
     }
   }
