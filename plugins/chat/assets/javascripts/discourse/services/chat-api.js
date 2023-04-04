@@ -145,6 +145,16 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Trashes (soft deletes) a chat message.
+   * @param {number} channelId - ID of the channel.
+   * @param {number} messageId - ID of the message.
+   * @returns {Promise}
+   */
+  trashMessage(channelId, messageId) {
+    return this.#deleteRequest(`/channels/${channelId}/messages/${messageId}`);
+  }
+
+  /**
    * Creates a channel archive.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - Params of the archive.
@@ -330,19 +340,6 @@ export default class ChatApi extends Service {
         react_action: reactAction,
         emoji,
       },
-    });
-  }
-
-  /**
-   * Deletes a single chat message in a channel.
-   *
-   * @param {number} channelId - The ID of the channel for the message being deleted.
-   * @param {number} messageId - The ID of the message being deleted.
-   */
-  deleteMessage(channelId, messageId) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
-    return ajax(`/chat/${channelId}/${messageId}`, {
-      type: "DELETE",
     });
   }
 

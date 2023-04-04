@@ -90,12 +90,12 @@
     border: 0;
     resize: none;
     max-height: 125px;
-    scrollbar-color: var(--primary-low-mid) transparent;
-    transition: scrollbar-color 0.2s ease-in-out;
     background: none;
     margin: 0;
     padding: 0.25rem 0.5rem;
     text-overflow: ellipsis;
+
+    @include chat-scrollbar();
 
     &:placeholder-shown,
     &::placeholder {

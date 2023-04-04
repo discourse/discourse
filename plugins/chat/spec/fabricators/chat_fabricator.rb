@@ -76,15 +76,6 @@ Fabricator(:chat_message_reaction, class_name: "Chat::MessageReaction") do
   end
 end
 
-Fabricator(:chat_upload, class_name: "Chat::Upload") do
-  transient :user
-
-  user { Fabricate(:user) }
-
-  chat_message { |attrs| Fabricate(:chat_message, user: attrs[:user]) }
-  upload { |attrs| Fabricate(:upload, user: attrs[:user]) }
-end
-
 Fabricator(:chat_message_revision, class_name: "Chat::MessageRevision") do
   chat_message { Fabricate(:chat_message) }
   old_message { "something old" }

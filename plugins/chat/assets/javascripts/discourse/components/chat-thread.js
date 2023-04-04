@@ -38,7 +38,7 @@ export default class ChatThreadPanel extends Component {
       this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
     }
 
-    // TODO (martin) Loading/scrolling to selected messagew
+    // TODO (martin) Loading/scrolling to selected message
     // this.highlightOrFetchMessage(this.requestedTargetMessageId);
     // if (this.requestedTargetMessageId) {
     // } else {

@@ -69,10 +69,24 @@
     position: relative;
     cursor: pointer;
     color: var(--primary-high);
-    transition: opacity 50ms ease-in;
-    opacity: 1;
+
+    @media (hover: none) {
+      &:hover,
+      &:focus {
+        background: transparent;
+      }
+
+      &:active {
+        background: var(--primary-low);
+      }
+    }
 
     @media (hover: hover) {
+      &:hover,
+      &.active {
+        background: var(--primary-very-low);
+      }
+
       &.can-leave:hover {
         .toggle-channel-membership-button.-leave {
           display: block;
@@ -88,17 +102,8 @@
       }
     }
 
-    .discourse-no-touch &:hover,
-    &.active {
-      background: var(--primary-low);
-    }
-
     &:hover,
     &.active {
-      &.active {
-        font-weight: 600;
-      }
-
       .chat-channel-title {
         &,
         .category-chat-name,

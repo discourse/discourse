@@ -29,6 +29,8 @@ Chat::Engine.routes.draw do
     get "/mentions/groups" => "hints#check_group_mentions", :format => :json
 
     get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
+
+    delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
   end
 
   # direct_messages_controller routes
@@ -56,7 +58,6 @@ Chat::Engine.routes.draw do
   get "/message/:message_id" => "chat#message_link"
   put ":chat_channel_id/edit/:message_id" => "chat#edit_message"
   put ":chat_channel_id/react/:message_id" => "chat#react"
-  delete "/:chat_channel_id/:message_id" => "chat#delete"
   put "/:chat_channel_id/:message_id/rebake" => "chat#rebake"
   post "/:chat_channel_id/:message_id/flag" => "chat#flag"
   post "/:chat_channel_id/quote" => "chat#quote_messages"

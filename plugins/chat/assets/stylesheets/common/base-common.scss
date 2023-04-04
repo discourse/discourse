@@ -286,7 +286,7 @@ $float-height: 530px;
     display: flex;
     flex-direction: column-reverse;
     z-index: 1;
-    margin: 0 3px 0 0;
+    margin: 0 1px 0 0;
     will-change: transform;
     @include chat-scrollbar();
 

@@ -237,13 +237,17 @@ export default Component.extend({
     this._similarTopicsMessage = message;
 
     composer.store.find("similar-topic", { title, raw }).then((topics) => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       similarTopics.clear();
       similarTopics.pushObjects(topics.get("content"));
 
       if (similarTopics.get("length") > 0) {
         message.set("similarTopics", similarTopics);
         this.send("popup", message);
-      } else if (message && !(this.isDestroyed || this.isDestroying)) {
+      } else if (message) {
         this.send("hideMessage", message);
       }
     });

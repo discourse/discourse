@@ -336,7 +336,7 @@ export default class ChatMessageInteractor {
   @action
   delete(message) {
     return this.chatApi
-      .deleteMessage(message.channelId, message.id)
+      .trashMessage(message.channelId, message.id)
       .catch(popupAjaxError);
   }
 

@@ -14,7 +14,7 @@ RSpec.describe HashtagAutocompleteService do
   after { DiscoursePluginRegistry.reset! }
 
   describe ".contexts_with_ordered_types" do
-    it "returns a hash of all the registrered search contexts and their types in the defined priority order" do
+    it "returns a hash of all the registered search contexts and their types in the defined priority order" do
       expect(HashtagAutocompleteService.contexts_with_ordered_types).to eq(
         { "topic-composer" => %w[category tag] },
       )
@@ -230,7 +230,7 @@ RSpec.describe HashtagAutocompleteService do
       end
       fab!(:tag4) { Fabricate(:tag, name: "book", staff_topic_count: 1, public_topic_count: 1) }
 
-      it "returns the 'most polular' categories and tags (based on topic_count) that the user can access" do
+      it "returns the 'most popular' categories and tags (based on topic_count) that the user can access" do
         category1.update!(read_restricted: true)
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["terrible-books"])
 

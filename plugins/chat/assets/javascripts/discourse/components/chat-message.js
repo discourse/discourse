@@ -33,6 +33,7 @@ export default class ChatMessage extends Component {
   @service appEvents;
   @service capabilities;
   @service chat;
+  @service chatApi;
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
   @service chatChannelPane;

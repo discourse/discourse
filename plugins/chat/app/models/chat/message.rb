@@ -60,11 +60,6 @@ module Chat
       CLASS_MAPPING.invert.fetch(self) || super
     end
 
-    # TODO (martin) Remove this when we drop the ChatUpload table
-    has_many :chat_uploads,
-             dependent: :destroy,
-             class_name: "Chat::Upload",
-             foreign_key: :chat_message_id
     has_one :chat_webhook_event,
             dependent: :destroy,
             class_name: "Chat::WebhookEvent",

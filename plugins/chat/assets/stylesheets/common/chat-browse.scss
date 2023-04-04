@@ -5,6 +5,7 @@
   padding-bottom: 41px;
   box-sizing: border-box;
   overflow-y: scroll;
+
   @include chat-scrollbar();
 
   @include breakpoint(mobile-large) {
