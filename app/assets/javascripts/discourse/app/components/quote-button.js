@@ -87,6 +87,7 @@ export default Component.extend(KeyEnterEscape, {
 
   _selectionChanged() {
     if (this._displayFastEditInput) {
+      this.textRange = virtualElementFromTextRange();
       return;
     }
 
