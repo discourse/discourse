@@ -2,14 +2,14 @@
 
 class SystemUserForPublicSections < ActiveRecord::Migration[7.0]
   def up
-    DB.exec(<<~SQL, user_id: Discourse.system_user)
+    execute(<<-SQL)
       UPDATE sidebar_sections
-      SET user_id = :user_id
+      SET user_id = -1
       WHERE public IS TRUE
     SQL
-    DB.exec(<<~SQL, user_id: Discourse.system_user)
+    execute(<<-SQL)
       UPDATE sidebar_section_links
-      SET user_id = :user_id
+      SET user_id = -1
       FROM sidebar_sections
       WHERE sidebar_sections.public IS TRUE
         AND sidebar_section_links.sidebar_section_id = sidebar_sections.id

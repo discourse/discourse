@@ -36,8 +36,10 @@ class SidebarSectionsController < ApplicationController
     sidebar_section = SidebarSection.find_by(id: section_params["id"])
     @guardian.ensure_can_edit!(sidebar_section)
 
-    sidebar_section.update!(section_params.merge(sidebar_urls_attributes: links_params))
-    sidebar_section.sidebar_section_links.update_all(user_id: sidebar_section.user_id)
+    ActiveRecord::Base.transaction do
+      sidebar_section.update!(section_params.merge(sidebar_urls_attributes: links_params))
+      sidebar_section.sidebar_section_links.update_all(user_id: sidebar_section.user_id)
+    end
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_update_public_sidebar_section(sidebar_section)
