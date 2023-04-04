@@ -9,6 +9,7 @@ import PermissionType from "discourse/models/permission-type";
 import { extractError } from "discourse/lib/ajax-error";
 import { underscore } from "@ember/string";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 
 export default Controller.extend({
   dialog: service(),
@@ -113,7 +114,7 @@ export default Controller.extend({
           }
         })
         .catch((error) => {
-          this.dialog.alert(extractError(error));
+          this.dialog.alert({ message: htmlSafe(extractError(error)) });
           this.set("saving", false);
         });
     },
