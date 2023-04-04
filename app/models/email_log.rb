@@ -133,13 +133,13 @@ end
 #  bounced                   :boolean          default(FALSE), not null
 #  message_id                :string
 #  smtp_group_id             :integer
-#  cc_addresses              :text
+#  cc_addresses              :string(1000000)
 #  cc_user_ids               :integer          is an Array
-#  raw                       :text
+#  raw                       :string(1000000)
 #  topic_id                  :integer
 #  bounce_error_code         :string
 #  smtp_transaction_response :string(500)
-#  bcc_addresses             :text
+#  bcc_addresses             :string(1000000)
 #
 # Indexes
 #

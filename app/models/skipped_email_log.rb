@@ -83,7 +83,7 @@ end
 #  user_id       :integer
 #  post_id       :integer
 #  reason_type   :integer          not null
-#  custom_reason :text
+#  custom_reason :string(1000000)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #

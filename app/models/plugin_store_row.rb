@@ -11,7 +11,7 @@ end
 #  plugin_name :string           not null
 #  key         :string           not null
 #  type_name   :string           not null
-#  value       :text
+#  value       :string(1000000)
 #
 # Indexes
 #

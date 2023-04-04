@@ -1248,7 +1248,7 @@ end
 #  updated_at                         :datetime         not null
 #  automatic                          :boolean          default(FALSE), not null
 #  user_count                         :integer          default(0), not null
-#  automatic_membership_email_domains :text
+#  automatic_membership_email_domains :string(100)
 #  primary_group                      :boolean          default(FALSE), not null
 #  title                              :string
 #  grant_trust_level                  :integer
@@ -1256,15 +1256,15 @@ end
 #  has_messages                       :boolean          default(FALSE), not null
 #  flair_bg_color                     :string
 #  flair_color                        :string
-#  bio_raw                            :text
-#  bio_cooked                         :text
+#  bio_raw                            :string(3000)
+#  bio_cooked                         :string(1000000)
 #  allow_membership_requests          :boolean          default(FALSE), not null
 #  full_name                          :string
 #  default_notification_level         :integer          default(3), not null
 #  visibility_level                   :integer          default(0), not null
 #  public_exit                        :boolean          default(FALSE), not null
 #  public_admission                   :boolean          default(FALSE), not null
-#  membership_request_template        :text
+#  membership_request_template        :string(3000)
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
 #  smtp_server                        :string
@@ -1280,7 +1280,7 @@ end
 #  email_password                     :string
 #  publish_read_state                 :boolean          default(FALSE), not null
 #  members_visibility_level           :integer          default(0), not null
-#  imap_last_error                    :text
+#  imap_last_error                    :string(1000000)
 #  imap_old_emails                    :integer
 #  imap_new_emails                    :integer
 #  flair_icon                         :string

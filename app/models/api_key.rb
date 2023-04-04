@@ -103,7 +103,7 @@ end
 #  hidden        :boolean          default(FALSE), not null
 #  last_used_at  :datetime
 #  revoked_at    :datetime
-#  description   :text
+#  description   :string(1000000)
 #  key_hash      :string           not null
 #  truncated_key :string           not null
 #

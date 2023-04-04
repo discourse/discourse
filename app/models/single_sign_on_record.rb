@@ -13,7 +13,7 @@ end
 #  id                              :integer          not null, primary key
 #  user_id                         :integer          not null
 #  external_id                     :string           not null
-#  last_payload                    :text             not null
+#  last_payload                    :string(1000000)  not null
 #  created_at                      :datetime         not null
 #  updated_at                      :datetime         not null
 #  external_username               :string

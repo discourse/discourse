@@ -305,15 +305,15 @@ end
 #  action         :integer          not null
 #  acting_user_id :integer
 #  target_user_id :integer
-#  details        :text
+#  details        :string(1000000)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  context        :string
 #  ip_address     :string
 #  email          :string
-#  subject        :text
-#  previous_value :text
-#  new_value      :text
+#  subject        :string(1000000)
+#  previous_value :string(1000000)
+#  new_value      :string(1000000)
 #  topic_id       :integer
 #  admin_only     :boolean          default(FALSE)
 #  post_id        :integer

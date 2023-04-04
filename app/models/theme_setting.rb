@@ -71,7 +71,7 @@ end
 #  id         :bigint           not null, primary key
 #  name       :string(255)      not null
 #  data_type  :integer          not null
-#  value      :text
+#  value      :string(6000)
 #  theme_id   :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

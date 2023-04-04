@@ -7,6 +7,7 @@ class IncomingEmail < ActiveRecord::Base
   belongs_to :group, foreign_key: :imap_group_id, class_name: "Group"
 
   validates :created_via, presence: true
+  validates :raw, length: { maximum: 100.megabytes }
 
   scope :errored, -> { where("NOT is_bounce AND error IS NOT NULL") }
 
@@ -78,15 +79,15 @@ end
 #  topic_id          :integer
 #  post_id           :integer
 #  raw               :text
-#  error             :text
-#  message_id        :text
-#  from_address      :text
-#  to_addresses      :text
-#  cc_addresses      :text
-#  subject           :text
+#  error             :string(1000000)
+#  message_id        :string(1000000)
+#  from_address      :string(1000000)
+#  to_addresses      :string(1000000)
+#  cc_addresses      :string(1000000)
+#  subject           :string(1000000)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  rejection_message :text
+#  rejection_message :string(1000000)
 #  is_auto_generated :boolean          default(FALSE)
 #  is_bounce         :boolean          default(FALSE), not null
 #  imap_uid_validity :integer

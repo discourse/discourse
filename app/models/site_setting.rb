@@ -313,7 +313,7 @@ end
 #  id         :integer          not null, primary key
 #  name       :string           not null
 #  data_type  :integer          not null
-#  value      :text
+#  value      :string(5000)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

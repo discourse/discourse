@@ -349,7 +349,7 @@ end
 #
 #  id                :integer          not null, primary key
 #  name              :string           not null
-#  description       :text
+#  description       :string(1000000)
 #  badge_type_id     :integer          not null
 #  grant_count       :integer          default(0), not null
 #  created_at        :datetime         not null
@@ -359,14 +359,14 @@ end
 #  icon              :string           default("fa-certificate")
 #  listable          :boolean          default(TRUE)
 #  target_posts      :boolean          default(FALSE)
-#  query             :text
+#  query             :string(1000000)
 #  enabled           :boolean          default(TRUE), not null
 #  auto_revoke       :boolean          default(TRUE), not null
 #  badge_grouping_id :integer          default(5), not null
 #  trigger           :integer
 #  show_posts        :boolean          default(FALSE), not null
 #  system            :boolean          default(FALSE), not null
-#  long_description  :text
+#  long_description  :string(1000000)
 #  image_upload_id   :integer
 #
 # Indexes

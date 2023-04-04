@@ -60,8 +60,8 @@ end
 #  target_user_id :integer
 #  action         :integer          not null
 #  subject        :string
-#  prev_value     :text
-#  new_value      :text
+#  prev_value     :string(1000000)
+#  new_value      :string(1000000)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #

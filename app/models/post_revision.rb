@@ -48,7 +48,7 @@ end
 #  id            :integer          not null, primary key
 #  user_id       :integer
 #  post_id       :integer
-#  modifications :text
+#  modifications :string(1000000)
 #  number        :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
@@ -59,3 +59,4 @@ end
 #  index_post_revisions_on_post_id             (post_id)
 #  index_post_revisions_on_post_id_and_number  (post_id,number)
 #  index_post_revisions_on_user_id             (user_id)
+#

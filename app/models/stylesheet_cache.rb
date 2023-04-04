@@ -46,11 +46,11 @@ end
 #  id         :integer          not null, primary key
 #  target     :string           not null
 #  digest     :string           not null
-#  content    :text             not null
+#  content    :string(1000000)  not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  theme_id   :integer          default(-1), not null
-#  source_map :text
+#  source_map :string(1500000)
 #
 # Indexes
 #

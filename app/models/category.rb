@@ -1160,7 +1160,7 @@ end
 #  topics_month                              :integer          default(0)
 #  topics_week                               :integer          default(0)
 #  slug                                      :string           not null
-#  description                               :text
+#  description                               :string(1000000)
 #  text_color                                :string(6)        default("FFFFFF"), not null
 #  read_restricted                           :boolean          default(FALSE), not null
 #  auto_close_hours                          :float
@@ -1179,7 +1179,7 @@ end
 #  allow_badges                              :boolean          default(TRUE), not null
 #  name_lower                                :string(50)       not null
 #  auto_close_based_on_last_post             :boolean          default(FALSE)
-#  topic_template                            :text
+#  topic_template                            :string(300000)
 #  contains_messages                         :boolean
 #  sort_order                                :string
 #  sort_ascending                            :boolean

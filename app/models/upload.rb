@@ -678,7 +678,7 @@ end
 #  verification_status          :integer          default(1), not null
 #  security_last_changed_at     :datetime
 #  security_last_changed_reason :string
-#  dominant_color               :text
+#  dominant_color               :string(6)
 #
 # Indexes
 #

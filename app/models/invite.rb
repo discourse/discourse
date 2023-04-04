@@ -369,7 +369,7 @@ end
 #  deleted_by_id           :integer
 #  invalidated_at          :datetime
 #  moderator               :boolean          default(FALSE), not null
-#  custom_message          :text
+#  custom_message          :string(1000)
 #  emailed_status          :integer
 #  max_redemptions_allowed :integer          default(1), not null
 #  redemption_count        :integer          default(0), not null

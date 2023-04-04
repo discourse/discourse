@@ -164,7 +164,7 @@ end
 #  value           :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  compiled_js     :text
+#  compiled_js     :string(1000000)
 #
 # Indexes
 #

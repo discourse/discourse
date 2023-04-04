@@ -10,8 +10,8 @@ end
 #
 #  user_id     :integer          not null, primary key
 #  search_data :tsvector
-#  raw_data    :text
-#  locale      :text
+#  raw_data    :string(1000000)
+#  locale      :string(10)
 #  version     :integer          default(0)
 #
 # Indexes

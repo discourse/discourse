@@ -15,7 +15,7 @@ end
 #
 #  id         :bigint           not null, primary key
 #  name       :string(100)      not null
-#  template   :text             not null
+#  template   :string(2000)     not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

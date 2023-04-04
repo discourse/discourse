@@ -15,7 +15,7 @@ end
 #  post_id    :integer
 #  key        :string
 #  value      :string
-#  extra      :text
+#  extra      :string(1000000)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

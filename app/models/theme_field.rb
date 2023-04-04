@@ -720,8 +720,8 @@ end
 #  theme_id         :integer          not null
 #  target_id        :integer          not null
 #  name             :string(255)      not null
-#  value            :text             not null
-#  value_baked      :text
+#  value            :string(300000)   not null
+#  value_baked      :string(1000000)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  compiler_version :string(50)       default("0"), not null

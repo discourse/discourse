@@ -11,12 +11,12 @@ end
 #  id         :integer          not null, primary key
 #  topic_id   :integer          not null
 #  name       :string(256)      not null
-#  value      :text
+#  value      :string(1000000)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
 # Indexes
 #
 #  index_topic_custom_fields_on_topic_id_and_name  (topic_id,name)
-#  topic_custom_fields_value_key_idx               (value,name) WHERE ((value IS NOT NULL) AND (char_length(value) < 400))
+#  topic_custom_fields_value_key_idx               (value,name) WHERE ((value IS NOT NULL) AND (char_length((value)::text) < 400))
 #

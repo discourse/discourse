@@ -226,8 +226,8 @@ end
 #  user_id                      :integer          not null, primary key
 #  location                     :string(3000)
 #  website                      :string(3000)
-#  bio_raw                      :text
-#  bio_cooked                   :text
+#  bio_raw                      :string(3000)
+#  bio_cooked                   :string(1000000)
 #  dismissed_banner_key         :integer
 #  bio_cooked_version           :integer
 #  views                        :integer          default(0), not null

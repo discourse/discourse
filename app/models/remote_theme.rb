@@ -371,9 +371,9 @@ end
 #  remote_updated_at         :datetime
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  private_key               :text
+#  private_key               :string(1000000)
 #  branch                    :string
-#  last_error_text           :text
+#  last_error_text           :string(1000000)
 #  authors                   :string
 #  theme_version             :string
 #  minimum_discourse_version :string

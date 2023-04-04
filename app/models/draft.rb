@@ -342,7 +342,7 @@ end
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
 #  draft_key  :string           not null
-#  data       :text             not null
+#  data       :string(400000)   not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  sequence   :bigint           default(0), not null

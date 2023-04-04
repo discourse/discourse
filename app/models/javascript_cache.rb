@@ -37,11 +37,11 @@ end
 #  id             :bigint           not null, primary key
 #  theme_field_id :bigint
 #  digest         :string
-#  content        :text             not null
+#  content        :string(1000000)  not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  theme_id       :bigint
-#  source_map     :text
+#  source_map     :string(1000000)
 #
 # Indexes
 #

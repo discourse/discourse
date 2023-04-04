@@ -16,7 +16,7 @@ end
 #  id         :bigint           not null, primary key
 #  group_id   :integer
 #  user_id    :integer
-#  reason     :text
+#  reason     :string(280)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

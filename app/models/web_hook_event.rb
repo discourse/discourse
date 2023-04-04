@@ -30,10 +30,10 @@ end
 #  id               :integer          not null, primary key
 #  web_hook_id      :integer          not null
 #  headers          :string
-#  payload          :text
+#  payload          :string(1000000)
 #  status           :integer          default(0)
 #  response_headers :string
-#  response_body    :text
+#  response_body    :string(1000000)
 #  duration         :integer          default(0)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null

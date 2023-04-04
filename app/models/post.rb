@@ -1257,8 +1257,8 @@ end
 #  user_id                 :integer
 #  topic_id                :integer          not null
 #  post_number             :integer          not null
-#  raw                     :text             not null
-#  cooked                  :text             not null
+#  raw                     :string(300000)   not null
+#  cooked                  :string(1000000)  not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  reply_to_post_number    :integer
@@ -1298,7 +1298,7 @@ end
 #  self_edits              :integer          default(0), not null
 #  reply_quoted            :boolean          default(FALSE), not null
 #  via_email               :boolean          default(FALSE), not null
-#  raw_email               :text
+#  raw_email               :string(1000000)
 #  public_version          :integer          default(1), not null
 #  action_code             :string
 #  locked_by_id            :integer
@@ -1312,7 +1312,7 @@ end
 #  idx_posts_user_id_deleted_at                           (user_id) WHERE (deleted_at IS NULL)
 #  index_for_rebake_old                                   (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
 #  index_posts_on_id_and_baked_version                    (id DESC,baked_version) WHERE (deleted_at IS NULL)
-#  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
+#  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND ((raw)::text <> ''::text))
 #  index_posts_on_image_upload_id                         (image_upload_id)
 #  index_posts_on_reply_to_post_number                    (reply_to_post_number)
 #  index_posts_on_topic_id_and_percent_rank               (topic_id,percent_rank)

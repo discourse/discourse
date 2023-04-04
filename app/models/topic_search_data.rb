@@ -9,7 +9,7 @@ end
 # Table name: topic_search_data
 #
 #  topic_id    :integer          not null, primary key
-#  raw_data    :text
+#  raw_data    :string(1000000)
 #  locale      :string           not null
 #  search_data :tsvector
 #  version     :integer          default(0)
