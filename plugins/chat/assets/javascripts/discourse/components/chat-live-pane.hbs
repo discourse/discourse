@@ -29,7 +29,10 @@
     {{chat/on-scroll this.resetIdle (hash delay=500)}}
     {{chat/on-scroll this.computeArrow (hash delay=150)}}
   >
-    <div class="chat-messages-container" {{chat/on-resize this.didResizePane}}>
+    <div
+      class="chat-messages-container"
+      {{chat/on-resize this.didResizePane (hash delay=10)}}
+    >
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
