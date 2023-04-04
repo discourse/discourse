@@ -150,6 +150,7 @@ export default function transformPost(
   postAtts.actionCode = post.action_code;
   postAtts.actionCodeWho = post.action_code_who;
   postAtts.actionCodePath = getURL(post.action_code_path || `/t/${topic.id}`);
+  postAtts.extraSmallActionTranslationArgs = post.extra_small_action_translation_args || {};
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
   postAtts.staged = post.staged;

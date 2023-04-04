@@ -9,7 +9,7 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
 
-export function actionDescriptionHtml(actionCode, createdAt, username, path) {
+export function actionDescriptionHtml(actionCode, createdAt, username, path, extraTranslationArgs) {
   const dt = new Date(createdAt);
   const when = autoUpdatingRelativeAge(dt, {
     format: "medium-with-ago-and-on",
@@ -23,14 +23,17 @@ export function actionDescriptionHtml(actionCode, createdAt, username, path) {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
     }
   }
-  return htmlSafe(I18n.t(`action_codes.${actionCode}`, { who, when, path }));
+  console.log(extraTranslationArgs)
+  const translationArgs = Object.assign({ who, when, path }, extraTranslationArgs || {})
+  return htmlSafe(I18n.t(`action_codes.${actionCode}`, translationArgs));
 }
 
 export function actionDescription(
   actionCode,
   createdAt,
   username,
-  path = null
+  path = null,
+  extraSmallActionTranslationArgs = null
 ) {
   return computed(actionCode, createdAt, function () {
     const ac = this.get(actionCode);
@@ -39,7 +42,8 @@ export function actionDescription(
         ac,
         this.get(createdAt),
         this.get(username),
-        path ? this.get(path) : null
+        path ? this.get(path) : null,
+        extraSmallActionTranslationArgs
       );
     }
   });
@@ -135,11 +139,14 @@ export default createWidget("post-small-action", {
     if (attrs.actionDescriptionWidget) {
       contents.push(this.attach(attrs.actionDescriptionWidget, attrs));
     } else {
+      console.log("HERE")
+      console.log(attrs.extraSmallActionTranslationArgs)
       const description = actionDescriptionHtml(
         attrs.actionCode,
         new Date(attrs.created_at),
         attrs.actionCodeWho,
-        attrs.actionCodePath
+        attrs.actionCodePath,
+        attrs.extraSmallActionTranslationArgs,
       );
       contents.push(new RawHtml({ html: `<p>${description}</p>` }));
     }

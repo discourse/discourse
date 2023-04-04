@@ -77,6 +77,7 @@ class PostSerializer < BasicPostSerializer
              :action_code,
              :action_code_who,
              :action_code_path,
+             :extra_small_action_translation_args,
              :notice,
              :last_wiki_edit,
              :locked,
@@ -448,6 +449,20 @@ class PostSerializer < BasicPostSerializer
 
   def action_code_who
     post_custom_fields["action_code_who"]
+  end
+
+  def extra_small_action_translation_args
+    begin
+      JSON.parse(post_custom_fields["extra_small_action_translation_args"])
+    rescue
+      {}
+    end
+  end
+
+  def include_extra_small_action_translation_args?
+    return false if action_code.blank?
+
+    post_custom_fields["extra_small_action_translation_args"].present?
   end
 
   def include_action_code_who?

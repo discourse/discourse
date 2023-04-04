@@ -29,7 +29,8 @@ export default Component.extend({
     "item.action_code",
     "item.created_at",
     "item.action_code_who",
-    "item.action_code_path"
+    "item.action_code_path",
+    "item.extra_small_action_translation_args",
   ),
 
   @discourseComputed("item.draft_username", "item.username")

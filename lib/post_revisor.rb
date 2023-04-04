@@ -180,12 +180,23 @@ class PostRevisor
   def self.create_small_action_for_tag_changes(topic:, user:, added_tags:, removed_tags:)
     return if !SiteSetting.create_post_for_category_and_tag_changes
 
+    action_code = if added_tags.present? && removed_tags.present?
+      "tags_changed"
+    elsif added_tags.present?
+      "tags_added"
+    elsif removed_tags.present?
+      "tags_removed"
+    else
+      return;
+    end
+
     topic.add_moderator_post(
       user,
       tags_changed_raw(added: added_tags, removed: removed_tags),
       post_type: Post.types[:small_action],
-      action_code: "tags_changed",
+      action_code: action_code,
       custom_fields: {
+        extra_small_action_translation_args: { added: tag_list_to_raw(added_tags), removed: tag_list_to_raw(removed_tags) },
         tags_added: added_tags,
         tags_removed: removed_tags,
       },

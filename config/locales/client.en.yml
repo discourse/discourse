@@ -175,7 +175,9 @@ en:
       removed_user: "Removed %{who} %{when}"
       removed_group: "Removed %{who} %{when}"
       autobumped: "Automatically bumped %{when}"
-      tags_changed: "Tags updated %{when}"
+      tags_changed: "Added %{added} and removed %{removed} %{when}"
+      tags_removed: "Removed %{removed} %{when}"
+      tags_added: "Added %{added} %{when}"
       category_changed: "Category updated %{when}"
       autoclosed:
         enabled: "Closed %{when}"

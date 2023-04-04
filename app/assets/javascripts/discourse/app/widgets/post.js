@@ -95,6 +95,7 @@ createWidget("select-post", {
   tagName: "div.select-posts",
 
   html(attrs) {
+    console.log(attrs)
     const buttons = [];
 
     if (!attrs.selected && attrs.post_number > 1) {
