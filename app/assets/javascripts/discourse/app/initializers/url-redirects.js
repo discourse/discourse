@@ -26,11 +26,12 @@ export default {
     let siteSettings = container.lookup("service:site-settings");
     initializeDefaultHomepage(siteSettings);
 
-    const defaultUserRoute = `/u/$1/${
-      siteSettings.view_user_route || "summary"
-    }`;
+    let defaultUserRoute = siteSettings.view_user_route || "summary";
+    if (!container.lookup(`route:user.${defaultUserRoute}`)) {
+      defaultUserRoute = "summary";
+    }
 
-    DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, defaultUserRoute, {
+    DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, `/u/$1/${defaultUserRoute}`, {
       exceptions: [
         "/u/account-created",
         "/users/account-created",
