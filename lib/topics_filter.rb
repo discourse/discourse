@@ -8,6 +8,7 @@ class TopicsFilter
 
   def filter_from_query_string(query_string)
     return @scope if query_string.blank?
+    category_or_clause = false
 
     query_string.scan(
       /(?<key_prefix>[-=])?(?<key>\w+):(?<value>[^\s]+)/,
@@ -45,7 +46,10 @@ class TopicsFilter
             filter_categories(
               category_slugs: category_slugs.split(delimiter),
               exclude_subcategories: key_prefix.presence,
+              or_clause: category_or_clause,
             )
+
+          category_or_clause = true
         end
       end
     end
@@ -80,7 +84,7 @@ class TopicsFilter
 
   private
 
-  def filter_categories(category_slugs:, exclude_subcategories: false)
+  def filter_categories(category_slugs:, exclude_subcategories: false, or_clause: false)
     category_ids = Category.ids_from_slugs(category_slugs)
 
     category_ids =
@@ -96,7 +100,11 @@ class TopicsFilter
       category_ids = category_ids.flat_map { |category_id| Category.subcategory_ids(category_id) }
     end
 
-    @scope = @scope.joins(:category).where("categories.id IN (?)", category_ids)
+    if or_clause
+      @scope.or(Topic.where("categories.id IN (?)", category_ids))
+    else
+      @scope.joins(:category).where("categories.id IN (?)", category_ids)
+    end
   end
 
   def filter_tags(tag_names:, match_all: true, exclude: false)
