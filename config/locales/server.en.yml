@@ -2438,7 +2438,6 @@ en:
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
-      discourse_connect_invite_only: "You cannot enable DiscourseConnect and invite only at the same time."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
       min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
       min_username_length_range: "You cannot set the minimum above the maximum."
