@@ -82,6 +82,7 @@ export default Component.extend(KeyEnterEscape, {
     this.set("_displayFastEditInput", false);
     this.set("_fastEditInitalSelection", null);
     this.set("_fastEditNewSelection", null);
+    this._teardownSelectionListeners();
   },
 
   _selectionChanged() {
@@ -236,16 +237,14 @@ export default Component.extend(KeyEnterEscape, {
 
   _setupSelectionListeners() {
     const updateRect = () => this.textRange.updateRect();
-    document.querySelector(".cooked").addEventListener("mouseup", updateRect);
+    document.body.addEventListener("mouseup", updateRect);
     window.addEventListener("scroll", updateRect);
     document.scrollingElement.addEventListener("scroll", updateRect);
   },
 
   _teardownSelectionListeners() {
     const updateRect = () => this.textRange.updateRect();
-    document
-      .querySelectorAll(".cooked")
-      .forEach((element) => element.removeEventListener("mouseup", updateRect));
+    document.body.removeEventListener("mouseup", updateRect);
     window.removeEventListener("scroll", updateRect);
     document.scrollingElement.removeEventListener("scroll", updateRect);
   },
