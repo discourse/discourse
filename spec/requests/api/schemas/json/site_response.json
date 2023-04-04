@@ -495,9 +495,6 @@
     "hashtag_icons" : {
       "type": "array"
     },
-    "hashtag_types" : {
-      "type": "array"
-    },
     "displayed_about_plugin_stat_groups" : {
       "type": "array"
     },
