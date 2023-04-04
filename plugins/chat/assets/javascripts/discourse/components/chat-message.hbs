@@ -107,9 +107,10 @@
                   {{#unless this.site.mobileView}}
                     <DButton
                       @class="chat-message-react-btn"
-                      @action={{this.messageInteractor.openChatEmojiPicker}}
+                      @action={{this.messageInteractor.openEmojiPicker}}
                       @icon="discourse-emojis"
                       @title="chat.react"
+                      @forwardEvent={{true}}
                     />
                   {{/unless}}
                 {{/if}}

@@ -47,12 +47,12 @@ export default Component.extend(TextareaTextManipulation, {
 
   @discourseComputed(...chatComposerButtonsDependentKeys())
   inlineButtons() {
-    return chatComposerButtons(this, "inline");
+    return chatComposerButtons(this, "inline", this.context);
   },
 
   @discourseComputed(...chatComposerButtonsDependentKeys())
   dropdownButtons() {
-    return chatComposerButtons(this, "dropdown");
+    return chatComposerButtons(this, "dropdown", this.context);
   },
 
   @discourseComputed("chatEmojiPickerManager.{opened,context}")

@@ -374,17 +374,13 @@ export default class ChatMessageInteractor {
   }
 
   @action
-  startReactionForMessageActions() {
-    this.chatEmojiPickerManager.startFromMessageActions(
-      this.message,
-      this.selectReaction,
-      { desktop: this.site.desktopView }
-    );
-  }
-
-  @action
-  openChatEmojiPicker() {
-    alert(1);
+  openEmojiPicker(_, { target }) {
+    const pickerState = {
+      didSelectEmoji: this.selectReaction,
+      trigger: target,
+      context: "chat-channel-message",
+    };
+    this.chatEmojiPickerManager.open(pickerState);
   }
 
   @bind

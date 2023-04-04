@@ -164,7 +164,7 @@ export default class ChatEmojiPicker extends Component {
       }
     }
 
-    this.toggleProperty("isExpandedFitzpatrickScale");
+    this.isExpandedFitzpatrickScale = !this.isExpandedFitzpatrickScale;
   }
 
   @action

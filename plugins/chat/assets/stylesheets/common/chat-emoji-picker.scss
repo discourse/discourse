@@ -199,12 +199,11 @@
   }
 }
 
-.chat-message-emoji-picker-anchor {
-  z-index: z("header") + 1;
-
+.chat-channel-message-emoji-picker-connector {
   .chat-emoji-picker {
     border: 1px solid var(--primary-low);
     width: 320px;
+    z-index: z("header") + 1;
 
     .emoji {
       width: 22px;
@@ -214,7 +213,7 @@
 }
 
 .mobile-view {
-  .chat-message-emoji-picker-anchor.-opened {
+  .chat-channel-message-emoji-picker-connector.-opened {
     position: fixed;
     top: 0;
     left: 0;

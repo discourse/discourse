@@ -25,9 +25,10 @@
       {{#if this.messageInteractor.canInteractWithMessage}}
         <DButton
           @class="btn-flat react-btn"
-          @action={{this.messageInteractor.startReactionForMessageActions}}
+          @action={{this.messageInteractor.openEmojiPicker}}
           @icon="discourse-emojis"
           @title="chat.react"
+          @forwardEvent={{true}}
         />
       {{/if}}
 

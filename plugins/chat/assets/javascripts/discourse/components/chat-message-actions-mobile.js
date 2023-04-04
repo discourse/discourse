@@ -53,8 +53,8 @@ export default class ChatMessageActionsMobile extends Component {
   }
 
   @action
-  actAndCloseMenu(fnId) {
-    this.messageInteractor[fnId]();
+  actAndCloseMenu(fnId, event) {
+    this.messageInteractor[fnId](event);
     this.#onCloseMenu();
   }
 
