@@ -61,7 +61,6 @@
       }
 
       &__name {
-        flex-shrink: 0;
         margin-left: 0.75em;
         font-size: var(--font-up-1);
       }
@@ -71,6 +70,7 @@
       }
 
       &__user-status-message {
+        flex-shrink: 3;
         overflow: hidden;
         text-overflow: ellipsis;
       }
