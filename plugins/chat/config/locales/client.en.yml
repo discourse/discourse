@@ -585,9 +585,8 @@ en:
       transcript:
         view: "View previous messages transcript"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Flagged Chat Message"
-          flagged_by: "Flagged By"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
