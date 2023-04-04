@@ -2466,6 +2466,11 @@ uncategorized:
     default: 0
     hidden: true
 
+  view_user_route:
+    default: "summary"
+    hidden: true
+    client: true
+
   tos_topic_id:
     default: -1
     hidden: true

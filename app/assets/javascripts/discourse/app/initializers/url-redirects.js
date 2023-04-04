@@ -26,7 +26,11 @@ export default {
     let siteSettings = container.lookup("service:site-settings");
     initializeDefaultHomepage(siteSettings);
 
-    DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, "/u/$1/summary", {
+    const defaultUserRoute = `/u/$1/${
+      siteSettings.view_user_route || "summary"
+    }`;
+
+    DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, defaultUserRoute, {
       exceptions: [
         "/u/account-created",
         "/users/account-created",
