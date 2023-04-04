@@ -8,16 +8,26 @@ class Onebox::Engine::VimeoOnebox
 
   def to_html
     if SiteSetting.lazy_videos_enabled && SiteSetting.lazy_vimeo_enabled
-      video_id = oembed_data[:video_id]
+      full_video_id = oembed_data[:uri].sub("/videos/", "").sub(":", "/")
+
+      # This is used to discern public and private video
+      # Unlisted videos have an adidtional alphanumeric ID in their URI.
+      if !oembed_data[:uri].match?(%r{videos/\d+:.+})
+        iframe_id = full_video_id
+      else
+        iframe_src = Nokogiri::HTML5.fragment(oembed_data[:html]).at_css("iframe")&.[]("src")
+        iframe_id = iframe_src.sub("https://player.vimeo.com/video/", "")
+      end
+
       thumbnail_url = "https://vumbnail.com/#{oembed_data[:video_id]}.jpg"
       escaped_title = ERB::Util.html_escape(og_data.title)
 
       <<~HTML
         <div class="vimeo-onebox lazy-video-container"
-          data-video-id="#{video_id}"
+          data-video-id="#{iframe_id}"
           data-video-title="#{escaped_title}"
           data-provider-name="vimeo">
-          <a href="https://vimeo.com/#{video_id}" target="_blank">
+          <a href="https://vimeo.com/#{full_video_id}" target="_blank">
             <img class="vimeo-thumbnail"
               src="#{thumbnail_url}"
               title="#{escaped_title}">
