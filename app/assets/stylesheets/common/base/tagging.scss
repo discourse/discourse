@@ -124,17 +124,13 @@
     font-size: var(--font-down-1);
   }
   .discourse-tags + .topic-featured-link {
-    margin-left: 8px;
+    margin-left: 0.5em;
   }
 }
 
 .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
-  a,
-  span {
-    margin-right: 0.25em;
-  }
 }
 
 .fps-result .add-full-page-tags {
@@ -161,6 +157,12 @@ header .discourse-tag {
 .tag-chooser {
   width: 100%;
   max-width: 100%;
+}
+
+#topic-title {
+  .discourse-tags .discourse-tag {
+    margin-right: 0.35em;
+  }
 }
 
 .title-wrapper .tag-chooser {
