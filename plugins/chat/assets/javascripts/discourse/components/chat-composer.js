@@ -314,7 +314,12 @@ export default Component.extend(TextareaTextManipulation, {
     const code = `:${emoji}:`;
     this.chatEmojiReactionStore.track(code);
     this.addText(this.getSelected(), code);
-    this._focusTextArea();
+
+    if (this.site.desktopView) {
+      this._focusTextArea();
+    } else {
+      this.chatEmojiPickerManager.close();
+    }
   },
 
   @action

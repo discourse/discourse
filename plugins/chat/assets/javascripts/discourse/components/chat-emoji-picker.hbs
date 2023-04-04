@@ -15,8 +15,8 @@
     }}
     {{did-insert this.addClickOutsideEventListener}}
     {{did-insert this.chatEmojiPickerManager.loadEmojis}}
-    {{did-insert @didInsert}}
-    {{will-destroy @willDestroy}}
+    {{did-insert (if @didInsert @didInsert (noop))}}
+    {{will-destroy (if @willDestroy @willDestroy (noop))}}
     {{will-destroy this.removeClickOutsideEventListener}}
     {{on "keydown" this.trapKeyDownEvents}}
   >
@@ -28,7 +28,7 @@
         @icons={{hash left="search"}}
         placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
         autofocus={{true}}
-        {{did-insert this.focusFilter}}
+        {{did-insert (if this.site.desktopView this.focusFilter (noop))}}
         {{did-insert
           (fn this.didInputFilter this.chatEmojiPickerManager.initialFilter)
         }}

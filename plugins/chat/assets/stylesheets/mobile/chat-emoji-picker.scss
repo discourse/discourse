@@ -10,6 +10,7 @@
     width: 100%;
     box-shadow: shadow("card");
     z-index: z("header") + 2;
+    max-width: 100vw;
 
     &__backdrop {
       position: fixed;
