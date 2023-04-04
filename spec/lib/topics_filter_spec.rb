@@ -138,6 +138,37 @@ RSpec.describe TopicsFilter do
         end
       end
 
+      describe "when query string is `category:category category:category2`" do
+        it "should return topics from any of the specified categories and its subcategories" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("category:category category:category2")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_in_category.id,
+            topic_in_category_subcategory.id,
+            topic_in_category2.id,
+            topic_in_category2_subcategory.id,
+          )
+        end
+      end
+
+      describe "when query string is `category:category =category:category2`" do
+        it "should return topics and subcategory topics from category but only topics from category2" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("category:category =category:category2")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_in_category.id,
+            topic_in_category_subcategory.id,
+            topic_in_category2.id,
+          )
+        end
+      end
+
       describe "when query string is `=category:category`" do
         it "should not return topics from subcategories`" do
           expect(
