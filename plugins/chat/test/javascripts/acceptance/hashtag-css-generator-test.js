@@ -44,10 +44,6 @@ acceptance("Chat | Hashtag CSS Generator", function (needs) {
   needs.site({
     categories: [category1, category2, category3],
   });
-  needs.hooks.afterEach(() => {
-    document.querySelector("style#category-color-css-generator").remove();
-    document.querySelector("style#hashtag-css-generator").remove();
-  });
 
   test("hashtag CSS classes are generated", async function (assert) {
     await visit("/");

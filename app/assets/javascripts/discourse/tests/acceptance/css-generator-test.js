@@ -11,10 +11,6 @@ acceptance("CSS Generator", function (needs) {
       { id: 4, color: "2B81AF", parentCategory: { id: 1 } },
     ],
   });
-  needs.hooks.afterEach(() => {
-    document.querySelector("style#category-color-css-generator").remove();
-    document.querySelector("style#hashtag-css-generator").remove();
-  });
 
   test("category CSS variables are generated", async function (assert) {
     await visit("/");
