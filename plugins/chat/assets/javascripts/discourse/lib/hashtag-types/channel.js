@@ -17,9 +17,7 @@ export default class ChannelHashtagType extends HashtagTypeBase {
 
   generateColorCssClasses(model) {
     return [
-      `.hashtag-color--${this.type}-${model.id} {
-      color: var(--category-${model.chatable.id}-color);
-      }`,
+      `.hashtag-color--${this.type}-${model.id} { color: var(--category-${model.chatable.id}-color); }`,
     ];
   }
 }

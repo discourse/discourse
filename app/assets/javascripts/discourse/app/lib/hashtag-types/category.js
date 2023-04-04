@@ -20,9 +20,9 @@ export default class CategoryHashtagType extends HashtagTypeBase {
       backgroundGradient.push(`var(--category-${model.id}-color) 50%`);
     }
 
-    generatedCssClasses.push(`hashtag-color--category-${model.id} {
-      background: linear-gradient(90deg, ${backgroundGradient.join(", ")});
-    }`);
+    generatedCssClasses.push(`.hashtag-color--category-${model.id} {
+  background: linear-gradient(90deg, ${backgroundGradient.join(", ")});
+}`);
 
     return generatedCssClasses;
   }
