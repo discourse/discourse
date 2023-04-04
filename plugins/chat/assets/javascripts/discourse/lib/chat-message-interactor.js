@@ -243,9 +243,9 @@ export default class ChatMessageInteractor {
     }
   }
 
-  copyLink(message) {
+  copyLink() {
     const { protocol, host } = window.location;
-    let url = getURL(`/chat/c/-/${message.channelId}/${message.id}`);
+    let url = getURL(`/chat/c/-/${this.message.channelId}/${this.message.id}`);
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
   }
@@ -334,23 +334,23 @@ export default class ChatMessageInteractor {
   }
 
   @action
-  delete(message) {
+  delete() {
     return this.chatApi
-      .trashMessage(message.channelId, message.id)
+      .trashMessage(this.message.channelId, this.message.id)
       .catch(popupAjaxError);
   }
 
   @action
-  restore(message) {
+  restore() {
     return this.chatApi
-      .restoreMessage(message.channelId, message.id)
+      .restoreMessage(this.message.channelId, this.message.id)
       .catch(popupAjaxError);
   }
 
   @action
-  rebake(message) {
+  rebake() {
     return this.chatApi
-      .rebakeMessage(message.channelId, message.id)
+      .rebakeMessage(this.message.channelId, this.message.id)
       .catch(popupAjaxError);
   }
 

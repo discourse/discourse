@@ -53,17 +53,14 @@
               <ChatMessageReaction
                 @reaction={{reaction}}
                 @onReaction={{this.messageInteractor.react}}
-                this.message={{this.message}}
+                @message={{this.message}}
                 @showCount={{false}}
               />
             {{/each}}
 
             <DButton
               @class="btn-flat react-btn"
-              @action={{action
-                this.actAndCloseMenu
-                "startReactionForMessageActions"
-              }}
+              @action={{this.openEmojiPicker}}
               @icon="discourse-emojis"
               @title="chat.react"
               @forwardEvent={{true}}

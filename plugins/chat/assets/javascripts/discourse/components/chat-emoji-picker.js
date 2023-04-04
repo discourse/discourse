@@ -41,6 +41,7 @@ export default class ChatEmojiPicker extends Component {
   @service emojiPickerScrollObserver;
   @service chatEmojiReactionStore;
   @service capabilities;
+  @service site;
 
   @tracked filteredEmojis = null;
   @tracked isExpandedFitzpatrickScale = false;

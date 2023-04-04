@@ -212,22 +212,6 @@
   }
 }
 
-.mobile-view {
-  .chat-channel-message-emoji-picker-connector.-opened {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    box-shadow: shadowcreatePopper("card");
-
-    .chat-emoji-picker {
-      height: 50vh;
-      width: 100%;
-    }
-  }
-}
-
 .chat-composer-container.with-emoji-picker {
   background: var(--primary-very-low);
 

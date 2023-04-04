@@ -53,8 +53,14 @@ export default class ChatMessageActionsMobile extends Component {
   }
 
   @action
-  actAndCloseMenu(fnId, event) {
-    this.messageInteractor[fnId](event);
+  actAndCloseMenu(fnId) {
+    this.messageInteractor[fnId]();
+    this.#onCloseMenu();
+  }
+
+  @action
+  openEmojiPicker(_, event) {
+    this.messageInteractor.openEmojiPicker(_, event);
     this.#onCloseMenu();
   }
 

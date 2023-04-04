@@ -1,0 +1,25 @@
+.chat-channel-message-emoji-picker-connector {
+  position: relative;
+
+  .chat-emoji-picker {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50vh;
+    width: 100%;
+    box-shadow: shadow("card");
+    z-index: z("header") + 2;
+
+    &__backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--primary);
+      opacity: 0.8;
+      z-index: z("header") + 1;
+    }
+  }
+}

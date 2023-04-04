@@ -8,16 +8,20 @@ import { schedule } from "@ember/runloop";
 export default class ChatChannelMessageEmojiPicker extends Component {
   context = "chat-channel-message";
 
+  @service site;
   @service chatEmojiPickerManager;
 
   @action
   didSelectEmoji(emoji) {
     this.chatEmojiPickerManager.picker?.didSelectEmoji(emoji);
+    this.chatEmojiPickerManager.close();
   }
 
   @action
   didInsert(element) {
-    this._popper?.destroy();
+    if (this.site.mobileView) {
+      return;
+    }
 
     schedule("afterRender", () => {
       this._popper = createPopper(
