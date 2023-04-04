@@ -205,7 +205,8 @@ class AdminDashboardData
                       :email_polling_errored_recently,
                       :out_of_date_themes,
                       :unreachable_themes,
-                      :watched_words_check
+                      :watched_words_check,
+                      :google_analytics_version_check
 
     register_default_scheduled_problem_checks
 
@@ -378,6 +379,10 @@ class AdminDashboardData
 
   def subfolder_ends_in_slash_check
     I18n.t("dashboard.subfolder_ends_in_slash") if Discourse.base_path =~ %r{/\z}
+  end
+
+  def google_analytics_version_check
+    I18n.t("dashboard.v3_analytics_deprecated") if SiteSetting.ga_version == "v3_analytics"
   end
 
   def email_polling_errored_recently
