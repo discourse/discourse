@@ -24,7 +24,6 @@ export default class LightboxService extends Service {
   lastFocusedElement = null;
   originalSiteThemeColor = null;
   onFocus = null;
-  onLightboxOpenerClick = null;
 
   callbacks = {};
   options = {};

@@ -9,6 +9,7 @@ import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { create } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
+import { SELECTORS } from "discourse/lib/lightbox/constants";
 
 export default {
   name: "post-decorations",
@@ -32,10 +33,11 @@ export default {
       if (siteSettings.enable_experimental_lightbox) {
         api.decorateCookedElement(
           (element, helper) => {
-            return helper
+            return helper &&
+              element.querySelector(SELECTORS.DEFAULT_ITEM_SELECTOR)
               ? lightboxService.setupLightboxes({
                   container: element,
-                  selector: "*:not(.spoiler):not(.spoiled) a.lightbox",
+                  selector: SELECTORS.DEFAULT_ITEM_SELECTOR,
                 })
               : null;
           },
