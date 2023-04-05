@@ -10,11 +10,11 @@ export default {
    * based on the category color.
    */
   initialize(container) {
-    this.site = container.lookup("service:site");
+    const site = container.lookup("service:site");
 
     const generatedCssVariables = [
       ":root {",
-      ...this.site.categories.map(
+      ...(site.categories || []).map(
         (category) => `--category-${category.id}-color: #${category.color};`
       ),
       "}",

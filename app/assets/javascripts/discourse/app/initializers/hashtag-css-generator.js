@@ -10,7 +10,7 @@ export default {
    * cooked posts, and the sidebar.
    *
    * Each type has its own corresponding class, which is registered
-   * with the hastag type via api.registerHashtagType. The default
+   * with the hashtag type via api.registerHashtagType. The default
    * ones in core are CategoryHashtagType and TagHashtagType.
    */
   initialize(container) {
