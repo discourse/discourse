@@ -998,14 +998,14 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    event.preventDefault();
-    event.stopPropagation();
-
     const composer = document.querySelector(".chat-composer-input");
     if (composer && !this.args.channel.isDraft) {
-      this.appEvents.trigger("chat:insert-text", key);
       composer.focus();
+      return;
     }
+
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   @action
