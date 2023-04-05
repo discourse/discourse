@@ -660,7 +660,7 @@ export default class AdminUserIndexController extends Controller.extend(
           progressModal.send("closeModal");
           let error;
           AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
-          error = extractError(e) || I18n.t("admin.user.delete_posts_failed");
+          error = extractError(e, I18n.t("admin.user.delete_posts_failed"));
           this.dialog.alert(error);
         });
     };
