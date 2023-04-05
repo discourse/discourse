@@ -5,8 +5,7 @@ createWidget("header-contents", {
   tagName: "div.contents.clearfix",
   transform() {
     return {
-      showBootstrapMode:
-        this.get("currentUser.staff") && this.get("site.desktopView"),
+      showBootstrapMode: this.currentUser?.staff && this.site.desktopView,
     };
   },
   template: hbs`
