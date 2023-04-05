@@ -9,7 +9,7 @@ export default class CategoryHashtagType extends HashtagTypeBase {
   }
 
   get preloadedData() {
-    return this.site.categories;
+    return this.site.categories || [];
   }
 
   generateColorCssClasses(model) {

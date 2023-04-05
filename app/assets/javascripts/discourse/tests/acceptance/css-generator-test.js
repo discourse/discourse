@@ -1,4 +1,4 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -30,3 +30,19 @@ acceptance("CSS Generator", function (needs) {
     );
   });
 });
+
+acceptance(
+  "CSS Generator | Anon user in login_required site",
+  function (needs) {
+    needs.site({ categories: null });
+    needs.settings({ login_required: true });
+
+    test("category CSS variables are not generated", async function (assert) {
+      await visit("/");
+      const cssTag = document.querySelector(
+        "style#category-color-css-generator"
+      );
+      assert.notOk(exists(cssTag));
+    });
+  }
+);
