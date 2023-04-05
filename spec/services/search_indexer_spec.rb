@@ -28,7 +28,7 @@ RSpec.describe SearchIndexer do
 
   it "extract youtube title" do
     html =
-      "<div class=\"lazyYT\" data-youtube-id=\"lmFgeFh2nlw\" data-youtube-title=\"Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]\" data-width=\"480\" data-height=\"270\" data-parameters=\"feature=oembed&amp;wmode=opaque\"></div>"
+      "<div class=\"lazy-video-container\" data-video-id=\"lmFgeFh2nlw\" data-video-title=\"Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]\" data-provider-name=\"youtube\"></div>"
     scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
     expect(scrubbed).to eq(
       "Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]",
@@ -139,6 +139,24 @@ RSpec.describe SearchIndexer do
       }
     end
 
+    it "should work with edge case domain names" do
+      # 00E5A4 stems to 00e5 and a4, which is odd, but by-design
+      # this may cause internal indexing to fail due to indexes not aligning
+      # when stuffing terms for domains
+      post.update!(cooked: <<~HTML)
+        Test.00E5A4.1
+      HTML
+
+      SearchIndexer.update_posts_index(
+        post_id: post.id,
+        topic_title: post.topic.title,
+        category_name: post.topic.category&.name,
+        topic_tags: post.topic.tags.map(&:name).join(" "),
+        cooked: post.cooked,
+        private_message: post.topic.private_message?,
+      )
+    end
+
     it "should work with invalid HTML" do
       post.update!(cooked: "<FD>" * Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH)
 
@@ -220,7 +238,7 @@ RSpec.describe SearchIndexer do
       Jobs.run_immediately!
       SiteSetting.max_image_width = 1
 
-      stub_request(:get, "https://meta.discourse.org/some.png").to_return(
+      stub_request(:get, "https://1.2.3.4/some.png").to_return(
         status: 200,
         body: file_from_fixtures("logo.png").read,
       )

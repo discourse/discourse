@@ -114,7 +114,7 @@ acceptance(
     });
 
     test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {
-      const capabilities = this.container.lookup("capabilities:main");
+      const capabilities = this.container.lookup("service:capabilities");
       capabilities.touch = true;
 
       await visit("/");
@@ -161,7 +161,7 @@ acceptance(
 
       assert.ok(
         exists(
-          ".sidebar-section-community .sidebar-section-header[aria-expanded='true'][aria-controls='sidebar-section-content-community']"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-header[aria-expanded='true'][aria-controls='sidebar-section-content-community']"
         ),
         "accessibility attributes are set correctly on sidebar section header when section is expanded"
       );
@@ -170,7 +170,7 @@ acceptance(
 
       assert.ok(
         exists(
-          ".sidebar-section-community .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-community']"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-community']"
         ),
         "accessibility attributes are set correctly on sidebar section header when section is collapsed"
       );

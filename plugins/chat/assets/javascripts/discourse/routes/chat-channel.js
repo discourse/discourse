@@ -10,17 +10,28 @@ export default class ChatChannelRoute extends DiscourseRoute {
 
   @action
   willTransition(transition) {
-    // Technically we could keep messages to avoid re-fetching them, but
-    // it's not worth the complexity for now
-    this.chat.activeChannel?.clearMessages();
+    this.#closeThread();
 
-    this.chat.activeChannel.activeThread = null;
-    this.chatStateManager.closeSidePanel();
+    if (transition?.to?.name === "chat.channel.index") {
+      const targetChannelId = transition?.to?.parent?.params?.channelId;
+      if (
+        targetChannelId &&
+        parseInt(targetChannelId, 10) !== this.chat.activeChannel.id
+      ) {
+        this.chat.activeChannel.messagesManager.clearMessages();
+      }
+    }
 
     if (!transition?.to?.name?.startsWith("chat.")) {
       this.chatStateManager.storeChatURL();
       this.chat.activeChannel = null;
       this.chat.updatePresence();
     }
+  }
+
+  #closeThread() {
+    this.chat.activeChannel.activeThread?.messagesManager?.clearMessages();
+    this.chat.activeChannel.activeThread = null;
+    this.chatStateManager.closeSidePanel();
   }
 }

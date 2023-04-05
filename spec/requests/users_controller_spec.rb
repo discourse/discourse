@@ -2996,7 +2996,6 @@ RSpec.describe UsersController do
           }
 
       expect(user1.reload.title).to eq(badge.display_name)
-      expect(user1.user_profile.badge_granted_title).to eq(true)
       expect(user1.user_profile.granted_title_badge_id).to eq(badge.id)
 
       badge.update allow_title: false
@@ -3009,7 +3008,6 @@ RSpec.describe UsersController do
       user1.reload
       user1.user_profile.reload
       expect(user1.title).to eq("")
-      expect(user1.user_profile.badge_granted_title).to eq(false)
       expect(user1.user_profile.granted_title_badge_id).to eq(nil)
     end
 
@@ -5947,7 +5945,7 @@ RSpec.describe UsersController do
       bookmark3 && bookmark4
     end
 
-    after { Bookmark.registered_bookmarkables = [] }
+    after { DiscoursePluginRegistry.reset! }
 
     let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:post)) }
     let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:topic)) }
@@ -6528,24 +6526,31 @@ RSpec.describe UsersController do
         )
       end
 
-      it "responds with an array of PM topics that are not associated with any of the unread private_message notifications" do
+      it "responds with an array of personal messages and user watching group messages that are not associated with any of the unread private_message notifications" do
         group_message1.update!(bumped_at: 1.minutes.ago)
         message_without_notification.update!(bumped_at: 3.minutes.ago)
         group_message2.update!(bumped_at: 6.minutes.ago)
         message_with_read_notification.update!(bumped_at: 10.minutes.ago)
         read_group_message_summary_notification.destroy!
 
+        TopicUser.create!(
+          user: user,
+          topic: group_message1,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+        TopicUser.create!(
+          user: user,
+          topic: group_message2,
+          notification_level: TopicUser.notification_levels[:regular],
+        )
+
         get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(200)
 
         topics = response.parsed_body["topics"]
+
         expect(topics.map { |topic| topic["id"] }).to eq(
-          [
-            group_message1.id,
-            message_without_notification.id,
-            group_message2.id,
-            message_with_read_notification.id,
-          ],
+          [group_message1.id, message_without_notification.id, message_with_read_notification.id],
         )
       end
 

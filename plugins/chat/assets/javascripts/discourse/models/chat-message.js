@@ -47,11 +47,13 @@ export default class ChatMessage {
   @tracked availableFlags;
   @tracked newest = false;
   @tracked highlighted = false;
+  @tracked firstOfResults = false;
 
   constructor(channel, args = {}) {
     this.channel = channel;
     this.id = args.id;
     this.newest = args.newest;
+    this.firstOfResults = args.firstOfResults;
     this.staged = args.staged;
     this.edited = args.edited;
     this.availableFlags = args.available_flags;
@@ -121,6 +123,10 @@ export default class ChatMessage {
     return this.channel?.messages?.objectAt?.(this.index + 1);
   }
 
+  incrementVersion() {
+    this.version++;
+  }
+
   react(emoji, action, actor, currentUserId) {
     const selfReaction = actor.id === currentUserId;
     const existingReaction = this.reactions.find(
@@ -145,18 +151,23 @@ export default class ChatMessage {
         }
         existingReaction.users.pushObject(actor);
       } else {
-        existingReaction.count = existingReaction.count - 1;
+        const existingUserReaction = existingReaction.users.find(
+          (user) => user.id === actor.id
+        );
+
+        if (!existingUserReaction) {
+          return;
+        }
 
         if (selfReaction) {
           existingReaction.reacted = false;
         }
 
-        if (existingReaction.count === 0) {
+        if (existingReaction.count === 1) {
           this.reactions.removeObject(existingReaction);
         } else {
-          existingReaction.users.removeObject(
-            existingReaction.users.find((user) => user.id === actor.id)
-          );
+          existingReaction.count = existingReaction.count - 1;
+          existingReaction.users.removeObject(existingUserReaction);
         }
       }
     } else {

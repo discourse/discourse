@@ -304,8 +304,7 @@ sw:
         refresh: "Rudisha Tena"
         category: "Kategoria"
       scores:
-        date: "Tarehe"
-        type: "Aina"
+        type: "Sababu"
       statuses:
         pending:
           title: "subiria"
@@ -313,6 +312,8 @@ sw:
           title: "Wamekubaliwa"
         rejected:
           title: "Imekataliwa"
+      context_question:
+        delimiter: "au"
       types:
         reviewable_user:
           title: "Mtumiaji"
@@ -2025,6 +2026,10 @@ sw:
     filters:
       with_topics: "mada %{filter}"
       with_category: "mada %{filter}%{category}"
+      filter:
+        title: "Chuja"
+        button:
+          label: "Chuja"
       latest:
         title: "Hivi Karibuni"
         title_with_count:
@@ -2909,9 +2914,17 @@ sw:
         new_template_form:
           submit: "Hifadhi"
           cancel: "Ghairi"
+          preview: "Kihakiki"
         quick_insert_fields:
           add_new_field: "ongeza"
           dropdown: "Shusha Chini"
+        validations_modal:
+          table_headers:
+            type: "Aina"
+            description: "Elezo"
+          validations:
+            required:
+              key: "muhimu"
       impersonate:
         title: "Iga Utambulisho"
         help: "Tumia kifaa hiki kuiga utambulisho wa mtumiaji ili uweze kutatua matatizo. Itabidi utoke ukishamaliza."

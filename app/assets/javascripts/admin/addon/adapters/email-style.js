@@ -1,7 +1,7 @@
 import RestAdapter from "discourse/adapters/rest";
 
-export default RestAdapter.extend({
+export default class EmailStyle extends RestAdapter {
   pathFor() {
     return "/admin/customize/email_style";
-  },
-});
+  }
+}

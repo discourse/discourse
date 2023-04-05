@@ -614,26 +614,43 @@ he:
       scores:
         about: "ניקוד זה מחושב בהתאם לדרגת האמון של המדווח, הדיוק בסימונים הקודמים ועדיפות הפריט המדווח."
         score: "ניקוד"
-        date: "תאריך"
-        type: "סוג"
+        date: "תאריך דיווח"
+        type: "סיבה"
         status: "מצב"
-        submitted_by: "הוגש על ידי"
+        submitted_by: "דווח ע״י"
         reviewed_by: "נסקר על ידי"
+        reviewed_timestamp: "תאריך סקירה"
       statuses:
         pending:
           title: "בהמתנה"
         approved:
           title: "אושר"
+        approved_flag:
+          title: "הסימון אושר"
+        approved_user:
+          title: "המשתמש אישר"
+        approved_post:
+          title: "הפוסט אושר"
         rejected:
           title: "נדחה"
+        rejected_flag:
+          title: "הסימון נדחה"
+        rejected_user:
+          title: "המשתמש דחה"
+        rejected_post:
+          title: "הפוסט נדחה"
         ignored:
-          title: "זכה להתעלמות"
+          title: "הסימון זכה להתעלמות"
         deleted:
-          title: "נמחק"
+          title: "הנושא או הפוסט נמחקו"
         reviewed:
-          title: "(כל אלו שנסקרו)"
+          title: "כל אלו שנסקרו"
         all:
-          title: "(הכול)"
+          title: "הכול"
+      context_question:
+        is_this_post: "הפוסט הזה %{reviewable_human_score_types}?"
+        delimiter: "או"
+        something_else_wrong: "משהו לא בסדר עם הפוסט הזה?"
       types:
         reviewable_flagged_post:
           title: "פוסט שדוגל"
@@ -956,6 +973,7 @@ he:
         make_all_primary_description: "להפוך את הקבוצה הזאת לראשית עבור כל המשתמשים הנבחרים"
         remove_all_primary: "הסרה כראשית"
         remove_all_primary_description: "הסרת הקבוצה הזאת כראשית"
+        status: "מצב"
         owner: "בעלות"
         primary: "ראשית"
         forbidden: "אין לך הרשאות לצפות ברשימת החברים."
@@ -2849,6 +2867,7 @@ he:
         bookmarks: "אין לך עדיין סימניות לנושאים."
         category: "אין נושאים בקטגוריה %{category}."
         top: "אין נושאים מובילים."
+        filter: "אין נושאים."
         educate:
           new: '<p>הנושאים החדשים שלך יופיעו כאן. כבררת מחדל, נושאים נחשבים חדשים ויופיעו עם המחוון <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> אם הם נוצרו ביומיים האחרונים. </p><p>ניתן לבקר בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
           unread: "<p>הנושאים שלא קראת יופיעו כאן.</p><p>כבררת מחדל, נושאים ייחשבו שטרם קראת אותם ויוצג עליהם מונה <span class=\"badge unread-posts badge-notification\">1</span> בספירה של הפריטים שלא נקראו אם: </p> <ul><li>יצרת את הנושא</li><li>הגבת לנושא</li><li>קראת את הנושא במשך יותר מ־4 דקות</li></ul><p>או אם בחרת לעקוב או לצפות בנושא דרך \U0001F514 המופיע בכל נושא.</p><p>ניתן לבקר בעמוד ה<a href=\"%{userPrefsUrl}\">העדפות</a> שלך כדי לשנות זאת.</p>"
@@ -2863,6 +2882,7 @@ he:
         tag: "אין יותר נושאי %{tag}."
         top: "אין עוד נושאים מובילים."
         bookmarks: "אין עוד סימניות לנושאים."
+        filter: "אין נושאים נוספים."
     topic:
       filter_to:
         one: "פוסט אחד בנושא"
@@ -2870,6 +2890,7 @@ he:
         many: "%{count} פוסטים בנושא"
         other: "%{count} פוסטים בנושא"
       create: "נושא חדש"
+      create_disabled_category: "אסור לך ליצור נושאים בקטגוריה הזאת"
       create_long: "יצירת נושא חדש"
       open_draft: "פתח טיוטה"
       private_message: "תחילת הודעה"
@@ -3727,6 +3748,7 @@ he:
       default_slow_mode: 'להפעיל „מצב אטי” לנושאים חדשים בקטגוריה הזאת.'
       parent: "קטגורית אם"
       num_auto_bump_daily: "מספר הנושאים הפתוחים להקפצה מדי יום:"
+      auto_bump_cooldown_days: "כמות הימים המזערית להקפצת אותו הנושא שוב:"
       navigate_to_first_post_after_read: "ניווט לפוסט הראשוני לאחר שהנושאים נקראו"
       notifications:
         title: "שינוי רמת ההתראות לקטגוריה הזו"
@@ -3928,6 +3950,10 @@ he:
     filters:
       with_topics: "%{filter} נושאים"
       with_category: "%{filter} %{category} נושאים"
+      filter:
+        title: "סינון"
+        button:
+          label: "סינון"
       latest:
         title: "העדכני ביותר"
         title_with_count:
@@ -4459,6 +4485,7 @@ he:
               title: "רשימת כל המשתמשים"
             my_posts:
               content: "הפוסטים שלי"
+              content_drafts: "הטיוטות שלי"
               title: "הפעילות האחרונה שלי בנושא"
               title_drafts: "הטיוטות שלא פרסמתי"
               draft_count:
@@ -5547,6 +5574,7 @@ he:
         list_table:
           headings:
             name: "שם"
+            active_categories: "קטגוריות פעילות"
             actions: "פעולות"
           actions:
             view: "הצגת תבנית"
@@ -5556,6 +5584,7 @@ he:
           close: "סגירה"
           edit: "עריכה"
           delete: "מחיקה"
+          toggle_preview: "החלפת מצב תצוגה מקדימה"
         new_template_form:
           submit: "שמירה"
           cancel: "ביטול"
@@ -5565,6 +5594,7 @@ he:
           template:
             label: "תבנית"
             placeholder: "יצירת תבנית YAML כאן…"
+          preview: "תצוגה מקדימה"
         delete_confirm: "למחוק את התבנית הזאת?"
         quick_insert_fields:
           add_new_field: "הוספה"
@@ -5574,6 +5604,41 @@ he:
           dropdown: "נפתח"
           upload: "העלאת קובץ"
           multiselect: "מגוון אפשרויות"
+        validations_modal:
+          button_title: "אמצעי וידוא"
+          modal_title: "אפשרויות וידוא"
+          table_headers:
+            key: "מפתח"
+            type: "סוג"
+            description: "תיאור"
+          validations:
+            required:
+              key: "נדרש"
+              type: "בוליאני"
+              description: "נדרשת השלמת השדה כדי להגיש את הטופס."
+            minimum:
+              key: "מזערי"
+              type: "מספר שלם וחיובי"
+              description: "בשדות טקסט, מציין את כמות התווים המזערית המותרת."
+            maximum:
+              key: "מרבי"
+              type: "מספר שלם וחיובי"
+              description: "בשדות טקסט, מציין את המספר התווים המרבי המותר. בתפריטים נפתחים של ריבוי בחירה, מציין את המספר המרבי של אפשרויות שניתן לבחור."
+            pattern:
+              key: "תבנית"
+              type: "מחרוזת ביטוי רגולרי"
+              description: "בשדות טקסט, ביטוי רגולרי המציין את הקלט המותר."
+        preview_modal:
+          title: "תצוגה מקדימה של תבנית"
+        field_placeholders:
+          validations: "נא למלא כאן אמצעי וידוא"
+          label: "נא למלא כאן תווית"
+          placeholder: "נא למלא כאן ממלא מקום"
+          none_label: "נא לבחור פריט"
+          choices:
+            first: "אפשרות 1"
+            second: "אפשרות 2"
+            third: "אפשרות 3"
         edit_category:
           toggle_freeform: "תבנית טופס מושבתת"
           toggle_form_template: "תבנית טופס פעילה"
@@ -5591,6 +5656,7 @@ he:
         not_found: "סליחה, שם המשתמש הזה אינו קיים במערכת שלנו."
         id_not_found: "מצטערים, זהות המשתמש/ת אינה קיימת במערכת שלנו."
         active: "מופעל"
+        status: "מצב"
         show_emails: "הצגת כתובות דוא״ל"
         hide_emails: "הסתרת כתובות דוא״ל"
         nav:
@@ -6098,6 +6164,12 @@ he:
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         confirm_delete: "האם ברצונכם להסיר את הhost הזה? "
+        sample: |
+          <p>יש להדביק את קוד ה־HTML לאתר שלך כדי ליצור ולהטמיע נושאים מ־Discourse. את <b>EMBED_URL</b> רצוי להחליף לשם הקנוני של העמוד אליו מבוצעת ההטמעה.</p>
+
+          p>כדי להתאים את הסגנון יש להסיר את ההערה ולהחליף את <b>CLASS_NAME</b> במחלקת ה־CSS שמוגדרת ב־<i>CSS המוטמע</i> של ערכת העיצוב שלך.</p>
+
+          <p>יש להחליף את <b>DISCOURSE_USERNAME</b> בשם המשתמש ב־Discourse של מי שאמור ליצור את הנושא. Discourse יחפש את המשתמש אוטומטית לפי המאפיין <code>content</code> (תוכן) של התגיות <code>&lt;meta&gt;</code> עם המאפיין <code>name</code> (שם) שמוגדר ל־<code>discourse-username</code> או ל־<code>author</code> (מחבר). המשתנה <code>discourseUserName</code> לא בשימוש עוד והוא יוסר ב־Discourse 3.2.</p>
         title: "שילוב (embedding)"
         host: "שרתים מורשים"
         allowed_paths: "רשימת נתיבים מותרים"

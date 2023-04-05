@@ -827,4 +827,17 @@ RSpec.describe Plugin::Instance do
       expect(callback_called).to eq(false)
     end
   end
+
+  describe "#register_modifier" do
+    let(:plugin) { Plugin::Instance.new }
+
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "allows modifier registration" do
+      plugin.register_modifier(:magic_sum_modifier) { |a, b| a + b }
+
+      sum = DiscoursePluginRegistry.apply_modifier(:magic_sum_modifier, 1, 2)
+      expect(sum).to eq(3)
+    end
+  end
 end

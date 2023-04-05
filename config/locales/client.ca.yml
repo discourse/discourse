@@ -477,11 +477,9 @@ ca:
       scores:
         about: "Aquesta puntuació es calcula en funció del nivell de confiança del reportador, de l'exactitud de les banderes prèvies i de la prioritat de l'element del qual es reporta."
         score: "Puntuació"
-        date: "Data"
-        type: "Tipus"
+        type: "Motiu"
         status: "Estat"
-        submitted_by: "Enviat per"
-        reviewed_by: "Revisat per"
+        submitted_by: "Reportat per"
       statuses:
         pending:
           title: "Pendent"
@@ -489,14 +487,12 @@ ca:
           title: "Aprovat"
         rejected:
           title: "Rebutjat"
-        ignored:
-          title: "Ignorat"
-        deleted:
-          title: "Suprimit"
         reviewed:
-          title: "(tots revisats)"
+          title: "Tots revisats"
         all:
-          title: "(qualsevol cosa)"
+          title: "Qualsevol cosa"
+      context_question:
+        delimiter: "o"
       types:
         reviewable_flagged_post:
           title: "Publicació amb bandera"
@@ -726,6 +722,7 @@ ca:
         make_owner_description: "Fes <b>%{username}</b> propietari del grup"
         remove_owner: "Elimina com a propietari"
         remove_owner_description: "Elimina <b>%{username}</b> com a propietari del grup"
+        status: "Estat"
         owner: "Propietari"
         forbidden: "No teniu permís per a veure els membres."
       topics: "Temes"
@@ -2609,6 +2606,10 @@ ca:
     filters:
       with_topics: "%{filter} temes"
       with_category: "%{filter} %{category} temes"
+      filter:
+        title: "Filtre"
+        button:
+          label: "Filtre"
       latest:
         title: "Més recents"
         title_with_count:
@@ -3761,9 +3762,18 @@ ca:
         new_template_form:
           submit: "Desa"
           cancel: "Cancel·la"
+          preview: "Previsualitza"
         quick_insert_fields:
           add_new_field: "Afegeix"
           dropdown: "Desplega"
+        validations_modal:
+          table_headers:
+            key: "Clau"
+            type: "Tipus"
+            description: "Descripció"
+          validations:
+            required:
+              key: "necessari"
       impersonate:
         title: "Suplanta"
         help: "Feu servir aquesta eina per a suplantar comptes amb l'objectiu de depurar. Haureu de tancar la sessió quan acabeu."
@@ -3776,6 +3786,7 @@ ca:
         not_found: "Aquest nom d'usuari no existeix en el nostre sistema. "
         id_not_found: "Aquest ID d'usuari no existeix en el nostre sistema. "
         active: "Activat"
+        status: "Estat"
         show_emails: "Mostra correus"
         hide_emails: "Amaga els correus "
         nav:

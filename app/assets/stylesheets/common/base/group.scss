@@ -154,7 +154,7 @@ table.group-manage-logs {
   }
 
   &.group-members__requests {
-    grid-template-columns: 3fr repeat(3, minmax(min-content, 1fr));
+    grid-template-columns: 3fr repeat(3, minmax(max-content, 1fr));
   }
 
   .directory-table__value {
@@ -166,7 +166,27 @@ table.group-manage-logs {
     gap: 0.5em;
   }
 
+  [class*="group-request-reason__"] {
+    justify-content: start;
+  }
+
+  .group-request-reason__content {
+    .directory-table__value {
+      white-space: normal;
+      max-width: 30em;
+    }
+  }
+
   @container (max-width: 47em) {
+    .directory-table__cell {
+      grid-column-start: 1;
+      grid-column-end: -1;
+    }
+
+    .group-accept-deny-buttons {
+      justify-content: start;
+    }
+
     .directory-table__cell.group-owner {
       order: 2;
     }

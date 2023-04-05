@@ -134,6 +134,10 @@ class Plugin::Instance
     end
   end
 
+  def register_modifier(modifier_name, &blk)
+    DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
+  end
+
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_report(name, &block)
     reloadable_patch { |plugin| Report.add_report(name, &block) }
@@ -1219,6 +1223,16 @@ class Plugin::Instance
   # @param {Block} callback to be called with the user, guardian, and the destroyer opts as arguments
   def register_user_destroyer_on_content_deletion_callback(callback)
     DiscoursePluginRegistry.register_user_destroyer_on_content_deletion_callback(callback, self)
+  end
+
+  ##
+  # Register a class that implements [BaseBookmarkable], which represents another
+  # [ActiveRecord::Model] that may be bookmarked via the [Bookmark] model's
+  # polymorphic association. The class handles create and destroy hooks, querying,
+  # and reminders among other things.
+  def register_bookmarkable(klass)
+    return if Bookmark.registered_bookmarkable_from_type(klass.model.name).present?
+    DiscoursePluginRegistry.register_bookmarkable(RegisteredBookmarkable.new(klass), self)
   end
 
   protected

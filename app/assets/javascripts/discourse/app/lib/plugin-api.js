@@ -111,6 +111,7 @@ import { registerNotificationTypeRenderer } from "discourse/lib/notification-typ
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
+import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -2056,9 +2057,9 @@ class PluginApi {
    * ```
    * api.registerUserMenuTab((UserMenuTab) => {
    *   return class extends UserMenuTab {
-   *     get id() {
-   *       return "custom-tab-id";
-   *     }
+   *     id = "custom-tab-id";
+   *     panelComponent = MyCustomPanelGlimmerComponent;
+   *     icon = "some-fa5-icon";
    *
    *     get shouldDisplay() {
    *       return this.siteSettings.enable_custom_tab && this.currentUser.admin;
@@ -2066,14 +2067,6 @@ class PluginApi {
    *
    *     get count() {
    *       return this.currentUser.my_custom_notification_count;
-   *     }
-   *
-   *     get panelComponent() {
-   *       return "your-custom-glimmer-component";
-   *     }
-   *
-   *     get icon() {
-   *       return "some-fa5-icon";
    *     }
    *   }
    * });
@@ -2131,6 +2124,18 @@ class PluginApi {
    */
   addUserMessagesNavigationDropdownRow(routeName, name, icon) {
     registerCustomUserNavMessagesDropdownRow(routeName, name, icon);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a new search type which can be selected when visiting the full page search UI.
+   *
+   * @param {string} translationKey
+   * @param {string} searchTypeId
+   * @param {function} searchFunc - Available arguments: fullPage controller, search args, searchKey.
+   */
+  addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
+    registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
   }
 }
 

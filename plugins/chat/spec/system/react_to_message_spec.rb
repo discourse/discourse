@@ -11,12 +11,11 @@ RSpec.describe "React to message", type: :system, js: true do
   before do
     chat_system_bootstrap
     category_channel_1.add(current_user)
-    sign_in(current_user)
   end
 
   context "when other user has reacted" do
     fab!(:reaction_1) do
-      Chat::ChatMessageReactor.new(Fabricate(:user), category_channel_1).react!(
+      Chat::MessageReactor.new(Fabricate(:user), category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
         emoji: "female_detective",
@@ -25,14 +24,16 @@ RSpec.describe "React to message", type: :system, js: true do
 
     shared_examples "inline reactions" do
       it "shows existing reactions under the message" do
+        sign_in(current_user)
         chat.visit_channel(category_channel_1)
-        expect(channel).to have_reaction(message_1, reaction_1)
+        expect(channel).to have_reaction(message_1, reaction_1.emoji)
       end
 
       it "increments when clicking it" do
+        sign_in(current_user)
         chat.visit_channel(category_channel_1)
-        channel.click_reaction(message_1, reaction_1)
-        expect(channel).to have_reaction(message_1, reaction_1, 2)
+        channel.click_reaction(message_1, reaction_1.emoji)
+        expect(channel).to have_reaction(message_1, reaction_1.emoji, 2)
       end
     end
 
@@ -47,7 +48,7 @@ RSpec.describe "React to message", type: :system, js: true do
 
   context "when current user reacts" do
     fab!(:reaction_1) do
-      Chat::ChatMessageReactor.new(Fabricate(:user), category_channel_1).react!(
+      Chat::MessageReactor.new(Fabricate(:user), category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
         emoji: "female_detective",
@@ -57,47 +58,62 @@ RSpec.describe "React to message", type: :system, js: true do
     context "when desktop" do
       context "when using inline reaction button" do
         it "adds a reaction" do
+          sign_in(current_user)
           chat.visit_channel(category_channel_1)
           channel.hover_message(message_1)
           find(".chat-message-react-btn").click
           find(".chat-emoji-picker [data-emoji=\"nerd_face\"]").click
 
-          expect(channel).to have_reaction(message_1, reaction_1)
+          expect(channel).to have_reaction(message_1, reaction_1.emoji)
         end
 
-        xit "adds the reaction to the frequently used list" do
-          chat.visit_channel(category_channel_1)
-          channel.hover_message(message_1)
-          find(".chat-message-react-btn").click
-          find(".chat-emoji-picker [data-emoji=\"nerd_face\"]").click
+        context "when current user has multiple sessions" do
+          it "adds reaction on each session" do
+            reaction = OpenStruct.new(emoji: "nerd_face")
 
-          channel.hover_message(message_1)
+            using_session(:tab_1) do
+              sign_in(current_user)
+              chat.visit_channel(category_channel_1)
+            end
+
+            using_session(:tab_2) do
+              sign_in(current_user)
+              chat.visit_channel(category_channel_1)
+            end
+
+            using_session(:tab_1) do |session|
+              channel.hover_message(message_1)
+              find(".chat-message-react-btn").click
+              find(".chat-emoji-picker [data-emoji=\"#{reaction.emoji}\"]").click
+
+              expect(channel).to have_reaction(message_1, reaction.emoji)
+              session.quit
+            end
+
+            using_session(:tab_2) do |session|
+              expect(channel).to have_reaction(message_1, reaction.emoji)
+              session.quit
+            end
+          end
         end
       end
 
       context "when using message actions menu" do
         context "when using the emoji picker" do
           it "adds a reaction" do
+            sign_in(current_user)
             chat.visit_channel(category_channel_1)
             channel.hover_message(message_1)
             find(".chat-message-actions .react-btn").click
             find(".chat-emoji-picker [data-emoji=\"nerd_face\"]").click
 
-            expect(channel).to have_reaction(message_1, reaction_1)
-          end
-
-          xit "adds the reaction to the frequently used list" do
-            chat.visit_channel(category_channel_1)
-            channel.hover_message(message_1)
-            find(".chat-message-actions .react-btn").click
-            find(".chat-emoji-picker [data-emoji=\"nerd_face\"]").click
-
-            channel.hover_message(message_1)
+            expect(channel).to have_reaction(message_1, reaction_1.emoji)
           end
         end
 
         context "when using frequent reactions" do
           it "adds a reaction" do
+            sign_in(current_user)
             chat.visit_channel(category_channel_1)
             channel.hover_message(message_1)
             find(".chat-message-actions [data-emoji-name=\"+1\"").click
@@ -111,9 +127,45 @@ RSpec.describe "React to message", type: :system, js: true do
     end
   end
 
+  context "when current user and another have reacted" do
+    fab!(:other_user) { Fabricate(:user) }
+
+    fab!(:reaction_1) do
+      Chat::MessageReactor.new(current_user, category_channel_1).react!(
+        message_id: message_1.id,
+        react_action: :add,
+        emoji: "female_detective",
+      )
+    end
+
+    fab!(:reaction_2) do
+      Chat::MessageReactor.new(other_user, category_channel_1).react!(
+        message_id: message_1.id,
+        react_action: :add,
+        emoji: "female_detective",
+      )
+    end
+
+    context "when removing the reaction" do
+      it "removes only the reaction from the current user" do
+        sign_in(current_user)
+        chat.visit_channel(category_channel_1)
+
+        expect(channel).to have_reaction(message_1, "female_detective", "2")
+
+        channel.click_reaction(message_1, "female_detective")
+
+        expect(channel).to have_reaction(message_1, "female_detective", "1")
+        expect(
+          channel.find_reaction(message_1, "female_detective")["data-tippy-content"],
+        ).to include(other_user.username)
+      end
+    end
+  end
+
   context "when current user has reacted" do
     fab!(:reaction_1) do
-      Chat::ChatMessageReactor.new(current_user, category_channel_1).react!(
+      Chat::MessageReactor.new(current_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
         emoji: "female_detective",
@@ -122,13 +174,15 @@ RSpec.describe "React to message", type: :system, js: true do
 
     shared_examples "inline reactions" do
       it "shows existing reactions under the message" do
+        sign_in(current_user)
         chat.visit_channel(category_channel_1)
-        expect(channel).to have_reaction(message_1, reaction_1)
+        expect(channel).to have_reaction(message_1, reaction_1.emoji)
       end
 
       it "removes it when clicking it" do
+        sign_in(current_user)
         chat.visit_channel(category_channel_1)
-        channel.click_reaction(message_1, reaction_1)
+        channel.click_reaction(message_1, reaction_1.emoji)
         expect(channel).to have_no_reactions(message_1)
       end
     end
@@ -145,7 +199,7 @@ RSpec.describe "React to message", type: :system, js: true do
       fab!(:user_1) { Fabricate(:user) }
 
       fab!(:reaction_2) do
-        Chat::ChatMessageReactor.new(user_1, category_channel_1).react!(
+        Chat::MessageReactor.new(user_1, category_channel_1).react!(
           message_id: message_1.id,
           react_action: :add,
           emoji: "heart",
@@ -153,12 +207,13 @@ RSpec.describe "React to message", type: :system, js: true do
       end
 
       it "doesn’t create duplicate reactions" do
+        sign_in(current_user)
         chat.visit_channel(category_channel_1)
 
-        ChatPublisher.publish_reaction!(category_channel_1, message_1, "add", user_1, "heart")
+        Chat::Publisher.publish_reaction!(category_channel_1, message_1, "add", user_1, "heart")
         channel.send_message("test") # cheap trick to ensure reaction has been processed
 
-        expect(channel).to have_reaction(message_1, reaction_2, "1")
+        expect(channel).to have_reaction(message_1, reaction_2.emoji, "1")
       end
     end
   end

@@ -506,11 +506,9 @@ pt:
       scores:
         about: "Esta pontuação é calculada com base no nível de confiança do utilizador que sinaliza, a precisão das suas anteriores denúncias e a prioridade do item sinalizado."
         score: "Pontuação"
-        date: "Data"
-        type: "Tipo"
+        type: "Motivo"
         status: "Estado"
-        submitted_by: "Enviado por"
-        reviewed_by: "Revisto por"
+        submitted_by: "Reportado por"
       statuses:
         pending:
           title: "Pendente"
@@ -518,14 +516,12 @@ pt:
           title: "Aprovado"
         rejected:
           title: "Rejeitado"
-        ignored:
-          title: "Ignorados"
-        deleted:
-          title: "Eliminado"
         reviewed:
-          title: "(todos revistos)"
+          title: "Todos revistos"
         all:
-          title: "(tudo)"
+          title: "Tudo"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Publicação Sinalizada"
@@ -830,6 +826,7 @@ pt:
         make_all_primary_description: "Tornar este o grupo principal para todos os usuários selecionados"
         remove_all_primary: "Remover como Principal"
         remove_all_primary_description: "Remover este grupo como principal"
+        status: "Estado"
         owner: "Dono(a)"
         primary: "Principal"
         forbidden: "Não tem permissão para visualizar os membros."
@@ -3139,6 +3136,10 @@ pt:
     filters:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
+      filter:
+        title: "Filtrar"
+        button:
+          label: "Filtrar"
       latest:
         title: "Recente"
         title_with_count:
@@ -4318,9 +4319,22 @@ pt:
         new_template_form:
           submit: "Guardar"
           cancel: "Cancelar"
+          preview: "Pré-visualização"
         quick_insert_fields:
           add_new_field: "Adicionar"
           dropdown: "Lista pendente"
+        validations_modal:
+          table_headers:
+            key: "Chave"
+            type: "Tipo"
+            description: "Descrição"
+          validations:
+            required:
+              key: "obrigatório"
+            minimum:
+              key: "mínimo"
+            maximum:
+              key: "máximo"
       impersonate:
         title: "Personificar"
         help: "Utilize este ferramenta de forma a personificar uma conta de utilizador para fins de depuração. Terá de encerrar a sessão assim que terminar."
@@ -4332,6 +4346,7 @@ pt:
         last_emailed: "Último email enviado"
         not_found: "Pedimos desculpa, esse nome de utilizador não existe no nosso sistema."
         id_not_found: "Pedimos desculpa, esse id de utilizador não existe no nosso sistema."
+        status: "Estado"
         show_emails: "Mostrar Emails"
         nav:
           new: "Novo"

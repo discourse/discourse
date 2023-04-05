@@ -1,24 +1,26 @@
+import { computed } from "@ember/object";
 import AdminUser from "admin/models/admin-user";
 import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
-import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 
-const ApiKey = RestModel.extend({
-  user: computed("_user", {
-    get() {
-      return this._user;
-    },
-    set(key, value) {
-      if (value && !(value instanceof AdminUser)) {
-        this.set("_user", AdminUser.create(value));
-      } else {
-        this.set("_user", value);
-      }
-      return this._user;
-    },
-  }),
+export default class ApiKey extends RestModel {
+  @fmt("truncated_key", "%@...") truncatedKey;
+
+  @computed("_user")
+  get user() {
+    return this._user;
+  }
+
+  set user(value) {
+    if (value && !(value instanceof AdminUser)) {
+      this.set("_user", AdminUser.create(value));
+    } else {
+      this.set("_user", value);
+    }
+    return this._user;
+  }
 
   @discourseComputed("description")
   shortDescription(description) {
@@ -26,32 +28,28 @@ const ApiKey = RestModel.extend({
       return description;
     }
     return `${description.substring(0, 40)}...`;
-  },
-
-  truncatedKey: fmt("truncated_key", "%@..."),
+  }
 
   revoke() {
     return ajax(`${this.basePath}/revoke`, {
       type: "POST",
     }).then((result) => this.setProperties(result.api_key));
-  },
+  }
 
   undoRevoke() {
     return ajax(`${this.basePath}/undo-revoke`, {
       type: "POST",
     }).then((result) => this.setProperties(result.api_key));
-  },
+  }
 
   createProperties() {
     return this.getProperties("description", "username", "scopes");
-  },
+  }
 
   @discourseComputed()
   basePath() {
     return this.store
       .adapterFor("api-key")
       .pathFor(this.store, "api-key", this.id);
-  },
-});
-
-export default ApiKey;
+  }
+}

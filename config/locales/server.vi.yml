@@ -1946,9 +1946,7 @@ vi:
     search_title: "Tìm trang này"
     search_button: "Tìm kiếm"
   login_required:
-    welcome_message: |
-      ## [Chào mừng tới %{title}] (#welcome)
-      Một tài khoản là bắt buộc. Vui lòng tạo một tài khoản hoặc đăng nhập để tiếp tục.
+    welcome_message: "## [Chào mừng tới %{title}] (#welcome)"
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."
     unauthorized: "Xin lỗi, tập tin của bạn tải lên không được cho phép (định dạng cho phép: %{authorized_extensions})."
@@ -2235,16 +2233,8 @@ vi:
       post_count: "Một vài bài viết đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Người dùng mới nhập bài đăng đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
     actions:
-      agree_and_keep:
-        title: "Giữ bài viết"
-        description: "Đồng ý với cờ và giữ nguyên bài viết."
-      agree_and_keep_hidden:
-        title: "Giữ bài đăng ẩn"
-        description: "Đồng ý với cờ và để bài viết ẩn."
-      agree_and_suspend:
-        title: "Tạm khóa Thành viên"
-      agree_and_silence:
-        title: "Người dùng im lặng"
+      agree:
+        title: "Đồng ý"
       delete_single:
         title: "Xóa"
       delete_and_ignore_replies:
@@ -2252,9 +2242,11 @@ vi:
       delete_and_agree_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
       disagree:
-        title: "Không đồng ý"
+        title: "Không"
       ignore:
         title: "Bỏ qua"
+      ignore_and_do_nothing:
+        title: "Không làm gì cả"
       approve:
         title: "Duyệt"
       approve_post:

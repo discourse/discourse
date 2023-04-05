@@ -34,10 +34,6 @@ controllerOpts.queryParams.forEach((p) => {
   controllerOpts[p] = queryParams[p].default;
 });
 
-export function changeQueryString(queryString) {
-  this.controller.set("q", queryString);
-}
-
 export function changeSort(sortBy) {
   let model = this.controllerFor("discovery.topics").model;
 

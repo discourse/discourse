@@ -97,6 +97,11 @@ sv:
         never: "Aldrig"
         title: "E-postaviseringar"
         when_away: "Endast när du är borta"
+      header_indicator_preference:
+        title: "Visa aktivitetsindikator i sidhuvudet"
+        all_new: "Alla nya meddelanden"
+        dm_and_mentions: "Direktmeddelanden och omnämnanden"
+        never: "Aldrig"
       enable: "Aktivera chatt"
       flag: "Flagga"
       emoji: "Infoga emoji"
@@ -106,7 +111,7 @@ sv:
       in_reply_to: "Som svar på"
       heading: "Chatt"
       join: "Gå med"
-      new_messages: "nya meddelanden"
+      last_visit: "senaste besök"
       mention_warning:
         dismiss: "avfärda"
         cannot_see: "%{username} kan inte komma åt den här kanalen och har inte aviserats."
@@ -238,7 +243,6 @@ sv:
       restore: "Återställ raderat meddelande"
       save: "Spara"
       select: "Välj"
-      silence: "Tysta användare"
       return_to_list: "Återgå till listan över kanaler"
       scroll_to_bottom: "Scrolla till botten"
       scroll_to_new_messages: "Se nya meddelanden"

@@ -58,6 +58,9 @@ export default {
 
     app.register("location:discourse-location", DiscourseLocation);
 
+    app.inject("controller", "capabilities", "service:capabilities");
+    app.inject("component", "capabilities", "service:capabilities");
+
     ALL_TARGETS.forEach((t) => {
       app.inject(t, "appEvents", "service:app-events");
       app.inject(t, "pmTopicTrackingState", "service:pm-topic-tracking-state");

@@ -93,6 +93,8 @@ it:
         never: "Mai"
         title: "Notifiche via e-mail"
         when_away: "Solo quando non sono collegato"
+      header_indicator_preference:
+        never: "Mai"
       enable: "Abilita chat"
       flag: "Segnala"
       emoji: "Inserisci emoji"
@@ -102,7 +104,7 @@ it:
       in_reply_to: "In risposta a"
       heading: "Chat"
       join: "Partecipa"
-      new_messages: "nuovi messaggi"
+      last_visit: "ultima visita"
       mention_warning:
         dismiss: "ignora"
         invitations_sent:
@@ -151,7 +153,6 @@ it:
       restore: "Ripristina messaggio eliminato"
       save: "Salva"
       select: "Seleziona"
-      silence: "Silenzia utente"
       return_to_list: "Torna all'elenco dei canali"
       scroll_to_bottom: "Scorri fino in fondo"
       scroll_to_new_messages: "Vedi nuovi messaggi"

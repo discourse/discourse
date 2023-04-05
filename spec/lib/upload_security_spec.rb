@@ -257,6 +257,18 @@ RSpec.describe UploadSecurity do
           create_secure_post_reference
           expect(subject.should_be_secure?).to eq(false)
         end
+
+        context "when the created_at dates for upload references are identical" do
+          it "orders by id as well and returns false" do
+            now = Time.zone.now
+            custom_emoji = CustomEmoji.create(name: "meme", upload: upload)
+            create_secure_post_reference
+
+            UploadReference.find_by(target: custom_emoji).update!(created_at: now)
+            UploadReference.find_by(target: post_in_secure_context).update!(created_at: now)
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
       end
 
       describe "when the upload is first used for a badge" do

@@ -166,40 +166,61 @@ export default Controller.extend(CanCheckEmails, {
         confirmButtonIcon: "ban",
         cancelButtonClass: "btn-flat",
         didConfirm: () => {
-          this.currentUser
-            .updateSecondFactor(
-              secondFactorMethod.id,
-              secondFactorMethod.name,
-              true,
-              secondFactorMethod.method
-            )
-            .then((response) => {
-              if (response.error) {
-                return;
-              }
-              this.markDirty();
-            })
-            .catch((e) => this.handleError(e))
-            .finally(() => {
-              this.setProperties({
-                totps: this.totps.filter(
-                  (totp) =>
-                    totp.id !== secondFactorMethod.id ||
-                    totp.method !== secondFactorMethod.method
-                ),
-                security_keys: this.security_keys.filter(
-                  (key) =>
-                    key.id !== secondFactorMethod.id ||
-                    key.method !== secondFactorMethod.method
-                ),
+          if (this.totps.includes(secondFactorMethod)) {
+            this.currentUser
+              .updateSecondFactor(
+                secondFactorMethod.id,
+                secondFactorMethod.name,
+                true,
+                secondFactorMethod.method
+              )
+              .then((response) => {
+                if (response.error) {
+                  return;
+                }
+                this.markDirty();
+                this.set(
+                  "totps",
+                  this.totps.filter(
+                    (totp) =>
+                      totp.id !== secondFactorMethod.id ||
+                      totp.method !== secondFactorMethod.method
+                  )
+                );
+              })
+              .catch((e) => this.handleError(e))
+              .finally(() => {
+                this.set("loading", false);
               });
+          }
 
-              this.set("loading", false);
-            });
+          if (this.security_keys.includes(secondFactorMethod)) {
+            this.currentUser
+              .updateSecurityKey(
+                secondFactorMethod.id,
+                secondFactorMethod.name,
+                true
+              )
+              .then((response) => {
+                if (response.error) {
+                  return;
+                }
+                this.markDirty();
+                this.set(
+                  "security_keys",
+                  this.security_keys.filter(
+                    (securityKey) => securityKey.id !== secondFactorMethod.id
+                  )
+                );
+              })
+              .catch((e) => this.handleError(e))
+              .finally(() => {
+                this.set("loading", false);
+              });
+          }
         },
       });
     },
-
     disableSecondFactorBackup() {
       this.dialog.deleteConfirm({
         title: I18n.t("user.second_factor.delete_backup_codes_confirm_title"),

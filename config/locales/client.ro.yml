@@ -515,11 +515,9 @@ ro:
       scores:
         about: "Acest scor este calculat pe baza nivelului de încredere al reclamantului, a acurateței notificărilor anterioare și a priorității elementului raportat."
         score: "Scor"
-        date: "Dată"
-        type: "Tip"
+        type: "Motiv"
         status: "Status"
-        submitted_by: "Trimis de"
-        reviewed_by: "Evaluat de"
+        submitted_by: "Raportat de"
       statuses:
         pending:
           title: "În așteptare"
@@ -527,14 +525,12 @@ ro:
           title: "Aprobat"
         rejected:
           title: "Respinse"
-        ignored:
-          title: "Ignorat"
-        deleted:
-          title: "Șters"
         reviewed:
-          title: "(toate revizuite)"
+          title: "Toate revizuite"
         all:
-          title: "(totul)"
+          title: "Totul"
+      context_question:
+        delimiter: "sau"
       types:
         reviewable_flagged_post:
           title: "Postare semnalată"
@@ -781,7 +777,7 @@ ro:
         other: "Grupuri"
       activity: "Activitate"
       members:
-        title: "Membrii"
+        title: "Membri"
         filter_placeholder_admin: "nume de utilizator sau email"
         filter_placeholder: "nume de utilizator"
         remove_member: "Elimină membru"
@@ -790,6 +786,7 @@ ro:
         make_owner_description: "Fă utilizatorul <b>%{username}</b> un deținător al acestui grup"
         remove_owner: "Elimină ca deținător"
         remove_owner_description: "Elimină <b>%{username}</b> ca deținător al acestui grup"
+        status: "Status"
         owner: "Deținător"
         forbidden: "Nu ai permisiuni să vezi membrii."
       topics: "Subiecte"
@@ -2654,6 +2651,10 @@ ro:
     filters:
       with_topics: "%{filter} subiecte"
       with_category: "%{filter} %{category} subiecte"
+      filter:
+        title: "Filtru"
+        button:
+          label: "Filtru"
       latest:
         title: "Cele mai recente"
         title_with_count:
@@ -3571,9 +3572,21 @@ ro:
         new_template_form:
           submit: "Salvare"
           cancel: "Anulare"
+          preview: "Previzualizează"
         quick_insert_fields:
           add_new_field: "Adaugă"
           dropdown: "Meniu derulant"
+        validations_modal:
+          table_headers:
+            type: "Tip"
+            description: "Descriere"
+          validations:
+            required:
+              key: "necesar"
+            minimum:
+              key: "minim"
+            maximum:
+              key: "maxim"
       impersonate:
         title: "Joacă rolul utilizatorului"
         help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
@@ -3585,6 +3598,7 @@ ro:
         last_emailed: "Ultimul email trimis"
         not_found: "Ne pare rău, acest nume de utilizator nu există în sistem."
         id_not_found: "Ne pare rău, dar acest utilizator nu există în sistem."
+        status: "Status"
         show_emails: "Arată email"
         nav:
           new: "Noi"

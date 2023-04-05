@@ -209,10 +209,12 @@ te:
         refresh: "తాజా పరుచు"
         category: "వర్గం"
       scores:
-        type: "రకం"
+        type: "కారణం"
       statuses:
         pending:
           title: "పెండింగు"
+      context_question:
+        delimiter: "లేదా"
       types:
         reviewable_user:
           title: "సభ్యుడు"
@@ -1195,6 +1197,10 @@ te:
     filters:
       with_topics: "%{filter} విషయాలు"
       with_category: "%{filter} %{category} విషయాలు"
+      filter:
+        title: "జల్లెడ"
+        button:
+          label: "జల్లెడ"
       latest:
         title: "తాజా"
         help: "ఇటీవలి టపాలతోని విషయాలు"
@@ -1755,6 +1761,13 @@ te:
           cancel: "రద్దుచేయి"
         quick_insert_fields:
           add_new_field: "కలుపు"
+        validations_modal:
+          table_headers:
+            type: "రకం"
+            description: "వివరణ"
+          validations:
+            required:
+              key: "కావాలి"
       impersonate:
         title: "పరకాయప్రవేశించు"
         help: "అనుకరించిన వినియోగదారుని ఖాతా దోషవిశ్లేషణ ప్రయోజనాలకు ఈ ఉపకరణం వినియోగించండి.పూర్తి అయిన తర్వాత మీరు లాగవుట్ చేయండి."

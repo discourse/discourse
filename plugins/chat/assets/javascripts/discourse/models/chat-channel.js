@@ -6,8 +6,8 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
+import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -55,18 +55,24 @@ export default class ChatChannel extends RestModel {
   @tracked chatableType;
   @tracked status;
   @tracked activeThread;
-  @tracked messages = new TrackedArray();
   @tracked lastMessageSentAt;
   @tracked canDeleteOthers;
   @tracked canDeleteSelf;
   @tracked canFlag;
-  @tracked canLoadMoreFuture;
-  @tracked canLoadMorePast;
   @tracked canModerate;
   @tracked userSilenced;
   @tracked draft;
 
   threadsManager = new ChatThreadsManager(getOwner(this));
+  messagesManager = new ChatMessagesManager(getOwner(this));
+
+  get messages() {
+    return this.messagesManager.messages;
+  }
+
+  set messages(messages) {
+    this.messagesManager.messages = messages;
+  }
 
   get escapedTitle() {
     return escapeExpression(this.title);
@@ -130,44 +136,14 @@ export default class ChatChannel extends RestModel {
     this.canFlag = details.can_flag ?? false;
     this.canModerate = details.can_moderate ?? false;
     if (details.can_load_more_future !== undefined) {
-      this.canLoadMoreFuture = details.can_load_more_future;
+      this.messagesManager.canLoadMoreFuture = details.can_load_more_future;
     }
     if (details.can_load_more_past !== undefined) {
-      this.canLoadMorePast = details.can_load_more_past;
+      this.messagesManager.canLoadMorePast = details.can_load_more_past;
     }
     this.userSilenced = details.user_silenced ?? false;
     this.status = details.channel_status;
     this.channelMessageBusLastId = details.channel_message_bus_last_id;
-  }
-
-  clearMessages() {
-    this.messages.clear();
-
-    this.canLoadMoreFuture = null;
-    this.canLoadMorePast = null;
-  }
-
-  addMessages(messages = []) {
-    this.messages = this.messages
-      .concat(messages)
-      .uniqBy("id")
-      .sortBy("createdAt");
-  }
-
-  findMessage(messageId) {
-    return this.messages.find(
-      (message) => message.id === parseInt(messageId, 10)
-    );
-  }
-
-  removeMessage(message) {
-    return this.messages.removeObject(message);
-  }
-
-  findStagedMessage(stagedMessageId) {
-    return this.messages.find(
-      (message) => message.staged && message.id === stagedMessageId
-    );
   }
 
   canModifyMessages(user) {
@@ -196,10 +172,10 @@ export default class ChatChannel extends RestModel {
       return;
     }
 
-    return ajax(`/chat/${this.id}/read/${messageId}.json`, {
+    // TODO (martin) Change this to use chatApi service once we change this
+    // class not to use RestModel
+    return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
       method: "PUT",
-    }).then(() => {
-      this.currentUserMembership.last_read_message_id = messageId;
     });
   }
 }

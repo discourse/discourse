@@ -349,7 +349,9 @@ class Invite < ActiveRecord::Base
   end
 
   def user_exists_error_msg(email)
-    I18n.t("invite.user_exists", email: CGI.escapeHTML(email))
+    error_key = SiteSetting.hide_email_address_taken? ? "generic_error_response" : "user_exists"
+
+    I18n.t("invite.#{error_key}", email: CGI.escapeHTML(email))
   end
 end
 

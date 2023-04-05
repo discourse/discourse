@@ -521,11 +521,9 @@ pt_BR:
       scores:
         about: "Esta pontuação é calculada com base no nível de confiança do relator, na precisão de suas sinalizações anteriores e na prioridade do item que está sendo relatado."
         score: "Pontuação"
-        date: "Data"
-        type: "Tipo"
+        type: "Motivo"
         status: "Status"
-        submitted_by: "Enviado por"
-        reviewed_by: "Revisado por"
+        submitted_by: "Relatado por"
       statuses:
         pending:
           title: "Pendentes"
@@ -533,14 +531,12 @@ pt_BR:
           title: "Aprovado"
         rejected:
           title: "Rejeitado"
-        ignored:
-          title: "Ignorados(as)"
-        deleted:
-          title: "Excluído"
         reviewed:
-          title: "(Tudo revisado)"
+          title: "Tudo revisado"
         all:
-          title: "(tudo)"
+          title: "Tudo"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
@@ -847,6 +843,7 @@ pt_BR:
         make_all_primary_description: "Tornar este grupo primário para todos os(as) usuários(as) selecionados(as)"
         remove_all_primary: "Remover como primário"
         remove_all_primary_description: "Remover este grupo como primário"
+        status: "Status"
         owner: "Proprietário(a)"
         primary: "Primário"
         forbidden: "Você não tem permissão para visualizar membros."
@@ -3575,6 +3572,10 @@ pt_BR:
     filters:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Recentes"
         title_with_count:
@@ -5094,9 +5095,22 @@ pt_BR:
         new_template_form:
           submit: "Salvar"
           cancel: "Cancelar"
+          preview: "Pré-visualizar"
         quick_insert_fields:
           add_new_field: "Adicionar"
           dropdown: "Menu suspenso"
+        validations_modal:
+          table_headers:
+            key: "Chave"
+            type: "Tipo"
+            description: "Descrição"
+          validations:
+            required:
+              key: "necessário(a)"
+            minimum:
+              key: "mínimo"
+            maximum:
+              key: "máximo"
       impersonate:
         title: "Representar"
         help: "Use esta ferramenta para representar uma conta de usuário(a) para efeitos de depuração. Você terá que sair dela assim que terminar."
@@ -5109,6 +5123,7 @@ pt_BR:
         not_found: "Desculpe, este nome de usuário(a) não existe no nosso sistema."
         id_not_found: "Desculpe, esta ID de usuário(a) não existe no nosso sistema."
         active: "Ativado(a)"
+        status: "Status"
         show_emails: "Exibir e-mails"
         hide_emails: "Ocultar e-mails"
         nav:

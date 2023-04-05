@@ -149,7 +149,7 @@ class User < ActiveRecord::Base
   validate :name_validator, if: :will_save_change_to_name?
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
-  validates :primary_email, presence: true
+  validates :primary_email, presence: true, unless: :skip_email_validation
   validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
   validates_associated :primary_email,
                        message: ->(_, user_email) { user_email[:value]&.errors[:email]&.first }
@@ -1968,7 +1968,7 @@ class User < ActiveRecord::Base
       end
     end
 
-    CategoryUser.insert_all!(values) if values.present?
+    CategoryUser.insert_all(values) if values.present?
   end
 
   def set_default_tags_preferences
@@ -2130,10 +2130,7 @@ class User < ActiveRecord::Base
           badges.find do |badge|
             badge.allow_title? && (badge.display_name == title || badge.name == title)
           end
-      user_profile.update(
-        badge_granted_title: badge_matching_title.present?,
-        granted_title_badge_id: badge_matching_title&.id,
-      )
+      user_profile.update!(granted_title_badge_id: badge_matching_title&.id)
     end
   end
 

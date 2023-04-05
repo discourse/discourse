@@ -101,6 +101,10 @@
 .directory-table-container {
   container-type: inline-size;
   container-name: directory-table;
+  transform: translateX(0px);
+  // transform here creates a containing blocks which
+  // is used by fixed-positioned dropdowns
+  // if omitted, `overflow-x: auto;` below will clip them
 }
 
 .directory-table {
@@ -127,11 +131,13 @@
 
   &__column-header,
   &__cell,
+  &__cell--empty,
   &__cell--user-field {
     display: flex;
     border-bottom: 1px solid var(--primary-low);
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
   }
 
   &__column-header {
@@ -233,6 +239,7 @@
       align-self: start;
       white-space: nowrap;
       overflow: hidden;
+      flex: 1 0 calc(50% - 0.5em + 5%); // 50% - padding + half the gap
 
       span {
         // caution: display flex here can interfere with overflow hiding
@@ -260,6 +267,12 @@
     &__value {
       font-size: var(--font-0);
       color: var(--primary);
+      align-self: start;
+      &--user-field {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+      }
     }
 
     &__row {
@@ -269,8 +282,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
       border-bottom: 1px solid var(--primary-low);
-      padding: 0.85em 0.75em 1em;
-      gap: 0 15%;
+      padding: 0.85em 0.5em 1em;
+      gap: 0 10%;
     }
 
     &__header {
@@ -293,6 +306,7 @@
       }
 
       &--user-field {
+        display: flex;
         order: 2;
         // force full width of the cell
         // because we don't know how much content there is
@@ -302,6 +316,10 @@
           margin-right: 0.25em;
         }
       }
+    }
+
+    [class*="--empty"] {
+      display: none;
     }
   }
 }

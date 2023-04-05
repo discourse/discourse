@@ -10,7 +10,7 @@ class Theme < ActiveRecord::Base
 
   attr_accessor :child_components
 
-  @cache = DistributedCache.new("theme:compiler#{BASE_COMPILER_VERSION}")
+  @cache = DistributedCache.new("theme:compiler:#{BASE_COMPILER_VERSION}")
 
   belongs_to :user
   belongs_to :color_scheme
@@ -33,6 +33,7 @@ class Theme < ActiveRecord::Base
   has_many :color_schemes
   belongs_to :remote_theme, dependent: :destroy
   has_one :theme_modifier_set, dependent: :destroy
+  has_one :theme_svg_sprite, dependent: :destroy
 
   has_one :settings_field,
           -> { where(target_id: Theme.targets[:settings], name: "yaml") },
@@ -330,13 +331,11 @@ class Theme < ActiveRecord::Base
 
     theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
     cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{Theme.compiler_version}"
-    lookup = @cache[cache_key]
-    return lookup.html_safe if lookup
 
-    target = target.to_sym
-    val = resolve_baked_field(theme_ids, target, field)
-
-    get_set_cache(cache_key) { val || "" }.html_safe
+    get_set_cache(cache_key) do
+      target = target.to_sym
+      resolve_baked_field(theme_ids, target, field) || ""
+    end.html_safe
   end
 
   def self.lookup_modifier(theme_ids, modifier_name)

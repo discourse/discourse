@@ -500,12 +500,12 @@ sr:
       medium: "Srednje"
       high: "Visoko"
     actions:
-      agree_and_suspend:
-        title: "Suspenduj Korisnika"
+      agree:
+        title: "Da"
       delete_single:
         title: "Obriši"
       disagree:
-        title: "Odbaci"
+        title: "Ne"
       approve:
         title: "Odobri"
       reject_user:

@@ -1449,7 +1449,6 @@ gl:
     enable_discourse_connect: "Activar o inicio de sesión a través de DiscourseConnect (anteriormente «Discourse SSO») (AVISO: OS ENDEREZOS DE CORREO DOS USUARIOS *DEBEN DE* SER VALIDADOS POLO SITIO EXTERNO!)"
     verbose_discourse_connect_logging: "Rexistrar diagnósticos detallados relacionados con DiscourseConnect en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementar o protocolo do fornecedor de DiscourseConnect (antes «Discourse SS0») no punto de destino en /session/sso_provider, require que se definan sso_provider_secrets"
-    discourse_connect_url: "URL do destino de DiscourseConnect (debe incluír http:// ou https://)"
     discourse_connect_secret: "Cadea secreta utilizada para autenticar criptograficamente a información de DiscourseConnect, asegúrese de que teña 10 caracteres ou máis"
     discourse_connect_provider_secrets: "Unha listaxe de pares de dominios secretos que utilizan DiscourseConnect. Asegúrese de que a clave secreta de DiscourseConnect teña 10 caracteres ou máis. O símbolo do comodín * pódese utilizar para facer coincidir calquera dominio ou só unha parte del (por exemplo, *.exemplo.com)."
     discourse_connect_overrides_bio: "Sobrescribe info biográfica do usuario no seu perfil e evita a posibilidade de que o usuario a cambie."
@@ -3283,12 +3282,7 @@ gl:
     title: "Non se pode cargar a aplicación"
     offline_page_message: "Parece que non está conectado/a! Comprobe a súa conexión á rede e vólvao tentar."
   login_required:
-    welcome_message: |
-      ## [Dámoslle a benvida a %{title}](#welcome)
-      Requírese unha conta. Cree unha ou inicie sesión para continuar.
-    welcome_message_invite_only: |
-      ## [Dámoslle a benvida a %{title}](#welcome)
-      Requírese unha conta. Pídalle a un membro que o convide ou inicie sesión para continuar.
+    welcome_message: "## [Dámoslle a benvida a %{title}](#welcome)"
   upload:
     edit_reason: "copias locais de imaxes descargadas"
     unauthorized: "Sentímolo, o ficheiro que tenta subir non está autorizado (extensións permitidas: %{authorized_extensions})."
@@ -3664,8 +3658,6 @@ gl:
       message: "<p>Volvémoslle enviar o correo de activación a <b>%{email}</b>"
   safe_mode:
     title: "Entrar en modo seguro"
-    no_unofficial_plugins: "Desactivar complementos non oficiais"
-    no_plugins: "Desactivar todos os complementos"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."
   wizard:
@@ -3771,50 +3763,29 @@ gl:
       queued_by_staff: "Un membro do equipo pensa que esta publicación necesita revisión. Permanecerá agochada ata entón."
     actions:
       agree:
-        title: "De acordo..."
-      agree_and_keep:
-        title: "Manter publicación"
-        description: "De acordo con esta denuncia e manter a publicación sen modificar."
-      agree_and_keep_hidden:
-        title: "Manter a publicación oculta"
-        description: "De acordo con esta denuncia e manter a publicación oculta."
+        title: "Si"
       agree_and_suspend:
-        title: "Suspender usuario"
         description: "De acordo con esta denuncia e suspender o usuario."
       agree_and_silence:
-        title: "Silenciar usuario"
         description: "De acordo con esta denuncia e silenciar o usuario."
       agree_and_restore:
-        title: "Restaurar publicación"
         description: "Restaurar a publicación para que todos os usuarios a poidan ver."
-      agree_and_hide:
-        title: "Agochar publicación"
-        description: "Agocha esta publicación e automaticamente lle envía ao usuario unha mensaxe que o insta a editala."
       delete_single:
         title: "Eliminar"
       delete:
         title: "Eliminar..."
-      delete_and_ignore:
-        title: "Eliminar publicación e ignorar"
-        description: "Eliminar publicación; se é a primeira, eliminar tamén o tema"
       delete_and_ignore_replies:
-        title: "Eliminar publicación + respostas e ignorar"
-        description: "Eliminar publicación e todas as súas respostas; se é a primeira publicación, eliminar o tema tamén"
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
-      delete_and_agree:
-        title: "Eliminar publicación e aceptar"
-        description: "Eliminar publicación; se é a primeira, eliminar tamén o tema"
       delete_and_agree_replies:
-        title: "Eliminar Publicación + Respostas e aceptar"
-        description: "Eliminar publicación e todas as súas respostas; se é a primeira publicación, eliminar o tema tamén"
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
       disagree_and_restore:
-        title: "Discrepar e restaurar publicación"
         description: "Restaurar a publicación para que todos os usuarios a poidan ver."
       disagree:
-        title: "Discrepar"
+        title: "Non"
       ignore:
         title: "Ignorar"
+      ignore_and_do_nothing:
+        title: "Non facer nada"
       approve:
         title: "Aprobar"
       approve_post:

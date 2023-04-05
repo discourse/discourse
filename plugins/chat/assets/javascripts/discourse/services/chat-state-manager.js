@@ -9,6 +9,15 @@ const PREFERRED_MODE_STORE_NAMESPACE = "discourse_chat_";
 const FULL_PAGE_CHAT = "FULL_PAGE_CHAT";
 const DRAWER_CHAT = "DRAWER_CHAT";
 
+let chatDrawerStateCallbacks = [];
+
+export function addChatDrawerStateCallback(callback) {
+  chatDrawerStateCallbacks.push(callback);
+}
+
+export function resetChatDrawerStateCallbacks() {
+  chatDrawerStateCallbacks = [];
+}
 export default class ChatStateManager extends Service {
   @service chat;
   @service router;
@@ -51,12 +60,14 @@ export default class ChatStateManager extends Service {
     }
 
     this.chat.updatePresence();
+    this.#publishStateChange();
   }
 
   didCloseDrawer() {
     this.set("isDrawerActive", false);
     this.set("isDrawerExpanded", false);
     this.chat.updatePresence();
+    this.#publishStateChange();
   }
 
   didExpandDrawer() {
@@ -68,11 +79,13 @@ export default class ChatStateManager extends Service {
   didCollapseDrawer() {
     this.set("isDrawerActive", true);
     this.set("isDrawerExpanded", false);
+    this.#publishStateChange();
   }
 
   didToggleDrawer() {
     this.set("isDrawerExpanded", !this.isDrawerExpanded);
     this.set("isDrawerActive", true);
+    this.#publishStateChange();
   }
 
   get isFullPagePreferred() {
@@ -118,5 +131,14 @@ export default class ChatStateManager extends Service {
 
   get lastKnownChatURL() {
     return this._chatURL || "/chat";
+  }
+
+  #publishStateChange() {
+    const state = {
+      isDrawerActive: this.isDrawerActive,
+      isDrawerExpanded: this.isDrawerExpanded,
+    };
+
+    chatDrawerStateCallbacks.forEach((callback) => callback(state));
   }
 }

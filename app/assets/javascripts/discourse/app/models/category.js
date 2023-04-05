@@ -219,6 +219,7 @@ const Category = RestModel.extend({
         uploaded_logo_dark_id: this.get("uploaded_logo_dark.id"),
         uploaded_background_id: this.get("uploaded_background.id"),
         allow_badges: this.allow_badges,
+        category_setting_attributes: this.category_setting,
         custom_fields: this.custom_fields,
         topic_template: this.topic_template,
         form_template_ids: this.form_template_ids,

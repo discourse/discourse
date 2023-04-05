@@ -5,15 +5,17 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Controller.extend(ModalFunctionality, {
+export default class AdminIncomingEmailController extends Controller.extend(
+  ModalFunctionality
+) {
   @discourseComputed("model.date")
   date(d) {
     return longDate(d);
-  },
+  }
 
   load(id) {
     return IncomingEmail.find(id).then((result) => this.set("model", result));
-  },
+  }
 
   loadFromBounced(id) {
     return IncomingEmail.findByBounced(id)
@@ -22,5 +24,5 @@ export default Controller.extend(ModalFunctionality, {
         this.send("closeModal");
         popupAjaxError(error);
       });
-  },
-});
+  }
+}

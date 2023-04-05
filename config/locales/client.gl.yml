@@ -464,11 +464,9 @@ gl:
       scores:
         about: "A puntuación calcúlase con base no nivel de fiabilidade do informador, a precisión das súas alertas anteriores e a prioridade do elemento que se recolle."
         score: "Puntuación"
-        date: "Data"
-        type: "Tipo"
+        type: "Motivo"
         status: "Estado"
-        submitted_by: "Enviado por"
-        reviewed_by: "Revisado por"
+        submitted_by: "Recollido por"
       statuses:
         pending:
           title: "Pendente"
@@ -476,14 +474,12 @@ gl:
           title: "Aprobado"
         rejected:
           title: "Rexeitado"
-        ignored:
-          title: "Ignorado"
-        deleted:
-          title: "Eliminado"
         reviewed:
-          title: "(todas revisadas)"
+          title: "Todas revisadas"
         all:
-          title: "(todo)"
+          title: "Todo"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Publicación sinalada"
@@ -755,6 +751,7 @@ gl:
         make_all_primary_description: "Facer deste o grupo primario para todos os usuarios seleccionados"
         remove_all_primary: "Retirar como primario"
         remove_all_primary_description: "Retirar este grupo como primario"
+        status: "Estado"
         owner: "Propietario"
         primary: "Primario"
         forbidden: "Non ten permiso para ver os membros."
@@ -2998,6 +2995,10 @@ gl:
     filters:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Últimos"
         title_with_count:
@@ -4318,9 +4319,22 @@ gl:
         new_template_form:
           submit: "Gardar"
           cancel: "Cancelar"
+          preview: "Visualizar"
         quick_insert_fields:
           add_new_field: "Engadir"
           dropdown: "Despregábel"
+        validations_modal:
+          table_headers:
+            key: "Chave"
+            type: "Tipo"
+            description: "Descrición"
+          validations:
+            required:
+              key: "obrigatorio"
+            minimum:
+              key: "mínimo"
+            maximum:
+              key: "máximo"
       impersonate:
         title: "Suplantar"
         help: "Usar esta ferramenta para suplantar unha conta de usuario co obxecto de detectar e corrixir erros. Deberá saír da sesión ao rematar."
@@ -4333,6 +4347,7 @@ gl:
         not_found: "Sentímolo pero o nome do usuario non existe no sistema."
         id_not_found: "Sentímolo pero o usuario non existe no sistema."
         active: "Activado"
+        status: "Estado"
         show_emails: "Amosar correos"
         hide_emails: "Agochar correos"
         nav:

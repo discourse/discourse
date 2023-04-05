@@ -150,7 +150,7 @@ basic:
     max: 36500
   ga_version:
     type: enum
-    default: v3_analytics
+    default: v4_gtag
     choices:
       - v3_analytics
       - v4_gtag
@@ -391,7 +391,6 @@ login:
     refresh: true
     client: true
     default: false
-    validator: "EnableInviteOnlyValidator"
   login_required:
     refresh: true
     client: true
@@ -1985,6 +1984,15 @@ rate_limits:
   max_batch_presign_multipart_per_minute:
     default: 20
     hidden: true
+  max_presigned_put_per_minute:
+    default: 10
+    hidden: true
+  max_create_multipart_per_minute:
+    default: 10
+    hidden: true
+  max_complete_multipart_per_minute:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:
@@ -2116,7 +2124,6 @@ navigation:
     default: ""
     allow_any: false
     refresh: true
-    hidden: true
 
 embedding:
   embed_by_username:
@@ -2458,6 +2465,11 @@ uncategorized:
     default: 0
     hidden: true
 
+  view_user_route:
+    default: "summary"
+    hidden: true
+    client: true
+
   tos_topic_id:
     default: -1
     hidden: true
@@ -2474,6 +2486,7 @@ uncategorized:
   admin_quick_start_topic_id:
     default: -1
     hidden: true
+    client: true
 
   bootstrap_mode_min_users:
     default: 50

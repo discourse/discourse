@@ -16,7 +16,6 @@ import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import showModal from "discourse/lib/show-modal";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "discourse-common/lib/get-owner";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
 let _chatMessageDecorators = [];
@@ -38,7 +37,9 @@ export default class ChatMessage extends Component {
   @service dialog;
   @service currentUser;
   @service appEvents;
+  @service capabilities;
   @service chat;
+  @service chatApi;
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
   @service chatChannelsManager;
@@ -270,16 +271,27 @@ export default class ChatMessage extends Component {
   }
 
   get hideUserInfo() {
+    const message = this.args.message;
+    const previousMessage = message?.previousMessage;
+
+    if (!previousMessage) {
+      return false;
+    }
+
+    // this is a micro optimization to avoid layout changes when we load more messages
+    if (message?.firstOfResults) {
+      return false;
+    }
+
     return (
-      !this.args.message?.chatWebhookEvent &&
-      !this.args.message?.inReplyTo &&
-      !this.args.message?.previousMessage?.deletedAt &&
+      !message?.chatWebhookEvent &&
+      (!message?.inReplyTo ||
+        message?.inReplyTo?.user?.id !== message?.user?.id) &&
+      !message?.previousMessage?.deletedAt &&
       Math.abs(
-        new Date(this.args.message?.createdAt) -
-          new Date(this.args.message?.createdAt)
+        new Date(message?.createdAt) - new Date(previousMessage?.createdAt)
       ) < 300000 && // If the time between messages is over 5 minutes, break.
-      this.args.message?.user?.id ===
-        this.args.message?.previousMessage?.user?.id
+      message?.user?.id === message?.previousMessage?.user?.id
     );
   }
 
@@ -471,10 +483,6 @@ export default class ChatMessage extends Component {
     this.react(emoji, REACTIONS.add);
   }
 
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
-  }
-
   @action
   react(emoji, reactAction) {
     if (!this.args.canInteractWithChat) {
@@ -601,7 +609,7 @@ export default class ChatMessage extends Component {
       this.args.message.bookmark ||
         Bookmark.createFor(
           this.currentUser,
-          "ChatMessage",
+          "Chat::Message",
           this.args.message.id
         ),
       {
@@ -633,12 +641,9 @@ export default class ChatMessage extends Component {
 
   @action
   deleteMessage() {
-    return ajax(
-      `/chat/${this.args.message.channelId}/${this.args.message.id}`,
-      {
-        type: "DELETE",
-      }
-    ).catch(popupAjaxError);
+    return this.chatApi
+      .trashMessage(this.args.message.channelId, this.args.message.id)
+      .catch(popupAjaxError);
   }
 
   @action

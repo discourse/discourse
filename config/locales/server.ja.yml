@@ -1551,7 +1551,6 @@ ja:
     enable_discourse_connect: "DiscourseConnect (旧 'Discourse SSO') を介したサインオンを有効にする (警告: ユーザーのメールアドレスは外部サイトで *検証される必要があります*！)"
     verbose_discourse_connect_logging: "詳細な DiscourseConnect 関連診断を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
     enable_discourse_connect_provider: "DiscourseConnect (旧 'Discourse SSO') プロバイダープロトコルを /session/sso_provider エンドポイントに実装する。discourse_connect_provider_secrets を設定する必要があります"
-    discourse_connect_url: "DiscourseConnect エンドポイントの URL (http:// または https:// を含める必要があります)"
     discourse_connect_secret: "DiscourseConnect 認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
     discourse_connect_provider_secrets: "DiscourseConnect を使用しているドメインとシークレットのペアのリスト。DiscourseConnect シークレットは 10 文字以上であることを確認してください。ワイルドカード記号 * を使用して、任意のドメインまたはその一部のみに一致させることができます (例: *.example.com)。"
     discourse_connect_overrides_bio: "ユーザープロファイルのユーザー略歴をオーバーライドし、ユーザーが変更できないようにする"
@@ -1669,7 +1668,6 @@ ja:
     composer_media_optimization_image_bytes_optimization_threshold: "クライアント側の最適化をトリガーする画像ファイルの最小サイズ"
     composer_media_optimization_image_resize_dimensions_threshold: "クライアント側のサイズ変更をトリガーする画像の最小幅"
     composer_media_optimization_image_resize_width_target: "幅が `composer_media_optimization_image_dimensions_resize_threshold` より大きい画像はこの花にサイズ変更されます。`composer_media_optimization_image_dimensions_resize_threshold` 以上 (>=) である必要があります。"
-    composer_media_optimization_image_encode_quality: "再エンコードプロセスで使用される JPEG エンコード品質。"
     min_ratio_to_crop: "高さのある画像のトリミングに使用される比率。幅 ÷ 高さの結果を入力します。"
     simultaneous_uploads: "コンポーザーにドラッグアンドドロップできるファイルの最大数"
     default_invitee_trust_level: "招待したユーザーのデフォルトの信頼レベル (0～4)。"
@@ -3587,12 +3585,7 @@ ja:
     title: "アプリを読み込めません"
     offline_page_message: "オフラインになっているようです！ネットワーク接続を確認して、もう一度お試しください。"
   login_required:
-    welcome_message: |
-      ## [%{title} へようこそ](#welcome)
-      アカウントが必要です。続行するには、アカウントを作成するかログインしてください。
-    welcome_message_invite_only: |
-      ## [%{title} へようこそ](#welcome)
-      アカウントが必要です。続行するには、既存のメンバーに招待をリクエストするかログインしてください。
+    welcome_message: "## [%{title} へようこそ](#welcome)"
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
@@ -4093,10 +4086,7 @@ ja:
       message: "<p><b>%{email}</b> にアクティベーションメールを再送信しました"
   safe_mode:
     title: "セーフモードを開始"
-    description: "セーフモードでは、プラグインやテーマを読み込まずにサイトをテストすることができます。"
     no_themes: "テーマとテーマのコンポーネントを無効にする"
-    no_unofficial_plugins: "非公式のプラグインを無効にする"
-    no_plugins: "すべてのプラグインを無効にする"
     enter: "セーフモードを開始"
     must_select: "セーフモードを開始するには、少なくとも 1 つのオプションを選択する必要があります。"
   wizard:
@@ -4272,50 +4262,30 @@ ja:
         category: カテゴリ設定
     actions:
       agree:
-        title: "合意…"
-      agree_and_keep:
-        title: "投稿を維持"
-        description: "通報に合意し、投稿を変更しないままにします。"
-      agree_and_keep_hidden:
-        title: "投稿を非表示のままに維持"
-        description: "通報に合意し、投稿を非表示のままにします。"
+        title: "はい"
       agree_and_suspend:
-        title: "ユーザーの凍結"
         description: "通報に合意し、ユーザーを凍結します。"
       agree_and_silence:
-        title: "ユーザーを投稿禁止"
+        title: "ユーザーを投稿禁止にする"
         description: "通報に同意し、ユーザーを投稿禁止にします。"
       agree_and_restore:
-        title: "投稿の復元"
         description: "すべてのユーザーが閲覧できるように投稿を復元します。"
-      agree_and_hide:
-        title: "投稿を非表示"
-        description: "この投稿を非表示にして、ユーザーに投稿の編集を促すメッセージをユーザーに送信します。"
       delete_single:
         title: "削除"
       delete:
         title: "削除…"
-      delete_and_ignore:
-        title: "投稿の削除と無視"
-        description: "投稿を削除します。最初の投稿である場合、トピックも削除されます"
       delete_and_ignore_replies:
-        title: "投稿と返信を削除して無視する"
-        description: "投稿とそのすべての返信を削除します。最初の投稿である場合、トピックも削除されます"
         confirm: "投稿への返信も削除してよろしいですか？"
-      delete_and_agree:
-        title: "投稿の削除と同意"
-        description: "投稿を削除します。最初の投稿である場合、トピックも削除されます"
       delete_and_agree_replies:
-        title: "投稿と返信を削除して同意する"
-        description: "投稿とそのすべての返信を削除します。最初の投稿である場合、トピックも削除されます"
         confirm: "投稿への返信も削除してよろしいですか？"
       disagree_and_restore:
-        title: "却下して投稿を復元"
         description: "すべてのユーザーが閲覧できるように投稿を復元します。"
       disagree:
-        title: "同意しない"
+        title: "いいえ"
       ignore:
         title: "無視"
+      ignore_and_do_nothing:
+        title: "何もしない"
       approve:
         title: "承認"
       approve_post:

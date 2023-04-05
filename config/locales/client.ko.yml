@@ -472,11 +472,9 @@ ko:
       scores:
         about: "이 점수는 보고자의 신뢰 레벨, 이전 신고의 정확도 및 신고된 항목의 우선순위를 기준으로 계산됩니다."
         score: "점수"
-        date: "날짜"
-        type: "유형"
+        type: "이유"
         status: "상태"
-        submitted_by: "제출자"
-        reviewed_by: "검토자"
+        submitted_by: "신고자"
       statuses:
         pending:
           title: "보류 중"
@@ -484,14 +482,12 @@ ko:
           title: "승인됨"
         rejected:
           title: "거부됨"
-        ignored:
-          title: "무시됨"
-        deleted:
-          title: "삭제됨"
         reviewed:
-          title: "(모두 검토됨)"
+          title: "모두 검토됨"
         all:
-          title: "(모두)"
+          title: "모두"
+      context_question:
+        delimiter: "또는"
       types:
         reviewable_flagged_post:
           title: "신고된 게시물"
@@ -788,6 +784,7 @@ ko:
         make_all_primary_description: "선택한 모든 사용자의 기본 그룹으로 만들기"
         remove_all_primary: "기본에서 제거"
         remove_all_primary_description: "이 그룹을 기본 그룹에서 제거"
+        status: "상태"
         owner: "소유자"
         primary: "기본"
         forbidden: "회원을 볼 권한이 없습니다."
@@ -3146,6 +3143,10 @@ ko:
     filters:
       with_topics: "%{filter} 주제"
       with_category: "%{filter} %{category} 주제"
+      filter:
+        title: "필터"
+        button:
+          label: "필터"
       latest:
         title: "최신"
         title_with_count:
@@ -4575,9 +4576,22 @@ ko:
         new_template_form:
           submit: "저장"
           cancel: "취소"
+          preview: "미리 보기"
         quick_insert_fields:
           add_new_field: "추가"
           dropdown: "드롭다운"
+        validations_modal:
+          table_headers:
+            key: "키"
+            type: "유형"
+            description: "내용"
+          validations:
+            required:
+              key: "필수"
+            minimum:
+              key: "최소"
+            maximum:
+              key: "최대"
       impersonate:
         title: "가장"
         help: "이 툴을 사용하면 디버깅을 위해 사용자 계정으로 로그인할 수 있습니다. 사용이 끝나면 로그아웃해야 합니다."
@@ -4590,6 +4604,7 @@ ko:
         not_found: "이 아이디는 시스템에 없습니다."
         id_not_found: "이 사용자 아이디는 시스템에 없습니다."
         active: "활성화됨"
+        status: "상태"
         show_emails: "이메일 표시"
         hide_emails: "이메일 숨기기"
         nav:

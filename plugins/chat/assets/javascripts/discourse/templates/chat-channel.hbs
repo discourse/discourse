@@ -1,4 +1,8 @@
-<FullPageChat @targetMessageId={{this.targetMessageId}} />
+<FullPageChat
+  @channel={{this.model}}
+  @targetMessageId={{this.targetMessageId}}
+/>
+
 <ChatSidePanel>
   {{outlet}}
 </ChatSidePanel>

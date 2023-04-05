@@ -203,7 +203,7 @@ pre.codeblock-buttons:hover {
     margin-left: var(--topic-avatar-width);
     width: calc(
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-        var(--topic-avatar-width) - (var(--topic-avatar-width + 2px))
+        var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
     ); // 2px accounts for left and right borders
     .row {
       border-bottom: none;

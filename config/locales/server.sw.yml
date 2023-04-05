@@ -1752,9 +1752,7 @@ sw:
     title: "Haiwezi kupakia programu-tumizi"
     offline_page_message: "Inaonekana kuwa hauko hewani! Tafadhali angalia muunganisho wa mtandao na jaribu tena."
   login_required:
-    welcome_message: |
-      ## [Karibu kwenye %{title}](#karibu)
-      Akaunti inahitajika. Tafadhali tengeneza akaunti au ingia kuendelea.
+    welcome_message: "## [Karibu kwenye %{title}](#karibu)"
   upload:
     unauthorized: "Samahani, faili unalo jaribu kupakia halina kibali (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Picha Iliyobandikwa"
@@ -1994,8 +1992,6 @@ sw:
       title: "Tuma Tena Barua Pepe ya Uanzisho"
       message: "<p>Tumekutumia tena barua ya uanzishaji<b>%{email}</b>"
   safe_mode:
-    no_unofficial_plugins: "Sitisha programu-jalizi zisizo rasmi"
-    no_plugins: "Sitisha programu-jalizi zote"
     enter: "Ingia Hali-tumizi iliyo salama"
   wizard:
     title: "Mpangilio wa Discourse"
@@ -2053,28 +2049,24 @@ sw:
     sensitivity:
       disabled: "Imezuiwa"
     actions:
-      agree_and_keep:
-        title: "Tunza Chapisho"
-        description: "Kubaliana na bendera na chapisho halitabadilishwa."
+      agree:
+        title: "Ndio"
       agree_and_suspend:
-        title: "Simamisha Mtumiaji"
         description: "Kubaliana na bendera na simamisha mtumiaji."
       agree_and_silence:
-        title: "Nyamazisha Mtumiaji"
         description: "Kubaliana na bendera na nyamazisha mtumiaji."
       agree_and_restore:
         description: "Rudisha chapisho ili watumiaji wote waweze kuliona."
-      agree_and_hide:
-        title: "Ficha Chapisho"
-        description: "Ficha chapisho hili na otomatikali mtumie mtumiaji ujumbe wa kumwambia afanye uhariri."
       delete_single:
         title: "Futa"
       disagree_and_restore:
         description: "Rudisha chapisho ili watumiaji wote waweze kuliona."
       disagree:
-        title: "Kataa"
+        title: "Hapana"
       ignore:
         title: "Puuzia"
+      ignore_and_do_nothing:
+        title: "Usifanye chochote"
       approve:
         title: "Imethibitishwa"
       reject_user:

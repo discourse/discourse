@@ -1603,7 +1603,6 @@ es:
     enable_discourse_connect: "Activar inicio de sesión a través de DiscourseConnect (antiguamente «Discourse SSO») (CUIDADO: ¡LAS DIRECCIONES DE CORREO ELECTRÓNICO *DEBEN* SER VALIDADAS POR EL SITIO EXTERNO!)"
     verbose_discourse_connect_logging: "Guardar registros detallados de diagnóstico de DiscourseConnect en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementar el proveedor de protocolo DiscourseConnect (antiguamente «Discourse SSO») en la ruta /session/sso_provider, discourse_connect_provider_secrets debe estar rellenado."
-    discourse_connect_url: "URL del endpoint de DiscourseConnect (debe incluir http:// o https://)"
     discourse_connect_secret: "Secreto usado para autenticar criptográficamente la información de DiscourseConnect, asegúrate de que tiene 10 o más caracteres de longitud"
     discourse_connect_provider_secrets: "Una lista de pares de dominio-secreto que utiliza Discourse como proveedor de SSO. Asegúrate de que la clave secreta SSO tenga de 10 caracteres o más. El símbolo de comodín * se puede usar para hacer coincidir cualquier dominio o solo una parte de él (por ejemplo, *.ejemplo.com)."
     discourse_connect_overrides_bio: "Sobrescribir la biografía del usuario y evita que los usuarios la cambien"
@@ -1721,7 +1720,6 @@ es:
     composer_media_optimization_image_bytes_optimization_threshold: "Tamaño mínimo del archivo de imagen para activar la optimización del lado del cliente"
     composer_media_optimization_image_resize_dimensions_threshold: "Ancho mínimo de la imagen para activar el redimensionamiento del lado del cliente"
     composer_media_optimization_image_resize_width_target: "Las imágenes con una anchura mayor que «composer_media_optimization_image_dimensions_resize_threshold» serán redimensionadas a esta anchura. Debe ser >= que «composer_media_optimization_image_dimensions_resize_threshold»."
-    composer_media_optimization_image_encode_quality: "Calidad de codificación JPEG utilizada en el proceso de recodificación."
     min_ratio_to_crop: "Proporción utilizada para recortar imágenes altas. Introduce el resultado de anchura / altura."
     simultaneous_uploads: "Número máximo de archivos que se pueden arrastrar y soltar en el editor"
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
@@ -3682,12 +3680,7 @@ es:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
   login_required:
-    welcome_message: |
-      ## [Te damos la bienvenida a %{title}](#welcome)
-      Se necesita una cuenta para utilizar el sitio. Crea una o inicia sesión para continuar.
-    welcome_message_invite_only: |
-      ## [Te damos la bienvenida a %{title}](#welcome)
-      Se necesita una cuenta para utilizar el sitio. Solicita a uno de los miembros actuales que te invite o inicia sesión para continuar.
+    welcome_message: "## [Te damos la bienvenida a %{title}](#welcome)"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
@@ -4194,10 +4187,7 @@ es:
       message: "<p>Hemos reenviado el correo electrónico de activación a <b>%{email}</b>"
   safe_mode:
     title: "Activar modo seguro"
-    description: "El modo seguro te permite probar tu sitio sin cargar plugins o temas."
     no_themes: "Desactivar temas y componentes de tema"
-    no_unofficial_plugins: "Desactivar plugins no oficiales"
-    no_plugins: "Desactivar todos los plugins"
     enter: "Activar modo seguro"
     must_select: "Debes escoger al menos una opción para entrar en el modo seguro."
   wizard:
@@ -4374,50 +4364,30 @@ es:
         category: ajustes de la categoría
     actions:
       agree:
-        title: "Estar de acuerdo..."
-      agree_and_keep:
-        title: "Mantener publicación"
-        description: "Estar de acuerdo con la denuncia y mantener la publicación intacta."
-      agree_and_keep_hidden:
-        title: "Mantener la publicación oculta"
-        description: "Aceptar la denuncia y mantener la publicación oculta."
+        title: "Sí"
       agree_and_suspend:
-        title: "Suspender usuario"
         description: "Estar de acuerdo con la denuncia y suspender el usuario."
       agree_and_silence:
         title: "Silenciar al usuario"
         description: "Estar de acuerdo con la denuncia y silenciar al usuario."
       agree_and_restore:
-        title: "Restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
-      agree_and_hide:
-        title: "Ocultar publicación"
-        description: "Ocultar la publicación y enviar un mensaje automáticamente al usuario animándole a que la edite."
       delete_single:
         title: "Eliminar"
       delete:
         title: "Eliminar..."
-      delete_and_ignore:
-        title: "Eliminar publicación e ignorar"
-        description: "Eliminar publicación; si es la primera del tema, eliminar el tema también."
       delete_and_ignore_replies:
-        title: "Eliminar publicación + respuestas e ignorar"
-        description: "Eliminar publicación y todas sus respuestas; si es la primera publicación de un tema, eliminarlo también"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
-      delete_and_agree:
-        title: "Eliminar publicación y coincidir"
-        description: "Eliminar publicación; si es la primera del tema, eliminar el tema también."
       delete_and_agree_replies:
-        title: "Eliminar publicación + respuestas y coincidir"
-        description: "Eliminar publicación y todas sus respuestas; si es la primera publicación de un tema, eliminarlo también"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
       disagree_and_restore:
-        title: "Discrepar y restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
       disagree:
-        title: "Discrepar"
+        title: "No"
       ignore:
         title: "Ignorar"
+      ignore_and_do_nothing:
+        title: "No hacer nada"
       approve:
         title: "Aprobar"
       approve_post:

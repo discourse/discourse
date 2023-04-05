@@ -1,4 +1,5 @@
 import Service, { inject as service } from "@ember/service";
+import { debounce } from "discourse-common/utils/decorators";
 import Promise from "rsvp";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { tracked } from "@glimmer/tracking";
@@ -82,6 +83,17 @@ export default class ChatChannelsManager extends Service {
     });
   }
 
+  @debounce(300)
+  async markAllChannelsRead() {
+    // The user tracking state for each channel marked read will be propagated by MessageBus
+    return this.chatApi.markAllChannelsAsRead();
+  }
+
+  remove(model) {
+    this.chatSubscriptionsManager.stopChannelSubscription(model);
+    delete this._cached[model.id];
+  }
+
   get unreadCount() {
     let count = 0;
     this.publicMessageChannels.forEach((channel) => {
@@ -134,6 +146,10 @@ export default class ChatChannelsManager extends Service {
   }
 
   #cache(channel) {
+    if (!channel) {
+      return;
+    }
+
     this._cached[channel.id] = channel;
   }
 

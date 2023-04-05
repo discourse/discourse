@@ -41,6 +41,12 @@ acceptance("User Preferences - Second Factor", function (needs) {
       });
     });
 
+    server.put("/u/security_key.json", () => {
+      return helper.response({
+        success: "OK",
+      });
+    });
+
     server.put("/u/second_factors_backup.json", () => {
       return helper.response({
         backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"],
@@ -109,14 +115,23 @@ acceptance("User Preferences - Second Factor", function (needs) {
     );
     await click(".dialog-close");
 
+    assert.ok(
+      exists(".security-key .second-factor-item"),
+      "User has a physical security key"
+    );
+
     await click(".security-key .btn-danger");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Deleting an authenticator"
     );
-    await click(".dialog-close");
+    await click(".dialog-footer .btn-danger");
+    assert.notOk(
+      exists(".security-key .second-factor-item"),
+      "security key row is removed after a successful delete"
+    );
 
-    await click(".btn-danger.btn-icon-text");
+    await click(".pref-second-factor-disable-all .btn-danger");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Are you sure you want to disable two-factor authentication?"

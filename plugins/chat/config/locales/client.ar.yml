@@ -93,6 +93,8 @@ ar:
         never: "أبدًا"
         title: "إشعارات البريد الإلكتروني"
         when_away: "عندما أكون غائبًا فقط"
+      header_indicator_preference:
+        never: "أبدًا"
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
       emoji: "إدراج رمز تعبيري"
@@ -102,7 +104,7 @@ ar:
       in_reply_to: "ردًا على"
       heading: "الدردشة"
       join: "الانضمام"
-      new_messages: "رسائل جديدة"
+      last_visit: "آخر زيارة"
       mention_warning:
         dismiss: "تجاهل"
         invitations_sent:
@@ -149,7 +151,6 @@ ar:
       restore: "استعادة الرسالة المحذوفة"
       save: "حفظ"
       select: "تحديد"
-      silence: "كتم المستخدم"
       return_to_list: "العودة إلى قائمة القنوات"
       scroll_to_bottom: "التمرير إلى الأسفل"
       scroll_to_new_messages: "عرض الرسائل الجديدة"

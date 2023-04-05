@@ -521,11 +521,9 @@ nl:
       scores:
         about: "Deze score wordt berekend op basis van het vertrouwen van de melder, de nauwkeurigheid van diens eerdere markeringen en de prioriteit van het item dat wordt gemeld."
         score: "Score"
-        date: "Datum"
-        type: "Type"
+        type: "Reden"
         status: "Status"
-        submitted_by: "Ingediend door"
-        reviewed_by: "Beoordeeld door"
+        submitted_by: "Gemeld door"
       statuses:
         pending:
           title: "Wachtend"
@@ -533,14 +531,12 @@ nl:
           title: "Goedgekeurd"
         rejected:
           title: "Geweigerd"
-        ignored:
-          title: "Genegeerd"
-        deleted:
-          title: "Verwijderd"
         reviewed:
-          title: "(alle beoordeelde)"
+          title: "Alle beoordeelde"
         all:
-          title: "(alles)"
+          title: "Alles"
+      context_question:
+        delimiter: "of"
       types:
         reviewable_flagged_post:
           title: "Gemarkeerd bericht"
@@ -847,6 +843,7 @@ nl:
         make_all_primary_description: "Maak dit de primaire groep voor alle geselecteerde gebruikers."
         remove_all_primary: "Verwijderen als primair"
         remove_all_primary_description: "Verwijder deze groep als primair"
+        status: "Status"
         owner: "Eigenaar"
         primary: "Primair"
         forbidden: "Je mag de leden niet bekijken."
@@ -3575,6 +3572,10 @@ nl:
     filters:
       with_topics: "%{filter} topics"
       with_category: "%{filter} topics in %{category}"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Nieuwste"
         title_with_count:
@@ -5093,9 +5094,22 @@ nl:
         new_template_form:
           submit: "Opslaan"
           cancel: "Annuleren"
+          preview: "Voorbeeld"
         quick_insert_fields:
           add_new_field: "Toevoegen"
           dropdown: "Vervolgkeuzelijst"
+        validations_modal:
+          table_headers:
+            key: "Sleutel"
+            type: "Type"
+            description: "Beschrijving"
+          validations:
+            required:
+              key: "vereist"
+            minimum:
+              key: "minimum"
+            maximum:
+              key: "maximum"
       impersonate:
         title: "Imiteren"
         help: "Gebruik deze tool om een gebruikersaccount te imiteren voor debugdoeleinden. Je moet je afmelden wanneer je klaar bent."
@@ -5108,6 +5122,7 @@ nl:
         not_found: "Sorry, die gebruikersnaam bestaat niet in ons systeem."
         id_not_found: "Sorry, die gebruikers-ID bestaat niet in ons systeem."
         active: "Geactiveerd"
+        status: "Status"
         show_emails: "E-mailadressen weergeven"
         hide_emails: "E-mailadressen verbergen"
         nav:

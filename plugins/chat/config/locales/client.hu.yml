@@ -89,6 +89,11 @@ hu:
         never: "Soha"
         title: "E-mail értesítések"
         when_away: "Csak ha távol van"
+      header_indicator_preference:
+        title: "Aktivitásjelző megjelenítése a fejlécben"
+        all_new: "Minden új üzenet"
+        dm_and_mentions: "Közvetlen üzenetek és említések"
+        never: "Soha"
       enable: "Csevegés engedélyezése"
       flag: "Jelölés"
       emoji: "Emodzsi beszúrása"
@@ -98,7 +103,7 @@ hu:
       in_reply_to: "Válaszul erre:"
       heading: "Csevegés"
       join: "Belépés"
-      new_messages: "új üzenetek"
+      last_visit: "utolsó látogatás"
       mention_warning:
         dismiss: "elvetés"
         invitations_sent:
@@ -137,7 +142,6 @@ hu:
       restore: "Törölt üzenet helyreállítása"
       save: "Mentés"
       select: "Válasszon"
-      silence: "Felhasználó némítása"
       return_to_list: "Vissza a csatornákhoz"
       scroll_to_bottom: "Görgetés lefelé"
       scroll_to_new_messages: "Új üzenetek megtekintése"

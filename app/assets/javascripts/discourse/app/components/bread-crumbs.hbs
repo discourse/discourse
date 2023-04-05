@@ -1,3 +1,18 @@
+<PluginOutlet
+  @name="bread-crumbs-left"
+  @connectorTagName="li"
+  @outletArgs={{hash
+    tagId=this.tag.id
+    additionalTags=this.additionalTags
+    noSubcategories=this.noSubcategories
+    showTagsSection=this.showTagsSection
+    currentCategory=this.category
+    categoryBreadcrumbs=this.categoryBreadcrumbs
+    editingCategory=this.editingCategory
+    editingCategoryTab=this.editingCategoryTab
+  }}
+/>
+
 {{#each this.categoryBreadcrumbs as |breadcrumb|}}
   {{#if breadcrumb.hasOptions}}
     <li>

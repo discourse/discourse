@@ -18,7 +18,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default class attribute for link", async function (assert) {
-    const template = hbs`<Sidebar::SectionLink @linkName="test" @route="discovery.latest" />`;
+    const template = hbs`<Sidebar::SectionLink @linkName="Test   Meta" @route="discovery.latest" />`;
 
     await render(template);
 
@@ -29,14 +29,14 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
         "ember-view",
         "sidebar-row",
         "sidebar-section-link",
-        "sidebar-section-link-test",
+        "sidebar-section-link-test-meta",
       ],
       "has the right class attribute for the link"
     );
   });
 
   test("custom class attribute for link", async function (assert) {
-    const template = hbs`<Sidebar::SectionLink @linkName="test" @route="discovery.latest" @class="123 abc" />`;
+    const template = hbs`<Sidebar::SectionLink @linkName="Test   Meta" @route="discovery.latest" @class="123 abc" />`;
 
     await render(template);
 
@@ -49,9 +49,24 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
         "ember-view",
         "sidebar-row",
         "sidebar-section-link",
-        "sidebar-section-link-test",
+        "sidebar-section-link-test-meta",
       ],
       "has the right class attribute for the link"
     );
+  });
+
+  test("target attribute for link", async function (assert) {
+    const template = hbs`<Sidebar::SectionLink @linkName="test" @href="https://discourse.org" />`;
+    await render(template);
+
+    assert.strictEqual(query("a").target, "_self");
+  });
+
+  test("target attribute for link when user set external links in new tab", async function (assert) {
+    this.currentUser.user_option.external_links_in_new_tab = true;
+    const template = hbs`<Sidebar::SectionLink @linkName="test" @href="https://discourse.org" />`;
+    await render(template);
+
+    assert.strictEqual(query("a").target, "_blank");
   });
 });

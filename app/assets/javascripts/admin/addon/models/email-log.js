@@ -3,10 +3,8 @@ import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 
-const EmailLog = EmberObject.extend({});
-
-EmailLog.reopenClass({
-  create(attrs) {
+export default class EmailLog extends EmberObject {
+  static create(attrs) {
     attrs = attrs || {};
 
     if (attrs.user) {
@@ -17,10 +15,10 @@ EmailLog.reopenClass({
       attrs.post_url = getURL(attrs.post_url);
     }
 
-    return this._super(attrs);
-  },
+    return super.create(attrs);
+  }
 
-  findAll(filter, offset) {
+  static findAll(filter, offset) {
     filter = filter || {};
     offset = offset || 0;
 
@@ -30,7 +28,5 @@ EmailLog.reopenClass({
     return ajax(`/admin/email/${status}.json?offset=${offset}`, {
       data: filter,
     }).then((logs) => logs.map((log) => EmailLog.create(log)));
-  },
-});
-
-export default EmailLog;
+  }
+}

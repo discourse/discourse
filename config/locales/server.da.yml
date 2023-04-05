@@ -1420,7 +1420,6 @@ da:
     enable_discourse_connect: "Aktivér loin via DiscourseConnect (tidligere 'Discourse SSO') (ADVARSEL: BRUGERNES e-mailadresser *SKAL* VALIDERES AF DEN EKSTERNE SIDE!)"
     verbose_discourse_connect_logging: "Log detaljeret DiscourseConnect relateret diagnostik til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementer DiscourseConnect (tidligere 'Discourse SSO') providerprotokollen på /session/sso_provider slutpunktet, kræver, at discourse_connect_provider_secrets indstilles"
-    discourse_connect_url: "URL til DiscourseConnect-slutpunkt (skal indeholde http:// eller https://)"
     discourse_connect_secret: "Hemmelig streng, der bruges til kryptografisk godkendelse af DiscourseConnect-oplysninger, sørg for at der er 10 tegn eller mere"
     discourse_connect_overrides_bio: "Tilsidesætter brugerbio i brugerprofilen og forhindrer brugeren i at ændre den"
     discourse_connect_overrides_groups: "Synkronisér alle manuelle gruppemedlemskaber med grupper angivet i grupper-attributten (ADVARSEL: hvis du ikke angiver grupper, vil alle manuelle gruppemedlemmer blive ryddet for brugeren)"
@@ -2867,9 +2866,7 @@ da:
     search_title: "Søg på dette websted"
     search_button: "Søg"
   login_required:
-    welcome_message: |
-      ## [Velkommen til %{title}](#welcome)
-      En konto er påkrævet. Opret venligst en konto eller log ind for at fortsætte.
+    welcome_message: "## [Velkommen til %{title}](#welcome)"
   upload:
     unauthorized: "Beklager, filen, som du forsøger at overføre er ikke godkendt (godkente filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
@@ -3242,8 +3239,6 @@ da:
       message: "<p>Vi har gensendt aktiverings-e-mailen til <b>%{email}</b>"
   safe_mode:
     title: "Gå ind i fejlsikret tilstand"
-    no_unofficial_plugins: "Deaktiver uofficielle udvidelser"
-    no_plugins: "Deaktiver alle udvidelsesmoduler"
     enter: "Gå ind i fejlsikret tilstand"
     must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."
   wizard:
@@ -3342,44 +3337,25 @@ da:
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:
       agree:
-        title: "Enig..."
-      agree_and_keep:
-        title: "Behold Indlæg"
-      agree_and_keep_hidden:
-        title: "Behold Indlæg Skjult"
-      agree_and_suspend:
-        title: "Suspendér Bruger"
-      agree_and_silence:
-        title: "Mådehold (silence) Bruger"
+        title: "Ja"
       agree_and_restore:
-        title: "Gendan Indlæg"
         description: "Gendan indlægget, så alle brugere kan se det."
-      agree_and_hide:
-        title: "Skjul Indlæg"
-        description: "Skjul dette indlæg og send automatisk brugeren en meddelelse, der opfordrer dem til at redigere det."
       delete_single:
         title: "Slet"
       delete:
         title: "Slet..."
-      delete_and_ignore:
-        title: "Slet Indlæg og Ignorer"
-        description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"
       delete_and_ignore_replies:
-        description: "Slet indlæg og alle dets svar Hvis det er første indlæg, så slet også emnet"
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
-      delete_and_agree:
-        title: "Slet Indlæg og Accepter"
-        description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"
       delete_and_agree_replies:
-        title: "Slet Indlæg + Svar og Accepter"
-        description: "Slet indlæg og alle dets svar Hvis det er første indlæg, så slet også emnet"
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       disagree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
       disagree:
-        title: "Uenig"
+        title: "Nej"
       ignore:
         title: "Ignorér"
+      ignore_and_do_nothing:
+        title: "Gøre ingenting"
       approve:
         title: "Godkend"
       approve_post:

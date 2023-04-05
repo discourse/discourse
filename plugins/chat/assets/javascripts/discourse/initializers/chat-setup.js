@@ -4,9 +4,12 @@ import { bind } from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { MENTION_KEYWORDS } from "discourse/plugins/chat/discourse/components/chat-message";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import { replaceIcon } from "discourse-common/lib/icon-library";
 
 let _lastForcedRefreshAt;
 const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
+
+replaceIcon("d-chat", "comment");
 
 export default {
   name: "chat-setup",
@@ -116,6 +119,14 @@ export default {
       api.addCardClickListenerSelector(".chat-drawer-outlet");
 
       api.addToHeaderIcons("chat-header-icon");
+
+      api.addChatDrawerStateCallback(({ isDrawerActive }) => {
+        if (isDrawerActive) {
+          document.body.classList.add("chat-drawer-active");
+        } else {
+          document.body.classList.remove("chat-drawer-active");
+        }
+      });
 
       api.decorateChatMessage(function (chatMessage, chatChannel) {
         if (!this.currentUser) {

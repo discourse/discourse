@@ -3,8 +3,6 @@
 module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
-      include SystemHelpers
-
       def type_in_composer(input)
         find(".chat-composer-input").send_keys(input)
       end
@@ -39,11 +37,8 @@ module PageObjects
       end
 
       def click_message_action_mobile(message, message_action)
-        i = 0.5
-        try_until_success(timeout: 20) do
-          expand_message_actions_mobile(message, delay: i)
-          first(".chat-message-action-item[data-id=\"#{message_action}\"]")
-        end
+        expand_message_actions_mobile(message, delay: 0.5)
+        wait_for_animation(find(".chat-message-actions"), timeout: 5)
         find(".chat-message-action-item[data-id=\"#{message_action}\"] button").click
       end
 
@@ -117,15 +112,13 @@ module PageObjects
         within(message_by_id(message.id)) { find(".chat-message-bookmarked") }
       end
 
-      def find_reaction(message, reaction)
-        within(message_reactions_list(message)) do
-          return find("[data-emoji-name=\"#{reaction.emoji}\"]")
-        end
+      def find_reaction(message, emoji)
+        within(message_reactions_list(message)) { return find("[data-emoji-name=\"#{emoji}\"]") }
       end
 
-      def has_reaction?(message, reaction, text = nil)
+      def has_reaction?(message, emoji, text = nil)
         within(message_reactions_list(message)) do
-          has_css?("[data-emoji-name=\"#{reaction.emoji}\"]", text: text)
+          has_css?("[data-emoji-name=\"#{emoji}\"]", text: text)
         end
       end
 
@@ -141,8 +134,8 @@ module PageObjects
         within(message_by_id(message.id)) { has_no_css?(".chat-message-reaction-list") }
       end
 
-      def click_reaction(message, reaction)
-        find_reaction(message, reaction).click
+      def click_reaction(message, emoji)
+        find_reaction(message, emoji).click
       end
 
       def open_action_menu

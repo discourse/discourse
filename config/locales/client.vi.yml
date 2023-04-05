@@ -474,11 +474,9 @@ vi:
       scores:
         about: "Điểm số này được tính toán dựa trên mức độ tin cậy của người báo cáo, độ chính xác của những gắn cờ trước đó, và mức độ ưu tiên của mục được báo cáo."
         score: "Điểm số"
-        date: "Ngày"
-        type: "Loại"
+        type: "Lý do"
         status: "Trạng thái"
-        submitted_by: "Được gửi bởi"
-        reviewed_by: "Được đánh giá bởi"
+        submitted_by: "Báo cáo bởi"
       statuses:
         pending:
           title: "Đang treo"
@@ -486,14 +484,12 @@ vi:
           title: "Đã phê duyệt"
         rejected:
           title: "Từ chối"
-        ignored:
-          title: "Đã bỏ qua"
-        deleted:
-          title: "Đã xóa"
         reviewed:
-          title: "(tất cả đã đánh giá)"
+          title: "Tất cả đã đánh giá"
         all:
-          title: "(mọi thứ)"
+          title: "Mọi thứ"
+      context_question:
+        delimiter: "hoặc"
       types:
         reviewable_flagged_post:
           title: "Bài viết bị gắn cờ"
@@ -786,6 +782,7 @@ vi:
         remove_owners_description: "Xóa những người dùng đã chọn làm chủ sở hữu của nhóm này"
         make_all_primary: "Đặt tất cả là chính"
         make_all_primary_description: "Đặt nhóm này thành nhóm chính cho tất cả người dùng đã chọn"
+        status: "Trạng thái"
         owner: "Chủ sở hữu"
         primary: "Chính"
         forbidden: "Bạn không được phép xem thành viên."
@@ -3174,6 +3171,10 @@ vi:
     filters:
       with_topics: "%{filter} chủ đề"
       with_category: "%{filter} %{category} chủ đề"
+      filter:
+        title: "Lọc"
+        button:
+          label: "Lọc"
       latest:
         title: "Mới nhất"
         title_with_count:
@@ -4575,9 +4576,22 @@ vi:
         new_template_form:
           submit: "Lưu lại"
           cancel: "Huỷ"
+          preview: "Xem trước"
         quick_insert_fields:
           add_new_field: "Thêm"
           dropdown: "Xổ xuống"
+        validations_modal:
+          table_headers:
+            key: "Phím"
+            type: "Loại"
+            description: "Mô tả"
+          validations:
+            required:
+              key: "bắt buộc"
+            minimum:
+              key: "tối thiểu"
+            maximum:
+              key: "tối đa"
       impersonate:
         title: "Mạo danh"
         help: "Sử dụng công cụ này để mạo danh một tài khoản thành viên cho mục đích gỡ lỗi, bạn sẽ phải đăng xuất sau khi hoàn tất."
@@ -4590,6 +4604,7 @@ vi:
         not_found: "Xin lỗi, username không tồn tại trong hệ thống."
         id_not_found: "Xin lỗi, id người dùng không tồn tại trong hệ thống."
         active: "Đã kích hoạt"
+        status: "Trạng thái"
         show_emails: "Hiện địa chỉ Email"
         hide_emails: "Ẩn Email"
         nav:

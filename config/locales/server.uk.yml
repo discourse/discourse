@@ -1689,7 +1689,6 @@ uk:
     enable_discourse_connect: "Увімкнути вхід через Discoursconnect (раніше «Дискурс SSO») (ПОПЕРЕДЖЕННЯ: АДРЕСИ ЕЛЕКТРОННОЇ ПОШТИ КОРИСТУВАЧІВ *ПОВИННІ* БУТИ ПІДТВЕРДЖЕНІ ЗОВНІШНІМ САЙТОМ!)"
     verbose_discourse_connect_logging: "Записувати всі дані діагностики, повʼязані з DiscourseConnect у файл <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Використовувати протокол провайдера DiscourseConnect (раніше «Discourse SSO») у кінцевій точці /session/sso_provider, потрібно налаштувати discourse_connect_provider_secrets"
-    discourse_connect_url: "Адреса кінцевої точки DiscourseConnect (має містити http:// або https://)"
     discourse_connect_secret: "Секретний рядок, який використовується для криптографічної автентифікації інформації DiscourseConnect, переконайтеся, що він містить 10 символів або більше"
     discourse_connect_provider_secrets: "Список пар домен-секрет, які використовують DiscourseConnect. Переконайтеся, що секрет DiscourseConnect містить 10 символів або більше. Символ підстановки * можна використовувати для відповідності будь-якому домену або лише його частині (наприклад, *.example.com)."
     discourse_connect_overrides_bio: "Перезаписує інформацію в профіль користувача і не дозволяє користувачеві його змінювати"
@@ -1806,7 +1805,6 @@ uk:
     composer_media_optimization_image_bytes_optimization_threshold: "Мінімальний розмір файлу зображення для запуску оптимізації на стороні клієнта"
     composer_media_optimization_image_resize_dimensions_threshold: "Мінімальна ширина зображення для зміни розміру на стороні клієнта"
     composer_media_optimization_image_resize_width_target: "Зображення з шириною більше, ніж `composer_media_optimization_image_dimensions_resize_pigold` буде змінено до цієї ширини. Значення має бути >= ніж `composer_media_оптимізація_image_dimensions_resize_pigold`."
-    composer_media_optimization_image_encode_quality: "Якість кодування JPEG, що використовується в процесі перекодування."
     min_ratio_to_crop: "Коефіцієнт, що використовується для обрізання високих зображень. Введіть відношення ширини / висоти."
     simultaneous_uploads: "Максимальна кількість файлів, які можна перетягнути в редактор"
     default_invitee_trust_level: "Стандартний рівень довіри запрошених користувачів (від 0 до 4)."
@@ -3767,10 +3765,7 @@ uk:
     title: "Неможливо завантажити застосунок"
     offline_page_message: "Схоже, ви офлайн! Перевірте підключення до мережі та повторіть спробу."
   login_required:
-    welcome_message: |
-      ## [Ласкаво просимо до %{title}](#welcome)
-      Потрібно зареєструватися. Створіть обліковий запис або увійдіть, щоб продовжити.
-    welcome_message_invite_only: "## [Ласкаво просимо до %{title}](#welcome) \nПотрібен обліковий запис. Будь ласка, попросіть когось з учасників запросити вас, або увійдіть, щоб продовжити.\n"
+    welcome_message: "## [Ласкаво просимо до %{title}](#welcome)"
   upload:
     edit_reason: "завантажені локальні копії зображень"
     unauthorized: "На жаль, ви не можете завантажити файл даного типу (список дозволених типів файлів: %{authorized_extensions})."
@@ -4191,10 +4186,7 @@ uk:
       message: "<p> Ми повторно надіслали електронний лист для активації на <b>%{email}</b>"
   safe_mode:
     title: "Увійти в безпечний режим"
-    description: "Безпечний режим дозволяє тестувати ваш сайт без завантаження втулків або тем."
     no_themes: "Вимкнути компоненти тем і теми"
-    no_unofficial_plugins: "Вимкнути неофіційні втулки"
-    no_plugins: "Вимкнути всі втулки"
     enter: "Увійти в безпечний режим"
     must_select: "Ви повинні вибрати принаймні одну опцію для входу в безпечний режим."
   wizard:
@@ -4343,50 +4335,29 @@ uk:
         category: налаштування розділу
     actions:
       agree:
-        title: "Погоджуюся…"
-      agree_and_keep:
-        title: "Залишити допис"
-        description: "Погодитися з прапором і залишити допис без змін"
-      agree_and_keep_hidden:
-        title: "Залишити допис прихованим"
-        description: "Погодитись з прапором і залишити допис прихованим."
+        title: "Так"
       agree_and_suspend:
-        title: "Призупинити користувача"
         description: "Погодитися з прапором та призупинити користувача."
       agree_and_silence:
-        title: "Заблокувати користувача"
         description: "Погодитися з прапором та заблокувати користувача."
       agree_and_restore:
-        title: "Відновити допис"
         description: "Відновити допис, щоб усі користувачі могли його бачити."
-      agree_and_hide:
-        title: "Сховати допис"
-        description: "Приховати цей допис і автоматично надіслати користувачеві повідомлення з проханням відредагувати його."
       delete_single:
         title: "Видалити"
       delete:
         title: "Видалити…"
-      delete_and_ignore:
-        title: "Видалити допис та Ігнорувати"
-        description: "Видалити допис; якщо це перший допис, видалиться також тема"
       delete_and_ignore_replies:
-        title: "Видалити допис + Відповіді та ігнорувати"
-        description: "Видалити допис і всі відповіді до нього; якщо це перший допис, то видалити також тему"
         confirm: "Ви впевнені, що хочете також видалити відповіді до посту?"
-      delete_and_agree:
-        title: "Видалити допис і погодитися"
-        description: "Видалити допис; якщо це перший допис, то видалиться також тема"
       delete_and_agree_replies:
-        title: "Видалити допис + Відповіді та Погодитися"
-        description: "Видалити допис і всі відповіді до нього; якщо це перший допис, то видалити також тему"
         confirm: "Ви впевнені, що хочете також видалити відповіді до допису?"
       disagree_and_restore:
-        title: "Відхилити та відновити допис"
         description: "Відновити допис, щоб усі користувачі могли його бачити."
       disagree:
-        title: "Відмовити"
+        title: "Ні"
       ignore:
         title: "Ігнорувати"
+      ignore_and_do_nothing:
+        title: "Нічого не робити"
       approve:
         title: "Схвалити"
       approve_post:

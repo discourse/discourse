@@ -608,11 +608,9 @@ uk:
       scores:
         about: "Цей бал розраховується на основі рівня довіри доповідача, відповідності їхніх попередніх скарг та пріоритету елемента, про який було сповіщено."
         score: "Бал"
-        date: "Дата"
-        type: "Тип"
+        type: "Причина"
         status: "Статус"
-        submitted_by: "Подано"
-        reviewed_by: "Розглянуто"
+        submitted_by: "Повідомлення від"
       statuses:
         pending:
           title: "В очікуванні"
@@ -620,14 +618,12 @@ uk:
           title: "Схвалено"
         rejected:
           title: "Відхилено"
-        ignored:
-          title: "Проігноровано"
-        deleted:
-          title: "Вилучено"
         reviewed:
-          title: "(усі розглянуті)"
+          title: "Усі розглянуті"
         all:
-          title: "(усе)"
+          title: "Усе"
+      context_question:
+        delimiter: "або"
       types:
         reviewable_flagged_post:
           title: "Позначений допис"
@@ -950,6 +946,7 @@ uk:
         make_all_primary_description: "Зробити основною групою для всіх вибраних користувачів"
         remove_all_primary: "Видалити як основну"
         remove_all_primary_description: "Видалити цю групу як основну"
+        status: "Статус"
         owner: "Власник"
         primary: "Основна"
         forbidden: "Ви не можете переглядати учасників."
@@ -3729,6 +3726,10 @@ uk:
     filters:
       with_topics: "%{filter} теми"
       with_category: "%{filter}%{category} теми"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Останні"
         title_with_count:
@@ -5278,9 +5279,22 @@ uk:
         new_template_form:
           submit: "Зберегти"
           cancel: "Скасувати"
+          preview: "Попередній перегляд"
         quick_insert_fields:
           add_new_field: "Додати"
           dropdown: "Випадаючий список"
+        validations_modal:
+          table_headers:
+            key: "Ключ"
+            type: "Тип"
+            description: "Опис"
+          validations:
+            required:
+              key: "Обов’язкове"
+            minimum:
+              key: "мінімум"
+            maximum:
+              key: "максимум"
       impersonate:
         title: "Втілитися"
         help: "Використовуйте цей інструмент, щоб увійти від імені користувача. Може бути корисно для налагодження. Після цього необхідно вийти та зайти під своїм обліковим записом знову."
@@ -5293,6 +5307,7 @@ uk:
         not_found: "Даруйте, такого імені користувача немає в нашій системі."
         id_not_found: "Даруйте, користувача за таким номером немає в нашій системі."
         active: "Активоване"
+        status: "Статус"
         show_emails: "Показати електронну пошту"
         hide_emails: "приховати E-mails"
         nav:

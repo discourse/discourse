@@ -53,6 +53,37 @@ module SystemHelpers
     end
   end
 
+  # Waits for an element to stop animating up to timeout seconds,
+  # then raises a Capybara error if it does not stop.
+  #
+  # This is based on getBoundingClientRect, where Y is the distance
+  # from the top of the element to the top of the viewport, and X
+  # is the distance from the leftmost edge of the element to the
+  # left of the viewport. The viewpoint origin (0, 0) is at the
+  # top left of the page.
+  #
+  # Once X and Y stop changing based on the current vs previous position,
+  # then we know the animation has stopped and the element is stabilised,
+  # at which point we can click on it without fear of Capybara mis-clicking.
+  #
+  # c.f. https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+  def wait_for_animation(element, timeout: Capybara.default_max_wait_time)
+    old_element_x = nil
+    old_element_y = nil
+
+    try_until_success(timeout: timeout) do
+      current_element_x = element.rect.x
+      current_element_y = element.rect.y
+
+      stopped_moving = current_element_x == old_element_x && current_element_y == old_element_y
+
+      old_element_x = current_element_x
+      old_element_y = current_element_y
+
+      raise Capybara::ExpectationNotMet if !stopped_moving
+    end
+  end
+
   def resize_window(width: nil, height: nil)
     original_size = page.driver.browser.manage.window.size
     page.driver.browser.manage.window.resize_to(

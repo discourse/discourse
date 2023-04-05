@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = "7.0.4.1"
+  rails_version = "7.0.4.3"
   gem "actionmailer", rails_version
   gem "actionpack", rails_version
   gem "actionview", rails_version
@@ -41,7 +41,7 @@ gem "actionview_precompiler", require: false
 
 gem "discourse-seed-fu"
 
-gem "mail", git: "https://github.com/discourse/mail.git"
+gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
@@ -181,7 +181,6 @@ group :development do
   gem "binding_of_caller"
   gem "yaml-lint"
   gem "yard"
-  gem "ruby-lsp", require: false
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"

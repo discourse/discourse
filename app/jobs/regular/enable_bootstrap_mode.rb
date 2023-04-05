@@ -5,11 +5,12 @@ module Jobs
     sidekiq_options queue: "critical"
 
     def execute(args)
-      raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
+      raise Discourse::InvalidParameters.new(:user_id) if !args[:user_id].present?
+
       return if SiteSetting.bootstrap_mode_enabled
 
       user = User.find_by(id: args[:user_id])
-      return unless user.is_singular_admin?
+      return if !user.is_singular_admin?
 
       # let's enable bootstrap mode settings
       if SiteSetting.default_trust_level == TrustLevel[0]

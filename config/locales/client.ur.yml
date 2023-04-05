@@ -494,11 +494,9 @@ ur:
       scores:
         about: "یہ اسکور رپورٹ کرنے والے کے ٹرسٹ لَیول پر مبنی ہے، اُن کے سابق فلَیگز کی درستگی، اور رپورٹ کردہ چیز کی ترجیح پر۔"
         score: "اسکور"
-        date: "تاریخ"
-        type: "قِسم"
+        type: "وجہ"
         status: "سٹیٹس"
-        submitted_by: "کی طرف سے شائع کردہ"
-        reviewed_by: "کی طرف سے جائزہ کردہ"
+        submitted_by: "کی طرف سے رپورٹ کردہ"
       statuses:
         pending:
           title: "زیرِاِلتوَاء"
@@ -506,14 +504,12 @@ ur:
           title: "منظورشدہ"
         rejected:
           title: "مسترد کر دی گئی"
-        ignored:
-          title: "نظر انداز کردہ"
-        deleted:
-          title: "مٹائیں"
         reviewed:
-          title: "(تمام جائزہ کردہ)"
+          title: "تمام جائزہ کردہ"
         all:
-          title: "(تمام)"
+          title: "تمام"
+      context_question:
+        delimiter: "یا"
       types:
         reviewable_flagged_post:
           title: "فلَیگ کردہ پوسٹ"
@@ -814,6 +810,7 @@ ur:
         make_all_primary_description: "اس کو تمام منتخب کردہ صارفین کے لئے بنیادی گروپ بنائیں"
         remove_all_primary: "بطور بنیادی ہٹائیں"
         remove_all_primary_description: "اس گروپ کو بنیادی طور پر ہٹا دیں"
+        status: "سٹیٹس"
         owner: "مالِک"
         primary: "بنیادی"
         forbidden: "آپ کو ممبران دیکھنے کی اجازت نہیں ہے۔"
@@ -3209,6 +3206,10 @@ ur:
     filters:
       with_topics: "%{filter} ٹاپک"
       with_category: "%{filter} %{category} ٹاپک"
+      filter:
+        title: "فِلٹر"
+        button:
+          label: "فِلٹر"
       latest:
         title: "تازہ ترین"
         title_with_count:
@@ -4644,9 +4645,22 @@ ur:
         new_template_form:
           submit: "محفوظ کریں"
           cancel: "منسوخ"
+          preview: "پیشگی دیکھیں"
         quick_insert_fields:
           add_new_field: "اضافہ کریں"
           dropdown: "ڈراپ ڈاؤن"
+        validations_modal:
+          table_headers:
+            key: "کی"
+            type: "قِسم"
+            description: "تفصیل"
+          validations:
+            required:
+              key: "درکار ہے"
+            minimum:
+              key: "کم از کم"
+            maximum:
+              key: "زیادہ سے زیادہ"
       impersonate:
         title: "نقالی"
         help: "ڈِیبَگ مقاصد کیلئے اِس آلے کو استعمال کر کہ ایک صارف کے اکاؤنٹ کی نقالی کریں۔ کام ختم ہونے کے بعد آپ کے ایک دفعہ لاگ آؤٹ کرنا ہو گا۔"
@@ -4659,6 +4673,7 @@ ur:
         not_found: "معذرت، وہ صارف نام ہمارے سِسٹم میں موجود نہیں ہے۔"
         id_not_found: "معذرت، وہ صارف ID ہمارے سِسٹم میں موجود نہیں ہے۔"
         active: "فعال کردہ"
+        status: "سٹیٹس"
         show_emails: "اِیمیل دکھائیں"
         hide_emails: "ای میلز چھپائیں"
         nav:

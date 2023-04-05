@@ -466,11 +466,9 @@ zh_TW:
       scores:
         about: "該分數基於報告者的信任級別，其先前標誌的準確性以及報告的項目的優先級來計算。"
         score: "分數"
-        date: "日期"
-        type: "類型"
+        type: "原因"
         status: "狀態"
-        submitted_by: "送出者"
-        reviewed_by: "審核由"
+        submitted_by: "回報由"
       statuses:
         pending:
           title: "申請中"
@@ -478,12 +476,10 @@ zh_TW:
           title: "已同意"
         rejected:
           title: "被拒絕"
-        ignored:
-          title: "忽略"
-        deleted:
-          title: "刪除"
         all:
-          title: "(所有)"
+          title: "所有"
+      context_question:
+        delimiter: "或"
       types:
         reviewable_flagged_post:
           title: "標記的貼文"
@@ -730,6 +726,7 @@ zh_TW:
         remove_members: "移除成員"
         remove_owners: "移除擁有者"
         make_all_primary: "將全部設為主要"
+        status: "狀態"
         owner: "擁有者"
         primary: "主要"
       topics: "話題"
@@ -2598,6 +2595,10 @@ zh_TW:
     filters:
       with_topics: "%{filter} 話題"
       with_category: "%{filter} %{category} 話題"
+      filter:
+        title: "過濾"
+        button:
+          label: "過濾"
       latest:
         title: "最新"
         title_with_count:
@@ -3705,9 +3706,17 @@ zh_TW:
         new_template_form:
           submit: "保存"
           cancel: "取消"
+          preview: "預覽"
         quick_insert_fields:
           add_new_field: "加入"
           dropdown: "下拉"
+        validations_modal:
+          table_headers:
+            type: "類型"
+            description: "簡述"
+          validations:
+            required:
+              key: "必填"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以使用者的檢視角度進行除錯。完成後將需登出。"
@@ -3720,6 +3729,7 @@ zh_TW:
         not_found: "抱歉，系統裡無此使用者名稱。"
         id_not_found: "抱歉，系統裡無此使用者名稱。"
         active: "已啟動"
+        status: "狀態"
         show_emails: "顯示電子郵件"
         hide_emails: "隱藏 email"
         nav:

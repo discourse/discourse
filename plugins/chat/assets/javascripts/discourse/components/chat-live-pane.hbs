@@ -3,6 +3,7 @@
     "chat-live-pane"
     (if this.loading "loading")
     (if this.sendingLoading "sending-loading")
+    (unless this.loadedOnce "not-loaded-once")
   }}
   {{did-insert this.setupListeners}}
   {{will-destroy this.teardownListeners}}
@@ -37,46 +38,41 @@
     }}
   ></div>
 
-  <div class="chat-messages-scroll chat-messages-container">
+  <div
+    class="chat-messages-scroll chat-messages-container"
+    {{on "scroll" this.computeScrollState passive=true}}
+    {{chat/on-scroll this.resetIdle (hash delay=500)}}
+    {{chat/on-scroll this.computeArrow (hash delay=150)}}
+  >
     <div class="chat-message-actions-desktop-anchor"></div>
-    <div class="chat-messages-container">
-
-      {{#if this.loadingMorePast}}
-        <ChatSkeleton
-          @onInsert={{this.onDidInsertSkeleton}}
-          @onDestroy={{this.onDestroySkeleton}}
-        />
-      {{/if}}
-
-      {{#each @channel.messages key="id" as |message|}}
-        <ChatMessage
-          @message={{message}}
-          @canInteractWithChat={{this.canInteractWithChat}}
-          @channel={{@channel}}
-          @setReplyTo={{this.setReplyTo}}
-          @replyMessageClicked={{this.replyMessageClicked}}
-          @editButtonClicked={{this.editButtonClicked}}
-          @selectingMessages={{this.selectingMessages}}
-          @onStartSelectingMessages={{this.onStartSelectingMessages}}
-          @onSelectMessage={{this.onSelectMessage}}
-          @bulkSelectMessages={{this.bulkSelectMessages}}
-          @isHovered={{eq message.id this.hoveredMessageId}}
-          @onHoverMessage={{this.onHoverMessage}}
-          @resendStagedMessage={{this.resendStagedMessage}}
-          @didShowMessage={{this.didShowMessage}}
-          @didHideMessage={{this.didHideMessage}}
-        />
-      {{/each}}
-
-      {{#if (or this.loadingMoreFuture)}}
-        <ChatSkeleton
-          @onInsert={{this.onDidInsertSkeleton}}
-          @onDestroy={{this.onDestroySkeleton}}
-        />
+    <div class="chat-messages-container" {{chat/on-resize this.didResizePane}}>
+      {{#if this.loadedOnce}}
+        {{#each @channel.messages key="id" as |message|}}
+          <ChatMessage
+            @message={{message}}
+            @canInteractWithChat={{this.canInteractWithChat}}
+            @channel={{@channel}}
+            @setReplyTo={{this.setReplyTo}}
+            @replyMessageClicked={{this.replyMessageClicked}}
+            @editButtonClicked={{this.editButtonClicked}}
+            @selectingMessages={{this.selectingMessages}}
+            @onStartSelectingMessages={{this.onStartSelectingMessages}}
+            @onSelectMessage={{this.onSelectMessage}}
+            @bulkSelectMessages={{this.bulkSelectMessages}}
+            @isHovered={{eq message.id this.hoveredMessageId}}
+            @onHoverMessage={{this.onHoverMessage}}
+            @resendStagedMessage={{this.resendStagedMessage}}
+            @messageDidEnterViewport={{this.messageDidEnterViewport}}
+            @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
+          />
+        {{/each}}
+      {{else}}
+        <ChatSkeleton />
       {{/if}}
     </div>
 
-    {{#if (and this.loadedOnce (not @channel.canLoadMorePast))}}
+    {{! at bottom even if shown at top due to column-reverse  }}
+    {{#if (and this.loadedOnce (not @channel.messagesManager.canLoadMorePast))}}
       <div class="all-loaded-message">
         {{i18n "chat.all_loaded"}}
       </div>
@@ -84,9 +80,9 @@
   </div>
 
   <ChatScrollToBottomArrow
-    @scrollToBottom={{this.scrollToBottom}}
+    @scrollToBottom={{this.scrollToLatestMessage}}
     @hasNewMessages={{this.hasNewMessages}}
-    @isAlmostDocked={{this.isAlmostDocked}}
+    @show={{or this.needsArrow @channel.messagesManager.canLoadMoreFuture}}
     @channel={{@channel}}
   />
 

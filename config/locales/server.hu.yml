@@ -190,6 +190,7 @@ hu:
     not_found_json: "A meghívási token érvénytelen. Lépjen kapcsolatba a stábbal."
     not_found_template_link: |
       <p>Ez a(z) <a href="%{base_url}">%{site_name}</a> meghívó már nem váltható be. Kérje meg az Ön meghívó személyt, hogy küldjön egy új meghívót.</p>
+    generic_error_response: "Probléma lépett fel a kéréssel kapcsolatban."
     confirm_email: "<p>Mindjárt készen is vagyunk! Elküldtünk egy megerősítő e-mailt a <b>%{email}</b> címre. Kérlek, kövesd a benne található instrukciókat, és aktiváld a fiókodat.</p><p>Ha pár percen belül nem érkezne meg, ne felejtsd el a <b>SPAM</b> és a <b>Promóciók</b> mappában is ellenőrizni!</p>"
     disabled_errors:
       invalid_access: "Nincs engedélye a kért erőforrás megtekintéséhez."
@@ -982,6 +983,7 @@ hu:
     hide_email_address_taken: "Ne tájékoztassa a felhasználókat arról, hogy létezik fiók egy adott e-mail címmel a regisztráció során vagy az elfelejtett jelszó folyamata során. Teljes e-mail cím megkövetelése az „elfelejtett jelszó” kérésekhez."
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
+    discourse_connect_url: "A DiscourseConnect végpont URL-je (tartalmaznia kell a http:// vagy https:// karaktereket, és nem tartalmazhat a végén perjelet)"
     discord_secret: "Discord titkos kulcs"
     maximum_backups: "A maximálisan megtartandó biztonsági másolatok száma. A régebbi biztonsági mentések automatikusan törlődnek"
     rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hozhatnak létre."
@@ -1025,6 +1027,7 @@ hu:
     enable_new_notifications_menu: "Engedélyezi az új értesítési menü használatát a régi navigációs menüben."
     enable_experimental_hashtag_autocomplete: "KÍSÉRLETI: Használja az új #hashtag automatikus kiegészítési rendszert a kategóriákhoz és címkékhez, amelyek másképp jelenítik meg a kiválasztott elemet, és javítják a keresést"
     experimental_new_new_view_groups: "Kísérleti: Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és az új témákat, és az oldalsávban lévő \"Minden\" linket kapcsolja rá."
+    enable_custom_sidebar_sections: "Kísérleti: Egyéni oldalsáv szekciók engedélyezése"
     errors:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
@@ -1045,7 +1048,7 @@ hu:
       search_tokenize_chinese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_chinese” beállítást."
       search_tokenize_japanese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_japanese” beállítást."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "A DiscourseConnect nem engedélyezhető, ha a 2FA kényszerítve van."
-      invalid_uncategorized_category_setting: "A \"Nem kategorizált\" kategória nem választható ki, ha a \"nem kategorizált témák engedélyezése\" nincs engedélyezve."
+      invalid_uncategorized_category_setting: 'A "Nem kategorizált" kategória nem választható ki, ha a "nem kategorizált témák engedélyezése" nincs engedélyezve.'
       enable_new_notifications_menu_not_legacy_navigation_menu: "A beállítás engedélyezése előtt a `navigation_menu`-t `legacy` értékre kell állítani."
       invalid_search_ranking_weights: "Az érték érvénytelen a search_ranking_weights webhely beállításánál. Példa: „{0.1,0.2,0.3,1.0}”. Vegye figyelembe, hogy az egyes súlyok maximális értéke 1,0."
   search:
@@ -2145,6 +2148,10 @@ hu:
       message: "<p>Aktiváló levelet küldtünk az <b>%{email}</b>címre, pár percen belül a postaládádban kell lennie. A fiók aktiválásához kövesd az e-mailben található utasításokat.</p><p>Ha nem érkezik meg, ellenőrizd a spam (és Gmail esetén a Promóciók) mappát is, és <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>ellenőrizd, hogy jó e-mail címet adtál-e meg!</a>.</p>"
     resend_email:
       title: "Aktiváló e-mail újraküldése"
+  safe_mode:
+    description: "A biztonságos mód lehetővé teszi, hogy tesztelje webhelyét témák vagy kliensoldali plugin-beállítások betöltése nélkül. A szerveroldali plugin testreszabások továbbra is engedélyezve maradnak."
+    no_unofficial_plugins: "Nem hivatalos ügyféloldali plugin testreszabások letiltása"
+    no_plugins: "Az összes ügyféloldali plugin testreszabás letiltása"
   wizard:
     step:
       introduction:
@@ -2230,42 +2237,30 @@ hu:
       medium: "Közepes"
       high: "Magas"
     actions:
-      agree_and_keep:
-        title: "Bejegyzés megtartása"
+      agree:
+        title: "Igen"
       agree_and_suspend:
-        title: "Felhasználó felfüggesztése"
         description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"
       agree_and_silence:
-        title: "Felhasználó némítása"
         description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
       agree_and_restore:
-        title: "Bejegyzés visszaállítása"
         description: "A bejegyzés visszaállítása, hogy minden felhasználó láthassa."
-      agree_and_hide:
-        title: "Bejegyzés elrejtése"
-        description: "Bejegyzés elrejtése, és automatikus üzenet küldése a létrehozójának, hogy módosítson rajta."
       delete_single:
         title: "Törlés"
       delete:
         title: "Törlés…"
-      delete_and_ignore:
-        title: "Bejegyzés törlése és letiltás"
-        description: "Bejegyzés törlése, és ha ez az első bejegyzés, akkor a téma törlése"
       delete_and_ignore_replies:
-        title: "Bejegyzés törlése a válaszokkal együtt, és letiltás"
-        description: "Bejegyzés törlése a válaszokkal együtt, és ha ez az első bejegyzés, akkor a téma törlése"
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
-      delete_and_agree:
-        description: "Bejegyzés törlése, és ha ez az első bejegyzés, akkor a téma törlése"
       delete_and_agree_replies:
-        description: "Bejegyzés törlése a válaszokkal együtt, és ha ez az első bejegyzés, akkor a téma törlése"
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
       disagree_and_restore:
         description: "A bejegyzés visszaállítása, hogy minden felhasználó láthassa."
       disagree:
-        title: "Elutasítás"
+        title: "Nem"
       ignore:
         title: "Letiltás"
+      ignore_and_do_nothing:
+        title: "Ne csinálj semmit"
       approve:
         title: "Jóváhagyás"
       approve_post:
@@ -2298,6 +2293,8 @@ hu:
   form_templates:
     errors:
       invalid_yaml: "nem érvényes YAML karakterlánc"
+      invalid_type: "érvénytelen sablontípust tartalmaz: %{type} (érvényes típusok: %{valid_types})"
+      missing_type: "hiányzik egy mezőtípus"
   activemodel:
     errors:
       <<: *errors

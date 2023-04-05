@@ -145,6 +145,16 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Trashes (soft deletes) a chat message.
+   * @param {number} channelId - ID of the channel.
+   * @param {number} messageId - ID of the message.
+   * @returns {Promise}
+   */
+  trashMessage(channelId, messageId) {
+    return this.#deleteRequest(`/channels/${channelId}/messages/${messageId}`);
+  }
+
+  /**
    * Creates a channel archive.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - Params of the archive.
@@ -243,7 +253,7 @@ export default class ChatApi extends Service {
    * @param {integer} data.pageSize - Max number of messages to fetch.
    * @returns {Promise}
    */
-  async messages(channelId, data = {}) {
+  messages(channelId, data = {}) {
     let path;
     const args = {};
 
@@ -260,6 +270,10 @@ export default class ChatApi extends Service {
 
       if (data.direction) {
         args.direction = data.direction;
+      }
+
+      if (data.threadId) {
+        args.thread_id = data.threadId;
       }
     }
 
@@ -280,6 +294,28 @@ export default class ChatApi extends Service {
       `/channels/${channelId}/notifications-settings/me`,
       { notifications_settings: data }
     );
+  }
+
+  /**
+   * Marks messages for all of a user's chat channel memberships as read.
+   *
+   * @returns {Promise}
+   */
+  markAllChannelsAsRead() {
+    return this.#putRequest(`/channels/read`);
+  }
+
+  /**
+   * Marks messages for a single user chat channel membership as read. If no
+   * message ID is provided, then the latest message for the channel is fetched
+   * on the server and used for the last read message.
+   *
+   * @param {number} channelId - The ID of the channel for the message being marked as read.
+   * @param {number} [messageId] - The ID of the message being marked as read.
+   * @returns {Promise}
+   */
+  markChannelAsRead(channelId, messageId = null) {
+    return this.#putRequest(`/channels/${channelId}/read/${messageId}`);
   }
 
   get #basePath() {

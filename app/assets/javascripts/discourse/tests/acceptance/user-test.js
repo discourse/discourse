@@ -335,6 +335,30 @@ acceptance(
   }
 );
 
+acceptance("User - Invalid view_user_route setting", function (needs) {
+  needs.settings({
+    view_user_route: "X",
+  });
+
+  test("It defaults to summary", async function (assert) {
+    await visit("/u/eviltrout");
+
+    assert.strictEqual(currentRouteName(), "user.summary");
+  });
+});
+
+acceptance("User - Valid view_user_route setting", function (needs) {
+  needs.settings({
+    view_user_route: "activity",
+  });
+
+  test("It defaults to summary", async function (assert) {
+    await visit("/u/eviltrout");
+
+    assert.strictEqual(currentRouteName(), "userActivity.index");
+  });
+});
+
 acceptance("User - Logout", function (needs) {
   needs.user({ username: "eviltrout" });
 

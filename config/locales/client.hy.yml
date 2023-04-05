@@ -427,11 +427,9 @@ hy:
       scores:
         about: "Այս գնահատականը հաշվարկվում է՝ ելնելով զեկուցողի վստահության մակարդակից, նրանց նախորդ բողքների ճշգրտությունից և հաղորդվող գրառումի գերակայությունից:"
         score: "Միավոր"
-        date: "Ամսաթիվ"
-        type: "Տիպ"
+        type: "Պատճառ"
         status: "Ստատուս"
-        submitted_by: "Ներկայացվել է"
-        reviewed_by: "Վերանայվել է"
+        submitted_by: "Հաղորդվում է"
       statuses:
         pending:
           title: "Սպասող"
@@ -439,14 +437,12 @@ hy:
           title: "Հաստատված է"
         rejected:
           title: "Մերժված"
-        ignored:
-          title: "Անտեսված"
-        deleted:
-          title: "Ջնջված է"
         reviewed:
-          title: "(բոլորը վերանայված են)"
+          title: "Բոլորը վերանայված են"
         all:
-          title: "(բոլորը)"
+          title: "Բոլորը"
+      context_question:
+        delimiter: "կամ"
       types:
         reviewable_flagged_post:
           title: "Դրոշակավորված Գրառումներ"
@@ -645,6 +641,7 @@ hy:
         make_owner_description: "Դարձնել <b>%{username}</b>-ին այս խմբի սեփականատեր"
         remove_owner: "Զրկել սեփականատիրոջ իրավունքից"
         remove_owner_description: "Զրկել <b>%{username}</b>-ին այս խմբի սեփականատիրոջ իրավունքից"
+        status: "Ստատուս"
         owner: "Սեփականատեր"
         forbidden: "Ձեզ թույլատրված չէ դիտել դա:"
       topics: "Թեմաներ"
@@ -2555,6 +2552,10 @@ hy:
     filters:
       with_topics: "%{filter} թեմա"
       with_category: "%{filter} %{category} թեմա"
+      filter:
+        title: "Ֆիլտր"
+        button:
+          label: "Ֆիլտր"
       latest:
         title: "Վերջինները"
         title_with_count:
@@ -3759,9 +3760,18 @@ hy:
         new_template_form:
           submit: "Պահպանել"
           cancel: "Չեղարկել"
+          preview: "Նախադիտում"
         quick_insert_fields:
           add_new_field: "Ավելացնել"
           dropdown: "Բացվող Ցուցակ"
+        validations_modal:
+          table_headers:
+            key: "Բանալի"
+            type: "Տիպը"
+            description: "Նկարագրությունը"
+          validations:
+            required:
+              key: "պարտադիր է"
       impersonate:
         title: "Նմանակել"
         help: "Օգտագործեք այս գործիքը՝ վրիպազերծման նպատակով օգտատիրոջ հաշիվը նմանակելու համար: Դուք պետք է ավարտելուց հետո դուրս գրվեք:"
@@ -3774,6 +3784,7 @@ hy:
         not_found: "Ներողություն, այդ օգտանունը գոյություն չունի մեր համակարգում:"
         id_not_found: "Ներողություն, այդ օգտատիրոջ id-ն գոյություն չունի մեր համակարգում:"
         active: "Ակտիվացված"
+        status: "Ստատուս"
         show_emails: "Ցուցադրել Էլ. հասցեները"
         hide_emails: "Թաքցնել Էլ. նամակները"
         nav:

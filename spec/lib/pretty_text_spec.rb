@@ -1019,12 +1019,30 @@ RSpec.describe PrettyText do
       expect(extract_urls(html)).to eq(["https://example.com"])
     end
 
-    it "should lazyYT videos" do
-      expect(
-        extract_urls(
-          "<div class=\"lazyYT\" data-youtube-id=\"yXEuEUQIP3Q\" data-youtube-title=\"Mister Rogers defending PBS to the US Senate\" data-width=\"480\" data-height=\"270\" data-parameters=\"feature=oembed&amp;wmode=opaque\"></div>",
-        ),
-      ).to eq(["https://www.youtube.com/watch?v=yXEuEUQIP3Q"])
+    context "when lazy-videos" do
+      it "should extract youtube url" do
+        expect(
+          extract_urls(
+            "<div class=\"lazy-video-container\" data-video-id=\"yXEuEUQIP3Q\" data-video-title=\"Mister Rogers defending PBS to the US Senate\" data-provider-name=\"youtube\"></div>",
+          ),
+        ).to eq(["https://www.youtube.com/watch?v=yXEuEUQIP3Q"])
+      end
+
+      it "should extract vimeo url" do
+        expect(
+          extract_urls(
+            "<div class=\"lazy-video-container\" data-video-id=\"786646692\" data-video-title=\"Dear Rich\" data-provider-name=\"vimeo\"></div>",
+          ),
+        ).to eq(["https://vimeo.com/786646692"])
+      end
+
+      it "should extract tiktok url" do
+        expect(
+          extract_urls(
+            "<div class=\"lazy-video-container\" data-video-id=\"6718335390845095173\" data-video-title=\"Scramble up ur name &amp;amp; I’ll try to guess it😍❤️ #foryoupage #petsoftiktok...\" data-provider-name=\"tiktok\"></div>",
+          ),
+        ).to eq(["https://m.tiktok.com/v/6718335390845095173"])
+      end
     end
 
     it "should extract links to posts" do
@@ -1515,6 +1533,27 @@ RSpec.describe PrettyText do
 
     it "replaces Emoji from Unicode 14.0" do
       expect(PrettyText.cook("🫣")).to match(/\:face_with_peeking_eye\:/)
+    end
+
+    context "with subfolder" do
+      it "prepends the subfolder path to the emoji url" do
+        set_subfolder "/forum"
+
+        expected = "src=\"/forum/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}\""
+
+        expect(PrettyText.cook("😀")).to include(expected)
+        expect(PrettyText.cook(":grinning:")).to include(expected)
+      end
+
+      it "prepends the subfolder path even if it is part of the emoji url" do
+        set_subfolder "/info"
+
+        expected =
+          "src=\"/info/images/emoji/twitter/information_source.png?v=#{Emoji::EMOJI_VERSION}\""
+
+        expect(PrettyText.cook("ℹ️")).to include(expected)
+        expect(PrettyText.cook(":information_source:")).to include(expected)
+      end
     end
   end
 

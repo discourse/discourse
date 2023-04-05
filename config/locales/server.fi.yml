@@ -1603,7 +1603,6 @@ fi:
     enable_discourse_connect: "Ota käyttöön kirjautuminen DiscourseConnectin (aikaisemmin \"Discourse SSO\") kautta (VAROITUS: KÄYTTÄJIEN SÄHKÖPOSTIEN OSOITTEET *ON TARKISTETTAVA* ULKOISELLA SIVUSTOLLA!)"
     verbose_discourse_connect_logging: "Kirjaa yksityiskohtaiset DiscourseConnect-diagnostiikat lokiin <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Käytä DiscourseConnectin (aikaisemmin '\"Discourse SSO\") palveluntarjoajaprotokollaa /session/sso_provider-päätepisteessä, edellyttää discourse_connect_provider_secretsin asettamista"
-    discourse_connect_url: "DiscourseConnectin päätepisteen URL (täytyy sisältää http:// tai https://)"
     discourse_connect_secret: "Salausavain, jolla todennetaan DiscourseConnectin tiedot, varmista, että se on vähintään 10 merkkiä pitkä"
     discourse_connect_provider_secrets: "Luettelo verkkotunnus-salausavain-pareista, jotka käyttävät DiscourseConnectia. Varmista, että DiscourseConnectin salausavain on vähintään 10 merkin pituinen. Jokerimerkkiä * voi käyttää kelpuuttamaan mikä tahansa verkkotunnus tai verkkotunnuksen osa (esim. *.esimerkki.fi)."
     discourse_connect_overrides_bio: "Syrjäyttää käyttäjän kuvauksen itsestään käyttäjäprofiilissa ja estää sen muokkaamisen"
@@ -1721,7 +1720,6 @@ fi:
     composer_media_optimization_image_bytes_optimization_threshold: "Kuvatiedoston vähimmäiskoko, joka laukaisee optimoinnin asiakkaan päässä"
     composer_media_optimization_image_resize_dimensions_threshold: "Kuvan vähimmäisleveys, joka laukaisee koon muuttamisen asiakkaan päässä"
     composer_media_optimization_image_resize_width_target: "Kuvat, joiden leveys on suurempi kuin \"composer_media_optimization_image_dimensions_resize_threshold\", muunnetaan tähän leveyteen. Täytyy olla suurempi tai yhtä suuri kuin \"composer_media_optimization_image_dimensions_resize_threshold\"."
-    composer_media_optimization_image_encode_quality: "Uudelleenkoodausprosessissa käytetty JPEG-koodauslaatu."
     min_ratio_to_crop: "Suhde, jolla korkeat kuvat rajataan. Syötä tulos leveys/korkeus-suhteena."
     simultaneous_uploads: "Kuinka monta tiedostoa voi enintään vetää ja pudottaa viestieditoriin"
     default_invitee_trust_level: "Oletusluottamustaso (0–4) kutsutuille käyttäjille."
@@ -3678,12 +3676,7 @@ fi:
     title: "Sovellusta ei voida ladata"
     offline_page_message: "Yhteydessäsi vaikuttaa olevan vikaa! Tarkista verkkoyhteytesi ja yritä uudelleen."
   login_required:
-    welcome_message: |
-      ## [Tervetuloa sivustolle %{title}](#welcome)
-      Käyttäjätili tarvitaan. Luo tili tai kirjaudu sisään.
-    welcome_message_invite_only: |
-      ## [Tervetuloa sivustolle %{title}](#welcome)
-      Käyttäjätili vaaditaan. Pyydä yhteisön jäsentä kutsumaan sinut tai kirjaudu sisään.
+    welcome_message: "## [Tervetuloa sivustolle %{title}](#welcome)"
   upload:
     edit_reason: "lataa kuvista paikalliset kopiot"
     unauthorized: "Tiedosto, jota yrität ladata, ei ole sallittu (sallitut päätteet: %{authorized_extensions})."
@@ -4190,10 +4183,7 @@ fi:
       message: "<p>Lähetimme uuden aktivointiviestin osoitteeseen <b>%{email}</b>"
   safe_mode:
     title: "Siirry vikasietotilaan"
-    description: "Vikasietotilassa voit testata sivustoasi ilman lisäosia ja teemoja."
     no_themes: "Poista teemat ja teeman komponentit käytöstä"
-    no_unofficial_plugins: "Poista epäviralliset lisäosat käytöstä"
-    no_plugins: "Poista kaikki lisäosat käytöstä"
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
   wizard:
@@ -4370,50 +4360,30 @@ fi:
         category: alueen asetukset
     actions:
       agree:
-        title: "Hyväksy..."
-      agree_and_keep:
-        title: "Säilytä viesti"
-        description: "Hyväksy merkintä ja pidä viesti ennallaan."
-      agree_and_keep_hidden:
-        title: "Jätä viesti piiloon"
-        description: "Hyväksy merkintä ja jätä viesti piiloon."
+        title: "Kyllä"
       agree_and_suspend:
-        title: "Hyllytä käyttäjä"
         description: "Hyväksy merkintä ja hyllytä käyttäjä."
       agree_and_silence:
         title: "Hiljennä käyttäjä"
         description: "Hyväksy merkintä ja hiljennä käyttäjä."
       agree_and_restore:
-        title: "Palauta viesti"
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
-      agree_and_hide:
-        title: "Piilota viesti"
-        description: "Piilota viesti ja lähetä käyttäjälle yksityisviesti, jossa pyydetään käyttäjää muokkaamaan viestiä."
       delete_single:
         title: "Poista"
       delete:
         title: "Poista..."
-      delete_and_ignore:
-        title: "Poista viesti ja ohita"
-        description: "Poista viesti: jos on viesti on ketjun ensimmäinen, poista myös ketju"
       delete_and_ignore_replies:
-        title: "Poista viesti + vastaukset ja sivuuta"
-        description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
-      delete_and_agree:
-        title: "Poista viesti ja hyväksy merkintä"
-        description: "Poista viesti; jos on viesti on ketjun ensimmäinen, poista myös ketju"
       delete_and_agree_replies:
-        title: "Poista viesti + vastaukset ja hyväksy merkintä"
-        description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
       disagree_and_restore:
-        title: "Hylkää merkintä ja palauta viesti"
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       disagree:
-        title: "Hylkää"
+        title: "Ei"
       ignore:
         title: "Sivuuta"
+      ignore_and_do_nothing:
+        title: "Älä tee mitään"
       approve:
         title: "Hyväksy"
       approve_post:

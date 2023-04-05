@@ -93,6 +93,8 @@ pl_PL:
         never: "Nigdy"
         title: "Powiadomienia e-mail"
         when_away: "Tylko gdy jesteś daleko"
+      header_indicator_preference:
+        never: "Nigdy"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"
@@ -102,7 +104,7 @@ pl_PL:
       in_reply_to: "W odpowiedzi na"
       heading: "Czat"
       join: "Dołącz"
-      new_messages: "nowe wiadomości"
+      last_visit: "ostatnia wizyta"
       mention_warning:
         dismiss: "odrzuć"
         invitations_sent:
@@ -124,6 +126,7 @@ pl_PL:
       no_public_channels: "Nie dołączyłeś do żadnego kanału."
       open: "Otwórz czat"
       open_full_page: "Otwórz czat na pełnym ekranie"
+      close_full_page: "Zamknij czat pełnoekranowy"
       open_message: "Otwórz wiadomość na czacie"
       placeholder_self: "Zanotuj coś"
       placeholder_silenced: "W tej chwili nie możesz wysyłać wiadomości."
@@ -141,7 +144,6 @@ pl_PL:
       restore: "Przywróć usuniętą wiadomość"
       save: "Zapisz"
       select: "Wybierz"
-      silence: "Wycisz użytkownika"
       return_to_list: "Powrót do listy kanałów"
       scroll_to_bottom: "Przewiń na dół"
       scroll_to_new_messages: "Zobacz nowe wiadomości"

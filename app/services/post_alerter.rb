@@ -55,12 +55,9 @@ class PostAlerter
 
     if user.push_subscriptions.exists?
       if user.seen_since?(SiteSetting.push_notification_time_window_mins.minutes.ago)
-        Jobs.enqueue_in(
-          SiteSetting.push_notification_time_window_mins.minutes,
-          :send_push_notification,
-          user_id: user.id,
-          payload: payload,
-        )
+        delay =
+          (SiteSetting.push_notification_time_window_mins - (Time.now - user.last_seen_at) / 60)
+        Jobs.enqueue_in(delay.minutes, :send_push_notification, user_id: user.id, payload: payload)
       else
         Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
       end

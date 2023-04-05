@@ -1603,7 +1603,6 @@ fr:
     enable_discourse_connect: "Activer le système d''authentification DiscourseConnect (précédemment appelé « Discourse SSO »). (ATTENTION : LES ADRESSES E-MAIL DES UTILISATEURS *DOIVENT* ÊTRE VALIDÉES PAR LE SITE EXTERNE !)"
     verbose_discourse_connect_logging: "Journaliser les diagnostics étendus liés au fonctionnement de DiscourseConnect dans le répertoire <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implémenter le protocole fournisseur de DiscourseConnect (précédemment appelé « Discourse SSO ») au point de terminaison /session/sso_provider, nécessite que le paramètre discourse_connect_provider soit défini"
-    discourse_connect_url: "URL du point de terminaison DiscourseConnect (comprenant http:// ou https://)"
     discourse_connect_secret: "Secret partagé servant à authentifier par cryptographie les informations liées à DiscourseConnect, assurez-vous qu'il compte au minimum 10 caractères"
     discourse_connect_provider_secrets: "Une liste de couples nom de domaine - clé secrète utilisant DiscourseConnect. Assurez-vous que la clé secrète DiscourseConnect compte au minimum 10 caractères. Le caractère de remplacement « * » peut servir à désigner n'importe quel nom de domaine ou n'importe quelle sous-partie d'un nom de domaine (p. ex. : *.exemple.com)."
     discourse_connect_overrides_bio: "Écrase la biographie du profil utilisateur et empêche l'utilisateur de la modifier"
@@ -1721,7 +1720,6 @@ fr:
     composer_media_optimization_image_bytes_optimization_threshold: "Taille minimale du fichier image pour déclencher l'optimisation côté client"
     composer_media_optimization_image_resize_dimensions_threshold: "Largeur d'image minimale pour déclencher le redimensionnement côté client"
     composer_media_optimization_image_resize_width_target: "Les images dont la largeur est supérieure à « composer_media_optimization_image_dimensions_resize_threshold » seront redimensionnées à cette largeur. Doit être >= à « composer_media_optimization_image_dimensions_resize_threshold »."
-    composer_media_optimization_image_encode_quality: "Qualité d'encodage JPEG utilisée dans le processus de réencodage."
     min_ratio_to_crop: "Ratio utilisé pour recadrer les images en hauteur. Saisissez le résultat de la largeur/hauteur."
     simultaneous_uploads: "Nombre maximal de fichiers qui peuvent être glissés et déposés dans l'éditeur"
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
@@ -3699,12 +3697,7 @@ fr:
     title: "Impossible de charger l'application"
     offline_page_message: "Il semble que vous n'êtes pas connecté(e) à Internet ! Veuillez vérifier votre connexion réseau et réessayez."
   login_required:
-    welcome_message: |
-      ## [Bienvenue sur %{title}](#welcome)
-      Un compte est nécessaire. Veuillez en créer un ou connectez-vous pour continuer.
-    welcome_message_invite_only: |
-      ## [Bienvenue sur %{title}](#welcome)
-      Un compte est nécessaire. Veuillez demander une invitation à un membre ou connectez-vous pour continuer.
+    welcome_message: "## [Bienvenue sur %{title}](#welcome)"
   upload:
     edit_reason: "téléchargement de copies locales des images distantes"
     unauthorized: "Nous sommes désolés, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : %{authorized_extensions})."
@@ -4210,10 +4203,7 @@ fr:
       message: "<p>Nous avons renvoyé l'e-mail d'activation à <b>%{email}</b>"
   safe_mode:
     title: "Activer le mode sans échec"
-    description: "Le mode sans échec vous permet de tester votre site sans charger d'extension ni de thème."
     no_themes: "Désactiver les thèmes et leurs composants"
-    no_unofficial_plugins: "Désactiver les extensions non officielles"
-    no_plugins: "Désactiver toutes les extensions"
     enter: "Activer le mode sans échec"
     must_select: "Vous devez sélectionner au moins une option pour activer le mode sans échec."
   wizard:
@@ -4390,50 +4380,30 @@ fr:
         category: paramètres de la catégorie
     actions:
       agree:
-        title: "Accepter…"
-      agree_and_keep:
-        title: "Conserver le message"
-        description: "Accepter le signalement et conserver le message tel quel."
-      agree_and_keep_hidden:
-        title: "Garder le message masqué"
-        description: "Accepter le signalement et laisser le message masqué."
+        title: "Oui"
       agree_and_suspend:
-        title: "Suspendre l'utilisateur"
         description: "Accepter le signalement et suspendre l'utilisateur."
       agree_and_silence:
-        title: "Mettre l'utilisateur en sourdine"
+        title: "Désactiver l'utilisateur"
         description: "Accepter le signalement et mettre l'utilisateur en sourdine."
       agree_and_restore:
-        title: "Rétablir le message"
         description: "Rétablir le message afin que tous les utilisateurs puissent le voir."
-      agree_and_hide:
-        title: "Masquer le message"
-        description: "Masquer le message et envoyer automatiquement un message à l'utilisateur l'incitant à le modifier."
       delete_single:
         title: "Supprimer"
       delete:
         title: "Supprimer…"
-      delete_and_ignore:
-        title: "Supprimer le message et ignorer"
-        description: "Supprimer le message ; s'il s'agit du premier message, le sujet sera supprimé"
       delete_and_ignore_replies:
-        title: "Supprimer message + réponses et ignorer"
-        description: "Supprimer le message et toutes les réponses ; s'il s'agit du premier message, le sujet sera supprimé"
         confirm: "Voulez-vous vraiment supprimer les réponses à ce message ?"
-      delete_and_agree:
-        title: "Supprimer le message et accepter"
-        description: "Supprimer le message ; s'il s'agit du premier message, le sujet sera supprimé"
       delete_and_agree_replies:
-        title: "Supprimer message + réponses et accepter"
-        description: "Supprimer le message et toutes les réponses ; s'il s'agit du premier message, le sujet sera supprimé"
         confirm: "Voulez-vous vraiment supprimer les réponses à ce message ?"
       disagree_and_restore:
-        title: "Rejeter le signalement et rétablir le message"
         description: "Rétablir le message afin que tous les utilisateurs puissent le voir."
       disagree:
-        title: "Rejeter"
+        title: "Non"
       ignore:
         title: "Ignorer"
+      ignore_and_do_nothing:
+        title: "Ne rien faire"
       approve:
         title: "Approuver"
       approve_post:

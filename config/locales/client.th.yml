@@ -394,11 +394,8 @@ th:
         view_full: "ดูบทสนทนาทั้งหมด"
       scores:
         score: "คะแนน"
-        date: "วันที่"
-        type: "ชนิด"
+        type: "เหตุผล"
         status: "สถานะ"
-        submitted_by: "ยืนยันโดย"
-        reviewed_by: "รีวิวโดย"
       statuses:
         pending:
           title: "อยู่ระหว่างการพิจารณา"
@@ -406,14 +403,12 @@ th:
           title: "อนุมัติ"
         rejected:
           title: "ปฏิเสธ"
-        ignored:
-          title: "ละเว้น"
-        deleted:
-          title: "ลบ"
         reviewed:
-          title: "(ถูกรีวิวทั้งหมด)"
+          title: "ถูกรีวิวทั้งหมด"
         all:
-          title: "(ทุกสิ่ง)"
+          title: "ทุกสิ่ง"
+      context_question:
+        delimiter: "หรือ"
       types:
         reviewable_flagged_post:
           title: "โพสต์ที่ถูกปักธง"
@@ -594,6 +589,7 @@ th:
         make_owner_description: "แต่งตั้ง<b>%{username}</b>เป็นเจ้าของกลุ่มนี้"
         remove_owner: "ลบในสถานะเจ้าของ"
         remove_owner_description: "ลบ<b>%{username}</b>ในสถานะเจ้าของกลุ่มนี้"
+        status: "สถานะ"
         owner: "เจ้าของ"
         forbidden: "คุณไม่ได้รับอนุญาตให้ดูสมาชิก"
       topics: "กระทู้"
@@ -2893,15 +2889,24 @@ th:
         new_template_form:
           submit: "บันทึก"
           cancel: "ยกเลิก"
+          preview: "แสดงตัวอย่าง"
         quick_insert_fields:
           add_new_field: "เพิ่ม"
           dropdown: "ดร็อปดาวน์"
+        validations_modal:
+          table_headers:
+            type: "ชนิด"
+            description: "รายละเอียด"
+          validations:
+            required:
+              key: "ต้องการ"
       impersonate:
         not_found: "ไม่พบผู้ใช้นั้น"
       users:
         title: "ผู้ใช้"
         last_emailed: "อีเมลล่าสุด"
         active: "เปิดใช้งานแล้ว"
+        status: "สถานะ"
         show_emails: "แสดงอีเมล"
         hide_emails: "ซ่อนอีเมล"
         nav:

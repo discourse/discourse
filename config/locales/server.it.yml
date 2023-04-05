@@ -1603,7 +1603,6 @@ it:
     enable_discourse_connect: "Abilita l'accesso tramite DiscourseConnect (già \"Discourse SSO\") (ATTENZIONE: GLI INDIRIZZI E-MAIL DEGLI UTENTI *DEVONO* ESSERE CONVALIDATI DAL SITO ESTERNO!)"
     verbose_discourse_connect_logging: "Registra informazioni di diagnostica dettagliate relative a DiscourseConnect su <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementa il protocollo del fornitore DiscourseConnect (già \"Discourse SSO\") nell'endpoint /session/sso_provider. È necessario che sia impostata l'opzione discourse_connect_provider_secrets"
-    discourse_connect_url: "URL dell'endpoint DiscourseConnect (deve includere http:// o https://)"
     discourse_connect_secret: "Stringa segreta utilizzata per l'autenticazione tramite crittografia delle informazioni DiscourseConnect, deve essere lunga almeno 10 caratteri"
     discourse_connect_provider_secrets: "Un elenco di coppie dominio-segreto che utilizzano DiscourseConnect. Assicurati che il segreto di DiscourseConnect sia lungo almeno 10 caratteri. Il simbolo jolly * può essere utilizzato per indicare qualsiasi dominio o solo una parte di esso (ad esempio *. Esempio.com)."
     discourse_connect_overrides_bio: "Sovrascrive la biografia utente nel profilo utente ed impedisce agli utenti di cambiarla"
@@ -1721,7 +1720,6 @@ it:
     composer_media_optimization_image_bytes_optimization_threshold: "Dimensione minima del file di immagini per attivare l'ottimizzazione lato client"
     composer_media_optimization_image_resize_dimensions_threshold: "Larghezza minima dell'immagine per attivare il ridimensionamento lato client"
     composer_media_optimization_image_resize_width_target: "Le immagini con larghezza maggiore di `composer_media_optimization_image_dimensions_resize_threshold` saranno ridimensionate a questa larghezza. il valore deve essere >= di `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "Qualità di codifica JPEG utilizzata nel processo di ricodifica."
     min_ratio_to_crop: "Rapporto usato per ritagliare immagini alte. Immettere il risultato del rapporto larghezza / altezza."
     simultaneous_uploads: "Numero massimo di file che possono essere trascinati e rilasciati nel composer"
     default_invitee_trust_level: "Livello di attendibilità predefinito (0-4) assegnato agli utenti invitati."
@@ -3541,10 +3539,7 @@ it:
     title: "Impossibile caricare l'app"
     offline_page_message: "Sembra che tu sia offline! Controlla la tua connessione di rete e riprova."
   login_required:
-    welcome_message: |
-      ## [Benvenuto su %{title}](#welcome)
-      E' richiesto un account. Per continuare, crea un nuovo account oppure accedi.
-    welcome_message_invite_only: "## [Benvenuto su %{title}](#benvenuto) \nÈ richiesto un account. Per favore, chiedi a un membro esistente un invito o accedi per continuare.\n"
+    welcome_message: "## [Benvenuto su %{title}](#welcome)"
   upload:
     edit_reason: "copie locali delle immagini scaricate"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
@@ -3954,10 +3949,7 @@ it:
       message: "<p>Abbiamo rispedito una email di attivazione a <b>%{email}</b>"
   safe_mode:
     title: "Avvia Modalità Sicura"
-    description: "La modalità sicura ti consente di testare il tuo sito senza caricare plugin o temi."
     no_themes: "Disabilita temi e componenti del tema"
-    no_unofficial_plugins: "Disabilita i plugin non ufficiali"
-    no_plugins: "Disabilita tutti i plugin"
     enter: "Avvia Modalità Sicura"
     must_select: "È necessario selezionare almeno un'opzione per accedere alla modalità sicura."
   wizard:
@@ -4134,50 +4126,30 @@ it:
         category: impostazioni della categoria
     actions:
       agree:
-        title: "Acconsenti..."
-      agree_and_keep:
-        title: "Mantieni il messaggio"
-        description: "Accetta la segnalazione e mantieni invariato il messaggio."
-      agree_and_keep_hidden:
-        title: "Tieni il Messaggio Nascosto"
-        description: "Accetta la segnalazione e lascia il messaggio nascosto."
+        title: "Sì"
       agree_and_suspend:
-        title: "Sospendi Utente"
         description: "Accetta la segnalazione e sospendi l'utente."
       agree_and_silence:
-        title: "Silenzia Utente"
+        title: "Silenzia utente"
         description: "Accetta la segnalazione e silenzia l'utente."
       agree_and_restore:
-        title: "Ripristina Messaggio"
         description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
-      agree_and_hide:
-        title: "Nascondi Messaggio"
-        description: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
       delete_single:
         title: "Elimina"
       delete:
         title: "Elimina..."
-      delete_and_ignore:
-        title: "Elimina il messaggio e ignora"
-        description: "Elimina il messaggio. Se fosse il primo messaggio, elimina anche l'Argomento"
       delete_and_ignore_replies:
-        title: "Elimina il messaggio e le sue risposte, ed ignora la segnalazione"
-        description: "Cancella il messaggio e tutte le relative risposte; se è il primo messaggio, cancella anche l'argomento"
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
-      delete_and_agree:
-        title: "Elimina Messaggio e accetta"
-        description: "Elimina il messaggio. Se fosse il primo messaggio, elimina anche l'Argomento"
       delete_and_agree_replies:
-        title: "Elimina il messaggio e le sue risposte, e accetta la segnalazione"
-        description: "Cancella il messaggio e tutte le relative risposte; se è il primo messaggio, cancella anche l'argomento"
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
       disagree_and_restore:
-        title: "Esprimi disaccordo e ripristina il Messaggio"
         description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
       disagree:
-        title: "Rifiuta"
+        title: "No"
       ignore:
         title: "Ignora"
+      ignore_and_do_nothing:
+        title: "Non fare nulla"
       approve:
         title: "Approva"
       approve_post:

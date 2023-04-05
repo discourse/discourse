@@ -59,25 +59,18 @@ class Emoji
 
   def self.[](name)
     name = name.delete_prefix(":").delete_suffix(":")
-    is_toned = name.match?(/.+:t[1-6]/)
-    normalized_name = name.gsub(/(.+):t[1-6]/, '\1')
+    is_toned = name.match?(/\A.+:t[1-6]\z/)
+    normalized_name = name.gsub(/\A(.+):t[1-6]\z/, '\1')
 
     found_emoji = nil
 
     [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
-      cache_postfix, found_emoji =
+      found_emoji =
         cache.defer_get_set(normalized_name) do
-          emoji =
-            Emoji
-              .public_send(list_key)
-              .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) }
-          [self.cache_postfix, emoji]
+          Emoji
+            .public_send(list_key)
+            .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) }
         end
-
-      if found_emoji && (cache_postfix != self.cache_postfix)
-        cache.delete(normalized_name)
-        redo
-      end
 
       break if found_emoji
     end

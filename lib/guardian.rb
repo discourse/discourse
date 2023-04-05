@@ -297,7 +297,7 @@ class Guardian
 
   # Can we impersonate this user?
   def can_impersonate?(target)
-    target &&
+    GlobalSetting.allow_impersonation && target &&
       # You must be an admin to impersonate
       is_admin? &&
       # You may not impersonate other admins unless you are a dev

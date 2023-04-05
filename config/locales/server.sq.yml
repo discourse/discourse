@@ -1405,12 +1405,12 @@ sq:
       linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
   reviewables:
     actions:
-      agree_and_suspend:
-        title: "Pezullo anëtarin"
+      agree:
+        title: "Po"
       delete_single:
         title: "Fshij"
       disagree:
-        title: "Jo dakord"
+        title: "Jo"
       approve:
         title: "Aprovo"
       reject_user:
