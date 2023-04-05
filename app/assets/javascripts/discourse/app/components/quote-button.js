@@ -17,7 +17,7 @@ import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 import Sharing from "discourse/lib/sharing";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { next, schedule } from "@ember/runloop";
@@ -236,22 +236,21 @@ export default Component.extend(KeyEnterEscape, {
     });
   },
 
+  @bind
+  _updateRect() {
+    this.textRange?.updateRect();
+  },
+
   _setupSelectionListeners() {
-    const updateRect = () => {
-      if (this.visible) {
-        this.textRange.updateRect();
-      }
-    };
-    document.body.addEventListener("mouseup", updateRect);
-    window.addEventListener("scroll", updateRect);
-    document.scrollingElement.addEventListener("scroll", updateRect);
+    document.body.addEventListener("mouseup", this._updateRect);
+    window.addEventListener("scroll", this._updateRect);
+    document.scrollingElement.addEventListener("scroll", this._updateRect);
   },
 
   _teardownSelectionListeners() {
-    const updateRect = () => this.textRange.updateRect();
-    document.body.removeEventListener("mouseup", updateRect);
-    window.removeEventListener("scroll", updateRect);
-    document.scrollingElement.removeEventListener("scroll", updateRect);
+    document.body.removeEventListener("mouseup", this._updateRect);
+    window.removeEventListener("scroll", this._updateRect);
+    document.scrollingElement.removeEventListener("scroll", this._updateRect);
   },
 
   didInsertElement() {
