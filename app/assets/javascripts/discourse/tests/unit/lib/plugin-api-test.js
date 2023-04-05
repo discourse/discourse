@@ -80,9 +80,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       }
     }
 
-    getOwner(this).register("class-test-thingy:main", ClassTestThingy, {
-      instantiate: false,
-    });
+    getOwner(this).register("class-test-thingy:main", ClassTestThingy);
 
     const warnStub = Sinon.stub(console, "warn");
 
