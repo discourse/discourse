@@ -31,6 +31,7 @@ export default Component.extend(TextareaTextManipulation, {
   chatChannel: null,
   chat: service(),
   classNames: ["chat-composer-container"],
+  classNameBindings: ["emojiPickerVisible:with-emoji-picker"],
   chatEmojiReactionStore: service("chat-emoji-reaction-store"),
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
   chatStateManager: service("chat-state-manager"),
@@ -52,6 +53,11 @@ export default Component.extend(TextareaTextManipulation, {
   @discourseComputed(...chatComposerButtonsDependentKeys())
   dropdownButtons() {
     return chatComposerButtons(this, "dropdown", this.context);
+  },
+
+  @discourseComputed("chatEmojiPickerManager.{opened,context}")
+  emojiPickerVisible(picker) {
+    return picker.opened && picker.context === "chat-composer";
   },
 
   @discourseComputed("chatStateManager.isFullPageActive")
@@ -416,9 +422,9 @@ export default Component.extend(TextareaTextManipulation, {
           return `${v.code}:`;
         } else {
           $textarea.autocomplete({ cancel: true });
-          this.appEvents.trigger("d-popover:close");
-          this.chatEmojiPickerManager.startFromComposer(this.emojiSelected, {
-            filter: v.term,
+          this.chatEmojiPickerManager.open({
+            context: this.context,
+            initialFilter: v.term,
           });
           return "";
         }

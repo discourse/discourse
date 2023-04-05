@@ -19,14 +19,16 @@
     <div class="chat-emoji-picker__filter-container">
       <DcFilterInput
         @class="chat-emoji-picker__filter"
-        @value={{this.chatEmojiPickerManager.initialFilter}}
+        @value={{this.chatEmojiPickerManager.picker.initialFilter}}
         @filterAction={{action this.didInputFilter value="target.value"}}
         @icons={{hash left="search"}}
         placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
         autofocus={{true}}
         {{did-insert (if this.site.desktopView this.focusFilter (noop))}}
         {{did-insert
-          (fn this.didInputFilter this.chatEmojiPickerManager.initialFilter)
+          (fn
+            this.didInputFilter this.chatEmojiPickerManager.picker.initialFilter
+          )
         }}
       >
         <div
