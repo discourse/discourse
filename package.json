@@ -34,6 +34,9 @@
     "eslint-config-discourse": "^3.3.0",
     "jsdoc": "^4.0.0",
     "lefthook": "^1.2.0",
+    "lint-to-the-future": "^2.0.0",
+    "lint-to-the-future-ember-template": "^1.1.1",
+    "lint-to-the-future-eslint": "^2.0.1",
     "puppeteer-core": "^13.7.0",
     "tidy-jsdoc": "^1.4.1"
   },
