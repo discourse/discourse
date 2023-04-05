@@ -41,7 +41,7 @@ class PasswordHasher
       raise UnsupportedAlgorithmError.new("pbkdf2 implementation only supports l=32")
     end
 
-    if !(params["i"].to_i >= 1)
+    if params["i"].to_i < 1
       raise UnsupportedAlgorithmError.new("pbkdf2 iterations must be 1 or more")
     end
 
