@@ -14,6 +14,17 @@ import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { emojiUnescape } from "discourse/lib/text";
 import { htmlSafe } from "@ember/template";
 
+let hashtagTypeClasses = {};
+export function registerHashtagType(type, typeClass) {
+  hashtagTypeClasses[type] = typeClass;
+}
+export function cleanUpHashtagTypeClasses() {
+  hashtagTypeClasses = {};
+}
+export function getHashtagTypeClasses() {
+  return hashtagTypeClasses;
+}
+
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
  * to match on the hashtag (#) character for autocompletion of categories,

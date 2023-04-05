@@ -4,6 +4,7 @@ import { bind } from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { MENTION_KEYWORDS } from "discourse/plugins/chat/discourse/components/chat-message";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import { replaceIcon } from "discourse-common/lib/icon-library";
 
 let _lastForcedRefreshAt;
@@ -13,6 +14,7 @@ replaceIcon("d-chat", "comment");
 
 export default {
   name: "chat-setup",
+  before: "hashtag-css-generator",
 
   initialize(container) {
     this.chatService = container.lookup("service:chat");
@@ -25,6 +27,8 @@ export default {
     }
 
     withPluginApi("0.12.1", (api) => {
+      api.registerHashtagType("channel", ChannelHashtagType);
+
       api.registerChatComposerButton({
         id: "chat-upload-btn",
         icon: "far-image",

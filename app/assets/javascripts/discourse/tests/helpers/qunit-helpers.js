@@ -52,6 +52,7 @@ import {
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
+import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-autocomplete";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
@@ -190,6 +191,7 @@ export function testCleanup(container, app) {
   clearTopicFooterDropdowns();
   clearTopicFooterButtons();
   clearDesktopNotificationHandlers();
+  cleanUpHashtagTypeClasses();
   resetLastEditNotificationClick();
   clearAuthMethods();
   setTestPresence(true);
@@ -211,6 +213,12 @@ export function testCleanup(container, app) {
   resetModelTransformers();
   resetMentions();
   cleanupTemporaryModuleRegistrations();
+  cleanupCssGeneratorTags();
+}
+
+function cleanupCssGeneratorTags() {
+  document.querySelector("style#category-color-css-generator")?.remove();
+  document.querySelector("style#hashtag-css-generator")?.remove();
 }
 
 export function discourseModule(name, options) {
