@@ -9,6 +9,9 @@ class User < ActiveRecord::Base
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
 
+  TARGET_PASSWORD_ALGORITHM =
+    "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
+
   # not deleted on user delete
   has_many :posts
   has_many :topics
@@ -927,8 +930,20 @@ class User < ActiveRecord::Base
   end
 
   def confirm_password?(password)
-    return false unless password_hash && salt
-    self.password_hash == hash_password(password, salt)
+    return false unless password_hash && salt && password_algorithm
+    confirmed = self.password_hash == hash_password(password, salt, password_algorithm)
+
+    if confirmed && persisted? && password_algorithm != TARGET_PASSWORD_ALGORITHM
+      # Regenerate password_hash with new algorithm and persist
+      salt = SecureRandom.hex(16)
+      update_columns(
+        password_algorithm: TARGET_PASSWORD_ALGORITHM,
+        salt: salt,
+        password_hash: hash_password(password, salt, TARGET_PASSWORD_ALGORITHM),
+      )
+    end
+
+    confirmed
   end
 
   def new_user_posting_on_first_day?
@@ -1863,7 +1878,8 @@ class User < ActiveRecord::Base
   def ensure_password_is_hashed
     if @raw_password
       self.salt = SecureRandom.hex(16)
-      self.password_hash = hash_password(@raw_password, salt)
+      self.password_algorithm = TARGET_PASSWORD_ALGORITHM
+      self.password_hash = hash_password(@raw_password, salt, password_algorithm)
     end
   end
 
@@ -1879,14 +1895,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  def hash_password(password, salt)
+  def hash_password(password, salt, algorithm)
     raise StandardError.new("password is too long") if password.size > User.max_password_length
-    Pbkdf2.hash_password(
-      password,
-      salt,
-      Rails.configuration.pbkdf2_iterations,
-      Rails.configuration.pbkdf2_algorithm,
-    )
+    PasswordHasher.hash_password(password: password, salt: salt, algorithm: algorithm)
   end
 
   def add_trust_level
@@ -2228,6 +2239,7 @@ end
 #  secure_identifier         :string
 #  flair_group_id            :integer
 #  last_seen_reviewable_id   :integer
+#  password_algorithm        :string(64)
 #
 # Indexes
 #
