@@ -4,6 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupTest } from "ember-qunit";
 import { getOwner } from "discourse-common/lib/get-owner";
+import Sinon from "sinon";
 
 module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
@@ -35,6 +36,9 @@ module("Unit | Utility | plugin-api", function (hooks) {
 
   test("modifyClass works with native class Ember objects", function (assert) {
     class NativeTestThingy extends EmberObject {
+      firstField = "firstFieldValue";
+      otherField = "otherFieldValue";
+
       @discourseComputed
       prop() {
         return "howdy";
@@ -47,6 +51,8 @@ module("Unit | Utility | plugin-api", function (hooks) {
       api.modifyClass("native-test-thingy:main", {
         pluginId: "plugin-api-test",
 
+        otherField: "new otherFieldValue",
+
         @discourseComputed
         prop() {
           return `${this._super(...arguments)} partner`;
@@ -56,10 +62,15 @@ module("Unit | Utility | plugin-api", function (hooks) {
 
     const thingy = getOwner(this).lookup("native-test-thingy:main");
     assert.strictEqual(thingy.prop, "howdy partner");
+    assert.strictEqual(thingy.firstField, "firstFieldValue");
+    assert.strictEqual(thingy.otherField, "new otherFieldValue");
   });
 
   test("modifyClass works with native classes", function (assert) {
     class ClassTestThingy {
+      firstField = "firstFieldValue";
+      otherField = "otherFieldValue";
+
       get keep() {
         return "hey!";
       }
@@ -69,23 +80,44 @@ module("Unit | Utility | plugin-api", function (hooks) {
       }
     }
 
-    getOwner(this).register("class-test-thingy:main", new ClassTestThingy(), {
+    getOwner(this).register("class-test-thingy:main", ClassTestThingy, {
       instantiate: false,
     });
+
+    const warnStub = Sinon.stub(console, "warn");
 
     withPluginApi("1.1.0", (api) => {
       api.modifyClass("class-test-thingy:main", {
         pluginId: "plugin-api-test",
 
+        otherField: "new otherFieldValue",
         get prop() {
           return "g'day";
         },
       });
     });
 
-    const thingy = getOwner(this).lookup("class-test-thingy:main");
-    assert.strictEqual(thingy.keep, "hey!");
-    assert.strictEqual(thingy.prop, "g'day");
+    assert.strictEqual(
+      warnStub.callCount,
+      1,
+      "fields warning was printed to console"
+    );
+    assert.true(warnStub.args[0][1].startsWith("Attempted to modify fields"));
+
+    const thingy = new ClassTestThingy();
+
+    assert.strictEqual(thingy.keep, "hey!", "maintains unchanged base getter");
+    assert.strictEqual(thingy.prop, "g'day", "can override getter");
+    assert.strictEqual(
+      thingy.firstField,
+      "firstFieldValue",
+      "maintains unchanged base field"
+    );
+    assert.strictEqual(
+      thingy.otherField,
+      "otherFieldValue",
+      "cannot override field"
+    );
   });
 
   skip("modifyClass works with getters", function (assert) {
