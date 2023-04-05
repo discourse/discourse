@@ -36,6 +36,10 @@ module PageObjects
       def custom_section_modal_title
         find("#discourse-modal-title")
       end
+
+      def has_section?(name)
+        find(".sidebar-wrapper").has_button?(name)
+      end
     end
   end
 end

@@ -25,6 +25,7 @@ class SidebarSectionsController < ApplicationController
         nil,
         group_ids: SiteSetting.enable_custom_sidebar_sections_map,
       )
+      Site.clear_anon_cache!
     end
 
     render json: SidebarSectionSerializer.new(sidebar_section)
@@ -48,6 +49,7 @@ class SidebarSectionsController < ApplicationController
         nil,
         group_ids: SiteSetting.enable_custom_sidebar_sections_map,
       )
+      Site.clear_anon_cache!
     end
 
     render json: SidebarSectionSerializer.new(sidebar_section)
