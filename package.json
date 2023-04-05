@@ -13,6 +13,7 @@
     "ace-builds": "1.4.13",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",
+    "concurrently": "^8.0.1",
     "diffhtml": "^1.0.0-beta.20",
     "magnific-popup": "1.1.0",
     "moment": "2.29.4",
@@ -37,6 +38,19 @@
     "tidy-jsdoc": "^1.4.1"
   },
   "scripts": {
+    "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
+    "lint:fix": "concurrently \"npm:lint:*:fix\" --names \"fix:\"",
+    "lint:js": "eslint ./app/assets/javascripts --cache",
+    "lint:js-plugins": "eslint ./plugins --cache",
+    "lint:js:fix": "eslint ./app/assets/javascripts",
+    "lint:js-plugins:fix": "eslint ./plugins",
+    "lint:hbs": "ember-template-lint app/assets/javascripts/**/*.hbs plugins/**/assets/javascripts/**/*.hbs --no-error-on-unmatched-pattern",
+    "lint:hbs:fix": "ember-template-lint app/assets/javascripts/**/*.hbs plugins/**/assets/javascripts/**/*.hbs --no-error-on-unmatched-pattern --fix",
+    "lint:prettier": "yarn pprettier  --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.js' 'app/assets/javascripts/**/*.hbs' 'plugins/**/assets/stylesheets/**/*.scss' 'plugins/**/assets/javascripts/**/*.js' 'plugins/**/assets/javascripts/**/*.hbs'",
+    "lint:prettier:fix": "yarn prettier -w '{app,plugins/**}/assets/{stylesheets,javascripts}/**/*.{scss,hbs,js}'",
+    "lttf:ignore": "lint-to-the-future ignore",
+    "lttf:output": "lint-to-the-future output -o ./lint-progress/",
+    "lint-progress": "yarn lttf:output && npx html-pages ./lint-progress --no-cache",
     "postinstall": "yarn --cwd app/assets/javascripts/discourse $(node -e 'if(JSON.parse(process.env.npm_config_argv).original.includes(`--frozen-lockfile`)){console.log(`--frozen-lockfile`)}')"
   },
   "engines": {

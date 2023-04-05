@@ -57,6 +57,7 @@
 dist
 node_modules
 yarn-error.log
+.eslintcache
 
 # Auto-generated plugin JS assets
 /app/assets/javascripts/plugins/*
