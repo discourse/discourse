@@ -1,0 +1,3 @@
+#!/bin/sh
+
+yarn --cwd "`dirname $0`"/../app/assets/javascripts/discourse "$@"
