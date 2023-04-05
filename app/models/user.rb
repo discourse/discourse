@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
 
+  PASSWORD_SALT_LENGTH = 16
   TARGET_PASSWORD_ALGORITHM =
     "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
 
@@ -935,7 +936,7 @@ class User < ActiveRecord::Base
 
     if confirmed && persisted? && password_algorithm != TARGET_PASSWORD_ALGORITHM
       # Regenerate password_hash with new algorithm and persist
-      salt = SecureRandom.hex(16)
+      salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
       update_columns(
         password_algorithm: TARGET_PASSWORD_ALGORITHM,
         salt: salt,
@@ -1877,7 +1878,7 @@ class User < ActiveRecord::Base
 
   def ensure_password_is_hashed
     if @raw_password
-      self.salt = SecureRandom.hex(16)
+      self.salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
       self.password_algorithm = TARGET_PASSWORD_ALGORITHM
       self.password_hash = hash_password(@raw_password, salt, password_algorithm)
     end
