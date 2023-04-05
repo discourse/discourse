@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { createPopper } from "@popperjs/core";
-import { schedule } from "@ember/runloop";
 
 export default class ChatChannelMessageEmojiPicker extends Component {
   context = "chat-channel-message";
@@ -20,28 +19,29 @@ export default class ChatChannelMessageEmojiPicker extends Component {
   @action
   didInsert(element) {
     if (this.site.mobileView) {
+      element.classList.remove("hidden");
       return;
     }
 
-    schedule("afterRender", () => {
-      this._popper = createPopper(
-        this.chatEmojiPickerManager.picker?.trigger,
-        element,
-        {
-          placement: "top",
-          modifiers: [
-            {
-              name: "eventListeners",
-              options: { scroll: false, resize: false },
-            },
-            {
-              name: "flip",
-              options: { padding: { top: headerOffset() } },
-            },
-          ],
-        }
-      );
-    });
+    this._popper = createPopper(
+      this.chatEmojiPickerManager.picker?.trigger,
+      element,
+      {
+        placement: "top",
+        modifiers: [
+          {
+            name: "eventListeners",
+            options: { scroll: false, resize: false },
+          },
+          {
+            name: "flip",
+            options: { padding: { top: headerOffset() } },
+          },
+        ],
+      }
+    );
+
+    element.classList.remove("hidden");
   }
 
   @action

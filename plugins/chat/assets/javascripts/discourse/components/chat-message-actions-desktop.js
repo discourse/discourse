@@ -12,6 +12,7 @@ const MSG_ACTIONS_VERTICAL_PADDING = -10;
 export default class ChatMessageActionsDesktop extends Component {
   @service chat;
   @service chatStateManager;
+  @service chatEmojiPickerManager;
   @service site;
 
   popper = null;

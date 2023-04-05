@@ -200,6 +200,8 @@
 }
 
 .chat-channel-message-emoji-picker-connector {
+  position: relative;
+
   .chat-emoji-picker {
     border: 1px solid var(--primary-low);
     width: 320px;
@@ -208,18 +210,6 @@
     .emoji {
       width: 22px;
       height: 22px;
-    }
-  }
-}
-
-.chat-composer-container.with-emoji-picker {
-  background: var(--primary-very-low);
-
-  .chat-emoji-picker {
-    border-bottom: 1px solid var(--primary-low);
-
-    &.closing {
-      height: 0;
     }
   }
 }

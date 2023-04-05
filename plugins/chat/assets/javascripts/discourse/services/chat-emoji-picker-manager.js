@@ -14,7 +14,6 @@ const DEFAULT_VISIBLE_SECTIONS = ["favorites", "smileys_&_emotion"];
 const DEFAULT_LAST_SECTION = "favorites";
 
 export default class ChatEmojiPickerManager extends Service {
-  @tracked opened = false;
   @tracked closing = false;
   @tracked loading = false;
   @tracked picker = null;
@@ -23,7 +22,6 @@ export default class ChatEmojiPickerManager extends Service {
   @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
   @tracked initialFilter = null;
   @tracked element = null;
-  @tracked callback;
 
   @service appEvents;
 
@@ -33,15 +31,14 @@ export default class ChatEmojiPickerManager extends Service {
 
   @bind
   closeExisting() {
-    this.callback = null;
     this.initialFilter = null;
     this.visibleSections = DEFAULT_VISIBLE_SECTIONS;
     this.lastVisibleSection = DEFAULT_LAST_SECTION;
+    this.picker = null;
   }
 
   @bind
   close() {
-    this.picker = null;
     this.closing = true;
 
     later(() => {
@@ -53,7 +50,7 @@ export default class ChatEmojiPickerManager extends Service {
       this.lastVisibleSection = DEFAULT_LAST_SECTION;
       this.initialFilter = null;
       this.closing = false;
-      this.opened = false;
+      this.picker = null;
     }, TRANSITION_TIME);
   }
 
@@ -64,13 +61,16 @@ export default class ChatEmojiPickerManager extends Service {
   }
 
   open(picker) {
-    if (this.opened) {
-      this.closeExisting();
+    if (this.picker) {
+      if (this.picker.trigger === picker?.trigger) {
+        this.closeExisting();
+      } else {
+        this.closeExisting();
+        this.picker = picker;
+      }
+    } else {
+      this.picker = picker;
     }
-
-    this.appEvents.trigger("d-popover:close");
-    this.picker = picker;
-    this.opened = true;
   }
 
   @action

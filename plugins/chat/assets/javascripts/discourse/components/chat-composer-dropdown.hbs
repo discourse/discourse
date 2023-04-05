@@ -1,19 +1,19 @@
 {{#if @buttons.length}}
-  <DPopover
-    @class="chat-composer-dropdown"
-    @options={{hash arrow=null}}
-    as |state|
-  >
-    <FlatButton
-      @disabled={{@isDisabled}}
-      @class="chat-composer-dropdown__trigger-btn d-popover-trigger"
-      @title="chat.composer.toggle_toolbar"
-      @icon={{if this.isActive "times" "plus"}}
-      {{on "click" (if @isActive @onCloseComposerDropdown (noop))}}
-      {{did-update this.computeIsActive state}}
-      {{did-update this.computeIsActive @isActive}}
-    />
-    <ul class="chat-composer-dropdown__list">
+  <DButton
+    @disabled={{@isDisabled}}
+    @class="chat-composer-dropdown__trigger-btn btn-flat btn-icon"
+    @title="chat.composer.toggle_toolbar"
+    @icon={{if @hasActivePanel "times" "plus"}}
+    @action={{this.toggleExpand}}
+    {{did-insert this.setupTrigger}}
+  />
+
+  {{#if this.isExpanded}}
+    <ul
+      class="chat-composer-dropdown__list"
+      {{did-insert this.setupPanel}}
+      {{will-destroy this.teardownPanel}}
+    >
       {{#each @buttons as |button|}}
         <li class={{concat-class "chat-composer-dropdown__item" button.id}}>
           <DButton
@@ -22,11 +22,11 @@
               button.id
             }}
             @icon={{button.icon}}
-            @action={{button.action}}
+            @action={{(fn this.onButtonClick button)}}
             @label={{button.label}}
           />
         </li>
       {{/each}}
     </ul>
-  </DPopover>
+  {{/if}}
 {{/if}}

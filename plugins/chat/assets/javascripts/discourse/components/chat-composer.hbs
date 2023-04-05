@@ -20,11 +20,15 @@
   class="chat-composer {{if this.disableComposer 'is-disabled'}}"
   {{did-update this.updateEditingMessage this.composerService.editingMessage}}
 >
+
   <ChatComposerDropdown
     @buttons={{this.dropdownButtons}}
     @isDisabled={{this.disableComposer}}
-    @isActive={{this.chatEmojiPickerManager.opened}}
-    @onCloseComposerDropdown={{this.closeComposerDropdown}}
+    @hasActivePanel={{and
+      this.chatEmojiPickerManager.picker
+      (eq this.chatEmojiPickerManager.picker.context @context)
+    }}
+    @onCloseActivePanel={{this.chatEmojiPickerManager.close}}
   />
 
   <DTextarea

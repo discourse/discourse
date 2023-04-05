@@ -131,6 +131,10 @@
       background: none;
       border: none;
 
+      > * {
+        pointer-events: none;
+      }
+
       .d-icon {
         color: var(--primary-high);
       }

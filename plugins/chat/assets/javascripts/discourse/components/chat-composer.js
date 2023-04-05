@@ -31,7 +31,6 @@ export default Component.extend(TextareaTextManipulation, {
   chatChannel: null,
   chat: service(),
   classNames: ["chat-composer-container"],
-  classNameBindings: ["emojiPickerVisible:with-emoji-picker"],
   chatEmojiReactionStore: service("chat-emoji-reaction-store"),
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
   chatStateManager: service("chat-state-manager"),
@@ -53,11 +52,6 @@ export default Component.extend(TextareaTextManipulation, {
   @discourseComputed(...chatComposerButtonsDependentKeys())
   dropdownButtons() {
     return chatComposerButtons(this, "dropdown", this.context);
-  },
-
-  @discourseComputed("chatEmojiPickerManager.{opened,context}")
-  emojiPickerVisible(picker) {
-    return picker.opened && picker.context === "chat-composer";
   },
 
   @discourseComputed("chatStateManager.isFullPageActive")

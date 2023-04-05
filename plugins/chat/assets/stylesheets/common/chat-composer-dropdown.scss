@@ -1,4 +1,4 @@
-.chat-composer-dropdown {
+[data-theme="chat-composer-drodown"] {
   margin-left: 0.2rem;
 
   .tippy-content {
@@ -32,15 +32,7 @@
 .chat-composer-dropdown__list {
   margin: 0;
   list-style: none;
-  padding: 0.25rem;
-}
-
-.chat-composer-dropdown__item {
-  padding-bottom: 0.25rem;
-
-  &:last-child {
-    padding-bottom: 0;
-  }
+  padding: 0.5rem;
 }
 
 .chat-composer-dropdown__action-btn {

@@ -2,15 +2,11 @@
 {{! template-lint-disable no-nested-interactive }}
 {{! template-lint-disable no-down-event-binding }}
 
-{{#if
-  (and
-    this.chatEmojiPickerManager.opened
-    (eq this.chatEmojiPickerManager.picker.context @context)
-  )
-}}
+{{#if (eq this.chatEmojiPickerManager.picker.context @context)}}
   <div
     class={{concat-class
       "chat-emoji-picker"
+      @class
       (if this.chatEmojiPickerManager.closing "closing")
     }}
     {{did-insert this.addClickOutsideEventListener}}

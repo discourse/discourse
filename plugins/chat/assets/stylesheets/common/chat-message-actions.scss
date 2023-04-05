@@ -47,6 +47,10 @@
     width: 2.5em;
     transition: background 0.2s, border-color 0.2s;
 
+    > * {
+      pointer-events: none;
+    }
+
     &:focus {
       .d-icon {
         color: var(--primary);
