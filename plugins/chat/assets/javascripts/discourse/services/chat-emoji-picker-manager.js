@@ -14,6 +14,8 @@ const DEFAULT_VISIBLE_SECTIONS = ["favorites", "smileys_&_emotion"];
 const DEFAULT_LAST_SECTION = "favorites";
 
 export default class ChatEmojiPickerManager extends Service {
+  @service appEvents;
+
   @tracked closing = false;
   @tracked loading = false;
   @tracked picker = null;
@@ -22,8 +24,6 @@ export default class ChatEmojiPickerManager extends Service {
   @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
   @tracked initialFilter = null;
   @tracked element = null;
-
-  @service appEvents;
 
   get sections() {
     return !this.loading && this.emojis ? Object.keys(this.emojis) : [];

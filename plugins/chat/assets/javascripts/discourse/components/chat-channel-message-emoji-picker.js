@@ -5,10 +5,10 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 import { createPopper } from "@popperjs/core";
 
 export default class ChatChannelMessageEmojiPicker extends Component {
-  context = "chat-channel-message";
-
   @service site;
   @service chatEmojiPickerManager;
+
+  context = "chat-channel-message";
 
   @action
   didSelectEmoji(emoji) {
