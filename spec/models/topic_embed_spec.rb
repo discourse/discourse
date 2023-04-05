@@ -457,5 +457,15 @@ RSpec.describe TopicEmbed do
       I18n.locale = :de
       expect(TopicEmbed.imported_from_html("some_url")).to eq(expected_html)
     end
+
+    it "normalize_encodes the url" do
+      html =
+        TopicEmbed.imported_from_html(
+          'http://www.discourse.org/%23<%2Fa><img%20src%3Dx%20onerror%3Dalert("document.domain")%3B>',
+        )
+      expected_html =
+        "\n<hr>\n<small>This is a companion discussion topic for the original entry at <a href='http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E'>http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E</a></small>\n"
+      expect(html).to eq(expected_html)
+    end
   end
 end

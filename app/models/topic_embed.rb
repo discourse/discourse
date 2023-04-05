@@ -29,6 +29,7 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.imported_from_html(url)
+    url = UrlHelper.normalized_encode(url)
     I18n.with_locale(SiteSetting.default_locale) do
       "\n<hr>\n<small>#{I18n.t("embed.imported_from", link: "<a href='#{url}'>#{url}</a>")}</small>\n"
     end
