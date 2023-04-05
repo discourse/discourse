@@ -70,7 +70,6 @@ export default class ChatChannelPane extends Service {
     }
 
     this.composerService.reset();
-    this.appEvents.trigger("chat-composer:reply-to-set", null);
   }
 
   @action
