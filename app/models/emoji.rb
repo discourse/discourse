@@ -246,7 +246,7 @@ class Emoji
     # ignore denied emojis and their aliases
     if SiteSetting.emoji_deny_list.present?
       denied_emoji = SiteSetting.emoji_deny_list.split("|")
-      denied_emoji += denied_emoji.map { |e| Emoji.aliases[e] }.flatten.compact
+      denied_emoji.concat(denied_emoji.flat_map { |e| Emoji.aliases[e] }.compact)
       return "" if denied_emoji.include?(name)
     end
 

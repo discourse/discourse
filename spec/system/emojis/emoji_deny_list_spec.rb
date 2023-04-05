@@ -27,18 +27,10 @@ describe "Emoji deny list", type: :system, js: true do
     fab!(:topic) { Fabricate(:topic, title: "Time for :monkey: business") }
     fab!(:post) { Fabricate(:post, topic: topic, raw: "We have no time to :monkey: around!") }
 
-    it "should remove denied emojis from page title" do
+    it "should remove denied emojis from page title, heading and body" do
       topic_page.visit_topic(topic)
       expect(page.title).to eq("Time for business - Discourse")
-    end
-
-    it "should remove denied emojis from post heading" do
-      topic_page.visit_topic(topic)
       expect(topic_page).to have_topic_title("Time for business")
-    end
-
-    it "should not show denied emoji in post body" do
-      topic_page.visit_topic(topic)
       expect(post).not_to have_css(".emoji[name=':monkey:']")
     end
   end
@@ -90,13 +82,9 @@ describe "Emoji deny list", type: :system, js: true do
     end
     fab!(:post) { Fabricate(:post, topic: topic, raw: "Can we use the :monkey: emoji here?") }
 
-    it "should remove denied emojis from message title" do
+    it "should remove denied emojis from message title and body" do
       topic_page.visit_topic(topic)
       expect(topic_page).to have_topic_title("Want to catch up for today?")
-    end
-
-    it "should remove denied emojis from message body" do
-      topic_page.visit_topic(topic)
       expect(post).not_to have_css(".emoji[title=':monkey:']")
     end
   end
