@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
-import { extractError } from "discourse/lib/ajax-error";
+import { flashAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
   duration: null,
@@ -18,9 +18,7 @@ export default Controller.extend(ModalFunctionality, {
       .then(() => {
         this.send("closeModal");
       })
-      .catch((e) => {
-        this.flash(extractError(e), "error");
-      });
+      .catch(flashAjaxError(this));
   },
 
   @action

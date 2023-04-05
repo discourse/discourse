@@ -59,13 +59,19 @@ export function extractError(error, defaultMessage) {
   return parsedError || defaultMessage || I18n.t("generic_error");
 }
 
-export function throwAjaxError(undoCallback) {
+export function throwAjaxError(undoCallback, defaultMessage) {
   return function (error) {
     // If we provided an `undo` callback
     if (undoCallback) {
       undoCallback(error);
     }
-    throw extractError(error);
+    throw extractError(error, defaultMessage);
+  };
+}
+
+export function flashAjaxError(modal, defaultMessage) {
+  return (error) => {
+    modal.flash(extractError(error, defaultMessage), "error");
   };
 }
 
