@@ -238,8 +238,18 @@ class PluginApi {
       const changeDescriptors = Object.getOwnPropertyDescriptors(changes);
 
       const fieldDescriptorEntries = Object.entries(changeDescriptors).filter(
-        ([, desc]) =>
-          !(typeof desc.value === "function" || desc.get || desc.set)
+        ([key, desc]) => {
+          if (typeof desc.value === "function" || desc.get || desc.set) {
+            return false;
+          }
+          if (
+            klass.prototype.mergedProperties?.includes(key) ||
+            klass.prototype.concatenatedProperties?.includes(key)
+          ) {
+            return false;
+          }
+          return true;
+        }
       );
 
       if (klass.reopen) {
