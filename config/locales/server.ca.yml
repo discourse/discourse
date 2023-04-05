@@ -875,7 +875,7 @@ ca:
       title: "DAU/MAU"
       xaxis: "Dia"
       yaxis: "DAU/MAU"
-      description: "Nombre de membres que han iniciat sessió el darrer dia dividit pel nombre de membres que ha iniciat sessió el darrer mes. Dóna un % que indica l'_adhesivitat_ de la comunitat. Objectiu >30%."
+      description: "Nombre de membres que han iniciat sessió el darrer dia dividit pel nombre de membres que ha iniciat sessió el darrer mes. Dóna un % que indica l'_adhesivitat_ de la comunitat. Objectiu >20%."
     daily_engaged_users:
       title: "Usuaris diaris compromesos"
       xaxis: "Dia"
@@ -1200,7 +1200,6 @@ ca:
     large_icon: "Imatge utilitzada com a base per a altres icones de metadades. Idealment hauria de ser superior a 512 x 512. Si es deixa en blanc, s'utilitzarà logo_small."
     manifest_icon: "Imatge utilitzada com a imatge de logo/splash en Android. Es redimensionarà automàticament a 512 × 512. Si es deixa en blanc, s'utilitzarà large_icon."
     favicon: "Icona per al vostre lloc web (favicon). Vegeu <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://ca.wikipedia.org/wiki/Icona_de_web</a>. Per a treballar correctament sobre un CDN, ha de ser PNG. Es redimensionarà a 32x32. Si es deixa en blanc, s'utilitzarà large_icon."
-    apple_touch_icon: "Icona utilitzada per als dispositius tàctils d'Apple. Es redimensionarà automàticament a 180x180. Si es deixa en blanc, s'utilitzarà large_icon."
     opengraph_image: "Imatge predeterminada opengraph, utilitzada quan la pàgina no té cap altra imatge adequada. Si es deixa en blanc, s'utilitzarà large_icon."
     notification_email: "Adreça de correu en el \"de:\" emprada en enviar tots els correus essencials de sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, configurats correctament perquè arribi el correu."
     email_custom_headers: "Llista de capçaleres de correu personalitzades, delimitada amb barres verticals"
@@ -2556,8 +2555,6 @@ ca:
   offline:
     title: "No es pot carregar l'aplicació"
     offline_page_message: "Sembla que esteu fora de línia! Comproveu la connexió de xarxa i torneu-ho a provar."
-  login_required:
-    welcome_message: "## [Benvingut a %{title}](#welcome)"
   upload:
     edit_reason: "còpia local d'imatges descarregada"
     unauthorized: "El fitxer que intenteu carregar no està autoritzat (extensions permeses: %{authorized_extensions})."

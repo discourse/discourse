@@ -138,7 +138,6 @@ sq:
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     software_update_prompt:
       dismiss: "Hiqe"
-    bootstrap_invite_button_title: "Dërgo ftesa"
     themes:
       default_description: "Paracaktuar"
     s3:
@@ -1938,8 +1937,10 @@ sq:
           save: "Ruaj"
           delete: "Fshij"
           links:
-            icon: "Ikonë"
-            name: "Emri"
+            icon:
+              label: "Ikonë"
+            name:
+              label: "Emri juaj"
         about:
           header_link_text: "Rreth"
         messages:

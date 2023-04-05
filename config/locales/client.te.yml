@@ -100,7 +100,6 @@ te:
     share:
       close: "మూసివేయి"
     emails_are_disabled: "బయటకు వెళ్లే అన్ని ఈమెయిల్లూ అధికారి నిశేధించాడు. ఇప్పుడు ఎటువంటి ఈమెయిల్ ప్రకటనలూ పంపవీలవదు."
-    bootstrap_invite_button_title: "ఆహ్వానాలు పంపు"
     themes:
       default_description: "అప్రమేయ"
     edit: "ఈ విషయపు శీర్షిక మరియు వర్గం సవరించు"
@@ -1354,8 +1353,10 @@ te:
           save: "భద్రపరుచు"
           delete: "తొలగించు"
           links:
-            icon: "ఐకాన్"
-            name: "పేరు"
+            icon:
+              label: "ఐకాన్"
+            name:
+              label: "పేరు"
         about:
           header_link_text: "గురించి"
         messages:

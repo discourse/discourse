@@ -185,12 +185,6 @@ pt:
     software_update_prompt:
       message: "Atualizámos este site, <span>por favor recarregue a página</span> ou poderá experienciar um comportamento inesperado."
       dismiss: "Marcar como visto"
-    bootstrap_mode_enabled:
-      one: "Para que o início do teu Site seja o mais simples possível, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{count} utilizador se tiver juntado ao fórum."
-      other: "Para que o início do teu Site seja o mais simples possível, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{count} utilizadores se tiverem juntado ao fórum."
-    bootstrap_mode_disabled: "O modo de inicialização simples será desactivado em 24 horas."
-    bootstrap_invite_button_title: "Enviar Convites"
-    bootstrap_wizard_link_title: "Concluir assistente de configuração"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
@@ -336,7 +330,6 @@ pt:
       remove_confirmation: "Tem a certeza que pretende eliminar este rascunho?"
       new_topic: "Novo rascunho de tópico"
       abandon:
-        confirm: "Tem um rascunho em andamento neste tópico. O que gostaria de fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
     topic_count_categories:
@@ -3484,8 +3477,10 @@ pt:
           save: "Guardar"
           delete: "Eliminar"
           links:
-            icon: "Ícone"
-            name: "Nome"
+            icon:
+              label: "Ícone"
+            name:
+              label: "Nome"
         about:
           header_link_text: "Sobre"
         messages:
@@ -4294,11 +4289,6 @@ pt:
         actions:
           block: "Bloquear"
           flag: "Denunciar"
-        action_descriptions:
-          block: "Impede que posts que contenham estas palavras sejam publicados. O usuário irá receber uma mensagem de erro ao tentar enviar o seu post."
-          censor: "Permite posts que contenham estas palavras, mas substitui-as por caracteres que ocultam as palavras censuradas."
-          require_approval: "As publicações que contenham estas palavras terão de ser aprovadas pelo pessoal antes de poderem ser vistas."
-          flag: "Permite posts que contenham estas palavras, mas sinaliza-as como inapropriadas para que os moderadores as possam rever."
         form:
           link_placeholder: "https://example.com"
           add: "Adicionar"
