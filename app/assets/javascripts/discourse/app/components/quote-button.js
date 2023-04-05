@@ -237,7 +237,11 @@ export default Component.extend(KeyEnterEscape, {
   },
 
   _setupSelectionListeners() {
-    const updateRect = () => this.textRange.updateRect();
+    const updateRect = () => {
+      if (this.visible) {
+        this.textRange.updateRect();
+      }
+    };
     document.body.addEventListener("mouseup", updateRect);
     window.addEventListener("scroll", updateRect);
     document.scrollingElement.addEventListener("scroll", updateRect);
