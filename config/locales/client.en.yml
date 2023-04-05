@@ -381,7 +381,7 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       abandon:
-        confirm: "You have a draft in progress for this topic. What would you like to do with it?"
+        confirm: "You already have a draft in progress. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
 
@@ -4401,12 +4401,12 @@ en:
               validation:
                 blank: "Icon cannot be blank"
                 maximum: "Icon must be shorter than %{count} characters"
-            name: 
+            name:
               label: "Name"
               validation:
                 blank: "Name cannot be blank"
                 maximum: "Name must be shorter than %{count} characters"
-            value: 
+            value:
               label: "Link"
               validation:
                 blank: "Link cannot be blank"

@@ -3,7 +3,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-
+import { tracked } from "@glimmer/tracking";
 export default class ChannelsList extends Component {
   @service chat;
   @service router;
@@ -12,6 +12,18 @@ export default class ChannelsList extends Component {
   @service site;
   @service session;
   @service currentUser;
+
+  @tracked hasScrollbar = false;
+
+  @action
+  computeHasScrollbar(element) {
+    this.hasScrollbar = element.scrollHeight > element.clientHeight;
+  }
+
+  @action
+  computeResizedEntries(entries) {
+    this.computeHasScrollbar(entries[0].target);
+  }
 
   get showMobileDirectMessageButton() {
     return this.site.mobileView && this.showDirectMessageChannels;

@@ -20,11 +20,6 @@ describe Jobs::Chat::ChannelDelete do
       upload = Fabricate(:upload, user: users.sample)
       message = messages.sample
 
-      # TODO (martin) Remove this when we remove ChatUpload completely, 2023-04-01
-      DB.exec(<<~SQL)
-        INSERT INTO chat_uploads(upload_id, chat_message_id, created_at, updated_at)
-        VALUES(#{upload.id}, #{message.id}, NOW(), NOW())
-      SQL
       UploadReference.create(target: message, upload: upload)
     end
 
@@ -66,10 +61,6 @@ describe Jobs::Chat::ChannelDelete do
       channel_memberships: Chat::UserChatChannelMembership.where(chat_channel: chat_channel).count,
       revisions: Chat::MessageRevision.where(chat_message_id: @message_ids).count,
       mentions: Chat::Mention.where(chat_message_id: @message_ids).count,
-      chat_uploads:
-        DB.query_single(
-          "SELECT COUNT(*) FROM chat_uploads WHERE chat_message_id IN (#{@message_ids.join(",")})",
-        ).first,
       upload_references:
         UploadReference.where(target_id: @message_ids, target_type: Chat::Message.sti_name).count,
       messages: Chat::Message.where(id: @message_ids).count,
@@ -88,7 +79,6 @@ describe Jobs::Chat::ChannelDelete do
     expect(new_counts[:channel_memberships]).to eq(initial_counts[:channel_memberships] - 3)
     expect(new_counts[:revisions]).to eq(initial_counts[:revisions] - 1)
     expect(new_counts[:mentions]).to eq(initial_counts[:mentions] - 1)
-    expect(new_counts[:chat_uploads]).to eq(initial_counts[:chat_uploads] - 10)
     expect(new_counts[:upload_references]).to eq(initial_counts[:upload_references] - 10)
     expect(new_counts[:messages]).to eq(initial_counts[:messages] - 20)
     expect(new_counts[:reactions]).to eq(initial_counts[:reactions] - 10)

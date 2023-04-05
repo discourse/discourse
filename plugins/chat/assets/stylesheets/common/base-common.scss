@@ -262,6 +262,7 @@ $float-height: 530px;
   width: 100%;
   min-height: 1px;
   position: relative;
+  overflow: hidden;
 
   .open-drawer-btn {
     color: var(--primary-low-mid);
@@ -283,31 +284,15 @@ $float-height: 530px;
     flex-grow: 1;
     overflow-y: scroll;
     overscroll-behavior: contain;
-    scrollbar-color: var(--primary-low) transparent;
-    transition: scrollbar-color 0.2s ease-in-out;
     display: flex;
     flex-direction: column-reverse;
     z-index: 1;
-    margin: 0 3px 0 0;
+    margin: 0 1px 0 0;
     will-change: transform;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 
-    &::-webkit-scrollbar {
-      width: 15px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: var(--primary-low);
-      border-radius: 8px;
-      border: 3px solid var(--secondary);
-    }
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
-    &:hover {
-      scrollbar-color: var(--primary-low-mid) transparent;
-      &::-webkit-scrollbar-thumb {
-        background: var(--primary-low-mid);
-      }
-    }
+    @include chat-scrollbar();
 
     .join-channel-btn.in-float {
       position: absolute;
@@ -495,6 +480,7 @@ body.has-full-page-chat {
     display: flex;
     align-items: stretch;
     flex: 1;
+    max-width: 100%;
 
     .chat-channel-archive-status {
       text-align: right;
@@ -632,6 +618,7 @@ html.has-full-page-chat {
 
       .main-chat-outlet {
         min-height: 0;
+        overflow: hidden;
       }
     }
   }

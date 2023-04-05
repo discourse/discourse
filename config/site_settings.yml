@@ -150,7 +150,7 @@ basic:
     max: 36500
   ga_version:
     type: enum
-    default: v3_analytics
+    default: v4_gtag
     choices:
       - v3_analytics
       - v4_gtag
@@ -391,7 +391,6 @@ login:
     refresh: true
     client: true
     default: false
-    validator: "EnableInviteOnlyValidator"
   login_required:
     refresh: true
     client: true
@@ -2465,6 +2464,11 @@ uncategorized:
   backup_drafts_to_pm_length:
     default: 0
     hidden: true
+
+  view_user_route:
+    default: "summary"
+    hidden: true
+    client: true
 
   tos_topic_id:
     default: -1

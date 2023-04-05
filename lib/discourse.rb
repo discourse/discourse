@@ -603,7 +603,7 @@ module Discourse
   USER_READONLY_MODE_KEY ||= "readonly_mode:user"
   PG_FORCE_READONLY_MODE_KEY ||= "readonly_mode:postgres_force"
 
-  # Psuedo readonly mode, where staff can still write
+  # Pseudo readonly mode, where staff can still write
   STAFF_WRITES_ONLY_MODE_KEY ||= "readonly_mode:staff_writes_only"
 
   READONLY_KEYS ||= [

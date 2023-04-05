@@ -21,7 +21,7 @@ function dataFor(status, type) {
             name: "approved_post",
             cssClass: "approved",
           };
-        case "User":
+        case "ReviewableUser":
           return {
             icon: "check",
             name: "approved_user",
@@ -42,7 +42,7 @@ function dataFor(status, type) {
             name: "rejected_post",
             cssClass: "rejected",
           };
-        case "User":
+        case "ReviewableUser":
           return {
             icon: "times",
             name: "rejected_user",

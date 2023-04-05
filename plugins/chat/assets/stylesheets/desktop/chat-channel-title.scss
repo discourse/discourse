@@ -5,4 +5,10 @@
     background: var(--primary-very-low);
     border-radius: 5px;
   }
+
+  .chat-channel-title {
+    &__user-info {
+      overflow: hidden;
+    }
+  }
 }

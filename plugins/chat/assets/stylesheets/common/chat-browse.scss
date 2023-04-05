@@ -5,7 +5,8 @@
   padding-bottom: 41px;
   box-sizing: border-box;
   overflow-y: scroll;
-  @include chat-scrollbar(var(--secondary));
+
+  @include chat-scrollbar();
 
   @include breakpoint(mobile-large) {
     padding-right: 1rem; //fix for different scroll behaviour on mobile where overflow-y:scroll acts like auto
