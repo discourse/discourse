@@ -31,6 +31,8 @@
     "@mixer/parallel-prettier": "^2.0.3",
     "chrome-launcher": "^0.15.1",
     "chrome-remote-interface": "^0.31.3",
+    "ember-template-lint": "^5.7.2",
+    "eslint": "^8.37.0",
     "eslint-config-discourse": "^3.3.0",
     "jsdoc": "^4.0.0",
     "lefthook": "^1.2.0",
