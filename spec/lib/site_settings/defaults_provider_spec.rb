@@ -128,4 +128,27 @@ RSpec.describe SiteSettings::DefaultsProvider do
       expect(settings.defaults.has_setting?("question")).to be_truthy
     end
   end
+
+  describe "plugin modifier" do
+    before { settings.setting(:my_setting, "defaultval") }
+
+    class TestFilterPlugInstance < Plugin::Instance
+    end
+
+    let(:plugin_instance) { TestFilterPlugInstance.new }
+
+    it "can change defaults" do
+      expect(settings.defaults.get(:my_setting)).to eq "defaultval"
+      expect(settings.defaults.all[:my_setting]).to eq "defaultval"
+
+      plugin_instance.register_modifier(:site_setting_defaults) do |defaults|
+        defaults.merge({ my_setting: "overridden default" })
+      end
+
+      expect(settings.defaults.get(:my_setting)).to eq "overridden default"
+      expect(settings.defaults.all[:my_setting]).to eq "overridden default"
+    ensure
+      DiscoursePluginRegistry.reset!
+    end
+  end
 end
