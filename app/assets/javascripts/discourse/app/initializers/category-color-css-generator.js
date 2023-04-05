@@ -12,6 +12,11 @@ export default {
   initialize(container) {
     this.site = container.lookup("service:site");
 
+    // If the site is login_required and the user is anon there will be no categories preloaded.
+    if (!this.site.categories) {
+      return;
+    }
+
     const generatedCssVariables = [
       ":root {",
       ...this.site.categories.map(
