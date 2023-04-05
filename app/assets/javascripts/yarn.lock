@@ -3735,10 +3735,10 @@ ember-auto-import-chunks-json-generator@^1.0.0:
     ember-cli-babel "^7.26.6"
     ember-cli-htmlbars "^5.7.1"
 
-ember-auto-import@^2.2.3, ember-auto-import@^2.6.0, ember-auto-import@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/ember-auto-import/-/ember-auto-import-2.6.1.tgz#bd8d434143bd411b99f4a8f32d8b58414d7da4f3"
-  integrity sha512-3bCRi/pXp4QslmuCXGlSz9xwR7DF5oDx3zZO5OXKzNZihtkqAM1xvGuRIdQSl46pvbAXOkp8Odl5fOen1i0dRw==
+ember-auto-import@^2.2.3, ember-auto-import@^2.6.0, ember-auto-import@^2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/ember-auto-import/-/ember-auto-import-2.6.2.tgz#ea0bfccb79c0601d2857764ebe04a67559a57b48"
+  integrity sha512-h0bdE1atVqEXkE+9OTkEi2wRHBpJilKn6iXlbrOS2nI4HGpWlqmUjWmQk/iMFad+1XEDBvNJnikxgtKb/GFL5A==
   dependencies:
     "@babel/core" "^7.16.7"
     "@babel/plugin-proposal-class-properties" "^7.16.7"
