@@ -23,6 +23,8 @@ class SidebarSection < ActiveRecord::Base
               maximum: MAX_TITLE_LENGTH,
             }
 
+  scope :public_sections, -> { where("public") }
+
   private
 
   def set_system_user_for_public_section

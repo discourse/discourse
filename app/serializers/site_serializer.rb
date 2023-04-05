@@ -263,8 +263,8 @@ class SiteSerializer < ApplicationSerializer
 
   def anonymous_sidebar_sections
     SidebarSection
+      .public_sections
       .includes(sidebar_section_links: :linkable)
-      .where("public")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
 

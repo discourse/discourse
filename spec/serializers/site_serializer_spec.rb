@@ -195,7 +195,7 @@ RSpec.describe SiteSerializer do
   describe "#anonymous_sidebar_sections" do
     fab!(:user) { Fabricate(:user) }
     fab!(:public_sidebar_section) do
-      Fabricate(:sidebar_section, title: "Public section", user: user, public: true)
+      Fabricate(:sidebar_section, title: "Public section", public: true)
     end
     fab!(:private_sidebar_section) do
       Fabricate(:sidebar_section, title: "Private section", user: user, public: false)
@@ -223,10 +223,8 @@ RSpec.describe SiteSerializer do
           serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
           expect(
-            serialized[:anonymous_sidebar_sections].map do |sidebar_section|
-              private_sidebar_section.id
-            end,
-          ).to eq([private_sidebar_section.id])
+            serialized[:anonymous_sidebar_sections].map { |sidebar_section| sidebar_section.id },
+          ).to eq([public_sidebar_section.id])
 
           expect(serialized[:anonymous_sidebar_sections].first.links.map { |link| link.id }).to eq(
             [public_section_link.linkable.id],
@@ -243,10 +241,8 @@ RSpec.describe SiteSerializer do
           serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
           expect(
-            serialized[:anonymous_sidebar_sections].map do |sidebar_section|
-              private_sidebar_section.id
-            end,
-          ).to eq([private_sidebar_section.id])
+            serialized[:anonymous_sidebar_sections].map { |sidebar_section| sidebar_section.id },
+          ).to eq([public_sidebar_section.id])
 
           expect(serialized[:anonymous_sidebar_sections].first.links.map { |link| link.id }).to eq(
             [
@@ -256,8 +252,7 @@ RSpec.describe SiteSerializer do
             ],
           )
         end.count
-
-      expect(final_count < initial_count).to be true
+      expect(final_count).to eq(initial_count)
     end
   end
 
