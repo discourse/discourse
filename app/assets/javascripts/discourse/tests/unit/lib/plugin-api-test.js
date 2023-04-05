@@ -127,9 +127,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       },
     });
 
-    getOwner(this).register("test-class:main", Base, {
-      instantiate: false,
-    });
+    getOwner(this).register("test-class:main", Base);
 
     // Performing this lookup triggers `factory._onLookup`. In DEBUG builds, that invokes injectedPropertyAssertion()
     // https://github.com/emberjs/ember.js/blob/36505f1b42/packages/%40ember/-internals/runtime/lib/system/core_object.js#L1144-L1163
