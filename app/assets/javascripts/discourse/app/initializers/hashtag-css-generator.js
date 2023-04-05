@@ -1,4 +1,3 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-autocomplete";
 
 export default {
@@ -15,23 +14,21 @@ export default {
    * ones in core are CategoryHashtagType and TagHashtagType.
    */
   initialize(container) {
-    withPluginApi("0.8.7", () => {
-      let generatedCssClasses = [];
+    let generatedCssClasses = [];
 
-      Object.values(getHashtagTypeClasses()).forEach((hashtagTypeClass) => {
-        const hashtagType = new hashtagTypeClass(container);
-        hashtagType.preloadedData.forEach((model) => {
-          generatedCssClasses = generatedCssClasses.concat(
-            hashtagType.generateColorCssClasses(model)
-          );
-        });
+    Object.values(getHashtagTypeClasses()).forEach((hashtagTypeClass) => {
+      const hashtagType = new hashtagTypeClass(container);
+      hashtagType.preloadedData.forEach((model) => {
+        generatedCssClasses = generatedCssClasses.concat(
+          hashtagType.generateColorCssClasses(model)
+        );
       });
-
-      const cssTag = document.createElement("style");
-      cssTag.type = "text/css";
-      cssTag.id = "hashtag-css-generator";
-      cssTag.innerHTML = generatedCssClasses.join("\n");
-      document.head.appendChild(cssTag);
     });
+
+    const cssTag = document.createElement("style");
+    cssTag.type = "text/css";
+    cssTag.id = "hashtag-css-generator";
+    cssTag.innerHTML = generatedCssClasses.join("\n");
+    document.head.appendChild(cssTag);
   },
 };

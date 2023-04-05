@@ -1,12 +1,15 @@
 import HashtagTypeBase from "./base";
+import { inject as service } from "@ember/service";
 
 export default class CategoryHashtagType extends HashtagTypeBase {
+  @service site;
+
   get type() {
     return "category";
   }
 
   get preloadedData() {
-    return this.container.lookup("service:site").categories;
+    return this.site.categories;
   }
 
   generateColorCssClasses(model) {

@@ -1,6 +1,8 @@
+import { setOwner } from "@ember/application";
+
 export default class HashtagTypeBase {
   constructor(container) {
-    this.container = container;
+    setOwner(this, container);
   }
 
   get type() {

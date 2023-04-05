@@ -12,15 +12,13 @@ export default {
   initialize(container) {
     this.site = container.lookup("service:site");
 
-    let generatedCssVariables = [":root {"];
-
-    this.site.categories.forEach((category) => {
-      generatedCssVariables.push(
-        `--category-${category.id}-color: #${category.color};`
-      );
-    });
-
-    generatedCssVariables.push("}");
+    const generatedCssVariables = [
+      ":root {",
+      ...this.site.categories.map(
+        (category) => `--category-${category.id}-color: #${category.color};`
+      ),
+      "}",
+    ];
 
     const cssTag = document.createElement("style");
     cssTag.type = "text/css";
