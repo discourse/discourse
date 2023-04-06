@@ -16,7 +16,10 @@
   </div>
 
   <div class="chat-thread__body" {{did-insert this.setScrollable}}>
-    <div class="chat-thread__messages chat-messages-container">
+    <div
+      class="chat-thread__messages chat-messages-container"
+      {{chat/on-resize this.didResizePane (hash delay=10)}}
+    >
       {{#each this.thread.messages key="id" as |message|}}
         <ChatMessage
           @message={{message}}

@@ -56,6 +56,11 @@ export default class ChatThreadPanel extends Component {
     // }
   }
 
+  @action
+  didResizePane() {
+    this.forceRendering();
+  }
+
   get _selfDeleted() {
     return this.isDestroying || this.isDestroyed;
   }
