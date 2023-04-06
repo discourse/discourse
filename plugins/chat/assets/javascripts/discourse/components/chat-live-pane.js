@@ -18,10 +18,6 @@ import {
 } from "discourse/lib/user-presence";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { tracked } from "@glimmer/tracking";
-import {
-  forceRendering,
-  scrollToBottom,
-} from "discourse/plugins/chat/discourse/lib/scroll-utilities";
 
 const PAGE_SIZE = 50;
 const PAST = "past";
@@ -88,7 +84,7 @@ export default class ChatLivePane extends Component {
   didResizePane() {
     this.fillPaneAttempt();
     this.computeDatesSeparators();
-    forceRendering(this.scrollable);
+    this.forceRendering();
   }
 
   @action
@@ -191,7 +187,7 @@ export default class ChatLivePane extends Component {
           return;
         }
 
-        scrollToBottom(this.scrollable);
+        this.scrollToBottom();
       })
       .catch(this._handleErrors)
       .finally(() => {
@@ -396,7 +392,7 @@ export default class ChatLivePane extends Component {
         }, 2000);
       }
 
-      forceRendering(this.scrollable, () => {
+      this.forceRendering(() => {
         messageEl.scrollIntoView({
           block: opts.position ?? "center",
         });
@@ -451,11 +447,6 @@ export default class ChatLivePane extends Component {
 
       this.args.channel.updateLastReadMessage(lastUnreadVisibleMessage.id);
     });
-  }
-
-  @action
-  scrollToBottom() {
-    scrollToBottom(this.scrollable);
   }
 
   @action
@@ -979,6 +970,44 @@ export default class ChatLivePane extends Component {
   @action
   computeDatesSeparators() {
     throttle(this, this._computeDatesSeparators, 50, false);
+  }
+
+  // A more consistent way to scroll to the bottom when we are sure this is our goal
+  // it will also limit issues with any element changing the height while we are scrolling
+  // to the bottom
+  @action
+  scrollToBottom() {
+    this.scrollable.scrollTop = -1;
+    this.forceRendering(() => {
+      this.scrollable.scrollTop = 0;
+    });
+  }
+
+  // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
+  // we now use this hack to disable it
+  @bind
+  forceRendering(callback) {
+    schedule("afterRender", () => {
+      if (!this.scrollable) {
+        return;
+      }
+
+      if (this.capabilities.isIOS) {
+        this.scrollable.style.overflow = "hidden";
+      }
+
+      callback?.();
+
+      if (this.capabilities.isIOS) {
+        discourseLater(() => {
+          if (!this.scrollable) {
+            return;
+          }
+
+          this.scrollable.style.overflow = "auto";
+        }, 50);
+      }
+    });
   }
 
   _computeDatesSeparators() {

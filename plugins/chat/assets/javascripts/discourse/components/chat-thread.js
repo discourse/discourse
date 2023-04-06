@@ -7,7 +7,8 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
-import { scrollToBottom } from "discourse/plugins/chat/discourse/lib/scroll-utilities";
+import { schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 const PAGE_SIZE = 50;
 
@@ -21,6 +22,7 @@ export default class ChatThreadPanel extends Component {
   @service chatChannelThreadComposer;
   @service chatChannelThreadPane;
   @service appEvents;
+  @service capabilities;
 
   @tracked loading;
   @tracked loadingMorePast;
@@ -186,7 +188,7 @@ export default class ChatThreadPanel extends Component {
         thread_id: stagedMessage.threadId,
       })
       .then(() => {
-        scrollToBottom(this.scrollable);
+        this.scrollToBottom();
       })
       .catch((error) => {
         this.#onSendError(stagedMessage.stagedId, error);
@@ -198,6 +200,44 @@ export default class ChatThreadPanel extends Component {
         this.chatChannelThreadPane.sendingLoading = false;
         this.chatChannelThreadPane.resetAfterSend();
       });
+  }
+
+  // A more consistent way to scroll to the bottom when we are sure this is our goal
+  // it will also limit issues with any element changing the height while we are scrolling
+  // to the bottom
+  @action
+  scrollToBottom() {
+    this.scrollable.scrollTop = -1;
+    this.forceRendering(() => {
+      this.scrollable.scrollTop = 0;
+    });
+  }
+
+  // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
+  // we now use this hack to disable it
+  @bind
+  forceRendering(callback) {
+    schedule("afterRender", () => {
+      if (!this.scrollable) {
+        return;
+      }
+
+      if (this.capabilities.isIOS) {
+        this.scrollable.style.overflow = "hidden";
+      }
+
+      callback?.();
+
+      if (this.capabilities.isIOS) {
+        discourseLater(() => {
+          if (!this.scrollable) {
+            return;
+          }
+
+          this.scrollable.style.overflow = "auto";
+        }, 50);
+      }
+    });
   }
 
   @action
