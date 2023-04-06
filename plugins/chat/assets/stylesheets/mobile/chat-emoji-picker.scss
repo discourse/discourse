@@ -18,8 +18,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: var(--primary);
-      opacity: 0.8;
+      background: rgba(var(--always-black-rgb), 0.75);
       z-index: z("header") + 1;
     }
   }
