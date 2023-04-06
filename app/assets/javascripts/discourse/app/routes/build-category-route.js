@@ -62,10 +62,10 @@ export default (filterArg, params) => {
       ) {
         // TODO: avoid throwing away preload data by redirecting on the server
         PreloadStore.getAndRemove("topic_list");
-        return this.replaceWith("discovery.categoryNone", {
-          category,
-          category_slug_path_with_id: modelParams.category_slug_path_with_id,
-        });
+        return this.replaceWith(
+          "discovery.categoryNone",
+          modelParams.category_slug_path_with_id
+        );
       }
 
       this._setupNavigation(category);
