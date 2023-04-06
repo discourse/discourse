@@ -42,7 +42,7 @@
             <Input
               @value={{this.loginPassword}}
               class={{value-entered this.loginPassword}}
-              @type="password"
+              @type={{if this.maskPassword "password" "text"}}
               id="login-account-password"
               maxlength="200"
               disabled={{this.showSecondFactor}}
@@ -50,11 +50,18 @@
             <label class="alt-placeholder" for="login-account-password">{{i18n
                 "login.password"
               }}</label>
-            <a
-              href
-              id="forgot-password-link"
-              {{on "click" this.handleForgotPassword}}
-            >{{i18n "forgot_password.action"}}</a>
+            <div class="login__password-links">
+              <a
+                href
+                id="forgot-password-link"
+                {{on "click" this.handleForgotPassword}}
+              >{{i18n "forgot_password.action"}}</a>
+              <TogglePasswordMask
+                @maskPassword={{this.maskPassword}}
+                @togglePasswordMask={{this.togglePasswordMask}}
+                tabindex="3"
+              />
+            </div>
           </div>
         </div>
         <SecondFactorForm
