@@ -61,10 +61,15 @@ export default class ChatEmojiPickerManager extends Service {
     this.loadEmojis();
 
     if (this.picker) {
-      this.closeExisting();
+      if (this.picker.trigger === picker.trigger) {
+        this.closeExisting();
+      } else {
+        this.closeExisting();
+        this.picker = picker;
+      }
+    } else {
+      this.picker = picker;
     }
-
-    this.picker = picker;
   }
 
   @action
