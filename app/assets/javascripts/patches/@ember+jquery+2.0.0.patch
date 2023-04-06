@@ -1,24 +1,27 @@
 diff --git a/node_modules/@ember/jquery/vendor/jquery/component.dollar.js b/node_modules/@ember/jquery/vendor/jquery/component.dollar.js
-index 8c0cfd5..4232e56 100644
+index 8c0cfd5..4c211e2 100644
 --- a/node_modules/@ember/jquery/vendor/jquery/component.dollar.js
 +++ b/node_modules/@ember/jquery/vendor/jquery/component.dollar.js
-@@ -1,5 +1,5 @@
-+import Ember from 'ember';
+@@ -1,8 +1,16 @@
  import { assert, deprecate } from '@ember/debug';
 -import EmberObject from '@ember/object';
- import Component from '@ember/component';
+-import Component from '@ember/component';
  
  (function() {
-@@ -8,7 +8,7 @@ import Component from '@ember/component';
++  // importing these, specifically, is done so that we don't trigger the
++  // ember-global deprecation
++  //
++  // We had tried to import at the top of this file, but there is a build time transform
++  // removing those, and re-triggering the ember-global deprecation.
++  // See: https://deprecations.emberjs.com/v3.x#toc_ember-global
++  // for more information
++  const EmberObject = require("@ember/object").default;
++  const Component = require("@ember/component").default;
++
+   /*
+    * This non-standard use of `reopen` and `call` allows the component
     * base class to be reopened without triggering the
-    * ember.component.reopen deprecation in Ember itself.
-    */
--  EmberObject.reopen.call(Component, {
-+  Ember.Object.reopen.call(Component, {
-     $(sel) {
-       assert(
-         "You cannot access this.$() on a component with `tagName: ''` specified.",
-@@ -28,6 +28,8 @@ import Component from '@ember/component';
+@@ -28,6 +36,8 @@ import Component from '@ember/component';
        );
  
        if (this.element) {
