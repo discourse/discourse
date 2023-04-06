@@ -196,6 +196,11 @@
     padding: 0;
     margin: 1em 0;
   }
+
+  .solo-preference {
+    grid-column-start: 1;
+    grid-column-end: -1;
+  }
 }
 
 .user-preferences-tracking-page {
