@@ -157,16 +157,15 @@ class UserStat < ActiveRecord::Base
     # NOTE: we only update the counts for users we have seen in the last hour
     #  this avoids a very expensive query that may run on the entire user base
     #  we also ensure we only touch the table if data changes
-    user_ids = User.where("last_seen_at > ?", last_seen).pluck(:id)
 
     # Update denormalized topics_entered
-    DB.exec(<<~SQL, user_ids: user_ids)
+    DB.exec(<<~SQL, seen_at: last_seen)
       UPDATE user_stats SET topics_entered = X.c
        FROM
       (SELECT v.user_id, COUNT(topic_id) AS c
        FROM topic_views AS v
        WHERE v.user_id IN (
-         :user_ids
+          SELECT u1.id FROM users u1 where u1.last_seen_at > :seen_at
        )
        GROUP BY v.user_id) AS X
       WHERE
@@ -175,19 +174,23 @@ class UserStat < ActiveRecord::Base
     SQL
 
     # Update denormalized posts_read_count
-    DB.exec(<<~SQL, user_ids: user_ids)
-      UPDATE user_stats SET posts_read_count = X.c
-      FROM
-      (SELECT pt.user_id,
-              COUNT(*) AS c
-       FROM post_timings AS pt
-       JOIN topics t ON t.id = pt.topic_id
-       WHERE pt.user_id IN (:user_ids) AND
-             t.archetype = 'regular' AND
-             t.deleted_at IS NULL
-       GROUP BY pt.user_id) AS X
-       WHERE user_stats.user_id = X.user_id AND
-             X.c <> posts_read_count
+    DB.exec(<<~SQL, seen_at: last_seen)
+      WITH filtered_users AS (
+         select id from users u
+         JOIN user_stats on user_id = u.id
+         where last_seen_at > :seen_at
+         AND posts_read_count < 10000
+      ),
+      filtered_topics AS (
+         select id from topics
+         WHERE archetype = 'regular' AND deleted_at IS NULL
+      )
+      SELECT pt.user_id, COUNT(*) as c , us.posts_read_count
+        FROM filtered_users AS u
+        JOIN post_timings AS pt ON pt.user_id = u.id
+        JOIN filtered_topics t ON t.id = pt.topic_id
+        JOIN user_stats us on us.user_id = u.id
+        GROUP BY pt.user_id, posts_read_count
     SQL
   end
 
