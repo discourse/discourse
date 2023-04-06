@@ -32,6 +32,8 @@ export default class ChatLivePane extends Component {
   @service chatEmojiPickerManager;
   @service chatComposerPresenceManager;
   @service chatStateManager;
+  @service chatChannelComposer;
+  @service chatChannelPane;
   @service chatApi;
   @service currentUser;
   @service appEvents;
@@ -41,28 +43,26 @@ export default class ChatLivePane extends Component {
   @tracked loading = false;
   @tracked loadingMorePast = false;
   @tracked loadingMoreFuture = false;
-  @tracked hoveredMessageId = null;
   @tracked sendingLoading = false;
-  @tracked selectingMessages = false;
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
-  @tracked editingMessage = null;
-  @tracked replyToMsg = null;
   @tracked hasNewMessages = false;
   @tracked needsArrow = false;
   @tracked loadedOnce = false;
 
+  scrollable = null;
   _loadedChannelId = null;
-  _scrollerEl = null;
-  _lastSelectedMessage = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
 
   @action
-  setupListeners(element) {
-    this._scrollerEl = element.querySelector(".chat-messages-scroll");
+  setScrollable(element) {
+    this.scrollable = element;
+  }
 
+  @action
+  setupListeners() {
     document.addEventListener("scroll", this._forceBodyScroll, {
       passive: true,
     });
@@ -102,8 +102,8 @@ export default class ChatLivePane extends Component {
 
     if (this._loadedChannelId !== this.args.channel?.id) {
       this._unsubscribeToUpdates(this._loadedChannelId);
-      this.selectingMessages = false;
-      this.cancelEditing();
+      this.chatChannelPane.selectingMessages = false;
+      this.chatChannelComposer.cancelEditing();
       this._loadedChannelId = this.args.channel?.id;
     }
 
@@ -239,7 +239,8 @@ export default class ChatLivePane extends Component {
       .then((results) => {
         if (
           this._selfDeleted ||
-          this.args.channel.id !== results.meta.channel_id
+          this.args.channel.id !== results.meta.channel_id ||
+          !this.scrollable
         ) {
           return;
         }
@@ -372,11 +373,15 @@ export default class ChatLivePane extends Component {
     }
 
     schedule("afterRender", () => {
-      const messageEl = this._scrollerEl.querySelector(
+      if (this._selfDeleted) {
+        return;
+      }
+
+      const messageEl = this.scrollable.querySelector(
         `.chat-message-container[data-id='${messageId}']`
       );
 
-      if (!messageEl || this._selfDeleted) {
+      if (!messageEl) {
         return;
       }
 
@@ -428,13 +433,13 @@ export default class ChatLivePane extends Component {
         return;
       }
 
-      const element = this._scrollerEl.querySelector(
+      const element = this.scrollable.querySelector(
         `[data-id='${lastUnreadVisibleMessage.id}']`
       );
 
       // if the last visible message is not fully visible, we don't want to mark it as read
       // attempt to mark previous one as read
-      if (!this.#isBottomOfMessageVisible(element, this._scrollerEl)) {
+      if (!this.#isBottomOfMessageVisible(element, this.scrollable)) {
         lastUnreadVisibleMessage = lastUnreadVisibleMessage.previousMessage;
 
         if (
@@ -446,23 +451,6 @@ export default class ChatLivePane extends Component {
       }
 
       this.args.channel.updateLastReadMessage(lastUnreadVisibleMessage.id);
-    });
-  }
-
-  @action
-  scrollToBottom() {
-    schedule("afterRender", () => {
-      if (this._selfDeleted) {
-        return;
-      }
-
-      // A more consistent way to scroll to the bottom when we are sure this is our goal
-      // it will also limit issues with any element changing the height while we are scrolling
-      // to the bottom
-      this._scrollerEl.scrollTop = -1;
-      this.forceRendering(() => {
-        this._scrollerEl.scrollTop = 0;
-      });
     });
   }
 
@@ -485,12 +473,20 @@ export default class ChatLivePane extends Component {
 
   @action
   computeArrow() {
-    this.needsArrow = Math.abs(this._scrollerEl.scrollTop) >= 250;
+    if (!this.scrollable) {
+      return;
+    }
+
+    this.needsArrow = Math.abs(this.scrollable.scrollTop) >= 250;
   }
 
   @action
   computeScrollState() {
     cancel(this.onScrollEndedHandler);
+
+    if (!this.scrollable) {
+      return;
+    }
 
     if (this.#isAtTop()) {
       this.fetchMoreMessages({ direction: PAST });
@@ -719,6 +715,8 @@ export default class ChatLivePane extends Component {
     }
   }
 
+  // TODO (martin) Maybe change this to public, since its referred to by
+  // livePanel.linkedComponent at the moment.
   get _selfDeleted() {
     return this.isDestroying || this.isDestroyed;
   }
@@ -731,11 +729,11 @@ export default class ChatLivePane extends Component {
   sendMessage(message, uploads = []) {
     resetIdle();
 
-    if (this.sendingLoading) {
+    if (this.chatChannelPane.sendingLoading) {
       return;
     }
 
-    this.sendingLoading = true;
+    this.chatChannelPane.sendingLoading = true;
     this.args.channel.draft = ChatMessageDraft.create();
 
     // TODO: all send message logic is due for massive refactoring
@@ -758,8 +756,8 @@ export default class ChatLivePane extends Component {
           return;
         }
         this.loading = false;
-        this.sendingLoading = false;
-        this._resetAfterSend();
+        this.chatChannelPane.sendingLoading = false;
+        this.chatChannelPane.resetAfterSend();
         this.scrollToLatestMessage();
       });
     }
@@ -771,8 +769,8 @@ export default class ChatLivePane extends Component {
       user: this.currentUser,
     });
 
-    if (this.replyToMsg) {
-      stagedMessage.inReplyTo = this.replyToMsg;
+    if (this.chatChannelComposer.replyToMsg) {
+      stagedMessage.inReplyTo = this.chatChannelComposer.replyToMsg;
     }
 
     this.args.channel.messagesManager.addMessages([stagedMessage]);
@@ -797,8 +795,8 @@ export default class ChatLivePane extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.sendingLoading = false;
-        this._resetAfterSend();
+        this.chatChannelPane.sendingLoading = false;
+        this.chatChannelPane.resetAfterSend();
       });
   }
 
@@ -836,12 +834,12 @@ export default class ChatLivePane extends Component {
       }
     }
 
-    this._resetAfterSend();
+    this.chatChannelPane.resetAfterSend();
   }
 
   @action
   resendStagedMessage(stagedMessage) {
-    this.sendingLoading = true;
+    this.chatChannelPane.sendingLoading = true;
 
     stagedMessage.error = null;
 
@@ -864,152 +862,12 @@ export default class ChatLivePane extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.sendingLoading = false;
+        this.chatChannelPane.sendingLoading = false;
       });
-  }
-
-  @action
-  editMessage(chatMessage, newContent, uploads) {
-    this.sendingLoading = true;
-    let data = {
-      new_message: newContent,
-      upload_ids: (uploads || []).map((upload) => upload.id),
-    };
-    return ajax(`/chat/${this.args.channel.id}/edit/${chatMessage.id}`, {
-      type: "PUT",
-      data,
-    })
-      .then(() => {
-        this._resetAfterSend();
-      })
-      .catch(popupAjaxError)
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.sendingLoading = false;
-      });
-  }
-
-  _resetAfterSend() {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    this.replyToMsg = null;
-    this.editingMessage = null;
-    this.chatComposerPresenceManager.notifyState(this.args.channel.id, false);
-    this.appEvents.trigger("chat-composer:reply-to-set", null);
-  }
-
-  @action
-  editLastMessageRequested() {
-    const lastUserMessage = this.args.channel.messages.findLast(
-      (message) => message.user.id === this.currentUser.id
-    );
-
-    if (!lastUserMessage) {
-      return;
-    }
-
-    if (lastUserMessage.staged || lastUserMessage.error) {
-      return;
-    }
-
-    this.editingMessage = lastUserMessage;
-    this._focusComposer();
-  }
-
-  @action
-  setReplyTo(messageId) {
-    if (messageId) {
-      this.cancelEditing();
-
-      const message = this.args.channel.messagesManager.findMessage(messageId);
-      this.replyToMsg = message;
-      this.appEvents.trigger("chat-composer:reply-to-set", message);
-      this._focusComposer();
-    } else {
-      this.replyToMsg = null;
-      this.appEvents.trigger("chat-composer:reply-to-set", null);
-    }
-  }
-
-  @action
-  replyMessageClicked(message) {
-    const replyMessageFromLookup =
-      this.args.channel.messagesManager.findMessage(message.id);
-    if (replyMessageFromLookup) {
-      this.scrollToMessage(replyMessageFromLookup.id, {
-        highlight: true,
-        position: "start",
-        autoExpand: true,
-      });
-    } else {
-      // Message is not present in the loaded messages. Fetch it!
-      this.requestedTargetMessageId = message.id;
-      this.fetchMessages();
-    }
-  }
-
-  @action
-  editButtonClicked(messageId) {
-    const message = this.args.channel.messagesManager.findMessage(messageId);
-    this.editingMessage = message;
-    this.scrollToLatestMessage();
-    this._focusComposer();
-  }
-
-  get canInteractWithChat() {
-    return !this.args.channel?.userSilenced;
   }
 
   get chatProgressBarContainer() {
     return document.querySelector("#chat-progress-bar-container");
-  }
-
-  get selectedMessageIds() {
-    return this.args.channel?.messages
-      ?.filter((m) => m.selected)
-      ?.map((m) => m.id);
-  }
-
-  @action
-  onStartSelectingMessages(message) {
-    this._lastSelectedMessage = message;
-    this.selectingMessages = true;
-  }
-
-  @action
-  cancelSelecting() {
-    this.selectingMessages = false;
-    this.args.channel.messages.forEach((message) => {
-      message.selected = false;
-    });
-  }
-
-  @action
-  onSelectMessage(message) {
-    this._lastSelectedMessage = message;
-  }
-
-  @action
-  bulkSelectMessages(message, checked) {
-    const lastSelectedIndex = this._findIndexOfMessage(
-      this._lastSelectedMessage
-    );
-    const newlySelectedIndex = this._findIndexOfMessage(message);
-    const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(
-      (a, b) => a - b
-    );
-
-    for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
-      this.args.channel.messages[i].selected = checked;
-    }
-  }
-
-  _findIndexOfMessage(message) {
-    return this.args.channel.messages.findIndex((m) => m.id === message.id);
   }
 
   @action
@@ -1021,144 +879,6 @@ export default class ChatLivePane extends Component {
         this.chatStateManager.lastKnownChatURL
       );
     });
-  }
-
-  @action
-  cancelEditing() {
-    this.editingMessage = null;
-  }
-
-  @action
-  setInReplyToMsg(inReplyMsg) {
-    this.replyToMsg = inReplyMsg;
-  }
-
-  @action
-  composerValueChanged({ value, uploads, replyToMsg, inProgressUploadsCount }) {
-    if (!this.editingMessage && !this.args.channel.isDraft) {
-      if (typeof value !== "undefined") {
-        this.args.channel.draft.message = value;
-      }
-
-      // only save the uploads to the draft if we are not still uploading other
-      // ones, otherwise we get into a cycle where we pass the draft uploads as
-      // existingUploads back to the upload component and cause in progress ones
-      // to be cancelled
-      if (
-        typeof uploads !== "undefined" &&
-        inProgressUploadsCount !== "undefined" &&
-        inProgressUploadsCount === 0
-      ) {
-        this.args.channel.draft.uploads = uploads;
-      }
-
-      if (typeof replyToMsg !== "undefined") {
-        this.args.channel.draft.replyToMsg = replyToMsg;
-      }
-    }
-
-    if (!this.args.channel.isDraft) {
-      this._reportReplyingPresence(value);
-    }
-
-    this._persistDraft();
-  }
-
-  @debounce(2000)
-  _persistDraft() {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    if (!this.args.channel.draft) {
-      return;
-    }
-
-    ajax("/chat/drafts.json", {
-      type: "POST",
-      data: {
-        chat_channel_id: this.args.channel.id,
-        data: this.args.channel.draft.toJSON(),
-      },
-      ignoreUnsent: false,
-    })
-      .then(() => {
-        this.chat.markNetworkAsReliable();
-      })
-      .catch((error) => {
-        // we ignore a draft which can't be saved because it's too big
-        // and only deal with network error for now
-        if (!error.jqXHR?.responseJSON?.errors?.length) {
-          this.chat.markNetworkAsUnreliable();
-        }
-      });
-  }
-
-  @action
-  onHoverMessage(message, options = {}, event) {
-    if (this.site.mobileView && options.desktopOnly) {
-      return;
-    }
-
-    if (this.isScrolling) {
-      return;
-    }
-
-    if (message?.staged) {
-      return;
-    }
-
-    if (
-      this.hoveredMessageId &&
-      message?.id &&
-      this.hoveredMessageId === message?.id
-    ) {
-      return;
-    }
-
-    if (event) {
-      if (
-        event.type === "mouseleave" &&
-        (event.toElement || event.relatedTarget)?.closest(
-          ".chat-message-actions-desktop-anchor"
-        )
-      ) {
-        return;
-      }
-
-      if (
-        event.type === "mouseenter" &&
-        (event.fromElement || event.relatedTarget)?.closest(
-          ".chat-message-actions-desktop-anchor"
-        )
-      ) {
-        this.hoveredMessageId = message?.id;
-        return;
-      }
-    }
-
-    this.hoveredMessageId =
-      message?.id && message.id !== this.hoveredMessageId ? message.id : null;
-  }
-
-  _reportReplyingPresence(composerValue) {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    if (this.args.channel.isDraft) {
-      return;
-    }
-
-    const replying = !this.editingMessage && !!composerValue;
-    this.chatComposerPresenceManager.notifyState(
-      this.args.channel.id,
-      replying
-    );
-  }
-
-  _focusComposer() {
-    this.appEvents.trigger("chat:focus-composer");
   }
 
   _unsubscribeToUpdates(channelId) {
@@ -1213,33 +933,6 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
-  // we now use this hack to disable it
-  @bind
-  forceRendering(callback) {
-    schedule("afterRender", () => {
-      if (!this._scrollerEl) {
-        return;
-      }
-
-      if (this.capabilities.isIOS) {
-        this._scrollerEl.style.overflow = "hidden";
-      }
-
-      callback?.();
-
-      if (this.capabilities.isIOS) {
-        discourseLater(() => {
-          if (!this._scrollerEl) {
-            return;
-          }
-
-          this._scrollerEl.style.overflow = "auto";
-        }, 50);
-      }
-    });
-  }
-
   @action
   addAutoFocusEventListener() {
     document.addEventListener("keydown", this._autoFocus);
@@ -1277,14 +970,14 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    event.preventDefault();
-    event.stopPropagation();
-
     const composer = document.querySelector(".chat-composer-input");
     if (composer && !this.args.channel.isDraft) {
-      this.appEvents.trigger("chat:insert-text", key);
       composer.focus();
+      return;
     }
+
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   @action
@@ -1292,12 +985,66 @@ export default class ChatLivePane extends Component {
     throttle(this, this._computeDatesSeparators, 50, false);
   }
 
+  // A more consistent way to scroll to the bottom when we are sure this is our goal
+  // it will also limit issues with any element changing the height while we are scrolling
+  // to the bottom
+  @action
+  scrollToBottom() {
+    if (!this.scrollable) {
+      return;
+    }
+
+    this.scrollable.scrollTop = -1;
+    this.forceRendering(() => {
+      this.scrollable.scrollTop = 0;
+    });
+  }
+
+  // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
+  // we now use this hack to disable it
+  @bind
+  forceRendering(callback) {
+    schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
+      if (!this.scrollable) {
+        return;
+      }
+
+      if (this.capabilities.isIOS) {
+        this.scrollable.style.overflow = "hidden";
+      }
+
+      callback?.();
+
+      if (this.capabilities.isIOS) {
+        discourseLater(() => {
+          if (!this.scrollable) {
+            return;
+          }
+
+          this.scrollable.style.overflow = "auto";
+        }, 50);
+      }
+    });
+  }
+
   _computeDatesSeparators() {
     schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
+      if (!this.scrollable) {
+        return;
+      }
+
       const dates = [
-        ...this._scrollerEl.querySelectorAll(".chat-message-separator-date"),
+        ...this.scrollable.querySelectorAll(".chat-message-separator-date"),
       ].reverse();
-      const height = this._scrollerEl.querySelector(
+      const height = this.scrollable.querySelector(
         ".chat-messages-container"
       ).clientHeight;
 
@@ -1336,17 +1083,29 @@ export default class ChatLivePane extends Component {
   }
 
   #isAtBottom() {
-    return Math.abs(this._scrollerEl.scrollTop) <= 2;
+    if (!this.scrollable) {
+      return false;
+    }
+
+    return Math.abs(this.scrollable.scrollTop) <= 2;
   }
 
   #isTowardsBottom() {
-    return Math.abs(this._scrollerEl.scrollTop) <= 50;
+    if (!this.scrollable) {
+      return false;
+    }
+
+    return Math.abs(this.scrollable.scrollTop) <= 50;
   }
 
   #isAtTop() {
+    if (!this.scrollable) {
+      return false;
+    }
+
     return (
-      Math.abs(this._scrollerEl.scrollTop) >=
-      this._scrollerEl.scrollHeight - this._scrollerEl.offsetHeight - 2
+      Math.abs(this.scrollable.scrollTop) >=
+      this.scrollable.scrollHeight - this.scrollable.offsetHeight - 2
     );
   }
 

@@ -2,6 +2,8 @@ import { tracked } from "@glimmer/tracking";
 import User from "discourse/models/user";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
+export const REACTIONS = { add: "add", remove: "remove" };
+
 export default class ChatMessageReaction {
   static create(args = {}) {
     return new ChatMessageReaction(args);

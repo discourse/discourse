@@ -5,7 +5,7 @@ $float-height: 530px;
   --full-page-border-radius: 12px;
   --full-page-sidebar-width: 275px;
   --channel-list-avatar-size: 30px;
-  --chat-header-offset: 65px;
+  --chat-header-offset: 50px;
 }
 
 .chat-message-move-to-channel-modal-modal {
@@ -289,9 +289,6 @@ $float-height: 530px;
     z-index: 1;
     margin: 0 1px 0 0;
     will-change: transform;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-
     @include chat-scrollbar();
 
     .join-channel-btn.in-float {

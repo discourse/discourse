@@ -1,22 +1,17 @@
-import Bookmark from "discourse/models/bookmark";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { isTesting } from "discourse-common/config/environment";
 import Component from "@glimmer/component";
 import I18n from "I18n";
-import getURL from "discourse-common/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
-import { clipboardCopy } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
-import showModal from "discourse/lib/show-modal";
-import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
-import { tracked } from "@glimmer/tracking";
-import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
+import { getOwner } from "discourse-common/lib/get-owner";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { bind } from "discourse-common/utils/decorators";
 
 let _chatMessageDecorators = [];
 
@@ -29,8 +24,7 @@ export function resetChatMessageDecorators() {
 }
 
 export const MENTION_KEYWORDS = ["here", "all"];
-
-export const REACTIONS = { add: "add", remove: "remove" };
+export const MESSAGE_CONTEXT_THREAD = "thread";
 
 export default class ChatMessage extends Component {
   @service site;
@@ -42,21 +36,25 @@ export default class ChatMessage extends Component {
   @service chatApi;
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
+  @service chatChannelPane;
+  @service chatChannelThreadPane;
   @service chatChannelsManager;
   @service router;
 
-  @tracked chatMessageActionsMobileAnchor = null;
-  @tracked chatMessageActionsDesktopAnchor = null;
-
   @optionalService adminTools;
 
-  cachedFavoritesReactions = null;
-  reacting = false;
+  get pane() {
+    return this.args.context === MESSAGE_CONTEXT_THREAD
+      ? this.chatChannelThreadPane
+      : this.chatChannelPane;
+  }
 
-  constructor() {
-    super(...arguments);
-
-    this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
+  get messageInteractor() {
+    return new ChatMessageInteractor(
+      getOwner(this),
+      this.args.message,
+      this.args.context
+    );
   }
 
   get deletedAndCollapsed() {
@@ -72,15 +70,17 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  setMessageActionsAnchors() {
-    schedule("afterRender", () => {
-      this.chatMessageActionsDesktopAnchor = document.querySelector(
-        ".chat-message-actions-desktop-anchor"
-      );
-      this.chatMessageActionsMobileAnchor = document.querySelector(
-        ".chat-message-actions-mobile-anchor"
-      );
-    });
+  expand() {
+    this.args.message.expanded = true;
+  }
+
+  @action
+  toggleChecked(event) {
+    if (event.shiftKey) {
+      this.messageInteractor.bulkSelect(event.target.checked);
+    }
+
+    this.messageInteractor.select(event.target.checked);
   }
 
   @action
@@ -108,114 +108,6 @@ export default class ChatMessage extends Component {
     }
   }
 
-  get showActions() {
-    return (
-      this.args.canInteractWithChat &&
-      !this.args.message?.staged &&
-      this.args.isHovered
-    );
-  }
-
-  get secondaryButtons() {
-    const buttons = [];
-
-    buttons.push({
-      id: "copyLinkToMessage",
-      name: I18n.t("chat.copy_link"),
-      icon: "link",
-    });
-
-    if (this.showEditButton) {
-      buttons.push({
-        id: "edit",
-        name: I18n.t("chat.edit"),
-        icon: "pencil-alt",
-      });
-    }
-
-    if (!this.args.selectingMessages) {
-      buttons.push({
-        id: "selectMessage",
-        name: I18n.t("chat.select"),
-        icon: "tasks",
-      });
-    }
-
-    if (this.canFlagMessage) {
-      buttons.push({
-        id: "flag",
-        name: I18n.t("chat.flag"),
-        icon: "flag",
-      });
-    }
-
-    if (this.showDeleteButton) {
-      buttons.push({
-        id: "deleteMessage",
-        name: I18n.t("chat.delete"),
-        icon: "trash-alt",
-      });
-    }
-
-    if (this.showRestoreButton) {
-      buttons.push({
-        id: "restore",
-        name: I18n.t("chat.restore"),
-        icon: "undo",
-      });
-    }
-
-    if (this.showRebakeButton) {
-      buttons.push({
-        id: "rebakeMessage",
-        name: I18n.t("chat.rebake_message"),
-        icon: "sync-alt",
-      });
-    }
-
-    if (this.hasThread) {
-      buttons.push({
-        id: "openThread",
-        name: I18n.t("chat.threads.open"),
-        icon: "puzzle-piece",
-      });
-    }
-
-    return buttons;
-  }
-
-  get messageActions() {
-    return {
-      reply: this.reply,
-      react: this.react,
-      copyLinkToMessage: this.copyLinkToMessage,
-      edit: this.edit,
-      selectMessage: this.selectMessage,
-      flag: this.flag,
-      deleteMessage: this.deleteMessage,
-      restore: this.restore,
-      rebakeMessage: this.rebakeMessage,
-      toggleBookmark: this.toggleBookmark,
-      openThread: this.openThread,
-      startReactionForMessageActions: this.startReactionForMessageActions,
-    };
-  }
-
-  get messageCapabilities() {
-    return {
-      canReact: this.canReact,
-      canReply: this.canReply,
-      canBookmark: this.showBookmarkButton,
-      hasThread: this.canReply && this.hasThread,
-    };
-  }
-
-  get hasThread() {
-    return (
-      this.args.channel?.get("threading_enabled") && this.args.message?.threadId
-    );
-  }
-
   get show() {
     return (
       !this.args.message?.deletedAt ||
@@ -226,30 +118,78 @@ export default class ChatMessage extends Component {
   }
 
   @action
+  onMouseEnter() {
+    if (this.site.mobileView) {
+      return;
+    }
+
+    if (this.pane.hoveredMessageId === this.args.message.id) {
+      return;
+    }
+
+    this._onHoverMessageDebouncedHandler = discourseDebounce(
+      this,
+      this._debouncedOnHoverMessage,
+      250
+    );
+  }
+
+  @action
+  onMouseLeave(event) {
+    if (this.site.mobileView) {
+      return;
+    }
+
+    if (
+      (event.toElement || event.relatedTarget)?.closest(
+        ".chat-message-actions-container"
+      )
+    ) {
+      return;
+    }
+
+    cancel(this._onHoverMessageDebouncedHandler);
+
+    this.chat.activeMessage = null;
+  }
+
+  @bind
+  _debouncedOnHoverMessage() {
+    if (!this.chat.userCanInteractWithChat) {
+      return;
+    }
+    this._setActiveMessage();
+  }
+
+  _setActiveMessage() {
+    this.chat.activeMessage = {
+      model: this.args.message,
+      context: this.args.context,
+    };
+    this.pane.hoveredMessageId = this.args.message.id;
+  }
+
+  @action
   handleTouchStart() {
     // if zoomed don't track long press
     if (isZoomed()) {
       return;
     }
 
-    if (!this.args.isHovered) {
-      // when testing this must be triggered immediately because there
-      // is no concept of "long press" there, the Ember `tap` test helper
-      // does send the touchstart/touchend events but immediately, see
-      // https://github.com/emberjs/ember-test-helpers/blob/master/API.md#tap
-      if (isTesting()) {
-        this._handleLongPress();
-      }
-
-      this._isPressingHandler = discourseLater(this._handleLongPress, 500);
+    // when testing this must be triggered immediately because there
+    // is no concept of "long press" there, the Ember `tap` test helper
+    // does send the touchstart/touchend events but immediately, see
+    // https://github.com/emberjs/ember-test-helpers/blob/master/API.md#tap
+    if (isTesting()) {
+      this._handleLongPress();
     }
+
+    this._isPressingHandler = discourseLater(this._handleLongPress, 500);
   }
 
   @action
   handleTouchMove() {
-    if (!this.args.isHovered) {
-      cancel(this._isPressingHandler);
-    }
+    cancel(this._isPressingHandler);
   }
 
   @action
@@ -267,7 +207,7 @@ export default class ChatMessage extends Component {
     document.activeElement.blur();
     document.querySelector(".chat-composer-input")?.blur();
 
-    this.args.onHoverMessage?.(this.args.message);
+    this._setActiveMessage();
   }
 
   get hideUserInfo() {
@@ -297,79 +237,10 @@ export default class ChatMessage extends Component {
 
   get hideReplyToInfo() {
     return (
+      this.args.context === MESSAGE_CONTEXT_THREAD ||
       this.args.message?.inReplyTo?.id ===
-      this.args.message?.previousMessage?.id
+        this.args.message?.previousMessage?.id
     );
-  }
-
-  get showEditButton() {
-    return (
-      !this.args.message?.deletedAt &&
-      this.currentUser?.id === this.args.message?.user?.id &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get canFlagMessage() {
-    return (
-      this.currentUser?.id !== this.args.message?.user?.id &&
-      !this.args.channel?.isDirectMessageChannel &&
-      this.args.message?.userFlagStatus === undefined &&
-      this.args.channel?.canFlag &&
-      !this.args.message?.chatWebhookEvent &&
-      !this.args.message?.deletedAt
-    );
-  }
-
-  get canManageDeletion() {
-    return this.currentUser?.id === this.args.message.user.id
-      ? this.args.channel?.canDeleteSelf
-      : this.args.channel?.canDeleteOthers;
-  }
-
-  get canReply() {
-    return (
-      !this.args.message?.deletedAt &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get canReact() {
-    return (
-      !this.args.message?.deletedAt &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get showDeleteButton() {
-    return (
-      this.canManageDeletion &&
-      !this.args.message?.deletedAt &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get showRestoreButton() {
-    return (
-      this.canManageDeletion &&
-      this.args.message?.deletedAt &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get showBookmarkButton() {
-    return this.args.channel?.canModifyMessages?.(this.currentUser);
-  }
-
-  get showRebakeButton() {
-    return (
-      this.currentUser?.staff &&
-      this.args.channel?.canModifyMessages?.(this.currentUser)
-    );
-  }
-
-  get hasReactions() {
-    return Object.values(this.args.message.reactions).some((r) => r.count > 0);
   }
 
   get mentionWarning() {
@@ -446,262 +317,5 @@ export default class ChatMessage extends Component {
   @action
   dismissMentionWarning() {
     this.args.message.mentionWarning = null;
-  }
-
-  @action
-  startReactionForMessageActions() {
-    this.chatEmojiPickerManager.startFromMessageActions(
-      this.args.message,
-      this.selectReaction,
-      { desktop: this.site.desktopView }
-    );
-  }
-
-  @action
-  startReactionForReactionList() {
-    this.chatEmojiPickerManager.startFromMessageReactionList(
-      this.args.message,
-      this.selectReaction,
-      { desktop: this.site.desktopView }
-    );
-  }
-
-  deselectReaction(emoji) {
-    if (!this.args.canInteractWithChat) {
-      return;
-    }
-
-    this.react(emoji, REACTIONS.remove);
-  }
-
-  @action
-  selectReaction(emoji) {
-    if (!this.args.canInteractWithChat) {
-      return;
-    }
-
-    this.react(emoji, REACTIONS.add);
-  }
-
-  @action
-  react(emoji, reactAction) {
-    if (!this.args.canInteractWithChat) {
-      return;
-    }
-
-    if (this.reacting) {
-      return;
-    }
-
-    if (this.capabilities.canVibrate && !isTesting()) {
-      navigator.vibrate(5);
-    }
-
-    if (this.site.mobileView) {
-      this.args.onHoverMessage(null);
-    }
-
-    if (reactAction === REACTIONS.add) {
-      this.chatEmojiReactionStore.track(`:${emoji}:`);
-    }
-
-    this.reacting = true;
-
-    this.args.message.react(
-      emoji,
-      reactAction,
-      this.currentUser,
-      this.currentUser.id
-    );
-
-    return ajax(
-      `/chat/${this.args.message.channelId}/react/${this.args.message.id}`,
-      {
-        type: "PUT",
-        data: {
-          react_action: reactAction,
-          emoji,
-        },
-      }
-    )
-      .catch((errResult) => {
-        popupAjaxError(errResult);
-        this.args.message.react(
-          emoji,
-          REACTIONS.remove,
-          this.currentUser,
-          this.currentUser.id
-        );
-      })
-      .finally(() => {
-        this.reacting = false;
-      });
-  }
-
-  // TODO(roman): For backwards-compatibility.
-  //   Remove after the 3.0 release.
-  _legacyFlag() {
-    this.dialog.yesNoConfirm({
-      message: I18n.t("chat.confirm_flag", {
-        username: this.args.message.user?.username,
-      }),
-      didConfirm: () => {
-        return ajax("/chat/flag", {
-          method: "PUT",
-          data: {
-            chat_message_id: this.args.message.id,
-            flag_type_id: 7, // notify_moderators
-          },
-        }).catch(popupAjaxError);
-      },
-    });
-  }
-
-  @action
-  reply() {
-    this.args.setReplyTo(this.args.message.id);
-  }
-
-  @action
-  edit() {
-    this.args.editButtonClicked(this.args.message.id);
-  }
-
-  @action
-  flag() {
-    const targetFlagSupported =
-      requirejs.entries["discourse/lib/flag-targets/flag"];
-
-    if (targetFlagSupported) {
-      const model = this.args.message;
-      model.username = model.user?.username;
-      model.user_id = model.user?.id;
-      let controller = showModal("flag", { model });
-      controller.set("flagTarget", new ChatMessageFlag());
-    } else {
-      this._legacyFlag();
-    }
-  }
-
-  @action
-  expand() {
-    this.args.message.expanded = true;
-  }
-
-  @action
-  restore() {
-    return ajax(
-      `/chat/${this.args.message.channelId}/restore/${this.args.message.id}`,
-      {
-        type: "PUT",
-      }
-    ).catch(popupAjaxError);
-  }
-
-  @action
-  openThread() {
-    this.router.transitionTo("chat.channel.thread", this.args.message.threadId);
-  }
-
-  @action
-  toggleBookmark() {
-    return openBookmarkModal(
-      this.args.message.bookmark ||
-        Bookmark.createFor(
-          this.currentUser,
-          "Chat::Message",
-          this.args.message.id
-        ),
-      {
-        onAfterSave: (savedData) => {
-          const bookmark = Bookmark.create(savedData);
-          this.args.message.bookmark = bookmark;
-          this.appEvents.trigger(
-            "bookmarks:changed",
-            savedData,
-            bookmark.attachedTo()
-          );
-        },
-        onAfterDelete: () => {
-          this.args.message.bookmark = null;
-        },
-      }
-    );
-  }
-
-  @action
-  rebakeMessage() {
-    return ajax(
-      `/chat/${this.args.message.channelId}/${this.args.message.id}/rebake`,
-      {
-        type: "PUT",
-      }
-    ).catch(popupAjaxError);
-  }
-
-  @action
-  deleteMessage() {
-    return this.chatApi
-      .trashMessage(this.args.message.channelId, this.args.message.id)
-      .catch(popupAjaxError);
-  }
-
-  @action
-  selectMessage() {
-    this.args.message.selected = true;
-    this.args.onStartSelectingMessages(this.args.message);
-  }
-
-  @action
-  toggleChecked(e) {
-    if (e.shiftKey) {
-      this.args.bulkSelectMessages(this.args.message, e.target.checked);
-    }
-
-    this.args.onSelectMessage(this.args.message);
-  }
-
-  @action
-  copyLinkToMessage() {
-    if (!this.messageContainer) {
-      return;
-    }
-
-    this.messageContainer
-      .querySelector(".link-to-message-btn")
-      ?.classList?.add("copied");
-
-    const { protocol, host } = window.location;
-    let url = getURL(
-      `/chat/c/-/${this.args.message.channelId}/${this.args.message.id}`
-    );
-    url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
-    clipboardCopy(url);
-
-    discourseLater(() => {
-      this.messageContainer
-        ?.querySelector(".link-to-message-btn")
-        ?.classList?.remove("copied");
-    }, 250);
-  }
-
-  get emojiReactions() {
-    let favorites = this.cachedFavoritesReactions;
-
-    // may be a {} if no defaults defined in some production builds
-    if (!favorites || !favorites.slice) {
-      return [];
-    }
-
-    return favorites.slice(0, 3).map((emoji) => {
-      return (
-        this.args.message.reactions.find(
-          (reaction) => reaction.emoji === emoji
-        ) ||
-        ChatMessageReaction.create({
-          emoji,
-        })
-      );
-    });
   }
 }

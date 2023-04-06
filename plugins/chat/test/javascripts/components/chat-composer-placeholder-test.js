@@ -4,6 +4,7 @@ import hbs from "htmlbars-inline-precompile";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
+import pretender from "discourse/tests/helpers/create-pretender";
 
 module(
   "Discourse Chat | Component | chat-composer placeholder",
@@ -11,6 +12,8 @@ module(
     setupRenderingTest(hooks);
 
     test("direct message to self shows Jot something down", async function (assert) {
+      pretender.get("/chat/emojis.json", () => [200, [], {}]);
+
       this.currentUser.set("id", 1);
       this.set(
         "chatChannel",
@@ -31,6 +34,8 @@ module(
     });
 
     test("direct message to multiple folks shows their names", async function (assert) {
+      pretender.get("/chat/emojis.json", () => [200, [], {}]);
+
       this.set(
         "chatChannel",
         ChatChannel.create({
@@ -54,6 +59,8 @@ module(
     });
 
     test("message to channel shows send message to channel name", async function (assert) {
+      pretender.get("/chat/emojis.json", () => [200, [], {}]);
+
       this.set(
         "chatChannel",
         ChatChannel.create({

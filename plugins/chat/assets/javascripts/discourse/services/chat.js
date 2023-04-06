@@ -9,6 +9,7 @@ import { and } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import discourseLater from "discourse-common/lib/later";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -26,6 +27,9 @@ export default class Chat extends Service {
   @service site;
 
   @service chatChannelsManager;
+  @service chatChannelPane;
+  @service chatChannelThreadPane;
+
   @tracked activeChannel = null;
 
   cook = null;
@@ -34,6 +38,8 @@ export default class Chat extends Service {
   isNetworkUnreliable = false;
 
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
+
+  @tracked _activeMessage = null;
 
   @computed("currentUser.staff", "currentUser.groups.[]")
   get userCanDirectMessage() {
@@ -49,6 +55,32 @@ export default class Chat extends Service {
           .map((groupId) => parseInt(groupId, 10))
       )
     );
+  }
+
+  @computed("activeChannel.userSilenced")
+  get userCanInteractWithChat() {
+    return !this.activeChannel?.userSilenced;
+  }
+
+  get activeMessage() {
+    return this._activeMessage;
+  }
+
+  set activeMessage(hash) {
+    this.chatChannelPane.hoveredMessageId = null;
+    this.chatChannelThreadPane.hoveredMessageId = null;
+
+    if (hash) {
+      this._activeMessage = hash;
+
+      if (hash.context === MESSAGE_CONTEXT_THREAD) {
+        this.chatChannelThreadPane.hoveredMessageId = hash.model.id;
+      } else {
+        this.chatChannelPane.hoveredMessageId = hash.model.id;
+      }
+    } else {
+      this._activeMessage = null;
+    }
   }
 
   init() {
