@@ -1022,7 +1022,7 @@
   resolved "https://registry.yarnpkg.com/@discourse/itsatrap/-/itsatrap-2.0.10.tgz#c7e750eeb32b54e769e952c4ecc472213eb1385a"
   integrity sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==
 
-"@discourse/virtual-dom@^2.1.2-0":
+"@discourse/virtual-dom@^2.1.2-0", "virtual-dom@npm:@discourse/virtual-dom":
   version "2.1.2-0"
   resolved "https://registry.yarnpkg.com/@discourse/virtual-dom/-/virtual-dom-2.1.2-0.tgz#74e44261c7b0a99b3bf6db0eac37b86e978906a6"
   integrity sha512-5sTfdNxyrFK9yb98YLBAChYiO2K6Go7ptErVUQciT7rgueoGyLyw6Sm0FeVkSK1GLfusYFKZG8ch2vGNzJ0wlQ==

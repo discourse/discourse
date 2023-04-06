@@ -20,7 +20,8 @@
     "wizard"
   ],
   "resolutions": {
-    "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1"
+    "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1",
+    "**/virtual-dom": "npm:@discourse/virtual-dom"
   },
   "devDependencies": {
     "patch-package": "^6.5.1",

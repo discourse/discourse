@@ -1,0 +1,11 @@
+diff --git a/node_modules/@discourse/virtual-dom/package.json b/node_modules/@discourse/virtual-dom/package.json
+index 26da530..576501b 100644
+--- a/node_modules/@discourse/virtual-dom/package.json
++++ b/node_modules/@discourse/virtual-dom/package.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "@discourse/virtual-dom",
++  "name": "virtual-dom",
+   "version": "2.1.2-0",
+   "description": "A fork of virtual-dom - adds handling for prepended elements",
+   "keywords": [
