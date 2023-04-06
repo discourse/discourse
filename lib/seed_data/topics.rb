@@ -84,8 +84,13 @@ module SeedData
         if general_category = Category.find_by(id: SiteSetting.general_category_id)
           topics << {
             site_setting_name: "welcome_topic_id",
-            title: I18n.t("discourse_welcome_topic.title"),
-            raw: I18n.t("discourse_welcome_topic.body", base_path: Discourse.base_path),
+            title: I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title),
+            raw:
+              I18n.t(
+                "discourse_welcome_topic.body",
+                base_path: Discourse.base_path,
+                site_description: SiteSetting.site_description,
+              ),
             category: general_category,
             after_create: proc { |post| post.topic.update_pinned(true, true) },
           }
