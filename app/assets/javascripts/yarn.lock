@@ -1667,14 +1667,14 @@
     "@uppy/utils" "^5.2.0"
     namespace-emitter "^2.0.1"
 
-"@uppy/core@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@uppy/core/-/core-3.0.4.tgz#3bdc08e50ab72749e6f9afa60eec6c836e8b3442"
-  integrity sha512-vFofKmmVVsQE9bnOXozAPy94kLQMUdMH/l8m4ncXmxyyGRc2e9VfvY9wiy2EEsoj11O7YVzHOP70FYdRReUpVw==
+"@uppy/core@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@uppy/core/-/core-3.1.2.tgz#59478264b9945c3ff31275caa2170bfa52e8db90"
+  integrity sha512-A7BpG1dbNWM6u9j/QxNem4iScgz0HMPbvf9INa2cZMVw7NKrSlr4B8qKZm+g0imMF02JaN40/8EUXK/AddqZyg==
   dependencies:
     "@transloadit/prettier-bytes" "0.0.9"
     "@uppy/store-default" "^3.0.2"
-    "@uppy/utils" "^5.0.2"
+    "@uppy/utils" "^5.2.0"
     lodash.throttle "^4.1.1"
     mime-match "^1.0.2"
     namespace-emitter "^2.0.1"
