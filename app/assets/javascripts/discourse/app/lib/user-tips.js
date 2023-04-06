@@ -25,6 +25,7 @@ export function showUserTip(options) {
     trigger: "manual",
     theme: "user-tips",
     zIndex: "",
+    delay: 100,
 
     // It must be interactive to make buttons work.
     interactive: true,
