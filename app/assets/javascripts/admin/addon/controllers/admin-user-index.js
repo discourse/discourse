@@ -246,14 +246,7 @@ export default class AdminUserIndexController extends Controller.extend(
             queryParams: { nonce },
           });
         } else {
-          const htmlMessage = error.jqXHR?.responseJSON.html_message;
-          if (htmlMessage) {
-            this.dialog.alert({
-              message: htmlSafe(error.jqXHR?.responseJSON.error),
-            });
-          } else {
-            popupAjaxError(error);
-          }
+          popupAjaxError(error);
         }
       });
   }
