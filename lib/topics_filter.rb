@@ -14,6 +14,8 @@ class TopicsFilter
       /(?<key_prefix>[-=])?(?<key>\w+):(?<value>[^\s]+)/,
     ) do |key_prefix, key, value|
       case key
+      when "in"
+        @scope = filter_state(state: value)
       when "status"
         @scope = filter_status(status: value)
       when "tags"
@@ -83,6 +85,18 @@ class TopicsFilter
   end
 
   private
+
+  def filter_state(state:)
+    case state
+    when "pinned"
+      @scope.where(
+        "topics.pinned_at IS NOT NULL AND topics.pinned_until > topics.pinned_at AND ? < topics.pinned_until",
+        Time.zone.now,
+      )
+    else
+      @scope
+    end
+  end
 
   def filter_categories(category_slugs:, exclude_subcategories: false, or_clause: false)
     category_ids = Category.ids_from_slugs(category_slugs)

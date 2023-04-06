@@ -24,6 +24,40 @@ RSpec.describe TopicsFilter do
       end
     end
 
+    describe "when filtering with the `in` filter" do
+      fab!(:topic) { Fabricate(:topic) }
+
+      fab!(:pinned_topic) do
+        Fabricate(:topic, pinned_at: Time.zone.now, pinned_until: 1.hour.from_now)
+      end
+
+      fab!(:expired_pinned_topic) do
+        Fabricate(:topic, pinned_at: 2.hour.ago, pinned_until: 1.hour.ago)
+      end
+
+      describe "when query string is `in:pinned`" do
+        it "should return topics that are pinned" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("in:pinned")
+              .pluck(:id),
+          ).to contain_exactly(pinned_topic.id)
+        end
+
+        it "should not return pinned topics that have expired" do
+          freeze_time(2.hours.from_now) do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("in:pinned")
+                .pluck(:id),
+            ).to eq([])
+          end
+        end
+      end
+    end
+
     describe "when filtering by categories" do
       fab!(:category) { Fabricate(:category, name: "category") }
 
