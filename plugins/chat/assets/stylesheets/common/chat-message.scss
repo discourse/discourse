@@ -194,7 +194,7 @@
       display: none;
     }
 
-    @media (hover: none) {
+    .touch & {
       &:active {
         background: var(--primary-very-low);
       }
@@ -206,7 +206,7 @@
       }
     }
 
-    @media (hover: hover) {
+    .no-touch & {
       &:hover,
       &:active {
         background: var(--primary-very-low);
