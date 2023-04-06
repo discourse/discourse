@@ -63,7 +63,7 @@ RSpec.describe "React to message", type: :system, js: true do
           sign_in(current_user)
           chat.visit_channel(category_channel_1)
           channel.hover_message(message_1)
-          find(".chat-message-react-btn").click
+          find(".chat-message-react-btn", visible: :all).click
           find(".chat-emoji-picker [data-emoji=\"grimacing\"]").click
 
           expect(channel).to have_reaction(message_1, "grimacing")
@@ -85,7 +85,7 @@ RSpec.describe "React to message", type: :system, js: true do
 
             using_session(:tab_1) do |session|
               channel.hover_message(message_1)
-              find(".chat-message-react-btn").click
+              find(".chat-message-react-btn", visible: :all).click
               find(".chat-emoji-picker [data-emoji=\"#{reaction.emoji}\"]").click
 
               expect(channel).to have_reaction(message_1, reaction.emoji)
