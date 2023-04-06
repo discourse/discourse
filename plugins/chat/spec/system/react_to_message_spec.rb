@@ -2,6 +2,7 @@
 
 RSpec.describe "React to message", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
+  fab!(:other_user) { Fabricate(:user) }
   fab!(:category_channel_1) { Fabricate(:category_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
@@ -11,11 +12,12 @@ RSpec.describe "React to message", type: :system, js: true do
   before do
     chat_system_bootstrap
     category_channel_1.add(current_user)
+    category_channel_1.add(other_user)
   end
 
   context "when other user has reacted" do
     fab!(:reaction_1) do
-      Chat::MessageReactor.new(Fabricate(:user), category_channel_1).react!(
+      Chat::MessageReactor.new(other_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
         emoji: "female_detective",
@@ -48,7 +50,7 @@ RSpec.describe "React to message", type: :system, js: true do
 
   context "when current user reacts" do
     fab!(:reaction_1) do
-      Chat::MessageReactor.new(Fabricate(:user), category_channel_1).react!(
+      Chat::MessageReactor.new(other_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
         emoji: "female_detective",
