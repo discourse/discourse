@@ -239,7 +239,8 @@ export default class ChatLivePane extends Component {
       .then((results) => {
         if (
           this._selfDeleted ||
-          this.args.channel.id !== results.meta.channel_id
+          this.args.channel.id !== results.meta.channel_id ||
+          !this.scrollable
         ) {
           return;
         }
@@ -372,11 +373,15 @@ export default class ChatLivePane extends Component {
     }
 
     schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
       const messageEl = this.scrollable.querySelector(
         `.chat-message-container[data-id='${messageId}']`
       );
 
-      if (!messageEl || this._selfDeleted) {
+      if (!messageEl) {
         return;
       }
 
@@ -468,12 +473,20 @@ export default class ChatLivePane extends Component {
 
   @action
   computeArrow() {
+    if (!this.scrollable) {
+      return;
+    }
+
     this.needsArrow = Math.abs(this.scrollable.scrollTop) >= 250;
   }
 
   @action
   computeScrollState() {
     cancel(this.onScrollEndedHandler);
+
+    if (!this.scrollable) {
+      return;
+    }
 
     if (this.#isAtTop()) {
       this.fetchMoreMessages({ direction: PAST });
@@ -977,6 +990,10 @@ export default class ChatLivePane extends Component {
   // to the bottom
   @action
   scrollToBottom() {
+    if (!this.scrollable) {
+      return;
+    }
+
     this.scrollable.scrollTop = -1;
     this.forceRendering(() => {
       this.scrollable.scrollTop = 0;
@@ -988,6 +1005,10 @@ export default class ChatLivePane extends Component {
   @bind
   forceRendering(callback) {
     schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
       if (!this.scrollable) {
         return;
       }
@@ -1012,6 +1033,14 @@ export default class ChatLivePane extends Component {
 
   _computeDatesSeparators() {
     schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
+      if (!this.scrollable) {
+        return;
+      }
+
       const dates = [
         ...this.scrollable.querySelectorAll(".chat-message-separator-date"),
       ].reverse();
@@ -1054,14 +1083,26 @@ export default class ChatLivePane extends Component {
   }
 
   #isAtBottom() {
+    if (!this.scrollable) {
+      return false;
+    }
+
     return Math.abs(this.scrollable.scrollTop) <= 2;
   }
 
   #isTowardsBottom() {
+    if (!this.scrollable) {
+      return false;
+    }
+
     return Math.abs(this.scrollable.scrollTop) <= 50;
   }
 
   #isAtTop() {
+    if (!this.scrollable) {
+      return false;
+    }
+
     return (
       Math.abs(this.scrollable.scrollTop) >=
       this.scrollable.scrollHeight - this.scrollable.offsetHeight - 2
