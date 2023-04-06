@@ -7,7 +7,6 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
-import { schedule } from "@ember/runloop";
 import { scrollToBottom } from "discourse/plugins/chat/discourse/lib/scroll-utilities";
 
 const PAGE_SIZE = 50;
@@ -187,7 +186,6 @@ export default class ChatThreadPanel extends Component {
         thread_id: stagedMessage.threadId,
       })
       .then(() => {
-        console.log("will scroll to bottom of", this.scrollable);
         scrollToBottom(this.scrollable);
       })
       .catch((error) => {
