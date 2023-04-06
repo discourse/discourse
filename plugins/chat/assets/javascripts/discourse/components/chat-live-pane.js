@@ -764,7 +764,7 @@ export default class ChatLivePane extends Component {
 
     const stagedMessage = ChatMessage.createStagedMessage(this.args.channel, {
       message,
-      created_at: new Date(),
+      created_at: moment.utc().format(),
       uploads: cloneJSON(uploads),
       user: this.currentUser,
     });
@@ -790,6 +790,7 @@ export default class ChatLivePane extends Component {
       })
       .catch((error) => {
         this._onSendError(stagedMessage.id, error);
+        this.scrollToBottom();
       })
       .finally(() => {
         if (this._selfDeleted) {
@@ -827,6 +828,9 @@ export default class ChatLivePane extends Component {
       this.args.channel.messagesManager.findStagedMessage(id);
     if (stagedMessage) {
       if (error.jqXHR?.responseJSON?.errors?.length) {
+        // only network errors are retryable
+        stagedMessage.message = "";
+        stagedMessage.cooked = "";
         stagedMessage.error = error.jqXHR.responseJSON.errors[0];
       } else {
         this.chat.markNetworkAsUnreliable();
