@@ -15,7 +15,7 @@
     </LinkTo>
   </div>
 
-  <div class="chat-thread__body">
+  <div class="chat-thread__body" {{did-insert this.setScrollable}}>
     <div class="chat-thread__messages chat-messages-container">
       {{#each this.thread.messages key="id" as |message|}}
         <ChatMessage

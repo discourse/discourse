@@ -28,6 +28,7 @@
     {{on "scroll" this.computeScrollState passive=true}}
     {{chat/on-scroll this.resetIdle (hash delay=500)}}
     {{chat/on-scroll this.computeArrow (hash delay=150)}}
+    {{did-insert this.setScrollable}}
   >
     <div
       class="chat-messages-container"

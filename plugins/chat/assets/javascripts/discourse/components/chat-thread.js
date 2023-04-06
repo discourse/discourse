@@ -7,6 +7,8 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
+import { schedule } from "@ember/runloop";
+import { scrollToBottom } from "discourse/plugins/chat/discourse/lib/scroll-utilities";
 
 const PAGE_SIZE = 50;
 
@@ -24,12 +26,19 @@ export default class ChatThreadPanel extends Component {
   @tracked loading;
   @tracked loadingMorePast;
 
+  scrollable = null;
+
   get thread() {
     return this.channel.activeThread;
   }
 
   get channel() {
     return this.chat.activeChannel;
+  }
+
+  @action
+  setScrollable(element) {
+    this.scrollable = element;
   }
 
   @action
@@ -178,8 +187,8 @@ export default class ChatThreadPanel extends Component {
         thread_id: stagedMessage.threadId,
       })
       .then(() => {
-        // TODO (martin) Scrolling!!
-        // this.scrollToBottom();
+        console.log("will scroll to bottom of", this.scrollable);
+        scrollToBottom(this.scrollable);
       })
       .catch((error) => {
         this.#onSendError(stagedMessage.stagedId, error);

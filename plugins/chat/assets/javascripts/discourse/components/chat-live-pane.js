@@ -18,6 +18,10 @@ import {
 } from "discourse/lib/user-presence";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { tracked } from "@glimmer/tracking";
+import {
+  forceRendering,
+  scrollToBottom,
+} from "discourse/plugins/chat/discourse/lib/scroll-utilities";
 
 const PAGE_SIZE = 50;
 const PAST = "past";
@@ -50,16 +54,19 @@ export default class ChatLivePane extends Component {
   @tracked needsArrow = false;
   @tracked loadedOnce = false;
 
+  scrollable = null;
   _loadedChannelId = null;
-  _scrollerEl = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
 
   @action
-  setupListeners(element) {
-    this._scrollerEl = element.querySelector(".chat-messages-scroll");
+  setScrollable(element) {
+    this.scrollable = element;
+  }
 
+  @action
+  setupListeners() {
     document.addEventListener("scroll", this._forceBodyScroll, {
       passive: true,
     });
@@ -81,7 +88,7 @@ export default class ChatLivePane extends Component {
   didResizePane() {
     this.fillPaneAttempt();
     this.computeDatesSeparators();
-    this.forceRendering();
+    forceRendering(this.scrollable);
   }
 
   @action
@@ -184,7 +191,7 @@ export default class ChatLivePane extends Component {
           return;
         }
 
-        this.scrollToBottom();
+        scrollToBottom(this.scrollable);
       })
       .catch(this._handleErrors)
       .finally(() => {
@@ -369,7 +376,7 @@ export default class ChatLivePane extends Component {
     }
 
     schedule("afterRender", () => {
-      const messageEl = this._scrollerEl.querySelector(
+      const messageEl = this.scrollable.querySelector(
         `.chat-message-container[data-id='${messageId}']`
       );
 
@@ -389,7 +396,7 @@ export default class ChatLivePane extends Component {
         }, 2000);
       }
 
-      this.forceRendering(() => {
+      forceRendering(this.scrollable, () => {
         messageEl.scrollIntoView({
           block: opts.position ?? "center",
         });
@@ -425,13 +432,13 @@ export default class ChatLivePane extends Component {
         return;
       }
 
-      const element = this._scrollerEl.querySelector(
+      const element = this.scrollable.querySelector(
         `[data-id='${lastUnreadVisibleMessage.id}']`
       );
 
       // if the last visible message is not fully visible, we don't want to mark it as read
       // attempt to mark previous one as read
-      if (!this.#isBottomOfMessageVisible(element, this._scrollerEl)) {
+      if (!this.#isBottomOfMessageVisible(element, this.scrollable)) {
         lastUnreadVisibleMessage = lastUnreadVisibleMessage.previousMessage;
 
         if (
@@ -448,19 +455,7 @@ export default class ChatLivePane extends Component {
 
   @action
   scrollToBottom() {
-    schedule("afterRender", () => {
-      if (this._selfDeleted) {
-        return;
-      }
-
-      // A more consistent way to scroll to the bottom when we are sure this is our goal
-      // it will also limit issues with any element changing the height while we are scrolling
-      // to the bottom
-      this._scrollerEl.scrollTop = -1;
-      this.forceRendering(() => {
-        this._scrollerEl.scrollTop = 0;
-      });
-    });
+    scrollToBottom(this.scrollable);
   }
 
   @action
@@ -482,7 +477,7 @@ export default class ChatLivePane extends Component {
 
   @action
   computeArrow() {
-    this.needsArrow = Math.abs(this._scrollerEl.scrollTop) >= 250;
+    this.needsArrow = Math.abs(this.scrollable.scrollTop) >= 250;
   }
 
   @action
@@ -934,33 +929,6 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
-  // we now use this hack to disable it
-  @bind
-  forceRendering(callback) {
-    schedule("afterRender", () => {
-      if (!this._scrollerEl) {
-        return;
-      }
-
-      if (this.capabilities.isIOS) {
-        this._scrollerEl.style.overflow = "hidden";
-      }
-
-      callback?.();
-
-      if (this.capabilities.isIOS) {
-        discourseLater(() => {
-          if (!this._scrollerEl) {
-            return;
-          }
-
-          this._scrollerEl.style.overflow = "auto";
-        }, 50);
-      }
-    });
-  }
-
   @action
   addAutoFocusEventListener() {
     document.addEventListener("keydown", this._autoFocus);
@@ -1016,9 +984,9 @@ export default class ChatLivePane extends Component {
   _computeDatesSeparators() {
     schedule("afterRender", () => {
       const dates = [
-        ...this._scrollerEl.querySelectorAll(".chat-message-separator-date"),
+        ...this.scrollable.querySelectorAll(".chat-message-separator-date"),
       ].reverse();
-      const height = this._scrollerEl.querySelector(
+      const height = this.scrollable.querySelector(
         ".chat-messages-container"
       ).clientHeight;
 
@@ -1057,17 +1025,17 @@ export default class ChatLivePane extends Component {
   }
 
   #isAtBottom() {
-    return Math.abs(this._scrollerEl.scrollTop) <= 2;
+    return Math.abs(this.scrollable.scrollTop) <= 2;
   }
 
   #isTowardsBottom() {
-    return Math.abs(this._scrollerEl.scrollTop) <= 50;
+    return Math.abs(this.scrollable.scrollTop) <= 50;
   }
 
   #isAtTop() {
     return (
-      Math.abs(this._scrollerEl.scrollTop) >=
-      this._scrollerEl.scrollHeight - this._scrollerEl.offsetHeight - 2
+      Math.abs(this.scrollable.scrollTop) >=
+      this.scrollable.scrollHeight - this.scrollable.offsetHeight - 2
     );
   }
 
