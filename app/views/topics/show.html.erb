@@ -36,7 +36,9 @@
   <%- if include_crawler_content? %>
     <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
       <meta itemprop='headline' content='<%= @topic_view.title %>'>
-      <meta itemprop='articleSection' content='<%= @topic_view.topic.category&.name %>'>
+      <% if @topic_view.topic.category.present? %>
+        <meta itemprop='articleSection' content='<%= @topic_view.topic.category.name %>'>
+      <% end %>
       <meta itemprop='keywords' content='<%= @tags.map(&:name).join(', ') %>'>
       <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
         <meta itemprop='name' content='<%= SiteSetting.company_name.presence || SiteSetting.title %>'>
