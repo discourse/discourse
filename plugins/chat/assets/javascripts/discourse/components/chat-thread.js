@@ -207,6 +207,10 @@ export default class ChatThreadPanel extends Component {
   // to the bottom
   @action
   scrollToBottom() {
+    if (!this.scrollable) {
+      return;
+    }
+
     this.scrollable.scrollTop = -1;
     this.forceRendering(() => {
       this.scrollable.scrollTop = 0;
@@ -218,6 +222,10 @@ export default class ChatThreadPanel extends Component {
   @bind
   forceRendering(callback) {
     schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
       if (!this.scrollable) {
         return;
       }
