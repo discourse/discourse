@@ -649,7 +649,16 @@ export default Component.extend(TextareaTextManipulation, {
 
   @action
   internalSendMessage() {
-    return this.sendMessage(this.value, this._uploads).then(this.reset);
+    // FIXME: This is fairly hacky, we should have a nicer
+    // flow and relationship between the panes for resetting
+    // the value here on send.
+    const _previousValue = this.value;
+    this.set("value", "");
+    return this.sendMessage(_previousValue, this._uploads)
+      .then(this.reset)
+      .catch(() => {
+        this.set("value", _previousValue);
+      });
   },
 
   @action
