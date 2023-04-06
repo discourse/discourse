@@ -7,7 +7,7 @@
 }
 
 .chat-composer-dropdown__trigger-btn {
-  padding: 5px;
+  padding: 5px !important; // overwrite ios rule
   border-radius: 100%;
   background: var(--primary-med-or-secondary-high);
   border: 1px solid transparent;
