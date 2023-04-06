@@ -93,6 +93,13 @@ class TopicsFilter
         "topics.pinned_at IS NOT NULL AND topics.pinned_until > topics.pinned_at AND ? < topics.pinned_until",
         Time.zone.now,
       )
+    when "bookmarked"
+      return @scope.none unless @guardian.user
+
+      @scope.joins(:topic_users).where(
+        "topic_users.bookmarked AND topic_users.user_id = ?",
+        @guardian.user.id,
+      )
     else
       @scope
     end

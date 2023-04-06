@@ -56,6 +56,40 @@ RSpec.describe TopicsFilter do
           end
         end
       end
+
+      describe "when query string is `in:bookmarked`" do
+        fab!(:bookmark) do
+          BookmarkManager.new(user).create_for(
+            bookmarkable_id: topic.id,
+            bookmarkable_type: "Topic",
+          )
+        end
+
+        fab!(:bookmark2) do
+          BookmarkManager.new(admin).create_for(
+            bookmarkable_id: topic.id,
+            bookmarkable_type: "Topic",
+          )
+        end
+
+        it "should not return any topics when user is anonymous" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("in:bookmarked")
+              .pluck(:id),
+          ).to eq([])
+        end
+
+        it "should return topics that are bookmarked" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:bookmarked")
+              .pluck(:id),
+          ).to contain_exactly(topic.id)
+        end
+      end
     end
 
     describe "when filtering by categories" do
