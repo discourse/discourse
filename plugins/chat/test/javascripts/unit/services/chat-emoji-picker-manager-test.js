@@ -63,10 +63,10 @@ module(
     });
 
     test("closeExisting", async function (assert) {
-      this.manager.open({ context: "channel-composer" });
+      this.manager.open({ context: "channel-composer", trigger: "foo" });
       this.manager.addVisibleSections("objects");
       this.manager.lastVisibleSection = "objects";
-      this.manager.open({ context: "thread-composer" });
+      this.manager.open({ context: "thread-composer", trigger: "bar" });
 
       assert.strictEqual(
         this.manager.picker.context,
