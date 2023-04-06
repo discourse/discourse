@@ -5,6 +5,7 @@ class ComposerMessagesFinder
     @user = user
     @details = details
     @topic = Topic.find_by(id: details[:topic_id]) if details[:topic_id]
+    @post = Post.find_by(id: details[:post_id]) if details[:post_id]
   end
 
   def self.check_methods
@@ -223,6 +224,24 @@ class ComposerMessagesFinder
             base_path: Discourse.base_path,
           ),
         ),
+    }
+  end
+
+  def check_dont_feed_the_trolls
+    return if @post.blank? || !replying?
+
+    flags = @post.flags.group(:user_id).count
+    flagged_by_replier = flags[@user.id].to_i > 0
+    flagged_by_others = flags.values.sum >= SiteSetting.dont_feed_the_trolls_threshold
+
+    return if !flagged_by_replier && !flagged_by_others
+
+    {
+      id: "dont_feed_the_trolls",
+      templateName: "education",
+      wait_for_typing: false,
+      extraClass: "urgent",
+      body: PrettyText.cook(I18n.t("education.dont_feed_the_trolls")),
     }
   end
 
