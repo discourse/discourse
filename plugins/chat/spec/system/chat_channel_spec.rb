@@ -115,7 +115,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
       visit("/chat/message/#{message_1.id}")
 
       new_message =
-        Chat::ChatMessageCreator.create(
+        Chat::MessageCreator.create(
           chat_channel: channel_1,
           user: other_user,
           content: "this is fine",
@@ -186,6 +186,32 @@ RSpec.describe "Chat channel", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       expect(page).to have_selector(".chat-reply__excerpt")
+    end
+  end
+
+  context "when replying to message that has HTML tags" do
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:message_2) do
+      Fabricate(
+        :chat_message,
+        user: other_user,
+        chat_channel: channel_1,
+        message: "<mark>not marked</mark>",
+      )
+    end
+
+    before do
+      Fabricate(:chat_message, user: other_user, chat_channel: channel_1)
+      Fabricate(:chat_message, in_reply_to: message_2, user: current_user, chat_channel: channel_1)
+      channel_1.add(other_user)
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "renders text in the reply-to" do
+      chat.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq("not marked")
     end
   end
 

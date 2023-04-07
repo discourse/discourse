@@ -155,11 +155,6 @@ vi:
     software_update_prompt:
       message: "Chúng tôi đã cập nhật trang web này, <span>vui lòng làm mới</span>, nếu không bạn có thể gặp phải hành vi không mong muốn."
       dismiss: "Hủy bỏ"
-    bootstrap_mode_enabled:
-      other: "Để đơn giản hoá quá trình triển khai trang web, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{count}"
-    bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
-    bootstrap_invite_button_title: "Gửi Lời Mời"
-    bootstrap_wizard_link_title: "Hoàn tất trình hướng dẫn thiết lập"
     themes:
       default_description: "Mặc định"
       broken_theme_alert: "Trang web của bạn có thể không hoạt động vì một chủ đề / thành phần có lỗi."
@@ -313,7 +308,6 @@ vi:
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Bản nháp tin nhắn cá nhân mới"
       abandon:
-        confirm: "Bạn đang có một bản nháp cho chủ đề này. Bạn muốn làm gì với nó?"
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
     topic_count_categories:
@@ -480,10 +474,14 @@ vi:
       statuses:
         pending:
           title: "Đang treo"
+        approved:
+          title: "Đã phê duyệt"
+        rejected:
+          title: "Từ chối"
         reviewed:
-          title: "(tất cả đã đánh giá)"
+          title: "Tất cả đã đánh giá"
         all:
-          title: "(mọi thứ)"
+          title: "Mọi thứ"
       context_question:
         delimiter: "hoặc"
       types:
@@ -3558,9 +3556,12 @@ vi:
           save: "Lưu lại"
           delete: "Xóa"
           links:
-            icon: "Biểu tượng"
-            name: "Tên"
-            value: "Liên kết"
+            icon:
+              label: "Biểu tượng"
+            name:
+              label: "T"
+            value:
+              label: "Liên kết"
         about:
           header_link_text: "Giới thiệu"
         messages:
@@ -4543,10 +4544,6 @@ vi:
           replace: "Thay thế"
           silence: "Im lặng"
           link: "Liên kết"
-        action_descriptions:
-          censor: "Cho phép các bài đăng có chứa những từ này nhưng hãy thay thế chúng bằng các ký tự ẩn các từ đã được kiểm duyệt."
-          tag: "Tự động gắn thẻ các chủ đề dựa trên bài đăng đầu tiên"
-          silence: "Các bài đăng đầu tiên của người dùng có chứa những từ này sẽ yêu cầu nhân viên phê duyệt trước khi họ có thể được nhìn thấy và người dùng sẽ tự động bị tắt tiếng."
         form:
           replace_label: "Sự thay thế"
           replace_placeholder: "thí dụ"

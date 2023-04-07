@@ -10,7 +10,7 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { escape } from "pretty-text/sanitizer";
-import { extractError } from "discourse/lib/ajax-error";
+import { flashAjaxError } from "discourse/lib/ajax-error";
 import { findAll } from "discourse/models/login-method";
 import getURL from "discourse-common/lib/get-url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
@@ -176,7 +176,7 @@ export default Controller.extend(ModalFunctionality, {
           );
         }
       })
-      .catch((e) => this.flash(extractError(e), "error"))
+      .catch(flashAjaxError(this))
       .finally(() => this.set("processingEmailLink", false));
   },
 

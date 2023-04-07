@@ -153,6 +153,10 @@ html.rtl {
     font-weight: 700;
     width: 100%;
 
+    &__user-info {
+      overflow: hidden;
+    }
+
     .chat-name,
     .chat-drawer-name,
     .category-chat-name,
@@ -179,7 +183,7 @@ html.rtl {
       text-overflow: ellipsis;
     }
 
-    .d-icon:not(.d-icon-hashtag) {
+    .d-icon:not(.d-icon-d-chat) {
       color: var(--primary-high);
     }
     .category-hashtag {

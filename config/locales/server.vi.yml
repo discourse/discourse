@@ -1945,10 +1945,6 @@ vi:
     see_more: "Thêm"
     search_title: "Tìm trang này"
     search_button: "Tìm kiếm"
-  login_required:
-    welcome_message: |
-      ## [Chào mừng tới %{title}] (#welcome)
-      Một tài khoản là bắt buộc. Vui lòng tạo một tài khoản hoặc đăng nhập để tiếp tục.
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."
     unauthorized: "Xin lỗi, tập tin của bạn tải lên không được cho phép (định dạng cho phép: %{authorized_extensions})."

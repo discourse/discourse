@@ -61,7 +61,7 @@ export default Component.extend({
       showOptions: false,
       _itsatrap: new ItsATrap(),
       autoDeletePreference:
-        this.model.autoDeletePreference ||
+        this.model.autoDeletePreference ??
         AUTO_DELETE_PREFERENCES.CLEAR_REMINDER,
     });
 

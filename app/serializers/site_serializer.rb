@@ -39,6 +39,7 @@ class SiteSerializer < ApplicationSerializer
     :displayed_about_plugin_stat_groups,
     :show_welcome_topic_banner,
     :anonymous_default_sidebar_tags,
+    :anonymous_sidebar_sections,
     :whispers_allowed_groups_names,
   )
 
@@ -258,6 +259,17 @@ class SiteSerializer < ApplicationSerializer
   def include_anonymous_default_sidebar_tags?
     scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled &&
       SiteSetting.default_sidebar_tags.present?
+  end
+
+  def anonymous_sidebar_sections
+    SidebarSection
+      .public_sections
+      .includes(sidebar_section_links: :linkable)
+      .map { |section| SidebarSectionSerializer.new(section, root: false) }
+  end
+
+  def include_anonymous_sidebar_sections?
+    scope.anonymous?
   end
 
   def whispers_allowed_groups_names

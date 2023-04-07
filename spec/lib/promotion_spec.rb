@@ -273,4 +273,18 @@ RSpec.describe Promotion do
       end
     end
   end
+
+  describe "#change_trust_level!" do
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    let(:promotion) { Promotion.new(user) }
+
+    context "when the user has no emails" do
+      before { user.user_emails.delete_all }
+
+      it "does not error" do
+        expect { promotion.change_trust_level!(TrustLevel[1]) }.not_to raise_error
+        expect(user.reload.trust_level).to eq(TrustLevel[1])
+      end
+    end
+  end
 end

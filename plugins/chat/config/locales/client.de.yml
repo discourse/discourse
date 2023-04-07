@@ -15,6 +15,7 @@ de:
           actions:
             chat_channel_status_change: "Chat-Kanal-Status geändert"
             chat_channel_delete: "Chat-Kanal gelöscht"
+            chat_auto_remove_membership: "Mitgliedschaften werden automatisch aus den Kanälen entfernt"
       api:
         scopes:
           descriptions:
@@ -208,6 +209,7 @@ de:
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
       no_public_channels: "Du bist keinem Kanal beigetreten."
+      kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       only_chat_push_notifications:
         title: "Nur Chat-Push-Benachrichtigungen senden"
         description: "Alle Nicht-Chat-Push-Benachrichtigungen blockieren und nicht senden"
@@ -243,7 +245,6 @@ de:
       restore: "Gelöschte Nachricht wiederherstellen"
       save: "Speichern"
       select: "Auswählen"
-      silence: "Benutzer stummschalten"
       return_to_list: "Zurück zur Kanalliste"
       scroll_to_bottom: "Nach unten scrollen"
       scroll_to_new_messages: "Neue Nachrichten anzeigen"
@@ -568,6 +569,7 @@ de:
           composer_code: "%{shortcut} Code (nur Composer)"
           drawer_open: "%{shortcut} Chat-Bereich öffnen"
           drawer_close: "%{shortcut} Chat-Bereich schließen"
+          mark_all_channels_read: "%{shortcut} Alle Kanäle als gelesen markieren"
     topic_statuses:
       chat:
         help: "Der Chat ist für dieses Thema aktiviert"

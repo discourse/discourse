@@ -6,7 +6,6 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
-import { alias, equal } from "@ember/object/computed";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
@@ -140,9 +139,6 @@ export default Component.extend(FilterModeMixin, {
     const controller = getOwner(this).lookup("controller:discovery/topics");
     return controller.canBulkSelect;
   },
-
-  isQueryFilterMode: equal("filterMode", "filter"),
-  queryString: alias("router.currentRoute.queryParams.q"),
 
   actions: {
     changeCategoryNotificationLevel(notificationLevel) {

@@ -144,6 +144,8 @@ fi:
       facebook: "Jaa Facebookissa"
       email: "Lähetä sähköpostitse"
       url: "Kopioi ja jaa URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Muutettu ketju julkiseksi %{when}"
       open_topic: "Muunsi tämän ketjuksi %{when}"
@@ -179,17 +181,13 @@ fi:
       forwarded: "Välitetty yllä oleva sähköposti"
     topic_admin_menu: "ketjun toiminnot"
     skip_to_main_content: "Siirry pääsisältöön"
+    skip_user_nav: "Siirry profiilin sisältöön"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     emails_are_disabled_non_staff: "Lähtevät sähköpostit on poistettu käytöstä muilta kuin henkilökunnan käyttäjiltä."
     software_update_prompt:
       message: "Sivusto on juuri päivitetty, <span>päivitä sivu</span>, tai sivusto voi käyttäytyä odottamattomasti."
       dismiss: "Sulje"
-    bootstrap_mode_enabled:
-      one: "Jotta sivusto saisi lentävämmän lähdön, olet aloitustilassa. Kaikki käyttäjät nousevat heti luottamustasolle 1, ja päivittäiset sähköpostitiivistelmät kytketään päälle. Tila kytkeytyy pois päältä, kun %{count} käyttäjä on liittynyt."
-      other: "Jotta sivusto saisi lentävämmän lähdön, olet aloitustilassa. Kaikki käyttäjät nousevat heti luottamustasolle 1, ja päivittäiset sähköpostitiivistelmät kytketään päälle. Tila kytkeytyy pois päältä, kun %{count} käyttäjää on liittynyt."
-    bootstrap_mode_disabled: "Aloitustila poistetaan käytöstä seuraavan 24 tunnin aikana."
-    bootstrap_invite_button_title: "Lähetä kutsuja"
-    bootstrap_wizard_link_title: "Viimeistele ohjattu määritys"
+    bootstrap_mode: "Aloitustila"
     themes:
       default_description: "Oletus"
       broken_theme_alert: "Sivustosi ei välttämättä toimi, koska teemassa tai komponentissa on virheitä."
@@ -348,7 +346,7 @@ fi:
       new_topic: "Uusi ketjuluonnos"
       new_private_message: "Uusi yksityisviestin luonnos"
       abandon:
-        confirm: "Sinulla on meneillään luonnos tätä ketjua varten. Mitä haluaisit tehdä sen kanssa?"
+        confirm: "Sinulla on jo keskeneräinen luonnos. Mitä haluat tehdä sille?"
         yes_value: "Hylkää"
         no_value: "Jatka muokkausta"
     topic_count_categories:
@@ -527,10 +525,14 @@ fi:
       statuses:
         pending:
           title: "Odottaa"
+        approved:
+          title: "Hyväksytty"
+        rejected:
+          title: "Hylätty"
         reviewed:
-          title: "(kaikki käsitellyt)"
+          title: "Kaikki käsitellyt"
         all:
-          title: "(kaikki)"
+          title: "Kaikki"
       context_question:
         delimiter: "tai"
       types:
@@ -3989,9 +3991,12 @@ fi:
           save: "Tallenna"
           delete: "Poista"
           links:
-            icon: "Kuvake"
-            name: "Nimi"
-            value: "Linkki"
+            icon:
+              label: "Kuvake"
+            name:
+              label: "Nimi"
+            value:
+              label: "Linkki"
         about:
           header_link_text: "Tietoa"
         messages:
@@ -5046,14 +5051,8 @@ fi:
           silence: "Hiljennä"
           link: "Linkki"
         action_descriptions:
-          block: "Estä lähettämästä viestiä, jossa esiintyy joku näistä sanoista. Käyttäjälle näytetään virheilmoitus, kun hän yrittää lähettää viestinsä."
-          censor: "Salli viesti, jossa esiintyy joku näistä sanoista, mutta korvaa ne merkeillä, jotka piilottavat sensuroidut sanat."
-          require_approval: "Viesti, jossa esiintyy joku näistä sanoista, tarvitsee henkilökunnan hyväksynnän ennen sen julkaisemista."
-          flag: "Salli viesti, jossa esiintyy joku näistä sanoista, mutta liputa se sopimattomaksi, jotta valvojat voivat tarkastella sitä."
-          replace: "Korvaa sanoja viesteissä vaihtoehtoisilla sanoilla"
-          tag: "Merkitse automaattisesti ketjuja tunnisteilla ensimmäisen viestin perusteella"
-          silence: "Ensimmäiset käyttäjän viestit, jotka sisältävät nämä sanat, tarvitsevat henkilökunnan hyväksynnän ennen kuin ne voidaan nähdä, ja käyttäjä hiljennetään automaattisesti."
-          link: "Korvaa sanoja viesteissä linkeillä"
+          replace: "Korvaa sanoja viesteissä vaihtoehtoisilla sanoilla."
+          link: "Korvaa sanoja viesteissä linkeillä."
         form:
           label: "Sisältää sanan tai lauseen"
           placeholder: "Syötä sana tai lause (* on jokerimerkki)"

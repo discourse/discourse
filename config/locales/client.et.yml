@@ -152,7 +152,6 @@ et:
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
     software_update_prompt:
       dismiss: "Ignoreeri"
-    bootstrap_invite_button_title: "Saada kutsed"
     themes:
       default_description: "Vaikimisi"
     s3:
@@ -379,6 +378,10 @@ et:
       statuses:
         pending:
           title: "Ootel"
+        approved:
+          title: "Heakskiidetud"
+        rejected:
+          title: "Tagasi lükatud"
       context_question:
         delimiter: "või"
       types:
@@ -2525,8 +2528,10 @@ et:
           save: "Salvesta"
           delete: "Kustuta"
           links:
-            icon: "Ikoon"
-            name: "Nimi"
+            icon:
+              label: "Ikoon"
+            name:
+              label: "Nimi"
         about:
           header_link_text: "Teave"
         messages:

@@ -991,7 +991,7 @@ lt:
       title: "DAU/MAU"
       xaxis: "Diena"
       yaxis: "DAU/MAU"
-      description: "Paskutinę dieną prisijungusių narių skaičius, padalytas iš narių, prisijungusių per pastarąjį mėnesį, skaičiaus – pateikiamas %, kuris rodo bendruomenės „lipnumą“. Siekite >30 proc."
+      description: "Paskutinę dieną prisijungusių narių skaičius, padalytas iš narių, prisijungusių per pastarąjį mėnesį, skaičiaus – pateikiamas %, kuris rodo bendruomenės „lipnumą“. Siekite >20 proc."
     daily_engaged_users:
       title: "Kasdien dalyvaujantys vartotojai"
       xaxis: "Diena"
@@ -1324,7 +1324,6 @@ lt:
     min_admin_password_length: "Minimalus administratoriaus slaptažodžio ilgis."
     password_unique_characters: "Mažiausias unikalių simbolių skaičius, kurį turi turėti slaptažodis."
     block_common_passwords: "Neleiskite slaptažodžių, kurie yra 10 000 dažniausiai naudojamų slaptažodžių."
-    discourse_connect_url: "„DiscourseConnect“ galutinio taško URL (turi būti http:// arba https://)"
     discourse_connect_secret: "Slapta eilutė, naudojama „DiscourseConnect“ informacijos kriptografiniam autentifikavimui, įsitikinkite, kad ji yra 10 simbolių ar ilgesnė"
     discourse_connect_not_approved_url: "Peradresuoti nepatvirtintas DiscourseConnect paskyras į šį URL"
     allow_new_registrations: "Leisti naujų vartotojų registracijas. Atžymėkite šį žymėjimą, kad niekas negalėtų sukurti naujos paskyros."
@@ -2344,10 +2343,6 @@ lt:
   offline:
     title: "Nepavyko įkelti programos"
     offline_page_message: "Atrodo, kad esate neprisijungę! Patikrinkite tinklo ryšį ir bandykite dar kartą."
-  login_required:
-    welcome_message: |
-      ## [Sveiki atvykę į %{title}] (#sveiki atvykę)
-      Būtina paskyra. Jei norite tęsti, sukurkite paskyrą arba prisijunkite.
   upload:
     edit_reason: "atsiųsti mano pranešimų archyvą"
     unauthorized: "Atsiprašome, failas, kurį bandote įkelti, nėra autorizuotas (įgalioti plėtiniai: %{authorized_extensions})."
@@ -2686,8 +2681,6 @@ lt:
       title: "Persiųsti patvirtinimo laišką"
   safe_mode:
     title: "Įeikite į saugųjį režimą"
-    no_unofficial_plugins: "Išjungti neoficialius įskiepius"
-    no_plugins: "Išjungti visus įskiepius"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
   wizard:

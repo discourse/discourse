@@ -151,7 +151,6 @@ ru:
       restore: "Восстановить удаленное сообщение"
       save: "Сохранить"
       select: "Выбрать"
-      silence: "Заблокировать пользователя"
       return_to_list: "Вернуться к списку каналов"
       scroll_to_bottom: "Прокрутка вниз"
       scroll_to_new_messages: "Новые сообщения"
@@ -182,7 +181,7 @@ ru:
         open_header: "Канал открыт"
         open: "Открыт"
       browse:
-        back: "Вернуться"
+        back: "Назад"
         title: Каналы
         filter_all: Все
         filter_open: Открытые
@@ -383,13 +382,13 @@ ru:
         chat_mention:
           direct: 'упомянул вас в «%{channel}»'
           direct_html: '<span>Пользователь %{username}</span> <span>упомянул вас на канале «%{channel}»</span>'
-          other_plain: 'упомянул %{identifier} в канале «%{channel}»'
-          other_html: '<span>Пользователь %{username}</span> <span>упомянул %{identifier} на канале «%{channel}»</span>'
+          other_plain: 'упомянул(а) %{identifier} в канале «%{channel}»'
+          other_html: '<span>%{username}</span> <span>упомянул(а) %{identifier} в канале «%{channel}»</span>'
         direct_message_chat_mention:
           direct: "упомянул вас в личном чате"
           direct_html: "<span>Пользователь %{username}</span> <span>упомянул вас в личном чате</span>"
-          other_plain: "упомянул %{identifier} в личном чате"
-          other_html: "<span>Пользователь %{username}</span> <span>упомянул @%{identifier} в личном чате</span>"
+          other_plain: "упомянул(а) %{identifier} в личном чате"
+          other_html: "<span>%{username}</span> <span>упомянул(а) %{identifier} в личном чате</span>"
         chat_message: "Новое сообщение в чате"
         chat_quoted: "Пользователь %{username} процитировал ваше сообщение в чате"
       titles:
@@ -418,7 +417,7 @@ ru:
       types:
         reviewable_chat_message:
           title: "Сообщение на премодерации"
-          flagged_by: "Жалоба от"
+          flagged_by: "Кто пожаловался"
     keyboard_shortcuts_help:
       chat:
         title: "Чат"

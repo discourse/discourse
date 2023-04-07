@@ -180,8 +180,6 @@ bs_BA:
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Ni jedna notifikacija bilo koje vrste neće biti poslana."
     software_update_prompt:
       dismiss: "Odpusti"
-    bootstrap_mode_disabled: "Bootstrap način rada će biti isključen u toku 24 sata."
-    bootstrap_invite_button_title: "Pošalji Pozivnice"
     themes:
       default_description: "Uobičajen"
     s3:
@@ -492,10 +490,14 @@ bs_BA:
       statuses:
         pending:
           title: "Na čekanju"
+        approved:
+          title: "Dozvojeno"
+        rejected:
+          title: "Odbijeni"
         reviewed:
-          title: "(sve pregledano)"
+          title: "Sve pregledano"
         all:
-          title: "(sve)"
+          title: "Sve"
       context_question:
         delimiter: "ili"
       types:
@@ -3051,9 +3053,12 @@ bs_BA:
           save: "Save"
           delete: "Delete"
           links:
-            icon: "Icon"
-            name: "Ime"
-            value: "Link"
+            icon:
+              label: "Icon"
+            name:
+              label: "Ime"
+            value:
+              label: "Link"
         about:
           header_link_text: "O nama"
         messages:
@@ -3891,11 +3896,6 @@ bs_BA:
           replace: "Zamijeni"
           silence: "Stišaj"
           link: "Link"
-        action_descriptions:
-          block: "Spriječite postavljanje postova koji sadrže ove riječi. Korisnik će vidjeti poruku o pogrešci kada pokuša da pošalje svoj post."
-          censor: "Dopustite poruke koje sadrže te riječi, ali ih zamijenite znakovima koji kriju cenzurirane riječi."
-          require_approval: "Postovi koji sadrže ove riječi će zahtijevati odobrenje osoblja prije nego što se mogu vidjeti."
-          flag: "Dozvoli objave koje sadrže ove riječi, ali prijavi ih kao neadekvatne kako bi ih moderatori mogli analizirati gledajući na kontekst i značenje"
         form:
           placeholder_regexp: "regularni izraz"
           link_label: "Link"

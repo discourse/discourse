@@ -74,7 +74,7 @@ module UserGuardian
   end
 
   def can_anonymize_user?(user)
-    is_staff? && !user.nil? && !user.staff?
+    is_staff? && !user.nil? && !user.staff? && !user.email.ends_with?(UserAnonymizer::EMAIL_SUFFIX)
   end
 
   def can_merge_user?(user)

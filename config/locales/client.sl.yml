@@ -202,8 +202,6 @@ sl:
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
     software_update_prompt:
       dismiss: "Opusti"
-    bootstrap_mode_disabled: "Zagonski način bo onemogočen v 24 urah."
-    bootstrap_invite_button_title: "Pošlji povabila"
     themes:
       default_description: "Privzeto"
     s3:
@@ -489,10 +487,14 @@ sl:
       statuses:
         pending:
           title: "Za potrditev"
+        approved:
+          title: "Potrjeno"
+        rejected:
+          title: "Zavrnjeno"
         reviewed:
-          title: "(vsi pregledani)"
+          title: "Vsi pregledani"
         all:
-          title: "(vse)"
+          title: "Vse"
       context_question:
         delimiter: "ali"
       types:
@@ -3367,9 +3369,12 @@ sl:
           save: "Shrani"
           delete: "Izbriši"
           links:
-            icon: "Ikona"
-            name: "Ime"
-            value: "Povezava"
+            icon:
+              label: "Ikona"
+            name:
+              label: "Ime"
+            value:
+              label: "Povezava"
         about:
           header_link_text: "O nas"
         messages:
@@ -3902,11 +3907,6 @@ sl:
           replace: "Zamenjaj"
           silence: "Utišaj"
           link: "Povezava"
-        action_descriptions:
-          block: "Onemogoči objavo prispevkov, ki vsebujejo te besede. Uporabnik bo dobil sporočilo o napaki, ko bo hotel objaviti prispevek."
-          censor: "Dovoli prispevke s temi besedami, ampak jih zamenjaj z znaki, ki skrijejo cenzurirane besede."
-          require_approval: "Prispevki, ki vsebujejo te besede bodo zahtevali potrditev s strani osebja preden jih lahko kdo vidi."
-          flag: "Dovoli prispevke, ki vsebujejo te besede, vendar jih prijavi kot neprimerne, tako da jih lahko moderatorji preverijo."
         form:
           placeholder_regexp: "Regularni izraz"
           replace_label: "Zamenjava"

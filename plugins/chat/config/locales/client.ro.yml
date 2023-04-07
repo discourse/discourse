@@ -54,7 +54,7 @@ ro:
         back_to_channel: "Înapoi"
         tabs:
           about: Despre
-          members: Membrii
+          members: Membri
           settings: Opțiuni
       direct_message_creator:
         title: Mesaj nou

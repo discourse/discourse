@@ -254,6 +254,7 @@ he:
     user_exists: "אין צורך להזמין את <b>%{email}</b>, יש כבר חשבון עם הכתובת הזאת!"
     invite_exists: "כבר הזמנת את <b>%{email}</b>."
     invalid_email: "%{email} אינה כתובת דוא״ל תקפה."
+    generic_error_response: "אירעה בעיה עם הבקשה שלך."
     rate_limit:
       one: "כבר שלחת הזמנה %{count} ביום האחרון, נא להמתין %{time_left} בטרם ניסיון קודם."
       two: "כבר שלחת %{count} הזמנות ביום האחרון, נא להמתין %{time_left} בטרם ניסיון קודם."
@@ -700,6 +701,7 @@ he:
       disallowed_tags_generic: "לנושא זה יש תגיות אסורות."
       slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"
       is_already_in_use: "כבר בשימוש"
+      move_topic_to_category_disallowed: "אין לך אפשרות להעביר את הנושא הזה לקטגוריה שאין לך הרשאה ליצור בה נושאים חדשים."
     cannot_delete:
       uncategorized: "קטגוריה זו נחשבת למיוחדת. היא מיועדת לשימוש כמתחם לנושאים מחוסרי קטגוריה, אין אפשרות למחוק אותה."
       has_subcategories: "לא ניתן להסיר קטגוריה זו משום שיש בה תת־קטגוריות."
@@ -811,17 +813,17 @@ he:
       about_x_years:
         one: "שנה"
         two: "שנתיים"
-        many: "%{count} שנים"
+        many: "%{count} שנה"
         other: "%{count} שנים"
       over_x_years:
         one: "למעלה משנה"
         two: "למעלה משנתיים"
-        many: "למעלה מ־%{count} שנים"
+        many: "למעלה מ־%{count} שנה"
         other: "למעלה מ־%{count} שנים"
       almost_x_years:
         one: "שנה"
         two: "שנתיים"
-        many: "%{count} שנים"
+        many: "%{count} שנה"
         other: "%{count} שנים"
     distance_in_words_verbose:
       half_a_minute: "ממש עכשיו"
@@ -864,17 +866,17 @@ he:
       about_x_years:
         one: "לפני שנה בערך"
         two: "לפני שנתיים בערך"
-        many: "לפני %{count} שנים בערך"
+        many: "לפני %{count} שנה בערך"
         other: "לפני %{count} שנים בערך"
       over_x_years:
         one: "לפני למעלה משנה"
         two: "לפני למעלה משנתיים"
-        many: "לפני למעלה מ־%{count} שנים"
+        many: "לפני למעלה מ־%{count} שנה"
         other: "לפני למעלה מ־%{count} שנים"
       almost_x_years:
         one: "לפני שנה כמעט"
         two: "לפני שנתיים כמעט"
-        many: "לפני %{count} שנים כמעט"
+        many: "לפני %{count} שנה כמעט"
         other: "לפני %{count} שנים כמעט"
   password_reset:
     no_token: 'אוי ויי! הקישור בו השתמשת לא פעיל עוד. אפשר <a href="%{base_url}/login">להיכנס</a> כעת. אם שכחת את הסיסמה שלך, אפשר <a href="%{base_url}/password-reset">לבקש קישור</a> כדי לאפס אותה.'
@@ -1215,7 +1217,7 @@ he:
       title: "יחס פעילות יומי/חודשי"
       xaxis: "יום"
       yaxis: "יחס פעילות יומי/חודשי"
-      description: "מספר החברים שנכנסו ביממה האחרונה לחלק במספר החברים שנכנסו בחודש האחרון – מחזירה אחוז שמציין את ‚דבקות’ הקהילה. עדיף לכוון לערך שעולה על 30%."
+      description: "מספר החברים שנכנסו ביממה האחרונה לחלק במספר החברים שנכנסו בחודש האחרון – מחזירה אחוז שמציין את ‚דבקות’ הקהילה. עדיף לכוון לערך שעולה על 20%."
     daily_engaged_users:
       title: "משתמשים מעורבים יומית"
       xaxis: "יום"
@@ -1585,7 +1587,7 @@ he:
     manifest_icon: "תמונה שתשמש בתור לוגו/תמונת פתיח ב־Android. גודלה ישתנה אוטומטית לכדי 512 × 512. במקרה של העדר בחירה, ייעשה שימוש ב־large_icon (סמל גדול)."
     manifest_screenshots: "צילומי מסך שמציגים לראווה את היכולות והתכונות של העותק שלך בעמוד תהליך ההתקנה. כל התמונות חייבות להיות העלאות מקומיות ובאותם הממדים."
     favicon: "סמל האתר שלך, לפרטים <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://he.wikipedia.org/wiki/Favicon</a>. כדי שהסמל יפעל כראוי גם דרך CDN עליו להיות מסוג png. גודל הסמל ישתנה לכדי 32×32. בהעדר בחירה, ייעשה שימוש ב־large_icon."
-    apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. גודלו ישתנה אוטומטית לכדי 180 × 180. במקרה של העדר בחירה ייעשה שימוש ב־large_icon (סמל גדול)."
+    apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. רקע שקוף לא מומלץ. הגודל ישתנה ל־180x180. אם יישאר ריק, ייעשה שימוש ב־large_icon (סמל גדול) במקום."
     opengraph_image: "תמונת opengraph כבררת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
     twitter_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמורה להיות ברוחב של 280 לפחות ובגובה של 150 לפחות, לא יכולה להיות ‎.svg). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ה־opengraph_image (תמונת opengraph) כל עוד זאת גם לא ‎.svg"
     notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
@@ -1721,7 +1723,7 @@ he:
     enable_discourse_connect: "הפעלת כניסה דרך DiscourseConnect (לשעבר ‚הכניסה האחודה של Discourse’) (אזהרה: *חובה* לאמת את כתובות הדוא״ל של המשתמשים על ידי האתר החיצוני!)"
     verbose_discourse_connect_logging: "תיעוד ניתוח נרחב בכל מה שקשור ב־DiscourseConnect אל <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "הטמעת פרוטוקול ספק DiscourseConnect ‏(‚Discourse SSO’ לשעבר) בנקודת הגישה ‎/session/sso_provider, דורשת את ההגדרה discourse_connect_provider_secrets (סודות ספק השירות)"
-    discourse_connect_url: "כתובת נקודת הגישה אל DiscourseConnect (חייבת לכלול http://‎ או https://‎)"
+    discourse_connect_url: "כתובת נקודת הקצה של DiscourseConnect (חייבת לכלול http://‎ או https://‎, ובלי לוכסן בסוף)"
     discourse_connect_secret: "מחרוזת סודית המשמשת לאמת מידע של DiscourseConnect באופן מוצפן, נא לוודא שאורכה 10 תווים לפחות"
     discourse_connect_provider_secrets: "רשימת צמדי סודות שמות תחום שמשתמשים ב־DiscourseConnect. עליך לוודא שאורך הסוד של DiscourseConnect הוא 10 תווים ומעלה. ניתן להשתמש בתו המכליל * כדי להרחיב את ההתאמה לכל שם תחום שהוא או לחלק מסוים משם תחום (למשל: ‎*.example.com)"
     discourse_connect_overrides_bio: "דריסת הביוגרפיה בפרופיל המשתמש ומניעת השינוי מצד המשתמש"
@@ -1763,13 +1765,13 @@ he:
     discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
     allow_restore: "לאפשר שחזור, מה שיכול להחליף את כל (!) המידע באתר! יש להשבית אלא אם כן בכוונתך לשחזר גיבוי"
-    maximum_backups: "המספר המקסימלי של גיבויים לשמירה. גיבויים ישנים יותר ימחקו אוטומטית"
+    maximum_backups: "המספר המרבי של גיבויים לשמירה. גיבויים ישנים יותר יימחקו אוטומטית"
     automatic_backups_enabled: "הרץ גיבויים אוטומטים כמו שמוגדר בתדירות הגיבויים"
     backup_frequency: "מספר הימים בין גיבויים."
     s3_backup_bucket: "הדלי המרוחק שבו לשמור גיבויים. אזהרה: שימו לב שהוא דלי פרטי."
     s3_endpoint: "ניתן לערוך את נקודת הגישה לגיבוי כדי שתפנה לשירות תואם S3 כגון DigitalOcean Spaces או Minio. אזהרה: יש להשאיר ריק בעת שימוש ב־S3 מבית AWS."
     s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מושבתת, לא יפונה מקום לאחר מחיקת העלאות."
-    s3_disable_cleanup: "למנוע הסרה של גיבויים ישנים מ־S3 שיש יותר גיבויים מהמותר."
+    s3_disable_cleanup: "למנוע הסרה של גיבויים ישנים מ־S3 כשיש יותר גיבויים מהמותר."
     enable_s3_inventory: "יצירת דוחות ואימות העלאות באמצעות מאגר של Amazon S3. חשוב: נדרשים פרטי גישה תקפים ל־S3 (מזהה מפתח הגישה ומפתח הגישה הסודי)."
     backup_time_of_day: "הגדרת זמן לגיבוי לפי UTC."
     backup_with_uploads: "כללו העלאות בגיבויים התקופתיים. ביטול של אפשרות זו תגבה רק את בסיס הנתונים."
@@ -1819,7 +1821,7 @@ he:
     s3_access_key_id: "מזהה מפתח הגישה ל־Amazon S3 שישמש להעלאת תמונות, קבצים מצורפים וגיבויים."
     s3_secret_access_key: "מפתח סוד הגישה ל־Amazon S3 שישמש להעלאת תמונות, קבצים מצורפים וגיבויים."
     s3_region: "שם האזור ב־Amazon S3 שישמש להעלאת תמונות וגיבויים."
-    s3_cdn_url: "CDN URL לכל ה assets ב s3 (למשל: https://cdn.somewhere.com). א-ז-ה-ר-ה: לאחר שינוי של הגדרה זו עליכם לאפות מחדש את כל הפוסטים הישנים."
+    s3_cdn_url: "כתובת CDN לכל המשאבים ב־S3 (למשל: https://cdn.somewhere.com). א-ז-ה-ר-ה: לאחר שינוי של הגדרה זו יש לאפות מחדש את כל הפוסטים הישנים."
     avatar_sizes: "רשימה של גדלי דמויות שנוצרת אוטומטית."
     external_system_avatars_enabled: "שימוש בשירות של מערכת אווטארים חיצונית."
     external_system_avatars_url: "כתובת של שירות דמויות חיצוני. החלפות מותרות הן {username} {first_letter} {color} {size}"
@@ -1839,7 +1841,7 @@ he:
     composer_media_optimization_image_bytes_optimization_threshold: "גודל קובץ תמונה מזערי להפעלת מיטוב בצד הלקוח"
     composer_media_optimization_image_resize_dimensions_threshold: "רוחב תמונה מזערי להפעלת שינוי גודל בצד הלקוח"
     composer_media_optimization_image_resize_width_target: "תמונות שרוחבן עולה על `composer_media_optimization_image_dimensions_resize_threshold`, גודלן ישתנה לרוחב זה. הערך חייב להיות >= לעומת `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "איכות קידוד JPEG המשמשת בתהליך הקידוד מחדש."
+    composer_media_optimization_image_encode_quality: "איכות קידוד JPG המשמשת בתהליך הקידוד מחדש."
     min_ratio_to_crop: "יחס לחיתוך תמונות גבוהות. יש להקליד את התוצאה ברוחב / גובה."
     simultaneous_uploads: "מספר הקבצים המרבי שניתן לגרור ולהשליך אל מחבר ההודעות"
     default_invitee_trust_level: "דרגת האמון כבררת המחדל למשתמשים שהוזמנו (0‏-4)"
@@ -3295,7 +3297,7 @@ he:
         ניתן לשנות את הסף הזה בעזרת שינוי `silence_new_user` (השתקת משתמשים חדשים) בהגדרות האתר.
     spam_post_blocked:
       title: "פוסט ספאם נחסם"
-      subject_template: "עקב קישורים חוזרים ונשנים הופעלה חסימה על המשתמש/ת החדש/ה %{username}"
+      subject_template: "עקב קישורים חוזרים ונשנים המשתמש החדש %{username} נחסם"
       text_body_template: |
         זוהי הודעה אוטומטית.
 
@@ -3861,12 +3863,7 @@ he:
     title: "לא ניתן לטעון את היישום"
     offline_page_message: "נראה כאילו אין לך תקשורת לאינטרנט! נא לבדוק את חיבור הרשת שלך ולנסות שוב."
   login_required:
-    welcome_message: |
-      ## [ברוך בואך אל %{title}](#welcome)
-      נדרש חשבון. נא ליצור חשבון או להיכנס כדי להמשיך.
-    welcome_message_invite_only: |
-      ## [ברוך בואך אל %{title}](#welcome)
-      נדרש חשבון. נא לבקש מחבר קיים לשלוח לך הזמנה או להיכנס כדי להמשיך.
+    welcome_message: "# [ברוך בואך אל %{title}](#welcome)"
   upload:
     edit_reason: "עותקים מקומיים של תמונות שהורדו"
     unauthorized: "הקובץ שמועמד להעלאה אינו מורשה (סיומות מורשות: %{authorized_extensions}), עמך הסליחה."
@@ -4635,10 +4632,10 @@ he:
       message: "<p>הודעת ההפעלה נשלחה מחדש בדוא״ל אל <b>%{email}</b>"
   safe_mode:
     title: "כנסו למצב בטוח"
-    description: "מצב בטוח מאפשר לכם לבחון את האתר שלכם מבלי לטעון תוספים או ערכות עיצוב."
+    description: "\"מצב בטוח\" מאפשר לך לבחון את האתר מבלי לעלות ערכות נושא או תוספים בצד לקוח. תוספים בצד שרת נשארים מופעלים."
     no_themes: "השבתת ערכות עיצוב ורכיבי ערכת עיצוב"
-    no_unofficial_plugins: "השבתת תוספים בלתי רשמיים"
-    no_plugins: "השבתת כל התוספים"
+    no_unofficial_plugins: "השבתת התאמות התוספים הבלתי רשמיים מצד הלקוח"
+    no_plugins: "השבתת כל התאמות התוספים מצד הלקוח"
     enter: "כנסו למצב בטוח"
     must_select: "עליך לבחור באפשרות אחת לפחות כדי להיכנס למצב בטוח."
   wizard:
@@ -4838,17 +4835,21 @@ he:
         description: "יש לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
       agree_and_hide:
         title: "הסתרת פוסט"
+        description: "הסכמה עם הסימון והסתרת הפוסט הזה + שליחת הודעה אוטומטית למשתמש שמפצירה בו לערוך אותו."
       delete_single:
         title: "מחיקה"
       delete:
         title: "מחיקה…"
       delete_and_ignore:
         title: "התעלמות מהדגל ומחיקת הפוסט"
+        description: "התעלמות מהסימון על ידי הסרתו מהתור ומחיקת הפוסט, אם זה הפוסט הראשון, למחוק גם את הנושא. "
       delete_and_ignore_replies:
         title: "התעלמות מהסימון, למחוק את הפוסט והתגובות"
+        description: "התעלמות מהסימון על ידי הסרתו מהתור, מחיקת הפוסט וכל התגובות שלו, אם זה הפוסט הראשון, למחוק גם את הנושא"
         confirm: "למחוק גם את התגובות לפוסט?"
       delete_and_agree:
         title: "מחיקת פוסט"
+        description: "להסכים עם הסימון ולמחוק את הפוסט, אם זה הפוסט הראשון אז למחוק גם את הנושא."
       delete_and_agree_replies:
         title: "מחיקת הפוסט והתגובות"
         description: "להסכים עם הסימון ולמחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא."
@@ -4862,6 +4863,7 @@ he:
         title: "התעלמות"
       ignore_and_do_nothing:
         title: "לא לעשות דבר"
+        description: "התעלמות מהסימון על ידי הסרתו מהתור מבלי לנקוט בעמדה. פוסטים מוסתרים נשארים מוסתרים ויטופלו על ידי הכלים האוטומטיים."
       approve:
         title: "אשר"
       approve_post:

@@ -190,6 +190,7 @@ hu:
     not_found_json: "A meghívási token érvénytelen. Lépjen kapcsolatba a stábbal."
     not_found_template_link: |
       <p>Ez a(z) <a href="%{base_url}">%{site_name}</a> meghívó már nem váltható be. Kérje meg az Ön meghívó személyt, hogy küldjön egy új meghívót.</p>
+    generic_error_response: "Probléma lépett fel a kéréssel kapcsolatban."
     confirm_email: "<p>Mindjárt készen is vagyunk! Elküldtünk egy megerősítő e-mailt a <b>%{email}</b> címre. Kérlek, kövesd a benne található instrukciókat, és aktiváld a fiókodat.</p><p>Ha pár percen belül nem érkezne meg, ne felejtsd el a <b>SPAM</b> és a <b>Promóciók</b> mappában is ellenőrizni!</p>"
     disabled_errors:
       invalid_access: "Nincs engedélye a kért erőforrás megtekintéséhez."
@@ -437,6 +438,7 @@ hu:
       email_already_used_in_category: "A(z) „%{email}” címet már használja a(z) „%{category_name}” kategória."
       slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
       is_already_in_use: "már használatban van"
+      move_topic_to_category_disallowed: "Nem helyezheti át ezt a témát olyan kategóriába, ahol nincs engedélye új témák létrehozására."
     cannot_delete:
       has_subcategories: "A kategóriát nem lehet törölni, mert vannak alkategóriái."
       topic_exists_no_oldest: "A kategóriát nem lehet törölni, mert a benne lévő témák száma %{count}."
@@ -968,6 +970,7 @@ hu:
     post_excerpt_maxlength: "A bejegyzés kivonatának / összefoglalójának maximális hossza."
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
     blocked_onebox_domains: "Azok a domainek, amelyek soha nem kerülnek dobozba, például wikipedia.org\n(A * ? helyettesítő karakterek nem támogatottak)"
+    apple_touch_icon: "Az Apple érintőképernyős készülékekhez használt ikon. Az átlátszó háttér nem ajánlott. Automatikusan átméreteződik 180x180-ra. Ha üresen hagyja, a large_icon lesz használva."
     enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
     review_every_post: "Minden bejegyzést jóvá kell hagyni. FIGYELEM! FORGALMAS OLDALAKON NEM AJÁNLOTT."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
@@ -982,6 +985,7 @@ hu:
     hide_email_address_taken: "Ne tájékoztassa a felhasználókat arról, hogy létezik fiók egy adott e-mail címmel a regisztráció során vagy az elfelejtett jelszó folyamata során. Teljes e-mail cím megkövetelése az „elfelejtett jelszó” kérésekhez."
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
+    discourse_connect_url: "A DiscourseConnect végpont URL-je (tartalmaznia kell a http:// vagy https:// karaktereket, és nem tartalmazhat a végén perjelet)"
     discord_secret: "Discord titkos kulcs"
     maximum_backups: "A maximálisan megtartandó biztonsági másolatok száma. A régebbi biztonsági mentések automatikusan törlődnek"
     rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hozhatnak létre."
@@ -2146,6 +2150,10 @@ hu:
       message: "<p>Aktiváló levelet küldtünk az <b>%{email}</b>címre, pár percen belül a postaládádban kell lennie. A fiók aktiválásához kövesd az e-mailben található utasításokat.</p><p>Ha nem érkezik meg, ellenőrizd a spam (és Gmail esetén a Promóciók) mappát is, és <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>ellenőrizd, hogy jó e-mail címet adtál-e meg!</a>.</p>"
     resend_email:
       title: "Aktiváló e-mail újraküldése"
+  safe_mode:
+    description: "A biztonságos mód lehetővé teszi, hogy tesztelje webhelyét témák vagy kliensoldali plugin-beállítások betöltése nélkül. A szerveroldali plugin testreszabások továbbra is engedélyezve maradnak."
+    no_unofficial_plugins: "Nem hivatalos ügyféloldali plugin testreszabások letiltása"
+    no_plugins: "Az összes ügyféloldali plugin testreszabás letiltása"
   wizard:
     step:
       introduction:

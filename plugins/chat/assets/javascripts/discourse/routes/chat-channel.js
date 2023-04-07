@@ -17,11 +17,7 @@ export default class ChatChannelRoute extends DiscourseRoute {
 
   @action
   willTransition() {
-    if (this.chat.activeChannel) {
-      this.chat.activeChannel.activeThread = null;
-    }
-
-    this.chatStateManager.closeSidePanel();
+    this.#closeThread();
   }
 
   @action
@@ -32,5 +28,11 @@ export default class ChatChannelRoute extends DiscourseRoute {
   @action
   deactivate() {
     this.chat.activeChannel = null;
+  }
+
+  #closeThread() {
+    this.chat.activeChannel.activeThread?.messagesManager?.clearMessages();
+    this.chat.activeChannel.activeThread = null;
+    this.chatStateManager.closeSidePanel();
   }
 }

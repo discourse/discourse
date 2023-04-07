@@ -154,9 +154,6 @@ id:
     software_update_prompt:
       message: "Kami telah memperbarui situs ini, <span>silakan refresh</span>, atau Anda mungkin mengalami perilaku yang tidak terduga."
       dismiss: "Bubar"
-    bootstrap_mode_enabled:
-      other: "Untuk lebih memudahkan peluncuran situs baru Anda, Anda berada di mode bootstrap. Semua pengguna baru akan mendapat level 1 dan mendapat ringkasan email harian diaktifkan. Hal ini akan otomatis dimatikan ketika pengguna %{count} sudah ikut."
-    bootstrap_mode_disabled: "Mode bootstrap akan dinonaktifkan dalam 24 jam."
     themes:
       default_description: "Asal"
       broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena suatu tema/komponen memiliki masalah."
@@ -310,7 +307,6 @@ id:
       new_topic: "Konsep topik baru"
       new_private_message: "Rancangan pesan pribadi baru"
       abandon:
-        confirm: "Anda memiliki rancangan yang sedang diproses untuk topik ini. Apa yang ingin Anda lakukan dengannya?"
         yes_value: "Batalkan"
         no_value: "Lanjut menyunting"
     topic_count_categories:
@@ -477,10 +473,14 @@ id:
       statuses:
         pending:
           title: "Tertunda"
+        approved:
+          title: "Disetujui"
+        rejected:
+          title: "Ditolak"
         reviewed:
-          title: "(semua ditinjau)"
+          title: "Semua ditinjau"
         all:
-          title: "(semuanya)"
+          title: "Semuanya"
       context_question:
         delimiter: "atau"
       types:
@@ -1813,7 +1813,8 @@ id:
           save: "Simpan"
           delete: "Hapus"
           links:
-            name: "Nama"
+            name:
+              label: "Name"
         about:
           header_link_text: "Tentang"
         messages:

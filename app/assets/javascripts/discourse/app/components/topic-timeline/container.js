@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { relativeAge } from "discourse/lib/formatter";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
@@ -153,22 +152,21 @@ export default class TopicTimelineScrollArea extends Component {
     return this.lastReadTop > bottom ? bottom : this.lastReadTop;
   }
 
-  get bottomAge() {
-    return relativeAge(
-      new Date(this.args.model.last_posted_at || this.args.model.created_at),
-      {
-        addAgo: true,
-        defaultFormat: timelineDate,
-      }
-    );
-  }
-
   get startDate() {
     return timelineDate(this.args.model.createdAt);
   }
 
+  get nowDateOptions() {
+    return {
+      addAgo: true,
+      defaultFormat: timelineDate,
+    };
+  }
+
   get nowDate() {
-    return this.bottomAge;
+    return (
+      this.args.model.get("last_posted_at") || this.args.model.get("created_at")
+    );
   }
 
   get lastReadHeight() {
@@ -289,8 +287,10 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   @bind
-  dragMove(e) {
-    this.updatePercentage(e);
+  dragMove(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.updatePercentage(event);
   }
 
   @bind

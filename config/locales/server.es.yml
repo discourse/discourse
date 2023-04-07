@@ -1104,7 +1104,7 @@ es:
       title: "UAD/UAM"
       xaxis: "Día"
       yaxis: "UAD/UAM"
-      description: "Número de miembros que han iniciado sesión durante el último día dividido entre el número de miembros que han iniciado sesión durante el último mes – resulta en un % que indica el grado de «permanencia» de la comunidad. Apuntar a >30%."
+      description: "Número de miembros que han iniciado sesión durante el último día dividido entre el número de miembros que han iniciado sesión durante el último mes – resulta en un % que indica el grado de «permanencia» de la comunidad. Apuntar a >20%."
     daily_engaged_users:
       title: "Usuarios involucrados a diario"
       xaxis: "Día"
@@ -1472,7 +1472,6 @@ es:
     manifest_icon: "Imagen utilizada como logo/imagen de bienvenida en Android. Se cambiará automáticamente el tamaño a 512 × 512. Si se deja en blanco, se utilizará large_icon."
     manifest_screenshots: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
     favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para que funcione correctamente sobre un CDN debe ser un png. Se cambiará automáticamente el tamaño a 32x32. Si se deja en blanco, se utilizará large_icon."
-    apple_touch_icon: "Icono utilizado para dispositivos táctiles de Apple. Se redimensionará automáticamente a 180x180. Si se deja en blanco, se utilizará el icono grande."
     opengraph_image: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon"
     twitter_summary_large_image: "\"Imagen grande de resumen\" de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de alto, no puede ser .svg). Si se deja en blanco, los metadatos de la tarjeta normal se generan utilizando opengraph_image, siempre que no sea también un .svg, mientras no sea un .svg"
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
@@ -1603,7 +1602,6 @@ es:
     enable_discourse_connect: "Activar inicio de sesión a través de DiscourseConnect (antiguamente «Discourse SSO») (CUIDADO: ¡LAS DIRECCIONES DE CORREO ELECTRÓNICO *DEBEN* SER VALIDADAS POR EL SITIO EXTERNO!)"
     verbose_discourse_connect_logging: "Guardar registros detallados de diagnóstico de DiscourseConnect en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementar el proveedor de protocolo DiscourseConnect (antiguamente «Discourse SSO») en la ruta /session/sso_provider, discourse_connect_provider_secrets debe estar rellenado."
-    discourse_connect_url: "URL del endpoint de DiscourseConnect (debe incluir http:// o https://)"
     discourse_connect_secret: "Secreto usado para autenticar criptográficamente la información de DiscourseConnect, asegúrate de que tiene 10 o más caracteres de longitud"
     discourse_connect_provider_secrets: "Una lista de pares de dominio-secreto que utiliza Discourse como proveedor de SSO. Asegúrate de que la clave secreta SSO tenga de 10 caracteres o más. El símbolo de comodín * se puede usar para hacer coincidir cualquier dominio o solo una parte de él (por ejemplo, *.ejemplo.com)."
     discourse_connect_overrides_bio: "Sobrescribir la biografía del usuario y evita que los usuarios la cambien"
@@ -1721,7 +1719,6 @@ es:
     composer_media_optimization_image_bytes_optimization_threshold: "Tamaño mínimo del archivo de imagen para activar la optimización del lado del cliente"
     composer_media_optimization_image_resize_dimensions_threshold: "Ancho mínimo de la imagen para activar el redimensionamiento del lado del cliente"
     composer_media_optimization_image_resize_width_target: "Las imágenes con una anchura mayor que «composer_media_optimization_image_dimensions_resize_threshold» serán redimensionadas a esta anchura. Debe ser >= que «composer_media_optimization_image_dimensions_resize_threshold»."
-    composer_media_optimization_image_encode_quality: "Calidad de codificación JPEG utilizada en el proceso de recodificación."
     min_ratio_to_crop: "Proporción utilizada para recortar imágenes altas. Introduce el resultado de anchura / altura."
     simultaneous_uploads: "Número máximo de archivos que se pueden arrastrar y soltar en el editor"
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
@@ -3681,13 +3678,6 @@ es:
   offline:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
-  login_required:
-    welcome_message: |
-      ## [Te damos la bienvenida a %{title}](#welcome)
-      Se necesita una cuenta para utilizar el sitio. Crea una o inicia sesión para continuar.
-    welcome_message_invite_only: |
-      ## [Te damos la bienvenida a %{title}](#welcome)
-      Se necesita una cuenta para utilizar el sitio. Solicita a uno de los miembros actuales que te invite o inicia sesión para continuar.
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
@@ -4194,10 +4184,7 @@ es:
       message: "<p>Hemos reenviado el correo electrónico de activación a <b>%{email}</b>"
   safe_mode:
     title: "Activar modo seguro"
-    description: "El modo seguro te permite probar tu sitio sin cargar plugins o temas."
     no_themes: "Desactivar temas y componentes de tema"
-    no_unofficial_plugins: "Desactivar plugins no oficiales"
-    no_plugins: "Desactivar todos los plugins"
     enter: "Activar modo seguro"
     must_select: "Debes escoger al menos una opción para entrar en el modo seguro."
   wizard:

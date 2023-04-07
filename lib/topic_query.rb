@@ -204,7 +204,8 @@ class TopicQuery
   end
 
   # Return a list of suggested topics for a topic
-  def list_suggested_for(topic, pm_params: nil)
+  # The include_random param was added so plugins can generate a suggested topics list without the random topics
+  def list_suggested_for(topic, pm_params: nil, include_random: true)
     # Don't suggest messages unless we have a user, and private messages are
     # enabled.
     if topic.private_message? &&
@@ -250,7 +251,7 @@ class TopicQuery
     end
 
     if !topic.private_message?
-      unless builder.full?
+      if include_random && !builder.full?
         builder.add_results(
           random_suggested(topic, builder.results_left, builder.excluded_topic_ids),
         )
@@ -268,7 +269,12 @@ class TopicQuery
   end
 
   def list_filter
-    list_latest
+    results =
+      TopicsFilter.new(guardian: @guardian, scope: latest_results).filter_from_query_string(
+        @options[:q],
+      )
+
+    create_list(:filter, {}, results)
   end
 
   def list_read
@@ -716,67 +722,17 @@ class TopicQuery
     end
 
     if SiteSetting.tagging_enabled
-      result = result.preload(:tags)
-
-      tags_arg = @options[:tags]
-
-      if tags_arg && tags_arg.size > 0
-        tags_arg = tags_arg.split if String === tags_arg
-
-        tags_arg =
-          tags_arg.map do |t|
-            if String === t
-              t.downcase
-            else
-              t
-            end
-          end
-
-        tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
-        tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
-
-        if ActiveModel::Type::Boolean.new.cast(@options[:match_all_tags])
-          # ALL of the given tags:
-          if tags_arg.length == tags.length
-            tags.each_with_index do |tag, index|
-              sql_alias = ["t", index].join
-              result =
-                result.joins(
-                  "INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}",
-                )
-            end
-          else
-            result = result.none # don't return any results unless all tags exist in the database
-          end
-        else
-          # ANY of the given tags:
-          result = result.joins(:tags).where("tags.id in (?)", tags)
-        end
-
-        # TODO: this is very side-effecty and should be changed
-        # It is done cause further up we expect normalized tags
-        @options[:tags] = tags
-      elsif @options[:no_tags]
-        # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
-        result = result.where.not(id: TopicTag.distinct.pluck(:topic_id))
-      end
-
-      if @options[:exclude_tag].present? &&
-           !DiscourseTagging.hidden_tag_names(@guardian).include?(@options[:exclude_tag])
-        result = result.where(<<~SQL, name: @options[:exclude_tag])
-          topics.id NOT IN (
-            SELECT topic_tags.topic_id
-            FROM topic_tags
-            INNER JOIN tags ON tags.id = topic_tags.tag_id
-            WHERE tags.name = :name
-          )
-          SQL
-      end
+      result = result.includes(:tags)
+      result = filter_by_tags(result)
     end
 
     result = apply_ordering(result, options)
 
-    all_listable_topics = @guardian.filter_allowed_categories(Topic.unscoped.listable_topics)
+    all_listable_topics =
+      @guardian.filter_allowed_categories(
+        Topic.unscoped.listable_topics,
+        category_id_column: "categories.id",
+      )
 
     if options[:include_pms] || options[:include_all_pms]
       all_pm_topics =
@@ -848,17 +804,11 @@ class TopicQuery
     end
 
     if status = options[:status]
-      options[:q] ||= +""
-      options[:q] << " status:#{status}"
-    end
-
-    if options[:q].present?
       result =
-        TopicsFilter.new(
-          scope: result,
-          guardian: @guardian,
+        TopicsFilter.new(scope: result, guardian: @guardian).filter_status(
+          status: options[:status],
           category_id: options[:category],
-        ).filter(options[:q])
+        )
     end
 
     if (filter = (options[:filter] || options[:f])) && @user
@@ -942,12 +892,12 @@ class TopicQuery
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 
-      list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
+      list = list.where("categories.id IN (?)", category_ids) if category_ids.present?
     else
       category_ids = SiteSetting.default_categories_muted.split("|").map(&:to_i)
       category_ids -= [category_id] if category_id.present? && category_ids.include?(category_id)
 
-      list = list.where("topics.category_id NOT IN (?)", category_ids) if category_ids.present?
+      list = list.where("categories.id NOT IN (?)", category_ids) if category_ids.present?
     end
 
     list
@@ -1202,5 +1152,55 @@ class TopicQuery
       results = results.where("topics.updated_at >= ?", unread_at)
     end
     results
+  end
+
+  def filter_by_tags(result)
+    tags_arg = @options[:tags]
+
+    if tags_arg && tags_arg.size > 0
+      tags_arg = tags_arg.split if String === tags_arg
+      tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
+      tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
+
+      if ActiveModel::Type::Boolean.new.cast(@options[:match_all_tags])
+        # ALL of the given tags:
+        if tags_arg.length == tags.length
+          tags.each_with_index do |tag, index|
+            sql_alias = ["t", index].join
+
+            result =
+              result.joins(
+                "INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}",
+              )
+          end
+        else
+          result = result.none # don't return any results unless all tags exist in the database
+        end
+      else
+        # ANY of the given tags:
+        result = result.joins(:tags).where("tags.id in (?)", tags)
+      end
+
+      # TODO: this is very side-effecty and should be changed
+      # It is done cause further up we expect normalized tags
+      @options[:tags] = tags
+    elsif @options[:no_tags]
+      # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
+      result = result.where.not(id: TopicTag.distinct.select(:topic_id))
+    end
+
+    if @options[:exclude_tag].present? &&
+         !DiscourseTagging.hidden_tag_names(@guardian).include?(@options[:exclude_tag])
+      result = result.where(<<~SQL, name: @options[:exclude_tag])
+        topics.id NOT IN (
+          SELECT topic_tags.topic_id
+          FROM topic_tags
+          INNER JOIN tags ON tags.id = topic_tags.tag_id
+          WHERE tags.name = :name
+        )
+        SQL
+    end
+
+    result
   end
 end

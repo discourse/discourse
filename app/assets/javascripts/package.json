@@ -6,7 +6,6 @@
     "dialog-holder",
     "discourse",
     "discourse-common",
-    "discourse-ensure-deprecation-order",
     "discourse-hbr",
     "discourse-plugins",
     "discourse-widget-hbs",
@@ -17,7 +16,8 @@
     "truth-helpers",
     "wizard"
   ],
-  "resolutions":{
+  "resolutions": {
     "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1"
-  }
+  },
+  "dependencies": {}
 }

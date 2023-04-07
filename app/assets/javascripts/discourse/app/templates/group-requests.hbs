@@ -10,7 +10,7 @@
 
   {{#if this.hasRequesters}}
     <LoadMore
-      @selector=".group-members .directory-table__row"
+      @selector=".directory-table .directory-table__cell"
       @action={{action "loadMore"}}
     >
       <ResponsiveTable @className="group-members group-members__requests">

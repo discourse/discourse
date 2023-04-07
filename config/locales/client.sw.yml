@@ -141,8 +141,6 @@ sw:
     emails_are_disabled: "Utumaji wa barua pepe umezuiliwa na msimamizi. Hakuna taarifa za utumwaji wa barua pepe zitakazotumwa."
     software_update_prompt:
       dismiss: "Ondosha"
-    bootstrap_mode_disabled: "Halitumizi ya Bootstrap itasitishwa baada ya masaa 24."
-    bootstrap_invite_button_title: "Tuma Mialiko"
     themes:
       default_description: "Halisi"
     s3:
@@ -308,6 +306,10 @@ sw:
       statuses:
         pending:
           title: "subiria"
+        approved:
+          title: "Wamekubaliwa"
+        rejected:
+          title: "Imekataliwa"
       context_question:
         delimiter: "au"
       types:
@@ -2256,8 +2258,10 @@ sw:
           save: "Hifadhi"
           delete: "Futa"
           links:
-            icon: "ikoni"
-            name: "Jina"
+            icon:
+              label: "ikoni"
+            name:
+              label: "Jina"
         about:
           header_link_text: "Kuhusu"
         messages:
@@ -2882,11 +2886,6 @@ sw:
           require_approval: "Inahitaji Uthibitisho"
           flag: "Bendera"
           silence: "Imenyamazishwa"
-        action_descriptions:
-          block: "Zuia machapisho yenye maneno haya kuchapishwa. Mtumiaji ataona ujumbe wa hitilafu akijaribu kuwasilisha chapisho."
-          censor: "Ruhusu machapisho yenye maneno yafuatayo, lakini badilisha maneno hayo na herufi zinazoficha maneno yanayokatazwa."
-          require_approval: "Machapicho yenye maneno yafuatayo yatahitaji kibali kutoka kwa wafanyakazi kabla hayajaonwa."
-          flag: "Ruhusu machapisho yawe na maneno haya, ila ripoti kuonyesha kuwa hazifai ili wasimamizi waweze kuzikagua."
         form:
           placeholder_regexp: "muonekano wa kawaida"
           link_placeholder: "https://example.com"

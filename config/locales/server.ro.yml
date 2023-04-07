@@ -2019,8 +2019,6 @@ ro:
       message: "<p>Am trimis un email de activare la <b>%{email}</b>"
   safe_mode:
     title: "Activează modul sigur"
-    no_unofficial_plugins: "Dezactivează plugin-urile neoficiale"
-    no_plugins: "Dezactivează toate plugin-urile"
     enter: "Activează modul sigur"
   wizard:
     title: "Configurare Discourse"

@@ -51,6 +51,7 @@ reviewed:
     - net-imap # Ruby (bundled gem)
     - net-pop # Ruby (bundled gem)
     - net-smtp # Ruby (bundled gem)
+    - nio4r # MIT + BSD
     - omniauth # MIT
     - pg # Ruby
     - r2 # Apache-2.0 (Twitter)

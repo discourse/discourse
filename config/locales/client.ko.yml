@@ -155,11 +155,6 @@ ko:
     software_update_prompt:
       message: "사이트가 업데이트되어 <span>새로고침</span>이 필요합니다. 그렇지 않으면 예기치 않은 동작이 발생할 수 있습니다."
       dismiss: "무시"
-    bootstrap_mode_enabled:
-      other: "신규 사이트를 편리하게 출시할 수 있도록 부트스트랩 모드로 구동합니다. 모든 신규 사용자는 신뢰 레벨 1이 부여되며 매일 요약 이메일을 받게 됩니다. %{count}명의 사용자가 가입하면 이 기능은 자동으로 비활성화됩니다."
-    bootstrap_mode_disabled: "부트스트랩 모드가 24시간 내에 해제됩니다."
-    bootstrap_invite_button_title: "초대장 보내기"
-    bootstrap_wizard_link_title: "설정 마법사 완료"
     themes:
       default_description: "디폴트"
       broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
@@ -311,7 +306,6 @@ ko:
       new_topic: "새 주제 초안"
       new_private_message: "새 개인 메시지 초안"
       abandon:
-        confirm: "이 주제에 대한 초안이 있습니다. 어떻게 진행할까요?"
         yes_value: "버리기"
         no_value: "편집 재개"
     topic_count_categories:
@@ -478,10 +472,14 @@ ko:
       statuses:
         pending:
           title: "보류 중"
+        approved:
+          title: "승인됨"
+        rejected:
+          title: "거부됨"
         reviewed:
-          title: "(모두 검토됨)"
+          title: "모두 검토됨"
         all:
-          title: "(모두)"
+          title: "모두"
       context_question:
         delimiter: "또는"
       types:
@@ -3521,9 +3519,12 @@ ko:
           save: "저장"
           delete: "삭제하기"
           links:
-            icon: "아이콘"
-            name: "그룹명"
-            value: "링크"
+            icon:
+              label: "아이콘"
+            name:
+              label: "그룹명"
+            value:
+              label: "링크"
         about:
           header_link_text: "소개"
         messages:
@@ -4529,14 +4530,8 @@ ko:
           silence: "차단"
           link: "링크"
         action_descriptions:
-          block: "이 단어가 포함된 게시물이 작성되지 않도록 합니다. 사용자가 게시물을 제출하려고 하면 오류 메시지가 표시됩니다."
-          censor: "이 단어가 포함된 게시물을 허용하되, 단어를 문자로 대체하여 검열된 단어를 숨깁니다."
-          require_approval: "이 단어가 포함된 게시물이 표시되려면 운영진의 승인이 필요합니다."
-          flag: "이 단어가 포함된 게시물을 허용하지만 운영자가 검토할 수 있도록 부적절 항목으로 신고합니다."
-          replace: "게시물의 단어를 다른 단어로 대체"
-          tag: "첫 게시물을 기반으로 주제에 자동으로 태그 지정"
-          silence: "이 단어가 포함된 사용자의 첫 게시물은 운영진의 승인을 받아야 표시될 수 있으며 해당 사용자는 자동으로 차단됩니다."
-          link: "게시물의 단어를 링크로 대체"
+          replace: "게시물의 단어를 다른 단어로 바꾸기."
+          link: "게시물의 단어를 링크로 바꾸기."
         form:
           label: "단어 또는 구문 포함"
           placeholder: "단어 또는 구문 입력(*는 와일드카드)"

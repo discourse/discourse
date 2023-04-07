@@ -2,7 +2,7 @@
   class={{concat-class
     "chat-live-pane"
     (if this.loading "loading")
-    (if this.sendingLoading "sending-loading")
+    (if this.chatChannelPane.sendingLoading "sending-loading")
     (unless this.loadedOnce "not-loaded-once")
   }}
   {{did-insert this.setupListeners}}
@@ -23,51 +23,26 @@
 
   <ChatMentionWarnings />
 
-  <div class="chat-message-actions-mobile-anchor"></div>
-
-  <div
-    class={{concat-class
-      "chat-message-emoji-picker-anchor"
-      (if
-        (and
-          this.chatEmojiPickerManager.opened
-          (eq this.chatEmojiPickerManager.context "chat-message")
-        )
-        "-opened"
-      )
-    }}
-  ></div>
-
   <div
     class="chat-messages-scroll chat-messages-container"
     {{on "scroll" this.computeScrollState passive=true}}
-    {{chat/on-throttled-scroll this.resetIdle (hash delay=500)}}
-    {{chat/on-throttled-scroll this.computeArrow (hash delay=150)}}
+    {{chat/on-scroll this.resetIdle (hash delay=500)}}
+    {{chat/on-scroll this.computeArrow (hash delay=150)}}
+    {{did-insert this.setScrollable}}
   >
-    <div class="chat-message-actions-desktop-anchor"></div>
     <div
       class="chat-messages-container"
-      {{chat/did-mutate-childlist this.computeDatesSeparators}}
+      {{chat/on-resize this.didResizePane (hash delay=10)}}
     >
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
             @message={{message}}
-            @canInteractWithChat={{this.canInteractWithChat}}
             @channel={{@channel}}
-            @setReplyTo={{this.setReplyTo}}
-            @replyMessageClicked={{this.replyMessageClicked}}
-            @editButtonClicked={{this.editButtonClicked}}
-            @selectingMessages={{this.selectingMessages}}
-            @onStartSelectingMessages={{this.onStartSelectingMessages}}
-            @onSelectMessage={{this.onSelectMessage}}
-            @bulkSelectMessages={{this.bulkSelectMessages}}
-            @isHovered={{eq message.id this.hoveredMessageId}}
-            @onHoverMessage={{this.onHoverMessage}}
             @resendStagedMessage={{this.resendStagedMessage}}
             @messageDidEnterViewport={{this.messageDidEnterViewport}}
             @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
-            @forceRendering={{this.forceRendering}}
+            @context="channel"
           />
         {{/each}}
       {{else}}
@@ -75,7 +50,8 @@
       {{/if}}
     </div>
 
-    {{#if (and this.loadedOnce (not @channel.canLoadMorePast))}}
+    {{! at bottom even if shown at top due to column-reverse  }}
+    {{#if (and this.loadedOnce (not @channel.messagesManager.canLoadMorePast))}}
       <div class="all-loaded-message">
         {{i18n "chat.all_loaded"}}
       </div>
@@ -85,30 +61,28 @@
   <ChatScrollToBottomArrow
     @scrollToBottom={{this.scrollToLatestMessage}}
     @hasNewMessages={{this.hasNewMessages}}
-    @show={{or this.needsArrow @channel.canLoadMoreFuture}}
+    @show={{or this.needsArrow @channel.messagesManager.canLoadMoreFuture}}
     @channel={{@channel}}
   />
 
-  {{#if this.selectingMessages}}
+  {{#if this.chatChannelPane.selectingMessages}}
     <ChatSelectionManager
-      @selectedMessageIds={{this.selectedMessageIds}}
+      @selectedMessageIds={{this.chatChannelPane.selectedMessageIds}}
       @chatChannel={{@channel}}
-      @cancelSelecting={{this.cancelSelecting}}
+      @cancelSelecting={{action
+        this.chatChannelPane.cancelSelecting
+        @channel.selectedMessages
+      }}
+      @context="channel"
     />
   {{else}}
     {{#if (or @channel.isDraft @channel.isFollowing)}}
       <ChatComposer
-        @canInteractWithChat={{this.canInteractWithChat}}
         @sendMessage={{this.sendMessage}}
-        @editMessage={{this.editMessage}}
-        @setReplyTo={{this.setReplyTo}}
-        @loading={{this.sendingLoading}}
-        @editingMessage={{readonly this.editingMessage}}
-        @onCancelEditing={{this.cancelEditing}}
-        @setInReplyToMsg={{this.setInReplyToMsg}}
-        @onEditLastMessageRequested={{this.editLastMessageRequested}}
-        @onValueChange={{this.composerValueChanged}}
         @chatChannel={{@channel}}
+        @composerService={{this.chatChannelComposer}}
+        @paneService={{this.chatChannelPane}}
+        @context="channel"
       />
     {{else}}
       <ChatChannelPreviewCard @channel={{@channel}} />

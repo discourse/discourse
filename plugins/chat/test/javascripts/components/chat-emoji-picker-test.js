@@ -68,7 +68,7 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
     this.chatEmojiPickerManager = this.container.lookup(
       "service:chat-emoji-picker-manager"
     );
-    this.chatEmojiPickerManager.startFromComposer(() => {});
+    this.chatEmojiPickerManager.open(() => {});
     this.chatEmojiPickerManager.addVisibleSections([
       "smileys_&_emotion",
       "people_&_body",
@@ -164,10 +164,13 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
 
   test("When selecting an emoji", async function (assert) {
     let selection;
-    this.chatEmojiPickerManager.didSelectEmoji = (emoji) => {
+    this.didSelectEmoji = (emoji) => {
       selection = emoji;
     };
-    await render(hbs`<ChatEmojiPicker />`);
+
+    await render(
+      hbs`<ChatEmojiPicker @didSelectEmoji={{this.didSelectEmoji}} />`
+    );
     await click('img.emoji[data-emoji="grinning"]');
 
     assert.strictEqual(selection, "grinning");
@@ -241,10 +244,13 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
 
   test("When selecting a toned an emoji", async function (assert) {
     let selection;
-    this.chatEmojiPickerManager.didSelectEmoji = (emoji) => {
+    this.didSelectEmoji = (emoji) => {
       selection = emoji;
     };
-    await render(hbs`<ChatEmojiPicker />`);
+
+    await render(
+      hbs`<ChatEmojiPicker @didSelectEmoji={{this.didSelectEmoji}} />`
+    );
     this.emojiReactionStore.diversity = 1;
     await click('img.emoji[data-emoji="man_rowing_boat"]');
 

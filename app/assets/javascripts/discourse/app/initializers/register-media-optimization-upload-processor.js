@@ -7,7 +7,7 @@ export default {
 
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
-    const capabilities = container.lookup("capabilities:main");
+    const capabilities = container.lookup("service:capabilities");
 
     if (siteSettings.composer_media_optimization_image_enabled) {
       // NOTE: There are various performance issues with the Canvas

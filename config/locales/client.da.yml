@@ -162,11 +162,6 @@ da:
     software_update_prompt:
       message: "Vi har opdateret dette websted, <span>genindlæs venligst siden</span>, ellers vil du kunne opleve uventet opførsel eller begrændset funktionalitet."
       dismiss: "Ignorer Alle"
-    bootstrap_mode_enabled:
-      one: "For at gøre lanceringen af dit nye forum lettere er du i \"bootstrap-tilstand\". Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{count} bruger er tilsluttet."
-      other: "For at gøre lanceringen af dit nye forum lettere er du i bootstrap-tilstand. Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{count} brugere er tilsluttet."
-    bootstrap_mode_disabled: "Bootstrap-tilstand deaktiveres inden for 24 timer."
-    bootstrap_invite_button_title: "Send Invitationer"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Dit websted fungerer muligvis ikke, fordi et tema/en komponent har fejl."
@@ -319,7 +314,6 @@ da:
       new_topic: "Nyt emne-kladde"
       new_private_message: "Ny personlig meddelelseskladde"
       abandon:
-        confirm: "Du har et udkast i gang for dette emne. Hvad vil du gerne gøre med det?"
         yes_value: "Kassér"
         no_value: "Genoptag redigering"
     topic_count_categories:
@@ -497,10 +491,14 @@ da:
       statuses:
         pending:
           title: "Afventende"
+        approved:
+          title: "Godkendt"
+        rejected:
+          title: "Afvist"
         reviewed:
-          title: "(alle gennemgåede)"
+          title: "Alle gennemgåede"
         all:
-          title: "(alting)"
+          title: "Alting"
       context_question:
         delimiter: "eller"
       types:
@@ -3585,9 +3583,12 @@ da:
           save: "Gem"
           delete: "Slet"
           links:
-            icon: "Ikon"
-            name: "Navn"
-            value: "Link"
+            icon:
+              label: "Ikon"
+            name:
+              label: "Navn"
+            value:
+              label: "Link"
         about:
           header_link_text: "Om"
         messages:
@@ -4577,13 +4578,8 @@ da:
           silence: "Mådehold (silence)"
           link: "Link"
         action_descriptions:
-          block: "Undgå, at indlæg, der indeholder disse ord, bliver sendt. Brugeren vil se en fejlmeddelelse, når de prøver at indsende deres post."
-          censor: "Tillad indlæg, der indeholder disse ord, men erstat dem med tegn, der skjuler de censurerede ord."
-          require_approval: "Indlæg, der indeholder disse ord, kræver godkendelse af hjælperteam, før de kan ses."
-          flag: "Tillad indlæg, der indeholder disse ord, men markér dem som upassende, så moderatorer kan gennemgå dem."
-          replace: "Erstat ord i indlæg med andre ord"
-          tag: "Mærk automatisk emner baseret på første indlæg"
-          link: "Erstat ord i indlæg med links"
+          replace: "Erstat ord i indlæg med andre ord."
+          link: "Erstat ord i indlæg med links."
         form:
           placeholder: "Indtast ord eller sætning (* er et jokertegn)"
           placeholder_regexp: "almindelig udtryk"

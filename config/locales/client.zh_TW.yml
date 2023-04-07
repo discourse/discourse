@@ -156,11 +156,6 @@ zh_TW:
     software_update_prompt:
       message: "我們更新了這個網站， <span>請重新整理</span>，否則您可能會遇到預期之外的狀況。"
       dismiss: "忽略"
-    bootstrap_mode_enabled:
-      other: "為了讓您更輕鬆地建設網站，您正處於初始模式。將會自動授予所有新註冊的使用者信任等級 1，並自動啟用每日摘要電子郵件。該功能將於 %{count} 個使用者註冊後自動關閉。"
-    bootstrap_mode_disabled: "初始模式將會在 24 小時後自動禁用。"
-    bootstrap_invite_button_title: "送出邀請"
-    bootstrap_wizard_link_title: "完成安裝精靈"
     themes:
       default_description: "預設"
       broken_theme_alert: "您的網站可能無法運行，因為主題/組件有錯誤。"
@@ -311,7 +306,6 @@ zh_TW:
       new_topic: "新話題草稿"
       new_private_message: "新個人訊息草稿"
       abandon:
-        confirm: "您有針對此主題的草稿。您想用它做什麼？"
         yes_value: "捨棄"
         no_value: "繼續編輯"
     topic_count_categories:
@@ -472,8 +466,12 @@ zh_TW:
       statuses:
         pending:
           title: "申請中"
+        approved:
+          title: "已同意"
+        rejected:
+          title: "被拒絕"
         all:
-          title: "(所有)"
+          title: "所有"
       context_question:
         delimiter: "或"
       types:
@@ -2872,8 +2870,10 @@ zh_TW:
           save: "保存"
           delete: "刪除"
           links:
-            icon: "圖示"
-            name: "名字"
+            icon:
+              label: "圖示"
+            name:
+              label: "姓名"
         about:
           header_link_text: "關於"
         messages:
@@ -3675,11 +3675,6 @@ zh_TW:
           flag: "檢舉"
           replace: "取代"
           silence: "靜音"
-        action_descriptions:
-          block: "防止含有這些文字的貼文被發佈，當使用者嘗試發送貼文時，會看見錯誤訊息。"
-          censor: "允許貼文含有這些文字，但以符碼來取代被禁用的文字。"
-          require_approval: "含有這些文字的貼文需要經過管理員審查才能被發佈。"
-          flag: "允許貼文含有這些文字，但標註成不當的用字以讓管理員能審核。"
         form:
           placeholder_regexp: "正規表示法"
           link_placeholder: "https://example.com"

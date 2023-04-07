@@ -288,20 +288,18 @@ module TopicGuardian
     topic&.access_topic_via_group.present? && authenticated?
   end
 
-  def filter_allowed_categories(records)
+  def filter_allowed_categories(records, category_id_column: "topics.category_id")
     return records if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
 
     records =
-      (
-        if allowed_category_ids.size == 0
-          records.where("topics.category_id IS NULL")
-        else
-          records.where(
-            "topics.category_id IS NULL or topics.category_id IN (?)",
-            allowed_category_ids,
-          )
-        end
-      )
+      if allowed_category_ids.size == 0
+        records.where("#{category_id_column} IS NULL")
+      else
+        records.where(
+          "#{category_id_column} IS NULL or #{category_id_column} IN (?)",
+          allowed_category_ids,
+        )
+      end
 
     records.references(:categories)
   end

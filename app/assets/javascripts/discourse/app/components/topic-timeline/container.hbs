@@ -105,13 +105,9 @@
     </div>
 
     <div class="timeline-date-wrapper">
-      <a
-        class="now-date"
-        onClick={{this.updatePercentage}}
-        title={{this.nowDate}}
-      >
+      <a class="now-date" onClick={{this.updatePercentage}}>
         <span>
-          {{this.nowDate}}
+          {{age-with-tooltip this.nowDate this.nowDateOptions}}
         </span>
       </a>
     </div>

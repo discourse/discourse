@@ -27,7 +27,7 @@ class ContentSecurityPolicy
 
     def theme_extensions(theme_id)
       key = "theme_extensions_#{theme_id}"
-      cache[key] ||= find_theme_extensions(theme_id)
+      cache.defer_get_set(key) { find_theme_extensions(theme_id) }
     end
 
     def clear_theme_extensions_cache!

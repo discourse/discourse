@@ -15,7 +15,7 @@ import {
 import I18n from "I18n";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/widgets/search-menu";
 
 acceptance("Search - Anonymous", function (needs) {
@@ -114,8 +114,7 @@ acceptance("Search - Anonymous", function (needs) {
     );
   });
 
-  // TODO: This feature doesn't work currently (/t/69760)
-  skip("search button toggles search menu", async function (assert) {
+  test("search button toggles search menu", async function (assert) {
     await visit("/");
 
     await click("#search-button");
@@ -139,7 +138,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.strictEqual(
       queryAll(contextSelector)[0].firstChild.textContent.trim(),
-      `${I18n.t("search.in")} test`,
+      `${I18n.t("search.in")} important`,
       "contextual tag search is first available option with no term"
     );
 
@@ -147,7 +146,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.strictEqual(
       queryAll(contextSelector)[1].firstChild.textContent.trim(),
-      `smth ${I18n.t("search.in")} test`,
+      `smth ${I18n.t("search.in")} important`,
       "tag-scoped search is second available option"
     );
 

@@ -415,6 +415,10 @@ module ApplicationHelper
       end
   end
 
+  def waving_hand_url
+    UrlHelper.cook_url(Emoji.url_for(":wave:t#{rand(2..6)}:"))
+  end
+
   def login_path
     "#{Discourse.base_path}/login"
   end

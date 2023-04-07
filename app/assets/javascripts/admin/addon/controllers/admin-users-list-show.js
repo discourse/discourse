@@ -1,4 +1,6 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 import AdminUser from "admin/models/admin-user";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
@@ -7,29 +9,28 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 
-export default Controller.extend(CanCheckEmails, {
-  model: null,
-  query: null,
-  order: null,
-  asc: null,
-  showEmails: false,
-  refreshing: false,
-  listFilter: null,
-  selectAll: false,
-  searchHint: i18n("search_hint"),
+export default class AdminUsersListShowController extends Controller.extend(
+  CanCheckEmails
+) {
+  model = null;
+  query = null;
+  order = null;
+  asc = null;
+  showEmails = false;
+  refreshing = false;
+  listFilter = null;
+  selectAll = false;
 
-  init() {
-    this._super(...arguments);
+  @i18n("search_hint") searchHint;
 
-    this._page = 1;
-    this._results = [];
-    this._canLoadMore = true;
-  },
+  _page = 1;
+  _results = [];
+  _canLoadMore = true;
 
   @discourseComputed("query")
   title(query) {
     return I18n.t("admin.users.titles." + query);
-  },
+  }
 
   @discourseComputed("showEmails")
   columnCount(showEmails) {
@@ -44,19 +45,19 @@ export default Controller.extend(CanCheckEmails, {
     }
 
     return colCount;
-  },
+  }
 
   @observes("listFilter")
   _filterUsers() {
     discourseDebounce(this, this.resetFilters, INPUT_DELAY);
-  },
+  }
 
   resetFilters() {
     this._page = 1;
     this._results = [];
     this._canLoadMore = true;
     this._refreshUsers();
-  },
+  }
 
   _refreshUsers() {
     if (!this._canLoadMore) {
@@ -84,17 +85,17 @@ export default Controller.extend(CanCheckEmails, {
       .finally(() => {
         this.set("refreshing", false);
       });
-  },
+  }
 
-  actions: {
-    loadMore() {
-      this._page += 1;
-      this._refreshUsers();
-    },
+  @action
+  loadMore() {
+    this._page += 1;
+    this._refreshUsers();
+  }
 
-    toggleEmailVisibility() {
-      this.toggleProperty("showEmails");
-      this.resetFilters();
-    },
-  },
-});
+  @action
+  toggleEmailVisibility() {
+    this.toggleProperty("showEmails");
+    this.resetFilters();
+  }
+}

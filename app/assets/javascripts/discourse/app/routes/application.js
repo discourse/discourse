@@ -256,7 +256,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
   renderTemplate() {
     this.render("application");
-    this.render("user-card", { into: "application", outlet: "user-card" });
     this.render("modal", { into: "application", outlet: "modal" });
     this.render("composer", { into: "application", outlet: "composer" });
   },

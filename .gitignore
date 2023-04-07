@@ -38,7 +38,7 @@
 !/plugins/discourse-local-dates
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
-!/plugins/lazy-yt/
+!/plugins/discourse-lazy-videos/
 !/plugins/chat/
 !/plugins/poll/
 !/plugins/styleguide
@@ -57,6 +57,10 @@
 dist
 node_modules
 yarn-error.log
+
+# Linting artifacts
+.eslintcache
+/lint-progress/
 
 # Auto-generated plugin JS assets
 /app/assets/javascripts/plugins/*

@@ -1,13 +1,13 @@
-import RESTAdapter from "discourse/adapters/rest";
+import RestAdapter from "discourse/adapters/rest";
 
-export default RESTAdapter.extend({
-  jsonMode: true,
+export default class ApiKey extends RestAdapter {
+  jsonMode = true;
 
   basePath() {
     return "/admin/api/";
-  },
+  }
 
   apiNameFor() {
     return "key";
-  },
-});
+  }
+}

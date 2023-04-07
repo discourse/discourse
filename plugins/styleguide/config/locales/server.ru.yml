@@ -6,5 +6,5 @@
 
 ru:
   site_settings:
-    styleguide_enabled: 'Включить путь `/styleguide`, чтобы облегчить стилизацию Discourse'
-    styleguide_admin_only: "Ограничить видимость styleguide только администраторами"
+    styleguide_enabled: 'Включить путь `/styleguide` для упрощения применения стилей в Discourse'
+    styleguide_admin_only: "Показывать руководство по стилю только администраторам"

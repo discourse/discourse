@@ -153,7 +153,6 @@ th:
     software_update_prompt:
       message: "เราอัปเดตไซต์นี้เมื่อสักครู่ โปรด<span>รีเฟรช</span>หน้านี้ หรือคุณอาจเกิดเหตุการณ์ที่ไม่ตรงตามต้องการ"
       dismiss: "ซ่อน"
-    bootstrap_invite_button_title: "ส่งคำเชิญ"
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
@@ -399,10 +398,14 @@ th:
       statuses:
         pending:
           title: "อยู่ระหว่างการพิจารณา"
+        approved:
+          title: "อนุมัติ"
+        rejected:
+          title: "ปฏิเสธ"
         reviewed:
-          title: "(ถูกรีวิวทั้งหมด)"
+          title: "ถูกรีวิวทั้งหมด"
         all:
-          title: "(ทุกสิ่ง)"
+          title: "ทุกสิ่ง"
       context_question:
         delimiter: "หรือ"
       types:
@@ -2429,9 +2432,12 @@ th:
           save: "บันทึก"
           delete: "ลบ"
           links:
-            icon: "ไอคอน"
-            name: "ชื่อ"
-            value: "ลิงก์"
+            icon:
+              label: "ไอคอน"
+            name:
+              label: "ชื่อ"
+            value:
+              label: "ลิงก์"
         about:
           header_link_text: "เกี่ยวกับ"
         messages:

@@ -159,6 +159,22 @@ jobs:
           path: tmp/turbo_rspec_runtime.log
           key: rspec-runtime-backend-core
 
+      - name: Run Zeitwerk check
+        if: matrix.build_type == 'backend'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
+        run: |
+          if ! bin/rails zeitwerk:check --trace; then
+            echo
+            echo "---------------------------------------------"
+            echo
+            echo "::error::'bin/rails zeitwerk:check' failed - the app will fail to boot with 'eager_load=true' (e.g. in production)."
+            echo "To reproduce locally, run 'bin/rails zeitwerk:check'."
+            echo "Alternatively, you can run your local server/tests with the 'DISCOURSE_ZEITWERK_EAGER_LOAD=1' environment variable."
+            echo
+            exit 1
+          fi
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --verbose
@@ -182,11 +198,11 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: PARALLEL_TEST_PROCESSORS=1 bin/turbo_rspec --verbose spec/system
+        run: bin/rspec spec/system -f d
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=1 bin/turbo_rspec --verbose plugins/*/spec/system
+        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
