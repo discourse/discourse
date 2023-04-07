@@ -88,6 +88,9 @@
     top: 50%;
     transform: translate(-50%, -50%);
     transition: 150ms;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    max-width: 30%;
 
     // Default play button
     background: svg-uri(
