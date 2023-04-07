@@ -1940,4 +1940,29 @@ RSpec.describe TopicQuery do
       ).to contain_exactly(category.topic_id, subcategory.topic_id, subcategory_regular_topic.id)
     end
   end
+
+  describe "with topic_query_create_list_topics modifier" do
+    let!(:topic1) { Fabricate(:topic, created_at: 3.days.ago, bumped_at: 1.hour.ago) }
+    let!(:topic2) { Fabricate(:topic, created_at: 2.days.ago, bumped_at: 3.hour.ago) }
+
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "allows changing" do
+      original_topic_query = TopicQuery.new(user)
+
+      Plugin::Instance
+        .new
+        .register_modifier(:topic_query_create_list_topics) do |topics, options, topic_query|
+          expect(topic_query).to eq(topic_query)
+          topic_query.options[:order] = "created"
+          topics
+        end
+
+      expect(original_topic_query.list_latest.topics.map(&:id)).to eq([topic1, topic2].map(&:id))
+
+      DiscoursePluginRegistry.clear_modifiers!
+
+      expect(original_topic_query.list_latest.topics.map(&:id)).to eq([topic2, topic1].map(&:id))
+    end
+  end
 end
