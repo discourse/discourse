@@ -191,14 +191,12 @@ export default Component.extend(TextareaTextManipulation, {
       this.paneService?.editLastMessageRequested();
     }
 
-    if (event.keyCode === 27) {
-      // keyCode for 'Escape'
+    if (event.key === "Escape") {
       if (this.composerService?.replyToMsg) {
         this.set("value", "");
         this.composerService?.setReplyTo(null);
         return false;
       } else if (this.composerService?.editingMessage) {
-        this.set("value", "");
         this.cancelEditing();
         return false;
       } else {
@@ -719,6 +717,7 @@ export default Component.extend(TextareaTextManipulation, {
   @action
   cancelEditing() {
     this.composerService?.cancelEditing();
+    this.set("value", "");
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
   },
 
