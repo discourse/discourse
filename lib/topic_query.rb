@@ -460,6 +460,8 @@ class TopicQuery
     options[:filter] ||= filter
     topics ||= default_results(options)
     topics = yield(topics) if block_given?
+    topics =
+      DiscoursePluginRegistry.apply_modifier(:topic_query_create_list_topics, topics, options, self)
 
     options = options.merge(@options)
     if %w[activity default].include?(options[:order] || "activity") && !options[:unordered] &&
