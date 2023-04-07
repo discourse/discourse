@@ -378,10 +378,16 @@ html.composer-open {
     }
   }
 
-  #draft-status .d-icon-user-edit {
-    color: var(--danger);
-    font-size: 20px;
-    vertical-align: -5.5px;
+  #draft-status {
+    margin-left: auto;
+    .d-icon-user-edit {
+      color: var(--danger);
+      font-size: 20px;
+      vertical-align: -5.5px;
+    }
+    + .btn-mini-toggle {
+      margin-left: 0;
+    }
   }
 
   #file-uploader {
