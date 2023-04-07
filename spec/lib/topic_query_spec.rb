@@ -1942,8 +1942,8 @@ RSpec.describe TopicQuery do
   end
 
   describe "with topic_query_create_list_topics modifier" do
-    let!(:topic1) { Fabricate(:topic, created_at: 3.days.ago, bumped_at: 1.hour.ago) }
-    let!(:topic2) { Fabricate(:topic, created_at: 2.days.ago, bumped_at: 3.hour.ago) }
+    fab!(:topic1) { Fabricate(:topic, created_at: 3.days.ago, bumped_at: 1.hour.ago) }
+    fab!(:topic2) { Fabricate(:topic, created_at: 2.days.ago, bumped_at: 3.hour.ago) }
 
     after { DiscoursePluginRegistry.clear_modifiers! }
 
