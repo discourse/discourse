@@ -216,6 +216,12 @@
         margin: 0;
         padding: 0 0.5em;
       }
+      img.emoji {
+        height: 1em;
+        width: 1em;
+        padding-top: 0.2em;
+        margin-right: 0.5em;
+      }
       .d-icon {
         padding-top: 0;
       }
@@ -503,13 +509,6 @@
       align-self: flex-start;
       width: 100%;
       .d-icon {
-        padding-top: 0.2em;
-        margin-right: 0.5em;
-      }
-
-      img.emoji {
-        height: 1em;
-        width: 1em;
         padding-top: 0.2em;
         margin-right: 0.5em;
       }
