@@ -337,7 +337,8 @@ html.composer-open {
   .save-or-cancel {
     align-items: center;
     display: flex;
-    flex: 1 1 auto;
+    flex: 0 1 auto;
+    margin-right: 1em;
 
     .btn-primary {
       flex: 0 0 auto;
@@ -357,32 +358,30 @@ html.composer-open {
         color: var(--danger);
       }
     }
-
-    #draft-status,
-    #file-uploading {
-      margin-left: 25px;
-    }
-    #file-uploading {
-      display: flex;
-      align-items: center;
-      a {
-        margin-left: 5px;
-        color: var(--primary-high);
-      }
-      .spinner {
-        margin-right: 5px;
-      }
-    }
-    #draft-status .d-icon-user-edit {
-      color: var(--danger);
-      font-size: 20px;
-      vertical-align: -5.5px;
-    }
   }
 
   #draft-status,
   #file-uploading {
     color: var(--primary-high);
+    margin-right: 0.5em;
+  }
+
+  #file-uploading {
+    display: flex;
+    align-items: center;
+    a {
+      margin-left: 0.33em;
+      color: var(--primary-high);
+    }
+    .spinner {
+      margin-right: 0.33em;
+    }
+  }
+
+  #draft-status .d-icon-user-edit {
+    color: var(--danger);
+    font-size: 20px;
+    vertical-align: -5.5px;
   }
 
   #file-uploader {
@@ -595,7 +594,7 @@ body:not(.ios-safari-composer-hacks) {
 }
 
 .toggle-preview {
-  margin-left: 8px;
+  margin-left: auto;
   transition: all 0.33s ease-out;
 
   &.active {
