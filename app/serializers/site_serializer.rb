@@ -41,6 +41,7 @@ class SiteSerializer < ApplicationSerializer
     :anonymous_default_sidebar_tags,
     :anonymous_sidebar_sections,
     :whispers_allowed_groups_names,
+    :denied_emojis,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -278,6 +279,10 @@ class SiteSerializer < ApplicationSerializer
 
   def include_whispers_allowed_groups_names?
     scope.can_see_whispers?
+  end
+
+  def denied_emojis
+    Emoji.denied
   end
 
   private
