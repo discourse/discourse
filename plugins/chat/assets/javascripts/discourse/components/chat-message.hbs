@@ -64,6 +64,7 @@
           (if this.hideUserInfo "user-info-hidden")
           (if @message.error "errored")
           (if @message.bookmark "chat-message-bookmarked")
+          (if (eq @message.id this.chat.activeMessage.model.id) "is-active")
         }}
       >
         {{#unless this.hideReplyToInfo}}
