@@ -390,7 +390,7 @@ export default class ChatEmojiPicker extends Component {
         .scrollIntoView({
           behavior: "auto",
           block: "start",
-          inline: "nearest",
+          inline: "start",
         });
 
       later(() => {
