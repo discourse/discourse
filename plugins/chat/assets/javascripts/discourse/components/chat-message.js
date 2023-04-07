@@ -212,27 +212,43 @@ export default class ChatMessage extends Component {
 
   get hideUserInfo() {
     const message = this.args.message;
-    const previousMessage = message?.previousMessage;
+
+    const previousMessage = message.previousMessage;
 
     if (!previousMessage) {
       return false;
     }
 
     // this is a micro optimization to avoid layout changes when we load more messages
-    if (message?.firstOfResults) {
+    if (message.firstOfResults) {
       return false;
     }
 
-    return (
-      !message?.chatWebhookEvent &&
-      (!message?.inReplyTo ||
-        message?.inReplyTo?.user?.id !== message?.user?.id) &&
-      !message?.previousMessage?.deletedAt &&
+    if (message.chatWebhookEvent) {
+      return false;
+    }
+
+    if (previousMessage.deletedAt) {
+      return false;
+    }
+
+    if (
       Math.abs(
-        new Date(message?.createdAt) - new Date(previousMessage?.createdAt)
-      ) < 300000 && // If the time between messages is over 5 minutes, break.
-      message?.user?.id === message?.previousMessage?.user?.id
-    );
+        new Date(message.createdAt) - new Date(previousMessage.createdAt)
+      ) > 300000
+    ) {
+      return false;
+    }
+
+    if (message.inReplyTo) {
+      if (message.inReplyTo?.id === previousMessage.id) {
+        return message.user?.id === previousMessage.user?.id;
+      } else {
+        return false;
+      }
+    }
+
+    return message.user?.id === previousMessage.user?.id;
   }
 
   get hideReplyToInfo() {
