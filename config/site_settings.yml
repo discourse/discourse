@@ -301,6 +301,7 @@ basic:
     default: 50
     min: 1
   top_page_default_timeframe:
+    client: true
     default: "yearly"
     type: enum
     choices:
