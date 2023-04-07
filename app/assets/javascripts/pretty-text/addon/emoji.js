@@ -88,17 +88,9 @@ export function performEmojiUnescape(string, opts) {
       classes += ` ${opts.class}`;
     }
 
-    if (opts.emojiDenyList) {
-      let deniedEmojiList = opts.emojiDenyList.split("|");
-      deniedEmojiList.forEach((emoji) => {
-        if (aliases[emoji]) {
-          aliases[emoji].forEach((alias) => deniedEmojiList.push(alias));
-        }
-      });
-
-      if (deniedEmojiList.includes(emojiVal)) {
-        return "";
-      }
+    // hides denied emojis and aliases from the emoji picker
+    if (opts.emojiDenyList?.includes(emojiVal)) {
+      return "";
     }
 
     const isReplacable =
