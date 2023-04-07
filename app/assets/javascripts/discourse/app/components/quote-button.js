@@ -403,7 +403,7 @@ export default Component.extend(KeyEnterEscape, {
             }
           });
 
-          this?.editPost(postModel);
+          this.editPost(postModel);
 
           afterTransition(document.querySelector("#reply-control"), () => {
             const textarea = document.querySelector(".d-editor-input");
