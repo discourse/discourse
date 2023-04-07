@@ -1,12 +1,17 @@
-/* global Babel:true Terser:true */
-
 // This is executed in mini_racer to provide the JS logic for lib/discourse_js_processor.rb
 
 const HTMLBarsInlinePrecompile =
   require("babel-plugin-ember-template-compilation").default;
-const colocatedBabelPlugin = require("colocated-babel-plugin").default;
-const precompile = require("ember-template-compiler").precompile;
+const colocatedBabelPlugin = require("ember-cli-htmlbars/lib/colocated-babel-plugin");
+const precompile =
+  require("ember-source/dist/ember-template-compiler").precompile;
 const Handlebars = require("handlebars").default;
+const Babel = require("@babel/standalone");
+const Terser = require("terser");
+const RawHandlebars =
+  require("discourse-common/addon/lib/raw-handlebars").default;
+const WidgetHbsCompiler =
+  require("./discourse-widget-hbs/lib/widget-hbs-compiler").WidgetHbsCompiler;
 
 function manipulateAstNodeForTheme(node, themeId) {
   // Magically add theme id as the first param for each of these helpers)
@@ -53,7 +58,7 @@ function buildTemplateCompilerBabelPlugins({ themeId }) {
 
   return [
     colocatedBabelPlugin,
-    require("widget-hbs-compiler").WidgetHbsCompiler,
+    WidgetHbsCompiler,
     [
       HTMLBarsInlinePrecompile,
       {
@@ -77,7 +82,6 @@ function buildThemeRawHbsTemplateManipulatorPlugin(themeId) {
 
 exports.compileRawTemplate = function (source, themeId) {
   try {
-    const RawHandlebars = require("raw-handlebars").default;
     const plugins = [];
     if (themeId) {
       plugins.push(buildThemeRawHbsTemplateManipulatorPlugin(themeId));

@@ -66,3 +66,4 @@ openapi/*
 
 # Cached License Data Files
 /.licenses
+/app/assets/javascripts/gizmo-output.js
