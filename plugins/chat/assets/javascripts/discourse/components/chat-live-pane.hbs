@@ -24,7 +24,7 @@
   <ChatMentionWarnings />
 
   <div
-    class="chat-messages-scroll chat-messages-container"
+    class="chat-messages-scroll chat-messages-container popper-viewport"
     {{on "scroll" this.computeScrollState passive=true}}
     {{chat/on-scroll this.resetIdle (hash delay=500)}}
     {{chat/on-scroll this.computeArrow (hash delay=150)}}

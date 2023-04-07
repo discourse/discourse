@@ -40,22 +40,31 @@ export default class ChatMessageActionsDesktop extends Component {
     this.popper?.destroy();
 
     schedule("afterRender", () => {
-      this.popper = createPopper(
-        chatMessageContainer(this.message.id, this.context),
-        element,
-        {
-          placement: "top-end",
-          strategy: "fixed",
-          modifiers: [
-            { name: "hide", enabled: true },
-            { name: "eventListeners", options: { scroll: false } },
-            {
-              name: "offset",
-              options: { offset: [-2, MSG_ACTIONS_VERTICAL_PADDING] },
-            },
-          ],
-        }
+      const messageContainer = chatMessageContainer(
+        this.message.id,
+        this.context
       );
+
+      this.popper = createPopper(messageContainer, element, {
+        placement: "top-end",
+        strategy: "fixed",
+        modifiers: [
+          {
+            name: "flip",
+            enabled: true,
+            options: {
+              boundary: messageContainer.closest(".popper-viewport"),
+              fallbackPlacements: ["bottom-end"],
+            },
+          },
+          { name: "hide", enabled: true },
+          { name: "eventListeners", options: { scroll: false } },
+          {
+            name: "offset",
+            options: { offset: [-2, MSG_ACTIONS_VERTICAL_PADDING] },
+          },
+        ],
+      });
     });
   }
 
