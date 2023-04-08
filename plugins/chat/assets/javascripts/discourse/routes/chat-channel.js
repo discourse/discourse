@@ -10,13 +10,6 @@ export default class ChatChannelRoute extends DiscourseRoute {
 
   afterModel() {
     super.afterModel?.(...arguments);
-
-    // Clear messages of the previous channel
-    this.chat.activeChannel?.clearMessages();
-  }
-
-  @action
-  willTransition() {
     this.#closeThread();
   }
 
@@ -28,6 +21,7 @@ export default class ChatChannelRoute extends DiscourseRoute {
   @action
   deactivate() {
     this.chat.activeChannel = null;
+    this.#closeThread();
   }
 
   #closeThread() {
