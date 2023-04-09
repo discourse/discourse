@@ -68,6 +68,18 @@ RSpec.describe "Drawer", type: :system, js: true do
     end
   end
 
+  context "when clicking the drawer's header" do
+    it "collapses the drawer" do
+      visit("/")
+      chat_page.open_from_header
+      expect(page).to have_selector(".chat-drawer.is-expanded")
+
+      page.find(".chat-drawer-header").click
+
+      expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
+    end
+  end
+
   context "when going from drawer to full page" do
     fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:channel_2) { Fabricate(:chat_channel) }
