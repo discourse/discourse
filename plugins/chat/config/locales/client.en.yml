@@ -79,6 +79,7 @@ en:
       click_to_join: "Click here to view available channels."
       close: "Close"
       collapse: "Collapse Chat Drawer"
+      expand: "Expand Chat Drawer"
       confirm_flag: "Are you sure you want to flag %{username}'s message?"
       deleted: "A message was deleted. [view]"
       hidden: "A message was hidden. [view]"
