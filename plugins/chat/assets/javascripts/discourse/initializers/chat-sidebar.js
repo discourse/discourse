@@ -34,7 +34,6 @@ export default {
               return dasherize(this.channel.slugifiedTitle);
             }
 
-            @computed("chatService.activeChannel")
             get classNames() {
               const classes = [];
 
