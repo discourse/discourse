@@ -30,8 +30,6 @@ export default class Chat extends Service {
   @service chatChannelPane;
   @service chatChannelThreadPane;
 
-  @tracked activeChannel = null;
-
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
@@ -40,6 +38,19 @@ export default class Chat extends Service {
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
 
   @tracked _activeMessage = null;
+  @tracked _activeChannel = null;
+
+  get activeChannel() {
+    return this._activeChannel;
+  }
+
+  set activeChannel(channel) {
+    if (!channel) {
+      this._activeMessage = null;
+    }
+
+    this._activeChannel = channel;
+  }
 
   @computed("currentUser.staff", "currentUser.groups.[]")
   get userCanDirectMessage() {
