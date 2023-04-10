@@ -78,17 +78,8 @@ export default class Chat extends Service {
   }
 
   set activeMessage(hash) {
-    this.chatChannelPane.hoveredMessageId = null;
-    this.chatChannelThreadPane.hoveredMessageId = null;
-
     if (hash) {
       this._activeMessage = hash;
-
-      if (hash.context === MESSAGE_CONTEXT_THREAD) {
-        this.chatChannelThreadPane.hoveredMessageId = hash.model.id;
-      } else {
-        this.chatChannelPane.hoveredMessageId = hash.model.id;
-      }
     } else {
       this._activeMessage = null;
     }
