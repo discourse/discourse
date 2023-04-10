@@ -1597,5 +1597,9 @@ Discourse::Application.routes.draw do
     post "/sidebar_sections/reorder" => "sidebar_sections#reorder"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
+
+    ### PCC change ###
+    resources :voice_credits, only: [:update]
+    ### END of PCC change ###
   end
 end
