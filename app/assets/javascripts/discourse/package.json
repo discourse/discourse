@@ -75,7 +75,7 @@
     "ember-rfc176-data": "^0.3.18",
     "ember-source": "~3.28.11",
     "ember-test-selectors": "^6.0.0",
-    "eslint": "^8.37.0",
+    "eslint": "^8.38.0",
     "eslint-plugin-qunit": "^7.3.4",
     "handlebars": "^4.7.7",
     "html-entities": "^2.3.3",
