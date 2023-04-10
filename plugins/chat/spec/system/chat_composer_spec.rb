@@ -102,6 +102,17 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
       expect(find(".chat-composer-input").value).to eq(":grimacing:")
     end
+
+    it "removes denied emojis and aliases from insert emoji picker" do
+      SiteSetting.emoji_deny_list = "poop"
+
+      chat.visit_channel(channel_1)
+      channel.open_action_menu
+      channel.click_action_button("emoji")
+
+      expect(page).to have_no_selector("[data-emoji='poop']")
+      expect(page).to have_no_selector("[data-emoji='hankey']")
+    end
   end
 
   context "when adding an emoji through the autocomplete" do
