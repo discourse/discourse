@@ -34,6 +34,11 @@ RSpec.describe Emoji do
     it "should return a skin toned emoji" do
       expect(Emoji.lookup_unicode("blonde_woman:t6")).to eq("👱🏿‍♀️")
     end
+
+    it "should not return a fu emoji when the emoji in denied emoji list site setting" do
+      SiteSetting.emoji_deny_list = "fu"
+      expect(Emoji.lookup_unicode("fu")).not_to eq("🖕")
+    end
   end
 
   describe ".url_for" do
