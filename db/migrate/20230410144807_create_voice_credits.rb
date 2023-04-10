@@ -5,6 +5,7 @@ class CreateVoiceCredits < ActiveRecord::Migration[7.0]
     create_table :voice_credits do |t|
       t.integer :user_id, null: false
       t.integer :topic_id, null: false
+      t.integer :category_id, null: false
       t.integer :credits_allocated, null: false, default: 0
 
       t.timestamps

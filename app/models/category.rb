@@ -154,6 +154,10 @@ class Category < ActiveRecord::Base
 
   belongs_to :reviewable_by_group, class_name: "Group"
 
+  ### PCC change ###
+  has_many :voice_credits
+  ### END of PCC change ###
+
   scope :latest, -> { order("topic_count DESC") }
 
   scope :secured,

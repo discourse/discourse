@@ -9,6 +9,7 @@ class VoiceCreditsController < ApplicationController
         VoiceCredit.find_or_initialize_by(
           user_id: current_user.id,
           topic_id: voice_credit[:topic_id],
+          category_id: voice_credit[:category_id],
         ).update!(credits_allocated: voice_credit[:credits_allocated])
       end
     end
