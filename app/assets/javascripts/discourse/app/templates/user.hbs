@@ -22,11 +22,15 @@
         {{#if this.showStaffCounters}}
           <div class="staff-counters">
             {{#if this.model.number_of_flags_given}}
-              <div><span
-                  class="helpful-flags"
-                >{{this.model.number_of_flags_given}}</span>{{i18n
-                  "user.staff_counters.flags_given"
-                }}</div>
+              <div>
+                {{html-safe
+                  (i18n
+                    "user.staff_counters.flags_given"
+                    className="helpful-flags"
+                    count=this.model.number_of_flags_given
+                  )
+                }}
+              </div>
             {{/if}}
             {{#if this.model.number_of_flagged_posts}}
               <div>
