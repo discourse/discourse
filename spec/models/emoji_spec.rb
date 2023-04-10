@@ -35,7 +35,7 @@ RSpec.describe Emoji do
       expect(Emoji.lookup_unicode("blonde_woman:t6")).to eq("👱🏿‍♀️")
     end
 
-    it "should not return a fu emoji when the emoji in denied emoji list site setting" do
+    it "should not return a fu emoji when emoji is in emoji deny list site setting" do
       SiteSetting.emoji_deny_list = "fu"
       expect(Emoji.lookup_unicode("fu")).not_to eq("🖕")
     end
