@@ -29,17 +29,11 @@ class Emoji
   end
 
   def self.allowed
-    denied_emojis = denied
-    all.reject { |e| denied_emojis.include?(e.name) }
+    Discourse.cache.fetch(cache_key("allowed_emojis")) { load_allowed }
   end
 
   def self.denied
-    if SiteSetting.emoji_deny_list.present?
-      denied_emoji = SiteSetting.emoji_deny_list.split("|")
-      denied_emoji.concat(denied_emoji.flat_map { |e| Emoji.aliases[e] }.compact)
-    else
-      []
-    end
+    Discourse.cache.fetch(cache_key("denied_emojis")) { load_denied }
   end
 
   def self.aliases
@@ -128,7 +122,7 @@ class Emoji
   end
 
   def self.clear_cache
-    %w[custom standard translations all].each do |key|
+    %w[custom standard translations allowed denied all].each do |key|
       Discourse.cache.delete(cache_key("#{key}_emojis"))
     end
     global_emoji_cache.clear
@@ -162,6 +156,25 @@ class Emoji
 
   def self.load_standard
     db["emojis"].map { |e| Emoji.create_from_db_item(e) }.compact
+  end
+
+  def self.load_allowed
+    denied_emojis = denied
+
+    if denied_emojis.present?
+      all.reject { |e| denied_emojis.include?(e.name) }
+    else
+      all
+    end
+  end
+
+  def self.load_denied
+    if SiteSetting.emoji_deny_list.present?
+      denied_emoji = SiteSetting.emoji_deny_list.split("|")
+      if denied_emoji.size > 0
+        denied_emoji.concat(denied_emoji.flat_map { |e| Emoji.aliases[e] }.compact)
+      end
+    end
   end
 
   def self.load_custom
@@ -257,7 +270,7 @@ class Emoji
   end
 
   def self.lookup_unicode(name)
-    return "" if denied.include?(name)
+    return "" if denied&.include?(name)
 
     @reverse_map ||=
       begin
