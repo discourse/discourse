@@ -123,7 +123,7 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.pane.hoveredMessageId === this.args.message.id) {
+    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
       return;
     }
 
@@ -166,11 +166,12 @@ export default class ChatMessage extends Component {
       model: this.args.message,
       context: this.args.context,
     };
-    this.pane.hoveredMessageId = this.args.message.id;
   }
 
   @action
-  handleTouchStart() {
+  handleTouchStart(event) {
+    event.stopPropagation();
+
     // if zoomed don't track long press
     if (isZoomed()) {
       return;
@@ -188,12 +189,16 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleTouchMove() {
+  handleTouchMove(event) {
+    event.stopPropagation();
+
     cancel(this._isPressingHandler);
   }
 
   @action
-  handleTouchEnd() {
+  handleTouchEnd(event) {
+    event.stopPropagation();
+
     cancel(this._isPressingHandler);
   }
 
@@ -212,27 +217,43 @@ export default class ChatMessage extends Component {
 
   get hideUserInfo() {
     const message = this.args.message;
-    const previousMessage = message?.previousMessage;
+
+    const previousMessage = message.previousMessage;
 
     if (!previousMessage) {
       return false;
     }
 
     // this is a micro optimization to avoid layout changes when we load more messages
-    if (message?.firstOfResults) {
+    if (message.firstOfResults) {
       return false;
     }
 
-    return (
-      !message?.chatWebhookEvent &&
-      (!message?.inReplyTo ||
-        message?.inReplyTo?.user?.id !== message?.user?.id) &&
-      !message?.previousMessage?.deletedAt &&
+    if (message.chatWebhookEvent) {
+      return false;
+    }
+
+    if (previousMessage.deletedAt) {
+      return false;
+    }
+
+    if (
       Math.abs(
-        new Date(message?.createdAt) - new Date(previousMessage?.createdAt)
-      ) < 300000 && // If the time between messages is over 5 minutes, break.
-      message?.user?.id === message?.previousMessage?.user?.id
-    );
+        new Date(message.createdAt) - new Date(previousMessage.createdAt)
+      ) > 300000
+    ) {
+      return false;
+    }
+
+    if (message.inReplyTo) {
+      if (message.inReplyTo?.id === previousMessage.id) {
+        return message.user?.id === previousMessage.user?.id;
+      } else {
+        return false;
+      }
+    }
+
+    return message.user?.id === previousMessage.user?.id;
   }
 
   get hideReplyToInfo() {

@@ -1281,7 +1281,9 @@ en:
       staged: "Staged"
 
       staff_counters:
-        flags_given: "helpful flags"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> helpful flag'
+          other: '<span class="%{className}">%{count}</span> helpful flags'
         flagged_posts: "flagged posts"
         deleted_posts: "deleted posts"
         suspensions: "suspensions"

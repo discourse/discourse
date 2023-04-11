@@ -197,6 +197,7 @@
     .touch & {
       &:active {
         background: var(--primary-very-low);
+        border-radius: 5px;
       }
 
       &.chat-message-bookmarked {
@@ -207,6 +208,7 @@
     }
 
     .no-touch & {
+      &.is-active,
       &:hover,
       &:active {
         background: var(--primary-very-low);
@@ -219,6 +221,7 @@
       }
 
       &.chat-message-bookmarked {
+        &.is-active,
         &:hover {
           background: var(--highlight-medium);
         }

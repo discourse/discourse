@@ -715,13 +715,10 @@ module Discourse
   end
 
   def self.postgres_recently_readonly?
-    timestamp =
-      postgres_last_read_only.defer_get_set("timestamp") do
-        seconds = redis.get(LAST_POSTGRES_READONLY_KEY)
-        Time.zone.at(seconds.to_i) if seconds
-      end
+    seconds =
+      postgres_last_read_only.defer_get_set("timestamp") { redis.get(LAST_POSTGRES_READONLY_KEY) }
 
-    timestamp.present? && timestamp > 15.seconds.ago
+    seconds ? Time.zone.at(seconds.to_i) > 15.seconds.ago : false
   end
 
   def self.recently_readonly?

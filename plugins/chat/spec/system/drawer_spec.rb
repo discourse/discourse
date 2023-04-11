@@ -68,6 +68,37 @@ RSpec.describe "Drawer", type: :system, js: true do
     end
   end
 
+  context "when closing the drawer" do
+    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+    before { channel_1.add(current_user) }
+
+    it "resets the active message" do
+      visit("/")
+      chat_page.open_from_header
+      drawer.open_channel(channel_1)
+      channel_page.hover_message(message_1)
+      expect(page).to have_css(".chat-message-actions-container")
+
+      find(".chat-composer-input").send_keys(:escape)
+
+      expect(page).to have_no_css(".chat-message-actions-container")
+    end
+  end
+
+  context "when clicking the drawer's header" do
+    it "collapses the drawer" do
+      visit("/")
+      chat_page.open_from_header
+      expect(page).to have_selector(".chat-drawer.is-expanded")
+
+      page.find(".chat-drawer-header").click
+
+      expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
+    end
+  end
+
   context "when going from drawer to full page" do
     fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:channel_2) { Fabricate(:chat_channel) }
