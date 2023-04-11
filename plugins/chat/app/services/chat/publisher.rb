@@ -37,7 +37,7 @@ module Chat
       )
     end
 
-    def self.publish_a_thread_is_born!(chat_channel, chat_message)
+    def self.publish_thread_created!(chat_channel, chat_message)
       content =
         Chat::MessageSerializer.new(
           chat_message,

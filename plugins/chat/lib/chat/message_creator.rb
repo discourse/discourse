@@ -176,7 +176,7 @@ module Chat
             channel: @chat_message.chat_channel,
           )
         @chat_message.in_reply_to.thread_id = thread.id
-        Chat::Publisher.publish_a_thread_is_born!(
+        Chat::Publisher.publish_thread_created!(
           @chat_message.chat_channel,
           @chat_message.in_reply_to,
         )
