@@ -101,8 +101,18 @@
 
   .submit-panel {
     margin-top: 6px;
+    flex-wrap: wrap;
+    gap: 0.25em 0;
+
+    .create {
+      max-width: 50vw;
+      span {
+        @include ellipsis;
+      }
+    }
 
     .save-or-cancel {
+      margin-right: 0.5em;
       flex: 1 1 auto;
 
       #draft-status,
