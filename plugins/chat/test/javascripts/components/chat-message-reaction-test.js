@@ -55,7 +55,7 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
     });
 
     await render(hbs`
-      <ChatMessageReaction class="show" @reaction={{hash emoji="heart" count=this.count}} @react={{this.react}} />
+      <ChatMessageReaction class="show" @reaction={{hash emoji="heart" count=this.count}} @onReaction={{this.react}} />
     `);
 
     assert.false(exists(".chat-message-reaction .count"));

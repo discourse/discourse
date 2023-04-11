@@ -59,5 +59,6 @@ RSpec.describe "topics/show.html.erb" do
     topic_schema = doc.css('[itemtype="http://schema.org/DiscussionForumPosting"]')
     expect(topic_schema.size).to eq(1)
     expect(topic_schema.css('[itemtype="http://schema.org/Comment"]').size).to eq(2)
+    expect(topic_schema.css('[itemprop="articleSection"]')[0]["content"]).to eq(topic.category.name)
   end
 end

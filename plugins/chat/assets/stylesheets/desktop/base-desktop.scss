@@ -90,16 +90,6 @@
     .chat-live-pane {
       border-radius: unset;
     }
-
-    .chat-live-pane,
-    .chat-messages-scroll,
-    .chat-message:not(.highlighted):not(.deleted):not(.chat-message-bookmarked) {
-      background-color: transparent;
-    }
-
-    .chat-message:not(.highlighted):not(.deleted):not(.chat-message-bookmarked):hover {
-      background-color: var(--primary-very-low);
-    }
   }
 
   @media screen and (max-width: var(--max-chat-width)) {
@@ -126,18 +116,8 @@
       border-radius: 0;
     }
 
-    .chat-live-pane,
-    .chat-messages-scroll,
-    .chat-message:not(.highlighted):not(.deleted):not(.chat-message-bookmarked) {
-      background: transparent;
-    }
-
     .chat-message {
       padding-left: 1em;
-
-      &:hover {
-        background-color: var(--primary-very-low);
-      }
     }
 
     .chat-messages-container .chat-message-deleted {

@@ -103,6 +103,8 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
+    @include chat-scrollbar();
   }
 
   &__unreliable-network {

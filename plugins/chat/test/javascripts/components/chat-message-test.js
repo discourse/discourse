@@ -21,7 +21,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
         unread_count: 0,
         muted: false,
       },
-      canInteractWithChat: true,
       canDeleteSelf: true,
       canDeleteOthers: true,
       canFlag: true,
@@ -46,14 +45,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
         )
       ),
       chatChannel,
-      setReplyTo: () => {},
-      replyMessageClicked: () => {},
-      editButtonClicked: () => {},
       afterExpand: () => {},
-      selectingMessages: false,
-      onStartSelectingMessages: () => {},
-      onSelectMessage: () => {},
-      bulkSelectMessages: () => {},
       onHoverMessage: () => {},
       messageDidEnterViewport: () => {},
       messageDidLeaveViewport: () => {},
@@ -63,16 +55,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   const template = hbs`
     <ChatMessage
       @message={{this.message}}
-      @canInteractWithChat={{this.canInteractWithChat}}
       @channel={{this.chatChannel}}
-      @setReplyTo={{this.setReplyTo}}
-      @replyMessageClicked={{this.replyMessageClicked}}
-      @editButtonClicked={{this.editButtonClicked}}
-      @selectingMessages={{this.selectingMessages}}
-      @onStartSelectingMessages={{this.onStartSelectingMessages}}
-      @onSelectMessage={{this.onSelectMessage}}
-      @bulkSelectMessages={{this.bulkSelectMessages}}
-      @onHoverMessage={{this.onHoverMessage}}
       @messageDidEnterViewport={{this.messageDidEnterViewport}}
       @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
     />

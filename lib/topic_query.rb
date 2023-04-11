@@ -269,10 +269,14 @@ class TopicQuery
   end
 
   def list_filter
-    results =
-      TopicsFilter.new(guardian: @guardian, scope: latest_results).filter_from_query_string(
-        @options[:q],
-      )
+    topics_filter =
+      TopicsFilter.new(guardian: @guardian, scope: latest_results(include_muted: false))
+
+    results = topics_filter.filter_from_query_string(@options[:q])
+
+    if !topics_filter.topic_notification_levels.include?(NotificationLevels.all[:muted])
+      results = remove_muted_topics(results, @user)
+    end
 
     create_list(:filter, {}, results)
   end
@@ -460,6 +464,8 @@ class TopicQuery
     options[:filter] ||= filter
     topics ||= default_results(options)
     topics = yield(topics) if block_given?
+    topics =
+      DiscoursePluginRegistry.apply_modifier(:topic_query_create_list_topics, topics, options, self)
 
     options = options.merge(@options)
     if %w[activity default].include?(options[:order] || "activity") && !options[:unordered] &&
@@ -844,7 +850,11 @@ class TopicQuery
   end
 
   def remove_muted(list, user, options)
-    list = remove_muted_topics(list, user) unless options && options[:state] == "muted"
+    if options && (options[:include_muted].nil? || options[:include_muted]) &&
+         options[:state] != "muted"
+      list = remove_muted_topics(list, user)
+    end
+
     list = remove_muted_categories(list, user, exclude: options[:category])
     TopicQuery.remove_muted_tags(list, user, options)
   end

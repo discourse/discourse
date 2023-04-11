@@ -72,6 +72,18 @@ RSpec.describe "Chat composer", type: :system, js: true do
         find(".chat-composer-input").send_keys(:escape)
 
         expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
+        expect(find(".chat-composer-input").value).to eq("")
+      end
+    end
+
+    context "when closing edited message" do
+      it "cancels editing" do
+        chat.visit_channel(channel_1)
+        channel.edit_message(message_2)
+        find(".cancel-message-action").click
+
+        expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
+        expect(find(".chat-composer-input").value).to eq("")
       end
     end
   end

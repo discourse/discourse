@@ -67,10 +67,14 @@ class Emoji
     [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
       found_emoji =
         cache.defer_get_set(normalized_name) do
-          Emoji
-            .public_send(list_key)
-            .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) }
-        end
+          [
+            Emoji
+              .public_send(list_key)
+              .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) },
+          ]
+        end[
+          0
+        ]
 
       break if found_emoji
     end

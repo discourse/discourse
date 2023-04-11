@@ -4,11 +4,16 @@ class TopicsFilter
   def initialize(guardian:, scope: Topic)
     @guardian = guardian
     @scope = scope
+    @notification_levels = Set.new
+    @registered_scopes = {}
+  end
+
+  def topic_notification_levels
+    @registered_scopes.dig(:topic_notification_levels, :params, :notification_levels) || []
   end
 
   def filter_from_query_string(query_string)
     return @scope if query_string.blank?
-    category_or_clause = false
 
     query_string.scan(
       /(?<key_prefix>[-=])?(?<key>\w+):(?<value>[^\s]+)/,
@@ -48,13 +53,12 @@ class TopicsFilter
             filter_categories(
               category_slugs: category_slugs.split(delimiter),
               exclude_subcategories: key_prefix.presence,
-              or_clause: category_or_clause,
             )
-
-          category_or_clause = true
         end
       end
     end
+
+    @registered_scopes.each_value { |value| @scope = value[:block].call(*value[:params].values) }
 
     @scope
   end
@@ -101,11 +105,36 @@ class TopicsFilter
         @guardian.user.id,
       )
     else
+      return @scope.none if !@guardian.user
+
+      topic_notification_levels = Set.new
+
+      state
+        .split(",")
+        .each do |topic_notification_level|
+          if level = TopicUser.notification_levels[topic_notification_level.to_sym]
+            topic_notification_levels << level
+          end
+        end
+
+      register_scope(
+        key: :topic_notification_levels,
+        params: {
+          notification_levels: topic_notification_levels.to_a,
+        },
+      ) do |notification_levels|
+        @scope.joins(:topic_users).where(
+          "topic_users.notification_level IN (:topic_notification_levels) AND topic_users.user_id = :user_id",
+          topic_notification_levels: notification_levels,
+          user_id: @guardian.user.id,
+        )
+      end
+
       @scope
     end
   end
 
-  def filter_categories(category_slugs:, exclude_subcategories: false, or_clause: false)
+  def filter_categories(category_slugs:, exclude_subcategories: false)
     category_ids = Category.ids_from_slugs(category_slugs)
 
     category_ids =
@@ -121,11 +150,14 @@ class TopicsFilter
       category_ids = category_ids.flat_map { |category_id| Category.subcategory_ids(category_id) }
     end
 
-    if or_clause
-      @scope.or(Topic.where("categories.id IN (?)", category_ids))
-    else
-      @scope.joins(:category).where("categories.id IN (?)", category_ids)
+    register_scope(key: :categories, params: { category_ids: category_ids }) do |in_category_ids|
+      @scope.joins(:category).where(
+        "categories.id IN (:category_ids)",
+        category_ids: in_category_ids,
+      )
     end
+
+    @scope
   end
 
   def filter_tags(tag_names:, match_all: true, exclude: false)
@@ -196,5 +228,19 @@ class TopicsFilter
 
   def include_topics_with_any_tags(tag_ids)
     @scope = @scope.joins(:topic_tags).where("topic_tags.tag_id IN (?)", tag_ids).distinct(:id)
+  end
+
+  def register_scope(key:, params:, &block)
+    if registered_scope = @registered_scopes[key]
+      registered_scope[:params].each do |param_name, param_value|
+        if param_value.is_a?(Array)
+          registered_scope[:params][param_name].concat(params[param_name]).tap(&:uniq!)
+        else
+          registered_scope[:params][param_name] = params[param_name]
+        end
+      end
+    else
+      @registered_scopes[key] = { block: block, params: params }
+    end
   end
 end

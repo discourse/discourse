@@ -60,11 +60,27 @@ export default {
         class: "chat-emoji-btn",
         icon: "discourse-emojis",
         position: "dropdown",
+        context: "channel",
         action() {
           const chatEmojiPickerManager = container.lookup(
             "service:chat-emoji-picker-manager"
           );
-          chatEmojiPickerManager.startFromComposer(this.didSelectEmoji);
+          chatEmojiPickerManager.open({ context: "channel" });
+        },
+      });
+
+      api.registerChatComposerButton({
+        label: "chat.emoji",
+        id: "channel-emoji",
+        class: "chat-emoji-btn",
+        icon: "discourse-emojis",
+        position: "dropdown",
+        context: "thread",
+        action() {
+          const chatEmojiPickerManager = container.lookup(
+            "service:chat-emoji-picker-manager"
+          );
+          chatEmojiPickerManager.open({ context: "thread" });
         },
       });
 
