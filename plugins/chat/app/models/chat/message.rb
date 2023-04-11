@@ -307,6 +307,10 @@ module Chat
       create_mentions(mentioned_user_ids_to_add)
     end
 
+    def is_thread_om?
+      self.thread.original_message_id == self.id
+    end
+
     private
 
     def delete_mentions(user_ids)

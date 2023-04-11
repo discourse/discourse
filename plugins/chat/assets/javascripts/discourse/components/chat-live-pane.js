@@ -550,6 +550,19 @@ export default class ChatLivePane extends Component {
       case "flag":
         this.handleFlaggedMessage(data);
         break;
+      case "thread_born":
+        this.handleThreadBorn(data);
+        break;
+    }
+  }
+
+  handleThreadBorn(data) {
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message.id
+    );
+    if (message) {
+      message.threadId = data.chat_message.thread_id;
+      message.threadMessageCount = 1;
     }
   }
 
@@ -773,7 +786,10 @@ export default class ChatLivePane extends Component {
       stagedMessage.inReplyTo = this.chatChannelComposer.replyToMsg;
     }
 
-    this.args.channel.messagesManager.addMessages([stagedMessage]);
+    if (!stagedMessage.inReplyTo) {
+      this.args.channel.messagesManager.addMessages([stagedMessage]);
+    }
+
     if (!this.args.channel.messagesManager.canLoadMoreFuture) {
       this.scrollToLatestMessage();
     }

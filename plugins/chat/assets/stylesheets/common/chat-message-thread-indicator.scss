@@ -1,0 +1,29 @@
+.chat-message-thread-indicator {
+  align-items: center;
+  display: grid;
+  font-size: var(--font-down-1);
+  grid: 1fr / auto-flow;
+  display: flex;
+  cursor: pointer;
+  grid-area: threadindicator;
+
+  margin-left: var(--message-left-width);
+  margin-top: 0.5em;
+  padding: 0.5em;
+  background-color: var(--primary-very-low);
+
+  &__last-reply {
+    color: var(--primary-medium);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: var(--font-down-2);
+  }
+
+  &__view-thread {
+    font-size: var(--font-down-2);
+  }
+
+  &__separator {
+    margin: 0 0.5em;
+  }
+}

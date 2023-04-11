@@ -16,6 +16,7 @@ module Chat
                :bookmark,
                :available_flags,
                :thread_id,
+               :thread_message_count,
                :chat_channel_id
 
     has_one :user, serializer: Chat::MessageUserSerializer, embed: :objects
@@ -150,6 +151,15 @@ module Chat
 
         sym
       end
+    end
+
+    def include_thread_message_count?
+      object.thread_id.present?
+    end
+
+    # TODO (martin) We need to cache this same as the channel message count
+    def thread_message_count
+      object.thread.chat_messages.count
     end
   end
 end

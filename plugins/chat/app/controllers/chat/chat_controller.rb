@@ -176,6 +176,7 @@ module Chat
       messages = preloaded_chat_message_query.where(chat_channel: @chat_channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(@chatable)
       messages = messages.where(thread_id: params[:thread_id]) if params[:thread_id]
+      messages = exclude_thread_messages(messages) if !echo_thread_messages && !params[:thread_id]
 
       if message_id.present?
         condition = direction == PAST ? "<" : ">"
@@ -259,6 +260,7 @@ module Chat
       messages = preloaded_chat_message_query.where(chat_channel: @chat_channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(@chatable)
       messages = messages.where(thread_id: params[:thread_id]) if params[:thread_id]
+      messages = exclude_thread_messages(messages) if !echo_thread_messages && !params[:thread_id]
 
       past_messages =
         messages
@@ -274,7 +276,11 @@ module Chat
 
       can_load_more_past = past_messages.count == PAST_MESSAGE_LIMIT
       can_load_more_future = future_messages.count == FUTURE_MESSAGE_LIMIT
-      messages = [past_messages.reverse, [@message], future_messages].reduce([], :concat)
+      messages = [
+        past_messages.reverse,
+        (!echo_thread_messages && @message.thread_id) ? [] : [@message],
+        future_messages,
+      ].reduce([], :concat)
       chat_view =
         Chat::View.new(
           chat_channel: @chat_channel,
@@ -412,10 +418,15 @@ module Chat
           .includes(:bookmarks)
           .includes(:uploads)
           .includes(chat_channel: :chatable)
+          .includes(:thread)
 
       query = query.includes(user: :user_status) if SiteSetting.enable_user_status
 
       query
+    end
+
+    def echo_thread_messages
+      @echo_thread_messages ||= params[:echo_thread_messages].to_s == "t"
     end
 
     def find_chatable
@@ -430,6 +441,16 @@ module Chat
       ]
       @message = @message.find_by(id: params[:message_id])
       raise Discourse::NotFound unless @message
+    end
+
+    def exclude_thread_messages(messages)
+      messages.where(<<~SQL, channel_id: @chat_channel.id)
+        chat_messages.thread_id IS NULL OR chat_messages.id IN (
+          SELECT original_message_id
+          FROM chat_threads
+          WHERE chat_threads.channel_id = :channel_id
+        )
+      SQL
     end
   end
 end

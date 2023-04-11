@@ -1,0 +1,13 @@
+<LinkTo
+  @route="chat.channel.thread"
+  @models={{@message.threadRouteModels}}
+  class="chat-message-thread-indicator"
+>
+  <span class="chat-message-thread-indicator__last-reply">{{i18n
+      "chat.thread.last_reply"
+    }}</span>
+  <span class="chat-message-thread-indicator__separator">-</span>
+  <span class="chat-message-thread-indicator__view-thread">
+    {{i18n "chat.thread.view_thread_replies" count=@message.threadMessageCount}}
+  </span>
+</LinkTo>

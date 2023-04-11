@@ -166,37 +166,45 @@ module Chat
       return if @in_reply_to_id.blank?
       return if @chat_message.thread_id.present?
 
-      thread =
-        @original_message.thread ||
+      if @original_message.thread
+        thread = @original_message.thread
+      else
+        thread =
           Chat::Thread.create!(
             original_message: @chat_message.in_reply_to,
             original_message_user: @chat_message.in_reply_to.user,
             channel: @chat_message.chat_channel,
           )
+        @chat_message.in_reply_to.thread_id = thread.id
+        Chat::Publisher.publish_a_thread_is_born!(
+          @chat_message.chat_channel,
+          @chat_message.in_reply_to,
+        )
+      end
+
+      @chat_message.thread_id = thread.id
 
       # NOTE: We intentionally do not try to correct thread IDs within the chain
       # if they are incorrect, and only set the thread ID of messages where the
       # thread ID is NULL. In future we may want some sync/background job to correct
       # any inconsistencies.
       DB.exec(<<~SQL)
-      WITH RECURSIVE thread_updater AS (
-        SELECT cm.id, cm.in_reply_to_id
-        FROM chat_messages cm
-        WHERE cm.in_reply_to_id IS NULL AND cm.id = #{@original_message_id}
+        WITH RECURSIVE thread_updater AS (
+          SELECT cm.id, cm.in_reply_to_id
+          FROM chat_messages cm
+          WHERE cm.in_reply_to_id IS NULL AND cm.id = #{@original_message_id}
 
-        UNION ALL
+          UNION ALL
 
-        SELECT cm.id, cm.in_reply_to_id
-        FROM chat_messages cm
-        JOIN thread_updater ON cm.in_reply_to_id = thread_updater.id
-      )
-      UPDATE chat_messages
-      SET thread_id = #{thread.id}
-      FROM thread_updater
-      WHERE thread_id IS NULL AND chat_messages.id = thread_updater.id
-    SQL
-
-      @chat_message.thread_id = thread.id
+          SELECT cm.id, cm.in_reply_to_id
+          FROM chat_messages cm
+          JOIN thread_updater ON cm.in_reply_to_id = thread_updater.id
+        )
+        UPDATE chat_messages
+        SET thread_id = #{thread.id}
+        FROM thread_updater
+        WHERE thread_id IS NULL AND chat_messages.id = thread_updater.id
+      SQL
     end
   end
 end
