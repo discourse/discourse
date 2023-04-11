@@ -5,6 +5,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import setHeaderOffset from "discourse/tests/helpers/header-offset";
 
 acceptance("Glimmer Topic Timeline", function (needs) {
   needs.user({
@@ -337,8 +338,13 @@ acceptance("Glimmer Topic Timeline", function (needs) {
     });
   });
 
-  test("it has a topic admin menu", async function (assert) {
+  async function setupTest() {
     await visit("/t/internationalization-localization");
+    await setHeaderOffset("60px");
+  }
+
+  test("it has a topic admin menu", async function (assert) {
+    await setupTest();
     assert.ok(
       exists(".timeline-controls .topic-admin-menu-button"),
       "admin menu is present"
@@ -346,7 +352,7 @@ acceptance("Glimmer Topic Timeline", function (needs) {
   });
 
   test("it has a reply-to-post button", async function (assert) {
-    await visit("/t/internationalization-localization");
+    await setupTest();
     assert.ok(
       exists(".timeline-footer-controls .reply-to-post"),
       "reply to post button is present"
@@ -354,7 +360,7 @@ acceptance("Glimmer Topic Timeline", function (needs) {
   });
 
   test("it has a topic notification button", async function (assert) {
-    await visit("/t/internationalization-localization");
+    await setupTest();
     assert.ok(
       exists(".timeline-footer-controls .topic-notifications-button"),
       "topic notifications button is present"
