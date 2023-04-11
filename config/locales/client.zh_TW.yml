@@ -4153,7 +4153,7 @@ zh_TW:
     wizard:
       back: "上一步"
       next: "下一步"
-      step-text: "梯級"
+      step-text: "步驟"
       step: "%{current} / %{total}"
       uploading: "上傳中..."
       upload_error: "抱歉，上傳檔案時發生錯誤，請再試一次。"
