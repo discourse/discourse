@@ -118,12 +118,10 @@ module Chat
       ids[:kick] = kick_message_bus_id if !object.direct_message_channel?
       data = { message_bus_last_ids: ids }
 
-      if !object.direct_message_channel?
-        if @opts.key?(:can_join_chat_channel)
-          data[:can_join_chat_channel] = @opts[:can_join_chat_channel]
-        else
-          data[:can_join_chat_channel] = scope.can_join_chat_channel?(object)
-        end
+      if @opts.key?(:can_join_chat_channel)
+        data[:can_join_chat_channel] = @opts[:can_join_chat_channel]
+      else
+        data[:can_join_chat_channel] = scope.can_join_chat_channel?(object)
       end
 
       data
