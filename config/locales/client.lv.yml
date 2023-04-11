@@ -1023,7 +1023,6 @@ lv:
       home: "Noklusējuma sākumlapa"
       staged: "Izveidots"
       staff_counters:
-        flags_given: "noderīgas sūdzības"
         flagged_posts: "ieraksti ar sūdzībām"
         deleted_posts: "izdzēstie ieraksti"
         suspensions: "īslaicīgās bloķēšanas"

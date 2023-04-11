@@ -117,7 +117,3 @@ nb_NO:
           fields:
             message:
               label: Send
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Rapportert av"

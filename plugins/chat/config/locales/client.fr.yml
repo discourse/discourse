@@ -407,9 +407,8 @@ fr:
       transcript:
         view: "Afficher la transcription des messages précédents"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Message de discussion signalé"
-          flagged_by: "Signalé par"
     keyboard_shortcuts_help:
       chat:
         title: "Discussion"

@@ -782,7 +782,6 @@ sk:
       home: "Predvolená domovská stránka"
       staged: "Dočasný"
       staff_counters:
-        flags_given: "nápomocné značky"
         flagged_posts: "označkované príspevky"
         deleted_posts: "vymazané príspevky"
         suspensions: "pozastavenia"

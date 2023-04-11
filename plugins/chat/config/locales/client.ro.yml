@@ -110,7 +110,3 @@ ro:
           fields:
             message:
               label: Mesaj
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Semnalat de"

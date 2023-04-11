@@ -129,6 +129,8 @@ zh_CN:
       removed_user: "%{when}移除了 %{who}"
       removed_group: "%{when}移除了 %{who}"
       autobumped: "%{when}自动提升"
+      tags_changed: "标签已更新 %{when}"
+      category_changed: "类别已更新 %{when}"
       autoclosed:
         enabled: "%{when}关闭"
         disabled: "%{when}打开"
@@ -1143,7 +1145,8 @@ zh_CN:
       home: "默认首页"
       staged: "暂存"
       staff_counters:
-        flags_given: "有用的举报"
+        flags_given:
+          other: '<span class="%{className}">%{count}</span> 有用的举报'
         flagged_posts: "被举报的帖子"
         deleted_posts: "已删除的帖子"
         suspensions: "封禁"
@@ -4984,6 +4987,7 @@ zh_CN:
         list_table:
           headings:
             name: "名称"
+            active_categories: "活动类别"
             actions: "操作"
           actions:
             view: "查看模板"

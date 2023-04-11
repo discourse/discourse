@@ -142,7 +142,3 @@ uk:
           fields:
             message:
               label: Повідомлення
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Позначено"

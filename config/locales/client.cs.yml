@@ -984,7 +984,6 @@ cs:
       home: "Výchozí domovská stránka"
       staged: "Staged"
       staff_counters:
-        flags_given: "užitečná nahlášení"
         flagged_posts: "nahlášených příspěvků"
         deleted_posts: "smazaných příspěvků"
         suspensions: "vyloučení"

@@ -998,7 +998,6 @@ bs_BA:
       home: "Uobičajena početna stranica"
       staged: "Priređen"
       staff_counters:
-        flags_given: "pomoćne prijave"
         flagged_posts: "prijavljene objave"
         deleted_posts: "obrisane objave"
         suspensions: "suspenzije"

@@ -331,7 +331,7 @@ fa_IR:
       one: "خواندن %{count} موضوعات خوانده نشده"
       other: "خواندن %{count} موضوع خوانده نشده"
     topic_count_new:
-      one: "مشاهده %{count} موضوعات جدید"
+      one: "مشاهده %{count} موضوع جدید"
       other: "مشاهده %{count} موضوع جدید"
     preview: "پیش‌نمایش"
     cancel: "لغو"
@@ -1098,7 +1098,6 @@ fa_IR:
       home: "صفحه خانگی پیشفرض"
       staged: "کاربر از راه دور"
       staff_counters:
-        flags_given: "پرچم گذاری‌های مفید"
         flagged_posts: "نوشته های پرچم گذاری شده"
         deleted_posts: "پست های حذف شده"
         suspensions: "تعلیق‌ها"

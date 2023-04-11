@@ -834,7 +834,6 @@ et:
       home: "aikimisi avaleht"
       staged: "Ettevalmistamisel"
       staff_counters:
-        flags_given: "kasulikud tähised"
         flagged_posts: "tähistatud postitused"
         deleted_posts: "kustutatud postitused"
         suspensions: "ajutised peatamised"
