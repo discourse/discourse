@@ -29,8 +29,8 @@ Discourse::Application.routes.draw do
 
     ### PCC change ###
     resources :voice_credits, only: %i[index update]
-    get "/topics/user-votes/:category_id" => "topics#user_votes"
-    get "/topics/category-totals/:category_id" => "topics#category_totals"
+    # get "/topics/user-votes/:category_id" => "topics#user_votes"
+    get "/topics/category-totals/:category_id" => "voice_credits#total_votes_per_topic_for_category"
     ### END of PCC change ###
 
     get "/bootstrap" => "bootstrap#index"

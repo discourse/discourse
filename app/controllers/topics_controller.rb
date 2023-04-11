@@ -36,34 +36,6 @@ class TopicsController < ApplicationController
 
   skip_before_action :check_xhr, only: %i[show feed]
 
-  ### PCC change ###
-  # def user_votes
-  #   user_id = current_user.id
-  #   category_id = params[:category_id]
-  #   votes =
-  #     VoiceCredit
-  #       .joins(:topic)
-  #       .where(user_id: user_id, topics: { category_id: category_id })
-  #       .select("topics.id, topics.title, voice_credits.credits_allocated")
-
-  #   render json: { user_votes: votes }
-  # end
-
-  def category_totals
-    category_id = params[:category_id]
-    totals =
-      VoiceCredit
-        .joins(:topic)
-        .where(topics: { category_id: category_id })
-        .select("topics.id, topics.title, voice_credits.credits_allocated")
-        .map { |record| [record.id, record.credits_allocated.to_i] }
-        .group_by(&:first)
-        .transform_values { |values| values.sum(&:last) }
-
-    render json: { category_totals: totals }
-  end
-  ### END of PCC change ###
-
   def id_for_slug
     topic = Topic.find_by_slug(params[:slug])
     guardian.ensure_can_see!(topic)
