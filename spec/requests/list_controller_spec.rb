@@ -1212,6 +1212,52 @@ RSpec.describe ListController do
       end
     end
 
+    describe "when filtering with the `in:<topic_notification_level>` filter" do
+      fab!(:user_muted_topic) do
+        Fabricate(:topic).tap do |topic|
+          TopicUser.change(
+            user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:muted],
+          )
+        end
+      end
+
+      fab!(:user_tracking_topic) do
+        Fabricate(:topic).tap do |topic|
+          TopicUser.change(
+            user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:tracking],
+          )
+        end
+      end
+
+      it "does not return topics that are muted by the user when `q` query param does not include `in:muted`" do
+        sign_in(user)
+
+        get "/filter.json", params: { q: "in:tracking" }
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }).to eq(
+          [user_tracking_topic.id],
+        )
+      end
+
+      it "only return topics that are muted by the user when `q` query param is `in:muted`" do
+        sign_in(user)
+
+        get "/filter.json", params: { q: "in:muted" }
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }).to eq(
+          [user_muted_topic.id],
+        )
+      end
+    end
+
     describe "when filtering by status" do
       fab!(:group) { Fabricate(:group) }
       fab!(:private_category) { Fabricate(:private_category, group: group) }

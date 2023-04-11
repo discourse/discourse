@@ -90,6 +90,103 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic.id)
         end
       end
+
+      TopicUser.notification_levels.keys.each do |notification_level|
+        describe "when query string is `in:#{notification_level}`" do
+          fab!("user_#{notification_level}_topic".to_sym) do
+            Fabricate(:topic).tap do |topic|
+              TopicUser.change(
+                user.id,
+                topic.id,
+                notification_level: TopicUser.notification_levels[notification_level],
+              )
+            end
+          end
+
+          it "should not return any topics if the user is anonymous" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("in:#{notification_level}")
+                .pluck(:id),
+            ).to eq([])
+          end
+
+          it "should return topics that the user has notification level set to #{notification_level}" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new(user))
+                .filter_from_query_string("in:#{notification_level}")
+                .pluck(:id),
+            ).to contain_exactly(self.public_send("user_#{notification_level}_topic").id)
+          end
+        end
+      end
+
+      describe "when filtering by multiple topic notification levels" do
+        fab!(:user_muted_topic) do
+          Fabricate(:topic).tap do |topic|
+            TopicUser.change(
+              user.id,
+              topic.id,
+              notification_level: TopicUser.notification_levels[:muted],
+            )
+          end
+        end
+
+        fab!(:user_watching_topic) do
+          Fabricate(:topic).tap do |topic|
+            TopicUser.change(
+              user.id,
+              topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
+            )
+          end
+        end
+
+        fab!(:user_tracking_topic) do
+          Fabricate(:topic).tap do |topic|
+            TopicUser.change(
+              user.id,
+              topic.id,
+              notification_level: TopicUser.notification_levels[:tracking],
+            )
+          end
+        end
+
+        describe "when query string is `in:muted,invalid`" do
+          it "should ignore the invalid notification level" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new(user))
+                .filter_from_query_string("in:muted,invalid")
+                .pluck(:id),
+            ).to contain_exactly(user_muted_topic.id)
+          end
+        end
+
+        describe "when query string is `in:muted in:tracking`" do
+          it "should return topics that the user is tracking or has muted" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new(user))
+                .filter_from_query_string("in:muted in:tracking")
+                .pluck(:id),
+            ).to contain_exactly(user_muted_topic.id, user_tracking_topic.id)
+          end
+        end
+
+        describe "when query string is `in:muted,tracking" do
+          it "should return topics that the user is tracking or has muted" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new(user))
+                .filter_from_query_string("in:muted,tracking")
+                .pluck(:id),
+            ).to contain_exactly(user_muted_topic.id, user_tracking_topic.id)
+          end
+        end
+      end
     end
 
     describe "when filtering by categories" do
