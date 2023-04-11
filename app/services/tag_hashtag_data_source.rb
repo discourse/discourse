@@ -27,6 +27,7 @@ class TagHashtagDataSource
       item.slug = tag.name
       item.relative_url = tag.url
       item.icon = icon
+      item.id = tag.id
     end
   end
   private_class_method :tag_to_hashtag_item

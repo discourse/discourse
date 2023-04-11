@@ -29,6 +29,7 @@ function addHashtag(buffer, matches, state) {
       ["href", result.relative_url],
       ["data-type", result.type],
       ["data-slug", result.slug],
+      ["data-id", result.id],
     ];
 
     // Most cases these will be the exact same, one standout is categories
@@ -40,20 +41,25 @@ function addHashtag(buffer, matches, state) {
     token.block = false;
     buffer.push(token);
 
-    token = new state.Token("svg_open", "svg", 1);
-    token.block = false;
-    token.attrs = [
-      ["class", `fa d-icon d-icon-${result.icon} svg-icon svg-node`],
-    ];
-    buffer.push(token);
+    // token = new state.Token("svg_open", "svg", 1);
+    // token.block = false;
+    // token.attrs = [
+    //   ["class", `fa d-icon d-icon-${result.icon} svg-icon svg-node`],
+    // ];
+    // buffer.push(token);
 
-    token = new state.Token("use_open", "use", 1);
-    token.block = false;
-    token.attrs = [["href", `#${result.icon}`]];
-    buffer.push(token);
+    // token = new state.Token("use_open", "use", 1);
+    // token.block = false;
+    // token.attrs = [["href", `#${result.icon}`]];
+    // buffer.push(token);
 
-    buffer.push(new state.Token("use_close", "use", -1));
-    buffer.push(new state.Token("svg_close", "svg", -1));
+    // buffer.push(new state.Token("use_close", "use", -1));
+    // buffer.push(new state.Token("svg_close", "svg", -1));
+    token = new state.Token("span_open", "span", 1);
+    token.block = false;
+    token.attrs = [["class", "hashtag-icon-placeholder"]];
+    buffer.push(token);
+    buffer.push(new state.Token("span_close", "span", -1));
 
     token = new state.Token("span_open", "span", 1);
     token.block = false;
@@ -118,9 +124,11 @@ export function setup(helper) {
     hashtagIconAllowList.concat([
       "a.hashtag-cooked",
       "span.hashtag-raw",
+      "span.hashtag-icon-placeholder",
       "a[data-type]",
       "a[data-slug]",
       "a[data-ref]",
+      "a[data-id]",
     ])
   );
 }

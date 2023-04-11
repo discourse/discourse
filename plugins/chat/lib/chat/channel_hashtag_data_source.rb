@@ -18,6 +18,7 @@ module Chat
         item.icon = icon
         item.relative_url = channel.relative_url
         item.type = "channel"
+        item.id = channel.id
       end
     end
 

@@ -1,4 +1,5 @@
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import { cancel } from "@ember/runloop";
@@ -245,7 +246,16 @@ function _findAndReplaceSeenHashtagPlaceholder(
       link.href = matchingSeenHashtag.relative_url;
       link.dataset.type = type;
       link.dataset.slug = matchingSeenHashtag.slug;
-      link.innerHTML = `<svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon svg-node"><use href="#${matchingSeenHashtag.icon}"></use></svg><span>${matchingSeenHashtag.text}</span>`;
+
+      if (type === "category") {
+        link.innerHTML = `<span class="hashtag-category-badge hashtag-color--${type}-${matchingSeenHashtag.id}"></span><span>${matchingSeenHashtag.text}</span>`;
+      } else {
+        link.innerHTML =
+          iconHTML(matchingSeenHashtag.icon, {
+            class: `hashtag-color--${type}-${matchingSeenHashtag.id}`,
+          }) + `<span>${matchingSeenHashtag.text}</span>`;
+      }
+      // link.innerHTML = `<svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon svg-node"><use href="#${matchingSeenHashtag.icon}"></use></svg><span>${matchingSeenHashtag.text}</span>`;
       hashtagSpan.replaceWith(link);
     }
   });

@@ -19,6 +19,7 @@ class CategoryHashtagDataSource
       item.description = category.description_text
       item.icon = icon
       item.relative_url = category.url
+      item.id = category.id
 
       # Single-level category heirarchy should be enough to distinguish between
       # categories here.
