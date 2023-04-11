@@ -9466,12 +9466,11 @@ walker@~1.0.5:
     makeerror "1.0.x"
 
 watch-detector@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/watch-detector/-/watch-detector-1.0.0.tgz#c7b722d8695fee9ab6071e0f38f258e6adb22609"
-  integrity sha512-siywMl3fXK30Tlpu/dUBHhlpxhQmHdguZ8OIb813eU9lrVmmsJa9k0+n1HtJ+7p3SzFCPq2XbmR3GUYpPC3TBA==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/watch-detector/-/watch-detector-1.0.2.tgz#95deb9189f8c89c0a9f211739cef6d01cffcf452"
+  integrity sha512-MrJK9z7kD5Gl3jHBnnBVHvr1saVGAfmkyyrvuNzV/oe0Gr1nwZTy5VSA0Gw2j2Or0Mu8HcjUa44qlBvC2Ofnpg==
   dependencies:
     heimdalljs-logger "^0.1.10"
-    semver "^6.3.0"
     silent-error "^1.1.1"
     tmp "^0.1.0"
 
