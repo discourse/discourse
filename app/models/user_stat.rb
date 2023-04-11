@@ -178,7 +178,7 @@ class UserStat < ActiveRecord::Base
       WITH filtered_users AS (
         SELECT id FROM users u
         JOIN user_stats ON user_id = u.id
-        WHERE last_seen_at > now() - interval '1 hour'
+        WHERE last_seen_at > :seen_at
         AND posts_read_count < 10000
       ),
       filtered_topics AS (
