@@ -6,7 +6,7 @@
     </span>
   {{/if}}
   {{#if this.showTooltip}}
-    <DTooltip @onTrigger={{@onTrigger}} @onUntrigger={{@onUntrigger}}>
+    <DTooltip>
       <div class="user-status-message-tooltip">
         {{emoji @status.emoji skipTitle=true}}
         <span class="user-status-tooltip-description">

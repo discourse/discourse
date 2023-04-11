@@ -8,10 +8,6 @@ async function mouseenter() {
   await triggerEvent(query(".user-status-message"), "mouseenter");
 }
 
-async function mouseleave() {
-  await triggerEvent(query(".user-status-message"), "mouseleave");
-}
-
 module("Integration | Component | user-status-message", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -110,21 +106,6 @@ module("Integration | Component | user-status-message", function (hooks) {
     assert.ok(
       document.querySelector("[data-tippy-root] .user-status-message-tooltip")
     );
-  });
-
-  test("it accepts optional onTrigger and onUntrigger callbacks", async function (assert) {
-    this.active = false;
-    this.toggleActive = () => (this.active = !this.active);
-
-    await render(
-      hbs`<UserStatusMessage @status={{this.status}} @onTrigger={{this.toggleActive}} @onUntrigger={{this.toggleActive}}/>`
-    );
-
-    await mouseenter();
-    assert.strictEqual(this.active, true);
-
-    await mouseleave();
-    assert.strictEqual(this.active, false);
   });
 
   test("it doesn't show tooltip if disabled", async function (assert) {
