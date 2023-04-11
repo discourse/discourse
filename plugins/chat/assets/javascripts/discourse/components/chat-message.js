@@ -123,7 +123,7 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.pane.hoveredMessageId === this.args.message.id) {
+    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
       return;
     }
 
@@ -166,11 +166,12 @@ export default class ChatMessage extends Component {
       model: this.args.message,
       context: this.args.context,
     };
-    this.pane.hoveredMessageId = this.args.message.id;
   }
 
   @action
-  handleTouchStart() {
+  handleTouchStart(event) {
+    event.stopPropagation();
+
     // if zoomed don't track long press
     if (isZoomed()) {
       return;
@@ -188,12 +189,16 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleTouchMove() {
+  handleTouchMove(event) {
+    event.stopPropagation();
+
     cancel(this._isPressingHandler);
   }
 
   @action
-  handleTouchEnd() {
+  handleTouchEnd(event) {
+    event.stopPropagation();
+
     cancel(this._isPressingHandler);
   }
 
