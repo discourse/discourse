@@ -175,19 +175,27 @@ class UserStat < ActiveRecord::Base
 
     # Update denormalized posts_read_count
     DB.exec(<<~SQL, seen_at: last_seen)
+      WITH filtered_users AS (
+        SELECT id FROM users u
+        JOIN user_stats ON user_id = u.id
+        WHERE last_seen_at > now() - interval '1 hour'
+        AND posts_read_count < 10000
+      ),
+      filtered_topics AS (
+         SELECT id FROM topics
+         WHERE archetype = 'regular'
+         AND deleted_at IS NULL
+      )
       UPDATE user_stats SET posts_read_count = X.c
-      FROM
-      (SELECT pt.user_id,
-              COUNT(*) AS c
-       FROM users AS u
-       JOIN post_timings AS pt ON pt.user_id = u.id
-       JOIN topics t ON t.id = pt.topic_id
-       WHERE u.last_seen_at > :seen_at AND
-             t.archetype = 'regular' AND
-             t.deleted_at IS NULL
-       GROUP BY pt.user_id) AS X
-       WHERE X.user_id = user_stats.user_id AND
-             X.c <> posts_read_count
+      FROM (SELECT pt.user_id, COUNT(*) as c
+            FROM filtered_users AS u
+            JOIN post_timings AS pt ON pt.user_id = u.id
+            JOIN filtered_topics t ON t.id = pt.topic_id
+            JOIN user_stats us ON us.user_id = u.id
+            GROUP BY pt.user_id
+           ) AS X
+      WHERE X.user_id = user_stats.user_id
+      AND X.c <> posts_read_count
     SQL
   end
 
