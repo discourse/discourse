@@ -3,11 +3,15 @@
 class VoiceCreditsController < ApplicationController
   def index
     category_id = params.require(:category_id)
-    voice_credits =
-      VoiceCredit.where(user_id: current_user.id, category_id: category_id).includes(
-        :topic,
-        :category,
-      )
+    if category_id == "all"
+      voice_credits = VoiceCredit.where(user_id: current_user.id).includes(:topic, :category)
+    else
+      voice_credits =
+        VoiceCredit.where(user_id: current_user.id, category_id: category_id).includes(
+          :topic,
+          :category,
+        )
+    end
 
     render json: {
              success: true,

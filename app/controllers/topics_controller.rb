@@ -37,17 +37,17 @@ class TopicsController < ApplicationController
   skip_before_action :check_xhr, only: %i[show feed]
 
   ### PCC change ###
-  def user_votes
-    user_id = current_user.id
-    category_id = params[:category_id]
-    votes =
-      VoiceCredit
-        .joins(:topic)
-        .where(user_id: user_id, topics: { category_id: category_id })
-        .select("topics.id, topics.title, voice_credits.credits_allocated")
+  # def user_votes
+  #   user_id = current_user.id
+  #   category_id = params[:category_id]
+  #   votes =
+  #     VoiceCredit
+  #       .joins(:topic)
+  #       .where(user_id: user_id, topics: { category_id: category_id })
+  #       .select("topics.id, topics.title, voice_credits.credits_allocated")
 
-    render json: { user_votes: votes }
-  end
+  #   render json: { user_votes: votes }
+  # end
 
   def category_totals
     category_id = params[:category_id]
