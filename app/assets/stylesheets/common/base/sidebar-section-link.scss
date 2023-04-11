@@ -69,13 +69,13 @@
     }
   }
 
-  .sidebar-section-link-personal-messages-sent,
-  .sidebar-section-link-personal-messages-new,
-  .sidebar-section-link-personal-messages-archive,
-  .sidebar-section-link-personal-messages-unread,
-  .sidebar-section-link-group-messages-new,
-  .sidebar-section-link-group-messages-unread,
-  .sidebar-section-link-group-messages-archive {
+  .sidebar-section-link[data-link-name="personal-messages-sent"],
+  .sidebar-section-link[data-link-name="personal-messages-new"],
+  .sidebar-section-link[data-link-name="personal-messages-archive"],
+  .sidebar-section-link[data-link-name="personal-messages-unread"],
+  .sidebar-section-link[data-link-name="group-messages-new"],
+  .sidebar-section-link[data-link-name="group-messages-unread"],
+  .sidebar-section-link[data-link-name="group-messages-archive"] {
     .sidebar-section-link-content-text {
       margin-left: calc(
         var(--d-sidebar-section-link-prefix-margin-right) +

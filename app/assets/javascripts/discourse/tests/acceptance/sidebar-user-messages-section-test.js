@@ -103,7 +103,7 @@ acceptance(
 
       assert.ok(
         exists(
-          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox']"
         ),
         "displays the personal message inbox link"
       );
@@ -117,12 +117,12 @@ acceptance(
       );
 
       await click(
-        ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox"
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox']"
       );
 
       assert.ok(
         exists(
-          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox.active"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox'].active"
         ),
         "personal message inbox link is marked as active"
       );
@@ -141,11 +141,11 @@ acceptance(
         await visit("/");
 
         await click(
-          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox']"
         );
 
         await click(
-          `.sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-${type}`
+          `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-${type}']`
         );
 
         assert.strictEqual(
@@ -164,21 +164,21 @@ acceptance(
 
         assert.ok(
           exists(
-            ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox.active"
+            ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox'].active"
           ),
           "personal message inbox link is marked as active"
         );
 
         assert.ok(
           exists(
-            `.sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-${type}.active`
+            `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-${type}'].active`
           ),
           `personal message ${type} link is marked as active`
         );
 
         assert.notOk(
           exists(
-            `.sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-${type} .sidebar-section-link-prefix`
+            `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-${type}'] .sidebar-section-link-prefix`
           ),
           `prefix is not displayed for ${type} personal message section link`
         );
@@ -236,7 +236,7 @@ acceptance(
       );
 
       await click(
-        ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-inbox.group3"
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-inbox'].group3"
       );
 
       assert.strictEqual(
@@ -278,11 +278,11 @@ acceptance(
         await visit("/");
 
         await click(
-          `.sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-inbox.group1`
+          `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-inbox'].group1`
         );
 
         await click(
-          `.sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-${type}.group1`
+          `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-${type}'].group1`
         );
 
         assert.strictEqual(
@@ -301,14 +301,14 @@ acceptance(
 
         assert.ok(
           exists(
-            ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-inbox.group1.active"
+            ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-inbox'].group1.active"
           ),
           "group1 group message inbox link is marked as active"
         );
 
         assert.ok(
           exists(
-            `.sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-${type}.group1.active`
+            `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-${type}'].group1.active`
           ),
           `group1 group message ${type} link is marked as active`
         );
@@ -407,7 +407,7 @@ acceptance(
       );
 
       await click(
-        ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-inbox.group1"
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-inbox'].group1"
       );
 
       await publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
@@ -434,7 +434,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-unread.group1"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-unread'].group1"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.unread_with_count", {
           count: 1,
@@ -444,7 +444,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-new.group1"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-new'].group1"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.new_with_count", {
           count: 1,
@@ -465,7 +465,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-group-messages-new.group1"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-new'].group1"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.new"),
         "removes count for group1 new inbox filter link"
@@ -480,7 +480,7 @@ acceptance(
       );
 
       await click(
-        ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-inbox"
+        ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox']"
       );
 
       await publishToMessageBus(pmTopicTrackingState.userChannel(), {
@@ -496,7 +496,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-unread"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-unread']"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.unread_with_count", {
           count: 1,
@@ -517,7 +517,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-unread"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-unread']"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.unread_with_count", {
           count: 2,
@@ -538,7 +538,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-new"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-new']"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.new_with_count", {
           count: 1,
@@ -559,7 +559,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section[data-section-name='messages'] .sidebar-section-link-personal-messages-new"
+          ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-new']"
         ).textContent.trim(),
         I18n.t("sidebar.sections.messages.links.new"),
         "removes the count from the new inbox filter link"
