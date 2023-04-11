@@ -1,5 +1,5 @@
 import { isTesting } from "discourse-common/config/environment";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import I18n from "I18n";
 import optionalService from "discourse/lib/optional-service";
@@ -265,12 +265,10 @@ export default class ChatMessage extends Component {
     );
   }
 
-  @computed("args.message.threadId")
   get threadingEnabled() {
     return this.args.channel?.threadingEnabled && this.args.message?.threadId;
   }
 
-  @computed("args.message.threadId")
   get showThreadIndicator() {
     return (
       this.args.context !== MESSAGE_CONTEXT_THREAD &&

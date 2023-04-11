@@ -164,7 +164,7 @@ module Chat
 
     def create_thread
       return if @in_reply_to_id.blank?
-      return if @chat_message.thread_id.present?
+      return if @chat_message.in_thread?
 
       if @original_message.thread
         thread = @original_message.thread

@@ -67,10 +67,9 @@ describe "Channel thread message echoing", type: :system, js: true do
 
     it "does not echo new thread messages into the channel stream" do
       chat_page.visit_channel(channel)
-      channel_page.message_thread_indicator_by_id(thread.original_message.id).click
+      channel_page.message_thread_indicator(thread.original_message).click
       expect(side_panel).to have_open_thread(thread)
-      open_thread.fill_composer(thread.id, "new thread message")
-      open_thread.click_send_message(thread.id)
+      open_thread.send_message(thread.id, "new thread message")
       expect(open_thread).to have_message(thread.id, text: "new thread message")
       new_message = thread.reload.replies.last
       expect(channel_page).not_to have_css(channel_page.message_by_id_selector(new_message.id))

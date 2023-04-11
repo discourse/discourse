@@ -176,7 +176,7 @@ module Chat
       messages = preloaded_chat_message_query.where(chat_channel: @chat_channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(@chatable)
       messages = messages.where(thread_id: params[:thread_id]) if params[:thread_id]
-      messages = exclude_thread_messages(messages) if should_exclude_thread_messages?
+      messages = exclude_thread_messages(messages) if !include_thread_messages?
 
       if message_id.present?
         condition = direction == PAST ? "<" : ">"
@@ -260,7 +260,7 @@ module Chat
       messages = preloaded_chat_message_query.where(chat_channel: @chat_channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(@chatable)
       messages = messages.where(thread_id: params[:thread_id]) if params[:thread_id]
-      messages = exclude_thread_messages(messages) if should_exclude_thread_messages?
+      messages = exclude_thread_messages(messages) if !include_thread_messages?
 
       past_messages =
         messages
@@ -278,7 +278,7 @@ module Chat
       can_load_more_future = future_messages.count == FUTURE_MESSAGE_LIMIT
       messages = [
         past_messages.reverse,
-        (should_exclude_thread_messages? && @message.thread_id) ? [] : [@message],
+        (!include_thread_messages? && @message.in_thread?) ? [] : [@message],
         future_messages,
       ].reduce([], :concat)
       chat_view =
@@ -425,13 +425,9 @@ module Chat
       query
     end
 
-    def echo_thread_messages
-      @echo_thread_messages ||= params[:echo_thread_messages].to_s == "t"
-    end
-
-    def should_exclude_thread_messages?
-      !echo_thread_messages && !params[:thread_id] &&
-        SiteSetting.enable_experimental_chat_threaded_discussions && @chat_channel.threading_enabled
+    def include_thread_messages?
+      params[:thread_id].present? || !SiteSetting.enable_experimental_chat_threaded_discussions ||
+        !@chat_channel.threading_enabled
     end
 
     def find_chatable

@@ -11,7 +11,7 @@ module Chat
     end
 
     def self.publish_new!(chat_channel, chat_message, staged_id)
-      return if chat_message.thread_id.present? && !chat_message.is_thread_om?
+      return if chat_message.thread_reply?
 
       content =
         Chat::MessageSerializer.new(
@@ -50,7 +50,7 @@ module Chat
     end
 
     def self.publish_processed!(chat_message)
-      return if chat_message.thread_id.present? && !chat_message.is_thread_om?
+      return if chat_message.thread_reply?
 
       chat_channel = chat_message.chat_channel
       content = {
@@ -68,7 +68,7 @@ module Chat
     end
 
     def self.publish_edit!(chat_channel, chat_message)
-      return if chat_message.thread_id.present? && !chat_message.is_thread_om?
+      return if chat_message.thread_reply?
 
       content =
         Chat::MessageSerializer.new(
@@ -84,7 +84,7 @@ module Chat
     end
 
     def self.publish_refresh!(chat_channel, chat_message)
-      return if chat_message.thread_id.present? && !chat_message.is_thread_om?
+      return if chat_message.thread_reply?
 
       content =
         Chat::MessageSerializer.new(
@@ -100,7 +100,7 @@ module Chat
     end
 
     def self.publish_reaction!(chat_channel, chat_message, action, user, emoji)
-      return if chat_message.thread_id.present? && !chat_message.is_thread_om?
+      return if chat_message.thread_reply?
 
       content = {
         action: action,
@@ -121,7 +121,7 @@ module Chat
     end
 
     def self.publish_delete!(chat_channel, chat_message)
-      return if chat_message.thread_id.present? && !chat_message.is_thread_om?
+      return if chat_message.thread_reply?
 
       MessageBus.publish(
         root_message_bus_channel(chat_channel.id),
@@ -139,7 +139,7 @@ module Chat
     end
 
     def self.publish_restore!(chat_channel, chat_message)
-      return if chat_message.thread_id.present? && !chat_message.is_thread_om?
+      return if chat_message.thread_reply?
 
       content =
         Chat::MessageSerializer.new(
@@ -155,7 +155,7 @@ module Chat
     end
 
     def self.publish_flag!(chat_message, user, reviewable, score)
-      return if chat_message.thread_id.present? && !chat_message.is_thread_om?
+      return if chat_message.thread_reply?
 
       # Publish to user who created flag
       MessageBus.publish(

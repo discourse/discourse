@@ -66,19 +66,19 @@ describe "Thread indicator for chat messages", type: :system, js: true do
 
     it "shows the correct reply counts" do
       chat_page.visit_channel(channel)
-      expect(channel_page.message_thread_indicator_by_id(thread_1.original_message.id)).to have_css(
-        ".chat-message-thread-indicator__view-thread",
-        text: I18n.t("js.chat.thread.view_thread_replies", count: 3),
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_css(
+        ".chat-message-thread-indicator__replies-count",
+        text: I18n.t("js.chat.thread.replies", count: 3),
       )
-      expect(channel_page.message_thread_indicator_by_id(thread_2.original_message.id)).to have_css(
-        ".chat-message-thread-indicator__view-thread",
-        text: I18n.t("js.chat.thread.view_thread_replies", count: 1),
+      expect(channel_page.message_thread_indicator(thread_2.original_message)).to have_css(
+        ".chat-message-thread-indicator__replies-count",
+        text: I18n.t("js.chat.thread.replies", count: 1),
       )
     end
 
     it "clicking a thread indicator opens the thread panel" do
       chat_page.visit_channel(channel)
-      channel_page.message_thread_indicator_by_id(thread_1.original_message.id).click
+      channel_page.message_thread_indicator(thread_1.original_message).click
       expect(side_panel).to have_open_thread(thread_1)
     end
 

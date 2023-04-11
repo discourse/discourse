@@ -4,11 +4,17 @@ module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
       def type_in_composer(input)
-        find(".chat-composer-input").send_keys(input)
+        find(".chat-composer-input--channel").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-composer-input--channel").send_keys(input)
       end
 
       def fill_composer(input)
-        find(".chat-composer-input").fill_in(with: input)
+        find(".chat-composer-input--channel").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-composer-input--channel").fill_in(with: input)
+      end
+
+      def click_composer
+        find(".chat-composer-input--channel").click # ensures autocomplete is closed and not masking anything
       end
 
       def click_send_message
@@ -96,10 +102,9 @@ module PageObjects
 
       def send_message(text = nil)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
-        find(".chat-composer-input").click # makes helper more reliable by ensuring focus is not lost
-        find(".chat-composer-input").fill_in(with: text)
+        fill_composer(text)
         click_send_message
-        find(".chat-composer-input").click # ensures autocomplete is closed and not masking anything
+        click_composer
       end
 
       def reply_to(message)
@@ -157,8 +162,8 @@ module PageObjects
         has_css?("#{message_by_id_selector(message.id)} .chat-message-thread-indicator")
       end
 
-      def message_thread_indicator_by_id(id)
-        find("#{message_by_id_selector(id)} .chat-message-thread-indicator")
+      def message_thread_indicator(message)
+        find("#{message_by_id_selector(message.id)} .chat-message-thread-indicator")
       end
     end
   end
