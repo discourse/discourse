@@ -600,6 +600,8 @@ class PostRevisor
         number: @post.version,
         modifications: modifications,
         hidden: only_hidden_tags_changed?,
+        created_at: @revised_at,
+        updated_at: @revised_at,
       )
   end
 
