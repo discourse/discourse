@@ -1609,6 +1609,12 @@ bg:
           restrict_email: "Ограничете до имейл"
           restrict_domain: "Ограничаване до домейн"
           email_or_domain_placeholder: "name@example.com или example.com"
+          max_redemptions_allowed: "Максимум използвания"
+          add_to_groups: "Добавяне към групи"
+          invite_to_topic: "Стигане до темата"
+          expires_at: "Изтича след"
+          custom_message: "Незадължително лично съобщение"
+          send_invite_email: "Запазване и изпращане на имейл"
       password:
         title: "Парола"
         too_short: "Вашата парола е твърде кратка."
