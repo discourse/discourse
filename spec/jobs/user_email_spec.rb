@@ -930,5 +930,24 @@ RSpec.describe Jobs::UserEmail do
         end
       end
     end
+
+    context "without post" do
+      context "when user is suspended" do
+        subject(:send_email) do
+          described_class.new.execute(
+            type: :account_suspended,
+            user_id: suspended.id,
+            user_history_id: user_history.id,
+          )
+        end
+
+        let(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:suspend_user]) }
+
+        it "does send an email" do
+          send_email
+          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(suspended.email)
+        end
+      end
+    end
   end
 end
