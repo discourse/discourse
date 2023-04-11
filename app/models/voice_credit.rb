@@ -5,7 +5,8 @@ class VoiceCredit < ActiveRecord::Base
   belongs_to :topic
   belongs_to :category
 
-  validates_presence_of :user, :topic, :category, :credits_allocated
+  validates_presence_of :user_id, :topic_id, :category_id, :credits_allocated
+
   ## technically the limitation is 100 between all the votes per category. But still one allocation can go over 100
   validates :credits_allocated,
             numericality: {

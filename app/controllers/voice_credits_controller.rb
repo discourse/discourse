@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class VoiceCreditsController < ApplicationController
+  requires_login except: [:total_votes_per_topic_for_category]
+
   def index
     category_id = params.require(:category_id)
     if category_id == "all"
@@ -43,11 +45,14 @@ class VoiceCreditsController < ApplicationController
       end
     end
 
-    render json: { total_vote_values_per_topic: result }
+    render json: { success: true, total_vote_values_per_topic: result }
   end
 
-  def update
-    voice_credits_data = params.require(:voice_credits)
+  def create
+    category_id = params["category_id"]
+    user_id = current_user.id
+    ## TODO validate voice_credits_data
+    voice_credits_data = params.require("voice_credits_data").values()
 
     if voice_credits_data.map { |vc| vc[:credits_allocated].to_i }.sum > 100
       render json: {
@@ -61,12 +66,12 @@ class VoiceCreditsController < ApplicationController
     VoiceCredit.transaction do
       voice_credits_data.each do |voice_credit|
         VoiceCredit.find_or_initialize_by(
-          user_id: current_user.id,
-          topic_id: voice_credit[:topic_id],
-        ).update!(credits_allocated: voice_credit[:credits_allocated])
+          user_id: user_id,
+          topic_id: voice_credit[:topic_id].to_i,
+          category_id: category_id.to_i,
+        ).update!(credits_allocated: voice_credit[:credits_allocated].to_i)
       end
     end
-
     render json: { success: true }
   end
 end

@@ -11,6 +11,6 @@ class CreateVoiceCredits < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    add_index :voice_credits, %i[user_id topic_id], unique: true
+    add_index :voice_credits, %i[user_id topic_id category_id], unique: true
   end
 end
