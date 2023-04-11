@@ -186,7 +186,6 @@ class UserStat < ActiveRecord::Base
             FROM filtered_users AS u
             JOIN post_timings AS pt ON pt.user_id = u.id
             JOIN topics t ON t.id = pt.topic_id
-            JOIN user_stats us ON us.user_id = u.id
             WHERE t.archetype = 'regular'
             AND t.deleted_at IS NULL
             GROUP BY pt.user_id
