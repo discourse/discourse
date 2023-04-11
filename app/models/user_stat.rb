@@ -180,18 +180,15 @@ class UserStat < ActiveRecord::Base
         JOIN user_stats ON user_id = u.id
         WHERE last_seen_at > :seen_at
         AND posts_read_count < 10000
-      ),
-      filtered_topics AS (
-         SELECT id FROM topics
-         WHERE archetype = 'regular'
-         AND deleted_at IS NULL
       )
       UPDATE user_stats SET posts_read_count = X.c
       FROM (SELECT pt.user_id, COUNT(*) as c
             FROM filtered_users AS u
             JOIN post_timings AS pt ON pt.user_id = u.id
-            JOIN filtered_topics t ON t.id = pt.topic_id
+            JOIN topics t ON t.id = pt.topic_id
             JOIN user_stats us ON us.user_id = u.id
+            WHERE t.archetype = 'regular'
+            AND t.deleted_at IS NULL
             GROUP BY pt.user_id
            ) AS X
       WHERE X.user_id = user_stats.user_id
