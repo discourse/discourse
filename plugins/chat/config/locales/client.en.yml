@@ -536,7 +536,9 @@ en:
       thread:
         label: Thread
         last_reply: Last Reply
-        view_thread_replies: view thread (%{count} replies)
+        view_thread_replies:
+          one: "view thread (%{count} reply)"
+          other: "view thread (%{count} replies)"
       threads:
         started_by: "Started by"
         open: "Open Thread"

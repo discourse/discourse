@@ -157,11 +157,8 @@ module Chat
       object.thread_id.present?
     end
 
-    # TODO (martin) We need to cache this same as the channel message count
-    #
-    # NOTE: We do not include the OM in this count.
     def thread_reply_count
-      [0, object.thread.chat_messages.count - 1].max
+      object.thread.replies_count
     end
   end
 end

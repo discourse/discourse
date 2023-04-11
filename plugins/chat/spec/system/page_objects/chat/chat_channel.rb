@@ -15,8 +15,12 @@ module PageObjects
         find(".chat-composer .send-btn:enabled").click
       end
 
+      def message_by_id_selector(id)
+        ".chat-message-container[data-id=\"#{id}\"]"
+      end
+
       def message_by_id(id)
-        find(".chat-message-container[data-id=\"#{id}\"]")
+        find(message_by_id_selector(id))
       end
 
       def has_no_loading_skeleton?
@@ -152,6 +156,14 @@ module PageObjects
         elsif id
           has_css?(".chat-message-container[data-id=\"#{id}\"]", wait: 10)
         end
+      end
+
+      def has_thread_indicator?(message)
+        has_css?("#{message_by_id_selector(message.id)} .chat-message-thread-indicator")
+      end
+
+      def message_thread_indicator_by_id(id)
+        find("#{message_by_id_selector(id)} .chat-message-thread-indicator")
       end
     end
   end
