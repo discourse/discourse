@@ -5,11 +5,30 @@
       @headerLinkText={{section.decoratedTitle}}
       @collapsable={{true}}
       @headerActions={{section.headerActions}}
-      @headerActionsIcon="pencil-alt"
+      @headerActionsIcon={{section.headerActionIcon}}
       @class={{section.dragCss}}
     >
       {{#each section.links as |link|}}
-        {{#if link.external}}
+        {{#if section.system}}
+          <Sidebar::SectionLink
+            @shouldDisplay={{link.shouldDisplay}}
+            @linkName={{link.name}}
+            @href={{link.href}}
+            @route={{link.route}}
+            @query={{link.query}}
+            @title={{link.title}}
+            @content={{link.text}}
+            @currentWhen={{link.currentWhen}}
+            @badgeText={{link.badgeText}}
+            @model={{link.model}}
+            @models={{link.models}}
+            @prefixType={{link.prefixType}}
+            @prefixValue={{link.prefixValue}}
+            @suffixCSSClass={{link.suffixCSSClass}}
+            @suffixValue={{link.suffixValue}}
+            @suffixType={{link.suffixType}}
+          />
+        {{else if link.external}}
           <Sidebar::SectionLink
             @linkName={{link.name}}
             @content={{replace-emoji link.name}}
@@ -41,6 +60,10 @@
           />
         {{/if}}
       {{/each}}
+
+      {{#if section.moreLinks}}
+        <Sidebar::MoreSectionLinks @sectionLinks={{section.moreLinks}} />
+      {{/if}}
     </Sidebar::Section>
   {{/each}}
 </div>

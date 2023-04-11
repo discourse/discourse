@@ -48,4 +48,5 @@ end
 #  updated_at :datetime         not null
 #  icon       :string(40)       not null
 #  external   :boolean          default(FALSE), not null
+#  segment    :string           default("primary"), not null
 #

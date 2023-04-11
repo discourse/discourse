@@ -5,8 +5,36 @@
       @headerLinkText={{section.decoratedTitle}}
       @collapsable={{true}}
     >
+
+      {{#if section.displayShortSiteDescription}}
+        <Sidebar::SectionMessage>
+          {{section.siteSettings.short_site_description}}
+        </Sidebar::SectionMessage>
+      {{/if}}
+
       {{#each section.links as |link|}}
-        {{#if link.external}}
+        {{#if section.system}}
+          {{#if link.shouldDisplay}}
+            <Sidebar::SectionLink
+              @shouldDisplay={{link.shouldDisplay}}
+              @linkName={{link.name}}
+              @href={{link.href}}
+              @route={{link.route}}
+              @query={{link.query}}
+              @title={{link.title}}
+              @content={{link.text}}
+              @currentWhen={{link.currentWhen}}
+              @badgeText={{link.badgeText}}
+              @model={{link.model}}
+              @models={{link.models}}
+              @prefixType={{link.prefixType}}
+              @prefixValue={{link.prefixValue}}
+              @suffixCSSClass={{link.suffixCSSClass}}
+              @suffixValue={{link.suffixValue}}
+              @suffixType={{link.suffixType}}
+            />
+          {{/if}}
+        {{else if link.external}}
           <Sidebar::SectionLink
             @linkName={{link.name}}
             @content={{replace-emoji link.name}}
@@ -26,6 +54,10 @@
           />
         {{/if}}
       {{/each}}
+
+      {{#if section.moreLinks}}
+        <Sidebar::MoreSectionLinks @sectionLinks={{section.moreLinks}} />
+      {{/if}}
     </Sidebar::Section>
   {{/each}}
 </div>

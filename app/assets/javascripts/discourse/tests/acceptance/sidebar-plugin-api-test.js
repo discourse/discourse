@@ -15,7 +15,35 @@ import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sideb
 import { bind } from "discourse-common/utils/decorators";
 
 acceptance("Sidebar - Plugin API", function (needs) {
-  needs.user();
+  needs.user({
+    sidebar_sections: [
+      {
+        id: 111,
+        title: "community",
+        links: [
+          {
+            id: 329,
+            name: "everything",
+            value: "/system_unread",
+            icon: "layer-group",
+            external: false,
+            segment: "primary",
+          },
+          {
+            id: 334,
+            name: "review",
+            value: "/system_review",
+            icon: "flag",
+            external: false,
+            segment: "secondary",
+          },
+        ],
+        slug: "community",
+        public: true,
+        system: true,
+      },
+    ],
+  });
 
   needs.settings({
     navigation_menu: "sidebar",
@@ -439,7 +467,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     const myCustomTopSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content-secondary .sidebar-section-link[data-link-name='my-custom-top']"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content-main .sidebar-section-link[data-link-name='my-custom-top']"
     );
 
     assert.ok(
@@ -467,14 +495,12 @@ acceptance("Sidebar - Plugin API", function (needs) {
           label: "filters.latest.title",
         };
       });
-
       api.decorateWidget("hamburger-menu:generalLinks", () => {
         return {
           route: "discovery.unread",
           rawLabel: "my unreads",
         };
       });
-
       api.decorateWidget("hamburger-menu:generalLinks", () => {
         return {
           route: "discovery.top",
@@ -482,14 +508,12 @@ acceptance("Sidebar - Plugin API", function (needs) {
           className: "my-custom-top",
         };
       });
-
       api.decorateWidget("hamburger-menu:generalLinks", () => {
         return {
           href: "/c/bug?status=open",
           rawLabel: "open bugs",
         };
       });
-
       api.decorateWidget("hamburger-menu:generalLinks", () => {
         return {
           href: "/t/internationalization-localization/280",

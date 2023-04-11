@@ -303,11 +303,6 @@ RSpec.describe CurrentUserSerializer do
     fab!(:group) { Fabricate(:group) }
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
 
-    before do
-      group.add(user)
-      SiteSetting.enable_custom_sidebar_sections = group.id
-    end
-
     it "eager loads sidebar_urls" do
       custom_sidebar_section_link_1 =
         Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: sidebar_section)

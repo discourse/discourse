@@ -12,7 +12,7 @@ export default class SidebarMoreSectionLinks extends Component {
   @tracked shouldDisplaySectionLinks = false;
   @tracked activeSectionLink;
 
-  #allLinks = [...this.args.sectionLinks, ...this.args.secondarySectionLinks];
+  #allLinks = [...this.args.sectionLinks];
 
   constructor() {
     super(...arguments);
@@ -30,14 +30,6 @@ export default class SidebarMoreSectionLinks extends Component {
       return this.#filterActiveSectionLink(this.args.sectionLinks);
     } else {
       return this.args.sectionLinks;
-    }
-  }
-
-  get secondarySectionLinks() {
-    if (this.activeSectionLink) {
-      return this.#filterActiveSectionLink(this.args.secondarySectionLinks);
-    } else {
-      return this.args.secondarySectionLinks;
     }
   }
 

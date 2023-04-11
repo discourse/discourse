@@ -15,6 +15,91 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
     navigation_menu: "sidebar",
     faq_url: "https://discourse.org",
   });
+  needs.site({
+    anonymous_sidebar_sections: [
+      {
+        id: 111,
+        title: "community",
+        links: [
+          {
+            id: 329,
+            name: "everything",
+            value: "/system_unread",
+            icon: "layer-group",
+            external: false,
+            segment: "primary",
+          },
+          {
+            id: 330,
+            name: "users",
+            value: "/system_users",
+            icon: "users",
+            external: false,
+            segment: "secondary",
+          },
+          {
+            id: 331,
+            name: "info",
+            value: "/system_about",
+            icon: "info-circle",
+            external: false,
+            segment: "secondary",
+          },
+          {
+            id: 332,
+            name: "faq",
+            value: "/system_faq",
+            icon: "question-circle",
+            external: false,
+            segment: "secondary",
+          },
+          {
+            id: 333,
+            name: "my_posts",
+            value: "/system_posts",
+            icon: "user",
+            external: false,
+            segment: "primary",
+          },
+          {
+            id: 334,
+            name: "review",
+            value: "/system_review",
+            icon: "flag",
+            external: false,
+            segment: "secondary",
+          },
+          {
+            id: 335,
+            name: "admin",
+            value: "/system_admin",
+            icon: "wrench",
+            external: false,
+            segment: "primary",
+          },
+          {
+            id: 336,
+            name: "groups",
+            value: "/system_groups",
+            icon: "user-friends",
+            external: false,
+            segment: "secondary",
+          },
+          {
+            id: 337,
+            name: "badges",
+            value: "/system_badges",
+            icon: "certificate",
+            external: false,
+            segment: "secondary",
+          },
+        ],
+        slug: "community",
+        public: true,
+        system: true,
+      },
+    ],
+  });
 
   test("display short site description site setting when it is set", async function (assert) {
     this.siteSettings.short_site_description =
@@ -29,19 +114,9 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
       this.siteSettings.short_site_description,
       "displays the short site description under the community section"
     );
-
-    const sectionLinks = queryAll(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link"
-    );
-
-    assert.strictEqual(
-      sectionLinks[0].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.about.content"),
-      "displays the about section link first"
-    );
   });
 
-  test("everything, users, about and FAQ section links are shown by default ", async function (assert) {
+  test("everything section link is shown by default ", async function (assert) {
     await visit("/");
 
     const sectionLinks = queryAll(
@@ -52,24 +127,6 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
       sectionLinks[0].textContent.trim(),
       I18n.t("sidebar.sections.community.links.everything.content"),
       "displays the everything section link first"
-    );
-
-    assert.strictEqual(
-      sectionLinks[1].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.users.content"),
-      "displays the users section link second"
-    );
-
-    assert.strictEqual(
-      sectionLinks[2].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.about.content"),
-      "displays the about section link third"
-    );
-
-    assert.strictEqual(
-      sectionLinks[3].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.faq.content"),
-      "displays the FAQ section link last"
     );
   });
 
@@ -86,7 +143,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
     );
   });
 
-  test("groups and badges section links are shown in more...", async function (assert) {
+  test("users, about, faq, groups and badges section links are shown in more...", async function (assert) {
     await visit("/");
 
     await click(
@@ -99,12 +156,30 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
     assert.strictEqual(
       sectionLinks[0].textContent.trim(),
+      I18n.t("sidebar.sections.community.links.users.content"),
+      "displays the users section link second"
+    );
+
+    assert.strictEqual(
+      sectionLinks[1].textContent.trim(),
+      I18n.t("sidebar.sections.community.links.about.content"),
+      "displays the about section link third"
+    );
+
+    assert.strictEqual(
+      sectionLinks[2].textContent.trim(),
+      I18n.t("sidebar.sections.community.links.faq.content"),
+      "displays the FAQ section link last"
+    );
+
+    assert.strictEqual(
+      sectionLinks[3].textContent.trim(),
       I18n.t("sidebar.sections.community.links.groups.content"),
       "displays the groups section link first"
     );
 
     assert.strictEqual(
-      sectionLinks[1].textContent.trim(),
+      sectionLinks[4].textContent.trim(),
       I18n.t("sidebar.sections.community.links.badges.content"),
       "displays the badges section link second"
     );

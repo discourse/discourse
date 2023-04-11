@@ -42,6 +42,7 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  public     :boolean          default(FALSE), not null
+#  system     :boolean          default(FALSE), not null
 #
 # Indexes
 #

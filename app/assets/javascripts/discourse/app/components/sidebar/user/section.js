@@ -41,6 +41,10 @@ export default class Section {
     }
   }
 
+  get headerActionIcon() {
+    return "pencil-alt";
+  }
+
   @bind
   disable() {
     this.dragCss = "disabled";
