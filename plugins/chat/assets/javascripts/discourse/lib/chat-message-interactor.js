@@ -120,14 +120,6 @@ export default class ChatMessageInteractor {
     );
   }
 
-  get canOpenThread() {
-    return (
-      this.context !== MESSAGE_CONTEXT_THREAD &&
-      this.message.channel?.threadingEnabled &&
-      this.message?.threadId
-    );
-  }
-
   get canRebakeMessage() {
     return (
       this.currentUser?.staff &&
@@ -209,14 +201,6 @@ export default class ChatMessageInteractor {
         id: "rebake",
         name: I18n.t("chat.rebake_message"),
         icon: "sync-alt",
-      });
-    }
-
-    if (this.canOpenThread) {
-      buttons.push({
-        id: "openThread",
-        name: I18n.t("chat.threads.open"),
-        icon: "puzzle-piece",
       });
     }
 
@@ -362,15 +346,6 @@ export default class ChatMessageInteractor {
   @action
   edit() {
     this.composer.editButtonClicked(this.message.id);
-  }
-
-  @action
-  openThread() {
-    this.router.transitionTo(
-      "chat.channel.thread",
-      ...this.message.channel.routeModels,
-      this.message.threadId
-    );
   }
 
   @action

@@ -790,6 +790,8 @@ export default class ChatLivePane extends Component {
       if (!this.args.channel.threadingEnabled) {
         this.args.channel.messagesManager.addMessages([stagedMessage]);
       }
+    } else {
+      this.args.channel.messagesManager.addMessages([stagedMessage]);
     }
 
     if (!this.args.channel.messagesManager.canLoadMoreFuture) {
