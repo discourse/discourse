@@ -253,6 +253,7 @@ pl_PL:
         mention: "Tylko dla wzmianek"
         always: "Dla całej aktywności"
       settings:
+        channel_wide_mentions_label: "Zezwalaj na wzmianki @all i @here"
         channel_wide_mentions_description: "Zezwalaj użytkownikom na powiadamianie wszystkich członków #%{channel} za pomocą @all lub tylko tych, którzy są aktywni w danym momencie za pomocą @here"
         auto_join_users_label: "Automatycznie dodawaj użytkowników"
         desktop_notification_level: "Powiadomienia na pulpicie"
@@ -300,6 +301,7 @@ pl_PL:
         username_instructions: "Nazwa użytkownika bota, który publikuje na kanale. Domyślnie \"system\" gdy pozostanie puste."
       selection:
         cancel: "Anuluj"
+        quote_selection: "Cytat w temacie"
         copy: "Kopiuj"
         move_selection_to_channel: "Przejdź do kanału"
         error: "Wystąpił błąd podczas przenoszenia wiadomości czatu"
@@ -370,10 +372,6 @@ pl_PL:
               label: Wiadomość
             sender:
               label: Nadawca
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Oflagowany przez"
     keyboard_shortcuts_help:
       chat:
         title: "Czat"

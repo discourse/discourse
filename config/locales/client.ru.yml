@@ -1276,7 +1276,6 @@ ru:
       home: "Домашняя страница"
       staged: "Сымитированный"
       staff_counters:
-        flags_given: "полезные жалобы"
         flagged_posts: "записи с жалобами"
         deleted_posts: "удалённые записи"
         suspensions: "заморозки"

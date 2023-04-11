@@ -157,6 +157,8 @@ sv:
       removed_user: "Tog bort %{who} %{when}"
       removed_group: "Tog bort %{who} %{when}"
       autobumped: "Automatiskt positionerad %{when}"
+      tags_changed: "Taggar uppdaterade %{when}"
+      category_changed: "Kategori uppdaterad %{when}"
       autoclosed:
         enabled: "Stängdes %{when}"
         disabled: "Öppnades %{when}"
@@ -348,6 +350,7 @@ sv:
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för personligt meddelande"
       abandon:
+        confirm: "Du har redan ett pågående utkast. Vad vill du göra med det?"
         yes_value: "Förkasta"
         no_value: "Återuppta redigering"
     topic_count_categories:
@@ -1197,7 +1200,6 @@ sv:
       home: "Standardhemsida"
       staged: "Arrangerad"
       staff_counters:
-        flags_given: "hjälpsamma flaggor"
         flagged_posts: "flaggade inlägg"
         deleted_posts: "raderade inlägg"
         suspensions: "avstängningar"

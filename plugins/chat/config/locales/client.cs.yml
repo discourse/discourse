@@ -110,7 +110,3 @@ cs:
           fields:
             message:
               label: Zpráva
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Nahlásil"

@@ -431,7 +431,6 @@ te:
       tracked_topics_link: "చూపు"
       theme: "అలంకారం"
       staff_counters:
-        flags_given: "సహాయకారి కేతనాలు"
         flagged_posts: "కేతనించిన టపాలు"
         deleted_posts: "తొగలించిన టపాలు"
         suspensions: "సస్పెన్షన్లు"

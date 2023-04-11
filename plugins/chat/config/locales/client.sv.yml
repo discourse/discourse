@@ -506,8 +506,9 @@ sv:
         symbols: "Symboler"
         search_placeholder: "Sök efter emojinamn och alias..."
         no_results: "Inga resultat"
+      thread:
+        label: Tråd
       threads:
-        op_said: "OP sa:"
         started_by: "Startad av"
         open: "Öppna tråd"
       draft_channel_screen:
@@ -554,9 +555,8 @@ sv:
       transcript:
         view: "Visa tidigare meddelandens avskrift"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Flaggat chattmeddelande"
-          flagged_by: "Flaggat av"
     keyboard_shortcuts_help:
       chat:
         title: "Chatt"

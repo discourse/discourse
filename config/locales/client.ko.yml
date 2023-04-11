@@ -1087,7 +1087,6 @@ ko:
       home: "디폴트 홈페이지"
       staged: "스테이징됨"
       staff_counters:
-        flags_given: "유용한 신고"
         flagged_posts: "신고된 게시물"
         deleted_posts: "삭제된 글"
         suspensions: "정지"

@@ -52,6 +52,11 @@ tr_TR:
   remove_posts_deleted_by_author: "Yazar tarafından silindi"
   redirect_warning: "Seçtiğiniz bağlantının gerçekten foruma gönderildiğini doğrulayamadık. Yine de devam etmek istiyorsanız aşağıdaki bağlantıyı seçin."
   on_another_topic: "Başka bir konuda"
+  topic_category_changed: "%{from} iken %{to} oldu"
+  topic_tag_changed:
+    added_and_removed: "%{added} eklendi ve %{removed} kaldırıldı"
+    added: "%{added} eklendi"
+    removed: "%{removed} kaldırıldı"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} tarafından #%{post_number}"
@@ -2093,6 +2098,7 @@ tr_TR:
     suppress_overlapping_tags_in_list: "Etiketler konu başlıklarındaki kelimelerle tam olarak eşleşiyorsa etiketi gösterme"
     remove_muted_tags_from_latest: "En son konu listesinde yalnızca sessize alınmış etiketlerle etiketlenmiş konuları göstermeyin."
     force_lowercase_tags: "Tüm yeni etiketleri tamamen küçük harf olmaya zorlayın."
+    create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde küçük bir bilgi gönderisi oluştur"
     company_name: "Şirket Adı"
     governing_law: "Geçerli Kanun"
     city_for_disputes: "Anlaşmazlıklar için şehir"
@@ -2163,7 +2169,6 @@ tr_TR:
       staged_users_disabled: "Bu ayarı etkinleştirmeden önce \"aşamalı kullanıcılar\"ı etkinleştirmeniz gerekiyor."
       reply_by_email_disabled: "Bu ayarı etkinleştirmeden önce \"e-posta ile yanıtla\" özelliğini etkinleştirmeniz gerekiyor."
       discourse_connect_url_is_empty: "Bu ayarı etkinleştirmeden önce bir \"discourse bağlantı URL'si\" ayarlamanız gerekiyor."
-      discourse_connect_invite_only: "DiscourseConnect'i ve yalnızca davetle özelliğini aynı anda etkinleştiremezsiniz."
       enable_local_logins_disabled: "Bu ayarı etkinleştirmeden önce \"yerel girişleri etkinleştir\" seçeneğini etkinleştirmeniz gerekiyor."
       min_username_length_exists: "Minimum kullanıcı adı uzunluğunu en kısa kullanıcı adının üzerinde ayarlayamazsınız (%{username})."
       min_username_length_range: "Minimum değeri maksimum değerin üzerinde ayarlayamazsınız."
@@ -4271,6 +4276,9 @@ tr_TR:
           <p>İyi eğlenceler ve <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'> yeni topluluğunuzu oluştururken</a></p> iyi şanslar!
   search_logs:
     graph_title: "Arama Sayısı"
+  onebox:
+    discourse:
+      user_joined_community: "%{date} tarihinde katıldı"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}, "%{topic}" konusunda sizden bahsetti - %{site_title}'
@@ -4334,22 +4342,35 @@ tr_TR:
     actions:
       agree:
         title: "Evet"
+      agree_and_keep:
+        title: "Gönderiyi Tut"
       agree_and_suspend:
+        title: "Kullanıcıyı askıya al"
         description: "Bayrağı kabul edin ve kullanıcıyı askıya alın."
       agree_and_silence:
         title: "Kullanıcıyı sustur"
         description: "Bayrağı kabul edin ve kullanıcıyı susturun."
       agree_and_restore:
+        title: "Gönderiyi geri yükle"
         description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
+      agree_and_hide:
+        title: "Gönderiyi gizle"
       delete_single:
         title: "Sil"
       delete:
         title: "Sil..."
+      delete_and_ignore:
+        title: "İşareti yoksay ve gönderiyi sil"
       delete_and_ignore_replies:
+        title: "Bayrağı yoksay, gönderiyi ve yanıtları sil"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
+      delete_and_agree:
+        title: "Gönderiyi sil"
       delete_and_agree_replies:
+        title: "Gönderiyi ve yanıtları sil"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
       disagree_and_restore:
+        title: "Hayır, gönderiyi geri yükle"
         description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
       disagree:
         title: "Hayır"

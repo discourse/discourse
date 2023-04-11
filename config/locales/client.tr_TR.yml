@@ -155,6 +155,8 @@ tr_TR:
       removed_user: "%{who} adlı kullanıcıyı çıkardı, %{when}"
       removed_group: "%{who} adlı kullanıcıyı çıkardı, %{when}"
       autobumped: "Otomatik olarak üste sıçradı, %{when}"
+      tags_changed: "Etiketler güncellendi (%{when})"
+      category_changed: "Kategori güncellendi (%{when})"
       autoclosed:
         enabled: "Kapattı, %{when}"
         disabled: "Açtı, %{when}"
@@ -1179,7 +1181,6 @@ tr_TR:
       home: "Varsayılan Ana Sayfa"
       staged: "Aşamalı"
       staff_counters:
-        flags_given: "yardımcı bayraklar"
         flagged_posts: "bayrak eklenen gönderiler"
         deleted_posts: "silinen gönderiler"
         suspensions: "uzaklaştırmalar"

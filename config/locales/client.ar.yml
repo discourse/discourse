@@ -1388,7 +1388,6 @@ ar:
       home: "الصفحة الرئيسية المبدئية"
       staged: "مؤقت"
       staff_counters:
-        flags_given: "بلاغ مفيد"
         flagged_posts: "منشور مُبلَغ عنه"
         deleted_posts: "منشور محذوف"
         suspensions: "حالة تعليق"

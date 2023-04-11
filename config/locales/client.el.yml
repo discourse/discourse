@@ -1051,7 +1051,6 @@ el:
       home: "Προεπιλεγμένη Αρχική Σελίδα"
       staged: "Υπό μετάβαση"
       staff_counters:
-        flags_given: "χρήσιμες σημάνσεις"
         flagged_posts: "επισημασμένες αναρτήσεις"
         deleted_posts: "διαγραμμένες αναρτήσεις"
         suspensions: "αποβολές"

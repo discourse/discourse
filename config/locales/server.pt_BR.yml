@@ -52,6 +52,8 @@ pt_BR:
   remove_posts_deleted_by_author: "Excluído(a) pelo autor(a)"
   redirect_warning: "Não foi possível confirmar se o link selecionado foi postado no fórum. Se deseja continuar mesmo assim, selecione o link abaixo."
   on_another_topic: "Em outro tópico"
+  topic_tag_changed:
+    removed: "Removeu %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
@@ -2163,7 +2165,6 @@ pt_BR:
       staged_users_disabled: "Primeiro você deve ativar os \"usuários(as) encenados(as)\" antes de ativar esta configuração."
       reply_by_email_disabled: "Você deve ativar \"responder por e-mail\" antes de ativar esta configuração primeiro."
       discourse_connect_url_is_empty: "É preciso definir uma \"url de conexão do Discourse\" antes de ativar esta configuração."
-      discourse_connect_invite_only: "Não é possível ativar o DiscourseConnect e \"apenas convite\" ao mesmo tempo."
       enable_local_logins_disabled: "Você deve ativar \"ativar entradas com e-mail em modo local\" antes de ativar esta configuração."
       min_username_length_exists: "Você não pode definir o tamanho mínimo do nome do(a) usuário(a) acima do nome do(a) usuário(a) mais curto (%{username})."
       min_username_length_range: "Você não pode definir o mínimo acima do máximo."

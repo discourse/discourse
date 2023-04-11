@@ -1164,7 +1164,6 @@ es:
       home: "Página de inicio por defecto"
       staged: "Temporal"
       staff_counters:
-        flags_given: "denuncias útiles"
         flagged_posts: "publicaciones denunciadas"
         deleted_posts: "publicaciones eliminadas"
         suspensions: "suspensiones"

@@ -1149,7 +1149,6 @@ lt:
       home: "Numatytasis pagrindinis puslapis"
       staged: "Inscenizuotas"
       staff_counters:
-        flags_given: "naudingos vėliavos"
         flagged_posts: "įrašai su vėliavomis"
         deleted_posts: "ištrinti įrašai"
         suspensions: "nušalinimai"

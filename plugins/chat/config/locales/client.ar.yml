@@ -425,10 +425,6 @@ ar:
     review:
       transcript:
         view: "عرض نص الرسائل السابقة"
-      types:
-        reviewable_chat_message:
-          title: "رسالة دردشة تم الإبلاغ عنها"
-          flagged_by: "تم الإبلاغ بواسطة"
     keyboard_shortcuts_help:
       chat:
         title: "الدردشة"
