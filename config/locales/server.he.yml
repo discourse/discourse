@@ -52,6 +52,11 @@ he:
   remove_posts_deleted_by_author: "נמחק על ידי הכותב"
   redirect_warning: "לא הצלחנו לאמת שהקישור שבחרת אכן פורסם לפורום. כדי להמשיך בכל אופן, נא לבחור בקישור שלהלן."
   on_another_topic: "בנושא אחר"
+  topic_category_changed: "מ־%{from} עד %{to}"
+  topic_tag_changed:
+    added_and_removed: "נוספו %{added} והוסרו %{removed}"
+    added: "נוספו %{added}"
+    removed: "הוסרו %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "מס׳ %{post_number}"
     topic_page_title_post_number_by_user: "מס׳ %{post_number} מאת %{username}"
@@ -1499,6 +1504,7 @@ he:
     out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
     watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב ‚%{action}’ שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
+    v3_analytics_deprecated: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"
@@ -2220,6 +2226,7 @@ he:
     suppress_overlapping_tags_in_list: "אם תגיות תואמות מילים בכותרות נושאים באופן מדויק, לא להציג את התגית"
     remove_muted_tags_from_latest: "לא להציג נושאים שמתויגים רק בתגיות מושתקות ברשימת הנושאים האחרונים."
     force_lowercase_tags: "לאלץ את כל התגיות החדשות להיות באותיות קטנות בלבד."
+    create_post_for_category_and_tag_changes: "ליצור פוסט פעולה קטן כאשר קטגוריה או תגיות של נושא משתנים"
     company_name: "שם החברה"
     governing_law: "החוק המחייב"
     city_for_disputes: "עיר המחלוקת"
@@ -2291,7 +2298,6 @@ he:
       staged_users_disabled: "עליך לאפשר ‚משתמשים מבוימים’ בטרם הפעלת הגדרה זו."
       reply_by_email_disabled: "עליך להפעיל את ‚תגובה בדוא״ל’ בטרם הפעלת הגדרה זו."
       discourse_connect_url_is_empty: "עליך להגדיר ‚כתובת discourse connect’ בטרם הפעלת הגדרה זו."
-      discourse_connect_invite_only: "לא ניתן להפעיל את DiscourseConnect ולסגור להזמנות בלבד בעת ובעונה אחת."
       enable_local_logins_disabled: "עליך תחילה להפעיל את ‚הפעלת כניסה מקומית’ בטרם הפעלת הגדרה זו."
       min_username_length_exists: "לא ניתן להגדיר את האורך המזערי לשם המשתמש לפחות תווים מאשר שם המשתמש הקצר ביותר במערכת (%{username})."
       min_username_length_range: "לא ניתן לקבוע את המינימום מעל המקסימום."

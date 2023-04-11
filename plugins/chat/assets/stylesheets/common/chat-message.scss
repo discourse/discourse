@@ -214,6 +214,7 @@
     .touch & {
       &:active {
         background: var(--primary-very-low);
+        border-radius: 5px;
       }
 
       &.chat-message-bookmarked {

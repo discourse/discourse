@@ -2157,7 +2157,6 @@ nl:
       staged_users_disabled: "Je moet eerst 'gefaseerde gebruikers' inschakelen voordat je deze instelling inschakelt."
       reply_by_email_disabled: "Je moet eerst 'reply by email' inschakelen voordat je deze instelling inschakelt."
       discourse_connect_url_is_empty: "Je moet een 'DiscourseConnect-URL' instellen voordat je deze instelling inschakelt."
-      discourse_connect_invite_only: "Je kunt DiscourseConnect en alleen uitnodiging niet tegelijk inschakelen."
       enable_local_logins_disabled: "Je moet eerst 'enable local logins' inschakelen voordat je deze instelling inschakelt."
       min_username_length_exists: "Je kunt de minimale gebruikersnaamlengte niet hoger instellen dan de kortste gebruikersnaam (%{username})."
       min_username_length_range: "Je kunt het minimum niet hoger instellen dan het maximum."

@@ -1164,7 +1164,6 @@ pt_BR:
       home: "Página inicial padrão"
       staged: "Encenado(a)"
       staff_counters:
-        flags_given: "sinalizações úteis"
         flagged_posts: "postagens sinalizadas"
         deleted_posts: "postagens excluídas"
         suspensions: "suspensões"

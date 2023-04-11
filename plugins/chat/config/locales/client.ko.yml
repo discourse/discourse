@@ -262,9 +262,8 @@ ko:
               description: 시스템 기본값
     review:
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "신고된 채팅 메시지"
-          flagged_by: "신고자"
     keyboard_shortcuts_help:
       chat:
         title: "채팅"

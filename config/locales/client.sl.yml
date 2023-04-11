@@ -1069,7 +1069,6 @@ sl:
       home: "Privzeta začetna stran"
       staged: "Prirejen"
       staff_counters:
-        flags_given: "oznake v pomoč"
         flagged_posts: "prijavljeni prispevki"
         deleted_posts: "izbrisani prispevki"
         suspensions: "suspendiranih"

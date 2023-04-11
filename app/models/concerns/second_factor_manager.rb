@@ -263,12 +263,10 @@ module SecondFactorManager
   end
 
   def hash_backup_code(code, salt)
-    Pbkdf2.hash_password(
-      code,
-      salt,
-      Rails.configuration.pbkdf2_iterations,
-      Rails.configuration.pbkdf2_algorithm,
-    )
+    # Backup codes have high entropy, so we can afford to use
+    # a lower number of iterations than for user-specific passwords
+    iterations = Rails.env.test? ? 10 : 64_000
+    Pbkdf2.hash_password(code, salt, iterations, "sha256")
   end
 
   def require_rotp

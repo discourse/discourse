@@ -202,10 +202,6 @@ zh_TW:
           fields:
             message:
               label: 訊息
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "標記由"
     keyboard_shortcuts_help:
       chat:
         title: "聊天"

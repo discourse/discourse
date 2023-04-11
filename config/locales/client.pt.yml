@@ -1120,7 +1120,6 @@ pt:
       home: "Página Principal Por Defeito"
       staged: "Não Confirmado"
       staff_counters:
-        flags_given: "denúncias úteis"
         flagged_posts: "publicações sinalizadas"
         deleted_posts: "mensagens eliminadas"
         suspensions: "suspensões"

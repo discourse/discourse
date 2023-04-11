@@ -1107,7 +1107,6 @@ ja:
       home: "デフォルトのホームページ"
       staged: "ステージング"
       staff_counters:
-        flags_given: "役に立った通報"
         flagged_posts: "通報された投稿"
         deleted_posts: "削除された投稿"
         suspensions: "凍結"

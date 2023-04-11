@@ -1053,7 +1053,6 @@ ro:
       home: "Pagina inițială implicită"
       staged: "Pus în scenă"
       staff_counters:
-        flags_given: "Marcaje ajutătoare"
         flagged_posts: "Postări marcate"
         deleted_posts: "Postări șterse"
         suspensions: "Suspendări"

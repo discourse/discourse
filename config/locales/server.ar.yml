@@ -52,6 +52,8 @@ ar:
   remove_posts_deleted_by_author: "تم الحذف بواسطة المؤلف"
   redirect_warning: "تعذَّر علينا التحقُّق من نشر الرابط الذي حدَّدته في المنتدى. إذا كنت تريد المتابعة على أي حال، فحدِّد الرابط أدناه."
   on_another_topic: "في موضوع آخر"
+  topic_tag_changed:
+    removed: "أزال %{removed} ‏في"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} بواسطة %{username}"
@@ -2373,7 +2375,6 @@ ar:
       staged_users_disabled: "يجب عليك تفعيل `staged users` أولًا قبل تفعيل هذا الإعداد."
       reply_by_email_disabled: "يجب عليك تفعيل `reply by email` أولًا قبل تفعيل هذا الإعداد."
       discourse_connect_url_is_empty: "يجب عليك تعيين `discourse connect url` قبل تفعيل هذا الإعداد."
-      discourse_connect_invite_only: "لا يمكنك تفعيل DiscourseConnect والدعوة فقط في الوقت نفسه."
       enable_local_logins_disabled: "يجب عليك تفعيل `enable local logins` أولًا قبل تفعيل هذا الإعداد."
       min_username_length_exists: "لا يمكنك تعيين الحد الأدنى لطول اسم المستخدم على قيمة أطول من أقصر اسم مستخدم (%{username})."
       min_username_length_range: "لا يمكنك تعيين الحد الأدنى ليكون أكبر من الحد الأقصى."

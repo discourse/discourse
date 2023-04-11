@@ -144,7 +144,7 @@ module Discourse
     config.active_record.use_schema_cache_dump = false
 
     # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
-    config.pbkdf2_iterations = 64_000
+    config.pbkdf2_iterations = 600_000
     config.pbkdf2_algorithm = "sha256"
 
     # rack lock is nothing but trouble, get rid of it

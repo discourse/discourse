@@ -1164,7 +1164,6 @@ it:
       home: "Home Page Predefinita"
       staged: "Temporaneo"
       staff_counters:
-        flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
         deleted_posts: "messaggi cancellati"
         suspensions: "sospensioni"
