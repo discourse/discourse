@@ -1600,6 +1600,8 @@ Discourse::Application.routes.draw do
 
     ### PCC change ###
     resources :voice_credits, only: [:update]
+    get "/topics/user-votes/:category_id" => "topics#user_votes"
+    get "/topics/category-totals/:category_id" => "topics#category_totals"
     ### END of PCC change ###
   end
 end
