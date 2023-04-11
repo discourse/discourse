@@ -41,10 +41,10 @@ class TopicsController < ApplicationController
     user_id = current_user.id
     category_id = params[:category_id]
     votes =
-      TopicVoiceCredit
+      VoiceCredit
         .joins(:topic)
         .where(user_id: user_id, topics: { category_id: category_id })
-        .select("topics.id, topics.title, voice_credits")
+        .select("topics.id, topics.title, voice_credits.credits_allocated")
 
     render json: { user_votes: votes }
   end
@@ -52,11 +52,11 @@ class TopicsController < ApplicationController
   def category_totals
     category_id = params[:category_id]
     totals =
-      TopicVoiceCredit
+      VoiceCredit
         .joins(:topic)
         .where(topics: { category_id: category_id })
-        .select("topics.id, topics.title, voice_credits")
-        .map { |record| [record.id, Math.sqrt(record.voice_credits.to_i)] }
+        .select("topics.id, topics.title, voice_credits.credits_allocated")
+        .map { |record| [record.id, record.credits_allocated.to_i] }
         .group_by(&:first)
         .transform_values { |values| values.sum(&:last) }
 

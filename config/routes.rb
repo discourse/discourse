@@ -27,6 +27,12 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
+    ### PCC change ###
+    resources :voice_credits, only: %i[index update]
+    get "/topics/user-votes/:category_id" => "topics#user_votes"
+    get "/topics/category-totals/:category_id" => "topics#category_totals"
+    ### END of PCC change ###
+
     get "/bootstrap" => "bootstrap#index"
     if Rails.env.test? || Rails.env.development?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
@@ -1597,11 +1603,5 @@ Discourse::Application.routes.draw do
     post "/sidebar_sections/reorder" => "sidebar_sections#reorder"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
-
-    ### PCC change ###
-    resources :voice_credits, only: [:update]
-    get "/topics/user-votes/:category_id" => "topics#user_votes"
-    get "/topics/category-totals/:category_id" => "topics#category_totals"
-    ### END of PCC change ###
   end
 end
