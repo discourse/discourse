@@ -165,32 +165,33 @@ end
 #
 # Table name: chat_channels
 #
-#  id                           :bigint           not null, primary key
-#  chatable_id                  :integer          not null
-#  deleted_at                   :datetime
-#  deleted_by_id                :integer
-#  featured_in_category_id      :integer
-#  delete_after_seconds         :integer
-#  chatable_type                :string           not null
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  name                         :string
-#  description                  :text
-#  status                       :integer          default("open"), not null
-#  user_count                   :integer          default(0), not null
-#  last_message_sent_at         :datetime         not null
-#  auto_join_users              :boolean          default(FALSE), not null
-#  allow_channel_wide_mentions  :boolean          default(TRUE), not null
-#  user_count_stale             :boolean          default(FALSE), not null
-#  slug                         :string
-#  type                         :string
-#  threading_enabled            :boolean          default(FALSE), not null
+#  id                          :bigint           not null, primary key
+#  chatable_id                 :integer          not null
+#  deleted_at                  :datetime
+#  deleted_by_id               :integer
+#  featured_in_category_id     :integer
+#  delete_after_seconds        :integer
+#  chatable_type               :string           not null
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  name                        :string
+#  description                 :text
+#  status                      :integer          default("open"), not null
+#  user_count                  :integer          default(0), not null
+#  last_message_sent_at        :datetime         not null
+#  auto_join_users             :boolean          default(FALSE), not null
+#  user_count_stale            :boolean          default(FALSE), not null
+#  slug                        :string
+#  type                        :string
+#  allow_channel_wide_mentions :boolean          default(TRUE), not null
+#  messages_count              :integer          default(0), not null
+#  threading_enabled           :boolean          default(FALSE), not null
 #
 # Indexes
 #
-#  index_chat_channels_on_messages_count             (messages_count)
 #  index_chat_channels_on_chatable_id                    (chatable_id)
 #  index_chat_channels_on_chatable_id_and_chatable_type  (chatable_id,chatable_type)
+#  index_chat_channels_on_messages_count                 (messages_count)
 #  index_chat_channels_on_slug                           (slug) UNIQUE
 #  index_chat_channels_on_status                         (status)
 #
