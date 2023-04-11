@@ -424,7 +424,7 @@ zh_TW:
       <<: *errors
   uncategorized_category_name: "尚未分類"
   general_category_name: "一般"
-  meta_category_name: "站點反饋"
+  meta_category_name: "站點回饋"
   meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"

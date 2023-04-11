@@ -287,7 +287,7 @@ zh_TW:
         on_owner_reply: "刪除書籤，一旦我回复"
         clear_reminder: "保留書籤和清除提醒"
       search_placeholder: "依名稱、主題標題或貼文內容搜尋書籤"
-      search: "搜索"
+      search: "搜尋"
       reminders:
         today_with_time: "今天 %{time}"
         tomorrow_with_time: "明天 %{time}"
@@ -1144,10 +1144,10 @@ zh_TW:
       name:
         title: "名稱"
         instructions: "您的全名 (選填)"
-        instructions_required: "您的匿稱"
+        instructions_required: "您的暱稱"
         required: "請輸入名稱"
-        too_short: "你的匿稱太短。"
-        ok: "你的匿稱符合要求。"
+        too_short: "你的暱稱太短。"
+        ok: "你的暱稱符合要求。"
       username:
         title: "使用者名稱"
         instructions: "獨一、無空格、短的"
@@ -1776,8 +1776,8 @@ zh_TW:
       too_short: "你的搜尋詞語太短。"
       result_count:
         other: "關於<span class='term'>%{term}</span>的<span>%{count}%{plus} 個結果 </span>"
-      title: "搜索"
-      full_page_title: "搜索"
+      title: "搜尋"
+      full_page_title: "搜尋"
       results: "結果"
       no_results: "未找到任何結果。"
       no_more_results: "沒有找到更多的結果。"
@@ -1789,7 +1789,7 @@ zh_TW:
       or_search_google: "或是嘗試利用 Google 搜尋:"
       search_google: "嘗試利用 Google 搜尋:"
       search_google_button: "Google"
-      search_button: "搜索"
+      search_button: "搜尋"
       categories: "分類"
       tags: "標籤"
       type:
@@ -1797,7 +1797,7 @@ zh_TW:
         categories: "分類"
       context:
         user: "搜尋 @%{username} 的貼文"
-        category: "搜索 #%{category} 分類"
+        category: "搜尋 #%{category} 分類"
         topic: "搜尋此話題"
         private_messages: "搜尋訊息"
       advanced:
@@ -2475,7 +2475,7 @@ zh_TW:
         activity: "活動"
         posters: "發表人"
         category: "分類"
-        created: "創建"
+        created: "建立"
       sort_ascending: "升序"
       sort_descending: "降序"
       subcategory_list_styles:
@@ -3088,7 +3088,7 @@ zh_TW:
         instruction: "Webhooks 讓 Discourse 可以在特定事件發生時通知外部服務。當 webhook 事件觸發時，一個 POST 請求將發向指定地址。"
         detailed_instruction: "一個 POST 請求將在選定事件發生時發至指定 URL。"
         new: "新建 Webhook"
-        create: "創建"
+        create: "建立"
         edit: "編輯"
         save: "保存"
         controls: "控制"
@@ -3156,7 +3156,7 @@ zh_TW:
           ping: "Ping"
           status: "狀態碼"
           event_id: "ID"
-          timestamp: "創建時間"
+          timestamp: "建立時間"
           completion: "完成時間"
           actions: "操作"
       plugins:
@@ -3956,15 +3956,15 @@ zh_TW:
           enabled: "在使用者卡片上顯示"
           disabled: "在使用者卡片上隱藏"
         searchable:
-          title: "可搜索"
-          enabled: "可搜索"
+          title: "可搜尋"
+          enabled: "可搜尋"
         field_types:
           text: "文字區域"
           confirm: "確認"
           dropdown: "下拉"
       site_text:
-        description: "你可以自定義論壇的任意文本。請按以下搜索："
-        search: "搜索你想要編輯的文本"
+        description: "你可以自定義論壇的任意文本。請按以下搜尋："
+        search: "搜尋你想要編輯的文本"
         title: "文字"
         edit: "編輯"
         revert: "恢復變更"
@@ -4019,7 +4019,7 @@ zh_TW:
           plugins: "延伸套件"
           user_preferences: "偏好設定"
           tags: "標籤"
-          search: "搜索"
+          search: "搜尋"
           groups: "群組"
           dashboard: "控制面板"
           navigation: "導覽"
@@ -4124,7 +4124,7 @@ zh_TW:
         allowed_embed_selectors: "使用 CSS 選擇器選擇允許的嵌入元素"
         blocked_embed_selectors: "使用 CSS 選擇器移除嵌入元素"
         allowed_embed_classnames: "允許 CSS class 名稱"
-        save: "儲存崁入設定"
+        save: "儲存嵌入設定"
       permalink:
         title: "固定連結"
         url: "網址"
@@ -4134,7 +4134,7 @@ zh_TW:
         post_title: "貼文"
         category_id: "分類 ID"
         category_title: "分類"
-        delete_confirm: 你確定要刪除此固定連結？
+        delete_confirm: "你確定要刪除此固定連結？"
         form:
           label: "新增："
           add: "新增"
