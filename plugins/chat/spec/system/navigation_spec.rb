@@ -242,11 +242,28 @@ RSpec.describe "Navigation", type: :system, js: true do
     end
 
     context "when opening a channel in full page" do
+      fab!(:other_user) { Fabricate(:user) }
+      fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
+
       it "activates the channel in the sidebar" do
         visit("/chat/c/#{category_channel.slug}/#{category_channel.id}")
         expect(page).to have_css(
           ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
         )
+      end
+
+      it "does not have multiple channels marked active in the sidebar" do
+        chat_page.visit_channel(dm_channel)
+        expect(page).to have_css(
+          ".sidebar-section-link-#{other_user.username}.sidebar-section-link--active",
+        )
+
+        page.find(".sidebar-section-link-#{category_channel.slug}").click
+        expect(page).to have_css(
+          ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
+        )
+
+        expect(page).to have_css(".sidebar-section-link--active", count: 1)
       end
     end
 
