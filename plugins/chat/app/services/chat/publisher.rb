@@ -43,7 +43,7 @@ module Chat
           chat_message,
           { scope: anonymous_guardian, root: :chat_message },
         ).as_json
-      content[:type] = :thread_born
+      content[:type] = :thread_created
       permissions = permissions(chat_channel)
 
       MessageBus.publish(root_message_bus_channel(chat_channel.id), content.as_json, permissions)
