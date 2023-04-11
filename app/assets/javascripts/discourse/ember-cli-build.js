@@ -114,7 +114,7 @@ module.exports = function (defaults) {
   // Ember CLI that we want the tests alone in a package without helpers/fixtures, since
   // we re-use those in the theme tests.
   app._defaultPackager.packageApplicationTests = function (tree) {
-    const appTestTrees = []
+    let appTestTrees = []
       .concat(
         this.packageEmberCliInternalFiles(),
         this.packageTestApplicationConfig(),
