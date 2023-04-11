@@ -267,6 +267,7 @@ da:
       like_count: "Synes godt om"
       topic_count: "Emner"
       post_count: "Indlæg"
+      user_count: "Tilmeldinger"
       active_user_count: "Aktive brugere"
       contact: "Kontakt os"
       contact_info: "I tilfælde af en kritisk begivenhed eller vigtige spørgsmål angående denne side, kontakt os venligst på %{contact_info}."
@@ -301,6 +302,7 @@ da:
         never: "Behold bogmærke"
         when_reminder_sent: "Slet bogmærke"
         on_owner_reply: "Slet bogmærke, når jeg svarer"
+        clear_reminder: "Behold bogmærke og ryd påmindelse"
       search_placeholder: "Søg i bogmærker efter navn, emnetitel eller indlægs indhold"
       search: "Søg"
       reminders:
@@ -1013,10 +1015,13 @@ da:
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         disable: "Deaktiver notifikationer"
         enable: "Aktiver notifikationer"
+        each_browser_note: 'Bemærk: Du skal ændre denne indstilling på hver browser, du bruger. Alle underretninger vil blive deaktiveret, hvis du pauserer underretninger fra brugermenuen, uanset denne indstilling.'
         consent_prompt: "Ønsker du live notifikationer, når folk svarer på dine indlæg?"
       dismiss: "Ignorer Alle"
       dismiss_notifications: "Skjul Alle"
       dismiss_notifications_tooltip: "Marker alle ulæste notifikationer som læst"
+      dismiss_bookmarks_tooltip: "Marker alle ulæste bogmærkepåmindelser som læst"
+      dismiss_messages_tooltip: "Marker alle ulæste personlige beskedunderretninger som læst"
       no_messages_title: "Du har ingen meddelelser"
       no_messages_body: >
         Har du brug for at have en direkte personlig samtale med nogen, uden for det normale samtale flow? Send dem en besked ved at vælge deres avatar og bruge %{icon} meddelelsesknappen.<br><br> Hvis du har brug for hjælp, kan du <a href='%{aboutUrl}'>sende en besked til en medarbejder</a>.
