@@ -28,6 +28,7 @@
               <span class="chat-channel-title__name">{{user.username}}</span>
               {{#if this.showUserStatus}}
                 <UserStatusMessage
+                  @class="chat-channel-title__user-status-message"
                   @status={{this.channel.chatable.users.firstObject.status}}
                   @showDescription={{if this.site.mobileView "true"}}
                 />
@@ -53,7 +54,7 @@
         class="chat-channel-title__category-badge"
         style={{this.channelColorStyle}}
       >
-        {{d-icon "hashtag"}}
+        {{d-icon "d-chat"}}
         {{#if this.channel.chatable.read_restricted}}
           {{d-icon "lock" class="chat-channel-title__restricted-category-icon"}}
         {{/if}}

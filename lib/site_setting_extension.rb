@@ -558,6 +558,13 @@ module SiteSettingExtension
       end
     end
 
+    # Same logic as above for group_list settings, with the caveat that normal
+    # list settings are not necessarily integers, so we just want to handle the splitting.
+    if type_supervisor.get_type(name) == :list &&
+         %w[simple compact].include?(type_supervisor.get_list_type(name))
+      define_singleton_method("#{clean_name}_map") { self.public_send(clean_name).to_s.split("|") }
+    end
+
     define_singleton_method "#{clean_name}?" do
       self.public_send clean_name
     end

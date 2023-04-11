@@ -184,12 +184,7 @@ tr_TR:
     software_update_prompt:
       message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik davranışlarla karşılaşabilirsiniz."
       dismiss: "Kapat"
-    bootstrap_mode_enabled:
-      one: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara 1. güven seviyesi verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılır."
-      other: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara 1. güven seviyesi verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılır."
-    bootstrap_mode_disabled: "Önyükleme modu 24 saat içinde devre dışı bırakılır."
-    bootstrap_invite_button_title: "Davet Gönder"
-    bootstrap_wizard_link_title: "Kurulum sihirbazını bitir"
+    bootstrap_mode: "Bootstrap modu"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir temada / bileşende hata olduğu için siteniz çalışmayabilir."
@@ -348,7 +343,7 @@ tr_TR:
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni kişisel ileti taslağı"
       abandon:
-        confirm: "Bu konu için devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
+        confirm: "Halihazırda bir taslağınız var. Bununla ne yapmak istersiniz?"
         yes_value: "Kapat"
         no_value: "Düzenlemeyi sürdür"
     topic_count_categories:
@@ -3988,9 +3983,27 @@ tr_TR:
           delete: "Sil"
           public: "Bu bölümü herkese açık ve herkes tarafından görülebilir hale getir"
           links:
-            icon: "Simge"
-            name: "Ad"
-            value: "Bağlantı"
+            icon:
+              label: "Simge"
+              validation:
+                blank: "Simge boş olamaz"
+                maximum: "Simge %{count} karakterden kısa olmalıdır"
+            name:
+              label: "Ad"
+              validation:
+                blank: "İsim boş olamaz"
+                maximum: "İsim %{count} karakterden kısa olmalıdır"
+            value:
+              label: "Bağlantı"
+              validation:
+                blank: "Bağlantı boş olamaz"
+                maximum: "Bağlantı %{count} karakterden kısa olmalıdır"
+                invalid: "Biçim geçersiz"
+          title:
+            label: "Bölüm başlığı"
+            validation:
+              blank: "Başlık boş olamaz"
+              maximum: "Başlık %{count} karakterden kısa olmalıdır"
         about:
           header_link_text: "Hakkında"
         messages:
@@ -5058,14 +5071,8 @@ tr_TR:
           silence: "Sustur"
           link: "Bağlantı"
         action_descriptions:
-          block: "Bu kelimeleri içeren gönderilerin yayınlanmasını engelleyin. Kullanıcı, gönderisini göndermeye çalıştığında bir hata mesajı görür."
-          censor: "Bu kelimeleri içeren gönderilere izin verin, ancak bunları sansürlü kelimeleri gizleyen karakterlerle değiştirin."
-          require_approval: "Bu kelimeleri içeren gönderilerin görülebilmesi için personel tarafından onaylanması gerekir."
-          flag: "Bu kelimeleri içeren gönderilere izin verin, ancak moderatörlerin inceleyebilmesi için bunlara uygunsuz bayrağı ekleyin."
-          replace: "Gönderilerdeki kelimeleri başka kelimelerle değiştirin"
-          tag: "Konuları ilk gönderiye göre otomatik olarak etiketleyin"
-          silence: "Kullanıcıların bu kelimeleri içeren ilk gönderilerinin görülebilmesi için personel tarafından onaylanması gerekir ve kullanıcı otomatik olarak susturulur."
-          link: "Gönderilerdeki kelimeleri bağlantılarla değiştirin"
+          replace: "Gönderilerdeki kelimeleri başka kelimelerle değiştirin."
+          link: "Gönderilerdeki kelimeleri bağlantılarla değiştirin."
         form:
           label: "Kelime veya kelime öbeği içerir"
           placeholder: "Kelime veya kelime öbeği girin (* joker karakterdir)"

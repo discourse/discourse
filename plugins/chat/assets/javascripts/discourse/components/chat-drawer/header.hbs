@@ -1,7 +1,14 @@
+{{! template-lint-disable no-invalid-interactive }}
 <div
   role="region"
   aria-label={{i18n "chat.aria_roles.header"}}
   class="chat-drawer-header"
+  {{on "click" @toggleExpand}}
+  title={{if
+    this.chatStateManager.isDrawerExpanded
+    (i18n "chat.collapse")
+    (i18n "chat.expand")
+  }}
 >
   {{yield}}
 </div>

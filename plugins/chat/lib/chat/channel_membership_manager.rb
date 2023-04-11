@@ -66,7 +66,7 @@ module Chat
     end
 
     def enforce_automatic_channel_memberships
-      Jobs.enqueue(Jobs::Chat::AutoManageChannelMemberships, chat_channel_id: channel.id)
+      Jobs.enqueue(Jobs::Chat::AutoJoinChannelMemberships, chat_channel_id: channel.id)
     end
 
     def enforce_automatic_user_membership(user)

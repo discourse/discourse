@@ -15,6 +15,10 @@ module Chat
             chat_message_bus_last_ids[Chat::Publisher.new_messages_message_bus_channel(channel.id)],
           new_mentions_message_bus_last_id:
             chat_message_bus_last_ids[Chat::Publisher.new_mentions_message_bus_channel(channel.id)],
+          kick_message_bus_last_id:
+            chat_message_bus_last_ids[Chat::Publisher.kick_users_message_bus_channel(channel.id)],
+          channel_message_bus_last_id:
+            chat_message_bus_last_ids[Chat::Publisher.root_message_bus_channel(channel.id)],
         )
       end
     end
@@ -30,6 +34,8 @@ module Chat
             chat_message_bus_last_ids[Chat::Publisher.new_messages_message_bus_channel(channel.id)],
           new_mentions_message_bus_last_id:
             chat_message_bus_last_ids[Chat::Publisher.new_mentions_message_bus_channel(channel.id)],
+          channel_message_bus_last_id:
+            chat_message_bus_last_ids[Chat::Publisher.root_message_bus_channel(channel.id)],
         )
       end
     end
@@ -52,11 +58,13 @@ module Chat
           chat_message_bus_last_ids[Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL],
       }
 
-      if id =
-           chat_message_bus_last_ids[
-             Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id)
-           ]
-        last_ids[:user_tracking_state] = id
+      if !scope.anonymous?
+        user_tracking_state_last_id =
+          chat_message_bus_last_ids[
+            Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id)
+          ]
+
+        last_ids[:user_tracking_state] = user_tracking_state_last_id if user_tracking_state_last_id
       end
 
       { message_bus_last_ids: last_ids }
@@ -84,11 +92,14 @@ module Chat
           object[:public_channels].each do |channel|
             message_bus_channels.push(Chat::Publisher.new_messages_message_bus_channel(channel.id))
             message_bus_channels.push(Chat::Publisher.new_mentions_message_bus_channel(channel.id))
+            message_bus_channels.push(Chat::Publisher.kick_users_message_bus_channel(channel.id))
+            message_bus_channels.push(Chat::Publisher.root_message_bus_channel(channel.id))
           end
 
           object[:direct_message_channels].each do |channel|
             message_bus_channels.push(Chat::Publisher.new_messages_message_bus_channel(channel.id))
             message_bus_channels.push(Chat::Publisher.new_mentions_message_bus_channel(channel.id))
+            message_bus_channels.push(Chat::Publisher.root_message_bus_channel(channel.id))
           end
 
           MessageBus.last_ids(*message_bus_channels)

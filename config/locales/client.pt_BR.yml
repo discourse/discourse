@@ -184,12 +184,6 @@ pt_BR:
     software_update_prompt:
       message: "Nós atualizamos este site, <span>atualize a página</span>, ou você poderá enfrentar uma situação inesperada."
       dismiss: "Descartar"
-    bootstrap_mode_enabled:
-      one: "Para facilitar o lançamento do seu novo site, você está no modo de inicialização. Todos os usuários novos receberão o nível de confiança 1 e terão os e-mails diários do resumo de e-mails ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
-      other: "Para facilitar o lançamento do seu novo site, você está no modo de inicialização. Todos os usuários novos receberão o nível de confiança 1 e terão os e-mails diários do resumo de e-mails ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
-    bootstrap_mode_disabled: "O modo de inicialização será desativado em 24 horas."
-    bootstrap_invite_button_title: "Enviar convites"
-    bootstrap_wizard_link_title: "Concluir o assistente de configuração"
     themes:
       default_description: "Padrão"
       broken_theme_alert: "Seu site pode não funcionar porque o tema/componente tem erros."
@@ -348,7 +342,6 @@ pt_BR:
       new_topic: "Novo rascunho de tópico"
       new_private_message: "Novo rascunho de mensagem"
       abandon:
-        confirm: "Você tem um rascunho em andamento para este tópico. O que deseja fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
     topic_count_categories:
@@ -3993,9 +3986,12 @@ pt_BR:
           save: "Salvar"
           delete: "Excluir"
           links:
-            icon: "Ícone"
-            name: "Nome"
-            value: "Link"
+            icon:
+              label: "Ícone"
+            name:
+              label: "Nome"
+            value:
+              label: "Link"
         about:
           header_link_text: "Sobre"
         messages:
@@ -5052,14 +5048,8 @@ pt_BR:
           silence: "Silenciar"
           link: "Vincular"
         action_descriptions:
-          block: "Evite que postagens contendo essas palavras sejam postadas. O(a) usuário(a) verá uma mensagem de erro quando tentar enviar a postagem."
-          censor: "Permita postagens contendo essas palavras, mas substitua-as por caracteres que ocultem as palavras censuradas."
-          require_approval: "As postagens contendo essas palavras exigirão aprovação da equipe antes que possam ser vistas."
-          flag: "Permita postagens contendo estas palavras, mas sinalize-as como impróprias para que a moderação possa analisá-las."
-          replace: "Substituir palavras em postagens com outras palavras"
-          tag: "Etiquete tópicos automaticamente conforme a primeira postagem"
-          silence: "As primeiras postagens de usuários(as) com estas palavras precisarão de aprovação da equipe antes que sejam exibidas e o(a) usuário(a) será silenciado(a) automaticamente."
-          link: "Substitua palavras em postagens por links"
+          replace: "Substituir palavras em postagens com outras palavras."
+          link: "Substitua palavras em postagens por links."
         form:
           label: "Tem palavra ou frase"
           placeholder: "Digite uma palavra ou frase (* é um curinga)"

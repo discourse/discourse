@@ -864,6 +864,20 @@ RSpec.describe Group do
       events = DiscourseEvent.track_events { group.remove(user) }.map { |e| e[:event_name] }
       expect(events).to include(:user_removed_from_group)
     end
+
+    describe "with webhook" do
+      fab!(:group_user_web_hook) { Fabricate(:group_user_web_hook) }
+
+      it "Enqueues webhook events" do
+        group.remove(user)
+        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+        expect(job_args["event_name"]).to eq("user_removed_from_group")
+        payload = JSON.parse(job_args["payload"])
+        expect(payload["group_id"]).to eq(group.id)
+        expect(payload["user_id"]).to eq(user.id)
+      end
+    end
   end
 
   describe "#add" do
@@ -994,7 +1008,45 @@ RSpec.describe Group do
       expect {
         group.bulk_add([user.id, admin.id])
         group.reload
-      }.to change { group.user_count }.by(2)
+      }.to change { group.user_count }.from(0).to(2)
+    end
+  end
+
+  describe "#bulk_remove" do
+    it "removes multiple users from the group and doesn't error with user_ids not present" do
+      group.bulk_add([user.id, admin.id])
+
+      group.bulk_remove([user.id, admin.id, admin.id + 1])
+
+      expect(group.group_users.count).to be_zero
+    end
+
+    it "updates group user count" do
+      group.bulk_add([user.id, admin.id])
+      expect(group.reload.user_count).to eq(2)
+
+      group.bulk_remove([user.id, admin.id])
+      expect(group.reload.user_count).to eq(0)
+    end
+
+    describe "with webhook" do
+      fab!(:group_user_web_hook) { Fabricate(:group_user_web_hook) }
+
+      it "Enqueues user_removed_from_group webhook events for each group_user" do
+        group.bulk_add([user.id, admin.id])
+
+        group.bulk_remove([user.id, admin.id])
+        Jobs::EmitWebHookEvent
+          .jobs
+          .last(2)
+          .each do |event|
+            job_args = event["args"].first
+            expect(job_args["event_name"]).to eq("user_removed_from_group")
+            payload = JSON.parse(job_args["payload"])
+            expect(payload["group_id"]).to eq(group.id)
+            expect([user.id, admin.id]).to include(payload["user_id"])
+          end
+      end
     end
   end
 

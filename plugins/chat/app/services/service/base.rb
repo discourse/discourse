@@ -18,7 +18,7 @@ module Service
 
     # Simple structure to hold the context of the service during its whole lifecycle.
     class Context < OpenStruct
-      # @return [Boolean] returns +true+ if the conext is set as successful (default)
+      # @return [Boolean] returns +true+ if the context is set as successful (default)
       def success?
         !failure?
       end

@@ -424,8 +424,8 @@ fr:
           Hé, bon sondage ! Comment s'est passée votre formation ?
 
           [poll]
-          :+1:
-          :-1:
+          * :+1:
+          * :-1:
           [/poll]
       details:
         instructions: |-

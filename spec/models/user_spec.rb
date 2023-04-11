@@ -2097,6 +2097,19 @@ RSpec.describe User do
       expect(CategoryUser.lookup(user, :regular).pluck(:category_id)).to eq([category4.id])
     end
 
+    it "does not update category preferences if already set by group" do
+      user_id = 123
+
+      CategoryUser.create!(
+        user_id: user_id,
+        category_id: category2.id,
+        notification_level: CategoryUser.notification_levels[:normal],
+      )
+      user = Fabricate(:user, id: user_id, trust_level: 1)
+
+      expect(CategoryUser.lookup(user, :normal).pluck(:category_id)).to include(category2.id)
+    end
+
     it "does not set category preferences for staged users" do
       user = Fabricate(:user, staged: true)
       expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([])

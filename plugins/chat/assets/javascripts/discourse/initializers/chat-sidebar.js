@@ -34,7 +34,6 @@ export default {
               return dasherize(this.channel.slugifiedTitle);
             }
 
-            @computed("chatService.activeChannel")
             get classNames() {
               const classes = [];
 
@@ -68,7 +67,7 @@ export default {
             }
 
             get prefixValue() {
-              return "hashtag";
+              return "d-chat";
             }
 
             get prefixColor() {

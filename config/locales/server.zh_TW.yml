@@ -795,7 +795,7 @@ zh_TW:
       title: "DAU/MAU"
       xaxis: "天"
       yaxis: "\\bDAU/MAU"
-      description: "在最後一天登入的會員數除以上個月登入會員數，返回的%數表示社群黏著度。目標為＞30%。"
+      description: "在最後一天登入的會員數除以上個月登入會員數，返回的%數表示社群黏著度。目標為＞20%。"
     daily_engaged_users:
       title: "每日活躍的使用者"
       xaxis: "天"
@@ -1114,7 +1114,6 @@ zh_TW:
     large_icon: "用作其他Metadata Icon的基礎圖示。 理想情況下應大於512 x 512。如果留空，將使用logo_small來顯示。"
     manifest_icon: "在Android上用作Logo或啟動顯示畫面的圖片。 將自動調整為512×512。如果留空，將使用large_icon。"
     favicon: "您網頁的圖示（favicon），請參閱<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>。 要在CDN上正常工作，favicon 副檔名必須為 .png，圖示將調整為32x32。如果留空，將使用large_icon。"
-    apple_touch_icon: "Icon 用於Apple觸控裝置的圖示，將自動調整為180x180。 如果留空，將使用large_icon。"
     opengraph_image: "預設opengraph image，在頁面沒有其他合適圖像時使用。 如果留空，將使用large_icon。"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
@@ -2548,13 +2547,6 @@ zh_TW:
   offline:
     title: "無法載入App"
     offline_page_message: "你似乎離線了！請檢查您的網路連接狀態，並重試。"
-  login_required:
-    welcome_message: |
-      ## [歡迎來到 %{title}](#welcome)
-      你需要一個帳號。請創設一個帳號，或者登入以繼續。
-    welcome_message_invite_only: |
-      ## [歡迎來到 %{title}](#welcome)
-      必須要有一個帳戶，請向現有會員請求邀請或登入以繼續。
   upload:
     edit_reason: "下載外部圖片留做存檔"
     unauthorized: "抱歉，你沒有上傳檔案的權限（驗證擴展：%{authorized_extensions}）。"

@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
+import discourseLater from "discourse-common/lib/later";
 
 export default class SectionLink {
   @tracked linkDragCss;
@@ -22,8 +23,28 @@ export default class SectionLink {
   }
 
   @bind
-  didStartDrag(e) {
-    this.mouseY = e.targetTouches ? e.targetTouches[0].screenY : e.screenY;
+  didStartDrag(event) {
+    // 0 represents left button of the mouse
+    if (event.button === 0 || event.targetTouches) {
+      this.startMouseY = this.#calcMouseY(event);
+      this.willDrag = true;
+      discourseLater(() => {
+        this.delayedStart(event);
+      }, 300);
+    }
+  }
+  delayedStart(event) {
+    if (this.willDrag) {
+      const currentMouseY = this.#calcMouseY(event);
+      if (currentMouseY === this.startMouseY) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.mouseY = this.#calcMouseY(event);
+        this.linkDragCss = "drag";
+        this.section.disable();
+        this.drag = true;
+      }
+    }
   }
 
   @bind
@@ -32,13 +53,19 @@ export default class SectionLink {
     this.mouseY = null;
     this.section.enable();
     this.section.reorder();
+    this.willDrag = false;
+    this.drag = false;
   }
 
   @bind
-  dragMove(e) {
-    const currentMouseY = e.targetTouches
-      ? e.targetTouches[0].screenY
-      : e.screenY;
+  dragMove(event) {
+    this.startMouseY = this.#calcMouseY(event);
+    if (!this.drag) {
+      return;
+    }
+    event.stopPropagation();
+    event.preventDefault();
+    const currentMouseY = this.#calcMouseY(event);
     const distance = currentMouseY - this.mouseY;
     if (!this.linkHeight) {
       this.linkHeight = document.getElementsByClassName(
@@ -57,7 +84,11 @@ export default class SectionLink {
         this.mouseY = currentMouseY;
       }
     }
-    this.linkDragCss = "drag";
-    this.section.disable();
+  }
+
+  #calcMouseY(event) {
+    return Math.round(
+      event.targetTouches ? event.targetTouches[0].clientY : event.y
+    );
   }
 }

@@ -134,6 +134,10 @@ class Plugin::Instance
     end
   end
 
+  def register_modifier(modifier_name, &blk)
+    DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
+  end
+
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_report(name, &block)
     reloadable_patch { |plugin| Report.add_report(name, &block) }

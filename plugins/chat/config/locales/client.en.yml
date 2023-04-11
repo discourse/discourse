@@ -9,6 +9,7 @@ en:
           actions:
             chat_channel_status_change: "Chat channel status changed"
             chat_channel_delete: "Chat channel deleted"
+            chat_auto_remove_membership: "Memberships automatically removed from channels"
       api:
         scopes:
           descriptions:
@@ -78,6 +79,7 @@ en:
       click_to_join: "Click here to view available channels."
       close: "Close"
       collapse: "Collapse Chat Drawer"
+      expand: "Expand Chat Drawer"
       confirm_flag: "Are you sure you want to flag %{username}'s message?"
       deleted: "A message was deleted. [view]"
       hidden: "A message was hidden. [view]"
@@ -207,6 +209,7 @@ en:
         channels_list: "Chat channels list"
 
       no_public_channels: "You have not joined any channels."
+      kicked_from_channel: "You can no longer access this channel."
       only_chat_push_notifications:
         title: "Only send chat push notifications"
         description: "Block all non-chat push notifications from being sent"
@@ -530,8 +533,9 @@ en:
         search_placeholder: "Search by emoji name and alias..."
         no_results: "No results"
 
+      thread:
+        label: Thread
       threads:
-        op_said: "OP said:"
         started_by: "Started by"
         open: "Open Thread"
 
@@ -583,9 +587,8 @@ en:
       transcript:
         view: "View previous messages transcript"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Flagged Chat Message"
-          flagged_by: "Flagged By"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -598,6 +601,7 @@ en:
           composer_code: "%{shortcut} Code (composer only)"
           drawer_open: "%{shortcut} Open chat drawer"
           drawer_close: "%{shortcut} Close chat drawer"
+          mark_all_channels_read: "%{shortcut} Mark all channels read"
     topic_statuses:
       chat:
         help: "Chat is enabled for this topic"

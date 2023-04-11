@@ -637,7 +637,7 @@ aside.quote {
         opacity: 1;
         transition: opacity 0.3s ease-in-out;
       }
-      // this psuedo element creates a transition buffer zone
+      // this pseudo element creates a transition buffer zone
       // without it, the width change on hover can cause transition jitter
       // the width is roughly wide enough to cover long translations of "share"
       &:after {
@@ -1633,20 +1633,21 @@ span.mention {
 
 .open-popup-link {
   position: sticky;
-  left: 0.5rem;
-  top: 0.5rem;
+  left: 1rem;
   opacity: 0%;
   white-space: nowrap;
-  display: block;
 }
 
 .fullscreen-table-wrapper {
   transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: block;
-}
+  position: relative;
 
-.expand-table-icon {
-  margin-right: 4px;
+  &--buttons {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+  }
 }
 
 .fullscreen-table-modal .modal-inner-container,

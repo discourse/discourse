@@ -1677,13 +1677,6 @@ sl:
     see_more: "Več"
     search_title: "Išči na tem spletnem mestu"
     search_button: "Išči"
-  login_required:
-    welcome_message: |
-      ## [Dobrodošli na %{title}](#welcome)
-      Za dostop morate biti prijavljeni. Registrirajte nov uporabniški račun ali se prijavite za nadaljevanje.
-    welcome_message_invite_only: |
-      ## [Dobrodošli na %{title}](#welcome)
-      Za dostop potrebujete uporabniški račun. Prosite obstoječega uporabnika, da vas povabi ali pa se prijavite za nadaljevanje.
   upload:
     edit_reason: "prenos slik v lokalno kopijo"
     unauthorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."

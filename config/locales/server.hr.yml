@@ -1262,7 +1262,6 @@ hr:
     composer_media_optimization_image_bytes_optimization_threshold: "Minimalna veličina slikovne datoteke za pokretanje optimizacije na strani klijenta"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimalna širina slike za pokretanje promjene veličine na strani klijenta"
     composer_media_optimization_image_resize_width_target: "Slikama čija je širina veća od `composer_media_optimization_image_dimensions_resize_threshold` bit će promijenjena veličina na ovu širinu. Mora biti >= od `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "Kvaliteta JPEG kodiranja koja se koristi u procesu ponovnog kodiranja."
     min_ratio_to_crop: "Omjer koji se koristi za obrezivanje visokih slika. Unesite rezultat širine / visine."
     simultaneous_uploads: "Maksimalni broj datoteka koje se mogu povući i ispustiti u skladatelj"
     default_invitee_trust_level: "Zadana razina povjerenja (0-4) za pozvane korisnike."
@@ -1794,13 +1793,6 @@ hr:
     see_more: "Više"
     search_title: "Pretraži ovu stranicu"
     search_button: "Pretraži"
-  login_required:
-    welcome_message: |
-      ## [Dobrodošli na %{title}](#welcome)
-      Nužno je prijaviti se korisničkim računom. Molimo učlanite se ili prijavite za nastavak.
-    welcome_message_invite_only: |
-      ## [Dobrodošli na %{title}] (#welcome)
-      Nužno je prijaviti se korisničkim računom. Molimo upitajte postojećeg korisnika za pozivnicu ili se prijavite za nastavak.
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije autorizirana (autorizirana proširenja: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."

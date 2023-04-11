@@ -184,12 +184,6 @@ it:
     software_update_prompt:
       message: "Abbiamo aggiornato il sito, <span>si prega di aggiornare</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
-    bootstrap_mode_enabled:
-      one: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di attendibilità 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utente si sarà unito."
-      other: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di attendibilità 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utenti si saranno uniti."
-    bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
-    bootstrap_invite_button_title: "Manda Inviti"
-    bootstrap_wizard_link_title: "Completa la configurazione guidata"
     themes:
       default_description: "Predefinito"
       broken_theme_alert: "Il sito potrebbe non funzionare a causa di errori in un tema / componente."
@@ -348,7 +342,6 @@ it:
       new_topic: "Nuovo argomento in bozza"
       new_private_message: "Nuovo messaggio personale in bozza"
       abandon:
-        confirm: "Hai una bozza in corso per questo argomento. Cosa vorresti fare?"
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
     topic_count_categories:
@@ -3981,9 +3974,12 @@ it:
           save: "Salva"
           delete: "Elimina"
           links:
-            icon: "Icona"
-            name: "Nome"
-            value: "Link"
+            icon:
+              label: "Icona"
+            name:
+              label: "Nome"
+            value:
+              label: "Link"
         about:
           header_link_text: "Informazioni"
         messages:
@@ -5039,14 +5035,8 @@ it:
           silence: "Silenzia"
           link: "Link"
         action_descriptions:
-          block: "Impedisci che i messaggi contenenti queste parole siano pubblicati. L'utente visualizzerà un messaggio di errore quando cercherà di pubblicare il messaggio."
-          censor: "Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate."
-          require_approval: "I messaggi contenenti queste parole richiederanno l'approvazione dello staff prima di poter essere visualizzati."
-          flag: "Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle."
-          replace: "Sostituisci le parole nei messaggi con altre parole"
-          tag: "Etichetta automaticamente gli argomenti in base al primo messaggio"
-          silence: "I primi post degli utenti che contengono queste parole richiederanno l'approvazione dello staff prima di essere visibili, e l'utente verrà automaticamente silenziato."
-          link: "Nei messaggi sostituisce le parole con link"
+          replace: "Sostituisci le parole nei messaggi con altre parole."
+          link: "Nei messaggi sostituisce le parole con link."
         form:
           label: "Ha una parola o frase"
           placeholder: "Inserisci parola o frase (* è un carattere jolly)"

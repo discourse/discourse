@@ -2,9 +2,12 @@
   .sidebar-section-wrapper {
     padding-bottom: 0;
   }
+  .sidebar-section-header {
+    position: relative;
+  }
   .d-icon-globe {
     position: absolute;
-    left: 0.5em;
+    left: -0.75em;
     height: 0.75em;
     width: 0.75em;
     margin-top: 0.15em;
@@ -15,12 +18,20 @@
     cursor: move;
   }
 
+  a {
+    -webkit-touch-callout: none !important;
+    @include unselectable;
+  }
+
   .sidebar-section-wrapper.disabled {
+    a {
+      pointer-events: none;
+    }
     .sidebar-section-link-wrapper {
       .sidebar-section-link-prefix.icon,
       .sidebar-section-link {
         background: none;
-        color: var(--primary-low);
+        color: var(--primary-low-mid);
       }
       .sidebar-section-link.drag {
         font-weight: bold;
@@ -29,6 +40,13 @@
           color: var(--primary-high);
         }
       }
+    }
+  }
+}
+.discourse-touch {
+  .sidebar-custom-sections {
+    a:hover {
+      background: none !important;
     }
   }
 }

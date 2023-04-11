@@ -22,11 +22,15 @@
         {{#if this.showStaffCounters}}
           <div class="staff-counters">
             {{#if this.model.number_of_flags_given}}
-              <div><span
-                  class="helpful-flags"
-                >{{this.model.number_of_flags_given}}</span>{{i18n
-                  "user.staff_counters.flags_given"
-                }}</div>
+              <div>
+                {{html-safe
+                  (i18n
+                    "user.staff_counters.flags_given"
+                    className="helpful-flags"
+                    count=this.model.number_of_flags_given
+                  )
+                }}
+              </div>
             {{/if}}
             {{#if this.model.number_of_flagged_posts}}
               <div>
@@ -116,7 +120,7 @@
           <UserProfileAvatar @user={{this.model}} @tagName="" />
           <div class="primary-textual">
             <div class="user-profile-names">
-              <h1
+              <div
                 class="{{if this.nameFirst 'full-name' 'username'}}
                   user-profile-names__primary"
               >
@@ -129,7 +133,7 @@
                 {{#if this.model.status}}
                   <UserStatusMessage @status={{this.model.status}} />
                 {{/if}}
-              </h1>
+              </div>
               <div
                 class="{{if this.nameFirst 'username' 'full-name'}}
                   user-profile-names__secondary"

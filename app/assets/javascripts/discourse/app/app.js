@@ -1,3 +1,5 @@
+import "./global-compat";
+
 import Application from "@ember/application";
 import { buildResolver } from "discourse-common/resolver";
 import { isTesting } from "discourse-common/config/environment";

@@ -41,7 +41,7 @@ gem "actionview_precompiler", require: false
 
 gem "discourse-seed-fu"
 
-gem "mail", git: "https://github.com/discourse/mail.git"
+gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
@@ -70,8 +70,6 @@ gem "message_bus"
 gem "rails_multisite"
 
 gem "fast_xs", platform: :ruby
-
-gem "xorcist"
 
 gem "fastimage"
 

@@ -3,7 +3,7 @@
 module Chat
   # = Chat::StepsInspector
   #
-  # This class takes a {Chat::Service::Base::Context} object and inspects it.
+  # This class takes a {Service::Base::Context} object and inspects it.
   # It will output a list of steps and what is their known state.
   class StepsInspector
     # @!visibility private

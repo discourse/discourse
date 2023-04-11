@@ -1104,7 +1104,7 @@ fi:
       title: "PAK/KAK"
       xaxis: "Päivä"
       yaxis: "PAK/KAK"
-      description: "Käyttäjät, jotka kirjautuivat sisään viimeisen päivän aikana, jaettuna käyttäjillä, jotka kirjautuivat sisään viimeisen kuukauden aikana – tuottaa prosenttiarvon, joka ilmaisee yhteisön sitoutuneisuutta. Tähtää yli 30 prosenttiin."
+      description: "Käyttäjät, jotka kirjautuivat sisään viimeisen päivän aikana, jaettuna käyttäjillä, jotka kirjautuivat sisään viimeisen kuukauden aikana – tuottaa prosenttiarvon, joka ilmaisee yhteisön sitoutuneisuutta. Tähtää yli 20 prosenttiin."
     daily_engaged_users:
       title: "Sitoutuneet päivittäiskäyttäjät"
       xaxis: "Päivä"
@@ -1472,7 +1472,6 @@ fi:
     manifest_icon: "Kuva, jota käytetään logo-/splash-kuvana Androidissa. Skaalataan automaattisesti kokoon 512×512. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
     manifest_screenshots: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
     favicon: "Sivuston favicon, ks. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Täytyy olla png, jotta toimii CDN:n kanssa. Skaalataan kokoon 32x32. Jos jätetty tyhjäksi, large_icon-kuvaketta käytetään."
-    apple_touch_icon: "Applen kosketuslaitteissa käytettävä kuvake. Skaalataan automaattisesti kokoon 180x180. Jos jätetään tyhjäksi, large_icon-kuvaketta käytetään."
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
     twitter_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
@@ -1720,7 +1719,6 @@ fi:
     composer_media_optimization_image_bytes_optimization_threshold: "Kuvatiedoston vähimmäiskoko, joka laukaisee optimoinnin asiakkaan päässä"
     composer_media_optimization_image_resize_dimensions_threshold: "Kuvan vähimmäisleveys, joka laukaisee koon muuttamisen asiakkaan päässä"
     composer_media_optimization_image_resize_width_target: "Kuvat, joiden leveys on suurempi kuin \"composer_media_optimization_image_dimensions_resize_threshold\", muunnetaan tähän leveyteen. Täytyy olla suurempi tai yhtä suuri kuin \"composer_media_optimization_image_dimensions_resize_threshold\"."
-    composer_media_optimization_image_encode_quality: "Uudelleenkoodausprosessissa käytetty JPEG-koodauslaatu."
     min_ratio_to_crop: "Suhde, jolla korkeat kuvat rajataan. Syötä tulos leveys/korkeus-suhteena."
     simultaneous_uploads: "Kuinka monta tiedostoa voi enintään vetää ja pudottaa viestieditoriin"
     default_invitee_trust_level: "Oletusluottamustaso (0–4) kutsutuille käyttäjille."
@@ -3677,12 +3675,7 @@ fi:
     title: "Sovellusta ei voida ladata"
     offline_page_message: "Yhteydessäsi vaikuttaa olevan vikaa! Tarkista verkkoyhteytesi ja yritä uudelleen."
   login_required:
-    welcome_message: |
-      ## [Tervetuloa sivustolle %{title}](#welcome)
-      Käyttäjätili tarvitaan. Luo tili tai kirjaudu sisään.
-    welcome_message_invite_only: |
-      ## [Tervetuloa sivustolle %{title}](#welcome)
-      Käyttäjätili vaaditaan. Pyydä yhteisön jäsentä kutsumaan sinut tai kirjaudu sisään.
+    welcome_message: "# [Tervetuloa %{title}](#welcome)"
   upload:
     edit_reason: "lataa kuvista paikalliset kopiot"
     unauthorized: "Tiedosto, jota yrität ladata, ei ole sallittu (sallitut päätteet: %{authorized_extensions})."
@@ -4374,13 +4367,18 @@ fi:
         description: "Hyväksy merkintä ja hiljennä käyttäjä."
       agree_and_restore:
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
+      agree_and_hide:
+        title: "Piilota viesti"
       delete_single:
         title: "Poista"
       delete:
         title: "Poista..."
       delete_and_ignore_replies:
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
+      delete_and_agree:
+        title: "Poista viesti"
       delete_and_agree_replies:
+        title: "Poista viesti ja vastaukset"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
       disagree_and_restore:
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."

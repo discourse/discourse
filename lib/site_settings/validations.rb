@@ -96,7 +96,7 @@ module SiteSettings::Validations
     validate_default_categories(category_ids, default_categories_selected)
   end
 
-  def validate_default_categories_regular(new_val)
+  def validate_default_categories_normal(new_val)
     category_ids = validate_category_ids(new_val)
 
     default_categories_selected = [

@@ -309,23 +309,27 @@ module FileStore
       key = get_upload_key(upload)
       update_ACL(key, upload.secure?)
 
-      # if we do find_each when the images have already been preloaded with
+      # If we do find_each when the images have already been preloaded with
       # includes(:optimized_images), then the optimized_images are fetched
       # from the database again, negating the preloading if this operation
       # is done on a large amount of uploads at once (see Jobs::SyncAclsForUploads)
       if optimized_images_preloaded
         upload.optimized_images.each do |optimized_image|
-          optimized_image_key = get_path_for_optimized_image(optimized_image)
-          update_ACL(optimized_image_key, upload.secure?)
+          update_optimized_image_acl(optimized_image, secure: upload.secure)
         end
       else
         upload.optimized_images.find_each do |optimized_image|
-          optimized_image_key = get_path_for_optimized_image(optimized_image)
-          update_ACL(optimized_image_key, upload.secure?)
+          update_optimized_image_acl(optimized_image, secure: upload.secure)
         end
       end
 
       true
+    end
+
+    def update_optimized_image_acl(optimized_image, secure: false)
+      optimized_image_key = get_path_for_optimized_image(optimized_image)
+      optimized_image_key.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
+      update_ACL(optimized_image_key, secure)
     end
 
     def download_file(upload, destination_path)

@@ -58,7 +58,7 @@ export default {
         { id: "discourse-audio" }
       );
 
-      const caps = container.lookup("capabilities:main");
+      const caps = container.lookup("service:capabilities");
       if (caps.isSafari || caps.isIOS) {
         api.decorateCookedElement(
           (elem) => {
@@ -141,15 +141,15 @@ export default {
           "open-popup-link",
           "btn-default",
           "btn",
-          "btn-icon-text"
+          "btn-icon",
+          "btn-expand-table",
+          "no-text"
         );
         const expandIcon = create(
           iconNode("discourse-expand", { class: "expand-table-icon" })
         );
-        const openPopupText = document.createTextNode(
-          I18n.t("fullscreen_table.expand_btn")
-        );
-        openPopupBtn.append(expandIcon, openPopupText);
+        openPopupBtn.title = I18n.t("fullscreen_table.expand_btn");
+        openPopupBtn.append(expandIcon);
         return openPopupBtn;
       }
 
@@ -158,7 +158,7 @@ export default {
       }
 
       function generateModal(event) {
-        const table = event.target.nextElementSibling;
+        const table = event.target.parentElement.nextElementSibling;
         const tempTable = table.cloneNode(true);
 
         showModal("fullscreen-table").set("tableHtml", tempTable);
@@ -176,8 +176,12 @@ export default {
 
           const popupBtn = _createButton();
           table.parentNode.classList.add("fullscreen-table-wrapper");
-          table.parentNode.insertBefore(popupBtn, table);
+          // Create a button wrapper for case of multiple buttons (i.e. table builder extension)
+          const buttonWrapper = document.createElement("div");
+          buttonWrapper.classList.add("fullscreen-table-wrapper--buttons");
+          buttonWrapper.append(popupBtn);
           popupBtn.addEventListener("click", generateModal, false);
+          table.parentNode.insertBefore(buttonWrapper, table);
         });
       }
 

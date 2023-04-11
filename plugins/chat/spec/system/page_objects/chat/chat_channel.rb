@@ -75,13 +75,13 @@ module PageObjects
       def select_message(message)
         hover_message(message)
         click_more_button
-        find("[data-value='selectMessage']").click
+        find("[data-value='select']").click
       end
 
       def delete_message(message)
         hover_message(message)
         click_more_button
-        find("[data-value='deleteMessage']").click
+        find("[data-value='delete']").click
       end
 
       def open_edit_message(message)
@@ -112,15 +112,13 @@ module PageObjects
         within(message_by_id(message.id)) { find(".chat-message-bookmarked") }
       end
 
-      def find_reaction(message, reaction)
-        within(message_reactions_list(message)) do
-          return find("[data-emoji-name=\"#{reaction.emoji}\"]")
-        end
+      def find_reaction(message, emoji)
+        within(message_reactions_list(message)) { return find("[data-emoji-name=\"#{emoji}\"]") }
       end
 
-      def has_reaction?(message, reaction, text = nil)
+      def has_reaction?(message, emoji, text = nil)
         within(message_reactions_list(message)) do
-          has_css?("[data-emoji-name=\"#{reaction.emoji}\"]", text: text)
+          has_css?("[data-emoji-name=\"#{emoji}\"]", text: text)
         end
       end
 
@@ -136,8 +134,8 @@ module PageObjects
         within(message_by_id(message.id)) { has_no_css?(".chat-message-reaction-list") }
       end
 
-      def click_reaction(message, reaction)
-        find_reaction(message, reaction).click
+      def click_reaction(message, emoji)
+        find_reaction(message, emoji).click
       end
 
       def open_action_menu

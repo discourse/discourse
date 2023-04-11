@@ -150,7 +150,7 @@ basic:
     max: 36500
   ga_version:
     type: enum
-    default: v3_analytics
+    default: v4_gtag
     choices:
       - v3_analytics
       - v4_gtag
@@ -301,6 +301,7 @@ basic:
     default: 50
     min: 1
   top_page_default_timeframe:
+    client: true
     default: "yearly"
     type: enum
     choices:
@@ -391,7 +392,6 @@ login:
     refresh: true
     client: true
     default: false
-    validator: "EnableInviteOnlyValidator"
   login_required:
     refresh: true
     client: true
@@ -2466,6 +2466,11 @@ uncategorized:
     default: 0
     hidden: true
 
+  view_user_route:
+    default: "summary"
+    hidden: true
+    client: true
+
   tos_topic_id:
     default: -1
     hidden: true
@@ -2482,6 +2487,7 @@ uncategorized:
   admin_quick_start_topic_id:
     default: -1
     hidden: true
+    client: true
 
   bootstrap_mode_min_users:
     default: 50
@@ -2783,6 +2789,8 @@ tags:
   force_lowercase_tags:
     default: true
     client: true
+  create_post_for_category_and_tag_changes:
+    default: false
 
 dashboard:
   dashboard_hidden_reports:

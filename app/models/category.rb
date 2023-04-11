@@ -204,21 +204,63 @@ class Category < ActiveRecord::Base
   @topic_id_cache = DistributedCache.new("category_topic_ids")
 
   def self.topic_ids
-    @topic_id_cache["ids"] || reset_topic_ids_cache
+    @topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache["ids"] = Set.new(Category.pluck(:topic_id).compact)
+    @topic_id_cache.clear
   end
 
   def reset_topic_ids_cache
     Category.reset_topic_ids_cache
   end
 
+  # Accepts an array of slugs with each item in the array
+  # Returns the category ids of the last slug in the array. The slugs array has to follow the proper category
+  # nesting hierarchy. If any of the slug in the array is invalid or if the slugs array does not follow the proper
+  # category nesting hierarchy, nil is returned.
+  #
+  # When only a single slug is provided, the category id of all the categories with that slug is returned.
+  def self.ids_from_slugs(slugs)
+    return [] if slugs.blank?
+
+    params = {}
+    params_index = 0
+
+    sqls =
+      slugs.map do |slug|
+        category_slugs = slug.split(":").first(SiteSetting.max_category_nesting)
+        sql = ""
+
+        if category_slugs.length == 1
+          params[:"slug_#{params_index}"] = category_slugs.first
+          sql = "SELECT id FROM categories WHERE slug = :slug_#{params_index}"
+          params_index += 1
+        else
+          category_slugs.each_with_index do |category_slug, index|
+            params[:"slug_#{params_index}"] = category_slug
+
+            sql =
+              if index == 0
+                "SELECT id FROM categories WHERE slug = :slug_#{params_index} AND parent_category_id IS NULL"
+              else
+                "SELECT id FROM categories WHERE parent_category_id = (#{sql}) AND slug = :slug_#{params_index}"
+              end
+
+            params_index += 1
+          end
+        end
+
+        sql
+      end
+
+    DB.query_single(sqls.join("\nUNION ALL\n"), params)
+  end
+
   @@subcategory_ids = DistributedCache.new("subcategory_ids")
 
   def self.subcategory_ids(category_id)
-    @@subcategory_ids[category_id] ||= begin
+    @@subcategory_ids.defer_get_set(category_id.to_s) do
       sql = <<~SQL
             WITH RECURSIVE subcategories AS (
                 SELECT :category_id id, 1 depth

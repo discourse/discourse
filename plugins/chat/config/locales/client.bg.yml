@@ -6,8 +6,39 @@
 
 bg:
   js:
+    admin:
+      site_settings:
+        categories:
+          chat: Чат
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Статусът на чат канала е променен"
+            chat_channel_delete: "Чат каналът е изтрит"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Създаване на чат съобщение в зададен канал."
+    about:
+      chat_messages_count: "Съобщения в чата"
+      chat_channels_count: "Чат канали"
+      chat_users_count: "Потребители в чата"
     chat:
+      dates:
+        time_tiny: "ч:мм"
+      all_loaded: "Показани са всички съобщения"
+      already_enabled: "Чатът вече е активиран по тази тема. Моля опреснете страницата."
+      disabled_for_topic: "Чатът е деактивиран в тази тема."
+      bot: "бот"
+      create: "Създай"
       cancel: "Прекрати"
+      cancel_reply: "Отмяна на отговора"
+      chat_channels: "Канали"
+      browse_all_channels: "Преглед на всички канали"
+      move_to_channel:
+        title: "Преместване на съобщенията в канал"
+        confirm_move: "Преместване на съобщения"
       channel_settings:
         edit: "Редактирай"
         add: "Добави "

@@ -16,9 +16,7 @@ class SidebarSectionsController < ApplicationController
 
   def create
     sidebar_section =
-      SidebarSection.create!(
-        section_params.merge(user: current_user, sidebar_urls_attributes: links_params),
-      )
+      SidebarSection.create!(section_params.merge(sidebar_urls_attributes: links_params))
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_create_public_sidebar_section(sidebar_section)
@@ -27,6 +25,7 @@ class SidebarSectionsController < ApplicationController
         nil,
         group_ids: SiteSetting.enable_custom_sidebar_sections_map,
       )
+      Site.clear_anon_cache!
     end
 
     render json: SidebarSectionSerializer.new(sidebar_section)
@@ -38,7 +37,10 @@ class SidebarSectionsController < ApplicationController
     sidebar_section = SidebarSection.find_by(id: section_params["id"])
     @guardian.ensure_can_edit!(sidebar_section)
 
-    sidebar_section.update!(section_params.merge(sidebar_urls_attributes: links_params))
+    ActiveRecord::Base.transaction do
+      sidebar_section.update!(section_params.merge(sidebar_urls_attributes: links_params))
+      sidebar_section.sidebar_section_links.update_all(user_id: sidebar_section.user_id)
+    end
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_update_public_sidebar_section(sidebar_section)
@@ -47,6 +49,7 @@ class SidebarSectionsController < ApplicationController
         nil,
         group_ids: SiteSetting.enable_custom_sidebar_sections_map,
       )
+      Site.clear_anon_cache!
     end
 
     render json: SidebarSectionSerializer.new(sidebar_section)
@@ -95,7 +98,9 @@ class SidebarSectionsController < ApplicationController
   end
 
   def section_params
-    params.permit(:id, :title, :public)
+    section_params = params.permit(:id, :title, :public)
+    section_params.merge!(user: current_user) if !params[:public]
+    section_params
   end
 
   def links_params

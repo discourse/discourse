@@ -641,6 +641,7 @@ tr_TR:
       disallowed_tags_generic: "Bu konu izin verilmeyen etiketlere sahip."
       slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"
       is_already_in_use: "zaten kullanımda"
+      move_topic_to_category_disallowed: "Bu konuyu, yeni konu oluşturma izninizin olmadığı bir kategoriye taşıyamazsınız."
     cannot_delete:
       uncategorized: "Bu kategori özeldir. Kategorisi olmayan konular için bir tutma alanı olarak tasarlanmıştır; silinemez."
       has_subcategories: "Alt kategorileri olduğu için bu kategori silinemiyor."
@@ -1104,7 +1105,7 @@ tr_TR:
       title: "Günlük Aktif Kullanıcı/Aylık Aktif Kullanıcı"
       xaxis: "Gün"
       yaxis: "Günlük Aktif Kullanıcı/Aylık Aktif Kullanıcı"
-      description: "Son gün giriş yapan üye sayısı, son ay giriş yapan üye sayısına bölündüğünde topluluk \"yapışkanlığını\" gösteren bir % elde edilir. Hedefiniz >%30 olsun."
+      description: "Son gün giriş yapan üye sayısı, son ay giriş yapan üye sayısına bölündüğünde topluluk \"yapışkanlığını\" gösteren bir % elde edilir. Hedefiniz >%20 olsun."
     daily_engaged_users:
       title: "Günlük Etkileşimli Kullanıcılar"
       xaxis: "Gün"
@@ -1472,7 +1473,7 @@ tr_TR:
     manifest_icon: "Android'de logo/splash görüntüsü olarak kullanılan görüntü. Otomatik olarak 512 × 512 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
     manifest_screenshots: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
     favicon: "Siteniz için bir favicon, bkz. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. CDN üzerinden düzgün çalışması için png olmalıdır. 32x32 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
-    apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Otomatik olarak 180x180 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
+    apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Şeffaf bir arka plan önerilmez. Otomatik olarak 180x180 olarak yeniden boyutlandırılacaktır. Boş bırakılırsa, large_icon kullanılacaktır."
     opengraph_image: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır"
     twitter_summary_large_image: "Twitter kartı \"özet büyük resmi\" (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa .svg olmadığı sürece opengraph_image kullanılarak normal kart meta verileri oluşturulur"
     notification_email: "Tüm temel sistem e-postalarını gönderirken kullanılan kimden: e-posta adresi. Burada belirtilen alan adının, e-postanın ulaşması için SPF, DKIM ve ters PTR kayıtlarının doğru şekilde ayarlanmış olması gerekir."
@@ -1721,7 +1722,7 @@ tr_TR:
     composer_media_optimization_image_bytes_optimization_threshold: "İstemci tarafı optimizasyonunu tetiklemek için minimum görüntü dosyası boyutu"
     composer_media_optimization_image_resize_dimensions_threshold: "İstemci tarafında yeniden boyutlandırmayı tetiklemek için minimum görüntü genişliği"
     composer_media_optimization_image_resize_width_target: "Genişliği \"composer_media_optimization_image_dimensions_resize_threshold\" değerinden büyük olan görüntüler bu genişliğe yeniden boyutlandırılır. \"composer_media_optimization_image_dimensions_resize_threshold\" değerinden >= olmalıdır."
-    composer_media_optimization_image_encode_quality: "Yeniden kodlama işleminde kullanılan JPEG kodlama kalitesi."
+    composer_media_optimization_image_encode_quality: "Yeniden kodlama işleminde kullanılan JPG kodlama kalitesi."
     min_ratio_to_crop: "Uzun görüntüleri kırpmak için kullanılan oran. Genişlik / yükseklik sonucunu girin."
     simultaneous_uploads: "Besteciye sürüklenip bırakılabilecek maksimum dosya sayısı"
     default_invitee_trust_level: "Davet edilen kullanıcılar için varsayılan güven seviyesi (0-4)."
@@ -3646,13 +3647,6 @@ tr_TR:
   offline:
     title: "Uygulama yüklenemiyor"
     offline_page_message: "Görünüşe göre çevrimdışısınız! Lütfen ağ bağlantınızı kontrol edip tekrar deneyin."
-  login_required:
-    welcome_message: |
-      ##[%{title} başlığına hoş geldiniz](#hoşgeldiniz)
-      Bir hesap gerekli. Lütfen devam etmek için bir hesap oluşturun veya giriş yapın.
-    welcome_message_invite_only: |
-      ##[%{title} başlığına hoş geldiniz](#hoşgeldiniz)
-      Bir hesap gerekli. Lütfen devam etmek mevcut bir üyeden davet isteyin veya giriş yapın.
   upload:
     edit_reason: "görüntülerin yerel kopyaları indirildi"
     unauthorized: "Üzgünüz, yüklemeye çalıştığınız dosyaya izin verilmiyor (izin verilen uzantılar: %{authorized_extensions})."
@@ -4159,7 +4153,10 @@ tr_TR:
       message: "<p> <b>%{email}</b> adresine etkinleştirme e-postasını yeniden gönderdik"
   safe_mode:
     title: "Güvenli moda gir"
+    description: "Güvenli mod, temaları veya istemci tarafı eklenti özelleştirmelerini yüklemeden sitenizi test etmenize olanak tanır. Sunucu tarafı eklenti özelleştirmeleri etkin durumda kalır."
     no_themes: "Temaları ve tema bileşenlerini devre dışı bırak"
+    no_unofficial_plugins: "Resmi olmayan istemci tarafı eklenti özelleştirmelerini devre dışı bırak"
+    no_plugins: "Tüm istemci tarafı eklenti özelleştirmelerini devre dışı bırak"
     enter: "Güvenli Moda Gir"
     must_select: "Güvenli moda girmek için en az bir seçenek belirlemelisiniz."
   wizard:

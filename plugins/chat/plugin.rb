@@ -17,7 +17,6 @@ register_asset "stylesheets/mobile/index.scss", :mobile
 
 register_svg_icon "comments"
 register_svg_icon "comment-slash"
-register_svg_icon "hashtag"
 register_svg_icon "lock"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
@@ -287,11 +286,25 @@ after_initialize do
     if name == :secure_uploads && old_value == false && new_value == true
       Chat::SecureUploadsCompatibility.update_settings
     end
+
+    if name == :chat_allowed_groups
+      Jobs.enqueue(
+        Jobs::Chat::AutoRemoveMembershipHandleChatAllowedGroupsChange,
+        new_allowed_groups: new_value,
+      )
+    end
   end
 
   on(:post_alerter_after_save_post) do |post, new_record, notified|
     next if !new_record
     Chat::PostNotificationHandler.new(post, notified).handle
+  end
+
+  on(:group_destroyed) do |group, user_ids|
+    Jobs.enqueue(
+      Jobs::Chat::AutoRemoveMembershipHandleDestroyedGroup,
+      destroyed_group_user_ids: user_ids,
+    )
   end
 
   register_presence_channel_prefix("chat") do |channel_name|
@@ -370,14 +383,19 @@ after_initialize do
     end
   end
 
+  on(:user_removed_from_group) do |user, group|
+    Jobs.enqueue(Jobs::Chat::AutoRemoveMembershipHandleUserRemovedFromGroup, user_id: user.id)
+  end
+
   on(:category_updated) do |category|
     # TODO(roman): remove early return after 2.9 release.
     # There's a bug on core where this event is triggered with an `#update` result (true/false)
-    return if !category.is_a?(Category)
-    category_channel = Chat::Channel.find_by(auto_join_users: true, chatable: category)
+    if category.is_a?(Category) && category_channel = Chat::Channel.find_by(chatable: category)
+      if category_channel.auto_join_users
+        Chat::ChannelMembershipManager.new(category_channel).enforce_automatic_channel_memberships
+      end
 
-    if category_channel
-      Chat::ChannelMembershipManager.new(category_channel).enforce_automatic_channel_memberships
+      Jobs.enqueue(Jobs::Chat::AutoRemoveMembershipHandleCategoryUpdated, category_id: category.id)
     end
   end
 

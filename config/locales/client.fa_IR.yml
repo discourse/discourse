@@ -166,8 +166,6 @@ fa_IR:
     software_update_prompt:
       message: "سایت بروز رسانی شده٬ لطفا برای پرهیز از بروز خطای احتمالی صفحه خود را دوباره <span>بارگزاری/ریفرش</span> کنید."
       dismiss: "رد کردن"
-    bootstrap_mode_disabled: "حالت خود راه انداز در 24 ساعت آینده غیر‌فعال خواهد شد."
-    bootstrap_invite_button_title: "ارسال دعوت‌نامه"
     themes:
       default_description: "پیش‌فرض"
     s3:
@@ -318,7 +316,6 @@ fa_IR:
       new_topic: "پیش‌نویس‌ موضوع جدید"
       new_private_message: "پیش‌نویس پیام شخصی جدید"
       abandon:
-        confirm: "شما یک پیش‌نویس در این موضوع دارید. دوست داری باهاش چیکار کنی؟"
         yes_value: "حذف"
         no_value: "ادامه"
     topic_count_categories:
@@ -3376,14 +3373,17 @@ fa_IR:
         custom:
           add: "افزودن بخش سفارشی"
           edit: "ویرایش بخش سفارشی"
-          name: "عنوان بخش"
           save: "ذخیره"
           delete: "حذف"
           delete_confirm: "آیا مطمئن هستید که می‌خواهید این بخش را حذف کنید؟"
           links:
-            icon: "آیکن"
-            name: "نام"
             delete: "حذف پیوند"
+            icon:
+              label: "آیکن"
+            name:
+              label: "نام"
+          title:
+            label: "عنوان بخش"
         about:
           header_link_text: "درباره"
         messages:
@@ -4147,9 +4147,6 @@ fa_IR:
           flag: "پرچم"
           replace: "جایگزینی"
           tag: "برچسب"
-        action_descriptions:
-          block: "از فرستادن فرسته‌هایی که دارای این واژه‌ها هستند جلوگیری کنید. کاربر هنگام ارسال فرسته با پیام خطا مواجه می‌شود."
-          require_approval: "فرسته‌های دارای این واژه‌ها پیش از دیده شدن نیاز به تائید کارکنان دارند."
         form:
           tag_label: "برچسب"
           link_placeholder: "https://example.com"

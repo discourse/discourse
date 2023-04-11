@@ -20,12 +20,10 @@ export default class ChatThread {
   constructor(args = {}) {
     this.title = args.title;
     this.id = args.id;
+    this.channelId = args.channel_id;
     this.status = args.status;
 
     this.originalMessageUser = this.#initUserModel(args.original_message_user);
-
-    // TODO (martin) Not sure if ChatMessage is needed here, original_message
-    // only has a small subset of message stuff.
     this.originalMessage = args.original_message;
     this.originalMessage.user = this.originalMessageUser;
   }
@@ -36,6 +34,10 @@ export default class ChatThread {
 
   set messages(messages) {
     this.messagesManager.messages = messages;
+  }
+
+  get selectedMessages() {
+    return this.messages.filter((message) => message.selected);
   }
 
   get escapedTitle() {

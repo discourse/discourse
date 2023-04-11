@@ -8,6 +8,7 @@ import I18n from "I18n";
 import { sanitize } from "discourse/lib/text";
 import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
+import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 
 const FULL_RELOAD_LINKS_REGEX = [/^\/my\/[a-z_\-\/]+$/, /^\/safe-mode$/];
 
@@ -29,11 +30,33 @@ class Section {
   }
 
   get validTitle() {
-    return !isEmpty(this.title) && this.title.length <= 30;
+    return !this.#blankTitle && !this.#tooLongTitle;
+  }
+
+  get invalidTitleMessage() {
+    if (this.title === undefined) {
+      return;
+    }
+    if (this.#blankTitle) {
+      return I18n.t("sidebar.sections.custom.title.validation.blank");
+    }
+    if (this.#tooLongTitle) {
+      return I18n.t("sidebar.sections.custom.title.validation.maximum", {
+        count: SIDEBAR_SECTION.max_title_length,
+      });
+    }
   }
 
   get titleCssClass() {
     return this.title === undefined || this.validTitle ? "" : "warning";
+  }
+
+  get #blankTitle() {
+    return isEmpty(this.title);
+  }
+
+  get #tooLongTitle() {
+    return this.title.length > SIDEBAR_SECTION.max_title_length;
   }
 }
 
@@ -62,19 +85,69 @@ class SectionLink {
   }
 
   get validIcon() {
-    return !isEmpty(this.icon) && this.icon.length <= 40;
+    return !this.#blankIcon && !this.#tooLongIcon;
+  }
+
+  get validName() {
+    return !this.#blankName && !this.#tooLongName;
+  }
+
+  get validValue() {
+    return !this.#blankValue && !this.#tooLongValue && !this.#invalidValue;
+  }
+
+  get invalidIconMessage() {
+    if (this.#blankIcon) {
+      return I18n.t("sidebar.sections.custom.links.icon.validation.blank");
+    }
+    if (this.#tooLongIcon) {
+      return I18n.t("sidebar.sections.custom.links.icon.validation.maximum", {
+        count: SIDEBAR_URL.max_icon_length,
+      });
+    }
+  }
+
+  get invalidNameMessage() {
+    if (this.name === undefined) {
+      return;
+    }
+    if (this.#blankName) {
+      return I18n.t("sidebar.sections.custom.links.name.validation.blank");
+    }
+    if (this.#tooLongName) {
+      return I18n.t("sidebar.sections.custom.links.name.validation.maximum", {
+        count: SIDEBAR_URL.max_name_length,
+      });
+    }
+  }
+
+  get invalidValueMessage() {
+    if (this.value === undefined) {
+      return;
+    }
+    if (this.#blankValue) {
+      return I18n.t("sidebar.sections.custom.links.value.validation.blank");
+    }
+    if (this.#tooLongValue) {
+      return I18n.t("sidebar.sections.custom.links.value.validation.maximum", {
+        count: SIDEBAR_URL.max_value_length,
+      });
+    }
+    if (this.#invalidValue) {
+      return I18n.t("sidebar.sections.custom.links.value.validation.invalid");
+    }
   }
 
   get iconCssClass() {
     return this.icon === undefined || this.validIcon ? "" : "warning";
   }
 
-  get validName() {
-    return !isEmpty(this.name) && this.name.length <= 80;
-  }
-
   get nameCssClass() {
     return this.name === undefined || this.validName ? "" : "warning";
+  }
+
+  get valueCssClass() {
+    return this.value === undefined || this.validValue ? "" : "warning";
   }
 
   get external() {
@@ -85,6 +158,37 @@ class SectionLink {
         this.value.startsWith(this.httpsHost) ||
         this.value.startsWith("/")
       )
+    );
+  }
+
+  get #blankIcon() {
+    return isEmpty(this.icon);
+  }
+
+  get #tooLongIcon() {
+    return this.icon.length > SIDEBAR_URL.max_icon_length;
+  }
+
+  get #blankName() {
+    return isEmpty(this.name);
+  }
+
+  get #tooLongName() {
+    return this.name.length > SIDEBAR_URL.max_name_length;
+  }
+
+  get #blankValue() {
+    return isEmpty(this.value);
+  }
+
+  get #tooLongValue() {
+    return this.value.length > SIDEBAR_URL.max_value_length;
+  }
+
+  get #invalidValue() {
+    return (
+      this.path &&
+      (this.external ? !this.#validExternal() : !this.#validInternal())
     );
   }
 
@@ -101,19 +205,6 @@ class SectionLink {
       this.router.recognize(this.path).name !== "unknown" ||
       FULL_RELOAD_LINKS_REGEX.some((regex) => this.path.match(regex))
     );
-  }
-
-  get validValue() {
-    return (
-      !isEmpty(this.value) &&
-      this.value.length <= 200 &&
-      this.path &&
-      (this.external ? this.#validExternal() : this.#validInternal())
-    );
-  }
-
-  get valueCssClass() {
-    return this.value === undefined || this.validValue ? "" : "warning";
   }
 }
 

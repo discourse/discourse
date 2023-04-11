@@ -852,7 +852,7 @@ export default Component.extend(
       this.clearErrors();
 
       const inModal = this.element.closest("#discourse-modal");
-      if (inModal && this?.site?.mobileView) {
+      if (inModal && this.site.mobileView) {
         const modalBody = inModal.querySelector(".modal-body");
         modalBody.style = "";
       }
@@ -1061,7 +1061,7 @@ export default Component.extend(
     handleDeprecations() {
       this._deprecateValueAttribute();
       this._deprecateMutations();
-      this._handleDeprecatdArgs();
+      this._handleDeprecatedArgs();
     },
 
     _computePlacementStrategy() {
@@ -1071,7 +1071,7 @@ export default Component.extend(
         return placementStrategy;
       }
 
-      if (this.capabilities?.isIpadOS || this.site?.mobileView) {
+      if (this.capabilities.isIpadOS || this.site.mobileView) {
         placementStrategy =
           this.selectKit.options.mobilePlacementStrategy || "absolute";
       } else {
@@ -1160,7 +1160,7 @@ export default Component.extend(
       return resolvedDeprecations;
     },
 
-    _handleDeprecatdArgs() {
+    _handleDeprecatedArgs() {
       const migrations = {
         headerIcon: "icon",
         onExpand: "onOpen",

@@ -18,7 +18,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     const sidebarCategories = Site.current()
@@ -64,7 +64,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     const siteCategories = Site.current().categories;
@@ -109,7 +109,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     assert.strictEqual(categories.length, 4);
@@ -138,7 +138,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
 
     assert.notOk(
       exists(
-        `.sidebar-section-categories .sidebar-section-link-${firstCategory.slug}`
+        `.sidebar-section[data-section-name='categories'] .sidebar-section-link-${firstCategory.slug}`
       ),
       "category section link is not shown in sidebar after being marked as uncategorized"
     );

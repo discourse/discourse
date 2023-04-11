@@ -64,6 +64,10 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
     }
   }
 
+  get shouldDisplayDefaultConfig() {
+    return this.currentUser.admin && !this.hasDefaultSidebarCategories;
+  }
+
   get hasDefaultSidebarCategories() {
     return this.siteSettings.default_sidebar_categories.length > 0;
   }

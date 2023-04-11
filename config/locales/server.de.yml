@@ -649,6 +649,7 @@ de:
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
       slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
       is_already_in_use: "wird bereits verwendet"
+      move_topic_to_category_disallowed: "Du kannst dieses Thema nicht in eine Kategorie verschieben, in der du keine Berechtigung hast, neue Themen zu erstellen."
     cannot_delete:
       uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben, und kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien enthält."
@@ -1112,7 +1113,7 @@ de:
       title: "TAB/MAB"
       xaxis: "Tag"
       yaxis: "TAB/MAB"
-      description: "Anzahl der Mitglieder, die sich innerhalb des letzten Tages angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, welche die „Bindung“ der Community angibt. Erstrebenswert sind 30 % oder mehr."
+      description: "Anzahl der Mitglieder, die sich innerhalb des letzten Tages angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, welche die „Bindung“ der Community angibt. Erstrebenswert sind 20 % oder mehr."
     daily_engaged_users:
       title: "Täglich engagierte Benutzer"
       xaxis: "Tag"
@@ -1480,7 +1481,7 @@ de:
     manifest_icon: "Das Bild, das als Logo/Splash-Bild auf Android benutzt wird. Es wird automatisch auf 512 x 512 gesetzt. Falls leer, wird large_icon genutzt."
     manifest_screenshots: "Screenshots, die die Merkmale und Funktionen deiner Instanz auf der Seite mit der Installationsaufforderung zeigen. Alle Bilder sollten lokal hochgeladen werden und die gleichen Abmessungen haben."
     favicon: "Ein Favicon für die Website, siehe <a href='https://de.wikipedia.org/wiki/Favicon' target='_blank'>https://de.wikipedia.org/wiki/Favicon</a>. Damit es auch über eine CDN richtig funktioniert, muss es ein PNG sein. Wird auf eine Größe von 32 x 32 gesetzt. Falls leer, wird large_icon verwendet."
-    apple_touch_icon: "Icon für Apple-Touch-Geräte. Wird automatisch auf eine Größe von 180 x 180 gesetzt. Falls leer, wird large_icon verwendet."
+    apple_touch_icon: "Das Symbol wird für Apple Touch-Geräte verwendet. Ein transparenter Hintergrund ist nicht empfehlenswert. Die Größe wird automatisch auf 180x180 angepasst. Wenn du nichts angibst, wird large_icon verwendet."
     opengraph_image: "Standard-Opengraph-Bild. Wird verwendet, wenn die Seite kein anderes passendes Bild hat. Falls leer, wird large_icon verwendet."
     twitter_summary_large_image: "Twitter-Karte „summary large image“ (sollte mindestens 280 Pixel in der Breite und mindestens 150 Pixel in der Höhe sein, keine .svg-Datei). Wenn das Feld leer gelassen wird, werden die regulären Metadaten der Karte aus dem opengraph_image generiert, sofern es sich nicht ebenfalls um eine .svg-Datei handelt"
     notification_email: "Die E-Mail-Adresse, die als „from:“-Absender aller wichtigen System-E-Mails benutzt wird. Die angegebene Domain sollte über korrekte SPF-, DKIM- und Reverse-PTR-Einträge verfügen, damit E-Mails sicher zugestellt werden können."
@@ -1734,7 +1735,7 @@ de:
     composer_media_optimization_image_bytes_optimization_threshold: "Mindestgröße der Bilddatei, um die clientseitige Optimierung auszulösen"
     composer_media_optimization_image_resize_dimensions_threshold: "Mindestbreite des Bildes, um die clientseitige Skalierung auszulösen"
     composer_media_optimization_image_resize_width_target: "Bilder, die breiter als `composer_media_optimization_image_dimensions_resize_threshold` sind, werden auf diese Breite angepasst. Muss >= `composer_media_optimization_image_dimensions_resize_threshold` sein."
-    composer_media_optimization_image_encode_quality: "JPEG-Encoding-Qualität, die im Re-Encoding-Prozess verwendet wird."
+    composer_media_optimization_image_encode_quality: "Qualität der JPG-Kodierung, die bei der Neukodierung verwendet wird."
     min_ratio_to_crop: "Seitenverhältnis zum Ausschneiden hoher Bilder. Angabe als Ergebnis von Breite geteilt durch Höhe."
     simultaneous_uploads: "Maximale Anzahl an Dateien, die per Drag-and-drop in den Editor gezogen werden können."
     default_invitee_trust_level: "Standardwert für die Vertrauensstufe eines eingeladenen Benutzers (0–4)."
@@ -3718,12 +3719,7 @@ de:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
   login_required:
-    welcome_message: |
-      ## [Willkommen bei %{title}](#welcome)
-      Ein Konto ist erforderlich. Bitte erstelle ein Konto oder melde dich an, um fortzufahren.
-    welcome_message_invite_only: |
-      ## [Willkommen bei %{title}](#welcome)
-      Ein Konto ist erforderlich. Bitte frage ein existierendes Mitglied nach einer Einladung oder melde dich an, um fortzufahren.
+    welcome_message: "# [Willkommen bei %{title}] (#welcome)"
   upload:
     edit_reason: "lokale Kopien von Bildern heruntergeladen"
     unauthorized: "Entschuldige, die Datei, die du hochladen möchtest, ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
@@ -4489,7 +4485,10 @@ de:
       message: "<p>Wir haben die Aktivierungs-E-Mail noch einmal an <b>%{email}</b> gesendet"
   safe_mode:
     title: "Abgesicherten Modus betreten"
+    description: "Im abgesicherten Modus kannst du deine Website testen, ohne Themes oder clientseitige Plugin-Anpassungen zu laden. Server-seitige Plugin-Anpassungen bleiben aktiviert."
     no_themes: "Themes und Theme-Komponente deaktivieren"
+    no_unofficial_plugins: "Deaktiviere inoffizielle clientseitige Plugin-Anpassungen"
+    no_plugins: "Deaktiviere alle clientseitigen Plugin-Anpassungen"
     enter: "Abgesicherten Modus betreten"
     must_select: "Du musst mindestens eine Option auswählen, um den abgesicherten Modus zu betreten."
   wizard:

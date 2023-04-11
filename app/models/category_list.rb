@@ -8,6 +8,21 @@ class CategoryList
 
   attr_accessor :categories, :uncategorized
 
+  def self.register_included_association(association)
+    @included_assocations ||= []
+    @included_assocations << association if !@included_assocations.include?(association)
+  end
+
+  def self.included_associations
+    [
+      :uploaded_background,
+      :uploaded_logo,
+      :uploaded_logo_dark,
+      :topic_only_relative_url,
+      subcategories: [:topic_only_relative_url],
+    ].concat(@included_assocations || [])
+  end
+
   def initialize(guardian = nil, options = {})
     @guardian = guardian || Guardian.new
     @options = options
@@ -104,14 +119,7 @@ class CategoryList
   end
 
   def find_categories
-    @categories =
-      Category.includes(
-        :uploaded_background,
-        :uploaded_logo,
-        :uploaded_logo_dark,
-        :topic_only_relative_url,
-        subcategories: [:topic_only_relative_url],
-      ).secured(@guardian)
+    @categories = Category.includes(CategoryList.included_associations).secured(@guardian)
 
     @categories =
       @categories.where(

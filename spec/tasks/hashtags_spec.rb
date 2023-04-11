@@ -24,7 +24,7 @@ RSpec.describe "tasks/hashtags" do
       post_3 = Fabricate(:post, raw: "This is a cool #support hashtag")
       SiteSetting.enable_experimental_hashtag_autocomplete = false
 
-      Rake::Task["hashtags:mark_old_format_for_rebake"].invoke
+      capture_stdout { Rake::Task["hashtags:mark_old_format_for_rebake"].invoke }
 
       [post_1, post_2, post_3].each(&:reload)
 

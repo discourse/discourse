@@ -145,6 +145,16 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Trashes (soft deletes) a chat message.
+   * @param {number} channelId - ID of the channel.
+   * @param {number} messageId - ID of the message.
+   * @returns {Promise}
+   */
+  trashMessage(channelId, messageId) {
+    return this.#deleteRequest(`/channels/${channelId}/messages/${messageId}`);
+  }
+
+  /**
    * Creates a channel archive.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - Params of the archive.
@@ -284,6 +294,118 @@ export default class ChatApi extends Service {
       `/channels/${channelId}/notifications-settings/me`,
       { notifications_settings: data }
     );
+  }
+
+  /**
+   * Saves a draft for the channel, which includes message contents and uploads.
+   * @param {number} channelId - The ID of the channel.
+   * @param {object} data - The draft data, see ChatMessageDraft.toJSON() for more details.
+   * @returns {Promise}
+   */
+  saveDraft(channelId, data) {
+    // TODO (martin) Change this to postRequest after moving DraftsController into Api::DraftsController
+    return ajax("/chat/drafts", {
+      type: "POST",
+      data: {
+        chat_channel_id: channelId,
+        data,
+      },
+      ignoreUnsent: false,
+    })
+      .then(() => {
+        this.chat.markNetworkAsReliable();
+      })
+      .catch((error) => {
+        // we ignore a draft which can't be saved because it's too big
+        // and only deal with network error for now
+        if (!error.jqXHR?.responseJSON?.errors?.length) {
+          this.chat.markNetworkAsUnreliable();
+        }
+      });
+  }
+
+  /**
+   * Adds or removes an emoji reaction for a message inside a channel.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} messageId - The ID of the message to react on.
+   * @param {string} emoji - The text version of the emoji without colons, e.g. tada
+   * @param {string} reaction - Either "add" or "remove"
+   * @returns {Promise}
+   */
+  publishReaction(channelId, messageId, emoji, reactAction) {
+    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
+    return ajax(`/chat/${channelId}/react/${messageId}`, {
+      type: "PUT",
+      data: {
+        react_action: reactAction,
+        emoji,
+      },
+    });
+  }
+
+  /**
+   * Restores a single deleted chat message in a channel.
+   *
+   * @param {number} channelId - The ID of the channel for the message being restored.
+   * @param {number} messageId - The ID of the message being restored.
+   */
+  restoreMessage(channelId, messageId) {
+    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
+    return ajax(`/chat/${channelId}/restore/${messageId}`, {
+      type: "PUT",
+    });
+  }
+
+  /**
+   * Rebakes the cooked HTML of a single message in a channel.
+   *
+   * @param {number} channelId - The ID of the channel for the message being restored.
+   * @param {number} messageId - The ID of the message being restored.
+   */
+  rebakeMessage(channelId, messageId) {
+    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
+    return ajax(`/chat/${channelId}/${messageId}/rebake`, {
+      type: "PUT",
+    });
+  }
+
+  /**
+   * Saves an edit to a message's contents in a channel.
+   *
+   * @param {number} channelId - The ID of the channel for the message being edited.
+   * @param {number} messageId - The ID of the message being edited.
+   * @param {object} data - Params of the edit.
+   * @param {string} data.new_message - The edited content of the message.
+   * @param {Array<number>} data.upload_ids - The uploads attached to the message after editing.
+   */
+  editMessage(channelId, messageId, data) {
+    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
+    return ajax(`/chat/${channelId}/edit/${messageId}`, {
+      type: "PUT",
+      data,
+    });
+  }
+
+  /**
+   * Marks messages for all of a user's chat channel memberships as read.
+   *
+   * @returns {Promise}
+   */
+  markAllChannelsAsRead() {
+    return this.#putRequest(`/channels/read`);
+  }
+
+  /**
+   * Marks messages for a single user chat channel membership as read. If no
+   * message ID is provided, then the latest message for the channel is fetched
+   * on the server and used for the last read message.
+   *
+   * @param {number} channelId - The ID of the channel for the message being marked as read.
+   * @param {number} [messageId] - The ID of the message being marked as read.
+   * @returns {Promise}
+   */
+  markChannelAsRead(channelId, messageId = null) {
+    return this.#putRequest(`/channels/${channelId}/read/${messageId}`);
   }
 
   get #basePath() {

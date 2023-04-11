@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
-import { extractError } from "discourse/lib/ajax-error";
+import { flashAjaxError } from "discourse/lib/ajax-error";
 import { emailValid } from "discourse/lib/utilities";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
@@ -76,7 +76,7 @@ export default Controller.extend(ModalFunctionality, {
 
         this.send("closeModal");
       })
-      .catch((error) => this.flash(extractError(error), "error"))
+      .catch(flashAjaxError(this))
       .finally(() => this.set("loading", false));
   },
 });

@@ -241,6 +241,12 @@ RSpec.describe Admin::ThemesController do
         expect(response.status).to eq(422)
       end
 
+      it "fails to import with a failing status" do
+        post "/admin/themes/import.json", params: { remote: "https://#{"a" * 10_000}.com" }
+
+        expect(response.status).to eq(422)
+      end
+
       it "can lookup a private key by public key" do
         Discourse.redis.setex("ssh_key_abcdef", 1.hour, "rsa private key")
 

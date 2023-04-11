@@ -1009,7 +1009,7 @@ ko:
       title: "DAU / MAU"
       xaxis: "일"
       yaxis: "DAU / MAU"
-      description: "마지막 날에 로그인한 회원 수를 지난 달에 로그인한 회원 수로 나눈 값 – 커뮤니티 '고착도'를 나타내는 %를 반환합니다. 30% 이상을 목표로 하세요."
+      description: "마지막 날에 로그인 한 회원 수를 지난 달에 로그인 한 회원 수로 나눈 값 – 커뮤니티 &#39;고착성&#39;을 나타내는 %를 반환합니다. 20 % 이상을 목표로하십시오."
     daily_engaged_users:
       title: "일일 참여 사용자"
       xaxis: "일"
@@ -1357,7 +1357,6 @@ ko:
     manifest_icon: "Android에서 로고/스플래시 이미지로 사용되는 이미지입니다. 512 × 512로 크기가 자동 조정됩니다. 비워두면 large_icon이 사용됩니다."
     manifest_screenshots: "설치 프롬프트 페이지에서 인스턴스 기능 및 함수 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
     favicon: "사이트의 즐겨찾기 아이콘은 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>을 참조하세요. CDN에서 올바르게 작동하려면 png여야 합니다. 32x32로 크기가 조정됩니다. 비워두면 large_icon이 사용됩니다."
-    apple_touch_icon: "Apple touch 디바이스에 사용되는 아이콘입니다. 180x180으로 크기가 자동 조정됩니다. 비워두면 large_icon이 사용됩니다."
     opengraph_image: "페이지에 다른 적절한 이미지가 없을 때 사용되는 디폴트 오픈그래프 이미지입니다. 비워두면 large_icon이 사용됩니다"
     notification_email: "from: 이메일 주소는 모든 필수 시스템 이메일을 전송하는 데 사용됩니다. 여기에 지정된 도메인은 SPF, DKIM이 있어야 하며, 리버스 PTR 레코드가 제대로 설정되어 있어야 메일이 도착할 수 있습니다."
     email_custom_headers: "사용자 지정 이메일 헤더의 파이프(|)로 구분된 목록"
@@ -1585,7 +1584,6 @@ ko:
     composer_media_optimization_image_bytes_optimization_threshold: "클라이언트 측 최적화를 트리거하기 위한 최소 이미지 파일 크기"
     composer_media_optimization_image_resize_dimensions_threshold: "클라이언트 측 크기 조정을 트리거하는 최소 이미지 너비"
     composer_media_optimization_image_resize_width_target: "너비가 `composer_media_optimization_image_dimensions_resize_threshold` 보다 큰 이미지는 이 너비로 크기가 조정됩니다. `composer_media_optimization_image_dimensions_resize_threshold` 보다 크거나 같아야 합니다."
-    composer_media_optimization_image_encode_quality: "재인코딩 프로세스에 사용되는 JPEG 인코딩 퀄리티입니다."
     min_ratio_to_crop: "큰 이미지를 자르는 데 사용되는 비율입니다. 너비 / 높이의 결과를 입력하세요."
     simultaneous_uploads: "작성기에서 드래그 앤 드롭할 수 있는 최대 파일 수"
     default_invitee_trust_level: "초대된 사용자의 디폴트 신뢰 레벨(0~4)입니다."
@@ -3384,13 +3382,6 @@ ko:
   offline:
     title: "앱을 로드할 수 없음"
     offline_page_message: "오프라인 상태인 것 같습니다. 네트워크 연결을 확인하고 다시 시도하세요."
-  login_required:
-    welcome_message: |
-      ## [%{title}에 오신 것을 환영합니다](#welcome)
-      계정이 필요합니다. 계속하려면 계정을 만들거나 로그인하세요.
-    welcome_message_invite_only: |
-      ## [%{title}에 오신 것을 환영합니다](#welcome)
-      계정이 필요합니다. 계속하려면 기존 회원에게 초대를 요청하거나 로그인하세요.
   upload:
     edit_reason: "이미지 로컬 사본 다운로드됨"
     unauthorized: "업로드하려는 파일 확장자는 허용되지 않습니다(허용 확장자: %{authorized_extensions})."
