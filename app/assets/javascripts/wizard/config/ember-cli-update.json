@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "packages": [
+    {
+      "name": "ember-cli",
+      "version": "4.12.0",
+      "blueprints": [
+        {
+          "name": "addon",
+          "outputRepo": "https://github.com/ember-cli/ember-addon-output",
+          "codemodsSource": "ember-addon-codemods-manifest@1",
+          "isBaseBlueprint": true,
+          "options": [
+            "--no-welcome"
+          ]
+        }
+      ]
+    }
+  ]
+}
