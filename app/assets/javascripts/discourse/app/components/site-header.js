@@ -443,8 +443,24 @@ export default SiteHeaderComponent.extend({
 
   init() {
     this._super(...arguments);
-
     this._resizeObserver = null;
+  },
+
+  updateHeaderOffset() {
+    // check offset from top of the page, in case there's a custom header above
+    // and adjust on scroll in case it's not sticky
+    if (this.scrollAnimationFrame) {
+      cancelAnimationFrame(this.scrollAnimationFrame);
+    }
+
+    this.scrollAnimationFrame = requestAnimationFrame(() => {
+      const currentHeaderWrapTop = this.headerWrap.getBoundingClientRect().top;
+
+      document.documentElement.style.setProperty(
+        "--header-offset",
+        `${this.headerWrap.offsetHeight + currentHeaderWrapTop}px`
+      );
+    });
   },
 
   didInsertElement() {
@@ -452,21 +468,16 @@ export default SiteHeaderComponent.extend({
 
     this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
-    const headerWrap = document.querySelector(".d-header-wrap");
-    let header;
-    if (headerWrap) {
+    this.headerWrap = document.querySelector(".d-header-wrap");
+
+    if (this.headerWrap) {
       schedule("afterRender", () => {
-        header = headerWrap.querySelector("header.d-header");
-        const headerOffset = headerWrap.offsetHeight;
-        const headerTop = header.offsetTop;
-        document.documentElement.style.setProperty(
-          "--header-offset",
-          `${headerOffset}px`
-        );
-        document.documentElement.style.setProperty(
-          "--header-top",
-          `${headerTop}px`
-        );
+        this.header = this.headerWrap.querySelector("header.d-header");
+        this.updateHeaderOffset();
+      });
+
+      window.addEventListener("scroll", () => this.updateHeaderOffset(), {
+        passive: true,
       });
     }
 
@@ -475,7 +486,7 @@ export default SiteHeaderComponent.extend({
         for (let entry of entries) {
           if (entry.contentRect) {
             const headerOffset = entry.contentRect.height;
-            const headerTop = header.offsetTop;
+            const headerTop = this.header.offsetTop;
             document.documentElement.style.setProperty(
               "--header-offset",
               `${headerOffset}px`
@@ -484,17 +495,18 @@ export default SiteHeaderComponent.extend({
               "--header-top",
               `${headerTop}px`
             );
+            this.updateHeaderOffset();
           }
         }
       });
 
-      this._resizeObserver.observe(headerWrap);
+      this._resizeObserver.observe(this.headerWrap);
     }
   },
 
   willDestroyElement() {
     this._super(...arguments);
-
+    window.removeEventListener("scroll", () => this.updateHeaderOffset());
     this._resizeObserver?.disconnect();
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
