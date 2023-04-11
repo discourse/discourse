@@ -50,6 +50,8 @@
         <th class="replies"><%= t 'js.replies' %></th>
         <th class="views"><%= t 'js.views' %></th>
         <th><%= t 'js.activity' %></th>
+        <th class="voice-credits-header">Your Voice Credits</th>
+        <th class="voice-credits-score-header">Voice Credit Score</th>
       </tr>
     </thead>
 
@@ -101,11 +103,18 @@
           <td>
             <%= I18n.l(t.last_posted_at || t.created_at, format: :date_only) %>
           </td>
+          <td class="voice-credits">
+            <input type="number" class="voice-credits-input" data-topic-id="<%= topic.id %>" value="<%= topic.user_voice_credits || 0 %>" min="0" max="100" />
+          </td>
+          <td class="voice-credits-score">
+            <%= topic.total_voice_credits_score || 0 %>
+          </td>
         </tr>
       <% end %>
     </tbody>
 
   </table>
+  <button id="save-voice-credits">Save Voice Credits</button>
 </div>
 
 <% if @list.topics.length > 0 && @list.more_topics_url %>
