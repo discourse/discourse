@@ -28,7 +28,7 @@
     "@embroider/test-setup": "^2.1.1",
     "@glimmer/component": "^1.1.2",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-cli": "~4.12.0",
+    "ember-cli": "~3.28.0",
     "ember-cli-dependency-checker": "^3.3.1",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
