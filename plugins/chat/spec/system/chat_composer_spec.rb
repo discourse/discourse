@@ -103,15 +103,15 @@ RSpec.describe "Chat composer", type: :system, js: true do
       expect(find(".chat-composer-input").value).to eq(":grimacing:")
     end
 
-    it "removes denied emojis and aliases from insert emoji picker" do
-      SiteSetting.emoji_deny_list = "poop"
+    it "removes denied emojis from insert emoji picker" do
+      SiteSetting.emoji_deny_list = "monkey|peach"
 
       chat.visit_channel(channel_1)
       channel.open_action_menu
       channel.click_action_button("emoji")
 
-      expect(page).to have_no_selector("[data-emoji='poop']")
-      expect(page).to have_no_selector("[data-emoji='hankey']")
+      expect(page).to have_no_selector("[data-emoji='monkey']")
+      expect(page).to have_no_selector("[data-emoji='peach']")
     end
   end
 
@@ -127,6 +127,17 @@ RSpec.describe "Chat composer", type: :system, js: true do
       find(".emoji-shortname", text: "grimacing").click
 
       expect(find(".chat-composer-input").value).to eq(":grimacing: ")
+    end
+
+    it "doesn't suggest denied emojis and aliases" do
+      SiteSetting.emoji_deny_list = "peach|poop"
+      chat.visit_channel(channel_1)
+
+      find(".chat-composer-input").fill_in(with: ":peac")
+      expect(page).to have_no_selector(".emoji-shortname", text: "peach")
+
+      find(".chat-composer-input").fill_in(with: ":hank") # alias
+      expect(page).to have_no_selector(".emoji-shortname", text: "poop")
     end
   end
 

@@ -29,11 +29,12 @@ class Emoji
   end
 
   def self.allowed
-    Discourse.cache.fetch(cache_key("allowed_emojis")) { load_allowed }
+    # TODO: David - add cache for allowed_emojis when we have a way to invalidate it
+    load_allowed
   end
 
   def self.denied
-    Discourse.cache.fetch(cache_key("denied_emojis")) { load_denied }
+    load_denied
   end
 
   def self.aliases

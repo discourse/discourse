@@ -4,6 +4,7 @@ module PageObjects
   module Components
     class Composer < PageObjects::Components::Base
       COMPOSER_ID = "#reply-control"
+      AUTOCOMPLETE_MENU = ".autocomplete.ac-emoji"
 
       def opened?
         page.has_css?("#{COMPOSER_ID}.open")
@@ -64,15 +65,15 @@ module PageObjects
       end
 
       def emoji_autocomplete
-        find(".autocomplete.ac-emoji")
+        find(AUTOCOMPLETE_MENU)
       end
 
       def has_emoji_autocomplete?
-        has_css?(".autocomplete.ac-emoji")
+        has_css?(AUTOCOMPLETE_MENU)
       end
 
       def has_emoji_suggestion?(emoji)
-        has_css?(".autocomplete.ac-emoji .emoji-shortname", text: emoji)
+        has_css?("#{AUTOCOMPLETE_MENU} .emoji-shortname", text: emoji)
       end
 
       def has_emoji_preview?(emoji)
