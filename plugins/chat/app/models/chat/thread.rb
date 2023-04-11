@@ -18,6 +18,10 @@ module Chat
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
 
+    def replies
+      self.chat_messages.where.not(id: self.original_message_id)
+    end
+
     def url
       "#{channel.url}/t/#{self.id}"
     end
@@ -28,6 +32,32 @@ module Chat
 
     def excerpt
       original_message.excerpt(max_length: EXCERPT_LENGTH)
+    end
+
+    def self.ensure_consistency!
+      update_counts
+    end
+
+    def self.update_counts
+      # NOTE: Chat::Thread#replies_count is not updated every time
+      # a message is created or deleted in a channel, the UI will lag
+      # behind unless it is kept in sync with MessageBus. The count
+      # has 1 subtracted from it to account for the original message.
+      #
+      # It is updated eventually via Jobs::Chat::PeriodicalUpdates. In
+      # future we may want to update this more frequently.
+      DB.exec <<~SQL
+        UPDATE chat_threads threads
+        SET replies_count = subquery.replies_count
+        FROM (
+          SELECT COUNT(*) - 1 AS replies_count, thread_id
+          FROM chat_messages
+          WHERE chat_messages.deleted_at IS NULL AND thread_id IS NOT NULL
+          GROUP BY thread_id
+        ) subquery
+        WHERE threads.id = subquery.thread_id
+        AND subquery.replies_count != threads.replies_count
+      SQL
     end
   end
 end
@@ -44,6 +74,7 @@ end
 #  title                    :string
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  replies_count            :integer          default(0), not null
 #
 # Indexes
 #
@@ -51,5 +82,6 @@ end
 #  index_chat_threads_on_channel_id_and_status     (channel_id,status)
 #  index_chat_threads_on_original_message_id       (original_message_id)
 #  index_chat_threads_on_original_message_user_id  (original_message_user_id)
+#  index_chat_threads_on_replies_count             (replies_count)
 #  index_chat_threads_on_status                    (status)
 #
