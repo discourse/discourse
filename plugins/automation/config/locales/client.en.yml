@@ -40,7 +40,7 @@ en:
             label: Body
           delay:
             label: Delay (minutes)
-          encrypt:
+          prefers_encrypt:
             label: Encrypts PM if available
         group:
           label: Group

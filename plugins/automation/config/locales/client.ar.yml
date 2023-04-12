@@ -46,7 +46,7 @@ ar:
             label: النص
           delay:
             label: التأخير (بالدقائق)
-          encrypt:
+          prefers_encrypt:
             label: يشفِّر الرسائل الشخصية إذا كانت متاحة
         group:
           label: المجموعة

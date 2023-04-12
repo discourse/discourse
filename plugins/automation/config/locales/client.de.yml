@@ -46,7 +46,7 @@ de:
             label: Body
           delay:
             label: Verzögerung (Minuten)
-          encrypt:
+          prefers_encrypt:
             label: Verschlüsselt PN, falls verfügbar
         group:
           label: Gruppe

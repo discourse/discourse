@@ -62,7 +62,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHAN
         utils.send_pm(
           { target_usernames: Array(gifter), title: title, raw: raw },
           delay: giftee_assignment_message["delay"],
-          encrypt: giftee_assignment_message["encrypt"],
+          prefers_encrypt: giftee_assignment_message["prefers_encrypt"],
           automation_id: automation.id,
         )
       end

@@ -46,7 +46,7 @@ hu:
             label: Törzs
           delay:
             label: Késleltetés (perc)
-          encrypt:
+          prefers_encrypt:
             label: PÜ titkosítása, ha elérhető
         group:
           label: Csoport

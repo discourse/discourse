@@ -46,7 +46,7 @@ es:
             label: Cuerpo
           delay:
             label: Retardo (en minutos)
-          encrypt:
+          prefers_encrypt:
             label: Cifrar el mensaje cuando sea posible
         group:
           label: Grupo

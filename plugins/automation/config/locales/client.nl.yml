@@ -46,7 +46,7 @@ nl:
             label: Tekst
           delay:
             label: Vertraging (minuten)
-          encrypt:
+          prefers_encrypt:
             label: Versleutelt PB indien beschikbaar
         group:
           label: Groep

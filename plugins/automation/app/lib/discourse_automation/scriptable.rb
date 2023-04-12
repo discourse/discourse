@@ -194,21 +194,23 @@ module DiscourseAutomation
         sender: Discourse.system_user.username,
         delay: nil,
         automation_id: nil,
-        encrypt: true
+        prefers_encrypt: true
       )
         pm = pm.symbolize_keys
+        prefers_encrypt = prefers_encrypt && !!defined?(EncryptedPostCreator)
 
-        if delay && automation_id
+        if delay && delay.to_i > 0 && automation_id
           pm[:execute_at] = delay.to_i.minutes.from_now
           pm[:sender] = sender
           pm[:automation_id] = automation_id
+          pm[:prefers_encrypt] = prefers_encrypt
           DiscourseAutomation::PendingPm.create!(pm)
         else
           if sender = User.find_by(username: sender)
             post_created = false
             pm = pm.merge(archetype: Archetype.private_message)
 
-            if encrypt && defined?(EncryptedPostCreator)
+            if prefers_encrypt
               pm[:target_usernames] = (pm[:target_usernames] || []).join(",")
               post_created = EncryptedPostCreator.new(sender, pm).create
             end

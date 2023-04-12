@@ -30,7 +30,7 @@ export default class PmsField extends BaseField {
       title: "",
       raw: "",
       delay: 0,
-      encrypt: true,
+      prefers_encrypt: true,
     });
   }
 }

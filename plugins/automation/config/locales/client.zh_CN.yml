@@ -46,7 +46,7 @@ zh_CN:
             label: 正文
           delay:
             label: 延迟（分钟）
-          encrypt:
+          prefers_encrypt:
             label: 加密 PM（如果可用）
         group:
           label: 群组

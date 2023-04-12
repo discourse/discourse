@@ -46,7 +46,7 @@ sv:
             label: Kropp
           delay:
             label: Fördröjning (minuter)
-          encrypt:
+          prefers_encrypt:
             label: Krypterar PM om tillgängligt
         group:
           label: Grupp

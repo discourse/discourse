@@ -20,7 +20,7 @@ class PostMigrateGiftFromPmToPms < ActiveRecord::Migration[6.1]
             title: pm["title"],
             raw: pm["body"],
             delay: pm["delay"] || 0,
-            encrypt: pm["encrypt"] || true,
+            prefers_encrypt: pm["encrypt"] || true,
           },
         ],
       }

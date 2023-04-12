@@ -46,7 +46,7 @@ fi:
             label: Teksti
           delay:
             label: Viive (minuutteina)
-          encrypt:
+          prefers_encrypt:
             label: Salaa yksityisviestin, jos käytettävissä
         group:
           label: Ryhmä

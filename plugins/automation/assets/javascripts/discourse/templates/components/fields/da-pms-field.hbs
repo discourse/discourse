@@ -73,14 +73,14 @@
 
       <div class="control-group">
         <label class="control-label">
-          {{i18n "discourse_automation.fields.pms.encrypt.label"}}
+          {{i18n "discourse_automation.fields.pms.prefers_encrypt.label"}}
         </label>
 
         <div class="controls">
           {{input
             type="checkbox"
-            checked=pm.encrypt
-            click=(action (mut pm.encrypt) value="target.checked")
+            checked=pm.prefers_encrypt
+            click=(action (mut pm.prefers_encrypt) value="target.checked")
             disabled=field.isDisabled
           }}
         </div>

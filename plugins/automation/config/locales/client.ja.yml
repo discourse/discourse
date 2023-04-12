@@ -46,7 +46,7 @@ ja:
             label: 本文
           delay:
             label: 遅延（分）
-          encrypt:
+          prefers_encrypt:
             label: 可能な場合は PM を暗号化する
         group:
           label: グループ

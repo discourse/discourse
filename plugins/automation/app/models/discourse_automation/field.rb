@@ -174,7 +174,7 @@ module DiscourseAutomation
               "delay" => {
                 "type" => "integer",
               },
-              "encrypt" => {
+              "prefers_encrypt" => {
                 "type" => "boolean",
               },
             },
