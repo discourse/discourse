@@ -121,7 +121,3 @@ vi:
           fields:
             message:
               label: Tin nhắn
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Gắn cờ bởi"

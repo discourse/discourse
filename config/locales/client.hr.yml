@@ -1220,7 +1220,6 @@ hr:
       home: "Zadana početna stranica"
       staged: "Priređen"
       staff_counters:
-        flags_given: "pomočne oznake"
         flagged_posts: "označene objave"
         deleted_posts: "obrisane objave"
         suspensions: "suspenzije"

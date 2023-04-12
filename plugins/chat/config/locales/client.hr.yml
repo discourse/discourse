@@ -190,10 +190,6 @@ hr:
           fields:
             message:
               label: Poruka
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Označio"
     keyboard_shortcuts_help:
       chat:
         title: "Čet"

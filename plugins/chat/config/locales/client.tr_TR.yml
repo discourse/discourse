@@ -15,6 +15,7 @@ tr_TR:
           actions:
             chat_channel_status_change: "Sohbet kanalı durumu değişti"
             chat_channel_delete: "Sohbet kanalı silindi"
+            chat_auto_remove_membership: "Üyelikler kanallardan otomatik olarak kaldırıldı"
       api:
         scopes:
           descriptions:
@@ -77,6 +78,7 @@ tr_TR:
       click_to_join: "Mevcut kanalları görüntülemek için buraya tıklayın."
       close: "Kapat"
       collapse: "Sohbet Çekmecesini Daralt"
+      expand: "Sohbet Çekmecesini Genişlet"
       confirm_flag: "%{username} adlı kullanıcının mesajına bayrak eklemek istediğinizden emin misiniz?"
       deleted: "Bir mesaj silindi. [görüntüleyin]"
       hidden: "Bir mesaj gizlendi. [görüntüleyin]"
@@ -411,9 +413,8 @@ tr_TR:
       transcript:
         view: "Önceki mesajların dökümünü görüntüle"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Bayrak Eklenen Sohbet Mesajı"
-          flagged_by: "Bayrak Ekleyen Kişi"
     keyboard_shortcuts_help:
       chat:
         title: "Sohbet"

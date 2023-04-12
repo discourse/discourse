@@ -1164,7 +1164,6 @@ fr:
       home: "Page d'accueil par défaut"
       staged: "Distant"
       staff_counters:
-        flags_given: "signalements utiles"
         flagged_posts: "messages signalés"
         deleted_posts: "messages supprimés"
         suspensions: "suspensions"

@@ -1164,7 +1164,6 @@ nl:
       home: "Standaard startpagina"
       staged: "Gefaseerd"
       staff_counters:
-        flags_given: "nuttige markeringen"
         flagged_posts: "gemarkeerde berichten"
         deleted_posts: "verwijderde berichten"
         suspensions: "schorsingen"

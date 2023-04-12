@@ -35,7 +35,10 @@
     @value={{readonly this.value}}
     @input={{action "onTextareaInput" value="target.value"}}
     @type="text"
-    @class="chat-composer-input"
+    @class={{concat-class
+      "chat-composer-input"
+      (concat "chat-composer-input--" @context)
+    }}
     @disabled={{this.disableComposer}}
     @autocorrect="on"
     @autocapitalize="sentences"

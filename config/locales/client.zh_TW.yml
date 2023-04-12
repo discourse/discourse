@@ -1005,7 +1005,6 @@ zh_TW:
       home: "預設首頁"
       staged: "暫存"
       staff_counters:
-        flags_given: "有幫助的檢舉"
         flagged_posts: "已檢舉的貼文"
         deleted_posts: "已刪除的貼文"
         suspensions: "停權"

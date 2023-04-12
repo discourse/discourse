@@ -234,10 +234,6 @@ da:
             sender:
               label: Afsender
               description: Standard er system
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Markeret af"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

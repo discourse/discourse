@@ -157,6 +157,8 @@ de:
       removed_user: "Hat %{who} entfernt, %{when}"
       removed_group: "Hat %{who} entfernt, %{when}"
       autobumped: "Thema wurde automatisch nach oben geschoben, %{when}"
+      tags_changed: "Tags aktualisiert %{when}"
+      category_changed: "Kategorie aktualisiert %{when}"
       autoclosed:
         enabled: "Geschlossen, %{when}"
         disabled: "Geöffnet, %{when}"
@@ -1199,7 +1201,9 @@ de:
       home: "Standard-Startseite"
       staged: "Vorbereitet"
       staff_counters:
-        flags_given: "hilfreiche Meldungen"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> hilfreiche Flagge'
+          other: '<span class="%{className}">%{count}</span> hilfreiche Flaggen'
         flagged_posts: "gemeldete Beiträge"
         deleted_posts: "gelöschte Beiträge"
         suspensions: "Sperren"

@@ -589,7 +589,6 @@ sq:
       theme: "Tema"
       staged: "Staged"
       staff_counters:
-        flags_given: "sinjalizime të dobishme"
         flagged_posts: "postimet e sinjalizuara"
         deleted_posts: "postimet e fshira"
         suspensions: "pezullimet"

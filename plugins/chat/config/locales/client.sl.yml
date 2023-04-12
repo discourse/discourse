@@ -114,7 +114,3 @@ sl:
           fields:
             message:
               label: Opozorilo
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Prijavljen od"

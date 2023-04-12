@@ -2236,7 +2236,6 @@ uk:
       staged_users_disabled: "Перш ніж активувати цей параметр, потрібно спочатку ввімкнути 'staged users'."
       reply_by_email_disabled: "Перш ніж активувати це налаштування, потрібно спочатку увімкнути 'відповідь електронною поштою'."
       discourse_connect_url_is_empty: "Ви повинні встановити 'discourse connect url' перед увімкненням цього параметра."
-      discourse_connect_invite_only: "Ви не можете увімкнути DiscourseConnect та реєстрацію лише через запрошення одночасно."
       enable_local_logins_disabled: "Перш ніж активувати цей параметр, спочатку потрібно ввімкнути функцію 'enable local logins'."
       min_username_length_exists: "Ви не можете встановити мінімальну довжину імені користувача менше найкоротшого імені користувача (%{username})."
       min_username_length_range: "Ви не можете встановити мінімум вище максимуму."

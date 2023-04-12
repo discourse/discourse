@@ -74,6 +74,7 @@ hu:
       click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
       collapse: "Csevegőfiók összecsukása"
+      expand: "Chat fiók bővítése"
       confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"
       deleted: "Egy üzenet törölve lett. [megtekintés]"
       hidden: "Egy üzenet el lett rejtve. [megtekintés]"
@@ -343,6 +344,8 @@ hu:
         flags: "Zászlók"
         symbols: "Szimbólumok"
         no_results: "Nincs találat"
+      thread:
+        label: Szál
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"
@@ -383,11 +386,6 @@ hu:
             sender:
               label: Feladó
               description: Alapértelmezés szerint a rendszer
-    review:
-      types:
-        reviewable_chat_message:
-          title: "Jelentett csevegőüzenet"
-          flagged_by: "Megjelölte"
     keyboard_shortcuts_help:
       chat:
         title: "Csevegés"

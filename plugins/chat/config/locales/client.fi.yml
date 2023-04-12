@@ -77,6 +77,7 @@ fi:
       click_to_join: "Näytä saatavilla olevat kanavat napsauttamalla tätä."
       close: "Sulje"
       collapse: "Tiivistä chat-laatikko"
+      expand: "Laajenna chat-laatikko"
       confirm_flag: "Haluatko varmasti liputtaa käyttäjän %{username} viestin?"
       deleted: "Viesti poistettiin. [näytä]"
       hidden: "Viesti piilotettiin. [näytä]"
@@ -409,9 +410,8 @@ fi:
       transcript:
         view: "Näytä aiempien viestien transkriptio"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Liputettu chat-viesti"
-          flagged_by: "Liputtanut"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
