@@ -459,12 +459,16 @@ export default SiteHeaderComponent.extend({
     }
 
     this.scrollAnimationFrame = requestAnimationFrame(() => {
-      const currentHeaderWrapTop = this.headerWrap.getBoundingClientRect().top;
+      const headerWrapTop = this.headerWrap.getBoundingClientRect().top;
 
-      document.documentElement.style.setProperty(
-        "--header-offset",
-        `${this.headerWrap.offsetHeight + currentHeaderWrapTop}px`
-      );
+      const documentStyle = document.documentElement.style;
+
+      const currentValue = documentStyle.getPropertyValue("--header-offset");
+      const newValue = `${this.headerWrap.offsetHeight + headerWrapTop}px`;
+
+      if (currentValue !== newValue) {
+        documentStyle.setProperty("--header-offset", newValue);
+      }
     });
   },
 
