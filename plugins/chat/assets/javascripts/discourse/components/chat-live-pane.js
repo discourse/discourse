@@ -36,7 +36,6 @@ export default class ChatLivePane extends Component {
   @service chatChannelComposer;
   @service chatChannelPane;
   @service chatChannelPaneSubscriptionsManager;
-  @service chatChannelThreadIndicatorSubscriptionsManager;
   @service chatApi;
   @service currentUser;
   @service appEvents;
@@ -735,7 +734,6 @@ export default class ChatLivePane extends Component {
     }
 
     this.chatChannelPaneSubscriptionsManager.unsubscribe();
-    this.chatChannelThreadIndicatorSubscriptionsManager.unsubscribe();
     this.messageBus.unsubscribe(`/chat/${channelId}`, this.onMessage);
   }
 
@@ -751,7 +749,6 @@ export default class ChatLivePane extends Component {
       channel.channelMessageBusLastId
     );
     this.chatChannelPaneSubscriptionsManager.subscribe(channel);
-    this.chatChannelThreadIndicatorSubscriptionsManager.subscribe(channel);
   }
 
   @bind

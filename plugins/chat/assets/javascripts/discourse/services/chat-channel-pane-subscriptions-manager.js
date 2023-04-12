@@ -77,6 +77,9 @@ export default class ChatChannelPaneSubscriptionsManager extends Service {
       case "thread_created":
         this.handleThreadCreated(busData);
         break;
+      case "update_thread_original_message":
+        this.handleThreadOriginalMessageUpdate(busData);
+        break;
     }
   }
 
@@ -184,6 +187,18 @@ export default class ChatChannelPaneSubscriptionsManager extends Service {
     if (message) {
       message.threadId = data.chat_message.thread_id;
       message.threadReplyCount = 1;
+    }
+  }
+
+  handleThreadOriginalMessageUpdate(data) {
+    const message = this.messagesManager.findMessage(data.original_message_id);
+    if (message) {
+      if (data.action === "increment_reply_count") {
+        // TODO (martin) In future we should use a replies_count delivered
+        // from the server and simply update the message accordingly, for
+        // now we don't have an accurate enough count for this.
+        message.threadReplyCount += 1;
+      }
     }
   }
 }

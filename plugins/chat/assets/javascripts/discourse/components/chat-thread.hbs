@@ -3,8 +3,8 @@
   data-id={{this.thread.id}}
   {{did-insert this.subscribeToUpdates}}
   {{did-insert this.loadMessages}}
-  {{did-update this.thread.id this.subscribeToUpdates}}
-  {{did-update this.thread.id this.loadMessages}}
+  {{did-update this.subscribeToUpdates this.thread.id}}
+  {{did-update this.loadMessages this.thread.id}}
   {{will-destroy this.unsubscribeFromUpdates}}
 >
   <div class="chat-thread__header">

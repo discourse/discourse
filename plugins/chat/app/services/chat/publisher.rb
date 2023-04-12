@@ -14,17 +14,17 @@ module Chat
       "#{root_message_bus_channel(chat_channel_id)}/thread/#{thread_id}"
     end
 
-    def self.calculate_publish_targets(chat_channel, chat_message)
+    def self.calculate_publish_targets(channel, message)
       targets =
-        if chat_message.thread_om?
+        if message.thread_om?
           [
-            root_message_bus_channel(chat_channel.id),
-            thread_message_bus_channel(chat_channel.id, chat_message.thread_id),
+            root_message_bus_channel(channel.id),
+            thread_message_bus_channel(channel.id, message.thread_id),
           ]
-        elsif chat_message.thread_reply?
-          [thread_message_bus_channel(chat_channel.id, chat_message.thread_id)]
+        elsif message.thread_reply?
+          [thread_message_bus_channel(channel.id, message.thread_id)]
         else
-          [root_message_bus_channel(chat_channel.id)]
+          [root_message_bus_channel(channel.id)]
         end
       targets
     end
@@ -49,7 +49,7 @@ module Chat
         MessageBus.publish(
           root_message_bus_channel(chat_channel.id),
           {
-            type: :update_thread_indicator,
+            type: :update_thread_original_message,
             original_message_id: chat_message.thread.original_message_id,
             action: :increment_reply_count,
           }.as_json,
