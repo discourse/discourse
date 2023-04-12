@@ -198,11 +198,11 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: bin/rspec spec/system -f d
+        run: bin/rspec spec/system --format documentation
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system
+        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system --format documentation
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3

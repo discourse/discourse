@@ -1985,7 +1985,6 @@ ko:
       staged_users_disabled: "이 설정을 활성화하기 전에 먼저 '스테이징된 사용자'를 활성화해야 합니다."
       reply_by_email_disabled: "이 설정을 활성화하기 전에 먼저 '이메일로 회신'을 활성화해야 합니다."
       discourse_connect_url_is_empty: "이 설정을 활성화하기 전에 'discourse connect url'을 설정해야 합니다."
-      discourse_connect_invite_only: "DiscourseConnect와 초대를 동시에 활성화할 수는 없습니다."
       enable_local_logins_disabled: "이 설정을 활성화하기 전에 먼저 '로컬 로그인 활성화'를 활성화해야 합니다."
       min_username_length_exists: "최소 아이디 길이를 가장 짧은 아이디(%{username}) 이상으로 설정할 수 없습니다."
       min_username_length_range: "최솟값은 최댓값보다 크게 설정할 수 없습니다."

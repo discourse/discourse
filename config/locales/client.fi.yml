@@ -157,6 +157,8 @@ fi:
       removed_user: "Poistettu käyttäjä %{who} %{when}"
       removed_group: "Poistettu käyttäjä %{who} %{when}"
       autobumped: "Nostettu automaattisesti %{when}"
+      tags_changed: "Tunnisteet on päivitetty %{when}"
+      category_changed: "Alue on päivitetty %{when}"
       autoclosed:
         enabled: "Suljettu %{when}"
         disabled: "Avattu %{when}"
@@ -1169,7 +1171,6 @@ fi:
       home: "Oletusaloitussivu"
       staged: "Esikäyttäjä"
       staff_counters:
-        flags_given: "hyödyllistä liputusta"
         flagged_posts: "liputettua viestiä"
         deleted_posts: "poistettua viestiä"
         suspensions: "estoa"

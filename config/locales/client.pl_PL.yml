@@ -1284,7 +1284,11 @@ pl_PL:
       home: "Domyślna strona domowa"
       staged: "Wystawiany na scenie"
       staff_counters:
-        flags_given: "uczynnych oflagowań"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> pomocna flaga'
+          few: '<span class="%{className}">%{count}</span> pomocne flagi'
+          many: '<span class="%{className}">%{count}</span> pomocne flagi'
+          other: '<span class="%{className}">%{count}</span> pomocne flagi'
         flagged_posts: "oflagowane wpisy"
         deleted_posts: "usunięte wpisy"
         suspensions: "zawieszone"

@@ -1074,7 +1074,6 @@ nb_NO:
       home: "Forvalgt hjemmeside"
       staged: "Arrangert"
       staff_counters:
-        flags_given: "nyttige rapporteringer"
         flagged_posts: "rapporterte innlegg"
         deleted_posts: "slettede innlegg"
         suspensions: "suspenderinger"

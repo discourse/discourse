@@ -52,6 +52,8 @@ ru:
   remove_posts_deleted_by_author: "Удалено автором"
   redirect_warning: "Нам не удалось убедиться, что выбранная вами ссылка действительно была размещена на форуме. Если вы хотите продолжить, выберите ссылку ниже."
   on_another_topic: "По другой теме"
+  topic_tag_changed:
+    removed: "Удалил(а) %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} от пользователя %{username}"
@@ -2261,7 +2263,6 @@ ru:
       staged_users_disabled: "Перед включением этого параметра необходимо включить параметр «Сымитированные пользователи»."
       reply_by_email_disabled: "Перед включением этого параметра необходимо включить параметр «Ответить по электронной почте»."
       discourse_connect_url_is_empty: "Перед включением этого параметра необходимо настроить параметр «discourse connect url»."
-      discourse_connect_invite_only: "Нельзя одновременно включить DiscourseConnect и регистрировать пользователей на форуме только через приглашения."
       enable_local_logins_disabled: "Перед включением этого параметра необходимо включить параметр «Включить локальные аккаунты»."
       min_username_length_exists: "Вы не можете установить минимальную длину имени пользователя более самого короткого (%{username})."
       min_username_length_range: "Нельзя установить минимум больше максимума."

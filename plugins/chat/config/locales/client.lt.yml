@@ -115,7 +115,3 @@ lt:
           fields:
             message:
               label: Žinutės
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Pažymėjo"

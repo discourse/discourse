@@ -2105,7 +2105,6 @@ ja:
       staged_users_disabled: "この設定を有効にする前に 'staged users' を有効にする必要があります。"
       reply_by_email_disabled: "この設定を有効にする前に 'reply by email' を有効にする必要があります。"
       discourse_connect_url_is_empty: "この設定を有効にする前に 'discourse connect url' を設定する必要があります。"
-      discourse_connect_invite_only: "DiscourseConnect と invite only を同時に有効にすることはできません。"
       enable_local_logins_disabled: "この設定を有効にする前に 'enable local logins' を有効にする必要があります。"
       min_username_length_exists: "最も短いユーザー名 (%{username}) を超える最小のユーザー名の長さを設定することはできません。"
       min_username_length_range: "最小値を最大値より上にすることはできません。"

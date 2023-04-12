@@ -50,38 +50,37 @@ describe "Single thread in side panel", type: :system, js: true do
 
     before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
 
-    it "opens the single thread in the drawer from the message actions menu" do
+    it "opens the single thread in the drawer using the indicator" do
       visit("/latest")
       chat_page.open_from_header
       chat_drawer_page.open_channel(channel)
-      channel_page.open_message_thread(thread.chat_messages.order(:created_at).last)
+      channel_page.message_thread_indicator(thread.original_message).click
       expect(chat_drawer_page).to have_open_thread(thread)
     end
 
-    it "opens the side panel for a single thread from the message actions menu" do
+    it "opens the side panel for a single thread from the indicator" do
       chat_page.visit_channel(channel)
-      channel_page.open_message_thread(thread.original_message)
+      channel_page.message_thread_indicator(thread.original_message).click
       expect(side_panel).to have_open_thread(thread)
     end
 
     xit "shows the excerpt of the thread original message" do
       chat_page.visit_channel(channel)
-      channel_page.open_message_thread(thread.original_message)
+      channel_page.message_thread_indicator(thread.original_message).click
       expect(open_thread).to have_header_content(thread.excerpt)
     end
 
     xit "shows the avatar and username of the original message user" do
       chat_page.visit_channel(channel)
-      channel_page.open_message_thread(thread.original_message)
+      channel_page.message_thread_indicator(thread.original_message).click
       expect(open_thread.omu).to have_css(".chat-user-avatar img.avatar")
       expect(open_thread.omu).to have_content(thread.original_message_user.username)
     end
 
     context "when using mobile" do
-      it "opens the side panel for a single thread from the mobile message actions menu",
-         mobile: true do
+      it "opens the side panel for a single thread using the indicator", mobile: true do
         chat_page.visit_channel(channel)
-        channel_page.click_message_action_mobile(thread.chat_messages.last, "openThread")
+        channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel).to have_open_thread(thread)
       end
     end

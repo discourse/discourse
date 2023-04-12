@@ -405,9 +405,8 @@ nl:
       transcript:
         view: "Transcript van eerdere berichten weergeven"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Gemarkeerd chatbericht"
-          flagged_by: "Gemarkeerd door"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

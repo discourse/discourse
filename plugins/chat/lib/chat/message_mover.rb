@@ -209,7 +209,7 @@ module Chat
     def update_thread_references
       threads_to_update = []
       @source_messages
-        .select { |message| message.thread_id.present? }
+        .select { |message| message.in_thread? }
         .each do |message_with_thread|
           # If one of the messages we are moving is the original message in a thread,
           # then all the remaining messages for that thread must be moved to a new one,

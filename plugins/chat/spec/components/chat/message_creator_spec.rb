@@ -436,6 +436,21 @@ describe Chat::MessageCreator do
         expect(message.thread.original_message_user).to eq(reply_message.user)
       end
 
+      it "publishes the new thread" do
+        messages =
+          MessageBus.track_publish do
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+          end
+
+        thread_created_message = messages.find { |m| m.data["type"] == "thread_created" }
+        expect(thread_created_message.channel).to eq("/chat/#{public_chat_channel.id}")
+      end
+
       context "when the thread_id is provided" do
         fab!(:existing_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
 

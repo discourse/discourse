@@ -31,7 +31,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_link("Sidebar Tags")
+    expect(sidebar).to have_section_link("Sidebar Tags")
   end
 
   it "allows the user to create custom section with /my link" do
@@ -51,7 +51,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_link("My preferences")
+    expect(sidebar).to have_section_link("My preferences")
   end
 
   it "allows the user to create custom section with external link" do
@@ -74,7 +74,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_link("Discourse Homepage", href: "https://discourse.org")
+    expect(sidebar).to have_section_link("Discourse Homepage", href: "https://discourse.org")
   end
 
   it "allows the user to edit custom section" do
@@ -97,9 +97,9 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(sidebar).to have_section("Edited section")
-    expect(sidebar).to have_link("Edited Tag")
+    expect(sidebar).to have_section_link("Edited Tag")
 
-    expect(page).not_to have_link("Sidebar Categories")
+    expect(sidebar).not_to have_section_link("Sidebar Categories")
   end
 
   it "allows the user to reorder links in custom section" do
@@ -111,22 +111,25 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     sign_in user
     visit("/latest")
+
     within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(1)") do
-      expect(page).to have_css(".sidebar-section-link-sidebar-tags")
-    end
-    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(2)") do
-      expect(page).to have_css(".sidebar-section-link-sidebar-categories")
+      expect(sidebar).to have_section_link("Sidebar Tags")
     end
 
-    tags_link = find(".sidebar-section-link-sidebar-tags")
-    categories_link = find(".sidebar-section-link-sidebar-categories")
+    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(2)") do
+      expect(sidebar).to have_section_link("Sidebar Categories")
+    end
+
+    tags_link = find(".sidebar-section-link[data-link-name='Sidebar Tags']")
+    categories_link = find(".sidebar-section-link[data-link-name='Sidebar Categories']")
     tags_link.drag_to(categories_link, html5: true, delay: 0.4)
 
     within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(1)") do
-      expect(page).to have_css(".sidebar-section-link-sidebar-categories")
+      expect(sidebar).to have_section_link("Sidebar Categories")
     end
+
     within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(2)") do
-      expect(page).to have_css(".sidebar-section-link-sidebar-tags")
+      expect(sidebar).to have_section_link("Sidebar Tags")
     end
   end
 
@@ -180,7 +183,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(sidebar).to have_section("Public section")
-    expect(sidebar).to have_link("Sidebar Tags")
+    expect(sidebar).to have_section_link("Sidebar Tags")
     expect(page).to have_css(".sidebar-section[data-section-name='public-section'] .d-icon-globe")
 
     sidebar.edit_custom_section("Public section")
@@ -205,8 +208,8 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     visit("/latest")
     expect(sidebar).to have_section("Public section")
-    expect(sidebar).to have_link("Sidebar Tags")
-    expect(sidebar).to have_link("Sidebar Categories")
+    expect(sidebar).to have_section_link("Sidebar Tags")
+    expect(sidebar).to have_section_link("Sidebar Categories")
   end
 
   it "validates custom section fields" do

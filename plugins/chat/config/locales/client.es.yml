@@ -405,9 +405,8 @@ es:
       transcript:
         view: "Ver la transcripción de los mensajes anteriores"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Mensaje de chat denunciado"
-          flagged_by: "Denunciado por"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

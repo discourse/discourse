@@ -1035,7 +1035,6 @@ gl:
       home: "Páxina de inicio predeterminada"
       staged: "Transitorio"
       staff_counters:
-        flags_given: "alertas útiles"
         flagged_posts: "publicacións sinaladas"
         deleted_posts: "publicacións eliminadas"
         suspensions: "suspensións"

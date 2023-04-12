@@ -114,7 +114,3 @@ gl:
           fields:
             message:
               label: Mensaxe
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Sinalado por"

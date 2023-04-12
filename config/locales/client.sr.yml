@@ -713,7 +713,6 @@ sr:
       tracked_topics_link: "Prikaži"
       api_approved: "Potvrđenji:"
       staff_counters:
-        flags_given: "pomoćne oznake"
         flagged_posts: "označene poruke"
         deleted_posts: "obrisane poruke"
         suspensions: "suspenzije"

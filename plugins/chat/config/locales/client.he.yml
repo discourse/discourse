@@ -84,6 +84,7 @@ he:
       click_to_join: "לחיצה כאן תציג את הערוצים הזמינים."
       close: "סגירה"
       collapse: "צמצום מגירת צ׳אט"
+      expand: "הרחבת מגירת הצ׳אט"
       confirm_flag: "לסמן את ההודעה של %{username}?"
       deleted: "הודעה נמחקה. [צפייה]"
       hidden: "הודעה הוסתרה. [צפייה]"
@@ -550,8 +551,9 @@ he:
         symbols: "סמלים"
         search_placeholder: "חיפוש לפי שם וכינוי של האמוג׳י…"
         no_results: "אין תוצאות"
+      thread:
+        label: שרשור
       threads:
-        op_said: "נאמר ע״י פותחי השרשור:"
         started_by: "נפתח ע״י"
         open: "פתיחת שרשור"
       draft_channel_screen:
@@ -598,9 +600,8 @@ he:
       transcript:
         view: "הצגת תמלול הודעות קודמות"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "הודעת צ׳אט מסומנת"
-          flagged_by: "דוגל על ידי"
     keyboard_shortcuts_help:
       chat:
         title: "צ׳אט"

@@ -884,7 +884,6 @@ hy:
       home: "Լռելյայն Գլխավոր Էջ"
       staged: "Աստիճանավորված (Staged)"
       staff_counters:
-        flags_given: "օգտակար դրոշակավորում"
         flagged_posts: "դրոշակավորված գրառում"
         deleted_posts: "ջնջված գրառում"
         suspensions: "սառեցում"

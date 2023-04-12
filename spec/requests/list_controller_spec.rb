@@ -1132,8 +1132,24 @@ RSpec.describe ListController do
   describe "#filter" do
     fab!(:category) { Fabricate(:category) }
     fab!(:tag) { Fabricate(:tag, name: "tag1") }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+    fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+    fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
 
     before { SiteSetting.experimental_topics_filter = true }
+
+    it "should not return topics that the user is not allowed to view" do
+      sign_in(user)
+
+      get "/filter.json"
+
+      expect(response.status).to eq(200)
+
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+      ).to contain_exactly(topic.id)
+    end
 
     it "should respond with 403 response code for an anonymous user" do
       get "/filter.json"
@@ -1209,6 +1225,40 @@ RSpec.describe ListController do
 
         expect(parsed["topic_list"]["topics"].length).to eq(1)
         expect(parsed["topic_list"]["topics"].first["id"]).to eq(topic_with_tag.id)
+      end
+    end
+
+    describe "when filtering with the `created-by:<username>` filter" do
+      fab!(:topic2) { Fabricate(:topic, user: admin) }
+
+      before do
+        topic.update!(user: user)
+        user.update!(username: "username")
+        admin.update!(username: "username2")
+      end
+
+      it "returns only topics created by the user when `q` query param is `created-by:username`" do
+        sign_in(user)
+
+        get "/filter.json", params: { q: "created-by:username" }
+
+        expect(response.status).to eq(200)
+
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+        ).to contain_exactly(topic.id)
+      end
+
+      it "returns only topics created by either user when `q` query param is `created-by:username,username2`" do
+        sign_in(user)
+
+        get "/filter.json", params: { q: "created-by:username,username2" }
+
+        expect(response.status).to eq(200)
+
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+        ).to contain_exactly(topic.id, topic2.id)
       end
     end
 

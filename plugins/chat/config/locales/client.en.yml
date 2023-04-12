@@ -534,6 +534,10 @@ en:
         no_results: "No results"
 
       thread:
+        view_thread: View thread
+        replies:
+          one: "%{count} reply"
+          other: "%{count} replies"
         label: Thread
       threads:
         started_by: "Started by"
