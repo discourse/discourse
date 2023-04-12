@@ -27,6 +27,8 @@ RSpec.describe Plugin::Instance do
       end
     end
 
+    before { global_setting :deprecate_serializer_overrides, true }
+
     class ApiSafetySerializer < ApplicationSerializer
       attribute :name
     end

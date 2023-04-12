@@ -195,6 +195,7 @@ after_initialize do
       end
   end
 
+  add_to_serializer(:post, :include_preloaded_polls?) { false }
   add_to_serializer(:post, :preloaded_polls, false) do
     @preloaded_polls ||=
       if @topic_view.present?
@@ -204,14 +205,15 @@ after_initialize do
       end
   end
 
-  add_to_serializer(:post, :include_preloaded_polls?) { false }
-
+  add_to_serializer(:post, :include_polls?) { SiteSetting.poll_enabled && preloaded_polls.present? }
   add_to_serializer(:post, :polls, false) do
     preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: self.scope) }
   end
 
-  add_to_serializer(:post, :include_polls?) { SiteSetting.poll_enabled && preloaded_polls.present? }
-
+  add_to_serializer(:post, :include_polls_votes?) do
+    SiteSetting.poll_enabled && scope.user&.id.present? && preloaded_polls.present? &&
+      preloaded_polls.any? { |p| p.has_voted?(scope.user) }
+  end
   add_to_serializer(:post, :polls_votes, false) do
     preloaded_polls
       .map do |poll|
@@ -225,11 +227,6 @@ after_initialize do
         [poll.name, user_poll_votes]
       end
       .to_h
-  end
-
-  add_to_serializer(:post, :include_polls_votes?) do
-    SiteSetting.poll_enabled && scope.user&.id.present? && preloaded_polls.present? &&
-      preloaded_polls.any? { |p| p.has_voted?(scope.user) }
   end
 
   register_search_advanced_filter(/in:polls/) do |posts, match|

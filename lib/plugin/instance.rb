@@ -121,18 +121,22 @@ class Plugin::Instance
       is_include_attr = attr.to_s.start_with?("include_")
       include_attr_method = is_include_attr ? attr : "include_#{attr}?"
 
-      if !is_include_attr && base.method_defined?(attr)
-        Discourse.deprecate(
-          "Overriding the #{attr} attribute in serializer #{base} from a plugin is no longer supported",
-          drop_from: "3.1",
-        )
-      end
+      if GlobalSetting.deprecate_serializer_overrides
+        if !is_include_attr && base.method_defined?(attr)
+          Discourse.deprecate(
+            "Overriding the #{attr} attribute in serializer #{base} from a plugin is no longer supported, please make a core PR to add modifiers instead (#{caller[2]})",
+            drop_from: "3.1",
+          )
+        end
 
-      if base.method_defined?(include_attr_method)
-        Discourse.deprecate(
-          "Overriding the #{include_attr_method} method in serializer #{base} from a plugin is no longer supported",
-          drop_from: "3.1",
-        )
+        if define_include_method
+          if base.method_defined?(include_attr_method)
+            Discourse.deprecate(
+              "Overriding the #{include_attr_method} method in serializer #{base} from a plugin is no longer supported, please make a core PR to add modifiers instead (#{caller[2]})",
+              drop_from: "3.1",
+            )
+          end
+        end
       end
 
       # we have to work through descendants cause serializers may already be baked and cached
