@@ -36,7 +36,7 @@ export default class ComposerMessages extends Component {
   }
 
   willDestroyElement() {
-    super.didInsertElement(...arguments);
+    super.willDestroyElement(...arguments);
 
     this.appEvents.off("composer:typed-reply", this, this._typedReply);
     this.appEvents.off("composer:opened", this, this._findMessages);
