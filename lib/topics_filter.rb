@@ -40,6 +40,10 @@ class TopicsFilter
         filter_created_by_user(usernames: values.flat_map { |value| value.split(",") })
       when "in"
         filter_in(values: values)
+      when "posts-min"
+        filter_by_number_of_posts(min: values.last)
+      when "posts-max"
+        filter_by_number_of_posts(max: values.last)
       when "status"
         values.each { |status| @scope = filter_status(status: status) }
       when "tags"
@@ -76,6 +80,13 @@ class TopicsFilter
   end
 
   private
+
+  def filter_by_number_of_posts(min: nil, max: nil)
+    { min => ">=", max => "<=" }.each do |value, operator|
+      next if !value || value !~ /^\d+$/
+      @scope = @scope.where("topics.posts_count #{operator} ?", value)
+    end
+  end
 
   def filter_categories(values:)
     exclude_subcategories_category_slugs = []
