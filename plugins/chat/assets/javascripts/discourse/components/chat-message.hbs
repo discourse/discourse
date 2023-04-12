@@ -21,6 +21,7 @@
     (if @message.highlighted "highlighted")
   }}
   data-id={{@message.id}}
+  data-thread-id={{@message.threadId}}
   {{chat/track-message
     (hash
       didEnterViewport=(fn @messageDidEnterViewport @message)
@@ -61,6 +62,7 @@
           (if @message.staged "chat-message-staged")
           (if @message.deletedAt "deleted")
           (if (and @message.inReplyTo (not this.hideReplyToInfo)) "is-reply")
+          (if this.showThreadIndicator "is-threaded")
           (if this.hideUserInfo "user-info-hidden")
           (if @message.error "errored")
           (if @message.bookmark "chat-message-bookmarked")
@@ -189,6 +191,10 @@
             </div>
           {{/if}}
         </div>
+
+        {{#if this.showThreadIndicator}}
+          <ChatMessageThreadIndicator @message={{@message}} />
+        {{/if}}
       </div>
     {{/if}}
   {{/if}}

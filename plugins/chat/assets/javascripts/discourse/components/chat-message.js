@@ -1,8 +1,8 @@
 import { isTesting } from "discourse-common/config/environment";
+import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import I18n from "I18n";
 import optionalService from "discourse/lib/optional-service";
-import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
@@ -260,7 +260,21 @@ export default class ChatMessage extends Component {
     return (
       this.args.context === MESSAGE_CONTEXT_THREAD ||
       this.args.message?.inReplyTo?.id ===
-        this.args.message?.previousMessage?.id
+        this.args.message?.previousMessage?.id ||
+      this.threadingEnabled
+    );
+  }
+
+  get threadingEnabled() {
+    return this.args.channel?.threadingEnabled && this.args.message?.threadId;
+  }
+
+  get showThreadIndicator() {
+    return (
+      this.args.context !== MESSAGE_CONTEXT_THREAD &&
+      this.threadingEnabled &&
+      this.args.message?.threadId !==
+        this.args.message?.previousMessage?.threadId
     );
   }
 
