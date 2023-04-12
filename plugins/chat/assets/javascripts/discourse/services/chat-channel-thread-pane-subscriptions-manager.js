@@ -17,6 +17,12 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatChann
     return;
   }
 
+  // TODO (martin) Hook this up in Chat::Publisher, it doesn't work yet there
+  // because we only have the deleted message IDs, not the message model.
+  handleBulkDeleteMessage() {
+    return;
+  }
+
   handleSentMessage(data) {
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
       return handleStagedMessage(this.messagesManager, data);

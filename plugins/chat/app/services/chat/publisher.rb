@@ -165,15 +165,13 @@ module Chat
     end
 
     def self.publish_bulk_delete!(chat_channel, deleted_message_ids)
-      message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
-
-      message_bus_targets.each do |message_bus_channel|
-        MessageBus.publish(
-          message_bus_channel,
-          { typ: "bulk_delete", deleted_ids: deleted_message_ids, deleted_at: Time.zone.now },
-          permissions(chat_channel),
-        )
-      end
+      # TODO (martin) Handle sending this through for all the threads that
+      # may contain the deleted messages as well.
+      MessageBus.publish(
+        root_message_bus_channel(chat_channel.id),
+        { typ: "bulk_delete", deleted_ids: deleted_message_ids, deleted_at: Time.zone.now },
+        permissions(chat_channel),
+      )
     end
 
     def self.publish_restore!(chat_channel, chat_message)
