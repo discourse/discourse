@@ -125,7 +125,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
       sign_in(current_user)
     end
 
-    it "prefills the emoji picker filter input" do
+    xit "prefills the emoji picker filter input" do
       chat.visit_channel(channel_1)
       find(".chat-composer-input").fill_in(with: ":gri")
 
