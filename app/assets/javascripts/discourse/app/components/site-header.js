@@ -8,7 +8,7 @@ import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
-import { observes } from "discourse-common/utils/decorators";
+import { bind, observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { isTesting } from "discourse-common/config/environment";
 import { DEBUG } from "@glimmer/env";
@@ -450,6 +450,7 @@ export default SiteHeaderComponent.extend({
     this._resizeObserver = null;
   },
 
+  @bind
   updateHeaderOffset() {
     // check offset from top of the page, in case there's a custom header above
     // and adjust on scroll in case it's not sticky
@@ -480,7 +481,7 @@ export default SiteHeaderComponent.extend({
         this.updateHeaderOffset();
       });
 
-      window.addEventListener("scroll", () => this.updateHeaderOffset(), {
+      window.addEventListener("scroll", this.updateHeaderOffset, {
         passive: true,
       });
     }
@@ -510,7 +511,7 @@ export default SiteHeaderComponent.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    window.removeEventListener("scroll", () => this.updateHeaderOffset());
+    window.removeEventListener("scroll", this.updateHeaderOffset);
     this._resizeObserver?.disconnect();
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
