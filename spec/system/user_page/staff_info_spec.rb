@@ -12,7 +12,7 @@ describe "Viewing user staff info as an admin", type: :system, js: true do
     fab!(:user_warning) { UserWarning.create!(user: user, created_by: admin, topic: topic) }
 
     it "should display the right link to user's warnings with the right count in text" do
-      user_page.visit(user).click_staff_info_warnings_link(warnings_count: 1)
+      user_page.visit(user).click_staff_info_warnings_link(user, warnings_count: 1)
 
       expect(user_page).to have_warning_messages_path(user)
     end
