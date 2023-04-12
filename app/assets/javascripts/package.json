@@ -21,7 +21,7 @@
   ],
   "resolutions": {
     "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1",
-    "**/ember-auto-import": "2.6.2"
+    "**/babel-plugin-ember-template-compilation": "2.0.0"
   },
   "devDependencies": {
     "patch-package": "^6.5.1",
