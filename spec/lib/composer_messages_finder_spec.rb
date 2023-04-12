@@ -334,10 +334,11 @@ RSpec.describe ComposerMessagesFinder do
     fab!(:other_user) { Fabricate(:user) }
     fab!(:third_user) { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic, user: author) }
-    fab!(:unflagged_post) { Fabricate(:post, topic_id: topic.id, user: author) }
-    fab!(:self_flagged_post) { Fabricate(:post, topic_id: topic.id, user: author) }
-    fab!(:under_flagged_post) { Fabricate(:post, topic_id: topic.id, user: author) }
-    fab!(:over_flagged_post) { Fabricate(:post, topic_id: topic.id, user: author) }
+    fab!(:original_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:unflagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:self_flagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:under_flagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:over_flagged_post) { Fabricate(:post, topic: topic, user: author) }
 
     before { SiteSetting.dont_feed_the_trolls_threshold = 2 }
 
@@ -361,6 +362,12 @@ RSpec.describe ComposerMessagesFinder do
           topic_id: topic.id,
           post_id: self_flagged_post.id,
         )
+      expect(finder.check_dont_feed_the_trolls).to be_present
+    end
+
+    it "shows a message when replying to flagged topic (first post)" do
+      Fabricate(:flag, post: original_post, user: user)
+      finder = ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: topic.id)
       expect(finder.check_dont_feed_the_trolls).to be_present
     end
 

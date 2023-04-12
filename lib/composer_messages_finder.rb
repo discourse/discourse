@@ -5,7 +5,6 @@ class ComposerMessagesFinder
     @user = user
     @details = details
     @topic = Topic.find_by(id: details[:topic_id]) if details[:topic_id]
-    @post = Post.find_by(id: details[:post_id]) if details[:post_id]
   end
 
   def self.check_methods
@@ -228,9 +227,18 @@ class ComposerMessagesFinder
   end
 
   def check_dont_feed_the_trolls
-    return if @post.blank? || !replying?
+    return if !replying?
 
-    flags = @post.flags.group(:user_id).count
+    post =
+      if @details[:post_id]
+        Post.find_by(id: @details[:post_id])
+      else
+        @topic.first_post
+      end
+
+    return if post.blank?
+
+    flags = post.flags.group(:user_id).count
     flagged_by_replier = flags[@user.id].to_i > 0
     flagged_by_others = flags.values.sum >= SiteSetting.dont_feed_the_trolls_threshold
 
