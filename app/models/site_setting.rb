@@ -16,8 +16,6 @@ class SiteSetting < ActiveRecord::Base
       elsif self.data_type == SiteSettings::TypeSupervisor.types[:uploaded_image_list]
         upload_ids = self.value.split("|").compact.uniq
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
-      elsif self.data_type == SiteSettings::TypeSupervisor.types[:emoji_list]
-        Emoji.clear_cache && Discourse.request_refresh!
       end
     end
   end

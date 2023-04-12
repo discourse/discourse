@@ -23,7 +23,9 @@ describe "Emoji deny list", type: :system, js: true do
   end
 
   describe "when visiting topics" do
-    before { SiteSetting.emoji_deny_list = "monkey" }
+    SiteSetting.emoji_deny_list = "monkey"
+    Emoji.clear_cache
+
     fab!(:topic) { Fabricate(:topic, title: "Time for :monkey: business") }
     fab!(:post) { Fabricate(:post, topic: topic, raw: "We have no time to :monkey: around!") }
 
@@ -31,12 +33,16 @@ describe "Emoji deny list", type: :system, js: true do
       topic_page.visit_topic(topic)
       expect(page.title).to eq("Time for business - Discourse")
       expect(topic_page).to have_topic_title("Time for business")
-      expect(post).not_to have_css(".emoji[name=':monkey:']")
+      expect(page).not_to have_css(".emoji[title=':monkey:']")
     end
   end
 
   describe "when using composer" do
-    before { SiteSetting.emoji_deny_list = "fu|poop" }
+    before do
+      SiteSetting.emoji_deny_list = "fu|poop"
+      Emoji.clear_cache && Discourse.request_refresh!
+    end
+
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -76,7 +82,11 @@ describe "Emoji deny list", type: :system, js: true do
   end
 
   describe "when using private messages" do
-    before { SiteSetting.emoji_deny_list = "pancakes|monkey" }
+    before do
+      SiteSetting.emoji_deny_list = "pancakes|monkey"
+      Emoji.clear_cache && Discourse.request_refresh!
+    end
+
     fab!(:topic) do
       Fabricate(:private_message_topic, title: "Want to catch up for :pancakes: today?")
     end

@@ -285,6 +285,10 @@ class SiteSerializer < ApplicationSerializer
     Emoji.denied
   end
 
+  def include_denied_emojis?
+    SiteSetting.emoji_deny_list.present?
+  end
+
   private
 
   def ordered_flags(flags)
