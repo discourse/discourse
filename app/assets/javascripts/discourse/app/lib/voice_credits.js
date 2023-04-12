@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const voiceCreditsInputs = document.querySelectorAll(".voice-credits-input");
   const saveButton = document.getElementById("save-voice-credits");
 
+  console.log("voiceCreditsInputs", voiceCreditsInputs);
+
   saveButton.addEventListener("click", () => {
     const voiceCreditsData = Array.from(voiceCreditsInputs).map((input) => {
       return {
