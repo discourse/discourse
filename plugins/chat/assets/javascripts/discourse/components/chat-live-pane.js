@@ -4,7 +4,8 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
-import EmberObject, { action } from "@ember/object";
+import { action } from "@ember/object";
+import { handleStagedMessage } from "discourse/plugins/chat/discourse/lib/staged-message-handler";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cancel, schedule, throttle } from "@ember/runloop";
@@ -34,6 +35,8 @@ export default class ChatLivePane extends Component {
   @service chatStateManager;
   @service chatChannelComposer;
   @service chatChannelPane;
+  @service chatChannelPaneSubscriptionsManager;
+  @service chatChannelThreadIndicatorSubscriptionsManager;
   @service chatApi;
   @service currentUser;
   @service appEvents;
@@ -108,7 +111,7 @@ export default class ChatLivePane extends Component {
     }
 
     this.loadMessages();
-    this._subscribeToUpdates(this.args.channel?.id);
+    this._subscribeToUpdates(this.args.channel);
   }
 
   @action
@@ -209,8 +212,8 @@ export default class ChatLivePane extends Component {
     const loadingMoreKey = `loadingMore${capitalize(direction)}`;
 
     const canLoadMore = loadingPast
-      ? this.args.channel.messagesManager.canLoadMorePast
-      : this.args.channel.messagesManager.canLoadMoreFuture;
+      ? this.#messagesManager.canLoadMorePast
+      : this.#messagesManager.canLoadMoreFuture;
 
     if (
       !canLoadMore ||
@@ -261,7 +264,7 @@ export default class ChatLivePane extends Component {
         }
 
         this.args.channel.details = meta;
-        this.args.channel.messagesManager.addMessages(messages);
+        this.#messagesManager.addMessages(messages);
 
         // Edge case for IOS to avoid blank screens
         // and/or scrolling to bottom losing track of scroll position
@@ -508,9 +511,9 @@ export default class ChatLivePane extends Component {
   }
 
   removeMessage(msgData) {
-    const message = this.args.channel.messagesManager.findMessage(msgData.id);
+    const message = this.#messagesManager.findMessage(msgData.id);
     if (message) {
-      this.args.channel.messagesManager.removeMessage(message);
+      this.#messagesManager.removeMessage(message);
     }
   }
 
@@ -520,72 +523,6 @@ export default class ChatLivePane extends Component {
       case "sent":
         this.handleSentMessage(data);
         break;
-      case "processed":
-        this.handleProcessedMessage(data);
-        break;
-      case "edit":
-        this.handleEditMessage(data);
-        break;
-      case "refresh":
-        this.handleRefreshMessage(data);
-        break;
-      case "delete":
-        this.handleDeleteMessage(data);
-        break;
-      case "bulk_delete":
-        this.handleBulkDeleteMessage(data);
-        break;
-      case "reaction":
-        this.handleReactionMessage(data);
-        break;
-      case "restore":
-        this.handleRestoreMessage(data);
-        break;
-      case "mention_warning":
-        this.handleMentionWarning(data);
-        break;
-      case "self_flagged":
-        this.handleSelfFlaggedMessage(data);
-        break;
-      case "flag":
-        this.handleFlaggedMessage(data);
-        break;
-      case "thread_created":
-        this.handleThreadCreated(data);
-        break;
-    }
-  }
-
-  handleThreadCreated(data) {
-    const message = this.args.channel.messagesManager.findMessage(
-      data.chat_message.id
-    );
-    if (message) {
-      message.threadId = data.chat_message.thread_id;
-      message.threadReplyCount = 1;
-    }
-  }
-
-  _handleStagedMessage(stagedMessage, data) {
-    stagedMessage.error = null;
-    stagedMessage.id = data.chat_message.id;
-    stagedMessage.staged = false;
-    stagedMessage.excerpt = data.chat_message.excerpt;
-    stagedMessage.threadId = data.chat_message.thread_id;
-    stagedMessage.channelId = data.chat_message.chat_channel_id;
-    stagedMessage.createdAt = data.chat_message.created_at;
-
-    const inReplyToMsg = this.args.channel.messagesManager.findMessage(
-      data.chat_message.in_reply_to?.id
-    );
-    if (inReplyToMsg && !inReplyToMsg.threadId) {
-      inReplyToMsg.threadId = data.chat_message.thread_id;
-    }
-
-    // some markdown is cooked differently on the server-side, e.g.
-    // quotes, avatar images etc.
-    if (data.chat_message?.cooked !== stagedMessage.cooked) {
-      stagedMessage.cooked = data.chat_message.cooked;
     }
   }
 
@@ -595,136 +532,24 @@ export default class ChatLivePane extends Component {
     }
 
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
-      const stagedMessage = this.args.channel.messagesManager.findStagedMessage(
-        data.staged_id
-      );
-      if (stagedMessage) {
-        return this._handleStagedMessage(stagedMessage, data);
-      }
+      return handleStagedMessage(this.#messagesManager, data);
     }
 
-    if (this.args.channel.messagesManager.canLoadMoreFuture) {
+    if (this.#messagesManager.canLoadMoreFuture) {
       // If we can load more messages, we just notice the user of new messages
       this.hasNewMessages = true;
     } else if (this.#isTowardsBottom()) {
       // If we are at the bottom, we append the message and scroll to it
       const message = ChatMessage.create(this.args.channel, data.chat_message);
 
-      this.args.channel.messagesManager.addMessages([message]);
+      this.#messagesManager.addMessages([message]);
       this.scrollToLatestMessage();
       this.updateLastReadMessage();
     } else {
       // If we are almost at the bottom, we append the message and notice the user
       const message = ChatMessage.create(this.args.channel, data.chat_message);
-      this.args.channel.messagesManager.addMessages([message]);
+      this.#messagesManager.addMessages([message]);
       this.hasNewMessages = true;
-    }
-  }
-
-  handleProcessedMessage(data) {
-    const message = this.args.channel.messagesManager.findMessage(
-      data.chat_message.id
-    );
-    if (message) {
-      message.cooked = data.chat_message.cooked;
-      this.scrollToLatestMessage();
-    }
-  }
-
-  handleRefreshMessage(data) {
-    const message = this.args.channel.messagesManager.findMessage(
-      data.chat_message.id
-    );
-    if (message) {
-      message.incrementVersion();
-    }
-  }
-
-  handleEditMessage(data) {
-    const message = this.args.channel.messagesManager.findMessage(
-      data.chat_message.id
-    );
-    if (message) {
-      message.message = data.chat_message.message;
-      message.cooked = data.chat_message.cooked;
-      message.excerpt = data.chat_message.excerpt;
-      message.uploads = cloneJSON(data.chat_message.uploads || []);
-      message.edited = true;
-      message.incrementVersion();
-    }
-  }
-
-  handleBulkDeleteMessage(data) {
-    data.deleted_ids.forEach((deletedId) => {
-      this.handleDeleteMessage({
-        deleted_id: deletedId,
-        deleted_at: data.deleted_at,
-      });
-    });
-  }
-
-  handleDeleteMessage(data) {
-    const deletedId = data.deleted_id;
-    const targetMsg = this.args.channel.messagesManager.findMessage(deletedId);
-
-    if (!targetMsg) {
-      return;
-    }
-
-    if (this.currentUser.staff || this.currentUser.id === targetMsg.user.id) {
-      targetMsg.deletedAt = data.deleted_at;
-      targetMsg.expanded = false;
-    } else {
-      this.args.channel.messagesManager.removeMessage(targetMsg);
-    }
-  }
-
-  handleReactionMessage(data) {
-    const message = this.args.channel.messagesManager.findMessage(
-      data.chat_message_id
-    );
-    if (message) {
-      message.react(data.emoji, data.action, data.user, this.currentUser.id);
-    }
-  }
-
-  handleRestoreMessage(data) {
-    const message = this.args.channel.messagesManager.findMessage(
-      data.chat_message.id
-    );
-    if (message) {
-      message.deletedAt = null;
-    } else {
-      this.args.channel.messagesManager.addMessages([
-        ChatMessage.create(this.args.channel, data.chat_message),
-      ]);
-    }
-  }
-
-  handleMentionWarning(data) {
-    const message = this.args.channel.messagesManager.findMessage(
-      data.chat_message_id
-    );
-    if (message) {
-      message.mentionWarning = EmberObject.create(data);
-    }
-  }
-
-  handleSelfFlaggedMessage(data) {
-    const message = this.args.channel.messagesManager.findMessage(
-      data.chat_message_id
-    );
-    if (message) {
-      message.userFlagStatus = data.user_flag_status;
-    }
-  }
-
-  handleFlaggedMessage(data) {
-    const message = this.args.channel.messagesManager.findMessage(
-      data.chat_message_id
-    );
-    if (message) {
-      message.reviewableId = data.reviewable_id;
     }
   }
 
@@ -788,13 +613,13 @@ export default class ChatLivePane extends Component {
 
     if (stagedMessage.inReplyTo) {
       if (!this.args.channel.threadingEnabled) {
-        this.args.channel.messagesManager.addMessages([stagedMessage]);
+        this.#messagesManager.addMessages([stagedMessage]);
       }
     } else {
-      this.args.channel.messagesManager.addMessages([stagedMessage]);
+      this.#messagesManager.addMessages([stagedMessage]);
     }
 
-    if (!this.args.channel.messagesManager.canLoadMoreFuture) {
+    if (!this.#messagesManager.canLoadMoreFuture) {
       this.scrollToLatestMessage();
     }
 
@@ -844,8 +669,7 @@ export default class ChatLivePane extends Component {
   }
 
   _onSendError(id, error) {
-    const stagedMessage =
-      this.args.channel.messagesManager.findStagedMessage(id);
+    const stagedMessage = this.#messagesManager.findStagedMessage(id);
     if (stagedMessage) {
       if (error.jqXHR?.responseJSON?.errors?.length) {
         // only network errors are retryable
@@ -910,20 +734,24 @@ export default class ChatLivePane extends Component {
       return;
     }
 
+    this.chatChannelPaneSubscriptionsManager.unsubscribe();
+    this.chatChannelThreadIndicatorSubscriptionsManager.unsubscribe();
     this.messageBus.unsubscribe(`/chat/${channelId}`, this.onMessage);
   }
 
-  _subscribeToUpdates(channelId) {
-    if (!channelId) {
+  _subscribeToUpdates(channel) {
+    if (!channel) {
       return;
     }
 
-    this._unsubscribeToUpdates(channelId);
+    this._unsubscribeToUpdates(channel.id);
     this.messageBus.subscribe(
-      `/chat/${channelId}`,
+      `/chat/${channel.id}`,
       this.onMessage,
-      this.args.channel.channelMessageBusLastId
+      channel.channelMessageBusLastId
     );
+    this.chatChannelPaneSubscriptionsManager.subscribe(channel);
+    this.chatChannelThreadIndicatorSubscriptionsManager.subscribe(channel);
   }
 
   @bind

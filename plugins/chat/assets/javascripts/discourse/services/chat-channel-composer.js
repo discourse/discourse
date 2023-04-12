@@ -16,7 +16,7 @@ export default class ChatChannelComposer extends Service {
     this.replyToMsg = null;
   }
 
-  get #model() {
+  get model() {
     return this.chat.activeChannel;
   }
 
@@ -26,7 +26,7 @@ export default class ChatChannelComposer extends Service {
 
       const message =
         typeof messageOrId === "number"
-          ? this.#model.messagesManager.findMessage(messageOrId)
+          ? this.model.messagesManager.findMessage(messageOrId)
           : messageOrId;
       this.replyToMsg = message;
       this.focusComposer();
@@ -38,7 +38,7 @@ export default class ChatChannelComposer extends Service {
   }
 
   editButtonClicked(messageId) {
-    const message = this.#model.messagesManager.findMessage(messageId);
+    const message = this.model.messagesManager.findMessage(messageId);
     this.editingMessage = message;
 
     // TODO (martin) Move scrollToLatestMessage to live panel.
@@ -53,13 +53,13 @@ export default class ChatChannelComposer extends Service {
     replyToMsg,
     inProgressUploadsCount,
   }) {
-    if (!this.#model) {
+    if (!this.model) {
       return;
     }
 
-    if (!this.editingMessage && !this.#model.isDraft) {
-      if (typeof value !== "undefined") {
-        this.#model.draft.message = value;
+    if (!this.editingMessage && !this.model.isDraft) {
+      if (typeof value !== "undefined" && this.model.draft) {
+        this.model.draft.message = value;
       }
 
       // only save the uploads to the draft if we are not still uploading other
@@ -69,17 +69,18 @@ export default class ChatChannelComposer extends Service {
       if (
         typeof uploads !== "undefined" &&
         inProgressUploadsCount !== "undefined" &&
-        inProgressUploadsCount === 0
+        inProgressUploadsCount === 0 &&
+        this.model.draft
       ) {
-        this.#model.draft.uploads = uploads;
+        this.model.draft.uploads = uploads;
       }
 
-      if (typeof replyToMsg !== "undefined") {
-        this.#model.draft.replyToMsg = replyToMsg;
+      if (typeof replyToMsg !== "undefined" && this.model.draft) {
+        this.model.draft.replyToMsg = replyToMsg;
       }
     }
 
-    if (!this.#model.isDraft) {
+    if (!this.model.isDraft) {
       this.#reportReplyingPresence(value);
     }
 
@@ -103,25 +104,25 @@ export default class ChatChannelComposer extends Service {
       return;
     }
 
-    if (this.#model.isDraft) {
+    if (this.model.isDraft) {
       return;
     }
 
     const replying = !this.editingMessage && !!composerValue;
-    this.chatComposerPresenceManager.notifyState(this.#model.id, replying);
+    this.chatComposerPresenceManager.notifyState(this.model.id, replying);
   }
 
   @debounce(2000)
   _persistDraft() {
-    if (this.#componentDeleted || !this.#model) {
+    if (this.#componentDeleted || !this.model) {
       return;
     }
 
-    if (!this.#model.draft) {
+    if (!this.model.draft) {
       return;
     }
 
-    return this.chatApi.saveDraft(this.#model.id, this.#model.draft.toJSON());
+    return this.chatApi.saveDraft(this.model.id, this.model.draft.toJSON());
   }
 
   get #componentDeleted() {
