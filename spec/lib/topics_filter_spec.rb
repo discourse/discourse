@@ -91,6 +91,29 @@ RSpec.describe TopicsFilter do
         end
       end
 
+      describe "when query string is `in:bookmarked in:pinnned`" do
+        it "should return topics that are bookmarked and pinned" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:bookmarked in:pinned")
+              .pluck(:id),
+          ).to eq([])
+
+          BookmarkManager.new(user).create_for(
+            bookmarkable_id: pinned_topic.id,
+            bookmarkable_type: "Topic",
+          )
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:bookmarked in:pinned")
+              .pluck(:id),
+          ).to contain_exactly(pinned_topic.id)
+        end
+      end
+
       TopicUser.notification_levels.keys.each do |notification_level|
         describe "when query string is `in:#{notification_level}`" do
           fab!("user_#{notification_level}_topic".to_sym) do
@@ -583,6 +606,19 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("status:public")
             .pluck(:id),
         ).not_to include(topic_in_private_category.id)
+      end
+
+      describe "when query string is `status:closed status:unlisted`" do
+        fab!(:closed_and_unlisted_topic) { Fabricate(:topic, closed: true, visible: false) }
+
+        it "should only return topics that have been closed and are not visible" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("status:closed status:unlisted")
+              .pluck(:id),
+          ).to contain_exactly(closed_and_unlisted_topic.id)
+        end
       end
     end
 
