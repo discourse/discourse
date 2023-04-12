@@ -13,7 +13,8 @@
   "scripts": {
     "build": "ember build",
     "start": "ember serve",
-    "test": "ember test"
+    "test": "ember test",
+    "postinstall": "yarn --silent --cwd .. patch-package"
   },
   "dependencies": {
     "@babel/core": "^7.21.4",

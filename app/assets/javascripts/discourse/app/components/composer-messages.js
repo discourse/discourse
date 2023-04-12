@@ -203,7 +203,8 @@ export default class ComposerMessages extends Component {
   });
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
+
     this.appEvents.on("composer:typed-reply", this, this._typedReply);
     this.appEvents.on("composer:opened", this, this._findMessages);
     this.appEvents.on("composer:find-similar", this, this._findSimilar);
@@ -213,6 +214,8 @@ export default class ComposerMessages extends Component {
   }
 
   willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
     this.appEvents.off("composer:typed-reply", this, this._typedReply);
     this.appEvents.off("composer:opened", this, this._findMessages);
     this.appEvents.off("composer:find-similar", this, this._findSimilar);
