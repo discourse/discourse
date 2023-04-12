@@ -706,7 +706,7 @@ acceptance("User menu", function (needs) {
     );
     assert.ok(
       item2.querySelector("a").href.endsWith("/test_2_path"),
-      "/The second item's link is present with correct href"
+      "The second item's link is present with correct href"
     );
   });
 
