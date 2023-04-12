@@ -272,13 +272,13 @@ export default class ComposerMessages extends Component {
 
     this.set("checkedMessages", true);
 
-    for (const msg of messages) {
+    messages.forEach((msg) => {
       if (msg.wait_for_typing) {
         this.queuedForTyping.addObject(msg);
       } else {
         this.popup(msg);
       }
-    }
+    });
   }
 
   @action
