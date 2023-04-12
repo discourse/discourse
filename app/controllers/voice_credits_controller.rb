@@ -44,6 +44,8 @@ class VoiceCreditsController < ApplicationController
         result[topic_id][:total_votes] += vote_value
       end
     end
+    descending = -1
+    result = result.values.sort_by { |r| r[:total_votes] * descending }
 
     render json: { success: true, total_vote_values_per_topic: result }
   end
