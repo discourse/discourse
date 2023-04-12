@@ -330,7 +330,7 @@ GEM
     rack (2.2.6.4)
     rack-mini-profiler (3.1.0)
       rack (>= 1.2.0)
-    rack-protection (3.0.5)
+    rack-protection (3.0.6)
       rack
     rack-test (2.1.0)
       rack (>= 1.3)
