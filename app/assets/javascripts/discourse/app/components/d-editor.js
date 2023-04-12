@@ -530,7 +530,11 @@ export default Component.extend(TextareaTextManipulation, {
 
           if (term === "") {
             if (this.emojiStore.favorites.length) {
-              return resolve(this.emojiStore.favorites.slice(0, 5));
+              return resolve(
+                this.emojiStore.favorites
+                  .filter((f) => !this.site.denied_emojis?.includes(f))
+                  .slice(0, 5)
+              );
             } else {
               return resolve([
                 "slight_smile",
@@ -555,7 +559,9 @@ export default Component.extend(TextareaTextManipulation, {
             return resolve([allTranslations[full]]);
           }
 
-          const emojiDenied = this.get("site.denied_emojis") || [];
+          const emojiDenied =
+            this.siteSettings.emoji_deny_list?.split("|") || [];
+
           const match = term.match(/^:?(.*?):t([2-6])?$/);
           if (match) {
             const name = match[1];
