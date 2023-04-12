@@ -51,8 +51,21 @@ class VoiceCreditsController < ApplicationController
   def create
     category_id = params["category_id"]
     user_id = current_user.id
-    ## TODO validate voice_credits_data
     voice_credits_data = params.require("voice_credits_data").values()
+    if voice_credits_data.empty?
+      render json: { success: false, error: "Credits missing." }, status: :unprocessable_entity
+      return
+    end
+    voice_credits_data.each do |v_c|
+      if v_c["topic_id"].nil? || v_c["credits_allocated"].nil?
+        render json: {
+                 success: false,
+                 error: "Missing attributes for voice credit.",
+               },
+               status: :unprocessable_entity
+        return
+      end
+    end
 
     if voice_credits_data.map { |vc| vc[:credits_allocated].to_i }.sum > 100
       render json: {
