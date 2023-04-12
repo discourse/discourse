@@ -25,9 +25,59 @@ export default class ComposerMessages extends Component {
   _lastSimilaritySearch = null;
   _similarTopicsMessage = null;
 
+  didInsertElement() {
+    this._super(...arguments);
+    this.appEvents.on("composer:typed-reply", this, this._typedReply);
+    this.appEvents.on("composer:opened", this, this._findMessages);
+    this.appEvents.on("composer:find-similar", this, this._findSimilar);
+    this.appEvents.on("composer-messages:close", this, this._closeTop);
+    this.appEvents.on("composer-messages:create", this, this._create);
+    this.reset();
+  }
+
+  willDestroyElement() {
+    this.appEvents.off("composer:typed-reply", this, this._typedReply);
+    this.appEvents.off("composer:opened", this, this._findMessages);
+    this.appEvents.off("composer:find-similar", this, this._findSimilar);
+    this.appEvents.off("composer-messages:close", this, this._closeTop);
+    this.appEvents.off("composer-messages:create", this, this._create);
+  }
+
+  _closeTop() {
+    this.messages.popObject();
+    this.set("messageCount", this.messages.length);
+  }
+
+  _removeMessage(message) {
+    this.messages.removeObject(message);
+    this.set("messageCount", this.messages.length);
+  }
+
+  _create(info) {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this.reset();
+    this.popup(EmberObject.create(info));
+  }
+
+  // Resets all active messages.
+  // For example if composing a new post.
+  reset() {
+    this.setProperties({
+      messages: [],
+      messagesByTemplate: {},
+      queuedForTyping: [],
+      checkedMessages: false,
+      similarTopics: [],
+    });
+  }
+
   // Called after the user has typed a reply.
   // Some messages only get shown after being typed.
-  _typedReply = task(async () => {
+  @task
+  async _typedReply() {
     for (const msg of this.queuedForTyping) {
       if (this.composer.whisper && msg.hide_if_whisper) {
         return;
@@ -108,9 +158,10 @@ export default class ComposerMessages extends Component {
         }
       }
     }
-  });
+  }
 
-  _findSimilar = task(async () => {
+  @task
+  async _findSimilar() {
     // We don't care about similar topics unless creating a topic
     if (!this.composer.creatingTopic) {
       return;
@@ -155,10 +206,11 @@ export default class ComposerMessages extends Component {
     } else if (this._similarTopicsMessage) {
       this.hideMessage(this._similarTopicsMessage);
     }
-  });
+  }
 
   // Figure out if there are any messages that should be displayed above the composer.
-  _findMessages = task(async () => {
+  @task
+  async _findMessages() {
     if (this.checkedMessages) {
       return;
     }
@@ -200,55 +252,6 @@ export default class ComposerMessages extends Component {
         this.popup(msg);
       }
     }
-  });
-
-  didInsertElement() {
-    this._super(...arguments);
-    this.appEvents.on("composer:typed-reply", this, this._typedReply);
-    this.appEvents.on("composer:opened", this, this._findMessages);
-    this.appEvents.on("composer:find-similar", this, this._findSimilar);
-    this.appEvents.on("composer-messages:close", this, this._closeTop);
-    this.appEvents.on("composer-messages:create", this, this._create);
-    this.reset();
-  }
-
-  willDestroyElement() {
-    this.appEvents.off("composer:typed-reply", this, this._typedReply);
-    this.appEvents.off("composer:opened", this, this._findMessages);
-    this.appEvents.off("composer:find-similar", this, this._findSimilar);
-    this.appEvents.off("composer-messages:close", this, this._closeTop);
-    this.appEvents.off("composer-messages:create", this, this._create);
-  }
-
-  _closeTop() {
-    this.messages.popObject();
-    this.set("messageCount", this.messages.length);
-  }
-
-  _removeMessage(message) {
-    this.messages.removeObject(message);
-    this.set("messageCount", this.messages.length);
-  }
-
-  _create(info) {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    this.reset();
-    this.popup(EmberObject.create(info));
-  }
-
-  // Resets all active messages.
-  // For example if composing a new post.
-  reset() {
-    this.setProperties({
-      messages: [],
-      messagesByTemplate: {},
-      queuedForTyping: [],
-      checkedMessages: false,
-      similarTopics: [],
-    });
   }
 
   @action
