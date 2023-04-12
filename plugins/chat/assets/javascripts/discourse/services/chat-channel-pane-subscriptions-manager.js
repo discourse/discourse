@@ -98,7 +98,7 @@ export default class ChatChannelPaneSubscriptionsManager extends Service {
     if (message) {
       message.cooked = data.chat_message.cooked;
 
-      // TODO: Move scrolling functionality to pane?
+      // TODO (martin) Move scrolling functionality to pane?
       // this.scrollToLatestMessage();
     }
   }

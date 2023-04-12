@@ -15,15 +15,17 @@ module Chat
     end
 
     def self.calculate_publish_targets(chat_channel, chat_message)
-      targets = []
-      if chat_message.thread_om?
-        targets << root_message_bus_channel(chat_channel.id)
-        targets << thread_message_bus_channel(chat_channel.id, chat_message.thread_id)
-      elsif chat_message.thread_reply?
-        targets << thread_message_bus_channel(chat_channel.id, chat_message.thread_id)
-      else
-        targets << root_message_bus_channel(chat_channel.id)
-      end
+      targets =
+        if chat_message.thread_om?
+          [
+            root_message_bus_channel(chat_channel.id),
+            thread_message_bus_channel(chat_channel.id, chat_message.thread_id),
+          ]
+        elsif chat_message.thread_reply?
+          [thread_message_bus_channel(chat_channel.id, chat_message.thread_id)]
+        else
+          [root_message_bus_channel(chat_channel.id)]
+        end
       targets
     end
 
