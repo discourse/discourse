@@ -199,7 +199,7 @@ export default class ChatThreadPanel extends Component {
       .sendMessage(this.channel.id, {
         message: stagedMessage.message,
         in_reply_to_id: stagedMessage.inReplyTo?.id,
-        staged_id: stagedMessage.stagedId,
+        staged_id: stagedMessage.id,
         upload_ids: stagedMessage.uploads.map((upload) => upload.id),
         thread_id: stagedMessage.threadId,
       })
@@ -207,7 +207,7 @@ export default class ChatThreadPanel extends Component {
         this.scrollToBottom();
       })
       .catch((error) => {
-        this.#onSendError(stagedMessage.stagedId, error);
+        this.#onSendError(stagedMessage.id, error);
       })
       .finally(() => {
         if (this._selfDeleted) {

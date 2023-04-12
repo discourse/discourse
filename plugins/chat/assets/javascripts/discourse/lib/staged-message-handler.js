@@ -1,5 +1,5 @@
 export function handleStagedMessage(messagesManager, data) {
-  const stagedMessage = messagesManager.findStagedMessage(data.stagedId);
+  const stagedMessage = messagesManager.findStagedMessage(data.staged_id);
 
   if (!stagedMessage) {
     return;
