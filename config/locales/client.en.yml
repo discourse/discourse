@@ -1284,11 +1284,21 @@ en:
         flags_given:
           one: '<span class="%{className}">%{count}</span> helpful flag'
           other: '<span class="%{className}">%{count}</span> helpful flags'
-        flagged_posts: "flagged posts"
-        deleted_posts: "deleted posts"
-        suspensions: "suspensions"
-        warnings_received: "warnings"
-        rejected_posts: "rejected posts"
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> flagged post'
+          other: '<span class="%{className}">%{count}</span> flagged posts'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> deleted post'
+          other: '<span class="%{className}">%{count}</span> deleted posts'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> suspension'
+          other: '<span class="%{className}">%{count}</span> suspensions'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> warning'
+          other: '<span class="%{className}">%{count}</span> warnings'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> rejected post'
+          other: '<span class="%{className}">%{count}</span> rejected posts'
 
       messages:
         all: "all inboxes"
