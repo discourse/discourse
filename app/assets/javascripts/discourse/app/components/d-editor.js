@@ -559,9 +559,7 @@ export default Component.extend(TextareaTextManipulation, {
             return resolve([allTranslations[full]]);
           }
 
-          const emojiDenied =
-            this.siteSettings.emoji_deny_list?.split("|") || [];
-
+          const emojiDenied = this.get("site.denied_emojis") || [];
           const match = term.match(/^:?(.*?):t([2-6])?$/);
           if (match) {
             const name = match[1];
