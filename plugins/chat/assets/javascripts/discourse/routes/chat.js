@@ -64,7 +64,11 @@ export default class ChatRoute extends DiscourseRoute {
     });
   }
 
-  deactivate() {
+  deactivate(transition) {
+    const url = this.router.urlFor(transition.from.name);
+    this.chatStateManager.storeChatURL(url);
+
+    this.chat.activeChannel = null;
     this.chat.updatePresence();
 
     schedule("afterRender", () => {

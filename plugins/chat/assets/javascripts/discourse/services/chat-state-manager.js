@@ -122,8 +122,8 @@ export default class ChatStateManager extends Service {
     }
   }
 
-  storeChatURL(url = null) {
-    this._chatURL = url || this.router.currentURL;
+  storeChatURL(url) {
+    this._chatURL = url;
   }
 
   get lastKnownAppURL() {
