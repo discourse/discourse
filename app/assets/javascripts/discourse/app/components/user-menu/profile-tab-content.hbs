@@ -120,6 +120,19 @@
     </li>
   {{/if}}
 
+  {{#each this.extraItems as |item|}}
+    <li class={{(or item.class item.className)}}>
+      <a href={{item.href}}>
+        {{#if item.icon}}
+          {{d-icon item.icon}}
+        {{/if}}
+        <span class="item-label">
+          {{item.content}}
+        </span>
+      </a>
+    </li>
+  {{/each}}
+
   <li class="logout">
     <DButton
       @class="btn-flat profile-tab-btn"

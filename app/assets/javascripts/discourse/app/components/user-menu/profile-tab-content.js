@@ -4,6 +4,12 @@ import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 
+const _extraItems = [];
+
+export function addUserMenuProfileTabItem(item) {
+  _extraItems.push(item);
+}
+
 export default class UserMenuProfileTabContent extends Component {
   @service currentUser;
   @service siteSettings;
@@ -32,6 +38,10 @@ export default class UserMenuProfileTabContent extends Component {
     return !DoNotDisturb.isEternal(
       this.currentUser.get("do_not_disturb_until")
     );
+  }
+
+  get extraItems() {
+    return _extraItems;
   }
 
   get #doNotDisturbUntilDate() {

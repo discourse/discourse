@@ -667,6 +667,49 @@ acceptance("User menu", function (needs) {
     );
   });
 
+  test("Extra items added to profile tab via plugin API are rendered properly", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.addQuickAccessProfileItem({
+        class: "test-1-item",
+        icon: "wrench",
+        content: "test 1",
+        href: "/test_1_path",
+      });
+
+      api.addQuickAccessProfileItem({
+        className: "test-2-item",
+        content: "test 2",
+        href: "/test_2_path",
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    const item1 = query("#quick-access-profile ul li.test-1-item");
+
+    assert.ok(
+      item1.querySelector(".d-icon-wrench"),
+      "The first item's icon is rendered"
+    );
+    assert.ok(
+      item1.querySelector("a").href.endsWith("/test_1_path"),
+      "The first item's link is present with correct href"
+    );
+
+    const item2 = query("#quick-access-profile ul li.test-2-item");
+
+    assert.notOk(
+      item2.querySelector(".d-icon"),
+      "The second item doesn't have an icon"
+    );
+    assert.ok(
+      item2.querySelector("a").href.endsWith("/test_2_path"),
+      "/The second item's link is present with correct href"
+    );
+  });
+
   test("the active tab can be clicked again to navigate to a page", async function (assert) {
     updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
