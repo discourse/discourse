@@ -517,7 +517,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
-    yard (0.9.32)
+    yard (0.9.34)
     zeitwerk (2.6.7)
 
 PLATFORMS
