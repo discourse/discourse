@@ -328,7 +328,7 @@ RSpec.describe ComposerMessagesFinder do
     end
   end
 
-  describe ".dont_feed_the_trolls" do
+  describe "#dont_feed_the_trolls" do
     fab!(:user) { Fabricate(:user) }
     fab!(:author) { Fabricate(:user) }
     fab!(:other_user) { Fabricate(:user) }
