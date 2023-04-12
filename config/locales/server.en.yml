@@ -2406,7 +2406,7 @@ en:
     navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
-    enable_new_notifications_menu: "Enables the new notifications menu for the legacy navigation menu."
+    enable_new_notifications_menu: "Enables the new notifications menu. Disabling this setting is deprecated. The new notifications menu is always used for non-legacy 'navigation menu' choices. <a href='https://meta.discourse.org/t/260358'>Learn more</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
     experimental_new_new_view_groups: "EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the \"Everything\" link in the sidebar link to it."
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
@@ -2467,7 +2467,6 @@ en:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
-      enable_new_notifications_menu_not_legacy_navigation_menu: "You must set `navigation_menu` to `legacy` before enabling this setting."
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
     placeholder:

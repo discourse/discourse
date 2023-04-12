@@ -31,7 +31,7 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
     assert.strictEqual(categories[2].textContent.trim(), "fun");
 
     assert.ok(
-      exists("a.sidebar-section-link-all-tags"),
+      exists("a.sidebar-section-link[data-link-name='all-tags']"),
       "all tags link is visible"
     );
   });
@@ -50,7 +50,7 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
     assert.strictEqual(categories[1].textContent.trim(), "meta");
 
     assert.ok(
-      exists("a.sidebar-section-link-all-tags"),
+      exists("a.sidebar-section-link[data-link-name='all-tags']"),
       "all tags link is visible"
     );
   });

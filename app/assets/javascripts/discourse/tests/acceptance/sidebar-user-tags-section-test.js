@@ -144,13 +144,13 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-configure-tags"
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-link-name='configure-tags']"
       ),
       "section link to add tags to sidebar is displayed"
     );
 
     await click(
-      ".sidebar-section[data-section-name='tags'] .sidebar-section-link-configure-tags"
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-link-name='configure-tags']"
     );
 
     assert.strictEqual(
@@ -164,7 +164,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit("/");
 
     const tagSectionLinks = queryAll(
-      ".sidebar-section[data-section-name='tags'] .sidebar-section-link:not(.sidebar-section-link-all-tags)"
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-tags'])"
     );
 
     const tagNames = [...tagSectionLinks].map((tagSectionLink) =>
@@ -183,7 +183,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       count(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link:not(.sidebar-section-link-all-tags)"
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-tags'])"
       ),
       4,
       "4 section links under the section"
@@ -675,11 +675,15 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-link-configure-default-sidebar-tags"),
+      exists(
+        ".sidebar-section-link[data-link-name='configure-default-sidebar-tags']"
+      ),
       "section link to configure default sidebar tags is shown"
     );
 
-    await click(".sidebar-section-link-configure-default-sidebar-tags");
+    await click(
+      ".sidebar-section-link[data-link-name='configure-default-sidebar-tags']"
+    );
 
     assert.strictEqual(
       currentURL(),
