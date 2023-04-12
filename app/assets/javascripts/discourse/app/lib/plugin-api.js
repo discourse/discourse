@@ -227,72 +227,25 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes, opts) {
-    const info = this._resolveClass(resolverName, opts);
-    if (!info) {
+    const klass = this._resolveClass(resolverName, opts);
+    if (!klass) {
       return;
     }
-    const klass = info.class;
 
-    if (canModify(info, "member", resolverName, changes)) {
+    if (canModify(klass, "member", resolverName, changes)) {
       delete changes.pluginId;
 
-      const changeDescriptors = Object.getOwnPropertyDescriptors(changes);
-
-      const fieldDescriptorEntries = Object.entries(changeDescriptors).filter(
-        ([key, desc]) => {
-          if (typeof desc.value === "function" || desc.get || desc.set) {
-            return false;
-          }
-          if (
-            klass.prototype.mergedProperties?.includes(key) ||
-            klass.prototype.concatenatedProperties?.includes(key)
-          ) {
-            return false;
-          }
-          return true;
-        }
-      );
-
-      if (klass.reopen) {
-        // klass is an EmberObject - use builtin ember 'reopen' feature
-        klass.reopen(changes);
-
-        if (fieldDescriptorEntries.length) {
-          // reopen sets these values on the prototype, but they might be overrides for
-          // native class fields. Those need to be overridden after the original values
-          // have been set on the instance by the constructor.
-          klass.reopen({
-            init() {
-              Object.defineProperties(
-                this,
-                Object.fromEntries(fieldDescriptorEntries)
-              );
-              this._super();
-            },
-          });
-        }
+      if (klass.class.reopen) {
+        klass.class.reopen(changes);
       } else {
-        // Not an EmberObject. We can override functions/getters/setters on the prototype
-        // but we don't currently have a way to override fields. Log a warning to the console
-        // if there are any overrides that look like fields.
-
-        Object.defineProperties(klass.prototype, changeDescriptors);
-
-        if (fieldDescriptorEntries.length) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            consolePrefix(),
-            `Attempted to modify fields in ${resolverName}, which is not an EmberObject. ` +
-              "These changes will not take effect. " +
-              `Fields: ${JSON.stringify(
-                fieldDescriptorEntries.map(([key]) => key)
-              )}`
-          );
-        }
+        Object.defineProperties(
+          klass.class.prototype || klass.class,
+          Object.getOwnPropertyDescriptors(changes)
+        );
       }
     }
 
-    return info;
+    return klass;
   }
 
   /**
