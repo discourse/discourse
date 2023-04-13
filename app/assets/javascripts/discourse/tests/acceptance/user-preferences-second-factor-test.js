@@ -109,7 +109,7 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await fillIn("#password", "secrets");
     await click(".user-preferences .btn-primary");
     await click(".token-based-auth-dropdown .select-kit-header");
-    await click("li[data-name='Disable'");
+    await click("li[data-name]='Disable'");
 
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),

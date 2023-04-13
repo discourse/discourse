@@ -52,7 +52,7 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
     await click(".modal-close");
     await click(".two-factor-backup-dropdown .select-kit-header");
     await click("li[data-name='Disable'");
-    await click(".pref-second-factor-backup .btn-danger");
+    await click(".dialog-content .btn-danger");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Deleting backup codes"
