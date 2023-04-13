@@ -17,5 +17,5 @@ jobs:
           password: ${{ secrets.DISCOURSE_DEV_PASSWORD }}
           port: 22
           script: |
-            /var/discourse/launcher run app "git -C /var/www/discourse pull"
+            docker exec -w /var/www/discourse -i app git pull --rebase
             /var/discourse/launcher restart app
