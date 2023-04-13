@@ -71,6 +71,12 @@ module PageObjects
         find("[data-value='flag']").click
       end
 
+      def copy_link(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='copyLink']").click
+      end
+
       def flag_message(message)
         hover_message(message)
         click_more_button
