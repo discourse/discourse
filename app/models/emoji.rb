@@ -160,11 +160,12 @@ class Emoji
 
   def self.load_allowed
     denied_emojis = denied
+    all_emojis = load_standard + load_custom
 
     if denied_emojis.present?
-      all.reject { |e| denied_emojis.include?(e.name) }
+      all_emojis.reject { |e| denied_emojis.include?(e.name) }
     else
-      all
+      all_emojis
     end
   end
 

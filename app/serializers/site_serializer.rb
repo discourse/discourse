@@ -282,11 +282,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def denied_emojis
-    Emoji.denied
+    @denied_emojis ||= Emoji.denied
   end
 
   def include_denied_emojis?
-    SiteSetting.emoji_deny_list.present?
+    denied_emojis.present?
   end
 
   private
