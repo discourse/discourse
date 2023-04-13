@@ -41,9 +41,21 @@ class TopicsFilter
       when "in"
         filter_in(values: values)
       when "posts-min"
-        filter_by_number_of_posts(min: values.last)
+        min = values.last
+        break if !integer_string?(min)
+        filter_by_number_of_posts(min: min)
       when "posts-max"
-        filter_by_number_of_posts(max: values.last)
+        max = values.last
+        break if !integer_string?(max)
+        filter_by_number_of_posts(max: max)
+      when "posters-min"
+        min = values.last
+        break if !integer_string?(min)
+        filter_by_number_of_posters(min: min)
+      when "posters-max"
+        max = values.last
+        break if !integer_string?(max)
+        filter_by_number_of_posters(max: max)
       when "status"
         values.each { |status| @scope = filter_status(status: status) }
       when "tags"
@@ -81,11 +93,19 @@ class TopicsFilter
 
   private
 
-  def filter_by_number_of_posts(min: nil, max: nil)
+  def filter_by_topic_range(column_name:, min: nil, max: nil)
     { min => ">=", max => "<=" }.each do |value, operator|
-      next if !value || value !~ /^\d+$/
-      @scope = @scope.where("topics.posts_count #{operator} ?", value)
+      next if !value
+      @scope = @scope.where("topics.#{column_name} #{operator} ?", value)
     end
+  end
+
+  def filter_by_number_of_posts(min: nil, max: nil)
+    filter_by_topic_range(column_name: "posts_count", min:, max:)
+  end
+
+  def filter_by_number_of_posters(min: nil, max: nil)
+    filter_by_topic_range(column_name: "participant_count", min:, max:)
   end
 
   def filter_categories(values:)
@@ -331,5 +351,9 @@ class TopicsFilter
 
   def include_topics_with_any_tags(tag_ids)
     @scope = @scope.joins(:topic_tags).where("topic_tags.tag_id IN (?)", tag_ids).distinct(:id)
+  end
+
+  def integer_string?(string)
+    string =~ /\A\d+\z/
   end
 end

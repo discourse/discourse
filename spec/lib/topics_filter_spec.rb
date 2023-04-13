@@ -929,5 +929,100 @@ RSpec.describe TopicsFilter do
         end
       end
     end
+
+    describe "when filtering by number of posters in a topic" do
+      fab!(:topic_with_1_participant) { Fabricate(:topic, participant_count: 1) }
+      fab!(:topic_with_2_participants) { Fabricate(:topic, participant_count: 2) }
+      fab!(:topic_with_3_participants) { Fabricate(:topic, participant_count: 3) }
+
+      describe "when query string is `posters-min:1`" do
+        it "should only return topics with at least 1 participant" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posters-min:1")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_1_participant.id,
+            topic_with_2_participants.id,
+            topic_with_3_participants.id,
+          )
+        end
+      end
+
+      describe "when query string is `posters-min:3`" do
+        it "should only return topics with at least 3 participants" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posters-min:3")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_3_participants.id)
+        end
+      end
+
+      describe "when query string is `posters-max:1`" do
+        it "should only return topics with at most 1 participant" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posters-max:1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_participant.id)
+        end
+      end
+
+      describe "when query string is `posters-max:3`" do
+        it "should only return topics with at most 3 participants" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posters-max:3")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_1_participant.id,
+            topic_with_2_participants.id,
+            topic_with_3_participants.id,
+          )
+        end
+      end
+
+      describe "when query string is `posters-min:1 posters-max:2`" do
+        it "should only return topics with at least 1 participant and at most 2 participants" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posters-min:1 posters-max:2")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_participant.id, topic_with_2_participants.id)
+        end
+      end
+
+      describe "when query string is `posters-min:3 posters-min:2 posters-max:1 posters-max:3`" do
+        it "should only return topics with at least 2 participants and at most 3 participants as it ignores earlier filters which are duplicated" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posters-min:3 posters-min:2 posters-max:1 posters-max:3")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_2_participants.id, topic_with_3_participants.id)
+        end
+      end
+
+      describe "when query string is `posters-min:invalid posters-max:invalid`" do
+        it "should ignore the filters with invalid values" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posters-min:invalid posters-max:invalid")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_1_participant.id,
+            topic_with_2_participants.id,
+            topic_with_3_participants.id,
+          )
+        end
+      end
+    end
   end
 end
