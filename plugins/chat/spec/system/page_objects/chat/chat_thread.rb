@@ -50,7 +50,7 @@ module PageObjects
 
       def has_message?(thread_id, text: nil, id: nil)
         if text
-          find(thread_selector_by_id(thread_id)).has_css?(".chat-message-text", text: text)
+          find(thread_selector_by_id(thread_id)).has_css?(".chat-message-text", text: text, wait: 5)
         elsif id
           find(thread_selector_by_id(thread_id)).has_css?(
             ".chat-message-container[data-id=\"#{id}\"]",
