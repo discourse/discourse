@@ -44,6 +44,8 @@ export default class ChatThreadPanel extends Component {
 
   @action
   loadMessages() {
+    this.thread.messagesManager.clearMessages();
+
     if (this.args.targetMessageId) {
       this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
     }
@@ -73,7 +75,6 @@ export default class ChatThreadPanel extends Component {
 
     this.loadingMorePast = true;
     this.loading = true;
-    this.thread.messagesManager.clearMessages();
 
     const findArgs = { pageSize: PAGE_SIZE };
 

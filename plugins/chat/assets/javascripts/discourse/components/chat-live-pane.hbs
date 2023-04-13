@@ -12,6 +12,7 @@
   {{did-update this.updateChannel @channel.id}}
   {{did-insert this.addAutoFocusEventListener}}
   {{will-destroy this.removeAutoFocusEventListener}}
+  data-id={{@channel.id}}
 >
   <ChatFullPageHeader
     @channel={{@channel}}

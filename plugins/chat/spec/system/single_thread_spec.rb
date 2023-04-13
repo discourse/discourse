@@ -58,6 +58,18 @@ describe "Single thread in side panel", type: :system, js: true do
       expect(chat_drawer_page).to have_open_thread(thread)
     end
 
+    it "navigates back to the channel when clicking back button from a thread" do
+      visit("/latest")
+      chat_page.open_from_header
+      chat_drawer_page.open_channel(channel)
+      channel_page.message_thread_indicator(thread.original_message).click
+      expect(chat_drawer_page).to have_open_thread(thread)
+
+      chat_drawer_page.back
+
+      expect(chat_drawer_page).to have_open_channel(channel)
+    end
+
     it "opens the side panel for a single thread from the indicator" do
       chat_page.visit_channel(channel)
       channel_page.message_thread_indicator(thread.original_message).click
