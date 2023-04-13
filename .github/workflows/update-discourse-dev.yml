@@ -1,0 +1,21 @@
+name: Rebuild Discourse Dev
+concurrency: fixed
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: run launcher rebuild command via ssh
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.DISCOURSE_DEV_HOST }}
+          username: ${{ secrets.DISCOURSE_DEV_USERNAME }}
+          password: ${{ secrets.DISCOURSE_DEV_PASSWORD }}
+          port: 22
+          script: |
+            /var/discourse/launcher run app "git -C /var/www/discourse pull"
+            /var/discourse/launcher restart app
