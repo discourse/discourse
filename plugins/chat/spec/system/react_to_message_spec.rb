@@ -111,6 +111,18 @@ RSpec.describe "React to message", type: :system, js: true do
 
             expect(channel).to have_reaction(message_1, reaction_1.emoji)
           end
+
+          it "removes denied emojis and aliases from reactions" do
+            SiteSetting.emoji_deny_list = "fu"
+
+            sign_in(current_user)
+            chat.visit_channel(category_channel_1)
+            channel.hover_message(message_1)
+            find(".chat-message-actions .react-btn").click
+
+            expect(page).to have_no_css(".chat-emoji-picker [data-emoji=\"fu\"]")
+            expect(page).to have_no_css(".chat-emoji-picker [data-emoji=\"middle_finger\"]")
+          end
         end
 
         context "when using frequent reactions" do

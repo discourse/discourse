@@ -51,13 +51,15 @@ export default class ChatEmojiPicker extends Component {
   get groups() {
     const emojis = this.chatEmojiPickerManager.emojis;
     const favorites = {
-      favorites: this.chatEmojiReactionStore.favorites.map((name) => {
-        return {
-          name,
-          group: "favorites",
-          url: emojiUrlFor(name),
-        };
-      }),
+      favorites: this.chatEmojiReactionStore.favorites
+        .filter((f) => !this.site.denied_emojis?.includes(f))
+        .map((name) => {
+          return {
+            name,
+            group: "favorites",
+            url: emojiUrlFor(name),
+          };
+        }),
     };
 
     return {

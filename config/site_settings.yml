@@ -1012,6 +1012,11 @@ posting:
       zh_TW: true
       ja: true
       ko: true
+  emoji_deny_list:
+    type: emoji_list
+    default: ""
+    client: true
+    refresh: true
   approve_post_count:
     default: 0
   approve_unless_trust_level:

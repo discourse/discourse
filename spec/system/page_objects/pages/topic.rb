@@ -30,6 +30,10 @@ module PageObjects
         self
       end
 
+      def has_topic_title?(text)
+        has_css?("h1 .fancy-title", text: text)
+      end
+
       def has_post_content?(post)
         post_by_number(post).has_content? post.raw
       end
