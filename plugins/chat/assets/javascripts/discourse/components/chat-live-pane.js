@@ -5,7 +5,9 @@ import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-messa
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
-import { handleStagedMessage } from "discourse/plugins/chat/discourse/lib/staged-message-handler";
+// TODO (martin) Remove this when the handleSentMessage logic inside chatChannelPaneSubscriptionsManager
+// is moved over from this file completely.
+import { handleStagedMessage } from "discourse/plugins/chat/discourse/services/chat-pane-base-subscriptions-manager";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cancel, schedule, throttle } from "@ember/runloop";

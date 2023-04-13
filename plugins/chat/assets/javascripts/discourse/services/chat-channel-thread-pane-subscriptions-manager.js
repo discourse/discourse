@@ -1,8 +1,7 @@
-import ChatChannelPaneSubscriptionsManager from "./chat-channel-pane-subscriptions-manager";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { handleStagedMessage } from "discourse/plugins/chat/discourse/lib/staged-message-handler";
+import ChatPaneBaseSubscriptionsManager from "./chat-pane-base-subscriptions-manager";
 
-export default class ChatChannelThreadPaneSubscriptionsManager extends ChatChannelPaneSubscriptionsManager {
+export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneBaseSubscriptionsManager {
   get messageBusChannel() {
     return `/chat/${this.model.channelId}/thread/${this.model.id}`;
   }
@@ -11,21 +10,9 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatChann
     return this.model.threadMessageBusLastId;
   }
 
-  // NOTE: This is a noop, there is nothing to do when a thread is created
-  // inside the thread panel.
-  handleThreadCreated() {
-    return;
-  }
-
-  // TODO (martin) Hook this up in Chat::Publisher, it doesn't work yet there
-  // because we only have the deleted message IDs, not the message model.
-  handleBulkDeleteMessage() {
-    return;
-  }
-
   handleSentMessage(data) {
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
-      return handleStagedMessage(this.messagesManager, data);
+      return this.handleStagedMessageInternal(data);
     }
 
     const message = ChatMessage.create(
@@ -35,5 +22,28 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatChann
     this.messagesManager.addMessages([message]);
 
     // TODO (martin) All the scrolling and new message indicator shenanigans.
+  }
+
+  // NOTE: noop, there is nothing to do when a thread is created
+  // inside the thread panel.
+  handleThreadCreated() {
+    return;
+  }
+
+  // NOTE: noop, there is nothing to do when a thread original message
+  // is updated inside the thread panel (for now).
+  handleThreadOriginalMessageUpdate() {
+    return;
+  }
+
+  // TODO (martin) Hook this up correctly in Chat::Publisher for threads.
+  handleBulkDeleteMessage() {
+    return;
+  }
+
+  // NOTE: noop for now, later we may want to do scrolling or something like
+  // we do in the channel pane.
+  afterProcessedMessage() {
+    return;
   }
 }
