@@ -95,6 +95,7 @@ describe "Single thread in side panel", type: :system, js: true do
         expect(side_panel).to have_open_thread(thread)
         open_thread.send_message(thread.id, "new thread message")
         expect(open_thread).to have_message(thread.id, text: "new thread message")
+        thread_message = thread.reload.replies.last
         expect(channel_page).not_to have_css(channel_page.message_by_id_selector(thread_message.id))
       end
 

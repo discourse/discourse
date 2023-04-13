@@ -22,7 +22,7 @@ module PageObjects
       end
 
       def message_by_id_selector(id)
-        ".chat-message-container[data-id=\"#{id}\"]"
+        ".chat-live-pane .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
 
       def message_by_id(id)
