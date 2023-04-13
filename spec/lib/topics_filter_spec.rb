@@ -846,5 +846,88 @@ RSpec.describe TopicsFilter do
         end
       end
     end
+
+    describe "when filtering by number of posts in a topic" do
+      fab!(:topic_with_1_post) { Fabricate(:topic, posts_count: 1) }
+      fab!(:topic_with_2_posts) { Fabricate(:topic, posts_count: 2) }
+      fab!(:topic_with_3_posts) { Fabricate(:topic, posts_count: 3) }
+
+      describe "when query string is `posts-min:1`" do
+        it "should only return topics with at least 1 post" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posts-min:1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_post.id, topic_with_2_posts.id, topic_with_3_posts.id)
+        end
+      end
+
+      describe "when query string is `posts-min:3`" do
+        it "should only return topics with at least 3 posts" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posts-min:3")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_3_posts.id)
+        end
+      end
+
+      describe "when query string is `posts-max:1`" do
+        it "should only return topics with at most 1 post" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posts-max:1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_post.id)
+        end
+      end
+
+      describe "when query string is `posts-max:3`" do
+        it "should only return topics with at most 3 posts" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posts-max:3")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_post.id, topic_with_2_posts.id, topic_with_3_posts.id)
+        end
+      end
+
+      describe "when query string is `posts-min:1 posts-max:2`" do
+        it "should only return topics with at least a post and at most 2 posts" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posts-min:1 posts-max:2")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_post.id, topic_with_2_posts.id)
+        end
+      end
+
+      describe "when query string is `posts-min:3 posts-min:2 posts-max:1 posts-max:3`" do
+        it "should only return topics with at least 2 posts and at most 3 posts as it ignores earlier filters which are duplicated" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posts-min:3 posts-min:2 posts-max:1 posts-max:3")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_2_posts.id, topic_with_3_posts.id)
+        end
+      end
+
+      describe "when query string is `posts-min:invalid posts-max:invalid`" do
+        it "should ignore the filters with invalid values" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("posts-min:invalid posts-max:invalid")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_post.id, topic_with_2_posts.id, topic_with_3_posts.id)
+        end
+      end
+    end
   end
 end
