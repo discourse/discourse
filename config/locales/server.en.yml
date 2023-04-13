@@ -4924,7 +4924,7 @@ en:
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:
-    congratulations: "Congratulations, you installed Discourse!!!!!"
+    congratulations: "Congratulations, you installed Discourse!"
     register:
       button: "Register"
       title: "Register Admin Account"
