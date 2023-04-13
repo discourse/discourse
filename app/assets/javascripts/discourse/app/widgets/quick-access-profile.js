@@ -6,14 +6,14 @@ import { createWidgetFrom } from "discourse/widgets/widget";
 import showModal from "discourse/lib/show-modal";
 import { dateNode } from "discourse/helpers/node";
 
-let _extraItems = [];
+const _extraItems = [];
 
 export function addQuickAccessProfileItem(item) {
   _extraItems.push(item);
 }
 
 export function resetQuickAccessProfileItems() {
-  _extraItems = [];
+  _extraItems.clear();
 }
 
 createWidgetFrom(QuickAccessItem, "logout-item", {

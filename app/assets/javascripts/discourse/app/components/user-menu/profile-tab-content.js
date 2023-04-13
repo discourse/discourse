@@ -4,14 +4,14 @@ import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 
-let _extraItems = [];
+const _extraItems = [];
 
 export function addUserMenuProfileTabItem(item) {
   _extraItems.push(item);
 }
 
 export function resetUserMenuProfileTabItems() {
-  _extraItems = [];
+  _extraItems.clear();
 }
 
 export default class UserMenuProfileTabContent extends Component {
