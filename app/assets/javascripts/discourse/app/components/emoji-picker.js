@@ -380,6 +380,7 @@ export default Component.extend({
     if (filter) {
       results.innerHTML = emojiSearch(filter.toLowerCase(), {
         diversity: this.emojiStore.diversity,
+        exclude: this.site.denied_emojis,
       })
         .map(this._replaceEmoji)
         .join("");
