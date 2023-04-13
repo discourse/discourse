@@ -12,7 +12,10 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneB
 
   handleSentMessage(data) {
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
-      return this.handleStagedMessageInternal(data);
+      const stagedMessage = this.handleStagedMessageInternal(data);
+      if (stagedMessage) {
+        return;
+      }
     }
 
     const message = ChatMessage.create(

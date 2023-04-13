@@ -33,6 +33,8 @@ export function handleStagedMessage(messagesManager, data) {
   if (data.chat_message?.cooked !== stagedMessage.cooked) {
     stagedMessage.cooked = data.chat_message.cooked;
   }
+
+  return stagedMessage;
 }
 
 /**

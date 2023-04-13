@@ -533,7 +533,10 @@ export default class ChatLivePane extends Component {
     }
 
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
-      return handleStagedMessage(this.#messagesManager, data);
+      const stagedMessage = handleStagedMessage(this.#messagesManager, data);
+      if (stagedMessage) {
+        return;
+      }
     }
 
     if (this.#messagesManager.canLoadMoreFuture) {
