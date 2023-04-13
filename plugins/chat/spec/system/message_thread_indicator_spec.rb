@@ -92,5 +92,20 @@ describe "Thread indicator for chat messages", type: :system, js: true do
       new_thread = message_without_thread.reload.thread
       expect(page).not_to have_css(channel_page.message_by_id_selector(new_thread.replies.first))
     end
+
+    it "increments the indicator when a new reply is sent in the thread" do
+      chat_page.visit_channel(channel)
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_css(
+        ".chat-message-thread-indicator__replies-count",
+        text: I18n.t("js.chat.thread.replies", count: 3),
+      )
+      channel_page.message_thread_indicator(thread_1.original_message).click
+      expect(side_panel).to have_open_thread(thread_1)
+      open_thread.send_message(thread_1.id, "new thread message")
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_css(
+        ".chat-message-thread-indicator__replies-count",
+        text: I18n.t("js.chat.thread.replies", count: 4),
+      )
+    end
   end
 end

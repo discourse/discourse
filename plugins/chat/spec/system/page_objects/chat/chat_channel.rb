@@ -22,7 +22,7 @@ module PageObjects
       end
 
       def message_by_id_selector(id)
-        ".chat-message-container[data-id=\"#{id}\"]"
+        ".chat-live-pane .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
 
       def message_by_id(id)
@@ -69,6 +69,12 @@ module PageObjects
         hover_message(message)
         click_more_button
         find("[data-value='flag']").click
+      end
+
+      def copy_link(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='copyLink']").click
       end
 
       def flag_message(message)

@@ -312,11 +312,11 @@ module Chat
     end
 
     def thread_reply?
-      in_thread? && !is_thread_om?
+      in_thread? && !thread_om?
     end
 
-    def is_thread_om?
-      self.thread.original_message_id == self.id
+    def thread_om?
+      in_thread? && self.thread.original_message_id == self.id
     end
 
     private

@@ -4,6 +4,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:chat_channel_1) { Fabricate(:chat_channel) }
 
+  let(:cdp) { PageObjects::CDP.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
@@ -23,30 +24,6 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       find(".chat-message-actions .more-buttons").click
       find(".select-kit-row[data-value=\"select\"]").click
     end
-  end
-
-  def cdp_allow_clipboard_access!
-    cdp_params = {
-      origin: page.server_url,
-      permission: {
-        name: "clipboard-read",
-      },
-      setting: "granted",
-    }
-    page.driver.browser.execute_cdp("Browser.setPermission", **cdp_params)
-
-    cdp_params = {
-      origin: page.server_url,
-      permission: {
-        name: "clipboard-write",
-      },
-      setting: "granted",
-    }
-    page.driver.browser.execute_cdp("Browser.setPermission", **cdp_params)
-  end
-
-  def read_clipboard
-    page.evaluate_async_script("navigator.clipboard.readText().then(arguments[0])")
   end
 
   def click_selection_button(button)
@@ -70,7 +47,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     expect(chat_channel_page).to have_selection_management
     click_selection_button("copy")
     expect(page).to have_selector(".chat-copy-success")
-    clip_text = read_clipboard
+    clip_text = cdp.read_clipboard
     expect(clip_text.chomp).to eq(generate_transcript(messages, current_user))
     clip_text
   end
@@ -84,7 +61,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
   end
 
   describe "copying quote transcripts with the clipboard" do
-    before { cdp_allow_clipboard_access! }
+    before { cdp.allow_clipboard }
 
     context "when quoting a single message into a topic" do
       fab!(:post_1) { Fabricate(:post) }
