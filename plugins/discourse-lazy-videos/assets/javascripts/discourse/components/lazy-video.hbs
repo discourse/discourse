@@ -18,6 +18,7 @@
     <div
       class={{concat-class "video-thumbnail" @videoAttributes.providerName}}
       tabindex="0"
+      style={{this.thumbnailStyle}}
       {{on "click" this.loadEmbed}}
       {{on "keypress" this.loadEmbed}}
     >
