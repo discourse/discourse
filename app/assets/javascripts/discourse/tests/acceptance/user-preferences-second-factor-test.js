@@ -108,7 +108,9 @@ acceptance("User Preferences - Second Factor", function (needs) {
 
     await fillIn("#password", "secrets");
     await click(".user-preferences .btn-primary");
-    await click(".totp .btn-danger");
+    await click(".token-based-auth-dropdown .select-kit-header");
+    await click("li[data-name='Disable'");
+
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Deleting an authenticator"
@@ -120,7 +122,9 @@ acceptance("User Preferences - Second Factor", function (needs) {
       "User has a physical security key"
     );
 
-    await click(".security-key .btn-danger");
+    await click(".security-key-dropdown .select-kit-header");
+    await click("li[data-name='Disable'");
+
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Deleting an authenticator"
