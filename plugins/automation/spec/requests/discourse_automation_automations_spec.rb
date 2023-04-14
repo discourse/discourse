@@ -2,7 +2,7 @@
 
 require_relative "../discourse_automation_helper"
 
-describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
+describe DiscourseAutomation::AdminAutomationsController do
   before { SiteSetting.discourse_automation_enabled = true }
 
   describe "#trigger" do

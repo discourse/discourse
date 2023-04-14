@@ -2,7 +2,7 @@
 
 require_relative "../discourse_automation_helper"
 
-describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
+describe DiscourseAutomation::AdminAutomationsController do
   fab!(:automation) { Fabricate(:automation) }
 
   before { SiteSetting.discourse_automation_enabled = true }

@@ -14,114 +14,60 @@ enabled_site_setting :discourse_automation_enabled
 
 register_asset "stylesheets/common/discourse-automation.scss"
 
-require_relative "app/lib/discourse_automation/triggerable"
-require_relative "app/lib/discourse_automation/scriptable"
-require_relative "app/core_ext/plugin_instance"
+module ::DiscourseAutomation
+  PLUGIN_NAME = "discourse-automation"
+
+  CUSTOM_FIELD = "discourse_automation_ids"
+  TOPIC_LAST_CHECKED_BY = "discourse_automation_last_checked_by"
+  TOPIC_LAST_CHECKED_AT = "discourse_automation_last_checked_at"
+end
+
+require_relative "lib/discourse_automation/engine"
+require_relative "lib/discourse_automation/scriptable"
+require_relative "lib/discourse_automation/triggerable"
+require_relative "lib/plugin/instance"
 
 after_initialize do
-  module ::DiscourseAutomation
-    PLUGIN_NAME = "discourse-automation"
-
-    CUSTOM_FIELD = "discourse_automation_ids"
-    TOPIC_LAST_CHECKED_BY = "discourse_automation_last_checked_by"
-    TOPIC_LAST_CHECKED_AT = "discourse_automation_last_checked_at"
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace DiscourseAutomation
-    end
-  end
-
   %w[
-    app/controllers/admin/discourse_automation/admin_discourse_automation_automations_controller
-    app/controllers/admin/discourse_automation/admin_discourse_automation_controller
-    app/controllers/admin/discourse_automation/admin_discourse_automation_scriptables_controller
-    app/controllers/admin/discourse_automation/admin_discourse_automation_triggerables_controller
-    app/controllers/discourse_automation/append_last_checked_by_controller
-    app/controllers/discourse_automation/automations_controller
-    app/controllers/discourse_automation/user_global_notices_controller
-    app/jobs/regular/call_zapier_webhook
+    app/jobs/regular/discourse_automation_call_zapier_webhook
     app/jobs/scheduled/discourse_automation_tracker
     app/jobs/scheduled/stalled_topic_tracker
     app/jobs/scheduled/stalled_wiki_tracker
-    app/lib/discourse_automation/event_handlers
-    app/lib/discourse_automation/post_extension
-    app/lib/discourse_automation/scripts/add_user_to_group_through_custom_field
-    app/lib/discourse_automation/scripts/append_last_checked_by
-    app/lib/discourse_automation/scripts/append_last_edited_by
-    app/lib/discourse_automation/scripts/auto_responder
-    app/lib/discourse_automation/scripts/banner_topic
-    app/lib/discourse_automation/scripts/close_topic
-    app/lib/discourse_automation/scripts/flag_post_on_words
-    app/lib/discourse_automation/scripts/gift_exchange
-    app/lib/discourse_automation/scripts/pin_topic
-    app/lib/discourse_automation/scripts/post
-    app/lib/discourse_automation/scripts/send_pms
-    app/lib/discourse_automation/scripts/suspend_user_by_email
-    app/lib/discourse_automation/scripts/topic_required_words
-    app/lib/discourse_automation/scripts/user_global_notice
-    app/lib/discourse_automation/scripts/zapier_webhook
-    app/lib/discourse_automation/triggers/after_post_cook
-    app/lib/discourse_automation/triggers/api_call
-    app/lib/discourse_automation/triggers/pm_created
-    app/lib/discourse_automation/triggers/point_in_time
-    app/lib/discourse_automation/triggers/post_created_edited
-    app/lib/discourse_automation/triggers/recurring
-    app/lib/discourse_automation/triggers/stalled_topic
-    app/lib/discourse_automation/triggers/stalled_wiki
-    app/lib/discourse_automation/triggers/topic
-    app/lib/discourse_automation/triggers/user_added_to_group
-    app/lib/discourse_automation/triggers/user_badge_granted
-    app/lib/discourse_automation/triggers/user_promoted
-    app/lib/discourse_automation/triggers/user_removed_from_group
-    app/models/discourse_automation/automation
-    app/models/discourse_automation/field
-    app/models/discourse_automation/pending_automation
-    app/models/discourse_automation/pending_pm
-    app/models/discourse_automation/user_global_notice
     app/queries/stalled_topic_finder
-    app/serializers/discourse_automation/automation_field_serializer
-    app/serializers/discourse_automation/automation_serializer
-    app/serializers/discourse_automation/template_serializer
-    app/serializers/discourse_automation/trigger_serializer
-    app/serializers/discourse_automation/user_global_notice_serializer
     app/services/discourse_automation/user_badge_granted_handler
+    lib/discourse_automation/event_handlers
+    lib/discourse_automation/post_extension
+    lib/discourse_automation/scripts/add_user_to_group_through_custom_field
+    lib/discourse_automation/scripts/append_last_checked_by
+    lib/discourse_automation/scripts/append_last_edited_by
+    lib/discourse_automation/scripts/auto_responder
+    lib/discourse_automation/scripts/banner_topic
+    lib/discourse_automation/scripts/close_topic
+    lib/discourse_automation/scripts/flag_post_on_words
+    lib/discourse_automation/scripts/gift_exchange
+    lib/discourse_automation/scripts/pin_topic
+    lib/discourse_automation/scripts/post
+    lib/discourse_automation/scripts/send_pms
+    lib/discourse_automation/scripts/suspend_user_by_email
+    lib/discourse_automation/scripts/topic_required_words
+    lib/discourse_automation/scripts/user_global_notice
+    lib/discourse_automation/scripts/zapier_webhook
+    lib/discourse_automation/triggers/after_post_cook
+    lib/discourse_automation/triggers/api_call
+    lib/discourse_automation/triggers/pm_created
+    lib/discourse_automation/triggers/point_in_time
+    lib/discourse_automation/triggers/post_created_edited
+    lib/discourse_automation/triggers/recurring
+    lib/discourse_automation/triggers/stalled_topic
+    lib/discourse_automation/triggers/stalled_wiki
+    lib/discourse_automation/triggers/topic
+    lib/discourse_automation/triggers/user_added_to_group
+    lib/discourse_automation/triggers/user_badge_granted
+    lib/discourse_automation/triggers/user_promoted
+    lib/discourse_automation/triggers/user_removed_from_group
   ].each { |path| require_relative path }
 
-  DiscourseAutomation::Engine.routes.draw do
-    scope format: :json, constraints: AdminConstraint.new do
-      post "/automations/:id/trigger" => "automations#trigger"
-    end
-
-    scope format: :json do
-      delete "/user-global-notices/:id" => "user_global_notices#destroy"
-      put "/append-last-checked-by/:post_id" => "append_last_checked_by#post_checked"
-    end
-
-    scope "/admin/plugins/discourse-automation",
-          as: "admin_discourse_automation",
-          constraints: AdminConstraint.new do
-      scope format: false do
-        get "/" => "admin_discourse_automation#index"
-        get "/new" => "admin_discourse_automation#new"
-        get "/:id" => "admin_discourse_automation#edit"
-      end
-
-      scope format: :json do
-        get "/scriptables" => "admin_discourse_automation_scriptables#index"
-        get "/triggerables" => "admin_discourse_automation_triggerables#index"
-        get "/automations" => "admin_discourse_automation_automations#index"
-        get "/automations/:id" => "admin_discourse_automation_automations#show"
-        delete "/automations/:id" => "admin_discourse_automation_automations#destroy"
-        put "/automations/:id" => "admin_discourse_automation_automations#update"
-        post "/automations" => "admin_discourse_automation_automations#create"
-      end
-    end
-  end
-
-  Discourse::Application.routes.append { mount ::DiscourseAutomation::Engine, at: "/" }
-
-  reloadable_patch { Post.class_eval { prepend DiscourseAutomation::PostExtension } }
+  reloadable_patch { Post.prepend DiscourseAutomation::PostExtension }
 
   add_admin_route "discourse_automation.title", "discourse-automation"
 
@@ -250,22 +196,4 @@ after_initialize do
   register_user_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
   register_post_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
   register_post_custom_field_type("stalled_wiki_triggered_at", :string)
-end
-
-Rake::Task.define_task run_automation: :environment do
-  script_methods = DiscourseAutomation::Scriptable.all
-
-  scripts = []
-
-  DiscourseAutomation::Automation.find_each do |automation|
-    script_methods.each do |name|
-      type = name.to_s.gsub("script_", "")
-
-      next if type != automation.script
-
-      scriptable = automation.scriptable
-      scriptable.public_send(name)
-      scripts << scriptable.script.call
-    end
-  end
 end
