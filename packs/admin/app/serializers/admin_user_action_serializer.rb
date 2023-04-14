@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "post_item_excerpt"
+# require_relative "post_item_excerpt"
 
 class AdminUserActionSerializer < ApplicationSerializer
   include PostItemExcerpt
