@@ -47,12 +47,16 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
   test("delete backup codes", async function (assert) {
     updateCurrentUser({ second_factor_enabled: true });
     await visit("/u/eviltrout/preferences/second-factor");
-    await click(".new-second-factor-backup");
-    await click(".second-factor-backup-edit-modal .btn-primary");
-    await click(".modal-close");
+
+    if (exists(".new-second-factor-backup")) {
+      // if codes don't exist yet, create them
+      await click(".new-second-factor-backup");
+      await click(".second-factor-backup-edit-modal .btn-primary");
+      await click(".modal-close");
+    }
+
     await click(".two-factor-backup-dropdown .select-kit-header");
     await click("li[data-name='Disable'");
-    await click(".dialog-content .btn-danger");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Deleting backup codes"
