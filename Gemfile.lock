@@ -79,6 +79,13 @@ GEM
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
+    better_html (2.0.1)
+      actionview (>= 6.0)
+      activesupport (>= 6.0)
+      ast (~> 2.0)
+      erubi (~> 1.4)
+      parser (>= 2.4)
+      smart_properties
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
     bootsnap (1.16.0)
@@ -101,10 +108,18 @@ GEM
     certified (1.0.0)
     cgi (0.3.6)
     chunky_png (1.4.0)
+    code_ownership (1.32.12)
+      code_teams (~> 1.0)
+      packs
+      sorbet-runtime
+    code_teams (1.0.1)
+      sorbet-runtime
     coderay (1.1.3)
     colored2 (3.1.2)
+    colorize (0.8.1)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.0)
+    constant_resolver (0.2.0)
     cose (1.3.0)
       cbor (~> 0.5.9)
       openssl-signature_algorithm (~> 1.0)
@@ -301,11 +316,31 @@ GEM
     openssl-signature_algorithm (1.3.0)
       openssl (> 2.0)
     optimist (3.0.1)
+    packs (0.0.6)
+      sorbet-runtime
+    packs-rails (0.0.3)
+      activesupport
+      packs
+      railties
+    packwerk (3.0.1)
+      activesupport (>= 6.0)
+      ast
+      better_html
+      bundler
+      constant_resolver (>= 0.2.0)
+      parallel
+      parser
+      sorbet-runtime (>= 0.5.9914)
+      zeitwerk (>= 2.6.1)
     parallel (1.22.1)
     parallel_tests (4.2.0)
       parallel
+    parse_packwerk (0.19.0)
+      sorbet-runtime
     parser (3.2.2.0)
       ast (~> 2.4.1)
+    pastel (0.8.0)
+      tty-color (~> 0.5)
     pg (1.4.6)
     prettier_print (1.2.1)
     progress (3.6.0)
@@ -421,9 +456,20 @@ GEM
     rubocop-discourse (3.2.0)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
+    rubocop-packs (0.0.37)
+      activesupport
+      packs
+      parse_packwerk
+      rubocop
+      rubocop-sorbet
+      sorbet-runtime
     rubocop-rspec (2.19.0)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
+    rubocop-sorbet (0.7.0)
+      rubocop (>= 0.90.0)
+    ruby-graphviz (1.2.5)
+      rexml
     ruby-prof (1.6.1)
     ruby-progressbar (1.13.0)
     ruby-readability (0.7.0)
@@ -458,9 +504,11 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
+    smart_properties (1.17.0)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
+    sorbet-runtime (0.5.10780)
     sprockets-rails (3.4.2)
       actionpack (>= 5.2)
       activesupport (>= 5.2)
@@ -474,6 +522,16 @@ GEM
     thor (1.2.1)
     tilt (2.1.0)
     timeout (0.3.2)
+    tty-color (0.6.0)
+    tty-cursor (0.7.1)
+    tty-prompt (0.23.1)
+      pastel (~> 0.8)
+      tty-reader (~> 0.8)
+    tty-reader (0.9.0)
+      tty-cursor (~> 0.7)
+      tty-screen (~> 0.8)
+      wisper (~> 2.0)
+    tty-screen (0.8.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2023.3)
@@ -490,7 +548,25 @@ GEM
     uniform_notifier (1.16.0)
     uri (0.12.1)
     uri_template (0.7.0)
+    use_packs (0.0.14)
+      code_ownership
+      colorize
+      packs
+      packwerk
+      parse_packwerk
+      rubocop-packs
+      sorbet-runtime
+      thor
+      tty-prompt
+      visualize_packwerk
     version_gem (1.1.2)
+    visualize_packwerk (0.1.3)
+      code_ownership
+      packs
+      parse_packwerk
+      rake
+      ruby-graphviz
+      sorbet-runtime
     web-push (1.0.0)
       hkdf (~> 0.2)
       jwt (~> 2.0)
@@ -504,6 +580,7 @@ GEM
       hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.7.0)
     websocket (1.2.9)
+    wisper (2.0.1)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
@@ -603,6 +680,8 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-oauth2
   omniauth-twitter
+  packs-rails
+  packwerk
   parallel_tests
   pg
   pry-byebug
@@ -650,6 +729,7 @@ DEPENDENCIES
   uglifier
   unf
   unicorn
+  use_packs
   web-push
   webdrivers
   webmock

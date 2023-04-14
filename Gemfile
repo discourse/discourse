@@ -279,3 +279,7 @@ gem "webrick", require: false
 gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
+
+gem 'use_packs'
+gem 'packs-rails'
+gem 'packwerk'
