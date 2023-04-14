@@ -40,6 +40,14 @@ class TopicsFilter
         filter_created_by_user(usernames: values.flat_map { |value| value.split(",") })
       when "in"
         filter_in(values: values)
+      when "likes-min"
+        min = values.last
+        break if !integer_string?(min)
+        filter_by_number_of_likes(min: min)
+      when "likes-max"
+        max = values.last
+        break if !integer_string?(max)
+        filter_by_number_of_likes(max: max)
       when "posts-min"
         min = values.last
         break if !integer_string?(min)
@@ -106,6 +114,10 @@ class TopicsFilter
 
   def filter_by_number_of_posters(min: nil, max: nil)
     filter_by_topic_range(column_name: "participant_count", min:, max:)
+  end
+
+  def filter_by_number_of_likes(min: nil, max: nil)
+    filter_by_topic_range(column_name: "like_count", min:, max:)
   end
 
   def filter_categories(values:)

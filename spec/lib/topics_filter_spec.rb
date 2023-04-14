@@ -847,182 +847,109 @@ RSpec.describe TopicsFilter do
       end
     end
 
-    describe "when filtering by number of posts in a topic" do
-      fab!(:topic_with_1_post) { Fabricate(:topic, posts_count: 1) }
-      fab!(:topic_with_2_posts) { Fabricate(:topic, posts_count: 2) }
-      fab!(:topic_with_3_posts) { Fabricate(:topic, posts_count: 3) }
-
-      describe "when query string is `posts-min:1`" do
-        it "should only return topics with at least 1 post" do
+    shared_examples "filtering for topics by range" do |filter|
+      describe "when query string is `#{filter}-min:1`" do
+        it "should only return topics with at least 1 #{filter}" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("posts-min:1")
+              .filter_from_query_string("#{filter}-min:1")
               .pluck(:id),
-          ).to contain_exactly(topic_with_1_post.id, topic_with_2_posts.id, topic_with_3_posts.id)
+          ).to contain_exactly(topic_with_1_count.id, topic_with_2_count.id, topic_with_3_count.id)
         end
       end
 
-      describe "when query string is `posts-min:3`" do
-        it "should only return topics with at least 3 posts" do
+      describe "when query string is `#{filter}-min:3`" do
+        it "should only return topics with at least 3 #{filter}" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("posts-min:3")
+              .filter_from_query_string("#{filter}-min:3")
               .pluck(:id),
-          ).to contain_exactly(topic_with_3_posts.id)
+          ).to contain_exactly(topic_with_3_count.id)
         end
       end
 
-      describe "when query string is `posts-max:1`" do
-        it "should only return topics with at most 1 post" do
+      describe "when query string is `#{filter}-max:1`" do
+        it "should only return topics with at most 1 #{filter}" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("posts-max:1")
+              .filter_from_query_string("#{filter}-max:1")
               .pluck(:id),
-          ).to contain_exactly(topic_with_1_post.id)
+          ).to contain_exactly(topic_with_1_count.id)
         end
       end
 
-      describe "when query string is `posts-max:3`" do
-        it "should only return topics with at most 3 posts" do
+      describe "when query string is `#{filter}-max:3`" do
+        it "should only return topics with at most 3 #{filter}" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("posts-max:3")
+              .filter_from_query_string("#{filter}-max:3")
               .pluck(:id),
-          ).to contain_exactly(topic_with_1_post.id, topic_with_2_posts.id, topic_with_3_posts.id)
+          ).to contain_exactly(topic_with_1_count.id, topic_with_2_count.id, topic_with_3_count.id)
         end
       end
 
-      describe "when query string is `posts-min:1 posts-max:2`" do
-        it "should only return topics with at least a post and at most 2 posts" do
+      describe "when query string is `#{filter}-min:1 #{filter}-max:2`" do
+        it "should only return topics with at least 1 like and at most 2 #{filter}" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("posts-min:1 posts-max:2")
+              .filter_from_query_string("#{filter}-min:1 #{filter}-max:2")
               .pluck(:id),
-          ).to contain_exactly(topic_with_1_post.id, topic_with_2_posts.id)
+          ).to contain_exactly(topic_with_1_count.id, topic_with_2_count.id)
         end
       end
 
-      describe "when query string is `posts-min:3 posts-min:2 posts-max:1 posts-max:3`" do
-        it "should only return topics with at least 2 posts and at most 3 posts as it ignores earlier filters which are duplicated" do
+      describe "when query string is `#{filter}-min:3 #{filter}-min:2 #{filter}-max:1 #{filter}-max:3`" do
+        it "should only return topics with at least 2 #{filter} and at most 3 #{filter} as it ignores earlier filters which are duplicated" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("posts-min:3 posts-min:2 posts-max:1 posts-max:3")
+              .filter_from_query_string(
+                "#{filter}-min:3 #{filter}-min:2 #{filter}-max:1 #{filter}-max:3",
+              )
               .pluck(:id),
-          ).to contain_exactly(topic_with_2_posts.id, topic_with_3_posts.id)
+          ).to contain_exactly(topic_with_2_count.id, topic_with_3_count.id)
         end
       end
 
-      describe "when query string is `posts-min:invalid posts-max:invalid`" do
+      describe "when query string is `#{filter}-min:invalid #{filter}-max:invalid`" do
         it "should ignore the filters with invalid values" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("posts-min:invalid posts-max:invalid")
+              .filter_from_query_string("#{filter}-min:invalid #{filter}-max:invalid")
               .pluck(:id),
-          ).to contain_exactly(topic_with_1_post.id, topic_with_2_posts.id, topic_with_3_posts.id)
+          ).to contain_exactly(topic_with_1_count.id, topic_with_2_count.id, topic_with_3_count.id)
         end
       end
     end
 
+    describe "when filtering by number of likes in a topic" do
+      fab!(:topic_with_1_count) { Fabricate(:topic, like_count: 1) }
+      fab!(:topic_with_2_count) { Fabricate(:topic, like_count: 2) }
+      fab!(:topic_with_3_count) { Fabricate(:topic, like_count: 3) }
+
+      include_examples("filtering for topics by range", "likes")
+    end
+
     describe "when filtering by number of posters in a topic" do
-      fab!(:topic_with_1_participant) { Fabricate(:topic, participant_count: 1) }
-      fab!(:topic_with_2_participants) { Fabricate(:topic, participant_count: 2) }
-      fab!(:topic_with_3_participants) { Fabricate(:topic, participant_count: 3) }
+      fab!(:topic_with_1_count) { Fabricate(:topic, participant_count: 1) }
+      fab!(:topic_with_2_count) { Fabricate(:topic, participant_count: 2) }
+      fab!(:topic_with_3_count) { Fabricate(:topic, participant_count: 3) }
 
-      describe "when query string is `posters-min:1`" do
-        it "should only return topics with at least 1 participant" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("posters-min:1")
-              .pluck(:id),
-          ).to contain_exactly(
-            topic_with_1_participant.id,
-            topic_with_2_participants.id,
-            topic_with_3_participants.id,
-          )
-        end
-      end
+      include_examples("filtering for topics by range", "posters")
+    end
 
-      describe "when query string is `posters-min:3`" do
-        it "should only return topics with at least 3 participants" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("posters-min:3")
-              .pluck(:id),
-          ).to contain_exactly(topic_with_3_participants.id)
-        end
-      end
+    describe "when filtering by number of posts in a topic" do
+      fab!(:topic_with_1_count) { Fabricate(:topic, posts_count: 1) }
+      fab!(:topic_with_2_count) { Fabricate(:topic, posts_count: 2) }
+      fab!(:topic_with_3_count) { Fabricate(:topic, posts_count: 3) }
 
-      describe "when query string is `posters-max:1`" do
-        it "should only return topics with at most 1 participant" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("posters-max:1")
-              .pluck(:id),
-          ).to contain_exactly(topic_with_1_participant.id)
-        end
-      end
-
-      describe "when query string is `posters-max:3`" do
-        it "should only return topics with at most 3 participants" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("posters-max:3")
-              .pluck(:id),
-          ).to contain_exactly(
-            topic_with_1_participant.id,
-            topic_with_2_participants.id,
-            topic_with_3_participants.id,
-          )
-        end
-      end
-
-      describe "when query string is `posters-min:1 posters-max:2`" do
-        it "should only return topics with at least 1 participant and at most 2 participants" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("posters-min:1 posters-max:2")
-              .pluck(:id),
-          ).to contain_exactly(topic_with_1_participant.id, topic_with_2_participants.id)
-        end
-      end
-
-      describe "when query string is `posters-min:3 posters-min:2 posters-max:1 posters-max:3`" do
-        it "should only return topics with at least 2 participants and at most 3 participants as it ignores earlier filters which are duplicated" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("posters-min:3 posters-min:2 posters-max:1 posters-max:3")
-              .pluck(:id),
-          ).to contain_exactly(topic_with_2_participants.id, topic_with_3_participants.id)
-        end
-      end
-
-      describe "when query string is `posters-min:invalid posters-max:invalid`" do
-        it "should ignore the filters with invalid values" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("posters-min:invalid posters-max:invalid")
-              .pluck(:id),
-          ).to contain_exactly(
-            topic_with_1_participant.id,
-            topic_with_2_participants.id,
-            topic_with_3_participants.id,
-          )
-        end
-      end
+      include_examples("filtering for topics by range", "posts")
     end
   end
 end
