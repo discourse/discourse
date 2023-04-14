@@ -20,11 +20,11 @@ if !Rails.env.production?
 end
 
 # Plugin related stuff
-require_relative "../packs/messy_middle/app/lib/plugin"
-require_relative "../packs/messy_middle/app/lib/discourse_event"
-require_relative "../packs/messy_middle/app/lib/discourse_plugin_registry"
+require_relative "../lib/plugin"
+require_relative "../lib/discourse_event"
+require_relative "../lib/discourse_plugin_registry"
 
-require_relative "../packs/messy_middle/app/lib/plugin_gem"
+require_relative "../lib/plugin_gem"
 
 # Global config
 require_relative "../packs/messy_middle/app/models/global_setting"
@@ -57,7 +57,7 @@ require "pry-byebug" if Rails.env.development?
 
 require "discourse_fonts"
 
-require_relative "../packs/messy_middle/app/lib/ember_cli"
+require_relative "../lib/ember_cli"
 
 if defined?(Bundler)
   bundler_groups = [:default]
@@ -69,7 +69,7 @@ if defined?(Bundler)
   Bundler.require(*bundler_groups)
 end
 
-require_relative "../packs/messy_middle/app/lib/require_dependency_backward_compatibility"
+require_relative "../lib/require_dependency_backward_compatibility"
 
 module Discourse
   class Application < Rails::Application
@@ -84,11 +84,11 @@ module Discourse
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    require_relative "../packs/messy_middle/app/lib/discourse"
-    require_relative "../packs/messy_middle/app/lib/js_locale_helper"
+    require "discourse"
+    require "js_locale_helper"
 
     # tiny file needed by site settings
-    require_relative "../packs/messy_middle/app/lib/highlight_js"
+    require "highlight_js"
 
     config.load_defaults 6.1
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
@@ -160,19 +160,19 @@ module Discourse
     config.middleware.delete Rack::ETag
 
     if !(Rails.env.development? || ENV["SKIP_ENFORCE_HOSTNAME"] == "1")
-      require_relative "../packs/messy_middle/app/lib/middleware/enforce_hostname"
+      require "middleware/enforce_hostname"
       config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     end
 
-    require_relative "../packs/messy_middle/app/lib/content_security_policy/middleware"
+    require "content_security_policy/middleware"
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,
                            ContentSecurityPolicy::Middleware
 
-    require_relative "../packs/messy_middle/app/lib/middleware/discourse_public_exceptions"
+    require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
-    require_relative "../packs/messy_middle/app/lib/discourse_js_processor"
-    require_relative "../packs/messy_middle/app/lib/discourse_sourcemapping_url_processor"
+    require "discourse_js_processor"
+    require "discourse_sourcemapping_url_processor"
 
     Sprockets.register_mime_type "application/javascript",
                                  extensions: %w[.js .es6 .js.es6],

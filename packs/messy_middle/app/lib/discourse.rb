@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "./cache"
+require "cache"
 require "open3"
-require_relative "plugin/instance"
-require_relative "version"
+require "plugin/instance"
+require "version"
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
