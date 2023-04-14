@@ -670,7 +670,7 @@ acceptance("User menu", function (needs) {
   test("Extra items added to profile tab via plugin API are rendered properly", async function (assert) {
     withPluginApi("0.1", (api) => {
       api.addQuickAccessProfileItem({
-        class: "test-1-item",
+        className: "test-1-item",
         icon: "wrench",
         content: "test 1",
         href: "/test_1_path",

@@ -121,7 +121,7 @@
   {{/if}}
 
   {{#each this.extraItems as |item|}}
-    <li class={{(or item.class item.className)}}>
+    <li class={{item.className}}>
       <a href={{item.href}}>
         {{#if item.icon}}
           {{d-icon item.icon}}
