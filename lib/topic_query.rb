@@ -646,7 +646,7 @@ class TopicQuery
           # to the top, do nothing
           return result if options[:unordered]
         end
-        sort_column = "vote_value"
+        sort_column = "bumped_at"
       end
       ### END of PCC change ###
     end
