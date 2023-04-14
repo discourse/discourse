@@ -1108,14 +1108,14 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
     end
 
-    it "is hidden to admins" do
+    it "is always shown to admins" do
       sign_in(admin)
 
       get "/latest.json"
       expect(response.status).to eq(200)
       parsed = response.parsed_body
-      expect(parsed["topic_list"]["topics"].length).to eq(1)
-      expect(parsed["topic_list"]["topics"].first["id"]).not_to eq(welcome_topic.id)
+      expect(parsed["topic_list"]["topics"].length).to eq(2)
+      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
     end
 
     it "is shown to users when bootstrap mode is disabled" do
