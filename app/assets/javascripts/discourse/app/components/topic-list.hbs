@@ -29,7 +29,7 @@
 />
 
 <tbody class="topic-list-body">
-  {{#each this.filteredTopics as |topic index|}}
+  {{#each this.augmentedFilteredTopics as |topic index|}}
     <TopicListItem
       @topic={{topic}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}

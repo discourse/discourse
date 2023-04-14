@@ -1,21 +1,25 @@
+/* eslint-disable no-console */
 import { alias, and } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
-import { next, schedule } from "@ember/runloop";
+import { next, schedule, scheduleOnce } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
+// import { ajax } from "discourse/lib/ajax";
+import { computed, set } from "@ember/object";
 
 export default Component.extend(LoadMore, {
   tagName: "table",
   classNames: ["topic-list"],
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
+  showQuadraticVoting: false,
   listTitle: "topic.title",
   canDoBulkActions: and("currentUser.canManageTopic", "selected.length"),
-
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),
+  _augmentedFilteredTopics: null,
 
   _init: on("init", function () {
     this.addObserver("hideCategory", this.rerender);
@@ -85,7 +89,106 @@ export default Component.extend(LoadMore, {
   didInsertElement() {
     this._super(...arguments);
     this.scrollToLastPosition();
+    scheduleOnce("afterRender", this, "fetchAndSetQuadraticVotes");
+    if (this.currentUser) {
+      this.set("showQuadraticVoting", true);
+    }
   },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+    scheduleOnce("afterRender", this, "fetchAndSetQuadraticVotes");
+  },
+
+  fetchAndSetQuadraticVotes() {
+    const filteredTopics = this.get("filteredTopics");
+    const categoryId = this.get("category.id");
+    const url = `/topics/category-totals/${categoryId}.json`;
+
+    fetch(url, {
+      headers: {
+        "Access-Control-Request-Headers": "*",
+        "Access-Control-Allow-Methods": "GET",
+      },
+    })
+      .then((response) => response.json())
+      .then((r) => {
+        const voiceCreditsPerTopic = r.total_vote_values_per_topic;
+        const augmentedTopics = filteredTopics.map((topic) => {
+          const topicId = topic.id;
+          const topicQuadraticVotes = voiceCreditsPerTopic[topicId].total_votes;
+          topic.set("quadratic_votes", topicQuadraticVotes);
+          return topic;
+        });
+        console.log("augmentedTopics:", augmentedTopics);
+        set(this, "_augmentedFilteredTopics", augmentedTopics);
+      })
+      .catch((error) => {
+        console.error("Error fetching quadratic_votes:", error);
+      });
+  },
+
+  augmentedFilteredTopics: computed("_augmentedFilteredTopics.[]", function () {
+    const augmentedTopics = this.get("_augmentedFilteredTopics");
+    return augmentedTopics || this.get("filteredTopics");
+  }),
+  /*
+
+  voteComment() {
+
+    const payload =
+       {
+          category_id: 6,
+          voice_credits_data:
+          [
+             { topic_id: 18, credits_allocated: 16 },
+             { topic_id: 19, credits_allocated: 25 },
+             { topic_id: 34, credits_allocated: 36  },
+             { topic_id: 35, credits_allocated: 4  },
+          ]
+         };
+    return ajax("/voice_credits.json", {
+      type: "POST",
+      data: payload,
+    })
+      .then((r) => {
+       //debugger;
+      })
+      .catch(function (error) {
+        //debugger;
+        // eslint-disable-next-line no-console
+        console.log(error);
+      });
+  },
+  */
+
+  /*
+  getUserVoiceCreditAllocations() {
+    const url = "/voice_credits.json?category_id=all";
+    return fetch(url, {
+      headers: {
+        "Access-Control-Request-Headers": "*",
+        "Access-Control-Allow-Methods": "GET",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then((r) => {
+        debugger;
+      })
+      .catch(function (error) {
+        let message;
+        if (error.hasOwnProperty("message")) {
+          message = error.message;
+        } else {
+          message = error;
+        }
+        // eslint-disable-next-line no-console
+        console.log(message);
+      });
+  },
+  */
 
   _updateLastVisitedTopic(topics, order, ascending, top) {
     this.set("lastVisitedTopic", null);

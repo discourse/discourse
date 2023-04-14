@@ -82,5 +82,5 @@
 </td>
 
 <td class="num square-root-hearts topic-list-data">
-  {{number 420 numberKey="views_long"}}
+  {{number topic.quadratic_votes}}
 </td>
