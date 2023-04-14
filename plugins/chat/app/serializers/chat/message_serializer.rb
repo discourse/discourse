@@ -158,7 +158,7 @@ module Chat
     end
 
     def thread_reply_count
-      object.thread.replies_count
+      object.thread&.replies_count || 0
     end
   end
 end
