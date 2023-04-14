@@ -151,7 +151,11 @@
               >{{d-icon "pencil-alt"}}</a>
 
               {{#if (eq this.siteSettings.welcome_topic_id this.model.id)}}
-                <UserTip @id="welcome_topic" @selector="#edit-topic" @placement="bottom" />
+                <UserTip
+                  @id="welcome_topic"
+                  @selector="#edit-topic"
+                  @placement="bottom"
+                />
               {{/if}}
             {{/if}}
 

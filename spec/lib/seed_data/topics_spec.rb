@@ -19,9 +19,15 @@ RSpec.describe SeedData::Topics do
       expect { create_topic }.to change { Topic.count }.by(1).and change { Post.count }.by(1)
 
       topic = Topic.last
-      expect(topic.title).to eq(I18n.t("discourse_welcome_topic.title"))
+      expect(topic.title).to eq(
+        I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title),
+      )
       expect(topic.first_post.raw).to eq(
-        I18n.t("discourse_welcome_topic.body", base_path: Discourse.base_path).rstrip,
+        I18n.t(
+          "discourse_welcome_topic.body",
+          base_path: Discourse.base_path,
+          site_description: SiteSetting.site_description,
+        ).rstrip,
       )
       expect(topic.category_id).to eq(SiteSetting.general_category_id)
       expect(topic.user_id).to eq(Discourse::SYSTEM_USER_ID)
@@ -81,9 +87,16 @@ RSpec.describe SeedData::Topics do
       update_topic
       topic.reload
 
-      expect(topic.title).to eq(I18n.t("discourse_welcome_topic.title"))
+      expect(topic.title).to eq(
+        I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title),
+      )
       expect(topic.first_post.raw).to eq(
-        I18n.t("discourse_welcome_topic.body", base_path: Discourse.base_path).rstrip,
+        I18n.t(
+          "discourse_welcome_topic.body",
+          "discourse_welcome_topic.body",
+          base_path: Discourse.base_path,
+          site_description: SiteSetting.site_description,
+        ).rstrip,
       )
     end
 

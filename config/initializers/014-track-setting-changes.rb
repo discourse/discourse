@@ -65,4 +65,28 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   end
 
   Emoji.clear_cache && Discourse.request_refresh! if name == :emoji_deny_list
+
+  if (name == :title || name == :site_description) &&
+       Site.welcome_topic_exists_and_is_not_edited? &&
+       topic = Topic.find_by(id: SiteSetting.welcome_topic_id)
+    attributes =
+      if name == :title
+        { title: I18n.t("discourse_welcome_topic.title", site_title: new_value) }
+      else
+        {
+          raw:
+            I18n.t(
+              "discourse_welcome_topic.body",
+              base_path: Discourse.base_path,
+              site_description: new_value,
+            ),
+        }
+      end
+
+    PostRevisor.new(topic.first_post, topic).revise!(
+      Discourse.system_user,
+      attributes,
+      skip_revision: true,
+    )
+  end
 end
