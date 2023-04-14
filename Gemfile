@@ -280,6 +280,6 @@ gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
 
-gem 'use_packs'
+gem 'use_packs', github: 'rubyatscale/use_packs', branch: 'ae-move-lib-fix'
 gem 'packs-rails'
 gem 'packwerk'
