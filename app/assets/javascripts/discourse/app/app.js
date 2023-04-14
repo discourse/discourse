@@ -4,7 +4,6 @@ import Application from "@ember/application";
 import { buildResolver } from "discourse-common/resolver";
 import { isTesting } from "discourse-common/config/environment";
 import { normalizeEmberEventHandling } from "./lib/ember-events";
-import "./lib/voice_credits";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
