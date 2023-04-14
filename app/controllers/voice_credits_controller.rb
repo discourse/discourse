@@ -14,9 +14,11 @@ class VoiceCreditsController < ApplicationController
           :category,
         )
     end
+    voice_credits_by_topic_id = voice_credits.index_by(&:topic_id)
 
     render json: {
              success: true,
+             voice_credits_by_topic_id: voice_credits_by_topic_id,
              voice_credits:
                ActiveModel::ArraySerializer.new(
                  voice_credits,
