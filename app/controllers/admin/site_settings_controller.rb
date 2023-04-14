@@ -38,7 +38,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     value = Upload.get_from_url(value) || "" if SiteSetting.type_supervisor.get_type(id) == :upload
 
     update_existing_users = params[:update_existing_user].present?
-    previous_value = value_or_default(SiteSetting.public_send(id)) if update_existing_users
+    previous_value = value_or_default(SiteSetting.get(id)) if update_existing_users
 
     SiteSetting.set_and_log(id, value, current_user)
 
