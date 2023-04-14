@@ -48,6 +48,14 @@ class TopicsFilter
         max = values.last
         break if !integer_string?(max)
         filter_by_number_of_likes(max: max)
+      when "likes-op-min"
+        min = values.last
+        break if !integer_string?(min)
+        filter_by_number_of_likes_in_first_post(min: min)
+      when "likes-op-max"
+        max = values.last
+        break if !integer_string?(max)
+        filter_by_number_of_likes_in_first_post(max: max)
       when "posts-min"
         min = values.last
         break if !integer_string?(min)
@@ -109,23 +117,35 @@ class TopicsFilter
 
   private
 
-  def filter_by_topic_range(column_name:, min: nil, max: nil)
+  def filter_by_topic_range(column_name:, min: nil, max: nil, scope: nil)
     { min => ">=", max => "<=" }.each do |value, operator|
       next if !value
-      @scope = @scope.where("topics.#{column_name} #{operator} ?", value)
+      @scope = (scope || @scope).where("#{column_name} #{operator} ?", value)
     end
   end
 
   def filter_by_number_of_posts(min: nil, max: nil)
-    filter_by_topic_range(column_name: "posts_count", min:, max:)
+    filter_by_topic_range(column_name: "topics.posts_count", min:, max:)
   end
 
   def filter_by_number_of_posters(min: nil, max: nil)
-    filter_by_topic_range(column_name: "participant_count", min:, max:)
+    filter_by_topic_range(column_name: "topics.participant_count", min:, max:)
   end
 
   def filter_by_number_of_likes(min: nil, max: nil)
-    filter_by_topic_range(column_name: "like_count", min:, max:)
+    filter_by_topic_range(column_name: "topics.like_count", min:, max:)
+  end
+
+  def filter_by_number_of_likes_in_first_post(min: nil, max: nil)
+    filter_by_topic_range(
+      column_name: "first_posts.like_count",
+      min:,
+      max:,
+      scope:
+        @scope.joins(
+          "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
+        ),
+    )
   end
 
   def filter_by_number_of_views(min: nil, max: nil)

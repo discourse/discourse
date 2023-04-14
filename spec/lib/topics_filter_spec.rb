@@ -959,5 +959,24 @@ RSpec.describe TopicsFilter do
 
       include_examples("filtering for topics by range", "views")
     end
+
+    describe "when filtering by number of likes in the first post of a topic" do
+      fab!(:topic_with_1_count) do
+        post = Fabricate(:post, like_count: 1)
+        post.topic
+      end
+
+      fab!(:topic_with_2_count) do
+        post = Fabricate(:post, like_count: 2)
+        post.topic
+      end
+
+      fab!(:topic_with_3_count) do
+        post = Fabricate(:post, like_count: 3)
+        post.topic
+      end
+
+      include_examples("filtering for topics by range", "likes-op")
+    end
   end
 end
