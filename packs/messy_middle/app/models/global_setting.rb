@@ -51,7 +51,7 @@ class GlobalSetting
 
   def self.load_defaults
     default_provider =
-      FileProvider.from(File.expand_path("../../../config/discourse_defaults.conf", __FILE__))
+      FileProvider.from(File.expand_path("../../../../../config/discourse_defaults.conf", __FILE__))
     default_provider
       .keys
       .concat(@provider.keys)

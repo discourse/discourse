@@ -27,7 +27,7 @@ require_relative "../lib/discourse_plugin_registry"
 require_relative "../lib/plugin_gem"
 
 # Global config
-require_relative "../app/models/global_setting"
+require_relative "../packs/messy_middle/app/models/global_setting"
 GlobalSetting.configure!
 if GlobalSetting.load_plugins?
   # Support for plugins to register custom setting providers. They can do this
