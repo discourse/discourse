@@ -12,7 +12,7 @@ Rails.application.config.to_prepare do
 
   SiteSetting.vapid_base_url = Discourse.base_url if SiteSetting.vapid_base_url.blank?
 
-  if generate_vapid_key?
+  if false # generate_vapid_key?
     vapid_key = WebPush.generate_key
     SiteSetting.vapid_public_key = vapid_key.public_key
     SiteSetting.vapid_private_key = vapid_key.private_key
