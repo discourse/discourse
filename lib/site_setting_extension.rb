@@ -433,7 +433,9 @@ module SiteSettingExtension
       value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
       StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
     else
-      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
+      raise Discourse::InvalidParameters.new(
+              I18n.t("errors.site_settings.invalid_site_setting", name: name),
+            )
     end
   end
 
@@ -441,7 +443,9 @@ module SiteSettingExtension
     if has_setting?(name)
       self.public_send(name)
     else
-      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
+      raise Discourse::InvalidParameters.new(
+              I18n.t("errors.site_settings.invalid_site_setting", name: name),
+            )
     end
   end
 

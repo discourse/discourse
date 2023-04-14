@@ -204,6 +204,7 @@ en:
     embed:
       load_from_remote: "There was an error loading that post."
     site_settings:
+      invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
       invalid_choice:
         one: "You specified the invalid choice %{name}"
