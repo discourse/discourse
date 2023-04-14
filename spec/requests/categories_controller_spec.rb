@@ -308,12 +308,12 @@ RSpec.describe CategoriesController do
         )
       end
 
-      it "is hidden to admins" do
+      it "is always shown to admins" do
         sign_in(admin)
 
         get "/categories_and_latest.json"
         expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).not_to include(
+        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to include(
           welcome_topic.id,
         )
       end
