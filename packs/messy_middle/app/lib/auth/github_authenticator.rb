@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "has_errors"
+require_relative "../has_errors"
 
 class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
   def name

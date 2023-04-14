@@ -3,12 +3,12 @@
 module Auth
 end
 
-require "auth/auth_provider"
-require "auth/result"
-require "auth/authenticator"
-require "auth/managed_authenticator"
-require "auth/facebook_authenticator"
-require "auth/github_authenticator"
-require "auth/twitter_authenticator"
-require "auth/google_oauth2_authenticator"
-require "auth/discord_authenticator"
+require_relative "auth/auth_provider"
+require_relative "auth/result"
+require_relative "auth/authenticator"
+require_relative "auth/managed_authenticator"
+require_relative "auth/facebook_authenticator"
+require_relative "auth/github_authenticator"
+require_relative "auth/twitter_authenticator"
+require_relative "auth/google_oauth2_authenticator"
+require_relative "auth/discord_authenticator"

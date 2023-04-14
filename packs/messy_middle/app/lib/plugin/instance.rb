@@ -2,8 +2,8 @@
 
 require "digest/sha1"
 require "fileutils"
-require "plugin/metadata"
-require "auth"
+require_relative "./metadata"
+require_relative "../auth"
 
 class Plugin::CustomEmoji
   CACHE_KEY ||= "plugin-emoji"
