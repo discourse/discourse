@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../../../script/import_scripts/base"
+require_relative "../../../../../script/import_scripts/base"
 
 RSpec.describe ImportScripts::Base do
   before { STDOUT.stubs(:write) }

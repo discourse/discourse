@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "swagger_helper"
+require_relative "../../swagger_helper"
 
 RSpec.describe "user_badges" do
   let(:admin) { Fabricate(:admin) }

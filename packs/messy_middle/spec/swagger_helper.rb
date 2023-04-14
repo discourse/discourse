@@ -4,9 +4,11 @@ require "json_schemer"
 
 # Require schema files
 Dir["./spec/requests/api/schemas/*.rb"].each { |file| require file }
+Dir["./packs/messy_middle/spec/requests/api/schemas/*.rb"].each { |file| require file }
 
 # Require shared spec examples
 Dir["./spec/requests/api/shared/*.rb"].each { |file| require file }
+Dir["./packs/messy_middle/spec/requests/api/shared/*.rb"].each { |file| require file }
 
 def load_spec_schema(name)
   SpecSchemas::SpecLoader.new(name).load

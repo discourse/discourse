@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "swagger_helper"
+require_relative "../../swagger_helper"
 
 RSpec.describe "invites" do
   let(:"Api-Key") { Fabricate(:api_key).key }

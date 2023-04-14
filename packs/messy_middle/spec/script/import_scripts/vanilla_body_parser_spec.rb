@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../../../script/import_scripts/vanilla_body_parser"
-require_relative "../../../script/import_scripts/base/lookup_container"
-require_relative "../../../script/import_scripts/base/uploader"
+require_relative "../../../../../script/import_scripts/vanilla_body_parser"
+require_relative "../../../../../script/import_scripts/base/lookup_container"
+require_relative "../../../../../script/import_scripts/base/uploader"
 
 RSpec.describe VanillaBodyParser do
   let(:lookup) { ImportScripts::LookupContainer.new }
