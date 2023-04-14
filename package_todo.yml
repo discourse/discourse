@@ -17,6 +17,11 @@ packs/admin:
     - dependency
     files:
     - plugins/poll/spec/requests/users_controller_spec.rb
+  "::AdminConstraint":
+    violations:
+    - dependency
+    files:
+    - config/routes.rb
 packs/messy_middle:
   "::About":
     violations:
@@ -74,6 +79,7 @@ packs/messy_middle:
     - dependency
     files:
     - lib/middleware/request_tracker.rb
+    - spec/rails_helper.rb
   "::ApplicationSerializer":
     violations:
     - dependency
@@ -460,6 +466,7 @@ packs/messy_middle:
     - plugins/discourse-narrative-bot/autoload/jobs/onceoff/discourse_narrative_bot/grant_badges.rb
     - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/base.rb
     - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
+    - spec/rails_helper.rb
   "::BadgeGrouping":
     violations:
     - dependency
@@ -566,6 +573,11 @@ packs/messy_middle:
     - dependency
     files:
     - plugins/chat/spec/requests/core_ext/bookmarks_controller_spec.rb
+  "::CachedCounting":
+    violations:
+    - dependency
+    files:
+    - spec/rails_helper.rb
   "::CategoriesController":
     violations:
     - dependency
@@ -804,7 +816,6 @@ packs/messy_middle:
     files:
     - db/fixtures/009_users.rb
     - lib/email_updater.rb
-    - lib/tasks/admin.rake
   "::EmbeddableHost":
     violations:
     - dependency
@@ -941,6 +952,7 @@ packs/messy_middle:
     - plugins/chat/lib/chat/secure_uploads_compatibility.rb
     - plugins/chat/plugin.rb
     - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/new_user_narrative_spec.rb
+    - spec/rails_helper.rb
   "::Group":
     violations:
     - dependency
@@ -1216,6 +1228,7 @@ packs/messy_middle:
     - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/new_user_narrative_spec.rb
     - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
     - plugins/discourse-narrative-bot/spec/user_spec.rb
+    - spec/rails_helper.rb
   "::NotificationSerializer":
     violations:
     - dependency
@@ -1378,6 +1391,7 @@ packs/messy_middle:
     - lib/post_action_creator.rb
     - lib/post_action_destroyer.rb
     - lib/post_revisor.rb
+    - spec/rails_helper.rb
   "::PostActionType":
     violations:
     - dependency
@@ -1622,6 +1636,7 @@ packs/messy_middle:
     - lib/tasks/search.rake
     - plugins/chat/spec/lib/chat/message_bookmarkable_spec.rb
     - plugins/poll/spec/lib/search_spec.rb
+    - spec/rails_helper.rb
   "::SearchIndexer::HtmlScrubber":
     violations:
     - dependency
@@ -1829,7 +1844,6 @@ packs/messy_middle:
     - lib/suggested_topics_builder.rb
     - lib/svg_sprite.rb
     - lib/system_message.rb
-    - lib/tasks/admin.rake
     - lib/tasks/annotate.rake
     - lib/tasks/assets.rake
     - lib/tasks/db.rake
@@ -2057,6 +2071,7 @@ packs/messy_middle:
     - plugins/styleguide/app/controllers/styleguide/styleguide_controller.rb
     - plugins/styleguide/spec/integration/access_spec.rb
     - plugins/styleguide/spec/integration/assets_spec.rb
+    - spec/rails_helper.rb
   "::SiteSetting::ALLOWLIST_DEPRECATED_SITE_SETTINGS":
     violations:
     - dependency
@@ -2101,14 +2116,12 @@ packs/messy_middle:
     violations:
     - dependency
     files:
-    - lib/admin_confirmation.rb
     - lib/email/receiver.rb
     - lib/email_updater.rb
     - lib/post_destroyer.rb
     - lib/post_locker.rb
     - lib/post_revisor.rb
     - lib/promotion.rb
-    - lib/second_factor/actions/grant_admin.rb
     - lib/site_setting_extension.rb
     - lib/topic_publisher.rb
     - lib/topic_view.rb
@@ -2299,6 +2312,7 @@ packs/messy_middle:
     - plugins/discourse-narrative-bot/spec/user_spec.rb
     - plugins/discourse-presence/plugin.rb
     - plugins/poll/spec/requests/posts_controller_spec.rb
+    - spec/rails_helper.rb
   "::TopicAllowedUser":
     violations:
     - dependency
@@ -2525,8 +2539,6 @@ packs/messy_middle:
     - db/migrate/20120427154330_create_vestal_versions.rb
     - db/migrate/20131209091702_create_post_revisions.rb
     - db/migrate/20131209091742_create_topic_revisions.rb
-    - lib/admin_confirmation.rb
-    - lib/admin_user_index_query.rb
     - lib/auth/default_current_user_provider.rb
     - lib/auth/github_authenticator.rb
     - lib/auth/managed_authenticator.rb
@@ -2554,10 +2566,8 @@ packs/messy_middle:
     - lib/pretty_text.rb
     - lib/pretty_text/helpers.rb
     - lib/search.rb
-    - lib/second_factor/actions/grant_admin.rb
     - lib/seed_data/categories.rb
     - lib/spam_handler.rb
-    - lib/tasks/admin.rake
     - lib/tasks/avatars.rake
     - lib/tasks/profile.rake
     - lib/tasks/search.rake
@@ -2626,6 +2636,7 @@ packs/messy_middle:
     - plugins/poll/lib/poll.rb
     - plugins/poll/plugin.rb
     - plugins/poll/spec/requests/users_controller_spec.rb
+    - spec/rails_helper.rb
   "::User::EMAIL":
     violations:
     - dependency
@@ -2691,6 +2702,7 @@ packs/messy_middle:
     - lib/post_creator.rb
     - lib/post_destroyer.rb
     - lib/topic_creator.rb
+    - spec/rails_helper.rb
   "::UserAnonymizer":
     violations:
     - dependency
@@ -3116,3 +3128,4 @@ packs/messy_middle:
     - plugins/chat/app/serializers/chat/in_reply_to_serializer.rb
     - plugins/chat/app/serializers/chat/message_serializer.rb
     - plugins/chat/app/serializers/chat/thread_original_message_serializer.rb
+    - spec/rails_helper.rb

@@ -7,11 +7,6 @@
 # bin/packwerk update-todo
 ---
 ".":
-  "::AdminUserIndexQuery":
-    violations:
-    - dependency
-    files:
-    - packs/admin/app/controllers/admin/users_controller.rb
   "::BackupRestore":
     violations:
     - dependency
@@ -42,6 +37,11 @@
     - dependency
     files:
     - packs/admin/app/controllers/admin/backups_controller.rb
+  "::CurrentUser":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/lib/admin_constraint.rb
   "::Discourse":
     violations:
     - dependency
@@ -51,6 +51,8 @@
     - packs/admin/app/controllers/admin/themes_controller.rb
     - packs/admin/app/controllers/admin/watched_words_controller.rb
     - packs/admin/app/jobs/scheduled/invalidate_inactive_admins.rb
+    - packs/admin/app/lib/admin_confirmation.rb
+    - packs/admin/app/lib/admin_user_index_query.rb
     - packs/admin/app/mailers/admin_confirmation_mailer.rb
     - packs/admin/app/models/admin_dashboard_data.rb
     - packs/admin/app/models/admin_dashboard_general_data.rb
@@ -65,6 +67,7 @@
     - packs/admin/app/controllers/admin/site_texts_controller.rb
     - packs/admin/app/controllers/admin/themes_controller.rb
     - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/lib/admin_constraint.rb
   "::Discourse::InvalidParameters":
     violations:
     - dependency
@@ -96,6 +99,12 @@
     - packs/admin/app/controllers/admin/site_texts_controller.rb
     - packs/admin/app/controllers/admin/users_controller.rb
     - packs/admin/app/controllers/admin/watched_words_controller.rb
+    - packs/admin/app/lib/second_factor/actions/grant_admin.rb
+  "::Discourse::ReadOnly":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/lib/admin_constraint.rb
   "::Discourse::USER_READONLY_MODE_KEY":
     violations:
     - dependency
@@ -187,6 +196,7 @@
     violations:
     - dependency
     files:
+    - packs/admin/app/lib/admin_confirmation.rb
     - packs/admin/spec/serializers/admin_user_action_serializer_spec.rb
     - packs/admin/spec/serializers/admin_user_list_serializer_spec.rb
   "::I18n::Backend::DiscourseI18n":
@@ -245,11 +255,11 @@
     - dependency
     files:
     - packs/admin/app/controllers/admin/search_logs_controller.rb
-  "::SecondFactor::Actions::GrantAdmin":
+  "::SecondFactor::Actions::Base":
     violations:
     - dependency
     files:
-    - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/lib/second_factor/actions/grant_admin.rb
   "::SeedData::Categories":
     violations:
     - dependency
@@ -274,6 +284,7 @@
     violations:
     - dependency
     files:
+    - packs/admin/app/lib/admin_user_index_query.rb
     - packs/admin/app/serializers/admin_detailed_user_serializer.rb
   "::UploadCreator":
     violations:
@@ -281,6 +292,11 @@
     files:
     - packs/admin/app/controllers/admin/emojis_controller.rb
     - packs/admin/app/controllers/admin/themes_controller.rb
+  "::UserNameSuggester":
+    violations:
+    - dependency
+    files:
+    - packs/admin/lib/tasks/admin.rake
 packs/messy_middle:
   "::ApiKey":
     violations:
@@ -470,6 +486,7 @@ packs/messy_middle:
     - dependency
     files:
     - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/lib/tasks/admin.rake
   "::EmbeddableHost":
     violations:
     - dependency
@@ -703,6 +720,7 @@ packs/messy_middle:
     - packs/admin/app/serializers/admin_user_list_serializer.rb
     - packs/admin/app/serializers/admin_user_serializer.rb
     - packs/admin/app/views/users/confirm_admin.html.erb
+    - packs/admin/lib/tasks/admin.rake
     - packs/admin/spec/models/admin_dashboard_data_spec.rb
     - packs/admin/spec/serializers/admin_user_list_serializer_spec.rb
   "::SiteTextSerializer":
@@ -737,6 +755,8 @@ packs/messy_middle:
     - packs/admin/app/controllers/admin/watched_words_controller.rb
     - packs/admin/app/controllers/admin/web_hooks_controller.rb
     - packs/admin/app/jobs/scheduled/invalidate_inactive_admins.rb
+    - packs/admin/app/lib/admin_confirmation.rb
+    - packs/admin/app/lib/second_factor/actions/grant_admin.rb
   "::StatsCacheable":
     violations:
     - dependency
@@ -817,6 +837,10 @@ packs/messy_middle:
     - packs/admin/app/controllers/admin/site_settings_controller.rb
     - packs/admin/app/controllers/admin/users_controller.rb
     - packs/admin/app/jobs/scheduled/invalidate_inactive_admins.rb
+    - packs/admin/app/lib/admin_confirmation.rb
+    - packs/admin/app/lib/admin_user_index_query.rb
+    - packs/admin/app/lib/second_factor/actions/grant_admin.rb
+    - packs/admin/lib/tasks/admin.rake
   "::UserAction::REPLY":
     violations:
     - dependency

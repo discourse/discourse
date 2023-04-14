@@ -7,22 +7,6 @@
 # bin/packwerk update-todo
 ---
 ".":
-  "::AdminConfirmation":
-    violations:
-    - dependency
-    files:
-    - packs/messy_middle/app/controllers/users_controller.rb
-    - packs/messy_middle/spec/lib/admin_confirmation_spec.rb
-    - packs/messy_middle/spec/lib/second_factor/actions/grant_admin_spec.rb
-    - packs/messy_middle/spec/requests/admin/users_controller_spec.rb
-    - packs/messy_middle/spec/requests/users_controller_spec.rb
-  "::AdminUserIndexQuery":
-    violations:
-    - dependency
-    files:
-    - packs/messy_middle/app/jobs/scheduled/pending_users_reminder.rb
-    - packs/messy_middle/spec/jobs/pending_users_reminder_spec.rb
-    - packs/messy_middle/spec/lib/admin_user_index_query_spec.rb
   "::AgeWords":
     violations:
     - dependency
@@ -130,7 +114,6 @@
     - dependency
     files:
     - packs/messy_middle/spec/lib/auth/default_current_user_provider_spec.rb
-    - packs/messy_middle/spec/rails_helper.rb
   "::Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY":
     violations:
     - dependency
@@ -850,7 +833,6 @@
     - packs/messy_middle/spec/models/user_stat_spec.rb
     - packs/messy_middle/spec/models/web_hook_spec.rb
     - packs/messy_middle/spec/multisite/s3_store_spec.rb
-    - packs/messy_middle/spec/rails_helper.rb
     - packs/messy_middle/spec/requests/admin/backups_controller_spec.rb
     - packs/messy_middle/spec/requests/admin/dashboard_controller_spec.rb
     - packs/messy_middle/spec/requests/admin/site_texts_controller_spec.rb
@@ -1402,7 +1384,6 @@
     - packs/messy_middle/spec/models/user_badge_spec.rb
     - packs/messy_middle/spec/models/user_spec.rb
     - packs/messy_middle/spec/models/web_hook_spec.rb
-    - packs/messy_middle/spec/rails_helper.rb
     - packs/messy_middle/spec/requests/admin/users_controller_spec.rb
     - packs/messy_middle/spec/requests/associate_accounts_controller_spec.rb
     - packs/messy_middle/spec/requests/categories_controller_spec.rb
@@ -1509,7 +1490,6 @@
     - packs/messy_middle/spec/models/user_bookmark_list_spec.rb
     - packs/messy_middle/spec/multisite/hashtag_autocomplete_service_spec.rb
     - packs/messy_middle/spec/multisite/site_settings_spec.rb
-    - packs/messy_middle/spec/rails_helper.rb
     - packs/messy_middle/spec/requests/admin/groups_controller_spec.rb
     - packs/messy_middle/spec/requests/bootstrap_controller_spec.rb
     - packs/messy_middle/spec/requests/groups_controller_spec.rb
@@ -3654,7 +3634,6 @@
     - packs/messy_middle/spec/models/post_spec.rb
     - packs/messy_middle/spec/models/topic_spec.rb
     - packs/messy_middle/spec/multisite/request_tracker_spec.rb
-    - packs/messy_middle/spec/rails_helper.rb
     - packs/messy_middle/spec/requests/admin/backups_controller_spec.rb
     - packs/messy_middle/spec/requests/application_controller_spec.rb
     - packs/messy_middle/spec/requests/bookmarks_controller_spec.rb
@@ -3961,11 +3940,6 @@
     files:
     - packs/messy_middle/app/controllers/session_controller.rb
     - packs/messy_middle/spec/lib/second_factor/actions/discourse_connect_provider_spec.rb
-  "::SecondFactor::Actions::GrantAdmin":
-    violations:
-    - dependency
-    files:
-    - packs/messy_middle/spec/lib/second_factor/actions/grant_admin_spec.rb
   "::SecondFactor::AuthManager":
     violations:
     - dependency
@@ -4037,7 +4011,6 @@
     - packs/messy_middle/app/models/site_setting.rb
     - packs/messy_middle/spec/lib/backup_restore/uploads_restorer_spec.rb
     - packs/messy_middle/spec/lib/site_icon_manager_spec.rb
-    - packs/messy_middle/spec/rails_helper.rb
     - packs/messy_middle/spec/requests/metadata_controller_spec.rb
     - packs/messy_middle/spec/requests/static_controller_spec.rb
   "::SiteIconManager::SKETCH_LOGO_ID":
@@ -4077,7 +4050,6 @@
     - packs/messy_middle/app/jobs/base.rb
     - packs/messy_middle/spec/lib/js_locale_helper_spec.rb
     - packs/messy_middle/spec/lib/wizard/step_updater_spec.rb
-    - packs/messy_middle/spec/rails_helper.rb
     - packs/messy_middle/spec/requests/application_controller_spec.rb
   "::SiteSettings::DeprecatedSettings::SETTINGS":
     violations:
@@ -4096,7 +4068,6 @@
     - packs/messy_middle/spec/lib/site_settings/type_supervisor_spec.rb
     - packs/messy_middle/spec/models/site_setting_spec.rb
     - packs/messy_middle/spec/multisite/hashtag_autocomplete_service_spec.rb
-    - packs/messy_middle/spec/rails_helper.rb
   "::SiteSettings::TypeSupervisor":
     violations:
     - dependency
@@ -5074,6 +5045,15 @@ packs/admin:
     - dependency
     files:
     - packs/messy_middle/spec/requests/admin/web_hooks_controller_spec.rb
+  "::AdminConfirmation":
+    violations:
+    - dependency
+    files:
+    - packs/messy_middle/app/controllers/users_controller.rb
+    - packs/messy_middle/spec/lib/admin_confirmation_spec.rb
+    - packs/messy_middle/spec/lib/second_factor/actions/grant_admin_spec.rb
+    - packs/messy_middle/spec/requests/admin/users_controller_spec.rb
+    - packs/messy_middle/spec/requests/users_controller_spec.rb
   "::AdminDashboardData":
     violations:
     - dependency
@@ -5104,8 +5084,20 @@ packs/admin:
     - dependency
     files:
     - packs/messy_middle/app/controllers/posts_controller.rb
+  "::AdminUserIndexQuery":
+    violations:
+    - dependency
+    files:
+    - packs/messy_middle/app/jobs/scheduled/pending_users_reminder.rb
+    - packs/messy_middle/spec/jobs/pending_users_reminder_spec.rb
+    - packs/messy_middle/spec/lib/admin_user_index_query_spec.rb
   "::AdminUserListSerializer":
     violations:
     - dependency
     files:
     - packs/messy_middle/app/serializers/queued_post_serializer.rb
+  "::SecondFactor::Actions::GrantAdmin":
+    violations:
+    - dependency
+    files:
+    - packs/messy_middle/spec/lib/second_factor/actions/grant_admin_spec.rb
