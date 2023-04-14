@@ -1,0 +1,206 @@
+# This file contains a list of dependencies that are not part of the long term plan for the
+# '.' package.
+# We should generally work to reduce this list over time.
+#
+# You can regenerate this file using the following command:
+#
+# bin/packwerk update-todo
+---
+packs/admin:
+  "::Admin::AdminController":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/controllers/chat/admin/incoming_webhooks_controller.rb
+    - spec/requests/admin/admin_controller_spec.rb
+  "::Admin::ApiController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/api_controller_spec.rb
+  "::Admin::BackupsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/backups_controller_spec.rb
+  "::Admin::BadgesController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/badges_controller_spec.rb
+  "::Admin::ColorSchemesController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/color_schemes_controller_spec.rb
+  "::Admin::DashboardController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/dashboard_controller_spec.rb
+  "::Admin::EmailController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/email_controller_spec.rb
+  "::Admin::EmailStylesController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/email_styles_controller_spec.rb
+  "::Admin::EmailTemplatesController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/email_templates_controller_spec.rb
+  "::Admin::EmbeddableHostsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/embeddable_hosts_controller_spec.rb
+  "::Admin::EmbeddingController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/embedding_controller_spec.rb
+  "::Admin::EmojisController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/emojis_controller_spec.rb
+  "::Admin::FormTemplatesController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/form_templates_controller_spec.rb
+  "::Admin::GroupsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/groups_controller_spec.rb
+  "::Admin::ImpersonateController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/impersonate_controller_spec.rb
+  "::Admin::PermalinksController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/permalinks_controller_spec.rb
+  "::Admin::PluginsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/plugins_controller_spec.rb
+  "::Admin::ReportsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/reports_controller_spec.rb
+  "::Admin::RobotsTxtController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/robots_txt_controller_spec.rb
+  "::Admin::ScreenedEmailsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/screened_emails_controller_spec.rb
+  "::Admin::ScreenedIpAddressesController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/screened_ip_addresses_controller_spec.rb
+  "::Admin::ScreenedUrlsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/screened_urls_controller_spec.rb
+  "::Admin::SearchLogsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/search_logs_spec.rb
+  "::Admin::SiteSettingsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/site_settings_controller_spec.rb
+  "::Admin::SiteTextsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/site_texts_controller_spec.rb
+  "::Admin::StaffActionLogsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/staff_action_logs_controller_spec.rb
+  "::Admin::ThemesController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/themes_controller_spec.rb
+  "::Admin::UserFieldsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/user_fields_controller_spec.rb
+  "::Admin::UsersController":
+    violations:
+    - dependency
+    files:
+    - plugins/poll/spec/requests/users_controller_spec.rb
+    - spec/requests/admin/users_controller_spec.rb
+  "::Admin::VersionsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/versions_controller_spec.rb
+  "::Admin::WatchedWordsController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/watched_words_controller_spec.rb
+  "::Admin::WebHooksController":
+    violations:
+    - dependency
+    files:
+    - spec/requests/admin/web_hooks_controller_spec.rb
+  "::AdminDashboardData":
+    violations:
+    - dependency
+    files:
+    - app/controllers/groups_controller.rb
+    - app/controllers/static_controller.rb
+    - app/jobs/scheduled/dashboard_stats.rb
+    - app/jobs/scheduled/poll_mailbox.rb
+    - app/jobs/scheduled/problem_checks.rb
+    - app/services/topic_timestamp_changer.rb
+    - spec/jobs/dashboard_stats_spec.rb
+    - spec/jobs/poll_mailbox_spec.rb
+    - spec/jobs/problem_checks_spec.rb
+    - spec/requests/admin/dashboard_controller_spec.rb
+    - spec/services/topic_timestamp_changer_spec.rb
+  "::AdminDashboardData::Problem":
+    violations:
+    - dependency
+    files:
+    - spec/jobs/problem_checks_spec.rb
+  "::AdminDetailedUserSerializer":
+    violations:
+    - dependency
+    files:
+    - app/jobs/regular/merge_user.rb
+  "::AdminUserActionSerializer":
+    violations:
+    - dependency
+    files:
+    - app/controllers/posts_controller.rb
+  "::AdminUserListSerializer":
+    violations:
+    - dependency
+    files:
+    - app/serializers/queued_post_serializer.rb

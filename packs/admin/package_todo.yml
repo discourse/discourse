@@ -1,0 +1,925 @@
+# This file contains a list of dependencies that are not part of the long term plan for the
+# 'packs/admin' package.
+# We should generally work to reduce this list over time.
+#
+# You can regenerate this file using the following command:
+#
+# bin/packwerk update-todo
+---
+".":
+  "::AdminUserIndexQuery":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::ApiKey":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/api_controller.rb
+  "::ApiKeyScope":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/api_controller.rb
+  "::ApiKeySerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/api_controller.rb
+  "::ApplicationController":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/admin_controller.rb
+    - packs/admin/app/controllers/admin/staff_controller.rb
+  "::ApplicationRequest":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/reports_controller.rb
+  "::ApplicationSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_badges_serializer.rb
+    - packs/admin/app/serializers/admin_email_template_serializer.rb
+    - packs/admin/app/serializers/admin_form_template_serializer.rb
+    - packs/admin/app/serializers/admin_plugin_serializer.rb
+    - packs/admin/app/serializers/admin_user_action_serializer.rb
+    - packs/admin/app/serializers/admin_web_hook_event_serializer.rb
+    - packs/admin/app/serializers/admin_web_hook_serializer.rb
+  "::BackupFileSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::BackupLocationSiteSetting::S3":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/models/admin_dashboard_data.rb
+  "::BackupRestore":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::BackupRestore::BackupStore":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::BackupRestore::BackupStore::BackupFileExists":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::BackupRestore::BackupStore::StorageError":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::BackupRestore::LocalBackupStore":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::BackupRestore::OperationRunningError":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::Badge":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/badges_controller.rb
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+    - packs/admin/app/serializers/admin_badges_serializer.rb
+  "::BadgeGranter":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/badges_controller.rb
+  "::BadgeGrouping":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/badges_controller.rb
+    - packs/admin/app/serializers/admin_badges_serializer.rb
+  "::BadgeGroupingSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/badges_controller.rb
+  "::BadgeSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_badge_serializer.rb
+  "::BadgeType":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/badges_controller.rb
+    - packs/admin/app/serializers/admin_badges_serializer.rb
+  "::BadgeTypeSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/badges_controller.rb
+  "::BasicCategorySerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_web_hook_serializer.rb
+  "::BasicGroupSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/groups_controller.rb
+    - packs/admin/app/serializers/admin_detailed_user_serializer.rb
+    - packs/admin/app/serializers/admin_web_hook_serializer.rb
+  "::BasicUserSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/serializers/admin_detailed_user_serializer.rb
+    - packs/admin/app/serializers/admin_user_action_serializer.rb
+    - packs/admin/app/serializers/admin_user_list_serializer.rb
+  "::Category":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_web_hook_serializer.rb
+  "::CategoryUser":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+  "::ColorScheme":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/color_schemes_controller.rb
+    - packs/admin/app/controllers/admin/themes_controller.rb
+  "::ColorSchemeRevisor":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/color_schemes_controller.rb
+  "::ColorSchemeSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/color_schemes_controller.rb
+    - packs/admin/app/controllers/admin/themes_controller.rb
+  "::CustomEmoji":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/emojis_controller.rb
+  "::DirectoryColumn":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/user_fields_controller.rb
+  "::Discourse":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+    - packs/admin/app/controllers/admin/plugins_controller.rb
+    - packs/admin/app/controllers/admin/themes_controller.rb
+    - packs/admin/app/controllers/admin/watched_words_controller.rb
+    - packs/admin/app/jobs/scheduled/invalidate_inactive_admins.rb
+    - packs/admin/app/mailers/admin_confirmation_mailer.rb
+    - packs/admin/app/models/admin_dashboard_data.rb
+    - packs/admin/app/models/admin_dashboard_general_data.rb
+    - packs/admin/app/views/users/confirm_admin.html.erb
+    - packs/admin/spec/models/admin_dashboard_data_spec.rb
+  "::Discourse::InvalidAccess":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+    - packs/admin/app/controllers/admin/form_templates_controller.rb
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+    - packs/admin/app/controllers/admin/themes_controller.rb
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::Discourse::InvalidParameters":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/api_controller.rb
+    - packs/admin/app/controllers/admin/backups_controller.rb
+    - packs/admin/app/controllers/admin/badges_controller.rb
+    - packs/admin/app/controllers/admin/email_controller.rb
+    - packs/admin/app/controllers/admin/groups_controller.rb
+    - packs/admin/app/controllers/admin/reports_controller.rb
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+    - packs/admin/app/controllers/admin/themes_controller.rb
+    - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/controllers/admin/watched_words_controller.rb
+    - packs/admin/app/jobs/regular/admin_confirmation_email.rb
+  "::Discourse::NotFound":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/api_controller.rb
+    - packs/admin/app/controllers/admin/email_controller.rb
+    - packs/admin/app/controllers/admin/email_templates_controller.rb
+    - packs/admin/app/controllers/admin/groups_controller.rb
+    - packs/admin/app/controllers/admin/impersonate_controller.rb
+    - packs/admin/app/controllers/admin/reports_controller.rb
+    - packs/admin/app/controllers/admin/search_logs_controller.rb
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+    - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/controllers/admin/watched_words_controller.rb
+  "::Discourse::USER_READONLY_MODE_KEY":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::DiscourseConnect":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::DiscourseConnect::BlankExternalId":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::DiscourseConnect::ParseError":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::DiscourseDiff":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/staff_action_logs_controller.rb
+  "::DiscourseEvent":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::DiscourseIpInfo":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::DiscoursePluginRegistry":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/groups_controller.rb
+  "::DiscourseUpdates":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/dashboard_controller.rb
+    - packs/admin/app/controllers/admin/versions_controller.rb
+  "::DiskSpace":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::Email":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::Email::BuildEmailHelper":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/mailers/admin_confirmation_mailer.rb
+  "::Email::Receiver":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::Email::Renderer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::Email::Sender":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+    - packs/admin/app/jobs/regular/admin_confirmation_email.rb
+  "::EmailBackupToken":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::EmailLog":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::EmailLogSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::EmailStyle":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_styles_controller.rb
+  "::EmailStyleSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_styles_controller.rb
+  "::EmailStyleUpdater":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_styles_controller.rb
+  "::EmailToken":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::EmbeddableHost":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/embeddable_hosts_controller.rb
+  "::EmbeddableHostSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/embeddable_hosts_controller.rb
+  "::Embedding":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/embedding_controller.rb
+  "::EmbeddingSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/embedding_controller.rb
+  "::Emoji":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/emojis_controller.rb
+  "::EmojiSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/emojis_controller.rb
+  "::ExternalUploadHelpers":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::ExternalUploadHelpers::ExternalUploadValidationError":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::FormTemplate":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/form_templates_controller.rb
+  "::FormTemplate::NotAllowed":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/form_templates_controller.rb
+  "::FreedomPatches::Rails4":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::GlobalSetting":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/models/admin_dashboard_data.rb
+  "::Group":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/groups_controller.rb
+    - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/serializers/admin_detailed_user_serializer.rb
+    - packs/admin/app/serializers/admin_web_hook_serializer.rb
+  "::GroupActionLogger":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/groups_controller.rb
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::GroupEmailCredentialsCheck":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/models/admin_dashboard_data.rb
+  "::GroupedScreenedUrlSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/screened_urls_controller.rb
+  "::GroupedSearchResultSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/search_logs_controller.rb
+  "::Guardian":
+    violations:
+    - dependency
+    files:
+    - packs/admin/spec/serializers/admin_user_action_serializer_spec.rb
+    - packs/admin/spec/serializers/admin_user_list_serializer_spec.rb
+  "::HandleChunkUpload":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::I18n::Backend::DiscourseI18n":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+  "::IncomingEmail":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::IncomingEmailDetailsSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::IncomingEmailSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::LocaleSiteSetting":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+  "::MemInfo":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/models/admin_dashboard_data.rb
+    - packs/admin/spec/models/admin_dashboard_data_spec.rb
+  "::NotificationLevels":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+  "::Permalink":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/permalinks_controller.rb
+  "::PermalinkSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/permalinks_controller.rb
+  "::Plugin::Instance":
+    violations:
+    - dependency
+    files:
+    - packs/admin/spec/serializers/admin_plugin_serializer_spec.rb
+  "::Plugin::Metadata::OFFICIAL_PLUGINS":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_plugin_serializer.rb
+  "::Post":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/serializers/admin_user_action_serializer.rb
+  "::PostDestroyer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::PostItemExcerpt":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_user_action_serializer.rb
+  "::PostReplyKey":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::PostRevisor":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::Promotion":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::RateLimiter":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+  "::RemoteTheme":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/themes_controller.rb
+    - packs/admin/app/models/admin_dashboard_data.rb
+    - packs/admin/spec/models/admin_dashboard_data_spec.rb
+  "::RemoteTheme::ImportError":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/themes_controller.rb
+  "::Report":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/reports_controller.rb
+    - packs/admin/app/models/admin_dashboard_data.rb
+  "::Report::SCHEMA_VERSION":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/models/admin_dashboard_data.rb
+    - packs/admin/app/models/admin_dashboard_general_data.rb
+    - packs/admin/app/models/admin_dashboard_index_data.rb
+  "::Reviewable":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::ReviewableUser":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::RobotsTxtController":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/robots_txt_controller.rb
+  "::Scheduler::Defer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/watched_words_controller.rb
+  "::ScreenedEmail":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/screened_emails_controller.rb
+  "::ScreenedEmailSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/screened_emails_controller.rb
+  "::ScreenedIpAddress":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/screened_ip_addresses_controller.rb
+  "::ScreenedIpAddressSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/screened_ip_addresses_controller.rb
+  "::ScreenedUrl":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/screened_urls_controller.rb
+  "::Search":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/search_logs_controller.rb
+  "::SearchLog":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/search_logs_controller.rb
+  "::SearchLogsSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/search_logs_controller.rb
+  "::SecondFactor::Actions::GrantAdmin":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::SeedData::Categories":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+  "::SeedData::Topics":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+  "::SidebarSiteSettingsBackfiller":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+  "::SingleSignOnRecord":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_user_serializer.rb
+  "::SingleSignOnRecordSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_user_serializer.rb
+  "::SiteSetting":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/backups_controller.rb
+    - packs/admin/app/controllers/admin/badges_controller.rb
+    - packs/admin/app/controllers/admin/dashboard_controller.rb
+    - packs/admin/app/controllers/admin/email_controller.rb
+    - packs/admin/app/controllers/admin/embeddable_hosts_controller.rb
+    - packs/admin/app/controllers/admin/form_templates_controller.rb
+    - packs/admin/app/controllers/admin/robots_txt_controller.rb
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+    - packs/admin/app/controllers/admin/themes_controller.rb
+    - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/controllers/admin/watched_words_controller.rb
+    - packs/admin/app/jobs/scheduled/invalidate_inactive_admins.rb
+    - packs/admin/app/models/admin_dashboard_data.rb
+    - packs/admin/app/serializers/admin_detailed_user_serializer.rb
+    - packs/admin/app/serializers/admin_plugin_serializer.rb
+    - packs/admin/app/serializers/admin_user_action_serializer.rb
+    - packs/admin/app/serializers/admin_user_list_serializer.rb
+    - packs/admin/app/serializers/admin_user_serializer.rb
+    - packs/admin/app/views/users/confirm_admin.html.erb
+    - packs/admin/spec/models/admin_dashboard_data_spec.rb
+    - packs/admin/spec/serializers/admin_user_list_serializer_spec.rb
+  "::SiteSettings::DeprecatedSettings::SETTINGS":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+  "::SiteTextSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+  "::SkippedEmailLog":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::SkippedEmailLogSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::StaffActionLogger":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/api_controller.rb
+    - packs/admin/app/controllers/admin/backups_controller.rb
+    - packs/admin/app/controllers/admin/badges_controller.rb
+    - packs/admin/app/controllers/admin/email_templates_controller.rb
+    - packs/admin/app/controllers/admin/embeddable_hosts_controller.rb
+    - packs/admin/app/controllers/admin/groups_controller.rb
+    - packs/admin/app/controllers/admin/impersonate_controller.rb
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+    - packs/admin/app/controllers/admin/themes_controller.rb
+    - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/controllers/admin/watched_words_controller.rb
+    - packs/admin/app/controllers/admin/web_hooks_controller.rb
+    - packs/admin/app/jobs/scheduled/invalidate_inactive_admins.rb
+  "::StatsCacheable":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/models/admin_dashboard_data.rb
+  "::Tag":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/permalinks_controller.rb
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+    - packs/admin/app/serializers/admin_web_hook_serializer.rb
+  "::TagSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_web_hook_serializer.rb
+  "::TagUser":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+  "::TestMailer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::Theme":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/themes_controller.rb
+  "::ThemeSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/themes_controller.rb
+  "::ThemeStore::ZipExporter":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/themes_controller.rb
+  "::Topic":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_user_action_serializer.rb
+  "::TopicUser":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+  "::TranslationOverride":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_templates_controller.rb
+    - packs/admin/app/controllers/admin/site_texts_controller.rb
+    - packs/admin/app/serializers/admin_email_template_serializer.rb
+  "::TrustLevel":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_detailed_user_serializer.rb
+  "::TrustLevel3Requirements":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_detailed_user_serializer.rb
+  "::TrustLevel3RequirementsSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_detailed_user_serializer.rb
+  "::Upload":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+  "::UploadCreator":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/emojis_controller.rb
+    - packs/admin/app/controllers/admin/themes_controller.rb
+  "::User":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/api_controller.rb
+    - packs/admin/app/controllers/admin/email_controller.rb
+    - packs/admin/app/controllers/admin/groups_controller.rb
+    - packs/admin/app/controllers/admin/impersonate_controller.rb
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+    - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/jobs/scheduled/invalidate_inactive_admins.rb
+  "::UserAction::REPLY":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_user_action_serializer.rb
+  "::UserAction::RESPONSE":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/serializers/admin_user_action_serializer.rb
+  "::UserAnonymizer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::UserDestroyer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::UserDestroyer::PostsExistError":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::UserField":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/user_fields_controller.rb
+  "::UserFieldOption":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/user_fields_controller.rb
+  "::UserFieldSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/user_fields_controller.rb
+  "::UserHistory":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/api_controller.rb
+    - packs/admin/app/controllers/admin/embeddable_hosts_controller.rb
+    - packs/admin/app/controllers/admin/staff_action_logs_controller.rb
+    - packs/admin/app/controllers/admin/users_controller.rb
+    - packs/admin/app/controllers/admin/web_hooks_controller.rb
+  "::UserHistorySerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/staff_action_logs_controller.rb
+  "::UserNotifications":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/email_controller.rb
+  "::UserOption":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/site_settings_controller.rb
+  "::UserSilencer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/users_controller.rb
+  "::WatchedWord":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/watched_words_controller.rb
+    - packs/admin/app/models/admin_dashboard_data.rb
+  "::WatchedWordListSerializer":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/watched_words_controller.rb
+  "::WebHook":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/web_hooks_controller.rb
+    - packs/admin/app/serializers/admin_web_hook_serializer.rb
+  "::WebHookEmitter":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/web_hooks_controller.rb
+  "::WebHookEvent":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/web_hooks_controller.rb
+  "::WebHookEventType":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/web_hooks_controller.rb
+  "::WordWatcher":
+    violations:
+    - dependency
+    files:
+    - packs/admin/app/controllers/admin/watched_words_controller.rb
+    - packs/admin/app/models/admin_dashboard_data.rb
