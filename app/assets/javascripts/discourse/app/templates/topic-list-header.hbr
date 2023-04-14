@@ -11,7 +11,7 @@
 {{#if showPosters}}
   {{raw "topic-list-header-column" order='posters' ariaLabel=(i18n "category.sort_options.posters")}}
 {{/if}}
-{{raw "topic-list-header-column" sortable=sortable number='true' order='posts' name='replies' ariaLabel=(i18n "sr_replies")}}
+{{raw "topic-list-header-column" sortable=false number='true' order='posts' name='replies' ariaLabel=(i18n "sr_replies")}}
 {{#if showLikes}}
   {{raw "topic-list-header-column" sortable=sortable number='true' order='likes' name='likes' ariaLabel=(i18n "sr_likes")}}
 {{/if}}
