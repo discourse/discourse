@@ -93,7 +93,29 @@ describe "SendPms" do
 
     before { automation.update!(trigger: DiscourseAutomation::Triggerable::RECURRING) }
 
-    it "correctly stores encrypt preference" do
+    it "correctly sets encrypt preference to false even when option is not specified" do
+      automation.upsert_field!(
+        "sendable_pms",
+        "pms",
+        {
+          value: [
+            {
+              title: "A message from %%SENDER_USERNAME%%",
+              raw: "This is a message sent to @%%RECEIVER_USERNAME%%",
+              delay: 1,
+            },
+          ],
+        },
+        target: "script",
+      )
+      automation.upsert_field!("receiver", "user", { value: Discourse.system_user.username })
+
+      automation.trigger!
+
+      expect(DiscourseAutomation::PendingPm.last.prefers_encrypt).to eq(false)
+    end
+
+    it "correctly stores encrypt preference to false" do
       automation.upsert_field!(
         "sendable_pms",
         "pms",

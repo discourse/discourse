@@ -49,7 +49,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SEND_PMS) d
           sender: sender_username,
           automation_id: automation.id,
           delay: sendable["delay"],
-          prefers_encrypt: sendable["prefers_encrypt"],
+          prefers_encrypt: !!sendable["prefers_encrypt"],
         )
       end
     end
