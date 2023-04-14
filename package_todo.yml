@@ -12,195 +12,3107 @@ packs/admin:
     - dependency
     files:
     - plugins/chat/app/controllers/chat/admin/incoming_webhooks_controller.rb
-    - spec/requests/admin/admin_controller_spec.rb
-  "::Admin::ApiController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/api_controller_spec.rb
-  "::Admin::BackupsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/backups_controller_spec.rb
-  "::Admin::BadgesController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/badges_controller_spec.rb
-  "::Admin::ColorSchemesController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/color_schemes_controller_spec.rb
-  "::Admin::DashboardController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/dashboard_controller_spec.rb
-  "::Admin::EmailController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/email_controller_spec.rb
-  "::Admin::EmailStylesController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/email_styles_controller_spec.rb
-  "::Admin::EmailTemplatesController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/email_templates_controller_spec.rb
-  "::Admin::EmbeddableHostsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/embeddable_hosts_controller_spec.rb
-  "::Admin::EmbeddingController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/embedding_controller_spec.rb
-  "::Admin::EmojisController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/emojis_controller_spec.rb
-  "::Admin::FormTemplatesController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/form_templates_controller_spec.rb
-  "::Admin::GroupsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/groups_controller_spec.rb
-  "::Admin::ImpersonateController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/impersonate_controller_spec.rb
-  "::Admin::PermalinksController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/permalinks_controller_spec.rb
-  "::Admin::PluginsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/plugins_controller_spec.rb
-  "::Admin::ReportsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/reports_controller_spec.rb
-  "::Admin::RobotsTxtController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/robots_txt_controller_spec.rb
-  "::Admin::ScreenedEmailsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/screened_emails_controller_spec.rb
-  "::Admin::ScreenedIpAddressesController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/screened_ip_addresses_controller_spec.rb
-  "::Admin::ScreenedUrlsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/screened_urls_controller_spec.rb
-  "::Admin::SearchLogsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/search_logs_spec.rb
-  "::Admin::SiteSettingsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/site_settings_controller_spec.rb
-  "::Admin::SiteTextsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/site_texts_controller_spec.rb
-  "::Admin::StaffActionLogsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/staff_action_logs_controller_spec.rb
-  "::Admin::ThemesController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/themes_controller_spec.rb
-  "::Admin::UserFieldsController":
-    violations:
-    - dependency
-    files:
-    - spec/requests/admin/user_fields_controller_spec.rb
   "::Admin::UsersController":
     violations:
     - dependency
     files:
     - plugins/poll/spec/requests/users_controller_spec.rb
-    - spec/requests/admin/users_controller_spec.rb
-  "::Admin::VersionsController":
+packs/messy_middle:
+  "::About":
     violations:
     - dependency
     files:
-    - spec/requests/admin/versions_controller_spec.rb
-  "::Admin::WatchedWordsController":
+    - lib/discourse_hub.rb
+  "::AllowedPmUser":
     violations:
     - dependency
     files:
-    - spec/requests/admin/watched_words_controller_spec.rb
-  "::Admin::WebHooksController":
+    - lib/user_comm_screener.rb
+    - plugins/chat/spec/lib/chat/direct_message_channel_creator_spec.rb
+  "::AnonymousShadowCreator":
     violations:
     - dependency
     files:
-    - spec/requests/admin/web_hooks_controller_spec.rb
-  "::AdminDashboardData":
+    - plugins/discourse-narrative-bot/spec/user_spec.rb
+  "::ApiKey":
     violations:
     - dependency
     files:
-    - app/controllers/groups_controller.rb
-    - app/controllers/static_controller.rb
-    - app/jobs/scheduled/dashboard_stats.rb
-    - app/jobs/scheduled/poll_mailbox.rb
-    - app/jobs/scheduled/problem_checks.rb
-    - app/services/topic_timestamp_changer.rb
-    - spec/jobs/dashboard_stats_spec.rb
-    - spec/jobs/poll_mailbox_spec.rb
-    - spec/jobs/problem_checks_spec.rb
-    - spec/requests/admin/dashboard_controller_spec.rb
-    - spec/services/topic_timestamp_changer_spec.rb
-  "::AdminDashboardData::Problem":
+    - db/api_test_seeds.rb
+    - lib/auth/default_current_user_provider.rb
+    - lib/tasks/api.rake
+    - plugins/chat/spec/integration/custom_api_key_scopes_spec.rb
+  "::ApiKeyScope":
     violations:
     - dependency
     files:
-    - spec/jobs/problem_checks_spec.rb
-  "::AdminDetailedUserSerializer":
+    - plugins/chat/spec/integration/custom_api_key_scopes_spec.rb
+  "::ApplicationController":
     violations:
     - dependency
     files:
-    - app/jobs/regular/merge_user.rb
-  "::AdminUserActionSerializer":
+    - lib/db_helper.rb
+    - lib/middleware/discourse_public_exceptions.rb
+    - lib/plugin/instance.rb
+    - plugins/chat/app/controllers/chat/api/category_chatables_controller.rb
+    - plugins/chat/app/controllers/chat/api/hints_controller.rb
+    - plugins/chat/app/controllers/chat/base_controller.rb
+    - plugins/chat/app/controllers/chat/incoming_webhooks_controller.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/certificate_generator.rb
+    - plugins/discourse-narrative-bot/plugin.rb
+    - plugins/poll/app/controllers/polls_controller.rb
+    - plugins/styleguide/app/controllers/styleguide/styleguide_controller.rb
+  "::ApplicationHelper":
     violations:
     - dependency
     files:
-    - app/controllers/posts_controller.rb
-  "::AdminUserListSerializer":
+    - lib/content_security_policy/default.rb
+    - lib/custom_renderer.rb
+    - lib/plugin/instance.rb
+  "::ApplicationRequest":
     violations:
     - dependency
     files:
-    - app/serializers/queued_post_serializer.rb
+    - lib/middleware/request_tracker.rb
+  "::ApplicationSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/serializers/chat/admin_chat_index_serializer.rb
+    - plugins/chat/app/serializers/chat/base_channel_membership_serializer.rb
+    - plugins/chat/app/serializers/chat/channel_serializer.rb
+    - plugins/chat/app/serializers/chat/direct_message_serializer.rb
+    - plugins/chat/app/serializers/chat/in_reply_to_serializer.rb
+    - plugins/chat/app/serializers/chat/incoming_webhook_serializer.rb
+    - plugins/chat/app/serializers/chat/message_serializer.rb
+    - plugins/chat/app/serializers/chat/structured_channel_serializer.rb
+    - plugins/chat/app/serializers/chat/thread_original_message_serializer.rb
+    - plugins/chat/app/serializers/chat/thread_serializer.rb
+    - plugins/chat/app/serializers/chat/view_serializer.rb
+    - plugins/chat/app/serializers/chat/webhook_event_serializer.rb
+    - plugins/poll/app/serializers/poll_option_serializer.rb
+    - plugins/poll/app/serializers/poll_serializer.rb
+  "::AssociatedGroup":
+    violations:
+    - dependency
+    files:
+    - lib/auth/result.rb
+    - lib/guardian/group_guardian.rb
+  "::BackupFile":
+    violations:
+    - dependency
+    files:
+    - lib/backup_restore/local_backup_store.rb
+    - lib/backup_restore/s3_backup_store.rb
+  "::BackupLocationSiteSetting::LOCAL":
+    violations:
+    - dependency
+    files:
+    - lib/backup_restore/backup_store.rb
+  "::BackupLocationSiteSetting::S3":
+    violations:
+    - dependency
+    files:
+    - lib/backup_restore/backup_store.rb
+    - lib/s3_cors_rulesets.rb
+    - lib/site_settings/validations.rb
+  "::BackupMetadata":
+    violations:
+    - dependency
+    files:
+    - lib/backup_restore/backuper.rb
+    - lib/backup_restore/database_restorer.rb
+    - lib/backup_restore/uploads_restorer.rb
+  "::Badge":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20140504174212_increment_reserved_trust_level_badge_ids.rb
+    - lib/cooked_post_processor.rb
+    - lib/guardian.rb
+    - lib/promotion.rb
+    - lib/search.rb
+    - lib/svg_sprite.rb
+    - lib/tasks/groups.rake
+    - plugins/discourse-narrative-bot/autoload/jobs/onceoff/discourse_narrative_bot/grant_badges.rb
+    - plugins/discourse-narrative-bot/db/fixtures/002_badges.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/base.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
+  "::Badge::Admired":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Aficionado":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Anniversary":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+    - lib/badge_queries.rb
+  "::Badge::Appreciated":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Autobiographer":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::AutobiographerMinBioLength":
+    violations:
+    - dependency
+    files:
+    - lib/badge_queries.rb
+  "::Badge::BasicUser":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - lib/promotion.rb
+  "::Badge::Campaigner":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Champion":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::CrazyInLove":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Devotee":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Editor":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::Empathetic":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Enthusiast":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::FamousLink":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::FirstEmoji":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+    - lib/cooked_post_processor.rb
+  "::Badge::FirstFlag":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::FirstLike":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::FirstLink":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::FirstMention":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::FirstOnebox":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+    - lib/cooked_post_processor.rb
+  "::Badge::FirstQuote":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::FirstReplyByEmail":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+    - lib/cooked_post_processor.rb
+  "::Badge::FirstShare":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::GivesBack":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::GoodPost":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::GoodShare":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::GoodTopic":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::GreatPost":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::GreatShare":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::GreatTopic":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::HigherLove":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::HotLink":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::Leader":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Member":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::NewUserOfTheMonth":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::NicePost":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::NiceShare":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::NiceTopic":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::OutOfLove":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::PopularLink":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::Promoter":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::ReadGuidelines":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::Reader":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::Regular":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Respected":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::ThankYou":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Trigger::None":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Trigger::PostAction":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - lib/post_action_creator.rb
+  "::Badge::Trigger::PostRevision":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - lib/post_creator.rb
+    - lib/post_revisor.rb
+  "::Badge::Trigger::TrustLevelChange":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - lib/promotion.rb
+  "::Badge::Trigger::UserChange":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Badge::Welcome":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::Badge::WikiEditor":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - db/migrate/20230227050147_update_badge_icons.rb
+  "::BadgeGranter":
+    violations:
+    - dependency
+    files:
+    - lib/cooked_post_processor.rb
+    - lib/post_action_creator.rb
+    - lib/post_creator.rb
+    - lib/post_revisor.rb
+    - lib/promotion.rb
+    - lib/tasks/groups.rake
+    - plugins/discourse-narrative-bot/autoload/jobs/onceoff/discourse_narrative_bot/grant_badges.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/base.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
+  "::BadgeGrouping":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+    - plugins/discourse-narrative-bot/db/fixtures/002_badges.rb
+  "::BadgeGrouping::Community":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::BadgeGrouping::GettingStarted":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::BadgeGrouping::Other":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::BadgeGrouping::Posting":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::BadgeGrouping::TrustLevel":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::BadgeType":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/005_badge_types.rb
+  "::BadgeType::Bronze":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::BadgeType::Gold":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::BadgeType::Silver":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/006_badges.rb
+  "::Base":
+    violations:
+    - dependency
+    files:
+    - lib/faker/discourse.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/advanced_user_narrative.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/new_user_narrative.rb
+  "::BaseBookmarkable":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/lib/chat/message_bookmarkable.rb
+  "::BasicCategorySerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/serializers/chat/channel_serializer.rb
+  "::BasicUserSerializer":
+    violations:
+    - dependency
+    files:
+    - lib/presence_channel.rb
+    - plugins/chat/app/serializers/chat/channel_search_serializer.rb
+    - plugins/chat/app/serializers/chat/in_reply_to_serializer.rb
+    - plugins/chat/app/serializers/chat/message_serializer.rb
+    - plugins/chat/app/serializers/chat/user_channel_membership_serializer.rb
+    - plugins/chat/app/services/chat/publisher.rb
+  "::BasicUserWithStatusSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/serializers/chat/message_user_serializer.rb
+    - plugins/chat/app/serializers/chat/thread_serializer.rb
+  "::Bookmark":
+    violations:
+    - dependency
+    files:
+    - db/migrate/20191217035630_populate_topic_id_on_bookmarks.rb
+    - lib/bookmark_manager.rb
+    - lib/bookmark_query.rb
+    - lib/bookmark_reminder_notification_handler.rb
+    - lib/plugin/instance.rb
+    - lib/post_creator.rb
+    - lib/topic_view.rb
+    - plugins/chat/app/models/chat/message.rb
+    - plugins/chat/plugin.rb
+    - plugins/chat/spec/lib/chat/message_bookmarkable_spec.rb
+    - plugins/chat/spec/requests/core_ext/bookmarks_controller_spec.rb
+    - plugins/chat/spec/system/bookmark_message_spec.rb
+    - plugins/discourse-narrative-bot/plugin.rb
+  "::BookmarksController":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/requests/core_ext/bookmarks_controller_spec.rb
+  "::CategoriesController":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/requests/core_ext/categories_controller_spec.rb
+  "::CategoriesController::MIN_CATEGORIES_TOPICS":
+    violations:
+    - dependency
+    files:
+    - lib/validators/categories_topics_validator.rb
+  "::Category":
+    violations:
+    - dependency
+    files:
+    - config/initializers/014-track-setting-changes.rb
+    - db/migrate/20130221215017_add_description_to_categories.rb
+    - lib/backup_restore/restorer.rb
+    - lib/category_badge.rb
+    - lib/discourse_dev/category.rb
+    - lib/discourse_dev/topic.rb
+    - lib/email/receiver.rb
+    - lib/email/sender.rb
+    - lib/guardian.rb
+    - lib/guardian/category_guardian.rb
+    - lib/guardian/post_guardian.rb
+    - lib/guardian/topic_guardian.rb
+    - lib/import_export/base_exporter.rb
+    - lib/import_export/category_exporter.rb
+    - lib/import_export/importer.rb
+    - lib/new_post_manager.rb
+    - lib/oneboxer.rb
+    - lib/plugin/instance.rb
+    - lib/post_creator.rb
+    - lib/post_revisor.rb
+    - lib/pretty_text/helpers.rb
+    - lib/search.rb
+    - lib/seed_data/categories.rb
+    - lib/seed_data/topics.rb
+    - lib/site_settings/validations.rb
+    - lib/stylesheet/importer.rb
+    - lib/stylesheet/manager/builder.rb
+    - lib/suggested_topics_builder.rb
+    - lib/tasks/categories.rake
+    - lib/tasks/import.rake
+    - lib/tasks/search.rake
+    - lib/tasks/site.rake
+    - lib/tasks/tags.rake
+    - lib/tasks/topics.rake
+    - lib/topic_creator.rb
+    - lib/topic_query.rb
+    - lib/topics_filter.rb
+    - plugins/chat/app/controllers/chat/api/category_chatables_controller.rb
+    - plugins/chat/app/controllers/chat/api/channels_controller.rb
+    - plugins/chat/app/controllers/chat/chat_controller.rb
+    - plugins/chat/app/models/concerns/chat/chatable.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_category_updated.rb
+    - plugins/chat/lib/chat/channel_fetcher.rb
+    - plugins/chat/lib/chat/guardian_extensions.rb
+    - plugins/chat/lib/chat/seeder.rb
+    - plugins/chat/plugin.rb
+    - plugins/chat/spec/fabricators/chat_fabricator.rb
+    - plugins/chat/spec/models/category_spec.rb
+    - plugins/chat/spec/requests/core_ext/categories_controller_spec.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/advanced_user_narrative.rb
+  "::CategoryCustomField":
+    violations:
+    - dependency
+    files:
+    - lib/import_export/importer.rb
+  "::CategoryGroup":
+    violations:
+    - dependency
+    files:
+    - lib/import_export/importer.rb
+    - plugins/chat/app/controllers/chat/api/category_chatables_controller.rb
+    - plugins/chat/app/services/chat/action/calculate_memberships_for_removal.rb
+    - plugins/chat/spec/integration/auto_channel_user_removal_spec.rb
+    - plugins/chat/spec/lib/chat/channel_fetcher_spec.rb
+    - plugins/chat/spec/lib/chat/guardian_extensions_spec.rb
+    - plugins/chat/spec/plugin_spec.rb
+    - plugins/chat/spec/queries/chat/channel_memberships_query_spec.rb
+    - plugins/chat/spec/requests/chat/api/category_chatables_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_current_user_membership_spec.rb
+    - plugins/chat/spec/requests/chat_controller_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_category_updated_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_destroyed_group_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_user_removed_from_group_spec.rb
+    - plugins/chat/spec/system/create_channel_spec.rb
+  "::CategoryHashtag::SEPARATOR":
+    violations:
+    - dependency
+    files:
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/advanced_user_narrative.rb
+  "::CategoryHashtagDataSource":
+    violations:
+    - dependency
+    files:
+    - lib/post_revisor.rb
+  "::CategoryPageStyle":
+    violations:
+    - dependency
+    files:
+    - lib/wizard/builder.rb
+  "::CategoryUser":
+    violations:
+    - dependency
+    files:
+    - lib/email_controller_helper/topic_email_unsubscriber.rb
+    - lib/topic_query.rb
+  "::ColorScheme":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/600_themes.rb
+    - lib/plugin/instance.rb
+    - lib/stylesheet/importer.rb
+    - lib/stylesheet/manager.rb
+    - lib/wizard/builder.rb
+  "::ColorScheme::LIGHT_THEME_ID":
+    violations:
+    - dependency
+    files:
+    - lib/wizard/builder.rb
+  "::CurrentUserSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/plugin_spec.rb
+    - plugins/chat/spec/serializer/current_user_serializer_spec.rb
+  "::CustomEmoji":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/requests/emojis_controller_spec.rb
+    - plugins/chat/spec/serializer/chat/chat_message_serializer_spec.rb
+  "::DestroyTask":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/destroy.rake
+  "::Developer":
+    violations:
+    - dependency
+    files:
+    - lib/guardian.rb
+  "::DigestEmailSiteSetting":
+    violations:
+    - dependency
+    files:
+    - lib/email_controller_helper/digest_email_unsubscriber.rb
+  "::DirectoryColumn":
+    violations:
+    - dependency
+    files:
+    - lib/plugin/instance.rb
+  "::DirectoryItem":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/posts.rake
+  "::DiscourseVersionCheck":
+    violations:
+    - dependency
+    files:
+    - lib/discourse_updates.rb
+  "::DismissedTopicUser":
+    violations:
+    - dependency
+    files:
+    - lib/topics_bulk_action.rb
+  "::Draft":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+  "::Draft::EXISTING_TOPIC":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/import.rake
+  "::Draft::NEW_TOPIC":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+  "::DraftSequence":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+    - lib/topic_view.rb
+  "::EmailChangeRequest":
+    violations:
+    - dependency
+    files:
+    - lib/email_updater.rb
+  "::EmailController":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/requests/core_ext/email_controller_spec.rb
+  "::EmailLog":
+    violations:
+    - dependency
+    files:
+    - lib/email/message_id_service.rb
+    - lib/email/receiver.rb
+    - lib/email/sender.rb
+    - lib/tasks/emails.rake
+  "::EmailSettingsExceptionHandler":
+    violations:
+    - dependency
+    files:
+    - lib/group_email_credentials_check.rb
+  "::EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS":
+    violations:
+    - dependency
+    files:
+    - lib/group_email_credentials_check.rb
+    - lib/validators/pop3_polling_enabled_setting_validator.rb
+  "::EmailSettingsValidator":
+    violations:
+    - dependency
+    files:
+    - lib/group_email_credentials_check.rb
+    - lib/tasks/emails.rake
+    - lib/validators/pop3_polling_enabled_setting_validator.rb
+  "::EmailStyle":
+    violations:
+    - dependency
+    files:
+    - lib/email/styles.rb
+  "::EmailToken":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/009_users.rb
+    - lib/email_updater.rb
+    - lib/tasks/admin.rake
+  "::EmbeddableHost":
+    violations:
+    - dependency
+    files:
+    - lib/content_security_policy/default.rb
+    - lib/topic_retriever.rb
+  "::Emoji":
+    violations:
+    - dependency
+    files:
+    - config/initializers/014-track-setting-changes.rb
+    - lib/backup_restore/restorer.rb
+    - lib/cooked_post_processor.rb
+    - lib/excerpt_parser.rb
+    - lib/inline_oneboxer.rb
+    - lib/onebox/engine/github_issue_onebox.rb
+    - lib/plugin/instance.rb
+    - lib/pretty_text.rb
+    - lib/tasks/assets.rake
+    - lib/tasks/javascript.rake
+    - lib/upload_security.rb
+    - lib/validators/max_emojis_validator.rb
+    - plugins/chat/app/controllers/chat/emojis_controller.rb
+    - plugins/chat/app/models/chat/message.rb
+    - plugins/chat/app/serializers/chat/message_serializer.rb
+    - plugins/chat/lib/chat/message_reactor.rb
+    - plugins/chat/spec/lib/chat/message_reactor_spec.rb
+    - plugins/chat/spec/requests/chat_controller_spec.rb
+    - plugins/chat/spec/requests/emojis_controller_spec.rb
+    - plugins/chat/spec/serializer/chat/chat_message_serializer_spec.rb
+  "::Emoji::DEFAULT_GROUP":
+    violations:
+    - dependency
+    files:
+    - lib/plugin/instance.rb
+  "::Emoji::EMOJI_VERSION":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/javascript.rake
+    - plugins/poll/spec/lib/pretty_text_spec.rb
+  "::ExternalUploadManager":
+    violations:
+    - dependency
+    files:
+    - lib/external_upload_helpers.rb
+    - lib/guardian/user_guardian.rb
+  "::ExternalUploadManager::CannotPromoteError":
+    violations:
+    - dependency
+    files:
+    - lib/external_upload_helpers.rb
+  "::ExternalUploadManager::ChecksumMismatchError":
+    violations:
+    - dependency
+    files:
+    - lib/external_upload_helpers.rb
+  "::ExternalUploadManager::DownloadFailedError":
+    violations:
+    - dependency
+    files:
+    - lib/external_upload_helpers.rb
+  "::ExternalUploadManager::SizeMismatchError":
+    violations:
+    - dependency
+    files:
+    - lib/external_upload_helpers.rb
+  "::ExternalUploadStub":
+    violations:
+    - dependency
+    files:
+    - lib/external_upload_helpers.rb
+  "::ExtraLocalesController":
+    violations:
+    - dependency
+    files:
+    - config/initializers/100-i18n.rb
+  "::GivenDailyLike":
+    violations:
+    - dependency
+    files:
+    - lib/post_action_creator.rb
+    - lib/post_action_destroyer.rb
+  "::GlobalSetting":
+    violations:
+    - dependency
+    files:
+    - config/application.rb
+    - config/environments/development.rb
+    - config/environments/production.rb
+    - config/initializers/002-rails_failover.rb
+    - config/initializers/004-message_bus.rb
+    - config/initializers/005-site_settings.rb
+    - config/initializers/006-ensure_login_hint.rb
+    - config/initializers/006-mini_profiler.rb
+    - config/initializers/008-rack-cors.rb
+    - config/initializers/100-logster.rb
+    - config/initializers/100-push-notifications.rb
+    - config/initializers/100-regex-timeout.rb
+    - config/initializers/100-secret_token.rb
+    - config/initializers/100-sidekiq.rb
+    - config/initializers/200-first_middlewares.rb
+    - config/initializers/400-deprecations.rb
+    - config/initializers/assets.rb
+    - db/migrate/20211124161346_queue_internal_onebox_rebake.rb
+    - lib/auth/default_current_user_provider.rb
+    - lib/content_security_policy/default.rb
+    - lib/content_security_policy/extension.rb
+    - lib/demon/sidekiq.rb
+    - lib/discourse.rb
+    - lib/discourse_ip_info.rb
+    - lib/discourse_redis.rb
+    - lib/final_destination/resolver.rb
+    - lib/final_destination/ssrf_detector.rb
+    - lib/freedom_patches/translate_accelerator.rb
+    - lib/global_path.rb
+    - lib/guardian.rb
+    - lib/middleware/anonymous_cache.rb
+    - lib/middleware/request_tracker.rb
+    - lib/middleware/turbo_dev.rb
+    - lib/oneboxer.rb
+    - lib/pretty_text.rb
+    - lib/s3_cors_rulesets.rb
+    - lib/s3_helper.rb
+    - lib/site_setting_extension.rb
+    - lib/site_settings/validations.rb
+    - lib/stylesheet/manager/builder.rb
+    - lib/tasks/assets.rake
+    - lib/tasks/db.rake
+    - lib/tasks/plugin.rake
+    - lib/tasks/s3.rake
+    - plugins/chat/app/validators/chat/allow_uploads_validator.rb
+    - plugins/chat/db/migrate/20220802014549_disable_chat_uploads_if_secure_media_enabled.rb
+    - plugins/chat/lib/chat/secure_uploads_compatibility.rb
+    - plugins/chat/plugin.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/new_user_narrative_spec.rb
+  "::Group":
+    violations:
+    - dependency
+    files:
+    - config/initializers/004-message_bus.rb
+    - db/fixtures/002_groups.rb
+    - db/fixtures/009_users.rb
+    - lib/auth/default_current_user_provider.rb
+    - lib/backup_restore/backuper.rb
+    - lib/demon/email_sync.rb
+    - lib/discourse_dev/group.rb
+    - lib/discourse_tagging.rb
+    - lib/email/receiver.rb
+    - lib/email/sender.rb
+    - lib/group_email_credentials_check.rb
+    - lib/guardian.rb
+    - lib/import_export/base_exporter.rb
+    - lib/import_export/importer.rb
+    - lib/plugin/instance.rb
+    - lib/post_action_creator.rb
+    - lib/post_creator.rb
+    - lib/pretty_text.rb
+    - lib/promotion.rb
+    - lib/search.rb
+    - lib/spam_handler.rb
+    - lib/svg_sprite.rb
+    - lib/system_message.rb
+    - lib/tasks/groups.rake
+    - lib/tasks/site.rake
+    - lib/topic_creator.rb
+    - lib/topic_query/private_message_lists.rb
+    - lib/topic_view.rb
+    - lib/topics_bulk_action.rb
+    - lib/user_lookup.rb
+    - lib/validators/group_setting_validator.rb
+    - plugins/chat/app/controllers/chat/api/category_chatables_controller.rb
+    - plugins/chat/app/controllers/chat/api/hints_controller.rb
+    - plugins/chat/lib/chat/message_mentions.rb
+    - plugins/chat/lib/chat/review_queue.rb
+    - plugins/chat/spec/components/chat/mailer_spec.rb
+    - plugins/chat/spec/components/chat/message_creator_spec.rb
+    - plugins/chat/spec/components/chat/message_updater_spec.rb
+    - plugins/chat/spec/components/chat/seeder_spec.rb
+    - plugins/chat/spec/fabricators/chat_fabricator.rb
+    - plugins/chat/spec/integration/auto_channel_user_removal_spec.rb
+    - plugins/chat/spec/jobs/regular/chat/notify_mentioned_spec.rb
+    - plugins/chat/spec/lib/chat/channel_hashtag_data_source_spec.rb
+    - plugins/chat/spec/lib/chat/direct_message_channel_creator_spec.rb
+    - plugins/chat/spec/lib/chat/guardian_extensions_spec.rb
+    - plugins/chat/spec/lib/chat/message_reactor_spec.rb
+    - plugins/chat/spec/lib/chat/notifier_spec.rb
+    - plugins/chat/spec/lib/chat/review_queue_spec.rb
+    - plugins/chat/spec/mailers/user_notifications_spec.rb
+    - plugins/chat/spec/plugin_helper.rb
+    - plugins/chat/spec/queries/chat/channel_memberships_query_spec.rb
+    - plugins/chat/spec/requests/chat/api/category_chatables_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channel_threads_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/hints_controller_spec.rb
+    - plugins/chat/spec/requests/chat_controller_spec.rb
+    - plugins/chat/spec/requests/core_ext/latest_performance_spec.rb
+    - plugins/chat/spec/requests/direct_messages_controller_spec.rb
+    - plugins/chat/spec/serializer/chat/chat_message_serializer_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_chat_allowed_groups_change_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_destroyed_group_spec.rb
+    - plugins/chat/spec/system/create_channel_spec.rb
+    - plugins/discourse-narrative-bot/db/fixtures/001_discobot.rb
+  "::Group::ALIAS_LEVELS":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/components/chat/message_creator_spec.rb
+    - plugins/chat/spec/components/chat/message_updater_spec.rb
+    - plugins/chat/spec/lib/chat/message_mentions_spec.rb
+    - plugins/chat/spec/lib/chat/notifier_spec.rb
+    - plugins/chat/spec/requests/chat/api/hints_controller_spec.rb
+    - plugins/chat/spec/system/jit_messages_spec.rb
+    - plugins/chat/spec/system/mention_warnings_spec.rb
+    - plugins/chat/spec/system/user_menu_notifications/sidebar_spec.rb
+  "::Group::AUTO_GROUPS":
+    violations:
+    - dependency
+    files:
+    - config/initializers/100-logster.rb
+    - db/migrate/20180420141134_remove_staff_tags_setting.rb
+    - lib/discourse_tagging.rb
+    - lib/guardian/group_guardian.rb
+    - lib/guardian/tag_guardian.rb
+    - lib/import_export/base_exporter.rb
+    - lib/presence_channel.rb
+    - plugins/chat/app/controllers/chat/api/category_chatables_controller.rb
+    - plugins/chat/app/controllers/chat/api/chatables_controller.rb
+    - plugins/chat/app/models/chat/category_channel.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_chat_allowed_groups_change.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_destroyed_group.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_user_removed_from_group.rb
+    - plugins/chat/app/services/chat/publisher.rb
+    - plugins/chat/lib/chat/mailer.rb
+    - plugins/chat/spec/components/chat/mailer_spec.rb
+    - plugins/chat/spec/components/chat/message_creator_spec.rb
+    - plugins/chat/spec/components/chat/message_updater_spec.rb
+    - plugins/chat/spec/integration/auto_channel_user_removal_spec.rb
+    - plugins/chat/spec/integration/custom_api_key_scopes_spec.rb
+    - plugins/chat/spec/jobs/regular/chat/notify_watching_spec.rb
+    - plugins/chat/spec/lib/chat/channel_hashtag_data_source_spec.rb
+    - plugins/chat/spec/lib/chat/direct_message_channel_creator_spec.rb
+    - plugins/chat/spec/lib/chat/guardian_extensions_spec.rb
+    - plugins/chat/spec/models/chat/category_channel_spec.rb
+    - plugins/chat/spec/plugin_helper.rb
+    - plugins/chat/spec/plugin_spec.rb
+    - plugins/chat/spec/queries/chat/channel_memberships_query_spec.rb
+    - plugins/chat/spec/queries/chat/channel_unreads_query_spec.rb
+    - plugins/chat/spec/requests/chat/api/category_chatables_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channel_threads_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_archives_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_current_user_membership_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_current_user_notifications_settings_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_moves_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_status_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/chatables_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/current_user_channels_spec.rb
+    - plugins/chat/spec/requests/chat/api/messages_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/reads_controller_spec.rb
+    - plugins/chat/spec/requests/chat_controller_spec.rb
+    - plugins/chat/spec/requests/direct_messages_controller_spec.rb
+    - plugins/chat/spec/requests/emojis_controller_spec.rb
+    - plugins/chat/spec/serializer/chat/chat_message_serializer_spec.rb
+    - plugins/chat/spec/serializer/current_user_serializer_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_chat_allowed_groups_change_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_destroyed_group_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_user_removed_from_group_spec.rb
+    - plugins/chat/spec/system/visit_channel_spec.rb
+    - plugins/discourse-presence/plugin.rb
+    - plugins/discourse-presence/spec/integration/presence_spec.rb
+  "::GroupArchivedMessage":
+    violations:
+    - dependency
+    files:
+    - lib/imap/sync.rb
+    - lib/post_creator.rb
+    - lib/topics_bulk_action.rb
+  "::GroupMessage":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+  "::GroupUser":
+    violations:
+    - dependency
+    files:
+    - config/initializers/012-web_hook_events.rb
+    - lib/discourse_dev/post.rb
+    - lib/discourse_dev/topic.rb
+    - lib/guardian.rb
+    - lib/presence_channel.rb
+    - lib/topic_query.rb
+    - lib/topic_query/private_message_lists.rb
+    - lib/topic_view.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_user_removed_from_group.rb
+    - plugins/chat/spec/components/chat/seeder_spec.rb
+    - plugins/chat/spec/lib/chat/channel_fetcher_spec.rb
+    - plugins/chat/spec/lib/chat/channel_hashtag_data_source_spec.rb
+    - plugins/chat/spec/plugin_spec.rb
+    - plugins/chat/spec/requests/chat/api/chatables_controller_spec.rb
+    - plugins/chat/spec/requests/chat_controller_spec.rb
+  "::HasSanitizableFields":
+    violations:
+    - dependency
+    files:
+    - lib/site_setting_extension.rb
+  "::HashtagAutocompleteService":
+    violations:
+    - dependency
+    files:
+    - lib/pretty_text.rb
+    - lib/pretty_text/helpers.rb
+    - plugins/chat/lib/chat/channel_hashtag_data_source.rb
+    - plugins/chat/plugin.rb
+  "::HashtagAutocompleteService::HashtagItem":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/lib/chat/channel_hashtag_data_source.rb
+    - plugins/chat/spec/lib/chat/channel_hashtag_data_source_spec.rb
+  "::IgnoredUser":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/requests/chat_controller_spec.rb
+  "::ImapSyncLog":
+    violations:
+    - dependency
+    files:
+    - lib/demon/email_sync.rb
+    - lib/imap/providers/gmail.rb
+    - lib/imap/sync.rb
+  "::IncomingEmail":
+    violations:
+    - dependency
+    files:
+    - lib/email/cleaner.rb
+    - lib/email/message_id_service.rb
+    - lib/email/receiver.rb
+    - lib/imap/sync.rb
+    - lib/post_destroyer.rb
+    - lib/tasks/incoming_emails.rake
+  "::InlineUploads":
+    violations:
+    - dependency
+    files:
+    - lib/email/receiver.rb
+    - lib/tasks/posts.rake
+  "::Invite":
+    violations:
+    - dependency
+    files:
+    - lib/validators/email_validator.rb
+  "::ListController":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/requests/core_ext/latest_performance_spec.rb
+  "::LocaleSiteSetting":
+    violations:
+    - dependency
+    files:
+    - lib/i18n/backend/discourse_i18n.rb
+    - lib/i18n/backend/fallback_locale_list.rb
+    - lib/js_locale_helper.rb
+    - lib/site_setting_extension.rb
+    - lib/tasks/i18n.rake
+    - lib/wizard/builder.rb
+  "::NavigationMenuSiteSetting::HEADER_DROPDOWN":
+    violations:
+    - dependency
+    files:
+    - lib/wizard/step_updater.rb
+  "::NavigationMenuSiteSetting::SIDEBAR":
+    violations:
+    - dependency
+    files:
+    - lib/wizard/builder.rb
+    - lib/wizard/step_updater.rb
+  "::Notification":
+    violations:
+    - dependency
+    files:
+    - lib/post_destroyer.rb
+    - lib/tasks/javascript.rake
+    - plugins/chat/app/controllers/chat/chat_controller.rb
+    - plugins/chat/app/jobs/regular/chat/notify_mentioned.rb
+    - plugins/chat/app/jobs/regular/chat/notify_watching.rb
+    - plugins/chat/app/models/chat/mention.rb
+    - plugins/chat/app/queries/chat/channel_unreads_query.rb
+    - plugins/chat/app/services/chat/action/mark_mentions_read.rb
+    - plugins/chat/lib/chat/channel_fetcher.rb
+    - plugins/chat/lib/chat/post_notification_handler.rb
+    - plugins/chat/plugin.rb
+    - plugins/chat/spec/jobs/regular/chat/notify_mentioned_spec.rb
+    - plugins/chat/spec/jobs/regular/chat/notify_watching_spec.rb
+    - plugins/chat/spec/lib/chat/message_bookmarkable_spec.rb
+    - plugins/chat/spec/lib/chat/post_notification_handler_spec.rb
+    - plugins/chat/spec/queries/chat/channel_unreads_query_spec.rb
+    - plugins/chat/spec/requests/chat/api/reads_controller_spec.rb
+    - plugins/chat/spec/requests/chat_controller_spec.rb
+    - plugins/chat/spec/services/chat/mark_all_user_channels_read_spec.rb
+    - plugins/chat/spec/services/chat/update_user_last_read_spec.rb
+    - plugins/discourse-narrative-bot/plugin.rb
+  "::NotificationEmailer":
+    violations:
+    - dependency
+    files:
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/new_user_narrative_spec.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
+    - plugins/discourse-narrative-bot/spec/user_spec.rb
+  "::NotificationSerializer":
+    violations:
+    - dependency
+    files:
+    - config/initializers/012-web_hook_events.rb
+  "::Notifications::ConsolidationPlan":
+    violations:
+    - dependency
+    files:
+    - lib/plugin/instance.rb
+  "::OptimizedImage":
+    violations:
+    - dependency
+    files:
+    - lib/disk_space.rb
+    - lib/file_store/local_store.rb
+    - lib/file_store/s3_store.rb
+    - lib/file_store/to_s3_migration.rb
+    - lib/letter_avatar.rb
+    - lib/s3_inventory.rb
+    - lib/shrink_uploaded_image.rb
+    - lib/site_icon_manager.rb
+    - lib/tasks/avatars.rake
+    - lib/tasks/s3.rake
+    - lib/tasks/uploads.rake
+    - lib/upload_creator.rb
+  "::Permalink":
+    violations:
+    - dependency
+    files:
+    - lib/permalink_constraint.rb
+    - lib/tasks/import.rake
+  "::PluginStore":
+    violations:
+    - dependency
+    files:
+    - lib/discourse.rb
+    - plugins/discourse-narrative-bot/plugin.rb
+  "::PluginStoreRow":
+    violations:
+    - dependency
+    files:
+    - plugins/discourse-narrative-bot/autoload/jobs/onceoff/discourse_narrative_bot/grant_badges.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/store_spec.rb
+    - plugins/poll/lib/tasks/migrate_old_polls.rake
+  "::Post":
+    violations:
+    - dependency
+    files:
+    - db/migrate/20121204183855_fix_link_post_id.rb
+    - db/migrate/20131014203951_backfill_post_upload_reverse_index.rb
+    - db/migrate/20131015131652_create_post_details.rb
+    - db/migrate/20131209091702_create_post_revisions.rb
+    - db/migrate/20200707154522_fix_topic_like_count.rb
+    - lib/composer_messages_finder.rb
+    - lib/cooked_post_processor.rb
+    - lib/discourse_dev/post.rb
+    - lib/email/message_id_service.rb
+    - lib/email/receiver.rb
+    - lib/email/sender.rb
+    - lib/file_store/to_s3_migration.rb
+    - lib/filter_best_posts.rb
+    - lib/guardian/topic_guardian.rb
+    - lib/imap/sync.rb
+    - lib/inline_oneboxer.rb
+    - lib/new_post_manager.rb
+    - lib/oneboxer.rb
+    - lib/plugin/instance.rb
+    - lib/post_action_creator.rb
+    - lib/post_creator.rb
+    - lib/post_destroyer.rb
+    - lib/post_jobs_enqueuer.rb
+    - lib/post_locker.rb
+    - lib/post_revisor.rb
+    - lib/quote_comparer.rb
+    - lib/reviewable/conversation.rb
+    - lib/search.rb
+    - lib/seed_data/topics.rb
+    - lib/shrink_uploaded_image.rb
+    - lib/tasks/add_topic_to_quotes.rake
+    - lib/tasks/hashtags.rake
+    - lib/tasks/import.rake
+    - lib/tasks/posts.rake
+    - lib/tasks/search.rake
+    - lib/tasks/uploads.rake
+    - lib/tasks/users.rake
+    - lib/topic_upload_security_manager.rb
+    - lib/topic_view.rb
+    - lib/upload_recovery.rb
+    - lib/wizard/builder.rb
+    - plugins/chat/lib/chat/channel_archive_service.rb
+    - plugins/chat/lib/chat/post_notification_handler.rb
+    - plugins/chat/spec/lib/chat/post_notification_handler_spec.rb
+    - plugins/chat/spec/lib/chat/review_queue_spec.rb
+    - plugins/discourse-local-dates/spec/models/post_spec.rb
+    - plugins/discourse-narrative-bot/autoload/jobs/onceoff/discourse_narrative_bot/remap_old_bot_images.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/advanced_user_narrative.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/base.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/new_user_narrative.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/track_selector.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/advanced_user_narrative_spec.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/new_user_narrative_spec.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
+    - plugins/discourse-narrative-bot/spec/user_spec.rb
+    - plugins/discourse-presence/plugin.rb
+    - plugins/poll/app/controllers/polls_controller.rb
+    - plugins/poll/app/models/poll.rb
+    - plugins/poll/lib/poll.rb
+    - plugins/poll/lib/tasks/migrate_old_polls.rake
+    - plugins/poll/plugin.rb
+  "::Post::BAKED_VERSION":
+    violations:
+    - dependency
+    files:
+    - lib/file_store/to_s3_migration.rb
+    - lib/tasks/posts.rake
+  "::Post::MISSING_UPLOADS":
+    violations:
+    - dependency
+    files:
+    - lib/file_store/to_s3_migration.rb
+    - lib/tasks/posts.rake
+  "::Post::MISSING_UPLOADS_IGNORED":
+    violations:
+    - dependency
+    files:
+    - lib/file_store/to_s3_migration.rb
+    - lib/tasks/posts.rake
+  "::Post::NOTICE":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+    - lib/topic_view.rb
+  "::Post::PERMANENT_DELETE_TIMER":
+    violations:
+    - dependency
+    files:
+    - lib/guardian/post_guardian.rb
+    - lib/guardian/topic_guardian.rb
+  "::PostAction":
+    violations:
+    - dependency
+    files:
+    - lib/filter_best_posts.rb
+    - lib/post_action_creator.rb
+    - lib/post_action_destroyer.rb
+    - lib/post_destroyer.rb
+    - lib/tasks/posts.rake
+    - lib/topic_view.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/new_user_narrative.rb
+    - plugins/discourse-narrative-bot/plugin.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/new_user_narrative_spec.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
+  "::PostActionNotifier":
+    violations:
+    - dependency
+    files:
+    - lib/plugin/instance.rb
+    - lib/post_action_creator.rb
+    - lib/post_action_destroyer.rb
+    - lib/post_revisor.rb
+  "::PostActionType":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/003_post_action_types.rb
+    - db/migrate/20181031165343_add_flag_stats_to_user.rb
+    - lib/badge_queries.rb
+    - lib/discourse_dev/post.rb
+    - lib/email/receiver.rb
+    - lib/filter_best_posts.rb
+    - lib/guardian/post_guardian.rb
+    - lib/plugin/instance.rb
+    - lib/post_action_creator.rb
+    - lib/post_action_destroyer.rb
+    - lib/post_destroyer.rb
+    - lib/post_revisor.rb
+    - lib/search.rb
+    - lib/tasks/posts.rake
+    - lib/topic_query.rb
+    - lib/topic_view.rb
+    - plugins/chat/app/serializers/chat/message_serializer.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/new_user_narrative.rb
+    - plugins/discourse-narrative-bot/plugin.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/new_user_narrative_spec.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
+  "::PostAlerter":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/jobs/regular/chat/notify_mentioned.rb
+    - plugins/chat/app/jobs/regular/chat/notify_watching.rb
+    - plugins/chat/lib/chat/post_notification_handler.rb
+    - plugins/chat/spec/components/chat/message_creator_spec.rb
+    - plugins/chat/spec/jobs/regular/chat/notify_mentioned_spec.rb
+    - plugins/chat/spec/jobs/regular/chat/notify_watching_spec.rb
+  "::PostAnalyzer":
+    violations:
+    - dependency
+    files:
+    - lib/upload_recovery.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/track_selector.rb
+  "::PostCustomField":
+    violations:
+    - dependency
+    files:
+    - lib/import_export/importer.rb
+    - lib/tasks/posts.rake
+    - plugins/poll/db/migrate/20150501152228_rename_total_votes_to_voters.rb
+    - plugins/poll/db/migrate/20151016163051_merge_polls_votes.rb
+    - plugins/poll/db/migrate/20160321164925_close_polls_in_closed_topics.rb
+  "::PostHotlinkedMedia":
+    violations:
+    - dependency
+    files:
+    - lib/cooked_post_processor.rb
+  "::PostOwnerChanger":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/users.rake
+  "::PostReply":
+    violations:
+    - dependency
+    files:
+    - lib/post_destroyer.rb
+  "::PostReplyKey":
+    violations:
+    - dependency
+    files:
+    - lib/email/receiver.rb
+    - lib/email/sender.rb
+  "::PostRevision":
+    violations:
+    - dependency
+    files:
+    - lib/discourse_dev/post_revision.rb
+    - lib/post_revisor.rb
+    - lib/tasks/revisions.rake
+  "::PostRevisionSerializer":
+    violations:
+    - dependency
+    files:
+    - lib/post_revisor.rb
+  "::PostTiming":
+    violations:
+    - dependency
+    files:
+    - lib/email/receiver.rb
+    - lib/post_creator.rb
+    - lib/topic_view.rb
+    - lib/topics_bulk_action.rb
+  "::PostsController":
+    violations:
+    - dependency
+    files:
+    - plugins/poll/spec/controllers/posts_controller_spec.rb
+    - plugins/poll/spec/requests/posts_controller_spec.rb
+  "::PresenceChannelStateSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/serializers/chat/channel_index_serializer.rb
+  "::PrivateMessageTopicTrackingState":
+    violations:
+    - dependency
+    files:
+    - lib/post_jobs_enqueuer.rb
+  "::PublishedPage":
+    violations:
+    - dependency
+    files:
+    - lib/post_destroyer.rb
+  "::PushNotificationPusher":
+    violations:
+    - dependency
+    files:
+    - config/initializers/100-push-notifications.rb
+  "::PushSubscription":
+    violations:
+    - dependency
+    files:
+    - config/initializers/100-push-notifications.rb
+  "::QuotedPost":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+    - lib/post_revisor.rb
+  "::RandomTopicSelector":
+    violations:
+    - dependency
+    files:
+    - lib/topic_query.rb
+  "::RegisteredBookmarkable":
+    violations:
+    - dependency
+    files:
+    - lib/plugin/instance.rb
+    - plugins/chat/spec/lib/chat/message_bookmarkable_spec.rb
+  "::RejectionMailer":
+    violations:
+    - dependency
+    files:
+    - lib/email/processor.rb
+    - lib/email/receiver.rb
+  "::RemoteTheme":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/site.rake
+    - lib/tasks/themes.rake
+  "::RemoteTheme::ImportError":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/themes.rake
+    - lib/theme_store/git_importer.rb
+    - lib/theme_store/zip_importer.rb
+  "::Report":
+    violations:
+    - dependency
+    files:
+    - config/initializers/014-track-setting-changes.rb
+    - lib/backup_restore/backup_store.rb
+    - lib/plugin/instance.rb
+  "::Reviewable":
+    violations:
+    - dependency
+    files:
+    - config/initializers/014-track-setting-changes.rb
+    - db/migrate/20200311135425_clear_approved_users_from_the_review_queue.rb
+    - lib/guardian/user_guardian.rb
+    - lib/plugin/instance.rb
+    - lib/post_action_creator.rb
+    - lib/post_destroyer.rb
+    - lib/reviewable/actions.rb
+    - lib/reviewable/collection.rb
+    - lib/reviewable/conversation.rb
+    - lib/reviewable/editable_fields.rb
+    - lib/reviewable/perform_result.rb
+    - plugins/chat/app/models/chat/reviewable_message.rb
+    - plugins/chat/lib/chat/review_queue.rb
+    - plugins/chat/plugin.rb
+  "::ReviewableFlaggedPost":
+    violations:
+    - dependency
+    files:
+    - lib/post_action_creator.rb
+  "::ReviewablePost":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+    - lib/post_revisor.rb
+  "::ReviewableQueuedPost":
+    violations:
+    - dependency
+    files:
+    - db/migrate/20211019152356_populate_pending_posts_count_column.rb
+    - lib/new_post_manager.rb
+    - lib/topic_view.rb
+  "::ReviewableScore":
+    violations:
+    - dependency
+    files:
+    - lib/new_post_manager.rb
+    - lib/plugin/instance.rb
+    - lib/topic_view.rb
+    - plugins/chat/app/controllers/chat/chat_controller.rb
+    - plugins/chat/app/models/chat/view.rb
+    - plugins/chat/app/serializers/chat/message_serializer.rb
+    - plugins/chat/lib/chat/guardian_extensions.rb
+    - plugins/chat/lib/chat/review_queue.rb
+    - plugins/chat/plugin.rb
+    - plugins/chat/spec/lib/chat/review_queue_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_moves_controller_spec.rb
+    - plugins/chat/spec/requests/chat_controller_spec.rb
+    - plugins/chat/spec/serializer/chat/chat_message_serializer_spec.rb
+    - plugins/chat/spec/services/chat/message_destroyer_spec.rb
+  "::ReviewableSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/serializers/chat/reviewable_message_serializer.rb
+  "::ScreenedEmail":
+    violations:
+    - dependency
+    files:
+    - lib/email/receiver.rb
+    - lib/validators/email_validator.rb
+  "::ScreenedIpAddress":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/004_screened_ip_addresses.rb
+    - lib/spam_handler.rb
+    - lib/validators/allowed_ip_address_validator.rb
+  "::SearchIndexer":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/search.rake
+    - plugins/chat/spec/lib/chat/message_bookmarkable_spec.rb
+    - plugins/poll/spec/lib/search_spec.rb
+  "::SearchIndexer::HtmlScrubber":
+    violations:
+    - dependency
+    files:
+    - lib/search/grouped_search_results.rb
+  "::SearchIndexer::MIN_POST_BLURB_INDEX_VERSION":
+    violations:
+    - dependency
+    files:
+    - lib/search/grouped_search_results.rb
+  "::SearchLog":
+    violations:
+    - dependency
+    files:
+    - lib/search.rb
+  "::Searchable::PRIORITIES":
+    violations:
+    - dependency
+    files:
+    - lib/search.rb
+    - lib/tasks/javascript.rake
+  "::SharedDraft":
+    violations:
+    - dependency
+    files:
+    - lib/topic_creator.rb
+    - lib/topic_publisher.rb
+    - lib/topic_query.rb
+  "::SidebarSection::MAX_TITLE_LENGTH":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/javascript.rake
+  "::SidebarUrl::MAX_ICON_LENGTH":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/javascript.rake
+  "::SidebarUrl::MAX_NAME_LENGTH":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/javascript.rake
+  "::SidebarUrl::MAX_VALUE_LENGTH":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/javascript.rake
+  "::SingleSignOnRecord":
+    violations:
+    - dependency
+    files:
+    - lib/auth/default_current_user_provider.rb
+  "::Site":
+    violations:
+    - dependency
+    files:
+    - lib/discourse.rb
+    - lib/plugin/instance.rb
+    - lib/post_revisor.rb
+    - lib/pretty_text.rb
+    - lib/site_setting_extension.rb
+    - lib/topic_query_params.rb
+    - plugins/chat/plugin.rb
+  "::SiteSetting":
+    violations:
+    - dependency
+    files:
+    - config/environments/test.rb
+    - config/initializers/002-rails_failover.rb
+    - config/initializers/004-message_bus.rb
+    - config/initializers/005-site_settings.rb
+    - config/initializers/006-ensure_login_hint.rb
+    - config/initializers/008-rack-cors.rb
+    - config/initializers/014-track-setting-changes.rb
+    - config/initializers/100-logster.rb
+    - config/initializers/100-onebox_options.rb
+    - config/initializers/100-push-notifications.rb
+    - config/initializers/100-session_store.rb
+    - config/initializers/101-lograge.rb
+    - db/fixtures/001_refresh.rb
+    - db/fixtures/600_themes.rb
+    - db/fixtures/990_settings.rb
+    - db/migrate/20130621042855_change_supress_to_suppress.rb
+    - db/migrate/20130625170842_remove_access_password.rb
+    - db/migrate/20131014203951_backfill_post_upload_reverse_index.rb
+    - db/migrate/20140211230222_move_cas_settings.rb
+    - db/migrate/20190304170931_migrate_uncategorized_category_name.rb
+    - db/migrate/20200409033412_create_bookmarks_from_post_action_bookmarks.rb
+    - db/migrate/20210201034048_move_category_last_seen_at_to_new_table.rb
+    - db/migrate/20210218022739_move_new_since_to_new_table_again.rb
+    - lib/action_dispatch/session/discourse_cookie_store.rb
+    - lib/auth/default_current_user_provider.rb
+    - lib/auth/discord_authenticator.rb
+    - lib/auth/facebook_authenticator.rb
+    - lib/auth/github_authenticator.rb
+    - lib/auth/google_oauth2_authenticator.rb
+    - lib/auth/managed_authenticator.rb
+    - lib/auth/result.rb
+    - lib/auth/twitter_authenticator.rb
+    - lib/backup_restore.rb
+    - lib/backup_restore/backup_file_handler.rb
+    - lib/backup_restore/backup_store.rb
+    - lib/backup_restore/backuper.rb
+    - lib/backup_restore/restorer.rb
+    - lib/backup_restore/s3_backup_store.rb
+    - lib/category_badge.rb
+    - lib/composer_messages_finder.rb
+    - lib/configurable_urls.rb
+    - lib/content_security_policy/default.rb
+    - lib/content_security_policy/extension.rb
+    - lib/content_security_policy/middleware.rb
+    - lib/cooked_post_processor.rb
+    - lib/cooked_processor_mixin.rb
+    - lib/crawler_detection.rb
+    - lib/db_helper.rb
+    - lib/demon/email_sync.rb
+    - lib/discourse.rb
+    - lib/discourse_connect_provider.rb
+    - lib/discourse_dev/config.rb
+    - lib/discourse_dev/tag.rb
+    - lib/discourse_dev/topic.rb
+    - lib/discourse_hub.rb
+    - lib/discourse_tagging.rb
+    - lib/discourse_updates.rb
+    - lib/edit_rate_limiter.rb
+    - lib/email.rb
+    - lib/email/authentication_results.rb
+    - lib/email/cleaner.rb
+    - lib/email/message_builder.rb
+    - lib/email/processor.rb
+    - lib/email/receiver.rb
+    - lib/email/sender.rb
+    - lib/email/styles.rb
+    - lib/email_controller_helper/digest_email_unsubscriber.rb
+    - lib/email_updater.rb
+    - lib/external_upload_helpers.rb
+    - lib/faker/discourse_markdown.rb
+    - lib/file_helper.rb
+    - lib/file_store/base_store.rb
+    - lib/file_store/local_store.rb
+    - lib/file_store/s3_store.rb
+    - lib/file_store/to_s3_migration.rb
+    - lib/final_destination/ssrf_detector.rb
+    - lib/global_path.rb
+    - lib/group_email_credentials_check.rb
+    - lib/guardian.rb
+    - lib/guardian/category_guardian.rb
+    - lib/guardian/group_guardian.rb
+    - lib/guardian/post_guardian.rb
+    - lib/guardian/post_revision_guardian.rb
+    - lib/guardian/tag_guardian.rb
+    - lib/guardian/topic_guardian.rb
+    - lib/guardian/user_guardian.rb
+    - lib/highlight_js.rb
+    - lib/homepage_constraint.rb
+    - lib/html_to_markdown.rb
+    - lib/http_language_parser.rb
+    - lib/image_sizer.rb
+    - lib/imap/providers/generic.rb
+    - lib/imap/sync.rb
+    - lib/import_export/importer.rb
+    - lib/inline_oneboxer.rb
+    - lib/middleware/omniauth_bypass_middleware.rb
+    - lib/middleware/request_tracker.rb
+    - lib/mobile_detection.rb
+    - lib/new_post_manager.rb
+    - lib/onebox/domain_checker.rb
+    - lib/onebox/engine/allowlisted_generic_onebox.rb
+    - lib/onebox/engine/audio_onebox.rb
+    - lib/onebox/engine/video_onebox.rb
+    - lib/oneboxer.rb
+    - lib/plugin/instance.rb
+    - lib/post_action_creator.rb
+    - lib/post_creator.rb
+    - lib/post_destroyer.rb
+    - lib/post_jobs_enqueuer.rb
+    - lib/post_merger.rb
+    - lib/post_revisor.rb
+    - lib/pretty_text.rb
+    - lib/pretty_text/helpers.rb
+    - lib/promotion.rb
+    - lib/rate_limiter/on_create_record.rb
+    - lib/rtl.rb
+    - lib/s3_cors_rulesets.rb
+    - lib/s3_helper.rb
+    - lib/s3_inventory.rb
+    - lib/score_calculator.rb
+    - lib/search.rb
+    - lib/search/grouped_search_results.rb
+    - lib/second_factor/actions/discourse_connect_provider.rb
+    - lib/seed_data/categories.rb
+    - lib/seed_data/topics.rb
+    - lib/shrink_uploaded_image.rb
+    - lib/site_icon_manager.rb
+    - lib/site_setting_extension.rb
+    - lib/site_settings/defaults_provider.rb
+    - lib/site_settings/deprecated_settings.rb
+    - lib/site_settings/validations.rb
+    - lib/slug.rb
+    - lib/spam_handler.rb
+    - lib/stylesheet/importer.rb
+    - lib/stylesheet/manager.rb
+    - lib/stylesheet/manager/builder.rb
+    - lib/suggested_topics_builder.rb
+    - lib/svg_sprite.rb
+    - lib/system_message.rb
+    - lib/tasks/admin.rake
+    - lib/tasks/annotate.rake
+    - lib/tasks/assets.rake
+    - lib/tasks/db.rake
+    - lib/tasks/emails.rake
+    - lib/tasks/import.rake
+    - lib/tasks/posts.rake
+    - lib/tasks/site.rake
+    - lib/tasks/topics.rake
+    - lib/tasks/uploads.rake
+    - lib/text_cleaner.rb
+    - lib/text_sentinel.rb
+    - lib/theme_settings_parser.rb
+    - lib/theme_store/zip_importer.rb
+    - lib/topic_creator.rb
+    - lib/topic_query.rb
+    - lib/topic_query/private_message_lists.rb
+    - lib/topic_query_params.rb
+    - lib/topic_retriever.rb
+    - lib/topic_upload_security_manager.rb
+    - lib/topic_view.rb
+    - lib/topics_bulk_action.rb
+    - lib/topics_filter.rb
+    - lib/trust_level.rb
+    - lib/twitter_api.rb
+    - lib/upload_creator.rb
+    - lib/upload_recovery.rb
+    - lib/upload_security.rb
+    - lib/url_helper.rb
+    - lib/user_name_suggester.rb
+    - lib/validators/allow_user_locale_enabled_validator.rb
+    - lib/validators/default_composer_category_validator.rb
+    - lib/validators/delete_rejected_email_after_days_validator.rb
+    - lib/validators/email_validator.rb
+    - lib/validators/enable_local_logins_via_email_validator.rb
+    - lib/validators/enable_private_email_messages_validator.rb
+    - lib/validators/enable_sso_validator.rb
+    - lib/validators/external_system_avatars_validator.rb
+    - lib/validators/google_oauth2_hd_groups_validator.rb
+    - lib/validators/max_emojis_validator.rb
+    - lib/validators/max_username_length_validator.rb
+    - lib/validators/min_username_length_validator.rb
+    - lib/validators/password_validator.rb
+    - lib/validators/pop3_polling_enabled_setting_validator.rb
+    - lib/validators/post_validator.rb
+    - lib/validators/reply_by_email_address_validator.rb
+    - lib/validators/reply_by_email_enabled_validator.rb
+    - lib/validators/search_tokenize_chinese_validator.rb
+    - lib/validators/search_tokenize_japanese_validator.rb
+    - lib/validators/selectable_avatars_mode_validator.rb
+    - lib/validators/sso_overrides_email_validator.rb
+    - lib/validators/topic_title_length_validator.rb
+    - lib/validators/unicode_username_validator.rb
+    - lib/validators/upload_validator.rb
+    - lib/validators/user_full_name_validator.rb
+    - lib/webauthn/challenge_generator.rb
+    - lib/wizard.rb
+    - lib/wizard/builder.rb
+    - lib/wizard/step_updater.rb
+    - plugins/chat/app/controllers/chat/api/channels_controller.rb
+    - plugins/chat/app/controllers/chat/api/chatables_controller.rb
+    - plugins/chat/app/controllers/chat/api/hints_controller.rb
+    - plugins/chat/app/controllers/chat/api_controller.rb
+    - plugins/chat/app/controllers/chat/base_controller.rb
+    - plugins/chat/app/controllers/chat/chat_controller.rb
+    - plugins/chat/app/controllers/chat/incoming_webhooks_controller.rb
+    - plugins/chat/app/jobs/regular/chat/auto_join_channel_memberships.rb
+    - plugins/chat/app/jobs/scheduled/chat/delete_old_messages.rb
+    - plugins/chat/app/jobs/scheduled/chat/email_notifications.rb
+    - plugins/chat/app/models/chat/category_channel.rb
+    - plugins/chat/app/models/chat/channel.rb
+    - plugins/chat/app/models/chat/draft.rb
+    - plugins/chat/app/models/chat/message.rb
+    - plugins/chat/app/models/chat/reviewable_message.rb
+    - plugins/chat/app/queries/chat/channel_memberships_query.rb
+    - plugins/chat/app/serializers/chat/channel_serializer.rb
+    - plugins/chat/app/serializers/chat/message_serializer.rb
+    - plugins/chat/app/serializers/chat/user_with_custom_fields_and_status_serializer.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_category_updated.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_chat_allowed_groups_change.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_destroyed_group.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_user_removed_from_group.rb
+    - plugins/chat/app/services/chat/lookup_thread.rb
+    - plugins/chat/app/services/chat/trash_channel.rb
+    - plugins/chat/app/validators/chat/allow_uploads_validator.rb
+    - plugins/chat/app/views/user_notifications/chat_summary.html.erb
+    - plugins/chat/db/post_migrate/20220701195731_convert_chatable_topics_to_categories.rb
+    - plugins/chat/lib/chat/channel_archive_service.rb
+    - plugins/chat/lib/chat/channel_fetcher.rb
+    - plugins/chat/lib/chat/channel_hashtag_data_source.rb
+    - plugins/chat/lib/chat/direct_message_channel_creator.rb
+    - plugins/chat/lib/chat/duplicate_message_validator.rb
+    - plugins/chat/lib/chat/engine.rb
+    - plugins/chat/lib/chat/guardian_extensions.rb
+    - plugins/chat/lib/chat/mailer.rb
+    - plugins/chat/lib/chat/message_creator.rb
+    - plugins/chat/lib/chat/message_rate_limiter.rb
+    - plugins/chat/lib/chat/message_updater.rb
+    - plugins/chat/lib/chat/notifier.rb
+    - plugins/chat/lib/chat/review_queue.rb
+    - plugins/chat/lib/chat/secure_uploads_compatibility.rb
+    - plugins/chat/lib/chat/seeder.rb
+    - plugins/chat/lib/chat/user_notifications_extension.rb
+    - plugins/chat/plugin.rb
+    - plugins/chat/spec/components/chat/mailer_spec.rb
+    - plugins/chat/spec/components/chat/message_creator_spec.rb
+    - plugins/chat/spec/components/chat/message_rate_limiter_spec.rb
+    - plugins/chat/spec/components/chat/message_updater_spec.rb
+    - plugins/chat/spec/components/chat/seeder_spec.rb
+    - plugins/chat/spec/integration/auto_channel_user_removal_spec.rb
+    - plugins/chat/spec/integration/custom_api_key_scopes_spec.rb
+    - plugins/chat/spec/integration/plugin_api_spec.rb
+    - plugins/chat/spec/integration/post_chat_quote_spec.rb
+    - plugins/chat/spec/jobs/regular/chat/auto_join_channel_memberships_spec.rb
+    - plugins/chat/spec/jobs/regular/chat/notify_watching_spec.rb
+    - plugins/chat/spec/jobs/scheduled/delete_old_chat_messages_spec.rb
+    - plugins/chat/spec/jobs/scheduled/email_notifications_spec.rb
+    - plugins/chat/spec/lib/chat/channel_archive_service_spec.rb
+    - plugins/chat/spec/lib/chat/channel_hashtag_data_source_spec.rb
+    - plugins/chat/spec/lib/chat/direct_message_channel_creator_spec.rb
+    - plugins/chat/spec/lib/chat/duplicate_message_validator_spec.rb
+    - plugins/chat/spec/lib/chat/guardian_extensions_spec.rb
+    - plugins/chat/spec/lib/chat/notifier_spec.rb
+    - plugins/chat/spec/lib/chat/review_queue_spec.rb
+    - plugins/chat/spec/lib/chat/transcript_service_spec.rb
+    - plugins/chat/spec/mailers/user_notifications_spec.rb
+    - plugins/chat/spec/models/chat/category_channel_spec.rb
+    - plugins/chat/spec/models/chat/draft_spec.rb
+    - plugins/chat/spec/models/chat/message_spec.rb
+    - plugins/chat/spec/plugin_helper.rb
+    - plugins/chat/spec/plugin_spec.rb
+    - plugins/chat/spec/queries/chat/channel_memberships_query_spec.rb
+    - plugins/chat/spec/queries/chat/channel_unreads_query_spec.rb
+    - plugins/chat/spec/requests/chat/admin/incoming_webhooks_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channel_threads_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_archives_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_current_user_membership_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_current_user_notifications_settings_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_moves_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_status_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/chatables_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/current_user_channels_spec.rb
+    - plugins/chat/spec/requests/chat/api/hints_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/messages_controller_spec.rb
+    - plugins/chat/spec/requests/chat/api/reads_controller_spec.rb
+    - plugins/chat/spec/requests/chat/incoming_webhooks_controller_spec.rb
+    - plugins/chat/spec/requests/chat_controller_spec.rb
+    - plugins/chat/spec/requests/core_ext/email_controller_spec.rb
+    - plugins/chat/spec/requests/core_ext/latest_performance_spec.rb
+    - plugins/chat/spec/requests/core_ext/users_controller_spec.rb
+    - plugins/chat/spec/requests/direct_messages_controller_spec.rb
+    - plugins/chat/spec/requests/emojis_controller_spec.rb
+    - plugins/chat/spec/serializer/chat/chat_message_serializer_spec.rb
+    - plugins/chat/spec/serializer/current_user_serializer_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_category_updated_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_chat_allowed_groups_change_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_destroyed_group_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_user_removed_from_group_spec.rb
+    - plugins/chat/spec/services/chat/lookup_thread_spec.rb
+    - plugins/chat/spec/support/examples/chat_channel_model.rb
+    - plugins/chat/spec/system/archive_channel_spec.rb
+    - plugins/chat/spec/system/browse_page_spec.rb
+    - plugins/chat/spec/system/channel_members_page_spec.rb
+    - plugins/chat/spec/system/channel_settings_page_spec.rb
+    - plugins/chat/spec/system/channel_thread_message_echoing_spec.rb
+    - plugins/chat/spec/system/hashtag_autocomplete_spec.rb
+    - plugins/chat/spec/system/kick_user_from_channel_spec.rb
+    - plugins/chat/spec/system/list_channels/mobile_spec.rb
+    - plugins/chat/spec/system/list_channels/no_sidebar_spec.rb
+    - plugins/chat/spec/system/list_channels/sidebar_spec.rb
+    - plugins/chat/spec/system/mention_warnings_spec.rb
+    - plugins/chat/spec/system/message_errors_spec.rb
+    - plugins/chat/spec/system/message_notifications_mobile_spec.rb
+    - plugins/chat/spec/system/message_notifications_with_sidebar_spec.rb
+    - plugins/chat/spec/system/message_thread_indicator_spec.rb
+    - plugins/chat/spec/system/move_message_to_channel_spec.rb
+    - plugins/chat/spec/system/navigation_spec.rb
+    - plugins/chat/spec/system/shortcuts/mark_all_read_spec.rb
+    - plugins/chat/spec/system/shortcuts/sidebar_spec.rb
+    - plugins/chat/spec/system/sidebar_navigation_menu_spec.rb
+    - plugins/chat/spec/system/sidebars_spec.rb
+    - plugins/chat/spec/system/single_thread_spec.rb
+    - plugins/chat/spec/system/unfollow_dm_channel_spec.rb
+    - plugins/chat/spec/system/uploads_spec.rb
+    - plugins/chat/spec/system/user_card_spec.rb
+    - plugins/chat/spec/system/user_chat_preferences_spec.rb
+    - plugins/chat/spec/system/user_menu_notifications/sidebar_spec.rb
+    - plugins/chat/spec/system/user_status/sidebar_spec.rb
+    - plugins/chat/spec/system/visit_channel_spec.rb
+    - plugins/chat/spec/validators/chat_allow_uploads_validator_spec.rb
+    - plugins/discourse-lazy-videos/lib/lazy-videos/lazy_tiktok.rb
+    - plugins/discourse-lazy-videos/lib/lazy-videos/lazy_vimeo.rb
+    - plugins/discourse-lazy-videos/lib/lazy-videos/lazy_youtube.rb
+    - plugins/discourse-local-dates/spec/lib/pretty_text_spec.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/actions.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/advanced_user_narrative.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/base.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/certificate_generator.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/new_user_narrative.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/track_selector.rb
+    - plugins/discourse-narrative-bot/plugin.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/advanced_user_narrative_spec.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/new_user_narrative_spec.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
+    - plugins/discourse-narrative-bot/spec/jobs/send_default_welcome_message_spec.rb
+    - plugins/discourse-narrative-bot/spec/lib/certificate_generator_spec.rb
+    - plugins/discourse-narrative-bot/spec/requests/discobot_certificate_spec.rb
+    - plugins/discourse-narrative-bot/spec/requests/discobot_welcome_post_spec.rb
+    - plugins/discourse-narrative-bot/spec/user_spec.rb
+    - plugins/discourse-presence/plugin.rb
+    - plugins/discourse-presence/spec/integration/presence_spec.rb
+    - plugins/poll/lib/poll.rb
+    - plugins/poll/lib/polls_updater.rb
+    - plugins/poll/lib/polls_validator.rb
+    - plugins/poll/lib/post_validator.rb
+    - plugins/poll/lib/tasks/migrate_old_polls.rake
+    - plugins/poll/plugin.rb
+    - plugins/poll/spec/controllers/posts_controller_spec.rb
+    - plugins/poll/spec/integration/poll_endpoints_spec.rb
+    - plugins/poll/spec/lib/new_post_manager_spec.rb
+    - plugins/poll/spec/lib/polls_updater_spec.rb
+    - plugins/poll/spec/lib/polls_validator_spec.rb
+    - plugins/poll/spec/lib/pretty_text_spec.rb
+    - plugins/poll/spec/lib/search_spec.rb
+    - plugins/styleguide/app/controllers/styleguide/styleguide_controller.rb
+    - plugins/styleguide/spec/integration/access_spec.rb
+    - plugins/styleguide/spec/integration/assets_spec.rb
+  "::SiteSetting::ALLOWLIST_DEPRECATED_SITE_SETTINGS":
+    violations:
+    - dependency
+    files:
+    - db/migrate/20200709032247_allowlist_and_blocklist_site_settings.rb
+    - db/migrate/20200724060632_remove_deprecated_allowlist_settings.rb
+  "::SiteSetting::Upload":
+    violations:
+    - dependency
+    files:
+    - lib/backup_restore/uploads_restorer.rb
+  "::SiteSettingsTask":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/site_settings.rake
+  "::SkippedEmailLog":
+    violations:
+    - dependency
+    files:
+    - lib/email/sender.rb
+    - lib/tasks/emails.rake
+  "::SpamRule::AutoSilence":
+    violations:
+    - dependency
+    files:
+    - lib/guardian/post_guardian.rb
+    - lib/post_action_creator.rb
+    - plugins/chat/lib/chat/guardian_extensions.rb
+    - plugins/chat/spec/lib/chat/message_reactor_spec.rb
+  "::SpamRule::FlagSockpuppets":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+  "::SplashScreenHelper":
+    violations:
+    - dependency
+    files:
+    - lib/content_security_policy/default.rb
+  "::StaffActionLogger":
+    violations:
+    - dependency
+    files:
+    - lib/admin_confirmation.rb
+    - lib/email/receiver.rb
+    - lib/email_updater.rb
+    - lib/post_destroyer.rb
+    - lib/post_locker.rb
+    - lib/post_revisor.rb
+    - lib/promotion.rb
+    - lib/second_factor/actions/grant_admin.rb
+    - lib/site_setting_extension.rb
+    - lib/topic_publisher.rb
+    - lib/topic_view.rb
+    - lib/wizard/step_updater.rb
+    - plugins/chat/app/models/chat/channel.rb
+    - plugins/chat/app/services/chat/action/publish_auto_removed_user.rb
+    - plugins/chat/app/services/chat/trash_channel.rb
+    - plugins/chat/lib/chat/secure_uploads_compatibility.rb
+  "::StaticController::CUSTOM_PAGES":
+    violations:
+    - dependency
+    files:
+    - lib/plugin/instance.rb
+  "::StylesheetCache":
+    violations:
+    - dependency
+    files:
+    - lib/stylesheet/manager/builder.rb
+  "::SubscriptionMailer":
+    violations:
+    - dependency
+    files:
+    - lib/email/receiver.rb
+  "::Tag":
+    violations:
+    - dependency
+    files:
+    - lib/discourse_dev/tag.rb
+    - lib/discourse_tagging.rb
+    - lib/pretty_text/helpers.rb
+    - lib/search.rb
+    - lib/tasks/import.rake
+    - lib/tasks/search.rake
+    - lib/tasks/site.rake
+    - lib/topic_creator.rb
+    - lib/topic_query.rb
+    - lib/topic_view.rb
+    - lib/topics_filter.rb
+  "::TagGroup":
+    violations:
+    - dependency
+    files:
+    - lib/search.rb
+    - lib/tasks/site.rake
+  "::TagGroupMembership":
+    violations:
+    - dependency
+    files:
+    - lib/discourse_tagging.rb
+  "::TagGroupPermission":
+    violations:
+    - dependency
+    files:
+    - db/migrate/20180420141134_remove_staff_tags_setting.rb
+    - lib/discourse_tagging.rb
+  "::TagSerializer":
+    violations:
+    - dependency
+    files:
+    - config/initializers/012-web_hook_events.rb
+  "::TagUser":
+    violations:
+    - dependency
+    files:
+    - lib/discourse_tagging.rb
+    - lib/topic_query.rb
+  "::TestMailer":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/emails.rake
+  "::Theme":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/600_themes.rb
+    - lib/backup_restore/restorer.rb
+    - lib/content_security_policy/extension.rb
+    - lib/cooked_post_processor.rb
+    - lib/db_helper.rb
+    - lib/discourse.rb
+    - lib/guardian.rb
+    - lib/middleware/anonymous_cache.rb
+    - lib/stylesheet/importer.rb
+    - lib/stylesheet/manager.rb
+    - lib/stylesheet/manager/builder.rb
+    - lib/stylesheet/manager/scss_checker.rb
+    - lib/svg_sprite.rb
+    - lib/tasks/assets.rake
+    - lib/tasks/site.rake
+    - lib/tasks/themes.rake
+    - lib/theme_modifier_helper.rb
+    - lib/wizard/builder.rb
+  "::ThemeField":
+    violations:
+    - dependency
+    files:
+    - lib/backup_restore/restorer.rb
+    - lib/content_security_policy/extension.rb
+    - lib/discourse.rb
+    - lib/svg_sprite.rb
+    - lib/theme_settings_manager.rb
+    - lib/theme_store/zip_exporter.rb
+  "::ThemeModifierSet":
+    violations:
+    - dependency
+    files:
+    - lib/theme_modifier_helper.rb
+  "::ThemeSetting":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/site.rake
+    - lib/theme_settings_manager.rb
+    - lib/theme_settings_parser.rb
+  "::ThemeSvgSprite":
+    violations:
+    - dependency
+    files:
+    - db/post_migrate/20230224225129_backfill_svg_sprites.rb
+    - lib/svg_sprite.rb
+    - lib/tasks/svg_sprites.rake
+  "::ThemeTranslationOverride":
+    violations:
+    - dependency
+    files:
+    - lib/theme_translation_manager.rb
+  "::ThemesInstallTask":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/themes.rake
+  "::TopTopic":
+    violations:
+    - dependency
+    files:
+    - config/routes.rb
+    - lib/topic_query.rb
+  "::Topic":
+    violations:
+    - dependency
+    files:
+    - config/initializers/012-web_hook_events.rb
+    - config/initializers/014-track-setting-changes.rb
+    - db/fixtures/990_topics.rb
+    - db/migrate/20131209091742_create_topic_revisions.rb
+    - db/migrate/20131223171005_create_top_topics.rb
+    - lib/composer_messages_finder.rb
+    - lib/discourse_dev/post.rb
+    - lib/discourse_dev/topic.rb
+    - lib/guardian.rb
+    - lib/guardian/post_guardian.rb
+    - lib/guardian/topic_guardian.rb
+    - lib/import_export/category_exporter.rb
+    - lib/import_export/topic_exporter.rb
+    - lib/new_post_manager.rb
+    - lib/oneboxer.rb
+    - lib/plugin/instance.rb
+    - lib/post_creator.rb
+    - lib/post_destroyer.rb
+    - lib/post_revisor.rb
+    - lib/pretty_text/helpers.rb
+    - lib/search.rb
+    - lib/seed_data/categories.rb
+    - lib/seed_data/topics.rb
+    - lib/tasks/categories.rake
+    - lib/tasks/import.rake
+    - lib/tasks/posts.rake
+    - lib/tasks/topics.rake
+    - lib/topic_creator.rb
+    - lib/topic_query.rb
+    - lib/topic_query/private_message_lists.rb
+    - lib/topic_view.rb
+    - lib/topics_bulk_action.rb
+    - lib/topics_filter.rb
+    - lib/wizard.rb
+    - plugins/chat/app/models/chat/channel_archive.rb
+    - plugins/chat/lib/chat/channel_archive_service.rb
+    - plugins/chat/lib/tasks/chat_message.rake
+    - plugins/chat/spec/jobs/regular/chat/channel_archive_spec.rb
+    - plugins/chat/spec/lib/chat/channel_archive_service_spec.rb
+    - plugins/chat/spec/lib/chat/review_queue_spec.rb
+    - plugins/chat/spec/system/transcript_spec.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/new_user_narrative.rb
+    - plugins/discourse-narrative-bot/plugin.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/advanced_user_narrative_spec.rb
+    - plugins/discourse-narrative-bot/spec/jobs/send_default_welcome_message_spec.rb
+    - plugins/discourse-narrative-bot/spec/user_spec.rb
+    - plugins/discourse-presence/plugin.rb
+    - plugins/poll/spec/requests/posts_controller_spec.rb
+  "::TopicAllowedUser":
+    violations:
+    - dependency
+    files:
+    - plugins/discourse-narrative-bot/spec/user_spec.rb
+  "::TopicConverter":
+    violations:
+    - dependency
+    files:
+    - lib/topic_publisher.rb
+  "::TopicEmbed":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+    - lib/topic_retriever.rb
+  "::TopicLink":
+    violations:
+    - dependency
+    files:
+    - db/migrate/20121204183855_fix_link_post_id.rb
+    - lib/post_creator.rb
+    - lib/post_destroyer.rb
+    - lib/post_revisor.rb
+    - lib/topic_view.rb
+  "::TopicList":
+    violations:
+    - dependency
+    files:
+    - lib/plugin/instance.rb
+    - lib/topic_query.rb
+  "::TopicListSerializer":
+    violations:
+    - dependency
+    files:
+    - lib/topic_list_responder.rb
+  "::TopicPostersSummary":
+    violations:
+    - dependency
+    files:
+    - lib/topic_query.rb
+  "::TopicTag":
+    violations:
+    - dependency
+    files:
+    - lib/discourse_tagging.rb
+    - lib/topic_query.rb
+    - lib/topics_bulk_action.rb
+  "::TopicTimer":
+    violations:
+    - dependency
+    files:
+    - lib/post_action_creator.rb
+    - lib/post_creator.rb
+    - lib/tasks/topics.rake
+    - lib/topic_publisher.rb
+  "::TopicTimestampChanger":
+    violations:
+    - dependency
+    files:
+    - lib/topic_publisher.rb
+  "::TopicTrackingState":
+    violations:
+    - dependency
+    files:
+    - lib/post_destroyer.rb
+    - lib/post_jobs_enqueuer.rb
+    - lib/post_revisor.rb
+  "::TopicUser":
+    violations:
+    - dependency
+    files:
+    - lib/bookmark_manager.rb
+    - lib/email/receiver.rb
+    - lib/email_controller_helper/topic_email_unsubscriber.rb
+    - lib/post_creator.rb
+    - lib/post_destroyer.rb
+    - lib/search.rb
+    - lib/search/grouped_search_results.rb
+    - lib/tasks/topics.rake
+    - lib/topic_query.rb
+    - lib/topics_bulk_action.rb
+    - lib/topics_filter.rb
+    - lib/unread.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/advanced_user_narrative_spec.rb
+  "::TranslationOverride":
+    violations:
+    - dependency
+    files:
+    - lib/backup_restore/restorer.rb
+    - lib/email/message_builder.rb
+    - lib/freedom_patches/translate_accelerator.rb
+    - lib/import_export/base_exporter.rb
+    - lib/import_export/importer.rb
+    - lib/js_locale_helper.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/advanced_user_narrative_spec.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
+  "::Trashable":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/models/chat/channel.rb
+    - plugins/chat/app/models/chat/message.rb
+  "::TrustLevel3Requirements":
+    violations:
+    - dependency
+    files:
+    - lib/promotion.rb
+  "::TrustLevelAndStaffAndDisabledSetting":
+    violations:
+    - dependency
+    files:
+    - lib/composer_messages_finder.rb
+  "::UnsubscribeKey":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/lib/chat/user_notifications_extension.rb
+    - plugins/chat/spec/requests/core_ext/email_controller_spec.rb
+  "::UnsubscribeKey::ALL_TYPE":
+    violations:
+    - dependency
+    files:
+    - lib/plugin/instance.rb
+  "::UnsubscribeKey::DIGEST_TYPE":
+    violations:
+    - dependency
+    files:
+    - lib/plugin/instance.rb
+  "::UnsubscribeKey::TOPIC_TYPE":
+    violations:
+    - dependency
+    files:
+    - lib/plugin/instance.rb
+  "::Upload":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/010_uploads.rb
+    - db/migrate/20140530002535_remove_system_avatars_from_user_avatars.rb
+    - db/migrate/20210215231312_fix_group_flair_avatar_upload_security_and_acls.rb
+    - db/migrate/20210528003603_fix_badge_image_avatar_upload_security_and_acls.rb
+    - lib/backup_restore/backuper.rb
+    - lib/cooked_post_processor.rb
+    - lib/cooked_processor_mixin.rb
+    - lib/disk_space.rb
+    - lib/email/styles.rb
+    - lib/file_store/local_store.rb
+    - lib/file_store/s3_store.rb
+    - lib/file_store/to_s3_migration.rb
+    - lib/plugin/instance.rb
+    - lib/pretty_text.rb
+    - lib/pretty_text/helpers.rb
+    - lib/s3_inventory.rb
+    - lib/shrink_uploaded_image.rb
+    - lib/site_icon_manager.rb
+    - lib/site_setting_extension.rb
+    - lib/site_settings/validations.rb
+    - lib/tasks/s3.rake
+    - lib/tasks/site.rake
+    - lib/tasks/uploads.rake
+    - lib/theme_settings_manager.rb
+    - lib/upload_creator.rb
+    - lib/upload_fixer.rb
+    - lib/upload_recovery.rb
+    - lib/url_helper.rb
+    - lib/wizard/step_updater.rb
+    - plugins/chat/app/models/chat/message.rb
+    - plugins/chat/app/serializers/chat/message_serializer.rb
+    - plugins/chat/lib/chat/message_creator.rb
+    - plugins/chat/lib/chat/message_updater.rb
+    - plugins/chat/spec/plugin_spec.rb
+    - plugins/chat/spec/system/uploads_spec.rb
+  "::Upload::MAX_IDENTIFY_SECONDS":
+    violations:
+    - dependency
+    files:
+    - lib/upload_creator.rb
+  "::Upload::SEEDED_ID_THRESHOLD":
+    violations:
+    - dependency
+    files:
+    - lib/site_setting_extension.rb
+  "::Upload::SHA1_LENGTH":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/010_uploads.rb
+    - lib/upload_recovery.rb
+  "::Upload::URL_REGEX":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/posts.rake
+  "::UploadReference":
+    violations:
+    - dependency
+    files:
+    - lib/shrink_uploaded_image.rb
+    - lib/tasks/uploads.rake
+    - plugins/chat/app/jobs/regular/chat/channel_delete.rb
+    - plugins/chat/app/models/chat/message.rb
+    - plugins/chat/lib/chat/message_updater.rb
+    - plugins/chat/spec/components/chat/message_creator_spec.rb
+    - plugins/chat/spec/components/chat/message_updater_spec.rb
+    - plugins/chat/spec/jobs/regular/chat/channel_delete_spec.rb
+    - plugins/chat/spec/lib/chat/channel_archive_service_spec.rb
+    - plugins/chat/spec/lib/chat/transcript_service_spec.rb
+    - plugins/chat/spec/models/chat/message_spec.rb
+  "::UploadSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/serializers/chat/message_serializer.rb
+  "::User":
+    violations:
+    - dependency
+    files:
+    - config/initializers/006-ensure_login_hint.rb
+    - config/initializers/012-web_hook_events.rb
+    - config/initializers/014-track-setting-changes.rb
+    - db/api_test_seeds.rb
+    - db/fixtures/009_users.rb
+    - db/migrate/20120427154330_create_vestal_versions.rb
+    - db/migrate/20131209091702_create_post_revisions.rb
+    - db/migrate/20131209091742_create_topic_revisions.rb
+    - lib/admin_confirmation.rb
+    - lib/admin_user_index_query.rb
+    - lib/auth/default_current_user_provider.rb
+    - lib/auth/github_authenticator.rb
+    - lib/auth/managed_authenticator.rb
+    - lib/auth/result.rb
+    - lib/backup_restore/backuper.rb
+    - lib/backup_restore/restorer.rb
+    - lib/backup_restore/uploads_restorer.rb
+    - lib/composer_messages_finder.rb
+    - lib/discourse.rb
+    - lib/discourse_dev/config.rb
+    - lib/discourse_dev/post.rb
+    - lib/discourse_dev/topic.rb
+    - lib/discourse_dev/user.rb
+    - lib/email/receiver.rb
+    - lib/email/sender.rb
+    - lib/email_updater.rb
+    - lib/guardian.rb
+    - lib/import_export/base_exporter.rb
+    - lib/import_export/importer.rb
+    - lib/oneboxer.rb
+    - lib/plugin/instance.rb
+    - lib/post_creator.rb
+    - lib/post_revisor.rb
+    - lib/presence_channel.rb
+    - lib/pretty_text.rb
+    - lib/pretty_text/helpers.rb
+    - lib/search.rb
+    - lib/second_factor/actions/grant_admin.rb
+    - lib/seed_data/categories.rb
+    - lib/spam_handler.rb
+    - lib/tasks/admin.rake
+    - lib/tasks/avatars.rake
+    - lib/tasks/profile.rake
+    - lib/tasks/search.rake
+    - lib/tasks/site.rake
+    - lib/tasks/users.rake
+    - lib/topic_creator.rb
+    - lib/topic_retriever.rb
+    - lib/topic_view.rb
+    - lib/user_comm_screener.rb
+    - lib/user_lookup.rb
+    - lib/user_name_suggester.rb
+    - lib/validators/max_username_length_validator.rb
+    - lib/validators/min_username_length_validator.rb
+    - lib/validators/not_username_validator.rb
+    - lib/validators/username_setting_validator.rb
+    - lib/wizard.rb
+    - plugins/chat/app/controllers/chat/api/chatables_controller.rb
+    - plugins/chat/app/controllers/chat/chat_controller.rb
+    - plugins/chat/app/controllers/chat/direct_messages_controller.rb
+    - plugins/chat/app/jobs/regular/auto_join_channel_batch.rb
+    - plugins/chat/app/jobs/regular/chat/auto_join_channel_batch.rb
+    - plugins/chat/app/jobs/regular/chat/auto_join_channel_memberships.rb
+    - plugins/chat/app/jobs/regular/chat/notify_watching.rb
+    - plugins/chat/app/models/chat/channel_archive.rb
+    - plugins/chat/app/models/chat/deleted_user.rb
+    - plugins/chat/app/models/chat/direct_message.rb
+    - plugins/chat/app/models/chat/direct_message_user.rb
+    - plugins/chat/app/models/chat/draft.rb
+    - plugins/chat/app/models/chat/mention.rb
+    - plugins/chat/app/models/chat/message.rb
+    - plugins/chat/app/models/chat/message_reaction.rb
+    - plugins/chat/app/models/chat/message_revision.rb
+    - plugins/chat/app/models/chat/thread.rb
+    - plugins/chat/app/models/chat/user_chat_channel_membership.rb
+    - plugins/chat/app/queries/chat/channel_memberships_query.rb
+    - plugins/chat/app/serializers/chat/channel_search_serializer.rb
+    - plugins/chat/app/serializers/chat/direct_message_serializer.rb
+    - plugins/chat/app/serializers/chat/in_reply_to_serializer.rb
+    - plugins/chat/app/serializers/chat/message_serializer.rb
+    - plugins/chat/app/serializers/chat/user_channel_membership_serializer.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_category_updated.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_chat_allowed_groups_change.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_destroyed_group.rb
+    - plugins/chat/app/services/chat/auto_remove/handle_user_removed_from_group.rb
+    - plugins/chat/lib/chat/channel_fetcher.rb
+    - plugins/chat/lib/chat/mailer.rb
+    - plugins/chat/lib/chat/message_mentions.rb
+    - plugins/chat/lib/chat/post_notification_handler.rb
+    - plugins/chat/lib/tasks/chat_message.rake
+    - plugins/chat/plugin.rb
+    - plugins/chat/spec/models/chat/message_spec.rb
+    - plugins/chat/spec/models/user_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_destroyed_group_spec.rb
+    - plugins/discourse-narrative-bot/autoload/jobs/onceoff/discourse_narrative_bot/grant_badges.rb
+    - plugins/discourse-narrative-bot/autoload/jobs/regular/bot_input.rb
+    - plugins/discourse-narrative-bot/autoload/jobs/regular/narrative_init.rb
+    - plugins/discourse-narrative-bot/autoload/jobs/regular/narrative_timeout.rb
+    - plugins/discourse-narrative-bot/autoload/jobs/regular/send_default_welcome_message.rb
+    - plugins/discourse-narrative-bot/db/fixtures/001_discobot.rb
+    - plugins/discourse-narrative-bot/lib/discourse_narrative_bot/actions.rb
+    - plugins/discourse-narrative-bot/plugin.rb
+    - plugins/discourse-narrative-bot/spec/requests/discobot_welcome_post_spec.rb
+    - plugins/discourse-narrative-bot/spec/user_spec.rb
+    - plugins/poll/app/models/poll_vote.rb
+    - plugins/poll/db/migrate/20180820080623_migrate_polls_data.rb
+    - plugins/poll/lib/poll.rb
+    - plugins/poll/plugin.rb
+    - plugins/poll/spec/requests/users_controller_spec.rb
+  "::User::EMAIL":
+    violations:
+    - dependency
+    files:
+    - lib/user_name_suggester.rb
+  "::User::MAX_STAFF_DELETE_POST_COUNT":
+    violations:
+    - dependency
+    files:
+    - lib/guardian/user_guardian.rb
+  "::User::NewTopicDuration::ALWAYS":
+    violations:
+    - dependency
+    files:
+    - db/migrate/20210201034048_move_category_last_seen_at_to_new_table.rb
+    - db/migrate/20210218022739_move_new_since_to_new_table_again.rb
+    - lib/topics_bulk_action.rb
+  "::User::NewTopicDuration::LAST_VISIT":
+    violations:
+    - dependency
+    files:
+    - db/migrate/20210201034048_move_category_last_seen_at_to_new_table.rb
+    - db/migrate/20210218022739_move_new_since_to_new_table_again.rb
+    - lib/topics_bulk_action.rb
+  "::User::USER_FIELD_PREFIX":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/lib/chat/channel_fetcher.rb
+  "::UserAction":
+    violations:
+    - dependency
+    files:
+    - lib/guardian/user_guardian.rb
+    - lib/post_destroyer.rb
+    - lib/post_revisor.rb
+  "::UserAction::NEW_TOPIC":
+    violations:
+    - dependency
+    files:
+    - lib/post_revisor.rb
+  "::UserAction::REPLY":
+    violations:
+    - dependency
+    files:
+    - lib/post_revisor.rb
+  "::UserAction::RESPONSE":
+    violations:
+    - dependency
+    files:
+    - lib/post_revisor.rb
+  "::UserAction::WAS_LIKED":
+    violations:
+    - dependency
+    files:
+    - lib/post_revisor.rb
+  "::UserActionManager":
+    violations:
+    - dependency
+    files:
+    - lib/post_action_creator.rb
+    - lib/post_action_destroyer.rb
+    - lib/post_creator.rb
+    - lib/post_destroyer.rb
+    - lib/topic_creator.rb
+  "::UserAnonymizer":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/users.rake
+  "::UserAnonymizer::EMAIL_SUFFIX":
+    violations:
+    - dependency
+    files:
+    - lib/guardian/user_guardian.rb
+  "::UserApiKey":
+    violations:
+    - dependency
+    files:
+    - lib/auth/default_current_user_provider.rb
+    - lib/tasks/profile.rake
+  "::UserApiKeyScope":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/profile.rake
+  "::UserArchivedMessage":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+    - lib/system_message.rb
+    - lib/topics_bulk_action.rb
+  "::UserAssociatedAccount":
+    violations:
+    - dependency
+    files:
+    - lib/auth/managed_authenticator.rb
+  "::UserAuthToken":
+    violations:
+    - dependency
+    files:
+    - db/api_test_seeds.rb
+    - lib/auth/default_current_user_provider.rb
+    - lib/guardian.rb
+  "::UserAuthToken::ROTATE_TIME":
+    violations:
+    - dependency
+    files:
+    - lib/auth/default_current_user_provider.rb
+  "::UserAuthToken::ROTATE_TIME_MINS":
+    violations:
+    - dependency
+    files:
+    - lib/middleware/request_tracker.rb
+  "::UserAuthToken::URGENT_ROTATE_TIME":
+    violations:
+    - dependency
+    files:
+    - lib/auth/default_current_user_provider.rb
+  "::UserAvatar":
+    violations:
+    - dependency
+    files:
+    - lib/file_store/s3_store.rb
+    - lib/tasks/uploads.rake
+    - plugins/discourse-narrative-bot/plugin.rb
+  "::UserBadge":
+    violations:
+    - dependency
+    files:
+    - config/initializers/012-web_hook_events.rb
+    - db/fixtures/006_badges.rb
+    - db/migrate/20140504174212_increment_reserved_trust_level_badge_ids.rb
+  "::UserBadgeSerializer":
+    violations:
+    - dependency
+    files:
+    - config/initializers/012-web_hook_events.rb
+  "::UserBookmarkBaseSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/serializers/chat/user_message_bookmark_serializer.rb
+  "::UserCardSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/plugin_spec.rb
+  "::UserCustomField":
+    violations:
+    - dependency
+    files:
+    - lib/import_export/importer.rb
+    - plugins/poll/lib/poll.rb
+    - plugins/poll/spec/integration/poll_endpoints_spec.rb
+  "::UserDestroyer":
+    violations:
+    - dependency
+    files:
+    - lib/email/receiver.rb
+    - plugins/chat/spec/plugin_spec.rb
+  "::UserEmail":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/009_users.rb
+    - plugins/discourse-narrative-bot/db/fixtures/001_discobot.rb
+  "::UserExport":
+    violations:
+    - dependency
+    files:
+    - lib/guardian.rb
+  "::UserField":
+    violations:
+    - dependency
+    files:
+    - lib/guardian/user_guardian.rb
+    - plugins/chat/lib/chat/channel_fetcher.rb
+    - plugins/poll/lib/poll.rb
+  "::UserHistory":
+    violations:
+    - dependency
+    files:
+    - db/migrate/20140228205743_add_admin_only_to_user_histories.rb
+    - db/migrate/20150102113309_clean_up_user_history.rb
+    - lib/composer_messages_finder.rb
+    - lib/email_updater.rb
+    - lib/promotion.rb
+    - lib/tasks/users.rake
+    - lib/topic_view.rb
+    - lib/trust_level.rb
+    - lib/wizard.rb
+    - plugins/chat/spec/components/chat/message_rate_limiter_spec.rb
+    - plugins/chat/spec/plugin_spec.rb
+    - plugins/chat/spec/requests/chat/api/channels_controller_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_category_updated_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_chat_allowed_groups_change_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_destroyed_group_spec.rb
+    - plugins/chat/spec/services/auto_remove/handle_user_removed_from_group_spec.rb
+    - plugins/chat/spec/services/chat/trash_channel_spec.rb
+    - plugins/chat/spec/support/examples/chat_channel_model.rb
+    - plugins/discourse-narrative-bot/spec/user_spec.rb
+  "::UserMerger":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/users.rake
+  "::UserNameSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/poll/lib/poll.rb
+  "::UserNotificationRenderer":
+    violations:
+    - dependency
+    files:
+    - lib/email/message_builder.rb
+    - lib/email/renderer.rb
+  "::UserNotifications":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/plugin.rb
+    - plugins/chat/spec/mailers/user_notifications_spec.rb
+  "::UserOption":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/009_users.rb
+    - lib/email/receiver.rb
+    - lib/email_controller_helper/base_email_unsubscriber.rb
+    - plugins/chat/lib/chat/mailer.rb
+    - plugins/chat/lib/chat/user_notifications_extension.rb
+    - plugins/chat/lib/email_controller_helper/chat_summary_unsubscriber.rb
+    - plugins/chat/plugin.rb
+    - plugins/chat/spec/components/chat/mailer_spec.rb
+    - plugins/chat/spec/system/message_notifications_with_sidebar_spec.rb
+    - plugins/discourse-narrative-bot/db/fixtures/001_discobot.rb
+    - plugins/discourse-narrative-bot/plugin.rb
+    - plugins/discourse-narrative-bot/spec/discourse_narrative_bot/track_selector_spec.rb
+  "::UserProfile":
+    violations:
+    - dependency
+    files:
+    - lib/post_destroyer.rb
+  "::UserSecondFactor":
+    violations:
+    - dependency
+    files:
+    - lib/second_factor/auth_manager.rb
+    - lib/tasks/users.rake
+  "::UserSecurityKey":
+    violations:
+    - dependency
+    files:
+    - lib/tasks/users.rake
+    - lib/webauthn/security_key_authentication_service.rb
+    - lib/webauthn/security_key_registration_service.rb
+  "::UserSerializer":
+    violations:
+    - dependency
+    files:
+    - config/initializers/012-web_hook_events.rb
+    - lib/oneboxer.rb
+  "::UserSilencer":
+    violations:
+    - dependency
+    files:
+    - lib/new_post_manager.rb
+    - plugins/chat/app/models/chat/reviewable_message.rb
+    - plugins/chat/lib/chat/message_rate_limiter.rb
+    - plugins/chat/lib/chat/review_queue.rb
+    - plugins/chat/spec/lib/chat/review_queue_spec.rb
+    - plugins/chat/spec/models/chat/reviewable_chat_message_spec.rb
+    - plugins/chat/spec/requests/chat/api/messages_controller_spec.rb
+    - plugins/chat/spec/requests/chat_controller_spec.rb
+    - plugins/chat/spec/system/silenced_user_spec.rb
+  "::UserStat":
+    violations:
+    - dependency
+    files:
+    - lib/post_destroyer.rb
+    - lib/tasks/posts.rake
+    - lib/topic_query.rb
+    - lib/topic_query/private_message_lists.rb
+  "::UserStatCountUpdater":
+    violations:
+    - dependency
+    files:
+    - lib/post_creator.rb
+    - lib/post_destroyer.rb
+    - lib/post_revisor.rb
+  "::UserStatusSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/serializers/chat/user_with_custom_fields_and_status_serializer.rb
+  "::UserUpdater::OPTION_ATTR":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/plugin.rb
+  "::UserUpload":
+    violations:
+    - dependency
+    files:
+    - lib/guardian/user_guardian.rb
+    - lib/upload_creator.rb
+  "::UserWarning":
+    violations:
+    - dependency
+    files:
+    - lib/topic_creator.rb
+    - plugins/chat/spec/lib/chat/review_queue_spec.rb
+  "::UserWithCustomFieldsSerializer":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/app/serializers/chat/user_with_custom_fields_and_status_serializer.rb
+  "::UsernameChanger":
+    violations:
+    - dependency
+    files:
+    - lib/auth/result.rb
+    - lib/tasks/users.rake
+  "::UsernameValidator":
+    violations:
+    - dependency
+    files:
+    - lib/user_name_suggester.rb
+  "::UsernameValidator::CONFUSING_EXTENSIONS":
+    violations:
+    - dependency
+    files:
+    - lib/user_name_suggester.rb
+  "::UsernameValidator::INVALID_LEADING_CHAR_PATTERN":
+    violations:
+    - dependency
+    files:
+    - lib/user_name_suggester.rb
+  "::UsernameValidator::INVALID_TRAILING_CHAR_PATTERN":
+    violations:
+    - dependency
+    files:
+    - lib/user_name_suggester.rb
+  "::UsernameValidator::MAX_CHARS":
+    violations:
+    - dependency
+    files:
+    - lib/user_name_suggester.rb
+  "::UsernameValidator::REPEATED_SPECIAL_CHAR_PATTERN":
+    violations:
+    - dependency
+    files:
+    - lib/user_name_suggester.rb
+  "::UsersController":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/requests/core_ext/users_controller_spec.rb
+  "::WatchedWord":
+    violations:
+    - dependency
+    files:
+    - plugins/chat/spec/models/chat/message_spec.rb
+    - plugins/chat/spec/requests/chat/incoming_webhooks_controller_spec.rb
+    - plugins/chat/spec/serializer/chat/chat_message_serializer_spec.rb
+    - plugins/chat/spec/serializer/chat/in_reply_to_serializer_spec.rb
+  "::WebCrawlerRequest":
+    violations:
+    - dependency
+    files:
+    - lib/middleware/request_tracker.rb
+  "::WebHook":
+    violations:
+    - dependency
+    files:
+    - config/initializers/012-web_hook_events.rb
+    - db/migrate/20160905084502_create_web_hook_events.rb
+    - lib/post_destroyer.rb
+  "::WebHookEventType":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::ASSIGN":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::CATEGORY":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::GROUP":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::GROUP_USER":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::LIKE":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::NOTIFICATION":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::POST":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::REVIEWABLE":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::SOLVED":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::TAG":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::TOPIC":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::USER":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::USER_BADGE":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookEventType::USER_PROMOTED":
+    violations:
+    - dependency
+    files:
+    - db/fixtures/007_web_hook_event_types.rb
+  "::WebHookGroupUserSerializer":
+    violations:
+    - dependency
+    files:
+    - config/initializers/012-web_hook_events.rb
+  "::WebHookLikeSerializer":
+    violations:
+    - dependency
+    files:
+    - config/initializers/012-web_hook_events.rb
+  "::WebHookTopicViewSerializer":
+    violations:
+    - dependency
+    files:
+    - lib/post_destroyer.rb
+  "::WildcardDomainChecker":
+    violations:
+    - dependency
+    files:
+    - lib/discourse_connect_provider.rb
+  "::WordWatcher":
+    violations:
+    - dependency
+    files:
+    - lib/inline_oneboxer.rb
+    - lib/new_post_manager.rb
+    - lib/oneboxer.rb
+    - lib/pretty_text.rb
+    - lib/topic_creator.rb
+    - lib/validators/censored_words_validator.rb
+    - lib/validators/watched_words_validator.rb
+    - plugins/chat/app/serializers/chat/in_reply_to_serializer.rb
+    - plugins/chat/app/serializers/chat/message_serializer.rb
+    - plugins/chat/app/serializers/chat/thread_original_message_serializer.rb
