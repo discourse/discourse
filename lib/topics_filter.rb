@@ -33,57 +33,39 @@ class TopicsFilter
       key_prefixes = hash["key_prefixes"]
       values = hash["values"]
 
+      filter_values = extract_and_validate_value_for(filter, values)
+
       case filter
       when "category"
-        filter_categories(values: key_prefixes.zip(values))
+        filter_categories(values: key_prefixes.zip(filter_values))
       when "created-by"
-        filter_created_by_user(usernames: values.flat_map { |value| value.split(",") })
+        filter_created_by_user(usernames: filter_values.flat_map { |value| value.split(",") })
       when "in"
-        filter_in(values: values)
+        filter_in(values: filter_values)
       when "likes-min"
-        min = values.last
-        break if !integer_string?(min)
-        filter_by_number_of_likes(min: min)
+        filter_by_number_of_likes(min: filter_values)
       when "likes-max"
-        max = values.last
-        break if !integer_string?(max)
-        filter_by_number_of_likes(max: max)
+        filter_by_number_of_likes(max: filter_values)
       when "likes-op-min"
-        min = values.last
-        break if !integer_string?(min)
-        filter_by_number_of_likes_in_first_post(min: min)
+        filter_by_number_of_likes_in_first_post(min: filter_values)
       when "likes-op-max"
-        max = values.last
-        break if !integer_string?(max)
-        filter_by_number_of_likes_in_first_post(max: max)
+        filter_by_number_of_likes_in_first_post(max: filter_values)
       when "posts-min"
-        min = values.last
-        break if !integer_string?(min)
-        filter_by_number_of_posts(min: min)
+        filter_by_number_of_posts(min: filter_values)
       when "posts-max"
-        max = values.last
-        break if !integer_string?(max)
-        filter_by_number_of_posts(max: max)
+        filter_by_number_of_posts(max: filter_values)
       when "posters-min"
-        min = values.last
-        break if !integer_string?(min)
-        filter_by_number_of_posters(min: min)
+        filter_by_number_of_posters(min: filter_values)
       when "posters-max"
-        max = values.last
-        break if !integer_string?(max)
-        filter_by_number_of_posters(max: max)
+        filter_by_number_of_posters(max: filter_values)
       when "status"
-        values.each { |status| @scope = filter_status(status: status) }
+        filter_values.each { |status| @scope = filter_status(status: status) }
       when "tags"
-        filter_tags(values: key_prefixes.zip(values))
+        filter_tags(values: key_prefixes.zip(filter_values))
       when "views-min"
-        min = values.last
-        break if !integer_string?(min)
-        filter_by_number_of_views(min: min)
+        filter_by_number_of_views(min: filter_values)
       when "views-max"
-        max = values.last
-        break if !integer_string?(max)
-        filter_by_number_of_views(max: max)
+        filter_by_number_of_views(max: filter_values)
       end
     end
 
@@ -116,6 +98,17 @@ class TopicsFilter
   end
 
   private
+
+  def extract_and_validate_value_for(filter, values)
+    case filter
+    when "likes-min", "likes-max", "likes-op-min", "likes-op-max", "posts-min", "posts-max",
+         "posters-min", "posters-max", "views-min", "views-max"
+      value = values.last
+      value if value =~ /\A\d+\z/
+    else
+      values
+    end
+  end
 
   def filter_by_topic_range(column_name:, min: nil, max: nil, scope: nil)
     { min => ">=", max => "<=" }.each do |value, operator|
@@ -395,9 +388,5 @@ class TopicsFilter
 
   def include_topics_with_any_tags(tag_ids)
     @scope = @scope.joins(:topic_tags).where("topic_tags.tag_id IN (?)", tag_ids).distinct(:id)
-  end
-
-  def integer_string?(string)
-    string =~ /\A\d+\z/
   end
 end
