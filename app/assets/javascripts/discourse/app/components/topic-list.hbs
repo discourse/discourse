@@ -30,15 +30,17 @@
   }}
 />
 
+<button type="button" id="save-voice-credits">Save Voice Credits</button>
+
 <tbody class="topic-list-body">
   {{#each this.filteredTopics as |topic index|}}
     <TopicListItem
       @topic={{topic}}
       @topicVote={{getFieldByObjectId this.topicVotes topic.id "total_votes"}}
       @voiceCredits={{getFieldByObjectId
-        this.topicVotes
+        this.voiceCredits
         topic.id
-        "total_votes"
+        "credits_allocated"
       }}
       @showQuadraticTotals={{this.showQuadraticTotals}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}

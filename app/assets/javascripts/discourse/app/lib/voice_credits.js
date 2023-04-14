@@ -1,57 +1,30 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
 
-function isValidAllocation(voiceCreditsData) {
-  const totalCredits = voiceCreditsData.reduce(
-    (sum, { credits_allocated }) => sum + parseInt(credits_allocated, 10),
-    0
-  );
-  return totalCredits <= 100;
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   const voiceCreditsInputs = document.querySelectorAll(".voice-credits-input");
   const saveButton = document.getElementById("save-voice-credits");
-
-  saveButton.addEventListener("click", () => {
-    const voiceCreditsData = Array.from(voiceCreditsInputs).map((input) => {
-      return {
-        topic_id: input.dataset.topicId,
-        credits_allocated: input.value,
-      };
+  let voiceCredits = {};
+  // Add event listeners to handle user input changes on the voice credit input elements
+  voiceCreditsInputs.forEach((input) => {
+    input.addEventListener("input", (event) => {
+      console.log("input event", event);
+      const topicId = parseInt(input.dataset.topicId, 10);
+      voiceCredits[topicId] = parseInt(event.target.value, 10);
     });
-
-    if (!isValidAllocation(voiceCreditsData)) {
+  });
+  saveButton.addEventListener("click", () => {
+    console.log("voiceCredits", voiceCredits);
+    // Validate if the total allocated credits are within the limit (100)
+    const totalCredits = Object.values(voiceCredits).reduce(
+      (sum, credits) => sum + credits,
+      0
+    );
+    if (totalCredits > 100) {
       alert(
-        "You have exceeded the maximum allocation of 100 credits. Please adjust your allocations and try again."
+        "You have allocated more than 100 voice credits. Please adjust your allocations."
       );
       return;
     }
-
-    fetch("/voice_credits", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": document.getElementsByName("csrf-token")[0].content,
-      },
-      body: JSON.stringify({ voice_credits: voiceCreditsData }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          alert("Voice credits saved successfully!");
-          location.reload();
-        } else {
-          alert(
-            "There was an error saving your voice credits. Please try again."
-          );
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert(
-          "There was an error saving your voice credits. Please try again."
-        );
-      });
   });
 });

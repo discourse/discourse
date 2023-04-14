@@ -34,9 +34,8 @@ export default Component.extend(LoadMore, {
       .then((response) => response.json())
       .then((r) => {
         if (r.success) {
-          const topicVotes = r.total_vote_values_per_topic;
-          console.log("topicVotes", topicVotes);
-          this.set("topicVotes", topicVotes);
+          console.log("topicVotes", r.total_vote_values_per_topic);
+          this.set("topicVotes", r.total_vote_values_per_topic);
           this.set("showQuadraticTotals", true);
         }
       })
@@ -59,7 +58,8 @@ export default Component.extend(LoadMore, {
       })
       .then((r) => {
         if (r.success) {
-          console.log("r.success", r.voice_credits);
+          console.log("r.success", r.voice_credits_by_topic_id);
+          this.set("voiceCredits", r.voice_credits_by_topic_id);
         }
       })
       .catch(function (error) {
