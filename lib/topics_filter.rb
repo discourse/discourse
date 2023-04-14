@@ -68,6 +68,14 @@ class TopicsFilter
         values.each { |status| @scope = filter_status(status: status) }
       when "tags"
         filter_tags(values: key_prefixes.zip(values))
+      when "views-min"
+        min = values.last
+        break if !integer_string?(min)
+        filter_by_number_of_views(min: min)
+      when "views-max"
+        max = values.last
+        break if !integer_string?(max)
+        filter_by_number_of_views(max: max)
       end
     end
 
@@ -118,6 +126,10 @@ class TopicsFilter
 
   def filter_by_number_of_likes(min: nil, max: nil)
     filter_by_topic_range(column_name: "like_count", min:, max:)
+  end
+
+  def filter_by_number_of_views(min: nil, max: nil)
+    filter_by_topic_range(column_name: "views", min:, max:)
   end
 
   def filter_categories(values:)

@@ -951,5 +951,13 @@ RSpec.describe TopicsFilter do
 
       include_examples("filtering for topics by range", "posts")
     end
+
+    describe "when filtering by number of views in a topic" do
+      fab!(:topic_with_1_count) { Fabricate(:topic, views: 1) }
+      fab!(:topic_with_2_count) { Fabricate(:topic, views: 2) }
+      fab!(:topic_with_3_count) { Fabricate(:topic, views: 3) }
+
+      include_examples("filtering for topics by range", "views")
+    end
   end
 end
