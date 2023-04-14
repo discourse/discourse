@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/* eslint-disable no-alert */
 import { alias, and } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
@@ -6,6 +7,7 @@ import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
 import { next, schedule } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
+import { action } from "@ember/object";
 // import { ajax } from "discourse/lib/ajax";
 
 export default Component.extend(LoadMore, {
@@ -85,6 +87,50 @@ export default Component.extend(LoadMore, {
     this.addObserver("ascending", this.rerender);
     this.refreshLastVisited();
   }),
+
+  @action
+  async saveVoiceCredits() {
+    const inputs = document.querySelectorAll(".voice-credits-input");
+    const voiceCredits = {};
+    // Check for valid input values and store in an object
+    inputs.forEach((input) => {
+      const topicId = input.getAttribute("data-topic-id");
+      const value = parseInt(input.value, 10);
+
+      if (value >= 0 && value <= 100) {
+        voiceCredits[topicId] = value;
+      } else {
+        alert("Invalid input: Voice credits must be between 0 and 100.");
+        throw new Error("Invalid input");
+      }
+    });
+
+    // Validate total value for each category
+    const categories = {};
+    this.filteredTopics.forEach((topic) => {
+      const categoryId = topic.category_id;
+      const topicId = topic.id;
+
+      if (!categories[categoryId]) {
+        categories[categoryId] = 0;
+      }
+
+      categories[categoryId] += voiceCredits[topicId] || 0;
+    });
+
+    for (const categoryId in categories) {
+      if (Object.prototype.hasOwnProperty.call(categories, categoryId)) {
+        const total = categories[categoryId];
+        if (total < 0 || total > 100) {
+          alert(
+            "Invalid total: The total value of all user entries for each category must be between 0 and 100."
+          );
+          throw new Error("Invalid total");
+        }
+      }
+    }
+    console.log("voiceCredits", voiceCredits);
+  },
 
   @discourseComputed("bulkSelectEnabled")
   toggleInTitle(bulkSelectEnabled) {
@@ -303,8 +349,8 @@ export default Component.extend(LoadMore, {
         title: "topics.bulk.actions",
       });
 
-      const action = this.bulkSelectAction;
-      if (action) {
+      const bulkAction = this.bulkSelectAction;
+      if (bulkAction) {
         controller.set("refreshClosure", () => action());
       }
     });

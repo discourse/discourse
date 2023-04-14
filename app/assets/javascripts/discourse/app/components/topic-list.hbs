@@ -30,7 +30,7 @@
   }}
 />
 
-<button type="button" id="save-voice-credits">Save Voice Credits</button>
+<button type="button" id="save-voice-credits" {{on "click" this.saveVoiceCredits}}>Save Voice Credits</button>
 
 <tbody class="topic-list-body">
   {{#each this.filteredTopics as |topic index|}}

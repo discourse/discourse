@@ -78,7 +78,7 @@
 {{/if}}
 
 <td class="num your-hearts topic-list-data">
-  <input type="number" class="voice-credits-input" data-topic-id={{topic.id}} value={{voiceCredits}} min="0" max="100" />
+  <input type="number" class="voice-credits-input" id="voice-credits-input-{{topic.id}}" data-topic-id={{topic.id}} value={{voiceCredits}} min="0" max="100" />
 </td>
 
 {{#if showQuadraticTotals}}
