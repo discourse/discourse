@@ -78,9 +78,13 @@
 {{/if}}
 
 <td class="num your-hearts topic-list-data">
-  <input type="number" class="voice-credits-input" data-topic-id="<%= topic.id %>" value="69" min="0" max="100" />
+  {{#if voiceCredits}}
+    <input type="number" class="voice-credits-input" data-topic-id="<%= topic.id %>" value={{voiceCredits}} min="0" max="100" />
+  {{/if}}
 </td>
 
-<td class="num square-root-hearts topic-list-data">
-  {{number topic.quadratic_votes}}
-</td>
+{{#if showQuadraticTotals}}
+  <td class="num square-root-hearts topic-list-data">
+    {{number topicVote}}
+  </td>
+{{/if}}

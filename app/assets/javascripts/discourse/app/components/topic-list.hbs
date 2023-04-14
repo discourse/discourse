@@ -7,6 +7,8 @@
     showPosters=this.showPosters
     showLikes=this.showLikes
     showOpLikes=this.showOpLikes
+    showQuadraticTotals=this.showQuadraticTotals
+    showUserVoiceCredits=this.showUserVoiceCredits
     order=this.order
     ascending=this.ascending
     sortable=this.sortable
@@ -29,9 +31,16 @@
 />
 
 <tbody class="topic-list-body">
-  {{#each this.augmentedFilteredTopics as |topic index|}}
+  {{#each this.filteredTopics as |topic index|}}
     <TopicListItem
       @topic={{topic}}
+      @topicVote={{getFieldByObjectId this.topicVotes topic.id "total_votes"}}
+      @voiceCredits={{getFieldByObjectId
+        this.topicVotes
+        topic.id
+        "total_votes"
+      }}
+      @showQuadraticTotals={{this.showQuadraticTotals}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
       @showTopicPostBadges={{this.showTopicPostBadges}}
       @hideCategory={{this.hideCategory}}

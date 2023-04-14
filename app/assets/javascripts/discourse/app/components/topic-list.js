@@ -4,24 +4,82 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
-import { next, schedule, scheduleOnce } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 // import { ajax } from "discourse/lib/ajax";
-import { computed, set } from "@ember/object";
 
 export default Component.extend(LoadMore, {
   tagName: "table",
   classNames: ["topic-list"],
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
-  showQuadraticVoting: false,
+  showUserVoiceCredits: false,
+  showQuadraticTotals: false,
   listTitle: "topic.title",
   canDoBulkActions: and("currentUser.canManageTopic", "selected.length"),
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),
-  _augmentedFilteredTopics: null,
+  topicVotes: {},
+
+  fetchTopicVotes() {
+    const categoryId = this.get("category.id");
+    const url = `/topics/category-totals/${categoryId}.json`;
+
+    fetch(url, {
+      headers: {
+        "Access-Control-Request-Headers": "*",
+        "Access-Control-Allow-Methods": "GET",
+      },
+    })
+      .then((response) => response.json())
+      .then((r) => {
+        if (r.success) {
+          const topicVotes = r.total_vote_values_per_topic;
+          console.log("topicVotes", topicVotes);
+          this.set("topicVotes", topicVotes);
+          this.set("showQuadraticTotals", true);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching quadratic_votes:", error);
+      });
+  },
+
+  fetchUserVoiceCredits() {
+    const categoryId = this.get("category.id");
+    const url = `/voice_credits.json?category_id=${categoryId}`;
+    return fetch(url, {
+      headers: {
+        "Access-Control-Request-Headers": "*",
+        "Access-Control-Allow-Methods": "GET",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then((r) => {
+        if (r.success) {
+          console.log("r.success", r.voice_credits);
+        }
+      })
+      .catch(function (error) {
+        let message;
+        if (error.hasOwnProperty("message")) {
+          message = error.message;
+        } else {
+          message = error;
+        }
+        console.log(message);
+      });
+  },
 
   _init: on("init", function () {
+    if (this.category && this.category.id) {
+      this.fetchTopicVotes(this.category.id);
+      if (this.currentUser) {
+        this.fetchUserVoiceCredits();
+      }
+    }
     this.addObserver("hideCategory", this.rerender);
     this.addObserver("order", this.rerender);
     this.addObserver("ascending", this.rerender);
@@ -89,49 +147,14 @@ export default Component.extend(LoadMore, {
   didInsertElement() {
     this._super(...arguments);
     this.scrollToLastPosition();
-    scheduleOnce("afterRender", this, "fetchAndSetQuadraticVotes");
-    if (this.currentUser) {
-      this.set("showQuadraticVoting", true);
+    if (this.currentUser && this.category && this.category.id) {
+      this.set("showUserVoiceCredits", true);
     }
   },
 
   didUpdateAttrs() {
     this._super(...arguments);
-    scheduleOnce("afterRender", this, "fetchAndSetQuadraticVotes");
   },
-
-  fetchAndSetQuadraticVotes() {
-    const filteredTopics = this.get("filteredTopics");
-    const categoryId = this.get("category.id");
-    const url = `/topics/category-totals/${categoryId}.json`;
-
-    fetch(url, {
-      headers: {
-        "Access-Control-Request-Headers": "*",
-        "Access-Control-Allow-Methods": "GET",
-      },
-    })
-      .then((response) => response.json())
-      .then((r) => {
-        const voiceCreditsPerTopic = r.total_vote_values_per_topic;
-        const augmentedTopics = filteredTopics.map((topic) => {
-          const topicId = topic.id;
-          const topicQuadraticVotes = voiceCreditsPerTopic[topicId].total_votes;
-          topic.set("quadratic_votes", topicQuadraticVotes);
-          return topic;
-        });
-        console.log("augmentedTopics:", augmentedTopics);
-        set(this, "_augmentedFilteredTopics", augmentedTopics);
-      })
-      .catch((error) => {
-        console.error("Error fetching quadratic_votes:", error);
-      });
-  },
-
-  augmentedFilteredTopics: computed("_augmentedFilteredTopics.[]", function () {
-    const augmentedTopics = this.get("_augmentedFilteredTopics");
-    return augmentedTopics || this.get("filteredTopics");
-  }),
   /*
 
   voteComment() {
@@ -163,32 +186,7 @@ export default Component.extend(LoadMore, {
   */
 
   /*
-  getUserVoiceCreditAllocations() {
-    const url = "/voice_credits.json?category_id=all";
-    return fetch(url, {
-      headers: {
-        "Access-Control-Request-Headers": "*",
-        "Access-Control-Allow-Methods": "GET",
-      },
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then((r) => {
-        debugger;
-      })
-      .catch(function (error) {
-        let message;
-        if (error.hasOwnProperty("message")) {
-          message = error.message;
-        } else {
-          message = error;
-        }
-        // eslint-disable-next-line no-console
-        console.log(message);
-      });
-  },
-  */
+   */
 
   _updateLastVisitedTopic(topics, order, ascending, top) {
     this.set("lastVisitedTopic", null);
