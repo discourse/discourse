@@ -14,9 +14,11 @@ class VoiceCreditsController < ApplicationController
           :category,
         )
     end
+    voice_credits_by_topic_id = voice_credits.index_by(&:topic_id)
 
     render json: {
              success: true,
+             voice_credits_by_topic_id: voice_credits_by_topic_id,
              voice_credits:
                ActiveModel::ArraySerializer.new(
                  voice_credits,
@@ -44,8 +46,6 @@ class VoiceCreditsController < ApplicationController
         result[topic_id][:total_votes] += vote_value
       end
     end
-    descending = -1
-    result = result.values.sort_by { |r| r[:total_votes] * descending }
 
     render json: { success: true, total_vote_values_per_topic: result }
   end
