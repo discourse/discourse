@@ -76,20 +76,21 @@ end
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("packs/messy_middle/spec/support/**/*.rb")].each { |f| require f }
 
-Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
-Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("packs/messy_middle/spec/system/page_objects/**/base.rb")].each { |f| require f }
+Dir[Rails.root.join("packs/messy_middle/spec/system/page_objects/**/*.rb")].each { |f| require f }
 
-Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
-require_relative "./helpers/redis_snapshot_helper"
+Dir[Rails.root.join("packs/messy_middle/spec/fabricators/*.rb")].each { |f| require f }
+require_relative "../packs/messy_middle/spec/helpers/redis_snapshot_helper"
 
 # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
 if ENV["LOAD_PLUGINS"] == "1"
-  Dir[Rails.root.join("plugins/*/spec/plugin_helper.rb")].each { |f| require f }
+  Dir[Rails.root.join("packs/messy_middleplugins/*/spec/plugin_helper.rb")].each { |f| require f }
 
-  Dir[Rails.root.join("plugins/*/spec/fabricators/**/*.rb")].each { |f| require f }
+  Dir[Rails.root.join("packs/messy_middleplugins/*/spec/fabricators/**/*.rb")].each { |f| require f }
 
-  Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
+  Dir[Rails.root.join("packs/messy_middleplugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
 end
 
 # let's not run seed_fu every test
