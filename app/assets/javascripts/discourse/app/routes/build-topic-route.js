@@ -67,7 +67,6 @@ async function findTopicList(
         filterParams[key] = null;
       }
     }
-
     list = await store.findFiltered("topicList", {
       filter,
       params: filterParams,
