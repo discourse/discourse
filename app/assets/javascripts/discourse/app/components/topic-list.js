@@ -22,6 +22,7 @@ export default Component.extend(LoadMore, {
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),
   topicVotes: {},
+  voiceCredits: {},
 
   fetchTopicVotes() {
     const categoryId = this.get("category.id");
@@ -85,56 +86,38 @@ export default Component.extend(LoadMore, {
     this.addObserver("hideCategory", this.rerender);
     this.addObserver("order", this.rerender);
     this.addObserver("ascending", this.rerender);
+    this.addObserver("voiceCredits", this.rerender);
     this.refreshLastVisited();
   }),
 
   @action
   async saveVoiceCredits() {
     const pageCategoryId = this.get("category.id");
-    const inputs = document.querySelectorAll(".voice-credits-input");
-    const voiceCredits = {};
-    // Check for valid input values and store in an object
-    inputs.forEach((input) => {
-      const topicId = input.getAttribute("data-topic-id");
-      const value = parseInt(input.value, 10);
-
-      if (value >= 0 && value <= 100) {
-        voiceCredits[topicId] = value;
-      } else {
-        alert("Invalid input: Voice credits must be between 0 and 100.");
-        throw new Error("Invalid input");
-      }
-    });
-    let payload = {
-      category_id: pageCategoryId,
-      voice_credits_data: [],
-    };
-    // Validate total value for each category
-    const categories = {};
-    this.filteredTopics.forEach((topic) => {
-      const categoryId = topic.category_id;
-      const topicId = topic.id;
-      if (!categories[categoryId]) {
-        categories[categoryId] = 0;
-      }
-      categories[categoryId] += voiceCredits[topicId] || 0;
-      payload.voice_credits_data.push({
-        topic_id: topicId,
-        credits_allocated: voiceCredits[topicId],
-      });
-    });
-
-    for (const categoryId in categories) {
-      if (Object.prototype.hasOwnProperty.call(categories, categoryId)) {
-        const total = categories[categoryId];
-        if (total < 0 || total > 100) {
-          alert(
-            "Invalid total: The total value of all user entries for each category must be between 0 and 100."
-          );
-          throw new Error("Invalid total");
-        }
-      }
+    const allUserCredits = Object.keys(this.voiceCredits).map((key) => ({
+      topic_id: Number(key),
+      credits_allocated: this.voiceCredits[key].credits_allocated,
+      modified: this.voiceCredits[key].modified || false,
+    }));
+    // Validate that the total votes from all topics even if they are not modified is less than 100
+    const totalVotes = allUserCredits.reduce(
+      (acc, curr) => acc + curr.credits_allocated,
+      0
+    );
+    if (totalVotes > 100) {
+      alert(
+        "Invalid vote: The total value of all user entries must be between 0 and 100."
+      );
+      return;
     }
+    // Send to the server only the modified entries
+    const allModifiedUserCredits = allUserCredits.filter(
+      (credit) => credit.modified
+    );
+    const payload = {
+      category_id: pageCategoryId,
+      voice_credits_data: allModifiedUserCredits,
+    };
+
     return ajax("/voice_credits.json", {
       type: "POST",
       data: payload,
@@ -304,6 +287,58 @@ export default Component.extend(LoadMore, {
         callback.call(this, target);
       }
     };
+
+    onClick(".your-hearts .triangle_up", function (element) {
+      const topicId = Number(element.dataset.topicId);
+      const maxSqrt = 9;
+      let currentCredits = { ...this.voiceCredits };
+      const currentSqrt =
+        !currentCredits[topicId] ||
+        !Number.isInteger(currentCredits[topicId].credits_allocated ** 0.5)
+          ? 0
+          : currentCredits[topicId].credits_allocated ** 0.5;
+      const newValue =
+        currentSqrt < maxSqrt ? (currentSqrt + 1) ** 2 : maxSqrt ** 2;
+      if (!currentCredits[topicId]) {
+        currentCredits[topicId] = {
+          topic_id: topicId,
+          credits_allocated: newValue,
+          user_id: this.currentUser.id,
+          category_id: this.category.id,
+        };
+      } else {
+        currentCredits[topicId].credits_allocated = newValue;
+      }
+      currentCredits[topicId].modified = true;
+      this.set("voiceCredits", currentCredits);
+      console.log("new vote " + newValue);
+    });
+
+    onClick(".your-hearts .triangle_down", function (element) {
+      const topicId = Number(element.dataset.topicId);
+      const minSqrt = 0;
+      let currentCredits = { ...this.voiceCredits };
+      const currentSqrt =
+        !currentCredits[topicId] ||
+        !Number.isInteger(currentCredits[topicId].credits_allocated ** 0.5)
+          ? 0
+          : currentCredits[topicId].credits_allocated ** 0.5;
+      const newValue =
+        currentSqrt > minSqrt ? (currentSqrt - 1) ** 2 : minSqrt ** 2;
+      if (!currentCredits[topicId]) {
+        currentCredits[topicId] = {
+          topic_id: topicId,
+          credits_allocated: newValue,
+          user_id: this.currentUser.id,
+          category_id: this.category.id,
+        };
+      } else {
+        currentCredits[topicId].credits_allocated = newValue;
+      }
+      currentCredits[topicId].modified = true;
+      this.set("voiceCredits", currentCredits);
+      console.log("new vote " + newValue);
+    });
 
     onClick("button.bulk-select", function () {
       this.toggleBulkSelect();

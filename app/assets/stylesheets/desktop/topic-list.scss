@@ -273,6 +273,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-width: 90px;
+
   .heart-wrapper {
     width: 100%;
     font-size: 3px;
@@ -314,5 +316,35 @@
   input[type="number"]::-webkit-outer-spin-button {
     opacity: 0.9;
     margin-left: 5px;
+  }
+
+  .voice-vote-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-left: 2px;
+    .triangle_down {
+      margin-top: 2px;
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid var(--primary-medium);
+      font-size: 0;
+      line-height: 0;
+      float: left;
+      cursor: pointer;
+    }
+    .triangle_up {
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid #c52317;
+      transform: rotate(180deg);
+      font-size: 0;
+      line-height: 0;
+      float: left;
+      cursor: pointer;
+    }
   }
 }

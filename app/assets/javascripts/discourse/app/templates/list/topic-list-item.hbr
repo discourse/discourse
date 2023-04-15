@@ -82,7 +82,11 @@
     <div class="heart-wrapper">
       <div class="heart"></div>
     </div>
-    <input type="number" class="voice-credits-input" id="voice-credits-input-{{topic.id}}" data-topic-id={{topic.id}} value={{voiceCredits}} min="0" max="100" />
+    <div>{{voiceCredits}}</div>
+    <div class="voice-vote-buttons" >
+    <div id="dialog3" class="triangle_up" data-topic-id={{topic.id}}></div>
+    <div id="dialog1" class="triangle_down" data-topic-id={{topic.id}} ></div>
+    </div>
   </td>
 {{/if}}
 
