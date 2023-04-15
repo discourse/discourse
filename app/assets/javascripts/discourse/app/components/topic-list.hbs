@@ -30,11 +30,13 @@
   }}
 />
 
-<button
-  type="button"
-  id="save-voice-credits"
-  {{on "click" this.saveVoiceCredits}}
->Save Voice Credits</button>
+{{#if this.showUserVoiceCredits}}
+  <button
+    type="button"
+    id="save-voice-credits"
+    {{on "click" this.saveVoiceCredits}}
+  >Save Voice Credits</button>
+{{/if}}
 
 <tbody class="topic-list-body">
   {{#each this.filteredTopics as |topic index|}}
@@ -47,6 +49,7 @@
         "credits_allocated"
       }}
       @showQuadraticTotals={{this.showQuadraticTotals}}
+      @showUserVoiceCredits={{this.showUserVoiceCredits}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
       @showTopicPostBadges={{this.showTopicPostBadges}}
       @hideCategory={{this.hideCategory}}

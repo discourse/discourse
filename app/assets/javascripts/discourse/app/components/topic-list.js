@@ -8,7 +8,7 @@ import { on } from "@ember/object/evented";
 import { next, schedule } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";
-// import { ajax } from "discourse/lib/ajax";
+import { ajax } from "discourse/lib/ajax";
 
 export default Component.extend(LoadMore, {
   tagName: "table",
@@ -90,6 +90,7 @@ export default Component.extend(LoadMore, {
 
   @action
   async saveVoiceCredits() {
+    const pageCategoryId = this.get("category.id");
     const inputs = document.querySelectorAll(".voice-credits-input");
     const voiceCredits = {};
     // Check for valid input values and store in an object
@@ -104,18 +105,23 @@ export default Component.extend(LoadMore, {
         throw new Error("Invalid input");
       }
     });
-
+    let payload = {
+      category_id: pageCategoryId,
+      voice_credits_data: [],
+    };
     // Validate total value for each category
     const categories = {};
     this.filteredTopics.forEach((topic) => {
       const categoryId = topic.category_id;
       const topicId = topic.id;
-
       if (!categories[categoryId]) {
         categories[categoryId] = 0;
       }
-
       categories[categoryId] += voiceCredits[topicId] || 0;
+      payload.voice_credits_data.push({
+        topic_id: topicId,
+        credits_allocated: voiceCredits[topicId],
+      });
     });
 
     for (const categoryId in categories) {
@@ -129,7 +135,13 @@ export default Component.extend(LoadMore, {
         }
       }
     }
-    console.log("voiceCredits", voiceCredits);
+    return ajax("/voice_credits.json", {
+      type: "POST",
+      data: payload,
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error));
   },
 
   @discourseComputed("bulkSelectEnabled")
@@ -201,38 +213,6 @@ export default Component.extend(LoadMore, {
   didUpdateAttrs() {
     this._super(...arguments);
   },
-  /*
-
-  voteComment() {
-
-    const payload =
-       {
-          category_id: 6,
-          voice_credits_data:
-          [
-             { topic_id: 18, credits_allocated: 16 },
-             { topic_id: 19, credits_allocated: 25 },
-             { topic_id: 34, credits_allocated: 36  },
-             { topic_id: 35, credits_allocated: 4  },
-          ]
-         };
-    return ajax("/voice_credits.json", {
-      type: "POST",
-      data: payload,
-    })
-      .then((r) => {
-       //debugger;
-      })
-      .catch(function (error) {
-        //debugger;
-        // eslint-disable-next-line no-console
-        console.log(error);
-      });
-  },
-  */
-
-  /*
-   */
 
   _updateLastVisitedTopic(topics, order, ascending, top) {
     this.set("lastVisitedTopic", null);
