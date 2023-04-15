@@ -88,9 +88,9 @@ module Chat
     end
 
     def self.publish_processed!(chat_message)
+      chat_channel = chat_message.chat_channel
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
 
-      chat_channel = chat_message.chat_channel
       content = {
         type: :processed,
         chat_message: {

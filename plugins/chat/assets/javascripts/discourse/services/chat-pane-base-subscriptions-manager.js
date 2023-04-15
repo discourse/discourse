@@ -142,6 +142,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     const message = this.messagesManager.findMessage(data.chat_message.id);
     if (message) {
       message.cooked = data.chat_message.cooked;
+      message.incrementVersion();
       this.afterProcessedMessage(message);
     }
   }
