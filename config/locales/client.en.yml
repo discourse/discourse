@@ -2893,7 +2893,7 @@ en:
         new: "There are no more new topics."
         unread: "There are no more unread topics."
         unseen: "There are no more unseen topics."
-        category: "There are no more %{category} topics."
+        category: "There are no more %{category} topic proposals."
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
@@ -2999,7 +2999,7 @@ en:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Browse all categories</a>, <a href='%{basePath}/latest'>view latest topics</a> or see top:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
 
-      suggest_create_topic: Ready to <a href>start a new conversation?</a>
+      suggest_create_topic: Ready to <a href>propose a new topic?</a>
       jump_reply: "Jump to post's original location"
       jump_reply_aria: "Jump to @%{username}'s post in its original location"
       deleted: "The topic has been deleted"

@@ -139,9 +139,18 @@ export default Component.extend(LoadMore, {
       type: "POST",
       data: payload,
     })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((response) => response)
+      .then((data) => {
+        console.log(data);
+        this.refreshTopicVotes();
+      })
       .catch((error) => console.error(error));
+  },
+
+  @action
+  refreshTopicVotes() {
+    this.fetchUserVoiceCredits();
+    this.fetchTopicVotes();
   },
 
   @discourseComputed("bulkSelectEnabled")
