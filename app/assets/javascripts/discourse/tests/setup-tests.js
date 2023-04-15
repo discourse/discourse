@@ -202,6 +202,7 @@ export default function setupTests(config) {
   setupDeprecationCounter(QUnit);
 
   QUnit.config.hidepassed = true;
+  QUnit.config.testTimeout = 60_000;
 
   sinon.config = {
     injectIntoThis: false,
