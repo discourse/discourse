@@ -11,13 +11,49 @@
 {{#if showPosters}}
   {{raw "topic-list-header-column" order='posters' ariaLabel=(i18n "category.sort_options.posters")}}
 {{/if}}
-{{raw "topic-list-header-column" sortable=sortable number='true' order='posts' name='replies' ariaLabel=(i18n "sr_replies")}}
+{{raw "topic-list-header-column" sortable=false number='true' order='posts' name='replies' ariaLabel=(i18n "sr_replies")}}
 {{#if showLikes}}
   {{raw "topic-list-header-column" sortable=sortable number='true' order='likes' name='likes' ariaLabel=(i18n "sr_likes")}}
 {{/if}}
 {{#if showOpLikes}}
   {{raw "topic-list-header-column" sortable=sortable number='true' order='op_likes' name='likes' ariaLabel=(i18n "sr_op_likes")}}
 {{/if}}
-{{raw "topic-list-header-column" sortable=sortable number='true' order='views' name='views' ariaLabel=(i18n "sr_views")}}
-{{raw "topic-list-header-column" sortable=sortable number='true' order='activity' name='activity' ariaLabel=(i18n "sr_activity")}}
+{{#if showUserVoiceCredits}}
+  <th data-sort-order='your_voice' class='your-voice-credits topic-list-data' scope="col">
+    {{~#if canBulkSelect}}
+      {{~#if showBulkToggle}}
+        {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
+      {{/if ~}}
+      {{~#if bulkSelectEnabled}}
+        <span class='bulk-select-topics'>
+          {{~#if canDoBulkActions}}
+            <button class='btn btn-icon no-text bulk-select-actions'>{{d-icon "cog"}}&#8203;</button>
+          {{/if ~}}
+          <button class='btn btn-default bulk-select-all'>{{i18n "topics.bulk.select_all"}}</button>
+          <button class='btn btn-default bulk-clear-all'>{{i18n "topics.bulk.clear_all"}}</button>
+        </span>
+      {{/if ~}}
+    {{/if ~}}
+    <span>Your Hearts</span>
+  </th>
+{{/if ~}}
+{{#if showQuadraticTotals}}
+  <th data-sort-order='square_root_hearts' class='square-root-hearts topic-list-data' scope="col">
+    {{~#if canBulkSelect}}
+      {{~#if showBulkToggle}}
+        {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
+      {{/if ~}}
+      {{~#if bulkSelectEnabled}}
+        <span class='bulk-select-topics'>
+          {{~#if canDoBulkActions}}
+            <button class='btn btn-icon no-text bulk-select-actions'>{{d-icon "cog"}}&#8203;</button>
+          {{/if ~}}
+          <button class='btn btn-default bulk-select-all'>{{i18n "topics.bulk.select_all"}}</button>
+          <button class='btn btn-default bulk-clear-all'>{{i18n "topics.bulk.clear_all"}}</button>
+        </span>
+      {{/if ~}}
+    {{/if ~}}
+    <span>Square Root Hearts</span>
+  </th>
+{{/if ~}}
 {{~raw-plugin-outlet name="topic-list-header-after"~}}

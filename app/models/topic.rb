@@ -286,6 +286,10 @@ class Topic < ActiveRecord::Base
   belongs_to :image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
 
+  ### PCC change ###
+  has_many :voice_credits
+  ### END of PCC change ###
+
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
   attr_accessor :category_user_data

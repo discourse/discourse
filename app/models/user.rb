@@ -140,7 +140,9 @@ class User < ActiveRecord::Base
            through: :sidebar_section_links,
            source: :linkable,
            source_type: "Tag"
-
+  ### PCC change ###
+  has_many :voice_credits
+  ### END of PCC change ###
   delegate :last_sent_email_address, to: :email_logs
 
   validates_presence_of :username

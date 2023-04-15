@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-alert */
 import { alias, and } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
@@ -5,24 +7,142 @@ import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
 import { next, schedule } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
+import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
 
 export default Component.extend(LoadMore, {
   tagName: "table",
   classNames: ["topic-list"],
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
+  showUserVoiceCredits: false,
+  showQuadraticTotals: false,
   listTitle: "topic.title",
   canDoBulkActions: and("currentUser.canManageTopic", "selected.length"),
-
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),
+  topicVotes: {},
+
+  fetchTopicVotes() {
+    const categoryId = this.get("category.id");
+    const url = `/topics/category-totals/${categoryId}.json`;
+
+    fetch(url, {
+      headers: {
+        "Access-Control-Request-Headers": "*",
+        "Access-Control-Allow-Methods": "GET",
+      },
+    })
+      .then((response) => response.json())
+      .then((r) => {
+        if (r.success) {
+          console.log("topicVotes", r.total_vote_values_per_topic);
+          this.set("topicVotes", r.total_vote_values_per_topic);
+          this.set("showQuadraticTotals", true);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching quadratic_votes:", error);
+      });
+  },
+
+  fetchUserVoiceCredits() {
+    const categoryId = this.get("category.id");
+    const url = `/voice_credits.json?category_id=${categoryId}`;
+    return fetch(url, {
+      headers: {
+        "Access-Control-Request-Headers": "*",
+        "Access-Control-Allow-Methods": "GET",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then((r) => {
+        if (r.success) {
+          console.log("r.success", r.voice_credits_by_topic_id);
+          this.set("voiceCredits", r.voice_credits_by_topic_id);
+        }
+      })
+      .catch(function (error) {
+        let message;
+        if (error.hasOwnProperty("message")) {
+          message = error.message;
+        } else {
+          message = error;
+        }
+        console.log(message);
+      });
+  },
 
   _init: on("init", function () {
+    if (this.category && this.category.id) {
+      this.fetchTopicVotes(this.category.id);
+      if (this.currentUser) {
+        this.fetchUserVoiceCredits();
+      }
+    }
     this.addObserver("hideCategory", this.rerender);
     this.addObserver("order", this.rerender);
     this.addObserver("ascending", this.rerender);
     this.refreshLastVisited();
   }),
+
+  @action
+  async saveVoiceCredits() {
+    const pageCategoryId = this.get("category.id");
+    const inputs = document.querySelectorAll(".voice-credits-input");
+    const voiceCredits = {};
+    // Check for valid input values and store in an object
+    inputs.forEach((input) => {
+      const topicId = input.getAttribute("data-topic-id");
+      const value = parseInt(input.value, 10);
+
+      if (value >= 0 && value <= 100) {
+        voiceCredits[topicId] = value;
+      } else {
+        alert("Invalid input: Voice credits must be between 0 and 100.");
+        throw new Error("Invalid input");
+      }
+    });
+    let payload = {
+      category_id: pageCategoryId,
+      voice_credits_data: [],
+    };
+    // Validate total value for each category
+    const categories = {};
+    this.filteredTopics.forEach((topic) => {
+      const categoryId = topic.category_id;
+      const topicId = topic.id;
+      if (!categories[categoryId]) {
+        categories[categoryId] = 0;
+      }
+      categories[categoryId] += voiceCredits[topicId] || 0;
+      payload.voice_credits_data.push({
+        topic_id: topicId,
+        credits_allocated: voiceCredits[topicId],
+      });
+    });
+
+    for (const categoryId in categories) {
+      if (Object.prototype.hasOwnProperty.call(categories, categoryId)) {
+        const total = categories[categoryId];
+        if (total < 0 || total > 100) {
+          alert(
+            "Invalid total: The total value of all user entries for each category must be between 0 and 100."
+          );
+          throw new Error("Invalid total");
+        }
+      }
+    }
+    return ajax("/voice_credits.json", {
+      type: "POST",
+      data: payload,
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error));
+  },
 
   @discourseComputed("bulkSelectEnabled")
   toggleInTitle(bulkSelectEnabled) {
@@ -85,6 +205,13 @@ export default Component.extend(LoadMore, {
   didInsertElement() {
     this._super(...arguments);
     this.scrollToLastPosition();
+    if (this.currentUser && this.category && this.category.id) {
+      this.set("showUserVoiceCredits", true);
+    }
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
   },
 
   _updateLastVisitedTopic(topics, order, ascending, top) {
@@ -202,8 +329,8 @@ export default Component.extend(LoadMore, {
         title: "topics.bulk.actions",
       });
 
-      const action = this.bulkSelectAction;
-      if (action) {
+      const bulkAction = this.bulkSelectAction;
+      if (bulkAction) {
         controller.set("refreshClosure", () => action());
       }
     });

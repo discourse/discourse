@@ -7,6 +7,8 @@
     showPosters=this.showPosters
     showLikes=this.showLikes
     showOpLikes=this.showOpLikes
+    showQuadraticTotals=this.showQuadraticTotals
+    showUserVoiceCredits=this.showUserVoiceCredits
     order=this.order
     ascending=this.ascending
     sortable=this.sortable
@@ -28,10 +30,26 @@
   }}
 />
 
+{{#if this.showUserVoiceCredits}}
+  <button
+    type="button"
+    id="save-voice-credits"
+    {{on "click" this.saveVoiceCredits}}
+  >Save Voice Credits</button>
+{{/if}}
+
 <tbody class="topic-list-body">
   {{#each this.filteredTopics as |topic index|}}
     <TopicListItem
       @topic={{topic}}
+      @topicVote={{getFieldByObjectId this.topicVotes topic.id "total_votes"}}
+      @voiceCredits={{getFieldByObjectId
+        this.voiceCredits
+        topic.id
+        "credits_allocated"
+      }}
+      @showQuadraticTotals={{this.showQuadraticTotals}}
+      @showUserVoiceCredits={{this.showUserVoiceCredits}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
       @showTopicPostBadges={{this.showTopicPostBadges}}
       @hideCategory={{this.hideCategory}}
