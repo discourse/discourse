@@ -17,6 +17,7 @@ export default Component.extend(LoadMore, {
   showTopicPostBadges: true,
   showUserVoiceCredits: false,
   showQuadraticTotals: false,
+  remainingVotes: 0,
   listTitle: "topic.title",
   canDoBulkActions: and("currentUser.canManageTopic", "selected.length"),
   // Overwrite this to perform client side filtering of topics, if desired
@@ -47,6 +48,73 @@ export default Component.extend(LoadMore, {
       });
   },
 
+  updateVotesCanvas() {
+    const canvas = document.querySelector("#myCanvas");
+    if(canvas) {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // set up the heart size and spacing
+      const heartSize = 20;
+      const spacing = 2;
+
+      // calculate the number of rows and columns
+      const rows = 5;
+      const cols = 20;
+
+      // draw the hearts
+      let heartCount = 0;
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          if (heartCount >= this.getAvailableVotes()) break;
+
+          // draw the heart
+          ctx.fillStyle = "red";
+          ctx.beginPath();
+          ctx.moveTo(j * (heartSize + spacing) + heartSize / 2, i * (heartSize + spacing) + heartSize / 4);
+          ctx.bezierCurveTo(
+            j * (heartSize + spacing) + heartSize / 8,
+            i * (heartSize + spacing),
+            j * (heartSize + spacing),
+            i * (heartSize + spacing) + 3 * heartSize / 8,
+            j * (heartSize + spacing),
+            i * (heartSize + spacing) + heartSize / 2
+          );
+          ctx.bezierCurveTo(
+            j * (heartSize + spacing),
+            i * (heartSize + spacing) + 5 * heartSize / 8,
+            j * (heartSize + spacing) + heartSize / 8,
+            i * (heartSize + spacing) + heartSize,
+            j * (heartSize + spacing) + heartSize / 2,
+            i * (heartSize + spacing) + 7 * heartSize / 8
+          );
+          ctx.bezierCurveTo(
+            j * (heartSize + spacing) + 7 * heartSize / 8,
+            i * (heartSize + spacing) + heartSize,
+            j * (heartSize + spacing) + heartSize,
+            i * (heartSize + spacing) + 5 * heartSize / 8,
+            j * (heartSize + spacing) + heartSize,
+            i * (heartSize + spacing) + heartSize / 2
+          );
+          ctx.bezierCurveTo(
+            j * (heartSize + spacing) + heartSize,
+            i * (heartSize + spacing) + 3 * heartSize / 8,
+            j * (heartSize + spacing) + 7 * heartSize / 8,
+            i * (heartSize + spacing),
+            j * (heartSize + spacing) + heartSize / 2,
+            i * (heartSize + spacing) + heartSize / 4
+          );
+          ctx.closePath();
+          ctx.fill();
+
+          heartCount++;
+        }
+        if (heartCount >= this.getAvailableVotes()) break;
+      }
+    } else {
+      console.error("canvas is null");
+    }
+  },
+
   fetchUserVoiceCredits() {
     const categoryId = this.get("category.id");
     const url = `/voice_credits.json?category_id=${categoryId}`;
@@ -62,7 +130,12 @@ export default Component.extend(LoadMore, {
       .then((r) => {
         if (r.success) {
           console.log("r.success", r.voice_credits_by_topic_id);
+          const remainingVotes = 100 - r.voice_credits.reduce((a, b) => {
+            return a + b.credits_allocated;
+          }, 0);
+          this.set("remainingVotes", remainingVotes);
           this.set("voiceCredits", r.voice_credits_by_topic_id);
+          this.updateVotesCanvas();
         }
       })
       .catch(function (error) {
@@ -90,13 +163,27 @@ export default Component.extend(LoadMore, {
     this.refreshLastVisited();
   }),
 
+  getAvailableVotes() {
+    const allUserCredits = Object.keys(this.voiceCredits).map((key) => ({
+      topic_id: Number(key),
+      credits_allocated: this.voiceCredits[key].credits_allocated,
+    }));
+    let number = 100 - allUserCredits.reduce(
+      (acc, curr) => acc + curr.credits_allocated,
+      0
+    );
+    this.set("remainingVotes", number);
+    return number;
+  },
+
   @action
   async saveVoiceCredits() {
     const pageCategoryId = this.get("category.id");
     const allUserCredits = Object.keys(this.voiceCredits).map((key) => ({
       topic_id: Number(key),
       credits_allocated: this.voiceCredits[key].credits_allocated,
-      modified: this.voiceCredits[key].modified || false,
+
+    modified: this.voiceCredits[key].modified || false,
     }));
     // Validate that the total votes from all topics even if they are not modified is less than 100
     const totalVotes = allUserCredits.reduce(
@@ -126,6 +213,7 @@ export default Component.extend(LoadMore, {
       .then((data) => {
         console.log(data);
         this.refreshTopicVotes();
+        this.updateVotesCanvas();
       })
       .catch((error) => console.error(error));
   },
@@ -200,6 +288,7 @@ export default Component.extend(LoadMore, {
     if (this.currentUser && this.category && this.category.id) {
       this.set("showUserVoiceCredits", true);
     }
+    jQuery(window).on('load', Ember.run.bind(this, this.updateVotesCanvas));
   },
 
   didUpdateAttrs() {
@@ -312,6 +401,7 @@ export default Component.extend(LoadMore, {
       currentCredits[topicId].modified = true;
       this.set("voiceCredits", currentCredits);
       console.log("new vote " + newValue);
+      this.updateVotesCanvas();
     });
 
     onClick(".your-hearts .triangle_down", function (element) {
@@ -338,6 +428,7 @@ export default Component.extend(LoadMore, {
       currentCredits[topicId].modified = true;
       this.set("voiceCredits", currentCredits);
       console.log("new vote " + newValue);
+      this.updateVotesCanvas();
     });
 
     onClick("button.bulk-select", function () {

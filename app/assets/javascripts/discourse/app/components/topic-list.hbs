@@ -1,4 +1,23 @@
+
+
 <thead class="topic-list-header">
+    {{#if this.showUserVoiceCredits}}
+    <tr>
+      <td style="text-align: right;" colspan="100%">
+        <div>
+            <canvas id="myCanvas" width="450" height="120"></canvas>
+            <p><span id="blockCounter">{{this.remainingVotes}}</span>/100 remaining</p>
+            <button
+              type="button"
+              id="save-voice-credits"
+              class="btn"
+              style="margin-bottom: 20px;"
+              {{on "click" this.saveVoiceCredits}}
+            >Save Voice Credits</button>
+          </div>
+      </td>
+    </tr>
+    {{/if}}
   {{raw
     "topic-list-header"
     canBulkSelect=this.canBulkSelect
@@ -9,6 +28,7 @@
     showOpLikes=this.showOpLikes
     showQuadraticTotals=this.showQuadraticTotals
     showUserVoiceCredits=this.showUserVoiceCredits
+    remainingVotes=this.remainingVotes
     order=this.order
     ascending=this.ascending
     sortable=this.sortable
@@ -30,14 +50,6 @@
   }}
 />
 
-{{#if this.showUserVoiceCredits}}
-  <button
-    type="button"
-    id="save-voice-credits"
-    {{on "click" this.saveVoiceCredits}}
-  >Save Voice Credits</button>
-{{/if}}
-
 <tbody class="topic-list-body">
   {{#each this.filteredTopics as |topic index|}}
     <TopicListItem
@@ -50,6 +62,7 @@
       }}
       @showQuadraticTotals={{this.showQuadraticTotals}}
       @showUserVoiceCredits={{this.showUserVoiceCredits}}
+      @remainingVotes={{this.remainingVotes}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
       @showTopicPostBadges={{this.showTopicPostBadges}}
       @hideCategory={{this.hideCategory}}
