@@ -18,4 +18,4 @@ jobs:
           port: 22
           script: |
             docker exec -w /var/www/discourse -i app git pull --rebase
-            /var/discourse/launcher restart app
+            /var/discourse/launcher rebuild app
