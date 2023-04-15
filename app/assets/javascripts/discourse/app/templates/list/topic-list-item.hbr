@@ -79,9 +79,6 @@
 
 {{#if showUserVoiceCredits}}
   <td class="num your-hearts topic-list-data">
-    <div class="heart-wrapper">
-      <div class="heart"></div>
-    </div>
     <input type="number" class="voice-credits-input" id="voice-credits-input-{{topic.id}}" data-topic-id={{topic.id}} value={{voiceCredits}} min="0" max="100" />
   </td>
 {{/if}}
