@@ -70,35 +70,38 @@ export default Component.extend(LoadMore, {
           // draw the heart
           ctx.fillStyle = "red";
           ctx.beginPath();
-          ctx.moveTo(j * (heartSize + spacing) + heartSize / 2, i * (heartSize + spacing) + heartSize / 4);
+          ctx.moveTo(
+            j * (heartSize + spacing) + heartSize / 2,
+            i * (heartSize + spacing) + heartSize / 4
+          );
           ctx.bezierCurveTo(
-            j * (heartSize + spacing) + heartSize / 8,
+            j * (heartSize + spacing) + heartSize / 4,
             i * (heartSize + spacing),
             j * (heartSize + spacing),
-            i * (heartSize + spacing) + 3 * heartSize / 8,
+            i * (heartSize + spacing),
             j * (heartSize + spacing),
-            i * (heartSize + spacing) + heartSize / 2
+            i * (heartSize + spacing) + heartSize / 4
           );
           ctx.bezierCurveTo(
             j * (heartSize + spacing),
-            i * (heartSize + spacing) + 5 * heartSize / 8,
-            j * (heartSize + spacing) + heartSize / 8,
-            i * (heartSize + spacing) + heartSize,
+            i * (heartSize + spacing) + heartSize / 2,
+            j * (heartSize + spacing) + heartSize / 4,
+            i * (heartSize + spacing) + (3 * heartSize) / 4,
             j * (heartSize + spacing) + heartSize / 2,
-            i * (heartSize + spacing) + 7 * heartSize / 8
+            i * (heartSize + spacing) + heartSize
           );
           ctx.bezierCurveTo(
-            j * (heartSize + spacing) + 7 * heartSize / 8,
-            i * (heartSize + spacing) + heartSize,
+            j * (heartSize + spacing) + (3 * heartSize) / 4,
+            i * (heartSize + spacing) + (3 * heartSize) / 4,
             j * (heartSize + spacing) + heartSize,
-            i * (heartSize + spacing) + 5 * heartSize / 8,
+            i * (heartSize + spacing) + heartSize / 2,
             j * (heartSize + spacing) + heartSize,
-            i * (heartSize + spacing) + heartSize / 2
+            i * (heartSize + spacing) + heartSize / 4
           );
           ctx.bezierCurveTo(
             j * (heartSize + spacing) + heartSize,
-            i * (heartSize + spacing) + 3 * heartSize / 8,
-            j * (heartSize + spacing) + 7 * heartSize / 8,
+            i * (heartSize + spacing),
+            j * (heartSize + spacing) + (3 * heartSize) / 4,
             i * (heartSize + spacing),
             j * (heartSize + spacing) + heartSize / 2,
             i * (heartSize + spacing) + heartSize / 4
