@@ -100,7 +100,6 @@ module Chat
       needs_deletion.each do |user_id|
         chat_mention = existing_notifications.detect { |n| n.user_id == user_id }
         chat_mention.notification.destroy! if chat_mention.notification.present?
-        chat_mention.destroy!
       end
 
       needs_notification_ids = mentioned_user_ids - already_notified_user_ids
