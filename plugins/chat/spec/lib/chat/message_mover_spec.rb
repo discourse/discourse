@@ -76,7 +76,7 @@ describe Chat::MessageMover do
       deleted_messages = Chat::Message.with_deleted.where(id: move_message_ids).order(:id)
       expect(deleted_messages.count).to eq(3)
       expect(messages.first.channel).to eq("/chat/#{source_channel.id}")
-      expect(messages.first.data[:typ]).to eq("bulk_delete")
+      expect(messages.first.data[:type]).to eq("bulk_delete")
       expect(messages.first.data[:deleted_ids]).to eq(deleted_messages.map(&:id))
       expect(messages.first.data[:deleted_at]).not_to eq(nil)
     end
