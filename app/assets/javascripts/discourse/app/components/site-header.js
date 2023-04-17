@@ -483,6 +483,11 @@ export default SiteHeaderComponent.extend({
       schedule("afterRender", () => {
         this.header = this.headerWrap.querySelector("header.d-header");
         this.updateHeaderOffset();
+        const headerTop = this.header.offsetTop;
+        document.documentElement.style.setProperty(
+          "--header-top",
+          `${headerTop}px`
+        );
       });
 
       window.addEventListener("scroll", this.updateHeaderOffset, {
