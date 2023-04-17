@@ -196,7 +196,7 @@ module Chat
     def self.publish_to_channel!(channel, payload)
       MessageBus.publish(
         root_message_bus_channel(channel.id),
-        payload.as_sjon,
+        payload.as_json,
         permissions(channel),
       )
     end
