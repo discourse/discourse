@@ -826,7 +826,7 @@ RSpec.describe SessionController do
     end
 
     it "redirects to random url if it is allowed" do
-      SiteSetting.discourse_connect_allows_all_return_paths = true
+      SiteSetting.discourse_connect_allowed_redirect_domains = "gusundtrout.com|foobar.com"
 
       sso = get_sso("https://gusundtrout.com")
       sso.external_id = "666"
