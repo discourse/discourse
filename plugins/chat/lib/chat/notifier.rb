@@ -116,12 +116,7 @@ module Chat
     private
 
     def list_users_to_notify
-      mentions_count =
-        @mentions.parsed_direct_mentions.length + @mentions.parsed_group_mentions.length
-      mentions_count += 1 if @mentions.has_global_mention
-      mentions_count += 1 if @mentions.has_here_mention
-
-      skip_notifications = mentions_count > SiteSetting.max_mentions_per_chat_message
+      skip_notifications = @mentions.count > SiteSetting.max_mentions_per_chat_message
 
       {}.tap do |to_notify|
         # The order of these methods is the precedence
