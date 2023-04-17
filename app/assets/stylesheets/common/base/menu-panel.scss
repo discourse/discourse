@@ -111,6 +111,7 @@
     border-left: 1px solid var(--primary-low);
     padding: 0.75em 0 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .tabs-list {
@@ -155,6 +156,7 @@
   .quick-access-panel {
     width: 320px;
     padding: 0.75em;
+    padding-bottom: max(env(safe-area-inset-bottom), 0.75em);
     justify-content: space-between;
     box-sizing: border-box;
     min-width: 0; // makes sure menu tabs don't go off screen
@@ -213,6 +215,12 @@
         align-items: center;
         margin: 0;
         padding: 0 0.5em;
+      }
+      img.emoji {
+        height: 1em;
+        width: 1em;
+        padding-top: 0.2em;
+        margin-right: 0.5em;
       }
       .d-icon {
         padding-top: 0;
@@ -504,13 +512,6 @@
         padding-top: 0.2em;
         margin-right: 0.5em;
       }
-
-      img.emoji {
-        height: 1em;
-        width: 1em;
-        padding-top: 0.2em;
-        margin-right: 0.5em;
-      }
     }
     .is-warning {
       .d-icon-envelope {
@@ -711,13 +712,12 @@ body.footer-nav-ipad {
   top: var(--header-top);
   box-sizing: border-box;
 
-  /* Use dvh where supported, with fallback to vh */
-  --100dvh: 100vh;
-  --100dvh: 100dvh;
+  --100dvh: 100%;
+  @supports (height: 100dvh) {
+    --100dvh: 100dvh;
+  }
 
-  --base-height: calc(
-    var(--100dvh) - var(--header-top) - env(safe-area-inset-bottom, 0px)
-  );
+  --base-height: calc(var(--100dvh) - var(--header-top));
 
   height: var(--base-height);
 

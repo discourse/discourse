@@ -232,7 +232,7 @@ export function setup(helper) {
   });
 
   helper.buildCookFunction((opts, generateCookFunction) => {
-    if (!opts.discourse.additionalOptions) {
+    if (!opts.discourse.additionalOptions?.chat) {
       return;
     }
 

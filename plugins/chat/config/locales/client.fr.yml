@@ -93,6 +93,8 @@ fr:
         never: "Jamais"
         title: "Notifications par e-mail"
         when_away: "Seulement en cas d'absence"
+      header_indicator_preference:
+        never: "Jamais"
       enable: "Activer la discussion"
       flag: "Drapeau"
       emoji: "Insérer un émoji"
@@ -102,7 +104,7 @@ fr:
       in_reply_to: "En réponse à"
       heading: "Discussion"
       join: "Rejoindre"
-      new_messages: "nouveaux messages"
+      last_visit: "dernière visite"
       mention_warning:
         dismiss: "rejeter"
         invitations_sent:
@@ -151,7 +153,6 @@ fr:
       restore: "Restaurer le message supprimé"
       save: "Enregistrer"
       select: "Sélectionner"
-      silence: "Désactiver l'utilisateur"
       return_to_list: "Retour à la liste des canaux"
       scroll_to_bottom: "Défiler vers le bas"
       scroll_to_new_messages: "Voir les nouveaux messages"
@@ -406,9 +407,8 @@ fr:
       transcript:
         view: "Afficher la transcription des messages précédents"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Message de discussion signalé"
-          flagged_by: "Signalé par"
     keyboard_shortcuts_help:
       chat:
         title: "Discussion"

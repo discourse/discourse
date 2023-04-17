@@ -107,6 +107,7 @@ CRITICAL_HOST_ENV_VARS = %w{
 )
 
 DEFAULT_DB_NAME = "discourse"
+DEFAULT_DB_PORT = 5432
 DEFAULT_REDIS_PORT = 6379
 
 HOST_RESOLVER_CACHE = {}
@@ -177,6 +178,8 @@ end
 
 CacheMeta = Struct.new(:first_seen, :last_seen)
 
+class EmptyCacheError < StandardError; end
+
 class ResolverCache
   def initialize(name)
     # instance of Name|SRVName
@@ -186,22 +189,29 @@ class ResolverCache
     @cached = {}
   end
 
-  # resolve returns a list of resolved addresses ordered by the time first seen,
-  # most recently seen at the head of the list.
-  # Addresses last seen more than 30 minutes ago are evicted from the cache on
-  # a call to resolve().
-  # If an exception occurs during DNS resolution we return whatever addresses are
-  # cached.
+  # Returns a list of resolved addresses ordered by first seen time.  Most
+  # recently seen address is first.
+  # If an exception occurs during DNS resolution we return whatever addresses
+  # are cached.
+  # Addresses last seen more than 30 minutes ago are evicted from the cache.
+  # Raises EmptyCacheError if the cache is empty after DNS resolution and cache
+  # eviction is performed.
   def resolve
-    @name.resolve.each do |address|
-      if @cached[address]
-        @cached[address].last_seen = Time.now.utc
-      else
-        @cached[address] = CacheMeta.new(Time.now.utc, Time.now.utc)
+    begin
+      @name.resolve.each do |address|
+        if @cached[address]
+          @cached[address].last_seen = Time.now.utc
+        else
+          @cached[address] = CacheMeta.new(Time.now.utc, Time.now.utc)
+        end
       end
+    rescue Resolv::ResolvError, Resolv::ResolvTimeout
     end
-  ensure
+
     @cached = @cached.delete_if { |_, meta| Time.now.utc - 30 * 60 > meta.last_seen }
+    if @cached.empty?
+      raise EmptyCacheError, "DNS resolver found no usable addresses"
+    end
     @cached.sort_by { |_, meta| meta.first_seen }.reverse.map(&:first)
   end
 end
@@ -213,11 +223,25 @@ class HealthyCache
     @cached = nil  # a single IP address that was most recently found to be healthy
   end
 
+  # Returns the first healthy server found in the list of resolved addresses.
+  # Returns the last known healthy server if all servers disappear from the
+  # DNS.
+  # Raises EmptyCacheError if no healthy servers have been cached.
   def first_healthy
-    address = @resolver_cache.resolve.lazy.select { |addr| @check.call(addr) }.first
-    if !nilempty(address).nil?
+    begin
+      addresses = @resolver_cache.resolve
+    rescue EmptyCacheError
+      return @cached if @cached
+      raise
+    end
+
+    if (address = addresses.lazy.select { |addr| @check.call(addr) }.first)
       @cached = address
     end
+    if @cached.nil?
+      raise EmptyCacheError, "no healthy servers found amongst #{addresses}"
+    end
+
     @cached
   end
 end
@@ -244,12 +268,13 @@ ensure
   client.close if client
 end
 
-def postgres_healthcheck(host:, user:, password:, dbname:)
+def postgres_healthcheck(host:, user:, password:, dbname:, port: DEFAULT_DB_PORT)
   client = PG::Connection.new(
     host: host,
     user: user,
     password: password,
     dbname: dbname,
+    port: port,
     connect_timeout: 2,  # minimum
   )
   client.exec(';').none?
@@ -268,12 +293,14 @@ HEALTH_CHECKS = Hash.new(
       host: addr,
       user: ENV["DISCOURSE_DB_USERNAME"] || DEFAULT_DB_NAME,
       dbname: ENV["DISCOURSE_DB_NAME"] || DEFAULT_DB_NAME,
+      port: ENV["DISCOURSE_DB_PORT"] || DEFAULT_DB_PORT,
       password: ENV["DISCOURSE_DB_PASSWORD"])},
   "DISCOURSE_DB_REPLICA_HOST": lambda { |addr|
     postgres_healthcheck(
       host: addr,
       user: ENV["DISCOURSE_DB_USERNAME"] || DEFAULT_DB_NAME,
       dbname: ENV["DISCOURSE_DB_NAME"] || DEFAULT_DB_NAME,
+      port: ENV["DISCOURSE_DB_REPLICA_PORT"] || DEFAULT_DB_PORT,
       password: ENV["DISCOURSE_DB_PASSWORD"])},
   "DISCOURSE_REDIS_HOST": lambda { |addr|
     redis_healthcheck(
@@ -413,8 +440,6 @@ def run_and_report(hostname_vars)
 end
 
 def run(hostname_vars)
-  # HOSTNAME: [IP_ADDRESS, ...]
-  # this will usually be a single address
   resolved = {}
   errors = Hash.new(0)
 
@@ -431,13 +456,9 @@ def run(hostname_vars)
     HOST_HEALTHY_CACHE[var] ||= HealthyCache.new(HOST_RESOLVER_CACHE[var], HEALTH_CHECKS[var.to_sym])
 
     begin
-      if (address = HOST_HEALTHY_CACHE[var].first_healthy)
-        resolved[name] = [address]
-      else
-        error("#{var}: #{name}: no address")
-        errors[name] += 1
-      end
-    rescue => e
+      address = HOST_HEALTHY_CACHE[var].first_healthy
+      resolved[name] = [address]
+    rescue EmptyCacheError => e
       error("#{var}: #{name}: #{e}")
       errors[name] += 1
     end
@@ -458,9 +479,8 @@ def run(hostname_vars)
   if changed
     File.write(HOSTS_PATH, hosts_content)
   end
-
 rescue => e
-  error("DNS lookup failed: #{e}")
+  error("unhandled exception during run: #{e}")
   errors[nil] = 1
 ensure
   return errors

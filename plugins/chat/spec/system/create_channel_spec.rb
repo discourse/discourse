@@ -81,6 +81,7 @@ RSpec.describe "Create channel", type: :system, js: true do
         chat_page.visit_browse
         chat_page.new_channel_button.click
         channel_modal.select_category(private_category_1)
+        expect(page).to have_no_css(".loading-permissions")
 
         expect(channel_modal.create_channel_hint["innerHTML"].strip).to include(
           "&lt;script&gt;e&lt;/script&gt;",
@@ -101,7 +102,7 @@ RSpec.describe "Create channel", type: :system, js: true do
       channel_modal.click_primary_button
 
       expect(page).to have_content(name)
-      created_channel = ChatChannel.find_by(chatable_id: category_1.id)
+      created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
       expect(created_channel.slug).to eq("cats-dogs")
       expect(page).to have_current_path(chat.channel_path(created_channel.slug, created_channel.id))
     end
@@ -117,7 +118,7 @@ RSpec.describe "Create channel", type: :system, js: true do
       channel_modal.click_primary_button
 
       expect(page).to have_content(name)
-      created_channel = ChatChannel.find_by(chatable_id: category_1.id)
+      created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
       expect(created_channel.slug).to eq("pets-everywhere")
       expect(page).to have_current_path(chat.channel_path(created_channel.slug, created_channel.id))
     end
@@ -152,7 +153,7 @@ RSpec.describe "Create channel", type: :system, js: true do
           it "allows the user to proceed with channel creation" do
             dialog.click_yes
             expect(page).to have_content(name)
-            created_channel = ChatChannel.find_by(chatable_id: category_1.id)
+            created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
             expect(page).to have_current_path(
               chat.channel_path(created_channel.slug, created_channel.id),
             )
@@ -161,7 +162,7 @@ RSpec.describe "Create channel", type: :system, js: true do
           it "does nothing if no is clicked" do
             dialog.click_no
             expect(page).to have_css(".create-channel-modal")
-            expect(ChatChannel.exists?(chatable_id: category_1.id)).to eq(false)
+            expect(Chat::Channel.exists?(chatable_id: category_1.id)).to eq(false)
           end
         end
 
@@ -269,7 +270,7 @@ RSpec.describe "Create channel", type: :system, js: true do
           channel_modal.click_primary_button
 
           expect(page).to have_content(category_1.name)
-          created_channel = ChatChannel.find_by(chatable_id: category_1.id)
+          created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
           expect(page).to have_current_path(
             chat.channel_path(created_channel.slug, created_channel.id),
           )

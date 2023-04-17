@@ -44,7 +44,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
           Jobs.run_immediately!
 
           message =
-            Chat::ChatMessageCreator.create(
+            Chat::MessageCreator.create(
               chat_channel: dm_channel_1,
               user: other_user,
               content: "this is fine @#{current_user.username}",
@@ -81,7 +81,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
 
         xit "shows a group mention notification" do
           message =
-            Chat::ChatMessageCreator.create(
+            Chat::MessageCreator.create(
               chat_channel: channel_1,
               user: other_user,
               content: "this is fine @#{group.name}",
@@ -110,7 +110,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
           Jobs.run_immediately!
 
           message =
-            Chat::ChatMessageCreator.create(
+            Chat::MessageCreator.create(
               chat_channel: channel_1,
               user: other_user,
               content: "this is fine @#{current_user.username}",
@@ -134,7 +134,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
       context "when @all" do
         xit "shows a mention notification" do
           message =
-            Chat::ChatMessageCreator.create(
+            Chat::MessageCreator.create(
               chat_channel: channel_1,
               user: other_user,
               content: "this is fine @all",

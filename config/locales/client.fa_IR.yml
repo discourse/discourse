@@ -166,8 +166,6 @@ fa_IR:
     software_update_prompt:
       message: "سایت بروز رسانی شده٬ لطفا برای پرهیز از بروز خطای احتمالی صفحه خود را دوباره <span>بارگزاری/ریفرش</span> کنید."
       dismiss: "رد کردن"
-    bootstrap_mode_disabled: "حالت خود راه انداز در 24 ساعت آینده غیر‌فعال خواهد شد."
-    bootstrap_invite_button_title: "ارسال دعوت‌نامه"
     themes:
       default_description: "پیش‌فرض"
     s3:
@@ -318,7 +316,6 @@ fa_IR:
       new_topic: "پیش‌نویس‌ موضوع جدید"
       new_private_message: "پیش‌نویس پیام شخصی جدید"
       abandon:
-        confirm: "شما یک پیش‌نویس در این موضوع دارید. دوست داری باهاش چیکار کنی؟"
         yes_value: "حذف"
         no_value: "ادامه"
     topic_count_categories:
@@ -334,7 +331,7 @@ fa_IR:
       one: "خواندن %{count} موضوعات خوانده نشده"
       other: "خواندن %{count} موضوع خوانده نشده"
     topic_count_new:
-      one: "مشاهده %{count} موضوعات جدید"
+      one: "مشاهده %{count} موضوع جدید"
       other: "مشاهده %{count} موضوع جدید"
     preview: "پیش‌نمایش"
     cancel: "لغو"
@@ -491,26 +488,37 @@ fa_IR:
       scores:
         about: "این امتیاز بر اساس سطح اعتماد گزارش دهنده، دقت پرچم‌های قبلی ایشان، و اولویت مورد گزارش شده حساب میشود، "
         score: "امتیاز"
-        date: "تاریخ"
-        type: "نوع"
+        type: "دلیل"
         status: "وضعیت"
-        submitted_by: "ارسال شده توسط"
-        reviewed_by: "بازنگری شده توسط"
+        submitted_by: "گزارش شده توسط"
       statuses:
         pending:
           title: "در انتظار"
         approved:
           title: "پذیرفته شده"
+        approved_flag:
+          title: "پرچم تایید شده"
+        approved_user:
+          title: "کاربر تایید شده"
+        approved_post:
+          title: "نوشته تایید شده"
         rejected:
           title: "رد شده"
-        ignored:
-          title: "صرف نظر شده"
+        rejected_flag:
+          title: "پرچم رد شده"
+        rejected_user:
+          title: "کاربر رد شده"
+        rejected_post:
+          title: "نوشته رد شده"
         deleted:
-          title: "حذف شده"
+          title: "موضوع یا نوشته حذف شده"
         reviewed:
-          title: "(همه مرور شده)"
+          title: "همه بررسی شده"
         all:
-          title: "«همه چیز»"
+          title: "همه چیز"
+      context_question:
+        delimiter: "یا"
+        something_else_wrong: "آیا مشکلی در این نوشته وجود دارد؟"
       types:
         reviewable_flagged_post:
           title: "نوشته پرچم شده"
@@ -794,6 +802,7 @@ fa_IR:
         remove_members: "اخراج عضو‌ها"
         make_owners: "اعطای مالکیت"
         make_owners_description: "کاربران انتخاب شده را مالک این گروه کن"
+        status: "وضعیت"
         owner: "مالک"
         primary: "اصلی"
         forbidden: "شما مجاز به دیدن کاربران نیستید."
@@ -1089,7 +1098,6 @@ fa_IR:
       home: "صفحه خانگی پیشفرض"
       staged: "کاربر از راه دور"
       staff_counters:
-        flags_given: "پرچم گذاری‌های مفید"
         flagged_posts: "نوشته های پرچم گذاری شده"
         deleted_posts: "پست های حذف شده"
         suspensions: "تعلیق‌ها"
@@ -2277,6 +2285,7 @@ fa_IR:
         bookmarks: "هنوز هیچ موضوع نشانک‌داری ندارید."
         category: "هیچ موضوعی در %{category} نیست."
         top: "موضوع برتری وجود ندارد."
+        filter: "هنوز هیچ موضوعی وجود ندارد."
       bottom:
         latest: "موضوع تازه‌ی دیگری وجود ندارد."
         posted: "هیچ موضوعات نوشته شده ای وجود ندارد"
@@ -2287,11 +2296,13 @@ fa_IR:
         tag: "هیچ موضوع دیگری در %{tag} نیست."
         top: "موضوع برتر دیگری وجود ندارد"
         bookmarks: "موضوع نشانک‌دار دیگری وجود ندارد."
+        filter: "هیچ موضوع بیشتری وجود ندارد."
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"
         other: "%{count} نوشته در این موضوع وجود دارد"
       create: "موضوع جدید"
+      create_disabled_category: "شما مجاز به ایجاد موضوع در این دسته‌بندی نیستید"
       create_long: "ساخت یک موضوع جدید"
       open_draft: "بازکردن پیشنویس"
       private_message: "شروع یک پیام"
@@ -3030,6 +3041,10 @@ fa_IR:
     filters:
       with_topics: "%{filter} موضوعات"
       with_category: "%{filter} %{category} موضوعات"
+      filter:
+        title: "فیلتر"
+        button:
+          label: "فیلتر"
       latest:
         title: "آخرین"
         title_with_count:
@@ -3357,14 +3372,17 @@ fa_IR:
         custom:
           add: "افزودن بخش سفارشی"
           edit: "ویرایش بخش سفارشی"
-          name: "عنوان بخش"
           save: "ذخیره"
           delete: "حذف"
           delete_confirm: "آیا مطمئن هستید که می‌خواهید این بخش را حذف کنید؟"
           links:
-            icon: "آیکن"
-            name: "نام"
             delete: "حذف پیوند"
+            icon:
+              label: "آیکن"
+            name:
+              label: "نام"
+          title:
+            label: "عنوان بخش"
         about:
           header_link_text: "درباره"
         messages:
@@ -4128,9 +4146,6 @@ fa_IR:
           flag: "پرچم"
           replace: "جایگزینی"
           tag: "برچسب"
-        action_descriptions:
-          block: "از فرستادن فرسته‌هایی که دارای این واژه‌ها هستند جلوگیری کنید. کاربر هنگام ارسال فرسته با پیام خطا مواجه می‌شود."
-          require_approval: "فرسته‌های دارای این واژه‌ها پیش از دیده شدن نیاز به تائید کارکنان دارند."
         form:
           tag_label: "برچسب"
           link_placeholder: "https://example.com"
@@ -4153,9 +4168,22 @@ fa_IR:
         new_template_form:
           submit: "ذخیره"
           cancel: "انصراف"
+          preview: "پیش‌نمایش"
         quick_insert_fields:
           add_new_field: "اضافه کردن"
           dropdown: "کرکره‌ای"
+        validations_modal:
+          table_headers:
+            key: "کلید"
+            type: "نوع"
+            description: "توضیح"
+          validations:
+            required:
+              key: "مورد نیاز "
+            minimum:
+              key: "حداقل"
+            maximum:
+              key: "حداکثر"
       impersonate:
         title: "جعل هویت کردن"
         help: "با استفاده از ابزار جعل هویت کردن یک حساب کاربری را برای اشکال زدایی انتخاب نمایید، شما باید بعد از اتمام کار یک بار خارج شوید."
@@ -4168,6 +4196,7 @@ fa_IR:
         not_found: "متاسفیم٬ این کاربر در سیستم ما وجود ندارد."
         id_not_found: "متاسفیم٬ این شناسه کاربری در سیستم ما وجود ندارد."
         active: "فعال شد"
+        status: "وضعیت"
         show_emails: "ایمیل ها را نشان بده"
         hide_emails: "مخفی کردن رایانامه‌ها"
         nav:

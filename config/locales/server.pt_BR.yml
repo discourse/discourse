@@ -52,6 +52,8 @@ pt_BR:
   remove_posts_deleted_by_author: "Excluído(a) pelo autor(a)"
   redirect_warning: "Não foi possível confirmar se o link selecionado foi postado no fórum. Se deseja continuar mesmo assim, selecione o link abaixo."
   on_another_topic: "Em outro tópico"
+  topic_tag_changed:
+    removed: "Removeu %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
@@ -1104,7 +1106,7 @@ pt_BR:
       title: "DAU/MAU"
       xaxis: "Dia"
       yaxis: "DAU/MAU"
-      description: "Quantidade de membros que entraram com a conta no último dia dividida pela quantidade de membros que entraram com a conta no último mês. Retorna uma % que indica a \"adesão\" à comunidade. Tente alcançar >30%."
+      description: "Quantidade de membros que entraram com a conta no último dia dividida pela quantidade de membros que entraram com a conta no último mês. Retorna uma % que indica a \"adesão\" à comunidade. Tente alcançar >20%."
     daily_engaged_users:
       title: "Usuários(as) envolvidos(as) diariamente"
       xaxis: "Dia"
@@ -1472,7 +1474,6 @@ pt_BR:
     manifest_icon: "Imagem usada como logotipo/splash no Android. Será redimensionada automaticamente para 512×512. Se for deixada em branco, large_icon será usado."
     manifest_screenshots: "Capturas de tela que mostram os recursos e funcionalidades da sua instância na sua página de alerta de instalação. Todas as imagens devem ser envios locais e devem ter as mesmas dimensões."
     favicon: "Um favicon para o seu site, consulte <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar corretamente em um CDN, precisa ser um png, que será redimensionado para 32x32. Se for deixado em branco, large_icon será usado."
-    apple_touch_icon: "Ícone usado para dispositivos Apple touch, que será automaticamente redimensionado para 180x180. Se for deixado em branco, large_icon será usado."
     opengraph_image: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
     twitter_summary_large_image: "Cartão do Twitter 'resumo de imagem grande' (deve ter pelo menos 280 de largura e pelo menos 150 de altura, não pode ser .svg). Se for deixado em branco, os metadados comuns do cartão são gerados usando o opengraph_image, desde que também não sejam um .svg."
     notification_email: "O endereço de e-mail utilizado ao enviar e-mails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR devidamente configurados para que os e-mails funcionem corretamente."
@@ -1603,7 +1604,6 @@ pt_BR:
     enable_discourse_connect: "Ativar a criação de conta via DiscourseConnect (anteriormente \"Discourse SS\") (ALERTA: OS ENDEREÇOS DE E-MAL DOS(AS) USUÁRIOS(AS) *DEVEM* SER VALIDADOS PELO SITE EXTERNO!)"
     verbose_discourse_connect_logging: "Registrar diagnósticos detalhados relacionados ao DiscourseConnec em <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementar o protocolo de provedor do DiscourseConnect (anteriormente \"Discourse SSO\") no ponto de extremidade /session/sso_provider, requer que o discourse_connect_provider_secrets seja definido"
-    discourse_connect_url: "URL do ponto de extremidade do DiscourseConnect (deve incluir http:// ou https://)"
     discourse_connect_secret: "Linha secreta usada para autenticar com criptografia as informações do DiscourseConnect, verifique se tem mais de dez caracteres"
     discourse_connect_provider_secrets: "Uma lista de pares de segredos de domínio que usam o Discourse. Verifique se o segredo do DiscourseConnect tem pelo menos dez caracteres. O símbolo de curinga * pode ser usado para fazer correspondência com domínios ou partes deles (por exemplo: *.example.com)."
     discourse_connect_overrides_bio: "Sobrescreve a biografia do(a) usuário(a) e o(a) impede de mudá-la."
@@ -1721,7 +1721,6 @@ pt_BR:
     composer_media_optimization_image_bytes_optimization_threshold: "Tamanho mínimo de imagem para acionar a otimização do lado do cliente"
     composer_media_optimization_image_resize_dimensions_threshold: "Largura de imagem mínima para acionar o redimensionamento do lado do cliente"
     composer_media_optimization_image_resize_width_target: "Imagens com larguas maiores do que \"composer_media_optimization_image_dimensions_resize_threshold\" serão redimensionadas para esta largura. Deve ser >= do que \"composer_media_optimization_image_dimensions_resize_threshold\"."
-    composer_media_optimization_image_encode_quality: "Qualidade de codificação de JPG usada no processo de recodificação."
     min_ratio_to_crop: "Taxa usada para cortar imagens altas. Digite o resultado da largura/altura."
     simultaneous_uploads: "Quantidade máxima de arquivos que podem ser arrastados e soltos no compositor"
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários(as) convidados(as)."
@@ -2166,7 +2165,6 @@ pt_BR:
       staged_users_disabled: "Primeiro você deve ativar os \"usuários(as) encenados(as)\" antes de ativar esta configuração."
       reply_by_email_disabled: "Você deve ativar \"responder por e-mail\" antes de ativar esta configuração primeiro."
       discourse_connect_url_is_empty: "É preciso definir uma \"url de conexão do Discourse\" antes de ativar esta configuração."
-      discourse_connect_invite_only: "Não é possível ativar o DiscourseConnect e \"apenas convite\" ao mesmo tempo."
       enable_local_logins_disabled: "Você deve ativar \"ativar entradas com e-mail em modo local\" antes de ativar esta configuração."
       min_username_length_exists: "Você não pode definir o tamanho mínimo do nome do(a) usuário(a) acima do nome do(a) usuário(a) mais curto (%{username})."
       min_username_length_range: "Você não pode definir o mínimo acima do máximo."
@@ -3679,13 +3677,6 @@ pt_BR:
   offline:
     title: "Não é possível carregar o aplicativo"
     offline_page_message: "Parece que você está off-line! Verifique sua conexão de rede e tente novamente."
-  login_required:
-    welcome_message: |
-      ## [Boas-vindas ao %{title}](#boas-vindas)
-      É preciso ter uma conta. Crie ou entre com uma para continuar.
-    welcome_message_invite_only: |
-      ## [Boas-vindas ao %{title}](#boas-vindas)
-      É preciso ter uma conta. Peça que a um membro um convite ou entre com uma conta para continuar.
   upload:
     edit_reason: "cópias locais de imagens baixadas"
     unauthorized: "Desculpe, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
@@ -4192,10 +4183,7 @@ pt_BR:
       message: "<p>Reenviamos o e-mail de confirmação para <b>%{email}</b>"
   safe_mode:
     title: "Entrar no modo de segurança"
-    description: "O modo de segurança permite que você teste seu site sem carregar plugins ou temas."
     no_themes: "Desabilitar temas e componentes"
-    no_unofficial_plugins: "Desativar plug-ins não oficiais"
-    no_plugins: "Desativar todos os plug-ins"
     enter: "Entrar no modo de segurança"
     must_select: "Você deve selecionar pelo menos uma opção para entrar no modo de segurança."
   wizard:
@@ -4372,50 +4360,30 @@ pt_BR:
         category: configurações de categoria
     actions:
       agree:
-        title: "Concordar…"
-      agree_and_keep:
-        title: "Manter postagem"
-        description: "Concorde com o sinalizador e mantenha a postagem inalterada."
-      agree_and_keep_hidden:
-        title: "Manter postagem oculta"
-        description: "Concorde com o sinalizador e mantenha a postagem oculta."
+        title: "Sim"
       agree_and_suspend:
-        title: "Suspender usuário(a)"
         description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
       agree_and_silence:
         title: "Silenciar usuário(a)"
         description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
       agree_and_restore:
-        title: "Restaurar postagem"
         description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
-      agree_and_hide:
-        title: "Ocultar publicação"
-        description: "Oculte esta publicação e envie automaticamente ao(à) usuário(as) uma mensagem pedindo que edite."
       delete_single:
         title: "Excluir"
       delete:
         title: "Excluir…"
-      delete_and_ignore:
-        title: "Excluir postagem e ignorar"
-        description: "Excluir postagem. Se for a primeira postagem, excluir o tópico também"
       delete_and_ignore_replies:
-        title: "Excluir postagem + respostas e ignorar"
-        description: "Excluir postagem e todas as suas respostas. Se for a primeira postagem, excluir o tópico também"
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
-      delete_and_agree:
-        title: "Excluir postagem e concordar"
-        description: "Excluir postagem. Se for a primeira postagem, excluir o tópico também"
       delete_and_agree_replies:
-        title: "Excluir postagem + respostas e concordar"
-        description: "Excluir postagem e todas as suas respostas. Se for a primeira postagem, excluir o tópico também"
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
       disagree_and_restore:
-        title: "Discordar e restaurar postagem"
         description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
       disagree:
-        title: "Discordar"
+        title: "Não"
       ignore:
         title: "Ignorar"
+      ignore_and_do_nothing:
+        title: "Não fazer nada"
       approve:
         title: "Aprovar"
       approve_post:

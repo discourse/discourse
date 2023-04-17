@@ -132,10 +132,10 @@ tr_TR:
           one: "%{count} yıl sonra"
           other: "%{count} yıl sonra"
       previous_month: "Önceki Ay"
-      next_month: "Sonraki Ay"
+      next_month: "Gelecek Ay"
       placeholder: tarih
       from_placeholder: "başlangıç tarihi"
-      to_placeholder: "bitiş tarihi"
+      to_placeholder: "bugüne kadar"
     share:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} adlı kullanıcının #%{postNumber}. gönderisi"
@@ -155,6 +155,8 @@ tr_TR:
       removed_user: "%{who} adlı kullanıcıyı çıkardı, %{when}"
       removed_group: "%{who} adlı kullanıcıyı çıkardı, %{when}"
       autobumped: "Otomatik olarak üste sıçradı, %{when}"
+      tags_changed: "Etiketler güncellendi (%{when})"
+      category_changed: "Kategori güncellendi (%{when})"
       autoclosed:
         enabled: "Kapattı, %{when}"
         disabled: "Açtı, %{when}"
@@ -184,12 +186,7 @@ tr_TR:
     software_update_prompt:
       message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik davranışlarla karşılaşabilirsiniz."
       dismiss: "Kapat"
-    bootstrap_mode_enabled:
-      one: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara 1. güven seviyesi verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılır."
-      other: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara 1. güven seviyesi verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılır."
-    bootstrap_mode_disabled: "Önyükleme modu 24 saat içinde devre dışı bırakılır."
-    bootstrap_invite_button_title: "Davet Gönder"
-    bootstrap_wizard_link_title: "Kurulum sihirbazını bitir"
+    bootstrap_mode: "Bootstrap modu"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir temada / bileşende hata olduğu için siteniz çalışmayabilir."
@@ -233,7 +230,7 @@ tr_TR:
     generic_error: "Üzgünüz, bir hata oluştu."
     generic_error_with_reason: "Bir hata oluştu: %{error}"
     multiple_errors: "Birden fazla hata oluştu: %{errors}"
-    sign_up: "Kayıt Ol"
+    sign_up: "Kaydol"
     log_in: "Giriş Yap"
     age: "Yaş"
     joined: "Katılma Tarihi"
@@ -245,7 +242,7 @@ tr_TR:
       one: "bağlantı"
       other: "bağlantı"
     faq: "SSS"
-    guidelines: "Yönergeler"
+    guidelines: "Kılavuz"
     privacy_policy: "Gizlilik Politikası"
     privacy: "Gizlilik"
     tos: "Hizmet Şartları"
@@ -253,7 +250,7 @@ tr_TR:
     conduct: "Davranış Kuralları"
     mobile_view: "Mobil Görünüm"
     desktop_view: "Masaüstü Görünümü"
-    now: "hemen şimdi"
+    now: "az önce"
     read_more: "devamını oku"
     more: "Daha fazla"
     x_more:
@@ -310,7 +307,7 @@ tr_TR:
       created_generic: "Bunu yer imlerine eklediniz. %{name}"
       create: "Yer imi oluştur"
       edit: "Yer imini düzenle"
-      not_bookmarked: "bu gönderiyi yer imlerine ekle"
+      not_bookmarked: "bu gönderiye yer imi ekle"
       remove_reminder_keep_bookmark: "Anımsatıcıyı kaldır ve yer imini tut"
       created_with_reminder: "Bu gönderiyi %{date} tarihli bir anımsatıcı ile yer imlerine eklediniz. %{name}"
       created_with_reminder_generic: "Bunu %{date} tarihli bir anımsatıcıyla yer imlerine eklediniz. %{name}"
@@ -348,8 +345,8 @@ tr_TR:
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni kişisel ileti taslağı"
       abandon:
-        confirm: "Bu konu için devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
-        yes_value: "Sil"
+        confirm: "Halihazırda bir taslağınız var. Bununla ne yapmak istersiniz?"
+        yes_value: "Kapat"
         no_value: "Düzenlemeyi sürdür"
     topic_count_categories:
       one: "%{count} yeni veya güncellenmiş konuya bakın"
@@ -367,7 +364,7 @@ tr_TR:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
     preview: "ön izleme"
-    cancel: "iptal"
+    cancel: "iptal et"
     deleting: "Siliniyor..."
     save: "Değişiklikleri Kaydet"
     saving: "Kaydediliyor..."
@@ -443,7 +440,7 @@ tr_TR:
         priorities:
           title: "İncelenebilir Öncelikler"
       moderation_history: "Moderasyon Tarihi"
-      view_all: "Hepsini görüntüle"
+      view_all: "Tümünü görüntüle"
       grouped_by_topic: "Konuya göre gruplandı"
       none: "İncelenecek öge yok."
       view_pending: "bekleyen görünüm"
@@ -472,7 +469,7 @@ tr_TR:
           other: "%{agreed}, %{disagreed}, %{ignored} (son %{count} bayraktan)"
         agreed:
           one: "%%{count} katılıyor"
-          other: "% %{count} katılıyor"
+          other: "%%{count} katılıyor"
         disagreed:
           one: "% %{count} katılmıyor"
           other: "% %{count} katılmıyor"
@@ -517,34 +514,43 @@ tr_TR:
           medium: "Orta"
           high: "Yüksek"
       conversation:
-        view_full: "sohbetin hepsini görüntüle"
+        view_full: "konuşmanın tamamını görüntüle"
       scores:
         about: "Bu puan, bildiren kişinin güven seviyesine, önceki bayraklarının doğruluğuna ve bildirilen ögenin önceliğine göre hesaplanır."
         score: "Puan"
-        date: "Tarih"
-        type: "Tür"
+        type: "Sebep"
         status: "Durum"
-        submitted_by: "Gönderen"
-        reviewed_by: "İnceleyen"
+        submitted_by: "Bildiren"
       statuses:
         pending:
           title: "Bekleyen"
         approved:
           title: "Onaylandı"
+        approved_flag:
+          title: "Bayrak onaylandı"
+        approved_user:
+          title: "Kullanıcı onaylandı"
+        approved_post:
+          title: "Gönderi onaylandı"
         rejected:
           title: "Reddedildi"
-        ignored:
-          title: "Yok sayıldı"
-        deleted:
-          title: "Silindi"
+        rejected_flag:
+          title: "Bayrak reddedildi"
+        rejected_user:
+          title: "Kullanıcı reddedildi"
+        rejected_post:
+          title: "Gönderi reddedildi"
         reviewed:
-          title: "(hepsi incelendi)"
+          title: "Tümü incelendi"
         all:
-          title: "(her şey)"
+          title: "Her şey"
+      context_question:
+        delimiter: "veya"
+        something_else_wrong: "Bu gönderide bir sorun var mı?"
       types:
         reviewable_flagged_post:
           title: "Bayrak Eklenen Gönderi"
-          flagged_by: "Bayrak Ekleyen"
+          flagged_by: "Bayrak Ekleyen Kişi"
         reviewable_queued_topic:
           title: "Kuyruğa Eklenen Konu"
         reviewable_queued_post:
@@ -554,7 +560,7 @@ tr_TR:
         reviewable_post:
           title: "Gönderi"
       approval:
-        title: "Gönderi Onay Gerektirir"
+        title: "Gönderi Onay Gerektiriyor"
         description: "Yeni gönderinizi aldık fakat görünmeden önce moderatör tarafından onaylanması gerekiyor. Lütfen sabırlı olun."
         pending_posts:
           one: "Bekleyen <strong>%{count}</strong> gönderiniz var."
@@ -845,8 +851,9 @@ tr_TR:
         remove_owners_description: "Seçili kullanıcıları bu grubun sahiplerinden çıkar"
         make_all_primary: "Tümünü Birincil Yap"
         make_all_primary_description: "Bunu tüm seçili kullanıcılar için birincil grup yap"
-        remove_all_primary: "Birincil Olarak Kaldır"
+        remove_all_primary: "Birincillikten çıkar"
         remove_all_primary_description: "Bu grubu birincil olarak kaldır"
+        status: "Durum"
         owner: "Sahip"
         primary: "Birincil"
         forbidden: "Üyeleri görüntülemenize izin verilmiyor."
@@ -871,7 +878,7 @@ tr_TR:
           title: "İzleniyor"
           description: "Her mesajdaki her yeni gönderi için size bildirim gönderilir ve bir dizi yeni yanıt gösterilir."
         watching_first_post:
-          title: "İlk Gönderiyi izleme"
+          title: "İlk Gönderi izleniyor"
           description: "Mesajlara yanıtlar dışında, bu gruptaki yeni iletiler için bildirim alırsınız."
         tracking:
           title: "Takip ediliyor"
@@ -880,7 +887,7 @@ tr_TR:
           title: "Normal"
           description: "Biri @adınızdan bahseder veya size yanıt verirse bildirim alırsınız."
         muted:
-          title: "Sessiz"
+          title: "Sessize alındı"
           description: "Bu gruptaki mesajlarla ilgili her konuda bildirim almazsınız."
       flair_url: "Gelişmiş Avatar Görüntüsü"
       flair_upload_description: "En küçük 20 x 20 px kare görüntüler kullanın."
@@ -1003,7 +1010,7 @@ tr_TR:
         label: "Özel bildirim zamanlamasını etkinleştir"
         tip: "Bu saatler dışında bildirimleriniz duraklatılacak."
         midnight: "Gece yarısı"
-        none: "Yok"
+        none: "Hiçbiri"
         monday: "Pazartesi"
         tuesday: "Salı"
         wednesday: "Çarşamba"
@@ -1012,7 +1019,7 @@ tr_TR:
         saturday: "Cumartesi"
         sunday: "Pazar"
         to: "kime"
-      activity_stream: "Etkinlik"
+      activity_stream: "Aktivite"
       read: "Okundu"
       read_help: "Son okunan konular"
       preferences: "Tercihler"
@@ -1070,7 +1077,7 @@ tr_TR:
         Bu panelde, sizinle ilgili olabilecek diğer etkinlik türleri hakkında bildirim alısınız; örneğin, biri gönderilerinizden birine bağlantı eklediğinde veya gönderilerinizden birini düzenlediğinde.
       no_notifications_page_title: "Henüz bildiriminiz yok"
       no_notifications_page_body: >
-        Konu ve gönderilerinize verilen yanıtlar da dahil olmak üzere, doğrudan sizinle alakalı etkinlik olduğunda, biri sizden <b>@bahsettiğinde</b> veya sizden alıntı yaptığında  bildirim alırsınız. Bir süredir giriş yapmadığınızda da bildirimler e-posta ile gönderilir. <br><br> Hangi konular, kategoriler ve etiketler hakkında bilgilendirilmek istediğinize karar vermek için %{icon} simgesini bulun. Daha fazlası için <a href='%{preferencesUrl}'> bildirim tercihlerinize bakın</a>.
+        Konu ve gönderilerinize verilen yanıtlar da dahil olmak üzere, doğrudan sizinle alakalı etkinlik olduğunda, biri sizden <b>@bahsettiğinde</b> veya sizden alıntı yaptığında bildirim alırsınız. Bir süredir giriş yapmadığınızda da bildirimler e-posta ile gönderilir. <br><br> Hangi konular, kategoriler ve etiketler hakkında bilgilendirilmek istediğinize karar vermek için %{icon} simgesini bulun. Daha fazlası için <a href='%{preferencesUrl}'> bildirim tercihlerinize bakın</a>.
       dynamic_favicon: "Sayıları, tarayıcı simgesi üzerinde göster"
       skip_new_user_tips:
         description: "Yeni kullanıcı ipuçlarını ve rozetlerini atla"
@@ -1170,12 +1177,11 @@ tr_TR:
       api_approved: "Onaylandı:"
       api_last_used_at: "Son kullanım zamanı:"
       theme: "Tema"
-      save_to_change_theme: 'Tema "%{save_text}” düğmesine tıklandıktan sonra güncellenir'
+      save_to_change_theme: 'Tema "%{save_text}" düğmesine tıklandıktan sonra güncellenir'
       home: "Varsayılan Ana Sayfa"
       staged: "Aşamalı"
       staff_counters:
-        flags_given: "yardımcı bayraklar"
-        flagged_posts: "bayraklı gönderiler"
+        flagged_posts: "bayrak eklenen gönderiler"
         deleted_posts: "silinen gönderiler"
         suspensions: "uzaklaştırmalar"
         warnings_received: "uyarılar"
@@ -1292,7 +1298,7 @@ tr_TR:
           one: "Yedek kodları yönetin. <strong>%{count}</strong> yedek kodunuz kaldı."
           other: "Yedek kodları yönetin. <strong>%{count}</strong> yedek kodunuz kaldı."
         copy_to_clipboard: "Panoya kopyala"
-        copy_to_clipboard_error: "Panoya kopyalanırken hata oluştu"
+        copy_to_clipboard_error: "Veriler Panoya kopyalanırken hata oluştu"
         copied_to_clipboard: "Panoya kopyalandı"
         download_backup_codes: "Yedek kodları indir"
         remaining_codes:
@@ -1344,7 +1350,7 @@ tr_TR:
           default_name: "Authenticator'ım"
           name_and_code_required_error: "Bir ad ve Authenticator uygulamanızdaki kodu girmeniz gerekiyor."
         security_key:
-          register: "Kaydol"
+          register: "Kayıt Ol"
           title: "Fiziksel Güvenlik Anahtarları"
           add: "Fiziksel Güvenlik Anahtarı Ekle"
           default_name: "Ana Güvenlik Anahtarı"
@@ -1445,7 +1451,7 @@ tr_TR:
         instructions: "benzersiz, boşluksuz, kısa"
         short_instructions: "Kullanıcılar sizden @%{username} olarak bahsedebilirler"
         available: "Kullanıcı adı kullanılabilir"
-        not_available: "Uygun değil. %{suggestion} olsa?"
+        not_available: "Kullanılamıyor. Şunu deneyin: %{suggestion}"
         not_available_no_suggestion: "Uygun değil"
         too_short: "Kullanıcı adınız çok kısa"
         too_long: "Kullanıcı adınız çok uzun"
@@ -1465,7 +1471,7 @@ tr_TR:
         instructions: "Kaydolmak için bir davet kodu gereklidir"
       auth_tokens:
         title: "Son Kullanılan Cihazlar"
-        details: "Detaylar"
+        details: "Ayrıntılar"
         log_out_all: "Tümünden çıkış yap"
         not_you: "Siz değil misiniz?"
         show_all: "Tümünü göster (%{count})"
@@ -1522,7 +1528,7 @@ tr_TR:
       email_level:
         title: "Benden alıntı yapıldığında, bana yanıt verildiğinde, kullanıcı adımdan (@username) bahsedildiğinde veya izlediğim kategorilerde, etiketlerde veya konularda yeni aktivite olduğunda bana e-posta gönder"
         always: "her zaman"
-        only_when_away: "yalnızca uzaktayken"
+        only_when_away: "sadece uzaktayken"
         never: "asla"
       email_messages_level: "Bana kişisel bir mesaj gönderildiğinde e-posta gönder"
       include_tl0_in_digests: "Yeni kullanıcıların içeriklerini özet e-postalarına ekle"
@@ -1588,7 +1594,7 @@ tr_TR:
         reinvite_all: "Tüm Davetleri Yeniden Gönder"
         reinvite_all_confirm: "Tüm davetleri yeniden göndermek istediğinizden emin misiniz?"
         reinvited_all: "Tüm Davetler Gönderildi!"
-        time_read: "Okunma Zamanı"
+        time_read: "Okuma Zamanı"
         days_visited: "Ziyaret Edilen Gün"
         account_age_days: "Gün cinsinden hesap yaşı"
         create: "Davet et"
@@ -1644,7 +1650,7 @@ tr_TR:
         required: "lütfen bir şifre girin"
       summary:
         title: "Özet"
-        stats: "İstatistik"
+        stats: "İstatistikler"
         time_read: "okuma süresi"
         time_read_title: "%{duration} (tüm zamanlar)"
         recent_time_read: "son okuma süresi"
@@ -1712,10 +1718,10 @@ tr_TR:
         title: "Özel Durum"
         not_set: "Ayarlanmamış"
       primary_group:
-        title: "Ana Grup"
+        title: "Birincil grup"
         none: "(hiçbiri)"
       filters:
-        all: "Hepsi"
+        all: "Tümü"
       stream:
         posted_by: "Gönderi yayınlayan:"
         sent_by: "Gönderen:"
@@ -1838,10 +1844,10 @@ tr_TR:
       add: "Ekle..."
       leave_message: "Bu mesajdan gerçekten ayrılmak istiyor musunuz?"
       remove_allowed_user: "Bu mesajdan %{name} adlı kullanıcıyı çıkarmak istediğinize emin misiniz?"
-      remove_allowed_group: "%{name} adlı kullanıcıyı bu mesajdan gerçekten çıkarmak istiyor musunuz?"
+      remove_allowed_group: "Bu mesajdan %{name} adlı kullanıcıyı çıkarmak istediğinize emin misiniz?"
       leave: "Ayrıl"
       remove_group: "Grubu kaldır"
-      remove_user: "Kullanıcıyı çıkar"
+      remove_user: "Kullanıcıyı kaldır"
     email: "E-posta"
     username: "Kullanıcı Adı"
     last_seen: "Görüldü"
@@ -1861,7 +1867,7 @@ tr_TR:
       action: "Şifremi unuttum"
       invite: "Kullanıcı adınızı veya e-posta adresinizi girin, size bir şifre sıfırlama e-postası gönderelim."
       invite_no_username: "E-posta adresinizi girin, size bir şifre sıfırlama e-postası gönderelim."
-      reset: "Şifre Sıfırlama "
+      reset: "Şifreyi Sıfırlayın"
       complete_username: "<b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde şifrenizi nasıl sıfırlayacağınızı açıklayan bir e-posta alırsınız. "
       complete_email: "<b>%{email}</b> adresi ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde şifrenizi nasıl sıfırlayacağınızı açıklayan bir e-posta alırsınız."
       complete_username_found: "<b>%{username}</b> kullanıcı adıyla eşleşen bir hesap bulduk. Kısa süre içinde şifrenizi nasıl sıfırlayacağınızla ilgili yönergeleri içeren bir e-posta alacaksınız."
@@ -1882,7 +1888,7 @@ tr_TR:
       complete_email_found: "<b>%{email}</b> e-posta adresi ile eşleşen bir hesap bulduk, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
       complete_username_not_found: "<b>%{username}</b> kullanıcı adıyla eşleşen bir hesap yok"
       complete_email_not_found: "<b>%{email}</b> ile eşleşen bir hesap yok"
-      confirm_title: '%{site_name} adresine gitmeye devam edin'
+      confirm_title: '%{site_name} adresine devam edin'
       logging_in_as: '%{email} olarak giriş yapılıyor'
       confirm_button: Giriş yapmayı bitir
     login:
@@ -1899,14 +1905,14 @@ tr_TR:
       second_factor_description: "Lütfen uygulamanızdan kimlik doğrulama kodunu girin:"
       second_factor_backup: "Yedek kod kullanarak giriş yapın"
       second_factor_backup_title: "İki Adımlı Yedek"
-      second_factor_backup_description: "Lütfen yedek kodlarınızdan birini girin:"
+      second_factor_backup_description: "Lütfen yedekleme kodlarınızdan birini girin:"
       second_factor: "Authenticator uygulamasını kullanarak giriş yapın"
       security_key_description: "Fiziksel güvenlik anahtarınızı veya uyumlu mobil cihazınızı hazırladığınızda aşağıdaki Güvenlik Anahtarıyla Kimlik Doğrula düğmesine basın."
-      security_key_alternative: "Başka bir yol dene"
+      security_key_alternative: "Başka bir yol deneyin"
       security_key_authenticate: "Güvenlik Anahtarı ile Kimlik Doğrulama"
       security_key_not_allowed_error: "Güvenlik anahtarı kimlik doğrulama işlemi zaman aşımına uğradı veya iptal edildi."
-      security_key_no_matching_credential_error: "Sağlanan güvenlik anahtarında eşleşen kimlik bilgisi bulunamadı."
-      security_key_support_missing_error: "Geçerli cihazınız veya tarayıcınız güvenlik anahtarlarının kullanımını desteklemiyor. Lütfen farklı bir yöntem kullanın."
+      security_key_no_matching_credential_error: "Sağlanan güvenlik anahtarında eşleşen kimlik bilgileri bulunamadı."
+      security_key_support_missing_error: "Mevcut cihazınız veya tarayıcınız güvenlik anahtarlarının kullanımını desteklemiyor. Lütfen farklı bir yöntem kullanın."
       email_placeholder: "E-posta / Kullanıcı adı"
       caps_lock_warning: "Caps Lock açık"
       error: "Bilinmeyen hata"
@@ -1962,7 +1968,7 @@ tr_TR:
         sr_title: "Discord ile Giriş Yapın"
       second_factor_toggle:
         totp: "Bunun yerine bir kimlik doğrulama uygulaması kullanın"
-        backup_code: "Bunun yerine bir yedek kod kullanın"
+        backup_code: "Bunun yerine bir yedekleme kodu kullanın"
         security_key: "Bunun yerine bir güvenlik anahtarı kullanın"
     invites:
       accept_title: "Davet"
@@ -1977,7 +1983,7 @@ tr_TR:
       password_label: "Şifre"
       existing_user_can_redeem: "Bir konuya veya gruba davetinizi kullanın."
     password_reset:
-      continue: "%{site_name} adresine gitmeye devam edin"
+      continue: "%{site_name} adresine devam edin"
     emoji_set:
       apple_international: "Apple/Uluslararası"
       google: "Google"
@@ -1989,11 +1995,11 @@ tr_TR:
       categories_only: "Yalnızca Kategoriler"
       categories_with_featured_topics: "Öne Çıkan Konuları içeren Kategoriler"
       categories_and_latest_topics: "Kategoriler ve En Son Konular"
-      categories_and_latest_topics_created_date: "Kategoriler ve En Son Konular (konu oluşturulma tarihine göre sırala)"
+      categories_and_latest_topics_created_date: "Kategoriler ve En Son Konular (konu oluşturulma tarihine göre sıralayın)"
       categories_and_top_topics: "Kategoriler ve Popüler Konular"
       categories_boxes: "Alt Kategorili Kutular"
       categories_boxes_with_topics: "Öne Çıkan Konuları içeren Kutular"
-      subcategories_with_featured_topics: "Öne Çıkan Konuları içeren alt kategoriler"
+      subcategories_with_featured_topics: "Öne Çıkan Konular içeren Alt Kategoriler"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2070,7 +2076,7 @@ tr_TR:
       whisper: "fısıltı"
       unlist: "listelenmedi"
       add_warning: "Bu resmi bir uyarıdır."
-      toggle_whisper: "Fısıltı Aç/Kapat"
+      toggle_whisper: "Fısıltıyı Aç/Kapat"
       toggle_unlisted: "Liste Dışı Aç/Kapat"
       posting_not_on_topic: "Hangi konuya yanıt vermek istiyorsunuz?"
       saved_local_draft_tip: "yerel olarak kaydedildi"
@@ -2100,7 +2106,7 @@ tr_TR:
       here_mention:
         one: "<b>@%{here}</b> diyerek %{count} kullanıcıya bildirim göndermek üzeresiniz, emin misiniz?"
         other: "<b>@%{here}</b> diyerek %{count} kullanıcıya bildirim göndermek üzeresiniz, emin misiniz?"
-      duplicate_link: "Görünüşe göre <b>%{domain}</b> alan adına bağlantınız <b>@%{username}</b> tarafından <a href='%{post_url}'>%{ago} bir yanıtta</a> konuda gönderi olarak zaten yayınlanmış. Tekrar  göndermek istediğinizden emin misiniz?"
+      duplicate_link: "Görünüşe göre <b>%{domain}</b> alan adına bağlantınız <b>@%{username}</b> tarafından <a href='%{post_url}'>%{ago} bir yanıtta</a> konuda gönderi olarak zaten yayınlanmış. Tekrar göndermek istediğinizden emin misiniz?"
       duplicate_link_same_user: "Görünüşe göre <b>%{domain}</b> alan adının bağlantısını <a href='%{post_url}'>adresindeki bu konuya %{ago}</a> bir yanıtta zaten göndermişsiniz. Tekrar göndermek istediğinizden emin misiniz?"
       reference_topic_title: "YNT: %{title}"
       error:
@@ -2169,7 +2175,7 @@ tr_TR:
       olist_title: "Numaralandırılmış Liste"
       ulist_title: "Madde İşaretli Liste"
       list_item: "Liste ögesi"
-      toggle_direction: "Yönü Değiştir"
+      toggle_direction: "Yönü Aç/Kapat"
       help: "Markdown Düzenleme Yardımı"
       collapse: "besteci panelini simge durumuna küçült"
       open: "besteci panelini aç"
@@ -2209,7 +2215,7 @@ tr_TR:
           label: Konuyu yanıtla
           desc: Belirli bir gönderiye değil, konuya yanıt verin
         toggle_whisper:
-          label: Fısıltıyı değiştir
+          label: Fısıltıyı Aç/Kapat
           desc: Fısıltılar yalnızca personel tarafından görülebilir
         create_topic:
           label: "Yeni Konu"
@@ -2217,7 +2223,7 @@ tr_TR:
           label: "Paylaşılan Taslak"
           desc: "Yalnızca izin verilen kullanıcılar tarafından görülebilecek bir konu taslağı oluşturun"
         toggle_topic_bump:
-          label: "Konu üste sıçratmayı değiştir"
+          label: "Konu üste sıçratmayı aç/kapat"
           desc: "En son yanıt tarihini değiştirmeden yanıtla"
       reload: "Yeniden Yükle"
       ignore: "Yok say"
@@ -2314,7 +2320,7 @@ tr_TR:
         watching_first_post: '%{username} yeni bir konu oluşturdu "%{topic}" - %{site_title}'
         confirm_title: "Bildirimler etkinleştirildi - %{site_title}"
         confirm_body: "Başarılı! Bildirimler etkinleştirildi."
-        custom: "%{site_title} üzerinde %{username} adlı kullanıcıdan bildirim"
+        custom: "%{site_title}'da %{username} adlı kullanıcıdan bildirim"
       titles:
         mentioned: "bahsedildi"
         replied: "yeni yanıt"
@@ -2555,7 +2561,7 @@ tr_TR:
         dismiss_new_with_selected:
           one: "Yenileri (%{count}) kapat"
           other: "Yenileri (%{count}) kapat"
-        toggle: "konuların toplu seçimini değiştir"
+        toggle: "konuların toplu seçimini aç/kapat"
         actions: "Toplu Eylemler"
         change_category: "Kategori ayarla..."
         close_topics: "Konuları Kapat"
@@ -2581,14 +2587,15 @@ tr_TR:
           other: "İlerleme: <strong>%{count}</strong> konu"
       none:
         unread: "Okunmamış konunuz bulunmuyor."
-        unseen: "Görülmemiş konunuz yok."
+        unseen: "Görülmemiş konunuz bulunmuyor."
         new: "Yeni konunuz yok."
         read: "Henüz herhangi bir konu okumadınız."
         posted: "Henüz herhangi bir konuda gönderi yapmadınız."
         latest: "Her şeyi tamamladınız!"
-        bookmarks: "Henüz konulara yer imi eklemediniz."
+        bookmarks: "Henüz hiçbir konuya yer imi eklemediniz."
         category: "%{category} konusu yok."
         top: "Popüler konu yok."
+        filter: "Konu yok."
         educate:
           new: '<p>Yeni konularınız burada görünür. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi görünür.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihlerinizi</a> ziyaret edin.</p>'
           unread: "<p>Okunmamış konularınız burada görünür.</p><p>Konular varsayılan olarak okunmamış sayılır ve şu durumlarda okunmamış ileti sayısı <span class=\"badge unread-posts badge-notification\">1</span> olarak gösterilir: </p><ul><li>Konuyu siz oluşturmuşsanız</li><li>Konuya yanıt vermişseniz</li><li>Konuyu 4 dakikadan fazla okumuşsanız</li></ul><p>Her bir konuda \U0001F514 aracılığıyla konuyu Takip Edildi veya İzlendi olarak seçmişseniz.</p><p><a href=\"%{userPrefsUrl}\">Tercihler</a> bölümünden bunu değiştirebilirsiniz.</p>"
@@ -2603,11 +2610,13 @@ tr_TR:
         tag: "Başka %{tag} konusu yok."
         top: "Başka popüler konu yok."
         bookmarks: "Başka yer imli konu yok."
+        filter: "Başka konu kalmadı."
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
         other: "Konuda %{count} gönderi"
       create: "Yeni Konu"
+      create_disabled_category: "Bu kategoride konu oluşturma izniniz yok"
       create_long: "Yeni bir Konu oluştur"
       open_draft: "Taslağı aç"
       private_message: "Mesaj başlat"
@@ -2801,8 +2810,8 @@ tr_TR:
           "2_4": "Bu konuya yanıt gönderdiğiniz için yeni yanıt sayısını göreceksiniz."
           "2_2": "Bu konuyu takip ettiğiniz için yeni yanıt sayısını göreceksiniz."
           "2": '<a href="%{basePath}/u/%{username}/preferences/notifications">Bu konuyu okuduğunuz</a> için yeni yanıt sayısını göreceksiniz.'
-          "1_2": "Biri @adınızdan bahsederse veya size yanıt verirse bildirim alacaksınız."
-          "1": "Biri @adınızdan bahsederse veya size yanıt verirse bildirim alacaksınız."
+          "1_2": "Biri @adınızdan bahseder veya size yanıt verirse bildirim alırsınız."
+          "1": "Biri @adınızdan bahseder veya size yanıt verirse bildirim alırsınız."
           "0_7": "Bu kategorideki tüm bildirimleri yok sayıyorsunuz."
           "0_2": "Bu konudaki tüm bildirimleri yok sayıyorsunuz."
           "0": "Bu konudaki tüm bildirimleri yok sayıyorsunuz."
@@ -2814,16 +2823,16 @@ tr_TR:
           description: "Bu konudaki her yeni yanıt için bildirim alacaksınız ve yeni yanıt sayısı gösterilecek."
         tracking_pm:
           title: "Takip Ediliyor"
-          description: "Bu mesaj için yeni yanıt sayısı gösterilecek. Biri @adınızdan bahsederse veya size yanıt verirse bildirim alacaksınız."
+          description: "Bu mesaj için yeni yanıt sayısı gösterilir. Biri @adınızdan bahseder veya size yanıt verirse bildirim alırsınız."
         tracking:
           title: "Takip Ediliyor"
-          description: "Bu konu için yeni yanıt sayısı gösterilecek. Biri @adınızdan bahsederse veya size yanıt verirse bildirim alacaksınız."
+          description: "Bu konu için yeni yanıt sayısı gösterilir. Biri @adınızdan bahseder veya size yanıt verirse bildirim alırsınız."
         regular:
           title: "Normal"
-          description: "Biri @adınızdan bahsederse veya size yanıt verirse bildirim alacaksınız."
+          description: "Biri @adınızdan bahseder veya size yanıt verirse bildirim alırsınız."
         regular_pm:
           title: "Normal"
-          description: "Biri @adınızdan bahsederse veya size yanıt verirse bildirim alacaksınız."
+          description: "Biri @adınızdan bahseder veya size yanıt verirse bildirim alırsınız."
         muted_pm:
           title: "Sessize alındı"
           description: "Bu mesaj hakkında asla bildirim almayacaksınız."
@@ -3048,7 +3057,7 @@ tr_TR:
       ignored: "Yok sayılan içerik"
       wiki_last_edited_on: "wiki son düzenleme zamanı: %{dateTime}"
       last_edited_on: "gönderi en son %{dateTime} tarihinde düzenlendi"
-      reply_as_new_topic: "Bağlantılı Konu olarak yanıt ver"
+      reply_as_new_topic: "Bağlantılı Konu olarak yanıtlayın"
       reply_as_new_private_message: "Aynı alıcılara yeni mesaj olarak yanıt ver"
       continue_discussion: "%{postLink} gönderisinden tartışılmaya devam ediliyor:"
       follow_quote: "alıntılanan gönderiye git"
@@ -3099,7 +3108,7 @@ tr_TR:
       errors:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin."
-        upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
+        upload: "Üzgünüz, bu dosyayı yüklerken bir hata oluştu. Lütfen yeniden deneyin."
         file_too_large: "Üzgünüz, bu dosya çok büyük (en fazla %{max_size_kb} kb). Paylaşımınızı bir bulut paylaşım hizmetine yükleyip bağlantısını paylaşmaya ne dersiniz?"
         file_size_zero: "Üzgünüz, bir şeyler ters gitmiş gibi görünüyor, yüklemeye çalıştığınız dosya 0 bayt. Lütfen tekrar deneyin."
         file_too_large_humanized: "Üzgünüz, bu dosya çok büyük (maksimum boyut %{max_size}). Dosyanızı bir bulut paylaşım hizmetine yükleyip bağlantıyı paylaşmaya ne dersiniz?"
@@ -3107,7 +3116,7 @@ tr_TR:
         too_many_dragged_and_dropped_files:
           one: "Üzgünüz, tek seferde yalnızca %{count} dosya yükleyebilirsiniz."
           other: "Üzgünüz, tek seferde yalnızca %{count} dosya yükleyebilirsiniz."
-        upload_not_authorized: "Üzgünüz, yüklemeye çalıştığınız dosya türüne izin verilmiyor (izin verilen uzantılar: %{authorized_extensions})."
+        upload_not_authorized: "Üzgünüz, yüklemeye çalıştığınız dosyaya izin verilmiyor (izin verilen uzantılar: %{authorized_extensions})."
         no_uploads_authorized: "Üzgünüz, hiçbir dosyanın yüklenmesine izin verilmiyor."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar görüntü yükleyemez."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar ek yükleyemez."
@@ -3119,7 +3128,7 @@ tr_TR:
         keep_editing: "Düzenlemeye devam et"
       via_email: "bu gönderi e-posta yoluyla geldi"
       via_auto_generated_email: "bu gönderi otomatik olarak oluşturulmuş bir e-posta yoluyla geldi"
-      whisper: "bu gönderi yöneticiler için özel bir fısıltıdır"
+      whisper: "bu gönderi moderatörler için özel bir fısıltıdır"
       whisper_groups: "bu gönderi sadece %{groupNames} tarafından görülebilen özel bir fısıltıdır"
       wiki:
         about: "bu gönderi bir wiki'dir"
@@ -3184,7 +3193,7 @@ tr_TR:
             other: "bunu beğendi"
           read:
             one: "bunu oku"
-            other: "bunları oku"
+            other: "bunu oku"
           like_capped:
             one: "ve %{count} kişi daha bunu beğendi"
             other: "ve %{count} kişi daha bunu beğendi"
@@ -3333,8 +3342,8 @@ tr_TR:
         create: "Oluştur"
         no_groups_selected: "Hiçbir gruba erişim izni verilmedi; bu kategori yalnızca personel tarafından görülebilir."
         everyone_has_access: 'Bu kategori herkese açık, herkes gönderileri görebilir, yanıtlayabilir ve oluşturabilir. İzinleri kısıtlamak için "herkes" grubuna verilen izinlerden birini veya birkaçını kaldırın.'
-        toggle_reply: "Yanıtlama iznini değiştir"
-        toggle_full: "Oluşturma iznini değiştir"
+        toggle_reply: "Yanıtlama iznini aç/kapat"
+        toggle_full: "Oluşturma iznini aç/kapat"
         inherited: 'Bu izin "herkesten" devralınır'
       special_warning: "Uyarı: Bu kategori önceden oluşturulmuş bir kategoridir ve güvenlik ayarları düzenlenemez. Bu kategoriyi kullanmak istemiyorsanız yeniden kullanmak yerine silin."
       uncategorized_security_warning: "Bu kategori özeldir. Kategorisi olmayan konular için tutma alanı olarak tasarlanmıştır; güvenlik ayarlarına sahip olamaz."
@@ -3370,6 +3379,7 @@ tr_TR:
       default_slow_mode: 'Bu kategorideki yeni konular için "Yavaş Modu" etkinleştirin.'
       parent: "Ana Kategori"
       num_auto_bump_daily: "Günlük olarak otomatik olarak üste çıkacak açık konu sayısı:"
+      auto_bump_cooldown_days: "Aynı konuyu tekrar açmadan önce geçmesi gereken gün sayısı:"
       navigate_to_first_post_after_read: "Konular okunduktan sonra ilk gönderiye gidin"
       notifications:
         title: "bu kategori için bildirim seviyesini değiştirin"
@@ -3413,7 +3423,7 @@ tr_TR:
         rows: "Satırlar"
         rows_with_featured_topics: "Öne çıkan konuların olduğu satırlar"
         boxes: "Kutular"
-        boxes_with_featured_topics: "Öne çıkan konuların olduğu kutular"
+        boxes_with_featured_topics: "Öne çıkan konuları içeren kutular"
       settings_sections:
         general: "Genel"
         moderation: "Moderasyon"
@@ -3551,6 +3561,10 @@ tr_TR:
     filters:
       with_topics: "%{filter} konular"
       with_category: "%{filter} %{category} konular"
+      filter:
+        title: "Filtrele"
+        button:
+          label: "Filtrele"
       latest:
         title: "En son"
         title_with_count:
@@ -3697,7 +3711,7 @@ tr_TR:
         delete: "%{shortcut} Yer imini sil"
       actions:
         title: "Eylemler"
-        bookmark_topic: "%{shortcut} Konu yer imini değiştir"
+        bookmark_topic: "%{shortcut} Konu yer imini aç/kapat"
         pin_unpin_topic: "%{shortcut} Konuyu sabitle/sabitlemesini kaldır"
         share_topic: "%{shortcut} Konuyu paylaş"
         share_post: "%{shortcut} Gönderiyi paylaş"
@@ -3740,6 +3754,7 @@ tr_TR:
       granted:
         one: "%{count} verildi"
         other: "%{count} verildi"
+      awarded: etiketi verildi
       select_badge_for_title: Başlığınız olarak kullanmak için bir rozet seçin
       none: "(hiçbiri)"
       successfully_granted: "%{username} adlı kullanıcıya başarıyla %{badge} verildi"
@@ -3844,7 +3859,7 @@ tr_TR:
           title: "İzleniyor"
           description: "Bu etikete sahip tüm konuları otomatik olarak izleyeceksiniz. Tüm yeni gönderiler ve konulardan haberdar edileceksiniz, ayrıca okunmamış ve yeni gönderilerin sayısı da konunun yanında görüntülenecek."
         watching_first_post:
-          title: "İlk gönderi izleniyor"
+          title: "İlk Gönderi izleniyor"
           description: "Bu etikette yeni konular hakkında bildirim alacak, ancak konulara verilen yanıtlar için bildirim almayacaksınız."
         tracking:
           title: "Takip ediliyor"
@@ -3885,12 +3900,12 @@ tr_TR:
         none:
           unread: "Okunmamış konunuz bulunmuyor."
           unseen: "Görülmemiş konunuz bulunmuyor."
-          new: "Yeni konunuz bulunmuyor"
+          new: "Yeni konunuz yok."
           read: "Henüz herhangi bir konu okumadınız."
           posted: "Henüz herhangi bir konuda gönderi yapmadınız."
           latest: "En son konu bulunmuyor."
           bookmarks: "Henüz hiçbir konuya yer imi eklemediniz."
-          top: "Popüler bir konu bulunmuyor."
+          top: "Popüler konu yok."
     invite:
       custom_message: "<a href>Özel bir mesaj</a>yazarak davetinizi biraz daha kişisel hale getirin."
       custom_message_placeholder: "Özel mesajınızı girin"
@@ -3959,7 +3974,7 @@ tr_TR:
       new_count:
         one: "%{count} yeni"
         other: "%{count} yeni"
-      toggle_section: "Bölümü değiştir"
+      toggle_section: "Bölümü aç/kapat"
       more: "Daha fazla"
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
@@ -3969,9 +3984,27 @@ tr_TR:
           delete: "Sil"
           public: "Bu bölümü herkese açık ve herkes tarafından görülebilir hale getir"
           links:
-            icon: "Simge"
-            name: "Ad"
-            value: "Bağlantı"
+            icon:
+              label: "Simge"
+              validation:
+                blank: "Simge boş olamaz"
+                maximum: "Simge %{count} karakterden kısa olmalıdır"
+            name:
+              label: "Ad"
+              validation:
+                blank: "İsim boş olamaz"
+                maximum: "İsim %{count} karakterden kısa olmalıdır"
+            value:
+              label: "Bağlantı"
+              validation:
+                blank: "Bağlantı boş olamaz"
+                maximum: "Bağlantı %{count} karakterden kısa olmalıdır"
+                invalid: "Biçim geçersiz"
+          title:
+            label: "Bölüm başlığı"
+            validation:
+              blank: "Başlık boş olamaz"
+              maximum: "Başlık %{count} karakterden kısa olmalıdır"
         about:
           header_link_text: "Hakkında"
         messages:
@@ -4023,7 +4056,7 @@ tr_TR:
               title: "Tüm konular"
             faq:
               content: "SSS"
-              title: "Bu siteyi kullanmak için yönergeler"
+              title: "Bu siteyi kullanmak için kılavuz"
             groups:
               content: "Gruplar"
               title: "Mevcut kullanıcı gruplarının listesi"
@@ -4230,11 +4263,11 @@ tr_TR:
         never_used: (asla)
         generate: "Oluştur"
         undo_revoke: "İptal İşlemini Geri Al"
-        revoke: "İptal Et"
+        revoke: "Geri çek"
         all_users: "Tüm Kullanıcılar"
         active_keys: "Aktif API Anahtarları"
         manage_keys: Anahtarları Yönet
-        show_details: Detaylar
+        show_details: Ayrıntılar
         description: Açıklama
         no_description: (açıklama yok)
         all_api_keys: Tüm API Anahtarları
@@ -4339,7 +4372,7 @@ tr_TR:
         individual_event: "Bireysel olayları seçin."
         verify_certificate: "Yük url'sinin TLS sertifikasını kontrol edin"
         active: "Aktif"
-        active_notice: "Olay olduğunda, detaylarını göndereceğiz."
+        active_notice: "Gerçekleştiğinde, etkinlik ayrıntılarını göndereceğiz."
         categories_filter_instructions: "İlgili web kancaları, yalnızca olay belirtilen kategorilerle ilgiliyse tetiklenir. Tüm kategoriler için web kancalarını tetiklemek için boş bırakın."
         categories_filter: "Tetiklenen Kategoriler"
         tags_filter_instructions: "İlgili web kancaları, yalnızca olay belirtilen etiketlerle ilgiliyse tetiklenir. Tüm etiketler için web kancalarını tetiklemek üzere boş bırakın."
@@ -4531,7 +4564,7 @@ tr_TR:
           filter_placeholder: "filtrelemek için yazın…"
           theme_name: "Tema adı"
           component_name: "Bileşen adı"
-          themes_intro: "Başlamak için mevcut bir tema seçin veya yeni bir tema\n yükleyin"
+          themes_intro: "Başlamak için mevcut bir tema seçin veya yeni bir tema\nyükleyin"
           themes_intro_emoji: "kadın sanatçı emojisi"
           beginners_guide_title: "Yeni Başlayanlar İçin Discourse Temaları kılavuzu"
           developers_guide_title: "Discourse Temaları için geliştirici kılavuzu"
@@ -4637,7 +4670,7 @@ tr_TR:
           disabled_by: "Bu bileşeni devre dışı bırakan kişi"
           required_version:
             error: "Bu tema, Discourse'un bu sürümüyle uyumlu olmadığı için otomatik olarak devre dışı bırakıldı."
-            minimum: "Dircourse sürüm %{version} veya üzerini gerektirir."
+            minimum: "Dircourse %{version} sürümü veya üstünü gerektirir."
             maximum: "Discourse sürüm %{version} veya altı gerektirir."
           update_to_latest: "En Sona Güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
@@ -4661,10 +4694,10 @@ tr_TR:
             text: "CSS"
             title: "Özel CSS girin, tüm geçerli CSS ve SCSS stillerini kabul ediyoruz"
           header:
-            text: "Üstbilgi"
-            title: "Site üstbilgisinin üstünde görüntülenecek HTML'yi girin"
+            text: "Başlık"
+            title: "Site başlığının üstünde görüntülenecek HTML'yi girin"
           after_header:
-            text: "Üstbilgiden sonra"
+            text: "Başlıktan Sonra"
             title: "Üstbilgiden sonra tüm sayfalarda görüntülenecek HTML'yi girin"
           footer:
             text: "Altbilgi"
@@ -4789,7 +4822,7 @@ tr_TR:
         time: "Saat"
         user: "Kullanıcı"
         email_type: "E-posta Türü"
-        details_title: "E-posta detaylarını göster"
+        details_title: "E-posta ayrıntılarını göster"
         to_address: "Kime Adresi"
         test_email_address: "test için e-posta adresi"
         send_test: "Test E-postası Gönder"
@@ -4807,7 +4840,7 @@ tr_TR:
         last_seen_user: "Son Görülen Kullanıcı:"
         no_result: "Özet için sonuç bulunamadı."
         reply_key: "Yanıtla Tuşu"
-        post_link_with_smtp: "Posta ve SMTP Detayları"
+        post_link_with_smtp: "Posta ve SMTP Ayrıntıları"
         skipped_reason: "Nedeni Atla"
         incoming_emails:
           from_address: "Kimden"
@@ -4897,9 +4930,9 @@ tr_TR:
             revoke_badge: "rozeti iptal et"
             check_email: "e-postayı kontrol et"
             delete_topic: "konuyu sil"
-            recover_topic: "konuyu silme işlemini geri al"
+            recover_topic: "konuyu silmeyi geri al"
             delete_post: "gönderiyi sil"
-            impersonate: "yerine geç"
+            impersonate: "kimliğine bürün"
             anonymize_user: "kullanıcıyı anonimleştir"
             roll_up: "IP bloklarını topla"
             change_category_settings: "kategori ayarlarını değiştir"
@@ -4912,7 +4945,7 @@ tr_TR:
             grant_admin: "yönetici yetkisi ver"
             revoke_admin: "yönetici yetkisini iptal et"
             grant_moderation: "moderasyon yetkisi ver"
-            revoke_moderation: "moderasyon yetkisini iptal et"
+            revoke_moderation: "moderasyonu iptal et"
             backup_create: "yedekleme oluştur"
             deleted_tag: "silinmiş etiket"
             deleted_unused_tags: "kullanılmayan etiketler silindi"
@@ -5013,7 +5046,7 @@ tr_TR:
             header: "Başlık"
             full_page: "Tam Sayfa"
             click_through_only: "Tümü (yalnızca tıklayın)"
-          header_search_results: "Üstbilgi Arama Sonuçları"
+          header_search_results: "Başlık Arama Sonuçları"
         logster:
           title: "Hata Kayıtları"
       watched_words:
@@ -5039,14 +5072,8 @@ tr_TR:
           silence: "Sustur"
           link: "Bağlantı"
         action_descriptions:
-          block: "Bu kelimeleri içeren gönderilerin yayınlanmasını engelleyin. Kullanıcı, gönderisini göndermeye çalıştığında bir hata mesajı görür."
-          censor: "Bu kelimeleri içeren gönderilere izin verin, ancak bunları sansürlü kelimeleri gizleyen karakterlerle değiştirin."
-          require_approval: "Bu kelimeleri içeren gönderilerin görülebilmesi için personel tarafından onaylanması gerekir."
-          flag: "Bu kelimeleri içeren gönderilere izin verin, ancak moderatörlerin inceleyebilmesi için bunlara uygunsuz bayrağı ekleyin."
-          replace: "Gönderilerdeki kelimeleri başka kelimelerle değiştirin"
-          tag: "Konuları ilk gönderiye göre otomatik olarak etiketleyin"
-          silence: "Kullanıcıların bu kelimeleri içeren ilk gönderilerinin görülebilmesi için personel tarafından onaylanması gerekir ve kullanıcı otomatik olarak susturulur."
-          link: "Gönderilerdeki kelimeleri bağlantılarla değiştirin"
+          replace: "Gönderilerdeki kelimeleri başka kelimelerle değiştirin."
+          link: "Gönderilerdeki kelimeleri bağlantılarla değiştirin."
         form:
           label: "Kelime veya kelime öbeği içerir"
           placeholder: "Kelime veya kelime öbeği girin (* joker karakterdir)"
@@ -5074,17 +5101,52 @@ tr_TR:
         list_table:
           headings:
             name: "Ad"
+            active_categories: "Aktif Kategoriler"
             actions: "Eylemler"
         view_template:
           close: "Bitir"
           edit: "Düzenle"
           delete: "Sil"
+          toggle_preview: "Ön İzlemeyi aç/kapat"
         new_template_form:
           submit: "Kaydet"
           cancel: "İptal et"
+          preview: "Ön izleme"
         quick_insert_fields:
           add_new_field: "Ekle"
           dropdown: "Açılır Menü"
+        validations_modal:
+          button_title: "Doğrulamalar"
+          modal_title: "Doğrulama Seçenekleri"
+          table_headers:
+            key: "Anahtar"
+            type: "Tür"
+            description: "Açıklama"
+          validations:
+            required:
+              key: "zorunlu"
+              type: "mantıksal"
+              description: "Formu göndermek için alanın doldurulması gerekir."
+            minimum:
+              key: "en az"
+              type: "tamsayı"
+            maximum:
+              key: "en fazla"
+              type: "tamsayı"
+            pattern:
+              key: "desen"
+              type: "regex dizesi"
+        preview_modal:
+          title: "Şablon Önizlemesi"
+        field_placeholders:
+          validations: "doğrulamaları buraya girin"
+          label: "Etiketi buraya girin"
+          placeholder: "Yer tutucuyu buraya girin"
+          none_label: "Bir öğe seçin"
+          choices:
+            first: "Seçenek 1"
+            second: "Seçenek 2"
+            third: "Seçenek 3"
       impersonate:
         title: "Kimliğine Bürün"
         help: "Hata ayıklama amacıyla bir kullanıcı hesabının kimliğine bürünmek için bu aracı kullanın. Bittiğinde oturumu kapatmanız gerekecek."
@@ -5097,6 +5159,7 @@ tr_TR:
         not_found: "Üzgünüz, bu kullanıcı adı sistemimizde bulunmuyor."
         id_not_found: "Üzgünüz, bu kullanıcı kimliği sistemimizde bulunmuyor."
         active: "Etkinleştirildi"
+        status: "Durum"
         show_emails: "E-postaları Göster"
         hide_emails: "E-postaları gizle"
         nav:
@@ -5463,7 +5526,7 @@ tr_TR:
           spam: "Spam"
           rate_limits: "Oran Limitleri"
           developer: "Geliştirici"
-          embedding: "Gömme"
+          embedding: "Yerleştirme"
           legal: "Yasal"
           api: "API"
           user_api: "Kullanıcı API'sı"
@@ -5480,7 +5543,7 @@ tr_TR:
         secret_list:
           invalid_input: "Girdi alanları boş olamaz veya dikey çubuk karakteri içeremez."
         default_categories:
-          modal_description: "Bu değişikliği tarihsel olarak uygulamak ister misiniz? Bu, %{count} mevcut kullanıcının tercihlerini değiştirecektir."
+          modal_description: "Bu değişikliği tarihsel olarak uygulamak ister misiniz? Bu, %{count} mevcut kullanıcının tercihlerini değiştirir."
           modal_yes: "Evet"
           modal_no: "Hayır, yalnızca ileriye dönük değişiklikleri uygula"
         simple_list:
@@ -5507,7 +5570,7 @@ tr_TR:
         save: Kaydet
         delete: Sil
         delete_confirm: Bu rozeti silmek istediğinizden emin misiniz?
-        revoke: İptal Et
+        revoke: Geri çek
         reason: Neden
         expand: Genişlet &hellip;
         revoke_confirm: Bu rozeti iptal etmek istediğinizden emin misiniz?

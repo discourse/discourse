@@ -769,7 +769,7 @@ RSpec.describe Plugin::Instance do
   describe "#register_about_stat_group" do
     let(:plugin) { Plugin::Instance.new }
 
-    after { About.clear_plugin_stat_groups }
+    after { DiscoursePluginRegistry.reset! }
 
     it "registers an about stat group correctly" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
@@ -788,6 +788,13 @@ RSpec.describe Plugin::Instance do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
       plugin.register_about_stat_group("some_group") { stats }
       expect(About.displayed_plugin_stat_groups).to eq([])
+    end
+
+    it "does not allow duplicate named stat groups" do
+      stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
+      plugin.register_about_stat_group("some_group") { stats }
+      plugin.register_about_stat_group("some_group") { stats }
+      expect(DiscoursePluginRegistry.about_stat_groups.count).to eq(1)
     end
   end
 
@@ -818,6 +825,19 @@ RSpec.describe Plugin::Instance do
       UserDestroyer.new(Discourse.system_user).destroy(user, {})
 
       expect(callback_called).to eq(false)
+    end
+  end
+
+  describe "#register_modifier" do
+    let(:plugin) { Plugin::Instance.new }
+
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "allows modifier registration" do
+      plugin.register_modifier(:magic_sum_modifier) { |a, b| a + b }
+
+      sum = DiscoursePluginRegistry.apply_modifier(:magic_sum_modifier, 1, 2)
+      expect(sum).to eq(3)
     end
   end
 end

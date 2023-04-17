@@ -21,8 +21,11 @@ bs_BA:
       joined: "pridružio se"
       email_frequency:
         never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
       flag: "Prijavi"
       join: "Učlani se"
+      last_visit: "zadnja posjeta"
       mention_warning:
         dismiss: "odbaci"
       reply: "Odgovori"
@@ -111,7 +114,3 @@ bs_BA:
           fields:
             message:
               label: Privatna Poruka
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Kaznio je"

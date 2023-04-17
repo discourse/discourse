@@ -99,48 +99,54 @@
 }
 
 .admin-users-list {
-  td.username {
-    @include ellipsis;
-    overflow-wrap: break-word;
-  }
-  @media screen and (max-width: 970px) and (min-width: 768px) {
-    td.username {
-      max-width: 23vw; // Prevents horizontal scroll down to 768px
+  .directory-table__cell {
+    &.username {
+      justify-content: start;
     }
-    td.email {
-      max-width: 28vw; // Prevents horizontal scroll down to 768px
-      overflow-wrap: break-word;
+    &.email {
+      justify-content: start;
+      span {
+        display: flex;
+        min-width: 17em;
+        word-break: break-all;
+      }
     }
   }
-  @media screen and (max-width: 767px) {
-    tr {
-      td.username {
-        grid-column-start: 1;
-        grid-column-end: -2;
-        font-weight: bold;
-      }
-      td.user-status {
-        text-align: right;
-        grid-row: 1;
-        grid-column-end: -1;
-        .d-icon {
-          margin-left: 0.25em;
-        }
-      }
-      td.email {
-        grid-column-start: 1;
-        grid-column-end: -1;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        overflow: hidden;
-        min-width: 0;
-        margin: 0.5em 0 0 0;
 
-        &:empty {
-          display: none;
+  .directory-table {
+    margin-top: 1em;
+    &__column-header--username,
+    &__column-header--email {
+      .header-contents {
+        text-align: left;
+      }
+    }
+
+    &__cell.username {
+      align-items: center;
+    }
+
+    &__cell.email {
+      @include breakpoint("tablet") {
+        grid-column-start: 1;
+        grid-column-end: -1;
+        span {
+          max-width: 100%;
         }
       }
     }
+  }
+
+  .directory-table__cell {
+    padding: 0.5em 0.25em;
+  }
+
+  .user-status span {
+    gap: 0.15em;
+  }
+
+  .avatar {
+    margin-right: 0.25em;
   }
 }
 

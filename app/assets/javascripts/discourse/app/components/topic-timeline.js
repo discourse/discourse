@@ -24,15 +24,6 @@ export default class TopicTimeline extends Component {
     }
   }
 
-  get displaySummary() {
-    return (
-      this.siteSettings.summary_timeline_button &&
-      !this.args.fullScreen &&
-      this.args.model.has_summary &&
-      !this.args.model.postStream.summary
-    );
-  }
-
   get createdAt() {
     return new Date(this.args.model.created_at);
   }

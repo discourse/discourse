@@ -1856,8 +1856,8 @@ RSpec.describe User do
   describe "hash_passwords" do
     let(:too_long) { "x" * (User.max_password_length + 1) }
 
-    def hash(password, salt)
-      User.new.send(:hash_password, password, salt)
+    def hash(password, salt, algorithm = User::TARGET_PASSWORD_ALGORITHM)
+      User.new.send(:hash_password, password, salt, algorithm)
     end
 
     it "returns the same hash for the same password and salt" do
@@ -1874,6 +1874,44 @@ RSpec.describe User do
 
     it "raises an error when passwords are too long" do
       expect { hash(too_long, "gravy") }.to raise_error(StandardError)
+    end
+
+    it "uses the target algorithm for new users" do
+      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+    end
+
+    it "can use an older algorithm to verify existing passwords, then upgrade" do
+      old_algorithm = "$pbkdf2-sha256$i=5,l=32$"
+      expect(old_algorithm).not_to eq(User::TARGET_PASSWORD_ALGORITHM)
+
+      password = "poutine"
+      old_hash = hash(password, user.salt, old_algorithm)
+
+      user.update!(password_algorithm: old_algorithm, password_hash: old_hash)
+
+      expect(user.password_algorithm).to eq(old_algorithm)
+      expect(user.password_hash).to eq(old_hash)
+
+      # With an incorrect attempt, should return false with no side effects
+      expect(user.confirm_password?("notthepassword")).to eq(false)
+      expect(user.password_algorithm).to eq(old_algorithm)
+      expect(user.password_hash).to eq(old_hash)
+
+      # Should correctly verify against old algorithm
+      expect(user.confirm_password?(password)).to eq(true)
+
+      # Auto-upgrades to new algorithm
+      expected_new_hash = hash(password, user.salt, User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_hash).to eq(expected_new_hash)
+
+      # And persists to the db
+      user.reload
+      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_hash).to eq(expected_new_hash)
+
+      # And can still log in
+      expect(user.confirm_password?(password)).to eq(true)
     end
   end
 
@@ -1955,7 +1993,10 @@ RSpec.describe User do
           .perform(moderator, :agree_and_keep)
 
         post_deferred = Fabricate(:post)
-        PostActionCreator.inappropriate(user, post_deferred).reviewable.perform(moderator, :ignore)
+        PostActionCreator
+          .inappropriate(user, post_deferred)
+          .reviewable
+          .perform(moderator, :ignore_and_do_nothing)
 
         post_disagreed = Fabricate(:post)
         PostActionCreator
@@ -2092,6 +2133,13 @@ RSpec.describe User do
         [category3.id],
       )
       expect(CategoryUser.lookup(user, :regular).pluck(:category_id)).to eq([category4.id])
+    end
+
+    it "does not error on duplicate categories for set_default_categories_preferences" do
+      SiteSetting.default_categories_normal = category4.id.to_s + "|" + category4.id.to_s
+      user = nil
+      expect { user = Fabricate(:user, trust_level: 1) }.not_to raise_error
+      expect(CategoryUser.lookup(user, :normal).pluck(:category_id)).to include(category4.id)
     end
 
     it "does not set category preferences for staged users" do
@@ -2661,24 +2709,22 @@ RSpec.describe User do
   describe "#title=" do
     fab!(:badge) { Fabricate(:badge, name: "Badge", allow_title: false) }
 
-    it "sets badge_granted_title correctly" do
+    it "sets granted_title_badge_id correctly" do
       BadgeGranter.grant(badge, user)
 
       user.update!(title: badge.name)
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.reload.granted_title_badge_id).to be_nil
 
       user.update!(title: "Custom")
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.reload.granted_title_badge_id).to be_nil
 
       badge.update!(allow_title: true)
       user.badges.reload
       user.update!(title: badge.name)
-      expect(user.user_profile.reload.badge_granted_title).to eq(true)
       expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
 
       user.update!(title: nil)
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
-      expect(user.user_profile.granted_title_badge_id).to eq(nil)
+      expect(user.user_profile.granted_title_badge_id).to be_nil
     end
 
     context "when a custom badge name has been set and it matches the title" do
@@ -2688,12 +2734,11 @@ RSpec.describe User do
         TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
       end
 
-      it "sets badge_granted_title correctly" do
+      it "sets granted_title_badge_id correctly" do
         BadgeGranter.grant(badge, user)
 
         badge.update!(allow_title: true)
         user.update!(title: customized_badge_name)
-        expect(user.user_profile.reload.badge_granted_title).to eq(true)
         expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
       end
 

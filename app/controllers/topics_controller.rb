@@ -361,7 +361,14 @@ class TopicsController < ApplicationController
         category = Category.find_by(id: params[:category_id])
 
         if category || (params[:category_id].to_i == 0)
-          guardian.ensure_can_move_topic_to_category!(category)
+          begin
+            guardian.ensure_can_move_topic_to_category!(category)
+          rescue Discourse::InvalidAccess
+            return(
+              render_json_error I18n.t("category.errors.move_topic_to_category_disallowed"),
+                                status: :forbidden
+            )
+          end
         else
           return render_json_error(I18n.t("category.errors.not_found"))
         end

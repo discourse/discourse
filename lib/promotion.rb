@@ -82,6 +82,7 @@ class Promotion
           new_value: new_level,
         )
       end
+      @user.skip_email_validation = true
       @user.save!
       @user.user_profile.recook_bio
       @user.user_profile.save!

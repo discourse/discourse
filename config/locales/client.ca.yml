@@ -165,8 +165,6 @@ ca:
     software_update_prompt:
       message: "Hem actualitzat aquest lloc, <span>si us plau actualitzeu</span>, o podeu experimentar un comportament inesperat."
       dismiss: "Descarta-ho"
-    bootstrap_mode_disabled: "El mode d'arrencada serà desactivat d'aquí a 24 hores."
-    bootstrap_invite_button_title: "Envia invitacions"
     themes:
       default_description: "Per defecte"
     s3:
@@ -309,7 +307,6 @@ ca:
       new_topic: "Esborrany de tema nou"
       new_private_message: "Nou esborrany de missatge personal"
       abandon:
-        confirm: "Teniu un esborrany en curs per a aquest tema. Què t'agradaria fer-hi?"
         yes_value: "Descarta"
         no_value: "Reprèn l'edició"
     topic_count_categories:
@@ -477,11 +474,9 @@ ca:
       scores:
         about: "Aquesta puntuació es calcula en funció del nivell de confiança del reportador, de l'exactitud de les banderes prèvies i de la prioritat de l'element del qual es reporta."
         score: "Puntuació"
-        date: "Data"
-        type: "Tipus"
+        type: "Motiu"
         status: "Estat"
-        submitted_by: "Enviat per"
-        reviewed_by: "Revisat per"
+        submitted_by: "Reportat per"
       statuses:
         pending:
           title: "Pendent"
@@ -489,14 +484,12 @@ ca:
           title: "Aprovat"
         rejected:
           title: "Rebutjat"
-        ignored:
-          title: "Ignorat"
-        deleted:
-          title: "Suprimit"
         reviewed:
-          title: "(tots revisats)"
+          title: "Tots revisats"
         all:
-          title: "(qualsevol cosa)"
+          title: "Qualsevol cosa"
+      context_question:
+        delimiter: "o"
       types:
         reviewable_flagged_post:
           title: "Publicació amb bandera"
@@ -726,6 +719,7 @@ ca:
         make_owner_description: "Fes <b>%{username}</b> propietari del grup"
         remove_owner: "Elimina com a propietari"
         remove_owner_description: "Elimina <b>%{username}</b> com a propietari del grup"
+        status: "Estat"
         owner: "Propietari"
         forbidden: "No teniu permís per a veure els membres."
       topics: "Temes"
@@ -973,7 +967,6 @@ ca:
       home: "Pàgina d'inici per defecte"
       staged: "Fictici"
       staff_counters:
-        flags_given: "banderes útils"
         flagged_posts: "publicacions amb banderes"
         deleted_posts: "publicacions suprimides"
         suspensions: "suspensions"
@@ -2609,6 +2602,10 @@ ca:
     filters:
       with_topics: "%{filter} temes"
       with_category: "%{filter} %{category} temes"
+      filter:
+        title: "Filtre"
+        button:
+          label: "Filtre"
       latest:
         title: "Més recents"
         title_with_count:
@@ -2890,8 +2887,10 @@ ca:
           save: "Desa"
           delete: "Suprimeix"
           links:
-            icon: "Icona"
-            name: "Nom"
+            icon:
+              label: "Icona"
+            name:
+              label: "Nom"
         about:
           header_link_text: "Quant a"
         messages:
@@ -3730,11 +3729,6 @@ ca:
           flag: "Bandera"
           replace: "Reemplaça"
           silence: "Silencia"
-        action_descriptions:
-          block: "Impedeix que es publiquin texts que continguin aquestes paraules. L'usuari veurà un missatge d'error quan intenti enviar la publicació. "
-          censor: "Permet publicacions que contenen aquestes paraules, però reemplaça-les amb caràcters que amaguin les paraules censurades."
-          require_approval: "Les publicacions que continguin aquestes paraules requeriran aprovació per l'equip responsable abans que puguin ser vistes. "
-          flag: "Permet publicacions que contenen aquestes paraules, però senyala-les amb bandera com a inapropiades de manera que els moderadors puguin revisar-les"
         form:
           placeholder_regexp: "expressió regular"
           link_placeholder: "https://example.com"
@@ -3761,9 +3755,18 @@ ca:
         new_template_form:
           submit: "Desa"
           cancel: "Cancel·la"
+          preview: "Previsualitza"
         quick_insert_fields:
           add_new_field: "Afegeix"
           dropdown: "Desplega"
+        validations_modal:
+          table_headers:
+            key: "Clau"
+            type: "Tipus"
+            description: "Descripció"
+          validations:
+            required:
+              key: "necessari"
       impersonate:
         title: "Suplanta"
         help: "Feu servir aquesta eina per a suplantar comptes amb l'objectiu de depurar. Haureu de tancar la sessió quan acabeu."
@@ -3776,6 +3779,7 @@ ca:
         not_found: "Aquest nom d'usuari no existeix en el nostre sistema. "
         id_not_found: "Aquest ID d'usuari no existeix en el nostre sistema. "
         active: "Activat"
+        status: "Estat"
         show_emails: "Mostra correus"
         hide_emails: "Amaga els correus "
         nav:

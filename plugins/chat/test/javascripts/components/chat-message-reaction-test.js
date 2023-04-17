@@ -7,14 +7,6 @@ import { module, test } from "qunit";
 module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("accepts arbitrary class property", async function (assert) {
-    await render(hbs`
-      <ChatMessageReaction @reaction={{hash emoji="heart"}} @class="foo" />
-    `);
-
-    assert.true(exists(".chat-message-reaction.foo"));
-  });
-
   test("adds reacted class when user reacted", async function (assert) {
     await render(hbs`
       <ChatMessageReaction @reaction={{hash emoji="heart" reacted=true}} />
@@ -27,19 +19,6 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
     await render(hbs`<ChatMessageReaction @reaction={{hash emoji="heart"}} />`);
 
     assert.true(exists(`.chat-message-reaction[data-emoji-name="heart"]`));
-  });
-
-  test("adds show class when count is positive", async function (assert) {
-    this.set("count", 0);
-
-    await render(hbs`
-      <ChatMessageReaction @reaction={{hash emoji="heart" count=this.count}} />
-    `);
-
-    assert.false(exists(".chat-message-reaction.show"));
-
-    this.set("count", 1);
-    assert.true(exists(".chat-message-reaction.show"));
   });
 
   test("title/alt attributes", async function (assert) {
@@ -76,7 +55,7 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
     });
 
     await render(hbs`
-      <ChatMessageReaction class="show" @reaction={{hash emoji="heart" count=this.count}} @react={{this.react}} />
+      <ChatMessageReaction class="show" @reaction={{hash emoji="heart" count=this.count}} @onReaction={{this.react}} />
     `);
 
     assert.false(exists(".chat-message-reaction .count"));

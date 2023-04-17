@@ -176,7 +176,7 @@ module DiscourseNarrativeBot
         opts[:delete_removed_posts_after] = 1
 
         result = PostActionCreator.notify_moderators(self.discobot_user, post)
-        result.reviewable.perform(self.discobot_user, :ignore)
+        result.reviewable.perform(self.discobot_user, :ignore_and_do_nothing)
       end
 
       PostDestroyer.new(@user, post, opts).destroy

@@ -129,7 +129,7 @@ class Reviewable < ActiveRecord::Base
       update_args = {
         status: statuses[:pending],
         id: target.id,
-        type: target.class.name,
+        type: target.class.polymorphic_name,
         potential_spam: potential_spam == true ? true : nil,
       }
 

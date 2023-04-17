@@ -2077,8 +2077,6 @@ pt:
       message: "<p>Reenviamos o email de ativação para <b>%{email}</b>"
   safe_mode:
     title: "Entrar em modo de segurança"
-    no_unofficial_plugins: "Desativar plugins não-oficiais"
-    no_plugins: "Desativar todos os plugins"
     enter: "Entrar em Modo de Segurança"
   wizard:
     title: "Configuração do Discourse"
@@ -2145,14 +2143,14 @@ pt:
     reasons:
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
-      agree_and_suspend:
-        title: "Utilizador Suspenso"
+      agree:
+        title: "Sim"
       agree_and_silence:
-        title: "Silenciar Usuário"
+        title: "Silenciar utilizador"
       delete_single:
         title: "Eliminar"
       disagree:
-        title: "Discordar"
+        title: "Não"
       ignore:
         title: "Ignorar"
       approve:

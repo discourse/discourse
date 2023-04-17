@@ -324,7 +324,7 @@ createWidget("header-icons", {
         let { currentUser } = this;
         if (
           currentUser?.reviewable_count &&
-          !this.currentUser.redesigned_user_menu_enabled
+          this.siteSettings.navigation_menu === "legacy"
         ) {
           return h(
             "div.badge-notification.reviewables",
@@ -664,14 +664,32 @@ export default createWidget("header", {
   },
 
   preventDefault(e) {
-    // prevent all scrolling on menu panels, except on overflow
-    const height = window.innerHeight ? window.innerHeight : $(window).height();
-    if (
-      !$(e.target).parents(".menu-panel").length ||
-      $(".menu-panel .panel-body-contents").height() <= height
-    ) {
-      e.preventDefault();
+    const windowHeight = window.innerHeight;
+
+    // allow profile menu tabs to scroll if they're taller than the window
+    if (e.target.closest(".menu-panel .menu-tabs-container")) {
+      const topTabs = document.querySelector(".menu-panel .top-tabs");
+      const bottomTabs = document.querySelector(".menu-panel .bottom-tabs");
+      const profileTabsHeight =
+        topTabs?.offsetHeight + bottomTabs?.offsetHeight || 0;
+
+      if (profileTabsHeight > windowHeight) {
+        return;
+      }
     }
+
+    // allow menu panels to scroll if contents are taller than the window
+    if (e.target.closest(".menu-panel")) {
+      const menuContentHeight =
+        document.querySelector(".menu-panel .panel-body-contents")
+          .offsetHeight || 0;
+
+      if (menuContentHeight > windowHeight) {
+        return;
+      }
+    }
+
+    e.preventDefault();
   },
 
   togglePageSearch() {

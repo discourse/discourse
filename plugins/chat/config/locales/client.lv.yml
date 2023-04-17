@@ -21,8 +21,11 @@ lv:
       joined: "pievienojās"
       email_frequency:
         never: "Nekad"
+      header_indicator_preference:
+        never: "Nekad"
       flag: "Sūdzība"
       join: "Pievienojieties"
+      last_visit: "pēdējais apmeklējums"
       mention_warning:
         dismiss: "nerādīt"
       reply: "Atbilde"
@@ -108,7 +111,3 @@ lv:
           fields:
             message:
               label: Ziņa
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Atzīmēja"

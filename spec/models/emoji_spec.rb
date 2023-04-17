@@ -23,6 +23,11 @@ RSpec.describe Emoji do
   end
 
   describe ".lookup_unicode" do
+    before do
+      SiteSetting.emoji_deny_list = "peach"
+      Emoji.clear_cache
+    end
+
     it "should return the emoji" do
       expect(Emoji.lookup_unicode("blonde_man")).to eq("👱")
     end
@@ -33,6 +38,10 @@ RSpec.describe Emoji do
 
     it "should return a skin toned emoji" do
       expect(Emoji.lookup_unicode("blonde_woman:t6")).to eq("👱🏿‍♀️")
+    end
+
+    it "should not return a fu emoji when emoji is in emoji deny list site setting" do
+      expect(Emoji.lookup_unicode("peach")).not_to eq("🍑")
     end
   end
 
@@ -76,36 +85,18 @@ RSpec.describe Emoji do
       expect(Emoji.exists?("test")).to be(true)
     end
 
+    it "finds a custom emoji with a name with :t1 in the middle" do
+      CustomEmoji.create!(name: "test:t1:foo", upload_id: 9999)
+      Emoji.clear_cache
+      expect(Emoji.exists?(":test:t1:foo:")).to be(true)
+      expect(Emoji.exists?("test:t1:foo")).to be(true)
+    end
+
     it "doesn’t find non-existing emoji" do
       expect(Emoji.exists?(":foo-bar:")).to be(false)
       expect(Emoji.exists?(":blonde_woman:t7:")).to be(false)
       expect(Emoji.exists?("blonde_woman:t0")).to be(false)
       expect(Emoji.exists?("blonde_woman:t")).to be(false)
-    end
-  end
-
-  describe "version updates" do
-    it "should correct cache when global emojis cache is stale" do
-      Emoji.global_emoji_cache["blonde_man"] = ["invalid", Emoji.new]
-
-      emoji = Emoji[":blonde_man:t3"]
-
-      expect(emoji.name).to eq("blonde_man")
-      expect(emoji.tonable).to eq(true)
-    end
-
-    it "should correct cache when site emojis cache is stale" do
-      CustomEmoji.create!(name: "test123", upload_id: 9999)
-      Emoji.clear_cache
-
-      Emoji.site_emoji_cache["test123"] = ["invalid", Emoji.new]
-
-      emoji = Emoji[":test123:"]
-
-      expect(emoji.name).to eq("test123")
-      expect(emoji.tonable).to be_falsey
-
-      Emoji.clear_cache
     end
   end
 

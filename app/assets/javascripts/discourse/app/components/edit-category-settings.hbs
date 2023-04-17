@@ -153,7 +153,6 @@
         <RelativeTimePicker
           @id="category-default-slow-mode"
           @durationMinutes={{this.category.defaultSlowModeMinutes}}
-          @hiddenIntervals={{this.hiddenRelativeIntervals}}
           @onChange={{action "onDefaultSlowModeDurationChange"}}
         />
       </div>
@@ -190,6 +189,18 @@
     <NumberField
       @number={{this.category.custom_fields.num_auto_bump_daily}}
       @id="category-number-daily-bump"
+      @type="number"
+      @min="0"
+    />
+  </section>
+
+  <section class="field auto-bump-cooldown-days">
+    <label for="category-auto-bump-cooldown-days">
+      {{i18n "category.auto_bump_cooldown_days"}}
+    </label>
+    <NumberField
+      @number={{this.category.category_setting.auto_bump_cooldown_days}}
+      @id="category-auto-bump-cooldown-days"
       @type="number"
       @min="0"
     />

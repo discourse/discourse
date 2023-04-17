@@ -157,6 +157,8 @@ sv:
       removed_user: "Tog bort %{who} %{when}"
       removed_group: "Tog bort %{who} %{when}"
       autobumped: "Automatiskt positionerad %{when}"
+      tags_changed: "Taggar uppdaterade %{when}"
+      category_changed: "Kategori uppdaterad %{when}"
       autoclosed:
         enabled: "Stängdes %{when}"
         disabled: "Öppnades %{when}"
@@ -187,12 +189,7 @@ sv:
     software_update_prompt:
       message: "Vi har uppdaterat den här webbplatsen, och <span>ber dig uppdatera sidan</span>, annars kan du uppleva oväntad funktion."
       dismiss: "Avfärda"
-    bootstrap_mode_enabled:
-      one: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
-      other: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
-    bootstrap_mode_disabled: "Bootstrap-läge stängs av om 24 timmar."
-    bootstrap_invite_button_title: "Skicka inbjudningar"
-    bootstrap_wizard_link_title: "Slutför installationsguiden"
+    bootstrap_mode: "Bootstrap-läge"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Din webbplats kanske inte fungerar eftersom ett tema / komponent har fel."
@@ -353,7 +350,7 @@ sv:
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för personligt meddelande"
       abandon:
-        confirm: "Du har ett pågående utkast för detta ämne. Vad vill du göra med det?"
+        confirm: "Du har redan ett pågående utkast. Vad vill du göra med det?"
         yes_value: "Förkasta"
         no_value: "Återuppta redigering"
     topic_count_categories:
@@ -526,26 +523,43 @@ sv:
       scores:
         about: "Denna poäng beräknas på förtroendenivån för de som rapporterar, deras träffsäkerhet på deras tidigare flaggor, samt på prioriteringen av föremål som rapporteras."
         score: "Poäng"
-        date: "Datum"
-        type: "Typ"
+        date: "Rapportdatum"
+        type: "Anledning"
         status: "Status"
-        submitted_by: "Inskickade av"
+        submitted_by: "Rapporterad av"
         reviewed_by: "Granskade av"
+        reviewed_timestamp: "Granskningsdatum"
       statuses:
         pending:
           title: "Väntar"
         approved:
           title: "Godkända"
+        approved_flag:
+          title: "Flaggning godkänd"
+        approved_user:
+          title: "Användaren godkändes"
+        approved_post:
+          title: "Inlägget godkändes"
         rejected:
           title: "Avvisade"
+        rejected_flag:
+          title: "Flaggning avvisades"
+        rejected_user:
+          title: "Användaren avvisades"
+        rejected_post:
+          title: "Inlägget avvisades"
         ignored:
-          title: "Ignorerade"
+          title: "Flaggning ignoreras"
         deleted:
-          title: "Raderade"
+          title: "Ämne eller inlägg raderat"
         reviewed:
-          title: "(alla granskade)"
+          title: "Alla granskade"
         all:
-          title: "(allting)"
+          title: "Allting"
+      context_question:
+        is_this_post: "Är detta inlägg %{reviewable_human_score_types}?"
+        delimiter: "eller"
+        something_else_wrong: "Är det något fel med detta inlägg?"
       types:
         reviewable_flagged_post:
           title: "Flaggat inlägg"
@@ -852,6 +866,7 @@ sv:
         make_all_primary_description: "Gör denna till primär grupp för alla markerade användare"
         remove_all_primary: "Ta bort som primär"
         remove_all_primary_description: "Ta bort denna grupp som primär"
+        status: "Status"
         owner: "Ägare"
         primary: "Primär"
         forbidden: "Du är inte tillåten att se medlemmarna."
@@ -1185,7 +1200,6 @@ sv:
       home: "Standardhemsida"
       staged: "Arrangerad"
       staff_counters:
-        flags_given: "hjälpsamma flaggor"
         flagged_posts: "flaggade inlägg"
         deleted_posts: "raderade inlägg"
         suspensions: "avstängningar"
@@ -2601,6 +2615,7 @@ sv:
         bookmarks: "Du har inga bokmärkta ämnen ännu."
         category: "Det finns inga ämnen i %{category}."
         top: "Det finns inga toppämnen."
+        filter: "Det finns inga ämnen."
         educate:
           new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
           unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa värden <span class=\"badge unread-posts badge-notification\">1</span> om du:</p><ul><li>skapade ämnet</li><li>svarade på ämnet</li><li>läste ämnet i mer än 4 minuter</li></ul><p>eller om du uttryckligen har satt ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
@@ -2615,11 +2630,13 @@ sv:
         tag: "Det finns inga fler %{tag}-ämnen."
         top: "Det finns inga fler toppämnen."
         bookmarks: "Inga fler bokmärkta ämnen hittades."
+        filter: "Det finns inga fler ämnen."
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"
         other: "%{count} inlägg i ämnet"
       create: "Nytt ämne"
+      create_disabled_category: "Du får inte skapa ämnen i den här kategorin"
       create_long: "Skapa ett nytt ämne"
       open_draft: "Öppna utkast"
       private_message: "Skriv meddelande"
@@ -3393,6 +3410,7 @@ sv:
       default_slow_mode: 'Aktivera "Långsamt läge" för nya ämnen i denna kategori.'
       parent: "Överordnad kategori"
       num_auto_bump_daily: "Antalet öppnade ämnen för att dagligen automatiskt knuffa ett ämne:"
+      auto_bump_cooldown_days: "Minsta antal dagar innan samma ämne får knuffas:"
       navigate_to_first_post_after_read: "Navigera till första inlägget efter att ämnen är lästa"
       notifications:
         title: "ändra aviseringsnivå för denna kategori"
@@ -3576,6 +3594,10 @@ sv:
     filters:
       with_topics: "%{filter} ämnen"
       with_category: "%{filter} %{category} ämnen"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Senaste"
         title_with_count:
@@ -3994,17 +4016,34 @@ sv:
         custom:
           add: "Lägg till ett anpassat avsnitt"
           edit: "Redigera anpassat avsnitt"
-          name: "Avsnittstitel"
           save: "Spara"
           delete: "Radera"
           delete_confirm: "Är du säker på att du vill radera det här avsnittet?"
           public: "Gör denna sektion offentligt och synligt för alla"
           links:
-            icon: "Ikon"
-            name: "Namn"
-            value: "Länk"
             add: "Lägg till ytterligare en länk"
             delete: "Ta bort länk"
+            icon:
+              label: "Ikon"
+              validation:
+                blank: "Ikonen får inte vara tom"
+                maximum: "Ikonen måste vara kortare än %{count} tecken"
+            name:
+              label: "Namn"
+              validation:
+                blank: "Namnet får inte vara tomt"
+                maximum: "Namnet måste vara kortare än %{count} tecken"
+            value:
+              label: "Länk"
+              validation:
+                blank: "Länken får inte vara tom"
+                maximum: "Länken måste vara kortare än %{count} tecken"
+                invalid: "Formatet är ogiltigt"
+          title:
+            label: "Avsnittstitel"
+            validation:
+              blank: "Titeln får inte vara tom"
+              maximum: "Titeln måste vara kortare än %{count} tecken"
         about:
           header_link_text: "Om"
         messages:
@@ -4065,6 +4104,7 @@ sv:
               title: "Lista över alla användare"
             my_posts:
               content: "Mina inlägg"
+              content_drafts: "Mina utkast"
               title: "Min senaste ämnesaktivitet"
               title_drafts: "Mina utkast som inte har publicerats"
               draft_count:
@@ -5034,6 +5074,7 @@ sv:
             create_public_sidebar_section: "skapa offentlig sektion i sidopanel"
             update_public_sidebar_section: "uppdatera offentlig sektion i sidopanel"
             destroy_public_sidebar_section: "förstöra doffentlig sektion i sidopanel"
+            reset_bounce_score: "återställ antalet studsar"
         screened_emails:
           title: "Kontrollerade e-postadresser"
           description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas."
@@ -5097,14 +5138,14 @@ sv:
           silence: "Tysta"
           link: "Länk"
         action_descriptions:
-          block: "Förhindra att inlägg med dessa ord publiceras. Användaren kommer att se ett felmeddelande när de försöker skicka inlägget."
-          censor: "Tillåt inlägg med dessa ord, men ersätt orden med tecken som döljer det censurerade orden."
-          require_approval: "Inlägg som innehåller dessa ord kommer att behöva godkännande av personal innan de visas."
-          flag: "Tillåt inlägg med dessa ord, men flagga orden som olämpliga så att moderatorer kan granska dem."
-          replace: "Ersätt ord i inlägg med andra ord"
-          tag: "Tagga ämnen automatiskt baserat på första inlägget"
-          silence: "Användares första inlägg som innehåller dessa ord kommer att kräva godkännande av personalen innan de kan ses och användaren kommer automatiskt att tystas."
-          link: "Ersätt ord i inlägg med länkar"
+          block: "Ett felmeddelande kommer att visas när du försöker skapa ett inlägg som innehåller dessa ord."
+          censor: "Tillåt inlägg som innehåller dessa ord, men ersätt orden med tecken som döljer det censurerade orden."
+          require_approval: "Kräv personalens godkännande för inlägg som innehåller dessa ord innan de blir synliga för andra."
+          flag: "Tillåt inlägg som innehåller dessa ord, men flagga dem som olämpliga för granskning av moderatorer."
+          replace: "Ersätt ord i inlägg med andra ord."
+          tag: "Tagga ämnen automatiskt om det första inlägget innehåller ett specifikt ord."
+          silence: "Tysta nya konton om deras allra första inlägg innehåller något av dessa ord. Inlägget döljs automatiskt tills personalen godkänner det."
+          link: "Ersätt ord i inlägg med länkar."
         form:
           label: "Har ord eller fras"
           placeholder: "Ange ord eller fras (* är ett jokertecken)"
@@ -5135,6 +5176,7 @@ sv:
         list_table:
           headings:
             name: "Namn"
+            active_categories: "Aktiva kategorier"
             actions: "Åtgärder"
           actions:
             view: "Visa mall"
@@ -5144,6 +5186,7 @@ sv:
           close: "Stäng"
           edit: "Redigera"
           delete: "Radera"
+          toggle_preview: "Växla förhandsgranskning"
         new_template_form:
           submit: "Spara"
           cancel: "Avbryt"
@@ -5153,6 +5196,7 @@ sv:
           template:
             label: "Mall"
             placeholder: "Skapa en YAML-mall här..."
+          preview: "Förhandsgranska"
         delete_confirm: "Är du säker på att du vill ta bort den här mallen?"
         quick_insert_fields:
           add_new_field: "Lägg till"
@@ -5162,6 +5206,41 @@ sv:
           dropdown: "Rullgardinsmeny"
           upload: "Ladda upp en fil"
           multiselect: "Flera val"
+        validations_modal:
+          button_title: "Valideringar"
+          modal_title: "Valideringsalternativ"
+          table_headers:
+            key: "Key"
+            type: "Typ"
+            description: "Beskrivning"
+          validations:
+            required:
+              key: "krävs"
+              type: "booleskt"
+              description: "Fältet måste fyllas i för att formuläret ska kunna skickas in."
+            minimum:
+              key: "minst"
+              type: "heltal"
+              description: "I textfält anges det minsta tillåtna antalet tecken."
+            maximum:
+              key: "maximalt"
+              type: "heltal"
+              description: "I textfält anges det högsta tillåtna antalet tecken. I flervalsrullgardinsmenyer anges det högsta tillåtna antalet alternativ som kan väljas."
+            pattern:
+              key: "mönster"
+              type: "regex-sträng"
+              description: "I textfält är detta ett reguljärt uttryck som anger tillåten inmatning."
+        preview_modal:
+          title: "Förhandsgranskningsmall"
+        field_placeholders:
+          validations: "ange valideringar här"
+          label: "Ange etikett här"
+          placeholder: "Ange platshållare här"
+          none_label: "Välj ett föremål"
+          choices:
+            first: "Alternativ 1"
+            second: "Alternativ 2"
+            third: "Alternativ 3"
         edit_category:
           toggle_freeform: "formulärmall inaktiverad"
           toggle_form_template: "formulärmall aktiverad"
@@ -5179,6 +5258,7 @@ sv:
         not_found: "Det användarnamnet finns tyvärr inte i vårt system."
         id_not_found: "Detta användar-ID finns tyvärr inte i vårt system."
         active: "Aktiverad"
+        status: "Status"
         show_emails: "Visa e-post"
         hide_emails: "Dölj e-post"
         nav:
@@ -5674,6 +5754,12 @@ sv:
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         confirm_delete: "Är du säker på att du vill ta bort värden?"
+        sample: |
+          <p>Klistra in följande HTML-kod på din webbplats för att skapa och bädda in Discourse-ämnen. Ersätt <b>EMBED_URL</b> med den kanoniska webbadressen till sidan du bäddar in den på.</p>
+
+          <p>Om du vill anpassa stilen, avkommentera och ersätt <b>CLASS_NAME</b> med en CSS-klass som definierats i <i>Embedded CSS</i> i ditt tema.</p>
+
+          <p>Ersätt <b>DISCOURSE_USERNAME</b> med Discourse-användarnamnet för författaren som ska skapa ämnet. Discourse kommer automatiskt att söka efter användaren med <code>&lt;meta&gt;</code> taggarnas <code>innehåll</code> sattribut med <code>namn</code>attributet inställt på <code>discourse-användarnamn</code> eller <code>författare</code>. Parametern <code>discourseUserName</code> har fasats ut och kommer att tas bort i Discourse 3.2.</p>
         title: "Inbäddning"
         host: "Tillåtna värdar"
         allowed_paths: "Sökväg till vitlista"

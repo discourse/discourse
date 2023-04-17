@@ -3,7 +3,9 @@
   class="reviewable-item {{this.customClasses}}"
 >
   <div class="reviewable-meta-data">
-    <span class="reviewable-type">{{this.reviewable.humanType}}</span>
+    <span
+      class={{concat-class "reviewable-type" this.reviewable.humanTypeCssClass}}
+    >{{this.reviewable.humanType}}</span>
     {{#if this.reviewable.reply_count}}
       <span class="reply-count">{{i18n
           "review.replies"
@@ -17,7 +19,7 @@
       >{{age-with-tooltip this.reviewable.created_at}}</LinkTo>
     </span>
     <span class="status">
-      {{reviewable-status this.reviewable.status}}
+      {{reviewable-status this.reviewable.status this.reviewable.type}}
     </span>
     <a
       href
@@ -65,6 +67,15 @@
       {{/component}}
     {{/if}}
   </div>
+
+  {{#if (eq this.reviewable.type "ReviewableFlaggedPost")}}
+    {{#if (eq this.reviewable.status 0)}}
+      <h3 class="reviewable-item__context-question">
+        {{this.reviewable.flaggedPostContextQuestion}}
+      </h3>
+    {{/if}}
+  {{/if}}
+
   <div class="reviewable-actions">
     {{#if this.reviewable.last_performing_username}}
       <div class="stale-help">{{html-safe

@@ -28,7 +28,7 @@ acceptance(
       await visit("/");
 
       assert.ok(
-        !exists(".sidebar-section-tags"),
+        !exists(".sidebar-section[data-section-name='tags']"),
         "does not display the tags section"
       );
     });
@@ -97,14 +97,16 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-tags"),
+      exists(".sidebar-section[data-section-name='tags']"),
       "tags section is not displayed"
     );
   });
 
   test("clicking on section header button", async function (assert) {
     await visit("/");
-    await click(".sidebar-section-tags .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-header-button"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -121,7 +123,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-tags"),
+      exists(".sidebar-section[data-section-name='tags']"),
       "tags section is not displayed"
     );
   });
@@ -135,14 +137,21 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     await visit("/");
 
-    assert.ok(exists(".sidebar-section-tags"), "tags section is shown");
+    assert.ok(
+      exists(".sidebar-section[data-section-name='tags']"),
+      "tags section is shown"
+    );
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-configure-tags"),
+      exists(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-link-name='configure-tags']"
+      ),
       "section link to add tags to sidebar is displayed"
     );
 
-    await click(".sidebar-section-tags .sidebar-section-link-configure-tags");
+    await click(
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-link-name='configure-tags']"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -155,7 +164,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit("/");
 
     const tagSectionLinks = queryAll(
-      ".sidebar-section-tags .sidebar-section-link:not(.sidebar-section-link-all-tags)"
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-tags'])"
     );
 
     const tagNames = [...tagSectionLinks].map((tagSectionLink) =>
@@ -174,7 +183,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       count(
-        ".sidebar-section-tags .sidebar-section-link:not(.sidebar-section-link-all-tags)"
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-tags'])"
       ),
       4,
       "4 section links under the section"
@@ -207,7 +216,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -226,7 +237,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -252,7 +265,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -292,7 +307,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -332,7 +349,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -355,7 +374,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -370,7 +391,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit(`/tag/tag1/l/top`);
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -385,7 +408,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit(`/tag/tag1/l/new`);
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -400,7 +425,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit(`/tag/tag1/l/unread`);
 
     assert.strictEqual(
-      count(".sidebar-section-tags .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -639,16 +666,24 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   });
 
   test("section link to admin site settings page when default sidebar tags have not been configured", async function (assert) {
-    updateCurrentUser({ admin: true });
+    updateCurrentUser({ admin: true, sidebar_tags: [] });
+
+    updateCurrentUser({
+      sidebar_tags: [],
+    });
 
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-link-configure-default-sidebar-tags"),
+      exists(
+        ".sidebar-section-link[data-link-name='configure-default-sidebar-tags']"
+      ),
       "section link to configure default sidebar tags is shown"
     );
 
-    await click(".sidebar-section-link-configure-default-sidebar-tags");
+    await click(
+      ".sidebar-section-link[data-link-name='configure-default-sidebar-tags']"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -657,3 +692,148 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
   });
 });
+
+acceptance(
+  "Sidebar - Logged on user - Tags section - New new view enabled",
+  function (needs) {
+    needs.settings({
+      tagging_enabled: true,
+      navigation_menu: "sidebar",
+    });
+
+    needs.user({
+      new_new_view_enabled: true,
+      display_sidebar_tags: true,
+      sidebar_tags: [
+        { name: "tag2", pm_only: false },
+        { name: "tag1", pm_only: false },
+        { name: "tag3", pm_only: false },
+      ],
+    });
+
+    test("count shown next to tag link", async function (assert) {
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1", "tag3"],
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1", "tag2"],
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 15,
+          last_read_post_number: 15,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: 3,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1"],
+        },
+      ]);
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(
+          '.sidebar-section-link[data-tag-name="tag1"] .sidebar-section-link-content-badge'
+        ).textContent.trim(),
+        "2",
+        "count for tag1 is 2 because it has 1 unread topic and 1 new topic"
+      );
+
+      assert.strictEqual(
+        query(
+          '.sidebar-section-link[data-tag-name="tag2"] .sidebar-section-link-content-badge'
+        ).textContent.trim(),
+        "1",
+        "count for tag2 is 1 because it has 1 unread topic"
+      );
+
+      assert.strictEqual(
+        query(
+          '.sidebar-section-link[data-tag-name="tag3"] .sidebar-section-link-content-badge'
+        ).textContent.trim(),
+        "1",
+        "count for tag3 is 1 because it has 1 new topic"
+      );
+    });
+
+    test("tag link href", async function (assert) {
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1"],
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag2"],
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 15,
+          last_read_post_number: 15,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: 3,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag3"],
+        },
+      ]);
+
+      await visit("/");
+
+      assert.true(
+        query('.sidebar-section-link[data-tag-name="tag1"]').href.endsWith(
+          "/tag/tag1/l/new"
+        ),
+        "links to the new topics list for the tag because there's 1 new topic"
+      );
+
+      assert.true(
+        query('.sidebar-section-link[data-tag-name="tag2"]').href.endsWith(
+          "/tag/tag2/l/new"
+        ),
+        "links to the new topics list for the tag because there's 1 unread topic"
+      );
+
+      assert.true(
+        query('.sidebar-section-link[data-tag-name="tag3"]').href.endsWith(
+          "/tag/tag3"
+        ),
+        "links to the latest topics list for the tag because there are no unread or new topics"
+      );
+    });
+  }
+);

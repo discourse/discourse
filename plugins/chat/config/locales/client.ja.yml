@@ -93,6 +93,8 @@ ja:
         never: "なし"
         title: "メール通知"
         when_away: "退席中の時のみ"
+      header_indicator_preference:
+        never: "なし"
       enable: "チャットを有効にする"
       flag: "通報する"
       emoji: "絵文字を挿入する"
@@ -102,7 +104,7 @@ ja:
       in_reply_to: "返信先"
       heading: "チャット"
       join: "参加"
-      new_messages: "新しいメッセージ"
+      last_visit: "最後の訪問"
       mention_warning:
         dismiss: "閉じる"
         invitations_sent:
@@ -146,7 +148,6 @@ ja:
       restore: "削除されたメッセージを復元する"
       save: "保存"
       select: "選択"
-      silence: "ユーザーを投稿禁止にする"
       return_to_list: "チャンネルリストに戻る"
       scroll_to_bottom: "一番下にスクロール"
       scroll_to_new_messages: "新しいメッセージを見る"
@@ -404,9 +405,8 @@ ja:
       transcript:
         view: "前のメッセージのトランスクリプトを表示"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "通報されたチャットメッセージ"
-          flagged_by: "通報者"
     keyboard_shortcuts_help:
       chat:
         title: "チャット"

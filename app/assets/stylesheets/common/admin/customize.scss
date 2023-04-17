@@ -191,8 +191,14 @@
       &.active {
         background-color: var(--quaternary);
         color: var(--secondary);
-        font-weight: 700;
+        .d-icon {
+          color: currentColor;
+        }
       }
+    }
+
+    .d-button-label {
+      @include ellipsis;
     }
   }
 
@@ -219,15 +225,24 @@
       border-bottom: 1px solid var(--primary-low);
       display: flex;
 
+      &.inactive-theme {
+        color: var(--primary-high);
+        background: var(--primary-very-low);
+        font-size: var(--font-down-1);
+        &:not(.selected):hover {
+          color: var(--primary);
+        }
+      }
+
       &.inactive-indicator {
         border-right: 0;
         border-left: 0;
-        font-weight: bold;
-        color: var(--primary-medium);
+        margin-top: 1em;
+        padding-left: 0.33em;
 
         span.empty {
-          padding-left: 5px;
-          padding-top: 15px;
+          padding-left: 0.33em;
+          padding-top: 1em;
         }
       }
       &:not(.inactive-indicator):not(.selected):hover {
@@ -263,7 +278,6 @@
       .info {
         overflow: hidden;
         display: flex;
-        font-weight: bold;
         font-size: var(--font-up-1);
 
         .icons {

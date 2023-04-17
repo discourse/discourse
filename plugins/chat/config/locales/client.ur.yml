@@ -21,8 +21,11 @@ ur:
       joined: "شمولیت اختیار کی"
       email_frequency:
         never: "کبھی نہیں"
+      header_indicator_preference:
+        never: "کبھی نہیں"
       flag: "فلَیگ"
       join: "شمولیت اختیار کریں"
+      last_visit: "آخری وزٹ"
       mention_warning:
         dismiss: "بر خاست کریں"
       reply: "جواب"
@@ -112,7 +115,3 @@ ur:
           fields:
             message:
               label: پیغام
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "کی طرف سے فلَیگ کردہ"

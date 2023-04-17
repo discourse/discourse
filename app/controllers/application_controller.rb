@@ -653,8 +653,10 @@ class ApplicationController < ActionController::Base
     report = TopicTrackingState.report(current_user)
     serializer = TopicTrackingStateSerializer.new(report, scope: guardian, root: false)
 
-    store_preloaded("topicTrackingStates", MultiJson.dump(serializer.as_json[:data]))
-    store_preloaded("topicTrackingStateMeta", MultiJson.dump(serializer.as_json[:meta]))
+    hash = serializer.as_json
+
+    store_preloaded("topicTrackingStates", MultiJson.dump(hash[:data]))
+    store_preloaded("topicTrackingStateMeta", MultiJson.dump(hash[:meta]))
   end
 
   def custom_html_json
@@ -686,16 +688,15 @@ class ApplicationController < ActionController::Base
   end
 
   def banner_json
-    json = ApplicationController.banner_json_cache["json"]
     return "{}" if !current_user && SiteSetting.login_required?
 
-    unless json
-      topic = Topic.where(archetype: Archetype.banner).first
-      banner = topic.present? ? topic.banner : {}
-      ApplicationController.banner_json_cache["json"] = json = MultiJson.dump(banner)
-    end
-
-    json
+    ApplicationController
+      .banner_json_cache
+      .defer_get_set("json") do
+        topic = Topic.where(archetype: Archetype.banner).first
+        banner = topic.present? ? topic.banner : {}
+        MultiJson.dump(banner)
+      end
   end
 
   def custom_emoji

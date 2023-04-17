@@ -1103,14 +1103,13 @@ class Topic < ActiveRecord::Base
       topic_user = topic_allowed_users.find_by(user_id: user.id)
 
       if topic_user
-        topic_user.destroy
-
         if user.id == removed_by&.id
           add_small_action(removed_by, "user_left", user.username)
         else
           add_small_action(removed_by, "removed_user", user.username)
         end
 
+        topic_user.destroy
         return true
       end
     end
@@ -2031,6 +2030,10 @@ class Topic < ActiveRecord::Base
         MessageBus.publish("/topic/#{topic_id}", message, opts.merge(secure_audience))
       end
     end
+  end
+
+  def group_pm?
+    private_message? && all_allowed_users.count > 2
   end
 
   private

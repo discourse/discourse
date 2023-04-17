@@ -8,7 +8,7 @@
         @action={{action "onCancelChatDraft"}}
       />
       <h2 class="chat-draft-header__title">
-        {{d-icon "comment"}}
+        {{d-icon "d-chat"}}
         {{i18n "chat.draft_channel_screen.header"}}
       </h2>
     </header>
@@ -19,9 +19,6 @@
   />
 
   {{#if this.previewedChannel}}
-    <ChatLivePane
-      @chatChannel={{this.previewedChannel}}
-      @includeHeader={{false}}
-    />
+    <ChatLivePane @channel={{this.previewedChannel}} @includeHeader={{false}} />
   {{/if}}
 </div>

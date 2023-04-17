@@ -43,7 +43,7 @@ acceptance(
 
       assert.strictEqual(
         count(
-          ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+          ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
         ),
         1,
         "there should only be one section link under the section"
@@ -113,10 +113,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     setupUserSidebarCategories();
 
     await visit("/t/280");
-    await click(".sidebar-section-categories .sidebar-section-header");
+    await click(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header"
+    );
 
     assert.notOk(
-      exists(".sidebar-section-categories .sidebar-section-content"),
+      exists(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-content"
+      ),
       "hides the content of the section"
     );
   });
@@ -125,7 +129,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     setupUserSidebarCategories();
 
     await visit("/");
-    await click(".sidebar-section-categories .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-button"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -140,7 +146,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     assert.notOk(
-      exists(".sidebar-section-categories"),
+      exists(".sidebar-section[data-section-name='categories']"),
       "categories section is not shown"
     );
   });
@@ -153,19 +159,19 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-categories"),
+      exists(".sidebar-section[data-section-name='categories']"),
       "categories section is shown"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section-categories .sidebar-section-link-configure-categories"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-link-name='configure-categories']"
       ),
       "section link to add categories to sidebar is displayed"
     );
 
     await click(
-      ".sidebar-section-categories .sidebar-section-link-configure-categories"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-link-name='configure-categories']"
     );
 
     assert.strictEqual(
@@ -237,7 +243,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -300,7 +306,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -363,7 +369,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -391,7 +397,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       count(
-        ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
       ),
       4,
       "there should only be 4 section link under the section"
@@ -421,7 +427,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -442,7 +450,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -486,7 +496,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -526,7 +538,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -574,7 +588,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -626,7 +642,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/new`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -645,7 +663,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/unread`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -664,7 +684,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/top`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -683,7 +705,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/none`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -702,7 +726,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/all`);
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link.active"),
+      count(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      ),
       1,
       "only one link is marked as active"
     );
@@ -928,17 +954,20 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   });
 
   test("section link to admin site settings page when default sidebar categories have not been configured", async function (assert) {
-    setupUserSidebarCategories();
     updateCurrentUser({ admin: true });
 
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-link-configure-default-sidebar-categories"),
+      exists(
+        ".sidebar-section-link[data-link-name='configure-default-sidebar-categories']"
+      ),
       "section link to configure default sidebar categories is shown"
     );
 
-    await click(".sidebar-section-link-configure-default-sidebar-categories");
+    await click(
+      ".sidebar-section-link[data-link-name='configure-default-sidebar-categories']"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -947,3 +976,171 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 });
+
+acceptance(
+  "Sidebar - Logged on user - Categories Section - New new view experiment enabled",
+  function (needs) {
+    needs.settings({
+      navigation_menu: "sidebar",
+    });
+
+    needs.user({ new_new_view_enabled: true });
+
+    test("count shown next to category link", async function (assert) {
+      const categories = Site.current().categories;
+      const category1 = categories[0];
+      const category2 = categories[1];
+      const category3 = categories[2];
+
+      updateCurrentUser({
+        sidebar_category_ids: [category1.id, category2.id, category3.id],
+      });
+
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category1.id,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category1.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 15,
+          last_read_post_number: 15,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: category1.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 4,
+          highest_post_number: 10,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category2.id,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 5,
+          highest_post_number: 19,
+          last_read_post_number: 18,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: category3.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(
+          `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
+        ).textContent.trim(),
+        "2",
+        "count for category1 is 2 because it has 1 unread topic and 1 new topic"
+      );
+
+      assert.strictEqual(
+        query(
+          `.sidebar-section-link[data-category-id="${category2.id}"] .sidebar-section-link-content-badge`
+        ).textContent.trim(),
+        "1",
+        "count for category2 is 1 because it has 1 new topic"
+      );
+
+      assert.strictEqual(
+        query(
+          `.sidebar-section-link[data-category-id="${category3.id}"] .sidebar-section-link-content-badge`
+        ).textContent.trim(),
+        "1",
+        "count for category3 is 1 because it has 1 unread topic"
+      );
+    });
+
+    test("category link href", async function (assert) {
+      const categories = Site.current().categories;
+      const category1 = categories[0];
+      const category2 = categories[1];
+      const category3 = categories[2];
+
+      updateCurrentUser({
+        sidebar_category_ids: [category1.id, category2.id, category3.id],
+      });
+
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category1.id,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category2.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 4,
+          last_read_post_number: 4,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category3.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert.true(
+        query(
+          `.sidebar-section-link[data-category-id="${category1.id}"]`
+        ).href.endsWith("/c/meta/3/l/new"),
+        "links to the new topics list for the category because there's 1 new topic"
+      );
+
+      assert.true(
+        query(
+          `.sidebar-section-link[data-category-id="${category2.id}"]`
+        ).href.endsWith("/c/howto/10/l/new"),
+        "links to the new topics list for the category because there's 1 unread topic"
+      );
+
+      assert.true(
+        query(
+          `.sidebar-section-link[data-category-id="${category3.id}"]`
+        ).href.endsWith("/c/feature/spec/26"),
+        "links to the latest topics list for the category because there are no unread or new topics"
+      );
+    });
+  }
+);

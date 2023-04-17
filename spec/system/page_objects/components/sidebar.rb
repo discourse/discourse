@@ -20,8 +20,37 @@ module PageObjects
       end
 
       def edit_custom_section(name)
-        find(".sidebar-section-#{name.parameterize}").hover
-        find(".sidebar-section-#{name.parameterize} button.sidebar-section-header-button").click
+        find(".sidebar-section[data-section-name='#{name.parameterize}']").hover
+
+        find(
+          ".sidebar-section[data-section-name='#{name.parameterize}'] button.sidebar-section-header-button",
+        ).click
+      end
+
+      SIDEBAR_SECTION_LINK_SELECTOR = "sidebar-section-link"
+
+      def click_section_link(name)
+        find(".#{SIDEBAR_SECTION_LINK_SELECTOR}", text: name).click
+      end
+
+      def has_one_active_section_link?
+        has_css?(".#{SIDEBAR_SECTION_LINK_SELECTOR}--active", count: 1)
+      end
+
+      def has_section_link?(name, href: nil, active: false)
+        attributes = {}
+        attributes[:href] = href if href
+        attributes[:class] = SIDEBAR_SECTION_LINK_SELECTOR
+        attributes[:class] += "--active" if active
+        has_link?(name, **attributes)
+      end
+
+      def custom_section_modal_title
+        find("#discourse-modal-title")
+      end
+
+      def has_section?(name)
+        find(".sidebar-wrapper").has_button?(name)
       end
     end
   end

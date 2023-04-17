@@ -52,6 +52,11 @@ fi:
   remove_posts_deleted_by_author: "Kirjoittajan poistama"
   redirect_warning: "Emme pystyneet varmistamaan, että klikkaamasi linkki on oikeasti lähetetty foorumille. Jos haluat silti jatkaa, klikkaa alla olevaa linkkiä."
   on_another_topic: "Toisessa ketjussa"
+  topic_category_changed: "Alueelta %{from} alueelle %{to}"
+  topic_tag_changed:
+    added_and_removed: "Lisättiin %{added} ja poistettiin %{removed}"
+    added: "Lisättiin %{added}"
+    removed: "Poistettu tunniste %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} käyttäjältä %{username}"
@@ -1104,7 +1109,7 @@ fi:
       title: "PAK/KAK"
       xaxis: "Päivä"
       yaxis: "PAK/KAK"
-      description: "Käyttäjät, jotka kirjautuivat sisään viimeisen päivän aikana, jaettuna käyttäjillä, jotka kirjautuivat sisään viimeisen kuukauden aikana – tuottaa prosenttiarvon, joka ilmaisee yhteisön sitoutuneisuutta. Tähtää yli 30 prosenttiin."
+      description: "Käyttäjät, jotka kirjautuivat sisään viimeisen päivän aikana, jaettuna käyttäjillä, jotka kirjautuivat sisään viimeisen kuukauden aikana – tuottaa prosenttiarvon, joka ilmaisee yhteisön sitoutuneisuutta. Tähtää yli 20 prosenttiin."
     daily_engaged_users:
       title: "Sitoutuneet päivittäiskäyttäjät"
       xaxis: "Päivä"
@@ -1472,7 +1477,6 @@ fi:
     manifest_icon: "Kuva, jota käytetään logo-/splash-kuvana Androidissa. Skaalataan automaattisesti kokoon 512×512. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
     manifest_screenshots: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
     favicon: "Sivuston favicon, ks. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Täytyy olla png, jotta toimii CDN:n kanssa. Skaalataan kokoon 32x32. Jos jätetty tyhjäksi, large_icon-kuvaketta käytetään."
-    apple_touch_icon: "Applen kosketuslaitteissa käytettävä kuvake. Skaalataan automaattisesti kokoon 180x180. Jos jätetään tyhjäksi, large_icon-kuvaketta käytetään."
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
     twitter_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
@@ -1603,7 +1607,6 @@ fi:
     enable_discourse_connect: "Ota käyttöön kirjautuminen DiscourseConnectin (aikaisemmin \"Discourse SSO\") kautta (VAROITUS: KÄYTTÄJIEN SÄHKÖPOSTIEN OSOITTEET *ON TARKISTETTAVA* ULKOISELLA SIVUSTOLLA!)"
     verbose_discourse_connect_logging: "Kirjaa yksityiskohtaiset DiscourseConnect-diagnostiikat lokiin <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Käytä DiscourseConnectin (aikaisemmin '\"Discourse SSO\") palveluntarjoajaprotokollaa /session/sso_provider-päätepisteessä, edellyttää discourse_connect_provider_secretsin asettamista"
-    discourse_connect_url: "DiscourseConnectin päätepisteen URL (täytyy sisältää http:// tai https://)"
     discourse_connect_secret: "Salausavain, jolla todennetaan DiscourseConnectin tiedot, varmista, että se on vähintään 10 merkkiä pitkä"
     discourse_connect_provider_secrets: "Luettelo verkkotunnus-salausavain-pareista, jotka käyttävät DiscourseConnectia. Varmista, että DiscourseConnectin salausavain on vähintään 10 merkin pituinen. Jokerimerkkiä * voi käyttää kelpuuttamaan mikä tahansa verkkotunnus tai verkkotunnuksen osa (esim. *.esimerkki.fi)."
     discourse_connect_overrides_bio: "Syrjäyttää käyttäjän kuvauksen itsestään käyttäjäprofiilissa ja estää sen muokkaamisen"
@@ -1721,7 +1724,6 @@ fi:
     composer_media_optimization_image_bytes_optimization_threshold: "Kuvatiedoston vähimmäiskoko, joka laukaisee optimoinnin asiakkaan päässä"
     composer_media_optimization_image_resize_dimensions_threshold: "Kuvan vähimmäisleveys, joka laukaisee koon muuttamisen asiakkaan päässä"
     composer_media_optimization_image_resize_width_target: "Kuvat, joiden leveys on suurempi kuin \"composer_media_optimization_image_dimensions_resize_threshold\", muunnetaan tähän leveyteen. Täytyy olla suurempi tai yhtä suuri kuin \"composer_media_optimization_image_dimensions_resize_threshold\"."
-    composer_media_optimization_image_encode_quality: "Uudelleenkoodausprosessissa käytetty JPEG-koodauslaatu."
     min_ratio_to_crop: "Suhde, jolla korkeat kuvat rajataan. Syötä tulos leveys/korkeus-suhteena."
     simultaneous_uploads: "Kuinka monta tiedostoa voi enintään vetää ja pudottaa viestieditoriin"
     default_invitee_trust_level: "Oletusluottamustaso (0–4) kutsutuille käyttäjille."
@@ -2092,6 +2094,7 @@ fi:
     suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
     remove_muted_tags_from_latest: "Jos ketjulla on vain vaimennettuja tunnisteita, älä näytä ketjua Tuoreimmat-ketjuluettelossa."
     force_lowercase_tags: "Salli vain pienet kirjaimet uusissa tunnisteissa."
+    create_post_for_category_and_tag_changes: "Luo pieni tapahtumaviesti ketjun alueiden tai tunnisteiden muuttuessa"
     company_name: "Yrityksen nimi"
     governing_law: "Sovellettava lainsäädäntö"
     city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
@@ -2160,7 +2163,6 @@ fi:
       staged_users_disabled: "Esikäyttäjät on otettava käyttöön ennen tämän asetuksen käyttöönottoa."
       reply_by_email_disabled: "Vastaus sähköpostilla täytyy ottaa käyttöön ennen tämän asetuksen käyttöönottoa."
       discourse_connect_url_is_empty: "Sinun täytyy määrittää \"discourse connect url'\" ennen kuin otat tämän asetuksen käyttöön."
-      discourse_connect_invite_only: "DiscourseConnect ja vain kutsulla -tila eivät voi olla käytössä samaan aikaan."
       enable_local_logins_disabled: "Paikalliset kirjautumiset täytyy ottaa käyttöön ennen tämän asetuksen käyttöönottoa."
       min_username_length_exists: "Käyttäjätunnuksen vähimmäispituus ei voi olla suurempi kuin lyhin käyttäjätunnus (%{username})."
       min_username_length_range: "Vähimmäisarvo ei voi olla suurempi kuin enimmäisarvo."
@@ -3678,12 +3680,7 @@ fi:
     title: "Sovellusta ei voida ladata"
     offline_page_message: "Yhteydessäsi vaikuttaa olevan vikaa! Tarkista verkkoyhteytesi ja yritä uudelleen."
   login_required:
-    welcome_message: |
-      ## [Tervetuloa sivustolle %{title}](#welcome)
-      Käyttäjätili tarvitaan. Luo tili tai kirjaudu sisään.
-    welcome_message_invite_only: |
-      ## [Tervetuloa sivustolle %{title}](#welcome)
-      Käyttäjätili vaaditaan. Pyydä yhteisön jäsentä kutsumaan sinut tai kirjaudu sisään.
+    welcome_message: "# [Tervetuloa foorumille %{title}](#welcome)"
   upload:
     edit_reason: "lataa kuvista paikalliset kopiot"
     unauthorized: "Tiedosto, jota yrität ladata, ei ole sallittu (sallitut päätteet: %{authorized_extensions})."
@@ -4190,10 +4187,7 @@ fi:
       message: "<p>Lähetimme uuden aktivointiviestin osoitteeseen <b>%{email}</b>"
   safe_mode:
     title: "Siirry vikasietotilaan"
-    description: "Vikasietotilassa voit testata sivustoasi ilman lisäosia ja teemoja."
     no_themes: "Poista teemat ja teeman komponentit käytöstä"
-    no_unofficial_plugins: "Poista epäviralliset lisäosat käytöstä"
-    no_plugins: "Poista kaikki lisäosat käytöstä"
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
   wizard:
@@ -4370,50 +4364,35 @@ fi:
         category: alueen asetukset
     actions:
       agree:
-        title: "Hyväksy..."
-      agree_and_keep:
-        title: "Säilytä viesti"
-        description: "Hyväksy merkintä ja pidä viesti ennallaan."
-      agree_and_keep_hidden:
-        title: "Jätä viesti piiloon"
-        description: "Hyväksy merkintä ja jätä viesti piiloon."
+        title: "Kyllä"
       agree_and_suspend:
-        title: "Hyllytä käyttäjä"
         description: "Hyväksy merkintä ja hyllytä käyttäjä."
       agree_and_silence:
         title: "Hiljennä käyttäjä"
         description: "Hyväksy merkintä ja hiljennä käyttäjä."
       agree_and_restore:
-        title: "Palauta viesti"
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       agree_and_hide:
         title: "Piilota viesti"
-        description: "Piilota viesti ja lähetä käyttäjälle yksityisviesti, jossa pyydetään käyttäjää muokkaamaan viestiä."
       delete_single:
         title: "Poista"
       delete:
         title: "Poista..."
-      delete_and_ignore:
-        title: "Poista viesti ja ohita"
-        description: "Poista viesti: jos on viesti on ketjun ensimmäinen, poista myös ketju"
       delete_and_ignore_replies:
-        title: "Poista viesti + vastaukset ja sivuuta"
-        description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
       delete_and_agree:
-        title: "Poista viesti ja hyväksy merkintä"
-        description: "Poista viesti; jos on viesti on ketjun ensimmäinen, poista myös ketju"
+        title: "Poista viesti"
       delete_and_agree_replies:
-        title: "Poista viesti + vastaukset ja hyväksy merkintä"
-        description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"
+        title: "Poista viesti ja vastaukset"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
       disagree_and_restore:
-        title: "Hylkää merkintä ja palauta viesti"
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       disagree:
-        title: "Hylkää"
+        title: "Ei"
       ignore:
         title: "Sivuuta"
+      ignore_and_do_nothing:
+        title: "Älä tee mitään"
       approve:
         title: "Hyväksy"
       approve_post:

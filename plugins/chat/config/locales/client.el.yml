@@ -21,8 +21,11 @@ el:
       joined: "έγινε μέλος"
       email_frequency:
         never: "Ποτέ"
+      header_indicator_preference:
+        never: "Ποτέ"
       flag: "Επισήμανση"
       join: "Γίνετε μέλος"
+      last_visit: "τελευταία επίσκεψη"
       mention_warning:
         dismiss: "απόρριψη"
       reply: "Απάντηση"
@@ -60,7 +63,7 @@ el:
         type: "Τύπος"
         types:
           category: "Κατηγορία"
-          topic: "Νήμα"
+          topic: "Θέμα"
       composer:
         italic_text: "κείμενο σε έμφαση"
         bold_text: "έντονη γραφή"
@@ -90,9 +93,9 @@ el:
         cancel: "Ακύρωση"
         copy: "Αντιγραφή"
         new_topic:
-          title: "Μεταφορά σε Νέο Νήμα "
+          title: "Μετακίνηση σε Νέο Θέμα"
         existing_topic:
-          title: "Μεταφορά σε Υφιστάμενο Νήμα"
+          title: "Μετακίνηση σε Υπάρχον Θέμα"
         new_message:
           title: "Μετακίνηση σε νέο μήνυμα"
       emoji_picker:
@@ -111,7 +114,3 @@ el:
           fields:
             message:
               label: Μήνυμα
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Επισήμανση από"

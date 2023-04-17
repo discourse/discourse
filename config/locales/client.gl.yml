@@ -158,11 +158,6 @@ gl:
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
       dismiss: "Desbotar"
-    bootstrap_mode_enabled:
-      one: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán o nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se una %{count} usuario."
-      other: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se unan %{count} usuarios."
-    bootstrap_mode_disabled: "O modo Bootstrap desactivarase nun prazo de 24 horas."
-    bootstrap_invite_button_title: "Enviar convites"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -295,7 +290,6 @@ gl:
       remove_confirmation: "Confirma que quere retirar este borrador?"
       new_topic: "Borrador de novo tema"
       abandon:
-        confirm: "Ten un borrador en curso neste tema. Que lle gustaría facer con iso?"
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
     topic_count_categories:
@@ -464,11 +458,9 @@ gl:
       scores:
         about: "A puntuación calcúlase con base no nivel de fiabilidade do informador, a precisión das súas alertas anteriores e a prioridade do elemento que se recolle."
         score: "Puntuación"
-        date: "Data"
-        type: "Tipo"
+        type: "Motivo"
         status: "Estado"
-        submitted_by: "Enviado por"
-        reviewed_by: "Revisado por"
+        submitted_by: "Recollido por"
       statuses:
         pending:
           title: "Pendente"
@@ -476,14 +468,12 @@ gl:
           title: "Aprobado"
         rejected:
           title: "Rexeitado"
-        ignored:
-          title: "Ignorado"
-        deleted:
-          title: "Eliminado"
         reviewed:
-          title: "(todas revisadas)"
+          title: "Todas revisadas"
         all:
-          title: "(todo)"
+          title: "Todo"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Publicación sinalada"
@@ -755,6 +745,7 @@ gl:
         make_all_primary_description: "Facer deste o grupo primario para todos os usuarios seleccionados"
         remove_all_primary: "Retirar como primario"
         remove_all_primary_description: "Retirar este grupo como primario"
+        status: "Estado"
         owner: "Propietario"
         primary: "Primario"
         forbidden: "Non ten permiso para ver os membros."
@@ -1044,7 +1035,6 @@ gl:
       home: "Páxina de inicio predeterminada"
       staged: "Transitorio"
       staff_counters:
-        flags_given: "alertas útiles"
         flagged_posts: "publicacións sinaladas"
         deleted_posts: "publicacións eliminadas"
         suspensions: "suspensións"
@@ -2998,6 +2988,10 @@ gl:
     filters:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Últimos"
         title_with_count:
@@ -3335,9 +3329,12 @@ gl:
           save: "Gardar"
           delete: "Eliminar"
           links:
-            icon: "Icona"
-            name: "Nome"
-            value: "Ligazón"
+            icon:
+              label: "Icona"
+            name:
+              label: "Nome"
+            value:
+              label: "Ligazón"
         about:
           header_link_text: "Verbo de"
         messages:
@@ -4284,11 +4281,6 @@ gl:
           tag: "Etiqueta"
           silence: "Silenciar"
           link: "Ligazón"
-        action_descriptions:
-          block: "Evitar as publicacións que conteñen estas palabras. O usuario verá unha mensaxe de erro cando tente enviar a publicación."
-          censor: "Permitir publicacións que conteñan estas palabras pero substitúeas por caracteres que oculten as palabras censuradas."
-          require_approval: "As publicacións que conteñan estas palabras requiren a aprobación do equipo antes de ser visíbeis."
-          flag: "Permitir as publicacións que conteñen estas palabras, pero marcalas como inadecuadas para que os moderadores poidan revisalas."
         form:
           placeholder_regexp: "expresión regular"
           replace_label: "Substitución"
@@ -4318,9 +4310,22 @@ gl:
         new_template_form:
           submit: "Gardar"
           cancel: "Cancelar"
+          preview: "Visualizar"
         quick_insert_fields:
           add_new_field: "Engadir"
           dropdown: "Despregábel"
+        validations_modal:
+          table_headers:
+            key: "Chave"
+            type: "Tipo"
+            description: "Descrición"
+          validations:
+            required:
+              key: "obrigatorio"
+            minimum:
+              key: "mínimo"
+            maximum:
+              key: "máximo"
       impersonate:
         title: "Suplantar"
         help: "Usar esta ferramenta para suplantar unha conta de usuario co obxecto de detectar e corrixir erros. Deberá saír da sesión ao rematar."
@@ -4333,6 +4338,7 @@ gl:
         not_found: "Sentímolo pero o nome do usuario non existe no sistema."
         id_not_found: "Sentímolo pero o usuario non existe no sistema."
         active: "Activado"
+        status: "Estado"
         show_emails: "Amosar correos"
         hide_emails: "Agochar correos"
         nav:

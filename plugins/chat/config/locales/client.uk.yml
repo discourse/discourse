@@ -29,8 +29,11 @@ uk:
       joined: "приєднався(лась)"
       email_frequency:
         never: "Ніколи"
+      header_indicator_preference:
+        never: "Ніколи"
       flag: "Поскаржитися"
       join: "Приєднатися"
+      last_visit: "останнє відвідування"
       mention_warning:
         dismiss: "відкласти"
       reply: "Відповідь"
@@ -139,7 +142,3 @@ uk:
           fields:
             message:
               label: Повідомлення
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Позначено"

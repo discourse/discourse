@@ -52,6 +52,8 @@ ar:
   remove_posts_deleted_by_author: "تم الحذف بواسطة المؤلف"
   redirect_warning: "تعذَّر علينا التحقُّق من نشر الرابط الذي حدَّدته في المنتدى. إذا كنت تريد المتابعة على أي حال، فحدِّد الرابط أدناه."
   on_another_topic: "في موضوع آخر"
+  topic_tag_changed:
+    removed: "أزال %{removed} ‏في"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} بواسطة %{username}"
@@ -270,6 +272,7 @@ ar:
     user_exists: "ليست هناك حاجة لدعوة <b>%{email}</b>، فلديه حساب بالفعل!"
     invite_exists: "لقد أرسلت بالفعل دعوة إلى <b>%{email}</b>."
     invalid_email: "%{email} ليس عنوان بريد إلكتروني صالحًا."
+    generic_error_response: "كانت هناك مشكلة مع طلبك."
     rate_limit:
       zero: "لقد أرسلت بالفعل %{count} دعوة في اليوم الماضي، يُرجى الانتظار %{time_left} قبل إعادة المحاولة."
       one: "لقد أرسلت بالفعل دعوة واحدة (%{count}) في اليوم الماضي، يُرجى الانتظار %{time_left} قبل إعادة المحاولة."
@@ -483,6 +486,7 @@ ar:
   too_late_to_edit: "تم إنشاء هذا المنشور منذ فترة طويلة جدًا، ولم يعد من الممكن تعديله أو حذفه."
   edit_conflict: "تم تعديل هذا المنشور بواسطة مستخدم آخر ولم يعُد من الممكن حفظ تغييراتك."
   revert_version_same: "الإصدار الحالي هو الإصدار نفسه الذي تحاول استرجاعه."
+  reverted_to_version: "العودة إلى المراجعة %{version}"
   cannot_edit_on_slow_mode: "هذا الموضوع في الوضع البطيء. لتشجيع المناقشة عميقة الفكر والمدروسة، فإنه غير مسموح حاليًا بتعديل المنشورات القديمة في هذا الموضوع في أثناء تفعيل الوضع البطيء."
   excerpt_image: "صورة"
   bookmarks:
@@ -1308,7 +1312,7 @@ ar:
       title: "المستخدمون النشطون يوميًا/المستخدمون النشطون شهريًا"
       xaxis: "اليوم"
       yaxis: "المستخدمون النشطون يوميًا/المستخدمون النشطون شهريًا"
-      description: "عدد الأعضاء الذين سجَّلوا الدخول في اليوم الماضي مقسومًا على عدد الأعضاء الذين سجَّلوا الدخول في الشهر الماضي - يتم عرض نسبة مئوية تشير إلى \"الاستمرار في المتابعة\" للمجتمع. ننصحك بالبقاء فوق 30%."
+      description: "عدد الأعضاء الذين سجَّلوا الدخول في اليوم الماضي مقسومًا على عدد الأعضاء الذين سجَّلوا الدخول في الشهر الماضي - يتم عرض نسبة مئوية تشير إلى \"الاستمرار في المتابعة\" للمجتمع. ننصحك بالبقاء فوق 20%."
     daily_engaged_users:
       title: "المستخدمون المتفاعلون يوميًا"
       xaxis: "اليوم"
@@ -1680,7 +1684,6 @@ ar:
     manifest_icon: "الصورة المُستخدَمة كشعار/صورة البداية على Android. سيتم تغيير حجمها تلقائيًا إلى 512 × 512. وإذا تركتها فارغة، فسيتم استخدام large_icon."
     manifest_screenshots: "لقطات شاشة تعرض ميزات المثيل ووظيفته على صفحة رسالة التثبيت الخاصة به. يجب أن تكون جميع الصور من تحميلات محلية وبالأبعاد نفسها."
     favicon: "الرمز المفضَّل لموقعك، راجع <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> للعمل بشكلٍ صحيح على شبكة توصيل المحتوى، يجب أن تكون الصورة بتنسيق png. سيتم تغيير حجمها إلى 32 × 32. وإذا تركتها فارغة، فسيتم استخدام large_icon."
-    apple_touch_icon: "الصورة المُستخدَمة كشعار/صورة البداية على Android. سيتم تغيير حجمها تلقائيًا إلى 512 × 512. وإذا تركتها فارغة، فسيتم استخدام large_icon."
     opengraph_image: "صورة opengraph افتراضية، يتم استخدامها عندما لا تحتوي الصفحة على صورة أخرى مناسبة. وإذا تركتها فارغة، فسيتم استخدام large_icon."
     twitter_summary_large_image: "بطاقة Twitter 'summary large image' (ينبغي ألا يقل عرضها عن 280، وارتفاعها عن 150، وألا تكون بتنسيق .svg). في حال تركها فارغة، يتم إنشاء البيانات الوصفية التقليدية باستخدام opengraph_image ما دامت هي أيضًا ليست بتنسيق .svg"
     notification_email: "عنوان البريد الإلكتروني المُستخدَم في حقل \"من:\" عند إرسال جميع رسائل النظام الأساسية. يجب تعيين سجلات SPF وDKIM وreverse PTR للنطاق المحدَّد هنا بشكلٍ صحيح لتصل الرسالة الإلكترونية."
@@ -1811,7 +1814,6 @@ ar:
     enable_discourse_connect: "تفعيل تسجيل الدخول عبر DiscourseConnect (المعروف سابقًا باسم \"Discourse SSO\") (تحذير: *يجب* التحقُّق من صحة عناوين البريد الإلكتروني للمستخدمين من خلال الموقع الخارجي!)"
     verbose_discourse_connect_logging: "تسجيل تشخصيات DiscourseConnect المطوَّلة ذات الصلة في <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "تنفيذ بروتوكول موفِّر DiscourseConnect (المعروف سابقًا باسم \"Discourse SSO\") في نقطة نهاية /session/sso_provider، يتطلب تعيين discourse_connect_provider_secrets"
-    discourse_connect_url: "عنوان URL لنقطة نهاية DiscourseConnect (يجب أن يتضمَّن http:// أو https://)"
     discourse_connect_secret: "السلسلة السرية المُستخدَمة لمصادقة معلومات DiscourseConnect بشكلٍ مشفَّر، تأكد من أنها تتكوَّن من 10 أحرف أو أكثر"
     discourse_connect_provider_secrets: "قائمة بالأزواج السرية للنطاق والتي تستخدم DiscourseConnect. تأكَّد من أن طول رمز DiscourseConnect السري هو 10 أحرف أو أكثر. يمكن استخدام رمز حرف البدل * لمطابقة أي نطاق أو جزء منه فقط (على سبيل المثال، *.example.com)."
     discourse_connect_overrides_bio: "تجاوز النبذة التعريفية في الملف الشخصي للمستخدم ومنعه من تغييرها"
@@ -1929,7 +1931,6 @@ ar:
     composer_media_optimization_image_bytes_optimization_threshold: "الحد الأدنى لحجم ملف الصورة لبدء التحسين من جانب العميل"
     composer_media_optimization_image_resize_dimensions_threshold: "الحد الأدنى لعرض الصورة لتشغيل تغيير الحجم من جانب العميل"
     composer_media_optimization_image_resize_width_target: "سيتم تغيير حجم الصور التي يزيد عرضها عن `composer_media_optimization_image_dimensions_resize_threshold` إلى هذا العرض. يجب أن تكون أكبر من أو تساوي `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "جودة ترميز JPEG المُستخدَم في عملية إعادة الترميز"
     min_ratio_to_crop: "النسبة المُستخدَمة لاقتصاص الصور الطويلة. أدخل نتيجة العرض/الارتفاع."
     simultaneous_uploads: "أقصى عدد من الملفات التي يمكن سحبها وإسقاطها في أداة الإنشاء"
     default_invitee_trust_level: "مستوى الثقة الافتراضي (0-4) للمستخدمين المدعوين"
@@ -2374,7 +2375,6 @@ ar:
       staged_users_disabled: "يجب عليك تفعيل `staged users` أولًا قبل تفعيل هذا الإعداد."
       reply_by_email_disabled: "يجب عليك تفعيل `reply by email` أولًا قبل تفعيل هذا الإعداد."
       discourse_connect_url_is_empty: "يجب عليك تعيين `discourse connect url` قبل تفعيل هذا الإعداد."
-      discourse_connect_invite_only: "لا يمكنك تفعيل DiscourseConnect والدعوة فقط في الوقت نفسه."
       enable_local_logins_disabled: "يجب عليك تفعيل `enable local logins` أولًا قبل تفعيل هذا الإعداد."
       min_username_length_exists: "لا يمكنك تعيين الحد الأدنى لطول اسم المستخدم على قيمة أطول من أقصر اسم مستخدم (%{username})."
       min_username_length_range: "لا يمكنك تعيين الحد الأدنى ليكون أكبر من الحد الأقصى."
@@ -3951,13 +3951,6 @@ ar:
   offline:
     title: "لا يمكن تحميل التطبيق"
     offline_page_message: "يبدو أنك غير متصل! يُرجى التحقُّق من اتصال الشبكة وإعادة المحاولة."
-  login_required:
-    welcome_message: |
-      ## [مرحبًا بك في %{title}](#welcome)
-      مطلوب حساب. يُرجى إنشاء حساب أو تسجيل الدخول للمتابعة.
-    welcome_message_invite_only: |
-      ## [مرحبًا بك في %{title}](#welcome)
-      مطلوب حساب. يُرجى مطالبة أحد الأعضاء الحاليين بدعوة أو تسجيل الدخول للمتابعة.
   upload:
     edit_reason: "تم تنزيل نسخ محلية من الصور"
     unauthorized: "عذرًا، الملف الذي تحاول تحميله غير مسموح به (الامتدادات المسموح بها: %{authorized_extensions})."
@@ -4391,10 +4384,7 @@ ar:
       message: "<p> لقد أعدنا إرسال الرسالة الإلكترونية للتنشيط إلى <b>%{email}</b>"
   safe_mode:
     title: "الدخول إلى الوضع الآمن"
-    description: "يسمح لك الوضع الآمن باختبار موقعك دون تحميل المكوِّنات الإضافية أو السمات."
     no_themes: "إيقاف السمات ومكوِّنات السمات"
-    no_unofficial_plugins: "إيقاف المكوِّنات الإضافية غير الرسمية"
-    no_plugins: "إيقاف كل المكوِّنات الإضافية"
     enter: "الدخول إلى الوضع الآمن"
     must_select: "يجب عليك تحديد خيار واحد على الأقل للدخول إلى الوضع الآمن."
   wizard:
@@ -4575,50 +4565,29 @@ ar:
         category: إعدادات الفئة
     actions:
       agree:
-        title: "الموافقة..."
-      agree_and_keep:
-        title: "الاحتفاظ بالمنشور"
-        description: "الموافقة على البلاغ والاحتفاظ بالمنشور دون تغيير"
-      agree_and_keep_hidden:
-        title: "إبقاء المنشور مخفيًا"
-        description: "الموافقة على البلاغ وترك المنشور مخفيًا"
+        title: "نعم"
       agree_and_suspend:
-        title: "تعليق المستخدم"
         description: "الموافقة على البلاغ وتعليق المستخدم"
       agree_and_silence:
-        title: "كتم المستخدم"
         description: "الموافقة على البلاغ وكتم المستخدم"
       agree_and_restore:
-        title: "استعادة المنشور"
         description: "استعادة المنشور حتى يتمكن جميع المستخدمين من رؤيته"
-      agree_and_hide:
-        title: "إخفاء المنشور"
-        description: "إخفاء هذا المنشور وإرسال رسالة إلى المستخدم تلقائيًا تحثه فيها على تعديله"
       delete_single:
         title: "حذف"
       delete:
         title: "الحذف..."
-      delete_and_ignore:
-        title: "حذف المنشور والتجاهل"
-        description: "حذف المنشور؛ وحذف الموضوع أيضًا إذا كان المنشور الأول"
       delete_and_ignore_replies:
-        title: "حذف المنشور + الردود والتجاهل"
-        description: "حذف المنشور وجميع الردود عليه؛ وحذف الموضوع أيضًا إذا كان المنشور الأول"
         confirm: "هل تريد بالتأكيد حذف الردود على المنشور أيضًا؟"
-      delete_and_agree:
-        title: "حذف المنشور والموافقة"
-        description: "حذف المنشور؛ وحذف الموضوع أيضًا إذا كان المنشور الأول"
       delete_and_agree_replies:
-        title: "حذف المنشور + الردود والموافقة"
-        description: "حذف المنشور وجميع الردود عليه؛ وحذف الموضوع أيضًا إذا كان المنشور الأول"
         confirm: "هل تريد بالتأكيد حذف الردود على المنشور أيضًا؟"
       disagree_and_restore:
-        title: "عدم الموافقة واستعادة المنشور"
         description: "استعادة المنشور حتى يتمكن جميع المستخدمين من رؤيته"
       disagree:
-        title: "عدم الموافقة"
+        title: "لا"
       ignore:
         title: "تجاهل"
+      ignore_and_do_nothing:
+        title: "عدم اتخاذ أي إجراء"
       approve:
         title: "الموافقة"
       approve_post:

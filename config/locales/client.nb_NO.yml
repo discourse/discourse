@@ -163,8 +163,6 @@ nb_NO:
     software_update_prompt:
       message: "Vi har oppdatert dette nettstedet, <span>Oppdater</span>, eller du kan oppleve uventet oppførsel."
       dismiss: "Avslå"
-    bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
-    bootstrap_invite_button_title: "Send invitasjoner"
     themes:
       default_description: "Forvalg"
     s3:
@@ -304,7 +302,6 @@ nb_NO:
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt personlig meldingsutkast"
       abandon:
-        confirm: "Du har et pågående utkast for dette emnet. Hva vil du gjøre med det?"
         yes_value: "Forkast"
         no_value: "Gjenoppta redigering"
     topic_count_categories:
@@ -475,11 +472,9 @@ nb_NO:
       scores:
         about: "Denne scoren beregnes ut fra tillitsnivået til eksportøren, nøyaktigheten til deres forrige flagg, og prioriteten til posten som skal rapporteres."
         score: "Poeng"
-        date: "Dato"
-        type: "Type"
+        type: "Begrunnelse"
         status: "Status"
-        submitted_by: "Innsendt av"
-        reviewed_by: "Gjennomgått av"
+        submitted_by: "Rapporter av"
       statuses:
         pending:
           title: "På vent"
@@ -487,14 +482,12 @@ nb_NO:
           title: "Godkjent"
         rejected:
           title: "Avvist"
-        ignored:
-          title: "Ignorert"
-        deleted:
-          title: "Slettet"
         reviewed:
-          title: "(alle gjennomgått)"
+          title: "Alle gjennomgått"
         all:
-          title: "(alt)"
+          title: "Alt"
+      context_question:
+        delimiter: "eller"
       types:
         reviewable_flagged_post:
           title: "Rapportert innlegg"
@@ -793,6 +786,7 @@ nb_NO:
         make_all_primary_description: "Gjør denne hovedgruppen til alle valgte brukere"
         remove_all_primary: "Fjern som primær"
         remove_all_primary_description: "Fjern denne gruppen som primær"
+        status: "Status"
         owner: "Eier"
         primary: "Primær"
         forbidden: "Du har ikke tillatelse til å vise medlemmene."
@@ -1080,7 +1074,6 @@ nb_NO:
       home: "Forvalgt hjemmeside"
       staged: "Arrangert"
       staff_counters:
-        flags_given: "nyttige rapporteringer"
         flagged_posts: "rapporterte innlegg"
         deleted_posts: "slettede innlegg"
         suspensions: "suspenderinger"
@@ -3040,6 +3033,10 @@ nb_NO:
     filters:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
+      filter:
+        title: "Filtrer"
+        button:
+          label: "Filtrer"
       latest:
         title: "Siste"
         title_with_count:
@@ -3396,8 +3393,10 @@ nb_NO:
           save: "Lagre"
           delete: "Slett"
           links:
-            icon: "Ikon"
-            name: "Navn"
+            icon:
+              label: "Ikon"
+            name:
+              label: "Navn"
         about:
           header_link_text: "Om"
         messages:
@@ -4226,11 +4225,6 @@ nb_NO:
           require_approval: "Krev godkjenning"
           flag: "Flagg"
           silence: "Demp"
-        action_descriptions:
-          block: "Forhindre innlegg som inneholder disse ordene, fra å bli opprettet. Brukeren vil se en feilmelding når vedkommende prøver å opprette innlegget sitt."
-          censor: "Tillat innlegg som inneholder disse ordene, men erstatt dem med bokstaver som skjuler de sensurerte ordene."
-          require_approval: "Innlegg som inneholder disse ordene, vil måtte godkjennes av staben før de kan bli sett."
-          flag: "Tillat innlegg som inneholder disse ordene, men flagg dem som upassende slik at moderatorer kan se over dem."
         form:
           placeholder_regexp: "regulært uttrykk"
           add: "Legg til"
@@ -4253,9 +4247,21 @@ nb_NO:
         new_template_form:
           submit: "Lagre"
           cancel: "Avbryt"
+          preview: "Forhåndsvis"
         quick_insert_fields:
           add_new_field: "Legg til"
           dropdown: "Nedtrekk"
+        validations_modal:
+          table_headers:
+            type: "Type"
+            description: "Beskrivelse"
+          validations:
+            required:
+              key: "nødvendig"
+            minimum:
+              key: "minst"
+            maximum:
+              key: "største"
       impersonate:
         title: "Fremstå som"
         help: "Bruk dette verktøyet for å fremstå som en annen bruker for feilsøking. Du må logge ut når du er ferdig."
@@ -4267,6 +4273,7 @@ nb_NO:
         last_emailed: "Sist kontaktet"
         not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
+        status: "Status"
         show_emails: "Vis e-poster"
         nav:
           new: "Ny"

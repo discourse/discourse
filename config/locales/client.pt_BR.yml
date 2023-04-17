@@ -184,12 +184,6 @@ pt_BR:
     software_update_prompt:
       message: "Nós atualizamos este site, <span>atualize a página</span>, ou você poderá enfrentar uma situação inesperada."
       dismiss: "Descartar"
-    bootstrap_mode_enabled:
-      one: "Para facilitar o lançamento do seu novo site, você está no modo de inicialização. Todos os usuários novos receberão o nível de confiança 1 e terão os e-mails diários do resumo de e-mails ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
-      other: "Para facilitar o lançamento do seu novo site, você está no modo de inicialização. Todos os usuários novos receberão o nível de confiança 1 e terão os e-mails diários do resumo de e-mails ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
-    bootstrap_mode_disabled: "O modo de inicialização será desativado em 24 horas."
-    bootstrap_invite_button_title: "Enviar convites"
-    bootstrap_wizard_link_title: "Concluir o assistente de configuração"
     themes:
       default_description: "Padrão"
       broken_theme_alert: "Seu site pode não funcionar porque o tema/componente tem erros."
@@ -348,7 +342,6 @@ pt_BR:
       new_topic: "Novo rascunho de tópico"
       new_private_message: "Novo rascunho de mensagem"
       abandon:
-        confirm: "Você tem um rascunho em andamento para este tópico. O que deseja fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
     topic_count_categories:
@@ -521,11 +514,9 @@ pt_BR:
       scores:
         about: "Esta pontuação é calculada com base no nível de confiança do relator, na precisão de suas sinalizações anteriores e na prioridade do item que está sendo relatado."
         score: "Pontuação"
-        date: "Data"
-        type: "Tipo"
+        type: "Motivo"
         status: "Status"
-        submitted_by: "Enviado por"
-        reviewed_by: "Revisado por"
+        submitted_by: "Relatado por"
       statuses:
         pending:
           title: "Pendentes"
@@ -533,14 +524,12 @@ pt_BR:
           title: "Aprovado"
         rejected:
           title: "Rejeitado"
-        ignored:
-          title: "Ignorados(as)"
-        deleted:
-          title: "Excluído"
         reviewed:
-          title: "(Tudo revisado)"
+          title: "Tudo revisado"
         all:
-          title: "(tudo)"
+          title: "Tudo"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
@@ -847,6 +836,7 @@ pt_BR:
         make_all_primary_description: "Tornar este grupo primário para todos os(as) usuários(as) selecionados(as)"
         remove_all_primary: "Remover como primário"
         remove_all_primary_description: "Remover este grupo como primário"
+        status: "Status"
         owner: "Proprietário(a)"
         primary: "Primário"
         forbidden: "Você não tem permissão para visualizar membros."
@@ -1174,7 +1164,6 @@ pt_BR:
       home: "Página inicial padrão"
       staged: "Encenado(a)"
       staff_counters:
-        flags_given: "sinalizações úteis"
         flagged_posts: "postagens sinalizadas"
         deleted_posts: "postagens excluídas"
         suspensions: "suspensões"
@@ -3575,6 +3564,10 @@ pt_BR:
     filters:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Recentes"
         title_with_count:
@@ -3992,9 +3985,12 @@ pt_BR:
           save: "Salvar"
           delete: "Excluir"
           links:
-            icon: "Ícone"
-            name: "Nome"
-            value: "Link"
+            icon:
+              label: "Ícone"
+            name:
+              label: "Nome"
+            value:
+              label: "Link"
         about:
           header_link_text: "Sobre"
         messages:
@@ -5051,14 +5047,8 @@ pt_BR:
           silence: "Silenciar"
           link: "Vincular"
         action_descriptions:
-          block: "Evite que postagens contendo essas palavras sejam postadas. O(a) usuário(a) verá uma mensagem de erro quando tentar enviar a postagem."
-          censor: "Permita postagens contendo essas palavras, mas substitua-as por caracteres que ocultem as palavras censuradas."
-          require_approval: "As postagens contendo essas palavras exigirão aprovação da equipe antes que possam ser vistas."
-          flag: "Permita postagens contendo estas palavras, mas sinalize-as como impróprias para que a moderação possa analisá-las."
-          replace: "Substituir palavras em postagens com outras palavras"
-          tag: "Etiquete tópicos automaticamente conforme a primeira postagem"
-          silence: "As primeiras postagens de usuários(as) com estas palavras precisarão de aprovação da equipe antes que sejam exibidas e o(a) usuário(a) será silenciado(a) automaticamente."
-          link: "Substitua palavras em postagens por links"
+          replace: "Substituir palavras em postagens com outras palavras."
+          link: "Substitua palavras em postagens por links."
         form:
           label: "Tem palavra ou frase"
           placeholder: "Digite uma palavra ou frase (* é um curinga)"
@@ -5094,9 +5084,22 @@ pt_BR:
         new_template_form:
           submit: "Salvar"
           cancel: "Cancelar"
+          preview: "Pré-visualizar"
         quick_insert_fields:
           add_new_field: "Adicionar"
           dropdown: "Menu suspenso"
+        validations_modal:
+          table_headers:
+            key: "Chave"
+            type: "Tipo"
+            description: "Descrição"
+          validations:
+            required:
+              key: "necessário(a)"
+            minimum:
+              key: "mínimo"
+            maximum:
+              key: "máximo"
       impersonate:
         title: "Representar"
         help: "Use esta ferramenta para representar uma conta de usuário(a) para efeitos de depuração. Você terá que sair dela assim que terminar."
@@ -5109,6 +5112,7 @@ pt_BR:
         not_found: "Desculpe, este nome de usuário(a) não existe no nosso sistema."
         id_not_found: "Desculpe, esta ID de usuário(a) não existe no nosso sistema."
         active: "Ativado(a)"
+        status: "Status"
         show_emails: "Exibir e-mails"
         hide_emails: "Ocultar e-mails"
         nav:

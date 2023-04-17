@@ -9,7 +9,6 @@ export default class EverythingSectionLink extends BaseSectionLink {
   @tracked totalNew = 0;
   @tracked hideCount =
     this.currentUser?.sidebarListDestination !== UNREAD_LIST_DESTINATION;
-  linkToNew = !!this.currentUser?.new_new_view_enabled;
 
   constructor() {
     super(...arguments);
@@ -27,7 +26,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
 
     this.totalUnread = this.topicTrackingState.countUnread();
 
-    if (this.totalUnread === 0 || this.linkToNew) {
+    if (this.totalUnread === 0 || this.#linkToNew) {
       this.totalNew = this.topicTrackingState.countNew();
     }
   }
@@ -49,16 +48,15 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get currentWhen() {
-    if (this.linkToNew) {
-      return "discovery.new";
-    } else {
-      return "discovery.latest discovery.new discovery.unread discovery.top";
-    }
+    return "discovery.latest discovery.new discovery.unread discovery.top";
   }
 
   get badgeText() {
-    if (this.linkToNew && this.#unreadAndNewCount > 0) {
-      return this.#unreadAndNewCount.toString();
+    if (this.#linkToNew) {
+      if (this.#unreadAndNewCount > 0) {
+        return this.#unreadAndNewCount.toString();
+      }
+      return;
     }
     if (this.hideCount) {
       return;
@@ -75,8 +73,12 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get route() {
-    if (this.linkToNew) {
-      return "discovery.new";
+    if (this.#linkToNew) {
+      if (this.#unreadAndNewCount > 0) {
+        return "discovery.new";
+      } else {
+        return "discovery.latest";
+      }
     } else if (
       this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION
     ) {
@@ -106,7 +108,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
     if (
       this.hideCount &&
       (this.totalUnread || this.totalNew) &&
-      !this.linkToNew
+      !this.#linkToNew
     ) {
       return "circle";
     }
@@ -114,5 +116,9 @@ export default class EverythingSectionLink extends BaseSectionLink {
 
   get #unreadAndNewCount() {
     return this.totalUnread + this.totalNew;
+  }
+
+  get #linkToNew() {
+    return !!this.currentUser?.new_new_view_enabled;
   }
 }

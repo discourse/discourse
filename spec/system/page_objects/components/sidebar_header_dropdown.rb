@@ -5,9 +5,7 @@ module PageObjects
     class SidebarHeaderDropdown < PageObjects::Components::Base
       def click
         page.find(".hamburger-dropdown").click
-
-        # `.animated` is important here because we want to wait until dropdown has finished its animation completely
-        page.has_css?(".menu-panel.animated")
+        wait_for_animation(find(".menu-panel"), timeout: 5)
         self
       end
 
@@ -33,10 +31,7 @@ module PageObjects
       end
 
       def click_everything_link
-        page.click_link(
-          I18n.t("js.sidebar.sections.community.links.everything.content"),
-          class: "sidebar-section-link-everything",
-        )
+        find(".sidebar-section-link[data-link-name='everything']").click
       end
 
       def click_toggle_to_desktop_view_button

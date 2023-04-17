@@ -853,4 +853,36 @@ RSpec.describe SiteSettingExtension do
       end
     end
   end
+
+  describe "_map extension for list settings" do
+    it "handles splitting group_list settings" do
+      SiteSetting.personal_message_enabled_groups = "1|2"
+      expect(SiteSetting.personal_message_enabled_groups_map).to eq([1, 2])
+    end
+
+    it "handles splitting compact list settings" do
+      SiteSetting.markdown_linkify_tlds = "com|net"
+      expect(SiteSetting.markdown_linkify_tlds_map).to eq(%w[com net])
+    end
+
+    it "handles splitting simple list settings" do
+      SiteSetting.ga_universal_auto_link_domains = "test.com|xy.com"
+      expect(SiteSetting.ga_universal_auto_link_domains_map).to eq(%w[test.com xy.com])
+    end
+
+    it "does not handle splitting secret list settings" do
+      SiteSetting.discourse_connect_provider_secrets = "test|secret1\ntest2|secret2"
+      expect(SiteSetting.respond_to?(:discourse_connect_provider_secrets_map)).to eq(false)
+    end
+
+    it "handles null values for settings" do
+      SiteSetting.ga_universal_auto_link_domains = nil
+      SiteSetting.pm_tags_allowed_for_groups = nil
+      SiteSetting.exclude_rel_nofollow_domains = nil
+
+      expect(SiteSetting.ga_universal_auto_link_domains_map).to eq([])
+      expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])
+      expect(SiteSetting.exclude_rel_nofollow_domains_map).to eq([])
+    end
+  end
 end

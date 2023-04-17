@@ -1,4 +1,5 @@
 import Service, { inject as service } from "@ember/service";
+import { debounce } from "discourse-common/utils/decorators";
 import Promise from "rsvp";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { tracked } from "@glimmer/tracking";
@@ -42,6 +43,14 @@ export default class ChatChannelsManager extends Service {
       this.#cache(model);
     }
 
+    if (
+      channelObject.meta?.message_bus_last_ids?.channel_message_bus_last_id !==
+      undefined
+    ) {
+      model.channelMessageBusLastId =
+        channelObject.meta.message_bus_last_ids.channel_message_bus_last_id;
+    }
+
     return model;
   }
 
@@ -72,6 +81,17 @@ export default class ChatChannelsManager extends Service {
 
       return model;
     });
+  }
+
+  @debounce(300)
+  async markAllChannelsRead() {
+    // The user tracking state for each channel marked read will be propagated by MessageBus
+    return this.chatApi.markAllChannelsAsRead();
+  }
+
+  remove(model) {
+    this.chatSubscriptionsManager.stopChannelSubscription(model);
+    delete this._cached[model.id];
   }
 
   get unreadCount() {
@@ -126,6 +146,10 @@ export default class ChatChannelsManager extends Service {
   }
 
   #cache(channel) {
+    if (!channel) {
+      return;
+    }
+
     this._cached[channel.id] = channel;
   }
 
@@ -138,8 +162,7 @@ export default class ChatChannelsManager extends Service {
       const unreadCountA = a.currentUserMembership.unread_count || 0;
       const unreadCountB = b.currentUserMembership.unread_count || 0;
       if (unreadCountA === unreadCountB) {
-        return new Date(a.get("last_message_sent_at")) >
-          new Date(b.get("last_message_sent_at"))
+        return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
           ? -1
           : 1;
       } else {

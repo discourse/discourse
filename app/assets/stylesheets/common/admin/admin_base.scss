@@ -802,19 +802,15 @@ section.details {
   }
 }
 
-tr.not-activated {
-  td,
-  td a,
-  td a:visited {
-    color: #bbb;
-  }
-}
-
-.details.not-activated {
-  .username .value,
-  .email .value a,
-  .email .value a:visited {
-    color: #bbb;
+.directory-table {
+  .not-activated {
+    .directory-table__cell {
+      &,
+      a,
+      a:visited {
+        color: #bbb;
+      }
+    }
   }
 }
 

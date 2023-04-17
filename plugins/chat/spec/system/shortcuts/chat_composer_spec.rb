@@ -5,8 +5,8 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
-
-  KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:key_modifier) { RUBY_PLATFORM =~ /darwin/i ? :meta : :control }
 
   before do
     chat_system_bootstrap
@@ -24,7 +24,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       within(".chat-composer-input") do |composer|
-        composer.send_keys([KEY_MODIFIER, "b"])
+        composer.send_keys([key_modifier, "b"])
 
         expect(composer.value).to eq("**strong text**")
       end
@@ -36,7 +36,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       within(".chat-composer-input") do |composer|
-        composer.send_keys([KEY_MODIFIER, "i"])
+        composer.send_keys([key_modifier, "i"])
 
         expect(composer.value).to eq("_emphasized text_")
       end
@@ -48,7 +48,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       within(".chat-composer-input") do |composer|
-        composer.send_keys([KEY_MODIFIER, "e"])
+        composer.send_keys([key_modifier, "e"])
 
         expect(composer.value).to eq("`indent preformatted text by 4 spaces`")
       end
@@ -63,10 +63,25 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
 
     it "edits last editable message" do
       chat.visit_channel(channel_1)
+      expect(channel_page).to have_message(id: message_1.id)
 
-      within(".chat-composer-input") { |composer| composer.send_keys(:arrow_up) }
+      find(".chat-composer-input").send_keys(:arrow_up)
 
       expect(page.find(".chat-composer-message-details")).to have_content(message_1.message)
+    end
+
+    context "when last message is not editable" do
+      after { page.driver.browser.network_conditions = { offline: false } }
+
+      it "does not edit a message" do
+        chat.visit_channel(channel_1)
+        page.driver.browser.network_conditions = { offline: true }
+        channel_page.send_message("Hello world")
+
+        find(".chat-composer-input").send_keys(:arrow_up)
+
+        expect(page).to have_no_css(".chat-composer-message-details")
+      end
     end
   end
 end

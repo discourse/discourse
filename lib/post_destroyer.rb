@@ -357,7 +357,7 @@ class PostDestroyer
   end
 
   def ignore(reviewable)
-    reviewable.perform_ignore(@user, post_was_deleted: true)
+    reviewable.perform_ignore_and_do_nothing(@user, post_was_deleted: true)
     reviewable.transition_to(:ignored, @user)
   end
 

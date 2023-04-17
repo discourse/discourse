@@ -48,7 +48,11 @@ class Category < ActiveRecord::Base
 
   has_one :category_setting, dependent: :destroy
 
+  delegate :auto_bump_cooldown_days, to: :category_setting, allow_nil: true
+
   has_and_belongs_to_many :web_hooks
+
+  accepts_nested_attributes_for :category_setting, update_only: true
 
   validates :user_id, presence: true
 
@@ -96,6 +100,7 @@ class Category < ActiveRecord::Base
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
+  before_save :ensure_category_setting
 
   after_save :publish_discourse_stylesheet
   after_save :publish_category
@@ -199,21 +204,63 @@ class Category < ActiveRecord::Base
   @topic_id_cache = DistributedCache.new("category_topic_ids")
 
   def self.topic_ids
-    @topic_id_cache["ids"] || reset_topic_ids_cache
+    @topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache["ids"] = Set.new(Category.pluck(:topic_id).compact)
+    @topic_id_cache.clear
   end
 
   def reset_topic_ids_cache
     Category.reset_topic_ids_cache
   end
 
+  # Accepts an array of slugs with each item in the array
+  # Returns the category ids of the last slug in the array. The slugs array has to follow the proper category
+  # nesting hierarchy. If any of the slug in the array is invalid or if the slugs array does not follow the proper
+  # category nesting hierarchy, nil is returned.
+  #
+  # When only a single slug is provided, the category id of all the categories with that slug is returned.
+  def self.ids_from_slugs(slugs)
+    return [] if slugs.blank?
+
+    params = {}
+    params_index = 0
+
+    sqls =
+      slugs.map do |slug|
+        category_slugs = slug.split(":").first(SiteSetting.max_category_nesting)
+        sql = ""
+
+        if category_slugs.length == 1
+          params[:"slug_#{params_index}"] = category_slugs.first
+          sql = "SELECT id FROM categories WHERE slug = :slug_#{params_index}"
+          params_index += 1
+        else
+          category_slugs.each_with_index do |category_slug, index|
+            params[:"slug_#{params_index}"] = category_slug
+
+            sql =
+              if index == 0
+                "SELECT id FROM categories WHERE slug = :slug_#{params_index} AND parent_category_id IS NULL"
+              else
+                "SELECT id FROM categories WHERE parent_category_id = (#{sql}) AND slug = :slug_#{params_index}"
+              end
+
+            params_index += 1
+          end
+        end
+
+        sql
+      end
+
+    DB.query_single(sqls.join("\nUNION ALL\n"), params)
+  end
+
   @@subcategory_ids = DistributedCache.new("subcategory_ids")
 
   def self.subcategory_ids(category_id)
-    @@subcategory_ids[category_id] ||= begin
+    @@subcategory_ids.defer_get_set(category_id.to_s) do
       sql = <<~SQL
             WITH RECURSIVE subcategories AS (
                 SELECT :category_id id, 1 depth
@@ -371,7 +418,10 @@ class Category < ActiveRecord::Base
   end
 
   def clear_related_site_settings
-    SiteSetting.general_category_id = -1 if self.id == SiteSetting.general_category_id
+    if self.id == SiteSetting.general_category_id
+      SiteSetting.general_category_id = -1
+      Site.clear_show_welcome_topic_cache
+    end
   end
 
   def topic_url
@@ -682,7 +732,7 @@ class Category < ActiveRecord::Base
         .exclude_scheduled_bump_topics
         .where(category_id: self.id)
         .where("id <> ?", self.topic_id)
-        .where("bumped_at < ?", 1.day.ago)
+        .where("bumped_at < ?", (self.auto_bump_cooldown_days || 1).days.ago)
         .where("pinned_at IS NULL AND NOT closed AND NOT archived")
         .order("bumped_at ASC")
         .limit(1)
@@ -1039,6 +1089,10 @@ class Category < ActiveRecord::Base
   end
 
   private
+
+  def ensure_category_setting
+    self.build_category_setting if self.category_setting.blank?
+  end
 
   def should_update_reviewables?
     SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?

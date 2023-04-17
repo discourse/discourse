@@ -66,8 +66,11 @@ pt:
         direct_message: "Você também pode iniciar um Chat pessoal com um ou mais utilizadores."
       email_frequency:
         never: "Nunca"
+      header_indicator_preference:
+        never: "Nunca"
       flag: "Denunciar"
       join: "Entrar"
+      last_visit: "última visita"
       mention_warning:
         dismiss: "marcar Visto"
       only_chat_push_notifications:
@@ -85,7 +88,6 @@ pt:
       restore: "Restaurar mensagem apagada"
       save: "Guardar"
       select: "Selecionar"
-      silence: "Silenciar utilizador"
       return_to_list: "Voltar à lista de canais"
       scroll_to_bottom: "Rolar até o final"
       scroll_to_new_messages: "Ver novas mensagens"
@@ -183,7 +185,3 @@ pt:
           fields:
             message:
               label: Mensagem
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Sinalizado por"

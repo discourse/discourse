@@ -82,7 +82,7 @@ class UploadCreator
     # in S3
     #
     # FIXME: I've added a bunch of external_upload_too_big checks littered
-    # throughout the UploadCreator code. It would be better to have two seperate
+    # throughout the UploadCreator code. It would be better to have two separate
     # classes with shared methods, rather than doing all these checks all over the
     # place. Needs a refactor.
     external_upload_too_big = @opts[:external_upload_too_big]
@@ -497,6 +497,7 @@ class UploadCreator
         if use_el.attr("href")
           use_el.remove_attribute("href") unless use_el.attr("href").starts_with?("#")
         end
+        use_el.remove_attribute("xlink:href")
       end
     File.write(@file.path, doc.to_s)
     @file.rewind

@@ -18,7 +18,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     const sidebarCategories = Site.current()
@@ -53,7 +53,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     );
 
     assert.ok(
-      exists("a.sidebar-section-link-all-categories"),
+      exists("a.sidebar-section-link[data-link-name='all-categories']"),
       "all categories link is visible"
     );
   });
@@ -64,7 +64,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     const siteCategories = Site.current().categories;
@@ -97,7 +97,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     );
 
     assert.ok(
-      exists("a.sidebar-section-link-all-categories"),
+      exists("a.sidebar-section-link[data-link-name='all-categories']"),
       "all categories link is visible"
     );
   });
@@ -109,7 +109,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     assert.strictEqual(categories.length, 4);
@@ -118,7 +118,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     assert.strictEqual(categories[2].textContent.trim(), "bug");
 
     assert.ok(
-      exists("a.sidebar-section-link-all-categories"),
+      exists("a.sidebar-section-link[data-link-name='all-categories']"),
       "all categories link is visible"
     );
   });
@@ -138,7 +138,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
 
     assert.notOk(
       exists(
-        `.sidebar-section-categories .sidebar-section-link-${firstCategory.slug}`
+        `.sidebar-section[data-section-name='categories'] .sidebar-section-link[data-link-name='${firstCategory.slug}']`
       ),
       "category section link is not shown in sidebar after being marked as uncategorized"
     );

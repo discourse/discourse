@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1.0")
-  STDERR.puts "Discourse requires Ruby 3.1 or above"
+if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
+  STDERR.puts "Discourse requires Ruby 3.2 or above"
   exit 1
 end
 
@@ -144,7 +144,7 @@ module Discourse
     config.active_record.use_schema_cache_dump = false
 
     # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
-    config.pbkdf2_iterations = 64_000
+    config.pbkdf2_iterations = 600_000
     config.pbkdf2_algorithm = "sha256"
 
     # rack lock is nothing but trouble, get rid of it

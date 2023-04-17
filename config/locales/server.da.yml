@@ -1276,6 +1276,7 @@ da:
     force_https_warning: "Dit websted bruger SSL. Men '<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>' er endnu ikke aktiveret i dine webstedsindstillinger."
     out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:"
     unreachable_themes: "Vi kunne ikke tjekke for opdateringer til følgende temaer:"
+    v3_analytics_deprecated: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
   site_settings:
     disabled: "deaktiveret"
     display_local_time_in_user_card: "Vis den lokale tid baseret på en brugers tidszone, når deres brugerkort åbnes."
@@ -1331,7 +1332,6 @@ da:
     facebook_app_access_token: "Et token genereret fra dit Facebook-app-id og hemmelighed. Bruges til at generere Instagram oneboxes."
     mobile_logo: "Logoet, der bruges på mobilversionen af dit websted. Brug et bredt rektangulært billede med en højde på 120 og et billedformat, der er større end 3: 1. Hvis det er tomt, bruges billedet fra 'logo'-indstillingen."
     favicon: "Et favicon til dit websted, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. For at fungere korrekt over et CDN skal det være en png. Ændres til 32x32. Hvis det er tomt, vil large_icon blive brugt."
-    apple_touch_icon: "Ikon der bruges til Apple touch-enheder. Vil automatisk blive skaleret til 180x180. Hvis feltet er tomt, vil large_icon blive brugt."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     detailed_404: "Giver flere detaljer til brugerne om, hvorfor de ikke kan få adgang til et bestemt emne. Bemærk: Dette er mindre sikkert, fordi brugerne vil vide, om en URL oversættes til et gyldigt emne."
@@ -1420,7 +1420,6 @@ da:
     enable_discourse_connect: "Aktivér loin via DiscourseConnect (tidligere 'Discourse SSO') (ADVARSEL: BRUGERNES e-mailadresser *SKAL* VALIDERES AF DEN EKSTERNE SIDE!)"
     verbose_discourse_connect_logging: "Log detaljeret DiscourseConnect relateret diagnostik til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementer DiscourseConnect (tidligere 'Discourse SSO') providerprotokollen på /session/sso_provider slutpunktet, kræver, at discourse_connect_provider_secrets indstilles"
-    discourse_connect_url: "URL til DiscourseConnect-slutpunkt (skal indeholde http:// eller https://)"
     discourse_connect_secret: "Hemmelig streng, der bruges til kryptografisk godkendelse af DiscourseConnect-oplysninger, sørg for at der er 10 tegn eller mere"
     discourse_connect_overrides_bio: "Tilsidesætter brugerbio i brugerprofilen og forhindrer brugeren i at ændre den"
     discourse_connect_overrides_groups: "Synkronisér alle manuelle gruppemedlemskaber med grupper angivet i grupper-attributten (ADVARSEL: hvis du ikke angiver grupper, vil alle manuelle gruppemedlemmer blive ryddet for brugeren)"
@@ -2866,10 +2865,6 @@ da:
     see_more: "Flere"
     search_title: "Søg på dette websted"
     search_button: "Søg"
-  login_required:
-    welcome_message: |
-      ## [Velkommen til %{title}](#welcome)
-      En konto er påkrævet. Opret venligst en konto eller log ind for at fortsætte.
   upload:
     unauthorized: "Beklager, filen, som du forsøger at overføre er ikke godkendt (godkente filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
@@ -3242,8 +3237,6 @@ da:
       message: "<p>Vi har gensendt aktiverings-e-mailen til <b>%{email}</b>"
   safe_mode:
     title: "Gå ind i fejlsikret tilstand"
-    no_unofficial_plugins: "Deaktiver uofficielle udvidelser"
-    no_plugins: "Deaktiver alle udvidelsesmoduler"
     enter: "Gå ind i fejlsikret tilstand"
     must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."
   wizard:
@@ -3342,44 +3335,25 @@ da:
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:
       agree:
-        title: "Enig..."
-      agree_and_keep:
-        title: "Behold Indlæg"
-      agree_and_keep_hidden:
-        title: "Behold Indlæg Skjult"
-      agree_and_suspend:
-        title: "Suspendér Bruger"
-      agree_and_silence:
-        title: "Mådehold (silence) Bruger"
+        title: "Ja"
       agree_and_restore:
-        title: "Gendan Indlæg"
         description: "Gendan indlægget, så alle brugere kan se det."
-      agree_and_hide:
-        title: "Skjul Indlæg"
-        description: "Skjul dette indlæg og send automatisk brugeren en meddelelse, der opfordrer dem til at redigere det."
       delete_single:
         title: "Slet"
       delete:
         title: "Slet..."
-      delete_and_ignore:
-        title: "Slet Indlæg og Ignorer"
-        description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"
       delete_and_ignore_replies:
-        description: "Slet indlæg og alle dets svar Hvis det er første indlæg, så slet også emnet"
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
-      delete_and_agree:
-        title: "Slet Indlæg og Accepter"
-        description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"
       delete_and_agree_replies:
-        title: "Slet Indlæg + Svar og Accepter"
-        description: "Slet indlæg og alle dets svar Hvis det er første indlæg, så slet også emnet"
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       disagree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
       disagree:
-        title: "Uenig"
+        title: "Nej"
       ignore:
         title: "Ignorér"
+      ignore_and_do_nothing:
+        title: "Gøre ingenting"
       approve:
         title: "Godkend"
       approve_post:

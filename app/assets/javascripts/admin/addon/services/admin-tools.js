@@ -10,8 +10,8 @@ import { htmlSafe } from "@ember/template";
 // A service that can act as a bridge between the front end Discourse application
 // and the admin application. Use this if you need front end code to access admin
 // modules. Inject it optionally, and if it exists go to town!
-export default Service.extend({
-  dialog: service(),
+export default class AdminToolsService extends Service {
+  @service dialog;
 
   showActionLogs(target, filters) {
     const controller = getOwner(target).lookup(
@@ -20,15 +20,15 @@ export default Service.extend({
     target.transitionToRoute("adminLogs.staffActionLogs").then(() => {
       controller.changeFilters(filters);
     });
-  },
+  }
 
   checkSpammer(userId) {
     return AdminUser.find(userId).then((au) => this.spammerDetails(au));
-  },
+  }
 
   deleteUser(id, formData) {
     return AdminUser.find(id).then((user) => user.destroy(formData));
-  },
+  }
 
   spammerDetails(adminUser) {
     return {
@@ -37,7 +37,7 @@ export default Service.extend({
         adminUser.get("can_be_deleted") &&
         adminUser.get("can_delete_all_posts"),
     };
-  },
+  }
 
   _showControlModal(type, user, opts) {
     opts = opts || {};
@@ -67,15 +67,15 @@ export default Service.extend({
 
       controller.finishedSetup();
     });
-  },
+  }
 
   showSilenceModal(user, opts) {
     this._showControlModal("silence", user, opts);
-  },
+  }
 
   showSuspendModal(user, opts) {
     this._showControlModal("suspend", user, opts);
-  },
+  }
 
   _deleteSpammer(adminUser) {
     // Try loading the email if the site supports it
@@ -131,5 +131,5 @@ export default Service.extend({
         });
       });
     });
-  },
-});
+  }
+}

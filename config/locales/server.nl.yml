@@ -1104,7 +1104,7 @@ nl:
       title: "DAU/MAU"
       xaxis: "Dag"
       yaxis: "DAU/MAU"
-      description: "Aantal leden dat de afgelopen dag was aangemeld, gedeeld door het aantal leden dat de afgelopen maand was aangemeld – geeft een % terug dat 'plakkerigheid' in de community aangeeft. Het streven is >30%."
+      description: "Aantal leden dat de afgelopen dag was aangemeld, gedeeld door het aantal leden dat de afgelopen maand was aangemeld – geeft een % terug dat 'plakkerigheid' in de community aangeeft. Het streven is >20%."
     daily_engaged_users:
       title: "Dagelijkse actieve gebruikers"
       xaxis: "Dag"
@@ -1472,7 +1472,6 @@ nl:
     manifest_icon: "Afbeelding die als logo/splashafbeelding op Android wordt gebruikt. Wordt automatisch verkleind naar 512 x 512. Bij leeg laten wordt large_icon gebruikt."
     manifest_screenshots: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
     favicon: "Een favicon voor je website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>.  Om goed via een CDN te werken, moet dit een png zijn. Wordt verkleind naar 32x32. Bij leeg laten wordt large_icon gebruikt."
-    apple_touch_icon: "Pictogram dat voor Apple touch-apparaten wordt gebruikt. Wordt automatisch verkleind naar 180x180. Bij leeg laten wordt large_icon gebruikt."
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     twitter_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
@@ -1603,7 +1602,6 @@ nl:
     enable_discourse_connect: "Schakel aanmelden via DiscourseConnect (voorheen 'Discourse SSO') in (WAARSCHUWING: E-MAILADRESSEN VAN GEBRUIKERS *MOETEN* WORDEN GEVALIDEERD DOOR DE EXTERNE SITE!)"
     verbose_discourse_connect_logging: "Log uitgebreide DiscourseConnect-gerelateerde diagnostiek naar <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementeer providerprotocol DiscourseConnect (voorheen 'Discourse SSO') op het eindpunt /session/sso_provider, vereist dat discourse_connect_provider_secrets is ingesteld"
-    discourse_connect_url: "URL van DiscourseConnect-eindpunt (moet http:// of https:// bevatten)"
     discourse_connect_secret: "Geheime tekenreeks die wordt gebruikt om DiscourseConnect-gegevens cryptografisch te verifiëren, zorg dat deze 10 tekens of langer is"
     discourse_connect_provider_secrets: "Een lijst met domeingeheimparen die DiscourseConnect gebruiken. Zorg dat het DiscourseConnect-geheim 10 tekens of langer is. Het jokerteken * kan worden gebruikt om elk domein of slechts een deel ervan te matchen (bijvoorbeeld *.voorbeeld.com)."
     discourse_connect_overrides_bio: "Overschrijft biografie in gebruikersprofiel en voorkomt dat gebruiker deze kan wijzigen"
@@ -1721,7 +1719,6 @@ nl:
     composer_media_optimization_image_bytes_optimization_threshold: "Minimale bestandsgrootte van afbeeldingen om optimalisatie aan de clientzijde te activeren"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimale afbeeldingsbreedte om vergroting/verkleining aan de clientzijde te activeren"
     composer_media_optimization_image_resize_width_target: "Afbeeldingen met een breedte groter dan `composer_media_optimization_image_dimensions_resize_threshold` worden verkleind tot deze breedte. Moet >= `composer_media_optimization_image_dimensions_resize_threshold` zijn."
-    composer_media_optimization_image_encode_quality: "JPEG-coderingskwaliteit gebruikt in het hercoderingsproces."
     min_ratio_to_crop: "Gebruikte verhouding voor het bijsnijden van hoge afbeeldingen. Voer het resultaat van breedte / hoogte in."
     simultaneous_uploads: "Maximale aantal bestanden dat naar de editor kan worden gesleept"
     default_invitee_trust_level: "Standaard vertrouwensniveau (0-4) voor uitgenodigde leden."
@@ -2160,7 +2157,6 @@ nl:
       staged_users_disabled: "Je moet eerst 'gefaseerde gebruikers' inschakelen voordat je deze instelling inschakelt."
       reply_by_email_disabled: "Je moet eerst 'reply by email' inschakelen voordat je deze instelling inschakelt."
       discourse_connect_url_is_empty: "Je moet een 'DiscourseConnect-URL' instellen voordat je deze instelling inschakelt."
-      discourse_connect_invite_only: "Je kunt DiscourseConnect en alleen uitnodiging niet tegelijk inschakelen."
       enable_local_logins_disabled: "Je moet eerst 'enable local logins' inschakelen voordat je deze instelling inschakelt."
       min_username_length_exists: "Je kunt de minimale gebruikersnaamlengte niet hoger instellen dan de kortste gebruikersnaam (%{username})."
       min_username_length_range: "Je kunt het minimum niet hoger instellen dan het maximum."
@@ -3686,13 +3682,6 @@ nl:
   offline:
     title: "Kan app niet laden"
     offline_page_message: "Het lijkt erop dat je offline bent! Controleer je netwerkverbinding en probeer het opnieuw."
-  login_required:
-    welcome_message: |
-      ## [Welkom bij %{title}](#welkom)
-      Een account is vereist. Maak een account of meld je aan om verder te gaan.
-    welcome_message_invite_only: |
-      ## [Welkom bij %{title}](#welkom)
-      Een account is vereist. Vraag een bestaand lid om een uitnodiging of meld je aan om verder te gaan.
   upload:
     edit_reason: "lokale kopieën van afbeeldingen gedownload"
     unauthorized: "Sorry, het bestand dat je probeert te uploaden is niet toegestaan (toegestane extensies: %{authorized_extensions})."
@@ -4199,10 +4188,7 @@ nl:
       message: "<p>We hebben de activerings-e-mail opnieuw naar <b>%{email}</b> gestuurd"
   safe_mode:
     title: "Veilige modus starten"
-    description: "In de veilige modus kun je je website testen zonder plug-ins of thema's te laden."
     no_themes: "Thema's en themacomponenten uitschakelen"
-    no_unofficial_plugins: "Niet-officiële plug-ins uitschakelen"
-    no_plugins: "Alle plug-ins uitschakelen"
     enter: "Veilige modus starten"
     must_select: "Je moet ten minste één optie selecteren om naar de veilige modus te gaan."
   wizard:
@@ -4379,50 +4365,30 @@ nl:
         category: categorie-instellingen
     actions:
       agree:
-        title: "Akkoord..."
-      agree_and_keep:
-        title: "Bericht behouden"
-        description: "Akkoord met markering en het bericht ongewijzigd laten."
-      agree_and_keep_hidden:
-        title: "Bericht verborgen houden"
-        description: "Akkoord gaan met markering en het bericht verborgen laten."
+        title: "Ja"
       agree_and_suspend:
-        title: "Gebruiker schorsen"
         description: "Akkoord met markering en de gebruiker schorsen."
       agree_and_silence:
         title: "Gebruiker dempen"
         description: "Akkoord met markering en de gebruiker dempen."
       agree_and_restore:
-        title: "Bericht herstellen"
         description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
-      agree_and_hide:
-        title: "Bericht verbergen"
-        description: "Dit bericht verbergen en de gebruiker automatisch een bericht sturen waarin dringend wordt gevraagd het te bewerken."
       delete_single:
         title: "Verwijderen"
       delete:
         title: "Verwijderen..."
-      delete_and_ignore:
-        title: "Bericht verwijderen en negeren"
-        description: "Bericht verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
       delete_and_ignore_replies:
-        title: "Bericht + antwoorden verwijderen en negeren"
-        description: "Bericht en alle antwoorden erop verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
-      delete_and_agree:
-        title: "Bericht verwijderen en akkoord"
-        description: "Bericht verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
       delete_and_agree_replies:
-        title: "Bericht + antwoorden verwijderen en akkoord"
-        description: "Bericht en alle antwoorden erop verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
       disagree_and_restore:
-        title: "Niet akkoord en bericht herstellen"
         description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
       disagree:
-        title: "Niet akkoord"
+        title: "Nee"
       ignore:
         title: "Negeren"
+      ignore_and_do_nothing:
+        title: "Niets doen"
       approve:
         title: "Goedkeuren"
       approve_post:

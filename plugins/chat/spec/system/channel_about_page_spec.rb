@@ -66,7 +66,7 @@ RSpec.describe "Channel - Info - About page", type: :system, js: true do
           click_button(I18n.t("js.chat.channel_settings.join_channel"))
           expect(page).to have_content(I18n.t("js.chat.channel_settings.leave_channel"))
         }.to change {
-          UserChatChannelMembership.where(user_id: current_user.id, following: true).count
+          Chat::UserChatChannelMembership.where(user_id: current_user.id, following: true).count
         }.by(1)
       end
     end

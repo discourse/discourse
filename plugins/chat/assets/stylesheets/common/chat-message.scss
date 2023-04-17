@@ -14,43 +14,6 @@
   }
 }
 
-@mixin chat-reaction {
-  align-items: center;
-  display: inline-flex;
-  padding: 0.3em 0.6em;
-  margin: 1px 0.25em 1px 0;
-  font-size: var(--font-down-2);
-  border-radius: 4px;
-  border: 1px solid var(--primary-low);
-  background: transparent;
-  cursor: pointer;
-  user-select: none;
-  transition: background 0.2s, border-color 0.2s;
-
-  &.reacted {
-    border-color: var(--tertiary-medium);
-    background: var(--tertiary-very-low);
-    color: var(--tertiary-hover);
-
-    &:hover {
-      background: var(--tertiary-low);
-    }
-  }
-
-  &:not(.reacted) {
-    &:hover {
-      background: var(--primary-low);
-      border-color: var(--primary-low-mid);
-    }
-  }
-
-  .emoji {
-    height: 15px;
-    margin-right: 4px;
-    width: auto;
-  }
-}
-
 .chat-message {
   align-items: flex-start;
   padding: 0.25em 0.5em 0.25em 0.75em;
@@ -60,10 +23,6 @@
 
   .chat-message-reaction {
     @include chat-reaction;
-
-    &:not(.show) {
-      display: none;
-    }
   }
 
   &.chat-action {
@@ -82,21 +41,6 @@
     background-color: var(--danger-hover);
   }
 
-  &.transition-slow {
-    transition: 2s linear background-color;
-  }
-
-  &.user-info-hidden {
-    .chat-time {
-      color: var(--secondary-medium);
-      flex-shrink: 0;
-      font-size: var(--font-down-2);
-      margin-top: 0.4em;
-      display: none;
-      width: var(--message-left-width);
-    }
-  }
-
   &.is-reply {
     display: grid;
     grid-template-columns: var(--message-left-width) 1fr;
@@ -104,6 +48,23 @@
     grid-template-areas:
       "replyto replyto"
       "avatar message";
+
+    .chat-user-avatar {
+      grid-area: avatar;
+    }
+
+    .chat-message-content {
+      grid-area: message;
+    }
+  }
+
+  &.is-threaded {
+    display: grid;
+    grid-template-columns: var(--message-left-width) 1fr;
+    grid-template-rows: auto 32px;
+    grid-template-areas:
+      "avatar message"
+      "threadindicator threadindicator";
 
     .chat-user-avatar {
       grid-area: avatar;
@@ -142,16 +103,6 @@
       padding: 0 0.3em 0.07em;
       border-radius: 0.6em;
       text-decoration: none;
-    }
-
-    img.ytp-thumbnail-image,
-    img.youtube-thumbnail {
-      height: 100%;
-      max-height: unset;
-
-      &:hover {
-        border-radius: 0;
-      }
     }
 
     // Automatic aspect-ratio mapping https://developer.mozilla.org/en-US/docs/Web/Media/images/aspect_ratio_mapping
@@ -196,6 +147,10 @@
       padding: 0em 0.25em;
       background: none;
       border: none;
+
+      > * {
+        pointer-events: none;
+      }
 
       .d-icon {
         color: var(--primary-high);
@@ -247,22 +202,47 @@
 }
 
 .chat-messages-container {
-  .not-mobile-device & .chat-message:hover,
-  .chat-message.chat-message-selected {
-    background: var(--primary-very-low);
-  }
+  .chat-message {
+    &.chat-message-bookmarked {
+      background: var(--highlight-bg);
+    }
 
-  .chat-message.chat-message-bookmarked {
-    background: var(--highlight-bg);
-  }
-
-  .not-mobile-device & .chat-message-reaction-list .chat-message-react-btn {
-    display: none;
-  }
-
-  .not-mobile-device & .chat-message:hover {
     .chat-message-reaction-list .chat-message-react-btn {
-      display: inline-block;
+      display: none;
+    }
+
+    .touch & {
+      &:active {
+        background: var(--primary-very-low);
+        border-radius: 5px;
+      }
+
+      &.chat-message-bookmarked {
+        &:active {
+          background: var(--highlight-medium);
+        }
+      }
+    }
+
+    .no-touch & {
+      &.is-active,
+      &:hover,
+      &:active {
+        background: var(--primary-very-low);
+      }
+
+      &:hover {
+        .chat-message-react-btn {
+          display: inline-block;
+        }
+      }
+
+      &.chat-message-bookmarked {
+        &.is-active,
+        &:hover {
+          background: var(--highlight-medium);
+        }
+      }
     }
   }
 }
@@ -282,15 +262,6 @@
 
 .chat-action-text {
   font-style: italic;
-}
-
-.chat-message-container.is-hovered,
-.chat-message.chat-message-selected {
-  background: var(--primary-very-low);
-}
-
-.chat-message.chat-message-bookmarked {
-  background: var(--highlight-bg);
 }
 
 .has-full-page-chat .chat-message .onebox:not(img),

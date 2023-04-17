@@ -10,7 +10,7 @@ export default {
   after: "inject-discourse-objects",
   name: "dynamic-route-builders",
 
-  initialize(registry, app) {
+  initialize(_container, app) {
     app.register(
       "controller:discovery.category",
       DiscoverySortableController.extend()

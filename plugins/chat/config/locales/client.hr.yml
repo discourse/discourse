@@ -74,6 +74,8 @@ hr:
         direct_message: "Također možete započeti osobni razgovor s jednim ili više korisnika."
       email_frequency:
         never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
       enable: "Omogući chat"
       flag: "Označi zastavicom"
       flagged: "Ova poruka je označena za pregled"
@@ -82,7 +84,7 @@ hr:
       in_reply_to: "U odgovoru na"
       heading: "Čet"
       join: "Pridružite se"
-      new_messages: "nove poruke"
+      last_visit: "posljednji posjet"
       mention_warning:
         dismiss: "skloni"
         invitations_sent:
@@ -188,10 +190,6 @@ hr:
           fields:
             message:
               label: Poruka
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Označio"
     keyboard_shortcuts_help:
       chat:
         title: "Čet"

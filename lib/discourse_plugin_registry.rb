@@ -108,6 +108,11 @@ class DiscoursePluginRegistry
 
   define_filtered_register :search_groups_set_query_callbacks
 
+  define_filtered_register :about_stat_groups
+  define_filtered_register :bookmarkables
+
+  define_filtered_register :list_suggested_for_providers
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end
@@ -241,8 +246,39 @@ class DiscoursePluginRegistry
     asset
   end
 
+  def self.clear_modifiers!
+    @modifiers = nil
+  end
+
+  def self.register_modifier(plugin_instance, name, &blk)
+    @modifiers ||= {}
+    modifiers = @modifiers[name] ||= []
+    modifiers << [plugin_instance, blk]
+  end
+
+  def self.apply_modifier(name, arg, *more_args)
+    return arg if !@modifiers
+
+    registered_modifiers = @modifiers[name]
+    return arg if !registered_modifiers
+
+    # iterate as fast as possible to minimize cost (avoiding each)
+    # also erases one stack frame
+    length = registered_modifiers.length
+    index = 0
+    while index < length
+      plugin_instance, block = registered_modifiers[index]
+      arg = block.call(arg, *more_args) if plugin_instance.enabled?
+
+      index += 1
+    end
+
+    arg
+  end
+
   def self.reset!
     @@register_names.each { |name| instance_variable_set(:"@#{name}", nil) }
+    clear_modifiers!
   end
 
   def self.reset_register!(register_name)

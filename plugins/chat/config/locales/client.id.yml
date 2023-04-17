@@ -19,6 +19,8 @@ id:
       joined: "joined"
       email_frequency:
         never: "Tidak pernah"
+      header_indicator_preference:
+        never: "Tidak pernah"
       join: "Gabung"
       mention_warning:
         dismiss: "bubar"
@@ -84,7 +86,3 @@ id:
           fields:
             message:
               label: pesan
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Dipanji Oleh"

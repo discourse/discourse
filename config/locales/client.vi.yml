@@ -155,11 +155,6 @@ vi:
     software_update_prompt:
       message: "Chúng tôi đã cập nhật trang web này, <span>vui lòng làm mới</span>, nếu không bạn có thể gặp phải hành vi không mong muốn."
       dismiss: "Hủy bỏ"
-    bootstrap_mode_enabled:
-      other: "Để đơn giản hoá quá trình triển khai trang web, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{count}"
-    bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
-    bootstrap_invite_button_title: "Gửi Lời Mời"
-    bootstrap_wizard_link_title: "Hoàn tất trình hướng dẫn thiết lập"
     themes:
       default_description: "Mặc định"
       broken_theme_alert: "Trang web của bạn có thể không hoạt động vì một chủ đề / thành phần có lỗi."
@@ -313,7 +308,6 @@ vi:
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Bản nháp tin nhắn cá nhân mới"
       abandon:
-        confirm: "Bạn đang có một bản nháp cho chủ đề này. Bạn muốn làm gì với nó?"
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
     topic_count_categories:
@@ -474,11 +468,9 @@ vi:
       scores:
         about: "Điểm số này được tính toán dựa trên mức độ tin cậy của người báo cáo, độ chính xác của những gắn cờ trước đó, và mức độ ưu tiên của mục được báo cáo."
         score: "Điểm số"
-        date: "Ngày"
-        type: "Loại"
+        type: "Lý do"
         status: "Trạng thái"
-        submitted_by: "Được gửi bởi"
-        reviewed_by: "Được đánh giá bởi"
+        submitted_by: "Báo cáo bởi"
       statuses:
         pending:
           title: "Đang treo"
@@ -486,14 +478,12 @@ vi:
           title: "Đã phê duyệt"
         rejected:
           title: "Từ chối"
-        ignored:
-          title: "Đã bỏ qua"
-        deleted:
-          title: "Đã xóa"
         reviewed:
-          title: "(tất cả đã đánh giá)"
+          title: "Tất cả đã đánh giá"
         all:
-          title: "(mọi thứ)"
+          title: "Mọi thứ"
+      context_question:
+        delimiter: "hoặc"
       types:
         reviewable_flagged_post:
           title: "Bài viết bị gắn cờ"
@@ -786,6 +776,7 @@ vi:
         remove_owners_description: "Xóa những người dùng đã chọn làm chủ sở hữu của nhóm này"
         make_all_primary: "Đặt tất cả là chính"
         make_all_primary_description: "Đặt nhóm này thành nhóm chính cho tất cả người dùng đã chọn"
+        status: "Trạng thái"
         owner: "Chủ sở hữu"
         primary: "Chính"
         forbidden: "Bạn không được phép xem thành viên."
@@ -1097,7 +1088,6 @@ vi:
       home: "Trang chủ mặc định"
       staged: "Theo giai đoạn"
       staff_counters:
-        flags_given: "cờ hữu ích"
         flagged_posts: "bài viết gắn cờ"
         deleted_posts: "bài viết bị xoá"
         suspensions: "đình chỉ"
@@ -3174,6 +3164,10 @@ vi:
     filters:
       with_topics: "%{filter} chủ đề"
       with_category: "%{filter} %{category} chủ đề"
+      filter:
+        title: "Lọc"
+        button:
+          label: "Lọc"
       latest:
         title: "Mới nhất"
         title_with_count:
@@ -3561,9 +3555,12 @@ vi:
           save: "Lưu lại"
           delete: "Xóa"
           links:
-            icon: "Biểu tượng"
-            name: "Tên"
-            value: "Liên kết"
+            icon:
+              label: "Biểu tượng"
+            name:
+              label: "T"
+            value:
+              label: "Liên kết"
         about:
           header_link_text: "Giới thiệu"
         messages:
@@ -4546,10 +4543,6 @@ vi:
           replace: "Thay thế"
           silence: "Im lặng"
           link: "Liên kết"
-        action_descriptions:
-          censor: "Cho phép các bài đăng có chứa những từ này nhưng hãy thay thế chúng bằng các ký tự ẩn các từ đã được kiểm duyệt."
-          tag: "Tự động gắn thẻ các chủ đề dựa trên bài đăng đầu tiên"
-          silence: "Các bài đăng đầu tiên của người dùng có chứa những từ này sẽ yêu cầu nhân viên phê duyệt trước khi họ có thể được nhìn thấy và người dùng sẽ tự động bị tắt tiếng."
         form:
           replace_label: "Sự thay thế"
           replace_placeholder: "thí dụ"
@@ -4575,9 +4568,22 @@ vi:
         new_template_form:
           submit: "Lưu lại"
           cancel: "Huỷ"
+          preview: "Xem trước"
         quick_insert_fields:
           add_new_field: "Thêm"
           dropdown: "Xổ xuống"
+        validations_modal:
+          table_headers:
+            key: "Phím"
+            type: "Loại"
+            description: "Mô tả"
+          validations:
+            required:
+              key: "bắt buộc"
+            minimum:
+              key: "tối thiểu"
+            maximum:
+              key: "tối đa"
       impersonate:
         title: "Mạo danh"
         help: "Sử dụng công cụ này để mạo danh một tài khoản thành viên cho mục đích gỡ lỗi, bạn sẽ phải đăng xuất sau khi hoàn tất."
@@ -4590,6 +4596,7 @@ vi:
         not_found: "Xin lỗi, username không tồn tại trong hệ thống."
         id_not_found: "Xin lỗi, id người dùng không tồn tại trong hệ thống."
         active: "Đã kích hoạt"
+        status: "Trạng thái"
         show_emails: "Hiện địa chỉ Email"
         hide_emails: "Ẩn Email"
         nav:

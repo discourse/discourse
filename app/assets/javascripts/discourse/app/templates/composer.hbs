@@ -4,7 +4,7 @@
   @openIfDraft={{action "openIfDraft"}}
   @typed={{action "typed"}}
   @cancelled={{action "cancelled"}}
-  @save={{action "save"}}
+  @save={{this.saveAction}}
 >
   <div class="grippie"></div>
 
@@ -234,7 +234,7 @@
 
           <div class="save-or-cancel">
             <ComposerSaveButton
-              @action={{action "save"}}
+              @action={{this.saveAction}}
               @icon={{this.saveIcon}}
               @label={{this.saveLabel}}
               @forwardEvent={{true}}
@@ -271,45 +271,6 @@
                 <span class="no-bump">{{d-icon "anchor"}}</span>
               {{/if}}
             {{/if}}
-
-            {{#if (or this.isUploading this.isProcessingUpload)}}
-              <div id="file-uploading">
-                {{#if this.isProcessingUpload}}
-                  {{loading-spinner size="small"}}<span>{{i18n
-                      "upload_selector.processing"
-                    }}</span>
-                {{else}}
-                  {{loading-spinner size="small"}}<span>{{i18n
-                      "upload_selector.uploading"
-                    }}
-                    {{this.uploadProgress}}%</span>
-                {{/if}}
-
-                {{#if this.isCancellable}}
-                  <a
-                    href
-                    id="cancel-file-upload"
-                    {{on "click" this.cancelUpload}}
-                  >{{d-icon "times"}}</a>
-                {{/if}}
-              </div>
-            {{/if}}
-
-            <div class={{if this.isUploading "hidden"}} id="draft-status">
-              {{#if this.model.draftStatus}}
-                <span class="draft-error" title={{this.model.draftStatus}}>
-                  {{#if this.model.draftConflictUser}}
-                    {{avatar this.model.draftConflictUser imageSize="small"}}
-                    {{d-icon "user-edit"}}
-                  {{else}}
-                    {{d-icon "exclamation-triangle"}}
-                  {{/if}}
-                  {{#unless this.site.mobileView}}
-                    {{this.model.draftStatus}}
-                  {{/unless}}
-                </span>
-              {{/if}}
-            </div>
 
             <span>
               <PluginOutlet
@@ -356,7 +317,48 @@
                 @icon="pencil-alt"
               />
             {{/if}}
-          {{else}}
+          {{/if}}
+
+          {{#if (or this.isUploading this.isProcessingUpload)}}
+            <div id="file-uploading">
+              {{#if this.isProcessingUpload}}
+                {{loading-spinner size="small"}}<span>{{i18n
+                    "upload_selector.processing"
+                  }}</span>
+              {{else}}
+                {{loading-spinner size="small"}}<span>{{i18n
+                    "upload_selector.uploading"
+                  }}
+                  {{this.uploadProgress}}%</span>
+              {{/if}}
+
+              {{#if this.isCancellable}}
+                <a
+                  href
+                  id="cancel-file-upload"
+                  {{on "click" this.cancelUpload}}
+                >{{d-icon "times"}}</a>
+              {{/if}}
+            </div>
+          {{/if}}
+
+          <div class={{if this.isUploading "hidden"}} id="draft-status">
+            {{#if this.model.draftStatus}}
+              <span class="draft-error" title={{this.model.draftStatus}}>
+                {{#if this.model.draftConflictUser}}
+                  {{avatar this.model.draftConflictUser imageSize="small"}}
+                  {{d-icon "user-edit"}}
+                {{else}}
+                  {{d-icon "exclamation-triangle"}}
+                {{/if}}
+                {{#unless this.site.mobileView}}
+                  {{this.model.draftStatus}}
+                {{/unless}}
+              </span>
+            {{/if}}
+          </div>
+
+          {{#unless this.site.mobileView}}
             <DButton
               @action={{action "togglePreview"}}
               @translatedTitle={{this.toggleText}}
@@ -366,7 +368,7 @@
                 (unless this.showPreview "active")
               }}
             />
-          {{/if}}
+          {{/unless}}
         </div>
       </div>
     {{else}}

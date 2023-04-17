@@ -8,10 +8,6 @@ module ExternalUploadHelpers
   class ExternalUploadValidationError < StandardError
   end
 
-  PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE = 10
-  CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
-  COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
-
   included do
     before_action :external_store_check,
                   only: %i[
@@ -38,7 +34,7 @@ module ExternalUploadHelpers
     RateLimiter.new(
       current_user,
       "generate-presigned-put-upload-stub",
-      ExternalUploadHelpers::PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE,
+      SiteSetting.max_presigned_put_per_minute,
       1.minute,
     ).performed!
 
@@ -81,7 +77,7 @@ module ExternalUploadHelpers
     RateLimiter.new(
       current_user,
       "create-multipart-upload",
-      ExternalUploadHelpers::CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE,
+      SiteSetting.max_create_multipart_per_minute,
       1.minute,
     ).performed!
 
@@ -127,9 +123,6 @@ module ExternalUploadHelpers
     # a 1.5GB upload with 5mb parts this could mean 60 requests to the server to get all
     # the part URLs. If the user's upload speed is super fast they may request all 60
     # batches in a minute, if it is slow they may request 5 batches in a minute.
-    #
-    # The other external upload endpoints are not hit as often, so they can stay as constant
-    # values for now.
     RateLimiter.new(
       current_user,
       "batch-presign",
@@ -225,7 +218,7 @@ module ExternalUploadHelpers
     RateLimiter.new(
       current_user,
       "complete-multipart-upload",
-      ExternalUploadHelpers::COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE,
+      SiteSetting.max_complete_multipart_per_minute,
       1.minute,
     ).performed!
 
@@ -256,12 +249,11 @@ module ExternalUploadHelpers
         .sort_by { |part| part[:part_number] }
 
     begin
-      complete_response =
-        store.complete_multipart(
-          upload_id: external_upload_stub.external_upload_identifier,
-          key: external_upload_stub.key,
-          parts: parts,
-        )
+      store.complete_multipart(
+        upload_id: external_upload_stub.external_upload_identifier,
+        key: external_upload_stub.key,
+        parts: parts,
+      )
     rescue Aws::S3::Errors::ServiceError => err
       return(
         render_json_error(

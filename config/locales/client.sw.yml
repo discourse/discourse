@@ -141,8 +141,6 @@ sw:
     emails_are_disabled: "Utumaji wa barua pepe umezuiliwa na msimamizi. Hakuna taarifa za utumwaji wa barua pepe zitakazotumwa."
     software_update_prompt:
       dismiss: "Ondosha"
-    bootstrap_mode_disabled: "Halitumizi ya Bootstrap itasitishwa baada ya masaa 24."
-    bootstrap_invite_button_title: "Tuma Mialiko"
     themes:
       default_description: "Halisi"
     s3:
@@ -304,8 +302,7 @@ sw:
         refresh: "Rudisha Tena"
         category: "Kategoria"
       scores:
-        date: "Tarehe"
-        type: "Aina"
+        type: "Sababu"
       statuses:
         pending:
           title: "subiria"
@@ -313,6 +310,8 @@ sw:
           title: "Wamekubaliwa"
         rejected:
           title: "Imekataliwa"
+      context_question:
+        delimiter: "au"
       types:
         reviewable_user:
           title: "Mtumiaji"
@@ -692,7 +691,6 @@ sw:
       home: "Chaguo-msingi mwanzo"
       staged: "Sehemu ya kujaribu"
       staff_counters:
-        flags_given: "bendera za usaidizi"
         flagged_posts: "Machapisho yenye bendera."
         deleted_posts: "Machapisho yaliyofutwa"
         suspensions: "masitisho"
@@ -2025,6 +2023,10 @@ sw:
     filters:
       with_topics: "mada %{filter}"
       with_category: "mada %{filter}%{category}"
+      filter:
+        title: "Chuja"
+        button:
+          label: "Chuja"
       latest:
         title: "Hivi Karibuni"
         title_with_count:
@@ -2255,8 +2257,10 @@ sw:
           save: "Hifadhi"
           delete: "Futa"
           links:
-            icon: "ikoni"
-            name: "Jina"
+            icon:
+              label: "ikoni"
+            name:
+              label: "Jina"
         about:
           header_link_text: "Kuhusu"
         messages:
@@ -2881,11 +2885,6 @@ sw:
           require_approval: "Inahitaji Uthibitisho"
           flag: "Bendera"
           silence: "Imenyamazishwa"
-        action_descriptions:
-          block: "Zuia machapisho yenye maneno haya kuchapishwa. Mtumiaji ataona ujumbe wa hitilafu akijaribu kuwasilisha chapisho."
-          censor: "Ruhusu machapisho yenye maneno yafuatayo, lakini badilisha maneno hayo na herufi zinazoficha maneno yanayokatazwa."
-          require_approval: "Machapicho yenye maneno yafuatayo yatahitaji kibali kutoka kwa wafanyakazi kabla hayajaonwa."
-          flag: "Ruhusu machapisho yawe na maneno haya, ila ripoti kuonyesha kuwa hazifai ili wasimamizi waweze kuzikagua."
         form:
           placeholder_regexp: "muonekano wa kawaida"
           link_placeholder: "https://example.com"
@@ -2909,9 +2908,17 @@ sw:
         new_template_form:
           submit: "Hifadhi"
           cancel: "Ghairi"
+          preview: "Kihakiki"
         quick_insert_fields:
           add_new_field: "ongeza"
           dropdown: "Shusha Chini"
+        validations_modal:
+          table_headers:
+            type: "Aina"
+            description: "Elezo"
+          validations:
+            required:
+              key: "muhimu"
       impersonate:
         title: "Iga Utambulisho"
         help: "Tumia kifaa hiki kuiga utambulisho wa mtumiaji ili uweze kutatua matatizo. Itabidi utoke ukishamaliza."

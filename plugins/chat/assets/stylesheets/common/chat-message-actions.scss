@@ -6,16 +6,12 @@
 .chat-message-actions {
   .chat-message-reaction {
     @include chat-reaction;
-
-    &:not(.show) {
-      display: none;
-    }
   }
 }
 
 .chat-message-actions-container {
   @include unselectable;
-  position: relative;
+  z-index: z("dropdown") - 1;
 }
 
 .chat-message-actions {
@@ -50,6 +46,10 @@
     padding: 0.5em 0;
     width: 2.5em;
     transition: background 0.2s, border-color 0.2s;
+
+    > * {
+      pointer-events: none;
+    }
 
     &:focus {
       .d-icon {

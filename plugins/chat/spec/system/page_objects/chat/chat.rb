@@ -19,7 +19,12 @@ module PageObjects
 
       def visit_channel(channel, mobile: false)
         visit(channel.url + (mobile ? "?mobile_view=1" : ""))
+        has_no_css?(".not-loaded-once")
         has_no_css?(".chat-skeleton")
+      end
+
+      def visit_thread(thread)
+        visit(thread.url)
       end
 
       def visit_channel_settings(channel)

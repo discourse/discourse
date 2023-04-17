@@ -3,6 +3,8 @@
 class UserAnonymizer
   attr_reader :user_history
 
+  EMAIL_SUFFIX = "@anonymized.invalid"
+
   # opts:
   #   anonymize_ip  - an optional new IP to update their logs with
   def initialize(user, actor = nil, opts = nil)
@@ -38,7 +40,7 @@ class UserAnonymizer
       end
 
       @user.save!
-      @user.primary_email.update_attribute(:email, "#{@user.username}@anonymized.invalid")
+      @user.primary_email.update_attribute(:email, "#{@user.username}#{EMAIL_SUFFIX}")
 
       options = @user.user_option
       options.mailing_list_mode = false

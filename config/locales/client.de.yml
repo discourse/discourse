@@ -157,6 +157,8 @@ de:
       removed_user: "Hat %{who} entfernt, %{when}"
       removed_group: "Hat %{who} entfernt, %{when}"
       autobumped: "Thema wurde automatisch nach oben geschoben, %{when}"
+      tags_changed: "Tags aktualisiert %{when}"
+      category_changed: "Kategorie aktualisiert %{when}"
       autoclosed:
         enabled: "Geschlossen, %{when}"
         disabled: "Geöffnet, %{when}"
@@ -187,12 +189,7 @@ de:
     software_update_prompt:
       message: "Wir haben ein Update dieser Website durchgeführt. <span>Bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
       dismiss: "Verwerfen"
-    bootstrap_mode_enabled:
-      one: "Damit du mit deiner Website einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert hat."
-      other: "Damit du mit deiner Website einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert haben."
-    bootstrap_mode_disabled: "Der Starthilfe-Modus wird in den nächsten 24 Stunden deaktiviert."
-    bootstrap_invite_button_title: "Einladungen versenden"
-    bootstrap_wizard_link_title: "Setup-Assistenten beenden"
+    bootstrap_mode: "Bootstrap-Modus"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil ein Theme/eine Komponente Fehler hat."
@@ -353,7 +350,7 @@ de:
       new_topic: "Neuer Entwurf für Thema"
       new_private_message: "Neuer Entwurf für persönliche Nachricht"
       abandon:
-        confirm: "Du hast einen Entwurf für dieses Thema in Arbeit. Was würdest du gerne damit machen?"
+        confirm: "Du hast bereits einen Entwurf in Arbeit. Was möchtest du gerne damit machen?"
         yes_value: "Verwerfen"
         no_value: "Bearbeitung fortsetzen"
     topic_count_categories:
@@ -526,26 +523,43 @@ de:
       scores:
         about: "Dieser Score wird basierend auf der Vertrauensstufe des Meldenden, der Richtigkeit der vorhergehenden Meldungen sowie der Priorität des gemeldeten Elements berechnet."
         score: "Score"
-        date: "Datum"
-        type: "Typ"
+        date: "Berichtsdatum"
+        type: "Grund"
         status: "Status"
-        submitted_by: "Abgesendet von"
+        submitted_by: "Gemeldet von"
         reviewed_by: "Überprüft von"
+        reviewed_timestamp: "Datum der Überprüfung"
       statuses:
         pending:
           title: "Ausstehend"
         approved:
           title: "Genehmigt"
+        approved_flag:
+          title: "Meldung genehmigt"
+        approved_user:
+          title: "Benutzer genehmigt"
+        approved_post:
+          title: "Beitrag genehmigt"
         rejected:
           title: "Abgelehnt"
+        rejected_flag:
+          title: "Meldung abgelehnt"
+        rejected_user:
+          title: "Benutzer abgelehnt"
+        rejected_post:
+          title: "Beitrag abgelehnt"
         ignored:
-          title: "Ignoriert"
+          title: "Meldung ignoriert"
         deleted:
-          title: "Gelöscht"
+          title: "Thema oder Beitrag gelöscht"
         reviewed:
-          title: "(alle überprüft)"
+          title: "Alle überprüft"
         all:
-          title: "(alles)"
+          title: "Alles"
+      context_question:
+        is_this_post: "Ist dieser Beitrag %{reviewable_human_score_types}?"
+        delimiter: "oder"
+        something_else_wrong: "Ist an diesem Beitrag etwas falsch?"
       types:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"
@@ -852,6 +866,7 @@ de:
         make_all_primary_description: "Mache diese Gruppe zur primären Gruppe für alle ausgewählten Benutzer"
         remove_all_primary: "Als primäre Gruppe entfernen"
         remove_all_primary_description: "Diese Gruppe als primäre Gruppe entfernen"
+        status: "Status"
         owner: "Eigentümer"
         primary: "Primär"
         forbidden: "Du hast nicht das Recht, die Mitglieder zu sehen."
@@ -1186,7 +1201,9 @@ de:
       home: "Standard-Startseite"
       staged: "Vorbereitet"
       staff_counters:
-        flags_given: "hilfreiche Meldungen"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> hilfreiche Flagge'
+          other: '<span class="%{className}">%{count}</span> hilfreiche Flaggen'
         flagged_posts: "gemeldete Beiträge"
         deleted_posts: "gelöschte Beiträge"
         suspensions: "Sperren"
@@ -2625,6 +2642,7 @@ de:
         bookmarks: "Du hast noch keine Themen mit einem Lesezeichen versehen."
         category: "Es gibt keine Themen in %{category}."
         top: "Es gibt keine angesagten Themen."
+        filter: "Es gibt keine Themen."
         educate:
           new: '<p>Hier werden deine neuen Themen angezeigt. Standardmäßig werden Themen als neu erachtet und mit einem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-Indikator dargestellt, wenn sie in den letzten 2 Tagen erstellt wurden. </p><p>Besuche deine <a href="%{userPrefsUrl}">Einstellungen</a>, um dies zu ändern.</p>'
           unread: "<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Standardmäßig werden Themen als ungelesen erachtet und mit einem Zähler für ungelesene Beiträge <span class=\"badge unread-posts badge-notification\">1</span> dargestellt, wenn du:</p><ul><li>das Thema erstellt hast;</li><li>auf das Thema geantwortet hast;</li><li>das Thema für mehr als 4 Minuten gelesen hast.</li></ul><p>Oder falls du das Thema über \U0001F514 ausdrücklich auf „Verfolgen“ oder „Beobachten“ eingestellt hast.</p><p>Besuche deine <a href=\"%{userPrefsUrl}\">Einstellungen</a>, um dies zu ändern.</p>"
@@ -2639,11 +2657,13 @@ de:
         tag: "Das waren alle Themen mit dem Schlagwort „%{tag}“."
         top: "Das waren alle angesagten Themen."
         bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
+        filter: "Es gibt keine weiteren Themen."
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
+      create_disabled_category: "Du darfst keine Themen in dieser Kategorie erstellen"
       create_long: "Ein neues Thema erstellen"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
@@ -3417,6 +3437,7 @@ de:
       default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
       parent: "Übergeordnete Kategorie"
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
+      auto_bump_cooldown_days: "Mindestanzahl an Tagen, bevor das gleiche Thema erneut angesprochen wird:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
       notifications:
         title: "Benachrichtigungsstufe für diese Kategorie ändern"
@@ -3600,6 +3621,10 @@ de:
     filters:
       with_topics: "%{filter}"
       with_category: "%{filter} in %{category}"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Aktuell"
         title_with_count:
@@ -4018,17 +4043,34 @@ de:
         custom:
           add: "Benutzerdefinierten Abschnitt hinzufügen"
           edit: "Benutzerdefinierten Abschnitt bearbeiten"
-          name: "Titel des Abschnitts"
           save: "Speichern"
           delete: "Löschen"
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
           public: "Mache diesen Bereich öffentlich und für alle sichtbar"
           links:
-            icon: "Symbol"
-            name: "Name"
-            value: "Link"
             add: "Einen weiteren Link hinzufügen"
             delete: "Link löschen"
+            icon:
+              label: "Symbol"
+              validation:
+                blank: "Das Symbol darf nicht leer sein"
+                maximum: "Symbol muss kürzer als %{count} Zeichen sein"
+            name:
+              label: "Name"
+              validation:
+                blank: "Der Name darf nicht leer sein"
+                maximum: "Der Name muss kürzer als %{count} Zeichen sein"
+            value:
+              label: "Link"
+              validation:
+                blank: "Link darf nicht leer sein"
+                maximum: "Der Link muss kürzer als %{count} Zeichen sein"
+                invalid: "Format ist ungültig"
+          title:
+            label: "Titel des Abschnitts"
+            validation:
+              blank: "Der Titel darf nicht leer sein"
+              maximum: "Titel muss kürzer als %{count} Zeichen sein"
         about:
           header_link_text: "Über uns"
         messages:
@@ -4089,6 +4131,7 @@ de:
               title: "Liste aller Benutzer"
             my_posts:
               content: "Meine Beiträge"
+              content_drafts: "Meine Entwürfe"
               title: "Meine aktuelle Themenaktivität"
               title_drafts: "Meine nicht geposteten Entwürfe"
               draft_count:
@@ -5058,6 +5101,7 @@ de:
             create_public_sidebar_section: "Öffentlichen Seitenleistenbereich erstellen"
             update_public_sidebar_section: "Öffentlichen Seitenleistenbereich aktualisieren"
             destroy_public_sidebar_section: "Öffentlichen Seitenleistenbereich zerstören"
+            reset_bounce_score: "Bounce-Score zurücksetzen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -5121,14 +5165,14 @@ de:
           silence: "Stummschalten"
           link: "Link"
         action_descriptions:
-          block: "Verhindert, dass Beiträge mit diesen Wörtern abgeschickt werden. Benutzer werden eine Fehlermeldung sehen, wenn sie ihren Beitrag abschicken."
-          censor: "Erlaube Beiträge mit diesen Wörtern, aber ersetze sie mit Zeichen, die die zensierten Wörter verstecken."
-          require_approval: "Beiträge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind."
-          flag: "Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können."
-          replace: "Wörter in Beiträgen durch andere Wörter ersetzen"
-          tag: "Themen basierend auf dem ersten Beitrag automatisch mit Schlagwort versehen"
-          silence: "Erste Beiträge von Benutzern, die diese Wörter enthalten, müssen vom Team genehmigt werden, bevor sie gesehen werden können, und der Benutzer wird automatisch stummgeschaltet."
-          link: "Wörter in Beiträgen durch Links ersetzen"
+          block: "Beim Versuch, einen Beitrag zu erstellen, der diese Wörter enthält, wird eine Fehlermeldung angezeigt werden."
+          censor: "Erlaube Beiträge, die diese Wörter enthalten, aber ersetze sie durch Zeichen, die die zensierten Wörter verbergen."
+          require_approval: "Erfordere die Genehmigung der Mitarbeiter/innen für Beiträge, die diese Wörter enthalten, bevor sie für andere sichtbar sind."
+          flag: "Erlaube Beiträge, die diese Wörter enthalten, kennzeichne sie jedoch als unangemessen für die Überprüfung durch Moderatoren."
+          replace: "Wörter in Beiträgen durch andere Wörter ersetzen."
+          tag: "Themen automatisch markieren, wenn der erste Beitrag ein bestimmtes Wort enthält."
+          silence: "Bringe neue Konten zum Schweigen, wenn ihr allererster Beitrag eines dieser Wörter enthält. Der Beitrag wird automatisch ausgeblendet, bis Mitarbeiter ihn freigeben."
+          link: "Wörter in Beiträgen durch Links ersetzen."
         form:
           label: "Hat Wort oder Wortgruppe"
           placeholder: "Wort oder Ausdruck eingeben (* ist ein Platzhalter)"
@@ -5159,6 +5203,7 @@ de:
         list_table:
           headings:
             name: "Name"
+            active_categories: "Aktive Kategorien"
             actions: "Aktionen"
           actions:
             view: "Vorlage ansehen"
@@ -5168,6 +5213,7 @@ de:
           close: "Beenden"
           edit: "Bearbeiten"
           delete: "Löschen"
+          toggle_preview: "Vorschau umschalten"
         new_template_form:
           submit: "Speichern"
           cancel: "Abbrechen"
@@ -5177,6 +5223,7 @@ de:
           template:
             label: "Vorlage"
             placeholder: "Erstelle hier eine YAML-Vorlage..."
+          preview: "Vorschau"
         delete_confirm: "Bist du sicher, dass du diese Vorlage löschen möchtest?"
         quick_insert_fields:
           add_new_field: "Hinzufügen"
@@ -5186,6 +5233,41 @@ de:
           dropdown: "Drop-down-Liste"
           upload: "Eine Datei hochladen"
           multiselect: "Mehrfachauswahl"
+        validations_modal:
+          button_title: "Validierungen"
+          modal_title: "Validierungsoptionen"
+          table_headers:
+            key: "Schlüssel"
+            type: "Art"
+            description: "Beschreibung"
+          validations:
+            required:
+              key: "erforderlich"
+              type: "boolean"
+              description: "Das Feld muss ausgefüllt werden, um das Formular abzuschicken."
+            minimum:
+              key: "Minimum"
+              type: "Ganzzahl"
+              description: "Legt in Textfeldern die Mindestanzahl der zulässigen Zeichen fest."
+            maximum:
+              key: "Maximum"
+              type: "Ganzzahl"
+              description: "Legt in Textfeldern die maximale Anzahl der zulässigen Zeichen fest. Legt in Dropdown-Listen mit Mehrfachauswahl die maximale Anzahl der Optionen fest, die ausgewählt werden können."
+            pattern:
+              key: "Muster"
+              type: "Regex-Zeichenfolge"
+              description: "In Textfeldern ein regulärer Ausdruck, der die zulässige Eingabe angibt."
+        preview_modal:
+          title: "Vorschau Vorlage"
+        field_placeholders:
+          validations: "Validierungen hier eingeben"
+          label: "Etikett hier eingeben"
+          placeholder: "Platzhalter hier eingeben"
+          none_label: "Wähle einen Artikel aus"
+          choices:
+            first: "Option 1"
+            second: "Option 2"
+            third: "Option 3"
         edit_category:
           toggle_freeform: "Formularvorlage deaktiviert"
           toggle_form_template: "Formularvorlage aktiviert"
@@ -5203,6 +5285,7 @@ de:
         not_found: "Entschuldige, dieser Benutzername ist im System nicht vorhanden."
         id_not_found: "Entschuldige, diese Benutzerkennung ist im System nicht vorhanden."
         active: "Aktiviert"
+        status: "Status"
         show_emails: "E-Mails anzeigen"
         hide_emails: "E-Mails ausblenden"
         nav:
@@ -5698,6 +5781,12 @@ de:
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
+        sample: |
+          <p>Füge den folgenden HTML-Code in deiner Website ein, um Themen in Discourse zu erstellen und diese daraus einzubetten. Ersetze <b>EMBED_URL</b> durch die kanonische URL der Seite, auf der du sie einbettest.</p>
+
+          <p>Wenn du den Stil anpassen möchtest, dann entferne das Kommentarzeichen und ersetze <b>CLASS_NAME</b> durch eine CSS-Klasse, die in <i>Embedded CSS</i> deines Designs definiert ist.</p>
+
+          <p>Ersetze <b>DISCOURSE_USERNAME</b> durch den Discourse-Benutzernamen des Autors, der das Thema erstellen soll. Discourse sucht den Benutzer automatisch anhand des <code>content</code> Attributes in den <code>&lt;meta&gt;</code> Tags, wenn das Attribut <code>name</code> den Wert <code>discourse-username</code> oder <code>author</code> hat. Der Parameter <code>discourseUserName</code> ist veraltet und wird in Discourse 3.2 entfernt.</p>
         title: "Einbettung"
         host: "Erlaubte Hosts"
         allowed_paths: "Pfad-Positivliste"

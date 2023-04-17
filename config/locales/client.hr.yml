@@ -212,13 +212,6 @@ hr:
     software_update_prompt:
       message: "Ažurirali smo ovu stranicu, <span>osvježite</span>ili ćete možda doživjeti neočekivano ponašanje."
       dismiss: "Skloni"
-    bootstrap_mode_enabled:
-      one: "Kako bi vam olakšali pokretanje novog foruma, nalazite se u bootstrap načinu rada. Svim novim korisnicima biti će dodijeljena razina povjerenja 1 i omogućeni dnevni e-mailovi sa sažecima. Bootstrap će se automatski isključiti čim se učlani minimalno %{count} korisnika."
-      few: "Kako bi vam olakšali pokretanje vašeg novog foruma, u bootstrap modu ste. Svim novim korisnicima biti će dodijeljena razina povjerenja 1 i omogućeni dnevni e-mailovi sa sažecima. Ovo će automatski biti isključeno kada se učlani minimalno %{count} korisnika."
-      other: "Kako bi vam olakšali pokretanje novog foruma, nalazite se u bootstrap načinu rada. Svim novim korisnicima biti će dodijeljena razina povjerenja 1 i omogućeni dnevni e-mailovi sa sažecima. Bootstrap će se automatski isključiti čim se učlani minimalno %{count} korisnika."
-    bootstrap_mode_disabled: "Bootstrap mod biti će isključen u sljedećih 24 sata."
-    bootstrap_invite_button_title: "Pošalji pozivnice"
-    bootstrap_wizard_link_title: "Završi postavljanje"
     themes:
       default_description: "Zadano"
       broken_theme_alert: "Vaša stranica možda neće raditi jer tema/komponenta ima pogreške."
@@ -380,7 +373,6 @@ hr:
       new_topic: "Nova skica teme"
       new_private_message: "Nova skica osobne poruke"
       abandon:
-        confirm: "Imate nacrt u tijeku za ovu temu. Što biste željeli učiniti s njom?"
         yes_value: "Odbaci"
         no_value: "Nastavi uređivati"
     topic_count_categories:
@@ -565,11 +557,9 @@ hr:
       scores:
         about: "Ocjena se računa na bazi razine povjerenja izvjestitelja, točnosti njihovih prethodnih zastavica i prioriteta stavke o kojoj se izvješćuje."
         score: "Ocjena"
-        date: "Datum"
-        type: "Tip"
+        type: "Razlog"
         status: "Statust"
-        submitted_by: "Podnio zahtjev"
-        reviewed_by: "Pregledao"
+        submitted_by: "Prijavio"
       statuses:
         pending:
           title: "Na čekanju"
@@ -577,14 +567,12 @@ hr:
           title: "Odobrio"
         rejected:
           title: "Odbio"
-        ignored:
-          title: "Ignorirao"
-        deleted:
-          title: "Izbrisao"
         reviewed:
-          title: "(svi pregledani)"
+          title: "Svi pregledani"
         all:
-          title: "(sve)"
+          title: "Sve"
+      context_question:
+        delimiter: "ili"
       types:
         reviewable_flagged_post:
           title: "Post označen zastavicom"
@@ -899,6 +887,7 @@ hr:
         make_all_primary_description: "Učinite primarnom grupom za sve odabrane korisnike"
         remove_all_primary: "Ukloni kao primarnu"
         remove_all_primary_description: "Ukloni ovu grupu kao primarnu"
+        status: "Statust"
         owner: "Vlasnik"
         primary: "Primarna"
         forbidden: "Nemate dozvolu vidjeti članove."
@@ -1231,7 +1220,6 @@ hr:
       home: "Zadana početna stranica"
       staged: "Priređen"
       staff_counters:
-        flags_given: "pomočne oznake"
         flagged_posts: "označene objave"
         deleted_posts: "obrisane objave"
         suspensions: "suspenzije"
@@ -3751,6 +3739,10 @@ hr:
     filters:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Zadnje"
         title_with_count:
@@ -4189,9 +4181,12 @@ hr:
           save: "Spremi"
           delete: "Pobriši"
           links:
-            icon: "Ikona"
-            name: "Ime"
-            value: "Veza"
+            icon:
+              label: "Ikona"
+            name:
+              label: "Naziv"
+            value:
+              label: "Veza"
         about:
           header_link_text: "O nama"
         messages:
@@ -5253,14 +5248,8 @@ hr:
           silence: "Utišaj"
           link: "Veza"
         action_descriptions:
-          block: "Spriječite objave koje sadrže ove riječi. Autor objave dobiti će poruku o grešci kada pokuša poslati objavu."
-          censor: "Dopustite postove koji sadrže ove riječi, ali ih zamijenite znakovima koji skrivaju cenzurirane riječi."
-          require_approval: "Objave koje sadrže ove riječi zahtijevat će odobrenje osoblja prije nego što budu vidljive."
-          flag: "Dopustite postove koji sadrže ove riječi, ali ih označite kao neprikladne kako bi ih moderatori mogli pregledati."
-          replace: "Zamijenite riječi u objavama drugim riječima"
-          tag: "Automatski označi teme na temelju prvog posta"
-          silence: "Prve objave korisnika koje sadrže ove riječi zahtijevat će odobrenje osoblja prije nego što budu vidljive i korisnik će biti automatski ušutkan."
-          link: "Zamijenite riječi u objavama vezama"
+          replace: "Zamijenite riječi u objavama drugim riječima."
+          link: "Zamijenite riječi u objavama vezama."
         form:
           label: "Ima riječ ili frazu"
           placeholder: "Unesite riječ ili izraz (* je zamjenski znak)"
@@ -5296,9 +5285,22 @@ hr:
         new_template_form:
           submit: "Spremi"
           cancel: "Odustani"
+          preview: "Pregled"
         quick_insert_fields:
           add_new_field: "Dodaj"
           dropdown: "Padajući izbornik"
+        validations_modal:
+          table_headers:
+            key: "Ključ"
+            type: "Tip"
+            description: "Opis"
+          validations:
+            required:
+              key: "potrebno"
+            minimum:
+              key: "minimum"
+            maximum:
+              key: "maksimum"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavljate kao određeni korisnički račun za potrebe ispravljanja grešaka. Morat će te se odjaviti kad završite."
@@ -5311,6 +5313,7 @@ hr:
         not_found: "Žao nam je, taj korisnik ne postoji."
         id_not_found: "Žao nam je, taj korisnički ID ne postoji."
         active: "Aktivirano"
+        status: "Statust"
         show_emails: "Pokaži emailove"
         hide_emails: "Sakrij e-poštu"
         nav:

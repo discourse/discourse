@@ -28,6 +28,10 @@ RSpec.describe SiteSettings::Validations do
       expect { SiteSetting.default_categories_tracking = "#{category.id}" }.to raise_error(
         Discourse::InvalidParameters,
       )
+
+      expect { SiteSetting.default_categories_normal = "#{category.id}" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
     end
   end
 

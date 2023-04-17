@@ -1,6 +1,9 @@
 import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
 
 export default class SectionLink extends Component {
+  @service currentUser;
+
   willDestroy() {
     if (this.args.willDestroy) {
       this.args.willDestroy();
@@ -24,15 +27,17 @@ export default class SectionLink extends Component {
   get classNames() {
     let classNames = ["sidebar-section-link", "sidebar-row"];
 
-    if (this.args.linkName) {
-      classNames.push(`sidebar-section-link-${this.args.linkName}`);
-    }
-
     if (this.args.class) {
       classNames.push(this.args.class);
     }
 
     return classNames.join(" ");
+  }
+
+  get target() {
+    return this.currentUser?.user_option?.external_links_in_new_tab
+      ? "_blank"
+      : "_self";
   }
 
   get models() {

@@ -153,6 +153,7 @@ module Helpers
     global_setting :relative_url_root, f
     old_root = ActionController::Base.config.relative_url_root
     ActionController::Base.config.relative_url_root = f
+    Rails.application.routes.stubs(:relative_url_root).returns(f)
 
     before_next_spec { ActionController::Base.config.relative_url_root = old_root }
   end
@@ -191,5 +192,14 @@ module Helpers
     ActiveSupport::Notifications.subscribed(callback, "sql.active_record") { yield }
 
     queries
+  end
+
+  def stub_ip_lookup(stub_addr, ips)
+    Addrinfo
+      .stubs(:getaddrinfo)
+      .with { |addr, _| addr == stub_addr }
+      .returns(
+        ips.map { |ip| Addrinfo.new([IPAddr.new(ip).ipv6? ? "AF_INET6" : "AF_INET", 80, nil, ip]) },
+      )
   end
 end

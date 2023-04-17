@@ -184,12 +184,6 @@ it:
     software_update_prompt:
       message: "Abbiamo aggiornato il sito, <span>si prega di aggiornare</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
-    bootstrap_mode_enabled:
-      one: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di attendibilità 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utente si sarà unito."
-      other: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di attendibilità 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utenti si saranno uniti."
-    bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
-    bootstrap_invite_button_title: "Manda Inviti"
-    bootstrap_wizard_link_title: "Completa la configurazione guidata"
     themes:
       default_description: "Predefinito"
       broken_theme_alert: "Il sito potrebbe non funzionare a causa di errori in un tema / componente."
@@ -348,7 +342,6 @@ it:
       new_topic: "Nuovo argomento in bozza"
       new_private_message: "Nuovo messaggio personale in bozza"
       abandon:
-        confirm: "Hai una bozza in corso per questo argomento. Cosa vorresti fare?"
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
     topic_count_categories:
@@ -521,11 +514,9 @@ it:
       scores:
         about: "Questo punteggio è calcolato sulla base del Livello di attendibilità dell'autore della segnalazione, dell'accuratezza delle precedenti segnalazioni e della priorità dell'elemento segnalato."
         score: "Punteggio"
-        date: "Data"
-        type: "Tipo"
+        type: "Motivo"
         status: "Stato"
-        submitted_by: "Inviato da"
-        reviewed_by: "Rivisto da"
+        submitted_by: "Segnalato da"
       statuses:
         pending:
           title: "In attesa"
@@ -533,14 +524,12 @@ it:
           title: "Approvato"
         rejected:
           title: "Rifiutato"
-        ignored:
-          title: "Ignorato"
-        deleted:
-          title: "Eliminato"
         reviewed:
-          title: "(tutti i revisionati)"
+          title: "Tutti i revisionati"
         all:
-          title: "(tutto)"
+          title: "Tutti"
+      context_question:
+        delimiter: "o"
       types:
         reviewable_flagged_post:
           title: "Messaggio segnalato"
@@ -847,6 +836,7 @@ it:
         make_all_primary_description: "Rendi questo il gruppo principale per tutti gli utenti selezionati"
         remove_all_primary: "Rimuovi dai primari"
         remove_all_primary_description: "Rimuovi questo gruppo dai primari"
+        status: "Stato"
         owner: "Proprietario"
         primary: "Primario"
         forbidden: "Non puoi visualizzare i membri."
@@ -1174,7 +1164,6 @@ it:
       home: "Home Page Predefinita"
       staged: "Temporaneo"
       staff_counters:
-        flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
         deleted_posts: "messaggi cancellati"
         suspensions: "sospensioni"
@@ -3563,6 +3552,10 @@ it:
     filters:
       with_topics: "%{filter} argomenti"
       with_category: "%{filter} %{category} argomenti"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Recenti"
         title_with_count:
@@ -3980,9 +3973,12 @@ it:
           save: "Salva"
           delete: "Elimina"
           links:
-            icon: "Icona"
-            name: "Nome"
-            value: "Link"
+            icon:
+              label: "Icona"
+            name:
+              label: "Nome"
+            value:
+              label: "Link"
         about:
           header_link_text: "Informazioni"
         messages:
@@ -5038,14 +5034,8 @@ it:
           silence: "Silenzia"
           link: "Link"
         action_descriptions:
-          block: "Impedisci che i messaggi contenenti queste parole siano pubblicati. L'utente visualizzerà un messaggio di errore quando cercherà di pubblicare il messaggio."
-          censor: "Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate."
-          require_approval: "I messaggi contenenti queste parole richiederanno l'approvazione dello staff prima di poter essere visualizzati."
-          flag: "Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle."
-          replace: "Sostituisci le parole nei messaggi con altre parole"
-          tag: "Etichetta automaticamente gli argomenti in base al primo messaggio"
-          silence: "I primi post degli utenti che contengono queste parole richiederanno l'approvazione dello staff prima di essere visibili, e l'utente verrà automaticamente silenziato."
-          link: "Nei messaggi sostituisce le parole con link"
+          replace: "Sostituisci le parole nei messaggi con altre parole."
+          link: "Nei messaggi sostituisce le parole con link."
         form:
           label: "Ha una parola o frase"
           placeholder: "Inserisci parola o frase (* è un carattere jolly)"
@@ -5081,9 +5071,22 @@ it:
         new_template_form:
           submit: "Salva"
           cancel: "Annulla"
+          preview: "Anteprima"
         quick_insert_fields:
           add_new_field: "Aggiungi"
           dropdown: "A discesa"
+        validations_modal:
+          table_headers:
+            key: "Chiave"
+            type: "Tipo"
+            description: "Descrizione"
+          validations:
+            required:
+              key: "obbligatorio"
+            minimum:
+              key: "minimo"
+            maximum:
+              key: "massimo"
       impersonate:
         title: "Impersona utente"
         help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai disconnetterti."
@@ -5096,6 +5099,7 @@ it:
         not_found: "Spiacenti, questo nome utente non esiste nel sistema."
         id_not_found: "Spiacenti, nel nostro sistema non esiste questo id utente."
         active: "Attivati"
+        status: "Stato"
         show_emails: "Mostra email"
         hide_emails: "Nascondi email"
         nav:

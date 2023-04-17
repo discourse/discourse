@@ -52,6 +52,11 @@ sv:
   remove_posts_deleted_by_author: "Borttaget av författaren"
   redirect_warning: "Vi kunde inte verifiera att länken som du valt faktiskt har lagts upp i forumet. Välj länken nedan om du vill fortsätta ändå."
   on_another_topic: "I ett annat ämne"
+  topic_category_changed: "Från %{from} till %{to}"
+  topic_tag_changed:
+    added_and_removed: "Lade till %{added} och tog bort %{removed}"
+    added: "Lade till %{added}"
+    removed: "Tog bort %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "Nr %{post_number}"
     topic_page_title_post_number_by_user: "Nr %{post_number} av %{username}"
@@ -238,6 +243,7 @@ sv:
     user_exists: "Det finns ingen anledning att bjuda in <b>%{email}</b>, de har redan ett konto!"
     invite_exists: "Du har redan bjudit in <b>%{email}</b>."
     invalid_email: "%{email} är inte en giltig e-postadress."
+    generic_error_response: "Det uppstod ett problem med din förfrågan."
     rate_limit:
       one: "Du har redan skickat %{count} inbjudan den senaste dagen, vänta %{time_left} innan du försöker igen."
       other: "Du har redan skickat %{count} inbjudningar den senaste dagen, vänta %{time_left} innan du försöker igen."
@@ -648,6 +654,7 @@ sv:
       disallowed_tags_generic: "Detta ämne har otillåtna taggar."
       slug_contains_non_ascii_chars: "innehåller icke-ascii tecken"
       is_already_in_use: "används redan"
+      move_topic_to_category_disallowed: "Du kan inte flytta detta ämne till en kategori där du inte har behörighet att skapa nya ämnen."
     cannot_delete:
       uncategorized: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som inte har en kategori; den kan inte raderas."
       has_subcategories: "Du kan inte ta bort den här kategorin eftersom den har underkategorier."
@@ -1111,7 +1118,7 @@ sv:
       title: "DAA/MAA"
       xaxis: "Dag"
       yaxis: "DAA/MAA"
-      description: "Antal medlemmar som loggade in den senaste dagen dividerat med antalet medlemmar som loggade in den senaste månaden - returnerar ett procenttal som indikerar forumets 'dragningskraft'. Sikta på > 30 %."
+      description: "Antal medlemmar som loggade in den senaste dagen dividerat med antalet medlemmar som loggade in den senaste månaden - returnerar ett procenttal som indikerar forumets 'dragningskraft'. Sikta på > 20 %."
     daily_engaged_users:
       title: "Dagligen engagerade användare"
       xaxis: "Dag"
@@ -1391,6 +1398,7 @@ sv:
     out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
+    v3_analytics_deprecated: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
   site_settings:
     allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
     disabled: "inaktiverade"
@@ -1479,7 +1487,7 @@ sv:
     manifest_icon: "Bild som används som logotyp/startbild på Android. Storleken ändras automatiskt till 512 × 512. Om detta lämnas tomt används large_icon."
     manifest_screenshots: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
     favicon: "En favoritikon för din webbplats, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>http://en.wikipedia.org/wiki/Favicon</a>. För att fungera korrekt över en CDN måste det vara en png. Storleken ändras automatiskt till 32 x 32. Om detta lämnas tomt används large_icon."
-    apple_touch_icon: "Ikon som används för Apples pekskärmsenheter. Storleken ändras automatiskt till 180 x 180. Om detta lämnas tomt används large_icon."
+    apple_touch_icon: "Ikon som används för Apple-pekskärmsenheter. En transparent bakgrund rekommenderas inte. Storleken ändras automatiskt till 180 x 180. Om detta lämnas tomt används large_icon."
     opengraph_image: "Standard Open Graph bild, används när sidan inte har någon annan lämplig bild. Om detta lämnas tomt används large_icon."
     twitter_summary_large_image: "Twitter-kortets 'summary large image' (bör vara minst 280 i bredd och minst 150 i höjd, kan inte vara .svg). Om den lämnas tom skapas istället vanlig metadata för kort med hjälp av opengraph_image, så länge den inte också är en .svg"
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specificeras här måste ha en SPF-, DKIM- och reverse PTR-post korrekt inställd för att e-post ska levereras."
@@ -1615,7 +1623,7 @@ sv:
     enable_discourse_connect: "Aktivera inloggning via DiscourseConnect (tidigare 'Discourse SSO') (VARNING: ANVÄNDARES E-POSTADRESSER *MÅSTE* VALIDERAS AV DEN EXTERNA WEBBPLATSEN!)"
     verbose_discourse_connect_logging: "Logga detaljerad DiscourseConnect-relaterad diagnostik i <a href='%{base_path}/logs' target='_blank'>/loggar</a>"
     enable_discourse_connect_provider: "Implementera leverantörsprotokoll för DiscourseConnect (tidigare 'Discourse SSO') vid slutpunkten /session/sso_provider, kräver att discourse_connect_provider_secrets är inställd"
-    discourse_connect_url: "URL till DiscourseConnect-slutpunkt (måste innehålla http:// eller https://)"
+    discourse_connect_url: "DiscourseConnect-slutpunktens URL (måste innehålla http:// eller https:// och får inte innehålla ett avslutande snedstreck)."
     discourse_connect_secret: "Hemlig sträng som används för att kryptografiskt autentisera DiscourseConnect-information, se till att den är 10 tecken eller längre"
     discourse_connect_provider_secrets: "En lista med domänhemliga par som använder DiscourseConnect. Se till att DiscourseConnect-hemligheten är 10 tecken eller längre. Jokertecknet * kan användas för att matcha valfri domän eller bara en del av den (t.ex. * .exempel.com)."
     discourse_connect_overrides_bio: "Åsidosätter användarbiografi i användarprofilen och hindrar användare från att ändra den"
@@ -1733,7 +1741,7 @@ sv:
     composer_media_optimization_image_bytes_optimization_threshold: "Minsta bildfilstorlek för att utlösa optimering på klientsidan"
     composer_media_optimization_image_resize_dimensions_threshold: "Minsta bildbredd för att utlösa storleksändring på klientsidan"
     composer_media_optimization_image_resize_width_target: "Bilder med större bredd än `composer_media_optimization_image_dimensions_resize_threshold` kommer att ändras till denna bredd. Måste vara >= än `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "JPEG-kodningskvalitet som används i omkodningsprocessen."
+    composer_media_optimization_image_encode_quality: "JPG-kodningskvalitet som används i omkodningsprocessen."
     min_ratio_to_crop: "Förhållandet används för att beskära höga bilder. Ange resultatet av bredd/höjd."
     simultaneous_uploads: "Maximalt antal filer som kan dras och släppas in i redigeraren"
     default_invitee_trust_level: "Förvald förtroendenivå (0-4) för inbjudna användare."
@@ -2112,6 +2120,7 @@ sv:
     suppress_overlapping_tags_in_list: "Om taggen matchar orden i ämnets titel exakt visas inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
     force_lowercase_tags: "Tvinga alla nya taggar att vara helt i små bokstäver."
+    create_post_for_category_and_tag_changes: "Skapa ett litet åtgärdsinlägg när ett ämnes kategori eller taggar ändras"
     company_name: "Företagsnamn"
     governing_law: "Gällande lag"
     city_for_disputes: "Domstol vid tvist"
@@ -2147,6 +2156,8 @@ sv:
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
     enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn för den gamla navigeringsmenyn."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
+    experimental_new_new_view_groups: "EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken \"Allt\" i sidofältet länkar till den."
+    enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2181,7 +2192,6 @@ sv:
       staged_users_disabled: "Du måste först aktivera \"arrangerade användare\" innan du aktiverar denna inställning."
       reply_by_email_disabled: "Du måste först aktivera 'svara med e-post' innan du aktiverar denna inställning."
       discourse_connect_url_is_empty: "Du måste ange en 'discourse connect url' innan du aktiverar denna inställning."
-      discourse_connect_invite_only: "Du kan inte aktivera DiscourseConnect och bara bjuda in samtidigt."
       enable_local_logins_disabled: "Du måste först 'aktivera lokala inloggningar' innan du aktiverar denna inställning."
       min_username_length_exists: "Du kan inte ställa in kortast tillåtna längd på användarnamn till att vara längre än det kortaste användarnamnet (%{username})."
       min_username_length_range: "Du kan inte ställa in minimum till att vara högre än maximum"
@@ -2203,7 +2213,7 @@ sv:
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
-      invalid_uncategorized_category_setting: "Kategorin \"Okategoriserade\" kan inte väljas om inte \"tillåt okategoriserade ämnen\" har aktiverats."
+      invalid_uncategorized_category_setting: 'Kategorin "Okategoriserade" kan inte väljas om inte "tillåt okategoriserade ämnen" har aktiverats.'
       enable_new_notifications_menu_not_legacy_navigation_menu: "Du måste ställa in `navigation_menu` till `legacy` innan du aktiverar den här inställningen."
       invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
     placeholder:
@@ -3530,12 +3540,7 @@ sv:
     title: "Det går inte att ladda appen"
     offline_page_message: "Det ser ut som om du är offline! Kontrollera din nätverksanslutning och försök igen."
   login_required:
-    welcome_message: |
-      ##[Välkommen till %{title}](#welcome)
-      Ett konto krävs för att logga in. Skapa ett konto eller logga in för att fortsätta.
-    welcome_message_invite_only: |
-      ##[Välkommen till %{title}](#welcome)
-      Det krävs ett konto för att logga in. Be en befintlig användare om en inbjudan eller logga in för att fortsätta.
+    welcome_message: "# [Välkommen till %{title}](#välkommen)"
   upload:
     edit_reason: "hämtade lokala kopior av bilder"
     unauthorized: "Tyvärr är filen som du försöker ladda upp inte tillåten (tillåtna filtyper: %{authorized_extensions})."
@@ -4301,10 +4306,10 @@ sv:
       message: "<p>Vi har sänt om aktiveringsbrevet till <b>%{email}</b>"
   safe_mode:
     title: "Gå över i felsäkert läge"
-    description: "I felsäkert läge kan du testa din webbplats utan att ladda några tillägg eller teman."
+    description: "I Säkert läge kan du testa din webbplats utan att ladda teman eller anpassningar av plugin-program på klientsidan. Anpassningar av plugin-program på serversidan förblir aktiverade."
     no_themes: "Inaktivera teman och temakomponenter"
-    no_unofficial_plugins: "Inaktivera alla inofficiella plugins"
-    no_plugins: "Inaktivera alla plugins"
+    no_unofficial_plugins: "Inaktivera inofficiella anpassningar av plugin-program på klientsidan"
+    no_plugins: "Inaktivera alla anpassningar av plugin-program på klientsidan"
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
   wizard:
@@ -4484,50 +4489,53 @@ sv:
         category: kategori inställningar
     actions:
       agree:
-        title: "Godkänn..."
+        title: "Ja"
       agree_and_keep:
         title: "Behåll inlägg"
-        description: "Godkänn flaggning men lämna inlägget oförändrat."
+        description: "Godkänn flaggning men lämna det här inlägget oförändrat."
       agree_and_keep_hidden:
         title: "Fortsätt dölja inlägg"
-        description: "Godkänn flaggning och lämna inlägget som dolt."
+        description: "Godkänn flaggning och fortsätt dölja inlägget."
       agree_and_suspend:
         title: "Stäng av användare"
         description: "Godkänn flaggning och stäng av användaren."
       agree_and_silence:
-        title: "Tysta användaren"
+        title: "Tysta användare"
         description: "Godkänn flaggning och tysta användaren."
       agree_and_restore:
         title: "Återställ inlägg"
         description: "Återställ inlägget så att alla användare kan se det."
       agree_and_hide:
         title: "Dölj inlägg"
-        description: "Dölj detta inlägg och sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
+        description: "Godkänn flaggning och dölj detta inlägg + sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
       delete_single:
         title: "Radera"
       delete:
         title: "Radera..."
       delete_and_ignore:
-        title: "Radera inlägg, samt ignorera"
-        description: "Radera inlägg; om det är det första inlägget, radera även ämnet"
+        title: "Ignorera flaggning och radera inlägget"
+        description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
       delete_and_ignore_replies:
-        title: "Radera inlägg + svar, samt ignorera"
-        description: "Radera inlägg och alla dess svar; om det är det första inlägget, radera även ämnet"
+        title: "Ignorera flaggning, radera inlägg och svar"
+        description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget och alla dess svar. Om det är det första inlägget, radera ämnet också"
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       delete_and_agree:
-        title: "Radera inlägg, samt samtyck"
-        description: "Radera inlägg; om det är det första inlägget, radera även ämnet"
+        title: "Radera inlägg"
+        description: "Godkänn flaggning och radera detta inlägg. Om det är det första inlägget, radera ämnet också."
       delete_and_agree_replies:
-        title: "Radera inlägg + svar, samt samtyck"
-        description: "Radera inlägg och alla dess svar; om det är det första inlägget, radera även ämnet"
+        title: "Radera inlägg och svar"
+        description: "Godkänn flaggning och radera detta inlägg och alla dess svar. Om det är det första inlägget, radera ämnet också."
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       disagree_and_restore:
-        title: "Håll inte med och återställ inlägg"
+        title: "Nej, återställ inlägget"
         description: "Återställ inlägget så att alla användare kan se det."
       disagree:
-        title: "Håll inte med"
+        title: "Nej"
       ignore:
         title: "Ignorera"
+      ignore_and_do_nothing:
+        title: "Gör ingenting"
+        description: "Ignorera flaggningen genom att ta bort den från kön utan att vidta några åtgärder. Dolda inlägg kommer att förbli dolda och hanteras av de automatiska verktygen."
       approve:
         title: "Godkänn"
       approve_post:
@@ -4589,6 +4597,8 @@ sv:
   form_templates:
     errors:
       invalid_yaml: "är inte en giltig YAML-sträng"
+      invalid_type: "innehåller en ogiltig malltyp: %{type} (giltiga typer är: %{valid_types})"
+      missing_type: "saknar en fälttyp"
   activemodel:
     errors:
       <<: *errors

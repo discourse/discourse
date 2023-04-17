@@ -105,13 +105,9 @@
     </div>
 
     <div class="timeline-date-wrapper">
-      <a
-        class="now-date"
-        onClick={{this.updatePercentage}}
-        title={{this.nowDate}}
-      >
+      <a class="now-date" onClick={{this.updatePercentage}}>
         <span>
-          {{this.nowDate}}
+          {{age-with-tooltip this.nowDate this.nowDateOptions}}
         </span>
       </a>
     </div>
@@ -121,12 +117,12 @@
     {{#if this.displaySummary}}
       <button
         type="button"
-        class="show-summary btn-small"
-        label={{i18n "summary.short_label"}}
+        class="show-summary btn btn-small"
         title={{i18n "summary.short_title"}}
         {{on "click" @showSummary}}
       >
         {{d-icon "layer-group"}}
+        {{i18n "summary.short_label"}}
       </button>
     {{/if}}
 

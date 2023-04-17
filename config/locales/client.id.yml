@@ -154,9 +154,6 @@ id:
     software_update_prompt:
       message: "Kami telah memperbarui situs ini, <span>silakan refresh</span>, atau Anda mungkin mengalami perilaku yang tidak terduga."
       dismiss: "Bubar"
-    bootstrap_mode_enabled:
-      other: "Untuk lebih memudahkan peluncuran situs baru Anda, Anda berada di mode bootstrap. Semua pengguna baru akan mendapat level 1 dan mendapat ringkasan email harian diaktifkan. Hal ini akan otomatis dimatikan ketika pengguna %{count} sudah ikut."
-    bootstrap_mode_disabled: "Mode bootstrap akan dinonaktifkan dalam 24 jam."
     themes:
       default_description: "Asal"
       broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena suatu tema/komponen memiliki masalah."
@@ -310,7 +307,6 @@ id:
       new_topic: "Konsep topik baru"
       new_private_message: "Rancangan pesan pribadi baru"
       abandon:
-        confirm: "Anda memiliki rancangan yang sedang diproses untuk topik ini. Apa yang ingin Anda lakukan dengannya?"
         yes_value: "Batalkan"
         no_value: "Lanjut menyunting"
     topic_count_categories:
@@ -471,11 +467,9 @@ id:
       scores:
         about: "Skor ini dihitung berdasarkan tingkat kepercayaan pelapor, keakuratan bendera mereka sebelumnya, dan tingkat prioritas butir yang dilaporkan."
         score: "Skor"
-        date: "Tanggal"
-        type: "Tipe"
+        type: "Alasan"
         status: "Status"
-        submitted_by: "Dikirim Oleh"
-        reviewed_by: "Diperiksa Oleh"
+        submitted_by: "Dilaporkan oleh"
       statuses:
         pending:
           title: "Tertunda"
@@ -483,14 +477,12 @@ id:
           title: "Disetujui"
         rejected:
           title: "Ditolak"
-        ignored:
-          title: "Diabaikan"
-        deleted:
-          title: "Dihapus"
         reviewed:
-          title: "(semua ditinjau)"
+          title: "Semua ditinjau"
         all:
-          title: "(semuanya)"
+          title: "Semuanya"
+      context_question:
+        delimiter: "atau"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
@@ -728,6 +720,7 @@ id:
         make_all_primary: "Jadikan Semua Utama"
         remove_all_primary: "Hapus sebagai Utama"
         remove_all_primary_description: "Hapus grup ini sebagai utama"
+        status: "Status"
         owner: "Pemilik"
         primary: "Utama"
         forbidden: "Anda tidak diizinkan melihat anggota."
@@ -1719,6 +1712,10 @@ id:
     filters:
       with_topics: "%{filter} topik"
       with_category: "%{filter} %{category} topik"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Terbaru"
       read:
@@ -1816,7 +1813,8 @@ id:
           save: "Simpan"
           delete: "Hapus"
           links:
-            name: "Nama"
+            name:
+              label: "Name"
         about:
           header_link_text: "Tentang"
         messages:
@@ -2054,10 +2052,14 @@ id:
           cancel: "Batal"
         quick_insert_fields:
           add_new_field: "Menambahkan"
+        validations_modal:
+          table_headers:
+            type: "Tipe"
       users:
         title: "Pengguna"
         last_emailed: "Terakhir Surel Dikirimkan"
         not_found: "Maaf, username tersebut tidak ada ditemukan."
+        status: "Status"
         nav:
           new: "Baru"
           active: "Aktif"

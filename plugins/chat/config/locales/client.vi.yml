@@ -21,8 +21,11 @@ vi:
       joined: "đã tham gia"
       email_frequency:
         never: "Không bao giờ"
+      header_indicator_preference:
+        never: "Không bao giờ"
       flag: "Gắn cờ"
       join: "Tham gia"
+      last_visit: "lần thăm cuối"
       mention_warning:
         dismiss: "bỏ qua"
         groups:
@@ -118,7 +121,3 @@ vi:
           fields:
             message:
               label: Tin nhắn
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Gắn cờ bởi"

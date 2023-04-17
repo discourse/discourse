@@ -16,6 +16,11 @@
   {{/if}}
 </div>
 
-<div class={{if this.collapsed "hidden" ""}}>
-  {{yield}}
+<div
+  class={{concat-class
+    "chat-message-collapser-body"
+    (if this.collapsed "hidden")
+  }}
+>
+  {{yield this.collapsed}}
 </div>

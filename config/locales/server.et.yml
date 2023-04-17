@@ -1007,8 +1007,6 @@ et:
       title: "Saada aktiveerimismeil uuesti"
   safe_mode:
     title: "Sisene turvalisse režiimi"
-    no_unofficial_plugins: "Keela kõik mitteametlikud pluginad"
-    no_plugins: "Keela kõik pluginad"
     enter: "Sisene turvalisse režiimi"
   wizard:
     title: "Discourse sätted"
@@ -1065,18 +1063,16 @@ et:
       medium: "Keskmine"
       high: "Kõrge"
     actions:
-      agree_and_suspend:
-        title: "Peata kasutaja"
-      agree_and_silence:
-        title: "Vaigista kasutaja"
-      agree_and_hide:
-        title: "Peida postitus"
+      agree:
+        title: "Jah"
       delete_single:
         title: "Kustuta"
       disagree:
-        title: "Ei nõustu"
+        title: "Ei"
       ignore:
         title: "Ignoreeri"
+      ignore_and_do_nothing:
+        title: "Ära tee midagi"
       approve:
         title: "Kinnita"
       approve_user:

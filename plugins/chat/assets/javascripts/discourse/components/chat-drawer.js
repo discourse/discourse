@@ -22,6 +22,7 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
+
     if (!this.chat.userCanChat) {
       return;
     }
@@ -46,6 +47,7 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
+
     if (!this.chat.userCanChat) {
       return;
     }

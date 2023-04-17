@@ -697,7 +697,7 @@ acceptance(
     });
 
     test("navigating between user messages route with dropdown", async function (assert) {
-      await visit("/u/charlie/messages");
+      await visit("/u/Charlie/messages");
 
       const messagesDropdown = selectKit(".user-nav-messages-dropdown");
 
@@ -954,12 +954,28 @@ acceptance(
 acceptance(
   "User Private Messages - user with uppercase username",
   function (needs) {
-    needs.user();
+    needs.user({
+      groups: [{ id: 14, name: "awesome_group", has_messages: true }],
+    });
 
     needs.pretender((server, helper) => {
       const response = cloneJSON(userFixtures["/u/charlie.json"]);
       response.user.username = "chArLIe";
       server.get("/u/charlie.json", () => helper.response(response));
+
+      server.get(
+        "/topics/private-messages-group/:username/:group_name.json",
+        () => {
+          return helper.response({
+            topic_list: {
+              topics: [
+                { id: 1, posters: [] },
+                { id: 2, posters: [] },
+              ],
+            },
+          });
+        }
+      );
     });
 
     test("viewing inbox", async function (assert) {
@@ -969,6 +985,16 @@ acceptance(
         query(".user-nav-messages-dropdown .selected-name").textContent.trim(),
         "Inbox",
         "menu defaults to Inbox"
+      );
+    });
+
+    test("viewing group inbox", async function (assert) {
+      await visit("/u/charlie/messages/group/awesome_group");
+
+      assert.strictEqual(
+        query(".user-nav-messages-dropdown .selected-name").textContent.trim(),
+        "awesome_group",
+        "dropdown menu displays the right group name"
       );
     });
   }

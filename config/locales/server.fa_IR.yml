@@ -51,6 +51,7 @@ fa_IR:
   remove_posts_deleted_by_author: "پاک شده توسط نویسنده"
   redirect_warning: "ما قادر به تایید این پیوند نمی‌باشیم. پیوند انتخابی شما قبلا به انجمن پست شده است. اگر در هر‌صورت مایل به انجام این کار هستید بر روی پیوند زیر کلیک کنید."
   on_another_topic: "در یک مبحث دیگر"
+  topic_category_changed: "از %{from} به %{to}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} توسط %{username}"
@@ -146,6 +147,7 @@ fa_IR:
     existing_user_already_redemeed: "شما قبلا این پیوند دعوتنامه را استفاده‌ کرده‌اید."
     invite_exists: "شما قبلا <b>%{email}</b> را دعوت کرده‌اید."
     invalid_email: "آدرس ایمیل %{email} معتبر نیست."
+    generic_error_response: "مشکلی در درخواست شما وجود داشت."
     disabled_errors:
       invalid_access: "شما اجازه مشاهده منبع درخواست شده را ندارید."
     max_redemptions_allowed_one: "برای دعوت‌نامه‌های ایمیل باید 1 باشد."
@@ -1995,10 +1997,6 @@ fa_IR:
     see_more: "بیشتر"
     search_title: "جستجو در سایت"
     search_button: "جستجو"
-  login_required:
-    welcome_message: |
-      ## [خوش آمدید به %{title}](#welcome)
-      داشتن حساب کاربری الزامی است. لطفا یک حساب کاربری بسازید یا وارد شوید.
   upload:
     edit_reason: "کپی عکس‌های محلی دانلود شد"
     unauthorized: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید معتبر نیست ( پسوندهای معتبر عبارتند از: {authorized_extensions}% )."
@@ -2251,10 +2249,7 @@ fa_IR:
       message: "<p>ایمیل فعال‌سازی به <b>%{email}</b> ارسال شد."
   safe_mode:
     title: "ورود به حالت امن"
-    description: "حالت ایمن به شما این امکان را می‌دهد، که سایت خود را بدون بارگیری افزونه‌ها یا پوسته‌ها آزمایش کنید."
     no_themes: "غیرفعال کردن پوسته‌ها و اجزای پوسته"
-    no_unofficial_plugins: "غیر‌فعال‌سازی افزونه‌های غیر رسمی"
-    no_plugins: "غیر‌فعال‌سازی تمام افزونه‌ها"
     enter: "فعال‌سازی حالت امن"
   wizard:
     title: "راه اندازی Discourse"
@@ -2349,12 +2344,18 @@ fa_IR:
       medium: "متوسط"
       high: "بالا"
     actions:
+      agree:
+        title: "بله"
       agree_and_suspend:
         title: "کاربر تعلیق شده"
+      agree_and_restore:
+        title: "بازیابی نوشته"
       delete_single:
         title: "حذف"
+      delete_and_agree:
+        title: "حذف نوشته"
       disagree:
-        title: "مخالف"
+        title: "خیر"
       ignore:
         title: "چشم پوشی"
       approve:

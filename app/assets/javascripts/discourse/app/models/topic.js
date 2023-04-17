@@ -26,7 +26,7 @@ import { applyModelTransformations } from "discourse/lib/model-transformers";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
-  const url = `${getURL("/t/")}${topic.id}`;
+  const url = `/t/${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
 
   delete data.nearPost;
@@ -183,12 +183,15 @@ const Topic = RestModel.extend({
     return postsCount - 1;
   },
 
-  @discourseComputed
-  details() {
-    return this.store.createRecord("topicDetails", {
+  get details() {
+    return (this._details ??= this.store.createRecord("topicDetails", {
       id: this.id,
       topic: this,
-    });
+    }));
+  },
+
+  set details(value) {
+    return (this._details = value);
   },
 
   @discourseComputed("visible")

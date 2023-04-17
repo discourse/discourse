@@ -2,6 +2,7 @@
 
 RSpec.describe "Sidebar navigation menu", type: :system, js: true do
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_component) { PageObjects::Components::Sidebar.new }
 
   fab!(:current_user) { Fabricate(:user) }
 
@@ -30,7 +31,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
       visit("/")
 
       expect(sidebar_page.channels_section).to have_css(
-        ".sidebar-section-link-#{channel_1.slug} .sidebar-section-link-prefix svg.prefix-icon.d-icon-hashtag",
+        ".sidebar-section-link[data-link-name='#{channel_1.slug}'] .sidebar-section-link-prefix svg.prefix-icon.d-icon-d-chat",
       )
     end
 
@@ -53,7 +54,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
         visit("/")
 
         expect(sidebar_page.channels_section).to have_css(
-          ".sidebar-section-link-#{private_channel_1.slug} .sidebar-section-link-prefix svg.prefix-badge.d-icon-lock",
+          ".sidebar-section-link[data-link-name='#{private_channel_1.slug}'] .sidebar-section-link-prefix svg.prefix-badge.d-icon-lock",
         )
       end
     end
@@ -67,7 +68,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
         visit("/")
 
         expect(sidebar_page.channels_section).to have_css(
-          ".sidebar-section-link-#{channel_1.slug} .emoji",
+          ".sidebar-section-link[data-link-name='#{channel_1.slug}'] .emoji",
         )
       end
     end
@@ -88,7 +89,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
         visit("/")
 
         expect(sidebar_page.channels_section).to have_css(
-          ".sidebar-section-link-#{channel_2.slug}.sidebar-section-link--muted",
+          ".sidebar-section-link[data-link-name='#{channel_2.slug}'].sidebar-section-link--muted",
         )
       end
     end
@@ -100,7 +101,11 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
         visit("/")
 
         expect(
-          sidebar_page.channels_section.find(".sidebar-section-link-#{channel_1.slug}")["title"],
+          sidebar_page.channels_section.find(
+            ".sidebar-section-link[data-link-name='#{channel_1.slug}']",
+          )[
+            "title"
+          ],
         ).to eq("&lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;")
       end
     end

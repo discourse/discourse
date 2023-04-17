@@ -42,6 +42,17 @@ RSpec.describe "Shortcuts | drawer", type: :system, js: true do
       end
     end
 
+    context "when pressing a letter" do
+      it "doesn’t intercept the event" do
+        drawer.open_channel(channel_1)
+        find(".header-sidebar-toggle").click # simple way to ensure composer is not focused
+
+        page.send_keys("e")
+
+        expect(find(".chat-composer-input").value).to eq("")
+      end
+    end
+
     context "when using Up/Down arrows" do
       it "navigates through the channels" do
         drawer.open_channel(channel_1)

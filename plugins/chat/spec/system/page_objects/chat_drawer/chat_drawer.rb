@@ -16,8 +16,8 @@ module PageObjects
         find("#{VISIBLE_DRAWER} .chat-drawer-header__close-btn").click
       end
 
-      def open_index
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__return-to-channels-btn").click
+      def back
+        find("#{VISIBLE_DRAWER} .chat-drawer-header__back-btn").click
       end
 
       def open_channel(channel)
@@ -29,6 +29,14 @@ module PageObjects
 
       def maximize
         find("#{VISIBLE_DRAWER} .chat-drawer-header__full-screen-btn").click
+      end
+
+      def has_open_thread?(thread)
+        has_css?("#{VISIBLE_DRAWER} .chat-thread[data-id='#{thread.id}']")
+      end
+
+      def has_open_channel?(channel)
+        has_css?("#{VISIBLE_DRAWER} .chat-live-pane[data-id='#{channel.id}']")
       end
     end
   end

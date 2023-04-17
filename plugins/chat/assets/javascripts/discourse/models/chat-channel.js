@@ -6,6 +6,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
+import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export const CHATABLE_TYPES = {
@@ -54,8 +55,28 @@ export default class ChatChannel extends RestModel {
   @tracked chatableType;
   @tracked status;
   @tracked activeThread;
+  @tracked lastMessageSentAt;
+  @tracked canDeleteOthers;
+  @tracked canDeleteSelf;
+  @tracked canFlag;
+  @tracked canModerate;
+  @tracked userSilenced;
+  @tracked draft;
 
   threadsManager = new ChatThreadsManager(getOwner(this));
+  messagesManager = new ChatMessagesManager(getOwner(this));
+
+  findIndexOfMessage(message) {
+    return this.messages.findIndex((m) => m.id === message.id);
+  }
+
+  get messages() {
+    return this.messagesManager.messages;
+  }
+
+  set messages(messages) {
+    this.messagesManager.messages = messages;
+  }
 
   get escapedTitle() {
     return escapeExpression(this.title);
@@ -73,12 +94,16 @@ export default class ChatChannel extends RestModel {
     return [this.slugifiedTitle, this.id];
   }
 
+  get selectedMessages() {
+    return this.messages.filter((message) => message.selected);
+  }
+
   get isDirectMessageChannel() {
-    return this.chatable_type === CHATABLE_TYPES.directMessageChannel;
+    return this.chatableType === CHATABLE_TYPES.directMessageChannel;
   }
 
   get isCategoryChannel() {
-    return this.chatable_type === CHATABLE_TYPES.categoryChannel;
+    return this.chatableType === CHATABLE_TYPES.categoryChannel;
   }
 
   get isOpen() {
@@ -105,6 +130,26 @@ export default class ChatChannel extends RestModel {
     return this.currentUserMembership.following;
   }
 
+  get visibleMessages() {
+    return this.messages.filter((message) => message.visible);
+  }
+
+  set details(details) {
+    this.canDeleteOthers = details.can_delete_others ?? false;
+    this.canDeleteSelf = details.can_delete_self ?? false;
+    this.canFlag = details.can_flag ?? false;
+    this.canModerate = details.can_moderate ?? false;
+    if (details.can_load_more_future !== undefined) {
+      this.messagesManager.canLoadMoreFuture = details.can_load_more_future;
+    }
+    if (details.can_load_more_past !== undefined) {
+      this.messagesManager.canLoadMorePast = details.can_load_more_past;
+    }
+    this.userSilenced = details.user_silenced ?? false;
+    this.status = details.channel_status;
+    this.channelMessageBusLastId = details.channel_message_bus_last_id;
+  }
+
   canModifyMessages(user) {
     if (user.staff) {
       return !STAFF_READONLY_STATUSES.includes(this.status);
@@ -127,10 +172,14 @@ export default class ChatChannel extends RestModel {
       return;
     }
 
-    return ajax(`/chat/${this.id}/read/${messageId}.json`, {
+    if (this.currentUserMembership.last_read_message_id >= messageId) {
+      return;
+    }
+
+    // TODO (martin) Change this to use chatApi service once we change this
+    // class not to use RestModel
+    return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
       method: "PUT",
-    }).then(() => {
-      this.currentUserMembership.last_read_message_id = messageId;
     });
   }
 }
@@ -142,10 +191,16 @@ ChatChannel.reopenClass({
     this._initUserModels(args);
     this._initUserMembership(args);
 
-    args.chatableType = args.chatable_type;
-    args.membershipsCount = args.memberships_count;
+    this._remapKey(args, "chatable_type", "chatableType");
+    this._remapKey(args, "memberships_count", "membershipsCount");
+    this._remapKey(args, "last_message_sent_at", "lastMessageSentAt");
+    this._remapKey(args, "threading_enabled", "threadingEnabled");
 
     return this._super(args);
+  },
+
+  _remapKey(obj, oldKey, newKey) {
+    delete Object.assign(obj, { [newKey]: obj[oldKey] })[oldKey];
   },
 
   _initUserModels(args) {

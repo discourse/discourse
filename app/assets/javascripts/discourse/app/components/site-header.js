@@ -29,6 +29,7 @@ const SiteHeaderComponent = MountWidget.extend(
     _scheduledRemoveAnimate: null,
     _topic: null,
     _itsatrap: null,
+    _applicationElement: null,
 
     @observes(
       "currentUser.unread_notifications",
@@ -78,7 +79,6 @@ const SiteHeaderComponent = MountWidget.extend(
       headerCloak.classList.add("animate");
       this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
-        panel.classList.add("animated");
         headerCloak.classList.remove("animate");
       }, 200);
       panel.style.setProperty("--offset", 0);
@@ -90,7 +90,6 @@ const SiteHeaderComponent = MountWidget.extend(
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
-      panel.classList.remove("animated");
       headerCloak.classList.add("animate");
       if (menuOrigin === "left") {
         panel.style.setProperty("--offset", `-100vw`);
@@ -205,7 +204,7 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     dockCheck() {
-      const header = document.querySelector("header.d-header");
+      const header = this.header;
 
       if (this.docAt === null) {
         if (!header) {
@@ -214,7 +213,8 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = header.offsetTop;
       }
 
-      const main = document.querySelector(".ember-application");
+      const main = (this._applicationElement ??=
+        document.querySelector(".ember-application"));
       const offsetTop = main ? main.offsetTop : 0;
       const offset = window.pageYOffset - offsetTop;
       if (offset >= this.docAt) {
@@ -442,6 +442,8 @@ const SiteHeaderComponent = MountWidget.extend(
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
   classNameBindings: ["site.mobileView::drop-down-mode"],
+  headerWrap: null,
+  header: null,
 
   init() {
     this._super(...arguments);
@@ -454,13 +456,12 @@ export default SiteHeaderComponent.extend({
 
     this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
-    const headerWrap = document.querySelector(".d-header-wrap");
-    let header;
-    if (headerWrap) {
+    this.headerWrap = document.querySelector(".d-header-wrap");
+    if (this.headerWrap) {
       schedule("afterRender", () => {
-        header = headerWrap.querySelector("header.d-header");
-        const headerOffset = headerWrap.offsetHeight;
-        const headerTop = header.offsetTop;
+        this.header = this.headerWrap.querySelector("header.d-header");
+        const headerOffset = this.headerWrap.offsetHeight;
+        const headerTop = this.header.offsetTop;
         document.documentElement.style.setProperty(
           "--header-offset",
           `${headerOffset}px`
@@ -477,7 +478,7 @@ export default SiteHeaderComponent.extend({
         for (let entry of entries) {
           if (entry.contentRect) {
             const headerOffset = entry.contentRect.height;
-            const headerTop = header.offsetTop;
+            const headerTop = this.header.offsetTop;
             document.documentElement.style.setProperty(
               "--header-offset",
               `${headerOffset}px`
@@ -490,7 +491,7 @@ export default SiteHeaderComponent.extend({
         }
       });
 
-      this._resizeObserver.observe(headerWrap);
+      this._resizeObserver.observe(this.headerWrap);
     }
   },
 

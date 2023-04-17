@@ -1,4 +1,4 @@
-.chat-composer-dropdown {
+[data-theme="chat-composer-drodown"] {
   margin-left: 0.2rem;
 
   .tippy-content {
@@ -7,7 +7,7 @@
 }
 
 .chat-composer-dropdown__trigger-btn {
-  padding: 5px;
+  padding: 5px !important; // overwrite ios rule
   border-radius: 100%;
   background: var(--primary-med-or-secondary-high);
   border: 1px solid transparent;
@@ -30,18 +30,9 @@
 }
 
 .chat-composer-dropdown__list {
-  padding: 0;
   margin: 0;
   list-style: none;
   padding: 0.5rem;
-}
-
-.chat-composer-dropdown__item {
-  padding-bottom: 0.25rem;
-
-  &:last-child {
-    padding-bottom: 0;
-  }
 }
 
 .chat-composer-dropdown__action-btn {

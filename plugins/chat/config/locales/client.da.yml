@@ -71,6 +71,8 @@ da:
       joined: "tilmeldt"
       email_frequency:
         never: "Aldrig"
+      header_indicator_preference:
+        never: "Aldrig"
       enable: "Aktiver chat"
       flag: "Rapportér"
       invalid_access: "Du har ikke adgang til at se denne chatkanal"
@@ -78,7 +80,7 @@ da:
       in_reply_to: "Som svar til"
       heading: "Chat"
       join: "Tilslut"
-      new_messages: "nye beskeder"
+      last_visit: "sidste besøg"
       mention_warning:
         dismiss: "afvis"
       reply: "Svar"
@@ -232,10 +234,6 @@ da:
             sender:
               label: Afsender
               description: Standard er system
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Markeret af"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

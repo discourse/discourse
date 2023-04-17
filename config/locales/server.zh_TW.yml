@@ -795,7 +795,7 @@ zh_TW:
       title: "DAU/MAU"
       xaxis: "天"
       yaxis: "\\bDAU/MAU"
-      description: "在最後一天登入的會員數除以上個月登入會員數，返回的%數表示社群黏著度。目標為＞30%。"
+      description: "在最後一天登入的會員數除以上個月登入會員數，返回的%數表示社群黏著度。目標為＞20%。"
     daily_engaged_users:
       title: "每日活躍的使用者"
       xaxis: "天"
@@ -1114,7 +1114,6 @@ zh_TW:
     large_icon: "用作其他Metadata Icon的基礎圖示。 理想情況下應大於512 x 512。如果留空，將使用logo_small來顯示。"
     manifest_icon: "在Android上用作Logo或啟動顯示畫面的圖片。 將自動調整為512×512。如果留空，將使用large_icon。"
     favicon: "您網頁的圖示（favicon），請參閱<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>。 要在CDN上正常工作，favicon 副檔名必須為 .png，圖示將調整為32x32。如果留空，將使用large_icon。"
-    apple_touch_icon: "Icon 用於Apple觸控裝置的圖示，將自動調整為180x180。 如果留空，將使用large_icon。"
     opengraph_image: "預設opengraph image，在頁面沒有其他合適圖像時使用。 如果留空，將使用large_icon。"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
@@ -2548,13 +2547,6 @@ zh_TW:
   offline:
     title: "無法載入App"
     offline_page_message: "你似乎離線了！請檢查您的網路連接狀態，並重試。"
-  login_required:
-    welcome_message: |
-      ## [歡迎來到 %{title}](#welcome)
-      你需要一個帳號。請創設一個帳號，或者登入以繼續。
-    welcome_message_invite_only: |
-      ## [歡迎來到 %{title}](#welcome)
-      必須要有一個帳戶，請向現有會員請求邀請或登入以繼續。
   upload:
     edit_reason: "下載外部圖片留做存檔"
     unauthorized: "抱歉，你沒有上傳檔案的權限（驗證擴展：%{authorized_extensions}）。"
@@ -2897,8 +2889,6 @@ zh_TW:
       message: "<p>我們已重發啟用信件至 <b>%{email}</b>"
   safe_mode:
     title: "進入安全模式"
-    no_unofficial_plugins: "停用非官方套件"
-    no_plugins: "停用所有套件"
     enter: "進入安全模式"
     must_select: "您必須至少選擇一個選項才能進入安全模式。"
   wizard:
@@ -2988,47 +2978,30 @@ zh_TW:
     conflict: "有一個更新衝突阻止您這樣做"
     actions:
       agree:
-        title: "同意..."
-      agree_and_keep:
-        title: "保留貼文"
-        description: "同意檢舉但不改變貼文"
+        title: "是"
       agree_and_suspend:
-        title: "將使用者停權"
         description: "同意檢舉並停權使用者"
       agree_and_silence:
-        title: "將使用者禁言"
+        title: "使用者靜音"
         description: "同意檢舉並禁止使用者發文"
       agree_and_restore:
-        title: "復原貼文"
         description: "將話題變更為對所有人顯示。"
-      agree_and_hide:
-        title: "隱藏貼文"
-        description: "隱藏此貼文並自動傳送訊息通知使用者重新編輯貼文內容。"
       delete_single:
         title: "刪除"
       delete:
         title: "刪除..."
-      delete_and_ignore:
-        title: "刪除貼文並忽略"
-        description: "刪除貼文，如果刪除的是話題的第一則貼文，討論話題也將一併刪除"
       delete_and_ignore_replies:
-        title: "刪除貼文及留言，並忽略"
-        description: "刪除貼文和其所有的留言；如果是第一個貼文，則刪除整個討論話題。"
         confirm: "您確定要刪除對該貼文的留言嗎？"
-      delete_and_agree:
-        title: "刪除貼文並同意"
-        description: "刪除貼文，如果刪除的是話題的第一則貼文，討論話題也將一併刪除"
       delete_and_agree_replies:
-        title: "刪除貼文及留言，並同意"
-        description: "刪除貼文和其所有的留言；如果刪除的是話題的第一則貼文，討論話題也將一併刪除"
         confirm: "您確定要刪除對該貼文的留言嗎？"
       disagree_and_restore:
-        title: "不同意及還原貼文"
         description: "將話題變更為對所有人顯示。"
       disagree:
-        title: "不同意"
+        title: "否"
       ignore:
         title: "忽略"
+      ignore_and_do_nothing:
+        title: "不做任何動作"
       approve:
         title: "批准"
       approve_post:

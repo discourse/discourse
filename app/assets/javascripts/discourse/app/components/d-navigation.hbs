@@ -68,7 +68,11 @@
     @label={{this.createTopicLabel}}
     @btnClass={{this.createTopicClass}}
     @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
-  />
+  >
+    {{#if this.createTopicButtonDisabled}}
+      <DTooltip>{{i18n "topic.create_disabled_category"}}</DTooltip>
+    {{/if}}
+  </CreateTopicButton>
 
   <PluginOutlet
     @name="after-create-topic-button"

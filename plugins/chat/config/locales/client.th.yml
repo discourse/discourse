@@ -21,8 +21,11 @@ th:
       joined: "สมัครสมาชิกเมื่อ"
       email_frequency:
         never: "ไม่เคย"
+      header_indicator_preference:
+        never: "ไม่เคย"
       flag: "ธง"
       join: "เข้าร่วม"
+      last_visit: "เยี่ยมชมครั้งล่าสุด"
       mention_warning:
         dismiss: "ซ่อน"
       reply: "ตอบ"
@@ -111,7 +114,3 @@ th:
           fields:
             message:
               label: ข้อความ
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "ถูกปักธงโดย"

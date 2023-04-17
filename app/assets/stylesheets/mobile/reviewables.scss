@@ -21,7 +21,34 @@
   }
 
   .reviewable-scores {
+    display: flex;
     width: 100%;
+    overflow-x: scroll;
+    border-top: 1px solid var(--primary-low);
+    thead {
+      tr {
+        display: flex;
+        flex-direction: column;
+        border: 0;
+      }
+    }
+
+    tbody {
+      display: flex;
+      border: 0;
+
+      .reviewable-score {
+        display: flex;
+        flex-direction: column;
+      }
+      tr {
+        border: 0;
+      }
+
+      td {
+        white-space: nowrap;
+      }
+    }
   }
 }
 
@@ -58,7 +85,6 @@
 
   > div,
   > button {
-    flex: 0 1 47%;
     margin-right: 0.25em;
     margin-bottom: 0.5em;
   }

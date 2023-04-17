@@ -10,25 +10,30 @@ import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 
-export default class AdminCustomizeColorsShowController extends Component {
+export default class ChatSelectionManager extends Component {
   @service router;
   tagName = "";
   chatChannel = null;
+  context = null;
   selectedMessageIds = null;
   chatCopySuccess = false;
   showChatCopySuccess = false;
   cancelSelecting = null;
-  canModerate = false;
 
   @computed("selectedMessageIds.length")
   get anyMessagesSelected() {
     return this.selectedMessageIds.length > 0;
   }
 
-  @computed("chatChannel.isDirectMessageChannel", "canModerate")
+  @computed("chatChannel.isDirectMessageChannel", "chatChannel.canModerate")
   get showMoveMessageButton() {
-    return !this.chatChannel.isDirectMessageChannel && this.canModerate;
+    return (
+      this.context !== MESSAGE_CONTEXT_THREAD &&
+      !this.chatChannel.isDirectMessageChannel &&
+      this.chatChannel.canModerate
+    );
   }
 
   @bind

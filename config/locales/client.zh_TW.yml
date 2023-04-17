@@ -156,11 +156,6 @@ zh_TW:
     software_update_prompt:
       message: "我們更新了這個網站， <span>請重新整理</span>，否則您可能會遇到預期之外的狀況。"
       dismiss: "忽略"
-    bootstrap_mode_enabled:
-      other: "為了讓您更輕鬆地建設網站，您正處於初始模式。將會自動授予所有新註冊的使用者信任等級 1，並自動啟用每日摘要電子郵件。該功能將於 %{count} 個使用者註冊後自動關閉。"
-    bootstrap_mode_disabled: "初始模式將會在 24 小時後自動禁用。"
-    bootstrap_invite_button_title: "送出邀請"
-    bootstrap_wizard_link_title: "完成安裝精靈"
     themes:
       default_description: "預設"
       broken_theme_alert: "您的網站可能無法運行，因為主題/組件有錯誤。"
@@ -311,7 +306,6 @@ zh_TW:
       new_topic: "新話題草稿"
       new_private_message: "新個人訊息草稿"
       abandon:
-        confirm: "您有針對此主題的草稿。您想用它做什麼？"
         yes_value: "捨棄"
         no_value: "繼續編輯"
     topic_count_categories:
@@ -466,11 +460,9 @@ zh_TW:
       scores:
         about: "該分數基於報告者的信任級別，其先前標誌的準確性以及報告的項目的優先級來計算。"
         score: "分數"
-        date: "日期"
-        type: "類型"
+        type: "原因"
         status: "狀態"
-        submitted_by: "送出者"
-        reviewed_by: "審核由"
+        submitted_by: "回報由"
       statuses:
         pending:
           title: "申請中"
@@ -478,12 +470,10 @@ zh_TW:
           title: "已同意"
         rejected:
           title: "被拒絕"
-        ignored:
-          title: "忽略"
-        deleted:
-          title: "刪除"
         all:
-          title: "(所有)"
+          title: "所有"
+      context_question:
+        delimiter: "或"
       types:
         reviewable_flagged_post:
           title: "標記的貼文"
@@ -730,6 +720,7 @@ zh_TW:
         remove_members: "移除成員"
         remove_owners: "移除擁有者"
         make_all_primary: "將全部設為主要"
+        status: "狀態"
         owner: "擁有者"
         primary: "主要"
       topics: "話題"
@@ -1014,7 +1005,6 @@ zh_TW:
       home: "預設首頁"
       staged: "暫存"
       staff_counters:
-        flags_given: "有幫助的檢舉"
         flagged_posts: "已檢舉的貼文"
         deleted_posts: "已刪除的貼文"
         suspensions: "停權"
@@ -2598,6 +2588,10 @@ zh_TW:
     filters:
       with_topics: "%{filter} 話題"
       with_category: "%{filter} %{category} 話題"
+      filter:
+        title: "過濾"
+        button:
+          label: "過濾"
       latest:
         title: "最新"
         title_with_count:
@@ -2875,8 +2869,10 @@ zh_TW:
           save: "保存"
           delete: "刪除"
           links:
-            icon: "圖示"
-            name: "名字"
+            icon:
+              label: "圖示"
+            name:
+              label: "姓名"
         about:
           header_link_text: "關於"
         messages:
@@ -3678,11 +3674,6 @@ zh_TW:
           flag: "檢舉"
           replace: "取代"
           silence: "靜音"
-        action_descriptions:
-          block: "防止含有這些文字的貼文被發佈，當使用者嘗試發送貼文時，會看見錯誤訊息。"
-          censor: "允許貼文含有這些文字，但以符碼來取代被禁用的文字。"
-          require_approval: "含有這些文字的貼文需要經過管理員審查才能被發佈。"
-          flag: "允許貼文含有這些文字，但標註成不當的用字以讓管理員能審核。"
         form:
           placeholder_regexp: "正規表示法"
           link_placeholder: "https://example.com"
@@ -3705,9 +3696,17 @@ zh_TW:
         new_template_form:
           submit: "保存"
           cancel: "取消"
+          preview: "預覽"
         quick_insert_fields:
           add_new_field: "加入"
           dropdown: "下拉"
+        validations_modal:
+          table_headers:
+            type: "類型"
+            description: "簡述"
+          validations:
+            required:
+              key: "必填"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以使用者的檢視角度進行除錯。完成後將需登出。"
@@ -3720,6 +3719,7 @@ zh_TW:
         not_found: "抱歉，系統裡無此使用者名稱。"
         id_not_found: "抱歉，系統裡無此使用者名稱。"
         active: "已啟動"
+        status: "狀態"
         show_emails: "顯示電子郵件"
         hide_emails: "隱藏 email"
         nav:

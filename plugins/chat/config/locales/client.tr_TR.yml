@@ -15,6 +15,7 @@ tr_TR:
           actions:
             chat_channel_status_change: "Sohbet kanalı durumu değişti"
             chat_channel_delete: "Sohbet kanalı silindi"
+            chat_auto_remove_membership: "Üyelikler kanallardan otomatik olarak kaldırıldı"
       api:
         scopes:
           descriptions:
@@ -77,6 +78,7 @@ tr_TR:
       click_to_join: "Mevcut kanalları görüntülemek için buraya tıklayın."
       close: "Kapat"
       collapse: "Sohbet Çekmecesini Daralt"
+      expand: "Sohbet Çekmecesini Genişlet"
       confirm_flag: "%{username} adlı kullanıcının mesajına bayrak eklemek istediğinizden emin misiniz?"
       deleted: "Bir mesaj silindi. [görüntüleyin]"
       hidden: "Bir mesaj gizlendi. [görüntüleyin]"
@@ -93,6 +95,11 @@ tr_TR:
         never: "Asla"
         title: "E-posta Bildirimleri"
         when_away: "Sadece uzaktayken"
+      header_indicator_preference:
+        title: "Etkinlik göstergesini başlıkta göster"
+        all_new: "Tüm Yeni Mesajlar"
+        dm_and_mentions: "Direkt Mesajlar ve Bahsetmeler"
+        never: "Asla"
       enable: "Sohbeti etkinleştir"
       flag: "Bayrak ekle"
       emoji: "Emoji ekle"
@@ -102,7 +109,7 @@ tr_TR:
       in_reply_to: "Şuna yanıt olarak:"
       heading: "Sohbet"
       join: "Katıl"
-      new_messages: "yeni mesajlar"
+      last_visit: "son ziyaret"
       mention_warning:
         dismiss: "kapat"
         invitations_sent:
@@ -152,7 +159,6 @@ tr_TR:
       restore: "Silinen mesajı geri yükle"
       save: "Kaydet"
       select: "Seç"
-      silence: "Kullanıcıyı sustur"
       return_to_list: "Kanal listesine dön"
       scroll_to_bottom: "En alta kaydır"
       scroll_to_new_messages: "Yeni mesajlara bak"
@@ -185,7 +191,7 @@ tr_TR:
         title: Kanallar
         filter_all: Tümü
         filter_open: Açıldı
-        filter_closed: Kapatıldı
+        filter_closed: Kapalı
         filter_archived: Arşivlendi
         filter_input_placeholder: Ada göre kanal ara
       chat_message_separator:
@@ -249,7 +255,7 @@ tr_TR:
         only_you: ":%{emoji}: ile tepki verdiniz"
         single_user: "%{username} :%{emoji}: ile tepki verdi"
       composer:
-        toggle_toolbar: "Geçiş yapma araç çubuğu"
+        toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
         bold_text: "güçlü metin"
         code_text: "kod metni"
@@ -375,7 +381,7 @@ tr_TR:
           direct: '"%{channel}" adlı kanalda sizden bahsetti'
           direct_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda sizden bahsetti</span>'
           other_plain: '"%{channel}" adlı kanalda %{identifier} bahsetti'
-          other_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda %{identifier} bahsetti</span>'
+          other_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda şundan bahsetti: %{identifier}</span>'
         direct_message_chat_mention:
           direct: "kişisel sohbette sizden bahsetti"
           direct_html: "<span>%{username}</span> <span>kişisel sohbette sizden bahsetti</span>"
@@ -407,9 +413,8 @@ tr_TR:
       transcript:
         view: "Önceki mesajların dökümünü görüntüle"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Bayrak Eklenen Sohbet Mesajı"
-          flagged_by: "Bayrak Ekleyen Kişi"
     keyboard_shortcuts_help:
       chat:
         title: "Sohbet"

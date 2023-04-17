@@ -893,6 +893,42 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
     );
   });
 
+  test("adds unread incoming to the new topic list if new new view is enabled", async function (assert) {
+    this.currentUser.new_new_view_enabled = true;
+
+    this.trackingState.trackIncoming("new");
+    await publishToMessageBus("/unread", unreadTopicPayload);
+
+    assert.deepEqual(
+      this.trackingState.newIncoming,
+      [111],
+      "unread topic is incoming"
+    );
+    assert.strictEqual(
+      this.trackingState.incomingCount,
+      1,
+      "incoming count is increased"
+    );
+  });
+
+  test("doesn't add unread incoming to the new topic list if new new view is disabled", async function (assert) {
+    this.currentUser.new_new_view_enabled = false;
+
+    this.trackingState.trackIncoming("new");
+    await publishToMessageBus("/unread", unreadTopicPayload);
+
+    assert.deepEqual(
+      this.trackingState.newIncoming,
+      [],
+      "unread topic is not incoming"
+    );
+    assert.strictEqual(
+      this.trackingState.incomingCount,
+      0,
+      "incoming count isn't increased"
+    );
+  });
+
   test("correct tag and category filters for different lists", function (assert) {
     this.trackingState.trackIncoming("unread");
     assert.strictEqual(this.trackingState.filterCategory, undefined);

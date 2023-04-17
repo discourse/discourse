@@ -4,6 +4,7 @@ import {
   resetChatMessageDecorators,
 } from "discourse/plugins/chat/discourse/components/chat-message";
 import { registerChatComposerButton } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/services/chat-state-manager";
 
 /**
  * Class exposing the javascript API available to plugins and themes.
@@ -17,6 +18,15 @@ import { registerChatComposerButton } from "discourse/plugins/chat/discourse/lib
  * @param {ChatMessage} chatMessage - model
  * @param {HTMLElement} messageContainer - DOM node
  * @param {ChatChannel} chatChannel - model
+ */
+
+/**
+ * Callback used to decorate a chat message
+ *
+ * @callback PluginApi~chatDrawerStateCallbak
+ * @param {Object} state
+ * @param {boolean} state.isDrawerActive - is the chat drawer active
+ * @param {boolean} state.isDrawerExpanded - is the chat drawer expanded
  */
 
 /**
@@ -65,6 +75,22 @@ import { registerChatComposerButton } from "discourse/plugins/chat/discourse/lib
  * });
  */
 
+/**
+ * Callback when the sate of the chat drawer changes
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function addChatDrawerStateCallback
+ * @param {PluginApi~chatDrawerStateCallbak} callback
+ * @example
+ *
+ * api.addChatDrawerStateCallback(({isDrawerExpanded, isDrawerActive}) => {
+ *   if (isDrawerActive && isDrawerExpanded) {
+ *     // do something
+ *   }
+ * });
+ */
+
 export default {
   name: "chat-plugin-api",
   after: "inject-discourse-objects",
@@ -85,6 +111,14 @@ export default {
         Object.defineProperty(apiPrototype, "registerChatComposerButton", {
           value(button) {
             registerChatComposerButton(button);
+          },
+        });
+      }
+
+      if (!apiPrototype.hasOwnProperty("addChatDrawerStateCallback")) {
+        Object.defineProperty(apiPrototype, "addChatDrawerStateCallback", {
+          value(callback) {
+            addChatDrawerStateCallback(callback);
           },
         });
       }

@@ -184,12 +184,6 @@ nl:
     software_update_prompt:
       message: "We hebben deze site bijgewerkt, dus <span>vernieuw de pagina</span>, anders kan er onverwacht gedrag optreden."
       dismiss: "Negeren"
-    bootstrap_mode_enabled:
-      one: "Om het opzetten van je nieuwe website makkelijker te maken, bevind je je in de bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend en dagelijkse e-mailsamenvattingen zijn ingeschakeld voor hen. Dit wordt automatisch uitgeschakeld zodra %{count} gebruiker lid is geworden."
-      other: "Om het opzetten van je nieuwe website makkelijker te maken, bevind je je in de bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend en dagelijkse e-mailsamenvattingen zijn ingeschakeld voor hen. Dit wordt automatisch uitgeschakeld zodra %{count} gebruikers lid zijn geworden."
-    bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
-    bootstrap_invite_button_title: "Uitnodigingen sturen"
-    bootstrap_wizard_link_title: "Instelwizard voltooien"
     themes:
       default_description: "Standaard"
       broken_theme_alert: "Je website werkt mogelijk niet, omdat het thema/onderdeel fouten bevat."
@@ -348,7 +342,6 @@ nl:
       new_topic: "Nieuw topicconcept"
       new_private_message: "Nieuw privéberichtconcept"
       abandon:
-        confirm: "Je hebt een concept in uitvoering voor dit topic. Wat wil je ermee doen?"
         yes_value: "Weggooien"
         no_value: "Bewerken hervatten"
     topic_count_categories:
@@ -521,11 +514,9 @@ nl:
       scores:
         about: "Deze score wordt berekend op basis van het vertrouwen van de melder, de nauwkeurigheid van diens eerdere markeringen en de prioriteit van het item dat wordt gemeld."
         score: "Score"
-        date: "Datum"
-        type: "Type"
+        type: "Reden"
         status: "Status"
-        submitted_by: "Ingediend door"
-        reviewed_by: "Beoordeeld door"
+        submitted_by: "Gemeld door"
       statuses:
         pending:
           title: "Wachtend"
@@ -533,14 +524,12 @@ nl:
           title: "Goedgekeurd"
         rejected:
           title: "Geweigerd"
-        ignored:
-          title: "Genegeerd"
-        deleted:
-          title: "Verwijderd"
         reviewed:
-          title: "(alle beoordeelde)"
+          title: "Alle beoordeelde"
         all:
-          title: "(alles)"
+          title: "Alles"
+      context_question:
+        delimiter: "of"
       types:
         reviewable_flagged_post:
           title: "Gemarkeerd bericht"
@@ -847,6 +836,7 @@ nl:
         make_all_primary_description: "Maak dit de primaire groep voor alle geselecteerde gebruikers."
         remove_all_primary: "Verwijderen als primair"
         remove_all_primary_description: "Verwijder deze groep als primair"
+        status: "Status"
         owner: "Eigenaar"
         primary: "Primair"
         forbidden: "Je mag de leden niet bekijken."
@@ -1174,7 +1164,6 @@ nl:
       home: "Standaard startpagina"
       staged: "Gefaseerd"
       staff_counters:
-        flags_given: "nuttige markeringen"
         flagged_posts: "gemarkeerde berichten"
         deleted_posts: "verwijderde berichten"
         suspensions: "schorsingen"
@@ -3575,6 +3564,10 @@ nl:
     filters:
       with_topics: "%{filter} topics"
       with_category: "%{filter} topics in %{category}"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Nieuwste"
         title_with_count:
@@ -3992,9 +3985,12 @@ nl:
           save: "Opslaan"
           delete: "Verwijderen"
           links:
-            icon: "Pictogram"
-            name: "Naam"
-            value: "Link"
+            icon:
+              label: "Pictogram"
+            name:
+              label: "Naam"
+            value:
+              label: "Link"
         about:
           header_link_text: "Over"
         messages:
@@ -5050,14 +5046,8 @@ nl:
           silence: "Dempen"
           link: "Link"
         action_descriptions:
-          block: "Het plaatsen van berichten die deze woorden bevatten tegengaan. Gebruikers zien een foutbericht wanneer ze hun bericht proberen te verzenden."
-          censor: "Berichten met deze woorden toestaan, maar deze vervangen door tekens die de gecensureerde woorden verbergen."
-          require_approval: "Berichten die deze woorden bevatten, vereisen goedkeuring door medewerkers voordat ze kunnen worden bekeken."
-          flag: "Sta berichten met deze woorden toe, maar markeer ze als ongepast, zodat moderators ze kunnen beoordelen."
-          replace: "Vervang woorden in berichten door andere woorden"
-          tag: "Tag topics automatisch op basis van het eerste bericht"
-          silence: "Eerste berichten van gebruikers die deze woorden bevatten, moeten door een medewerker worden goedgekeurd voordat ze zichtbaar worden en de gebruiker wordt automatisch gedempt."
-          link: "Woorden in berichten vervangen door links"
+          replace: "Vervang woorden in berichten door andere woorden."
+          link: "Woorden in berichten vervangen door links."
         form:
           label: "Bevat woord of zin"
           placeholder: "Voer woord of zin in (* is een joker)"
@@ -5093,9 +5083,22 @@ nl:
         new_template_form:
           submit: "Opslaan"
           cancel: "Annuleren"
+          preview: "Voorbeeld"
         quick_insert_fields:
           add_new_field: "Toevoegen"
           dropdown: "Vervolgkeuzelijst"
+        validations_modal:
+          table_headers:
+            key: "Sleutel"
+            type: "Type"
+            description: "Beschrijving"
+          validations:
+            required:
+              key: "vereist"
+            minimum:
+              key: "minimum"
+            maximum:
+              key: "maximum"
       impersonate:
         title: "Imiteren"
         help: "Gebruik deze tool om een gebruikersaccount te imiteren voor debugdoeleinden. Je moet je afmelden wanneer je klaar bent."
@@ -5108,6 +5111,7 @@ nl:
         not_found: "Sorry, die gebruikersnaam bestaat niet in ons systeem."
         id_not_found: "Sorry, die gebruikers-ID bestaat niet in ons systeem."
         active: "Geactiveerd"
+        status: "Status"
         show_emails: "E-mailadressen weergeven"
         hide_emails: "E-mailadressen verbergen"
         nav:

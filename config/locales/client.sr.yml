@@ -191,7 +191,6 @@ sr:
     software_update_prompt:
       message: "Ажурирали смо сајт. <span>Освежите страницу</span> да бисте избегли непријатности."
       dismiss: "Одбаци"
-    bootstrap_mode_disabled: "Режим покретања ће бити искључен у року од 24 сата."
     themes:
       default_description: "Подразумевано"
     s3:
@@ -332,7 +331,6 @@ sr:
       new_topic: "Novi nacrt teme"
       new_private_message: "Nacrt nove privatne poruke"
       abandon:
-        confirm: "Imate nacrt za ovu temu. Sta želite da učinite sa njim?"
         yes_value: "Odbaci"
         no_value: "Nastavi sa uređivanjem"
     topic_count_categories:
@@ -439,13 +437,14 @@ sr:
       conversation:
         view_full: "pogledaj ceo razgovor"
       scores:
-        type: "Tip"
-        reviewed_by: "Pregledano od strane"
+        type: "Razlog"
       statuses:
         pending:
           title: "U toku"
         approved:
           title: "Potvrđenji"
+      context_question:
+        delimiter: "ili"
       types:
         reviewable_user:
           title: "Korisnik"
@@ -714,7 +713,6 @@ sr:
       tracked_topics_link: "Prikaži"
       api_approved: "Potvrđenji:"
       staff_counters:
-        flags_given: "pomoćne oznake"
         flagged_posts: "označene poruke"
         deleted_posts: "obrisane poruke"
         suspensions: "suspenzije"
@@ -1627,6 +1625,10 @@ sr:
     filters:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Poslednje"
         title_with_count:
@@ -1817,8 +1819,10 @@ sr:
           save: "Sačuvaj"
           delete: "Obriši"
           links:
-            icon: "Ikona"
-            name: "Ime foruma"
+            icon:
+              label: "Ikona"
+            name:
+              label: "Ime"
         about:
           header_link_text: "O nama"
         messages:
@@ -2222,6 +2226,13 @@ sr:
           cancel: "Odustani"
         quick_insert_fields:
           add_new_field: "Dodaj"
+        validations_modal:
+          table_headers:
+            type: "Tip"
+            description: "Opis"
+          validations:
+            required:
+              key: "potrebno"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavite kao određeni korisnički nalog za potrebe ispravljanja grešaka. Moraćete se odjaviti kad završite."

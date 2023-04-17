@@ -195,6 +195,10 @@ class SiteSettings::TypeSupervisor
     self.class.types[@types[name.to_sym]]
   end
 
+  def get_list_type(name)
+    @list_type[name.to_sym]
+  end
+
   private
 
   def normalize_input(name, val)

@@ -6,17 +6,40 @@
       @collapsable={{true}}
       @headerActions={{section.headerActions}}
       @headerActionsIcon="pencil-alt"
+      @class={{section.dragCss}}
     >
       {{#each section.links as |link|}}
-        <Sidebar::SectionLink
-          @linkName={{link.name}}
-          @route={{link.route}}
-          @models={{link.models}}
-          @query={{link.query}}
-          @content={{replace-emoji link.name}}
-          @prefixType="icon"
-          @prefixValue={{link.icon}}
-        />
+        {{#if link.external}}
+          <Sidebar::SectionLink
+            @linkName={{link.name}}
+            @content={{replace-emoji link.name}}
+            @prefixType="icon"
+            @prefixValue={{link.icon}}
+            @href={{link.value}}
+            @class={{link.linkDragCss}}
+            {{draggable
+              didStartDrag=link.didStartDrag
+              didEndDrag=link.didEndDrag
+              dragMove=link.dragMove
+            }}
+          />
+        {{else}}
+          <Sidebar::SectionLink
+            @linkName={{link.name}}
+            @route={{link.route}}
+            @models={{link.models}}
+            @query={{link.query}}
+            @content={{replace-emoji link.name}}
+            @prefixType="icon"
+            @prefixValue={{link.icon}}
+            @class={{link.linkDragCss}}
+            {{draggable
+              didStartDrag=link.didStartDrag
+              didEndDrag=link.didEndDrag
+              dragMove=link.dragMove
+            }}
+          />
+        {{/if}}
       {{/each}}
     </Sidebar::Section>
   {{/each}}

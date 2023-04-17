@@ -15,11 +15,11 @@ RSpec.describe Chat::DirectMessagesController do
   end
 
   def create_dm_channel(user_ids)
-    direct_messages_channel = DirectMessage.create!
+    direct_messages_channel = Chat::DirectMessage.create!
     user_ids.each do |user_id|
       direct_messages_channel.direct_message_users.create!(user_id: user_id)
     end
-    DirectMessageChannel.create!(chatable: direct_messages_channel)
+    Chat::DirectMessageChannel.create!(chatable: direct_messages_channel)
   end
 
   describe "#index" do
@@ -41,10 +41,10 @@ RSpec.describe Chat::DirectMessagesController do
 
     context "when channel exists" do
       let!(:channel) do
-        direct_messages_channel = DirectMessage.create!
+        direct_messages_channel = Chat::DirectMessage.create!
         direct_messages_channel.direct_message_users.create!(user_id: user.id)
         direct_messages_channel.direct_message_users.create!(user_id: user1.id)
-        DirectMessageChannel.create!(chatable: direct_messages_channel)
+        Chat::DirectMessageChannel.create!(chatable: direct_messages_channel)
       end
 
       it "returns the channel" do
@@ -76,8 +76,8 @@ RSpec.describe Chat::DirectMessagesController do
       it "creates a new dm channel with username(s) provided" do
         expect {
           post "/chat/direct_messages/create.json", params: { usernames: [usernames] }
-        }.to change { DirectMessage.count }.by(1)
-        expect(DirectMessage.last.direct_message_users.map(&:user_id)).to match_array(
+        }.to change { Chat::DirectMessage.count }.by(1)
+        expect(Chat::DirectMessage.last.direct_message_users.map(&:user_id)).to match_array(
           direct_message_user_ids,
         )
       end
@@ -86,7 +86,7 @@ RSpec.describe Chat::DirectMessagesController do
         create_dm_channel(direct_message_user_ids)
         expect {
           post "/chat/direct_messages/create.json", params: { usernames: [usernames] }
-        }.not_to change { DirectMessage.count }
+        }.not_to change { Chat::DirectMessage.count }
       end
     end
 
@@ -111,12 +111,12 @@ RSpec.describe Chat::DirectMessagesController do
       include_examples "creating dms"
     end
 
-    it "creates UserChatChannelMembership records" do
+    it "creates Chat::UserChatChannelMembership records" do
       users = [user2, user3]
       usernames = users.map(&:username)
       expect {
         post "/chat/direct_messages/create.json", params: { usernames: usernames }
-      }.to change { UserChatChannelMembership.count }.by(3)
+      }.to change { Chat::UserChatChannelMembership.count }.by(3)
     end
 
     context "when one of the users I am messaging has ignored, muted, or prevented DMs from the acting user creating the channel" do
@@ -127,7 +127,7 @@ RSpec.describe Chat::DirectMessagesController do
         it "responds with a friendly error" do
           expect {
             post "/chat/direct_messages/create.json", params: { usernames: [usernames] }
-          }.not_to change { DirectMessage.count }
+          }.not_to change { Chat::DirectMessage.count }
           expect(response.status).to eq(422)
           expect(response.parsed_body["errors"]).to eq(
             [I18n.t("chat.errors.not_accepting_dms", username: user1.username)],

@@ -175,6 +175,8 @@ en:
       removed_user: "Removed %{who} %{when}"
       removed_group: "Removed %{who} %{when}"
       autobumped: "Automatically bumped %{when}"
+      tags_changed: "Tags updated %{when}"
+      category_changed: "Category updated %{when}"
       autoclosed:
         enabled: "Closed %{when}"
         disabled: "Opened %{when}"
@@ -209,12 +211,7 @@ en:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
       dismiss: "Dismiss"
 
-    bootstrap_mode_enabled:
-      one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
-      other: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} users have joined."
-    bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
-    bootstrap_invite_button_title: "Send Invites"
-    bootstrap_wizard_link_title: "Finish setup wizard"
+    bootstrap_mode: "Bootstrap mode"
 
     themes:
       default_description: "Default"
@@ -386,7 +383,7 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       abandon:
-        confirm: "You have a draft in progress for this topic. What would you like to do with it?"
+        confirm: "You already have a draft in progress. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
 
@@ -581,27 +578,45 @@ en:
       scores:
         about: "This score is calculated based on the trust level of the reporter, the accuracy of their previous flags, and the priority of the item being reported."
         score: "Score"
-        date: "Date"
-        type: "Type"
+        date: "Report date"
+        type: "Reason"
         status: "Status"
-        submitted_by: "Submitted By"
-        reviewed_by: "Reviewed By"
+        submitted_by: "Reported by"
+        reviewed_by: "Reviewed by"
+        reviewed_timestamp: "Review date"
 
       statuses:
         pending:
           title: "Pending"
         approved:
           title: "Approved"
+        approved_flag:
+          title: "Flag approved"
+        approved_user:
+          title: "User approved"
+        approved_post:
+          title: "Post approved"
         rejected:
           title: "Rejected"
+        rejected_flag:
+          title: "Flag rejected"
+        rejected_user:
+          title: "User rejected"
+        rejected_post:
+          title: "Post rejected"
         ignored:
-          title: "Ignored"
+          title: "Flag ignored"
         deleted:
-          title: "Deleted"
+          title: "Topic or post deleted"
         reviewed:
-          title: "(all reviewed)"
+          title: "All reviewed"
         all:
-          title: "(everything)"
+          title: "Everything"
+
+      context_question:
+        is_this_post: "Is this post %{reviewable_human_score_types}?"
+        delimiter: "or"
+        something_else_wrong: "Is there something wrong with this post?"
 
       types:
         reviewable_flagged_post:
@@ -917,6 +932,7 @@ en:
         make_all_primary_description: "Make this the primary group for all selected users"
         remove_all_primary: "Remove as Primary"
         remove_all_primary_description: "Remove this group as primary"
+        status: "Status"
         owner: "Owner"
         primary: "Primary"
         forbidden: "You're not allowed to view the members."
@@ -1265,12 +1281,24 @@ en:
       staged: "Staged"
 
       staff_counters:
-        flags_given: "helpful flags"
-        flagged_posts: "flagged posts"
-        deleted_posts: "deleted posts"
-        suspensions: "suspensions"
-        warnings_received: "warnings"
-        rejected_posts: "rejected posts"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> helpful flag'
+          other: '<span class="%{className}">%{count}</span> helpful flags'
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> flagged post'
+          other: '<span class="%{className}">%{count}</span> flagged posts'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> deleted post'
+          other: '<span class="%{className}">%{count}</span> deleted posts'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> suspension'
+          other: '<span class="%{className}">%{count}</span> suspensions'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> warning'
+          other: '<span class="%{className}">%{count}</span> warnings'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> rejected post'
+          other: '<span class="%{className}">%{count}</span> rejected posts'
 
       messages:
         all: "all inboxes"
@@ -2864,6 +2892,7 @@ en:
         bookmarks: "You have no bookmarked topics yet."
         category: "There are no %{category} topics."
         top: "There are no top topics."
+        filter: "There are no topics."
         educate:
           new: '<p>Your new topics will appear here. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
           unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge unread-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
@@ -2878,12 +2907,14 @@ en:
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
+        filter: "There are no more topics."
 
     topic:
       filter_to:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
       create: "New Topic"
+      create_disabled_category: "You're not allowed to create topics in this category"
       create_long: "Create a new Topic"
       open_draft: "Open Draft"
       private_message: "Start a message"
@@ -3718,6 +3749,7 @@ en:
       default_slow_mode: 'Enable "Slow Mode" for new topics in this category.'
       parent: "Parent Category"
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
+      auto_bump_cooldown_days: "Minimum days before bumping the same topic again:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
       notifications:
         title: "change notification level for this category"
@@ -3924,6 +3956,10 @@ en:
     filters:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Latest"
         title_with_count:
@@ -4367,17 +4403,34 @@ en:
         custom:
           add: "Add custom section"
           edit: "Edit custom section"
-          name: "Section title"
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
           public: "Make this section public and visible to everyone"
           links:
-            icon: "Icon"
-            name: "Name"
-            value: "Link"
             add: "Add another link"
             delete: "Delete link"
+            icon:
+              label: "Icon"
+              validation:
+                blank: "Icon cannot be blank"
+                maximum: "Icon must be shorter than %{count} characters"
+            name:
+              label: "Name"
+              validation:
+                blank: "Name cannot be blank"
+                maximum: "Name must be shorter than %{count} characters"
+            value:
+              label: "Link"
+              validation:
+                blank: "Link cannot be blank"
+                maximum: "Link must be shorter than %{count} characters"
+                invalid: "Format is invalid"
+          title:
+            label: "Section title"
+            validation:
+              blank: "Title cannot be blank"
+              maximum: "Title must be shorter than %{count} characters"
         about:
           header_link_text: "About"
         messages:
@@ -4438,6 +4491,7 @@ en:
               title: "List of all users"
             my_posts:
               content: "My Posts"
+              content_drafts: "My Drafts"
               title: "My recent topic activity"
               title_drafts: "My unposted drafts"
               draft_count:
@@ -5435,6 +5489,7 @@ en:
             create_public_sidebar_section: "create public sidebar section"
             update_public_sidebar_section: "update public sidebar section"
             destroy_public_sidebar_section: "destroy public sidebar section"
+            reset_bounce_score: "reset bounce score"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -5499,14 +5554,14 @@ en:
           silence: "Silence"
           link: "Link"
         action_descriptions:
-          block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
-          censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
-          require_approval: "Posts containing these words will require approval by staff before they can be seen."
-          flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
-          replace: "Replace words in posts with other words"
-          tag: "Automatically tag topics based on first post"
-          silence: "First posts of users containing these words will require approval by staff before they can be seen and the user will be automatically silenced."
-          link: "Replace words in posts with links"
+          block: "An error message will be displayed when attempting to create a post containing these words."
+          censor: "Allow posts that contain these words, but replace them with characters that hide the censored words."
+          require_approval: "Require staff approval for posts that contain these words before they can be visible to others."
+          flag: "Allow posts that contain these words, but flag them as inappropriate for review by moderators."
+          replace: "Replace words in posts with other words."
+          tag: "Automatically tag topics if the first post contains a specific word."
+          silence: "Silence new accounts if their very first post contains any of these words. The post will be automatically hidden until staff approves it."
+          link: "Replace words in posts with links."
         form:
           label: "Has word or phrase"
           placeholder: "Enter word or phrase (* is a wildcard)"
@@ -5538,6 +5593,7 @@ en:
         list_table:
           headings:
             name: "Name"
+            active_categories: "Active Categories"
             actions: "Actions"
           actions:
             view: "View Template"
@@ -5621,6 +5677,7 @@ en:
         not_found: "Sorry, that username doesn't exist in our system."
         id_not_found: "Sorry, that user id doesn't exist in our system."
         active: "Activated"
+        status: "Status"
         show_emails: "Show Emails"
         hide_emails: "Hide Emails"
         nav:
