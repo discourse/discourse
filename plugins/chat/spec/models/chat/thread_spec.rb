@@ -42,4 +42,107 @@ RSpec.describe Chat::Thread do
       end
     end
   end
+
+  describe ".grouped_messages" do
+    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
+    fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
+
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread_1) }
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread_1) }
+    fab!(:message_3) { Fabricate(:chat_message, chat_channel: channel, thread: thread_2) }
+
+    let(:result) { Chat::Thread.grouped_messages(**params) }
+
+    context "when thread_ids provided" do
+      let(:params) { { thread_ids: [thread_1.id, thread_2.id] } }
+
+      it "groups all the message ids in each thread by thread ID" do
+        expect(result.find { |res| res.thread_id == thread_1.id }.to_h).to eq(
+          {
+            thread_message_ids: [thread_1.original_message_id, message_1.id, message_2.id],
+            thread_id: thread_1.id,
+            original_message_id: thread_1.original_message_id,
+          },
+        )
+        expect(result.find { |res| res.thread_id == thread_2.id }.to_h).to eq(
+          {
+            thread_message_ids: [thread_2.original_message_id, message_3.id],
+            thread_id: thread_2.id,
+            original_message_id: thread_2.original_message_id,
+          },
+        )
+      end
+
+      context "when include_original_message is false" do
+        let(:params) { { thread_ids: [thread_1.id, thread_2.id], include_original_message: false } }
+
+        it "does not include the original message in the thread_message_ids" do
+          expect(result.find { |res| res.thread_id == thread_1.id }.to_h).to eq(
+            {
+              thread_message_ids: [message_1.id, message_2.id],
+              thread_id: thread_1.id,
+              original_message_id: thread_1.original_message_id,
+            },
+          )
+        end
+      end
+    end
+
+    context "when message_ids provided" do
+      let(:params) do
+        {
+          message_ids: [
+            thread_1.original_message_id,
+            thread_2.original_message_id,
+            message_1.id,
+            message_2.id,
+            message_3.id,
+          ],
+        }
+      end
+
+      it "groups all the message ids in each thread by thread ID" do
+        expect(result.find { |res| res.thread_id == thread_1.id }.to_h).to eq(
+          {
+            thread_message_ids: [thread_1.original_message_id, message_1.id, message_2.id],
+            thread_id: thread_1.id,
+            original_message_id: thread_1.original_message_id,
+          },
+        )
+        expect(result.find { |res| res.thread_id == thread_2.id }.to_h).to eq(
+          {
+            thread_message_ids: [thread_2.original_message_id, message_3.id],
+            thread_id: thread_2.id,
+            original_message_id: thread_2.original_message_id,
+          },
+        )
+      end
+
+      context "when include_original_message is false" do
+        let(:params) do
+          {
+            message_ids: [
+              thread_1.original_message_id,
+              thread_2.original_message_id,
+              message_1.id,
+              message_2.id,
+              message_3.id,
+            ],
+            include_original_message: false,
+          }
+        end
+
+        it "does not include the original message in the thread_message_ids" do
+          expect(result.find { |res| res.thread_id == thread_1.id }.to_h).to eq(
+            {
+              thread_message_ids: [message_1.id, message_2.id],
+              thread_id: thread_1.id,
+              original_message_id: thread_1.original_message_id,
+            },
+          )
+        end
+      end
+    end
+  end
 end
