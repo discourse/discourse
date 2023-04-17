@@ -9,7 +9,7 @@ module Jobs
         return if thread.replies_count_cache_recently_updated?
 
         Discourse.redis.setex(
-          thread.replies_count_cache_updated_at_redis_key,
+          ::Chat::Thread.replies_count_cache_updated_at_redis_key(thread.id),
           5.minutes.from_now.to_i,
           Time.zone.now.to_i,
         )

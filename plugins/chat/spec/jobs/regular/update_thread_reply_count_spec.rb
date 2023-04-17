@@ -5,7 +5,7 @@ RSpec.describe Jobs::Chat::UpdateThreadReplyCount do
   fab!(:message_1) { Fabricate(:chat_message, thread: thread) }
   fab!(:message_2) { Fabricate(:chat_message, thread: thread) }
 
-  before { thread.clear_caches! }
+  before { Chat::Thread.clear_caches! }
 
   it "does not error if the thread is deleted" do
     id = thread.id
