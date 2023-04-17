@@ -177,8 +177,13 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     }
   }
 
-  handleBulkDeleteMessage() {
-    throw "not implemented";
+  handleBulkDeleteMessage(data) {
+    data.deleted_ids.forEach((deletedId) => {
+      this.handleDeleteMessage({
+        deleted_id: deletedId,
+        deleted_at: data.deleted_at,
+      });
+    });
   }
 
   handleDeleteMessage(data) {

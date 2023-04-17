@@ -39,11 +39,6 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneB
     return;
   }
 
-  // TODO (martin) Hook this up correctly in Chat::Publisher for threads.
-  handleBulkDeleteMessage() {
-    return;
-  }
-
   // NOTE: noop for now, later we may want to do scrolling or something like
   // we do in the channel pane.
   afterProcessedMessage() {

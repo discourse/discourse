@@ -5,10 +5,7 @@ module Chat
     self.table_name = "direct_message_channels"
 
     include Chatable
-
-    def self.polymorphic_name
-      Chat::Chatable.polymorphic_name_for(self) || super
-    end
+    include TypeMappable
 
     has_many :direct_message_users,
              class_name: "Chat::DirectMessageUser",
@@ -17,11 +14,15 @@ module Chat
 
     has_one :direct_message_channel, as: :chatable, class_name: "Chat::DirectMessageChannel"
 
-    def self.for_user_ids(user_ids)
-      joins(:users)
-        .group("direct_message_channels.id")
-        .having("ARRAY[?] = ARRAY_AGG(users.id ORDER BY users.id)", user_ids.sort)
-        &.first
+    class << self
+      def polymorphic_class_mapping = { "DirectMessage" => Chat::DirectMessage }
+
+      def for_user_ids(user_ids)
+        joins(:users)
+          .group("direct_message_channels.id")
+          .having("ARRAY[?] = ARRAY_AGG(users.id ORDER BY users.id)", user_ids.sort)
+          .first
+      end
     end
 
     def user_can_access?(user)

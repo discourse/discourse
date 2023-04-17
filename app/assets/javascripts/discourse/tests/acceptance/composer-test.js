@@ -370,6 +370,26 @@ acceptance("Composer", function (needs) {
     );
   });
 
+  test("Can Keep Editing when replying on a different topic", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click("#topic-footer-buttons .create");
+    await fillIn(".d-editor-input", "this is the content of my reply");
+
+    await visit("/t/this-is-a-test-topic/9");
+    await click("#topic-footer-buttons .create");
+    assert.ok(visible(".discard-draft-modal.modal"));
+
+    await click(".modal-footer button.keep-editing");
+    assert.ok(invisible(".discard-draft-modal.modal"));
+
+    assert.strictEqual(
+      query(".d-editor-input").value,
+      "this is the content of my reply",
+      "composer does not switch when using Keep Editing button"
+    );
+  });
+
   test("Posting on a different topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");

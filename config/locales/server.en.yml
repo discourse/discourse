@@ -1743,7 +1743,7 @@ en:
     discourse_connect_overrides_profile_background: "Overrides user profile background with value from DiscourseConnect payload."
     discourse_connect_overrides_card_background: "Overrides user card background with value from DiscourseConnect payload."
     discourse_connect_not_approved_url: "Redirect unapproved DiscourseConnect accounts to this URL"
-    discourse_connect_allows_all_return_paths: "Do not restrict the domain for return_paths provided by DiscourseConnect (by default return path must be on current site)"
+    discourse_connect_allowed_redirect_domains: "Restrict to these domains for return_paths provided by DiscourseConnect (by default return path must be on current site). Use * to allow any domain for return path. Subdomain wildcards (`*.foobar.com`) are not allowed."
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."

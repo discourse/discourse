@@ -40,6 +40,21 @@ module Chat
       original_message.excerpt(max_length: EXCERPT_LENGTH)
     end
 
+    def self.grouped_messages(thread_ids: nil, message_ids: nil, include_original_message: true)
+      DB.query(<<~SQL, message_ids: message_ids, thread_ids: thread_ids)
+        SELECT thread_id,
+          array_agg(chat_messages.id ORDER BY chat_messages.created_at, chat_messages.id) AS thread_message_ids,
+          chat_threads.original_message_id
+        FROM chat_messages
+        INNER JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
+        WHERE thread_id IS NOT NULL
+        #{thread_ids ? "AND thread_id IN (:thread_ids)" : ""}
+        #{message_ids ? "AND chat_messages.id IN (:message_ids)" : ""}
+        #{include_original_message ? "" : "AND chat_messages.id != chat_threads.original_message_id"}
+        GROUP BY thread_id, chat_threads.original_message_id;
+      SQL
+    end
+
     def self.ensure_consistency!
       update_counts
     end

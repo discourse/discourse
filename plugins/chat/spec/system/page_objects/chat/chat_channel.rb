@@ -157,10 +157,19 @@ module PageObjects
       end
 
       def has_message?(text: nil, id: nil)
+        check_message_presence(exists: true, text: text, id: id)
+      end
+
+      def has_no_message?(text: nil, id: nil)
+        check_message_presence(exists: false, text: text, id: id)
+      end
+
+      def check_message_presence(exists: true, text: nil, id: nil)
+        css_method = exists ? :has_css? : :has_no_css?
         if text
-          has_css?(".chat-message-text", text: text)
+          send(css_method, ".chat-message-text", text: text, wait: 5)
         elsif id
-          has_css?(".chat-message-container[data-id=\"#{id}\"]", wait: 10)
+          send(css_method, ".chat-message-container[data-id=\"#{id}\"]", wait: 10)
         end
       end
 

@@ -533,7 +533,7 @@ describe Chat::Message do
       upload_references = UploadReference.where(upload_id: [upload_1, upload_2])
       expect(upload_references.count).to eq(2)
       expect(upload_references.map(&:target_id).uniq).to eq([chat_message.id])
-      expect(upload_references.map(&:target_type).uniq).to eq([Chat::Message.sti_name])
+      expect(upload_references.map(&:target_type).uniq).to eq([described_class.polymorphic_name])
     end
 
     it "does nothing if the message record is new" do

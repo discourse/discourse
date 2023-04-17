@@ -24,4 +24,49 @@ RSpec.describe "Deleted message", type: :system, js: true do
       expect(page).to have_content(I18n.t("js.chat.deleted"))
     end
   end
+
+  context "when bulk deleting messages across the channel and a thread" do
+    let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
+    let(:open_thread) { PageObjects::Pages::ChatThread.new }
+
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: other_user) }
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, user: other_user) }
+    fab!(:message_3) { Fabricate(:chat_message, chat_channel: channel_1, user: other_user) }
+
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel_1) }
+    fab!(:message_4) do
+      Fabricate(:chat_message, chat_channel: channel_1, user: other_user, thread: thread)
+    end
+    fab!(:message_5) do
+      Fabricate(:chat_message, chat_channel: channel_1, user: other_user, thread: thread)
+    end
+
+    before do
+      channel_1.update!(threading_enabled: true)
+      SiteSetting.enable_experimental_chat_threaded_discussions = true
+      chat_system_user_bootstrap(user: other_user, channel: channel_1)
+    end
+
+    it "hides the deleted messages" do
+      chat_page.visit_channel(channel_1)
+      channel_page.message_thread_indicator(thread.original_message).click
+      expect(side_panel).to have_open_thread(thread)
+
+      expect(channel_page).to have_message(id: message_1.id)
+      expect(channel_page).to have_message(id: message_2.id)
+      expect(open_thread).to have_message(thread.id, id: message_4.id)
+      expect(open_thread).to have_message(thread.id, id: message_5.id)
+
+      Chat::Publisher.publish_bulk_delete!(
+        channel_1,
+        [message_1.id, message_2.id, message_4.id, message_5.id].flatten,
+      )
+
+      expect(channel_page).to have_no_message(id: message_1.id)
+      expect(channel_page).to have_no_message(id: message_2.id)
+      expect(open_thread).to have_no_message(thread.id, id: message_4.id)
+      expect(open_thread).to have_no_message(thread.id, id: message_5.id)
+    end
+  end
 end
