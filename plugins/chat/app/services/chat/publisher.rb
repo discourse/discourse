@@ -45,18 +45,6 @@ module Chat
         MessageBus.publish(message_bus_channel, content.as_json, permissions)
       end
 
-      if chat_message.thread_reply?
-        MessageBus.publish(
-          root_message_bus_channel(chat_channel.id),
-          {
-            type: :update_thread_original_message,
-            original_message_id: chat_message.thread.original_message_id,
-            action: :increment_reply_count,
-          }.as_json,
-          permissions,
-        )
-      end
-
       # NOTE: This means that the read count is only updated in the client
       # for new messages in the main channel stream, maybe in future we want to
       # do this for thread messages as well?
@@ -73,6 +61,19 @@ module Chat
           permissions,
         )
       end
+    end
+
+    def self.publish_thread_original_message_metadata!(thread)
+      permissions = permissions(thread.channel)
+      MessageBus.publish(
+        root_message_bus_channel(thread.channel.id),
+        {
+          type: :update_thread_original_message,
+          original_message_id: thread.original_message_id,
+          replies_count: thread.replies_count_cache,
+        }.as_json,
+        permissions,
+      )
     end
 
     def self.publish_thread_created!(chat_channel, chat_message)

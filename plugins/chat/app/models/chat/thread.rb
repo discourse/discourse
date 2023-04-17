@@ -11,7 +11,11 @@ module Chat
     belongs_to :original_message, foreign_key: "original_message_id", class_name: "Chat::Message"
 
     has_many :chat_messages,
-             -> { order("chat_messages.created_at ASC, chat_messages.id ASC") },
+             -> {
+               where("deleted_at IS NULL").order(
+                 "chat_messages.created_at ASC, chat_messages.id ASC",
+               )
+             },
              foreign_key: :thread_id,
              primary_key: :id,
              class_name: "Chat::Message"
@@ -20,6 +24,54 @@ module Chat
 
     def replies
       self.chat_messages.where.not(id: self.original_message_id)
+    end
+
+    def replies_count_cache_updated_at_redis_key
+      "chat_thread:replies_count_cache_updated_at:#{self.id}"
+    end
+
+    def replies_count_cache_redis_key
+      "chat_thread:replies_count_cache:#{self.id}"
+    end
+
+    def replies_count_cache_recently_updated?
+      replies_count_cache_updated_at.after?(5.minutes.ago)
+    end
+
+    def replies_count_cache_updated_at
+      Time.at(
+        Discourse.redis.get(self.replies_count_cache_updated_at_redis_key).to_i,
+        in: Time.zone,
+      )
+    end
+
+    def replies_count_cache
+      redis_cache = Discourse.redis.get(replies_count_cache_redis_key)&.to_i
+      if redis_cache.present? && redis_cache != self.replies_count
+        redis_cache
+      else
+        self.replies_count
+      end
+    end
+
+    def set_replies_count_cache(value, update_db: false)
+      self.update!(replies_count: value) if update_db
+      Discourse.redis.setex(self.replies_count_cache_redis_key, 5.minutes.from_now.to_i, value)
+      Jobs.enqueue_in(3.seconds, Jobs::Chat::UpdateThreadReplyCount, thread_id: self.id)
+      ::Chat::Publisher.publish_thread_original_message_metadata!(self)
+    end
+
+    def increment_replies_count_cache
+      self.set_replies_count_cache(self.replies_count_cache + 1)
+    end
+
+    def decrement_replies_count_cache
+      self.set_replies_count_cache(self.replies_count_cache - 1)
+    end
+
+    def clear_caches!
+      Discourse.redis.del(self.replies_count_cache_redis_key)
+      Discourse.redis.del(self.replies_count_cache_updated_at_redis_key)
     end
 
     def url
@@ -58,6 +110,7 @@ module Chat
         WHERE threads.id = subquery.thread_id
         AND subquery.replies_count != threads.replies_count
       SQL
+      Discourse.redis.delete_prefixed("chat_thread:replies_count_cache")
     end
   end
 end
