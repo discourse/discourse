@@ -16,7 +16,7 @@ export default class ChatChannelPane extends Service {
   @tracked sendingLoading = false;
 
   get selectedMessageIds() {
-    return this.chat.activeChannel.selectedMessages.mapBy("id");
+    return this.chat.activeChannel?.selectedMessages?.mapBy("id") || [];
   }
 
   get composerService() {
