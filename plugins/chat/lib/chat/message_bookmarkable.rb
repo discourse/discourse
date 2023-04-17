@@ -23,12 +23,12 @@ module Chat
           :sanitize_sql_array,
           [
             "INNER JOIN chat_messages ON chat_messages.id = bookmarks.bookmarkable_id AND chat_messages.deleted_at IS NULL AND bookmarks.bookmarkable_type = ?",
-            Chat::Message.sti_name,
+            Chat::Message.polymorphic_name,
           ],
         )
 
       user
-        .bookmarks_of_type(Chat::Message.sti_name)
+        .bookmarks_of_type(Chat::Message.polymorphic_name)
         .joins(joins)
         .where("chat_messages.chat_channel_id IN (?)", accessible_channel_ids)
     end
@@ -66,7 +66,7 @@ module Chat
     end
 
     def self.cleanup_deleted
-      DB.query(<<~SQL, grace_time: 3.days.ago, bookmarkable_type: Chat::Message.sti_name)
+      DB.query(<<~SQL, grace_time: 3.days.ago, bookmarkable_type: Chat::Message.polymorphic_name)
       DELETE FROM bookmarks b
       USING chat_messages cm
       WHERE b.bookmarkable_id = cm.id
