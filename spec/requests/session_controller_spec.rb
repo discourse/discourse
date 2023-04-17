@@ -838,6 +838,32 @@ RSpec.describe SessionController do
       expect(response).to redirect_to("https://gusundtrout.com")
     end
 
+    it "allows wildcard character to redirect to any domain" do
+      SiteSetting.discourse_connect_allowed_redirect_domains = "*|foo.com"
+
+      sso = get_sso("https://foobar.com")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      expect(response).to redirect_to("https://foobar.com")
+    end
+
+    it "does not allow wildcard character in domains" do
+      SiteSetting.discourse_connect_allowed_redirect_domains = "*.foobar.com|foobar.com"
+
+      sso = get_sso("https://sub.foobar.com")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      expect(response).to redirect_to("/")
+    end
+
     it "redirects to root if the host of the return_path is different" do
       sso = get_sso("//eviltrout.com")
       sso.external_id = "666"
