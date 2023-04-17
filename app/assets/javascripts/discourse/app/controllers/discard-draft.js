@@ -13,7 +13,7 @@ export default Controller.extend(ModalFunctionality, {
       this.send("closeModal");
     },
 
-   dismissModal() {
+    dismissModal() {
       this.send("closeModal");
     },
   },
