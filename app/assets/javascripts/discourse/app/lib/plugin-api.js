@@ -72,6 +72,7 @@ import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map"
 import { addTopicSummaryCallback } from "discourse/widgets/toggle-topic-summary";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
+import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import deprecated from "discourse-common/lib/deprecated";
@@ -1585,6 +1586,7 @@ class PluginApi {
    **/
   addQuickAccessProfileItem(item) {
     addQuickAccessProfileItem(item);
+    addUserMenuProfileTabItem(item);
   }
 
   addFeaturedLinkMetaDecorator(decorator) {
