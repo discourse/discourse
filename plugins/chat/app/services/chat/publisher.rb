@@ -50,7 +50,7 @@ module Chat
             username: chat_message.user.username,
             thread_id: chat_message.thread_id,
           },
-          permissions,
+          permissions(chat_channel),
         )
       end
     end
