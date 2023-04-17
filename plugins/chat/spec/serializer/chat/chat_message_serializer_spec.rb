@@ -208,4 +208,44 @@ describe Chat::MessageSerializer do
       end
     end
   end
+
+  describe "threading data" do
+    before { message_1.update!(thread: Fabricate(:chat_thread, channel: chat_channel)) }
+
+    context "when enable_experimental_chat_threaded_discussions is disabled" do
+      before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
+
+      it "does not include thread data" do
+        serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
+        expect(serialized).not_to have_key(:thread_id)
+        expect(serialized).not_to have_key(:thread_reply_count)
+      end
+    end
+
+    context "when the channel has threading_enabled false" do
+      before do
+        SiteSetting.enable_experimental_chat_threaded_discussions = true
+        chat_channel.update!(threading_enabled: false)
+      end
+
+      it "does not include thread data" do
+        serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
+        expect(serialized).not_to have_key(:thread_id)
+        expect(serialized).not_to have_key(:thread_reply_count)
+      end
+    end
+
+    context "when the channel has threading_enabled true and enable_experimental_chat_threaded_discussions is true" do
+      before do
+        SiteSetting.enable_experimental_chat_threaded_discussions = true
+        chat_channel.update!(threading_enabled: true)
+      end
+
+      it "does include thread data" do
+        serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
+        expect(serialized).to have_key(:thread_id)
+        expect(serialized).to have_key(:thread_reply_count)
+      end
+    end
+  end
 end
