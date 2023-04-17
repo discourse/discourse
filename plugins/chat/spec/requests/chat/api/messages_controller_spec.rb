@@ -116,7 +116,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         expect(response.status).to eq(403)
       end
 
-      it "allows a user to restore their own posts" do
+      it "allows a user to restore their own messages" do
         sign_in(current_user)
 
         put "/chat/api/channels/#{chat_channel.id}/messages/#{deleted_message.id}/restore.json"
@@ -124,7 +124,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         expect(deleted_message.reload.deleted_at).to be_nil
       end
 
-      it "allows admin to restore others' posts" do
+      it "allows admin to restore others' messages" do
         sign_in(admin)
 
         put "/chat/api/channels/#{chat_channel.id}/messages/#{deleted_message.id}/restore.json"
@@ -132,7 +132,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         expect(deleted_message.reload.deleted_at).to be_nil
       end
 
-      it "does not allow message restore when chat channel is read_only" do
+      it "does not allow message restore when channel is read_only" do
         sign_in(current_user)
 
         chat_channel.update!(status: :read_only)
@@ -146,7 +146,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         expect(response.status).to eq(403)
       end
 
-      it "only allows admin to restore when chat channel is closed" do
+      it "only allows admin to restore when channel is closed" do
         sign_in(admin)
 
         chat_channel.update!(status: :read_only)

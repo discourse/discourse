@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  # Service responsible for restoreing a trashed chat message
+  # Service responsible for restoring a trashed chat message
   # for a channel and ensuring that the client and read state is
   # updated.
   #
