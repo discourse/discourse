@@ -38,8 +38,8 @@ module Chat
 
     def fetch_message(contract:, **)
       Chat::Message
-        .includes(chat_channel: :chatable)
         .with_deleted
+        .includes(chat_channel: :chatable)
         .find_by(id: contract.message_id, chat_channel_id: contract.channel_id)
     end
 
@@ -56,7 +56,7 @@ module Chat
     end
 
     def publish_events(guardian:, message:, **)
-      DiscourseEvent.trigger(:chat_message_restoreed, message, message.chat_channel, guardian.user)
+      DiscourseEvent.trigger(:chat_message_restored, message, message.chat_channel, guardian.user)
       Chat::Publisher.publish_restore!(message.chat_channel, message)
     end
   end

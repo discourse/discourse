@@ -86,6 +86,18 @@ RSpec.describe Chat::TrashMessage do
           expect(membership_3.reload.last_read_message_id).not_to be_nil
         end
 
+        context "when the message has a thread" do
+          fab!(:thread) { Fabricate(:chat_thread, channel: message.chat_channel) }
+
+          before { message.update!(thread: thread) }
+
+          it "decrements the thread reply count" do
+            thread.set_replies_count_cache(5)
+            result
+            expect(thread.replies_count_cache).to eq(4)
+          end
+        end
+
         context "when message is already deleted" do
           before { message.trash! }
 
