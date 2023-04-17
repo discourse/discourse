@@ -11,6 +11,8 @@ module Chat
     end
 
     def self.publish_new!(chat_channel, chat_message, staged_id)
+      return if chat_message.thread_reply?
+
       content =
         Chat::MessageSerializer.new(
           chat_message,
@@ -35,7 +37,21 @@ module Chat
       )
     end
 
+    def self.publish_thread_created!(chat_channel, chat_message)
+      content =
+        Chat::MessageSerializer.new(
+          chat_message,
+          { scope: anonymous_guardian, root: :chat_message },
+        ).as_json
+      content[:type] = :thread_created
+      permissions = permissions(chat_channel)
+
+      MessageBus.publish(root_message_bus_channel(chat_channel.id), content.as_json, permissions)
+    end
+
     def self.publish_processed!(chat_message)
+      return if chat_message.thread_reply?
+
       chat_channel = chat_message.chat_channel
       content = {
         type: :processed,
@@ -52,6 +68,8 @@ module Chat
     end
 
     def self.publish_edit!(chat_channel, chat_message)
+      return if chat_message.thread_reply?
+
       content =
         Chat::MessageSerializer.new(
           chat_message,
@@ -66,6 +84,8 @@ module Chat
     end
 
     def self.publish_refresh!(chat_channel, chat_message)
+      return if chat_message.thread_reply?
+
       content =
         Chat::MessageSerializer.new(
           chat_message,
@@ -80,6 +100,8 @@ module Chat
     end
 
     def self.publish_reaction!(chat_channel, chat_message, action, user, emoji)
+      return if chat_message.thread_reply?
+
       content = {
         action: action,
         user: BasicUserSerializer.new(user, root: false).as_json,
@@ -99,6 +121,8 @@ module Chat
     end
 
     def self.publish_delete!(chat_channel, chat_message)
+      return if chat_message.thread_reply?
+
       MessageBus.publish(
         root_message_bus_channel(chat_channel.id),
         { type: "delete", deleted_id: chat_message.id, deleted_at: chat_message.deleted_at },
@@ -115,6 +139,8 @@ module Chat
     end
 
     def self.publish_restore!(chat_channel, chat_message)
+      return if chat_message.thread_reply?
+
       content =
         Chat::MessageSerializer.new(
           chat_message,
@@ -129,6 +155,8 @@ module Chat
     end
 
     def self.publish_flag!(chat_message, user, reviewable, score)
+      return if chat_message.thread_reply?
+
       # Publish to user who created flag
       MessageBus.publish(
         "/chat/#{chat_message.chat_channel_id}",

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicsFilter do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, username: "username") }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:group) { Fabricate(:group) }
 
@@ -88,6 +88,29 @@ RSpec.describe TopicsFilter do
               .filter_from_query_string("in:bookmarked")
               .pluck(:id),
           ).to contain_exactly(topic.id)
+        end
+      end
+
+      describe "when query string is `in:bookmarked in:pinnned`" do
+        it "should return topics that are bookmarked and pinned" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:bookmarked in:pinned")
+              .pluck(:id),
+          ).to eq([])
+
+          BookmarkManager.new(user).create_for(
+            bookmarkable_id: pinned_topic.id,
+            bookmarkable_type: "Topic",
+          )
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:bookmarked in:pinned")
+              .pluck(:id),
+          ).to contain_exactly(pinned_topic.id)
         end
       end
 
@@ -584,6 +607,19 @@ RSpec.describe TopicsFilter do
             .pluck(:id),
         ).not_to include(topic_in_private_category.id)
       end
+
+      describe "when query string is `status:closed status:unlisted`" do
+        fab!(:closed_and_unlisted_topic) { Fabricate(:topic, closed: true, visible: false) }
+
+        it "should only return topics that have been closed and are not visible" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("status:closed status:unlisted")
+              .pluck(:id),
+          ).to contain_exactly(closed_and_unlisted_topic.id)
+        end
+      end
     end
 
     describe "when filtering by tags" do
@@ -735,6 +771,79 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("-tags:tag1,tag2")
             .pluck(:id),
         ).to contain_exactly(topic_without_tag.id, topic_with_group_only_tag.id)
+      end
+    end
+
+    describe "when filtering by topic author" do
+      fab!(:user2) { Fabricate(:user, username: "username2") }
+      fab!(:topic_by_user) { Fabricate(:topic, user: user) }
+      fab!(:topic2_by_user) { Fabricate(:topic, user: user) }
+      fab!(:topic_by_user2) { Fabricate(:topic, user: user2) }
+
+      describe "when query string is `created-by:username`" do
+        it "should return the topics created by the specified user" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:#{user.username}")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_user.id, topic2_by_user.id)
+        end
+      end
+
+      describe "when query string is `created-by:username2`" do
+        it "should return the topics created by the specified user" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:#{user2.username}")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_user2.id)
+        end
+      end
+
+      describe "when query string is `created-by:username created-by:username2`" do
+        it "should return the topics created by either of the specified users" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:#{user.username} created-by:#{user2.username}")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_user.id, topic2_by_user.id, topic_by_user2.id)
+        end
+      end
+
+      describe "when query string is `created-by:username,invalid`" do
+        it "should only return the topics created by the user with the valid username" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:#{user.username},invalid")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_user.id, topic2_by_user.id)
+        end
+      end
+
+      describe "when query string is `created-by:username,username2`" do
+        it "should return the topics created by either of the specified users" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:#{user.username},#{user2.username}")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_user.id, topic2_by_user.id, topic_by_user2.id)
+        end
+      end
+
+      describe "when query string is `created-by:invalid`" do
+        it "should not return any topics" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:invalid")
+              .pluck(:id),
+          ).to eq([])
+        end
       end
     end
   end

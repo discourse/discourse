@@ -50,15 +50,6 @@
         />
       {{/if}}
 
-      {{#if this.messageInteractor.canOpenThread}}
-        <DButton
-          @class="btn-flat chat-message-thread-btn"
-          @action={{this.messageInteractor.openThread}}
-          @icon="puzzle-piece"
-          @title="chat.threads.open"
-        />
-      {{/if}}
-
       {{#if this.messageInteractor.secondaryButtons.length}}
         <DropdownSelectBox
           @class="more-buttons"

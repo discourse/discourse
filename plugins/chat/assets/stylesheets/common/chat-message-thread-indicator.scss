@@ -1,0 +1,40 @@
+.chat-message-thread-indicator {
+  align-items: center;
+  display: grid;
+  grid: 1fr / auto-flow;
+  display: flex;
+  cursor: pointer;
+  grid-area: threadindicator;
+  border: 1px solid transparent;
+  margin: 4px 0 -2px calc(var(--message-left-width) - 5px);
+  padding: 4px;
+
+  &:hover {
+    .chat-message:hover & {
+      border-color: var(--primary-low);
+      background-color: var(--secondary);
+    }
+  }
+
+  &__replies-count {
+    color: var(--primary-medium);
+
+    font-size: var(--font-down-2);
+  }
+
+  &__view-thread {
+    font-size: var(--font-down-2);
+
+    .chat-message-thread-indicator:hover & {
+      text-decoration: underline;
+    }
+  }
+
+  &__replies-count + &__view-thread {
+    padding-left: 0.25rem;
+  }
+
+  &__separator {
+    margin: 0 0.5em;
+  }
+}

@@ -16,6 +16,7 @@ module Chat
                :bookmark,
                :available_flags,
                :thread_id,
+               :thread_reply_count,
                :chat_channel_id
 
     has_one :user, serializer: Chat::MessageUserSerializer, embed: :objects
@@ -150,6 +151,14 @@ module Chat
 
         sym
       end
+    end
+
+    def include_thread_reply_count?
+      object.thread_id.present?
+    end
+
+    def thread_reply_count
+      object.thread.replies_count
     end
   end
 end

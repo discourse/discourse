@@ -13,7 +13,8 @@
   "scripts": {
     "build": "ember build",
     "start": "ember serve",
-    "test": "ember test"
+    "test": "ember test",
+    "postinstall": "yarn --silent --cwd .. patch-package"
   },
   "dependencies": {
     "@babel/core": "^7.21.4",
@@ -90,7 +91,7 @@
     "pretty-text": "1.0.0",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.61.0",
+    "sass": "^1.62.0",
     "select-kit": "1.0.0",
     "sinon": "^15.0.3",
     "source-map": "^0.7.4",

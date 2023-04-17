@@ -16,9 +16,11 @@ class TopicsFilter
     return @scope if query_string.blank?
 
     query_string.scan(
-      /(?<key_prefix>[-=])?(?<key>\w+):(?<value>[^\s]+)/,
+      /(?<key_prefix>[-=])?(?<key>[\w-]+):(?<value>[^\s]+)/,
     ) do |key_prefix, key, value|
       case key
+      when "created-by"
+        filter_created_by_user(usernames: value.split(","))
       when "in"
         @scope = filter_state(state: value)
       when "status"
@@ -89,6 +91,17 @@ class TopicsFilter
   end
 
   private
+
+  def filter_created_by_user(usernames:)
+    register_scope(
+      key: :created_by_user,
+      params: {
+        usernames: usernames.map(&:downcase),
+      },
+    ) do |usernames_lower|
+      @scope.joins(:user).where("users.username_lower IN (?)", usernames_lower)
+    end
+  end
 
   def filter_state(state:)
     case state

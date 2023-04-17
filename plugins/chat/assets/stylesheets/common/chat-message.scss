@@ -58,6 +58,23 @@
     }
   }
 
+  &.is-threaded {
+    display: grid;
+    grid-template-columns: var(--message-left-width) 1fr;
+    grid-template-rows: auto 32px;
+    grid-template-areas:
+      "avatar message"
+      "threadindicator threadindicator";
+
+    .chat-user-avatar {
+      grid-area: avatar;
+    }
+
+    .chat-message-content {
+      grid-area: message;
+    }
+  }
+
   .chat-message-content {
     display: flex;
     flex-direction: column;

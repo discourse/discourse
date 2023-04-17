@@ -153,7 +153,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   test("clicking on everything link", async function (assert) {
     await visit("/t/280");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
     );
 
     assert.strictEqual(
@@ -172,7 +172,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
       ),
       "the everything link is marked as active"
     );
@@ -185,7 +185,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     await visit("/t/280");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
     );
     assert.strictEqual(
       currentURL(),
@@ -203,7 +203,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
       ),
       "the everything link is marked as active"
     );
@@ -225,7 +225,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
     await visit("/t/280");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
     );
 
     assert.strictEqual(
@@ -244,7 +244,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
       ),
       "the everything link is marked as active"
     );
@@ -274,7 +274,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
     await visit("/t/280");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
     );
 
     assert.strictEqual(
@@ -293,7 +293,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
       ),
       "the everything link is marked as active"
     );
@@ -304,7 +304,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-users"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users']"
       ),
       "users link is not displayed in sidebar when it is not the active route"
     );
@@ -314,7 +314,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-users"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users']"
     );
 
     assert.strictEqual(
@@ -333,7 +333,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-users.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users'].active"
       ),
       "the users link is marked as active"
     );
@@ -350,7 +350,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-users.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users'].active"
       ),
       "users link is displayed in sidebar when it is the active route"
     );
@@ -367,7 +367,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-users"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users']"
       ),
       "users section link is not displayed in sidebar"
     );
@@ -381,7 +381,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-badges"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='badges']"
     );
 
     assert.strictEqual(
@@ -402,7 +402,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-badges"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='badges']"
       ),
       "badges section link is not shown in sidebar"
     );
@@ -413,7 +413,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-groups"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='groups']"
       ),
       "groups link is not displayed in sidebar when it is not the active route"
     );
@@ -423,7 +423,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-groups"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='groups']"
     );
 
     assert.strictEqual(
@@ -442,7 +442,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-groups.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='groups'].active"
       ),
       "the groups link is marked as active"
     );
@@ -459,7 +459,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-groups.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='groups'].active"
       ),
       "groups link is displayed in sidebar when it is the active route"
     );
@@ -476,7 +476,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-groups"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='groups']"
       ),
       "groups section link is not shown in sidebar"
     );
@@ -490,7 +490,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-about"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='about']"
     );
 
     assert.strictEqual(
@@ -501,7 +501,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-about.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='about'].active"
       ),
       "about section link link is displayed in the main section and marked as active"
     );
@@ -515,7 +515,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-faq"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='faq']"
     );
 
     assert.strictEqual(
@@ -536,7 +536,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-faq"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='faq']"
       ).href,
       "http://some.faq.url/",
       "href attribute is set to custom FAQ URL on the section link"
@@ -546,7 +546,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   test("navigating to admin from sidebar", async function (assert) {
     await visit("/");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-admin"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='admin']"
     );
 
     assert.strictEqual(currentRouteName(), "admin.dashboard.general");
@@ -559,7 +559,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-admin"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='admin']"
       )
     );
   });
@@ -567,7 +567,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   test("clicking on my posts link", async function (assert) {
     await visit("/t/280");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts']"
     );
 
     assert.strictEqual(
@@ -586,7 +586,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
       ),
       "the my posts link is marked as active"
     );
@@ -595,7 +595,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
       ),
       "the my posts link is not marked as active when user has no drafts and visiting the user activity drafts URL"
     );
@@ -609,7 +609,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts']"
     );
 
     assert.strictEqual(
@@ -628,7 +628,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
       ),
       "the my posts link is marked as active"
     );
@@ -637,7 +637,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-posts.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
       ),
       "the my posts link is marked as active"
     );
@@ -647,7 +647,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     assert.strictEqual(
-      query(".sidebar-section-link-my-posts").title,
+      query(".sidebar-section-link[data-link-name='my-posts']").title,
       I18n.t("sidebar.sections.community.links.my_posts.title"),
       "displays the default title when no drafts are present"
     );
@@ -657,7 +657,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
 
     assert.strictEqual(
-      query(".sidebar-section-link-my-posts").title,
+      query(".sidebar-section-link[data-link-name='my-posts']").title,
       I18n.t("sidebar.sections.community.links.my_posts.title_drafts"),
       "displays the draft title when drafts are present"
     );
@@ -671,7 +671,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     assert.strictEqual(
-      query(".sidebar-section-link-my-posts").textContent.trim(),
+      query(
+        ".sidebar-section-link[data-link-name='my-posts']"
+      ).textContent.trim(),
       I18n.t("sidebar.sections.community.links.my_posts.content"),
       "displays the default text when no drafts are present"
     );
@@ -682,14 +684,14 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-link-my-posts .sidebar-section-link-content-text"
+        ".sidebar-section-link[data-link-name='my-posts'] .sidebar-section-link-content-text"
       ).textContent.trim(),
       I18n.t("sidebar.sections.community.links.my_posts.content_drafts"),
       "displays the text that's appropriate for when drafts are present"
     );
     assert.strictEqual(
       query(
-        ".sidebar-section-link-my-posts .sidebar-section-link-content-badge"
+        ".sidebar-section-link[data-link-name='my-posts'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "1",
       "displays the draft count with no text"
@@ -709,7 +711,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
       ),
       "the everything link is marked as active"
     );
@@ -728,7 +730,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
       ),
       "the everything link is marked as active"
     );
@@ -747,7 +749,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
       ),
       "the everything link is marked as active"
     );
@@ -784,7 +786,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
+      exists(
+        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
+      ),
       "shows suffix indicator for unread posts on everything link"
     );
 
@@ -800,7 +804,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
 
     assert.ok(
-      exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
+      exists(
+        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
+      ),
       "shows suffix indicator for new topics on categories link"
     );
 
@@ -816,7 +822,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
 
     assert.ok(
-      !exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
+      !exists(
+        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
+      ),
       "it removes the suffix indicator when all topics are read"
     );
   });
@@ -873,7 +881,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-link-everything .sidebar-section-link-content-badge"
+        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "3 unread",
       "it displays the right unread count"
@@ -892,7 +900,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-link-everything .sidebar-section-link-content-badge"
+        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "2 unread",
       "it updates the unread count"
@@ -922,7 +930,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-link-everything .sidebar-section-link-content-badge"
+        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "1 new",
       "it displays the new count once there are no unread topics"
@@ -940,7 +948,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       !exists(
-        ".sidebar-section-link-everything .sidebar-section-link-content-badge"
+        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
       ),
       "it removes new count once there are no new topics"
     );
@@ -953,7 +961,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review']"
       ),
       "review link is not shown"
     );
@@ -964,7 +972,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review']"
       ),
       "review link is not shown"
     );
@@ -980,7 +988,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review'].active"
       ),
       "review link is shown as active when visiting the review route even if there are no pending reviewables"
     );
@@ -989,7 +997,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review']"
       ),
       "review link is not shown as part of the main section links"
     );
@@ -1000,7 +1008,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content .sidebar-section-link-review"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='review']"
       ),
       "review link is displayed in the more drawer"
     );
@@ -1011,14 +1019,14 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review']"
       ),
       "review link is shown as part of the main section links"
     );
 
     assert.strictEqual(
       query(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-review .sidebar-section-link-content-badge"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "34 pending",
       "displays the pending reviewable count"
@@ -1030,7 +1038,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content .sidebar-section-link-review"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='review']"
       ),
       "review link is not displayed in the more drawer"
     );
@@ -1053,18 +1061,20 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      query(".sidebar-section-link-unread").textContent.trim(),
+      query(
+        ".sidebar-section-link[data-link-name='unread']"
+      ).textContent.trim(),
       "unread topics",
       "displays the right text for the link"
     );
 
     assert.strictEqual(
-      query(".sidebar-section-link-unread").title,
+      query(".sidebar-section-link[data-link-name='unread']").title,
       "List of unread topics",
       "displays the right title for the link"
     );
 
-    await click(".sidebar-section-link-unread");
+    await click(".sidebar-section-link[data-link-name='unread']");
 
     assert.strictEqual(currentURL(), "/unread", "links to the right URL");
   });
@@ -1108,7 +1118,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    await click(".sidebar-section-link-user-summary");
+    await click(".sidebar-section-link[data-link-name='user-summary']");
 
     assert.strictEqual(
       currentURL(),
@@ -1117,13 +1127,15 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      query(".sidebar-section-link-user-summary").textContent.trim(),
+      query(
+        ".sidebar-section-link[data-link-name='user-summary']"
+      ).textContent.trim(),
       "my summary",
       "displays the right text for the link"
     );
 
     assert.strictEqual(
-      query(".sidebar-section-link-user-summary").title,
+      query(".sidebar-section-link[data-link-name='user-summary']").title,
       "eviltrout summary",
       "displays the right title for the link"
     );
@@ -1183,7 +1195,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything .sidebar-section-link-content-badge"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
         ).textContent.trim(),
         "2",
         "count is 2 because there's 1 unread topic and 1 new topic"
@@ -1218,7 +1230,7 @@ acceptance(
 
       assert.true(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
         ).href.endsWith("/new"),
         "links to /new because there are 1 new and 1 unread topics"
       );
@@ -1234,7 +1246,7 @@ acceptance(
 
       assert.true(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
         ).href.endsWith("/new"),
         "links to /new because there is 1 unread topic"
       );
@@ -1250,7 +1262,7 @@ acceptance(
 
       assert.true(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
         ).href.endsWith("/latest"),
         "links to /latest because there are no unread or new topics"
       );
@@ -1266,7 +1278,7 @@ acceptance(
 
       assert.true(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link-everything"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
         ).href.endsWith("/new"),
         "links to /new because there is 1 new topic"
       );
