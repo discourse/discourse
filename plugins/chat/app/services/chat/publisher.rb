@@ -241,6 +241,7 @@ module Chat
       "/chat/user-tracking-state/#{user_id}"
     end
 
+    # TODO (martin) Account for messages inside threads here.
     def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
       data = {
         channel_id: chat_channel_id,

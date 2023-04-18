@@ -112,6 +112,7 @@ module Chat
 
       return render_json_error(chat_message_creator.error) if chat_message_creator.failed?
 
+      # TODO (martin) Maybe we just do not set this if creating the message in the thread?
       @user_chat_channel_membership.update!(
         last_read_message_id: chat_message_creator.chat_message.id,
       )
@@ -139,6 +140,7 @@ module Chat
         end
       end
 
+      # TODO (martin) Maybe we just do not set this if creating the message in the thread?
       Chat::Publisher.publish_user_tracking_state(
         current_user,
         @chat_channel.id,

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Chat
+  # TODO (martin) Needs to account for threads as well, should not be
+  # unread if the last message sent was in thread.
   class ChannelUnreadsQuery
     def self.call(channel_ids:, user_id:)
       sql = <<~SQL

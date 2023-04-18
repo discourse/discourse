@@ -219,11 +219,13 @@ module Chat
       FROM chat_messages cm
       JOIN chat_channels cc ON cc.id = cm.chat_channel_id
       JOIN user_chat_channel_memberships uccm ON uccm.chat_channel_id = cc.id
+      LEFT JOIN chat_threads ct ON ct.id = cm.thread_id
       WHERE cc.id IN (:channel_ids)
         AND cm.user_id != :user_id
         AND uccm.user_id = :user_id
         AND cm.id > COALESCE(uccm.last_read_message_id, 0)
         AND cm.deleted_at IS NULL
+        AND (cm.thread_id IS NULL OR cm.id = ct.original_message_id)
       GROUP BY cc.id
     SQL
       unread_counts.default = 0
