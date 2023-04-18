@@ -24,11 +24,13 @@ describe Chat::ChannelUnreadsQuery do
     context "for multiple channels" do
       fab!(:channel_2) { Fabricate(:category_channel) }
 
-      it "returns accurate counts" do
+      before do
         channel_2.add(current_user)
         Fabricate(:chat_message, chat_channel: channel_2)
         Fabricate(:chat_message, chat_channel: channel_2)
+      end
 
+      it "returns accurate counts" do
         expect(
           described_class.call(
             channel_ids: [channel_1.id, channel_2.id],
@@ -40,6 +42,41 @@ describe Chat::ChannelUnreadsQuery do
             { mention_count: 0, unread_count: 2, channel_id: channel_2.id },
           ],
         )
+      end
+
+      context "for channels where the user has no membership" do
+        before do
+          current_user
+            .user_chat_channel_memberships
+            .where(chat_channel_id: channel_2.id)
+            .destroy_all
+        end
+
+        it "does not return counts for the channels" do
+          expect(
+            described_class.call(
+              channel_ids: [channel_1.id, channel_2.id],
+              user_id: current_user.id,
+            ).map(&:to_h),
+          ).to match_array([{ mention_count: 0, unread_count: 1, channel_id: channel_1.id }])
+        end
+
+        context "when include_no_membership_channels is true" do
+          it "does return zeroed counts for the channels" do
+            expect(
+              described_class.call(
+                channel_ids: [channel_1.id, channel_2.id],
+                user_id: current_user.id,
+                include_no_membership_channels: true,
+              ).map(&:to_h),
+            ).to match_array(
+              [
+                { mention_count: 0, unread_count: 1, channel_id: channel_1.id },
+                { mention_count: 0, unread_count: 0, channel_id: channel_2.id },
+              ],
+            )
+          end
+        end
       end
     end
   end
