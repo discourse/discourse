@@ -3,7 +3,7 @@
     class={{concat-class
       "btn-flat"
       "chat-scroll-to-bottom"
-      (if (or @show @hasNewMessages) "visible")
+      (if @show "visible")
     }}
     @action={{@scrollToBottom}}
   >
