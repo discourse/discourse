@@ -1,51 +1,44 @@
-{{#if this.replyToMsg}}
+{{#if this.composerService.replyToMsg}}
   <ChatComposerMessageDetails
-    @message={{this.replyToMsg}}
+    @message={{this.composerService.replyToMsg}}
     @icon="reply"
     @action={{action "cancelReplyTo"}}
   />
 {{/if}}
 
-{{#if this.editingMessage}}
+{{#if this.composerService.editingMessage}}
   <ChatComposerMessageDetails
-    @message={{this.editingMessage}}
+    @message={{this.composerService.editingMessage}}
     @icon="pencil-alt"
-    @action={{action "cancelEditing"}}
+    @action={{this.cancelEditing}}
   />
 {{/if}}
-
-<div class="chat-composer-emoji-picker-anchor"></div>
 
 <div
   role="region"
   aria-label={{i18n "chat.aria_roles.composer"}}
   class="chat-composer {{if this.disableComposer 'is-disabled'}}"
+  {{did-update this.updateEditingMessage this.composerService.editingMessage}}
 >
-  {{#if
-    (and
-      this.chatEmojiPickerManager.opened
-      (eq this.chatEmojiPickerManager.context "chat-composer")
-    )
-  }}
-    <DButton
-      @icon="times"
-      @action={{this.chatEmojiPickerManager.close}}
-      @class="chat-composer__close-emoji-picker-btn btn-flat"
-    />
-  {{else}}
-    {{#unless this.disableComposer}}
-      <ChatComposerDropdown
-        @buttons={{this.dropdownButtons}}
-        @isDisabled={{this.disableComposer}}
-      />
-    {{/unless}}
-  {{/if}}
+
+  <ChatComposerDropdown
+    @buttons={{this.dropdownButtons}}
+    @isDisabled={{this.disableComposer}}
+    @hasActivePanel={{and
+      this.chatEmojiPickerManager.picker
+      (eq this.chatEmojiPickerManager.picker.context @context)
+    }}
+    @onCloseActivePanel={{this.chatEmojiPickerManager.close}}
+  />
 
   <DTextarea
     @value={{readonly this.value}}
     @input={{action "onTextareaInput" value="target.value"}}
     @type="text"
-    @class="chat-composer-input"
+    @class={{concat-class
+      "chat-composer-input"
+      (concat "chat-composer-input--" @context)
+    }}
     @disabled={{this.disableComposer}}
     @autocorrect="on"
     @autocapitalize="sentences"
@@ -82,7 +75,7 @@
     @onUploadChanged={{this.uploadsChanged}}
     @existingUploads={{or
       this.chatChannel.draft.uploads
-      this.editingMessage.uploads
+      this.composerService.editingMessage.uploads
     }}
   />
 {{/if}}
@@ -92,3 +85,8 @@
     <ChatReplyingIndicator @chatChannel={{this.chatChannel}} />
   </div>
 {{/unless}}
+
+<ChatEmojiPicker
+  @context={{@context}}
+  @didSelectEmoji={{this.didSelectEmoji}}
+/>

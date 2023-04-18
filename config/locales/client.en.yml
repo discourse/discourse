@@ -175,6 +175,8 @@ en:
       removed_user: "Removed %{who} %{when}"
       removed_group: "Removed %{who} %{when}"
       autobumped: "Automatically bumped %{when}"
+      tags_changed: "Tags updated %{when}"
+      category_changed: "Category updated %{when}"
       autoclosed:
         enabled: "Closed %{when}"
         disabled: "Opened %{when}"
@@ -209,12 +211,7 @@ en:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
       dismiss: "Dismiss"
 
-    bootstrap_mode_enabled:
-      one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
-      other: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} users have joined."
-    bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
-    bootstrap_invite_button_title: "Send Invites"
-    bootstrap_wizard_link_title: "Finish setup wizard"
+    bootstrap_mode: "Bootstrap mode"
 
     themes:
       default_description: "Default"
@@ -386,7 +383,7 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       abandon:
-        confirm: "You have a draft in progress for this topic. What would you like to do with it?"
+        confirm: "You already have a draft in progress. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
 
@@ -1284,12 +1281,24 @@ en:
       staged: "Staged"
 
       staff_counters:
-        flags_given: "helpful flags"
-        flagged_posts: "flagged posts"
-        deleted_posts: "deleted posts"
-        suspensions: "suspensions"
-        warnings_received: "warnings"
-        rejected_posts: "rejected posts"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> helpful flag'
+          other: '<span class="%{className}">%{count}</span> helpful flags'
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> flagged post'
+          other: '<span class="%{className}">%{count}</span> flagged posts'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> deleted post'
+          other: '<span class="%{className}">%{count}</span> deleted posts'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> suspension'
+          other: '<span class="%{className}">%{count}</span> suspensions'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> warning'
+          other: '<span class="%{className}">%{count}</span> warnings'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> rejected post'
+          other: '<span class="%{className}">%{count}</span> rejected posts'
 
       messages:
         all: "all inboxes"
@@ -4394,17 +4403,34 @@ en:
         custom:
           add: "Add custom section"
           edit: "Edit custom section"
-          name: "Section title"
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
           public: "Make this section public and visible to everyone"
           links:
-            icon: "Icon"
-            name: "Name"
-            value: "Link"
             add: "Add another link"
             delete: "Delete link"
+            icon:
+              label: "Icon"
+              validation:
+                blank: "Icon cannot be blank"
+                maximum: "Icon must be shorter than %{count} characters"
+            name:
+              label: "Name"
+              validation:
+                blank: "Name cannot be blank"
+                maximum: "Name must be shorter than %{count} characters"
+            value:
+              label: "Link"
+              validation:
+                blank: "Link cannot be blank"
+                maximum: "Link must be shorter than %{count} characters"
+                invalid: "Format is invalid"
+          title:
+            label: "Section title"
+            validation:
+              blank: "Title cannot be blank"
+              maximum: "Title must be shorter than %{count} characters"
         about:
           header_link_text: "About"
         messages:
@@ -5463,6 +5489,7 @@ en:
             create_public_sidebar_section: "create public sidebar section"
             update_public_sidebar_section: "update public sidebar section"
             destroy_public_sidebar_section: "destroy public sidebar section"
+            reset_bounce_score: "reset bounce score"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -5527,14 +5554,14 @@ en:
           silence: "Silence"
           link: "Link"
         action_descriptions:
-          block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
-          censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
-          require_approval: "Posts containing these words will require approval by staff before they can be seen."
-          flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
-          replace: "Replace words in posts with other words"
-          tag: "Automatically tag topics based on first post"
-          silence: "First posts of users containing these words will require approval by staff before they can be seen and the user will be automatically silenced."
-          link: "Replace words in posts with links"
+          block: "An error message will be displayed when attempting to create a post containing these words."
+          censor: "Allow posts that contain these words, but replace them with characters that hide the censored words."
+          require_approval: "Require staff approval for posts that contain these words before they can be visible to others."
+          flag: "Allow posts that contain these words, but flag them as inappropriate for review by moderators."
+          replace: "Replace words in posts with other words."
+          tag: "Automatically tag topics if the first post contains a specific word."
+          silence: "Silence new accounts if their very first post contains any of these words. The post will be automatically hidden until staff approves it."
+          link: "Replace words in posts with links."
         form:
           label: "Has word or phrase"
           placeholder: "Enter word or phrase (* is a wildcard)"

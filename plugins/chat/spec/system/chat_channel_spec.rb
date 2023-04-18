@@ -115,7 +115,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
       visit("/chat/message/#{message_1.id}")
 
       new_message =
-        Chat::ChatMessageCreator.create(
+        Chat::MessageCreator.create(
           chat_channel: channel_1,
           user: other_user,
           content: "this is fine",
@@ -189,7 +189,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
     end
   end
 
-  context "when replying to message that has tags" do
+  context "when replying to message that has HTML tags" do
     fab!(:other_user) { Fabricate(:user) }
     fab!(:message_2) do
       Fabricate(
@@ -208,12 +208,10 @@ RSpec.describe "Chat channel", type: :system, js: true do
       sign_in(current_user)
     end
 
-    xit "escapes the reply-to line" do
+    it "renders text in the reply-to" do
       chat.visit_channel(channel_1)
 
-      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "&lt;mark&gt;not marked&lt;/mark&gt;",
-      )
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq("not marked")
     end
   end
 

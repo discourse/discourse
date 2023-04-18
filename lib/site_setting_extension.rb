@@ -433,7 +433,9 @@ module SiteSettingExtension
       value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
       StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
     else
-      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
+      raise Discourse::InvalidParameters.new(
+              I18n.t("errors.site_settings.invalid_site_setting", name: name),
+            )
     end
   end
 
@@ -441,7 +443,9 @@ module SiteSettingExtension
     if has_setting?(name)
       self.public_send(name)
     else
-      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
+      raise Discourse::InvalidParameters.new(
+              I18n.t("errors.site_settings.invalid_site_setting", name: name),
+            )
     end
   end
 
@@ -556,6 +560,13 @@ module SiteSettingExtension
       define_singleton_method("#{clean_name}_map") do
         self.public_send(clean_name).to_s.split("|").map(&:to_i)
       end
+    end
+
+    # Same logic as above for group_list settings, with the caveat that normal
+    # list settings are not necessarily integers, so we just want to handle the splitting.
+    if type_supervisor.get_type(name) == :list &&
+         %w[simple compact].include?(type_supervisor.get_list_type(name))
+      define_singleton_method("#{clean_name}_map") { self.public_send(clean_name).to_s.split("|") }
     end
 
     define_singleton_method "#{clean_name}?" do

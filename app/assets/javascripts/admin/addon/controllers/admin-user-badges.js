@@ -69,7 +69,7 @@ export default class AdminUserBadgesController extends Controller.extend(
   }
 
   @action
-  grantBadge() {
+  performGrantBadge() {
     this.grantBadge(
       this.selectedBadgeId,
       this.get("user.username"),

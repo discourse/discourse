@@ -87,7 +87,17 @@ class SearchIndexer
           .scan(TS_VECTOR_PARSE_REGEX)
           .map do |term, _, indexes|
             new_indexes =
-              indexes.split(",").map { |index| additional_words[index.to_i - 1][1] }.join(",")
+              indexes
+                .split(",")
+                .map do |index|
+                  existing_positions = additional_words[index.to_i - 1]
+                  if existing_positions
+                    existing_positions[1]
+                  else
+                    index
+                  end
+                end
+                .join(",")
             "#{term}#{new_indexes}"
           end
           .join(" ")
@@ -386,7 +396,7 @@ class SearchIndexer
     end
 
     MENTION_CLASSES ||= %w[mention mention-group]
-    ATTRIBUTES ||= %w[alt title href data-youtube-title]
+    ATTRIBUTES ||= %w[alt title href data-video-title]
 
     def start_element(_name, attributes = [])
       attributes = Hash[*attributes.flatten]

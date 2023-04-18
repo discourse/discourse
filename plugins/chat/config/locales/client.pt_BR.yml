@@ -153,7 +153,6 @@ pt_BR:
       restore: "Restaurar mensagem excluída"
       save: "Salvar"
       select: "Selecionar"
-      silence: "Silenciar usuário(a)"
       return_to_list: "Retornar para lista de canais"
       scroll_to_bottom: "Rolar para a parte inferior"
       scroll_to_new_messages: "Ver novas mensagens"
@@ -408,9 +407,8 @@ pt_BR:
       transcript:
         view: "Ver transcrição de mensagens anteriores"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Mensagem de chat sinalizada"
-          flagged_by: "Sinalizada por"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

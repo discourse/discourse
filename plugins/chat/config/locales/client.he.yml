@@ -15,6 +15,7 @@ he:
           actions:
             chat_channel_status_change: "מצב ערוץ הצ׳אט השתנה"
             chat_channel_delete: "ערוץ הצ׳אט נמחק"
+            chat_auto_remove_membership: "חברות הוסרה אוטומטית מערוצים"
       api:
         scopes:
           descriptions:
@@ -83,6 +84,7 @@ he:
       click_to_join: "לחיצה כאן תציג את הערוצים הזמינים."
       close: "סגירה"
       collapse: "צמצום מגירת צ׳אט"
+      expand: "הרחבת מגירת הצ׳אט"
       confirm_flag: "לסמן את ההודעה של %{username}?"
       deleted: "הודעה נמחקה. [צפייה]"
       hidden: "הודעה הוסתרה. [צפייה]"
@@ -226,6 +228,7 @@ he:
         composer: "כותב צ׳אט"
         channels_list: "רשימת ערוצי צ׳אט"
       no_public_channels: "לא הצטרפת לאף ערוץ."
+      kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
       only_chat_push_notifications:
         title: "לשלוח התראות בדחיפה על הצ׳אט בלבד"
         description: "לחסום שליחה של התראות בדחיפה שאינן לגבי הצ׳אט"
@@ -261,7 +264,6 @@ he:
       restore: "שחזור הודעה שנמחקה"
       save: "שמירה"
       select: "בחירה"
-      silence: "השתקת משתמש"
       return_to_list: "חזרה לרשימת הערוצים"
       scroll_to_bottom: "גלילה לתחתית"
       scroll_to_new_messages: "הצגת הודעות חדשות"
@@ -549,8 +551,9 @@ he:
         symbols: "סמלים"
         search_placeholder: "חיפוש לפי שם וכינוי של האמוג׳י…"
         no_results: "אין תוצאות"
+      thread:
+        label: שרשור
       threads:
-        op_said: "נאמר ע״י פותחי השרשור:"
         started_by: "נפתח ע״י"
         open: "פתיחת שרשור"
       draft_channel_screen:
@@ -597,9 +600,8 @@ he:
       transcript:
         view: "הצגת תמלול הודעות קודמות"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "הודעת צ׳אט מסומנת"
-          flagged_by: "דוגל על ידי"
     keyboard_shortcuts_help:
       chat:
         title: "צ׳אט"
@@ -612,6 +614,7 @@ he:
           composer_code: "%{shortcut} קוד (עורך בלבד)"
           drawer_open: "%{shortcut} פתיחת מגירת הצ׳אט"
           drawer_close: "%{shortcut} סגירת מגירת הצ׳אט"
+          mark_all_channels_read: "%{shortcut} סימון כל הערוצים כנקראו"
     topic_statuses:
       chat:
         help: "הצ׳אט מופעל בנושא הזה"

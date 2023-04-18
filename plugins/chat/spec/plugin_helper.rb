@@ -20,6 +20,13 @@ module ChatSystemHelpers
     Group.refresh_automatic_groups!
   end
 
+  def chat_system_user_bootstrap(user:, channel:)
+    user.activate
+    user.user_option.update!(chat_enabled: true)
+    Group.refresh_automatic_group!("trust_level_#{user.trust_level}".to_sym)
+    Fabricate(:user_chat_channel_membership, chat_channel: channel, user: user)
+  end
+
   def chat_thread_chain_bootstrap(channel:, users:, messages_count: 4)
     last_user = nil
     last_message = nil
@@ -29,7 +36,7 @@ module ChatSystemHelpers
       thread_id = i.zero? ? nil : last_message.thread_id
       last_user = last_user.present? ? (users - [last_user]).sample : users.sample
       creator =
-        Chat::ChatMessageCreator.new(
+        Chat::MessageCreator.new(
           chat_channel: channel,
           in_reply_to_id: in_reply_to,
           thread_id: thread_id,
@@ -42,6 +49,7 @@ module ChatSystemHelpers
       last_message = creator.chat_message
     end
 
+    last_message.thread.update!(replies_count: messages_count - 1)
     last_message.thread
   end
 end
@@ -49,4 +57,9 @@ end
 RSpec.configure do |config|
   config.include ChatSystemHelpers, type: :system
   config.include Chat::ServiceMatchers
+
+  config.expect_with :rspec do |c|
+    # Or a very large value, if you do want to truncate at some point
+    c.max_formatted_output_length = nil
+  end
 end

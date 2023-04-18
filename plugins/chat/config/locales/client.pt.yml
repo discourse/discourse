@@ -88,7 +88,6 @@ pt:
       restore: "Restaurar mensagem apagada"
       save: "Guardar"
       select: "Selecionar"
-      silence: "Silenciar utilizador"
       return_to_list: "Voltar à lista de canais"
       scroll_to_bottom: "Rolar até o final"
       scroll_to_new_messages: "Ver novas mensagens"
@@ -186,7 +185,3 @@ pt:
           fields:
             message:
               label: Mensagem
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Sinalizado por"

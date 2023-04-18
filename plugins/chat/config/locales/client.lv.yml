@@ -111,7 +111,3 @@ lv:
           fields:
             message:
               label: Ziņa
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Atzīmēja"

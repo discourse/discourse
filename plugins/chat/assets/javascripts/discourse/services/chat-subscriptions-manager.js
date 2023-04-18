@@ -1,4 +1,5 @@
 import Service, { inject as service } from "@ember/service";
+import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
@@ -7,6 +8,9 @@ export default class ChatSubscriptionsManager extends Service {
   @service chatChannelsManager;
   @service currentUser;
   @service appEvents;
+  @service chat;
+  @service dialog;
+  @service router;
 
   _channelSubscriptions = new Set();
 
@@ -22,6 +26,7 @@ export default class ChatSubscriptionsManager extends Service {
 
     if (!channel.isDirectMessageChannel) {
       this._startChannelMentionsSubscription(channel);
+      this._startKickFromChannelSubscription(channel);
     }
 
     this._startChannelNewMessagesSubscription(channel);
@@ -36,6 +41,10 @@ export default class ChatSubscriptionsManager extends Service {
       this.messageBus.unsubscribe(
         `/chat/${channel.id}/new-mentions`,
         this._onNewMentions
+      );
+      this.messageBus.unsubscribe(
+        `/chat/${channel.id}/kick`,
+        this._onKickFromChannel
       );
     }
 
@@ -93,6 +102,14 @@ export default class ChatSubscriptionsManager extends Service {
     );
   }
 
+  _startKickFromChannelSubscription(channel) {
+    this.messageBus.subscribe(
+      `/chat/${channel.id}/kick`,
+      this._onKickFromChannel,
+      channel.meta.message_bus_last_ids.kick
+    );
+  }
+
   @bind
   _onChannelArchiveStatusUpdate(busData) {
     // we don't want to fetch a channel we don't have locally because archive status changed
@@ -119,6 +136,34 @@ export default class ChatSubscriptionsManager extends Service {
       const membership = channel.currentUserMembership;
       if (busData.message_id > membership?.last_read_message_id) {
         membership.unread_mentions = (membership.unread_mentions || 0) + 1;
+      }
+    });
+  }
+
+  @bind
+  _onKickFromChannel(busData) {
+    this.chatChannelsManager.find(busData.channel_id).then((channel) => {
+      if (this.chat.activeChannel.id === channel.id) {
+        this.dialog.alert({
+          message: I18n.t("chat.kicked_from_channel"),
+          didConfirm: () => {
+            this.chatChannelsManager.remove(channel);
+
+            const firstChannel =
+              this.chatChannelsManager.publicMessageChannels[0];
+
+            if (firstChannel) {
+              this.router.transitionTo(
+                "chat.channel",
+                ...firstChannel.routeModels
+              );
+            } else {
+              this.router.transitionTo("chat.browse");
+            }
+          },
+        });
+      } else {
+        this.chatChannelsManager.remove(channel);
       }
     });
   }
@@ -168,6 +213,11 @@ export default class ChatSubscriptionsManager extends Service {
       this._onUserTrackingStateUpdate,
       lastId
     );
+    this.messageBus.subscribe(
+      `/chat/bulk-user-tracking-state/${this.currentUser.id}`,
+      this._onBulkUserTrackingStateUpdate,
+      lastId
+    );
   }
 
   _stopUserTrackingStateSubscription() {
@@ -179,20 +229,38 @@ export default class ChatSubscriptionsManager extends Service {
       `/chat/user-tracking-state/${this.currentUser.id}`,
       this._onUserTrackingStateUpdate
     );
+
+    this.messageBus.unsubscribe(
+      `/chat/bulk-user-tracking-state/${this.currentUser.id}`,
+      this._onBulkUserTrackingStateUpdate
+    );
+  }
+
+  @bind
+  _onBulkUserTrackingStateUpdate(busData) {
+    Object.keys(busData).forEach((channelId) => {
+      this._updateChannelTrackingData(channelId, busData[channelId]);
+    });
   }
 
   @bind
   _onUserTrackingStateUpdate(busData) {
-    this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
+    this._updateChannelTrackingData(busData.channel_id, busData);
+  }
+
+  @bind
+  _updateChannelTrackingData(channelId, trackingData) {
+    this.chatChannelsManager.find(channelId).then((channel) => {
       if (
         !channel?.currentUserMembership?.last_read_message_id ||
         parseInt(channel?.currentUserMembership?.last_read_message_id, 10) <=
-          busData.chat_message_id
+          trackingData.last_read_message_id
       ) {
         channel.currentUserMembership.last_read_message_id =
-          busData.chat_message_id;
-        channel.currentUserMembership.unread_count = busData.unread_count;
-        channel.currentUserMembership.unread_mentions = busData.unread_mentions;
+          trackingData.last_read_message_id;
+        channel.currentUserMembership.unread_count = trackingData.unread_count;
+        channel.currentUserMembership.unread_mentions =
+          trackingData.mention_count;
       }
     });
   }
@@ -270,14 +338,16 @@ export default class ChatSubscriptionsManager extends Service {
 
   @bind
   _onChannelMetadata(busData) {
-    this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
-      if (channel) {
-        channel.setProperties({
-          memberships_count: busData.memberships_count,
-        });
-        this.appEvents.trigger("chat:refresh-channel-members");
-      }
-    });
+    this.chatChannelsManager
+      .find(busData.chat_channel_id, { fetchIfNotFound: false })
+      .then((channel) => {
+        if (channel) {
+          channel.setProperties({
+            memberships_count: busData.memberships_count,
+          });
+          this.appEvents.trigger("chat:refresh-channel-members");
+        }
+      });
   }
 
   @bind

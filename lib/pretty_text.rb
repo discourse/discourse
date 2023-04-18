@@ -202,6 +202,7 @@ module PrettyText
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
+        __optInput.emojiDenyList = #{Emoji.denied.to_json};
         __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor).to_json};
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
@@ -215,16 +216,7 @@ module PrettyText
         buffer << "__optInput.forceQuoteLink = #{opts[:force_quote_link]};\n"
       end
 
-      if opts[:user_id]
-        buffer << "__optInput.userId = #{opts[:user_id].to_i};\n"
-
-        # NOTE: If using this for server-side cooking you will end up
-        # with a Hash once it is passed to a PrettyText::Helper. If
-        # you use that hash to instanciate a User model, you will want to do
-        # user.reload before accessing data on this parsed User, otherwise
-        # AR relations will not be loaded.
-        buffer << "__optInput.currentUser = #{User.find(opts[:user_id]).to_json}\n"
-      end
+      buffer << "__optInput.userId = #{opts[:user_id].to_i};\n" if opts[:user_id]
 
       opts[:hashtag_context] = opts[:hashtag_context] || "topic-composer"
       hashtag_types_as_js =
@@ -433,13 +425,19 @@ module PrettyText
 
     # extract Youtube links
     doc
-      .css("div[data-youtube-id]")
+      .css("div[data-video-id]")
       .each do |div|
-        if div["data-youtube-id"].present?
-          links << DetectedLink.new(
-            "https://www.youtube.com/watch?v=#{div["data-youtube-id"]}",
-            false,
-          )
+        if div["data-video-id"].present? && div["data-provider-name"].present?
+          base_url =
+            case div["data-provider-name"]
+            when "youtube"
+              "https://www.youtube.com/watch?v="
+            when "vimeo"
+              "https://vimeo.com/"
+            when "tiktok"
+              "https://m.tiktok.com/v/"
+            end
+          links << DetectedLink.new(base_url + div["data-video-id"], false)
         end
       end
 

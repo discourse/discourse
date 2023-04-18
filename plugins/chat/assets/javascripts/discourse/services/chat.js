@@ -17,20 +17,39 @@ const CHAT_ONLINE_OPTIONS = {
 
 export default class Chat extends Service {
   @service appEvents;
+  @service currentUser;
   @service chatNotificationManager;
   @service chatSubscriptionsManager;
   @service chatStateManager;
   @service presence;
   @service router;
   @service site;
+
   @service chatChannelsManager;
-  @tracked activeChannel = null;
+  @service chatChannelPane;
+  @service chatChannelThreadPane;
+
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
   isNetworkUnreliable = false;
 
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
+
+  @tracked _activeMessage = null;
+  @tracked _activeChannel = null;
+
+  get activeChannel() {
+    return this._activeChannel;
+  }
+
+  set activeChannel(channel) {
+    if (!channel) {
+      this._activeMessage = null;
+    }
+
+    this._activeChannel = channel;
+  }
 
   @computed("currentUser.staff", "currentUser.groups.[]")
   get userCanDirectMessage() {
@@ -46,6 +65,23 @@ export default class Chat extends Service {
           .map((groupId) => parseInt(groupId, 10))
       )
     );
+  }
+
+  @computed("activeChannel.userSilenced")
+  get userCanInteractWithChat() {
+    return !this.activeChannel?.userSilenced;
+  }
+
+  get activeMessage() {
+    return this._activeMessage;
+  }
+
+  set activeMessage(hash) {
+    if (hash) {
+      this._activeMessage = hash;
+    } else {
+      this._activeMessage = null;
+    }
   }
 
   init() {
@@ -111,6 +147,10 @@ export default class Chat extends Service {
   updatePresence() {
     next(() => {
       if (this.isDestroyed || this.isDestroying) {
+        return;
+      }
+
+      if (this.currentUser.user_option?.hide_profile_and_presence) {
         return;
       }
 

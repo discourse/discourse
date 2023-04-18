@@ -115,7 +115,3 @@ ur:
           fields:
             message:
               label: پیغام
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "کی طرف سے فلَیگ کردہ"

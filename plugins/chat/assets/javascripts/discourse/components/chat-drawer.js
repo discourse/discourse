@@ -22,6 +22,7 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
+
     if (!this.chat.userCanChat) {
       return;
     }
@@ -46,6 +47,7 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
+
     if (!this.chat.userCanChat) {
       return;
     }
@@ -120,7 +122,9 @@ export default Component.extend({
       return;
     }
 
-    document.querySelector(".chat-drawer").classList.add("clear-transitions");
+    document
+      .querySelector(".chat-drawer-outlet-container")
+      .classList.add("clear-transitions");
   },
 
   _clearDynamicCheckSize() {
@@ -129,7 +133,7 @@ export default Component.extend({
     }
 
     document
-      .querySelector(".chat-drawer")
+      .querySelector(".chat-drawer-outlet-container")
       .classList.remove("clear-transitions");
     this._checkSize();
   },

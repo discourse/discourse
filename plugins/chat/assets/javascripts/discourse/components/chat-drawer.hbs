@@ -1,7 +1,7 @@
 {{#if this.chatStateManager.isDrawerActive}}
-
   <div
     data-chat-channel-id={{this.chat.activeChannel.id}}
+    data-chat-thread-id={{this.chat.activeChannel.activeThread.id}}
     class={{concat-class
       "chat-drawer"
       (if this.chatStateManager.isDrawerExpanded "is-expanded")

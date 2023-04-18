@@ -153,7 +153,6 @@ it:
       restore: "Ripristina messaggio eliminato"
       save: "Salva"
       select: "Seleziona"
-      silence: "Silenzia utente"
       return_to_list: "Torna all'elenco dei canali"
       scroll_to_bottom: "Scorri fino in fondo"
       scroll_to_new_messages: "Vedi nuovi messaggi"
@@ -406,9 +405,8 @@ it:
       transcript:
         view: "Visualizza la trascrizione dei messaggi precedenti"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Messaggio di chat segnalato"
-          flagged_by: "Segnalato da"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

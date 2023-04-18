@@ -1,12 +1,14 @@
 {
   "private": true,
+  "scripts": {
+    "postinstall": "patch-package"
+  },
   "workspaces": [
     "admin",
     "bootstrap-json",
     "dialog-holder",
     "discourse",
     "discourse-common",
-    "discourse-ensure-deprecation-order",
     "discourse-hbr",
     "discourse-plugins",
     "discourse-widget-hbs",
@@ -17,7 +19,12 @@
     "truth-helpers",
     "wizard"
   ],
-  "resolutions":{
+  "resolutions": {
     "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "patch-package": "^6.5.1",
+    "postinstall-postinstall": "^2.1.0"
   }
 }

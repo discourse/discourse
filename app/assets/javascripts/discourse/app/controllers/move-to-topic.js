@@ -5,7 +5,7 @@ import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
-import { extractError } from "discourse/lib/ajax-error";
+import { flashAjaxError } from "discourse/lib/ajax-error";
 import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 
@@ -168,9 +168,7 @@ export default Controller.extend(ModalFunctionality, {
           this.topicController.send("toggleMultiSelect");
           DiscourseURL.routeTo(result.url);
         })
-        .catch((xhr) => {
-          this.flash(extractError(xhr, I18n.t("topic.move_to.error")), "error");
-        })
+        .catch(flashAjaxError(this, I18n.t("topic.move_to.error")))
         .finally(() => {
           this.set("saving", false);
         });

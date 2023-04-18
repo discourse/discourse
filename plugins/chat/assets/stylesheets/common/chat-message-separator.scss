@@ -56,7 +56,9 @@
     }
 
     .chat-message-separator__text-container {
-      padding-top: 7px;
+      align-items: center;
+      display: flex;
+      height: 40px;
       position: sticky;
       top: -1px;
 
@@ -93,16 +95,12 @@
     }
 
     & + .chat-message-separator__line-container {
-      padding: 20px 0 20px 1em;
+      padding: 20px 0;
       box-sizing: border-box;
 
       .chat-message-separator__line {
         border-top: 1px solid var(--secondary-high);
-        left: 0;
         margin: 0 0 -1px;
-        position: relative;
-        right: 0;
-        top: -1px;
       }
     }
   }

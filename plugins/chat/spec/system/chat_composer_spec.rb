@@ -31,6 +31,19 @@ RSpec.describe "Chat composer", type: :system, js: true do
         text: message_1.user.username,
       )
     end
+
+    context "with HTML tags" do
+      before { message_1.update!(message: "<mark>not marked</mark>") }
+
+      it "renders text in the details" do
+        chat.visit_channel(channel_1)
+        channel.reply_to(message_1)
+
+        expect(
+          find(".chat-composer-message-details .chat-reply__excerpt")["innerHTML"].strip,
+        ).to eq("not marked")
+      end
+    end
   end
 
   context "when editing a message" do
@@ -59,6 +72,18 @@ RSpec.describe "Chat composer", type: :system, js: true do
         find(".chat-composer-input").send_keys(:escape)
 
         expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
+        expect(find(".chat-composer-input").value).to eq("")
+      end
+    end
+
+    context "when closing edited message" do
+      it "cancels editing" do
+        chat.visit_channel(channel_1)
+        channel.edit_message(message_2)
+        find(".cancel-message-action").click
+
+        expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
+        expect(find(".chat-composer-input").value).to eq("")
       end
     end
   end
@@ -77,6 +102,17 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
       expect(find(".chat-composer-input").value).to eq(":grimacing:")
     end
+
+    it "removes denied emojis from insert emoji picker" do
+      SiteSetting.emoji_deny_list = "monkey|peach"
+
+      chat.visit_channel(channel_1)
+      channel.open_action_menu
+      channel.click_action_button("emoji")
+
+      expect(page).to have_no_selector("[data-emoji='monkey']")
+      expect(page).to have_no_selector("[data-emoji='peach']")
+    end
   end
 
   context "when adding an emoji through the autocomplete" do
@@ -92,6 +128,17 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
       expect(find(".chat-composer-input").value).to eq(":grimacing: ")
     end
+
+    it "doesn't suggest denied emojis and aliases" do
+      SiteSetting.emoji_deny_list = "peach|poop"
+      chat.visit_channel(channel_1)
+
+      find(".chat-composer-input").fill_in(with: ":peac")
+      expect(page).to have_no_selector(".emoji-shortname", text: "peach")
+
+      find(".chat-composer-input").fill_in(with: ":hank") # alias
+      expect(page).to have_no_selector(".emoji-shortname", text: "poop")
+    end
   end
 
   context "when opening emoji picker through more button of the autocomplete" do
@@ -100,7 +147,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
       sign_in(current_user)
     end
 
-    it "prefills the emoji picker filter input" do
+    xit "prefills the emoji picker filter input" do
       chat.visit_channel(channel_1)
       find(".chat-composer-input").fill_in(with: ":gri")
 

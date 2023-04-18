@@ -156,7 +156,7 @@ Discourse::Application.routes.draw do
         get "tl3_requirements"
         put "anonymize"
         post "merge"
-        post "reset_bounce_score"
+        post "reset-bounce-score"
         put "disable_second_factor"
         delete "sso_record"
       end
@@ -1594,6 +1594,7 @@ Discourse::Application.routes.draw do
     delete "user-status" => "user_status#clear"
 
     resources :sidebar_sections, only: %i[index create update destroy]
+    post "/sidebar_sections/reorder" => "sidebar_sections#reorder"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
   end

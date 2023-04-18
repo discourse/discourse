@@ -153,6 +153,7 @@ sk:
       placeholder: Dátum
     share:
       close: "zatvoriť"
+      twitter: "Zdieľať na Twitteri"
     action_codes:
       public_topic: "Téma je verejná%{when}"
       private_topic: "Urobil(a) z témy osobnú správu%{when}"
@@ -187,8 +188,6 @@ sk:
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     software_update_prompt:
       dismiss: "Zahodiť"
-    bootstrap_mode_disabled: "Zavádzací režim bude zrušený v priebehu nasledujúcich 24 hodín."
-    bootstrap_invite_button_title: "Poslať pozvánky"
     themes:
       default_description: "Predvolené"
     s3:
@@ -346,6 +345,8 @@ sk:
     choose_message:
       none_found: "Žiadne správy."
     review:
+      order_by: "Zoradiť podľa"
+      in_reply_to: "v odpovedi na"
       explain:
         total: "Celkovo"
       delete: "Odstrániť"
@@ -781,7 +782,6 @@ sk:
       home: "Predvolená domovská stránka"
       staged: "Dočasný"
       staff_counters:
-        flags_given: "nápomocné značky"
         flagged_posts: "označkované príspevky"
         deleted_posts: "vymazané príspevky"
         suspensions: "pozastavenia"
@@ -1256,6 +1256,7 @@ sk:
       delete_item: "Zmazaných %{name}"
       default_header_text: Vybrať...
       filter_placeholder: Hľadať
+      filter_placeholder_with_any: Vyhľadať alebo vytvoriť...
     date_time_picker:
       from: Od
       to: Komu
@@ -1287,6 +1288,7 @@ sk:
       create_topic: "Vytvoriť tému"
       create_pm: "Správa"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
+      title_or_link_placeholder: "Napíšte názov témy alebo tu skopírujte odkaz"
       edit_reason_placeholder: "prečo upravujete?"
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
       view_new_post: "Zobraziť nový príspevok."
@@ -1357,6 +1359,7 @@ sk:
       select_all: "Označ všetky"
       clear_all: "Odznač všetky"
       too_short: "Vyhladávací termín je príliš krátky."
+      open_advanced: "Otvoriť rozšírené vyhľadávanie"
       title: "Hľadať"
       full_page_title: "Hľadať"
       results: "výsledky"
@@ -1369,30 +1372,46 @@ sk:
       categories: "Kategórie"
       tags: "Štítky"
       type:
+        default: "Témy/príspevky"
         users: "Používatelia"
         categories: "Kategórie"
+        categories_and_tags: "Kategórie/štítky"
       context:
         user: "Vyhľadávanie podľa @%{username}"
         category: "Vyhľadať kategóriu #%{category}"
         topic: "Hľadaj v tejto téme"
         private_messages: "Hľadaj správy"
+      tips:
+        category_tag: "filtruje podľa kategórie alebo štítku"
       advanced:
+        title: Rozšírené filtre
         posted_by:
           label: Autor príspevku
         in_category:
           label: Kategorizovaný
+        with_tags:
+          label: So štítkom
         filters:
-          likes: sa mi páčia
+          label: Hľadať iba v témach/príspevkoch, ktoré...
+          title: Hľadať len v nadpisoch
+          likes: Ktoré sa mi páčia
           posted: obsahujú môj príspevok
+          created: Vytvorené mnou
           watching: Sledujem
           tracking: Pozorujem
           private: V mojich správach
+          bookmarks: Mám v záložkách
+          first: sú prvý príspevok v téme
           pinned: sú pripnuté
+          seen: Ktoré mám prečítané
           unseen: som nečítal
+          wiki: sú wiki
+          images: zahŕňajú obrázok(y)
         statuses:
           label: Kde témy
           open: sú otvorené
           closed: uzavreté
+          public: sú verejné
           archived: sú archivované
           noreplies: majú nula odpovedí
           single_user: obsahujú jediného používateľa
@@ -1405,6 +1424,8 @@ sk:
             after: po
         views:
           label: Zobrazenia
+        additional_options:
+          label: "Filtrovať podľa počtu príspevkov a zobrazení tém"
     new_item: "nový"
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"
@@ -1516,6 +1537,7 @@ sk:
       back_to_list: "Naspäť na zoznam tém"
       options: "Možnosti tém"
       show_links: "zobrazovať odkazy v tejto téme"
+      suggest_create_topic: Ste pripravení <a href>začať novú konverzáciu?</a>
       deleted: "Téma bola vymazaná"
       slow_mode_update:
         enable: "Zapnúť"
@@ -1746,6 +1768,8 @@ sk:
         few: "zobraziť %{count} skryté odpovede"
         many: "zobraziť %{count} skrytých odpovedí"
         other: "zobraziť %{count} skrytých odpovedí"
+      notice:
+        new_user: "%{user} prispel(a) po prvýkrát — privítajme ho/ju v našej komunite!"
       unread: "Príspevok je neprečítaný."
       has_replies:
         one: "%{count} Odpoveď"
@@ -2091,7 +2115,7 @@ sk:
           other: "%{categoryName} (%{count})"
         help: "najnovšie témy v kategórii %{categoryName}"
       top:
-        title: "Top"
+        title: "Najlepšie"
         help: "najaktívnejšie témy za posledný rok, mesiac, týždeň, alebo deň"
         all:
           title: "Za celú dobu"
@@ -2206,6 +2230,7 @@ sk:
       selector_no_tags: "žiadne štítky"
       changed: "zmenené štítky:"
       tags: "Štítky"
+      choose_for_topic: "voliteľné štítky"
       add_synonyms: "Pridať"
       delete_tag: "Zmazať štítok"
       description: "Popis"
@@ -2279,8 +2304,10 @@ sk:
           save: "Uložiť"
           delete: "Odstrániť"
           links:
-            icon: "Ikona"
-            name: "Meno"
+            icon:
+              label: "Ikona"
+            name:
+              label: "Názov"
         about:
           header_link_text: "O stránke"
         messages:
@@ -2306,6 +2333,8 @@ sk:
               content: "Administrátor"
             badges:
               content: "Odznaky"
+            everything:
+              content: "Všetko"
             faq:
               content: "Časté otázky"
             groups:

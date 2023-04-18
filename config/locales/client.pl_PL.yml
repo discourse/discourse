@@ -241,14 +241,6 @@ pl_PL:
     software_update_prompt:
       message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
       dismiss: "Odrzuć"
-    bootstrap_mode_enabled:
-      one: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoba dołączy."
-      few: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoby dołączy."
-      many: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osób dołączy."
-      other: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osób dołączy."
-    bootstrap_mode_disabled: "Tryb bootstrap zostanie wyłączony w ciągu 24 godzin."
-    bootstrap_invite_button_title: "Wyślij zaproszenia"
-    bootstrap_wizard_link_title: "Zakończ kreator konfiguracji"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
@@ -414,7 +406,6 @@ pl_PL:
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości osobistej"
       abandon:
-        confirm: "Masz projekt w toku dla tego tematu. Co chcesz z nim zrobić?"
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
     topic_count_categories:
@@ -1293,7 +1284,11 @@ pl_PL:
       home: "Domyślna strona domowa"
       staged: "Wystawiany na scenie"
       staff_counters:
-        flags_given: "uczynnych oflagowań"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> pomocna flaga'
+          few: '<span class="%{className}">%{count}</span> pomocne flagi'
+          many: '<span class="%{className}">%{count}</span> pomocne flagi'
+          other: '<span class="%{className}">%{count}</span> pomocne flagi'
         flagged_posts: "oflagowane wpisy"
         deleted_posts: "usunięte wpisy"
         suspensions: "zawieszone"
@@ -1944,6 +1939,18 @@ pl_PL:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
     too_few_topics_and_posts_notice_MF: |
       Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">dyskutować!</a> Mamy {currentTopics, plural, one {<strong>#</strong> temat}  few {<strong>#</strong> tematy} other {<strong>#</strong> tematów}} i {currentPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredTopics, plural, one {<strong>#</strong> temat} few {<strong>#</strong> tematy} other {<strong>#</strong> tematów}} i {requiredPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Tylko członkowie personelu widzą tę wiadomość.
+    too_few_topics_notice_MF: |
+      Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">dyskusję!</a> Tam { currentTopics, plural,
+          one {jest <strong>#</strong> temat}
+          few {są <strong>#</strong> tematy}
+          many {są <strong>#</strong> tematy}
+        other {są <strong>#</strong> tematy}
+      }. Odwiedzający potrzebują więcej do czytania i odpowiadania - zalecamy co najmniej { requiredTopics, plural,
+          one {<strong>#</strong> temat}
+          few {<strong>#</strong> tematy}
+          many {<strong>#</strong> tematy}
+        other {<strong>#</strong> tematy}
+      }. Tylko personel może zobaczyć tę wiadomość.
     too_few_posts_notice_MF: |
       Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">dyskutować!</a> Mamy {currentPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Tylko członkowie zespołu widzą tę wiadomość.
     logs_error_rate_notice:
@@ -4376,16 +4383,20 @@ pl_PL:
         custom:
           add: "Dodaj niestandardową sekcję"
           edit: "Edytuj niestandardową sekcję"
-          name: "Tytuł sekcji"
           save: "Zapisz"
           delete: "Usuń"
           delete_confirm: "Czy na pewno chcesz usunąć tę sekcję?"
           links:
-            icon: "Ikona"
-            name: "Nazwa"
-            value: "Odnośnik"
             add: "Dodaj kolejny link"
             delete: "Usuń link"
+            icon:
+              label: "Ikona"
+            name:
+              label: "Pełna nazwa"
+            value:
+              label: "Odnośnik"
+          title:
+            label: "Tytuł sekcji"
         about:
           header_link_text: "O stronie"
         messages:
@@ -5457,14 +5468,9 @@ pl_PL:
           silence: "Wycisz"
           link: "Odnośnik"
         action_descriptions:
-          block: "Zapobiegaj publikacji postów zawierających te słowa. Użytkownicy zobaczą błąd próbując wysłać taki wpis."
-          censor: "Zezwalaj na wysyłanie wpisów zawierających te słowa, ale zamień na znaki ukrywające ocenzurowane słowa."
-          require_approval: "Wpisy zawierające te słowa będą wymagały zatwierdzenia przez członka zespołu zarządzającego zanim zostaną opublikowane."
-          flag: "Zezwalaj na publikację takich wpisów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
-          replace: "Zastąp słowa w postach innymi słowami"
-          tag: "Automatycznie otaguj tematy na podstawie pierwszego postu"
-          silence: "Pierwsze posty użytkowników zawierające te słowa będą wymagały zatwierdzenia przez personel, zanim będą widoczne, a użytkownik zostanie automatycznie wyciszony."
-          link: "Zastąp słowa w postach linkami"
+          block: "Komunikat o błędzie zostanie wyświetlony podczas próby utworzenia posta zawierającego te słowa."
+          replace: "Zastąp słowa w postach innymi słowami."
+          link: "Zastąp słowa w postach linkami."
         form:
           label: "Zawiera słowo lub frazę"
           placeholder: "Wpisz słowo lub frazę (* to symbol wieloznaczny)"
@@ -5479,6 +5485,7 @@ pl_PL:
           exists: "Już istnieje"
           upload: "Dodaj z pliku"
           upload_successful: "Przesyłanie zakończone sukcesem. Słowa zostały dodane."
+          case_sensitivity_label: "Rozróżniana jest wielkość liter"
         test:
           button_label: "Sprawdź"
           modal_title: "%{action}: Testuj obserwowane słowa"
@@ -5787,6 +5794,7 @@ pl_PL:
           username: "Nazwa użytkownika"
           trust_level: "Poziom zaufania"
           read_time: "Czas czytania"
+          topics_entered: "Wprowadzone tematy"
           posts: "Postów"
         tl3_requirements:
           title: "Wymagania dla osiągnięcia 3. poziomu zaufania"

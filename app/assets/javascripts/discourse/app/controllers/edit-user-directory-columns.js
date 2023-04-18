@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import EmberObject, { action } from "@ember/object";
-import { extractError } from "discourse/lib/ajax-error";
+import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import { reload } from "discourse/helpers/page-reloader";
 
 const UP = "up";
@@ -23,7 +23,7 @@ export default Controller.extend(ModalFunctionality, {
             .map((c) => EmberObject.create(c)),
         });
       })
-      .catch(extractError);
+      .catch(popupAjaxError);
   },
 
   @action

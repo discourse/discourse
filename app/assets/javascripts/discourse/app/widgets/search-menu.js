@@ -348,8 +348,10 @@ export default createWidget("search-menu", {
     });
   },
 
-  mouseDownOutside() {
-    this.sendWidgetAction("toggleSearchMenu");
+  clickOutside() {
+    if (this.key === "search-menu" && !window.getSelection().toString()) {
+      this.sendWidgetAction("toggleSearchMenu");
+    }
   },
 
   clearTopicContext() {

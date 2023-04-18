@@ -765,6 +765,9 @@
     },
     "whispers_allowed_groups_names" : {
       "type": "array"
+    },
+    "denied_emojis" : {
+      "type": "array"
     }
   },
   "required": [

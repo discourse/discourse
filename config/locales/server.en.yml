@@ -61,6 +61,12 @@ en:
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
 
+  topic_category_changed: "From %{from} to %{to}"
+  topic_tag_changed:
+    added_and_removed: "Added %{added} and removed %{removed}"
+    added: "Added %{added}"
+    removed: "Removed %{removed}"
+
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -198,6 +204,7 @@ en:
     embed:
       load_from_remote: "There was an error loading that post."
     site_settings:
+      invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
       invalid_choice:
         one: "You specified the invalid choice %{name}"
@@ -705,6 +712,7 @@ en:
       disallowed_tags_generic: "This topic has disallowed tags."
       slug_contains_non_ascii_chars: "contains non-ascii characters"
       is_already_in_use: "is already in use"
+      move_topic_to_category_disallowed: "You cannot move this topic to a category where you do not have permission to create new topics."
     cannot_delete:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -1193,7 +1201,7 @@ en:
       title: "DAU/MAU"
       xaxis: "Day"
       yaxis: "DAU/MAU"
-      description: "Number of members that logged in in the last day divided by number of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >30%."
+      description: "Number of members that logged in in the last day divided by number of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >20%."
     daily_engaged_users:
       title: "Daily Engaged Users"
       xaxis: "Day"
@@ -1474,6 +1482,7 @@ en:
     out_of_date_themes: "Updates are available for the following themes:"
     unreachable_themes: "We were unable to check for updates on the following themes:"
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
+    v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1565,7 +1574,7 @@ en:
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
     manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
-    apple_touch_icon: "Icon used for Apple touch devices. Will be automatically resized to 180x180. If left blank, large_icon will be used."
+    apple_touch_icon: "Icon used for Apple touch devices. A transparent backround is not reccomended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
     twitter_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
@@ -1735,7 +1744,7 @@ en:
     discourse_connect_overrides_profile_background: "Overrides user profile background with value from DiscourseConnect payload."
     discourse_connect_overrides_card_background: "Overrides user card background with value from DiscourseConnect payload."
     discourse_connect_not_approved_url: "Redirect unapproved DiscourseConnect accounts to this URL"
-    discourse_connect_allows_all_return_paths: "Do not restrict the domain for return_paths provided by DiscourseConnect (by default return path must be on current site)"
+    discourse_connect_allowed_redirect_domains: "Restrict to these domains for return_paths provided by DiscourseConnect (by default return path must be on current site). Use * to allow any domain for return path. Subdomain wildcards (`*.foobar.com`) are not allowed."
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
@@ -2256,6 +2265,7 @@ en:
     emoji_set: "How would you like your emoji?"
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
+    emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
@@ -2351,6 +2361,7 @@ en:
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
+    create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change"
 
     company_name: "Company Name"
     governing_law: "Governing Law"
@@ -2397,7 +2408,7 @@ en:
     navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
-    enable_new_notifications_menu: "Enables the new notifications menu for the legacy navigation menu."
+    enable_new_notifications_menu: "Enables the new notifications menu. Disabling this setting is deprecated. The new notifications menu is always used for non-legacy 'navigation menu' choices. <a href='https://meta.discourse.org/t/260358'>Learn more</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
     experimental_new_new_view_groups: "EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the \"Everything\" link in the sidebar link to it."
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
@@ -2436,7 +2447,6 @@ en:
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
-      discourse_connect_invite_only: "You cannot enable DiscourseConnect and invite only at the same time."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
       min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
       min_username_length_range: "You cannot set the minimum above the maximum."
@@ -2459,7 +2469,6 @@ en:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
-      enable_new_notifications_menu_not_legacy_navigation_menu: "You must set `navigation_menu` to `legacy` before enabling this setting."
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
     placeholder:
@@ -4148,12 +4157,7 @@ en:
     offline_page_message: "It looks like you are offline! Please check your network connection and try again."
 
   login_required:
-    welcome_message: |
-      ## [Welcome to %{title}](#welcome)
-      An account is required. Please create an account or log in to continue.
-    welcome_message_invite_only: |
-      ## [Welcome to %{title}](#welcome)
-      An account is required. Please ask an existing member for an invite or log in to continue.
+    welcome_message: "# [Welcome to %{title}](#welcome)"
 
   upload:
     edit_reason: "downloaded local copies of images"

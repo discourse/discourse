@@ -77,6 +77,7 @@ fi:
       click_to_join: "Näytä saatavilla olevat kanavat napsauttamalla tätä."
       close: "Sulje"
       collapse: "Tiivistä chat-laatikko"
+      expand: "Laajenna chat-laatikko"
       confirm_flag: "Haluatko varmasti liputtaa käyttäjän %{username} viestin?"
       deleted: "Viesti poistettiin. [näytä]"
       hidden: "Viesti piilotettiin. [näytä]"
@@ -94,6 +95,7 @@ fi:
         title: "Sähköposti-ilmoitukset"
         when_away: "Vain poissa ollessa"
       header_indicator_preference:
+        all_new: "Kaikki uudet viestit"
         never: "Ei koskaan"
       enable: "Ota chat käyttöön"
       flag: "Liputa"
@@ -152,7 +154,6 @@ fi:
       restore: "Palauta poistettu viesti"
       save: "Tallenna"
       select: "Valitse"
-      silence: "Hiljennä käyttäjä"
       return_to_list: "Palaa kanavaluetteloon"
       scroll_to_bottom: "Vieritä alas"
       scroll_to_new_messages: "Katso uudet viestit"
@@ -207,6 +208,8 @@ fi:
           members: Jäsenet
           settings: Asetukset
       channel_edit_name_slug_modal:
+        title: Muokkaa kanavaa
+        input_placeholder: Lisää nimi
         name: Kanavan nimi
       channel_edit_description_modal:
         title: Muokkaa kuvausta
@@ -361,6 +364,8 @@ fi:
         symbols: "Symbolit"
         search_placeholder: "Hae emojin nimen ja aliaksen mukaan..."
         no_results: "Ei tuloksia"
+      threads:
+        open: "Avaa ketju"
       draft_channel_screen:
         header: "Uusi viesti"
         cancel: "Peruuta"
@@ -405,9 +410,8 @@ fi:
       transcript:
         view: "Näytä aiempien viestien transkriptio"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Liputettu chat-viesti"
-          flagged_by: "Liputtanut"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

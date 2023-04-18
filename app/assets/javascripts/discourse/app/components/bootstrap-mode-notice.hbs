@@ -1,21 +1,3 @@
-<div class="row bootstrap-mode-notice">
-  <div class="alert alert-info alert-bootstrap-mode">
-    <div class="col-text">
-      {{this.message}}
-    </div>
-    <div class="col-button">
-      <div class="alert--button"><DButton
-          @icon="user-plus"
-          @action={{this.inviteUsers}}
-          @class="btn-primary bootstrap-invite-button"
-          @label="bootstrap_invite_button_title"
-        /></div>
-      {{#if this.site.wizard_required}}
-        <div class="alert--link"><a
-            class="bootstrap-wizard-link"
-            href="/wizard"
-          >{{i18n "bootstrap_wizard_link_title"}}</a></div>
-      {{/if}}
-    </div>
-  </div>
-</div>
+<a class="btn btn-default bootstrap-mode" href={{this.href}}>
+  {{i18n "bootstrap_mode"}}
+</a>

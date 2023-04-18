@@ -69,8 +69,10 @@ import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profil
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
+import { addTopicSummaryCallback } from "discourse/widgets/toggle-topic-summary";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
+import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import deprecated from "discourse-common/lib/deprecated";
@@ -111,6 +113,8 @@ import { registerNotificationTypeRenderer } from "discourse/lib/notification-typ
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
+import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
+import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1021,6 +1025,28 @@ class PluginApi {
   }
 
   /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a callback to be topic summary widget markup that can be used, for example,
+   * to add an extra button to the topic summary widget.
+   *
+   * Example:
+   *
+   *  api.addTopicSummaryCallback((html, attrs, widget) => {
+   *    html.push(
+   *      widget.attach("button", {
+   *        className: "btn btn-primary",
+   *        icon: "magic",
+   *        title: "discourse_ai.ai_helper.title",
+   *        label: "discourse_ai.ai_helper.title",
+   *        action: "showAiSummary",
+   *     })
+   *   );
+   **/
+  addTopicSummaryCallback(callback) {
+    addTopicSummaryCallback(callback);
+  }
+
+  /**
    *
    * Adds a callback to be executed on the "transformed" post that is passed to the post
    * widget.
@@ -1560,6 +1586,7 @@ class PluginApi {
    **/
   addQuickAccessProfileItem(item) {
     addQuickAccessProfileItem(item);
+    addUserMenuProfileTabItem(item);
   }
 
   addFeaturedLinkMetaDecorator(decorator) {
@@ -2056,9 +2083,9 @@ class PluginApi {
    * ```
    * api.registerUserMenuTab((UserMenuTab) => {
    *   return class extends UserMenuTab {
-   *     get id() {
-   *       return "custom-tab-id";
-   *     }
+   *     id = "custom-tab-id";
+   *     panelComponent = MyCustomPanelGlimmerComponent;
+   *     icon = "some-fa5-icon";
    *
    *     get shouldDisplay() {
    *       return this.siteSettings.enable_custom_tab && this.currentUser.admin;
@@ -2066,14 +2093,6 @@ class PluginApi {
    *
    *     get count() {
    *       return this.currentUser.my_custom_notification_count;
-   *     }
-   *
-   *     get panelComponent() {
-   *       return "your-custom-glimmer-component";
-   *     }
-   *
-   *     get icon() {
-   *       return "some-fa5-icon";
    *     }
    *   }
    * });
@@ -2131,6 +2150,29 @@ class PluginApi {
    */
   addUserMessagesNavigationDropdownRow(routeName, name, icon) {
     registerCustomUserNavMessagesDropdownRow(routeName, name, icon);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a new search type which can be selected when visiting the full page search UI.
+   *
+   * @param {string} translationKey
+   * @param {string} searchTypeId
+   * @param {function} searchFunc - Available arguments: fullPage controller, search args, searchKey.
+   */
+  addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
+    registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
+  }
+
+  /**
+   * Registers a hastag type and its corresponding class.
+   * This is used when generating CSS classes in the hashtag-css-generator.
+   *
+   * @param {string} type - The type of the hashtag.
+   * @param {Class} typeClass - The class of the hashtag type.
+   */
+  registerHashtagType(type, typeClass) {
+    registerHashtagType(type, typeClass);
   }
 }
 

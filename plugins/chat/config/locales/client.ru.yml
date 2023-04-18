@@ -151,7 +151,6 @@ ru:
       restore: "Восстановить удаленное сообщение"
       save: "Сохранить"
       select: "Выбрать"
-      silence: "Заблокировать пользователя"
       return_to_list: "Вернуться к списку каналов"
       scroll_to_bottom: "Прокрутка вниз"
       scroll_to_new_messages: "Новые сообщения"
@@ -416,9 +415,8 @@ ru:
       transcript:
         view: "Просмотр предыдущих сообщений"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Сообщение на премодерации"
-          flagged_by: "Кто пожаловался"
     keyboard_shortcuts_help:
       chat:
         title: "Чат"

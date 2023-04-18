@@ -111,6 +111,7 @@
     border-left: 1px solid var(--primary-low);
     padding: 0.75em 0 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .tabs-list {
@@ -155,7 +156,7 @@
   .quick-access-panel {
     width: 320px;
     padding: 0.75em;
-    padding-bottom: env(safe-area-inset-bottom, 0.75em);
+    padding-bottom: max(env(safe-area-inset-bottom), 0.75em);
     justify-content: space-between;
     box-sizing: border-box;
     min-width: 0; // makes sure menu tabs don't go off screen
@@ -214,6 +215,12 @@
         align-items: center;
         margin: 0;
         padding: 0 0.5em;
+      }
+      img.emoji {
+        height: 1em;
+        width: 1em;
+        padding-top: 0.2em;
+        margin-right: 0.5em;
       }
       .d-icon {
         padding-top: 0;
@@ -502,13 +509,6 @@
       align-self: flex-start;
       width: 100%;
       .d-icon {
-        padding-top: 0.2em;
-        margin-right: 0.5em;
-      }
-
-      img.emoji {
-        height: 1em;
-        width: 1em;
         padding-top: 0.2em;
         margin-right: 0.5em;
       }

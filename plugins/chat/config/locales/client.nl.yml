@@ -153,7 +153,6 @@ nl:
       restore: "Verwijderd bericht herstellen"
       save: "Opslaan"
       select: "Selecteren"
-      silence: "Gebruiker dempen"
       return_to_list: "Terug naar kanalenlijst"
       scroll_to_bottom: "Naar beneden scrollen"
       scroll_to_new_messages: "Nieuwe berichten weergeven"
@@ -406,9 +405,8 @@ nl:
       transcript:
         view: "Transcript van eerdere berichten weergeven"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Gemarkeerd chatbericht"
-          flagged_by: "Gemarkeerd door"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

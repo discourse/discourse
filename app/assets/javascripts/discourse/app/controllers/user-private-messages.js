@@ -55,12 +55,11 @@ export default class extends Controller {
 
   @cached
   get messagesDropdownContent() {
+    const usernameLower = this.model.username_lower;
+
     const content = [
       {
-        id: this.router.urlFor(
-          "userPrivateMessages.user",
-          this.model.username_lower
-        ),
+        id: this.router.urlFor("userPrivateMessages.user", usernameLower),
         name: I18n.t("user.messages.inbox"),
       },
     ];
@@ -69,7 +68,7 @@ export default class extends Controller {
       content.push({
         id: this.router.urlFor(
           "userPrivateMessages.group",
-          this.model.username,
+          usernameLower,
           group.name
         ),
         name: group.name,
@@ -79,10 +78,7 @@ export default class extends Controller {
 
     if (this.pmTaggingEnabled) {
       content.push({
-        id: this.router.urlFor(
-          "userPrivateMessages.tags",
-          this.model.username_lower
-        ),
+        id: this.router.urlFor("userPrivateMessages.tags", usernameLower),
         name: I18n.t("user.messages.tags"),
         icon: "tags",
       });
@@ -90,7 +86,7 @@ export default class extends Controller {
 
     customUserNavMessagesDropdownRows.forEach((row) => {
       content.push({
-        id: this.router.urlFor(row.routeName, this.model.username_lower),
+        id: this.router.urlFor(row.routeName, usernameLower),
         name: row.name,
         icon: row.icon,
       });

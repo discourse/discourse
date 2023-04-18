@@ -151,7 +151,6 @@ ar:
       restore: "استعادة الرسالة المحذوفة"
       save: "حفظ"
       select: "تحديد"
-      silence: "كتم المستخدم"
       return_to_list: "العودة إلى قائمة القنوات"
       scroll_to_bottom: "التمرير إلى الأسفل"
       scroll_to_new_messages: "عرض الرسائل الجديدة"
@@ -426,10 +425,6 @@ ar:
     review:
       transcript:
         view: "عرض نص الرسائل السابقة"
-      types:
-        reviewable_chat_message:
-          title: "رسالة دردشة تم الإبلاغ عنها"
-          flagged_by: "تم الإبلاغ بواسطة"
     keyboard_shortcuts_help:
       chat:
         title: "الدردشة"
