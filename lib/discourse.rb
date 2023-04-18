@@ -777,10 +777,8 @@ module Discourse
 
   def self.git_branch
     @git_branch ||=
-      begin
-        git_cmd = "git rev-parse --abbrev-ref HEAD"
-        self.try_git(git_cmd, "unknown")
-      end
+      self.try_git("git branch --show-current", nil) ||
+        self.try_git("git config user.discourse-version", "unknown")
   end
 
   def self.full_version
