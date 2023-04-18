@@ -53,8 +53,8 @@ export default Component.extend(LoadMore, {
     const heartsContainer = document.querySelector("#user-hearts");
     if (heartsContainer) {
       heartsContainer.innerHTML = "";
-      const heartImgSrc = "/assets/full-heart.png";
-      const emptyHeartImgSrc = "/assets/empty-heart.png";
+      const heartImgSrc = "/images/full-heart.png";
+      const emptyHeartImgSrc = "/images/empty-heart.png";
       const heartSize = 20;
       const spacing = 2;
       const rows = 5;
