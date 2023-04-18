@@ -27,19 +27,18 @@ RSpec.describe UserStat do
         fab!(:topic) { Fabricate(:topic) }
         let!(:view) { TopicViewItem.add(topic.id, "127.0.0.1", user.id) }
 
-        before { user.update_column :last_seen_at, 1.second.ago }
+        before do
+          user.update_column :last_seen_at, 1.second.ago
+          stat.update_column :topics_entered, 0
+        end
 
         it "adds one to the topics entered" do
-          UserStat.update_view_counts
-          stat.reload
-          expect(stat.topics_entered).to eq(1)
+          expect { UserStat.update_view_counts }.to change { stat.reload.topics_entered }.to 1
         end
 
         it "won't record a second view as a different topic" do
           TopicViewItem.add(topic.id, "127.0.0.1", user.id)
-          UserStat.update_view_counts
-          stat.reload
-          expect(stat.topics_entered).to eq(1)
+          expect { UserStat.update_view_counts }.to change { stat.reload.topics_entered }.to 1
         end
       end
     end
@@ -65,12 +64,13 @@ RSpec.describe UserStat do
           )
         end
 
-        before { user.update_column :last_seen_at, 1.second.ago }
+        before do
+          user.update_column :last_seen_at, 1.second.ago
+          stat.update_column :posts_read_count, 0
+        end
 
         it "increases posts_read_count" do
-          UserStat.update_view_counts
-          stat.reload
-          expect(stat.posts_read_count).to eq(1)
+          expect { UserStat.update_view_counts }.to change { stat.reload.posts_read_count }.to 1
         end
       end
     end
