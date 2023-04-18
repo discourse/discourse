@@ -334,6 +334,16 @@ export default Component.extend(LoadMore, {
     this.set("autoAddTopicsToBulkSelect", newVal);
   },
 
+  updateTotalVotes(topicId, newValue, operator) {
+    let newTopicVotes = { ...this.topicVotes };
+    if (operator === "+") {
+      newTopicVotes[topicId].total_votes += 1;
+    } else {
+      newTopicVotes[topicId].total_votes -= 1;
+    }
+    this.set("topicVotes", newTopicVotes);
+  },
+
   click(e) {
     const onClick = (sel, callback) => {
       let target = e.target.closest(sel);
@@ -345,7 +355,7 @@ export default Component.extend(LoadMore, {
 
     onClick(".your-hearts .triangle_up", function (element) {
       const topicId = Number(element.dataset.topicId);
-      const maxSqrt = 9;
+      const maxSqrt = 10;
       let currentCredits = { ...this.voiceCredits };
       const currentSqrt =
         !currentCredits[topicId] ||
@@ -368,6 +378,10 @@ export default Component.extend(LoadMore, {
       this.set("voiceCredits", currentCredits);
       console.log("new vote " + newValue);
       this.updateVotesCanvas();
+      // Only update the total votes if the user has not reached the max
+      if (currentSqrt < maxSqrt) {
+        this.updateTotalVotes(topicId, newValue, "+");
+      }
     });
 
     onClick(".your-hearts .triangle_down", function (element) {
@@ -395,6 +409,10 @@ export default Component.extend(LoadMore, {
       this.set("voiceCredits", currentCredits);
       console.log("new vote " + newValue);
       this.updateVotesCanvas();
+      // Only update the total votes if the user has not reached the min
+      if (currentSqrt > minSqrt) {
+        this.updateTotalVotes(topicId, newValue, "-");
+      }
     });
 
     onClick("button.bulk-select", function () {
