@@ -12,7 +12,6 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
-import { shortDate } from "discourse/lib/formatter";
 import pretender, { response } from "../helpers/create-pretender";
 
 acceptance("Composer - Messages", function (needs) {
