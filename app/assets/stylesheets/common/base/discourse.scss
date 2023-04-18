@@ -5,13 +5,17 @@
 
 // Animation Keyframes
 @keyframes ping {
-  from {
-    transform: scale(0.25);
-    opacity: 1;
+  0% {
+    transform: scale(0.6);
+    box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0.7);
   }
-  to {
-    transform: scale(2);
-    opacity: 0;
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(var(--success-rgb), 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0);
   }
 }
 
