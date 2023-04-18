@@ -16,6 +16,8 @@
   &__description {
     color: var(--primary-600);
     text-align: center;
+    overflow-wrap: break-word;
+    max-width: 100%;
   }
 
   .chat-channel-title__name {
