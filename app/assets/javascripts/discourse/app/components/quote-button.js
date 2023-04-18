@@ -59,6 +59,7 @@ export default Component.extend(KeyEnterEscape, {
   editPost: null,
   _popper: null,
   popperPlacement: "top-start",
+  popperOffset: [0, 3],
 
   _isFastEditable: false,
   _displayFastEditInput: false,
@@ -199,6 +200,12 @@ export default Component.extend(KeyEnterEscape, {
 
     if (showAtEnd) {
       this.popperPlacement = "bottom-start";
+
+      if (isAndroid) {
+        this.popperOffset = [0, 25];
+      } else {
+        this.popperOffset = [0, 15];
+      }
     }
 
     // change the position of the button
@@ -222,7 +229,7 @@ export default Component.extend(KeyEnterEscape, {
           {
             name: "offset",
             options: {
-              offset: [0, 3],
+              offset: this.popperOffset,
             },
           },
         ],

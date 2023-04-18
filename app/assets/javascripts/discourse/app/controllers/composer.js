@@ -1468,8 +1468,6 @@ export default class ComposerController extends Controller {
             this.appEvents.trigger("composer:cancelled");
             return resolve();
           },
-          // needed to resume saving drafts if composer stays open
-          onDismissModal: () => resolve(),
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
