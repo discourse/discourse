@@ -649,27 +649,30 @@ export default class ComposerController extends Controller {
 
         const [linkWarn, linkInfo] = linkLookup.check(post, href);
 
-        if (linkWarn && !this.get("isWhispering")) {
-          let body;
+        if (linkWarn && !this.isWhispering) {
           if (linkInfo.username === this.currentUser.username) {
-            body = I18n.t("composer.duplicate_link_same_user", {
-              domain: linkInfo.domain,
-              post_url: topic.urlForPostNumber(linkInfo.post_number),
-              ago: shortDate(linkInfo.posted_at),
+            this.appEvents.trigger("composer-messages:create", {
+              extraClass: "custom-body",
+              templateName: "education",
+              body: I18n.t("composer.duplicate_link_same_user", {
+                domain: linkInfo.domain,
+                post_url: topic.urlForPostNumber(linkInfo.post_number),
+                ago: shortDate(linkInfo.posted_at),
+              }),
             });
           } else {
-            body = I18n.t("composer.duplicate_link", {
-              domain: linkInfo.domain,
-              username: linkInfo.username,
-              post_url: topic.urlForPostNumber(linkInfo.post_number),
-              ago: shortDate(linkInfo.posted_at),
+            this.appEvents.trigger("composer-messages:create", {
+              extraClass: "custom-body duplicate-link-message",
+              templateName: "education",
+              body: I18n.t("composer.duplicate_link", {
+                domain: linkInfo.domain,
+                username: linkInfo.username,
+                post_url: topic.urlForPostNumber(linkInfo.post_number),
+                ago: shortDate(linkInfo.posted_at),
+              }),
             });
           }
-          this.appEvents.trigger("composer-messages:create", {
-            extraClass: "custom-body",
-            templateName: "education",
-            body,
-          });
+
           return false;
         }
       }
