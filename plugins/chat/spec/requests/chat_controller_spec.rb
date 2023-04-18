@@ -402,7 +402,13 @@ RSpec.describe Chat::ChatController do
             messages =
               MessageBus.track_publish(
                 Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
-              ) { post "/chat/#{chat_channel.id}.json", params: { message: message } }
+              ) do
+                post "/chat/#{chat_channel.id}.json",
+                     params: {
+                       message: message,
+                       thread_id: thread.id,
+                     }
+              end
             expect(response.status).to eq(200)
             expect(messages.first.data["last_read_message_id"]).to eq(message_1.id)
           end
