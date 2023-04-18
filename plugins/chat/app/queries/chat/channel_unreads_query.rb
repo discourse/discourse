@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 
 module Chat
-  # TODO (martin) Needs to account for threads as well, should not be
-  # unread if the last message sent was in thread.
+  ##
+  # Handles counting unread messages and mentions for a list of channels.
+  # This is used for unread indicators in the chat UI. By default only the
+  # channels that the user is a member of will be counted and returned in
+  # the result.
   class ChannelUnreadsQuery
+    ##
+    # @param channel_ids [Array<Integer>] The IDs of the channels to count.
+    # @param user_id [Integer] The ID of the user to count for.
+    # @param include_no_membership_channels [Boolean] Whether to include channels
+    #   that the user is not a member of. These counts will always be 0.
     def self.call(channel_ids:, user_id:, include_no_membership_channels: false)
       sql = <<~SQL
         SELECT (
@@ -11,11 +19,13 @@ module Chat
           FROM chat_messages
           INNER JOIN chat_channels ON chat_channels.id = chat_messages.chat_channel_id
           INNER JOIN user_chat_channel_memberships ON user_chat_channel_memberships.chat_channel_id = chat_channels.id
+          LEFT JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
           WHERE chat_channels.id = memberships.chat_channel_id
           AND chat_messages.user_id != :user_id
           AND user_chat_channel_memberships.user_id = :user_id
           AND chat_messages.id > COALESCE(user_chat_channel_memberships.last_read_message_id, 0)
           AND chat_messages.deleted_at IS NULL
+          AND (chat_messages.thread_id IS NULL OR chat_messages.id = chat_threads.original_message_id)
         ) AS unread_count,
         (
           SELECT COUNT(*) AS mention_count

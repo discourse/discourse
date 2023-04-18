@@ -21,6 +21,25 @@ describe Chat::ChannelUnreadsQuery do
       ).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
     end
 
+    context "for unread messages in a thread" do
+      fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel_1) }
+      fab!(:thread) { Fabricate(:chat_thread, channel: channel_1, original_message: thread_om) }
+
+      it "does include the original message in the unread count" do
+        expect(
+          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
+        ).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
+      end
+
+      it "does not include other thread messages in the unread count" do
+        Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+        Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+        expect(
+          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
+        ).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
+      end
+    end
+
     context "for multiple channels" do
       fab!(:channel_2) { Fabricate(:category_channel) }
 

@@ -347,19 +347,66 @@ RSpec.describe Chat::ChatController do
         )
       end
 
-      it "sends a message for regular user when staff-only is disabled and they are following channel" do
-        sign_in(user)
-        Chat::UserChatChannelMembership.create(
-          user: user,
-          chat_channel: chat_channel,
-          following: true,
-        )
+      context "when the regular user is following the channel" do
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel) }
+        fab!(:membership) do
+          Chat::UserChatChannelMembership.create(
+            user: user,
+            chat_channel: chat_channel,
+            following: true,
+            last_read_message_id: message_1.id,
+          )
+        end
 
-        expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
-          Chat::Message.count
-        }.by(1)
-        expect(response.status).to eq(200)
-        expect(Chat::Message.last.message).to eq(message)
+        it "sends a message for regular user when staff-only is disabled and they are following channel" do
+          sign_in(user)
+
+          expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
+            Chat::Message.count
+          }.by(1)
+          expect(response.status).to eq(200)
+          expect(Chat::Message.last.message).to eq(message)
+        end
+
+        it "updates the last_read_message_id for the user who sent the message" do
+          sign_in(user)
+          post "/chat/#{chat_channel.id}.json", params: { message: message }
+          expect(response.status).to eq(200)
+          expect(membership.reload.last_read_message_id).to eq(Chat::Message.last.id)
+        end
+
+        it "publishes user tracking state using the new chat message as the last_read_message_id" do
+          sign_in(user)
+          messages =
+            MessageBus.track_publish(
+              Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
+            ) { post "/chat/#{chat_channel.id}.json", params: { message: message } }
+          expect(response.status).to eq(200)
+          expect(messages.first.data["last_read_message_id"]).to eq(Chat::Message.last.id)
+        end
+
+        context "when sending a message in a thread" do
+          fab!(:thread) do
+            Fabricate(:chat_thread, channel: chat_channel, original_message: message_1)
+          end
+
+          it "does not update the last_read_message_id for the user who sent the message" do
+            sign_in(user)
+            post "/chat/#{chat_channel.id}.json", params: { message: message, thread_id: thread.id }
+            expect(response.status).to eq(200)
+            expect(membership.reload.last_read_message_id).to eq(message_1.id)
+          end
+
+          it "publishes user tracking state using the old membership last_read_message_id" do
+            sign_in(user)
+            messages =
+              MessageBus.track_publish(
+                Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
+              ) { post "/chat/#{chat_channel.id}.json", params: { message: message } }
+            expect(response.status).to eq(200)
+            expect(messages.first.data["last_read_message_id"]).to eq(message_1.id)
+          end
+        end
       end
     end
 

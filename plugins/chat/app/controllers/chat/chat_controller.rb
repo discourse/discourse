@@ -112,10 +112,11 @@ module Chat
 
       return render_json_error(chat_message_creator.error) if chat_message_creator.failed?
 
-      # TODO (martin) Maybe we just do not set this if creating the message in the thread?
-      @user_chat_channel_membership.update!(
-        last_read_message_id: chat_message_creator.chat_message.id,
-      )
+      if !chat_message_creator.chat_message.thread_id.present?
+        @user_chat_channel_membership.update!(
+          last_read_message_id: chat_message_creator.chat_message.id,
+        )
+      end
 
       if @chat_channel.direct_message_channel?
         # If any of the channel users is ignoring, muting, or preventing DMs from
@@ -140,11 +141,16 @@ module Chat
         end
       end
 
-      # TODO (martin) Maybe we just do not set this if creating the message in the thread?
       Chat::Publisher.publish_user_tracking_state(
         current_user,
         @chat_channel.id,
-        chat_message_creator.chat_message.id,
+        (
+          if chat_message_creator.chat_message.thread_id.present?
+            @user_chat_channel_membership.last_read_message_id
+          else
+            chat_message_creator.chat_message.id
+          end
+        ),
       )
       render json: success_json
     end
@@ -278,11 +284,8 @@ module Chat
 
       can_load_more_past = past_messages.count == PAST_MESSAGE_LIMIT
       can_load_more_future = future_messages.count == FUTURE_MESSAGE_LIMIT
-      messages = [
-        past_messages.reverse,
-        (!include_thread_messages? && @message.in_thread?) ? [] : [@message],
-        future_messages,
-      ].reduce([], :concat)
+      looked_up_message = !include_thread_messages? && @message.thread_reply? ? [] : [@message]
+      messages = [past_messages.reverse, looked_up_message, future_messages].reduce([], :concat)
       chat_view =
         Chat::View.new(
           chat_channel: @chat_channel,
