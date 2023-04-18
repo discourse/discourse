@@ -137,6 +137,10 @@ acceptance("Composer - Messages - Duplicate links", function (needs) {
 
     await visit("/t/internationalization-localization/280");
     await click("button.create");
+
+    // Work around the lack of CSS transitions in the test env
+    query("#reply-control").dispatchEvent(new Event("transitionend"));
+
     assert
       .dom(".composer-popup")
       .doesNotExist("composer warning is not shown by default");
