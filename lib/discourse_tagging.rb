@@ -634,7 +634,10 @@ module DiscourseTagging
       taggable.tags = Tag.where_name(tag_names).all
       new_tag_names =
         taggable.tags.size < tag_names.size ? tag_names - taggable.tags.map(&:name) : []
-      taggable.tags << Tag.where(target_tag_id: taggable.tags.map(&:id)).all
+      taggable.tags << Tag
+        .where(target_tag_id: taggable.tags.map(&:id))
+        .where.not(id: taggable.tags.map(&:id))
+        .all
       new_tag_names.each { |name| taggable.tags << Tag.create(name: name) }
     end
   end
