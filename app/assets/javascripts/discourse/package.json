@@ -21,7 +21,6 @@
     "@babel/standalone": "^7.21.4",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
-    "@discourse/virtual-dom": "^2.1.2-0",
     "@ember-compat/tracked-built-ins": "^0.9.1",
     "@ember/jquery": "^2.0.0",
     "@ember/legacy-built-in-components": "^0.4.2",
@@ -99,6 +98,7 @@
     "tippy.js": "^6.3.7",
     "util": "^0.12.5",
     "webpack": "^5.79.0",
+    "virtual-dom": "^2.1.1",
     "wizard": "1.0.0",
     "xss": "^1.0.14"
   },

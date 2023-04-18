@@ -22,9 +22,12 @@
   "resolutions": {
     "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1"
   },
-  "devDependencies": {},
   "dependencies": {
     "patch-package": "^6.5.1",
     "postinstall-postinstall": "^2.1.0"
+  },
+  "devDependencies": {},
+  "notes": {
+    "deps vs devDeps": "this project doesn't use dev dependencies when building the app, so all dependencies affecting the build of the UI (ember-cli, webpack, etc), need to be in 'dependencies', not 'devDependencies' (yarn install --production is used)"
   }
 }
