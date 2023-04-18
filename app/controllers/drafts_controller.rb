@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DraftsController < ApplicationController
-  requires_login
+  requires_login except: %i[destroy]
 
   skip_before_action :check_xhr, :preload_json
 
@@ -87,11 +87,21 @@ class DraftsController < ApplicationController
   end
 
   def destroy
+    user =
+      if @guardian.is_admin? && params[:api]
+        fetch_user_from_params
+      else
+        current_user
+      end
+
     begin
-      Draft.clear(current_user, params[:id], params[:sequence].to_i)
-    rescue Draft::OutOfSequence
-      # nothing really we can do here, if try clearing a draft that is not ours, just skip it.
+      Draft.clear(user, params[:id], params[:sequence].to_i)
+    rescue Draft::OutOfSequence => e
+      return render json: failed_json.merge(errors: e), status: 500
+    rescue StandardError => e
+      return render json: failed_json.merge(errors: e), status: 500
     end
+
     render json: success_json
   end
 end

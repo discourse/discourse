@@ -236,5 +236,27 @@ RSpec.describe DraftsController do
       expect(response.status).to eq(200)
       expect(Draft.get(user, "xxx", 0)).to eq(nil)
     end
+
+    it "can destroy a draft for a passed user" do
+      sign_in(Fabricate(:admin))
+      user = Fabricate(:user)
+      Draft.set(user, "xxx", 0, "hi")
+      delete "/drafts/xxx.json", params: { sequence: 0, username: user.username, api: true }
+      expect(response.status).to eq(200)
+      expect(Draft.get(user, "xxx", 0)).to eq(nil)
+    end
+
+    it "raises missing user" do
+      delete "/drafts/xxx.json", params: { sequence: 0 }
+      expect(response.status).to eq(500)
+      expect(response.parsed_body["errors"]).to eq("user not present")
+    end
+
+    it "raises bad sequence" do
+      user = sign_in(Fabricate(:user))
+      delete "/drafts/xxx.json", params: { username: user.username, sequence: 1 }
+      expect(response.status).to eq(500)
+      expect(response.parsed_body["errors"]).to eq("bad draft sequence")
+    end
   end
 end
