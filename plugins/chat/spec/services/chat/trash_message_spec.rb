@@ -57,7 +57,11 @@ RSpec.describe Chat::TrashMessage do
           expect(event[:event_name]).to eq(:chat_message_trashed)
           expect(event[:params]).to eq([message, message.chat_channel, current_user])
           expect(messages.find { |m| m.channel == "/chat/#{message.chat_channel_id}" }.data).to eq(
-            { "type" => "delete", "deleted_id" => message.id, "deleted_at" => Time.zone.now },
+            {
+              "type" => "delete",
+              "deleted_id" => message.id,
+              "deleted_at" => message.reload.deleted_at.iso8601(3),
+            },
           )
         end
 
