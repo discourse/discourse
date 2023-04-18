@@ -269,36 +269,31 @@
   }
 }
 
+#user-hearts-container {
+  display: flex;
+  justify-content: flex-end;
+}
+#user-hearts {
+  width: 500px;
+}
 .your-hearts.topic-list-data {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-width: 90px;
+  min-width: 50px;
+  max-width: 75px;
+  padding: 15px 5px;
 
   .heart-wrapper {
-    width: 100%;
-    font-size: 3px;
-  }
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
 
-  .heart {
-    display: inline-block;
-    width: 0.5em;
-    height: 0.5em;
-    background: #a52a21;
-    box-shadow:
-      /* white shine */ 0 -2em 0 white, -3em 0 0 white,
-      -2em -1em 0 white, /* top shades */ 0 -1em 0 0 #c52317,
-      -1em -2em 0 0 #c52317, -2em -2em 0 0 #c52317, -3em -2em 0 0 #c52317,
-      1em -2em 0 0 #c52317, 2em -2em 0 0 #c52317, 3em -2em 0 0 #c52317,
-      -4em -1em 0 0 #c52317, 4em -1em 0 0 #c52317,
-      /* fills my heart */ 0 0 0 2em #a52a21, -1em 0 0 2em #a52a21,
-      1em 0 0 2em #a52a21, -3em 0 0 1em #a52a21, 3em 0 0 1em #a52a21,
-      0 1em 0 2em #a52a21, 0 3em 0 1em #a52a21, 0 5em 0 0 #a52a21,
-      /* white borders */ -2em -2em 0 1em white, 2em -2em 0 1em white,
-      -3em -1em 0 1em white, 3em -1em 0 1em white, -4em 0 0 1em white,
-      4em 0 0 1em white, -3em 1em 0 1em white, 3em 1em 0 1em white,
-      1em 1em 0 2em white, -1em 1em 0 2em white, 0 2em 0 2em white,
-      0 4em 0 1em white, 0 6em 0 0 white;
+    .full-heart {
+      margin-top: 3px;
+      width: 25px;
+      height: 25px;
+    }
   }
 
   .voice-credits-input {
@@ -321,7 +316,6 @@
   .voice-vote-buttons {
     display: flex;
     flex-direction: column;
-    margin-left: 2px;
     .triangle_down {
       margin-top: 2px;
       width: 0;

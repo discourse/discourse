@@ -79,10 +79,10 @@
 
 {{#if showUserVoiceCredits}}
   <td class="num your-hearts topic-list-data">
-    <div class="heart-wrapper">
-      <div class="heart"></div>
-    </div>
     <div>{{voiceCredits}}</div>
+    <div class="heart-wrapper">
+      <img class="full-heart" src="/assets/full-heart.png" alt="Full Hearts"> 
+    </div>
     <div class="voice-vote-buttons" >
     <div id="dialog3" class="triangle_up" data-topic-id={{topic.id}}></div>
     <div id="dialog1" class="triangle_down" data-topic-id={{topic.id}} ></div>

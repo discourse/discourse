@@ -1,23 +1,25 @@
-
-
 <thead class="topic-list-header">
-    {{#if this.showUserVoiceCredits}}
+  {{#if this.showUserVoiceCredits}}
     <tr>
       <td style="text-align: right;" colspan="100%">
-        <div>
-            <canvas id="myCanvas" width="450" height="120"></canvas>
-            <p><span id="blockCounter">{{this.remainingVotes}}</span>/100 remaining</p>
-            <button
-              type="button"
-              id="save-voice-credits"
-              class="btn"
-              style="margin-bottom: 20px;"
-              {{on "click" this.saveVoiceCredits}}
-            >Save Voice Credits</button>
+        <div id="user-hearts-container-row">
+          <div id="user-hearts-container">
+            <div id="user-hearts">
+            </div>
           </div>
+          <p><span id="blockCounter">{{this.remainingVotes}}</span>/100
+            remaining</p>
+          <button
+            type="button"
+            id="save-voice-credits"
+            class="btn"
+            style="margin-bottom: 20px;"
+            {{on "click" this.saveVoiceCredits}}
+          >Save Voice Credits</button>
+        </div>
       </td>
     </tr>
-    {{/if}}
+  {{/if}}
   {{raw
     "topic-list-header"
     canBulkSelect=this.canBulkSelect
