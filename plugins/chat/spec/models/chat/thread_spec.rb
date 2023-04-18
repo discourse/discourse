@@ -40,6 +40,20 @@ RSpec.describe Chat::Thread do
         described_class.ensure_consistency!
         expect(thread_1.reload.replies_count).to eq(0)
       end
+
+      it "clears the affected replies_count caches" do
+        thread_1.set_replies_count_cache(100)
+        expect(thread_1.replies_count_cache).to eq(100)
+        expect(thread_1.replies_count_cache_updated_at).not_to eq(nil)
+
+        described_class.ensure_consistency!
+        expect(Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(thread_1.id))).to eq(
+          nil,
+        )
+        expect(
+          Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(thread_1.id)),
+        ).to eq(nil)
+      end
     end
   end
 
