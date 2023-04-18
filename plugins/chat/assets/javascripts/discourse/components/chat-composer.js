@@ -108,7 +108,10 @@ export default Component.extend(TextareaTextManipulation, {
     this.set("ready", true);
   },
 
-  _modifySelection(opts = { type: null }) {
+  _modifySelection(opts = { type: null, context: null }) {
+    if (opts.context !== this.context) {
+      return;
+    }
     const sel = this.getSelected("", { lineVal: true });
     if (opts.type === "bold") {
       this.applySurround(sel, "**", "**", "bold_text");

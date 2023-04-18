@@ -45,6 +45,7 @@
     @placeholder={{this.placeholder}}
     @focus-in={{action "onTextareaFocusIn" value="target"}}
     @rows={{1}}
+    data-chat-composer-context={{@context}}
   />
 
   {{#if this.isNetworkUnreliable}}
