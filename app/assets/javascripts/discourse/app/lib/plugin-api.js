@@ -187,11 +187,15 @@ class PluginApi {
   _resolveClass(resolverName, opts) {
     opts = opts || {};
 
-    if (this.container.cache[resolverName]) {
+    if (
+      this.container.cache[resolverName] ||
+      (resolverName === "model:user" &&
+        this.container.lookup("service:current-user"))
+    ) {
       // eslint-disable-next-line no-console
       console.warn(
         consolePrefix(),
-        `"${resolverName}" was already cached in the container. Changes won't be applied.`
+        `"${resolverName}" has already been initialized and registered as a singleton. Move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
       );
     }
 
