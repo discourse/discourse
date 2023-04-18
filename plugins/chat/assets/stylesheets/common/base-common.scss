@@ -343,18 +343,6 @@ $float-height: 530px;
       opacity: 0.8;
     }
 
-    &__text {
-      color: var(--secondary);
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
-      background: var(--primary-medium);
-      border-radius: 3px;
-      text-align: center;
-      font-size: var(--font-down-1);
-      bottom: 40px;
-      position: absolute;
-    }
-
     &__arrow {
       display: flex;
       background: var(--primary-medium);
