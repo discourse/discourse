@@ -140,6 +140,44 @@ RSpec.describe HashtagAutocompleteService do
       )
     end
 
+    it "does not add a type suffix where
+        1. a subcategory name conflicts with an existing tag name and
+        2. the category is not the top ranked type" do
+      parent = Fabricate(:category, name: "Hobbies", slug: "hobbies")
+      category1.update!(parent_category: parent)
+      Fabricate(:tag, name: "the-book-club")
+
+      Fabricate(:bookmark, user: user, name: "book club")
+      guardian.user.reload
+
+      DiscoursePluginRegistry.register_hashtag_autocomplete_data_source(
+        FakeBookmarkHashtagDataSource,
+        stub(enabled?: true),
+      )
+
+      expect(subject.search("book", %w[bookmark category tag]).map(&:ref)).to eq(
+        %w[book-club hobbies:the-book-club great-books the-book-club::tag],
+      )
+    end
+
+    it "handles the type suffix where the top ranked type conflicts with a subcategory" do
+      parent = Fabricate(:category, name: "Hobbies", slug: "hobbies")
+      category1.update!(parent_category: parent)
+      Fabricate(:tag, name: "the-book-club")
+
+      Fabricate(:bookmark, user: user, name: "the book club")
+      guardian.user.reload
+
+      DiscoursePluginRegistry.register_hashtag_autocomplete_data_source(
+        FakeBookmarkHashtagDataSource,
+        stub(enabled?: true),
+      )
+
+      expect(subject.search("book", %w[bookmark category tag]).map(&:ref)).to eq(
+        %w[the-book-club hobbies:the-book-club::category great-books the-book-club::tag],
+      )
+    end
+
     it "orders results by (with type ordering within each section):
         1. exact match on slug (ignoring parent/child distinction for categories)
         2. slugs that start with the term
@@ -336,6 +374,18 @@ RSpec.describe HashtagAutocompleteService do
       result = subject.lookup(%w[media:the-book-club], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(["the-book-club"])
       expect(result[:category].map(&:ref)).to eq(["media:the-book-club"])
+      expect(result[:category].map(&:relative_url)).to eq(
+        ["/c/media/the-book-club/#{category1.id}"],
+      )
+      category1.update!(parent_category: nil)
+    end
+
+    it "handles parent:child category lookups with type suffix" do
+      parent_category = Fabricate(:category, name: "Media", slug: "media")
+      category1.update!(parent_category: parent_category)
+      result = subject.lookup(%w[media:the-book-club::category], %w[category tag])
+      expect(result[:category].map(&:slug)).to eq(["the-book-club"])
+      expect(result[:category].map(&:ref)).to eq(["media:the-book-club::category"])
       expect(result[:category].map(&:relative_url)).to eq(
         ["/c/media/the-book-club/#{category1.id}"],
       )
