@@ -146,15 +146,14 @@ RSpec.describe EmbedController do
         expect(response.body).to match("data-referer=\"\\*\"")
       end
 
-      it "disallows indexing the embed topic list" do
-        get "/embed/topics?discourse_embed_id=de-1234",
-            headers: {
-              "REFERER" => "https://example.com/evil-trout",
-            }
-
+      it "disallows indexing the embed topic list for Googlebot" do
+        topic = Fabricate(:topic)
+        get '/embed/topics?discourse_embed_id=de-1234', headers: {
+          'REFERER' => 'https://example.com/evil-trout'
+        }
         expect(response.status).to eq(200)
-        expect(response.headers["X-Robots-Tag"]).to match(/noindex/)
-      end
+        expect(response.headers['X-Robots-Tag']).to match(/googlebot:noindex/)
+      end      
     end
   end
 
