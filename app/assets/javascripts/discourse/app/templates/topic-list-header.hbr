@@ -34,7 +34,11 @@
         </span>
       {{/if ~}}
     {{/if ~}}
-    <span>Your Hearts</span>
+    <span>    
+      <div class="heart-header-wrapper">
+        <img class="full-heart-header" src="/images/full-heart.png" alt="Full Hearts"> 
+      </div>
+    </span>
   </th>
 {{/if ~}}
 {{#if showQuadraticTotals}}
@@ -53,7 +57,7 @@
         </span>
       {{/if ~}}
     {{/if ~}}
-    <span>Square Root Hearts</span>
+    <span><img class="full-heart" src="/images/total-votes.png" alt="total Hearts"></span>
   </th>
 {{/if ~}}
 {{~raw-plugin-outlet name="topic-list-header-after"~}}

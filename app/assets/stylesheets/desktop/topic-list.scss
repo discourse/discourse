@@ -269,6 +269,39 @@
   }
 }
 
+#user-hearts-container-row {
+  .save-section {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
+
+#user-info-topic-list {
+  display: flex;
+  justify-content: end;
+
+  .user-hearts-data {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  }
+  #save-voice-credits {
+    margin-left: 10px;
+  }
+}
+
+.heart-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .full-heart-header {
+    width: 25px;
+    height: 25px;
+  }
+}
+
 #user-hearts-container {
   display: flex;
   justify-content: flex-end;
@@ -282,7 +315,7 @@
   justify-content: space-between;
   min-width: 50px;
   max-width: 75px;
-  padding: 15px 5px;
+  height: 45px;
 
   .heart-wrapper {
     display: flex;

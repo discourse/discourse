@@ -2,20 +2,30 @@
   {{#if this.showUserVoiceCredits}}
     <tr>
       <td style="text-align: right;" colspan="100%">
-        <div id="user-hearts-container-row">
-          <div id="user-hearts-container">
-            <div id="user-hearts">
+        <div id="user-info-topic-list">
+          <div class="user-hearts-data">
+            <div><strong>{{this.currentUser.username}}</strong></div>
+
+            <div>You have
+              <strong>{{this.remainingVotes}}</strong>
+              hearts left to give</div>
+          </div>
+          <div id="user-hearts-container-row">
+            <div id="user-hearts-container">
+              <div id="user-hearts">
+              </div>
+            </div>
+            <div class="save-section">
+              <p><span id="blockCounter">{{this.remainingVotes}}</span>/100
+                remaining</p>
+              <button
+                type="button"
+                id="save-voice-credits"
+                class="btn"
+                {{on "click" this.saveVoiceCredits}}
+              >Save</button>
             </div>
           </div>
-          <p><span id="blockCounter">{{this.remainingVotes}}</span>/100
-            remaining</p>
-          <button
-            type="button"
-            id="save-voice-credits"
-            class="btn"
-            style="margin-bottom: 20px;"
-            {{on "click" this.saveVoiceCredits}}
-          >Save Voice Credits</button>
         </div>
       </td>
     </tr>
