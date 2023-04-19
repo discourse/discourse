@@ -62,7 +62,8 @@ module PrettyText
   end
 
   def self.ctx_load_directory(ctx, path)
-    Dir["#{path}/**/*"].sort.each do |f|
+    root_path = "#{Rails.root}/app/assets/javascripts/"
+    Dir["#{root_path}#{path}/**/*"].sort.each do |f|
       apply_es6_file(ctx, root_path, f.sub(root_path, "").sub(/\.js(.es6)?\z/, ""))
     end
   end
@@ -92,11 +93,11 @@ module PrettyText
 
     workspace_path = "#{Rails.root}/app/assets/javascripts/"
     ctx.load("#{Rails.root}/node_modules/loader.js/dist/loader/loader.js")
-    ctx.load("#{workspace_path}/handlebars-shim.js")
+    ctx.load("#{workspace_path}handlebars-shim.js")
     ctx.load("#{Rails.root}/node_modules/xss/dist/xss.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
-    ctx_load_directory(ctx, "#{workspace_path}/pretty-text/addon")
-    ctx_load_directory(ctx, "#{workspace_path}/pretty-text/engines/discourse-markdown")
+    ctx_load_directory(ctx, "pretty-text/addon")
+    ctx_load_directory(ctx, "pretty-text/engines/discourse-markdown")
     ctx.load("#{Rails.root}/node_modules/markdown-it/dist/markdown-it.js")
 
     apply_es6_file(ctx, workspace_path, "discourse-common/addon/lib/get-url")
