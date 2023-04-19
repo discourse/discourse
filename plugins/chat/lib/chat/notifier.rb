@@ -97,19 +97,10 @@ module Chat
       already_notified_user_ids = existing_notifications.map(&:user_id)
 
       to_notify = list_users_to_notify
-      mentioned_user_ids = to_notify.extract!(:all_mentioned_user_ids)[:all_mentioned_user_ids]
-
-      needs_deletion = already_notified_user_ids - mentioned_user_ids
-      needs_deletion.each do |user_id|
-        chat_mention = existing_notifications.detect { |n| n.user_id == user_id }
-        chat_mention.notification.destroy! if chat_mention.notification.present?
-      end
-
-      needs_notification_ids = mentioned_user_ids - already_notified_user_ids
+      needs_notification_ids = to_notify[:all_mentioned_user_ids] - already_notified_user_ids
       return if needs_notification_ids.blank?
 
       notify_creator_of_inaccessible_mentions(to_notify)
-
       notify_mentioned_users(to_notify, already_notified_user_ids: already_notified_user_ids)
 
       to_notify
