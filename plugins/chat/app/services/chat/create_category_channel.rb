@@ -27,6 +27,7 @@ module Chat
 
     policy :can_create_channel
     contract
+    step :set_auto_join_users_default
     policy :category_channel_does_not_exist
     model :category, :fetch_category
     model :channel, :create_channel
@@ -47,6 +48,11 @@ module Chat
     end
 
     private
+
+    def set_auto_join_users_default(contract:, **)
+      contract.auto_join_users =
+        ActiveRecord::Type::Boolean.new.deserialize(context[:auto_join_users]) || false
+    end
 
     def can_create_channel(guardian:, **)
       guardian.can_create_chat_channel?

@@ -56,7 +56,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
       on_model_not_found(:category) { raise ActiveRecord::RecordNotFound }
       on_failed_policy(:can_create_channel) { raise Discourse::InvalidAccess }
       on_failed_policy(:category_channel_does_not_exist) do
-        Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
+        raise Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
       end
     end
   end
