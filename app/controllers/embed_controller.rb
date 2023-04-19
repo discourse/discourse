@@ -37,7 +37,7 @@ class EmbedController < ApplicationController
       end
     end
 
-    response.headers["X-Robots-Tag"] = "noindex, indexifembedded"
+    response.headers['X-Robots-Tag'] = 'googlebot:noindex, indexifembedded'
 
     if params.has_key?(:template) && params[:template] == "complete"
       @template = "complete"
