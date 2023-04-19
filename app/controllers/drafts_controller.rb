@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DraftsController < ApplicationController
-  requires_login except: %i[destroy]
+  requires_login
 
   skip_before_action :check_xhr, :preload_json
 
@@ -88,8 +88,12 @@ class DraftsController < ApplicationController
 
   def destroy
     user =
-      if @guardian.is_admin? && params[:api]
-        fetch_user_from_params
+      if is_api?
+        if @guardian.is_admin?
+          fetch_user_from_params
+        else
+          raise Discourse::InvalidAccess
+        end
       else
         current_user
       end
@@ -97,9 +101,9 @@ class DraftsController < ApplicationController
     begin
       Draft.clear(user, params[:id], params[:sequence].to_i)
     rescue Draft::OutOfSequence => e
-      return render json: failed_json.merge(errors: e), status: 500
+      return render json: failed_json.merge(errors: e), status: 404
     rescue StandardError => e
-      return render json: failed_json.merge(errors: e), status: 500
+      return render json: failed_json.merge(errors: e), status: 401
     end
 
     render json: success_json
