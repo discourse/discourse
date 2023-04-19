@@ -21,7 +21,7 @@ RSpec.describe SidebarSectionsController do
       get "/sidebar_sections.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["sidebar_sections"].map { |section| section["title"] }).to eq(
-        ["public section", "private section"],
+        ["community", "public section", "private section"],
       )
     end
   end
@@ -41,6 +41,8 @@ RSpec.describe SidebarSectionsController do
 
     it "creates custom section for user" do
       sign_in(user)
+      expect(SidebarSection.count).to eq(1)
+
       post "/sidebar_sections.json",
            params: {
              title: "custom section",
@@ -58,7 +60,7 @@ RSpec.describe SidebarSectionsController do
 
       expect(response.status).to eq(200)
 
-      expect(SidebarSection.count).to eq(1)
+      expect(SidebarSection.count).to eq(2)
       sidebar_section = SidebarSection.last
 
       expect(sidebar_section.title).to eq("custom section")

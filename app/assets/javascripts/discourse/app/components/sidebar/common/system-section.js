@@ -123,6 +123,9 @@ export default class Section {
   }
 
   #initializeSectionLink(sectionLinkClass, inMoreDrawer) {
+    if (this.router.isDestroying) {
+      return;
+    }
     return new sectionLinkClass({
       topicTrackingState: this.topicTrackingState,
       currentUser: this.currentUser,

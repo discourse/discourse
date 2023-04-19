@@ -8,9 +8,41 @@ acceptance("Opengraph Tag Updater", function (needs) {
       return helper.response({});
     });
   });
+  needs.site({
+    anonymous_sidebar_sections: [
+      {
+        id: 111,
+        title: "community",
+        links: [
+          {
+            id: 329,
+            name: "everything",
+            value: "/system_unread",
+            icon: "layer-group",
+            external: false,
+            segment: "primary",
+          },
+          {
+            id: 331,
+            name: "info",
+            value: "/system_about",
+            icon: "info-circle",
+            external: false,
+            segment: "secondary",
+          },
+        ],
+        slug: "community",
+        public: true,
+        system: true,
+      },
+    ],
+  });
 
   test("updates OG title and URL", async function (assert) {
     await visit("/");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+    );
     await click("a[href='/about']");
 
     assert.strictEqual(

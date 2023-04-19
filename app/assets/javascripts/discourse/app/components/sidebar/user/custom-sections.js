@@ -24,10 +24,8 @@ export default class SidebarUserCustomSections extends Component {
     this.callbackIds.forEach((id) => {
       this.topicTrackingState.offStateChange(id);
     });
-    return this.sections.map((section) => {
-      if (section.teardown) {
-        section.teardown();
-      }
+    return this.sections.forEach((section) => {
+      section.teardown?.();
     });
   }
 

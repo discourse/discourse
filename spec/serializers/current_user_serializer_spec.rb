@@ -314,11 +314,9 @@ RSpec.describe CurrentUserSerializer do
         track_sql_queries do
           serialized = described_class.new(user, scope: Guardian.new(user), root: false).as_json
 
-          expect(serialized[:sidebar_sections].map { |sidebar_section| sidebar_section.id }).to eq(
-            [sidebar_section.id],
-          )
+          expect(serialized[:sidebar_sections].count).to eq(2)
 
-          expect(serialized[:sidebar_sections].first.links.map { |link| link.id }).to eq(
+          expect(serialized[:sidebar_sections].last.links.map { |link| link.id }).to eq(
             [custom_sidebar_section_link_1.linkable.id],
           )
         end.count
@@ -330,11 +328,9 @@ RSpec.describe CurrentUserSerializer do
         track_sql_queries do
           serialized = described_class.new(user, scope: Guardian.new(user), root: false).as_json
 
-          expect(serialized[:sidebar_sections].map { |sidebar_section| sidebar_section.id }).to eq(
-            [sidebar_section.id],
-          )
+          expect(serialized[:sidebar_sections].count).to eq(2)
 
-          expect(serialized[:sidebar_sections].first.links.map { |link| link.id }).to eq(
+          expect(serialized[:sidebar_sections].last.links.map { |link| link.id }).to eq(
             [custom_sidebar_section_link_1.linkable.id, custom_sidebar_section_link_2.linkable.id],
           )
         end.count
