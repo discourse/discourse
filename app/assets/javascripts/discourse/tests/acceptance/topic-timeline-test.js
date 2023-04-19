@@ -341,6 +341,8 @@ acceptance("Glimmer Topic Timeline", function (needs) {
   async function setupTest() {
     await visit("/t/internationalization-localization");
     await setHeaderOffset("60px");
+    const bodyElement = document.querySelector("body");
+    bodyElement.style.width = "1200px";
   }
 
   test("it has a topic admin menu", async function (assert) {
