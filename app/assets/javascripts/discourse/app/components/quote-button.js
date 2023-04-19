@@ -199,12 +199,7 @@ export default Component.extend(KeyEnterEscape, {
 
     if (showAtEnd) {
       this.popperPlacement = "bottom-start";
-
-      if (isAndroid) {
-        this.popperOffset = [0, 25];
-      } else {
-        this.popperOffset = [0, 15];
-      }
+      this.popperOffset = [0, 25];
     }
 
     // change the position of the button

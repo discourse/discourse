@@ -1419,11 +1419,12 @@ en:
         title: "Two-Factor Backup Codes"
         regenerate: "Regenerate"
         disable: "Disable"
-        enable: "Enable"
-        enable_long: "Enable backup codes"
+        enable: "Create backup codes"
+        enable_long: "Add backup codes"
+        not_enabled: "You haven't created any backup codes yet."
         manage:
-          one: "Manage backup codes. You have <strong>%{count}</strong> backup code remaining."
-          other: "Manage backup codes. You have <strong>%{count}</strong> backup codes remaining."
+          one: "You have <strong>%{count}</strong> backup code remaining."
+          other: "You have <strong>%{count}</strong> backup codes remaining."
         copy_to_clipboard: "Copy to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
@@ -1512,6 +1513,7 @@ en:
         success: "We've sent an email to that address. Please follow the confirmation instructions."
         success_via_admin: "We've sent an email to that address. The user will need to follow the confirmation instructions in the email."
         success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
+        back_to_preferences: "Back to preferences"
 
       change_avatar:
         title: "Change your profile picture"
