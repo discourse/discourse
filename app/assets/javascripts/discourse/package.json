@@ -14,7 +14,7 @@
     "build": "ember build",
     "start": "ember serve",
     "test": "ember test",
-    "postinstall": "yarn --silent --cwd .. patch-package"
+    "postinstall": "yarn --silent --cwd ../../../.. patch-package --patch-dir app/assets/javascripts/patches"
   },
   "dependencies": {
     "@babel/core": "^7.21.4",

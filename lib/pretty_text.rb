@@ -62,8 +62,7 @@ module PrettyText
   end
 
   def self.ctx_load_directory(ctx, path)
-    root_path = "#{Rails.root}/app/assets/javascripts/"
-    Dir["#{root_path}#{path}/**/*"].sort.each do |f|
+    Dir["#{path}/**/*"].sort.each do |f|
       apply_es6_file(ctx, root_path, f.sub(root_path, "").sub(/\.js(.es6)?\z/, ""))
     end
   end
@@ -91,22 +90,22 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    root_path = "#{Rails.root}/app/assets/javascripts/"
-    ctx_load(ctx, "#{root_path}/node_modules/loader.js/dist/loader/loader.js")
-    ctx_load(ctx, "#{root_path}/handlebars-shim.js")
-    ctx_load(ctx, "#{root_path}/node_modules/xss/dist/xss.js")
+    workspace_path = "#{Rails.root}/app/assets/javascripts/"
+    ctx.load("#{Rails.root}/node_modules/loader.js/dist/loader/loader.js")
+    ctx.load("#{workspace_path}/handlebars-shim.js")
+    ctx.load("#{Rails.root}/node_modules/xss/dist/xss.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
-    ctx_load_directory(ctx, "pretty-text/addon")
-    ctx_load_directory(ctx, "pretty-text/engines/discourse-markdown")
-    ctx_load(ctx, "#{root_path}/node_modules/markdown-it/dist/markdown-it.js")
+    ctx_load_directory(ctx, "#{workspace_path}/pretty-text/addon")
+    ctx_load_directory(ctx, "#{workspace_path}/pretty-text/engines/discourse-markdown")
+    ctx.load("#{Rails.root}/node_modules/markdown-it/dist/markdown-it.js")
 
-    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/get-url")
-    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")
-    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/deprecated")
-    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/escape")
-    apply_es6_file(ctx, root_path, "discourse-common/addon/utils/watched-words")
-    apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
-    apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
+    apply_es6_file(ctx, workspace_path, "discourse-common/addon/lib/get-url")
+    apply_es6_file(ctx, workspace_path, "discourse-common/addon/lib/object")
+    apply_es6_file(ctx, workspace_path, "discourse-common/addon/lib/deprecated")
+    apply_es6_file(ctx, workspace_path, "discourse-common/addon/lib/escape")
+    apply_es6_file(ctx, workspace_path, "discourse-common/addon/utils/watched-words")
+    apply_es6_file(ctx, workspace_path, "discourse/app/lib/to-markdown")
+    apply_es6_file(ctx, workspace_path, "discourse/app/lib/utilities")
 
     ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
@@ -664,7 +663,7 @@ module PrettyText
   end
 
   def self.ctx_load(ctx, *files)
-    files.each { |file| ctx.load(app_root + file) }
+    files.each { |file| ctx.load(file) }
   end
 
   private
