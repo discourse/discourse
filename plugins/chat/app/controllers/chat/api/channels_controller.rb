@@ -38,46 +38,27 @@ class Chat::Api::ChannelsController < Chat::ApiController
     channel_params =
       params.require(:channel).permit(:chatable_id, :name, :slug, :description, :auto_join_users)
 
-    guardian.ensure_can_create_chat_channel!
-    if channel_params[:name].length > SiteSetting.max_topic_title_length
-      raise Discourse::InvalidParameters.new(:name)
+    # NOTE: We don't allow creationg channels for anything but category chatable types
+    # at the moment. This may change in future, at which point we will need to pass in
+    # a chatable_type param as well and switch to the correct service here.
+    with_service(
+      Chat::CreateCategoryChannel,
+      **channel_params.merge(category_id: channel_params[:chatable_id]),
+    ) do
+      on_success do
+        render_serialized(
+          result.channel,
+          Chat::ChannelSerializer,
+          root: "channel",
+          membership: result.membership,
+        )
+      end
+      on_model_not_found(:category) { raise ActiveRecord::RecordNotFound }
+      on_failed_policy(:can_create_channel) { raise Discourse::InvalidAccess }
+      on_failed_policy(:category_channel_does_not_exist) do
+        Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
+      end
     end
-
-    if Chat::Channel.exists?(
-         chatable_type: "Category",
-         chatable_id: channel_params[:chatable_id],
-         name: channel_params[:name],
-       )
-      raise Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
-    end
-
-    chatable = Category.find_by(id: channel_params[:chatable_id])
-    raise Discourse::NotFound unless chatable
-
-    auto_join_users =
-      ActiveRecord::Type::Boolean.new.deserialize(channel_params[:auto_join_users]) || false
-
-    channel =
-      chatable.create_chat_channel!(
-        name: channel_params[:name],
-        slug: channel_params[:slug],
-        description: channel_params[:description],
-        user_count: 1,
-        auto_join_users: auto_join_users,
-      )
-
-    channel.user_chat_channel_memberships.create!(user: current_user, following: true)
-
-    if channel.auto_join_users
-      Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
-    end
-
-    render_serialized(
-      channel,
-      Chat::ChannelSerializer,
-      membership: channel.membership_for(current_user),
-      root: "channel",
-    )
   end
 
   def show
