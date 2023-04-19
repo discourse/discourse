@@ -6,7 +6,7 @@ index b21a9bcd4..6537fcc2e 100644
      @return {Object}       Bower dependencies
     */
    bowerDependencies(bower) {
-+    return {};
++    return {}; // Silence deprecation until Discourse is on ember-source 4.x
      deprecate(
        [
          '`bowerDependencies` has been deprecated.',
