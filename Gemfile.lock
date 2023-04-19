@@ -427,7 +427,7 @@ GEM
     rubocop-discourse (3.2.0)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
-    rubocop-rspec (2.19.0)
+    rubocop-rspec (2.20.0)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
     ruby-prof (1.6.2)
