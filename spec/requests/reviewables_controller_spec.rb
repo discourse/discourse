@@ -811,64 +811,73 @@ RSpec.describe ReviewablesController do
         expect(queued_post.reload).to be_deleted
       end
 
-      #shared_examples "for a passed user" do
-        #it "deletes reviewable" do
-          #api_key = Fabricate(:api_key).key
-          #queued_post = Fabricate(:reviewable_queued_post, created_by: recipient)
-          #delete "/review/#{queued_post.id}.json",
-             #params: {
-               #username: recipient.username,
-             #},
-             #headers: {
-               #HTTP_API_USERNAME: caller.username,
-               #HTTP_API_KEY: api_key,
-             #}
+      it "denies attempts to destroy unowned reviewables" do
+        sign_in(admin)
+        queued_post = Fabricate(:reviewable_queued_post, created_by: user)
+        delete "/review/#{queued_post.id}.json"
+        expect(response.status).to eq(404)
+        # Reviewable is not deleted because request is not via API
+        expect(queued_post.reload).to be_present
+      end
 
-          #expect(response.status).to eq(response_code)
+      shared_examples "for a passed user" do
+        it "deletes reviewable" do
+          api_key = Fabricate(:api_key).key
+          queued_post = Fabricate(:reviewable_queued_post, created_by: recipient)
+          delete "/review/#{queued_post.id}.json",
+                 params: {
+                   username: recipient.username,
+                 },
+                 headers: {
+                   HTTP_API_USERNAME: caller.username,
+                   HTTP_API_KEY: api_key,
+                 }
 
-          #if reviewable_deleted
-            #expect(queued_post).to be_deleted
-          #else
-            #expect(queued_post).to be_present
-          #end
-        #end
-      #end
+          expect(response.status).to eq(response_code)
 
-      #describe "api called by admin" do
-        #include_examples "for a passed user" do
-          #let(:caller) { Fabricate(:admin) }
-          #let(:recipient) { Fabricate(:user) }
-          #let(:response_code) { 200 }
-          #let(:reviewable_deleted) { true }
-        #end
-      #end
+          if reviewable_deleted
+            expect(queued_post.reload).to be_deleted
+          else
+            expect(queued_post.reload).to be_present
+          end
+        end
+      end
 
-      #describe "api called by tl4 user" do
-        #include_examples "for a passed user" do
-          #let(:caller) { Fabricate(:trust_level_4) }
-          #let(:recipient) { Fabricate(:user) }
-          #let(:response_code) { 403 }
-          #let(:reviewable_deleted) { false }
-        #end
-      #end
+      describe "api called by admin" do
+        include_examples "for a passed user" do
+          let(:caller) { Fabricate(:admin) }
+          let(:recipient) { user }
+          let(:response_code) { 200 }
+          let(:reviewable_deleted) { true }
+        end
+      end
 
-      #describe "api called by regular user" do
-        #include_examples "for a passed user" do
-          #let(:caller) { Fabricate(:user) }
-          #let(:recipient) { Fabricate(:user) }
-          #let(:response_code) { 403 }
-          #let(:reviewable_deleted) { false }
-        #end
-      #end
+      describe "api called by tl4 user" do
+        include_examples "for a passed user" do
+          let(:caller) { Fabricate(:trust_level_4) }
+          let(:recipient) { user }
+          let(:response_code) { 403 }
+          let(:reviewable_deleted) { false }
+        end
+      end
 
-      #describe "api called by admin for another admin" do
-        #include_examples "for a passed user" do
-          #let(:caller) { Fabricate(:admin) }
-          #let(:recipient) { Fabricate(:admin) }
-          #let(:response_code) { 200 }
-          #let(:reviewable_deleted) { true }
-        #end
-      #end
+      describe "api called by regular user" do
+        include_examples "for a passed user" do
+          let(:caller) { user }
+          let(:recipient) { Fabricate(:user) }
+          let(:response_code) { 403 }
+          let(:reviewable_deleted) { false }
+        end
+      end
+
+      describe "api called by admin for another admin" do
+        include_examples "for a passed user" do
+          let(:caller) { Fabricate(:admin) }
+          let(:recipient) { Fabricate(:admin) }
+          let(:response_code) { 200 }
+          let(:reviewable_deleted) { true }
+        end
+      end
     end
 
     describe "#count" do

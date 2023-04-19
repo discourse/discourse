@@ -155,15 +155,16 @@ class ReviewablesController < ApplicationController
   end
 
   def destroy
-    user = if is_api?
-      if @guardian.is_admin?
-        fetch_user_from_params
+    user =
+      if is_api?
+        if @guardian.is_admin?
+          fetch_user_from_params
+        else
+          raise Discourse::InvalidAccess
+        end
       else
-        raise Discourse::InvalidAccess
+        current_user
       end
-    else
-      current_user
-    end
 
     reviewable = Reviewable.find_by(id: params[:reviewable_id], created_by: user)
     raise Discourse::NotFound.new if reviewable.blank?
