@@ -89,12 +89,11 @@ module Chat
     def notify_edit
       @chat_message.update_mentions(@mentions.all_mentioned_users_ids)
 
-      existing_notifications =
+      already_notified_user_ids =
         Chat::Mention
-          .includes(:user, :notification)
           .where(chat_message: @chat_message)
           .where.not(notification: nil)
-      already_notified_user_ids = existing_notifications.map(&:user_id)
+          .pluck(:user_id)
 
       to_notify = list_users_to_notify
       needs_notification_ids = to_notify[:all_mentioned_user_ids] - already_notified_user_ids
