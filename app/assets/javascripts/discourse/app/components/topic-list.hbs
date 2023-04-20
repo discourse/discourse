@@ -4,7 +4,12 @@
       <td style="text-align: right;" colspan="100%">
         <div id="user-info-topic-list">
           <div class="user-hearts-data">
-            <div><strong>{{this.currentUser.username}}</strong></div>
+            {{#if this.currentUser.name}}
+              <div><strong>{{this.currentUser.name}}</strong></div>
+            {{/if}}
+            {{#unless this.currentUser.name}}
+              <div><strong>{{this.currentUser.username}}</strong></div>
+            {{/unless}}
             <div>You have
               <strong>{{this.remainingVotes}}</strong>
               hearts left to give</div>

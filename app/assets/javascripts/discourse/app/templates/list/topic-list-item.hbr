@@ -24,6 +24,11 @@
     {{~#if topic.featured_link}}
       {{~topic-featured-link topic}}
     {{~/if}}
+   <span> - </span>
+    <a href='{{path-to-creator topic.posters}}'>
+      <span>{{display-creator-name topic.posters}}</span>
+    </a>
+
     {{~raw-plugin-outlet name="topic-list-after-title"}}
     {{~raw "list/unread-indicator" includeUnreadIndicator=includeUnreadIndicator
                                    topicId=topic.id
@@ -56,7 +61,6 @@
 {{/if}}
 
 {{raw "list/posts-count-column" topic=topic}}
-
 {{#if showLikes}}
   <td class="num likes topic-list-data">
     {{#if hasLikes}}
@@ -93,7 +97,6 @@
     </div>
   </td>
 {{/if}}
-
 {{#if showQuadraticTotals}}
   <td class="num square-root-hearts topic-list-data">
     {{number topicVote}}
