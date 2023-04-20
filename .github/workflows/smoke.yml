@@ -86,13 +86,11 @@ jobs:
       - name: Yarn install
         run: yarn install
 
-      - name: Checkout official plugins
-        if: matrix.target == 'plugins'
-        run: bin/rake plugin:install_all_official
+      # - name: Checkout official plugins
+      #   run: bin/rake plugin:install_all_official
 
-      - name: Pull compatible versions of plugins
-        if: matrix.target == 'plugins'
-        run: bin/rake plugin:pull_compatible_all
+      # - name: Pull compatible versions of plugins
+      #   run: bin/rake plugin:pull_compatible_all
 
       - name: Fetch app state cache
         uses: actions/cache@v3
@@ -126,8 +124,9 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
-      - name: Create script
+      - name: Setup env
         shell: ruby {0}
+        working-directory: .
         run: |
           require_relative "config/environment"
           u = User.new(username: "smoke_user", password: "P4ssw0rd", email: "smoke@example.com", admin:true)
