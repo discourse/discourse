@@ -152,7 +152,6 @@ $float-height: 530px;
     display: grid;
     will-change: transform;
     transform: translateZ(0);
-    overflow-x: hidden;
 
     &.selecting-messages {
       grid-template-columns: 1.5em 1fr;

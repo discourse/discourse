@@ -43,6 +43,10 @@ module PageObjects
         composer_input.value == content
       end
 
+      def has_popup_content?(content)
+        composer_popup.has_content?(content)
+      end
+
       def select_action(action)
         find(action(action)).click
         self
@@ -82,6 +86,10 @@ module PageObjects
 
       def composer_input
         find("#{COMPOSER_ID} .d-editor .d-editor-input")
+      end
+
+      def composer_popup
+        find("#{COMPOSER_ID} .composer-popup")
       end
     end
   end

@@ -555,6 +555,8 @@ en:
 
     get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
+    dont_feed_the_trolls: This post has already been flagged for moderator attention. Are you sure you wish to reply to it? Replies to negative content tend to encourage more negative behavior.
+
     too_many_replies: |
       ### You have reached the reply limit for this topic
 
@@ -2178,6 +2180,8 @@ en:
     sequential_replies_threshold: "Number of posts a user has to make in a row in a topic before being reminded about too many sequential replies."
 
     get_a_room_threshold: "Number of posts a user has to make to the same person in the same topic before being warned."
+
+    dont_feed_the_trolls_threshold: "Number of flags from other users before being warned."
 
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
 

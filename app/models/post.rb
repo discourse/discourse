@@ -550,10 +550,14 @@ class Post < ActiveRecord::Base
   end
 
   def is_flagged?
+    flags.count != 0
+  end
+
+  def flags
     post_actions.where(
       post_action_type_id: PostActionType.flag_types_without_custom.values,
       deleted_at: nil,
-    ).count != 0
+    )
   end
 
   def reviewable_flag
