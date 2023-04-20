@@ -126,13 +126,13 @@ jobs:
 
       - name: Setup env
         run: |
-          echo "\
+          echo '\
           require_relative "config/environment"\
           u = User.new(username: "smoke_user", password: "P4ssw0rd", email: "smoke@example.com", admin:true)\
           u.save!(validate: false)\
           u.activate\
           SiteSetting.wizard_enabled = false\
-          " | ruby
+          ' | ruby
 
       - name: Start server
         run: bin/unicorn
