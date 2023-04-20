@@ -212,6 +212,38 @@ describe Chat::MessageUpdater do
       mention = admin1.chat_mentions.where(chat_message: message).first
       expect(mention.notification).to be_nil
     end
+
+    context "when updating a mentioned user" do
+      it "updates the mention record" do
+        chat_message = create_chat_message(user1, "ping @#{user2.username}", public_chat_channel)
+
+        Chat::MessageUpdater.update(
+          guardian: guardian,
+          chat_message: chat_message,
+          new_content: "ping @#{user3.username}",
+        )
+
+        user2_mentions = user2.chat_mentions.where(chat_message: chat_message)
+        expect(user2_mentions.length).to be(0)
+
+        user3_mentions = user3.chat_mentions.where(chat_message: chat_message)
+        expect(user3_mentions.length).to be(1)
+      end
+    end
+
+    context "when there are duplicate mentions" do
+      it "creates a single mention record per user" do
+        chat_message = create_chat_message(user1, "ping @#{user2.username}", public_chat_channel)
+
+        Chat::MessageUpdater.update(
+          guardian: guardian,
+          chat_message: chat_message,
+          new_content: "ping @#{user2.username} @#{user2.username} edited",
+        )
+
+        expect(user2.chat_mentions.where(chat_message: chat_message).count).to eq(1)
+      end
+    end
   end
 
   describe "group mentions" do
