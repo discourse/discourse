@@ -127,7 +127,7 @@ jobs:
       - name: Setup env
         shell: ruby {0}
         run: |
-          Dir.chdir(ENV["GITHUB_WORKSPACE") do
+          Dir.chdir(ENV["GITHUB_WORKSPACE"]) do
             require_relative "config/environment"
             u = User.new(username: "smoke_user", password: "P4ssw0rd", email: "smoke@example.com", admin:true)
             u.save!(validate: false)
