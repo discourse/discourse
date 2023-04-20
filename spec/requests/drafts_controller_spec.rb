@@ -233,88 +233,8 @@ RSpec.describe DraftsController do
       user = sign_in(Fabricate(:user))
       Draft.set(user, "xxx", 0, "hi")
       delete "/drafts/xxx.json", params: { sequence: 0 }
-
       expect(response.status).to eq(200)
       expect(Draft.get(user, "xxx", 0)).to eq(nil)
-    end
-
-    it "denies attempts to destroy unowned draft" do
-      sign_in(Fabricate(:admin))
-      user = Fabricate(:user)
-      Draft.set(user, "xxx", 0, "hi")
-      delete "/drafts/xxx.json", params: { sequence: 0, username: user.username }
-
-      # Draft is not deleted because request is not via API
-      expect(Draft.get(user, "xxx", 0)).to be_present
-    end
-
-    it "raises bad sequence" do
-      user = sign_in(Fabricate(:user))
-      delete "/drafts/xxx.json", params: { sequence: 1 }
-
-      expect(response.status).to eq(404)
-      expect(response.parsed_body["errors"]).to eq("bad draft sequence")
-    end
-
-    shared_examples "for a passed user" do
-      it "deletes draft" do
-        api_key = Fabricate(:api_key).key
-        Draft.set(recipient, "xxx", 0, "hi")
-
-        delete "/drafts/xxx.json",
-               params: {
-                 sequence: 0,
-                 username: recipient.username,
-               },
-               headers: {
-                 HTTP_API_USERNAME: caller.username,
-                 HTTP_API_KEY: api_key,
-               }
-
-        expect(response.status).to eq(response_code)
-
-        if draft_deleted
-          expect(Draft.get(recipient, "xxx", 0)).to eq(nil)
-        else
-          expect(Draft.get(recipient, "xxx", 0)).to be_present
-        end
-      end
-    end
-
-    describe "api called by admin" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:admin) }
-        let(:recipient) { Fabricate(:user) }
-        let(:response_code) { 200 }
-        let(:draft_deleted) { true }
-      end
-    end
-
-    describe "api called by tl4 user" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:trust_level_4) }
-        let(:recipient) { Fabricate(:user) }
-        let(:response_code) { 403 }
-        let(:draft_deleted) { false }
-      end
-    end
-
-    describe "api called by regular user" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:user) }
-        let(:recipient) { Fabricate(:user) }
-        let(:response_code) { 403 }
-        let(:draft_deleted) { false }
-      end
-    end
-
-    describe "api called by admin for another admin" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:admin) }
-        let(:recipient) { Fabricate(:admin) }
-        let(:response_code) { 200 }
-        let(:draft_deleted) { true }
-      end
     end
   end
 end

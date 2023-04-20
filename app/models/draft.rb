@@ -134,14 +134,12 @@ class Draft < ActiveRecord::Base
   end
 
   def self.clear(user, key, sequence)
-    if !user || !user.id || !User.human_user_id?(user.id)
-      raise StandardError.new("user not present")
-    end
+    return if !user || !user.id || !User.human_user_id?(user.id)
 
     current_sequence = DraftSequence.current(user, key)
 
     # bad caller is a reason to complain
-    raise Draft::OutOfSequence.new("bad draft sequence") if sequence != current_sequence
+    raise Draft::OutOfSequence if sequence != current_sequence
 
     # corrupt data is not a reason not to leave data
     Draft.where(user_id: user.id, draft_key: key).destroy_all
