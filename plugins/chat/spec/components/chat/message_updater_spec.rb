@@ -30,8 +30,6 @@ describe Chat::MessageUpdater do
       Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
     end
     Group.refresh_automatic_groups!
-    @direct_message_channel =
-      Chat::DirectMessageChannelCreator.create!(acting_user: user1, target_users: [user1, user2])
   end
 
   def create_chat_message(user, message, channel, upload_ids: nil)
@@ -201,7 +199,9 @@ describe Chat::MessageUpdater do
     end
 
     it "doesn't create mention notification in direct message for users without access" do
-      message = create_chat_message(user1, "ping nobody", @direct_message_channel)
+      direct_message_channel =
+        Chat::DirectMessageChannelCreator.create!(acting_user: user1, target_users: [user1, user2])
+      message = create_chat_message(user1, "ping nobody", direct_message_channel)
 
       Chat::MessageUpdater.update(
         guardian: guardian,
