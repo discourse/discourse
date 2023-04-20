@@ -100,8 +100,9 @@ class DraftsController < ApplicationController
 
     begin
       Draft.clear(user, params[:id], params[:sequence].to_i)
-    rescue Draft::OutOfSequence => e
-      return render json: failed_json.merge(errors: e), status: 404
+    rescue Draft::OutOfSequence
+      # nothing really we can do here, if try clearing a draft that is not ours, just skip it.
+      # rendering an error causes issues in the composer
     rescue StandardError => e
       return render json: failed_json.merge(errors: e), status: 401
     end

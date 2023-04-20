@@ -248,14 +248,6 @@ RSpec.describe DraftsController do
       expect(Draft.get(user, "xxx", 0)).to be_present
     end
 
-    it "raises bad sequence" do
-      user = sign_in(Fabricate(:user))
-      delete "/drafts/xxx.json", params: { sequence: 1 }
-
-      expect(response.status).to eq(404)
-      expect(response.parsed_body["errors"]).to eq("bad draft sequence")
-    end
-
     shared_examples "for a passed user" do
       it "deletes draft" do
         api_key = Fabricate(:api_key).key
