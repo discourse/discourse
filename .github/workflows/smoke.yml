@@ -125,15 +125,14 @@ jobs:
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Setup env
-        shell: ruby {0}
         run: |
-          Dir.chdir(ENV["GITHUB_WORKSPACE"]) do
-            require_relative "config/environment"
-            u = User.new(username: "smoke_user", password: "P4ssw0rd", email: "smoke@example.com", admin:true)
-            u.save!(validate: false)
-            u.activate
-            SiteSetting.wizard_enabled = false
-          end
+          echo "\
+          require_relative "config/environment"\
+          u = User.new(username: "smoke_user", password: "P4ssw0rd", email: "smoke@example.com", admin:true)\
+          u.save!(validate: false)\
+          u.activate\
+          SiteSetting.wizard_enabled = false\
+          " | ruby
 
       - name: Start server
         run: bin/unicorn
