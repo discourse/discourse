@@ -28,10 +28,12 @@ module Chat
     policy :can_create_channel
     contract
     step :set_auto_join_users_default
-    policy :category_channel_does_not_exist
     model :category, :fetch_category
-    model :channel, :create_channel
-    model :membership, :create_membership
+    policy :category_channel_does_not_exist
+    transaction do
+      model :channel, :create_channel
+      model :membership, :create_membership
+    end
     step :enforce_automatic_channel_memberships
 
     # @!visibility private
@@ -42,16 +44,15 @@ module Chat
       attribute :category_id, :integer
       attribute :auto_join_users, :boolean, default: false
 
-      validates :category_id, presence: true
+      before_validation { self.auto_join_users = auto_join_users.presence || false }
 
+      validates :category_id, presence: true
       validates :name, length: { maximum: SiteSetting.max_topic_title_length }
     end
 
     private
 
     def set_auto_join_users_default(contract:, **)
-      contract.auto_join_users =
-        ActiveRecord::Type::Boolean.new.deserialize(context[:auto_join_users]) || false
     end
 
     def can_create_channel(guardian:, **)
@@ -62,16 +63,12 @@ module Chat
       Category.find_by(id: contract.category_id)
     end
 
-    def category_channel_does_not_exist(contract:, **)
-      !Chat::Channel.exists?(
-        chatable_type: "Category",
-        chatable_id: contract.category_id,
-        name: contract.name,
-      )
+    def category_channel_does_not_exist(category:, contract:, **)
+      !Chat::Channel.exists?(chatable: category, name: contract.name)
     end
 
     def create_channel(category:, contract:, **)
-      category.create_chat_channel!(
+      category.create_chat_channel(
         name: contract.name,
         slug: contract.slug,
         description: contract.description,
@@ -81,13 +78,12 @@ module Chat
     end
 
     def create_membership(channel:, guardian:, **)
-      channel.user_chat_channel_memberships.create!(user: guardian.user, following: true)
+      channel.user_chat_channel_memberships.create(user: guardian.user, following: true)
     end
 
     def enforce_automatic_channel_memberships(channel:, **)
-      if channel.auto_join_users
-        Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
-      end
+      return if !channel.auto_join_users?
+      Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
     end
   end
 end

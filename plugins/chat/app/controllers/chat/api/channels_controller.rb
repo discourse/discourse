@@ -38,7 +38,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
     channel_params =
       params.require(:channel).permit(:chatable_id, :name, :slug, :description, :auto_join_users)
 
-    # NOTE: We don't allow creationg channels for anything but category chatable types
+    # NOTE: We don't allow creating channels for anything but category chatable types
     # at the moment. This may change in future, at which point we will need to pass in
     # a chatable_type param as well and switch to the correct service here.
     with_service(
