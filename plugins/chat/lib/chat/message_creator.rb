@@ -58,7 +58,6 @@ module Chat
         @chat_message.attach_uploads(uploads)
         Chat::Draft.where(user_id: @user.id, chat_channel_id: @chat_channel.id).destroy_all
         Chat::Publisher.publish_new!(@chat_channel, @chat_message, @staged_id)
-        resolved_thread&.increment_replies_count_cache
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
         @chat_channel.touch(:last_message_sent_at)
@@ -206,10 +205,6 @@ module Chat
         FROM thread_updater
         WHERE thread_id IS NULL AND chat_messages.id = thread_updater.id
       SQL
-    end
-
-    def resolved_thread
-      @existing_thread || @chat_message.thread
     end
   end
 end

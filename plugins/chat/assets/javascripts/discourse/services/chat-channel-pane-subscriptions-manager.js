@@ -37,8 +37,11 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
   handleThreadOriginalMessageUpdate(data) {
     const message = this.messagesManager.findMessage(data.original_message_id);
     if (message) {
-      if (data.replies_count) {
-        message.threadReplyCount = data.replies_count;
+      if (data.action === "increment_reply_count") {
+        // TODO (martin) In future we should use a replies_count delivered
+        // from the server and simply update the message accordingly, for
+        // now we don't have an accurate enough count for this.
+        message.threadReplyCount += 1;
       }
     }
   }

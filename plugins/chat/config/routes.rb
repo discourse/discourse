@@ -30,7 +30,6 @@ Chat::Engine.routes.draw do
 
     get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
 
-    put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
     delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
   end
 
@@ -62,6 +61,7 @@ Chat::Engine.routes.draw do
   put "/:chat_channel_id/:message_id/rebake" => "chat#rebake"
   post "/:chat_channel_id/:message_id/flag" => "chat#flag"
   post "/:chat_channel_id/quote" => "chat#quote_messages"
+  put "/:chat_channel_id/restore/:message_id" => "chat#restore"
   get "/lookup/:message_id" => "chat#lookup_message"
   put "/:chat_channel_id/read/:message_id" => "chat#update_user_last_read"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
