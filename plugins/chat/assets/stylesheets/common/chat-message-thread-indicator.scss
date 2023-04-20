@@ -5,16 +5,12 @@
   display: flex;
   cursor: pointer;
   grid-area: threadindicator;
-  border: 1px solid transparent;
-  margin: 4px 0 -2px calc(var(--message-left-width) - 5px);
-  padding: 4px;
-
-  &:hover {
-    .chat-message:hover & {
-      border-color: var(--primary-low);
-      background-color: var(--secondary);
-    }
-  }
+  background-color: var(--primary-very-low);
+  margin: 4px 0 -2px calc(var(--message-left-width) - 0.25rem);
+  padding-block: 0.25rem;
+  padding-inline: 0.5rem;
+  max-width: 500px;
+  border-radius: 4px;
 
   &__replies-count {
     color: var(--primary-medium);

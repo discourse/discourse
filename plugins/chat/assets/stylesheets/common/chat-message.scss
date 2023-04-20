@@ -213,13 +213,13 @@
 
     .touch & {
       &:active {
-        background: var(--primary-very-low);
+        background: var(--d-hover);
         border-radius: 5px;
       }
 
       &.chat-message-bookmarked {
         &:active {
-          background: var(--highlight-medium);
+          background: var(--highlight-low);
         }
       }
     }
@@ -228,7 +228,7 @@
       &.is-active,
       &:hover,
       &:active {
-        background: var(--primary-very-low);
+        background: var(--d-hover);
       }
 
       &:hover {
