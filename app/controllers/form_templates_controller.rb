@@ -5,8 +5,8 @@ class FormTemplatesController < ApplicationController
 
   def show
     params.require(:id)
-    templates = FormTemplate.find(params[:id])
-    render json: success_json.merge(form_templates: templates || [])
+    template = FormTemplate.find(params[:id])
+    render_serialized(template, FormTemplateSerializer, root: "form_template")
   end
 
   private

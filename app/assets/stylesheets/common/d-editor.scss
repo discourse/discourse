@@ -344,3 +344,10 @@
     justify-content: center;
   }
 }
+
+.d-editor .form-template-form__wrapper {
+  overflow: auto;
+  background: var(--primary-very-low);
+  padding: 1rem;
+  border: 1px solid var(--primary-medium);
+}
