@@ -2390,6 +2390,7 @@ uncategorized:
   educate_until_posts: 2
   sequential_replies_threshold: 2
   get_a_room_threshold: 3
+  dont_feed_the_trolls_threshold: 2
   dominating_topic_minimum_percent: 40
   disable_avatar_education_message: false
   pm_warn_user_last_seen_months_ago: 24

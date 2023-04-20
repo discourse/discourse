@@ -328,6 +328,75 @@ RSpec.describe ComposerMessagesFinder do
     end
   end
 
+  describe "#dont_feed_the_trolls" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:author) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:third_user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic, user: author) }
+    fab!(:original_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:unflagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:self_flagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:under_flagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:over_flagged_post) { Fabricate(:post, topic: topic, user: author) }
+
+    before { SiteSetting.dont_feed_the_trolls_threshold = 2 }
+
+    it "does not show a message for unflagged posts" do
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: topic.id,
+          post_id: unflagged_post.id,
+        )
+      expect(finder.check_dont_feed_the_trolls).to be_blank
+    end
+
+    it "shows a message when the replier has already flagged the post" do
+      Fabricate(:flag, post: self_flagged_post, user: user)
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: topic.id,
+          post_id: self_flagged_post.id,
+        )
+      expect(finder.check_dont_feed_the_trolls).to be_present
+    end
+
+    it "shows a message when replying to flagged topic (first post)" do
+      Fabricate(:flag, post: original_post, user: user)
+      finder = ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: topic.id)
+      expect(finder.check_dont_feed_the_trolls).to be_present
+    end
+
+    it "does not show a message when not enough others have flagged the post" do
+      Fabricate(:flag, post: under_flagged_post, user: other_user)
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: topic.id,
+          post_id: under_flagged_post.id,
+        )
+      expect(finder.check_dont_feed_the_trolls).to be_blank
+    end
+
+    it "shows a message when enough others have already flagged the post" do
+      Fabricate(:flag, post: over_flagged_post, user: other_user)
+      Fabricate(:flag, post: over_flagged_post, user: third_user)
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: topic.id,
+          post_id: over_flagged_post.id,
+        )
+      expect(finder.check_dont_feed_the_trolls).to be_present
+    end
+  end
+
   describe ".check_get_a_room" do
     fab!(:user) { Fabricate(:user) }
     fab!(:other_user) { Fabricate(:user) }
