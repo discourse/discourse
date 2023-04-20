@@ -15,14 +15,17 @@
               </div>
             </div>
             <div class="save-section">
-              <p><span id="blockCounter">{{this.remainingVotes}}</span>/100
+              <p
+                class={{save-voice-credits-text-class this.saveButtonText}}
+              ><span id="blockCounter">{{this.remainingVotes}}</span>/100
                 remaining</p>
               <button
                 type="button"
                 id="save-voice-credits"
-                class="btn"
+                disabled={{this.isSaving}}
+                class={{save-voice-credits-button-class this.saveButtonText}}
                 {{on "click" this.saveVoiceCredits}}
-              >Save</button>
+              >{{this.saveButtonText}}</button>
             </div>
           </div>
         </div>

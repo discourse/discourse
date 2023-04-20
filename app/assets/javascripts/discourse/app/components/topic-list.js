@@ -25,6 +25,8 @@ export default Component.extend(LoadMore, {
   filteredTopics: alias("topics"),
   topicVotes: {},
   voiceCredits: {},
+  saveButtonText: "Save",
+  isSaving: false,
 
   fetchTopicVotes() {
     const categoryId = this.get("category.id");
@@ -144,6 +146,9 @@ export default Component.extend(LoadMore, {
 
   @action
   async saveVoiceCredits() {
+    if (this.isSaving) {
+      return;
+    }
     const pageCategoryId = this.get("category.id");
     const allUserCredits = Object.keys(this.voiceCredits).map((key) => ({
       topic_id: Number(key),
@@ -157,9 +162,12 @@ export default Component.extend(LoadMore, {
       0
     );
     if (totalVotes > 100) {
-      alert(
-        "Invalid vote: The total value of all user entries must be between 0 and 100."
-      );
+      this.set("saveButtonText", "X");
+      let self = this;
+      setTimeout(function () {
+        self.set("saveButtonText", "Save");
+      }, 1000);
+
       return;
     }
     // Send to the server only the modified entries
@@ -171,6 +179,8 @@ export default Component.extend(LoadMore, {
       voice_credits_data: allModifiedUserCredits,
     };
 
+    this.set("isSaving", true);
+
     return ajax("/voice_credits.json", {
       type: "POST",
       data: payload,
@@ -180,8 +190,19 @@ export default Component.extend(LoadMore, {
         console.log(data);
         this.refreshTopicVotes();
         this.updateVotesCanvas();
+        this.set("saveButtonText", "✓");
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        this.set("saveButtonText", "X");
+        console.error(error);
+      })
+      .finally(() => {
+        let self = this;
+        setTimeout(function () {
+          self.set("saveButtonText", "Save");
+          self.set("isSaving", false);
+        }, 1000);
+      });
   },
 
   @action

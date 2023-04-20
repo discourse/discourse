@@ -288,7 +288,28 @@
     align-items: start;
   }
   #save-voice-credits {
+    cursor: pointer;
     margin-left: 10px;
+    width: 60px;
+
+    &.btn-success {
+      background-color: #01b94e;
+      color: white;
+    }
+
+    &.btn-error {
+      background-color: #ad2626;
+      color: white;
+    }
+  }
+  .save-section p {
+    &.save-success {
+      color: #01b94e;
+    }
+
+    &.save-error {
+      color: #ad2626;
+    }
   }
 }
 
