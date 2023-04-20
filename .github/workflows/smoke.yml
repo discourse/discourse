@@ -124,9 +124,12 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
+      - name: Debug
+        run: echo $(pwd)
+
       - name: Setup env
         shell: ruby {0}
-        working-directory: .
+        working-directory: /__w/discourse/discourse
         run: |
           require_relative "config/environment"
           u = User.new(username: "smoke_user", password: "P4ssw0rd", email: "smoke@example.com", admin:true)
