@@ -63,6 +63,13 @@ RSpec.describe Chat::CreateCategoryChannel do
           result
         end
 
+        context "when the slug is already in use" do
+          fab!(:channel) { Fabricate(:chat_channel, chatable: category, slug: "in-use") }
+          let(:params) { { guardian: guardian, category_id: category_id, slug: "in-use" } }
+
+          it { is_expected.to fail_a_step(:create_channel) }
+        end
+
         context "if auto_join_users is blank" do
           let(:params) { { guardian: guardian, category_id: category_id, auto_join_users: "" } }
 

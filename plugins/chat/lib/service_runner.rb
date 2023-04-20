@@ -55,6 +55,7 @@ class ServiceRunner
   AVAILABLE_ACTIONS = {
     on_success: -> { result.success? },
     on_failure: -> { result.failure? },
+    on_failed_step: ->(name) { failure_for?("result.step.#{name}") },
     on_failed_policy: ->(name = "default") { failure_for?("result.policy.#{name}") },
     on_failed_contract: ->(name = "default") { failure_for?("result.contract.#{name}") },
     on_model_not_found: ->(name = "model") { failure_for?("result.model.#{name}") },

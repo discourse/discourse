@@ -98,6 +98,10 @@ module Chat
       FailToFindModel.new(name)
     end
 
+    def fail_a_step(name)
+      FailStep.new(name)
+    end
+
     def inspect_steps(result)
       inspector = Chat::StepsInspector.new(result)
       puts "Steps:"
