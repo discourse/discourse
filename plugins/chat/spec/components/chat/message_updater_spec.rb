@@ -164,7 +164,7 @@ describe Chat::MessageUpdater do
       expect(mention.notification).to be_nil
     end
 
-    it "destroys mention notifications that should be removed" do
+    it "destroys mentions that should be removed" do
       chat_message =
         create_chat_message(
           user1,
