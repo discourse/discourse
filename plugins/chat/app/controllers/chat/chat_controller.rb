@@ -12,7 +12,8 @@ module Chat
     # these endpoints require a standalone find because they need to be
     # able to get deleted channels and recover them.
     before_action :find_chatable, only: %i[enable_chat disable_chat]
-    before_action :find_chat_message, only: %i[lookup_message edit_message rebake message_link]
+    before_action :find_chat_message,
+                  only: %i[delete restore lookup_message edit_message rebake message_link]
     before_action :set_channel_and_chatable_with_access_check,
                   except: %i[
                     respond
@@ -230,6 +231,18 @@ module Chat
       )
 
       render json: success_json
+    end
+
+    def restore
+      chat_channel = @message.chat_channel
+      guardian.ensure_can_restore_chat!(@message, chat_channel.chatable)
+      updated = @message.recover!
+      if updated
+        Chat::Publisher.publish_restore!(chat_channel, @message)
+        render json: success_json
+      else
+        render_json_error(@message)
+      end
     end
 
     def rebake
