@@ -72,14 +72,14 @@ module Chat
           user_count: 1,
           auto_join_users: contract.auto_join_users,
         )
-      fail!(channel.errors.full_messages.join("\n")) if channel.errors.present?
+      fail!(channel.errors.full_messages) if channel.errors.present?
       context.merge(channel: channel)
     end
 
     def create_membership(channel:, guardian:, **)
       membership =
         channel.user_chat_channel_memberships.create(user: guardian.user, following: true)
-      fail!(membership.errors.full_messages.join("\n")) if membership.errors.present?
+      fail!(membership.errors.full_messages) if membership.errors.present?
       context.merge(membership: membership)
     end
 

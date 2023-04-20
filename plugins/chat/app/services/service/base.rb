@@ -327,9 +327,10 @@ module Service
     end
 
     # @!visibility private
-    def fail!(message)
+    def fail!(messages)
       step_name = caller_locations(1, 1)[0].label
-      context["result.step.#{step_name}"].fail(error: message)
+      messages = Array.wrap(messages)
+      context["result.step.#{step_name}"].fail(errors: messages)
       context.fail!
     end
   end

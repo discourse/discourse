@@ -60,13 +60,13 @@ class Chat::Api::ChannelsController < Chat::ApiController
       end
       on_failed_step(:create_channel) do
         render(
-          json: failed_json.merge(errors: result[:"result.step.create_channel"].error),
+          json: failed_json.merge(errors: result[:"result.step.create_channel"].errors),
           status: 400,
         )
       end
       on_failed_step(:create_membership) do
         render(
-          json: failed_json.merge(errors: result[:"result.step.create_membership"].error),
+          json: failed_json.merge(errors: result[:"result.step.create_membership"].errors),
           status: 400,
         )
       end
