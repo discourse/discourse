@@ -3737,7 +3737,7 @@ ember-auto-import-chunks-json-generator@^1.0.0:
     ember-cli-babel "^7.26.6"
     ember-cli-htmlbars "^5.7.1"
 
-ember-auto-import@^2.2.3, ember-auto-import@^2.6.0, ember-auto-import@^2.6.3:
+ember-auto-import@^2.2.3, ember-auto-import@^2.5.0, ember-auto-import@^2.6.0, ember-auto-import@^2.6.3:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/ember-auto-import/-/ember-auto-import-2.6.3.tgz#f18d1b93dd10b08ba5496518436f9d56dd4e000a"
   integrity sha512-uLhrRDJYWCRvQ4JQ1e64XlSrqAKSd6PXaJ9ZsZI6Tlms9T4DtQFxNXasqji2ZRJBVrxEoLCRYX3RTldsQ0vNGQ==
@@ -4038,22 +4038,6 @@ ember-cli-typescript@^4.1.0:
     stagehand "^1.0.0"
     walk-sync "^2.2.0"
 
-ember-cli-typescript@^5.0.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/ember-cli-typescript/-/ember-cli-typescript-5.1.0.tgz#460eb848564e29d64f2b36b2a75bbe98172b72a4"
-  integrity sha512-wEZfJPkjqFEZAxOYkiXsDrJ1HY75e/6FoGhQFg8oNFJeGYpIS/3W0tgyl1aRkSEEN1NRlWocDubJ4aZikT+RTA==
-  dependencies:
-    ansi-to-html "^0.6.15"
-    broccoli-stew "^3.0.0"
-    debug "^4.0.0"
-    execa "^4.0.0"
-    fs-extra "^9.0.1"
-    resolve "^1.5.0"
-    rsvp "^4.8.1"
-    semver "^7.3.2"
-    stagehand "^1.0.0"
-    walk-sync "^2.2.0"
-
 ember-cli-version-checker@^2.1.2:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/ember-cli-version-checker/-/ember-cli-version-checker-2.2.0.tgz#47771b731fe0962705e27c8199a9e3825709f3b3"
@@ -4187,7 +4171,7 @@ ember-cli@~4.12.0:
     workerpool "^6.4.0"
     yam "^1.0.0"
 
-ember-compatibility-helpers@^1.1.2, ember-compatibility-helpers@^1.2.0, ember-compatibility-helpers@^1.2.1, ember-compatibility-helpers@^1.2.5, ember-compatibility-helpers@^1.2.6:
+ember-compatibility-helpers@^1.1.2, ember-compatibility-helpers@^1.2.0, ember-compatibility-helpers@^1.2.1, ember-compatibility-helpers@^1.2.6:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/ember-compatibility-helpers/-/ember-compatibility-helpers-1.2.6.tgz#603579ab2fb14be567ef944da3fc2d355f779cd8"
   integrity sha512-2UBUa5SAuPg8/kRVaiOfTwlXdeVweal1zdNPibwItrhR0IvPrXpaqwJDlEZnWKEoB+h33V0JIfiWleSG6hGkkA==
@@ -4263,18 +4247,7 @@ ember-modifier-manager-polyfill@^1.2.0:
     ember-cli-version-checker "^2.1.2"
     ember-compatibility-helpers "^1.2.0"
 
-ember-modifier@^3.2.7:
-  version "3.2.7"
-  resolved "https://registry.yarnpkg.com/ember-modifier/-/ember-modifier-3.2.7.tgz#f2d35b7c867cbfc549e1acd8d8903c5ecd02ea4b"
-  integrity sha512-ezcPQhH8jUfcJQbbHji4/ZG/h0yyj1jRDknfYue/ypQS8fM8LrGcCMo0rjDZLzL1Vd11InjNs3BD7BdxFlzGoA==
-  dependencies:
-    ember-cli-babel "^7.26.6"
-    ember-cli-normalize-entity-name "^1.0.0"
-    ember-cli-string-utils "^1.1.0"
-    ember-cli-typescript "^5.0.0"
-    ember-compatibility-helpers "^1.2.5"
-
-ember-modifier@^4.1.0:
+"ember-modifier@^3.2.7 || ^4.0.0", ember-modifier@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/ember-modifier/-/ember-modifier-4.1.0.tgz#cb91efbf8ca4ff4a1a859767afa42dddba5a2bbd"
   integrity sha512-YFCNpEYj6jdyy3EjslRb2ehNiDvaOrXTilR9+ngq+iUqSHYto2zKV0rleiA1XJQ27ELM1q8RihT29U6Lq5EyqQ==
@@ -4283,14 +4256,15 @@ ember-modifier@^4.1.0:
     ember-cli-normalize-entity-name "^1.0.0"
     ember-cli-string-utils "^1.1.0"
 
-ember-on-resize-modifier@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/ember-on-resize-modifier/-/ember-on-resize-modifier-1.1.0.tgz#96b92cb190a552a8e240a2077037b0b71facc54e"
-  integrity sha512-Pz7muUcwzgAVGQ3ZNCdY/KMKtmvtJk5DWetuvx2MVHZCRpVzSRvkVa2tKXcp4tmz/COYUysneJxAR4tmwAyH9Q==
+ember-on-resize-modifier@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/ember-on-resize-modifier/-/ember-on-resize-modifier-2.0.2.tgz#a1e2ab86e69c825a6851e63261263b1610ef9e15"
+  integrity sha512-7mcD7CNbiCaZEIASWlRz/Wmn47afCMSFTdQJSSUe0WCgnXxn9DVoqZ39B7ZuddTHa0V6otTFrV/lIRYpggQ+eg==
   dependencies:
+    ember-auto-import "^2.5.0"
     ember-cli-babel "^7.26.6"
     ember-cli-htmlbars "^5.7.1"
-    ember-modifier "^3.2.7"
+    ember-modifier "^3.2.7 || ^4.0.0"
     ember-resize-observer-service "^1.1.0"
 
 ember-qunit@^6.2.0:
