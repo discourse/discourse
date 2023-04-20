@@ -14,7 +14,7 @@
     "build": "ember build",
     "start": "ember serve",
     "test": "ember test",
-    "postinstall": "yarn --silent --cwd ../../../.. patch-package --patch-dir app/assets/javascripts/patches"
+    "postinstall": "yarn --silent --cwd .. patch-package"
   },
   "dependencies": {
     "@babel/core": "^7.21.4",
@@ -103,11 +103,6 @@
     "wizard": "1.0.0",
     "xss": "^1.0.14"
   },
-  "devDependencies": {
-    "ember-cached-decorator-polyfill": "^1.0.1",
-    "ember-cli-deprecation-workflow": "^2.1.0",
-    "ember-exam": "^8.0.0"
-  },
   "engines": {
     "node": "16.* || >= 18",
     "npm": "please-use-yarn",
@@ -115,5 +110,10 @@
   },
   "ember": {
     "edition": "default"
+  },
+  "devDependencies": {
+    "ember-cached-decorator-polyfill": "^1.0.1",
+    "ember-cli-deprecation-workflow": "^2.1.0",
+    "ember-exam": "^8.0.0"
   }
 }
