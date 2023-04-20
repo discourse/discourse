@@ -57,7 +57,13 @@
         </span>
       {{/if ~}}
     {{/if ~}}
-    <span><img class="full-heart" src="/images/total-votes.png" alt="total Hearts"></span>
+    <span>    
+      <div class="total-hearts-wrapper">
+        <img class="full-heart-header" src="/images/full-heart-purple.png" alt="Full Hearts"> 
+        <img class="full-heart-header" src="/images/full-heart-green.png" alt="Full Hearts"> 
+        <img class="full-heart-header" src="/images/full-heart-blue.png" alt="Full Hearts"> 
+      </div>
+    </span>
   </th>
 {{/if ~}}
 {{~raw-plugin-outlet name="topic-list-header-after"~}}
