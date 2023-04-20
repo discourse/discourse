@@ -1,0 +1,142 @@
+name: Smoke test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - beta
+      - stable
+
+concurrency:
+  group: smoke-test-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
+    name: Smoke test
+    runs-on: ubuntu-20.04-8core
+    container: discourse/discourse_test:release
+    timeout-minutes: 20
+
+    env:
+      DISCOURSE_HOSTNAME: www.example.com
+      RUBY_GLOBAL_METHOD_CACHE_SIZE: 131072
+      RAILS_ENV: production
+      PGUSER: discourse
+      PGPASSWORD: discourse
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+
+      - name: Start redis
+        run: |
+          redis-server /etc/redis/redis.conf &
+
+      - name: Start Postgres
+        run: |
+          chown -R postgres /var/run/postgresql
+          sudo -E -u postgres script/start_test_db.rb
+          sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
+
+      - name: Bundler cache
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.ruby }}-gem-
+
+      - name: Setup gems
+        run: |
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
+
+      - name: Get yarn cache directory
+        id: yarn-cache-dir
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: Checkout official plugins
+        if: matrix.target == 'plugins'
+        run: bin/rake plugin:install_all_official
+
+      - name: Pull compatible versions of plugins
+        if: matrix.target == 'plugins'
+        run: bin/rake plugin:pull_compatible_all
+
+      - name: Fetch app state cache
+        uses: actions/cache@v3
+        id: app-cache
+        with:
+          path: tmp/app-cache
+          key: >- # postgres version, hash of migrations, "parallel?"
+            ${{ runner.os }}-
+            ${{ hashFiles('.github/workflows/smoke.yml') }}-
+            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}
+
+      - name: Restore database from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: psql -f tmp/app-cache/cache.sql postgres
+
+      - name: Restore uploads from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
+
+      - name: Create and migrate database
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: |
+          bin/rake db:create
+          bin/rake db:migrate
+
+      - name: Dump database for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
+
+      - name: Dump uploads for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
+
+      - name: Create script
+        shell: ruby {0}
+        run: |
+          require_relative "config/environment"
+          u = User.new(username: "smoke_user", password: "P4ssw0rd", email: "smoke@example.com", admin:true)
+          u.save!(validate: false)
+          u.activate
+          SiteSetting.wizard_enabled = false
+
+      - name: Start server
+        run: bin/unicorn
+
+      - name: Make request
+        run: curl -I -A "Chrome" --retry 10 --retry-delay 1 --max-time 60 http://localhost:3000
