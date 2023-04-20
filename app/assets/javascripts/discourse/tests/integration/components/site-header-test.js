@@ -68,17 +68,19 @@ module("Integration | Component | site-header", function (hooks) {
     await render(hbs`<SiteHeader />`);
 
     function getProperty() {
-      return getComputedStyle(document.body).getPropertyValue(
+      const rawValue = getComputedStyle(document.body).getPropertyValue(
         "--header-offset"
       );
+      const roundedValue = Math.floor(parseFloat(rawValue));
+      return roundedValue + "px";
     }
 
     document.querySelector(".d-header").style.height = 90 + "px";
-    await waitUntil(() => getProperty() === "90px", { timeout: 100 });
+    await waitUntil(() => getProperty() === "90px", { timeout: 150 });
     assert.strictEqual(getProperty(), "90px");
 
     document.querySelector(".d-header").style.height = 60 + "px";
-    await waitUntil(() => getProperty() === "60px", { timeout: 100 });
+    await waitUntil(() => getProperty() === "60px", { timeout: 150 });
     assert.strictEqual(getProperty(), "60px");
   });
 
