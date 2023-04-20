@@ -232,7 +232,11 @@ class Guardian
   end
 
   def can_delete_reviewable_queued_post?(reviewable)
-    reviewable.present? && authenticated? && (reviewable.created_by_id == @user.id || @user.admin?)
+    return false if reviewable.blank?
+    return false if !authenticated?
+    return true if @user.admin?
+
+    reviewable.created_by_id == @user.id
   end
 
   def can_see_group?(group)
