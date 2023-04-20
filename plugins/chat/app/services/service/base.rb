@@ -127,6 +127,10 @@ module Service
       def call(instance, context)
         context[name] = super
         raise ArgumentError, "Model not found" if context[name].blank?
+        if context[name].try(:invalid?)
+          context[result_key].fail(invalid: true)
+          context.fail!
+        end
       rescue ArgumentError => exception
         context[result_key].fail(exception: exception)
         context.fail!
@@ -327,10 +331,9 @@ module Service
     end
 
     # @!visibility private
-    def fail!(messages)
+    def fail!(message)
       step_name = caller_locations(1, 1)[0].label
-      messages = Array.wrap(messages)
-      context["result.step.#{step_name}"].fail(errors: messages)
+      context["result.step.#{step_name}"].fail(error: message)
       context.fail!
     end
   end

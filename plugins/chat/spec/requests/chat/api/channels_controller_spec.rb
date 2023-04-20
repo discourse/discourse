@@ -270,15 +270,17 @@ RSpec.describe Chat::Api::ChannelsController do
       expect(new_channel.slug).to eq("wow-so-cool")
     end
 
-    it "errors if the user-provided slug already exists for a channel" do
-      new_params = params.dup
-      new_params[:channel][:slug] = "wow-so-cool"
-      post "/chat/api/channels", params: new_params
-      expect(response.status).to eq(200)
+    context "when the user-provided slug already exists for a channel" do
+      before do
+        params[:channel][:slug] = "wow-so-cool"
+        post "/chat/api/channels", params: params
+        params[:channel][:name] = "new name"
+      end
 
-      new_params[:channel][:name] = "new name"
-      post "/chat/api/channels", params: new_params
-      expect(response.status).to eq(400)
+      it "returns an error" do
+        post "/chat/api/channels", params: params
+        expect(response).to have_http_status :unprocessable_entity
+      end
     end
 
     it "creates a channel sets auto_join_users to false by default" do

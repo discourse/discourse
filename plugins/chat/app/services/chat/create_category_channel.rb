@@ -30,8 +30,8 @@ module Chat
     model :category, :fetch_category
     policy :category_channel_does_not_exist
     transaction do
-      step :create_channel
-      step :create_membership
+      model :channel, :create_channel
+      model :membership, :create_membership
     end
     step :enforce_automatic_channel_memberships
 
@@ -64,23 +64,17 @@ module Chat
     end
 
     def create_channel(category:, contract:, **)
-      channel =
-        category.create_chat_channel(
-          name: contract.name,
-          slug: contract.slug,
-          description: contract.description,
-          user_count: 1,
-          auto_join_users: contract.auto_join_users,
-        )
-      fail!(channel.errors.full_messages) if channel.errors.present?
-      context.merge(channel: channel)
+      category.create_chat_channel(
+        name: contract.name,
+        slug: contract.slug,
+        description: contract.description,
+        user_count: 1,
+        auto_join_users: contract.auto_join_users,
+      )
     end
 
     def create_membership(channel:, guardian:, **)
-      membership =
-        channel.user_chat_channel_memberships.create(user: guardian.user, following: true)
-      fail!(membership.errors.full_messages) if membership.errors.present?
-      context.merge(membership: membership)
+      channel.user_chat_channel_memberships.create(user: guardian.user, following: true)
     end
 
     def enforce_automatic_channel_memberships(channel:, **)
