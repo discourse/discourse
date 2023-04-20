@@ -18,7 +18,7 @@ module.exports = function prettyTextEngine(app) {
 
   const engineTree = babelAddon.transpileTree(namespacedTree);
 
-  let markdownIt = funnel("../../../../node_modules/markdown-it/dist", {
+  let markdownIt = funnel("../node_modules/markdown-it/dist", {
     files: ["markdown-it.js"],
   });
   return concat(mergeTrees([engineTree, markdownIt]), {

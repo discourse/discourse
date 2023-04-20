@@ -5,32 +5,14 @@
       "CC0-1.0",
       "CC-BY-3.0",
       "CC-BY-4.0",
-      "Apache-2.0 WITH LLVM-exception",
-      "ISC"
+      "Apache-2.0 WITH LLVM-exception"
     ]
   },
   "packages": {
     "@fortawesome/fontawesome-free": "*",
-    "component-bind": "1.0.0",
-    "component-inherit": "0.0.3",
-    "duplex": "1.0.0",
     "ember-template-lint-plugin-discourse": "*",
-    "glob": "3.1.21",
-    "indexof": "0.0.1",
-    "inherits": "1.0.2",
-    "jsonify": "0.0.0",
-    "line-stream": "0.0.0",
-    "messageformat": "0.1.5",
-    "regenerator-transform": "0.10.1",
-    "source-map": "0.1.43",
-    "sourcemap-validator": "1.1.1",
     "squoosh": "2.0.0",
     "taffydb": "2.6.2"
   },
-  "corrections": true,
-  "ignore": [
-    {
-      "author": "Discourse"
-    }
-  ]
+  "corrections": true
 }
