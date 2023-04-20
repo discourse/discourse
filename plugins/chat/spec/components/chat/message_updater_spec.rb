@@ -126,16 +126,17 @@ describe Chat::MessageUpdater do
     expect(events.map { _1[:event_name] }).to include(:chat_message_edited)
   end
 
-  it "creates mention notifications for unmentioned users" do
-    chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
-    expect {
-      Chat::MessageUpdater.update(
-        guardian: guardian,
-        chat_message: chat_message,
-        new_content:
-          "this is a message with @system @mentions @#{user2.username} and @#{user3.username}",
-      )
-    }.to change { user2.chat_mentions.count }.by(1).and change { user3.chat_mentions.count }.by(1)
+  it "sends notifications if a message was updated with new mentions" do
+    message = create_chat_message(user1, "Mentioning @#{user2.username}", public_chat_channel)
+
+    Chat::MessageUpdater.update(
+      guardian: guardian,
+      chat_message: message,
+      new_content: "Mentioning @#{user2.username} and @#{user3.username}",
+    )
+
+    mention = user3.chat_mentions.where(chat_message: message).first
+    expect(mention.notification).to be_present
   end
 
   it "doesn't create mentions for already mentioned users" do
