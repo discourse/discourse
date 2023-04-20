@@ -76,11 +76,11 @@ module("Integration | Component | site-header", function (hooks) {
     }
 
     document.querySelector(".d-header").style.height = 90 + "px";
-    await waitUntil(() => getProperty() === "90px", { timeout: 150 });
+    await waitUntil(() => getProperty() === "90px", { timeout: 100 });
     assert.strictEqual(getProperty(), "90px");
 
     document.querySelector(".d-header").style.height = 60 + "px";
-    await waitUntil(() => getProperty() === "60px", { timeout: 150 });
+    await waitUntil(() => getProperty() === "60px", { timeout: 100 });
     assert.strictEqual(getProperty(), "60px");
   });
 
