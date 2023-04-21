@@ -422,7 +422,7 @@ RSpec.describe PostRevisor do
         }.to change { post.topic.bumped_at }
       end
 
-      it "does not bump topic when no topic category" do
+      it "should bump topic when no topic category" do
         topic_with_no_category = Fabricate(:topic, category_id: nil)
         post_from_topic_with_no_category = Fabricate(:post, topic: topic_with_no_category)
         expect {
