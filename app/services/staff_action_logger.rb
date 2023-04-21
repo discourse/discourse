@@ -219,7 +219,7 @@ class StaffActionLogger
   end
 
   def theme_json(theme)
-    ThemeSerializer.new(theme, root: false).to_json
+    ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
   end
 
   def strip_duplicates(old, cur)
