@@ -48,7 +48,10 @@ class UserBadge < ActiveRecord::Base
     Badge.decrement_counter "grant_count", self.badge_id
     UserStat.update_distinct_badge_count self.user_id
     UserBadge.update_featured_ranks! self.user_id
+
+    # TODO: Follow up with a deprecation notice for `user_badge_removed`
     DiscourseEvent.trigger(:user_badge_removed, self.badge_id, self.user_id)
+    DiscourseEvent.trigger(:user_badge_revoked, user_badge: self)
   end
 
   def self.ensure_consistency!
