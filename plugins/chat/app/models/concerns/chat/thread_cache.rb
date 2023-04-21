@@ -52,16 +52,21 @@ module Chat
         5.minutes.from_now.to_i,
         value,
       )
-      Jobs.enqueue_in(5.seconds, Jobs::Chat::UpdateThreadReplyCount, thread_id: self.id)
-      ::Chat::Publisher.publish_thread_original_message_metadata!(self)
     end
 
     def increment_replies_count_cache
-      self.set_replies_count_cache(self.replies_count_cache + 1)
+      Discourse.redis.incr(Chat::Thread.replies_count_cache_redis_key(self.id))
+      thread_reply_count_cache_changed
     end
 
     def decrement_replies_count_cache
-      self.set_replies_count_cache(self.replies_count_cache - 1)
+      Discourse.redis.decr(Chat::Thread.replies_count_cache_redis_key(self.id))
+      thread_reply_count_cache_changed
+    end
+
+    def thread_reply_count_cache_changed
+      Jobs.enqueue_in(5.seconds, Jobs::Chat::UpdateThreadReplyCount, thread_id: self.id)
+      ::Chat::Publisher.publish_thread_original_message_metadata!(self)
     end
   end
 end
