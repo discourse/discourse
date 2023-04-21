@@ -38,15 +38,25 @@ module Chat
 
     def replies_count_cache
       redis_cache = Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(self.id))&.to_i
-      if redis_cache.present? && redis_cache != self.replies_count
-        redis_cache
-      else
+
+      # If the cache is not present for whatever reason, set it to the current value,
+      # otherwise INCR/DECR will be way off. No need to enqueue the job or publish,
+      # since this is likely fetched by a serializer.
+      if !redis_cache.present?
+        set_replies_count_redis_cache(self.replies_count)
         self.replies_count
+      else
+        redis_cache != self.replies_count ? redis_cache : self.replies_count
       end
     end
 
     def set_replies_count_cache(value, update_db: false)
       self.update!(replies_count: value) if update_db
+      set_replies_count_redis_cache(value)
+      thread_reply_count_cache_changed
+    end
+
+    def set_replies_count_redis_cache(value)
       Discourse.redis.setex(
         Chat::Thread.replies_count_cache_redis_key(self.id),
         5.minutes.from_now.to_i,
