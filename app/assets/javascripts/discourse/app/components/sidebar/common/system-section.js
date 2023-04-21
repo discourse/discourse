@@ -20,7 +20,18 @@ import {
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
 
-const SECTIONS_IN_BOTH_SEGMENTS = ["/system_review"];
+const LINKS_IN_BOTH_SEGMENTS = ["/system_review"];
+const SPECIAL_LINKS_MAP = {
+  "/system_unread": EverythingSectionLink,
+  "/system_about": AboutSectionLink,
+  "/system_users": UsersSectionLink,
+  "/system_faq": FAQSectionLink,
+  "/system_posts": MyPostsSectionLink,
+  "/system_review": ReviewSectionLink,
+  "/system_badges": BadgesSectionLink,
+  "/system_admin": AdminSectionLink,
+  "/system_groups": GroupsSectionLink,
+};
 
 export default class Section {
   @tracked links;
@@ -59,7 +70,7 @@ export default class Section {
       .filter(
         (link) =>
           link.segment === "primary" ||
-          SECTIONS_IN_BOTH_SEGMENTS.includes(link.value)
+          LINKS_IN_BOTH_SEGMENTS.includes(link.value)
       )
       .map((link) => {
         return this.#generateLink(link);
@@ -70,7 +81,7 @@ export default class Section {
       .filter(
         (link) =>
           link.segment === "secondary" ||
-          SECTIONS_IN_BOTH_SEGMENTS.includes(link.value)
+          LINKS_IN_BOTH_SEGMENTS.includes(link.value)
       )
       .map((link) => {
         return this.#generateLink(link, true);
@@ -89,36 +100,11 @@ export default class Section {
   }
 
   #generateLink(link, inMoreDrawer = false) {
-    switch (link.value) {
-      case "/system_unread":
-        return this.#initializeSectionLink(EverythingSectionLink, inMoreDrawer);
-        break;
-      case "/system_about":
-        return this.#initializeSectionLink(AboutSectionLink, inMoreDrawer);
-        break;
-      case "/system_users":
-        return this.#initializeSectionLink(UsersSectionLink, inMoreDrawer);
-        break;
-      case "/system_faq":
-        return this.#initializeSectionLink(FAQSectionLink, inMoreDrawer);
-        break;
-      case "/system_posts":
-        return this.#initializeSectionLink(MyPostsSectionLink, inMoreDrawer);
-        break;
-      case "/system_review":
-        return this.#initializeSectionLink(ReviewSectionLink, inMoreDrawer);
-        break;
-      case "/system_badges":
-        return this.#initializeSectionLink(BadgesSectionLink, inMoreDrawer);
-        break;
-      case "/system_admin":
-        return this.#initializeSectionLink(AdminSectionLink, inMoreDrawer);
-        break;
-      case "/system_groups":
-        return this.#initializeSectionLink(GroupsSectionLink, inMoreDrawer);
-        break;
-      default:
-        return new SectionLink(link, this, this.router);
+    const sectionLinkClass = SPECIAL_LINKS_MAP[link.value];
+    if (sectionLinkClass) {
+      return this.#initializeSectionLink(sectionLinkClass, inMoreDrawer);
+    } else {
+      return new SectionLink(link, this, this.router);
     }
   }
 

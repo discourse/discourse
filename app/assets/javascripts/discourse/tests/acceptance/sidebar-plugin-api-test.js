@@ -551,12 +551,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
           label: "filters.latest.title",
         };
       });
+
       api.decorateWidget("hamburger-menu:generalLinks", () => {
         return {
           route: "discovery.unread",
           rawLabel: "my unreads",
         };
       });
+
       api.decorateWidget("hamburger-menu:generalLinks", () => {
         return {
           route: "discovery.top",
@@ -564,12 +566,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
           className: "my-custom-top",
         };
       });
+
       api.decorateWidget("hamburger-menu:generalLinks", () => {
         return {
           href: "/c/bug?status=open",
           rawLabel: "open bugs",
         };
       });
+
       api.decorateWidget("hamburger-menu:generalLinks", () => {
         return {
           href: "/t/internationalization-localization/280",
