@@ -15,8 +15,8 @@ module PageObjects
         self
       end
 
-      def click_toolbar_button(number)
-        find(".d-editor-button-bar button:nth-child(#{number})").click
+      def click_toolbar_button(button_class)
+        find(".d-editor-button-bar button.#{button_class}").click
         self
       end
 
