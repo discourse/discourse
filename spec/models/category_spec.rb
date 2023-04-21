@@ -1425,4 +1425,28 @@ RSpec.describe Category do
       )
     end
   end
+
+  describe "allowed_tags=" do
+    let(:category) { Fabricate(:category) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag2) { Fabricate(:tag) }
+
+    before { SiteSetting.tagging_enabled = true }
+
+    it "can use existing tags for category tags" do
+      category.allowed_tags = [tag.name]
+      expect_same_tag_names(category.reload.tags, [tag])
+    end
+
+    context "with synonyms" do
+      fab!(:synonym) { Fabricate(:tag, name: "synonym", target_tag: tag) }
+
+      it "can use existing tags for category tags" do
+        category.allowed_tags = [tag.name, synonym.name]
+        category.reload
+        category.allowed_tags = [tag.name, synonym.name, tag2.name]
+        expect_same_tag_names(category.reload.tags, [tag.name, synonym.name, tag2.name])
+      end
+    end
+  end
 end

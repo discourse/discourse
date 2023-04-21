@@ -26,15 +26,6 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
     return;
   }
 
-  handleBulkDeleteMessage(data) {
-    data.deleted_ids.forEach((deletedId) => {
-      this.handleDeleteMessage({
-        deleted_id: deletedId,
-        deleted_at: data.deleted_at,
-      });
-    });
-  }
-
   handleThreadCreated(data) {
     const message = this.messagesManager.findMessage(data.chat_message.id);
     if (message) {

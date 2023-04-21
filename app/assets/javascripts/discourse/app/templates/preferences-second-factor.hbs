@@ -1,31 +1,21 @@
 <DSection @pageClass="user-preferences" @tagName="">
   <section class="user-content user-preferences solo-preference second-factor">
     <ConditionalLoadingSpinner @condition={{this.loading}}>
-      <form class="form-horizontal">
+      <form class="form-vertical">
         {{#if this.showEnforcedNotice}}
-          <div class="control-group">
-            <div class="controls">
-              <div class="alert alert-error">{{i18n
-                  "user.second_factor.enforced_notice"
-                }}</div>
-            </div>
-          </div>
+          <div class="alert alert-error">{{i18n
+              "user.second_factor.enforced_notice"
+            }}</div>
         {{/if}}
 
         {{#if this.displayOAuthWarning}}
-          <div class="control-group">
-            <div class="controls">
-              {{i18n "user.second_factor.oauth_enabled_warning"}}
-            </div>
-          </div>
+          <div class="alert alert-warning">{{i18n
+              "user.second_factor.oauth_enabled_warning"
+            }}</div>
         {{/if}}
 
         {{#if this.errorMessage}}
-          <div class="control-group">
-            <div class="controls">
-              <div class="alert alert-error">{{this.errorMessage}}</div>
-            </div>
-          </div>
+          <div class="alert alert-error">{{this.errorMessage}}</div>
         {{/if}}
 
         {{#if this.loaded}}
@@ -41,23 +31,14 @@
                       {{i18n "user.second_factor.totp.default_name"}}
                     {{/if}}
                   </div>
-
                   {{#if this.isCurrentUser}}
                     <div class="actions">
-                      <DButton
-                        @action={{action "editSecondFactor" totp}}
-                        @class="btn-default btn-flat btn-small btn-icon pad-left no-text edit"
-                        @disabled={{this.loading}}
-                        @icon="pencil-alt"
-                        @aria-label="user.second_factor.edit"
-                        @title="user.second_factor.edit"
-                      />
-                      <DButton
-                        @action={{action "disableSingleSecondFactor" totp}}
-                        @class="btn-danger btn-flat no-text"
-                        @icon="trash-alt"
-                        @aria-label="user.second_factor.disable"
-                        @title="user.second_factor.disable"
+                      <TokenBasedAuthDropdown
+                        @totp={{totp}}
+                        @editSecondFactor={{action "editSecondFactor"}}
+                        @disableSingleSecondFactor={{action
+                          "disableSingleSecondFactor"
+                        }}
                       />
                     </div>
                   {{/if}}
@@ -65,7 +46,7 @@
               {{/each}}
               <DButton
                 @action={{action "createTotp"}}
-                @class="btn-primary new-totp"
+                @class="btn-default new-totp"
                 @icon="plus"
                 @disabled={{this.loading}}
                 @label="user.second_factor.totp.add"
@@ -88,23 +69,12 @@
 
                   {{#if this.isCurrentUser}}
                     <div class="actions">
-                      <DButton
-                        @action={{action "editSecurityKey" security_key}}
-                        @class="btn-default btn-flat btn-small btn-icon pad-left no-text edit"
-                        @disabled={{this.loading}}
-                        @icon="pencil-alt"
-                        @aria-label="user.second_factor.edit"
-                        @title="user.second_factor.edit"
-                      />
-                      <DButton
-                        @action={{action
+                      <SecurityKeyDropdown
+                        @securityKey={{security_key}}
+                        @editSecurityKey={{action "editSecurityKey"}}
+                        @disableSingleSecondFactor={{action
                           "disableSingleSecondFactor"
-                          security_key
                         }}
-                        @class="btn-danger btn-flat no-text"
-                        @icon="trash-alt"
-                        @aria-label="user.second_factor.disable"
-                        @title="user.second_factor.disable"
                       />
                     </div>
                   {{/if}}
@@ -112,7 +82,7 @@
               {{/each}}
               <DButton
                 @action={{action "createSecurityKey"}}
-                @class="btn-primary new-security-key"
+                @class="btn-default new-security-key"
                 @icon="plus"
                 @disabled={{this.loading}}
                 @label="user.second_factor.security_key.add"
@@ -134,32 +104,34 @@
                         )
                       }}
                     {{else}}
-                      {{i18n "user.second_factor_backup.enable_long"}}
+                      <DButton
+                        @action={{action "editSecondFactorBackup"}}
+                        @class="btn-default new-second-factor-backup"
+                        @icon="plus"
+                        @disabled={{this.loading}}
+                        @label="user.second_factor_backup.enable_long"
+                      />
                     {{/if}}
                   </div>
 
-                  {{#if this.isCurrentUser}}
+                  {{#if
+                    (and
+                      this.model.second_factor_backup_enabled this.isCurrentUser
+                    )
+                  }}
                     <div class="actions">
-                      <DButton
-                        @action={{action "editSecondFactorBackup"}}
-                        @class="btn-default btn-flat btn-small btn-icon pad-left no-text edit edit-2fa-backup"
-                        @disabled={{this.loading}}
-                        @icon="pencil-alt"
-                        @aria-label="user.second_factor.edit"
-                        @title="user.second_factor.edit"
+                      <TwoFactorBackupDropdown
+                        @secondFactorBackupEnabled={{this.model.second_factor_backup_enabled}}
+                        @editSecondFactorBackup={{action
+                          "editSecondFactorBackup"
+                        }}
+                        @disableSecondFactorBackup={{action
+                          "disableSecondFactorBackup"
+                        }}
                       />
-
-                      {{#if this.model.second_factor_backup_enabled}}
-                        <DButton
-                          @action={{action "disableSecondFactorBackup"}}
-                          @class="btn-danger btn-flat no-text"
-                          @icon="trash-alt"
-                          @aria-label="user.second_factor.disable"
-                          @title="user.second_factor.disable"
-                        />
-                      {{/if}}
                     </div>
                   {{/if}}
+
                 {{else}}
                   {{i18n "user.second_factor_backup.enable_prerequisites"}}
                 {{/if}}
@@ -170,13 +142,17 @@
           {{#if this.model.second_factor_enabled}}
             {{#unless this.showEnforcedNotice}}
               <div class="control-group pref-second-factor-disable-all">
-                <div class="controls">
+                <div class="controls -actions">
                   <DButton
                     @class="btn-danger"
                     @icon="ban"
                     @action={{action "disableAllSecondFactors"}}
                     @disabled={{this.loading}}
                     @label="user.second_factor.disable_all"
+                  />
+                  <CancelLink
+                    @route="preferences.security"
+                    @args={{this.model.username}}
                   />
                 </div>
               </div>

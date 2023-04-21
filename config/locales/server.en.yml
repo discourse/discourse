@@ -204,6 +204,7 @@ en:
     embed:
       load_from_remote: "There was an error loading that post."
     site_settings:
+      invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
       invalid_choice:
         one: "You specified the invalid choice %{name}"
@@ -553,6 +554,8 @@ en:
     dominating_topic: You’ve posted a lot in this topic! Consider giving others an opportunity to reply here and discuss things with each other as well.
 
     get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
+
+    dont_feed_the_trolls: This post has already been flagged for moderator attention. Are you sure you wish to reply to it? Replies to negative content tend to encourage more negative behavior.
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
@@ -1743,7 +1746,7 @@ en:
     discourse_connect_overrides_profile_background: "Overrides user profile background with value from DiscourseConnect payload."
     discourse_connect_overrides_card_background: "Overrides user card background with value from DiscourseConnect payload."
     discourse_connect_not_approved_url: "Redirect unapproved DiscourseConnect accounts to this URL"
-    discourse_connect_allows_all_return_paths: "Do not restrict the domain for return_paths provided by DiscourseConnect (by default return path must be on current site)"
+    discourse_connect_allowed_redirect_domains: "Restrict to these domains for return_paths provided by DiscourseConnect (by default return path must be on current site). Use * to allow any domain for return path. Subdomain wildcards (`*.foobar.com`) are not allowed."
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
@@ -2177,6 +2180,8 @@ en:
     sequential_replies_threshold: "Number of posts a user has to make in a row in a topic before being reminded about too many sequential replies."
 
     get_a_room_threshold: "Number of posts a user has to make to the same person in the same topic before being warned."
+
+    dont_feed_the_trolls_threshold: "Number of flags from other users before being warned."
 
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
 

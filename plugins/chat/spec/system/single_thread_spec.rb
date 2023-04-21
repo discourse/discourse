@@ -143,6 +143,22 @@ describe "Single thread in side panel", type: :system, js: true do
           expect(open_thread).to have_message(thread.id, text: "this is a test message")
         end
       end
+
+      it "does not mark the channel unread if another user sends a message in the thread" do
+        other_user = Fabricate(:user)
+        chat_system_user_bootstrap(user: other_user, channel: channel)
+        Chat::MessageCreator.create(
+          chat_channel: channel,
+          user: other_user,
+          content: "Hello world!",
+          thread_id: thread.id,
+        )
+        sign_in(current_user)
+        chat_page.visit_channel(channel)
+        expect(page).not_to have_css(
+          ".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-suffix.unread",
+        )
+      end
     end
 
     context "when using mobile" do

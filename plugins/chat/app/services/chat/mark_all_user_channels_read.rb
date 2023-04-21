@@ -30,7 +30,9 @@ module Chat
           (
             SELECT chat_messages.chat_channel_id, MAX(chat_messages.id) AS newest_message_id
             FROM chat_messages
+            LEFT JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
             WHERE chat_messages.deleted_at IS NULL
+            AND (chat_messages.thread_id IS NULL or chat_messages.id = chat_threads.original_message_id)
             GROUP BY chat_messages.chat_channel_id
           ) AS subquery
           WHERE user_chat_channel_memberships.chat_channel_id = subquery.chat_channel_id AND

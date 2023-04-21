@@ -24,7 +24,8 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneB
     );
     this.messagesManager.addMessages([message]);
 
-    // TODO (martin) All the scrolling and new message indicator shenanigans.
+    // TODO (martin) All the scrolling and new message indicator shenanigans,
+    // as well as handling marking the thread as read.
   }
 
   // NOTE: noop, there is nothing to do when a thread is created
@@ -36,11 +37,6 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneB
   // NOTE: noop, there is nothing to do when a thread original message
   // is updated inside the thread panel (for now).
   handleThreadOriginalMessageUpdate() {
-    return;
-  }
-
-  // TODO (martin) Hook this up correctly in Chat::Publisher for threads.
-  handleBulkDeleteMessage() {
     return;
   }
 

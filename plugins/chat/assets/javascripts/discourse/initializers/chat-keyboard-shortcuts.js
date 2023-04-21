@@ -58,7 +58,10 @@ export default {
       }
       event.preventDefault();
       event.stopPropagation();
-      appEvents.trigger("chat:modify-selection", { type });
+      appEvents.trigger("chat:modify-selection", {
+        type,
+        context: event.target.dataset.chatComposerContext,
+      });
     };
 
     const openInsertLinkModal = (event) => {

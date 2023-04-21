@@ -152,7 +152,6 @@ $float-height: 530px;
     display: grid;
     will-change: transform;
     transform: translateZ(0);
-    overflow-x: hidden;
 
     &.selecting-messages {
       grid-template-columns: 1.5em 1fr;
@@ -341,18 +340,6 @@ $float-height: 530px;
     &.visible {
       transform: translateY(-32px) scale(1);
       opacity: 0.8;
-    }
-
-    &__text {
-      color: var(--secondary);
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
-      background: var(--primary-medium);
-      border-radius: 3px;
-      text-align: center;
-      font-size: var(--font-down-1);
-      bottom: 40px;
-      position: absolute;
     }
 
     &__arrow {

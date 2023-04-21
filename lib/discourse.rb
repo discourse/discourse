@@ -777,10 +777,8 @@ module Discourse
 
   def self.git_branch
     @git_branch ||=
-      begin
-        git_cmd = "git rev-parse --abbrev-ref HEAD"
-        self.try_git(git_cmd, "unknown")
-      end
+      self.try_git("git branch --show-current", nil) ||
+        self.try_git("git config user.discourse-version", "unknown")
   end
 
   def self.full_version
@@ -801,17 +799,11 @@ module Discourse
   end
 
   def self.try_git(git_cmd, default_value)
-    version_value = false
-
     begin
-      version_value = `#{git_cmd}`.strip
+      `#{git_cmd}`.strip
     rescue StandardError
-      version_value = default_value
-    end
-
-    version_value = default_value if version_value.empty?
-
-    version_value
+      default_value
+    end.presence || default_value
   end
 
   # Either returns the site_contact_username user or the first admin.

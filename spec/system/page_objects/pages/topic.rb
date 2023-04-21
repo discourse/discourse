@@ -71,6 +71,8 @@ module PageObjects
         case button
         when :bookmark
           post_by_number(post).find(".bookmark.with-reminder").click
+        when :reply
+          post_by_number(post).find(".post-controls .reply").click
         end
       end
 
@@ -109,6 +111,10 @@ module PageObjects
 
       def has_composer_content?(content)
         @composer_component.has_content?(content)
+      end
+
+      def has_composer_popup_content?(content)
+        @composer_component.has_popup_content?(content)
       end
 
       def send_reply

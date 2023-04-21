@@ -15,18 +15,22 @@ module Chat
     end
 
     def self.calculate_publish_targets(channel, message)
-      targets =
-        if message.thread_om?
-          [
-            root_message_bus_channel(channel.id),
-            thread_message_bus_channel(channel.id, message.thread_id),
-          ]
-        elsif message.thread_reply?
-          [thread_message_bus_channel(channel.id, message.thread_id)]
-        else
-          [root_message_bus_channel(channel.id)]
-        end
-      targets
+      return [root_message_bus_channel(channel.id)] if !allow_publish_to_thread?(channel)
+
+      if message.thread_om?
+        [
+          root_message_bus_channel(channel.id),
+          thread_message_bus_channel(channel.id, message.thread_id),
+        ]
+      elsif message.thread_reply?
+        [thread_message_bus_channel(channel.id, message.thread_id)]
+      else
+        [root_message_bus_channel(channel.id)]
+      end
+    end
+
+    def self.allow_publish_to_thread?(channel)
+      SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
     end
 
     def self.publish_new!(chat_channel, chat_message, staged_id)
@@ -60,7 +64,7 @@ module Chat
       # NOTE: This means that the read count is only updated in the client
       # for new messages in the main channel stream, maybe in future we want to
       # do this for thread messages as well?
-      if !chat_message.thread_reply?
+      if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel)
         MessageBus.publish(
           self.new_messages_message_bus_channel(chat_channel.id),
           {
@@ -167,11 +171,31 @@ module Chat
     end
 
     def self.publish_bulk_delete!(chat_channel, deleted_message_ids)
-      # TODO (martin) Handle sending this through for all the threads that
-      # may contain the deleted messages as well.
+      Chat::Thread
+        .grouped_messages(message_ids: deleted_message_ids)
+        .each do |group|
+          MessageBus.publish(
+            thread_message_bus_channel(chat_channel.id, group.thread_id),
+            {
+              type: "bulk_delete",
+              deleted_ids: group.thread_message_ids,
+              deleted_at: Time.zone.now,
+            },
+            permissions(chat_channel),
+          )
+
+          # Don't need to publish to the main channel if the messages deleted
+          # were a part of the thread (except the original message ID, since
+          # that shows in the main channel).
+          deleted_message_ids =
+            deleted_message_ids - (group.thread_message_ids - [group.original_message_id])
+        end
+
+      return if deleted_message_ids.empty?
+
       MessageBus.publish(
         root_message_bus_channel(chat_channel.id),
-        { typ: "bulk_delete", deleted_ids: deleted_message_ids, deleted_at: Time.zone.now },
+        { type: "bulk_delete", deleted_ids: deleted_message_ids, deleted_at: Time.zone.now },
         permissions(chat_channel),
       )
     end

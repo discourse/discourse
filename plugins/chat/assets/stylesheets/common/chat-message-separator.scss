@@ -65,8 +65,10 @@
       &.is-pinned,
       &.is-force-pinned {
         .chat-message-separator__text {
-          border: 1px solid var(--secondary-high);
-          border-radius: 3px;
+          border: 1px solid var(--primary-200);
+          border-radius: 4px;
+          color: var(--primary-800);
+          background: var(--primary-50);
         }
 
         .chat-message-separator__last-visit {
