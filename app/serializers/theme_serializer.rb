@@ -3,7 +3,7 @@
 require "base64"
 
 class ThemeFieldSerializer < ApplicationSerializer
-  attributes :name, :target, :value, :error, :type_id, :upload_id, :url, :filename
+  attributes :name, :target, :error, :type_id, :upload_id, :url, :filename
 
   def include_url?
     object.upload
