@@ -32,9 +32,11 @@ RSpec.describe HashtagAutocompleteService do
     end
   end
 
-  describe ".data_source_icons" do
+  describe ".data_source_icon_map" do
     it "gets an array for all icons defined by data sources so they can be used for markdown allowlisting" do
-      expect(HashtagAutocompleteService.data_source_icons).to eq(%w[folder tag])
+      expect(HashtagAutocompleteService.data_source_icon_map).to eq(
+        { "category" => "folder", "tag" => "tag" },
+      )
     end
   end
 

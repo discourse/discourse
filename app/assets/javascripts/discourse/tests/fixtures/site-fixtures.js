@@ -699,7 +699,7 @@ export default {
       ],
       displayed_about_plugin_stat_groups: ["chat_messages"],
       hashtag_configurations: { "topic-composer": ["category", "tag"] },
-      hashtag_icons: ["folder", "tag"]
+      hashtag_icons: { "category": "folder", "tag": "tag" }
     },
   },
 };

@@ -493,7 +493,7 @@
       "type": "object"
     },
     "hashtag_icons" : {
-      "type": "array"
+      "type": "object"
     },
     "displayed_about_plugin_stat_groups" : {
       "type": "array"

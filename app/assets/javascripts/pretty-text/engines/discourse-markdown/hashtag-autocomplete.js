@@ -94,7 +94,7 @@ export function setup(helper) {
   // sources which specify an icon, and each icon must be allowlisted
   // or it will not render in the markdown pipeline
   const hashtagIconAllowList = opts.hashtagIcons
-    ? opts.hashtagIcons
+    ? Object.values(opts.hashtagIcons)
         .concat(["hashtag"])
         .map((icon) => {
           return [

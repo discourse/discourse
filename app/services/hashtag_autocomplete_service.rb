@@ -34,8 +34,8 @@ class HashtagAutocompleteService
     data_sources.map(&:type)
   end
 
-  def self.data_source_icons
-    data_sources.map(&:icon)
+  def self.data_source_icon_map
+    data_sources.map { |ds| [ds.type, ds.icon] }.to_h
   end
 
   def self.data_source_from_type(type)

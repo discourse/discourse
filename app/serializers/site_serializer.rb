@@ -242,7 +242,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def hashtag_icons
-    HashtagAutocompleteService.data_source_icons
+    HashtagAutocompleteService.data_source_icon_map
   end
 
   def displayed_about_plugin_stat_groups

@@ -1,5 +1,4 @@
 import { setOwner } from "@ember/application";
-import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default class HashtagTypeBase {
   constructor(container) {
@@ -18,9 +17,7 @@ export default class HashtagTypeBase {
     throw "not implemented";
   }
 
-  generateIconHTML(hashtag) {
-    return iconHTML(hashtag.icon, {
-      class: `hashtag-color--${this.type}-${hashtag.id}`,
-    });
+  generateIconHTML() {
+    throw "not implemented";
   }
 }

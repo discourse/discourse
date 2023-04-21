@@ -249,7 +249,7 @@ function _findAndReplaceSeenHashtagPlaceholder(
       const hashtagType = new getHashtagTypeClasses()[type];
       link.innerHTML = `${hashtagType.generateIconHTML(
         matchingSeenHashtag
-      )}<span>${matchingSeenHashtag.text}</span>`;
+      )}<span>${emojiUnescape(matchingSeenHashtag.text)}</span>`;
       hashtagSpan.replaceWith(link);
     }
   });

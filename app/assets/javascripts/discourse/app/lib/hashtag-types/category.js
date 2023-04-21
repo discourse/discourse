@@ -12,20 +12,20 @@ export default class CategoryHashtagType extends HashtagTypeBase {
     return this.site.categories || [];
   }
 
-  generateColorCssClasses(model) {
+  generateColorCssClasses(category) {
     const generatedCssClasses = [];
-    const backgroundGradient = [`var(--category-${model.id}-color) 50%`];
-    if (model.parentCategory) {
+    const backgroundGradient = [`var(--category-${category.id}-color) 50%`];
+    if (category.parentCategory) {
       backgroundGradient.push(
-        `var(--category-${model.parentCategory.id}-color) 50%`
+        `var(--category-${category.parentCategory.id}-color) 50%`
       );
     } else {
-      backgroundGradient.push(`var(--category-${model.id}-color) 50%`);
+      backgroundGradient.push(`var(--category-${category.id}-color) 50%`);
     }
 
-    generatedCssClasses.push(`.hashtag-color--category-${model.id} {
-  background: linear-gradient(90deg, ${backgroundGradient.join(", ")});
-}`);
+    generatedCssClasses.push(`.hashtag-color--category-${category.id} {
+    background: linear-gradient(90deg, ${backgroundGradient.join(", ")});
+  }`);
 
     return generatedCssClasses;
   }
