@@ -350,10 +350,9 @@ export default class ChatApi extends Service {
    * @param {number} messageId - The ID of the message being restored.
    */
   restoreMessage(channelId, messageId) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
-    return ajax(`/chat/${channelId}/restore/${messageId}`, {
-      type: "PUT",
-    });
+    return this.#putRequest(
+      `/channels/${channelId}/messages/${messageId}/restore`
+    );
   }
 
   /**
