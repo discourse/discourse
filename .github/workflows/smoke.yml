@@ -124,19 +124,34 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
+      - name: Assets
+        run: bin/rails assets:precompile
+
       - name: Setup env
+        id: setup_env
         run: |
           echo "\n
           require_relative 'config/environment'\n
           u = User.new(username: 'smoke_user', password: 'P4ssw0rd', email: 'smoke@example.com', admin:true)\n
           u.save!(validate: false)\n
           u.activate\n
+          api_key = ApiKey.create!(user: u)
+          File.write(ENV['GITHUB_OUTPUT'], %Q{api_key=#{api_key.key}\n}, mode: 'a+')
           SiteSetting.wizard_enabled = false\n
           " | ruby
 
       - name: Start server
         run: bin/unicorn &
 
-      - name: Make request
-        run: |
-          curl -s -I -A "Chrome" --retry 15 --retry-delay 5 --retry-all-errors --max-time 90 http://0.0.0.0:8080
+      # - name: Warmup
+      #   run: |
+      #     curl -s -I -A "Chrome" --retry 15 --retry-delay 5 --retry-all-errors --max-time 90 http://0.0.0.0:8080
+
+      - name: Smoke test
+        env:
+          URL: http://0.0.0.0:8080
+          WAIT_FOR_URL: 60
+          ADMIN_API_KEY: ${{ steps.setup_env.outputs.api_key }}
+          ADMIN_API_USERNAME: smoke_user
+          SMOKE_TEST_THEME_URL: https://github.com/discourse/unformatted-code-detector
+        run: bin/rails smoke:test
