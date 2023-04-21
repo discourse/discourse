@@ -6,6 +6,11 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
   fab!(:user) { Fabricate(:user) }
   fab!(:thread) { Fabricate(:chat_thread) }
 
+  before do
+    SiteSetting.chat_enabled = true
+    SiteSetting.enable_experimental_chat_threaded_discussions = true
+  end
+
   it "keeps an accurate replies_count cache" do
     freeze_time
     Jobs.run_immediately!
@@ -40,7 +45,7 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
     expect(thread.reload.replies_count).to eq(6)
 
     # Lose the cache intentionally.
-    Chat::Thread.clear_caches!
+    Chat::Thread.clear_caches!(thread.id)
     message_to_destroy = thread.replies.last
     Chat::TrashMessage.call(
       message_id: message_to_destroy.id,
@@ -51,7 +56,7 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
     expect(thread.reload.replies_count).to eq(5)
 
     # Lose the cache intentionally.
-    Chat::Thread.clear_caches!
+    Chat::Thread.clear_caches!(thread.id)
     Chat::RestoreMessage.call(
       message_id: message_to_destroy.id,
       channel_id: thread.channel_id,
