@@ -29,4 +29,8 @@ export default class CategoryHashtagType extends HashtagTypeBase {
 
     return generatedCssClasses;
   }
+
+  generateIconHTML(hashtag) {
+    return `<span class="hashtag-category-badge hashtag-color--${this.type}-${hashtag.id}"></span>`;
+  }
 }

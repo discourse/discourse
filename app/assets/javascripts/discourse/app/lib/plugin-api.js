@@ -2173,10 +2173,11 @@ class PluginApi {
    * This is used when generating CSS classes in the hashtag-css-generator.
    *
    * @param {string} type - The type of the hashtag.
-   * @param {Class} typeClass - The class of the hashtag type.
+   * @param {Class} typeClassInstance - The initialized class of the hashtag type, which
+   *  needs the `container`.
    */
-  registerHashtagType(type, typeClass) {
-    registerHashtagType(type, typeClass);
+  registerHashtagType(type, typeClassInstance) {
+    registerHashtagType(type, typeClassInstance);
   }
 }
 

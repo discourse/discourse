@@ -41,25 +41,7 @@ function addHashtag(buffer, matches, state) {
     token.block = false;
     buffer.push(token);
 
-    // token = new state.Token("svg_open", "svg", 1);
-    // token.block = false;
-    // token.attrs = [
-    //   ["class", `fa d-icon d-icon-${result.icon} svg-icon svg-node`],
-    // ];
-    // buffer.push(token);
-
-    // token = new state.Token("use_open", "use", 1);
-    // token.block = false;
-    // token.attrs = [["href", `#${result.icon}`]];
-    // buffer.push(token);
-
-    // buffer.push(new state.Token("use_close", "use", -1));
-    // buffer.push(new state.Token("svg_close", "svg", -1));
-    token = new state.Token("span_open", "span", 1);
-    token.block = false;
-    token.attrs = [["class", "hashtag-icon-placeholder"]];
-    buffer.push(token);
-    buffer.push(new state.Token("span_close", "span", -1));
+    addIconPlaceholder(buffer, state);
 
     token = new state.Token("span_open", "span", 1);
     token.block = false;
@@ -77,6 +59,8 @@ function addHashtag(buffer, matches, state) {
     token.attrs = [["class", "hashtag-raw"]];
     buffer.push(token);
 
+    addIconPlaceholder(buffer, state);
+
     token = new state.Token("span_open", "span", 1);
     token = new state.Token("text", "", 0);
     token.content = matches[0];
@@ -86,6 +70,21 @@ function addHashtag(buffer, matches, state) {
     token = new state.Token("span_close", "span", -1);
     buffer.push(token);
   }
+}
+
+// The svg icon is not baked into the HTML because we want
+// to be able to use icon replacement via renderIcon, and
+// because different hashtag types may render icons/CSS
+// classes differently.
+//
+// Instead, the UI will dynamically replace these where hashtags
+// are rendered, like within posts, using decorateCooked* APIs.
+function addIconPlaceholder(buffer, state) {
+  const token = new state.Token("span_open", "span", 1);
+  token.block = false;
+  token.attrs = [["class", "hashtag-icon-placeholder"]];
+  buffer.push(token);
+  buffer.push(new state.Token("span_close", "span", -1));
 }
 
 export function setup(helper) {

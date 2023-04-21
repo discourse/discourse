@@ -6,10 +6,10 @@ export default {
   name: "register-hashtag-types",
   before: "hashtag-css-generator",
 
-  initialize() {
+  initialize(container) {
     withPluginApi("0.8.7", (api) => {
-      api.registerHashtagType("category", CategoryHashtagType);
-      api.registerHashtagType("tag", TagHashtagType);
+      api.registerHashtagType("category", new CategoryHashtagType(container));
+      api.registerHashtagType("tag", new TagHashtagType(container));
     });
   },
 };
