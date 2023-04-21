@@ -135,7 +135,7 @@ jobs:
           " | ruby
 
       - name: Start server
-        run: bin/unicorn
+        run: bin/unicorn &
 
       - name: Make request
         run: curl -I -A "Chrome" --retry 10 --retry-delay 1 --max-time 60 http://localhost:3000
