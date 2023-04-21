@@ -56,6 +56,7 @@ module Chat
     end
 
     def self.ensure_consistency!
+      return if !SiteSetting.enable_experimental_chat_threaded_discussions
       update_counts
     end
 
@@ -80,6 +81,7 @@ module Chat
         AND subquery.replies_count != threads.replies_count
         RETURNING threads.id AS thread_id;
       SQL
+      return if updated_thread_ids.empty?
       self.clear_caches!(updated_thread_ids)
     end
   end

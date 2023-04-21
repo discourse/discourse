@@ -13,10 +13,8 @@ module Chat
         "chat_thread:replies_count_cache:#{id}"
       end
 
-      def clear_caches!(ids = nil)
-        return Discourse.redis.delete_prefixed("chat_thread:") if ids.blank?
+      def clear_caches!(ids)
         ids = Array.wrap(ids)
-
         keys_to_delete =
           ids
             .map do |id|
