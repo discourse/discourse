@@ -31,6 +31,7 @@ export default class ChatMessage {
   @tracked excerpt;
   @tracked message;
   @tracked threadId;
+  @tracked threadReplyCount;
   @tracked reactions;
   @tracked reviewableId;
   @tracked user;
@@ -59,6 +60,7 @@ export default class ChatMessage {
     this.availableFlags = args.availableFlags || args.available_flags;
     this.hidden = args.hidden;
     this.threadId = args.threadId || args.thread_id;
+    this.threadReplyCount = args.threadReplyCount || args.thread_reply_count;
     this.channelId = args.channelId || args.chat_channel_id;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
     this.createdAt = args.createdAt || args.created_at;
@@ -79,6 +81,10 @@ export default class ChatMessage {
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
+  }
+
+  get threadRouteModels() {
+    return [...this.channel.routeModels, this.threadId];
   }
 
   get read() {

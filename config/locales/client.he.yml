@@ -213,6 +213,8 @@ he:
       removed_user: "הוסר ע״י %{who} ב־%{when}"
       removed_group: "הוסר ע״י %{who} ב־%{when}"
       autobumped: "הוקפץ אוטומטית ב־%{when}"
+      tags_changed: "התגיות עודכנו ב־%{when}"
+      category_changed: "הקטגוריה עודכנה ב־%{when}"
       autoclosed:
         enabled: "נסגר ב־%{when}"
         disabled: "נפתח ב־%{when}"
@@ -1311,7 +1313,6 @@ he:
       home: "דף בית ברירת מחדל"
       staged: "מבוים"
       staff_counters:
-        flags_given: "דגלים שעוזרים"
         flagged_posts: "פסטים מדוגלים"
         deleted_posts: "פוסטים שנמחקו"
         suspensions: "השעיות"

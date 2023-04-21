@@ -52,6 +52,11 @@ de:
   remove_posts_deleted_by_author: "Gelöscht vom Verfasser"
   redirect_warning: "Wir konnten nicht überprüfen, dass der ausgewählte Link tatsächlich im Forum geteilt wurde. Wenn du trotzdem fortfahren möchtest, wähle den Link unten aus."
   on_another_topic: "Zu einem anderen Thema"
+  topic_category_changed: "Von %{from} bis %{to}"
+  topic_tag_changed:
+    added_and_removed: "%{added} hinzugefügt und %{removed}entfernt"
+    added: "%{added} hinzugefügt"
+    removed: "%{removed} entfernt"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} von %{username}"
@@ -1393,6 +1398,7 @@ de:
     out_of_date_themes: "Updates sind für die folgenden Themes verfügbar:"
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
+    v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a> , um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -2114,6 +2120,7 @@ de:
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
+    create_post_for_category_and_tag_changes: "Erstelle einen kleinen Aktionsbeitrag, wenn sich die Kategorie oder die Tags eines Themas ändern"
     company_name: "Firmenname"
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
@@ -2185,7 +2192,6 @@ de:
       staged_users_disabled: "Du musst erst „staged users“ aktivieren, bevor du diese Einstellung aktivierst."
       reply_by_email_disabled: "Du musst erst „reply by email“ aktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_url_is_empty: "Du musst eine „discourse connect url'“ festlegen, bevor du diese Einstellung aktivierst."
-      discourse_connect_invite_only: "Du kannst DiscourseConnect und „invite only“ nicht gleichzeitig aktivieren."
       enable_local_logins_disabled: "Du musst erst „enable local logins“ aktivieren, bevor du diese Einstellung aktivierst."
       min_username_length_exists: "Du kannst die Mindestlänge von Benutzernamen nicht über den kürzesten Benutzernamen (%{username}) setzen."
       min_username_length_range: "Du kannst das Minimum nicht über das Maximum setzen."

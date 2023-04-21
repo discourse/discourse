@@ -21,6 +21,7 @@ export default class ChatThreadPanel extends Component {
   @service chatComposerPresenceManager;
   @service chatChannelThreadComposer;
   @service chatChannelThreadPane;
+  @service chatChannelThreadPaneSubscriptionsManager;
   @service appEvents;
   @service capabilities;
 
@@ -38,12 +39,24 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
+  subscribeToUpdates() {
+    this.chatChannelThreadPaneSubscriptionsManager.subscribe(this.thread);
+  }
+
+  @action
+  unsubscribeFromUpdates() {
+    this.chatChannelThreadPaneSubscriptionsManager.unsubscribe();
+  }
+
+  @action
   setScrollable(element) {
     this.scrollable = element;
   }
 
   @action
   loadMessages() {
+    this.thread.messagesManager.clearMessages();
+
     if (this.args.targetMessageId) {
       this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
     }
@@ -73,7 +86,6 @@ export default class ChatThreadPanel extends Component {
 
     this.loadingMorePast = true;
     this.loading = true;
-    this.thread.messagesManager.clearMessages();
 
     const findArgs = { pageSize: PAGE_SIZE };
 
@@ -188,7 +200,7 @@ export default class ChatThreadPanel extends Component {
       .sendMessage(this.channel.id, {
         message: stagedMessage.message,
         in_reply_to_id: stagedMessage.inReplyTo?.id,
-        staged_id: stagedMessage.stagedId,
+        staged_id: stagedMessage.id,
         upload_ids: stagedMessage.uploads.map((upload) => upload.id),
         thread_id: stagedMessage.threadId,
       })
@@ -196,7 +208,7 @@ export default class ChatThreadPanel extends Component {
         this.scrollToBottom();
       })
       .catch((error) => {
-        this.#onSendError(stagedMessage.stagedId, error);
+        this.#onSendError(stagedMessage.id, error);
       })
       .finally(() => {
         if (this._selfDeleted) {

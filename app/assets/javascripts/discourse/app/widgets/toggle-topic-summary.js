@@ -31,10 +31,16 @@ createWidget("toggle-summary-description", {
   },
 });
 
+let topicSummaryCallbacks = null;
+export function addTopicSummaryCallback(callback) {
+  topicSummaryCallbacks = topicSummaryCallbacks || [];
+  topicSummaryCallbacks.push(callback);
+}
+
 export default createWidget("toggle-topic-summary", {
   tagName: "section.information.toggle-summary",
   html(attrs) {
-    return [
+    let html = [
       this.attach("toggle-summary-description", attrs),
       this.attach("button", {
         className: "btn btn-primary",
@@ -44,5 +50,13 @@ export default createWidget("toggle-topic-summary", {
         action: attrs.topicSummaryEnabled ? "cancelFilter" : "showSummary",
       }),
     ];
+
+    if (topicSummaryCallbacks) {
+      topicSummaryCallbacks.forEach((callback) => {
+        html = callback(html, attrs, this);
+      });
+    }
+
+    return html;
   },
 });

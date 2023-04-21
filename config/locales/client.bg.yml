@@ -157,6 +157,8 @@ bg:
       removed_user: "Изтри %{who} на %{when}"
       removed_group: "Изтри %{who} на %{when}"
       autobumped: "Автоматично вдигната %{when}"
+      tags_changed: "Етикетите са актуализирани %{when}"
+      category_changed: "Категорията е актуализирана %{when}"
       autoclosed:
         enabled: "Затворена %{when}"
         disabled: "Отворена %{when}"
@@ -1190,7 +1192,6 @@ bg:
       home: "Начална страница по подразбиране"
       staged: "Поставен"
       staff_counters:
-        flags_given: "полезни сигнали"
         flagged_posts: "публикации със сигнали"
         deleted_posts: "изтрити публикации"
         suspensions: "отстранявания"
@@ -1630,6 +1631,12 @@ bg:
           restrict_email: "Ограничете до имейл"
           restrict_domain: "Ограничаване до домейн"
           email_or_domain_placeholder: "name@example.com или example.com"
+          max_redemptions_allowed: "Максимум използвания"
+          add_to_groups: "Добавяне към групи"
+          invite_to_topic: "Стигане до темата"
+          expires_at: "Изтича след"
+          custom_message: "Незадължително лично съобщение"
+          send_invite_email: "Запазване и изпращане на имейл"
       password:
         title: "Парола"
         too_short: "Вашата парола е твърде кратка."

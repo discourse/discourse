@@ -80,7 +80,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-users"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users']"
       ),
       "users section link is not shown in sidebar"
     );

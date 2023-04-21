@@ -1939,7 +1939,6 @@ gl:
       staged_users_disabled: "Primeiro debe activar «usuarios transitorios» antes de activar esta opción."
       reply_by_email_disabled: "Primeiro debe activar «responder vía correo electrónico» antes de activar esta opción."
       discourse_connect_url_is_empty: "Debe estabelecer un «URL de discourse connect» antes de activar este axuste."
-      discourse_connect_invite_only: "Non pode activar o DiscourseConnect e ter «só por convite» ao mesmo tempo."
       enable_local_logins_disabled: "Debe activar primeiro «activar inicios de sesión locais» antes de activar esta opción."
       min_username_length_exists: "Non pode estabelecer que a largura mínima do nome de usuario sexa maior có nome de usuario máis curto (%{username})."
       min_username_length_range: "O mínimo non pode ser maior que o máximo."

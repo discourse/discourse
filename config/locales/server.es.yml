@@ -52,6 +52,8 @@ es:
   remove_posts_deleted_by_author: "Eliminado por el autor"
   redirect_warning: "No pudimos verificar que el enlace que seleccionaste realmente se haya publicado en el foro. Si deseas continuar de todos modos, selecciona el siguiente enlace."
   on_another_topic: "En otro tema"
+  topic_tag_changed:
+    removed: "Eliminó a %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "nº %{post_number}"
     topic_page_title_post_number_by_user: "nº %{post_number} por %{username}"
@@ -2157,7 +2159,6 @@ es:
       staged_users_disabled: "Primero debes activar «usuarios provisionales» para poder activar esta configuración."
       reply_by_email_disabled: "Primero debes activar «responder por correo electrónico» antes de activar esta configuración."
       discourse_connect_url_is_empty: "Debes rellenar «discourse connect url» antes de activar este ajuste."
-      discourse_connect_invite_only: "No puedes activar SSO y el modo de solo invitaciones al mismo tiempo."
       enable_local_logins_disabled: "Primero debes activar «activar inicio de sesión local» antes de activar esta configuración."
       min_username_length_exists: "No puede establecer la longitud de usuario mínima por encima del nombre de usuario más corto (%{username})"
       min_username_length_range: "No puedes establecer el mínimo por encima del máximo."

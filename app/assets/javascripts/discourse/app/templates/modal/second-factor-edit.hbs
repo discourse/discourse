@@ -1,16 +1,10 @@
 <DModalBody>
-  <form class="form-horizontal">
-    <div class="input-group">
-      <label for="authenticator-name">{{i18n
-          "user.second_factor.edit_description"
-        }}</label>
-      <Input
-        name="authenticator-name"
-        @type="text"
-        @value={{this.model.name}}
-      />
-    </div>
-  </form>
+  <div class="input-group">
+    <label for="authenticator-name">{{i18n
+        "user.second_factor.edit_description"
+      }}</label>
+    <Input name="authenticator-name" @type="text" @value={{this.model.name}} />
+  </div>
 </DModalBody>
 
 <div class="modal-footer">

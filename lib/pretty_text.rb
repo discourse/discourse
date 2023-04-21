@@ -202,6 +202,7 @@ module PrettyText
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
+        __optInput.emojiDenyList = #{Emoji.denied.to_json};
         __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor).to_json};
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};

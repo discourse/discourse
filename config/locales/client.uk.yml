@@ -1270,7 +1270,6 @@ uk:
       home: "Типова головна сторінка"
       staged: "Попередньо"
       staff_counters:
-        flags_given: "корисні позначки"
         flagged_posts: "позначені дописи"
         deleted_posts: "видалені дописи"
         suspensions: "тимчасові призупинення"

@@ -114,7 +114,3 @@ th:
           fields:
             message:
               label: ข้อความ
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "ถูกปักธงโดย"

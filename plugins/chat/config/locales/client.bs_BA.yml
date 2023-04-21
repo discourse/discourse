@@ -114,7 +114,3 @@ bs_BA:
           fields:
             message:
               label: Privatna Poruka
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Kaznio je"

@@ -58,6 +58,23 @@
     }
   }
 
+  &.is-threaded {
+    display: grid;
+    grid-template-columns: var(--message-left-width) 1fr;
+    grid-template-rows: auto 32px;
+    grid-template-areas:
+      "avatar message"
+      "threadindicator threadindicator";
+
+    .chat-user-avatar {
+      grid-area: avatar;
+    }
+
+    .chat-message-content {
+      grid-area: message;
+    }
+  }
+
   .chat-message-content {
     display: flex;
     flex-direction: column;
@@ -196,12 +213,13 @@
 
     .touch & {
       &:active {
-        background: var(--primary-very-low);
+        background: var(--d-hover);
+        border-radius: 5px;
       }
 
       &.chat-message-bookmarked {
         &:active {
-          background: var(--highlight-medium);
+          background: var(--highlight-low);
         }
       }
     }
@@ -210,7 +228,7 @@
       &.is-active,
       &:hover,
       &:active {
-        background: var(--primary-very-low);
+        background: var(--d-hover);
       }
 
       &:hover {

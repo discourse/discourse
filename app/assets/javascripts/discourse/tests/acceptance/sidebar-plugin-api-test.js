@@ -439,7 +439,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     const myCustomTopSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content-secondary .sidebar-section-link-my-custom-top"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content-secondary .sidebar-section-link[data-link-name='my-custom-top']"
     );
 
     assert.ok(
@@ -501,7 +501,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     await visit("/");
 
     const customLatestSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-latest"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='latest']"
     );
 
     assert.ok(
@@ -525,7 +525,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     const customUnreadSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-unreads"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-unreads']"
     );
 
     assert.ok(
@@ -545,7 +545,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     const customTopSectionLInk = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-custom-top"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-custom-top']"
     );
 
     assert.ok(
@@ -554,7 +554,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     const openBugsSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link-open-bugs"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='open-bugs']"
     );
 
     assert.ok(
@@ -576,7 +576,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-favourite-topic.active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-favourite-topic'].active"
       ),
       "displays my favourite topic custom section link when current route matches the link's route"
     );

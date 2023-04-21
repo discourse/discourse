@@ -87,7 +87,6 @@ Fabricator(:chat_reviewable_message, class_name: "Chat::ReviewableMessage") do
   reviewable_by_moderator true
   type "ReviewableChatMessage"
   created_by { Fabricate(:user) }
-  target_type Chat::Message.sti_name
   target { Fabricate(:chat_message) }
   reviewable_scores { |p| [Fabricate.build(:reviewable_score, reviewable_id: p[:id])] }
 end
@@ -147,4 +146,6 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
   original_message do |attrs|
     Fabricate(:chat_message, chat_channel: attrs[:channel] || Fabricate(:chat_channel))
   end
+
+  after_create { |thread| thread.original_message.update!(thread_id: thread.id) }
 end

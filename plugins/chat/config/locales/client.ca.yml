@@ -115,7 +115,3 @@ ca:
           fields:
             message:
               label: Missatge
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Marcat amb bandera per"

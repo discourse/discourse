@@ -27,10 +27,22 @@ module PageObjects
         ).click
       end
 
-      def has_link?(name, href: nil)
+      SIDEBAR_SECTION_LINK_SELECTOR = "sidebar-section-link"
+
+      def click_section_link(name)
+        find(".#{SIDEBAR_SECTION_LINK_SELECTOR}", text: name).click
+      end
+
+      def has_one_active_section_link?
+        has_css?(".#{SIDEBAR_SECTION_LINK_SELECTOR}--active", count: 1)
+      end
+
+      def has_section_link?(name, href: nil, active: false)
         attributes = {}
         attributes[:href] = href if href
-        page.has_link?(name, attributes)
+        attributes[:class] = SIDEBAR_SECTION_LINK_SELECTOR
+        attributes[:class] += "--active" if active
+        has_link?(name, **attributes)
       end
 
       def custom_section_modal_title

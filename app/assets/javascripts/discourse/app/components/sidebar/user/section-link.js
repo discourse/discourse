@@ -3,6 +3,9 @@ import { bind } from "discourse-common/utils/decorators";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
 import discourseLater from "discourse-common/lib/later";
 
+const TOUCH_SCREEN_DELAY = 300;
+const MOUSE_DELAY = 250;
+
 export default class SectionLink {
   @tracked linkDragCss;
 
@@ -28,9 +31,12 @@ export default class SectionLink {
     if (event.button === 0 || event.targetTouches) {
       this.startMouseY = this.#calcMouseY(event);
       this.willDrag = true;
-      discourseLater(() => {
-        this.delayedStart(event);
-      }, 300);
+      discourseLater(
+        () => {
+          this.delayedStart(event);
+        },
+        event.targetTouches ? TOUCH_SCREEN_DELAY : MOUSE_DELAY
+      );
     }
   }
   delayedStart(event) {

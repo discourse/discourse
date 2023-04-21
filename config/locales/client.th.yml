@@ -811,7 +811,6 @@ th:
       save_to_change_theme: 'ธีมจะถูกอัปเดตเมื่อคุณคลิก "%{save_text}"'
       home: "หน้าเริ่มต้น"
       staff_counters:
-        flags_given: "ธงที่เป็นประโยชน์"
         flagged_posts: "โพสต์ที่ปักธง"
         deleted_posts: "โพสต์ที่ลบ"
         suspensions: "ระงับการใช้งาน"

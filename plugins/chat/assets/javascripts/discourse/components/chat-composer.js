@@ -108,7 +108,10 @@ export default Component.extend(TextareaTextManipulation, {
     this.set("ready", true);
   },
 
-  _modifySelection(opts = { type: null }) {
+  _modifySelection(opts = { type: null, context: null }) {
+    if (opts.context !== this.context) {
+      return;
+    }
     const sel = this.getSelected("", { lineVal: true });
     if (opts.type === "bold") {
       this.applySurround(sel, "**", "**", "bold_text");
@@ -480,12 +483,13 @@ export default Component.extend(TextareaTextManipulation, {
             return resolve([allTranslations[full]]);
           }
 
+          const emojiDenied = this.get("site.denied_emojis") || [];
           const match = term.match(/^:?(.*?):t([2-6])?$/);
           if (match) {
             const name = match[1];
             const scale = match[2];
 
-            if (isSkinTonableEmoji(name)) {
+            if (isSkinTonableEmoji(name) && !emojiDenied.includes(name)) {
               if (scale) {
                 return resolve([`${name}:t${scale}`]);
               } else {
@@ -497,6 +501,7 @@ export default Component.extend(TextareaTextManipulation, {
           const options = emojiSearch(term, {
             maxResults: 5,
             diversity: this.chatEmojiReactionStore.diversity,
+            exclude: emojiDenied,
           });
 
           return resolve(options);

@@ -12,12 +12,11 @@ export default class ChatChannelPane extends Service {
 
   @tracked reacting = false;
   @tracked selectingMessages = false;
-  @tracked hoveredMessageId = false;
   @tracked lastSelectedMessage = null;
   @tracked sendingLoading = false;
 
   get selectedMessageIds() {
-    return this.chat.activeChannel.selectedMessages.mapBy("id");
+    return this.chat.activeChannel?.selectedMessages?.mapBy("id") || [];
   }
 
   get composerService() {

@@ -43,7 +43,7 @@ acceptance(
 
       assert.strictEqual(
         count(
-          ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+          ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
         ),
         1,
         "there should only be one section link under the section"
@@ -165,13 +165,13 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-configure-categories"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-link-name='configure-categories']"
       ),
       "section link to add categories to sidebar is displayed"
     );
 
     await click(
-      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-configure-categories"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-link-name='configure-categories']"
     );
 
     assert.strictEqual(
@@ -243,7 +243,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -306,7 +306,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -369,7 +369,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -397,7 +397,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       count(
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
       ),
       4,
       "there should only be 4 section link under the section"
@@ -959,11 +959,15 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-link-configure-default-sidebar-categories"),
+      exists(
+        ".sidebar-section-link[data-link-name='configure-default-sidebar-categories']"
+      ),
       "section link to configure default sidebar categories is shown"
     );
 
-    await click(".sidebar-section-link-configure-default-sidebar-categories");
+    await click(
+      ".sidebar-section-link[data-link-name='configure-default-sidebar-categories']"
+    );
 
     assert.strictEqual(
       currentURL(),

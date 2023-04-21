@@ -69,8 +69,10 @@ import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profil
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
+import { addTopicSummaryCallback } from "discourse/widgets/toggle-topic-summary";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
+import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import deprecated from "discourse-common/lib/deprecated";
@@ -185,11 +187,15 @@ class PluginApi {
   _resolveClass(resolverName, opts) {
     opts = opts || {};
 
-    if (this.container.cache[resolverName]) {
+    if (
+      this.container.cache[resolverName] ||
+      (resolverName === "model:user" &&
+        this.container.lookup("service:current-user"))
+    ) {
       // eslint-disable-next-line no-console
       console.warn(
         consolePrefix(),
-        `"${resolverName}" was already cached in the container. Changes won't be applied.`
+        `"${resolverName}" has already been initialized and registered as a singleton. Move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
       );
     }
 
@@ -1023,6 +1029,28 @@ class PluginApi {
   }
 
   /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a callback to be topic summary widget markup that can be used, for example,
+   * to add an extra button to the topic summary widget.
+   *
+   * Example:
+   *
+   *  api.addTopicSummaryCallback((html, attrs, widget) => {
+   *    html.push(
+   *      widget.attach("button", {
+   *        className: "btn btn-primary",
+   *        icon: "magic",
+   *        title: "discourse_ai.ai_helper.title",
+   *        label: "discourse_ai.ai_helper.title",
+   *        action: "showAiSummary",
+   *     })
+   *   );
+   **/
+  addTopicSummaryCallback(callback) {
+    addTopicSummaryCallback(callback);
+  }
+
+  /**
    *
    * Adds a callback to be executed on the "transformed" post that is passed to the post
    * widget.
@@ -1562,6 +1590,7 @@ class PluginApi {
    **/
   addQuickAccessProfileItem(item) {
     addQuickAccessProfileItem(item);
+    addUserMenuProfileTabItem(item);
   }
 
   addFeaturedLinkMetaDecorator(decorator) {

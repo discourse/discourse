@@ -128,7 +128,8 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
     await click(`.chat-emoji-picker__section-btn[data-section="objects"]`);
 
     assert.true(
-      document.querySelector("#ember-testing-container").scrollTop > 0,
+      document.querySelector(".chat-emoji-picker__scrollable-content")
+        .scrollTop > 0,
       "it scrolls to the section"
     );
   });

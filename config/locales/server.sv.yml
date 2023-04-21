@@ -52,6 +52,11 @@ sv:
   remove_posts_deleted_by_author: "Borttaget av författaren"
   redirect_warning: "Vi kunde inte verifiera att länken som du valt faktiskt har lagts upp i forumet. Välj länken nedan om du vill fortsätta ändå."
   on_another_topic: "I ett annat ämne"
+  topic_category_changed: "Från %{from} till %{to}"
+  topic_tag_changed:
+    added_and_removed: "Lade till %{added} och tog bort %{removed}"
+    added: "Lade till %{added}"
+    removed: "Tog bort %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "Nr %{post_number}"
     topic_page_title_post_number_by_user: "Nr %{post_number} av %{username}"
@@ -1393,6 +1398,7 @@ sv:
     out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
+    v3_analytics_deprecated: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
   site_settings:
     allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
     disabled: "inaktiverade"
@@ -2114,6 +2120,7 @@ sv:
     suppress_overlapping_tags_in_list: "Om taggen matchar orden i ämnets titel exakt visas inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
     force_lowercase_tags: "Tvinga alla nya taggar att vara helt i små bokstäver."
+    create_post_for_category_and_tag_changes: "Skapa ett litet åtgärdsinlägg när ett ämnes kategori eller taggar ändras"
     company_name: "Företagsnamn"
     governing_law: "Gällande lag"
     city_for_disputes: "Domstol vid tvist"
@@ -2185,7 +2192,6 @@ sv:
       staged_users_disabled: "Du måste först aktivera \"arrangerade användare\" innan du aktiverar denna inställning."
       reply_by_email_disabled: "Du måste först aktivera 'svara med e-post' innan du aktiverar denna inställning."
       discourse_connect_url_is_empty: "Du måste ange en 'discourse connect url' innan du aktiverar denna inställning."
-      discourse_connect_invite_only: "Du kan inte aktivera DiscourseConnect och bara bjuda in samtidigt."
       enable_local_logins_disabled: "Du måste först 'aktivera lokala inloggningar' innan du aktiverar denna inställning."
       min_username_length_exists: "Du kan inte ställa in kortast tillåtna längd på användarnamn till att vara längre än det kortaste användarnamnet (%{username})."
       min_username_length_range: "Du kan inte ställa in minimum till att vara högre än maximum"

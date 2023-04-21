@@ -120,14 +120,6 @@ export default class ChatMessageInteractor {
     );
   }
 
-  get canOpenThread() {
-    return (
-      this.context !== MESSAGE_CONTEXT_THREAD &&
-      this.message.channel?.threadingEnabled &&
-      this.message?.threadId
-    );
-  }
-
   get canRebakeMessage() {
     return (
       this.currentUser?.staff &&
@@ -212,14 +204,6 @@ export default class ChatMessageInteractor {
       });
     }
 
-    if (this.canOpenThread) {
-      buttons.push({
-        id: "openThread",
-        name: I18n.t("chat.threads.open"),
-        icon: "puzzle-piece",
-      });
-    }
-
     return buttons;
   }
 
@@ -245,7 +229,16 @@ export default class ChatMessageInteractor {
 
   copyLink() {
     const { protocol, host } = window.location;
-    let url = getURL(`/chat/c/-/${this.message.channelId}/${this.message.id}`);
+    const channelId = this.message.channelId;
+    const threadId = this.message.threadId;
+
+    let url;
+    if (threadId) {
+      url = getURL(`/chat/c/-/${channelId}/t/${threadId}`);
+    } else {
+      url = getURL(`/chat/c/-/${channelId}/${this.message.id}`);
+    }
+
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
   }
@@ -362,15 +355,6 @@ export default class ChatMessageInteractor {
   @action
   edit() {
     this.composer.editButtonClicked(this.message.id);
-  }
-
-  @action
-  openThread() {
-    this.router.transitionTo(
-      "chat.channel.thread",
-      ...this.message.channel.routeModels,
-      this.message.threadId
-    );
   }
 
   @action

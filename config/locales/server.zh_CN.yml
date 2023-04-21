@@ -52,6 +52,11 @@ zh_CN:
   remove_posts_deleted_by_author: "被作者删除"
   redirect_warning: "我们无法验证您选择的链接是否确实发布到了论坛。如果您仍想继续，请选择下面的链接。"
   on_another_topic: "在另一个话题中"
+  topic_category_changed: "从 %{from} 到 %{to}"
+  topic_tag_changed:
+    added_and_removed: "添加 %{added} 并删除 %{removed}"
+    added: "已添加 %{added}"
+    removed: "删除了 %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
@@ -2132,7 +2137,6 @@ zh_CN:
       staged_users_disabled: "在启用此设置之前，您必须先启用 'staged users'。"
       reply_by_email_disabled: "在启用此设置之前，您必须先启用 'reply by email'。"
       discourse_connect_url_is_empty: "在启用此设置之前，您必须先设置 'discourse connect url'。"
-      discourse_connect_invite_only: "您不能同时启用 DiscourseConnect 和仅邀请模式。"
       enable_local_logins_disabled: "在启用此设置之前，您必须先启用 'enable local logins'。"
       min_username_length_exists: "您不能将最小用户名长度设置为高于最短用户名 (%{username})。"
       min_username_length_range: "您不能将最小值设置为高于最大值。"

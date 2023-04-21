@@ -4,19 +4,29 @@ module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
       def type_in_composer(input)
-        find(".chat-composer-input").send_keys(input)
+        find(".chat-composer-input--channel").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-composer-input--channel").send_keys(input)
       end
 
       def fill_composer(input)
-        find(".chat-composer-input").fill_in(with: input)
+        find(".chat-composer-input--channel").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-composer-input--channel").fill_in(with: input)
+      end
+
+      def click_composer
+        find(".chat-composer-input--channel").click # ensures autocomplete is closed and not masking anything
       end
 
       def click_send_message
         find(".chat-composer .send-btn:enabled").click
       end
 
+      def message_by_id_selector(id)
+        ".chat-live-pane .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
+      end
+
       def message_by_id(id)
-        find(".chat-message-container[data-id=\"#{id}\"]")
+        find(message_by_id_selector(id))
       end
 
       def has_no_loading_skeleton?
@@ -61,15 +71,16 @@ module PageObjects
         find("[data-value='flag']").click
       end
 
+      def copy_link(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='copyLink']").click
+      end
+
       def flag_message(message)
         hover_message(message)
         click_more_button
         find("[data-value='flag']").click
-      end
-
-      def open_message_thread(message)
-        hover_message(message)
-        find(".chat-message-thread-btn").click
       end
 
       def select_message(message)
@@ -97,10 +108,9 @@ module PageObjects
 
       def send_message(text = nil)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
-        find(".chat-composer-input").click # makes helper more reliable by ensuring focus is not lost
-        find(".chat-composer-input").fill_in(with: text)
+        fill_composer(text)
         click_send_message
-        find(".chat-composer-input").click # ensures autocomplete is closed and not masking anything
+        click_composer
       end
 
       def reply_to(message)
@@ -147,11 +157,28 @@ module PageObjects
       end
 
       def has_message?(text: nil, id: nil)
+        check_message_presence(exists: true, text: text, id: id)
+      end
+
+      def has_no_message?(text: nil, id: nil)
+        check_message_presence(exists: false, text: text, id: id)
+      end
+
+      def check_message_presence(exists: true, text: nil, id: nil)
+        css_method = exists ? :has_css? : :has_no_css?
         if text
-          has_css?(".chat-message-text", text: text)
+          send(css_method, ".chat-message-text", text: text, wait: 5)
         elsif id
-          has_css?(".chat-message-container[data-id=\"#{id}\"]", wait: 10)
+          send(css_method, ".chat-message-container[data-id=\"#{id}\"]", wait: 10)
         end
+      end
+
+      def has_thread_indicator?(message)
+        has_css?("#{message_by_id_selector(message.id)} .chat-message-thread-indicator")
+      end
+
+      def message_thread_indicator(message)
+        find("#{message_by_id_selector(message.id)} .chat-message-thread-indicator")
       end
     end
   end

@@ -1088,7 +1088,6 @@ vi:
       home: "Trang chủ mặc định"
       staged: "Theo giai đoạn"
       staff_counters:
-        flags_given: "cờ hữu ích"
         flagged_posts: "bài viết gắn cờ"
         deleted_posts: "bài viết bị xoá"
         suspensions: "đình chỉ"

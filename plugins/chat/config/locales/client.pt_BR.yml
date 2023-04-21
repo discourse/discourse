@@ -407,9 +407,8 @@ pt_BR:
       transcript:
         view: "Ver transcrição de mensagens anteriores"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Mensagem de chat sinalizada"
-          flagged_by: "Sinalizada por"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

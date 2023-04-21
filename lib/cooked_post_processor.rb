@@ -410,6 +410,7 @@ class CookedPostProcessor
       still_an_image = false
     elsif info&.downloaded? && upload = info&.upload
       img["src"] = UrlHelper.cook_url(upload.url, secure: @with_secure_uploads)
+      img["data-dominant-color"] = upload.dominant_color(calculate_if_missing: true).presence
       img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
     end
 

@@ -691,7 +691,6 @@ sw:
       home: "Chaguo-msingi mwanzo"
       staged: "Sehemu ya kujaribu"
       staff_counters:
-        flags_given: "bendera za usaidizi"
         flagged_posts: "Machapisho yenye bendera."
         deleted_posts: "Machapisho yaliyofutwa"
         suspensions: "masitisho"

@@ -1,8 +1,8 @@
 import { isTesting } from "discourse-common/config/environment";
+import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import I18n from "I18n";
 import optionalService from "discourse/lib/optional-service";
-import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
@@ -123,7 +123,7 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.pane.hoveredMessageId === this.args.message.id) {
+    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
       return;
     }
 
@@ -166,11 +166,12 @@ export default class ChatMessage extends Component {
       model: this.args.message,
       context: this.args.context,
     };
-    this.pane.hoveredMessageId = this.args.message.id;
   }
 
   @action
-  handleTouchStart() {
+  handleTouchStart(event) {
+    event.stopPropagation();
+
     // if zoomed don't track long press
     if (isZoomed()) {
       return;
@@ -188,12 +189,16 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleTouchMove() {
+  handleTouchMove(event) {
+    event.stopPropagation();
+
     cancel(this._isPressingHandler);
   }
 
   @action
-  handleTouchEnd() {
+  handleTouchEnd(event) {
+    event.stopPropagation();
+
     cancel(this._isPressingHandler);
   }
 
@@ -255,7 +260,21 @@ export default class ChatMessage extends Component {
     return (
       this.args.context === MESSAGE_CONTEXT_THREAD ||
       this.args.message?.inReplyTo?.id ===
-        this.args.message?.previousMessage?.id
+        this.args.message?.previousMessage?.id ||
+      this.threadingEnabled
+    );
+  }
+
+  get threadingEnabled() {
+    return this.args.channel?.threadingEnabled && this.args.message?.threadId;
+  }
+
+  get showThreadIndicator() {
+    return (
+      this.args.context !== MESSAGE_CONTEXT_THREAD &&
+      this.threadingEnabled &&
+      this.args.message?.threadId !==
+        this.args.message?.previousMessage?.threadId
     );
   }
 

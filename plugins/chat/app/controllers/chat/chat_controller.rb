@@ -112,9 +112,11 @@ module Chat
 
       return render_json_error(chat_message_creator.error) if chat_message_creator.failed?
 
-      @user_chat_channel_membership.update!(
-        last_read_message_id: chat_message_creator.chat_message.id,
-      )
+      if !chat_message_creator.chat_message.thread_id.present?
+        @user_chat_channel_membership.update!(
+          last_read_message_id: chat_message_creator.chat_message.id,
+        )
+      end
 
       if @chat_channel.direct_message_channel?
         # If any of the channel users is ignoring, muting, or preventing DMs from
@@ -142,7 +144,13 @@ module Chat
       Chat::Publisher.publish_user_tracking_state(
         current_user,
         @chat_channel.id,
-        chat_message_creator.chat_message.id,
+        (
+          if chat_message_creator.chat_message.thread_id.present?
+            @user_chat_channel_membership.last_read_message_id
+          else
+            chat_message_creator.chat_message.id
+          end
+        ),
       )
       render json: success_json
     end
@@ -176,6 +184,7 @@ module Chat
       messages = preloaded_chat_message_query.where(chat_channel: @chat_channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(@chatable)
       messages = messages.where(thread_id: params[:thread_id]) if params[:thread_id]
+      messages = exclude_thread_messages(messages) if !include_thread_messages?
 
       if message_id.present?
         condition = direction == PAST ? "<" : ">"
@@ -259,6 +268,7 @@ module Chat
       messages = preloaded_chat_message_query.where(chat_channel: @chat_channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(@chatable)
       messages = messages.where(thread_id: params[:thread_id]) if params[:thread_id]
+      messages = exclude_thread_messages(messages) if !include_thread_messages?
 
       past_messages =
         messages
@@ -274,7 +284,8 @@ module Chat
 
       can_load_more_past = past_messages.count == PAST_MESSAGE_LIMIT
       can_load_more_future = future_messages.count == FUTURE_MESSAGE_LIMIT
-      messages = [past_messages.reverse, [@message], future_messages].reduce([], :concat)
+      looked_up_message = !include_thread_messages? && @message.thread_reply? ? [] : [@message]
+      messages = [past_messages.reverse, looked_up_message, future_messages].reduce([], :concat)
       chat_view =
         Chat::View.new(
           chat_channel: @chat_channel,
@@ -412,10 +423,16 @@ module Chat
           .includes(:bookmarks)
           .includes(:uploads)
           .includes(chat_channel: :chatable)
+          .includes(:thread)
 
       query = query.includes(user: :user_status) if SiteSetting.enable_user_status
 
       query
+    end
+
+    def include_thread_messages?
+      params[:thread_id].present? || !SiteSetting.enable_experimental_chat_threaded_discussions ||
+        !@chat_channel.threading_enabled
     end
 
     def find_chatable
@@ -430,6 +447,16 @@ module Chat
       ]
       @message = @message.find_by(id: params[:message_id])
       raise Discourse::NotFound unless @message
+    end
+
+    def exclude_thread_messages(messages)
+      messages.where(<<~SQL, channel_id: @chat_channel.id)
+        chat_messages.thread_id IS NULL OR chat_messages.id IN (
+          SELECT original_message_id
+          FROM chat_threads
+          WHERE chat_threads.channel_id = :channel_id
+        )
+      SQL
     end
   end
 end
