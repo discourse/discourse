@@ -15,8 +15,8 @@ module PageObjects
         self
       end
 
-      def click_toolbar_button(number)
-        find(".d-editor-button-bar button:nth-child(#{number})").click
+      def click_toolbar_button(button_class)
+        find(".d-editor-button-bar button.#{button_class}").click
         self
       end
 
@@ -41,6 +41,10 @@ module PageObjects
 
       def has_content?(content)
         composer_input.value == content
+      end
+
+      def has_popup_content?(content)
+        composer_popup.has_content?(content)
       end
 
       def select_action(action)
@@ -82,6 +86,10 @@ module PageObjects
 
       def composer_input
         find("#{COMPOSER_ID} .d-editor .d-editor-input")
+      end
+
+      def composer_popup
+        find("#{COMPOSER_ID} .composer-popup")
       end
     end
   end

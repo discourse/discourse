@@ -4,7 +4,7 @@ import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
 import discourseLater from "discourse-common/lib/later";
 
 const TOUCH_SCREEN_DELAY = 300;
-const MOUSE_DELAY = 100;
+const MOUSE_DELAY = 250;
 
 export default class SectionLink {
   @tracked linkDragCss;
