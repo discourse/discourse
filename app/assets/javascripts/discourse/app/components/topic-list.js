@@ -179,6 +179,16 @@ export default Component.extend(LoadMore, {
       voice_credits_data: allModifiedUserCredits,
     };
 
+    if (allModifiedUserCredits.length === 0) {
+      // act like a request is made but no changes
+      this.set("saveButtonText", "✓");
+      let self = this;
+      setTimeout(function () {
+        self.set("saveButtonText", "Save");
+      }, 1000);
+      return;
+    }
+
     this.set("isSaving", true);
 
     return ajax("/voice_credits.json", {
@@ -197,10 +207,10 @@ export default Component.extend(LoadMore, {
         console.error(error);
       })
       .finally(() => {
+        this.set("isSaving", false);
         let self = this;
         setTimeout(function () {
           self.set("saveButtonText", "Save");
-          self.set("isSaving", false);
         }, 1000);
       });
   },
