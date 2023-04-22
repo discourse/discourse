@@ -577,14 +577,13 @@ td .main-link {
 .your-hearts-mobile {
   .your-hearts-voting-container {
     display: flex;
-    width: 100%;
+    width: 95px;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 
   .your-hearts-voting {
     display: flex;
-    width: 95px;
     align-items: center;
     justify-content: flex-end;
     gap: 15px;
@@ -600,6 +599,10 @@ td .main-link {
     margin-top: 3px;
     width: 20px;
     height: 20px;
+  }
+  .full-hearts-icon {
+    width: 25px;
+    height: 25px;
   }
 
   .total-hearts-wrapper {
@@ -619,7 +622,8 @@ td .main-link {
   .total-votes-cell {
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: start;
+    gap: 12px;
     .total-votes-num {
       margin-right: 2px;
     }
