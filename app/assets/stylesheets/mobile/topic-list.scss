@@ -514,6 +514,12 @@ td .main-link {
 // Bulk select
 
 .topic-list-header {
+  tr:not(.above-colum-headers) {
+    display: none;
+  }
+}
+
+#user-hearts {
   display: none;
 }
 
@@ -565,5 +571,138 @@ td .main-link {
     height: 45px;
     justify-content: center;
     align-items: center;
+  }
+}
+
+.your-hearts-mobile {
+  .your-hearts-voting-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .your-hearts-voting {
+    display: flex;
+    width: 95px;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+    height: 45px;
+  }
+
+  .heart-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .full-heart {
+    margin-top: 3px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .total-hearts-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    margin-top: 3px;
+    margin-left: 6px;
+
+    .full-heart-header {
+      width: 20px;
+      height: 20px;
+      opacity: 0.8;
+    }
+  }
+
+  .total-votes-cell {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    .total-votes-num {
+      margin-right: 2px;
+    }
+  }
+
+  .voice-vote-buttons {
+    display: flex;
+    flex-direction: column;
+    .triangle_down {
+      margin-top: 2px;
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid var(--primary-700);
+      font-size: 0;
+      line-height: 0;
+      float: left;
+      cursor: pointer;
+    }
+    .triangle_up {
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid #af2926;
+      transform: rotate(180deg);
+      font-size: 0;
+      line-height: 0;
+      float: left;
+      cursor: pointer;
+    }
+  }
+}
+
+#user-hearts-mobile {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#user-hearts-container-row {
+  .save-section p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+#user-info-topic-list {
+  .remaining-votes-text {
+    display: none;
+  }
+}
+
+#user-info-topic-list {
+  #save-voice-credits {
+    cursor: pointer;
+    margin-left: 10px;
+    width: 60px;
+
+    &.btn-success {
+      background-color: #01b94e;
+      color: white;
+    }
+
+    &.btn-error {
+      background-color: #ad2626;
+      color: white;
+    }
+  }
+  .save-section {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    p {
+      &.save-success {
+        color: #01b94e;
+      }
+
+      &.save-error {
+        color: #ad2626;
+      }
+    }
   }
 }

@@ -355,23 +355,6 @@
       }
     }
 
-    .voice-credits-input {
-      border: none;
-      background: none;
-      margin-top: 12px;
-      padding: 2px 0;
-      margin-left: 10px;
-      width: 60px;
-      text-align: right;
-      color: var(--primary-medium);
-    }
-    // ups and down arrows
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-      opacity: 0.9;
-      margin-left: 5px;
-    }
-
     .voice-vote-buttons {
       display: flex;
       flex-direction: column;
@@ -381,7 +364,7 @@
         height: 0;
         border-left: 10px solid transparent;
         border-right: 10px solid transparent;
-        border-top: 10px solid #222222;
+        border-top: 10px solid var(--primary-700);
         font-size: 0;
         line-height: 0;
         float: left;
@@ -411,4 +394,8 @@
     width: 25px;
     height: 25px;
   }
+}
+
+#user-hearts-mobile {
+  display: none;
 }

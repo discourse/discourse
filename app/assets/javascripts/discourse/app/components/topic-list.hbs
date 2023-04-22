@@ -1,6 +1,6 @@
 <thead class="topic-list-header">
   {{#if this.showUserVoiceCredits}}
-    <tr>
+    <tr class="above-colum-headers">
       <td style="text-align: right;" colspan="100%">
         <div id="user-info-topic-list">
           <div class="user-hearts-data">
@@ -10,7 +10,7 @@
             {{#unless this.currentUser.name}}
               <div><strong>{{this.currentUser.username}}</strong></div>
             {{/unless}}
-            <div>You have
+            <div class="remaining-votes-text">You have
               <strong>{{this.remainingVotes}}</strong>
               hearts left to give
             </div>
@@ -26,6 +26,13 @@
           <div id="user-hearts-container-row">
             <div id="user-hearts-container">
               <div id="user-hearts">
+              </div>
+              <div id="user-hearts-mobile">
+                <img
+                  class="full-heart"
+                  src={{mobileHeartsImageSrc this.remainingVotes}}
+                  alt="Full Hearts"
+                />
               </div>
             </div>
             <div class="save-section">

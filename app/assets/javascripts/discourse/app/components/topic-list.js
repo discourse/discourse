@@ -375,6 +375,68 @@ export default Component.extend(LoadMore, {
     this.set("topicVotes", newTopicVotes);
   },
 
+  voteUp(element) {
+    const topicId = Number(element.dataset.topicId);
+    const maxSqrt = 10;
+    let currentCredits = { ...this.voiceCredits };
+    const currentSqrt =
+      !currentCredits[topicId] ||
+      !Number.isInteger(currentCredits[topicId].credits_allocated ** 0.5)
+        ? 0
+        : currentCredits[topicId].credits_allocated ** 0.5;
+    const newValue =
+      currentSqrt < maxSqrt ? (currentSqrt + 1) ** 2 : maxSqrt ** 2;
+    if (!currentCredits[topicId]) {
+      currentCredits[topicId] = {
+        topic_id: topicId,
+        credits_allocated: newValue,
+        user_id: this.currentUser.id,
+        category_id: this.category.id,
+      };
+    } else {
+      currentCredits[topicId].credits_allocated = newValue;
+    }
+    currentCredits[topicId].modified = true;
+    this.set("voiceCredits", currentCredits);
+    console.log("new vote " + newValue);
+    this.updateVotesCanvas();
+    // Only update the total votes if the user has not reached the max
+    if (currentSqrt < maxSqrt) {
+      this.updateTotalVotes(topicId, newValue, "+");
+    }
+  },
+
+  voteDown(element) {
+    const topicId = Number(element.dataset.topicId);
+    const minSqrt = 0;
+    let currentCredits = { ...this.voiceCredits };
+    const currentSqrt =
+      !currentCredits[topicId] ||
+      !Number.isInteger(currentCredits[topicId].credits_allocated ** 0.5)
+        ? 0
+        : currentCredits[topicId].credits_allocated ** 0.5;
+    const newValue =
+      currentSqrt > minSqrt ? (currentSqrt - 1) ** 2 : minSqrt ** 2;
+    if (!currentCredits[topicId]) {
+      currentCredits[topicId] = {
+        topic_id: topicId,
+        credits_allocated: newValue,
+        user_id: this.currentUser.id,
+        category_id: this.category.id,
+      };
+    } else {
+      currentCredits[topicId].credits_allocated = newValue;
+    }
+    currentCredits[topicId].modified = true;
+    this.set("voiceCredits", currentCredits);
+    console.log("new vote " + newValue);
+    this.updateVotesCanvas();
+    // Only update the total votes if the user has not reached the min
+    if (currentSqrt > minSqrt) {
+      this.updateTotalVotes(topicId, newValue, "-");
+    }
+  },
+
   click(e) {
     const onClick = (sel, callback) => {
       let target = e.target.closest(sel);
@@ -385,67 +447,20 @@ export default Component.extend(LoadMore, {
     };
 
     onClick(".your-hearts .triangle_up", function (element) {
-      const topicId = Number(element.dataset.topicId);
-      const maxSqrt = 10;
-      let currentCredits = { ...this.voiceCredits };
-      const currentSqrt =
-        !currentCredits[topicId] ||
-        !Number.isInteger(currentCredits[topicId].credits_allocated ** 0.5)
-          ? 0
-          : currentCredits[topicId].credits_allocated ** 0.5;
-      const newValue =
-        currentSqrt < maxSqrt ? (currentSqrt + 1) ** 2 : maxSqrt ** 2;
-      if (!currentCredits[topicId]) {
-        currentCredits[topicId] = {
-          topic_id: topicId,
-          credits_allocated: newValue,
-          user_id: this.currentUser.id,
-          category_id: this.category.id,
-        };
-      } else {
-        currentCredits[topicId].credits_allocated = newValue;
-      }
-      currentCredits[topicId].modified = true;
-      this.set("voiceCredits", currentCredits);
-      console.log("new vote " + newValue);
-      this.updateVotesCanvas();
-      // Only update the total votes if the user has not reached the max
-      if (currentSqrt < maxSqrt) {
-        this.updateTotalVotes(topicId, newValue, "+");
-      }
+      this.voteUp(element);
+    });
+
+    onClick(".your-hearts-mobile .triangle_up", function (element) {
+      this.voteUp(element);
     });
 
     onClick(".your-hearts .triangle_down", function (element) {
-      const topicId = Number(element.dataset.topicId);
-      const minSqrt = 0;
-      let currentCredits = { ...this.voiceCredits };
-      const currentSqrt =
-        !currentCredits[topicId] ||
-        !Number.isInteger(currentCredits[topicId].credits_allocated ** 0.5)
-          ? 0
-          : currentCredits[topicId].credits_allocated ** 0.5;
-      const newValue =
-        currentSqrt > minSqrt ? (currentSqrt - 1) ** 2 : minSqrt ** 2;
-      if (!currentCredits[topicId]) {
-        currentCredits[topicId] = {
-          topic_id: topicId,
-          credits_allocated: newValue,
-          user_id: this.currentUser.id,
-          category_id: this.category.id,
-        };
-      } else {
-        currentCredits[topicId].credits_allocated = newValue;
-      }
-      currentCredits[topicId].modified = true;
-      this.set("voiceCredits", currentCredits);
-      console.log("new vote " + newValue);
-      this.updateVotesCanvas();
-      // Only update the total votes if the user has not reached the min
-      if (currentSqrt > minSqrt) {
-        this.updateTotalVotes(topicId, newValue, "-");
-      }
+      this.voteDown(element);
     });
 
+    onClick(".your-hearts-mobile .triangle_down", function (element) {
+      this.voteDown(element);
+    });
     onClick("button.bulk-select", function () {
       this.toggleBulkSelect();
       this.rerender();
