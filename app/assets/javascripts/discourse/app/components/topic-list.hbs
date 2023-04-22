@@ -14,10 +14,13 @@
               <strong>{{this.remainingVotes}}</strong>
               hearts left to give
             </div>
+            {{! user_field_1 seems to be auto generated depending on the order of adding custom fields,
+            so it may vary per env and needs to be validated in the user_custom_fields table }}
             <div>Organisation:
-              {{! user_field_1 seems to be auto generated depending on the order of adding custom fields,
-              so it may vary per env and needs to be validated in the user_custom_fields table }}
               <strong>{{this.currentUser.custom_fields.user_field_1}}</strong>
+            </div>
+            <div>Region:
+              <strong>{{this.currentUser.custom_fields.user_field_2}}</strong>
             </div>
           </div>
           <div id="user-hearts-container-row">
