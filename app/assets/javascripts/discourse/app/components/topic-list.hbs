@@ -28,11 +28,23 @@
               <div id="user-hearts">
               </div>
               <div id="user-hearts-mobile">
-                <img
-                  class="full-heart"
-                  src={{mobileHeartsImageSrc this.remainingVotes}}
-                  alt="Full Hearts"
-                />
+                <div class="combine-hearts">
+                  <img
+                    class="empty-heart-bar"
+                    src="/images/health-bar-black.png"
+                    alt="Black bar Hearts"
+                  />
+                  <img
+                    class={{mobileHearthsBarWidth this.remainingVotes}}
+                    src="/images/health-red-bar.png"
+                    alt="Empty Hearts"
+                  />
+                  <img
+                    class="heart-bar-legend"
+                    src="/images/full-heart.png"
+                    alt="Heart"
+                  />
+                </div>
               </div>
             </div>
             <div class="save-section">

@@ -76,9 +76,7 @@
           <div class="total-votes-cell">
             <div class="total-votes-num">{{number topicVote}}</div>
             <div class="total-hearts-wrapper">
-              <img class="full-heart-header" src="/images/full-heart-purple.png" alt="Full Hearts"> 
-              <img class="full-heart-header" src="/images/full-heart-green.png" alt="Full Hearts"> 
-              <img class="full-heart-header" src="/images/full-heart-blue.png" alt="Full Hearts"> 
+              <img class="full-heart-header" src="/images/triple-hearts.png" alt="Full Hearts"> 
             </div>
             </div>
         {{/if}}

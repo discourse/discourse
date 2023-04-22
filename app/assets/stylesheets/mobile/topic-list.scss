@@ -660,6 +660,34 @@ td .main-link {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+
+  .combine-hearts {
+    width: 130px;
+    display: flex;
+    flex-direction: column;
+  }
+  .empty-heart-bar {
+    height: 45px;
+    margin-left: 15px;
+  }
+  .heart-bar-legend {
+    width: 40px;
+    height: 40px;
+    margin-top: -35px;
+  }
+  .progress-heart-bar {
+    height: 30px;
+    width: 10px;
+    margin-top: -42px;
+    margin-left: 16px;
+
+    // 0 hearts starts at 10px
+    @for $i from 10 through 100 {
+      &.w-#{$i} {
+        width: $i * 1px + 10px;
+      }
+    }
+  }
 }
 
 #user-hearts-container-row {
