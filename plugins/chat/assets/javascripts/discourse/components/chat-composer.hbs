@@ -17,13 +17,13 @@
     class={{concat-class
       "chat-composer"
       (if this.isFocused "chat-composer--focused")
-      (if @paneService.sending "chat-composer--sending")
+      (if this.pane.sending "chat-composer--sending")
       (if
         this.isSendEnabled
         "chat-composer--send-enabled"
         "chat-composer--send-disabled"
       )
-      (if @composerService.isDisabled "chat-composer--disabled")
+      (if this.composer.isDisabled "chat-composer--disabled")
     }}
     {{did-update this.didUpdateMessage this.currentMessage.message}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
@@ -34,7 +34,7 @@
       <div class="chat-composer__inner-container">
         <ChatComposerDropdown
           @buttons={{this.dropdownButtons}}
-          @isDisabled={{@composerService.isDisabled}}
+          @isDisabled={{this.composer.isDisabled}}
           @hasActivePanel={{and
             this.chatEmojiPickerManager.picker
             (eq this.chatEmojiPickerManager.picker.context @context)
@@ -47,10 +47,10 @@
             @value={{readonly this.currentMessage.message}}
             @type="text"
             @class="chat-composer__input"
-            @disabled={{@composerService.isDisabled}}
+            @disabled={{this.composer.isDisabled}}
             @autocorrect="on"
             @autocapitalize="sentences"
-            @placeholder={{@composerService.inputPlaceholder}}
+            @placeholder={{this.composer.inputPlaceholder}}
             @rows={{1}}
             {{did-insert this.setupTextareaInteractor}}
             {{on "input" this.onInput}}
@@ -67,7 +67,7 @@
           @action={{this.onSend}}
           @icon="paper-plane"
           @class="chat-composer__send-btn icon-only"
-          @title={{@composerService.sendButtonTitle}}
+          @title={{this.composer.sendButtonTitle}}
           @disabled={{not this.isSendEnabled}}
           tabindex={{if this.isSendEnabled 0 -1}}
           {{on "focus" (fn this.computeIsFocused true)}}

@@ -30,6 +30,14 @@ export default class ChatComposer extends Component {
 
   @tracked isFocused = false;
 
+  get pane() {
+    return this.args.paneService;
+  }
+
+  get composer() {
+    return this.args.composerService;
+  }
+
   get inlineButtons() {
     return chatComposerButtons(this, "inline", this.args.context);
   }
@@ -74,7 +82,7 @@ export default class ChatComposer extends Component {
   }
 
   get currentMessage() {
-    return this.args.composerService.message;
+    return this.composer.message;
   }
 
   get hasContent() {
@@ -85,7 +93,7 @@ export default class ChatComposer extends Component {
   }
 
   get isSendEnabled() {
-    return this.hasContent && !this.args.paneService.sending;
+    return this.hasContent && !this.pane.sending;
   }
 
   @action
@@ -138,7 +146,7 @@ export default class ChatComposer extends Component {
     this.currentMessage.message = event.target.value;
     this.textareaInteractor.refreshHeight();
     this.#reportReplyingPresence();
-    this.args.composerService.persistDraft();
+    this.composer.persistDraft();
   }
 
   @action
@@ -153,7 +161,7 @@ export default class ChatComposer extends Component {
     }
 
     this.#reportReplyingPresence();
-    this.args.composerService.persistDraft();
+    this.composer.persistDraft();
   }
 
   @action
@@ -174,7 +182,7 @@ export default class ChatComposer extends Component {
 
   @action
   onCancel() {
-    this.args.composerService.cancel();
+    this.composer.cancel();
   }
 
   #reportReplyingPresence() {
@@ -257,18 +265,18 @@ export default class ChatComposer extends Component {
       !this.hasContent &&
       !this.currentMessage.editing
     ) {
-      const editableMessage = this.args.paneService?.lastCurrentUserMessage;
+      const editableMessage = this.pane?.lastCurrentUserMessage;
       if (editableMessage) {
-        this.args.composerService.editMessage(editableMessage);
+        this.composer.editMessage(editableMessage);
       }
     }
 
     if (event.key === "Escape") {
-      if (this.args.composerService.message?.inReplyTo) {
-        this.args.composerService.reset();
+      if (this.composer.message?.inReplyTo) {
+        this.composer.reset();
         return false;
-      } else if (this.args.composerService.message?.editing) {
-        this.args.composerService.onCancelEditing();
+      } else if (this.composer.message?.editing) {
+        this.composer.onCancelEditing();
         return false;
       } else {
         event.target.blur();
