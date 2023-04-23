@@ -13,18 +13,12 @@ export default class ChatChannelComposer extends Service {
   @service chatComposerPresenceManager;
   @service currentUser;
 
-  @tracked editingMessage = null;
-  @tracked replyToMsg = null;
-  @tracked linkedComponent = null;
-
   @tracked _message = null;
 
   @action
   cancel() {
     if (this.message.editing) {
-      this.message = ChatMessage.createDraftMessage(this.model, {
-        user: this.currentUser,
-      });
+      this.reset();
     } else if (this.message.inReplyTo) {
       this.message.inReplyTo = null;
     }
@@ -47,6 +41,26 @@ export default class ChatChannelComposer extends Service {
     this.chat.activeMessage = null;
     message.editing = true;
     this.message = message;
+  }
+
+  @action
+  onCancelEditing() {
+    this.reset();
+  }
+
+  @action
+  replyTo(message) {
+    this.chat.activeMessage = null;
+    this.message.inReplyTo = message;
+  }
+
+  @action
+  persistDraft() {
+    this._persistHandler = discourseDebounce(
+      this,
+      this._debouncedPersistDraft,
+      2000
+    );
   }
 
   get pane() {
@@ -79,11 +93,6 @@ export default class ChatChannelComposer extends Service {
     }
   }
 
-  @action
-  onCancelEditing() {
-    this.reset();
-  }
-
   get channel() {
     return this.chat.activeChannel;
   }
@@ -99,23 +108,6 @@ export default class ChatChannelComposer extends Service {
 
   get model() {
     return this.chat.activeChannel;
-  }
-
-  replyTo(message) {
-    this.chat.activeMessage = null;
-    this.message.inReplyTo = message;
-  }
-
-  cancelEditing() {
-    this.editingMessage = null;
-  }
-
-  persistDraft() {
-    this._persistHandler = discourseDebounce(
-      this,
-      this._debouncedPersistDraft,
-      2000
-    );
   }
 
   @action

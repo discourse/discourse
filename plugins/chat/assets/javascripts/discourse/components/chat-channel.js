@@ -116,7 +116,7 @@ export default class ChatLivePane extends Component {
         ChatMessage.createDraftMessage(this.args.channel, {
           user: this.currentUser,
         });
-      this.chatChannelComposer.cancelEditing();
+      this.chatChannelComposer.onCancelEditing();
       this._loadedChannelId = this.args.channel?.id;
     }
 
