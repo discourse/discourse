@@ -68,8 +68,6 @@ export default class ChatChannelComposer extends Service {
   set message(message) {
     cancel(this._persistHandler);
     this._message = message;
-    // TODO (martin) Move scrollToLatestMessage to live panel.
-    // this.scrollToLatestMessage()
   }
 
   get model() {
@@ -91,15 +89,6 @@ export default class ChatChannelComposer extends Service {
 
   focusComposer() {
     this.focusHandler();
-  }
-
-  #reportReplyingPresence(composerValue) {
-    if (this.model.isDraft) {
-      return;
-    }
-
-    const replying = !this.editingMessage && !!composerValue;
-    this.chatComposerPresenceManager.notifyState(this.model.id, replying);
   }
 
   persistDraft() {
