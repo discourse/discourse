@@ -39,7 +39,7 @@ export default Component.extend(UppyUploadMixin, {
 
   didInsertElement() {
     this._super(...arguments);
-    this.composerInputEl = document.querySelector(".chat-composer-input");
+    this.composerInputEl = document.querySelector(".chat-composer__input");
     this.composerInputEl?.addEventListener("paste", this._pasteEventListener);
   },
 

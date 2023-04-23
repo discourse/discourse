@@ -402,6 +402,7 @@ en:
         italic_text: "emphasized text"
         bold_text: "strong text"
         code_text: "code text"
+        send: "Send"
 
       quote:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'

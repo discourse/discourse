@@ -62,17 +62,17 @@ RSpec.describe "Chat composer", type: :system, js: true do
         ".chat-composer-message-details .chat-reply__username",
         text: current_user.username,
       )
-      expect(find(".chat-composer-input").value).to eq(message_2.message)
+      expect(find(".chat-composer__input").value).to eq(message_2.message)
     end
 
     context "when pressing escape" do
       it "cancels editing" do
         chat.visit_channel(channel_1)
         channel.edit_message(message_2)
-        find(".chat-composer-input").send_keys(:escape)
+        find(".chat-composer__input").send_keys(:escape)
 
         expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
-        expect(find(".chat-composer-input").value).to eq("")
+        expect(find(".chat-composer__input").value).to eq("")
       end
     end
 
@@ -83,7 +83,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
         find(".cancel-message-action").click
 
         expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
-        expect(find(".chat-composer-input").value).to eq("")
+        expect(find(".chat-composer__input").value).to eq("")
       end
     end
   end
@@ -100,7 +100,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
       channel.click_action_button("emoji")
       find("[data-emoji='grimacing']").click(wait: 0.5)
 
-      expect(find(".chat-composer-input").value).to eq(":grimacing:")
+      expect(find(".chat-composer__input").value).to eq(":grimacing:")
     end
 
     it "removes denied emojis from insert emoji picker" do
@@ -123,20 +123,20 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
     it "adds the emoji to the composer" do
       chat.visit_channel(channel_1)
-      find(".chat-composer-input").fill_in(with: ":gri")
+      find(".chat-composer__input").fill_in(with: ":gri")
       find(".emoji-shortname", text: "grimacing").click
 
-      expect(find(".chat-composer-input").value).to eq(":grimacing: ")
+      expect(find(".chat-composer__input").value).to eq(":grimacing: ")
     end
 
     it "doesn't suggest denied emojis and aliases" do
       SiteSetting.emoji_deny_list = "peach|poop"
       chat.visit_channel(channel_1)
 
-      find(".chat-composer-input").fill_in(with: ":peac")
+      find(".chat-composer__input").fill_in(with: ":peac")
       expect(page).to have_no_selector(".emoji-shortname", text: "peach")
 
-      find(".chat-composer-input").fill_in(with: ":hank") # alias
+      find(".chat-composer__input").fill_in(with: ":hank") # alias
       expect(page).to have_no_selector(".emoji-shortname", text: "poop")
     end
   end
@@ -149,7 +149,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
     xit "prefills the emoji picker filter input" do
       chat.visit_channel(channel_1)
-      find(".chat-composer-input").fill_in(with: ":gri")
+      find(".chat-composer__input").fill_in(with: ":gri")
 
       click_link(I18n.t("js.composer.more_emoji"))
 
@@ -158,7 +158,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
     it "filters with the prefilled input" do
       chat.visit_channel(channel_1)
-      find(".chat-composer-input").fill_in(with: ":fr")
+      find(".chat-composer__input").fill_in(with: ":fr")
 
       click_link(I18n.t("js.composer.more_emoji"))
 
@@ -178,15 +178,15 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
       find("body").send_keys("b")
 
-      expect(find(".chat-composer-input").value).to eq("b")
+      expect(find(".chat-composer__input").value).to eq("b")
 
       find("body").send_keys("b")
 
-      expect(find(".chat-composer-input").value).to eq("bb")
+      expect(find(".chat-composer__input").value).to eq("bb")
 
       find("body").send_keys(:enter) # special case
 
-      expect(find(".chat-composer-input").value).to eq("bb")
+      expect(find(".chat-composer__input").value).to eq("bb")
     end
   end
 end

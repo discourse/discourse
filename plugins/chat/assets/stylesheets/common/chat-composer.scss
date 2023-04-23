@@ -41,6 +41,10 @@
     .chat-composer--focused & {
       border-color: var(--primary-medium);
     }
+
+    .chat-composer--disabled & {
+      background: var(--primary-low);
+    }
   }
 
   &__send-btn {
@@ -142,6 +146,10 @@
     text-overflow: ellipsis;
 
     @include chat-scrollbar();
+
+    &[disabled] {
+      background: none;
+    }
 
     &:focus,
     &:active {

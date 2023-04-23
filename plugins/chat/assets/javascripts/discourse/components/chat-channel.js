@@ -840,7 +840,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    const composer = document.querySelector(".chat-composer-input");
+    const composer = document.querySelector(".chat-composer__input");
     if (composer && !this.args.channel.isDraft) {
       composer.focus();
       return;

@@ -163,7 +163,7 @@ export default Component.extend({
   @action
   handleFilterKeyUp(event) {
     if (event.key === "Tab") {
-      const enabledComposer = document.querySelector(".chat-composer-input");
+      const enabledComposer = document.querySelector(".chat-composer__input");
       if (enabledComposer && !enabledComposer.disabled) {
         event.preventDefault();
         event.stopPropagation();

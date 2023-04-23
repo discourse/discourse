@@ -19,7 +19,7 @@ RSpec.describe "Shortcuts | full page", type: :system, js: true do
 
       page.send_keys("e")
 
-      expect(find(".chat-composer-input").value).to eq("e")
+      expect(find(".chat-composer__input").value).to eq("e")
     end
   end
 end

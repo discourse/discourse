@@ -6,6 +6,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { cancel } from "@ember/runloop";
 import I18n from "I18n";
+import { isEmpty } from "@ember/utils";
 
 export default class ChatChannelComposer extends Service {
   @service chat;
@@ -65,6 +66,14 @@ export default class ChatChannelComposer extends Service {
 
   get pane() {
     return getOwner(this).lookup("service:chat-channel-pane");
+  }
+
+  get disabled() {
+    return (
+      (this.channel.isDraft && isEmpty(this.channel?.chatable?.users)) ||
+      !this.chat.userCanInteractWithChat ||
+      !this.channel.canModifyMessages(this.currentUser)
+    );
   }
 
   get placeholder() {

@@ -2,7 +2,7 @@
   #skip-link,
   .d-header,
   .chat-message-actions-mobile-outlet,
-  .chat-live-pane,
+  .chat-channel,
   .chat-thread {
     > * {
       @include user-select(none);

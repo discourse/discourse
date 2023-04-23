@@ -27,6 +27,7 @@ export default class ChatComposer extends Component {
   @service chatComposerWarningsTracker;
   @service appEvents;
   @service chatEmojiReactionStore;
+  @service chatEmojiPickerManager;
 
   @tracked isFocused = false;
 
@@ -86,9 +87,10 @@ export default class ChatComposer extends Component {
   }
 
   get hasContent() {
+    const minLength = this.siteSettings.chat_minimum_message_length || 0;
     return (
-      this.currentMessage?.message?.length > 0 ||
-      this.currentMessage?.uploads?.length > 0
+      this.currentMessage?.message?.length > minLength ||
+      (this.canAttachUploads && this.currentMessage?.uploads?.length > 0)
     );
   }
 
@@ -147,6 +149,7 @@ export default class ChatComposer extends Component {
     this.textareaInteractor.refreshHeight();
     this.#reportReplyingPresence();
     this.composer.persistDraft();
+    this.captureMentions();
   }
 
   @action
@@ -219,7 +222,7 @@ export default class ChatComposer extends Component {
 
     // hack to prevent the whole viewport
     // to move on focus input
-    textarea = document.querySelector(".chat-composer-input");
+    textarea = document.querySelector(".chat-composer__input");
     textarea.style.transform = "translateY(-99999px)";
     textarea.focus();
     window.requestAnimationFrame(() => {
@@ -407,7 +410,7 @@ export default class ChatComposer extends Component {
         } else {
           $textarea.autocomplete({ cancel: true });
           this.chatEmojiPickerManager.open({
-            context: this.context,
+            context: this.args.context,
             initialFilter: v.term,
           });
           return "";
