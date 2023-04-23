@@ -4,7 +4,6 @@ import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
-import guid from "pretty-text/guid";
 import { generateCookFunction } from "discourse/lib/text";
 import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
 import { getOwner } from "discourse-common/lib/get-owner";
