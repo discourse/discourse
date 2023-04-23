@@ -143,9 +143,15 @@ jobs:
       - name: Start server
         run: bin/unicorn &
 
-      # - name: Warmup
-      #   run: |
-      #     curl -s -I -A "Chrome" --retry 15 --retry-delay 5 --retry-all-errors --max-time 90 http://0.0.0.0:8080
+      - name: Warmup
+        run: |
+          curl -s -A "Chrome" --retry 1 --retry-delay 5 --retry-all-errors --max-time 90 http://0.0.0.0:8080
+
+      - run: ls log
+
+      - run: cat log/production.log
+
+      - run: cat log/unicorn.stderr.log
 
       - name: Smoke test
         env:
