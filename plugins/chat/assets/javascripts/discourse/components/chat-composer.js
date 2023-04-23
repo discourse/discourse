@@ -4,10 +4,7 @@ import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
 import { cloneJSON } from "discourse-common/lib/object";
-import {
-  chatComposerButtons,
-  chatComposerButtonsDependentKeys,
-} from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import showModal from "discourse/lib/show-modal";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
 import { getOwner } from "discourse-common/lib/get-owner";
