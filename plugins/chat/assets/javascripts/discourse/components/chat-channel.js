@@ -606,35 +606,34 @@ export default class ChatLivePane extends Component {
   #sendNewMessage(message) {
     this.chatChannelPane.sending = true;
 
-    // resetIdle();
+    resetIdle();
 
-    // this.args.channel.draft = ChatMessageDraft.create();
+    // TODO: all send message logic is due for massive refactoring
+    // This is all the possible case Im currently aware of
+    // - messaging to a public channel where you are not a member yet (preview = true)
+    // - messaging to an existing direct channel you were not tracking yet through dm creator (channel draft)
+    // - messaging to a new direct channel through DM creator (channel draft)
+    // - message to a direct channel you were tracking (preview = false, not draft)
+    // - message to a public channel you were tracking (preview = false, not draft)
+    // - message to a channel when we haven't loaded all future messages yet.
+    if (!this.args.channel.isFollowing || this.args.channel.isDraft) {
+      const data = {
+        message: message.message,
+        upload_ids: message.uploads.map((upload) => upload.id),
+      };
 
-    // // TODO: all send message logic is due for massive refactoring
-    // // This is all the possible case Im currently aware of
-    // // - messaging to a public channel where you are not a member yet (preview = true)
-    // // - messaging to an existing direct channel you were not tracking yet through dm creator (channel draft)
-    // // - messaging to a new direct channel through DM creator (channel draft)
-    // // - message to a direct channel you were tracking (preview = false, not draft)
-    // // - message to a public channel you were tracking (preview = false, not draft)
-    // // - message to a channel when we haven't loaded all future messages yet.
-    // if (!this.args.channel.isFollowing || this.args.channel.isDraft) {
-    //   this.loading = true;
+      this.chatChannelComposer.reset();
 
-    //   return this._upsertChannelWithMessage(
-    //     this.args.channel,
-    //     draftMessage.message,
-    //     uploads
-    //   ).finally(() => {
-    //     if (this._selfDeleted) {
-    //       return;
-    //     }
-    //     this.loading = false;
-    //     this.chatChannelPane.sendingLoading = false;
-    //     this.chatChannelPane.resetAfterSend();
-    //     this.scrollToLatestMessage();
-    //   });
-    // }
+      return this._upsertChannelWithMessage(this.args.channel, data).finally(
+        () => {
+          if (this._selfDeleted) {
+            return;
+          }
+          this.chatChannelPane.sending = false;
+          this.scrollToLatestMessage();
+        }
+      );
+    }
 
     const channel = this.args.channel;
     channel.stageMessage(message);
@@ -669,7 +668,7 @@ export default class ChatLivePane extends Component {
       });
   }
 
-  async _upsertChannelWithMessage(channel, message, uploads) {
+  async _upsertChannelWithMessage(channel, data) {
     let promise = Promise.resolve(channel);
 
     if (channel.isDirectMessageChannel || channel.isDraft) {
@@ -681,11 +680,9 @@ export default class ChatLivePane extends Component {
     return promise.then((c) =>
       ajax(`/chat/${c.id}.json`, {
         type: "POST",
-        data: {
-          message,
-          upload_ids: (uploads || []).mapBy("id"),
-        },
+        data,
       }).then(() => {
+        this.chatChannelPane.sending = false;
         this.router.transitionTo("chat.channel", "-", c.id);
       })
     );
