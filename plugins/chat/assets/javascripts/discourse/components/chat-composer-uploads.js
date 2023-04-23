@@ -79,7 +79,7 @@ export default Component.extend(UppyUploadMixin, {
 
   _uploadDropTargetOptions() {
     return {
-      target: this.uploadDropZone,
+      target: this.uploadDropZone || document.body,
     };
   },
 
