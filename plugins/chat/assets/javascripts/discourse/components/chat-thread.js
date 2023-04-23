@@ -181,6 +181,14 @@ export default class ChatThreadPanel extends Component {
 
   @action
   onSendMessage(message) {
+    if (message.editing) {
+      this.#sendEditMessage(message);
+    } else {
+      this.#sendNewMessage(message);
+    }
+  }
+
+  #sendNewMessage(message) {
     // TODO (martin) For desktop notifications
     // resetIdle()
     if (this.chatChannelThreadPane.sending) {
@@ -220,6 +228,24 @@ export default class ChatThreadPanel extends Component {
         if (this._selfDeleted) {
           return;
         }
+        this.chatChannelThreadPane.sending = false;
+      });
+  }
+
+  #sendEditMessage(message) {
+    this.chatChannelThreadPane.sending = true;
+
+    const data = {
+      new_message: message.message,
+      upload_ids: message.uploads.map((upload) => upload.id),
+    };
+
+    this.chatChannelThreadComposer.reset();
+
+    return this.chatApi
+      .editMessage(message.channelId, message.id, data)
+      .catch(popupAjaxError)
+      .finally(() => {
         this.chatChannelThreadPane.sending = false;
       });
   }

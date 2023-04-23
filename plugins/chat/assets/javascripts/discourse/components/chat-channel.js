@@ -578,6 +578,32 @@ export default class ChatLivePane extends Component {
 
   @action
   onSendMessage(message) {
+    if (message.editing) {
+      this.#sendEditMessage(message);
+    } else {
+      this.#sendNewMessage(message);
+    }
+  }
+
+  #sendEditMessage(message) {
+    this.chatChannelPane.sending = true;
+
+    const data = {
+      new_message: message.message,
+      upload_ids: message.uploads.map((upload) => upload.id),
+    };
+
+    this.chatChannelComposer.reset();
+
+    return this.chatApi
+      .editMessage(message.channelId, message.id, data)
+      .catch(popupAjaxError)
+      .finally(() => {
+        this.chatChannelPane.sending = false;
+      });
+  }
+
+  #sendNewMessage(message) {
     this.chatChannelPane.sending = true;
 
     // resetIdle();

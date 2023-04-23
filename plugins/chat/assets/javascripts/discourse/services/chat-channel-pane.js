@@ -41,31 +41,6 @@ export default class ChatChannelPane extends Service {
     this.selectingMessages = true;
   }
 
-  @action
-  editMessage(newContent, uploads) {
-    this.sendingLoading = true;
-    let data = {
-      new_message: newContent,
-      upload_ids: (uploads || []).map((upload) => upload.id),
-    };
-    return this.chatApi
-      .editMessage(
-        this.composerService.editingMessage.channelId,
-        this.composerService.editingMessage.id,
-        data
-      )
-      .then(() => {
-        this.resetAfterSend();
-      })
-      .catch(popupAjaxError)
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.sendingLoading = false;
-      });
-  }
-
   get lastCurrentUserMessage() {
     const lastCurrentUserMessage = this.chat.activeChannel.messages.findLast(
       (message) => message.user.id === this.currentUser.id
