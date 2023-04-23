@@ -75,7 +75,7 @@ export default class ChatChannelComposer extends Service {
     if (!this.chat.userCanInteractWithChat) {
       return I18n.t("chat.placeholder_silenced");
     } else {
-      return this.#messageRecipient(this.channel);
+      return this.#messageRecipients(this.channel);
     }
   }
 
@@ -123,7 +123,7 @@ export default class ChatChannelComposer extends Service {
     this.chatApi.saveDraft(this.model.id, this.message.toJSONDraft());
   }
 
-  #messageRecipient(channel) {
+  #messageRecipients(channel) {
     if (channel.isDirectMessageChannel) {
       const directMessageRecipients = channel.chatable.users;
       if (
