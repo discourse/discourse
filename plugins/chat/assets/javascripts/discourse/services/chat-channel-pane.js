@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import Service, { inject as service } from "@ember/service";
 
 export default class ChatChannelPane extends Service {
