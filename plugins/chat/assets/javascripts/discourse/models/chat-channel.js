@@ -75,12 +75,12 @@ export default class ChatChannel extends RestModel {
     return this.messagesManager.messages;
   }
 
-  get canLoadMoreFuture() {
-    return this.messagesManager.canLoadMoreFuture;
-  }
-
   set messages(messages) {
     this.messagesManager.messages = messages;
+  }
+
+  get canLoadMoreFuture() {
+    return this.messagesManager.canLoadMoreFuture;
   }
 
   get escapedTitle() {
@@ -163,6 +163,11 @@ export default class ChatChannel extends RestModel {
     message.cook();
 
     if (message.inReplyTo) {
+      if (!message.inReplyTo.threadId) {
+        message.inReplyTo.threadId = guid();
+        message.inReplyTo.threadReplyCount = 1;
+      }
+
       if (!this.threadingEnabled) {
         this.messagesManager.addMessages([message]);
       }
