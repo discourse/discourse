@@ -16,12 +16,6 @@ export default class ChatMessage {
     return new ChatMessage(channel, args);
   }
 
-  static createStagedMessage(channel, args = {}) {
-    args.id = guid();
-    args.staged = true;
-    return new ChatMessage(channel, args);
-  }
-
   static createDraftMessage(channel, args = {}) {
     args.draft = true;
     return new ChatMessage(channel, args);
@@ -82,9 +76,15 @@ export default class ChatMessage {
         ? ChatMessage.create(channel, args.in_reply_to)
         : null;
     this.draft = args.draft;
-    this.message = args.message;
+    this.message = args.message || "";
 
-    this.cooked = args.cooked || this.cook();
+    if (args.cooked) {
+      this.cooked = args.cooked;
+    } else {
+      this.cooked = "";
+      this.cook();
+    }
+
     this.reactions = this.#initChatMessageReactionModel(
       args.id,
       args.reactions
