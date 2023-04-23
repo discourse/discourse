@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   display: flex;
-  background: rgba(var(--always-black-rgb), 0.75);
+  background: rgba(var(--always-black-rgb), 0.5);
 
   .uppy-is-drag-over & {
     visibility: visible;
