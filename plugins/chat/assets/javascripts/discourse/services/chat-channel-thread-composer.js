@@ -1,10 +1,15 @@
 import ChatChannelComposer from "./chat-channel-composer";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { action } from "@ember/object";
+import I18n from "I18n";
 
 export default class extends ChatChannelComposer {
   get model() {
     return this.chat.activeChannel.activeThread;
+  }
+
+  get placeholder() {
+    return I18n.t("chat.placeholder_thread");
   }
 
   @action

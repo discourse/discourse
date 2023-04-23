@@ -5,6 +5,7 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { getOwner } from "discourse-common/lib/get-owner";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { cancel } from "@ember/runloop";
+import I18n from "I18n";
 
 export default class ChatChannelComposer extends Service {
   @service chat;
@@ -52,6 +53,32 @@ export default class ChatChannelComposer extends Service {
     return getOwner(this).lookup("service:chat-channel-pane");
   }
 
+  get placeholder() {
+    if (!this.channel.canModifyMessages(this.currentUser)) {
+      return I18n.t(
+        `chat.placeholder_new_message_disallowed.${this.channel.status}`
+      );
+    }
+
+    if (this.channel.isDraft) {
+      if (this.channel?.chatable?.users?.length) {
+        return I18n.t("chat.placeholder_start_conversation_users", {
+          commaSeparatedUsernames: this.channel.chatable.users
+            .mapBy("username")
+            .join(I18n.t("word_connector.comma")),
+        });
+      } else {
+        return I18n.t("chat.placeholder_start_conversation");
+      }
+    }
+
+    if (!this.chat.userCanInteractWithChat) {
+      return I18n.t("chat.placeholder_silenced");
+    } else {
+      return this.#messageRecipient(this.channel);
+    }
+  }
+
   @action
   onCancelEditing() {
     this.reset();
@@ -94,5 +121,27 @@ export default class ChatChannelComposer extends Service {
   @action
   _debouncedPersistDraft() {
     this.chatApi.saveDraft(this.model.id, this.message.toJSONDraft());
+  }
+
+  #messageRecipient(channel) {
+    if (channel.isDirectMessageChannel) {
+      const directMessageRecipients = channel.chatable.users;
+      if (
+        directMessageRecipients.length === 1 &&
+        directMessageRecipients[0].id === this.currentUser.id
+      ) {
+        return I18n.t("chat.placeholder_self");
+      }
+
+      return I18n.t("chat.placeholder_users", {
+        commaSeparatedNames: directMessageRecipients
+          .map((u) => u.name || `@${u.username}`)
+          .join(I18n.t("word_connector.comma")),
+      });
+    } else {
+      return I18n.t("chat.placeholder_channel", {
+        channelName: `#${channel.title}`,
+      });
+    }
   }
 }

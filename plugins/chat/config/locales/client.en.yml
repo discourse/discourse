@@ -221,7 +221,8 @@ en:
       close_full_page: "Close full-screen chat"
       open_message: "Open message in chat"
       placeholder_self: "Jot something down"
-      placeholder_channel: "Chat with %{channelName}"
+      placeholder_channel: "Chat in %{channelName}"
+      placeholder_thread: "Chat in thread"
       placeholder_users: "Chat with %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Channel is archived, you cannot send new messages right now."

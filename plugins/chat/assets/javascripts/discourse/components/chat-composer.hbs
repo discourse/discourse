@@ -45,14 +45,14 @@
 
         <div class="chat-composer__input-container">
           <DTextarea
-            @value={{readonly this.currentMessage.message}}
-            @type="text"
-            @class="chat-composer__input"
-            @disabled={{this.composer.isDisabled}}
-            @autocorrect="on"
-            @autocapitalize="sentences"
-            @placeholder={{this.composer.inputPlaceholder}}
-            @rows={{1}}
+            value={{readonly this.currentMessage.message}}
+            type="text"
+            class="chat-composer__input"
+            disabled={{this.composer.isDisabled}}
+            autocorrect="on"
+            autocapitalize="sentences"
+            placeholder={{this.composer.placeholder}}
+            rows={{1}}
             {{did-insert this.setupTextareaInteractor}}
             {{on "input" this.onInput}}
             {{on "keydown" this.onKeyDown}}
