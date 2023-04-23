@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   display: flex;
-  background: rgba(var(--always-black-rgb), 0.5);
+  background: rgba(var(--always-black-rgb), 0.85);
 
   .uppy-is-drag-over & {
     visibility: visible;
@@ -71,6 +71,7 @@
       text-align: center;
       font-size: var(--font-up-2);
       padding-inline: 1rem;
+      color: var(--secondary-or-primary);
     }
   }
 }
