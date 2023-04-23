@@ -4,6 +4,8 @@ module Chat
   class Thread < ActiveRecord::Base
     EXCERPT_LENGTH = 150
 
+    include Chat::ThreadCache
+
     self.table_name = "chat_threads"
 
     belongs_to :channel, foreign_key: "channel_id", class_name: "Chat::Channel"
@@ -11,7 +13,11 @@ module Chat
     belongs_to :original_message, foreign_key: "original_message_id", class_name: "Chat::Message"
 
     has_many :chat_messages,
-             -> { order("chat_messages.created_at ASC, chat_messages.id ASC") },
+             -> {
+               where("deleted_at IS NULL").order(
+                 "chat_messages.created_at ASC, chat_messages.id ASC",
+               )
+             },
              foreign_key: :thread_id,
              primary_key: :id,
              class_name: "Chat::Message"
@@ -50,6 +56,7 @@ module Chat
     end
 
     def self.ensure_consistency!
+      return if !SiteSetting.enable_experimental_chat_threaded_discussions
       update_counts
     end
 
@@ -61,7 +68,7 @@ module Chat
       #
       # It is updated eventually via Jobs::Chat::PeriodicalUpdates. In
       # future we may want to update this more frequently.
-      DB.exec <<~SQL
+      updated_thread_ids = DB.query_single <<~SQL
         UPDATE chat_threads threads
         SET replies_count = subquery.replies_count
         FROM (
@@ -72,7 +79,10 @@ module Chat
         ) subquery
         WHERE threads.id = subquery.thread_id
         AND subquery.replies_count != threads.replies_count
+        RETURNING threads.id AS thread_id;
       SQL
+      return if updated_thread_ids.empty?
+      self.clear_caches!(updated_thread_ids)
     end
   end
 end
