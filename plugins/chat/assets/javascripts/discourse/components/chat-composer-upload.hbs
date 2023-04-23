@@ -18,17 +18,17 @@
   </div>
 
   <span class="data">
-    {{#unless (eq this.type this.IMAGE_TYPE)}}
+    {{#if (not (eq this.type this.IMAGE_TYPE))}}
       <div class="top-data">
         <span class="file-name">{{this.fileName}}</span>
       </div>
-    {{/unless}}
+    {{/if}}
 
     <div class="bottom-data">
       {{#if this.isDone}}
-        {{#unless (eq this.type this.IMAGE_TYPE)}}
+        {{#if (not (eq this.type this.IMAGE_TYPE))}}
           <span class="extension-pill">{{this.upload.extension}}</span>
-        {{/unless}}
+        {{/if}}
       {{else}}
         {{#if this.upload.processing}}
           <span class="processing">{{i18n "processing"}}</span>
