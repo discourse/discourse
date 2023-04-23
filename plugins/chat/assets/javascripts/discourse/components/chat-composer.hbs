@@ -1,7 +1,11 @@
 <div class="chat-composer__wrapper">
-  {{#if (or this.message.editing this.message.inReplyTo)}}
+  {{#if (or this.currentMessage.editing this.currentMessage.inReplyTo)}}
     <ChatComposerMessageDetails
-      @message={{if this.message.editing this.message this.message.inReplyTo}}
+      @message={{if
+        this.currentMessage.editing
+        this.currentMessage
+        this.currentMessage.inReplyTo
+      }}
       @icon="pencil-alt"
       @cancelAction={{this.onCancel}}
     />
@@ -21,8 +25,8 @@
       )
       (if @composerService.isDisabled "chat-composer--disabled")
     }}
-    {{did-update this.didUpdateMessage this.message.message}}
-    {{did-update this.didUpdateInReplyTo this.message.inReplyTo}}
+    {{did-update this.didUpdateMessage this.currentMessage.message}}
+    {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
     {{did-insert this.setupAppEvents}}
     {{will-destroy this.teardownAppEvents}}
   >
@@ -40,7 +44,7 @@
 
         <div class="chat-composer__input-container">
           <DTextarea
-            @value={{readonly this.message.message}}
+            @value={{readonly this.currentMessage.message}}
             @type="text"
             @class="chat-composer__input"
             @disabled={{@composerService.isDisabled}}
@@ -78,7 +82,7 @@
     <ChatComposerUploads
       @fileUploadElementId={{this.fileUploadElementId}}
       @onUploadChanged={{this.onUploadChanged}}
-      @existingUploads={{this.message.uploads}}
+      @existingUploads={{this.currentMessage.uploads}}
       @uploadDropZone={{@uploadDropZone}}
     />
   {{/if}}

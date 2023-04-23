@@ -64,7 +64,7 @@ export default class ChatComposer extends Component {
 
   @action
   didUpdateMessage() {
-    this.textareaInteractor.value = this.message.message || "";
+    this.textareaInteractor.value = this.currentMessage.message || "";
     this.textareaInteractor.focus({ refreshSize: true });
   }
 
@@ -73,13 +73,14 @@ export default class ChatComposer extends Component {
     this.textareaInteractor.focus({ ensureAtEnd: true, refreshSize: true });
   }
 
-  get message() {
+  get currentMessage() {
     return this.args.composerService.message;
   }
 
   get hasContent() {
     return (
-      this.message?.message?.length > 0 || this.message?.uploads?.length > 0
+      this.currentMessage?.message?.length > 0 ||
+      this.currentMessage?.uploads?.length > 0
     );
   }
 
@@ -134,7 +135,7 @@ export default class ChatComposer extends Component {
 
   @action
   onInput(event) {
-    this.message.message = event.target.value;
+    this.currentMessage.message = event.target.value;
     this.textareaInteractor.refreshHeight();
     this.#reportReplyingPresence();
     this.args.composerService.persistDraft();
@@ -146,9 +147,9 @@ export default class ChatComposer extends Component {
       typeof uploads !== "undefined" &&
       inProgressUploadsCount !== "undefined" &&
       inProgressUploadsCount === 0 &&
-      this.message
+      this.currentMessage
     ) {
-      this.message.uploads = cloneJSON(uploads);
+      this.currentMessage.uploads = cloneJSON(uploads);
     }
 
     this.#reportReplyingPresence();
@@ -167,7 +168,7 @@ export default class ChatComposer extends Component {
       this.textareaInteractor.focus();
     }
 
-    this.args.onSendMessage(this.message);
+    this.args.onSendMessage(this.currentMessage);
     this.textareaInteractor.focus({ refreshSize: true });
   }
 
@@ -183,7 +184,7 @@ export default class ChatComposer extends Component {
 
     this.chatComposerPresenceManager.notifyState(
       this.args.channel.id,
-      !this.message.editing && this.hasContent
+      !this.currentMessage.editing && this.hasContent
     );
   }
 
@@ -251,7 +252,11 @@ export default class ChatComposer extends Component {
       return false;
     }
 
-    if (event.key === "ArrowUp" && !this.hasContent && !this.message.editing) {
+    if (
+      event.key === "ArrowUp" &&
+      !this.hasContent &&
+      !this.currentMessage.editing
+    ) {
       const editableMessage = this.args.paneService?.lastCurrentUserMessage;
       if (editableMessage) {
         this.args.composerService.editMessage(editableMessage);
@@ -306,7 +311,9 @@ export default class ChatComposer extends Component {
   @action
   captureMentions() {
     if (this.hasContent) {
-      this.chatComposerWarningsTracker.trackMentions(this.message.message);
+      this.chatComposerWarningsTracker.trackMentions(
+        this.currentMessage.message
+      );
     }
   }
 

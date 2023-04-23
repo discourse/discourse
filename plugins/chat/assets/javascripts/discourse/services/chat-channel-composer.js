@@ -83,14 +83,6 @@ export default class ChatChannelComposer extends Service {
     this.editingMessage = null;
   }
 
-  registerFocusHandler(handlerFn) {
-    this.focusHandler = handlerFn;
-  }
-
-  focusComposer() {
-    this.focusHandler();
-  }
-
   persistDraft() {
     this._persistHandler = discourseDebounce(
       this,
