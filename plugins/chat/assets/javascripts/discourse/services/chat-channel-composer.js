@@ -76,7 +76,7 @@ export default class ChatChannelComposer extends Service {
     return this.chat.activeChannel;
   }
 
-  setReplyTo(message) {
+  replyTo(message) {
     this.chat.activeMessage = null;
     this.message.inReplyTo = message;
   }

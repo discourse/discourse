@@ -349,7 +349,7 @@ export default class ChatMessageInteractor {
 
   @action
   reply() {
-    this.composer.setReplyTo(this.message);
+    this.composer.replyTo(this.message);
   }
 
   @action
