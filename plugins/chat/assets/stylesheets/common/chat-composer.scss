@@ -46,6 +46,7 @@
   &__send-btn {
     border-radius: 3px;
     background: none;
+    will-change: scale;
 
     .chat-composer--send-enabled & {
       &:hover {
