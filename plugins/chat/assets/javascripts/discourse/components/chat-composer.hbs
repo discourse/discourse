@@ -73,6 +73,10 @@
           {{on "focus" (fn this.computeIsFocused true)}}
           {{on "blur" (fn this.computeIsFocused false)}}
         />
+
+        {{#unless this.composer.isDisabled}}
+          <ChatComposerInlineButtons @buttons={{this.inlineButtons}} />
+        {{/unless}}
       </div>
 
     </div>
