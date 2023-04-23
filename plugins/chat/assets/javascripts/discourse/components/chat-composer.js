@@ -68,6 +68,11 @@ export default class ChatComposer extends Component {
   @action
   didUpdateMessage() {
     this.textareaInteractor.value = this.message.message || "";
+    this.textareaInteractor.focus({ refreshSize: true });
+  }
+
+  @action
+  didUpdateInReplyTo() {
     this.textareaInteractor.focus({ ensureAtEnd: true, refreshSize: true });
   }
 

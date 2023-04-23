@@ -22,6 +22,7 @@
       (if @composerService.isDisabled "chat-composer--disabled")
     }}
     {{did-update this.didUpdateMessage this.message.message}}
+    {{did-update this.didUpdateInReplyTo this.message.inReplyTo}}
     {{did-insert this.setupAppEvents}}
     {{will-destroy this.teardownAppEvents}}
   >
