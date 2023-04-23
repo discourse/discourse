@@ -256,7 +256,7 @@ $float-height: 530px;
   }
 }
 
-.chat-live-pane {
+.chat-channel {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -432,9 +432,8 @@ body.has-full-page-chat {
     }
   }
 
-  .chat-live-pane,
   .chat-messages-scroll,
-  .chat-live-pane {
+  .chat-channel {
     box-sizing: border-box;
     height: 100%;
   }
@@ -629,7 +628,7 @@ html.has-full-page-chat {
     }
 
     .full-page-chat,
-    .chat-live-pane,
+    .chat-channel,
     #main-outlet {
       // allows containers to shrink to fit
       min-height: 0;

@@ -8,6 +8,7 @@ import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel
 import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import { getOwner } from "discourse-common/lib/get-owner";
+import guid from "pretty-text/guid";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -72,6 +73,10 @@ export default class ChatChannel extends RestModel {
 
   get messages() {
     return this.messagesManager.messages;
+  }
+
+  get canLoadMoreFuture() {
+    return this.messagesManager.canLoadMoreFuture;
   }
 
   set messages(messages) {
@@ -148,6 +153,22 @@ export default class ChatChannel extends RestModel {
     this.userSilenced = details.user_silenced ?? false;
     this.status = details.channel_status;
     this.channelMessageBusLastId = details.channel_message_bus_last_id;
+  }
+
+  stageMessage(message) {
+    message.id = guid();
+    message.staged = true;
+    message.draft = false;
+    message.createdAt ??= moment.utc().format();
+    message.cook();
+
+    if (message.inReplyTo) {
+      if (!this.threadingEnabled) {
+        this.messagesManager.addMessages([message]);
+      }
+    } else {
+      this.messagesManager.addMessages([message]);
+    }
   }
 
   canModifyMessages(user) {

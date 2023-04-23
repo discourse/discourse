@@ -539,6 +539,7 @@ en:
           one: "%{count} reply"
           other: "%{count} replies"
         label: Thread
+        close: "Close Thread"
       threads:
         started_by: "Started by"
         open: "Open Thread"

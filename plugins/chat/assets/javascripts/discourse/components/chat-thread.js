@@ -1,6 +1,4 @@
 import Component from "@glimmer/component";
-import { cloneJSON } from "discourse-common/lib/object";
-import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -27,6 +25,7 @@ export default class ChatThreadPanel extends Component {
 
   @tracked loading;
   @tracked loadingMorePast;
+  @tracked uploadDropZone;
 
   scrollable = null;
 
@@ -41,6 +40,19 @@ export default class ChatThreadPanel extends Component {
   @action
   subscribeToUpdates() {
     this.chatChannelThreadPaneSubscriptionsManager.subscribe(this.thread);
+  }
+
+  @action
+  setUploadDropZone(element) {
+    this.uploadDropZone = element;
+  }
+
+  @action
+  setupMessage() {
+    this.chatChannelThreadComposer.message = ChatMessage.createDraftMessage(
+      this.channel,
+      { user: this.currentUser, thread_id: this.thread.id }
+    );
   }
 
   @action
@@ -168,27 +180,21 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
-  sendMessage(message, uploads = []) {
+  onSendMessage(message) {
     // TODO (martin) For desktop notifications
     // resetIdle()
-    if (this.chatChannelThreadPane.sendingLoading) {
+    if (this.chatChannelThreadPane.sending) {
       return;
     }
 
-    this.chatChannelThreadPane.sendingLoading = true;
-    this.channel.draft = ChatMessageDraft.create();
+    this.chatChannelThreadPane.sending = true;
 
     // TODO (martin) Handling case when channel is not followed???? IDK if we
     // even let people send messages in threads without this, seems weird.
 
-    const stagedMessage = ChatMessage.createStagedMessage(this.channel, {
-      message,
-      created_at: new Date(),
-      uploads: cloneJSON(uploads),
-      user: this.currentUser,
-      thread_id: this.thread.id,
-    });
-
+    this.thread.stageMessage(message);
+    const stagedMessage = message;
+    this.chatChannelThreadComposer.reset();
     this.thread.messagesManager.addMessages([stagedMessage]);
 
     // TODO (martin) Scrolling!!
@@ -214,7 +220,7 @@ export default class ChatThreadPanel extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.chatChannelThreadPane.sendingLoading = false;
+        this.chatChannelThreadPane.sending = false;
         this.chatChannelThreadPane.resetAfterSend();
       });
   }

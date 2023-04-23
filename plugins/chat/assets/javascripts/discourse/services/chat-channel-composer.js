@@ -1,90 +1,84 @@
-import { debounce } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 import Service, { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import { getOwner } from "discourse-common/lib/get-owner";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { cancel } from "@ember/runloop";
 
 export default class ChatChannelComposer extends Service {
   @service chat;
   @service chatApi;
   @service chatComposerPresenceManager;
+  @service currentUser;
 
   @tracked editingMessage = null;
   @tracked replyToMsg = null;
   @tracked linkedComponent = null;
 
+  @tracked _message = null;
+
+  @action
+  cancel() {
+    if (this.message.editing) {
+      this.message = ChatMessage.createDraftMessage(this.model, {
+        user: this.currentUser,
+      });
+    } else if (this.message.inReplyTo) {
+      this.message.inReplyTo = null;
+    }
+  }
+
+  @action
   reset() {
-    this.editingMessage = null;
-    this.replyToMsg = null;
+    this.message = ChatMessage.createDraftMessage(this.model, {
+      user: this.currentUser,
+    });
+  }
+
+  @action
+  clear() {
+    this.message.message = "";
+  }
+
+  @action
+  editMessage(message) {
+    this.chat.activeMessage = null;
+    message.editing = true;
+    this.message = message;
+  }
+
+  get pane() {
+    return getOwner(this).lookup("service:chat-channel-pane");
+  }
+
+  @action
+  onCancelEditing() {
+    this.reset();
+  }
+
+  get channel() {
+    return this.chat.activeChannel;
+  }
+
+  get message() {
+    return this._message;
+  }
+
+  set message(message) {
+    cancel(this._persistHandler);
+    this._message = message;
+    // TODO (martin) Move scrollToLatestMessage to live panel.
+    // this.scrollToLatestMessage()
   }
 
   get model() {
     return this.chat.activeChannel;
   }
 
-  setReplyTo(messageOrId) {
-    if (messageOrId) {
-      this.cancelEditing();
-
-      const message =
-        typeof messageOrId === "number"
-          ? this.model.messagesManager.findMessage(messageOrId)
-          : messageOrId;
-      this.replyToMsg = message;
-      this.focusComposer();
-    } else {
-      this.replyToMsg = null;
-    }
-
-    this.onComposerValueChange({ replyToMsg: this.replyToMsg });
-  }
-
-  editButtonClicked(messageId) {
-    const message = this.model.messagesManager.findMessage(messageId);
-    this.editingMessage = message;
-
-    // TODO (martin) Move scrollToLatestMessage to live panel.
-    // this.scrollToLatestMessage();
-
-    this.focusComposer();
-  }
-
-  onComposerValueChange({
-    value,
-    uploads,
-    replyToMsg,
-    inProgressUploadsCount,
-  }) {
-    if (!this.model) {
-      return;
-    }
-
-    if (!this.editingMessage && !this.model.isDraft) {
-      if (typeof value !== "undefined" && this.model.draft) {
-        this.model.draft.message = value;
-      }
-
-      // only save the uploads to the draft if we are not still uploading other
-      // ones, otherwise we get into a cycle where we pass the draft uploads as
-      // existingUploads back to the upload component and cause in progress ones
-      // to be cancelled
-      if (
-        typeof uploads !== "undefined" &&
-        inProgressUploadsCount !== "undefined" &&
-        inProgressUploadsCount === 0 &&
-        this.model.draft
-      ) {
-        this.model.draft.uploads = uploads;
-      }
-
-      if (typeof replyToMsg !== "undefined" && this.model.draft) {
-        this.model.draft.replyToMsg = replyToMsg;
-      }
-    }
-
-    if (!this.model.isDraft) {
-      this.#reportReplyingPresence(value);
-    }
-
-    this._persistDraft();
+  setReplyTo(message) {
+    this.chat.activeMessage = null;
+    this.message.inReplyTo = message;
   }
 
   cancelEditing() {
@@ -100,10 +94,6 @@ export default class ChatChannelComposer extends Service {
   }
 
   #reportReplyingPresence(composerValue) {
-    if (this.#componentDeleted) {
-      return;
-    }
-
     if (this.model.isDraft) {
       return;
     }
@@ -112,21 +102,16 @@ export default class ChatChannelComposer extends Service {
     this.chatComposerPresenceManager.notifyState(this.model.id, replying);
   }
 
-  @debounce(2000)
-  _persistDraft() {
-    if (this.#componentDeleted || !this.model) {
-      return;
-    }
-
-    if (!this.model.draft) {
-      return;
-    }
-
-    return this.chatApi.saveDraft(this.model.id, this.model.draft.toJSON());
+  persistDraft() {
+    this._persistHandler = discourseDebounce(
+      this,
+      this._debouncedPersistDraft,
+      2000
+    );
   }
 
-  get #componentDeleted() {
-    // note I didn't set this in the new version, not sure yet what to do with it
-    // return this.linkedComponent._selfDeleted;
+  @action
+  _debouncedPersistDraft() {
+    this.chatApi.saveDraft(this.model.id, this.message.toJSONDraft());
   }
 }

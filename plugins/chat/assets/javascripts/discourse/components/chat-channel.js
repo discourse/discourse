@@ -1,7 +1,5 @@
 import { capitalize } from "@ember/string";
-import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
@@ -53,12 +51,18 @@ export default class ChatLivePane extends Component {
   @tracked hasNewMessages = false;
   @tracked needsArrow = false;
   @tracked loadedOnce = false;
+  @tracked uploadDropZone;
 
   scrollable = null;
   _loadedChannelId = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
+
+  @action
+  setUploadDropZone(element) {
+    this.uploadDropZone = element;
+  }
 
   @action
   setScrollable(element) {
@@ -107,6 +111,11 @@ export default class ChatLivePane extends Component {
     if (this._loadedChannelId !== this.args.channel?.id) {
       this._unsubscribeToUpdates(this._loadedChannelId);
       this.chatChannelPane.selectingMessages = false;
+      this.chatChannelComposer.message =
+        this.args.channel.draft ||
+        ChatMessage.createDraftMessage(this.args.channel, {
+          user: this.currentUser,
+        });
       this.chatChannelComposer.cancelEditing();
       this._loadedChannelId = this.args.channel?.id;
     }
@@ -568,71 +577,54 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  sendMessage(message, uploads = []) {
-    resetIdle();
+  onSendMessage(message) {
+    this.chatChannelPane.sending = true;
 
-    if (this.chatChannelPane.sendingLoading) {
-      return;
-    }
+    // resetIdle();
 
-    this.chatChannelPane.sendingLoading = true;
-    this.args.channel.draft = ChatMessageDraft.create();
+    // this.args.channel.draft = ChatMessageDraft.create();
 
-    // TODO: all send message logic is due for massive refactoring
-    // This is all the possible case Im currently aware of
-    // - messaging to a public channel where you are not a member yet (preview = true)
-    // - messaging to an existing direct channel you were not tracking yet through dm creator (channel draft)
-    // - messaging to a new direct channel through DM creator (channel draft)
-    // - message to a direct channel you were tracking (preview = false, not draft)
-    // - message to a public channel you were tracking (preview = false, not draft)
-    // - message to a channel when we haven't loaded all future messages yet.
-    if (!this.args.channel.isFollowing || this.args.channel.isDraft) {
-      this.loading = true;
+    // // TODO: all send message logic is due for massive refactoring
+    // // This is all the possible case Im currently aware of
+    // // - messaging to a public channel where you are not a member yet (preview = true)
+    // // - messaging to an existing direct channel you were not tracking yet through dm creator (channel draft)
+    // // - messaging to a new direct channel through DM creator (channel draft)
+    // // - message to a direct channel you were tracking (preview = false, not draft)
+    // // - message to a public channel you were tracking (preview = false, not draft)
+    // // - message to a channel when we haven't loaded all future messages yet.
+    // if (!this.args.channel.isFollowing || this.args.channel.isDraft) {
+    //   this.loading = true;
 
-      return this._upsertChannelWithMessage(
-        this.args.channel,
-        message,
-        uploads
-      ).finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.loading = false;
-        this.chatChannelPane.sendingLoading = false;
-        this.chatChannelPane.resetAfterSend();
-        this.scrollToLatestMessage();
-      });
-    }
+    //   return this._upsertChannelWithMessage(
+    //     this.args.channel,
+    //     draftMessage.message,
+    //     uploads
+    //   ).finally(() => {
+    //     if (this._selfDeleted) {
+    //       return;
+    //     }
+    //     this.loading = false;
+    //     this.chatChannelPane.sendingLoading = false;
+    //     this.chatChannelPane.resetAfterSend();
+    //     this.scrollToLatestMessage();
+    //   });
+    // }
 
-    const stagedMessage = ChatMessage.createStagedMessage(this.args.channel, {
-      message,
-      created_at: moment.utc().format(),
-      uploads: cloneJSON(uploads),
-      user: this.currentUser,
-    });
+    const channel = this.args.channel;
+    channel.stageMessage(message);
+    const stagedMessage = message;
+    this.chatChannelComposer.reset();
 
-    if (this.chatChannelComposer.replyToMsg) {
-      stagedMessage.inReplyTo = this.chatChannelComposer.replyToMsg;
-    }
-
-    if (stagedMessage.inReplyTo) {
-      if (!this.args.channel.threadingEnabled) {
-        this.#messagesManager.addMessages([stagedMessage]);
-      }
-    } else {
-      this.#messagesManager.addMessages([stagedMessage]);
-    }
-
-    if (!this.#messagesManager.canLoadMoreFuture) {
+    if (!channel.canLoadMoreFuture) {
       this.scrollToLatestMessage();
     }
 
     return this.chatApi
-      .sendMessage(this.args.channel.id, {
-        message: stagedMessage.message,
-        in_reply_to_id: stagedMessage.inReplyTo?.id,
-        staged_id: stagedMessage.id,
-        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
+      .sendMessage(channel.id, {
+        message: message.message,
+        in_reply_to_id: message.inReplyTo?.id,
+        staged_id: message.id,
+        upload_ids: message.uploads.map((upload) => upload.id),
       })
       .then(() => {
         this.scrollToLatestMessage();
@@ -645,8 +637,9 @@ export default class ChatLivePane extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.chatChannelPane.sendingLoading = false;
-        this.chatChannelPane.resetAfterSend();
+
+        channel.draft = null;
+        this.chatChannelPane.sending = false;
       });
   }
 
@@ -686,7 +679,7 @@ export default class ChatLivePane extends Component {
       }
     }
 
-    this.chatChannelPane.resetAfterSend();
+    this.chatChannelComposer.reset();
   }
 
   @action

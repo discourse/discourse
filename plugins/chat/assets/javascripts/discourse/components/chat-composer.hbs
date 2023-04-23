@@ -1,93 +1,95 @@
-{{#if this.composerService.replyToMsg}}
-  <ChatComposerMessageDetails
-    @message={{this.composerService.replyToMsg}}
-    @icon="reply"
-    @action={{action "cancelReplyTo"}}
-  />
-{{/if}}
-
-{{#if this.composerService.editingMessage}}
-  <ChatComposerMessageDetails
-    @message={{this.composerService.editingMessage}}
-    @icon="pencil-alt"
-    @action={{this.cancelEditing}}
-  />
-{{/if}}
-
-<div
-  role="region"
-  aria-label={{i18n "chat.aria_roles.composer"}}
-  class="chat-composer {{if this.disableComposer 'is-disabled'}}"
-  {{did-update this.updateEditingMessage this.composerService.editingMessage}}
->
-
-  <ChatComposerDropdown
-    @buttons={{this.dropdownButtons}}
-    @isDisabled={{this.disableComposer}}
-    @hasActivePanel={{and
-      this.chatEmojiPickerManager.picker
-      (eq this.chatEmojiPickerManager.picker.context @context)
-    }}
-    @onCloseActivePanel={{this.chatEmojiPickerManager.close}}
-  />
-
-  <DTextarea
-    @value={{readonly this.value}}
-    @input={{action "onTextareaInput" value="target.value"}}
-    @type="text"
-    @class={{concat-class
-      "chat-composer-input"
-      (concat "chat-composer-input--" @context)
-    }}
-    @disabled={{this.disableComposer}}
-    @autocorrect="on"
-    @autocapitalize="sentences"
-    @placeholder={{this.placeholder}}
-    @focus-in={{action "onTextareaFocusIn" value="target"}}
-    @rows={{1}}
-    data-chat-composer-context={{@context}}
-  />
-
-  {{#if this.isNetworkUnreliable}}
-    <span
-      class="chat-composer__unreliable-network"
-      title={{i18n "chat.unreliable_network"}}
-    >
-      {{d-icon "exclamation-circle"}}
-    </span>
+<div class="chat-composer__wrapper">
+  {{#if (or this.message.editing this.message.inReplyTo)}}
+    <ChatComposerMessageDetails
+      @message={{if this.message.editing this.message this.message.inReplyTo}}
+      @icon="pencil-alt"
+      @cancelAction={{this.onCancel}}
+    />
   {{/if}}
 
-  <FlatButton
-    @action={{action "sendClicked"}}
-    @icon="paper-plane"
-    @class="icon-only send-btn chat-composer-inline-button"
-    @title={{this.sendTitle}}
-    @disabled={{this.sendDisabled}}
-  />
-
-  {{#unless this.disableComposer}}
-    <ChatComposerInlineButtons @buttons={{this.inlineButtons}} />
-  {{/unless}}
-</div>
-
-{{#if this.canAttachUploads}}
-  <ChatComposerUploads
-    @fileUploadElementId={{this.fileUploadElementId}}
-    @onUploadChanged={{this.uploadsChanged}}
-    @existingUploads={{or
-      this.chatChannel.draft.uploads
-      this.composerService.editingMessage.uploads
+  <div
+    role="region"
+    aria-label={{i18n "chat.aria_roles.composer"}}
+    class={{concat-class
+      "chat-composer"
+      (if this.isFocused "chat-composer--focused")
+      (if @paneService.sending "chat-composer--sending")
+      (if
+        this.isSendEnabled
+        "chat-composer--send-enabled"
+        "chat-composer--send-disabled"
+      )
+      (if @composerService.isDisabled "chat-composer--disabled")
     }}
-  />
-{{/if}}
+    {{did-update this.didUpdateMessage this.message.message}}
+    {{did-insert this.setupAppEvents}}
+    {{will-destroy this.teardownAppEvents}}
+  >
+    <div class="chat-composer__outer-container">
+      <div class="chat-composer__inner-container">
+        <ChatComposerDropdown
+          @buttons={{this.dropdownButtons}}
+          @isDisabled={{@composerService.isDisabled}}
+          @hasActivePanel={{and
+            this.chatEmojiPickerManager.picker
+            (eq this.chatEmojiPickerManager.picker.context @context)
+          }}
+          @onCloseActivePanel={{this.chatEmojiPickerManager.close}}
+        />
 
-{{#unless this.chatChannel.isDraft}}
-  <div class="chat-replying-indicator-container">
-    <ChatReplyingIndicator @chatChannel={{this.chatChannel}} />
+        <div class="chat-composer__input-container">
+          <DTextarea
+            @value={{readonly this.message.message}}
+            @type="text"
+            @class="chat-composer__input"
+            @disabled={{@composerService.isDisabled}}
+            @autocorrect="on"
+            @autocapitalize="sentences"
+            @placeholder={{@composerService.inputPlaceholder}}
+            @rows={{1}}
+            {{did-insert this.setupTextareaInteractor}}
+            {{on "input" this.onInput}}
+            {{on "keydown" this.onKeyDown}}
+            {{on "focusin" this.onTextareaFocusIn}}
+            {{on "focusin" (fn this.computeIsFocused true)}}
+            {{on "focusout" (fn this.computeIsFocused false)}}
+            {{did-insert this.setupAutocomplete}}
+            data-chat-composer-context={{@context}}
+          />
+        </div>
+
+        <DButton
+          @action={{this.onSend}}
+          @icon="paper-plane"
+          @class="chat-composer__send-btn icon-only"
+          @title={{@composerService.sendButtonTitle}}
+          @disabled={{not this.isSendEnabled}}
+          tabindex={{if this.isSendEnabled 0 -1}}
+          {{on "focus" (fn this.computeIsFocused true)}}
+          {{on "blur" (fn this.computeIsFocused false)}}
+        />
+      </div>
+
+    </div>
   </div>
-{{/unless}}
 
-<ChatEmojiPicker
-  @context={{@context}}
-  @didSelectEmoji={{this.didSelectEmoji}}
-/>
+  {{#if this.canAttachUploads}}
+    <ChatComposerUploads
+      @fileUploadElementId={{this.fileUploadElementId}}
+      @onUploadChanged={{this.onUploadChanged}}
+      @existingUploads={{this.message.uploads}}
+      @uploadDropZone={{@uploadDropZone}}
+    />
+  {{/if}}
+
+  {{#unless @channel.isDraft}}
+    <div class="chat-replying-indicator-container">
+      <ChatReplyingIndicator @chatChannel={{@channel}} />
+    </div>
+  {{/unless}}
+
+  {{!-- <ChatEmojiPicker
+    @context={{@context}}
+    @didSelectEmoji={{this.didSelectEmoji}}
+  /> --}}
+</div>

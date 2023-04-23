@@ -16,6 +16,7 @@ export default Component.extend(UppyUploadMixin, {
   existingUploads: null,
   uploads: null,
   useMultipartUploadsIfAvailable: true,
+  uploadDropZone: null,
 
   init() {
     this._super(...arguments);
@@ -77,19 +78,8 @@ export default Component.extend(UppyUploadMixin, {
   },
 
   _uploadDropTargetOptions() {
-    let targetEl;
-    if (this.chatStateManager.isFullPageActive) {
-      targetEl = document.querySelector(".full-page-chat");
-    } else {
-      targetEl = document.querySelector(".chat-drawer.is-expanded");
-    }
-
-    if (!targetEl) {
-      return this._super();
-    }
-
     return {
-      target: targetEl,
+      target: this.uploadDropZone,
     };
   },
 

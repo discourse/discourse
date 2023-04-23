@@ -1,5 +1,11 @@
-<span class="chat-composer-upload">
-  <span class="preview">
+<div
+  class={{concat-class
+    "chat-composer-upload"
+    (if (eq this.type this.IMAGE_TYPE) "chat-composer-upload--image")
+    (unless this.isDone "chat-composer-upload--in-progress")
+  }}
+>
+  <div class="preview">
     {{#if (eq this.type this.IMAGE_TYPE)}}
       {{#if this.isDone}}
         <img class="preview-img" src={{this.upload.short_path}} />
@@ -9,22 +15,20 @@
     {{else}}
       {{d-icon "file-alt"}}
     {{/if}}
-  </span>
+  </div>
 
   <span class="data">
-    <div class="top-data">
-      <span class="file-name">{{this.fileName}}</span>
-      <DButton
-        @class="btn-flat remove-upload"
-        @action={{this.onCancel}}
-        @icon="times"
-        @title="chat.remove_upload"
-      />
-    </div>
+    {{#unless (eq this.type this.IMAGE_TYPE)}}
+      <div class="top-data">
+        <span class="file-name">{{this.fileName}}</span>
+      </div>
+    {{/unless}}
 
     <div class="bottom-data">
       {{#if this.isDone}}
-        <span class="extension-pill">{{this.upload.extension}}</span>
+        {{#unless (eq this.type this.IMAGE_TYPE)}}
+          <span class="extension-pill">{{this.upload.extension}}</span>
+        {{/unless}}
       {{else}}
         {{#if this.upload.processing}}
           <span class="processing">{{i18n "processing"}}</span>
@@ -41,4 +45,11 @@
       {{/if}}
     </div>
   </span>
-</span>
+
+  <DButton
+    @class="btn-flat chat-composer-upload__remove-btn"
+    @action={{this.onCancel}}
+    @icon="times"
+    @title="chat.remove_upload"
+  />
+</div>

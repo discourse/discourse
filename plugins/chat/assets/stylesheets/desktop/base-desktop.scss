@@ -7,7 +7,7 @@
   &.teams-sidebar-on {
     grid-template-columns: 1fr;
 
-    .chat-live-pane {
+    .chat-channel {
       border-radius: var(--full-page-border-radius);
     }
   }
@@ -19,7 +19,7 @@
     flex-shrink: 0;
   }
 
-  .chat-live-pane {
+  .chat-channel {
     .chat-messages-container {
       .chat-message {
         &.is-reply {
@@ -87,7 +87,7 @@
     border-right: 1px solid var(--primary-low);
     border-left: 1px solid var(--primary-low);
 
-    .chat-live-pane {
+    .chat-channel {
       border-radius: unset;
     }
   }
@@ -112,7 +112,7 @@
   }
 
   .full-page-chat.teams-sidebar-on {
-    .chat-live-pane {
+    .chat-channel {
       border-radius: 0;
     }
 

@@ -1,10 +1,12 @@
 <div
   class={{concat-class "chat-thread" (if this.loading "loading")}}
   data-id={{this.thread.id}}
+  {{did-insert this.setUploadDropZone}}
   {{did-insert this.subscribeToUpdates}}
   {{did-insert this.loadMessages}}
   {{did-update this.subscribeToUpdates this.thread.id}}
   {{did-update this.loadMessages this.thread.id}}
+  {{did-insert this.setupMessage}}
   {{will-destroy this.unsubscribeFromUpdates}}
 >
   {{#if @includeHeader}}
@@ -14,6 +16,7 @@
         class="chat-thread__close btn-flat btn btn-icon no-text"
         @route="chat.channel"
         @models={{this.chat.activeChannel.routeModels}}
+        title={{i18n "chat.thread.close"}}
       >
         {{d-icon "times"}}
       </LinkTo>
@@ -56,11 +59,14 @@
     />
   {{else}}
     <ChatComposer
-      @sendMessage={{this.sendMessage}}
-      @chatChannel={{this.channel}}
+      @channel={{this.channel}}
       @composerService={{this.chatChannelThreadComposer}}
       @paneService={{this.chatChannelThreadPane}}
+      @onSendMessage={{this.onSendMessage}}
       @context="thread"
+      @uploadDropZone={{this.uploadDropZone}}
     />
   {{/if}}
+
+  <ChatUploadDropZone @context="thread" />
 </div>

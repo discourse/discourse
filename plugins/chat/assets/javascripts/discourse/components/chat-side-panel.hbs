@@ -1,5 +1,14 @@
 {{#if this.chatStateManager.isSidePanelExpanded}}
-  <div class="chat-side-panel">
+  <div
+    class="chat-side-panel"
+    {{chat/resizable-node
+      ".chat-side-panel-resizer"
+      this.didResize
+      (hash position=false vertical=false mutate=false)
+    }}
+    style={{this.width}}
+  >
     {{yield}}
+    <ChatSidePanelResizer />
   </div>
 {{/if}}

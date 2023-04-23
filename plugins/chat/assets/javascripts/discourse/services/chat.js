@@ -8,7 +8,7 @@ import { cancel, next } from "@ember/runloop";
 import { and } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import discourseLater from "discourse-common/lib/later";
-import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -126,8 +126,15 @@ export default class Chat extends Service {
           const storedDraft = this.currentUser.chat_drafts.find(
             (draft) => draft.channel_id === channel.id
           );
-          channel.draft = ChatMessageDraft.create(
-            storedDraft ? JSON.parse(storedDraft.data) : null
+
+          channel.draft = ChatMessage.createDraftMessage(
+            channel,
+            Object.assign(
+              {
+                user: this.currentUser,
+              },
+              storedDraft ? JSON.parse(storedDraft.data) : {}
+            )
           );
         }
 

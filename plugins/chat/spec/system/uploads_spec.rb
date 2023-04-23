@@ -101,7 +101,8 @@ describe "Uploading files in chat messages", type: :system, js: true do
     it "allows deleting uploads" do
       chat.visit_channel(channel_1)
       channel.open_edit_message(message_2)
-      find(".chat-composer-upload").find(".remove-upload").click
+      find(".chat-composer-upload").hover
+      find(".chat-composer-upload__remove-btn").click
       channel.click_send_message
       expect(channel.message_by_id(message_2.id)).not_to have_css(".chat-uploads")
       expect(message_2.reload.uploads).to be_empty

@@ -13,7 +13,7 @@ export default class ChatChannelPane extends Service {
   @tracked reacting = false;
   @tracked selectingMessages = false;
   @tracked lastSelectedMessage = null;
-  @tracked sendingLoading = false;
+  @tracked sending = false;
 
   get selectedMessageIds() {
     return this.chat.activeChannel?.selectedMessages?.mapBy("id") || [];
@@ -21,6 +21,10 @@ export default class ChatChannelPane extends Service {
 
   get composerService() {
     return this.chatChannelComposer;
+  }
+
+  get channel() {
+    return this.chat.activeChannel;
   }
 
   @action
@@ -62,30 +66,19 @@ export default class ChatChannelPane extends Service {
       });
   }
 
-  resetAfterSend() {
-    const channelId = this.composerService.editingMessage?.channelId;
-    if (channelId) {
-      this.chatComposerPresenceManager.notifyState(channelId, false);
-    }
-
-    this.composerService.reset();
-  }
-
-  @action
-  editLastMessageRequested() {
-    const lastUserMessage = this.chat.activeChannel.messages.findLast(
+  get lastCurrentUserMessage() {
+    const lastCurrentUserMessage = this.chat.activeChannel.messages.findLast(
       (message) => message.user.id === this.currentUser.id
     );
 
-    if (!lastUserMessage) {
+    if (!lastCurrentUserMessage) {
       return;
     }
 
-    if (lastUserMessage.staged || lastUserMessage.error) {
+    if (lastCurrentUserMessage.staged || lastCurrentUserMessage.error) {
       return;
     }
 
-    this.composerService.editingMessage = lastUserMessage;
-    this.composerService.focusComposer();
+    return lastCurrentUserMessage;
   }
 }

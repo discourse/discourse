@@ -5,6 +5,9 @@ import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-me
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import guid from "pretty-text/guid";
+import { generateCookFunction } from "discourse/lib/text";
+import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default class ChatMessage {
   static cookFunction = null;
@@ -19,11 +22,17 @@ export default class ChatMessage {
     return new ChatMessage(channel, args);
   }
 
+  static createDraftMessage(channel, args = {}) {
+    args.draft = true;
+    return new ChatMessage(channel, args);
+  }
+
   @tracked id;
   @tracked error;
   @tracked selected;
   @tracked channel;
   @tracked staged = false;
+  @tracked draft = false;
   @tracked channelId;
   @tracked createdAt;
   @tracked deletedAt;
@@ -72,8 +81,10 @@ export default class ChatMessage {
       args.inReplyTo || args.in_reply_to
         ? ChatMessage.create(channel, args.in_reply_to)
         : null;
+    this.draft = args.draft;
     this.message = args.message;
-    this.cooked = args.cooked || ChatMessage.cookFunction(this.message);
+
+    this.cooked = args.cooked || this.cook();
     this.reactions = this.#initChatMessageReactionModel(
       args.id,
       args.reactions
@@ -81,6 +92,36 @@ export default class ChatMessage {
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
+  }
+
+  cook() {
+    const site = getOwner(this).lookup("service:site");
+
+    const markdownOptions = {
+      featuresOverride:
+        site.markdown_additional_options?.chat?.limited_pretty_text_features,
+      markdownItRules:
+        site.markdown_additional_options?.chat
+          ?.limited_pretty_text_markdown_rules,
+      hashtagTypesInPriorityOrder:
+        site.hashtag_configurations?.["chat-composer"],
+      hashtagIcons: site.hashtag_icons,
+    };
+
+    if (ChatMessage.cookFunction) {
+      this.cooked = ChatMessage.cookFunction(this.message);
+    } else {
+      generateCookFunction(markdownOptions).then((cookFunction) => {
+        ChatMessage.cookFunction = (raw) => {
+          return simpleCategoryHashMentionTransform(
+            cookFunction(raw),
+            site.categories
+          );
+        };
+
+        this.cooked = ChatMessage.cookFunction(this.message);
+      });
+    }
   }
 
   get threadRouteModels() {
@@ -132,6 +173,32 @@ export default class ChatMessage {
 
   incrementVersion() {
     this.version++;
+  }
+
+  toJSONDraft() {
+    if (
+      this.message?.length === 0 &&
+      this.uploads?.length === 0 &&
+      !this.replyToMsg
+    ) {
+      return null;
+    }
+
+    const data = {};
+
+    if (this.uploads?.length > 0) {
+      data.uploads = this.uploads;
+    }
+
+    if (this.message?.length > 0) {
+      data.message = this.message;
+    }
+
+    if (this.replyToMsg) {
+      data.replyToMsg = this.replyToMsg;
+    }
+
+    return JSON.stringify(data);
   }
 
   react(emoji, action, actor, currentUserId) {
