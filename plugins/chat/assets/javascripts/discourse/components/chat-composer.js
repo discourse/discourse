@@ -3,9 +3,11 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { cloneJSON } from "discourse-common/lib/object";
-import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import {
+  chatComposerButtons,
+  chatComposerButtonsDependentKeys,
+} from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import showModal from "discourse/lib/show-modal";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -17,6 +19,8 @@ import { SKIP } from "discourse/lib/autocomplete";
 import I18n from "I18n";
 import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import { isPresent } from "@ember/utils";
+
 export default class ChatComposer extends Component {
   @service capabilities;
   @service site;
@@ -30,11 +34,11 @@ export default class ChatComposer extends Component {
   @tracked isFocused = false;
 
   get inlineButtons() {
-    return chatComposerButtons(this, "inline", this.context);
+    return chatComposerButtons(this, "inline", this.args.context);
   }
 
   get dropdownButtons() {
-    return chatComposerButtons(this, "dropdown", this.context);
+    return chatComposerButtons(this, "dropdown", this.args.context);
   }
 
   get fileUploadElementId() {
@@ -42,7 +46,10 @@ export default class ChatComposer extends Component {
   }
 
   get canAttachUploads() {
-    return this.siteSettings.chat_allow_uploads && this.args.uploadDropZone;
+    return (
+      this.siteSettings.chat_allow_uploads &&
+      isPresent(this.args.uploadDropZone)
+    );
   }
 
   @action
@@ -274,6 +281,22 @@ export default class ChatComposer extends Component {
         addText: (text) => this.textareaInteractor.addText(selected, text),
       },
     });
+  }
+
+  @action
+  onSelectEmoji(emoji) {
+    const code = `:${emoji}:`;
+    this.chatEmojiReactionStore.track(code);
+    this.textareaInteractor.addText(
+      this.textareaInteractor.getSelected(),
+      code
+    );
+
+    if (this.site.desktopView) {
+      this.textareaInteractor.focus();
+    } else {
+      this.chatEmojiPickerManager.close();
+    }
   }
 
   @action
