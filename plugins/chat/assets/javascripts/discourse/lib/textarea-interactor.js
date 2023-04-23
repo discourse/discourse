@@ -25,9 +25,9 @@ export default class TextareaInteractor extends EmberObject.extend(
     this._textarea.value = value;
   }
 
-  focus(opts = { ensureAtEnd: false, refreshSize: true }) {
+  focus(opts = { ensureAtEnd: false, refreshHeight: true }) {
     next(() => {
-      if (opts.refreshSize) {
+      if (opts.refreshHeight) {
         this.refreshHeight();
       }
 

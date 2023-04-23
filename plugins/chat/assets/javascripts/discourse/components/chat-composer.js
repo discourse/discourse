@@ -65,12 +65,12 @@ export default class ChatComposer extends Component {
   @action
   didUpdateMessage() {
     this.textareaInteractor.value = this.currentMessage.message || "";
-    this.textareaInteractor.focus({ refreshSize: true });
+    this.textareaInteractor.focus({ refreshHeight: true });
   }
 
   @action
   didUpdateInReplyTo() {
-    this.textareaInteractor.focus({ ensureAtEnd: true, refreshSize: true });
+    this.textareaInteractor.focus({ ensureAtEnd: true, refreshHeight: true });
   }
 
   get currentMessage() {
@@ -169,7 +169,7 @@ export default class ChatComposer extends Component {
     }
 
     this.args.onSendMessage(this.currentMessage);
-    this.textareaInteractor.focus({ refreshSize: true });
+    this.textareaInteractor.focus({ refreshHeight: true });
   }
 
   @action
