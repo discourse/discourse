@@ -221,7 +221,6 @@ export default class ChatThreadPanel extends Component {
           return;
         }
         this.chatChannelThreadPane.sending = false;
-        this.chatChannelThreadPane.resetAfterSend();
       });
   }
 
@@ -308,6 +307,6 @@ export default class ChatThreadPanel extends Component {
       }
     }
 
-    this.chatChannelThreadPane.resetAfterSend();
+    this.chatChannelThreadComposer.reset();
   }
 }
