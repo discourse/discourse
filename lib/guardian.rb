@@ -234,7 +234,7 @@ class Guardian
   def can_delete_reviewable_queued_post?(reviewable)
     return false if reviewable.blank?
     return false if !authenticated?
-    return true if @user.admin?
+    return true if is_api? && is_admin?
 
     reviewable.created_by_id == @user.id
   end
@@ -652,6 +652,10 @@ class Guardian
     else
       false
     end
+  end
+
+  def is_api?
+    @user && request&.env&.dig(Auth::DefaultCurrentUserProvider::API_KEY_ENV)
   end
 
   protected
