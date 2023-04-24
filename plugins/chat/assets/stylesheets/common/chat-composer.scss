@@ -22,7 +22,7 @@
   &__outer-container {
     display: flex;
     align-items: center;
-    padding: 0.15rem 0.25rem;
+    padding-inline: 0.25rem;
     box-sizing: border-box;
     width: 100%;
   }
@@ -36,7 +36,8 @@
     border: 1px solid var(--primary-low-mid);
     border-radius: 5px;
     background-color: var(--secondary);
-    padding: 0.25rem;
+    padding-inline: 0.25rem;
+    height: 50px;
 
     .chat-composer--focused & {
       border-color: var(--primary-medium);

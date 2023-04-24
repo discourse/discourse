@@ -92,7 +92,7 @@
     />
   {{/if}}
 
-  {{#unless @channel.isDraft}}
+  {{#unless (or @channel.isDraft (eq @context "thread"))}}
     <div class="chat-replying-indicator-container">
       <ChatReplyingIndicator @chatChannel={{@channel}} />
     </div>
