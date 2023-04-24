@@ -585,6 +585,11 @@ export default class ChatLivePane extends Component {
     }
   }
 
+  @action
+  resetComposer() {
+    this.chatChannelComposer.reset(this.args.channel);
+  }
+
   #sendEditMessage(message) {
     this.chatChannelPane.sending = true;
 
@@ -593,10 +598,10 @@ export default class ChatLivePane extends Component {
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 
-    this.chatChannelComposer.reset();
+    this.resetComposer();
 
     return this.chatApi
-      .editMessage(message.channelId, message.id, data)
+      .editMessage(this.args.channel.id, message.id, data)
       .catch(popupAjaxError)
       .finally(() => {
         this.chatChannelPane.sending = false;
@@ -622,7 +627,7 @@ export default class ChatLivePane extends Component {
         upload_ids: message.uploads.map((upload) => upload.id),
       };
 
-      this.chatChannelComposer.reset();
+      this.resetComposer();
 
       return this._upsertChannelWithMessage(this.args.channel, data).finally(
         () => {
@@ -635,17 +640,16 @@ export default class ChatLivePane extends Component {
       );
     }
 
-    const channel = this.args.channel;
-    channel.stageMessage(message);
+    this.args.channel.stageMessage(message);
     const stagedMessage = message;
-    this.chatChannelComposer.reset();
+    this.resetComposer();
 
-    if (!channel.canLoadMoreFuture) {
+    if (!this.args.channel.canLoadMoreFuture) {
       this.scrollToLatestMessage();
     }
 
     return this.chatApi
-      .sendMessage(channel.id, {
+      .sendMessage(this.args.channel.id, {
         message: message.message,
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
@@ -663,7 +667,7 @@ export default class ChatLivePane extends Component {
           return;
         }
 
-        channel.draft = null;
+        this.args.channel.draft = null;
         this.chatChannelPane.sending = false;
       });
   }
@@ -702,7 +706,7 @@ export default class ChatLivePane extends Component {
       }
     }
 
-    this.chatChannelComposer.reset();
+    this.resetComposer();
   }
 
   @action

@@ -16,7 +16,7 @@ import { SKIP } from "discourse/lib/autocomplete";
 import I18n from "I18n";
 import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
-import { isPresent } from "@ember/utils";
+import { isEmpty, isPresent } from "@ember/utils";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -28,28 +28,13 @@ export default class ChatComposer extends Component {
   @service appEvents;
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
+  @service currentUser;
+  @service chatApi;
 
   @tracked isFocused = false;
 
-  constructor() {
-    super(...arguments);
-    this.composer.channel = this.args.channel;
-  }
-
-  willDestroy() {
-    this.composer.channel = null;
-  }
-
-  get pane() {
-    return this.args.paneService;
-  }
-
-  get composer() {
-    return this.args.composerService;
-  }
-
   get shouldRenderReplyingIndicator() {
-    return this.args.context === "channel" && !this.args.channel?.isDraft;
+    return this.context === "channel" && !this.args.channel?.isDraft;
   }
 
   get shouldRenderMessageDetails() {
@@ -57,15 +42,15 @@ export default class ChatComposer extends Component {
   }
 
   get inlineButtons() {
-    return chatComposerButtons(this, "inline", this.args.context);
+    return chatComposerButtons(this, "inline", this.context);
   }
 
   get dropdownButtons() {
-    return chatComposerButtons(this, "dropdown", this.args.context);
+    return chatComposerButtons(this, "dropdown", this.context);
   }
 
   get fileUploadElementId() {
-    return this.args.context + "-file-uploader";
+    return this.context + "-file-uploader";
   }
 
   get canAttachUploads() {
@@ -74,6 +59,18 @@ export default class ChatComposer extends Component {
       isPresent(this.args.uploadDropZone)
     );
   }
+
+  get disabled() {
+    return (
+      (this.args.channel.isDraft &&
+        isEmpty(this.args.channel?.chatable?.users)) ||
+      !this.chat.userCanInteractWithChat ||
+      !this.args.channel.canModifyMessages(this.currentUser)
+    );
+  }
+
+  @action
+  persistDraft() {}
 
   @action
   setupAutocomplete(textarea) {
@@ -97,6 +94,7 @@ export default class ChatComposer extends Component {
   @action
   didUpdateInReplyTo() {
     this.textareaInteractor.focus({ ensureAtEnd: true, refreshHeight: true });
+    this.persistDraft();
   }
 
   get currentMessage() {
@@ -164,8 +162,8 @@ export default class ChatComposer extends Component {
   onInput(event) {
     this.currentMessage.message = event.target.value;
     this.textareaInteractor.refreshHeight();
-    this.#reportReplyingPresence();
-    this.composer.persistDraft();
+    this.reportReplyingPresence();
+    this.persistDraft();
     this.captureMentions();
   }
 
@@ -181,8 +179,8 @@ export default class ChatComposer extends Component {
     }
 
     this.textareaInteractor.focus();
-    this.#reportReplyingPresence();
-    this.composer.persistDraft();
+    this.reportReplyingPresence();
+    this.persistDraft();
   }
 
   @action
@@ -207,7 +205,7 @@ export default class ChatComposer extends Component {
     this.composer.cancel();
   }
 
-  #reportReplyingPresence() {
+  reportReplyingPresence() {
     if (this.args.channel.isDraft) {
       return;
     }
@@ -220,9 +218,10 @@ export default class ChatComposer extends Component {
 
   @action
   modifySelection(event, options = { type: null, context: null }) {
-    if (options.context !== this.args.context) {
+    if (options.context !== this.context) {
       return;
     }
+
     const sel = this.textareaInteractor.getSelected("", { lineVal: true });
     if (options.type === "bold") {
       this.textareaInteractor.applySurround(sel, "**", "**", "bold_text");
@@ -294,10 +293,10 @@ export default class ChatComposer extends Component {
     }
 
     if (event.key === "Escape") {
-      if (this.composer.message?.inReplyTo) {
-        this.composer.reset();
+      if (this.currentMessage?.inReplyTo) {
+        this.resetComposer();
         return false;
-      } else if (this.composer.message?.editing) {
+      } else if (this.currentMessage?.editing) {
         this.composer.onCancelEditing();
         return false;
       } else {
@@ -307,8 +306,13 @@ export default class ChatComposer extends Component {
   }
 
   @action
+  resetComposer() {
+    this.composer.reset(this.args.channel);
+  }
+
+  @action
   openInsertLinkModal(event, options = { context: null }) {
-    if (options.context !== this.args.context) {
+    if (options.context !== this.context) {
       return;
     }
 
@@ -429,7 +433,7 @@ export default class ChatComposer extends Component {
         } else {
           $textarea.autocomplete({ cancel: true });
           this.chatEmojiPickerManager.open({
-            context: this.args.context,
+            context: this.context,
             initialFilter: v.term,
           });
           return "";

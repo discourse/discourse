@@ -24,7 +24,7 @@
         "chat-composer--send-enabled"
         "chat-composer--send-disabled"
       )
-      (if this.composer.disabled "chat-composer--disabled")
+      (if this.disabled "chat-composer--disabled")
     }}
     {{did-update this.didUpdateMessage this.currentMessage}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
@@ -35,10 +35,10 @@
       <div class="chat-composer__inner-container">
         <ChatComposerDropdown
           @buttons={{this.dropdownButtons}}
-          @isDisabled={{this.composer.disabled}}
+          @isDisabled={{this.disabled}}
           @hasActivePanel={{eq
             this.chatEmojiPickerManager.picker.context
-            @context
+            this.context
           }}
           @onCloseActivePanel={{this.chatEmojiPickerManager.close}}
         />
@@ -48,10 +48,10 @@
             value={{readonly this.currentMessage.message}}
             type="text"
             class="chat-composer__input"
-            disabled={{this.composer.disabled}}
+            disabled={{this.disabled}}
             autocorrect="on"
             autocapitalize="sentences"
-            placeholder={{this.composer.placeholder}}
+            placeholder={{this.placeholder}}
             rows={{1}}
             {{did-insert this.setupTextareaInteractor}}
             {{on "input" this.onInput}}
@@ -60,7 +60,7 @@
             {{on "focusin" (fn this.computeIsFocused true)}}
             {{on "focusout" (fn this.computeIsFocused false)}}
             {{did-insert this.setupAutocomplete}}
-            data-chat-composer-context={{@context}}
+            data-chat-composer-context={{this.context}}
           />
         </div>
 
@@ -69,13 +69,13 @@
           @icon="paper-plane"
           class="chat-composer__send-btn icon-only"
           @title="chat.composer.send"
-          @disabled={{or this.composer.disabled (not this.sendEnabled)}}
+          @disabled={{or this.disabled (not this.sendEnabled)}}
           tabindex={{if this.sendEnabled 0 -1}}
           {{on "focus" (fn this.computeIsFocused true)}}
           {{on "blur" (fn this.computeIsFocused false)}}
         />
 
-        {{#unless this.composer.disabled}}
+        {{#unless this.disabled}}
           <ChatComposerInlineButtons @buttons={{this.inlineButtons}} />
         {{/unless}}
       </div>
@@ -99,7 +99,7 @@
   {{/if}}
 
   <ChatEmojiPicker
-    @context={{@context}}
+    @context={{this.context}}
     @didSelectEmoji={{this.onSelectEmoji}}
   />
 </div>

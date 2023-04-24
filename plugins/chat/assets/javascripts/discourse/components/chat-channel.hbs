@@ -79,13 +79,10 @@
     />
   {{else}}
     {{#if (or @channel.isDraft @channel.isFollowing)}}
-      <ChatComposer
+      <Chat::Composer::Channel
         @channel={{@channel}}
         @uploadDropZone={{this.uploadDropZone}}
-        @composerService={{this.chatChannelComposer}}
-        @paneService={{this.chatChannelPane}}
         @onSendMessage={{this.onSendMessage}}
-        @context="channel"
       />
     {{else}}
       <ChatChannelPreviewCard @channel={{@channel}} />

@@ -188,6 +188,11 @@ export default class ChatThreadPanel extends Component {
     }
   }
 
+  @action
+  resetComposer() {
+    this.chatChannelThreadComposer.reset(this.channel);
+  }
+
   #sendNewMessage(message) {
     // TODO (martin) For desktop notifications
     // resetIdle()
@@ -202,7 +207,7 @@ export default class ChatThreadPanel extends Component {
 
     this.thread.stageMessage(message);
     const stagedMessage = message;
-    this.chatChannelThreadComposer.reset();
+    this.resetComposer();
     this.thread.messagesManager.addMessages([stagedMessage]);
 
     // TODO (martin) Scrolling!!
@@ -240,7 +245,7 @@ export default class ChatThreadPanel extends Component {
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 
-    this.chatChannelThreadComposer.reset();
+    this.resetComposer();
 
     return this.chatApi
       .editMessage(message.channelId, message.id, data)
@@ -333,6 +338,6 @@ export default class ChatThreadPanel extends Component {
       }
     }
 
-    this.chatChannelThreadComposer.reset();
+    this.resetComposer();
   }
 }
