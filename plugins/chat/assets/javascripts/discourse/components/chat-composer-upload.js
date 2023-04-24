@@ -4,7 +4,7 @@ import { isImage } from "discourse/lib/uploads";
 export default class ChatComposerUpload extends Component {
   get isImage() {
     return isImage(
-      this.args.upload.original_filename || this.args.upload.upload.fileName
+      this.args.upload.original_filename || this.args.upload.fileName
     );
   }
 
