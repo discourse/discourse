@@ -32,6 +32,7 @@ jobs:
       UNICORN_WORKERS: 2
       UNICORN_SIDEKIQS: 1
       UNICORN_PORT: 80
+      DISCOURSE_SERVE_STATIC_ASSETS: true
 
     steps:
       - name: Set working directory owner
