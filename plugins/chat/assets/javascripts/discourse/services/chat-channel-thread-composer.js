@@ -14,13 +14,13 @@ export default class extends ChatChannelComposer {
 
   @action
   reset() {
-    this.message = ChatMessage.createDraftMessage(this.chat.activeChannel, {
+    this.message = ChatMessage.createDraftMessage(this.channel, {
       user: this.currentUser,
       thread_id: this.model.id,
     });
   }
 
-  _persistDraft() {
+  persistDraft() {
     // eslint-disable-next-line no-console
     console.debug(
       "Drafts are unsupported for chat threads at this point in time"
