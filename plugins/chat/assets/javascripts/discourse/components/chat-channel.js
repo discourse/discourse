@@ -856,7 +856,7 @@ export default class ChatLivePane extends Component {
 
   @action
   computeDatesSeparators() {
-    throttle(this, this._computeDatesSeparators, 50, false);
+    throttle(this, this._computeDatesSeparators, 50, true);
   }
 
   // A more consistent way to scroll to the bottom when we are sure this is our goal
