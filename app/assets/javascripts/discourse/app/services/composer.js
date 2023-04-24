@@ -1,5 +1,5 @@
 import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
 import {
@@ -96,7 +96,9 @@ export function addComposerSaveErrorCallback(callback) {
 export default class ComposerController extends Controller {
   @service router;
   @service dialog;
-  @controller("topic") topicController;
+  @service site;
+  @service store;
+  @service appEvents;
 
   checkedMessages = false;
   messageCount = null;
@@ -120,6 +122,14 @@ export default class ComposerController extends Controller {
   @reads("currentUser.whisperer") whisperer;
   @and("model.creatingTopic", "isStaffUser") canUnlistTopic;
   @or("replyingToWhisper", "model.whisper") isWhispering;
+
+  get topicController() {
+    return getOwner(this).lookup("controller:topic");
+  }
+
+  get capabilities() {
+    return getOwner(this).lookup("capabilities:main");
+  }
 
   @on("init")
   _setupPreview() {
@@ -574,7 +584,10 @@ export default class ComposerController extends Controller {
 
   @action
   onPopupMenuAction(menuAction) {
-    this.send(menuAction);
+    return (
+      this.actions?.[menuAction]?.bind(this) || // Legacy-style contributions from themes/plugins
+      this[menuAction]
+    )();
   }
 
   @action
@@ -590,7 +603,7 @@ export default class ComposerController extends Controller {
 
   @action
   cancelled() {
-    this.send("hitEsc");
+    this.hitEsc();
   }
 
   @action
@@ -1042,7 +1055,7 @@ export default class ComposerController extends Controller {
         this.appEvents.trigger("composer:saved");
 
         if (result.responseJson.action === "enqueued") {
-          this.send("postWasEnqueued", result.responseJson);
+          this.postWasEnqueued(result.responseJson);
           if (result.responseJson.pending_post) {
             let pendingPosts = this.get("topicController.model.pending_posts");
             if (pendingPosts) {
@@ -1142,6 +1155,14 @@ export default class ComposerController extends Controller {
     promise.finally(() => this.messageBus.resume());
 
     return promise;
+  }
+
+  @action
+  postWasEnqueued(details) {
+    showModal("post-enqueued", {
+      model: details,
+      title: "review.approval.title",
+    });
   }
 
   // Notify the composer messages controller that a reply has been typed. Some
