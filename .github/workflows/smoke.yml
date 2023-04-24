@@ -138,7 +138,7 @@ jobs:
           Dir.chdir(ENV["GITHUB_WORKSPACE"]) do
             require "./config/environment"
 
-            user = User.create!(username: "jane", password: "P4ssw0rd", email: "jane@example.com")
+            user = User.create!(username: "jane", password: "P4ssw0rdUser", email: "jane@example.com")
             user.activate
             # user.change_trust_level!(4)
 
@@ -181,4 +181,4 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           tail -n 250 log/production.log
-          tail -n 250 log/unicorn.stderr.log
+          tail -n 250 log/unicorn.stderr.log || true
