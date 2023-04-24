@@ -987,7 +987,7 @@ class PluginApi {
   }
 
   /**
-   * Adds a glyph to user menu after bookmarks
+   * Adds a glyph to the legacy user menu after bookmarks
    * WARNING: there is limited space there
    *
    * example:
@@ -999,6 +999,7 @@ class PluginApi {
    *    data: { url: `/some/path` },
    * });
    *
+   * To customize the new user menu, see api.registerUserMenuTab
    */
   addUserMenuGlyph(glyph) {
     addUserMenuGlyph(glyph);
@@ -2078,7 +2079,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for
