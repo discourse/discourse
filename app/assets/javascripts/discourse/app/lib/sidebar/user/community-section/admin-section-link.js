@@ -16,7 +16,10 @@ export default class AdminSectionLink extends BaseSectionLink {
   }
 
   get text() {
-    return I18n.t("sidebar.sections.community.links.admin.content");
+    return I18n.t(
+      `sidebar.sections.community.links.${this.overridenName.toLowerCase()}.content`,
+      { defaultValue: this.overridenName }
+    );
   }
 
   get shouldDisplay() {
@@ -24,6 +27,6 @@ export default class AdminSectionLink extends BaseSectionLink {
   }
 
   get prefixValue() {
-    return "wrench";
+    return this.overridenIcon || "wrench";
   }
 }

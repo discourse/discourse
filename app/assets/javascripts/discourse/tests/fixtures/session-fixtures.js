@@ -75,7 +75,7 @@ export default {
             },
             {
               id: 331,
-              name: "Info",
+              name: "About",
               value: "/about",
               icon: "info-circle",
               external: false,
@@ -110,6 +110,14 @@ export default {
               name: "Admin",
               value: "/admin",
               icon: "wrench",
+              external: false,
+              segment: "primary",
+            },
+            {
+              id: 338,
+              name: "New Topic",
+              value: "/new-topic",
+              icon: "plus",
               external: false,
               segment: "primary",
             },

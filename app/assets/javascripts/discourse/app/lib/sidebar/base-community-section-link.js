@@ -9,6 +9,8 @@ export default class BaseCommunitySectionLink {
     router,
     siteSettings,
     inMoreDrawer,
+    overridenName,
+    overridenIcon,
   } = {}) {
     this.router = router;
     this.topicTrackingState = topicTrackingState;
@@ -16,6 +18,8 @@ export default class BaseCommunitySectionLink {
     this.appEvents = appEvents;
     this.siteSettings = siteSettings;
     this.inMoreDrawer = inMoreDrawer;
+    this.overridenName = overridenName;
+    this.overridenIcon = overridenIcon;
   }
 
   /**

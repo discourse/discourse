@@ -1594,6 +1594,7 @@ Discourse::Application.routes.draw do
 
     resources :sidebar_sections, only: %i[index create update destroy]
     post "/sidebar_sections/reorder" => "sidebar_sections#reorder"
+    put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
   end

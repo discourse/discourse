@@ -24,6 +24,6 @@ export default class BadgesSectionLink extends BaseSectionLink {
   }
 
   get prefixValue() {
-    return "certificate";
+    return this.overridenIcon || "certificate";
   }
 }

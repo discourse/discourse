@@ -55,10 +55,10 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.ok(exists("#reply-control"), "it opens the composer");
   });
 
-  test("clicking on section header button while viewing a category", async function (assert) {
+  test("clicking on new topic button while viewing a category", async function (assert) {
     await visit("/c/bug");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-header-button"
+      ".sidebar-section[data-section-name='community'] .sidebar-button"
     );
 
     assert.ok(exists("#reply-control"), "it opens the composer");

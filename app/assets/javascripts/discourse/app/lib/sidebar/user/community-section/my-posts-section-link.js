@@ -69,9 +69,17 @@ export default class MyPostsSectionLink extends BaseSectionLink {
 
   get text() {
     if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
-      return I18n.t("sidebar.sections.community.links.my_posts.content_drafts");
+      return I18n.t(
+        `sidebar.sections.community.links.my_posts.content_drafts`,
+        { defaultValue: "My Drafts" }
+      );
     } else {
-      return I18n.t("sidebar.sections.community.links.my_posts.content");
+      return I18n.t(
+        `sidebar.sections.community.links.${this.overridenName
+          .toLowerCase()
+          .replace(" ", "/")}.content`,
+        { defaultValue: this.overridenName }
+      );
     }
   }
 
@@ -94,7 +102,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
       return "pencil-alt";
     }
-    return "user";
+    return this.overridenIcon || "user";
   }
 
   get suffixCSSClass() {

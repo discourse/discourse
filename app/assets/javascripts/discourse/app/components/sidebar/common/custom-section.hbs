@@ -23,6 +23,13 @@
             dragMove=link.dragMove
           }}
         />
+      {{else if link.action}}
+        <Sidebar::SectionButton
+          @action={{link.action}}
+          @content={{link.text}}
+          @prefixType="icon"
+          @prefixValue={{link.prefixValue}}
+        />
       {{else}}
         <Sidebar::SectionLink
           @shouldDisplay={{link.shouldDisplay}}

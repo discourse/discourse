@@ -4416,10 +4416,13 @@ en:
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
+          reset_confirm: "Are you sure you want to reset this section to default?"
           public: "Make this section public and visible to everyone"
+          more_menu: "More menu"
           links:
             add: "Add another link"
             delete: "Delete link"
+            reset: "Reset to default"
             icon:
               label: "Icon"
               validation:
@@ -4476,8 +4479,10 @@ en:
           configure_defaults: "Configure defaults"
         community:
           header_link_text: "Community"
-          header_action_title: "Create a topic"
           links:
+            new_topic:
+              content: "New topic"
+              title: "Create a topic"
             about:
               content: "About"
               title: "More details about this site"

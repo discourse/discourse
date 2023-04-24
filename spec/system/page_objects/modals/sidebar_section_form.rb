@@ -28,6 +28,11 @@ module PageObjects
         find(".dialog-container .btn-primary").click
       end
 
+      def reset
+        find(".reset-link").click
+        find(".dialog-footer .btn-primary").click
+      end
+
       def save
         find("#save-section").click
       end

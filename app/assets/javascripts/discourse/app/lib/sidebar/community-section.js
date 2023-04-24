@@ -1,12 +1,9 @@
 import I18n from "I18n";
 import SectionLink from "discourse/lib/sidebar/section-link";
-import Composer from "discourse/models/composer";
-import { getOwner, setOwner } from "@ember/application";
+import { setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { next } from "@ember/runloop";
-import PermissionType from "discourse/models/permission-type";
 import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
@@ -16,10 +13,12 @@ import UsersSectionLink from "discourse/lib/sidebar/common/community-section/use
 import GroupsSectionLink from "discourse/lib/sidebar/common/community-section/groups-section-link";
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
 import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
+import NewTopicSectionButton from "discourse/lib/sidebar/user/community-section/new-topic-section-button";
 import {
   customSectionLinks,
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
+import showModal from "discourse/lib/show-modal";
 
 const LINKS_IN_BOTH_SEGMENTS = ["/review"];
 
@@ -34,6 +33,7 @@ const SPECIAL_LINKS_MAP = {
   "/badges": BadgesSectionLink,
   "/admin": AdminSectionLink,
   "/g": GroupsSectionLink,
+  "/new-topic": NewTopicSectionButton,
 };
 
 export default class CommunitySection {
@@ -111,13 +111,23 @@ export default class CommunitySection {
     const sectionLinkClass = SPECIAL_LINKS_MAP[link.value];
 
     if (sectionLinkClass) {
-      return this.#initializeSectionLink(sectionLinkClass, inMoreDrawer);
+      return this.#initializeSectionLink(
+        sectionLinkClass,
+        inMoreDrawer,
+        link.name,
+        link.icon
+      );
     } else {
       return new SectionLink(link, this, this.router);
     }
   }
 
-  #initializeSectionLink(sectionLinkClass, inMoreDrawer) {
+  #initializeSectionLink(
+    sectionLinkClass,
+    inMoreDrawer,
+    overridenName,
+    overridenIcon
+  ) {
     if (this.router.isDestroying) {
       return;
     }
@@ -128,6 +138,8 @@ export default class CommunitySection {
       router: this.router,
       siteSettings: this.siteSettings,
       inMoreDrawer,
+      overridenName,
+      overridenIcon,
     });
   }
 
@@ -141,7 +153,8 @@ export default class CommunitySection {
 
   get decoratedTitle() {
     return I18n.t(
-      `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`
+      `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`,
+      { defaultValue: this.section.title }
     );
   }
 
@@ -149,7 +162,7 @@ export default class CommunitySection {
     if (this.currentUser) {
       return [
         {
-          action: this.composeTopic,
+          action: this.editSection,
           title: I18n.t("sidebar.sections.community.header_action_title"),
         },
       ];
@@ -157,25 +170,11 @@ export default class CommunitySection {
   }
 
   get headerActionIcon() {
-    return "plus";
+    return "pencil-alt";
   }
 
   @action
-  composeTopic() {
-    const composerArgs = {
-      action: Composer.CREATE_TOPIC,
-      draftKey: Composer.NEW_TOPIC_KEY,
-    };
-
-    const controller = getOwner(this).lookup("controller:navigation/category");
-    const category = controller.category;
-
-    if (category && category.permission === PermissionType.FULL) {
-      composerArgs.categoryId = category.id;
-    }
-
-    next(() => {
-      getOwner(this).lookup("controller:composer").open(composerArgs);
-    });
+  editSection() {
+    showModal("sidebar-section-form", { model: this.section });
   }
 }

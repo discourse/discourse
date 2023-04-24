@@ -9,23 +9,38 @@ import { sanitize } from "discourse/lib/text";
 import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
+import { bind } from "discourse-common/utils/decorators";
 
 const FULL_RELOAD_LINKS_REGEX = [/^\/my\/[a-z_\-\/]+$/, /^\/safe-mode$/];
 
 class Section {
   @tracked title;
   @tracked links;
+  @tracked secondaryLinks;
 
-  constructor({ title, links, id, publicSection }) {
+  constructor({
+    title,
+    links,
+    secondaryLinks,
+    id,
+    publicSection,
+    sectionType,
+  }) {
     this.title = title;
     this.public = publicSection;
+    this.sectionType = sectionType;
     this.links = links;
+    this.secondaryLinks = secondaryLinks;
     this.id = id;
   }
 
   get valid() {
     const validLinks =
-      this.links.length > 0 && this.links.every((link) => link.valid);
+      this.links.length > 0 &&
+      this.links.every((link) => link.valid) &&
+      (this.secondaryLinks
+        ? this.secondaryLinks.every((link) => link.valid)
+        : true);
     return this.validTitle && validLinks;
   }
 
@@ -66,7 +81,7 @@ class SectionLink {
   @tracked value;
   @tracked _destroy;
 
-  constructor({ router, icon, name, value, id }) {
+  constructor({ router, icon, name, value, id, objectId }) {
     this.router = router;
     this.icon = icon || "link";
     this.name = name;
@@ -74,6 +89,7 @@ class SectionLink {
     this.id = id;
     this.httpHost = "http://" + window.location.host;
     this.httpsHost = "https://" + window.location.host;
+    this.objectId = objectId;
   }
 
   get path() {
@@ -217,6 +233,7 @@ export default Controller.extend(ModalFunctionality, {
       flashText: null,
       flashClass: null,
     });
+    this.nextObjectId = 0;
     this.model = this.initModel();
   },
 
@@ -229,25 +246,43 @@ export default Controller.extend(ModalFunctionality, {
       return new Section({
         title: this.model.title,
         publicSection: this.model.public,
+        sectionType: this.model.section_type,
         links: A(
-          this.model.links.map(
-            (link) =>
-              new SectionLink({
-                router: this.router,
-                icon: link.icon,
-                name: link.name,
-                value: link.value,
-                id: link.id,
-              })
-          )
+          this.model.links
+            .filter((link) => link.segment === "primary")
+            .map((link) => {
+              this.nextObjectId = this.nextObjectId + 1;
+              return this.initLink(link);
+            })
+        ),
+        secondaryLinks: A(
+          this.model.links
+            .filter((link) => link.segment === "secondary")
+            .map((link) => {
+              this.nextObjectId = this.nextObjectId + 1;
+              return this.initLink(link);
+            })
         ),
         id: this.model.id,
       });
     } else {
       return new Section({
-        links: A([new SectionLink({ router: this.router })]),
+        links: A([
+          new SectionLink({ router: this.router, objectId: this.nextObjectId }),
+        ]),
       });
     }
+  },
+
+  initLink(link) {
+    return new SectionLink({
+      router: this.router,
+      icon: link.icon,
+      name: link.name,
+      value: link.value,
+      id: link.id,
+      objectId: this.nextObjectId,
+    });
   },
 
   create() {
@@ -290,15 +325,18 @@ export default Controller.extend(ModalFunctionality, {
       data: JSON.stringify({
         title: this.model.title,
         public: this.model.public,
-        links: this.model.links.map((link) => {
-          return {
-            id: link.id,
-            icon: link.icon,
-            name: link.name,
-            value: link.path,
-            _destroy: link._destroy,
-          };
-        }),
+        links: this.model.links
+          .concat(this.model?.secondaryLinks || [])
+          .map((link) => {
+            return {
+              id: link.id,
+              icon: link.icon,
+              name: link.name,
+              value: link.path,
+              segment: link.segment,
+              _destroy: link._destroy,
+            };
+          }),
       }),
     })
       .then((data) => {
@@ -325,23 +363,108 @@ export default Controller.extend(ModalFunctionality, {
     return this.model.links.filter((link) => !link._destroy);
   },
 
+  get activeSecondaryLinks() {
+    return this.model.secondaryLinks?.filter((link) => !link._destroy);
+  },
+
   get header() {
     return this.model.id
       ? "sidebar.sections.custom.edit"
       : "sidebar.sections.custom.add";
   },
 
+  @bind
+  reorder(linkIdFrom, linkIdTo, above) {
+    let fromLink = this.model.links.find(
+      (link) => link.objectId === linkIdFrom
+    );
+    if (!fromLink) {
+      fromLink = this.model.secondaryLinks.find(
+        (link) => link.objectId === linkIdFrom
+      );
+    }
+    this.model.links.removeObject(fromLink);
+    this.model.secondaryLinks?.removeObject(fromLink);
+
+    let toPosition = this.model.links.findIndex(
+      (link) => link.objectId === linkIdTo
+    );
+    if (toPosition === -1) {
+      fromLink.segment = "secondary";
+      toPosition = this.model.secondaryLinks.findIndex(
+        (link) => link.objectId === linkIdTo
+      );
+      if (above) {
+        this.model.secondaryLinks.insertAt(toPosition, fromLink);
+      } else {
+        this.model.secondaryLinks.insertAt(toPosition + 1, fromLink);
+      }
+    } else {
+      fromLink.segment = "primary";
+      if (above) {
+        this.model.links.insertAt(toPosition, fromLink);
+      } else {
+        this.model.links.insertAt(toPosition + 1, fromLink);
+      }
+    }
+  },
+
+  get canDelete() {
+    return this.model.id && !this.model.sectionType;
+  },
+
+  @bind
+  deleteLink(link) {
+    if (link.id) {
+      link._destroy = "1";
+    } else {
+      this.model.links.removeObject(link);
+      this.model.secondaryLinks.removeObject(link);
+    }
+  },
+
   actions: {
     addLink() {
-      this.model.links.pushObject(new SectionLink({ router: this.router }));
+      this.nextObjectId = this.nextObjectId + 1;
+      this.model.links.pushObject(
+        new SectionLink({ router: this.router, objectId: this.nextObjectId })
+      );
     },
 
-    deleteLink(link) {
-      if (link.id) {
-        link._destroy = "1";
-      } else {
-        this.model.links.removeObject(link);
-      }
+    addSecondaryLink() {
+      this.nextObjectId = this.nextObjectId + 1;
+      this.model.secondaryLinks.pushObject(
+        new SectionLink({ router: this.router, objectId: this.nextObjectId })
+      );
+    },
+
+    resetToDefault() {
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("sidebar.sections.custom.reset_confirm"),
+        didConfirm: () => {
+          return ajax(`/sidebar_sections/reset/${this.model.id}`, {
+            type: "PUT",
+          })
+            .then((data) => {
+              const newSidebarSections = this.currentUser.sidebar_sections.map(
+                (section) => {
+                  if (section.id === data["sidebar_section"].id) {
+                    return data["sidebar_section"];
+                  }
+                  return section;
+                }
+              );
+              this.currentUser.set("sidebar_sections", newSidebarSections);
+              this.send("closeModal");
+            })
+            .catch((e) =>
+              this.setProperties({
+                flashText: sanitize(extractError(e)),
+                flashClass: "error",
+              })
+            );
+        },
+      });
     },
 
     save() {
