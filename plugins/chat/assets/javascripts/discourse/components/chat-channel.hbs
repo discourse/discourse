@@ -34,7 +34,7 @@
   >
     <div
       class="chat-messages-container"
-      {{chat/on-resize this.didResizePane (hash delay=10)}}
+      {{chat/on-resize this.didResizePane (hash delay=25)}}
     >
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
