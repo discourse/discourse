@@ -140,7 +140,7 @@ jobs:
 
             user = User.create!(username: "jane", password: "P4ssw0rdUser", email: "jane@example.com")
             user.activate
-            # user.change_trust_level!(4)
+            user.change_trust_level!(4)
 
             admin = User.create!(username: "kim", password: "Adm1N_P4ssw0rd", email: "kim@example.com")
             admin.activate
