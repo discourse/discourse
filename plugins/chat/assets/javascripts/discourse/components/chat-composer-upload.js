@@ -9,7 +9,7 @@ export default class ChatComposerUpload extends Component {
   }
 
   get fileName() {
-    return this.isDone
+    return this.args.isDone
       ? this.args.upload.original_filename
       : this.args.upload.fileName;
   }
