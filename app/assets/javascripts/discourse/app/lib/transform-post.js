@@ -26,6 +26,7 @@ export function transformBasicPost(post) {
     flair_url: post.flair_url,
     flair_bg_color: post.flair_bg_color,
     flair_color: post.flair_color,
+    flair_group_id: post.flair_group_id,
     wiki: post.wiki,
     lastWikiEdit: post.last_wiki_edit,
     firstPost: post.post_number === 1,
