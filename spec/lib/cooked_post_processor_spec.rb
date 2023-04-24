@@ -1080,7 +1080,7 @@ RSpec.describe CookedPostProcessor do
           .returns("<img class='onebox' src='#{image_url}' />")
 
         post = Fabricate(:post, raw: url)
-        upload.update!(url: "https://test.s3.amazonaws.com/something.png")
+        upload.update!(url: "https://test.s3.amazonaws.com/something.png", dominant_color: "00ffff")
 
         PostHotlinkedMedia.create!(
           url: "//image.com/avatar.png",
@@ -1094,7 +1094,7 @@ RSpec.describe CookedPostProcessor do
         cpp.post_process_oneboxes
 
         expect(cpp.doc.to_s).to eq(
-          "<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"100\" height=\"200\"></p>",
+          "<p><img class=\"onebox\" src=\"#{upload.url}\" data-dominant-color=\"00ffff\" width=\"100\" height=\"200\"></p>",
         )
 
         upload.destroy!
@@ -1124,7 +1124,10 @@ RSpec.describe CookedPostProcessor do
             .returns("<img class='onebox' src='#{image_url}' />")
 
           post = Fabricate(:post, raw: url)
-          upload.update!(url: "https://test.s3.amazonaws.com/something.png")
+          upload.update!(
+            url: "https://test.s3.amazonaws.com/something.png",
+            dominant_color: "00ffff",
+          )
 
           PostHotlinkedMedia.create!(
             url: "//image.com/avatar.png",
@@ -1141,7 +1144,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process_oneboxes
 
           expect(cpp.doc.to_s).to eq(
-            "<p><img class=\"onebox\" src=\"#{cooked_url}\" width=\"100\" height=\"200\"></p>",
+            "<p><img class=\"onebox\" src=\"#{cooked_url}\" data-dominant-color=\"00ffff\" width=\"100\" height=\"200\"></p>",
           )
         end
       end

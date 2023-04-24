@@ -22,11 +22,15 @@
         {{#if this.showStaffCounters}}
           <div class="staff-counters">
             {{#if this.model.number_of_flags_given}}
-              <div><span
-                  class="helpful-flags"
-                >{{this.model.number_of_flags_given}}</span>{{i18n
-                  "user.staff_counters.flags_given"
-                }}</div>
+              <div>
+                {{html-safe
+                  (i18n
+                    "user.staff_counters.flags_given"
+                    className="helpful-flags"
+                    count=this.model.number_of_flags_given
+                  )
+                }}
+              </div>
             {{/if}}
             {{#if this.model.number_of_flagged_posts}}
               <div>
@@ -38,10 +42,12 @@
                     type="ReviewableFlaggedPost"
                   }}
                 >
-                  <span
-                    class="flagged-posts"
-                  >{{this.model.number_of_flagged_posts}}</span>{{i18n
-                    "user.staff_counters.flagged_posts"
+                  {{html-safe
+                    (i18n
+                      "user.staff_counters.flagged_posts"
+                      className="flagged-posts"
+                      count=this.model.number_of_flagged_posts
+                    )
                   }}
                 </LinkTo>
               </div>
@@ -56,10 +62,12 @@
                     type="ReviewableQueuedPost"
                   }}
                 >
-                  <span
-                    class="flagged-posts"
-                  >{{this.model.number_of_rejected_posts}}</span>{{i18n
-                    "user.staff_counters.rejected_posts"
+                  {{html-safe
+                    (i18n
+                      "user.staff_counters.rejected_posts"
+                      className="flagged-posts"
+                      count=this.model.number_of_rejected_posts
+                    )
                   }}
                 </LinkTo>
               </div>
@@ -68,10 +76,12 @@
             {{#if this.model.number_of_deleted_posts}}
               <div>
                 <LinkTo @route="user.deletedPosts" @model={{this.model}}>
-                  <span
-                    class="deleted-posts"
-                  >{{this.model.number_of_deleted_posts}}</span>{{i18n
-                    "user.staff_counters.deleted_posts"
+                  {{html-safe
+                    (i18n
+                      "user.staff_counters.deleted_posts"
+                      className="deleted-posts"
+                      count=this.model.number_of_deleted_posts
+                    )
                   }}
                 </LinkTo>
               </div>
@@ -79,10 +89,12 @@
             {{#if this.model.number_of_suspensions}}
               <div>
                 <a href {{on "click" this.showSuspensions}}>
-                  <span
-                    class="suspensions"
-                  >{{this.model.number_of_suspensions}}</span>{{i18n
-                    "user.staff_counters.suspensions"
+                  {{html-safe
+                    (i18n
+                      "user.staff_counters.suspensions"
+                      className="suspensions"
+                      count=this.model.number_of_suspensions
+                    )
                   }}
                 </a>
               </div>
@@ -93,10 +105,13 @@
                   @route="userPrivateMessages.user.warnings"
                   @model={{this.model}}
                 >
-                  <span
-                    class="warnings-received"
-                  >{{this.model.warnings_received_count}}</span>
-                  {{i18n "user.staff_counters.warnings_received"}}
+                  {{html-safe
+                    (i18n
+                      "user.staff_counters.warnings_received"
+                      className="warnings-received"
+                      count=this.model.warnings_received_count
+                    )
+                  }}
                 </LinkTo>
               </div>
             {{/if}}

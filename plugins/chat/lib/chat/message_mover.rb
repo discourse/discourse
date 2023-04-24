@@ -143,7 +143,7 @@ module Chat
       WHERE cmr.chat_message_id = mm.old_chat_message_id
     SQL
 
-      DB.exec(<<~SQL, target_type: Chat::Message.sti_name)
+      DB.exec(<<~SQL, target_type: Chat::Message.polymorphic_name)
       UPDATE upload_references uref
       SET target_id = mm.new_chat_message_id
       FROM moved_chat_messages mm
@@ -209,7 +209,7 @@ module Chat
     def update_thread_references
       threads_to_update = []
       @source_messages
-        .select { |message| message.thread_id.present? }
+        .select { |message| message.in_thread? }
         .each do |message_with_thread|
           # If one of the messages we are moving is the original message in a thread,
           # then all the remaining messages for that thread must be moved to a new one,

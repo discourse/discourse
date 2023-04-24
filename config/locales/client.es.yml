@@ -184,12 +184,6 @@ es:
     software_update_prompt:
       message: "Hemos actualizado este sitio, <span>vuelve a cargarlo</span>, o podrías experimentar un comportamiento inesperado."
       dismiss: "Descartar"
-    bootstrap_mode_enabled:
-      one: "Para hacer que la inauguración de tu sitio sea más fácil, el modo de arranque está activado. Todas las cuentas tendrán nivel de confianza 1 y los correos electrónicos de resumen diarios están activados. Esto se desactivará automáticamente cuando se haya registrado %{count} usuario."
-      other: "Para hacer que la inauguración de tu sitio sea más fácil, el modo arranque está activado. Todas las cuentas tendrán nivel de confianza 1 y los correos electrónicos de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuarios."
-    bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de las próximas 24 horas."
-    bootstrap_invite_button_title: "Enviar invitaciones"
-    bootstrap_wizard_link_title: "Finalizar asistente de configuración"
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
@@ -348,7 +342,6 @@ es:
       new_topic: "Nuevo borrador de tema"
       new_private_message: "Nuevo borrador de mensaje personal"
       abandon:
-        confirm: "Tienes un borrador en curso para este tema. ¿Qué te gustaría hacer?"
         yes_value: "Descartar"
         no_value: "Reanudar edición"
     topic_count_categories:
@@ -1171,7 +1164,6 @@ es:
       home: "Página de inicio por defecto"
       staged: "Temporal"
       staff_counters:
-        flags_given: "denuncias útiles"
         flagged_posts: "publicaciones denunciadas"
         deleted_posts: "publicaciones eliminadas"
         suspensions: "suspensiones"
@@ -3980,9 +3972,12 @@ es:
           save: "Guardar"
           delete: "Eliminar"
           links:
-            icon: "Icono"
-            name: "Nombre"
-            value: "Enlace"
+            icon:
+              label: "Icono"
+            name:
+              label: "Nombre"
+            value:
+              label: "Enlace"
         about:
           header_link_text: "Acerca de"
         messages:
@@ -5037,14 +5032,8 @@ es:
           silence: "Silenciar"
           link: "Enlace"
         action_descriptions:
-          block: "Impedir la publicación de mensajes que contengan estas palabras. El usuario verá un mensaje de error cuando trate de publicar su mensaje."
-          censor: "Permitir mensajes que contengan estas palabras, pero reemplazar estas palabras por caracteres que las censuren."
-          require_approval: "Las publicaciones que contengan estas palabras deberán ser aprobadas por el personal antes de que se puedan visualizar."
-          flag: "Permitir publicaciones que contengan estas palabras, pero denunciar el mensaje como inapropiado para que los moderadores puedan revisarlo."
-          replace: "Reemplazar palabras en publicaciones por otras palabras"
-          tag: "Etiquetar temas automáticamente basándose en su primera publicación."
-          silence: "Las primeras publicaciones de usuarios que contengan estas palabras deberán ser aprobadas por el personal antes de que se puedan ver, y el usuario será silenciado automáticamente."
-          link: "Reemplazar palabras en publicaciones por enlaces"
+          replace: "Reemplazar palabras en publicaciones por otras palabras."
+          link: "Reemplazar palabras en publicaciones por enlaces."
         form:
           label: "Contiene palabra o frase"
           placeholder: "Escribe una palabra o frase (* es un comodín)"

@@ -157,6 +157,8 @@ sv:
       removed_user: "Tog bort %{who} %{when}"
       removed_group: "Tog bort %{who} %{when}"
       autobumped: "Automatiskt positionerad %{when}"
+      tags_changed: "Taggar uppdaterade %{when}"
+      category_changed: "Kategori uppdaterad %{when}"
       autoclosed:
         enabled: "Stängdes %{when}"
         disabled: "Öppnades %{when}"
@@ -187,12 +189,7 @@ sv:
     software_update_prompt:
       message: "Vi har uppdaterat den här webbplatsen, och <span>ber dig uppdatera sidan</span>, annars kan du uppleva oväntad funktion."
       dismiss: "Avfärda"
-    bootstrap_mode_enabled:
-      one: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
-      other: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
-    bootstrap_mode_disabled: "Bootstrap-läge stängs av om 24 timmar."
-    bootstrap_invite_button_title: "Skicka inbjudningar"
-    bootstrap_wizard_link_title: "Slutför installationsguiden"
+    bootstrap_mode: "Bootstrap-läge"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Din webbplats kanske inte fungerar eftersom ett tema / komponent har fel."
@@ -353,7 +350,7 @@ sv:
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för personligt meddelande"
       abandon:
-        confirm: "Du har ett pågående utkast för detta ämne. Vad vill du göra med det?"
+        confirm: "Du har redan ett pågående utkast. Vad vill du göra med det?"
         yes_value: "Förkasta"
         no_value: "Återuppta redigering"
     topic_count_categories:
@@ -1203,7 +1200,6 @@ sv:
       home: "Standardhemsida"
       staged: "Arrangerad"
       staff_counters:
-        flags_given: "hjälpsamma flaggor"
         flagged_posts: "flaggade inlägg"
         deleted_posts: "raderade inlägg"
         suspensions: "avstängningar"
@@ -4020,17 +4016,34 @@ sv:
         custom:
           add: "Lägg till ett anpassat avsnitt"
           edit: "Redigera anpassat avsnitt"
-          name: "Avsnittstitel"
           save: "Spara"
           delete: "Radera"
           delete_confirm: "Är du säker på att du vill radera det här avsnittet?"
           public: "Gör denna sektion offentligt och synligt för alla"
           links:
-            icon: "Ikon"
-            name: "Namn"
-            value: "Länk"
             add: "Lägg till ytterligare en länk"
             delete: "Ta bort länk"
+            icon:
+              label: "Ikon"
+              validation:
+                blank: "Ikonen får inte vara tom"
+                maximum: "Ikonen måste vara kortare än %{count} tecken"
+            name:
+              label: "Namn"
+              validation:
+                blank: "Namnet får inte vara tomt"
+                maximum: "Namnet måste vara kortare än %{count} tecken"
+            value:
+              label: "Länk"
+              validation:
+                blank: "Länken får inte vara tom"
+                maximum: "Länken måste vara kortare än %{count} tecken"
+                invalid: "Formatet är ogiltigt"
+          title:
+            label: "Avsnittstitel"
+            validation:
+              blank: "Titeln får inte vara tom"
+              maximum: "Titeln måste vara kortare än %{count} tecken"
         about:
           header_link_text: "Om"
         messages:
@@ -5061,6 +5074,7 @@ sv:
             create_public_sidebar_section: "skapa offentlig sektion i sidopanel"
             update_public_sidebar_section: "uppdatera offentlig sektion i sidopanel"
             destroy_public_sidebar_section: "förstöra doffentlig sektion i sidopanel"
+            reset_bounce_score: "återställ antalet studsar"
         screened_emails:
           title: "Kontrollerade e-postadresser"
           description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas."
@@ -5124,14 +5138,14 @@ sv:
           silence: "Tysta"
           link: "Länk"
         action_descriptions:
-          block: "Förhindra att inlägg med dessa ord publiceras. Användaren kommer att se ett felmeddelande när de försöker skicka inlägget."
-          censor: "Tillåt inlägg med dessa ord, men ersätt orden med tecken som döljer det censurerade orden."
-          require_approval: "Inlägg som innehåller dessa ord kommer att behöva godkännande av personal innan de visas."
-          flag: "Tillåt inlägg med dessa ord, men flagga orden som olämpliga så att moderatorer kan granska dem."
-          replace: "Ersätt ord i inlägg med andra ord"
-          tag: "Tagga ämnen automatiskt baserat på första inlägget"
-          silence: "Användares första inlägg som innehåller dessa ord kommer att kräva godkännande av personalen innan de kan ses och användaren kommer automatiskt att tystas."
-          link: "Ersätt ord i inlägg med länkar"
+          block: "Ett felmeddelande kommer att visas när du försöker skapa ett inlägg som innehåller dessa ord."
+          censor: "Tillåt inlägg som innehåller dessa ord, men ersätt orden med tecken som döljer det censurerade orden."
+          require_approval: "Kräv personalens godkännande för inlägg som innehåller dessa ord innan de blir synliga för andra."
+          flag: "Tillåt inlägg som innehåller dessa ord, men flagga dem som olämpliga för granskning av moderatorer."
+          replace: "Ersätt ord i inlägg med andra ord."
+          tag: "Tagga ämnen automatiskt om det första inlägget innehåller ett specifikt ord."
+          silence: "Tysta nya konton om deras allra första inlägg innehåller något av dessa ord. Inlägget döljs automatiskt tills personalen godkänner det."
+          link: "Ersätt ord i inlägg med länkar."
         form:
           label: "Har ord eller fras"
           placeholder: "Ange ord eller fras (* är ett jokertecken)"

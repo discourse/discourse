@@ -63,4 +63,6 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   if name == :reviewable_low_priority_threshold && Reviewable.min_score_for_priority(:medium) > 0
     Reviewable.set_priorities(low: new_value)
   end
+
+  Emoji.clear_cache && Discourse.request_refresh! if name == :emoji_deny_list
 end

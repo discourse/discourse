@@ -76,15 +76,6 @@ Fabricator(:chat_message_reaction, class_name: "Chat::MessageReaction") do
   end
 end
 
-Fabricator(:chat_upload, class_name: "Chat::Upload") do
-  transient :user
-
-  user { Fabricate(:user) }
-
-  chat_message { |attrs| Fabricate(:chat_message, user: attrs[:user]) }
-  upload { |attrs| Fabricate(:upload, user: attrs[:user]) }
-end
-
 Fabricator(:chat_message_revision, class_name: "Chat::MessageRevision") do
   chat_message { Fabricate(:chat_message) }
   old_message { "something old" }
@@ -96,7 +87,6 @@ Fabricator(:chat_reviewable_message, class_name: "Chat::ReviewableMessage") do
   reviewable_by_moderator true
   type "ReviewableChatMessage"
   created_by { Fabricate(:user) }
-  target_type Chat::Message.sti_name
   target { Fabricate(:chat_message) }
   reviewable_scores { |p| [Fabricate.build(:reviewable_score, reviewable_id: p[:id])] }
 end
@@ -156,4 +146,6 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
   original_message do |attrs|
     Fabricate(:chat_message, chat_channel: attrs[:channel] || Fabricate(:chat_channel))
   end
+
+  after_create { |thread| thread.original_message.update!(thread_id: thread.id) }
 end

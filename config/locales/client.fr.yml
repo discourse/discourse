@@ -184,12 +184,6 @@ fr:
     software_update_prompt:
       message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>actualiser cette page</span> pour éviter d'éventuels dysfonctionnements."
       dismiss: "Ignorer"
-    bootstrap_mode_enabled:
-      one: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par e-mail. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateur."
-      other: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par e-mail. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateurs."
-    bootstrap_mode_disabled: "Le mode d'amorçage sera désactivé dans les prochaines 24 heures."
-    bootstrap_invite_button_title: "Envoyer des invitations"
-    bootstrap_wizard_link_title: "Terminer l'assistant de configuration"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
@@ -348,7 +342,6 @@ fr:
       new_topic: "Nouveau brouillon de sujet"
       new_private_message: "Nouveau brouillon de message direct"
       abandon:
-        confirm: "Vous avez un brouillon en cours pour ce sujet. Que voulez-vous en faire ?"
         yes_value: "Abandonner"
         no_value: "Reprendre l'édition"
     topic_count_categories:
@@ -1171,7 +1164,6 @@ fr:
       home: "Page d'accueil par défaut"
       staged: "Distant"
       staff_counters:
-        flags_given: "signalements utiles"
         flagged_posts: "messages signalés"
         deleted_posts: "messages supprimés"
         suspensions: "suspensions"
@@ -3993,9 +3985,12 @@ fr:
           save: "Enregistrer"
           delete: "Supprimer"
           links:
-            icon: "Icône"
-            name: "Nom"
-            value: "Insérer un lien"
+            icon:
+              label: "Icône"
+            name:
+              label: "Nom"
+            value:
+              label: "Insérer un lien"
         about:
           header_link_text: "À propos"
         messages:
@@ -5052,14 +5047,8 @@ fr:
           silence: "Mettre en sourdine"
           link: "Insérer un lien"
         action_descriptions:
-          block: "Empêcher les messages contenant ces mots d'être publiés. L'utilisateur verra un message d'erreur lorsqu'il essaiera de publier son message."
-          censor: "Autoriser les messages contenant ces mots, mais les remplacer par des caractères qui masquent les mots censurés."
-          require_approval: "Obtenir l'approbation d'un responsable avant de publier les messages contenant ces mots."
-          flag: "Autoriser les messages qui contiennent ces mots, mais les marquer comme étant signalés pour que les modérateurs puissent les examiner."
-          replace: "Remplacer ces mots par d'autres mots"
-          tag: "Étiqueter automatiquement les sujets en fonction de leur premier message."
-          silence: "Mettre automatiquement en sourdine les utilisateurs dont le premier message contient ces mots, et nécessiter l'approbation d'un responsable avant sa publication."
-          link: "Remplacer ces mots par des liens"
+          replace: "Remplacer ces mots par d'autres mots."
+          link: "Remplacer ces mots par des liens."
         form:
           label: "Contient le mot ou l'expression"
           placeholder: "Saisissez un mot ou une expression (* sert de caractère générique)"

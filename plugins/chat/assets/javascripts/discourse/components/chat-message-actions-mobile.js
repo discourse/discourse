@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import { getOwner } from "discourse-common/lib/get-owner";
 import { tracked } from "@glimmer/tracking";
 import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
@@ -6,12 +8,28 @@ import { isTesting } from "discourse-common/config/environment";
 import { inject as service } from "@ember/service";
 
 export default class ChatMessageActionsMobile extends Component {
+  @service chat;
+  @service site;
   @service capabilities;
 
   @tracked hasExpandedReply = false;
   @tracked showFadeIn = false;
 
   messageActions = null;
+
+  get message() {
+    return this.chat.activeMessage.model;
+  }
+
+  get messageInteractor() {
+    const activeMessage = this.chat.activeMessage;
+
+    return new ChatMessageInteractor(
+      getOwner(this),
+      activeMessage.model,
+      activeMessage.context
+    );
+  }
 
   @action
   fadeAndVibrate() {
@@ -35,8 +53,14 @@ export default class ChatMessageActionsMobile extends Component {
   }
 
   @action
-  actAndCloseMenu(fn) {
-    fn?.();
+  actAndCloseMenu(fnId) {
+    this.messageInteractor[fnId]();
+    this.#onCloseMenu();
+  }
+
+  @action
+  openEmojiPicker(_, event) {
+    this.messageInteractor.openEmojiPicker(_, event);
     this.#onCloseMenu();
   }
 
@@ -52,7 +76,7 @@ export default class ChatMessageActionsMobile extends Component {
 
       // by ensuring we are not hovering any message anymore
       // we also ensure the menu is fully removed
-      this.args.onHoverMessage?.(null);
+      this.chat.activeMessage = null;
     }, 200);
   }
 

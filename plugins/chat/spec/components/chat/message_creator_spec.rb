@@ -436,6 +436,21 @@ describe Chat::MessageCreator do
         expect(message.thread.original_message_user).to eq(reply_message.user)
       end
 
+      it "publishes the new thread" do
+        messages =
+          MessageBus.track_publish do
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+          end
+
+        thread_created_message = messages.find { |m| m.data["type"] == "thread_created" }
+        expect(thread_created_message.channel).to eq("/chat/#{public_chat_channel.id}")
+      end
+
       context "when the thread_id is provided" do
         fab!(:existing_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
 
@@ -813,9 +828,7 @@ describe Chat::MessageCreator do
             content: "Beep boop",
             upload_ids: [upload1.id],
           )
-        }.to not_change { chat_upload_count([upload1]) }.and change {
-                UploadReference.where(upload_id: upload1.id).count
-              }.by(1)
+        }.to change { UploadReference.where(upload_id: upload1.id).count }.by(1)
       end
 
       it "can attach multiple uploads to a new message" do
@@ -826,9 +839,7 @@ describe Chat::MessageCreator do
             content: "Beep boop",
             upload_ids: [upload1.id, upload2.id],
           )
-        }.to not_change { chat_upload_count([upload1, upload2]) }.and change {
-                UploadReference.where(upload_id: [upload1.id, upload2.id]).count
-              }.by(2)
+        }.to change { UploadReference.where(upload_id: [upload1.id, upload2.id]).count }.by(2)
       end
 
       it "filters out uploads that weren't uploaded by the user" do
@@ -839,7 +850,7 @@ describe Chat::MessageCreator do
             content: "Beep boop",
             upload_ids: [private_upload.id],
           )
-        }.not_to change { chat_upload_count([private_upload]) }
+        }.not_to change { UploadReference.where(upload_id: private_upload.id).count }
       end
 
       it "doesn't attach uploads when `chat_allow_uploads` is false" do
@@ -851,9 +862,7 @@ describe Chat::MessageCreator do
             content: "Beep boop",
             upload_ids: [upload1.id],
           )
-        }.to not_change { chat_upload_count([upload1]) }.and not_change {
-                UploadReference.where(upload_id: upload1.id).count
-              }
+        }.to not_change { UploadReference.where(upload_id: upload1.id).count }
       end
     end
   end
@@ -941,12 +950,5 @@ describe Chat::MessageCreator do
         )
       end
     end
-  end
-
-  # TODO (martin) Remove this when we remove ChatUpload completely, 2023-04-01
-  def chat_upload_count(uploads)
-    DB.query_single(
-      "SELECT COUNT(*) FROM chat_uploads WHERE upload_id IN (#{uploads.map(&:id).join(",")})",
-    ).first
   end
 end

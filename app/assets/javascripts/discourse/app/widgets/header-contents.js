@@ -5,7 +5,7 @@ createWidget("header-contents", {
   tagName: "div.contents.clearfix",
   transform() {
     return {
-      staff: this.get("currentUser.staff"),
+      showBootstrapMode: this.currentUser?.staff && this.site.desktopView,
     };
   },
   template: hbs`
@@ -20,7 +20,7 @@ createWidget("header-contents", {
     {{#if attrs.topic}}
       {{header-topic-info attrs=attrs}}
     {{else if this.siteSettings.bootstrap_mode_enabled}}
-      {{#if transformed.staff}}
+      {{#if transformed.showBootstrapMode}}
         {{header-bootstrap-mode attrs=attrs}}
       {{/if}}
     {{/if}}

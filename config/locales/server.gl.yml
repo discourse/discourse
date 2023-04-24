@@ -999,7 +999,7 @@ gl:
       title: "UAD/UAM"
       xaxis: "Día"
       yaxis: "UAD/UAM"
-      description: "Número de membros que iniciaron sesión no último día entre o número de membros que iniciaron sesión no último mes - devolve a porcentaxe que indica o grao de permanencia da comunidade. Obxectivo: >30%."
+      description: "Número de membros que iniciaron sesión no último día entre o número de membros que iniciaron sesión no último mes - devolve a porcentaxe que indica o grao de permanencia da comunidade. Obxectivo: >20%."
     daily_engaged_users:
       title: "Usuarios comprometidos a diario"
       xaxis: "Día"
@@ -1340,7 +1340,6 @@ gl:
     manifest_icon: "Imaxe utilizada como logo/imaxe de benvida en Android. Cambiarase automaticamente o tamaño a 512 × 512. Se se deixa en branco, utilizarase large_icon."
     manifest_screenshots: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
     favicon: "Unha favicona para o seu sitio, mire <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
-    apple_touch_icon: "Icona utilizada para dispositivos Apple. Redimensionarase automaticamente a 180x180. Se se deixa en branco, utilizarase large_icon."
     opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada"
     notification_email: "O enderezo electrónico remitente utilizado ao enviar todos os correos electrónicos esenciais do sistema. O dominio especificado debe ter correctamente configurados os rexistros SPF, DKIM e PTR inversos para que os correos electrónicos se reciban correctamente."
     email_custom_headers: "Unha listaxe de cabeceiras de correo personalizadas separadas por barras verticais"
@@ -1940,7 +1939,6 @@ gl:
       staged_users_disabled: "Primeiro debe activar «usuarios transitorios» antes de activar esta opción."
       reply_by_email_disabled: "Primeiro debe activar «responder vía correo electrónico» antes de activar esta opción."
       discourse_connect_url_is_empty: "Debe estabelecer un «URL de discourse connect» antes de activar este axuste."
-      discourse_connect_invite_only: "Non pode activar o DiscourseConnect e ter «só por convite» ao mesmo tempo."
       enable_local_logins_disabled: "Debe activar primeiro «activar inicios de sesión locais» antes de activar esta opción."
       min_username_length_exists: "Non pode estabelecer que a largura mínima do nome de usuario sexa maior có nome de usuario máis curto (%{username})."
       min_username_length_range: "O mínimo non pode ser maior que o máximo."
@@ -3281,8 +3279,6 @@ gl:
   offline:
     title: "Non se pode cargar a aplicación"
     offline_page_message: "Parece que non está conectado/a! Comprobe a súa conexión á rede e vólvao tentar."
-  login_required:
-    welcome_message: "## [Dámoslle a benvida a %{title}](#welcome)"
   upload:
     edit_reason: "copias locais de imaxes descargadas"
     unauthorized: "Sentímolo, o ficheiro que tenta subir non está autorizado (extensións permitidas: %{authorized_extensions})."

@@ -52,6 +52,11 @@ zh_CN:
   remove_posts_deleted_by_author: "被作者删除"
   redirect_warning: "我们无法验证您选择的链接是否确实发布到了论坛。如果您仍想继续，请选择下面的链接。"
   on_another_topic: "在另一个话题中"
+  topic_category_changed: "从 %{from} 到 %{to}"
+  topic_tag_changed:
+    added_and_removed: "添加 %{added} 并删除 %{removed}"
+    added: "已添加 %{added}"
+    removed: "删除了 %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
@@ -623,6 +628,7 @@ zh_CN:
       disallowed_tags_generic: "此话题包含禁止的标签。"
       slug_contains_non_ascii_chars: "包含非 ASCII 字符"
       is_already_in_use: "已在使用中"
+      move_topic_to_category_disallowed: "你不能把这个话题移动到一个你没有权限创建新主题的类别。"
     cannot_delete:
       uncategorized: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能删除。"
       has_subcategories: "无法删除此类别，因为它有子类别。"
@@ -1060,7 +1066,7 @@ zh_CN:
       title: "DAU/MAU"
       xaxis: "天"
       yaxis: "DAU/MAU"
-      description: "在过去一天内登录的成员数除以过去一个月内登录的成员数 - 返回表示社区“粘性”的 %。目标是 >30％。"
+      description: "在过去一天内登录的成员数除以过去一个月内登录的成员数 - 返回表示社区“粘性”的 %。目标是 >20％。"
     daily_engaged_users:
       title: "每日参与用户"
       xaxis: "天"
@@ -1427,7 +1433,7 @@ zh_CN:
     manifest_icon: "在 Android 上用作徽标/初始屏幕图片的图片。将自动调整为 512 × 512。如果留空，将使用 large_icon。"
     manifest_screenshots: "在安装提示页面上展示您的实例特色和功能的屏幕截图。所有图片均应为本地上传且尺寸相同。"
     favicon: "您的站点的网站图标，请参阅 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是 png 图片。将调整为 32x32。如果留空，将使用 large_icon。"
-    apple_touch_icon: "用于 Apple 触控设备的图标。将自动调整为 180x180。如果留空，将使用 large_icon。"
+    apple_touch_icon: "用于 Apple 触摸设备的图标。不推荐透明背景。将自动调整为 180x180。如果留空，将使用 large_icon。"
     opengraph_image: "默认 OpenGraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
     twitter_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
@@ -1939,6 +1945,8 @@ zh_CN:
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
     read_time_word_count: "每分钟可阅读的字数，用于估算阅读时间。"
     topic_page_title_includes_category: "话题页面<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>标题标签</a>包含类别名称。"
+    native_app_install_banner_ios: "在 iOS 设备上向基本用户 (信任级别1) 及以上的用户显示 DiscourseHub 应用程序横幅。"
+    native_app_install_banner_android: "在 Android 设备上向基本用户 (信任级别1) 及以上的用户显示 DiscourseHub 应用程序横幅。"
     app_association_android: "端点 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 的内容，用于 Google 的 Digital Asset Links API。"
     app_association_ios: "端点 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association </a> 的内容，用于在创建此站点与 iOS 应用之间通用链接。"
     share_anonymized_statistics: "共享匿名使用统计信息。"
@@ -2094,6 +2102,7 @@ zh_CN:
     enable_new_notifications_menu: "为传统导航菜单启用新的通知菜单。"
     enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
     experimental_new_new_view_groups: "试验性的：启用一个新的主题列表，将未读和新的主题合并，并使侧边栏中的 \"一切 \"链接指向它。"
+    enable_custom_sidebar_sections: "实验：启用自定义侧边栏部分"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2128,7 +2137,6 @@ zh_CN:
       staged_users_disabled: "在启用此设置之前，您必须先启用 'staged users'。"
       reply_by_email_disabled: "在启用此设置之前，您必须先启用 'reply by email'。"
       discourse_connect_url_is_empty: "在启用此设置之前，您必须先设置 'discourse connect url'。"
-      discourse_connect_invite_only: "您不能同时启用 DiscourseConnect 和仅邀请模式。"
       enable_local_logins_disabled: "在启用此设置之前，您必须先启用 'enable local logins'。"
       min_username_length_exists: "您不能将最小用户名长度设置为高于最短用户名 (%{username})。"
       min_username_length_range: "您不能将最小值设置为高于最大值。"
@@ -3632,7 +3640,7 @@ zh_CN:
     title: "无法加载应用"
     offline_page_message: "您好像离线了！请检查您的网络连接，然后重试。"
   login_required:
-    welcome_message: "## [欢迎来到%{title}](#welcome)"
+    welcome_message: "# [欢迎来到 %{title}](#welcome)"
   upload:
     edit_reason: "下载图片的本地副本"
     unauthorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"

@@ -15,6 +15,7 @@ sv:
           actions:
             chat_channel_status_change: "Chattkanalens status har ändrats"
             chat_channel_delete: "Chattkanal raderad"
+            chat_auto_remove_membership: "Medlemskap tas automatiskt bort från kanaler"
       api:
         scopes:
           descriptions:
@@ -208,6 +209,7 @@ sv:
         composer: "Chattkompositör"
         channels_list: "Lista över chattkanaler"
       no_public_channels: "Du har inte gått med i några kanaler."
+      kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
       only_chat_push_notifications:
         title: "Skicka bara push-meddelanden för chatt"
         description: "Blockera alla push-meddelanden som inte är chattmeddelanden från att skickas"
@@ -504,8 +506,9 @@ sv:
         symbols: "Symboler"
         search_placeholder: "Sök efter emojinamn och alias..."
         no_results: "Inga resultat"
+      thread:
+        label: Tråd
       threads:
-        op_said: "OP sa:"
         started_by: "Startad av"
         open: "Öppna tråd"
       draft_channel_screen:
@@ -552,9 +555,8 @@ sv:
       transcript:
         view: "Visa tidigare meddelandens avskrift"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Flaggat chattmeddelande"
-          flagged_by: "Flaggat av"
     keyboard_shortcuts_help:
       chat:
         title: "Chatt"
@@ -567,6 +569,7 @@ sv:
           composer_code: "%{shortcut} Kod (endast kompositör)"
           drawer_open: "%{shortcut} Öppna chattmenyn"
           drawer_close: "%{shortcut} Stäng chattmenyn"
+          mark_all_channels_read: "%{shortcut} Markera alla kanaler som lästa"
     topic_statuses:
       chat:
         help: "Chatt är aktiverat för detta ämne"

@@ -603,7 +603,7 @@ module Discourse
   USER_READONLY_MODE_KEY ||= "readonly_mode:user"
   PG_FORCE_READONLY_MODE_KEY ||= "readonly_mode:postgres_force"
 
-  # Psuedo readonly mode, where staff can still write
+  # Pseudo readonly mode, where staff can still write
   STAFF_WRITES_ONLY_MODE_KEY ||= "readonly_mode:staff_writes_only"
 
   READONLY_KEYS ||= [
@@ -715,13 +715,10 @@ module Discourse
   end
 
   def self.postgres_recently_readonly?
-    timestamp =
-      postgres_last_read_only.defer_get_set("timestamp") do
-        seconds = redis.get(LAST_POSTGRES_READONLY_KEY)
-        Time.zone.at(seconds.to_i) if seconds
-      end
+    seconds =
+      postgres_last_read_only.defer_get_set("timestamp") { redis.get(LAST_POSTGRES_READONLY_KEY) }
 
-    timestamp.present? && timestamp > 15.seconds.ago
+    seconds ? Time.zone.at(seconds.to_i) > 15.seconds.ago : false
   end
 
   def self.recently_readonly?
@@ -780,10 +777,8 @@ module Discourse
 
   def self.git_branch
     @git_branch ||=
-      begin
-        git_cmd = "git rev-parse --abbrev-ref HEAD"
-        self.try_git(git_cmd, "unknown")
-      end
+      self.try_git("git branch --show-current", nil) ||
+        self.try_git("git config user.discourse-version", "unknown")
   end
 
   def self.full_version
@@ -804,17 +799,11 @@ module Discourse
   end
 
   def self.try_git(git_cmd, default_value)
-    version_value = false
-
     begin
-      version_value = `#{git_cmd}`.strip
+      `#{git_cmd}`.strip
     rescue StandardError
-      version_value = default_value
-    end
-
-    version_value = default_value if version_value.empty?
-
-    version_value
+      default_value
+    end.presence || default_value
   end
 
   # Either returns the site_contact_username user or the first admin.

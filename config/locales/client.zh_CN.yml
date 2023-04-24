@@ -129,6 +129,8 @@ zh_CN:
       removed_user: "%{when}移除了 %{who}"
       removed_group: "%{when}移除了 %{who}"
       autobumped: "%{when}自动提升"
+      tags_changed: "标签已更新 %{when}"
+      category_changed: "类别已更新 %{when}"
       autoclosed:
         enabled: "%{when}关闭"
         disabled: "%{when}打开"
@@ -153,16 +155,13 @@ zh_CN:
       forwarded: "转发了上述电子邮件"
     topic_admin_menu: "话题操作"
     skip_to_main_content: "跳转到主要内容"
+    skip_user_nav: "跳到个人资料内容"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
     software_update_prompt:
       message: "我们已经更新此站点，请 <span>刷新页面</span>，否则可能会遇到意外行为。"
       dismiss: "忽略"
-    bootstrap_mode_enabled:
-      other: "为了更轻松地启动您的新站点，您现在处于引导模式。所有新用户都将被授予信任级别 1，并且已启用每日摘要电子邮件。引导模式会在达到 %{count} 个用户时自动关闭。"
-    bootstrap_mode_disabled: "引导模式将在 24 小时内禁用。"
-    bootstrap_invite_button_title: "发送邀请"
-    bootstrap_wizard_link_title: "完成设置向导"
+    bootstrap_mode: "引导模式"
     themes:
       default_description: "默认"
       broken_theme_alert: "您的站点可能无法运行，因为主题/组件有错误。"
@@ -320,7 +319,7 @@ zh_CN:
       new_topic: "新话题草稿"
       new_private_message: "新个人消息草稿"
       abandon:
-        confirm: "您在此话题下有一个进行中的草稿。您想对它做什么？"
+        confirm: "您已经有一个正在进行的草稿。你想用它做什么？"
         yes_value: "舍弃"
         no_value: "恢复编辑"
     topic_count_categories:
@@ -1146,7 +1145,8 @@ zh_CN:
       home: "默认首页"
       staged: "暂存"
       staff_counters:
-        flags_given: "有用的举报"
+        flags_given:
+          other: '<span class="%{className}">%{count}</span> 有用的举报'
         flagged_posts: "被举报的帖子"
         deleted_posts: "已删除的帖子"
         suspensions: "封禁"
@@ -3104,6 +3104,7 @@ zh_CN:
           hide: "隐藏修订"
           show: "显示修订"
           destroy: "删除修订"
+          destroy_confirm: "你确定要删除这个帖子上的所有修订吗？此操作是永久性的。"
           revert: "还原到修订 %{revision}"
           edit_wiki: "编辑 Wiki"
           edit_post: "编辑帖子"
@@ -3838,17 +3839,34 @@ zh_CN:
         custom:
           add: "添加自定义部分"
           edit: "编辑自定义部分"
-          name: "章节标题"
           save: "保存"
           delete: "删除"
           delete_confirm: "确定要删除此板块吗？"
           public: "将此板块公开并对所有人可见"
           links:
-            icon: "图标"
-            name: "名称"
-            value: "链接"
             add: "添加另一个链接"
             delete: "删除链接"
+            icon:
+              label: "图标"
+              validation:
+                blank: "图标不能为空"
+                maximum: "图标必须短于 %{count} 个字符"
+            name:
+              label: "名称"
+              validation:
+                blank: "名称不能为空"
+                maximum: "标题必须短于 %{count} 个字符"
+            value:
+              label: "链接"
+              validation:
+                blank: "链接不能为空"
+                maximum: "链接必须短于 %{count} 个字符"
+                invalid: "格式无效"
+          title:
+            label: "章节标题"
+            validation:
+              blank: "标题不能为空"
+              maximum: "标题必须短于 %{count} 个字符"
         about:
           header_link_text: "关于"
         messages:
@@ -4152,8 +4170,10 @@ zh_CN:
             topics:
               read: 阅读一个话题或其中的一个帖子。也支持 RSS。
               write: 创建一个新话题或发布到现有话题。
+              update: 更新一个话题。更改标题、类别、标签、状态、原型、特色链接等。
               delete: 删除话题。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
+              status: "更新一个话题的状态。状态：关闭、存档、可见、已置顶。启用: true, false. 在此处和请求有效负载中指定一个 category_id，以仅允许在该类别中更改主题状态。"
             posts:
               edit: 编辑任意帖子或特定帖子。
               delete: 删除帖子。
@@ -4771,6 +4791,7 @@ zh_CN:
           no_previous: "没有之前的值。"
           deleted: "没有新值。记录已被删除。"
           actions:
+            permanently_delete_post_revisions: "永久删除帖子的修订记录"
             delete_user: "删除用户"
             change_trust_level: "更改信任级别"
             change_username: "更改用户名"
@@ -4865,6 +4886,7 @@ zh_CN:
             create_public_sidebar_section: "创建公共侧边栏部分"
             update_public_sidebar_section: "更新公共侧边栏部分"
             destroy_public_sidebar_section: "销毁公共侧边栏部分"
+            reset_bounce_score: "重置退回分数"
         screened_emails:
           title: "已屏蔽的电子邮件"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -4927,14 +4949,14 @@ zh_CN:
           silence: "禁言"
           link: "链接"
         action_descriptions:
-          block: "禁止发布包含这些字词的帖子。用户在尝试提交帖子时会看到一条错误消息。"
+          block: "试图创建一个包含这些词的帖子时，将显示一条错误信息。"
           censor: "允许包含这些字词的帖子，但将其替换为隐藏敏感词的字符。"
-          require_approval: "包含这些字词的帖子需通过管理人员批准才能被看到。"
-          flag: "允许包含这些字词的帖子，但将其举报为不当，以便版主对其进行审核。"
-          replace: "使用其他字词替换帖子中的字词"
-          tag: "根据第一个帖子自动为话题添加标签"
-          silence: "用户包含这些字词的第一个帖子需要管理人员批准才能被看到，该用户将被自动禁言。"
-          link: "使用链接替换帖子中的字词"
+          require_approval: "包含这些词的帖子需要管理人员批准后才能被其他人看到。"
+          flag: "允许包含这些词的帖子，但将它们举报为不当言论以供版主审查。"
+          replace: "使用其他字词替换帖子中的字词."
+          tag: "自动为首个帖子含特定词的话题添加标签。"
+          silence: "如果新帐户的第一篇帖子包含这些词中的任何一个，则自动禁言用户。在管理人员批准之前，该帖子将自动隐藏。"
+          link: "使用链接替换帖子中的字词."
         form:
           label: "包含字词或短语"
           placeholder: "包含字词或短语（* 为通配符）"
@@ -4960,10 +4982,12 @@ zh_CN:
       form_templates:
         nav_title: "模板"
         title: "表单模板"
+        help: "创建可用于创建新话题、帖子和消息的模板。"
         new_template: "新模板"
         list_table:
           headings:
             name: "名称"
+            active_categories: "活动类别"
             actions: "操作"
           actions:
             view: "查看模板"
@@ -4994,6 +5018,8 @@ zh_CN:
           upload: "上传一个文件"
           multiselect: "多选"
         validations_modal:
+          button_title: "验证"
+          modal_title: "验证选项"
           table_headers:
             key: "密钥"
             type: "类型"

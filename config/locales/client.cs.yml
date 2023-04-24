@@ -205,14 +205,6 @@ cs:
     software_update_prompt:
       message: "Aktualizovali jsme tento web, <span>prosím obnovte stránku</span>, jinak může dojít k neočekávanému chování."
       dismiss: "Označit jako přečtené"
-    bootstrap_mode_enabled:
-      one: "Aby spuštění vaší webové stránky bylo jednodušší, tak se nachází v bootstrap režimu. Všichni noví uživatelé dostanou vernostní úroveň 1 a mohou mít zapnuté denní emailové shrnutí. Toto se automaticky vypne, když %{count} uživatelů se připojí."
-      few: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile se zaregistruje alespoň %{count} uživatelů."
-      many: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile se zaregistruje alespoň %{count} uživatelů."
-      other: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile se zaregistruje alespoň %{count} uživatelů."
-    bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
-    bootstrap_invite_button_title: "Poslat pozvánky"
-    bootstrap_wizard_link_title: "Dokončete průvodce nastavením"
     themes:
       default_description: "Výchozí"
       broken_theme_alert: "Váš web nemusí fungovat, protože motiv/komponenta obsahuje chyby."
@@ -377,7 +369,6 @@ cs:
       new_topic: "Nový koncept tématu"
       new_private_message: "Nový koncept soukromé zprávy"
       abandon:
-        confirm: "Máte rozpracovaný koncept tohoto tématu. Co byste s ním chtěli udělat?"
         yes_value: "Zahodit"
         no_value: "Pokračovat v úpravách"
     topic_count_categories:
@@ -993,7 +984,6 @@ cs:
       home: "Výchozí domovská stránka"
       staged: "Staged"
       staff_counters:
-        flags_given: "užitečná nahlášení"
         flagged_posts: "nahlášených příspěvků"
         deleted_posts: "smazaných příspěvků"
         suspensions: "vyloučení"
@@ -2895,8 +2885,10 @@ cs:
           save: "Uložit"
           delete: "Smazat"
           links:
-            icon: "Ikona"
-            name: "Jméno"
+            icon:
+              label: "Ikona"
+            name:
+              label: "Název"
         about:
           header_link_text: "O fóru"
         messages:
@@ -3543,11 +3535,6 @@ cs:
           require_approval: "Vyžádat schválení"
           flag: "Nahlášení"
           silence: "Ztišit"
-        action_descriptions:
-          block: "Zabránit přidání příspěvků obsahující tato slova. Uživatel uvidí chybovou hlášku ve chvíli, kdy se pokusí odeslat svůj příspěvek."
-          censor: "Povolit příspěvky obsahující tato slova, ale nahradit je symboly, které skryjí cenzurovaná slova."
-          require_approval: "Příspěvky obsahující tato slova budou vyžadovat schválení zaměstnanců před schválením."
-          flag: "Povolit příspěvky obsahující tato slova, ale oflagovat je jako nevhodně, aby je mohli moderátoři kontrolovat."
         form:
           placeholder_regexp: "obvyklý výraz"
           link_placeholder: "https://example.com"

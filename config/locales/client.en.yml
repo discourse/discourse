@@ -175,6 +175,8 @@ en:
       removed_user: "Removed %{who} %{when}"
       removed_group: "Removed %{who} %{when}"
       autobumped: "Automatically bumped %{when}"
+      tags_changed: "Tags updated %{when}"
+      category_changed: "Category updated %{when}"
       autoclosed:
         enabled: "Closed %{when}"
         disabled: "Opened %{when}"
@@ -381,7 +383,7 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       abandon:
-        confirm: "You have a draft in progress for this topic. What would you like to do with it?"
+        confirm: "You already have a draft in progress. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
 
@@ -1279,12 +1281,24 @@ en:
       staged: "Staged"
 
       staff_counters:
-        flags_given: "helpful flags"
-        flagged_posts: "flagged posts"
-        deleted_posts: "deleted posts"
-        suspensions: "suspensions"
-        warnings_received: "warnings"
-        rejected_posts: "rejected posts"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> helpful flag'
+          other: '<span class="%{className}">%{count}</span> helpful flags'
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> flagged post'
+          other: '<span class="%{className}">%{count}</span> flagged posts'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> deleted post'
+          other: '<span class="%{className}">%{count}</span> deleted posts'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> suspension'
+          other: '<span class="%{className}">%{count}</span> suspensions'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> warning'
+          other: '<span class="%{className}">%{count}</span> warnings'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> rejected post'
+          other: '<span class="%{className}">%{count}</span> rejected posts'
 
       messages:
         all: "all inboxes"
@@ -1405,11 +1419,12 @@ en:
         title: "Two-Factor Backup Codes"
         regenerate: "Regenerate"
         disable: "Disable"
-        enable: "Enable"
-        enable_long: "Enable backup codes"
+        enable: "Create backup codes"
+        enable_long: "Add backup codes"
+        not_enabled: "You haven't created any backup codes yet."
         manage:
-          one: "Manage backup codes. You have <strong>%{count}</strong> backup code remaining."
-          other: "Manage backup codes. You have <strong>%{count}</strong> backup codes remaining."
+          one: "You have <strong>%{count}</strong> backup code remaining."
+          other: "You have <strong>%{count}</strong> backup codes remaining."
         copy_to_clipboard: "Copy to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
@@ -1498,6 +1513,7 @@ en:
         success: "We've sent an email to that address. Please follow the confirmation instructions."
         success_via_admin: "We've sent an email to that address. The user will need to follow the confirmation instructions in the email."
         success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
+        back_to_preferences: "Back to preferences"
 
       change_avatar:
         title: "Change your profile picture"
@@ -4416,12 +4432,12 @@ en:
               validation:
                 blank: "Icon cannot be blank"
                 maximum: "Icon must be shorter than %{count} characters"
-            name: 
+            name:
               label: "Name"
               validation:
                 blank: "Name cannot be blank"
                 maximum: "Name must be shorter than %{count} characters"
-            value: 
+            value:
               label: "Link"
               validation:
                 blank: "Link cannot be blank"

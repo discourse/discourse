@@ -307,10 +307,6 @@ fa_IR:
     review:
       transcript:
         view: "مشاهده رونوشت متن پیام‌های قبلی"
-      types:
-        reviewable_chat_message:
-          title: "پیام گفتگوی پرچم گذاری شده"
-          flagged_by: "پرچم شده توسط"
     keyboard_shortcuts_help:
       chat:
         title: "گفتگو"

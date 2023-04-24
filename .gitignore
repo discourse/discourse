@@ -58,6 +58,10 @@ dist
 node_modules
 yarn-error.log
 
+# Linting artifacts
+.eslintcache
+/lint-progress/
+
 # Auto-generated plugin JS assets
 /app/assets/javascripts/plugins/*
 

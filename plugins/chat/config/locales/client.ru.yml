@@ -415,9 +415,8 @@ ru:
       transcript:
         view: "Просмотр предыдущих сообщений"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Сообщение на премодерации"
-          flagged_by: "Кто пожаловался"
     keyboard_shortcuts_help:
       chat:
         title: "Чат"

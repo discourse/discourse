@@ -79,8 +79,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def sidebar_sections
     SidebarSection
+      .public_sections
+      .or(SidebarSection.where(user_id: object.id))
       .includes(sidebar_section_links: :linkable)
-      .where("public OR user_id = ?", object.id)
       .order("(public IS TRUE) DESC")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end

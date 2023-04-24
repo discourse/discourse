@@ -23,6 +23,10 @@ module PageObjects
         has_no_css?(".chat-skeleton")
       end
 
+      def visit_thread(thread)
+        visit(thread.url)
+      end
+
       def visit_channel_settings(channel)
         visit(channel.url + "/info/settings")
       end

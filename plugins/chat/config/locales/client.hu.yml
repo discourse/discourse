@@ -15,6 +15,7 @@ hu:
           actions:
             chat_channel_status_change: "A csevegőcsatorna állapota megváltozott"
             chat_channel_delete: "Csevegőcsatorna törölve"
+            chat_auto_remove_membership: "A tagságok automatikusan eltávolításra kerülnek a csatornákról"
       api:
         scopes:
           descriptions:
@@ -73,6 +74,7 @@ hu:
       click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
       collapse: "Csevegőfiók összecsukása"
+      expand: "Chat fiók bővítése"
       confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"
       deleted: "Egy üzenet törölve lett. [megtekintés]"
       hidden: "Egy üzenet el lett rejtve. [megtekintés]"
@@ -115,6 +117,7 @@ hu:
         composer: "Csevegés szerkesztője"
         channels_list: "Csevegőcsatornák"
       no_public_channels: "Nem csatlakozott egyetlen csatornához sem."
+      kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       only_chat_push_notifications:
         title: "Csak csevegési leküldéses értesítések küldése"
         description: "Az összes nem csevegési leküldéses értesítés elküldésének letiltása"
@@ -341,6 +344,8 @@ hu:
         flags: "Zászlók"
         symbols: "Szimbólumok"
         no_results: "Nincs találat"
+      thread:
+        label: Szál
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"
@@ -381,11 +386,6 @@ hu:
             sender:
               label: Feladó
               description: Alapértelmezés szerint a rendszer
-    review:
-      types:
-        reviewable_chat_message:
-          title: "Jelentett csevegőüzenet"
-          flagged_by: "Megjelölte"
     keyboard_shortcuts_help:
       chat:
         title: "Csevegés"

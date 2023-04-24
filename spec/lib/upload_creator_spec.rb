@@ -613,7 +613,7 @@ RSpec.describe UploadCreator do
           <g>
             <use id="valid-use" x="123" href="#pathdef" />
           </g>
-          <use id="invalid-use1" href="https://svg.example.com/evil.svg" />
+          <use id="invalid-use1" xlink:href="https://svg.example.com/evil.svg" />
           <use id="invalid-use2" href="data:image/svg+xml;base64,#{b64}" />
         </svg>
       XML

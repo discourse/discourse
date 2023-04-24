@@ -1053,7 +1053,7 @@ ja:
       title: "DAU/MAU"
       xaxis: "日"
       yaxis: "DAU/MAU"
-      description: "前日にログインしたメンバーの数を先月にログインしたメンバーの数で割った数 - コミュニティーの「粘着性」を示す割合 % を返します。30% 以上を目指してください。"
+      description: "前日にログインしたメンバーの数を先月にログインしたメンバーの数で割った数 - コミュニティーの「粘着性」を示す割合 % を返します。20% 以上を目指してください。"
     daily_engaged_users:
       title: "1 日のエンゲージユーザー"
       xaxis: "日"
@@ -1420,7 +1420,6 @@ ja:
     manifest_icon: "Android でロゴ/スプラッシュ画像として使用される画像。自動的に 512 × 512 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     manifest_screenshots: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
     favicon: "サイトのファビコン。<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> をご覧ください。CDN で正しく動作させるには、png である必要があります。32 x 32 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
-    apple_touch_icon: "Apple タッチデバイスに使用されるアイコン。自動的に 180x180 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     opengraph_image: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます"
     twitter_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があり、.svg を使用できません)。空のままにすると、.svg でない限り opengraph_image を使って通常のカードメタデータが生成されます。"
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
@@ -2106,7 +2105,6 @@ ja:
       staged_users_disabled: "この設定を有効にする前に 'staged users' を有効にする必要があります。"
       reply_by_email_disabled: "この設定を有効にする前に 'reply by email' を有効にする必要があります。"
       discourse_connect_url_is_empty: "この設定を有効にする前に 'discourse connect url' を設定する必要があります。"
-      discourse_connect_invite_only: "DiscourseConnect と invite only を同時に有効にすることはできません。"
       enable_local_logins_disabled: "この設定を有効にする前に 'enable local logins' を有効にする必要があります。"
       min_username_length_exists: "最も短いユーザー名 (%{username}) を超える最小のユーザー名の長さを設定することはできません。"
       min_username_length_range: "最小値を最大値より上にすることはできません。"
@@ -3584,8 +3582,6 @@ ja:
   offline:
     title: "アプリを読み込めません"
     offline_page_message: "オフラインになっているようです！ネットワーク接続を確認して、もう一度お試しください。"
-  login_required:
-    welcome_message: "## [%{title} へようこそ](#welcome)"
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"

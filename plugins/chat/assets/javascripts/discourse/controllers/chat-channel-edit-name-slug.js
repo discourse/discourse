@@ -3,7 +3,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { ajax } from "discourse/lib/ajax";
 import { cancel } from "@ember/runloop";
 import { action, computed } from "@ember/object";
-import { extractError } from "discourse/lib/ajax-error";
+import { flashAjaxError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { inject as service } from "@ember/service";
 export default class ChatChannelEditTitleController extends Controller.extend(
@@ -49,9 +49,7 @@ export default class ChatChannelEditTitleController extends Controller.extend(
         this.model.set("title", result.channel.title);
         this.send("closeModal");
       })
-      .catch((event) => {
-        this.flash(extractError(event), "error");
-      });
+      .catch(flashAjaxError(this));
   }
 
   @action

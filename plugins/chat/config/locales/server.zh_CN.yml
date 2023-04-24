@@ -34,16 +34,34 @@ zh_CN:
     chat_channel_archive_complete:
       title: "聊天频道归档完成"
       subject_template: "聊天频道归档成功完成"
+      text_body_template: |
+        存档聊天频道 %{channel_hashtag_or_name} 已成功完成。这些消息已复制到主题 [%{topic_title}](%{topic_url}) 中。
     chat_channel_archive_failed:
       title: "聊天频道归档失败"
       subject_template: "聊天频道归档失败"
+      text_body_template: |
+        存档聊天频道 %{channel_hashtag_or_name} 失败。 %{messages_archived} 消息已存档。部分归档的消息被复制到主题 [%{topic_title}](%{topic_url}) 中。访问 %{channel_url} 的频道重试。
     chat_channel_archive_failed_no_topic:
       title: "聊天频道归档失败"
       subject_template: "聊天频道归档失败"
+      text_body_template: |
+        存档聊天频道 %{channel_hashtag_or_name} 失败。没有消息被存档。话题创建不成功，原因如下：
+
+          %{topic_validation_errors}
+
+        访问 %{channel_url} 频道重试。
   chat:
     deleted_chat_username: 已删除
     errors:
       channel_exists_for_category: "此类别和名称的频道已经存在"
+      channel_new_message_disallowed:
+        archived: "该频道已被存档，无法发送新消息"
+        closed: "该频道已关闭，无法发送新消息"
+        read_only: "该频道是只读的，不能发送新消息"
+      channel_modify_message_disallowed:
+        archived: "频道已关闭，无法编辑或删除任何消息"
+        closed: "频道已关闭，无法编辑或删除任何消息"
+        read_only: "该频道为只读频道，无法编辑或删除任何消息"
       user_cannot_send_message: "您目前无法发送消息。"
       rate_limit_exceeded: "超过了 30 秒内可发送的聊天消息的上限"
       auto_silence_from_flags: "聊天消息被举报的分数高到足以将用户禁言。"
@@ -65,6 +83,7 @@ zh_CN:
       actor_disallowed_dms: "您已选择阻止用户向您发送私人和直接消息，因此您无法创建新的直接消息。"
       actor_preventing_target_user_from_dm: "您已选择阻止 %{username} 向您发送私人和直接消息，因此您无法创建给他们的新直接消息。"
       user_cannot_send_direct_messages: "抱歉，您无法发送直接消息。"
+      over_chat_max_direct_message_users_allow_self: "你只能创建一个与自己的直接信息。"
       over_chat_max_direct_message_users:
         other: "您无法创建与超过 %{count} 个其他用户的直接消息。"
     reviewables:

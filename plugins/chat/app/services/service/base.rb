@@ -18,7 +18,7 @@ module Service
 
     # Simple structure to hold the context of the service during its whole lifecycle.
     class Context < OpenStruct
-      # @return [Boolean] returns +true+ if the conext is set as successful (default)
+      # @return [Boolean] returns +true+ if the context is set as successful (default)
       def success?
         !failure?
       end
@@ -127,6 +127,10 @@ module Service
       def call(instance, context)
         context[name] = super
         raise ArgumentError, "Model not found" if context[name].blank?
+        if context[name].try(:invalid?)
+          context[result_key].fail(invalid: true)
+          context.fail!
+        end
       rescue ArgumentError => exception
         context[result_key].fail(exception: exception)
         context.fail!

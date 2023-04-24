@@ -52,6 +52,11 @@ tr_TR:
   remove_posts_deleted_by_author: "Yazar tarafından silindi"
   redirect_warning: "Seçtiğiniz bağlantının gerçekten foruma gönderildiğini doğrulayamadık. Yine de devam etmek istiyorsanız aşağıdaki bağlantıyı seçin."
   on_another_topic: "Başka bir konuda"
+  topic_category_changed: "%{from} iken %{to} oldu"
+  topic_tag_changed:
+    added_and_removed: "%{added} eklendi ve %{removed} kaldırıldı"
+    added: "%{added} eklendi"
+    removed: "%{removed} kaldırıldı"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} tarafından #%{post_number}"
@@ -641,6 +646,7 @@ tr_TR:
       disallowed_tags_generic: "Bu konu izin verilmeyen etiketlere sahip."
       slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"
       is_already_in_use: "zaten kullanımda"
+      move_topic_to_category_disallowed: "Bu konuyu, yeni konu oluşturma izninizin olmadığı bir kategoriye taşıyamazsınız."
     cannot_delete:
       uncategorized: "Bu kategori özeldir. Kategorisi olmayan konular için bir tutma alanı olarak tasarlanmıştır; silinemez."
       has_subcategories: "Alt kategorileri olduğu için bu kategori silinemiyor."
@@ -1104,7 +1110,7 @@ tr_TR:
       title: "Günlük Aktif Kullanıcı/Aylık Aktif Kullanıcı"
       xaxis: "Gün"
       yaxis: "Günlük Aktif Kullanıcı/Aylık Aktif Kullanıcı"
-      description: "Son gün giriş yapan üye sayısı, son ay giriş yapan üye sayısına bölündüğünde topluluk \"yapışkanlığını\" gösteren bir % elde edilir. Hedefiniz >%30 olsun."
+      description: "Son gün giriş yapan üye sayısı, son ay giriş yapan üye sayısına bölündüğünde topluluk \"yapışkanlığını\" gösteren bir % elde edilir. Hedefiniz >%20 olsun."
     daily_engaged_users:
       title: "Günlük Etkileşimli Kullanıcılar"
       xaxis: "Gün"
@@ -1472,7 +1478,7 @@ tr_TR:
     manifest_icon: "Android'de logo/splash görüntüsü olarak kullanılan görüntü. Otomatik olarak 512 × 512 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
     manifest_screenshots: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
     favicon: "Siteniz için bir favicon, bkz. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. CDN üzerinden düzgün çalışması için png olmalıdır. 32x32 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
-    apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Otomatik olarak 180x180 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
+    apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Şeffaf bir arka plan önerilmez. Otomatik olarak 180x180 olarak yeniden boyutlandırılacaktır. Boş bırakılırsa, large_icon kullanılacaktır."
     opengraph_image: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır"
     twitter_summary_large_image: "Twitter kartı \"özet büyük resmi\" (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa .svg olmadığı sürece opengraph_image kullanılarak normal kart meta verileri oluşturulur"
     notification_email: "Tüm temel sistem e-postalarını gönderirken kullanılan kimden: e-posta adresi. Burada belirtilen alan adının, e-postanın ulaşması için SPF, DKIM ve ters PTR kayıtlarının doğru şekilde ayarlanmış olması gerekir."
@@ -2092,6 +2098,7 @@ tr_TR:
     suppress_overlapping_tags_in_list: "Etiketler konu başlıklarındaki kelimelerle tam olarak eşleşiyorsa etiketi gösterme"
     remove_muted_tags_from_latest: "En son konu listesinde yalnızca sessize alınmış etiketlerle etiketlenmiş konuları göstermeyin."
     force_lowercase_tags: "Tüm yeni etiketleri tamamen küçük harf olmaya zorlayın."
+    create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde küçük bir bilgi gönderisi oluştur"
     company_name: "Şirket Adı"
     governing_law: "Geçerli Kanun"
     city_for_disputes: "Anlaşmazlıklar için şehir"
@@ -2162,7 +2169,6 @@ tr_TR:
       staged_users_disabled: "Bu ayarı etkinleştirmeden önce \"aşamalı kullanıcılar\"ı etkinleştirmeniz gerekiyor."
       reply_by_email_disabled: "Bu ayarı etkinleştirmeden önce \"e-posta ile yanıtla\" özelliğini etkinleştirmeniz gerekiyor."
       discourse_connect_url_is_empty: "Bu ayarı etkinleştirmeden önce bir \"discourse bağlantı URL'si\" ayarlamanız gerekiyor."
-      discourse_connect_invite_only: "DiscourseConnect'i ve yalnızca davetle özelliğini aynı anda etkinleştiremezsiniz."
       enable_local_logins_disabled: "Bu ayarı etkinleştirmeden önce \"yerel girişleri etkinleştir\" seçeneğini etkinleştirmeniz gerekiyor."
       min_username_length_exists: "Minimum kullanıcı adı uzunluğunu en kısa kullanıcı adının üzerinde ayarlayamazsınız (%{username})."
       min_username_length_range: "Minimum değeri maksimum değerin üzerinde ayarlayamazsınız."
@@ -3646,8 +3652,6 @@ tr_TR:
   offline:
     title: "Uygulama yüklenemiyor"
     offline_page_message: "Görünüşe göre çevrimdışısınız! Lütfen ağ bağlantınızı kontrol edip tekrar deneyin."
-  login_required:
-    welcome_message: "##[%{title} başlığına hoş geldiniz](#hoşgeldiniz)"
   upload:
     edit_reason: "görüntülerin yerel kopyaları indirildi"
     unauthorized: "Üzgünüz, yüklemeye çalıştığınız dosyaya izin verilmiyor (izin verilen uzantılar: %{authorized_extensions})."
@@ -4272,6 +4276,9 @@ tr_TR:
           <p>İyi eğlenceler ve <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'> yeni topluluğunuzu oluştururken</a></p> iyi şanslar!
   search_logs:
     graph_title: "Arama Sayısı"
+  onebox:
+    discourse:
+      user_joined_community: "%{date} tarihinde katıldı"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}, "%{topic}" konusunda sizden bahsetti - %{site_title}'
@@ -4335,22 +4342,35 @@ tr_TR:
     actions:
       agree:
         title: "Evet"
+      agree_and_keep:
+        title: "Gönderiyi Tut"
       agree_and_suspend:
+        title: "Kullanıcıyı askıya al"
         description: "Bayrağı kabul edin ve kullanıcıyı askıya alın."
       agree_and_silence:
         title: "Kullanıcıyı sustur"
         description: "Bayrağı kabul edin ve kullanıcıyı susturun."
       agree_and_restore:
+        title: "Gönderiyi geri yükle"
         description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
+      agree_and_hide:
+        title: "Gönderiyi gizle"
       delete_single:
         title: "Sil"
       delete:
         title: "Sil..."
+      delete_and_ignore:
+        title: "İşareti yoksay ve gönderiyi sil"
       delete_and_ignore_replies:
+        title: "Bayrağı yoksay, gönderiyi ve yanıtları sil"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
+      delete_and_agree:
+        title: "Gönderiyi sil"
       delete_and_agree_replies:
+        title: "Gönderiyi ve yanıtları sil"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
       disagree_and_restore:
+        title: "Hayır, gönderiyi geri yükle"
         description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
       disagree:
         title: "Hayır"

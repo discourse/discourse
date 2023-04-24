@@ -107,6 +107,7 @@
         margin-left: -20px;
         padding-right: 4px;
         position: absolute;
+        z-index: 2;
       }
     }
 
@@ -637,7 +638,7 @@ aside.quote {
         opacity: 1;
         transition: opacity 0.3s ease-in-out;
       }
-      // this psuedo element creates a transition buffer zone
+      // this pseudo element creates a transition buffer zone
       // without it, the width change on hover can cause transition jitter
       // the width is roughly wide enough to cover long translations of "share"
       &:after {
@@ -1057,7 +1058,6 @@ kbd {
   border-bottom-width: 2px;
   border-radius: 3px;
   box-sizing: border-box;
-  color: var(--primary);
   display: inline-flex;
   gap: 0 0.5em; // space between text and images/emoji
   font-size: var(--font-down-1);
@@ -1166,7 +1166,7 @@ blockquote > *:last-child {
 
     p {
       margin: 0;
-      padding-right: 0.5em;
+      padding: 0.15em 0.5em 0 0;
     }
   }
 

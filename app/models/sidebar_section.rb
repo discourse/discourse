@@ -12,6 +12,8 @@ class SidebarSection < ActiveRecord::Base
 
   accepts_nested_attributes_for :sidebar_urls, allow_destroy: true
 
+  before_save :set_system_user_for_public_section
+
   validates :title,
             presence: true,
             uniqueness: {
@@ -20,6 +22,14 @@ class SidebarSection < ActiveRecord::Base
             length: {
               maximum: MAX_TITLE_LENGTH,
             }
+
+  scope :public_sections, -> { where("public") }
+
+  private
+
+  def set_system_user_for_public_section
+    self.user_id = Discourse.system_user.id if self.public
+  end
 end
 
 # == Schema Information

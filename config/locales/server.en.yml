@@ -61,6 +61,12 @@ en:
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
 
+  topic_category_changed: "From %{from} to %{to}"
+  topic_tag_changed:
+    added_and_removed: "Added %{added} and removed %{removed}"
+    added: "Added %{added}"
+    removed: "Removed %{removed}"
+
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -198,6 +204,7 @@ en:
     embed:
       load_from_remote: "There was an error loading that post."
     site_settings:
+      invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
       invalid_choice:
         one: "You specified the invalid choice %{name}"
@@ -547,6 +554,8 @@ en:
     dominating_topic: You’ve posted a lot in this topic! Consider giving others an opportunity to reply here and discuss things with each other as well.
 
     get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
+
+    dont_feed_the_trolls: This post has already been flagged for moderator attention. Are you sure you wish to reply to it? Replies to negative content tend to encourage more negative behavior.
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
@@ -1475,6 +1484,7 @@ en:
     out_of_date_themes: "Updates are available for the following themes:"
     unreachable_themes: "We were unable to check for updates on the following themes:"
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
+    v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1736,7 +1746,7 @@ en:
     discourse_connect_overrides_profile_background: "Overrides user profile background with value from DiscourseConnect payload."
     discourse_connect_overrides_card_background: "Overrides user card background with value from DiscourseConnect payload."
     discourse_connect_not_approved_url: "Redirect unapproved DiscourseConnect accounts to this URL"
-    discourse_connect_allows_all_return_paths: "Do not restrict the domain for return_paths provided by DiscourseConnect (by default return path must be on current site)"
+    discourse_connect_allowed_redirect_domains: "Restrict to these domains for return_paths provided by DiscourseConnect (by default return path must be on current site). Use * to allow any domain for return path. Subdomain wildcards (`*.foobar.com`) are not allowed."
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
@@ -2171,6 +2181,8 @@ en:
 
     get_a_room_threshold: "Number of posts a user has to make to the same person in the same topic before being warned."
 
+    dont_feed_the_trolls_threshold: "Number of flags from other users before being warned."
+
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
@@ -2244,7 +2256,7 @@ en:
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
 
-    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
+    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable, can take up to 24 hours)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
     secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
@@ -2257,6 +2269,7 @@ en:
     emoji_set: "How would you like your emoji?"
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
+    emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
@@ -2352,6 +2365,7 @@ en:
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
+    create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change"
 
     company_name: "Company Name"
     governing_law: "Governing Law"
@@ -2398,7 +2412,7 @@ en:
     navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
-    enable_new_notifications_menu: "Enables the new notifications menu for the legacy navigation menu."
+    enable_new_notifications_menu: "Enables the new notifications menu. Disabling this setting is deprecated. The new notifications menu is always used for non-legacy 'navigation menu' choices. <a href='https://meta.discourse.org/t/260358'>Learn more</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
     experimental_new_new_view_groups: "EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the \"Everything\" link in the sidebar link to it."
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
@@ -2439,7 +2453,6 @@ en:
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
-      discourse_connect_invite_only: "You cannot enable DiscourseConnect and invite only at the same time."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
       min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
       min_username_length_range: "You cannot set the minimum above the maximum."
@@ -2462,7 +2475,6 @@ en:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
-      enable_new_notifications_menu_not_legacy_navigation_menu: "You must set `navigation_menu` to `legacy` before enabling this setting."
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
     placeholder:

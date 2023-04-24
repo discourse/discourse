@@ -1207,7 +1207,7 @@ pl_PL:
       title: "DAU / MAU"
       xaxis: "Dzień"
       yaxis: "DAU / MAU"
-      description: "Liczba członków zalogowanych w ostatnim dniu podzielona przez liczbę członków zalogowanych w ostatnim miesiącu - zwraca % wskazujący 'lepkość' społeczności. Celuj na >30%."
+      description: "Liczba członków zalogowanych w ostatnim dniu podzielona przez liczbę członków zalogowanych w ostatnim miesiącu - zwraca % wskazujący 'lepkość' społeczności. Celuj na >20%."
     daily_engaged_users:
       title: "Zaangażowani użytkownicy dziennie"
       xaxis: "Dzień"
@@ -1530,6 +1530,7 @@ pl_PL:
     title: "Nazwa tej witryny. Widoczna dla wszystkich odwiedzających, w tym dla użytkowników anonimowych."
     site_description: "Opisz tę stronę w jednym zdaniu. Widoczne dla wszystkich odwiedzających, w tym użytkowników anonimowych."
     short_site_description: "Krótki opis w kilku słowach. Widoczne dla wszystkich odwiedzających, w tym użytkowników anonimowych."
+    contact_email: "Adres e-mail kluczowego kontaktu do osoby odpowiedzialnej za tę witrynę. Używany do krytycznych powiadomień, a także wyświetlany na <a href='%{base_path}/about' target='_blank'>/about</a>. Widoczny dla anonimowych użytkowników na stronach publicznych."
     contact_url: "Kontaktowy adres URL dla tej witryny. Jeśli jest obecny, zastępuje adres e-mail na stronie <a href='%{base_path}/about' target='_blank'>/about</a> i jest widoczny dla anonimowych użytkowników w witrynach publicznych."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Konwertuj zdalne obrazy (hotlinkowane) na obrazy lokalne poprzez ich pobranie; pozwala to zachować zawartość nawet wtedy, gdy obrazy zostaną w przyszłości usunięte ze strony zdalnej."
@@ -1574,7 +1575,6 @@ pl_PL:
     manifest_icon: "Obraz używany jako logo / obraz powitalny na Androidzie. Zostanie automatycznie przeskalowany do rozmiaru 512 × 512. Jeśli pozostanie puste, zostanie użyty large_icon."
     manifest_screenshots: "Zrzuty ekranu, które pokazują możliwości i funkcjonalność Twojej instancji na stronie instalacyjnej. Wszystkie obrazy powinny być przesłane lokalnie i o tych samych wymiarach."
     favicon: "Favicona dla Twojej strony, zobacz <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby działała poprawnie poprzez CDN, musi to być w formacie png. Zostanie przeskalowana do 32x32. Jeśli pozostanie pusta, zostanie użyte large_icon."
-    apple_touch_icon: "Ikona używana dla urządzeń Apple Touch. Zostanie automatycznie przeskalowany do rozmiaru 180x180. Jeśli pozostanie puste, zostanie użyty large_icon."
     opengraph_image: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon"
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -2252,7 +2252,6 @@ pl_PL:
       staged_users_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć 'staged users'."
       reply_by_email_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć opcję 'reply by email'."
       discourse_connect_url_is_empty: "Musisz ustawić 'discourse connect url' przed włączeniem tego ustawienia."
-      discourse_connect_invite_only: "Nie możesz włączyć DiscourseConnect i wymagać dołączenia przez zaproszenie w tym samym czasie."
       enable_local_logins_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć opcję 'enable local logins'."
       min_username_length_exists: "Nie możesz ustawić minimalnej długości nazwy użytkownika powyżej najkrótszej nazwy użytkownika (%{username})."
       min_username_length_range: "Nie możesz ustawić minimum powyżej maksimum."
@@ -3813,8 +3812,6 @@ pl_PL:
   offline:
     title: "Nie można załadować aplikacji"
     offline_page_message: "Wygląda na to, że jesteś offline! Sprawdź połączenie sieciowe i spróbuj ponownie."
-  login_required:
-    welcome_message: "#[Witamy na %{title}](#welcome)"
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."

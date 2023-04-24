@@ -2,6 +2,7 @@
 
 RSpec.describe "React to message", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
+  fab!(:other_user) { Fabricate(:user) }
   fab!(:category_channel_1) { Fabricate(:category_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
@@ -11,11 +12,12 @@ RSpec.describe "React to message", type: :system, js: true do
   before do
     chat_system_bootstrap
     category_channel_1.add(current_user)
+    category_channel_1.add(other_user)
   end
 
   context "when other user has reacted" do
     fab!(:reaction_1) do
-      Chat::MessageReactor.new(Fabricate(:user), category_channel_1).react!(
+      Chat::MessageReactor.new(other_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
         emoji: "female_detective",
@@ -48,7 +50,7 @@ RSpec.describe "React to message", type: :system, js: true do
 
   context "when current user reacts" do
     fab!(:reaction_1) do
-      Chat::MessageReactor.new(Fabricate(:user), category_channel_1).react!(
+      Chat::MessageReactor.new(other_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
         emoji: "female_detective",
@@ -62,14 +64,14 @@ RSpec.describe "React to message", type: :system, js: true do
           chat.visit_channel(category_channel_1)
           channel.hover_message(message_1)
           find(".chat-message-react-btn").click
-          find(".chat-emoji-picker [data-emoji=\"nerd_face\"]").click
+          find(".chat-emoji-picker [data-emoji=\"grimacing\"]").click
 
-          expect(channel).to have_reaction(message_1, reaction_1.emoji)
+          expect(channel).to have_reaction(message_1, "grimacing")
         end
 
         context "when current user has multiple sessions" do
           it "adds reaction on each session" do
-            reaction = OpenStruct.new(emoji: "nerd_face")
+            reaction = OpenStruct.new(emoji: "grimacing")
 
             using_session(:tab_1) do
               sign_in(current_user)
@@ -108,6 +110,18 @@ RSpec.describe "React to message", type: :system, js: true do
             find(".chat-emoji-picker [data-emoji=\"nerd_face\"]").click
 
             expect(channel).to have_reaction(message_1, reaction_1.emoji)
+          end
+
+          it "removes denied emojis and aliases from reactions" do
+            SiteSetting.emoji_deny_list = "fu"
+
+            sign_in(current_user)
+            chat.visit_channel(category_channel_1)
+            channel.hover_message(message_1)
+            find(".chat-message-actions .react-btn").click
+
+            expect(page).to have_no_css(".chat-emoji-picker [data-emoji=\"fu\"]")
+            expect(page).to have_no_css(".chat-emoji-picker [data-emoji=\"middle_finger\"]")
           end
         end
 

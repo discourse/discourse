@@ -348,8 +348,17 @@ export default createWidget("search-menu", {
     });
   },
 
-  mouseDownOutside() {
-    this.sendWidgetAction("toggleSearchMenu");
+  mouseDown(e) {
+    if (e.target === document.querySelector("input#search-term")) {
+      this.state.inputSelectionEvent = true;
+    }
+  },
+
+  clickOutside() {
+    if (this.key === "search-menu" && !this.state.inputSelectionEvent) {
+      this.sendWidgetAction("toggleSearchMenu");
+    }
+    this.state.inputSelectionEvent = false;
   },
 
   clearTopicContext() {

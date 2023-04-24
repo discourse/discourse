@@ -438,6 +438,7 @@ hu:
       email_already_used_in_category: "A(z) „%{email}” címet már használja a(z) „%{category_name}” kategória."
       slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
       is_already_in_use: "már használatban van"
+      move_topic_to_category_disallowed: "Nem helyezheti át ezt a témát olyan kategóriába, ahol nincs engedélye új témák létrehozására."
     cannot_delete:
       has_subcategories: "A kategóriát nem lehet törölni, mert vannak alkategóriái."
       topic_exists_no_oldest: "A kategóriát nem lehet törölni, mert a benne lévő témák száma %{count}."
@@ -953,6 +954,7 @@ hu:
     rails_env_warning: "A kiszolgáló jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
     memory_warning: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
+    v3_analytics_deprecated: "A Discourse jelenleg a Google Analytics 3-at használja, amely 2023 júliusa után már nem kap támogatást. <a href='https://meta.discourse.org/t/260498'>Frissítsen most a Google Analytics 4-re</a> , hogy továbbra is értékes betekintést és elemzést kapjon webhelye teljesítményéről."
   site_settings:
     disabled: "kikapcsolva"
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
@@ -969,6 +971,7 @@ hu:
     post_excerpt_maxlength: "A bejegyzés kivonatának / összefoglalójának maximális hossza."
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
     blocked_onebox_domains: "Azok a domainek, amelyek soha nem kerülnek dobozba, például wikipedia.org\n(A * ? helyettesítő karakterek nem támogatottak)"
+    apple_touch_icon: "Az Apple érintőképernyős készülékekhez használt ikon. Az átlátszó háttér nem ajánlott. Automatikusan átméreteződik 180x180-ra. Ha üresen hagyja, a large_icon lesz használva."
     enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
     review_every_post: "Minden bejegyzést jóvá kell hagyni. FIGYELEM! FORGALMAS OLDALAKON NEM AJÁNLOTT."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."

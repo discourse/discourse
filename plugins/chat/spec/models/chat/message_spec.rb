@@ -466,19 +466,13 @@ describe Chat::Message do
       expect { webhook_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    it "destroys upload_references and chat_uploads" do
+    it "destroys upload_references" do
       message_1 = Fabricate(:chat_message)
       upload_reference_1 = Fabricate(:upload_reference, target: message_1)
       upload_1 = Fabricate(:upload)
-      # TODO (martin) Remove this when we remove ChatUpload completely, 2023-04-01
-      DB.exec(<<~SQL)
-        INSERT INTO chat_uploads(upload_id, chat_message_id, created_at, updated_at)
-        VALUES(#{upload_1.id}, #{message_1.id}, NOW(), NOW())
-      SQL
 
       message_1.destroy!
 
-      expect(DB.query("SELECT * FROM chat_uploads WHERE upload_id = #{upload_1.id}")).to eq([])
       expect { upload_reference_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
@@ -537,22 +531,19 @@ describe Chat::Message do
     it "creates an UploadReference record for the provided uploads" do
       chat_message.attach_uploads([upload_1, upload_2])
       upload_references = UploadReference.where(upload_id: [upload_1, upload_2])
-      expect(chat_upload_count([upload_1, upload_2])).to eq(0)
       expect(upload_references.count).to eq(2)
       expect(upload_references.map(&:target_id).uniq).to eq([chat_message.id])
-      expect(upload_references.map(&:target_type).uniq).to eq([Chat::Message.sti_name])
+      expect(upload_references.map(&:target_type).uniq).to eq([described_class.polymorphic_name])
     end
 
     it "does nothing if the message record is new" do
       expect { described_class.new.attach_uploads([upload_1, upload_2]) }.to not_change {
-        chat_upload_count
-      }.and not_change { UploadReference.count }
+        UploadReference.count
+      }
     end
 
     it "does nothing for an empty uploads array" do
-      expect { chat_message.attach_uploads([]) }.to not_change {
-        chat_upload_count
-      }.and not_change { UploadReference.count }
+      expect { chat_message.attach_uploads([]) }.to not_change { UploadReference.count }
     end
   end
 
@@ -616,13 +607,5 @@ describe Chat::Message do
       expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
       expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
     end
-  end
-
-  # TODO (martin) Remove this when we remove ChatUpload completely, 2023-04-01
-  def chat_upload_count(uploads = nil)
-    return DB.query_single("SELECT COUNT(*) FROM chat_uploads").first if !uploads
-    DB.query_single(
-      "SELECT COUNT(*) FROM chat_uploads WHERE upload_id IN (#{uploads.map(&:id).join(",")})",
-    ).first
   end
 end

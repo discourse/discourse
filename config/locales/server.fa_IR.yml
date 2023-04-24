@@ -51,6 +51,7 @@ fa_IR:
   remove_posts_deleted_by_author: "پاک شده توسط نویسنده"
   redirect_warning: "ما قادر به تایید این پیوند نمی‌باشیم. پیوند انتخابی شما قبلا به انجمن پست شده است. اگر در هر‌صورت مایل به انجام این کار هستید بر روی پیوند زیر کلیک کنید."
   on_another_topic: "در یک مبحث دیگر"
+  topic_category_changed: "از %{from} به %{to}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} توسط %{username}"
@@ -1996,8 +1997,6 @@ fa_IR:
     see_more: "بیشتر"
     search_title: "جستجو در سایت"
     search_button: "جستجو"
-  login_required:
-    welcome_message: "## [خوش آمدید به %{title}](#welcome)"
   upload:
     edit_reason: "کپی عکس‌های محلی دانلود شد"
     unauthorized: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید معتبر نیست ( پسوندهای معتبر عبارتند از: {authorized_extensions}% )."

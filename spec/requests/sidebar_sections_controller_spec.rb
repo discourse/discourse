@@ -15,14 +15,13 @@ RSpec.describe SidebarSectionsController do
   describe "#index" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "private section", user: user) }
     fab!(:sidebar_url_1) { Fabricate(:sidebar_url, name: "tags", value: "/tags") }
+    fab!(:sidebar_url_2) { Fabricate(:sidebar_url, name: "categories", value: "/categories") }
     fab!(:section_link_1) do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
     end
-    fab!(:sidebar_section_2) do
-      Fabricate(:sidebar_section, title: "public section", user: admin, public: true)
-    end
+    fab!(:sidebar_section_2) { Fabricate(:sidebar_section, title: "public section", public: true) }
     fab!(:section_link_2) do
-      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
     end
 
     it "returns public and private sections" do
@@ -123,6 +122,7 @@ RSpec.describe SidebarSectionsController do
       sidebar_section = SidebarSection.last
       expect(sidebar_section.title).to eq("custom section")
       expect(sidebar_section.public).to be true
+      expect(sidebar_section.user_id).to be Discourse.system_user.id
 
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:create_public_sidebar_section])
@@ -165,7 +165,7 @@ RSpec.describe SidebarSectionsController do
 
     it "allows admin to update public section and links" do
       sign_in(admin)
-      sidebar_section.update!(user: admin, public: true)
+      sidebar_section.update!(public: true)
       put "/sidebar_sections/#{sidebar_section.id}.json",
           params: {
             title: "custom section edited",
@@ -313,7 +313,7 @@ RSpec.describe SidebarSectionsController do
 
     it "allows admin to delete public section" do
       sign_in(admin)
-      sidebar_section.update!(user: admin, public: true)
+      sidebar_section.update!(public: true)
       delete "/sidebar_sections/#{sidebar_section.id}.json"
 
       expect(response.status).to eq(200)

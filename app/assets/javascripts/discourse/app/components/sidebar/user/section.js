@@ -23,13 +23,13 @@ export default class Section {
   }
 
   get decoratedTitle() {
-    return this.section.public && this.currentUser.staff
+    return this.section.public && this.currentUser?.staff
       ? htmlSafe(`${iconHTML("globe")} ${this.section.title}`)
       : this.section.title;
   }
 
   get headerActions() {
-    if (!this.section.public || this.currentUser.staff) {
+    if (!this.section.public || this.currentUser?.staff) {
       return [
         {
           action: () => {

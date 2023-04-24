@@ -215,6 +215,48 @@ class Category < ActiveRecord::Base
     Category.reset_topic_ids_cache
   end
 
+  # Accepts an array of slugs with each item in the array
+  # Returns the category ids of the last slug in the array. The slugs array has to follow the proper category
+  # nesting hierarchy. If any of the slug in the array is invalid or if the slugs array does not follow the proper
+  # category nesting hierarchy, nil is returned.
+  #
+  # When only a single slug is provided, the category id of all the categories with that slug is returned.
+  def self.ids_from_slugs(slugs)
+    return [] if slugs.blank?
+
+    params = {}
+    params_index = 0
+
+    sqls =
+      slugs.map do |slug|
+        category_slugs = slug.split(":").first(SiteSetting.max_category_nesting)
+        sql = ""
+
+        if category_slugs.length == 1
+          params[:"slug_#{params_index}"] = category_slugs.first
+          sql = "SELECT id FROM categories WHERE slug = :slug_#{params_index}"
+          params_index += 1
+        else
+          category_slugs.each_with_index do |category_slug, index|
+            params[:"slug_#{params_index}"] = category_slug
+
+            sql =
+              if index == 0
+                "SELECT id FROM categories WHERE slug = :slug_#{params_index} AND parent_category_id IS NULL"
+              else
+                "SELECT id FROM categories WHERE parent_category_id = (#{sql}) AND slug = :slug_#{params_index}"
+              end
+
+            params_index += 1
+          end
+        end
+
+        sql
+      end
+
+    DB.query_single(sqls.join("\nUNION ALL\n"), params)
+  end
+
   @@subcategory_ids = DistributedCache.new("subcategory_ids")
 
   def self.subcategory_ids(category_id)

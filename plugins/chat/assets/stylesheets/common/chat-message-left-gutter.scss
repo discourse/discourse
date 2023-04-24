@@ -6,7 +6,7 @@
   width: var(--message-left-width);
 }
 
-.chat-message-container.is-hovered .chat-message-left-gutter {
+.chat-message-container:hover .chat-message-left-gutter {
   .chat-time {
     color: var(--secondary-mediumy);
   }

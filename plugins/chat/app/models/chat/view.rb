@@ -56,7 +56,7 @@ module Chat
           sql,
           pending: ReviewableScore.statuses[:pending],
           message_ids: @chat_messages.map(&:id),
-          target_type: Chat::Message.sti_name,
+          target_type: Chat::Message.polymorphic_name,
         )
         .each { |row| ids[row.target_id] = row.reviewable_id }
 
@@ -85,7 +85,7 @@ module Chat
           sql,
           message_ids: @chat_messages.map(&:id),
           user_id: @user.id,
-          target_type: Chat::Message.sti_name,
+          target_type: Chat::Message.polymorphic_name,
         )
         .each { |row| statuses[row.target_id] = row.status }
 

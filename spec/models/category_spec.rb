@@ -1352,4 +1352,101 @@ RSpec.describe Category do
       expect(SiteSetting.general_category_id).to be < 1
     end
   end
+
+  describe ".ids_from_slugs" do
+    fab!(:category) { Fabricate(:category, slug: "category") }
+    fab!(:category2) { Fabricate(:category, slug: "category2") }
+    fab!(:subcategory) { Fabricate(:category, parent_category: category, slug: "subcategory") }
+    fab!(:subcategory2) { Fabricate(:category, parent_category: category2, slug: "subcategory") }
+
+    it "returns [] when inputs is []" do
+      expect(Category.ids_from_slugs([])).to eq([])
+    end
+
+    it 'returns the ids of category when input is ["category"]' do
+      expect(Category.ids_from_slugs(%w[category])).to contain_exactly(category.id)
+    end
+
+    it 'returns the ids of subcategory when input is ["category:subcategory"]' do
+      expect(Category.ids_from_slugs(%w[category:subcategory])).to contain_exactly(subcategory.id)
+    end
+
+    it 'returns the ids of subcategory2 when input is ["category2:subcategory"]' do
+      expect(Category.ids_from_slugs(%w[category2:subcategory])).to contain_exactly(subcategory2.id)
+    end
+
+    it "returns the ids of category and category2 when input is ['category', 'category2']" do
+      expect(Category.ids_from_slugs(%w[category category2])).to contain_exactly(
+        category.id,
+        category2.id,
+      )
+    end
+
+    it "returns the ids of subcategory and subcategory2 when input is ['category:subcategory', 'category2:subcategory']" do
+      expect(
+        Category.ids_from_slugs(%w[category:subcategory category2:subcategory]),
+      ).to contain_exactly(subcategory.id, subcategory2.id)
+    end
+
+    it "returns the ids of subcategory when input is ['category:subcategory', 'invalid:subcategory']" do
+      expect(
+        Category.ids_from_slugs(%w[category:subcategory invalid:subcategory]),
+      ).to contain_exactly(subcategory.id)
+    end
+
+    it 'returns the ids of sub-subcategory when input is ["category:subcategory:sub-subcategory"] and maximum category nesting is 3' do
+      SiteSetting.max_category_nesting = 3
+      sub_subcategory = Fabricate(:category, parent_category: subcategory, slug: "sub-subcategory")
+
+      expect(Category.ids_from_slugs(%w[category:subcategory:sub-subcategory])).to contain_exactly(
+        sub_subcategory.id,
+      )
+    end
+
+    it 'returns nil when input is ["category:invalid-slug:sub-subcategory"] and maximum category nesting is 3' do
+      SiteSetting.max_category_nesting = 3
+      sub_subcategory = Fabricate(:category, parent_category: subcategory, slug: "sub-subcategory")
+
+      expect(Category.ids_from_slugs(%w[category:invalid-slug:sub-subcategory])).to eq([])
+    end
+
+    it 'returns the ids of subcategory when input is ["category:subcategory:sub-subcategory"] but maximum category nesting is 2' do
+      SiteSetting.max_category_nesting = 2
+
+      expect(Category.ids_from_slugs(%w[category:subcategory:sub-subcategory])).to contain_exactly(
+        subcategory.id,
+      )
+    end
+
+    it 'returns the ids of subcategory and subcategory2 when input is ["subcategory"]' do
+      expect(Category.ids_from_slugs(%w[subcategory])).to contain_exactly(
+        subcategory.id,
+        subcategory2.id,
+      )
+    end
+  end
+
+  describe "allowed_tags=" do
+    let(:category) { Fabricate(:category) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag2) { Fabricate(:tag) }
+
+    before { SiteSetting.tagging_enabled = true }
+
+    it "can use existing tags for category tags" do
+      category.allowed_tags = [tag.name]
+      expect_same_tag_names(category.reload.tags, [tag])
+    end
+
+    context "with synonyms" do
+      fab!(:synonym) { Fabricate(:tag, name: "synonym", target_tag: tag) }
+
+      it "can use existing tags for category tags" do
+        category.allowed_tags = [tag.name, synonym.name]
+        category.reload
+        category.allowed_tags = [tag.name, synonym.name, tag2.name]
+        expect_same_tag_names(category.reload.tags, [tag.name, synonym.name, tag2.name])
+      end
+    end
+  end
 end

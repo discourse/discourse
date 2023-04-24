@@ -52,6 +52,11 @@ de:
   remove_posts_deleted_by_author: "Gelöscht vom Verfasser"
   redirect_warning: "Wir konnten nicht überprüfen, dass der ausgewählte Link tatsächlich im Forum geteilt wurde. Wenn du trotzdem fortfahren möchtest, wähle den Link unten aus."
   on_another_topic: "Zu einem anderen Thema"
+  topic_category_changed: "Von %{from} bis %{to}"
+  topic_tag_changed:
+    added_and_removed: "%{added} hinzugefügt und %{removed}entfernt"
+    added: "%{added} hinzugefügt"
+    removed: "%{removed} entfernt"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} von %{username}"
@@ -649,6 +654,7 @@ de:
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
       slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
       is_already_in_use: "wird bereits verwendet"
+      move_topic_to_category_disallowed: "Du kannst dieses Thema nicht in eine Kategorie verschieben, in der du keine Berechtigung hast, neue Themen zu erstellen."
     cannot_delete:
       uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben, und kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien enthält."
@@ -1112,7 +1118,7 @@ de:
       title: "TAB/MAB"
       xaxis: "Tag"
       yaxis: "TAB/MAB"
-      description: "Anzahl der Mitglieder, die sich innerhalb des letzten Tages angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, welche die „Bindung“ der Community angibt. Erstrebenswert sind 30 % oder mehr."
+      description: "Anzahl der Mitglieder, die sich innerhalb des letzten Tages angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, welche die „Bindung“ der Community angibt. Erstrebenswert sind 20 % oder mehr."
     daily_engaged_users:
       title: "Täglich engagierte Benutzer"
       xaxis: "Tag"
@@ -1392,6 +1398,7 @@ de:
     out_of_date_themes: "Updates sind für die folgenden Themes verfügbar:"
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
+    v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a> , um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -1480,7 +1487,7 @@ de:
     manifest_icon: "Das Bild, das als Logo/Splash-Bild auf Android benutzt wird. Es wird automatisch auf 512 x 512 gesetzt. Falls leer, wird large_icon genutzt."
     manifest_screenshots: "Screenshots, die die Merkmale und Funktionen deiner Instanz auf der Seite mit der Installationsaufforderung zeigen. Alle Bilder sollten lokal hochgeladen werden und die gleichen Abmessungen haben."
     favicon: "Ein Favicon für die Website, siehe <a href='https://de.wikipedia.org/wiki/Favicon' target='_blank'>https://de.wikipedia.org/wiki/Favicon</a>. Damit es auch über eine CDN richtig funktioniert, muss es ein PNG sein. Wird auf eine Größe von 32 x 32 gesetzt. Falls leer, wird large_icon verwendet."
-    apple_touch_icon: "Icon für Apple-Touch-Geräte. Wird automatisch auf eine Größe von 180 x 180 gesetzt. Falls leer, wird large_icon verwendet."
+    apple_touch_icon: "Das Symbol wird für Apple Touch-Geräte verwendet. Ein transparenter Hintergrund ist nicht empfehlenswert. Die Größe wird automatisch auf 180x180 angepasst. Wenn du nichts angibst, wird large_icon verwendet."
     opengraph_image: "Standard-Opengraph-Bild. Wird verwendet, wenn die Seite kein anderes passendes Bild hat. Falls leer, wird large_icon verwendet."
     twitter_summary_large_image: "Twitter-Karte „summary large image“ (sollte mindestens 280 Pixel in der Breite und mindestens 150 Pixel in der Höhe sein, keine .svg-Datei). Wenn das Feld leer gelassen wird, werden die regulären Metadaten der Karte aus dem opengraph_image generiert, sofern es sich nicht ebenfalls um eine .svg-Datei handelt"
     notification_email: "Die E-Mail-Adresse, die als „from:“-Absender aller wichtigen System-E-Mails benutzt wird. Die angegebene Domain sollte über korrekte SPF-, DKIM- und Reverse-PTR-Einträge verfügen, damit E-Mails sicher zugestellt werden können."
@@ -2113,6 +2120,7 @@ de:
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
+    create_post_for_category_and_tag_changes: "Erstelle einen kleinen Aktionsbeitrag, wenn sich die Kategorie oder die Tags eines Themas ändern"
     company_name: "Firmenname"
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
@@ -2184,7 +2192,6 @@ de:
       staged_users_disabled: "Du musst erst „staged users“ aktivieren, bevor du diese Einstellung aktivierst."
       reply_by_email_disabled: "Du musst erst „reply by email“ aktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_url_is_empty: "Du musst eine „discourse connect url'“ festlegen, bevor du diese Einstellung aktivierst."
-      discourse_connect_invite_only: "Du kannst DiscourseConnect und „invite only“ nicht gleichzeitig aktivieren."
       enable_local_logins_disabled: "Du musst erst „enable local logins“ aktivieren, bevor du diese Einstellung aktivierst."
       min_username_length_exists: "Du kannst die Mindestlänge von Benutzernamen nicht über den kürzesten Benutzernamen (%{username}) setzen."
       min_username_length_range: "Du kannst das Minimum nicht über das Maximum setzen."
@@ -3718,7 +3725,7 @@ de:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
   login_required:
-    welcome_message: "## [Willkommen bei %{title}](#welcome)"
+    welcome_message: "# [Willkommen bei %{title}] (#welcome)"
   upload:
     edit_reason: "lokale Kopien von Bildern heruntergeladen"
     unauthorized: "Entschuldige, die Datei, die du hochladen möchtest, ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."

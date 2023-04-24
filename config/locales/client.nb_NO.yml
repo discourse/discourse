@@ -163,8 +163,6 @@ nb_NO:
     software_update_prompt:
       message: "Vi har oppdatert dette nettstedet, <span>Oppdater</span>, eller du kan oppleve uventet oppførsel."
       dismiss: "Avslå"
-    bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
-    bootstrap_invite_button_title: "Send invitasjoner"
     themes:
       default_description: "Forvalg"
     s3:
@@ -304,7 +302,6 @@ nb_NO:
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt personlig meldingsutkast"
       abandon:
-        confirm: "Du har et pågående utkast for dette emnet. Hva vil du gjøre med det?"
         yes_value: "Forkast"
         no_value: "Gjenoppta redigering"
     topic_count_categories:
@@ -1077,7 +1074,6 @@ nb_NO:
       home: "Forvalgt hjemmeside"
       staged: "Arrangert"
       staff_counters:
-        flags_given: "nyttige rapporteringer"
         flagged_posts: "rapporterte innlegg"
         deleted_posts: "slettede innlegg"
         suspensions: "suspenderinger"
@@ -3397,8 +3393,10 @@ nb_NO:
           save: "Lagre"
           delete: "Slett"
           links:
-            icon: "Ikon"
-            name: "Navn"
+            icon:
+              label: "Ikon"
+            name:
+              label: "Navn"
         about:
           header_link_text: "Om"
         messages:
@@ -4227,11 +4225,6 @@ nb_NO:
           require_approval: "Krev godkjenning"
           flag: "Flagg"
           silence: "Demp"
-        action_descriptions:
-          block: "Forhindre innlegg som inneholder disse ordene, fra å bli opprettet. Brukeren vil se en feilmelding når vedkommende prøver å opprette innlegget sitt."
-          censor: "Tillat innlegg som inneholder disse ordene, men erstatt dem med bokstaver som skjuler de sensurerte ordene."
-          require_approval: "Innlegg som inneholder disse ordene, vil måtte godkjennes av staben før de kan bli sett."
-          flag: "Tillat innlegg som inneholder disse ordene, men flagg dem som upassende slik at moderatorer kan se over dem."
         form:
           placeholder_regexp: "regulært uttrykk"
           add: "Legg til"

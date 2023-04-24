@@ -15,7 +15,7 @@ import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor } from "discourse/lib/text";
 import { inject as service } from "@ember/service";
-import { readOnly, reads } from "@ember/object/computed";
+import { reads } from "@ember/object/computed";
 import { SKIP } from "discourse/lib/autocomplete";
 import { Promise } from "rsvp";
 import { translations } from "pretty-text/emoji/data";
@@ -32,12 +32,9 @@ export default Component.extend(TextareaTextManipulation, {
   chat: service(),
   classNames: ["chat-composer-container"],
   classNameBindings: ["emojiPickerVisible:with-emoji-picker"],
-  userSilenced: readOnly("chatChannel.userSilenced"),
   chatEmojiReactionStore: service("chat-emoji-reaction-store"),
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
   chatStateManager: service("chat-state-manager"),
-  editingMessage: null,
-  onValueChange: null,
   timer: null,
   value: "",
   inProgressUploads: null,
@@ -50,12 +47,12 @@ export default Component.extend(TextareaTextManipulation, {
 
   @discourseComputed(...chatComposerButtonsDependentKeys())
   inlineButtons() {
-    return chatComposerButtons(this, "inline");
+    return chatComposerButtons(this, "inline", this.context);
   },
 
   @discourseComputed(...chatComposerButtonsDependentKeys())
   dropdownButtons() {
-    return chatComposerButtons(this, "dropdown");
+    return chatComposerButtons(this, "dropdown", this.context);
   },
 
   @discourseComputed("chatEmojiPickerManager.{opened,context}")
@@ -71,7 +68,6 @@ export default Component.extend(TextareaTextManipulation, {
   init() {
     this._super(...arguments);
 
-    this.appEvents.on("chat-composer:reply-to-set", this, "_replyToMsgChanged");
     this.appEvents.on(
       "upload-mixin:chat-composer-uploader:in-progress-uploads",
       this,
@@ -81,6 +77,10 @@ export default Component.extend(TextareaTextManipulation, {
     this.setProperties({
       inProgressUploads: [],
       _uploads: [],
+    });
+
+    this.composerService?.registerFocusHandler(() => {
+      this._focusTextArea();
     });
   },
 
@@ -92,7 +92,6 @@ export default Component.extend(TextareaTextManipulation, {
     this._applyUserAutocomplete(this._$textarea);
     this._applyCategoryHashtagAutocomplete(this._$textarea);
     this._applyEmojiAutocomplete(this._$textarea);
-    this.appEvents.on("chat:focus-composer", this, "_focusTextArea");
     this.appEvents.on("chat:insert-text", this, "insertText");
     this._focusTextArea();
 
@@ -109,7 +108,10 @@ export default Component.extend(TextareaTextManipulation, {
     this.set("ready", true);
   },
 
-  _modifySelection(opts = { type: null }) {
+  _modifySelection(opts = { type: null, context: null }) {
+    if (opts.context !== this.context) {
+      return;
+    }
     const sel = this.getSelected("", { lineVal: true });
     if (opts.type === "bold") {
       this.applySurround(sel, "**", "**", "bold_text");
@@ -135,11 +137,6 @@ export default Component.extend(TextareaTextManipulation, {
     this._super(...arguments);
 
     this.appEvents.off(
-      "chat-composer:reply-to-set",
-      this,
-      "_replyToMsgChanged"
-    );
-    this.appEvents.off(
       "upload-mixin:chat-composer-uploader:in-progress-uploads",
       this,
       "_inProgressUploadsChanged"
@@ -147,7 +144,6 @@ export default Component.extend(TextareaTextManipulation, {
 
     cancel(this.timer);
 
-    this.appEvents.off("chat:focus-composer", this, "_focusTextArea");
     this.appEvents.off("chat:insert-text", this, "insertText");
     this.appEvents.off("chat:modify-selection", this, "_modifySelection");
     this.appEvents.off(
@@ -192,20 +188,18 @@ export default Component.extend(TextareaTextManipulation, {
     if (
       event.key === "ArrowUp" &&
       this._messageIsEmpty() &&
-      !this.editingMessage
+      !this.composerService?.editingMessage
     ) {
       event.preventDefault();
-      this.onEditLastMessageRequested();
+      this.paneService?.editLastMessageRequested();
     }
 
-    if (event.keyCode === 27) {
-      // keyCode for 'Escape'
-      if (this.replyToMsg) {
+    if (event.key === "Escape") {
+      if (this.composerService?.replyToMsg) {
         this.set("value", "");
-        this._replyToMsgChanged(null);
+        this.composerService?.setReplyTo(null);
         return false;
-      } else if (this.editingMessage) {
-        this.set("value", "");
+      } else if (this.composerService?.editingMessage) {
         this.cancelEditing();
         return false;
       } else {
@@ -218,32 +212,34 @@ export default Component.extend(TextareaTextManipulation, {
     this._super(...arguments);
 
     if (
-      !this.editingMessage &&
+      !this.composerService?.editingMessage &&
       this.chatChannel?.draft &&
       this.chatChannel?.canModifyMessages(this.currentUser)
     ) {
       // uses uploads from draft here...
-      this.setProperties({
-        value: this.chatChannel.draft.message,
-        replyToMsg: this.chatChannel.draft.replyToMsg,
-      });
+      this.set("value", this.chatChannel.draft.message);
+      this.composerService?.setReplyTo(this.chatChannel.draft.replyToMsg);
 
       this._captureMentions();
       this._syncUploads(this.chatChannel.draft.uploads);
-      this.setInReplyToMsg(this.chatChannel.draft.replyToMsg);
-    }
-
-    if (this.editingMessage && !this.loading) {
-      this.setProperties({
-        replyToMsg: null,
-        value: this.editingMessage.message,
-      });
-
-      this._syncUploads(this.editingMessage.uploads);
-      this._focusTextArea({ ensureAtEnd: true, resizeTextarea: false });
     }
 
     this.resizeTextarea();
+  },
+
+  @action
+  updateEditingMessage() {
+    if (
+      this.composerService?.editingMessage &&
+      !this.paneService?.sendingLoading
+    ) {
+      this.set("value", this.composerService?.editingMessage.message);
+
+      this.composerService?.setReplyTo(null);
+
+      this._syncUploads(this.composerService?.editingMessage.uploads);
+      this._focusTextArea({ ensureAtEnd: true, resizeTextarea: false });
+    }
   },
 
   // the chat-composer needs to be able to set the internal list of uploads
@@ -281,11 +277,6 @@ export default Component.extend(TextareaTextManipulation, {
     });
   },
 
-  _replyToMsgChanged(replyToMsg) {
-    this.set("replyToMsg", replyToMsg);
-    this.onValueChange?.({ replyToMsg });
-  },
-
   @action
   onTextareaInput(value) {
     this.set("value", value);
@@ -299,7 +290,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @bind
   _handleTextareaInput() {
-    this.onValueChange?.({ value: this.value });
+    this.composerService?.onComposerValueChange?.({ value: this.value });
   },
 
   @bind
@@ -324,6 +315,18 @@ export default Component.extend(TextareaTextManipulation, {
     const code = `:${emoji}:`;
     this.chatEmojiReactionStore.track(code);
     this.addText(this.getSelected(), code);
+
+    if (this.site.desktopView) {
+      this._focusTextArea();
+    } else {
+      this.chatEmojiPickerManager.close();
+    }
+  },
+
+  @action
+  closeComposerDropdown() {
+    this.chatEmojiPickerManager.close();
+    this.appEvents.trigger("d-popover:close");
   },
 
   @action
@@ -420,8 +423,9 @@ export default Component.extend(TextareaTextManipulation, {
           return `${v.code}:`;
         } else {
           $textarea.autocomplete({ cancel: true });
-          this.chatEmojiPickerManager.startFromComposer(this.emojiSelected, {
-            filter: v.term,
+          this.chatEmojiPickerManager.open({
+            context: this.context,
+            initialFilter: v.term,
           });
           return "";
         }
@@ -479,12 +483,13 @@ export default Component.extend(TextareaTextManipulation, {
             return resolve([allTranslations[full]]);
           }
 
+          const emojiDenied = this.get("site.denied_emojis") || [];
           const match = term.match(/^:?(.*?):t([2-6])?$/);
           if (match) {
             const name = match[1];
             const scale = match[2];
 
-            if (isSkinTonableEmoji(name)) {
+            if (isSkinTonableEmoji(name) && !emojiDenied.includes(name)) {
               if (scale) {
                 return resolve([`${name}:t${scale}`]);
               } else {
@@ -496,6 +501,7 @@ export default Component.extend(TextareaTextManipulation, {
           const options = emojiSearch(term, {
             maxResults: 5,
             diversity: this.chatEmojiReactionStore.diversity,
+            exclude: emojiDenied,
           });
 
           return resolve(options);
@@ -551,18 +557,21 @@ export default Component.extend(TextareaTextManipulation, {
 
   @discourseComputed(
     "chatChannel.{id,chatable.users.[]}",
-    "canInteractWithChat"
+    "chat.userCanInteractWithChat"
   )
-  disableComposer(channel, canInteractWithChat) {
+  disableComposer(channel, userCanInteractWithChat) {
     return (
       (channel.isDraft && isEmpty(channel?.chatable?.users)) ||
-      !canInteractWithChat ||
+      !userCanInteractWithChat ||
       !channel.canModifyMessages(this.currentUser)
     );
   },
 
-  @discourseComputed("userSilenced", "chatChannel.{chatable.users.[],id}")
-  placeholder(userSilenced, chatChannel) {
+  @discourseComputed(
+    "chatChannel.{chatable.users.[],id}",
+    "chat.userCanInteractWithChat"
+  )
+  placeholder(chatChannel, userCanInteractWithChat) {
     if (!chatChannel.canModifyMessages(this.currentUser)) {
       return I18n.t(
         `chat.placeholder_new_message_disallowed.${chatChannel.status}`
@@ -581,7 +590,7 @@ export default Component.extend(TextareaTextManipulation, {
       }
     }
 
-    if (userSilenced) {
+    if (!userCanInteractWithChat) {
       return I18n.t("chat.placeholder_silenced");
     } else {
       return this.messageRecipient(chatChannel);
@@ -612,7 +621,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @discourseComputed(
     "value",
-    "loading",
+    "paneService.sendingLoading",
     "disableComposer",
     "inProgressUploads.[]"
   )
@@ -636,23 +645,30 @@ export default Component.extend(TextareaTextManipulation, {
       return;
     }
 
-    this.editingMessage
+    this.composerService?.editingMessage
       ? this.internalEditMessage()
       : this.internalSendMessage();
   },
 
   @action
   internalSendMessage() {
-    return this.sendMessage(this.value, this._uploads).then(this.reset);
+    // FIXME: This is fairly hacky, we should have a nicer
+    // flow and relationship between the panes for resetting
+    // the value here on send.
+    const _previousValue = this.value;
+    this.set("value", "");
+    return this.sendMessage(_previousValue, this._uploads)
+      .then(this.reset)
+      .catch(() => {
+        this.set("value", _previousValue);
+      });
   },
 
   @action
   internalEditMessage() {
-    return this.editMessage(
-      this.editingMessage,
-      this.value,
-      this._uploads
-    ).then(this.reset);
+    return this.paneService
+      ?.editMessage(this.value, this._uploads)
+      .then(this.reset);
   },
 
   _messageIsValid() {
@@ -691,19 +707,22 @@ export default Component.extend(TextareaTextManipulation, {
     this._captureMentions();
     this._syncUploads([]);
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
-    this.onValueChange?.(this.value, this._uploads, this.replyToMsg);
+    this.composerService?.onComposerValueChange?.(
+      this.value,
+      this._uploads,
+      this.composerService?.replyToMsg
+    );
   },
 
   @action
   cancelReplyTo() {
-    this.set("replyToMsg", null);
-    this.setInReplyToMsg(null);
-    this.onValueChange?.({ replyToMsg: null });
+    this.composerService?.setReplyTo(null);
   },
 
   @action
   cancelEditing() {
-    this.onCancelEditing();
+    this.composerService?.cancelEditing();
+    this.set("value", "");
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
   },
 
@@ -721,7 +740,10 @@ export default Component.extend(TextareaTextManipulation, {
   @action
   uploadsChanged(uploads, { inProgressUploadsCount }) {
     this.set("_uploads", cloneJSON(uploads));
-    this.onValueChange?.({ uploads: this._uploads, inProgressUploadsCount });
+    this.composerService?.onComposerValueChange?.({
+      uploads: this._uploads,
+      inProgressUploadsCount,
+    });
   },
 
   @action

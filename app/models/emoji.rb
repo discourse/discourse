@@ -28,6 +28,14 @@ class Emoji
     Discourse.cache.fetch(cache_key("standard_emojis")) { load_standard }
   end
 
+  def self.allowed
+    Discourse.cache.fetch(cache_key("allowed_emojis")) { load_allowed }
+  end
+
+  def self.denied
+    Discourse.cache.fetch(cache_key("denied_emojis")) { load_denied }
+  end
+
   def self.aliases
     db["aliases"]
   end
@@ -67,10 +75,14 @@ class Emoji
     [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
       found_emoji =
         cache.defer_get_set(normalized_name) do
-          Emoji
-            .public_send(list_key)
-            .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) }
-        end
+          [
+            Emoji
+              .public_send(list_key)
+              .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) },
+          ]
+        end[
+          0
+        ]
 
       break if found_emoji
     end
@@ -110,7 +122,7 @@ class Emoji
   end
 
   def self.clear_cache
-    %w[custom standard translations all].each do |key|
+    %w[custom standard translations allowed denied all].each do |key|
       Discourse.cache.delete(cache_key("#{key}_emojis"))
     end
     global_emoji_cache.clear
@@ -144,6 +156,26 @@ class Emoji
 
   def self.load_standard
     db["emojis"].map { |e| Emoji.create_from_db_item(e) }.compact
+  end
+
+  def self.load_allowed
+    denied_emojis = denied
+    all_emojis = load_standard + load_custom
+
+    if denied_emojis.present?
+      all_emojis.reject { |e| denied_emojis.include?(e.name) }
+    else
+      all_emojis
+    end
+  end
+
+  def self.load_denied
+    if SiteSetting.emoji_deny_list.present?
+      denied_emoji = SiteSetting.emoji_deny_list.split("|")
+      if denied_emoji.size > 0
+        denied_emoji.concat(denied_emoji.flat_map { |e| Emoji.aliases[e] }.compact)
+      end
+    end
   end
 
   def self.load_custom
@@ -239,6 +271,8 @@ class Emoji
   end
 
   def self.lookup_unicode(name)
+    return "" if denied&.include?(name)
+
     @reverse_map ||=
       begin
         map = {}

@@ -43,4 +43,22 @@ RSpec.describe "topics/show.html.erb" do
     expect(first_item.css('[itemprop="position"]')[0]["content"]).to eq("1")
     expect(first_item.css('[itemprop="url"]')[0]["href"]).to eq("https://example.com/")
   end
+
+  it "uses comment scheme type for replies" do
+    view.stubs(:crawler_layout?).returns(true)
+    view.stubs(:include_crawler_content?).returns(true)
+    Fabricate(:post, topic: topic)
+    Fabricate(:post, topic: topic)
+    Fabricate(:post, topic: topic)
+    assign(:topic_view, TopicView.new(topic))
+    assign(:tags, [])
+
+    render template: "topics/show", formats: [:html]
+
+    doc = Nokogiri::HTML5.fragment(rendered)
+    topic_schema = doc.css('[itemtype="http://schema.org/DiscussionForumPosting"]')
+    expect(topic_schema.size).to eq(1)
+    expect(topic_schema.css('[itemtype="http://schema.org/Comment"]').size).to eq(2)
+    expect(topic_schema.css('[itemprop="articleSection"]')[0]["content"]).to eq(topic.category.name)
+  end
 end
