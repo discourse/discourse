@@ -41,7 +41,10 @@ class ThemeSerializer < BasicThemeSerializer
   end
 
   def include_theme_field_values?
-    @include_theme_field_values
+    # This is passed into each `ThemeFieldSerializer` to determine if `value` will be serialized.
+    # We only want to serialize if we are viewing staff_action_logs (for diffing changes), or if
+    # the theme is a local theme, so the saved values appear in the theme field editor.
+    @include_theme_field_values || object.remote_theme_id.nil?
   end
 
   def child_themes
