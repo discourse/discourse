@@ -24,13 +24,14 @@ jobs:
     timeout-minutes: 20
 
     env:
-      DISCOURSE_HOSTNAME: www.example.com
+      DISCOURSE_HOSTNAME: example.com
       RUBY_GLOBAL_METHOD_CACHE_SIZE: 131072
       RAILS_ENV: production
       PGUSER: discourse
       PGPASSWORD: discourse
       UNICORN_WORKERS: 2
       UNICORN_SIDEKIQS: 1
+      UNICORN_PORT: 80
 
     steps:
       - name: Set working directory owner
@@ -143,16 +144,19 @@ jobs:
             SiteSetting.wizard_enabled = false
           end
 
+      - name: Setup host
+        run: echo "127.0.0.1 ${{ env.DISCOURSE_HOSTNAME }}" >> /etc/hosts
+
       - name: Start server
         run: bundle exec config/unicorn_launcher -E production -c config/unicorn.conf.rb &
 
       - name: Warmup
         run: |
-          curl -s -A "Chrome" --retry 15 --retry-delay 5 --retry-all-errors --max-time 90 http://127.0.0.1:3000
+          curl -s -A "Chrome" --retry 15 --retry-delay 5 --retry-all-errors --max-time 90 http://example.com
 
       - name: Smoke test
         env:
-          URL: http://127.0.0.1:3000
+          URL: http://${{ env.DISCOURSE_HOSTNAME }}
           WAIT_FOR_URL: 60
           ADMIN_API_KEY: ${{ steps.setup_env.outputs.api_key }}
           ADMIN_API_USERNAME: smoke_user
