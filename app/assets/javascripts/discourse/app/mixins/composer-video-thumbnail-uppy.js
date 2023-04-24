@@ -32,7 +32,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       .split(".")[0];
 
     // Wait for the video element to load, otherwise the canvas will be empty.
-    // iOS Safari perfers onloadedmetadata over oncanplay.
+    // iOS Safari prefers onloadedmetadata over oncanplay.
     video.onloadedmetadata = () => {
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
