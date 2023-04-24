@@ -125,7 +125,7 @@ jobs:
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Assets
-        run: bin/rails assets:precompile
+        run: bin/rails themes:update assets:precompile
 
       - name: Setup env
         id: setup_env
@@ -135,8 +135,10 @@ jobs:
         run: |
           puts ENV["WORKSPACE_DIR"]
           puts ENV["GITHUB_WORKSPACE"]
-          Dir.chdir(ENV["WORKSPACE_DIR"]) do
-            require_relative "config/environment"
+          puts `pwd`
+          Dir.chdir("/__w/discourse/discourse") do
+            puts `pwd`
+            require "./config/environment"
             u = User.new(username: "smoke_user", password: "P4ssw0rd", email: "smoke@example.com", admin:true)
             u.save!(validate: false)
             u.activate
@@ -146,7 +148,7 @@ jobs:
           end
 
       - name: Start server
-        run: bin/unicorn -E production &
+        run: bundle exec config/unicorn_launcher -E production -c config/unicorn.conf.rb &
 
       - name: Warmup
         run: |
