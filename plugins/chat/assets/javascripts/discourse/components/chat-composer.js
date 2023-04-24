@@ -175,9 +175,10 @@ export default class ChatComposer extends Component {
     }
 
     if (this.site.mobileView) {
-      // prevents android to hide the keyboard after sending a message
-      // we do a focusTextarea later but it's too late for android
-      this.textareaInteractor.focus();
+      // prevents to hide the keyboard after sending a message
+      // we use direct DOM manipulation here because textareaInteractor.focus()
+      // is using the runloop which is too late
+      this.textareaInteractor.textarea.focus();
     }
 
     this.args.onSendMessage(this.currentMessage);

@@ -16,6 +16,7 @@ export default class TextareaInteractor extends EmberObject.extend(
   constructor(owner, textarea) {
     super(...arguments);
     setOwner(this, owner);
+    this.textarea = textarea;
     this._textarea = textarea;
     this.element = this._textarea;
     this.ready = true;
