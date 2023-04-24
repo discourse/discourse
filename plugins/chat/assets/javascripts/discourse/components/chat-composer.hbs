@@ -36,9 +36,9 @@
         <ChatComposerDropdown
           @buttons={{this.dropdownButtons}}
           @isDisabled={{this.composer.disabled}}
-          @hasActivePanel={{and
-            this.chatEmojiPickerManager.picker
-            (eq this.chatEmojiPickerManager.picker.context @context)
+          @hasActivePanel={{eq
+            this.chatEmojiPickerManager.picker.context
+            @context
           }}
           @onCloseActivePanel={{this.chatEmojiPickerManager.close}}
         />
