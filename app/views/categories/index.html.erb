@@ -22,10 +22,7 @@
               <div itemprop='description'><%= c.description&.html_safe %></div>
               <div class='subcategories'>
                 <% c&.subcategory_list&.each_with_index do |sc, index| %>
-                  <a href='<%= sc.url %>'>
-                    <span itemprop='name'><%= sc.name %></span>
-                  </a>
-                  &nbsp;
+                  <a href='<%= sc.url %>'><%= sc.name %></a>&nbsp;
                 <% end %>
               </div>
             </div>
