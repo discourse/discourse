@@ -154,6 +154,8 @@ jobs:
             })
 
             SiteSetting.wizard_enabled = false
+            SiteSetting.rate_limit_create_post = 1
+            DiscourseRedis.new.flushall
           end
 
       - name: Setup host
