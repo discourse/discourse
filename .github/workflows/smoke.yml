@@ -129,16 +129,21 @@ jobs:
 
       - name: Setup env
         id: setup_env
+        shell: ruby {0}
+        env:
+          WORKSPACE_DIR: ${{ github.workspace }}
         run: |
-          echo "\n
-          require_relative 'config/environment'\n
-          u = User.new(username: 'smoke_user', password: 'P4ssw0rd', email: 'smoke@example.com', admin:true)\n
-          u.save!(validate: false)\n
-          u.activate\n
-          api_key = ApiKey.create!(user: u)\n
-          File.write(ENV['GITHUB_OUTPUT'], %Q{api_key=#{api_key.key}\n}, mode: 'a+')\n
-          SiteSetting.wizard_enabled = false\n
-          " | ruby
+          puts ENV["WORKSPACE_DIR"]
+          puts ENV["GITHUB_WORKSPACE"]
+          Dir.chdir(ENV["WORKSPACE_DIR"]) do
+            require_relative "config/environment"
+            u = User.new(username: "smoke_user", password: "P4ssw0rd", email: "smoke@example.com", admin:true)
+            u.save!(validate: false)
+            u.activate
+            api_key = ApiKey.create!(user: u)
+            File.write(ENV["GITHUB_OUTPUT"], "api_key=#{api_key.key}\n", mode: "a+")
+            SiteSetting.wizard_enabled = false
+          end
 
       - name: Start server
         run: bin/unicorn -E production &
