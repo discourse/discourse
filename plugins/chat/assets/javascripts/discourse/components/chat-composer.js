@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-import { next } from "@ember/runloop";
+import { cancel, next } from "@ember/runloop";
 import { cloneJSON } from "discourse-common/lib/object";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import showModal from "discourse/lib/show-modal";
@@ -87,6 +87,7 @@ export default class ChatComposer extends Component {
 
   @action
   didUpdateMessage() {
+    cancel(this._persistHandler);
     this.textareaInteractor.value = this.currentMessage.message || "";
     this.textareaInteractor.focus({ refreshHeight: true });
   }

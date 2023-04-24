@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import Service, { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { cancel } from "@ember/runloop";
 
 export default class ChatChannelComposer extends Service {
   @service chat;
@@ -56,7 +55,6 @@ export default class ChatChannelComposer extends Service {
   }
 
   set message(message) {
-    cancel(this._persistHandler);
     this._message = message;
   }
 }
