@@ -39,6 +39,14 @@ export default class ChatComposer extends Component {
     return this.args.composerService;
   }
 
+  get shouldRenderReplyingIndicator() {
+    return !this.args.channel?.isDraft && !this.args.context === "channel";
+  }
+
+  get shouldRenderMessageDetails() {
+    return this.currentMessage?.editing || this.currentMessage?.inReplyTo;
+  }
+
   get inlineButtons() {
     return chatComposerButtons(this, "inline", this.args.context);
   }

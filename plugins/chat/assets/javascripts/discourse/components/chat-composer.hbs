@@ -1,6 +1,6 @@
 {{! template-lint-disable no-down-event-binding }}
 <div class="chat-composer__wrapper">
-  {{#if (or this.currentMessage.editing this.currentMessage.inReplyTo)}}
+  {{#if this.shouldRenderMessageDetails}}
     <ChatComposerMessageDetails
       @message={{if
         this.currentMessage.editing
@@ -92,11 +92,11 @@
     />
   {{/if}}
 
-  {{#unless (or @channel.isDraft (eq @context "thread"))}}
+  {{#if this.shouldRenderReplyingIndicator}}
     <div class="chat-replying-indicator-container">
       <ChatReplyingIndicator @chatChannel={{@channel}} />
     </div>
-  {{/unless}}
+  {{/if}}
 
   <ChatEmojiPicker
     @context={{@context}}
