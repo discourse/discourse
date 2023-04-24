@@ -19,17 +19,17 @@
     </div>
 
     <span class="data">
-      {{#if (not this.isImage)}}
+      {{#unless this.isImage}}
         <div class="top-data">
           <span class="file-name">{{this.fileName}}</span>
         </div>
-      {{/if}}
+      {{/unless}}
 
       <div class="bottom-data">
         {{#if @isDone}}
-          {{#if (not this.isImage)}}
+          {{#unless this.isImage}}
             <span class="extension-pill">{{@upload.extension}}</span>
-          {{/if}}
+          {{/unless}}
         {{else}}
           {{#if @upload.processing}}
             <span class="processing">{{i18n "processing"}}</span>
