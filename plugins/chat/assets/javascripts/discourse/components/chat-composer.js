@@ -40,7 +40,7 @@ export default class ChatComposer extends Component {
   }
 
   get shouldRenderReplyingIndicator() {
-    return !this.args.channel?.isDraft && !this.args.context === "channel";
+    return this.args.context === "channel" && !this.args.channel?.isDraft;
   }
 
   get shouldRenderMessageDetails() {
