@@ -138,11 +138,11 @@ jobs:
           Dir.chdir(ENV["GITHUB_WORKSPACE"]) do
             require "./config/environment"
 
-            user = User.create!(username: "jane", password: "P4ssw0rdUser", email: "jane@example.com")
+            user = User.create!(username: "jane", password: "P4ssw0rdUser", email: "jane@example.com", active: true)
             user.activate
             user.change_trust_level!(4)
 
-            admin = User.create!(username: "kim", password: "Adm1N_P4ssw0rd", email: "kim@example.com")
+            admin = User.create!(username: "kim", password: "Adm1N_P4ssw0rd", email: "kim@example.com", active: true)
             admin.activate
             api_key = ApiKey.create!(user: admin)
             File.write(ENV["GITHUB_OUTPUT"], "api_key=#{api_key.key}\n", mode: "a+")
