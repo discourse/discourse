@@ -135,9 +135,12 @@ jobs:
           u = User.new(username: 'smoke_user', password: 'P4ssw0rd', email: 'smoke@example.com', admin:true)\n
           u.save!(validate: false)\n
           u.activate\n
-          api_key = ApiKey.create!(user: u)
-          File.write(ENV['GITHUB_OUTPUT'], %Q{api_key=#{api_key.key}\n}, mode: 'a+')
+          api_key = ApiKey.create!(user: u)\n
+          File.write(ENV['GITHUB_OUTPUT'], %Q{api_key=#{api_key.key}\n}, mode: 'a+')\n
           SiteSetting.wizard_enabled = false\n
+          puts ENV['RAILS_ENV']\n
+          puts ENV['RACK_ENV']\n
+          puts Rails.env\n
           " | ruby
 
       - name: Start server
