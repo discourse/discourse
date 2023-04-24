@@ -33,7 +33,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
           {
             id: 329,
             name: "everything",
-            value: "/system_unread",
+            value: "/latest",
             icon: "layer-group",
             external: false,
             segment: "primary",
@@ -41,7 +41,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
           {
             id: 330,
             name: "users",
-            value: "/system_users",
+            value: "/u",
             icon: "users",
             external: false,
             segment: "secondary",
@@ -49,7 +49,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
           {
             id: 331,
             name: "info",
-            value: "/system_about",
+            value: "/about",
             icon: "info-circle",
             external: false,
             segment: "secondary",
@@ -57,7 +57,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
           {
             id: 332,
             name: "faq",
-            value: "/system_faq",
+            value: "/faq",
             icon: "question-circle",
             external: false,
             segment: "secondary",
@@ -65,7 +65,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
           {
             id: 333,
             name: "my_posts",
-            value: "/system_posts",
+            value: "/my/activity",
             icon: "user",
             external: false,
             segment: "primary",
@@ -73,7 +73,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
           {
             id: 334,
             name: "review",
-            value: "/system_review",
+            value: "/review",
             icon: "flag",
             external: false,
             segment: "secondary",
@@ -81,7 +81,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
           {
             id: 335,
             name: "admin",
-            value: "/system_admin",
+            value: "/admin",
             icon: "wrench",
             external: false,
             segment: "primary",
@@ -89,7 +89,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
           {
             id: 336,
             name: "groups",
-            value: "/system_groups",
+            value: "/g",
             icon: "user-friends",
             external: false,
             segment: "secondary",
@@ -97,7 +97,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
           {
             id: 337,
             name: "badges",
-            value: "/system_badges",
+            value: "/badges",
             icon: "certificate",
             external: false,
             segment: "secondary",
@@ -1242,7 +1242,7 @@ acceptance(
             {
               id: 329,
               name: "everything",
-              value: "/system_unread",
+              value: "/latest",
               icon: "layer-group",
               external: false,
               segment: "primary",
@@ -1250,7 +1250,7 @@ acceptance(
             {
               id: 330,
               name: "users",
-              value: "/system_users",
+              value: "/u",
               icon: "users",
               external: false,
               segment: "secondary",
@@ -1258,7 +1258,7 @@ acceptance(
             {
               id: 331,
               name: "info",
-              value: "/system_about",
+              value: "/u",
               icon: "info-circle",
               external: false,
               segment: "secondary",
@@ -1266,7 +1266,7 @@ acceptance(
             {
               id: 332,
               name: "faq",
-              value: "/system_faq",
+              value: "/u",
               icon: "question-circle",
               external: false,
               segment: "secondary",
@@ -1274,7 +1274,7 @@ acceptance(
             {
               id: 333,
               name: "my_posts",
-              value: "/system_posts",
+              value: "/my/activity",
               icon: "user",
               external: false,
               segment: "primary",
@@ -1282,7 +1282,7 @@ acceptance(
             {
               id: 334,
               name: "review",
-              value: "/system_review",
+              value: "/review",
               icon: "flag",
               external: false,
               segment: "secondary",
@@ -1290,7 +1290,7 @@ acceptance(
             {
               id: 335,
               name: "admin",
-              value: "/system_admin",
+              value: "/admin",
               icon: "wrench",
               external: false,
               segment: "primary",
@@ -1298,7 +1298,7 @@ acceptance(
             {
               id: 336,
               name: "groups",
-              value: "/system_groups",
+              value: "/g",
               icon: "user-friends",
               external: false,
               segment: "secondary",
@@ -1306,7 +1306,7 @@ acceptance(
             {
               id: 337,
               name: "badges",
-              value: "/system_badges",
+              value: "/badges",
               icon: "certificate",
               external: false,
               segment: "secondary",

@@ -81,7 +81,7 @@ acceptance(
             {
               id: 329,
               name: "everything",
-              value: "/system_unread",
+              value: "/latest",
               icon: "layer-group",
               external: false,
               segment: "primary",
@@ -89,7 +89,7 @@ acceptance(
             {
               id: 334,
               name: "review",
-              value: "/system_review",
+              value: "/review",
               icon: "flag",
               external: false,
               segment: "secondary",

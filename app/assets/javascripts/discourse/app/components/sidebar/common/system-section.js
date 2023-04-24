@@ -20,20 +20,20 @@ import {
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
 
-const LINKS_IN_BOTH_SEGMENTS = ["/system_review"];
+const LINKS_IN_BOTH_SEGMENTS = ["/review"];
 const SPECIAL_LINKS_MAP = {
-  "/system_unread": EverythingSectionLink,
-  "/system_about": AboutSectionLink,
-  "/system_users": UsersSectionLink,
-  "/system_faq": FAQSectionLink,
-  "/system_posts": MyPostsSectionLink,
-  "/system_review": ReviewSectionLink,
-  "/system_badges": BadgesSectionLink,
-  "/system_admin": AdminSectionLink,
-  "/system_groups": GroupsSectionLink,
+  "/latest": EverythingSectionLink,
+  "/about": AboutSectionLink,
+  "/u": UsersSectionLink,
+  "/faq": FAQSectionLink,
+  "/my/activity": MyPostsSectionLink,
+  "/review": ReviewSectionLink,
+  "/badges": BadgesSectionLink,
+  "/admin": AdminSectionLink,
+  "/g": GroupsSectionLink,
 };
 
-export default class Section {
+export default class SystemSection {
   @tracked links;
   @tracked moreLinks;
 

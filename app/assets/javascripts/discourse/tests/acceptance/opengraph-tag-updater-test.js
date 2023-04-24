@@ -17,7 +17,7 @@ acceptance("Opengraph Tag Updater", function (needs) {
           {
             id: 329,
             name: "everything",
-            value: "/system_unread",
+            value: "/latest",
             icon: "layer-group",
             external: false,
             segment: "primary",
@@ -25,7 +25,7 @@ acceptance("Opengraph Tag Updater", function (needs) {
           {
             id: 331,
             name: "info",
-            value: "/system_about",
+            value: "/about",
             icon: "info-circle",
             external: false,
             segment: "secondary",
