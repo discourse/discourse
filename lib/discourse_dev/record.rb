@@ -37,7 +37,7 @@ module DiscourseDev
         raise 'To run this rake task in a production site, set the value of `ALLOW_DEV_POPULATE` environment variable to "1"'
       end
 
-      unless ignore_current_count || @ignore_current_count
+      unless ignore_current_count
         if current_count >= @count
           puts "Already have #{current_count} #{type} records"
 
@@ -68,8 +68,8 @@ module DiscourseDev
       model.count
     end
 
-    def self.populate!(**args)
-      self.new(**args).populate!
+    def self.populate!(*args)
+      self.new(*args).populate!
     end
 
     def self.random(model, use_existing_records: true)
