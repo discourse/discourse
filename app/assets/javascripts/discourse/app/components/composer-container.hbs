@@ -1,75 +1,76 @@
 <ComposerBody
-  @composer={{this.model}}
-  @showPreview={{this.showPreview}}
-  @openIfDraft={{action "openIfDraft"}}
-  @typed={{action "typed"}}
-  @cancelled={{action "cancelled"}}
-  @save={{this.saveAction}}
+  @composer={{this.composer.model}}
+  @showPreview={{this.composer.showPreview}}
+  @openIfDraft={{this.composer.openIfDraft}}
+  @typed={{this.composer.typed}}
+  @cancelled={{this.composer.cancelled}}
+  @save={{this.composer.saveAction}}
 >
   <div class="grippie"></div>
 
-  {{#if this.visible}}
+  {{#if this.composer.visible}}
     <ComposerMessages
-      @composer={{this.model}}
-      @messageCount={{this.messageCount}}
-      @addLinkLookup={{action "addLinkLookup"}}
+      @composer={{this.composer.model}}
+      @messageCount={{this.composer.messageCount}}
+      @addLinkLookup={{this.composer.addLinkLookup}}
     />
 
-    {{#if this.showFullScreenPrompt}}
+    {{#if this.composer.showFullScreenPrompt}}
       <ComposerFullscreenPrompt
-        @removeFullScreenExitPrompt={{action "removeFullScreenExitPrompt"}}
+        @removeFullScreenExitPrompt={{this.composer.removeFullScreenExitPrompt}}
       />
     {{/if}}
 
-    {{#if this.model.viewOpenOrFullscreen}}
+    {{#if this.composer.model.viewOpenOrFullscreen}}
       <div
         role="form"
-        aria-label={{I18n this.saveLabel}}
-        class="reply-area {{if this.canEditTags 'with-tags' 'without-tags'}}"
+        aria-label={{I18n this.composer.saveLabel}}
+        class="reply-area
+          {{if this.composer.canEditTags 'with-tags' 'without-tags'}}"
       >
         <span class="composer-open-plugin-outlet-container">
           <PluginOutlet
             @name="composer-open"
             @connectorTagName="div"
-            @outletArgs={{hash model=this.model}}
+            @outletArgs={{hash model=this.composer.model}}
           />
         </span>
 
         <div class="reply-to">
-          {{#unless this.model.viewFullscreen}}
+          {{#unless this.composer.model.viewFullscreen}}
             <div class="reply-details">
               <ComposerActionTitle
-                @model={{this.model}}
-                @openComposer={{action "openComposer"}}
-                @closeComposer={{action "closeComposer"}}
-                @canWhisper={{this.canWhisper}}
+                @model={{this.composer.model}}
+                @openComposer={{this.composer.openComposer}}
+                @closeComposer={{this.composer.closeComposer}}
+                @canWhisper={{this.composer.canWhisper}}
               />
 
               <PluginOutlet
                 @name="composer-action-after"
-                @outletArgs={{hash model=this.model}}
+                @outletArgs={{hash model=this.composer.model}}
               />
 
-              {{#unless this.site.mobileView}}
-                {{#if this.model.unlistTopic}}
+              {{#unless this.composer.site.mobileView}}
+                {{#if this.composer.model.unlistTopic}}
                   <span class="unlist">({{i18n "composer.unlist"}})</span>
                 {{/if}}
-                {{#if this.isWhispering}}
-                  {{#if this.model.noBump}}
+                {{#if this.composer.isWhispering}}
+                  {{#if this.composer.model.noBump}}
                     <span class="no-bump">{{d-icon "anchor"}}</span>
                   {{/if}}
                 {{/if}}
               {{/unless}}
 
-              {{#if this.canEdit}}
+              {{#if this.composer.canEdit}}
                 <LinkToInput
-                  @onClick={{action "displayEditReason"}}
-                  @showInput={{this.showEditReason}}
+                  @onClick={{this.composer.displayEditReason}}
+                  @showInput={{this.composer.showEditReason}}
                   @icon="info-circle"
                   @class="display-edit-reason"
                 >
                   <TextField
-                    @value={{this.editReason}}
+                    @value={{this.composer.editReason}}
                     @id="edit-reason"
                     @maxlength="255"
                     @placeholderKey="composer.edit_reason_placeholder"
@@ -81,70 +82,70 @@
 
           <PluginOutlet
             @name="before-composer-controls"
-            @outletArgs={{hash model=this.model}}
+            @outletArgs={{hash model=this.composer.model}}
           />
 
           <ComposerToggles
-            @composeState={{this.model.composeState}}
-            @showToolbar={{this.showToolbar}}
-            @toggleComposer={{action "toggle"}}
-            @toggleToolbar={{action "toggleToolbar"}}
-            @toggleFullscreen={{action "fullscreenComposer"}}
-            @disableTextarea={{this.disableTextarea}}
+            @composeState={{this.composer.model.composeState}}
+            @showToolbar={{this.composer.showToolbar}}
+            @toggleComposer={{this.composer.toggle}}
+            @toggleToolbar={{this.composer.toggleToolbar}}
+            @toggleFullscreen={{this.composer.fullscreenComposer}}
+            @disableTextarea={{this.composer.disableTextarea}}
           />
         </div>
 
         <ComposerEditor
-          @topic={{this.topic}}
-          @composer={{this.model}}
-          @lastValidatedAt={{this.lastValidatedAt}}
-          @canWhisper={{this.canWhisper}}
-          @storeToolbarState={{action "storeToolbarState"}}
-          @onPopupMenuAction={{action "onPopupMenuAction"}}
+          @topic={{this.composer.topic}}
+          @composer={{this.composer.model}}
+          @lastValidatedAt={{this.composer.lastValidatedAt}}
+          @canWhisper={{this.composer.canWhisper}}
+          @storeToolbarState={{this.composer.storeToolbarState}}
+          @onPopupMenuAction={{this.composer.onPopupMenuAction}}
           @showUploadModal={{route-action "showUploadSelector"}}
-          @popupMenuOptions={{this.popupMenuOptions}}
-          @draftStatus={{this.model.draftStatus}}
-          @isUploading={{this.isUploading}}
-          @isProcessingUpload={{this.isProcessingUpload}}
-          @allowUpload={{this.allowUpload}}
-          @uploadIcon={{this.uploadIcon}}
-          @isCancellable={{this.isCancellable}}
-          @uploadProgress={{this.uploadProgress}}
-          @groupsMentioned={{action "groupsMentioned"}}
-          @cannotSeeMention={{action "cannotSeeMention"}}
-          @hereMention={{action "hereMention"}}
-          @importQuote={{action "importQuote"}}
-          @togglePreview={{action "togglePreview"}}
-          @processPreview={{this.showPreview}}
-          @showToolbar={{this.showToolbar}}
-          @afterRefresh={{action "afterRefresh"}}
-          @focusTarget={{this.focusTarget}}
-          @disableTextarea={{this.disableTextarea}}
+          @popupMenuOptions={{this.composer.popupMenuOptions}}
+          @draftStatus={{this.composer.model.draftStatus}}
+          @isUploading={{this.composer.isUploading}}
+          @isProcessingUpload={{this.composer.isProcessingUpload}}
+          @allowUpload={{this.composer.allowUpload}}
+          @uploadIcon={{this.composer.uploadIcon}}
+          @isCancellable={{this.composer.isCancellable}}
+          @uploadProgress={{this.composer.uploadProgress}}
+          @groupsMentioned={{this.composer.groupsMentioned}}
+          @cannotSeeMention={{this.composer.cannotSeeMention}}
+          @hereMention={{this.composer.hereMention}}
+          @importQuote={{this.composer.importQuote}}
+          @togglePreview={{this.composer.togglePreview}}
+          @processPreview={{this.composer.showPreview}}
+          @showToolbar={{this.composer.showToolbar}}
+          @afterRefresh={{this.composer.afterRefresh}}
+          @focusTarget={{this.composer.focusTarget}}
+          @disableTextarea={{this.composer.disableTextarea}}
         >
           <div class="composer-fields">
             <PluginOutlet
               @name="before-composer-fields"
-              @outletArgs={{hash model=this.model}}
+              @outletArgs={{hash model=this.composer.model}}
             />
-            {{#unless this.model.viewFullscreen}}
-              {{#if this.model.canEditTitle}}
-                {{#if this.model.creatingPrivateMessage}}
+            {{#unless this.composer.model.viewFullscreen}}
+              {{#if this.composer.model.canEditTitle}}
+                {{#if this.composer.model.creatingPrivateMessage}}
                   <div class="user-selector">
                     <ComposerUserSelector
-                      @topicId={{this.topicModel.id}}
-                      @recipients={{this.model.targetRecipients}}
-                      @hasGroups={{this.model.hasTargetGroups}}
-                      @focusTarget={{this.focusTarget}}
+                      @topicId={{this.composer.topicModel.id}}
+                      @recipients={{this.composer.model.targetRecipients}}
+                      @hasGroups={{this.composer.model.hasTargetGroups}}
+                      @focusTarget={{this.composer.focusTarget}}
                       @class={{concat
                         "users-input"
-                        (if this.showWarning " can-warn")
+                        (if this.composer.showWarning " can-warn")
                       }}
                     />
-                    {{#if this.showWarning}}
+                    {{#if this.composer.showWarning}}
                       <label class="add-warning">
                         <Input
                           @type="checkbox"
-                          @checked={{this.model.isWarning}}
+                          @checked={{this.composer.model.isWarning}}
                         />
                         <span>{{i18n "composer.add_warning"}}</span>
                       </label>
@@ -154,49 +155,55 @@
 
                 <div
                   class="title-and-category
-                    {{if this.showPreview 'with-preview'}}"
+                    {{if this.composer.showPreview 'with-preview'}}"
                 >
                   <ComposerTitle
-                    @composer={{this.model}}
-                    @lastValidatedAt={{this.lastValidatedAt}}
-                    @focusTarget={{this.focusTarget}}
+                    @composer={{this.composer.model}}
+                    @lastValidatedAt={{this.composer.lastValidatedAt}}
+                    @focusTarget={{this.composer.focusTarget}}
                   />
 
-                  {{#if this.model.showCategoryChooser}}
+                  {{#if this.composer.model.showCategoryChooser}}
                     <div class="category-input">
                       <CategoryChooser
-                        @value={{this.model.categoryId}}
-                        @onChange={{action (mut this.model.categoryId)}}
+                        @value={{this.composer.model.categoryId}}
+                        @onChange={{action
+                          (mut this.composer.model.categoryId)
+                        }}
                         @options={{hash
-                          disabled=this.disableCategoryChooser
-                          scopedCategoryId=this.scopedCategoryId
-                          prioritizedCategoryId=this.prioritizedCategoryId
+                          disabled=this.composer.disableCategoryChooser
+                          scopedCategoryId=this.composer.scopedCategoryId
+                          prioritizedCategoryId=this.composer.prioritizedCategoryId
                         }}
                       />
-                      <PopupInputTip @validation={{this.categoryValidation}} />
+                      <PopupInputTip
+                        @validation={{this.composer.categoryValidation}}
+                      />
                     </div>
                   {{/if}}
 
-                  {{#if this.canEditTags}}
+                  {{#if this.composer.canEditTags}}
                     <MiniTagChooser
-                      @value={{this.model.tags}}
-                      @onChange={{action (mut this.model.tags)}}
+                      @value={{this.composer.model.tags}}
+                      @onChange={{action (mut this.composer.model.tags)}}
                       @options={{hash
-                        disabled=this.disableTagsChooser
-                        categoryId=this.model.categoryId
-                        minimum=this.model.minimumRequiredTags
+                        disabled=this.composer.disableTagsChooser
+                        categoryId=this.composer.model.categoryId
+                        minimum=this.composer.model.minimumRequiredTags
                       }}
                     />
-                    <PopupInputTip @validation={{this.tagValidation}} />
+                    <PopupInputTip
+                      @validation={{this.composer.tagValidation}}
+                    />
                   {{/if}}
 
                   <PluginOutlet
                     @name="after-title-and-category"
                     @outletArgs={{hash
-                      model=this.model
-                      tagValidation=this.tagValidation
-                      canEditTags=this.canEditTags
-                      disabled=this.disableTagsChooser
+                      model=this.composer.model
+                      tagValidation=this.composer.tagValidation
+                      canEditTags=this.composer.canEditTags
+                      disabled=this.composer.disableTagsChooser
                     }}
                   />
                 </div>
@@ -207,8 +214,8 @@
                   @name="composer-fields"
                   @connectorTagName="div"
                   @outletArgs={{hash
-                    model=this.model
-                    showPreview=this.showPreview
+                    model=this.composer.model
+                    showPreview=this.composer.showPreview
                   }}
                 />
               </span>
@@ -219,7 +226,7 @@
         <span>
           <PluginOutlet
             @name="composer-after-composer-editor"
-            @outletArgs={{hash model=this.model}}
+            @outletArgs={{hash model=this.composer.model}}
           />
         </span>
 
@@ -228,46 +235,46 @@
             <PluginOutlet
               @name="composer-fields-below"
               @connectorTagName="div"
-              @outletArgs={{hash model=this.model}}
+              @outletArgs={{hash model=this.composer.model}}
             />
           </span>
 
           <div class="save-or-cancel">
             <ComposerSaveButton
-              @action={{this.saveAction}}
-              @icon={{this.saveIcon}}
-              @label={{this.saveLabel}}
+              @action={{this.composer.saveAction}}
+              @icon={{this.composer.saveIcon}}
+              @label={{this.composer.saveLabel}}
               @forwardEvent={{true}}
-              @disableSubmit={{this.disableSubmit}}
+              @disableSubmit={{this.composer.disableSubmit}}
             />
 
-            {{#if this.site.mobileView}}
+            {{#if this.composer.site.mobileView}}
               <a
                 href
-                {{on "click" this.cancel}}
+                {{on "click" this.composer.cancel}}
                 title={{i18n "cancel"}}
                 class="cancel"
               >
-                {{#if this.canEdit}}
+                {{#if this.composer.canEdit}}
                   {{d-icon "times"}}
                 {{else}}
                   {{d-icon "far-trash-alt"}}
                 {{/if}}
               </a>
             {{else}}
-              <a href {{on "click" this.cancel}} class="cancel">{{i18n
+              <a href {{on "click" this.composer.cancel}} class="cancel">{{i18n
                   "close"
                 }}</a>
             {{/if}}
 
-            {{#if this.site.mobileView}}
-              {{#if this.whisperOrUnlistTopic}}
+            {{#if this.composer.site.mobileView}}
+              {{#if this.composer.whisperOrUnlistTopic}}
                 <span class="whisper">
                   {{d-icon "far-eye-slash"}}
                 </span>
               {{/if}}
 
-              {{#if this.model.noBump}}
+              {{#if this.composer.model.noBump}}
                 <span class="no-bump">{{d-icon "anchor"}}</span>
               {{/if}}
             {{/if}}
@@ -275,27 +282,27 @@
             <span>
               <PluginOutlet
                 @name="composer-after-save-or-cancel"
-                @outletArgs={{hash model=this.model}}
+                @outletArgs={{hash model=this.composer.model}}
               />
             </span>
           </div>
 
-          {{#if this.site.mobileView}}
+          {{#if this.composer.site.mobileView}}
             <span>
               <PluginOutlet
                 @name="composer-mobile-buttons-bottom"
-                @outletArgs={{hash model=this.model}}
+                @outletArgs={{hash model=this.composer.model}}
               />
             </span>
 
-            {{#if this.allowUpload}}
+            {{#if this.composer.allowUpload}}
               <a
                 id="mobile-file-upload"
                 class="btn btn-default no-text mobile-file-upload
-                  {{if this.isUploading 'hidden'}}"
+                  {{if this.composer.isUploading 'hidden'}}"
                 aria-label={{i18n "composer.upload_title"}}
               >
-                {{d-icon this.uploadIcon}}
+                {{d-icon this.composer.uploadIcon}}
               </a>
             {{/if}}
 
@@ -303,15 +310,15 @@
               href
               class="btn btn-default no-text mobile-preview"
               title={{i18n "composer.show_preview"}}
-              {{on "click" this.togglePreview}}
+              {{on "click" this.composer.togglePreview}}
               aria-label={{i18n "preview"}}
             >
               {{d-icon "desktop"}}
             </a>
 
-            {{#if this.showPreview}}
+            {{#if this.composer.showPreview}}
               <DButton
-                @action={{action "togglePreview"}}
+                @action={{this.composer.togglePreview}}
                 @class="hide-preview"
                 @ariaLabel="composer.hide_preview"
                 @icon="pencil-alt"
@@ -319,9 +326,11 @@
             {{/if}}
           {{/if}}
 
-          {{#if (or this.isUploading this.isProcessingUpload)}}
+          {{#if
+            (or this.composer.isUploading this.composer.isProcessingUpload)
+          }}
             <div id="file-uploading">
-              {{#if this.isProcessingUpload}}
+              {{#if this.composer.isProcessingUpload}}
                 {{loading-spinner size="small"}}<span>{{i18n
                     "upload_selector.processing"
                   }}</span>
@@ -329,30 +338,39 @@
                 {{loading-spinner size="small"}}<span>{{i18n
                     "upload_selector.uploading"
                   }}
-                  {{this.uploadProgress}}%</span>
+                  {{this.composer.uploadProgress}}%</span>
               {{/if}}
 
-              {{#if this.isCancellable}}
+              {{#if this.composer.isCancellable}}
                 <a
                   href
                   id="cancel-file-upload"
-                  {{on "click" this.cancelUpload}}
+                  {{on "click" this.composer.cancelUpload}}
                 >{{d-icon "times"}}</a>
               {{/if}}
             </div>
           {{/if}}
 
-          <div class={{if this.isUploading "hidden"}} id="draft-status">
-            {{#if this.model.draftStatus}}
-              <span class="draft-error" title={{this.model.draftStatus}}>
-                {{#if this.model.draftConflictUser}}
-                  {{avatar this.model.draftConflictUser imageSize="small"}}
+          <div
+            class={{if this.composer.isUploading "hidden"}}
+            id="draft-status"
+          >
+            {{#if this.composer.model.draftStatus}}
+              <span
+                class="draft-error"
+                title={{this.composer.model.draftStatus}}
+              >
+                {{#if this.composer.model.draftConflictUser}}
+                  {{avatar
+                    this.composer.model.draftConflictUser
+                    imageSize="small"
+                  }}
                   {{d-icon "user-edit"}}
                 {{else}}
                   {{d-icon "exclamation-triangle"}}
                 {{/if}}
-                {{#unless this.site.mobileView}}
-                  {{this.model.draftStatus}}
+                {{#unless this.composer.site.mobileView}}
+                  {{this.composer.model.draftStatus}}
                 {{/unless}}
               </span>
             {{/if}}
@@ -360,12 +378,12 @@
 
           {{#unless this.site.mobileView}}
             <DButton
-              @action={{action "togglePreview"}}
-              @translatedTitle={{this.toggleText}}
+              @action={{this.composer.togglePreview}}
+              @translatedTitle={{this.composer.toggleText}}
               @icon="angle-double-left"
               @class={{concat
                 "btn-flat btn-mini-toggle toggle-preview "
-                (unless this.showPreview "active")
+                (unless this.composer.showPreview "active")
               }}
             />
           {{/unless}}
@@ -373,11 +391,11 @@
       </div>
     {{else}}
       <div class="saving-text">
-        {{#if this.model.createdPost}}
+        {{#if this.composer.model.createdPost}}
           {{i18n "composer.saved"}}
           <a
-            href={{this.createdPost.url}}
-            {{on "click" this.viewNewReply}}
+            href={{this.composer.createdPost.url}}
+            {{on "click" this.composer.viewNewReply}}
             class="permalink"
           >{{i18n "composer.view_new_post"}}</a>
         {{else}}
@@ -387,19 +405,19 @@
       </div>
 
       <div class="draft-text">
-        {{#if this.model.topic}}
+        {{#if this.composer.model.topic}}
           {{d-icon "share"}}
-          {{html-safe this.draftTitle}}
+          {{html-safe this.composer.draftTitle}}
         {{else}}
           {{i18n "composer.saved_draft"}}
         {{/if}}
       </div>
 
       <ComposerToggles
-        @composeState={{this.model.composeState}}
-        @toggleFullscreen={{action "openIfDraft"}}
-        @toggleComposer={{action "toggle"}}
-        @toggleToolbar={{action "toggleToolbar"}}
+        @composeState={{this.composer.model.composeState}}
+        @toggleFullscreen={{this.composer.openIfDraft}}
+        @toggleComposer={{this.composer.toggle}}
+        @toggleToolbar={{this.composer.toggleToolbar}}
       />
     {{/if}}
   {{/if}}
