@@ -307,9 +307,9 @@ export default class Chat extends Service {
   // channel for. The current user will automatically be included in the channel
   // when it is created.
   upsertDmChannelForUsernames(usernames) {
-    return ajax("/chat/direct_messages/create.json", {
+    return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
-      data: { usernames: usernames.uniq() },
+      data: { target_usernames: usernames.uniq() },
     })
       .then((response) => {
         const channel = this.chatChannelsManager.store(response.channel);

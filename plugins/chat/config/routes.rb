@@ -32,6 +32,10 @@ Chat::Engine.routes.draw do
 
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
     delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
+
+    # TODO (martin) Remove this when we refactor the DM channel creation to happen
+    # via message creation in a different API controller.
+    post "/direct-message-channels" => "direct_message_channels#create"
   end
 
   # direct_messages_controller routes
