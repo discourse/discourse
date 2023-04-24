@@ -71,9 +71,10 @@ export default class ChatMessage {
     this.reviewableId = args.reviewableId || args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus || args.user_flag_status;
     this.inReplyTo =
-      args.inReplyTo || args.in_reply_to
-        ? ChatMessage.create(channel, args.in_reply_to)
-        : null;
+      args.inReplyTo ||
+      (args.in_reply_to || args.replyToMsg
+        ? ChatMessage.create(channel, args.in_reply_to || args.replyToMsg)
+        : null);
     this.draft = args.draft;
     this.message = args.message || "";
 
@@ -180,7 +181,7 @@ export default class ChatMessage {
     if (
       this.message?.length === 0 &&
       this.uploads?.length === 0 &&
-      !this.replyToMsg
+      !this.inReplyTo
     ) {
       return null;
     }
@@ -195,8 +196,17 @@ export default class ChatMessage {
       data.message = this.message;
     }
 
-    if (this.replyToMsg) {
-      data.replyToMsg = this.replyToMsg;
+    if (this.inReplyTo) {
+      data.replyToMsg = {
+        id: this.inReplyTo.id,
+        excerpt: this.inReplyTo.excerpt,
+        user: {
+          id: this.inReplyTo.user.id,
+          name: this.inReplyTo.user.name,
+          avatar_template: this.inReplyTo.user.avatar_template,
+          username: this.inReplyTo.user.username,
+        },
+      };
     }
 
     return JSON.stringify(data);

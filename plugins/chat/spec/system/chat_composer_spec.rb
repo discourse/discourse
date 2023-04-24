@@ -10,10 +10,83 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
   before { chat_system_bootstrap }
 
-  xit "it stores draft in replies" do
-  end
+  context "when loading a channel with a draft" do
+    fab!(:draft_1) do
+      Chat::Draft.create!(
+        chat_channel: channel_1,
+        user: current_user,
+        data: { message: "draft" }.to_json,
+      )
+    end
 
-  xit "it stores draft" do
+    before do
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "loads the draft" do
+      chat.visit_channel(channel_1)
+
+      expect(find(".chat-composer__input").value).to eq("draft")
+    end
+
+    context "with uploads" do
+      fab!(:upload_1) do
+        Fabricate(
+          :upload,
+          url: "/images/logo-dark.png",
+          original_filename: "logo_dark.png",
+          width: 400,
+          height: 300,
+          extension: "png",
+        )
+      end
+
+      fab!(:draft_1) do
+        Chat::Draft.create!(
+          chat_channel: channel_1,
+          user: current_user,
+          data: { message: "draft", uploads: [upload_1] }.to_json,
+        )
+      end
+
+      it "loads the draft with the upload" do
+        chat.visit_channel(channel_1)
+
+        expect(find(".chat-composer__input").value).to eq("draft")
+        expect(page).to have_selector(".chat-composer-upload--image", count: 1)
+      end
+    end
+
+    context "when replying" do
+      fab!(:draft_1) do
+        Chat::Draft.create!(
+          chat_channel: channel_1,
+          user: current_user,
+          data: {
+            message: "draft",
+            replyToMsg: {
+              id: message_1.id,
+              excerpt: message_1.excerpt,
+              user: {
+                id: message_1.user.id,
+                name: nil,
+                avatar_template: message_1.user.avatar_template,
+                username: message_1.user.username,
+              },
+            },
+          }.to_json,
+        )
+      end
+
+      it "loads the draft with replied to mesage" do
+        chat.visit_channel(channel_1)
+
+        expect(find(".chat-composer__input").value).to eq("draft")
+        expect(page).to have_selector(".chat-reply__username", text: message_1.user.username)
+        expect(page).to have_selector(".chat-reply__excerpt", text: message_1.excerpt)
+      end
+    end
   end
 
   context "when replying to a message" do

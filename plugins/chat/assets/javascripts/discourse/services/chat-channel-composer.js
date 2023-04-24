@@ -53,6 +53,7 @@ export default class ChatChannelComposer extends Service {
   replyTo(message) {
     this.chat.activeMessage = null;
     this.message.inReplyTo = message;
+    this.persistDraft();
   }
 
   @action
