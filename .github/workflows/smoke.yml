@@ -137,12 +137,23 @@ jobs:
         run: |
           Dir.chdir(ENV["GITHUB_WORKSPACE"]) do
             require "./config/environment"
-            u = User.new(username: "smoke_user", password: "P4ssw0rd", email: "smoke@example.com", admin:true)
-            u.save!(validate: false)
-            u.activate
-            api_key = ApiKey.create!(user: u)
+
+            user = User.create!(username: "jane", password: "P4ssw0rd", email: "jane@example.com")
+            user.activate
+            # user.change_trust_level!(4)
+
+            admin = User.create!(username: "kim", password: "Adm1N_P4ssw0rd", email: "kim@example.com")
+            admin.activate
+            api_key = ApiKey.create!(user: admin)
             File.write(ENV["GITHUB_OUTPUT"], "api_key=#{api_key.key}\n", mode: "a+")
-            SiteSetting.wizard_enabled = false
+
+            ThemesInstallTask.install({
+              "unformatted-code-detector": {
+                url: "https://github.com/discourse/unformatted-code-detector"
+              }
+            })
+
+            # SiteSetting.wizard_enabled = false
           end
 
       - name: Setup host
@@ -159,8 +170,10 @@ jobs:
         env:
           URL: http://${{ env.DISCOURSE_HOSTNAME }}
           WAIT_FOR_URL: 60
+          DISCOURSE_USERNAME: jane
+          DISCOURSE_PASSWORD: P4ssw0rd
+          ADMIN_API_USERNAME: kim
           ADMIN_API_KEY: ${{ steps.setup_env.outputs.api_key }}
-          ADMIN_API_USERNAME: smoke_user
           SMOKE_TEST_THEME_URL: https://github.com/discourse/unformatted-code-detector
         run: bin/rails smoke:test
 
