@@ -23,6 +23,11 @@ export default class TextareaInteractor extends EmberObject.extend(
 
   set value(value) {
     this._textarea.value = value;
+    const event = new Event("input", {
+      bubbles: true,
+      cancelable: true,
+    });
+    this._textarea.dispatchEvent(event);
   }
 
   focus(opts = { ensureAtEnd: false, refreshHeight: true }) {
