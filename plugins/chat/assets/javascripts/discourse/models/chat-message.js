@@ -17,7 +17,7 @@ export default class ChatMessage {
 
   static createDraftMessage(channel, args = {}) {
     args.draft = true;
-    return new ChatMessage(channel, args);
+    return ChatMessage.create(channel, args);
   }
 
   @tracked id;
