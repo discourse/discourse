@@ -1,55 +1,57 @@
-<div
-  class={{concat-class
-    "chat-composer-upload"
-    (if (eq this.type this.IMAGE_TYPE) "chat-composer-upload--image")
-    (unless this.isDone "chat-composer-upload--in-progress")
-  }}
->
-  <div class="preview">
-    {{#if (eq this.type this.IMAGE_TYPE)}}
-      {{#if this.isDone}}
-        <img class="preview-img" src={{this.upload.short_path}} />
-      {{else}}
-        {{d-icon "far-image"}}
-      {{/if}}
-    {{else}}
-      {{d-icon "file-alt"}}
-    {{/if}}
-  </div>
-
-  <span class="data">
-    {{#if (not (eq this.type this.IMAGE_TYPE))}}
-      <div class="top-data">
-        <span class="file-name">{{this.fileName}}</span>
-      </div>
-    {{/if}}
-
-    <div class="bottom-data">
-      {{#if this.isDone}}
-        {{#if (not (eq this.type this.IMAGE_TYPE))}}
-          <span class="extension-pill">{{this.upload.extension}}</span>
-        {{/if}}
-      {{else}}
-        {{#if this.upload.processing}}
-          <span class="processing">{{i18n "processing"}}</span>
+{{#if @upload}}
+  <div
+    class={{concat-class
+      "chat-composer-upload"
+      (if this.isImage "chat-composer-upload--image")
+      (unless @isDone "chat-composer-upload--in-progress")
+    }}
+  >
+    <div class="preview">
+      {{#if this.isImage}}
+        {{#if @isDone}}
+          <img class="preview-img" src={{@upload.short_path}} />
         {{else}}
-          <span class="uploading">{{i18n "uploading"}}</span>
+          {{d-icon "far-image"}}
         {{/if}}
-
-        <progress
-          class="upload-progress"
-          id="file"
-          max="100"
-          value={{this.upload.progress}}
-        ></progress>
+      {{else}}
+        {{d-icon "file-alt"}}
       {{/if}}
     </div>
-  </span>
 
-  <DButton
-    @class="btn-flat chat-composer-upload__remove-btn"
-    @action={{this.onCancel}}
-    @icon="times"
-    @title="chat.remove_upload"
-  />
-</div>
+    <span class="data">
+      {{#if (not this.isImage)}}
+        <div class="top-data">
+          <span class="file-name">{{this.fileName}}</span>
+        </div>
+      {{/if}}
+
+      <div class="bottom-data">
+        {{#if @isDone}}
+          {{#if (not this.isImage)}}
+            <span class="extension-pill">{{@upload.extension}}</span>
+          {{/if}}
+        {{else}}
+          {{#if @upload.processing}}
+            <span class="processing">{{i18n "processing"}}</span>
+          {{else}}
+            <span class="uploading">{{i18n "uploading"}}</span>
+          {{/if}}
+
+          <progress
+            class="upload-progress"
+            id="file"
+            max="100"
+            value={{@upload.progress}}
+          ></progress>
+        {{/if}}
+      </div>
+    </span>
+
+    <DButton
+      @class="btn-flat chat-composer-upload__remove-btn"
+      @action={{@onCancel}}
+      @icon="times"
+      @title="chat.remove_upload"
+    />
+  </div>
+{{/if}}
