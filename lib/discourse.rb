@@ -958,7 +958,7 @@ module Discourse
     nil
   end
 
-  def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)
+  def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: true)
     location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
     warning = ["Deprecation notice:", warning]
     warning << "(deprecated since Discourse #{since})" if since
@@ -968,9 +968,7 @@ module Discourse
 
     raise Deprecation.new(warning) if raise_error
 
-    STDERR.puts(warning) if Rails.env == "development"
-
-    STDERR.puts(warning) if output_in_test && Rails.env == "test"
+    STDERR.puts(warning) if Rails.env.development? || (Rails.env.test? && output_in_test)
 
     digest = Digest::MD5.hexdigest(warning)
     redis_key = "deprecate-notice-#{digest}"
