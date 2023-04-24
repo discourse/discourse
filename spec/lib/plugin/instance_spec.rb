@@ -75,14 +75,6 @@ RSpec.describe Plugin::Instance do
 
         # Serializer
         @plugin.add_to_serializer(:trout, :scales) { 1024 }
-        @plugin.add_to_serializer(:trout, :unconditional_scales, respect_plugin_enabled: false) do
-          2048
-        end
-        @plugin.add_to_serializer(
-          :trout,
-          :conditional_scales,
-          include_condition: -> { !!object.data&.[](:has_scales) },
-        ) { 4096 }
 
         @serializer = TroutSerializer.new(@trout)
         @child_serializer = TroutJuniorSerializer.new(@trout)
@@ -108,31 +100,11 @@ RSpec.describe Plugin::Instance do
         expect(@hello_count).to eq(1)
         expect(@serializer.scales).to eq(1024)
         expect(@serializer.include_scales?).to eq(false)
-        expect(@serializer.include_unconditional_scales?).to eq(true)
         expect(@serializer.name).to eq("a trout")
 
         expect(@child_serializer.scales).to eq(1024)
         expect(@child_serializer.include_scales?).to eq(false)
         expect(@child_serializer.name).to eq("a trout jr")
-      end
-
-      it "can control the include_* implementation" do
-        @plugin.enabled = true
-
-        expect(@serializer.scales).to eq(1024)
-        expect(@serializer.include_scales?).to eq(true)
-
-        expect(@serializer.unconditional_scales).to eq(2048)
-        expect(@serializer.include_unconditional_scales?).to eq(true)
-
-        expect(@serializer.include_conditional_scales?).to eq(false)
-        @trout.data = { has_scales: true }
-        expect(@serializer.include_conditional_scales?).to eq(true)
-
-        @plugin.enabled = false
-        expect(@serializer.include_scales?).to eq(false)
-        expect(@serializer.include_unconditional_scales?).to eq(true)
-        expect(@serializer.include_conditional_scales?).to eq(false)
       end
 
       it "only returns HTML if enabled" do
