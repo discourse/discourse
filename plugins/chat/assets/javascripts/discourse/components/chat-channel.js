@@ -45,7 +45,7 @@ export default class ChatLivePane extends Component {
   @tracked loading = false;
   @tracked loadingMorePast = false;
   @tracked loadingMoreFuture = false;
-  @tracked sendingLoading = false;
+  @tracked sending = false;
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
   @tracked hasNewMessages = false;
@@ -707,7 +707,7 @@ export default class ChatLivePane extends Component {
 
   @action
   resendStagedMessage(stagedMessage) {
-    this.chatChannelPane.sendingLoading = true;
+    this.chatChannelPane.sending = true;
 
     stagedMessage.error = null;
 
@@ -730,7 +730,7 @@ export default class ChatLivePane extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.chatChannelPane.sendingLoading = false;
+        this.chatChannelPane.sending = false;
       });
   }
 
