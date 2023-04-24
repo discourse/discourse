@@ -29,6 +29,8 @@ jobs:
       RAILS_ENV: production
       PGUSER: discourse
       PGPASSWORD: discourse
+      UNICORN_WORKERS: 2
+      UNICORN_SIDEKIQS: 1
 
     steps:
       - name: Set working directory owner
@@ -142,7 +144,7 @@ jobs:
           end
 
       - name: Start server
-        run: bundle exec config/unicorn_launcher -E production -c config/unicorn.conf.rb &
+        run: bin/unicorn -E production -c config/unicorn.conf.rb &
 
       - name: Warmup
         run: |
@@ -159,4 +161,6 @@ jobs:
 
       - name: Print debug output
         if: ${{ !cancelled() }}
-        run: tail -n 250 log/production.log
+        run: |
+          tail -n 250 log/production.log
+          tail -n 250 log/unicorn.stderr.log

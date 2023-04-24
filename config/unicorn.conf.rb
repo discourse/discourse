@@ -25,11 +25,7 @@ FileUtils.mkdir_p("#{discourse_path}/tmp/pids") if !File.exist?("#{discourse_pat
 # feel free to point this anywhere accessible on the filesystem
 pid (ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
-if ENV["RAILS_ENV"] != "production"
-  logger Logger.new(STDOUT)
-  # we want a longer timeout in dev cause first request can be really slow
-  timeout (ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
-else
+if ENV["RAILS_ENV"] == "production"
   # By default, the Unicorn logger will write to stderr.
   # Additionally, some applications/frameworks log to stderr or stdout,
   # so prevent them from going to /dev/null when daemonized here:
@@ -37,6 +33,10 @@ else
   stdout_path "#{discourse_path}/log/unicorn.stdout.log"
   # nuke workers after 30 seconds instead of 60 seconds (the default)
   timeout 30
+else
+  logger Logger.new(STDOUT)
+  # we want a longer timeout in dev cause first request can be really slow
+  timeout (ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
 end
 
 # important for Ruby 2.0
