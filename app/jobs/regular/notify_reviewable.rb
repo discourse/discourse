@@ -35,7 +35,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
           counts[reviewable_by_group_id] += count if reviewable_by_group_id
         end
 
-      if SiteSetting.legacy_navigation_menu?
+      if legacy_user_menu?
         notify_legacy(
           User.real.admins.pluck(:id),
           count: counts[:admins],
@@ -46,7 +46,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
       end
 
       if reviewable.reviewable_by_moderator?
-        if SiteSetting.legacy_navigation_menu?
+        if legacy_user_menu?
           notify_legacy(
             User.real.moderators.where("id NOT IN (?)", @contacted).pluck(:id),
             count: counts[:moderators],
@@ -71,7 +71,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
             count += counts[gu.group_id]
           end
 
-          if SiteSetting.legacy_navigation_menu?
+          if legacy_user_menu?
             notify_legacy([user.id], count: count, updates: updates)
           else
             notify_user(user, updates)
@@ -102,5 +102,9 @@ class Jobs::NotifyReviewable < ::Jobs::Base
 
   def notify_user(user, updates)
     user.publish_reviewable_counts(updates.present? ? { updates: updates } : nil)
+  end
+
+  def legacy_user_menu?
+    SiteSetting.legacy_navigation_menu? && !SiteSetting.enable_new_notifications_menu
   end
 end
