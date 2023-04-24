@@ -975,7 +975,8 @@ module Discourse
     digest = Digest::MD5.hexdigest(warning)
     redis_key = "deprecate-notice-#{digest}"
 
-    if Rails.logger && !Discourse.redis.without_namespace.get(redis_key)
+    if Rails.logger && !GlobalSetting.skip_redis? &&
+         !Discourse.redis.without_namespace.get(redis_key)
       Rails.logger.warn(warning)
       begin
         Discourse.redis.without_namespace.setex(redis_key, 3600, "x")

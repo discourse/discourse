@@ -181,31 +181,48 @@ after_initialize do
     scope.user.id != object.id && scope.can_chat? && Guardian.new(object).can_chat?
   end
 
-  add_to_serializer(:current_user, :can_chat) { true }
+  add_to_serializer(
+    :current_user,
+    :can_chat,
+    include_condition: -> do
+      return @can_chat if defined?(@can_chat)
+      @can_chat = SiteSetting.chat_enabled && scope.can_chat?
+    end,
+  ) { true }
 
-  add_to_serializer(:current_user, :include_can_chat?) do
-    return @can_chat if defined?(@can_chat)
+  add_to_serializer(
+    :current_user,
+    :has_chat_enabled,
+    include_condition: -> do
+      return @has_chat_enabled if defined?(@has_chat_enabled)
+      @has_chat_enabled = include_can_chat? && object.user_option.chat_enabled
+    end,
+  ) { true }
 
-    @can_chat = SiteSetting.chat_enabled && scope.can_chat?
-  end
+  add_to_serializer(
+    :current_user,
+    :chat_sound,
+    include_condition: -> { include_has_chat_enabled? && object.user_option.chat_sound },
+  ) { object.user_option.chat_sound }
 
-  add_to_serializer(:current_user, :has_chat_enabled) { true }
+  add_to_serializer(
+    :current_user,
+    :needs_channel_retention_reminder,
+    include_condition: -> do
+      include_has_chat_enabled? && object.staff? &&
+        !object.user_option.dismissed_channel_retention_reminder &&
+        !SiteSetting.chat_channel_retention_days.zero?
+    end,
+  ) { true }
 
-  add_to_serializer(:current_user, :include_has_chat_enabled?) do
-    return @has_chat_enabled if defined?(@has_chat_enabled)
-
-    @has_chat_enabled = include_can_chat? && object.user_option.chat_enabled
-  end
-
-  add_to_serializer(:current_user, :chat_sound) { object.user_option.chat_sound }
-
-  add_to_serializer(:current_user, :include_chat_sound?) do
-    include_has_chat_enabled? && object.user_option.chat_sound
-  end
-
-  add_to_serializer(:current_user, :needs_channel_retention_reminder) { true }
-
-  add_to_serializer(:current_user, :needs_dm_retention_reminder) { true }
+  add_to_serializer(
+    :current_user,
+    :needs_dm_retention_reminder,
+    include_condition: -> do
+      include_has_chat_enabled? && !object.user_option.dismissed_dm_retention_reminder &&
+        !SiteSetting.chat_dm_retention_days.zero?
+    end,
+  ) { true }
 
   add_to_serializer(:current_user, :has_joinable_public_channels) do
     Chat::ChannelFetcher.secured_public_channel_search(
@@ -221,18 +238,11 @@ after_initialize do
     Chat::ChannelIndexSerializer.new(structured, scope: self.scope, root: false).as_json
   end
 
-  add_to_serializer(:current_user, :include_needs_channel_retention_reminder?) do
-    include_has_chat_enabled? && object.staff? &&
-      !object.user_option.dismissed_channel_retention_reminder &&
-      !SiteSetting.chat_channel_retention_days.zero?
-  end
-
-  add_to_serializer(:current_user, :include_needs_dm_retention_reminder?) do
-    include_has_chat_enabled? && !object.user_option.dismissed_dm_retention_reminder &&
-      !SiteSetting.chat_dm_retention_days.zero?
-  end
-
-  add_to_serializer(:current_user, :chat_drafts) do
+  add_to_serializer(
+    :current_user,
+    :chat_drafts,
+    include_condition: -> { include_has_chat_enabled? },
+  ) do
     Chat::Draft
       .where(user_id: object.id)
       .order(updated_at: :desc)
@@ -241,13 +251,13 @@ after_initialize do
       .map { |row| { channel_id: row[0], data: row[1] } }
   end
 
-  add_to_serializer(:current_user, :include_chat_drafts?) { include_has_chat_enabled? }
-
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 
-  add_to_serializer(:user_option, :chat_sound) { object.chat_sound }
-
-  add_to_serializer(:user_option, :include_chat_sound?) { !object.chat_sound.blank? }
+  add_to_serializer(
+    :user_option,
+    :chat_sound,
+    include_condition: -> { !object.chat_sound.blank? },
+  ) { object.chat_sound }
 
   add_to_serializer(:user_option, :only_chat_push_notifications) do
     object.only_chat_push_notifications
