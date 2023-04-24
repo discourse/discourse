@@ -14,7 +14,8 @@ export default class ChatChannelComposer extends Service {
   @service chatComposerPresenceManager;
   @service currentUser;
 
-  @tracked _message = null;
+  @tracked channel;
+  @tracked _message;
 
   @action
   cancel() {
@@ -27,7 +28,7 @@ export default class ChatChannelComposer extends Service {
 
   @action
   reset() {
-    this.message = ChatMessage.createDraftMessage(this.model, {
+    this.message = ChatMessage.createDraftMessage(this.channel, {
       user: this.currentUser,
     });
   }
@@ -58,6 +59,10 @@ export default class ChatChannelComposer extends Service {
 
   @action
   persistDraft() {
+    if (this.channel.isDraft) {
+      return;
+    }
+
     this._persistHandler = discourseDebounce(
       this,
       this._debouncedPersistDraft,
@@ -103,10 +108,6 @@ export default class ChatChannelComposer extends Service {
     }
   }
 
-  get channel() {
-    return this.chat.activeChannel;
-  }
-
   get message() {
     return this._message;
   }
@@ -116,13 +117,9 @@ export default class ChatChannelComposer extends Service {
     this._message = message;
   }
 
-  get model() {
-    return this.chat.activeChannel;
-  }
-
   @action
   _debouncedPersistDraft() {
-    this.chatApi.saveDraft(this.model.id, this.message.toJSONDraft());
+    this.chatApi.saveDraft(this.channel.id, this.message.toJSONDraft());
   }
 
   #messageRecipients(channel) {

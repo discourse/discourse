@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import I18n from "I18n";
 
 export default class extends ChatChannelComposer {
-  get model() {
-    return this.chat.activeChannel.activeThread;
+  get thread() {
+    return this.channel.activeThread;
   }
 
   get placeholder() {
@@ -16,7 +16,7 @@ export default class extends ChatChannelComposer {
   reset() {
     this.message = ChatMessage.createDraftMessage(this.channel, {
       user: this.currentUser,
-      thread_id: this.model.id,
+      thread_id: this.thread.id,
     });
   }
 

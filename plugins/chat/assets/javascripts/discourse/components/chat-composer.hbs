@@ -20,7 +20,7 @@
       (if this.isFocused "chat-composer--focused")
       (if this.pane.sending "chat-composer--sending")
       (if
-        this.isSendEnabled
+        this.sendEnabled
         "chat-composer--send-enabled"
         "chat-composer--send-disabled"
       )
@@ -69,8 +69,8 @@
           @icon="paper-plane"
           class="chat-composer__send-btn icon-only"
           @title="chat.composer.send"
-          @disabled={{or this.composer.disabled (not this.isSendEnabled)}}
-          tabindex={{if this.isSendEnabled 0 -1}}
+          @disabled={{or this.composer.disabled (not this.sendEnabled)}}
+          tabindex={{if this.sendEnabled 0 -1}}
           {{on "focus" (fn this.computeIsFocused true)}}
           {{on "blur" (fn this.computeIsFocused false)}}
         />

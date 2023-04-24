@@ -31,6 +31,15 @@ export default class ChatComposer extends Component {
 
   @tracked isFocused = false;
 
+  constructor() {
+    super(...arguments);
+    this.composer.channel = this.args.channel;
+  }
+
+  willDestroy() {
+    this.composer.channel = null;
+  }
+
   get pane() {
     return this.args.paneService;
   }
@@ -102,7 +111,7 @@ export default class ChatComposer extends Component {
     );
   }
 
-  get isSendEnabled() {
+  get sendEnabled() {
     return this.hasContent && !this.pane.sending;
   }
 
@@ -178,7 +187,7 @@ export default class ChatComposer extends Component {
 
   @action
   onSend() {
-    if (!this.isSendEnabled) {
+    if (!this.sendEnabled) {
       return;
     }
 
