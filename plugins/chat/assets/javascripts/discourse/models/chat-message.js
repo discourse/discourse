@@ -109,6 +109,7 @@ export default class ChatMessage {
 
     if (ChatMessage.cookFunction) {
       this.cooked = ChatMessage.cookFunction(this.message);
+      this.incrementVersion();
     } else {
       generateCookFunction(markdownOptions).then((cookFunction) => {
         ChatMessage.cookFunction = (raw) => {
@@ -119,6 +120,7 @@ export default class ChatMessage {
         };
 
         this.cooked = ChatMessage.cookFunction(this.message);
+        this.incrementVersion();
       });
     }
   }
