@@ -4,7 +4,7 @@ class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
   def up
     result = DB.query <<~SQL
     INSERT INTO sidebar_sections(user_id, title, public, system, created_at, updated_at)
-      VALUES (-1, 'community', true, true, now(), now())
+      VALUES (-1, 'Community', true, true, now(), now())
       RETURNING sidebar_sections.id
     SQL
 
@@ -13,15 +13,15 @@ class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
     result = DB.query <<~SQL
       INSERT INTO sidebar_urls(name, value, icon, external, segment, created_at, updated_at)
       VALUES
-        ('everything', '/latest', 'layer-group', false, 'primary', now(), now()),
-        ('my_posts', '/my/activity', 'user', false, 'primary', now(), now()),
-        ('review', '/review', 'flag', false, 'primary', now(), now()),
-        ('admin', '/admin', 'wrench', false, 'primary', now(), now()),
-        ('users', '/u', 'users', false, 'secondary', now(), now()),
-        ('info', '/about', 'info-circle', false, 'secondary', now(), now()),
-        ('faq', '/faq', 'question-circle', false, 'secondary', now(), now()),
-        ('groups', '/g', 'user-friends', false, 'secondary', now(), now()),
-        ('badges', '/badges', 'certificate', false, 'secondary', now(), now())
+        ('Everything', '/latest', 'layer-group', false, 'primary', now(), now()),
+        ('My Posts', '/my/activity', 'user', false, 'primary', now(), now()),
+        ('Review', '/review', 'flag', false, 'primary', now(), now()),
+        ('Admin', '/admin', 'wrench', false, 'primary', now(), now()),
+        ('Users', '/u', 'users', false, 'secondary', now(), now()),
+        ('Info', '/about', 'info-circle', false, 'secondary', now(), now()),
+        ('Faq', '/faq', 'question-circle', false, 'secondary', now(), now()),
+        ('Groups', '/g', 'user-friends', false, 'secondary', now(), now()),
+        ('Badges', '/badges', 'certificate', false, 'secondary', now(), now())
       RETURNING sidebar_urls.id
     SQL
 

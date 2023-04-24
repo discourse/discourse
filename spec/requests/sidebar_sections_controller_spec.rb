@@ -21,7 +21,7 @@ RSpec.describe SidebarSectionsController do
       get "/sidebar_sections.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["sidebar_sections"].map { |section| section["title"] }).to eq(
-        ["community", "public section", "private section"],
+        ["Community", "public section", "private section"],
       )
     end
   end

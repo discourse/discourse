@@ -19,11 +19,11 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
     anonymous_sidebar_sections: [
       {
         id: 111,
-        title: "community",
+        title: "Community",
         links: [
           {
             id: 329,
-            name: "everything",
+            name: "Everything",
             value: "/latest",
             icon: "layer-group",
             external: false,
@@ -31,7 +31,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
           },
           {
             id: 330,
-            name: "users",
+            name: "Users",
             value: "/u",
             icon: "users",
             external: false,
@@ -39,7 +39,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
           },
           {
             id: 331,
-            name: "info",
+            name: "Info",
             value: "/about",
             icon: "info-circle",
             external: false,
@@ -47,7 +47,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
           },
           {
             id: 332,
-            name: "faq",
+            name: "Faq",
             value: "/faq",
             icon: "question-circle",
             external: false,
@@ -55,7 +55,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
           },
           {
             id: 333,
-            name: "my_posts",
+            name: "My Posts",
             value: "/my/activity",
             icon: "user",
             external: false,
@@ -63,7 +63,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
           },
           {
             id: 334,
-            name: "review",
+            name: "Review",
             value: "/review",
             icon: "flag",
             external: false,
@@ -71,7 +71,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
           },
           {
             id: 335,
-            name: "admin",
+            name: "Admin",
             value: "/admin",
             icon: "wrench",
             external: false,
@@ -79,7 +79,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
           },
           {
             id: 336,
-            name: "groups",
+            name: "Groups",
             value: "/g",
             icon: "user-friends",
             external: false,
@@ -87,7 +87,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
           },
           {
             id: 337,
-            name: "badges",
+            name: "Badges",
             value: "/badges",
             icon: "certificate",
             external: false,

@@ -130,7 +130,9 @@ export default class SystemSection {
   }
 
   get decoratedTitle() {
-    return I18n.t(`sidebar.sections.${this.section.title}.header_link_text`);
+    return I18n.t(
+      `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`
+    );
   }
 
   get headerActions() {

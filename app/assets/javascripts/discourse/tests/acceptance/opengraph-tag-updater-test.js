@@ -12,11 +12,11 @@ acceptance("Opengraph Tag Updater", function (needs) {
     anonymous_sidebar_sections: [
       {
         id: 111,
-        title: "community",
+        title: "Community",
         links: [
           {
             id: 329,
-            name: "everything",
+            name: "Everything",
             value: "/latest",
             icon: "layer-group",
             external: false,
@@ -24,7 +24,7 @@ acceptance("Opengraph Tag Updater", function (needs) {
           },
           {
             id: 331,
-            name: "info",
+            name: "Info",
             value: "/about",
             icon: "info-circle",
             external: false,

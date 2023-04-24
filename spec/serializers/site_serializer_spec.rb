@@ -210,7 +210,7 @@ RSpec.describe SiteSerializer do
     it "includes only public sidebar sections serialised object when user is anonymous" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:anonymous_sidebar_sections].map(&:title)).to eq(
-        ["community", "Public section"],
+        ["Community", "Public section"],
       )
     end
 

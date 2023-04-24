@@ -76,11 +76,11 @@ acceptance(
       sidebar_sections: [
         {
           id: 111,
-          title: "community",
+          title: "Community",
           links: [
             {
               id: 329,
-              name: "everything",
+              name: "Everything",
               value: "/latest",
               icon: "layer-group",
               external: false,
@@ -88,7 +88,7 @@ acceptance(
             },
             {
               id: 334,
-              name: "review",
+              name: "Review",
               value: "/review",
               icon: "flag",
               external: false,
