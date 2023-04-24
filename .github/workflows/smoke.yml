@@ -140,7 +140,7 @@ jobs:
 
             user = User.create!(username: "jane", password: "P4ssw0rdUser", email: "jane@example.com")
             user.activate
-            user.change_trust_level!(4)
+            # user.change_trust_level!(4)
 
             admin = User.create!(username: "kim", password: "Adm1N_P4ssw0rd", email: "kim@example.com")
             admin.activate
@@ -153,7 +153,7 @@ jobs:
               }
             })
 
-            SiteSetting.wizard_enabled = false
+            # SiteSetting.wizard_enabled = false
           end
 
       - name: Setup host
@@ -170,7 +170,7 @@ jobs:
         env:
           URL: http://${{ env.DISCOURSE_HOSTNAME }}
           WAIT_FOR_URL: 60
-          DISCOURSE_USERNAME: jane
+          DISCOURSE_USERNAME: jane@example.com
           DISCOURSE_PASSWORD: P4ssw0rd
           ADMIN_API_USERNAME: kim
           ADMIN_API_KEY: ${{ steps.setup_env.outputs.api_key }}
