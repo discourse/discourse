@@ -5438,6 +5438,7 @@ pl_PL:
           few: "pokaż %{count} słowa"
           many: "pokaż %{count} słów"
           other: "pokaż %{count} słów"
+        case_sensitive: "(z uwzg. wielkości liter)"
         download: Pobierz
         clear_all: Wyczyść wszystko
         clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"

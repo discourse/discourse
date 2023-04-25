@@ -165,6 +165,7 @@ hu:
     embed:
       load_from_remote: "Hiba történt a bejegyzés betöltésekor."
     site_settings:
+      invalid_site_setting: "Nem létezik „%{name}” nevű beállítás"
       invalid_category_id: "Olyan kategóriát adott meg, amely nem létezik"
       default_categories_already_selected: "Nem választhat olyan kategóriát, amely már szerepel egy másik listában."
       default_tags_already_selected: "Más listában használt címke nem választható ki."

@@ -2401,6 +2401,7 @@ pt_BR:
       must_not_contain_two_special_chars_in_seq: "não deve conter uma sequência de dois ou mais caracteres especiais (.-_)"
       must_not_end_with_confusing_suffix: "não deve terminar com um sufixo confuso como .json ou .png etc."
     email:
+      blank: "não pode estar em branco."
       invalid: "é inválido(a)."
       not_allowed: "este provedor de e-mail não é permitido. Utilize outro endereço de e-mail."
       blocked: "não é permitido."

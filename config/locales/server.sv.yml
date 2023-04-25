@@ -188,6 +188,7 @@ sv:
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av inlägget."
     site_settings:
+      invalid_site_setting: "Det finns ingen inställning med namnet '%{name}'"
       invalid_category_id: "Du angav en kategori som inte finns"
       invalid_choice:
         one: "Du angav det ogiltiga valet %{name}"

@@ -206,6 +206,8 @@ tr_TR:
         read_only: "Salt Okunur"
         archived_header: "Kanal arşivlendi"
         archived: "Arşivlendi"
+        archive_failed: "Arşiv kanalı başarısız oldu. %{completed}/%{total} mesaj arşivlendi. <a target=\"_blank\" href=\"%{topic_url}\">hedef konu</a>. Arşivi tamamlamayı denemek için yeniden dene'ye basın."
+        archive_failed_no_topic: "Arşiv kanalı başarısız oldu. %{completed}/%{total} mesaj arşivlendi, hedef konu oluşturulmadı. Arşivi tamamlamayı denemek için yeniden dene'ye basın."
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">Arşiv konusuna</a> bakın"
         closed_header: "Kanal kapalı"
         closed: "Kapalı"

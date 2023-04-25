@@ -188,6 +188,7 @@ fi:
     embed:
       load_from_remote: "Viestin lataamisessa tapahtui virhe."
     site_settings:
+      invalid_site_setting: "Asetusta nimeltä \"%{name}\" ei ole olemassa"
       invalid_category_id: "Määritit alueen, jota ei ole olemassa"
       invalid_choice:
         one: "Määrittämäsi valinta ei kelpaa %{name}"

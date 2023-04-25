@@ -188,6 +188,7 @@ de:
     embed:
       load_from_remote: "Beim Laden des Beitrags ist ein Fehler aufgetreten."
     site_settings:
+      invalid_site_setting: "Es ist keine Einstellung mit dem Namen '%{name}' vorhanden"
       invalid_category_id: "Du hast eine Kategorie angegeben, die nicht existiert"
       invalid_choice:
         one: "Du hast die ungültige Auswahl %{name} getroffen"
