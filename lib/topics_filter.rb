@@ -36,12 +36,24 @@ class TopicsFilter
       filter_values = extract_and_validate_value_for(filter, values)
 
       case filter
+      when "activity-before"
+        filter_by_activity(before: filter_values)
+      when "activity-after"
+        filter_by_activity(after: filter_values)
       when "category"
         filter_categories(values: key_prefixes.zip(filter_values))
+      when "created-after"
+        filter_by_created(after: filter_values)
+      when "created-before"
+        filter_by_created(before: filter_values)
       when "created-by"
         filter_created_by_user(usernames: filter_values.flat_map { |value| value.split(",") })
       when "in"
         filter_in(values: filter_values)
+      when "latest-post-after"
+        filter_by_latest_post(after: filter_values)
+      when "latest-post-before"
+        filter_by_latest_post(before: filter_values)
       when "likes-min"
         filter_by_number_of_likes(min: filter_values)
       when "likes-max"
@@ -99,8 +111,21 @@ class TopicsFilter
 
   private
 
+  YYYY_MM_DD_REGEXP =
+    /^(?<year>[12][0-9]{3})-(?<month>0?[1-9]|1[0-2])-(?<day>0?[1-9]|[12]\d|3[01])$/
+  private_constant :YYYY_MM_DD_REGEXP
+
   def extract_and_validate_value_for(filter, values)
     case filter
+    when "activity-before", "activity-after", "created-before", "created-after",
+         "latest-post-before", "latest-post-after"
+      value = values.last
+
+      if match_data = value.match(YYYY_MM_DD_REGEXP)
+        Time.zone.parse(
+          "#{match_data[:year].to_i}-#{match_data[:month].to_i}-#{match_data[:day].to_i}",
+        )
+      end
     when "likes-min", "likes-max", "likes-op-min", "likes-op-max", "posts-min", "posts-max",
          "posters-min", "posters-max", "views-min", "views-max"
       value = values.last
@@ -115,6 +140,18 @@ class TopicsFilter
       next if !value
       @scope = (scope || @scope).where("#{column_name} #{operator} ?", value)
     end
+  end
+
+  def filter_by_activity(before: nil, after: nil)
+    filter_by_topic_range(column_name: "topics.bumped_at", min: after, max: before)
+  end
+
+  def filter_by_created(before: nil, after: nil)
+    filter_by_topic_range(column_name: "topics.created_at", min: after, max: before)
+  end
+
+  def filter_by_latest_post(before: nil, after: nil)
+    filter_by_topic_range(column_name: "topics.last_posted_at", min: after, max: before)
   end
 
   def filter_by_number_of_posts(min: nil, max: nil)
