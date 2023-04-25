@@ -989,6 +989,24 @@ eviltrout</p>
       '<p><a href="http://discourse.org" data-bbcode="true">discourse</a></p>',
       "named links are properly parsed"
     );
+
+    assert.cooked(
+      "[url]https://discourse.org/path[/url]",
+      '<p><a href="https://discourse.org/path" data-bbcode="true">https://discourse.org/path</a></p>',
+      "paths are correctly handled"
+    );
+
+    assert.cooked(
+      "[url]discourse.org/path[/url]",
+      '<p><a href="https://discourse.org/path" data-bbcode="true">discourse.org/path</a></p>',
+      "paths are correctly handled"
+    );
+
+    assert.cooked(
+      "[url][b]discourse.org/path[/b][/url]",
+      '<p><a href="https://discourse.org/path" data-bbcode="true"><span class="bbcode-b">discourse.org/path</span></a></p>',
+      "paths are correctly handled"
+    );
   });
 
   test("images", function (assert) {
@@ -1216,7 +1234,7 @@ eviltrout</p>
     );
     assert.cookedPara(
       "[url]abc.com[/url]",
-      '<a href="http://abc.com">abc.com</a>',
+      '<a href="https://abc.com" data-bbcode="true">abc.com</a>',
       "it magically links using linkify"
     );
     assert.cookedPara(
