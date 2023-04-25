@@ -33,6 +33,9 @@ jobs:
       UNICORN_SIDEKIQS: 1
       UNICORN_PORT: 80
       DISCOURSE_SERVE_STATIC_ASSETS: true
+      DISCOURSE_USERNAME: jane@example.com
+      DISCOURSE_PASSWORD: P4ssw0rdUser
+      ADMIN_API_USERNAME: kim
 
     steps:
       - name: Set working directory owner
@@ -137,11 +140,11 @@ jobs:
           Dir.chdir(ENV["GITHUB_WORKSPACE"]) do
             require "./config/environment"
 
-            user = User.create!(username: "jane", password: "P4ssw0rdUser", email: "jane@example.com", active: true)
+            user = User.create!(username: "jane", password: ENV["DISCOURSE_PASSWORD"], email: ENV["DISCOURSE_USERNAME"], active: true)
             user.activate
-            user.change_trust_level!(4)
+            # user.change_trust_level!(4)
 
-            admin = User.create!(username: "kim", password: "Adm1N_P4ssw0rd", email: "kim@example.com", active: true)
+            admin = User.create!(username: ENV["ADMIN_API_USERNAME"], password: "Adm1N_P4ssw0rd", email: "kim@example.com", active: true)
             admin.activate
 
             ThemesInstallTask.install({
@@ -150,9 +153,9 @@ jobs:
               }
             })
 
-            SiteSetting.wizard_enabled = false
-            SiteSetting.rate_limit_create_post = 1
-            DiscourseRedis.new.flushall
+            # SiteSetting.wizard_enabled = false
+            # SiteSetting.rate_limit_create_post = 1
+            # DiscourseRedis.new.flushall
           end
 
       - name: Generate API key
@@ -175,9 +178,6 @@ jobs:
         env:
           URL: http://${{ env.DISCOURSE_HOSTNAME }}
           WAIT_FOR_URL: 60
-          DISCOURSE_USERNAME: jane@example.com
-          DISCOURSE_PASSWORD: P4ssw0rd
-          ADMIN_API_USERNAME: kim
           ADMIN_API_KEY: ${{ steps.generate_key.outputs.api_key }}
           SMOKE_TEST_THEME_URL: https://github.com/discourse/unformatted-code-detector
         run: bin/rails smoke:test
