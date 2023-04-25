@@ -25,6 +25,10 @@
       {{~#if topic.featured_link~}}
       {{~topic-featured-link topic~}}
       {{~/if~}}
+      <span> - </span>
+      <a href='{{path-to-creator topic.posters}}'>
+        <span>{{display-creator-name topic.posters}}</span>
+      </a>
       {{~raw-plugin-outlet name="topic-list-after-title"}}
       {{~#if topic.unseen~}}
         <span class="topic-post-badges">&nbsp;<span class="badge-notification new-topic"></span></span>
@@ -34,21 +38,36 @@
       {{~/if~}}
        {{~raw-plugin-outlet name="topic-list-main-link-bottom"}}
     </div>
-    <div class='pull-right'>
-      {{raw "list/post-count-or-badges" topic=topic postBadgesEnabled=showTopicPostBadges}}
-    </div>
-    <div class="topic-item-stats clearfix">
-      <span class="topic-item-stats__category-tags">
-        {{#unless hideCategory}}
-          {{~raw-plugin-outlet name="topic-list-before-category"}}
-          {{category-link topic.category~}}
-        {{~/unless}}
-        {{~discourse-tags topic mode="list"}}
-      </span>
-      <div class='num activity last'>
-        <span class="age activity" title="{{topic.bumpedAtTitle}}"><a
-            href="{{topic.lastPostUrl}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a>
-        </span>
-      </div>
-  </div>
+    <td class="your-hearts-mobile topic-list-data">
+      {{#if showQuadraticTotals}}
+        <div class="total-votes-cell">
+          <div class="total-votes-num">{{number topicVote}}</div>
+          <div class="total-hearts-wrapper">
+            <span class="quadratic-vote-formula">(Σ√</span><img class="full-heart-header" src="/images/full-heart.png" alt="Full Hearts"><span class="quadratic-vote-formula">)</span><sup class="qv-superscript">2</sup> 
+          </div>
+          </div>
+        </div>
+      {{/if}}
+      {{#if showUserVoiceCredits}}
+        <div class="mobile-hearts-cell">
+          <div class="your-hearts-voting-container">
+            <div class="your-hearts-voting">
+              <div>{{voiceCredits}}</div>
+              <div class="heart-wrapper">
+                <img class="full-heart" src="/images/full-heart.png" alt="Full Hearts"> 
+              </div>
+            </div>
+          </div>
+          <div class="voice-vote-buttons">
+            <div class="triangle_up_container" data-topic-id={{topic.id}}>
+              <div id="dialog3" class="triangle_up"></div>
+            </div>
+            <div class="triangle_down_container" data-topic-id={{topic.id}}>
+              <div id="dialog1" class="triangle_down" data-topic-id={{topic.id}}></div>
+            </div>
+          </div>
+        </div>
+      {{/if}}
+    </td>
 </td>
+

@@ -38,7 +38,7 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins]
-        ruby: ['3.2']
+        ruby: ["3.2"]
         exclude:
           - build_type: annotations
             target: plugins
