@@ -23,7 +23,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
     it "adds bold text" do
       chat.visit_channel(channel_1)
 
-      composer = find(".chat-composer-input")
+      composer = find(".chat-composer__input")
       composer.send_keys([key_modifier, "b"])
 
       expect(composer.value).to eq("**strong text**")
@@ -34,7 +34,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
     it "adds italic text" do
       chat.visit_channel(channel_1)
 
-      composer = find(".chat-composer-input")
+      composer = find(".chat-composer__input")
       composer.send_keys([key_modifier, "i"])
 
       expect(composer.value).to eq("_emphasized text_")
@@ -45,7 +45,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
     it "adds preformatted text" do
       chat.visit_channel(channel_1)
 
-      composer = find(".chat-composer-input")
+      composer = find(".chat-composer__input")
       composer.send_keys([key_modifier, "e"])
 
       expect(composer.value).to eq("`indent preformatted text by 4 spaces`")
@@ -71,8 +71,8 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
       channel_page.message_thread_indicator(thread.original_message).click
 
-      composer = find(".chat-composer-input--channel")
-      thread_composer = find(".chat-composer-input--thread")
+      composer = find(".chat-channel .chat-composer__input")
+      thread_composer = find(".chat-thread .chat-composer__input")
       composer.send_keys([key_modifier, "i"])
 
       expect(composer.value).to eq("_emphasized text_")
@@ -98,7 +98,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
       expect(channel_page).to have_message(id: message_1.id)
 
-      find(".chat-composer-input").send_keys(:arrow_up)
+      find(".chat-composer__input").send_keys(:arrow_up)
 
       expect(page.find(".chat-composer-message-details")).to have_content(message_1.message)
     end
@@ -111,7 +111,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
         page.driver.browser.network_conditions = { offline: true }
         channel_page.send_message("Hello world")
 
-        find(".chat-composer-input").send_keys(:arrow_up)
+        find(".chat-composer__input").send_keys(:arrow_up)
 
         expect(page).to have_no_css(".chat-composer-message-details")
       end

@@ -1,16 +1,16 @@
 <div class="chat-composer-message-details">
   <div class="chat-reply">
-    {{d-icon this.icon}}
-    <ChatUserAvatar @user={{this.message.user}} />
-    <span class="chat-reply__username">{{this.message.user.username}}</span>
+    {{d-icon @icon}}
+    <ChatUserAvatar @user={{@message.user}} />
+    <span class="chat-reply__username">{{@message.user.username}}</span>
     <span class="chat-reply__excerpt">
-      {{replace-emoji this.message.excerpt}}
+      {{replace-emoji @message.excerpt}}
     </span>
   </div>
 
-  <FlatButton
-    @action={{this.action}}
-    @class="cancel-message-action"
+  <DButton
+    @action={{@cancelAction}}
+    @class="btn-flat cancel-message-action"
     @icon="times-circle"
     @title="cancel"
   />

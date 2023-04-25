@@ -299,7 +299,7 @@ export default class ChatApi extends Service {
   /**
    * Saves a draft for the channel, which includes message contents and uploads.
    * @param {number} channelId - The ID of the channel.
-   * @param {object} data - The draft data, see ChatMessageDraft.toJSON() for more details.
+   * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
    * @returns {Promise}
    */
   saveDraft(channelId, data) {

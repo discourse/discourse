@@ -36,7 +36,7 @@ module PageObjects
       end
 
       def has_open_channel?(channel)
-        has_css?("#{VISIBLE_DRAWER} .chat-live-pane[data-id='#{channel.id}']")
+        has_css?("#{VISIBLE_DRAWER} .chat-channel[data-id='#{channel.id}']")
       end
     end
   end

@@ -88,8 +88,15 @@ describe "Thread indicator for chat messages", type: :system, js: true do
       channel_page.reply_to(message_without_thread)
       channel_page.fill_composer("this is a reply to make a new thread")
       channel_page.click_send_message
+
       expect(channel_page).to have_thread_indicator(message_without_thread)
-      new_thread = message_without_thread.reload.thread
+
+      new_thread = nil
+      try_until_success(timeout: 5) do
+        new_thread = message_without_thread.reload.thread
+        expect(new_thread).to be_present
+      end
+
       expect(page).not_to have_css(channel_page.message_by_id_selector(new_thread.replies.first))
     end
 
