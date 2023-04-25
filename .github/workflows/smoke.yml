@@ -145,7 +145,7 @@ jobs:
             user.activate
             user.change_trust_level!(4)
 
-            admin = User.create!(username: "kim", password: "Adm1N_P4ssw0rd", email: "kim@example.com", active: true)
+            admin = User.create!(username: "kim", password: "@l0nG-Adm1N_P4ssw0rd", email: "kim@example.com", admin: true, active: true)
             admin.activate
 
             ThemesInstallTask.install({
@@ -157,6 +157,10 @@ jobs:
             SiteSetting.wizard_enabled = false
             SiteSetting.rate_limit_create_post = 1
             DiscourseRedis.new.flushall
+
+            puts "hint: #{SiteSetting.has_login_hint}"
+            puts "notice: #{SiteSetting.global_notice}"
+            puts "admins: #{User.where(admin: true).human_users.count}"
           end
 
       - name: Generate API key
