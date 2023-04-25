@@ -1992,7 +1992,7 @@ RSpec.describe PostsController do
       it "throws an exception for users" do
         sign_in(user)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(403)
       end
 
       it "works for admins" do
