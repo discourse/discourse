@@ -145,8 +145,8 @@ jobs:
             user.activate
             user.change_trust_level!(4)
 
-            # admin = User.create!(username: ENV["ADMIN_API_USERNAME"], password: "Adm1N_P4ssw0rd", email: "kim@example.com", active: true)
-            # admin.activate
+            admin = User.create!(username: "kim", password: "Adm1N_P4ssw0rd", email: "kim@example.com", active: true)
+            admin.activate
 
             ThemesInstallTask.install({
               "unformatted-code-detector": {
