@@ -132,7 +132,6 @@ jobs:
         run: bin/rails themes:update assets:precompile
 
       - name: Setup env
-        id: setup_env
         shell: ruby {0}
         run: |
           Dir.chdir(ENV["GITHUB_WORKSPACE"]) do
@@ -144,8 +143,6 @@ jobs:
 
             admin = User.create!(username: "kim", password: "Adm1N_P4ssw0rd", email: "kim@example.com", active: true)
             admin.activate
-            api_key = ApiKey.create!(user: admin)
-            File.write(ENV["GITHUB_OUTPUT"], "api_key=#{api_key.key}\n", mode: "a+")
 
             ThemesInstallTask.install({
               "unformatted-code-detector": {
@@ -157,6 +154,12 @@ jobs:
             SiteSetting.rate_limit_create_post = 1
             DiscourseRedis.new.flushall
           end
+
+      - name: Generate API key
+        id: generate_key
+        run: |
+          key=$(bin/rails "api_key:create_master[API key for smoke tests]")
+          echo "api_key=$key" >> $GITHUB_OUTPUT
 
       - name: Setup host
         run: echo "127.0.0.1 ${{ env.DISCOURSE_HOSTNAME }}" >> /etc/hosts
@@ -175,7 +178,7 @@ jobs:
           DISCOURSE_USERNAME: jane@example.com
           DISCOURSE_PASSWORD: P4ssw0rd
           ADMIN_API_USERNAME: kim
-          ADMIN_API_KEY: ${{ steps.setup_env.outputs.api_key }}
+          ADMIN_API_KEY: ${{ steps.generate_key.outputs.api_key }}
           SMOKE_TEST_THEME_URL: https://github.com/discourse/unformatted-code-detector
         run: bin/rails smoke:test
 
