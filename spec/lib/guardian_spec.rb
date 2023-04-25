@@ -4200,11 +4200,11 @@ RSpec.describe Guardian do
       it "returns true for api requests from admins" do
         api_key = Fabricate(:api_key).key
         queued_post = Fabricate(:reviewable_queued_post, created_by: user)
-        opts =  {
-             "HTTP_API_USERNAME" => admin.username,
-             "HTTP_API_KEY" => api_key,
-             "REQUEST_METHOD" => "DELETE",
-             "#{Auth::DefaultCurrentUserProvider::API_KEY_ENV}" => "foo",
+        opts = {
+          "HTTP_API_USERNAME" => admin.username,
+          "HTTP_API_KEY" => api_key,
+          "REQUEST_METHOD" => "DELETE",
+          "#{Auth::DefaultCurrentUserProvider::API_KEY_ENV}" => "foo",
         }
 
         env = create_request_env(path: "/review/#{queued_post.id}.json").merge(opts)
@@ -4214,7 +4214,10 @@ RSpec.describe Guardian do
 
       it "returns false for admin requests not via the API" do
         queued_post = Fabricate(:reviewable_queued_post, created_by: user)
-        env = create_request_env(path: "/review/#{queued_post.id}.json").merge({"REQUEST_METHOD" => "DELETE"})
+        env =
+          create_request_env(path: "/review/#{queued_post.id}.json").merge(
+            { "REQUEST_METHOD" => "DELETE" },
+          )
         guardian = Guardian.new(admin, ActionDispatch::Request.new(env))
         expect(guardian.can_delete_reviewable_queued_post?(queued_post)).to eq(false)
       end
@@ -4222,11 +4225,11 @@ RSpec.describe Guardian do
       it "returns false for api requests from tl4 users" do
         api_key = Fabricate(:api_key).key
         queued_post = Fabricate(:reviewable_queued_post, created_by: user)
-        opts =  {
-             "HTTP_API_USERNAME" => trust_level_4.username,
-             "HTTP_API_KEY" => api_key,
-             "REQUEST_METHOD" => "DELETE",
-             "#{Auth::DefaultCurrentUserProvider::API_KEY_ENV}" => "foo",
+        opts = {
+          "HTTP_API_USERNAME" => trust_level_4.username,
+          "HTTP_API_KEY" => api_key,
+          "REQUEST_METHOD" => "DELETE",
+          "#{Auth::DefaultCurrentUserProvider::API_KEY_ENV}" => "foo",
         }
 
         env = create_request_env(path: "/review/#{queued_post.id}.json").merge(opts)
@@ -4238,7 +4241,10 @@ RSpec.describe Guardian do
     context "when attempting to destroy your own reviewable" do
       it "returns true" do
         queued_post = Fabricate(:reviewable_queued_post, created_by: user)
-        env = create_request_env(path: "/review/#{queued_post.id}.json").merge({"REQUEST_METHOD" => "DELETE"})
+        env =
+          create_request_env(path: "/review/#{queued_post.id}.json").merge(
+            { "REQUEST_METHOD" => "DELETE" },
+          )
         guardian = Guardian.new(user, ActionDispatch::Request.new(env))
         expect(guardian.can_delete_reviewable_queued_post?(queued_post)).to eq(true)
       end
