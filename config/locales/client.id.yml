@@ -961,11 +961,6 @@ id:
       api_last_used_at: "Terakhir digunakan pada:"
       theme: "Tema"
       home: "Halaman Utama"
-      staff_counters:
-        flagged_posts: "tulisan yang dipanji"
-        deleted_posts: "menghapus posting"
-        suspensions: "penangguhan"
-        warnings_received: "peringatan"
       messages:
         inbox: "Kotak Masuk"
         latest: "Terbaru"
@@ -1001,7 +996,6 @@ id:
         choose: "Pilih kata sandi"
       second_factor_backup:
         disable: "Nonaktifkan"
-        enable: "Aktifkan"
         use: "Gunakan kode cadangan"
         codes:
           title: "Kode Cadangan Dibuat"

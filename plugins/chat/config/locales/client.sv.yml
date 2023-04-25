@@ -82,6 +82,7 @@ sv:
       click_to_join: "Klicka här för att se tillgängliga kanaler."
       close: "Stäng"
       collapse: "Komprimera chattruta"
+      expand: "Expandera chattlådan"
       confirm_flag: "Är du säker på att du vill flagga %{username}:s meddelande?"
       deleted: "Ett meddelande raderades. [view]"
       hidden: "Ett meddelande doldes. [view]"
@@ -221,7 +222,6 @@ sv:
       close_full_page: "Stäng helskärmschatt"
       open_message: "Öppna meddelande i chatten"
       placeholder_self: "Gör en anteckning"
-      placeholder_channel: "Chatta med %{channelName}"
       placeholder_users: "Chatta med %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Kanalen är arkiverad, och du kan inte skicka nya meddelanden just nu."
@@ -385,6 +385,7 @@ sv:
         italic_text: "kursiv text"
         bold_text: "fet text"
         code_text: "kod text"
+        send: "Skicka"
       quote:
         original_channel: 'Ursprungligen skickad i <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chattcitat kopierat till urklipp"
@@ -507,6 +508,10 @@ sv:
         search_placeholder: "Sök efter emojinamn och alias..."
         no_results: "Inga resultat"
       thread:
+        view_thread: Visa tråd
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
         label: Tråd
       threads:
         started_by: "Startad av"

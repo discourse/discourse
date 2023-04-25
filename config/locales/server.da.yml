@@ -1424,7 +1424,6 @@ da:
     discourse_connect_overrides_bio: "Tilsidesætter brugerbio i brugerprofilen og forhindrer brugeren i at ændre den"
     discourse_connect_overrides_groups: "Synkronisér alle manuelle gruppemedlemskaber med grupper angivet i grupper-attributten (ADVARSEL: hvis du ikke angiver grupper, vil alle manuelle gruppemedlemmer blive ryddet for brugeren)"
     discourse_connect_not_approved_url: "Omdiriger ikke-godkendte DiscourseConnect konti til denne URL"
-    discourse_connect_allows_all_return_paths: "Begræns ikke domænet for retur_stier leveret af DiscourseConnect (som standard skal retur_sti være på nuværende websted)"
     enable_local_logins: "Aktivér lokale \"brugernavn og adgangskode\" login-baserede konti. ADVARSEL: Hvis deaktiveret, kan du muligvis ikke logge ind, hvis du ikke tidligere har konfigureret mindst én alternativ loginmetode."
     enable_local_logins_via_email: "Tillad brugere at anmode om et enkelt-klik login link bliver sendt til dem via e-mail."
     allow_new_registrations: "Tillad nye brugerregistreringer. Fjern markeringen for at forhindre enhver i at oprette en ny konto."

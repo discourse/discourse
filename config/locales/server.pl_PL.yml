@@ -52,6 +52,11 @@ pl_PL:
   remove_posts_deleted_by_author: "Usunięte przez autora"
   redirect_warning: "Nie byliśmy w stanie zweryfikować, że wybrany przez Ciebie link został rzeczywiście wysłany na forum. Aby kontynować mimo tego, wybierz link poniżej."
   on_another_topic: "Na innym temacie"
+  topic_category_changed: "Od %{from} do %{to}"
+  topic_tag_changed:
+    added_and_removed: "Dodano %{added} i usunięto %{removed}"
+    added: "Dodano %{added}"
+    removed: "Usunięto %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} przez %{username}"
@@ -254,6 +259,7 @@ pl_PL:
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, ponieważ ma już konto!"
     invite_exists: "Zaprosiłeś już <b>%{email}</b>."
     invalid_email: "%{email} nie jest prawidłowym adresem e-mail."
+    generic_error_response: "Wystąpił problem z twoim żądaniem."
     rate_limit:
       one: "Wysłałeś już %{count} zaproszenie w ostatnim dniu, odczekaj %{time_left} zanim spróbujesz ponownie."
       few: "Wysłałeś już %{count} zaproszenia w ostatnim dniu, odczekaj %{time_left} zanim spróbujesz ponownie."
@@ -1715,7 +1721,6 @@ pl_PL:
     discourse_connect_overrides_profile_background: "Zastępuje tło profilu użytkownika wartością z DiscourseConnect."
     discourse_connect_overrides_card_background: "Zastępuje tło karty użytkownika wartością z DiscourseConnect."
     discourse_connect_not_approved_url: "Przekieruj niezatwierdzone konta DiscourseConnect do tego adresu URL"
-    discourse_connect_allows_all_return_paths: "Nie ograniczaj domeny do return_paths dostarczanych przez DiscourseConnect (domyślnie ścieżka zwrotna musi znajdować się w bieżącej witrynie)"
     enable_local_logins: "Włącz konta oparte na loginach lokalnych i hasłach. OSTRZEŻENIE: jeśli opcja jest wyłączona, zalogowanie się może nie być możliwe, jeśli wcześniej nie skonfigurowano co najmniej jednej alternatywnej metody logowania."
     enable_local_logins_via_email: "Zezwalaj użytkownikom na żądanie linku logowania do jednego kliknięcia, który zostanie im przesłany pocztą e-mail."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
@@ -2097,7 +2102,6 @@ pl_PL:
     show_create_topics_notice: "Jeśli na stronie jest mniej niż 5 publicznych tematów, pokaż powiadomienie proszące adminów, aby stworzyli nowe tematy."
     delete_drafts_older_than_n_days: "Usuń projekty starsze niż (n) dni."
     delete_merged_stub_topics_after_days: "Liczba dni, po których wątki, z których zostały przeniesione wszystkie posty, zostaną automatycznie usunięte. Aby to wyłączyć, ustaw wartość na 0."
-    bootstrap_mode_min_users: "Minimalna liczba użytkowników potrzebnych do wyłączenia trybu rozruchowego (ustaw 0, aby wyłączyć)"
     prevent_anons_from_downloading_files: "Zablokuj możliwość pobierania załączników przez anonimowych użytkowników."
     secure_uploads: 'Ograniczenie dostępu do WSZYSTKICH przesyłanych plików (obrazów, filmów, audio, tekstów, plików pdf, zipów i innych). Jeśli włączona jest opcja "Wymagane logowanie", tylko zalogowani użytkownicy będą mieli dostęp do przesyłanych materiałów. W przeciwnym razie dostęp będzie ograniczony tylko do przesyłania mediów w prywatnych wiadomościach i prywatnych kategoriach. UWAGA: To ustawienie jest skomplikowane i wymaga głębokiej wiedzy administracyjnej. Szczegóły znajdziesz na stronie <a target="_blank" href="https://meta.discourse.org/t/-/140017">w temacie bezpieczne przesyłanie plików na Meta</a> .'
     secure_uploads_allow_embed_images_in_emails: "Umożliwia osadzanie w wiadomościach e-mail bezpiecznych obrazów, które normalnie byłyby pominięte, jeśli ich rozmiar jest mniejszy niż ustawienie 'secure uploads max email embed image size kb'."
@@ -2108,6 +2112,7 @@ pl_PL:
     emoji_set: "Jaki jest twój preferowany styl emoji?"
     emoji_autocomplete_min_chars: "Minimalna liczba znaków wymagana do wywołania wyskakującego okienka z autouzupełnianiem"
     enable_inline_emoji_translation: "Włącza tłumaczenie wbudowanych emoji (bez spacji i znaków interpunkcyjnych przed)"
+    emoji_deny_list: "Tych emoji nie będzie można używać w menu ani w shortcodes."
     approve_post_count: "Liczba wpisów od nowego lub podstawowego użytkownika, które muszą zostać zatwierdzone"
     approve_unless_trust_level: "Wpisy użytkowników poniżej tego poziomu zaufania muszą być zatwierdzane"
     approve_new_topics_unless_trust_level: "Nowe tematy dodawane przez użytkowników z poziomem zaufania poniżej muszą zostać zaakceptowane"
@@ -2218,6 +2223,8 @@ pl_PL:
     default_sidebar_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji Kategorie paska bocznego."
     default_sidebar_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi paska bocznego."
     enable_experimental_hashtag_autocomplete: "EKSPERYMENTALNIE: Użyj nowego systemu autouzupełniania #hashtagów dla kategorii i tagów, który inaczej renderuje wybrany element i usprawnia wyszukiwanie"
+    experimental_new_new_view_groups: "EKSPERYMENTALNE: Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i utwórz link \"Wszystko\" na pasku bocznym."
+    enable_custom_sidebar_sections: "EKSPERYMENTALNIE: Włącz niestandardowe sekcje paska bocznego"
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
@@ -2270,6 +2277,7 @@ pl_PL:
       markdown_linkify_tlds: "Nie możesz uwzględnić wartości '*'."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Nie można włączyć DiscourseConnect, jeśli wymuszono 2FA."
       delete_rejected_email_after_days: "To ustawienie nie może być niższe niż ustawienie delete_email_logs_after_days ani większe niż %{max}"
+      invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3235,6 +3243,14 @@ pl_PL:
     user_automatically_silenced:
       title: "Użytkownik automatycznie wyciszony"
       subject_template: "Nowy użytkownik %{username} wyciszony przez flagi społeczności"
+      text_body_template: |
+        To jest automatyczna wiadomość.
+
+        Nowy użytkownik [%{username}](%{user_url}) został automatycznie wyciszony, ponieważ wielu użytkowników oflagowało post(y) %{username}.
+
+        Proszę [przejrzyj zgłoszenia](%{base_url}/review). Jeśli %{username} został nieprawidłowo wyciszony, kliknij przycisk odciszenia na stronie [administratora tego użytkownika](%{user_url}).
+
+        Ten próg można zmienić w ustawieniach witryny `silence_new_user`.
     spam_post_blocked:
       title: "Spam Zablokowany"
       subject_template: "Wpisy nowego użytkownika %{username} zablokowane za powtarzanie linków"
@@ -3812,6 +3828,8 @@ pl_PL:
   offline:
     title: "Nie można załadować aplikacji"
     offline_page_message: "Wygląda na to, że jesteś offline! Sprawdź połączenie sieciowe i spróbuj ponownie."
+  login_required:
+    welcome_message: "# [Witamy na %{title}](#welcome)"
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -4501,6 +4519,8 @@ pl_PL:
     actions:
       agree:
         title: "Tak"
+      agree_and_keep:
+        title: "Zachowaj post"
       agree_and_keep_hidden:
         title: "Zachowaj post ukryty"
         description: "Zgódź się z flagą i zachowaj post ukryty."

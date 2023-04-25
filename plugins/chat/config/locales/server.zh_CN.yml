@@ -86,6 +86,7 @@ zh_CN:
       over_chat_max_direct_message_users_allow_self: "你只能创建一个与自己的直接信息。"
       over_chat_max_direct_message_users:
         other: "您无法创建与超过 %{count} 个其他用户的直接消息。"
+      original_message_not_found: "无法找到您要回复信息的内容，或已被删除。"
     reviewables:
       message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:
@@ -128,6 +129,7 @@ zh_CN:
         other: "@%{acting_username} 将 %{count} 条消息移至[%{channel_name}](%{first_moved_message_url})频道。"
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           other: "%{comma_separated_usernames} 和其他 %{count} 人"
     category_channel:

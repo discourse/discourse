@@ -193,6 +193,7 @@ de:
     embed:
       load_from_remote: "Beim Laden des Beitrags ist ein Fehler aufgetreten."
     site_settings:
+      invalid_site_setting: "Es ist keine Einstellung mit dem Namen '%{name}' vorhanden"
       invalid_category_id: "Du hast eine Kategorie angegeben, die nicht existiert"
       invalid_choice:
         one: "Du hast die ungültige Auswahl %{name} getroffen"
@@ -1637,7 +1638,7 @@ de:
     discourse_connect_overrides_profile_background: "Überschreibt den Hintergrund des Benutzerprofils mit dem Wert aus dem DiscourseConnect-Payload."
     discourse_connect_overrides_card_background: "Überschreibt den Hintergrund der Benutzerkarte mit dem Wert aus dem DiscourseConnect-Payload."
     discourse_connect_not_approved_url: "Nicht genehmigte DiscourseConnect-Konten zu dieser URL weiterleiten"
-    discourse_connect_allows_all_return_paths: "Beschränke die von DiscourseConnect bereitgestellte Domain für return_paths nicht (standardmäßig muss der Return-Path auf der aktuellen Website liegen)"
+    discourse_connect_allowed_redirect_domains: "Beschränke die von DiscourseConnect zur Verfügung gestellten return_paths auf diese Domains (standardmäßig muss der return path auf der aktuellen Site liegen). Verwende *, um jede beliebige Domain als Rückgabepfad zuzulassen. Platzhalter für Subdomains (`*.foobar.com`) sind nicht erlaubt."
     enable_local_logins: "Aktiviert lokale Konten mit Anmeldung über Benutzername und Passwort. WARNUNG: Wenn deaktiviert, kannst du dich möglicherweise nicht mehr anmelden, wenn du nicht vorher mindestens eine alternative Anmeldemethode konfiguriert hast."
     enable_local_logins_via_email: "Erlaube Benutzern, einen Ein-Klick-Anmelde-Link anzufordern, der ihnen per E-Mail zugeschickt wird."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
@@ -2032,7 +2033,6 @@ de:
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die älter als (n) Tage sind."
     delete_merged_stub_topics_after_days: "Anzahl der abzuwartenden Tage, bevor vollständig zusammengeführte Stub-Themen automatisch gelöscht werden. Auf 0 setzen, um Stub-Themen nie zu löschen."
-    bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (zum Deaktivieren auf 0 setzen)"
     prevent_anons_from_downloading_files: "Verhindern, dass anonyme Benutzer Anhänge herunterladen können."
     secure_uploads: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, ZIPs und andere). Wenn „Anmeldung erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienuploads in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein umfassendes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/-/140017">das Thema „Sichere Uploads“ auf Meta</a> für Details.'
     secure_uploads_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung „secure uploads max email embed image size kb“."
@@ -2043,6 +2043,7 @@ de:
     emoji_set: "Welche Emojis sollen es sein?"
     emoji_autocomplete_min_chars: "Mindestanzahl von Zeichen, um das Pop-up-Fenster zur Emoji-Autovervollständigung zu öffnen."
     enable_inline_emoji_translation: "Aktiviert die Übersetzung von Inline-Emojis (ohne ein Leerzeichen oder Satzzeichen davor)"
+    emoji_deny_list: "Diese Emoji können nicht in Menüs oder Shortcodes verwendet werden."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzers oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Benutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
     approve_new_topics_unless_trust_level: "Neue Themen von Benutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
@@ -2154,7 +2155,7 @@ de:
     navigation_menu: "Legt fest, welches Navigationsmenü verwendet werden soll. Die Seitenleisten- und Kopfzeilennavigation kann von den Benutzern angepasst werden. Die Legacy-Option ist zur Abwärtskompatibilität verfügbar."
     default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
     default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
-    enable_new_notifications_menu: "Aktiviert das neue Benachrichtigungsmenü für das alte Navigationsmenü."
+    enable_new_notifications_menu: "Aktiviert das neue Benachrichtigungsmenü. Das Deaktivieren dieser Einstellung ist veraltet. Das neue Benachrichtigungsmenü wird immer für Optionen im Navigationsmenü verwendet, die nicht aus den älteren Versionen stammen. <a href='https://meta.discourse.org/t/260358'>Erfahren Sie mehr</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     experimental_new_new_view_groups: "EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf."
     enable_custom_sidebar_sections: "EXPERIMENTELL: Aktiviere benutzerdefinierte Seitenleistenabschnitte"
@@ -2214,7 +2215,6 @@ de:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
       delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden"
       invalid_uncategorized_category_setting: 'Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist.'
-      enable_new_notifications_menu_not_legacy_navigation_menu: "Du musst `navigation_menu` auf `legacy` setzen, bevor du diese Einstellung aktivierst."
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: '{0.1,0.2,0.3,1.0}'. Beachte, dass der Maximalwert für jedes Gewicht 1,0 beträgt."
     placeholder:
       discourse_connect_provider_secrets:

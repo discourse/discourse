@@ -250,6 +250,7 @@ ja:
         italic_text: "強調文字"
         bold_text: "太字"
         code_text: "コードテキスト"
+        send: "送信"
       quote:
         original_channel: '最初に <a href="%{channelLink}">%{channel}</a> で送信されました'
         copy_success: "チャットの引用をクリップボードにコピーしました"
@@ -361,6 +362,9 @@ ja:
         symbols: "記号"
         search_placeholder: "絵文字名とエイリアスで検索..."
         no_results: "結果がありません"
+      thread:
+        replies:
+          other: "返信: %{count} 件"
       draft_channel_screen:
         header: "新しいメッセージ"
         cancel: "キャンセル"

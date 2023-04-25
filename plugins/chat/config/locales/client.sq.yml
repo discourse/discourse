@@ -89,6 +89,10 @@ sq:
           title: "Transfero tek një Temë tjetër"
       emoji_picker:
         flags: "Sinjalizime"
+      thread:
+        replies:
+          one: "%{count} përgjigje"
+          other: "%{count} përgjigje"
       draft_channel_screen:
         header: "Mesazh i ri"
         cancel: "Anulo"

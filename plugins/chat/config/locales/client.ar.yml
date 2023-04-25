@@ -256,6 +256,7 @@ ar:
         italic_text: "نص بارز"
         bold_text: "نص بارز"
         code_text: "نص رمز برمجي"
+        send: "إرسال"
       quote:
         original_channel: 'تم إرساله في الأساس في <a href="%{channelLink}">%{channel}</a>'
         copy_success: "تم نسخ اقتباس الدردشة إلى الحافظة"
@@ -382,6 +383,14 @@ ar:
         symbols: "الرموز"
         search_placeholder: "البحث باسم الرمز التعبيري والاسم المستعار..."
         no_results: "لا توجد نتائج"
+      thread:
+        replies:
+          zero: "%{count} ردًا"
+          one: "رد واحد (%{count})"
+          two: "ردَّان (%{count})"
+          few: "%{count} ردود"
+          many: "%{count} ردود"
+          other: "%{count} ردًا"
       draft_channel_screen:
         header: "رسالة جديدة"
         cancel: "إلغاء"

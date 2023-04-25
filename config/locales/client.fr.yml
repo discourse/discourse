@@ -1163,12 +1163,6 @@ fr:
       save_to_change_theme: 'Le thème sera mis à jour après un clic sur « %{save_text} »'
       home: "Page d'accueil par défaut"
       staged: "Distant"
-      staff_counters:
-        flagged_posts: "messages signalés"
-        deleted_posts: "messages supprimés"
-        suspensions: "suspensions"
-        warnings_received: "avertissements"
-        rejected_posts: "messages rejetés"
       messages:
         all: "toutes les boîtes de réception"
         inbox: "Boîte de réception"
@@ -1275,11 +1269,9 @@ fr:
         title: "Codes de secours de l'authentification à deux facteurs"
         regenerate: "Régénérer"
         disable: "Désactiver"
-        enable: "Activer"
-        enable_long: "Activer les codes de secours"
         manage:
-          one: "Gérer les codes de secours. Il vous reste <strong>%{count}</strong> code de secours."
-          other: "Gérer les codes de secours. Il vous reste <strong>%{count}</strong> codes de secours."
+          one: "Il vous reste <strong>%{count}</strong> code de secours."
+          other: "Il vous reste <strong>%{count}</strong> codes de secours."
         copy_to_clipboard: "Copier dans le presse-papier"
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
         copied_to_clipboard: "Copié dans le presse-papier"
@@ -4385,9 +4377,6 @@ fr:
         user_promoted_event:
           name: "Événement sponsorisé par l'utilisateur"
           details: "Lorsqu'un utilisateur est promu d'un niveau de confiance à un autre."
-        user_badge_event:
-          name: "Événement d'attribution de badge"
-          details: "Lorsqu'un utilisateur reçoit un badge."
         group_user_event:
           name: "Évènement d'appartenance à un groupe"
           details: "Lorsqu'un utilisateur est ajouté ou supprimé d'un groupe."

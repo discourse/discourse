@@ -77,6 +77,7 @@ pl_PL:
       click_to_join: "Kliknij tutaj, aby wyświetlić dostępne kanały."
       close: "Zamknij"
       collapse: "Zwiń szufladę czatu"
+      expand: "Rozwiń szufladę czatu"
       confirm_flag: "Czy na pewno chcesz oflagować wiadomość od %{username}?"
       deleted: "Wiadomość została usunięta. [view]"
       hidden: "Wiadomość została ukryta. [view]"
@@ -122,6 +123,7 @@ pl_PL:
           unreachable_1: "@%{group} nie zezwala na wzmianki."
       aria_roles:
         header: "Nagłówek czatu"
+        composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
       no_public_channels: "Nie dołączyłeś do żadnego kanału."
       open: "Otwórz czat"
@@ -129,7 +131,14 @@ pl_PL:
       close_full_page: "Zamknij czat pełnoekranowy"
       open_message: "Otwórz wiadomość na czacie"
       placeholder_self: "Zanotuj coś"
+      placeholder_users: "Czat z %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "Kanał jest zarchiwizowany, nie możesz teraz wysyłać nowych wiadomości."
+        closed: "Kanał jest zamknięty, nie możesz teraz wysyłać nowych wiadomości."
+        read_only: "Kanał jest tylko do odczytu, nie możesz teraz wysyłać nowych wiadomości."
       placeholder_silenced: "W tej chwili nie możesz wysyłać wiadomości."
+      placeholder_start_conversation: "Rozpocznij rozmowę z..."
+      placeholder_start_conversation_users: "Rozpocznij rozmowę z %{commaSeparatedUsernames}"
       remove_upload: "Usuń plik"
       react: "Zareaguj z emoji"
       reply: "Odpowiedz"
@@ -212,6 +221,7 @@ pl_PL:
         title: Nowa wiadomość
         prefix: "Do:"
         no_results: Brak wyników
+        selected_user_title: "Odznacz %{username}"
       channel_selector:
         title: "Przejdź do kanału"
         no_channels: "Żadne kanały nie pasują do Twojego wyszukiwania"
@@ -246,6 +256,7 @@ pl_PL:
         italic_text: "wyróżniony tekst"
         bold_text: "pogrubiony tekst"
         code_text: "kod"
+        send: "Wyślij"
       quote:
         copy_success: "Cytat z czatu skopiowany do schowka"
       notification_levels:
@@ -256,6 +267,7 @@ pl_PL:
         channel_wide_mentions_label: "Zezwalaj na wzmianki @all i @here"
         channel_wide_mentions_description: "Zezwalaj użytkownikom na powiadamianie wszystkich członków #%{channel} za pomocą @all lub tylko tych, którzy są aktywni w danym momencie za pomocą @here"
         auto_join_users_label: "Automatycznie dodawaj użytkowników"
+        auto_join_users_warning: "Każdy użytkownik, który nie jest członkiem tego kanału i ma dostęp do kategorii %{category} , dołączy do niego. Czy jesteś pewien?"
         desktop_notification_level: "Powiadomienia na pulpicie"
         follow: "Dołącz"
         followed: "Dołączył"
@@ -313,6 +325,7 @@ pl_PL:
             few: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
             many: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
             other: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
+          instructions_channel_archive: "Zamierzasz utworzyć nowy temat i zarchiwizować w nim wiadomości z kanału."
         existing_topic:
           title: "Przenieś do Istniejącego Tematu"
         new_message:
@@ -333,6 +346,12 @@ pl_PL:
         symbols: "Symbolika"
         search_placeholder: "Szukaj według nazwy emoji i aliasu..."
         no_results: "Brak wyników"
+      thread:
+        replies:
+          one: "%{count} odpowiedź"
+          few: "%{count} odpowiedzi"
+          many: "%{count} odpowiedzi"
+          other: "%{count} odpowiedzi"
       draft_channel_screen:
         header: "Nowa wiadomość"
         cancel: "Anuluj"
@@ -378,9 +397,15 @@ pl_PL:
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Przełącz kanał"
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
+          drawer_open: "%{shortcut} Otwórz szufladę czatu"
+          drawer_close: "%{shortcut} Zamknij szufladę czatu"
     topic_statuses:
       chat:
         help: "Czat jest włączony dla tego tematu"
+    user:
+      allow_private_messages: "Zezwalaj innym użytkownikom na wysyłanie mi osobistych wiadomości i bezpośrednich wiadomości na czacie"
+      muted_users_instructions: "Wyłącz wszystkie powiadomienia, wiadomości osobiste i bezpośrednie wiadomości czatu od tych użytkowników."
+      allowed_pm_users_instructions: "Zezwalaj na wysyłanie osobistych wiadomości lub bezpośrednich wiadomości na czacie tylko od tych użytkowników."
     user_menu:
       tabs:
         chat_notifications: "Powiadomienia czatu"

@@ -424,7 +424,8 @@ zh_TW:
       <<: *errors
   uncategorized_category_name: "尚未分類"
   general_category_name: "一般"
-  meta_category_name: "站點反饋"
+  general_category_description: "在這裡建立不屬於任何其他現有類別的話題。"
+  meta_category_name: "站點回饋"
   meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
@@ -1480,7 +1481,6 @@ zh_TW:
     notify_about_flags_after: "如果有投訴沒有在設定的時數內處理，將私訊給版主。設為 0 將禁用。"
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     delete_drafts_older_than_n_days: "刪除超過 n 天得草稿。"
-    bootstrap_mode_min_users: "禁用摘要模式的使用者數下限（0 為禁用）。"
     slug_generation_method: "選擇一個連結生成方式。“encoded”將生成以百分號編碼的連結。“none”將禁用自定義連結，只生成預設連結。"
     enable_emoji: "啟用表情符號"
     enable_emoji_shortcuts: "常見的顏文字，例如：「 :)、:p、:( 」，將轉換為表情符號"

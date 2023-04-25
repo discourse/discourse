@@ -1241,7 +1241,6 @@ pt:
     embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: "Eliminar rascunhos mais antigos que (n) days."
-    bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"
@@ -1288,7 +1287,6 @@ pt:
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
     create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
-    enable_new_notifications_menu: "Permite o novo menu de notificações para o menu de navegação antigo."
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1314,7 +1312,6 @@ pt:
       invalid_regex: "A expressão regular não é válida ou permitida."
       min_username_length_range: "Não pode definir o mínimo acima do máximo."
       max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
-      enable_new_notifications_menu_not_legacy_navigation_menu: "Deve definir \"menu_navegação\" para \"legado\" antes de permitir esta definição."
   search:
     within_post: "#%{post_number} por %{username}"
     types:

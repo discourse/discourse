@@ -690,11 +690,6 @@ sw:
       theme: "Mandhari"
       home: "Chaguo-msingi mwanzo"
       staged: "Sehemu ya kujaribu"
-      staff_counters:
-        flagged_posts: "Machapisho yenye bendera."
-        deleted_posts: "Machapisho yaliyofutwa"
-        suspensions: "masitisho"
-        warnings_received: "maonyo"
       messages:
         inbox: "Kisanduku-pokezi"
         latest: "Hivi Karibuni"
@@ -734,8 +729,6 @@ sw:
       second_factor_backup:
         regenerate: "Tengeneza Upya"
         disable: "Sitisha"
-        enable: "Wezesha"
-        enable_long: "Wezesha kodi za backup"
         copy_to_clipboard: "Umenakili kwenye Ubao Nakili"
         copy_to_clipboard_error: "Makosa kwenye Kunakili"
         copied_to_clipboard: "Nakili"

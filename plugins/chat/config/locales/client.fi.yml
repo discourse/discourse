@@ -136,6 +136,8 @@ fi:
       close_full_page: "Sulje koko näytön chat"
       open_message: "Avaa viesti chatissa"
       placeholder_self: "Kirjoita jotakin"
+      placeholder_channel: "Keskustelu kanavalla %{channelName}"
+      placeholder_thread: "Keskustelu ketjussa"
       placeholder_users: "Chat-keskustelu käyttäjän %{commaSeparatedNames} kanssa"
       placeholder_silenced: "Et voi lähettää viestejä tällä hetkellä."
       placeholder_start_conversation_users: "Aloita keskustelu käyttäjän %{commaSeparatedUsernames} kanssa"
@@ -166,6 +168,8 @@ fi:
       title: "chat"
       title_capitalized: "Chat"
       upload: "Liitä tiedosto"
+      upload_to_channel: "Lähetä kanavalle %{title}"
+      upload_to_thread: "Lähetä ketjuun"
       uploaded_files:
         one: "%{count} tiedosto"
         other: "%{count} tiedostoa"
@@ -254,6 +258,7 @@ fi:
         italic_text: "korostettu teksti"
         bold_text: "lihavoitu teksti"
         code_text: "kooditeksti"
+        send: "Lähetä"
       quote:
         original_channel: 'Lähetetty alun perin kanavalla <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat-lainaus kopioitiin leikepöydälle"
@@ -364,6 +369,12 @@ fi:
         symbols: "Symbolit"
         search_placeholder: "Hae emojin nimen ja aliaksen mukaan..."
         no_results: "Ei tuloksia"
+      thread:
+        view_thread: Näytä ketju
+        replies:
+          one: "%{count} vastaus"
+          other: "%{count} vastausta"
+        close: "Sulje ketju"
       threads:
         open: "Avaa ketju"
       draft_channel_screen:
