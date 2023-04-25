@@ -125,7 +125,7 @@ export default class SystemSection {
   get displayShortSiteDescription() {
     return (
       !this.currentUser &&
-      (this.siteSettings.short_site_description || "").length > 0
+      !!this.siteSettings.short_site_description
     );
   }
 
