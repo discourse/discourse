@@ -35,7 +35,7 @@ jobs:
       DISCOURSE_SERVE_STATIC_ASSETS: true
       DISCOURSE_USERNAME: jane@example.com
       DISCOURSE_PASSWORD: P4ssw0rdUser
-      DISCOURSE_DISABLE_EMAILS: yes
+      SMOKE_TEST_THEME_URL: https://github.com/discourse/unformatted-code-detector.git
 
     steps:
       - name: Set working directory owner
@@ -104,7 +104,7 @@ jobs:
         id: app-cache
         with:
           path: tmp/app-cache
-          key: >- # postgres version, hash of migrations, "parallel?"
+          key: >-
             ${{ runner.os }}-
             ${{ hashFiles('.github/workflows/smoke.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}
@@ -149,7 +149,7 @@ jobs:
 
             ThemesInstallTask.install({
               "unformatted-code-detector": {
-                url: "https://github.com/discourse/unformatted-code-detector.git"
+                url: ENV["SMOKE_TEST_THEME_URL"]
               }
             })
 
@@ -164,29 +164,15 @@ jobs:
           key=$(bin/rails "api_key:create_master[API key for smoke tests]")
           echo "api_key=$key" >> $GITHUB_OUTPUT
 
-      # - name: Setup host
-      #   run: echo "127.0.0.1 ${{ env.DISCOURSE_HOSTNAME }}" >> /etc/hosts
-
       - name: Start server
         run: bundle exec config/unicorn_launcher -E production -c config/unicorn.conf.rb &
 
-      - name: Warmup
-        run: |
-          curl -s -A "Chrome" --retry 15 --retry-delay 5 --retry-all-errors --max-time 90 http://localhost
-
-      - name: QUnit
-        env:
-          ADMIN_API_KEY: ${{ steps.generate_key.outputs.api_key }}
-        run: |
-          curl -v -H "Api-Key: $ADMIN_API_KEY" -H 'Api-Username: system' -s -A "Chrome" --retry 15 --retry-delay 15 --retry-all-errors --max-time 90 'http://localhost/theme-qunit?theme_url=https://github.com/discourse/unformatted-code-detector.git&report_requests=1'
-
       - name: Smoke test
         env:
-          URL: http://${{ env.DISCOURSE_HOSTNAME }}
+          URL: http://localhost
           WAIT_FOR_URL: 60
           ADMIN_API_USERNAME: system
           ADMIN_API_KEY: ${{ steps.generate_key.outputs.api_key }}
-          SMOKE_TEST_THEME_URL: https://github.com/discourse/unformatted-code-detector.git
         run: |
           echo
           bin/rails smoke:test
