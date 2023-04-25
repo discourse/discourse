@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Thread do
+  before do
+    SiteSetting.chat_enabled = true
+    SiteSetting.enable_experimental_chat_threaded_discussions = true
+  end
+
   describe ".ensure_consistency!" do
     fab!(:channel) { Fabricate(:category_channel) }
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
@@ -40,6 +45,69 @@ RSpec.describe Chat::Thread do
         described_class.ensure_consistency!
         expect(thread_1.reload.replies_count).to eq(0)
       end
+
+      it "clears the affected replies_count caches" do
+        thread_1.set_replies_count_cache(100)
+        expect(thread_1.replies_count_cache).to eq(100)
+        expect(thread_1.replies_count_cache_updated_at).not_to eq(nil)
+
+        described_class.ensure_consistency!
+        expect(Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(thread_1.id))).to eq(
+          nil,
+        )
+        expect(
+          Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(thread_1.id)),
+        ).to eq(nil)
+      end
+
+      it "does not attempt to clear caches if no replies_count caches are updated" do
+        described_class.ensure_consistency!
+        Chat::Thread.expects(:clear_caches!).never
+        described_class.ensure_consistency!
+      end
+
+      it "does nothing if threads are disabled" do
+        SiteSetting.enable_experimental_chat_threaded_discussions = false
+        Chat::Thread.expects(:update_counts).never
+        described_class.ensure_consistency!
+      end
+    end
+  end
+
+  describe ".clear_caches" do
+    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
+    fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
+
+    before do
+      thread_1.set_replies_count_cache(100)
+      thread_2.set_replies_count_cache(100)
+    end
+
+    it "clears multiple keys" do
+      Chat::Thread.clear_caches!([thread_1.id, thread_2.id])
+      expect(Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(thread_1.id))).to eq(
+        nil,
+      )
+      expect(
+        Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(thread_1.id)),
+      ).to eq(nil)
+      expect(Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(thread_2.id))).to eq(
+        nil,
+      )
+      expect(
+        Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(thread_2.id)),
+      ).to eq(nil)
+    end
+
+    it "wraps the ids into an array if only an integer is provided" do
+      Chat::Thread.clear_caches!(thread_1.id)
+      expect(Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(thread_1.id))).to eq(
+        nil,
+      )
+      expect(
+        Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(thread_1.id)),
+      ).to eq(nil)
     end
   end
 

@@ -6,6 +6,8 @@ module Jobs
       every 1.hour
 
       def execute(_args)
+        return if !SiteSetting.chat_enabled
+
         ::Chat::Channel
           .where(auto_join_users: true)
           .each do |channel|

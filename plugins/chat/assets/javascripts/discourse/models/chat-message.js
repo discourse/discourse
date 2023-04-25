@@ -4,7 +4,9 @@ import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
-import guid from "pretty-text/guid";
+import { generateCookFunction } from "discourse/lib/text";
+import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default class ChatMessage {
   static cookFunction = null;
@@ -13,10 +15,9 @@ export default class ChatMessage {
     return new ChatMessage(channel, args);
   }
 
-  static createStagedMessage(channel, args = {}) {
-    args.id = guid();
-    args.staged = true;
-    return new ChatMessage(channel, args);
+  static createDraftMessage(channel, args = {}) {
+    args.draft = true;
+    return ChatMessage.create(channel, args);
   }
 
   @tracked id;
@@ -24,6 +25,7 @@ export default class ChatMessage {
   @tracked selected;
   @tracked channel;
   @tracked staged = false;
+  @tracked draft = false;
   @tracked channelId;
   @tracked createdAt;
   @tracked deletedAt;
@@ -69,11 +71,20 @@ export default class ChatMessage {
     this.reviewableId = args.reviewableId || args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus || args.user_flag_status;
     this.inReplyTo =
-      args.inReplyTo || args.in_reply_to
-        ? ChatMessage.create(channel, args.in_reply_to)
-        : null;
-    this.message = args.message;
-    this.cooked = args.cooked || ChatMessage.cookFunction(this.message);
+      args.inReplyTo ||
+      (args.in_reply_to || args.replyToMsg
+        ? ChatMessage.create(channel, args.in_reply_to || args.replyToMsg)
+        : null);
+    this.draft = args.draft;
+    this.message = args.message || "";
+
+    if (args.cooked) {
+      this.cooked = args.cooked;
+    } else {
+      this.cooked = "";
+      this.cook();
+    }
+
     this.reactions = this.#initChatMessageReactionModel(
       args.id,
       args.reactions
@@ -81,6 +92,38 @@ export default class ChatMessage {
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
+  }
+
+  cook() {
+    const site = getOwner(this).lookup("service:site");
+
+    const markdownOptions = {
+      featuresOverride:
+        site.markdown_additional_options?.chat?.limited_pretty_text_features,
+      markdownItRules:
+        site.markdown_additional_options?.chat
+          ?.limited_pretty_text_markdown_rules,
+      hashtagTypesInPriorityOrder:
+        site.hashtag_configurations?.["chat-composer"],
+      hashtagIcons: site.hashtag_icons,
+    };
+
+    if (ChatMessage.cookFunction) {
+      this.cooked = ChatMessage.cookFunction(this.message);
+      this.incrementVersion();
+    } else {
+      generateCookFunction(markdownOptions).then((cookFunction) => {
+        ChatMessage.cookFunction = (raw) => {
+          return simpleCategoryHashMentionTransform(
+            cookFunction(raw),
+            site.categories
+          );
+        };
+
+        this.cooked = ChatMessage.cookFunction(this.message);
+        this.incrementVersion();
+      });
+    }
   }
 
   get threadRouteModels() {
@@ -132,6 +175,41 @@ export default class ChatMessage {
 
   incrementVersion() {
     this.version++;
+  }
+
+  toJSONDraft() {
+    if (
+      this.message?.length === 0 &&
+      this.uploads?.length === 0 &&
+      !this.inReplyTo
+    ) {
+      return null;
+    }
+
+    const data = {};
+
+    if (this.uploads?.length > 0) {
+      data.uploads = this.uploads;
+    }
+
+    if (this.message?.length > 0) {
+      data.message = this.message;
+    }
+
+    if (this.inReplyTo) {
+      data.replyToMsg = {
+        id: this.inReplyTo.id,
+        excerpt: this.inReplyTo.excerpt,
+        user: {
+          id: this.inReplyTo.user.id,
+          name: this.inReplyTo.user.name,
+          avatar_template: this.inReplyTo.user.avatar_template,
+          username: this.inReplyTo.user.username,
+        },
+      };
+    }
+
+    return JSON.stringify(data);
   }
 
   react(emoji, action, actor, currentUserId) {

@@ -413,6 +413,9 @@
             "flair_color": {
               "type": ["string", "null"]
             },
+            "flair_group_id": {
+              "type": ["string", "null"]
+            },
             "bio_raw": {
               "type": ["string", "null"]
             },

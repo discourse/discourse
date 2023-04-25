@@ -3,6 +3,7 @@ import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messa
 import User from "discourse/models/user";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
+import guid from "pretty-text/guid";
 
 export const THREAD_STATUSES = {
   open: "open",
@@ -26,6 +27,16 @@ export default class ChatThread {
     this.originalMessageUser = this.#initUserModel(args.original_message_user);
     this.originalMessage = args.original_message;
     this.originalMessage.user = this.originalMessageUser;
+  }
+
+  stageMessage(message) {
+    message.id = guid();
+    message.staged = true;
+    message.draft = false;
+    message.createdAt ??= moment.utc().format();
+    message.cook();
+
+    this.messagesManager.addMessages([message]);
   }
 
   get messages() {

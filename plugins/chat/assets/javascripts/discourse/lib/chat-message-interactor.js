@@ -349,12 +349,12 @@ export default class ChatMessageInteractor {
 
   @action
   reply() {
-    this.composer.setReplyTo(this.message.id);
+    this.composer.replyTo(this.message);
   }
 
   @action
   edit() {
-    this.composer.editButtonClicked(this.message.id);
+    this.composer.editMessage(this.message);
   }
 
   @action

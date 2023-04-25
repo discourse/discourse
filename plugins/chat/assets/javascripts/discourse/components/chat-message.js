@@ -210,7 +210,7 @@ export default class ChatMessage extends Component {
     }
 
     document.activeElement.blur();
-    document.querySelector(".chat-composer-input")?.blur();
+    document.querySelector(".chat-composer__input")?.blur();
 
     this._setActiveMessage();
   }

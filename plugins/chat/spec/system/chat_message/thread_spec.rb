@@ -11,6 +11,7 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
   let(:cdp) { PageObjects::CDP.new }
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
+  let(:thread) { PageObjects::Pages::ChatThread.new }
   let(:message_1) { thread_1.chat_messages.first }
 
   before do
@@ -24,12 +25,13 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
 
   context "when hovering a message" do
     it "adds an active class" do
+      last_message = thread_1.chat_messages.last
       chat.visit_thread(thread_1)
 
-      channel.hover_message(message_1)
+      thread.hover_message(last_message)
 
       expect(page).to have_css(
-        ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{message_1.id}'] .chat-message.is-active",
+        ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{last_message.id}'] .chat-message.is-active",
       )
     end
   end

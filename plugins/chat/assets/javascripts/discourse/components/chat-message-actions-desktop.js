@@ -45,6 +45,10 @@ export default class ChatMessageActionsDesktop extends Component {
         this.context
       );
 
+      if (!messageContainer) {
+        return;
+      }
+
       this.popper = createPopper(messageContainer, element, {
         placement: "top-end",
         strategy: "fixed",

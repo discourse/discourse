@@ -1,0 +1,16 @@
+.chat-side-panel-resizer {
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  width: 5px;
+  position: absolute;
+  z-index: z("max");
+  transition: background-color 0.15s 0.15s;
+  background-color: transparent;
+
+  &:hover,
+  &:active {
+    cursor: col-resize;
+    background: var(--tertiary);
+  }
+}

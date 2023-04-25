@@ -1013,24 +1013,21 @@ class Post < ActiveRecord::Base
       upload ||= Upload.get_from_url(src)
 
       # Link any video thumbnails
-      if upload.present? && (FileHelper.supported_video.include? upload.extension)
+      if upload.present? && (FileHelper.supported_video.include? upload.extension&.downcase)
         # Video thumbnails have the filename of the video file sha1 with a .png or .jpg extension.
         # This is because at time of upload in the composer we don't know the topic/post id yet
         # and there is no thumbnail info added to the markdown to tie the thumbnail to the topic/post after
         # creation.
         thumbnail =
           Upload.where("original_filename like ?", "#{upload.sha1}.%").first if upload.sha1.present?
-        if thumbnail.present?
-          upload_ids << thumbnail.id if thumbnail.present?
-
-          if self.is_first_post? #topic
-            self.topic.update_column(:image_upload_id, thumbnail.id)
-            extra_sizes =
-              ThemeModifierHelper.new(
-                theme_ids: Theme.user_selectable.pluck(:id),
-              ).topic_thumbnail_sizes
-            self.topic.generate_thumbnails!(extra_sizes: extra_sizes)
-          end
+        if thumbnail.present? && self.is_first_post? && !self.topic.image_upload_id
+          upload_ids << thumbnail.id
+          self.topic.update_column(:image_upload_id, thumbnail.id)
+          extra_sizes =
+            ThemeModifierHelper.new(
+              theme_ids: Theme.user_selectable.pluck(:id),
+            ).topic_thumbnail_sizes
+          self.topic.generate_thumbnails!(extra_sizes: extra_sizes)
         end
       end
       upload_ids << upload.id if upload.present?

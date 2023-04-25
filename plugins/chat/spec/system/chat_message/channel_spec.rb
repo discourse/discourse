@@ -22,7 +22,7 @@ RSpec.describe "Chat message", type: :system, js: true do
       channel.hover_message(message_1)
 
       expect(page).to have_css(
-        ".chat-live-pane[data-id='#{channel_1.id}'] [data-id='#{message_1.id}'] .chat-message.is-active",
+        ".chat-channel[data-id='#{channel_1.id}'] [data-id='#{message_1.id}'] .chat-message.is-active",
       )
     end
   end
