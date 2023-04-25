@@ -149,7 +149,7 @@ jobs:
 
             ThemesInstallTask.install({
               "unformatted-code-detector": {
-                url: "https://github.com/discourse/unformatted-code-detector"
+                url: "https://github.com/discourse/unformatted-code-detector.git"
               }
             })
 
@@ -186,7 +186,7 @@ jobs:
           WAIT_FOR_URL: 60
           ADMIN_API_USERNAME: system
           ADMIN_API_KEY: ${{ steps.generate_key.outputs.api_key }}
-          SMOKE_TEST_THEME_URL: https://github.com/discourse/unformatted-code-detector
+          SMOKE_TEST_THEME_URL: https://github.com/discourse/unformatted-code-detector.git
         run: |
           echo
           bin/rails smoke:test
