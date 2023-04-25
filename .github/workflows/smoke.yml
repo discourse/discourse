@@ -35,7 +35,8 @@ jobs:
       DISCOURSE_SERVE_STATIC_ASSETS: true
       DISCOURSE_USERNAME: jane@example.com
       DISCOURSE_PASSWORD: P4ssw0rdUser
-      ADMIN_API_USERNAME: kim
+      ADMIN_API_USERNAME: system
+      DISCOURSE_DISABLE_EMAILS: yes
 
     steps:
       - name: Set working directory owner
@@ -144,8 +145,8 @@ jobs:
             user.activate
             user.change_trust_level!(4)
 
-            admin = User.create!(username: ENV["ADMIN_API_USERNAME"], password: "Adm1N_P4ssw0rd", email: "kim@example.com", active: true)
-            admin.activate
+            # admin = User.create!(username: ENV["ADMIN_API_USERNAME"], password: "Adm1N_P4ssw0rd", email: "kim@example.com", active: true)
+            # admin.activate
 
             ThemesInstallTask.install({
               "unformatted-code-detector": {
@@ -187,3 +188,10 @@ jobs:
         run: |
           tail -n 250 log/production.log
           tail -n 250 log/unicorn.stderr.log || true
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: failed-test-screenshots
+          path: tmp/smoke-test-screenshots/*.png
