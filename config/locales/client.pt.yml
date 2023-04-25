@@ -1119,12 +1119,6 @@ pt:
       save_to_change_theme: 'O tema será atualizado após clicar em "%{save_text}"'
       home: "Página Principal Por Defeito"
       staged: "Não Confirmado"
-      staff_counters:
-        flagged_posts: "publicações sinalizadas"
-        deleted_posts: "mensagens eliminadas"
-        suspensions: "suspensões"
-        warnings_received: "avisos"
-        rejected_posts: "mensagens rejeitadas"
       messages:
         all: "todas as caixas de entrada"
         inbox: "Caixa de Entrada"
@@ -1173,11 +1167,9 @@ pt:
         title: "Códigos de Reserva para Autenticação em Dois Passos"
         regenerate: "Regenerar"
         disable: "Desativar"
-        enable: "Ativar"
-        enable_long: "Ativar códigos de reserva"
         manage:
-          one: "Gerir códigos de reserva. Resta <strong>%{count}</strong> código de reserva."
-          other: "Gerir códigos de reserva. Restam <strong>%{count}</strong> códigos de reserva."
+          one: "Resta <strong>%{count}</strong> código de reserva."
+          other: "Restam <strong>%{count}</strong> códigos de reserva."
         copy_to_clipboard: "Copiar para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
         copied_to_clipboard: "Copiado para a Área de Transferência"

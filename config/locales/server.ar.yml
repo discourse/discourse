@@ -1827,7 +1827,6 @@ ar:
     discourse_connect_overrides_profile_background: "يستبدل خلفية الملف الشخصي للمستخدم بالصورة الرمزية للموقع الخارجي من حمولة DiscourseConnect."
     discourse_connect_overrides_card_background: "يستبدل خلفية بطاقة المستخدم بالصورة الرمزية للموقع الخارجي من حمولة DiscourseConnect."
     discourse_connect_not_approved_url: "إعادة توجيه حسابات DiscourseConnect غير المعتمدة إلى عنوان URL هذا"
-    discourse_connect_allows_all_return_paths: "عدم تقييد نطاق return_paths الذي يقدِّمه DiscourseConnect (يجب أن يكون مسار الإرجاع الافتراضي على الموقع الحالي)"
     enable_local_logins: "تفعيل الحسابات المحلية التي تعتمد على اسم المستخدم وكلمة المرور في تسجيل الدخول. تحذير: إذا تم إيقاف هذا الإعداد، فقد لا تتمكن من تسجيل الدخول إذا كنت لم تُعدَّ مسبقًا طريقة تسجيل دخول بديلة واحدة على الأقل."
     enable_local_logins_via_email: "السماح للمستخدمين بطلب رابط تسجيل الدخول بنقرة واحدة ليتم إرساله إليهم عبر البريد الإلكتروني"
     allow_new_registrations: "السماح بعمليات تسجيل جديدة من المستخدمين. يمكنك إلغاء تحديد هذا الإعداد لمنع أي شخص من إنشاء حساب جديد."
@@ -2218,7 +2217,6 @@ ar:
     show_create_topics_notice: "إظهار إشعار يطلب من المسؤولين إنشاء بعض الموضوعات إذا كان الموقع يحتوي على أقل من 5 موضوعات عامة"
     delete_drafts_older_than_n_days: "حذف المسودات الأقدم من (n) يوم"
     delete_merged_stub_topics_after_days: "عدد الأيام التي يجب انتظارها قبل حذف الموضوعات البديلة المدمجة بالكامل تلقائيًا. اتعيين القيمة على 0 لعدم حذف الموضوعات البديلة أبدًا."
-    bootstrap_mode_min_users: "الحد الأدنى لعدد المستخدمين المطلوب لإيقاف وضع التمهيد (اتعيين القيمة على 0 للإيقاف)"
     prevent_anons_from_downloading_files: "منع المستخدمين المجهولين من تنزيل المرفقات"
     secure_uploads: 'يقيِّد الوصول إلى كل التحميلات (الصور ومقاطع الفيديو والمقاطع الصوتية والنصوص وملفات PDF وملفات ZIP وغير ذلك). بخلاف ذلك، سيكون الوصول مقيَّدًا فقط لتحميلات الوسائط في الرسائل والفئات الخاصة. تحذير: هذا الإعداد معقَّد ويتطلب فهمًا إداريًا عميقًا. انظر <a target="_blank" href="https://meta.discourse.org/t/-/140017">موضوع التحميلات الآمنة على Meta</a> لمعرفة التفاصيل.'
     secure_uploads_allow_embed_images_in_emails: "يسمح بتضمين الصور الآمنة التي عادةً ما يتم تنقيحها في الرسائل الإلكترونية، إذا كان حجمها أصغر من الإعداد `secure uploads max email embed image size kb`."
@@ -2339,7 +2337,6 @@ ar:
     navigation_menu: "تحديد قائمة التنقل التي سيتم استخدامها. يمكن للمستخدمين تخصيص الشريط الجانبي وقائمة التنقل في رأس الصفحة. يتوفَّر خيار \"القائمة القديمة\" للتوافق مع الإصدارات السابقة."
     default_sidebar_categories: "سيتم عرض الفئات المحدَّدة ضمن قسم فئات الشريط الجانبي بشكلٍ افتراضي."
     default_sidebar_tags: "سيتم عرض الوسوم المحدَّدة ضمن قسم فئات الشريط الجانبي بشكلٍ افتراضي."
-    enable_new_notifications_menu: "يمكِّن قائمة الإشعارات الجديدة لقائمة التنقل القديمة."
     enable_experimental_hashtag_autocomplete: "تجريبي: استخدم نظام الإكمال التلقائي #hashtag الجديد للفئات والوسوم التي تعرض العنصر المحدَّد بشكلٍ مختلف وحسَّنت نتائج البحث"
     errors:
       invalid_css_color: "لون غير صالح. أدخِل اسم لون أو قيمة سداسية عشرية."
@@ -2396,7 +2393,6 @@ ar:
       search_tokenize_japanese_enabled: "يجب عليك إيقاف 'search_tokenize_japanese' قبل تفعيل هذا الإعداد."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "لا يمكنك تفعيل DiscourseConnect في حال فرض المصادقة الثنائية."
       delete_rejected_email_after_days: "لا يمكن تعيين هذا الإعداد على أقل من الإعداد delete_email_logs_after_days أو أكثر من %{max}"
-      enable_new_notifications_menu_not_legacy_navigation_menu: "يجب عليك تعيين `navigation_menu` إلى `legacy` قبل تمكين هذا الإعداد."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

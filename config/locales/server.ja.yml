@@ -1563,7 +1563,6 @@ ja:
     discourse_connect_overrides_profile_background: "ユーザープロファイルの背景を DiscourseConnect ペイロードの値でオーバーライドする。"
     discourse_connect_overrides_card_background: "ユーザーカードの背景を DiscourseConnect ペイロードの値でオーバーライドする。"
     discourse_connect_not_approved_url: "未承認の DiscourseConnect アカウントをこの URL にリダイレクトする"
-    discourse_connect_allows_all_return_paths: "DiscourseConnect が指定する return_paths のドメインを制限しない (デフォルトでは、リターンパスは現在のサイトにある必要があります)"
     enable_local_logins: "ローカルのユーザー名とパスワードでログインするアカウントを有効にする。警告: 無効にすると、以前に少なくとも 1 つの代替ログイン方法を構成していない場合にログインできなくなる可能性があります。"
     enable_local_logins_via_email: "メールで送信されるワンクリックログインリンクをユーザーがリクエストすることを許可する。"
     allow_new_registrations: "新しいユーザーの登録を許可。新規アカウントを作成できないようにするには、これをオフにします。"
@@ -1949,7 +1948,6 @@ ja:
     show_create_topics_notice: "サイトの公開トピック数が 5 件未満である場合、管理者にトピックを作成するかどうかを尋ねる通知を表示します。"
     delete_drafts_older_than_n_days: "(n) 日間経過した下書きを削除します。"
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまで待機する日数。0 に設定すると、スタブトピックは削除されません。"
-    bootstrap_mode_min_users: "ブートストラップモードを無効にするために必要な最低ユーザー数 (0 に設定すると無効になります)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
     secure_uploads: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/-/140017">メタに関するセキュリティで保護されたアップロードのトピック</a>をご覧ください。'
     secure_uploads_allow_embed_images_in_emails: "通常はメールで編集されるセキュリティで保護された画像のサイズが 'secure uploads max email embed image size kb' 設定よりも小さい場合、その埋め込みを許可します。"

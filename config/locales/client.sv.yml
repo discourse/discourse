@@ -1200,11 +1200,24 @@ sv:
       home: "Standardhemsida"
       staged: "Arrangerad"
       staff_counters:
-        flagged_posts: "flaggade inlägg"
-        deleted_posts: "raderade inlägg"
-        suspensions: "avstängningar"
-        warnings_received: "varningar"
-        rejected_posts: "avvisade inlägg"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> hjälpsam flagga'
+          other: '<span class="%{className}">%{count}</span> hjälpsamma flaggor'
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> flaggat inlägg'
+          other: '<span class="%{className}">%{count}</span> flaggade inlägg'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> raderat inlägg'
+          other: '<span class="%{className}">%{count}</span> raderade inlägg'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> avstängning'
+          other: '<span class="%{className}">%{count}</span> avstängningar'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> varning'
+          other: '<span class="%{className}">%{count}</span> varningar'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> avvisat inlägg'
+          other: '<span class="%{className}">%{count}</span> avvisade inlägg'
       messages:
         all: "alla inkorgar"
         inbox: "Inkorg"
@@ -1311,11 +1324,12 @@ sv:
         title: "Tvåfaktorsreservkoder"
         regenerate: "Generera ny"
         disable: "Inaktivera"
-        enable: "Aktivera"
-        enable_long: "Aktivera reservkoder"
+        enable: "Skapa reservkoder"
+        enable_long: "Lägg till reservkoder"
+        not_enabled: "Du har inte skapat några reservkoder än."
         manage:
-          one: "Hantera reservkoder. Du har <strong>%{count}</strong> reservkod kvar."
-          other: "Hantera reservkoder. Du har <strong>%{count}</strong> reservkoder kvar."
+          one: "Du har <strong>%{count}</strong> reservkod kvar."
+          other: "Du har <strong>%{count}</strong> reservkoder kvar."
         copy_to_clipboard: "Kopiera till urklipp"
         copy_to_clipboard_error: "Fel vid kopiering av data till urklipp"
         copied_to_clipboard: "Kopierad till urklipp"
@@ -1400,6 +1414,7 @@ sv:
         success: "Vi har skickat e-post till den adressen. Var god följ bekräftelseinstruktionerna."
         success_via_admin: "Vi har skickat e-post till den adressen. Var god följ bekräftelseinstruktionerna."
         success_staff: "Vi har skickat e-post till din nuvarande adress. Vänligen följ instruktionerna för konfirmering."
+        back_to_preferences: "Tillbaka till inställningarna"
       change_avatar:
         title: "Ändra din profilbild"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, baserat på"
@@ -4463,9 +4478,6 @@ sv:
         user_promoted_event:
           name: "Användarfrämjande händelse"
           details: "När en användare befordras från en förtroendenivå till en annan."
-        user_badge_event:
-          name: "Utmärkelsetilldelning"
-          details: "När en användare får en utmärkelse."
         group_user_event:
           name: "Gruppanvändarhändelse"
           details: "När en användare läggs till i, eller tas bort från, en grupp."

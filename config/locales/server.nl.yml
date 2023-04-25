@@ -1615,7 +1615,6 @@ nl:
     discourse_connect_overrides_profile_background: "Overschrijft achtergrond gebruikersprofiel door waarde uit DiscourseConnect-payload."
     discourse_connect_overrides_card_background: "Overschrijft achtergrond gebruikerskaart door waarde uit DiscourseConnect-payload."
     discourse_connect_not_approved_url: "Niet-goedgekeurde DiscourseConnect-accounts omleiden naar deze URL"
-    discourse_connect_allows_all_return_paths: "Het domein niet beperken voor return_paths opgegeven door DiscourseConnect (standaard moet het retourpad zich op de huidige website bevinden)"
     enable_local_logins: "Accounts op basis van een lokale gebruikersnaam en wachtwoord toestaan. WAARSCHUWING: als dit is uitgeschakeld, kun je je mogelijk niet aanmelden als je eerder niet ten minste één alternatieve aanmeldmethode hebt geconfigureerd."
     enable_local_logins_via_email: "Sta gebruikers toe te verzoeken een aanmeldlink met één klik te ontvangen via e-mail."
     allow_new_registrations: "Nieuwe gebruikersregistraties toestaan. Vink dit uit om te voorkomen dat iedereen een nieuwe account kan maken."
@@ -2001,7 +2000,6 @@ nl:
     show_create_topics_notice: "Als de website minder dan 5 publieke topics heeft, een melding weergeven waarin beheerders wordt gevraagd een aantal topics te maken."
     delete_drafts_older_than_n_days: "Concepten ouder dan (n) dagen verwijderen."
     delete_merged_stub_topics_after_days: "Aantal dagen dat moet worden gewacht voordat volledig samengevoegde stubtopics automatisch worden verwijderd. Stel dit in op 0 om stubtopics niet te verwijderen."
-    bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen (stel dit in op 0 om uit te schakelen)"
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen downloaden."
     secure_uploads: 'Beperkt de toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf''s, zips en andere). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is de toegang alleen beperkt voor media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist diepgaande beheerkennis. Zie <a target="_blank" href="https://meta.discourse.org/t/-/140017">het onderwerp Veilige uploads op Meta</a> voor meer informatie.'
     secure_uploads_allow_embed_images_in_emails: "Staat het insluiten van beveiligde afbeeldingen toe die normaal gesproken zouden worden geredigeerd in e-mails, als hun grootte kleiner is dan de instelling 'veilige uploads max. afbeeldingsgrootte insluiten in e-mail kb'."

@@ -513,7 +513,6 @@ be:
       second_factor_backup:
         regenerate: "Перагенераваць"
         disable: "Адключыць"
-        enable: "Уключыць"
       second_factor:
         name: "Імя"
         disable: "Адключыць"

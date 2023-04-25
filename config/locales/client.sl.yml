@@ -1068,12 +1068,6 @@ sl:
       save_to_change_theme: 'Tema bo posodobljena, ko kliknete "%{save_text}"'
       home: "Privzeta začetna stran"
       staged: "Prirejen"
-      staff_counters:
-        flagged_posts: "prijavljeni prispevki"
-        deleted_posts: "izbrisani prispevki"
-        suspensions: "suspendiranih"
-        warnings_received: "opozorila"
-        rejected_posts: "zavrnjene objave"
       messages:
         inbox: "Prejeto"
         latest: "Najnovejše"
@@ -1122,8 +1116,6 @@ sl:
         title: "Rezervne potrditvene kode za preverjanje v dveh korakih"
         regenerate: "Ponovno ustvari"
         disable: "Onemogoči"
-        enable: "Omogoči"
-        enable_long: "Omogočite rezervne potrditvene kode"
         copy_to_clipboard: "Kopiraj v odložišče"
         copy_to_clipboard_error: "Napaka pri prenosu na odlagališče"
         copied_to_clipboard: "Kopirano v odložišče"

@@ -1087,7 +1087,6 @@ ro:
     embed_username_required: "Numele utilizator pentru acest subiect este obligatoriu."
     show_create_topics_notice: "Dacă site-ul are mai puțin de 5 subiecte publice, afișează o notificare prin care se cere adminilor să creeze subiecte."
     delete_drafts_older_than_n_days: "șterge schițele mai vechi de (n) zile."
-    bootstrap_mode_min_users: "Numărul minim de utilizatori necesar pentru dezactivarea modului bootstrap (0 pentru dezactivare)"
     slug_generation_method: "Alege o metodă de generare de identificator. 'encodat' va genera șir de caractere encodate cu procentaje. 'nimic' va dezactiva complet identificatorii."
     enable_emoji: "Activează emoji"
     emoji_set: "Cum ți-ar placea să fie emoji tăi?"

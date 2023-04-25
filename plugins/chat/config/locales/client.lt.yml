@@ -68,6 +68,7 @@ lt:
       composer:
         italic_text: "pasviras tekstas"
         bold_text: "paryškintas tekstas"
+        send: "Siųsti"
       notification_levels:
         never: "Niekada"
       settings:
@@ -104,6 +105,12 @@ lt:
         activities: "Veikla"
         flags: "Pažymėk!"
         symbols: "Simboliai"
+      thread:
+        replies:
+          one: "%{count} atsakymas"
+          few: "%{count} atsakymai"
+          many: "%{count} atsakymai"
+          other: "%{count} atsakymai"
       draft_channel_screen:
         header: "Nauja žinutė"
         cancel: "Atšaukti"

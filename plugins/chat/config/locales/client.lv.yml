@@ -68,6 +68,7 @@ lv:
       composer:
         italic_text: "Uzsvērts teksts"
         bold_text: "treknrakstā"
+        send: "Sūtīt"
       notification_levels:
         never: "Nekad"
       settings:
@@ -102,6 +103,11 @@ lv:
         activities: "Aktivitātes"
         flags: "Sūdzības"
         symbols: "Simboli"
+      thread:
+        replies:
+          zero: "%{count} atbildes"
+          one: "%{count} atbilde"
+          other: "%{count} atbildes"
       draft_channel_screen:
         header: "Jauns ziņa"
         cancel: "Atcelt"

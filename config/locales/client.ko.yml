@@ -1087,11 +1087,16 @@ ko:
       home: "디폴트 홈페이지"
       staged: "스테이징됨"
       staff_counters:
-        flagged_posts: "신고된 게시물"
-        deleted_posts: "삭제된 글"
-        suspensions: "정지"
-        warnings_received: "경고"
-        rejected_posts: "거부된 게시물"
+        flagged_posts:
+          other: '<span class="%{className}">%{count}</span> 신고된 게시물'
+        deleted_posts:
+          other: '<span class="%{className}">%{count}</span> 삭제된 게시물'
+        suspensions:
+          other: '<span class="%{className}">%{count}</span> 차단'
+        warnings_received:
+          other: '<span class="%{className}">%{count}</span> 경고'
+        rejected_posts:
+          other: '<span class="%{className}">%{count}</span> 거부된 게시물'
       messages:
         all: "모든 받은 편지함"
         inbox: "받은 편지함"
@@ -1139,10 +1144,11 @@ ko:
         title: "2단계 백업 코드"
         regenerate: "재생성"
         disable: "비활성화"
-        enable: "활성화"
-        enable_long: "백업 코드 활성화"
+        enable: "백업 코드 생성"
+        enable_long: "백업 코드 추가"
+        not_enabled: "아직 백업 코드를 생성하지 않았습니다."
         manage:
-          other: "백업 코드를 관리합니다. <strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
+          other: "<strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
         copy_to_clipboard: "클립보드에 복사"
         copy_to_clipboard_error: "데이터를 클립보드로 복사하는 중 오류 발생"
         copied_to_clipboard: "클립보드에 복사됨"
@@ -1216,6 +1222,7 @@ ko:
         success: "이 주소로 이메일을 전송했습니다. 확인 지침을 따라주세요."
         success_via_admin: "이 주소로 이메일을 전송했습니다. 사용자는 이메일에 있는 확인 지침을 따라야 합니다."
         success_staff: "현재 주소로 이메일을 전송했습니다. 확인 지침을 따라주세요."
+        back_to_preferences: "환경설정으로 돌아가기"
       change_avatar:
         title: "프로필 사진 변경"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, 기반:"
@@ -3879,9 +3886,6 @@ ko:
         notification_event:
           name: "알림 이벤트"
           details: "사용자가 피드에서 알림을 받은 경우"
-        user_badge_event:
-          name: "배지 부여 이벤트"
-          details: "사용자가 배지를 받은 경우"
         group_user_event:
           name: "그룹 사용자 이벤트"
           details: "사용자가 그룹에 추가 또는 제거된 경우"

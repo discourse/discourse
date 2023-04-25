@@ -1590,7 +1590,6 @@ ca:
     notify_about_flags_after: "Si hi ha banderes que no s'han gestionat després d'aquest nombre d'hores, envia un missatge personal als moderadors. 0 per desactivar."
     show_create_topics_notice: "Si el lloc web té menys de 5 temes públics, mostra un avís demanant als administradors que en creï uns quants. "
     delete_drafts_older_than_n_days: "Suprimeix esborranys amb més de (n) dies."
-    bootstrap_mode_min_users: "Nombre mínim d'usuaris necessaris per a desactivar el mode d'arrencada (deixeu-ho a 0 per a desactivar-lo)."
     slug_generation_method: "Trieu un mètode de generació de slugs (adreces amigables). 'encoded' generarà una cadena amb codificacions %. 'none' anul·larà totalment l'adreça amigable."
     enable_emoji: "Activa emojis"
     enable_emoji_shortcuts: "El text típic d'emojis com ara :): p :( serà convertit en emojis."

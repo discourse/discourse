@@ -1097,12 +1097,6 @@ fa_IR:
       theme: "قالب"
       home: "صفحه خانگی پیشفرض"
       staged: "کاربر از راه دور"
-      staff_counters:
-        flagged_posts: "نوشته های پرچم گذاری شده"
-        deleted_posts: "پست های حذف شده"
-        suspensions: "تعلیق‌ها"
-        warnings_received: "هشدارها"
-        rejected_posts: "پست های رد شده"
       messages:
         all: "تمام صندوق‌های ورودی"
         inbox: "صندوق دریافت"
@@ -1150,8 +1144,6 @@ fa_IR:
       second_factor_backup:
         regenerate: "ایجاد مجدد"
         disable: "ازکاراندازی"
-        enable: "فعال کردن"
-        enable_long: "کدهای پشتیبان را به کار بگیر"
         copy_to_clipboard: "کپی در clipboard"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
         copied_to_clipboard: "کپی شد"

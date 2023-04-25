@@ -205,6 +205,7 @@ he:
     embed:
       load_from_remote: "ארעה שגיאה בטעינת הפוסט הזה."
     site_settings:
+      invalid_site_setting: "לא קיימת הגדרה שנקראת ‚%{name}’"
       invalid_category_id: "ציינת קטגוריה שאינה קיימת"
       invalid_choice:
         one: "ציינת את הבחירה השגויה %{name}"
@@ -558,6 +559,7 @@ he:
       יותר קל לכולם לקרוא נושאים שיש בהם פחות תגובות עמוקות מאשר הרבה תגובות קטנות.
     dominating_topic: פרסמת המון בנושא הזה! אולי כדאי לתת גם לאחרים הזדמנות להגיב ולהחליף ביניהם דברים.
     get_a_room: הגבת ל־‎@%{reply_username} ‏%{count} פעמים, ידעת שניתן לשלוח הודעה פרטית במקום?
+    dont_feed_the_trolls: הפוסט הזה כבר סומן להסבת תשומת הלב של המפקחים. עדיין להגיב אליו? תגובות לתוכן שלילי מעודדות התנהגות שלילית קיצונית אף יותר.
     too_many_replies: |
       ### הגעת למספר התגובות המרבי לנושא זה
 
@@ -1743,7 +1745,7 @@ he:
     discourse_connect_overrides_profile_background: "דריסת רקע פרופיל המשתמש בערך ממטען ה־DiscourseConnect."
     discourse_connect_overrides_card_background: "דריסת רקע כרטיס המשתמש בערך ממטען ה־DiscourseConnect."
     discourse_connect_not_approved_url: "הפניית חשבונות DiscourseConnect ללא אישור לכתובת הזאת"
-    discourse_connect_allows_all_return_paths: "לא להגביל את שמות התחום של נתיבי החזרה (return_paths) שמסופקים על ידי DiscourseConnect (כבררת מחדל, נתיבי החזרה חייבים להיות באתר הנוכחי)"
+    discourse_connect_allowed_redirect_domains: "הגבלת שמות תחום אלו עבור return_paths (נתיבי חזרה) שסופקו על ידי DiscourseConnect (כברירת מחדל נתיב החזרה חייב להיות לאתר הנוכחי). אפשר להשתמש ב־* כדי שיהיה כל שם תחום בתור נתיב חזרה. אסור להשתמש בתווי־כל לתתי תחום (‎`*.foobar.com`)"
     enable_local_logins: "הפעלת חשבונות כניסה עם שם משתמש וססמה. אזהרה: השבתה עשויה למנוע את כניסתך אלמלא הגדרת לפחות שיטת כניסה חלופית אחת נוספת."
     enable_local_logins_via_email: "לאפשר למשתמשים לבקש לשלוח אליהם קישור לכניסה בלחיצה אחת בדוא״ל."
     allow_new_registrations: "לאפשר הרשמות של משתמשים חדשים. יש לבטל סימון זה כדי למנוע יצירת חשבונות חדשים."
@@ -2089,6 +2091,7 @@ he:
     allow_profile_backgrounds: "אפשרו למשתמשים להעלות רקעים לפרופיל."
     sequential_replies_threshold: "מספר הפוסטים שעל משתמש לפרסם אחד-לאחר-השני בנושא לפני שמזכירים לו שהוא משאיר יותר מידי תגובות ברצף."
     get_a_room_threshold: "מספר פוסטים שמשתמשים צריכים להכין לאותו אדם באותו הנושא לפני שהם מוזהרים."
+    dont_feed_the_trolls_threshold: "מספר הסימונים ממשתמשים אחרים בטרם אזהרה."
     enable_mobile_theme: "מכשירים ניידים משתמשים בערכת עיצוב מותאמת לניידים לצד האפשרות לעבור לאתר המלא. ניתן להשבית זאת כדי להשתמש בערכת סגנון מסתגלת לחלוטין."
     dominating_topic_minimum_percent: "איזה אחוז מהפוסטים משתמש צריך לייצר בנושא לפני שיקבל תזכורת לגבי שתלטנות יתר על הנושא."
     disable_avatar_education_message: "ניטרול הודעה שמלמדת על שינוי דמות."
@@ -2138,7 +2141,7 @@ he:
     show_create_topics_notice: "אם לאתר פחות מ־5 נושאים פומביים, יש להציג מודעה המבקשת מהמנהלים ליצור נושאים נוספים."
     delete_drafts_older_than_n_days: "למחוק טיוטות שגילן עולה על (n) ימים."
     delete_merged_stub_topics_after_days: "מספר הימים להמתנה לפני מחיקה אוטומטית של נושאים מקוצרים שמוזגו במלואם. יש להגדיר ל־0 כדי לא למחוק נושאים מקוצרים לעולם."
-    bootstrap_mode_min_users: "מספר משתמשים מזערי שנדרש כדי להשבית מצב ראשוניות (0 להשבתה)"
+    bootstrap_mode_min_users: "מספר משתמשים מזערי שנדרש כדי להשבית מצב ראשוניות (0 להשבתה, יכול לארוך עד 24 שעות)"
     prevent_anons_from_downloading_files: "למנוע ממשתמשים אלמוניים להוריד קבצים מצורפים."
     secure_uploads: 'מגביל גישה לכל ההעלאות (תמונות, סרטונים, שמע, טקסט, קובצי PDF, ארכיוני zip ועוד). אם מופעלת האפשרות „דרישת כניסה”, רק משתמשים שנכנסו למערכת יכולים לגשת להעלאות. אחרת, הגישה תוגבל רק להעלאות מסוגי מדיה בהודעות פרטיות ובקטגוריות פרטיות. אזהרה: מדובר בהגדרה מסובכת שדורשת הבנה עמוקה בניהול המערכת. יש לעיין ב<a target="_blank" href="https://meta.discourse.org/t/-/140017">נושא ההעלאות המאובטחות ב־Meta</a> לקבלת פרטים נוספים.'
     secure_uploads_allow_embed_images_in_emails: "מאפשר להטמיע תמונות מאובטחות שבדרך כלל יידחסו אם הגודל שלהן קטן מההגדרה ‚secure uploads max email embed image size kb’ (גודל העלאות מרבי להטמעה כתמונה בקילובתים)."
@@ -2149,6 +2152,7 @@ he:
     emoji_set: "איך בא לך את האמוג׳י שלך?"
     emoji_autocomplete_min_chars: "מספר התווים המזערי שנדרש להקפצת חלונית השלמה אוטומטית של אמוג׳י"
     enable_inline_emoji_translation: "הפעלת תרגום לאמוג׳י כחלק מהשורה (ללא רווחים או סימני פיסוק לפני)."
+    emoji_deny_list: "סמלי האמוג׳י האלה לא יהיו זמינים לשימוש בתפריטים או בקודים מקוצרים."
     approve_post_count: "מספר הפוסטים ממשתמשים חדשים או בסיסיים שחייבים לאשר אותם"
     approve_unless_trust_level: "פוסטים של משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
     approve_new_topics_unless_trust_level: "נושאים חדשים של משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
@@ -2260,7 +2264,7 @@ he:
     navigation_menu: "קביעת תפריט הניווט לשימוש. המשתמשים יכולים להתאים את הניווט מסרגל הצד והכותרת. האפשרות הישנה זמינה לטובת תאימות לאחור."
     default_sidebar_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של סרגל הצד כברירת מחדל."
     default_sidebar_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד כברירת מחדל."
-    enable_new_notifications_menu: "מפעיל את תפריט ההתראות החדש בתפריט הניווט הישן."
+    enable_new_notifications_menu: "מפעיל את תפריט ההתראות החדש. השבתת ההגדרה הזאת יצאה מכלל שימוש. תפריט ההתראות החדש תמיד ישמש לבחירות ‚תפריט ניווט’ שאינן מיושנות. <a href='https://meta.discourse.org/t/260358'>מידע נוסף</a>"
     enable_experimental_hashtag_autocomplete: "ניסיוני: ניתן להשתמש במערכת אוטומטית להשלמת #תגיות עבור קטגוריות ותגיות שמעבדת את הפריט הנבחר באופן שונה והחיפוש בה משופר"
     experimental_new_new_view_groups: "ניסיוני: לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד."
     enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
@@ -2320,7 +2324,6 @@ he:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
       delete_rejected_email_after_days: "הגדרה זו לא יכולה להיות קטנה מ־delete_email_logs_after_days (ימים שלאחריהם למחוק יומני דוא״ל) או גדולה מ־%{max}"
       invalid_uncategorized_category_setting: 'אי אפשר לבחור בקטגוריה „ללא קטגוריה” אם ‚הרשאת נושאים ללא קטגוריה’ אסורה.'
-      enable_new_notifications_menu_not_legacy_navigation_menu: "יש להגדיר את `navigation_menu` לערך `legacy` בטרם הפעלת הגדרה זו."
       invalid_search_ranking_weights: "הערך שגוי להגדרת האתר search_ranking_weights (משקלי דירוג חיפוש). למשל: ‚{0.1,0.2,0.3,1.0}’. נא לשים לב שהערך המרבי לכל משקל הוא 1.0."
     placeholder:
       discourse_connect_provider_secrets:

@@ -67,6 +67,7 @@ gl:
       composer:
         italic_text: "texto recalcado"
         bold_text: "texto groso"
+        send: "Enviar"
       notification_levels:
         never: "Nunca"
       settings:
@@ -103,6 +104,10 @@ gl:
         activities: "Actividades"
         flags: "Alertas"
         symbols: "Símbolos"
+      thread:
+        replies:
+          one: "%{count} resposta"
+          other: "%{count} repostas"
       draft_channel_screen:
         header: "Nova mensaxe"
         cancel: "Cancelar"
