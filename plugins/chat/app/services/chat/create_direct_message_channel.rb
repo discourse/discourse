@@ -24,13 +24,18 @@ module Chat
     policy :can_create_direct_message
     contract
     model :target_users
-    policy :does_not_exceed_max_direct_message_users
+    policy :does_not_exceed_max_direct_message_users,
+           class_name: Chat::DirectMessageChannel::MaxUsersExcessPolicy
     model :user_comm_screener
     policy :acting_user_not_disallowing_all_messages
-    policy :acting_user_can_message_all_target_users
-    policy :acting_user_not_preventing_messages_from_any_target_users
-    policy :acting_user_not_ignoring_any_target_users
-    policy :acting_user_not_muting_any_target_users
+    policy :acting_user_can_message_all_target_users,
+           class_name: Chat::DirectMessageChannel::CanMessageAllTargetUsersPolicy
+    policy :acting_user_not_preventing_messages_from_any_target_users,
+           class_name: Chat::DirectMessageChannel::NotPreventingMessagesFromAnyTargetUsersPolicy
+    policy :acting_user_not_ignoring_any_target_users,
+           class_name: Chat::DirectMessageChannel::NotIgnoringAnyTargetUsersPolicy
+    policy :acting_user_not_muting_any_target_users,
+           class_name: Chat::DirectMessageChannel::NotMutingAnyTargetUsersPolicy
     model :direct_message, :fetch_or_create_direct_message
     model :channel, :fetch_or_create_channel
     step :update_memberships
@@ -67,62 +72,12 @@ module Chat
       users.uniq
     end
 
-    def does_not_exceed_max_direct_message_users(target_users:, guardian:, **)
-      target_users = target_users.reject { |user| user.id == guardian.user.id }
-      guardian.is_staff? || target_users.size <= SiteSetting.chat_max_direct_message_users
-    end
-
     def fetch_user_comm_screener(target_users:, guardian:, **)
       UserCommScreener.new(acting_user: guardian.user, target_user_ids: target_users.map(&:id))
     end
 
     def acting_user_not_disallowing_all_messages(user_comm_screener:, **)
       !user_comm_screener.actor_disallowing_all_pms?
-    end
-
-    def acting_user_can_message_all_target_users(user_comm_screener:, target_users:, **)
-      return true if user_comm_screener.preventing_actor_communication.none?
-      context.merge(
-        preventing_communication_username:
-          target_users
-            .find { |user| user.id == user_comm_screener.preventing_actor_communication.first }
-            .username,
-      )
-      context.preventing_communication_username.blank?
-    end
-
-    def acting_user_not_preventing_messages_from_any_target_users(
-      user_comm_screener:,
-      target_users:,
-      **
-    )
-      context.merge(
-        preventing_communication_username:
-          target_users
-            .find { |target_user| user_comm_screener.actor_disallowing_pms?(target_user.id) }
-            &.username,
-      )
-      context.preventing_communication_username.blank?
-    end
-
-    def acting_user_not_ignoring_any_target_users(user_comm_screener:, target_users:, **)
-      context.merge(
-        preventing_communication_username:
-          target_users
-            .find { |target_user| user_comm_screener.actor_ignoring?(target_user.id) }
-            &.username,
-      )
-      context.preventing_communication_username.blank?
-    end
-
-    def acting_user_not_muting_any_target_users(user_comm_screener:, target_users:, **)
-      context.merge(
-        preventing_communication_username:
-          target_users
-            .find { |target_user| user_comm_screener.actor_muting?(target_user.id) }
-            &.username,
-      )
-      context.preventing_communication_username.blank?
     end
 
     def fetch_or_create_direct_message(target_users:, **)

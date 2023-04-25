@@ -53,17 +53,40 @@ class ServiceRunner
   NULL_RESULT = OpenStruct.new(failure?: false)
   # @!visibility private
   AVAILABLE_ACTIONS = {
-    on_success: -> { result.success? },
-    on_failure: -> { result.failure? },
-    on_failed_step: ->(name) { failure_for?("result.step.#{name}") },
-    on_failed_policy: ->(name = "default") { failure_for?("result.policy.#{name}") },
-    on_failed_contract: ->(name = "default") { failure_for?("result.contract.#{name}") },
-    on_model_not_found: ->(name = "model") do
-      failure_for?("result.model.#{name}") && result[name].blank?
-    end,
-    on_model_errors: ->(name = "model") do
-      failure_for?("result.model.#{name}") && result["result.model.#{name}"].invalid
-    end,
+    on_success: {
+      condition: -> { result.success? },
+      key: [],
+    },
+    on_failure: {
+      condition: -> { result.failure? },
+      key: [],
+    },
+    on_failed_step: {
+      condition: ->(name) { failure_for?("result.step.#{name}") },
+      key: %w[result step],
+    },
+    on_failed_policy: {
+      condition: ->(name = "default") { failure_for?("result.policy.#{name}") },
+      key: %w[result policy],
+      default_name: "default",
+    },
+    on_failed_contract: {
+      condition: ->(name = "default") { failure_for?("result.contract.#{name}") },
+      key: %w[result contract],
+      default_name: "default",
+    },
+    on_model_not_found: {
+      condition: ->(name = "model") { failure_for?("result.model.#{name}") && result[name].blank? },
+      key: %w[result model],
+      default_name: "model",
+    },
+    on_model_errors: {
+      condition: ->(name = "model") do
+        failure_for?("result.model.#{name}") && result["result.model.#{name}"].invalid
+      end,
+      key: [],
+      default_name: "model",
+    },
   }.with_indifferent_access.freeze
 
   # @!visibility private
@@ -108,9 +131,15 @@ class ServiceRunner
   end
 
   def add_action(name, *args, &block)
+    action = AVAILABLE_ACTIONS[name]
     actions[[name, *args].join("_").to_sym] = [
-      -> { instance_exec(*args, &AVAILABLE_ACTIONS[name]) },
-      -> { object.instance_eval(&block) },
+      -> { instance_exec(*args, &action[:condition]) },
+      -> do
+        object.instance_exec(
+          result[[*action[:key], args.first || action[:default_name]].join(".")],
+          &block
+        )
+      end,
     ]
   end
 

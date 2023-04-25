@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+class PolicyBase
+  attr_reader :context
+
+  delegate :guardian, to: :context
+
+  def initialize(context)
+    @context = context
+  end
+end

@@ -80,8 +80,8 @@ module Service
         )
       end
 
-      def policy(name = :default)
-        steps << PolicyStep.new(name)
+      def policy(name = :default, class_name: nil)
+        steps << PolicyStep.new(name, class_name: class_name)
       end
 
       def step(name)
@@ -104,10 +104,11 @@ module Service
       end
 
       def call(instance, context)
-        method = instance.method(method_name)
+        object = class_name&.new(context)
+        method = object&.method(:call) || instance.method(method_name)
         args = {}
         args = context.to_h if method.arity.nonzero?
-        context[result_key] = Context.build
+        context[result_key] = Context.build(object: object)
         instance.instance_exec(**args, &method)
       end
 
@@ -141,7 +142,7 @@ module Service
     class PolicyStep < Step
       def call(instance, context)
         if !super
-          context[result_key].fail
+          context[result_key].fail(reason: context[result_key].object&.reason)
           context.fail!
         end
       end

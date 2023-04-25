@@ -35,7 +35,7 @@ Chat::Engine.routes.draw do
 
     # TODO (martin) Remove this when we refactor the DM channel creation to happen
     # via message creation in a different API controller.
-    post "/direct-message-channels" => "direct_message_channels#create"
+    post "/direct-message-channels" => "direct_messages#create"
   end
 
   # direct_messages_controller routes

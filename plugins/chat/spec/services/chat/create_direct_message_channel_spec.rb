@@ -109,28 +109,19 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         IgnoredUser.create!(user: user_1, ignored_user: current_user, expiring_at: 1.day.from_now)
       end
 
-      it "fails the policy and stores the target username in context" do
-        expect(result).to fail_a_policy(:acting_user_can_message_all_target_users)
-        expect(result.preventing_communication_username).to eq("lechuck")
-      end
+      it { is_expected.to fail_a_policy(:acting_user_can_message_all_target_users) }
     end
 
     context "when one of the target users is muting the current user" do
       before { MutedUser.create!(user: user_1, muted_user: current_user) }
 
-      it "fails the policy and stores the target username in context" do
-        expect(result).to fail_a_policy(:acting_user_can_message_all_target_users)
-        expect(result.preventing_communication_username).to eq("lechuck")
-      end
+      it { is_expected.to fail_a_policy(:acting_user_can_message_all_target_users) }
     end
 
     context "when one of the target users is disallowing messages" do
       before { user_1.user_option.update!(allow_private_messages: false) }
 
-      it "fails the policy and stores the target username in context" do
-        expect(result).to fail_a_policy(:acting_user_can_message_all_target_users)
-        expect(result.preventing_communication_username).to eq("lechuck")
-      end
+      it { is_expected.to fail_a_policy(:acting_user_can_message_all_target_users) }
     end
 
     context "when the current user is allowing messages from all but one of the target users" do
@@ -139,9 +130,8 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         AllowedPmUser.create!(user: current_user, allowed_pm_user: user_2)
       end
 
-      it "fails the policy and stores the target username in context" do
-        expect(result).to fail_a_policy(:acting_user_not_preventing_messages_from_any_target_users)
-        expect(result.preventing_communication_username).to eq("lechuck")
+      it do
+        is_expected.to fail_a_policy(:acting_user_not_preventing_messages_from_any_target_users)
       end
     end
 
@@ -150,19 +140,13 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         IgnoredUser.create!(user: current_user, ignored_user: user_1, expiring_at: 1.day.from_now)
       end
 
-      it "fails the policy and stores the target username in context" do
-        expect(result).to fail_a_policy(:acting_user_not_ignoring_any_target_users)
-        expect(result.preventing_communication_username).to eq("lechuck")
-      end
+      it { is_expected.to fail_a_policy(:acting_user_not_ignoring_any_target_users) }
     end
 
     context "when the current user is muting one of the target users" do
       before { MutedUser.create!(user: current_user, muted_user: user_1) }
 
-      it "fails the policy and stores the target username in context" do
-        expect(result).to fail_a_policy(:acting_user_not_muting_any_target_users)
-        expect(result.preventing_communication_username).to eq("lechuck")
-      end
+      it { is_expected.to fail_a_policy(:acting_user_not_muting_any_target_users) }
     end
   end
 end

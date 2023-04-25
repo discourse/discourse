@@ -75,7 +75,7 @@ RSpec.describe Chat::DirectMessagesController do
     shared_examples "creating dms" do
       it "creates a new dm channel with username(s) provided" do
         expect {
-          post "/chat/direct_messages/create.json", params: { usernames: [usernames] }
+          post "/chat/api/direct-message-channels.json", params: { target_usernames: [usernames] }
         }.to change { Chat::DirectMessage.count }.by(1)
         expect(Chat::DirectMessage.last.direct_message_users.map(&:user_id)).to match_array(
           direct_message_user_ids,
@@ -85,7 +85,7 @@ RSpec.describe Chat::DirectMessagesController do
       it "returns existing dm channel if one exists for username(s)" do
         create_dm_channel(direct_message_user_ids)
         expect {
-          post "/chat/direct_messages/create.json", params: { usernames: [usernames] }
+          post "/chat/api/direct-message-channels.json", params: { target_usernames: [usernames] }
         }.not_to change { Chat::DirectMessage.count }
       end
     end
@@ -115,7 +115,7 @@ RSpec.describe Chat::DirectMessagesController do
       users = [user2, user3]
       usernames = users.map(&:username)
       expect {
-        post "/chat/direct_messages/create.json", params: { usernames: usernames }
+        post "/chat/api/direct-message-channels.json", params: { target_usernames: usernames }
       }.to change { Chat::UserChatChannelMembership.count }.by(3)
     end
 
@@ -126,7 +126,7 @@ RSpec.describe Chat::DirectMessagesController do
       shared_examples "creating dms with communication error" do
         it "responds with a friendly error" do
           expect {
-            post "/chat/direct_messages/create.json", params: { usernames: [usernames] }
+            post "/chat/api/direct-message-channels.json", params: { target_usernames: [usernames] }
           }.not_to change { Chat::DirectMessage.count }
           expect(response.status).to eq(422)
           expect(response.parsed_body["errors"]).to eq(

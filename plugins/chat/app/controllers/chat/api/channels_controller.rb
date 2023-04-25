@@ -58,12 +58,8 @@ class Chat::Api::ChannelsController < Chat::ApiController
       on_failed_policy(:category_channel_does_not_exist) do
         raise Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
       end
-      on_model_errors(:channel) do
-        render_json_error(result.channel, type: :record_invalid, status: 422)
-      end
-      on_model_errors(:membership) do
-        render_json_error(result.membership, type: :record_invalid, status: 422)
-      end
+      on_model_errors(:channel) { record_invalid(:channel) }
+      on_model_errors(:membership) { record_invalid(:membership) }
     end
   end
 
