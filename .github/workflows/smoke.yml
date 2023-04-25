@@ -142,7 +142,7 @@ jobs:
 
             user = User.create!(username: "jane", password: ENV["DISCOURSE_PASSWORD"], email: ENV["DISCOURSE_USERNAME"], active: true)
             user.activate
-            # user.change_trust_level!(4)
+            user.change_trust_level!(4)
 
             admin = User.create!(username: ENV["ADMIN_API_USERNAME"], password: "Adm1N_P4ssw0rd", email: "kim@example.com", active: true)
             admin.activate
@@ -153,9 +153,9 @@ jobs:
               }
             })
 
-            # SiteSetting.wizard_enabled = false
-            # SiteSetting.rate_limit_create_post = 1
-            # DiscourseRedis.new.flushall
+            SiteSetting.wizard_enabled = false
+            SiteSetting.rate_limit_create_post = 1
+            DiscourseRedis.new.flushall
           end
 
       - name: Generate API key
