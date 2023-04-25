@@ -152,8 +152,6 @@ jobs:
                 url: ENV["SMOKE_TEST_THEME_URL"]
               }
             })
-
-            SiteSetting.wizard_enabled = false
           end
 
       - name: Generate API key
@@ -176,9 +174,10 @@ jobs:
           bin/rails smoke:test
 
       - name: Print debug output
-        if: ${{ !cancelled() }}
+        if: ${{ failure() }}
         run: |
           tail -n 250 log/production.log
+          echo "\n---\n"
           tail -n 250 log/unicorn.stderr.log || true
 
       - name: Upload screenshots
