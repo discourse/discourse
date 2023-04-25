@@ -270,6 +270,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     it "outputs a markdown link" do
+      modifier = /darwin/i =~ RbConfig::CONFIG["host_os"] ? :command : :control
       select_text = <<-JS
         const element = document.querySelector(arguments[0]);
         element.focus();
@@ -281,15 +282,13 @@ RSpec.describe "Chat composer", type: :system, js: true do
       find("body").send_keys("https://www.discourse.org")
       page.execute_script(select_text, ".chat-composer__input")
 
-      page.send_keys [:command, "c"]
-      page.send_keys [:control, "c"]
+      page.send_keys [modifier, "c"]
       page.send_keys [:backspace]
 
       find("body").send_keys("discourse")
       page.execute_script(select_text, ".chat-composer__input")
 
-      page.send_keys [:command, "v"]
-      page.send_keys [:control, "v"]
+      page.send_keys [modifier, "v"]
 
       expect(find(".chat-composer__input").value).to eq("[discourse](https://www.discourse.org)")
     end
