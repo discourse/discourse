@@ -1152,13 +1152,13 @@ RSpec.describe CookedPostProcessor do
 
     it "replaces large image placeholder" do
       SiteSetting.max_image_size_kb = 4096
-      url = "https://image.com/my-avatar"
-      image_url = "https://image.com/avatar.png"
+      url = "https://image.com/avatar.png"
 
-      Oneboxer
-        .stubs(:onebox)
-        .with(url, anything)
-        .returns("<img class='onebox' src='#{image_url}' />")
+      Oneboxer.stubs(:onebox).with(url, anything).returns <<~HTML
+          <a href="#{url}" target="_blank" rel="noopener" class="onebox">
+            <img class='onebox' src='#{url}' />
+          </a>
+        HTML
 
       post = Fabricate(:post, raw: url)
 
