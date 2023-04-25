@@ -295,7 +295,7 @@ export default class ChatComposer extends Component {
 
     if (event.key === "Escape") {
       if (this.currentMessage?.inReplyTo) {
-        this.resetComposer();
+        this.reset();
         return false;
       } else if (this.currentMessage?.editing) {
         this.composer.onCancelEditing();
@@ -307,7 +307,7 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  resetComposer() {
+  reset() {
     this.composer.reset(this.args.channel);
   }
 
