@@ -37,7 +37,7 @@
     border-radius: 5px;
     background-color: var(--secondary);
     padding-inline: 0.25rem;
-    height: 42px;
+    min-height: 42px;
 
     .chat-composer--focused & {
       border-color: var(--primary-medium);
