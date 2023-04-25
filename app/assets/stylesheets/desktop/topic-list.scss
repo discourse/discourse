@@ -287,6 +287,12 @@
     flex-direction: column;
     align-items: start;
   }
+
+  #save-voice-credits {
+    margin-right: 10px;
+  }
+
+  #reset-voice-credits,
   #save-voice-credits {
     cursor: pointer;
     margin-left: 10px;

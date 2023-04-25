@@ -26,6 +26,7 @@ export default Component.extend(LoadMore, {
   topicVotes: {},
   voiceCredits: {},
   saveButtonText: "Save",
+  resetButtonText: "Reset",
   isSaving: false,
 
   fetchTopicVotes() {
@@ -145,6 +146,54 @@ export default Component.extend(LoadMore, {
   },
 
   @action
+  async resetVoiceCredits() {
+    if (this.isSaving) {
+      return;
+    }
+    const pageCategoryId = this.get("category.id");
+    const allCredits = Object.keys(this.voiceCredits).map((key) => ({
+      topic_id: Number(key),
+      credits_allocated: 0,
+      modified: false,
+    }));
+
+    const payload = {
+      category_id: pageCategoryId,
+      voice_credits_data: allCredits,
+    };
+
+    this.set("isSaving", true);
+
+    return ajax("/voice_credits.json", {
+      type: "POST",
+      data: payload,
+    })
+      .then((response) => response)
+      .then((data) => {
+        if (data.success === true) {
+          this.set("remainingVotes", 100);
+          this.set("voiceCredits", allCredits);
+          this.updateVotesCanvas();
+          this.set("resetButtonText", "✓");
+          this.fetchTopicVotes();
+        } else {
+          throw new Error(data);
+        }
+      })
+      .catch((error) => {
+        this.set("resetButtonText", "X");
+        console.error(error);
+      })
+      .finally(() => {
+        this.set("isSaving", false);
+        let self = this;
+        setTimeout(function () {
+          self.set("resetButtonText", "Reset");
+        }, 1000);
+      });
+  },
+
+  @action
   async saveVoiceCredits() {
     if (this.isSaving) {
       return;
@@ -196,10 +245,14 @@ export default Component.extend(LoadMore, {
     })
       .then((response) => response)
       .then((data) => {
-        console.log(data);
-        this.updateVotesCanvas();
-        this.set("saveButtonText", "✓");
-        this.fetchTopicVotes();
+        if (data.success === true) {
+          console.log(data);
+          this.updateVotesCanvas();
+          this.set("saveButtonText", "✓");
+          this.fetchTopicVotes();
+        } else {
+          throw new Error(data);
+        }
       })
       .catch((error) => {
         this.set("saveButtonText", "X");

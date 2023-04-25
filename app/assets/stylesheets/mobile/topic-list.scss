@@ -729,6 +729,11 @@ td .main-link {
 
 #user-info-topic-list {
   #save-voice-credits {
+    margin-right: 10px;
+  }
+
+  #reset-voice-credits,
+  #save-voice-credits {
     cursor: pointer;
     margin-left: 10px;
     width: 60px;
