@@ -44,6 +44,8 @@ he:
             label: גוף
           delay:
             label: השהיה (דקות)
+          prefers_encrypt:
+            label: מצפין הודעות פרטיות אם זמין
         group:
           label: קבוצה
         text:
