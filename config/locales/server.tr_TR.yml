@@ -188,6 +188,7 @@ tr_TR:
     embed:
       load_from_remote: "Gönderi yüklenirken bir hata oluştu."
     site_settings:
+      invalid_site_setting: "'%{name}' adında bir ayar mevcut değil"
       invalid_category_id: "Mevcut olmayan bir kategori belirttiniz"
       invalid_choice:
         one: "Geçersiz bir seçim belirttiniz %{name}"

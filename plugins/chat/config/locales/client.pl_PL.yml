@@ -172,6 +172,7 @@ pl_PL:
           other: "%{count} wzmianek"
       aria_roles:
         header: "Nagłówek czatu"
+        composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
       no_public_channels: "Nie dołączyłeś do żadnego kanału."
       open: "Otwórz czat"
@@ -262,6 +263,7 @@ pl_PL:
         title: Nowa wiadomość
         prefix: "Do:"
         no_results: Brak wyników
+        selected_user_title: "Odznacz %{username}"
       channel_selector:
         title: "Przejdź do kanału"
         no_channels: "Żadne kanały nie pasują do Twojego wyszukiwania"
@@ -309,7 +311,9 @@ pl_PL:
         channel_wide_mentions_label: "Zezwalaj na wzmianki @all i @here"
         channel_wide_mentions_description: "Zezwalaj użytkownikom na powiadamianie wszystkich członków #%{channel} za pomocą @all lub tylko tych, którzy są aktywni w danym momencie za pomocą @here"
         auto_join_users_label: "Automatycznie dodawaj użytkowników"
+        auto_join_users_info: "Sprawdzaj co godzinę, którzy użytkownicy byli aktywni w ciągu ostatnich 3 miesięcy i jeśli mają dostęp do kategorii %{category} , dodaj ich do tego kanału."
         enable_auto_join_users: "Automatycznie dodawaj wszystkich ostatnio aktywnych użytkowników"
+        auto_join_users_warning: "Każdy użytkownik, który nie jest członkiem tego kanału i ma dostęp do kategorii %{category} , dołączy do niego. Czy jesteś pewien?"
         desktop_notification_level: "Powiadomienia na pulpicie"
         follow: "Dołącz"
         followed: "Dołączył"
@@ -367,6 +371,7 @@ pl_PL:
             few: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
             many: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
             other: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
+          instructions_channel_archive: "Zamierzasz utworzyć nowy temat i zarchiwizować w nim wiadomości z kanału."
         existing_topic:
           title: "Przenieś do Istniejącego Tematu"
         new_message:
@@ -439,9 +444,15 @@ pl_PL:
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Przełącz kanał"
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
+          drawer_open: "%{shortcut} Otwórz szufladę czatu"
+          drawer_close: "%{shortcut} Zamknij szufladę czatu"
     topic_statuses:
       chat:
         help: "Czat jest włączony dla tego tematu"
+    user:
+      allow_private_messages: "Zezwalaj innym użytkownikom na wysyłanie mi osobistych wiadomości i bezpośrednich wiadomości na czacie"
+      muted_users_instructions: "Wyłącz wszystkie powiadomienia, wiadomości osobiste i bezpośrednie wiadomości czatu od tych użytkowników."
+      allowed_pm_users_instructions: "Zezwalaj na wysyłanie osobistych wiadomości lub bezpośrednich wiadomości na czacie tylko od tych użytkowników."
     user_menu:
       tabs:
         chat_notifications: "Powiadomienia czatu"

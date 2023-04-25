@@ -239,6 +239,10 @@ pt_BR:
           about: Sobre
           members: Membros
           settings: Definições
+      channel_edit_name_modal:
+        title: Editar Nome
+        input_placeholder: Adicionar um Nome
+        description: Dê um nome breve e descritivo ao seu canal
       channel_edit_description_modal:
         title: Editar descrição
         input_placeholder: Adicione uma descrição

@@ -176,6 +176,7 @@ ko:
     embed:
       load_from_remote: "이 게시물을 로드하는 중에 오류가 발생했습니다."
     site_settings:
+      invalid_site_setting: "'%{name}' 라는 설정이 존재하지 않습니다."
       invalid_category_id: "존재하지 않는 카테고리를 지정했습니다"
       invalid_choice:
         other: "유효하지 않은 선택 항목을 지정했습니다. %{name}"

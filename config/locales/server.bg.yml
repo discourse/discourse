@@ -106,6 +106,8 @@ bg:
         other: ! "%{count} грешки възпрепятстват запазването на този %{model} "
     embed:
       load_from_remote: "Получи се грешка при зареждането на тази публикация."
+    site_settings:
+      invalid_site_setting: "Не съществува настройка с име „%{name}“."
   invite:
     disabled_errors:
       invalid_access: "Вие нямате права да разглеждате този ресурс."

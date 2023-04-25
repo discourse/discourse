@@ -51,6 +51,8 @@ pl_PL:
         closed: "Zamknięta"
         open: "Otwórz"
       dm_title:
+        single_user: "%{user}"
+        multi_user: "%{users}"
         multi_user_truncated: "%{users} i %{leftover} innych"
     category_channel:
       errors:

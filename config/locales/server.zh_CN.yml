@@ -182,6 +182,7 @@ zh_CN:
     embed:
       load_from_remote: "加载该帖子时出错。"
     site_settings:
+      invalid_site_setting: "不存在名为'%{name}' 的设置"
       invalid_category_id: "您指定了一个不存在的类别"
       invalid_choice:
         other: "您指定了无效的选择 %{name}"
