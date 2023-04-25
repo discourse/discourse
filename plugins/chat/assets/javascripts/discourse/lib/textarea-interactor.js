@@ -4,7 +4,6 @@ import { next, schedule } from "@ember/runloop";
 import { setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
 import { registerDestructor } from "@ember/destroyable";
-import { generateLinkifyFunction } from "discourse/lib/text";
 
 // This class sole purpose is to provide a way to interact with the textarea
 // using the existing TextareaTextManipulation mixin without using it directly
