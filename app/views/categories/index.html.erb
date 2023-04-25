@@ -22,7 +22,7 @@
               <div itemprop='description'><%= c.description&.html_safe %></div>
               <% if c.subcategory_list.present? %>
                 <div class='subcategories'>
-                  <% c.subcategory_list&.each_with_index do |sc, index| %>
+                  <% c.subcategory_list.each_with_index do |sc, index| %>
                     <a href='<%= sc.url %>'><%= sc.name %></a>&nbsp;
                   <% end %>
                 </div>
