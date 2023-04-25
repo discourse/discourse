@@ -15,7 +15,7 @@ html.has-full-page-chat {
     padding: 0;
 
     .main-chat-outlet {
-      .chat-live-pane {
+      .chat-channel {
         min-width: 0;
       }
 
@@ -23,7 +23,7 @@ html.has-full-page-chat {
         grid-template-columns: 1fr;
         grid-template-areas: "threads";
 
-        .chat-live-pane {
+        .chat-channel {
           display: none;
         }
       }
@@ -45,7 +45,7 @@ html.has-full-page-chat {
     }
   }
 
-  .chat-live-pane {
+  .chat-channel {
     border-radius: 0;
     padding: 0;
   }

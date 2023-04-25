@@ -116,6 +116,9 @@ RSpec.describe "posts" do
                        flair_color: {
                          type: %i[string null],
                        },
+                       flair_group_id: {
+                         type: %i[string null],
+                       },
                        version: {
                          type: :integer,
                        },

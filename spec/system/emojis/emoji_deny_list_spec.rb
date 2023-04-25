@@ -50,10 +50,10 @@ describe "Emoji deny list", type: :system, js: true do
       topic_page.visit_topic_and_open_composer(topic)
       expect(composer).to be_opened
 
-      composer.click_toolbar_button(10)
+      composer.click_toolbar_button("insert-emoji")
       expect(composer.emoji_picker).to be_visible
 
-      expect(emoji_picker.has_emoji?("fu")).to eq(false)
+      expect(emoji_picker).not_to have_emoji("fu")
     end
 
     it "should not show denied emojis and aliases in emoji autocomplete" do

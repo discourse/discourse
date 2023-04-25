@@ -63,7 +63,11 @@ const CORE_TOP_TABS = [
     }
 
     get count() {
-      return this.getUnreadCountForType("liked");
+      return (
+        this.getUnreadCountForType("liked") +
+        this.getUnreadCountForType("liked_consolidated") +
+        this.getUnreadCountForType("reaction")
+      );
     }
 
     // TODO(osama): reaction is a type used by the reactions plugin, but it's

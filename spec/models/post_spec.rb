@@ -1566,6 +1566,17 @@ RSpec.describe Post do
       post.topic.reload
       expect(post.topic.topic_thumbnails.length).to eq(0)
     end
+
+    it "does not overwrite existing thumbnails" do
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      post.topic.image_upload_id = image_upload_2.id
+      post.topic.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.image_upload_id).to eq(image_upload_2.id)
+    end
   end
 
   describe "uploads" do

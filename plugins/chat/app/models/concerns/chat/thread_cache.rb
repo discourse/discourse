@@ -13,10 +13,8 @@ module Chat
         "chat_thread:replies_count_cache:#{id}"
       end
 
-      def clear_caches!(ids = nil)
-        return Discourse.redis.delete_prefixed("chat_thread:") if ids.blank?
+      def clear_caches!(ids)
         ids = Array.wrap(ids)
-
         keys_to_delete =
           ids
             .map do |id|
@@ -40,30 +38,45 @@ module Chat
 
     def replies_count_cache
       redis_cache = Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(self.id))&.to_i
-      if redis_cache.present? && redis_cache != self.replies_count
-        redis_cache
-      else
+
+      # If the cache is not present for whatever reason, set it to the current value,
+      # otherwise INCR/DECR will be way off. No need to enqueue the job or publish,
+      # since this is likely fetched by a serializer.
+      if !redis_cache.present?
+        set_replies_count_redis_cache(self.replies_count)
         self.replies_count
+      else
+        redis_cache != self.replies_count ? redis_cache : self.replies_count
       end
     end
 
     def set_replies_count_cache(value, update_db: false)
       self.update!(replies_count: value) if update_db
+      set_replies_count_redis_cache(value)
+      thread_reply_count_cache_changed
+    end
+
+    def set_replies_count_redis_cache(value)
       Discourse.redis.setex(
         Chat::Thread.replies_count_cache_redis_key(self.id),
         5.minutes.from_now.to_i,
         value,
       )
-      Jobs.enqueue_in(5.seconds, Jobs::Chat::UpdateThreadReplyCount, thread_id: self.id)
-      ::Chat::Publisher.publish_thread_original_message_metadata!(self)
     end
 
     def increment_replies_count_cache
-      self.set_replies_count_cache(self.replies_count_cache + 1)
+      Discourse.redis.incr(Chat::Thread.replies_count_cache_redis_key(self.id))
+      thread_reply_count_cache_changed
     end
 
     def decrement_replies_count_cache
-      self.set_replies_count_cache(self.replies_count_cache - 1)
+      Discourse.redis.decr(Chat::Thread.replies_count_cache_redis_key(self.id))
+      thread_reply_count_cache_changed
+    end
+
+    def thread_reply_count_cache_changed
+      Jobs.enqueue_in(5.seconds, Jobs::Chat::UpdateThreadReplyCount, thread_id: self.id)
+      ::Chat::Publisher.publish_thread_original_message_metadata!(self)
     end
   end
 end

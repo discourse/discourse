@@ -1,10 +1,11 @@
 <div
   class={{concat-class
-    "chat-live-pane"
+    "chat-channel"
     (if this.loading "loading")
-    (if this.chatChannelPane.sendingLoading "sending-loading")
-    (unless this.loadedOnce "not-loaded-once")
+    (if this.chatChannelPane.sending "chat-channel--sending")
+    (unless this.loadedOnce "chat-channel--not-loaded-once")
   }}
+  {{did-insert this.setUploadDropZone}}
   {{did-insert this.setupListeners}}
   {{will-destroy this.teardownListeners}}
   {{did-insert this.updateChannel}}
@@ -33,7 +34,7 @@
   >
     <div
       class="chat-messages-container"
-      {{chat/on-resize this.didResizePane (hash delay=10)}}
+      {{chat/on-resize this.didResizePane (hash delay=25 immediate=true)}}
     >
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
@@ -78,15 +79,15 @@
     />
   {{else}}
     {{#if (or @channel.isDraft @channel.isFollowing)}}
-      <ChatComposer
-        @sendMessage={{this.sendMessage}}
-        @chatChannel={{@channel}}
-        @composerService={{this.chatChannelComposer}}
-        @paneService={{this.chatChannelPane}}
-        @context="channel"
+      <Chat::Composer::Channel
+        @channel={{@channel}}
+        @uploadDropZone={{this.uploadDropZone}}
+        @onSendMessage={{this.onSendMessage}}
       />
     {{else}}
       <ChatChannelPreviewCard @channel={{@channel}} />
     {{/if}}
   {{/if}}
+
+  <ChatUploadDropZone @model={{@channel}} />
 </div>

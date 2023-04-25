@@ -6,7 +6,7 @@ export default function chatMessageContainer(id, context) {
   if (context === MESSAGE_CONTEXT_THREAD) {
     selector = `.chat-thread .chat-message-container[data-id="${id}"]`;
   } else {
-    selector = `.chat-live-pane .chat-message-container[data-id="${id}"]`;
+    selector = `.chat-channel .chat-message-container[data-id="${id}"]`;
   }
 
   return document.querySelector(selector);

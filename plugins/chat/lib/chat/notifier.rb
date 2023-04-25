@@ -89,24 +89,17 @@ module Chat
     def notify_edit
       @chat_message.update_mentions(@mentions.all_mentioned_users_ids)
 
-      existing_notifications =
-        Chat::Mention.includes(:user, :notification).where(chat_message: @chat_message)
-      already_notified_user_ids = existing_notifications.map(&:user_id)
+      already_notified_user_ids =
+        Chat::Mention
+          .where(chat_message: @chat_message)
+          .where.not(notification: nil)
+          .pluck(:user_id)
 
       to_notify = list_users_to_notify
-      mentioned_user_ids = to_notify.extract!(:all_mentioned_user_ids)[:all_mentioned_user_ids]
-
-      needs_deletion = already_notified_user_ids - mentioned_user_ids
-      needs_deletion.each do |user_id|
-        chat_mention = existing_notifications.detect { |n| n.user_id == user_id }
-        chat_mention.notification.destroy! if chat_mention.notification.present?
-      end
-
-      needs_notification_ids = mentioned_user_ids - already_notified_user_ids
+      needs_notification_ids = to_notify[:all_mentioned_user_ids] - already_notified_user_ids
       return if needs_notification_ids.blank?
 
       notify_creator_of_inaccessible_mentions(to_notify)
-
       notify_mentioned_users(to_notify, already_notified_user_ids: already_notified_user_ids)
 
       to_notify
@@ -115,12 +108,7 @@ module Chat
     private
 
     def list_users_to_notify
-      mentions_count =
-        @mentions.parsed_direct_mentions.length + @mentions.parsed_group_mentions.length
-      mentions_count += 1 if @mentions.has_global_mention
-      mentions_count += 1 if @mentions.has_here_mention
-
-      skip_notifications = mentions_count > SiteSetting.max_mentions_per_chat_message
+      skip_notifications = @mentions.count > SiteSetting.max_mentions_per_chat_message
 
       {}.tap do |to_notify|
         # The order of these methods is the precedence

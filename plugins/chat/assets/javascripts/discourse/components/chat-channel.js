@@ -1,7 +1,5 @@
 import { capitalize } from "@ember/string";
-import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
@@ -47,18 +45,24 @@ export default class ChatLivePane extends Component {
   @tracked loading = false;
   @tracked loadingMorePast = false;
   @tracked loadingMoreFuture = false;
-  @tracked sendingLoading = false;
+  @tracked sending = false;
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
   @tracked hasNewMessages = false;
   @tracked needsArrow = false;
   @tracked loadedOnce = false;
+  @tracked uploadDropZone;
 
   scrollable = null;
   _loadedChannelId = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
+
+  @action
+  setUploadDropZone(element) {
+    this.uploadDropZone = element;
+  }
 
   @action
   setScrollable(element) {
@@ -107,7 +111,12 @@ export default class ChatLivePane extends Component {
     if (this._loadedChannelId !== this.args.channel?.id) {
       this._unsubscribeToUpdates(this._loadedChannelId);
       this.chatChannelPane.selectingMessages = false;
-      this.chatChannelComposer.cancelEditing();
+      this.chatChannelComposer.message =
+        this.args.channel.draft ||
+        ChatMessage.createDraftMessage(this.args.channel, {
+          user: this.currentUser,
+        });
+
       this._loadedChannelId = this.args.channel?.id;
     }
 
@@ -568,15 +577,41 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  sendMessage(message, uploads = []) {
-    resetIdle();
-
-    if (this.chatChannelPane.sendingLoading) {
-      return;
+  onSendMessage(message) {
+    if (message.editing) {
+      this.#sendEditMessage(message);
+    } else {
+      this.#sendNewMessage(message);
     }
+  }
 
-    this.chatChannelPane.sendingLoading = true;
-    this.args.channel.draft = ChatMessageDraft.create();
+  @action
+  resetComposer() {
+    this.chatChannelComposer.reset(this.args.channel);
+  }
+
+  #sendEditMessage(message) {
+    this.chatChannelPane.sending = true;
+
+    const data = {
+      new_message: message.message,
+      upload_ids: message.uploads.map((upload) => upload.id),
+    };
+
+    this.resetComposer();
+
+    return this.chatApi
+      .editMessage(this.args.channel.id, message.id, data)
+      .catch(popupAjaxError)
+      .finally(() => {
+        this.chatChannelPane.sending = false;
+      });
+  }
+
+  #sendNewMessage(message) {
+    this.chatChannelPane.sending = true;
+
+    resetIdle();
 
     // TODO: all send message logic is due for massive refactoring
     // This is all the possible case Im currently aware of
@@ -587,52 +622,38 @@ export default class ChatLivePane extends Component {
     // - message to a public channel you were tracking (preview = false, not draft)
     // - message to a channel when we haven't loaded all future messages yet.
     if (!this.args.channel.isFollowing || this.args.channel.isDraft) {
-      this.loading = true;
+      const data = {
+        message: message.message,
+        upload_ids: message.uploads.map((upload) => upload.id),
+      };
 
-      return this._upsertChannelWithMessage(
-        this.args.channel,
-        message,
-        uploads
-      ).finally(() => {
-        if (this._selfDeleted) {
-          return;
+      this.resetComposer();
+
+      return this._upsertChannelWithMessage(this.args.channel, data).finally(
+        () => {
+          if (this._selfDeleted) {
+            return;
+          }
+          this.chatChannelPane.sending = false;
+          this.scrollToLatestMessage();
         }
-        this.loading = false;
-        this.chatChannelPane.sendingLoading = false;
-        this.chatChannelPane.resetAfterSend();
-        this.scrollToLatestMessage();
-      });
+      );
     }
 
-    const stagedMessage = ChatMessage.createStagedMessage(this.args.channel, {
-      message,
-      created_at: moment.utc().format(),
-      uploads: cloneJSON(uploads),
-      user: this.currentUser,
-    });
+    this.args.channel.stageMessage(message);
+    const stagedMessage = message;
+    this.resetComposer();
 
-    if (this.chatChannelComposer.replyToMsg) {
-      stagedMessage.inReplyTo = this.chatChannelComposer.replyToMsg;
-    }
-
-    if (stagedMessage.inReplyTo) {
-      if (!this.args.channel.threadingEnabled) {
-        this.#messagesManager.addMessages([stagedMessage]);
-      }
-    } else {
-      this.#messagesManager.addMessages([stagedMessage]);
-    }
-
-    if (!this.#messagesManager.canLoadMoreFuture) {
+    if (!this.args.channel.canLoadMoreFuture) {
       this.scrollToLatestMessage();
     }
 
     return this.chatApi
       .sendMessage(this.args.channel.id, {
-        message: stagedMessage.message,
-        in_reply_to_id: stagedMessage.inReplyTo?.id,
-        staged_id: stagedMessage.id,
-        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
+        message: message.message,
+        in_reply_to_id: message.inReplyTo?.id,
+        staged_id: message.id,
+        upload_ids: message.uploads.map((upload) => upload.id),
       })
       .then(() => {
         this.scrollToLatestMessage();
@@ -645,12 +666,13 @@ export default class ChatLivePane extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.chatChannelPane.sendingLoading = false;
-        this.chatChannelPane.resetAfterSend();
+
+        this.args.channel.draft = null;
+        this.chatChannelPane.sending = false;
       });
   }
 
-  async _upsertChannelWithMessage(channel, message, uploads) {
+  async _upsertChannelWithMessage(channel, data) {
     let promise = Promise.resolve(channel);
 
     if (channel.isDirectMessageChannel || channel.isDraft) {
@@ -662,11 +684,9 @@ export default class ChatLivePane extends Component {
     return promise.then((c) =>
       ajax(`/chat/${c.id}.json`, {
         type: "POST",
-        data: {
-          message,
-          upload_ids: (uploads || []).mapBy("id"),
-        },
+        data,
       }).then(() => {
+        this.chatChannelPane.sending = false;
         this.router.transitionTo("chat.channel", "-", c.id);
       })
     );
@@ -686,12 +706,12 @@ export default class ChatLivePane extends Component {
       }
     }
 
-    this.chatChannelPane.resetAfterSend();
+    this.resetComposer();
   }
 
   @action
   resendStagedMessage(stagedMessage) {
-    this.chatChannelPane.sendingLoading = true;
+    this.chatChannelPane.sending = true;
 
     stagedMessage.error = null;
 
@@ -714,7 +734,7 @@ export default class ChatLivePane extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.chatChannelPane.sendingLoading = false;
+        this.chatChannelPane.sending = false;
       });
   }
 
@@ -824,7 +844,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    const composer = document.querySelector(".chat-composer-input");
+    const composer = document.querySelector(".chat-composer__input");
     if (composer && !this.args.channel.isDraft) {
       composer.focus();
       return;
@@ -836,7 +856,7 @@ export default class ChatLivePane extends Component {
 
   @action
   computeDatesSeparators() {
-    throttle(this, this._computeDatesSeparators, 50, false);
+    throttle(this, this._computeDatesSeparators, 50, true);
   }
 
   // A more consistent way to scroll to the bottom when we are sure this is our goal

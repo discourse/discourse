@@ -24,17 +24,17 @@ module PageObjects
       end
 
       def type_in_composer(input)
-        find(".chat-composer-input--thread").click # makes helper more reliable by ensuring focus is not lost
-        find(".chat-composer-input--thread").send_keys(input)
+        find(".chat-thread .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-thread .chat-composer__input").send_keys(input)
       end
 
       def fill_composer(input)
-        find(".chat-composer-input--thread").click # makes helper more reliable by ensuring focus is not lost
-        find(".chat-composer-input--thread").fill_in(with: input)
+        find(".chat-thread .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-thread .chat-composer__input").fill_in(with: input)
       end
 
       def click_composer
-        find(".chat-composer-input--thread").click # ensures autocomplete is closed and not masking anything
+        find(".chat-thread .chat-composer__input").click # ensures autocomplete is closed and not masking anything
       end
 
       def send_message(id, text = nil)
@@ -45,7 +45,9 @@ module PageObjects
       end
 
       def click_send_message(id)
-        find(thread_selector_by_id(id)).find(".chat-composer .send-btn:enabled").click
+        find(thread_selector_by_id(id)).find(
+          ".chat-composer--send-enabled .chat-composer__send-btn",
+        ).click
       end
 
       def has_message?(thread_id, text: nil, id: nil)
@@ -72,6 +74,18 @@ module PageObjects
             wait: 10,
           )
         end
+      end
+
+      def hover_message(message)
+        message_by_id(message.id).hover
+      end
+
+      def message_by_id(id)
+        find(message_by_id_selector(id))
+      end
+
+      def message_by_id_selector(id)
+        ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
     end
   end
