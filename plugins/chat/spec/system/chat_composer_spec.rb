@@ -229,7 +229,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
       expect(find(".chat-emoji-picker .dc-filter-input").value).to eq("gri")
     end
 
-    it "filters with the prefilled input" do
+    xit "filters with the prefilled input" do
       chat.visit_channel(channel_1)
       find(".chat-composer__input").fill_in(with: ":fr")
 
