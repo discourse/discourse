@@ -106,7 +106,7 @@ class DiscourseJsProcessor
     end
 
     def self.load_file_in_context(ctx, path, wrap_in_module: nil)
-      contents = File.read("#{Rails.root}/app/assets/javascripts/#{path}")
+      contents = File.read(path)
       contents = <<~JS if wrap_in_module
           define(#{wrap_in_module.to_json}, ["exports", "require", "module"], function(exports, require, module){
             #{contents}
@@ -134,10 +134,10 @@ class DiscourseJsProcessor
       JS
 
       # define/require support
-      load_file_in_context(ctx, "node_modules/loader.js/dist/loader/loader.js")
+      load_file_in_context(ctx, "#{Rails.root}/node_modules/loader.js/dist/loader/loader.js")
 
       # Babel
-      load_file_in_context(ctx, "node_modules/@babel/standalone/babel.js")
+      load_file_in_context(ctx, "#{Rails.root}/node_modules/@babel/standalone/babel.js")
       ctx.eval <<~JS
         globalThis.rawBabelTransform = function(){
           return Babel.transform(...arguments).code;
@@ -145,39 +145,42 @@ class DiscourseJsProcessor
       JS
 
       # Terser
-      load_file_in_context(ctx, "node_modules/source-map/dist/source-map.js")
-      load_file_in_context(ctx, "node_modules/terser/dist/bundle.min.js")
+      load_file_in_context(ctx, "#{Rails.root}/node_modules/source-map/dist/source-map.js")
+      load_file_in_context(ctx, "#{Rails.root}/node_modules/terser/dist/bundle.min.js")
 
       # Template Compiler
-      load_file_in_context(ctx, "node_modules/ember-source/dist/ember-template-compiler.js")
       load_file_in_context(
         ctx,
-        "node_modules/babel-plugin-ember-template-compilation/src/plugin.js",
+        "#{Rails.root}/node_modules/ember-source/dist/ember-template-compiler.js",
+      )
+      load_file_in_context(
+        ctx,
+        "#{Rails.root}/node_modules/babel-plugin-ember-template-compilation/src/plugin.js",
         wrap_in_module: "babel-plugin-ember-template-compilation/index",
       )
       load_file_in_context(
         ctx,
-        "node_modules/babel-plugin-ember-template-compilation/src/expression-parser.js",
+        "#{Rails.root}/node_modules/babel-plugin-ember-template-compilation/src/expression-parser.js",
         wrap_in_module: "babel-plugin-ember-template-compilation/expression-parser",
       )
       load_file_in_context(
         ctx,
-        "node_modules/babel-plugin-ember-template-compilation/src/js-utils.js",
+        "#{Rails.root}/node_modules/babel-plugin-ember-template-compilation/src/js-utils.js",
         wrap_in_module: "babel-plugin-ember-template-compilation/js-utils",
       )
       load_file_in_context(
         ctx,
-        "node_modules/babel-plugin-ember-template-compilation/src/public-types.js",
+        "#{Rails.root}/node_modules/babel-plugin-ember-template-compilation/src/public-types.js",
         wrap_in_module: "babel-plugin-ember-template-compilation/public-types",
       )
       load_file_in_context(
         ctx,
-        "node_modules/babel-import-util/src/index.js",
+        "#{Rails.root}/node_modules/babel-import-util/src/index.js",
         wrap_in_module: "babel-import-util",
       )
       load_file_in_context(
         ctx,
-        "node_modules/ember-cli-htmlbars/lib/colocated-babel-plugin.js",
+        "#{Rails.root}/node_modules/ember-cli-htmlbars/lib/colocated-babel-plugin.js",
         wrap_in_module: "colocated-babel-plugin",
       )
 
@@ -202,7 +205,7 @@ class DiscourseJsProcessor
       # Raw HBS compiler
       load_file_in_context(
         ctx,
-        "node_modules/handlebars/dist/handlebars.js",
+        "#{Rails.root}/node_modules/handlebars/dist/handlebars.js",
         wrap_in_module: "handlebars",
       )
 
@@ -226,7 +229,7 @@ class DiscourseJsProcessor
       # Theme template AST transformation plugins
       load_file_in_context(
         ctx,
-        "discourse-js-processor.js",
+        "#{Rails.root}/app/assets/javascripts/discourse-js-processor.js",
         wrap_in_module: "discourse-js-processor",
       )
 

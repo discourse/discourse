@@ -79,9 +79,3 @@ jobs:
           yarn global add licensee
           yarn global upgrade licensee
           licensee --errors-only
-
-      - name: Check Ember CLI Workspace Licenses
-        if: ${{ !cancelled() }}
-        working-directory: ./app/assets/javascripts
-        run: |
-          licensee --errors-only

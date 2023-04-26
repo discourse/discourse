@@ -31,9 +31,7 @@ module EmberCli
     return @@chunk_infos if defined?(@@chunk_infos)
 
     raw_chunk_infos =
-      JSON.parse(
-        File.read("#{Rails.configuration.root}/app/assets/javascripts/discourse/dist/chunks.json"),
-      )
+      JSON.parse(File.read("#{Rails.root}/app/assets/javascripts/discourse/dist/chunks.json"))
 
     chunk_infos =
       raw_chunk_infos["scripts"]
@@ -57,8 +55,7 @@ module EmberCli
   def self.ember_version
     @version ||=
       begin
-        ember_source_package_raw =
-          File.read("#{Rails.root}/app/assets/javascripts/node_modules/ember-source/package.json")
+        ember_source_package_raw = File.read("#{Rails.root}/node_modules/ember-source/package.json")
         JSON.parse(ember_source_package_raw)["version"]
       end
   end

@@ -1,10 +1,10 @@
 {
   "name": "discourse",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:discourse/discourse.git",
+  "repository": "https://github.com/discourse/discourse",
   "author": "Discourse",
   "license": "GPL-2.0-only",
+  "private": true,
   "dependencies": {
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "5.15.4",
@@ -18,7 +18,9 @@
     "magnific-popup": "1.1.0",
     "moment": "2.29.4",
     "moment-timezone": "0.5.39",
+    "patch-package": "^6.5.1",
     "pikaday": "1.8.2",
+    "postinstall-postinstall": "^2.1.0",
     "squoosh": "discourse/squoosh#dc9649d",
     "workbox-cacheable-response": "^4.3.1",
     "workbox-core": "^4.3.1",
@@ -53,12 +55,34 @@
     "lint:js-plugins:fix": "eslint ./plugins",
     "lint:hbs": "ember-template-lint app/assets/javascripts/**/*.hbs plugins/**/assets/javascripts/**/*.hbs --no-error-on-unmatched-pattern",
     "lint:hbs:fix": "ember-template-lint app/assets/javascripts/**/*.hbs plugins/**/assets/javascripts/**/*.hbs --no-error-on-unmatched-pattern --fix",
-    "lint:prettier": "yarn pprettier  --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.js' 'app/assets/javascripts/**/*.hbs' 'plugins/**/assets/stylesheets/**/*.scss' 'plugins/**/assets/javascripts/**/*.js' 'plugins/**/assets/javascripts/**/*.hbs'",
+    "lint:prettier": "yarn pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.js' 'app/assets/javascripts/**/*.hbs' 'plugins/**/assets/stylesheets/**/*.scss' 'plugins/**/assets/javascripts/**/*.js' 'plugins/**/assets/javascripts/**/*.hbs'",
     "lint:prettier:fix": "yarn prettier -w '{app,plugins/**}/assets/{stylesheets,javascripts}/**/*.{scss,hbs,js}'",
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "yarn lttf:output && npx html-pages ./lint-progress --no-cache",
-    "postinstall": "yarn --cwd app/assets/javascripts $(node -e 'if(JSON.parse(process.env.npm_config_argv).original.includes(`--frozen-lockfile`)){console.log(`--frozen-lockfile`)}')"
+    "postinstall": "patch-package --patch-dir app/assets/javascripts/patches"
+  },
+  "workspaces": [
+    "app/assets/javascripts/admin",
+    "app/assets/javascripts/bootstrap-json",
+    "app/assets/javascripts/dialog-holder",
+    "app/assets/javascripts/discourse",
+    "app/assets/javascripts/discourse-common",
+    "app/assets/javascripts/discourse-hbr",
+    "app/assets/javascripts/discourse-plugins",
+    "app/assets/javascripts/discourse-widget-hbs",
+    "app/assets/javascripts/ember-cli-progress-ci",
+    "app/assets/javascripts/ember-production-deprecations",
+    "app/assets/javascripts/pretty-text",
+    "app/assets/javascripts/select-kit",
+    "app/assets/javascripts/truth-helpers",
+    "app/assets/javascripts/wizard"
+  ],
+  "resolutions": {
+    "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1",
+    "**/babel-plugin-ember-template-compilation": "2.0.0",
+    "**/markdown-it": "13.0.1",
+    "**/prettier": "2.7.1"
   },
   "engines": {
     "node": "16.* || >= 18",
