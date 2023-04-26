@@ -103,6 +103,12 @@ sl:
         activities: "Dejavnosti"
         flags: "Zastave"
         symbols: "Simboli"
+      thread:
+        replies:
+          one: "%{count} odgovor"
+          two: "%{count} odgovora"
+          few: "%{count} odgovori"
+          other: "%{count} odgovorov"
       draft_channel_screen:
         header: "Novo zasebno sporočilo"
         cancel: "Prekliči"

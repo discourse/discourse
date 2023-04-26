@@ -229,7 +229,16 @@ export default class ChatMessageInteractor {
 
   copyLink() {
     const { protocol, host } = window.location;
-    let url = getURL(`/chat/c/-/${this.message.channelId}/${this.message.id}`);
+    const channelId = this.message.channelId;
+    const threadId = this.message.threadId;
+
+    let url;
+    if (threadId) {
+      url = getURL(`/chat/c/-/${channelId}/t/${threadId}`);
+    } else {
+      url = getURL(`/chat/c/-/${channelId}/${this.message.id}`);
+    }
+
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
   }
@@ -340,12 +349,12 @@ export default class ChatMessageInteractor {
 
   @action
   reply() {
-    this.composer.setReplyTo(this.message.id);
+    this.composer.replyTo(this.message);
   }
 
   @action
   edit() {
-    this.composer.editButtonClicked(this.message.id);
+    this.composer.editMessage(this.message);
   }
 
   @action

@@ -129,7 +129,7 @@ class Reviewable < ActiveRecord::Base
       update_args = {
         status: statuses[:pending],
         id: target.id,
-        type: target.class.sti_name,
+        type: target.class.polymorphic_name,
         potential_spam: potential_spam == true ? true : nil,
       }
 
@@ -314,7 +314,7 @@ class Reviewable < ActiveRecord::Base
     valid = [action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first)].flatten
 
     # Ensure the user has access to the action
-    actions = actions_for(Guardian.new(performed_by), args)
+    actions = actions_for(args[:guardian] || Guardian.new(performed_by), args)
     raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
 
     perform_method = "perform_#{aliases[action_id] || action_id}".to_sym

@@ -430,11 +430,6 @@ te:
       muted_users: "నిశ్శబ్దం"
       tracked_topics_link: "చూపు"
       theme: "అలంకారం"
-      staff_counters:
-        flagged_posts: "కేతనించిన టపాలు"
-        deleted_posts: "తొగలించిన టపాలు"
-        suspensions: "సస్పెన్షన్లు"
-        warnings_received: "హెచ్చరికలు"
       messages:
         inbox: "ఇన్ బాక్స్"
         latest: "తాజా"
@@ -460,7 +455,6 @@ te:
       second_factor_backup:
         regenerate: "పునరుత్పత్తించు"
         disable: "అచేతనం"
-        enable: "చేతనం"
       second_factor:
         name: "పేరు"
         disable: "అచేతనం"

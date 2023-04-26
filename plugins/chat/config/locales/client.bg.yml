@@ -134,6 +134,10 @@ bg:
         activities: "Дейности"
         flags: "Сигнали"
         symbols: "Символи"
+      thread:
+        replies:
+          one: "%{count} отговор"
+          other: "%{count} отговора"
       draft_channel_screen:
         header: "Ново Съобщение"
         cancel: "Прекрати"

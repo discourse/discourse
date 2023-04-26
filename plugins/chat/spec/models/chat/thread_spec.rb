@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Thread do
+  before do
+    SiteSetting.chat_enabled = true
+    SiteSetting.enable_experimental_chat_threaded_discussions = true
+  end
+
   describe ".ensure_consistency!" do
     fab!(:channel) { Fabricate(:category_channel) }
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
@@ -39,6 +44,172 @@ RSpec.describe Chat::Thread do
 
         described_class.ensure_consistency!
         expect(thread_1.reload.replies_count).to eq(0)
+      end
+
+      it "clears the affected replies_count caches" do
+        thread_1.set_replies_count_cache(100)
+        expect(thread_1.replies_count_cache).to eq(100)
+        expect(thread_1.replies_count_cache_updated_at).not_to eq(nil)
+
+        described_class.ensure_consistency!
+        expect(Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(thread_1.id))).to eq(
+          nil,
+        )
+        expect(
+          Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(thread_1.id)),
+        ).to eq(nil)
+      end
+
+      it "does not attempt to clear caches if no replies_count caches are updated" do
+        described_class.ensure_consistency!
+        Chat::Thread.expects(:clear_caches!).never
+        described_class.ensure_consistency!
+      end
+
+      it "does nothing if threads are disabled" do
+        SiteSetting.enable_experimental_chat_threaded_discussions = false
+        Chat::Thread.expects(:update_counts).never
+        described_class.ensure_consistency!
+      end
+    end
+  end
+
+  describe ".clear_caches" do
+    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
+    fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
+
+    before do
+      thread_1.set_replies_count_cache(100)
+      thread_2.set_replies_count_cache(100)
+    end
+
+    it "clears multiple keys" do
+      Chat::Thread.clear_caches!([thread_1.id, thread_2.id])
+      expect(Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(thread_1.id))).to eq(
+        nil,
+      )
+      expect(
+        Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(thread_1.id)),
+      ).to eq(nil)
+      expect(Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(thread_2.id))).to eq(
+        nil,
+      )
+      expect(
+        Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(thread_2.id)),
+      ).to eq(nil)
+    end
+
+    it "wraps the ids into an array if only an integer is provided" do
+      Chat::Thread.clear_caches!(thread_1.id)
+      expect(Discourse.redis.get(Chat::Thread.replies_count_cache_redis_key(thread_1.id))).to eq(
+        nil,
+      )
+      expect(
+        Discourse.redis.get(Chat::Thread.replies_count_cache_updated_at_redis_key(thread_1.id)),
+      ).to eq(nil)
+    end
+  end
+
+  describe ".grouped_messages" do
+    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
+    fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
+
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread_1) }
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread_1) }
+    fab!(:message_3) { Fabricate(:chat_message, chat_channel: channel, thread: thread_2) }
+
+    let(:result) { Chat::Thread.grouped_messages(**params) }
+
+    context "when thread_ids provided" do
+      let(:params) { { thread_ids: [thread_1.id, thread_2.id] } }
+
+      it "groups all the message ids in each thread by thread ID" do
+        expect(result.find { |res| res.thread_id == thread_1.id }.to_h).to eq(
+          {
+            thread_message_ids: [thread_1.original_message_id, message_1.id, message_2.id],
+            thread_id: thread_1.id,
+            original_message_id: thread_1.original_message_id,
+          },
+        )
+        expect(result.find { |res| res.thread_id == thread_2.id }.to_h).to eq(
+          {
+            thread_message_ids: [thread_2.original_message_id, message_3.id],
+            thread_id: thread_2.id,
+            original_message_id: thread_2.original_message_id,
+          },
+        )
+      end
+
+      context "when include_original_message is false" do
+        let(:params) { { thread_ids: [thread_1.id, thread_2.id], include_original_message: false } }
+
+        it "does not include the original message in the thread_message_ids" do
+          expect(result.find { |res| res.thread_id == thread_1.id }.to_h).to eq(
+            {
+              thread_message_ids: [message_1.id, message_2.id],
+              thread_id: thread_1.id,
+              original_message_id: thread_1.original_message_id,
+            },
+          )
+        end
+      end
+    end
+
+    context "when message_ids provided" do
+      let(:params) do
+        {
+          message_ids: [
+            thread_1.original_message_id,
+            thread_2.original_message_id,
+            message_1.id,
+            message_2.id,
+            message_3.id,
+          ],
+        }
+      end
+
+      it "groups all the message ids in each thread by thread ID" do
+        expect(result.find { |res| res.thread_id == thread_1.id }.to_h).to eq(
+          {
+            thread_message_ids: [thread_1.original_message_id, message_1.id, message_2.id],
+            thread_id: thread_1.id,
+            original_message_id: thread_1.original_message_id,
+          },
+        )
+        expect(result.find { |res| res.thread_id == thread_2.id }.to_h).to eq(
+          {
+            thread_message_ids: [thread_2.original_message_id, message_3.id],
+            thread_id: thread_2.id,
+            original_message_id: thread_2.original_message_id,
+          },
+        )
+      end
+
+      context "when include_original_message is false" do
+        let(:params) do
+          {
+            message_ids: [
+              thread_1.original_message_id,
+              thread_2.original_message_id,
+              message_1.id,
+              message_2.id,
+              message_3.id,
+            ],
+            include_original_message: false,
+          }
+        end
+
+        it "does not include the original message in the thread_message_ids" do
+          expect(result.find { |res| res.thread_id == thread_1.id }.to_h).to eq(
+            {
+              thread_message_ids: [message_1.id, message_2.id],
+              thread_id: thread_1.id,
+              original_message_id: thread_1.original_message_id,
+            },
+          )
+        end
       end
     end
   end

@@ -422,6 +422,20 @@ RSpec.describe PostRevisor do
         }.to change { post.topic.bumped_at }
       end
 
+      it "should bump topic when no topic category" do
+        topic_with_no_category = Fabricate(:topic, category_id: nil)
+        post_from_topic_with_no_category = Fabricate(:post, topic: topic_with_no_category)
+        expect {
+          result =
+            subject.revise!(
+              Fabricate(:admin),
+              raw: post_from_topic_with_no_category.raw,
+              tags: ["foo"],
+            )
+          expect(result).to eq(true)
+        }.to change { topic.reload.bumped_at }
+      end
+
       it "should send muted and latest message" do
         TopicUser.create!(topic: post.topic, user: post.user, notification_level: 0)
         messages =

@@ -1,10 +1,17 @@
 <ChatDrawer::Header @toggleExpand={{@drawerActions.toggleExpand}}>
-  <ChatDrawer::Header::LeftActions />
+  {{#if (and this.chatStateManager.isDrawerExpanded this.chat.activeChannel)}}
+    <div class="chat-drawer-header__left-actions">
+      <div class="chat-drawer-header__top-line">
+        <ChatDrawer::Header::BackLink
+          @route="chat.channel"
+          @title={{i18n "chat.return_to_list"}}
+          @routeModels={{this.chat.activeChannel.routeModels}}
+        />
+      </div>
+    </div>
+  {{/if}}
 
-  <ChatDrawer::Header::ChannelTitle
-    @channel={{this.chat.activeChannel}}
-    @drawerActions={{@drawerActions}}
-  />
+  <ChatDrawer::Header::Title @title="chat.thread.label" />
 
   <ChatDrawer::Header::RightActions @drawerActions={{@drawerActions}} />
 </ChatDrawer::Header>

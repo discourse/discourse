@@ -1,6 +1,7 @@
 @import "base-common";
 @import "sidebar-extensions";
 @import "chat-browse";
+@import "chat-channel";
 @import "chat-channel-card";
 @import "chat-channel-info";
 @import "chat-channel-preview-card";
@@ -35,6 +36,8 @@
 @import "chat-skeleton";
 @import "chat-tabs";
 @import "chat-thread";
+@import "chat-side-panel-resizer";
+@import "chat-upload-drop-zone";
 @import "chat-transcript";
 @import "core-extensions";
 @import "create-channel-modal";

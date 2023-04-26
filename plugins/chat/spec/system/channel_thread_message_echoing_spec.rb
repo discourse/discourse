@@ -85,5 +85,17 @@ describe "Channel thread message echoing", type: :system, js: true do
         channel_page.message_by_id_selector(thread.replies.last.id),
       )
     end
+
+    it "does show the thread original_message if it is the last message in the channel" do
+      new_thread = Fabricate(:chat_thread, channel: channel)
+      current_user
+        .user_chat_channel_memberships
+        .find_by(chat_channel: channel)
+        .update!(last_read_message_id: new_thread.original_message_id)
+      chat_page.visit_channel(channel)
+      expect(channel_page).to have_css(
+        channel_page.message_by_id_selector(new_thread.original_message_id),
+      )
+    end
   end
 end

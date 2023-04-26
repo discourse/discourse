@@ -299,7 +299,7 @@ export default class ChatApi extends Service {
   /**
    * Saves a draft for the channel, which includes message contents and uploads.
    * @param {number} channelId - The ID of the channel.
-   * @param {object} data - The draft data, see ChatMessageDraft.toJSON() for more details.
+   * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
    * @returns {Promise}
    */
   saveDraft(channelId, data) {
@@ -350,10 +350,9 @@ export default class ChatApi extends Service {
    * @param {number} messageId - The ID of the message being restored.
    */
   restoreMessage(channelId, messageId) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
-    return ajax(`/chat/${channelId}/restore/${messageId}`, {
-      type: "PUT",
-    });
+    return this.#putRequest(
+      `/channels/${channelId}/messages/${messageId}/restore`
+    );
   }
 
   /**

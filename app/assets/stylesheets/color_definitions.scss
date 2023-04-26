@@ -25,6 +25,7 @@
   --header_background-rgb: #{hexToRGB($header_background)};
   --tertiary-rgb: #{hexToRGB($tertiary)};
   --highlight-rgb: #{hexToRGB($highlight)};
+  --success-rgb: #{hexToRGB($success)};
 
   --primary-very-low: #{$primary-very-low};
   --primary-low: #{$primary-low};

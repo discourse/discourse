@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import Service, { inject as service } from "@ember/service";
 
 export default class ChatChannelPane extends Service {
@@ -13,14 +12,18 @@ export default class ChatChannelPane extends Service {
   @tracked reacting = false;
   @tracked selectingMessages = false;
   @tracked lastSelectedMessage = null;
-  @tracked sendingLoading = false;
+  @tracked sending = false;
 
   get selectedMessageIds() {
-    return this.chat.activeChannel.selectedMessages.mapBy("id");
+    return this.chat.activeChannel?.selectedMessages?.mapBy("id") || [];
   }
 
   get composerService() {
     return this.chatChannelComposer;
+  }
+
+  get channel() {
+    return this.chat.activeChannel;
   }
 
   @action
@@ -37,55 +40,19 @@ export default class ChatChannelPane extends Service {
     this.selectingMessages = true;
   }
 
-  @action
-  editMessage(newContent, uploads) {
-    this.sendingLoading = true;
-    let data = {
-      new_message: newContent,
-      upload_ids: (uploads || []).map((upload) => upload.id),
-    };
-    return this.chatApi
-      .editMessage(
-        this.composerService.editingMessage.channelId,
-        this.composerService.editingMessage.id,
-        data
-      )
-      .then(() => {
-        this.resetAfterSend();
-      })
-      .catch(popupAjaxError)
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.sendingLoading = false;
-      });
-  }
-
-  resetAfterSend() {
-    const channelId = this.composerService.editingMessage?.channelId;
-    if (channelId) {
-      this.chatComposerPresenceManager.notifyState(channelId, false);
-    }
-
-    this.composerService.reset();
-  }
-
-  @action
-  editLastMessageRequested() {
-    const lastUserMessage = this.chat.activeChannel.messages.findLast(
+  get lastCurrentUserMessage() {
+    const lastCurrentUserMessage = this.chat.activeChannel.messages.findLast(
       (message) => message.user.id === this.currentUser.id
     );
 
-    if (!lastUserMessage) {
+    if (!lastCurrentUserMessage) {
       return;
     }
 
-    if (lastUserMessage.staged || lastUserMessage.error) {
+    if (lastCurrentUserMessage.staged || lastCurrentUserMessage.error) {
       return;
     }
 
-    this.composerService.editingMessage = lastUserMessage;
-    this.composerService.focusComposer();
+    return lastCurrentUserMessage;
   }
 }

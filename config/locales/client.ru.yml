@@ -1275,12 +1275,6 @@ ru:
       save_to_change_theme: 'Тема будет обновлена после нажатия на кнопку «%{save_text}».'
       home: "Домашняя страница"
       staged: "Сымитированный"
-      staff_counters:
-        flagged_posts: "записи с жалобами"
-        deleted_posts: "удалённые записи"
-        suspensions: "заморозки"
-        warnings_received: "предупреждения"
-        rejected_posts: "отклонённые записи"
       messages:
         all: "все"
         inbox: "Входящие"
@@ -1407,13 +1401,11 @@ ru:
         title: "Резервные коды двухфакторной аутентификации"
         regenerate: "Сгенерировать заново"
         disable: "Отключить"
-        enable: "Включить"
-        enable_long: "Включить резервные коды"
         manage:
-          one: "Управление резервными кодами. У вас остался <strong>%{count}</strong> резервный код."
-          few: "Управление резервными кодами. У вас осталось <strong>%{count}</strong> резервных кода."
-          many: "Управление резервными кодами. У вас осталось <strong>%{count}</strong> резервных кодов."
-          other: "Управление резервными кодами. У вас осталось <strong>%{count}</strong> резервного кода."
+          one: "У вас остался <strong>%{count}</strong> резервный код."
+          few: "У вас осталось <strong>%{count}</strong> резервных кода."
+          many: "У вас осталось <strong>%{count}</strong> резервных кодов."
+          other: "У вас осталось <strong>%{count}</strong> резервного кода."
         copy_to_clipboard: "Скопировать в буфер"
         copy_to_clipboard_error: "Ошибка при копировании данных в буфер обмена"
         copied_to_clipboard: "Скопировано в буфер"
@@ -4794,9 +4786,6 @@ ru:
         user_promoted_event:
           name: "Событие повышения уровня доверия"
           details: "При повышении уровня доверия пользователя."
-        user_badge_event:
-          name: "Событие награждения"
-          details: "При получении пользователем награды."
         group_user_event:
           name: "Событие группового пользователя"
           details: "При добавлении или удалении пользователя из группы."

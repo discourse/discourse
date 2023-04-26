@@ -123,6 +123,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
 
           chat.visit_channel(channel_1)
           click_button(I18n.t("js.chat.channel_archive.retry"))
+          expect(page).to have_css(".chat-channel-archive-status a")
 
           new_window = window_opened_by { find(".chat-channel-archive-status a").click }
           within_window(new_window) do

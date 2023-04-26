@@ -226,13 +226,15 @@ createWidget("post-avatar", {
 
     const postAvatarBody = [body];
 
-    if (attrs.flair_url || attrs.flair_bg_color) {
-      postAvatarBody.push(this.attach("avatar-flair", attrs));
-    } else {
-      const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+    if (attrs.flair_group_id) {
+      if (attrs.flair_url || attrs.flair_bg_color) {
+        postAvatarBody.push(this.attach("avatar-flair", attrs));
+      } else {
+        const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
 
-      if (autoFlairAttrs) {
-        postAvatarBody.push(this.attach("avatar-flair", autoFlairAttrs));
+        if (autoFlairAttrs) {
+          postAvatarBody.push(this.attach("avatar-flair", autoFlairAttrs));
+        }
       }
     }
 
@@ -495,7 +497,10 @@ createWidget("post-contents", {
 
     result = result.concat(applyDecorators(this, "after-cooked", attrs, state));
 
-    if (attrs.cooked_hidden) {
+    if (
+      attrs.cooked_hidden &&
+      (this.currentUser?.isLeader || attrs.user_id === this.currentUser?.id)
+    ) {
       result.push(this.attach("expand-hidden", attrs));
     }
 

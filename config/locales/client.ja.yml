@@ -1106,12 +1106,6 @@ ja:
       save_to_change_theme: '「%{save_text}」をクリックするとテーマが更新されます'
       home: "デフォルトのホームページ"
       staged: "ステージング"
-      staff_counters:
-        flagged_posts: "通報された投稿"
-        deleted_posts: "削除された投稿"
-        suspensions: "凍結"
-        warnings_received: "警告"
-        rejected_posts: "拒否された投稿"
       messages:
         all: "すべての受信トレイ"
         inbox: "受信トレイ"
@@ -1208,10 +1202,8 @@ ja:
         title: "二要素認証のバックアップコード"
         regenerate: "再生成"
         disable: "無効化"
-        enable: "有効化"
-        enable_long: "バックアップコードを有効にする"
         manage:
-          other: "バックアップコードを管理してください。 <strong>%{count}</strong> 個のバックアップコードが残っています。"
+          other: "<strong>%{count}</strong> 個のバックアップコードが残っています。"
         copy_to_clipboard: "クリップボードにコピー"
         copy_to_clipboard_error: "データをクリップボードにコピーする際にエラーが発生しました"
         copied_to_clipboard: "クリップボードにコピーしました"
@@ -4178,9 +4170,6 @@ ja:
         user_promoted_event:
           name: "ユーザー昇格イベント"
           details: "ユーザーがある信頼レベルから別の信頼レベルに昇格したとき。"
-        user_badge_event:
-          name: "バッジ付与イベント"
-          details: "ユーザーがバッジを受け取った場合。"
         group_user_event:
           name: "グループユーザーイベント"
           details: "ユーザーがグループに追加またはグループから削除された場合。"

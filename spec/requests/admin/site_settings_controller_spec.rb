@@ -253,6 +253,19 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.search_tokenize_chinese).to eq(true)
       end
 
+      it "throws an error when the parameter is not a configurable site setting" do
+        put "/admin/site_settings/clear_cache!.json",
+            params: {
+              clear_cache!: "",
+              update_existing_user: true,
+            }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          "No setting named 'clear_cache!' exists",
+        )
+      end
+
       it "throws an error when trying to change a deprecated setting with override = false" do
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
         put "/admin/site_settings/enable_personal_messages.json",

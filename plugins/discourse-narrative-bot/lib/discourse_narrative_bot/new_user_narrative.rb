@@ -638,7 +638,10 @@ module DiscourseNarrativeBot
     end
 
     def url_helpers(url, opts = {})
-      Rails.application.routes.url_helpers.public_send(url, opts.merge(host: Discourse.base_url))
+      Rails.application.routes.url_helpers.public_send(
+        url,
+        opts.merge(host: Discourse.base_url_no_prefix),
+      )
     end
   end
 end

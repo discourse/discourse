@@ -1387,12 +1387,6 @@ ar:
       save_to_change_theme: 'سيتم تحديث السمة بعد النقر على "%{save_text}"'
       home: "الصفحة الرئيسية المبدئية"
       staged: "مؤقت"
-      staff_counters:
-        flagged_posts: "منشور مُبلَغ عنه"
-        deleted_posts: "منشور محذوف"
-        suspensions: "حالة تعليق"
-        warnings_received: "تحذير"
-        rejected_posts: "منشور مرفوض"
       messages:
         all: "جميع صناديق الوارد"
         inbox: "صندوق الوارد"
@@ -1531,15 +1525,13 @@ ar:
         title: "الرموز الاحياطية للمصادقة الثنائية"
         regenerate: "أعِد التوليد"
         disable: "إيقاف"
-        enable: "تفعيل"
-        enable_long: "تفعيل الرموز الاحتياطية"
         manage:
-          zero: "يمكنك إدارة الرموز الاحتياطية. متبقٍ لديك <strong>%{count}</strong> رمز احتياطي."
-          one: "يمكنك إدارة الرموز الاحتياطية. متبقٍ لديك رمز احتياطي واحد (<strong>%{count}</strong>)."
-          two: "يمكنك إدارة الرموز الاحتياطية. متبقٍ لديك رمزان احتياطيان (<strong>%{count}</strong>)."
-          few: "يمكنك إدارة الرموز الاحتياطية. متبقٍ لديك <strong>%{count}</strong> رموز احتياطية."
-          many: "يمكنك إدارة الرموز الاحتياطية. متبقٍ لديك <strong>%{count}</strong> رمزًا احتياطيًا."
-          other: "يمكنك إدارة الرموز الاحتياطية. متبقٍ لديك <strong>%{count}</strong> رمز احتياطي."
+          zero: "متبقٍ لديك <strong>%{count}</strong> رمزًا احتياطيًا."
+          one: "متبقٍ لديك رمز احتياطي واحد (<strong>%{count}</strong>)."
+          two: "متبقٍ لديك رمزان احتياطيان (<strong>%{count}</strong>)."
+          few: "متبقٍ لديك <strong>%{count}</strong> رموز احتياطية."
+          many: "متبقٍ لديك <strong>%{count}</strong> رمزًا احتياطيًا."
+          other: "بقيَ <strong>%{count}</strong> رمز احتياطي."
         copy_to_clipboard: "انسخ إلى الحافظة"
         copy_to_clipboard_error: "حدث خطأ في نسخ البيانات إلى الحافظة"
         copied_to_clipboard: "تم النسخ إلى الحافظة"
@@ -5185,9 +5177,6 @@ ar:
         user_promoted_event:
           name: "حدث يروِّج له المستخدم"
           details: "عندما تتم ترقية المستخدم من مستوى ثقة إلى آخر."
-        user_badge_event:
-          name: "حدث منح الشارة"
-          details: "عند حصول المستخدم على شارة."
         group_user_event:
           name: "حدث مستخدم المجموعة"
           details: "عند إضافة مستخدم أو إزالته في مجموعة."

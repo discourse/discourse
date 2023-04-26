@@ -20,26 +20,24 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
   end
 
   context "when using meta + b" do
-    xit "adds bold text" do
+    it "adds bold text" do
       chat.visit_channel(channel_1)
 
-      within(".chat-composer-input") do |composer|
-        composer.send_keys([key_modifier, "b"])
+      composer = find(".chat-composer__input")
+      composer.send_keys([key_modifier, "b"])
 
-        expect(composer.value).to eq("**strong text**")
-      end
+      expect(composer.value).to eq("**strong text**")
     end
   end
 
   context "when using meta + i" do
-    xit "adds italic text" do
+    it "adds italic text" do
       chat.visit_channel(channel_1)
 
-      within(".chat-composer-input") do |composer|
-        composer.send_keys([key_modifier, "i"])
+      composer = find(".chat-composer__input")
+      composer.send_keys([key_modifier, "i"])
 
-        expect(composer.value).to eq("_emphasized text_")
-      end
+      expect(composer.value).to eq("_emphasized text_")
     end
   end
 
@@ -47,11 +45,46 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
     it "adds preformatted text" do
       chat.visit_channel(channel_1)
 
-      within(".chat-composer-input") do |composer|
-        composer.send_keys([key_modifier, "e"])
+      composer = find(".chat-composer__input")
+      composer.send_keys([key_modifier, "e"])
 
-        expect(composer.value).to eq("`indent preformatted text by 4 spaces`")
-      end
+      expect(composer.value).to eq("`indent preformatted text by 4 spaces`")
+    end
+  end
+
+  context "when the thread panel is also open" do
+    fab!(:user_2) { Fabricate(:user) }
+    fab!(:thread) do
+      chat_thread_chain_bootstrap(
+        channel: channel_1,
+        users: [current_user, user_2],
+        messages_count: 2,
+      )
+    end
+
+    before do
+      SiteSetting.enable_experimental_chat_threaded_discussions = true
+      channel_1.update!(threading_enabled: true)
+    end
+
+    it "directs the shortcut to the focused composer" do
+      chat.visit_channel(channel_1)
+      channel_page.message_thread_indicator(thread.original_message).click
+
+      composer = find(".chat-channel .chat-composer__input")
+      thread_composer = find(".chat-thread .chat-composer__input")
+      composer.send_keys([key_modifier, "i"])
+
+      expect(composer.value).to eq("_emphasized text_")
+      expect(thread_composer.value).to eq("")
+
+      composer.fill_in(with: "")
+      thread_composer.fill_in(with: "")
+
+      thread_composer.send_keys([key_modifier, "i"])
+
+      expect(composer.value).to eq("")
+      expect(thread_composer.value).to eq("_emphasized text_")
     end
   end
 
@@ -65,7 +98,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
       expect(channel_page).to have_message(id: message_1.id)
 
-      find(".chat-composer-input").send_keys(:arrow_up)
+      find(".chat-composer__input").send_keys(:arrow_up)
 
       expect(page.find(".chat-composer-message-details")).to have_content(message_1.message)
     end
@@ -78,7 +111,7 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
         page.driver.browser.network_conditions = { offline: true }
         channel_page.send_message("Hello world")
 
-        find(".chat-composer-input").send_keys(:arrow_up)
+        find(".chat-composer__input").send_keys(:arrow_up)
 
         expect(page).to have_no_css(".chat-composer-message-details")
       end

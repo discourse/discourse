@@ -1,66 +1,73 @@
 # frozen_string_literal: true
 
 class TopicsFilter
-  def initialize(guardian:, scope: Topic)
+  attr_reader :topic_notification_levels
+
+  def initialize(guardian:, scope: Topic.all)
     @guardian = guardian
     @scope = scope
-    @notification_levels = Set.new
-    @registered_scopes = {}
+    @topic_notification_levels = Set.new
   end
 
-  def topic_notification_levels
-    @registered_scopes.dig(:topic_notification_levels, :params, :notification_levels) || []
-  end
+  FILTER_ALIASES = { "categories" => "category" }
+  private_constant :FILTER_ALIASES
 
   def filter_from_query_string(query_string)
     return @scope if query_string.blank?
 
+    filters = {}
+
     query_string.scan(
       /(?<key_prefix>[-=])?(?<key>[\w-]+):(?<value>[^\s]+)/,
     ) do |key_prefix, key, value|
-      case key
-      when "created-by"
-        filter_created_by_user(usernames: value.split(","))
-      when "in"
-        @scope = filter_state(state: value)
-      when "status"
-        @scope = filter_status(status: value)
-      when "tags"
-        value.scan(
-          /^(?<tag_names>([a-zA-Z0-9\-]+)(?<delimiter>[,+])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)$/,
-        ) do |tag_names, delimiter|
-          break if key_prefix && key_prefix != "-"
+      key = FILTER_ALIASES[key] || key
 
-          match_all =
-            if delimiter == ","
-              false
-            else
-              true
-            end
-
-          @scope =
-            filter_tags(
-              tag_names: tag_names.split(delimiter),
-              exclude: key_prefix.presence,
-              match_all: match_all,
-            )
-        end
-      when "category", "categories"
-        value.scan(
-          /^(?<category_slugs>([a-zA-Z0-9\-:]+)(?<delimiter>[,])?([a-zA-Z0-9\-:]+)?(\k<delimiter>[a-zA-Z0-9\-:]+)*)$/,
-        ) do |category_slugs, delimiter|
-          break if key_prefix && key_prefix != "="
-
-          @scope =
-            filter_categories(
-              category_slugs: category_slugs.split(delimiter),
-              exclude_subcategories: key_prefix.presence,
-            )
-        end
-      end
+      filters[key] ||= {}
+      filters[key]["key_prefixes"] ||= []
+      filters[key]["key_prefixes"] << key_prefix
+      filters[key]["values"] ||= []
+      filters[key]["values"] << value
     end
 
-    @registered_scopes.each_value { |value| @scope = value[:block].call(*value[:params].values) }
+    filters.each do |filter, hash|
+      key_prefixes = hash["key_prefixes"]
+      values = hash["values"]
+
+      filter_values = extract_and_validate_value_for(filter, values)
+
+      case filter
+      when "category"
+        filter_categories(values: key_prefixes.zip(filter_values))
+      when "created-by"
+        filter_created_by_user(usernames: filter_values.flat_map { |value| value.split(",") })
+      when "in"
+        filter_in(values: filter_values)
+      when "likes-min"
+        filter_by_number_of_likes(min: filter_values)
+      when "likes-max"
+        filter_by_number_of_likes(max: filter_values)
+      when "likes-op-min"
+        filter_by_number_of_likes_in_first_post(min: filter_values)
+      when "likes-op-max"
+        filter_by_number_of_likes_in_first_post(max: filter_values)
+      when "posts-min"
+        filter_by_number_of_posts(min: filter_values)
+      when "posts-max"
+        filter_by_number_of_posts(max: filter_values)
+      when "posters-min"
+        filter_by_number_of_posters(min: filter_values)
+      when "posters-max"
+        filter_by_number_of_posters(max: filter_values)
+      when "status"
+        filter_values.each { |status| @scope = filter_status(status: status) }
+      when "tags"
+        filter_tags(values: key_prefixes.zip(filter_values))
+      when "views-min"
+        filter_by_number_of_views(min: filter_values)
+      when "views-max"
+        filter_by_number_of_views(max: filter_values)
+      end
+    end
 
     @scope
   end
@@ -92,63 +99,154 @@ class TopicsFilter
 
   private
 
-  def filter_created_by_user(usernames:)
-    register_scope(
-      key: :created_by_user,
-      params: {
-        usernames: usernames.map(&:downcase),
-      },
-    ) do |usernames_lower|
-      @scope.joins(:user).where("users.username_lower IN (?)", usernames_lower)
+  def extract_and_validate_value_for(filter, values)
+    case filter
+    when "likes-min", "likes-max", "likes-op-min", "likes-op-max", "posts-min", "posts-max",
+         "posters-min", "posters-max", "views-min", "views-max"
+      value = values.last
+      value if value =~ /\A\d+\z/
+    else
+      values
     end
   end
 
-  def filter_state(state:)
-    case state
-    when "pinned"
-      @scope.where(
-        "topics.pinned_at IS NOT NULL AND topics.pinned_until > topics.pinned_at AND ? < topics.pinned_until",
-        Time.zone.now,
-      )
-    when "bookmarked"
-      return @scope.none unless @guardian.user
+  def filter_by_topic_range(column_name:, min: nil, max: nil, scope: nil)
+    { min => ">=", max => "<=" }.each do |value, operator|
+      next if !value
+      @scope = (scope || @scope).where("#{column_name} #{operator} ?", value)
+    end
+  end
 
-      @scope.joins(:topic_users).where(
-        "topic_users.bookmarked AND topic_users.user_id = ?",
-        @guardian.user.id,
-      )
-    else
-      return @scope.none if !@guardian.user
+  def filter_by_number_of_posts(min: nil, max: nil)
+    filter_by_topic_range(column_name: "topics.posts_count", min:, max:)
+  end
 
-      topic_notification_levels = Set.new
+  def filter_by_number_of_posters(min: nil, max: nil)
+    filter_by_topic_range(column_name: "topics.participant_count", min:, max:)
+  end
 
-      state
-        .split(",")
-        .each do |topic_notification_level|
-          if level = TopicUser.notification_levels[topic_notification_level.to_sym]
-            topic_notification_levels << level
-          end
-        end
+  def filter_by_number_of_likes(min: nil, max: nil)
+    filter_by_topic_range(column_name: "topics.like_count", min:, max:)
+  end
 
-      register_scope(
-        key: :topic_notification_levels,
-        params: {
-          notification_levels: topic_notification_levels.to_a,
-        },
-      ) do |notification_levels|
-        @scope.joins(:topic_users).where(
-          "topic_users.notification_level IN (:topic_notification_levels) AND topic_users.user_id = :user_id",
-          topic_notification_levels: notification_levels,
-          user_id: @guardian.user.id,
+  def filter_by_number_of_likes_in_first_post(min: nil, max: nil)
+    filter_by_topic_range(
+      column_name: "first_posts.like_count",
+      min:,
+      max:,
+      scope:
+        @scope.joins(
+          "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
+        ),
+    )
+  end
+
+  def filter_by_number_of_views(min: nil, max: nil)
+    filter_by_topic_range(column_name: "views", min:, max:)
+  end
+
+  def filter_categories(values:)
+    exclude_subcategories_category_slugs = []
+    include_subcategories_category_slugs = []
+
+    values.each do |key_prefix, value|
+      break if key_prefix && key_prefix != "="
+
+      value
+        .scan(
+          /^(?<category_slugs>([a-zA-Z0-9\-:]+)(?<delimiter>[,])?([a-zA-Z0-9\-:]+)?(\k<delimiter>[a-zA-Z0-9\-:]+)*)$/,
         )
+        .each do |category_slugs, delimiter|
+          (
+            if key_prefix.presence
+              exclude_subcategories_category_slugs
+            else
+              include_subcategories_category_slugs
+            end
+          ).concat(category_slugs.split(delimiter))
+        end
+    end
+
+    category_ids = []
+
+    if exclude_subcategories_category_slugs.present?
+      category_ids =
+        get_category_ids_from_slugs(
+          exclude_subcategories_category_slugs,
+          exclude_subcategories: true,
+        )
+    end
+
+    if include_subcategories_category_slugs.present?
+      category_ids.concat(
+        get_category_ids_from_slugs(
+          include_subcategories_category_slugs,
+          exclude_subcategories: false,
+        ),
+      )
+    end
+
+    if category_ids.present?
+      @scope = @scope.where("topics.category_id IN (?)", category_ids)
+    elsif exclude_subcategories_category_slugs.present? ||
+          include_subcategories_category_slugs.present?
+      @scope = @scope.none
+    end
+  end
+
+  def filter_created_by_user(usernames:)
+    @scope =
+      @scope.joins(:user).where(
+        "users.username_lower IN (:usernames)",
+        usernames: usernames.map(&:downcase),
+      )
+  end
+
+  def filter_in(values:)
+    values.uniq!
+
+    if values.delete("pinned")
+      @scope =
+        @scope.where(
+          "topics.pinned_at IS NOT NULL AND topics.pinned_until > topics.pinned_at AND ? < topics.pinned_until",
+          Time.zone.now,
+        )
+    end
+
+    if @guardian.user
+      if values.delete("bookmarked")
+        @scope =
+          @scope.joins(:topic_users).where(
+            "topic_users.bookmarked AND topic_users.user_id = ?",
+            @guardian.user.id,
+          )
       end
 
-      @scope
+      if values.present?
+        values.each do |value|
+          value
+            .split(",")
+            .each do |topic_notification_level|
+              if level = TopicUser.notification_levels[topic_notification_level.to_sym]
+                @topic_notification_levels << level
+              end
+            end
+        end
+
+        @scope =
+          @scope.joins(:topic_users).where(
+            "topic_users.notification_level IN (:topic_notification_levels) AND topic_users.user_id = :user_id",
+            topic_notification_levels: @topic_notification_levels.to_a,
+            user_id: @guardian.user.id,
+          )
+      end
+    elsif values.present?
+      @scope = @scope.none
     end
   end
 
-  def filter_categories(category_slugs:, exclude_subcategories: false)
-    category_ids = Category.ids_from_slugs(category_slugs)
+  def get_category_ids_from_slugs(slugs, exclude_subcategories: false)
+    category_ids = Category.ids_from_slugs(slugs)
 
     category_ids =
       Category
@@ -156,46 +254,95 @@ class TopicsFilter
         .filter { |category| @guardian.can_see_category?(category) }
         .map(&:id)
 
-    # Don't return any records if the user does not have access to any of the categories
-    return @scope.none if category_ids.length < category_slugs.length
-
     if !exclude_subcategories
       category_ids = category_ids.flat_map { |category_id| Category.subcategory_ids(category_id) }
     end
 
-    register_scope(key: :categories, params: { category_ids: category_ids }) do |in_category_ids|
-      @scope.joins(:category).where(
-        "categories.id IN (:category_ids)",
-        category_ids: in_category_ids,
-      )
-    end
-
-    @scope
+    category_ids
   end
 
-  def filter_tags(tag_names:, match_all: true, exclude: false)
-    return @scope if !SiteSetting.tagging_enabled?
-    return @scope if tag_names.blank?
-
-    tag_ids =
+  # Accepts an array of tag names and returns an array of tag ids and the tag ids of aliases for the tag names which the user can see.
+  # If a block is given, it will be called with the tag ids and alias tag ids as arguments.
+  def tag_ids_from_tag_names(tag_names)
+    tag_ids, alias_tag_ids =
       DiscourseTagging
         .filter_visible(Tag, @guardian)
         .where_name(tag_names)
         .pluck(:id, :target_tag_id)
 
-    tag_ids.flatten!
-    tag_ids.uniq!
-    tag_ids.compact!
+    tag_ids ||= []
+    alias_tag_ids ||= []
 
-    return @scope.none if match_all && tag_ids.length != tag_names.length
-    return @scope if tag_ids.empty?
+    yield(tag_ids, alias_tag_ids) if block_given?
 
-    self.send(
-      "#{exclude ? "exclude" : "include"}_topics_with_#{match_all ? "all" : "any"}_tags",
-      tag_ids,
-    )
+    all_tag_ids = tag_ids.concat(alias_tag_ids)
+    all_tag_ids.compact!
+    all_tag_ids.uniq!
+    all_tag_ids
+  end
 
-    @scope
+  def filter_tags(values:)
+    return if !SiteSetting.tagging_enabled?
+
+    exclude_all_tags = []
+    exclude_any_tags = []
+    include_any_tags = []
+    include_all_tags = []
+
+    values.each do |key_prefix, value|
+      break if key_prefix && key_prefix != "-"
+
+      value.scan(
+        /^(?<tag_names>([a-zA-Z0-9\-]+)(?<delimiter>[,+])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)$/,
+      ) do |tag_names, delimiter|
+        match_all =
+          if delimiter == ","
+            false
+          else
+            true
+          end
+
+        (
+          case [key_prefix, match_all]
+          in ["-", true]
+            exclude_all_tags
+          in ["-", false]
+            exclude_any_tags
+          in [nil, true]
+            include_all_tags
+          in [nil, false]
+            include_any_tags
+          end
+        ).concat(tag_names.split(delimiter))
+      end
+    end
+
+    if exclude_all_tags.present?
+      exclude_topics_with_all_tags(tag_ids_from_tag_names(exclude_all_tags))
+    end
+
+    if exclude_any_tags.present?
+      exclude_topics_with_any_tags(tag_ids_from_tag_names(exclude_any_tags))
+    end
+
+    if include_any_tags.present?
+      include_topics_with_any_tags(tag_ids_from_tag_names(include_any_tags))
+    end
+
+    if include_all_tags.present?
+      has_invalid_tags = false
+
+      all_tag_ids =
+        tag_ids_from_tag_names(include_all_tags) do |tag_ids, _|
+          has_invalid_tags = tag_ids.length < include_all_tags.length
+        end
+
+      if has_invalid_tags
+        @scope = @scope.none
+      else
+        include_topics_with_all_tags(all_tag_ids)
+      end
+    end
   end
 
   def topic_tags_alias
@@ -241,19 +388,5 @@ class TopicsFilter
 
   def include_topics_with_any_tags(tag_ids)
     @scope = @scope.joins(:topic_tags).where("topic_tags.tag_id IN (?)", tag_ids).distinct(:id)
-  end
-
-  def register_scope(key:, params:, &block)
-    if registered_scope = @registered_scopes[key]
-      registered_scope[:params].each do |param_name, param_value|
-        if param_value.is_a?(Array)
-          registered_scope[:params][param_name].concat(params[param_name]).tap(&:uniq!)
-        else
-          registered_scope[:params][param_name] = params[param_name]
-        end
-      end
-    else
-      @registered_scopes[key] = { block: block, params: params }
-    end
   end
 end

@@ -57,7 +57,11 @@ RSpec.describe Chat::TrashMessage do
           expect(event[:event_name]).to eq(:chat_message_trashed)
           expect(event[:params]).to eq([message, message.chat_channel, current_user])
           expect(messages.find { |m| m.channel == "/chat/#{message.chat_channel_id}" }.data).to eq(
-            { type: "delete", deleted_id: message.id, deleted_at: Time.zone.now },
+            {
+              "type" => "delete",
+              "deleted_id" => message.id,
+              "deleted_at" => message.reload.deleted_at.iso8601(3),
+            },
           )
         end
 
@@ -84,6 +88,18 @@ RSpec.describe Chat::TrashMessage do
           expect(membership_1.reload.last_read_message_id).to be_nil
           expect(membership_2.reload.last_read_message_id).to be_nil
           expect(membership_3.reload.last_read_message_id).not_to be_nil
+        end
+
+        context "when the message has a thread" do
+          fab!(:thread) { Fabricate(:chat_thread, channel: message.chat_channel) }
+
+          before { message.update!(thread: thread) }
+
+          it "decrements the thread reply count" do
+            thread.set_replies_count_cache(5)
+            result
+            expect(thread.replies_count_cache).to eq(4)
+          end
         end
 
         context "when message is already deleted" do

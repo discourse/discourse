@@ -58,6 +58,18 @@ describe "Single thread in side panel", type: :system, js: true do
       expect(chat_drawer_page).to have_open_thread(thread)
     end
 
+    it "navigates back to the channel when clicking back button from a thread" do
+      visit("/latest")
+      chat_page.open_from_header
+      chat_drawer_page.open_channel(channel)
+      channel_page.message_thread_indicator(thread.original_message).click
+      expect(chat_drawer_page).to have_open_thread(thread)
+
+      chat_drawer_page.back
+
+      expect(chat_drawer_page).to have_open_channel(channel)
+    end
+
     it "opens the side panel for a single thread from the indicator" do
       chat_page.visit_channel(channel)
       channel_page.message_thread_indicator(thread.original_message).click
@@ -75,6 +87,78 @@ describe "Single thread in side panel", type: :system, js: true do
       channel_page.message_thread_indicator(thread.original_message).click
       expect(open_thread.omu).to have_css(".chat-user-avatar img.avatar")
       expect(open_thread.omu).to have_content(thread.original_message_user.username)
+    end
+
+    describe "sending a message" do
+      it "shows the message in the thread pane and links it to the correct channel" do
+        chat_page.visit_channel(channel)
+        channel_page.message_thread_indicator(thread.original_message).click
+        expect(side_panel).to have_open_thread(thread)
+        open_thread.send_message(thread.id, "new thread message")
+        expect(open_thread).to have_message(thread.id, text: "new thread message")
+        thread_message = thread.replies.last
+        expect(thread_message.chat_channel_id).to eq(channel.id)
+        expect(thread_message.thread.channel_id).to eq(channel.id)
+      end
+
+      it "does not echo the message in the channel pane" do
+        chat_page.visit_channel(channel)
+        channel_page.message_thread_indicator(thread.original_message).click
+        expect(side_panel).to have_open_thread(thread)
+        open_thread.send_message(thread.id, "new thread message")
+        expect(open_thread).to have_message(thread.id, text: "new thread message")
+        thread_message = thread.reload.replies.last
+        expect(channel_page).not_to have_css(channel_page.message_by_id_selector(thread_message.id))
+      end
+
+      it "handles updates from multiple users sending messages in the thread" do
+        using_session(:tab_1) do
+          sign_in(current_user)
+          chat_page.visit_channel(channel)
+          channel_page.message_thread_indicator(thread.original_message).click
+        end
+
+        other_user = Fabricate(:user)
+        chat_system_user_bootstrap(user: other_user, channel: channel)
+        using_session(:tab_2) do
+          sign_in(other_user)
+          chat_page.visit_channel(channel)
+          channel_page.message_thread_indicator(thread.original_message).click
+        end
+
+        using_session(:tab_2) do
+          expect(side_panel).to have_open_thread(thread)
+          open_thread.send_message(thread.id, "the other user message")
+          expect(open_thread).to have_message(thread.id, text: "the other user message")
+        end
+
+        using_session(:tab_1) do
+          expect(side_panel).to have_open_thread(thread)
+          expect(open_thread).to have_message(thread.id, text: "the other user message")
+          open_thread.send_message(thread.id, "this is a test message")
+          expect(open_thread).to have_message(thread.id, text: "this is a test message")
+        end
+
+        using_session(:tab_2) do
+          expect(open_thread).to have_message(thread.id, text: "this is a test message")
+        end
+      end
+
+      it "does not mark the channel unread if another user sends a message in the thread" do
+        other_user = Fabricate(:user)
+        chat_system_user_bootstrap(user: other_user, channel: channel)
+        Chat::MessageCreator.create(
+          chat_channel: channel,
+          user: other_user,
+          content: "Hello world!",
+          thread_id: thread.id,
+        )
+        sign_in(current_user)
+        chat_page.visit_channel(channel)
+        expect(page).not_to have_css(
+          ".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-suffix.unread",
+        )
+      end
     end
 
     context "when using mobile" do

@@ -22,7 +22,6 @@ class ComposerMessagesController < ApplicationController
     usernames = params.require(:usernames)
     users = ComposerMessagesFinder.user_not_seen_in_a_while(usernames)
     user_count = users.count
-    warning_message = nil
 
     if user_count > 0
       message_locale =

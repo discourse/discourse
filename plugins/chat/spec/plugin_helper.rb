@@ -20,6 +20,13 @@ module ChatSystemHelpers
     Group.refresh_automatic_groups!
   end
 
+  def chat_system_user_bootstrap(user:, channel:)
+    user.activate
+    user.user_option.update!(chat_enabled: true)
+    Group.refresh_automatic_group!("trust_level_#{user.trust_level}".to_sym)
+    Fabricate(:user_chat_channel_membership, chat_channel: channel, user: user)
+  end
+
   def chat_thread_chain_bootstrap(channel:, users:, messages_count: 4)
     last_user = nil
     last_message = nil
@@ -42,7 +49,7 @@ module ChatSystemHelpers
       last_message = creator.chat_message
     end
 
-    last_message.thread.update!(replies_count: messages_count - 1)
+    last_message.thread.set_replies_count_cache(messages_count - 1, update_db: true)
     last_message.thread
   end
 end

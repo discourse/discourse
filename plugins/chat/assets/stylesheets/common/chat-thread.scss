@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 
   &__header {
     height: var(--chat-header-offset);
@@ -12,7 +13,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-inline: 1.5rem;
+    padding-inline: 1rem;
   }
 
   &__body {
@@ -28,11 +29,7 @@
     will-change: transform;
   }
 
-  &__close {
-    color: var(--primary-medium);
-
-    &:visited {
-      color: var(--primary-medium);
-    }
+  .chat-composer {
+    padding-bottom: 28px;
   }
 }

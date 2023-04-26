@@ -97,7 +97,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
 
     assert.dom(".chat-composer-upload").exists({ count: 1 });
 
-    await click(".remove-upload");
+    await click(".chat-composer-upload__remove-btn");
 
     assert.dom(".chat-composer-upload").exists({ count: 0 });
   });
@@ -138,7 +138,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
     await waitFor(".chat-composer-upload");
     assert.strictEqual(count(".chat-composer-upload"), 1);
 
-    await click(".remove-upload");
+    await click(".chat-composer-upload__remove-btn");
     assert.strictEqual(count(".chat-composer-upload"), 0);
   });
 });

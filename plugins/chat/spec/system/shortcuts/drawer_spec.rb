@@ -36,7 +36,7 @@ RSpec.describe "Shortcuts | drawer", type: :system, js: true do
         expect(page).to have_css(".chat-drawer.is-expanded")
 
         drawer.open_channel(channel_1)
-        find(".chat-composer-input").send_keys(:escape)
+        find(".chat-composer__input").send_keys(:escape)
 
         expect(page).to have_no_css(".chat-drawer.is-expanded")
       end
@@ -49,7 +49,7 @@ RSpec.describe "Shortcuts | drawer", type: :system, js: true do
 
         page.send_keys("e")
 
-        expect(find(".chat-composer-input").value).to eq("")
+        expect(find(".chat-composer__input").value).to eq("")
       end
     end
 
@@ -59,15 +59,15 @@ RSpec.describe "Shortcuts | drawer", type: :system, js: true do
 
         expect(page).to have_selector(".chat-drawer[data-chat-channel-id=\"#{channel_1.id}\"]")
 
-        find(".chat-composer-input").send_keys(%i[alt arrow_down])
+        find(".chat-composer__input").send_keys(%i[alt arrow_down])
 
         expect(page).to have_selector(".chat-drawer[data-chat-channel-id=\"#{channel_2.id}\"]")
 
-        find(".chat-composer-input").send_keys(%i[alt arrow_down])
+        find(".chat-composer__input").send_keys(%i[alt arrow_down])
 
         expect(page).to have_selector(".chat-drawer[data-chat-channel-id=\"#{channel_1.id}\"]")
 
-        find(".chat-composer-input").send_keys(%i[alt arrow_up])
+        find(".chat-composer__input").send_keys(%i[alt arrow_up])
 
         expect(page).to have_selector(".chat-drawer[data-chat-channel-id=\"#{channel_2.id}\"]")
       end

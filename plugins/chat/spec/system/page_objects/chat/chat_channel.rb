@@ -4,25 +4,25 @@ module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
       def type_in_composer(input)
-        find(".chat-composer-input--channel").click # makes helper more reliable by ensuring focus is not lost
-        find(".chat-composer-input--channel").send_keys(input)
+        find(".chat-channel .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-channel .chat-composer__input").send_keys(input)
       end
 
       def fill_composer(input)
-        find(".chat-composer-input--channel").click # makes helper more reliable by ensuring focus is not lost
-        find(".chat-composer-input--channel").fill_in(with: input)
+        find(".chat-channel .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-channel .chat-composer__input").fill_in(with: input)
       end
 
       def click_composer
-        find(".chat-composer-input--channel").click # ensures autocomplete is closed and not masking anything
+        find(".chat-channel .chat-composer__input").click # ensures autocomplete is closed and not masking anything
       end
 
       def click_send_message
-        find(".chat-composer .send-btn:enabled").click
+        find(".chat-composer--send-enabled .chat-composer__send-btn").click
       end
 
       def message_by_id_selector(id)
-        ".chat-message-container[data-id=\"#{id}\"]"
+        ".chat-channel .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
 
       def message_by_id(id)
@@ -69,6 +69,12 @@ module PageObjects
         hover_message(message)
         click_more_button
         find("[data-value='flag']").click
+      end
+
+      def copy_link(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='copyLink']").click
       end
 
       def flag_message(message)
@@ -151,10 +157,19 @@ module PageObjects
       end
 
       def has_message?(text: nil, id: nil)
+        check_message_presence(exists: true, text: text, id: id)
+      end
+
+      def has_no_message?(text: nil, id: nil)
+        check_message_presence(exists: false, text: text, id: id)
+      end
+
+      def check_message_presence(exists: true, text: nil, id: nil)
+        css_method = exists ? :has_css? : :has_no_css?
         if text
-          has_css?(".chat-message-text", text: text)
+          send(css_method, ".chat-message-text", text: text, wait: 5)
         elsif id
-          has_css?(".chat-message-container[data-id=\"#{id}\"]", wait: 10)
+          send(css_method, ".chat-message-container[data-id=\"#{id}\"]", wait: 10)
         end
       end
 

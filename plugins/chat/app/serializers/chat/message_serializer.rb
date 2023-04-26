@@ -153,12 +153,20 @@ module Chat
       end
     end
 
+    def include_threading_data?
+      SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+    end
+
+    def include_thread_id?
+      include_threading_data?
+    end
+
     def include_thread_reply_count?
-      object.thread_id.present?
+      include_threading_data? && object.thread_id.present?
     end
 
     def thread_reply_count
-      object.thread.replies_count
+      object.thread&.replies_count_cache || 0
     end
   end
 end

@@ -347,19 +347,72 @@ RSpec.describe Chat::ChatController do
         )
       end
 
-      it "sends a message for regular user when staff-only is disabled and they are following channel" do
-        sign_in(user)
-        Chat::UserChatChannelMembership.create(
-          user: user,
-          chat_channel: chat_channel,
-          following: true,
-        )
+      context "when the regular user is following the channel" do
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel) }
+        fab!(:membership) do
+          Chat::UserChatChannelMembership.create(
+            user: user,
+            chat_channel: chat_channel,
+            following: true,
+            last_read_message_id: message_1.id,
+          )
+        end
 
-        expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
-          Chat::Message.count
-        }.by(1)
-        expect(response.status).to eq(200)
-        expect(Chat::Message.last.message).to eq(message)
+        it "sends a message for regular user when staff-only is disabled and they are following channel" do
+          sign_in(user)
+
+          expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
+            Chat::Message.count
+          }.by(1)
+          expect(response.status).to eq(200)
+          expect(Chat::Message.last.message).to eq(message)
+        end
+
+        it "updates the last_read_message_id for the user who sent the message" do
+          sign_in(user)
+          post "/chat/#{chat_channel.id}.json", params: { message: message }
+          expect(response.status).to eq(200)
+          expect(membership.reload.last_read_message_id).to eq(Chat::Message.last.id)
+        end
+
+        it "publishes user tracking state using the new chat message as the last_read_message_id" do
+          sign_in(user)
+          messages =
+            MessageBus.track_publish(
+              Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
+            ) { post "/chat/#{chat_channel.id}.json", params: { message: message } }
+          expect(response.status).to eq(200)
+          expect(messages.first.data["last_read_message_id"]).to eq(Chat::Message.last.id)
+        end
+
+        context "when sending a message in a thread" do
+          fab!(:thread) do
+            Fabricate(:chat_thread, channel: chat_channel, original_message: message_1)
+          end
+
+          it "does not update the last_read_message_id for the user who sent the message" do
+            sign_in(user)
+            post "/chat/#{chat_channel.id}.json", params: { message: message, thread_id: thread.id }
+            expect(response.status).to eq(200)
+            expect(membership.reload.last_read_message_id).to eq(message_1.id)
+          end
+
+          it "publishes user tracking state using the old membership last_read_message_id" do
+            sign_in(user)
+            messages =
+              MessageBus.track_publish(
+                Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
+              ) do
+                post "/chat/#{chat_channel.id}.json",
+                     params: {
+                       message: message,
+                       thread_id: thread.id,
+                     }
+              end
+            expect(response.status).to eq(200)
+            expect(messages.first.data["last_read_message_id"]).to eq(message_1.id)
+          end
+        end
       end
     end
 
@@ -556,82 +609,6 @@ RSpec.describe Chat::ChatController do
           }
       expect(response.status).to eq(200)
       expect(chat_message.reload.message).to eq(new_message)
-    end
-  end
-
-  RSpec.shared_examples "chat_message_restoration" do
-    it "doesn't allow a user to restore another user's message" do
-      sign_in(other_user)
-
-      put "/chat/#{chat_channel.id}/restore/#{Chat::Message.unscoped.last.id}.json"
-      expect(response.status).to eq(403)
-    end
-
-    it "allows a user to restore their own posts" do
-      sign_in(user)
-
-      deleted_message = Chat::Message.unscoped.last
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(200)
-      expect(deleted_message.reload.deleted_at).to be_nil
-    end
-
-    it "allows admin to restore others' posts" do
-      sign_in(admin)
-
-      deleted_message = Chat::Message.unscoped.last
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(200)
-      expect(deleted_message.reload.deleted_at).to be_nil
-    end
-
-    it "does not allow message restore when chat channel is read_only" do
-      sign_in(Chat::Message.last.user)
-
-      chat_channel.update!(status: :read_only)
-
-      deleted_message = Chat::Message.unscoped.last
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(403)
-      expect(deleted_message.reload.deleted_at).not_to be_nil
-
-      sign_in(admin)
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(403)
-    end
-
-    it "only allows admin to restore when chat channel is closed" do
-      sign_in(admin)
-
-      chat_channel.update!(status: :read_only)
-
-      deleted_message = Chat::Message.unscoped.last
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(403)
-      expect(deleted_message.reload.deleted_at).not_to be_nil
-
-      chat_channel.update!(status: :closed)
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(200)
-      expect(deleted_message.reload.deleted_at).to be_nil
-    end
-  end
-
-  describe "#restore" do
-    fab!(:second_user) { Fabricate(:user) }
-
-    before do
-      message =
-        Chat::Message.create(user: user, message: "this is a message", chat_channel: chat_channel)
-      message.trash!
-    end
-
-    describe "for category" do
-      fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
-
-      it_behaves_like "chat_message_restoration" do
-        let(:other_user) { second_user }
-      end
     end
   end
 

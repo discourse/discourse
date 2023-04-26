@@ -12,6 +12,7 @@ module("Discourse Lazy Videos | Component | lazy-video", function (hooks) {
     title: "15 Sorting Algorithms in 6 Minutes",
     providerName: "youtube",
     id: "kPRA0W1kECg",
+    dominantColor: "00ffff",
   };
 
   test("displays the correct video title", async function (assert) {
@@ -24,6 +25,14 @@ module("Discourse Lazy Videos | Component | lazy-video", function (hooks) {
     await render(hbs`<LazyVideo @videoAttributes={{this.attributes}} />`);
 
     assert.dom(".icon.youtube-icon").exists();
+  });
+
+  test("uses tthe dominant color from the dom", async function (assert) {
+    await render(hbs`<LazyVideo @videoAttributes={{this.attributes}} />`);
+
+    assert
+      .dom(".video-thumbnail")
+      .hasAttribute("style", "background-color: #00ffff;");
   });
 
   test("loads the iframe when clicked", async function (assert) {

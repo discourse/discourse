@@ -1034,12 +1034,6 @@ gl:
       save_to_change_theme: 'Para actualizar o tema, prema "%{save_text}"'
       home: "Páxina de inicio predeterminada"
       staged: "Transitorio"
-      staff_counters:
-        flagged_posts: "publicacións sinaladas"
-        deleted_posts: "publicacións eliminadas"
-        suspensions: "suspensións"
-        warnings_received: "advertencias"
-        rejected_posts: "publicacións rexeitadas"
       messages:
         inbox: "Caixa de entrada"
         latest: "Últimos"
@@ -1084,11 +1078,9 @@ gl:
         title: "Códigos de copia de seguranza de dobre paso"
         regenerate: "Rexenerar"
         disable: "Desactivar"
-        enable: "Activar"
-        enable_long: "Activar códigos de copia de seguranza"
         manage:
-          one: "Xestionar os códigos de copia de seguranza. Quédanlle <strong>%{count}</strong> de código de copia de seguranza."
-          other: "Xestionar os códigos de copia de seguranza. Quédanlle <strong>%{count}</strong> de códigos de copia de seguranza."
+          one: "Quédanlle <strong>%{count}</strong> de código de copia de seguranza."
+          other: "Quédanlle <strong>%{count}</strong> de códigos de copia de seguranza."
         copy_to_clipboard: "Copiar ao portapapeis"
         copy_to_clipboard_error: "Produciuse un erro ao copiar os datos ao portapapeis"
         copied_to_clipboard: "Copiado ao portapapeis"
@@ -3650,9 +3642,6 @@ gl:
         notification_event:
           name: "Evento de notificación"
           details: "Cando o usuario recibe unha notificación na fonte."
-        user_badge_event:
-          name: "Evento de concesión de insignias"
-          details: "Cando se recibe unha insignia."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"

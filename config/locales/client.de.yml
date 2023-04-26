@@ -1204,11 +1204,21 @@ de:
         flags_given:
           one: '<span class="%{className}">%{count}</span> hilfreiche Flagge'
           other: '<span class="%{className}">%{count}</span> hilfreiche Flaggen'
-        flagged_posts: "gemeldete Beiträge"
-        deleted_posts: "gelöschte Beiträge"
-        suspensions: "Sperren"
-        warnings_received: "Warnungen"
-        rejected_posts: "abgelehnte Beiträge"
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> gemeldeter Beitrag'
+          other: '<span class="%{className}">%{count}</span> gemeldete Beiträge'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> gelöschter Beitrag'
+          other: '<span class="%{className}">%{count}</span> gelöschte Beiträge'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> Suspendierung'
+          other: '<span class="%{className}">%{count}</span> Suspendierungen'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> Warnung'
+          other: '<span class="%{className}">%{count}</span> Warnungen'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> abgelehnter Beitrag'
+          other: '<span class="%{className}">%{count}</span> abgelehnte Beiträge'
       messages:
         all: "alle Posteingänge"
         inbox: "Posteingang"
@@ -1315,11 +1325,12 @@ de:
         title: "Wiederherstellungscodes für Zwei-Faktor-Authentifizierung"
         regenerate: "Erneuern"
         disable: "Deaktivieren"
-        enable: "Aktivieren"
-        enable_long: "Wiederherstellungscodes aktivieren"
+        enable: "Wiederherstellungscodes erstellen"
+        enable_long: "Wiederherstellungscodes hinzufügen"
+        not_enabled: "Du hast noch keine Wiederherstellungscodes erstellt."
         manage:
-          one: "Verwalte deine Wiederherstellungscodes. Du hast noch <strong>%{count}</strong> verbleibenden Wiederherstellungscode."
-          other: "Verwalte deine Wiederherstellungscodes. Du hast noch <strong>%{count}</strong> verbleibende Wiederherstellungscodes."
+          one: "Du hast noch <strong>%{count}</strong> verbleibenden Wiederherstellungscode."
+          other: "Du hast noch <strong>%{count}</strong> verbleibende Wiederherstellungscodes."
         copy_to_clipboard: "In Zwischenablage kopieren"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
@@ -1403,6 +1414,7 @@ de:
         success: "Wir haben eine E-Mail an die angegebene E-Mail-Adresse gesendet. Folge zur Bestätigung der Adresse bitte den darin enthaltenen Anweisungen."
         success_via_admin: "Wir haben eine E-Mail an diese Adresse gesendet. Der Benutzer muss den Bestätigungsanweisungen in der E-Mail folgen."
         success_staff: "Wir haben eine E-Mail an deine aktuelle Adresse geschickt. Bitte folge den Bestätigungsanweisungen."
+        back_to_preferences: "Zurück zu den Einstellungen"
       change_avatar:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basierend auf"
@@ -4490,9 +4502,6 @@ de:
         user_promoted_event:
           name: "Benutzer-Beförderungs-Ereignis"
           details: "Wenn ein Benutzer von einer Vertrauensstufe zur nächsten befördert wird."
-        user_badge_event:
-          name: "Abzeichen-Verleihungs-Ereignis"
-          details: "Wenn ein Benutzer ein Abzeichen erhält."
         group_user_event:
           name: "Gruppenbenutzer-Ereignis"
           details: "Wenn ein Benutzer in einer Gruppe hinzugefügt oder entfernt wird."

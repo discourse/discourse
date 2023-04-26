@@ -107,6 +107,12 @@ const DEPRECATED_MODULES = new Map(
       dropFrom: "3.0.0",
       silent: true,
     },
+    "controller:composer": {
+      newName: "service:composer",
+      since: "3.1.0.beta3",
+      dropFrom: "3.2.0",
+      silent: true,
+    },
   })
 );
 

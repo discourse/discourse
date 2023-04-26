@@ -154,6 +154,7 @@ da:
         italic_text: "kursiv skrift"
         bold_text: "fed skrift"
         code_text: "kode tekst"
+        send: "Send"
       quote:
         copy_success: "Chat-citat kopieret til udklipsholderen"
       notification_levels:
@@ -199,6 +200,10 @@ da:
         activities: "Aktiviteter"
         flags: "Flag"
         symbols: "Symboler"
+      thread:
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
       draft_channel_screen:
         header: "Ny Besked"
         cancel: "Annuller"

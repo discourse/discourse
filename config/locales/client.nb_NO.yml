@@ -1073,12 +1073,6 @@ nb_NO:
       save_to_change_theme: 'Temaet vil bli oppdatert etter at du klikker på "%{save_text}»'
       home: "Forvalgt hjemmeside"
       staged: "Arrangert"
-      staff_counters:
-        flagged_posts: "rapporterte innlegg"
-        deleted_posts: "slettede innlegg"
-        suspensions: "suspenderinger"
-        warnings_received: "advarsler"
-        rejected_posts: "avviste innlegg"
       messages:
         inbox: "Innboks"
         latest: "Siste"
@@ -1124,11 +1118,6 @@ nb_NO:
         title: "To-faktor backup koder"
         regenerate: "Regenerer"
         disable: "Deaktiver"
-        enable: "Aktiver"
-        enable_long: "Aktiver reservekoder"
-        manage:
-          one: "Administrer sikkerhetskoder. Du har <strong>%{count}</strong> reservekode igjen."
-          other: "Administrer sikkerhetskoder. Du har igjen <strong>%{count}</strong> reservekoder."
         copy_to_clipboard: "Kopier til utklippstavle"
         copy_to_clipboard_error: "Feil ved kopiering til utklippstavlen"
         copied_to_clipboard: "Kopiert til utklippstavlen"
@@ -3664,9 +3653,6 @@ nb_NO:
         notification_event:
           name: "Varslingshendelse"
           details: "Når en bruker mottar et varsel i feeden."
-        user_badge_event:
-          name: "Badge Tillat hendelse"
-          details: "Når en bruker mottar et merke."
         group_user_event:
           name: "Gruppebrukerhendelse"
           details: "Når en bruker er lagt til eller fjernet i en gruppe."

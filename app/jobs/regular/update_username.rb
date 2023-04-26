@@ -46,9 +46,21 @@ module Jobs
     def update_posts
       updated_post_ids = Set.new
 
+      # Other people mentioning this user
+      Post
+        .with_deleted
+        .joins(mentioned("posts.id"))
+        .where("a.user_id = :user_id", user_id: @user_id)
+        .find_each do |post|
+          update_post(post)
+          updated_post_ids << post.id
+        end
+
+      # User mentioning self (not included in post_actions table)
       Post
         .with_deleted
         .where("raw ILIKE ?", "%@#{@old_username}%")
+        .where("posts.user_id = :user_id", user_id: @user_id)
         .find_each do |post|
           update_post(post)
           updated_post_ids << post.id

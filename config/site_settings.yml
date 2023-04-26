@@ -491,7 +491,10 @@ login:
     client: true
     default: false
     validator: "EnableSsoValidator"
-  discourse_connect_allows_all_return_paths: false
+  discourse_connect_allowed_redirect_domains:
+    default: ""
+    type: list
+    list_type: simple
   verbose_discourse_connect_logging: false
   verbose_upload_logging:
     hidden: true
@@ -1012,6 +1015,11 @@ posting:
       zh_TW: true
       ja: true
       ko: true
+  emoji_deny_list:
+    type: emoji_list
+    default: ""
+    client: true
+    refresh: true
   approve_post_count:
     default: 0
   approve_unless_trust_level:
@@ -2382,6 +2390,7 @@ uncategorized:
   educate_until_posts: 2
   sequential_replies_threshold: 2
   get_a_room_threshold: 3
+  dont_feed_the_trolls_threshold: 2
   dominating_topic_minimum_percent: 40
   disable_avatar_education_message: false
   pm_warn_user_last_seen_months_ago: 24

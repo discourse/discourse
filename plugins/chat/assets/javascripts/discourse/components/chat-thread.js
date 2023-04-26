@@ -1,6 +1,4 @@
 import Component from "@glimmer/component";
-import { cloneJSON } from "discourse-common/lib/object";
-import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -21,11 +19,13 @@ export default class ChatThreadPanel extends Component {
   @service chatComposerPresenceManager;
   @service chatChannelThreadComposer;
   @service chatChannelThreadPane;
+  @service chatChannelThreadPaneSubscriptionsManager;
   @service appEvents;
   @service capabilities;
 
   @tracked loading;
   @tracked loadingMorePast;
+  @tracked uploadDropZone;
 
   scrollable = null;
 
@@ -38,12 +38,37 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
+  subscribeToUpdates() {
+    this.chatChannelThreadPaneSubscriptionsManager.subscribe(this.thread);
+  }
+
+  @action
+  setUploadDropZone(element) {
+    this.uploadDropZone = element;
+  }
+
+  @action
+  setupMessage() {
+    this.chatChannelThreadComposer.message = ChatMessage.createDraftMessage(
+      this.channel,
+      { user: this.currentUser, thread_id: this.thread.id }
+    );
+  }
+
+  @action
+  unsubscribeFromUpdates() {
+    this.chatChannelThreadPaneSubscriptionsManager.unsubscribe();
+  }
+
+  @action
   setScrollable(element) {
     this.scrollable = element;
   }
 
   @action
   loadMessages() {
+    this.thread.messagesManager.clearMessages();
+
     if (this.args.targetMessageId) {
       this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
     }
@@ -73,7 +98,6 @@ export default class ChatThreadPanel extends Component {
 
     this.loadingMorePast = true;
     this.loading = true;
-    this.thread.messagesManager.clearMessages();
 
     const findArgs = { pageSize: PAGE_SIZE };
 
@@ -156,27 +180,34 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
-  sendMessage(message, uploads = []) {
+  onSendMessage(message) {
+    if (message.editing) {
+      this.#sendEditMessage(message);
+    } else {
+      this.#sendNewMessage(message);
+    }
+  }
+
+  @action
+  resetComposer() {
+    this.chatChannelThreadComposer.reset(this.channel);
+  }
+
+  #sendNewMessage(message) {
     // TODO (martin) For desktop notifications
     // resetIdle()
-    if (this.chatChannelThreadPane.sendingLoading) {
+    if (this.chatChannelThreadPane.sending) {
       return;
     }
 
-    this.chatChannelThreadPane.sendingLoading = true;
-    this.channel.draft = ChatMessageDraft.create();
+    this.chatChannelThreadPane.sending = true;
 
     // TODO (martin) Handling case when channel is not followed???? IDK if we
     // even let people send messages in threads without this, seems weird.
 
-    const stagedMessage = ChatMessage.createStagedMessage(this.channel, {
-      message,
-      created_at: new Date(),
-      uploads: cloneJSON(uploads),
-      user: this.currentUser,
-      thread_id: this.thread.id,
-    });
-
+    this.thread.stageMessage(message);
+    const stagedMessage = message;
+    this.resetComposer();
     this.thread.messagesManager.addMessages([stagedMessage]);
 
     // TODO (martin) Scrolling!!
@@ -188,7 +219,7 @@ export default class ChatThreadPanel extends Component {
       .sendMessage(this.channel.id, {
         message: stagedMessage.message,
         in_reply_to_id: stagedMessage.inReplyTo?.id,
-        staged_id: stagedMessage.stagedId,
+        staged_id: stagedMessage.id,
         upload_ids: stagedMessage.uploads.map((upload) => upload.id),
         thread_id: stagedMessage.threadId,
       })
@@ -196,14 +227,31 @@ export default class ChatThreadPanel extends Component {
         this.scrollToBottom();
       })
       .catch((error) => {
-        this.#onSendError(stagedMessage.stagedId, error);
+        this.#onSendError(stagedMessage.id, error);
       })
       .finally(() => {
         if (this._selfDeleted) {
           return;
         }
-        this.chatChannelThreadPane.sendingLoading = false;
-        this.chatChannelThreadPane.resetAfterSend();
+        this.chatChannelThreadPane.sending = false;
+      });
+  }
+
+  #sendEditMessage(message) {
+    this.chatChannelThreadPane.sending = true;
+
+    const data = {
+      new_message: message.message,
+      upload_ids: message.uploads.map((upload) => upload.id),
+    };
+
+    this.resetComposer();
+
+    return this.chatApi
+      .editMessage(message.channelId, message.id, data)
+      .catch(popupAjaxError)
+      .finally(() => {
+        this.chatChannelThreadPane.sending = false;
       });
   }
 
@@ -290,6 +338,6 @@ export default class ChatThreadPanel extends Component {
       }
     }
 
-    this.chatChannelThreadPane.resetAfterSend();
+    this.resetComposer();
   }
 }

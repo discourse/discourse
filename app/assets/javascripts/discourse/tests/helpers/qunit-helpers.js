@@ -35,7 +35,9 @@ import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetUserSearchCache } from "discourse/lib/user-search";
 import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { resetComposerCustomizations } from "discourse/models/composer";
+import { resetQuickAccessProfileItems } from "discourse/widgets/quick-access-profile";
 import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
+import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import {
   resetHighestReadCache,
@@ -179,8 +181,10 @@ export function testCleanup(container, app) {
   resetHighestReadCache();
   resetCardClickListenerSelector();
   resetComposerCustomizations();
+  resetQuickAccessProfileItems();
   resetQuickSearchRandomTips();
   resetPostMenuExtraButtons();
+  resetUserMenuProfileTabItems();
   clearExtraKeyboardShortcutHelp();
   clearNavItems();
   setTopicList(null);

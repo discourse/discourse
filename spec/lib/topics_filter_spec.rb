@@ -846,5 +846,137 @@ RSpec.describe TopicsFilter do
         end
       end
     end
+
+    shared_examples "filtering for topics by range" do |filter|
+      describe "when query string is `#{filter}-min:1`" do
+        it "should only return topics with at least 1 #{filter}" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-min:1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_count.id, topic_with_2_count.id, topic_with_3_count.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-min:3`" do
+        it "should only return topics with at least 3 #{filter}" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-min:3")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_3_count.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-max:1`" do
+        it "should only return topics with at most 1 #{filter}" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-max:1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_count.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-max:3`" do
+        it "should only return topics with at most 3 #{filter}" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-max:3")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_count.id, topic_with_2_count.id, topic_with_3_count.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-min:1 #{filter}-max:2`" do
+        it "should only return topics with at least 1 like and at most 2 #{filter}" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-min:1 #{filter}-max:2")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_count.id, topic_with_2_count.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-min:3 #{filter}-min:2 #{filter}-max:1 #{filter}-max:3`" do
+        it "should only return topics with at least 2 #{filter} and at most 3 #{filter} as it ignores earlier filters which are duplicated" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string(
+                "#{filter}-min:3 #{filter}-min:2 #{filter}-max:1 #{filter}-max:3",
+              )
+              .pluck(:id),
+          ).to contain_exactly(topic_with_2_count.id, topic_with_3_count.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-min:invalid #{filter}-max:invalid`" do
+        it "should ignore the filters with invalid values" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-min:invalid #{filter}-max:invalid")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_1_count.id, topic_with_2_count.id, topic_with_3_count.id)
+        end
+      end
+    end
+
+    describe "when filtering by number of likes in a topic" do
+      fab!(:topic_with_1_count) { Fabricate(:topic, like_count: 1) }
+      fab!(:topic_with_2_count) { Fabricate(:topic, like_count: 2) }
+      fab!(:topic_with_3_count) { Fabricate(:topic, like_count: 3) }
+
+      include_examples("filtering for topics by range", "likes")
+    end
+
+    describe "when filtering by number of posters in a topic" do
+      fab!(:topic_with_1_count) { Fabricate(:topic, participant_count: 1) }
+      fab!(:topic_with_2_count) { Fabricate(:topic, participant_count: 2) }
+      fab!(:topic_with_3_count) { Fabricate(:topic, participant_count: 3) }
+
+      include_examples("filtering for topics by range", "posters")
+    end
+
+    describe "when filtering by number of posts in a topic" do
+      fab!(:topic_with_1_count) { Fabricate(:topic, posts_count: 1) }
+      fab!(:topic_with_2_count) { Fabricate(:topic, posts_count: 2) }
+      fab!(:topic_with_3_count) { Fabricate(:topic, posts_count: 3) }
+
+      include_examples("filtering for topics by range", "posts")
+    end
+
+    describe "when filtering by number of views in a topic" do
+      fab!(:topic_with_1_count) { Fabricate(:topic, views: 1) }
+      fab!(:topic_with_2_count) { Fabricate(:topic, views: 2) }
+      fab!(:topic_with_3_count) { Fabricate(:topic, views: 3) }
+
+      include_examples("filtering for topics by range", "views")
+    end
+
+    describe "when filtering by number of likes in the first post of a topic" do
+      fab!(:topic_with_1_count) do
+        post = Fabricate(:post, like_count: 1)
+        post.topic
+      end
+
+      fab!(:topic_with_2_count) do
+        post = Fabricate(:post, like_count: 2)
+        post.topic
+      end
+
+      fab!(:topic_with_3_count) do
+        post = Fabricate(:post, like_count: 3)
+        post.topic
+      end
+
+      include_examples("filtering for topics by range", "likes-op")
+    end
   end
 end

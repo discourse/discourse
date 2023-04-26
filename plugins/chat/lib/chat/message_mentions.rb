@@ -31,6 +31,16 @@ module Chat
         end
     end
 
+    def count
+      @count ||=
+        begin
+          result = @parsed_direct_mentions.length + @parsed_group_mentions.length
+          result += 1 if @has_global_mention
+          result += 1 if @has_here_mention
+          result
+        end
+    end
+
     def global_mentions
       return User.none unless @has_global_mention
       channel_members.where.not(username_lower: @parsed_direct_mentions)

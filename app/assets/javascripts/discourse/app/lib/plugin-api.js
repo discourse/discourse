@@ -58,7 +58,7 @@ import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import {
   addComposerSaveErrorCallback,
   addPopupMenuOptionsCallback,
-} from "discourse/controllers/composer";
+} from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
@@ -72,6 +72,7 @@ import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map"
 import { addTopicSummaryCallback } from "discourse/widgets/toggle-topic-summary";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
+import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import deprecated from "discourse-common/lib/deprecated";
@@ -186,11 +187,15 @@ class PluginApi {
   _resolveClass(resolverName, opts) {
     opts = opts || {};
 
-    if (this.container.cache[resolverName]) {
+    if (
+      this.container.cache[resolverName] ||
+      (resolverName === "model:user" &&
+        this.container.lookup("service:current-user"))
+    ) {
       // eslint-disable-next-line no-console
       console.warn(
         consolePrefix(),
-        `"${resolverName}" was already cached in the container. Changes won't be applied.`
+        `"${resolverName}" has already been initialized and registered as a singleton. Move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
       );
     }
 
@@ -982,7 +987,7 @@ class PluginApi {
   }
 
   /**
-   * Adds a glyph to user menu after bookmarks
+   * Adds a glyph to the legacy user menu after bookmarks
    * WARNING: there is limited space there
    *
    * example:
@@ -994,6 +999,7 @@ class PluginApi {
    *    data: { url: `/some/path` },
    * });
    *
+   * To customize the new user menu, see api.registerUserMenuTab
    */
   addUserMenuGlyph(glyph) {
     addUserMenuGlyph(glyph);
@@ -1585,6 +1591,7 @@ class PluginApi {
    **/
   addQuickAccessProfileItem(item) {
     addQuickAccessProfileItem(item);
+    addUserMenuProfileTabItem(item);
   }
 
   addFeaturedLinkMetaDecorator(decorator) {
@@ -2072,7 +2079,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for

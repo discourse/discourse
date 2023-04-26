@@ -12,8 +12,7 @@ module Chat
     # these endpoints require a standalone find because they need to be
     # able to get deleted channels and recover them.
     before_action :find_chatable, only: %i[enable_chat disable_chat]
-    before_action :find_chat_message,
-                  only: %i[delete restore lookup_message edit_message rebake message_link]
+    before_action :find_chat_message, only: %i[lookup_message edit_message rebake message_link]
     before_action :set_channel_and_chatable_with_access_check,
                   except: %i[
                     respond
@@ -112,9 +111,11 @@ module Chat
 
       return render_json_error(chat_message_creator.error) if chat_message_creator.failed?
 
-      @user_chat_channel_membership.update!(
-        last_read_message_id: chat_message_creator.chat_message.id,
-      )
+      if !chat_message_creator.chat_message.thread_id.present?
+        @user_chat_channel_membership.update!(
+          last_read_message_id: chat_message_creator.chat_message.id,
+        )
+      end
 
       if @chat_channel.direct_message_channel?
         # If any of the channel users is ignoring, muting, or preventing DMs from
@@ -142,7 +143,13 @@ module Chat
       Chat::Publisher.publish_user_tracking_state(
         current_user,
         @chat_channel.id,
-        chat_message_creator.chat_message.id,
+        (
+          if chat_message_creator.chat_message.thread_id.present?
+            @user_chat_channel_membership.last_read_message_id
+          else
+            chat_message_creator.chat_message.id
+          end
+        ),
       )
       render json: success_json
     end
@@ -225,18 +232,6 @@ module Chat
       render json: success_json
     end
 
-    def restore
-      chat_channel = @message.chat_channel
-      guardian.ensure_can_restore_chat!(@message, chat_channel.chatable)
-      updated = @message.recover!
-      if updated
-        Chat::Publisher.publish_restore!(chat_channel, @message)
-        render json: success_json
-      else
-        render_json_error(@message)
-      end
-    end
-
     def rebake
       guardian.ensure_can_rebake_chat_message!(@message)
       @message.rebake!(invalidate_oneboxes: true)
@@ -276,11 +271,8 @@ module Chat
 
       can_load_more_past = past_messages.count == PAST_MESSAGE_LIMIT
       can_load_more_future = future_messages.count == FUTURE_MESSAGE_LIMIT
-      messages = [
-        past_messages.reverse,
-        (!include_thread_messages? && @message.in_thread?) ? [] : [@message],
-        future_messages,
-      ].reduce([], :concat)
+      looked_up_message = !include_thread_messages? && @message.thread_reply? ? [] : [@message]
+      messages = [past_messages.reverse, looked_up_message, future_messages].reduce([], :concat)
       chat_view =
         Chat::View.new(
           chat_channel: @chat_channel,
