@@ -17,12 +17,10 @@
     aria-label={{i18n "chat.aria_roles.composer"}}
     class={{concat-class
       "chat-composer"
-      (if this.isFocused "chat-composer is-focused")
-      (if this.pane.sending "chat-composer is-sending")
-      (if
-        this.sendEnabled "chat-composer is-enabled" "chat-composer is-disabled"
-      )
-      (if this.disabled "chat-composer is-disabled")
+      (if this.isFocused "is-focused")
+      (if this.pane.sending "is-sending")
+      (if this.sendEnabled "is-enabled" "is-disabled")
+      (if this.disabled "is-disabled")
     }}
     {{did-update this.didUpdateMessage this.currentMessage}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
