@@ -18,6 +18,9 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   @bind
   _generateVideoThumbnail(videoFile, uploadUrl) {
+    if (!this.siteSettings.video_thumbnails_enabled) {
+      return;
+    }
     let video = document.createElement("video");
     video.src = URL.createObjectURL(videoFile.data);
 
