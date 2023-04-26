@@ -39,6 +39,7 @@ describe "Emoji deny list", type: :system, js: true do
 
   describe "when using composer" do
     before do
+      SiteSetting.enable_emoji = true
       SiteSetting.emoji_deny_list = "fu|poop"
       Emoji.clear_cache && Discourse.request_refresh!
     end
