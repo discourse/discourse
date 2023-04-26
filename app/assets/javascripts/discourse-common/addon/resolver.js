@@ -269,20 +269,7 @@ export function buildResolver(baseName) {
     }
 
     resolveOther(parsedName) {
-      let resolved = super.resolveOther(parsedName);
-      if (!resolved) {
-        let legacyParsedName = this.legacyResolver.parseName(
-          `${parsedName.type}:${parsedName.fullName}`
-        );
-        resolved = this.legacyResolver.resolveOther(legacyParsedName);
-        if (resolved) {
-          deprecated(
-            `Unable to resolve with new resolver, but resolved with legacy resolver: ${parsedName.fullName}`,
-            { id: "discourse.legacy-resolver-fallback" }
-          );
-        }
-      }
-      return resolved;
+      return super.resolveOther(parsedName);
     }
 
     resolveHelper(parsedName) {
