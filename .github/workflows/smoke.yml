@@ -90,12 +90,6 @@ jobs:
       - name: Yarn install
         run: yarn install
 
-      # - name: Checkout official plugins
-      #   run: bin/rake plugin:install_all_official
-
-      # - name: Pull compatible versions of plugins
-      #   run: bin/rake plugin:pull_compatible_all
-
       - name: Fetch app state cache
         uses: actions/cache@v3
         id: app-cache
