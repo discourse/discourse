@@ -39,6 +39,7 @@ describe "Emoji deny list", type: :system, js: true do
 
   describe "when using composer" do
     before do
+      SiteSetting.enable_emoji = true
       SiteSetting.emoji_deny_list = "fu|poop"
       Emoji.clear_cache && Discourse.request_refresh!
     end
@@ -46,7 +47,7 @@ describe "Emoji deny list", type: :system, js: true do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
 
-    xit "should remove denied emojis from emoji picker" do
+    it "should remove denied emojis from emoji picker" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(composer).to be_opened
 
