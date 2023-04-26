@@ -47,7 +47,6 @@ import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearExtraKeyboardShortcutHelp } from "discourse/lib/keyboard-shortcuts";
 import { clearResolverOptions } from "discourse-common/resolver";
-import { clearResolverOptions as clearLegacyResolverOptions } from "discourse-common/lib/legacy-resolver";
 import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
@@ -206,7 +205,6 @@ export function testCleanup(container, app) {
   clearBlockDecorateCallbacks();
   clearTextDecorateCallbacks();
   clearResolverOptions();
-  clearLegacyResolverOptions();
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
   resetSidebarSection();
