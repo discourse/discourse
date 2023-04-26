@@ -983,12 +983,6 @@ cs:
       theme: "Motiv"
       home: "Výchozí domovská stránka"
       staged: "Staged"
-      staff_counters:
-        flagged_posts: "nahlášených příspěvků"
-        deleted_posts: "smazaných příspěvků"
-        suspensions: "vyloučení"
-        warnings_received: "varování"
-        rejected_posts: "zamítnuté příspěvky"
       messages:
         inbox: "Doručené"
         latest: "Aktuální"
@@ -1037,8 +1031,6 @@ cs:
         title: "Dvoufaktorové záložní kódy"
         regenerate: "Vytvořit znovu"
         disable: "Vypnout"
-        enable: "Zapnout"
-        enable_long: "Povolit záložní kódy"
         copy_to_clipboard: "Kopírovat do schránky"
         copy_to_clipboard_error: "Chyba při kopírování dat do schránky"
         copied_to_clipboard: "Zkopírováno do schránky"

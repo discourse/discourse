@@ -52,7 +52,10 @@ pt_BR:
   remove_posts_deleted_by_author: "Excluído(a) pelo autor(a)"
   redirect_warning: "Não foi possível confirmar se o link selecionado foi postado no fórum. Se deseja continuar mesmo assim, selecione o link abaixo."
   on_another_topic: "Em outro tópico"
+  topic_category_changed: "De %{from} para %{to}"
   topic_tag_changed:
+    added_and_removed: "Adicionado %{added} e removido %{removed}"
+    added: "Adicionado %{added}"
     removed: "Removeu %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
@@ -240,6 +243,7 @@ pt_BR:
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, visto que já têm uma conta!"
     invite_exists: "Você já convidou <b>%{email}</b>"
     invalid_email: "%{email}' não é um endereço de e-mail válido."
+    generic_error_response: "Houve um problema com sua requisição"
     rate_limit:
       one: "Você já enviou %{count} convite no último dia, aguarde %{time_left} antes de tentar novamente."
       other: "Você já enviou %{count} convites no último dia, aguarde %{time_left} antes de tentar novamente."
@@ -401,6 +405,7 @@ pt_BR:
   too_late_to_edit: "Esta postagem foi criada há muito tempo. Ela não pode mais ser editada ou excluída."
   edit_conflict: "Esta postagem foi editada por outro(a) usuário(a) e suas alterações não podem mais ser salvas."
   revert_version_same: "A versão atual é a mesma versão para a qual você está tentando reverter."
+  reverted_to_version: "revertido para a versão #%{version}"
   cannot_edit_on_slow_mode: "Este tópico está no modo lento. Para incentivar discussões reflexivas e selecionadas. Não é permitido editar postagens antigas deste tópico no modo lento."
   excerpt_image: "imagem"
   bookmarks:
@@ -589,6 +594,12 @@ pt_BR:
             duration_minutes:
               cannot_be_zero: "deve ser maior que 0."
               exceeds_maximum: "não pode ter mais de 20 anos."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys:
+                one: 'A seguinte chave de interpolação é inválida: %{keys}'
+                other: 'As seguintes chaves de interpolação são inválidas: %{keys}'
         watched_word:
           attributes:
             word:
@@ -1617,7 +1628,6 @@ pt_BR:
     discourse_connect_overrides_profile_background: "Substitui o plano de fundo do perfil do(a) usuário(a) pelo valor do conteúdo do DiscourseConnect."
     discourse_connect_overrides_card_background: "Substitui o plano de fundo do cartão de usuário(a) pelo valor do conteúdo do DiscourseConnect."
     discourse_connect_not_approved_url: "Redireciona contas não aprovadas do DiscourseConnect para esta URL"
-    discourse_connect_allows_all_return_paths: "Não restrinja o domínio para return_paths fornecidos pelo DiscourseConnect (por padrão, o caminho de retorno deve estar no site atual)"
     enable_local_logins: "Ative contas baseadas em entrada com senha e usuário(a) local. ALERTA: se estiver desativado, talvez não seja possível entrar com a conta caso você não tenha configurado pelo menos um método de entrada alternativo."
     enable_local_logins_via_email: "Permita que os(as) usuários(as) solicitem um link para entrar com um clique para ser enviado por e-mail."
     allow_new_registrations: "Permita cadastro de novos(as) usuários(as). Desmarque isso para evitar que qualquer pessoa crie uma nova conta."
@@ -2008,7 +2018,6 @@ pt_BR:
     show_create_topics_notice: "Se o site tiver menos de cinco tópicos públicos, mostre um aviso pedindo que os(as) administradores(as) criem alguns tópicos."
     delete_drafts_older_than_n_days: "Exclua rascunhos anteriores a (n) dias."
     delete_merged_stub_topics_after_days: "Quantidade de dias para aguardar antes de excluir automaticamente tópicos de stub totalmente mesclados. Defina para 0 para nunca excluir tópicos de stub."
-    bootstrap_mode_min_users: "Quantidade mínima de usuários(as) necessários(as) para desativar o modo de inicialização (defina como 0 para desativar)"
     prevent_anons_from_downloading_files: "Impeça que usuários(as) anônimos(as) baixem anexos."
     secure_uploads: 'Limita acesso a TODOS os envios (imagens, vídeo, áudio, texto, pdfs, zips e muito mais). Se “É necessário entrar com a conta” estiver ativado, apenas usuários(as) que entraram com a conta podem acessar os envios. Caso contrário, o acesso será limitado apenas a envios de mídias em mensagens e categorias privadas. AVISO: esta configuração é complexa e requer conhecimento de administração. Para mais detalhes, consulte <a target="_blank" href="https://meta.discourse.org/t/-/140017">o tópico de envios seguros em Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Permite incorporação de imagens seguras que geralmente seriam escritas em e-mails, caso o tamanho seja menor do que a configuração 'tamanho máx. de imagem de envio incorporada no e-mail, em KB\"."
@@ -2129,7 +2138,6 @@ pt_BR:
     navigation_menu: "Determine qual menu de navegação usar. A barra lateral e a navegação no cabeçalho podem ser personalizadas pelos usuários. A opção legada está disponível para compatibilidade com versões anteriores."
     default_sidebar_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Painel Lateral por padrão."
     default_sidebar_tags: "As etiquetas selecionadas serão exibidas na seção de Etiquetas da barra lateral por padrão."
-    enable_new_notifications_menu: "Ativa o novo menu de notificações para o menu de navegação legado."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use o novo sistema de complementação automática #hashtag para categorias e etiquetas que renderiza o item selecionado de maneira diferente e que tem melhorado a busca"
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."
@@ -2186,7 +2194,6 @@ pt_BR:
       search_tokenize_japanese_enabled: "Você deve desativar o 'search_tokenize_japanese' antes de ativar esta configuração."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Você não pode ativar o DiscourseConnect se o 2FA for aplicado."
       delete_rejected_email_after_days: "Esta configuração não pode ser inferior à configuração delete_email_logs_after_days ou superior a %{max}"
-      enable_new_notifications_menu_not_legacy_navigation_menu: "Você precisa definir `navigation_menu` como `legacy` antes de ativar esta configuração."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exemplo.com.br"
@@ -2393,6 +2400,7 @@ pt_BR:
       must_not_contain_two_special_chars_in_seq: "não deve conter uma sequência de dois ou mais caracteres especiais (.-_)"
       must_not_end_with_confusing_suffix: "não deve terminar com um sufixo confuso como .json ou .png etc."
     email:
+      blank: "não pode estar em branco."
       invalid: "é inválido(a)."
       not_allowed: "este provedor de e-mail não é permitido. Utilize outro endereço de e-mail."
       blocked: "não é permitido."
@@ -3677,6 +3685,8 @@ pt_BR:
   offline:
     title: "Não é possível carregar o aplicativo"
     offline_page_message: "Parece que você está off-line! Verifique sua conexão de rede e tente novamente."
+  login_required:
+    welcome_message: "# [Bem-vindo(a) ao %{title}](#welcome)"
   upload:
     edit_reason: "cópias locais de imagens baixadas"
     unauthorized: "Desculpe, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
@@ -4298,6 +4308,9 @@ pt_BR:
           <p>Divirta-se e boa sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construindo a sua nova comunidade!</a></p>
   search_logs:
     graph_title: "Contagem de pesquisa"
+  onebox:
+    discourse:
+      user_joined_community: "Juntou-se em %{date}"
   discourse_push_notifications:
     popup:
       mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'
@@ -4361,22 +4374,36 @@ pt_BR:
     actions:
       agree:
         title: "Sim"
+      agree_and_keep:
+        title: "Manter publicação"
+      agree_and_keep_hidden:
+        title: "Manter publicação oculta"
+        description: "Concordar com o sinalizador e manter a publicação oculta."
       agree_and_suspend:
+        title: "Suspender usuário(a)"
         description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
       agree_and_silence:
         title: "Silenciar usuário(a)"
         description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
       agree_and_restore:
+        title: "Restaurar publicação"
         description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
+      agree_and_hide:
+        title: "Ocultar publicação"
       delete_single:
         title: "Excluir"
       delete:
         title: "Excluir…"
+      delete_and_ignore:
+        title: "Ignorar sinalizador e excluir publicação"
       delete_and_ignore_replies:
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
+      delete_and_agree:
+        title: "Excluir publicação"
       delete_and_agree_replies:
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
       disagree_and_restore:
+        title: "Não, restaurar publicação"
         description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
       disagree:
         title: "Não"
@@ -4449,6 +4476,11 @@ pt_BR:
     payload_url:
       blocked_or_internal: "A URL da Carga não poderá ser usada porque se refere a um IP interno ou bloqueado"
       unsafe: "A URL da carga útil não poderá ser usada porque não é segura"
+  form_templates:
+    errors:
+      invalid_yaml: "não é uma string YAML válida"
+      invalid_type: "contém um tipo de modelo inválido: %{type} (os tipos válidos são: %{valid_types})"
+      missing_type: "está faltando o tipo do campo"
   activemodel:
     errors:
       <<: *errors

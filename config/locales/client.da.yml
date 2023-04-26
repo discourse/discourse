@@ -1111,12 +1111,6 @@ da:
       save_to_change_theme: 'Tema vil blive opdateret efter du har trykket på“%{save_text}„'
       home: "Standard startside"
       staged: "Iscenesat"
-      staff_counters:
-        flagged_posts: "markerede indlæg"
-        deleted_posts: "slettede indlæg"
-        suspensions: "suspenderinger"
-        warnings_received: "advarsler"
-        rejected_posts: "afviste indlæg"
       messages:
         all: "alle indbakker"
         inbox: "Indbakke"
@@ -1164,11 +1158,9 @@ da:
         title: "To-faktor backup koder"
         regenerate: "Regenerér"
         disable: "Deaktiver"
-        enable: "Aktiver"
-        enable_long: "Aktivér backup koder"
         manage:
-          one: "Administrér backup koder. Du har <strong>%{count}</strong> backup kode tilbage."
-          other: "Administrér backup koder. Du har <strong>%{count}</strong> backup koder tilbage."
+          one: "Du har <strong>%{count}</strong> backup kode tilbage."
+          other: "Du har <strong>%{count}</strong> backup koder tilbage."
         copy_to_clipboard: "Kopiér til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
         copied_to_clipboard: "Kopieret til udklipsholder"
@@ -3932,9 +3924,6 @@ da:
         notification_event:
           name: "Meddelelsesbegivenhed"
           details: "Når en bruger modtager en underretning i deres beskedstrøm."
-        user_badge_event:
-          name: "Emblem Tildelings Begivenhed"
-          details: "Når en bruger modtager et emblem."
         group_user_event:
           name: "Gruppe Bruger Begivenhed"
           details: "Når en bruger tilføjes eller fjernes en gruppe."

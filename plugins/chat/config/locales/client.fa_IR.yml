@@ -205,6 +205,7 @@ fa_IR:
       composer:
         italic_text: "متن تاکید شده"
         bold_text: "نوشته‌ی ضخیم "
+        send: "ارسال"
       quote:
         copy_success: "نقل قول گفتگو در کلیپ‌بورد کپی شد"
       notification_levels:
@@ -277,6 +278,11 @@ fa_IR:
         flags: "پرچم‌ها"
         symbols: "نشانه ها"
         no_results: "هیج نتیجه‌ای نداشت"
+      thread:
+        view_thread: مشاهده موضوع
+        replies:
+          one: "%{count} پاسخ"
+          other: "%{count} پاسخ"
       draft_channel_screen:
         header: "پیام جدید"
         cancel: "انصراف"

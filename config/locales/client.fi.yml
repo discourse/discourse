@@ -1171,11 +1171,21 @@ fi:
       home: "Oletusaloitussivu"
       staged: "Esikäyttäjä"
       staff_counters:
-        flagged_posts: "liputettua viestiä"
-        deleted_posts: "poistettua viestiä"
-        suspensions: "estoa"
-        warnings_received: "varoituksia"
-        rejected_posts: "hylättyjä viestejä"
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> merkitty julkaisu'
+          other: '<span class="%{className}">%{count}</span> merkittyä julkaisua'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> poistettu julkaisu'
+          other: '<span class="%{className}">%{count}</span> poistettua julkaisua'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> jäädytys'
+          other: '<span class="%{className}">%{count}</span> jäädytystä'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> varoitus'
+          other: '<span class="%{className}">%{count}</span> varoitusta'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> hylätty julkaisu'
+          other: '<span class="%{className}">%{count}</span> hylättyä julkaisua'
       messages:
         all: "kaikki postilaatikot"
         inbox: "Saapuneet"
@@ -1282,11 +1292,9 @@ fi:
         title: "Kaksivaiheisen tunnistuksen varakoodit"
         regenerate: "Tee uusi"
         disable: "Poista käytöstä"
-        enable: "Ota käyttöön"
-        enable_long: "Ota varakoodit käyttöön"
         manage:
-          one: "Hallitse varakoodeja. Sinulla on <strong>%{count}</strong> varakoodi jäljellä."
-          other: "Hallitse varakoodeja. Sinulla on <strong>%{count}</strong> varakoodia jäljellä."
+          one: "<strong>%{count}</strong> varakoodi jäljellä."
+          other: "<strong>%{count}</strong> varakoodia jäljellä."
         copy_to_clipboard: "Kopioi leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
@@ -4391,8 +4399,8 @@ fi:
           name: "Käyttäjän ylennustapahtuma"
           details: "Kun käyttäjä ylennetään luottamustasolta toiselle."
         user_badge_event:
-          name: "Kunniamerkin myöntämistapahtuma"
-          details: "Kun käyttäjä saa kunniamerkin."
+          name: "Merkittävä tapahtuma"
+          details: "Kun kunniamerkki myönnetään tai mitätöidään."
         group_user_event:
           name: "Käyttäjäryhmän tapahtuma"
           details: "Kun käyttäjä lisätään tai poistetaan ryhmästä."

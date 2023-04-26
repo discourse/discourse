@@ -93,6 +93,7 @@ uk:
       composer:
         italic_text: "виділення тексту курсивом"
         bold_text: "Сильне виділення тексту"
+        send: "Надіслати"
       notification_levels:
         never: "Ніколи"
       settings:
@@ -131,6 +132,12 @@ uk:
         activities: "Діяльність"
         flags: "Скарги"
         symbols: "Атрибутика"
+      thread:
+        replies:
+          one: "%{count} відповідь"
+          few: "%{count} відповіді"
+          many: "%{count} відповідь"
+          other: "%{count} відповідь"
       draft_channel_screen:
         header: "Нове повідомлення"
         cancel: "Скасувати"

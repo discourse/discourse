@@ -1163,12 +1163,6 @@ nl:
       save_to_change_theme: 'Thema wordt bijgewerkt nadat je op ''%{save_text}'' klikt'
       home: "Standaard startpagina"
       staged: "Gefaseerd"
-      staff_counters:
-        flagged_posts: "gemarkeerde berichten"
-        deleted_posts: "verwijderde berichten"
-        suspensions: "schorsingen"
-        warnings_received: "waarschuwingen"
-        rejected_posts: "geweigerde berichten"
       messages:
         all: "alle inboxen"
         inbox: "Inbox"
@@ -1275,11 +1269,9 @@ nl:
         title: "Back-upcodes voor tweeledige verificatie"
         regenerate: "Opnieuw genereren"
         disable: "Uitschakelen"
-        enable: "Inschakelen"
-        enable_long: "Back-upcodes inschakelen"
         manage:
-          one: "Back-upcodes beheren. Je hebt nog <strong>%{count}</strong> back-upcode over."
-          other: "Back-upcodes beheren. Je hebt nog <strong>%{count}</strong> back-upcodes over."
+          one: "Je hebt nog <strong>%{count}</strong> back-upcode over."
+          other: "Je hebt nog <strong>%{count}</strong> back-upcodes over."
         copy_to_clipboard: "Kopiëren naar klembord"
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
         copied_to_clipboard: "Gekopieerd naar klembord"
@@ -4384,9 +4376,6 @@ nl:
         user_promoted_event:
           name: "Door gebruiker gepromoot evenement"
           details: "Wanneer een gebruiker wordt gepromoveerd van het ene vertrouwensniveau naar het andere."
-        user_badge_event:
-          name: "Badgetoekenningsgebeurtenis"
-          details: "Wanneer een gebruiker een badge ontvangt."
         group_user_event:
           name: "Groepgebruikersgebeurtenis"
           details: "Wanneer een gebruiker wordt toegevoegd of verwijderd in een groep."

@@ -3,6 +3,7 @@ import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulatio
 import { next, schedule } from "@ember/runloop";
 import { setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
+import { registerDestructor } from "@ember/destroyable";
 
 // This class sole purpose is to provide a way to interact with the textarea
 // using the existing TextareaTextManipulation mixin without using it directly
@@ -12,6 +13,7 @@ export default class TextareaInteractor extends EmberObject.extend(
 ) {
   @service capabilities;
   @service site;
+  @service siteSettings;
 
   constructor(owner, textarea) {
     super(...arguments);
@@ -20,6 +22,18 @@ export default class TextareaInteractor extends EmberObject.extend(
     this._textarea = textarea;
     this.element = this._textarea;
     this.ready = true;
+    this.composerFocusSelector = ".chat-composer__input";
+
+    this.init(); // mixin init wouldn't be called otherwise
+    this.composerEventPrefix = null; // we don't need app events
+
+    // paste is using old native ember events defined on composer
+    this.textarea.addEventListener("paste", this.paste);
+    registerDestructor(this, (instance) => instance.teardown());
+  }
+
+  teardown() {
+    this.textarea.removeEventListener("paste", this.paste);
   }
 
   set value(value) {

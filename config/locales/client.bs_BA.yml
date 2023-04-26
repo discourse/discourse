@@ -997,12 +997,6 @@ bs_BA:
       save_to_change_theme: 'Tema će biti ažurirana nakon što kliknete "%{save_text}"'
       home: "Uobičajena početna stranica"
       staged: "Priređen"
-      staff_counters:
-        flagged_posts: "prijavljene objave"
-        deleted_posts: "obrisane objave"
-        suspensions: "suspenzije"
-        warnings_received: "upozorenja"
-        rejected_posts: "odbijeni postovi"
       messages:
         inbox: "Inbox"
         latest: "Zadnje"
@@ -1048,8 +1042,6 @@ bs_BA:
       second_factor_backup:
         regenerate: "Regenerate"
         disable: "Onemogući"
-        enable: "Omogući"
-        enable_long: "Omogućite rezervne kodove"
         copy_to_clipboard: "Kopirati u clipboard"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
         copied_to_clipboard: "Kopirano u međuspremnik"

@@ -222,7 +222,6 @@ de:
       close_full_page: "Vollbild-Chat schließen"
       open_message: "Nachricht im Chat öffnen"
       placeholder_self: "Etwas notieren"
-      placeholder_channel: "Chatte mit %{channelName}"
       placeholder_users: "Chat mit %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Der Kanal ist archiviert, du kannst im Moment keine neuen Nachrichten senden."
@@ -386,6 +385,7 @@ de:
         italic_text: "hervorgehobener Text"
         bold_text: "fett gedruckter Text"
         code_text: "Code-Text"
+        send: "Senden"
       quote:
         original_channel: 'Ursprünglich gesendet in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat-Zitat in die Zwischenablage kopiert"
@@ -508,6 +508,10 @@ de:
         search_placeholder: "Nach Emoji-Namen und -Alias suchen …"
         no_results: "Keine Ergebnisse"
       thread:
+        view_thread: Thread ansehen
+        replies:
+          one: "%{count} Antwort"
+          other: "%{count} Antworten"
         label: Thread
       threads:
         started_by: "Gestartet von"

@@ -10,6 +10,18 @@ export default function withChatChannel(extendedClass) {
       return this.chatChannelsManager.find(params.channelId);
     }
 
+    titleToken() {
+      if (!this.currentModel) {
+        return;
+      }
+
+      if (this.currentModel.isDirectMessageChannel) {
+        return `${this.currentModel.title}`;
+      } else {
+        return `#${this.currentModel.title}`;
+      }
+    }
+
     afterModel(model) {
       this.controllerFor("chat-channel").set("targetMessageId", null);
       this.chat.activeChannel = model;

@@ -57,6 +57,7 @@ be:
       composer:
         italic_text: "выдзялення тэксту"
         bold_text: "Моцнае вылучэнне тэксту"
+        send: "адправіць"
       notification_levels:
         never: "ніколі"
       settings:
