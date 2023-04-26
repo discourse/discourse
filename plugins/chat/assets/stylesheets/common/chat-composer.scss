@@ -39,11 +39,11 @@
     padding-inline: 0.25rem;
     min-height: 42px;
 
-    .chat-composer--focused & {
+    .chat-composer.is-focused & {
       border-color: var(--primary-medium);
     }
 
-    .chat-composer--disabled & {
+    .chat-composer.is-disabled & {
       background: var(--primary-low);
     }
   }
@@ -53,7 +53,7 @@
     background: none;
     will-change: scale;
 
-    .chat-composer--send-enabled & {
+    .chat-composer.is-enabled & {
       &:hover {
         background: none;
       }
@@ -70,21 +70,21 @@
 
     @keyframes sendingScales {
       0% {
-        transform: scale(0.8);
+        transform: scale(0.9);
       }
       50% {
         transform: scale(1.2);
       }
       100% {
-        transform: scale(0.8);
+        transform: scale(0.9);
       }
     }
 
-    .chat-composer--sending & {
-      animation: sendingScales 1s infinite;
+    .chat-composer.is-sending & {
+      animation: sendingScales 1s infinite linear;
     }
 
-    .chat-composer--send-disabled & {
+    .chat-composer.is-disabled & {
       cursor: default;
       opacity: 0.6 !important;
 
