@@ -293,4 +293,35 @@ RSpec.describe "Chat composer", type: :system, js: true do
       expect(find(".chat-composer__input").value).to eq("[discourse](https://www.discourse.org)")
     end
   end
+
+  context "when posting a message with length equal to minimum length" do
+    before do
+      SiteSetting.chat_minimum_message_length = 1
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "works" do
+      chat.visit_channel(channel_1)
+      find("body").send_keys("1")
+      channel.click_send_message
+
+      expect(channel).to have_message(text: "1")
+    end
+  end
+
+  context "when posting a message with length superior to minimum length" do
+    before do
+      SiteSetting.chat_minimum_message_length = 2
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "doesn’t allow to send" do
+      chat.visit_channel(channel_1)
+      find("body").send_keys("1")
+
+      expect(page).to have_css(".chat-composer--send-disabled")
+    end
+  end
 end
