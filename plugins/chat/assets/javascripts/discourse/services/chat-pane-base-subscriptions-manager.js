@@ -28,11 +28,7 @@ export function handleStagedMessage(messagesManager, data) {
     inReplyToMsg.threadId = data.chat_message.thread_id;
   }
 
-  // some markdown is cooked differently on the server-side, e.g.
-  // quotes, avatar images etc.
-  if (data.chat_message?.cooked !== stagedMessage.cooked) {
-    stagedMessage.cooked = data.chat_message.cooked;
-  }
+  stagedMessage.cooked = data.chat_message.cooked;
 
   return stagedMessage;
 }
@@ -142,13 +138,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     const message = this.messagesManager.findMessage(data.chat_message.id);
     if (message) {
       message.cooked = data.chat_message.cooked;
-      message.incrementVersion();
-      this.afterProcessedMessage(message);
     }
-  }
-
-  afterProcessedMessage() {
-    throw "not implemented";
   }
 
   handleReactionMessage(data) {
@@ -166,7 +156,6 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
       message.excerpt = data.chat_message.excerpt;
       message.uploads = cloneJSON(data.chat_message.uploads || []);
       message.edited = true;
-      message.incrementVersion();
     }
   }
 

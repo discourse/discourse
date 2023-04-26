@@ -39,10 +39,4 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneB
   handleThreadOriginalMessageUpdate() {
     return;
   }
-
-  // NOTE: noop for now, later we may want to do scrolling or something like
-  // we do in the channel pane.
-  afterProcessedMessage() {
-    return;
-  }
 }
