@@ -9,7 +9,7 @@
       @class={{section.dragCss}}
     >
       {{#each section.links as |link|}}
-        {{#if section.system}}
+        {{#if section.system_section}}
           <Sidebar::SectionLink
             @shouldDisplay={{link.shouldDisplay}}
             @linkName={{link.name}}

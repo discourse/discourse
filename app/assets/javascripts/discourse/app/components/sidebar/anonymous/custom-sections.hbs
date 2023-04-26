@@ -13,7 +13,7 @@
       {{/if}}
 
       {{#each section.links as |link|}}
-        {{#if section.system}}
+        {{#if section.system_section}}
           {{#if link.shouldDisplay}}
             <Sidebar::SectionLink
               @shouldDisplay={{link.shouldDisplay}}

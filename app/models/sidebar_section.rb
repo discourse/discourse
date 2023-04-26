@@ -36,13 +36,13 @@ end
 #
 # Table name: sidebar_sections
 #
-#  id         :bigint           not null, primary key
-#  user_id    :integer          not null
-#  title      :string(30)       not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  public     :boolean          default(FALSE), not null
-#  system     :boolean          default(FALSE), not null
+#  id             :bigint           not null, primary key
+#  user_id        :integer          not null
+#  title          :string(30)       not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  public         :boolean          default(FALSE), not null
+#  system_section :string
 #
 # Indexes
 #

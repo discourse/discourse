@@ -3,25 +3,22 @@
 class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
   def up
     result = DB.query <<~SQL
-    INSERT INTO sidebar_sections(user_id, title, public, system, created_at, updated_at)
-      VALUES (-1, 'Community', true, true, now(), now())
+    INSERT INTO sidebar_sections(id, user_id, title, public, system_section, created_at, updated_at)
+      VALUES (-1, -1, 'Community', true, 'community', now(), now())
       RETURNING sidebar_sections.id
     SQL
 
     community_section_id = result.last&.id
 
+    sidebar_urls =
+      SidebarUrl::COMMUNITY_SECTION_LINKS.map do |url_data|
+        "(#{url_data[:id]}, '#{url_data[:name]}', '#{url_data[:path]}', '#{url_data[:icon]}', '#{url_data[:segment]}', false, now(), now())"
+      end
+    puts sidebar_urls.inspect
+
     result = DB.query <<~SQL
-      INSERT INTO sidebar_urls(name, value, icon, external, segment, created_at, updated_at)
-      VALUES
-        ('Everything', '/latest', 'layer-group', false, 'primary', now(), now()),
-        ('My Posts', '/my/activity', 'user', false, 'primary', now(), now()),
-        ('Review', '/review', 'flag', false, 'primary', now(), now()),
-        ('Admin', '/admin', 'wrench', false, 'primary', now(), now()),
-        ('Users', '/u', 'users', false, 'secondary', now(), now()),
-        ('Info', '/about', 'info-circle', false, 'secondary', now(), now()),
-        ('Faq', '/faq', 'question-circle', false, 'secondary', now(), now()),
-        ('Groups', '/g', 'user-friends', false, 'secondary', now(), now()),
-        ('Badges', '/badges', 'certificate', false, 'secondary', now(), now())
+      INSERT INTO sidebar_urls(id, name, value, icon, segment, external, created_at, updated_at)
+      VALUES #{sidebar_urls.join(",")}
       RETURNING sidebar_urls.id
     SQL
 
@@ -39,10 +36,7 @@ class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
   def down
     result = DB.query <<~SQL
       DELETE FROM sidebar_sections
-      WHERE user_id = -1
-      AND title = 'community'
-      AND public IS TRUE
-      AND system IS TRUE
+      WHERE id = -1
       RETURNING sidebar_sections.id
     SQL
     community_section_id = result.last&.id

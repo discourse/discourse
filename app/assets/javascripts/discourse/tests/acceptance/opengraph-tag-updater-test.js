@@ -33,7 +33,7 @@ acceptance("Opengraph Tag Updater", function (needs) {
         ],
         slug: "community",
         public: true,
-        system: true,
+        system_section: "community",
       },
     ],
   });

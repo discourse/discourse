@@ -5,6 +5,17 @@ class SidebarUrl < ActiveRecord::Base
   MAX_ICON_LENGTH = 40
   MAX_NAME_LENGTH = 80
   MAX_VALUE_LENGTH = 200
+  COMMUNITY_SECTION_LINKS = [
+    { id: -1, name: "Everything", path: "/latest", icon: "layer-group", segment: "primary" },
+    { id: -2, name: "My Posts", path: "/my/activity", icon: "user", segment: "primary" },
+    { id: -3, name: "Review", path: "/review", icon: "flag", segment: "primary" },
+    { id: -4, name: "Admin", path: "/admin", icon: "wrench", segment: "primary" },
+    { id: -5, name: "Users", path: "/u", icon: "users", segment: "secondary" },
+    { id: -6, name: "Info", path: "/about", icon: "info-circle", segment: "secondary" },
+    { id: -7, name: "Faq", path: "/faq", icon: "question-circle", segment: "secondary" },
+    { id: -8, name: "Groups", path: "/g", icon: "user-friends", segment: "secondary" },
+    { id: -9, name: "Badges", path: "/badges", icon: "certificate", segment: "secondary" },
+  ]
 
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }
   validates :name, presence: true, length: { maximum: MAX_NAME_LENGTH }

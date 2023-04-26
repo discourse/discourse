@@ -10,14 +10,14 @@ export default class SidebarAnonymousCustomSections extends Component {
 
   get sections() {
     return this.site.anonymous_sidebar_sections?.map((section) => {
-      const klass = section.system ? SystemSection : Section
+      const klass = section.system_section ? SystemSection : Section;
 
       return new klass({
-          section,
-          currentUser: this.currentUser,
-          router: this.router,
-          siteSettings: this.siteSettings,
-      })
+        section,
+        currentUser: this.currentUser,
+        router: this.router,
+        siteSettings: this.siteSettings,
+      });
     });
   }
 }

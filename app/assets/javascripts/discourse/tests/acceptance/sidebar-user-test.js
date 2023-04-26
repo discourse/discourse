@@ -97,7 +97,7 @@ acceptance(
           ],
           slug: "community",
           public: true,
-          system: true,
+          system_section: "community",
         },
       ],
     });

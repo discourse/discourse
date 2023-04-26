@@ -23,6 +23,7 @@ import {
 const LINKS_IN_BOTH_SEGMENTS = ["/review"];
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
+  "/new": EverythingSectionLink,
   "/about": AboutSectionLink,
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,
@@ -52,7 +53,7 @@ export default class SystemSection {
     this.topicTrackingState = topicTrackingState;
     this.appEvents = appEvents;
     this.siteSettings = siteSettings;
-    this.system = section.system;
+    this.system_section = section.system_section;
 
     this.callbackId = this.topicTrackingState?.onStateChange(() => {
       this.links.forEach((link) => {
@@ -123,10 +124,7 @@ export default class SystemSection {
   }
 
   get displayShortSiteDescription() {
-    return (
-      !this.currentUser &&
-      !!this.siteSettings.short_site_description
-    );
+    return !this.currentUser && !!this.siteSettings.short_site_description;
   }
 
   get decoratedTitle() {

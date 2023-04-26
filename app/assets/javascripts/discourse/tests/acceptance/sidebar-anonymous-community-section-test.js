@@ -96,7 +96,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
         ],
         slug: "community",
         public: true,
-        system: true,
+        system_section: "community",
       },
     ],
   });
