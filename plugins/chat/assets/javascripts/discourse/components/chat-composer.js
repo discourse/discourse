@@ -98,6 +98,11 @@ export default class ChatComposer extends Component {
     this.persistDraft();
   }
 
+  @action
+  cancelPersistDraft() {
+    cancel(this._persistHandler);
+  }
+
   get currentMessage() {
     return this.composer.message;
   }
