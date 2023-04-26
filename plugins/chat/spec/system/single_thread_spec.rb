@@ -52,7 +52,7 @@ describe "Single thread in side panel", type: :system, js: true do
     before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
 
     context "when in full page" do
-      context "switching channel" do
+      context "when switching channel" do
         fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: true) }
 
         before { channel_2.add(current_user) }
