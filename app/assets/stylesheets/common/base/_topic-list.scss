@@ -32,7 +32,7 @@
 }
 
 .category-breadcrumb {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: var(--nav-space) 0; // used if the breadcrumb dropdowns wrap
   list-style: none;
@@ -47,7 +47,7 @@
 }
 
 #navigation-bar {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   margin: 0;
   margin-bottom: var(--nav-space);

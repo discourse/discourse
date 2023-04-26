@@ -27,6 +27,12 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
+    ### PCC change ###
+    resources :voice_credits, only: %i[index create]
+    # get "/topics/user-votes/:category_id" => "topics#user_votes"
+    get "/topics/category-totals/:category_id" => "voice_credits#total_votes_per_topic_for_category"
+    ### END of PCC change ###
+
     get "/bootstrap" => "bootstrap#index"
     if Rails.env.test? || Rails.env.development?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"

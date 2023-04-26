@@ -1,4 +1,70 @@
 <thead class="topic-list-header">
+  {{#if this.showUserVoiceCredits}}
+    <tr class="above-colum-headers">
+      <td style="text-align: right;" colspan="100%">
+        <div id="user-info-topic-list">
+          <div class="user-hearts-data">
+            {{#if this.currentUser.name}}
+              <div><strong>{{this.currentUser.name}}</strong></div>
+            {{/if}}
+            {{#unless this.currentUser.name}}
+              <div><strong>{{this.currentUser.username}}</strong></div>
+            {{/unless}}
+            <div class="remaining-votes-text">You have
+              <strong>{{this.remainingVotes}}</strong>
+              hearts left to give
+            </div>
+            {{! user_field_1 seems to be auto generated depending on the order of adding custom fields,
+            so it may vary per env and needs to be validated in the user_custom_fields table }}
+            <div>Organisation:
+              <strong>{{this.currentUser.custom_fields.user_field_1}}</strong>
+            </div>
+            <div>Region:
+              <strong>{{this.currentUser.custom_fields.user_field_2}}</strong>
+            </div>
+          </div>
+          <div id="user-hearts-container-row">
+            <div id="user-hearts-container">
+              <div id="user-hearts">
+              </div>
+              <div id="user-hearts-mobile">
+                <div class="combine-hearts">
+                  <img
+                    class="empty-heart-bar"
+                    src="/images/health-bar-black.png"
+                    alt="Black bar Hearts"
+                  />
+                  <img
+                    class={{mobileHearthsBarWidth this.remainingVotes}}
+                    src="/images/health-red-bar.png"
+                    alt="Empty Hearts"
+                  />
+                  <img
+                    class="heart-bar-legend"
+                    src="/images/full-heart.png"
+                    alt="Heart"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="save-section">
+              <p
+                class={{save-voice-credits-text-class this.saveButtonText}}
+              ><span id="blockCounter">{{this.remainingVotes}}</span>/100
+                remaining</p>
+              <button
+                type="button"
+                id="save-voice-credits"
+                disabled={{this.isSaving}}
+                class={{save-voice-credits-button-class this.saveButtonText}}
+                {{on "click" this.saveVoiceCredits}}
+              >{{this.saveButtonText}}</button>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  {{/if}}
   {{raw
     "topic-list-header"
     canBulkSelect=this.canBulkSelect
@@ -7,6 +73,9 @@
     showPosters=this.showPosters
     showLikes=this.showLikes
     showOpLikes=this.showOpLikes
+    showQuadraticTotals=this.showQuadraticTotals
+    showUserVoiceCredits=this.showUserVoiceCredits
+    remainingVotes=this.remainingVotes
     order=this.order
     ascending=this.ascending
     sortable=this.sortable
@@ -32,6 +101,20 @@
   {{#each this.filteredTopics as |topic index|}}
     <TopicListItem
       @topic={{topic}}
+      @topicVote={{getFieldByObjectId this.topicVotes topic.id "total_votes"}}
+      @voiceCredits={{getFieldByObjectId
+        this.voiceCredits
+        topic.id
+        "credits_allocated"
+      }}
+      @heartPower={{getHeartPower
+        this.voiceCredits
+        topic.id
+        "credits_allocated"
+      }}
+      @showQuadraticTotals={{this.showQuadraticTotals}}
+      @showUserVoiceCredits={{this.showUserVoiceCredits}}
+      @remainingVotes={{this.remainingVotes}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
       @showTopicPostBadges={{this.showTopicPostBadges}}
       @hideCategory={{this.hideCategory}}

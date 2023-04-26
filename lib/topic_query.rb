@@ -9,7 +9,7 @@ class TopicQuery
   include PrivateMessageLists
 
   PG_MAX_INT ||= 2_147_483_647
-  DEFAULT_PER_PAGE_COUNT ||= 30
+  DEFAULT_PER_PAGE_COUNT ||= 200
 
   def self.validators
     @validators ||=
@@ -625,12 +625,34 @@ class TopicQuery
     # If we are sorting in the default order desc, we should consider including pinned
     # topics. Otherwise, just use bumped_at.
     if sort_column == "default"
-      if sort_dir == "DESC"
-        # If something requires a custom order, for example "unread" which sorts the least read
-        # to the top, do nothing
-        return result if options[:unordered]
+      ### PCC change ###
+
+      # if sort_dir == "DESC"
+      #  # If something requires a custom order, for example "unread" which sorts the least read
+      #   # to the top, do nothing
+      #   return result if options[:unordered]
+      # end
+      # sort_column = "bumped_at"
+      ### END of PCC change ###
+
+      ### PCC change ###
+      category_id = get_category_id(options[:category])
+      if category_id && category_id != 1 #Uncategorized
+        result =
+          result.joins(
+            "LEFT JOIN (SELECT topic_id, SUM(SQRT(credits_allocated)) as total_voice_credits_score FROM voice_credits where category_id =#{category_id} GROUP BY topic_id) vc ON vc.topic_id = topics.id",
+          ).order("total_voice_credits_score IS NULL, total_voice_credits_score DESC") #null values last
+
+        return result
+      else
+        if sort_dir == "DESC"
+          # If something requires a custom order, for example "unread" which sorts the least read
+          # to the top, do nothing
+          return result if options[:unordered]
+        end
+        sort_column = "bumped_at"
       end
-      sort_column = "bumped_at"
+      ### END of PCC change ###
     end
 
     # If we are sorting by category, actually use the name

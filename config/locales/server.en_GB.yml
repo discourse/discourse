@@ -18,19 +18,19 @@ en_GB:
       no_day: "%B %Y"
   date:
     month_names:
-    - null
-    - January
-    - February
-    - March
-    - April
-    - May
-    - June
-    - July
-    - August
-    - September
-    - October
-    - November
-    - December
+      - null
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
     <<: *datetime_formats
   themes:
     bad_color_scheme: "Can not update theme, invalid colour palette"

@@ -24,6 +24,11 @@
     {{~#if topic.featured_link}}
       {{~topic-featured-link topic}}
     {{~/if}}
+   <span> - </span>
+    <a href='{{path-to-creator topic.posters}}'>
+      <span>{{display-creator-name topic.posters}}</span>
+    </a>
+
     {{~raw-plugin-outlet name="topic-list-after-title"}}
     {{~raw "list/unread-indicator" includeUnreadIndicator=includeUnreadIndicator
                                    topicId=topic.id
@@ -55,8 +60,6 @@
   {{raw "list/posters-column" posters=topic.featuredUsers}}
 {{/if}}
 
-{{raw "list/posts-count-column" topic=topic}}
-
 {{#if showLikes}}
   <td class="num likes topic-list-data">
     {{#if hasLikes}}
@@ -77,9 +80,27 @@
   </td>
 {{/if}}
 
-<td class="num views {{topic.viewsHeat}} topic-list-data">
-  {{raw-plugin-outlet name="topic-list-before-view-count"}}
-  {{number topic.views numberKey="views_long"}}
-</td>
-
-{{raw "list/activity-column" topic=topic class="num topic-list-data" tagName="td"}}
+{{#if showUserVoiceCredits}}
+  <td class="num your-hearts topic-list-data">
+    <div class="your-hearts-voting-container">
+      <div class="your-hearts-voting">
+        <div>{{voiceCredits}}</div>
+        <div class="heart-wrapper">
+          <img class="full-heart" src="/images/full-heart.png" alt="Full Hearts"> 
+        </div>
+        <div class="voice-vote-buttons" >
+          <div id="dialog3" class="triangle_up" data-topic-id={{topic.id}}></div>
+          <div id="dialog1" class="triangle_down" data-topic-id={{topic.id}} ></div>
+        </div>
+      </div>
+    </div>
+  </td>
+  <td class="num square-root-hearts topic-list-data">
+    {{float heartPower}}
+  </td>
+{{/if}}
+{{#if showQuadraticTotals}}
+  <td class="num square-root-hearts topic-list-data">
+    {{float topicVote}}
+  </td>
+{{/if}}
