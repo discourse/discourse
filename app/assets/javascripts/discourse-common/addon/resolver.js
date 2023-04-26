@@ -152,10 +152,6 @@ function lookupModuleBySuffix(suffix) {
 
 export function buildResolver(baseName) {
   return class extends Resolver {
-    init(props) {
-      super.init(props);
-    }
-
     resolveRouter(/* parsedName */) {
       const routerPath = `${baseName}/router`;
       if (requirejs.entries[routerPath]) {
@@ -260,10 +256,6 @@ export function buildResolver(baseName) {
           return resolved;
         }
       }
-    }
-
-    resolveOther(parsedName) {
-      return super.resolveOther(parsedName);
     }
 
     resolveHelper(parsedName) {
