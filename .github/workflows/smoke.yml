@@ -160,9 +160,7 @@ jobs:
           WAIT_FOR_URL: 60
           ADMIN_API_USERNAME: system
           ADMIN_API_KEY: ${{ steps.generate_key.outputs.api_key }}
-        run: |
-          echo
-          bin/rails smoke:test
+        run: bin/rails smoke:test
 
       - name: Print debug output
         if: ${{ failure() }}
