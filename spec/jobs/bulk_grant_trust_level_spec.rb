@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::BulkGrantTrustLevel do
-
   it "raises an error when trust_level is missing" do
-    expect { Jobs::BulkGrantTrustLevel.new.execute(user_ids: [1, 2]) }.to raise_error(Discourse::InvalidParameters)
+    expect { Jobs::BulkGrantTrustLevel.new.execute(user_ids: [1, 2]) }.to raise_error(
+      Discourse::InvalidParameters,
+    )
   end
 
   it "raises an error when user_ids are missing" do
-    expect { Jobs::BulkGrantTrustLevel.new.execute(trust_level: 0) }.to raise_error(Discourse::InvalidParameters)
+    expect { Jobs::BulkGrantTrustLevel.new.execute(trust_level: 0) }.to raise_error(
+      Discourse::InvalidParameters,
+    )
   end
 
   it "updates the trust_level" do

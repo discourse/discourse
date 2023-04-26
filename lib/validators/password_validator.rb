@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class PasswordValidator < ActiveModel::EachValidator
-
   def validate_each(record, attribute, value)
     return unless record.password_validation_required?
 
     if value.nil?
       record.errors.add(attribute, :blank)
-    elsif value.length < SiteSetting.min_admin_password_length && (record.admin? || is_developer?(record.email))
+    elsif value.length < SiteSetting.min_admin_password_length &&
+          (record.admin? || is_developer?(record.email))
       record.errors.add(attribute, :too_short, count: SiteSetting.min_admin_password_length)
     elsif value.length < SiteSetting.min_password_length
       record.errors.add(attribute, :too_short, count: SiteSetting.min_password_length)
@@ -27,7 +27,7 @@ class PasswordValidator < ActiveModel::EachValidator
   end
 
   def is_developer?(value)
-    Rails.configuration.respond_to?(:developer_emails) && Rails.configuration.developer_emails.include?(value)
+    Rails.configuration.respond_to?(:developer_emails) &&
+      Rails.configuration.developer_emails.include?(value)
   end
-
 end

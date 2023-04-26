@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe BookmarkQuery do
-  before do
-    SearchIndexer.enable
-  end
+  before { SearchIndexer.enable }
 
   fab!(:user) { Fabricate(:user) }
   let(:params) { {} }
@@ -14,7 +12,6 @@ RSpec.describe BookmarkQuery do
 
   describe "#list_all" do
     before do
-      Bookmark.reset_bookmarkables
       register_test_bookmarkable
 
       Fabricate(:topic_user, user: user, topic: post_bookmark.bookmarkable.topic)
@@ -22,12 +19,12 @@ RSpec.describe BookmarkQuery do
       user_bookmark
     end
 
+    after { DiscoursePluginRegistry.reset! }
+
     let(:post_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post)) }
     let(:topic_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:topic)) }
-    let(:user_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkqueen")) }
-
-    after do
-      Bookmark.reset_bookmarkables
+    let(:user_bookmark) do
+      Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkqueen"))
     end
 
     it "returns all the bookmarks for a user" do
@@ -42,16 +39,16 @@ RSpec.describe BookmarkQuery do
 
     it "runs the on_preload block provided passing in bookmarks" do
       preloaded_bookmarks = []
-      BookmarkQuery.on_preload do |bookmarks, bq|
-        (preloaded_bookmarks << bookmarks).flatten
-      end
+      BookmarkQuery.on_preload { |bookmarks, bq| (preloaded_bookmarks << bookmarks).flatten }
       bookmark_query.list_all
       expect(preloaded_bookmarks.any?).to eq(true)
     end
 
     it "returns a mixture of post, topic, and custom bookmarkable type bookmarks" do
       bookmarks = bookmark_query.list_all
-      expect(bookmarks.map(&:id)).to match_array([post_bookmark.id, topic_bookmark.id, user_bookmark.id])
+      expect(bookmarks.map(&:id)).to match_array(
+        [post_bookmark.id, topic_bookmark.id, user_bookmark.id],
+      )
     end
 
     it "handles the user not having permission for all of the bookmarks of a certain bookmarkable" do
@@ -61,7 +58,9 @@ RSpec.describe BookmarkQuery do
     end
 
     it "handles the user not having permission to see any of their bookmarks" do
-      topic_bookmark.bookmarkable.update(category: Fabricate(:private_category, group: Fabricate(:group)))
+      topic_bookmark.bookmarkable.update(
+        category: Fabricate(:private_category, group: Fabricate(:group)),
+      )
       post_bookmark.bookmarkable.topic.update(category: topic_bookmark.bookmarkable.category)
       UserTestBookmarkable.expects(:list_query).returns(nil)
       bookmarks = bookmark_query.list_all
@@ -69,17 +68,19 @@ RSpec.describe BookmarkQuery do
     end
 
     context "when q param is provided" do
-      let!(:post) { Fabricate(:post, raw: "Some post content here", topic: Fabricate(:topic, title: "Bugfix game for devs")) }
-
-      before do
-        Bookmark.reset_bookmarkables
+      let!(:post) do
+        Fabricate(
+          :post,
+          raw: "Some post content here",
+          topic: Fabricate(:topic, title: "Bugfix game for devs"),
+        )
       end
 
-      after do
-        Bookmark.reset_bookmarkables
-      end
+      after { DiscoursePluginRegistry.reset! }
 
-      let(:bookmark3) { Fabricate(:bookmark, user: user, name: "Check up later", bookmarkable: Fabricate(:post)) }
+      let(:bookmark3) do
+        Fabricate(:bookmark, user: user, name: "Check up later", bookmarkable: Fabricate(:post))
+      end
       let(:bookmark4) { Fabricate(:bookmark, user: user, bookmarkable: post) }
 
       before do
@@ -88,29 +89,29 @@ RSpec.describe BookmarkQuery do
       end
 
       it "can search by bookmark name" do
-        bookmarks = bookmark_query(params: { q: 'check' }).list_all
+        bookmarks = bookmark_query(params: { q: "check" }).list_all
         expect(bookmarks.map(&:id)).to eq([bookmark3.id])
       end
 
       it "can search by post content" do
-        bookmarks = bookmark_query(params: { q: 'content' }).list_all
+        bookmarks = bookmark_query(params: { q: "content" }).list_all
         expect(bookmarks.map(&:id)).to eq([bookmark4.id])
       end
 
       it "can search by topic title" do
-        bookmarks = bookmark_query(params: { q: 'bugfix' }).list_all
+        bookmarks = bookmark_query(params: { q: "bugfix" }).list_all
         expect(bookmarks.map(&:id)).to eq([bookmark4.id])
       end
 
       context "with custom bookmarkable fitering" do
-        before do
-          register_test_bookmarkable
+        before { register_test_bookmarkable }
+
+        let!(:bookmark5) do
+          Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkking"))
         end
 
-        let!(:bookmark5) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkking")) }
-
         it "allows searching bookmarkables by fields in other tables" do
-          bookmarks = bookmark_query(params: { q: 'bookmarkk' }).list_all
+          bookmarks = bookmark_query(params: { q: "bookmarkk" }).list_all
           expect(bookmarks.map(&:id)).to eq([bookmark5.id])
         end
       end
@@ -157,9 +158,7 @@ RSpec.describe BookmarkQuery do
       end
 
       context "when the user is a topic_allowed_user" do
-        before do
-          TopicAllowedUser.create(topic: pm_topic, user: user)
-        end
+        before { TopicAllowedUser.create(topic: pm_topic, user: user) }
         it "shows the user the bookmark in the PM" do
           expect(bookmark_query.list_all.map(&:id).count).to eq(3)
         end
@@ -192,7 +191,9 @@ RSpec.describe BookmarkQuery do
     context "when the topic category is private" do
       let(:group) { Fabricate(:group) }
       before do
-        post_bookmark.bookmarkable.topic.update(category: Fabricate(:private_category, group: group))
+        post_bookmark.bookmarkable.topic.update(
+          category: Fabricate(:private_category, group: group),
+        )
         post_bookmark.reload
       end
       it "does not show the user a post/topic in a private category they cannot see" do
@@ -227,26 +228,18 @@ RSpec.describe BookmarkQuery do
     end
 
     it "order defaults to updated_at DESC" do
-      expect(bookmark_query.list_all.map(&:id)).to eq([
-        bookmark1.id,
-        bookmark2.id,
-        bookmark5.id,
-        bookmark4.id,
-        bookmark3.id
-      ])
+      expect(bookmark_query.list_all.map(&:id)).to eq(
+        [bookmark1.id, bookmark2.id, bookmark5.id, bookmark4.id, bookmark3.id],
+      )
     end
 
     it "orders by reminder_at, then updated_at" do
       bookmark4.update_column(:reminder_at, 1.day.from_now)
       bookmark5.update_column(:reminder_at, 26.hours.from_now)
 
-      expect(bookmark_query.list_all.map(&:id)).to eq([
-        bookmark4.id,
-        bookmark5.id,
-        bookmark1.id,
-        bookmark2.id,
-        bookmark3.id
-      ])
+      expect(bookmark_query.list_all.map(&:id)).to eq(
+        [bookmark4.id, bookmark5.id, bookmark1.id, bookmark2.id, bookmark3.id],
+      )
     end
 
     it "shows pinned bookmarks first ordered by reminder_at ASC then updated_at DESC" do
@@ -261,13 +254,9 @@ RSpec.describe BookmarkQuery do
 
       bookmark5.update_column(:reminder_at, 1.day.from_now)
 
-      expect(bookmark_query.list_all.map(&:id)).to eq([
-        bookmark3.id,
-        bookmark4.id,
-        bookmark1.id,
-        bookmark2.id,
-        bookmark5.id
-      ])
+      expect(bookmark_query.list_all.map(&:id)).to eq(
+        [bookmark3.id, bookmark4.id, bookmark1.id, bookmark2.id, bookmark5.id],
+      )
     end
   end
 end

@@ -1,4 +1,5 @@
+import { tagName } from "@ember-decorators/component";
 import Component from "@ember/component";
-export default Component.extend({
-  tagName: "tr",
-});
+
+@tagName("tr")
+export default class AdminReportPerDayCounts extends Component {}

@@ -1,17 +1,19 @@
-{{#if (and this.reaction this.emojiUrl)}}
+{{#if (and @reaction this.emojiUrl)}}
   <button
-    id={{this.componentId}}
     type="button"
-    {{on "click" (action "handleClick")}}
+    {{on "touchstart" this.handleTouchStart}}
+    {{on "click" this.handleClick}}
     tabindex="0"
     class={{concat-class
-      this.class
       "chat-message-reaction"
-      (if this.reaction.reacted "reacted")
-      (if this.reaction.count "show")
+      (if @reaction.reacted "reacted")
     }}
-    data-emoji-name={{this.reaction.emoji}}
+    data-emoji-name={{@reaction.emoji}}
+    data-tippy-content={{this.popoverContent}}
     title={{this.emojiString}}
+    {{did-insert this.setupTooltip}}
+    {{will-destroy this.teardownTooltip}}
+    {{did-update this.refreshTooltip this.popoverContent}}
   >
     <img
       loading="lazy"
@@ -20,10 +22,10 @@
       height="20"
       alt={{this.emojiString}}
       src={{this.emojiUrl}}
-    >
+    />
 
-    {{#if this.reaction.count}}
-      <span class="count">{{this.reaction.count}}</span>
+    {{#if (and this.showCount @reaction.count)}}
+      <span class="count">{{@reaction.count}}</span>
     {{/if}}
   </button>
 {{/if}}

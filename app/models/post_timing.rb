@@ -10,7 +10,8 @@ class PostTiming < ActiveRecord::Base
   def self.pretend_read(topic_id, actual_read_post_number, pretend_read_post_number)
     # This is done in SQL cause the logic is quite tricky and we want to do this in one db hit
     #
-    DB.exec("INSERT INTO post_timings(topic_id, user_id, post_number, msecs)
+    DB.exec(
+      "INSERT INTO post_timings(topic_id, user_id, post_number, msecs)
               SELECT :topic_id, user_id, :pretend_read_post_number, 1
               FROM post_timings pt
               WHERE topic_id = :topic_id AND
@@ -22,27 +23,32 @@ class PostTiming < ActiveRecord::Base
                               pt1.user_id = pt.user_id
                     )
              ",
-                pretend_read_post_number: pretend_read_post_number,
-                topic_id: topic_id,
-                actual_read_post_number: actual_read_post_number
-            )
+      pretend_read_post_number: pretend_read_post_number,
+      topic_id: topic_id,
+      actual_read_post_number: actual_read_post_number,
+    )
 
     TopicUser.ensure_consistency!(topic_id)
   end
 
   def self.record_new_timing(args)
-    row_count = DB.exec("INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
+    row_count =
+      DB.exec(
+        "INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
               SELECT :topic_id, :user_id, :post_number, :msecs
               ON CONFLICT DO NOTHING",
-            args)
+        args,
+      )
 
     # concurrency is hard, we are not running serialized so this can possibly
     # still happen, if it happens we just don't care, its an invalid record anyway
     return if row_count == 0
-    Post.where(['topic_id = :topic_id and post_number = :post_number', args]).update_all 'reads = reads + 1'
+    Post.where(
+      ["topic_id = :topic_id and post_number = :post_number", args],
+    ).update_all "reads = reads + 1"
 
     return if Topic.exists?(id: args[:topic_id], archetype: Archetype.private_message)
-    UserStat.where(user_id: args[:user_id]).update_all 'posts_read_count = posts_read_count + 1'
+    UserStat.where(user_id: args[:user_id]).update_all "posts_read_count = posts_read_count + 1"
   end
 
   # Increases a timer if a row exists, otherwise create it
@@ -65,13 +71,16 @@ class PostTiming < ActiveRecord::Base
     last_read = post_number - 1
 
     PostTiming.transaction do
-      PostTiming.where("topic_id = ? AND user_id = ? AND post_number > ?", topic.id, user.id, last_read).delete_all
-      if last_read < 1
-        last_read = nil
-      end
+      PostTiming.where(
+        "topic_id = ? AND user_id = ? AND post_number > ?",
+        topic.id,
+        user.id,
+        last_read,
+      ).delete_all
+      last_read = nil if last_read < 1
 
       TopicUser.where(user_id: user.id, topic_id: topic.id).update_all(
-        last_read_post_number: last_read
+        last_read_post_number: last_read,
       )
 
       topic.posts.find_by(post_number: post_number).decrement!(:reads)
@@ -86,28 +95,23 @@ class PostTiming < ActiveRecord::Base
 
   def self.destroy_for(user_id, topic_ids)
     PostTiming.transaction do
-      PostTiming
-        .where('user_id = ? and topic_id in (?)', user_id, topic_ids)
-        .delete_all
+      PostTiming.where("user_id = ? and topic_id in (?)", user_id, topic_ids).delete_all
 
-      TopicUser
-        .where('user_id = ? and topic_id in (?)', user_id, topic_ids)
-        .delete_all
+      TopicUser.where("user_id = ? and topic_id in (?)", user_id, topic_ids).delete_all
 
-      Post.where(topic_id: topic_ids).update_all('reads = reads - 1')
+      Post.where(topic_id: topic_ids).update_all("reads = reads - 1")
 
       date = Topic.listable_topics.where(id: topic_ids).minimum(:updated_at)
 
-      if date
-        set_minimum_first_unread!(user_id: user_id, date: date)
-      end
+      set_minimum_first_unread!(user_id: user_id, date: date) if date
     end
   end
 
   def self.set_minimum_first_unread_pm!(topic:, user_id:, date:)
     if topic.topic_allowed_users.exists?(user_id: user_id)
-      UserStat.where("first_unread_pm_at > ? AND user_id = ?", date, user_id)
-        .update_all(first_unread_pm_at: date)
+      UserStat.where("first_unread_pm_at > ? AND user_id = ?", date, user_id).update_all(
+        first_unread_pm_at: date,
+      )
     else
       DB.exec(<<~SQL, date: date, user_id: user_id, topic_id: topic.id)
       UPDATE group_users gu
@@ -155,12 +159,10 @@ class PostTiming < ActiveRecord::Base
     end
 
     timings.each_with_index do |(post_number, time), index|
-
       join_table << "SELECT #{topic_id.to_i} topic_id, #{post_number.to_i} post_number,
                      #{current_user.id.to_i} user_id, #{time.to_i} msecs, #{index} idx"
 
-        highest_seen = post_number.to_i > highest_seen ?
-                       post_number.to_i : highest_seen
+      highest_seen = post_number.to_i > highest_seen ? post_number.to_i : highest_seen
     end
 
     if join_table.length > 0
@@ -188,10 +190,12 @@ SQL
 
       timings.each_with_index do |(post_number, time), index|
         unless existing.include?(index)
-          PostTiming.record_new_timing(topic_id: topic_id,
-                                       post_number: post_number,
-                                       user_id: current_user.id,
-                                       msecs: time)
+          PostTiming.record_new_timing(
+            topic_id: topic_id,
+            post_number: post_number,
+            user_id: current_user.id,
+            msecs: time,
+          )
         end
       end
     end
@@ -203,7 +207,14 @@ SQL
 
     topic_time = max_time_per_post if topic_time > max_time_per_post
 
-    TopicUser.update_last_read(current_user, topic_id, highest_seen, new_posts_read, topic_time, opts)
+    TopicUser.update_last_read(
+      current_user,
+      topic_id,
+      highest_seen,
+      new_posts_read,
+      topic_time,
+      opts,
+    )
     TopicGroup.update_last_read(current_user, topic_id, highest_seen)
 
     if total_changed > 0

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe MiniSqlMultisiteConnection do
-
   describe "after_commit" do
     it "works for 'fake' (joinable) transactions" do
       outputString = "1"
@@ -28,14 +27,14 @@ RSpec.describe MiniSqlMultisiteConnection do
       ActiveRecord::Base.transaction(requires_new: true, joinable: false) do
         outputString += "2"
         DB.exec("SELECT 1")
-          ActiveRecord::Base.transaction(requires_new: true) do
-            DB.exec("SELECT 2")
-            outputString += "3"
-            DB.after_commit { outputString += "6" }
-            outputString += "4"
-          end
-          DB.after_commit { outputString += "7" }
-          outputString += "5"
+        ActiveRecord::Base.transaction(requires_new: true) do
+          DB.exec("SELECT 2")
+          outputString += "3"
+          DB.after_commit { outputString += "6" }
+          outputString += "4"
+        end
+        DB.after_commit { outputString += "7" }
+        outputString += "5"
       end
 
       expect(outputString).to eq("1234567")
@@ -47,9 +46,7 @@ RSpec.describe MiniSqlMultisiteConnection do
       ActiveRecord::Base.transaction do
         outputString += "2"
 
-        DB.after_commit do
-          outputString += "4"
-        end
+        DB.after_commit { outputString += "4" }
 
         outputString += "3"
 
@@ -62,9 +59,7 @@ RSpec.describe MiniSqlMultisiteConnection do
     it "runs immediately if there is no transaction" do
       outputString = "1"
 
-      DB.after_commit do
-        outputString += "2"
-      end
+      DB.after_commit { outputString += "2" }
 
       outputString += "3"
 
@@ -75,7 +70,5 @@ RSpec.describe MiniSqlMultisiteConnection do
       DB.prepared.query("SELECT ?", 1)
       DB.prepared.query("SELECT ?", 2)
     end
-
   end
-
 end

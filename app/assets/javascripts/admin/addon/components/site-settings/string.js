@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import Component from "@ember/component";
 import showModal from "discourse/lib/show-modal";
 
-export default Component.extend({
+export default class String extends Component {
   @action
   launchJsonEditorModal() {
     const schemaModal = showModal("json-schema-editor", {
@@ -16,5 +16,5 @@ export default Component.extend({
     schemaModal.set("onClose", () => {
       this.set("value", schemaModal.model.value);
     });
-  },
-});
+  }
+}

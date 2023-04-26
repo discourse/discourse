@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'migration/column_dropper'
+require "migration/column_dropper"
 
 class CreatePostReplyKeys < ActiveRecord::Migration[5.2]
   def up
@@ -46,7 +46,7 @@ class CreatePostReplyKeys < ActiveRecord::Migration[5.2]
 
     execute(sql)
 
-    add_index :post_reply_keys, [:user_id, :post_id], unique: true
+    add_index :post_reply_keys, %i[user_id post_id], unique: true
   end
 
   def down

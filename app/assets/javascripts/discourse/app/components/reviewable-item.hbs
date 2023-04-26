@@ -1,0 +1,137 @@
+<div
+  data-reviewable-id={{this.reviewable.id}}
+  class="reviewable-item {{this.customClasses}}"
+>
+  <div class="reviewable-meta-data">
+    <span
+      class={{concat-class "reviewable-type" this.reviewable.humanTypeCssClass}}
+    >{{this.reviewable.humanType}}</span>
+    {{#if this.reviewable.reply_count}}
+      <span class="reply-count">{{i18n
+          "review.replies"
+          count=this.reviewable.reply_count
+        }}</span>
+    {{/if}}
+    <span class="created-at">
+      <LinkTo
+        @route="review.show"
+        @model={{this.reviewable.id}}
+      >{{age-with-tooltip this.reviewable.created_at}}</LinkTo>
+    </span>
+    <span class="status">
+      {{reviewable-status this.reviewable.status this.reviewable.type}}
+    </span>
+    <a
+      href
+      {{on "click" (fn this.explainReviewable this.reviewable)}}
+      title={{i18n "review.explain.why"}}
+      class="explain"
+    >
+      {{d-icon "question-circle"}}
+    </a>
+  </div>
+
+  <div class="reviewable-contents">
+    {{#if this.editing}}
+      <div class="editable-fields">
+        {{#if this.reviewable.created_by}}
+          <div class="editable-created-by">
+            {{avatar this.reviewable.created_by imageSize="tiny"}}
+            <ReviewableCreatedByName
+              @user={{this.reviewable.created_by}}
+              @tagName=""
+            />
+          </div>
+        {{/if}}
+
+        {{#each this.reviewable.editable_fields as |f|}}
+          <div class="editable-field {{dasherize f.id}}">
+            {{component
+              (concat "reviewable-field-" f.type)
+              tagName=""
+              value=(editable-value this.reviewable f.id)
+              tagCategoryId=this.tagCategoryId
+              valueChanged=(action "valueChanged" f.id)
+              categoryChanged=(action "categoryChanged")
+            }}
+          </div>
+        {{/each}}
+      </div>
+    {{else}}
+      {{#component
+        this.reviewableComponent
+        reviewable=this.reviewable
+        tagName=""
+      }}
+        <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
+      {{/component}}
+    {{/if}}
+  </div>
+
+  {{#if (eq this.reviewable.type "ReviewableFlaggedPost")}}
+    {{#if (eq this.reviewable.status 0)}}
+      <h3 class="reviewable-item__context-question">
+        {{this.reviewable.flaggedPostContextQuestion}}
+      </h3>
+    {{/if}}
+  {{/if}}
+
+  <div class="reviewable-actions">
+    {{#if this.reviewable.last_performing_username}}
+      <div class="stale-help">{{html-safe
+          (i18n
+            "review.stale_help"
+            username=this.reviewable.last_performing_username
+          )
+        }}</div>
+    {{else}}
+      {{#if this.claimEnabled}}
+        <div class="claimed-actions">
+          <span class="help">{{html-safe this.claimHelp}}</span>
+          <ReviewableClaimedTopic
+            @topicId={{this.topicId}}
+            @claimedBy={{this.reviewable.claimed_by}}
+          />
+        </div>
+      {{/if}}
+
+      {{#if this.canPerform}}
+        {{#if this.editing}}
+          <DButton
+            @class="btn-primary reviewable-action save-edit"
+            @disabled={{this.disabled}}
+            @icon="check"
+            @action={{action "saveEdit"}}
+            @label="review.save"
+          />
+          <DButton
+            @class="btn-danger reviewable-action cancel-edit"
+            @disabled={{this.disabled}}
+            @icon="times"
+            @action={{action "cancelEdit"}}
+            @label="review.cancel"
+          />
+        {{else}}
+          {{#each this.reviewable.bundled_actions as |bundle|}}
+            <ReviewableBundledAction
+              @bundle={{bundle}}
+              @performAction={{action "perform"}}
+              @reviewableUpdating={{this.disabled}}
+            />
+          {{/each}}
+
+          {{#if this.reviewable.can_edit}}
+            <DButton
+              @class="reviewable-action edit"
+              @disabled={{this.disabled}}
+              @icon="pencil-alt"
+              @action={{action "edit"}}
+              @label="review.edit"
+            />
+          {{/if}}
+        {{/if}}
+      {{/if}}
+    {{/if}}
+  </div>
+
+</div>

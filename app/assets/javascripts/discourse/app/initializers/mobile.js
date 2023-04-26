@@ -1,6 +1,5 @@
 import Mobile from "discourse/lib/mobile";
 import { setResolverOption } from "discourse-common/resolver";
-import { setResolverOption as setLegacyResolverOption } from "discourse-common/lib/legacy-resolver";
 
 // Initializes the `Mobile` helper object.
 export default {
@@ -16,6 +15,5 @@ export default {
     site.set("isMobileDevice", Mobile.isMobileDevice);
 
     setResolverOption("mobileView", Mobile.mobileView);
-    setLegacyResolverOption("mobileView", Mobile.mobileView);
   },
 };

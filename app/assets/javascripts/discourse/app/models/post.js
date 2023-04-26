@@ -461,6 +461,12 @@ Post.reopenClass({
     });
   },
 
+  permanentlyDeleteRevisions(postId) {
+    return ajax(`/posts/${postId}/revisions/permanently_delete`, {
+      type: "DELETE",
+    });
+  },
+
   showRevision(postId, version) {
     return ajax(`/posts/${postId}/revisions/${version}/show`, {
       type: "PUT",

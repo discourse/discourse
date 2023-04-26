@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'html_to_markdown'
+require "html_to_markdown"
 
 RSpec.describe HtmlToMarkdown do
-
   def html_to_markdown(html, opts = {})
     HtmlToMarkdown.new(html, opts).to_markdown
   end
@@ -20,7 +19,9 @@ RSpec.describe HtmlToMarkdown do
       </div>
     HTML
 
-    expect(html_to_markdown(html)).to eq("Hello,\n\nThis is the 1st paragraph.\n\nThis is another paragraph")
+    expect(html_to_markdown(html)).to eq(
+      "Hello,\n\nThis is the 1st paragraph.\n\nThis is another paragraph",
+    )
 
     html = <<~HTML
       <body text="#000000" bgcolor="#FFFFFF">
@@ -65,7 +66,6 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "doesn't error on non-inline elements like (aside, section)" do
-
     html = <<~HTML
       <aside class="quote no-group">
       <blockquote>
@@ -84,7 +84,7 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "skips hidden tags" do
-    expect(html_to_markdown(%Q{<p>Hello <span hidden>cruel </span>World!</p>})).to eq("Hello World!")
+    expect(html_to_markdown("<p>Hello <span hidden>cruel </span>World!</p>")).to eq("Hello World!")
   end
 
   it "converts <strong>" do
@@ -119,25 +119,31 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "converts <a>" do
-    expect(html_to_markdown(%Q{<a href="https://www.discourse.org">Discourse</a>})).to eq("[Discourse](https://www.discourse.org)")
+    expect(html_to_markdown(%Q{<a href="https://www.discourse.org">Discourse</a>})).to eq(
+      "[Discourse](https://www.discourse.org)",
+    )
   end
 
   it "supports SiteSetting.allowed_href_schemes" do
     SiteSetting.allowed_href_schemes = "tel|steam"
-    expect(html_to_markdown(%Q{<a href="steam://store/48000">LIMBO</a>})).to eq("[LIMBO](steam://store/48000)")
+    expect(html_to_markdown(%Q{<a href="steam://store/48000">LIMBO</a>})).to eq(
+      "[LIMBO](steam://store/48000)",
+    )
   end
 
   it "removes empty & invalid <a>" do
-    expect(html_to_markdown(%Q{<a>Discourse</a>})).to eq("Discourse")
+    expect(html_to_markdown("<a>Discourse</a>")).to eq("Discourse")
     expect(html_to_markdown(%Q{<a href="">Discourse</a>})).to eq("Discourse")
     expect(html_to_markdown(%Q{<a href="foo.bar">Discourse</a>})).to eq("Discourse")
   end
 
-  HTML_WITH_IMG     ||= %Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse Logo">}
+  HTML_WITH_IMG ||= %Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse Logo">}
   HTML_WITH_CID_IMG ||= %Q{<img src="cid:ii_1525434659ddb4cb" title="Discourse Logo">}
 
   it "converts <img>" do
-    expect(html_to_markdown(HTML_WITH_IMG)).to eq("![Discourse Logo](https://www.discourse.org/logo.svg)")
+    expect(html_to_markdown(HTML_WITH_IMG)).to eq(
+      "![Discourse Logo](https://www.discourse.org/logo.svg)",
+    )
   end
 
   it "keeps <img> with 'keep_img_tags'" do
@@ -145,7 +151,7 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "removes empty & invalid <img>" do
-    expect(html_to_markdown(%Q{<img>})).to eq("")
+    expect(html_to_markdown("<img>")).to eq("")
     expect(html_to_markdown(%Q{<img src="">})).to eq("")
     expect(html_to_markdown(%Q{<img src="foo.bar">})).to eq("")
   end
@@ -156,13 +162,21 @@ RSpec.describe HtmlToMarkdown do
 
   it "skips hidden <img>" do
     expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" width=0>})).to eq("")
-    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height="0">})).to eq("")
+    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height="0">})).to eq(
+      "",
+    )
   end
 
   it "supports width/height on <img>" do
-    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height=100>})).to eq("![](https://www.discourse.org/logo.svg)")
-    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" width=200>})).to eq("![](https://www.discourse.org/logo.svg)")
-    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height=100 width=200>})).to eq("![|200x100](https://www.discourse.org/logo.svg)")
+    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height=100>})).to eq(
+      "![](https://www.discourse.org/logo.svg)",
+    )
+    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" width=200>})).to eq(
+      "![](https://www.discourse.org/logo.svg)",
+    )
+    expect(
+      html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height=100 width=200>}),
+    ).to eq("![|200x100](https://www.discourse.org/logo.svg)")
   end
 
   (1..6).each do |n|
@@ -180,7 +194,9 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "converts <hr>" do
-    expect(html_to_markdown("Before<hr>Inside<hr>After")).to eq("Before\n\n---\n\nInside\n\n---\n\nAfter")
+    expect(html_to_markdown("Before<hr>Inside<hr>After")).to eq(
+      "Before\n\n---\n\nInside\n\n---\n\nAfter",
+    )
   end
 
   it "converts <tt>" do
@@ -192,7 +208,9 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "supports <ins>" do
-    expect(html_to_markdown("This is an <ins>insertion</ins>")).to eq("This is an <ins>insertion</ins>")
+    expect(html_to_markdown("This is an <ins>insertion</ins>")).to eq(
+      "This is an <ins>insertion</ins>",
+    )
   end
 
   it "supports <del>" do
@@ -204,7 +222,9 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "supports <mark>" do
-    expect(html_to_markdown("<mark>This is highlighted!</mark>")).to eq("<mark>This is highlighted!</mark>")
+    expect(html_to_markdown("<mark>This is highlighted!</mark>")).to eq(
+      "<mark>This is highlighted!</mark>",
+    )
   end
 
   it "supports <sup>" do
@@ -220,7 +240,9 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "supports <abbr>" do
-    expect(html_to_markdown(%Q{<abbr title="Civilized Discourse Construction Kit, Inc.">CDCK</abbr>})).to eq(%Q{<abbr title="Civilized Discourse Construction Kit, Inc.">CDCK</abbr>})
+    expect(
+      html_to_markdown(%Q{<abbr title="Civilized Discourse Construction Kit, Inc.">CDCK</abbr>}),
+    ).to eq(%Q{<abbr title="Civilized Discourse Construction Kit, Inc.">CDCK</abbr>})
   end
 
   it "supports <s>" do
@@ -237,7 +259,9 @@ RSpec.describe HtmlToMarkdown do
 
   it "supports <ul>" do
     expect(html_to_markdown("<ul><li>🍏</li><li>🍐</li><li>🍌</li></ul>")).to eq("- 🍏\n- 🍐\n- 🍌")
-    expect(html_to_markdown("<ul>\n<li>🍏</li>\n<li>🍐</li>\n<li>🍌</li>\n</ul>")).to eq("- 🍏\n- 🍐\n- 🍌")
+    expect(html_to_markdown("<ul>\n<li>🍏</li>\n<li>🍐</li>\n<li>🍌</li>\n</ul>")).to eq(
+      "- 🍏\n- 🍐\n- 🍌",
+    )
   end
 
   it "supports <ol>" do
@@ -245,11 +269,13 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "supports <p> inside <li>" do
-    expect(html_to_markdown("<ul><li><p>🍏</p></li><li><p>🍐</p></li><li><p>🍌</p></li></ul>")).to eq("- 🍏\n\n- 🍐\n\n- 🍌")
+    expect(html_to_markdown("<ul><li><p>🍏</p></li><li><p>🍐</p></li><li><p>🍌</p></li></ul>")).to eq(
+      "- 🍏\n\n- 🍐\n\n- 🍌",
+    )
   end
 
   it "supports <ul> inside <ul>" do
-    expect(html_to_markdown(<<-HTML
+    expect(html_to_markdown(<<-HTML)).to eq(
       <ul>
         <li>Fruits
             <ul>
@@ -267,7 +293,8 @@ RSpec.describe HtmlToMarkdown do
         </li>
       </ul>
     HTML
-    )).to eq("- Fruits\n  - 🍏\n  - 🍐\n  - 🍌\n- Vegetables\n  - 🍆\n  - 🍅\n  - 🍄")
+      "- Fruits\n  - 🍏\n  - 🍐\n  - 🍌\n- Vegetables\n  - 🍆\n  - 🍅\n  - 🍄",
+    )
   end
 
   it "supports bare <li>" do
@@ -276,26 +303,50 @@ RSpec.describe HtmlToMarkdown do
 
   it "supports <pre>" do
     expect(html_to_markdown("<pre>var foo = 'bar';</pre>")).to eq("```\nvar foo = 'bar';\n```")
-    expect(html_to_markdown("<pre><code>var foo = 'bar';</code></pre>")).to eq("```\nvar foo = 'bar';\n```")
-    expect(html_to_markdown(%Q{<pre><code class="lang-javascript">var foo = 'bar';</code></pre>})).to eq("```javascript\nvar foo = 'bar';\n```")
-    expect(html_to_markdown("<pre>    function f() {\n        console.log('Hello world!');\n    }</pre>")).to eq("```\n    function f() {\n        console.log('Hello world!');\n    }\n```")
+    expect(html_to_markdown("<pre><code>var foo = 'bar';</code></pre>")).to eq(
+      "```\nvar foo = 'bar';\n```",
+    )
+    expect(
+      html_to_markdown(%Q{<pre><code class="lang-javascript">var foo = 'bar';</code></pre>}),
+    ).to eq("```javascript\nvar foo = 'bar';\n```")
+    expect(
+      html_to_markdown(
+        "<pre>    function f() {\n        console.log('Hello world!');\n    }</pre>",
+      ),
+    ).to eq("```\n    function f() {\n        console.log('Hello world!');\n    }\n```")
   end
 
   it "supports <pre> inside <blockquote>" do
-    expect(html_to_markdown("<blockquote><pre><code>var foo = 'bar';</code></pre></blockquote>")).to eq("> ```\n> var foo = 'bar';\n> ```")
+    expect(
+      html_to_markdown("<blockquote><pre><code>var foo = 'bar';</code></pre></blockquote>"),
+    ).to eq("> ```\n> var foo = 'bar';\n> ```")
   end
 
   it "works" do
-    expect(html_to_markdown("<ul><li><p>A list item with a blockquote:</p><blockquote><p>This is a <strong>blockquote</strong><br>inside a list item.</p></blockquote></li></ul>")).to eq("- A list item with a blockquote:\n\n  > This is a **blockquote**\n  > inside a list item.")
+    expect(
+      html_to_markdown(
+        "<ul><li><p>A list item with a blockquote:</p><blockquote><p>This is a <strong>blockquote</strong><br>inside a list item.</p></blockquote></li></ul>",
+      ),
+    ).to eq(
+      "- A list item with a blockquote:\n\n  > This is a **blockquote**\n  > inside a list item.",
+    )
   end
 
   it "supports html document" do
-    expect(html_to_markdown("<html><body>Hello<div>World</div></body></html>")).to eq("Hello\nWorld")
+    expect(html_to_markdown("<html><body>Hello<div>World</div></body></html>")).to eq(
+      "Hello\nWorld",
+    )
   end
 
   it "handles <p>" do
-    expect(html_to_markdown("<p>1st paragraph</p><p>2nd paragraph</p>")).to eq("1st paragraph\n\n2nd paragraph")
-    expect(html_to_markdown("<body><p>1st paragraph</p>\n    <p>    2nd paragraph\n    2nd paragraph</p>\n<p>3rd paragraph</p></body>")).to eq("1st paragraph\n\n2nd paragraph 2nd paragraph\n\n3rd paragraph")
+    expect(html_to_markdown("<p>1st paragraph</p><p>2nd paragraph</p>")).to eq(
+      "1st paragraph\n\n2nd paragraph",
+    )
+    expect(
+      html_to_markdown(
+        "<body><p>1st paragraph</p>\n    <p>    2nd paragraph\n    2nd paragraph</p>\n<p>3rd paragraph</p></body>",
+      ),
+    ).to eq("1st paragraph\n\n2nd paragraph 2nd paragraph\n\n3rd paragraph")
   end
 
   it "handles <div>" do
@@ -324,32 +375,42 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "handles <p> and <div> within <font>" do
-    html = "<font>1st paragraph<br><span>2nd paragraph</span><div>3rd paragraph</div><p>4th paragraph</p></font>"
-    expect(html_to_markdown(html)).to eq("1st paragraph\n2nd paragraph\n3rd paragraph\n\n4th paragraph")
+    html =
+      "<font>1st paragraph<br><span>2nd paragraph</span><div>3rd paragraph</div><p>4th paragraph</p></font>"
+    expect(html_to_markdown(html)).to eq(
+      "1st paragraph\n2nd paragraph\n3rd paragraph\n\n4th paragraph",
+    )
   end
 
   context "with an oddly placed <br>" do
-
     it "handles <strong>" do
-      expect(html_to_markdown("Hello <strong><br>Bold</strong> World")).to eq("Hello\n**Bold** World")
-      expect(html_to_markdown("Hello <strong>Bold<br></strong> World")).to eq("Hello **Bold**\nWorld")
-      expect(html_to_markdown("Hello <strong>Bold<br>text</strong> World")).to eq("Hello **Bold**\n**text** World")
+      expect(html_to_markdown("Hello <strong><br>Bold</strong> World")).to eq(
+        "Hello\n**Bold** World",
+      )
+      expect(html_to_markdown("Hello <strong>Bold<br></strong> World")).to eq(
+        "Hello **Bold**\nWorld",
+      )
+      expect(html_to_markdown("Hello <strong>Bold<br>text</strong> World")).to eq(
+        "Hello **Bold**\n**text** World",
+      )
     end
 
     it "handles <em>" do
       expect(html_to_markdown("Hello <em><br>Italic</em> World")).to eq("Hello\n*Italic* World")
       expect(html_to_markdown("Hello <em>Italic<br></em> World")).to eq("Hello *Italic*\nWorld")
-      expect(html_to_markdown("Hello <em>Italic<br>text</em> World")).to eq("Hello *Italic*\n*text* World")
+      expect(html_to_markdown("Hello <em>Italic<br>text</em> World")).to eq(
+        "Hello *Italic*\n*text* World",
+      )
     end
 
     it "works" do
-      expect(html_to_markdown("<div>A <b> B <i> C <br> D </i> E <br> F </b> G</div>")).to eq("A __B *C*__\n__*D* E__\n**F** G")
+      expect(html_to_markdown("<div>A <b> B <i> C <br> D </i> E <br> F </b> G</div>")).to eq(
+        "A __B *C*__\n__*D* E__\n**F** G",
+      )
     end
-
   end
 
   context "with an empty tag" do
-
     it "handles <strong>" do
       expect(html_to_markdown("<strong></strong>")).to eq("")
       expect(html_to_markdown("<strong>   </strong>")).to eq("")
@@ -363,11 +424,9 @@ RSpec.describe HtmlToMarkdown do
       expect(html_to_markdown("Some<em> </em>text")).to eq("Some text")
       expect(html_to_markdown("Some<em>    </em>text")).to eq("Some text")
     end
-
   end
 
   context "with spaces around text" do
-
     it "handles <strong>" do
       expect(html_to_markdown("<strong> Bold</strong>")).to eq("**Bold**")
       expect(html_to_markdown("<strong>     Bold</strong>")).to eq("**Bold**")
@@ -389,7 +448,6 @@ RSpec.describe HtmlToMarkdown do
       expect(html_to_markdown("Some <em>italic </em>text")).to eq("Some *italic* text")
       expect(html_to_markdown("Some <em>italic     </em>text")).to eq("Some *italic* text")
     end
-
   end
 
   it "supports <table>" do
@@ -429,7 +487,9 @@ RSpec.describe HtmlToMarkdown do
 
     expect(html_to_markdown(html)).to eq(markdown.strip)
 
-    expect(html_to_markdown("<table><tr><td>Hello</td><td>World</td></tr></table>")).to eq("| Hello | World |\n| - | - |")
+    expect(html_to_markdown("<table><tr><td>Hello</td><td>World</td></tr></table>")).to eq(
+      "| Hello | World |\n| - | - |",
+    )
   end
 
   it "doesn't swallow badly formatted <table>" do
@@ -451,5 +511,4 @@ RSpec.describe HtmlToMarkdown do
 
     expect(html_to_markdown(html)).to eq("1 2 3 4 \nOne Two Three")
   end
-
 end

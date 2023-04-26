@@ -1,7 +1,11 @@
 {{#if @fullscreen}}
   <div class="title">
     <h2>
-      <a class="fancy-title" href {{on "click" @jumpTop}}>{{this.topicTitle}}</a>
+      <a
+        class="fancy-title"
+        href
+        {{on "click" @jumpTop}}
+      >{{this.topicTitle}}</a>
     </h2>
     {{#if (or this.siteSettings.topic_featured_link_enabled this.showTags)}}
       <div class="topic-header-extra">
@@ -30,9 +34,12 @@
   </div>
 {{/if}}
 
-{{#if (and (not @fullscreen) @currentUser)}}
+{{#if (and (not @fullscreen) this.currentUser)}}
   <div class="timeline-controls">
-    <PluginOutlet @name="timeline-controls-before" @args={{hash model=@model}} />
+    <PluginOutlet
+      @name="timeline-controls-before"
+      @outletArgs={{hash model=@model}}
+    />
     <TopicAdminMenuButton
       @topic={{@model}}
       @addKeyboardTargetClass={{true}}
@@ -56,18 +63,26 @@
 {{#if this.displayTimeLineScrollArea}}
   <div class="timeline-scrollarea-wrapper">
     <div class="timeline-date-wrapper">
-      <a class="start-date" onClick={{this.updatePercentage}} title={{this.startDate}}>
+      <a
+        class="start-date"
+        onClick={{this.updatePercentage}}
+        title={{this.startDate}}
+      >
         <span>
           {{this.startDate}}
         </span>
       </a>
     </div>
     <div class="timeline-scrollarea" style={{this.timelineScrollareaStyle}}>
-      <div class="timeline-padding" style={{this.beforePadding}} onClick={{this.updatePercentage}}></div>
+      <div
+        class="timeline-padding"
+        style={{this.beforePadding}}
+        onClick={{this.updatePercentage}}
+      ></div>
       <TopicTimeline::Scroller
         @current={{this.current}}
         @total={{this.total}}
-        @goBack={{this.goBack}}
+        @onGoBack={{this.onGoBack}}
         @fullscreen={{@fullscreen}}
         @showDockedButton={{this.showDockedButton}}
         @date={{this.date}}
@@ -75,22 +90,24 @@
         @dragMove={{this.dragMove}}
         @didEndDrag={{this.didEndDrag}}
       />
-      <div class="timeline-padding" style={{this.afterPadding}} onClick={{this.updatePercentage}}></div>
+      <div
+        class="timeline-padding"
+        style={{this.afterPadding}}
+        onClick={{this.updatePercentage}}
+      ></div>
 
-      {{#if this.hasBackPosition}}
+      {{#if (and this.hasBackPosition this.showButton)}}
         <div class="timeline-last-read" style={{this.lastReadStyle}}>
           {{d-icon "minus" class="progress"}}
-          {{#if this.showButton}}
-            <TopicTimeline::BackButton @onClick={{this.goBack}}/>
-          {{/if}}
+          <TopicTimeline::BackButton @onGoBack={{this.goBack}} />
         </div>
       {{/if}}
     </div>
 
     <div class="timeline-date-wrapper">
-      <a class="now-date" onClick={{this.updatePercentage}} title={{this.nowDate}}>
+      <a class="now-date" onClick={{this.updatePercentage}}>
         <span>
-          {{this.nowDate}}
+          {{age-with-tooltip this.nowDate this.nowDateOptions}}
         </span>
       </a>
     </div>
@@ -98,14 +115,25 @@
 
   <div class="timeline-footer-controls">
     {{#if this.displaySummary}}
-      <button type="button" class="show-summary btn-small" label={{i18n "summary.short_label"}} title={{i18n "summary.short_title"}} {{on "click" @showSummary}}>
+      <button
+        type="button"
+        class="show-summary btn btn-small"
+        title={{i18n "summary.short_title"}}
+        {{on "click" @showSummary}}
+      >
         {{d-icon "layer-group"}}
+        {{i18n "summary.short_label"}}
       </button>
     {{/if}}
 
-    {{#if (and @currentUser (not @fullscreen))}}
+    {{#if (and this.currentUser (not @fullscreen))}}
       {{#if this.canCreatePost}}
-        <button type="button" class="btn btn-default create reply-to-post no-text btn-icon" title={{i18n "topic.reply.help"}} {{on "click" (fn @replyToPost null)}}>
+        <button
+          type="button"
+          class="btn btn-default create reply-to-post no-text btn-icon"
+          title={{i18n "topic.reply.help"}}
+          {{on "click" (fn @replyToPost null)}}
+        >
           {{d-icon "reply"}}
         </button>
       {{/if}}
@@ -114,18 +142,17 @@
     {{#if @fullscreen}}
       <button
         type="button"
-        {{!-- we need to keep this a widget-button to not close the modal when opening form --}}
-        class="widget-button btn btn-text jump-to-post"
+        class="timeline-open-jump-to-post-prompt-btn btn btn-text jump-to-post"
         title={{i18n "topic.progress.jump_prompt_long"}}
         {{on "click" @jumpToPostPrompt}}
-       >
+      >
         <span class="d-button-label">
           {{i18n "topic.progress.jump_prompt"}}
         </span>
       </button>
     {{/if}}
 
-    {{#if @currentUser}}
+    {{#if this.currentUser}}
       <TopicNotificationsButton
         @notificationLevel={{@model.details.notification_level}}
         @topic={{@model}}
@@ -135,9 +162,16 @@
         @showCaret={{false}}
       />
       {{#if @mobileView}}
-        <TopicAdminMenuButton @topic={{@model}} @addKeyboardTargetClass={{true}} @openUpwards={{true}} />
+        <TopicAdminMenuButton
+          @topic={{@model}}
+          @addKeyboardTargetClass={{true}}
+          @openUpwards={{true}}
+        />
       {{/if}}
     {{/if}}
-    <PluginOutlet @name="timeline-footer-controls-after" @args={{hash model=@model}}/>
+    <PluginOutlet
+      @name="timeline-footer-controls-after"
+      @outletArgs={{hash model=@model}}
+    />
   </div>
 {{/if}}

@@ -6,10 +6,7 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def index
-    render_json_dump(
-      site_settings: SiteSetting.all_settings,
-      diags: SiteSetting.diags
-    )
+    render_json_dump(site_settings: SiteSetting.all_settings)
   end
 
   def update
@@ -18,15 +15,17 @@ class Admin::SiteSettingsController < Admin::AdminController
     value = params[id]
     value.strip! if value.is_a?(String)
 
-    new_setting_name = SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, override, _|
-      if old_name == id
-        if !override
-          raise Discourse::InvalidParameters, "You cannot change this site setting because it is deprecated, use #{new_name} instead."
-        end
+    new_setting_name =
+      SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, override, _|
+        if old_name == id
+          if !override
+            raise Discourse::InvalidParameters,
+                  "You cannot change this site setting because it is deprecated, use #{new_name} instead."
+          end
 
-        break new_name
+          break new_name
+        end
       end
-    end
 
     id = new_setting_name if new_setting_name
 
@@ -36,12 +35,10 @@ class Admin::SiteSettingsController < Admin::AdminController
       value = Upload.get_from_urls(value.split("|")).to_a
     end
 
-    if SiteSetting.type_supervisor.get_type(id) == :upload
-      value = Upload.get_from_url(value) || ""
-    end
+    value = Upload.get_from_url(value) || "" if SiteSetting.type_supervisor.get_type(id) == :upload
 
     update_existing_users = params[:update_existing_user].present?
-    previous_value = value_or_default(SiteSetting.public_send(id)) if update_existing_users
+    previous_value = value_or_default(SiteSetting.get(id)) if update_existing_users
 
     SiteSetting.set_and_log(id, value, current_user)
 
@@ -68,22 +65,40 @@ class Admin::SiteSettingsController < Admin::AdminController
         notification_level = category_notification_level(id)
 
         categories_to_unwatch = previous_category_ids - new_category_ids
-        CategoryUser.where(category_id: categories_to_unwatch, notification_level: notification_level).delete_all
+        CategoryUser.where(
+          category_id: categories_to_unwatch,
+          notification_level: notification_level,
+        ).delete_all
         TopicUser
           .joins(:topic)
-          .where(notification_level: TopicUser.notification_levels[:watching],
-                 notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
-                 topics: { category_id: categories_to_unwatch })
+          .where(
+            notification_level: TopicUser.notification_levels[:watching],
+            notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
+            topics: {
+              category_id: categories_to_unwatch,
+            },
+          )
           .update_all(notification_level: TopicUser.notification_levels[:regular])
 
         (new_category_ids - previous_category_ids).each do |category_id|
           skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
 
-          User.real.where(staged: false).where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
-            category_users = []
-            users.each { |user| category_users << { category_id: category_id, user_id: user.id, notification_level: notification_level } }
-            CategoryUser.insert_all!(category_users)
-          end
+          User
+            .real
+            .where(staged: false)
+            .where.not(id: skip_user_ids)
+            .select(:id)
+            .find_in_batches do |users|
+              category_users = []
+              users.each do |user|
+                category_users << {
+                  category_id: category_id,
+                  user_id: user.id,
+                  notification_level: notification_level,
+                }
+              end
+              CategoryUser.insert_all!(category_users)
+            end
         end
       elsif id.start_with?("default_tags_")
         previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
@@ -92,19 +107,40 @@ class Admin::SiteSettingsController < Admin::AdminController
 
         notification_level = tag_notification_level(id)
 
-        TagUser.where(tag_id: (previous_tag_ids - new_tag_ids), notification_level: notification_level).delete_all
+        TagUser.where(
+          tag_id: (previous_tag_ids - new_tag_ids),
+          notification_level: notification_level,
+        ).delete_all
 
         (new_tag_ids - previous_tag_ids).each do |tag_id|
           skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
 
-          User.real.where(staged: false).where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
-            tag_users = []
-            users.each { |user| tag_users << { tag_id: tag_id, user_id: user.id, notification_level: notification_level, created_at: now, updated_at: now } }
-            TagUser.insert_all!(tag_users)
-          end
+          User
+            .real
+            .where(staged: false)
+            .where.not(id: skip_user_ids)
+            .select(:id)
+            .find_in_batches do |users|
+              tag_users = []
+              users.each do |user|
+                tag_users << {
+                  tag_id: tag_id,
+                  user_id: user.id,
+                  notification_level: notification_level,
+                  created_at: now,
+                  updated_at: now,
+                }
+              end
+              TagUser.insert_all!(tag_users)
+            end
         end
       elsif is_sidebar_default_setting?(id)
-        Jobs.enqueue(:backfill_sidebar_site_settings, setting_name: id, previous_value: previous_value, new_value: new_value)
+        Jobs.enqueue(
+          :backfill_sidebar_site_settings,
+          setting_name: id,
+          previous_value: previous_value,
+          new_value: new_value,
+        )
       end
     end
 
@@ -135,15 +171,26 @@ class Admin::SiteSettingsController < Admin::AdminController
 
       notification_level = category_notification_level(id)
 
-      user_ids = CategoryUser.where(category_id: previous_category_ids - new_category_ids, notification_level: notification_level).distinct.pluck(:user_id)
-      user_ids += User
-        .real
-        .joins("CROSS JOIN categories c")
-        .joins("LEFT JOIN category_users cu ON users.id = cu.user_id AND c.id = cu.category_id")
-        .where(staged: false)
-        .where("c.id IN (?) AND cu.notification_level IS NULL", new_category_ids - previous_category_ids)
-        .distinct
-        .pluck("users.id")
+      user_ids =
+        CategoryUser
+          .where(
+            category_id: previous_category_ids - new_category_ids,
+            notification_level: notification_level,
+          )
+          .distinct
+          .pluck(:user_id)
+      user_ids +=
+        User
+          .real
+          .joins("CROSS JOIN categories c")
+          .joins("LEFT JOIN category_users cu ON users.id = cu.user_id AND c.id = cu.category_id")
+          .where(staged: false)
+          .where(
+            "c.id IN (?) AND cu.notification_level IS NULL",
+            new_category_ids - previous_category_ids,
+          )
+          .distinct
+          .pluck("users.id")
 
       json[:user_count] = user_ids.uniq.count
     elsif id.start_with?("default_tags_")
@@ -152,19 +199,28 @@ class Admin::SiteSettingsController < Admin::AdminController
 
       notification_level = tag_notification_level(id)
 
-      user_ids = TagUser.where(tag_id: previous_tag_ids - new_tag_ids, notification_level: notification_level).distinct.pluck(:user_id)
-      user_ids += User
-        .real
-        .joins("CROSS JOIN tags t")
-        .joins("LEFT JOIN tag_users tu ON users.id = tu.user_id AND t.id = tu.tag_id")
-        .where(staged: false)
-        .where("t.id IN (?) AND tu.notification_level IS NULL", new_tag_ids - previous_tag_ids)
-        .distinct
-        .pluck("users.id")
+      user_ids =
+        TagUser
+          .where(tag_id: previous_tag_ids - new_tag_ids, notification_level: notification_level)
+          .distinct
+          .pluck(:user_id)
+      user_ids +=
+        User
+          .real
+          .joins("CROSS JOIN tags t")
+          .joins("LEFT JOIN tag_users tu ON users.id = tu.user_id AND t.id = tu.tag_id")
+          .where(staged: false)
+          .where("t.id IN (?) AND tu.notification_level IS NULL", new_tag_ids - previous_tag_ids)
+          .distinct
+          .pluck("users.id")
 
       json[:user_count] = user_ids.uniq.count
     elsif is_sidebar_default_setting?(id)
-      json[:user_count] = SidebarSiteSettingsBackfiller.new(id, previous_value: previous_value, new_value: new_value).number_of_users_to_backfill
+      json[:user_count] = SidebarSiteSettingsBackfiller.new(
+        id,
+        previous_value: previous_value,
+        new_value: new_value,
+      ).number_of_users_to_backfill
     end
 
     render json: json
@@ -173,7 +229,7 @@ class Admin::SiteSettingsController < Admin::AdminController
   private
 
   def is_sidebar_default_setting?(setting_name)
-    %w{default_sidebar_categories default_sidebar_tags}.include?(setting_name.to_s)
+    %w[default_sidebar_categories default_sidebar_tags].include?(setting_name.to_s)
   end
 
   def user_options
@@ -198,7 +254,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       default_include_tl0_in_digests: "include_tl0_in_digests",
       default_text_size: "text_size_key",
       default_title_count_mode: "title_count_mode_key",
-      default_hide_profile_and_presence: "hide_profile_and_presence"
+      default_hide_profile_and_presence: "hide_profile_and_presence",
     }
   end
 

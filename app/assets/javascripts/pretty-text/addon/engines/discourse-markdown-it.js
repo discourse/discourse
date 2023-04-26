@@ -423,6 +423,7 @@ function unhoistForCooked(hoisted, cooked) {
         found = true;
         return hoisted[key];
       });
+      delete hoisted[key];
     };
 
     while (found) {
@@ -578,14 +579,16 @@ export function setup(opts, siteSettings, state) {
 
 export function cook(raw, opts) {
   // we still have to hoist html_raw nodes so they bypass the allowlister
-  // this is the case for oneboxes
-  let hoisted = {};
-  opts.discourse.hoisted = hoisted;
+  // this is the case for oneboxes and also certain plugins that require
+  // raw HTML rendering within markdown bbcode rules
+  opts.discourse.hoisted ??= {};
 
   const rendered = opts.engine.render(raw);
   let cooked = opts.discourse.sanitizer(rendered).trim();
-  cooked = unhoistForCooked(hoisted, cooked);
-  delete opts.discourse.hoisted;
+
+  // opts.discourse.hoisted guid keys will be deleted within here to
+  // keep the object empty
+  cooked = unhoistForCooked(opts.discourse.hoisted, cooked);
 
   return cooked;
 }

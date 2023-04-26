@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe WatchedWord do
-
   it "can't have duplicate words" do
     Fabricate(:watched_word, word: "darn", action: described_class.actions[:block])
     w = Fabricate.build(:watched_word, word: "darn", action: described_class.actions[:block])
@@ -12,15 +11,15 @@ RSpec.describe WatchedWord do
   end
 
   it "doesn't downcase words" do
-    expect(described_class.create(word: "ShooT").word).to eq('ShooT')
+    expect(described_class.create(word: "ShooT").word).to eq("ShooT")
   end
 
   it "strips leading and trailing spaces" do
-    expect(described_class.create(word: "  poutine  ").word).to eq('poutine')
+    expect(described_class.create(word: "  poutine  ").word).to eq("poutine")
   end
 
   it "squeezes multiple asterisks" do
-    expect(described_class.create(word: "a**les").word).to eq('a*les')
+    expect(described_class.create(word: "a**les").word).to eq("a*les")
   end
 
   it "is case-insensitive by default" do
@@ -51,10 +50,10 @@ RSpec.describe WatchedWord do
     end
   end
 
-  describe '#create_or_update_word' do
+  describe "#create_or_update_word" do
     it "can create a new record" do
       expect {
-        w = described_class.create_or_update_word(word: 'nickelback', action_key: :block)
+        w = described_class.create_or_update_word(word: "nickelback", action_key: :block)
         expect(w.reload.action).to eq(described_class.actions[:block])
       }.to change { described_class.count }.by(1)
     end
@@ -69,7 +68,13 @@ RSpec.describe WatchedWord do
     end
 
     it "doesn't error for existing record with same action" do
-      existing = Fabricate(:watched_word, action: described_class.actions[:flag], created_at: 1.day.ago, updated_at: 1.day.ago)
+      existing =
+        Fabricate(
+          :watched_word,
+          action: described_class.actions[:flag],
+          created_at: 1.day.ago,
+          updated_at: 1.day.ago,
+        )
       expect {
         w = described_class.create_or_update_word(word: existing.word, action_key: :flag)
         expect(w.id).to eq(existing.id)
@@ -79,7 +84,11 @@ RSpec.describe WatchedWord do
 
     it "allows action param instead of action_key" do
       expect {
-        w = described_class.create_or_update_word(word: 'nickelback', action: described_class.actions[:block])
+        w =
+          described_class.create_or_update_word(
+            word: "nickelback",
+            action: described_class.actions[:block],
+          )
         expect(w.reload.action).to eq(described_class.actions[:block])
       }.to change { described_class.count }.by(1)
     end
@@ -87,7 +96,11 @@ RSpec.describe WatchedWord do
     it "normalizes input" do
       existing = Fabricate(:watched_word, action: described_class.actions[:flag])
       expect {
-        w = described_class.create_or_update_word(word: "  #{existing.word.upcase}  ", action_key: :block)
+        w =
+          described_class.create_or_update_word(
+            word: "  #{existing.word.upcase}  ",
+            action_key: :block,
+          )
         expect(w.reload.action).to eq(described_class.actions[:block])
         expect(w.id).to eq(existing.id)
       }.to_not change { described_class.count }
@@ -103,24 +116,47 @@ RSpec.describe WatchedWord do
       word = Fabricate(:watched_word, action: described_class.actions[:link], word: "meta1")
       expect(word.replacement).to eq("http://test.localhost/")
 
-      word = Fabricate(:watched_word, action: described_class.actions[:link], word: "meta2", replacement: "test")
+      word =
+        Fabricate(
+          :watched_word,
+          action: described_class.actions[:link],
+          word: "meta2",
+          replacement: "test",
+        )
       expect(word.replacement).to eq("http://test.localhost/test")
 
-      word = Fabricate(:watched_word, action: described_class.actions[:link], word: "meta3", replacement: "/test")
+      word =
+        Fabricate(
+          :watched_word,
+          action: described_class.actions[:link],
+          word: "meta3",
+          replacement: "/test",
+        )
       expect(word.replacement).to eq("http://test.localhost/test")
     end
 
     it "sets case-sensitivity of a word" do
-      word = described_class.create_or_update_word(word: 'joker', action_key: :block, case_sensitive: true)
+      word =
+        described_class.create_or_update_word(
+          word: "joker",
+          action_key: :block,
+          case_sensitive: true,
+        )
       expect(word.case_sensitive?).to eq(true)
 
-      word = described_class.create_or_update_word(word: 'free', action_key: :block)
+      word = described_class.create_or_update_word(word: "free", action_key: :block)
       expect(word.case_sensitive?).to eq(false)
     end
 
     it "updates case-sensitivity of a word" do
-      existing = Fabricate(:watched_word, action: described_class.actions[:block], case_sensitive: true)
-      updated = described_class.create_or_update_word(word: existing.word, action_key: :block, case_sensitive: false)
+      existing =
+        Fabricate(:watched_word, action: described_class.actions[:block], case_sensitive: true)
+      updated =
+        described_class.create_or_update_word(
+          word: existing.word,
+          action_key: :block,
+          case_sensitive: false,
+        )
 
       expect(updated.case_sensitive?).to eq(false)
     end

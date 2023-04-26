@@ -6,7 +6,7 @@ RSpec.describe Admin::ScreenedEmailsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:screened_email) { Fabricate(:screened_email) }
 
-  describe '#index' do
+  describe "#index" do
     shared_examples "screened emails accessible" do
       it "returns screened emails" do
         get "/admin/logs/screened_emails.json"
@@ -30,7 +30,7 @@ RSpec.describe Admin::ScreenedEmailsController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       it "denies access with a 404 response" do
         get "/admin/logs/screened_emails.json"
@@ -44,9 +44,9 @@ RSpec.describe Admin::ScreenedEmailsController do
   describe "#destroy" do
     shared_examples "screened email deletion possible" do
       it "deletes screened email" do
-        expect do
-          delete "/admin/logs/screened_emails/#{screened_email.id}.json"
-        end.to change { ScreenedEmail.count }.by(-1)
+        expect do delete "/admin/logs/screened_emails/#{screened_email.id}.json" end.to change {
+          ScreenedEmail.count
+        }.by(-1)
 
         expect(response.status).to eq(200)
       end
@@ -65,7 +65,7 @@ RSpec.describe Admin::ScreenedEmailsController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       it "prevents deletion with a 404 response" do
         delete "/admin/logs/screened_emails/#{screened_email.id}.json"

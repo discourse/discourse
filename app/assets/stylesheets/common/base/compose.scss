@@ -305,12 +305,15 @@ html.composer-open {
     }
   }
 
+  .category-input + .mini-tag-chooser {
+    margin-left: 8px;
+  }
+
   .mini-tag-chooser {
     flex-grow: 1;
     max-width: calc(50% - 4px);
-    margin: 0 0 8px 8px;
+    margin: 0 0 8px 0px;
     z-index: z("composer", "dropdown");
-
     .select-kit-header {
       color: var(--primary-high);
     }
@@ -334,7 +337,8 @@ html.composer-open {
   .save-or-cancel {
     align-items: center;
     display: flex;
-    flex: 1 1 auto;
+    flex: 0 1 auto;
+    margin-right: 1em;
 
     .btn-primary {
       flex: 0 0 auto;
@@ -354,32 +358,37 @@ html.composer-open {
         color: var(--danger);
       }
     }
-
-    #draft-status,
-    #file-uploading {
-      margin-left: 25px;
-    }
-    #file-uploading {
-      display: flex;
-      align-items: center;
-      a {
-        margin-left: 5px;
-        color: var(--primary-high);
-      }
-      .spinner {
-        margin-right: 5px;
-      }
-    }
-    #draft-status .d-icon-user-edit {
-      color: var(--danger);
-      font-size: 20px;
-      vertical-align: -5.5px;
-    }
   }
 
   #draft-status,
   #file-uploading {
     color: var(--primary-high);
+    margin-right: 0.5em;
+  }
+
+  #file-uploading {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+    a {
+      margin-left: 0.33em;
+      color: var(--primary-high);
+    }
+    .spinner {
+      margin-right: 0.33em;
+    }
+  }
+
+  #draft-status {
+    margin-left: auto;
+    .d-icon-user-edit {
+      color: var(--danger);
+      font-size: 20px;
+      vertical-align: -5.5px;
+    }
+    + .btn-mini-toggle {
+      margin-left: 0;
+    }
   }
 
   #file-uploader {
@@ -390,9 +399,12 @@ html.composer-open {
 .autocomplete {
   z-index: z("composer", "dropdown") + 1;
   position: absolute;
-  width: 240px;
+  max-width: 300px;
+  width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
+  box-shadow: shadow("dropdown-lite");
+  border-radius: 8px;
 
   ul {
     list-style: none;
@@ -400,37 +412,51 @@ html.composer-open {
     margin: 0;
 
     li {
-      &:not(:last-child) {
-        border-bottom: 1px solid var(--primary-low);
+      &:first-of-type a {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
       }
-
+      &:last-of-type a {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
       a {
         @include ellipsis;
         align-items: center;
-        color: var(--primary-high);
+        color: var(--primary);
         display: flex;
-        padding: 5px;
+        gap: 0.25em;
+        padding: 0.3em 1em;
 
         @include hover {
-          background-color: var(--highlight-low);
+          background-color: var(--d-hover);
           text-decoration: none;
         }
 
         &.selected {
-          background-color: var(--tertiary-low);
+          background-color: var(--d-selected);
+
+          .username,
+          .name,
+          .emoji-shortname {
+            font-weight: bold;
+          }
         }
 
-        span {
-          margin-left: 5px;
+        .avatar {
+          margin-right: 0.25em;
+        }
 
-          &.username {
-            color: var(--primary);
-            margin-right: 5px;
-          }
+        .name {
+          display: contents;
+          font-size: var(--font-down-1);
+          color: var(--primary-high);
+        }
 
-          &.name {
-            font-size: var(--font-down-1);
-          }
+        .status-description {
+          @include ellipsis;
+          font-size: var(--font-down-2);
+          color: var(--primary-high);
         }
 
         .relative-date {
@@ -442,6 +468,25 @@ html.composer-open {
         color: var(--primary-medium);
         padding: 0 2px;
       }
+    }
+  }
+
+  &.ac-user {
+    li a {
+      padding: 0.5em 1em;
+    }
+    .emoji {
+      height: 0.75em;
+      width: 0.75em;
+    }
+  }
+
+  &.ac-emoji {
+    li:last-of-type a {
+      color: var(--primary-high);
+    }
+    .emoji {
+      margin-right: 0.25em;
     }
   }
 }
@@ -556,7 +601,7 @@ body:not(.ios-safari-composer-hacks) {
 }
 
 .toggle-preview {
-  margin-left: 8px;
+  margin-left: auto;
   transition: all 0.33s ease-out;
 
   &.active {

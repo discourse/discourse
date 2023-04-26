@@ -18,34 +18,37 @@ if Rails.env == "development"
   # 3. we have a post_edited hook that queues a job for bot input
   # 4. if you are not running sidekiq in dev every time you save a post it will trigger it
   # 5. but the constant can not be autoloaded
-  Rails.configuration.autoload_paths << File.expand_path('../autoload/jobs', __FILE__)
+  Rails.configuration.autoload_paths << File.expand_path("../autoload/jobs", __FILE__)
 end
 
-require_relative 'lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
-register_asset 'stylesheets/discourse-narrative-bot.scss'
+require_relative "lib/discourse_narrative_bot/welcome_post_type_site_setting.rb"
+register_asset "stylesheets/discourse-narrative-bot.scss"
 
 after_initialize do
-  SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-narrative-bot", "db", "fixtures").to_s
+  SeedFu.fixture_paths << Rails
+    .root
+    .join("plugins", "discourse-narrative-bot", "db", "fixtures")
+    .to_s
 
   Mime::Type.register "image/svg+xml", :svg
 
-  [
-    '../autoload/jobs/regular/bot_input.rb',
-    '../autoload/jobs/regular/narrative_timeout.rb',
-    '../autoload/jobs/regular/narrative_init.rb',
-    '../autoload/jobs/regular/send_default_welcome_message.rb',
-    '../autoload/jobs/onceoff/discourse_narrative_bot/grant_badges.rb',
-    '../autoload/jobs/onceoff/discourse_narrative_bot/remap_old_bot_images.rb',
-    '../lib/discourse_narrative_bot/actions.rb',
-    '../lib/discourse_narrative_bot/base.rb',
-    '../lib/discourse_narrative_bot/new_user_narrative.rb',
-    '../lib/discourse_narrative_bot/advanced_user_narrative.rb',
-    '../lib/discourse_narrative_bot/track_selector.rb',
-    '../lib/discourse_narrative_bot/certificate_generator.rb',
-    '../lib/discourse_narrative_bot/dice.rb',
-    '../lib/discourse_narrative_bot/quote_generator.rb',
-    '../lib/discourse_narrative_bot/magic_8_ball.rb',
-    '../lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
+  %w[
+    ../autoload/jobs/regular/bot_input.rb
+    ../autoload/jobs/regular/narrative_timeout.rb
+    ../autoload/jobs/regular/narrative_init.rb
+    ../autoload/jobs/regular/send_default_welcome_message.rb
+    ../autoload/jobs/onceoff/discourse_narrative_bot/grant_badges.rb
+    ../autoload/jobs/onceoff/discourse_narrative_bot/remap_old_bot_images.rb
+    ../lib/discourse_narrative_bot/actions.rb
+    ../lib/discourse_narrative_bot/base.rb
+    ../lib/discourse_narrative_bot/new_user_narrative.rb
+    ../lib/discourse_narrative_bot/advanced_user_narrative.rb
+    ../lib/discourse_narrative_bot/track_selector.rb
+    ../lib/discourse_narrative_bot/certificate_generator.rb
+    ../lib/discourse_narrative_bot/dice.rb
+    ../lib/discourse_narrative_bot/quote_generator.rb
+    ../lib/discourse_narrative_bot/magic_8_ball.rb
+    ../lib/discourse_narrative_bot/welcome_post_type_site_setting.rb
   ].each { |path| load File.expand_path(path, __FILE__) }
 
   RailsMultisite::ConnectionManagement.safe_each_connection do
@@ -55,12 +58,13 @@ after_initialize do
 
       certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
       if !SiteSetting.allowed_iframes.include?(certificate_path)
-        SiteSetting.allowed_iframes = SiteSetting.allowed_iframes.split('|').append(certificate_path).join('|')
+        SiteSetting.allowed_iframes =
+          SiteSetting.allowed_iframes.split("|").append(certificate_path).join("|")
       end
     end
   end
 
-  require_dependency 'plugin_store'
+  require_dependency "plugin_store"
 
   module ::DiscourseNarrativeBot
     PLUGIN_NAME = "discourse-narrative-bot".freeze
@@ -94,13 +98,15 @@ after_initialize do
         immutable_for(24.hours)
 
         %i[date user_id].each do |key|
-          raise Discourse::InvalidParameters.new("#{key} must be present") unless params[key]&.present?
+          unless params[key]&.present?
+            raise Discourse::InvalidParameters.new("#{key} must be present")
+          end
         end
 
         if params[:user_id].to_i != current_user.id
-          rate_limiter = RateLimiter.new(current_user, 'svg_certificate', 3, 1.minute)
+          rate_limiter = RateLimiter.new(current_user, "svg_certificate", 3, 1.minute)
         else
-          rate_limiter = RateLimiter.new(current_user, 'svg_certificate_self', 30, 10.minutes)
+          rate_limiter = RateLimiter.new(current_user, "svg_certificate_self", 30, 10.minutes)
         end
         rate_limiter.performed! unless current_user.staff?
 
@@ -110,33 +116,28 @@ after_initialize do
         hijack do
           generator = CertificateGenerator.new(user, params[:date], avatar_url(user))
 
-          svg = params[:type] == 'advanced' ? generator.advanced_user_track : generator.new_user_track
+          svg =
+            params[:type] == "advanced" ? generator.advanced_user_track : generator.new_user_track
 
-          respond_to do |format|
-            format.svg { render inline: svg }
-          end
+          respond_to { |format| format.svg { render inline: svg } }
         end
       end
 
       private
 
       def avatar_url(user)
-        UrlHelper.absolute(Discourse.base_path + user.avatar_template.gsub('{size}', '250'))
+        UrlHelper.absolute(Discourse.base_path + user.avatar_template.gsub("{size}", "250"))
       end
     end
   end
 
   DiscourseNarrativeBot::Engine.routes.draw do
-    get "/certificate" => "certificates#generate", format: :svg
+    get "/certificate" => "certificates#generate", :format => :svg
   end
 
-  Discourse::Application.routes.append do
-    mount ::DiscourseNarrativeBot::Engine, at: "/discobot"
-  end
+  Discourse::Application.routes.append { mount ::DiscourseNarrativeBot::Engine, at: "/discobot" }
 
-  self.add_model_callback(User, :after_destroy) do
-    DiscourseNarrativeBot::Store.remove(self.id)
-  end
+  self.add_model_callback(User, :after_destroy) { DiscourseNarrativeBot::Store.remove(self.id) }
 
   self.on(:user_created) do |user|
     if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0 && !user.staged
@@ -145,19 +146,13 @@ after_initialize do
   end
 
   self.on(:user_first_logged_in) do |user|
-    if SiteSetting.discourse_narrative_bot_welcome_post_delay > 0
-      user.enqueue_bot_welcome_post
-    end
+    user.enqueue_bot_welcome_post if SiteSetting.discourse_narrative_bot_welcome_post_delay > 0
   end
 
-  self.on(:user_unstaged) do |user|
-    user.enqueue_bot_welcome_post
-  end
+  self.on(:user_unstaged) { |user| user.enqueue_bot_welcome_post }
 
   self.add_model_callback(UserOption, :after_save) do
-    if saved_change_to_skip_new_user_tips? && self.skip_new_user_tips
-      user.delete_bot_welcome_post
-    end
+    user.delete_bot_welcome_post if saved_change_to_skip_new_user_tips? && self.skip_new_user_tips
   end
 
   self.add_to_class(:user, :enqueue_bot_welcome_post) do
@@ -166,28 +161,29 @@ after_initialize do
     delay = SiteSetting.discourse_narrative_bot_welcome_post_delay
 
     case SiteSetting.discourse_narrative_bot_welcome_post_type
-    when 'new_user_track'
+    when "new_user_track"
       if enqueue_narrative_bot_job? && !manually_disabled_discobot?
-        Jobs.enqueue_in(delay, :narrative_init,
+        Jobs.enqueue_in(
+          delay,
+          :narrative_init,
           user_id: self.id,
-          klass: DiscourseNarrativeBot::NewUserNarrative.to_s
+          klass: DiscourseNarrativeBot::NewUserNarrative.to_s,
         )
       end
-    when 'welcome_message'
+    when "welcome_message"
       Jobs.enqueue_in(delay, :send_default_welcome_message, user_id: self.id)
     end
   end
 
-  self.add_to_class(:user, :manually_disabled_discobot?) do
-    user_option&.skip_new_user_tips
-  end
+  self.add_to_class(:user, :manually_disabled_discobot?) { user_option&.skip_new_user_tips }
 
   self.add_to_class(:user, :enqueue_narrative_bot_job?) do
-    SiteSetting.discourse_narrative_bot_enabled &&
-      self.human? &&
-      !self.anonymous? &&
+    SiteSetting.discourse_narrative_bot_enabled && self.human? && !self.anonymous? &&
       !self.staged &&
-      !SiteSetting.discourse_narrative_bot_ignored_usernames.split('|'.freeze).include?(self.username)
+      !SiteSetting
+        .discourse_narrative_bot_ignored_usernames
+        .split("|".freeze)
+        .include?(self.username)
   end
 
   self.add_to_class(:user, :delete_bot_welcome_post) do
@@ -219,42 +215,31 @@ after_initialize do
     user = post.user
 
     if user&.enqueue_narrative_bot_job? && !options[:skip_bot]
-      Jobs.enqueue(:bot_input,
-        user_id: user.id,
-        post_id: post.id,
-        input: "reply"
-      )
+      Jobs.enqueue(:bot_input, user_id: user.id, post_id: post.id, input: "reply")
     end
   end
 
   self.on(:post_edited) do |post|
     if post.user&.enqueue_narrative_bot_job?
-      Jobs.enqueue(:bot_input,
-        user_id: post.user.id,
-        post_id: post.id,
-        input: "edit"
-      )
+      Jobs.enqueue(:bot_input, user_id: post.user.id, post_id: post.id, input: "edit")
     end
   end
 
   self.on(:post_destroyed) do |post, options, user|
     if user&.enqueue_narrative_bot_job? && !options[:skip_bot]
-      Jobs.enqueue(:bot_input,
+      Jobs.enqueue(
+        :bot_input,
         user_id: user.id,
         post_id: post.id,
         topic_id: post.topic_id,
-        input: "delete"
+        input: "delete",
       )
     end
   end
 
   self.on(:post_recovered) do |post, _, user|
     if user&.enqueue_narrative_bot_job?
-      Jobs.enqueue(:bot_input,
-        user_id: user.id,
-        post_id: post.id,
-        input: "recover"
-      )
+      Jobs.enqueue(:bot_input, user_id: user.id, post_id: post.id, input: "recover")
     end
   end
 
@@ -268,20 +253,19 @@ after_initialize do
           "like"
         end
 
-      if input
-        Jobs.enqueue(:bot_input,
-          user_id: self.user.id,
-          post_id: self.post.id,
-          input: input
-        )
-      end
+      Jobs.enqueue(:bot_input, user_id: self.user.id, post_id: self.post.id, input: input) if input
     end
   end
 
   self.add_model_callback(Bookmark, :after_commit, on: :create) do
     if self.user.enqueue_narrative_bot_job?
       if self.bookmarkable_type == "Post"
-        Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.bookmarkable_id, input: "bookmark")
+        Jobs.enqueue(
+          :bot_input,
+          user_id: self.user_id,
+          post_id: self.bookmarkable_id,
+          input: "bookmark",
+        )
       end
     end
   end
@@ -290,31 +274,36 @@ after_initialize do
     user = User.find_by(id: user_id)
 
     if user && user.enqueue_narrative_bot_job?
-      Jobs.enqueue(:bot_input,
+      Jobs.enqueue(
+        :bot_input,
         user_id: user_id,
         topic_id: topic_id,
-        input: "topic_notification_level_changed"
+        input: "topic_notification_level_changed",
       )
     end
   end
 
   UserAvatar.register_custom_user_gravatar_email_hash(
     DiscourseNarrativeBot::BOT_USER_ID,
-    "discobot@discourse.org"
+    "discobot@discourse.org",
   )
 
   self.on(:system_message_sent) do |args|
     next if !SiteSetting.discourse_narrative_bot_enabled
-    next if args[:message_type] != 'tl2_promotion_message'
+    next if args[:message_type] != "tl2_promotion_message"
 
     recipient = args[:post].topic.topic_users.where.not(user_id: args[:post].user_id).last&.user
     recipient ||= Discourse.site_contact_user if args[:post].user == Discourse.site_contact_user
     next if recipient.nil?
 
     I18n.with_locale(recipient.effective_locale) do
-      raw = I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template",
-                   discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
-                   reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
+      raw =
+        I18n.t(
+          "discourse_narrative_bot.tl2_promotion_message.text_body_template",
+          discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
+          reset_trigger:
+            "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}",
+        )
 
       PostCreator.create!(
         ::DiscourseNarrativeBot::Base.new.discobot_user,
@@ -322,7 +311,7 @@ after_initialize do
         raw: raw,
         skip_validations: true,
         archetype: Archetype.private_message,
-        target_usernames: recipient.username
+        target_usernames: recipient.username,
       )
     end
   end
@@ -331,12 +320,12 @@ after_initialize do
     alias_method :existing_can_create_post?, :can_create_post?
 
     def can_create_post?(parent)
-      return true if SiteSetting.discourse_narrative_bot_enabled &&
-        parent.try(:subtype) == "system_message" &&
-        parent.try(:user) == ::DiscourseNarrativeBot::Base.new.discobot_user
+      if SiteSetting.discourse_narrative_bot_enabled && parent.try(:subtype) == "system_message" &&
+           parent.try(:user) == ::DiscourseNarrativeBot::Base.new.discobot_user
+        return true
+      end
 
       existing_can_create_post?(parent)
     end
   end
-
 end

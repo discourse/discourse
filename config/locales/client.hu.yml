@@ -145,38 +145,38 @@ hu:
       email: "Küldés e-mailben"
       url: "URL másolása és megosztása"
     action_codes:
-      public_topic: "téma nyilvánossá téve: %{when}"
-      open_topic: "témává alakította %{when}"
-      private_topic: "téma privát üzenetté alakítva: %{when}"
-      split_topic: "felosztotta a témát ekkor: %{when}"
-      invited_user: "meghívva: %{who} %{when}"
-      invited_group: "meghívva: %{who} %{when}"
+      public_topic: "Téma nyilvánossá téve: %{when}"
+      open_topic: "Témává alakította %{when}"
+      private_topic: "Téma privát üzenetté alakítva: %{when}"
+      split_topic: "Felosztotta a témát ekkor: %{when}"
+      invited_user: "Meghívva: %{who} %{when}"
+      invited_group: "Meghívva: %{who} %{when}"
       user_left: "%{who} eltávolította magát ebből az üzenetből ekkor: %{when}"
-      removed_user: "törölve: %{who} %{when}"
-      removed_group: "törölve: %{who} %{when}"
-      autobumped: "automatikusan előrehozva: %{when}"
+      removed_user: "Törölve: %{who} %{when}"
+      removed_group: "Törölve: %{who} %{when}"
+      autobumped: "Automatikusan előrehozva: %{when}"
       autoclosed:
-        enabled: "lezárva: %{when}"
-        disabled: "megnyitva: %{when}"
+        enabled: "Lezárva: %{when}"
+        disabled: "Megnyitva: %{when}"
       closed:
-        enabled: "lezárva: %{when}"
-        disabled: "megnyitva: %{when}"
+        enabled: "Lezárva: %{when}"
+        disabled: "Megnyitva: %{when}"
       archived:
-        enabled: "archiválva: %{when}"
-        disabled: "visszahozva: %{when}"
+        enabled: "Archiválva: %{when}"
+        disabled: "Visszahozva: %{when}"
       pinned:
-        enabled: "kitűzve: %{when}"
-        disabled: "kitűzés megszüntetve: %{when}"
+        enabled: "Kitűzve: %{when}"
+        disabled: "Kitűzés megszüntetve: %{when}"
       pinned_globally:
-        enabled: "globálisan kitűzve: %{when}"
-        disabled: "kitűzés megszüntetve: %{when}"
+        enabled: "Globálisan kitűzve: %{when}"
+        disabled: "Kitűzés megszüntetve: %{when}"
       visible:
-        enabled: "listázva: %{when}"
-        disabled: "listázás megszüntetve: %{when}"
+        enabled: "Listázva: %{when}"
+        disabled: "Listázás megszüntetve: %{when}"
       banner:
-        enabled: "kiemelve ekkor: %{when}. Minden oldal tetején megjelenik, amíg a felhasználó nem törli."
-        disabled: "kiemelés eltávolítva ekkor: %{when}. Többé nem jelenik meg minden oldal tetején."
-      forwarded: "a fenti e-mail továbbítva"
+        enabled: "Kiemelve ekkor: %{when}. Minden oldal tetején megjelenik, amíg a felhasználó nem törli."
+        disabled: "Kiemelés eltávolítva ekkor: %{when}. Többé nem jelenik meg minden oldal tetején."
+      forwarded: "Továbbította a fenti e-mailt"
     topic_admin_menu: "témaműveletek"
     skip_to_main_content: "Ugrás a fő tartalomhoz"
     emails_are_disabled: "Egy adminisztrátor letiltotta a kimenő e-maileket. Semmilyen értesítő e-mail nem lesz elküldve."
@@ -184,12 +184,7 @@ hu:
     software_update_prompt:
       message: "Frissítettük a webhelyet, <span>frissítse az oldalt</span>, különben váratlan viselkedést tapasztalhat."
       dismiss: "Elvetés"
-    bootstrap_mode_enabled:
-      one: "Hogy könnyebbé tegyük az új oldala elindítását, most előkészítési módban van. Minden új felhasználó 1-es szintet kap, és be lesz állítva, hogy napi kivonat e-mailt kapjanak. Ez a beállítás automatikusan kikapcsol, ha legalább %{count} felhasználó regisztrált."
-      other: "Hogy könnyebbé tegyük az új oldala elindítását, most előkészítési módban van. Minden új felhasználó 1-es szintet kap, és be lesz állítva, hogy napi kivonat e-mailt kapjanak. Ez a beállítás automatikusan kikapcsol, ha legalább %{count} felhasználó regisztrált."
-    bootstrap_mode_disabled: "Az előkészítési mód 24 órán belül kikapcsol."
-    bootstrap_invite_button_title: "Meghívók küldése"
-    bootstrap_wizard_link_title: "Beállítási varázsló befejezése"
+    bootstrap_mode: "Bootstrap mód"
     themes:
       default_description: "Alapértelmezett"
       broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
@@ -302,11 +297,11 @@ hu:
       edit_bookmark: "Könyvjelző szerkesztése"
       clear_bookmarks: "Könyvjelzők törlése"
       help:
-        bookmark: "Kattintson a téma első bejegyzésének könyvjelzőzéséhez"
-        edit_bookmark: "Kattintson a témán szereplő könyvjelző szerkesztéséhez"
+        bookmark: "Kattintson a téma könyvjelzővé tételéhez"
+        edit_bookmark: "Kattintson a témában lévő hozzászólás könyvjelzőjének szerkesztéséhez."
         edit_bookmark_for_topic: "Kattintson a témához tartozó könyvjelző szerkesztéséhez"
         unbookmark: "Kattintson a téma valamennyi könyvjelzőjének törléséhez"
-        unbookmark_with_reminder: "Kattintson a téma valamennyi könyvjelzőjének és emlékeztetőjének törléséhez."
+        unbookmark_with_reminder: "Kattintson ide a téma összes könyvjelzőjének és emlékeztetőjének eltávolításához."
     bookmarks:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
       created_generic: "Könyvjelzőzte ezt. %{name}"
@@ -316,7 +311,6 @@ hu:
       remove_reminder_keep_bookmark: "Emlékeztető eltávolítása és könyvjelző megtartása"
       created_with_reminder: "Könyvjelzőzte ezt a bejegyzést, és emlékeztetőt állított be ekkorra: %{date}. %{name}"
       created_with_reminder_generic: "Könyvjelzőzte ezt, és emlékeztetőt állított be ekkorra: %{date}. %{name}"
-      remove: "Könyvjelző eltávolítása"
       delete: "Könyvjelző törlése"
       confirm_delete: "Biztos, hogy törli ezt a könyvjelzőt? Az emlékeztető is törlődni fog."
       confirm_clear: "Biztos, hogy törli az összes könyvjelzőjét ebből a témából?"
@@ -351,7 +345,7 @@ hu:
       new_topic: "Új témavázlat"
       new_private_message: "Új személyesüzenet-vázlat"
       abandon:
-        confirm: "Van egy folyamatban lévő vázlata ehhez a témához. Mit szeretne vele tenni?"
+        confirm: "Már van egy folyamatban lévő tervezete. Mit szeretne vele kezdeni?"
         yes_value: "Elvetés"
         no_value: "Szerkesztés folytatása"
     topic_count_categories:
@@ -386,9 +380,6 @@ hu:
     enable: "Engedélyezés"
     disable: "Letiltás"
     continue: "Folytatás"
-    undo: "Visszavonás"
-    revert: "Visszaállítás"
-    failed: "Sikertelen"
     switch_to_anon: "Anonim módba lépés"
     switch_from_anon: "Kilépés az anonim módból"
     banner:
@@ -527,26 +518,33 @@ hu:
       scores:
         about: "Ez a pontszám a jelentő bizalmi szintje, a korábbi megjelöléseinek pontossága és a jelentett elem prioritása alapján számított."
         score: "Pontszám"
-        date: "Dátum"
-        type: "Típus"
+        type: "Ok"
         status: "Állapot"
-        submitted_by: "Beküldte"
-        reviewed_by: "Jóváhagyta"
+        submitted_by: "Jelentette"
       statuses:
         pending:
           title: "Folyamatban"
         approved:
           title: "Jóváhagyva"
+        approved_flag:
+          title: "Jóváhagyott zászló"
+        approved_post:
+          title: "Hozzászólás jóváhagyva"
         rejected:
           title: "Elutasítva"
-        ignored:
-          title: "Figyelmen kívül hagyva"
-        deleted:
-          title: "Törölve"
+        rejected_flag:
+          title: "Megjelölés elutasítva"
+        rejected_user:
+          title: "Felhasználó elutasítva"
+        rejected_post:
+          title: "A bejegyzés elutasítva"
         reviewed:
-          title: "(összes jóváhagyott)"
+          title: "Minden áttekintve"
         all:
-          title: "(összes)"
+          title: "Összes"
+      context_question:
+        delimiter: "vagy"
+        something_else_wrong: "Valami baj van ezzel a bejegyzéssel?"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"
@@ -685,6 +683,7 @@ hu:
         denied: "tiltva"
         undone: "kérés visszavonva"
         handle: "tagsági kérés kezelése"
+        undo: "Visszavonás"
       manage:
         title: "Kezelés"
         name: "Név"
@@ -852,6 +851,7 @@ hu:
         make_all_primary_description: "Ez legyen az összes kijelölt felhasználó elsődleges csoportja"
         remove_all_primary: "Eltávolítás, mint elsődleges"
         remove_all_primary_description: "Csoport eltávolítása, mint elsődleges"
+        status: "Állapot"
         owner: "Tulajdonos"
         primary: "Elsődleges"
         forbidden: "Nem láthatja a tagokat."
@@ -980,10 +980,12 @@ hu:
       mute: "Némítás"
       edit: "Beállítások szerkesztése"
       download_archive:
-        button_text: "Összes letöltése"
-        confirm: "Biztos, hogy letölti a bejegyzéseit?"
-        success: "A letöltés elkezdődött, értesítjük, amint a folyamat véget ért."
-        rate_limit_error: "A bejegyzések naponta csak egyszer töltetők le, próbálja újra holnap."
+        title: "Adatok exportálása"
+        description: "Töltse le a fiók tevékenységének és beállításainak archívumát."
+        button_text: "Archívum kérése"
+        confirm: "Szeretné letölteni a fiók tevékenységének és beállításainak archívumát?"
+        success: "Megkezdtük az archívum összegyűjtését, üzenetet fog kapni, ha a folyamat befejeződik."
+        rate_limit_error: "A fiókarchívumokat naponta egyszer lehet letölteni, kérjük, próbálja meg holnap újra."
       new_private_message: "Új üzenet"
       private_message: "Üzenet"
       private_messages: "Üzenetek"
@@ -1011,7 +1013,7 @@ hu:
       notification_schedule:
         title: "Értesítési ütemterv"
         label: "Egyéni értesítési ütemterv engedélyezése"
-        tip: "Ezen időpontokon kívül automatikusan „ne zavarjanak” állapotba kerül."
+        tip: "Ezeken az órákon kívül az értesítések szünetelnek."
         midnight: "Éjfél"
         none: "Egyik sem"
         monday: "Hétfő"
@@ -1055,7 +1057,7 @@ hu:
         perm_denied_expl: "Letiltotta a figyelmeztetéseket. Engedélyezze őket a böngésző beállításaiban."
         disable: "Értesítések kikapcsolása"
         enable: "Értesítések bekapcsolása"
-        each_browser_note: 'Megjegyzés: Ezt a beállítást minden használt böngészőben meg kell változtatnia. Az összes értesítés letiltásra került ettől a beállítástól függetlenül, ha a profilját „Ne zavarjanak” állapotba teszi.'
+        each_browser_note: "Megjegyzés: Ezt a beállítást minden használt böngészőben módosítania kell. Ettől a beállítástól függetlenül minden értesítés le lesz tiltva, ha szünetelteti az értesítéseket a felhasználói menüből."
         consent_prompt: "Szeretne élő értesítéseket kapni, ha valaki válaszol a hozzászólásaira?"
       dismiss: "Elvetés"
       dismiss_notifications: "Összes elvetése"
@@ -1182,13 +1184,6 @@ hu:
       save_to_change_theme: 'A téma a „%{save_text}” gombra kattintás után frissül'
       home: "Alapértelmezett főoldal"
       staged: "Lépcsőzetes"
-      staff_counters:
-        flags_given: "hasznos megjelölések"
-        flagged_posts: "megjelölt bejegyzések"
-        deleted_posts: "törölt bejegyzések"
-        suspensions: "felfüggesztések"
-        warnings_received: "figyelmeztetések"
-        rejected_posts: "elutasított bejegyzések"
       messages:
         all: "összes bejövő postaláda"
         inbox: "Bejövő"
@@ -1239,11 +1234,12 @@ hu:
         title: "Kétfaktoros biztonsági kódok"
         regenerate: "Újragenerálás"
         disable: "Letiltás"
-        enable: "Engedélyezés"
-        enable_long: "Biztonsági kódok engedélyezése"
+        enable: "Biztonsági kódok létrehozása"
+        enable_long: "Biztonsági kódok hozzáadása"
+        not_enabled: "Még nem hoztál létre biztonsági kódokat."
         manage:
-          one: "Biztonsági kódok kezelése. <strong>%{count}</strong> biztonsági kód maradt."
-          other: "Biztonsági kódok kezelése. <strong>%{count}</strong> biztonsági kód maradt."
+          one: "<strong>%{count}</strong> biztonsági kódja maradt."
+          other: "<strong>%{count}</strong> biztonsági kódja maradt."
         copy_to_clipboard: "Vágólapra másolás"
         copy_to_clipboard_error: "Hiba az adatok vágólapra másolásakor"
         copied_to_clipboard: "Vágólapra másolva"
@@ -1325,6 +1321,7 @@ hu:
         success: "Küldtünk egy levelet a megadott e-mail-címre. Kövesse a megerősítési utasításokat."
         success_via_admin: "Küldtünk egy levelet a megadott e-mail-címre. A felhasználónak követnie kell a levélben szereplő megerősítési utasításokat."
         success_staff: "Küldtünk egy levelet a jelenlegi e-mail-címére. Kövesse a megerősítési utasításokat."
+        back_to_preferences: "Vissza a beállításokhoz"
       change_avatar:
         title: "Profilkép megváltoztatása"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, ez alapján:"
@@ -1449,6 +1446,8 @@ hu:
         title: "A háttéroldal címe a következők számát jeleníti meg:"
         notifications: "Új értesítések"
         contextual: "Új oldal tartalma"
+      bookmark_after_notification:
+        title: "A könyvjelzőre emlékeztető értesítés elküldése után:"
       like_notification_frequency:
         title: "Értesítés kedvelés esetén"
         always: "Mindig"
@@ -1673,6 +1672,7 @@ hu:
       save: "Mentés"
       set_custom_status: "Egyéni állapot beállítása"
       what_are_you_doing: "Mit csinál?"
+      pause_notifications: "Értesítések szüneteltetése"
       remove_status: "Állapot eltávolítása"
     user_tips:
       primary: "Értem!"
@@ -1829,6 +1829,9 @@ hu:
       title: "Bejelentkezés"
       username: "Felhasználó"
       password: "Jelszó"
+      show_password: "Megjelenítés"
+      show_password_title: "Jelszó megjelenítése"
+      hide_password_title: "Jelszó elrejtése"
       second_factor_title: "Kétfaktoros hitelesítés"
       second_factor_description: "Írja be a hitelesítési kódot az alkalmazásából:"
       second_factor_backup: "Bejelentkezés biztonsági kóddal"
@@ -2050,8 +2053,6 @@ hu:
         topic_template_not_modified: "Adjon hozzá részleteket és konkrétumokat a témájához a témasablon szerkesztésével."
       save_edit: "Módosítások mentése"
       overwrite_edit: "Módosítások felülírása"
-      reply_original: "Válasz az eredeti témára"
-      reply_here: "Válasz ide"
       reply: "Válasz"
       cancel: "Mégse"
       create_topic: "Téma létrehozása"
@@ -2177,6 +2178,7 @@ hu:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2208,6 +2210,7 @@ hu:
       reaction: "<span>%{username}</span>%{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – kész"
+      new_features: "Új funkciók érhetők el!"
       dismiss_confirmation:
         body:
           default:
@@ -2246,6 +2249,7 @@ hu:
         invited_to_private_message: "privát üzenetre meghívva"
         invitee_accepted: "meghívás elfogadva"
         posted: "új bejegyzés"
+        watching_category_or_tag: "új bejegyzés"
         moved_post: "bejegyzés áthelyezve"
         linked: "hivatkozva"
         bookmark_reminder: "könyvjelző-emlékeztető"
@@ -2261,6 +2265,7 @@ hu:
         membership_request_consolidated: "új tagsági kérés"
         reaction: "új reakció"
         votes_released: "A szavazat feloldásra került"
+        new_features: "új Discourse funkciók jelentek meg!"
     upload_selector:
       uploading: "Feltöltés"
       processing: "Feltöltés feldolgozása"
@@ -2527,6 +2532,7 @@ hu:
         one: "%{count} bejegyzés a témában"
         other: "%{count} bejegyzés a témában"
       create: "Új téma"
+      create_disabled_category: "Ebben a kategóriában nem hozhatsz létre témákat"
       create_long: "Új téma létrehozása"
       open_draft: "Vázlat megnyitása"
       private_message: "Üzenet indítása"
@@ -2571,9 +2577,12 @@ hu:
       collapse_details: "téma részleteinek összecsukása"
       expand_details: "téma részleteinek kibontása"
       unread_indicator: "Egyetlen tag sem olvasta még a téma utolsó bejegyzését."
+      bumped_at_title: |
+        Első bejegyzés: %{createdAtDate}
+        Elküldve: %{bumpedAtDate}
       suggest_create_topic: Készen áll, hogy <a href>új beszélgetést kezdjen?</a>
-      jump_reply_up: ugrás a korábbi válaszhoz
-      jump_reply_down: ugrás a későbbi válaszhoz
+      jump_reply: "Ugrás a hozzászólás eredeti helyére"
+      jump_reply_aria: "Ugrás @%{username} bejegyzésére az eredeti helyén"
       deleted: "A téma törölve lett"
       slow_mode_update:
         title: "Lassú mód"
@@ -2757,6 +2766,7 @@ hu:
           one: "Jelenleg %{count} kítűzött témája van. A túl sok kiemelt téma megzavarhatja az új vagy névtelen felhasználókat. Biztos, hogy kitűz egy újabb témát ebben a kategóriában?"
           other: "Jelenleg %{count} kítűzött témája van. A túl sok kiemelt téma megzavarhatja az új vagy névtelen felhasználókat. Biztos, hogy kitűz egy újabb témát ebben a kategóriában?"
         unpin_globally: "Távolítsa el ezt a témát az összes téma listájának tetejéről."
+        global_pin_note: "A felhasználók saját maguk számára feloldhatják a témát."
         not_pinned_globally: "Nincsenek globálisan rögzített témák."
         already_pinned_globally:
           one: "Jelenleg globálisan kitűzött témák: <strong class='badge badge-notification unread'>%{count}</strong>"
@@ -2823,6 +2833,9 @@ hu:
         message_title: "Új üzenet címe"
         radio_label: "Új üzenet"
         participants: "Résztvevők"
+        instructions:
+          one: "Új üzenet létrehozására készül, amelyet a kiválasztott <b>%{count}</b> bejegyzéssel fog megtölteni."
+          other: "Új üzenet létrehozására készül, amelyet a kiválasztott <b>%{count}</b> bejegyzéssel fog megtölteni."
       move_to_existing_message:
         title: "Áthelyezés egy meglévő üzenethez"
         action: "áthelyezés egy meglévő üzenethez"
@@ -2839,6 +2852,9 @@ hu:
         title: "Oldal közzététele"
         publish: "Közzététel"
         public: "Nyilvános"
+        unpublish: "Közzététel visszavonása"
+        unpublished: "Az oldal közzététele vissza lett vonva, már nem érhető el."
+        publishing_settings: "Közzétételi beállítások"
       change_owner:
         title: "Tulajdonosváltás"
         action: "tulajdonjog módosítása"
@@ -2915,7 +2931,7 @@ hu:
         create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
         edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."
         upload: "Sajnos hiba történt a fájl feltöltése során. Próbálja újra."
-        file_too_large: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size_kb} kb). Töltse fel a nagyméretű fájlt egy felhőmegosztó szolgáltatásba, majd illessze be annak a linkjét."
+        file_too_large: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size_kb} kB). Töltse fel a nagyméretű fájlt egy felhős megosztási szolgáltatásba, majd illessze be annak a hivatkozását."
         file_size_zero: "Sajnos úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
         file_too_large_humanized: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size}). Töltse fel a nagyméretű fájlt egy felhőmegosztó szolgáltatásba, majd illessze be annak a linkjét."
         too_many_uploads: "Sajnos egyszerre csak egy fájlt tölthet fel."
@@ -2927,6 +2943,7 @@ hu:
       cancel_composer:
         discard: "Elvetés"
         save_draft: "Vázlat mentése későbbre"
+        keep_editing: "Szerkesztés tovább"
       via_email: "ez a válasz e-mailben érkezett"
       via_auto_generated_email: "ez a bejegyzés egy automatikusan előállított e-mailen keresztül érkezett"
       whisper: "ez a hozzászólás egy privát suttogás a moderátorok számára."
@@ -2950,7 +2967,7 @@ hu:
         delete_replies:
           confirm: "A hozzászólásra adott válaszokat is törölni akarja?"
           just_the_post: "Nem, csak ezt a bejegyzést"
-        admin: "admin műveletek"
+        admin: "bejegyzés-adminisztrátori műveletek"
         permanently_delete: "Végleges törlés"
         permanently_delete_confirmation: "Biztos, hogy végleg törölni szeretné ezt a bejegyzést? Nem fogja tudni visszaállítani."
         wiki: "Wiki létrehozása"
@@ -2958,6 +2975,7 @@ hu:
         convert_to_moderator: "Stábszín hozzáadása"
         revert_to_regular: "Stábszín eltávolítása"
         rebake: "HTML újjáépítése"
+        publish_page: "Oldal közzététele"
         unhide: "Elrejtés visszavonása"
         change_owner: "Tulajdonjog módosítása..."
         grant_badge: "Jelvény adományozása..."
@@ -2994,7 +3012,7 @@ hu:
           sr_post_readers_list_description: "felhasználók, akik elolvasták ezt a bejegyzést"
         by_you:
           off_topic: "Megjelölte nem a témához tartozóként"
-          spam: "Spam-ként jelölted"
+          spam: "Megjelölte kéretlenként"
           inappropriate: "Ezt ide nem illőnek jelölte."
           notify_moderators: "Moderálásra jelölted"
           notify_user: "Üzenetet küldtél ennek a felhasználónak"
@@ -3013,12 +3031,12 @@ hu:
           side_by_side:
             button: "HTML"
           side_by_side_markdown:
-            button: "Raw"
+            button: "Nyers"
       raw_email:
         displays:
           raw:
             title: "A nyers e-mail megjelenítése"
-            button: "Raw"
+            button: "Nyers"
           text_part:
             title: "Az e-mail szöveges részének megjelenítése"
             button: "Üzenet"
@@ -3028,7 +3046,6 @@ hu:
       bookmarks:
         create: "Könyvjelző létrehozása"
         edit: "Könyvjelző szerkesztése"
-        created: "Létrehozott"
         updated: "Frissítve"
         name: "Név"
         name_placeholder: "Mire való ez a könyvjelző?"
@@ -3059,7 +3076,7 @@ hu:
       back: "Vissza a kategóriához"
       general: "Általános"
       settings: "Beállítások"
-      topic_template: "Téma sablonja"
+      topic_template: "Sablon"
       tags: "Címkék"
       required_tag_group:
         delete: "Törlés"
@@ -3079,7 +3096,7 @@ hu:
       background_color: "Háttér színe"
       foreground_color: "Előtér színe"
       name_placeholder: "Maximum egy vagy két szó"
-      color_placeholder: "Akármelyik web-es szín"
+      color_placeholder: "Bármilyen webes szín"
       delete_confirm: "Biztosan törölni szeretnéd ezt a kategóriát?"
       delete_error: "Hiba lépett fel a kategória törlése során!"
       list: "Kategóriák listázása"
@@ -3098,8 +3115,7 @@ hu:
       email_in: "Egyéni e-mail cím a bejövő üzeneteknek:"
       email_in_tooltip: "Több e-mail címet elválaszthat a | karakterrel."
       email_in_allow_strangers: "E-mailek fogadása fiók nélküli névtelen felhasználóktól"
-      email_in_disabled: "Az e-maillel történő témalétrehozáski van kapcsolva az oldal beállításaiban. A bekapcsoláshoz"
-      email_in_disabled_click: 'engedélyezd az "e-mail be" beállítást.'
+      email_in_disabled: "Az új témák e-mailben történő közzététele le van tiltva. Ha engedélyezni szeretné az új témák e-mailben történő közzétételét, engedélyezze a <a href='%{setting_url}'>„e-mail in”</a> beállítást."
       num_featured_topics: "A kategóriák oldalon megjelenő témák száma:"
       subcategory_num_featured_topics: "A kiemelt témák száma a szülő kategória oldalán:"
       sort_order: "Témakörök csoportosítása:"
@@ -3113,6 +3129,7 @@ hu:
       default_position: "Alapértelmezett pozíció"
       parent: "Szülő kategória"
       num_auto_bump_daily: "A naponta automatikusan előrehozandó nyitott témák száma:"
+      auto_bump_cooldown_days: "Minimum napok száma, mielőtt újra feldobná ugyanazt a témát:"
       navigate_to_first_post_after_read: "A témák elolvasása után navigáljon az első hozzászóláshoz"
       notifications:
         watching:
@@ -3256,7 +3273,6 @@ hu:
       other: "felhasználók"
     category_title: "Kategória"
     history: "Idővonal"
-    changed_by: "szerző %{author}"
     raw_email:
       title: "Bejövő email"
       not_available: "Nem elérhető!"
@@ -3264,6 +3280,10 @@ hu:
     filters:
       with_topics: "%{filter} témák"
       with_category: "%{filter} %{category} Témák"
+      filter:
+        title: "Szűrő"
+        button:
+          label: "Szűrő"
       latest:
         title: "Legújabb"
         title_with_count:
@@ -3286,6 +3306,9 @@ hu:
         lower_title_with_count:
           one: "%{count} olvasatlan"
           other: "%{count} olvasatlan"
+      unseen:
+        title: "Nem látott"
+        lower_title: "nem látott"
       new:
         lower_title_with_count:
           one: "%{count} új"
@@ -3424,6 +3447,7 @@ hu:
       granted:
         one: "%{count} kiadva"
         other: "%{count} kiadva"
+      awarded: elnyerte
       select_badge_for_title: Válassz egy jelvényt, hogy címként használd
       none: "(semmi)"
       successfully_granted: "Sikeresen adományoztott %{badge} %{username} számára"
@@ -3549,16 +3573,13 @@ hu:
     safe_mode:
       enabled: "A biztonságos mód be van kapcsolva, hogy kilépj a biztonságos módból lépj ki ebből a keresési lapból"
     image_removed: "(kép eltávolítva)"
-    do_not_disturb:
-      title: "Ne zavarjanak..."
-      label: "Ne zavarjanak"
-      remaining: "%{remaining} van hátra"
+    pause_notifications:
+      label: "Értesítések szüneteltetése"
       options:
         half_hour: "30 percig"
         one_hour: "1 óráig"
         two_hours: "2 óráig"
         tomorrow: "Holnapig"
-        custom: "Egyéni"
     trust_levels:
       names:
         newuser: "új felhasználó"
@@ -3603,11 +3624,37 @@ hu:
       all_categories: "Minden kategória"
       all_tags: "Összes címke"
       sections:
+        custom:
+          save: "Mentés"
+          delete: "Törlés"
+          public: "Tegye ezt a részt nyilvánossá és mindenki számára láthatóvá"
+          links:
+            icon:
+              label: "Ikon"
+              validation:
+                blank: "Az ikon nem lehet üres"
+                maximum: "Az ikonnak rövidebbnek kell lennie %{count} karakternél"
+            name:
+              label: "Név"
+              validation:
+                blank: "A név nem lehet üres"
+                maximum: "A névnek %{count} karakternél rövidebbnek kell lennie"
+            value:
+              label: "Hivatkozás"
+              validation:
+                blank: "A link nem lehet üres"
+                maximum: "A linknek %{count} karakternél rövidebbnek kell lennie"
+                invalid: "A formátum érvénytelen"
+          title:
+            label: "A szakasz címe"
+            validation:
+              blank: "A cím nem lehet üres"
+              maximum: "A címnek %{count} karakternél rövidebbnek kell lennie"
         about:
           header_link_text: "Névjegy"
         messages:
           header_link_text: "Üzenetek"
-          header_action_title: "új személyes üzenet létrehozása"
+          header_action_title: "Személyes üzenet létrehozása"
           links:
             inbox: "Beérkezett üzenetek"
             sent: "Elküldött"
@@ -3624,7 +3671,6 @@ hu:
           none: "Még nem adott hozzá címkéket."
           click_to_get_started: "Kattintson ide a kezdéshez."
           header_link_text: "Címkék"
-          header_action_title: "szerkessze az oldalsávja címkéit"
           configure_defaults: "Alapértelmezések beállítása"
         categories:
           links:
@@ -3634,42 +3680,47 @@ hu:
           none: "Még nem adott hozzá kategóriákat."
           click_to_get_started: "Kattintson ide a kezdéshez."
           header_link_text: "Kategóriák"
-          header_action_title: "szerkessze az oldalsávja kategóriáit"
           configure_defaults: "Alapértelmezések beállítása"
         community:
           header_link_text: "Közösség"
-          header_action_title: "új téma létrehozása"
+          header_action_title: "Téma létrehozása"
           links:
             about:
               content: "Névjegy"
+              title: "További részletek erről az oldalról"
             admin:
               content: "Adminisztrátor"
+              title: "Oldalbeállítások és jelentések"
             badges:
               content: "Jelvények"
+              title: "Az összes megszerezhető jelvény"
             everything:
               content: "Összes"
               title: "Minden téma"
             faq:
               content: "GYIK"
+              title: "Útmutató az oldal használatához"
             groups:
               content: "Csoportok"
-              title: "Összes csoport"
+              title: "Az elérhető felhasználói csoportok listája"
             users:
               content: "Felhasználók"
-              title: "Minden felhasználó"
+              title: "Az összes felhasználó listája"
             my_posts:
               content: "Saját bejegyzéseim"
               title: "Legutóbbi téma tevékenységem"
               title_drafts: "Nem közzétett piszkozataim"
             review:
               content: "Áttekintés"
-              title: "áttekintés"
+              title: "Megjelölt bejegyzések és egyéb sorban álló elemek"
               pending_count: "%{count} függőben"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
       description: "Az üdvözlő téma az első dolog, amit az új tagok elolvasnak. Gondoljon rá úgy, mint egy \"lendületbe hozó beszéd\"-re vagy \"küldetésnyilatkozat\"-ra. Tudassa mindenkivel, kiknek szól ez a közösség, mire számíthatnak itt, és mit szeretne, mit csináljanak először."
       button_title: "Szerkesztés megkezdése"
     until: "Eddig:"
+    char_counter:
+      exceeded: "Túllépte a megengedett maximális karakterszámot."
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:
@@ -3700,11 +3751,11 @@ hu:
           title: "\U0001F381 Új funkciók"
           dismiss: "Elvetés"
           learn_more: "Tudjon meg többet"
-        last_checked: "Utoljára ellenőrizve: "
+        last_checked: "Utoljára ellenőrizve:"
         refresh_problems: "Újratöltés"
         no_problems: "Nem találtunk semmilyen problémát."
         moderators: "Moderátorok: "
-        admins: "Adminok: "
+        admins: "Adminisztrátorok:"
         silenced: "Hangtalan:"
         suspended: "Felfüggesztettek: "
         private_messages_short: "Üzenetek"
@@ -3723,8 +3774,8 @@ hu:
         page_views_short: "Oldalmegtekintések"
         show_traffic_report: "Részletes forgalom jelentés megtekintése"
         community_health: Szociális egészség
-        moderators_activity: Moderátok aktivitása
-        whats_new_in_discourse: Mi az új a Discourseban?
+        moderators_activity: Moderátorok tevékenysége
+        whats_new_in_discourse: Mik a Discourse újdonságai?
         activity_metrics: Aktivitás metrika
         all_reports: "Összes bejelentés"
         general_tab: "Általános"
@@ -3799,11 +3850,13 @@ hu:
             members_visibility_levels:
               title: "Ki láthatja ennek a csoportnak a tagjait?"
           membership:
-            automatic: Autómatikus
+            automatic: Automatikus
             trust_levels_title: "Új tagok hozzáadásakor automatikusan kapott Bizalmi szint: "
             trust_levels_none: "Egyik sem"
             automatic_membership_associated_groups: "Azok a felhasználók, akik egy itt felsorolt szolgáltatás csoportjának tagjai, automatikusan hozzáadódnak ehhez a csoporthoz, amikor bejelentkeznek a szolgáltatásba."
             primary_group: "Automatikusan beállítva elsődleges csoportnak"
+          alert:
+            primary_group: "Mivel ez egy elsődleges csoport, a(z) '%{group_name}' nevet fogja használni a CSS osztályokban, amelyeket bárki megtekinthet."
         name_placeholder: "Csoport neve szóközök nélkül, a felhasználónév szabályaival"
         primary: "Elsődleges csoport"
         no_primary: "(nincs elsődleges csoport)"
@@ -3812,7 +3865,8 @@ hu:
         refresh: "Frissítés"
         group_members: "A csoport tagjai"
         delete: "Törlés"
-        delete_confirm: "Biztos, hogy törölni szeretné ezt a csoportot?"
+        delete_confirm: "Biztos, hogy törölni szeretné a(z) %{group} csoportot?"
+        delete_warning: "A törölt csoportok nem állíthatók vissza"
         delete_failed: "A csoport törlése sikertelen. Ha ez egy automatikusan létrehozott csoport, akkor nem törölhető."
         delete_automatic_group: Ez egy automatikus csoport, nem törölhető.
         delete_owner_confirm: "Eltávolítja „%{username}” tulajdonosi jogosultságát?"
@@ -3868,10 +3922,14 @@ hu:
             topics:
               read: Olvasson el egy témát vagy egy adott hozzászólást. Az RSS is támogatva van.
               write: Hozzon létre új témát, vagy írjon egy meglévő témához.
-              update: Téma frissítése. A cím, kategória, címkék stb. módosítása.
+              update: Téma frissítése. Módosíthatja a címet, kategóriát, címkéket, státuszt, archetípust, featured_linket stb.
+              delete: Téma törlése.
               read_lists: Témalisták olvasása, mint a top, új, legújabb, stb. Az RSS is támogatva van.
             posts:
               edit: Bármelyik hozzászólás vagy egy adott hozzászólás szerkesztése.
+              delete: Hozzászólás törlése.
+            tags:
+              list: Címkék listázása.
             categories:
               list: A kategóriák listájának lekérdezése.
               show: Egyetlen kategória kinyerése az azonosító alapján.
@@ -3895,6 +3953,11 @@ hu:
               list_user_badges: A felhasználó jelvényeinek felsorolása.
               assign_badge_to_user: Jelvény kiosztása egy felhasználónak.
               revoke_badge_from_user: Jelvény elvétele egy felhasználótól.
+            groups:
+              manage_groups: Csoporttagok listázása, hozzáadása és eltávolítása.
+              administer_groups: Csoportok listázása, megjelenítése, létrehozása, frissítése és törlése.
+            search:
+              query: Keresés a `/search/query?term=term` végpont használatával.
       web_hooks:
         title: "Webhooks"
         create: "Létrehoz"
@@ -3934,6 +3997,9 @@ hu:
         reviewable_event:
           name: "Áttekinthető esemény"
           details: "Ha egy új elem készen áll a felülvizsgálatra és állapota frissül."
+        user_badge_event:
+          name: "Jelvény esemény"
+          details: "A jelvény megadásakor vagy visszavonásakor."
         delivery_status:
           title: "Kiszállítás állapota"
           inactive: "Inaktív"
@@ -3954,18 +4020,18 @@ hu:
           completion: "Elvégzési idő"
           actions: "Műveletek"
       plugins:
-        title: "Pluginok"
-        installed: "Telepített pluginek"
+        title: "Bővítmények"
+        installed: "Telepített bővítmények"
         name: "Név"
         none_installed: "Egy plugin sincs telepítve."
         version: "Verzió"
         enabled: "Engedélyezed?"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "Beállítások változtatása"
+        change_settings: "Beépülő modul beállításai"
         change_settings_short: "Beállítások"
         howto: "Hogyan lehet plugin-eket telepíteni?"
-        official: "Hivatalos plugin"
+        official: "Hivatalos bővítmény"
       navigation_menu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"
@@ -4042,7 +4108,6 @@ hu:
         button_title: "Meghívók küldése"
       customize:
         title: "Személyre szabás"
-        long_title: "Oldal testreszabása"
         preview: "előnézet"
         explain_preview: "Az oldal megtekintése ezzel a témával"
         save: "Mentés"
@@ -4227,6 +4292,8 @@ hu:
           love:
             name: "szerelem"
             description: "A kedvelés gomb színe."
+          selected:
+            name: "kiválasztott"
         email_style:
           title: "E-mail stílus"
           heading: "E-mail stílus testreszabása"
@@ -4335,6 +4402,7 @@ hu:
           no_previous: "Nincsen előzőleges érték"
           deleted: "Nincs új érték. A feljegyzés törölve lett"
           actions:
+            permanently_delete_post_revisions: "véglegesen törölni a hozzászólás módosításait"
             delete_user: "felhasználó törlése"
             change_trust_level: "bizalmi szint megváltoztatása"
             change_username: "Felhasználónév módosítása"
@@ -4412,6 +4480,9 @@ hu:
             delete_group: "csoport törlése"
             watched_word_create: "figyelt szó hozzáadása"
             watched_word_destroy: "figyelt szó törlése"
+            create_public_sidebar_section: "nyilvános oldalsáv szakasz létrehozása"
+            update_public_sidebar_section: "frissítse a nyilvános oldalsáv szakaszt"
+            destroy_public_sidebar_section: "semmisítse meg a nyilvános oldalsáv szakaszt"
         screened_emails:
           title: "Szűrt e-mailek"
           email: "E-mail cím"
@@ -4452,10 +4523,9 @@ hu:
           censor: "Cenzúra"
           require_approval: "Jóváhagyást igényel"
           flag: "Jelölés"
+          replace: "Csere"
           silence: "Elnémítás"
           link: "Hivatkozás"
-        action_descriptions:
-          flag: "Az ezen szavakat tartalmazó bejegyzések engedélyezése, de ide nem illőnek jelölése, hogy a moderátorok átnézhessék azokat."
         form:
           placeholder_regexp: "reguláris kifejezés"
           replace_placeholder: "példa"
@@ -4468,6 +4538,68 @@ hu:
         test:
           button_label: "Teszt"
           no_matches: "Nem található egyezés"
+      form_templates:
+        nav_title: "Sablonok"
+        new_template: "Új sablon"
+        list_table:
+          headings:
+            name: "Név"
+            actions: "Műveletek"
+          actions:
+            view: "Sablon megtekintése"
+            edit: "Sablon szerkesztése"
+            delete: "Sablon törlése"
+        view_template:
+          close: "Lezárás"
+          edit: "Szerkesztés"
+          delete: "Törlés"
+          toggle_preview: "Előnézet átkapcsolása"
+        new_template_form:
+          submit: "Mentés"
+          cancel: "Mégse"
+          name:
+            label: "Sablon neve"
+            placeholder: "Adja meg a sablon nevét..."
+          template:
+            label: "Sablon"
+            placeholder: "Hozzon létre egy YAML-sablont itt..."
+          preview: "Előnézet"
+        delete_confirm: "Biztosan törölni szeretné ezt a sablont?"
+        quick_insert_fields:
+          add_new_field: "Hozzáad"
+          checkbox: "Jelölőnégyzet"
+          input: "Rövid válasz"
+          textarea: "Hosszú válasz"
+          dropdown: "Legördülő menü"
+          upload: "Fájl feltöltése"
+          multiselect: "Több választási lehetőség"
+        validations_modal:
+          button_title: "Érvényesítések"
+          modal_title: "Érvényesítési lehetőségek"
+          table_headers:
+            key: "Kulcs"
+            type: "Típus"
+            description: "Leírás"
+          validations:
+            required:
+              key: "kötelező"
+              type: "logikai érték"
+              description: "Az űrlap elküldéséhez a mező kitöltése szükséges."
+            minimum:
+              key: "legalább"
+              type: "egész szám"
+              description: "Szöveges mezőkben megadja a minimálisan megengedett karakterek számát."
+            maximum:
+              key: "legfeljebb"
+              description: "Szöveges mezőkben megadja a megengedett maximális karakterek számát. A többszörös kiválasztású legördülő menüpontokban megadja a kiválasztható lehetőségek maximális számát."
+            pattern:
+              key: "minta"
+              type: "regex karakterlánc"
+        edit_category:
+          toggle_freeform: "űrlap sablon letiltva"
+          toggle_form_template: "űrlap sablon engedélyezve"
+          select_template: "Űrlapsablonok kiválasztása"
+          select_template_help: "Űrlapsablonok hozzáadása/szerkesztése"
       impersonate:
         title: "Megszemélyesít"
         not_found: "A felhasználó nem található."
@@ -4478,6 +4610,7 @@ hu:
         not_found: "Sajnos ez a felhasználónév nem létezik."
         id_not_found: "Sajnos ez a felhasználó id nem található a rendszerben."
         active: "Aktíválva"
+        status: "Állapot"
         show_emails: "E-mailek megjelenítése"
         hide_emails: "E-mailek elrejtése"
         nav:
@@ -4510,6 +4643,7 @@ hu:
           text: "Megjelenítés"
       user:
         suspend_failed: "Hiba történt %{error} felhasználó felfüggesztésekor"
+        suspend_duration: "Felhasználó felfüggesztése a következő időpontig:"
         suspend_reason_label: "Miért függeszti fel? Ez a <b>szöveg mindenki számára látható lesz</b> a felhasználó profiloldalán, és megjelenik a felhasználó számára is, ha megpróbál bejelentkezni. Fogalmazzon röviden."
         suspend_reason: "Ok"
         suspend_reason_title: "Felfüggesztés oka"
@@ -4530,7 +4664,9 @@ hu:
         silence_message: "E-mail üzenet"
         silence_message_placeholder: "(Hagyd üresen hogy az alapértelmezett üzenetet küldje el)"
         suspended_until: "(eddig: %{until})"
+        suspend_forever: "Örökre felfüggeszteni"
         cant_suspend: "Ez a felhasználó nem lett felfüggesztve"
+        cant_silence: "Ezt a felhasználót nem lehet elhallgattatni."
         delete_posts_failed: "Probléma volt a hozzászólások törlésével."
         penalty_post_actions: "Mit szeretnél csinálni ezzel az összekapcsolt bejegyzéssel?"
         penalty_post_delete: "Bejegyzés eltávolítása"
@@ -4548,7 +4684,6 @@ hu:
         staged: "Lépcsőzetes?"
         show_admin_profile: "Adminisztrátor"
         show_public_profile: "Publikus profil megjelenítése"
-        impersonate: "Megszemélyesít"
         ip_lookup: "IP-cím keresés"
         log_out: "Kijelentkezés"
         revoke_admin: "Admin jog visszavonása"
@@ -4652,6 +4787,7 @@ hu:
         field_types:
           text: "Szöveges mező"
           confirm: "Megerősítés"
+          dropdown: "Legördülő menü"
       site_text:
         search: "A szerkesztendő szöveg keresése"
         title: "Szöveg"
@@ -4711,7 +4847,9 @@ hu:
           dashboard: "Vezérlőpult"
           navigation: "Navigáció"
         default_categories:
+          modal_description: "Szeretné visszamenőleg alkalmazni ezt a változtatást? Ez %{count} felhasználó beállítását fogja módosítani."
           modal_yes: "Igen"
+          modal_no: "Nem, csak mostantól alkalmazza a változtatást"
       badges:
         title: Jelvények
         new_badge: Új jelvény
@@ -4740,7 +4878,8 @@ hu:
         none_selected: "A kezdéshez válasszon egy jelvényt"
         allow_title: Jelvény címként való használatának engedélyezése
         listable: Jelvény megjelenítése a nyilvános jelvények oldalon
-        enabled: Jelvény engedélyezése
+        enabled: engedélyezve
+        disabled: kikapcsolva
         icon: Ikon
         image: Kép
         select_an_icon: "Válasszon ikont"
@@ -4812,6 +4951,7 @@ hu:
         action:
           label: "Szöveg cseréje…"
         modal:
+          title: "Szöveg cseréje"
           categories: "Kategóriák"
           topics: "Témák"
           replace: "Csere"
@@ -4822,7 +4962,6 @@ hu:
       next: "Tovább"
       step-text: "Lépés"
       step: "%{current} / %{total}"
-      upload: "Feltöltés"
       uploading: "Feltöltés…"
       upload_error: "Sajnáljuk, de hiba lépett fel a fájl feltöltése során. Próbálja újra."
       staff_count:

@@ -10,6 +10,6 @@ class CreateEmailLogs < ActiveRecord::Migration[4.2]
     end
 
     add_index :email_logs, :created_at, order: { created_at: :desc }
-    add_index :email_logs, [:user_id, :created_at], order: { created_at: :desc }
+    add_index :email_logs, %i[user_id created_at], order: { created_at: :desc }
   end
 end

@@ -2,14 +2,22 @@
 
 <div class="control-group chat-setting">
   <label class="controls">
-    <Input id="user_chat_enabled" @type="checkbox" @checked={{this.model.user_option.chat_enabled}} />
+    <Input
+      id="user_chat_enabled"
+      @type="checkbox"
+      @checked={{this.model.user_option.chat_enabled}}
+    />
     {{i18n "chat.enable"}}
   </label>
 </div>
 
 <div class="control-group chat-setting">
   <label class="controls">
-    <Input id="user_chat_only_push_notifications" @type="checkbox" @checked={{this.model.user_option.only_chat_push_notifications}} />
+    <Input
+      id="user_chat_only_push_notifications"
+      @type="checkbox"
+      @checked={{this.model.user_option.only_chat_push_notifications}}
+    />
     {{i18n "chat.only_chat_push_notifications.title"}}
   </label>
   <span class="control-instructions">
@@ -19,7 +27,11 @@
 
 <div class="control-group chat-setting">
   <label class="controls">
-    <Input id="user_chat_ignore_channel_wide_mention" @type="checkbox" @checked={{this.model.user_option.ignore_channel_wide_mention}} />
+    <Input
+      id="user_chat_ignore_channel_wide_mention"
+      @type="checkbox"
+      @checked={{this.model.user_option.ignore_channel_wide_mention}}
+    />
     {{i18n "chat.ignore_channel_wide_mention.title"}}
   </label>
   <span class="control-instructions">
@@ -29,14 +41,27 @@
 
 <div class="control-group chat-setting controls-dropdown">
   <label for="user_chat_sounds">{{i18n "chat.sound.title"}}</label>
-  <ComboBox @options={{hash none="chat.sounds.none"}} @valueProperty="value" @content={{this.chatSounds}} @value={{this.model.user_option.chat_sound}} @id="user_chat_sounds" @onChange={{action "onChangeChatSound"}} />
+  <ComboBox
+    @options={{hash none="chat.sounds.none"}}
+    @valueProperty="value"
+    @content={{this.chatSounds}}
+    @value={{this.model.user_option.chat_sound}}
+    @id="user_chat_sounds"
+    @onChange={{action "onChangeChatSound"}}
+  />
 </div>
 
 <div class="control-group chat-setting controls-dropdown">
   <label for="user_chat_email_frequency">
     {{i18n "chat.email_frequency.title"}}
   </label>
-  <ComboBox @valueProperty="value" @content={{this.emailFrequencyOptions}} @value={{this.model.user_option.chat_email_frequency}} @id="user_chat_email_frequency" @onChange={{action (mut this.model.user_option.chat_email_frequency)}} />
+  <ComboBox
+    @valueProperty="value"
+    @content={{this.emailFrequencyOptions}}
+    @value={{this.model.user_option.chat_email_frequency}}
+    @id="user_chat_email_frequency"
+    @onChange={{action (mut this.model.user_option.chat_email_frequency)}}
+  />
   {{#if (eq this.model.user_option.chat_email_frequency "when_away")}}
     <div class="control-instructions">
       {{i18n "chat.email_frequency.description"}}
@@ -44,4 +69,24 @@
   {{/if}}
 </div>
 
-<SaveControls @id="user_chat_preference_save" @model={{this.model}} @action={{action "save"}} @saved={{this.saved}} />
+<div class="control-group chat-setting controls-dropdown">
+  <label for="user_chat_header_indicator_preference">
+    {{i18n "chat.header_indicator_preference.title"}}
+  </label>
+  <ComboBox
+    @valueProperty="value"
+    @content={{this.headerIndicatorOptions}}
+    @value={{this.model.user_option.chat_header_indicator_preference}}
+    @id="user_chat_header_indicator_preference"
+    @onChange={{action
+      (mut this.model.user_option.chat_header_indicator_preference)
+    }}
+  />
+</div>
+
+<SaveControls
+  @id="user_chat_preference_save"
+  @model={{this.model}}
+  @action={{action "save"}}
+  @saved={{this.saved}}
+/>

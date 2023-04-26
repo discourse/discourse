@@ -21,14 +21,13 @@ ca:
       joined: "registrat"
       email_frequency:
         never: "Mai"
+      header_indicator_preference:
+        never: "Mai"
       flag: "Bandera"
       join: "Registre"
+      last_visit: "darrera visita"
       mention_warning:
         dismiss: "descarta-ho"
-        groups:
-          users_limit:
-            one: "%{count} usuari"
-            other: "%{count} usuaris"
       reply: "Respon"
       edit: "Edita"
       rebake_message: "Refés HTML"
@@ -50,6 +49,7 @@ ca:
         yesterday: Ahir
       about_view:
         title: Títol
+        name: Nom
         description: Descripció
       channel_info:
         back_to_channel: "Enrere"
@@ -68,6 +68,7 @@ ca:
       composer:
         italic_text: "text en cursiva"
         bold_text: "text en negreta"
+        send: "Envia"
       notification_levels:
         never: "Mai"
       settings:
@@ -104,6 +105,10 @@ ca:
         activities: "Activitats"
         flags: "Banderes"
         symbols: "Símbols"
+      thread:
+        replies:
+          one: "%{count} resposta"
+          other: "%{count} respostes"
       draft_channel_screen:
         header: "Missatge nou"
         cancel: "Cancel·la"
@@ -115,7 +120,3 @@ ca:
           fields:
             message:
               label: Missatge
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Marcat amb bandera per"

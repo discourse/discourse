@@ -33,14 +33,18 @@ export default Component.extend({
 
     if (usernames.length < 4) {
       const lastUsername = usernames.pop();
-      const commaSeparatedUsernames = usernames.join(", ");
+      const commaSeparatedUsernames = usernames.join(
+        I18n.t("word_connector.comma")
+      );
       return I18n.t("chat.replying_indicator.multiple_users", {
         commaSeparatedUsernames,
         lastUsername,
       });
     }
 
-    const commaSeparatedUsernames = usernames.slice(0, 2).join(", ");
+    const commaSeparatedUsernames = usernames
+      .slice(0, 2)
+      .join(I18n.t("word_connector.comma"));
     return I18n.t("chat.replying_indicator.many_users", {
       commaSeparatedUsernames,
       count: usernames.length - 2,

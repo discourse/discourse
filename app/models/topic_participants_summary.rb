@@ -18,7 +18,7 @@ class TopicParticipantsSummary
   def new_topic_poster_for(user)
     TopicPoster.new.tap do |topic_poster|
       topic_poster.user = user
-      topic_poster.extras = 'latest' if is_latest_poster?(user)
+      topic_poster.extras = "latest" if is_latest_poster?(user)
     end
   end
 

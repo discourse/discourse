@@ -20,14 +20,13 @@ et:
       joined: "liitus"
       email_frequency:
         never: "Mitte kunagi"
+      header_indicator_preference:
+        never: "Mitte kunagi"
       flag: "Tähis"
       join: "Liitu"
+      last_visit: "viimane visiit"
       mention_warning:
         dismiss: "ignoreeri"
-        groups:
-          users_limit:
-            one: "%{count} kasutaja"
-            other: "%{count} kasutajat"
       reply: "Vasta"
       edit: "Muuda"
       rebake_message: "Rekonstrueeri HTML"
@@ -48,6 +47,7 @@ et:
         yesterday: Eile
       about_view:
         title: Pealkiri
+        name: Nimi
         description: Kirjeldus
       channel_info:
         back_to_channel: "Tagasi"
@@ -66,6 +66,7 @@ et:
       composer:
         italic_text: "esiletõstetud tekst"
         bold_text: "rasvane tekst"
+        send: "Saada"
       notification_levels:
         never: "Mitte kunagi"
       settings:
@@ -100,6 +101,10 @@ et:
       emoji_picker:
         objects: "Objektid"
         flags: "Tähised"
+      thread:
+        replies:
+          one: "%{count} vastus"
+          other: "%{count} vastust"
       draft_channel_screen:
         header: "Uus sõnum"
         cancel: "Tühista"

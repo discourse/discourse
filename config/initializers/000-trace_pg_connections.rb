@@ -15,31 +15,32 @@
 # Warning: this could create some very large files!
 
 if ENV["TRACE_PG_CONNECTIONS"]
-  PG::Connection.prepend(Module.new do
-    TRACE_DIR = "tmp/pgtrace"
+  PG::Connection.prepend(
+    Module.new do
+      TRACE_DIR = "tmp/pgtrace"
 
-    def initialize(*args)
-      super(*args).tap do
-        next if ENV["TRACE_PG_CONNECTIONS"] == "SIDEKIQ" && !Sidekiq.server?
-        FileUtils.mkdir_p(TRACE_DIR)
-        @trace_filename = "#{TRACE_DIR}/#{Process.pid}_#{self.object_id}.txt"
-        trace File.new(@trace_filename, "w")
+      def initialize(*args)
+        super(*args).tap do
+          next if ENV["TRACE_PG_CONNECTIONS"] == "SIDEKIQ" && !Sidekiq.server?
+          FileUtils.mkdir_p(TRACE_DIR)
+          @trace_filename = "#{TRACE_DIR}/#{Process.pid}_#{self.object_id}.txt"
+          trace File.new(@trace_filename, "w")
+        end
+        @access_log_mutex = Mutex.new
+        @accessor_thread = nil
       end
-      @access_log_mutex = Mutex.new
-      @accessor_thread = nil
-    end
 
-    def close
-      super.tap do
-        next if ENV["TRACE_PG_CONNECTIONS"] == "SIDEKIQ" && !Sidekiq.server?
-        File.delete(@trace_filename)
+      def close
+        super.tap do
+          next if ENV["TRACE_PG_CONNECTIONS"] == "SIDEKIQ" && !Sidekiq.server?
+          File.delete(@trace_filename)
+        end
       end
-    end
 
-    def log_access(&blk)
-      @access_log_mutex.synchronize do
-        if !@accessor_thread.nil?
-          Rails.logger.error <<~TEXT
+      def log_access(&blk)
+        @access_log_mutex.synchronize do
+          if !@accessor_thread.nil?
+            Rails.logger.error <<~TEXT
             PG Clash: A connection is being accessed from two locations
 
             #{@accessor_thread} was using the connection. Backtrace:
@@ -51,37 +52,38 @@ if ENV["TRACE_PG_CONNECTIONS"]
             #{Thread.current&.backtrace&.join("\n")}
           TEXT
 
-          if ENV["ON_PG_CLASH"] == "byebug"
-            require "byebug"
-            byebug # rubocop:disable Lint/Debugger
+            if ENV["ON_PG_CLASH"] == "byebug"
+              require "byebug"
+              byebug # rubocop:disable Lint/Debugger
+            end
           end
+          @accessor_thread = Thread.current
         end
-        @accessor_thread = Thread.current
+        yield
+      ensure
+        @access_log_mutex.synchronize { @accessor_thread = nil }
       end
-      yield
-    ensure
-      @access_log_mutex.synchronize do
-        @accessor_thread = nil
-      end
-    end
-
-  end)
+    end,
+  )
 
   class PG::Connection
-    LOG_ACCESS_METHODS = [:exec, :sync_exec, :async_exec,
-                          :sync_exec_params, :async_exec_params,
-                          :sync_prepare, :async_prepare,
-                          :sync_exec_prepared, :async_exec_prepared,
-                        ]
+    LOG_ACCESS_METHODS = %i[
+      exec
+      sync_exec
+      async_exec
+      sync_exec_params
+      async_exec_params
+      sync_prepare
+      async_prepare
+      sync_exec_prepared
+      async_exec_prepared
+    ]
 
     LOG_ACCESS_METHODS.each do |method|
       new_method = "#{method}_without_logging".to_sym
       alias_method new_method, method
 
-      define_method(method) do |*args, &blk|
-        log_access { send(new_method, *args, &blk) }
-      end
+      define_method(method) { |*args, &blk| log_access { send(new_method, *args, &blk) } }
     end
   end
-
 end

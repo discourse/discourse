@@ -45,9 +45,6 @@ fr:
       trigger: "jet"
       invalid: |-
         Je regrette, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
-      not_enough_dice:
-        one: "Je n'ai que %{count} dé. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
-        other: "Je n'ai que %{count} dés. [Honteux](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
       out_of_range: |-
         Saviez-vous que [le nombre maximal de faces](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) d'un dé non truqué est de 120 ?
       results: |-
@@ -378,12 +375,22 @@ fr:
           Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple, avez-vous vu la catégorie %{category} ?
 
           Saisissez « # » au milieu d'une phrase et sélectionnez n'importe quelle catégorie ou étiquette.
+        instructions_experimental: |-
+          Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple, avez-vous vu la catégorie %{category} ?
+
+          Saisissez « # » dans une phrase et sélectionnez la catégorie ou l'étiquette de votre choix.
         not_found: |-
           Hum, je ne vois de catégorie nulle part. Notez que « # » ne peut pas être le premier caractère. Pouvez-vous copier ceci dans votre prochaine réponse ?
 
           « texte
           Je peux créer un lien de catégorie via #
           »
+        not_found_experimental: |-
+          Hum, je ne vois aucune catégorie ici. Pouvez-vous copier ceci dans votre prochaine réponse ?
+
+          ```text
+          Je peux créer un lien de catégorie via #
+          ```
         reply: |-
           Excellent ! Retenez que ceci fonctionne pour les catégories _et_ les étiquettes, si les étiquettes sont activées.
       change_topic_notification_level:
@@ -417,8 +424,8 @@ fr:
           Hé, bon sondage ! Comment s'est passée votre formation ?
 
           [poll]
-          :+1:
-          :-1:
+          * :+1:
+          * :-1:
           [/poll]
       details:
         instructions: |-

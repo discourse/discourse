@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 class RemoveSuppressFromLatestFromCategory < ActiveRecord::Migration[6.0]
-  DROPPED_COLUMNS ||= {
-    categories: %i{suppress_from_latest}
-  }
+  DROPPED_COLUMNS ||= { categories: %i[suppress_from_latest] }
 
   def up
     ids = DB.query_single("SELECT id::text FROM categories WHERE suppress_from_latest = TRUE")
 
     if ids.present?
-      muted_ids = DB.query_single("SELECT value from site_settings WHERE name = 'default_categories_muted'").first
+      muted_ids =
+        DB.query_single(
+          "SELECT value from site_settings WHERE name = 'default_categories_muted'",
+        ).first
       ids += muted_ids.split("|") if muted_ids.present?
       ids.uniq!
 
@@ -37,9 +38,7 @@ class RemoveSuppressFromLatestFromCategory < ActiveRecord::Migration[6.0]
       end
     end
 
-    DROPPED_COLUMNS.each do |table, columns|
-      Migration::ColumnDropper.execute_drop(table, columns)
-    end
+    DROPPED_COLUMNS.each { |table, columns| Migration::ColumnDropper.execute_drop(table, columns) }
   end
 
   def down

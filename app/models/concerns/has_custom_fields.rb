@@ -4,7 +4,6 @@ module HasCustomFields
   extend ActiveSupport::Concern
 
   module Helpers
-
     def self.append_field(target, key, value, types)
       if target.has_key?(key)
         target[key] = [target[key]] if !target[key].is_a? Array
@@ -14,18 +13,14 @@ module HasCustomFields
       end
     end
 
-    CUSTOM_FIELD_TRUE ||= ['1', 't', 'true', 'T', 'True', 'TRUE'].freeze
+    CUSTOM_FIELD_TRUE ||= %w[1 t true T True TRUE].freeze
 
     def self.get_custom_field_type(types, key)
       return unless types
 
-      sorted_types = types.keys.select { |k| k.end_with?("*") }
-        .sort_by(&:length)
-        .reverse
+      sorted_types = types.keys.select { |k| k.end_with?("*") }.sort_by(&:length).reverse
 
-      sorted_types.each do |t|
-        return types[t] if key =~ /^#{t}/i
-      end
+      sorted_types.each { |t| return types[t] if key =~ /\A#{t}/i }
 
       types[key]
     end
@@ -42,9 +37,12 @@ module HasCustomFields
 
       result =
         case type
-        when :boolean then !!CUSTOM_FIELD_TRUE.include?(value)
-        when :integer then value.to_i
-        when :json    then parse_json_value(value, key)
+        when :boolean
+          !!CUSTOM_FIELD_TRUE.include?(value)
+        when :integer
+          value.to_i
+        when :json
+          parse_json_value(value, key)
         else
           value
         end
@@ -55,7 +53,9 @@ module HasCustomFields
     def self.parse_json_value(value, key)
       ::JSON.parse(value)
     rescue JSON::ParserError
-      Rails.logger.warn("Value '#{value}' for custom field '#{key}' is not json, it is being ignored.")
+      Rails.logger.warn(
+        "Value '#{value}' for custom field '#{key}' is not json, it is being ignored.",
+      )
       {}
     end
   end
@@ -80,11 +80,13 @@ module HasCustomFields
 
       return result if allowed_fields.blank?
 
-      klass.where(foreign_key => ids, :name => allowed_fields)
-        .pluck(foreign_key, :name, :value).each do |cf|
-        result[cf[0]] ||= {}
-        append_custom_field(result[cf[0]], cf[1], cf[2])
-      end
+      klass
+        .where(foreign_key => ids, :name => allowed_fields)
+        .pluck(foreign_key, :name, :value)
+        .each do |cf|
+          result[cf[0]] ||= {}
+          append_custom_field(result[cf[0]], cf[1], cf[2])
+        end
 
       result
     end
@@ -108,9 +110,7 @@ module HasCustomFields
         map = {}
 
         empty = {}
-        fields.each do |field|
-          empty[field] = nil
-        end
+        fields.each { |field| empty[field] = nil }
 
         objects.each do |obj|
           map[obj.id] = obj
@@ -119,20 +119,18 @@ module HasCustomFields
 
         fk = (name.underscore << "_id")
 
-        "#{name}CustomField".constantize
+        "#{name}CustomField"
+          .constantize
           .where("#{fk} in (?)", map.keys)
           .where("name in (?)", fields)
-          .pluck(fk, :name, :value).each do |id, name, value|
+          .pluck(fk, :name, :value)
+          .each do |id, name, value|
+            preloaded = map[id].preloaded_custom_fields
 
-          preloaded = map[id].preloaded_custom_fields
-
-            if preloaded[name].nil?
-              preloaded.delete(name)
-            end
+            preloaded.delete(name) if preloaded[name].nil?
 
             HasCustomFields::Helpers.append_field(preloaded, name, value, @custom_field_types)
-        end
-
+          end
       end
     end
   end
@@ -160,7 +158,8 @@ module HasCustomFields
     @custom_fields_orig = nil
   end
 
-  class NotPreloadedError < StandardError; end
+  class NotPreloadedError < StandardError
+  end
   class PreloadedProxy
     def initialize(preloaded, klass_with_custom_fields)
       @preloaded = preloaded
@@ -172,7 +171,8 @@ module HasCustomFields
         @preloaded[key]
       else
         # for now you can not mix preload an non preload, it better just to fail
-        raise NotPreloadedError, "Attempted to access the non preloaded custom field '#{key}' on the '#{@klass_with_custom_fields}' class. This is disallowed to prevent N+1 queries."
+        raise NotPreloadedError,
+              "Attempted to access the non preloaded custom field '#{key}' on the '#{@klass_with_custom_fields}' class. This is disallowed to prevent N+1 queries."
       end
     end
   end
@@ -210,9 +210,7 @@ module HasCustomFields
   def upsert_custom_fields(fields)
     fields.each do |k, v|
       row_count = _custom_fields.where(name: k).update_all(value: v)
-      if row_count == 0
-        _custom_fields.create!(name: k, value: v)
-      end
+      _custom_fields.create!(name: k, value: v) if row_count == 0
 
       custom_fields[k.to_s] = v # We normalize custom_fields as strings
     end
@@ -281,8 +279,8 @@ module HasCustomFields
   # update the same custom field we should catch the error and perform an update instead.
   def create_singular(name, value, field_type = nil)
     write_value = value.is_a?(Hash) || field_type == :json ? value.to_json : value
-    write_value = 't' if write_value.is_a?(TrueClass)
-    write_value = 'f' if write_value.is_a?(FalseClass)
+    write_value = "t" if write_value.is_a?(TrueClass)
+    write_value = "f" if write_value.is_a?(FalseClass)
     row_count = DB.exec(<<~SQL, name: name, value: write_value, id: id, now: Time.zone.now)
       INSERT INTO #{_custom_fields.table_name} (#{custom_fields_fk}, name, value, created_at, updated_at)
       VALUES (:id, :name, :value, :now, :now)
@@ -291,15 +289,15 @@ module HasCustomFields
     _custom_fields.where(name: name).update_all(value: write_value) if row_count == 0
   end
 
-protected
+  protected
 
   def refresh_custom_fields_from_db
     target = HashWithIndifferentAccess.new
-    _custom_fields.order('id asc').pluck(:name, :value).each do |key, value|
-      self.class.append_custom_field(target, key, value)
-    end
+    _custom_fields
+      .order("id asc")
+      .pluck(:name, :value)
+      .each { |key, value| self.class.append_custom_field(target, key, value) }
     @custom_fields_orig = target
     @custom_fields = @custom_fields_orig.deep_dup
   end
-
 end

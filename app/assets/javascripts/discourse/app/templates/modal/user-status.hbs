@@ -21,17 +21,23 @@
         @customLabels={{this.customTimeShortcutLabels}}
         @prefilledDatetime={{this.prefilledDateTime}}
         @onTimeSelected={{action "onTimeSelected"}}
-        @_itsatrap={{this._itsatrap}} />
+        @_itsatrap={{this._itsatrap}}
+      />
     </div>
     <div class="modal-footer control-group">
       <DButton
         @label="user_status.save"
         @class="btn-primary"
         @disabled={{not this.statusIsSet}}
-        @action={{action "saveAndClose"}} />
+        @action={{action "saveAndClose"}}
+      />
       <DModalCancel @close={{action "closeModal"}} />
       {{#if this.showDeleteButton}}
-        <DButton @icon="trash-alt" @class="delete-status btn-danger" @action={{action "delete"}} />
+        <DButton
+          @icon="trash-alt"
+          @class="delete-status btn-danger"
+          @action={{action "delete"}}
+        />
       {{/if}}
     </div>
   </ConditionalLoadingSpinner>

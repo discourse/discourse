@@ -41,18 +41,24 @@ class BookmarkManager
   #                                      automatically.
   def create_for(bookmarkable_id:, bookmarkable_type:, name: nil, reminder_at: nil, options: {})
     registered_bookmarkable = Bookmark.registered_bookmarkable_from_type(bookmarkable_type)
+
+    if registered_bookmarkable.blank?
+      return add_error(I18n.t("bookmarks.errors.invalid_bookmarkable", type: bookmarkable_type))
+    end
+
     bookmarkable = registered_bookmarkable.model.find_by(id: bookmarkable_id)
     registered_bookmarkable.validate_before_create(@guardian, bookmarkable)
 
-    bookmark = Bookmark.create(
-      {
-        user_id: @user.id,
-        bookmarkable: bookmarkable,
-        name: name,
-        reminder_at: reminder_at,
-        reminder_set_at: Time.zone.now
-      }.merge(bookmark_model_options_with_defaults(options))
-    )
+    bookmark =
+      Bookmark.create(
+        {
+          user_id: @user.id,
+          bookmarkable: bookmarkable,
+          name: name,
+          reminder_at: reminder_at,
+          reminder_set_at: Time.zone.now,
+        }.merge(bookmark_model_options_with_defaults(options)),
+      )
 
     return add_errors_from(bookmark) if bookmark.errors.any?
 
@@ -97,16 +103,14 @@ class BookmarkManager
       bookmark.reminder_last_sent_at = nil
     end
 
-    success = bookmark.update(
-      {
-        name: name,
-        reminder_set_at: Time.zone.now,
-      }.merge(bookmark_model_options_with_defaults(options))
-    )
+    success =
+      bookmark.update(
+        { name: name, reminder_set_at: Time.zone.now }.merge(
+          bookmark_model_options_with_defaults(options),
+        ),
+      )
 
-    if bookmark.errors.any?
-      return add_errors_from(bookmark)
-    end
+    return add_errors_from(bookmark) if bookmark.errors.any?
 
     success
   end
@@ -116,9 +120,7 @@ class BookmarkManager
     bookmark.pinned = !bookmark.pinned
     success = bookmark.save
 
-    if bookmark.errors.any?
-      return add_errors_from(bookmark)
-    end
+    return add_errors_from(bookmark) if bookmark.errors.any?
 
     success
   end
@@ -136,20 +138,30 @@ class BookmarkManager
     # PostCreator can specify whether auto_track is enabled or not, don't want to
     # create a TopicUser in that case
     return if opts.key?(:auto_track) && !opts[:auto_track]
-    TopicUser.change(@user.id, topic, bookmarked: Bookmark.for_user_in_topic(@user.id, topic.id).exists?)
+    TopicUser.change(
+      @user.id,
+      topic,
+      bookmarked: Bookmark.for_user_in_topic(@user.id, topic.id).exists?,
+    )
   end
 
   def bookmark_model_options_with_defaults(options)
-    model_options = {
-      pinned: options[:pinned]
-    }
+    model_options = { pinned: options[:pinned] }
 
     if options[:auto_delete_preference].blank?
-      model_options[:auto_delete_preference] = Bookmark.auto_delete_preferences[:never]
+      model_options[:auto_delete_preference] = if user_auto_delete_preference.present?
+        user_auto_delete_preference
+      else
+        Bookmark.auto_delete_preferences[:clear_reminder]
+      end
     else
       model_options[:auto_delete_preference] = options[:auto_delete_preference]
     end
 
     model_options
+  end
+
+  def user_auto_delete_preference
+    @guardian.user.user_option&.bookmark_auto_delete_preference
   end
 end

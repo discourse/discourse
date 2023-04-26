@@ -1,35 +1,31 @@
 # frozen_string_literal: true
 
 class UsersEmailController < ApplicationController
+  requires_login only: %i[index update]
 
-  requires_login only: [:index, :update]
+  skip_before_action :check_xhr,
+                     only: %i[
+                       confirm_old_email
+                       show_confirm_old_email
+                       confirm_new_email
+                       show_confirm_new_email
+                     ]
 
-  skip_before_action :check_xhr, only: [
-    :confirm_old_email,
-    :show_confirm_old_email,
-    :confirm_new_email,
-    :show_confirm_new_email
-  ]
+  skip_before_action :redirect_to_login_if_required,
+                     only: %i[
+                       confirm_old_email
+                       show_confirm_old_email
+                       confirm_new_email
+                       show_confirm_new_email
+                     ]
 
-  skip_before_action :redirect_to_login_if_required, only: [
-    :confirm_old_email,
-    :show_confirm_old_email,
-    :confirm_new_email,
-    :show_confirm_new_email
-  ]
-
-  before_action :require_login, only: [
-    :confirm_old_email,
-    :show_confirm_old_email
-  ]
+  before_action :require_login, only: %i[confirm_old_email show_confirm_old_email]
 
   def index
   end
 
   def create
-    if !SiteSetting.enable_secondary_emails
-      return render json: failed_json, status: 410
-    end
+    return render json: failed_json, status: 410 if !SiteSetting.enable_secondary_emails
 
     params.require(:email)
     user = fetch_user_from_params
@@ -40,9 +36,7 @@ class UsersEmailController < ApplicationController
     updater = EmailUpdater.new(guardian: guardian, user: user)
     updater.change_to(params[:email], add: true)
 
-    if updater.errors.present?
-      return render_json_error(updater.errors.full_messages)
-    end
+    return render_json_error(updater.errors.full_messages) if updater.errors.present?
 
     render body: nil
   rescue RateLimiter::LimitExceeded
@@ -59,9 +53,7 @@ class UsersEmailController < ApplicationController
     updater = EmailUpdater.new(guardian: guardian, user: user)
     updater.change_to(params[:email])
 
-    if updater.errors.present?
-      return render_json_error(updater.errors.full_messages)
-    end
+    return render_json_error(updater.errors.full_messages) if updater.errors.present?
 
     render body: nil
   rescue RateLimiter::LimitExceeded
@@ -119,9 +111,7 @@ class UsersEmailController < ApplicationController
   def show_confirm_new_email
     load_change_request(:new)
 
-    if params[:done].to_s == "true"
-      @done = true
-    end
+    @done = true if params[:done].to_s == "true"
 
     if @change_request&.change_state != EmailChangeRequest.states[:authorizing_new]
       @error = I18n.t("change_email.already_done")
@@ -135,21 +125,20 @@ class UsersEmailController < ApplicationController
       if params[:show_backup].to_s == "true" && @backup_codes_enabled
         @show_backup_codes = true
       else
-        if @user.totp_enabled?
-          @show_second_factor = true
-        end
+        @show_second_factor = true if @user.totp_enabled?
         if @user.security_keys_enabled?
           Webauthn.stage_challenge(@user, secure_session)
           @show_security_key = params[:show_totp].to_s == "true" ? false : true
           @security_key_challenge = Webauthn.challenge(@user, secure_session)
-          @security_key_allowed_credential_ids = Webauthn.allowed_credentials(@user, secure_session)[:allowed_credential_ids]
+          @security_key_allowed_credential_ids =
+            Webauthn.allowed_credentials(@user, secure_session)[:allowed_credential_ids]
         end
       end
 
       @to_email = @change_request.new_email
     end
 
-    render layout: 'no_ember'
+    render layout: "no_ember"
   end
 
   def confirm_old_email
@@ -183,16 +172,14 @@ class UsersEmailController < ApplicationController
       @error = I18n.t("change_email.already_done")
     end
 
-    if params[:done].to_s == "true"
-      @almost_done = true
-    end
+    @almost_done = true if params[:done].to_s == "true"
 
     if !@error
       @from_email = @user.email
       @to_email = @change_request.new_email
     end
 
-    render layout: 'no_ember'
+    render layout: "no_ember"
   end
 
   private
@@ -204,27 +191,24 @@ class UsersEmailController < ApplicationController
 
     if token
       if type == :old
-        @change_request = token.user&.email_change_requests.where(old_email_token_id: token.id).first
+        @change_request =
+          token.user&.email_change_requests.where(old_email_token_id: token.id).first
       elsif type == :new
-        @change_request = token.user&.email_change_requests.where(new_email_token_id: token.id).first
+        @change_request =
+          token.user&.email_change_requests.where(new_email_token_id: token.id).first
       end
     end
 
     @user = token&.user
 
-    if (!@user || !@change_request)
-      @error = I18n.t("change_email.already_done")
-    end
+    @error = I18n.t("change_email.already_done") if (!@user || !@change_request)
 
     if current_user && current_user.id != @user&.id
-      @error = I18n.t 'change_email.wrong_account_error'
+      @error = I18n.t "change_email.wrong_account_error"
     end
   end
 
   def require_login
-    if !current_user
-      redirect_to_login
-    end
+    redirect_to_login if !current_user
   end
-
 end

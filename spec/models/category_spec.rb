@@ -7,12 +7,18 @@ RSpec.describe Category do
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :name }
 
-  it 'validates uniqueness of name' do
+  it do
+    is_expected.to validate_numericality_of(:default_slow_mode_seconds).is_greater_than(
+      0,
+    ).only_integer
+  end
+
+  it "validates uniqueness of name" do
     Fabricate(:category_with_definition)
     is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id).case_insensitive
   end
 
-  it 'validates inclusion of search_priority' do
+  it "validates inclusion of search_priority" do
     category = Fabricate.build(:category, user: user)
 
     expect(category.valid?).to eq(true)
@@ -23,20 +29,29 @@ RSpec.describe Category do
     expect(category.errors.to_hash.keys).to contain_exactly(:search_priority)
   end
 
-  it 'validates uniqueness in case insensitive way' do
+  it "validates uniqueness in case insensitive way" do
     Fabricate(:category_with_definition, name: "Cats")
     cats = Fabricate.build(:category, name: "cats")
     expect(cats).to_not be_valid
     expect(cats.errors[:name]).to be_present
   end
 
-  describe 'Associations' do
-    it 'should delete associated sidebar_section_links when category is destroyed' do
+  describe "Associations" do
+    it { is_expected.to have_one(:category_setting).dependent(:destroy) }
+
+    it "automatically creates a category setting" do
+      expect { Fabricate(:category) }.to change { CategorySetting.count }.by(1)
+    end
+
+    it "should delete associated sidebar_section_links when category is destroyed" do
       category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
-      category_sidebar_section_link_2 = Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
+      category_sidebar_section_link_2 =
+        Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
       tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
 
-      expect { category_sidebar_section_link.linkable.destroy! }.to change { SidebarSectionLink.count }.from(3).to(1)
+      expect { category_sidebar_section_link.linkable.destroy! }.to change {
+        SidebarSectionLink.count
+      }.from(3).to(1)
       expect(SidebarSectionLink.first).to eq(tag_sidebar_section_link)
     end
   end
@@ -81,11 +96,14 @@ RSpec.describe Category do
 
     it "will add the group to the reviewable even if created manually" do
       SiteSetting.enable_category_group_moderation = true
-      reviewable = ReviewableFlaggedPost.create!(
-        created_by: user,
-        payload: { raw: 'test raw' },
-        category: category
-      )
+      reviewable =
+        ReviewableFlaggedPost.create!(
+          created_by: user,
+          payload: {
+            raw: "test raw",
+          },
+          category: category,
+        )
       expect(reviewable.reviewable_by_group_id).to eq(group.id)
     end
 
@@ -149,10 +167,8 @@ RSpec.describe Category do
     let(:admin_guardian) { Guardian.new(admin) }
     let(:anon_guardian) { Guardian.new(nil) }
 
-    context 'when disabling uncategorized' do
-      before do
-        SiteSetting.allow_uncategorized_topics = false
-      end
+    context "when disabling uncategorized" do
+      before { SiteSetting.allow_uncategorized_topics = false }
 
       it "allows everything to admins unconditionally" do
         count = Category.count
@@ -163,7 +179,6 @@ RSpec.describe Category do
       end
 
       it "allows normal users correct access to all categories" do
-
         # Sam: I am mixed here, once disabling uncategorized maybe users should no
         # longer be allowed to know about it so all counts should go down?
         expect(Category.secured(user_guardian).count).to eq(5)
@@ -204,7 +219,6 @@ RSpec.describe Category do
       # anonymous has permission to create no topics
       expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
     end
-
   end
 
   describe "security" do
@@ -244,7 +258,9 @@ RSpec.describe Category do
       category_2.save!
 
       expect(Category.secured).to match_array([uncategorized])
-      expect(Category.secured(Guardian.new(user))).to match_array([uncategorized, category, category_2])
+      expect(Category.secured(Guardian.new(user))).to match_array(
+        [uncategorized, category, category_2],
+      )
     end
   end
 
@@ -277,21 +293,21 @@ RSpec.describe Category do
   end
 
   describe "short name" do
-    fab!(:category) { Fabricate(:category_with_definition, name: 'xx') }
+    fab!(:category) { Fabricate(:category_with_definition, name: "xx") }
 
     it "creates the category" do
       expect(category).to be_present
     end
 
-    it 'has one topic' do
+    it "has one topic" do
       expect(Topic.where(category_id: category.id).count).to eq(1)
     end
   end
 
-  describe 'non-english characters' do
-    context 'when using ascii slug generator' do
+  describe "non-english characters" do
+    context "when using ascii slug generator" do
       before do
-        SiteSetting.slug_generation_method = 'ascii'
+        SiteSetting.slug_generation_method = "ascii"
         @category = Fabricate(:category_with_definition, name: "测试")
       end
       after { @category.destroy }
@@ -302,13 +318,13 @@ RSpec.describe Category do
       end
     end
 
-    context 'when using none slug generator' do
+    context "when using none slug generator" do
       before do
-        SiteSetting.slug_generation_method = 'none'
+        SiteSetting.slug_generation_method = "none"
         @category = Fabricate(:category_with_definition, name: "测试")
       end
       after do
-        SiteSetting.slug_generation_method = 'ascii'
+        SiteSetting.slug_generation_method = "ascii"
         @category.destroy
       end
 
@@ -318,13 +334,13 @@ RSpec.describe Category do
       end
     end
 
-    context 'when using encoded slug generator' do
+    context "when using encoded slug generator" do
       before do
-        SiteSetting.slug_generation_method = 'encoded'
+        SiteSetting.slug_generation_method = "encoded"
         @category = Fabricate(:category_with_definition, name: "测试")
       end
       after do
-        SiteSetting.slug_generation_method = 'ascii'
+        SiteSetting.slug_generation_method = "ascii"
         @category.destroy
       end
 
@@ -341,23 +357,23 @@ RSpec.describe Category do
     end
   end
 
-  describe 'slug would be a number' do
+  describe "slug would be a number" do
     let(:category) { Fabricate.build(:category, name: "2") }
 
-    it 'creates a blank slug' do
+    it "creates a blank slug" do
       expect(category.slug).to be_blank
       expect(category.slug_for_url).to eq("#{category.id}-category")
     end
   end
 
-  describe 'custom slug can be provided' do
-    it 'can be sanitized' do
+  describe "custom slug can be provided" do
+    it "can be sanitized" do
       @c = Fabricate(:category_with_definition, name: "Fun Cats", slug: "fun-cats")
       @cat = Fabricate(:category_with_definition, name: "love cats", slug: "love-cats")
 
-      @c.slug = '  invalid slug'
+      @c.slug = "  invalid slug"
       @c.save
-      expect(@c.slug).to eq('invalid-slug')
+      expect(@c.slug).to eq("invalid-slug")
 
       c = Fabricate.build(:category, name: "More Fun Cats", slug: "love-cats")
       expect(c).not_to be_valid
@@ -372,12 +388,10 @@ RSpec.describe Category do
       expect(@cat.errors[:slug]).not_to be_present
     end
 
-    context 'if SiteSettings.slug_generation_method = ascii' do
-      before do
-        SiteSetting.slug_generation_method = 'ascii'
-      end
+    context "if SiteSettings.slug_generation_method = ascii" do
+      before { SiteSetting.slug_generation_method = "ascii" }
 
-      it 'fails if slug contains non-ascii characters' do
+      it "fails if slug contains non-ascii characters" do
         c = Fabricate.build(:category, name: "Sem acentuação", slug: "sem-acentuação")
         expect(c).not_to be_valid
 
@@ -386,23 +400,23 @@ RSpec.describe Category do
     end
   end
 
-  describe 'description_text' do
-    it 'correctly generates text description as needed' do
+  describe "description_text" do
+    it "correctly generates text description as needed" do
       c = Category.new
       expect(c.description_text).to be_nil
-      c.description = "&lt;hello <a>test</a>."
-      expect(c.description_text).to eq("&lt;hello test.")
+      c.description = "&lt;hello <a>foo/bar</a>."
+      expect(c.description_text).to eq("&lt;hello foo/bar.")
     end
   end
 
-  describe 'after create' do
+  describe "after create" do
     before do
-      @category = Fabricate(:category_with_definition, name: 'Amazing Category')
+      @category = Fabricate(:category_with_definition, name: "Amazing Category")
       @topic = @category.topic
     end
 
-    it 'is created correctly' do
-      expect(@category.slug).to eq('amazing-category')
+    it "is created correctly" do
+      expect(@category.slug).to eq("amazing-category")
       expect(@category.slug_for_url).to eq(@category.slug)
 
       expect(@category.description).to be_blank
@@ -433,67 +447,73 @@ RSpec.describe Category do
     end
 
     it "cooks the definition" do
-      category = Category.create(
-        name: 'little-test',
-        user_id: Discourse.system_user.id,
-        description: "click the link [here](https://fakeurl.com)"
-      )
+      category =
+        Category.create(
+          name: "little-test",
+          user_id: Discourse.system_user.id,
+          description: "click the link [here](https://fakeurl.com)",
+        )
       expect(category.description.include?("[here]")).to eq(false)
       expect(category.description).to eq(category.topic.first_post.cooked)
     end
 
     it "renames the definition when renamed" do
-      @category.update(name: 'Troutfishing')
+      @category.update(name: "Troutfishing")
       @topic.reload
       expect(@topic.title).to match(/Troutfishing/)
       expect(@topic.fancy_title).to match(/Troutfishing/)
     end
 
     it "doesn't raise an error if there is no definition topic to rename (uncategorized)" do
-      expect { @category.update(name: 'Troutfishing', topic_id: nil) }.to_not raise_error
+      expect { @category.update(name: "Troutfishing", topic_id: nil) }.to_not raise_error
     end
 
     it "creates permalink when category slug is changed" do
-      @category.update(slug: 'new-category')
+      @category.update(slug: "new-category")
       expect(Permalink.count).to eq(1)
     end
 
     it "reuses existing permalink when category slug is changed" do
       permalink = Permalink.create!(url: "c/#{@category.slug}/#{@category.id}", category_id: 42)
 
-      expect { @category.update(slug: 'new-slug') }.to_not change { Permalink.count }
+      expect { @category.update(slug: "new-slug") }.to_not change { Permalink.count }
       expect(permalink.reload.category_id).to eq(@category.id)
     end
 
     it "creates permalink when sub category slug is changed" do
-      sub_category = Fabricate(:category_with_definition, slug: 'sub-category', parent_category_id: @category.id)
-      sub_category.update(slug: 'new-sub-category')
+      sub_category =
+        Fabricate(:category_with_definition, slug: "sub-category", parent_category_id: @category.id)
+      sub_category.update(slug: "new-sub-category")
       expect(Permalink.count).to eq(1)
     end
 
     it "deletes permalink when category slug is reused" do
       Fabricate(:permalink, url: "/c/bikeshed-category")
-      Fabricate(:category_with_definition, slug: 'bikeshed-category')
+      Fabricate(:category_with_definition, slug: "bikeshed-category")
       expect(Permalink.count).to eq(0)
     end
 
     it "deletes permalink when sub category slug is reused" do
       Fabricate(:permalink, url: "/c/main-category/sub-category")
-      main_category = Fabricate(:category_with_definition, slug: 'main-category')
-      Fabricate(:category_with_definition, slug: 'sub-category', parent_category_id: main_category.id)
+      main_category = Fabricate(:category_with_definition, slug: "main-category")
+      Fabricate(
+        :category_with_definition,
+        slug: "sub-category",
+        parent_category_id: main_category.id,
+      )
       expect(Permalink.count).to eq(0)
     end
 
     it "correctly creates permalink when category slug is changed in subfolder install" do
-      set_subfolder '/forum'
+      set_subfolder "/forum"
       old_url = @category.url
-      @category.update(slug: 'new-category')
+      @category.update(slug: "new-category")
       permalink = Permalink.last
       expect(permalink.url).to eq(old_url[1..-1])
     end
 
     it "should not set its description topic to auto-close" do
-      category = Fabricate(:category_with_definition, name: 'Closing Topics', auto_close_hours: 1)
+      category = Fabricate(:category_with_definition, name: "Closing Topics", auto_close_hours: 1)
       expect(category.topic.public_topic_timer).to eq(nil)
     end
 
@@ -505,22 +525,27 @@ RSpec.describe Category do
       end
 
       it "doesn't have a blank slug if not at the same level" do
-        parent = Fabricate(:category_with_definition, name: 'Other parent')
-        category = Fabricate(:category_with_definition, name: "Amazing Categóry", parent_category_id: parent.id)
-        expect(category.slug).to eq('amazing-category')
+        parent = Fabricate(:category_with_definition, name: "Other parent")
+        category =
+          Fabricate(
+            :category_with_definition,
+            name: "Amazing Categóry",
+            parent_category_id: parent.id,
+          )
+        expect(category.slug).to eq("amazing-category")
         expect(category.slug_for_url).to eq("amazing-category")
       end
     end
 
     describe "trying to change the category topic's category" do
       before do
-        @new_cat = Fabricate(:category_with_definition, name: '2nd Category', user: @category.user)
+        @new_cat = Fabricate(:category_with_definition, name: "2nd Category", user: @category.user)
         @topic.change_category_to_id(@new_cat.id)
         @topic.reload
         @category.reload
       end
 
-      it 'does not cause changes' do
+      it "does not cause changes" do
         expect(@category.topic_count).to eq(0)
         expect(@topic.category).to eq(@category)
         expect(@category.topic).to eq(@topic)
@@ -528,10 +553,10 @@ RSpec.describe Category do
     end
   end
 
-  describe 'new' do
+  describe "new" do
     subject { Fabricate.build(:category, user: Fabricate(:user)) }
 
-    it 'triggers a extensibility event' do
+    it "triggers a extensibility event" do
       event = DiscourseEvent.track_events { subject.save! }.last
 
       expect(event[:event_name]).to eq(:category_created)
@@ -549,7 +574,7 @@ RSpec.describe Category do
     end
   end
 
-  describe 'destroy' do
+  describe "destroy" do
     before do
       @category = Fabricate(:category_with_definition)
       @category_id = @category.id
@@ -557,14 +582,20 @@ RSpec.describe Category do
       SiteSetting.shared_drafts_category = @category.id.to_s
     end
 
-    it 'is deleted correctly' do
+    it "is deleted correctly" do
       @category.destroy
       expect(Category.exists?(id: @category_id)).to be false
       expect(Topic.with_deleted.where.not(deleted_at: nil).exists?(id: @topic_id)).to be true
       expect(SiteSetting.shared_drafts_category).to be_blank
     end
 
-    it 'triggers a extensibility event' do
+    it "deletes related embeddable host" do
+      embeddable_host = Fabricate(:embeddable_host, category: @category)
+      @category.destroy!
+      expect { embeddable_host.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "triggers a extensibility event" do
       event = DiscourseEvent.track(:category_destroyed) { @category.destroy }
 
       expect(event[:event_name]).to eq(:category_destroyed)
@@ -572,8 +603,8 @@ RSpec.describe Category do
     end
   end
 
-  describe 'latest' do
-    it 'should be updated correctly' do
+  describe "latest" do
+    it "should be updated correctly" do
       category = freeze_time(1.minute.ago) { Fabricate(:category_with_definition) }
       post = create_post(category: category.id, created_at: 15.seconds.ago)
 
@@ -598,19 +629,17 @@ RSpec.describe Category do
     end
   end
 
-  describe 'update_stats' do
-    before do
-      @category = Fabricate(:category_with_definition)
-    end
+  describe "update_stats" do
+    before { @category = Fabricate(:category_with_definition) }
 
-    context 'with regular topics' do
+    context "with regular topics" do
       before do
         create_post(user: @category.user, category: @category.id)
         Category.update_stats
         @category.reload
       end
 
-      it 'updates topic stats' do
+      it "updates topic stats" do
         expect(@category.topics_week).to eq(1)
         expect(@category.topics_month).to eq(1)
         expect(@category.topics_year).to eq(1)
@@ -620,18 +649,16 @@ RSpec.describe Category do
         expect(@category.posts_month).to eq(1)
         expect(@category.posts_week).to eq(1)
       end
-
     end
 
-    context 'with deleted topics' do
+    context "with deleted topics" do
       before do
-        @category.topics << Fabricate(:deleted_topic,
-                                      user: @category.user)
+        @category.topics << Fabricate(:deleted_topic, user: @category.user)
         Category.update_stats
         @category.reload
       end
 
-      it 'does not count deleted topics' do
+      it "does not count deleted topics" do
         expect(@category.topics_week).to eq(0)
         expect(@category.topic_count).to eq(0)
         expect(@category.topics_month).to eq(0)
@@ -643,12 +670,12 @@ RSpec.describe Category do
       end
     end
 
-    context 'with revised post' do
+    context "with revised post" do
       before do
         post = create_post(user: @category.user, category: @category.id)
 
         SiteSetting.editing_grace_period = 1.minute
-        post.revise(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 2.minutes)
+        post.revise(post.user, { raw: "updated body" }, revised_at: post.updated_at + 2.minutes)
 
         Category.update_stats
         @category.reload
@@ -662,7 +689,7 @@ RSpec.describe Category do
       end
     end
 
-    context 'for uncategorized category' do
+    context "for uncategorized category" do
       before do
         @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
         create_post(user: Fabricate(:user), category: @uncategorized.id)
@@ -670,7 +697,7 @@ RSpec.describe Category do
         @uncategorized.reload
       end
 
-      it 'updates topic stats' do
+      it "updates topic stats" do
         expect(@uncategorized.topics_week).to eq(1)
         expect(@uncategorized.topics_month).to eq(1)
         expect(@uncategorized.topics_year).to eq(1)
@@ -682,10 +709,10 @@ RSpec.describe Category do
       end
     end
 
-    context 'when there are no topics left' do
+    context "when there are no topics left" do
       let!(:topic) { create_post(user: @category.user, category: @category.id).reload.topic }
 
-      it 'can update the topic count to zero' do
+      it "can update the topic count to zero" do
         @category.reload
         expect(@category.topic_count).to eq(1)
         expect(@category.topics.count).to eq(2)
@@ -700,26 +727,14 @@ RSpec.describe Category do
   end
 
   describe "#url" do
-    before_all do
-      SiteSetting.max_category_nesting = 3
-    end
+    before_all { SiteSetting.max_category_nesting = 3 }
 
     fab!(:category) { Fabricate(:category, name: "root") }
 
-    fab!(:sub_category) do
-      Fabricate(
-        :category,
-        name: "child",
-        parent_category_id: category.id,
-      )
-    end
+    fab!(:sub_category) { Fabricate(:category, name: "child", parent_category_id: category.id) }
 
     fab!(:sub_sub_category) do
-      Fabricate(
-        :category,
-        name: "child_of_child",
-        parent_category_id: sub_category.id,
-      )
+      Fabricate(:category, name: "child_of_child", parent_category_id: sub_category.id)
     end
 
     describe "for normal categories" do
@@ -736,8 +751,7 @@ RSpec.describe Category do
 
     describe "for sub-sub-categories" do
       it "builds a url" do
-        expect(sub_sub_category.url)
-          .to eq("/c/root/child/child-of-child/#{sub_sub_category.id}")
+        expect(sub_sub_category.url).to eq("/c/root/child/child-of-child/#{sub_sub_category.id}")
       end
     end
   end
@@ -772,8 +786,10 @@ RSpec.describe Category do
     end
 
     it "cannot have a category two levels deep" do
-      sub_category = Fabricate(:category_with_definition, parent_category_id: parent_category.id, user: user)
-      nested_sub_category = Fabricate.build(:category, parent_category_id: sub_category.id, user: user)
+      sub_category =
+        Fabricate(:category_with_definition, parent_category_id: parent_category.id, user: user)
+      nested_sub_category =
+        Fabricate.build(:category, parent_category_id: sub_category.id, user: user)
       expect(nested_sub_category).to_not be_valid
     end
 
@@ -786,57 +802,60 @@ RSpec.describe Category do
 
     describe ".query_category" do
       it "should return the category" do
-        category = Fabricate(:category_with_definition, name: "Amazing Category", parent_category_id: parent_category.id, user: user)
+        category =
+          Fabricate(
+            :category_with_definition,
+            name: "Amazing Category",
+            parent_category_id: parent_category.id,
+            user: user,
+          )
         parent_category.name = "Amazing Parent Category"
         expect(category).to eq(Category.query_category(category.slug, parent_category.id))
       end
     end
-
   end
 
   describe "find_by_email" do
     it "is case insensitive" do
-      c1 = Fabricate(:category_with_definition, email_in: 'lower@example.com')
-      c2 = Fabricate(:category_with_definition, email_in: 'UPPER@EXAMPLE.COM')
-      c3 = Fabricate(:category_with_definition, email_in: 'Mixed.Case@Example.COM')
-      expect(Category.find_by_email('LOWER@EXAMPLE.COM')).to eq(c1)
-      expect(Category.find_by_email('upper@example.com')).to eq(c2)
-      expect(Category.find_by_email('mixed.case@example.com')).to eq(c3)
-      expect(Category.find_by_email('MIXED.CASE@EXAMPLE.COM')).to eq(c3)
+      c1 = Fabricate(:category_with_definition, email_in: "lower@example.com")
+      c2 = Fabricate(:category_with_definition, email_in: "UPPER@EXAMPLE.COM")
+      c3 = Fabricate(:category_with_definition, email_in: "Mixed.Case@Example.COM")
+      expect(Category.find_by_email("LOWER@EXAMPLE.COM")).to eq(c1)
+      expect(Category.find_by_email("upper@example.com")).to eq(c2)
+      expect(Category.find_by_email("mixed.case@example.com")).to eq(c3)
+      expect(Category.find_by_email("MIXED.CASE@EXAMPLE.COM")).to eq(c3)
     end
   end
 
   describe "find_by_slug" do
-    fab!(:category) do
-      Fabricate(:category_with_definition, slug: 'awesome-category')
-    end
+    fab!(:category) { Fabricate(:category_with_definition, slug: "awesome-category") }
 
     fab!(:subcategory) do
       Fabricate(
         :category_with_definition,
         parent_category_id: category.id,
-        slug: 'awesome-sub-category'
+        slug: "awesome-sub-category",
       )
     end
 
     it "finds a category that exists" do
-      expect(Category.find_by_slug('awesome-category')).to eq(category)
+      expect(Category.find_by_slug("awesome-category")).to eq(category)
     end
 
     it "finds a subcategory that exists" do
-      expect(Category.find_by_slug('awesome-sub-category', 'awesome-category')).to eq(subcategory)
+      expect(Category.find_by_slug("awesome-sub-category", "awesome-category")).to eq(subcategory)
     end
 
     it "produces nil if the parent doesn't exist" do
-      expect(Category.find_by_slug('awesome-sub-category', 'no-such-category')).to eq(nil)
+      expect(Category.find_by_slug("awesome-sub-category", "no-such-category")).to eq(nil)
     end
 
     it "produces nil if the parent doesn't exist and the requested category is a root category" do
-      expect(Category.find_by_slug('awesome-category', 'no-such-category')).to eq(nil)
+      expect(Category.find_by_slug("awesome-category", "no-such-category")).to eq(nil)
     end
 
     it "produces nil if the subcategory doesn't exist" do
-      expect(Category.find_by_slug('no-such-category', 'awesome-category')).to eq(nil)
+      expect(Category.find_by_slug("no-such-category", "awesome-category")).to eq(nil)
     end
   end
 
@@ -844,40 +863,48 @@ RSpec.describe Category do
     fab!(:user) { Fabricate(:user) }
 
     it "works with a valid email" do
-      expect(Category.new(name: 'test', user: user, email_in: 'test@example.com').valid?).to eq(true)
+      expect(Category.new(name: "test", user: user, email_in: "test@example.com").valid?).to eq(
+        true,
+      )
     end
 
     it "adds an error with an invalid email" do
-      category = Category.new(name: 'test', user: user, email_in: '<sup>test</sup>')
+      category = Category.new(name: "test", user: user, email_in: "<sup>test</sup>")
       expect(category.valid?).to eq(false)
       expect(category.errors.full_messages.join).not_to match(/<sup>/)
     end
 
     context "with a duplicate email in a group" do
-      fab!(:group) { Fabricate(:group, name: 'testgroup', incoming_email: 'test@example.com') }
+      fab!(:group) { Fabricate(:group, name: "testgroup", incoming_email: "test@example.com") }
 
       it "adds an error with an invalid email" do
-        category = Category.new(name: 'test', user: user, email_in: group.incoming_email)
+        category = Category.new(name: "test", user: user, email_in: group.incoming_email)
         expect(category.valid?).to eq(false)
       end
     end
 
     context "with duplicate email in a category" do
-      fab!(:category) { Fabricate(:category_with_definition, user: user, name: '<b>cool</b>', email_in: 'test@example.com') }
+      fab!(:category) do
+        Fabricate(
+          :category_with_definition,
+          user: user,
+          name: "<b>cool</b>",
+          email_in: "test@example.com",
+        )
+      end
 
       it "adds an error with an invalid email" do
-        category = Category.new(name: 'test', user: user, email_in: "test@example.com")
+        category = Category.new(name: "test", user: user, email_in: "test@example.com")
         expect(category.valid?).to eq(false)
         expect(category.errors.full_messages.join).not_to match(/<b>/)
       end
     end
-
   end
 
-  describe 'require topic/post approval' do
+  describe "require topic/post approval" do
     fab!(:category) { Fabricate(:category_with_definition) }
 
-    describe '#require_topic_approval?' do
+    describe "#require_topic_approval?" do
       before do
         category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
         category.save
@@ -886,7 +913,7 @@ RSpec.describe Category do
       it { expect(category.reload.require_topic_approval?).to eq(true) }
     end
 
-    describe '#require_reply_approval?' do
+    describe "#require_reply_approval?" do
       before do
         category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
         category.save
@@ -896,8 +923,8 @@ RSpec.describe Category do
     end
   end
 
-  describe 'auto bump' do
-    it 'should correctly automatically bump topics' do
+  describe "auto bump" do
+    it "should correctly automatically bump topics" do
       freeze_time
       category = Fabricate(:category_with_definition, created_at: 1.minute.ago)
       category.clear_auto_bump_cache!
@@ -942,7 +969,41 @@ RSpec.describe Category do
       expect(Category.auto_bump_topic!).to eq(false)
     end
 
-    it 'should not automatically bump topics with a bump scheduled' do
+    it "should not auto-bump the same topic within the cooldown" do
+      freeze_time
+      category =
+        Fabricate(
+          :category_with_definition,
+          num_auto_bump_daily: 2,
+          created_at: 1.minute.ago,
+          category_setting_attributes: {
+            auto_bump_cooldown_days: 1,
+          },
+        )
+      category.clear_auto_bump_cache!
+
+      post1 = create_post(category: category, created_at: 15.seconds.ago)
+
+      # no limits on post creation or category creation please
+      RateLimiter.enable
+
+      time = freeze_time 1.month.from_now
+
+      expect(category.auto_bump_topic!).to eq(true)
+      expect(Topic.where(bumped_at: time).count).to eq(1)
+
+      time = freeze_time 13.hours.from_now
+
+      expect(category.auto_bump_topic!).to eq(false)
+      expect(Topic.where(bumped_at: time).count).to eq(0)
+
+      time = freeze_time 13.hours.from_now
+
+      expect(category.auto_bump_topic!).to eq(true)
+      expect(Topic.where(bumped_at: time).count).to eq(1)
+    end
+
+    it "should not automatically bump topics with a bump scheduled" do
       freeze_time
       category = Fabricate(:category_with_definition, created_at: 1.second.ago)
       category.clear_auto_bump_cache!
@@ -966,10 +1027,12 @@ RSpec.describe Category do
         user_id: -1,
         topic: topic,
         execute_at: 1.hour.from_now,
-        status_type: TopicTimer.types[:bump]
+        status_type: TopicTimer.types[:bump],
       )
 
-      expect(Topic.joins(:topic_timers).where(topic_timers: { status_type: 6, deleted_at: nil }).count).to eq(1)
+      expect(
+        Topic.joins(:topic_timers).where(topic_timers: { status_type: 6, deleted_at: nil }).count,
+      ).to eq(1)
 
       expect(category.auto_bump_topic!).to eq(false)
       expect(Topic.where(bumped_at: time).count).to eq(0)
@@ -983,7 +1046,9 @@ RSpec.describe Category do
     fab!(:group) { Fabricate(:group) }
     fab!(:group2) { Fabricate(:group) }
     fab!(:parent_category) { Fabricate(:category_with_definition, name: "parent") }
-    fab!(:subcategory) { Fabricate(:category_with_definition, name: "child1", parent_category_id: parent_category.id) }
+    fab!(:subcategory) do
+      Fabricate(:category_with_definition, name: "child1", parent_category_id: parent_category.id)
+    end
 
     context "when changing subcategory permissions" do
       it "it is not valid if permissions are less restrictive" do
@@ -996,7 +1061,9 @@ RSpec.describe Category do
         subcategory.set_permissions(group => :full, group2 => :readonly)
 
         expect(subcategory.valid?).to eq(false)
-        expect(subcategory.errors.full_messages).to contain_exactly(I18n.t("category.errors.permission_conflict", group_names: group2.name))
+        expect(subcategory.errors.full_messages).to contain_exactly(
+          I18n.t("category.errors.permission_conflict", group_names: group2.name),
+        )
       end
 
       it "is valid if permissions are same or more restrictive" do
@@ -1022,7 +1089,9 @@ RSpec.describe Category do
     end
 
     context "when changing parent category permissions" do
-      fab!(:subcategory2) { Fabricate(:category_with_definition, name: "child2", parent_category_id: parent_category.id) }
+      fab!(:subcategory2) do
+        Fabricate(:category_with_definition, name: "child2", parent_category_id: parent_category.id)
+      end
 
       it "is not valid if subcategory permissions are less restrictive" do
         subcategory.set_permissions(group => :create_post)
@@ -1033,7 +1102,9 @@ RSpec.describe Category do
         parent_category.set_permissions(group => :readonly)
 
         expect(parent_category.valid?).to eq(false)
-        expect(parent_category.errors.full_messages).to contain_exactly(I18n.t("category.errors.permission_conflict", group_names: group2.name))
+        expect(parent_category.errors.full_messages).to contain_exactly(
+          I18n.t("category.errors.permission_conflict", group_names: group2.name),
+        )
       end
 
       it "is not valid if the subcategory has no category groups, but the parent does" do
@@ -1051,7 +1122,6 @@ RSpec.describe Category do
         parent_category.set_permissions(group => :full, group2 => :create_post)
 
         expect(parent_category.valid?).to eq(true)
-
       end
 
       it "is valid if everyone has access to parent category" do
@@ -1065,29 +1135,16 @@ RSpec.describe Category do
   end
 
   describe "tree metrics" do
-    fab!(:category) do
-      Category.create!(
-        user: user,
-        name: "foo"
-      )
-    end
+    fab!(:category) { Category.create!(user: user, name: "foo") }
 
-    fab!(:subcategory) do
-      Category.create!(
-        user: user,
-        name: "bar",
-        parent_category: category
-      )
-    end
+    fab!(:subcategory) { Category.create!(user: user, name: "bar", parent_category: category) }
 
     context "with a self-parent" do
-      before_all do
-        DB.exec(<<-SQL, id: category.id)
+      before_all { DB.exec(<<-SQL, id: category.id) }
           UPDATE categories
           SET parent_category_id = :id
           WHERE id = :id
         SQL
-      end
 
       describe "#depth_of_descendants" do
         it "should produce max_depth" do
@@ -1103,9 +1160,7 @@ RSpec.describe Category do
     end
 
     context "with a prospective self-parent" do
-      before do
-        category.parent_category_id = category.id
-      end
+      before { category.parent_category_id = category.id }
 
       describe "#depth_of_descendants" do
         it "should produce max_depth" do
@@ -1121,9 +1176,7 @@ RSpec.describe Category do
     end
 
     context "with a prospective loop" do
-      before do
-        category.parent_category_id = subcategory.id
-      end
+      before { category.parent_category_id = subcategory.id }
 
       describe "#depth_of_descendants" do
         it "should produce max_depth" do
@@ -1163,9 +1216,7 @@ RSpec.describe Category do
     it "does not publish notification level when publishing to /categories" do
       category = Fabricate(:category)
       category.name = "Amazing category"
-      messages = MessageBus.track_publish("/categories") do
-        category.save!
-      end
+      messages = MessageBus.track_publish("/categories") { category.save! }
 
       expect(messages.length).to eq(1)
       message = messages.first
@@ -1179,7 +1230,6 @@ RSpec.describe Category do
 
   describe "#ensure_consistency!" do
     it "creates category topic" do
-
       # corrupt a category topic
       uncategorized = Category.find(SiteSetting.uncategorized_category_id)
       uncategorized.create_category_definition
@@ -1211,91 +1261,192 @@ RSpec.describe Category do
   end
 
   describe "#find_by_slug_path" do
-    it 'works for categories with slugs' do
-      category = Fabricate(:category, slug: 'cat1')
+    it "works for categories with slugs" do
+      category = Fabricate(:category, slug: "cat1")
 
-      expect(Category.find_by_slug_path(['cat1'])).to eq(category)
+      expect(Category.find_by_slug_path(["cat1"])).to eq(category)
     end
 
-    it 'works for categories without slugs' do
-      SiteSetting.slug_generation_method = 'none'
+    it "works for categories without slugs" do
+      SiteSetting.slug_generation_method = "none"
 
-      category = Fabricate(:category, slug: 'cat1')
+      category = Fabricate(:category, slug: "cat1")
 
       expect(Category.find_by_slug_path(["#{category.id}-category"])).to eq(category)
     end
 
-    it 'works for subcategories with slugs' do
-      category = Fabricate(:category, slug: 'cat1')
-      subcategory = Fabricate(:category, slug: 'cat2', parent_category: category)
+    it "works for subcategories with slugs" do
+      category = Fabricate(:category, slug: "cat1")
+      subcategory = Fabricate(:category, slug: "cat2", parent_category: category)
 
-      expect(Category.find_by_slug_path(['cat1', 'cat2'])).to eq(subcategory)
+      expect(Category.find_by_slug_path(%w[cat1 cat2])).to eq(subcategory)
     end
 
-    it 'works for subcategories without slugs' do
-      SiteSetting.slug_generation_method = 'none'
+    it "works for subcategories without slugs" do
+      SiteSetting.slug_generation_method = "none"
 
-      category = Fabricate(:category, slug: 'cat1')
-      subcategory = Fabricate(:category, slug: 'cat2', parent_category: category)
+      category = Fabricate(:category, slug: "cat1")
+      subcategory = Fabricate(:category, slug: "cat2", parent_category: category)
 
-      expect(Category.find_by_slug_path(['cat1', "#{subcategory.id}-category"])).to eq(subcategory)
-      expect(Category.find_by_slug_path(["#{category.id}-category", "#{subcategory.id}-category"])).to eq(subcategory)
+      expect(Category.find_by_slug_path(["cat1", "#{subcategory.id}-category"])).to eq(subcategory)
+      expect(
+        Category.find_by_slug_path(["#{category.id}-category", "#{subcategory.id}-category"]),
+      ).to eq(subcategory)
     end
   end
 
-  describe '#cannot_delete_reason' do
+  describe "#cannot_delete_reason" do
     fab!(:admin) { Fabricate(:admin) }
     let(:guardian) { Guardian.new(admin) }
     fab!(:category) { Fabricate(:category) }
 
-    describe 'when category is uncategorized' do
-      it 'should return the reason' do
+    describe "when category is uncategorized" do
+      it "should return the reason" do
         category = Category.find(SiteSetting.uncategorized_category_id)
 
-        expect(category.cannot_delete_reason).to eq(
-          I18n.t('category.cannot_delete.uncategorized')
-        )
+        expect(category.cannot_delete_reason).to eq(I18n.t("category.cannot_delete.uncategorized"))
       end
     end
 
-    describe 'when category has subcategories' do
-      it 'should return the right reason' do
+    describe "when category has subcategories" do
+      it "should return the right reason" do
         category.subcategories << Fabricate(:category)
 
         expect(category.cannot_delete_reason).to eq(
-          I18n.t('category.cannot_delete.has_subcategories')
+          I18n.t("category.cannot_delete.has_subcategories"),
         )
       end
     end
 
-    describe 'when category has topics' do
-      it 'should return the right reason' do
-        topic = Fabricate(:topic,
-          title: '</a><script>alert(document.cookie);</script><a>',
-          category: category
-        )
+    describe "when category has topics" do
+      it "should return the right reason" do
+        topic =
+          Fabricate(
+            :topic,
+            title: "</a><script>alert(document.cookie);</script><a>",
+            category: category,
+          )
 
         category.reload
 
         expect(category.cannot_delete_reason).to eq(
-          I18n.t('category.cannot_delete.topic_exists',
+          I18n.t(
+            "category.cannot_delete.topic_exists",
             count: 1,
-            topic_link: "<a href=\"#{topic.url}\">&lt;/a&gt;&lt;script&gt;alert(document.cookie);&lt;/script&gt;&lt;a&gt;</a>"
-          )
+            topic_link:
+              "<a href=\"#{topic.url}\">&lt;/a&gt;&lt;script&gt;alert(document.cookie);&lt;/script&gt;&lt;a&gt;</a>",
+          ),
         )
       end
     end
   end
 
-  describe '#deleting the general category' do
+  describe "#deleting the general category" do
     fab!(:category) { Fabricate(:category) }
 
-    it 'should empty out the general_category_id site_setting' do
+    it "should empty out the general_category_id site_setting" do
       SiteSetting.general_category_id = category.id
       category.destroy
 
       expect(SiteSetting.general_category_id).to_not eq(category.id)
       expect(SiteSetting.general_category_id).to be < 1
+    end
+  end
+
+  describe ".ids_from_slugs" do
+    fab!(:category) { Fabricate(:category, slug: "category") }
+    fab!(:category2) { Fabricate(:category, slug: "category2") }
+    fab!(:subcategory) { Fabricate(:category, parent_category: category, slug: "subcategory") }
+    fab!(:subcategory2) { Fabricate(:category, parent_category: category2, slug: "subcategory") }
+
+    it "returns [] when inputs is []" do
+      expect(Category.ids_from_slugs([])).to eq([])
+    end
+
+    it 'returns the ids of category when input is ["category"]' do
+      expect(Category.ids_from_slugs(%w[category])).to contain_exactly(category.id)
+    end
+
+    it 'returns the ids of subcategory when input is ["category:subcategory"]' do
+      expect(Category.ids_from_slugs(%w[category:subcategory])).to contain_exactly(subcategory.id)
+    end
+
+    it 'returns the ids of subcategory2 when input is ["category2:subcategory"]' do
+      expect(Category.ids_from_slugs(%w[category2:subcategory])).to contain_exactly(subcategory2.id)
+    end
+
+    it "returns the ids of category and category2 when input is ['category', 'category2']" do
+      expect(Category.ids_from_slugs(%w[category category2])).to contain_exactly(
+        category.id,
+        category2.id,
+      )
+    end
+
+    it "returns the ids of subcategory and subcategory2 when input is ['category:subcategory', 'category2:subcategory']" do
+      expect(
+        Category.ids_from_slugs(%w[category:subcategory category2:subcategory]),
+      ).to contain_exactly(subcategory.id, subcategory2.id)
+    end
+
+    it "returns the ids of subcategory when input is ['category:subcategory', 'invalid:subcategory']" do
+      expect(
+        Category.ids_from_slugs(%w[category:subcategory invalid:subcategory]),
+      ).to contain_exactly(subcategory.id)
+    end
+
+    it 'returns the ids of sub-subcategory when input is ["category:subcategory:sub-subcategory"] and maximum category nesting is 3' do
+      SiteSetting.max_category_nesting = 3
+      sub_subcategory = Fabricate(:category, parent_category: subcategory, slug: "sub-subcategory")
+
+      expect(Category.ids_from_slugs(%w[category:subcategory:sub-subcategory])).to contain_exactly(
+        sub_subcategory.id,
+      )
+    end
+
+    it 'returns nil when input is ["category:invalid-slug:sub-subcategory"] and maximum category nesting is 3' do
+      SiteSetting.max_category_nesting = 3
+      sub_subcategory = Fabricate(:category, parent_category: subcategory, slug: "sub-subcategory")
+
+      expect(Category.ids_from_slugs(%w[category:invalid-slug:sub-subcategory])).to eq([])
+    end
+
+    it 'returns the ids of subcategory when input is ["category:subcategory:sub-subcategory"] but maximum category nesting is 2' do
+      SiteSetting.max_category_nesting = 2
+
+      expect(Category.ids_from_slugs(%w[category:subcategory:sub-subcategory])).to contain_exactly(
+        subcategory.id,
+      )
+    end
+
+    it 'returns the ids of subcategory and subcategory2 when input is ["subcategory"]' do
+      expect(Category.ids_from_slugs(%w[subcategory])).to contain_exactly(
+        subcategory.id,
+        subcategory2.id,
+      )
+    end
+  end
+
+  describe "allowed_tags=" do
+    let(:category) { Fabricate(:category) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag2) { Fabricate(:tag) }
+
+    before { SiteSetting.tagging_enabled = true }
+
+    it "can use existing tags for category tags" do
+      category.allowed_tags = [tag.name]
+      expect_same_tag_names(category.reload.tags, [tag])
+    end
+
+    context "with synonyms" do
+      fab!(:synonym) { Fabricate(:tag, name: "synonym", target_tag: tag) }
+
+      it "can use existing tags for category tags" do
+        category.allowed_tags = [tag.name, synonym.name]
+        category.reload
+        category.allowed_tags = [tag.name, synonym.name, tag2.name]
+        expect_same_tag_names(category.reload.tags, [tag.name, synonym.name, tag2.name])
+      end
     end
   end
 end

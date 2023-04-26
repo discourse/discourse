@@ -10,10 +10,26 @@
           <tr>
             <td>
               <ScoreValue @value="1.0" @tagName="" />
-              <ScoreValue @value={{s.type_bonus}} @label="type_bonus" @tagName="" />
-              <ScoreValue @value={{s.take_action_bonus}} @label="take_action_bonus" @tagName="" />
-              <ScoreValue @value={{s.trust_level_bonus}} @label="trust_level_bonus" @tagName="" />
-              <ScoreValue @value={{s.user_accuracy_bonus}} @label="user_accuracy_bonus" @tagName="" />
+              <ScoreValue
+                @value={{s.type_bonus}}
+                @label="type_bonus"
+                @tagName=""
+              />
+              <ScoreValue
+                @value={{s.take_action_bonus}}
+                @label="take_action_bonus"
+                @tagName=""
+              />
+              <ScoreValue
+                @value={{s.trust_level_bonus}}
+                @label="trust_level_bonus"
+                @tagName=""
+              />
+              <ScoreValue
+                @value={{s.user_accuracy_bonus}}
+                @label="user_accuracy_bonus"
+                @tagName=""
+              />
             </td>
             <td class="sum">{{float s.score}}</td>
           </tr>

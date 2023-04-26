@@ -14,6 +14,7 @@ import PostFlag from "discourse/lib/flag-targets/post-flag";
 const SCROLL_DELAY = 500;
 
 const TopicRoute = DiscourseRoute.extend({
+  composer: service(),
   screenTrack: service(),
 
   scheduledReplace: null,
@@ -113,13 +114,11 @@ const TopicRoute = DiscourseRoute.extend({
   showTopicTimerModal() {
     const model = this.modelFor("topic");
 
-    const topicTimer = model.get("topic_timer");
-    if (!topicTimer) {
+    if (!model.get("topic_timer")) {
       model.set("topic_timer", {});
     }
 
     showModal("edit-topic-timer", { model });
-    this.controllerFor("modal").set("modalClass", "edit-topic-timer-modal");
   },
 
   @action
@@ -139,11 +138,10 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showFeatureTopic() {
-    showModal("featureTopic", {
+    showModal("feature-topic", {
       model: this.modelFor("topic"),
       title: "topic.feature_topic.title",
     });
-    this.controllerFor("modal").set("modalClass", "feature-topic-modal");
     this.controllerFor("feature_topic").reset();
   },
 
@@ -328,7 +326,6 @@ const TopicRoute = DiscourseRoute.extend({
     this._super(...arguments);
 
     this.searchService.set("searchContext", null);
-    this.controllerFor("user-card").set("visible", false);
 
     const topicController = this.controllerFor("topic");
     const postStream = topicController.get("model.postStream");
@@ -336,7 +333,7 @@ const TopicRoute = DiscourseRoute.extend({
     postStream.cancelFilter();
 
     topicController.set("multiSelect", false);
-    this.controllerFor("composer").set("topic", null);
+    this.composer.set("topic", null);
     this.screenTrack.stop();
 
     this.appEvents.trigger("header:hide-topic");
@@ -360,7 +357,7 @@ const TopicRoute = DiscourseRoute.extend({
     controller.set("multiSelect", false);
     controller.get("quoteState").clear();
 
-    this.controllerFor("composer").set("topic", model);
+    this.composer.set("topic", model);
     this.topicTrackingState.trackIncoming("all");
 
     // We reset screen tracking every time a topic is entered

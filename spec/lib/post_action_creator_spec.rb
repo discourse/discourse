@@ -6,9 +6,7 @@ RSpec.describe PostActionCreator do
   fab!(:post) { Fabricate(:post) }
   let(:like_type_id) { PostActionType.types[:like] }
 
-  before do
-    Group.refresh_automatic_groups!
-  end
+  before { Group.refresh_automatic_groups! }
 
   describe "rate limits" do
     before do
@@ -22,15 +20,18 @@ RSpec.describe PostActionCreator do
       PostActionCreator.like(user, post)
       PostActionDestroyer.destroy(user, post, :like)
 
-      expect {
-        PostActionCreator.like(user, post)
-      }.to raise_error(RateLimiter::LimitExceeded)
+      expect { PostActionCreator.like(user, post) }.to raise_error(RateLimiter::LimitExceeded)
     end
   end
 
   describe "messaging" do
     it "doesn't generate title longer than 255 characters" do
-      topic = Fabricate(:topic, title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet rutrum neque. Pellentesque suscipit vehicula facilisis. Phasellus lacus sapien, aliquam nec convallis sit amet, vestibulum laoreet ante. Curabitur et pellentesque tortor. Donec non.")
+      topic =
+        Fabricate(
+          :topic,
+          title:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet rutrum neque. Pellentesque suscipit vehicula facilisis. Phasellus lacus sapien, aliquam nec convallis sit amet, vestibulum laoreet ante. Curabitur et pellentesque tortor. Donec non.",
+        )
       post = Fabricate(:post, topic: topic)
 
       expect(PostActionCreator.notify_user(user, post, "WAT")).to be_success
@@ -53,8 +54,8 @@ RSpec.describe PostActionCreator do
     end
   end
 
-  describe 'perform' do
-    it 'creates a post action' do
+  describe "perform" do
+    it "creates a post action" do
       result = PostActionCreator.new(user, post, like_type_id).perform
       expect(result.success).to eq(true)
       expect(result.post_action).to be_present
@@ -63,12 +64,11 @@ RSpec.describe PostActionCreator do
       expect(result.post_action.post_action_type_id).to eq(like_type_id)
     end
 
-    it 'notifies subscribers' do
+    it "notifies subscribers" do
       expect(post.reload.like_count).to eq(0)
 
-      messages = MessageBus.track_publish do
-        PostActionCreator.new(user, post, like_type_id).perform
-      end
+      messages =
+        MessageBus.track_publish { PostActionCreator.new(user, post, like_type_id).perform }
 
       message = messages.find { |msg| msg.data[:type] === :liked }.data
       expect(message).to be_present
@@ -77,29 +77,32 @@ RSpec.describe PostActionCreator do
       expect(message[:user_id]).to eq(user.id)
     end
 
-    it 'notifies updated topic stats to subscribers' do
+    it "notifies updated topic stats to subscribers" do
       topic = Fabricate(:topic)
       post = Fabricate(:post, topic: topic)
 
       expect(post.reload.like_count).to eq(0)
 
-      messages = MessageBus.track_publish("/topic/#{topic.id}") do
-        PostActionCreator.new(user, post, like_type_id).perform
-      end
+      messages =
+        MessageBus.track_publish("/topic/#{topic.id}") do
+          PostActionCreator.new(user, post, like_type_id).perform
+        end
 
       stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
       expect(stats_message).to be_present
       expect(stats_message.data[:like_count]).to eq(1)
     end
 
-    it 'does not create an invalid post action' do
+    it "does not create an invalid post action" do
       result = PostActionCreator.new(user, nil, like_type_id).perform
       expect(result.failed?).to eq(true)
     end
 
-    it 'does not create a double like notification' do
+    it "does not create a double like notification" do
       PostActionNotifier.enable
-      post.user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:always])
+      post.user.user_option.update!(
+        like_notification_frequency: UserOption.like_notification_frequency_type[:always],
+      )
 
       expect(PostActionCreator.new(user, post, like_type_id).perform.success).to eq(true)
       expect(PostActionDestroyer.new(user, post, like_type_id).perform.success).to eq(true)
@@ -107,16 +110,16 @@ RSpec.describe PostActionCreator do
 
       notification = Notification.last
       notification_data = JSON.parse(notification.data)
-      expect(notification_data['display_username']).to eq(user.username)
-      expect(notification_data['username2']).to eq(nil)
+      expect(notification_data["display_username"]).to eq(user.username)
+      expect(notification_data["username2"]).to eq(nil)
     end
 
-    it 'does not create a notification if silent mode is enabled' do
+    it "does not create a notification if silent mode is enabled" do
       PostActionNotifier.enable
 
-      expect(
-        PostActionCreator.new(user, post, like_type_id, silent: true).perform.success
-      ).to eq(true)
+      expect(PostActionCreator.new(user, post, like_type_id, silent: true).perform.success).to eq(
+        true,
+      )
 
       expect(Notification.where(notification_type: Notification.types[:liked]).exists?).to eq(false)
     end
@@ -153,7 +156,7 @@ RSpec.describe PostActionCreator do
         expect(post.hidden?).to eq(true)
       end
 
-      it 'does not hide the post if the setting is disabled' do
+      it "does not hide the post if the setting is disabled" do
         SiteSetting.high_trust_flaggers_auto_hide_posts = false
 
         result = PostActionCreator.create(user, post, :spam)
@@ -161,7 +164,7 @@ RSpec.describe PostActionCreator do
         expect(post.hidden?).to eq(false)
       end
 
-      it 'sets the force_review field' do
+      it "sets the force_review field" do
         result = PostActionCreator.create(user, post, :spam)
 
         reviewable = result.reviewable
@@ -171,9 +174,9 @@ RSpec.describe PostActionCreator do
     end
 
     context "with existing reviewable" do
-      let!(:reviewable) {
+      let!(:reviewable) do
         PostActionCreator.create(Fabricate(:user), post, :inappropriate).reviewable
-      }
+      end
 
       it "appends to an existing reviewable if exists" do
         result = PostActionCreator.create(user, post, :inappropriate)
@@ -188,7 +191,7 @@ RSpec.describe PostActionCreator do
       end
 
       describe "When the post was already reviewed by staff" do
-        before { reviewable.perform(admin, :ignore) }
+        before { reviewable.perform(admin, :ignore_and_do_nothing) }
 
         it "fails because the post was recently reviewed" do
           freeze_time 10.seconds.from_now
@@ -241,17 +244,14 @@ RSpec.describe PostActionCreator do
   end
 
   describe "take_action" do
-    before do
-      PostActionCreator.create(Fabricate(:user), post, :inappropriate)
-    end
+    before { PostActionCreator.create(Fabricate(:user), post, :inappropriate) }
 
     it "will agree with the old reviewable" do
-      reviewable = PostActionCreator.new(
-        Fabricate(:moderator),
-        post,
-        PostActionType.types[:spam],
-        take_action: true
-      ).perform.reviewable
+      reviewable =
+        PostActionCreator
+          .new(Fabricate(:moderator), post, PostActionType.types[:spam], take_action: true)
+          .perform
+          .reviewable
       scores = reviewable.reviewable_scores
       expect(scores[0]).to be_agreed
       expect(scores[1]).to be_agreed
@@ -260,27 +260,30 @@ RSpec.describe PostActionCreator do
   end
 
   describe "queue_for_review" do
-    it 'fails if the user is not a staff member' do
-      creator = PostActionCreator.new(
-        user, post,
-        PostActionType.types[:notify_moderators], queue_for_review: true
-      )
+    it "fails if the user is not a staff member" do
+      creator =
+        PostActionCreator.new(
+          user,
+          post,
+          PostActionType.types[:notify_moderators],
+          queue_for_review: true,
+        )
       result = creator.perform
 
       expect(result.success?).to eq(false)
     end
 
-    it 'creates a new reviewable and hides the post' do
+    it "creates a new reviewable and hides the post" do
       result = build_creator.perform
 
       expect(result.success?).to eq(true)
 
       score = result.reviewable.reviewable_scores.last
-      expect(score.reason).to eq('queued_by_staff')
+      expect(score.reason).to eq("queued_by_staff")
       expect(post.reload.hidden?).to eq(true)
     end
 
-    it 'hides the topic even if it has replies' do
+    it "hides the topic even if it has replies" do
       Fabricate(:post, topic: post.topic)
 
       result = build_creator.perform
@@ -290,8 +293,10 @@ RSpec.describe PostActionCreator do
 
     def build_creator
       PostActionCreator.new(
-        admin, post,
-        PostActionType.types[:notify_moderators], queue_for_review: true
+        admin,
+        post,
+        PostActionType.types[:notify_moderators],
+        queue_for_review: true,
       )
     end
   end

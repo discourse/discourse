@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require 'discourse_js_processor'
+require "discourse_js_processor"
 
 RSpec.describe DiscourseJsProcessor do
-
-  describe 'should_transpile?' do
+  describe "should_transpile?" do
     it "returns false for empty strings" do
       expect(DiscourseJsProcessor.should_transpile?(nil)).to eq(false)
-      expect(DiscourseJsProcessor.should_transpile?('')).to eq(false)
+      expect(DiscourseJsProcessor.should_transpile?("")).to eq(false)
     end
 
     it "returns false for a regular js file" do
@@ -24,16 +23,76 @@ RSpec.describe DiscourseJsProcessor do
   describe "skip_module?" do
     it "returns false for empty strings" do
       expect(DiscourseJsProcessor.skip_module?(nil)).to eq(false)
-      expect(DiscourseJsProcessor.skip_module?('')).to eq(false)
+      expect(DiscourseJsProcessor.skip_module?("")).to eq(false)
     end
 
     it "returns true if the header is present" do
-      expect(DiscourseJsProcessor.skip_module?("// cool comment\n// discourse-skip-module")).to eq(true)
+      expect(DiscourseJsProcessor.skip_module?("// cool comment\n// discourse-skip-module")).to eq(
+        true,
+      )
     end
 
     it "returns false if the header is not present" do
       expect(DiscourseJsProcessor.skip_module?("// just some JS\nconsole.log()")).to eq(false)
     end
+
+    it "works end-to-end" do
+      source = <<~JS.chomp
+        // discourse-skip-module
+        console.log("hello world");
+      JS
+      expect(DiscourseJsProcessor.transpile(source, "test", "test")).to eq(source)
+    end
+  end
+
+  it "passes through modern JS syntaxes which are supported in our target browsers" do
+    script = <<~JS.chomp
+      optional?.chaining;
+      const template = func`test`;
+      let numericSeparator = 100_000_000;
+      logicalAssignment ||= 2;
+      nullishCoalescing ?? 'works';
+      try {
+        "optional catch binding";
+      } catch {
+        "works";
+      }
+      async function* asyncGeneratorFunction() {
+        yield await Promise.resolve('a');
+      }
+      let a = {
+        x,
+        y,
+        ...spreadRest
+      };
+    JS
+
+    result = DiscourseJsProcessor.transpile(script, "blah", "blah/mymodule")
+    expect(result).to eq <<~JS.strip
+      define("blah/mymodule", [], function () {
+        "use strict";
+
+      #{script.indent(2)}
+      });
+    JS
+  end
+
+  it "supports decorators and class properties without error" do
+    script = <<~JS.chomp
+      class MyClass {
+        classProperty = 1;
+        #privateProperty = 1;
+        #privateMethod() {
+          console.log("hello world");
+        }
+        @decorated
+        myMethod(){
+        }
+      }
+    JS
+
+    result = DiscourseJsProcessor.transpile(script, "blah", "blah/mymodule")
+    expect(result).to include("_applyDecoratedDescriptor")
   end
 
   it "correctly transpiles widget hbs" do
@@ -70,7 +129,7 @@ RSpec.describe DiscourseJsProcessor do
         {
           "id": null,
           "block": "[[[1,[34,0]]],[],false,[\\"somevalue\\"]]",
-          "moduleName": "(unknown template module)",
+          "moduleName": "/blah/mymodule",
           "isStrictMode": false
         });
       });
@@ -83,8 +142,7 @@ RSpec.describe DiscourseJsProcessor do
     let(:compiler) { DiscourseJsProcessor::Transpiler.new }
     let(:theme_id) { 22 }
 
-    let(:helpers) {
-      <<~JS
+    let(:helpers) { <<~JS }
       Handlebars.registerHelper('theme-prefix', function(themeId, string) {
         return `theme_translations.${themeId}.${string}`
       })
@@ -98,37 +156,48 @@ RSpec.describe DiscourseJsProcessor do
         return `dummy(${string})`
       })
       JS
-    }
 
-    let(:mini_racer) {
+    let(:mini_racer) do
       ctx = MiniRacer::Context.new
-      ctx.eval(File.open("#{Rails.root}/app/assets/javascripts/node_modules/handlebars/dist/handlebars.js").read)
+      ctx.eval(
+        File.open(
+          "#{Rails.root}/app/assets/javascripts/node_modules/handlebars/dist/handlebars.js",
+        ).read,
+      )
       ctx.eval(helpers)
       ctx
-    }
+    end
 
     def render(template)
       compiled = compiler.compile_raw_template(template, theme_id: theme_id)
       mini_racer.eval "Handlebars.template(#{compiled.squish})({})"
     end
 
-    it 'adds the theme id to the helpers' do
+    it "adds the theme id to the helpers" do
       # Works normally
-      expect(render("{{theme-prefix 'translation_key'}}")).
-        to eq('theme_translations.22.translation_key')
-      expect(render("{{theme-i18n 'translation_key'}}")).
-        to eq('translated(theme_translations.22.translation_key)')
-      expect(render("{{theme-setting 'setting_key'}}")).
-        to eq('setting(22:setting_key)')
+      expect(render("{{theme-prefix 'translation_key'}}")).to eq(
+        "theme_translations.22.translation_key",
+      )
+      expect(render("{{theme-i18n 'translation_key'}}")).to eq(
+        "translated(theme_translations.22.translation_key)",
+      )
+      expect(render("{{theme-setting 'setting_key'}}")).to eq("setting(22:setting_key)")
 
       # Works when used inside other statements
-      expect(render("{{dummy-helper (theme-prefix 'translation_key')}}")).
-        to eq('dummy(theme_translations.22.translation_key)')
+      expect(render("{{dummy-helper (theme-prefix 'translation_key')}}")).to eq(
+        "dummy(theme_translations.22.translation_key)",
+      )
     end
 
     it "doesn't duplicate number parameter inside {{each}}" do
-      expect(compiler.compile_raw_template("{{#each item as |test test2|}}{{theme-setting 'setting_key'}}{{/each}}", theme_id: theme_id)).
-        to include('{"name":"theme-setting","hash":{},"hashTypes":{},"hashContexts":{},"types":["NumberLiteral","StringLiteral"]')
+      expect(
+        compiler.compile_raw_template(
+          "{{#each item as |test test2|}}{{theme-setting 'setting_key'}}{{/each}}",
+          theme_id: theme_id,
+        ),
+      ).to include(
+        '{"name":"theme-setting","hash":{},"hashTypes":{},"hashContexts":{},"types":["NumberLiteral","StringLiteral"]',
+      )
       # Fail would be if theme-setting is defined with types:["NumberLiteral","NumberLiteral","StringLiteral"]
     end
   end
@@ -144,7 +213,7 @@ RSpec.describe DiscourseJsProcessor do
         export default hbs(#{template.to_json});
       JS
       result = DiscourseJsProcessor.transpile(script, "", "theme/blah", theme_id: theme_id)
-      result.gsub(/\/\*(.*)\*\//m, "/* (js comment stripped) */")
+      result.gsub(%r{/\*(.*)\*/}m, "/* (js comment stripped) */")
     end
 
     def standard_compile(template)
@@ -153,32 +222,24 @@ RSpec.describe DiscourseJsProcessor do
         export default hbs(#{template.to_json});
       JS
       result = DiscourseJsProcessor.transpile(script, "", "theme/blah")
-      result.gsub(/\/\*(.*)\*\//m, "/* (js comment stripped) */")
+      result.gsub(%r{/\*(.*)\*/}m, "/* (js comment stripped) */")
     end
 
-    it 'adds the theme id to the helpers' do
-      expect(
-        theme_compile "{{theme-prefix 'translation_key'}}"
-      ).to eq(
+    it "adds the theme id to the helpers" do
+      expect(theme_compile "{{theme-prefix 'translation_key'}}").to eq(
         standard_compile "{{theme-prefix #{theme_id} 'translation_key'}}"
       )
 
-      expect(
-        theme_compile "{{theme-i18n 'translation_key'}}"
-      ).to eq(
+      expect(theme_compile "{{theme-i18n 'translation_key'}}").to eq(
         standard_compile "{{theme-i18n #{theme_id} 'translation_key'}}"
       )
 
-      expect(
-        theme_compile "{{theme-setting 'setting_key'}}"
-      ).to eq(
+      expect(theme_compile "{{theme-setting 'setting_key'}}").to eq(
         standard_compile "{{theme-setting #{theme_id} 'setting_key'}}"
       )
 
       # Works when used inside other statements
-      expect(
-        theme_compile "{{dummy-helper (theme-prefix 'translation_key')}}"
-      ).to eq(
+      expect(theme_compile "{{dummy-helper (theme-prefix 'translation_key')}}").to eq(
         standard_compile "{{dummy-helper (theme-prefix #{theme_id} 'translation_key')}}"
       )
     end
@@ -188,10 +249,14 @@ RSpec.describe DiscourseJsProcessor do
     it "can minify code and provide sourcemaps" do
       sources = {
         "multiply.js" => "let multiply = (firstValue, secondValue) => firstValue * secondValue;",
-        "add.js" => "let add = (firstValue, secondValue) => firstValue + secondValue;"
+        "add.js" => "let add = (firstValue, secondValue) => firstValue + secondValue;",
       }
 
-      result = DiscourseJsProcessor::Transpiler.new.terser(sources, { sourceMap: { includeSources: true } })
+      result =
+        DiscourseJsProcessor::Transpiler.new.terser(
+          sources,
+          { sourceMap: { includeSources: true } },
+        )
       expect(result.keys).to contain_exactly("code", "decoded_map", "map")
 
       begin

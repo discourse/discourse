@@ -13,7 +13,7 @@ class CreateStandaloneBookmarksTable < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    add_index :bookmarks, [:user_id, :post_id], unique: true
+    add_index :bookmarks, %i[user_id post_id], unique: true
   end
 
   def down

@@ -27,7 +27,6 @@ const SERVER_SIDE_ONLY = [
   /^\/raw\/\d+/,
   /\.rss$/,
   /\.json$/,
-  /^\/admin\/upgrade$/,
   /^\/logs($|\/)/,
   /^\/admin\/customize\/watched_words\/action\/[^\/]+\/download$/,
   /^\/pub\//,
@@ -410,7 +409,7 @@ const DiscourseURL = EmberObject.extend({
   },
 
   get isComposerOpen() {
-    return this.controllerFor("composer")?.visible;
+    return this.container.lookup("service:composer")?.visible;
   },
 
   get router() {
@@ -506,9 +505,13 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
 
   if (category) {
     url = category.path;
-    if (subcategories && category.default_list_filter === "none") {
-      url += "/all";
-    } else if (!subcategories && category.default_list_filter === "all") {
+    if (category.default_list_filter === "none" && subcategories) {
+      if (subcategories) {
+        url += "/all";
+      } else {
+        url += "/none";
+      }
+    } else if (!subcategories) {
       url += "/none";
     }
   }

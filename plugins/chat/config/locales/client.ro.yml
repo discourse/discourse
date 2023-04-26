@@ -20,15 +20,13 @@ ro:
       joined: "înscris"
       email_frequency:
         never: "Niciodată"
+      header_indicator_preference:
+        never: "Niciodată"
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
+      last_visit: "ultima vizită"
       mention_warning:
         dismiss: "renunță"
-        groups:
-          users_limit:
-            one: "%{count} utilizator"
-            few: "%{count} utilizatori"
-            other: "%{count} utilizatori"
       reply: "Răspunde"
       edit: "Modifică"
       rebake_message: "Reconstruieşte HTML"
@@ -50,12 +48,13 @@ ro:
         yesterday: Ieri
       about_view:
         title: Titlu
+        name: Nume
         description: Descriere
       channel_info:
         back_to_channel: "Înapoi"
         tabs:
           about: Despre
-          members: Membrii
+          members: Membri
           settings: Opțiuni
       direct_message_creator:
         title: Mesaj nou
@@ -68,6 +67,7 @@ ro:
       composer:
         italic_text: "text italic"
         bold_text: "text aldin"
+        send: "Trimite"
       notification_levels:
         never: "Niciodată"
       settings:
@@ -100,6 +100,11 @@ ro:
       emoji_picker:
         objects: "Obiecte"
         flags: "Marcaje de avertizare"
+      thread:
+        replies:
+          one: "%{count} răspuns"
+          few: "%{count} răspunsuri"
+          other: "%{count} răspunsuri"
       draft_channel_screen:
         header: "Mesaj nou"
         cancel: "Anulare"
@@ -111,7 +116,3 @@ ro:
           fields:
             message:
               label: Mesaj
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Semnalat de"

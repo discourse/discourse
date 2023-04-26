@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'has_errors'
+require "has_errors"
 
 class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
-
   def name
     "github"
   end
@@ -50,12 +49,13 @@ class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
 
   def register_middleware(omniauth)
     omniauth.provider :github,
-           setup: lambda { |env|
-             strategy = env["omniauth.strategy"]
-              strategy.options[:client_id] = SiteSetting.github_client_id
-              strategy.options[:client_secret] = SiteSetting.github_client_secret
-           },
-           scope: "user:email"
+                      setup:
+                        lambda { |env|
+                          strategy = env["omniauth.strategy"]
+                          strategy.options[:client_id] = SiteSetting.github_client_id
+                          strategy.options[:client_secret] = SiteSetting.github_client_secret
+                        },
+                      scope: "user:email"
   end
 
   # the omniauth-github gem only picks up the primary email if it's verified:

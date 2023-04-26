@@ -27,9 +27,18 @@
             {{#let this.channel.chatable.users.firstObject as |user|}}
               <span class="chat-channel-title__name">{{user.username}}</span>
               {{#if this.showUserStatus}}
-                <UserStatusMessage @status={{this.channel.chatable.users.firstObject.status}} @showDescription={{if this.site.mobileView "true"}} />
+                <UserStatusMessage
+                  @class="chat-channel-title__user-status-message"
+                  @status={{this.channel.chatable.users.firstObject.status}}
+                  @showDescription={{if this.site.mobileView "true"}}
+                />
               {{/if}}
-              <PluginOutlet @name="after-chat-channel-username" @args={{hash user=user}} @tagName="" @connectorTagName="" />
+              <PluginOutlet
+                @name="after-chat-channel-username"
+                @outletArgs={{hash user=user}}
+                @tagName=""
+                @connectorTagName=""
+              />
             {{/let}}
           {{/if}}
         </div>
@@ -45,13 +54,13 @@
         class="chat-channel-title__category-badge"
         style={{this.channelColorStyle}}
       >
-        {{d-icon "hashtag"}}
+        {{d-icon "d-chat"}}
         {{#if this.channel.chatable.read_restricted}}
           {{d-icon "lock" class="chat-channel-title__restricted-category-icon"}}
         {{/if}}
       </span>
       <span class="chat-channel-title__name">
-        {{replace-emoji this.channel.escapedTitle}}
+        {{replace-emoji this.channel.title}}
       </span>
 
       {{#if (has-block)}}

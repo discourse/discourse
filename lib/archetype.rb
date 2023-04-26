@@ -11,22 +11,19 @@ class Archetype
   end
 
   def attributes
-    {
-      id: @id,
-      options: @options
-    }
+    { id: @id, options: @options }
   end
 
   def self.default
-    'regular'
+    "regular"
   end
 
   def self.private_message
-    'private_message'
+    "private_message"
   end
 
   def self.banner
-    'banner'
+    "banner"
   end
 
   def self.list
@@ -40,8 +37,7 @@ class Archetype
   end
 
   # default archetypes
-  register 'regular'
-  register 'private_message'
-  register 'banner'
-
+  register "regular"
+  register "private_message"
+  register "banner"
 end

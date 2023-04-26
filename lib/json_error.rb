@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module JsonError
-
   def create_errors_json(obj, opts = nil)
     opts ||= {}
 
@@ -32,7 +31,7 @@ module JsonError
       return { errors: [message] } if message.present?
     end
 
-    return { errors: [I18n.t('not_found')] } if obj.is_a?(HasErrors) && obj.not_found
+    return { errors: [I18n.t("not_found")] } if obj.is_a?(HasErrors) && obj.not_found
 
     # Log a warning (unless obj is nil)
     Rails.logger.warn("create_errors_json called with unrecognized type: #{obj.inspect}") if obj
@@ -42,7 +41,6 @@ module JsonError
   end
 
   def self.generic_error
-    { errors: [I18n.t('js.generic_error')] }
+    { errors: [I18n.t("js.generic_error")] }
   end
-
 end

@@ -1,47 +1,74 @@
 # frozen_string_literal: true
 
 RSpec.describe WildcardUrlChecker do
-  describe '.check_url' do
-    context 'when url is valid' do
-      it 'returns true' do
-        result1 = described_class.check_url('https://*.discourse.org', 'https://anything.is.possible.discourse.org')
+  describe ".check_url" do
+    context "when url is valid" do
+      it "returns true" do
+        result1 =
+          described_class.check_url(
+            "https://*.discourse.org",
+            "https://anything.is.possible.discourse.org",
+          )
         expect(result1).to eq(true)
 
-        result2 = described_class.check_url('https://www.discourse.org', 'https://www.discourse.org')
+        result2 =
+          described_class.check_url("https://www.discourse.org", "https://www.discourse.org")
         expect(result2).to eq(true)
 
-        result3 = described_class.check_url('*', 'https://hello.discourse.org')
+        result3 = described_class.check_url("*", "https://hello.discourse.org")
         expect(result3).to eq(true)
 
-        result4 = described_class.check_url('discourse://auth_redirect', 'discourse://auth_redirect')
+        result4 =
+          described_class.check_url("discourse://auth_redirect", "discourse://auth_redirect")
         expect(result4).to eq(true)
 
-        result5 = described_class.check_url('customprotocol://www.discourse.org', "customprotocol://www.discourse.org")
+        result5 =
+          described_class.check_url(
+            "customprotocol://www.discourse.org",
+            "customprotocol://www.discourse.org",
+          )
         expect(result5).to eq(true)
       end
     end
 
-    context 'when url is invalid' do
+    context "when url is invalid" do
       it "returns false" do
-        result1 = described_class.check_url('https://*.discourse.org', 'https://bad-domain.discourse.org.evil.com')
+        result1 =
+          described_class.check_url(
+            "https://*.discourse.org",
+            "https://bad-domain.discourse.org.evil.com",
+          )
         expect(result1).to eq(false)
 
-        result2 = described_class.check_url('https://www.discourse.org', 'https://www.discourse.org.evil.com')
+        result2 =
+          described_class.check_url(
+            "https://www.discourse.org",
+            "https://www.discourse.org.evil.com",
+          )
         expect(result2).to eq(false)
 
-        result3 = described_class.check_url('https://www.discourse.org', 'https://www.www.discourse.org')
+        result3 =
+          described_class.check_url("https://www.discourse.org", "https://www.www.discourse.org")
         expect(result3).to eq(false)
 
-        result4 = described_class.check_url('https://www.discourse.org', "https://www.discourse.org\nwww.discourse.org.evil.com")
+        result4 =
+          described_class.check_url(
+            "https://www.discourse.org",
+            "https://www.discourse.org\nwww.discourse.org.evil.com",
+          )
         expect(result4).to eq(false)
 
-        result5 = described_class.check_url('https://', "https://")
+        result5 = described_class.check_url("https://", "https://")
         expect(result5).to eq(false)
 
-        result6 = described_class.check_url('invalid$protocol://www.discourse.org', "invalid$protocol://www.discourse.org")
+        result6 =
+          described_class.check_url(
+            "invalid$protocol://www.discourse.org",
+            "invalid$protocol://www.discourse.org",
+          )
         expect(result6).to eq(false)
 
-        result7 = described_class.check_url('noscheme', "noscheme")
+        result7 = described_class.check_url("noscheme", "noscheme")
         expect(result7).to eq(false)
       end
     end

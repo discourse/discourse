@@ -6,22 +6,28 @@ RSpec.describe User do
   subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
   def user_error_message(*keys)
-    I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join('.')}")
+    I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join(".")}")
   end
 
-  it { is_expected.to have_many(:pending_posts).class_name('ReviewableQueuedPost').with_foreign_key(:created_by_id) }
+  it do
+    is_expected.to have_many(:pending_posts).class_name("ReviewableQueuedPost").with_foreign_key(
+      :created_by_id,
+    )
+  end
 
-  describe 'Associations' do
-    it 'should delete sidebar_section_links when a user is destroyed' do
+  describe "Associations" do
+    it "should delete sidebar_section_links when a user is destroyed" do
       Fabricate(:category_sidebar_section_link, user: user)
       Fabricate(:tag_sidebar_section_link, user: user)
 
-      expect { user.destroy! }.to change { SidebarSectionLink.where(user: user).count }.from(2).to(0)
+      expect { user.destroy! }.to change { SidebarSectionLink.where(user: user).count }.from(2).to(
+        0,
+      )
     end
   end
 
-  describe 'Callbacks' do
-    describe 'default sidebar section links' do
+  describe "Callbacks" do
+    describe "default sidebar section links" do
       fab!(:category) { Fabricate(:category) }
 
       fab!(:secured_category) do |category|
@@ -33,7 +39,9 @@ RSpec.describe User do
 
       fab!(:tag) { Fabricate(:tag) }
       fab!(:hidden_tag) { Fabricate(:tag) }
-      fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+      fab!(:staff_tag_group) do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+      end
 
       before do
         SiteSetting.navigation_menu = "sidebar"
@@ -42,72 +50,77 @@ RSpec.describe User do
         SiteSetting.default_sidebar_tags = "#{tag.name}|#{hidden_tag.name}"
       end
 
-      it 'creates the right sidebar section link records for categories and tags that a user can see' do
+      it "creates the right sidebar section link records for categories and tags that a user can see" do
         user = Fabricate(:user)
 
-        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          category.id
-        )
+        expect(
+          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
+        ).to contain_exactly(category.id)
 
-        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          tag.id
-        )
+        expect(
+          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
+        ).to contain_exactly(tag.id)
 
         admin = Fabricate(:admin)
 
-        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: admin.id).pluck(:linkable_id)).to contain_exactly(
-          category.id,
-          secured_category.id
-        )
+        expect(
+          SidebarSectionLink.where(linkable_type: "Category", user_id: admin.id).pluck(
+            :linkable_id,
+          ),
+        ).to contain_exactly(category.id, secured_category.id)
 
-        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: admin.id).pluck(:linkable_id)).to contain_exactly(
-          tag.id,
-          hidden_tag.id
-        )
+        expect(
+          SidebarSectionLink.where(linkable_type: "Tag", user_id: admin.id).pluck(:linkable_id),
+        ).to contain_exactly(tag.id, hidden_tag.id)
       end
 
-      it 'should create and remove the right sidebar section link records when user is promoted/demoted as an admin' do
+      it "should create and remove the right sidebar section link records when user is promoted/demoted as an admin" do
         user = Fabricate(:user)
         another_category = Fabricate(:category)
         another_tag = Fabricate(:tag)
 
         # User has customized their sidebar categories and tags
         SidebarSectionLink.where(user: user).delete_all
-        SidebarSectionLinksUpdater.update_category_section_links(user, category_ids: [another_category.id])
+        SidebarSectionLinksUpdater.update_category_section_links(
+          user,
+          category_ids: [another_category.id],
+        )
         SidebarSectionLinksUpdater.update_tag_section_links(user, tag_names: [another_tag.name])
 
         # A user promoted to admin now has any default categories/tags they didn't previously have access to
         user.update(admin: true)
-        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          another_category.id,
-          secured_category.id
-        )
-        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          another_tag.id,
-          hidden_tag.id
-        )
+        expect(
+          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
+        ).to contain_exactly(another_category.id, secured_category.id)
+        expect(
+          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
+        ).to contain_exactly(another_tag.id, hidden_tag.id)
 
         # User still has their customized sidebar categories and tags after demotion
         user.update(admin: false)
-        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          another_category.id
-        )
-        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          another_tag.id
-        )
+        expect(
+          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
+        ).to contain_exactly(another_category.id)
+        expect(
+          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
+        ).to contain_exactly(another_tag.id)
       end
 
-      it 'should not receive any new categories w/ suppress secured categories from admin enabled' do
+      it "should not receive any new categories w/ suppress secured categories from admin enabled" do
         SiteSetting.suppress_secured_categories_from_admin = true
         user = Fabricate(:user)
         SidebarSectionLink.where(user: user).delete_all # User has customized their sidebar categories
         user.update(admin: true)
-        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
+        expect(
+          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
+        ).to be_empty
         user.update(admin: false)
-        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
+        expect(
+          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
+        ).to be_empty
       end
 
-      it 'should not create any sidebar section link records when navigation_menu site setting is still legacy' do
+      it "should not create any sidebar section link records when navigation_menu site setting is still legacy" do
         SiteSetting.navigation_menu = "legacy"
 
         user = Fabricate(:user)
@@ -115,141 +128,143 @@ RSpec.describe User do
         expect(SidebarSectionLink.exists?(user_id: user.id)).to eq(false)
       end
 
-      it 'should not create any sidebar section link records for staged users' do
+      it "should not create any sidebar section link records for staged users" do
         user = Fabricate(:user, staged: true)
 
         expect(SidebarSectionLink.exists?).to eq(false)
       end
 
-      it 'should create sidebar section link records when user has been unstaged' do
+      it "should create sidebar section link records when user has been unstaged" do
         user = Fabricate(:user, staged: true)
         user.unstage!
 
         expect(SidebarSectionLink.exists?(user: user)).to eq(true)
       end
 
-      it 'should not create any sidebar section link records for non human users' do
+      it "should not create any sidebar section link records for non human users" do
         user = Fabricate(:user, id: -Time.now.to_i)
 
         expect(SidebarSectionLink.exists?).to eq(false)
       end
 
-      it 'should not create any tag sidebar section link records when tagging is disabled' do
+      it "should not create any tag sidebar section link records when tagging is disabled" do
         SiteSetting.tagging_enabled = false
 
         user = Fabricate(:user)
 
-        expect(SidebarSectionLink.exists?(linkable_type: 'Category', user_id: user.id)).to eq(true)
-        expect(SidebarSectionLink.exists?(linkable_type: 'Tag', user_id: user.id)).to eq(false)
+        expect(SidebarSectionLink.exists?(linkable_type: "Category", user_id: user.id)).to eq(true)
+        expect(SidebarSectionLink.exists?(linkable_type: "Tag", user_id: user.id)).to eq(false)
       end
     end
   end
 
-  describe 'Validations' do
-    describe '#username' do
+  describe "Validations" do
+    describe "#username" do
       it { is_expected.to validate_presence_of :username }
 
-      describe 'when username already exists' do
-        it 'should not be valid' do
+      describe "when username already exists" do
+        it "should not be valid" do
           new_user = Fabricate.build(:user, username: user.username.upcase)
 
           expect(new_user).to_not be_valid
 
-          expect(new_user.errors.full_messages.first)
-            .to include(I18n.t(:'user.username.unique'))
+          expect(new_user.errors.full_messages.first).to include(I18n.t(:"user.username.unique"))
         end
       end
 
-      describe 'when group with a same name already exists' do
-        it 'should not be valid' do
+      describe "when group with a same name already exists" do
+        it "should not be valid" do
           new_user = Fabricate.build(:user, username: group.name.upcase)
 
           expect(new_user).to_not be_valid
 
-          expect(new_user.errors.full_messages.first)
-            .to include(I18n.t(:'user.username.unique'))
+          expect(new_user.errors.full_messages.first).to include(I18n.t(:"user.username.unique"))
         end
       end
 
-      it 'is not valid if username changes to be same as password' do
-        user.username = 'myawesomepassword'
+      it "is not valid if username changes to be same as password" do
+        user.username = "myawesomepassword"
         expect(user).to_not be_valid
-        expect(user.errors.full_messages.first)
-          .to include(user_error_message(:username, :same_as_password))
+        expect(user.errors.full_messages.first).to include(
+          user_error_message(:username, :same_as_password),
+        )
       end
 
-      it 'is not valid if username lowercase changes to be same as password' do
-        user.username = 'MyAwesomePassword'
+      it "is not valid if username lowercase changes to be same as password" do
+        user.username = "MyAwesomePassword"
         expect(user).to_not be_valid
-        expect(user.errors.full_messages.first)
-          .to include(user_error_message(:username, :same_as_password))
+        expect(user.errors.full_messages.first).to include(
+          user_error_message(:username, :same_as_password),
+        )
       end
 
-      describe 'when a username is an integer' do
-        it 'is converted to a string on normalization' do
+      describe "when a username is an integer" do
+        it "is converted to a string on normalization" do
           expect(User.normalize_username(123)).to eq("123") # This is possible via the API
         end
       end
     end
 
-    describe 'name' do
-      it 'is not valid if it changes to be the same as the password' do
-        user.name = 'myawesomepassword'
+    describe "name" do
+      it "is not valid if it changes to be the same as the password" do
+        user.name = "myawesomepassword"
         expect(user).to_not be_valid
-        expect(user.errors.full_messages.first)
-          .to include(user_error_message(:name, :same_as_password))
+        expect(user.errors.full_messages.first).to include(
+          user_error_message(:name, :same_as_password),
+        )
       end
 
-      it 'is not valid if name lowercase changes to be the same as the password' do
-        user.name = 'MyAwesomePassword'
+      it "is not valid if name lowercase changes to be the same as the password" do
+        user.name = "MyAwesomePassword"
         expect(user).to_not be_valid
-        expect(user.errors.full_messages.first)
-          .to include(user_error_message(:name, :same_as_password))
+        expect(user.errors.full_messages.first).to include(
+          user_error_message(:name, :same_as_password),
+        )
       end
 
       it "doesn't raise an error if the name is longer than the max password length" do
-        user.name = 'x' * (User.max_password_length + 1)
+        user.name = "x" * (User.max_password_length + 1)
         expect(user).to be_valid
       end
     end
 
-    describe 'emails' do
+    describe "emails" do
       it { is_expected.to validate_presence_of :primary_email }
 
       let(:user) { Fabricate.build(:user) }
 
-      describe 'when record has a valid email' do
+      describe "when record has a valid email" do
         it "should be valid" do
-          user.email = 'test@gmail.com'
+          user.email = "test@gmail.com"
 
           expect(user).to be_valid
         end
       end
 
-      describe 'when record has an invalid email' do
-        it 'should not be valid' do
-          user.email = 'test@gmailcom'
+      describe "when record has an invalid email" do
+        it "should not be valid" do
+          user.email = "test@gmailcom"
 
           expect(user).to_not be_valid
           expect(user.errors.messages.keys).to contain_exactly(:primary_email)
         end
       end
 
-      describe 'when record has an email that as already been taken' do
-        it 'should not be valid' do
+      describe "when record has an email that as already been taken" do
+        it "should not be valid" do
           user2 = Fabricate(:user)
           user.email = user2.email.upcase
 
           expect(user).to_not be_valid
 
-          expect(user.errors.messages[:primary_email]).to include(I18n.t(
-            'activerecord.errors.messages.taken'
-          ))
+          expect(user.errors.messages[:primary_email]).to include(
+            I18n.t("activerecord.errors.messages.taken"),
+          )
         end
       end
 
-      describe 'when user is staged' do
-        it 'should still validate presence of primary_email' do
+      describe "when user is staged" do
+        it "should still validate presence of primary_email" do
           user.staged = true
           user.email = nil
 
@@ -258,7 +273,7 @@ RSpec.describe User do
         end
       end
 
-      describe 'when primary_email is being reassigned to another user' do
+      describe "when primary_email is being reassigned to another user" do
         it "should not be valid" do
           user2 = Fabricate.build(:user, email: nil)
           user.save!
@@ -298,7 +313,9 @@ RSpec.describe User do
         end
 
         context "when watched words are of type 'Censor'" do
-          let!(:censored_word) { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+          let!(:censored_word) do
+            Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
+          end
           let(:value) { "censored word" }
 
           context "when user field is public" do
@@ -321,7 +338,12 @@ RSpec.describe User do
         context "when watched words are of type 'Replace'" do
           let(:value) { "word to replace" }
           let!(:replace_word) do
-            Fabricate(:watched_word, word: "to replace", replacement: "replaced", action: WatchedWord.actions[:replace])
+            Fabricate(
+              :watched_word,
+              word: "to replace",
+              replacement: "replaced",
+              action: WatchedWord.actions[:replace],
+            )
           end
 
           context "when user field is public" do
@@ -338,6 +360,23 @@ RSpec.describe User do
               user.save!
               expect(user_field_value).to eq "word to replace"
             end
+          end
+        end
+
+        context "when watched words are of type 'link'" do
+          let(:value) { "don't replace me" }
+          let!(:replace_word) do
+            Fabricate(
+              :watched_word,
+              word: "replace",
+              replacement: "touch",
+              action: WatchedWord.actions[:link],
+            )
+          end
+
+          it "does not replace anything" do
+            user.save!
+            expect(user_field_value).to eq value
           end
         end
       end
@@ -359,11 +398,11 @@ RSpec.describe User do
 
       context "with a multiselect user field" do
         fab!(:user_field) do
-          Fabricate(:user_field, field_type: 'multiselect', show_on_profile: true) do
+          Fabricate(:user_field, field_type: "multiselect", show_on_profile: true) do
             user_field_options do
               [
-                Fabricate(:user_field_option, value: 'Axe'),
-                Fabricate(:user_field_option, value: 'Sword')
+                Fabricate(:user_field_option, value: "Axe"),
+                Fabricate(:user_field_option, value: "Sword"),
               ]
             end
           end
@@ -372,28 +411,29 @@ RSpec.describe User do
         let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
 
         context "with a blocked word" do
-          let(:value) { %w{ Axe bad Sword } }
+          let(:value) { %w[Axe bad Sword] }
 
           it "does not block the word since it is not user generated-content" do
             user.save!
-            expect(user_field_value).to eq %w{ Axe bad Sword }
+            expect(user_field_value).to eq %w[Axe bad Sword]
           end
         end
 
         context "with a censored word" do
-          let(:value) { %w{ Axe bad Sword } }
+          let(:value) { %w[Axe bad Sword] }
           before { watched_word.action = WatchedWord.actions[:censor] }
 
           it "does not censor the word since it is not user generated-content" do
             user.save!
-            expect(user_field_value).to eq %w{ Axe bad Sword }
+            expect(user_field_value).to eq %w[Axe bad Sword]
           end
         end
-
       end
 
       context "when reseting user fields" do
-        let!(:censored_word) { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+        let!(:censored_word) do
+          Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
+        end
         let(:value) { nil }
 
         it "works" do
@@ -404,85 +444,95 @@ RSpec.describe User do
     end
   end
 
-  describe '#count_by_signup_date' do
+  describe "#count_by_signup_date" do
     before(:each) do
       User.destroy_all
-      freeze_time DateTime.parse('2017-02-01 12:00')
+      freeze_time DateTime.parse("2017-02-01 12:00")
       Fabricate(:user)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 2.days.ago)
       Fabricate(:user, created_at: 4.days.ago)
     end
-    let(:signups_by_day) { { 1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1 } }
+    let(:signups_by_day) do
+      { 1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1 }
+    end
 
-    it 'collect closed interval signups' do
+    it "collect closed interval signups" do
       expect(User.count_by_signup_date(2.days.ago, Time.now)).to include(signups_by_day)
-      expect(User.count_by_signup_date(2.days.ago, Time.now)).not_to include(4.days.ago.to_date => 1)
+      expect(User.count_by_signup_date(2.days.ago, Time.now)).not_to include(
+        4.days.ago.to_date => 1,
+      )
     end
   end
 
-  describe '.enqueue_welcome_message' do
+  describe ".enqueue_welcome_message" do
     fab!(:user) { Fabricate(:user) }
 
-    it 'enqueues the system message' do
+    it "enqueues the system message" do
       SiteSetting.send_welcome_message = true
 
-      expect_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'welcome_user' }) do
-        user.enqueue_welcome_message('welcome_user')
-      end
+      expect_enqueued_with(
+        job: :send_system_message,
+        args: {
+          user_id: user.id,
+          message_type: "welcome_user",
+        },
+      ) { user.enqueue_welcome_message("welcome_user") }
     end
 
     it "doesn't enqueue the system message when the site settings disable it" do
       SiteSetting.send_welcome_message = false
 
-      expect_not_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'welcome_user' }) do
-        user.enqueue_welcome_message('welcome_user')
-      end
+      expect_not_enqueued_with(
+        job: :send_system_message,
+        args: {
+          user_id: user.id,
+          message_type: "welcome_user",
+        },
+      ) { user.enqueue_welcome_message("welcome_user") }
     end
   end
 
-  describe 'enqueue_staff_welcome_message' do
+  describe "enqueue_staff_welcome_message" do
     fab!(:first_admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }
 
-    it 'enqueues message for admin' do
-      expect {
-        user.grant_admin!
-      }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
+    it "enqueues message for admin" do
+      expect { user.grant_admin! }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
     end
 
-    it 'enqueues message for moderator' do
-      expect {
-        user.grant_moderation!
-      }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
+    it "enqueues message for moderator" do
+      expect { user.grant_moderation! }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
     end
 
-    it 'skips the message if already an admin' do
+    it "skips the message if already an admin" do
       user.update(admin: true)
-      expect {
-        user.grant_admin!
-      }.not_to change { Jobs::SendSystemMessage.jobs.count }
+      expect { user.grant_admin! }.not_to change { Jobs::SendSystemMessage.jobs.count }
     end
   end
 
-  describe '.set_default_tags_preferences' do
+  describe ".set_default_tags_preferences" do
     let(:tag) { Fabricate(:tag) }
 
     it "should set default tag preferences when new user created" do
       SiteSetting.default_tags_watching = tag.name
       user = Fabricate(:user)
-      expect(TagUser.exists?(tag_id: tag.id, user_id: user.id, notification_level: TagUser.notification_levels[:watching])).to be_truthy
+      expect(
+        TagUser.exists?(
+          tag_id: tag.id,
+          user_id: user.id,
+          notification_level: TagUser.notification_levels[:watching],
+        ),
+      ).to be_truthy
     end
   end
 
-  describe 'reviewable' do
+  describe "reviewable" do
     let(:user) { Fabricate(:user, active: false) }
     fab!(:admin) { Fabricate(:admin) }
 
-    before do
-      Jobs.run_immediately!
-    end
+    before { Jobs.run_immediately! }
 
     it "creates a reviewable for the user if must_approve_users is true and activate is called" do
       SiteSetting.must_approve_users = true
@@ -531,7 +581,7 @@ RSpec.describe User do
     end
   end
 
-  describe 'delete posts in batches' do
+  describe "delete posts in batches" do
     fab!(:post1) { Fabricate(:post) }
     fab!(:user) { post1.user }
     fab!(:post2) { Fabricate(:post, topic: post1.topic, user: user) }
@@ -541,7 +591,7 @@ RSpec.describe User do
     let(:guardian) { Guardian.new(Fabricate(:admin)) }
     fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, created_by: user) }
 
-    it 'deletes only one batch of posts' do
+    it "deletes only one batch of posts" do
       post2
       deleted_posts = user.delete_posts_in_batches(guardian, 1)
       expect(Post.where(id: post_ids).count).to eq(2)
@@ -549,21 +599,17 @@ RSpec.describe User do
       expect(deleted_posts[0]).to eq(post2)
     end
 
-    it 'correctly deletes posts and topics' do
+    it "correctly deletes posts and topics" do
       posts
       user.delete_posts_in_batches(guardian, 20)
 
       expect(Post.where(id: post_ids)).to be_empty
       expect(Reviewable.where(created_by: user).count).to eq(0)
 
-      posts.each do |p|
-        if p.is_first_post?
-          expect(Topic.find_by(id: p.topic_id)).to be_nil
-        end
-      end
+      posts.each { |p| expect(Topic.find_by(id: p.topic_id)).to be_nil if p.is_first_post? }
     end
 
-    it 'does not allow non moderators to delete all posts' do
+    it "does not allow non moderators to delete all posts" do
       invalid_guardian = Guardian.new(Fabricate(:user))
 
       expect do
@@ -578,8 +624,7 @@ RSpec.describe User do
     end
   end
 
-  describe 'new' do
-
+  describe "new" do
     subject { Fabricate.build(:user) }
 
     it { is_expected.to be_valid }
@@ -591,55 +636,59 @@ RSpec.describe User do
       expect(subject.approved_by_id).to be_blank
     end
 
-    it 'triggers an extensibility event' do
+    it "triggers an extensibility event" do
       event = DiscourseEvent.track_events { subject.save! }.first
 
       expect(event[:event_name]).to eq(:user_created)
       expect(event[:params].first).to eq(subject)
     end
 
-    context 'with after_save' do
+    context "with after_save" do
       before { subject.save! }
 
       it "has correct settings" do
         expect(subject.email_tokens).to be_present
         expect(subject.user_stat).to be_present
         expect(subject.user_profile).to be_present
-        expect(subject.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
+        expect(subject.user_option.email_messages_level).to eq(
+          UserOption.email_level_types[:always],
+        )
         expect(subject.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
       end
     end
 
     it "downcases email addresses" do
-      user = Fabricate.build(:user, email: 'Fancy.Caps.4.U@gmail.com')
+      user = Fabricate.build(:user, email: "Fancy.Caps.4.U@gmail.com")
       user.valid?
-      expect(user.email).to eq('fancy.caps.4.u@gmail.com')
+      expect(user.email).to eq("fancy.caps.4.u@gmail.com")
     end
 
     it "strips whitespace from email addresses" do
-      user = Fabricate.build(:user, email: ' example@gmail.com ')
+      user = Fabricate.build(:user, email: " example@gmail.com ")
       user.valid?
-      expect(user.email).to eq('example@gmail.com')
+      expect(user.email).to eq("example@gmail.com")
     end
   end
 
-  describe 'ip address validation' do
-    it 'validates ip_address for new users' do
+  describe "ip address validation" do
+    it "validates ip_address for new users" do
       u = Fabricate.build(:user)
-      AllowedIpAddressValidator.any_instance.expects(:validate_each).with(u, :ip_address, u.ip_address)
+      AllowedIpAddressValidator
+        .any_instance
+        .expects(:validate_each)
+        .with(u, :ip_address, u.ip_address)
       u.valid?
     end
 
-    it 'does not validate ip_address when updating an existing user' do
+    it "does not validate ip_address when updating an existing user" do
       u = Fabricate(:user)
-      u.ip_address = '87.123.23.11'
+      u.ip_address = "87.123.23.11"
       AllowedIpAddressValidator.any_instance.expects(:validate_each).never
       u.valid?
     end
   end
 
   describe "trust levels" do
-
     # NOTE be sure to use build to avoid db calls
     let(:user) { Fabricate.build(:user, trust_level: TrustLevel[0]) }
 
@@ -648,8 +697,7 @@ RSpec.describe User do
       expect(User.new.trust_level).to eq(TrustLevel[4])
     end
 
-    describe 'has_trust_level?' do
-
+    describe "has_trust_level?" do
       it "raises an error with an invalid level" do
         expect { user.has_trust_level?(:wat) }.to raise_error(InvalidTrustLevel)
       end
@@ -672,10 +720,9 @@ RSpec.describe User do
         user.admin = true
         expect(user.has_trust_level?(TrustLevel[1])).to eq(true)
       end
-
     end
 
-    describe 'moderator' do
+    describe "moderator" do
       it "isn't a moderator by default" do
         expect(user.moderator?).to eq(false)
       end
@@ -689,44 +736,42 @@ RSpec.describe User do
         user.admin = true
         expect(user.staff?).to eq(true)
       end
-
     end
-
   end
 
-  describe 'staff and regular users' do
+  describe "staff and regular users" do
     let(:user) { Fabricate.build(:user) }
 
-    describe '#staff?' do
+    describe "#staff?" do
       subject { user.staff? }
 
       it { is_expected.to eq(false) }
 
-      context 'for a moderator user' do
+      context "for a moderator user" do
         before { user.moderator = true }
 
         it { is_expected.to eq(true) }
       end
 
-      context 'for an admin user' do
+      context "for an admin user" do
         before { user.admin = true }
 
         it { is_expected.to eq(true) }
       end
     end
 
-    describe '#regular?' do
+    describe "#regular?" do
       subject { user.regular? }
 
       it { is_expected.to eq(true) }
 
-      context 'for a moderator user' do
+      context "for a moderator user" do
         before { user.moderator = true }
 
         it { is_expected.to eq(false) }
       end
 
-      context 'for an admin user' do
+      context "for an admin user" do
         before { user.admin = true }
 
         it { is_expected.to eq(false) }
@@ -734,16 +779,14 @@ RSpec.describe User do
     end
   end
 
-  describe 'email_hash' do
-    before_all do
-      @user = Fabricate(:user)
-    end
+  describe "email_hash" do
+    before_all { @user = Fabricate(:user) }
 
-    it 'should have a sane email hash' do
+    it "should have a sane email hash" do
       expect(@user.email_hash).to match(/^[0-9a-f]{32}$/)
     end
 
-    it 'should use downcase email' do
+    it "should use downcase email" do
       @user.email = "example@example.com"
       @user2 = Fabricate(:user)
       @user2.email = "ExAmPlE@eXaMpLe.com"
@@ -751,7 +794,7 @@ RSpec.describe User do
       expect(@user.email_hash).to eq(@user2.email_hash)
     end
 
-    it 'should trim whitespace before hashing' do
+    it "should trim whitespace before hashing" do
       @user.email = "example@example.com"
       @user2 = Fabricate(:user)
       @user2.email = " example@example.com "
@@ -760,30 +803,70 @@ RSpec.describe User do
     end
   end
 
-  describe 'associated_accounts' do
-    it 'should correctly find social associations' do
+  describe "associated_accounts" do
+    it "should correctly find social associations" do
       user = Fabricate(:user)
       expect(user.associated_accounts).to eq([])
 
-      UserAssociatedAccount.create(user_id: user.id, provider_name: "twitter", provider_uid: "1", info: { nickname: "sam" })
-      UserAssociatedAccount.create(user_id: user.id, provider_name: "facebook", provider_uid: "1234", info: { email: "test@example.com" })
-      UserAssociatedAccount.create(user_id: user.id, provider_name: "discord", provider_uid: "examplel123123", info: { nickname: "sam" })
-      UserAssociatedAccount.create(user_id: user.id, provider_name: "google_oauth2", provider_uid: "1", info: { email: "sam@sam.com" })
-      UserAssociatedAccount.create(user_id: user.id, provider_name: "github", provider_uid: "1", info: { nickname: "sam" })
+      UserAssociatedAccount.create(
+        user_id: user.id,
+        provider_name: "twitter",
+        provider_uid: "1",
+        info: {
+          nickname: "sam",
+        },
+      )
+      UserAssociatedAccount.create(
+        user_id: user.id,
+        provider_name: "facebook",
+        provider_uid: "1234",
+        info: {
+          email: "test@example.com",
+        },
+      )
+      UserAssociatedAccount.create(
+        user_id: user.id,
+        provider_name: "discord",
+        provider_uid: "examplel123123",
+        info: {
+          nickname: "sam",
+        },
+      )
+      UserAssociatedAccount.create(
+        user_id: user.id,
+        provider_name: "google_oauth2",
+        provider_uid: "1",
+        info: {
+          email: "sam@sam.com",
+        },
+      )
+      UserAssociatedAccount.create(
+        user_id: user.id,
+        provider_name: "github",
+        provider_uid: "1",
+        info: {
+          nickname: "sam",
+        },
+      )
 
       user.reload
-      expect(user.associated_accounts.map { |a| a[:name] }).to contain_exactly('twitter', 'facebook', 'google_oauth2', 'github', 'discord')
-
+      expect(user.associated_accounts.map { |a| a[:name] }).to contain_exactly(
+        "twitter",
+        "facebook",
+        "google_oauth2",
+        "github",
+        "discord",
+      )
     end
   end
 
-  describe '.is_singular_admin?' do
-    it 'returns true if user is singular admin' do
+  describe ".is_singular_admin?" do
+    it "returns true if user is singular admin" do
       admin = Fabricate(:admin)
       expect(admin.is_singular_admin?).to eq(true)
     end
 
-    it 'returns false if user is not the only admin' do
+    it "returns false if user is not the only admin" do
       admin = Fabricate(:admin)
       Fabricate(:admin)
 
@@ -791,21 +874,21 @@ RSpec.describe User do
     end
   end
 
-  describe 'name heuristics' do
-    it 'is able to guess a decent name from an email' do
-      expect(User.suggest_name('sam.saffron@gmail.com')).to eq('Sam Saffron')
+  describe "name heuristics" do
+    it "is able to guess a decent name from an email" do
+      expect(User.suggest_name("sam.saffron@gmail.com")).to eq("Sam Saffron")
     end
 
-    it 'is able to guess a decent name from username' do
-      expect(User.suggest_name('@sam.saffron')).to eq('Sam Saffron')
+    it "is able to guess a decent name from username" do
+      expect(User.suggest_name("@sam.saffron")).to eq("Sam Saffron")
     end
 
-    it 'is able to guess a decent name from name' do
-      expect(User.suggest_name('sam saffron')).to eq('Sam Saffron')
+    it "is able to guess a decent name from name" do
+      expect(User.suggest_name("sam saffron")).to eq("Sam Saffron")
     end
   end
 
-  describe 'username format' do
+  describe "username format" do
     fab!(:user) { Fabricate(:user) }
 
     def assert_bad(username)
@@ -824,10 +907,10 @@ RSpec.describe User do
       assert_good("abcde")
     end
 
-    context 'when Unicode usernames are disabled' do
+    context "when Unicode usernames are disabled" do
       before { SiteSetting.unicode_usernames = false }
 
-      %w{
+      %w[
         first.last
         first
         first-last
@@ -836,13 +919,13 @@ RSpec.describe User do
         mc.hammer_nose
         UPPERCASE
         sgif
-      }.each do |username|
+      ].each do |username|
         it "allows #{username}" do
           assert_good(username)
         end
       end
 
-      %w{
+      %w[
         traildot.
         has\ space
         double__underscore
@@ -860,39 +943,23 @@ RSpec.describe User do
         sam.woff
         sam.Png
         sam.gif
-      }.each do |username|
+      ].each do |username|
         it "disallows #{username}" do
           assert_bad(username)
         end
       end
     end
 
-    context 'when Unicode usernames are enabled' do
+    context "when Unicode usernames are enabled" do
       before { SiteSetting.unicode_usernames = true }
 
-      %w{
-        Джофрэй
-        Джо.фрэй
-        Джофр-эй
-        Д.жофрэй
-        乔夫雷
-        乔夫_雷
-        _乔夫雷
-      }.each do |username|
+      %w[Джофрэй Джо.фрэй Джофр-эй Д.жофрэй 乔夫雷 乔夫_雷 _乔夫雷].each do |username|
         it "allows #{username}" do
           assert_good(username)
         end
       end
 
-      %w{
-        .Джофрэй
-        Джофрэй.
-        Джо\ фрэй
-        Джоф__рэй
-        乔夫雷.js
-        乔夫雷.
-        乔夫%雷
-      }.each do |username|
+      %w[.Джофрэй Джофрэй. Джо\ фрэй Джоф__рэй 乔夫雷.js 乔夫雷. 乔夫%雷].each do |username|
         it "disallows #{username}" do
           assert_bad(username)
         end
@@ -900,7 +967,7 @@ RSpec.describe User do
     end
   end
 
-  describe 'username uniqueness' do
+  describe "username uniqueness" do
     before_all do
       @user = Fabricate.build(:user)
       @user.save!
@@ -918,28 +985,24 @@ RSpec.describe User do
     end
   end
 
-  describe '.username_available?' do
+  describe ".username_available?" do
     it "returns true for a username that is available" do
-      expect(User.username_available?('BruceWayne')).to eq(true)
+      expect(User.username_available?("BruceWayne")).to eq(true)
     end
 
-    it 'returns false when a username is taken' do
+    it "returns false when a username is taken" do
       expect(User.username_available?(Fabricate(:user).username)).to eq(false)
     end
 
-    it 'returns false when a username is reserved' do
-      SiteSetting.reserved_usernames = 'test|donkey'
-      expect(User.username_available?('tESt')).to eq(false)
+    it "returns false when a username is reserved" do
+      SiteSetting.reserved_usernames = "test|donkey"
+      expect(User.username_available?("tESt")).to eq(false)
     end
 
-    it 'returns true when reserved username is explicitly allowed' do
-      SiteSetting.reserved_usernames = 'test|donkey'
+    it "returns true when reserved username is explicitly allowed" do
+      SiteSetting.reserved_usernames = "test|donkey"
 
-      expect(User.username_available?(
-        'tESt',
-        nil,
-        allow_reserved_username: true)
-      ).to eq(true)
+      expect(User.username_available?("tESt", nil, allow_reserved_username: true)).to eq(true)
     end
 
     it "returns true when username is associated to a staged user of the same email" do
@@ -950,160 +1013,160 @@ RSpec.describe User do
       expect(User.username_available?(user.username, user.primary_email.email)).to eq(false)
     end
 
-    it 'returns false when a username equals an existing group name' do
-      Fabricate(:group, name: 'foo')
-      expect(User.username_available?('Foo')).to eq(false)
+    it "returns false when a username equals an existing group name" do
+      Fabricate(:group, name: "foo")
+      expect(User.username_available?("Foo")).to eq(false)
     end
 
     context "with Unicode usernames enabled" do
       before { SiteSetting.unicode_usernames = true }
 
-      it 'returns false when the username is taken, but the Unicode normalization form is different' do
+      it "returns false when the username is taken, but the Unicode normalization form is different" do
         Fabricate(:user, username: "L\u00F6we") # NFC
         requested_username = "Lo\u0308we" # NFD
         expect(User.username_available?(requested_username)).to eq(false)
       end
 
-      it 'returns false when the username is taken and the case differs' do
-        Fabricate(:user, username: 'LÖWE')
-        expect(User.username_available?('löwe')).to eq(false)
+      it "returns false when the username is taken and the case differs" do
+        Fabricate(:user, username: "LÖWE")
+        expect(User.username_available?("löwe")).to eq(false)
       end
     end
   end
 
-  describe '.reserved_username?' do
-    it 'returns true when a username is reserved' do
-      SiteSetting.reserved_usernames = 'test|donkey'
+  describe ".reserved_username?" do
+    it "returns true when a username is reserved" do
+      SiteSetting.reserved_usernames = "test|donkey"
 
-      expect(User.reserved_username?('donkey')).to eq(true)
-      expect(User.reserved_username?('DonKey')).to eq(true)
-      expect(User.reserved_username?('test')).to eq(true)
+      expect(User.reserved_username?("donkey")).to eq(true)
+      expect(User.reserved_username?("DonKey")).to eq(true)
+      expect(User.reserved_username?("test")).to eq(true)
     end
 
-    it 'should not allow usernames matched against an expression' do
+    it "should not allow usernames matched against an expression" do
       SiteSetting.reserved_usernames = "test)|*admin*|foo*|*bar|abc.def|löwe|ka\u0308fer"
 
-      expect(User.reserved_username?('test')).to eq(false)
-      expect(User.reserved_username?('abc9def')).to eq(false)
+      expect(User.reserved_username?("test")).to eq(false)
+      expect(User.reserved_username?("abc9def")).to eq(false)
 
-      expect(User.reserved_username?('admin')).to eq(true)
-      expect(User.reserved_username?('foo')).to eq(true)
-      expect(User.reserved_username?('bar')).to eq(true)
+      expect(User.reserved_username?("admin")).to eq(true)
+      expect(User.reserved_username?("foo")).to eq(true)
+      expect(User.reserved_username?("bar")).to eq(true)
 
-      expect(User.reserved_username?('admi')).to eq(false)
-      expect(User.reserved_username?('bar.foo')).to eq(false)
-      expect(User.reserved_username?('foo.bar')).to eq(true)
-      expect(User.reserved_username?('baz.bar')).to eq(true)
+      expect(User.reserved_username?("admi")).to eq(false)
+      expect(User.reserved_username?("bar.foo")).to eq(false)
+      expect(User.reserved_username?("foo.bar")).to eq(true)
+      expect(User.reserved_username?("baz.bar")).to eq(true)
 
-      expect(User.reserved_username?('LÖwe')).to eq(true)
+      expect(User.reserved_username?("LÖwe")).to eq(true)
       expect(User.reserved_username?("Lo\u0308we")).to eq(true) # NFD
-      expect(User.reserved_username?('löwe')).to eq(true) # NFC
-      expect(User.reserved_username?('käfer')).to eq(true) # NFC
+      expect(User.reserved_username?("löwe")).to eq(true) # NFC
+      expect(User.reserved_username?("käfer")).to eq(true) # NFC
     end
   end
 
-  describe 'email_validator' do
-    it 'should allow good emails' do
-      user = Fabricate.build(:user, email: 'good@gmail.com')
+  describe "email_validator" do
+    it "should allow good emails" do
+      user = Fabricate.build(:user, email: "good@gmail.com")
       expect(user).to be_valid
     end
 
-    it 'should reject some emails based on the blocked_email_domains site setting' do
-      SiteSetting.blocked_email_domains = 'mailinator.com'
-      expect(Fabricate.build(:user, email: 'notgood@mailinator.com')).not_to be_valid
-      expect(Fabricate.build(:user, email: 'mailinator@gmail.com')).to be_valid
+    it "should reject some emails based on the blocked_email_domains site setting" do
+      SiteSetting.blocked_email_domains = "mailinator.com"
+      expect(Fabricate.build(:user, email: "notgood@mailinator.com")).not_to be_valid
+      expect(Fabricate.build(:user, email: "mailinator@gmail.com")).to be_valid
     end
 
-    it 'should reject some emails based on the blocked_email_domains site setting' do
-      SiteSetting.blocked_email_domains = 'mailinator.com|trashmail.net'
-      expect(Fabricate.build(:user, email: 'notgood@mailinator.com')).not_to be_valid
-      expect(Fabricate.build(:user, email: 'notgood@trashmail.net')).not_to be_valid
-      expect(Fabricate.build(:user, email: 'mailinator.com@gmail.com')).to be_valid
+    it "should reject some emails based on the blocked_email_domains site setting" do
+      SiteSetting.blocked_email_domains = "mailinator.com|trashmail.net"
+      expect(Fabricate.build(:user, email: "notgood@mailinator.com")).not_to be_valid
+      expect(Fabricate.build(:user, email: "notgood@trashmail.net")).not_to be_valid
+      expect(Fabricate.build(:user, email: "mailinator.com@gmail.com")).to be_valid
     end
 
-    it 'should not reject partial matches' do
-      SiteSetting.blocked_email_domains = 'mail.com'
-      expect(Fabricate.build(:user, email: 'mailinator@gmail.com')).to be_valid
+    it "should not reject partial matches" do
+      SiteSetting.blocked_email_domains = "mail.com"
+      expect(Fabricate.build(:user, email: "mailinator@gmail.com")).to be_valid
     end
 
-    it 'should reject some emails based on the blocked_email_domains site setting ignoring case' do
-      SiteSetting.blocked_email_domains = 'trashmail.net'
-      expect(Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET')).not_to be_valid
+    it "should reject some emails based on the blocked_email_domains site setting ignoring case" do
+      SiteSetting.blocked_email_domains = "trashmail.net"
+      expect(Fabricate.build(:user, email: "notgood@TRASHMAIL.NET")).not_to be_valid
     end
 
-    it 'should reject emails based on the blocked_email_domains site setting matching subdomain' do
-      SiteSetting.blocked_email_domains = 'domain.com'
-      expect(Fabricate.build(:user, email: 'notgood@sub.domain.com')).not_to be_valid
+    it "should reject emails based on the blocked_email_domains site setting matching subdomain" do
+      SiteSetting.blocked_email_domains = "domain.com"
+      expect(Fabricate.build(:user, email: "notgood@sub.domain.com")).not_to be_valid
     end
 
-    it 'skips the blocklist if skip_email_validation is set' do
-      SiteSetting.blocked_email_domains = 'domain.com'
-      user = Fabricate.build(:user, email: 'notgood@sub.domain.com')
+    it "skips the blocklist if skip_email_validation is set" do
+      SiteSetting.blocked_email_domains = "domain.com"
+      user = Fabricate.build(:user, email: "notgood@sub.domain.com")
       user.skip_email_validation = true
       expect(user).to be_valid
     end
 
-    it 'blocklist should not reject developer emails' do
-      Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
-      SiteSetting.blocked_email_domains = 'discourse.org'
-      expect(Fabricate.build(:user, email: 'developer@discourse.org')).to be_valid
+    it "blocklist should not reject developer emails" do
+      Rails.configuration.stubs(:developer_emails).returns("developer@discourse.org")
+      SiteSetting.blocked_email_domains = "discourse.org"
+      expect(Fabricate.build(:user, email: "developer@discourse.org")).to be_valid
     end
 
-    it 'should not interpret a period as a wildcard' do
-      SiteSetting.blocked_email_domains = 'trashmail.net'
-      expect(Fabricate.build(:user, email: 'good@trashmailinet.com')).to be_valid
+    it "should not interpret a period as a wildcard" do
+      SiteSetting.blocked_email_domains = "trashmail.net"
+      expect(Fabricate.build(:user, email: "good@trashmailinet.com")).to be_valid
     end
 
-    it 'should not be used to validate existing records' do
-      u = Fabricate(:user, email: 'in_before_blocklisted@fakemail.com')
-      SiteSetting.blocked_email_domains = 'fakemail.com'
+    it "should not be used to validate existing records" do
+      u = Fabricate(:user, email: "in_before_blocklisted@fakemail.com")
+      SiteSetting.blocked_email_domains = "fakemail.com"
       expect(u).to be_valid
     end
 
-    it 'should be used when email is being changed' do
-      SiteSetting.blocked_email_domains = 'mailinator.com'
-      u = Fabricate(:user, email: 'good@gmail.com')
-      u.email = 'nope@mailinator.com'
+    it "should be used when email is being changed" do
+      SiteSetting.blocked_email_domains = "mailinator.com"
+      u = Fabricate(:user, email: "good@gmail.com")
+      u.email = "nope@mailinator.com"
       expect(u).not_to be_valid
     end
 
-    it 'allowlist should reject some emails based on the allowed_email_domains site setting' do
-      SiteSetting.allowed_email_domains = 'vaynermedia.com'
-      user = Fabricate.build(:user, email: 'notgood@mailinator.com')
+    it "allowlist should reject some emails based on the allowed_email_domains site setting" do
+      SiteSetting.allowed_email_domains = "vaynermedia.com"
+      user = Fabricate.build(:user, email: "notgood@mailinator.com")
       expect(user).not_to be_valid
-      expect(user.errors.messages[:primary_email]).to include(I18n.t('user.email.not_allowed'))
-      expect(Fabricate.build(:user, email: 'sbauch@vaynermedia.com')).to be_valid
+      expect(user.errors.messages[:primary_email]).to include(I18n.t("user.email.not_allowed"))
+      expect(Fabricate.build(:user, email: "sbauch@vaynermedia.com")).to be_valid
     end
 
-    it 'should reject some emails based on the allowed_email_domains site setting when allowlisting multiple domains' do
-      SiteSetting.allowed_email_domains = 'vaynermedia.com|gmail.com'
-      expect(Fabricate.build(:user, email: 'notgood@mailinator.com')).not_to be_valid
-      expect(Fabricate.build(:user, email: 'notgood@trashmail.net')).not_to be_valid
-      expect(Fabricate.build(:user, email: 'mailinator.com@gmail.com')).to be_valid
-      expect(Fabricate.build(:user, email: 'mailinator.com@vaynermedia.com')).to be_valid
+    it "should reject some emails based on the allowed_email_domains site setting when allowlisting multiple domains" do
+      SiteSetting.allowed_email_domains = "vaynermedia.com|gmail.com"
+      expect(Fabricate.build(:user, email: "notgood@mailinator.com")).not_to be_valid
+      expect(Fabricate.build(:user, email: "notgood@trashmail.net")).not_to be_valid
+      expect(Fabricate.build(:user, email: "mailinator.com@gmail.com")).to be_valid
+      expect(Fabricate.build(:user, email: "mailinator.com@vaynermedia.com")).to be_valid
     end
 
-    it 'should accept some emails based on the allowed_email_domains site setting ignoring case' do
-      SiteSetting.allowed_email_domains = 'vaynermedia.com'
-      expect(Fabricate.build(:user, email: 'good@VAYNERMEDIA.COM')).to be_valid
+    it "should accept some emails based on the allowed_email_domains site setting ignoring case" do
+      SiteSetting.allowed_email_domains = "vaynermedia.com"
+      expect(Fabricate.build(:user, email: "good@VAYNERMEDIA.COM")).to be_valid
     end
 
-    it 'allowlist should accept developer emails' do
-      Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
-      SiteSetting.allowed_email_domains = 'awesome.org'
-      expect(Fabricate.build(:user, email: 'developer@discourse.org')).to be_valid
+    it "allowlist should accept developer emails" do
+      Rails.configuration.stubs(:developer_emails).returns("developer@discourse.org")
+      SiteSetting.allowed_email_domains = "awesome.org"
+      expect(Fabricate.build(:user, email: "developer@discourse.org")).to be_valid
     end
 
-    it 'email allowlist should not be used to validate existing records' do
-      u = Fabricate(:user, email: 'in_before_allowlisted@fakemail.com')
-      SiteSetting.blocked_email_domains = 'vaynermedia.com'
+    it "email allowlist should not be used to validate existing records" do
+      u = Fabricate(:user, email: "in_before_allowlisted@fakemail.com")
+      SiteSetting.blocked_email_domains = "vaynermedia.com"
       expect(u).to be_valid
     end
 
-    it 'email allowlist should be used when email is being changed' do
-      SiteSetting.allowed_email_domains = 'vaynermedia.com'
-      u = Fabricate(:user, email: 'good@vaynermedia.com')
-      u.email = 'nope@mailinator.com'
+    it "email allowlist should be used when email is being changed" do
+      SiteSetting.allowed_email_domains = "vaynermedia.com"
+      u = Fabricate(:user, email: "good@vaynermedia.com")
+      u.email = "nope@mailinator.com"
       expect(u).not_to be_valid
     end
 
@@ -1117,8 +1180,7 @@ RSpec.describe User do
     end
   end
 
-  describe 'passwords' do
-
+  describe "passwords" do
     it "should not have an active account with a good password" do
       @user = Fabricate.build(:user, active: false)
       @user.password = "ilovepasta"
@@ -1127,7 +1189,7 @@ RSpec.describe User do
       expect(@user.active).to eq(false)
       expect(@user.confirm_password?("ilovepasta")).to eq(true)
 
-      email_token = Fabricate(:email_token, user: @user, email: 'pasta@delicious.com')
+      email_token = Fabricate(:email_token, user: @user, email: "pasta@delicious.com")
 
       UserAuthToken.generate!(user_id: @user.id)
 
@@ -1153,9 +1215,7 @@ RSpec.describe User do
       SiteSetting.previous_visit_timeout_hours = 1
     end
 
-    after do
-      reset_last_seen_cache!(user)
-    end
+    after { reset_last_seen_cache!(user) }
 
     it "should act correctly" do
       expect(user.previous_visit_at).to eq(nil)
@@ -1179,7 +1239,6 @@ RSpec.describe User do
       user.reload
       expect(user.previous_visit_at).to eq_time(second_visit_date)
     end
-
   end
 
   describe "update_last_seen!" do
@@ -1187,9 +1246,7 @@ RSpec.describe User do
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
 
-    after do
-      reset_last_seen_cache!(user)
-    end
+    after { reset_last_seen_cache!(user) }
 
     it "should update the last seen value" do
       expect(user.last_seen_at).to eq nil
@@ -1239,9 +1296,7 @@ RSpec.describe User do
       end
 
       context "if a timezone already exists on user option" do
-        before do
-          user.user_option.update_attribute(:timezone, "America/Denver")
-        end
+        before { user.user_option.update_attribute(:timezone, "America/Denver") }
 
         it "does not update the timezone" do
           user.update_timezone_if_missing(timezone)
@@ -1262,7 +1317,7 @@ RSpec.describe User do
       expect(user.user_stat.days_visited).to eq(0)
     end
 
-    describe 'with no previous values' do
+    describe "with no previous values" do
       after do
         reset_last_seen_cache!(user)
         unfreeze_time
@@ -1313,25 +1368,25 @@ RSpec.describe User do
     end
   end
 
-  describe 'email_confirmed?' do
+  describe "email_confirmed?" do
     fab!(:user) { Fabricate(:user) }
 
-    context 'when email has not been confirmed yet' do
-      it 'should return false' do
+    context "when email has not been confirmed yet" do
+      it "should return false" do
         expect(user.email_confirmed?).to eq(false)
       end
     end
 
-    context 'when email has been confirmed' do
-      it 'should return true' do
+    context "when email has been confirmed" do
+      it "should return true" do
         token = Fabricate(:email_token, user: user)
         EmailToken.confirm(token.token)
         expect(user.email_confirmed?).to eq(true)
       end
     end
 
-    context 'when user has no email tokens for some reason' do
-      it 'should return false' do
+    context "when user has no email tokens for some reason" do
+      it "should return false" do
         user.email_tokens.each { |t| t.destroy }
         user.reload
         expect(user.email_confirmed?).to eq(true)
@@ -1342,9 +1397,27 @@ RSpec.describe User do
   describe "flag_linked_posts_as_spam" do
     fab!(:user) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
-    fab!(:post) { PostCreator.new(user, title: "this topic contains spam", raw: "this post has a link: http://discourse.org").create }
-    fab!(:another_post) { PostCreator.new(user, title: "this topic also contains spam", raw: "this post has a link: http://discourse.org/asdfa").create }
-    fab!(:post_without_link) { PostCreator.new(user, title: "this topic shouldn't be spam", raw: "this post has no links in it.").create }
+    fab!(:post) do
+      PostCreator.new(
+        user,
+        title: "this topic contains spam",
+        raw: "this post has a link: http://discourse.org",
+      ).create
+    end
+    fab!(:another_post) do
+      PostCreator.new(
+        user,
+        title: "this topic also contains spam",
+        raw: "this post has a link: http://discourse.org/asdfa",
+      ).create
+    end
+    fab!(:post_without_link) do
+      PostCreator.new(
+        user,
+        title: "this topic shouldn't be spam",
+        raw: "this post has no links in it.",
+      ).create
+    end
 
     it "has flagged all the user's posts as spam" do
       user.flag_linked_posts_as_spam
@@ -1373,69 +1446,72 @@ RSpec.describe User do
 
       expect(post.reload.spam_count).to eq(0)
     end
-
   end
 
-  describe '#readable_name' do
-    context 'when name is missing' do
-      it 'returns just the username' do
-        expect(Fabricate(:user, username: 'foo', name: nil).readable_name).to eq('foo')
+  describe "#readable_name" do
+    context "when name is missing" do
+      it "returns just the username" do
+        expect(Fabricate(:user, username: "foo", name: nil).readable_name).to eq("foo")
       end
     end
-    context 'when name and username are identical' do
-      it 'returns just the username' do
-        expect(Fabricate(:user, username: 'foo', name: 'foo').readable_name).to eq('foo')
+    context "when name and username are identical" do
+      it "returns just the username" do
+        expect(Fabricate(:user, username: "foo", name: "foo").readable_name).to eq("foo")
       end
     end
-    context 'when name and username are not identical' do
-      it 'returns the name and username' do
-        expect(Fabricate(:user, username: 'foo', name: 'Bar Baz').readable_name).to eq('Bar Baz (foo)')
+    context "when name and username are not identical" do
+      it "returns the name and username" do
+        expect(Fabricate(:user, username: "foo", name: "Bar Baz").readable_name).to eq(
+          "Bar Baz (foo)",
+        )
       end
     end
   end
 
-  describe '.find_by_username_or_email' do
-    it 'finds users' do
-      bob = Fabricate(:user, username: 'bob', email: 'bob@example.com')
-      found_user = User.find_by_username_or_email('Bob')
+  describe ".find_by_username_or_email" do
+    it "finds users" do
+      bob = Fabricate(:user, username: "bob", email: "bob@example.com")
+      found_user = User.find_by_username_or_email("Bob")
       expect(found_user).to eq bob
 
-      found_user = User.find_by_username_or_email('bob@Example.com')
+      found_user = User.find_by_username_or_email("bob@Example.com")
       expect(found_user).to eq bob
 
-      found_user = User.find_by_username_or_email('Bob@Example.com')
+      found_user = User.find_by_username_or_email("Bob@Example.com")
       expect(found_user).to eq bob
 
-      found_user = User.find_by_username_or_email('bob1')
+      found_user = User.find_by_username_or_email("bob1")
       expect(found_user).to be_nil
 
-      found_user = User.find_by_email('bob@Example.com')
+      found_user = User.find_by_email("bob@Example.com")
       expect(found_user).to eq bob
 
-      found_user = User.find_by_email('BOB@Example.com')
+      found_user = User.find_by_email("BOB@Example.com")
       expect(found_user).to eq bob
 
-      found_user = User.find_by_email('bob')
+      found_user = User.find_by_email("bob")
       expect(found_user).to be_nil
 
-      found_user = User.find_by_username('bOb')
+      found_user = User.find_by_username("bOb")
       expect(found_user).to eq bob
     end
 
-    it 'finds users with Unicode username' do
+    it "finds users with Unicode username" do
       SiteSetting.unicode_usernames = true
-      user = Fabricate(:user, username: 'löwe')
+      user = Fabricate(:user, username: "löwe")
 
-      expect(User.find_by_username('LÖWE')).to eq(user) # NFC
+      expect(User.find_by_username("LÖWE")).to eq(user) # NFC
       expect(User.find_by_username("LO\u0308WE")).to eq(user) # NFD
       expect(User.find_by_username("lo\u0308we")).to eq(user) # NFD
     end
   end
 
   describe "#new_user_posting_on_first_day?" do
-
     def test_user?(opts = {})
-      Fabricate.build(:user, { created_at: Time.zone.now }.merge(opts)).new_user_posting_on_first_day?
+      Fabricate.build(
+        :user,
+        { created_at: Time.zone.now }.merge(opts),
+      ).new_user_posting_on_first_day?
     end
 
     it "handles when user has never posted" do
@@ -1489,10 +1565,12 @@ RSpec.describe User do
       context "with a reply" do
         before do
           Jobs.run_immediately!
-          PostCreator.new(Fabricate(:user),
-                          raw: 'whatever this is a raw post',
-                          topic_id: topic.id,
-                          reply_to_post_number: post.post_number).create
+          PostCreator.new(
+            Fabricate(:user),
+            raw: "whatever this is a raw post",
+            topic_id: topic.id,
+            reply_to_post_number: post.post_number,
+          ).create
         end
 
         it "resets the `posted_too_much` threshold" do
@@ -1506,11 +1584,9 @@ RSpec.describe User do
       topic_user.trust_level = TrustLevel[0]
       expect(topic.user.posted_too_much_in_topic?(topic.id)).to eq(false)
     end
-
   end
 
   describe "#find_email" do
-
     fab!(:user) { Fabricate(:user, email: "bob@example.com") }
 
     context "when email is exists in the email logs" do
@@ -1531,27 +1607,25 @@ RSpec.describe User do
   end
 
   describe "#gravatar_template" do
-
     it "returns a gravatar based template" do
-      expect(User.gravatar_template("em@il.com")).to eq("//www.gravatar.com/avatar/6dc2fde946483a1d8a84b89345a1b638.png?s={size}&r=pg&d=identicon")
+      expect(User.gravatar_template("em@il.com")).to eq(
+        "//www.gravatar.com/avatar/6dc2fde946483a1d8a84b89345a1b638.png?s={size}&r=pg&d=identicon",
+      )
     end
-
   end
 
   describe "#custom_gravatar" do
-    before do
-      SiteSetting.gravatar_base_url = "seccdn.libravatar.org"
-    end
+    before { SiteSetting.gravatar_base_url = "seccdn.libravatar.org" }
 
     it "returns a gravatar url as set in the settings" do
-      expect(User.gravatar_template("em@il.com")).to eq("//seccdn.libravatar.org/avatar/6dc2fde946483a1d8a84b89345a1b638.png?s={size}&r=pg&d=identicon")
+      expect(User.gravatar_template("em@il.com")).to eq(
+        "//seccdn.libravatar.org/avatar/6dc2fde946483a1d8a84b89345a1b638.png?s={size}&r=pg&d=identicon",
+      )
     end
   end
 
   describe "#letter_avatar_color" do
-    before do
-      SiteSetting.restrict_letter_avatar_colors = "2F70AC|ED207B|AAAAAA|77FF33"
-    end
+    before { SiteSetting.restrict_letter_avatar_colors = "2F70AC|ED207B|AAAAAA|77FF33" }
 
     it "returns custom color if restrict_letter_avatar_colors site setting is set" do
       expect(User.letter_avatar_color("username_one")).to eq("2F70AC")
@@ -1562,42 +1636,46 @@ RSpec.describe User do
   end
 
   describe ".small_avatar_url" do
-
-    let(:user) { build(:user, username: 'Sam') }
+    let(:user) { build(:user, username: "Sam") }
 
     it "returns a 45-pixel-wide avatar" do
       SiteSetting.external_system_avatars_enabled = false
-      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png")
+      expect(user.small_avatar_url).to eq(
+        "//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png",
+      )
 
       SiteSetting.external_system_avatars_enabled = true
-      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar_proxy/v4/letter/s/5f9b8f/45.png")
+      expect(user.small_avatar_url).to eq(
+        "//test.localhost/letter_avatar_proxy/v4/letter/s/5f9b8f/45.png",
+      )
     end
-
   end
 
   describe ".avatar_template_url" do
-
-    let(:user) { build(:user, uploaded_avatar_id: 99, username: 'Sam') }
+    let(:user) { build(:user, uploaded_avatar_id: 99, username: "Sam") }
 
     it "returns a schemaless avatar template with correct id" do
-      expect(user.avatar_template_url).to eq("//test.localhost/user_avatar/test.localhost/sam/{size}/99_#{OptimizedImage::VERSION}.png")
+      expect(user.avatar_template_url).to eq(
+        "//test.localhost/user_avatar/test.localhost/sam/{size}/99_#{OptimizedImage::VERSION}.png",
+      )
     end
 
     it "returns a schemaless cdn-based avatar template" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      expect(user.avatar_template_url).to eq("//my.cdn.com/user_avatar/test.localhost/sam/{size}/99_#{OptimizedImage::VERSION}.png")
+      expect(user.avatar_template_url).to eq(
+        "//my.cdn.com/user_avatar/test.localhost/sam/{size}/99_#{OptimizedImage::VERSION}.png",
+      )
     end
-
   end
 
-  describe '#avatar_template' do
-    it 'uses the small logo if the user is the system user' do
+  describe "#avatar_template" do
+    it "uses the small logo if the user is the system user" do
       logo_small_url = Discourse.store.cdn_url(SiteSetting.logo_small.url)
 
       expect(Discourse.system_user.avatar_template).to eq(logo_small_url)
     end
 
-    it 'uses the system user avatar if the logo is nil' do
+    it "uses the system user avatar if the logo is nil" do
       SiteSetting.logo_small = nil
       system_user = Discourse.system_user
       expected = User.avatar_template(system_user.username, system_user.uploaded_avatar_id)
@@ -1605,7 +1683,7 @@ RSpec.describe User do
       expect(Discourse.system_user.avatar_template).to eq(expected)
     end
 
-    it 'uses the regular avatar for other users' do
+    it "uses the regular avatar for other users" do
       user = Fabricate(:user)
       expected = User.avatar_template(user.username, user.uploaded_avatar_id)
 
@@ -1618,9 +1696,7 @@ RSpec.describe User do
       fab!(:user) { Fabricate(:user) }
       let!(:now) { Time.zone.now }
       before { user.update_last_seen!(now) }
-      after do
-        reset_last_seen_cache!(user)
-      end
+      after { reset_last_seen_cache!(user) }
 
       it "with existing UserVisit record, increments the posts_read value" do
         expect {
@@ -1646,7 +1722,6 @@ RSpec.describe User do
     end
 
     context "when the user has a group" do
-
       before do
         group.usernames = user.username
         group.save
@@ -1721,83 +1796,135 @@ RSpec.describe User do
     fab!(:user) { Fabricate(:user) }
     fab!(:unactivated) { Fabricate(:user, active: false) }
     fab!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
-    fab!(:unactivated_old_with_system_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
-    fab!(:unactivated_old_with_human_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
+    fab!(:unactivated_old_with_system_pm) do
+      Fabricate(:user, active: false, created_at: 2.months.ago)
+    end
+    fab!(:unactivated_old_with_human_pm) do
+      Fabricate(:user, active: false, created_at: 2.months.ago)
+    end
     fab!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
 
     before do
       Group.refresh_automatic_groups!
 
-      PostCreator.new(Discourse.system_user,
-                      title: "Welcome to our Discourse",
-                      raw: "This is a welcome message",
-                      archetype: Archetype.private_message,
-                      target_usernames: [unactivated_old_with_system_pm.username],
+      PostCreator.new(
+        Discourse.system_user,
+        title: "Welcome to our Discourse",
+        raw: "This is a welcome message",
+        archetype: Archetype.private_message,
+        target_usernames: [unactivated_old_with_system_pm.username],
       ).create
 
-      PostCreator.new(user,
-                      title: "Welcome to our Discourse",
-                      raw: "This is a welcome message",
-                      archetype: Archetype.private_message,
-                      target_usernames: [unactivated_old_with_human_pm.username],
+      PostCreator.new(
+        user,
+        title: "Welcome to our Discourse",
+        raw: "This is a welcome message",
+        archetype: Archetype.private_message,
+        target_usernames: [unactivated_old_with_human_pm.username],
       ).create
 
-      PostCreator.new(unactivated_old_with_post,
-                      title: "Test topic from a user",
-                      raw: "This is a sample message"
+      PostCreator.new(
+        unactivated_old_with_post,
+        title: "Test topic from a user",
+        raw: "This is a sample message",
       ).create
     end
 
-    it 'should only remove old, unactivated users' do
+    it "should only remove old, unactivated users" do
       User.purge_unactivated
-      expect(User.real.all).to match_array([user, unactivated, unactivated_old_with_human_pm, unactivated_old_with_post])
+      expect(User.real.all).to match_array(
+        [user, unactivated, unactivated_old_with_human_pm, unactivated_old_with_post],
+      )
     end
 
     it "does nothing if purge_unactivated_users_grace_period_days is 0" do
       SiteSetting.purge_unactivated_users_grace_period_days = 0
       User.purge_unactivated
-      expect(User.real.all).to match_array([
-        user, unactivated, unactivated_old, unactivated_old_with_system_pm, unactivated_old_with_human_pm, unactivated_old_with_post
-      ])
+      expect(User.real.all).to match_array(
+        [
+          user,
+          unactivated,
+          unactivated_old,
+          unactivated_old_with_system_pm,
+          unactivated_old_with_human_pm,
+          unactivated_old_with_post,
+        ],
+      )
     end
   end
 
   describe "hash_passwords" do
-
     let(:too_long) { "x" * (User.max_password_length + 1) }
 
-    def hash(password, salt)
-      User.new.send(:hash_password, password, salt)
+    def hash(password, salt, algorithm = User::TARGET_PASSWORD_ALGORITHM)
+      User.new.send(:hash_password, password, salt, algorithm)
     end
 
     it "returns the same hash for the same password and salt" do
-      expect(hash('poutine', 'gravy')).to eq(hash('poutine', 'gravy'))
+      expect(hash("poutine", "gravy")).to eq(hash("poutine", "gravy"))
     end
 
     it "returns a different hash for the same salt and different password" do
-      expect(hash('poutine', 'gravy')).not_to eq(hash('fries', 'gravy'))
+      expect(hash("poutine", "gravy")).not_to eq(hash("fries", "gravy"))
     end
 
     it "returns a different hash for the same password and different salt" do
-      expect(hash('poutine', 'gravy')).not_to eq(hash('poutine', 'cheese'))
+      expect(hash("poutine", "gravy")).not_to eq(hash("poutine", "cheese"))
     end
 
     it "raises an error when passwords are too long" do
-      expect { hash(too_long, 'gravy') }.to raise_error(StandardError)
+      expect { hash(too_long, "gravy") }.to raise_error(StandardError)
     end
 
+    it "uses the target algorithm for new users" do
+      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+    end
+
+    it "can use an older algorithm to verify existing passwords, then upgrade" do
+      old_algorithm = "$pbkdf2-sha256$i=5,l=32$"
+      expect(old_algorithm).not_to eq(User::TARGET_PASSWORD_ALGORITHM)
+
+      password = "poutine"
+      old_hash = hash(password, user.salt, old_algorithm)
+
+      user.update!(password_algorithm: old_algorithm, password_hash: old_hash)
+
+      expect(user.password_algorithm).to eq(old_algorithm)
+      expect(user.password_hash).to eq(old_hash)
+
+      # With an incorrect attempt, should return false with no side effects
+      expect(user.confirm_password?("notthepassword")).to eq(false)
+      expect(user.password_algorithm).to eq(old_algorithm)
+      expect(user.password_hash).to eq(old_hash)
+
+      # Should correctly verify against old algorithm
+      expect(user.confirm_password?(password)).to eq(true)
+
+      # Auto-upgrades to new algorithm
+      expected_new_hash = hash(password, user.salt, User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_hash).to eq(expected_new_hash)
+
+      # And persists to the db
+      user.reload
+      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_hash).to eq(expected_new_hash)
+
+      # And can still log in
+      expect(user.confirm_password?(password)).to eq(true)
+    end
   end
 
   describe "automatic group membership" do
-
-    fab!(:group) {
-      Fabricate(:group,
-                automatic_membership_email_domains: "bar.com|wat.com",
-                grant_trust_level: 1,
-                title: "bars and wats",
-                primary_group: true
+    fab!(:group) do
+      Fabricate(
+        :group,
+        automatic_membership_email_domains: "bar.com|wat.com",
+        grant_trust_level: 1,
+        title: "bars and wats",
+        primary_group: true,
       )
-    }
+    end
 
     it "doesn't automatically add staged users" do
       staged_user = Fabricate(:user, active: true, staged: true, email: "wat@wat.com")
@@ -1821,19 +1948,25 @@ RSpec.describe User do
 
     it "is automatically added to a group when the email matches the SSO record" do
       user = Fabricate(:user, active: true, email: "sso@bar.com")
-      user.create_single_sign_on_record(external_id: 123, external_email: "sso@bar.com", last_payload: "")
+      user.create_single_sign_on_record(
+        external_id: 123,
+        external_email: "sso@bar.com",
+        last_payload: "",
+      )
       user.set_automatic_groups
       group.reload
       expect(group.users.include?(user)).to eq(true)
     end
 
     it "get attributes from the group" do
-      user = Fabricate.build(:user,
-                             active: true,
-                             trust_level: 0,
-                             email: "foo@bar.com",
-                             password: "strongpassword4Uguys"
-      )
+      user =
+        Fabricate.build(
+          :user,
+          active: true,
+          trust_level: 0,
+          email: "foo@bar.com",
+          password: "strongpassword4Uguys",
+        )
 
       user.password_required!
       user.save!
@@ -1847,20 +1980,29 @@ RSpec.describe User do
     end
   end
 
-  describe 'staff info' do
+  describe "staff info" do
     fab!(:user) { Fabricate(:user) }
     fab!(:moderator) { Fabricate(:moderator) }
 
     describe "#number_of_flags_given" do
       it "doesn't count disagreed flags" do
         post_agreed = Fabricate(:post)
-        PostActionCreator.inappropriate(user, post_agreed).reviewable.perform(moderator, :agree_and_keep)
+        PostActionCreator
+          .inappropriate(user, post_agreed)
+          .reviewable
+          .perform(moderator, :agree_and_keep)
 
         post_deferred = Fabricate(:post)
-        PostActionCreator.inappropriate(user, post_deferred).reviewable.perform(moderator, :ignore)
+        PostActionCreator
+          .inappropriate(user, post_deferred)
+          .reviewable
+          .perform(moderator, :ignore_and_do_nothing)
 
         post_disagreed = Fabricate(:post)
-        PostActionCreator.inappropriate(user, post_disagreed).reviewable.perform(moderator, :disagree)
+        PostActionCreator
+          .inappropriate(user, post_disagreed)
+          .reviewable
+          .perform(moderator, :disagree)
 
         expect(user.number_of_flags_given).to eq(2)
       end
@@ -1885,28 +2027,28 @@ RSpec.describe User do
       end
     end
 
-    describe '#number_of_rejected_posts' do
-      it 'counts rejected posts' do
+    describe "#number_of_rejected_posts" do
+      it "counts rejected posts" do
         Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:rejected])
 
         expect(user.number_of_rejected_posts).to eq(1)
       end
 
-      it 'ignore non-rejected posts' do
+      it "ignore non-rejected posts" do
         Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:approved])
 
         expect(user.number_of_rejected_posts).to eq(0)
       end
     end
 
-    describe '#number_of_flagged_posts' do
-      it 'counts flagged posts from the user' do
+    describe "#number_of_flagged_posts" do
+      it "counts flagged posts from the user" do
         Fabricate(:reviewable_flagged_post, target_created_by: user)
 
         expect(user.number_of_flagged_posts).to eq(1)
       end
 
-      it 'ignores flagged posts from another user' do
+      it "ignores flagged posts from another user" do
         Fabricate(:reviewable_flagged_post, target_created_by: Fabricate(:user))
 
         expect(user.number_of_flagged_posts).to eq(0)
@@ -1936,7 +2078,6 @@ RSpec.describe User do
   end
 
   context "when user preferences are overridden" do
-
     fab!(:category0) { Fabricate(:category) }
     fab!(:category1) { Fabricate(:category) }
     fab!(:category2) { Fabricate(:category) }
@@ -1988,8 +2129,17 @@ RSpec.describe User do
       expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([category0.id])
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([category1.id])
       expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([category2.id])
-      expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([category3.id])
+      expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq(
+        [category3.id],
+      )
       expect(CategoryUser.lookup(user, :regular).pluck(:category_id)).to eq([category4.id])
+    end
+
+    it "does not error on duplicate categories for set_default_categories_preferences" do
+      SiteSetting.default_categories_normal = category4.id.to_s + "|" + category4.id.to_s
+      user = nil
+      expect { user = Fabricate(:user, trust_level: 1) }.not_to raise_error
+      expect(CategoryUser.lookup(user, :normal).pluck(:category_id)).to include(category4.id)
     end
 
     it "does not set category preferences for staged users" do
@@ -2003,7 +2153,6 @@ RSpec.describe User do
   end
 
   context UserOption do
-
     it "Creates a UserOption row when a user record is created and destroys once done" do
       user = Fabricate(:user)
       expect(user.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
@@ -2011,64 +2160,62 @@ RSpec.describe User do
       user_id = user.id
       user.destroy!
       expect(UserOption.find_by(user_id: user_id)).to eq(nil)
-
     end
-
   end
 
   describe "#logged_out" do
     fab!(:user) { Fabricate(:user) }
 
-    it 'should publish the right message' do
-      message = MessageBus.track_publish('/logout') { user.logged_out }.first
+    it "should publish the right message" do
+      message = MessageBus.track_publish("/logout/#{user.id}") { user.logged_out }.first
 
       expect(message.data).to eq(user.id)
     end
   end
 
-  describe '#read_first_notification?' do
+  describe "#read_first_notification?" do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
     fab!(:notification) { Fabricate(:private_message_notification) }
 
-    describe 'when first notification has not been seen' do
-      it 'should return the right value' do
+    describe "when first notification has not been seen" do
+      it "should return the right value" do
         expect(user.read_first_notification?).to eq(false)
       end
     end
 
-    describe 'when first notification has been seen' do
-      it 'should return the right value' do
+    describe "when first notification has been seen" do
+      it "should return the right value" do
         user.update!(seen_notification_id: notification.id)
         expect(user.reload.read_first_notification?).to eq(true)
       end
     end
 
-    describe 'when user is trust level 1' do
-      it 'should return the right value' do
+    describe "when user is trust level 1" do
+      it "should return the right value" do
         user.update!(trust_level: TrustLevel[1])
 
         expect(user.read_first_notification?).to eq(false)
       end
     end
 
-    describe 'when user is trust level 2' do
-      it 'should return the right value' do
+    describe "when user is trust level 2" do
+      it "should return the right value" do
         user.update!(trust_level: TrustLevel[2])
 
         expect(user.read_first_notification?).to eq(true)
       end
     end
 
-    describe 'when user is an old user' do
-      it 'should return the right value' do
+    describe "when user is an old user" do
+      it "should return the right value" do
         user.update!(first_seen_at: 1.year.ago)
 
         expect(user.read_first_notification?).to eq(true)
       end
     end
 
-    describe 'when user skipped new user tips' do
-      it 'should return the right value' do
+    describe "when user skipped new user tips" do
+      it "should return the right value" do
         user.user_option.update!(skip_new_user_tips: true)
 
         expect(user.read_first_notification?).to eq(true)
@@ -2078,17 +2225,39 @@ RSpec.describe User do
 
   describe "#featured_user_badges" do
     fab!(:user) { Fabricate(:user) }
-    let!(:user_badge_tl1) { UserBadge.create(badge_id: Badge::BasicUser, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
-    let!(:user_badge_tl2) { UserBadge.create(badge_id: Badge::Member, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
-    let!(:user_badge_like) { UserBadge.create(badge_id: Badge::FirstLike, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+    let!(:user_badge_tl1) do
+      UserBadge.create(
+        badge_id: Badge::BasicUser,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+      )
+    end
+    let!(:user_badge_tl2) do
+      UserBadge.create(
+        badge_id: Badge::Member,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+      )
+    end
+    let!(:user_badge_like) do
+      UserBadge.create(
+        badge_id: Badge::FirstLike,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+      )
+    end
 
-    it 'should display badges in the correct order' do
-      expect(user.featured_user_badges.map(&:badge_id)).to eq([Badge::Member, Badge::FirstLike, Badge::BasicUser])
+    it "should display badges in the correct order" do
+      expect(user.featured_user_badges.map(&:badge_id)).to eq(
+        [Badge::Member, Badge::FirstLike, Badge::BasicUser],
+      )
     end
   end
 
   describe ".clear_global_notice_if_needed" do
-
     fab!(:user) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
 
@@ -2114,11 +2283,10 @@ RSpec.describe User do
       expect(SiteSetting.has_login_hint).to eq(false)
       expect(SiteSetting.global_notice).to eq("")
     end
-
   end
 
-  describe '.human_users' do
-    it 'should only return users with a positive primary key' do
+  describe ".human_users" do
+    it "should only return users with a positive primary key" do
       Fabricate(:bot)
       user = Fabricate(:user)
 
@@ -2126,7 +2294,7 @@ RSpec.describe User do
     end
   end
 
-  describe '.not_staged' do
+  describe ".not_staged" do
     let!(:user0) { Fabricate(:user, staged: true) }
     let!(:user1) { Fabricate(:user) }
 
@@ -2136,45 +2304,70 @@ RSpec.describe User do
     end
   end
 
-  describe '#publish_notifications_state' do
-    it 'should publish the right message sorted by ID desc' do
+  describe "#publish_notifications_state" do
+    it "should publish the right message sorted by ID desc" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
 
-      message = MessageBus.track_publish("/notification/#{user.id}") do
-        user.publish_notifications_state
-      end.first
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+          .first
 
-      expect(message.data[:recent]).to eq([
-        [notification2.id, true], [notification.id, false]
-      ])
+      expect(message.data[:recent]).to eq([[notification2.id, true], [notification.id, false]])
     end
 
-    it 'floats the unread high priority notifications to the top' do
+    it "floats the unread high priority notifications to the top" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
-      notification3 = Fabricate(:notification, user: user, notification_type: Notification.types[:private_message])
-      notification4 = Fabricate(:notification, user: user, notification_type: Notification.types[:bookmark_reminder])
+      notification3 =
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:private_message],
+        )
+      notification4 =
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:bookmark_reminder],
+        )
 
-      message = MessageBus.track_publish("/notification/#{user.id}") do
-        user.publish_notifications_state
-      end.first
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+          .first
 
-      expect(message.data[:recent]).to eq([
-        [notification4.id, false], [notification3.id, false],
-        [notification2.id, true], [notification.id, false]
-      ])
+      expect(message.data[:recent]).to eq(
+        [
+          [notification4.id, false],
+          [notification3.id, false],
+          [notification2.id, true],
+          [notification.id, false],
+        ],
+      )
     end
 
     it "has the correct counts" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
-      notification3 = Fabricate(:notification, user: user, notification_type: Notification.types[:private_message])
-      notification4 = Fabricate(:notification, user: user, notification_type: Notification.types[:bookmark_reminder])
+      notification3 =
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:private_message],
+        )
+      notification4 =
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:bookmark_reminder],
+        )
 
-      message = MessageBus.track_publish("/notification/#{user.id}") do
-        user.publish_notifications_state
-      end.first
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+          .first
 
       expect(message.data[:unread_notifications]).to eq(1)
       # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
@@ -2188,41 +2381,51 @@ RSpec.describe User do
       notification2 = Fabricate(:notification, user: user, read: true)
       user.update(last_seen_at: 31.days.ago)
 
-      message = MessageBus.track_publish("/notification/#{user.id}") do
-        user.publish_notifications_state
-      end.first
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+          .first
 
       expect(message).to eq(nil)
     end
 
     context "with sidebar based navigation menu" do
-      before do
-        SiteSetting.navigation_menu = "sidebar"
-      end
+      before { SiteSetting.navigation_menu = "sidebar" }
 
       it "adds all_unread_notifications and grouped_unread_notifications to the payload" do
         user.update!(admin: true)
         Fabricate(:notification, user: user, notification_type: 1)
-        Fabricate(:notification, notification_type: 15, high_priority: true, read: false, user: user)
-        Fabricate(:notification, user: user, notification_type: Notification.types[:private_message], read: false)
+        Fabricate(
+          :notification,
+          notification_type: 15,
+          high_priority: true,
+          read: false,
+          user: user,
+        )
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:private_message],
+          read: false,
+        )
 
-        messages = MessageBus.track_publish("/notification/#{user.id}") do
-          user.publish_notifications_state
-        end
+        messages =
+          MessageBus.track_publish("/notification/#{user.id}") { user.publish_notifications_state }
 
         expect(messages.size).to eq(1)
 
         message = messages.first
 
         expect(message.data[:all_unread_notifications_count]).to eq(3)
-        expect(message.data[:grouped_unread_notifications]).to eq({ 1 => 1, 15 => 1, Notification.types[:private_message] => 1 })
+        expect(message.data[:grouped_unread_notifications]).to eq(
+          { 1 => 1, 15 => 1, Notification.types[:private_message] => 1 },
+        )
         expect(message.data[:new_personal_messages_notifications_count]).to eq(1)
       end
     end
   end
 
   describe "silenced?" do
-
     it "is not silenced by default" do
       expect(Fabricate(:user)).not_to be_silenced
     end
@@ -2250,26 +2453,32 @@ RSpec.describe User do
 
   describe "#unread_notifications" do
     fab!(:user) { Fabricate(:user) }
-    before do
-      User.max_unread_notifications = 3
-    end
+    before { User.max_unread_notifications = 3 }
 
-    after do
-      User.max_unread_notifications = nil
-    end
+    after { User.max_unread_notifications = nil }
 
     it "limits to MAX_UNREAD_NOTIFICATIONS" do
       4.times do
-        Notification.create!(user_id: user.id, notification_type: 1, read: false, data: '{}')
+        Notification.create!(user_id: user.id, notification_type: 1, read: false, data: "{}")
       end
 
       expect(user.unread_notifications).to eq(3)
     end
 
     it "does not include high priority notifications" do
-      Notification.create!(user_id: user.id, notification_type: 1, read: false, data: '{}')
-      Notification.create!(user_id: user.id, notification_type: Notification.types[:private_message], read: false, data: '{}')
-      Notification.create!(user_id: user.id, notification_type: Notification.types[:bookmark_reminder], read: false, data: '{}')
+      Notification.create!(user_id: user.id, notification_type: 1, read: false, data: "{}")
+      Notification.create!(
+        user_id: user.id,
+        notification_type: Notification.types[:private_message],
+        read: false,
+        data: "{}",
+      )
+      Notification.create!(
+        user_id: user.id,
+        notification_type: Notification.types[:bookmark_reminder],
+        read: false,
+        data: "{}",
+      )
 
       expect(user.unread_notifications).to eq(1)
     end
@@ -2279,16 +2488,34 @@ RSpec.describe User do
     fab!(:user) { Fabricate(:user) }
 
     it "only returns an unread count of PM and bookmark reminder notifications" do
-      Notification.create!(user_id: user.id, notification_type: 1, read: false, data: '{}')
-      Notification.create!(user_id: user.id, notification_type: Notification.types[:private_message], read: false, data: '{}')
-      Notification.create!(user_id: user.id, notification_type: Notification.types[:bookmark_reminder], read: false, data: '{}')
+      Notification.create!(user_id: user.id, notification_type: 1, read: false, data: "{}")
+      Notification.create!(
+        user_id: user.id,
+        notification_type: Notification.types[:private_message],
+        read: false,
+        data: "{}",
+      )
+      Notification.create!(
+        user_id: user.id,
+        notification_type: Notification.types[:bookmark_reminder],
+        read: false,
+        data: "{}",
+      )
 
       expect(user.unread_high_priority_notifications).to eq(2)
     end
   end
 
   describe "#unstage!" do
-    let!(:user) { Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name') }
+    let!(:user) do
+      Fabricate(
+        :staged,
+        email: "staged@account.com",
+        active: true,
+        username: "staged1",
+        name: "Stage Name",
+      )
+    end
 
     it "correctly unstages a user" do
       user.unstage!
@@ -2316,20 +2543,20 @@ RSpec.describe User do
   describe "#activate" do
     let!(:inactive) { Fabricate(:user, active: false) }
 
-    it 'confirms email token and activates user' do
+    it "confirms email token and activates user" do
       inactive.activate
       inactive.reload
       expect(inactive.email_confirmed?).to eq(true)
       expect(inactive.active).to eq(true)
     end
 
-    it 'works without needing to reload the model' do
+    it "works without needing to reload the model" do
       inactive.activate
       expect(inactive.email_confirmed?).to eq(true)
       expect(inactive.active).to eq(true)
     end
 
-    it 'activates user even if email token is already confirmed' do
+    it "activates user even if email token is already confirmed" do
       token = inactive.email_tokens.find_by(email: inactive.email)
       token.update_column(:confirmed, true)
       inactive.activate
@@ -2338,44 +2565,38 @@ RSpec.describe User do
   end
 
   def filter_by(method)
-    username = 'someuniqueusername'
+    username = "someuniqueusername"
     user.update!(username: username)
 
-    username2 = 'awesomeusername'
+    username2 = "awesomeusername"
     user2 = Fabricate(:user, username: username2)
 
-    expect(User.public_send(method, username))
-      .to eq([user])
+    expect(User.public_send(method, username)).to eq([user])
 
-    expect(User.public_send(method, 'UNiQuE'))
-      .to eq([user])
+    expect(User.public_send(method, "UNiQuE")).to eq([user])
 
-    expect(User.public_send(method, [username, username2]))
-      .to contain_exactly(user, user2)
+    expect(User.public_send(method, [username, username2])).to contain_exactly(user, user2)
 
-    expect(User.public_send(method, ['UNiQuE', 'sOME']))
-      .to contain_exactly(user, user2)
+    expect(User.public_send(method, %w[UNiQuE sOME])).to contain_exactly(user, user2)
   end
 
-  describe '#filter_by_username' do
-    it 'should be able to filter by username' do
+  describe "#filter_by_username" do
+    it "should be able to filter by username" do
       filter_by(:filter_by_username)
     end
   end
 
-  describe '#filter_by_username_or_email' do
-    it 'should be able to filter by email' do
-      email = 'veryspecialtest@discourse.org'
+  describe "#filter_by_username_or_email" do
+    it "should be able to filter by email" do
+      email = "veryspecialtest@discourse.org"
       user.update!(email: email)
 
-      expect(User.filter_by_username_or_email(email))
-        .to eq([user])
+      expect(User.filter_by_username_or_email(email)).to eq([user])
 
-      expect(User.filter_by_username_or_email('veryspeCiaLtest'))
-        .to eq([user])
+      expect(User.filter_by_username_or_email("veryspeCiaLtest")).to eq([user])
     end
 
-    it 'should be able to filter by username' do
+    it "should be able to filter by username" do
       filter_by(:filter_by_username_or_email)
     end
   end
@@ -2394,12 +2615,12 @@ RSpec.describe User do
 
   describe "#email=" do
     let(:new_email) { "newprimary@example.com" }
-    it 'sets the primary email' do
+    it "sets the primary email" do
       user.update!(email: new_email)
       expect(User.find(user.id).email).to eq(new_email)
     end
 
-    it 'only saves when save called' do
+    it "only saves when save called" do
       old_email = user.email
       user.email = new_email
       expect(User.find(user.id).email).to eq(old_email)
@@ -2407,7 +2628,7 @@ RSpec.describe User do
       expect(User.find(user.id).email).to eq(new_email)
     end
 
-    it 'will automatically remove matching secondary emails' do
+    it "will automatically remove matching secondary emails" do
       secondary_email_record = Fabricate(:secondary_email, user: user)
       user.reload
       expect(user.secondary_emails.count).to eq(1)
@@ -2418,6 +2639,10 @@ RSpec.describe User do
       expect(user.secondary_emails.count).to eq(0)
     end
 
+    it "returns error if email is nil" do
+      user.email = nil
+      expect { user.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
   end
 
   describe "set_random_avatar" do
@@ -2435,7 +2660,6 @@ RSpec.describe User do
   end
 
   describe "ensure_consistency!" do
-
     it "will clean up dangling avatars" do
       upload = Fabricate(:upload)
       user = Fabricate(:user, uploaded_avatar_id: upload.id)
@@ -2451,92 +2675,94 @@ RSpec.describe User do
       user.reload
       expect(user.uploaded_avatar_id).to eq(nil)
     end
-
   end
 
-  describe '#match_primary_group_changes' do
-    let(:group_a) { Fabricate(:group, title: 'A', users: [user]) }
-    let(:group_b) { Fabricate(:group, title: 'B', users: [user]) }
+  describe "#match_primary_group_changes" do
+    let(:group_a) { Fabricate(:group, title: "A", users: [user]) }
+    let(:group_b) { Fabricate(:group, title: "B", users: [user]) }
 
     it "updates user's title only when it is blank or matches the previous primary group" do
-      expect { user.update(primary_group: group_a) }.to change { user.reload.title }.from(nil).to('A')
-      expect { user.update(primary_group: group_b) }.to change { user.reload.title }.from('A').to('B')
+      expect { user.update(primary_group: group_a) }.to change { user.reload.title }.from(nil).to(
+        "A",
+      )
+      expect { user.update(primary_group: group_b) }.to change { user.reload.title }.from("A").to(
+        "B",
+      )
 
-      user.update(title: 'Different')
+      user.update(title: "Different")
       expect { user.update(primary_group: group_a) }.to_not change { user.reload.title }
     end
 
     it "updates user's title only when it is blank or matches the previous primary group" do
-      expect { user.update(primary_group: group_a) }.to change { user.reload.flair_group }.from(nil).to(group_a)
-      expect { user.update(primary_group: group_b) }.to change { user.reload.flair_group }.from(group_a).to(group_b)
+      expect { user.update(primary_group: group_a) }.to change { user.reload.flair_group }.from(
+        nil,
+      ).to(group_a)
+      expect { user.update(primary_group: group_b) }.to change { user.reload.flair_group }.from(
+        group_a,
+      ).to(group_b)
 
       user.update(flair_group: group_a)
       expect { user.update(primary_group: group_a) }.to_not change { user.reload.flair_group }
     end
   end
 
-  describe '#title=' do
-    fab!(:badge) { Fabricate(:badge, name: 'Badge', allow_title: false) }
+  describe "#title=" do
+    fab!(:badge) { Fabricate(:badge, name: "Badge", allow_title: false) }
 
-    it 'sets badge_granted_title correctly' do
+    it "sets granted_title_badge_id correctly" do
       BadgeGranter.grant(badge, user)
 
       user.update!(title: badge.name)
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.reload.granted_title_badge_id).to be_nil
 
-      user.update!(title: 'Custom')
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      user.update!(title: "Custom")
+      expect(user.user_profile.reload.granted_title_badge_id).to be_nil
 
       badge.update!(allow_title: true)
       user.badges.reload
       user.update!(title: badge.name)
-      expect(user.user_profile.reload.badge_granted_title).to eq(true)
       expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
 
       user.update!(title: nil)
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
-      expect(user.user_profile.granted_title_badge_id).to eq(nil)
+      expect(user.user_profile.granted_title_badge_id).to be_nil
     end
 
-    context 'when a custom badge name has been set and it matches the title' do
-      let(:customized_badge_name) { 'Merit Badge' }
+    context "when a custom badge name has been set and it matches the title" do
+      let(:customized_badge_name) { "Merit Badge" }
 
       before do
         TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
       end
 
-      it 'sets badge_granted_title correctly' do
+      it "sets granted_title_badge_id correctly" do
         BadgeGranter.grant(badge, user)
 
         badge.update!(allow_title: true)
         user.update!(title: customized_badge_name)
-        expect(user.user_profile.reload.badge_granted_title).to eq(true)
         expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
       end
 
-      after do
-        TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name))
-      end
+      after { TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name)) }
     end
   end
 
-  describe '#next_best_title' do
-    fab!(:group_a) { Fabricate(:group, title: 'Group A') }
-    fab!(:group_b) { Fabricate(:group, title: 'Group B') }
-    fab!(:group_c) { Fabricate(:group, title: 'Group C') }
-    fab!(:badge) { Fabricate(:badge, name: 'Badge', allow_title: true) }
+  describe "#next_best_title" do
+    fab!(:group_a) { Fabricate(:group, title: "Group A") }
+    fab!(:group_b) { Fabricate(:group, title: "Group B") }
+    fab!(:group_c) { Fabricate(:group, title: "Group C") }
+    fab!(:badge) { Fabricate(:badge, name: "Badge", allow_title: true) }
 
-    it 'only includes groups with title' do
+    it "only includes groups with title" do
       group_a.add(user)
-      expect(user.next_best_title).to eq('Group A')
+      expect(user.next_best_title).to eq("Group A")
 
       group_a.update!(title: nil)
       expect(user.next_best_title).to eq(nil)
     end
 
-    it 'only includes badges that allow to be set as title' do
+    it "only includes badges that allow to be set as title" do
       BadgeGranter.grant(badge, user)
-      expect(user.next_best_title).to eq('Badge')
+      expect(user.next_best_title).to eq("Badge")
 
       badge.update!(allow_title: false)
       expect(user.next_best_title).to eq(nil)
@@ -2551,69 +2777,75 @@ RSpec.describe User do
       group_a.update!(primary_group: true)
       group_b.update!(primary_group: true)
       user.update!(primary_group_id: group_a.id)
-      expect(user.next_best_title).to eq('Group A')
+      expect(user.next_best_title).to eq("Group A")
 
       user.update!(primary_group_id: group_b.id)
-      expect(user.next_best_title).to eq('Group B')
+      expect(user.next_best_title).to eq("Group B")
 
       group_b.remove(user)
-      expect(user.next_best_title).to eq('Group A')
+      expect(user.next_best_title).to eq("Group A")
 
       group_a.remove(user)
-      expect(user.next_best_title).to eq('Group C')
+      expect(user.next_best_title).to eq("Group C")
 
       group_c.remove(user)
-      expect(user.next_best_title).to eq('Badge')
+      expect(user.next_best_title).to eq("Badge")
 
       BadgeGranter.revoke(UserBadge.find_by(user_id: user.id, badge_id: badge.id))
       expect(user.next_best_title).to eq(nil)
     end
   end
 
-  describe 'check_site_contact_username' do
+  describe "check_site_contact_username" do
     before { SiteSetting.site_contact_username = contact_user.username }
 
-    context 'when admin' do
+    context "when admin" do
       let(:contact_user) { Fabricate(:admin) }
 
-      it 'clears site_contact_username site setting when admin privilege is revoked' do
+      it "clears site_contact_username site setting when admin privilege is revoked" do
         contact_user.revoke_admin!
-        expect(SiteSetting.site_contact_username).to eq(SiteSetting.defaults[:site_contact_username])
+        expect(SiteSetting.site_contact_username).to eq(
+          SiteSetting.defaults[:site_contact_username],
+        )
       end
     end
 
-    context 'when moderator' do
+    context "when moderator" do
       let(:contact_user) { Fabricate(:moderator) }
 
-      it 'clears site_contact_username site setting when moderator privilege is revoked' do
+      it "clears site_contact_username site setting when moderator privilege is revoked" do
         contact_user.revoke_moderation!
-        expect(SiteSetting.site_contact_username).to eq(SiteSetting.defaults[:site_contact_username])
+        expect(SiteSetting.site_contact_username).to eq(
+          SiteSetting.defaults[:site_contact_username],
+        )
       end
     end
 
-    context 'when admin and moderator' do
+    context "when admin and moderator" do
       let(:contact_user) { Fabricate(:moderator, admin: true) }
 
-      it 'does not change site_contact_username site setting when admin privilege is revoked' do
+      it "does not change site_contact_username site setting when admin privilege is revoked" do
         contact_user.revoke_admin!
         expect(SiteSetting.site_contact_username).to eq(contact_user.username)
       end
 
-      it 'does not change site_contact_username site setting when moderator privilege is revoked' do
+      it "does not change site_contact_username site setting when moderator privilege is revoked" do
         contact_user.revoke_moderation!
         expect(SiteSetting.site_contact_username).to eq(contact_user.username)
       end
 
-      it 'clears site_contact_username site setting when staff privileges are revoked' do
+      it "clears site_contact_username site setting when staff privileges are revoked" do
         contact_user.revoke_admin!
         contact_user.revoke_moderation!
-        expect(SiteSetting.site_contact_username).to eq(SiteSetting.defaults[:site_contact_username])
+        expect(SiteSetting.site_contact_username).to eq(
+          SiteSetting.defaults[:site_contact_username],
+        )
       end
     end
   end
 
   describe "#destroy!" do
-    it 'clears up associated data on destroy!' do
+    it "clears up associated data on destroy!" do
       user = Fabricate(:user)
       post = Fabricate(:post)
 
@@ -2661,9 +2893,9 @@ RSpec.describe User do
       it "normalizes username before executing query" do
         expect(User.username_exists?(user.username)).to eq(true)
         expect(User.username_exists?("Lo\u0308we")).to eq(true) # NFD
-        expect(User.username_exists?("L\u00F6we")).to eq(true)  # NFC
+        expect(User.username_exists?("L\u00F6we")).to eq(true) # NFC
         expect(User.username_exists?("LO\u0308WE")).to eq(true) # NFD
-        expect(User.username_exists?("l\u00D6wE")).to eq(true)  # NFC
+        expect(User.username_exists?("l\u00D6wE")).to eq(true) # NFC
         expect(User.username_exists?("foo")).to eq(false)
       end
     end
@@ -2673,17 +2905,25 @@ RSpec.describe User do
         before { SiteSetting.external_system_avatars_enabled = true }
 
         it "uses the normalized username" do
-          expect(User.system_avatar_template("Lo\u0308we")).to match(%r|/letter_avatar_proxy/v\d/letter/l/71e660/{size}.png|)
-          expect(User.system_avatar_template("L\u00F6wE")).to match(%r|/letter_avatar_proxy/v\d/letter/l/71e660/{size}.png|)
+          expect(User.system_avatar_template("Lo\u0308we")).to match(
+            %r|/letter_avatar_proxy/v\d/letter/l/71e660/{size}.png|,
+          )
+          expect(User.system_avatar_template("L\u00F6wE")).to match(
+            %r|/letter_avatar_proxy/v\d/letter/l/71e660/{size}.png|,
+          )
         end
 
         it "uses the first grapheme cluster and URL encodes it" do
-          expect(User.system_avatar_template("बहुत")).to match(%r|/letter_avatar_proxy/v\d/letter/%E0%A4%AC/ea5d25/{size}.png|)
+          expect(User.system_avatar_template("बहुत")).to match(
+            %r|/letter_avatar_proxy/v\d/letter/%E0%A4%AC/ea5d25/{size}.png|,
+          )
         end
 
         it "substitutes {username} with the URL encoded username" do
           SiteSetting.external_system_avatars_url = "https://{hostname}/{username}.png"
-          expect(User.system_avatar_template("बहुत")).to eq("https://#{Discourse.current_hostname}/%E0%A4%AC%E0%A4%B9%E0%A5%81%E0%A4%A4.png")
+          expect(User.system_avatar_template("बहुत")).to eq(
+            "https://#{Discourse.current_hostname}/%E0%A4%AC%E0%A4%B9%E0%A5%81%E0%A4%A4.png",
+          )
         end
       end
     end
@@ -2692,8 +2932,10 @@ RSpec.describe User do
   describe "Second-factor authenticators" do
     describe "#totps" do
       it "only includes enabled totp 2FA" do
-        enabled_totp_2fa = Fabricate(:user_second_factor_totp, user: user, name: 'Enabled TOTP', enabled: true)
-        disabled_totp_2fa = Fabricate(:user_second_factor_totp, user: user, name: 'Disabled TOTP', enabled: false)
+        enabled_totp_2fa =
+          Fabricate(:user_second_factor_totp, user: user, name: "Enabled TOTP", enabled: true)
+        disabled_totp_2fa =
+          Fabricate(:user_second_factor_totp, user: user, name: "Disabled TOTP", enabled: false)
 
         expect(user.totps.map(&:id)).to eq([enabled_totp_2fa.id])
       end
@@ -2701,29 +2943,39 @@ RSpec.describe User do
 
     describe "#security_keys" do
       it "only includes enabled security_key 2FA" do
-        enabled_security_key_2fa = Fabricate(:user_security_key_with_random_credential, user: user, name: 'Enabled YubiKey', enabled: true)
-        disabled_security_key_2fa = Fabricate(:user_security_key_with_random_credential, user: user, name: 'Disabled YubiKey', enabled: false)
+        enabled_security_key_2fa =
+          Fabricate(
+            :user_security_key_with_random_credential,
+            user: user,
+            name: "Enabled YubiKey",
+            enabled: true,
+          )
+        disabled_security_key_2fa =
+          Fabricate(
+            :user_security_key_with_random_credential,
+            user: user,
+            name: "Disabled YubiKey",
+            enabled: false,
+          )
 
         expect(user.security_keys.map(&:id)).to eq([enabled_security_key_2fa.id])
       end
     end
   end
 
-  describe 'Secure identifier for a user which is a string other than the ID used to identify the user in some cases e.g. security keys' do
-    describe '#create_or_fetch_secure_identifier' do
-      context 'if the user already has a secure identifier' do
+  describe "Secure identifier for a user which is a string other than the ID used to identify the user in some cases e.g. security keys" do
+    describe "#create_or_fetch_secure_identifier" do
+      context "if the user already has a secure identifier" do
         let(:sec_ident) { SecureRandom.hex(20) }
-        before do
-          user.update(secure_identifier: sec_ident)
-        end
+        before { user.update(secure_identifier: sec_ident) }
 
-        it 'returns the identifier' do
+        it "returns the identifier" do
           expect(user.create_or_fetch_secure_identifier).to eq(sec_ident)
         end
       end
 
-      context 'if the user already does not have a secure identifier' do
-        it 'creates one' do
+      context "if the user already does not have a secure identifier" do
+        it "creates one" do
           expect(user.secure_identifier).to eq(nil)
           user.create_or_fetch_secure_identifier
           expect(user.reload.secure_identifier).not_to eq(nil)
@@ -2732,42 +2984,40 @@ RSpec.describe User do
     end
   end
 
-  describe 'Granting admin or moderator status' do
-    context 'when granting admin status' do
-      context 'when there is a reviewable' do
+  describe "Granting admin or moderator status" do
+    context "when granting admin status" do
+      context "when there is a reviewable" do
         fab!(:user) { Fabricate(:reviewable_user) }
 
-        context 'when the user isn’t approved yet' do
-          it 'approves the associated reviewable' do
+        context "when the user isn’t approved yet" do
+          it "approves the associated reviewable" do
             expect { user.target.grant_admin! }.to change { user.reload.dup }.to be_approved
           end
         end
 
         context "when the user is already approved" do
-          before do
-            user.perform(Discourse.system_user, :approve_user)
-          end
+          before { user.perform(Discourse.system_user, :approve_user) }
 
-          it 'does nothing' do
+          it "does nothing" do
             expect { user.target.grant_admin! }.not_to change { user.reload.approved? }
           end
         end
       end
 
-      context 'when there is no reviewable' do
+      context "when there is no reviewable" do
         let(:user) { Fabricate(:user, approved: false) }
 
-        it 'approves the user' do
+        it "approves the user" do
           expect { user.grant_admin! }.to change { user.reload.approved }.to true
         end
       end
     end
 
-    context 'when granting moderator status' do
-      context 'when there is a reviewable' do
+    context "when granting moderator status" do
+      context "when there is a reviewable" do
         let(:user) { Fabricate(:reviewable_user) }
 
-        it 'approves the associated reviewable' do
+        it "approves the associated reviewable" do
           expect { user.target.grant_moderation! }.to change { user.reload.dup }.to be_approved
         end
       end
@@ -2779,11 +3029,41 @@ RSpec.describe User do
     fab!(:user2) { Fabricate(:user) }
 
     before_all do
-      UserVisit.create(user_id: user.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 10)
-      UserVisit.create(user_id: user.id, visited_at: 2.days.ago, posts_read: 1, mobile: false, time_read: 20)
-      UserVisit.create(user_id: user.id, visited_at: 1.week.ago, posts_read: 1, mobile: false, time_read: 30)
-      UserVisit.create(user_id: user.id, visited_at: 1.year.ago, posts_read: 1, mobile: false, time_read: 40) # Old, should be ignored
-      UserVisit.create(user_id: user2.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 50)
+      UserVisit.create(
+        user_id: user.id,
+        visited_at: 1.minute.ago,
+        posts_read: 1,
+        mobile: false,
+        time_read: 10,
+      )
+      UserVisit.create(
+        user_id: user.id,
+        visited_at: 2.days.ago,
+        posts_read: 1,
+        mobile: false,
+        time_read: 20,
+      )
+      UserVisit.create(
+        user_id: user.id,
+        visited_at: 1.week.ago,
+        posts_read: 1,
+        mobile: false,
+        time_read: 30,
+      )
+      UserVisit.create(
+        user_id: user.id,
+        visited_at: 1.year.ago,
+        posts_read: 1,
+        mobile: false,
+        time_read: 40,
+      ) # Old, should be ignored
+      UserVisit.create(
+        user_id: user2.id,
+        visited_at: 1.minute.ago,
+        posts_read: 1,
+        mobile: false,
+        time_read: 50,
+      )
     end
 
     it "calculates correctly" do
@@ -2821,70 +3101,76 @@ RSpec.describe User do
     end
   end
 
-  describe '#update_ip_address!' do
-    it 'updates ip_address correctly' do
-      expect do
-        user.update_ip_address!('127.0.0.1')
-      end.to change { user.reload.ip_address.to_s }.to('127.0.0.1')
+  describe "#update_ip_address!" do
+    it "updates ip_address correctly" do
+      expect do user.update_ip_address!("127.0.0.1") end.to change {
+        user.reload.ip_address.to_s
+      }.to("127.0.0.1")
 
-      expect do
-        user.update_ip_address!('127.0.0.1')
-      end.to_not change { user.reload.ip_address }
+      expect do user.update_ip_address!("127.0.0.1") end.to_not change { user.reload.ip_address }
     end
 
-    describe 'keeping old ip address' do
-      before do
-        SiteSetting.keep_old_ip_address_count = 2
-      end
+    describe "keeping old ip address" do
+      before { SiteSetting.keep_old_ip_address_count = 2 }
 
-      it 'tracks old user record correctly' do
-        expect do
-          user.update_ip_address!('127.0.0.1')
-        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(1)
+      it "tracks old user record correctly" do
+        expect do user.update_ip_address!("127.0.0.1") end.to change {
+          UserIpAddressHistory.where(user_id: user.id).count
+        }.by(1)
 
         freeze_time 10.minutes.from_now
 
-        expect do
-          user.update_ip_address!('0.0.0.0')
-        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(1)
+        expect do user.update_ip_address!("0.0.0.0") end.to change {
+          UserIpAddressHistory.where(user_id: user.id).count
+        }.by(1)
 
         freeze_time 11.minutes.from_now
 
-        expect do
-          user.update_ip_address!('127.0.0.1')
-        end.to_not change { UserIpAddressHistory.where(user_id: user.id).count }
+        expect do user.update_ip_address!("127.0.0.1") end.to_not change {
+          UserIpAddressHistory.where(user_id: user.id).count
+        }
 
-        expect(UserIpAddressHistory.find_by(
-          user_id: user.id, ip_address: '127.0.0.1'
-        ).updated_at).to eq_time(Time.zone.now)
+        expect(
+          UserIpAddressHistory.find_by(user_id: user.id, ip_address: "127.0.0.1").updated_at,
+        ).to eq_time(Time.zone.now)
 
         freeze_time 12.minutes.from_now
 
-        expect do
-          user.update_ip_address!('0.0.0.1')
-        end.not_to change { UserIpAddressHistory.where(user_id: user.id).count }
+        expect do user.update_ip_address!("0.0.0.1") end.not_to change {
+          UserIpAddressHistory.where(user_id: user.id).count
+        }
 
-        expect(
-          UserIpAddressHistory.where(user_id: user.id).pluck(:ip_address).map(&:to_s)
-        ).to eq(['127.0.0.1', '0.0.0.1'])
+        expect(UserIpAddressHistory.where(user_id: user.id).pluck(:ip_address).map(&:to_s)).to eq(
+          %w[127.0.0.1 0.0.0.1],
+        )
       end
     end
   end
 
   describe "#do_not_disturb?" do
     it "is true when a dnd timing is present for the current time" do
-      Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now, ends_at: 1.day.from_now)
+      Fabricate(
+        :do_not_disturb_timing,
+        user: user,
+        starts_at: Time.zone.now,
+        ends_at: 1.day.from_now,
+      )
       expect(user.do_not_disturb?).to eq(true)
     end
 
     it "is false when no dnd timing is present for the current time" do
-      Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now - 2.day, ends_at: 1.minute.ago)
+      Fabricate(
+        :do_not_disturb_timing,
+        user: user,
+        starts_at: Time.zone.now - 2.day,
+        ends_at: 1.minute.ago,
+      )
       expect(user.do_not_disturb?).to eq(false)
     end
   end
 
   describe "#invited_by" do
-    it 'returns even if invites was trashed' do
+    it "returns even if invites was trashed" do
       invite = Fabricate(:invite, invited_by: Fabricate(:user))
       Fabricate(:invited_user, invite: invite, user: user)
       invite.trash!
@@ -2897,7 +3183,7 @@ RSpec.describe User do
     [
       ["returns true for equal usernames", "john", "john", true],
       ["returns false for different usernames", "john", "bill", false],
-      ["considers usernames that are different only in case as equal", "john", "JoHN", true]
+      ["considers usernames that are different only in case as equal", "john", "JoHN", true],
     ].each do |testcase_name, current_username, another_username, is_equal|
       it "#{testcase_name}" do
         user = Fabricate(:user, username: current_username)
@@ -2922,19 +3208,19 @@ RSpec.describe User do
   describe "#whisperer?" do
     fab!(:group) { Fabricate(:group) }
 
-    it 'returns true for an admin user' do
+    it "returns true for an admin user" do
       SiteSetting.whispers_allowed_groups = "#{group.id}"
 
       admin = Fabricate.create(:admin)
       expect(admin.whisperer?).to eq(true)
     end
 
-    it 'returns false for an admin user when whispers are not enabled' do
+    it "returns false for an admin user when whispers are not enabled" do
       admin = Fabricate.create(:admin)
       expect(admin.whisperer?).to eq(false)
     end
 
-    it 'returns true for user belonging to whisperers groups' do
+    it "returns true for user belonging to whisperers groups" do
       whisperer = Fabricate(:user)
       user = Fabricate(:user)
       SiteSetting.whispers_allowed_groups = "#{group.id}"
@@ -2948,7 +3234,7 @@ RSpec.describe User do
       expect(user.whisperer?).to eq(false)
     end
 
-    it 'returns false if no whispers groups exist' do
+    it "returns false if no whispers groups exist" do
       expect(subject.whisperer?).to eq(false)
     end
   end
@@ -2960,11 +3246,22 @@ RSpec.describe User do
       Fabricate(:notification, user: user, notification_type: 1, high_priority: false, read: true)
       Fabricate(:notification, user: user, notification_type: 1, high_priority: false, read: false)
 
-      Fabricate(:notification, user: user, notification_type: 2, high_priority: true, read: false, topic: nil)
+      Fabricate(
+        :notification,
+        user: user,
+        notification_type: 2,
+        high_priority: true,
+        read: false,
+        topic: nil,
+      )
 
-      Fabricate(:notification, user: user, notification_type: 3, high_priority: true, read: false).tap do |n|
-        n.topic.trash!(Fabricate(:admin))
-      end
+      Fabricate(
+        :notification,
+        user: user,
+        notification_type: 3,
+        high_priority: true,
+        read: false,
+      ).tap { |n| n.topic.trash!(Fabricate(:admin)) }
 
       Fabricate(:notification, user: user, notification_type: 3, high_priority: false, read: true)
 
@@ -3012,18 +3309,9 @@ RSpec.describe User do
 
     it "picks the reviewable of the largest id" do
       user.update!(admin: true)
-      Fabricate(
-        :reviewable,
-        created_at: 3.minutes.ago,
-        updated_at: 3.minutes.ago,
-        score: 100
-      )
-      reviewable2 = Fabricate(
-        :reviewable,
-        created_at: 30.minutes.ago,
-        updated_at: 30.minutes.ago,
-        score: 10
-      )
+      Fabricate(:reviewable, created_at: 3.minutes.ago, updated_at: 3.minutes.ago, score: 100)
+      reviewable2 =
+        Fabricate(:reviewable, created_at: 30.minutes.ago, updated_at: 30.minutes.ago, score: 10)
       user.bump_last_seen_reviewable!
       expect(user.last_seen_reviewable_id).to eq(reviewable2.id)
     end
@@ -3044,7 +3332,8 @@ RSpec.describe User do
       user.update!(groups: [group])
       SiteSetting.enable_category_group_moderation = true
 
-      group_reviewable = Fabricate(:reviewable, reviewable_by_moderator: false, reviewable_by_group: group)
+      group_reviewable =
+        Fabricate(:reviewable, reviewable_by_moderator: false, reviewable_by_group: group)
       mod_reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
       admin_reviewable = Fabricate(:reviewable, reviewable_by_moderator: false)
 
@@ -3058,14 +3347,15 @@ RSpec.describe User do
     it "publishes a message to the user's /reviewable_counts message bus channel" do
       user.update!(admin: true)
       Fabricate(:reviewable)
-      messages = MessageBus.track_publish do
-        user.bump_last_seen_reviewable!
-      end
+      messages = MessageBus.track_publish { user.bump_last_seen_reviewable! }
       expect(messages.size).to eq(1)
       expect(messages.first).to have_attributes(
         channel: "/reviewable_counts/#{user.id}",
         user_ids: [user.id],
-        data: { unseen_reviewable_count: 0, reviewable_count: 1 }
+        data: {
+          unseen_reviewable_count: 0,
+          reviewable_count: 1,
+        },
       )
     end
   end
@@ -3088,15 +3378,21 @@ RSpec.describe User do
     end
   end
 
-  describe '#visible_sidebar_tags' do
+  describe "#visible_sidebar_tags" do
     fab!(:user) { Fabricate(:user) }
     fab!(:tag) { Fabricate(:tag) }
     fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
-    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"]) }
-    fab!(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user, linkable: tag) }
-    fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag) }
+    fab!(:staff_tag_group) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"])
+    end
+    fab!(:tag_sidebar_section_link) do
+      Fabricate(:tag_sidebar_section_link, user: user, linkable: tag)
+    end
+    fab!(:tag_sidebar_section_link_2) do
+      Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag)
+    end
 
-    it 'should only return tag sidebar section link records of tags that the user is allowed to see' do
+    it "should only return tag sidebar section link records of tags that the user is allowed to see" do
       expect(user.visible_sidebar_tags).to contain_exactly(tag)
 
       user.update!(admin: true)
@@ -3105,35 +3401,36 @@ RSpec.describe User do
     end
   end
 
-  describe '#secure_category_ids' do
+  describe "#secure_category_ids" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:group) { Fabricate(:group) }
     fab!(:private_category) { Fabricate(:private_category, group: group) }
 
-    it 'allows admin to see all secure categories' do
+    it "allows admin to see all secure categories" do
       expect(admin.secure_category_ids).to include(private_category.id)
     end
 
-    context 'when SiteSetting.suppress_secured_categories_from_admin is true' do
-      it 'hides secure categories from admins' do
+    context "when SiteSetting.suppress_secured_categories_from_admin is true" do
+      it "hides secure categories from admins" do
         SiteSetting.suppress_secured_categories_from_admin = true
         expect(admin.secure_category_ids).not_to include(private_category.id)
       end
     end
   end
 
-  describe '#new_personal_messages_notifications_count' do
+  describe "#new_personal_messages_notifications_count" do
     it "returns count of new and unread private_message notifications of the user" do
       another_user = Fabricate(:user)
 
       Fabricate(:notification, user: user, read: false)
 
-      last_seen_id = Fabricate(
-        :notification,
-        user: user,
-        read: false,
-        notification_type: Notification.types[:private_message]
-      ).id
+      last_seen_id =
+        Fabricate(
+          :notification,
+          user: user,
+          read: false,
+          notification_type: Notification.types[:private_message],
+        ).id
 
       expect(user.new_personal_messages_notifications_count).to eq(1)
 
@@ -3141,32 +3438,60 @@ RSpec.describe User do
         :notification,
         user: user,
         read: false,
-        notification_type: Notification.types[:private_message]
+        notification_type: Notification.types[:private_message],
       )
 
       Fabricate(
         :notification,
         user: another_user,
         read: false,
-        notification_type: Notification.types[:private_message]
+        notification_type: Notification.types[:private_message],
       )
 
       Fabricate(
         :notification,
         user: user,
         read: true,
-        notification_type: Notification.types[:private_message]
+        notification_type: Notification.types[:private_message],
       )
 
       Fabricate(
         :notification,
         user: user,
         read: false,
-        notification_type: Notification.types[:replied]
+        notification_type: Notification.types[:replied],
       )
 
       user.update!(seen_notification_id: last_seen_id)
       expect(user.new_personal_messages_notifications_count).to eq(1)
+    end
+  end
+
+  describe "#redesigned_user_menu_enabled?" do
+    it "returns true when `navigation_menu` site settings is `legacy` and `enable_new_notifications_menu` site settings is enabled" do
+      SiteSetting.navigation_menu = "legacy"
+      SiteSetting.enable_new_notifications_menu = true
+
+      expect(user.redesigned_user_menu_enabled?).to eq(true)
+    end
+
+    it "returns false when `navigation_menu` site settings is `legacy` and `enable_new_notifications_menu` site settings is not enabled" do
+      SiteSetting.navigation_menu = "legacy"
+      SiteSetting.enable_new_notifications_menu = false
+
+      expect(user.redesigned_user_menu_enabled?).to eq(false)
+    end
+
+    it "returns true when `navigation_menu` site settings is `sidebar`" do
+      SiteSetting.navigation_menu = "sidebar"
+
+      expect(user.redesigned_user_menu_enabled?).to eq(true)
+    end
+
+    it "returns true when `navigation_menu` site settings is `header_dropdown`" do
+      SiteSetting.navigation_menu = "header dropdown"
+
+      expect(user.redesigned_user_menu_enabled?).to eq(true)
     end
   end
 end

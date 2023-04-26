@@ -8,9 +8,9 @@ class PublishedPage < ActiveRecord::Base
 
   validate :slug_format
   def slug_format
-    if slug !~ /^[a-zA-Z\-\_0-9]+$/
+    if slug !~ /\A[a-zA-Z\-\_0-9]+\z/
       errors.add(:slug, I18n.t("publish_page.slug_errors.invalid"))
-    elsif ["check-slug", "by-topic"].include?(slug)
+    elsif %w[check-slug by-topic].include?(slug)
       errors.add(:slug, I18n.t("publish_page.slug_errors.unavailable"))
     end
   end
@@ -26,16 +26,17 @@ class PublishedPage < ActiveRecord::Base
   def self.publish!(publisher, topic, slug, options = {})
     pp = nil
 
-    results = transaction do
-      pp = find_or_initialize_by(topic: topic)
-      pp.slug = slug.strip
-      pp.public = options[:public] || false
+    results =
+      transaction do
+        pp = find_or_initialize_by(topic: topic)
+        pp.slug = slug.strip
+        pp.public = options[:public] || false
 
-      if pp.save
-        StaffActionLogger.new(publisher).log_published_page(topic.id, slug)
-        [true, pp]
+        if pp.save
+          StaffActionLogger.new(publisher).log_published_page(topic.id, slug)
+          [true, pp]
+        end
       end
-    end
 
     results || [false, pp]
   end

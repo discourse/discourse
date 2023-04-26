@@ -1,5 +1,6 @@
-  # frozen_string_literal: true
-  BASES = '{
+# frozen_string_literal: true
+BASES =
+  '{
     "type" : "kbase",
     "data" : [ {
       "objectId" : "90b1ccf3-35aa-4d6f-848e-e7c122d92c58",
@@ -9,7 +10,8 @@
     } ]
   }'
 
-  QUESTIONS = '{
+QUESTIONS =
+  '{
     "type": "question-search-result",
     "data": {
       "totalSize": 445,
@@ -50,7 +52,8 @@
     }
   }'
 
-  QUESTION = '{
+QUESTION =
+  '{
   "type" : "question",
   "data" : {
     "uid" : "de20ed0a-5fe5-48a5-9c14-d854f9af99f1",

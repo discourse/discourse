@@ -8,25 +8,35 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
     *Dir["#{Rails.root}/app/*"].reject { |path| path.end_with? "/assets" },
     "#{Rails.root}/config",
     "#{Rails.root}/lib",
-    "#{Rails.root}/plugins"
+    "#{Rails.root}/plugins",
   ]
 
-  Listen.to(*paths, only: /\.rb$/) do |modified, added, removed|
-    supervisor_pid = UNICORN_DEV_SUPERVISOR_PID
-    auto_restart = supervisor_pid && ENV["AUTO_RESTART"] != "0"
+  Listen
+    .to(*paths, only: /\.rb$/) do |modified, added, removed|
+      supervisor_pid = UNICORN_DEV_SUPERVISOR_PID
+      auto_restart = supervisor_pid && ENV["AUTO_RESTART"] != "0"
 
-    files = modified + added + removed
+      files = modified + added + removed
 
-    not_autoloaded = files.filter_map do |file|
-      autoloaded = Rails.autoloaders.main.autoloads.key? file
-      Pathname.new(file).relative_path_from(Rails.root) if !autoloaded
+      not_autoloaded =
+        files.filter_map do |file|
+          autoloaded = Rails.autoloaders.main.__autoloads.key? file
+          Pathname.new(file).relative_path_from(Rails.root) if !autoloaded
+        end
+
+      if not_autoloaded.length > 0
+        message =
+          (
+            if auto_restart
+              "Restarting server..."
+            else
+              "Server restart required. Automate this by setting AUTO_RESTART=1."
+            end
+          )
+        STDERR.puts "[DEV]: Edited files which are not autoloaded. #{message}"
+        STDERR.puts not_autoloaded.map { |path| "- #{path}".indent(7) }.join("\n")
+        Process.kill("USR2", supervisor_pid) if auto_restart
+      end
     end
-
-    if not_autoloaded.length > 0
-      message = auto_restart ? "Restarting server..." : "Server restart required. Automate this by setting AUTO_RESTART=1."
-      STDERR.puts "[DEV]: Edited files which are not autoloaded. #{message}"
-      STDERR.puts not_autoloaded.map { |path| "- #{path}".indent(7) }.join("\n")
-      Process.kill("USR2", supervisor_pid) if auto_restart
-    end
-  end.start
+    .start
 end

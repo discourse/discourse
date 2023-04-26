@@ -6,6 +6,7 @@
 
 ru:
   site_settings:
+    chat_enabled: "Включить плагин чата."
     chat_allowed_groups: "Пользователи в этих группах могут общаться в чате. Обратите внимание, что сотрудники всегда могут получить доступ к чату."
     chat_channel_retention_days: "Сообщения чата в обычных каналах будут храниться указанное здесь количество дней. Установите значение в «0», чтобы сохранять сообщения навсегда."
     chat_dm_retention_days: "Сообщения чата в личных каналах чата будут храниться указанное здесь количество дней. Установите значение в «0», чтобы сохранять сообщения навсегда."
@@ -22,6 +23,9 @@ ru:
     default_emoji_reactions: "Стандартные эмодзи чата. Можно добавить до 5 смайликов."
     direct_message_enabled_groups: "Разрешить пользователям в этих группах создавать личные чаты между пользователями. Примечание. Сотрудники всегда могут создавать личные чаты, а пользователи смогут отвечать на личные чаты, инициированные пользователями, имеющими разрешение на их создание."
     chat_message_flag_allowed_groups: "Пользователям этих групп разрешено жаловаться на сообщения в чате."
+    max_mentions_per_chat_message: "Максимальное число упоминаний других пользователей, которое пользователь может сделать в сообщении чата."
+    chat_max_direct_message_users: "Максимальное число пользователей, которое можно добавить при создании прямого сообщения. Значение «0» — разрешить сообщения только себе. Сотрудники могут добавлять неограниченное число пользователей."
+    chat_allow_archiving_channels: "Разрешить персоналу архивировать сообщения в тему при закрытии канала."
     errors:
       chat_default_channel: "Канал чата по умолчанию должен быть общедоступным."
       direct_message_enabled_groups_invalid: "Для этого параметра необходимо указать хотя бы одну группу. Если вы не хотите, чтобы кто-либо, кроме сотрудников, отправлял прямые сообщения, выберите группу сотрудников."
@@ -30,26 +34,27 @@ ru:
     chat_channel_archive_complete:
       title: "Архивация канала завершена"
       subject_template: "Архивация канала успешно завершена"
-      text_body_template: |
-        Архивация канала **\#%{channel_name}** успешно завершена. Сообщения были скопированы в тему [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Не удалось заархивировать канал"
       subject_template: "Не удалось заархивировать канал"
-      text_body_template: |
-        Не удалось заархивировать канал **\#%{channel_name}**. Сообщения %{messages_archived} были заархивированы. Частично заархивированные сообщения были скопированы в тему [%{topic_title}](%{topic_url}). Посетите канал %{channel_url} и повторите попытку.
+    chat_channel_archive_failed_no_topic:
+      title: "Не удалось заархивировать канал"
+      subject_template: "Не удалось заархивировать канал"
   chat:
     deleted_chat_username: удалён
     errors:
       channel_exists_for_category: "Канал для этой категории уже существует"
-      channel_new_message_disallowed: "Канал %{status}, в него не могут быть отправлены новые сообщения"
-      channel_modify_message_disallowed: "Канал %{status}, существующие сообщения не могут быть отредактированы или удалены"
       user_cannot_send_message: "В настоящее время вы не можете отправлять сообщения."
       rate_limit_exceeded: "Превышен лимит сообщений, которые могут быть отправлены в течение 30 секунд"
       auto_silence_from_flags: "На сообщение поступило большое количество жалоб, и пользователь был заблокирован."
       channel_cannot_be_archived: "Канал в данный момент не может быть заархивирован, он должен быть либо закрыт, либо открыт для архивации."
       duplicate_message: "Вы отправляете одно и то же сообщение слишком часто."
       delete_channel_failed: "Не удалось удалить канал, попробуйте ещё раз."
-      minimum_length_not_met: "Сообщение слишком короткое, оно должно содержать не менее %{minimum} символов."
+      message_too_long:
+        one: "Сообщение слишком длинное, максимум символов — %{count}."
+        few: "Сообщение слишком длинное, максимум символов — %{count}."
+        many: "Сообщение слишком длинное, максимум символов — %{count}."
+        other: "Сообщение слишком длинное, максимум символов — %{count}."
       max_reactions_limit_reached: "Новые реакции на это сообщение запрещены."
       message_move_invalid_channel: "Исходный и целевой каналы должны быть общедоступными."
       message_move_no_messages_found: "Не найдено сообщений с указанными идентификаторами сообщений."
@@ -60,6 +65,7 @@ ru:
       actor_disallowed_dms: "Вы решили запретить пользователям отправлять вам личные и прямые сообщения чата, поэтому вы не можете создавать новые прямые сообщения."
       actor_preventing_target_user_from_dm: "Вы решили запретить %{username} отправлять вам личные и прямые сообщения чата, поэтому вы не можете создавать для них новые прямые сообщения."
       user_cannot_send_direct_messages: "Вы не можете отправлять прямые сообщения."
+      over_chat_max_direct_message_users_allow_self: "Вы не можете создать прямое сообщение более чем с %{count} пользователем."
     reviewables:
       message_already_handled: "Спасибо, но мы уже рассмотрели жалобу на это сообщение, поэтому жаловаться на него снова нет необходимости."
       actions:
@@ -75,8 +81,8 @@ ru:
           title: "Заморозить пользователя"
           description: "Согласиться с жалобой и заморозить пользователя."
         agree_and_silence:
-          title: "Pf,kjrbhjdfnm gjkmpjdfntkz"
-          description: "Согласиться с жалобой и блокировать пользователя."
+          title: "Блокировка пользователя"
+          description: "Согласиться с жалобой и заблокировать пользователя."
         agree_and_restore:
           title: "Восстановить сообщение"
           description: "Восстановить сообщение, чтобы пользователи могли его видеть."
@@ -96,11 +102,6 @@ ru:
         transcript_title: "Содержимое предыдущих сообщений в канале %{channel_name}"
         transcript_body: "Чтобы дать больше контекста, мы отображаем содержимое предыдущих сообщений этой беседы (до десяти):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Только для чтения"
-        archived: "Архивные"
-        closed: "Закрытые"
-        open: "Открыт"
       archive:
         first_post_raw: "Эта тема является архивом канала [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -109,9 +110,16 @@ ru:
         many: "Пользователь @%{acting_username} переместил %{count} сообщений в канал [%{channel_name}](%{first_moved_message_url})."
         other: "Пользователь @%{acting_username} переместил %{count} сообщений в канал [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} и ещё %{leftover}"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} и ещё %{count}"
+          few: "%{comma_separated_usernames} и ещё %{count}"
+          many: "%{comma_separated_usernames} и ещё %{count}"
+          other: "%{comma_separated_usernames} и ещё %{count}"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "содержит символы не в ascii-кодировке"
+        is_already_in_use: "уже используется"
     bookmarkable:
       notification_title: "Сообщение в канале %{channel_name}"
     personal_chat: "личный чат"
@@ -123,7 +131,7 @@ ru:
         one: "%{count} участник"
         few: "%{count} участника"
         many: "%{count} участников"
-        other: "%{count} участников"
+        other: "%{count} участника"
       and_x_others:
         one: "и ещё %{count}"
         few: "и ещё %{count}"
@@ -133,10 +141,10 @@ ru:
     popup:
       chat_mention:
         direct: 'Пользователь %{username} упомянул вас на канале «%{channel}»'
-        other_type: 'Пользователь %{username} упомянул %{identifier} в канале «%{channel}»'
+        other_type: '%{username} упомянул(а) %{identifier} в канале «%{channel}»'
       direct_message_chat_mention:
         direct: "Пользователь %{username} упомянул вас в личном чате"
-        other_type: "Пользователь %{username} упомянул %{identifier} в личном чате"
+        other_type: "%{username} упомянул(а) %{identifier} в личном чате"
       new_chat_message: 'Пользователь %{username} отправил сообщение на канале «%{channel}»'
       new_direct_chat_message: "Пользователь %{username} отправил сообщение в личный чат"
   discourse_automation:
@@ -164,8 +172,24 @@ ru:
         many: "У вас в чате есть новые сообщения"
         other: "У вас в чате есть новые сообщения"
       from: "%{site_name}"
-      unsubscribe: "Этот дайджест чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Для отмены подписки измените %{email_preferences_link} или %{unsubscribe_link}."
-      unsubscribe_no_link: "Этот дайджест чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Настройка рассылки: %{email_preferences_link}."
+      subject:
+        direct_message_from_1: "[%{email_prefix}] Новое сообщение от %{username}"
+        direct_message_from_2: "[%{email_prefix}] Новое сообщение от пользователей %{username1} и %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Новое сообщение от пользователя %{username} и еще %{count}"
+          few: "[%{email_prefix}] Новое сообщение от пользователя %{username} и еще %{count}"
+          many: "[%{email_prefix}] Новое сообщение от пользователя %{username} и еще %{count}"
+          other: "[%{email_prefix}] Новое сообщение от пользователя %{username} и еще %{count}"
+        chat_channel_1: "[%{email_prefix}] Новое сообщение в канале «%{channel}»"
+        chat_channel_2: "[%{email_prefix}] Новое сообщение в каналах «%{channel1}» и «%{channel2}»"
+        chat_channel_more:
+          one: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и еще %{count}"
+          few: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и еще %{count}"
+          many: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и еще %{count}"
+          other: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и еще %{count}"
+        chat_channel_and_direct_message: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и от пользователя %{username}"
+      unsubscribe: "Эта сводка чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Для отмены подписки измените %{email_preferences_link} или %{unsubscribe_link}."
+      unsubscribe_no_link: "Эта сводка чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Настройка рассылки: %{email_preferences_link}."
       view_messages:
         one: "Посмотреть %{count} сообщение"
         few: "Посмотреть %{count} сообщения"
@@ -179,7 +203,7 @@ ru:
       your_chat_settings: "Настройка частоты рассылки дайджеста чата"
   unsubscribe:
     chat_summary:
-      select_title: "Настройте частоту получения электронных писем с дайджестами чата:"
+      select_title: "Частота писем со сводками чата:"
       never: Никогда
       when_away: Если вы находитесь офлайн
   category:

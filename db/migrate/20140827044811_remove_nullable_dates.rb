@@ -2,7 +2,6 @@
 
 class RemoveNullableDates < ActiveRecord::Migration[4.2]
   def up
-
     # must drop so we can muck with the column
     execute "DROP VIEW badge_posts"
 
@@ -10,7 +9,8 @@ class RemoveNullableDates < ActiveRecord::Migration[4.2]
     #  this is no longer the case in Rails 4, some old installs have
     #  this relic
     #  Fix it
-    sql = "select table_name, column_name from information_schema.columns
+    sql =
+      "select table_name, column_name from information_schema.columns
            WHERE  column_name IN ('created_at','updated_at') AND
                   table_schema = 'public' AND
                   is_nullable = 'YES' AND
@@ -35,7 +35,6 @@ class RemoveNullableDates < ActiveRecord::Migration[4.2]
           t.deleted_at IS NULL AND
           NOT c.read_restricted AND
           t.visible"
-
   end
 
   def down

@@ -23,9 +23,8 @@ lt:
         ignore:
           title: "Ignoruoti"
     channel:
-      statuses:
-        closed: "Uždaryta"
-        open: "Atidaryti"
+      dm_title:
+        single_user: "%{username}"
   discourse_push_notifications:
     popup:
       chat_mention:

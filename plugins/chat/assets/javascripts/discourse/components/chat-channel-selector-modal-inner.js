@@ -17,24 +17,25 @@ export default Component.extend({
   channels: null,
   searchIndex: 0,
   loading: false,
-
-  init() {
-    this._super(...arguments);
-    this.appEvents.on("chat-channel-selector-modal:close", this.close);
-    this.getInitialChannels();
-  },
+  chatChannelsManager: service(),
+  router: service(),
 
   didInsertElement() {
     this._super(...arguments);
+
+    this.appEvents.on("chat-channel-selector-modal:close", this.close);
     document.addEventListener("keyup", this.onKeyUp);
     document
       .getElementById("chat-channel-selector-modal-inner")
       ?.addEventListener("mouseover", this.mouseover);
     document.getElementById("chat-channel-selector-input")?.focus();
+
+    this.getInitialChannels();
   },
 
   willDestroyElement() {
     this._super(...arguments);
+
     this.appEvents.off("chat-channel-selector-modal:close", this.close);
     document.removeEventListener("keyup", this.onKeyUp);
     document
@@ -101,16 +102,17 @@ export default Component.extend({
   switchChannel(channel) {
     if (channel.user) {
       return this.fetchOrCreateChannelForUser(channel).then((response) => {
-        this.chat
-          .startTrackingChannel(ChatChannel.create(response.chat_channel))
-          .then((newlyTracked) => {
-            this.chat.openChannel(newlyTracked);
-            this.close();
-          });
+        const newChannel = this.chatChannelsManager.store(response.channel);
+        return this.chatChannelsManager.follow(newChannel).then((c) => {
+          this.router.transitionTo("chat.channel", ...c.routeModels);
+          this.close();
+        });
       });
     } else {
-      this.chat.openChannel(channel);
-      this.close();
+      return this.chatChannelsManager.follow(channel).then((c) => {
+        this.router.transitionTo("chat.channel", ...c.routeModels);
+        this.close();
+      });
     }
   },
 
@@ -130,12 +132,16 @@ export default Component.extend({
 
   @action
   fetchChannelsFromServer(filter) {
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
     this.setProperties({
       loading: true,
       searchIndex: this.searchIndex + 1,
     });
     const thisSearchIndex = this.searchIndex;
-    ajax("/chat/chat_channels/search", { data: { filter } })
+    ajax("/chat/api/chatables", { data: { filter } })
       .then((searchModel) => {
         if (this.searchIndex === thisSearchIndex) {
           this.set("searchModel", searchModel);
@@ -149,7 +155,11 @@ export default Component.extend({
             }
           });
           this.setProperties({
-            channels: channels.map((channel) => ChatChannel.create(channel)),
+            channels: channels.map((channel) => {
+              return channel.user
+                ? ChatChannel.create(channel)
+                : this.chatChannelsManager.store(channel);
+            }),
             loading: false,
           });
           this.focusFirstChannel(this.channels);
@@ -160,10 +170,13 @@ export default Component.extend({
 
   @action
   getInitialChannels() {
-    return this.chat.getChannelsWithFilter(this.filter).then((channels) => {
-      this.focusFirstChannel(channels);
-      this.set("channels", channels);
-    });
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
+    const channels = this.getChannelsWithFilter(this.filter);
+    this.set("channels", channels);
+    this.focusFirstChannel(channels);
   },
 
   @action
@@ -177,5 +190,43 @@ export default Component.extend({
   focusFirstChannel(channels) {
     channels.forEach((c) => c.set("focused", false));
     channels[0]?.set("focused", true);
+  },
+
+  getChannelsWithFilter(filter, opts = { excludeActiveChannel: true }) {
+    let sortedChannels = this.chatChannelsManager.channels.sort((a, b) => {
+      return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
+        ? -1
+        : 1;
+    });
+
+    const trimmedFilter = filter.trim();
+    const lowerCasedFilter = filter.toLowerCase();
+
+    return sortedChannels.filter((channel) => {
+      if (
+        opts.excludeActiveChannel &&
+        this.chat.activeChannel?.id === channel.id
+      ) {
+        return false;
+      }
+      if (!trimmedFilter.length) {
+        return true;
+      }
+
+      if (channel.isDirectMessageChannel) {
+        let userFound = false;
+        channel.chatable.users.forEach((user) => {
+          if (
+            user.username.toLowerCase().includes(lowerCasedFilter) ||
+            user.name?.toLowerCase().includes(lowerCasedFilter)
+          ) {
+            return (userFound = true);
+          }
+        });
+        return userFound;
+      } else {
+        return channel.title.toLowerCase().includes(lowerCasedFilter);
+      }
+    });
   },
 });

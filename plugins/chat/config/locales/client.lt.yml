@@ -21,16 +21,13 @@ lt:
       joined: "prisijungė"
       email_frequency:
         never: "Niekada"
+      header_indicator_preference:
+        never: "Niekada"
       flag: "Pranešti"
       join: "Prisijungti"
+      last_visit: "paskutinis apsilankymas"
       mention_warning:
         dismiss: "praleisti"
-        groups:
-          users_limit:
-            one: "%{count} vartotojas"
-            few: "%{count} vartotojų"
-            many: "%{count} vartotojų"
-            other: "%{count} vartotojų"
       reply: "Atsakyti"
       edit: "Redaguoti"
       rebake_message: "Perkurti HTML"
@@ -52,6 +49,7 @@ lt:
         yesterday: Vakar
       about_view:
         title: Antraštė
+        name: Vardas
         description: Aprašymas
       channel_info:
         back_to_channel: "Atgal"
@@ -70,6 +68,7 @@ lt:
       composer:
         italic_text: "pasviras tekstas"
         bold_text: "paryškintas tekstas"
+        send: "Siųsti"
       notification_levels:
         never: "Niekada"
       settings:
@@ -106,6 +105,12 @@ lt:
         activities: "Veikla"
         flags: "Pažymėk!"
         symbols: "Simboliai"
+      thread:
+        replies:
+          one: "%{count} atsakymas"
+          few: "%{count} atsakymai"
+          many: "%{count} atsakymai"
+          other: "%{count} atsakymai"
       draft_channel_screen:
         header: "Nauja žinutė"
         cancel: "Atšaukti"
@@ -117,7 +122,3 @@ lt:
           fields:
             message:
               label: Žinutės
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Pažymėjo"

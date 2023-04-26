@@ -40,9 +40,7 @@ RSpec.describe TopicUploadSecurityManager do
         end
 
         context "when changing the topic to a non-private category" do
-          before do
-            topic.update(category: Fabricate(:category))
-          end
+          before { topic.update(category: Fabricate(:category)) }
           it "changes the upload secure statuses to false and updates ACLs and rebakes" do
             expect_upload_status_to_change_and_rebake
           end
@@ -72,9 +70,7 @@ RSpec.describe TopicUploadSecurityManager do
         end
 
         context "when making the PM into a public topic" do
-          before do
-            topic.update(archetype: Archetype.default)
-          end
+          before { topic.update(archetype: Archetype.default) }
           it "changes the upload secure statuses to false and updates ACLs and rebakes" do
             expect_upload_status_to_change_and_rebake
           end
@@ -98,9 +94,7 @@ RSpec.describe TopicUploadSecurityManager do
         end
 
         context "when login required is enabled" do
-          before do
-            SiteSetting.login_required = true
-          end
+          before { SiteSetting.login_required = true }
 
           it "does not change any upload statuses or update ACLs or rebake" do
             expect_upload_status_not_to_change
@@ -108,9 +102,7 @@ RSpec.describe TopicUploadSecurityManager do
         end
 
         context "when login required is not enabled" do
-          before do
-            SiteSetting.login_required = false
-          end
+          before { SiteSetting.login_required = false }
 
           it "changes the upload secure statuses to false and updates ACLs and rebakes" do
             expect_upload_status_to_change_and_rebake
@@ -131,9 +123,7 @@ RSpec.describe TopicUploadSecurityManager do
       end
 
       context "when this is the first post the upload has appeared in" do
-        before do
-          UploadReference.create(upload: upload3, target: post4)
-        end
+        before { UploadReference.create(upload: upload3, target: post4) }
 
         it "changes the upload secure status to true and changes the ACL and rebakes the post and sets the access control post" do
           Post.any_instance.expects(:rebake!).once
@@ -143,9 +133,7 @@ RSpec.describe TopicUploadSecurityManager do
         end
 
         context "when secure uploads is not enabled" do
-          before do
-            SiteSetting.secure_uploads = false
-          end
+          before { SiteSetting.secure_uploads = false }
 
           it "does not change the upload secure status and does not set the access control post" do
             subject.run

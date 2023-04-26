@@ -18,7 +18,7 @@ module Onebox
       ".latex" => "tex",
       ".ru" => "rb",
       ".simplecov" => "rb", # Not official, but seems commonly found
-      ".sty" => "tex"
+      ".sty" => "tex",
     }
 
     # Some extensionless files for which we know the type
@@ -29,12 +29,9 @@ module Onebox
     # FIRST by their types and THEN by their names.
     @extensionless_files = {
       "cmake.in" => "cmake",
-
       "gruntfile" => "js",
       "gulpfile" => "js",
-
       "artisan" => "php",
-
       "berksfile" => "rb",
       "capfile" => "rb",
       "cheffile" => "rb",
@@ -44,8 +41,7 @@ module Onebox
       "rakefile" => "rb",
       "thorfile" => "rb",
       "vagrantfile" => "rb",
-
-      "boxfile" => "yaml" # Not currently (2014-11) in Highlight.js
+      "boxfile" => "yaml", # Not currently (2014-11) in Highlight.js
     }
 
     def self.from_file_name(file_name)
@@ -53,9 +49,7 @@ module Onebox
       # First check against the known lists of "special" files and extensions.
       return @extensionless_files[lower_name] if @extensionless_files.has_key?(lower_name)
 
-      @long_file_types.each { |extension, type|
-        return type if lower_name.end_with?(extension)
-      }
+      @long_file_types.each { |extension, type| return type if lower_name.end_with?(extension) }
 
       # Otherwise, just split on the last ".",
       # but add one so we don't return the "." itself.

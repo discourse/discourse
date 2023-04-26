@@ -61,6 +61,12 @@ en:
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
 
+  topic_category_changed: "From %{from} to %{to}"
+  topic_tag_changed:
+    added_and_removed: "Added %{added} and removed %{removed}"
+    added: "Added %{added}"
+    removed: "Removed %{removed}"
+
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -198,6 +204,7 @@ en:
     embed:
       load_from_remote: "There was an error loading that post."
     site_settings:
+      invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
       invalid_choice:
         one: "You specified the invalid choice %{name}"
@@ -255,6 +262,7 @@ en:
     user_exists: "There's no need to invite <b>%{email}</b>, they already have an account!"
     invite_exists: "You already invited <b>%{email}</b>."
     invalid_email: "%{email} isn't a valid email address."
+    generic_error_response: "There was a problem with your request."
     rate_limit:
       one: "You have already sent %{count} invite in the last 24 hours, please wait %{time_left} before trying again."
       other: "You have already sent %{count} invites in the last 24 hours, please wait %{time_left} before trying again."
@@ -432,6 +440,7 @@ en:
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   edit_conflict: "That post was edited by another user and your changes can no longer be saved."
   revert_version_same: "The current version is same as the version you are trying to revert to."
+  reverted_to_version: "reverted to version #%{version}"
   cannot_edit_on_slow_mode: "This topic is in slow mode. To encourage thoughtful, considered discussion, editing old posts in this topic is not currently allowed during slow mode."
 
   excerpt_image: "image"
@@ -546,6 +555,8 @@ en:
 
     get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
+    dont_feed_the_trolls: This post has already been flagged for moderator attention. Are you sure you wish to reply to it? Replies to negative content tend to encourage more negative behavior.
+
     too_many_replies: |
       ### You have reached the reply limit for this topic
 
@@ -640,7 +651,9 @@ en:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'The following interpolation key(s) are invalid: "%{keys}"'
+              invalid_interpolation_keys:
+                one: 'The following interpolation key is invalid: %{keys}'
+                other: 'The following interpolation keys are invalid: %{keys}'
         watched_word:
           attributes:
             word:
@@ -701,6 +714,7 @@ en:
       disallowed_tags_generic: "This topic has disallowed tags."
       slug_contains_non_ascii_chars: "contains non-ascii characters"
       is_already_in_use: "is already in use"
+      move_topic_to_category_disallowed: "You cannot move this topic to a category where you do not have permission to create new topics."
     cannot_delete:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -833,10 +847,6 @@ en:
 
   password_reset:
     no_token: 'Oops! The link you used no longer works. You can <a href="%{base_url}/login">Log In</a> now. If you forgot your password, you can <a href="%{base_url}/password-reset">request a link</a> to reset it.'
-    choose_new: "Choose a new password"
-    choose: "Choose a password"
-    update: "Update Password"
-    save: "Set Password"
     title: "Reset Password"
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
@@ -1049,7 +1059,7 @@ en:
     mailing_list_mode: "Turn off mailing list mode"
     all: "Don’t send me any mail from %{sitename}"
     different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
-    not_found_description: Sorry, we couldn't find that subscription. It's possible the link in your email is too old and has expired?"
+    not_found_description: "Sorry, we couldn't find that subscription. It's possible the link in your email is too old and has expired?"
     user_not_found_description: "Sorry, we couldn't find a user for this subscription. You are probably attempting to unsubscribe an account that no longer exists."
     log_out: "Log Out"
     submit: "Save preferences"
@@ -1193,7 +1203,7 @@ en:
       title: "DAU/MAU"
       xaxis: "Day"
       yaxis: "DAU/MAU"
-      description: "Number of members that logged in in the last day divided by number of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >30%."
+      description: "Number of members that logged in in the last day divided by number of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >20%."
     daily_engaged_users:
       title: "Daily Engaged Users"
       xaxis: "Day"
@@ -1474,6 +1484,7 @@ en:
     out_of_date_themes: "Updates are available for the following themes:"
     unreachable_themes: "We were unable to check for updates on the following themes:"
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
+    v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1516,8 +1527,8 @@ en:
     title: "The name of this site. Visible to all visitors including anonymous users."
     site_description: "Describe this site in one sentence. Visible to all visitors including anonymous users."
     short_site_description: "Short description in a few words. Visible to all visitors including anonymous users."
-    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a> for urgent matters."
-    contact_url: "Contact URL for this site. Displayed on the <a href='%{base_path}/about' target='_blank'>/about</a> page for urgent matters."
+    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a>. Visible to anonymous users on public sites."
+    contact_url: "Contact URL for this site. When present, replaces email address on <a href='%{base_path}/about' target='_blank'>/about</a> and visible to anonymous users on public sites."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote (hotlinked) images to local images by downloading them; This preserves content even if the images are removed from the remote site in future."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
@@ -1565,7 +1576,7 @@ en:
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
     manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
-    apple_touch_icon: "Icon used for Apple touch devices. Will be automatically resized to 180x180. If left blank, large_icon will be used."
+    apple_touch_icon: "Icon used for Apple touch devices. A transparent backround is not reccomended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
     twitter_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
@@ -1655,6 +1666,8 @@ en:
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
+    include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
+    display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
@@ -1686,10 +1699,10 @@ en:
     whispers_allowed_groups: "Allow private communication within topics for members of specified groups."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
-    blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
-    allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
+    blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. Example: mailinator.com|trashmail.net"
+    allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. WARNING: Users with email domains other than those listed will not be allowed!"
     normalize_emails: "Check if normalized email is unique. Normalized email removes all dots from the username and everything between + and @ symbols."
-    auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved."
+    auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported."
     hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup or during forgot password flow. Require full email for 'forgotten password' requests."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the <a href='%{base_path}/admin' target='_blank'>/admin</a> dashboard"
@@ -1719,7 +1732,7 @@ en:
     enable_discourse_connect: "Enable sign on via DiscourseConnect (formerly 'Discourse SSO') (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     verbose_discourse_connect_logging: "Log verbose DiscourseConnect related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implement DiscourseConnect (formerly 'Discourse SSO') provider protocol at the /session/sso_provider endpoint, requires discourse_connect_provider_secrets to be set"
-    discourse_connect_url: "URL of DiscourseConnect endpoint (must include http:// or https://)"
+    discourse_connect_url: "URL of DiscourseConnect endpoint (must include http:// or https://, and must not include a trailing slash)"
     discourse_connect_secret: "Secret string used to cryptographically authenticate DiscourseConnect information, be sure it is 10 characters or longer"
     discourse_connect_provider_secrets: "A list of domain-secret pairs that are using DiscourseConnect. Make sure DiscourseConnect secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
     discourse_connect_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
@@ -1733,7 +1746,7 @@ en:
     discourse_connect_overrides_profile_background: "Overrides user profile background with value from DiscourseConnect payload."
     discourse_connect_overrides_card_background: "Overrides user card background with value from DiscourseConnect payload."
     discourse_connect_not_approved_url: "Redirect unapproved DiscourseConnect accounts to this URL"
-    discourse_connect_allows_all_return_paths: "Do not restrict the domain for return_paths provided by DiscourseConnect (by default return path must be on current site)"
+    discourse_connect_allowed_redirect_domains: "Restrict to these domains for return_paths provided by DiscourseConnect (by default return path must be on current site). Use * to allow any domain for return path. Subdomain wildcards (`*.foobar.com`) are not allowed."
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
@@ -1862,7 +1875,7 @@ en:
     composer_media_optimization_image_bytes_optimization_threshold: "Minimum image file size to trigger client-side optimization"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimum image width to trigger client-side resize"
     composer_media_optimization_image_resize_width_target: "Images with widths larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "JPEG encode quality used in the re-encode process."
+    composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
 
     min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
 
@@ -1897,6 +1910,7 @@ en:
     tl3_requires_likes_given: "The minimum number of likes that must be given in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_requires_likes_received: "The minimum number of likes that must be received in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
+    tl4_delete_posts_and_topics: "Allow TL4 users to delete posts and topics created by other users. TL4 users will also be able to see deleted topics and posts."
     trusted_users_can_edit_others: "Allow users with high trust levels to edit content from other users"
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
@@ -2044,6 +2058,11 @@ en:
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
     ignore_by_title: "Ignore incoming emails based on their title."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
+    sendgrid_verification_key: "Sendgrid verification key used to verify webhook messages."
+    mailjet_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "Mandrill authentication key used to verify webhook messages."
+    postmark_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/sparkpost?t=supersecret"
 
     soft_bounce_score: "Bounce score added to the user when a temporary bounce happens."
     hard_bounce_score: "Bounce score added to the user when a permanent bounce happens."
@@ -2162,6 +2181,8 @@ en:
 
     get_a_room_threshold: "Number of posts a user has to make to the same person in the same topic before being warned."
 
+    dont_feed_the_trolls_threshold: "Number of flags from other users before being warned."
+
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
@@ -2194,9 +2215,9 @@ en:
 
     topic_page_title_includes_category: "Topic page <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>title tag</a> includes the category name."
 
-    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to regular users (trust level 1 and up)."
+    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to basic users (trust level 1) and up."
 
-    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to regular users (trust level 1 and up)."
+    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to basic users (trust level 1) and up."
 
     app_association_android: "Contents of <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> endpoint, used for Google's Digital Asset Links API."
     app_association_ios: "Contents of <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> endpoint, used to create Universal Links between this site and iOS apps."
@@ -2235,14 +2256,11 @@ en:
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
 
-    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
+    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable, can take up to 24 hours)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
-    secure_media: "DEPRECATED: Use the secure_uploads setting instead, will be removed in Discourse 3.0."
     secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
-    secure_media_allow_embed_images_in_emails: "DEPRECATED: Use secure_uploads_allow_embed_images_in_emails, will remove in Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "Allows embedding secure images that would normally be redacted in emails, if their size is smaller than the 'secure uploads max email embed image size kb' setting."
-    secure_media_max_email_embed_image_size_kb: "DEPRECATED: Use secure_uploads_max_email_embed_image_size_kb, will be removed in Discourse 3.0."
     secure_uploads_max_email_embed_image_size_kb: "The size cutoff for secure images that will be embedded in emails if the 'secure uploads allow embed in emails' setting is enabled. Without that setting enabled, this setting has no effect."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
 
@@ -2251,6 +2269,7 @@ en:
     emoji_set: "How would you like your emoji?"
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
+    emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
@@ -2346,6 +2365,7 @@ en:
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
+    create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change"
 
     company_name: "Company Name"
     governing_law: "Governing Law"
@@ -2357,6 +2377,7 @@ en:
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
     enable_desktop_push_notifications: "Enable desktop push notifications"
+    push_notification_time_window_mins: "Wait (n) minutes before sending push notification. Helps prevent push notifications from being sent to an active online user."
 
     base_font: "Base font to use for most text on the site. Themes can override via the `--font-family` CSS custom property."
     heading_font: "Font to use for headings on the site. Themes can override via the `--heading-font-family` CSS custom property."
@@ -2391,9 +2412,10 @@ en:
     navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
-    enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
-    enable_experimental_topic_timeline_groups: "EXPERIMENTAL: Users of the selected groups will be shown the refactored topic timeline"
+    enable_new_notifications_menu: "Enables the new notifications menu. Disabling this setting is deprecated. The new notifications menu is always used for non-legacy 'navigation menu' choices. <a href='https://meta.discourse.org/t/260358'>Learn more</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
+    experimental_new_new_view_groups: "EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the \"Everything\" link in the sidebar link to it."
+    enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2429,7 +2451,6 @@ en:
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
-      discourse_connect_invite_only: "You cannot enable DiscourseConnect and invite only at the same time."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
       min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
       min_username_length_range: "You cannot set the minimum above the maximum."
@@ -2451,7 +2472,8 @@ en:
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
-      invalid_uncategorized_category_setting: "The Uncategorized category cannot be selected if allow uncategorized topics is not allowed"
+      invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
+      invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2661,7 +2683,6 @@ en:
     activated_by_staff: "Activated by staff"
     new_user_typed_too_fast: "New user typed too fast"
     content_matches_auto_silence_regex: "Content matches auto silence regex"
-    content_matches_auto_block_regex: "Content matches auto block regex"
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
@@ -2674,6 +2695,7 @@ en:
       must_not_contain_two_special_chars_in_seq: "must not contain a sequence of 2 or more special chars (.-_)"
       must_not_end_with_confusing_suffix: "must not end with a confusing suffix like .json or .png etc."
     email:
+      blank: "can't be blank."
       invalid: "is invalid."
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
@@ -3472,7 +3494,7 @@ en:
 
         The new user [%{username}](%{user_url}) was automatically silenced because multiple users flagged %{username}'s post(s).
 
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
+        Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
         This threshold can be changed via the `silence_new_user` site settings.
 
@@ -3565,9 +3587,6 @@ en:
       one: "Heads up: We send a maximum of %{count} daily email. Check the site to see the ones that might be held back."
       other: "Heads up: We send a maximum of %{count} daily emails. Check the site to see the ones that might be held back. PS thanks for being popular!"
     in_reply_to: "In Reply To"
-    unsubscribe:
-      title: "Unsubscribe"
-      description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     header_instructions: ""
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
@@ -3790,6 +3809,18 @@ en:
 
         %{respond_instructions}
 
+    user_watching_category_or_tag:
+      title: "User Watching Category or Tag"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+
     user_watching_first_post:
       title: "User Watching First Post"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3884,7 +3915,6 @@ en:
       liked_received: "Likes Received"
       new_users: "New Users"
       popular_topics: "Popular Topics"
-      follow_topic: "Follow this topic"
       join_the_discussion: "Read More"
       popular_posts: "Popular Posts"
       more_new: "New for you"
@@ -4131,16 +4161,7 @@ en:
     offline_page_message: "It looks like you are offline! Please check your network connection and try again."
 
   login_required:
-    welcome_message: |
-      ## [Welcome to %{title}](#welcome)
-      An account is required. Please create an account or log in to continue.
-    welcome_message_invite_only: |
-      ## [Welcome to %{title}](#welcome)
-      An account is required. Please ask an existing member for an invite or log in to continue.
-
-  deleted: "deleted"
-
-  image: "image"
+    welcome_message: "# [Welcome to %{title}](#welcome)"
 
   upload:
     edit_reason: "downloaded local copies of images"
@@ -4352,7 +4373,11 @@ en:
   tos_topic:
     title: "Terms of Service"
     body: |
-      These terms govern use of the Internet forum at <%{base_url}>. To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
+      <h2 id="heading--change-me"><a href="#heading--change-me">Change Me</a></h2>
+
+      Forum Admin, please find below an example starting template for a privacy policy that you should customise to meet your site's needs.
+
+      These terms do not, but might one day, govern use of the Internet forum at <%{base_url}>. In that event, to use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
 
       The company may offer other products and services, under different terms. These terms apply only to use of the forum.
 
@@ -4520,13 +4545,15 @@ en:
 
       <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
 
-      The company last updated these terms on July 12, 2018, and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
+      The company last updated these terms on [INSERT LAST UPDATE DATE HERE], and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
 
       Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
 
   privacy_topic:
     title: "Privacy Policy"
     body: |
+      ## [Forum Admin, please find below an example starting template for a privacy policy that you should customise to your site.]
+
       <a name="collect"></a>
 
       ## [What information do we collect?](#collect)
@@ -4560,8 +4587,7 @@ en:
 
       We will make a good faith effort to:
 
-      * Retain server logs containing the IP address of all requests to this server no more than 90 days.
-      * Retain the IP addresses associated with registered users and their posts no more than 5 years.
+      * Retain server logs containing the IP address of all requests to this server no more than [NUMBER OF DAYS] days.
 
       <a name="cookies"></a>
 
@@ -4607,7 +4633,7 @@ en:
 
       If we decide to change our privacy policy, we will post those changes on this page.
 
-      This document is CC-BY-SA. It was last updated May 31, 2013.
+      This document is CC-BY-SA. It was last updated [INSERT LAST UPDATE DATE HERE].
 
   badges:
     mass_award:
@@ -4918,17 +4944,18 @@ en:
 
   safe_mode:
     title: "Enter safe mode"
-    description: "Safe mode allows you to test your site without loading plugins or themes."
+    description: "Safe mode allows you to test your site without loading themes or client-side plugin customizations. Server-side plugin customizations remain enabled."
     no_themes: "Disable themes and theme components"
-    no_unofficial_plugins: "Disable unofficial plugins"
-    no_plugins: "Disable all plugins"
+    no_unofficial_plugins: "Disable unofficial client-side plugin customizations"
+    no_plugins: "Disable all client-side plugin customizations"
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."
   wizard:
     title: "Discourse Setup"
     step:
       introduction:
-        title: "Tell us about your community"
+        title: "About your site"
+        description: "These will be shown on your login and any public pages. You can always change them later."
 
         fields:
           title:
@@ -4937,39 +4964,35 @@ en:
           site_description:
             label: "Describe your community in a sentence"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
-          contact_email:
-            label: "Point of contact"
-            placeholder: "example@user.com"
-            description: "Person or group responsible for this community. Used for critical updates, and listed on <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent contact."
           default_locale:
             label: "Language"
 
       privacy:
-        title: "Member Experience"
+        title: "Member experience"
 
         fields:
           login_required:
             placeholder: "Private"
             extra_description: "Only logged in users can access this community"
           invite_only:
-            placeholder: "Invite Only"
+            placeholder: "Invite only"
             extra_description: "Users must be invited by trusted users or staff, otherwise users can sign up on their own"
           must_approve_users:
-            placeholder: "Require Approval"
+            placeholder: "Require approval"
             extra_description: "Users must be approved by staff"
           chat_enabled:
-            placeholder: "Enable Chat"
+            placeholder: "Enable chat"
             extra_description: "Engage with your members in real time"
           enable_sidebar:
-            placeholder: "Enable Sidebar"
+            placeholder: "Enable sidebar"
             extra_description: "Access your favorite spaces with ease"
 
       ready:
-        title: "Your Discourse is Ready!"
+        title: "Your site is ready!"
         description: "That's it! You've done the basics to setup your community. Now you can jump in and have a look around, write a welcome topic, and send invites!<br><br>Have fun!"
 
       styling:
-        title: "Look & Feel"
+        title: "Look and feel"
         fields:
           color_scheme:
             label: "Color scheme"
@@ -5002,38 +5025,39 @@ en:
                 label: "Subcategories with Featured Topics"
 
       branding:
-        title: "Customize Logos"
+        title: "Site logo"
         fields:
           logo:
-            label: "Primary Logo"
-            description: "The logo at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
+            label: "Primary logo"
+            description: "Recommended size: 600 x 200"
           logo_small:
-            label: "Square Logo"
-            description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
+            label: "Square logo"
+            description: "Recommended size: 512 x 512. Also used as the favicon and mobile home screen app icon."
 
       corporate:
-        title: "Your Organization"
+        title: "Your organization"
+        description: "The following information will be used in your Terms of Service and About pages. Feel free to skip if no company exists."
 
         fields:
           company_name:
-            label: "Company Name"
-            placeholder: "Example Organization"
-            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
+            label: "Company name"
+            placeholder: "Acme Organization"
           governing_law:
-            label: "Governing Law"
+            label: "Governing law"
             placeholder: "California law"
-            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
           contact_url:
-            label: "Web Page"
+            label: "Web page"
             placeholder: "https://www.example.com/contact-us"
-            description: "General contact web page for you or your organization. Will be displayed on <a href='%{base_path}/about' target='_blank'>your about page</a>."
           city_for_disputes:
-            label: "City for Disputes"
+            label: "City for disputes"
             placeholder: "San Francisco, California"
-            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
           site_contact:
-            label: "Automated Messages"
+            label: "Automated messages"
             description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
+          contact_email:
+            label: "Point of contact"
+            placeholder: "example@user.com"
+            description: "Email address of key contact responsible for this site. Used for critical notifications, and listed on your <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent matters."
 
       invites:
         title: "Invite Staff"
@@ -5050,7 +5074,9 @@ en:
   search_logs:
     graph_title: "Search Count"
 
-  joined: "Joined"
+  onebox:
+    discourse:
+      user_joined_community: "Joined %{date}"
 
   discourse_push_notifications:
     popup:
@@ -5117,50 +5143,53 @@ en:
 
     actions:
       agree:
-        title: "Agree..."
+        title: "Yes"
       agree_and_keep:
-        title: "Keep Post"
-        description: "Agree with flag and keep the post unchanged."
+        title: "Keep post"
+        description: "Agree with flag but keep this post unchanged."
       agree_and_keep_hidden:
-        title: "Keep Post Hidden"
-        description: "Agree with flag and leave the post hidden."
+        title: "Keep post hidden"
+        description: "Agree with flag and keep the post hidden."
       agree_and_suspend:
-        title: "Suspend User"
+        title: "Suspend user"
         description: "Agree with flag and suspend the user."
       agree_and_silence:
-        title: "Silence User"
+        title: "Silence user"
         description: "Agree with flag and silence the user."
       agree_and_restore:
-        title: "Restore Post"
+        title: "Restore post"
         description: "Restore the post so that all users can see it."
       agree_and_hide:
-        title: "Hide Post"
-        description: "Hide this post and automatically send the user a message urging them to edit it."
+        title: "Hide post"
+        description: "Agree with flag and hide this post + automatically send the user a message urging them to edit it."
       delete_single:
         title: "Delete"
       delete:
         title: "Delete..."
       delete_and_ignore:
-        title: "Delete Post and Ignore"
-        description: "Delete post; if the first post, delete the topic as well"
+        title: "Ignore flag and delete post"
+        description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
       delete_and_ignore_replies:
-        title: "Delete Post + Replies and Ignore"
-        description: "Delete post and all of its replies; if the first post, delete the topic as well"
+        title: "Ignore flag, delete post and replies"
+        description: "Ignore the flag by removing it from the queue, delete the post and all of its replies; if the first post, delete the topic as well"
         confirm: "Are you sure you want to delete the replies to the post as well?"
       delete_and_agree:
-        title: "Delete Post and Agree"
-        description: "Delete post; if the first post, delete the topic as well"
+        title: "Delete post"
+        description: "Agree with flag and delete this post; if the first post, delete the topic as well."
       delete_and_agree_replies:
-        title: "Delete Post + Replies and Agree"
-        description: "Delete post and all of its replies; if the first post, delete the topic as well"
+        title: "Delete post and replies"
+        description: "Agree with flag and delete this post and all of its replies; if the first post, delete the topic as well."
         confirm: "Are you sure you want to delete the replies to the post as well?"
       disagree_and_restore:
-        title: "Disagree and Restore Post"
+        title: "No, restore post"
         description: "Restore the post so that all users can see it."
       disagree:
-        title: "Disagree"
+        title: "No"
       ignore:
         title: "Ignore"
+      ignore_and_do_nothing:
+        title: "Do nothing"
+        description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
       approve:
         title: "Approve"
       approve_post:
@@ -5233,3 +5262,9 @@ en:
     payload_url:
       blocked_or_internal: "Payload URL cannot be used because it resolves to a blocked or internal IP"
       unsafe: "Payload URL cannot be used because it's unsafe"
+
+  form_templates:
+    errors:
+      invalid_yaml: "is not a valid YAML string"
+      invalid_type: "contains an invalid template type: %{type} (valid types are: %{valid_types})"
+      missing_type: "is missing a field type"

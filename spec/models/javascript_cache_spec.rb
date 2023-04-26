@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 RSpec.describe JavascriptCache, type: :model do
   let!(:theme) { Fabricate(:theme) }
-  let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "header", value: "<a>html</a>") }
+  let(:theme_field) do
+    ThemeField.create!(theme: theme, target_id: 0, name: "header", value: "<a>html</a>")
+  end
 
-  describe '#save' do
-    it 'updates the digest only if the content has changed' do
-      javascript_cache = JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
+  describe "#save" do
+    it "updates the digest only if the content has changed" do
+      javascript_cache =
+        JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
       expect(javascript_cache.digest).to_not be_empty
 
       expect { javascript_cache.save! }.to_not change { javascript_cache.reload.digest }
@@ -16,10 +19,11 @@ RSpec.describe JavascriptCache, type: :model do
       end.to change { javascript_cache.reload.digest }
     end
 
-    it 'allows content to be empty, but not nil' do
-      javascript_cache = JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
+    it "allows content to be empty, but not nil" do
+      javascript_cache =
+        JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
 
-      javascript_cache.content = ''
+      javascript_cache.content = ""
       expect(javascript_cache.valid?).to eq(true)
 
       javascript_cache.content = nil
@@ -28,9 +32,10 @@ RSpec.describe JavascriptCache, type: :model do
     end
   end
 
-  describe 'url' do
-    it 'works with multisite' do
-      javascript_cache = JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
+  describe "url" do
+    it "works with multisite" do
+      javascript_cache =
+        JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
       expect(javascript_cache.url).to include("?__ws=test.localhost")
     end
   end

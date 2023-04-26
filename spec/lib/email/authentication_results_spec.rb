@@ -13,11 +13,10 @@ RSpec.describe Email::AuthenticationResults do
 
     it "parses 'Service Provided, Authentication Done' correctly" do
       # https://tools.ietf.org/html/rfc8601#appendix-B.3
-      results = described_class.new(<<~RAW
+      results = described_class.new(<<~RAW).results
         example.com;
                  spf=pass smtp.mailfrom=example.net
       RAW
-      ).results
       expect(results[0][:authserv_id]).to eq "example.com"
       expect(results[0][:resinfo][0][:method]).to eq "spf"
       expect(results[0][:resinfo][0][:result]).to eq "pass"
@@ -29,16 +28,15 @@ RSpec.describe Email::AuthenticationResults do
 
     it "parses 'Service Provided, Several Authentications Done, Single MTA' correctly" do
       # https://tools.ietf.org/html/rfc8601#appendix-B.4
-      results = described_class.new([<<~RAW ,
+      results = described_class.new([<<~RAW, <<~RAW]).results
         example.com;
                   auth=pass (cram-md5) smtp.auth=sender@example.net;
                   spf=pass smtp.mailfrom=example.net
       RAW
-      <<~RAW ,
         example.com; iprev=pass
                   policy.iprev=192.0.2.200
       RAW
-      ]).results
+
       expect(results[0][:authserv_id]).to eq "example.com"
       expect(results[0][:resinfo][0][:method]).to eq "auth"
       expect(results[0][:resinfo][0][:result]).to eq "pass"
@@ -63,16 +61,14 @@ RSpec.describe Email::AuthenticationResults do
 
     it "parses 'Service Provided, Several Authentications Done, Different MTAs' correctly" do
       # https://tools.ietf.org/html/rfc8601#appendix-B.5
-      results = described_class.new([<<~RAW ,
+      results = described_class.new([<<~RAW, <<~RAW]).results
         example.com;
                  dkim=pass (good signature) header.d=example.com
       RAW
-      <<~RAW ,
         example.com;
                   auth=pass (cram-md5) smtp.auth=sender@example.com;
                   spf=fail smtp.mailfrom=example.com
       RAW
-      ]).results
 
       expect(results[0][:authserv_id]).to eq "example.com"
       expect(results[0][:resinfo][0][:method]).to eq "dkim"
@@ -98,18 +94,16 @@ RSpec.describe Email::AuthenticationResults do
 
     it "parses 'Service Provided, Multi-tiered Authentication Done' correctly" do
       # https://tools.ietf.org/html/rfc8601#appendix-B.6
-      results = described_class.new([<<~RAW ,
+      results = described_class.new([<<~RAW, <<~RAW]).results
          example.com;
               dkim=pass reason="good signature"
                 header.i=@mail-router.example.net;
               dkim=fail reason="bad signature"
                 header.i=@newyork.example.com
       RAW
-      <<~RAW ,
         example.net;
              dkim=pass (good signature) header.i=@newyork.example.com
       RAW
-      ]).results
 
       expect(results[0][:authserv_id]).to eq "example.com"
       expect(results[0][:resinfo][0][:method]).to eq "dkim"
@@ -135,13 +129,12 @@ RSpec.describe Email::AuthenticationResults do
 
     it "parses 'Comment-Heavy Example' correctly" do
       # https://tools.ietf.org/html/rfc8601#appendix-B.7
-      results = described_class.new(<<~RAW
+      results = described_class.new(<<~RAW).results
         foo.example.net (foobar) 1 (baz);
           dkim (Because I like it) / 1 (One yay) = (wait for it) fail
             policy (A dot can go here) . (like that) expired
             (this surprised me) = (as I wasn't expecting it) 1362471462
       RAW
-      ).results
 
       expect(results[0][:authserv_id]).to eq "foo.example.net"
       expect(results[0][:resinfo][0][:method]).to eq "dkim"
@@ -162,13 +155,12 @@ RSpec.describe Email::AuthenticationResults do
     end
 
     it "parses header with multiple props correctly" do
-      results = described_class.new(<<~RAW
+      results = described_class.new(<<~RAW).results
         mx.google.com;
       dkim=pass header.i=@email.example.com header.s=20111006 header.b=URn9MW+F;
       spf=pass (google.com: domain of foo@b.email.example.com designates 1.2.3.4 as permitted sender) smtp.mailfrom=foo@b.email.example.com;
       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=email.example.com
       RAW
-      ).results
 
       expect(results[0][:authserv_id]).to eq "mx.google.com"
       expect(results[0][:resinfo][0][:method]).to eq "dkim"
@@ -199,9 +191,7 @@ RSpec.describe Email::AuthenticationResults do
   end
 
   describe "#verdict" do
-    before do
-      SiteSetting.email_in_authserv_id = "valid.com"
-    end
+    before { SiteSetting.email_in_authserv_id = "valid.com" }
 
     shared_examples "is verdict" do |verdict|
       it "is #{verdict}" do
@@ -294,5 +284,4 @@ RSpec.describe Email::AuthenticationResults do
       expect(results.action).to eq (:accept)
     end
   end
-
 end

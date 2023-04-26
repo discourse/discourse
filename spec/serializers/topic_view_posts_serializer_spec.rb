@@ -1,28 +1,35 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicViewPostsSerializer do
-
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post) }
   let(:topic) { post.topic }
-  let!(:reviewable) { Fabricate(:reviewable_flagged_post,
-    created_by: user,
-    target: post,
-    topic: topic,
-    reviewable_scores: [
-      Fabricate(:reviewable_score, reviewable_score_type: 0, status: ReviewableScore.statuses[:pending]),
-      Fabricate(:reviewable_score, reviewable_score_type: 0, status: ReviewableScore.statuses[:ignored])
-    ]
-  )}
+  let!(:reviewable) do
+    Fabricate(
+      :reviewable_flagged_post,
+      created_by: user,
+      target: post,
+      topic: topic,
+      reviewable_scores: [
+        Fabricate(
+          :reviewable_score,
+          reviewable_score_type: 0,
+          status: ReviewableScore.statuses[:pending],
+        ),
+        Fabricate(
+          :reviewable_score,
+          reviewable_score_type: 0,
+          status: ReviewableScore.statuses[:ignored],
+        ),
+      ],
+    )
+  end
 
-  it 'should return the right attributes' do
+  it "should return the right attributes" do
     topic_view = TopicView.new(topic, user, post_ids: [post.id])
 
-    serializer = TopicViewPostsSerializer.new(
-      topic_view,
-      scope: Guardian.new(Fabricate(:admin)),
-      root: false
-    )
+    serializer =
+      TopicViewPostsSerializer.new(topic_view, scope: Guardian.new(Fabricate(:admin)), root: false)
 
     body = JSON.parse(serializer.to_json)
 
@@ -37,6 +44,5 @@ RSpec.describe TopicViewPostsSerializer do
     expect(body["post_stream"]["stream"]).to eq(nil)
     expect(body["post_stream"]["timeline_lookup"]).to eq(nil)
     expect(body["post_stream"]["gaps"]).to eq(nil)
-
   end
 end

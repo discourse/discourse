@@ -10,7 +10,7 @@ RSpec.describe BackupRestore::BackupFileHandler, type: :multisite do
       expect_decompress_and_clean_up_to_work(
         backup_filename: "backup_till_v1.5.tar.gz",
         require_metadata_file: true,
-        require_uploads: true
+        require_uploads: true,
       )
     end
   end

@@ -54,6 +54,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
       admin: true,
       moderator: false,
       trust_level: 2,
+      flair_group_id: 12,
     });
     setupSiteGroups(this);
 
@@ -73,6 +74,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
       admin: false,
       moderator: true,
       trust_level: 2,
+      flair_group_id: 12,
     });
     setupSiteGroups(this);
 
@@ -92,6 +94,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
       admin: false,
       moderator: false,
       trust_level: 2,
+      flair_group_id: 12,
     });
     setupSiteGroups(this);
 
@@ -106,11 +109,26 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     );
   });
 
+  test("avatar flair for trust level when set to none", async function (assert) {
+    this.set("args", {
+      admin: false,
+      moderator: false,
+      trust_level: 2,
+      flair_group_id: null,
+    });
+    setupSiteGroups(this);
+
+    await render(hbs`<UserAvatarFlair @user={{this.args}} />`);
+
+    assert.ok(!exists(".avatar-flair"), "it does not render a flair");
+  });
+
   test("avatar flair for trust level with fallback", async function (assert) {
     this.set("args", {
       admin: false,
       moderator: false,
       trust_level: 3,
+      flair_group_id: 13,
     });
     setupSiteGroups(this);
 
@@ -130,6 +148,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
       admin: false,
       moderator: false,
       trust_level: 3,
+      flair_group_id: 13,
     });
     // Groups not serialized for anon on login_required
     this.site.groups = undefined;
@@ -148,6 +167,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
       flair_url: "fa-times",
       flair_bg_color: "123456",
       flair_color: "B0B0B0",
+      flair_group_id: 41,
       primary_group_name: "Band Geeks",
     });
     setupSiteGroups(this);
@@ -168,6 +188,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
       admin: false,
       moderator: false,
       trust_level: 1,
+      flair_group_id: 11,
     });
 
     await render(hbs`<UserAvatarFlair @user={{this.args}} />`);

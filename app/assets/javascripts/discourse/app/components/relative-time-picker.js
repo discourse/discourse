@@ -14,19 +14,19 @@ export default Component.extend({
 
   @on("init")
   cloneDuration() {
-    let mins = this.durationMinutes;
-    let hours = this.durationHours;
+    const usesHours = Object.hasOwn(this.attrs, "durationHours");
+    const usesMinutes = Object.hasOwn(this.attrs, "durationMinutes");
 
-    if (hours && mins) {
+    if (usesHours && usesMinutes) {
       throw new Error(
         "relative-time needs initial duration in hours OR minutes, both are not supported"
       );
     }
 
-    if (hours) {
-      this._setInitialDurationFromHours(hours);
+    if (usesHours) {
+      this._setInitialDurationFromHours(this.durationHours);
     } else {
-      this._setInitialDurationFromMinutes(mins);
+      this._setInitialDurationFromMinutes(this.durationMinutes);
     }
   },
 
@@ -47,7 +47,12 @@ export default Component.extend({
   },
 
   _setInitialDurationFromHours(hours) {
-    if (hours >= 8760) {
+    if (hours === null) {
+      this.setProperties({
+        duration: hours,
+        selectedInterval: "hours",
+      });
+    } else if (hours >= 8760) {
       this.setProperties({
         duration: this._roundedDuration(hours / 365 / 24),
         selectedInterval: "years",

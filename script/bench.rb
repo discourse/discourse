@@ -5,6 +5,8 @@ require "csv"
 require "yaml"
 require "optparse"
 require "fileutils"
+require "net/http"
+require "uri"
 
 @include_env = false
 @result_file = nil
@@ -17,42 +19,43 @@ require "fileutils"
 @skip_asset_bundle = false
 @unicorn_workers = 3
 
-opts = OptionParser.new do |o|
-  o.banner = "Usage: ruby bench.rb [options]"
+opts =
+  OptionParser.new do |o|
+    o.banner = "Usage: ruby bench.rb [options]"
 
-  o.on("-n", "--with_default_env", "Include recommended Discourse env") do
-    @include_env = true
+    o.on("-n", "--with_default_env", "Include recommended Discourse env") { @include_env = true }
+    o.on("-o", "--output [FILE]", "Output results to this file") { |f| @result_file = f }
+    o.on("-i", "--iterations [ITERATIONS]", "Number of iterations to run the bench for") do |i|
+      @iterations = i.to_i
+    end
+    o.on("-b", "--best_of [NUM]", "Number of times to run the bench taking best as result") do |i|
+      @best_of = i.to_i
+    end
+    o.on("-d", "--heap_dump") do
+      @dump_heap = true
+      # We need an env var for config/boot.rb to enable allocation tracing prior to framework init
+      ENV["DISCOURSE_DUMP_HEAP"] = "1"
+    end
+    o.on("-m", "--memory_stats") { @mem_stats = true }
+    o.on("-u", "--unicorn", "Use unicorn to serve pages as opposed to puma") { @unicorn = true }
+    o.on(
+      "-c",
+      "--concurrency [NUM]",
+      "Run benchmark with this number of concurrent requests (default: 1)",
+    ) { |i| @concurrency = i.to_i }
+    o.on(
+      "-w",
+      "--unicorn_workers [NUM]",
+      "Run benchmark with this number of unicorn workers (default: 3)",
+    ) { |i| @unicorn_workers = i.to_i }
+    o.on("-s", "--skip-bundle-assets", "Skip bundling assets") { @skip_asset_bundle = true }
+
+    o.on(
+      "-t",
+      "--tests [STRING]",
+      "List of tests to run. Example: '--tests topic,categories')",
+    ) { |i| @tests = i.split(",") }
   end
-  o.on("-o", "--output [FILE]", "Output results to this file") do |f|
-    @result_file = f
-  end
-  o.on("-i", "--iterations [ITERATIONS]", "Number of iterations to run the bench for") do |i|
-    @iterations = i.to_i
-  end
-  o.on("-b", "--best_of [NUM]", "Number of times to run the bench taking best as result") do |i|
-    @best_of = i.to_i
-  end
-  o.on("-d", "--heap_dump") do
-    @dump_heap = true
-    # We need an env var for config/boot.rb to enable allocation tracing prior to framework init
-    ENV['DISCOURSE_DUMP_HEAP'] = "1"
-  end
-  o.on("-m", "--memory_stats") do
-    @mem_stats = true
-  end
-  o.on("-u", "--unicorn", "Use unicorn to serve pages as opposed to puma") do
-    @unicorn = true
-  end
-  o.on("-c", "--concurrency [NUM]", "Run benchmark with this number of concurrent requests (default: 1)") do |i|
-    @concurrency = i.to_i
-  end
-  o.on("-w", "--unicorn_workers [NUM]", "Run benchmark with this number of unicorn workers (default: 3)") do |i|
-    @unicorn_workers = i.to_i
-  end
-  o.on("-s", "--skip-bundle-assets", "Skip bundling assets") do
-    @skip_asset_bundle = true
-  end
-end
 opts.parse!
 
 def run(command, opt = nil)
@@ -67,7 +70,7 @@ def run(command, opt = nil)
 end
 
 begin
-  require 'facter'
+  require "facter"
   raise LoadError if Gem::Version.new(Facter.version) < Gem::Version.new("4.0")
 rescue LoadError
   run "gem install facter"
@@ -107,7 +110,7 @@ end
 
 puts "Ensuring config is setup"
 
-%x{which ab > /dev/null 2>&1}
+`which ab > /dev/null 2>&1`
 unless $? == 0
   abort "Apache Bench is not installed. Try: apt-get install apache2-utils or brew install ab"
 end
@@ -119,7 +122,7 @@ end
 
 ENV["RAILS_ENV"] = "profile"
 
-discourse_env_vars = %w(
+discourse_env_vars = %w[
   DISCOURSE_DUMP_HEAP
   RUBY_GC_HEAP_INIT_SLOTS
   RUBY_GC_HEAP_FREE_SLOTS
@@ -132,29 +135,22 @@ discourse_env_vars = %w(
   RUBY_GC_MALLOC_LIMIT_GROWTH_FACTOR
   RUBY_GC_OLDMALLOC_LIMIT_GROWTH_FACTOR
   RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR
-  RUBY_GLOBAL_METHOD_CACHE_SIZE
   LD_PRELOAD
-)
+]
 
 if @include_env
   puts "Running with tuned environment"
-  discourse_env_vars.each do |v|
-    ENV.delete v
-  end
+  discourse_env_vars.each { |v| ENV.delete v }
 
-  ENV['RUBY_GLOBAL_METHOD_CACHE_SIZE'] = '131072'
-  ENV['RUBY_GC_HEAP_GROWTH_MAX_SLOTS'] = '40000'
-  ENV['RUBY_GC_HEAP_INIT_SLOTS'] = '400000'
-  ENV['RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR'] = '1.5'
-
+  ENV["RUBY_GC_HEAP_GROWTH_MAX_SLOTS"] = "40000"
+  ENV["RUBY_GC_HEAP_INIT_SLOTS"] = "400000"
+  ENV["RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR"] = "1.5"
 else
   # clean env
   puts "Running with the following custom environment"
 end
 
-discourse_env_vars.each do |w|
-  puts "#{w}: #{ENV[w]}" if ENV[w].to_s.length > 0
-end
+discourse_env_vars.each { |w| puts "#{w}: #{ENV[w]}" if ENV[w].to_s.length > 0 }
 
 def port_available?(port)
   server = TCPServer.open("0.0.0.0", port)
@@ -164,35 +160,37 @@ rescue Errno::EADDRINUSE
   false
 end
 
-@port = 60079
+@port = 60_079
 
-while !port_available? @port
-  @port += 1
-end
+@port += 1 while !port_available? @port
 
 puts "Ensuring profiling DB exists and is migrated"
 puts `bundle exec rake db:create`
 `bundle exec rake db:migrate`
 
 puts "Timing loading Rails"
-measure("load_rails") do
-  `bundle exec rake middleware`
-end
+measure("load_rails") { `bundle exec rake middleware` }
 
 puts "Populating Profile DB"
 run("bundle exec ruby script/profile_db_generator.rb")
 
-puts "Getting api key"
-api_key = `bundle exec rake api_key:create_master[bench]`.split("\n")[-1]
+puts "Getting admin api key"
+admin_api_key = `bundle exec rake api_key:create_master[bench]`.split("\n")[-1]
+raise "Failed to obtain a user API key" if admin_api_key.to_s.empty?
 
-def bench(path, name)
+puts "Getting user api key"
+user_api_key = `bundle exec rake user_api_key:create[user1]`.split("\n")[-1]
+raise "Failed to obtain a user API key" if user_api_key.to_s.empty?
+
+def bench(path, name, headers)
   puts "Running apache bench warmup"
   add = ""
   add = "-c #{@concurrency} " if @concurrency > 1
-  `ab #{add} -n 20 -l "http://127.0.0.1:#{@port}#{path}"`
+  header_string = headers&.map { |k, v| "-H \"#{k}:#{v}\"" }&.join(" ")
+  `ab #{add} #{header_string} -n 20 -l "http://127.0.0.1:#{@port}#{path}"`
 
   puts "Benchmarking #{name} @ #{path}"
-  `ab #{add} -n #{@iterations} -l -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
+  `ab #{add} #{header_string} -n #{@iterations} -l -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
   CSV.foreach("tmp/ab.csv") do |percent, time|
@@ -211,47 +209,73 @@ begin
 
   pid =
     if @unicorn
-      ENV['UNICORN_PORT'] = @port.to_s
-      ENV['UNICORN_WORKERS'] = @unicorn_workers.to_s
-      FileUtils.mkdir_p(File.join('tmp', 'pids'))
-      spawn("bundle exec unicorn -c config/unicorn.conf.rb")
+      ENV["UNICORN_PORT"] = @port.to_s
+      ENV["UNICORN_WORKERS"] = @unicorn_workers.to_s
+      FileUtils.mkdir_p(File.join("tmp", "pids"))
+      unicorn_pid = spawn("bundle exec unicorn -c config/unicorn.conf.rb")
+
+      while (
+              unicorn_master_pid =
+                `ps aux | grep "unicorn master" | grep -v "grep" | awk '{print $2}'`.strip.to_i
+            ) == 0
+        sleep 1
+      end
+
+      while `ps -f --ppid #{unicorn_master_pid} | grep worker | awk '{ print $2 }'`.split("\n")
+              .map(&:to_i)
+              .size != @unicorn_workers.to_i
+        sleep 1
+      end
+
+      unicorn_pid
     else
       spawn("bundle exec puma -p #{@port} -e production")
     end
 
-  while port_available? @port
-    sleep 1
-  end
+  sleep 1 while port_available? @port
 
   puts "Starting benchmark..."
-  headers = { 'Api-Key' => api_key,
-              'Api-Username' => "admin1" }
+
+  admin_headers = { "Api-Key" => admin_api_key, "Api-Username" => "admin1" }
+
+  user_headers = { "User-Api-Key" => user_api_key }
 
   # asset precompilation is a dog, wget to force it
   run "curl -s -o /dev/null http://127.0.0.1:#{@port}/"
 
   redirect_response = `curl -s -I "http://127.0.0.1:#{@port}/t/i-am-a-topic-used-for-perf-tests"`
-  if redirect_response !~ /301 Moved Permanently/
-    raise "Unable to locate topic for perf tests"
-  end
+  raise "Unable to locate topic for perf tests" if redirect_response !~ /301 Moved Permanently/
 
-  topic_url = redirect_response.match(/^location: .+(\/t\/i-am-a-topic-used-for-perf-tests\/.+)$/i)[1].strip
+  topic_url =
+    redirect_response.match(%r{^location: .+(/t/i-am-a-topic-used-for-perf-tests/.+)$}i)[1].strip
 
-  tests = [
-    ["categories", "/categories"],
-    ["home", "/"],
-    ["topic", topic_url]
-    # ["user", "/u/admin1/activity"],
+  all_tests = [
+    %w[categories /categories],
+    %w[home /],
+    ["topic", topic_url],
+    ["topic.json", "#{topic_url}.json"],
+    ["user activity", "/u/admin1/activity"],
   ]
 
-  tests.concat(tests.map { |k, url| ["#{k}_admin", "#{url}", headers] })
+  @tests ||= %w[categories home topic]
 
-  tests.each do |_, path, headers_for_path|
-    header_string = headers_for_path&.map { |k, v| "-H \"#{k}: #{v}\"" }&.join(" ")
+  tests_to_run = all_tests.select { |test_name, path| @tests.include?(test_name) }
 
-    if `curl -s -I "http://127.0.0.1:#{@port}#{path}" #{header_string}` !~ /200 OK/
-      raise "#{path} returned non 200 response code"
-    end
+  tests_to_run.concat(
+    tests_to_run.map { |k, url| ["#{k} user", "#{url}", user_headers] },
+    tests_to_run.map { |k, url| ["#{k} admin", "#{url}", admin_headers] },
+  )
+
+  tests_to_run.each do |test_name, path, headers_for_path|
+    uri = URI.parse("http://127.0.0.1:#{@port}#{path}")
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Get.new(uri.request_uri)
+
+    headers_for_path&.each { |key, value| request[key] = value }
+
+    response = http.request(request)
+
+    raise "#{test_name} #{path} returned non 200 response code" if response.code != "200"
   end
 
   # NOTE: we run the most expensive page first in the bench
@@ -265,8 +289,8 @@ begin
 
   results = {}
   @best_of.times do
-    tests.each do |name, url|
-      results[name] = best_of(bench(url, name), results[name])
+    tests_to_run.each do |name, url, headers|
+      results[name] = best_of(bench(url, name, headers), results[name])
     end
   end
 
@@ -288,11 +312,17 @@ begin
   Facter.reset
   facts = Facter.to_hash
 
-  facts.delete_if { |k, v|
-    !["operatingsystem", "architecture", "kernelversion",
-    "memorysize", "physicalprocessorcount", "processor0",
-    "virtual"].include?(k)
-  }
+  facts.delete_if do |k, v|
+    !%w[
+      operatingsystem
+      architecture
+      kernelversion
+      memorysize
+      physicalprocessorcount
+      processor0
+      virtual
+    ].include?(k)
+  end
 
   run("RAILS_ENV=profile bundle exec rake assets:clean")
 
@@ -302,10 +332,13 @@ begin
 
   mem = get_mem(pid)
 
-  results = results.merge("timings" => @timings,
-                          "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
-                          "rss_kb" => mem["rss_kb"],
-                          "pss_kb" => mem["pss_kb"]).merge(facts)
+  results =
+    results.merge(
+      "timings" => @timings,
+      "ruby-version" => "#{RUBY_DESCRIPTION}",
+      "rss_kb" => mem["rss_kb"],
+      "pss_kb" => mem["pss_kb"],
+    ).merge(facts)
 
   if @unicorn
     child_pids = `ps --ppid #{pid} | awk '{ print $1; }' | grep -v PID`.split("\n")
@@ -328,12 +361,7 @@ begin
     puts open("http://127.0.0.1:#{@port}/admin/dump_heap", headers).read
   end
 
-  if @result_file
-    File.open(@result_file, "wb") do |f|
-      f.write(results)
-    end
-  end
-
+  File.open(@result_file, "wb") { |f| f.write(results) } if @result_file
 ensure
   Process.kill "KILL", pid
 end

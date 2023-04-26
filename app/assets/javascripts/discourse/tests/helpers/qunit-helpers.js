@@ -35,7 +35,9 @@ import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetUserSearchCache } from "discourse/lib/user-search";
 import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { resetComposerCustomizations } from "discourse/models/composer";
+import { resetQuickAccessProfileItems } from "discourse/widgets/quick-access-profile";
 import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
+import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import {
   resetHighestReadCache,
@@ -45,13 +47,13 @@ import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearExtraKeyboardShortcutHelp } from "discourse/lib/keyboard-shortcuts";
 import { clearResolverOptions } from "discourse-common/resolver";
-import { clearResolverOptions as clearLegacyResolverOptions } from "discourse-common/lib/legacy-resolver";
 import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
+import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-autocomplete";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
@@ -178,8 +180,10 @@ export function testCleanup(container, app) {
   resetHighestReadCache();
   resetCardClickListenerSelector();
   resetComposerCustomizations();
+  resetQuickAccessProfileItems();
   resetQuickSearchRandomTips();
   resetPostMenuExtraButtons();
+  resetUserMenuProfileTabItems();
   clearExtraKeyboardShortcutHelp();
   clearNavItems();
   setTopicList(null);
@@ -190,6 +194,7 @@ export function testCleanup(container, app) {
   clearTopicFooterDropdowns();
   clearTopicFooterButtons();
   clearDesktopNotificationHandlers();
+  cleanUpHashtagTypeClasses();
   resetLastEditNotificationClick();
   clearAuthMethods();
   setTestPresence(true);
@@ -200,7 +205,6 @@ export function testCleanup(container, app) {
   clearBlockDecorateCallbacks();
   clearTextDecorateCallbacks();
   clearResolverOptions();
-  clearLegacyResolverOptions();
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
   resetSidebarSection();
@@ -211,6 +215,12 @@ export function testCleanup(container, app) {
   resetModelTransformers();
   resetMentions();
   cleanupTemporaryModuleRegistrations();
+  cleanupCssGeneratorTags();
+}
+
+function cleanupCssGeneratorTags() {
+  document.querySelector("style#category-color-css-generator")?.remove();
+  document.querySelector("style#hashtag-css-generator")?.remove();
 }
 
 export function discourseModule(name, options) {
@@ -397,6 +407,14 @@ export function acceptance(name, optionsOrCallback) {
 }
 
 export function controllerFor(controller, model) {
+  deprecated(
+    'controllerFor is deprecated. Use the standard `getOwner(this).lookup("controller:NAME")` instead',
+    {
+      id: "controller-for",
+      since: "3.0.0.beta14",
+    }
+  );
+
   controller = getOwner(this).lookup("controller:" + controller);
   if (model) {
     controller.set("model", model);
@@ -412,7 +430,7 @@ export function fixture(selector) {
 }
 
 QUnit.assert.not = function (actual, message) {
-  deprecated("assert.not() is deprecated. Use assert.notOk() instead.", {
+  deprecated("assert.not() is deprecated. Use assert.false() instead.", {
     since: "2.9.0.beta1",
     dropFrom: "2.10.0.beta1",
     id: "discourse.qunit.assert-not",

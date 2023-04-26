@@ -4,13 +4,12 @@ class FixBadgeImageAvatarUploadSecurityAndAcls < ActiveRecord::Migration[6.1]
   disable_ddl_transaction!
 
   def up
-    upload_ids = DB.query_single(<<~SQL
+    upload_ids = DB.query_single(<<~SQL)
       SELECT image_upload_id
       FROM badges
       INNER JOIN uploads ON uploads.id = badges.image_upload_id
       WHERE image_upload_id IS NOT NULL AND uploads.secure
      SQL
-    )
 
     if upload_ids.any?
       reason = "badge_image fixup migration"

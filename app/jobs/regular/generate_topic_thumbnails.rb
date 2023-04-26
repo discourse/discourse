@@ -2,7 +2,7 @@
 
 module Jobs
   class GenerateTopicThumbnails < ::Jobs::Base
-    sidekiq_options queue: 'ultra_low'
+    sidekiq_options queue: "ultra_low"
 
     def execute(args)
       topic_id = args[:topic_id]
@@ -13,6 +13,5 @@ module Jobs
       topic = Topic.find_by(id: topic_id)
       topic&.generate_thumbnails!(extra_sizes: extra_sizes)
     end
-
   end
 end

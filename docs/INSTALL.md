@@ -2,10 +2,10 @@
 
 > :bell: The only officially supported installs of Discourse are [Docker](https://www.docker.io/) based. You must have SSH access to a 64-bit Linux server **with Docker support**. We regret that we cannot support any other methods of installation including cpanel, plesk, webmin, etc.
 
-Simple 30 minute basic install:  
+Simple 30 minute basic install:
 [**Beginner Docker install guide**][basic]
 
-Powerful, flexible, large / multiple server install:  
+Powerful, flexible, large / multiple server install:
 [**Advanced Docker install guide**][advanced]
 
 ### Why do you only officially support Docker?
@@ -21,10 +21,9 @@ Hosting Rails applications is complicated. Even if you already have Postgres, Re
 
 ### Software Requirements
 
-- [Postgres 13+](https://www.postgresql.org/download/)
-- [Redis 6+](https://redis.io/download)
-- [Ruby 2.7](https://www.ruby-lang.org/en/downloads/) (we recommend 2.7.2)
-
+- [Postgres 13](https://www.postgresql.org/download/)
+- [Redis 7](https://redis.io/download)
+- [Ruby 3.2+](https://www.ruby-lang.org/en/downloads/)
 ## Security
 
 We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/main/docs/SECURITY.md) for an overview of security measures in Discourse.

@@ -10,7 +10,7 @@ class CreateLinkedTopics < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    add_index :linked_topics, [:topic_id, :original_topic_id], unique: true
-    add_index :linked_topics, [:topic_id, :sequence], unique: true
+    add_index :linked_topics, %i[topic_id original_topic_id], unique: true
+    add_index :linked_topics, %i[topic_id sequence], unique: true
   end
 end

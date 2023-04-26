@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'stylesheet/compiler'
+require "stylesheet/compiler"
 
 RSpec.describe Stylesheet::Compiler do
-  describe 'compilation' do
+  describe "compilation" do
     Dir["#{Rails.root.join("app/assets/stylesheets")}/*.scss"].each do |path|
       next if path =~ /ember_cli/
 
-      path = File.basename(path, '.scss')
+      path = File.basename(path, ".scss")
 
       it "can compile '#{path}' css" do
         css, _map = Stylesheet::Compiler.compile_asset(path)
@@ -18,13 +18,39 @@ RSpec.describe Stylesheet::Compiler do
 
   context "with a theme" do
     let!(:theme) { Fabricate(:theme) }
-    let!(:upload) { UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(Discourse.system_user.id) }
-    let!(:upload_theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "primary", upload: upload, value: "", type_id: ThemeField.types[:theme_upload_var]) }
-    let!(:stylesheet_theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "scss", value: "body { background: $primary }", type_id: ThemeField.types[:scss]) }
+    let!(:upload) do
+      UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(
+        Discourse.system_user.id,
+      )
+    end
+    let!(:upload_theme_field) do
+      ThemeField.create!(
+        theme: theme,
+        target_id: 0,
+        name: "primary",
+        upload: upload,
+        value: "",
+        type_id: ThemeField.types[:theme_upload_var],
+      )
+    end
+    let!(:stylesheet_theme_field) do
+      ThemeField.create!(
+        theme: theme,
+        target_id: 0,
+        name: "scss",
+        value: "body { background: $primary }",
+        type_id: ThemeField.types[:scss],
+      )
+    end
     before { stylesheet_theme_field.save! }
 
     it "theme stylesheet should be able to access theme asset variables" do
-      css, _map = Stylesheet::Compiler.compile_asset("desktop_theme", theme_id: theme.id, theme_variables: theme.scss_variables)
+      css, _map =
+        Stylesheet::Compiler.compile_asset(
+          "desktop_theme",
+          theme_id: theme.id,
+          theme_variables: theme.scss_variables,
+        )
       expect(css).to include(upload.url)
     end
 
@@ -80,7 +106,7 @@ RSpec.describe Stylesheet::Compiler do
     css, _map = Stylesheet::Compiler.compile(scss, "test.scss")
 
     expect(css).to include('url("http://test.localhost/images/favicons/github.png")')
-    expect(css).not_to include('absolute-image-url')
+    expect(css).not_to include("absolute-image-url")
   end
 
   it "supports absolute-image-url in subfolder" do
@@ -90,7 +116,7 @@ RSpec.describe Stylesheet::Compiler do
     css, _map = Stylesheet::Compiler.compile(scss, "test2.scss")
 
     expect(css).to include('url("http://test.localhost/subfo/images/favicons/github.png")')
-    expect(css).not_to include('absolute-image-url')
+    expect(css).not_to include("absolute-image-url")
   end
 
   it "supports absolute-image-url with CDNs" do
@@ -100,17 +126,20 @@ RSpec.describe Stylesheet::Compiler do
     css, _map = Stylesheet::Compiler.compile(scss, "test2.scss")
 
     expect(css).to include('url("https://awesome.com/images/favicons/github.png")')
-    expect(css).not_to include('absolute-image-url')
+    expect(css).not_to include("absolute-image-url")
   end
 
   it "supports absolute-image-url in plugins" do
     set_cdn_url "https://awesome.com"
     scss = Stylesheet::Importer.new({}).prepended_scss
-    scss += ".body{background-image: absolute-image-url('/plugins/discourse-special/images/somefile.png');}"
+    scss +=
+      ".body{background-image: absolute-image-url('/plugins/discourse-special/images/somefile.png');}"
     css, _map = Stylesheet::Compiler.compile(scss, "discourse-special.scss")
 
-    expect(css).to include('url("https://awesome.com/plugins/discourse-special/images/somefile.png")')
-    expect(css).not_to include('absolute-image-url')
+    expect(css).to include(
+      'url("https://awesome.com/plugins/discourse-special/images/somefile.png")',
+    )
+    expect(css).not_to include("absolute-image-url")
   end
 
   context "with a color scheme" do
@@ -121,16 +150,21 @@ RSpec.describe Stylesheet::Compiler do
     end
 
     it "returns color definitions for a custom color scheme" do
-      cs = Fabricate(:color_scheme, name: 'Stylish', color_scheme_colors: [
-        Fabricate(:color_scheme_color, name: 'header_primary', hex: '88af8e'),
-        Fabricate(:color_scheme_color, name: 'header_background', hex: 'f8745c')
-      ])
+      cs =
+        Fabricate(
+          :color_scheme,
+          name: "Stylish",
+          color_scheme_colors: [
+            Fabricate(:color_scheme_color, name: "header_primary", hex: "88af8e"),
+            Fabricate(:color_scheme_color, name: "header_background", hex: "f8745c"),
+          ],
+        )
 
       css, _map = Stylesheet::Compiler.compile_asset("color_definitions", color_scheme_id: cs.id)
 
       expect(css).to include("--header_background: #f8745c")
       expect(css).to include("--header_primary: #88af8e")
-      expect(css).to include("--header_background-rgb: 248,116,92")
+      expect(css).to include("--header_background-rgb: 248, 116, 92")
     end
 
     context "with a plugin" do
@@ -152,29 +186,39 @@ RSpec.describe Stylesheet::Compiler do
         expect(css).to include("--plugin-color")
       end
     end
-
   end
 
   describe "indexes" do
     it "include all SCSS files in their respective folders" do
       refs = []
 
-      Dir.glob(Rails.root.join('app/assets/stylesheets/**/*/')).each do |dir|
-        Dir.glob("#{dir}_index.scss").each do |indexfile|
-          contents = File.read indexfile
+      Dir
+        .glob(Rails.root.join("app/assets/stylesheets/**/*/"))
+        .each do |dir|
+          Dir
+            .glob("#{dir}_index.scss")
+            .each do |indexfile|
+              contents = File.read indexfile
 
-          files = Dir["#{dir}*.scss"]
-          files -= Dir["#{dir}_index.scss"]
-          files.each do |path|
-            filename = File.basename(path, ".scss")
-            if !contents.match(/@import "#{filename}";/)
-              refs << "#{filename} import missing in #{indexfile}"
+              files = Dir["#{dir}*.scss"]
+              files -= Dir["#{dir}_index.scss"]
+              files.each do |path|
+                filename = File.basename(path, ".scss")
+                if !contents.match(/@import "#{filename}";/)
+                  refs << "#{filename} import missing in #{indexfile}"
+                end
+              end
             end
-          end
         end
-      end
 
       expect(refs).to eq([])
+    end
+  end
+
+  describe ".compile" do
+    it "produces RTL CSS when rtl option is given" do
+      css, _ = Stylesheet::Compiler.compile("a{right:1px}", "test.scss", rtl: true)
+      expect(css).to eq("a{left:1px}")
     end
   end
 end

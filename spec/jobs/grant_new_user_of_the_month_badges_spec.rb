@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::GrantNewUserOfTheMonthBadges do
-
   let(:granter) { described_class.new }
 
   it "runs correctly" do
-    freeze_time(DateTime.parse('2019-11-30 23:59 UTC'))
+    freeze_time(DateTime.parse("2019-11-30 23:59 UTC"))
 
     u0 = Fabricate(:user, created_at: 2.weeks.ago)
     BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0, created_at: Time.now)
 
-    freeze_time(DateTime.parse('2020-01-01 00:00 UTC'))
+    freeze_time(DateTime.parse("2020-01-01 00:00 UTC"))
 
     user = Fabricate(:user, created_at: 1.week.ago)
     p = Fabricate(:post, user: user)
@@ -25,11 +24,11 @@ RSpec.describe Jobs::GrantNewUserOfTheMonthBadges do
 
     badges = user.user_badges.where(badge_id: Badge::NewUserOfTheMonth)
     expect(badges).to be_present
-    expect(badges.first.granted_at.to_s).to eq('2019-12-31 23:59:59 UTC')
+    expect(badges.first.granted_at.to_s).to eq("2019-12-31 23:59:59 UTC")
   end
 
   it "does not include people created after the previous month" do
-    freeze_time(DateTime.parse('2020-01-15 00:00 UTC'))
+    freeze_time(DateTime.parse("2020-01-15 00:00 UTC"))
 
     user = Fabricate(:user, created_at: 1.week.ago)
     p = Fabricate(:post, user: user)
@@ -85,12 +84,12 @@ RSpec.describe Jobs::GrantNewUserOfTheMonthBadges do
   end
 
   it "does nothing if it's already been awarded in previous month" do
-    freeze_time(DateTime.parse('2019-11-30 23:59 UTC'))
+    freeze_time(DateTime.parse("2019-11-30 23:59 UTC"))
 
     u0 = Fabricate(:user, created_at: 2.weeks.ago)
     BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0, created_at: Time.now)
 
-    freeze_time(DateTime.parse('2019-12-01 00:00 UTC'))
+    freeze_time(DateTime.parse("2019-12-01 00:00 UTC"))
 
     user = Fabricate(:user, created_at: 1.week.ago)
     p = Fabricate(:post, user: user)
@@ -107,7 +106,7 @@ RSpec.describe Jobs::GrantNewUserOfTheMonthBadges do
     expect(badge).to be_blank
   end
 
-  describe '.scores' do
+  describe ".scores" do
     def scores
       granter.scores(1.month.ago, Time.now)
     end
@@ -223,7 +222,5 @@ RSpec.describe Jobs::GrantNewUserOfTheMonthBadges do
 
       expect(scores.keys.size).to eq(2)
     end
-
   end
-
 end

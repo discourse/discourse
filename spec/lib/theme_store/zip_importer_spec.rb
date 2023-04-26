@@ -1,8 +1,7 @@
-
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'theme_store/zip_importer'
+require "theme_store/zip_importer"
 
 RSpec.describe ThemeStore::ZipImporter do
   before do
@@ -10,23 +9,21 @@ RSpec.describe ThemeStore::ZipImporter do
 
     FileUtils.mkdir(@temp_folder)
     Dir.chdir(@temp_folder) do
-      FileUtils.mkdir_p('test/a')
+      FileUtils.mkdir_p("test/a")
       File.write("test/hello.txt", "hello world")
       File.write("test/a/inner", "hello world inner")
     end
   end
 
-  after do
-    FileUtils.rm_rf @temp_folder
-  end
+  after { FileUtils.rm_rf @temp_folder }
 
   it "can import a simple zipped theme" do
     Dir.chdir(@temp_folder) do
-      Compression::Zip.new.compress(@temp_folder, 'test')
-      FileUtils.rm_rf('test/')
+      Compression::Zip.new.compress(@temp_folder, "test")
+      FileUtils.rm_rf("test/")
     end
 
-    file_name = 'test.zip'
+    file_name = "test.zip"
     importer = ThemeStore::ZipImporter.new("#{@temp_folder}/#{file_name}", file_name)
     importer.import!
 
@@ -37,11 +34,9 @@ RSpec.describe ThemeStore::ZipImporter do
   end
 
   it "can import a simple gzipped theme" do
-    Dir.chdir(@temp_folder) do
-      `tar -cvzf test.tar.gz test/* 2> /dev/null`
-    end
+    Dir.chdir(@temp_folder) { `tar -cvzf test.tar.gz test/* 2> /dev/null` }
 
-    file_name = 'test.tar.gz'
+    file_name = "test.tar.gz"
     importer = ThemeStore::ZipImporter.new("#{@temp_folder}/#{file_name}", file_name)
     importer.import!
 

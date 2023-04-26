@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-GIT_INITIAL_BRANCH_SUPPORTED = Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
+GIT_INITIAL_BRANCH_SUPPORTED =
+  Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
 
 module Helpers
   extend ActiveSupport::Concern
@@ -27,8 +28,8 @@ module Helpers
   end
 
   def fixture_file(filename)
-    return '' if filename.blank?
-    file_path = File.expand_path(Rails.root + 'spec/fixtures/' + filename)
+    return "" if filename.blank?
+    file_path = File.expand_path(Rails.root + "spec/fixtures/" + filename)
     File.read(file_path)
   end
 
@@ -47,9 +48,7 @@ module Helpers
   def create_post(args = {})
     # Pretty much all the tests with `create_post` will fail without this
     # since allow_uncategorized_topics is now false by default
-    unless args[:allow_uncategorized_topics] == false
-      SiteSetting.allow_uncategorized_topics = true
-    end
+    SiteSetting.allow_uncategorized_topics = true unless args[:allow_uncategorized_topics] == false
 
     args[:title] ||= "This is my title #{Helpers.next_seq}"
     args[:raw] ||= "This is the raw body of my post, it is cool #{Helpers.next_seq}"
@@ -61,9 +60,7 @@ module Helpers
     creator = PostCreator.new(user, args)
     post = creator.create
 
-    if creator.errors.present?
-      raise StandardError.new(creator.errors.full_messages.join(" "))
-    end
+    raise StandardError.new(creator.errors.full_messages.join(" ")) if creator.errors.present?
 
     post
   end
@@ -92,7 +89,7 @@ module Helpers
   end
 
   def create_staff_only_tags(tag_names)
-    create_limited_tags('Staff Tags', Group::AUTO_GROUPS[:staff], tag_names)
+    create_limited_tags("Staff Tags", Group::AUTO_GROUPS[:staff], tag_names)
   end
 
   def create_limited_tags(tag_group_name, group_id, tag_names)
@@ -100,12 +97,12 @@ module Helpers
     TagGroupPermission.where(
       tag_group: tag_group,
       group_id: Group::AUTO_GROUPS[:everyone],
-      permission_type: TagGroupPermission.permission_types[:full]
+      permission_type: TagGroupPermission.permission_types[:full],
     ).update(permission_type: TagGroupPermission.permission_types[:readonly])
     TagGroupPermission.create!(
       tag_group: tag_group,
       group_id: group_id,
-      permission_type: TagGroupPermission.permission_types[:full]
+      permission_type: TagGroupPermission.permission_types[:full],
     )
     tag_names.each do |name|
       tag_group.tags << (Tag.where(name: name).first || Fabricate(:tag, name: name))
@@ -113,10 +110,7 @@ module Helpers
   end
 
   def create_hidden_tags(tag_names)
-    tag_group = Fabricate(:tag_group,
-      name: 'Hidden Tags',
-      permissions: { staff: :full }
-    )
+    tag_group = Fabricate(:tag_group, name: "Hidden Tags", permissions: { staff: :full })
     tag_names.each do |name|
       tag_group.tags << (Tag.where(name: name).first || Fabricate(:tag, name: name))
     end
@@ -131,7 +125,7 @@ module Helpers
   end
 
   def capture_output(output_name)
-    if ENV['RAILS_ENABLE_TEST_STDOUT']
+    if ENV["RAILS_ENABLE_TEST_STDOUT"]
       yield
       return
     end
@@ -159,10 +153,9 @@ module Helpers
     global_setting :relative_url_root, f
     old_root = ActionController::Base.config.relative_url_root
     ActionController::Base.config.relative_url_root = f
+    Rails.application.routes.stubs(:relative_url_root).returns(f)
 
-    before_next_spec do
-      ActionController::Base.config.relative_url_root = old_root
-    end
+    before_next_spec { ActionController::Base.config.relative_url_root = old_root }
   end
 
   def setup_git_repo(files)
@@ -192,14 +185,21 @@ module Helpers
 
   def track_sql_queries
     queries = []
-    callback = ->(*, payload) {
-      queries << payload.fetch(:sql) unless ["CACHE", "SCHEMA"].include?(payload.fetch(:name))
-    }
-
-    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
-      yield
+    callback = ->(*, payload) do
+      queries << payload.fetch(:sql) unless %w[CACHE SCHEMA].include?(payload.fetch(:name))
     end
 
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") { yield }
+
     queries
+  end
+
+  def stub_ip_lookup(stub_addr, ips)
+    Addrinfo
+      .stubs(:getaddrinfo)
+      .with { |addr, _| addr == stub_addr }
+      .returns(
+        ips.map { |ip| Addrinfo.new([IPAddr.new(ip).ipv6? ? "AF_INET6" : "AF_INET", 80, nil, ip]) },
+      )
   end
 end

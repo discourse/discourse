@@ -21,14 +21,13 @@ el:
       joined: "έγινε μέλος"
       email_frequency:
         never: "Ποτέ"
+      header_indicator_preference:
+        never: "Ποτέ"
       flag: "Επισήμανση"
       join: "Γίνετε μέλος"
+      last_visit: "τελευταία επίσκεψη"
       mention_warning:
         dismiss: "απόρριψη"
-        groups:
-          users_limit:
-            one: "%{count} χρήστης"
-            other: "%{count} χρήστες"
       reply: "Απάντηση"
       edit: "Επεξεργασία"
       rebake_message: "Ανανέωση HTML"
@@ -49,6 +48,7 @@ el:
         yesterday: Χτες
       about_view:
         title: Τίτλος
+        name: Όνομα
         description: Περιγραφή
       channel_info:
         back_to_channel: "Πίσω"
@@ -63,10 +63,11 @@ el:
         type: "Τύπος"
         types:
           category: "Κατηγορία"
-          topic: "Νήμα"
+          topic: "Θέμα"
       composer:
         italic_text: "κείμενο σε έμφαση"
         bold_text: "έντονη γραφή"
+        send: "Αποστολή"
       notification_levels:
         never: "Ποτέ"
       settings:
@@ -93,9 +94,9 @@ el:
         cancel: "Ακύρωση"
         copy: "Αντιγραφή"
         new_topic:
-          title: "Μεταφορά σε Νέο Νήμα "
+          title: "Μετακίνηση σε Νέο Θέμα"
         existing_topic:
-          title: "Μεταφορά σε Υφιστάμενο Νήμα"
+          title: "Μετακίνηση σε Υπάρχον Θέμα"
         new_message:
           title: "Μετακίνηση σε νέο μήνυμα"
       emoji_picker:
@@ -103,6 +104,10 @@ el:
         activities: "Δραστηριότητες"
         flags: "Σημάνσεις"
         symbols: "Σύμβολα"
+      thread:
+        replies:
+          one: "%{count} απάντηση"
+          other: "%{count} απαντήσεις"
       draft_channel_screen:
         header: "Νέο Μήνυμα"
         cancel: "Ακύρωση"
@@ -114,7 +119,3 @@ el:
           fields:
             message:
               label: Μήνυμα
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Επισήμανση από"

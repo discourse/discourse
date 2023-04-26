@@ -5,15 +5,17 @@ require "rails_helper"
 RSpec.describe Jobs::ClosePoll do
   let(:post) { Fabricate(:post, raw: "[poll]\n- A\n- B\n[/poll]") }
 
-  describe 'missing arguments' do
-    it 'should raise the right error' do
-      expect do
-        Jobs::ClosePoll.new.execute(post_id: post.id)
-      end.to raise_error(Discourse::InvalidParameters, "poll_name")
+  describe "missing arguments" do
+    it "should raise the right error" do
+      expect do Jobs::ClosePoll.new.execute(post_id: post.id) end.to raise_error(
+        Discourse::InvalidParameters,
+        "poll_name",
+      )
 
-      expect do
-        Jobs::ClosePoll.new.execute(poll_name: "poll")
-      end.to raise_error(Discourse::InvalidParameters, "post_id")
+      expect do Jobs::ClosePoll.new.execute(poll_name: "poll") end.to raise_error(
+        Discourse::InvalidParameters,
+        "post_id",
+      )
     end
   end
 
@@ -24,5 +26,4 @@ RSpec.describe Jobs::ClosePoll do
 
     expect(post.polls.first.closed?).to eq(true)
   end
-
 end

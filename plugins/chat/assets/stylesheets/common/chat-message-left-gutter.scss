@@ -6,16 +6,15 @@
   width: var(--message-left-width);
 }
 
+.chat-message-container:hover .chat-message-left-gutter {
+  .chat-time {
+    color: var(--secondary-mediumy);
+  }
+}
+
 .chat-message-left-gutter__date {
   color: var(--primary-high);
   font-size: var(--font-down-1);
-
-  &:hover,
-  &:focus {
-    .chat-time {
-      color: var(--primary);
-    }
-  }
 }
 
 .chat-message-left-gutter__flag {

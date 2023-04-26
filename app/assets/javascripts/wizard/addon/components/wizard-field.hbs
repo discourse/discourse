@@ -1,0 +1,39 @@
+{{#if this.field.label}}
+  <label for={{this.field.id}}>
+    <span class="wizard-container__label">
+      {{this.field.label}}
+    </span>
+
+    {{#if this.field.required}}
+      <span class="wizard-container__label required">*</span>
+    {{/if}}
+
+    {{#if this.field.description}}
+      <div class="wizard-container__description">{{html-safe
+          this.field.description
+        }}</div>
+    {{/if}}
+  </label>
+{{/if}}
+
+<div class="wizard-container__input">
+  {{component
+    this.inputComponentName
+    field=this.field
+    step=this.step
+    fieldClass=this.fieldClass
+    wizard=this.wizard
+  }}
+</div>
+
+{{#if this.field.errorDescription}}
+  <div class="wizard-container__description error">{{html-safe
+      this.field.errorDescription
+    }}</div>
+{{/if}}
+
+{{#if this.field.extra_description}}
+  <div class="wizard-container__description extra">{{html-safe
+      this.field.extra_description
+    }}</div>
+{{/if}}

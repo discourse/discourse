@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::ImpersonateController < Admin::AdminController
-
   def create
     params.require(:username_or_email)
 
@@ -18,5 +17,4 @@ class Admin::ImpersonateController < Admin::AdminController
 
     render body: nil
   end
-
 end

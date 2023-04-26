@@ -7,12 +7,13 @@ export default class ChatChannelToggleController extends Controller.extend(
   ModalFunctionality
 ) {
   @service chat;
+  @service router;
 
   chatChannel = null;
 
   @action
   channelStatusChanged(channel) {
     this.send("closeModal");
-    this.chat.openChannel(channel);
+    this.router.transitionTo("chat.channel", ...channel.routeModels);
   }
 }

@@ -1,0 +1,55 @@
+<div class="setting-label">
+  <h3>
+    {{this.settingName}}
+
+    {{#if this.staffLogFilter}}
+      <LinkTo
+        @route="adminLogs.staffActionLogs"
+        @query={{hash filters=this.staffLogFilter force_refresh=true}}
+        title={{i18n "admin.settings.history"}}
+      >
+        <span class="history-icon">
+          {{d-icon "history"}}
+        </span>
+      </LinkTo>
+    {{/if}}
+  </h3>
+
+  {{#if this.defaultIsAvailable}}
+    <DButton
+      class="btn-link"
+      @action={{this.setDefaultValues}}
+      @translatedLabel={{this.setting.setDefaultValuesLabel}}
+    />
+  {{/if}}
+</div>
+
+<div class="setting-value">
+  {{component
+    this.componentName
+    setting=this.setting
+    value=this.buffered.value
+    validationMessage=this.validationMessage
+    preview=this.preview
+    isSecret=this.isSecret
+    allowAny=this.allowAny
+  }}
+</div>
+
+{{#if this.dirty}}
+  <div class="setting-controls">
+    <DButton class="ok" @action={{this.update}} @icon="check" />
+    <DButton class="cancel" @action={{this.cancel}} @icon="times" />
+  </div>
+{{else if this.setting.overridden}}
+  {{#if this.setting.secret}}
+    <DButton @action={{this.toggleSecret}} @icon="far-eye-slash" />
+  {{/if}}
+
+  <DButton
+    class="btn-default undo"
+    @action={{this.resetDefault}}
+    @icon="undo"
+    @label="admin.settings.reset"
+  />
+{{/if}}

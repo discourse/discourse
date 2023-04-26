@@ -1,58 +1,104 @@
-.chat-composer-container {
-  display: flex;
-  flex-direction: column;
-
-  #chat-full-page-uploader,
-  #chat-widget-uploader {
-    display: none;
-  }
-
-  .drop-a-file {
-    display: none;
-  }
-}
-
 .chat-composer {
   display: flex;
   align-items: center;
-  background-color: var(--secondary);
-  border: 1px solid var(--primary-low-mid);
-  border-radius: 5px;
-  padding: 0.15rem 0.25rem;
-  margin-top: 0.5rem;
 
-  &.is-disabled {
-    background-color: var(--primary-low);
-    border: 1px solid var(--primary-low-mid);
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    z-index: 3;
+    background-color: var(--secondary);
+    margin-top: 0.1rem;
+
+    #chat-full-page-uploader,
+    #chat-widget-uploader {
+      display: none;
+    }
+
+    .drop-a-file {
+      display: none;
+    }
   }
 
-  .send-btn {
-    padding: 0.4rem 0.5rem;
-    border: 1px solid transparent;
-    border-radius: 5px;
+  &__outer-container {
     display: flex;
     align-items: center;
+    padding-inline: 0.25rem;
+    box-sizing: border-box;
+    width: 100%;
+  }
 
-    .d-icon {
-      color: var(--tertiary);
+  &__inner-container {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    flex-direction: row;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: 5px;
+    background-color: var(--secondary);
+    padding-inline: 0.25rem;
+    min-height: 42px;
+
+    .chat-composer--focused & {
+      border-color: var(--primary-medium);
     }
 
-    &:disabled {
-      cursor: not-allowed;
+    .chat-composer--disabled & {
+      background: var(--primary-low);
+    }
+  }
+
+  &__send-btn {
+    border-radius: 3px;
+    background: none;
+    will-change: scale;
+
+    .chat-composer--send-enabled & {
+      &:hover {
+        background: none;
+      }
+
+      &:focus {
+        background: none;
+        outline: auto;
+      }
 
       .d-icon {
-        color: var(--primary-low);
+        color: var(--tertiary) !important;
       }
     }
 
-    &:not(:disabled) {
-      &:hover,
-      &:focus {
-        background: var(--tertiary);
-        .d-icon {
-          color: var(--secondary);
-        }
+    @keyframes sendingScales {
+      0% {
+        transform: scale(0.8);
       }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(0.8);
+      }
+    }
+
+    .chat-composer--sending & {
+      animation: sendingScales 1s infinite;
+    }
+
+    .chat-composer--send-disabled & {
+      cursor: default;
+      opacity: 0.6 !important;
+
+      &:hover {
+        background: none !important;
+      }
+    }
+
+    > * {
+      pointer-events: none;
+    }
+
+    .d-icon {
+      color: var(--primary) !important;
     }
   }
 
@@ -80,7 +126,14 @@
     }
   }
 
-  .chat-composer-input {
+  &__input-container {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  &__input {
     overflow-x: hidden;
     width: 100%;
     appearance: none;
@@ -88,33 +141,27 @@
     border: 0;
     resize: none;
     max-height: 125px;
-    scrollbar-color: var(--primary-low-mid) transparent;
-    transition: scrollbar-color 0.2s ease-in-out;
     background: none;
     margin: 0;
     padding: 0.25rem 0.5rem;
     text-overflow: ellipsis;
+
+    @include chat-scrollbar();
+
+    &[disabled] {
+      background: none;
+    }
+
+    &:focus,
+    &:active {
+      outline: none;
+    }
 
     &:placeholder-shown,
     &::placeholder {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: var(--primary-low-mid);
-      border-radius: 6px;
-      border: 3px solid var(--secondary);
-    }
-    &:hover {
-      scrollbar-color: var(--primary-low-mid) transparent;
-      &::-webkit-scrollbar-thumb {
-        background-color: var(--primary-low-mid);
-      }
-    }
-    &::-webkit-scrollbar {
-      width: 12px;
     }
   }
 
@@ -129,10 +176,6 @@
   border-top: 1px solid var(--primary-low);
   display: flex;
   align-items: center;
-  @include ellipsis;
-  position: relative;
-  height: 100%;
-  max-height: calc(2em - 5px);
 
   .cancel-message-action {
     margin-left: auto;

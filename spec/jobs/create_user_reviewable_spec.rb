@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::CreateUserReviewable do
-
   let(:user) { Fabricate(:user) }
 
   it "creates the reviewable" do
@@ -11,9 +10,9 @@ RSpec.describe Jobs::CreateUserReviewable do
     reviewable = Reviewable.find_by(target: user)
     expect(reviewable).to be_present
     expect(reviewable.pending?).to eq(true)
-    expect(reviewable.payload['username']).to eq(user.username)
-    expect(reviewable.payload['name']).to eq(user.name)
-    expect(reviewable.payload['email']).to eq(user.email)
+    expect(reviewable.payload["username"]).to eq(user.username)
+    expect(reviewable.payload["name"]).to eq(user.name)
+    expect(reviewable.payload["email"]).to eq(user.email)
   end
 
   it "should not raise an error if there is a reviewable already" do
@@ -37,7 +36,7 @@ RSpec.describe Jobs::CreateUserReviewable do
       reviewable = Reviewable.find_by(target: user)
       score = reviewable.reviewable_scores.first
       expect(score).to be_present
-      expect(score.reason).to eq('must_approve_users')
+      expect(score.reason).to eq("must_approve_users")
     end
 
     it "adds invite_only if enabled" do
@@ -46,8 +45,7 @@ RSpec.describe Jobs::CreateUserReviewable do
       reviewable = Reviewable.find_by(target: user)
       score = reviewable.reviewable_scores.first
       expect(score).to be_present
-      expect(score.reason).to eq('invite_only')
+      expect(score.reason).to eq("invite_only")
     end
   end
-
 end

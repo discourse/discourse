@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'cose'
-require 'openssl/signature_algorithm/rsapkcs1'
+require "cose"
+require "openssl/signature_algorithm/rsapkcs1"
 
 # 'cose' gem does not implement all algorithms from the Web Authentication
 # (WebAuthn) standard specification. This patch implements one of the missing
@@ -38,11 +38,11 @@ module COSE
         when OpenSSL::PKey::RSA
           key
         else
-          raise(COSE::Error, 'Incompatible key for algorithm')
+          raise(COSE::Error, "Incompatible key for algorithm")
         end
       end
     end
 
-    register(RSAPKCS1.new(-257, 'RS256', hash_function: 'SHA256'))
+    register(RSAPKCS1.new(-257, "RS256", hash_function: "SHA256"))
   end
 end

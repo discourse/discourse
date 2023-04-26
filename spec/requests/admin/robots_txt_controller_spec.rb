@@ -43,7 +43,7 @@ RSpec.describe Admin::RobotsTxtController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "robot.txt inaccessible"
     end
@@ -89,7 +89,7 @@ RSpec.describe Admin::RobotsTxtController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "robot.txt update not allowed"
     end
@@ -129,7 +129,7 @@ RSpec.describe Admin::RobotsTxtController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "robot.txt reset not allowed"
     end

@@ -15,12 +15,16 @@ permissions:
 
 jobs:
   build:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: run
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim
     timeout-minutes: 30
 
     steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
@@ -67,31 +71,29 @@ jobs:
         if: ${{ !cancelled() }}
         run: bundle exec rubocop --parallel .
 
+      - name: syntax_tree
+        if: ${{ !cancelled() }}
+        run: |
+          set -E
+          bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake')
+
       - name: ESLint (core)
         if: ${{ !cancelled() }}
-        run: yarn eslint app/assets/javascripts
+        run: yarn lint:js
 
       - name: ESLint (core plugins)
         if: ${{ !cancelled() }}
-        run: yarn eslint plugins
+        run: yarn lint:js-plugins
 
       - name: Prettier
         if: ${{ !cancelled() }}
         run: |
           yarn prettier -v
-          yarn pprettier --list-different \
-            "app/assets/stylesheets/**/*.scss" \
-            "app/assets/javascripts/**/*.js" \
-            "plugins/**/assets/stylesheets/**/*.scss" \
-            "plugins/**/assets/javascripts/**/*.js"
+          yarn lint:prettier
 
       - name: Ember template lint
         if: ${{ !cancelled() }}
-        run: |
-          yarn ember-template-lint \
-            --no-error-on-unmatched-pattern \
-            "app/assets/javascripts/**/*.hbs" \
-            "plugins/**/assets/javascripts/**/*.hbs"
+        run: yarn lint:hbs
 
       - name: English locale lint (core)
         if: ${{ !cancelled() }}

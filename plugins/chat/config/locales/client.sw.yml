@@ -20,14 +20,13 @@ sw:
       joined: "alijiunga"
       email_frequency:
         never: "Kamwe"
+      header_indicator_preference:
+        never: "Kamwe"
       flag: "Bendera"
       join: "Jiunge"
+      last_visit: "Mara ya mwisho imetembelewa"
       mention_warning:
         dismiss: "ondosha..."
-        groups:
-          users_limit:
-            one: "Mtumiaji mmoja"
-            other: "%{count} watumiaji"
       reply: "Jibu"
       edit: "Hariri"
       rebake_message: "Tengeneza upya HTML"
@@ -48,6 +47,7 @@ sw:
         yesterday: Jana
       about_view:
         title: Kichwa cha Habari
+        name: Jina
         description: Elezo
       channel_info:
         back_to_channel: "Iliyopita"
@@ -66,6 +66,7 @@ sw:
       composer:
         italic_text: "Maneno yaliyo tiliwa mkazo"
         bold_text: "Maneno yaliyokolezwa"
+        send: "Tuma"
       notification_levels:
         never: "Kamwe"
       settings:
@@ -98,6 +99,10 @@ sw:
       emoji_picker:
         objects: "Vitu"
         flags: "Bendera"
+      thread:
+        replies:
+          one: "%{count} jibu"
+          other: "%{count} majibu"
       draft_channel_screen:
         header: "Ujumbe Mpya"
         cancel: "Ghairi"

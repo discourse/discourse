@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe SvgSpriteController do
-  describe '#show' do
-    before do
-      SvgSprite.expire_cache
-    end
+  describe "#show" do
+    before { SvgSprite.expire_cache }
 
     it "should return bundle when version is current" do
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{SvgSprite.version}.js"
@@ -21,21 +19,19 @@ RSpec.describe SvgSpriteController do
       random_hash = Digest::SHA1.hexdigest("somerandomstring")
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"
 
-      expect(response).to redirect_to(
-        "/svg-sprite/test.localhost/svg--#{SvgSprite.version}.js"
-      )
+      expect(response).to redirect_to("/svg-sprite/test.localhost/svg--#{SvgSprite.version}.js")
 
       set_cdn_url "//some-cdn.com/site"
 
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"
 
       expect(response).to redirect_to(
-        "https://some-cdn.com/site/svg-sprite/test.localhost/svg--#{SvgSprite.version}.js"
+        "https://some-cdn.com/site/svg-sprite/test.localhost/svg--#{SvgSprite.version}.js",
       )
     end
   end
 
-  describe '#search' do
+  describe "#search" do
     it "should not work for anons" do
       get "/svg-sprite/search/fa-bolt"
       expect(response.status).to eq(404)
@@ -46,7 +42,7 @@ RSpec.describe SvgSpriteController do
 
       get "/svg-sprite/search/fa-bolt"
       expect(response.status).to eq(200)
-      expect(response.body).to include('bolt')
+      expect(response.body).to include("bolt")
     end
 
     it "should return 404 when looking for non-existent FA icon" do
@@ -62,7 +58,12 @@ RSpec.describe SvgSpriteController do
 
       upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
 
-      theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
+      theme.set_field(
+        target: :common,
+        name: SvgSprite.theme_sprite_variable_name,
+        upload_id: upload.id,
+        type: :theme_upload_var,
+      )
       theme.save!
 
       SiteSetting.default_theme_id = theme.id
@@ -71,14 +72,14 @@ RSpec.describe SvgSpriteController do
 
       get "/svg-sprite/search/fa-my-custom-theme-icon"
       expect(response.status).to eq(200)
-      expect(response.body).to include('my-custom-theme-icon')
+      expect(response.body).to include("my-custom-theme-icon")
     end
   end
 
-  describe '#icon_picker_search' do
-    it 'should work with no filter and max out at 200 results' do
+  describe "#icon_picker_search" do
+    it "should work with no filter and max out at 200 results" do
       user = sign_in(Fabricate(:user))
-      get '/svg-sprite/picker-search'
+      get "/svg-sprite/picker-search"
 
       expect(response.status).to eq(200)
 
@@ -87,10 +88,10 @@ RSpec.describe SvgSpriteController do
       expect(data[0]["id"]).to eq("ad")
     end
 
-    it 'should filter' do
+    it "should filter" do
       user = sign_in(Fabricate(:user))
 
-      get '/svg-sprite/picker-search', params: { filter: '500px' }
+      get "/svg-sprite/picker-search", params: { filter: "500px" }
 
       expect(response.status).to eq(200)
 
@@ -98,9 +99,24 @@ RSpec.describe SvgSpriteController do
       expect(data.length).to eq(1)
       expect(data[0]["id"]).to eq("fab-500px")
     end
+
+    it "should display only available" do
+      sign_in(Fabricate(:user))
+
+      get "/svg-sprite/picker-search"
+      data = response.parsed_body
+      beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
+      expect(beer_icon).to be_present
+
+      get "/svg-sprite/picker-search", params: { only_available: "true" }
+      data = response.parsed_body
+      beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
+      expect(beer_icon).to be nil
+      expect(data.length).to eq(200)
+    end
   end
 
-  describe '#svg_icon' do
+  describe "#svg_icon" do
     it "requires .svg extension" do
       get "/svg-sprite/#{Discourse.current_hostname}/icon/bolt"
       expect(response.status).to eq(404)
@@ -109,14 +125,14 @@ RSpec.describe SvgSpriteController do
     it "returns SVG given an icon name" do
       get "/svg-sprite/#{Discourse.current_hostname}/icon/bolt.svg"
       expect(response.status).to eq(200)
-      expect(response.body).to include('bolt')
+      expect(response.body).to include("bolt")
     end
 
     it "returns SVG given an icon name and a color" do
       get "/svg-sprite/#{Discourse.current_hostname}/icon/CC0000/fab-github.svg"
       expect(response.status).to eq(200)
 
-      expect(response.body).to include('fab-github')
+      expect(response.body).to include("fab-github")
       expect(response.body).to include('fill="#CC0000"')
       expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
     end
@@ -125,7 +141,7 @@ RSpec.describe SvgSpriteController do
       get "/svg-sprite/#{Discourse.current_hostname}/icon/C00/fab-github.svg"
       expect(response.status).to eq(200)
 
-      expect(response.body).to include('fab-github')
+      expect(response.body).to include("fab-github")
       expect(response.body).to include('fill="#CC0000"')
       expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
     end
@@ -134,6 +150,5 @@ RSpec.describe SvgSpriteController do
       get "/svg-sprite/#{Discourse.current_hostname}/icon/orange/fab-github.svg"
       expect(response.status).to eq(404)
     end
-
   end
 end

@@ -2,6 +2,6 @@
 
 class AddIndexActionTypeCreatedAtOnUserActions < ActiveRecord::Migration[5.2]
   def change
-    add_index :user_actions, [:action_type, :created_at]
+    add_index :user_actions, %i[action_type created_at]
   end
 end

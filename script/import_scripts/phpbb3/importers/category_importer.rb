@@ -23,11 +23,13 @@ module ImportScripts::PhpBB3
       {
         id: @settings.prefix(row[:forum_id]),
         name: CGI.unescapeHTML(row[:forum_name]),
-        parent_category_id: @lookup.category_id_from_imported_category_id(@settings.prefix(row[:parent_id])),
-        post_create_action: proc do |category|
-          update_category_description(category, row)
-          @permalink_importer.create_for_category(category, row[:forum_id]) # skip @settings.prefix because ID is used in permalink generation
-        end
+        parent_category_id:
+          @lookup.category_id_from_imported_category_id(@settings.prefix(row[:parent_id])),
+        post_create_action:
+          proc do |category|
+            update_category_description(category, row)
+            @permalink_importer.create_for_category(category, row[:forum_id]) # skip @settings.prefix because ID is used in permalink generation
+          end,
       }
     end
 
@@ -51,7 +53,16 @@ module ImportScripts::PhpBB3
       end
 
       if row[:forum_desc].present?
-        changes = { raw: (@text_processor.process_raw_text(row[:forum_desc]) rescue row[:forum_desc]) }
+        changes = {
+          raw:
+            (
+              begin
+                @text_processor.process_raw_text(row[:forum_desc])
+              rescue StandardError
+                row[:forum_desc]
+              end
+            ),
+        }
         opts = { revised_at: post.created_at, bypass_bump: true }
         post.revise(Discourse.system_user, changes, opts)
       end

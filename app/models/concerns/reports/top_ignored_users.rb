@@ -15,22 +15,18 @@ module Reports::TopIgnoredUsers
             username: :ignored_username,
             avatar: :ignored_user_avatar_template,
           },
-          title: I18n.t("reports.top_ignored_users.labels.ignored_user")
+          title: I18n.t("reports.top_ignored_users.labels.ignored_user"),
         },
         {
           type: :number,
-          properties: [
-            :ignores_count,
-          ],
-          title: I18n.t("reports.top_ignored_users.labels.ignores_count")
+          properties: [:ignores_count],
+          title: I18n.t("reports.top_ignored_users.labels.ignores_count"),
         },
         {
           type: :number,
-          properties: [
-            :mutes_count,
-          ],
-          title: I18n.t("reports.top_ignored_users.labels.mutes_count")
-        }
+          properties: [:mutes_count],
+          title: I18n.t("reports.top_ignored_users.labels.mutes_count"),
+        },
       ]
 
       report.data = []
@@ -69,15 +65,18 @@ module Reports::TopIgnoredUsers
           ORDER BY total DESC
       SQL
 
-      DB.query(sql, limit: report.limit || 250).each do |row|
-        report.data << {
-          ignored_user_id: row.user_id,
-          ignored_username: row.username,
-          ignored_user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
-          ignores_count: row.ignores_count,
-          mutes_count: row.mutes_count,
-        }
-      end
+      DB
+        .query(sql, limit: report.limit || 250)
+        .each do |row|
+          report.data << {
+            ignored_user_id: row.user_id,
+            ignored_username: row.username,
+            ignored_user_avatar_template:
+              User.avatar_template(row.username, row.uploaded_avatar_id),
+            ignores_count: row.ignores_count,
+            mutes_count: row.mutes_count,
+          }
+        end
     end
   end
 end

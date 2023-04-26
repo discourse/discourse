@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe UserStatusController do
-  describe '#get' do
-    it 'requires user to be logged in' do
+  describe "#get" do
+    it "requires user to be logged in" do
       get "/user-status.json"
       expect(response.status).to eq(403)
     end
@@ -17,7 +17,7 @@ RSpec.describe UserStatusController do
       expect(response.status).to eq(404)
     end
 
-    describe 'when feature is enabled and a user is logged in' do
+    describe "when feature is enabled and a user is logged in" do
       fab!(:user) { Fabricate(:user) }
 
       before do
@@ -41,8 +41,8 @@ RSpec.describe UserStatusController do
     end
   end
 
-  describe '#set' do
-    it 'requires user to be logged in' do
+  describe "#set" do
+    it "requires user to be logged in" do
       put "/user-status.json", params: { description: "off to dentist" }
       expect(response.status).to eq(403)
     end
@@ -57,7 +57,7 @@ RSpec.describe UserStatusController do
       expect(response.status).to eq(404)
     end
 
-    describe 'feature is enabled and user is logged in' do
+    describe "feature is enabled and user is logged in" do
       fab!(:user) { Fabricate(:user) }
 
       before do
@@ -65,14 +65,39 @@ RSpec.describe UserStatusController do
         SiteSetting.enable_user_status = true
       end
 
-      it 'the description parameter is mandatory' do
+      it "the description parameter is mandatory" do
         put "/user-status.json", params: { emoji: "tooth" }
         expect(response.status).to eq(400)
       end
 
-      it 'the emoji parameter is mandatory' do
+      it "the emoji parameter is mandatory" do
         put "/user-status.json", params: { description: "off to dentist" }
         expect(response.status).to eq(400)
+      end
+
+      it "validates emoji" do
+        put "/user-status.json",
+            params: {
+              emoji: "invalid_emoji_name",
+              description: "off to dentist",
+            }
+        expect(response.status).to eq(422)
+      end
+
+      it "limits description’s length" do
+        put "/user-status.json",
+            params: {
+              emoji: "tooth",
+              description: "x" * UserStatus::MAX_DESCRIPTION_LENGTH,
+            }
+        expect(response.status).to eq(200)
+
+        put "/user-status.json",
+            params: {
+              emoji: "tooth",
+              description: "x" * (UserStatus::MAX_DESCRIPTION_LENGTH + 1),
+            }
+        expect(response.status).to eq(422)
       end
 
       it "sets user status" do
@@ -80,11 +105,12 @@ RSpec.describe UserStatusController do
         status_emoji = "tooth"
         ends_at = DateTime.parse("2100-01-01 18:00")
 
-        put "/user-status.json", params: {
-          description: status,
-          emoji: status_emoji,
-          ends_at: ends_at
-        }
+        put "/user-status.json",
+            params: {
+              description: status,
+              emoji: status_emoji,
+              ends_at: ends_at,
+            }
 
         expect(response.status).to eq(200)
         expect(user.user_status.description).to eq(status)
@@ -96,11 +122,12 @@ RSpec.describe UserStatusController do
         status = "off to dentist"
         status_emoji = "tooth"
         ends_at = DateTime.parse("2100-01-01 18:00")
-        put "/user-status.json", params: {
-          description: status,
-          emoji: status_emoji,
-          ends_at: ends_at
-        }
+        put "/user-status.json",
+            params: {
+              description: status,
+              emoji: status_emoji,
+              ends_at: ends_at,
+            }
         expect(response.status).to eq(200)
 
         user.reload
@@ -111,11 +138,12 @@ RSpec.describe UserStatusController do
         new_status = "surfing"
         new_status_emoji = "surfing_man"
         new_ends_at = DateTime.parse("2100-01-01 18:59")
-        put "/user-status.json", params: {
-          description: new_status,
-          emoji: new_status_emoji,
-          ends_at: new_ends_at
-        }
+        put "/user-status.json",
+            params: {
+              description: new_status,
+              emoji: new_status_emoji,
+              ends_at: new_ends_at,
+            }
         expect(response.status).to eq(200)
 
         user.reload
@@ -129,15 +157,12 @@ RSpec.describe UserStatusController do
         emoji = "tooth"
         ends_at = "2100-01-01T18:00:00Z"
 
-        messages = MessageBus.track_publish do
-          put "/user-status.json", params: {
-            description: status,
-            emoji: emoji,
-            ends_at: ends_at
-          }
-        end
+        messages =
+          MessageBus.track_publish("/user-status") do
+            put "/user-status.json", params: { description: status, emoji: emoji, ends_at: ends_at }
+          end
 
-        expect(messages.size).to eq(1)
+        expect(messages.map(&:channel)).to contain_exactly("/user-status")
         expect(messages[0].channel).to eq("/user-status")
         expect(messages[0].group_ids).to eq([Group::AUTO_GROUPS[:trust_level_0]])
 
@@ -148,8 +173,8 @@ RSpec.describe UserStatusController do
     end
   end
 
-  describe '#clear' do
-    it 'requires you to be logged in' do
+  describe "#clear" do
+    it "requires you to be logged in" do
       delete "/user-status.json"
       expect(response.status).to eq(403)
     end
@@ -164,7 +189,7 @@ RSpec.describe UserStatusController do
       expect(response.status).to eq(404)
     end
 
-    describe 'feature is enabled and user is logged in' do
+    describe "feature is enabled and user is logged in" do
       fab!(:user_status) { Fabricate(:user_status, description: "off to dentist") }
       fab!(:user) { Fabricate(:user, user_status: user_status) }
 
@@ -182,7 +207,7 @@ RSpec.describe UserStatusController do
       end
 
       it "publishes to message bus" do
-        messages = MessageBus.track_publish { delete "/user-status.json" }
+        messages = MessageBus.track_publish("/user-status") { delete "/user-status.json" }
 
         expect(messages.size).to eq(1)
         expect(messages[0].channel).to eq("/user-status")

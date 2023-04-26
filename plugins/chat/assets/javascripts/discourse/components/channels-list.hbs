@@ -1,5 +1,11 @@
-{{#if (and this.showMobileDirectMessageButton this.canCreateDirectMessageChannel)}}
-  <LinkTo @route="chat.draft-channel" class="btn-flat open-draft-channel-page-btn keep-mobile-sidebar-open btn-floating" title={{i18n this.createDirectMessageChannelLabel}}>
+{{#if
+  (and this.showMobileDirectMessageButton this.canCreateDirectMessageChannel)
+}}
+  <LinkTo
+    @route="chat.draft-channel"
+    class="btn-flat open-draft-channel-page-btn keep-mobile-sidebar-open btn-floating"
+    title={{i18n this.createDirectMessageChannelLabel}}
+  >
     {{d-icon "plus"}}
   </LinkTo>
 {{/if}}
@@ -7,8 +13,13 @@
 <div
   role="region"
   aria-label={{i18n "chat.aria_roles.channels_list"}}
-  class="channels-list"
-  {{on "scroll" (if this.chatStateManager.isFullPageActive this.storeScrollPosition (noop))}}
+  class={{concat-class "channels-list" (if this.hasScrollbar "has-scrollbar")}}
+  {{on
+    "scroll"
+    (if this.chatStateManager.isFullPageActive this.storeScrollPosition (noop))
+  }}
+  {{did-insert this.computeHasScrollbar}}
+  {{chat/on-resize this.computeResizedEntries}}
 >
   {{#if this.displayPublicChannels}}
     <div class="chat-channel-divider public-channels-section">
@@ -26,7 +37,11 @@
       {{/if}}
       <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
 
-      <LinkTo @route="chat.browse" class="btn no-text btn-flat open-browse-page-btn title-action" title={{i18n "chat.channels_list_popup.browse"}}>
+      <LinkTo
+        @route="chat.browse"
+        class="btn no-text btn-flat open-browse-page-btn title-action"
+        title={{i18n "chat.channels_list_popup.browse"}}
+      >
         {{d-icon "pencil-alt"}}
       </LinkTo>
     </div>
@@ -40,7 +55,7 @@
           </LinkTo>
         </div>
       {{else}}
-        {{#each this.publicChannels as |channel|}}
+        {{#each this.chatChannelsManager.publicMessageChannels as |channel|}}
           <ChatChannelRow
             @channel={{channel}}
             @options={{hash settingsButton=true}}
@@ -53,7 +68,7 @@
   <PluginOutlet
     @name="below-public-chat-channels"
     @tagName=""
-    @args={{hash inSidebar=this.inSidebar}}
+    @outletArgs={{hash inSidebar=this.inSidebar}}
   />
 
   {{#if this.showDirectMessageChannels}}
@@ -75,8 +90,17 @@
       {{/if}}
       <span class="channel-title">{{i18n "chat.direct_messages.title"}}</span>
 
-      {{#if (and this.canCreateDirectMessageChannel (not this.showMobileDirectMessageButton))}}
-        <LinkTo @route="chat.draft-channel" class="btn no-text btn-flat open-draft-channel-page-btn" title={{i18n this.createDirectMessageChannelLabel}}>
+      {{#if
+        (and
+          this.canCreateDirectMessageChannel
+          (not this.showMobileDirectMessageButton)
+        )
+      }}
+        <LinkTo
+          @route="chat.draft-channel"
+          class="btn no-text btn-flat open-draft-channel-page-btn"
+          title={{i18n this.createDirectMessageChannelLabel}}
+        >
           {{d-icon "plus"}}
         </LinkTo>
       {{/if}}
@@ -84,11 +108,11 @@
   {{/if}}
 
   <div id="direct-message-channels" class={{this.directMessageChannelClasses}}>
-    {{#each this.sortedDirectMessageChannels as |channel|}}
-      <ChatChannelRow
-        @channel={{channel}}
-        @options={{hash leaveButton=true}}
-      />
+    {{#each
+      this.chatChannelsManager.truncatedDirectMessageChannels
+      as |channel|
+    }}
+      <ChatChannelRow @channel={{channel}} @options={{hash leaveButton=true}} />
     {{/each}}
   </div>
 </div>

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableFlaggedPost, type: :model do
-
   def pending_count
     ReviewableFlaggedPost.default_visible.pending.count
   end
@@ -24,7 +23,6 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     let(:guardian) { Guardian.new(moderator) }
 
     describe "actions_for" do
-
       it "returns appropriate defaults" do
         actions = reviewable.actions_for(guardian)
         expect(actions.has?(:agree_and_hide)).to eq(true)
@@ -35,7 +33,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:delete_user)).to eq(true)
         expect(actions.has?(:delete_user_block)).to eq(true)
         expect(actions.has?(:disagree)).to eq(true)
-        expect(actions.has?(:ignore)).to eq(true)
+        expect(actions.has?(:ignore_and_do_nothing)).to eq(true)
         expect(actions.has?(:delete_and_ignore)).to eq(true)
         expect(actions.has?(:delete_and_ignore_replies)).to eq(false)
         expect(actions.has?(:delete_and_agree)).to eq(true)
@@ -69,7 +67,6 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       it "returns delete replies options if there are replies" do
         post.update(reply_count: 3)
         expect(reviewable.actions_for(guardian).has?(:delete_and_agree_replies)).to eq(true)
-        expect(reviewable.actions_for(guardian).has?(:delete_and_ignore_replies)).to eq(true)
       end
 
       it "returns appropriate actions for a hidden post" do
@@ -90,7 +87,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         it "excludes delete action if the reviewer cannot delete the user" do
           post.user.user_stat.update!(
             first_post_created_at: 1.year.ago,
-            post_count: User::MAX_STAFF_DELETE_POST_COUNT + 1
+            post_count: User::MAX_STAFF_DELETE_POST_COUNT + 1,
           )
 
           expect(reviewable.actions_for(guardian).has?(:delete_user)).to be false
@@ -114,15 +111,22 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     describe "with reviewable claiming enabled" do
       fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator) }
       it "clears the claimed topic on resolve" do
-        SiteSetting.reviewable_claiming = 'required'
+        SiteSetting.reviewable_claiming = "required"
         reviewable.perform(moderator, :agree_and_keep)
         expect(reviewable).to be_approved
         expect(score.reload).to be_agreed
         expect(post).not_to be_hidden
         expect(ReviewableClaimedTopic.where(topic_id: post.topic.id).exists?).to eq(false)
-        expect(post.topic.reviewables.first.history.where(reviewable_history_type: ReviewableHistory.types[:unclaimed]).size).to eq(1)
+        expect(
+          post
+            .topic
+            .reviewables
+            .first
+            .history
+            .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
+            .size,
+        ).to eq(1)
       end
-
     end
 
     it "agree_and_suspend agrees with the flags and keeps the post" do
@@ -163,7 +167,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "ignores the flags" do
-      reviewable.perform(moderator, :ignore)
+      reviewable.perform(moderator, :ignore_and_do_nothing)
       expect(reviewable).to be_ignored
       expect(score.reload).to be_ignored
     end
@@ -222,7 +226,6 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.user_deleted?).to eq(false)
       expect(post.hidden?).to eq(false)
     end
-
   end
 
   describe "pending count" do
@@ -238,7 +241,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
     it "respects `reviewable_default_visibility`" do
       Reviewable.set_priorities(high: 7.5)
-      SiteSetting.reviewable_default_visibility = 'high'
+      SiteSetting.reviewable_default_visibility = "high"
       expect(pending_count).to eq(0)
 
       PostActionCreator.off_topic(user, post)
@@ -269,7 +272,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.hidden).to eq(false)
       expect(post.hidden_at).to be_blank
 
-      reviewable.perform(moderator, :ignore)
+      reviewable.perform(moderator, :ignore_and_do_nothing)
       expect(pending_count).to eq(0)
 
       post.reload
@@ -282,15 +285,15 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.hidden).to eq(true)
       expect(post.hidden_at).to be_present
     end
-
   end
 
   describe "#perform_delete_and_agree" do
     it "notifies the user about the flagged post deletion" do
       reviewable = Fabricate(:reviewable_flagged_post)
       reviewable.add_score(
-        moderator, PostActionType.types[:spam],
-        created_at: reviewable.created_at
+        moderator,
+        PostActionType.types[:spam],
+        created_at: reviewable.created_at,
       )
 
       reviewable.perform(moderator, :delete_and_agree)
@@ -303,11 +306,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     let(:flagged_post) { Fabricate(:reviewable_flagged_post) }
     let!(:reply) { create_reply(flagged_post.target) }
 
-    before do
-      flagged_post.target.update(reply_count: 1)
-    end
+    before { flagged_post.target.update(reply_count: 1) }
 
-    it 'ignore flagged replies' do
+    it "ignore flagged replies" do
       flagged_reply = Fabricate(:reviewable_flagged_post, target: reply)
       flagged_post.perform(moderator, :delete_and_agree_replies)
 
@@ -319,20 +320,30 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       flagged_post.perform(moderator, :delete_and_agree_replies)
 
       expect(Jobs::SendSystemMessage.jobs.size).to eq(2)
-      expect(Jobs::SendSystemMessage.jobs.last["args"].first["message_type"]).to eq("flags_agreed_and_post_deleted_for_responders")
+      expect(Jobs::SendSystemMessage.jobs.last["args"].first["message_type"]).to eq(
+        "flags_agreed_and_post_deleted_for_responders",
+      )
     end
 
     it "skips responders notification when the score type doesn't match any post action flag type" do
-      flagged_post.reviewable_scores.first.update!(reviewable_score_type: ReviewableScore.types[:needs_approval])
+      flagged_post.reviewable_scores.first.update!(
+        reviewable_score_type: ReviewableScore.types[:needs_approval],
+      )
 
-      expect {
-        flagged_post.perform(moderator, :delete_and_agree_replies)
-      }.not_to change(Jobs::SendSystemMessage.jobs, :size)
+      expect { flagged_post.perform(moderator, :delete_and_agree_replies) }.not_to change(
+        Jobs::SendSystemMessage.jobs,
+        :size,
+      )
     end
 
     it "ignores flagged responses" do
       SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
       flagged_reply = Fabricate(:reviewable_flagged_post, target: reply)
+      Fabricate(
+        :post,
+        reply_to_post_number: flagged_reply.target.post_number,
+        topic: flagged_reply.target.topic,
+      )
       flagged_post.perform(moderator, :delete_and_agree_replies)
 
       expect(flagged_reply.reload).to be_ignored
@@ -342,7 +353,11 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   describe "#perform_disagree_and_restore" do
     it "notifies the user about the flagged post being restored" do
       reviewable = Fabricate(:reviewable_flagged_post)
-      reviewable.post.update(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: PostActionType.types[:spam])
+      reviewable.post.update(
+        hidden: true,
+        hidden_at: Time.zone.now,
+        hidden_reason_id: PostActionType.types[:spam],
+      )
 
       reviewable.perform(moderator, :disagree_and_restore)
 
@@ -350,12 +365,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
-  describe 'recalculating the reviewable score' do
+  describe "recalculating the reviewable score" do
     let(:expected_score) { 8 }
     let(:reviewable) { Fabricate(:reviewable_flagged_post, score: expected_score) }
 
     it "doesn't recalculate the score after ignore" do
-      reviewable.perform(moderator, :ignore)
+      reviewable.perform(moderator, :ignore_and_do_nothing)
 
       expect(reviewable.score).to eq(expected_score)
     end
@@ -377,9 +392,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   def create_reply(post)
     PostCreator.create(
       Fabricate(:user),
-      raw: 'this is the reply text',
+      raw: "this is the reply text",
       reply_to_post_number: post.post_number,
-      topic_id: post.topic
+      topic_id: post.topic,
     )
   end
 end

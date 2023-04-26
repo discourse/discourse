@@ -56,7 +56,6 @@ hr:
         instructions: "Zatvaranje kanala onemogućuje korisnicima koji nisu zaposlenici da šalju nove poruke ili uređuju postojeće poruke. Jeste li sigurni da želite zatvoriti ovaj kanal?"
       channel_delete:
         title: "Izbriši kanal"
-        instructions: "<p>Briše <strong>%{name}</strong> kanal i povijest razgovora. Sve poruke i srodni podaci, kao što su reakcije i prijenosi, trajno će biti izbrisani. Ako želite sačuvati povijest kanala i raspada ga, možda želite arhivirati kanal umjesto.</p> <p>Jeste li sigurni da želite <strong>trajno izbrisati</strong> kanal? Da biste potvrdili, upišite naziv kanala u okvir ispod.</p>"
         confirm: "Razumijem posljedice, obriši kanal"
         confirm_channel_name: "Unesite naziv kanala"
         process_started: "Započeo je proces brisanja kanala. Ovaj modal će se uskoro zatvoriti, više nigdje nećete vidjeti izbrisani kanal."
@@ -75,6 +74,8 @@ hr:
         direct_message: "Također možete započeti osobni razgovor s jednim ili više korisnika."
       email_frequency:
         never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
       enable: "Omogući chat"
       flag: "Označi zastavicom"
       flagged: "Ova poruka je označena za pregled"
@@ -83,7 +84,7 @@ hr:
       in_reply_to: "U odgovoru na"
       heading: "Čet"
       join: "Pridružite se"
-      new_messages: "nove poruke"
+      last_visit: "posljednji posjet"
       mention_warning:
         dismiss: "skloni"
         invitations_sent:
@@ -91,11 +92,6 @@ hr:
           few: "Pozivnice poslane"
           other: "Pozivnice poslane"
         invite: "Pozovite na kanal"
-        groups:
-          users_limit:
-            one: "%{count} korisnik"
-            few: "%{count} korisnika"
-            other: "%{count} korisnika"
       aria_roles:
         header: "Zaglavlje chata"
         composer: "Skladatelj chata"
@@ -111,6 +107,8 @@ hr:
       title_capitalized: "Čet"
       exit: "natrag"
       channel_status:
+        archive_failed: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruke su arhivirane. <a target=\"_blank\" href=\"%{topic_url}\">tema odredišta</a>. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
+        archive_failed_no_topic: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruka je arhivirano, odredišna tema nije kreirana. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
         closed: "Zatvoreno"
         open: "Otvori"
       browse:
@@ -123,6 +121,7 @@ hr:
         yesterday: Jučer
       about_view:
         title: Naslov
+        name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Natrag"
@@ -141,6 +140,7 @@ hr:
       composer:
         italic_text: "naglašen tekst"
         bold_text: "jaki text"
+        send: "Pošalji"
       notification_levels:
         never: "Nikad"
       settings:
@@ -179,6 +179,11 @@ hr:
         activities: "Aktivnosti"
         flags: "Oznake zastavicom"
         symbols: "Simboli"
+      thread:
+        replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
       draft_channel_screen:
         header: "Nova poruka"
         cancel: "Odustani"
@@ -191,10 +196,6 @@ hr:
           fields:
             message:
               label: Poruka
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Označio"
     keyboard_shortcuts_help:
       chat:
         title: "Čet"

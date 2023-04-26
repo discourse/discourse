@@ -10,5 +10,4 @@ class AddInvisibleToForumThread < ActiveRecord::Migration[4.2]
     remove_column :forum_threads, :invisible
     change_column :categories, :excerpt, :string, limit: 250, null: true
   end
-
 end

@@ -32,11 +32,14 @@ RSpec.describe UserSummarySerializer do
     topic = Fabricate(:topic)
     post = Fabricate(:post_with_external_links, user: topic.user, topic: topic)
     TopicLink.extract_from(post)
-    TopicLink.where(topic_id: topic.id).order(domain: :asc, url: :asc).each_with_index do |link, index|
-      index.times do |i|
-        TopicLinkClick.create(topic_link: link, ip_address: "192.168.1.#{i + 1}")
+    TopicLink
+      .where(topic_id: topic.id)
+      .order(domain: :asc, url: :asc)
+      .each_with_index do |link, index|
+        index.times do |i|
+          TopicLinkClick.create(topic_link: link, ip_address: "192.168.1.#{i + 1}")
+        end
       end
-    end
 
     guardian = Guardian.new
     summary = UserSummary.new(topic.user, guardian)

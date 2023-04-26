@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AdminConstraint
-
   def initialize(options = {})
     @require_master = options[:require_master]
   end
@@ -19,5 +18,4 @@ class AdminConstraint
   def custom_admin_check(request)
     true
   end
-
 end

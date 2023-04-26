@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../mixins/twitch_onebox'
+require_relative "../mixins/twitch_onebox"
 
 class Onebox::Engine::TwitchStreamOnebox
   def self.twitch_regexp

@@ -10,18 +10,19 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    hooks.beforeEach(function () {
-      this.set("channel", fabricators.chatChannel({}));
-    });
-
     test("channel title is escaped in instructions correctly", async function (assert) {
-      this.set("channel.title", `<script>someeviltitle</script>`);
-
-      await render(
-        hbs`{{chat-channel-archive-modal-inner chatChannel=channel}}`
+      this.set(
+        "channel",
+        fabricators.chatChannel({
+          title: `<script>someeviltitle</script>`,
+        })
       );
 
-      assert.ok(
+      await render(
+        hbs`<ChatChannelArchiveModalInner @chatChannel={{this.channel}} />`
+      );
+
+      assert.true(
         query(".chat-channel-archive-modal-instructions").innerHTML.includes(
           "&lt;script&gt;someeviltitle&lt;/script&gt;"
         )

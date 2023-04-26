@@ -1,4 +1,7 @@
-<DModalBody @title="admin.badges.badge_groupings.modal_title" @class="badge-groupings-modal">
+<DModalBody
+  @title="admin.badges.badge_groupings.modal_title"
+  @class="badge-groupings-modal"
+>
   <div class="badge-groupings">
     <ul class="badge-groupings-list">
       {{#each this.workingCopy as |wc|}}
@@ -12,10 +15,18 @@
             {{/if}}
           </div>
           <div class="actions">
-            <DButton @action={{action "edit" wc}} @disabled={{wc.system}} @icon="pencil-alt" />
+            <DButton
+              @action={{action "edit" wc}}
+              @disabled={{wc.system}}
+              @icon="pencil-alt"
+            />
             <DButton @action={{action "up" wc}} @icon="chevron-up" />
             <DButton @action={{action "down" wc}} @icon="chevron-down" />
-            <DButton @action={{action "delete" wc}} @disabled={{wc.system}} @icon="times" />
+            <DButton
+              @action={{action "delete" wc}}
+              @disabled={{wc.system}}
+              @icon="times"
+            />
           </div>
         </li>
       {{/each}}
@@ -25,6 +36,11 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @action={{action "saveAll"}} @label="admin.badges.save" @class="btn-primary" @disabled={{this.submitDisabled}} />
+  <DButton
+    @action={{action "saveAll"}}
+    @label="admin.badges.save"
+    @class="btn-primary"
+    @disabled={{this.submitDisabled}}
+  />
   <DModalCancel @close={{route-action "closeModal"}} />
 </div>

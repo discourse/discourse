@@ -3,14 +3,15 @@ import { isEmpty } from "@ember/utils";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
 import { htmlSafe } from "@ember/template";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-export default Component.extend({
+export default Component.extend(ModalFunctionality, {
   chat: service(),
+  chatApi: service(),
   router: service(),
   tagName: "",
   chatChannel: null,
@@ -37,16 +38,12 @@ export default Component.extend({
   @action
   deleteChannel() {
     this.set("deleting", true);
-    return ajax(`/chat/chat_channels/${this.chatChannel.id}.json`, {
-      method: "DELETE",
-      data: { channel_name_confirmation: this.channelNameConfirmation },
-    })
+
+    return this.chatApi
+      .destroyChannel(this.chatChannel.id, this.channelNameConfirmation)
       .then(() => {
         this.set("confirmed", true);
-        this.appEvents.trigger("modal-body:flash", {
-          text: I18n.t("chat.channel_delete.process_started"),
-          messageClass: "success",
-        });
+        this.flash(I18n.t("chat.channel_delete.process_started"), "success");
 
         discourseLater(() => {
           this.closeModal();

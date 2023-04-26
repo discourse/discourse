@@ -3,13 +3,13 @@
     <label class="chat-form__label">
       <span>{{i18n "chat.settings.mute"}}</span>
       <ChatChannelSettingsSavedIndicator
-        @property={{this.channel.current_user_membership.muted}}
+        @property={{this.channel.currentUserMembership.muted}}
       />
     </label>
     <div class="chat-form__control">
       <ComboBox
         @content={{this.mutedOptions}}
-        @value={{this.channel.current_user_membership.muted}}
+        @value={{this.channel.currentUserMembership.muted}}
         @valueProperty="value"
         @class="channel-settings-view__muted-selector"
         @onChange={{action (fn this.saveNotificationSettings "muted")}}
@@ -17,18 +17,18 @@
     </div>
   </div>
 
-  {{#unless this.channel.current_user_membership.muted}}
+  {{#unless this.channel.currentUserMembership.muted}}
     <div class="chat-form__field">
       <label class="chat-form__label">
         <span>{{i18n "chat.settings.desktop_notification_level"}}</span>
         <ChatChannelSettingsSavedIndicator
-          @property={{this.channel.current_user_membership.desktop_notification_level}}
+          @property={{this.channel.currentUserMembership.desktop_notification_level}}
         />
       </label>
       <div class="chat-form__control">
         <ComboBox
           @content={{this.notificationLevels}}
-          @value={{this.channel.current_user_membership.desktop_notification_level}}
+          @value={{this.channel.currentUserMembership.desktop_notification_level}}
           @valueProperty="value"
           @class="channel-settings-view__desktop-notification-level-selector"
           @onChange={{action
@@ -42,13 +42,13 @@
       <label class="chat-form__label">
         <span>{{i18n "chat.settings.mobile_notification_level"}}</span>
         <ChatChannelSettingsSavedIndicator
-          @property={{this.channel.current_user_membership.mobile_notification_level}}
+          @property={{this.channel.currentUserMembership.mobile_notification_level}}
         />
       </label>
       <div class="chat-form__control">
         <ComboBox
           @content={{this.notificationLevels}}
-          @value={{this.channel.current_user_membership.mobile_notification_level}}
+          @value={{this.channel.currentUserMembership.mobile_notification_level}}
           @valueProperty="value"
           @class="channel-settings-view__mobile-notification-level-selector"
           @onChange={{action
@@ -60,10 +60,7 @@
   {{/unless}}
   <div class="chat-retention-info">
     {{d-icon "info-circle"}}
-    {{i18n
-      "chat.settings.retention_info"
-      days=this.siteSettings.chat_channel_retention_days
-    }}
+    <ChatRetentionReminderText @channel={{this.channel}} />
   </div>
 </div>
 
@@ -116,7 +113,10 @@
           @onChange={{this.onToggleChannelWideMentions}}
         />
         <p class="chat-form__description -channel-wide-mentions">
-          {{i18n "chat.settings.channel_wide_mentions_description" channel=this.channel.title}}
+          {{i18n
+            "chat.settings.channel_wide_mentions_description"
+            channel=this.channel.title
+          }}
         </p>
       </div>
     </div>

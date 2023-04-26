@@ -52,17 +52,29 @@ acceptance("User Preferences - Sidebar", function (needs) {
     });
   });
 
+  test("sidebar preferences link is not shown when navigation menu is set to legacy", async function (assert) {
+    this.siteSettings.navigation_menu = "legacy";
+
+    await visit("/u/eviltrout/preferences");
+
+    assert.dom(".nav-sidebar").doesNotExist();
+  });
+
   test("user encountering error when adding categories to sidebar", async function (assert) {
     updateCurrentUser({ sidebar_category_ids: [6] });
 
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-categories .sidebar-section-link-support"),
+      exists(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=6]"
+      ),
       "support category is present in sidebar"
     );
 
-    await click(".sidebar-section-categories .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-button"
+    );
 
     const categorySelector = selectKit(".category-selector");
     await categorySelector.expand();
@@ -82,20 +94,25 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await click(".dialog-footer .btn-primary");
 
     assert.ok(
-      !exists(".sidebar-section-categories .sidebar-section-link-howto"),
+      !exists(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=10]"
+      ),
       "howto category is not displayed in sidebar"
     );
 
     assert.ok(
-      exists(".sidebar-section-categories .sidebar-section-link-support"),
+      exists(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=6]"
+      ),
       "support category is displayed in sidebar"
     );
   });
 
   test("user adding categories to sidebar when default sidebar categories have not been configured", async function (assert) {
+    updateCurrentUser({ admin: false, display_sidebar_tags: false });
     await visit("/u/eviltrout/preferences/sidebar");
 
-    assert.notOk(exists(".sidebar-section-categories"));
+    assert.notOk(exists(".sidebar-section[data-section-name='categories']"));
 
     const categorySelector = selectKit(".category-selector");
     await categorySelector.expand();
@@ -105,12 +122,16 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await click(".save-changes");
 
     assert.ok(
-      exists(".sidebar-section-categories .sidebar-section-link-support"),
+      exists(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=6]"
+      ),
       "support category has been added to sidebar"
     );
 
     assert.ok(
-      exists(".sidebar-section-categories .sidebar-section-link-bug"),
+      exists(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=1]"
+      ),
       "bug category has been added to sidebar"
     );
   });
@@ -119,7 +140,9 @@ acceptance("User Preferences - Sidebar", function (needs) {
     this.siteSettings.default_sidebar_categories = "5";
 
     await visit("/");
-    await click(".sidebar-section-categories .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-header-button"
+    );
 
     const categorySelector = selectKit(".category-selector");
     await categorySelector.expand();
@@ -129,12 +152,16 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await click(".save-changes");
 
     assert.ok(
-      exists(".sidebar-section-categories .sidebar-section-link-support"),
+      exists(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=6]"
+      ),
       "support category has been added to sidebar"
     );
 
     assert.ok(
-      exists(".sidebar-section-categories .sidebar-section-link-bug"),
+      exists(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=1]"
+      ),
       "bug category has been added to sidebar"
     );
 
@@ -151,11 +178,15 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-monkey"),
+      exists(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=monkey]"
+      ),
       "monkey tag is displayed in sidebar"
     );
 
-    await click(".sidebar-section-tags .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-header-button"
+    );
 
     const tagChooser = selectKit(".tag-chooser");
     await tagChooser.expand();
@@ -175,12 +206,16 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await click(".dialog-footer .btn-primary");
 
     assert.ok(
-      !exists(".sidebar-section-tags .sidebar-section-link-gazelle"),
+      !exists(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=gazelle]"
+      ),
       "gazelle tag is not displayed in sidebar"
     );
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-monkey"),
+      exists(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=monkey]"
+      ),
       "monkey tag is displayed in sidebar"
     );
   });
@@ -203,7 +238,9 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await click(".save-changes");
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-monkey"),
+      exists(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=monkey]"
+      ),
       "monkey tag has been added to sidebar"
     );
   });
@@ -212,7 +249,9 @@ acceptance("User Preferences - Sidebar", function (needs) {
     this.siteSettings.default_sidebar_tags = "tag1|tag2";
 
     await visit("/");
-    await click(".sidebar-section-tags .sidebar-section-header-button");
+    await click(
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-header-button"
+    );
 
     const tagChooser = selectKit(".tag-chooser");
     await tagChooser.expand();
@@ -222,12 +261,16 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await click(".save-changes");
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-monkey"),
+      exists(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=monkey]"
+      ),
       "monkey tag has been added to sidebar"
     );
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-gazelle"),
+      exists(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=gazelle]"
+      ),
       "gazelle tag has been added to sidebar"
     );
 

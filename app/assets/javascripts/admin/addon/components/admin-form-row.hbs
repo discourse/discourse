@@ -1,0 +1,14 @@
+<div class="form-element label-area">
+  {{#if this.label}}
+    <label>{{i18n this.label}}</label>
+  {{else}}
+    &nbsp;
+  {{/if}}
+</div>
+<div class="form-element input-area">
+  {{#if this.wrapLabel}}
+    <label>{{yield}}</label>
+  {{else}}
+    {{yield}}
+  {{/if}}
+</div>

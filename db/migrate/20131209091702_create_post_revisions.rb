@@ -17,7 +17,7 @@ class CreatePostRevisions < ActiveRecord::Migration[4.2]
 
     change_table :post_revisions do |t|
       t.index :post_id
-      t.index [:post_id, :number]
+      t.index %i[post_id number]
     end
   end
 

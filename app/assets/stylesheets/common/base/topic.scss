@@ -150,7 +150,8 @@ $topic-progress-height: 42px;
   &.docked {
     position: initial;
     .topic-admin-popup-menu.right-side {
-      bottom: -150px; // Prevents menu from being too high when a topic is very short
+      bottom: unset;
+      right: 10px;
     }
   }
 
@@ -363,7 +364,7 @@ a.badge-category {
   justify-content: space-between;
 
   padding: 0.5em;
-  background-color: var(--highlight-medium);
+  background-color: var(--highlight-bg);
   margin-top: 1em;
   max-width: 757px;
 }

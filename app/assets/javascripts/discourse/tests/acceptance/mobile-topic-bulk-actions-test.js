@@ -23,7 +23,7 @@ acceptance("Topic - Bulk Actions - Mobile", function (needs) {
   });
 
   test("bulk select - modal", async function (assert) {
-    updateCurrentUser({ moderator: true, enable_defer: true });
+    updateCurrentUser({ moderator: true, user_option: { enable_defer: true } });
     await visit("/latest");
     await click("button.bulk-select");
 

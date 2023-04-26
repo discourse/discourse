@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative '../mixins/git_blob_onebox'
+require_relative "../mixins/git_blob_onebox"
 
 module Onebox
   module Engine
     class GitlabBlobOnebox
       def self.git_regexp
-        /^https?:\/\/(www\.)?gitlab\.com.*\/blob\//
+        %r{^https?://(www\.)?gitlab\.com.*/blob/}
       end
 
       def self.onebox_name
@@ -16,7 +16,7 @@ module Onebox
       include Onebox::Mixins::GitBlobOnebox
 
       def raw_regexp
-        /gitlab\.com\/(?<user>[^\/]+)\/(?<repo>[^\/]+)\/blob\/(?<sha1>[^\/]+)\/(?<file>[^#]+)(#(L(?<from>[^-]*)(-L(?<to>.*))?))?/mi
+        %r{gitlab\.com/(?<user>[^/]+)/(?<repo>[^/]+)/blob/(?<sha1>[^/]+)/(?<file>[^#]+)(#(L(?<from>[^-]*)(-L(?<to>.*))?))?}mi
       end
 
       def raw_template(m)
@@ -24,7 +24,7 @@ module Onebox
       end
 
       def title
-        Sanitize.fragment(Onebox::Helpers.uri_unencode(link).sub(/^https?\:\/\/gitlab\.com\//, ''))
+        Sanitize.fragment(Onebox::Helpers.uri_unencode(link).sub(%r{^https?\://gitlab\.com/}, ""))
       end
     end
   end

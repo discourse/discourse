@@ -7,13 +7,13 @@ import { action } from "@ember/object";
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default Controller.extend({
-  queryParams: [{ sidebarQueryParamOverride: "enable_sidebar" }],
+  queryParams: [{ navigationMenuQueryParamOverride: "navigation_menu" }],
 
   showTop: true,
   showFooter: false,
   router: service(),
   showSidebar: false,
-  sidebarQueryParamOverride: null,
+  navigationMenuQueryParamOverride: null,
   sidebarDisabledRouteOverride: false,
   showSiteHeader: true,
 
@@ -41,18 +41,6 @@ export default Controller.extend({
     return this.siteSettings.login_required && !this.currentUser;
   },
 
-  @discourseComputed(
-    "siteSettings.bootstrap_mode_enabled",
-    "router.currentRouteName"
-  )
-  showBootstrapModeNotice(bootstrapModeEnabled, currentRouteName) {
-    return (
-      this.currentUser?.get("staff") &&
-      bootstrapModeEnabled &&
-      !currentRouteName.startsWith("wizard")
-    );
-  },
-
   @discourseComputed
   showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
@@ -63,13 +51,13 @@ export default Controller.extend({
   },
 
   @discourseComputed(
-    "sidebarQueryParamOverride",
+    "navigationMenuQueryParamOverride",
     "siteSettings.navigation_menu",
     "canDisplaySidebar",
     "sidebarDisabledRouteOverride"
   )
   sidebarEnabled(
-    sidebarQueryParamOverride,
+    navigationMenuQueryParamOverride,
     navigationMenu,
     canDisplaySidebar,
     sidebarDisabledRouteOverride
@@ -82,11 +70,14 @@ export default Controller.extend({
       return false;
     }
 
-    if (sidebarQueryParamOverride === "1") {
+    if (navigationMenuQueryParamOverride === "sidebar") {
       return true;
     }
 
-    if (sidebarQueryParamOverride === "0") {
+    if (
+      navigationMenuQueryParamOverride === "legacy" ||
+      navigationMenuQueryParamOverride === "header_dropdown"
+    ) {
       return false;
     }
 

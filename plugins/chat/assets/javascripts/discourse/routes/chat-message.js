@@ -10,12 +10,10 @@ export default class ChatMessageRoute extends DiscourseRoute {
     return ajax(`/chat/message/${params.messageId}.json`)
       .then((response) => {
         this.transitionTo(
-          "chat.channel",
-          response.chat_channel_id,
+          "chat.channel.near-message",
           response.chat_channel_title,
-          {
-            queryParams: { messageId: params.messageId },
-          }
+          response.chat_channel_id,
+          params.messageId
         );
       })
       .catch(() => this.replaceWith("/404"));

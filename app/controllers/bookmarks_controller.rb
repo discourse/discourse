@@ -6,26 +6,34 @@ class BookmarksController < ApplicationController
   def create
     params.require(:bookmarkable_id)
     params.require(:bookmarkable_type)
-    params.permit(:bookmarkable_id, :bookmarkable_type, :name, :reminder_at, :auto_delete_preference)
+    params.permit(
+      :bookmarkable_id,
+      :bookmarkable_type,
+      :name,
+      :reminder_at,
+      :auto_delete_preference,
+    )
 
     RateLimiter.new(
-      current_user, "create_bookmark", SiteSetting.max_bookmarks_per_day, 1.day.to_i
+      current_user,
+      "create_bookmark",
+      SiteSetting.max_bookmarks_per_day,
+      1.day.to_i,
     ).performed!
 
     bookmark_manager = BookmarkManager.new(current_user)
-    bookmark = bookmark_manager.create_for(
-      bookmarkable_id: params[:bookmarkable_id],
-      bookmarkable_type: params[:bookmarkable_type],
-      name: params[:name],
-      reminder_at: params[:reminder_at],
-      options: {
-        auto_delete_preference: params[:auto_delete_preference]
-      }
-    )
+    bookmark =
+      bookmark_manager.create_for(
+        bookmarkable_id: params[:bookmarkable_id],
+        bookmarkable_type: params[:bookmarkable_type],
+        name: params[:name],
+        reminder_at: params[:reminder_at],
+        options: {
+          auto_delete_preference: params[:auto_delete_preference],
+        },
+      )
 
-    if bookmark_manager.errors.empty?
-      return render json: success_json.merge(id: bookmark.id)
-    end
+    return render json: success_json.merge(id: bookmark.id) if bookmark_manager.errors.empty?
 
     render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
   end
@@ -33,7 +41,8 @@ class BookmarksController < ApplicationController
   def destroy
     params.require(:id)
     destroyed_bookmark = BookmarkManager.new(current_user).destroy(params[:id])
-    render json: success_json.merge(BookmarkManager.bookmark_metadata(destroyed_bookmark, current_user))
+    render json:
+             success_json.merge(BookmarkManager.bookmark_metadata(destroyed_bookmark, current_user))
   end
 
   def update
@@ -46,13 +55,11 @@ class BookmarksController < ApplicationController
       name: params[:name],
       reminder_at: params[:reminder_at],
       options: {
-        auto_delete_preference: params[:auto_delete_preference]
-      }
+        auto_delete_preference: params[:auto_delete_preference],
+      },
     )
 
-    if bookmark_manager.errors.empty?
-      return render json: success_json
-    end
+    return render json: success_json if bookmark_manager.errors.empty?
 
     render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
   end
@@ -63,9 +70,7 @@ class BookmarksController < ApplicationController
     bookmark_manager = BookmarkManager.new(current_user)
     bookmark_manager.toggle_pin(bookmark_id: params[:bookmark_id])
 
-    if bookmark_manager.errors.empty?
-      return render json: success_json
-    end
+    return render json: success_json if bookmark_manager.errors.empty?
 
     render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
   end

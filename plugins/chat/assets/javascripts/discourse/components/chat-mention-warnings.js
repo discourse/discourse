@@ -2,21 +2,35 @@ import Component from "@glimmer/component";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
+import getURL from "discourse-common/lib/get-url";
 
 export default class ChatMentionWarnings extends Component {
   @service siteSettings;
   @service currentUser;
+  @service chatComposerWarningsTracker;
 
-  get unreachableGroupMentionsCount() {
-    return this.args?.unreachableGroupMentions.length;
+  get unreachableGroupMentions() {
+    return this.chatComposerWarningsTracker.unreachableGroupMentions;
   }
 
-  get overMembersLimitMentionsCount() {
-    return this.args?.overMembersLimitGroupMentions.length;
+  get overMembersLimitGroupMentions() {
+    return this.chatComposerWarningsTracker.overMembersLimitGroupMentions;
   }
 
   get hasTooManyMentions() {
-    return this.args?.tooManyMentions;
+    return this.chatComposerWarningsTracker.tooManyMentions;
+  }
+
+  get mentionsCount() {
+    return this.chatComposerWarningsTracker.mentionsCount;
+  }
+
+  get unreachableGroupMentionsCount() {
+    return this.unreachableGroupMentions.length;
+  }
+
+  get overMembersLimitMentionsCount() {
+    return this.overMembersLimitGroupMentions.length;
   }
 
   get hasUnreachableGroupMentions() {
@@ -54,10 +68,7 @@ export default class ChatMentionWarnings extends Component {
   }
 
   get warningHeaderText() {
-    if (
-      this.args?.mentionsCount <= this.warningsCount ||
-      this.hasTooManyMentions
-    ) {
+    if (this.mentionsCount <= this.warningsCount || this.hasTooManyMentions) {
       return I18n.t("chat.mention_warning.groups.header.all");
     } else {
       return I18n.t("chat.mention_warning.groups.header.some");
@@ -69,31 +80,22 @@ export default class ChatMentionWarnings extends Component {
       return;
     }
 
-    let notificationLimit = I18n.t(
-      "chat.mention_warning.groups.notification_limit"
-    );
-
-    if (this.currentUser.staff) {
-      notificationLimit = htmlSafe(
-        `<a 
-          target="_blank" 
-          href="/admin/site_settings/category/plugins?filter=max_mentions_per_chat_message"
-        >
-          ${notificationLimit}
-        </a>`
+    if (this.currentUser.admin) {
+      return htmlSafe(
+        I18n.t("chat.mention_warning.too_many_mentions_admin", {
+          count: this.siteSettings.max_mentions_per_chat_message,
+          siteSettingUrl: getURL(
+            "/admin/site_settings/category/plugins?filter=max_mentions_per_chat_message"
+          ),
+        })
+      );
+    } else {
+      return htmlSafe(
+        I18n.t("chat.mention_warning.too_many_mentions", {
+          count: this.siteSettings.max_mentions_per_chat_message,
+        })
       );
     }
-
-    const settingLimit = I18n.t("chat.mention_warning.mentions_limit", {
-      count: this.siteSettings.max_mentions_per_chat_message,
-    });
-
-    return htmlSafe(
-      I18n.t("chat.mention_warning.too_many_mentions", {
-        notification_limit: notificationLimit,
-        limit: settingLimit,
-      })
-    );
   }
 
   get unreachableBody() {
@@ -101,17 +103,21 @@ export default class ChatMentionWarnings extends Component {
       return;
     }
 
-    if (this.unreachableGroupMentionsCount <= 2) {
-      return I18n.t("chat.mention_warning.groups.unreachable", {
-        group: this.args.unreachableGroupMentions[0],
-        group_2: this.args.unreachableGroupMentions[1],
-        count: this.unreachableGroupMentionsCount,
-      });
-    } else {
-      return I18n.t("chat.mention_warning.groups.unreachable_multiple", {
-        group: this.args.unreachableGroupMentions[0],
-        count: this.unreachableGroupMentionsCount - 1, //N others
-      });
+    switch (this.unreachableGroupMentionsCount) {
+      case 1:
+        return I18n.t("chat.mention_warning.groups.unreachable_1", {
+          group: this.unreachableGroupMentions[0],
+        });
+      case 2:
+        return I18n.t("chat.mention_warning.groups.unreachable_2", {
+          group1: this.unreachableGroupMentions[0],
+          group2: this.unreachableGroupMentions[1],
+        });
+      default:
+        return I18n.t("chat.mention_warning.groups.unreachable_multiple", {
+          group: this.unreachableGroupMentions[0],
+          count: this.unreachableGroupMentionsCount - 1,
+        });
     }
   }
 
@@ -120,44 +126,18 @@ export default class ChatMentionWarnings extends Component {
       return;
     }
 
-    let notificationLimit = I18n.t(
-      "chat.mention_warning.groups.notification_limit"
+    return htmlSafe(
+      I18n.messageFormat("chat.mention_warning.groups.too_many_members_MF", {
+        groupCount: this.overMembersLimitMentionsCount,
+        isAdmin: this.currentUser.admin,
+        siteSettingUrl: getURL(
+          "/admin/site_settings/category/plugins?filter=max_users_notified_per_group_mention"
+        ),
+        notificationLimit:
+          this.siteSettings.max_users_notified_per_group_mention,
+        group1: this.overMembersLimitGroupMentions[0],
+        group2: this.overMembersLimitGroupMentions[1],
+      })
     );
-
-    if (this.currentUser.staff) {
-      notificationLimit = htmlSafe(
-        `<a 
-          target="_blank" 
-          href="/admin/site_settings/category/plugins?filter=max_users_notified_per_group_mention"
-        >
-          ${notificationLimit}
-        </a>`
-      );
-    }
-
-    const settingLimit = I18n.t("chat.mention_warning.groups.users_limit", {
-      count: this.siteSettings.max_users_notified_per_group_mention,
-    });
-
-    if (this.hasOverMembersLimitGroupMentions <= 2) {
-      return htmlSafe(
-        I18n.t("chat.mention_warning.groups.too_many_members", {
-          group: this.args.overMembersLimitGroupMentions[0],
-          group_2: this.args.overMembersLimitGroupMentions[1],
-          count: this.overMembersLimitMentionsCount,
-          notification_limit: notificationLimit,
-          limit: settingLimit,
-        })
-      );
-    } else {
-      return htmlSafe(
-        I18n.t("chat.mention_warning.groups.too_many_members_multiple", {
-          group: this.args.overMembersLimitGroupMentions[0],
-          count: this.overMembersLimitMentionsCount - 1, //N others
-          notification_limit: notificationLimit,
-          limit: settingLimit,
-        })
-      );
-    }
   }
 }

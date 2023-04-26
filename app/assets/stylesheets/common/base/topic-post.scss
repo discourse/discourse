@@ -1,5 +1,3 @@
-$quote-share-maxwidth: 150px;
-
 .button-count.has-pending {
   span {
     background-color: var(--danger);
@@ -109,6 +107,7 @@ $quote-share-maxwidth: 150px;
         margin-left: -20px;
         padding-right: 4px;
         position: absolute;
+        z-index: 2;
       }
     }
 
@@ -208,13 +207,13 @@ $quote-share-maxwidth: 150px;
 // add staff color
 .moderator {
   .regular > .cooked {
-    background-color: var(--highlight-low-or-medium);
+    background-color: var(--highlight-bg);
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
       color: var(--primary-high-or-secondary-low);
       a {
-        background-color: var(--highlight-low-or-medium);
+        background-color: var(--highlight-bg);
         padding-left: 4px;
         padding-right: 4px;
       }
@@ -555,8 +554,9 @@ aside.quote {
   display: none;
   position: absolute;
   z-index: z("dropdown");
-  opacity: 0.9;
-  background-color: var(--secondary-high);
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-low);
+  box-shadow: shadow("card");
   flex-direction: column;
 
   &.animated {
@@ -565,10 +565,6 @@ aside.quote {
 
   &.visible {
     display: flex;
-  }
-
-  &.fast-editing {
-    opacity: 1;
   }
 
   .buttons {
@@ -599,22 +595,19 @@ aside.quote {
     }
   }
 
-  .btn,
-  .btn:hover,
-  .d-icon,
-  .btn:hover .d-icon {
-    color: var(--secondary-or-primary);
-  }
-
-  .btn-primary,
-  .btn-primary:hover,
-  .btn-primary .d-icon,
-  .btn-primary:hover .d-icon {
-    color: var(--secondary);
-  }
-
   .insert-quote + .quote-sharing {
     border-left: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-flat {
+    .d-icon {
+      color: var(--primary-high);
+    }
+    .discourse-no-touch & {
+      &:hover {
+        background-color: var(--tertiary-low);
+      }
+    }
   }
 
   .quote-sharing {
@@ -629,16 +622,34 @@ aside.quote {
 
     .quote-share-label {
       opacity: 1;
-      max-width: $quote-share-maxwidth;
-      transition: opacity 0.3s ease-in-out, max-width 0.3s ease-in-out,
-        padding 0.3s ease-in-out;
+      transition: opacity 0.3s ease-in-out;
     }
 
-    &:hover .quote-share-label {
-      background: transparent;
-      opacity: 0;
-      max-width: 0px;
-      padding: 6px 0px;
+    &:hover {
+      .quote-share-label {
+        background: transparent;
+        opacity: 0;
+        max-width: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      .quote-share-label + .quote-share-buttons {
+        max-width: 10em;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+      }
+      // this pseudo element creates a transition buffer zone
+      // without it, the width change on hover can cause transition jitter
+      // the width is roughly wide enough to cover long translations of "share"
+      &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        background: transparent;
+        height: 100%;
+        padding: 0.5em 4em;
+        z-index: -1; // below the buttons
+      }
     }
 
     .quote-share-label + .quote-share-buttons {
@@ -646,12 +657,7 @@ aside.quote {
       overflow: hidden;
       max-width: 0;
       display: inline-flex;
-      transition: opacity 0.3s ease-in-out, max-width 0.3s ease-in-out;
-    }
-
-    &:hover .quote-share-label + .quote-share-buttons {
-      max-width: $quote-share-maxwidth;
-      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
     }
   }
 }
@@ -803,10 +809,11 @@ aside.quote {
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
-        border-radius: 0 0.25em 0.25em 0;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
         padding-top: 0;
         padding-bottom: 0;
-        height: 100%;
+        height: calc(100% + 0.25em);
+        margin-right: -4px;
       }
     }
   }
@@ -1016,15 +1023,7 @@ pre {
 
   .codeblock-button-wrapper {
     position: absolute;
-    right: 0;
     display: flex;
-
-    .copy-cmd {
-      right: 0;
-    }
-    .copy-fullscreen {
-      right: 28px;
-    }
   }
 
   .copy-cmd,
@@ -1036,8 +1035,10 @@ pre {
     min-height: 0;
     font-size: var(--font-down-2);
     opacity: 0.7;
+    cursor: pointer;
 
     &.action-complete {
+      cursor: auto;
       .d-icon {
         color: var(--tertiary);
       }
@@ -1057,7 +1058,6 @@ kbd {
   border-bottom-width: 2px;
   border-radius: 3px;
   box-sizing: border-box;
-  color: var(--primary);
   display: inline-flex;
   gap: 0 0.5em; // space between text and images/emoji
   font-size: var(--font-down-1);
@@ -1166,7 +1166,7 @@ blockquote > *:last-child {
 
     p {
       margin: 0;
-      padding-right: 0.5em;
+      padding: 0.15em 0.5em 0 0;
     }
   }
 
@@ -1246,6 +1246,12 @@ a.mention,
 a.mention-group {
   // linked
   @include mention;
+}
+
+.mention .emoji {
+  margin-left: 0.3em;
+  width: 15px;
+  height: 15px;
 }
 
 span.mention {
@@ -1432,6 +1438,7 @@ span.mention {
 }
 
 .post-notice {
+  box-sizing: border-box;
   align-items: center;
   background-color: var(--tertiary-low);
   border-top: 1px solid var(--primary-low);
@@ -1626,20 +1633,21 @@ span.mention {
 
 .open-popup-link {
   position: sticky;
-  left: 0.5rem;
-  top: 0.5rem;
+  left: 1rem;
   opacity: 0%;
   white-space: nowrap;
-  display: block;
 }
 
 .fullscreen-table-wrapper {
   transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: block;
-}
+  position: relative;
 
-.expand-table-icon {
-  margin-right: 4px;
+  &--buttons {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+  }
 }
 
 .fullscreen-table-modal .modal-inner-container,

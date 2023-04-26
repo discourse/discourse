@@ -19,12 +19,12 @@ id:
       joined: "joined"
       email_frequency:
         never: "Tidak pernah"
+      header_indicator_preference:
+        all_new: "Semua Pesan Baru"
+        never: "Tidak pernah"
       join: "Gabung"
       mention_warning:
         dismiss: "bubar"
-        groups:
-          users_limit:
-            other: "%{count} pengguna"
       reply: "Balas"
       edit: "Ubah"
       bookmark_message: "Penandaan"
@@ -40,6 +40,7 @@ id:
         filter_closed: Tertutup
       about_view:
         title: Judul
+        name: Nama
       channel_info:
         tabs:
           about: Tentang
@@ -77,6 +78,9 @@ id:
       emoji_picker:
         objects: "Objek"
         flags: "Flags"
+      thread:
+        replies:
+          other: "%{count} balasan"
       draft_channel_screen:
         header: "Pesan Baru"
         cancel: "Batal"
@@ -86,7 +90,3 @@ id:
           fields:
             message:
               label: pesan
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Dipanji Oleh"

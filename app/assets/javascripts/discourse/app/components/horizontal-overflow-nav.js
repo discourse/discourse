@@ -62,7 +62,7 @@ export default class HorizontalOverflowNav extends Component {
 
   @bind
   scrollDrag(event) {
-    if (this.site.mobileView) {
+    if (this.site.mobileView || !this.hasScroll) {
       return;
     }
 
@@ -78,19 +78,20 @@ export default class HorizontalOverflowNav extends Component {
     const mouseDragScroll = function (e) {
       let mouseChange = e.clientX - position.x;
       navPills.scrollLeft = position.left - mouseChange;
-
-      navPills.querySelectorAll("a").forEach((a) => {
-        a.style.cursor = "grabbing";
-      });
     };
 
+    navPills.querySelectorAll("a").forEach((a) => {
+      a.style.cursor = "grabbing";
+    });
+
     const removeDragScroll = function () {
+      document.removeEventListener("mousemove", mouseDragScroll);
       navPills.querySelectorAll("a").forEach((a) => {
         a.style.cursor = "pointer";
       });
     };
 
-    document.addEventListener("mousemove", mouseDragScroll, { once: true });
+    document.addEventListener("mousemove", mouseDragScroll);
     document.addEventListener("mouseup", removeDragScroll, { once: true });
   }
 

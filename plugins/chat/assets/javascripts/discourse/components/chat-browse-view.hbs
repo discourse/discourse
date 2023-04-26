@@ -1,12 +1,19 @@
 {{#if this.chatProgressBarContainer}}
   {{#in-element this.chatProgressBarContainer}}
-    <DProgressBar @key="browse-list" @isLoading={{this.isLoading}} />
+    <DProgressBar
+      @key="browse-list"
+      @isLoading={{this.channelsCollection.loading}}
+    />
   {{/in-element}}
 {{/if}}
 
 <div class="chat-browse-view__header chat-full-page-header">
   {{#if this.site.mobileView}}
-    <LinkTo @route="chat.index" class="chat-full-page-header__back-btn no-text btn-flat btn" title={{i18n "chat.browse.back"}}>
+    <LinkTo
+      @route="chat.index"
+      class="chat-full-page-header__back-btn no-text btn-flat btn"
+      title={{i18n "chat.browse.back"}}
+    >
       {{d-icon "chevron-left"}}
     </LinkTo>
   {{/if}}
@@ -17,7 +24,10 @@
     <DButton
       @action={{action "createChannel"}}
       @icon="plus"
-      @class={{concat-class "new-channel-btn" (if this.site.mobileView "btn-flat")}}
+      @class={{concat-class
+        "new-channel-btn"
+        (if this.site.mobileView "btn-flat")
+      }}
       @label={{if this.site.desktopView "chat.create_channel.title"}}
     />
   {{/if}}
@@ -49,7 +59,11 @@
     />
   </div>
 
-  {{#if (and (not this.channels.length) (not this.isLoading))}}
+  {{#if
+    (and
+      (not this.channelsCollection.length) (not this.channelsCollection.loading)
+    )
+  }}
     <div class="empty-state">
       <span class="empty-state-title">{{i18n "chat.empty_state.title"}}</span>
       <div class="empty-state-body">
@@ -60,16 +74,16 @@
         </LinkTo>
       </div>
     </div>
-  {{else if this.channels.length}}
+  {{else if this.channelsCollection.length}}
     <div class="chat-browse-view__content_wrapper">
       <div class="chat-browse-view__content">
         <div class="chat-browse-view__cards">
-          {{#each this.channels as |channel|}}
+          {{#each this.channelsCollection as |channel|}}
             <ChatChannelCard @channel={{channel}} />
           {{/each}}
         </div>
 
-        {{#unless this.isLoading}}
+        {{#unless this.channelsCollection.loading}}
           <OnVisibilityAction @action={{action "onScroll"}} />
         {{/unless}}
       </div>

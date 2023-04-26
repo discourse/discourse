@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Search', type: :system, js: true do
+describe "Search", type: :system, js: true do
   let(:search_page) { PageObjects::Pages::Search.new }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is a test post in a test topic") }
@@ -11,9 +11,7 @@ describe 'Search', type: :system, js: true do
       SearchIndexer.index(topic, force: true)
     end
 
-    after do
-      SearchIndexer.disable
-    end
+    after { SearchIndexer.disable }
 
     it "works and clears search page state", mobile: true do
       visit("/search")
@@ -36,6 +34,32 @@ describe 'Search', type: :system, js: true do
 
       expect(search_page).not_to have_search_result
       expect(search_page.heading_text).to eq("Search")
+    end
+  end
+
+  describe "when using full page search on desktop" do
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(topic, force: true)
+      SiteSetting.rate_limit_search_anon_user_per_minute = 4
+      RateLimiter.enable
+    end
+
+    after { SearchIndexer.disable }
+
+    xit "rate limits searches for anonymous users" do
+      queries = %w[one two three four]
+
+      visit("/search?expanded=true")
+
+      queries.each do |query|
+        search_page.clear_search_input
+        search_page.type_in_search(query)
+        search_page.click_search_button
+      end
+
+      # Rate limit error should kick in after 4 queries
+      expect(search_page).to have_warning_message
     end
   end
 end

@@ -21,34 +21,17 @@ vi:
       joined: "đã tham gia"
       email_frequency:
         never: "Không bao giờ"
+      header_indicator_preference:
+        never: "Không bao giờ"
       flag: "Gắn cờ"
       join: "Tham gia"
+      last_visit: "lần thăm cuối"
       mention_warning:
         dismiss: "bỏ qua"
-        cannot_see:
-          other: "%{username} và %{others} không thể truy cập kênh này và không được thông báo."
-        without_membership:
-          other: "%{username} và %{others} chưa tham gia kênh này."
-        group_mentions_disabled:
-          other: "%{group_name} và %{others} không cho phép đề cập"
-        too_many_members:
-          other: "%{group_name} và %{others} có quá nhiều thành viên. Không ai được thông báo"
-        warning_multiple:
-          other: "%{count} khác"
         groups:
           header:
             some: "Một số người dùng sẽ không được thông báo"
             all: "Sẽ không ai được thông báo"
-          unreachable:
-            other: "@%{group} và @%{group_2} không cho phép đề cập"
-          unreachable_multiple: "@%{group} và %{count} người khác không cho phép đề cập"
-          too_many_members_multiple: "%{count} nhóm vượt quá %{notification_limit} của %{limit}"
-          users_limit:
-            other: "%{count} người dùng"
-          notification_limit: "giới hạn thông báo"
-        too_many_mentions: "Tin nhắn này vượt quá %{notification_limit} của %{limit}"
-        mentions_limit:
-          other: "%{count} đề cập"
       reply: "Trả lời"
       edit: "Sửa"
       rebake_message: "Tạo lại HTML"
@@ -70,6 +53,7 @@ vi:
         yesterday: Hôm qua
       about_view:
         title: Tiêu đề
+        name: Tên
         description: Mô tả
       channel_info:
         back_to_channel: "Quay lại"
@@ -88,6 +72,7 @@ vi:
       composer:
         italic_text: "văn bản nhấn mạnh"
         bold_text: "chữ in đậm"
+        send: "Gửi"
       notification_levels:
         never: "Không bao giờ"
       settings:
@@ -126,6 +111,9 @@ vi:
         activities: "Hoạt động"
         flags: "Dấu cờ - Flags"
         symbols: "Ký hiệu"
+      thread:
+        replies:
+          other: "%{count} trả lời"
       draft_channel_screen:
         header: "Tin nhắn mới"
         cancel: "Huỷ"
@@ -137,7 +125,3 @@ vi:
           fields:
             message:
               label: Tin nhắn
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Gắn cờ bởi"

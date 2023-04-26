@@ -4,53 +4,40 @@ RSpec.describe Jobs::CheckNewFeatures do
   def build_feature_hash(id:, created_at:, discourse_version: "2.9.0.beta10")
     {
       id: id,
-      user_id: 89432,
+      user_id: 89_432,
       emoji: "👤",
       title: "New fancy feature!",
       description: "",
       link: "https://meta.discourse.org/t/-/238821",
       created_at: created_at.iso8601,
       updated_at: (created_at + 1.minutes).iso8601,
-      discourse_version: discourse_version
+      discourse_version: discourse_version,
     }
   end
 
   def stub_meta_new_features_endpoint(*features)
-    stub_request(:get, "https://meta.discourse.org/new-features.json")
-      .to_return(
-        status: 200,
-        body: JSON.dump(features),
-        headers: {
-          "Content-Type" => "application/json"
-        }
-      )
+    stub_request(:get, "https://meta.discourse.org/new-features.json").to_return(
+      status: 200,
+      body: JSON.dump(features),
+      headers: {
+        "Content-Type" => "application/json",
+      },
+    )
   end
 
   fab!(:admin1) { Fabricate(:admin) }
   fab!(:admin2) { Fabricate(:admin) }
 
   let(:feature1) do
-    build_feature_hash(
-      id: 35,
-      created_at: 3.days.ago,
-      discourse_version: "2.8.1.beta12"
-    )
+    build_feature_hash(id: 35, created_at: 3.days.ago, discourse_version: "2.8.1.beta12")
   end
 
   let(:feature2) do
-    build_feature_hash(
-      id: 34,
-      created_at: 2.days.ago,
-      discourse_version: "2.8.1.beta13"
-    )
+    build_feature_hash(id: 34, created_at: 2.days.ago, discourse_version: "2.8.1.beta13")
   end
 
   let(:pending_feature) do
-    build_feature_hash(
-      id: 37,
-      created_at: 1.day.ago,
-      discourse_version: "2.8.1.beta14"
-    )
+    build_feature_hash(id: 37, created_at: 1.day.ago, discourse_version: "2.8.1.beta14")
   end
 
   before do
@@ -59,10 +46,7 @@ RSpec.describe Jobs::CheckNewFeatures do
     stub_meta_new_features_endpoint(feature1, feature2, pending_feature)
   end
 
-  after do
-    Discourse.redis.del("new_features")
-    Discourse.redis.del("last_viewed_feature_dates_for_users_hash")
-  end
+  after { DiscourseUpdates.clean_state }
 
   it "backfills last viewed feature for admins who don't have last viewed feature" do
     DiscourseUpdates.stubs(:current_version).returns("2.8.1.beta12")
@@ -71,8 +55,12 @@ RSpec.describe Jobs::CheckNewFeatures do
 
     described_class.new.execute({})
 
-    expect(DiscourseUpdates.get_last_viewed_feature_date(admin2.id).iso8601).to eq(feature1[:created_at])
-    expect(DiscourseUpdates.get_last_viewed_feature_date(admin1.id).iso8601).to eq(Time.zone.now.iso8601)
+    expect(DiscourseUpdates.get_last_viewed_feature_date(admin2.id).iso8601).to eq(
+      feature1[:created_at],
+    )
+    expect(DiscourseUpdates.get_last_viewed_feature_date(admin1.id).iso8601).to eq(
+      Time.zone.now.iso8601,
+    )
   end
 
   it "notifies admins about new features that are available in the site's version" do
@@ -80,14 +68,18 @@ RSpec.describe Jobs::CheckNewFeatures do
 
     described_class.new.execute({})
 
-    expect(admin1.notifications.where(
-      notification_type: Notification.types[:new_features],
-      read: false
-    ).count).to eq(1)
-    expect(admin2.notifications.where(
-      notification_type: Notification.types[:new_features],
-      read: false
-    ).count).to eq(1)
+    expect(
+      admin1
+        .notifications
+        .where(notification_type: Notification.types[:new_features], read: false)
+        .count,
+    ).to eq(1)
+    expect(
+      admin2
+        .notifications
+        .where(notification_type: Notification.types[:new_features], read: false)
+        .count,
+    ).to eq(1)
   end
 
   it "consolidates new features notifications" do
@@ -95,10 +87,11 @@ RSpec.describe Jobs::CheckNewFeatures do
 
     described_class.new.execute({})
 
-    notification = admin1.notifications.where(
-      notification_type: Notification.types[:new_features],
-      read: false
-    ).first
+    notification =
+      admin1
+        .notifications
+        .where(notification_type: Notification.types[:new_features], read: false)
+        .first
     expect(notification).to be_present
 
     DiscourseUpdates.stubs(:current_version).returns("2.8.1.beta14")
@@ -107,10 +100,11 @@ RSpec.describe Jobs::CheckNewFeatures do
     # old notification is destroyed
     expect(Notification.find_by(id: notification.id)).to eq(nil)
 
-    notification = admin1.notifications.where(
-      notification_type: Notification.types[:new_features],
-      read: false
-    ).first
+    notification =
+      admin1
+        .notifications
+        .where(notification_type: Notification.types[:new_features], read: false)
+        .first
     # new notification is created
     expect(notification).to be_present
   end
@@ -122,6 +116,8 @@ RSpec.describe Jobs::CheckNewFeatures do
     described_class.new.execute({})
 
     expect(admin1.notifications.count).to eq(0)
-    expect(admin2.notifications.where(notification_type: Notification.types[:new_features]).count).to eq(1)
+    expect(
+      admin2.notifications.where(notification_type: Notification.types[:new_features]).count,
+    ).to eq(1)
   end
 end

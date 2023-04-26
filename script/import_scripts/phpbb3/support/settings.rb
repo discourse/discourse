@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'csv'
-require 'yaml'
-require_relative '../../base'
+require "csv"
+require "yaml"
+require_relative "../../base"
 
 module ImportScripts::PhpBB3
   class Settings
     def self.load(filename)
-      yaml = YAML::load_file(filename)
+      yaml = YAML.load_file(filename)
       Settings.new(yaml.deep_stringify_keys.with_indifferent_access)
     end
 
@@ -44,40 +44,41 @@ module ImportScripts::PhpBB3
     attr_reader :database
 
     def initialize(yaml)
-      import_settings = yaml['import']
+      import_settings = yaml["import"]
 
-      @site_name = import_settings['site_name']
+      @site_name = import_settings["site_name"]
 
-      @new_categories = import_settings['new_categories']
-      @category_mappings = import_settings.fetch('category_mappings', []).to_h { |m| [m[:source_category_id].to_s, m] }
-      @tag_mappings = import_settings['tag_mappings']
-      @rank_mapping = import_settings['rank_mapping']
+      @new_categories = import_settings["new_categories"]
+      @category_mappings =
+        import_settings.fetch("category_mappings", []).to_h { |m| [m[:source_category_id].to_s, m] }
+      @tag_mappings = import_settings["tag_mappings"]
+      @rank_mapping = import_settings["rank_mapping"]
 
-      @import_anonymous_users = import_settings['anonymous_users']
-      @import_attachments = import_settings['attachments']
-      @import_private_messages = import_settings['private_messages']
-      @import_polls = import_settings['polls']
-      @import_bookmarks = import_settings['bookmarks']
-      @import_passwords = import_settings['passwords']
-      @import_likes = import_settings['likes']
+      @import_anonymous_users = import_settings["anonymous_users"]
+      @import_attachments = import_settings["attachments"]
+      @import_private_messages = import_settings["private_messages"]
+      @import_polls = import_settings["polls"]
+      @import_bookmarks = import_settings["bookmarks"]
+      @import_passwords = import_settings["passwords"]
+      @import_likes = import_settings["likes"]
 
-      avatar_settings = import_settings['avatars']
-      @import_uploaded_avatars = avatar_settings['uploaded']
-      @import_remote_avatars = avatar_settings['remote']
-      @import_gallery_avatars = avatar_settings['gallery']
+      avatar_settings = import_settings["avatars"]
+      @import_uploaded_avatars = avatar_settings["uploaded"]
+      @import_remote_avatars = avatar_settings["remote"]
+      @import_gallery_avatars = avatar_settings["gallery"]
 
-      @use_bbcode_to_md = import_settings['use_bbcode_to_md']
+      @use_bbcode_to_md = import_settings["use_bbcode_to_md"]
 
-      @original_site_prefix = import_settings['site_prefix']['original']
-      @new_site_prefix = import_settings['site_prefix']['new']
-      @base_dir = import_settings['phpbb_base_dir']
-      @permalinks = PermalinkSettings.new(import_settings['permalinks'])
+      @original_site_prefix = import_settings["site_prefix"]["original"]
+      @new_site_prefix = import_settings["site_prefix"]["new"]
+      @base_dir = import_settings["phpbb_base_dir"]
+      @permalinks = PermalinkSettings.new(import_settings["permalinks"])
 
-      @username_as_name = import_settings['username_as_name']
-      @emojis = import_settings.fetch('emojis', [])
-      @custom_fields = import_settings.fetch('custom_fields', [])
+      @username_as_name = import_settings["username_as_name"]
+      @emojis = import_settings.fetch("emojis", [])
+      @custom_fields = import_settings.fetch("custom_fields", [])
 
-      @database = DatabaseSettings.new(yaml['database'])
+      @database = DatabaseSettings.new(yaml["database"])
     end
 
     def prefix(val)
@@ -87,7 +88,7 @@ module ImportScripts::PhpBB3
     def trust_level_for_posts(rank, trust_level: 0)
       if @rank_mapping.present?
         @rank_mapping.each do |key, value|
-          trust_level = [trust_level, key.gsub('trust_level_', '').to_i].max if rank >= value
+          trust_level = [trust_level, key.gsub("trust_level_", "").to_i].max if rank >= value
         end
       end
 
@@ -106,14 +107,14 @@ module ImportScripts::PhpBB3
     attr_reader :batch_size
 
     def initialize(yaml)
-      @type = yaml['type']
-      @host = yaml['host']
-      @port = yaml['port']
-      @username = yaml['username']
-      @password = yaml['password']
-      @schema = yaml['schema']
-      @table_prefix = yaml['table_prefix']
-      @batch_size = yaml['batch_size']
+      @type = yaml["type"]
+      @host = yaml["host"]
+      @port = yaml["port"]
+      @username = yaml["username"]
+      @password = yaml["password"]
+      @schema = yaml["schema"]
+      @table_prefix = yaml["table_prefix"]
+      @batch_size = yaml["batch_size"]
     end
   end
 
@@ -124,10 +125,10 @@ module ImportScripts::PhpBB3
     attr_reader :normalization_prefix
 
     def initialize(yaml)
-      @create_category_links = yaml['categories']
-      @create_topic_links = yaml['topics']
-      @create_post_links = yaml['posts']
-      @normalization_prefix = yaml['prefix']
+      @create_category_links = yaml["categories"]
+      @create_topic_links = yaml["topics"]
+      @create_post_links = yaml["posts"]
+      @normalization_prefix = yaml["prefix"]
     end
   end
 end

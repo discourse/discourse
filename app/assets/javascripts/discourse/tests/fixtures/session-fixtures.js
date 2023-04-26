@@ -25,7 +25,6 @@ export default {
       custom_fields: {},
       muted_category_ids: [],
       dismissed_banner_key: null,
-      akismet_review_count: 0,
       can_review: true,
       ignored_users: [],
       groups: [

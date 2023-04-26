@@ -7,7 +7,6 @@ export default class ChatDraftChannelScreen extends Component {
   @service chat;
   @service router;
   tagName = "";
-  onSwitchChannel = null;
 
   @action
   onCancelChatDraft() {
@@ -22,7 +21,6 @@ export default class ChatDraftChannelScreen extends Component {
   @action
   onSwitchFromDraftChannel(channel) {
     channel.set("isDraft", false);
-    this.onSwitchChannel?.(channel);
   }
 
   _fetchPreviewedChannel(users) {
@@ -34,7 +32,7 @@ export default class ChatDraftChannelScreen extends Component {
         this.set(
           "previewedChannel",
           ChatChannel.create(
-            Object.assign({}, response.chat_channel, { isDraft: true })
+            Object.assign({}, response.channel, { isDraft: true })
           )
         );
       })

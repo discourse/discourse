@@ -17,7 +17,10 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert
       .dom(".chat-channel-row")
-      .hasAttribute("href", `/chat/channel/${this.categoryChatChannel.id}/-`);
+      .hasAttribute(
+        "href",
+        `/chat/c/${this.categoryChatChannel.slugifiedTitle}/${this.categoryChatChannel.id}`
+      );
   });
 
   test("allows tabbing", async function (assert) {
@@ -48,9 +51,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert
       .dom(".chat-channel-metadata")
-      .hasText(
-        moment(this.categoryChatChannel.last_message_sent_at).format("l")
-      );
+      .hasText(moment(this.categoryChatChannel.lastMessageSentAt).format("l"));
   });
 
   test("renders membership toggling button when necessary", async function (assert) {
@@ -60,7 +61,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert.dom(".toggle-channel-membership-button").doesNotExist();
 
-    this.categoryChatChannel.current_user_membership.following = true;
+    this.categoryChatChannel.currentUserMembership.following = true;
 
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
@@ -92,7 +93,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert.dom(".chat-channel-row").doesNotHaveClass("muted");
 
-    this.categoryChatChannel.current_user_membership.muted = true;
+    this.categoryChatChannel.currentUserMembership.muted = true;
 
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
@@ -130,11 +131,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert.dom(".chat-channel-row").doesNotHaveClass("has-unread");
 
-    this.owner
-      .lookup("service:current-user")
-      .set("chat_channel_tracking_state", {
-        [this.categoryChatChannel.id]: { unread_count: 1 },
-      });
+    this.categoryChatChannel.currentUserMembership.unread_count = 1;
 
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 

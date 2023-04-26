@@ -6,13 +6,13 @@ class AddMultipleAwardToBadges < ActiveRecord::Migration[4.2]
 
     reversible do |dir|
       dir.up do
-        remove_index :user_badges, column: [:badge_id, :user_id]
-        add_index :user_badges, [:badge_id, :user_id]
+        remove_index :user_badges, column: %i[badge_id user_id]
+        add_index :user_badges, %i[badge_id user_id]
       end
 
       dir.down do
-        remove_index :user_badges, column: [:badge_id, :user_id]
-        add_index :user_badges, [:badge_id, :user_id], unique: true
+        remove_index :user_badges, column: %i[badge_id user_id]
+        add_index :user_badges, %i[badge_id user_id], unique: true
       end
     end
   end

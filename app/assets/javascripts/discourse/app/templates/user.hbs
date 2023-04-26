@@ -1,24 +1,74 @@
-<PluginOutlet @name="above-user-profile" @connectorTagName="div" @args={{hash model=this.model}} />
-<div class="container {{if this.viewingSelf "viewing-self"}} {{if this.model.profile_hidden "profile-hidden"}} {{this.primaryGroup}}">
+<PluginOutlet
+  @name="above-user-profile"
+  @connectorTagName="div"
+  @outletArgs={{hash model=this.model}}
+/>
+<div
+  class="container
+    {{if this.viewingSelf 'viewing-self'}}
+    {{if this.model.profile_hidden 'profile-hidden'}}
+    {{this.primaryGroup}}"
+>
   <DSection @class="user-main">
-    <section class="{{if this.collapsedInfo "collapsed-info"}} about {{if this.hasProfileBackgroundUrl "has-background" "no-background"}}" >
+    <a href="#user-content" id="skip-link" class="skip-link__user-nav">
+      {{i18n "skip_user_nav"}}
+    </a>
+    <section
+      class="{{if this.collapsedInfo 'collapsed-info'}}
+        about
+        {{if this.hasProfileBackgroundUrl 'has-background' 'no-background'}}"
+    >
       {{#unless this.collapsedInfo}}
         {{#if this.showStaffCounters}}
           <div class="staff-counters">
             {{#if this.model.number_of_flags_given}}
-              <div><span class="helpful-flags">{{this.model.number_of_flags_given}}</span>{{i18n "user.staff_counters.flags_given"}}</div>
+              <div>
+                {{html-safe
+                  (i18n
+                    "user.staff_counters.flags_given"
+                    className="helpful-flags"
+                    count=this.model.number_of_flags_given
+                  )
+                }}
+              </div>
             {{/if}}
             {{#if this.model.number_of_flagged_posts}}
               <div>
-                <LinkTo @route="review" @query={{hash username=this.model.username status="all" type="ReviewableFlaggedPost"}}>
-                  <span class="flagged-posts">{{this.model.number_of_flagged_posts}}</span>{{i18n "user.staff_counters.flagged_posts"}}
+                <LinkTo
+                  @route="review"
+                  @query={{hash
+                    username=this.model.username
+                    status="all"
+                    type="ReviewableFlaggedPost"
+                  }}
+                >
+                  {{html-safe
+                    (i18n
+                      "user.staff_counters.flagged_posts"
+                      className="flagged-posts"
+                      count=this.model.number_of_flagged_posts
+                    )
+                  }}
                 </LinkTo>
               </div>
             {{/if}}
             {{#if this.model.number_of_rejected_posts}}
               <div>
-                <LinkTo @route="review" @query={{hash username=this.model.username status="rejected" type="ReviewableQueuedPost"}}>
-                  <span class="flagged-posts">{{this.model.number_of_rejected_posts}}</span>{{i18n "user.staff_counters.rejected_posts"}}
+                <LinkTo
+                  @route="review"
+                  @query={{hash
+                    username=this.model.username
+                    status="rejected"
+                    type="ReviewableQueuedPost"
+                  }}
+                >
+                  {{html-safe
+                    (i18n
+                      "user.staff_counters.rejected_posts"
+                      className="flagged-posts"
+                      count=this.model.number_of_rejected_posts
+                    )
+                  }}
                 </LinkTo>
               </div>
             {{/if}}
@@ -26,116 +76,171 @@
             {{#if this.model.number_of_deleted_posts}}
               <div>
                 <LinkTo @route="user.deletedPosts" @model={{this.model}}>
-                  <span class="deleted-posts">{{this.model.number_of_deleted_posts}}</span>{{i18n "user.staff_counters.deleted_posts"}}
+                  {{html-safe
+                    (i18n
+                      "user.staff_counters.deleted_posts"
+                      className="deleted-posts"
+                      count=this.model.number_of_deleted_posts
+                    )
+                  }}
                 </LinkTo>
               </div>
             {{/if}}
             {{#if this.model.number_of_suspensions}}
               <div>
                 <a href {{on "click" this.showSuspensions}}>
-                  <span class="suspensions">{{this.model.number_of_suspensions}}</span>{{i18n "user.staff_counters.suspensions"}}
+                  {{html-safe
+                    (i18n
+                      "user.staff_counters.suspensions"
+                      className="suspensions"
+                      count=this.model.number_of_suspensions
+                    )
+                  }}
                 </a>
               </div>
             {{/if}}
             {{#if this.model.warnings_received_count}}
               <div>
-                <LinkTo @route="userPrivateMessages.user.warnings" @model={{this.model}}>
-                  <span class="warnings-received">{{this.model.warnings_received_count}}</span> {{i18n "user.staff_counters.warnings_received"}}
+                <LinkTo
+                  @route="userPrivateMessages.user.warnings"
+                  @model={{this.model}}
+                >
+                  {{html-safe
+                    (i18n
+                      "user.staff_counters.warnings_received"
+                      className="warnings-received"
+                      count=this.model.warnings_received_count
+                    )
+                  }}
                 </LinkTo>
               </div>
             {{/if}}
           </div>
         {{/if}}
-        <div class="user-profile-image" style={{this.model.profileBackgroundUrl}}></div>
+        <div
+          class="user-profile-image"
+          style={{this.model.profileBackgroundUrl}}
+        ></div>
       {{/unless}}
       <div class="details">
         <div class="primary">
-          <PluginOutlet @name="before-user-profile-avatar" @args={{hash model=this.model}} />
+          <PluginOutlet
+            @name="before-user-profile-avatar"
+            @outletArgs={{hash model=this.model}}
+          />
           <UserProfileAvatar @user={{this.model}} @tagName="" />
-          <section class="controls">
-            <ul>
-              {{#if this.model.can_send_private_message_to_user}}
-                <li>
-                  <DButton @class="btn-primary compose-pm" @action={{route-action "composePrivateMessage" this.model}} @icon="envelope" @label="user.private_message" />
-                </li>
-              {{/if}}
-
-              {{#if this.canMuteOrIgnoreUser}}
-                <li>
-                  <UserNotificationsDropdown @user={{this.model}} @value={{this.userNotificationLevel}} @updateNotificationLevel={{action "updateNotificationLevel"}} />
-                </li>
-              {{/if}}
-
-              {{#if this.displayTopLevelAdminButton}}
-                <li><a href={{this.model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
-              {{/if}}
-
-              <PluginOutlet @name="user-profile-controls" @connectorTagName="li" @args={{hash model=this.model}} />
-
-              {{#if this.canExpandProfile}}
-                <li>
-                  <DButton @ariaExpanded={{this.collapsedInfoState.isExpanded}} @ariaLabel={{this.collapsedInfoState.ariaLabel}} @ariaControls="collapsed-info-panel" @class="btn-default" @label={{concat "user." this.collapsedInfoState.label}} @icon={{this.collapsedInfoState.icon}} @action={{action this.collapsedInfoState.action}} />
-                </li>
-              {{/if}}
-            </ul>
-          </section>
-
           <div class="primary-textual">
             <div class="user-profile-names">
-              <h1 class={{if this.nameFirst "full-name" "username"}}>
-                {{if this.nameFirst this.model.name (format-username this.model.username)}}
+              <div
+                class="{{if this.nameFirst 'full-name' 'username'}}
+                  user-profile-names__primary"
+              >
+                {{if
+                  this.nameFirst
+                  this.model.name
+                  (format-username this.model.username)
+                }}
                 {{user-status this.model currentUser=this.currentUser}}
                 {{#if this.model.status}}
                   <UserStatusMessage @status={{this.model.status}} />
                 {{/if}}
-              </h1>
-              <h2 class={{if this.nameFirst "username" "full-name"}}>{{#if this.nameFirst}}{{this.model.username}}{{else}}{{this.model.name}}{{/if}}</h2>
+              </div>
+              <div
+                class="{{if this.nameFirst 'username' 'full-name'}}
+                  user-profile-names__secondary"
+              >{{#if
+                  this.nameFirst
+                }}{{this.model.username}}{{else}}{{this.model.name}}{{/if}}</div>
               {{#if this.model.staged}}
-                <h2 class="staged">{{i18n "user.staged"}}</h2>
+                <div class="staged user-profile-names__secondary">{{i18n
+                    "user.staged"
+                  }}</div>
               {{/if}}
               {{#if this.model.title}}
-                <h3>{{this.model.title}}</h3>
+                <div
+                  class="user-profile-names__title"
+                >{{this.model.title}}</div>
               {{/if}}
-              <PluginOutlet @name="user-post-names" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+              <span>
+                <PluginOutlet
+                  @name="user-post-names"
+                  @connectorTagName="div"
+                  @outletArgs={{hash model=this.model}}
+                />
+              </span>
             </div>
 
             {{#if this.showFeaturedTopic}}
-              <h3 class="featured-topic">
-                <span>{{i18n "user.featured_topic"}}</span>
-                <LinkTo @route="topic" @models={{array this.model.featured_topic.slug this.model.featured_topic.id}}>{{html-safe (replace-emoji this.model.featured_topic.fancy_title)}}</LinkTo>
-              </h3>
+              <div class="featured-topic user-profile__featured-topic">
+                <span title={{i18n "user.featured_topic"}}>
+                  {{d-icon "book"~}}
+                </span><LinkTo
+                  @route="topic"
+                  @models={{array
+                    this.model.featured_topic.slug
+                    this.model.featured_topic.id
+                  }}
+                >{{html-safe
+                    (replace-emoji this.model.featured_topic.fancy_title)
+                  }}</LinkTo>
+              </div>
             {{/if}}
 
-            <h3 class="location-and-website">
-              {{#if this.model.location}}<div class="user-profile-location">{{d-icon "map-marker-alt"}} {{this.model.location}}</div>{{/if}}
+            <div
+              class="location-and-website user-profile__location-and-website"
+            >
+              {{#if this.model.location}}<div
+                  class="user-profile-location"
+                >{{d-icon "map-marker-alt"~}}
+                  {{this.model.location}}</div>{{/if}}
               {{#if this.model.website_name}}
                 <div class="user-profile-website">
-                  {{d-icon "globe"}}
-                  {{#if this.linkWebsite}}
-                    {{!-- template-lint-disable  --}}
-                    <a href={{this.model.website}} rel="noopener {{unless this.removeNoFollow 'nofollow ugc'}}" target="_blank">{{this.model.website_name}}</a>
+                  {{! template-lint-disable link-rel-noopener }}
+                  {{d-icon "globe"~}}
+                  {{#if this.linkWebsite~}}
+                    <a
+                      href={{this.model.website}}
+                      rel="noopener {{unless
+                        this.removeNoFollow
+                        'nofollow ugc'
+                      }}"
+                      target="_blank"
+                    >{{this.model.website_name}}</a>
                   {{else}}
-                    <span title={{this.model.website}}>{{this.model.website_name}}</span>
+                    <span
+                      title={{this.model.website}}
+                    >{{this.model.website_name}}</span>
                   {{/if}}
+                  {{! template-lint-enable link-rel-noopener }}
                 </div>
               {{/if}}
-              <PluginOutlet @name="user-location-and-website" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
-            </h3>
+              <span>
+                <PluginOutlet
+                  @name="user-location-and-website"
+                  @connectorTagName="div"
+                  @outletArgs={{hash model=this.model}}
+                />
+              </span>
+            </div>
 
-            <div class='bio'>
+            <div class="bio">
               {{#if this.model.suspended}}
-                <div class='suspended'>
+                <div class="suspended">
                   {{d-icon "ban"}}
                   <b>
                     {{#if this.model.suspendedForever}}
-                      {{i18n 'user.suspended_permanently'}}
+                      {{i18n "user.suspended_permanently"}}
                     {{else}}
-                      {{i18n 'user.suspended_notice' date=this.model.suspendedTillDate}}
+                      {{i18n
+                        "user.suspended_notice"
+                        date=this.model.suspendedTillDate
+                      }}
                     {{/if}}
                   </b>
-                  <br>
+                  <br />
                   {{#if this.model.suspend_reason}}
-                    <b>{{i18n 'user.suspended_reason'}}</b> {{this.model.suspend_reason}}
+                    <b>{{i18n "user.suspended_reason"}}</b>
+                    {{this.model.suspend_reason}}
                   {{/if}}
                 </div>
               {{/if}}
@@ -153,9 +258,10 @@
                     <div class="public-user-field {{uf.field.dasherized_name}}">
                       <span class="user-field-name">{{uf.field.name}}</span>:
                       <span class="user-field-value">
-                        {{#each uf.value as |v|}} {{! some values are arrays }}
+                        {{#each uf.value as |v|}}
+                          {{! some values are arrays }}
                           <span class="user-field-value-list-item">{{v}}</span>
-                        {{else }}
+                        {{else}}
                           {{uf.value}}
                         {{/each}}
                       </span>
@@ -163,127 +269,202 @@
                   {{/if}}
                 {{/each}}
 
-                <PluginOutlet @name="user-profile-public-fields" @tagName="span" @connectorTagName="div" @args={{hash publicUserFields=this.publicUserFields
-                                      model=this.model}} />
+                <span>
+                  <PluginOutlet
+                    @name="user-profile-public-fields"
+                    @connectorTagName="div"
+                    @outletArgs={{hash
+                      publicUserFields=this.publicUserFields
+                      model=this.model
+                    }}
+                  />
+                </span>
               </div>
             {{/if}}
 
-            <PluginOutlet @name="user-profile-primary" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+            <span>
+              <PluginOutlet
+                @name="user-profile-primary"
+                @connectorTagName="div"
+                @outletArgs={{hash model=this.model}}
+              />
+            </span>
           </div>
+
+          <section class="controls">
+            <ul>
+              {{#if this.model.can_send_private_message_to_user}}
+                <li>
+                  <DButton
+                    @class="btn-primary compose-pm"
+                    @action={{route-action "composePrivateMessage" this.model}}
+                    @icon="envelope"
+                    @label="user.private_message"
+                  />
+                </li>
+              {{/if}}
+
+              {{#if this.canMuteOrIgnoreUser}}
+                <li>
+                  <UserNotificationsDropdown
+                    @user={{this.model}}
+                    @value={{this.userNotificationLevel}}
+                    @updateNotificationLevel={{action
+                      "updateNotificationLevel"
+                    }}
+                  />
+                </li>
+              {{/if}}
+
+              {{#if this.displayTopLevelAdminButton}}
+                <li><a
+                    href={{this.model.adminPath}}
+                    class="btn btn-default"
+                  >{{d-icon "wrench"}}<span class="d-button-label">{{i18n
+                        "admin.user.show_admin_profile"
+                      }}</span></a></li>
+              {{/if}}
+
+              <PluginOutlet
+                @name="user-profile-controls"
+                @connectorTagName="li"
+                @outletArgs={{hash model=this.model}}
+              />
+
+              {{#if this.canExpandProfile}}
+                <li>
+                  <DButton
+                    @ariaExpanded={{this.collapsedInfoState.isExpanded}}
+                    @ariaLabel={{this.collapsedInfoState.ariaLabel}}
+                    @ariaControls="collapsed-info-panel"
+                    @class="btn-default"
+                    @label={{concat "user." this.collapsedInfoState.label}}
+                    @icon={{this.collapsedInfoState.icon}}
+                    @action={{action this.collapsedInfoState.action}}
+                  />
+                </li>
+              {{/if}}
+            </ul>
+          </section>
         </div>
-        <PluginOutlet @name="user-profile-above-collapsed-info" @args={{hash model=this.model collapsedInfo=this.collapsedInfo}} />
+        <PluginOutlet
+          @name="user-profile-above-collapsed-info"
+          @outletArgs={{hash model=this.model collapsedInfo=this.collapsedInfo}}
+        />
         {{#unless this.collapsedInfo}}
-          <div class='secondary' id='collapsed-info-panel'>
+          <div class="secondary" id="collapsed-info-panel">
             <dl>
               {{#if this.model.created_at}}
-                <div><dt>{{i18n 'user.created'}}</dt><dd>{{bound-date this.model.created_at}}</dd></div>
+                <div><dt class="created-at">{{i18n "user.created"}}</dt><dd
+                    class="created-at"
+                  >{{bound-date this.model.created_at}}</dd></div>
               {{/if}}
               {{#if this.model.last_posted_at}}
-                <div><dt>{{i18n 'user.last_posted'}}</dt><dd>{{bound-date this.model.last_posted_at}}</dd></div>
+                <div><dt class="last-posted-at">{{i18n
+                      "user.last_posted"
+                    }}</dt><dd class="last-posted-at">{{bound-date
+                      this.model.last_posted_at
+                    }}</dd></div>
               {{/if}}
               {{#if this.model.last_seen_at}}
-                <div><dt>{{i18n 'user.last_seen'}}</dt><dd>{{bound-date this.model.last_seen_at}}</dd></div>
+                <div><dt class="last-seen-at">{{i18n "user.last_seen"}}</dt><dd
+                    class="last-seen-at"
+                  >{{bound-date this.model.last_seen_at}}</dd></div>
               {{/if}}
               {{#if this.model.profile_view_count}}
-                <div><dt>{{i18n 'views'}}</dt><dd>{{this.model.profile_view_count}}</dd></div>
+                <div><dt class="profile-view-count">{{i18n "views"}}</dt><dd
+                    class="profile-view-count"
+                  >{{this.model.profile_view_count}}</dd></div>
               {{/if}}
               {{#if this.model.invited_by}}
-                <div><dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by"><LinkTo @route="user" @model={{this.model.invited_by}}>{{this.model.invited_by.username}}</LinkTo></dd></div>
+                <div><dt class="invited-by">{{i18n "user.invited_by"}}</dt><dd
+                    class="invited-by"
+                  ><LinkTo
+                      @route="user"
+                      @model={{this.model.invited_by}}
+                    >{{this.model.invited_by.username}}</LinkTo></dd></div>
               {{/if}}
               {{#if this.model.trust_level}}
-                <div><dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{this.model.trustLevel.name}}</dd></div>
+                <div><dt class="trust-level">{{i18n "user.trust_level"}}</dt><dd
+                    class="trust-level"
+                  >{{this.model.trustLevel.name}}</dd></div>
               {{/if}}
               {{#if this.canCheckEmails}}
-                <div><dt>{{i18n 'user.email.title'}}</dt>
-                <dd title={{this.model.email}}>
-                  {{#if this.model.email}}
-                    {{this.model.email}}
-                  {{else}}
-                    <DButton @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="envelope" @label="admin.users.check_email.text" @class="btn-primary" />
-                  {{/if}}
-                </dd>
+                <div><dt class="email">{{i18n "user.email.title"}}</dt>
+                  <dd class="email" title={{this.model.email}}>
+                    {{#if this.model.email}}
+                      {{this.model.email}}
+                    {{else}}
+                      <DButton
+                        @action={{route-action "checkEmail"}}
+                        @actionParam={{this.model}}
+                        @icon="envelope"
+                        @label="admin.users.check_email.text"
+                        @class="btn-primary"
+                      />
+                    {{/if}}
+                  </dd>
                 </div>
               {{/if}}
               {{#if this.model.displayGroups}}
-                <div><dt class="groups">{{i18n 'groups.title' count=this.model.displayGroups.length}}</dt>
-                <dd class='groups'>
-                  {{#each this.model.displayGroups as |group|}}
-                    <span><LinkTo @route="group" @model={{group.name}} class="group-link">{{group.name}}</LinkTo></span>
-                  {{/each}}
+                <div><dt class="groups">{{i18n
+                      "groups.title"
+                      count=this.model.displayGroups.length
+                    }}</dt>
+                  <dd class="groups">
+                    {{#each this.model.displayGroups as |group|}}
+                      <span><LinkTo
+                          @route="group"
+                          @model={{group.name}}
+                          class="group-link"
+                        >{{group.name}}</LinkTo></span>
+                    {{/each}}
 
-                  <LinkTo @route="groups" @query={{hash username=this.model.username}}>
-                    ...
-                  </LinkTo>
-                </dd>
+                    <LinkTo
+                      @route="groups"
+                      @query={{hash username=this.model.username}}
+                    >
+                      ...
+                    </LinkTo>
+                  </dd>
                 </div>
               {{/if}}
 
               {{#if this.canDeleteUser}}
-                <div class='pull-right'><DButton @action={{action "adminDelete"}} @icon="exclamation-triangle" @label="user.admin_delete" @class="btn-danger btn-delete-user" /></div>
+                <div class="pull-right"><DButton
+                    @action={{action "adminDelete"}}
+                    @icon="exclamation-triangle"
+                    @label="user.admin_delete"
+                    @class="btn-danger btn-delete-user"
+                  /></div>
               {{/if}}
             </dl>
-            <PluginOutlet @name="user-profile-secondary" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+            <PluginOutlet
+              @name="user-profile-secondary"
+              @connectorTagName="div"
+              @outletArgs={{hash model=this.model}}
+            />
           </div>
         {{/unless}}
       </div>
     </section>
 
-    {{#if this.currentUser.redesigned_user_page_nav_enabled}}
-      <div class="new-user-wrapper">
-        <UserNav
-          @user={{this.model}}
-          @showNotificationsTab={{this.showNotificationsTab}}
-          @showPrivateMessages={{this.showPrivateMessages}}
-          @canInviteToForum={{this.canInviteToForum}}
-          @showBadges={{this.showBadges}}
-          @currentParentRoute={{this.currentParentRoute}}
-          @showRead={{this.showRead}}
-          @showDrafts={{this.showDrafts}}
-          @showBookmarks={{this.showBookmarks}} />
+    <div class="new-user-wrapper">
+      <UserNav
+        @user={{this.model}}
+        @showNotificationsTab={{this.showNotificationsTab}}
+        @showPrivateMessages={{this.showPrivateMessages}}
+        @canInviteToForum={{this.canInviteToForum}}
+        @showBadges={{this.showBadges}}
+        @currentParentRoute={{this.currentParentRoute}}
+        @showRead={{this.showRead}}
+        @showDrafts={{this.showDrafts}}
+        @showBookmarks={{this.showBookmarks}}
+      />
 
-        <div class="new-user-content-wrapper">
-          {{outlet}}
-        </div>
-      </div>
-    {{else}}
-      <div class='user-content-wrapper'>
-        <section class="user-primary-navigation">
-          <MobileNav @class="main-nav" @desktopClass="nav nav-pills user-nav">
-            {{#unless this.model.profile_hidden}}
-              <li class="summary"><LinkTo @route="user.summary">{{i18n 'user.summary.title'}}</LinkTo></li>
-              <li class="activity"><LinkTo @route="userActivity">{{i18n 'user.activity_stream'}}</LinkTo></li>
-            {{/unless}}
-
-            {{#if this.showNotificationsTab}}
-              <li class="user-notifications">
-                <LinkTo @route="userNotifications">
-                  {{d-icon "bell" class="glyph"}}{{i18n 'user.notifications'}}
-                </LinkTo>
-              </li>
-            {{/if}}
-
-            {{#if this.showPrivateMessages}}
-              <li class="private-messages"><LinkTo @route="userPrivateMessages">{{d-icon "envelope"}}{{i18n 'user.private_messages'}}</LinkTo></li>
-            {{/if}}
-
-            {{#if this.canInviteToForum}}
-              <li class="invited"><LinkTo @route="userInvited">{{d-icon "user-plus"}}{{i18n 'user.invited.title'}}</LinkTo></li>
-            {{/if}}
-
-            {{#if this.showBadges}}
-              <li class="badges"><LinkTo @route="user.badges">{{d-icon "certificate"}}{{i18n 'badges.title'}}</LinkTo></li>
-            {{/if}}
-
-            <PluginOutlet @name="user-main-nav" @connectorTagName="li" @args={{hash model=this.model}} />
-
-            {{#if this.model.can_edit}}
-              <li class="preferences"><LinkTo @route="preferences">{{d-icon "cog"}}{{i18n 'user.preferences'}}</LinkTo></li>
-            {{/if}}
-          </MobileNav>
-        </section>
-
+      <div class="new-user-content-wrapper">
         {{outlet}}
       </div>
-    {{/if}}
+    </div>
   </DSection>
 </div>

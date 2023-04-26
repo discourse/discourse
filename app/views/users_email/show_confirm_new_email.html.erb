@@ -4,7 +4,7 @@
       <%= t 'change_email.confirmed' %>
     </h2>
     <p>
-    <a class="btn" href="<%= path "/" %>"><%= t('change_email.please_continue', site_name: SiteSetting.title) %></a>
+    <a class="btn btn-primary" href="<%= path "/" %>"><%= t('change_email.please_continue', site_name: SiteSetting.title) %></a>
     </p>
   <% elsif @error %>
     <div class='alert alert-error'>

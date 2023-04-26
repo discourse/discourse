@@ -34,7 +34,9 @@
   </form>
 {{else}}
   <div class="controls">
-    <span class="static username-preference__current-username">{{@user.username}}</span>
+    <span
+      class="static username-preference__current-username"
+    >{{@user.username}}</span>
 
     {{#if @user.can_edit_username}}
       <DButton
@@ -49,7 +51,9 @@
 
   {{#if this.siteSettings.enable_mentions}}
     <div class="instructions">
-      {{html-safe (i18n "user.username.short_instructions" username=@user.username)}}
+      {{html-safe
+        (i18n "user.username.short_instructions" username=@user.username)
+      }}
     </div>
   {{/if}}
 {{/if}}

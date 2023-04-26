@@ -1,15 +1,13 @@
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
+import { readOnly } from "@ember/object/computed";
 
 export default RestModel.extend({
-  @discourseComputed("count", "pm_count")
-  totalCount(count, pmCount) {
-    return count + pmCount;
-  },
+  pmOnly: readOnly("pm_only"),
 
   @discourseComputed("count", "pm_count")
-  pmOnly(count, pmCount) {
-    return count === 0 && pmCount > 0;
+  totalCount(count, pmCount) {
+    return pmCount ? count + pmCount : count;
   },
 
   @discourseComputed("id")

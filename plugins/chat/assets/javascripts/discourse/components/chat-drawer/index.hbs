@@ -1,0 +1,15 @@
+<ChatDrawer::Header @toggleExpand={{@drawerActions.toggleExpand}}>
+  <div class="chat-drawer-header__title">
+    <div class="chat-drawer-header__top-line">
+      {{i18n "chat.heading"}}
+    </div>
+  </div>
+
+  <ChatDrawer::Header::RightActions @drawerActions={{@drawerActions}} />
+</ChatDrawer::Header>
+
+{{#if this.chatStateManager.isDrawerExpanded}}
+  <div class="chat-drawer-content">
+    <ChannelsList />
+  </div>
+{{/if}}

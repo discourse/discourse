@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative '../mixins/twitch_onebox'
+require_relative "../mixins/twitch_onebox"
 
 class Onebox::Engine::TwitchVideoOnebox
   def self.twitch_regexp
-    /^https?:\/\/(?:www\.)?twitch\.tv\/videos\/([0-9]+)/
+    %r{^https?://(?:www\.)?twitch\.tv/videos/([0-9]+)}
   end
 
   include Onebox::Mixins::TwitchOnebox

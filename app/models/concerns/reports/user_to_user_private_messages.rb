@@ -5,7 +5,7 @@ module Reports::UserToUserPrivateMessages
 
   class_methods do
     def report_user_to_user_private_messages(report)
-      report.icon = 'envelope'
+      report.icon = "envelope"
       private_messages_report report, TopicSubtype.user_to_user
     end
   end

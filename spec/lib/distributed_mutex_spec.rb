@@ -1,31 +1,27 @@
 # frozen_string_literal: true
 
 RSpec.describe DistributedMutex do
-  before do
-    DistributedMutex.any_instance.stubs(:sleep)
-  end
+  before { DistributedMutex.any_instance.stubs(:sleep) }
 
   let(:key) { "test_mutex_key" }
 
-  after do
-    Discourse.redis.del(key)
-  end
+  after { Discourse.redis.del(key) }
 
   it "allows only one mutex object to have the lock at a time" do
-    mutexes = (1..10).map do
-      DistributedMutex.new(key, redis: DiscourseRedis.new)
-    end
+    mutexes = (1..10).map { DistributedMutex.new(key, redis: DiscourseRedis.new) }
 
     x = 0
-    mutexes.map do |m|
-      Thread.new do
-        m.synchronize do
-          y = x
-          sleep 0.001
-          x = y + 1
+    mutexes
+      .map do |m|
+        Thread.new do
+          m.synchronize do
+            y = x
+            sleep 0.001
+            x = y + 1
+          end
         end
       end
-    end.map(&:join)
+      .map(&:join)
 
     expect(x).to eq(10)
   end
@@ -36,9 +32,7 @@ RSpec.describe DistributedMutex do
     Discourse.redis.setnx key, Time.now.to_i - 1
 
     start = Time.now
-    m.synchronize do
-      "nop"
-    end
+    m.synchronize { "nop" }
 
     # no longer than a second
     expect(Time.now).to be <= start + 1
@@ -56,39 +50,29 @@ RSpec.describe DistributedMutex do
 
     mutex.synchronize do
       expect(Discourse.redis.ttl(key)).to be <= DistributedMutex::DEFAULT_VALIDITY + 1
-      expect(Discourse.redis.get(key).to_i).to be_within(1.second).of(Time.now.to_i + DistributedMutex::DEFAULT_VALIDITY)
+      expect(Discourse.redis.get(key).to_i).to be_within(1.second).of(
+        Time.now.to_i + DistributedMutex::DEFAULT_VALIDITY,
+      )
     end
   end
 
   it "maintains mutex semantics" do
     m = DistributedMutex.new(key)
 
-    expect {
-      m.synchronize do
-        m.synchronize {}
-      end
-    }.to raise_error(ThreadError)
+    expect { m.synchronize { m.synchronize {} } }.to raise_error(ThreadError)
   end
 
   describe "readonly redis" do
-    before do
-      Discourse.redis.slaveof "127.0.0.1", "65534"
-    end
+    before { Discourse.redis.slaveof "127.0.0.1", "65534" }
 
-    after do
-      Discourse.redis.slaveof "no", "one"
-    end
+    after { Discourse.redis.slaveof "no", "one" }
 
     it "works even if redis is in readonly" do
       m = DistributedMutex.new(key)
       start = Time.now
       done = false
 
-      expect {
-        m.synchronize do
-          done = true
-        end
-      }.to raise_error(Discourse::ReadOnly)
+      expect { m.synchronize { done = true } }.to raise_error(Discourse::ReadOnly)
 
       expect(done).to eq(false)
       expect(Time.now).to be <= start + 1
@@ -103,23 +87,17 @@ RSpec.describe DistributedMutex do
         Concurrency::Scenario.new do |execution|
           locked = false
 
-          Discourse.redis.del('mutex_key')
+          Discourse.redis.del("mutex_key")
 
-          connections.each do |connection|
-            connection.unwatch
-          end
+          connections.each { |connection| connection.unwatch }
 
           3.times do |i|
             execution.spawn do
               begin
-                redis =
-                  Concurrency::RedisWrapper.new(
-                    connections[i],
-                    execution
-                  )
+                redis = Concurrency::RedisWrapper.new(connections[i], execution)
 
                 2.times do
-                  DistributedMutex.synchronize('mutex_key', redis: redis) do
+                  DistributedMutex.synchronize("mutex_key", redis: redis) do
                     raise "already locked #{execution.path}" if locked
                     locked = true
 

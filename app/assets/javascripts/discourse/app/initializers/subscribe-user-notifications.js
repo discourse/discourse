@@ -58,7 +58,11 @@ export default {
       this.onDoNotDisturb
     );
 
-    this.messageBus.subscribe(`/user-status`, this.onUserStatus);
+    this.messageBus.subscribe(
+      `/user-status`,
+      this.onUserStatus,
+      this.currentUser.status?.message_bus_last_id
+    );
 
     this.messageBus.subscribe("/categories", this.onCategories);
 

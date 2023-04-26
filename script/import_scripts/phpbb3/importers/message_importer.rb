@@ -20,14 +20,16 @@ module ImportScripts::PhpBB3
     end
 
     def map_message(row)
-      user_id = @lookup.user_id_from_imported_user_id(@settings.prefix(row[:author_id])) || Discourse.system_user.id
+      user_id =
+        @lookup.user_id_from_imported_user_id(@settings.prefix(row[:author_id])) ||
+          Discourse.system_user.id
       attachments = import_attachments(row, user_id)
 
       mapped = {
         id: get_import_id(row[:msg_id]),
         user_id: user_id,
         created_at: Time.zone.at(row[:message_time]),
-        raw: @text_processor.process_private_msg(row[:message_text], attachments)
+        raw: @text_processor.process_private_msg(row[:message_text], attachments),
       }
 
       root_user_ids = sorted_user_ids(row[:root_author_id], row[:root_to_address])
@@ -43,7 +45,7 @@ module ImportScripts::PhpBB3
 
     protected
 
-    RE_PREFIX = 're: '
+    RE_PREFIX = "re: "
 
     def import_attachments(row, user_id)
       if @settings.import_attachments && row[:attachment_count] > 0
@@ -55,7 +57,7 @@ module ImportScripts::PhpBB3
       mapped[:title] = get_topic_title(row)
       mapped[:archetype] = Archetype.private_message
       mapped[:target_usernames] = get_recipient_usernames(row)
-      mapped[:custom_fields] = { import_user_ids: current_user_ids.join(',') }
+      mapped[:custom_fields] = { import_user_ids: current_user_ids.join(",") }
 
       if mapped[:target_usernames].empty?
         puts "Private message without recipients. Skipping #{row[:msg_id]}: #{row[:message_subject][0..40]}"
@@ -75,9 +77,9 @@ module ImportScripts::PhpBB3
 
       # to_address looks like this: "u_91:u_1234:g_200"
       # If there is a "u_" prefix, the prefix is discarded and the rest is a user_id
-      user_ids = to_address.split(':')
+      user_ids = to_address.split(":")
       user_ids.uniq!
-      user_ids.map! { |u| u[2..-1].to_i if u[0..1] == 'u_' }.compact
+      user_ids.map! { |u| u[2..-1].to_i if u[0..1] == "u_" }.compact
     end
 
     def get_recipient_group_ids(to_address)
@@ -85,16 +87,19 @@ module ImportScripts::PhpBB3
 
       # to_address looks like this: "u_91:u_1234:g_200"
       # If there is a "g_" prefix, the prefix is discarded and the rest is a group_id
-      group_ids = to_address.split(':')
+      group_ids = to_address.split(":")
       group_ids.uniq!
-      group_ids.map! { |g| g[2..-1].to_i if g[0..1] == 'g_' }.compact
+      group_ids.map! { |g| g[2..-1].to_i if g[0..1] == "g_" }.compact
     end
 
     def get_recipient_usernames(row)
       import_user_ids = get_recipient_user_ids(row[:to_address])
-      usernames = import_user_ids.map do |import_user_id|
-        @lookup.find_user_by_import_id(@settings.prefix(import_user_id)).try(:username)
-      end.compact
+      usernames =
+        import_user_ids
+          .map do |import_user_id|
+            @lookup.find_user_by_import_id(@settings.prefix(import_user_id)).try(:username)
+          end
+          .compact
 
       import_group_ids = get_recipient_group_ids(row[:to_address])
       import_group_ids.each do |import_group_id|
@@ -142,13 +147,19 @@ module ImportScripts::PhpBB3
       topic_titles = [topic_title]
       topic_titles << topic_title[RE_PREFIX.length..-1] if topic_title.start_with?(RE_PREFIX)
 
-      Post.select(:topic_id)
+      Post
+        .select(:topic_id)
         .joins(:topic)
         .joins(:_custom_fields)
-        .where(["LOWER(topics.title) IN (:titles) AND post_custom_fields.name = 'import_user_ids' AND post_custom_fields.value = :user_ids",
-                { titles: topic_titles, user_ids: current_user_ids.join(',') }])
-        .order('topics.created_at DESC')
-        .first.try(:topic_id)
+        .where(
+          [
+            "LOWER(topics.title) IN (:titles) AND post_custom_fields.name = 'import_user_ids' AND post_custom_fields.value = :user_ids",
+            { titles: topic_titles, user_ids: current_user_ids.join(",") },
+          ],
+        )
+        .order("topics.created_at DESC")
+        .first
+        .try(:topic_id)
     end
   end
 end

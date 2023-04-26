@@ -14,6 +14,8 @@
   --danger: #{$danger};
   --success: #{$success};
   --love: #{$love};
+  --d-selected: #{$selected};
+  --d-hover: #{$hover};
 
   --always-black-rgb: 0, 0, 0;
   --primary-rgb: #{hexToRGB($primary)};
@@ -22,6 +24,8 @@
   --secondary-rgb: #{hexToRGB($secondary)};
   --header_background-rgb: #{hexToRGB($header_background)};
   --tertiary-rgb: #{hexToRGB($tertiary)};
+  --highlight-rgb: #{hexToRGB($highlight)};
+  --success-rgb: #{hexToRGB($success)};
 
   --primary-very-low: #{$primary-very-low};
   --primary-low: #{$primary-low};
@@ -72,6 +76,7 @@
 
   --quaternary-low: #{$quaternary-low};
 
+  --highlight-bg: #{$highlight-bg};
   --highlight-low: #{$highlight-low};
   --highlight-medium: #{$highlight-medium};
   --highlight-high: #{$highlight-high};

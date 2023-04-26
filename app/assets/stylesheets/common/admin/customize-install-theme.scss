@@ -91,6 +91,11 @@
   padding: 8px 0px;
   display: flex;
   align-items: center;
+
+  @include breakpoint(mobile-extra-large) {
+    flex-direction: column;
+    align-items: initial;
+  }
   .popular-theme-name {
     flex: 1;
     .popular-theme-type {
@@ -115,6 +120,13 @@
     }
   }
   .popular-theme-buttons {
+    @include breakpoint(mobile-extra-large) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.25em;
+    }
+
     > span {
       font-style: italic;
       font-size: var(--font-down-1);

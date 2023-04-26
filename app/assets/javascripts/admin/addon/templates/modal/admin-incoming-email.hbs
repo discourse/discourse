@@ -1,4 +1,7 @@
-<DModalBody @class="incoming-emails" @title="admin.email.incoming_emails.modal.title">
+<DModalBody
+  @class="incoming-emails"
+  @title="admin.email.incoming_emails.modal.title"
+>
   <div class="control-group">
     <label>{{i18n "admin.email.incoming_emails.modal.error"}}</label>
     <div class="controls">
@@ -9,7 +12,7 @@
     </div>
   </div>
 
-  <hr>
+  <hr />
 
   <div class="control-group">
     <label>{{i18n "admin.email.incoming_emails.modal.headers"}}</label>
@@ -33,10 +36,12 @@
   </div>
 
   {{#if this.model.rejection_message}}
-    <hr>
+    <hr />
 
     <div class="control-group">
-      <label>{{i18n "admin.email.incoming_emails.modal.rejection_message"}}</label>
+      <label>{{i18n
+          "admin.email.incoming_emails.modal.rejection_message"
+        }}</label>
       <div class="controls">
         <Textarea @value={{this.model.rejection_message}} />
       </div>

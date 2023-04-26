@@ -8,9 +8,7 @@ module TurboTests
       formatter_config.each do |config|
         name, outputs = config.values_at(:name, :outputs)
 
-        outputs.map! do |filename|
-          filename == '-' ? STDOUT : File.open(filename, 'w')
-        end
+        outputs.map! { |filename| filename == "-" ? STDOUT : File.open(filename, "w") }
 
         reporter.add(name, outputs)
       end
@@ -35,7 +33,7 @@ module TurboTests
       outputs.each do |output|
         formatter_class =
           case name
-          when 'p', 'progress'
+          when "p", "progress"
             RSpec::Core::Formatters::ProgressFormatter
           else
             Kernel.const_get(name)
@@ -77,32 +75,27 @@ module TurboTests
     def finish
       end_time = Time.now
 
-      delegate_to_formatters(:start_dump,
-        RSpec::Core::Notifications::NullNotification
+      delegate_to_formatters(:start_dump, RSpec::Core::Notifications::NullNotification)
+      delegate_to_formatters(
+        :dump_pending,
+        RSpec::Core::Notifications::ExamplesNotification.new(self),
       )
-      delegate_to_formatters(:dump_pending,
-        RSpec::Core::Notifications::ExamplesNotification.new(
-          self
-        )
+      delegate_to_formatters(
+        :dump_failures,
+        RSpec::Core::Notifications::ExamplesNotification.new(self),
       )
-      delegate_to_formatters(:dump_failures,
-        RSpec::Core::Notifications::ExamplesNotification.new(
-          self
-        )
-      )
-      delegate_to_formatters(:dump_summary,
+      delegate_to_formatters(
+        :dump_summary,
         RSpec::Core::Notifications::SummaryNotification.new(
           end_time - @start_time,
           @all_examples,
           @failed_examples,
           @pending_examples,
           0,
-          @errors_outside_of_examples_count
-        )
+          @errors_outside_of_examples_count,
+        ),
       )
-      delegate_to_formatters(:close,
-        RSpec::Core::Notifications::NullNotification
-      )
+      delegate_to_formatters(:close, RSpec::Core::Notifications::NullNotification)
     end
 
     protected

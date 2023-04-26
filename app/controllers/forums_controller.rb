@@ -6,7 +6,7 @@ class ForumsController < ActionController::Base
   include ReadOnlyMixin
 
   before_action :check_readonly_mode
-  after_action  :add_readonly_header
+  after_action :add_readonly_header
 
   def status
     if params[:cluster]

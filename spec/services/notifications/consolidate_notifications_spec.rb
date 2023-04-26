@@ -1,25 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe Notifications::ConsolidateNotifications do
-  describe '#before_consolidation_callbacks' do
+  describe "#before_consolidation_callbacks" do
     fab!(:user) { Fabricate(:user) }
     let(:rule) do
       described_class.new(
         from: Notification.types[:liked],
         to: Notification.types[:liked],
         consolidation_window: 10.minutes,
-        consolidated_query_blk: Proc.new do |notifications|
-          notifications.where("(data::json ->> 'consolidated')::bool")
-        end,
-        threshold: 1
+        consolidated_query_blk:
+          Proc.new { |notifications| notifications.where("(data::json ->> 'consolidated')::bool") },
+        threshold: 1,
       ).set_mutations(set_data_blk: Proc.new { |n| n.data_hash.merge(consolidated: true) })
     end
 
-    it 'applies a callback when consolidating a notification' do
+    it "applies a callback when consolidating a notification" do
       rule.before_consolidation_callbacks(
-        before_consolidation_blk: Proc.new do |_, data|
-          data[:consolidation_callback_called] = true
-        end
+        before_consolidation_blk:
+          Proc.new { |_, data| data[:consolidation_callback_called] = true },
       )
 
       rule.consolidate_or_save!(build_like_notification)
@@ -30,11 +28,9 @@ RSpec.describe Notifications::ConsolidateNotifications do
       expect(consolidated_notification.data_hash[:consolidation_callback_called]).to eq(true)
     end
 
-    it 'applies a callback when updating a consolidated notification' do
+    it "applies a callback when updating a consolidated notification" do
       rule.before_consolidation_callbacks(
-        before_update_blk: Proc.new do |_, data|
-          data[:update_callback_called] = true
-        end
+        before_update_blk: Proc.new { |_, data| data[:update_callback_called] = true },
       )
 
       rule.consolidate_or_save!(build_like_notification)
@@ -52,7 +48,12 @@ RSpec.describe Notifications::ConsolidateNotifications do
     end
 
     def build_like_notification
-      Fabricate.build(:notification, user: user, notification_type: Notification.types[:liked], data: {}.to_json)
+      Fabricate.build(
+        :notification,
+        user: user,
+        notification_type: Notification.types[:liked],
+        data: {}.to_json,
+      )
     end
   end
 end

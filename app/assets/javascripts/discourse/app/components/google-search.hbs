@@ -1,0 +1,12 @@
+<form action="//google.com/search" id="google-search" class="inline-form">
+  <input
+    type="text"
+    name="q"
+    aria-label={{i18n "search.search_google"}}
+    value={{this.searchTerm}}
+  />
+  <input name="as_sitesearch" value={{this.siteUrl}} type="hidden" />
+  <button class="btn btn-primary" type="submit">{{i18n
+      "search.search_google_button"
+    }}</button>
+</form>

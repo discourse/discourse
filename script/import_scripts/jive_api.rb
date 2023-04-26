@@ -7,7 +7,6 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # https://developers.jivesoftware.com/api/v3/cloud/rest/index.html
 
 class ImportScripts::JiveApi < ImportScripts::Base
-
   USER_COUNT ||= 1000
   POST_COUNT ||= 100
   STAFF_GUARDIAN ||= Guardian.new(Discourse.system_user)
@@ -16,37 +15,141 @@ class ImportScripts::JiveApi < ImportScripts::Base
     #############################
     # WHOLE CATEGORY OF CONTENT #
     #############################
-
     # Announcement & News
-    { jive_object: { type: 37, id: 1004 }, filters: { created_after: 1.year.ago, type: "post" }, category_id: 7 },
+    {
+      jive_object: {
+        type: 37,
+        id: 1004,
+      },
+      filters: {
+        created_after: 1.year.ago,
+        type: "post",
+      },
+      category_id: 7,
+    },
     # Questions & Answers / General Discussions
-    { jive_object: { type: 14, id: 2006 }, filters: { created_after: 6.months.ago, type: "discussion" }, category: Proc.new { |c| c["question"] ? 5 : 21 } },
+    {
+      jive_object: {
+        type: 14,
+        id: 2006,
+      },
+      filters: {
+        created_after: 6.months.ago,
+        type: "discussion",
+      },
+      category: Proc.new { |c| c["question"] ? 5 : 21 },
+    },
     # Anywhere beta
-    { jive_object: { type: 14, id: 2052 }, filters: { created_after: 6.months.ago, type: "discussion" }, category_id: 22 },
+    {
+      jive_object: {
+        type: 14,
+        id: 2052,
+      },
+      filters: {
+        created_after: 6.months.ago,
+        type: "discussion",
+      },
+      category_id: 22,
+    },
     # Tips & Tricks
     { jive_object: { type: 37, id: 1284 }, filters: { type: "post" }, category_id: 6 },
     { jive_object: { type: 37, id: 1319 }, filters: { type: "post" }, category_id: 6 },
     { jive_object: { type: 37, id: 1177 }, filters: { type: "post" }, category_id: 6 },
     { jive_object: { type: 37, id: 1165 }, filters: { type: "post" }, category_id: 6 },
     # Ambassadors
-    { jive_object: { type: 700, id: 1001 }, filters: { type: "discussion" }, authenticated: true, category_id: 8 },
+    {
+      jive_object: {
+        type: 700,
+        id: 1001,
+      },
+      filters: {
+        type: "discussion",
+      },
+      authenticated: true,
+      category_id: 8,
+    },
     # Experts
-    { jive_object: { type: 700, id: 1034 }, filters: { type: "discussion" }, authenticated: true, category_id: 15 },
+    {
+      jive_object: {
+        type: 700,
+        id: 1034,
+      },
+      filters: {
+        type: "discussion",
+      },
+      authenticated: true,
+      category_id: 15,
+    },
     # Feature Requests
     { jive_object: { type: 14, id: 2015 }, filters: { type: "idea" }, category_id: 31 },
-
     ####################
     # SELECTED CONTENT #
     ####################
-
     # Announcement & News
-    { jive_object: { type: 37, id: 1004 }, filters: { entities: { 38 => [1345, 1381, 1845, 2046, 2060, 2061] } }, category_id: 7 },
+    {
+      jive_object: {
+        type: 37,
+        id: 1004,
+      },
+      filters: {
+        entities: {
+          38 => [1345, 1381, 1845, 2046, 2060, 2061],
+        },
+      },
+      category_id: 7,
+    },
     # Problem Solving
-    { jive_object: { type: 14, id: 2006 }, filters: { entities: { 2 => [116685, 160745, 177010, 223482, 225036, 233228, 257882, 285103, 292297, 345243, 363250, 434546] } }, category_id: 10 },
+    {
+      jive_object: {
+        type: 14,
+        id: 2006,
+      },
+      filters: {
+        entities: {
+          2 => [
+            116_685,
+            160_745,
+            177_010,
+            223_482,
+            225_036,
+            233_228,
+            257_882,
+            285_103,
+            292_297,
+            345_243,
+            363_250,
+            434_546,
+          ],
+        },
+      },
+      category_id: 10,
+    },
     # General Discussions
-    { jive_object: { type: 14, id: 2006 }, filters: { entities: { 2 => [178203, 188350, 312734] } }, category_id: 21 },
+    {
+      jive_object: {
+        type: 14,
+        id: 2006,
+      },
+      filters: {
+        entities: {
+          2 => [178_203, 188_350, 312_734],
+        },
+      },
+      category_id: 21,
+    },
     # Questions & Answers
-    { jive_object: { type: 14, id: 2006 }, filters: { entities: { 2 => [418811] } }, category_id: 5 },
+    {
+      jive_object: {
+        type: 14,
+        id: 2006,
+      },
+      filters: {
+        entities: {
+          2 => [418_811],
+        },
+      },
+      category_id: 5,
+    },
   ]
 
   def initialize
@@ -75,9 +178,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
       people = get("people/email/#{user.email}?fields=initialLogin,-resources", true)
       if people && people["initialLogin"].present?
         created_at = DateTime.parse(people["initialLogin"])
-        if user.created_at > created_at
-          user.update_columns(created_at: created_at)
-        end
+        user.update_columns(created_at: created_at) if user.created_at > created_at
       end
     end
   end
@@ -89,7 +190,11 @@ class ImportScripts::JiveApi < ImportScripts::Base
     start_index = [0, UserCustomField.where(name: "import_id").count - USER_COUNT].max
 
     loop do
-      users = get("people/@all?fields=initialLogin,emails,displayName,mentionName,thumbnailUrl,-resources&count=#{USER_COUNT}&startIndex=#{start_index}", true)
+      users =
+        get(
+          "people/@all?fields=initialLogin,emails,displayName,mentionName,thumbnailUrl,-resources&count=#{USER_COUNT}&startIndex=#{start_index}",
+          true,
+        )
       create_users(users["list"], offset: imported_users) do |user|
         {
           id: user["id"],
@@ -113,7 +218,11 @@ class ImportScripts::JiveApi < ImportScripts::Base
     TO_IMPORT.each do |to_import|
       puts Time.now
       entity = to_import[:jive_object]
-      places = get("places?fields=placeID,name,-resources&filter=entityDescriptor(#{entity[:type]},#{entity[:id]})", to_import[:authenticated])
+      places =
+        get(
+          "places?fields=placeID,name,-resources&filter=entityDescriptor(#{entity[:type]},#{entity[:id]})",
+          to_import[:authenticated],
+        )
       import_place_contents(places["list"][0], to_import) if places && places["list"].present?
     end
   end
@@ -125,19 +234,28 @@ class ImportScripts::JiveApi < ImportScripts::Base
 
     if to_import.dig(:filters, :entities).present?
       path = "contents"
-      entities = to_import[:filters][:entities].flat_map { |type, ids| ids.map { |id| "#{type},#{id}" } }
+      entities =
+        to_import[:filters][:entities].flat_map { |type, ids| ids.map { |id| "#{type},#{id}" } }
       filters = "filter=entityDescriptor(#{entities.join(",")})"
     else
       path = "places/#{place["placeID"]}/contents"
       filters = +"filter=status(published)"
       if to_import[:filters]
-        filters << "&filter=type(#{to_import[:filters][:type]})" if to_import[:filters][:type].present?
-        filters << "&filter=creationDate(null,#{to_import[:filters][:created_after].strftime("%Y-%m-%dT%TZ")})" if to_import[:filters][:created_after].present?
+        if to_import[:filters][:type].present?
+          filters << "&filter=type(#{to_import[:filters][:type]})"
+        end
+        if to_import[:filters][:created_after].present?
+          filters << "&filter=creationDate(null,#{to_import[:filters][:created_after].strftime("%Y-%m-%dT%TZ")})"
+        end
       end
     end
 
     loop do
-      contents = get("#{path}?#{filters}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
+      contents =
+        get(
+          "#{path}?#{filters}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}",
+          to_import[:authenticated],
+        )
       contents["list"].each do |content|
         content_id = content["contentID"].presence || "#{content["type"]}_#{content["id"]}"
 
@@ -149,7 +267,8 @@ class ImportScripts::JiveApi < ImportScripts::Base
           created_at: content["published"],
           title: @htmlentities.decode(content["subject"]),
           raw: process_raw(content["content"]["text"]),
-          user_id: user_id_from_imported_user_id(content["author"]["id"]) || Discourse::SYSTEM_USER_ID,
+          user_id:
+            user_id_from_imported_user_id(content["author"]["id"]) || Discourse::SYSTEM_USER_ID,
           views: content["viewCount"],
           custom_fields: custom_fields,
         }
@@ -165,10 +284,16 @@ class ImportScripts::JiveApi < ImportScripts::Base
 
         if parent_post&.id && parent_post&.topic_id
           resources = content["resources"]
-          import_likes(resources["likes"]["ref"], parent_post.id) if content["likeCount"].to_i > 0 && resources.dig("likes", "ref").present?
+          if content["likeCount"].to_i > 0 && resources.dig("likes", "ref").present?
+            import_likes(resources["likes"]["ref"], parent_post.id)
+          end
           if content["replyCount"].to_i > 0
-            import_comments(resources["comments"]["ref"], parent_post.topic_id, to_import) if resources.dig("comments", "ref").present?
-            import_messages(resources["messages"]["ref"], parent_post.topic_id, to_import) if resources.dig("messages", "ref").present?
+            if resources.dig("comments", "ref").present?
+              import_comments(resources["comments"]["ref"], parent_post.topic_id, to_import)
+            end
+            if resources.dig("messages", "ref").present?
+              import_messages(resources["messages"]["ref"], parent_post.topic_id, to_import)
+            end
           end
         end
       end
@@ -198,7 +323,11 @@ class ImportScripts::JiveApi < ImportScripts::Base
     start_index = 0
 
     loop do
-      comments = get("#{url}?hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
+      comments =
+        get(
+          "#{url}?hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}",
+          to_import[:authenticated],
+        )
       break if comments["error"]
       comments["list"].each do |comment|
         next if post_id_from_imported_post_id(comment["id"])
@@ -207,9 +336,12 @@ class ImportScripts::JiveApi < ImportScripts::Base
           id: comment["id"],
           created_at: comment["published"],
           topic_id: topic_id,
-          user_id: user_id_from_imported_user_id(comment["author"]["id"]) || Discourse::SYSTEM_USER_ID,
+          user_id:
+            user_id_from_imported_user_id(comment["author"]["id"]) || Discourse::SYSTEM_USER_ID,
           raw: process_raw(comment["content"]["text"]),
-          custom_fields: { import_id: comment["id"] },
+          custom_fields: {
+            import_id: comment["id"],
+          },
         }
 
         if (parent_post_id = comment["parentID"]).to_i > 0
@@ -234,7 +366,11 @@ class ImportScripts::JiveApi < ImportScripts::Base
     start_index = 0
 
     loop do
-      messages = get("#{url}?hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}", to_import[:authenticated])
+      messages =
+        get(
+          "#{url}?hierarchical=false&count=#{POST_COUNT}&startIndex=#{start_index}",
+          to_import[:authenticated],
+        )
       break if messages["error"]
       messages["list"].each do |message|
         next if post_id_from_imported_post_id(message["id"])
@@ -243,9 +379,12 @@ class ImportScripts::JiveApi < ImportScripts::Base
           id: message["id"],
           created_at: message["published"],
           topic_id: topic_id,
-          user_id: user_id_from_imported_user_id(message["author"]["id"]) || Discourse::SYSTEM_USER_ID,
+          user_id:
+            user_id_from_imported_user_id(message["author"]["id"]) || Discourse::SYSTEM_USER_ID,
           raw: process_raw(message["content"]["text"]),
-          custom_fields: { import_id: message["id"] },
+          custom_fields: {
+            import_id: message["id"],
+          },
         }
         post[:custom_fields][:is_accepted_answer] = true if message["answer"]
 
@@ -280,20 +419,25 @@ class ImportScripts::JiveApi < ImportScripts::Base
     puts "", "importing bookmarks..."
 
     start_index = 0
-    fields = "fields=author.id,favoriteObject.id,-resources,-author.resources,-favoriteObject.resources"
+    fields =
+      "fields=author.id,favoriteObject.id,-resources,-author.resources,-favoriteObject.resources"
     filter = "&filter=creationDate(null,2016-01-01T00:00:00Z)"
 
     loop do
-      favorites = get("contents?#{fields}&filter=type(favorite)#{filter}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}")
-      bookmarks_to_create = favorites["list"].map do |favorite|
-        next unless user_id = user_id_from_imported_user_id(favorite["author"]["id"])
-        next unless post_id = post_id_from_imported_post_id(favorite["favoriteObject"]["id"])
-        { user_id: user_id, post_id: post_id }
-      end.flatten
+      favorites =
+        get(
+          "contents?#{fields}&filter=type(favorite)#{filter}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}",
+        )
+      bookmarks_to_create =
+        favorites["list"]
+          .map do |favorite|
+            next unless user_id = user_id_from_imported_user_id(favorite["author"]["id"])
+            next unless post_id = post_id_from_imported_post_id(favorite["favoriteObject"]["id"])
+            { user_id: user_id, post_id: post_id }
+          end
+          .flatten
 
-      create_bookmarks(bookmarks_to_create) do |row|
-        row
-      end
+      create_bookmarks(bookmarks_to_create) { |row| row }
 
       break if favorites["list"].size < POST_COUNT || favorites.dig("links", "next").blank?
       break unless start_index = favorites["links"]["next"][/startIndex=(\d+)/, 1]
@@ -304,22 +448,26 @@ class ImportScripts::JiveApi < ImportScripts::Base
     doc = Nokogiri::HTML5.fragment(raw)
 
     # convert emoticon
-    doc.css("span.emoticon-inline").each do |span|
-      name = span["class"][/emoticon_(\w+)/, 1]&.downcase
-      name && Emoji.exists?(name) ? span.replace(":#{name}:") : span.remove
-    end
+    doc
+      .css("span.emoticon-inline")
+      .each do |span|
+        name = span["class"][/emoticon_(\w+)/, 1]&.downcase
+        name && Emoji.exists?(name) ? span.replace(":#{name}:") : span.remove
+      end
 
     # convert mentions
     doc.css("a.jive-link-profile-small").each { |a| a.replace("@#{a.content}") }
 
     # fix links
-    doc.css("a[href]").each do |a|
-      if a["href"]["#{@base_uri}/docs/DOC-"]
-        a["href"] = a["href"][/#{Regexp.escape(@base_uri)}\/docs\/DOC-\d+/]
-      elsif a["href"][@base_uri]
-        a.replace(a.inner_html)
+    doc
+      .css("a[href]")
+      .each do |a|
+        if a["href"]["#{@base_uri}/docs/DOC-"]
+          a["href"] = a["href"][%r{#{Regexp.escape(@base_uri)}/docs/DOC-\d+}]
+        elsif a["href"][@base_uri]
+          a.replace(a.inner_html)
+        end
       end
-    end
 
     html = doc.at(".jive-rendered-content").to_html
 
@@ -341,17 +489,22 @@ class ImportScripts::JiveApi < ImportScripts::Base
   def get(url_or_path, authenticated = false)
     tries ||= 3
 
-    command = ["curl", "--silent"]
+    command = %w[curl --silent]
     command << "--user \"#{@username}:#{@password}\"" if !!authenticated
-    command << (url_or_path.start_with?("http") ? "\"#{url_or_path}\"" : "\"#{@base_uri}/api/core/v3/#{url_or_path}\"")
+    command << (
+      if url_or_path.start_with?("http")
+        "\"#{url_or_path}\""
+      else
+        "\"#{@base_uri}/api/core/v3/#{url_or_path}\""
+      end
+    )
 
     puts command.join(" ") if ENV["VERBOSE"] == "1"
 
     JSON.parse `#{command.join(" ")}`
-  rescue
+  rescue StandardError
     retry if (tries -= 1) >= 0
   end
-
 end
 
 ImportScripts::JiveApi.new.perform

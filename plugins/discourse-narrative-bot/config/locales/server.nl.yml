@@ -45,9 +45,6 @@ nl:
       trigger: "gooien"
       invalid: |-
         Sorry, het is wiskundig onmogelijk om die combinatie te gooien. :confounded:
-      not_enough_dice:
-        one: "Ik heb maar %{count} dobbelsteen. [Beschamend](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ik weet het!"
-        other: "Ik heb maar %{count} dobbelstenen. [Beschamend](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ik weet het!"
       out_of_range: |-
         Wist je dat [het maximale aantal zijden](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-Sided-dice) voor een wiskundig eerlijke dobbelstenen 120 is?
       results: |-

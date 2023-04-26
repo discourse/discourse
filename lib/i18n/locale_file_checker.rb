@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'i18n/i18n_interpolation_keys_finder'
-require 'yaml'
+require "i18n/i18n_interpolation_keys_finder"
+require "yaml"
 
 class LocaleFileChecker
   TYPE_MISSING_INTERPOLATION_KEYS = 1
@@ -17,9 +17,10 @@ class LocaleFileChecker
     locale_files.each do |locale_path|
       next unless reference_path = reference_file(locale_path)
 
-      @relative_locale_path = Pathname.new(locale_path).relative_path_from(Pathname.new(Rails.root)).to_s
-      @locale_yaml = YAML.load_file(locale_path)
-      @reference_yaml = YAML.load_file(reference_path)
+      @relative_locale_path =
+        Pathname.new(locale_path).relative_path_from(Pathname.new(Rails.root)).to_s
+      @locale_yaml = YAML.load_file(locale_path, aliases: true)
+      @reference_yaml = YAML.load_file(reference_path, aliases: true)
 
       next if @locale_yaml.blank? || @locale_yaml.first[1].blank?
 
@@ -34,21 +35,21 @@ class LocaleFileChecker
 
   private
 
-  YML_DIRS = ["config/locales", "plugins/**/locales"]
+  YML_DIRS = %w[config/locales plugins/**/locales]
   PLURALS_FILE = "config/locales/plurals.rb"
   REFERENCE_LOCALE = "en"
-  REFERENCE_PLURAL_KEYS = ["one", "other"]
+  REFERENCE_PLURAL_KEYS = %w[one other]
 
   # Some languages should always use %{count} in pluralized strings.
   # https://meta.discourse.org/t/always-use-count-variable-when-translating-pluralized-strings/83969
-  FORCE_PLURAL_COUNT_LOCALES = ["bs", "fr", "lt", "lv", "ru", "sl", "sr", "uk"]
+  FORCE_PLURAL_COUNT_LOCALES = %w[bs fr lt lv ru sl sr uk]
 
   def locale_files
     YML_DIRS.map { |dir| Dir["#{Rails.root}/#{dir}/{client,server}.#{@locale}.yml"] }.flatten
   end
 
   def reference_file(path)
-    path = path.gsub(/\.\w{2,}\.yml$/, ".#{REFERENCE_LOCALE}.yml")
+    path = path.gsub(/\.\w{2,}\.yml\z/, ".#{REFERENCE_LOCALE}.yml")
     path if File.exist?(path)
   end
 
@@ -92,8 +93,17 @@ class LocaleFileChecker
         missing_keys.delete("count")
       end
 
-      add_error(keys, TYPE_MISSING_INTERPOLATION_KEYS, missing_keys, pluralized: pluralized) unless missing_keys.empty?
-      add_error(keys, TYPE_UNSUPPORTED_INTERPOLATION_KEYS, unsupported_keys, pluralized: pluralized) unless unsupported_keys.empty?
+      unless missing_keys.empty?
+        add_error(keys, TYPE_MISSING_INTERPOLATION_KEYS, missing_keys, pluralized: pluralized)
+      end
+      unless unsupported_keys.empty?
+        add_error(
+          keys,
+          TYPE_UNSUPPORTED_INTERPOLATION_KEYS,
+          unsupported_keys,
+          pluralized: pluralized,
+        )
+      end
     end
   end
 
@@ -123,12 +133,15 @@ class LocaleFileChecker
       actual_plural_keys = parent.is_a?(Hash) ? parent.keys : []
       missing_plural_keys = expected_plural_keys - actual_plural_keys
 
-      add_error(keys, TYPE_MISSING_PLURAL_KEYS, missing_plural_keys, pluralized: true) unless missing_plural_keys.empty?
+      unless missing_plural_keys.empty?
+        add_error(keys, TYPE_MISSING_PLURAL_KEYS, missing_plural_keys, pluralized: true)
+      end
     end
   end
 
   def check_message_format
-    mf_locale, mf_filename = JsLocaleHelper.find_message_format_locale([@locale], fallback_to_english: true)
+    mf_locale, mf_filename =
+      JsLocaleHelper.find_message_format_locale([@locale], fallback_to_english: true)
 
     traverse_hash(@locale_yaml, []) do |keys, value|
       next unless keys.last.ends_with?("_MF")
@@ -158,17 +171,18 @@ class LocaleFileChecker
   end
 
   def reference_value_pluralized?(value)
-    value.is_a?(Hash) &&
-      value.keys.sort == REFERENCE_PLURAL_KEYS &&
+    value.is_a?(Hash) && value.keys.sort == REFERENCE_PLURAL_KEYS &&
       value.keys.all? { |k| value[k].is_a?(String) }
   end
 
   def plural_keys
-    @plural_keys ||= begin
-      eval(File.read("#{Rails.root}/#{PLURALS_FILE}")).map do |locale, value| # rubocop:disable Security/Eval
-        [locale.to_s, value[:i18n][:plural][:keys].map(&:to_s)]
-      end.to_h
-    end
+    @plural_keys ||=
+      begin
+        # rubocop:disable Security/Eval
+        eval(File.read("#{Rails.root}/#{PLURALS_FILE}"))
+          .map { |locale, value| [locale.to_s, value[:i18n][:plural][:keys].map(&:to_s)] }
+          .to_h
+      end
   end
 
   def add_error(keys, type, details, pluralized:)
@@ -180,10 +194,6 @@ class LocaleFileChecker
       joined_key = keys[1..-1].join(".")
     end
 
-    @errors[@relative_locale_path] << {
-      key: joined_key,
-      type: type,
-      details: details.to_s
-    }
+    @errors[@relative_locale_path] << { key: joined_key, type: type, details: details.to_s }
   end
 end

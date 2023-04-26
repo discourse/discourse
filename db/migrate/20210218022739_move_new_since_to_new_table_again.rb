@@ -47,19 +47,20 @@ class MoveNewSinceToNewTableAgain < ActiveRecord::Migration[6.0]
         ON CONFLICT DO NOTHING
       SQL
 
-      DB.exec(sql,
-               now: DateTime.now,
-               last_visit: User::NewTopicDuration::LAST_VISIT,
-               always: User::NewTopicDuration::ALWAYS,
-               default_duration: SiteSetting.default_other_new_topic_duration_minutes,
-               min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
-               private_message: Archetype.private_message,
-               min_id: min_id,
-               max_id: max_id,
-               max_new_topics: SiteSetting.max_new_topics)
+      DB.exec(
+        sql,
+        now: DateTime.now,
+        last_visit: User::NewTopicDuration::LAST_VISIT,
+        always: User::NewTopicDuration::ALWAYS,
+        default_duration: SiteSetting.default_other_new_topic_duration_minutes,
+        min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
+        private_message: Archetype.private_message,
+        min_id: min_id,
+        max_id: max_id,
+        max_new_topics: SiteSetting.max_new_topics,
+      )
 
       offset += BATCH_SIZE
-
     end
   end
 

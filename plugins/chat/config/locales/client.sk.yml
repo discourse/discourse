@@ -20,16 +20,13 @@ sk:
       joined: "vytvorený"
       email_frequency:
         never: "Nikdy"
+      header_indicator_preference:
+        never: "Nikdy"
       flag: "Označenie"
       join: "Pridať sa"
+      last_visit: "posledná návševa"
       mention_warning:
         dismiss: "zahodiť"
-        groups:
-          users_limit:
-            one: "%{count} používateľ"
-            few: "%{count} používatelia"
-            many: "%{count} používateľov"
-            other: "%{count} používateľov"
       reply: "Odpoveď"
       edit: "Upraviť"
       rebake_message: "Pregenerovať HTML"
@@ -50,6 +47,7 @@ sk:
         yesterday: Včera
       about_view:
         title: Názov
+        name: Meno
         description: Popis
       channel_info:
         back_to_channel: "Späť"
@@ -100,6 +98,12 @@ sk:
       emoji_picker:
         objects: "Objekty"
         flags: "Označenia"
+      thread:
+        replies:
+          one: "%{count} odpoveď"
+          few: "%{count} odpovede"
+          many: "%{count} odpovedí"
+          other: "%{count} odpovedí"
       draft_channel_screen:
         header: "Nová správa"
         cancel: "Zrušiť"

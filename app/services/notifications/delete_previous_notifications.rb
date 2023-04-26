@@ -35,9 +35,7 @@ module Notifications
       return unless can_consolidate_data?(notification)
 
       notifications = user_notifications(notification, type)
-      if previous_query_blk.present?
-        notifications = previous_query_blk.call(notifications, data)
-      end
+      notifications = previous_query_blk.call(notifications, data) if previous_query_blk.present?
 
       notification.data = data.to_json
 

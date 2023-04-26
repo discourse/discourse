@@ -3,11 +3,11 @@
 def create_notification(user_id, resp_code, matcher)
   notification_count = Notification.count
   post "/notifications.json",
-    params: {
-      notification_type: Notification.types[:mentioned],
-      user_id: user_id,
-      data: { message: 'tada' }.to_json
-    }
+       params: {
+         notification_type: Notification.types[:mentioned],
+         user_id: user_id,
+         data: { message: "tada" }.to_json,
+       }
   expect(response.status).to eq(resp_code)
   expect(Notification.count).public_send(matcher, eq(notification_count))
 end
@@ -29,18 +29,18 @@ def delete_notification(resp_code, matcher)
 end
 
 RSpec.describe NotificationsController do
-  context 'when logged in' do
-    context 'as normal user' do
+  context "when logged in" do
+    context "as normal user" do
       fab!(:user) { sign_in(Fabricate(:user)) }
       fab!(:notification) { Fabricate(:notification, user: user) }
 
-      describe '#index' do
-        it 'should succeed for recent' do
+      describe "#index" do
+        it "should succeed for recent" do
           get "/notifications", params: { recent: true }
           expect(response.status).to eq(200)
         end
 
-        it 'should succeed for history' do
+        it "should succeed for history" do
           get "/notifications.json"
 
           expect(response.status).to eq(200)
@@ -51,7 +51,7 @@ RSpec.describe NotificationsController do
           expect(notifications.first["id"]).to eq(notification.id)
         end
 
-        it 'should mark notifications as viewed' do
+        it "should mark notifications as viewed" do
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
 
@@ -62,7 +62,7 @@ RSpec.describe NotificationsController do
           expect(user.reload.total_unread_notifications).to eq(1)
         end
 
-        it 'should not mark notifications as viewed if silent param is present' do
+        it "should not mark notifications as viewed if silent param is present" do
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
 
@@ -73,7 +73,7 @@ RSpec.describe NotificationsController do
           expect(user.reload.total_unread_notifications).to eq(1)
         end
 
-        it 'should not mark notifications as viewed in readonly mode' do
+        it "should not mark notifications as viewed in readonly mode" do
           Discourse.received_redis_readonly!
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
@@ -96,19 +96,19 @@ RSpec.describe NotificationsController do
           get "/notifications.json"
 
           expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)['notifications'].length).to be >= 2
+          expect(JSON.parse(response.body)["notifications"].length).to be >= 2
 
           get "/notifications.json", params: { filter: "read" }
 
           expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)['notifications'].length).to be >= 1
-          expect(JSON.parse(response.body)['notifications'][0]['read']).to eq(true)
+          expect(JSON.parse(response.body)["notifications"].length).to be >= 1
+          expect(JSON.parse(response.body)["notifications"][0]["read"]).to eq(true)
 
           get "/notifications.json", params: { filter: "unread" }
 
           expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)['notifications'].length).to be >= 1
-          expect(JSON.parse(response.body)['notifications'][0]['read']).to eq(false)
+          expect(JSON.parse(response.body)["notifications"].length).to be >= 1
+          expect(JSON.parse(response.body)["notifications"][0]["read"]).to eq(false)
         end
 
         context "when navigation menu settings is non-legacy" do
@@ -118,7 +118,7 @@ RSpec.describe NotificationsController do
               user: user,
               high_priority: true,
               read: false,
-              created_at: 10.minutes.ago
+              created_at: 10.minutes.ago,
             )
           end
 
@@ -128,7 +128,7 @@ RSpec.describe NotificationsController do
               user: user,
               high_priority: true,
               read: true,
-              created_at: 8.minutes.ago
+              created_at: 8.minutes.ago,
             )
           end
 
@@ -138,7 +138,7 @@ RSpec.describe NotificationsController do
               user: user,
               high_priority: false,
               read: false,
-              created_at: 6.minutes.ago
+              created_at: 6.minutes.ago,
             )
           end
 
@@ -148,28 +148,28 @@ RSpec.describe NotificationsController do
               user: user,
               high_priority: false,
               read: true,
-              created_at: 4.minutes.ago
+              created_at: 4.minutes.ago,
             )
           end
 
           fab!(:pending_reviewable) { Fabricate(:reviewable) }
 
-          before do
-            SiteSetting.navigation_menu = "sidebar"
-          end
+          before { SiteSetting.navigation_menu = "sidebar" }
 
           it "gets notifications list with unread ones at the top" do
             get "/notifications.json", params: { recent: true }
 
             expect(response.status).to eq(200)
 
-            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([
-              unread_high_priority.id,
-              notification.id,
-              unread_regular.id,
-              read_regular.id,
-              read_high_priority.id
-            ])
+            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq(
+              [
+                unread_high_priority.id,
+                notification.id,
+                unread_regular.id,
+                read_regular.id,
+                read_high_priority.id,
+              ],
+            )
           end
 
           it "gets notifications list with unread high priority notifications at the top when navigation menu is legacy" do
@@ -179,13 +179,15 @@ RSpec.describe NotificationsController do
 
             expect(response.status).to eq(200)
 
-            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([
-              unread_high_priority.id,
-              notification.id,
-              read_regular.id,
-              unread_regular.id,
-              read_high_priority.id
-            ])
+            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq(
+              [
+                unread_high_priority.id,
+                notification.id,
+                read_regular.id,
+                unread_regular.id,
+                read_high_priority.id,
+              ],
+            )
           end
 
           it "should not bump last seen reviewable in readonly mode" do
@@ -212,11 +214,12 @@ RSpec.describe NotificationsController do
             user.update!(admin: true)
 
             expect {
-              get "/notifications.json", params: {
-                recent: true,
-                silent: true,
-                bump_last_seen_reviewable: true
-              }
+              get "/notifications.json",
+                  params: {
+                    recent: true,
+                    silent: true,
+                    bump_last_seen_reviewable: true,
+                  }
               expect(response.status).to eq(200)
             }.not_to change { user.reload.last_seen_reviewable_id }
           end
@@ -258,16 +261,16 @@ RSpec.describe NotificationsController do
 
             expect(response.status).to eq(200)
 
-            expect(response.parsed_body["pending_reviewables"].map { |r| r["id"] }).to eq([
-              pending_reviewable.id,
-              pending_reviewable2.id
-            ])
+            expect(response.parsed_body["pending_reviewables"].map { |r| r["id"] }).to eq(
+              [pending_reviewable.id, pending_reviewable2.id],
+            )
           end
 
           it "doesn't include reviewables that are claimed by someone that's not the current user" do
             user.update!(admin: true)
 
-            claimed_by_user = Fabricate(:reviewable, topic: Fabricate(:topic), created_at: 5.minutes.ago)
+            claimed_by_user =
+              Fabricate(:reviewable, topic: Fabricate(:topic), created_at: 5.minutes.ago)
             Fabricate(:reviewable_claimed_topic, topic: claimed_by_user.topic, user: user)
 
             user2 = Fabricate(:user)
@@ -278,11 +281,9 @@ RSpec.describe NotificationsController do
 
             get "/notifications.json", params: { recent: true }
             expect(response.status).to eq(200)
-            expect(response.parsed_body["pending_reviewables"].map { |r| r["id"] }).to eq([
-              pending_reviewable.id,
-              claimed_by_user.id,
-              unclaimed.id,
-            ])
+            expect(response.parsed_body["pending_reviewables"].map { |r| r["id"] }).to eq(
+              [pending_reviewable.id, claimed_by_user.id, unclaimed.id],
+            )
           end
 
           it "doesn't include reviewables when navigation menu is legacy" do
@@ -310,7 +311,7 @@ RSpec.describe NotificationsController do
               :notification,
               user: user,
               notification_type: Notification.types[:liked],
-              created_at: 2.minutes.ago
+              created_at: 2.minutes.ago,
             )
           end
           fab!(:liked2) do
@@ -318,7 +319,7 @@ RSpec.describe NotificationsController do
               :notification,
               user: user,
               notification_type: Notification.types[:liked],
-              created_at: 10.minutes.ago
+              created_at: 10.minutes.ago,
             )
           end
           fab!(:replied) do
@@ -326,56 +327,48 @@ RSpec.describe NotificationsController do
               :notification,
               user: user,
               notification_type: Notification.types[:replied],
-              created_at: 7.minutes.ago
+              created_at: 7.minutes.ago,
             )
           end
           fab!(:mentioned) do
-            Fabricate(
-              :notification,
-              user: user,
-              notification_type: Notification.types[:mentioned]
-            )
+            Fabricate(:notification, user: user, notification_type: Notification.types[:mentioned])
           end
 
           it "correctly filters notifications to the type(s) given" do
             get "/notifications.json", params: { recent: true, filter_by_types: "liked,replied" }
             expect(response.status).to eq(200)
-            expect(
-              response.parsed_body["notifications"].map { |n| n["id"] }
-            ).to eq([liked1.id, replied.id, liked2.id])
+            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq(
+              [liked1.id, replied.id, liked2.id],
+            )
 
             get "/notifications.json", params: { recent: true, filter_by_types: "replied" }
             expect(response.status).to eq(200)
-            expect(
-              response.parsed_body["notifications"].map { |n| n["id"] }
-            ).to eq([replied.id])
+            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([replied.id])
           end
 
           it "doesn't include notifications from other users" do
             Fabricate(
               :notification,
               user: Fabricate(:user),
-              notification_type: Notification.types[:liked]
+              notification_type: Notification.types[:liked],
             )
             get "/notifications.json", params: { recent: true, filter_by_types: "liked" }
             expect(response.status).to eq(200)
-            expect(
-              response.parsed_body["notifications"].map { |n| n["id"] }
-            ).to eq([liked1.id, liked2.id])
+            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq(
+              [liked1.id, liked2.id],
+            )
           end
 
           it "limits the number of returned notifications according to the limit param" do
             get "/notifications.json", params: { recent: true, filter_by_types: "liked", limit: 1 }
             expect(response.status).to eq(200)
-            expect(
-              response.parsed_body["notifications"].map { |n| n["id"] }
-            ).to eq([liked1.id])
+            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([liked1.id])
           end
         end
 
-        context 'when username params is not valid' do
-          it 'should raise the right error' do
-            get "/notifications.json", params: { username: 'somedude' }
+        context "when username params is not valid" do
+          it "should raise the right error" do
+            get "/notifications.json", params: { username: "somedude" }
             expect(response.status).to eq(404)
           end
         end
@@ -383,11 +376,24 @@ RSpec.describe NotificationsController do
         context "with notifications for inaccessible topics" do
           fab!(:sender) { Fabricate.build(:topic_allowed_user, user: Fabricate(:coding_horror)) }
           fab!(:allowed_user) { Fabricate.build(:topic_allowed_user, user: user) }
-          fab!(:another_allowed_user) { Fabricate.build(:topic_allowed_user, user: Fabricate(:user)) }
-          fab!(:allowed_pm) { Fabricate(:private_message_topic, topic_allowed_users: [sender, allowed_user, another_allowed_user]) }
-          fab!(:forbidden_pm) { Fabricate(:private_message_topic, topic_allowed_users: [sender, another_allowed_user]) }
-          fab!(:allowed_pm_notification) { Fabricate(:private_message_notification, user: user, topic: allowed_pm) }
-          fab!(:forbidden_pm_notification) { Fabricate(:private_message_notification, user: user, topic: forbidden_pm) }
+          fab!(:another_allowed_user) do
+            Fabricate.build(:topic_allowed_user, user: Fabricate(:user))
+          end
+          fab!(:allowed_pm) do
+            Fabricate(
+              :private_message_topic,
+              topic_allowed_users: [sender, allowed_user, another_allowed_user],
+            )
+          end
+          fab!(:forbidden_pm) do
+            Fabricate(:private_message_topic, topic_allowed_users: [sender, another_allowed_user])
+          end
+          fab!(:allowed_pm_notification) do
+            Fabricate(:private_message_notification, user: user, topic: allowed_pm)
+          end
+          fab!(:forbidden_pm_notification) do
+            Fabricate(:private_message_notification, user: user, topic: forbidden_pm)
+          end
 
           def expect_correct_notifications(response)
             notification_ids = response.parsed_body["notifications"].map { |n| n["id"] }
@@ -429,7 +435,7 @@ RSpec.describe NotificationsController do
         end
       end
 
-      it 'should succeed' do
+      it "should succeed" do
         put "/notifications/mark-read.json"
         expect(response.status).to eq(200)
       end
@@ -458,27 +464,27 @@ RSpec.describe NotificationsController do
         expect(user.reload.total_unread_notifications).to eq(0)
       end
 
-      describe '#create' do
+      describe "#create" do
         it "can't create notification" do
           create_notification(user.id, 403, :to)
         end
       end
 
-      describe '#update' do
+      describe "#update" do
         it "can't update notification" do
           update_notification(Fabricate(:topic).id, 403, :to_not)
         end
       end
 
-      describe '#destroy' do
+      describe "#destroy" do
         it "can't delete notification" do
           delete_notification(403, :to)
         end
       end
 
-      describe '#mark_read' do
+      describe "#mark_read" do
         context "when targeting a notification by id" do
-          it 'can mark a notification as read' do
+          it "can mark a notification as read" do
             expect {
               put "/notifications/mark-read.json", params: { id: notification.id }
               expect(response.status).to eq(200)
@@ -500,27 +506,28 @@ RSpec.describe NotificationsController do
           it "can mark notifications as read" do
             replied1 = notification
             replied1.update!(notification_type: Notification.types[:replied])
-            mentioned = Fabricate(
-              :notification,
-              user: user,
-              notification_type: Notification.types[:mentioned],
-              read: false
-            )
-            liked = Fabricate(
-              :notification,
-              user: user,
-              notification_type: Notification.types[:liked],
-              read: false
-            )
-            replied2 = Fabricate(
-              :notification,
-              user: user,
-              notification_type: Notification.types[:replied],
-              read: true
-            )
-            put "/notifications/mark-read.json", params: {
-              dismiss_types: "replied,mentioned"
-            }
+            mentioned =
+              Fabricate(
+                :notification,
+                user: user,
+                notification_type: Notification.types[:mentioned],
+                read: false,
+              )
+            liked =
+              Fabricate(
+                :notification,
+                user: user,
+                notification_type: Notification.types[:liked],
+                read: false,
+              )
+            replied2 =
+              Fabricate(
+                :notification,
+                user: user,
+                notification_type: Notification.types[:replied],
+                read: true,
+              )
+            put "/notifications/mark-read.json", params: { dismiss_types: "replied,mentioned" }
             expect(response.status).to eq(200)
             expect(replied1.reload.read).to eq(true)
             expect(replied2.reload.read).to eq(true)
@@ -530,21 +537,21 @@ RSpec.describe NotificationsController do
           end
 
           it "doesn't mark notifications of another user as read" do
-            mentioned1 = Fabricate(
-              :notification,
-              user: user,
-              notification_type: Notification.types[:mentioned],
-              read: false
-            )
-            mentioned2 = Fabricate(
-              :notification,
-              user: Fabricate(:user),
-              notification_type: Notification.types[:mentioned],
-              read: false
-            )
-            put "/notifications/mark-read.json", params: {
-              dismiss_types: "mentioned"
-            }
+            mentioned1 =
+              Fabricate(
+                :notification,
+                user: user,
+                notification_type: Notification.types[:mentioned],
+                read: false,
+              )
+            mentioned2 =
+              Fabricate(
+                :notification,
+                user: Fabricate(:user),
+                notification_type: Notification.types[:mentioned],
+                read: false,
+              )
+            put "/notifications/mark-read.json", params: { dismiss_types: "mentioned" }
             expect(mentioned1.reload.read).to eq(true)
             expect(mentioned2.reload.read).to eq(false)
           end
@@ -552,24 +559,24 @@ RSpec.describe NotificationsController do
       end
     end
 
-    context 'as admin' do
+    context "as admin" do
       fab!(:admin) { sign_in(Fabricate(:admin)) }
 
-      describe '#create' do
+      describe "#create" do
         it "can create notification" do
           create_notification(admin.id, 200, :to_not)
           expect(response.parsed_body["id"]).to_not eq(nil)
         end
       end
 
-      describe '#update' do
+      describe "#update" do
         it "can update notification" do
           update_notification(8, 200, :to)
           expect(response.parsed_body["topic_id"]).to eq(8)
         end
       end
 
-      describe '#destroy' do
+      describe "#destroy" do
         it "can delete notification" do
           delete_notification(200, :to_not)
         end
@@ -577,29 +584,28 @@ RSpec.describe NotificationsController do
     end
   end
 
-  context 'when not logged in' do
-
-    describe '#index' do
-      it 'should raise an error' do
+  context "when not logged in" do
+    describe "#index" do
+      it "should raise an error" do
         get "/notifications.json", params: { recent: true }
         expect(response.status).to eq(403)
       end
     end
 
-    describe '#create' do
+    describe "#create" do
       it "can't create notification" do
         user = Fabricate(:user)
         create_notification(user.id, 403, :to)
       end
     end
 
-    describe '#update' do
+    describe "#update" do
       it "can't update notification" do
         update_notification(Fabricate(:topic).id, 403, :to_not)
       end
     end
 
-    describe '#destroy' do
+    describe "#destroy" do
       it "can't delete notification" do
         delete_notification(403, :to)
       end

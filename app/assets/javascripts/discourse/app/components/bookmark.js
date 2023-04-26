@@ -60,7 +60,9 @@ export default Component.extend({
       userTimezone: this.currentUser.user_option.timezone,
       showOptions: false,
       _itsatrap: new ItsATrap(),
-      autoDeletePreference: this.model.autoDeletePreference || 0,
+      autoDeletePreference:
+        this.model.autoDeletePreference ??
+        AUTO_DELETE_PREFERENCES.CLEAR_REMINDER,
     });
 
     this.registerOnCloseHandler(this._onModalClose);

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewablePerformResultSerializer < ApplicationSerializer
-
   attributes(
     :success,
     :transition_to,
@@ -11,7 +10,7 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :remove_reviewable_ids,
     :version,
     :reviewable_count,
-    :unseen_reviewable_count
+    :unseen_reviewable_count,
   )
 
   def success

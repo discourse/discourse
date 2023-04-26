@@ -300,10 +300,6 @@ sq:
         one: "pothuajse %{count} vit më parë"
         other: "pothuajse %{count} vite më parë"
   password_reset:
-    choose_new: "Zgjidhni një fjalëkalim të ri"
-    choose: "Zgjidhni një fjalëkalim të ri"
-    update: "Rifresko Fjalëkalimin"
-    save: "Vendos Fjalëkalim"
     title: "Rivendos Fjalëkalimin"
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
@@ -661,8 +657,6 @@ sq:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     enable_badges: "Aktivizo sistemin e targetave"
-    blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
-    allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
@@ -983,9 +977,6 @@ sq:
   user_notifications:
     previous_discussion: "Përgjigjet e mëparshme"
     in_reply_to: "Në Përgjigje Të"
-    unsubscribe:
-      title: "Çregjistrohuni"
-      description: "Nuk të interesojnë këto emaila? S'ka problem! Kliko më poshtë për të anuluar abonimin:"
     reply_by_email: "[Shiko Temën](%{base_url}%{url}) ose përgjigjju këtij email-i për të postuar."
     only_reply_by_email: "Përgjigjju këtij email-i për të vazhduar."
     visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
@@ -1108,6 +1099,15 @@ sq:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       text_body_template: |
         %{header_instructions}
@@ -1178,8 +1178,6 @@ sq:
     see_more: "Më shumë"
     search_title: "Kërko në këtë faqe"
     search_button: "Kërko"
-  deleted: "deleted"
-  image: "imazh"
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -1397,7 +1395,6 @@ sq:
                 label: "Kategoritë dhe temat e zgjedhura"
               categories_and_latest_topics:
                 label: "Kategoritë dhe temat e fundit"
-  joined: "Anëtarësuar"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
@@ -1408,15 +1405,16 @@ sq:
       linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
   reviewables:
     actions:
-      agree_and_suspend:
-        title: "Pezullo anëtarin"
+      agree:
+        title: "Po"
       delete_single:
         title: "Fshij"
       disagree:
-        title: "Jo dakord"
+        title: "Jo"
       approve:
         title: "Aprovo"
       reject_user:
+        title: "Fshij Anëtarin..."
         delete:
           title: "Fshij Anëtarin"
       reject:

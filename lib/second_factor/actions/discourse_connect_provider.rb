@@ -28,13 +28,16 @@ module SecondFactor::Actions
       sso = get_sso(pl)
       hostname = URI(sso.return_sso_url).hostname
       {
-        callback_params: { payload: pl },
+        callback_params: {
+          payload: pl,
+        },
         callback_path: session_sso_provider_path,
         callback_method: "GET",
-        description: I18n.t(
-          "second_factor_auth.actions.discourse_connect_provider.description",
-          hostname: hostname,
-        )
+        description:
+          I18n.t(
+            "second_factor_auth.actions.discourse_connect_provider.description",
+            hostname: hostname,
+          ),
       }
     end
 
@@ -63,21 +66,25 @@ module SecondFactor::Actions
       sso.groups = current_user.groups.pluck(:name).join(",")
 
       if current_user.uploaded_avatar.present?
-        base_url = Discourse.store.external? ? "#{Discourse.store.absolute_base_url}/" : Discourse.base_url
-        avatar_url = "#{base_url}#{Discourse.store.get_path_for_upload(current_user.uploaded_avatar)}"
+        base_url =
+          Discourse.store.external? ? "#{Discourse.store.absolute_base_url}/" : Discourse.base_url
+        avatar_url =
+          "#{base_url}#{Discourse.store.get_path_for_upload(current_user.uploaded_avatar)}"
         sso.avatar_url = UrlHelper.absolute Discourse.store.cdn_url(avatar_url)
       end
 
       if current_user.user_profile.profile_background_upload.present?
-        sso.profile_background_url = UrlHelper.absolute(GlobalPath.upload_cdn_path(
-          current_user.user_profile.profile_background_upload.url
-        ))
+        sso.profile_background_url =
+          UrlHelper.absolute(
+            GlobalPath.upload_cdn_path(current_user.user_profile.profile_background_upload.url),
+          )
       end
 
       if current_user.user_profile.card_background_upload.present?
-        sso.card_background_url = UrlHelper.absolute(GlobalPath.upload_cdn_path(
-          current_user.user_profile.card_background_upload.url
-        ))
+        sso.card_background_url =
+          UrlHelper.absolute(
+            GlobalPath.upload_cdn_path(current_user.user_profile.card_background_upload.url),
+          )
       end
     end
 
@@ -87,7 +94,9 @@ module SecondFactor::Actions
       sso
     rescue ::DiscourseConnectProvider::ParseError => e
       if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
+        Rails.logger.warn(
+          "Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}",
+        )
       end
       raise
     end

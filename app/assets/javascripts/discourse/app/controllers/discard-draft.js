@@ -13,8 +13,7 @@ export default Controller.extend(ModalFunctionality, {
       this.send("closeModal");
     },
 
-    async dismissModal() {
-      await this.onDismissModal();
+    dismissModal() {
       this.send("closeModal");
     },
   },

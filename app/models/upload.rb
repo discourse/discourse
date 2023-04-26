@@ -8,12 +8,12 @@ class Upload < ActiveRecord::Base
 
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
-  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
+  URL_REGEX ||= %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
   DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
 
   belongs_to :user
-  belongs_to :access_control_post, class_name: 'Post'
+  belongs_to :access_control_post, class_name: "Post"
 
   # when we access this post we don't care if the post
   # is deleted
@@ -25,7 +25,7 @@ class Upload < ActiveRecord::Base
   has_many :optimized_images, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
   has_many :upload_references, dependent: :destroy
-  has_many :posts, through: :upload_references, source: :target, source_type: 'Post'
+  has_many :posts, through: :upload_references, source: :target, source_type: "Post"
   has_many :topic_thumbnails
 
   attr_accessor :for_group_message
@@ -44,7 +44,9 @@ class Upload < ActiveRecord::Base
 
   before_destroy do
     UserProfile.where(card_background_upload_id: self.id).update_all(card_background_upload_id: nil)
-    UserProfile.where(profile_background_upload_id: self.id).update_all(profile_background_upload_id: nil)
+    UserProfile.where(profile_background_upload_id: self.id).update_all(
+      profile_background_upload_id: nil,
+    )
   end
 
   after_destroy do
@@ -56,11 +58,7 @@ class Upload < ActiveRecord::Base
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
 
   def self.verification_statuses
-    @verification_statuses ||= Enum.new(
-      unchecked: 1,
-      verified: 2,
-      invalid_etag: 3
-    )
+    @verification_statuses ||= Enum.new(unchecked: 1, verified: 2, invalid_etag: 3)
   end
 
   def self.add_unused_callback(&block)
@@ -88,9 +86,9 @@ class Upload < ActiveRecord::Base
   end
 
   def self.with_no_non_post_relations
-    self
-      .joins("LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'")
-      .where("ur.upload_id IS NULL")
+    self.joins(
+      "LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'",
+    ).where("ur.upload_id IS NULL")
   end
 
   def initialize(*args)
@@ -100,6 +98,10 @@ class Upload < ActiveRecord::Base
 
   def to_s
     self.url
+  end
+
+  def to_markdown
+    UploadMarkdown.new(self).to_markdown
   end
 
   def thumbnail(width = self.thumbnail_width, height = self.thumbnail_height)
@@ -114,18 +116,14 @@ class Upload < ActiveRecord::Base
     return unless SiteSetting.create_thumbnails?
     opts ||= {}
 
-    if get_optimized_image(width, height, opts)
-      save(validate: false)
-    end
+    save(validate: false) if get_optimized_image(width, height, opts)
   end
 
   # this method attempts to correct old incorrect extensions
   def get_optimized_image(width, height, opts = nil)
     opts ||= {}
 
-    if (!extension || extension.length == 0)
-      fix_image_extension
-    end
+    fix_image_extension if (!extension || extension.length == 0)
 
     opts = opts.merge(raise_on_error: true)
     begin
@@ -152,9 +150,7 @@ class Upload < ActiveRecord::Base
 
     File.read(original_path)
   ensure
-    if external_copy
-      File.unlink(external_copy.path)
-    end
+    File.unlink(external_copy.path) if external_copy
   end
 
   def fix_image_extension
@@ -164,18 +160,28 @@ class Upload < ActiveRecord::Base
       # this is relatively cheap once cached
       original_path = Discourse.store.path_for(self)
       if original_path.blank?
-        external_copy = Discourse.store.download(self) rescue nil
+        external_copy =
+          begin
+            Discourse.store.download(self)
+          rescue StandardError
+            nil
+          end
         original_path = external_copy.try(:path)
       end
 
-      image_info = FastImage.new(original_path) rescue nil
+      image_info =
+        begin
+          FastImage.new(original_path)
+        rescue StandardError
+          nil
+        end
       new_extension = image_info&.type&.to_s || "unknown"
 
       if new_extension != self.extension
         self.update_columns(extension: new_extension)
         true
       end
-    rescue
+    rescue StandardError
       self.update_columns(extension: "unknown")
       true
     end
@@ -211,7 +217,9 @@ class Upload < ActiveRecord::Base
 
   def self.consider_for_reuse(upload, post)
     return upload if !SiteSetting.secure_uploads? || upload.blank? || post.blank?
-    return nil if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_uploads_enabled?
+    if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_uploads_enabled?
+      return nil
+    end
     upload
   end
 
@@ -220,7 +228,8 @@ class Upload < ActiveRecord::Base
     # have secure-uploads in the URL e.g. /t/secure-uploads-are-cool/223452
     route = UrlHelper.rails_route_from_url(url)
     return false if route.blank?
-    route[:action] == "show_secure" && route[:controller] == "uploads" && FileHelper.is_supported_media?(url)
+    route[:action] == "show_secure" && route[:controller] == "uploads" &&
+      FileHelper.is_supported_media?(url)
   rescue ActionController::RoutingError
     false
   end
@@ -239,17 +248,14 @@ class Upload < ActiveRecord::Base
       controller: "uploads",
       action: "show_secure",
       path: uri.path[1..-1],
-      only_path: true
+      only_path: true,
     )
   end
 
   def self.short_path(sha1:, extension:)
     @url_helpers ||= Rails.application.routes.url_helpers
 
-    @url_helpers.upload_short_path(
-      base62: self.base62_sha1(sha1),
-      extension: extension
-    )
+    @url_helpers.upload_short_path(base62: self.base62_sha1(sha1), extension: extension)
   end
 
   def self.base62_sha1(sha1)
@@ -261,7 +267,7 @@ class Upload < ActiveRecord::Base
   end
 
   def local?
-    !(url =~ /^(https?:)?\/\//)
+    !(url =~ %r{\A(https?:)?//})
   end
 
   def fix_dimensions!
@@ -275,8 +281,19 @@ class Upload < ActiveRecord::Base
       end
 
     begin
-      if extension == 'svg'
-        w, h = Discourse::Utils.execute_command("identify", "-format", "%w %h", path, timeout: MAX_IDENTIFY_SECONDS).split(' ') rescue [0, 0]
+      if extension == "svg"
+        w, h =
+          begin
+            Discourse::Utils.execute_command(
+              "identify",
+              "-format",
+              "%w %h",
+              path,
+              timeout: MAX_IDENTIFY_SECONDS,
+            ).split(" ")
+          rescue StandardError
+            [0, 0]
+          end
       else
         w, h = FastImage.new(path, raise_on_failure: true).size
       end
@@ -290,7 +307,7 @@ class Upload < ActiveRecord::Base
         width: width,
         height: height,
         thumbnail_width: thumbnail_width,
-        thumbnail_height: thumbnail_height
+        thumbnail_height: thumbnail_height,
       )
     rescue => e
       Discourse.warn_exception(e, message: "Error getting image dimensions")
@@ -337,9 +354,7 @@ class Upload < ActiveRecord::Base
   def calculate_dominant_color!(local_path = nil)
     color = nil
 
-    if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg"
-      color = ""
-    end
+    color = "" if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg"
 
     if color.nil?
       local_path ||=
@@ -360,37 +375,41 @@ class Upload < ActiveRecord::Base
         color = ""
       end
 
-      color ||= begin
-        data = Discourse::Utils.execute_command(
-          "nice",
-          "-n",
-          "10",
-          "convert",
-          local_path,
-          "-resize",
-          "1x1",
-          "-define",
-          "histogram:unique-colors=true",
-          "-format",
-          "%c",
-          "histogram:info:",
-          timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS
-        )
+      color ||=
+        begin
+          data =
+            Discourse::Utils.execute_command(
+              "nice",
+              "-n",
+              "10",
+              "convert",
+              local_path,
+              "-depth",
+              "8",
+              "-resize",
+              "1x1",
+              "-define",
+              "histogram:unique-colors=true",
+              "-format",
+              "%c",
+              "histogram:info:",
+              timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
+            )
 
-        # Output format:
-        # 1: (110.873,116.226,93.8821) #6F745E srgb(43.4798%,45.5789%,36.8165%)
+          # Output format:
+          # 1: (110.873,116.226,93.8821) #6F745E srgb(43.4798%,45.5789%,36.8165%)
 
-        color = data[/#([0-9A-F]{6})/, 1]
+          color = data[/#([0-9A-F]{6})/, 1]
 
-        raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
+          raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
 
-        color
-      rescue Discourse::Utils::CommandError => e
-        # Timeout or unable to parse image
-        # This can happen due to bad user input - ignore and save
-        # an empty string to prevent re-evaluation
-        ""
-      end
+          color
+        rescue Discourse::Utils::CommandError => e
+          # Timeout or unable to parse image
+          # This can happen due to bad user input - ignore and save
+          # an empty string to prevent re-evaluation
+          ""
+        end
     end
 
     if persisted?
@@ -401,23 +420,28 @@ class Upload < ActiveRecord::Base
   end
 
   def target_image_quality(local_path, test_quality)
-    @file_quality ||= Discourse::Utils.execute_command("identify", "-format", "%Q", local_path, timeout: MAX_IDENTIFY_SECONDS).to_i rescue 0
+    @file_quality ||=
+      begin
+        Discourse::Utils.execute_command(
+          "identify",
+          "-format",
+          "%Q",
+          local_path,
+          timeout: MAX_IDENTIFY_SECONDS,
+        ).to_i
+      rescue StandardError
+        0
+      end
 
-    if @file_quality == 0 || @file_quality > test_quality
-      test_quality
-    end
+    test_quality if @file_quality == 0 || @file_quality > test_quality
   end
 
   def self.sha1_from_short_path(path)
-    if path =~ /(\/uploads\/short-url\/)([a-zA-Z0-9]+)(\..*)?/
-      self.sha1_from_base62_encoded($2)
-    end
+    self.sha1_from_base62_encoded($2) if path =~ %r{(/uploads/short-url/)([a-zA-Z0-9]+)(\..*)?}
   end
 
   def self.sha1_from_short_url(url)
-    if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
-      self.sha1_from_base62_encoded($2)
-    end
+    self.sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
   end
 
   def self.sha1_from_base62_encoded(encoded_sha1)
@@ -426,7 +450,7 @@ class Upload < ActiveRecord::Base
     if sha1.length > SHA1_LENGTH
       nil
     else
-      sha1.rjust(SHA1_LENGTH, '0')
+      sha1.rjust(SHA1_LENGTH, "0")
     end
   end
 
@@ -457,7 +481,10 @@ class Upload < ActiveRecord::Base
       begin
         Discourse.store.update_upload_ACL(self)
       rescue Aws::S3::Errors::NotImplemented => err
-        Discourse.warn_exception(err, message: "The file store object storage provider does not support setting ACLs")
+        Discourse.warn_exception(
+          err,
+          message: "The file store object storage provider does not support setting ACLs",
+        )
       end
     end
 
@@ -468,7 +495,7 @@ class Upload < ActiveRecord::Base
     {
       secure: secure,
       security_last_changed_reason: reason + " | source: #{source}",
-      security_last_changed_at: Time.zone.now
+      security_last_changed_at: Time.zone.now,
     }
   end
 
@@ -479,15 +506,17 @@ class Upload < ActiveRecord::Base
       if SiteSetting.migrate_to_new_scheme
         max_file_size_kb = [
           SiteSetting.max_image_size_kb,
-          SiteSetting.max_attachment_size_kb
+          SiteSetting.max_attachment_size_kb,
         ].max.kilobytes
 
         local_store = FileStore::LocalStore.new
         db = RailsMultisite::ConnectionManagement.current_db
 
-        scope = Upload.by_users
-          .where("url NOT LIKE '%/original/_X/%' AND url LIKE ?", "%/uploads/#{db}%")
-          .order(id: :desc)
+        scope =
+          Upload
+            .by_users
+            .where("url NOT LIKE '%/original/_X/%' AND url LIKE ?", "%/uploads/#{db}%")
+            .order(id: :desc)
 
         scope = scope.limit(limit) if limit
 
@@ -503,7 +532,7 @@ class Upload < ActiveRecord::Base
             # keep track of the url
             previous_url = upload.url.dup
             # where is the file currently stored?
-            external = previous_url =~ /^\/\//
+            external = previous_url =~ %r{\A//}
             # download if external
             if external
               url = SiteSetting.scheme + ":" + previous_url
@@ -511,12 +540,13 @@ class Upload < ActiveRecord::Base
               begin
                 retries ||= 0
 
-                file = FileHelper.download(
-                  url,
-                  max_file_size: max_file_size_kb,
-                  tmp_file_name: "discourse",
-                  follow_redirect: true
-                )
+                file =
+                  FileHelper.download(
+                    url,
+                    max_file_size: max_file_size_kb,
+                    tmp_file_name: "discourse",
+                    follow_redirect: true,
+                  )
               rescue OpenURI::HTTPError
                 retry if (retries += 1) < 1
                 next
@@ -527,9 +557,7 @@ class Upload < ActiveRecord::Base
               path = local_store.path_for(upload)
             end
             # compute SHA if missing
-            if upload.sha1.blank?
-              upload.sha1 = Upload.generate_digest(path)
-            end
+            upload.sha1 = Upload.generate_digest(path) if upload.sha1.blank?
 
             # store to new location & update the filesize
             File.open(path) do |f|
@@ -543,7 +571,7 @@ class Upload < ActiveRecord::Base
             DbHelper.remap(
               previous_url,
               upload.url,
-              excluded_tables: %w{
+              excluded_tables: %w[
                 posts
                 post_search_data
                 incoming_emails
@@ -555,28 +583,32 @@ class Upload < ActiveRecord::Base
                 user_emails
                 draft_sequences
                 optimized_images
-              }
+              ],
             )
 
-            remap_scope ||= begin
-              Post.with_deleted
-                .where("raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'")
-                .select(:id, :raw, :cooked)
-                .all
-            end
+            remap_scope ||=
+              begin
+                Post
+                  .with_deleted
+                  .where(
+                    "raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'",
+                  )
+                  .select(:id, :raw, :cooked)
+                  .all
+              end
 
             remap_scope.each do |post|
               post.raw.gsub!(previous_url, upload.url)
               post.cooked.gsub!(previous_url, upload.url)
-              Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked) if post.changed?
+              if post.changed?
+                Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked)
+              end
             end
 
             upload.optimized_images.find_each(&:destroy!)
             upload.rebake_posts_on_old_scheme
             # remove the old file (when local)
-            unless external
-              FileUtils.rm(path, force: true)
-            end
+            FileUtils.rm(path, force: true) unless external
           rescue => e
             problems << { upload: upload, ex: e }
           ensure
@@ -595,21 +627,21 @@ class Upload < ActiveRecord::Base
 
     sha1s = []
 
-    raw.scan(/\/(\h{40})/).each do |match|
-      sha1s << match[0]
-    end
+    raw.scan(/\/(\h{40})/).each { |match| sha1s << match[0] }
 
-    raw.scan(/\/([a-zA-Z0-9]+)/).each do |match|
-      sha1s << Upload.sha1_from_base62_encoded(match[0])
-    end
+    raw
+      .scan(%r{/([a-zA-Z0-9]+)})
+      .each { |match| sha1s << Upload.sha1_from_base62_encoded(match[0]) }
 
     Upload.where(sha1: sha1s.uniq).pluck(:id)
   end
 
   def self.backfill_dominant_colors!(count)
-    Upload.where(dominant_color: nil).order("id desc").first(count).each do |upload|
-      upload.calculate_dominant_color!
-    end
+    Upload
+      .where(dominant_color: nil)
+      .order("id desc")
+      .first(count)
+      .each { |upload| upload.calculate_dominant_color! }
   end
 
   private
@@ -617,7 +649,6 @@ class Upload < ActiveRecord::Base
   def short_url_basename
     "#{Upload.base62_sha1(sha1)}#{extension.present? ? ".#{extension}" : ""}"
   end
-
 end
 
 # == Schema Information

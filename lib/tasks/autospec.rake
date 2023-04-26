@@ -6,9 +6,9 @@
 
 desc "Run all specs automatically as needed"
 task "autospec" => :environment do
-  require 'autospec/manager'
+  require "autospec/manager"
 
-  debug = ARGV.any? { |a|  a == "d" || a == "debug" } || ENV["DEBUG"]
+  debug = ARGV.any? { |a| a == "d" || a == "debug" } || ENV["DEBUG"]
   force_polling = ARGV.any? { |a| a == "p" || a == "polling" }
   latency = ((ARGV.find { |a| a =~ /l=|latency=/ } || "").split("=")[1] || 3).to_i
 
@@ -25,18 +25,19 @@ end
 
 desc "Regenerate swagger docs on API spec change"
 task "autospec:swagger" => :environment do
-  require 'listen'
-  require 'open3'
+  require "listen"
+  require "open3"
 
   puts "Listening to changes in spec/requests/api to regenerate Swagger docs."
-  listener = Listen.to("spec/requests/api") do |modified, added, removed|
-    puts "API doc file changed."
-    Open3.popen3("spec/regenerate_swagger_docs") do |stdin, stdout, stderr, wait_thr|
-      while line = stdout.gets
-        puts line
+  listener =
+    Listen.to("spec/requests/api") do |modified, added, removed|
+      puts "API doc file changed."
+      Open3.popen3("spec/regenerate_swagger_docs") do |stdin, stdout, stderr, wait_thr|
+        while line = stdout.gets
+          puts line
+        end
       end
     end
-  end
   listener.start
   sleep
 end

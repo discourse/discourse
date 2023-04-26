@@ -16,7 +16,7 @@ class SiteSettingsTask
     counts = { updated: 0, not_found: 0, errors: 0 }
     log = []
 
-    site_settings = YAML::safe_load(yml)
+    site_settings = YAML.safe_load(yml)
     site_settings.each do |site_setting|
       key = site_setting[0]
       val = site_setting[1]

@@ -10,6 +10,9 @@ import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
+import { isTesting } from "discourse-common/config/environment";
+import { DEBUG } from "@glimmer/env";
+import { registerWaiter, unregisterWaiter } from "@ember/test";
 
 const SiteHeaderComponent = MountWidget.extend(
   Docking,
@@ -26,6 +29,7 @@ const SiteHeaderComponent = MountWidget.extend(
     _scheduledRemoveAnimate: null,
     _topic: null,
     _itsatrap: null,
+    _applicationElement: null,
 
     @observes(
       "currentUser.unread_notifications",
@@ -54,6 +58,22 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _animateOpening(panel) {
+      let waiter;
+      if (DEBUG && isTesting()) {
+        waiter = () => false;
+        registerWaiter(waiter);
+      }
+
+      window.requestAnimationFrame(() => {
+        this._setAnimateOpeningProperties(panel);
+
+        if (DEBUG && isTesting()) {
+          unregisterWaiter(waiter);
+        }
+      });
+    },
+
+    _setAnimateOpeningProperties(panel) {
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
@@ -67,13 +87,16 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _animateClosing(panel, menuOrigin) {
-      const windowWidth = document.body.offsetWidth;
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
-      const offsetDirection = menuOrigin === "left" ? -1 : 1;
-      panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
+      if (menuOrigin === "left") {
+        panel.style.setProperty("--offset", `-100vw`);
+      } else {
+        panel.style.setProperty("--offset", `100vw`);
+      }
+
       headerCloak.style.setProperty("--opacity", 0);
       this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
@@ -181,7 +204,7 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     dockCheck() {
-      const header = document.querySelector("header.d-header");
+      const header = this.header;
 
       if (this.docAt === null) {
         if (!header) {
@@ -190,7 +213,8 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = header.offsetTop;
       }
 
-      const main = document.querySelector(".ember-application");
+      const main = (this._applicationElement ??=
+        document.querySelector(".ember-application"));
       const offsetTop = main ? main.offsetTop : 0;
       const offset = window.pageYOffset - offsetTop;
       if (offset >= this.docAt) {
@@ -343,6 +367,7 @@ const SiteHeaderComponent = MountWidget.extend(
         canSignUp: this.canSignUp,
         sidebarEnabled: this.sidebarEnabled,
         showSidebar: this.showSidebar,
+        navigationMenuQueryParamOverride: this.navigationMenuQueryParamOverride,
       };
     },
 
@@ -364,7 +389,6 @@ const SiteHeaderComponent = MountWidget.extend(
         return;
       }
 
-      const windowWidth = document.body.offsetWidth;
       const viewMode =
         this.site.mobileView || this.site.narrowDesktopView
           ? "slide-in"
@@ -373,9 +397,6 @@ const SiteHeaderComponent = MountWidget.extend(
       menuPanels.forEach((panel) => {
         const headerCloak = document.querySelector(".header-cloak");
         let width = parseInt(panel.getAttribute("data-max-width"), 10) || 300;
-        if (windowWidth - width < 50) {
-          width = windowWidth - 50;
-        }
         if (this._panMenuOffset) {
           this._panMenuOffset = -width;
         }
@@ -383,77 +404,23 @@ const SiteHeaderComponent = MountWidget.extend(
         panel.classList.remove("drop-down");
         panel.classList.remove("slide-in");
         panel.classList.add(viewMode);
+
         if (this._animate || this._panMenuOffset !== 0) {
           if (
             (this.site.mobileView || this.site.narrowDesktopView) &&
             panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
             this._panMenuOrigin = "left";
-            panel.style.setProperty("--offset", `${-windowWidth}px`);
+            panel.style.setProperty("--offset", `-100vw`);
           } else {
             this._panMenuOrigin = "right";
-            panel.style.setProperty("--offset", `${windowWidth}px`);
+            panel.style.setProperty("--offset", `100vw`);
           }
           headerCloak.style.setProperty("--opacity", 0);
         }
 
-        const panelBody = panel.querySelector(".panel-body");
-
-        // We use a mutationObserver to check for style changes, so it's important
-        // we don't set it if it doesn't change. Same goes for the panelBody!
-
-        if (!this.site.mobileView && !this.site.narrowDesktopView) {
-          const buttonPanel = document.querySelectorAll("header ul.icons");
-          if (buttonPanel.length === 0) {
-            return;
-          }
-
-          // These values need to be set here, not in the css file - this is to deal with the
-          // possibility of the window being resized and the menu changing from .slide-in to .drop-down.
-          if (panel.style.top !== "100%" || panel.style.height !== "auto") {
-            panel.style.setProperty("top", "100%");
-            panel.style.setProperty("height", "auto");
-          }
-        } else {
+        if (viewMode === "slide-in") {
           headerCloak.style.display = "block";
-
-          const menuTop = headerTop();
-
-          const winHeightOffset = this.currentUser?.redesigned_user_menu_enabled
-            ? 0
-            : 16;
-          let initialWinHeight = window.innerHeight;
-          const winHeight = initialWinHeight - winHeightOffset;
-
-          let height = winHeight - menuTop;
-
-          const isIPadApp = document.body.classList.contains("footer-nav-ipad"),
-            heightProp = isIPadApp ? "max-height" : "height",
-            iPadOffset = 10;
-
-          if (isIPadApp) {
-            height = winHeight - menuTop - iPadOffset;
-          }
-
-          if (panelBody.style.height !== "100%") {
-            panelBody.style.setProperty("height", "100%");
-          }
-          if (
-            panel.style.top !== `${menuTop}px` ||
-            panel.style[heightProp] !== `${height}px`
-          ) {
-            panel.style.top = `${menuTop}px`;
-            panel.style.setProperty(heightProp, `${height}px`);
-            if (headerCloak) {
-              headerCloak.style.top = `${menuTop}px`;
-            }
-          }
-        }
-
-        // TODO: remove the if condition when redesigned_user_menu_enabled is
-        // removed
-        if (!panel.classList.contains("revamped")) {
-          panel.style.setProperty("width", `${width}px`);
         }
         if (this._animate) {
           this._animateOpening(panel);
@@ -475,6 +442,8 @@ const SiteHeaderComponent = MountWidget.extend(
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
   classNameBindings: ["site.mobileView::drop-down-mode"],
+  headerWrap: null,
+  header: null,
 
   init() {
     this._super(...arguments);
@@ -487,12 +456,19 @@ export default SiteHeaderComponent.extend({
 
     this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
-    const header = document.querySelector(".d-header-wrap");
-    if (header) {
+    this.headerWrap = document.querySelector(".d-header-wrap");
+    if (this.headerWrap) {
       schedule("afterRender", () => {
+        this.header = this.headerWrap.querySelector("header.d-header");
+        const headerOffset = this.headerWrap.offsetHeight;
+        const headerTop = this.header.offsetTop;
         document.documentElement.style.setProperty(
           "--header-offset",
-          `${header.offsetHeight}px`
+          `${headerOffset}px`
+        );
+        document.documentElement.style.setProperty(
+          "--header-top",
+          `${headerTop}px`
         );
       });
     }
@@ -501,15 +477,21 @@ export default SiteHeaderComponent.extend({
       this._resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (entry.contentRect) {
+            const headerOffset = entry.contentRect.height;
+            const headerTop = this.header.offsetTop;
             document.documentElement.style.setProperty(
               "--header-offset",
-              entry.contentRect.height + "px"
+              `${headerOffset}px`
+            );
+            document.documentElement.style.setProperty(
+              "--header-top",
+              `${headerTop}px`
             );
           }
         }
       });
 
-      this._resizeObserver.observe(header);
+      this._resizeObserver.observe(this.headerWrap);
     }
   },
 
@@ -520,8 +502,3 @@ export default SiteHeaderComponent.extend({
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
 });
-
-export function headerTop() {
-  const header = document.querySelector("header.d-header");
-  return header.offsetTop ? header.offsetTop : 0;
-}

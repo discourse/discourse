@@ -19,14 +19,12 @@ sr:
       joined: "pridružen"
       email_frequency:
         never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
       flag: "Označi Zastavom"
+      last_visit: "poslednja poseta"
       mention_warning:
         dismiss: "одбаци"
-        groups:
-          users_limit:
-            one: "{count} korisnik"
-            few: "%{count} korisnika"
-            other: "%{count} korisnika"
       reply: "Odgovori"
       edit: "Izmeni"
       rebake_message: "Popravi HTML"
@@ -46,6 +44,7 @@ sr:
         yesterday: Juče
       about_view:
         title: Naslov
+        name: Ime foruma
         description: Opis
       channel_info:
         back_to_channel: "Nazad"

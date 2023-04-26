@@ -3,7 +3,6 @@
 # Handle sending a message to a user from the system.
 
 class SystemMessage
-
   def self.create(recipient, type, params = {})
     self.new(recipient).create(type, params)
   end
@@ -25,14 +24,29 @@ class SystemMessage
 
     params = defaults.merge(params)
 
-    title = params[:message_title] || I18n.with_locale(@recipient.effective_locale) { I18n.t("system_messages.#{type}.subject_template", params) }
-    raw = params[:message_raw] || I18n.with_locale(@recipient.effective_locale) { I18n.t("system_messages.#{type}.text_body_template", params) }
+    title =
+      params[:message_title] ||
+        I18n.with_locale(@recipient.effective_locale) do
+          I18n.t("system_messages.#{type}.subject_template", params)
+        end
+    raw =
+      params[:message_raw] ||
+        I18n.with_locale(@recipient.effective_locale) do
+          I18n.t("system_messages.#{type}.text_body_template", params)
+        end
 
     if from_system
       user = Discourse.system_user
     else
       user = Discourse.site_contact_user
-      target_group_names = Group.exists?(name: SiteSetting.site_contact_group_name) ? SiteSetting.site_contact_group_name : nil
+      target_group_names =
+        (
+          if Group.exists?(name: SiteSetting.site_contact_group_name)
+            SiteSetting.site_contact_group_name
+          else
+            nil
+          end
+        )
     end
 
     post_creator_args = [
@@ -44,10 +58,16 @@ class SystemMessage
       target_group_names: target_group_names,
       subtype: TopicSubtype.system_message,
       skip_validations: true,
-      post_alert_options: params[:post_alert_options]
+      post_alert_options: params[:post_alert_options],
     ]
 
-    DiscourseEvent.trigger(:before_system_message_sent, message_type: type, recipient: @recipient, post_creator_args: post_creator_args, params: method_params)
+    DiscourseEvent.trigger(
+      :before_system_message_sent,
+      message_type: type,
+      recipient: @recipient,
+      post_creator_args: post_creator_args,
+      params: method_params,
+    )
 
     creator = PostCreator.new(*post_creator_args)
 
@@ -55,9 +75,7 @@ class SystemMessage
 
     DiscourseEvent.trigger(:system_message_sent, post: post, message_type: type)
 
-    if creator.errors.present?
-      raise StandardError, creator.errors.full_messages.join(" ")
-    end
+    raise StandardError, creator.errors.full_messages.join(" ") if creator.errors.present?
 
     unless from_system
       UserArchivedMessage.create!(user: Discourse.site_contact_user, topic: post.topic)
@@ -70,11 +88,15 @@ class SystemMessage
     {
       site_name: SiteSetting.title,
       username: @recipient.username,
+      name: @recipient.name,
+      name_or_username: @recipient.name.presence || @recipient.username,
       user_preferences_url: "#{@recipient.full_url}/preferences",
-      new_user_tips: I18n.with_locale(@recipient.effective_locale) { I18n.t('system_messages.usage_tips.text_body_template', base_url: Discourse.base_url) },
+      new_user_tips:
+        I18n.with_locale(@recipient.effective_locale) do
+          I18n.t("system_messages.usage_tips.text_body_template", base_url: Discourse.base_url)
+        end,
       site_password: "",
       base_url: Discourse.base_url,
     }
   end
-
 end

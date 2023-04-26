@@ -10,12 +10,10 @@ class ReviewableClaimedTopicsController < ApplicationController
     begin
       ReviewableClaimedTopic.create!(user_id: current_user.id, topic_id: topic.id)
     rescue ActiveRecord::RecordInvalid
-      return render_json_error(I18n.t('reviewables.conflict'), status: 409)
+      return render_json_error(I18n.t("reviewables.conflict"), status: 409)
     end
 
-    topic.reviewables.find_each do |reviewable|
-      reviewable.log_history(:claimed, current_user)
-    end
+    topic.reviewables.find_each { |reviewable| reviewable.log_history(:claimed, current_user) }
 
     notify_users(topic, current_user)
     render json: success_json
@@ -27,9 +25,7 @@ class ReviewableClaimedTopicsController < ApplicationController
 
     guardian.ensure_can_claim_reviewable_topic!(topic)
     ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
-    topic.reviewables.find_each do |reviewable|
-      reviewable.log_history(:unclaimed, current_user)
-    end
+    topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
 
     notify_users(topic, nil)
     render json: success_json
@@ -40,7 +36,8 @@ class ReviewableClaimedTopicsController < ApplicationController
   def notify_users(topic, claimed_by)
     group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
 
-    if SiteSetting.enable_category_group_moderation? && group_id = topic.category&.reviewable_by_group_id.presence
+    if SiteSetting.enable_category_group_moderation? &&
+         group_id = topic.category&.reviewable_by_group_id.presence
       group_ids.add(group_id)
     end
 

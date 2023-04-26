@@ -9,18 +9,31 @@
   <form class="web-hook form-horizontal">
     <div class="control-group">
       <label for="payload-url">{{i18n "admin.web_hooks.payload_url"}}</label>
-      <TextField @name="payload-url" @value={{this.model.payload_url}} @placeholderKey="admin.web_hooks.payload_url_placeholder" />
+      <TextField
+        @name="payload-url"
+        @value={{this.model.payload_url}}
+        @placeholderKey="admin.web_hooks.payload_url_placeholder"
+      />
       <InputTip @validation={{this.urlValidation}} />
     </div>
 
     <div class="control-group">
       <label for="content-type">{{i18n "admin.web_hooks.content_type"}}</label>
-      <ComboBox @content={{this.contentTypes}} @name="content-type" @value={{this.model.content_type}} @onChange={{action (mut this.model.content_type)}} />
+      <ComboBox
+        @content={{this.contentTypes}}
+        @name="content-type"
+        @value={{this.model.content_type}}
+        @onChange={{action (mut this.model.content_type)}}
+      />
     </div>
 
     <div class="control-group">
       <label for="secret">{{i18n "admin.web_hooks.secret"}}</label>
-      <TextField @name="secret" @value={{this.model.secret}} @placeholderKey="admin.web_hooks.secret_placeholder" />
+      <TextField
+        @name="secret"
+        @value={{this.model.secret}}
+        @placeholderKey="admin.web_hooks.secret_placeholder"
+      />
       <InputTip @validation={{this.secretValidation}} />
     </div>
 
@@ -60,30 +73,62 @@
 
     <div class="filters control-group">
       <div class="filter">
-        <label>{{d-icon "circle" class="tracking"}}{{i18n "admin.web_hooks.categories_filter"}}</label>
-        <CategorySelector @categories={{this.model.categories}} @onChange={{action (mut this.model.categories)}} />
-        <div class="instructions">{{i18n "admin.web_hooks.categories_filter_instructions"}}</div>
+        <label>{{d-icon "circle" class="tracking"}}{{i18n
+            "admin.web_hooks.categories_filter"
+          }}</label>
+        <CategorySelector
+          @categories={{this.model.categories}}
+          @onChange={{action (mut this.model.categories)}}
+        />
+        <div class="instructions">{{i18n
+            "admin.web_hooks.categories_filter_instructions"
+          }}</div>
       </div>
 
       {{#if this.showTagsFilter}}
         <div class="filter">
-          <label>{{d-icon "circle" class="tracking"}}{{i18n "admin.web_hooks.tags_filter"}}</label>
-          <TagChooser @tags={{this.model.tag_names}} @everyTag={{true}} @excludeSynonyms={{true}} />
-          <div class="instructions">{{i18n "admin.web_hooks.tags_filter_instructions"}}</div>
+          <label>{{d-icon "circle" class="tracking"}}{{i18n
+              "admin.web_hooks.tags_filter"
+            }}</label>
+          <TagChooser
+            @tags={{this.model.tag_names}}
+            @everyTag={{true}}
+            @excludeSynonyms={{true}}
+          />
+          <div class="instructions">{{i18n
+              "admin.web_hooks.tags_filter_instructions"
+            }}</div>
         </div>
       {{/if}}
 
       <div class="filter">
-        <label>{{d-icon "circle" class="tracking"}}{{i18n "admin.web_hooks.groups_filter"}}</label>
-        <GroupSelector @groupNames={{this.model.groupsFilterInName}} @groupFinder={{this.model.groupFinder}} />
-        <div class="instructions">{{i18n "admin.web_hooks.groups_filter_instructions"}}</div>
+        <label>{{d-icon "circle" class="tracking"}}{{i18n
+            "admin.web_hooks.groups_filter"
+          }}</label>
+        <GroupSelector
+          @groupNames={{this.model.groupsFilterInName}}
+          @groupFinder={{this.model.groupFinder}}
+        />
+        <div class="instructions">{{i18n
+            "admin.web_hooks.groups_filter_instructions"
+          }}</div>
       </div>
     </div>
 
-    <PluginOutlet @name="web-hook-fields" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+    <span>
+      <PluginOutlet
+        @name="web-hook-fields"
+        @connectorTagName="div"
+        @outletArgs={{hash model=this.model}}
+      />
+    </span>
 
     <label>
-      <Input @type="checkbox" name="verify_certificate" @checked={{this.model.verify_certificate}} />
+      <Input
+        @type="checkbox"
+        name="verify_certificate"
+        @checked={{this.model.verify_certificate}}
+      />
       {{i18n "admin.web_hooks.verify_certificate"}}
     </label>
 
@@ -112,7 +157,11 @@
         {{i18n "cancel"}}
       </LinkTo>
     {{else}}
-      <LinkTo @route="adminWebHooks.show" @model={{this.model}} class="btn btn-default">
+      <LinkTo
+        @route="adminWebHooks.show"
+        @model={{this.model}}
+        class="btn btn-default"
+      >
         {{i18n "cancel"}}
       </LinkTo>
     {{/if}}

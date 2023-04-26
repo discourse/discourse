@@ -9,22 +9,25 @@ module Reports::WebCrawlers
         {
           type: :string,
           property: :user_agent,
-          title: I18n.t('reports.web_crawlers.labels.user_agent')
+          title: I18n.t("reports.web_crawlers.labels.user_agent"),
         },
         {
           property: :count,
           type: :number,
-          title: I18n.t('reports.web_crawlers.labels.page_views')
-        }
+          title: I18n.t("reports.web_crawlers.labels.page_views"),
+        },
       ]
 
       report.modes = [:table]
 
-      report.data = WebCrawlerRequest.where('date >= ? and date <= ?', report.start_date, report.end_date)
-        .limit(200)
-        .order('sum_count DESC')
-        .group(:user_agent).sum(:count)
-        .map { |ua, count| { user_agent: ua, count: count } }
+      report.data =
+        WebCrawlerRequest
+          .where("date >= ? and date <= ?", report.start_date, report.end_date)
+          .limit(200)
+          .order("sum_count DESC")
+          .group(:user_agent)
+          .sum(:count)
+          .map { |ua, count| { user_agent: ua, count: count } }
     end
   end
 end

@@ -32,9 +32,7 @@ shared_examples "basic reviewable attributes" do
 
   describe "#flagger_username" do
     it "equals to the username of the user who created the reviewable" do
-      reviewable.update!(
-        created_by: Fabricate(:user, username: "gg.osama")
-      )
+      reviewable.update!(created_by: Fabricate(:user, username: "gg.osama"))
       expect(subject[:flagger_username]).to eq("gg.osama")
     end
   end

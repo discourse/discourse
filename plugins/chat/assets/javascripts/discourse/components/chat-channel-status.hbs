@@ -2,5 +2,7 @@
   <div class="chat-channel-status">
     {{d-icon this.channelStatusIcon}}
     <span>{{this.channelStatusMessage}}</span>
+
+    <ChatChannelArchiveStatus @channel={{this.channel}} />
   </div>
 {{/if}}

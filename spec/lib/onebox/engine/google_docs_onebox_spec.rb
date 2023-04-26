@@ -16,7 +16,9 @@ RSpec.describe Onebox::Engine::GoogleDocsOnebox do
     end
 
     it "has description" do
-      expect(html).to include("Lorem Ipsum  Lorem ipsum dolor sit amet, consectetur adipiscing elit")
+      expect(html).to include(
+        "Lorem Ipsum  Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+      )
     end
 
     it "has icon" do

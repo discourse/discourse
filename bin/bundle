@@ -73,7 +73,7 @@ m = Module.new do
 
     requirement = bundler_gem_version.approximate_recommendation
 
-    return requirement unless Gem::Version.new(Gem::VERSION) < Gem::Version.new("2.7.0")
+    return requirement if Gem::Version.new(Gem::VERSION) >= Gem::Version.new("2.7.0")
 
     requirement += ".a" if bundler_gem_version.prerelease?
 

@@ -1,0 +1,31 @@
+<div class="composer-controls">
+  <span>
+    <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
+  </span>
+
+  {{#if this.site.mobileView}}
+    <DButton
+      @class="btn-flat toggle-toolbar btn-mini-toggle"
+      @icon="bars"
+      @action={{this.toggleToolbar}}
+      @title={{this.toggleToolbarTitle}}
+      @preventFocus={{true}}
+    />
+  {{/if}}
+
+  {{#if this.showFullScreenButton}}
+    <DButton
+      @class="btn-flat toggle-fullscreen btn-mini-toggle"
+      @icon={{this.fullscreenIcon}}
+      @action={{this.toggleFullscreen}}
+      @title={{this.fullscreenTitle}}
+    />
+  {{/if}}
+
+  <DButton
+    @class="btn-flat toggler toggle-minimize btn-mini-toggle"
+    @icon={{this.toggleIcon}}
+    @action={{this.toggleComposer}}
+    @title={{this.toggleTitle}}
+  />
+</div>

@@ -39,7 +39,6 @@ class UserActivator
       LoginActivator
     end
   end
-
 end
 
 class ApprovalActivator < UserActivator
@@ -69,7 +68,7 @@ class LoginActivator < UserActivator
 
   def activate
     log_on_user(user)
-    user.enqueue_welcome_message('welcome_user')
+    user.enqueue_welcome_message("welcome_user")
     success_message
   end
 

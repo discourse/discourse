@@ -28,7 +28,8 @@ RSpec.describe UnicodeUsernameAllowlistValidator do
   end
 
   it "detects invalid regular expressions" do
-    expected_error = I18n.t("site_settings.errors.allowed_unicode_usernames.regex_invalid", error: "")
+    expected_error =
+      I18n.t("site_settings.errors.allowed_unicode_usernames.regex_invalid", error: "")
 
     expect(subject.valid_value?("\\p{Foo}")).to eq(false)
     expect(subject.error_message).to start_with(expected_error)

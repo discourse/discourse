@@ -1,66 +1,65 @@
 # frozen_string_literal: true
 
 class UserUpdater
-
   CATEGORY_IDS = {
     watched_first_post_category_ids: :watching_first_post,
     watched_category_ids: :watching,
     tracked_category_ids: :tracking,
     regular_category_ids: :regular,
-    muted_category_ids: :muted
+    muted_category_ids: :muted,
   }
 
   TAG_NAMES = {
     watching_first_post_tags: :watching_first_post,
     watched_tags: :watching,
     tracked_tags: :tracking,
-    muted_tags: :muted
+    muted_tags: :muted,
   }
 
-  OPTION_ATTR = [
-    :mailing_list_mode,
-    :mailing_list_mode_frequency,
-    :email_digests,
-    :email_level,
-    :email_messages_level,
-    :external_links_in_new_tab,
-    :enable_quoting,
-    :enable_defer,
-    :color_scheme_id,
-    :dark_scheme_id,
-    :dynamic_favicon,
-    :automatically_unpin_topics,
-    :digest_after_minutes,
-    :new_topic_duration_minutes,
-    :auto_track_topics_after_msecs,
-    :notification_level_when_replying,
-    :email_previous_replies,
-    :email_in_reply_to,
-    :like_notification_frequency,
-    :include_tl0_in_digests,
-    :theme_ids,
-    :allow_private_messages,
-    :enable_allowed_pm_users,
-    :homepage_id,
-    :hide_profile_and_presence,
-    :text_size,
-    :title_count_mode,
-    :timezone,
-    :skip_new_user_tips,
-    :seen_popups,
-    :default_calendar,
-    :sidebar_list_destination,
-    :bookmark_auto_delete_preference
+  OPTION_ATTR = %i[
+    mailing_list_mode
+    mailing_list_mode_frequency
+    email_digests
+    email_level
+    email_messages_level
+    external_links_in_new_tab
+    enable_quoting
+    enable_defer
+    color_scheme_id
+    dark_scheme_id
+    dynamic_favicon
+    automatically_unpin_topics
+    digest_after_minutes
+    new_topic_duration_minutes
+    auto_track_topics_after_msecs
+    notification_level_when_replying
+    email_previous_replies
+    email_in_reply_to
+    like_notification_frequency
+    include_tl0_in_digests
+    theme_ids
+    allow_private_messages
+    enable_allowed_pm_users
+    homepage_id
+    hide_profile_and_presence
+    text_size
+    title_count_mode
+    timezone
+    skip_new_user_tips
+    seen_popups
+    default_calendar
+    sidebar_list_destination
+    bookmark_auto_delete_preference
   ]
 
-  NOTIFICATION_SCHEDULE_ATTRS = -> {
+  NOTIFICATION_SCHEDULE_ATTRS = -> do
     attrs = [:enabled]
     7.times do |n|
       attrs.push("day_#{n}_start_time".to_sym)
       attrs.push("day_#{n}_end_time".to_sym)
     end
     { user_notification_schedule: attrs }
-  }.call
+  end.call
 
   def initialize(actor, user)
     @user = user
@@ -70,7 +69,9 @@ class UserUpdater
 
   def update(attributes = {})
     user_profile = user.user_profile
-    user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[:dismissed_banner_key].present?
+    user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[
+      :dismissed_banner_key
+    ].present?
     unless SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_bio
       user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
     end
@@ -83,56 +84,52 @@ class UserUpdater
       user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
     end
 
-    if attributes[:profile_background_upload_url] == "" || !guardian.can_upload_profile_header?(user)
+    if attributes[:profile_background_upload_url] == "" ||
+         !guardian.can_upload_profile_header?(user)
       user_profile.profile_background_upload_id = nil
     elsif upload = Upload.get_from_url(attributes[:profile_background_upload_url])
       user_profile.profile_background_upload_id = upload.id
     end
 
-    if attributes[:card_background_upload_url] == "" || !guardian.can_upload_user_card_background?(user)
+    if attributes[:card_background_upload_url] == "" ||
+         !guardian.can_upload_user_card_background?(user)
       user_profile.card_background_upload_id = nil
     elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
       user_profile.card_background_upload_id = upload.id
     end
 
     if attributes[:user_notification_schedule]
-      user_notification_schedule = user.user_notification_schedule || UserNotificationSchedule.new(user: user)
+      user_notification_schedule =
+        user.user_notification_schedule || UserNotificationSchedule.new(user: user)
       user_notification_schedule.assign_attributes(attributes[:user_notification_schedule])
     end
 
     old_user_name = user.name.present? ? user.name : ""
 
-    if guardian.can_edit_name?(user)
-      user.name = attributes.fetch(:name) { user.name }
-    end
+    user.name = attributes.fetch(:name) { user.name } if guardian.can_edit_name?(user)
 
     user.locale = attributes.fetch(:locale) { user.locale }
     user.date_of_birth = attributes.fetch(:date_of_birth) { user.date_of_birth }
 
-    if attributes[:title] &&
-      attributes[:title] != user.title &&
-      guardian.can_grant_title?(user, attributes[:title])
+    if attributes[:title] && attributes[:title] != user.title &&
+         guardian.can_grant_title?(user, attributes[:title])
       user.title = attributes[:title]
     end
 
-    if SiteSetting.user_selected_primary_groups &&
-      attributes[:primary_group_id] &&
-      attributes[:primary_group_id] != user.primary_group_id &&
-      guardian.can_use_primary_group?(user, attributes[:primary_group_id])
-
+    if SiteSetting.user_selected_primary_groups && attributes[:primary_group_id] &&
+         attributes[:primary_group_id] != user.primary_group_id &&
+         guardian.can_use_primary_group?(user, attributes[:primary_group_id])
       user.primary_group_id = attributes[:primary_group_id]
-    elsif SiteSetting.user_selected_primary_groups &&
-      attributes[:primary_group_id] &&
-      attributes[:primary_group_id].blank?
-
+    elsif SiteSetting.user_selected_primary_groups && attributes[:primary_group_id] &&
+          attributes[:primary_group_id].blank?
       user.primary_group_id = nil
     end
 
-    if attributes[:flair_group_id] &&
-      attributes[:flair_group_id] != user.flair_group_id &&
-      (attributes[:flair_group_id].blank? ||
-        guardian.can_use_flair_group?(user, attributes[:flair_group_id]))
-
+    if attributes[:flair_group_id] && attributes[:flair_group_id] != user.flair_group_id &&
+         (
+           attributes[:flair_group_id].blank? ||
+             guardian.can_use_flair_group?(user, attributes[:flair_group_id])
+         )
       user.flair_group_id = attributes[:flair_group_id]
     end
 
@@ -145,7 +142,7 @@ class UserUpdater
 
       TAG_NAMES.each do |attribute, level|
         if attributes.has_key?(attribute)
-          TagUser.batch_set(user, level, attributes[attribute]&.split(',') || [])
+          TagUser.batch_set(user, level, attributes[attribute]&.split(",") || [])
         end
       end
     end
@@ -165,7 +162,8 @@ class UserUpdater
     end
 
     if attributes.key?(:text_size)
-      user.user_option.text_size_seq += 1 if user.user_option.text_size.to_s != attributes[:text_size]
+      user.user_option.text_size_seq += 1 if user.user_option.text_size.to_s !=
+        attributes[:text_size]
     end
 
     OPTION_ATTR.each do |attribute|
@@ -173,7 +171,7 @@ class UserUpdater
         save_options = true
 
         if [true, false].include?(user.user_option.public_send(attribute))
-          val = attributes[attribute].to_s == 'true'
+          val = attributes[attribute].to_s == "true"
           user.user_option.public_send("#{attribute}=", val)
         else
           user.user_option.public_send("#{attribute}=", attributes[attribute])
@@ -189,16 +187,12 @@ class UserUpdater
     user.user_option.email_digests = false if user.user_option.mailing_list_mode
 
     fields = attributes[:custom_fields]
-    if fields.present?
-      user.custom_fields = user.custom_fields.merge(fields)
-    end
+    user.custom_fields = user.custom_fields.merge(fields) if fields.present?
 
     saved = nil
 
     User.transaction do
-      if attributes.key?(:muted_usernames)
-        update_muted_users(attributes[:muted_usernames])
-      end
+      update_muted_users(attributes[:muted_usernames]) if attributes.key?(:muted_usernames)
 
       if attributes.key?(:allowed_pm_usernames)
         update_allowed_pm_users(attributes[:allowed_pm_usernames])
@@ -213,11 +207,17 @@ class UserUpdater
       end
 
       if attributes.key?(:sidebar_category_ids)
-        SidebarSectionLinksUpdater.update_category_section_links(user, category_ids: attributes[:sidebar_category_ids])
+        SidebarSectionLinksUpdater.update_category_section_links(
+          user,
+          category_ids: attributes[:sidebar_category_ids],
+        )
       end
 
       if attributes.key?(:sidebar_tag_names) && SiteSetting.tagging_enabled
-        SidebarSectionLinksUpdater.update_tag_section_links(user, tag_names: attributes[:sidebar_tag_names])
+        SidebarSectionLinksUpdater.update_tag_section_links(
+          user,
+          tag_names: attributes[:sidebar_tag_names],
+        )
       end
 
       if SiteSetting.enable_user_status?
@@ -225,17 +225,16 @@ class UserUpdater
       end
 
       name_changed = user.name_changed?
-      saved = (!save_options || user.user_option.save) &&
-        (user_notification_schedule.nil? || user_notification_schedule.save) &&
-        user_profile.save &&
-        user.save
+      saved =
+        (!save_options || user.user_option.save) &&
+          (user_notification_schedule.nil? || user_notification_schedule.save) &&
+          user_profile.save && user.save
 
       if saved && (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
-
         StaffActionLogger.new(@actor).log_name_change(
           user.id,
           old_user_name,
-          attributes.fetch(:name) { '' }
+          attributes.fetch(:name) { "" },
         )
       end
     rescue Addressable::URI::InvalidURIError => e
@@ -245,15 +244,17 @@ class UserUpdater
 
     if saved
       if user_notification_schedule
-        user_notification_schedule.enabled ?
-          user_notification_schedule.create_do_not_disturb_timings(delete_existing: true) :
+        if user_notification_schedule.enabled
+          user_notification_schedule.create_do_not_disturb_timings(delete_existing: true)
+        else
           user_notification_schedule.destroy_scheduled_timings
+        end
       end
       if attributes.key?(:seen_popups) || attributes.key?(:skip_new_user_tips)
         MessageBus.publish(
-          '/user-tips',
+          "/user-tips/#{user.id}",
           user.user_option.seen_popups,
-          user_ids: [user.id]
+          user_ids: [user.id],
         )
       end
       DiscourseEvent.trigger(:user_updated, user)
@@ -269,7 +270,7 @@ class UserUpdater
     if desired_ids.empty?
       MutedUser.where(user_id: user.id).destroy_all
     else
-      MutedUser.where('user_id = ? AND muted_user_id not in (?)', user.id, desired_ids).destroy_all
+      MutedUser.where("user_id = ? AND muted_user_id not in (?)", user.id, desired_ids).destroy_all
 
       # SQL is easier here than figuring out how to do the same in AR
       DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
@@ -290,7 +291,11 @@ class UserUpdater
     if desired_ids.empty?
       AllowedPmUser.where(user_id: user.id).destroy_all
     else
-      AllowedPmUser.where('user_id = ? AND allowed_pm_user_id not in (?)', user.id, desired_ids).destroy_all
+      AllowedPmUser.where(
+        "user_id = ? AND allowed_pm_user_id not in (?)",
+        user.id,
+        desired_ids,
+      ).destroy_all
 
       # SQL is easier here than figuring out how to do the same in AR
       DB.exec(<<~SQL, now: Time.zone.now, user_id: user.id, desired_ids: desired_ids)
@@ -305,7 +310,11 @@ class UserUpdater
 
   def updated_associated_accounts(associations)
     associations.each do |association|
-      user_associated_account = UserAssociatedAccount.find_or_initialize_by(user_id: user.id, provider_name: association[:provider_name])
+      user_associated_account =
+        UserAssociatedAccount.find_or_initialize_by(
+          user_id: user.id,
+          provider_name: association[:provider_name],
+        )
       if association[:provider_uid].present?
         user_associated_account.update!(provider_uid: association[:provider_uid])
       else
@@ -329,7 +338,10 @@ class UserUpdater
     sso = SingleSignOnRecord.find_or_initialize_by(user_id: user.id)
 
     if external_id.present?
-      sso.update!(external_id: discourse_connect[:external_id], last_payload: "external_id=#{discourse_connect[:external_id]}")
+      sso.update!(
+        external_id: discourse_connect[:external_id],
+        last_payload: "external_id=#{discourse_connect[:external_id]}",
+      )
     else
       sso.destroy!
     end
@@ -339,6 +351,6 @@ class UserUpdater
 
   def format_url(website)
     return nil if website.blank?
-    website =~ /^http/ ? website : "http://#{website}"
+    website =~ /\Ahttp/ ? website : "http://#{website}"
   end
 end

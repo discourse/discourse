@@ -5,7 +5,7 @@ import { ajax } from "discourse/lib/ajax";
 import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
-import { extractError } from "discourse/lib/ajax-error";
+import { flashAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 
@@ -90,9 +90,7 @@ export default Controller.extend(ModalFunctionality, {
             this.set("helpSeen", !data.user_found);
           }
         })
-        .catch((e) => {
-          this.flash(extractError(e), "error");
-        })
+        .catch(flashAjaxError(this))
         .finally(() => {
           this.set("disabled", false);
         });

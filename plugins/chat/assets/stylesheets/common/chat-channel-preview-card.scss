@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 3;
 
   &.-no-description {
     .chat-channel-title {
@@ -15,6 +16,8 @@
   &__description {
     color: var(--primary-600);
     text-align: center;
+    overflow-wrap: break-word;
+    max-width: 100%;
   }
 
   .chat-channel-title__name {

@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class UserAvatarsController < ApplicationController
+  skip_before_action :preload_json,
+                     :redirect_to_login_if_required,
+                     :check_xhr,
+                     :verify_authenticity_token,
+                     only: %i[show show_letter show_proxy_letter]
 
-  skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter, :show_proxy_letter]
-
-  before_action :apply_cdn_headers, only: [:show, :show_letter, :show_proxy_letter]
+  before_action :apply_cdn_headers, only: %i[show show_letter show_proxy_letter]
 
   def refresh_gravatar
     user = User.find_by(username_lower: params[:username].downcase)
@@ -15,17 +18,16 @@ class UserAvatarsController < ApplicationController
         user.create_user_avatar(user_id: user.id) unless user.user_avatar
         user.user_avatar.update_gravatar!
 
-        gravatar = if user.user_avatar.gravatar_upload_id
-          {
-            gravatar_upload_id: user.user_avatar.gravatar_upload_id,
-            gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
-          }
-        else
-          {
-            gravatar_upload_id: nil,
-            gravatar_avatar_template: nil
-          }
-        end
+        gravatar =
+          if user.user_avatar.gravatar_upload_id
+            {
+              gravatar_upload_id: user.user_avatar.gravatar_upload_id,
+              gravatar_avatar_template:
+                User.avatar_template(user.username, user.user_avatar.gravatar_upload_id),
+            }
+          else
+            { gravatar_upload_id: nil, gravatar_avatar_template: nil }
+          end
 
         render json: gravatar
       end
@@ -37,7 +39,7 @@ class UserAvatarsController < ApplicationController
   def show_proxy_letter
     is_asset_path
 
-    if SiteSetting.external_system_avatars_url !~ /^\/letter_avatar_proxy/
+    if SiteSetting.external_system_avatars_url !~ %r{\A/letter_avatar_proxy}
       raise Discourse::NotFound
     end
 
@@ -48,7 +50,10 @@ class UserAvatarsController < ApplicationController
 
     hijack do
       begin
-        proxy_avatar("https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new(1990, 01, 01))
+        proxy_avatar(
+          "https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png",
+          Time.new(1990, 01, 01),
+        )
       rescue OpenURI::HTTPError
         render_blank
       end
@@ -81,16 +86,13 @@ class UserAvatarsController < ApplicationController
 
     # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      hijack do
-        show_in_site(params[:hostname])
-      end
+      hijack { show_in_site(params[:hostname]) }
     end
   end
 
   protected
 
   def show_in_site(hostname)
-
     username = params[:username].to_s
     return render_blank unless user = User.find_by(username_lower: username.downcase)
 
@@ -99,19 +101,23 @@ class UserAvatarsController < ApplicationController
     version = (version || OptimizedImage::VERSION).to_i
 
     # old versions simply get new avatar
-    if version > OptimizedImage::VERSION
-      return render_blank
-    end
+    return render_blank if version > OptimizedImage::VERSION
 
     upload_id = upload_id.to_i
-    return render_blank unless upload_id > 0
+    return render_blank if upload_id <= 0
 
     size = params[:size].to_i
     return render_blank if size < 8 || size > 1000
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min { |a, b| (size - a).abs <=> (size - b).abs }
-      avatar_url = UserAvatar.local_avatar_url(hostname, user.encoded_username(lower: true), upload_id, closest)
+      avatar_url =
+        UserAvatar.local_avatar_url(
+          hostname,
+          user.encoded_username(lower: true),
+          upload_id,
+          closest,
+        )
       return redirect_to cdn_path(avatar_url), allow_other_host: true
     end
 
@@ -119,7 +125,13 @@ class UserAvatarsController < ApplicationController
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == upload_id
 
     if user.uploaded_avatar && !upload
-      avatar_url = UserAvatar.local_avatar_url(hostname, user.encoded_username(lower: true), user.uploaded_avatar_id, size)
+      avatar_url =
+        UserAvatar.local_avatar_url(
+          hostname,
+          user.encoded_username(lower: true),
+          user.uploaded_avatar_id,
+          size,
+        )
       return redirect_to cdn_path(avatar_url), allow_other_host: true
     elsif upload && optimized = get_optimized_image(upload, size)
       if optimized.local?
@@ -151,10 +163,7 @@ class UserAvatarsController < ApplicationController
 
   PROXY_PATH = Rails.root + "tmp/avatar_proxy"
   def proxy_avatar(url, last_modified)
-
-    if url[0..1] == "//"
-      url = (SiteSetting.force_https ? "https:" : "http:") + url
-    end
+    url = (SiteSetting.force_https ? "https:" : "http:") + url if url[0..1] == "//"
 
     sha = Digest::SHA1.hexdigest(url)
     filename = "#{sha}#{File.extname(url)}"
@@ -162,13 +171,14 @@ class UserAvatarsController < ApplicationController
 
     unless File.exist? path
       FileUtils.mkdir_p PROXY_PATH
-      tmp = FileHelper.download(
-        url,
-        max_file_size: max_file_size,
-        tmp_file_name: filename,
-        follow_redirect: true,
-        read_timeout: 10
-      )
+      tmp =
+        FileHelper.download(
+          url,
+          max_file_size: max_file_size,
+          tmp_file_name: filename,
+          follow_redirect: true,
+          read_timeout: 10,
+        )
 
       return render_blank if tmp.nil?
 
@@ -182,7 +192,9 @@ class UserAvatarsController < ApplicationController
   end
 
   def redirect_s3_avatar(url)
-    immutable_for 1.hour
+    response.cache_control[:max_age] = 1.hour.to_i
+    response.cache_control[:public] = true
+    response.cache_control[:extras] = ["immutable", "stale-while-revalidate=#{1.day.to_i}"]
     redirect_to url, allow_other_host: true
   end
 
@@ -206,5 +218,4 @@ class UserAvatarsController < ApplicationController
     upload.get_optimized_image(size, size)
     # TODO decide if we want to detach here
   end
-
 end

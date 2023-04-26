@@ -1,37 +1,41 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
+import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
+
+const DESCRIPTION_MAX_LENGTH = 280;
 
 export default class ChatChannelEditDescriptionController extends Controller.extend(
   ModalFunctionality
 ) {
-  editedDescription = "";
+  @service chatApi;
+  @tracked editedDescription = this.model.description || "";
 
   @computed("model.description", "editedDescription")
   get isSaveDisabled() {
     return (
       this.model.description === this.editedDescription ||
-      this.editedDescription?.length > 280
+      this.editedDescription?.length > DESCRIPTION_MAX_LENGTH
     );
   }
 
-  onShow() {
-    this.set("editedDescription", this.model.description || "");
+  get descriptionMaxLength() {
+    return DESCRIPTION_MAX_LENGTH;
   }
 
   onClose() {
-    this.set("editedDescription", "");
     this.clearFlash();
   }
 
   @action
   onSaveChatChannelDescription() {
-    return ChatApi.modifyChatChannel(this.model.id, {
-      description: this.editedDescription,
-    })
-      .then((chatChannel) => {
-        this.model.set("description", chatChannel.description);
+    return this.chatApi
+      .updateChannel(this.model.id, {
+        description: this.editedDescription,
+      })
+      .then((result) => {
+        this.model.set("description", result.channel.description);
         this.send("closeModal");
       })
       .catch((event) => {
@@ -44,6 +48,6 @@ export default class ChatChannelEditDescriptionController extends Controller.ext
   @action
   onChangeChatChannelDescription(description) {
     this.clearFlash();
-    this.set("editedDescription", description);
+    this.editedDescription = description;
   }
 }

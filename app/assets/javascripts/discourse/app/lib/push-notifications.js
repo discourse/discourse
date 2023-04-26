@@ -47,7 +47,8 @@ export function isPushNotificationsSupported() {
       "showNotification" in ServiceWorkerRegistration.prototype &&
       "PushManager" in window &&
       !caps.isAppWebview &&
-      !caps.isIOS
+      navigator.serviceWorker.controller &&
+      navigator.serviceWorker.controller.state === "activated"
     )
   ) {
     return false;

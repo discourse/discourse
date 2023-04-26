@@ -6,11 +6,23 @@ class DoNotDisturbController < ApplicationController
   def create
     raise Discourse::InvalidParameters.new(:duration) if params[:duration].blank?
 
-    duration_minutes = (Integer(params[:duration]) rescue false)
+    duration_minutes =
+      (
+        begin
+          Integer(params[:duration])
+        rescue StandardError
+          false
+        end
+      )
 
-    ends_at = duration_minutes ?
-      ends_at_from_minutes(duration_minutes) :
-      ends_at_from_string(params[:duration])
+    ends_at =
+      (
+        if duration_minutes
+          ends_at_from_minutes(duration_minutes)
+        else
+          ends_at_from_string(params[:duration])
+        end
+      )
 
     new_timing = current_user.do_not_disturb_timings.new(starts_at: Time.zone.now, ends_at: ends_at)
 
@@ -37,7 +49,7 @@ class DoNotDisturbController < ApplicationController
   end
 
   def ends_at_from_string(string)
-    if string == 'tomorrow'
+    if string == "tomorrow"
       Time.now.end_of_day.utc
     else
       raise Discourse::InvalidParameters.new(:duration)

@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/.*\.bandcamp\.com\/(album|track)\//)
+      matches_regexp(%r{^https?://.*\.bandcamp\.com/(album|track)/})
       always_https
       requires_iframe_origins "https://bandcamp.com"
 

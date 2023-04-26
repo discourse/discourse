@@ -1,6 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal, or } from "@ember/object/computed";
+import { wavingHandURL } from "discourse/lib/waving-hand-url";
 
 export default Controller.extend({
   application: controller(),
@@ -16,5 +17,9 @@ export default Controller.extend({
     return (
       this.get("model.path") === "login" && this.get("application.canSignUp")
     );
+  },
+
+  get wavingHandURL() {
+    return wavingHandURL();
   },
 });

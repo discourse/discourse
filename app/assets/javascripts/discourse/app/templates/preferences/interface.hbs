@@ -1,17 +1,32 @@
-<PluginOutlet @name="user-preferences-interface-top" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />
+<span>
+  <PluginOutlet
+    @name="user-preferences-interface-top"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 {{#if this.showThemeSelector}}
   <div class="control-group theme">
     <label class="control-label">{{i18n "user.theme"}}</label>
     <div class="controls">
-      <ComboBox @content={{this.userSelectableThemes}} @value={{this.themeId}} />
+      <ComboBox
+        @content={{this.userSelectableThemes}}
+        @value={{this.themeId}}
+      />
     </div>
     {{#if this.themeIdChanged}}
-      <p class="alert alert-success save-theme-alert">{{i18n "user.save_to_change_theme" save_text=(i18n "save") }}</p>
+      <p class="alert alert-success save-theme-alert">{{i18n
+          "user.save_to_change_theme"
+          save_text=(i18n "save")
+        }}</p>
     {{/if}}
     {{#if this.showThemeSetDefault}}
       <div class="controls">
-        <PreferenceCheckbox @labelKey="user.theme_default_on_all_devices" @checked={{this.makeThemeDefault}} />
+        <PreferenceCheckbox
+          @labelKey="user.theme_default_on_all_devices"
+          @checked={{this.makeThemeDefault}}
+        />
       </div>
     {{/if}}
   </div>
@@ -22,35 +37,52 @@
     <legend class="control-label">{{i18n "user.color_scheme"}}</legend>
     <div class="control-subgroup light-color-scheme">
       {{#if this.showDarkColorSchemeSelector}}
-        <div class="instructions">{{i18n "user.color_schemes.regular" }}</div>
+        <div class="instructions">{{i18n "user.color_schemes.regular"}}</div>
       {{/if}}
       <div class="controls">
-        <ComboBox @content={{this.userSelectableColorSchemes}} @value={{this.selectedColorSchemeId}} @onChange={{action "loadColorScheme"}} @options={{hash
+        <ComboBox
+          @content={{this.userSelectableColorSchemes}}
+          @value={{this.selectedColorSchemeId}}
+          @onChange={{action "loadColorScheme"}}
+          @options={{hash
             translatedNone=this.selectedColorSchemeNoneLabel
             autoInsertNoneItem=this.showColorSchemeNoneItem
-          }} />
+          }}
+        />
       </div>
     </div>
     {{#if this.showDarkColorSchemeSelector}}
       <div class="control-subgroup dark-color-scheme">
-        <div class="instructions">{{i18n "user.color_schemes.dark" }}</div>
+        <div class="instructions">{{i18n "user.color_schemes.dark"}}</div>
         <div class="controls">
-          <ComboBox @content={{this.userSelectableDarkColorSchemes}} @value={{this.selectedDarkColorSchemeId}} @onChange={{action "loadDarkColorScheme"}} />
+          <ComboBox
+            @content={{this.userSelectableDarkColorSchemes}}
+            @value={{this.selectedDarkColorSchemeId}}
+            @onChange={{action "loadDarkColorScheme"}}
+          />
         </div>
       </div>
 
       <div class="instructions">
-        {{i18n "user.color_schemes.dark_instructions" }}
+        {{i18n "user.color_schemes.dark_instructions"}}
       </div>
     {{/if}}
 
     {{#if this.previewingColorScheme}}
       {{#if this.previewingColorScheme}}
-        <DButton @action={{action "undoColorSchemePreview"}} @label="user.color_schemes.undo" @icon="undo" @class="btn-default btn-small undo-preview" />
+        <DButton
+          @action={{action "undoColorSchemePreview"}}
+          @label="user.color_schemes.undo"
+          @icon="undo"
+          @class="btn-default btn-small undo-preview"
+        />
       {{/if}}
 
       <div class="controls color-scheme-checkbox">
-        <PreferenceCheckbox @labelKey="user.color_scheme_default_on_all_devices" @checked={{this.makeColorSchemeDefault}} />
+        <PreferenceCheckbox
+          @labelKey="user.color_scheme_default_on_all_devices"
+          @checked={{this.makeColorSchemeDefault}}
+        />
       </div>
     {{/if}}
   </fieldset>
@@ -60,31 +92,52 @@
   <div class="control-group dark-mode">
     <label class="control-label">{{i18n "user.dark_mode"}}</label>
     <div class="controls">
-      <PreferenceCheckbox @labelKey="user.dark_mode_enable" @checked={{this.enableDarkMode}} />
+      <PreferenceCheckbox
+        @labelKey="user.dark_mode_enable"
+        @checked={{this.enableDarkMode}}
+      />
     </div>
   </div>
 {{/if}}
 
 <div class="control-group text-size">
-  <label for="text-size-selector" class="control-label">{{i18n "user.text_size.title"}}</label>
+  <label for="text-size-selector" class="control-label">{{i18n
+      "user.text_size.title"
+    }}</label>
   <div class="controls">
-    <ComboBox @id="text-size-selector" @valueProperty="value" @content={{this.textSizes}} @value={{this.textSize}} @onChange={{action "selectTextSize"}} />
+    <ComboBox
+      @id="text-size-selector"
+      @valueProperty="value"
+      @content={{this.textSizes}}
+      @value={{this.textSize}}
+      @onChange={{action "selectTextSize"}}
+    />
   </div>
   {{#if this.showTextSetDefault}}
     <div class="controls">
-      <PreferenceCheckbox @labelKey="user.text_size_default_on_all_devices" @checked={{this.makeTextSizeDefault}} />
+      <PreferenceCheckbox
+        @labelKey="user.text_size_default_on_all_devices"
+        @checked={{this.makeTextSizeDefault}}
+      />
     </div>
   {{/if}}
 </div>
 
 {{#if this.siteSettings.allow_user_locale}}
   <div class="control-group pref-locale">
-    <label for="locale-selector" class="control-label">{{i18n "user.locale.title"}}</label>
+    <label for="locale-selector" class="control-label">{{i18n
+        "user.locale.title"
+      }}</label>
     <div class="controls">
-      <ComboBox @id="locale-selector" @valueProperty="value" @langProperty="value" @content={{this.availableLocales}} @value={{this.model.locale}} @onChange={{action (mut this.model.locale)}} @options={{hash
-          filterable=true
-          none="user.locale.default"
-        }} />
+      <ComboBox
+        @id="locale-selector"
+        @valueProperty="value"
+        @langProperty="value"
+        @content={{this.availableLocales}}
+        @value={{this.model.locale}}
+        @onChange={{action (mut this.model.locale)}}
+        @options={{hash filterable=true none="user.locale.default"}}
+      />
     </div>
     <div class="instructions">
       {{i18n "user.locale.instructions"}}
@@ -95,41 +148,112 @@
 <div class="control-group home">
   <label for="home-selector" class="control-label">{{i18n "user.home"}}</label>
   <div class="controls">
-    <ComboBox @id="home-selector" @content={{this.userSelectableHome}} @valueProperty="value" @value={{this.homepageId}} @onChange={{action (mut this.model.user_option.homepage_id)}} />
+    <ComboBox
+      @id="home-selector"
+      @content={{this.userSelectableHome}}
+      @valueProperty="value"
+      @value={{this.homepageId}}
+      @onChange={{action (mut this.model.user_option.homepage_id)}}
+    />
   </div>
 </div>
 
 <fieldset class="control-group other">
   <legend class="control-label">{{i18n "user.other_settings"}}</legend>
 
-  <PreferenceCheckbox @labelKey="user.external_links_in_new_tab" @checked={{this.model.user_option.external_links_in_new_tab}} @class="pref-external-links" />
-  <PreferenceCheckbox @labelKey="user.enable_quoting" @checked={{this.model.user_option.enable_quoting}} @class="pref-enable-quoting" />
-  <PreferenceCheckbox @labelKey="user.enable_defer" @checked={{this.model.user_option.enable_defer}} @class="pref-defer-unread" />
+  <PreferenceCheckbox
+    @labelKey="user.external_links_in_new_tab"
+    @checked={{this.model.user_option.external_links_in_new_tab}}
+    @class="pref-external-links"
+  />
+  <PreferenceCheckbox
+    @labelKey="user.enable_quoting"
+    @checked={{this.model.user_option.enable_quoting}}
+    @class="pref-enable-quoting"
+  />
+  <PreferenceCheckbox
+    @labelKey="user.enable_defer"
+    @checked={{this.model.user_option.enable_defer}}
+    @class="pref-defer-unread"
+  />
   {{#if this.siteSettings.automatically_unpin_topics}}
-    <PreferenceCheckbox @labelKey="user.automatically_unpin_topics" @checked={{this.model.user_option.automatically_unpin_topics}} @class="pref-auto-unpin" />
+    <PreferenceCheckbox
+      @labelKey="user.automatically_unpin_topics"
+      @checked={{this.model.user_option.automatically_unpin_topics}}
+      @class="pref-auto-unpin"
+    />
   {{/if}}
   {{#if this.siteSettings.allow_users_to_hide_profile}}
-    <PreferenceCheckbox @labelKey="user.hide_profile_and_presence" @checked={{this.model.user_option.hide_profile_and_presence}} @class="pref-hide-profile" />
+    <PreferenceCheckbox
+      @labelKey="user.hide_profile_and_presence"
+      @checked={{this.model.user_option.hide_profile_and_presence}}
+      @class="pref-hide-profile"
+    />
   {{/if}}
-  <PreferenceCheckbox @labelKey="user.dynamic_favicon" @checked={{this.model.user_option.dynamic_favicon}} @class="pref-dynamic-favicon" />
+  <PreferenceCheckbox
+    @labelKey="user.dynamic_favicon"
+    @checked={{this.model.user_option.dynamic_favicon}}
+    @class="pref-dynamic-favicon"
+  />
   <div class="controls controls-dropdown pref-page-title">
-    <label for="user-title-count-mode">{{i18n "user.title_count_mode.title"}}</label>
-    <ComboBox @valueProperty="value" @content={{this.titleCountModes}} @value={{this.model.user_option.title_count_mode}} @id="user-title-count-mode" @onChange={{action (mut this.model.user_option.title_count_mode)}} />
+    <label for="user-title-count-mode">{{i18n
+        "user.title_count_mode.title"
+      }}</label>
+    <ComboBox
+      @valueProperty="value"
+      @content={{this.titleCountModes}}
+      @value={{this.model.user_option.title_count_mode}}
+      @id="user-title-count-mode"
+      @onChange={{action (mut this.model.user_option.title_count_mode)}}
+    />
   </div>
   <div class="controls controls-dropdown pref-bookmark-after-notification">
-    <label for="bookmark-after-notification-mode">{{i18n "user.bookmark_after_notification.title"}}</label>
-    <ComboBox @valueProperty="value" @content={{this.bookmarkAfterNotificationModes}} @value={{this.model.user_option.bookmark_auto_delete_preference}} @id="boookmark-after-notification-mode" @onChange={{action (mut this.model.user_option.bookmark_auto_delete_preference)}} />
+    <label for="bookmark-after-notification-mode">{{i18n
+        "user.bookmark_after_notification.title"
+      }}</label>
+    <ComboBox
+      @valueProperty="value"
+      @content={{this.bookmarkAfterNotificationModes}}
+      @value={{this.model.user_option.bookmark_auto_delete_preference}}
+      @id="boookmark-after-notification-mode"
+      @onChange={{action
+        (mut this.model.user_option.bookmark_auto_delete_preference)
+      }}
+    />
   </div>
-  <PreferenceCheckbox @labelKey="user.skip_new_user_tips.description" @checked={{this.model.user_option.skip_new_user_tips}} @class="pref-new-user-tips" />
+  <PreferenceCheckbox
+    @labelKey="user.skip_new_user_tips.description"
+    @checked={{this.model.user_option.skip_new_user_tips}}
+    @class="pref-new-user-tips"
+  />
   {{#if this.site.user_tips}}
-    <DButton @class="pref-reset-seen-user-tips" @action={{action "resetSeenUserTips"}}>{{i18n "user.reset_seen_user_tips"}}</DButton>
+    <DButton
+      @class="pref-reset-seen-user-tips"
+      @action={{action "resetSeenUserTips"}}
+    >{{i18n "user.reset_seen_user_tips"}}</DButton>
   {{/if}}
 </fieldset>
 
-<PluginOutlet @name="user-preferences-interface" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />
+<span>
+  <PluginOutlet
+    @name="user-preferences-interface"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
-<br>
+<br />
 
-<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
-<SaveControls @model={{this.model}} @action={{action "save"}} @saved={{this.saved}} />
+<SaveControls
+  @model={{this.model}}
+  @action={{action "save"}}
+  @saved={{this.saved}}
+/>

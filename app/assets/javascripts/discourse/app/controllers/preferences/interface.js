@@ -36,6 +36,7 @@ export default Controller.extend({
   preferencesController: controller("preferences"),
   makeColorSchemeDefault: true,
   canPreviewColorScheme: propertyEqual("model.id", "currentUser.id"),
+  subpageTitle: I18n.t("user.preferences_nav.interface"),
 
   init() {
     this._super(...arguments);
@@ -433,8 +434,6 @@ export default Controller.extend({
     },
 
     resetSeenUserTips() {
-      this.model.set("skip_new_user_tips", false);
-      this.model.set("seen_popups", null);
       this.model.set("user_option.skip_new_user_tips", false);
       this.model.set("user_option.seen_popups", null);
       return this.model.save(["skip_new_user_tips", "seen_popups"]);

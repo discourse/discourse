@@ -25,7 +25,8 @@
     <div class="controls pref-second-factor">
       {{#if this.isCurrentUser}}
         <LinkTo @route="preferences.second-factor" class="btn btn-default">
-          {{d-icon "lock"}} <span>{{i18n "user.second_factor.enable"}}</span>
+          {{d-icon "lock"}}
+          <span>{{i18n "user.second_factor.enable"}}</span>
         </LinkTo>
       {{/if}}
     </div>
@@ -41,16 +42,35 @@
         <div class="row auth-token">
           <div class="auth-token-icon">{{d-icon token.icon}}</div>
           {{#unless token.is_active}}
-            <AuthTokenDropdown @token={{token}} @revokeAuthToken={{action "revokeAuthToken"}} @showToken={{action "showToken"}} />
+            <AuthTokenDropdown
+              @token={{token}}
+              @revokeAuthToken={{action "revokeAuthToken"}}
+              @showToken={{action "showToken"}}
+            />
           {{/unless}}
           <div class="auth-token-first">
-            {{html-safe (i18n "user.auth_tokens.device_location" device=token.device ip=token.client_ip location=token.location)}}
+            {{html-safe
+              (i18n
+                "user.auth_tokens.device_location"
+                device=token.device
+                ip=token.client_ip
+                location=token.location
+              )
+            }}
           </div>
           <div class="auth-token-second">
             {{#if token.is_active}}
-              {{html-safe (i18n "user.auth_tokens.browser_active" browser=token.browser)}}
+              {{html-safe
+                (i18n "user.auth_tokens.browser_active" browser=token.browser)
+              }}
             {{else}}
-              {{html-safe (i18n "user.auth_tokens.browser_last_seen" browser=token.browser date=(format-date token.seen_at))}}
+              {{html-safe
+                (i18n
+                  "user.auth_tokens.browser_last_seen"
+                  browser=token.browser
+                  date=(format-date token.seen_at)
+                )
+              }}
             {{/if}}
           </div>
         </div>
@@ -60,23 +80,42 @@
     {{#if this.canShowAllAuthTokens}}
       <a href {{on "click" this.toggleShowAllAuthTokens}}>
         {{#if this.showAllAuthTokens}}
-          {{d-icon "caret-up"}} {{i18n "user.auth_tokens.show_few"}}
+          {{d-icon "caret-up"}}
+          {{i18n "user.auth_tokens.show_few"}}
         {{else}}
-          {{d-icon "caret-down"}} {{i18n "user.auth_tokens.show_all" count=this.model.user_auth_tokens.length}}
+          {{d-icon "caret-down"}}
+          {{i18n
+            "user.auth_tokens.show_all"
+            count=this.model.user_auth_tokens.length
+          }}
         {{/if}}
       </a>
     {{/if}}
 
-    <a href {{on "click" (fn this.revokeAuthToken null)}} class="pull-right text-danger">{{d-icon "sign-out-alt"}} {{i18n "user.auth_tokens.log_out_all"}}</a>
+    <a
+      href
+      {{on "click" (fn this.revokeAuthToken null)}}
+      class="pull-right text-danger"
+    >{{d-icon "sign-out-alt"}} {{i18n "user.auth_tokens.log_out_all"}}</a>
   </div>
 {{/if}}
 
-{{#if this.currentUser.redesigned_user_page_nav_enabled}}
-  <UserPreferences::UserApiKeys @model={{@model}}/>
-{{/if}}
+<UserPreferences::UserApiKeys @model={{@model}} />
 
-<PluginOutlet @name="user-preferences-security" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />
+<span>
+  <PluginOutlet
+    @name="user-preferences-security"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
-<br>
+<br />
 
-<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>

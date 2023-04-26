@@ -42,6 +42,7 @@ export default Controller.extend(
     prefilledUsername: null,
     userFields: null,
     isDeveloper: false,
+    maskPassword: true,
 
     hasAuthOptions: notEmpty("authOptions"),
     canCreateLocal: setting("enable_local_logins"),
@@ -68,6 +69,7 @@ export default Controller.extend(
         rejectedPasswords: [],
         prefilledUsername: null,
         isDeveloper: false,
+        maskPassword: true,
       });
       this._createUserFields();
     },
@@ -433,6 +435,11 @@ export default Controller.extend(
         associate_link: url,
         provider: I18n.t(`login.${provider}.name`),
       });
+    },
+
+    @action
+    togglePasswordMask() {
+      this.toggleProperty("maskPassword");
     },
 
     actions: {

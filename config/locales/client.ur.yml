@@ -157,7 +157,6 @@ ur:
       banner:
         enabled: "اِس کو بینر بنا لیا %{when}۔ یہ ہر صفحے کے سب سے اوپر دکھایا جائے گا جب تک صارف اِسے برخاست نہیں کر دیتا۔"
         disabled: "اِس بینر کو ہٹا دیا %{when}۔ یہ اب ہر صفحے کے سب سے اوپر دکھایا نہیں جائے گا۔"
-      forwarded: "مندرجہ بالا ای میل بھیجیں"
     topic_admin_menu: "موضوع کے ایکشنز"
     skip_to_main_content: "مرکزی مواد پر جائیں"
     emails_are_disabled: "ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
@@ -165,11 +164,6 @@ ur:
     software_update_prompt:
       message: "ہم نے اس سائٹ کواپڈیٹ کردیا <span>براہ مہربانی ریفریش کریں</span> ، یا آپ کا تجربہ غیر متوقع ہو سکتا ہے۔"
       dismiss: "بر خاست کریں"
-    bootstrap_mode_enabled:
-      one: "اپنی نئی سائٹ کو شروع کرنے کوآسان بنانے کے لیے، آپ بوٹسٹریپ موڈ میں ہیں۔ تمام نئے صارفین کو اعتماد کی سطح 1 دی جائے گی اور روزانہ ای میل سمری ای میلز کو فعال کیا جائے گا۔ %{count} صارف کے شامل ہونے پر یہ خود بخود بند ہو جائے گا۔"
-      other: "اپنی نئی سائٹ کو شروع کرنے کوآسان بنانے کے لیے، آپ بوٹسٹریپ موڈ میں ہیں۔ تمام نئے صارفین کو اعتماد کی سطح 1 دی جائے گی اور روزانہ ای میل سمری ای میلز کو فعال کیا جائے گا۔ %{count} صارفین کے شامل ہونے پر یہ خود بخود بند ہو جائے گا۔"
-    bootstrap_mode_disabled: "بُوٹسٹرَیپ مَوڈ 24 گھنٹوں کے اندر غیر فعال کر دیا جائے گا۔"
-    bootstrap_invite_button_title: "دعوت بھیجیں"
     themes:
       default_description: "ڈِیفالٹ"
       broken_theme_alert: "ہو سکتا ہے آپ کی سائٹ کام نہ کرے کیونکہ تھیم/جزو میں خامیاں ہیں۔"
@@ -280,11 +274,8 @@ ur:
       edit_bookmark: "بک مارک میں ترمیم کریں"
       clear_bookmarks: "بک مارکس ختم کریں"
       help:
-        bookmark: "اِس ٹاپک کی پہلی پوسٹ بُک مارک کرنے کے لئے کلک کریں"
-        edit_bookmark: "اس موضوع پر بک مارک میں ترمیم کرنے کے لیے کلک کریں"
         edit_bookmark_for_topic: "اس موضوع پر بک مارک میں ترمیم کرنے کے لیے کلک کریں"
         unbookmark: "اِس ٹاپک کے تمام بُک مارک ہٹانے کے لئے کلک کریں"
-        unbookmark_with_reminder: "اس موضوع میں تمام بک مارکس اور یاد دہانیوں کو مٹانے کے لیے کلک کریں۔"
     bookmarks:
       created: "آپ نے اس %{name} پوسٹ کو بک مارک کیا ہے۔"
       create: "بک مارک بنائیں"
@@ -292,7 +283,6 @@ ur:
       not_bookmarked: "اِس پوسٹ کو بُک مارک کریں"
       remove_reminder_keep_bookmark: "یاد دہانی کو ہٹا دیں اور بک مارک کو بچا کر رکھیں"
       created_with_reminder: "آپ نے اس پوسٹ کو ایک یاد دہانی %{date}, %{name} کے ساتھ بک مارک کیا ہے۔"
-      remove: "بُک مارک ہٹائیں"
       delete: "بک مارک مٹائیں"
       confirm_delete: "کیا آپ واقعی اس بُک مارک کو مٹانا چاہتے ہیں؟ یاد دہانی بھی مٹادی جائے گی۔"
       confirm_clear: "کیا آپ کو یقین ہے کہ آپ اِس ٹاپک سے اپنے تمام بُک مارکس ہٹانا چاہتے ہیں؟"
@@ -327,7 +317,6 @@ ur:
       new_topic: "نئے ٹاپک کا ڈرافٹ"
       new_private_message: "نیے ذاتی پیغام کا مسودہ"
       abandon:
-        confirm: "آپ کے پاس اس عنوان کے لئے ایک مسودہ ہے۔ آپ اس کے ساتھ کیا کرنا چاہیں گے؟"
         yes_value: "منسوخ"
         no_value: "ترمیم دوبارہ شروع کریں"
     topic_count_categories:
@@ -361,9 +350,6 @@ ur:
     enable: "فعال کریں"
     disable: "غیر فعال کریں"
     continue: "جاری رکھی"
-    undo: "کالعدم کریں"
-    revert: "رِیوَرٹ"
-    failed: "عمل ناکام رہا"
     switch_to_anon: "گمنام موڈ میں داخل ہوں"
     switch_from_anon: "گمنام موڈ سے باہر نکلیں"
     banner:
@@ -502,11 +488,9 @@ ur:
       scores:
         about: "یہ اسکور رپورٹ کرنے والے کے ٹرسٹ لَیول پر مبنی ہے، اُن کے سابق فلَیگز کی درستگی، اور رپورٹ کردہ چیز کی ترجیح پر۔"
         score: "اسکور"
-        date: "تاریخ"
-        type: "قِسم"
+        type: "وجہ"
         status: "سٹیٹس"
-        submitted_by: "کی طرف سے شائع کردہ"
-        reviewed_by: "کی طرف سے جائزہ کردہ"
+        submitted_by: "کی طرف سے رپورٹ کردہ"
       statuses:
         pending:
           title: "زیرِاِلتوَاء"
@@ -514,14 +498,12 @@ ur:
           title: "منظورشدہ"
         rejected:
           title: "مسترد کر دی گئی"
-        ignored:
-          title: "نظر انداز کردہ"
-        deleted:
-          title: "مٹائیں"
         reviewed:
-          title: "(تمام جائزہ کردہ)"
+          title: "تمام جائزہ کردہ"
         all:
-          title: "(تمام)"
+          title: "تمام"
+      context_question:
+        delimiter: "یا"
       types:
         reviewable_flagged_post:
           title: "فلَیگ کردہ پوسٹ"
@@ -655,6 +637,7 @@ ur:
         denied: "انکار کر دیا"
         undone: "درخواست کالعدم"
         handle: "رکنیت کی درخواست سے نمٹیں"
+        undo: "کالعدم کریں"
       manage:
         title: "مَینَیج"
         name: "نام"
@@ -821,6 +804,7 @@ ur:
         make_all_primary_description: "اس کو تمام منتخب کردہ صارفین کے لئے بنیادی گروپ بنائیں"
         remove_all_primary: "بطور بنیادی ہٹائیں"
         remove_all_primary_description: "اس گروپ کو بنیادی طور پر ہٹا دیں"
+        status: "سٹیٹس"
         owner: "مالِک"
         primary: "بنیادی"
         forbidden: "آپ کو ممبران دیکھنے کی اجازت نہیں ہے۔"
@@ -946,11 +930,6 @@ ur:
       profile: "پروفائل"
       mute: "خاموش کردیں"
       edit: "ترجیحات میں ترمیم کردیں"
-      download_archive:
-        button_text: "تمام ڈاؤن لوڈ کریں"
-        confirm: "کیا آپ واقعی اپنی پوسٹس ڈاؤن لوڈ کرنا چاہتے ہیں؟"
-        success: "ڈاؤن لوڈ کا آغاز کر دیا گیا ہے، عمل مکمل ہونے پر آپ کو پیغام کے ذریعے مطلع کر دیا جائے گا۔"
-        rate_limit_error: "پوسٹس فی دن ایک بار ہی ڈاؤن لوڈ کی جا سکتی ہیں، براہ مہربانی کل دوبارہ کوشش کریں۔"
       new_private_message: "نیا پیغام"
       private_message: "پیغام"
       private_messages: "پیغامات"
@@ -978,7 +957,6 @@ ur:
       notification_schedule:
         title: "اطلاع کا نظام الاوقات"
         label: "حسب ضرورت نوٹیفکیشن نظام الاوقات کو فعال کریں"
-        tip: "ان گھنٹوں کے باہر آپ کو خود کار طریقے سے 'پریشان نہ کرنا' میں ڈال دیا جائے گا."
         midnight: "آدھی رات"
         none: "کوئی نہیں"
         monday: "پیر"
@@ -1022,7 +1000,6 @@ ur:
         perm_denied_expl: "آپ نے اطلاعات کے لئے اجازت دینے سے انکار کر دیا۔ اپنے براؤزر کی سیٹِنگ سے اطلاعات کی اجازت دیں۔"
         disable: "اطلاعات غیر فعال کریں"
         enable: "اطلاعات فعال کریں"
-        each_browser_note: 'نوٹ: آپ کو اپنے استعمال کردہ ہر براؤزر پر اس ترتیب کو تبدیل کرنا ہوگا۔ اس ترتیب سے قطع نظر "ڈسٹرب نہ کریں" میں ہونے پر تمام اطلاعات کو غیر فعال کر دیا جائے گا۔'
         consent_prompt: "جب لوگ آپ کی پوسٹس کا جواب دیں تو کیا آپ لائیو اطلاعات چاہتے ہیں؟"
       dismiss: "بر خاست کریں"
       dismiss_notifications: "سب بر خاست کریں"
@@ -1133,13 +1110,6 @@ ur:
       save_to_change_theme: 'آپ کے "%{save_text}" پر کلک کرنے کے بعد تھیم کو اپ ڈیٹ کر دیا جائے گا۔'
       home: "ڈیفالٹ ہوم پیج"
       staged: "سٹَیجڈ"
-      staff_counters:
-        flags_given: "مدد گار فلَیگ"
-        flagged_posts: "فلَیگ کی گئی پوسٹس"
-        deleted_posts: "مٹائی گئی پوسٹس"
-        suspensions: "معطلیاں"
-        warnings_received: "تنبیہات"
-        rejected_posts: "مسترد شدہ پوسٹس"
       messages:
         all: "تمام ان باکسز"
         inbox: "اِن باکس"
@@ -1189,11 +1159,9 @@ ur:
         title: "دو فیکٹر بیک اپ کوڈز"
         regenerate: "دوبارہ تخلیق کریں"
         disable: "غیر فعال کریں"
-        enable: "فعال کریں"
-        enable_long: "بیک اپ کوڈ فعال کریں"
         manage:
-          one: "بیک اپ کوڈز کا نظم کریں۔ آپ کے پاس <strong>%{count}</strong> بیک اپ کوڈ باقی ہے۔"
-          other: "بیک اپ کوڈز کا نظم کریں۔ آپ کے پاس <strong>%{count}</strong> بیک اپ کوڈز باقی ہیں۔"
+          one: "آپ کے <strong>%{count}</strong> بیک اپ کوڈ باقی ہے۔"
+          other: "آپ کے <strong>%{count}</strong> بیک اپ کوڈز باقی ہیں۔"
         copy_to_clipboard: "کلِپ بورڈ میں کاپی کریں"
         copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"
         copied_to_clipboard: "کلِپ بورڈ میں کاپی کر لیا گیا"
@@ -1732,6 +1700,7 @@ ur:
       title: "لاگ ان"
       username: "صارف"
       password: "پاسورڈ"
+      show_password: "دکھائیں"
       second_factor_title: "دو عنصری کی تصدیق"
       second_factor_description: "براہ مہربانی اپنی اَیپ میں سے توثیقی کَوڈ درج کریں:"
       second_factor_backup: "بیک اپ کوڈ کا استعمال کرتے ہوئے لاگ ان کریں"
@@ -1934,8 +1903,6 @@ ur:
         topic_template_not_modified: "براہ مہربانی ٹاپک ٹَیمپلیٹ میں ترمیم کرکے اپنے ٹاپک میں تفصیلات اور مخصوصیات شامل کریں۔"
       save_edit: "ترمیم محفوظ کریں"
       overwrite_edit: "دوسری ترمیم کے اوپر لکھ ڈالیں"
-      reply_original: "حقیقی ٹاپک پر جواب دیں"
-      reply_here: "یہاں جواب دیں"
       reply: "جواب"
       cancel: "منسوخ"
       create_topic: "ٹاپک بنائیں"
@@ -2054,6 +2021,7 @@ ur:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2116,6 +2084,7 @@ ur:
         invited_to_private_message: "ذاتی پیغام کیلئے دعوت دی گئی"
         invitee_accepted: "دعوت قبول کر لی گئی"
         posted: "نئی پوسٹ"
+        watching_category_or_tag: "نئی پوسٹ"
         moved_post: "پوسٹ منتقل کر دی گئی"
         linked: "لنک کردہ"
         bookmark_reminder: "بک مارک یاد دہانی"
@@ -2394,8 +2363,6 @@ ur:
       expand_details: "موضوع کی تفصیلات کو پھیلائیں"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
-      jump_reply_up: اِس سے پرانے جواب پر جائیں
-      jump_reply_down: اِس سے نئے جواب پر جائیں
       deleted: "ٹاپک مٹادیا گیا ہے"
       slow_mode_update:
         title: "سست موڈ"
@@ -2925,7 +2892,6 @@ ur:
         create_for_topic: "موضوع کے لیے بُک مارک بنائیں"
         edit: "بک مارک میں ترمیم"
         edit_for_topic: "موضوع کے لیے بک مارک میں ترمیم"
-        created: "بنایا گیا"
         updated: "اپ ڈیٹ کیا"
         name: "نام"
         name_placeholder: "یہ بک مارک کس لیے ہے؟"
@@ -2966,7 +2932,6 @@ ur:
       back: "واپس زمرے میں"
       general: "عام"
       settings: "سیٹِنگ"
-      topic_template: "ٹاپک ٹَیمپلیٹ"
       tags: "ٹیگز"
       tags_allowed_tags: "اس زُمرہ میں اِن ٹیگز کو محدود کریں:"
       tags_allowed_tag_groups: "اس زُمرہ میں اِن ٹیگ گروپس کو محدود کریں:"
@@ -3020,8 +2985,6 @@ ur:
       images: "تصاویر"
       email_in: "اپنی مرضی کا اِنکَمِنگ اِیمیل ایڈریس:"
       email_in_allow_strangers: "اکاؤنٹس نہ رکھنے والے گمنام صارفین کی طرف سے اِیمیلز کو قبول کریں"
-      email_in_disabled: "ای میل کے ذریعے نئے عنوانات پوسٹ کرنا سائٹ کی ترتیبات میں غیر فعال ہے۔ ای میل کے ذریعے نئے عنوانات کی اشاعت کو فعال کرنے کے لیے، "
-      email_in_disabled_click: 'سیٹِنگ میں "اِیمیل اِن" فعال کریں۔'
       mailinglist_mirror: "زُمرہ میلنگ فہرست کا عکس ہے"
       show_subcategory_list: "اس زمرہ میں ذیلی زمرہ جات کی فہرست ٹاپکس سے مندرجہ بالا دکھائیں۔"
       read_only_banner: "بینر ٹیکسٹ جب کوئی صارف اس زمرے میں موضوع نہیں بنا سکتا:"
@@ -3221,7 +3184,6 @@ ur:
     category_title: "زمرہ"
     history_capped_revisions: "تاریخی، آخری 100 ترمیم"
     history: "تاریخی"
-    changed_by: "%{author} کی طرف سے"
     raw_email:
       title: "آنے والی اِیمیل"
       not_available: "دستیاب نہیں ہے!"
@@ -3229,6 +3191,10 @@ ur:
     filters:
       with_topics: "%{filter} ٹاپک"
       with_category: "%{filter} %{category} ٹاپک"
+      filter:
+        title: "فِلٹر"
+        button:
+          label: "فِلٹر"
       latest:
         title: "تازہ ترین"
         title_with_count:
@@ -3577,16 +3543,12 @@ ur:
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
     image_removed: "(تصویر ہٹا دی گئی)"
-    do_not_disturb:
-      title: "کے لئے پریشان مت کرو..."
-      label: "پریشان مت کرو"
-      remaining: "%{remaining} باقی رہتا ہے..."
+    pause_notifications:
       options:
         half_hour: "30 منٹ"
         one_hour: "1 گھنٹہ"
         two_hours: "2 گھنٹے"
         tomorrow: "کل تک"
-        custom: "اپنی مرضی کا"
       set_schedule: "اطلاع کا شیڈول مرتب کریں"
     trust_levels:
       names:
@@ -3627,6 +3589,16 @@ ur:
       more: "مزید"
       all_categories: "تمام زُمرَہ جات"
       sections:
+        custom:
+          save: "محفوظ کریں"
+          delete: "مٹائیں"
+          links:
+            icon:
+              label: "آئیکن"
+            name:
+              label: "نام"
+            value:
+              label: "لنک"
         about:
           header_link_text: "بارے میں"
         messages:
@@ -3652,18 +3624,19 @@ ur:
               content: "ایڈمن"
             badges:
               content: "بَیج"
+            everything:
+              content: "تمام"
             faq:
               content: "عمومی سوالات"
             groups:
               content: "گروپس"
-              title: "تمام گروپس"
             users:
               content: "صارفین"
             my_posts:
               content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
-              title: "جائزہ لیں"
+    until: "جب تک:"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
@@ -3884,7 +3857,6 @@ ur:
             topics:
               read: اس میں کوئی موضوع یا کوئی مخصوص پوسٹ پڑھیں۔ آر ایس ایس کی بھی حمایت حاصل ہے۔
               write: ایک نیا موضوع بنائیں یا موجودہ موضوع پر پوسٹ کریں۔
-              update: ایک موضوع کو اپ ڈیٹ کریں۔ عنوان، زمرہ، ٹیگز وغیرہ تبدیل کریں۔
               read_lists: ٹاپک، نیا، تازہ ترین، وغیرہ جیسے عنوانات کی فہرستیں پڑھیں۔ RSS بھی تعاون یافتہ ہے۔
             posts:
               edit: کسی بھی پوسٹ یا مخصوص میں ترمیم کریں۔
@@ -3972,9 +3944,6 @@ ur:
         user_promoted_event:
           name: "یوزر پروموٹڈ ایونٹ"
           details: "جب کسی صارف کو ایک اعتماد کی سطح سے دوسری سطح پر ترقی دی جاتی ہے۔"
-        user_badge_event:
-          name: "بیج گرانٹ ایونٹ"
-          details: "جب صارف کو بیج ملتا ہے۔"
         group_user_event:
           name: "گروپ یوزر ایونٹ"
           details: "جب کسی صارف کو گروپ میں شامل یا ہٹا دیا جاتا ہے۔"
@@ -4017,7 +3986,6 @@ ur:
         enabled: "فعال؟"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "سیٹنگ تبدیل کریں"
         change_settings_short: "سیٹِنگ"
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
         official: "آفیشل پلَگ اِن"
@@ -4096,7 +4064,6 @@ ur:
         button_title: "دعوت بھیجیں"
       customize:
         title: "مرضی کے مطابق بنائیں"
-        long_title: "ویب سائٹ کو اپنی مرضی کے حساب سے بنانے کیلئے اختیارات"
         preview: "پیشگی دیکھیں"
         explain_preview: "اِس تِھیم کے ساتھ سائٹ ملاحظہ کریں"
         save: "محفوظ کریں"
@@ -4230,7 +4197,6 @@ ur:
             error: "یہ تِھیم خود کار طریقے سے غیر فعال کر دی گئی ہے کیونکہ یہ ڈِسکورس کے اِس ورژن کیلئے ناموافق ہے۔"
             minimum: "ڈِسکورس ورژن %{version} یا اُس سے اوپر ضروری ہے۔"
             maximum: "ڈِسکورس ورژن %{version} یا اُس سے نیچے ضروری ہے۔"
-          component_of: "جس کا کمپنَینٹ:"
           update_to_latest: "تازہ ترین ورژن تک اِپ ڈَیٹ کریں"
           check_for_updates: "اپ ڈیٹ کے لیے چیک کریں"
           updating: "اَپ ڈَیٹ کیا جا رہا ہے..."
@@ -4341,6 +4307,8 @@ ur:
           love:
             name: "محبت"
             description: "لائیک بٹن کا رنگ۔"
+          selected:
+            name: "منتخب کیا ہوا"
         robots:
           title: "آپ کی سائٹ کی robots.txt فائل کی جگہ لے لیتی ہے:"
           warning: "یہ مستقل طور پر کسی بھی متعلقہ سائٹ ترتیبات کی جگہ لے لیگی۔"
@@ -4621,14 +4589,8 @@ ur:
           silence: "خاموش کریں"
           link: "لنک"
         action_descriptions:
-          block: "اِن الفاظ پر مشتمل پوسٹس شائع ہونے سے روکیں۔ جب صارف اپنی پوسٹ شائع کرنے کی کوشش کرے گا تو اُسے ایک خرابی کا پیغام دکھایا جائے گا۔"
-          censor: "اِن الفاظ پر مشتمل پوسٹس کوشائع ہونے دیں، لیکن سینسر کیے گئے الفاظ کو چھپانے والے حروف کے ساتھ تبدیل کریں۔"
-          require_approval: "اِن الفاظ پر مشتمل پوسٹس کے نظر آنے سے پہلے اسٹاف کی طرف سے منظوری کی ضرورت ہوگی۔"
-          flag: "اِن الفاظ پر مشتمل پوسٹس کوشائع ہونے دیں، لیکن ان کو غیر مناسب کے طور پر فلَیگ کریں تاکہ منتظمین ان کا جائزہ لے سکیں۔"
-          replace: "پوسٹس میں الفاظ کو دوسرے الفاظ سے بدلیں"
-          tag: "پہلی پوسٹ کی بنیاد پر موضوعات کو خودکار طور پر ٹیگ کریں"
-          silence: "ان الفاظ پر مشتمل صارفین کی پہلی پوسٹس کو دیکھنے سے پہلے عملے کی منظوری درکار ہوگی اور صارف خود بخود خاموش ہو جائے گا۔"
-          link: "پوسٹس میں الفاظ کو لنکس سے بدلیں"
+          replace: "پوسٹس میں الفاظ کو دوسرے الفاظ سے بدلیں."
+          link: "پوسٹس میں الفاظ کو لنکس سے بدلیں."
         form:
           label: "لفظ یا جملہ ہے۔"
           placeholder: "لفظ یا جملہ درج کریں (* سب کیلیے )"
@@ -4649,6 +4611,35 @@ ur:
           description: "نظر رکھے ہوئے الفاظ کے ساتھ مَیچ چَیک کرنے کیلئے نیچے ٹَیکسٹ درج کریں۔"
           found_matches: "ملے مَیچ:"
           no_matches: "کوئی میل نہیں ملے"
+      form_templates:
+        nav_title: "ٹَیمپلیٹ"
+        list_table:
+          headings:
+            name: "نام"
+            actions: "عمل"
+        view_template:
+          close: "بند کریں"
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
+        new_template_form:
+          submit: "محفوظ کریں"
+          cancel: "منسوخ"
+          preview: "پیشگی دیکھیں"
+        quick_insert_fields:
+          add_new_field: "اضافہ کریں"
+          dropdown: "ڈراپ ڈاؤن"
+        validations_modal:
+          table_headers:
+            key: "کی"
+            type: "قِسم"
+            description: "تفصیل"
+          validations:
+            required:
+              key: "درکار ہے"
+            minimum:
+              key: "کم از کم"
+            maximum:
+              key: "زیادہ سے زیادہ"
       impersonate:
         title: "نقالی"
         help: "ڈِیبَگ مقاصد کیلئے اِس آلے کو استعمال کر کہ ایک صارف کے اکاؤنٹ کی نقالی کریں۔ کام ختم ہونے کے بعد آپ کے ایک دفعہ لاگ آؤٹ کرنا ہو گا۔"
@@ -4661,6 +4652,7 @@ ur:
         not_found: "معذرت، وہ صارف نام ہمارے سِسٹم میں موجود نہیں ہے۔"
         id_not_found: "معذرت، وہ صارف ID ہمارے سِسٹم میں موجود نہیں ہے۔"
         active: "فعال کردہ"
+        status: "سٹیٹس"
         show_emails: "اِیمیل دکھائیں"
         hide_emails: "ای میلز چھپائیں"
         nav:
@@ -4696,7 +4688,6 @@ ur:
       user:
         suspend_failed: "اِس صارف کو معطل کرتے ہوے کچھ غلط ہو گیا %{error}"
         unsuspend_failed: "اِس صارف کی معطلی ختم کرتے ہوے کچھ غلط ہو گیا %{error}"
-        suspend_duration: "صارف کب تک معطل رہے گا؟"
         suspend_reason_label: "آپ معطل کیوں کر رہے ہیں؟ یہ ٹَیکسٹ اِس صارف کے پروفائل پیج پر <b>ہر کسی کے لیے ظاہر ہو گا</b>، اور جب صارف لاگ اِن کرنے کی کوشش کریں گے تو اُنہیں دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason_hidden_label: "آپ کیوں معطل کر رہے ہیں؟ صارف جب لاگ اِن کرنے کی کوشش کرے گا تو اُسے یہ ٹیکسٹ دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason: "وجہ"
@@ -4730,7 +4721,6 @@ ur:
         penalty_post_edit: "پوسٹ میں ترمیم کریں"
         penalty_post_none: "کچھ نہ کریں"
         penalty_count: "سزا شمار"
-        penalty_history: "سزا کی تاریخ"
         clear_penalty_history:
           title: "سزا ہِسٹری صاف کریں"
           description: "سزاوں والے صارفین TL3 تک نہیں پہنچ سکتے"
@@ -4744,7 +4734,6 @@ ur:
         staged: "سٹَیجڈ؟"
         show_admin_profile: "ایڈمن"
         show_public_profile: "پبلک پروفائل دکھائیں"
-        impersonate: "نقالی"
         action_logs: "عوامل کے لاگز"
         ip_lookup: "IP کا سراغ"
         log_out: "لاگ آُوٹ"
@@ -5069,7 +5058,7 @@ ur:
         allow_title: عنوان کے طور پر بَیج وں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
         listable: پبلک بَیجز کے صفحے پر بَیج دکھائیں
-        enabled: بَیج فعال کریں
+        disabled: غیر فعال
         icon: آئیکن
         image: تصویر
         graphic: گرافک
@@ -5141,7 +5130,6 @@ ur:
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"
         title: "اَیمبَیڈ کرنا"
         host: "اجازت یافتہ ہَوسٹ"
-        class_name: "کلاس کا نام"
         allowed_paths: "پاتھ کی اجازت کی فہرست"
         edit: "ترمیم"
         category: "زمرہ میں پوسٹ کریں"
@@ -5193,7 +5181,6 @@ ur:
       next: "اگلا"
       step-text: "قدم"
       step: "%{total} میں سے %{current}"
-      upload: "اَپ لوڈ"
       uploading: "اَپ لوڈ کیا جا رہا ہے..."
       upload_error: "معذرت، یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
       staff_count:

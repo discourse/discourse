@@ -43,9 +43,19 @@ describe FinalDestination::SSRFDetector do
       expect(subject.ip_allowed?("9001:82f3:8873::3")).to eq(false)
     end
 
-    it "returns false for standard internal IPs" do
-      expect(subject.ip_allowed?("172.31.100.31")).to eq(false)
-      expect(subject.ip_allowed?("fd02:77fa:ffea::f")).to eq(false)
+    %w[0.0.0.0 10.0.0.0 127.0.0.0 172.31.100.31 255.255.255.255 ::1 ::].each do |internal_ip|
+      it "returns false for '#{internal_ip}'" do
+        expect(subject.ip_allowed?(internal_ip)).to eq(false)
+      end
+    end
+
+    it "returns false for private IPv4-mapped IPv6 addresses" do
+      expect(subject.ip_allowed?("::ffff:172.31.100.31")).to eq(false)
+      expect(subject.ip_allowed?("::ffff:0.0.0.0")).to eq(false)
+    end
+
+    it "returns true for public IPv4-mapped IPv6 addresses" do
+      expect(subject.ip_allowed?("::ffff:52.52.167.244")).to eq(true)
     end
   end
 
@@ -92,6 +102,13 @@ describe FinalDestination::SSRFDetector do
       subject.stubs(:lookup_ips).returns(["127.0.0.1"])
       expect { subject.lookup_and_filter_ips("example.com") }.to raise_error(
         subject::DisallowedIpError,
+      )
+    end
+
+    it "raises an exception if lookup fails" do
+      subject.stubs(:lookup_ips).raises(SocketError)
+      expect { subject.lookup_and_filter_ips("example.com") }.to raise_error(
+        subject::LookupFailedError,
       )
     end
 

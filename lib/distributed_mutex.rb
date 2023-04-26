@@ -31,11 +31,7 @@ class DistributedMutex
   LUA
 
   def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
-    self.new(
-      key,
-      redis: redis,
-      validity: validity
-    ).synchronize(&blk)
+    self.new(key, redis: redis, validity: validity).synchronize(&blk)
   end
 
   def initialize(key, redis: nil, validity: DEFAULT_VALIDITY)
@@ -58,7 +54,9 @@ class DistributedMutex
       ensure
         current_time = redis.time[0]
         if current_time > expire_time
-          warn("held for too long, expected max: #{@validity} secs, took an extra #{current_time - expire_time} secs")
+          warn(
+            "held for too long, expected max: #{@validity} secs, took an extra #{current_time - expire_time} secs",
+          )
         end
 
         unlocked = UNLOCK_SCRIPT.eval(redis, [prefixed_key], [expire_time.to_s])

@@ -1,4 +1,10 @@
-<DModalBody @rawTitle={{i18n "admin.watched_words.test.modal_title" action=this.model.name}} @class="watched-words-test-modal">
+<DModalBody
+  @rawTitle={{i18n
+    "admin.watched_words.test.modal_title"
+    action=this.model.name
+  }}
+  @class="watched-words-test-modal"
+>
   <p>{{i18n "admin.watched_words.test.description"}}</p>
   <Textarea name="test_value" @value={{this.value}} autofocus="autofocus" />
   {{#if this.matches}}

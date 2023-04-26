@@ -1,10 +1,24 @@
-<DModalBody @title="user.user_notifications.ignore_duration_title" @autoFocus="false">
-  <FutureDateInput @label="user.user_notifications.ignore_duration_when" @input={{this.ignoredUntil}} @customShortcuts={{this.timeShortcuts}} @includeDateTime={{false}} @onChangeInput={{action (mut this.ignoredUntil)}} />
+<DModalBody
+  @title="user.user_notifications.ignore_duration_title"
+  @autoFocus="false"
+>
+  <FutureDateInput
+    @label="user.user_notifications.ignore_duration_when"
+    @input={{this.ignoredUntil}}
+    @customShortcuts={{this.timeShortcuts}}
+    @includeDateTime={{false}}
+    @onChangeInput={{action (mut this.ignoredUntil)}}
+  />
   <p>{{i18n "user.user_notifications.ignore_duration_note"}}</p>
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary ignore-duration-save" @disabled={{this.saveDisabled}} @label="user.user_notifications.ignore_duration_save" @action={{action "ignore"}} />
+  <DButton
+    @class="btn-primary ignore-duration-save"
+    @disabled={{this.saveDisabled}}
+    @label="user.user_notifications.ignore_duration_save"
+    @action={{action "ignore"}}
+  />
 
   <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
 </div>

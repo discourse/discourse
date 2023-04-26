@@ -16,13 +16,10 @@ module("Discourse Chat | Unit | chat-emoji-reaction-store", function (hooks) {
     this.chatEmojiReactionStore.reset();
   });
 
-  // TODO (martin) Remove site setting workarounds after core PR#1290
   test("defaults", function (assert) {
     assert.deepEqual(
       this.chatEmojiReactionStore.favorites,
-      (this.siteSettings.default_emoji_reactions || "")
-        .split("|")
-        .filter((val) => val)
+      this.siteSettings.default_emoji_reactions.split("|").filter((val) => val)
     );
   });
 
