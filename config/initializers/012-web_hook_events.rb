@@ -100,6 +100,7 @@ DiscourseEvent.on(:user_added_to_group) do |user, group, options|
     group_user,
     :user_added_to_group,
     WebHookGroupUserSerializer,
+    group_ids: [group.id],
   )
 end
 
