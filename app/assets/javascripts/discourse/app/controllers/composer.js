@@ -33,7 +33,6 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import renderTags from "discourse/lib/render-tags";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import FormTemplate from "discourse/models/form-template";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -149,15 +148,9 @@ export default class ComposerController extends Controller {
     return this.set("_disableSubmit", value);
   }
 
-  get formTemplates() {
-    if (!this.model.category) {
-      return;
-    }
-
-    return FormTemplate.findById(this.model.category.form_template_ids[0]);
-    // return this.site.form_templates.filter((t) =>
-    //   this.model.category.form_template_ids?.includes(t.id)
-    // )[0];
+  @discourseComputed("model.category")
+  formTemplateIds() {
+    return this.model.category?.form_template_ids;
   }
 
   @discourseComputed("showPreview")

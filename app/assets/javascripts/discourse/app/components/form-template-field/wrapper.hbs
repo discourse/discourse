@@ -1,6 +1,6 @@
-{{#if this.canShowContent}}
+{{#if this.parsedTemplate}}
   <div class="form-template-form__wrapper">
-    {{#each this.parsedContent as |content|}}
+    {{#each this.parsedTemplate as |content|}}
       {{component
         (concat "form-template-field/" content.type)
         attributes=content.attributes

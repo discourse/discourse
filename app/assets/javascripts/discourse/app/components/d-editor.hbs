@@ -1,11 +1,9 @@
 <div class="d-editor-container">
   <div class="d-editor-textarea-column">
     {{yield}}
-    {{!-- {{log @formTemplates}} --}}
 
-    {{#if @formTemplates}}
-      {{@formTemplates.name}}
-      <FormTemplateField::Wrapper @content={{@formTemplates.template}} />
+    {{#if @formTemplateIds}}
+      <FormTemplateField::Wrapper @ids={{@formTemplateIds}} />
     {{else}}
       <div
         class="d-editor-textarea-wrapper

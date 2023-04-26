@@ -3,8 +3,6 @@ import RestModel from "discourse/models/rest";
 
 export default class FormTemplate extends RestModel {
   static findById(id) {
-    return ajax(`form-templates/${id}.json`).then(
-      (result) => result.form_template
-    );
+    return ajax(`/form-templates/${id}.json`);
   }
 }
