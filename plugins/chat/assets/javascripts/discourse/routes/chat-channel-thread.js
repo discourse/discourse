@@ -11,6 +11,16 @@ export default class ChatChannelThread extends DiscourseRoute {
     return channel.threadsManager.find(channel.id, params.threadId);
   }
 
+  deactivate() {
+    this.#closeThread();
+  }
+
+  #closeThread() {
+    this.chat.activeChannel.activeThread?.messagesManager?.clearMessages();
+    this.chat.activeChannel.activeThread = null;
+    this.chatStateManager.closeSidePanel();
+  }
+
   afterModel(model) {
     this.chat.activeChannel.activeThread = model;
     this.chatStateManager.openSidePanel();
