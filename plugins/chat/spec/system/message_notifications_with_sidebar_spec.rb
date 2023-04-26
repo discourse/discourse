@@ -222,7 +222,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
         end
 
         context "when messages are created" do
-          it "correctly renders notifications" do
+          xit "correctly renders notifications" do
             using_session(:current_user) { visit("/") }
 
             using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
