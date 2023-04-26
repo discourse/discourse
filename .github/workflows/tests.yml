@@ -25,7 +25,6 @@ jobs:
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
-      RUBY_GLOBAL_METHOD_CACHE_SIZE: 131072
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
