@@ -6,8 +6,9 @@ describe "Single thread in side panel", type: :system, js: true do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
-  let(:open_thread) { PageObjects::Pages::ChatThread.new }
+  let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
+  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
 
   before do
     chat_system_bootstrap(current_user, [channel])
@@ -50,6 +51,34 @@ describe "Single thread in side panel", type: :system, js: true do
 
     before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
 
+    context "when in full page" do
+      context "when switching channel" do
+        fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: true) }
+
+        before { channel_2.add(current_user) }
+
+        it "closes the opened thread" do
+          chat_page.visit_thread(thread)
+          expect(side_panel).to have_open_thread(thread)
+
+          sidebar_page.open_channel(channel_2)
+
+          expect(side_panel).to have_no_open_thread
+        end
+      end
+
+      context "when closing the thread" do
+        it "closes it" do
+          chat_page.visit_thread(thread)
+          expect(side_panel).to have_open_thread(thread)
+
+          thread_page.close
+
+          expect(side_panel).to have_no_open_thread
+        end
+      end
+    end
+
     it "opens the single thread in the drawer using the indicator" do
       visit("/latest")
       chat_page.open_from_header
@@ -79,14 +108,14 @@ describe "Single thread in side panel", type: :system, js: true do
     xit "shows the excerpt of the thread original message" do
       chat_page.visit_channel(channel)
       channel_page.message_thread_indicator(thread.original_message).click
-      expect(open_thread).to have_header_content(thread.excerpt)
+      expect(thread_page).to have_header_content(thread.excerpt)
     end
 
     xit "shows the avatar and username of the original message user" do
       chat_page.visit_channel(channel)
       channel_page.message_thread_indicator(thread.original_message).click
-      expect(open_thread.omu).to have_css(".chat-user-avatar img.avatar")
-      expect(open_thread.omu).to have_content(thread.original_message_user.username)
+      expect(thread_page.omu).to have_css(".chat-user-avatar img.avatar")
+      expect(thread_page.omu).to have_content(thread.original_message_user.username)
     end
 
     describe "sending a message" do
@@ -94,8 +123,8 @@ describe "Single thread in side panel", type: :system, js: true do
         chat_page.visit_channel(channel)
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel).to have_open_thread(thread)
-        open_thread.send_message(thread.id, "new thread message")
-        expect(open_thread).to have_message(thread.id, text: "new thread message")
+        thread_page.send_message(thread.id, "new thread message")
+        expect(thread_page).to have_message(thread.id, text: "new thread message")
         thread_message = thread.replies.last
         expect(thread_message.chat_channel_id).to eq(channel.id)
         expect(thread_message.thread.channel_id).to eq(channel.id)
@@ -105,8 +134,8 @@ describe "Single thread in side panel", type: :system, js: true do
         chat_page.visit_channel(channel)
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel).to have_open_thread(thread)
-        open_thread.send_message(thread.id, "new thread message")
-        expect(open_thread).to have_message(thread.id, text: "new thread message")
+        thread_page.send_message(thread.id, "new thread message")
+        expect(thread_page).to have_message(thread.id, text: "new thread message")
         thread_message = thread.reload.replies.last
         expect(channel_page).not_to have_css(channel_page.message_by_id_selector(thread_message.id))
       end
@@ -128,19 +157,19 @@ describe "Single thread in side panel", type: :system, js: true do
 
         using_session(:tab_2) do
           expect(side_panel).to have_open_thread(thread)
-          open_thread.send_message(thread.id, "the other user message")
-          expect(open_thread).to have_message(thread.id, text: "the other user message")
+          thread_page.send_message(thread.id, "the other user message")
+          expect(thread_page).to have_message(thread.id, text: "the other user message")
         end
 
         using_session(:tab_1) do
           expect(side_panel).to have_open_thread(thread)
-          expect(open_thread).to have_message(thread.id, text: "the other user message")
-          open_thread.send_message(thread.id, "this is a test message")
-          expect(open_thread).to have_message(thread.id, text: "this is a test message")
+          expect(thread_page).to have_message(thread.id, text: "the other user message")
+          thread_page.send_message(thread.id, "this is a test message")
+          expect(thread_page).to have_message(thread.id, text: "this is a test message")
         end
 
         using_session(:tab_2) do
-          expect(open_thread).to have_message(thread.id, text: "this is a test message")
+          expect(thread_page).to have_message(thread.id, text: "this is a test message")
         end
       end
 
