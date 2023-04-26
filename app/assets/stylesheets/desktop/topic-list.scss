@@ -280,16 +280,13 @@
 #user-info-topic-list {
   display: flex;
   justify-content: end;
+  gap: 7px;
 
   .user-hearts-data {
     text-align: left;
     display: flex;
     flex-direction: column;
     align-items: start;
-  }
-
-  #save-voice-credits {
-    margin-right: 10px;
   }
 
   #reset-voice-credits,
