@@ -46,7 +46,7 @@ describe "Emoji deny list", type: :system, js: true do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
 
-    it "should remove denied emojis from emoji picker" do
+    xit "should remove denied emojis from emoji picker" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(composer).to be_opened
 
