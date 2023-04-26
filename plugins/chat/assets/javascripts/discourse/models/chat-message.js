@@ -77,7 +77,7 @@ export default class ChatMessage {
         ? ChatMessage.create(channel, args.in_reply_to || args.replyToMsg)
         : null);
     this.draft = args.draft;
-    this._message = args.message || "";
+    this.message = args.message || "";
     this._cooked = args.cooked || "";
     this.reactions = this.#initChatMessageReactionModel(
       args.id,
