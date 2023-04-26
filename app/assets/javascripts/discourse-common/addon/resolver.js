@@ -3,7 +3,6 @@ import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import SuffixTrie from "discourse-common/lib/suffix-trie";
 import Resolver from "ember-resolver";
-import { buildResolver as buildLegacyResolver } from "discourse-common/lib/legacy-resolver";
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
 let _options = {};
@@ -152,14 +151,9 @@ function lookupModuleBySuffix(suffix) {
 }
 
 export function buildResolver(baseName) {
-  let LegacyResolver = buildLegacyResolver(baseName);
-
   return class extends Resolver {
-    LegacyResolver = LegacyResolver;
-
     init(props) {
       super.init(props);
-      this.legacyResolver = this.LegacyResolver.create(props);
     }
 
     resolveRouter(/* parsedName */) {
