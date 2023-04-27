@@ -49,9 +49,6 @@
     padding: 0;
     .sidebar-footer-container {
       padding: 0;
-      &:before {
-        top: calc(-100% + 2px);
-      }
     }
   }
 }
