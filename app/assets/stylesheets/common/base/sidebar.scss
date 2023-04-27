@@ -31,13 +31,19 @@
 
   @include unselectable;
 
+  // 100dvh with fallback for old browsers
+  --100dvh: 100vh;
+  @supports (height: 100dvh) {
+    --100dvh: 100dvh;
+  }
+
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
     height: calc(
-      100vh - var(--header-offset, 0px) - var(--footer-nav-height, 0px)
+      var(--100dvh) - var(--header-offset, 0px) - var(--footer-nav-height, 0px)
     );
   }
-  height: calc(100vh - var(--header-offset, 0px));
+  height: calc(var(--100dvh) - var(--header-offset, 0px));
   align-self: start;
   overflow-y: auto;
 
