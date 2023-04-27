@@ -12,12 +12,12 @@ export default Component.extend({
     return false;
   }),
 
-  rootEventType: "click",
+  rootEventType: "focusout",
 
   init() {
     this._super(...arguments);
 
-    this.handleRootMouseDownHandler = bind(this, this.handleRootMouseDown);
+    this.handleRootFocusOutHandler = bind(this, this.handleRootFocusOut);
   },
 
   didInsertElement() {
@@ -25,9 +25,9 @@ export default Component.extend({
 
     this.element.style.position = "relative";
 
-    document.addEventListener(
+    this.element.addEventListener(
       this.rootEventType,
-      this.handleRootMouseDownHandler,
+      this.handleRootFocusOutHandler,
       true
     );
   },
@@ -35,27 +35,23 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    document.removeEventListener(
+    this.element.removeEventListener(
       this.rootEventType,
-      this.handleRootMouseDownHandler,
+      this.handleRootFocusOutHandler,
       true
     );
   },
 
-  handleRootMouseDown(event) {
+  handleRootFocusOut(event) {
     if (!this.selectKit.isExpanded) {
       return;
     }
 
-    const headerElement = document.querySelector(
-      `#${this.selectKit.uniqueID}-header`
-    );
-
-    if (headerElement && headerElement.contains(event.target)) {
+    if (!this.selectKit.mainElement()) {
       return;
     }
 
-    if (this.element.contains(event.target)) {
+    if (this.selectKit.mainElement().contains(event.relatedTarget)) {
       return;
     }
 
