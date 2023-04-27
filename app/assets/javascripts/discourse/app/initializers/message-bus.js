@@ -5,23 +5,14 @@ import { handleLogoff } from "discourse/lib/ajax";
 import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
-const CONNECTIVITY_ERROR_CLASS = "message-bus-offline";
 
-function updateConnectivityIndicator(stat) {
-  if (stat === "error") {
-    document.documentElement.classList.add(CONNECTIVITY_ERROR_CLASS);
-  } else {
-    document.documentElement.classList.remove(CONNECTIVITY_ERROR_CLASS);
-  }
-}
-
-function ajax(opts) {
+function ajax(opts, messageBusConnectivity) {
   if (opts.complete) {
     const oldComplete = opts.complete;
     opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
-      updateConnectivityIndicator(stat);
+      messageBusConnectivity.setConnectivity(stat !== "error");
     };
   } else {
     opts.complete = handleLogoff;
@@ -42,7 +33,10 @@ export default {
 
     const messageBus = container.lookup("service:message-bus"),
       user = container.lookup("service:current-user"),
-      siteSettings = container.lookup("service:site-settings");
+      siteSettings = container.lookup("service:site-settings"),
+      messageBusConnectivity = container.lookup(
+        "service:message-bus-connectivity"
+      );
 
     messageBus.alwaysLongPoll = !isProduction();
     messageBus.shouldLongPollCallback = () =>
@@ -97,7 +91,7 @@ export default {
         if (userPresent()) {
           opts.headers["Discourse-Present"] = "true";
         }
-        return ajax(opts);
+        return ajax(opts, messageBusConnectivity);
       };
     } else {
       messageBus.ajax = function (opts) {
@@ -105,7 +99,7 @@ export default {
         if (userPresent()) {
           opts.headers["Discourse-Present"] = "true";
         }
-        return ajax(opts);
+        return ajax(opts, messageBusConnectivity);
       };
 
       messageBus.baseUrl = getURL("/");
