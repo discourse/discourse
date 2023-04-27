@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
@@ -57,6 +57,7 @@ module(
       await this.subject.expand();
       await this.subject.fillInFilter("baz");
       await this.subject.selectRowByValue("monkey");
+      await settled();
 
       assert.strictEqual(
         query(".select-kit-error").innerText,
@@ -86,6 +87,7 @@ module(
       );
 
       await this.subject.selectRowByValue("monkey");
+      await settled();
 
       assert.strictEqual(
         query("input[name=filter-input-search]").placeholder,

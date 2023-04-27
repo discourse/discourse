@@ -51,7 +51,7 @@ export default Component.extend({
       return;
     }
 
-    if (this.selectKit.mainElement().contains(event.target)) {
+    if (this.selectKit.mainElement().contains(event.relatedTarget)) {
       return;
     }
 
