@@ -36,12 +36,24 @@ class TopicsFilter
       filter_values = extract_and_validate_value_for(filter, values)
 
       case filter
+      when "activity-before"
+        filter_by_activity(before: filter_values)
+      when "activity-after"
+        filter_by_activity(after: filter_values)
       when "category"
         filter_categories(values: key_prefixes.zip(filter_values))
+      when "created-after"
+        filter_by_created(after: filter_values)
+      when "created-before"
+        filter_by_created(before: filter_values)
       when "created-by"
         filter_created_by_user(usernames: filter_values.flat_map { |value| value.split(",") })
       when "in"
         filter_in(values: filter_values)
+      when "latest-post-after"
+        filter_by_latest_post(after: filter_values)
+      when "latest-post-before"
+        filter_by_latest_post(before: filter_values)
       when "likes-min"
         filter_by_number_of_likes(min: filter_values)
       when "likes-max"
@@ -50,6 +62,8 @@ class TopicsFilter
         filter_by_number_of_likes_in_first_post(min: filter_values)
       when "likes-op-max"
         filter_by_number_of_likes_in_first_post(max: filter_values)
+      when "order"
+        order_by(values: filter_values)
       when "posts-min"
         filter_by_number_of_posts(min: filter_values)
       when "posts-max"
@@ -99,8 +113,21 @@ class TopicsFilter
 
   private
 
+  YYYY_MM_DD_REGEXP =
+    /^(?<year>[12][0-9]{3})-(?<month>0?[1-9]|1[0-2])-(?<day>0?[1-9]|[12]\d|3[01])$/
+  private_constant :YYYY_MM_DD_REGEXP
+
   def extract_and_validate_value_for(filter, values)
     case filter
+    when "activity-before", "activity-after", "created-before", "created-after",
+         "latest-post-before", "latest-post-after"
+      value = values.last
+
+      if match_data = value.match(YYYY_MM_DD_REGEXP)
+        Time.zone.parse(
+          "#{match_data[:year].to_i}-#{match_data[:month].to_i}-#{match_data[:day].to_i}",
+        )
+      end
     when "likes-min", "likes-max", "likes-op-min", "likes-op-max", "posts-min", "posts-max",
          "posters-min", "posters-max", "views-min", "views-max"
       value = values.last
@@ -115,6 +142,18 @@ class TopicsFilter
       next if !value
       @scope = (scope || @scope).where("#{column_name} #{operator} ?", value)
     end
+  end
+
+  def filter_by_activity(before: nil, after: nil)
+    filter_by_topic_range(column_name: "topics.bumped_at", min: after, max: before)
+  end
+
+  def filter_by_created(before: nil, after: nil)
+    filter_by_topic_range(column_name: "topics.created_at", min: after, max: before)
+  end
+
+  def filter_by_latest_post(before: nil, after: nil)
+    filter_by_topic_range(column_name: "topics.last_posted_at", min: after, max: before)
   end
 
   def filter_by_number_of_posts(min: nil, max: nil)
@@ -134,10 +173,7 @@ class TopicsFilter
       column_name: "first_posts.like_count",
       min:,
       max:,
-      scope:
-        @scope.joins(
-          "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
-        ),
+      scope: self.joins_first_posts(@scope),
     )
   end
 
@@ -388,5 +424,58 @@ class TopicsFilter
 
   def include_topics_with_any_tags(tag_ids)
     @scope = @scope.joins(:topic_tags).where("topic_tags.tag_id IN (?)", tag_ids).distinct(:id)
+  end
+
+  ORDER_BY_MAPPINGS = {
+    "activity" => {
+      column: "topics.bumped_at",
+    },
+    "category" => {
+      column: "categories.name",
+      scope: -> { @scope.joins(:category) },
+    },
+    "created" => {
+      column: "topics.created_at",
+    },
+    "latest-post" => {
+      column: "topics.last_posted_at",
+    },
+    "likes" => {
+      column: "topics.like_count",
+    },
+    "likes-op" => {
+      column: "first_posts.like_count",
+      scope: -> { joins_first_posts(@scope) },
+    },
+    "posters" => {
+      column: "topics.participant_count",
+    },
+    "views" => {
+      column: "topics.views",
+    },
+  }
+  private_constant :ORDER_BY_MAPPINGS
+
+  ORDER_BY_REGEXP = /^(?<order_by>#{ORDER_BY_MAPPINGS.keys.join("|")})(?<asc>-asc)?$/
+  private_constant :ORDER_BY_REGEXP
+
+  def order_by(values:)
+    values.each do |value|
+      match_data = value.match(ORDER_BY_REGEXP)
+
+      if match_data && column_name = ORDER_BY_MAPPINGS.dig(match_data[:order_by], :column)
+        if scope = ORDER_BY_MAPPINGS.dig(match_data[:order_by], :scope)
+          @scope = instance_exec(&scope)
+        end
+
+        @scope = @scope.order(column_name => match_data[:asc] ? :asc : :desc)
+      end
+    end
+  end
+
+  def joins_first_posts(scope)
+    scope.joins(
+      "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
+    )
   end
 end

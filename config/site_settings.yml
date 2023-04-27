@@ -1568,6 +1568,10 @@ files:
     default: false
     client: true
     hidden: true
+  video_thumbnails_enabled:
+    default: true
+    client: true
+    hidden: true
 
 trust:
   default_trust_level:

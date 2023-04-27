@@ -810,6 +810,7 @@ class Group < ActiveRecord::Base
       :user_removed_from_group,
       id: group_user.id,
       payload: payload,
+      group_ids: [self.id],
     )
   end
 
