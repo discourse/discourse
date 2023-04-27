@@ -2065,6 +2065,10 @@ en:
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
       value_prop: "Tired of scrolling through the same posts? When you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
 
+    offline_indicator:
+      no_internet: "No internet connection."
+      refresh_page: "Refresh page"
+
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
       description:
