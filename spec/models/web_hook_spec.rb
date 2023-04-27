@@ -558,7 +558,10 @@ RSpec.describe WebHook do
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
       expect(job_args["event_name"]).to eq("user_added_to_group")
+      expect(job_args["group_ids"]).to contain_exactly(group.id)
+
       payload = JSON.parse(job_args["payload"])
+
       expect(payload["group_id"]).to eq(group.id)
       expect(payload["user_id"]).to eq(user.id)
       expect(payload["notification_level"]).to eq(group.default_notification_level)
@@ -577,7 +580,10 @@ RSpec.describe WebHook do
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
       expect(job_args["event_name"]).to eq("user_removed_from_group")
+      expect(job_args["group_ids"]).to contain_exactly(group.id)
+
       payload = JSON.parse(job_args["payload"])
+
       expect(payload["group_id"]).to eq(group.id)
       expect(payload["user_id"]).to eq(user.id)
     end
