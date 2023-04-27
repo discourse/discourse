@@ -11,12 +11,13 @@ export default SingleSelectHeaderComponent.extend({
   caretDownIcon: reads("selectKit.options.caretDownIcon"),
   shouldDisplayClearableButton: and("clearable", "value"),
 
-  caretIcon: computed(
-    "selectKit.isExpanded",
-    "caretUpIcon",
-    "caretDownIcon",
-    function () {
+  caretIcon: computed("selectKit.isExpanded", "caretUpIcon", "caretDownIcon", {
+    get() {
       return this.selectKit.isExpanded ? this.caretUpIcon : this.caretDownIcon;
-    }
-  ),
+    },
+
+    set(key, value) {
+      return value;
+    },
+  }),
 });

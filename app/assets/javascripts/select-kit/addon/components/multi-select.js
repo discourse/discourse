@@ -25,11 +25,17 @@ export default SelectKitComponent.extend({
     caretUpIcon: "caretIcon",
   },
 
-  caretIcon: computed("value.[]", function () {
-    const maximum = this.selectKit.options.maximum;
-    return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
-      ? null
-      : "plus";
+  caretIcon: computed("value.[]", {
+    get() {
+      const maximum = this.selectKit.options.maximum;
+      return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
+        ? null
+        : "plus";
+    },
+
+    set(key, value) {
+      return value;
+    },
   }),
 
   search(filter) {
