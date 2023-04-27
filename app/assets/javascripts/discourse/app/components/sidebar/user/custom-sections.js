@@ -31,7 +31,7 @@ export default class SidebarUserCustomSections extends Component {
 
   get sections() {
     return this.currentUser.sidebarSections.map((section) => {
-      if (section.system_section) {
+      if (section.section_type) {
         const systemSection = new SystemSection({
           section,
           currentUser: this.currentUser,

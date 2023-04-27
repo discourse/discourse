@@ -266,7 +266,7 @@ class SiteSerializer < ApplicationSerializer
     SidebarSection
       .public_sections
       .includes(sidebar_section_links: :linkable)
-      .order("(system_section IS NOT NULL) DESC, (public IS TRUE) DESC")
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
 

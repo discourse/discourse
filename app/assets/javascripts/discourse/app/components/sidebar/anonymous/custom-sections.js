@@ -10,7 +10,7 @@ export default class SidebarAnonymousCustomSections extends Component {
 
   get sections() {
     return this.site.anonymous_sidebar_sections?.map((section) => {
-      const klass = section.system_section ? SystemSection : Section;
+      const klass = section.section_type ? SystemSection : Section;
 
       return new klass({
         section,

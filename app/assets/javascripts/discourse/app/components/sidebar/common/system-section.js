@@ -53,7 +53,7 @@ export default class SystemSection {
     this.topicTrackingState = topicTrackingState;
     this.appEvents = appEvents;
     this.siteSettings = siteSettings;
-    this.system_section = section.system_section;
+    this.section_type = section.section_type;
 
     this.callbackId = this.topicTrackingState?.onStateChange(() => {
       this.links.forEach((link) => {

@@ -3,7 +3,7 @@
 class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
   def up
     result = DB.query <<~SQL
-    INSERT INTO sidebar_sections(id, user_id, title, public, system_section, created_at, updated_at)
+    INSERT INTO sidebar_sections(id, user_id, title, public, section_type, created_at, updated_at)
       VALUES (-1, -1, 'Community', true, 'community', now(), now())
       RETURNING sidebar_sections.id
     SQL
