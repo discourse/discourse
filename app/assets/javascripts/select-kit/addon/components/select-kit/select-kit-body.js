@@ -12,37 +12,24 @@ export default Component.extend({
     return false;
   }),
 
-  rootEventType: "focusout",
-
   init() {
     this._super(...arguments);
 
-    this.handleRootFocusOutHandler = bind(this, this.handleRootFocusOut);
+    this.focusOutHandler = bind(this, this.handleFocusOut);
   },
 
   didInsertElement() {
     this._super(...arguments);
-
     this.element.style.position = "relative";
-
-    this.element.addEventListener(
-      this.rootEventType,
-      this.handleRootFocusOutHandler,
-      true
-    );
+    this.element.addEventListener("focusout", this.focusOutHandler, true);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-
-    this.element.removeEventListener(
-      this.rootEventType,
-      this.handleRootFocusOutHandler,
-      true
-    );
+    this.element.removeEventListener("focusout", this.focusOutHandler, true);
   },
 
-  handleRootFocusOut(event) {
+  handleFocusOut(event) {
     if (!this.selectKit.isExpanded) {
       return;
     }
@@ -55,8 +42,22 @@ export default Component.extend({
       return;
     }
 
-    if (this.selectKit.mainElement()) {
-      this.selectKit.close(event);
+    // multi-selects need to keep the UI visible when adding/removing items
+    // for these cases, we can't rely on event.relatedTarget
+    // because the element may have already been removed from the DOM
+    // so we cannot check if the element is contained within the main element
+    if (this.selectKit.mainElement().classList.contains("multi-select")) {
+      const hasClass = [
+        "select-kit-row",
+        "selected-choice",
+        "filter-input",
+      ].some((className) => event.target.classList.contains(className));
+
+      if (hasClass) {
+        return;
+      }
     }
+
+    this.selectKit.close(event);
   },
 });
