@@ -16,12 +16,16 @@
             </div>
             {{! user_field_1 seems to be auto generated depending on the order of adding custom fields,
             so it may vary per env and needs to be validated in the user_custom_fields table }}
-            <div>Organisation:
-              <strong>{{this.currentUser.custom_fields.user_field_1}}</strong>
-            </div>
-            <div>Region:
-              <strong>{{this.currentUser.custom_fields.user_field_2}}</strong>
-            </div>
+            {{#if this.currentUser.custom_fields.user_field_1}}
+              <div>Organisation:
+                <strong>{{this.currentUser.custom_fields.user_field_1}}</strong>
+              </div>
+            {{/if}}
+            {{#if this.currentUser.custom_fields.user_field_2}}
+              <div>Region:
+                <strong>{{this.currentUser.custom_fields.user_field_2}}</strong>
+              </div>
+            {{/if}}
           </div>
           <div id="user-hearts-container-row">
             <div id="user-hearts-container">
