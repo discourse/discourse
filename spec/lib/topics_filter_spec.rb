@@ -1075,5 +1075,152 @@ RSpec.describe TopicsFilter do
                        :last_posted_at,
                        "last posted date"
     end
+
+    describe "ordering topics filter" do
+      # Requires the fabrication of `topic`, `topic2` and `topic3` such that the order of the topics is `topic2`, `topic1`, `topic3`
+      # when ordered by the given filter in descending order.
+      shared_examples "ordering topics filters" do |order, order_description|
+        describe "when query string is `order:#{order}`" do
+          it "should return topics ordered by #{order_description} in descending order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:#{order}")
+                .pluck(:id),
+            ).to eq([topic2.id, topic.id, topic3.id])
+          end
+        end
+
+        describe "when query string is `order:#{order}-asc`" do
+          it "should return topics ordered by #{order_description} in ascending order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:#{order}-asc")
+                .pluck(:id),
+            ).to eq([topic3.id, topic.id, topic2.id])
+          end
+        end
+
+        describe "when query string is `order:#{order}-invalid`" do
+          it "should return topics ordered by the default order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:#{order}-invalid")
+                .pluck(:id),
+            ).to eq(Topic.all.order(:id).pluck(:id))
+          end
+        end
+      end
+
+      describe "when ordering topics by creation date" do
+        fab!(:topic) { Fabricate(:topic, created_at: Time.zone.local(2023, 1, 1)) }
+        fab!(:topic2) { Fabricate(:topic, created_at: Time.zone.local(2024, 1, 1)) }
+        fab!(:topic3) { Fabricate(:topic, created_at: Time.zone.local(2022, 1, 1)) }
+
+        include_examples "ordering topics filters", "created", "creation date"
+      end
+
+      describe "when ordering topics by last activity date" do
+        fab!(:topic) { Fabricate(:topic, bumped_at: Time.zone.local(2023, 1, 1)) }
+        fab!(:topic2) { Fabricate(:topic, bumped_at: Time.zone.local(2024, 1, 1)) }
+        fab!(:topic3) { Fabricate(:topic, bumped_at: Time.zone.local(2022, 1, 1)) }
+
+        include_examples "ordering topics filters", "activity", "bumped date"
+      end
+
+      describe "when ordering topics by number of likes in the topic" do
+        fab!(:topic) { Fabricate(:topic, like_count: 2) }
+        fab!(:topic2) { Fabricate(:topic, like_count: 3) }
+        fab!(:topic3) { Fabricate(:topic, like_count: 1) }
+
+        include_examples "ordering topics filters", "likes", "number of likes in the topic"
+      end
+
+      describe "when ordering topics by number of participants in the topic" do
+        fab!(:topic) { Fabricate(:topic, participant_count: 2) }
+        fab!(:topic2) { Fabricate(:topic, participant_count: 3) }
+        fab!(:topic3) { Fabricate(:topic, participant_count: 1) }
+
+        include_examples "ordering topics filters", "posters", "number of participants in the topic"
+      end
+
+      describe "when ordering topics by number of topics views" do
+        fab!(:topic) { Fabricate(:topic, views: 2) }
+        fab!(:topic2) { Fabricate(:topic, views: 3) }
+        fab!(:topic3) { Fabricate(:topic, views: 1) }
+
+        include_examples "ordering topics filters", "views", "number of views"
+      end
+
+      describe "when ordering topics by latest post creation date" do
+        fab!(:topic) { Fabricate(:topic, last_posted_at: Time.zone.local(2023, 1, 1)) }
+        fab!(:topic2) { Fabricate(:topic, last_posted_at: Time.zone.local(2024, 1, 1)) }
+        fab!(:topic3) { Fabricate(:topic, last_posted_at: Time.zone.local(2022, 1, 1)) }
+
+        include_examples "ordering topics filters", "latest-post", "latest post creation date"
+      end
+
+      describe "when ordering topics by number of likes in the first post" do
+        fab!(:topic) do
+          post = Fabricate(:post, like_count: 2)
+          post.topic
+        end
+
+        fab!(:topic2) do
+          post = Fabricate(:post, like_count: 3)
+          post.topic
+        end
+
+        fab!(:topic3) do
+          post = Fabricate(:post, like_count: 1)
+          post.topic
+        end
+
+        include_examples "ordering topics filters", "likes-op", "number of likes in the first post"
+      end
+
+      describe "when ordering by topics's category name" do
+        fab!(:category) { Fabricate(:category, name: "Category 1") }
+        fab!(:category2) { Fabricate(:category, name: "Category 2") }
+        fab!(:category3) { Fabricate(:category, name: "Category 3") }
+
+        fab!(:topic) { Fabricate(:topic, category: category2) }
+        fab!(:topic2) { Fabricate(:topic, category: category3) }
+        fab!(:topic3) { Fabricate(:topic, category: category) }
+
+        include_examples "ordering topics filters", "category", "category name"
+
+        describe "when query string is `order:category` and there are multiple topics in a category" do
+          fab!(:topic4) { Fabricate(:topic, category: category) }
+          fab!(:topic5) { Fabricate(:topic, category: category2) }
+
+          it "should return topics ordered by category name in descending order and then topic id in ascending order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:category")
+                .pluck(:id),
+            ).to eq([topic2.id, topic.id, topic5.id, topic3.id, topic4.id])
+          end
+        end
+      end
+
+      describe "when query string is `order:created order:views`" do
+        fab!(:topic) { Fabricate(:topic, created_at: Time.zone.local(2023, 1, 1), views: 2) }
+        fab!(:topic2) { Fabricate(:topic, created_at: Time.zone.local(2024, 1, 1), views: 2) }
+        fab!(:topic3) { Fabricate(:topic, created_at: Time.zone.local(2024, 1, 1), views: 1) }
+
+        it "should return topics ordered by creation date in descending order and then number of views in descending order" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("order:created order:views")
+              .pluck(:id),
+          ).to eq([topic2.id, topic3.id, topic.id])
+        end
+      end
+    end
   end
 end

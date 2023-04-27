@@ -62,6 +62,8 @@ class TopicsFilter
         filter_by_number_of_likes_in_first_post(min: filter_values)
       when "likes-op-max"
         filter_by_number_of_likes_in_first_post(max: filter_values)
+      when "order"
+        order_by(values: filter_values)
       when "posts-min"
         filter_by_number_of_posts(min: filter_values)
       when "posts-max"
@@ -171,10 +173,7 @@ class TopicsFilter
       column_name: "first_posts.like_count",
       min:,
       max:,
-      scope:
-        @scope.joins(
-          "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
-        ),
+      scope: self.joins_first_posts(@scope),
     )
   end
 
@@ -425,5 +424,58 @@ class TopicsFilter
 
   def include_topics_with_any_tags(tag_ids)
     @scope = @scope.joins(:topic_tags).where("topic_tags.tag_id IN (?)", tag_ids).distinct(:id)
+  end
+
+  ORDER_BY_MAPPINGS = {
+    "activity" => {
+      column: "topics.bumped_at",
+    },
+    "category" => {
+      column: "categories.name",
+      scope: -> { @scope.joins(:category) },
+    },
+    "created" => {
+      column: "topics.created_at",
+    },
+    "latest-post" => {
+      column: "topics.last_posted_at",
+    },
+    "likes" => {
+      column: "topics.like_count",
+    },
+    "likes-op" => {
+      column: "first_posts.like_count",
+      scope: -> { joins_first_posts(@scope) },
+    },
+    "posters" => {
+      column: "topics.participant_count",
+    },
+    "views" => {
+      column: "topics.views",
+    },
+  }
+  private_constant :ORDER_BY_MAPPINGS
+
+  ORDER_BY_REGEXP = /^(?<order_by>#{ORDER_BY_MAPPINGS.keys.join("|")})(?<asc>-asc)?$/
+  private_constant :ORDER_BY_REGEXP
+
+  def order_by(values:)
+    values.each do |value|
+      match_data = value.match(ORDER_BY_REGEXP)
+
+      if match_data && column_name = ORDER_BY_MAPPINGS.dig(match_data[:order_by], :column)
+        if scope = ORDER_BY_MAPPINGS.dig(match_data[:order_by], :scope)
+          @scope = instance_exec(&scope)
+        end
+
+        @scope = @scope.order(column_name => match_data[:asc] ? :asc : :desc)
+      end
+    end
+  end
+
+  def joins_first_posts(scope)
+    scope.joins(
+      "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
+    )
   end
 end
