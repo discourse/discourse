@@ -6,15 +6,69 @@ class SidebarUrl < ActiveRecord::Base
   MAX_NAME_LENGTH = 80
   MAX_VALUE_LENGTH = 200
   COMMUNITY_SECTION_LINKS = [
-    { id: -1, name: "Everything", path: "/latest", icon: "layer-group", segment: "primary" },
-    { id: -2, name: "My Posts", path: "/my/activity", icon: "user", segment: "primary" },
-    { id: -3, name: "Review", path: "/review", icon: "flag", segment: "primary" },
-    { id: -4, name: "Admin", path: "/admin", icon: "wrench", segment: "primary" },
-    { id: -5, name: "Users", path: "/u", icon: "users", segment: "secondary" },
-    { id: -6, name: "Info", path: "/about", icon: "info-circle", segment: "secondary" },
-    { id: -7, name: "Faq", path: "/faq", icon: "question-circle", segment: "secondary" },
-    { id: -8, name: "Groups", path: "/g", icon: "user-friends", segment: "secondary" },
-    { id: -9, name: "Badges", path: "/badges", icon: "certificate", segment: "secondary" },
+    {
+      id: -1,
+      name: I18n.t("sidebar.sections.community.links.everything.content"),
+      path: "/latest",
+      icon: "layer-group",
+      segment: "primary",
+    },
+    {
+      id: -2,
+      name: I18n.t("sidebar.sections.community.links.my_posts.content"),
+      path: "/my/activity",
+      icon: "user",
+      segment: "primary",
+    },
+    {
+      id: -3,
+      name: I18n.t("sidebar.sections.community.links.review.content"),
+      path: "/review",
+      icon: "flag",
+      segment: "primary",
+    },
+    {
+      id: -4,
+      name: I18n.t("sidebar.sections.community.links.admin.content"),
+      path: "/admin",
+      icon: "wrench",
+      segment: "primary",
+    },
+    {
+      id: -5,
+      name: I18n.t("sidebar.sections.community.links.users.content"),
+      path: "/u",
+      icon: "users",
+      segment: "secondary",
+    },
+    {
+      id: -6,
+      name: I18n.t("sidebar.sections.community.links.about.content"),
+      path: "/about",
+      icon: "info-circle",
+      segment: "secondary",
+    },
+    {
+      id: -7,
+      name: I18n.t("sidebar.sections.community.links.faq.content"),
+      path: "/faq",
+      icon: "question-circle",
+      segment: "secondary",
+    },
+    {
+      id: -8,
+      name: I18n.t("sidebar.sections.community.links.groups.content"),
+      path: "/g",
+      icon: "user-friends",
+      segment: "secondary",
+    },
+    {
+      id: -9,
+      name: I18n.t("sidebar.sections.community.links.badges.content"),
+      path: "/badges",
+      icon: "certificate",
+      segment: "secondary",
+    },
   ]
 
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }
