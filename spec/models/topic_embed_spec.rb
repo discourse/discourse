@@ -23,6 +23,41 @@ RSpec.describe TopicEmbed do
       expect(TopicEmbed.count).to eq(0)
     end
 
+    it "Allows figure and figcaption HTML tags" do
+      html = <<~HTML
+        <html>
+        <head>
+           <title>Some title</title>
+        </head>
+        <body>
+          <div class='content'>
+            <p>some content</p>
+            <figure>
+              <img src="/a.png">
+              <figcaption>Some caption</figcaption>
+            <figure>
+          </div>
+        </body>
+        </html>
+      HTML
+
+      parsed = TopicEmbed.parse_html(html, "https://blog.discourse.com/somepost.html")
+
+      # div inception is inserted by the readability gem
+      expected = <<~HTML
+        <div><div>
+          <div>
+            <p>some content</p>
+            <figure>
+              <img src="https://blog.discourse.com/a.png">
+              <figcaption>Some caption</figcaption>
+            <figure>
+          </figure></figure></div>
+        </div></div>
+      HTML
+      expect(parsed.body.strip).to eq(expected.strip)
+    end
+
     context "when creating a post" do
       let!(:post) { TopicEmbed.import(user, url, title, contents) }
       let(:topic_embed) { TopicEmbed.find_by(post: post) }
