@@ -847,7 +847,7 @@ RSpec.describe TopicsFilter do
       end
     end
 
-    shared_examples "filtering for topics by range" do |filter|
+    shared_examples "filtering for topics by counts" do |filter|
       describe "when query string is `#{filter}-min:1`" do
         it "should only return topics with at least 1 #{filter}" do
           expect(
@@ -933,7 +933,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_2_count) { Fabricate(:topic, like_count: 2) }
       fab!(:topic_with_3_count) { Fabricate(:topic, like_count: 3) }
 
-      include_examples("filtering for topics by range", "likes")
+      include_examples("filtering for topics by counts", "likes")
     end
 
     describe "when filtering by number of posters in a topic" do
@@ -941,7 +941,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_2_count) { Fabricate(:topic, participant_count: 2) }
       fab!(:topic_with_3_count) { Fabricate(:topic, participant_count: 3) }
 
-      include_examples("filtering for topics by range", "posters")
+      include_examples("filtering for topics by counts", "posters")
     end
 
     describe "when filtering by number of posts in a topic" do
@@ -949,7 +949,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_2_count) { Fabricate(:topic, posts_count: 2) }
       fab!(:topic_with_3_count) { Fabricate(:topic, posts_count: 3) }
 
-      include_examples("filtering for topics by range", "posts")
+      include_examples("filtering for topics by counts", "posts")
     end
 
     describe "when filtering by number of views in a topic" do
@@ -957,7 +957,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_2_count) { Fabricate(:topic, views: 2) }
       fab!(:topic_with_3_count) { Fabricate(:topic, views: 3) }
 
-      include_examples("filtering for topics by range", "views")
+      include_examples("filtering for topics by counts", "views")
     end
 
     describe "when filtering by number of likes in the first post of a topic" do
@@ -976,7 +976,104 @@ RSpec.describe TopicsFilter do
         post.topic
       end
 
-      include_examples("filtering for topics by range", "likes-op")
+      include_examples("filtering for topics by counts", "likes-op")
+    end
+
+    shared_examples "filtering for topics by date column" do |filter, column, description|
+      fab!(:topic) { Fabricate(:topic, column => Time.zone.local(2022, 1, 1)) }
+      fab!(:topic2) { Fabricate(:topic, column => Time.zone.local(2023, 5, 12)) }
+
+      describe "when query string is `#{filter}-after:invalid-date-test`" do
+        it "should ignore the filter" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-after:invalid-date-test")
+              .pluck(:id),
+          ).to contain_exactly(topic.id, topic2.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-after:2022-01-01`" do
+        it "should only return topics with #{description} after 2022-01-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-after:2022-01-01")
+              .pluck(:id),
+          ).to contain_exactly(topic.id, topic2.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-after:2023-01-1`" do
+        it "should only return topics with #{description} after 2023-01-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-after:2023-01-1")
+              .pluck(:id),
+          ).to contain_exactly(topic2.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-after:2023-6-01`" do
+        it "should only return topics with #{description} after 2023-06-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-after:2023-6-01")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+
+      describe "when query string is `#{filter}-before:2023-01-01`" do
+        it "should only return topics with #{description} before 2023-01-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-before:2023-01-01")
+              .pluck(:id),
+          ).to contain_exactly(topic.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-before:2023-1-1`" do
+        it "should only return topics with #{description} before 2023-01-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-before:2023-1-1")
+              .pluck(:id),
+          ).to contain_exactly(topic.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-before:2000-01-01`" do
+        it "should only return topics with #{description} before 2000-01-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-before:2000-01-01")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+    end
+
+    describe "when filtering by activity of topics" do
+      include_examples "filtering for topics by date column", "activity", :bumped_at, "bumped date"
+    end
+
+    describe "when filtering by creation date of topics" do
+      include_examples "filtering for topics by date column", "created", :created_at, "created date"
+    end
+
+    describe "when filtering by last post date of topics" do
+      include_examples "filtering for topics by date column",
+                       "latest-post",
+                       :last_posted_at,
+                       "last posted date"
     end
   end
 end
