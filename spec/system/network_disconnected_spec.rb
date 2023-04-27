@@ -3,7 +3,7 @@
 RSpec.describe "Network Disconnected", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
 
-  it "Displays the offline indicator" do
+  it "Message bus connectivity service adds class to DOM and displays offline indicator" do
     sign_in(current_user)
     visit("/c")
 
