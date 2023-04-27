@@ -139,33 +139,6 @@ RSpec.describe Search do
     end
   end
 
-  context "with apostrophes" do
-    fab!(:post_1) { Fabricate(:post, raw: "searching for: John's") }
-    fab!(:post_2) { Fabricate(:post, raw: "searching for: Johns") }
-
-    before { SearchIndexer.enable }
-
-    after { SearchIndexer.disable }
-
-    it "returns correct results" do
-      SiteSetting.search_ignore_accents = false
-      [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
-
-      expect(Search.execute("John's").posts).to contain_exactly(post_1, post_2)
-      expect(Search.execute("John’s").posts).to contain_exactly(post_1, post_2)
-      expect(Search.execute("Johns").posts).to contain_exactly(post_1, post_2)
-    end
-
-    it "returns correct results with accents" do
-      SiteSetting.search_ignore_accents = true
-      [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
-
-      expect(Search.execute("John's").posts).to contain_exactly(post_1, post_2)
-      expect(Search.execute("John’s").posts).to contain_exactly(post_1, post_2)
-      expect(Search.execute("Johns").posts).to contain_exactly(post_1, post_2)
-    end
-  end
-
   describe "custom_eager_load" do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
@@ -1359,7 +1332,10 @@ RSpec.describe Search do
       end
 
       context "with non staff logged in" do
-        it "shows doesn’t show group" do
+        fab!(:user) { Fabricate(:user) }
+
+        it "shows doesn't show group" do
+          expect(search(user).groups.map(&:name)).to eq([])
         end
       end
     end

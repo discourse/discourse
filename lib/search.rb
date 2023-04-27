@@ -93,6 +93,13 @@ class Search
     data = search_data.dup
     data.force_encoding("UTF-8")
 
+    # Removes any zero-width characters from search terms
+    data.gsub!(/[\u200B-\u200D\uFEFF]/, "")
+    # Replace curly quotes to regular quotes
+    data.gsub!(/[\u201c\u201d]/, '"')
+    # Replace fancy apostophes to regular apostophes
+    data.gsub!(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
+
     if purpose != :topic
       if segment_chinese?
         require "cppjieba_rb" unless defined?(CppjiebaRb)
@@ -215,11 +222,6 @@ class Search
     @search_all_pms = false
 
     term = term.to_s.dup
-
-    # Removes any zero-width characters from search terms
-    term.gsub!(/[\u200B-\u200D\uFEFF]/, "")
-    # Replace curly quotes to regular quotes
-    term.gsub!(/[\u201c\u201d]/, '"')
 
     @clean_term = term
     @in_title = false
@@ -1276,12 +1278,6 @@ class Search
   end
 
   def self.escape_string(term)
-    # HACK: The ’ and other similar characters have to be "unaccented" before
-    # it is escaped or the resulting tsqueries will be invalid
-    if SiteSetting.search_ignore_accents
-      term = term.gsub(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
-    end
-
     PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end
 
