@@ -5,14 +5,15 @@ module Jobs
     every 30.minutes
 
     def execute(args)
+      Notification.where(notification_type: Notification.types[:admin_problems]).destroy_all
+
       if persistent_problems?
-        # If there have been problems reported on the dashboard for a while,
-        # send a message to admins no more often than once per week.
-        group_message =
-          GroupMessage.new(Group[:admins].name, :dashboard_problems, limit_once_per: 7.days.to_i)
-        Topic.transaction do
-          group_message.delete_previous!
-          group_message.create
+        Group[:admins].users.each do |user|
+          Notification.create!(
+            notification_type: Notification.types[:admin_problems],
+            user_id: user.id,
+            data: "{}",
+          )
         end
       end
     end

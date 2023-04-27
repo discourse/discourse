@@ -2580,6 +2580,7 @@ en:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
       new_features: "New features available!"
+      admin_problems: "New advice on your site dashboard"
       dismiss_confirmation:
         body:
           default:
