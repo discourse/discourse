@@ -37,13 +37,15 @@
     --100dvh: 100dvh;
   }
 
+  height: calc(var(--100dvh) - var(--header-offset, 0px));
+
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
     height: calc(
       var(--100dvh) - var(--header-offset, 0px) - var(--footer-nav-height, 0px)
     );
   }
-  height: calc(var(--100dvh) - var(--header-offset, 0px));
+
   align-self: start;
   overflow-y: auto;
 
