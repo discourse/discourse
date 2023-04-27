@@ -51,11 +51,17 @@ export default MultiSelectComponent.extend(TagsMixin, {
 
   allowAnyTag: or("allowCreate", "site.can_create_tag"),
 
-  caretIcon: computed("value.[]", "content.[]", function () {
-    const maximum = this.selectKit.options.maximum;
-    return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
-      ? null
-      : "plus";
+  caretIcon: computed("value.[]", "content.[]", {
+    get() {
+      const maximum = this.selectKit.options.maximum;
+      return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
+        ? null
+        : "plus";
+    },
+
+    set(key, value) {
+      return value;
+    },
   }),
 
   content: computed("value.[]", function () {
