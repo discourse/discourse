@@ -615,8 +615,16 @@ html.has-full-page-chat {
     #main-outlet-wrapper {
       // restrict the row height, including when virtual keyboard is open
       grid-template-rows: calc(
-        var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px)
+        var(--chat-vh, 1dh) * 100 - var(--header-offset, 0px)
       );
+
+      .footer-nav-ipad & {
+        grid-template-rows: calc(
+          var(--chat-vh, 1dh) * 100 - var(--header-offset, 0px) -
+            var(--footer-nav-height, 0px)
+        );
+      }
+
       .sidebar-wrapper {
         // prevents sidebar from overflowing behind the virtual keyboard
         height: 100%;
