@@ -618,7 +618,8 @@ class TopicQuery
     result.where("topics.category_id != ?", drafts_category_id)
   end
 
-  def apply_ordering(result, options)
+  # topics - all the topics; we only care about id
+  def apply_ordering(topics, options)
     sort_column = SORTABLE_MAPPING[options[:order]] || "default"
     sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
 
@@ -630,25 +631,32 @@ class TopicQuery
       # if sort_dir == "DESC"
       #  # If something requires a custom order, for example "unread" which sorts the least read
       #   # to the top, do nothing
-      #   return result if options[:unordered]
+      #   return topics if options[:unordered]
       # end
       # sort_column = "bumped_at"
-      ### END of PCC change ###
 
-      ### PCC change ###
+      # index for groups: field_id + value_id
+      # { [index]: group }
+
+      # unique_groups -
+      # unique_users - all users across discourse
+      # user_votes (aka user_contributions) - all users votes for a given category id
+      # user_groups
+
       category_id = get_category_id(options[:category])
       if category_id && category_id != 1 #Uncategorized
-        result =
-          result.joins(
+        # topics_order = [7, 18, 1, 2]
+        topics =
+          topics.joins(
             "LEFT JOIN (SELECT topic_id, SUM(SQRT(credits_allocated)) as total_voice_credits_score FROM voice_credits where category_id =#{category_id} GROUP BY topic_id) vc ON vc.topic_id = topics.id",
           ).order("total_voice_credits_score IS NULL, total_voice_credits_score DESC") #null values last
 
-        return result
+        return topics
       else
         if sort_dir == "DESC"
           # If something requires a custom order, for example "unread" which sorts the least read
           # to the top, do nothing
-          return result if options[:unordered]
+          return topics if options[:unordered]
         end
         sort_column = "bumped_at"
       end
