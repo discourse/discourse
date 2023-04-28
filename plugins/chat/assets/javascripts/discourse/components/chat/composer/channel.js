@@ -12,6 +12,8 @@ export default class ChatComposerChannel extends ChatComposer {
 
   context = "channel";
 
+  composerId = "channel-composer";
+
   @action
   sendMessage(raw) {
     const message = ChatMessage.createDraftMessage(this.args.channel, {
