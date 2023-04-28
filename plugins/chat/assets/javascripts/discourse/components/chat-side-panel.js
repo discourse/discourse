@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { tracked } from "@glimmer/tracking";
 
-const MIN_CHAT_CHANNEL_WIDTH = 300;
+const MIN_CHAT_CHANNEL_WIDTH = 250;
 
 export default class ChatSidePanel extends Component {
   @service chatStateManager;
