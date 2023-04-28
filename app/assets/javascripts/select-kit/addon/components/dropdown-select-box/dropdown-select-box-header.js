@@ -24,11 +24,17 @@ export default SingleSelectHeaderComponent.extend({
 
   caretIcon: computed("selectKit.isExpanded", "caretUpIcon", "caretDownIcon", {
     get() {
-      return this.selectKit.isExpanded ? this.caretUpIcon : this.caretDownIcon;
+      if (this._caretIcon) {
+        return this._caretIcon;
+      } else {
+        return this.selectKit.isExpanded
+          ? this.caretUpIcon
+          : this.caretDownIcon;
+      }
     },
 
     set(key, value) {
-      return value;
+      return (this._caretIcon = value);
     },
   }),
 });

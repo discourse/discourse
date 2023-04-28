@@ -14,11 +14,17 @@ export default SelectKitHeaderComponent.extend({
   ariaLabel: reads("selectKit.options.headerAriaLabel"),
   caretIcon: computed("selectKit.isExpanded", "caretUpIcon", "caretDownIcon", {
     get() {
-      return this.selectKit.isExpanded ? this.caretUpIcon : this.caretDownIcon;
+      if (this._caretIcon) {
+        return this._caretIcon;
+      } else {
+        return this.selectKit.isExpanded
+          ? this.caretUpIcon
+          : this.caretDownIcon;
+      }
     },
 
     set(key, value) {
-      return value;
+      return (this.careIcon = value);
     },
   }),
 });

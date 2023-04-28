@@ -53,14 +53,18 @@ export default MultiSelectComponent.extend(TagsMixin, {
 
   caretIcon: computed("value.[]", "content.[]", {
     get() {
-      const maximum = this.selectKit.options.maximum;
-      return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
-        ? null
-        : "plus";
+      if (this._caretIcon) {
+        return this._caretIcon;
+      } else {
+        const maximum = this.selectKit.options.maximum;
+        return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
+          ? null
+          : "plus";
+      }
     },
 
     set(key, value) {
-      return value;
+      return (this.caretIcon = value);
     },
   }),
 
