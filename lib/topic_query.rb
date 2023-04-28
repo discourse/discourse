@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require_relative "cluster_match_qv_helper"
 
 #
 # Helps us find topics.
@@ -638,18 +639,31 @@ class TopicQuery
       # index for groups: field_id + value_id
       # { [index]: group }
 
-      # unique_groups -
-      # unique_users - all users across discourse
-      # user_votes (aka user_contributions) - all users votes for a given category id
-      # user_groups
-
       category_id = get_category_id(options[:category])
       if category_id && category_id != 1 #Uncategorized
-        # topics_order = [7, 18, 1, 2]
+        unique_groups =
+          UserFieldOption.all.map do |x|
+            "user_field_#{x.user_field_id}_#{x.value}".gsub(/\s+/, "_")
+          end
+        unique_users = User.all
+        user_votes = VoiceCredit.where("credits_allocated > 0 AND category_id = ?", category_id)
+        custom_fields = UserCustomField.all
+        user_groups =
+          custom_fields
+            .group_by(&:user_id)
+            .map do |user_id, fields|
+              formatted_fields = fields.map { |x| "#{x.name}_#{x.value}" }
+              { user_id: user_id, groups: formatted_fields }
+            end
+
         topics =
-          topics.joins(
-            "LEFT JOIN (SELECT topic_id, SUM(SQRT(credits_allocated)) as total_voice_credits_score FROM voice_credits where category_id =#{category_id} GROUP BY topic_id) vc ON vc.topic_id = topics.id",
-          ).order("total_voice_credits_score IS NULL, total_voice_credits_score DESC") #null values last
+          ClusterMatchQvHelper.sort_by_topics_score(
+            unique_users,
+            unique_groups,
+            topics,
+            user_groups,
+            user_votes,
+          )
 
         return topics
       else
