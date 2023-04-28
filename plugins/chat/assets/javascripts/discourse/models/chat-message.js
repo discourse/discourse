@@ -31,13 +31,11 @@ export default class ChatMessage {
   @tracked deletedAt;
   @tracked uploads;
   @tracked excerpt;
-  @tracked message;
   @tracked threadId;
   @tracked threadReplyCount;
   @tracked reactions;
   @tracked reviewableId;
   @tracked user;
-  @tracked cooked;
   @tracked inReplyTo;
   @tracked expanded;
   @tracked bookmark;
@@ -51,6 +49,9 @@ export default class ChatMessage {
   @tracked newest = false;
   @tracked highlighted = false;
   @tracked firstOfResults = false;
+  @tracked message;
+
+  @tracked _cooked;
 
   constructor(channel, args = {}) {
     this.channel = channel;
@@ -77,14 +78,7 @@ export default class ChatMessage {
         : null);
     this.draft = args.draft;
     this.message = args.message || "";
-
-    if (args.cooked) {
-      this.cooked = args.cooked;
-    } else {
-      this.cooked = "";
-      this.cook();
-    }
-
+    this._cooked = args.cooked || "";
     this.reactions = this.#initChatMessageReactionModel(
       args.id,
       args.reactions
@@ -92,6 +86,19 @@ export default class ChatMessage {
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
+  }
+
+  get cooked() {
+    return this._cooked;
+  }
+
+  set cooked(newCooked) {
+    // some markdown is cooked differently on the server-side, e.g.
+    // quotes, avatar images etc.
+    if (newCooked !== this._cooked) {
+      this._cooked = newCooked;
+      this.incrementVersion();
+    }
   }
 
   cook() {
@@ -110,7 +117,6 @@ export default class ChatMessage {
 
     if (ChatMessage.cookFunction) {
       this.cooked = ChatMessage.cookFunction(this.message);
-      this.incrementVersion();
     } else {
       generateCookFunction(markdownOptions).then((cookFunction) => {
         ChatMessage.cookFunction = (raw) => {
@@ -121,7 +127,6 @@ export default class ChatMessage {
         };
 
         this.cooked = ChatMessage.cookFunction(this.message);
-        this.incrementVersion();
       });
     }
   }

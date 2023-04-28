@@ -385,6 +385,8 @@ class CookedPostProcessor
   end
 
   def process_hotlinked_image(img)
+    onebox = img.ancestors(".onebox, .onebox-body").first
+
     @hotlinked_map ||= @post.post_hotlinked_media.preload(:upload).map { |r| [r.url, r] }.to_h
     normalized_src =
       PostHotlinkedMedia.normalize_src(img["src"] || img[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR])
@@ -393,7 +395,7 @@ class CookedPostProcessor
     still_an_image = true
 
     if info&.too_large?
-      if img.ancestors(".onebox, .onebox-body").blank?
+      if !onebox || onebox.element_children.size == 1
         add_large_image_placeholder!(img)
       else
         img.remove
@@ -401,7 +403,7 @@ class CookedPostProcessor
 
       still_an_image = false
     elsif info&.download_failed?
-      if img.ancestors(".onebox, .onebox-body").blank?
+      if !onebox || onebox.element_children.size == 1
         add_broken_image_placeholder!(img)
       else
         img.remove

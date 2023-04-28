@@ -98,14 +98,19 @@ export default class ChatComposer extends Component {
     this.persistDraft();
   }
 
+  @action
+  cancelPersistDraft() {
+    cancel(this._persistHandler);
+  }
+
   get currentMessage() {
     return this.composer.message;
   }
 
   get hasContent() {
-    const minLength = this.siteSettings.chat_minimum_message_length || 0;
+    const minLength = this.siteSettings.chat_minimum_message_length || 1;
     return (
-      this.currentMessage?.message?.length > minLength ||
+      this.currentMessage?.message?.length >= minLength ||
       (this.canAttachUploads && this.currentMessage?.uploads?.length > 0)
     );
   }

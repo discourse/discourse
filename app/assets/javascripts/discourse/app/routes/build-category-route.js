@@ -16,11 +16,13 @@ import PermissionType from "discourse/models/permission-type";
 import TopicList from "discourse/models/topic-list";
 import { action } from "@ember/object";
 import PreloadStore from "discourse/lib/preload-store";
+import { inject as service } from "@ember/service";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
   return DiscourseRoute.extend({
     queryParams,
+    composer: service(),
 
     model(modelParams) {
       const category = Category.findBySlugPathWithID(
@@ -209,7 +211,7 @@ export default (filterArg, params) => {
     deactivate() {
       this._super(...arguments);
 
-      this.controllerFor("composer").set("prioritizedCategoryId", null);
+      this.composer.set("prioritizedCategoryId", null);
       this.searchService.set("searchContext", null);
     },
 

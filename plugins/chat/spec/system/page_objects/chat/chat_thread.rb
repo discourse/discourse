@@ -11,6 +11,10 @@ module PageObjects
         header.find(".chat-thread__omu")
       end
 
+      def close
+        header.find(".chat-thread__close").click
+      end
+
       def has_header_content?(content)
         header.has_content?(content)
       end

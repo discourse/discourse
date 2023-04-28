@@ -6,6 +6,10 @@ module PageObjects
       def has_open_thread?(thread)
         has_css?(".chat-side-panel .chat-thread[data-id='#{thread.id}']")
       end
+
+      def has_no_open_thread?
+        !has_css?(".chat-side-panel .chat-thread")
+      end
     end
   end
 end

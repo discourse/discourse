@@ -26,6 +26,7 @@
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
     {{did-insert this.setupAppEvents}}
     {{will-destroy this.teardownAppEvents}}
+    {{will-destroy this.cancelPersistDraft}}
   >
     <div class="chat-composer__outer-container">
       <div class="chat-composer__inner-container">

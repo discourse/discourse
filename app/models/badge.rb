@@ -115,10 +115,12 @@ class Badge < ActiveRecord::Base
   has_many :user_badges, dependent: :destroy
   has_many :upload_references, as: :target, dependent: :destroy
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
   validates :badge_type, presence: true
   validates :allow_title, inclusion: [true, false]
   validates :multiple_grant, inclusion: [true, false]
+  validates :description, length: { maximum: 250 }
+  validates :long_description, length: { maximum: 1000 }
 
   scope :enabled, -> { where(enabled: true) }
 
@@ -220,7 +222,7 @@ class Badge < ActiveRecord::Base
   end
 
   def self.i18n_name(name)
-    name.downcase.tr(" ", "_")
+    name.to_s.downcase.tr(" ", "_")
   end
 
   def self.display_name(name)
