@@ -10,7 +10,7 @@ module Email
     end
 
     def self.process!(mail, opts = {})
-      Email::Processor.new(mail, opts).process!
+      Email::Processor.new(mail, opts).process! if mail.present?
     end
 
     def process!
@@ -24,7 +24,7 @@ module Email
           raise
         end
       rescue => e
-        return handle_bounce(e) if @receiver.is_bounce?
+        return handle_bounce(e) if @receiver&.is_bounce?
 
         log_email_process_failure(@mail, e)
         incoming_email = @receiver.try(:incoming_email)
