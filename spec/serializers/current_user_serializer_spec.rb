@@ -285,7 +285,6 @@ RSpec.describe CurrentUserSerializer do
 
     it "isn't included when navigation menu is legacy with old user menu" do
       SiteSetting.navigation_menu = "legacy"
-      SiteSetting.enable_new_notifications_menu = false
 
       expect(serializer.as_json[:new_personal_messages_notifications_count]).to be_nil
     end

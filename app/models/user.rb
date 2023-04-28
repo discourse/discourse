@@ -1827,7 +1827,7 @@ class User < ActiveRecord::Base
   end
 
   def redesigned_user_menu_enabled?
-    !SiteSetting.legacy_navigation_menu? || SiteSetting.enable_new_notifications_menu
+    !SiteSetting.legacy_navigation_menu?
   end
 
   def new_new_view_enabled?

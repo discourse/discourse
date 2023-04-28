@@ -85,7 +85,6 @@ RSpec.describe Jobs::NotifyReviewable do
 
     it "will notify users of new reviewable content for the old user menu" do
       SiteSetting.navigation_menu = "legacy"
-      SiteSetting.enable_new_notifications_menu = false
       SiteSetting.enable_category_group_moderation = true
 
       GroupUser.create!(group_id: group.id, user_id: moderator.id)
@@ -171,7 +170,6 @@ RSpec.describe Jobs::NotifyReviewable do
 
     it "respects priority" do
       SiteSetting.navigation_menu = "legacy"
-      SiteSetting.enable_new_notifications_menu = false
       SiteSetting.enable_category_group_moderation = true
       Reviewable.set_priorities(medium: 2.0)
       SiteSetting.reviewable_default_visibility = "medium"
@@ -227,7 +225,6 @@ RSpec.describe Jobs::NotifyReviewable do
 
   it "skips sending notifications if user_ids is empty" do
     SiteSetting.navigation_menu = "legacy"
-    SiteSetting.enable_new_notifications_menu = false
     reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
     regular_user = Fabricate(:user)
 

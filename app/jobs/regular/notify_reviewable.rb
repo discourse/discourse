@@ -105,6 +105,6 @@ class Jobs::NotifyReviewable < ::Jobs::Base
   end
 
   def legacy_user_menu?
-    SiteSetting.legacy_navigation_menu? && !SiteSetting.enable_new_notifications_menu
+    SiteSetting.legacy_navigation_menu?
   end
 end
