@@ -238,6 +238,7 @@ export default class ChatThreadPanel extends Component {
   }
 
   #sendEditMessage(message) {
+    message.cook();
     this.chatChannelThreadPane.sending = true;
 
     const data = {
