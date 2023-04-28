@@ -178,6 +178,10 @@ export default class ChatComposer extends Component {
 
   @action
   onUploadChanged(uploads, { inProgressUploadsCount }) {
+    if (!this.args.channel) {
+      return;
+    }
+
     this.inProgressUploadsCount = inProgressUploadsCount || 0;
 
     if (
