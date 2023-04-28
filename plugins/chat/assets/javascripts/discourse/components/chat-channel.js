@@ -452,7 +452,10 @@ export default class ChatLivePane extends Component {
 
       // if the last visible message is not fully visible, we don't want to mark it as read
       // attempt to mark previous one as read
-      if (!this.#isBottomOfMessageVisible(element, this.scrollable)) {
+      if (
+        element &&
+        !this.#isBottomOfMessageVisible(element, this.scrollable)
+      ) {
         lastUnreadVisibleMessage = lastUnreadVisibleMessage.previousMessage;
 
         if (
