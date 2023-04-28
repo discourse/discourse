@@ -27,6 +27,14 @@
       color: var(--primary-low);
     }
   }
+
+  .chat-composer.is-disabled & {
+    background: var(--primary-400);
+
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
 }
 
 .chat-composer-dropdown__list {

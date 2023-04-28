@@ -138,6 +138,18 @@ RSpec.describe "Chat composer", type: :system, js: true do
       expect(find(".chat-composer__input").value).to eq(message_2.message)
     end
 
+    it "updates the message instantly" do
+      chat.visit_channel(channel_1)
+      page.driver.browser.network_conditions = { offline: true }
+
+      channel.edit_message(message_2)
+      find(".chat-composer__input").send_keys("instant")
+      channel.click_send_message
+
+      expect(channel).to have_message(text: message_2.message + "instant")
+      page.driver.browser.network_conditions = { offline: false }
+    end
+
     context "when pressing escape" do
       it "cancels editing" do
         chat.visit_channel(channel_1)
@@ -321,7 +333,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
       find("body").send_keys("1")
 
-      expect(page).to have_css(".chat-composer--send-disabled")
+      expect(page).to have_css(".chat-composer.is-send-disabled")
     end
   end
 end

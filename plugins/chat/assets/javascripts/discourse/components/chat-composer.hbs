@@ -17,14 +17,10 @@
     aria-label={{i18n "chat.aria_roles.composer"}}
     class={{concat-class
       "chat-composer"
-      (if this.isFocused "chat-composer--focused")
-      (if this.pane.sending "chat-composer--sending")
-      (if
-        this.sendEnabled
-        "chat-composer--send-enabled"
-        "chat-composer--send-disabled"
-      )
-      (if this.disabled "chat-composer--disabled")
+      (if this.isFocused "is-focused")
+      (if this.pane.sending "is-sending")
+      (if this.sendEnabled "is-send-enabled" "is-send-disabled")
+      (if this.disabled "is-disabled")
     }}
     {{did-update this.didUpdateMessage this.currentMessage}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
@@ -46,6 +42,7 @@
 
         <div class="chat-composer__input-container">
           <DTextarea
+            id={{this.composerId}}
             value={{readonly this.currentMessage.message}}
             type="text"
             class="chat-composer__input"
@@ -90,6 +87,7 @@
       @onUploadChanged={{this.onUploadChanged}}
       @existingUploads={{this.currentMessage.uploads}}
       @uploadDropZone={{@uploadDropZone}}
+      @composerInputEl={{this.textareaInteractor.textarea}}
     />
   {{/if}}
 

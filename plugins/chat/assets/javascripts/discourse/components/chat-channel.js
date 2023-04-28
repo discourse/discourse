@@ -591,6 +591,7 @@ export default class ChatLivePane extends Component {
   }
 
   #sendEditMessage(message) {
+    message.cook();
     this.chatChannelPane.sending = true;
 
     const data = {
