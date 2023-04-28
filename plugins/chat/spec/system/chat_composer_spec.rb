@@ -321,7 +321,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
       chat.visit_channel(channel_1)
       find("body").send_keys("1")
 
-      expect(page).to have_css(".chat-composer--send-disabled")
+      expect(page).to have_css(".chat-composer.is-send-disabled")
     end
   end
 end

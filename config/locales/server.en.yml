@@ -2346,7 +2346,9 @@ en:
 
     allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
-    min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
+    min_trust_level_for_user_api_key: |
+      Trust level required for generation of user API keys.<br>
+      <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
     expire_user_api_keys_days: "Number of days before a user API key automatically expires (0 for never)"

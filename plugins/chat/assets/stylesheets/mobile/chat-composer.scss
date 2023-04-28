@@ -1,0 +1,11 @@
+.chat-composer {
+  &__wrapper {
+    padding: 0;
+  }
+
+  &__input {
+    .ios-device & {
+      background-color: transparent;
+    }
+  }
+}

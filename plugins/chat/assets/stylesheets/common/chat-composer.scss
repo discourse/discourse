@@ -1,7 +1,4 @@
 .chat-composer {
-  display: flex;
-  align-items: center;
-
   &__wrapper {
     display: flex;
     flex-direction: column;
@@ -39,12 +36,16 @@
     padding-inline: 0.25rem;
     min-height: 42px;
 
-    .chat-composer--focused & {
+    .chat-composer.is-focused & {
       border-color: var(--primary-medium);
     }
 
-    .chat-composer--disabled & {
+    .chat-composer.is-disabled & {
       background: var(--primary-low);
+
+      &:hover {
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -53,13 +54,24 @@
     background: none;
     will-change: scale;
 
-    .chat-composer--send-enabled & {
-      &:hover {
-        background: none;
+    @keyframes sendingScales {
+      0% {
+        transform: scale(0.9);
       }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(0.9);
+      }
+    }
+    .chat-composer.is-sending & {
+      animation: sendingScales 1s infinite linear;
+    }
 
+    .chat-composer.is-send-enabled & {
+      background: var(--tertiary-50);
       &:focus {
-        background: none;
         outline: auto;
       }
 
@@ -68,26 +80,15 @@
       }
     }
 
-    @keyframes sendingScales {
-      0% {
-        transform: scale(0.8);
-      }
-      50% {
-        transform: scale(1.2);
-      }
-      100% {
-        transform: scale(0.8);
-      }
-    }
-
-    .chat-composer--sending & {
-      animation: sendingScales 1s infinite;
-    }
-
-    .chat-composer--send-disabled & {
+    .chat-composer.is-send-disabled & {
       cursor: default;
-      opacity: 0.6 !important;
+      &:hover {
+        background: none !important;
+      }
+    }
 
+    .chat-composer.is-disabled & {
+      opacity: 0.4;
       &:hover {
         background: none !important;
       }
@@ -145,6 +146,7 @@
     margin: 0;
     padding: 0.25rem 0.5rem;
     text-overflow: ellipsis;
+    cursor: inherit;
 
     @include chat-scrollbar();
 

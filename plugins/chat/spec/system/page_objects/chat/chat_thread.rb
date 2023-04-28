@@ -50,7 +50,7 @@ module PageObjects
 
       def click_send_message(id)
         find(thread_selector_by_id(id)).find(
-          ".chat-composer--send-enabled .chat-composer__send-btn",
+          ".chat-composer.is-send-enabled .chat-composer__send-btn",
         ).click
       end
 
