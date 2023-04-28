@@ -324,4 +324,28 @@ RSpec.describe "Chat composer", type: :system, js: true do
       expect(page).to have_css(".chat-composer.is-send-disabled")
     end
   end
+
+  context "when upload is in progress" do
+    before do
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    after { page.driver.browser.network_conditions = { latency: 0 } }
+
+    it "doesn’t allow to send" do
+      chat.visit_channel(channel_1)
+
+      page.driver.browser.network_conditions = { latency: 20_000 }
+
+      file_path = file_from_fixtures("logo.png", "images").path
+      attach_file(file_path) do
+        channel.open_action_menu
+        channel.click_action_button("chat-upload-btn")
+      end
+
+      expect(page).to have_css(".chat-composer-upload--in-progress")
+      expect(page).to have_css(".chat-composer.is-send-disabled")
+    end
+  end
 end
