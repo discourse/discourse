@@ -133,10 +133,18 @@
     }
   }
 
+  .sidebar-section-wrapper .sidebar-section-header-caret {
+    display: none;
+  }
+
+  .sidebar-section-header-collapsable {
+    pointer-events: none; // disabling collapsible sections
+  }
+
   .sidebar-custom-sections .d-icon-globe {
-    left: -0.6em;
-    top: 0.2em;
-    font-size: 0.9em;
+    left: -0.95em;
+    top: 0.35em;
+    font-size: 0.7em;
   }
 
   .sidebar-footer-wrapper .sidebar-footer-container {
