@@ -89,16 +89,25 @@ class Search
       Regexp.compile("[-–—―.。・（）()［］｛｝{}【】⟨⟩、､,，،…‥〽「」『』〜~！!：:？?\"'|_＿“”‘’;/⁄／«»]")
   end
 
+  def self.clean_term(term)
+    term = term.to_s.dup
+
+    # Removes any zero-width characters from search terms
+    term.gsub!(/[\u200B-\u200D\uFEFF]/, "")
+
+    # Replace curly quotes to regular quotes
+    term.gsub!(/[\u201c\u201d]/, '"')
+
+    # Replace fancy apostophes to regular apostophes
+    term.gsub!(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
+
+    term
+  end
+
   def self.prepare_data(search_data, purpose = nil)
     data = search_data.dup
     data.force_encoding("UTF-8")
-
-    # Removes any zero-width characters from search terms
-    data.gsub!(/[\u200B-\u200D\uFEFF]/, "")
-    # Replace curly quotes to regular quotes
-    data.gsub!(/[\u201c\u201d]/, '"')
-    # Replace fancy apostophes to regular apostophes
-    data.gsub!(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
+    data = clean_term(data)
 
     if purpose != :topic
       if segment_chinese?
@@ -221,7 +230,7 @@ class Search
     @page = @opts[:page]
     @search_all_pms = false
 
-    term = term.to_s.dup
+    term = Search.clean_term(term)
 
     @clean_term = term
     @in_title = false
