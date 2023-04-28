@@ -10,7 +10,7 @@ module Email
     end
 
     def self.process!(mail, opts = {})
-      Email::Processor.new(mail, opts).process! if mail.present?
+      Email::Processor.new(mail, opts).process!
     end
 
     def process!
@@ -156,7 +156,7 @@ module Email
     end
 
     def can_send_rejection_email?(email, type)
-      return false if @receiver.sent_to_mailinglist_mirror?
+      return false if @receiver&.sent_to_mailinglist_mirror?
       return true if type == :email_reject_unrecognized_error
 
       key = "rejection_email:#{email}:#{type}:#{Date.today}"
