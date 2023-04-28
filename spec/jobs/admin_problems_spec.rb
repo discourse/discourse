@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Jobs::DashboardStats do
+RSpec.describe ::Jobs::AdminProblems do
   fab!(:admin) { Fabricate(:admin) }
 
-  it "creates group notification when problems are persistent for 2 days" do
+  it "creates notification when problems persist for at least 2 days" do
     Discourse.redis.setex(AdminDashboardData.problems_started_key, 14.days.to_i, Time.zone.now.to_s)
     expect { described_class.new.execute({}) }.not_to change { Notification.count }
 

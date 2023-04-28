@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class DashboardStats < ::Jobs::Scheduled
+  class AdminProblems < ::Jobs::Scheduled
     every 30.minutes
 
     def execute(args)
