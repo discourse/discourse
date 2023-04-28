@@ -42,6 +42,7 @@
 
         <div class="chat-composer__input-container">
           <DTextarea
+            id={{this.composerId}}
             value={{readonly this.currentMessage.message}}
             type="text"
             class="chat-composer__input"
@@ -86,6 +87,7 @@
       @onUploadChanged={{this.onUploadChanged}}
       @existingUploads={{this.currentMessage.uploads}}
       @uploadDropZone={{@uploadDropZone}}
+      @composerInputEl={{this.textareaInteractor.textarea}}
     />
   {{/if}}
 
