@@ -193,6 +193,11 @@ export default class ChatThreadPanel extends Component {
     this.chatChannelThreadComposer.reset(this.channel);
   }
 
+  @action
+  resetActiveMessage() {
+    this.chat.activeMessage = null;
+  }
+
   #sendNewMessage(message) {
     // TODO (martin) For desktop notifications
     // resetIdle()

@@ -501,6 +501,8 @@ export default class ChatLivePane extends Component {
       return;
     }
 
+    this.chat.activeMessage = null;
+
     if (this.#isAtTop()) {
       this.fetchMoreMessages({ direction: PAST });
       this.onScrollEnded();
