@@ -4,7 +4,7 @@ export default class LazyVideo extends Component {
   get iframeSrc() {
     switch (this.args.providerName) {
       case "youtube":
-        return `https://www.youtube.com/embed/${this.args.videoId}?autoplay=1`;
+        return `https://www.youtube.com/embed/${this.args.videoId}?autoplay=1&start=${this.args.startTime}`;
       case "vimeo":
         return `https://player.vimeo.com/video/${this.args.videoId}${
           this.args.videoId.includes("?") ? "&" : "?"
