@@ -17,9 +17,12 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   useUploadPlaceholders: true,
 
   @bind
-  _generateVideoThumbnail(videoFile, uploadUrl) {
+  _generateVideoThumbnail(videoFile, uploadUrl, callback) {
     if (!this.siteSettings.video_thumbnails_enabled) {
-      return;
+      callback();
+    }
+    if (videoFile.type.split("/")[0] !== "video") {
+      callback();
     }
     let video = document.createElement("video");
     video.src = URL.createObjectURL(videoFile.data);
@@ -45,10 +48,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       // A timeout is needed on mobile.
       setTimeout(() => {
         ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-      }, 100);
 
-      // A timeout is needed on mobile.
-      setTimeout(() => {
         // upload video thumbnail
         canvas.toBlob((blob) => {
           this._uppyInstance = new Uppy({
@@ -103,6 +103,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
             });
           }
         });
+        callback();
       }, 100);
     };
   },
