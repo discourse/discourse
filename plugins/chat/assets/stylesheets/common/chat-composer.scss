@@ -53,7 +53,7 @@
     background: none;
     will-change: scale;
 
-    .chat-composer.is-enabled & {
+    .chat-composer.is-send-enabled & {
       &:hover {
         background: none;
       }
