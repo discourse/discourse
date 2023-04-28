@@ -680,14 +680,14 @@ class TopicQuery
     # If we are sorting by category, actually use the name
     if sort_column == "category_id"
       # TODO forces a table scan, slow
-      return result.references(:categories).order(<<~SQL)
+      return topics.references(:categories).order(<<~SQL)
         CASE WHEN categories.id = #{SiteSetting.uncategorized_category_id.to_i} THEN '' ELSE categories.name END #{sort_dir}
       SQL
     end
 
     if sort_column == "op_likes"
       return(
-        result.includes(:first_post).order(
+        topics.includes(:first_post).order(
           "(SELECT like_count FROM posts p3 WHERE p3.topic_id = topics.id AND p3.post_number = 1) #{sort_dir}",
         )
       )
@@ -696,13 +696,13 @@ class TopicQuery
     if sort_column.start_with?("custom_fields")
       field = sort_column.split(".")[1]
       return(
-        result.order(
+        topics.order(
           "(SELECT CASE WHEN EXISTS (SELECT true FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') THEN (SELECT value::integer FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') ELSE 0 END) #{sort_dir}",
         )
       )
     end
 
-    result.order("topics.#{sort_column} #{sort_dir}")
+    topics.order("topics.#{sort_column} #{sort_dir}")
   end
 
   def get_category_id(category_id_or_slug)
