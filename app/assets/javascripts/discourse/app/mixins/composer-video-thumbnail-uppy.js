@@ -19,10 +19,10 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   @bind
   _generateVideoThumbnail(videoFile, uploadUrl, callback) {
     if (!this.siteSettings.video_thumbnails_enabled) {
-      callback();
+      return callback();
     }
     if (videoFile.type.split("/")[0] !== "video") {
-      callback();
+      return callback();
     }
     let video = document.createElement("video");
     video.src = URL.createObjectURL(videoFile.data);
@@ -77,6 +77,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
           this._uppyInstance.on("upload-success", () => {
             this.set("uploading", false);
+            callback();
           });
 
           this._uppyInstance.on("upload-error", (file, error, response) => {
@@ -88,6 +89,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
             // eslint-disable-next-line no-console
             console.error(message);
             this.set("uploading", false);
+            callback();
           });
 
           try {
@@ -103,7 +105,6 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
             });
           }
         });
-        callback();
       }, 100);
     };
   },
