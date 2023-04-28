@@ -18,6 +18,13 @@ acceptance("Static", function () {
     );
     assert.ok(exists(".body-page"), "The content is present");
 
+    await visit("/conduct");
+    assert.ok(
+      document.body.classList.contains("static-conduct"),
+      "has the body class"
+    );
+    assert.ok(exists(".body-page"), "The content is present");
+
     await visit("/tos");
     assert.ok(
       document.body.classList.contains("static-tos"),
