@@ -49,7 +49,7 @@ RSpec.describe Email::Processor do
   end
 
   describe "when mail is not set" do
-    it "does not process mail or raise an error" do
+    it "does not raise an error" do
       expect { Email::Processor.process!(nil) }.not_to raise_error
       expect { Email::Processor.process!("") }.not_to raise_error
     end
