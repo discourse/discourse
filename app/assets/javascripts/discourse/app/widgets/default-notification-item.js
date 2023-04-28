@@ -192,6 +192,7 @@ export const DefaultNotificationItem = createWidget(
           method: "PUT",
           data: { id: this.attrs.id },
         });
+        this.scheduleRerender();
       }
     },
   }
