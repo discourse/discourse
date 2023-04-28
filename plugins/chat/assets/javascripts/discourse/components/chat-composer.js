@@ -184,7 +184,7 @@ export default class ChatComposer extends Component {
       this.currentMessage.uploads = cloneJSON(uploads);
     }
 
-    this.textareaInteractor.focus();
+    this.textareaInteractor?.focus();
     this.reportReplyingPresence();
     this.persistDraft();
   }
@@ -212,6 +212,10 @@ export default class ChatComposer extends Component {
   }
 
   reportReplyingPresence() {
+    if (!this.args.channel) {
+      return;
+    }
+
     if (this.args.channel.isDraft) {
       return;
     }
