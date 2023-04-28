@@ -50,15 +50,9 @@ export default Component.extend({
     }
 
     let count = pluginCounterFunctions.reduce((sum, fn) => sum + fn(), 0);
-    if (this.currentUser.redesigned_user_menu_enabled) {
-      count += this.currentUser.all_unread_notifications_count;
-      if (this.currentUser.unseen_reviewable_count) {
-        count += this.currentUser.unseen_reviewable_count;
-      }
-    } else {
-      count +=
-        this.currentUser.unread_notifications +
-        this.currentUser.unread_high_priority_notifications;
+    count += this.currentUser.all_unread_notifications_count;
+    if (this.currentUser.unseen_reviewable_count) {
+      count += this.currentUser.unseen_reviewable_count;
     }
     this.documentTitle.updateNotificationCount(count, { forced: opts?.forced });
   },

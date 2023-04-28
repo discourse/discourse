@@ -35,7 +35,6 @@ const SiteHeaderComponent = MountWidget.extend(
       "currentUser.unread_notifications",
       "currentUser.unread_high_priority_notifications",
       "currentUser.all_unread_notifications_count",
-      "currentUser.reviewable_count", // TODO: remove this when redesigned_user_menu_enabled is removed
       "currentUser.unseen_reviewable_count",
       "session.defaultColorSchemeIsDark",
       "session.darkModeAvailable"
@@ -250,9 +249,7 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.on("header:show-topic", this, "setTopic");
       this.appEvents.on("header:hide-topic", this, "setTopic");
 
-      if (this.currentUser?.redesigned_user_menu_enabled) {
-        this.appEvents.on("user-menu:rendered", this, "_animateMenu");
-      }
+      this.appEvents.on("user-menu:rendered", this, "_animateMenu");
 
       if (this._dropDownHeaderEnabled()) {
         this.appEvents.on(
@@ -274,53 +271,35 @@ const SiteHeaderComponent = MountWidget.extend(
 
       const header = document.querySelector("header.d-header");
       this._itsatrap = new ItsATrap(header);
-      const dirs = this.currentUser?.redesigned_user_menu_enabled
-        ? ["up", "down"]
-        : ["right", "left"];
+      const dirs = ["up", "down"];
       this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
     },
 
     _handleArrowKeysNav(event) {
-      if (this.currentUser?.redesigned_user_menu_enabled) {
-        const activeTab = document.querySelector(
-          ".menu-tabs-container .btn.active"
+      const activeTab = document.querySelector(
+        ".menu-tabs-container .btn.active"
+      );
+      if (activeTab) {
+        let activeTabNumber = Number(
+          document.activeElement.dataset.tabNumber ||
+            activeTab.dataset.tabNumber
         );
-        if (activeTab) {
-          let activeTabNumber = Number(
-            document.activeElement.dataset.tabNumber ||
-              activeTab.dataset.tabNumber
-          );
-          const maxTabNumber =
-            document.querySelectorAll(".menu-tabs-container .btn").length - 1;
-          const isNext = event.key === "ArrowDown";
-          let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
-          if (isNext && nextTab > maxTabNumber) {
-            nextTab = 0;
-          }
-          if (!isNext && nextTab < 0) {
-            nextTab = maxTabNumber;
-          }
-          event.preventDefault();
-          document
-            .querySelector(
-              `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
-            )
-            .focus();
+        const maxTabNumber =
+          document.querySelectorAll(".menu-tabs-container .btn").length - 1;
+        const isNext = event.key === "ArrowDown";
+        let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
+        if (isNext && nextTab > maxTabNumber) {
+          nextTab = 0;
         }
-      } else {
-        const activeTab = document.querySelector(".glyphs .menu-link.active");
-
-        if (activeTab) {
-          let focusedTab = document.activeElement;
-          if (!focusedTab.dataset.tabNumber) {
-            focusedTab = activeTab;
-          }
-
-          this.appEvents.trigger("user-menu:navigation", {
-            key: event.key,
-            tabNumber: Number(focusedTab.dataset.tabNumber),
-          });
+        if (!isNext && nextTab < 0) {
+          nextTab = maxTabNumber;
         }
+        event.preventDefault();
+        document
+          .querySelector(
+            `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
+          )
+          .focus();
       }
     },
 
@@ -339,9 +318,7 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.off("header:show-topic", this, "setTopic");
       this.appEvents.off("header:hide-topic", this, "setTopic");
       this.appEvents.off("dom:clean", this, "_cleanDom");
-      if (this.currentUser?.redesigned_user_menu_enabled) {
-        this.appEvents.off("user-menu:rendered", this, "_animateMenu");
-      }
+      this.appEvents.off("user-menu:rendered", this, "_animateMenu");
 
       if (this._dropDownHeaderEnabled()) {
         this.appEvents.off(

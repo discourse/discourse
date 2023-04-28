@@ -112,8 +112,7 @@ acceptance("Do not disturb", function (needs) {
   });
 });
 
-acceptance("Do not disturb - new user menu", function (needs) {
-  needs.user({ redesigned_user_menu_enabled: true });
+acceptance("Do not disturb - user menu", function (needs) {
   needs.pretender((server, helper) => {
     server.post("/do-not-disturb.json", () => {
       const now = new Date();

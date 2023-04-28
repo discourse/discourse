@@ -355,11 +355,7 @@ export default createWidget("hamburger-menu", {
   },
 
   html(attrs, state) {
-    if (
-      this.currentUser &&
-      !this.currentUser.redesigned_user_menu_enabled &&
-      !state.loaded
-    ) {
+    if (this.currentUser && !state.loaded) {
       this.refreshReviewableCount(state);
     }
 

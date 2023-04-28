@@ -30,14 +30,10 @@ class NotificationsController < ApplicationController
 
       include_reviewables = false
 
-      if SiteSetting.legacy_navigation_menu?
-        notifications = Notification.recent_report(current_user, limit, notification_types)
-      else
-        notifications =
-          Notification.prioritized_list(current_user, count: limit, types: notification_types)
-        # notification_types is blank for the "all notifications" user menu tab
-        include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
-      end
+      notifications =
+        Notification.prioritized_list(current_user, count: limit, types: notification_types)
+      # notification_types is blank for the "all notifications" user menu tab
+      include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
 
       if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
         if current_user.bump_last_seen_notification!
