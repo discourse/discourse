@@ -121,6 +121,7 @@ acceptance("Managing Group Membership", function (needs) {
     );
     await associatedGroups.expand();
     await associatedGroups.selectRowByName("google_oauth2:test-group");
+    await associatedGroups.keyboard("enter");
 
     assert.equal(associatedGroups.header().name(), "google_oauth2:test-group");
   });
