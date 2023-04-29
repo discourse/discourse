@@ -82,14 +82,21 @@ module ClusterMatchQvHelper
   def self.sort_by_topics_score(unique_users, unique_groups, unique_topics, user_groups, user_votes)
     processed_groups, topic_contributions =
       process_data(unique_users, unique_groups, unique_topics, user_groups, user_votes)
+
     sorted_unique_topics =
       unique_topics.sort_by do |topic|
-        topic_id = topic[:topic_id] # Replace 'topic_id' with the appropriate attribute/method name
+        topic_id = topic[:id] # Replace 'topic_id' with the appropriate attribute/method name
         contributions = topic_contributions[topic_id]
         topic_score = cluster_match(processed_groups, contributions)
         -topic_score
       end
 
-    sorted_unique_topics
+    ids = sorted_unique_topics.map(&:id)
+    aa_sorted_unique_topics =
+      unique_topics.where(id: ids).order(
+        "ARRAY_POSITION(ARRAY[#{ids.join(",")}], #{unique_topics.table_name}.id)",
+      )
+
+    aa_sorted_unique_topics
   end
 end
