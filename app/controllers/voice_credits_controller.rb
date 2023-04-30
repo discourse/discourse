@@ -73,6 +73,7 @@ class VoiceCreditsController < ApplicationController
         user_groups,
         user_votes,
       )
+
     discounted_totals.each do |ct|
       topic_id = ct[:topic_id]
       vote_value = topic_contributions[topic_id]
@@ -96,8 +97,6 @@ class VoiceCreditsController < ApplicationController
         result[topic_id][:total_votes] += vote_value
       end
     end
-
-    # return old results and new
 
     # Square the sum of total votes per topic
     result.each { |topic_id, topic_data| topic_data[:total_votes] = topic_data[:total_votes]**2 }
