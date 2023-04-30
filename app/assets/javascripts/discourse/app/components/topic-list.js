@@ -42,8 +42,8 @@ export default Component.extend(LoadMore, {
       .then((response) => response.json())
       .then((r) => {
         if (r.success) {
-          console.log("topicVotes", r.total_vote_values_per_topic);
-          this.set("topicVotes", r.total_vote_values_per_topic);
+          console.log("topicVotes", r.discounted_total_vote_values_per_topic);
+          this.set("topicVotes", r.discounted_total_vote_values_per_topic);
           this.set("showQuadraticTotals", true);
         }
       })
