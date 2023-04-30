@@ -46,8 +46,7 @@ module ClusterMatchQvHelper
   def self.process_data(unique_users, unique_groups, unique_topics, user_groups, user_votes)
     # Create a mapping of user_id to the index
     user_index_mapping = {}
-    unique_users.each_with_index { |user, index| user_index_mapping[user] = index }
-
+    unique_users.each_with_index { |user, index| user_index_mapping[user.id] = index }
     # Create a mapping of group to the index
     group_index_mapping = {}
     unique_groups.each_with_index { |group, index| group_index_mapping[group] = index }
@@ -57,7 +56,6 @@ module ClusterMatchQvHelper
     user_groups.each do |user_group|
       user_index = user_index_mapping[user_group[:user_id]]
       next unless user_index
-
       user_group[:groups].each do |group|
         group_index = group_index_mapping[group]
         next unless group_index
