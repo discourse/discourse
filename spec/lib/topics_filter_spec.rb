@@ -780,67 +780,69 @@ RSpec.describe TopicsFilter do
       fab!(:topic2_by_user) { Fabricate(:topic, user: user) }
       fab!(:topic_by_user2) { Fabricate(:topic, user: user2) }
 
-      describe "when query string is `created-by:username`" do
+      describe "when query string is `created-by:@username`" do
         it "should return the topics created by the specified user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:#{user.username}")
+              .filter_from_query_string("created-by:@#{user.username}")
               .pluck(:id),
           ).to contain_exactly(topic_by_user.id, topic2_by_user.id)
         end
       end
 
-      describe "when query string is `created-by:username2`" do
+      describe "when query string is `created-by:@username2`" do
         it "should return the topics created by the specified user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:#{user2.username}")
+              .filter_from_query_string("created-by:@#{user2.username}")
               .pluck(:id),
           ).to contain_exactly(topic_by_user2.id)
         end
       end
 
-      describe "when query string is `created-by:username created-by:username2`" do
+      describe "when query string is `created-by:@username created-by:@username2`" do
         it "should return the topics created by either of the specified users" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:#{user.username} created-by:#{user2.username}")
+              .filter_from_query_string(
+                "created-by:@#{user.username} created-by:@#{user2.username}",
+              )
               .pluck(:id),
           ).to contain_exactly(topic_by_user.id, topic2_by_user.id, topic_by_user2.id)
         end
       end
 
-      describe "when query string is `created-by:username,invalid`" do
+      describe "when query string is `created-by:@username,invalid`" do
         it "should only return the topics created by the user with the valid username" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:#{user.username},invalid")
+              .filter_from_query_string("created-by:@#{user.username},invalid")
               .pluck(:id),
           ).to contain_exactly(topic_by_user.id, topic2_by_user.id)
         end
       end
 
-      describe "when query string is `created-by:username,username2`" do
+      describe "when query string is `created-by:@username,@username2`" do
         it "should return the topics created by either of the specified users" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:#{user.username},#{user2.username}")
+              .filter_from_query_string("created-by:@#{user.username},@#{user2.username}")
               .pluck(:id),
           ).to contain_exactly(topic_by_user.id, topic2_by_user.id, topic_by_user2.id)
         end
       end
 
-      describe "when query string is `created-by:invalid`" do
+      describe "when query string is `created-by:@invalid`" do
         it "should not return any topics" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:invalid")
+              .filter_from_query_string("created-by:@invalid")
               .pluck(:id),
           ).to eq([])
         end
