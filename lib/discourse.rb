@@ -327,19 +327,9 @@ module Discourse
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + %i[categories top]
   end
 
-  PIXEL_RATIOS ||= [1, 1.5, 2, 3]
-
   def self.avatar_sizes
     # TODO: should cache these when we get a notification system for site settings
-    set = Set.new
-
-    SiteSetting
-      .avatar_sizes
-      .split("|")
-      .map(&:to_i)
-      .each { |size| PIXEL_RATIOS.each { |pixel_ratio| set << (size * pixel_ratio).to_i } }
-
-    set
+    Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
   end
 
   def self.activate_plugins!
