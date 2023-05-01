@@ -986,6 +986,28 @@ class PluginApi {
   }
 
   /**
+   * Adds a glyph to the legacy user menu after bookmarks
+   * WARNING: there is limited space there
+   *
+   * example:
+   *
+   * api.addUserMenuGlyph({
+   *    title: 'awesome.label',
+   *    className: 'my-class',
+   *    icon: 'my-icon',
+   *    data: { url: `/some/path` },
+   * });
+   *
+   * To customize the new user menu, see api.registerUserMenuTab
+   */
+  addUserMenuGlyph() {
+    deprecated(
+      "addUserMenuGlyph has been removed. Use api.registerUserMenuTab instead.",
+      { id: "discourse.add-user-menu-glyph" }
+    );
+  }
+
+  /**
    * Adds a callback to be called before rendering any post that
    * that returns custom classes to add to the post
    *
