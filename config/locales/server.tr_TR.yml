@@ -2008,7 +2008,6 @@ tr_TR:
     allowed_href_schemes: "Bağlantılarda http ve https'ye ek olarak izin verilen şemalar."
     embed_post_limit: "Yerleştirilecek maksimum gönderi sayısı."
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
-    notify_about_flags_after: "Bu kadar saat sonra ele alınmamış bayraklar varsa moderatörlere kişisel bir mesaj gönderin. Devre dışı bırakmak için 0 olarak ayarlayın."
     show_create_topics_notice: "Sitede 5'ten az genel konu varsa yöneticilerden birkaç konu oluşturmalarını isteyen bir bildirim gösterin."
     delete_drafts_older_than_n_days: "(n) günden daha eski taslakları silin."
     delete_merged_stub_topics_after_days: "Tamamen birleştirilmiş saplama konularını otomatik olarak silmeden önce beklenecek gün sayısı. Saplama konularını asla silmemek için 0 olarak ayarlayın."

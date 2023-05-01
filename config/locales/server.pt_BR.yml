@@ -2014,7 +2014,6 @@ pt_BR:
     allowed_href_schemes: "Esquemas permitidos em links, além de http e https."
     embed_post_limit: "Quantidade máxima de postagens para incorporar."
     embed_username_required: "O nome do(a) usuário(a) para criação do tópico é obrigatório."
-    notify_about_flags_after: "Se houver sinalizadores que não foram tratados depois de muitas horas, envie uma mensagem pessoal para os(as) moderadores(as). Defina como 0 para desativar."
     show_create_topics_notice: "Se o site tiver menos de cinco tópicos públicos, mostre um aviso pedindo que os(as) administradores(as) criem alguns tópicos."
     delete_drafts_older_than_n_days: "Exclua rascunhos anteriores a (n) dias."
     delete_merged_stub_topics_after_days: "Quantidade de dias para aguardar antes de excluir automaticamente tópicos de stub totalmente mesclados. Defina para 0 para nunca excluir tópicos de stub."
