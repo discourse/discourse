@@ -645,14 +645,19 @@ class TopicQuery
           UserFieldOption.all.map do |x|
             "user_field_#{x.user_field_id}_#{x.value}".gsub(/\s+/, "_")
           end
+        unique_groups << "no_group"
         unique_users = User.all
         user_votes = VoiceCredit.where("credits_allocated > 0 AND category_id = ?", category_id)
         custom_fields = UserCustomField.all
+        # groups for each user
         user_groups =
           custom_fields
             .group_by(&:user_id)
             .map do |user_id, fields|
               formatted_fields = fields.map { |x| "#{x.name}_#{x.value}" }
+
+              formatted_fields << "no_group" if formatted_fields.empty?
+
               { user_id: user_id, groups: formatted_fields }
             end
 

@@ -45,7 +45,7 @@ class VoiceCreditsController < ApplicationController
     unique_users = User.all
     unique_groups =
       UserFieldOption.all.map { |x| "user_field_#{x.user_field_id}_#{x.value}".gsub(/\s+/, "_") }
-    # unique_groups << ("no_group")
+    unique_groups << "no_group"
 
     unique_topics = Topic.where(category_id: category_id)
     custom_fields = UserCustomField.all
@@ -58,6 +58,9 @@ class VoiceCreditsController < ApplicationController
         .group_by(&:user_id)
         .map do |user_id, fields|
           formatted_fields = fields.map { |x| "#{x.name}_#{x.value}" }
+
+          formatted_fields << "no_group" if formatted_fields.empty?
+
           { user_id: user_id, groups: formatted_fields }
         end
 
