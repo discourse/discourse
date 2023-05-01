@@ -129,7 +129,7 @@ RSpec.describe User do
       end
 
       it "should not create any sidebar section link records for staged users" do
-        user = Fabricate(:user, staged: true)
+        Fabricate(:user, staged: true)
 
         expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
@@ -142,7 +142,7 @@ RSpec.describe User do
       end
 
       it "should not create any sidebar section link records for non human users" do
-        user = Fabricate(:user, id: -Time.now.to_i)
+        Fabricate(:user, id: -Time.now.to_i)
 
         expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
@@ -1359,7 +1359,7 @@ RSpec.describe User do
       describe "after 3 days" do
         it "should log a second visited_at record when we log an update later" do
           user.update_last_seen!
-          future_date = freeze_time(3.days.from_now)
+          freeze_time(3.days.from_now)
           user.update_last_seen!
 
           expect(user.user_visits.count).to eq(2)
@@ -2349,15 +2349,15 @@ RSpec.describe User do
     end
 
     it "has the correct counts" do
-      notification = Fabricate(:notification, user: user)
-      notification2 = Fabricate(:notification, user: user, read: true)
-      notification3 =
+      _notification = Fabricate(:notification, user: user)
+      _notification2 = Fabricate(:notification, user: user, read: true)
+      _notification3 =
         Fabricate(
           :notification,
           user: user,
           notification_type: Notification.types[:private_message],
         )
-      notification4 =
+      _notification4 =
         Fabricate(
           :notification,
           user: user,
@@ -2377,8 +2377,8 @@ RSpec.describe User do
     end
 
     it "does not publish to the /notification channel for users who have not been seen in > 30 days" do
-      notification = Fabricate(:notification, user: user)
-      notification2 = Fabricate(:notification, user: user, read: true)
+      _notification = Fabricate(:notification, user: user)
+      _notification2 = Fabricate(:notification, user: user, read: true)
       user.update(last_seen_at: 31.days.ago)
 
       message =
@@ -2934,7 +2934,7 @@ RSpec.describe User do
       it "only includes enabled totp 2FA" do
         enabled_totp_2fa =
           Fabricate(:user_second_factor_totp, user: user, name: "Enabled TOTP", enabled: true)
-        disabled_totp_2fa =
+        _disabled_totp_2fa =
           Fabricate(:user_second_factor_totp, user: user, name: "Disabled TOTP", enabled: false)
 
         expect(user.totps.map(&:id)).to eq([enabled_totp_2fa.id])
@@ -2950,7 +2950,7 @@ RSpec.describe User do
             name: "Enabled YubiKey",
             enabled: true,
           )
-        disabled_security_key_2fa =
+        _disabled_security_key_2fa =
           Fabricate(
             :user_security_key_with_random_credential,
             user: user,
@@ -3371,7 +3371,7 @@ RSpec.describe User do
       last_notification = Fabricate(:notification, user: user)
       deleted_notification = Fabricate(:notification, user: user)
       deleted_notification.topic.trash!
-      someone_else_notification = Fabricate(:notification, user: Fabricate(:user))
+      _someone_else_notification = Fabricate(:notification, user: Fabricate(:user))
 
       expect(user.bump_last_seen_notification!).to eq(true)
       expect(user.reload.seen_notification_id).to eq(last_notification.id)

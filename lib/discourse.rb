@@ -327,6 +327,9 @@ module Discourse
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + %i[categories top]
   end
 
+  # list of pixel ratios Discourse tries to optimize for
+  PIXEL_RATIOS ||= [1, 1.5, 2, 3]
+
   def self.avatar_sizes
     # TODO: should cache these when we get a notification system for site settings
     Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
