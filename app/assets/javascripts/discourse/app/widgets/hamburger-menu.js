@@ -355,9 +355,6 @@ export default createWidget("hamburger-menu", {
   },
 
   html(attrs, state) {
-    if (this.currentUser && !state.loaded) {
-      this.refreshReviewableCount(state);
-    }
 
     return this.attach("menu-panel", {
       contents: () => this.panelContents(),
