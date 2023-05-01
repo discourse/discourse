@@ -12,7 +12,9 @@ function ajax(opts, messageBusConnectivity) {
     opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
-      messageBusConnectivity.setConnectivity(xhr.readyState === 4);
+      messageBusConnectivity.setConnectivity(
+        stat === "abort" || xhr.readyState === 4
+      );
     };
   } else {
     opts.complete = handleLogoff;
