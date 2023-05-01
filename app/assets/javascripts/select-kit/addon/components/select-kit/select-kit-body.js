@@ -42,11 +42,13 @@ export default Component.extend({
       return;
     }
 
-    // multi-selects need to keep the UI visible when adding/removing items
-    // for these cases, we can't rely on event.relatedTarget
-    // because the element has already been removed from DOM
-    if (this.selectKit.multiSelectRecentlyChanged) {
-      this.selectKit.set("multiSelectRecentlyChanged", false);
+    // We have to use a custom flag for multi-selects to keep UI visible.
+    // We can't rely on event.relatedTarget for these cases because,
+    // when adding/removing items in a multi-select, the DOM element
+    // has already been removed by this point, and therefore
+    // event.relatedTarget is going to be null.
+    if (this.selectKit.multiSelectInFocus) {
+      this.selectKit.set("multiSelectInFocus", false);
       return;
     }
 
