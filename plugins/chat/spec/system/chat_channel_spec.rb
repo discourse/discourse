@@ -127,16 +127,18 @@ RSpec.describe "Chat channel", type: :system, js: true do
 
   context "when a message contains mentions" do
     fab!(:other_user) { Fabricate(:user) }
-
-    before do
-      channel_1.add(other_user)
-      channel_1.add(current_user)
+    fab!(:message) do
       Fabricate(
         :chat_message,
         chat_channel: channel_1,
         message: "hello @here @all @#{current_user.username} @#{other_user.username} @unexisting",
         user: other_user,
       )
+    end
+
+    before do
+      channel_1.add(other_user)
+      channel_1.add(current_user)
       sign_in(current_user)
     end
 
@@ -151,6 +153,18 @@ RSpec.describe "Chat channel", type: :system, js: true do
       )
       expect(page).to have_selector(".mention", text: "@#{other_user.username}")
       expect(page).to have_selector(".mention", text: "@unexisting")
+    end
+
+    it "renders user status on mentions" do
+      SiteSetting.enable_user_status = true
+      other_user.set_status!("surfing", "surfing_man")
+      Fabricate(:chat_mention, user: other_user, chat_message: message)
+
+      chat.visit_channel(channel_1)
+
+      expect(page).to have_selector(
+        ".mention .user-status[title=#{other_user.user_status.description}]",
+      )
     end
   end
 
