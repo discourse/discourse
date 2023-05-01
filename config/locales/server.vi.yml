@@ -1327,7 +1327,6 @@ vi:
     embed_truncate: "Cắt ngắn các bài viết được nhúng."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
-    notify_about_flags_after: "Nếu có cờ chưa được xử lý sau nhiều giờ này, hãy gửi tin nhắn cá nhân cho người điều hành. Đặt thành 0 để tắt."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: "Xóa các bản nháp cũ hơn (n) ngày."
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."

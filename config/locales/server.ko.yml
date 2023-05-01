@@ -1851,7 +1851,6 @@ ko:
     allowed_href_schemes: "http 및 https 외에도 링크에 허용되는 스키마입니다."
     embed_post_limit: "임베드할 최대 게시물 수입니다."
     embed_username_required: "주제 생성을 위해 아이디가 필요합니다."
-    notify_about_flags_after: "이 시간이 지나도 처리되지 않은 신고가 있으면 운영자에게 개인 메시지를 보냅니다. 비활성화하려면 0으로 설정하세요."
     show_create_topics_notice: "사이트에 5개 미만의 공개 주제가 있는 경우 관리자에게 주제를 만들도록 요청하는 공지를 표시합니다."
     delete_drafts_older_than_n_days: "(n)일 지난 초안을 삭제합니다."
     delete_merged_stub_topics_after_days: "완전히 병합된 스텁 주제를 자동으로 삭제하기 전에 대기할 일 수입니다. 스텁 주제를 삭제하지 않으려면 0으로 설정하세요."

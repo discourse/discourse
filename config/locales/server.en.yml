@@ -2250,7 +2250,7 @@ en:
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
-    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
+    notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
