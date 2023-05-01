@@ -283,10 +283,10 @@ RSpec.describe CurrentUserSerializer do
       )
     end
 
-    it "isn't included when navigation menu is legacy with old user menu" do
+    it "isn't included when navigation menu is legacy" do
       SiteSetting.navigation_menu = "legacy"
 
-      expect(serializer.as_json[:new_personal_messages_notifications_count]).to be_nil
+      expect(serializer.as_json[:new_personal_messages_notifications_count]).to eq(1)
     end
 
     it "is included when sidebar is enabled" do
