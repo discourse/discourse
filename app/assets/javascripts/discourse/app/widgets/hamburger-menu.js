@@ -354,8 +354,7 @@ export default createWidget("hamburger-menu", {
       });
   },
 
-  html(attrs, state) {
-
+  html() {
     return this.attach("menu-panel", {
       contents: () => this.panelContents(),
       maxWidth: this.settings.maxWidth,
