@@ -3,9 +3,14 @@
 module ClusterMatchQvHelper
   # mirrors https://github.com/erichfi/connection-oriented-quadratic/blob/main/QV.rb
   def self.cluster_match(groups, contributions)
+    ## groups: [0, 4, 0, ,]
+    ## contributions:  [10, 0, 1, 0, 0, 0]
     group_memberships_map = Array.new(contributions.length) { [] }
 
     groups.each_with_index { |group, i| group.each { |j| group_memberships_map[j] << i } }
+    ## group_memberships_map  group_memberships_map: [[2, 3], [], [], [], [2], []]
+    ## We push a random number to empty groups to avoid empty arrays that cannot run on each loops in calculations
+    group_memberships_map.each { |group| group << (9999) if group.empty? }
 
     common_group =
       lambda do |i, j|
@@ -24,6 +29,8 @@ module ClusterMatchQvHelper
     result = 0
 
     groups.each { |g| g.each { |i| result += contributions[i] / group_memberships_map[i].length } }
+    puts "RESULT"
+    puts result
 
     groups.each do |g|
       groups.each do |h|
@@ -74,6 +81,8 @@ module ClusterMatchQvHelper
       topic_contributions[topic_id][user_index] += contribution[:credits_allocated]
     end
 
+    ## topic contr: {3=>[6, 0, 0, 0, 0, 0], 29=>[13, 0, 0, 0, 0, 0], 34=>[10, 0, 1, 0, 0, 0], 44=>[17, 0, 0, 0, 0, 0], 39=>[49, 0, 0, 0, 0, 0]}
+    ## processed_groups: [, , 0, 4, 0, ,]
     [processed_groups, topic_contributions]
   end
 
