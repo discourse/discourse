@@ -44,11 +44,17 @@ RSpec.describe Badge do
   end
 
   it "can ensure consistency" do
-    b = Badge.first
+    b = Badge.find_by_name("Basic User")
+
     b.grant_count = 100
     b.save
 
-    UserBadge.create!(user_id: -100, badge_id: b.id, granted_at: 1.minute.ago, granted_by_id: -1)
+    UserBadge.create!(
+      user_id: User.minimum(:id) - 1,
+      badge_id: b.id,
+      granted_at: 1.minute.ago,
+      granted_by_id: -1,
+    )
     UserBadge.create!(
       user_id: User.first.id,
       badge_id: b.id,
