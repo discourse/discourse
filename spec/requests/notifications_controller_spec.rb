@@ -286,16 +286,6 @@ RSpec.describe NotificationsController do
             )
           end
 
-          it "doesn't include reviewables when navigation menu is legacy" do
-            SiteSetting.navigation_menu = "legacy"
-            user.update!(admin: true)
-
-            get "/notifications.json", params: { recent: true }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body.key?("pending_reviewables")).to eq(false)
-          end
-
           it "doesn't include reviewables if the user can't see the review queue" do
             user.update!(admin: false)
 
