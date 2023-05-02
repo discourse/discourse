@@ -1117,7 +1117,6 @@ ro:
     default_categories_watching_first_post: "Lista categoriilor în care prima postare din fiecare topic va fi urmărită activ în mod implicit."
     allow_user_api_keys: "Permite generarea de chei API pentru utilizator"
     allow_user_api_key_scopes: "Lista domeniilor pentru care se permit chei API pentru utilizatori"
-    min_trust_level_for_user_api_key: "Nivelul de încredere necesar pentru generarea de chei API utilizator"
     allowed_user_api_push_urls: "URL-uri permise pentru serviciul push al serverului la API utilizator"
     tagging_enabled: "Activează etichetele la subiecte?"
     min_trust_to_create_tag: "Nivelul minim de încredere necesar pentru crearea unei etichete."

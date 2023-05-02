@@ -2016,7 +2016,6 @@ ja:
     revoke_api_keys_days: "未使用の API キーが自動的に取り消されるまでの日数 (0 に設定すると取り消されません)"
     allow_user_api_keys: "ユーザー API キーの生成を許可する"
     allow_user_api_key_scopes: "ユーザー API キーに許可されるスコープのリスト"
-    min_trust_level_for_user_api_key: "ユーザー API キーの生成に必要な信頼レベル"
     allowed_user_api_auth_redirects: "ユーザー API キーの認証リダイレクトに許可された URL。任意の部分を照合するには、ワイルドカード記号 * を使用できます (例: www.example.com/*)。"
     allowed_user_api_push_urls: "ユーザー API へのサーバープッシュで許可される URL"
     expire_user_api_keys_days: "ユーザー API キーが自動的に期限切れになるまでの日数 (0 に設定すると期限切れになりません)"

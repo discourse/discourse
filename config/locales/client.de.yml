@@ -4502,6 +4502,9 @@ de:
         user_promoted_event:
           name: "Benutzer-Beförderungs-Ereignis"
           details: "Wenn ein Benutzer von einer Vertrauensstufe zur nächsten befördert wird."
+        user_badge_event:
+          name: "Abzeichen-Ereignis"
+          details: "Wenn ein Abzeichen erteilt oder widerrufen wird."
         group_user_event:
           name: "Gruppenbenutzer-Ereignis"
           details: "Wenn ein Benutzer in einer Gruppe hinzugefügt oder entfernt wird."

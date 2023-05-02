@@ -2105,7 +2105,9 @@ sv:
     revoke_api_keys_days: "Antal dagar innan en oanvänd API-nyckel automatiskt återkallas (0 för aldrig)"
     allow_user_api_keys: "Tillåt generering av API-nycklar för användare"
     allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API-nycklar"
-    min_trust_level_for_user_api_key: "Förtroendenivå som krävs för att generera användar-API-nycklar"
+    min_trust_level_for_user_api_key: |
+      Förtroendenivå som krävs för generering av användar-API-nycklar.<br>
+      <b>VARNING</b>: Ändring av förtroendenivån kommer att förhindra användare med en lägre förtroendenivå från att logga in via Discourse Hub
     allowed_user_api_auth_redirects: "Tillåten URL för omdirigering efter verifiering av användares API-nycklar. Jokersymbol * kan användas för att matcha vilken del som helst av denna (t.ex. www.exempel.se/*)."
     allowed_user_api_push_urls: "Tillåtna URL:er för serverframstötning till användar-API"
     expire_user_api_keys_days: "Antal dagar innan en användares API-nyckel automatiskt upphör (0 för aldrig)"

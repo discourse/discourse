@@ -1527,7 +1527,6 @@ zh_TW:
     retry_web_hook_events: "自動重試失敗的Web hook事件，最大重試為4次。 重試之間的時間間隔為1、5、25及125分鐘"
     allow_user_api_keys: "允許生成使用者API密鑰"
     allow_user_api_key_scopes: "使用者API授權範圍列表"
-    min_trust_level_for_user_api_key: "生成使用者 API 密鑰所需的信任等級"
     allowed_user_api_auth_redirects: "允許身份驗證URL用於導向使用者API 密鑰（Keys），使用星號「*」將代入所有字詞，並找到最適合的配對（例如：www.example.com/*）。"
     allowed_user_api_push_urls: "允許使用伺服器推送至使用者 API 的 URL"
     tagging_enabled: "啟用話題標籤功能？"
