@@ -5,16 +5,24 @@ module Jobs
     every 30.minutes
 
     def execute(args)
-      Notification.where(notification_type: Notification.types[:admin_problems]).destroy_all
+      Notification
+        .where(notification_type: Notification.types[:admin_problems])
+        .where("created_at < ?", 7.days.ago)
+        .destroy_all
 
-      if persistent_problems?
-        Group[:admins].users.each do |user|
-          Notification.create!(
-            notification_type: Notification.types[:admin_problems],
-            user_id: user.id,
-            data: "{}",
-          )
-        end
+      return if !persistent_problems?
+
+      notified_user_ids =
+        Notification.where(notification_type: Notification.types[:admin_problems]).pluck(:user_id)
+
+      users = Group[:admins].users.where.not(id: notified_user_ids)
+
+      users.each do |user|
+        Notification.create!(
+          notification_type: Notification.types[:admin_problems],
+          user_id: user.id,
+          data: "{}",
+        )
       end
     end
 
