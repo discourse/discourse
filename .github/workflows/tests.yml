@@ -201,14 +201,8 @@ jobs:
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-<<<<<<< HEAD
         run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec plugins/*/spec/system
         timeout-minutes: 30
-||||||| parent of 0eeb01892e (Show which test is running in CI for plugin system specs)
-        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system
-=======
-        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system -f d
->>>>>>> 0eeb01892e (Show which test is running in CI for plugin system specs)
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
