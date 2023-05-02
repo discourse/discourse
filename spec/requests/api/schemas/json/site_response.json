@@ -41,6 +41,9 @@
         "new_features": {
           "type": "integer"
         },
+        "admin_problems": {
+          "type": "integer"
+        },
         "moved_post": {
           "type": "integer"
         },
