@@ -387,6 +387,7 @@ cs:
       email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."
       email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
       description_incomplete: "Příspěvek s popisem kategorie musí obsahovat alespoň jeden odstavec."
+      disallowed_tags_generic: "Toto téma obsahuje nedovolené štítky."
     cannot_delete:
       has_subcategories: "Tato kategorie nejde smazat protože obsahuje podkategorie."
       topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
@@ -576,9 +577,11 @@ cs:
       long_form: "označeno jako spam"
     inappropriate:
       title: "Nevhodné"
+      description: 'Toto téma obsahuje obsah, který by rozumná osoba mohla považovat za urážlivý, zneužívající, za nenávistné chování nebo za porušení <a href="%{base_path}/guidelines">našich komunitních zásad</a>.'
       long_form: "nahlášeno jako nevhodné"
     notify_moderators:
       title: "Něco jiného"
+      description: 'Toto téma vyžaduje obecnou pozornost redakce na základě <a href="%{base_path}/guidelines">pokynů</a>, <a href="%{tos_url}">podmínek použití</a>nebo z jiného důvodu, který není uveden výše.'
       long_form: "nahlášeno moderátorům"
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\n\\n%{message}\n"
@@ -810,7 +813,7 @@ cs:
     staff_logins:
       labels:
         user: Uživatel
-        location: Lokace
+        location: Poloha
     top_uploads:
       labels:
         filename: Název souboru
@@ -873,6 +876,7 @@ cs:
     embed_truncate: "Useknout zabudované příspěvky."
     embed_post_limit: "Maximální počet příspěvků k zabudování."
     tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
+    force_lowercase_tags: "Vynutit, aby všechny nové štítky byly psány výhradně malými písmeny."
     errors:
       invalid_email: "Neplatná emailová adresa."
       invalid_integer: "Hodnota musí být celé číslo."
@@ -953,6 +957,14 @@ cs:
         few: "%{count} users waiting for approval"
         many: "%{count} users waiting for approval"
         other: "%{count} users waiting for approval"
+    dashboard_problems:
+      subject_template: "Nové rady na řídicím panelu vašeho webu"
+      text_body_template: |
+        Máme pro vás několik nových rad a doporučení na základě aktuálního nastavení webu.
+
+        [Navštivte řídicí panel webu] (%{base_url}/admin), abyste si je mohli prohlédnout.
+
+        Pokud na vašem řídicím panelu není nic vidět, možná již podle této rady postupoval jiný člen redakce. Seznam akcí redaktorů najdete ve vašich [protokolech akcí redakce] (%{base_url}/admin/logs/staff_action_logs).
   unsubscribe_link: |
     Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1110,7 +1122,7 @@ cs:
     success: "E-mail odeslán"
     submit_button: "Odeslat e-mail"
   tags:
-    title: "Tagy"
+    title: "Štítky"
   finish_installation:
     register:
       button: "Registrovat"
@@ -1143,7 +1155,7 @@ cs:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
       invites:
-        title: "Pozvi redakci"
+        title: "Pozvi redaktory"
       finished:
         title: "Váš Discourse je připraven!"
   joined: "Účet vytvořen"

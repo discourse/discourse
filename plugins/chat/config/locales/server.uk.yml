@@ -10,39 +10,87 @@ uk:
     direct_message_enabled_groups: "Дозволити користувачам у цих групах створювати особисті чати між користувачами. Примітка: команда обслуговування завжди може створювати особисті чати, і користувачі зможуть відповідати на особисті чати, ініційовані користувачами, які мають дозвіл на їх створення."
     errors:
       direct_message_enabled_groups_invalid: "Ви повинні вказати принаймні одну групу для цього параметра. Якщо ви не хочете, щоб хтось, крім членів команди обслуговування, надсилав приватні повідомлення, виберіть групу команди обслуговування."
+  system_messages:
+    chat_channel_archive_complete:
+      title: "Архівацію каналу чату завершено"
+      subject_template: "Архівацію каналу чату успішно завершено"
+    chat_channel_archive_failed:
+      title: "Не вдалося створити архів каналу чату"
+      subject_template: "Не вдалося архівувати канали чату"
+    chat_channel_archive_failed_no_topic:
+      title: "Не вдалося створити архів каналу чату"
+      subject_template: "Помилка архіву каналу чату"
+      text_body_template: |
+        Архівування каналу чату %{channel_hashtag_or_name} завершилося невдало. Жодного повідомлення не було заархівовано. Тема не була успішно створена з наступних причин:
+
+          %{topic_validation_errors}
+
+        Відвідайте канал за адресою %{channel_url} , щоб повторити спробу.
   chat:
     deleted_chat_username: видалено
     errors:
       auto_silence_from_flags: "Повідомлення чату, позначене достатньо високим балом, щоб заблокувати користувача."
+      draft_too_long: "Чернетка занадто довга."
       not_accepting_dms: "На жаль, %{username} в даний момент не приймає повідомлення."
     reviewables:
       actions:
         agree:
           title: "Погодитися…"
+        agree_and_keep_message:
+          title: "Залишити повідомлення"
+        agree_and_keep_deleted:
+          title: "Залишити повідомлення видаленим"
         agree_and_suspend:
           title: "Призупинити користувача"
           description: "Погодитися з прапором та заморозити користувача."
         agree_and_silence:
           title: "Заблокувати користувача"
           description: "Погодитися з прапором та відключити користувача."
+        agree_and_restore:
+          title: "Відновити повідомлення"
         disagree:
           title: "Відмовити"
         ignore:
           title: "Ігнорувати"
     channel:
       statuses:
+        read_only: "Тільки для читання"
+        archived: "Архівовано"
         closed: "Закриті"
         open: "Відкрити"
       dm_title:
+        single_user: "%{user}"
+        multi_user: "%{users}"
         multi_user_truncated: "%{users} і ще %{leftover}"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "містить символи, які не є ASCII"
         is_already_in_use: "вже використовується"
+    bookmarkable:
+      notification_title: "повідомлення в %{channel_name}"
+    personal_chat: "особистий чат"
+    onebox:
+      inline_to_message: "Повідомлення №%{message_id} від %{username} – №%{chat_channel}"
+      inline_to_channel: "Чат №%{chat_channel}"
+      inline_to_topic_channel: "Чат для теми %{topic_title}"
+      x_members:
+        one: "%{count} учасник"
+        few: "%{count} учасники"
+        many: "%{count} учасників"
+        other: "%{count} учасників"
+      and_x_others:
+        one: "та %{count} інший"
+        few: "та %{count} інші"
+        many: "та %{count} інших"
+        other: "та %{count} інших"
   discourse_push_notifications:
     popup:
       chat_mention:
         direct: '%{username} згадав вас у "%{channel}"'
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Надіслати повідомлення в чат
   reviewable_score_types:
     needs_review:
       title: "Потребує розгляду"
@@ -58,7 +106,14 @@ uk:
   user_notifications:
     chat_summary:
       deleted_user: "Видалений користувач"
+      description:
+        one: "У вас нове повідомлення в чаті"
+        few: "У вас є нові повідомлення в чаті"
+        many: "У вас є нові повідомлення в чаті"
+        other: "У вас є нові повідомлення в чаті"
       from: "%{site_name}"
+      your_chat_settings: "Налаштування частоти електронної пошти чату"
   unsubscribe:
     chat_summary:
       never: Ніколи
+      when_away: Тільки коли офлайн
