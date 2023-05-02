@@ -68,10 +68,7 @@ class WordWatcher
     regexps = grouped_words.select { |_, w| w.present? }.transform_values { |w| w.join("|") }
 
     if !SiteSetting.watched_words_regular_expressions?
-      regexps.transform_values! do |regexp|
-        regexp = "(#{regexp})"
-        "(?:\\W|^)#{regexp}(?=\\W|$)"
-      end
+      regexps.transform_values! { |regexp| "(?:[^[:word:]]|^)(#{regexp})(?=[^[:word:]]|$)" }
     end
 
     regexps.map { |c, regexp| Regexp.new(regexp, c == :case_sensitive ? nil : Regexp::IGNORECASE) }
@@ -97,7 +94,7 @@ class WordWatcher
     regexp = Regexp.escape(word).gsub("\\*", '\S*')
 
     if whole && !SiteSetting.watched_words_regular_expressions?
-      regexp = "(?:\\W|^)(#{regexp})(?=\\W|$)"
+      regexp = "(?:[^[:word:]]|^)(#{regexp})(?=[^[:word:]]|$)"
     end
 
     regexp

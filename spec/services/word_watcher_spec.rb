@@ -79,8 +79,8 @@ RSpec.describe WordWatcher do
 
         expect(regexps).to be_an(Array)
         expect(regexps.map(&:inspect)).to contain_exactly(
-          "/(?:\\W|^)(#{word1}|#{word2})(?=\\W|$)/i",
-          "/(?:\\W|^)(#{word3}|#{word4})(?=\\W|$)/",
+          "/(?:[^[:word:]]|^)(#{word1}|#{word2})(?=[^[:word:]]|$)/i",
+          "/(?:[^[:word:]]|^)(#{word3}|#{word4})(?=[^[:word:]]|$)/",
         )
       end
 
@@ -411,7 +411,7 @@ RSpec.describe WordWatcher do
           SiteSetting.watched_words_regular_expressions = true
           Fabricate(
             :watched_word,
-            word: "\\Wplaceholder",
+            word: "[^[:word:]]placeholder",
             replacement: "replacement",
             action: WatchedWord.actions[:replace],
           )
