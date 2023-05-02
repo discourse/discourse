@@ -43,7 +43,7 @@ end
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  public       :boolean          default(FALSE), not null
-#  section_type :string
+#  section_type :integer
 #
 # Indexes
 #
