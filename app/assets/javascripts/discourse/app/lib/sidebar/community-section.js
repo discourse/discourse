@@ -5,7 +5,7 @@ import { tracked } from "@glimmer/tracking";
 
 =======
 import I18n from "I18n";
-import SectionLink from "discourse/components/sidebar/user/section-link";
+import SectionLink from "discourse/lib/sidebar/section-link";
 import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { tracked } from "@glimmer/tracking";

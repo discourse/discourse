@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import Section from "discourse/components/sidebar/user/section";
-import CommunitySection from "discourse/components/sidebar/common/community-section";
+import Section from "discourse/lib/sidebar/section";
+import CommunitySection from "discourse/lib/sidebar/community-section";
 
 export default class SidebarAnonymousCustomSections extends Component {
   @service router;
@@ -10,7 +10,14 @@ export default class SidebarAnonymousCustomSections extends Component {
 
   get sections() {
     return this.site.anonymous_sidebar_sections?.map((section) => {
-      const klass = section.section_type ? CommunitySection : Section;
+      let klass;
+      switch (section.section_type) {
+        case "community":
+          klass = CommunitySection;
+          break;
+        default:
+          klass = Section;
+      }
 
       return new klass({
         section,

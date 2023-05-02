@@ -11,9 +11,10 @@ export default class SectionLink {
 
   constructor({ external, icon, id, name, value }, section, router) {
     this.external = external;
-    this.icon = icon;
+    this.prefixValue = icon;
     this.id = id;
     this.name = name;
+    this.text = name;
     this.value = value;
     this.section = section;
 
@@ -23,6 +24,10 @@ export default class SectionLink {
       this.models = routeInfoHelper.models;
       this.query = routeInfoHelper.query;
     }
+  }
+
+  get shouldDisplay() {
+    return true;
   }
 
   @bind

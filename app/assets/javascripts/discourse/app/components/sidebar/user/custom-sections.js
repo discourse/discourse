@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
-import Section from "discourse/components/sidebar/user/section";
-import CommunitySection from "discourse/components/sidebar/common/community-section";
+import Section from "discourse/lib/sidebar/section";
+import CommunitySection from "discourse/lib/sidebar/community-section";
 
 export default class SidebarUserCustomSections extends Component {
   @service currentUser;
@@ -16,21 +16,18 @@ export default class SidebarUserCustomSections extends Component {
   constructor() {
     super(...arguments);
     this.messageBus.subscribe("/refresh-sidebar-sections", this._refresh);
-    this.callbackIds = [];
+    this.cacheSections;
   }
 
   willDestroy() {
     this.messageBus.unsubscribe("/refresh-sidebar-sections");
-    this.callbackIds.forEach((id) => {
-      this.topicTrackingState.offStateChange(id);
-    });
-    return this.sections.forEach((section) => {
+    return this.cacheSections.forEach((section) => {
       section.teardown?.();
     });
   }
 
   get sections() {
-    return this.currentUser.sidebarSections.map((section) => {
+    this.cacheSections = this.currentUser.sidebarSections.map((section) => {
       switch (section.section_type) {
         case "community":
           const systemSection = new CommunitySection({
@@ -41,7 +38,6 @@ export default class SidebarUserCustomSections extends Component {
             topicTrackingState: this.topicTrackingState,
             siteSettings: this.siteSettings,
           });
-          this.callbackIds.push(systemSection.callbackId);
           return systemSection;
           break;
         default:
@@ -52,6 +48,7 @@ export default class SidebarUserCustomSections extends Component {
           });
       }
     });
+    return this.cacheSections;
   }
 
   @bind
