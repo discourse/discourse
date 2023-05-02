@@ -385,7 +385,7 @@ basic:
     default: false
   enable_user_tips:
     client: true
-    default: false
+    default: true
 
 login:
   invite_only:
