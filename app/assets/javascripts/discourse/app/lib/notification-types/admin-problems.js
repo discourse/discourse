@@ -16,6 +16,6 @@ export default class extends NotificationTypeBase {
   }
 
   get icon() {
-    return "exclamation-triangle";
+    return "gift";
   }
 }
