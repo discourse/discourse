@@ -34,7 +34,11 @@ export default class DeprecationCounter {
     let { id } = options;
     id ||= "discourse.(unknown)";
 
-    this.incrementDeprecation(id);
+    const matchingConfig = this.#configById.get(id);
+
+    if (matchingConfig !== "silence") {
+      this.incrementDeprecation(id);
+    }
   }
 
   incrementDeprecation(id) {
