@@ -19,7 +19,7 @@ class Onebox::Engine::VimeoOnebox
         iframe_id = iframe_src.sub("https://player.vimeo.com/video/", "")
       end
 
-      thumbnail_url = "https://vumbnail.com/#{oembed_data[:video_id]}.jpg"
+      thumbnail_url = get_opengraph.image
       escaped_title = ERB::Util.html_escape(og_data.title)
 
       <<~HTML
