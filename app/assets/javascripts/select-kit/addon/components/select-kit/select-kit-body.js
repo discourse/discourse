@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { bind } from "@ember/runloop";
+import { bind } from "discourse-common/utils/decorators";
 import { computed } from "@ember/object";
 import layout from "select-kit/templates/components/select-kit/select-kit-body";
 
@@ -12,24 +12,19 @@ export default Component.extend({
     return false;
   }),
 
-  init() {
-    this._super(...arguments);
-
-    this.focusOutHandler = bind(this, this.handleFocusOut);
-  },
-
   didInsertElement() {
     this._super(...arguments);
     this.element.style.position = "relative";
-    this.element.addEventListener("focusout", this.focusOutHandler, true);
+    this.element.addEventListener("focusout", this._handleFocusOut, true);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.element.removeEventListener("focusout", this.focusOutHandler, true);
+    this.element.removeEventListener("focusout", this._handleFocusOut, true);
   },
 
-  handleFocusOut(event) {
+  @bind
+  _handleFocusOut(event) {
     if (!this.selectKit.isExpanded) {
       return;
     }
