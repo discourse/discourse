@@ -44,7 +44,34 @@ class UsernameValidator
   MAX_CHARS ||= 60
 
   ASCII_INVALID_CHAR_PATTERN ||= /[^\w.-]/
-  UNICODE_INVALID_CHAR_PATTERN ||= /[^\p{Alnum}\p{M}._-]/
+  # All Unicode characters except for alphabetic and numeric character, marks and underscores are invalid.
+  # In addition to that, the following letters and nonspacing marks are invalid:
+  #   (U+034F) Combining Grapheme Joiner
+  #   (U+115F) Hangul Choseong Filler
+  #   (U+1160) Hangul Jungseong Filler
+  #   (U+17B4) Khmer Vowel Inherent Aq
+  #   (U+17B5) Khmer Vowel Inherent Aa
+  #   (U+180B - U+180D) Mongolian Free Variation Selectors
+  #   (U+3164) Hangul Filler
+  #   (U+FFA0) Halfwidth Hangul Filler
+  #   (U+FE00 - U+FE0F) "Variation Selectors" block
+  #   (U+E0100 - U+E01EF) "Variation Selectors Supplement" block
+  UNICODE_INVALID_CHAR_PATTERN ||=
+    /
+      [^\p{Alnum}\p{M}._-]|
+      [
+        \u{034F}
+        \u{115F}
+        \u{1160}
+        \u{17B4}
+        \u{17B5}
+        \u{180B}-\u{180D}
+        \u{3164}
+        \u{FFA0}
+        \p{In Variation Selectors}
+        \p{In Variation Selectors Supplement}
+      ]
+    /x
   INVALID_LEADING_CHAR_PATTERN ||= /\A[^\p{Alnum}\p{M}_]+/
   INVALID_TRAILING_CHAR_PATTERN ||= /[^\p{Alnum}\p{M}]+\z/
   REPEATED_SPECIAL_CHAR_PATTERN ||= /[-_.]{2,}/
