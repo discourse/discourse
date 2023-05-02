@@ -1329,6 +1329,42 @@ uk:
         warnings: "Офіційні попередження"
         read_more_in_group: "Бажаєте дізнатися більше? Перегляньте інші повідомлення в %{groupLink}."
         read_more: "Хочете прочитати більше? Перегляньте інші повідомлення в <a href='%{basePath}/u/%{username}/messages'>особистих повідомленнях</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитане</a>}
+                   few {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитані</a>}
+                   many {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитані</a>}
+                other {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитані</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># залишилося нове</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
+                   few { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень залишилися, або перегляньте інші повідомлення в {groupLink}}
+                   many { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень залишилися, або перегляньте інші повідомлення в {groupLink}}
+                other { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень залишилося, або перегляньте інші повідомлення в {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитане</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
+                   few {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
+                   many {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
+                other {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нове</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
+                   few {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
+                   many {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
+                other {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Обліковий запис"
         security: "Безпека"
@@ -2202,6 +2238,12 @@ uk:
         not_allowed: "Ви згадали @%{username}, але користувач не одержить сповіщення, оскільки його (її) не запрошено до цієї теми."
       cannot_see_group_mention:
         not_mentionable: "Ви не можете згадувати групу @%{group}."
+        some_not_allowed:
+          one: "Ви згадали @%{group}, але лише %{count} учасник отримає сповіщення, оскільки інші учасники не можуть побачити це особисте повідомлення. Вам потрібно буде запросити їх у це особисте повідомлення."
+          few: "Ви згадали @%{group}, але лише %{count} учасники отримають сповіщення, оскільки інші учасники не можуть побачити це особисте повідомлення. Вам потрібно буде запросити їх у це особисте повідомлення."
+          many: "Ви згадали @%{group}, але лише %{count} учасників отримають сповіщення, оскільки інші учасники не можуть побачити це особисте повідомлення. Вам потрібно буде запросити їх у це особисте повідомлення."
+          other: "Ви згадали @%{group}, але лише %{count} учасників отримають сповіщення, оскільки інші учасники не можуть побачити це особисте повідомлення. Вам потрібно буде запросити їх у це особисте повідомлення."
+        not_allowed: "Ви згадали @%{group} , але жоден з її учасників не буде сповіщений, тому що вони не можуть бачити це особисте повідомлення. Вам потрібно буде запросити їх до цього особистого повідомлення."
       here_mention:
         one: "Використовуючи <b>@%{here}</b>, ви повідомите %{count} користувача – ви впевнені?"
         few: "Використовуючи <b>@%{here}</b>, ви повідомите %{count} користувачів – ви впевнені?"
@@ -2837,6 +2879,47 @@ uk:
       read_more_in_category: "Хочете прочитати більше? Перегляньте інші теми на %{categoryLink} або <a href='%{latestLink}'>перегляньте останні теми</a>."
       read_more: "Хочете прочитати більше? <a href='%{categoryLink}'>Перегляньте всі категорії</a> або <a href='%{latestLink}'>перегляньте останні теми</a>."
       unread_indicator: "Поки що ніхто з учасників не прочитав останній допис цієї теми."
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {Є <a href="{basePath}/unread"># непрочитана</a>}
+                 few {Є <a href="{basePath}/unread"># непрочитані</a>}
+                 many {Є <a href="{basePath}/unread"># непрочитані</a>}
+              other {Є <a href="{basePath}/unread"># непрочитані</a>}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { і <a href="{basePath}/new"># залишилася нова</a> тема,}
+                 few { і <a href="{basePath}/new"># нові</a> теми залишилися,}
+                 many { і <a href="{basePath}/new"># нові</a> теми залишилися,}
+              other { і <a href="{basePath}/new"># нові</a> теми залишилися,}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {Залишилася <a href="{basePath}/unread"># непрочитана</a> тема,}
+                 few {Залишилося <a href="{basePath}/unread"># непрочитані</a> теми,}
+                 many {Залишилося <a href="{basePath}/unread"># непрочитані</a> теми,}
+              other {Залишилося <a href="{basePath}/unread"># непрочитані</a> теми,}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {Залишилася <a href="{basePath}/new"># нова</a> тема,}
+                 few {Залишилося <a href="{basePath}/new"># нових</a> теми,}
+                 many {Залишилося <a href="{basePath}/new"># нові</a> теми,}
+              other {Залишилося <a href="{basePath}/new"># нові</a> теми,}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { або перегляньте інші теми в {categoryLink}}
+          false { або <a href="{basePath}/latest">переглянути останні теми</a>}
+          other {}
+        }
       bumped_at_title: |
         Перший допис: %{createdAtDate}
         Опубліковано: %{bumpedAtDate}
@@ -4292,21 +4375,29 @@ uk:
           links:
             about:
               content: "Про"
+              title: "Детальніше про цей сайт"
             admin:
               content: "Адмін"
+              title: "Налаштування сайту та звіти"
             badges:
               content: "Нагороди"
+              title: "Всі значки доступні для отримання"
             everything:
               content: "Усе"
               title: "Всі теми"
             faq:
               content: "Часті запитання"
+              title: "Правила використання цього сайту"
             groups:
               content: "Групи"
+              title: "Список доступних груп користувачів"
             users:
               content: "Користувачі"
+              title: "Список усіх користувачів"
             my_posts:
               content: "Мої дописи"
+              title: "Моя нещодавня активність в темі"
+              title_drafts: "Мої неопубліковані чернетки"
               draft_count:
                 one: "%{count} чернетка"
                 few: "%{count} чернетки"
@@ -4314,6 +4405,7 @@ uk:
                 other: "%{count} чернеток"
             review:
               content: "Переглянути"
+              title: "Позначені публікації та інші елементи в черзі"
               pending_count: "%{count} очікує на розгляд"
     welcome_topic_banner:
       title: "Створіть тему привітання"
@@ -4470,6 +4562,9 @@ uk:
               other: "%{count} користувачів мають нові домени електронної пошти і будуть додані до групи."
             automatic_membership_associated_groups: "Користувачі, які є користувачами служби, вказаної тут, автоматично додаватимуться до цієї групи під час входу за допомогою служби."
             primary_group: "Автоматично встановлюється в якості основної групи"
+          alert:
+            primary_group: "Оскільки це основна група, назва «%{group_name}» буде використовуватися в класах CSS, які може переглядати будь-хто."
+            flair_group: "У цеї групи є мітка для учасників, тому назву «%{group_name}» буде видно всім."
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
         no_primary: "(no primary group)"
@@ -4479,6 +4574,12 @@ uk:
         about: "Edit your group membership and names here"
         group_members: "Учасники групи"
         delete: "Видалити"
+        delete_confirm: "Ви впевнені, що хочете видалити цю групу?"
+        delete_with_messages_confirm:
+          one: "Видалення цієї групи призведе до втрати %{count} повідомлення, учасники групи більше не матимуть до нього доступу."
+          few: "Видалення цієї групи призведе до втрати %{count} повідомлень, учасники групи більше не матимуть до них доступу."
+          many: "Видалення цієї групи призведе до втрати %{count} повідомлень, учасники групи більше не матимуть до них доступу."
+          other: "Видалення цієї групи призведе до втрати %{count} повідомлень, учасники групи більше не матимуть до них доступу."
         delete_failed: "Не вдалося видалити групу. Якщо це - автоматична група, її неможливо знищити."
         delete_automatic_group: Це автоматична група, яку не можна видалити.
         delete_owner_confirm: "Відкликати права власника у користувача '%{username}'?"
@@ -4563,6 +4664,9 @@ uk:
               anonymize: Анонімізувати облікові записи.
               delete: Видалення облікових записів користувачів.
               list: Отримання списку користувачів.
+            user_status:
+              read: Читати статус користувача.
+              update: Оновити статус користувача.
             email:
               receive_emails: Об'єднайте цю область з поштовим отримувачем для обробки вхідних листів електронної пошти.
             badges:
@@ -4587,6 +4691,7 @@ uk:
         create: "Створити"
         edit: "Редагувати"
         save: "Зберегти"
+        description_label: "Тригери подій"
         controls: "Управління"
         go_back: "Повернутися до списку"
         payload_url: "Посилання для відправки"
@@ -4693,6 +4798,8 @@ uk:
         broken_route: "Не вдалося налаштувати посилання на «%{name}». Переконайтеся, що блокувальники реклами вимкнено, і спробуйте перезавантажити сторінку."
       navigation_menu:
         sidebar: "Бічна панель"
+        header_dropdown: "Випадаючий заголовок"
+        legacy: "Спадщина"
       backups:
         title: "Backups"
         menu:
@@ -5381,6 +5488,7 @@ uk:
       user:
         suspend_failed: "Щось трапилося під час призупинення цього користувача: %{error}"
         unsuspend_failed: "Щось трапилося під час скасування призупинення цього користувача: %{error}"
+        suspend_duration: "Призупинити користувача до:"
         suspend_reason_label: "Чому Ви призупиняєте цього користувача? Цей текст <b>буде видимим для всіх</b> на сторінці профілю цього користувача, і його буде показано користувачу при спробі увійти в систему. Будьте лаконічні."
         suspend_reason_hidden_label: "Чому ви призупиняєте користувача? Цей текст буде показаний користувачеві, коли він спробує увійти в систему. Будьте лаконічним."
         suspend_reason: "Причина"
@@ -5404,7 +5512,9 @@ uk:
         silence_message: "Повідомлення пошти"
         silence_message_placeholder: "(Залиште незаповненим, щоб відправити дефолтне повідомлення)"
         suspended_until: "(Поки не буде %{until})"
+        suspend_forever: "Призупинити назавжди"
         cant_suspend: "Цього користувача не можна заморозити."
+        cant_silence: "Цього користувача неможливо вимкнути."
         delete_posts_failed: "При видаленні дописів виникла проблема."
         post_edits: "Редагувати допис"
         view_edits: "Перегляд змін"
@@ -5414,6 +5524,8 @@ uk:
         penalty_post_edit: "Редагувати допис"
         penalty_post_none: "Нічого не робити"
         penalty_count: "Кількість порушень"
+        penalty_history_MF: >-
+          За останні 6 місяців цей користувач був <b>призупинений { SUSPENDED, plural, one {# раз} few {# рази} many {# разів} other {# разів} }</b> і <b>заблокований { SILENCED, plural, one {# раз} few {# рази} many {# разів} other {# разів} }</b>.
         clear_penalty_history:
           title: "Очистити Історію Штрафів"
           description: "користувачі зі штрафами не можуть досягти TL3"
@@ -5574,10 +5686,16 @@ uk:
         silenced_count: "Відключений"
         suspended_count: "Призупинені"
         last_six_months: "Останні 6 місяців"
+        other_matches:
+          one: "Існує <b>%{count} інший користувач</b> з такою ж IP-адресою. Перегляньте та виберіть підозрілі для покарання разом із %{username}."
+          few: "Існує <b>%{count} інших користувачі</b> з такою ж IP-адресою. Перегляньте та виберіть підозрілі для покарання разом із %{username}."
+          many: "Існує <b>%{count} інших користувачів</b> з такою ж IP-адресою. Перегляньте та виберіть підозрілі для покарання разом із %{username}."
+          other: "Існує <b>%{count} інших користувачів</b> з такою ж IP-адресою. Перегляньте та виберіть підозрілі для покарання разом із %{username}."
         other_matches_list:
           username: "Імʼя користувача"
           trust_level: "Рівень довіри"
           read_time: "Час читання"
+          topics_entered: "Введені теми"
           posts: "Дописи"
         tl3_requirements:
           title: "Вимоги для Рівня довіри 3"
@@ -5898,8 +6016,10 @@ uk:
       finish: "Вийти з налаштування"
       back: "Назад"
       next: "Далі"
+      configure_more: "Налаштувати більше..."
       step-text: "Крок"
       step: "%{current} з %{total}"
+      upload: "Завантажити файл"
       uploading: "Надсилання…"
       upload_error: "Даруйте, під час завантаження цього файлу трапилася помилка. Будь ласка, спробуйте ще раз."
       staff_count:
