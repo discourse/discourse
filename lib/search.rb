@@ -1153,22 +1153,30 @@ class Search
         )
         SQL
 
+        rank_sort_priorities = [["topics.archived", 0.85], ["topics.closed", 0.9]]
+
+        rank_sort_priorities =
+          DiscoursePluginRegistry.apply_modifier(
+            :search_rank_sort_priorities,
+            rank_sort_priorities,
+            self,
+          )
+
         category_priority_weights = <<~SQL
-        (
-          CASE categories.search_priority
-          WHEN #{Searchable::PRIORITIES[:low]}
-          THEN #{SiteSetting.category_search_priority_low_weight}
-          WHEN #{Searchable::PRIORITIES[:high]}
-          THEN #{SiteSetting.category_search_priority_high_weight}
-          ELSE
-            CASE WHEN topics.archived
-            THEN 0.85
-            WHEN topics.closed
-            THEN 0.9
-            ELSE 1
+          (
+            CASE categories.search_priority
+              WHEN #{Searchable::PRIORITIES[:low]}
+              THEN #{SiteSetting.category_search_priority_low_weight.to_f}
+              WHEN #{Searchable::PRIORITIES[:high]}
+              THEN #{SiteSetting.category_search_priority_high_weight.to_f}
+              ELSE 1.0
             END
-          END
-        )
+            *
+            CASE
+              #{rank_sort_priorities.sort_by { |_, pri| -pri }.map { |k, v| "WHEN #{k} THEN #{v}" }.join("\n")}
+              ELSE 1.0
+            END
+          )
         SQL
 
         posts =
@@ -1302,8 +1310,6 @@ class Search
   end
 
   def aggregate_post_sql(opts)
-    default_opts = { type_filter: opts[:type_filter] }
-
     min_id =
       if SiteSetting.search_recent_regular_posts_offset_post_id > 0
         if %w[all_topics private_message].include?(opts[:type_filter])
