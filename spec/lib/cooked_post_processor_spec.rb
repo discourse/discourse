@@ -1012,7 +1012,7 @@ RSpec.describe CookedPostProcessor do
       end
     end
 
-    it "optimizes images in quotes" do
+    it "optimizes and wraps images in quotes with lightbox wrapper" do
       post = Fabricate(:post, raw: <<~MD)
         [quote]
         ![image|1024x768, 50%](#{large_image_upload.short_url})
@@ -1023,7 +1023,7 @@ RSpec.describe CookedPostProcessor do
       cpp.post_process
 
       doc = Nokogiri::HTML5.fragment(cpp.html)
-      expect(doc.css(".lightbox-wrapper").size).to eq(0)
+      expect(doc.css(".lightbox-wrapper").size).to eq(1)
       expect(doc.css("img").first["srcset"]).to_not eq(nil)
     end
 

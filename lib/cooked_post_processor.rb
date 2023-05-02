@@ -209,7 +209,7 @@ class CookedPostProcessor
 
       return if upload.animated?
 
-      if img.ancestors(".onebox, .onebox-body, .quote").blank? && !img.classes.include?("onebox")
+      if img.ancestors(".onebox, .onebox-body").blank? && !img.classes.include?("onebox")
         add_lightbox!(img, original_width, original_height, upload, cropped: crop)
       end
 
