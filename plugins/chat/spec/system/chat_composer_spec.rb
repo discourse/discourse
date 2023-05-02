@@ -343,8 +343,6 @@ RSpec.describe "Chat composer", type: :system, js: true do
       sign_in(current_user)
     end
 
-    after { page.driver.browser.network_conditions = { latency: 0 } }
-
     it "doesn’t allow to send" do
       chat.visit_channel(channel_1)
 
@@ -358,6 +356,8 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
       expect(page).to have_css(".chat-composer-upload--in-progress")
       expect(page).to have_css(".chat-composer.is-send-disabled")
+
+      page.driver.browser.network_conditions = { latency: 0 }
     end
   end
 end
