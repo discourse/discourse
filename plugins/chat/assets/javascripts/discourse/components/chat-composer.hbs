@@ -7,7 +7,7 @@
         this.currentMessage
         this.currentMessage.inReplyTo
       }}
-      @icon="pencil-alt"
+      @icon={{if this.currentMessage.editing "pencil-alt" "reply"}}
       @cancelAction={{this.onCancel}}
     />
   {{/if}}
