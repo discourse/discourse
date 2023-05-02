@@ -1,20 +1,84 @@
 # frozen_string_literal: true
 
 class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
+  COMMUNITY_SECTION_LINKS = [
+    {
+      id: -1,
+      name: I18n.t("sidebar.sections.community.links.everything.content", default: "Everything"),
+      path: "/latest",
+      icon: "layer-group",
+      segment: SidebarUrl.segments["primary"],
+    },
+    {
+      id: -2,
+      name: I18n.t("sidebar.sections.community.links.my_posts.content", default: "My Posts"),
+      path: "/my/activity",
+      icon: "user",
+      segment: SidebarUrl.segments["primary"],
+    },
+    {
+      id: -3,
+      name: I18n.t("sidebar.sections.community.links.review.content", default: "Review"),
+      path: "/review",
+      icon: "flag",
+      segment: SidebarUrl.segments["primary"],
+    },
+    {
+      id: -4,
+      name: I18n.t("sidebar.sections.community.links.admin.content", default: "Admin"),
+      path: "/admin",
+      icon: "wrench",
+      segment: SidebarUrl.segments["primary"],
+    },
+    {
+      id: -5,
+      name: I18n.t("sidebar.sections.community.links.users.content", default: "Users"),
+      path: "/u",
+      icon: "users",
+      segment: SidebarUrl.segments["secondary"],
+    },
+    {
+      id: -6,
+      name: I18n.t("sidebar.sections.community.links.about.content", default: "About"),
+      path: "/about",
+      icon: "info-circle",
+      segment: SidebarUrl.segments["secondary"],
+    },
+    {
+      id: -7,
+      name: I18n.t("sidebar.sections.community.links.faq.content", default: "FAQ"),
+      path: "/faq",
+      icon: "question-circle",
+      segment: SidebarUrl.segments["secondary"],
+    },
+    {
+      id: -8,
+      name: I18n.t("sidebar.sections.community.links.groups.content", default: "Groups"),
+      path: "/g",
+      icon: "user-friends",
+      segment: SidebarUrl.segments["secondary"],
+    },
+    {
+      id: -9,
+      name: I18n.t("sidebar.sections.community.links.badges.content", default: "Badges"),
+      path: "/badges",
+      icon: "certificate",
+      segment: SidebarUrl.segments["secondary"],
+    },
+  ]
   def up
     result = DB.query <<~SQL
-    INSERT INTO sidebar_sections(id, user_id, title, public, section_type, created_at, updated_at)
-      VALUES (-1, -1, 'Community', true, 'community', now(), now())
+      INSERT INTO sidebar_sections(id, user_id, title, public, section_type, created_at, updated_at)
+      VALUES (-1, -1, 'Community', true, #{SidebarSection.section_types["community"]}, now(), now())
       RETURNING sidebar_sections.id
     SQL
 
     community_section_id = result.last&.id
 
     sidebar_urls =
-      SidebarUrl::COMMUNITY_SECTION_LINKS.map do |url_data|
+      COMMUNITY_SECTION_LINKS.map do |url_data|
         "(#{url_data[:id]}, '#{url_data[:name]}', '#{url_data[:path]}', '#{url_data[:icon]}', '#{url_data[:segment]}', false, now(), now())"
       end
-    puts sidebar_urls.inspect
 
     result = DB.query <<~SQL
       INSERT INTO sidebar_urls(id, name, value, icon, segment, external, created_at, updated_at)

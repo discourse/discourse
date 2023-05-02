@@ -79,6 +79,8 @@ class SidebarUrl < ActiveRecord::Base
 
   before_validation :remove_internal_hostname, :set_external
 
+  enum :segment, { primary: 0, secondary: 1 }, scopes: false, suffix: true
+
   def path_validator
     return true if !external?
     raise ActionController::RoutingError.new("Not Found") if value !~ Discourse::Utils::URI_REGEXP

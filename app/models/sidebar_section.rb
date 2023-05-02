@@ -24,6 +24,7 @@ class SidebarSection < ActiveRecord::Base
             }
 
   scope :public_sections, -> { where("public") }
+  enum :section_type, { community: 0 }, scopes: false, suffix: true
 
   private
 

@@ -8,35 +8,7 @@ acceptance("Opengraph Tag Updater", function (needs) {
       return helper.response({});
     });
   });
-  needs.site({
-    anonymous_sidebar_sections: [
-      {
-        id: 111,
-        title: "Community",
-        links: [
-          {
-            id: 329,
-            name: "Everything",
-            value: "/latest",
-            icon: "layer-group",
-            external: false,
-            segment: "primary",
-          },
-          {
-            id: 331,
-            name: "Info",
-            value: "/about",
-            icon: "info-circle",
-            external: false,
-            segment: "secondary",
-          },
-        ],
-        slug: "community",
-        public: true,
-        section_type: "community",
-      },
-    ],
-  });
+  needs.site({});
 
   test("updates OG title and URL", async function (assert) {
     await visit("/");

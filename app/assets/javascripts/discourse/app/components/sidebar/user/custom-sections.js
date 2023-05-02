@@ -16,7 +16,6 @@ export default class SidebarUserCustomSections extends Component {
   constructor() {
     super(...arguments);
     this.messageBus.subscribe("/refresh-sidebar-sections", this._refresh);
-    this.cacheSections;
   }
 
   willDestroy() {
