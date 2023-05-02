@@ -111,6 +111,10 @@ fa_IR:
               label: شناسه موضوع
             post:
               label: محتوای نوشته
+        group_category_notification_default:
+          fields:
+            group:
+              label: گروه
         user_global_notice:
           fields:
             level:

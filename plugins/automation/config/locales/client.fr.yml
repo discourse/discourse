@@ -145,6 +145,10 @@ fr:
             restricted_category:
               label: Catégorie
               description: Facultatif, permet de limiter l'exécution du déclencheur à cette catégorie
+        category_created_edited:
+          fields:
+            restricted_category:
+              description: Facultatif, permet de limiter l'exécution du déclencheur à cette catégorie
         pm_created:
           fields:
             restricted_user:
@@ -193,6 +197,10 @@ fr:
               label: ID de sujet
             post:
               label: Contenu du message
+        group_category_notification_default:
+          fields:
+            group:
+              label: Groupe
         user_global_notice:
           fields:
             level:

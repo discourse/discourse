@@ -145,6 +145,10 @@ ar:
             restricted_category:
               label: الفئة
               description: اختياري، يسمح بتقييد تنفيذ المشغِّل لهذه الفئة
+        category_created_edited:
+          fields:
+            restricted_category:
+              description: اختياري، يسمح بتقييد تنفيذ المشغِّل لهذه الفئة
         pm_created:
           fields:
             restricted_user:
@@ -193,6 +197,10 @@ ar:
               label: معرِّف الموضوع
             post:
               label: محتوى المنشور
+        group_category_notification_default:
+          fields:
+            group:
+              label: المجموعة
         user_global_notice:
           fields:
             level:

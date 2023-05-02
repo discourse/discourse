@@ -145,6 +145,10 @@ es:
             restricted_category:
               label: Categoría
               description: Opcional, permite limitar la ejecución del activador a esta categoría
+        category_created_edited:
+          fields:
+            restricted_category:
+              description: Opcional, permite limitar la ejecución del activador a esta categoría
         pm_created:
           fields:
             restricted_user:
@@ -193,6 +197,10 @@ es:
               label: ID del tema
             post:
               label: Contenido de la publicación
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupo
         user_global_notice:
           fields:
             level:

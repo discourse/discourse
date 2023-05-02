@@ -147,6 +147,10 @@ tr_TR:
             restricted_category:
               label: Kategori
               description: İsteğe bağlı, tetikleyici yürütmeyi bu kategoriyle sınırlandırmaya izin verir
+        category_created_edited:
+          fields:
+            restricted_category:
+              description: İsteğe bağlı, tetikleyici yürütmeyi bu kategoriyle sınırlandırmaya izin verir
         pm_created:
           fields:
             restricted_user:
@@ -195,6 +199,10 @@ tr_TR:
               label: Konu Kimliği
             post:
               label: Gönderi içeriği
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grup
         user_global_notice:
           fields:
             level:
