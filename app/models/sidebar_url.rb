@@ -7,63 +7,54 @@ class SidebarUrl < ActiveRecord::Base
   MAX_VALUE_LENGTH = 200
   COMMUNITY_SECTION_LINKS = [
     {
-      id: -1,
       name: I18n.t("sidebar.sections.community.links.everything.content", default: "Everything"),
       path: "/latest",
       icon: "layer-group",
       segment: "primary",
     },
     {
-      id: -2,
       name: I18n.t("sidebar.sections.community.links.my_posts.content", default: "My Posts"),
       path: "/my/activity",
       icon: "user",
       segment: "primary",
     },
     {
-      id: -3,
       name: I18n.t("sidebar.sections.community.links.review.content", default: "Review"),
       path: "/review",
       icon: "flag",
       segment: "primary",
     },
     {
-      id: -4,
       name: I18n.t("sidebar.sections.community.links.admin.content", default: "Admin"),
       path: "/admin",
       icon: "wrench",
       segment: "primary",
     },
     {
-      id: -5,
       name: I18n.t("sidebar.sections.community.links.users.content", default: "Users"),
       path: "/u",
       icon: "users",
       segment: "secondary",
     },
     {
-      id: -6,
       name: I18n.t("sidebar.sections.community.links.about.content", default: "About"),
       path: "/about",
       icon: "info-circle",
       segment: "secondary",
     },
     {
-      id: -7,
       name: I18n.t("sidebar.sections.community.links.faq.content", default: "FAQ"),
       path: "/faq",
       icon: "question-circle",
       segment: "secondary",
     },
     {
-      id: -8,
       name: I18n.t("sidebar.sections.community.links.groups.content", default: "Groups"),
       path: "/g",
       icon: "user-friends",
       segment: "secondary",
     },
     {
-      id: -9,
       name: I18n.t("sidebar.sections.community.links.badges.content", default: "Badges"),
       path: "/badges",
       icon: "certificate",

@@ -72,35 +72,7 @@ acceptance(
 acceptance(
   "Sidebar - Experimental sidebar and hamburger setting enabled - Sidebar enabled",
   function (needs) {
-    needs.user({
-      sidebar_sections: [
-        {
-          id: 111,
-          title: "Community",
-          links: [
-            {
-              id: 329,
-              name: "Everything",
-              value: "/latest",
-              icon: "layer-group",
-              external: false,
-              segment: "primary",
-            },
-            {
-              id: 334,
-              name: "Review",
-              value: "/review",
-              icon: "flag",
-              external: false,
-              segment: "secondary",
-            },
-          ],
-          slug: "community",
-          public: true,
-          section_type: "community",
-        },
-      ],
-    });
+    needs.user({});
 
     needs.settings({
       navigation_menu: "sidebar",
