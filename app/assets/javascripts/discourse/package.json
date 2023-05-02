@@ -17,7 +17,7 @@
     "postinstall": "yarn --silent --cwd .. patch-package"
   },
   "dependencies": {
-    "@babel/core": "^7.21.4",
+    "@babel/core": "^7.21.5",
     "@babel/standalone": "^7.21.4",
     "@ember/string": "^3.0.1",
     "@discourse/backburner.js": "^2.7.1-0",
