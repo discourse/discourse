@@ -94,6 +94,7 @@ export default Component.extend(
           noneItem: null,
           newItem: null,
           filter: null,
+          multiSelectInFocus: null,
 
           modifyContent: bind(this, this._modifyContentWrapper),
           modifySelection: bind(this, this._modifySelectionWrapper),
@@ -441,6 +442,7 @@ export default Component.extend(
         items = makeArray(items);
 
         if (this.multiSelect) {
+          this.selectKit.set("multiSelectInFocus", true);
           items = items.filter(
             (i) =>
               i !== this.newItem &&

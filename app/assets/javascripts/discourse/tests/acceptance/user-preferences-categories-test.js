@@ -39,10 +39,16 @@ acceptance("User Preferences - Categories", function (needs) {
       ".tracking-controls__regular-categories .category-selector"
     );
 
+    await trackedCategoriesSelector.collapse();
+
     await regularCategoriesSelector.expand();
     await regularCategoriesSelector.deselectItemByValue("4");
+
+    await regularCategoriesSelector.collapse();
     await trackedCategoriesSelector.expand();
     await trackedCategoriesSelector.selectRowByValue("4");
+    await trackedCategoriesSelector.collapse();
+
     await click(".save-changes");
 
     assert.deepEqual(putRequestData, {
@@ -63,6 +69,7 @@ acceptance("User Preferences - Categories", function (needs) {
     await categorySelector.expand();
     // User has `regular_category_ids` set to [4] in fixtures
     await categorySelector.selectRowByValue(4);
+    await categorySelector.collapse();
     await click(".save-changes");
 
     assert.deepEqual(putRequestData, {
