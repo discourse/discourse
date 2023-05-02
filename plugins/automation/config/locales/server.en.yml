@@ -18,6 +18,9 @@ en:
         title: API call
         description: Making a POST request to trigger an automation
         doc: The POST request should be made to `/automations/:id/trigger.json` with a global API key.
+      category_created_edited:
+        title: Category created/edited
+        description: When a category is created or edited the automation will be triggered
       recurring:
         title: Recurring
       point_in_time:
@@ -110,3 +113,6 @@ en:
         button_text: Done
       add_user_to_group_through_custom_field:
         title: "Add user to group through User Custom Field"
+      group_category_notification_default:
+        title: "Group Category Notification Default"
+        description: "Set the default notification level of a category for members of a group"

@@ -45,6 +45,7 @@ after_initialize do
     lib/discourse_automation/scripts/close_topic
     lib/discourse_automation/scripts/flag_post_on_words
     lib/discourse_automation/scripts/gift_exchange
+    lib/discourse_automation/scripts/group_category_notification_default
     lib/discourse_automation/scripts/pin_topic
     lib/discourse_automation/scripts/post
     lib/discourse_automation/scripts/send_pms
@@ -54,6 +55,7 @@ after_initialize do
     lib/discourse_automation/scripts/zapier_webhook
     lib/discourse_automation/triggers/after_post_cook
     lib/discourse_automation/triggers/api_call
+    lib/discourse_automation/triggers/category_created_edited
     lib/discourse_automation/triggers/pm_created
     lib/discourse_automation/triggers/point_in_time
     lib/discourse_automation/triggers/post_created_edited
@@ -160,6 +162,14 @@ after_initialize do
 
   on(:post_edited) do |post|
     DiscourseAutomation::EventHandlers.handle_post_created_edited(post, :edit)
+  end
+
+  on(:category_created) do |category|
+    DiscourseAutomation::EventHandlers.handle_category_created_edited(category, :create)
+  end
+
+  on(:category_edited) do |category|
+    DiscourseAutomation::EventHandlers.handle_category_created_edited(category, :edit)
   end
 
   Plugin::Filter.register(:after_post_cook) do |post, cooked|

@@ -25,6 +25,21 @@ module DiscourseAutomation
         end
     end
 
+    def self.handle_category_created_edited(category, action)
+      name = DiscourseAutomation::Triggerable::CATEGORY_CREATED_EDITED
+
+      DiscourseAutomation::Automation
+        .where(trigger: name, enabled: true)
+        .find_each do |automation|
+          restricted_category = automation.trigger_field("restricted_category")
+          if restricted_category["value"].present?
+            next if restricted_category["value"] != category.parent_category_id
+          end
+
+          automation.trigger!("kind" => name, "action" => action, "category" => category)
+        end
+    end
+
     def self.handle_pm_created(topic)
       return if topic.user_id < 0
 
