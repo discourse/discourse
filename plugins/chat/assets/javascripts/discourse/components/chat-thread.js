@@ -25,7 +25,6 @@ export default class ChatThreadPanel extends Component {
   @service capabilities;
 
   @tracked loading;
-  @tracked loadingMorePast;
   @tracked uploadDropZone;
 
   scrollable = null;
@@ -92,7 +91,6 @@ export default class ChatThreadPanel extends Component {
       return Promise.resolve();
     }
 
-    this.loadingMorePast = true;
     this.loading = true;
 
     const findArgs = { pageSize: PAGE_SIZE, threadId: this.thread.id };
@@ -117,9 +115,7 @@ export default class ChatThreadPanel extends Component {
           return;
         }
 
-        this.requestedTargetMessageId = null;
         this.loading = false;
-        this.loadingMorePast = false;
       });
   }
 
@@ -137,12 +133,7 @@ export default class ChatThreadPanel extends Component {
         );
       }
 
-      if (this.requestedTargetMessageId === messageData.id) {
-        messageData.expanded = !messageData.hidden;
-      } else {
-        messageData.expanded = !(messageData.hidden || messageData.deleted_at);
-      }
-
+      messageData.expanded = !(messageData.hidden || messageData.deleted_at);
       messages.push(ChatMessage.create(channel, messageData));
     });
 

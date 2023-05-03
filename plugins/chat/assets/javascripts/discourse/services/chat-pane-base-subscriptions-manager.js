@@ -18,7 +18,7 @@ export function handleStagedMessage(channel, messagesManager, data) {
   stagedMessage.staged = false;
   stagedMessage.excerpt = data.chat_message.excerpt;
 
-  if (data.chat_message.thread_id) {
+  if (stagedMessage.thread.id !== data.chat_message.thread_id) {
     stagedMessage.thread.id = data.chat_message.thread_id;
   }
 

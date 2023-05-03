@@ -5,6 +5,7 @@
   {{did-insert this.subscribeToUpdates}}
   {{did-update this.subscribeToUpdates this.thread.id}}
   {{did-insert this.loadMessages}}
+  {{did-update this.loadMessages this.thread.id}}
   {{did-insert this.setupMessage}}
   {{will-destroy this.unsubscribeFromUpdates}}
 >
@@ -41,7 +42,7 @@
           @context="thread"
         />
       {{/each}}
-      {{#if (or this.loading this.loadingMoreFuture)}}
+      {{#if (or this.loading)}}
         <ChatSkeleton />
       {{/if}}
     </div>
