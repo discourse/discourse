@@ -385,6 +385,27 @@ RSpec.describe Chat::ChatController do
           expect(messages.first.data["last_read_message_id"]).to eq(Chat::Message.last.id)
         end
 
+        context "when sending a message in a staged thread" do
+          it "creates the thread" do
+            sign_in(user)
+
+            messages =
+              MessageBus.track_publish do
+                post "/chat/#{chat_channel.id}.json",
+                     params: {
+                       message: message,
+                       in_reply_to_id: message_1.id,
+                       staged_thread_id: "stagedthreadid",
+                     }
+              end
+
+            expect(response.status).to eq(200)
+            event = messages.find { |m| m.data["type"] == "thread_created" }
+            expect(event.data["staged_thread_id"]).to eq("stagedthreadid")
+            expect(Chat::Thread.find(event.data["thread_id"])).to be_persisted
+          end
+        end
+
         context "when sending a message in a thread" do
           fab!(:thread) do
             Fabricate(:chat_thread, channel: chat_channel, original_message: message_1)
