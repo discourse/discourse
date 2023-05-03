@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe "Reply to message - channel - full page", type: :system, js: true do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
