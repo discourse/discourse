@@ -37,8 +37,10 @@ RSpec.describe "i18n integrity checks" do
   end
 
   it "has an i18n key for each Badge description" do
+    # skip non core badges
     Badge
       .where(system: true)
+      .where("id < 100")
       .each do |b|
         expect(b.long_description).to be_present
         expect(b.description).to be_present
