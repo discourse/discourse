@@ -17,6 +17,7 @@ RSpec.describe "request tracker" do
     CachedCounting.reset
     CachedCounting.enable
     ApplicationRequest.enable
+    ApplicationRequest.delete_all
   end
 
   after do
