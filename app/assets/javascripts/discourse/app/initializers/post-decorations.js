@@ -158,7 +158,7 @@ export default {
       }
 
       function generateModal(event) {
-        const table = event.target.parentElement.nextElementSibling;
+        const table = event.currentTarget.parentElement.nextElementSibling;
         const tempTable = table.cloneNode(true);
 
         showModal("fullscreen-table").set("tableHtml", tempTable);
