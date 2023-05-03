@@ -9,7 +9,7 @@ class TopicsFilter
     @topic_notification_levels = Set.new
   end
 
-  FILTER_ALIASES = { "categories" => "category" }
+  FILTER_ALIASES = { "categories" => "category", "tags" => "tag" }
   private_constant :FILTER_ALIASES
 
   def filter_from_query_string(query_string)
@@ -74,7 +74,7 @@ class TopicsFilter
         filter_by_number_of_posters(max: filter_values)
       when "status"
         filter_values.each { |status| @scope = filter_status(status: status) }
-      when "tags"
+      when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
       when "views-min"
         filter_by_number_of_views(min: filter_values)

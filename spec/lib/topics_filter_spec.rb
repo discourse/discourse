@@ -663,6 +663,17 @@ RSpec.describe TopicsFilter do
         )
       end
 
+      describe "when query string is `tag:tag1+tag2`" do
+        it "should only return topics that are tagged with all of the specified tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:#{tag.name}+#{tag2.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag_and_tag2.id)
+        end
+      end
+
       it "should only return topics that are tagged with all of the specified tags when query string is `tags:tag1+tag2`" do
         expect(
           TopicsFilter
