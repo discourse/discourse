@@ -132,6 +132,8 @@ class TopicsFilter
          "posters-min", "posters-max", "views-min", "views-max"
       value = values.last
       value if value =~ /\A\d+\z/
+    when "order"
+      values.flat_map { |value| value.split(",") }
     when "created-by"
       values.flat_map { |value| value.split(",").map { |username| username.delete_prefix("@") } }
     else

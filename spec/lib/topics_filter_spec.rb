@@ -1209,18 +1209,31 @@ RSpec.describe TopicsFilter do
         end
       end
 
-      describe "when query string is `order:created order:views`" do
+      describe "composing multiple order filters" do
         fab!(:topic) { Fabricate(:topic, created_at: Time.zone.local(2023, 1, 1), views: 2) }
         fab!(:topic2) { Fabricate(:topic, created_at: Time.zone.local(2024, 1, 1), views: 2) }
         fab!(:topic3) { Fabricate(:topic, created_at: Time.zone.local(2024, 1, 1), views: 1) }
 
-        it "should return topics ordered by creation date in descending order and then number of views in descending order" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("order:created order:views")
-              .pluck(:id),
-          ).to eq([topic2.id, topic3.id, topic.id])
+        describe "when query string is `order:created,views`" do
+          it "should return topics ordered by creation date in descending order and then number of views in descending order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:created,views")
+                .pluck(:id),
+            ).to eq([topic2.id, topic3.id, topic.id])
+          end
+        end
+
+        describe "when query string is `order:created order:views`" do
+          it "should return topics ordered by creation date in descending order and then number of views in descending order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:created order:views")
+                .pluck(:id),
+            ).to eq([topic2.id, topic3.id, topic.id])
+          end
         end
       end
     end
