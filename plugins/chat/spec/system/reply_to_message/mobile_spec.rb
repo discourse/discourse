@@ -36,6 +36,21 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, js: true, m
 
       expect(channel_page).to have_thread_indicator(original_message)
     end
+
+    context "when reloading after creating thread" do
+      it "correctly loads the thread" do
+        chat_page.visit_channel(channel_1)
+        channel_page.reply_to(original_message)
+        thread_page.fill_composer("reply to message")
+        thread_page.click_send_message
+
+        expect(thread_page).to have_message(text: "reply to message")
+
+        refresh
+
+        expect(thread_page).to have_message(text: "reply to message")
+      end
+    end
   end
 
   context "when the message has an existing thread" do
