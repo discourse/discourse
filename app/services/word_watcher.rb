@@ -44,14 +44,16 @@ class WordWatcher
     end
   end
 
-  def self.serializable_word_matcher_regexp(action)
-    word_matcher_regexp_list(action).map { |r| { r.source => { case_sensitive: !r.casefold? } } }
+  def self.serializable_word_matcher_regexp(action, engine: :ruby)
+    word_matcher_regexp_list(action, engine: engine).map do |r|
+      { r.source => { case_sensitive: !r.casefold? } }
+    end
   end
 
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   # hint: non-chrome browsers do not support 'lookbehind'
-  def self.word_matcher_regexp_list(action, raise_errors: false)
+  def self.word_matcher_regexp_list(action, engine: :ruby, raise_errors: false)
     words = get_cached_words(action)
     return [] if words.blank?
 
@@ -68,7 +70,7 @@ class WordWatcher
     regexps = grouped_words.select { |_, w| w.present? }.transform_values { |w| w.join("|") }
 
     if !SiteSetting.watched_words_regular_expressions?
-      regexps.transform_values! { |regexp| "(?:[^[:word:]]|^)(#{regexp})(?=[^[:word:]]|$)" }
+      regexps.transform_values! { |regexp| wrap_regexp(regexp, engine: engine) }
     end
 
     regexps.map { |c, regexp| Regexp.new(regexp, c == :case_sensitive ? nil : Regexp::IGNORECASE) }
@@ -77,13 +79,13 @@ class WordWatcher
     [] # Admin will be alerted via admin_dashboard_data.rb
   end
 
-  def self.word_matcher_regexps(action)
+  def self.word_matcher_regexps(action, engine: :ruby)
     if words = get_cached_words(action)
-      words.map { |w, opts| [word_to_regexp(w, whole: true), opts] }.to_h
+      words.map { |w, opts| [word_to_regexp(w, engine: engine, whole: true), opts] }.to_h
     end
   end
 
-  def self.word_to_regexp(word, whole: false)
+  def self.word_to_regexp(word, engine: :ruby, whole: false)
     if SiteSetting.watched_words_regular_expressions?
       # Strip ruby regexp format if present
       regexp = word.start_with?("(?-mix:") ? word[7..-2] : word
@@ -91,13 +93,26 @@ class WordWatcher
       return regexp
     end
 
-    regexp = Regexp.escape(word).gsub("\\*", '\S*')
+    # Escape regular expression. Avoid using Regexp.escape because it escapes
+    # more characters than it should (for example, whitespaces)
+    regexp = word.gsub(/([.*+?^${}()|\[\]\\])/, '\\\\\1')
 
-    if whole && !SiteSetting.watched_words_regular_expressions?
-      regexp = "(?:[^[:word:]]|^)(#{regexp})(?=[^[:word:]]|$)"
-    end
+    # Handle wildcards
+    regexp = regexp.gsub("\\*", '\S*')
 
+    regexp = wrap_regexp(regexp, engine: engine) if whole &&
+      !SiteSetting.watched_words_regular_expressions?
     regexp
+  end
+
+  def self.wrap_regexp(regexp, engine: :ruby)
+    if engine == :js
+      "(?:\\P{L}|^)(#{regexp})(?=\\P{L}|$)"
+    elsif engine == :ruby
+      "(?:[^[:word:]]|^)(#{regexp})(?=[^[:word:]]|$)"
+    else
+      "(?:\\W|^)(#{regexp})(?=\\W|$)"
+    end
   end
 
   def self.word_matcher_regexp_key(action)

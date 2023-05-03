@@ -411,7 +411,7 @@ RSpec.describe WordWatcher do
           SiteSetting.watched_words_regular_expressions = true
           Fabricate(
             :watched_word,
-            word: "[^[:word:]]placeholder",
+            word: "\\Wplaceholder",
             replacement: "replacement",
             action: WatchedWord.actions[:replace],
           )
