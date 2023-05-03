@@ -70,7 +70,7 @@ describe "Channel thread message echoing", type: :system, js: true do
       channel_page.message_thread_indicator(thread.original_message).click
       expect(side_panel).to have_open_thread(thread)
       open_thread.send_message(thread.id, "new thread message")
-      expect(open_thread).to have_message(thread.id, text: "new thread message")
+      expect(open_thread).to have_message(thread_id: thread.id, text: "new thread message")
       new_message = thread.reload.replies.last
       expect(channel_page).not_to have_css(channel_page.message_by_id_selector(new_message.id))
     end
