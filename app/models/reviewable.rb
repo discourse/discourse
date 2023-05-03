@@ -60,7 +60,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.valid_type?(type)
-    return false unless type =~ /\AReviewable[A-Za-z]+\z/
+    return false unless Reviewable.types.include?(type)
     type.constantize <= Reviewable
   rescue NameError
     false
@@ -459,7 +459,8 @@ class Reviewable < ActiveRecord::Base
 
     result = by_status(result, status)
     result = result.where(id: ids) if ids
-    result = result.where("reviewables.type = ?", type) if type
+
+    result = result.where("reviewables.type = ?", Reviewable.sti_class_for(type).sti_name) if type
     result = result.where("reviewables.category_id = ?", category_id) if category_id
     result = result.where("reviewables.topic_id = ?", topic_id) if topic_id
     result = result.where("reviewables.created_at >= ?", from_date) if from_date

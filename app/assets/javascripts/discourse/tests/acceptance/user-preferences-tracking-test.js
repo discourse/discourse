@@ -173,17 +173,25 @@ acceptance("User Preferences - Tracking", function (needs) {
 
     assert.notOk(
       trackedCategoriesSelector.rowByValue("4").exists(),
-      "category that is set to regular is not available for selection"
+      "category that is set to regular is not available for selection under tracked"
     );
 
     const regularCategoriesSelector = selectKit(
       ".tracking-controls__regular-categories .category-selector"
     );
-
+    await trackedCategoriesSelector.collapse();
     await regularCategoriesSelector.expand();
     await regularCategoriesSelector.deselectItemByValue("4");
+
+    assert.ok(
+      regularCategoriesSelector.rowByValue("4").exists(),
+      "category is no longer selected under regular"
+    );
+
+    await regularCategoriesSelector.collapse();
     await trackedCategoriesSelector.expand();
     await trackedCategoriesSelector.selectRowByValue("4");
+    await trackedCategoriesSelector.collapse();
     await click(".save-changes");
 
     assert.deepEqual(putRequestData, {

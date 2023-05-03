@@ -32,6 +32,7 @@ export default class ChatComposer extends Component {
   @service chatApi;
 
   @tracked isFocused = false;
+  @tracked inProgressUploadsCount = 0;
 
   get shouldRenderReplyingIndicator() {
     return this.context === "channel" && !this.args.channel?.isDraft;
@@ -116,7 +117,9 @@ export default class ChatComposer extends Component {
   }
 
   get sendEnabled() {
-    return this.hasContent && !this.pane.sending;
+    return (
+      this.hasContent && !this.pane.sending && !this.inProgressUploadsCount > 0
+    );
   }
 
   @action
@@ -175,6 +178,12 @@ export default class ChatComposer extends Component {
 
   @action
   onUploadChanged(uploads, { inProgressUploadsCount }) {
+    if (!this.args.channel) {
+      return;
+    }
+
+    this.inProgressUploadsCount = inProgressUploadsCount || 0;
+
     if (
       typeof uploads !== "undefined" &&
       inProgressUploadsCount !== "undefined" &&

@@ -26,6 +26,7 @@
   <div
     class="chat-thread__body popper-viewport"
     {{did-insert this.setScrollable}}
+    {{on "scroll" this.resetActiveMessage passive=true}}
   >
     <div
       class="chat-thread__messages chat-messages-container"

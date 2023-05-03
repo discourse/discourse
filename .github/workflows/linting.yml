@@ -65,7 +65,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Yarn install
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Rubocop
         if: ${{ !cancelled() }}

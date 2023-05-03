@@ -711,6 +711,8 @@ body.footer-nav-ipad {
 .menu-panel.slide-in {
   top: var(--header-top);
   box-sizing: border-box;
+  // ensure there's always space to click outside on tiny devices
+  max-width: 90vw;
 
   --100dvh: 100%;
   @supports (height: 100dvh) {

@@ -2654,6 +2654,34 @@ RSpec.describe Search do
     end
   end
 
+  context "when plugin introduces a search_rank_sort_priorities modifier" do
+    before do
+      SearchIndexer.enable
+      DiscoursePluginRegistry.clear_modifiers!
+    end
+    after do
+      SearchIndexer.disable
+
+      DiscoursePluginRegistry.clear_modifiers!
+    end
+
+    it "allow modifying the search rank" do
+      plugin = Plugin::Instance.new
+      plugin.register_modifier(:search_rank_sort_priorities) do |ranks, search|
+        [["topics.closed", 77]]
+      end
+
+      closed_topic = Fabricate(:topic, title: "saml saml saml is the best", closed: true)
+      closed_post = Fabricate(:post, topic: closed_topic, raw: "this topic is a story about saml")
+
+      open_topic = Fabricate(:topic, title: "saml saml saml is the best2")
+      open_post = Fabricate(:post, topic: open_topic, raw: "this topic is a story about saml")
+
+      result = Search.execute("story")
+      expect(result.posts.pluck(:id)).to eq([closed_post.id, open_post.id])
+    end
+  end
+
   context "when max_duplicate_search_index_terms limits duplication" do
     before { SearchIndexer.enable }
 

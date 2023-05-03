@@ -263,13 +263,20 @@ WidgetClickHook.setupDocumentCallback = function () {
   });
 
   $(document).on("mousedown.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_DOWN_ATTRIBUTE_NAME, (w) => {
-      w.mouseDown(e);
-    });
+    nodeCallback(
+      e.target,
+      MOUSE_DOWN_ATTRIBUTE_NAME,
+      (w) => {
+        w.mouseDown(e);
+      },
+      { rerender: false }
+    );
   });
 
   $(document).on("mouseup.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, (w) => w.mouseUp(e));
+    nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, (w) => w.mouseUp(e), {
+      rerender: false,
+    });
   });
 
   $(document).on("mousemove.discourse-widget", (e) => {

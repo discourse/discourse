@@ -114,7 +114,7 @@ class TopicsFilter
   private
 
   YYYY_MM_DD_REGEXP =
-    /^(?<year>[12][0-9]{3})-(?<month>0?[1-9]|1[0-2])-(?<day>0?[1-9]|[12]\d|3[01])$/
+    /\A(?<year>[12][0-9]{3})-(?<month>0?[1-9]|1[0-2])-(?<day>0?[1-9]|[12]\d|3[01])\z/
   private_constant :YYYY_MM_DD_REGEXP
 
   def extract_and_validate_value_for(filter, values)
@@ -134,6 +134,8 @@ class TopicsFilter
       value if value =~ /\A\d+\z/
     when "order"
       values.flat_map { |value| value.split(",") }
+    when "created-by"
+      values.flat_map { |value| value.split(",").map { |username| username.delete_prefix("@") } }
     else
       values
     end
@@ -192,7 +194,7 @@ class TopicsFilter
 
       value
         .scan(
-          /^(?<category_slugs>([a-zA-Z0-9\-:]+)(?<delimiter>[,])?([a-zA-Z0-9\-:]+)?(\k<delimiter>[a-zA-Z0-9\-:]+)*)$/,
+          /\A(?<category_slugs>([a-zA-Z0-9\-:]+)(?<delimiter>[,])?([a-zA-Z0-9\-:]+)?(\k<delimiter>[a-zA-Z0-9\-:]+)*)\z/,
         )
         .each do |category_slugs, delimiter|
           (
@@ -331,7 +333,7 @@ class TopicsFilter
       break if key_prefix && key_prefix != "-"
 
       value.scan(
-        /^(?<tag_names>([a-zA-Z0-9\-]+)(?<delimiter>[,+])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)$/,
+        /\A(?<tag_names>([a-zA-Z0-9\-]+)(?<delimiter>[,+])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)\z/,
       ) do |tag_names, delimiter|
         match_all =
           if delimiter == ","
@@ -458,7 +460,7 @@ class TopicsFilter
   }
   private_constant :ORDER_BY_MAPPINGS
 
-  ORDER_BY_REGEXP = /^(?<order_by>#{ORDER_BY_MAPPINGS.keys.join("|")})(?<asc>-asc)?$/
+  ORDER_BY_REGEXP = /\A(?<order_by>#{ORDER_BY_MAPPINGS.keys.join("|")})(?<asc>-asc)?\z/
   private_constant :ORDER_BY_REGEXP
 
   def order_by(values:)
