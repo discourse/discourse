@@ -545,7 +545,6 @@
 
   .instructions {
     color: var(--primary-medium);
-    margin-bottom: 10px;
     font-size: var(--font-down-1);
     line-height: var(--line-height-large);
 
@@ -595,8 +594,11 @@
     font-size: var(--font-down-1);
   }
 
+  .color-scheme .controls {
+    display: flex;
+  }
+
   .control-subgroup {
-    float: left;
     + .controls {
       clear: both;
       padding-top: 1em;
