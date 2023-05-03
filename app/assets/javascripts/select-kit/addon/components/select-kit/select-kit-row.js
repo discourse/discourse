@@ -3,16 +3,15 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import UtilsMixin from "select-kit/mixins/utils";
 import { guidFor } from "@ember/object/internals";
-import layout from "select-kit/templates/components/select-kit/select-kit-row";
 import { makeArray } from "discourse-common/lib/helpers";
 import { reads } from "@ember/object/computed";
 import { dasherize } from "@ember/string";
 
 export default Component.extend(UtilsMixin, {
-  layout,
   classNames: ["select-kit-row"],
   tagName: "li",
   tabIndex: 0,
+
   attributeBindings: [
     "tabIndex",
     "title",
@@ -24,6 +23,7 @@ export default Component.extend(UtilsMixin, {
     "guid:data-guid",
     "rowLang:lang",
   ],
+
   classNameBindings: [
     "isHighlighted",
     "isSelected",
@@ -31,8 +31,8 @@ export default Component.extend(UtilsMixin, {
     "isNone:none",
     "item.classNames",
   ],
-  index: 0,
 
+  index: 0,
   role: "menuitemradio",
 
   didInsertElement() {
@@ -41,7 +41,6 @@ export default Component.extend(UtilsMixin, {
     if (!this.site.mobileView) {
       this.element.addEventListener("mouseenter", this.handleMouseEnter);
       this.element.addEventListener("focus", this.handleMouseEnter);
-      this.element.addEventListener("blur", this.handleBlur);
     }
   },
 
@@ -49,9 +48,8 @@ export default Component.extend(UtilsMixin, {
     this._super(...arguments);
 
     if (!this.site.mobileView) {
-      this.element.removeEventListener("mouseenter", this.handleBlur);
+      this.element.removeEventListener("mouseenter", this.handleMouseEnter);
       this.element.removeEventListener("focus", this.handleMouseEnter);
-      this.element.removeEventListener("blur", this.handleMouseEnter);
     }
   },
 
@@ -130,20 +128,6 @@ export default Component.extend(UtilsMixin, {
   handleMouseEnter() {
     if (!this.isDestroying || !this.isDestroyed) {
       this.selectKit.onHover(this.rowValue, this.item);
-    }
-    return false;
-  },
-
-  @action
-  handleBlur(event) {
-    if (
-      (!this.isDestroying || !this.isDestroyed) &&
-      event.target &&
-      this.selectKit.mainElement()
-    ) {
-      if (!this.selectKit.mainElement().contains(event.target)) {
-        this.selectKit.close(event);
-      }
     }
     return false;
   },

@@ -33,7 +33,7 @@
     "chrome-remote-interface": "^0.31.3",
     "ember-template-lint": "4.10.1",
     "eslint": "^8.37.0",
-    "eslint-config-discourse": "^3.3.0",
+    "eslint-config-discourse": "^3.4.0",
     "eslint-plugin-ember": "10.6.1",
     "eslint-plugin-sort-class-members": "1.14.1",
     "jsdoc": "^4.0.0",

@@ -2250,7 +2250,7 @@ en:
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
-    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
+    notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
@@ -2417,6 +2417,7 @@ en:
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
     experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
+    experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -3535,16 +3536,6 @@ en:
       title: "Download Remote Images Disabled"
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
-
-    dashboard_problems:
-      title: "Dashboard Problems"
-      subject_template: "New advice on your site dashboard"
-      text_body_template: |
-        We have some new advice and recommendations for you based on your current site settings.
-
-        [Visit your site dashboard](%{base_url}/admin) to see it.
-
-        If nothing is visible on your dashboard, another staff member may have already acted on this advice. A list of staff actions can be found in your [Staff Action Logs](%{base_url}/admin/logs/staff_action_logs).
 
     new_user_of_the_month:
       title: "You're a New User of the Month!"

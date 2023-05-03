@@ -22,7 +22,7 @@ export default class TextareaInteractor extends EmberObject.extend(
     this._textarea = textarea;
     this.element = this._textarea;
     this.ready = true;
-    this.composerFocusSelector = ".chat-composer__input";
+    this.composerFocusSelector = `#${textarea.id}`;
 
     this.init(); // mixin init wouldn't be called otherwise
     this.composerEventPrefix = null; // we don't need app events

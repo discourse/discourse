@@ -127,7 +127,7 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    this._onHoverMessageDebouncedHandler = discourseDebounce(
+    this._onMouseEnterMessageDebouncedHandler = discourseDebounce(
       this,
       this._debouncedOnHoverMessage,
       250
@@ -135,7 +135,22 @@ export default class ChatMessage extends Component {
   }
 
   @action
+  onMouseMove() {
+    if (this.site.mobileView) {
+      return;
+    }
+
+    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
+      return;
+    }
+
+    this._setActiveMessage();
+  }
+
+  @action
   onMouseLeave(event) {
+    cancel(this._onMouseEnterMessageDebouncedHandler);
+
     if (this.site.mobileView) {
       return;
     }
@@ -148,20 +163,21 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    cancel(this._onHoverMessageDebouncedHandler);
-
     this.chat.activeMessage = null;
   }
 
   @bind
   _debouncedOnHoverMessage() {
-    if (!this.chat.userCanInteractWithChat) {
-      return;
-    }
     this._setActiveMessage();
   }
 
   _setActiveMessage() {
+    cancel(this._onMouseEnterMessageDebouncedHandler);
+
+    if (!this.chat.userCanInteractWithChat) {
+      return;
+    }
+
     this.chat.activeMessage = {
       model: this.args.message,
       context: this.args.context,

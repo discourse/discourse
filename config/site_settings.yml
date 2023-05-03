@@ -2104,7 +2104,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-    hidden: true
 
 navigation:
   navigation_menu:
@@ -2430,7 +2429,7 @@ uncategorized:
     default: ""
     validator: "DefaultComposerCategoryValidator"
 
-  notify_about_flags_after:
+  notify_about_reviewable_item_after:
     type: float
     default: 48
 

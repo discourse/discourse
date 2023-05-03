@@ -383,7 +383,7 @@ module Email
         @mail[:subject].to_s[
           /\A\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i
         ] ||
-        @mail.header.to_s[
+        @mail.header.reject { |h| h.name.downcase == "x-auto-response-suppress" }.to_s[
           /auto[\-_]?(response|submitted|replied|reply|generated|respond)|holidayreply|machinegenerated/i
         ]
     end

@@ -58,9 +58,8 @@ module(
       await this.subject.fillInFilter("baz");
       await this.subject.selectRowByValue("monkey");
 
-      const error = query(".select-kit-error").innerText;
       assert.strictEqual(
-        error,
+        query(".select-kit-error").innerText,
         I18n.t("select_kit.max_content_reached", {
           count: this.siteSettings.max_tags_per_topic,
         })

@@ -2004,7 +2004,6 @@ fi:
     allowed_href_schemes: "Linkeissä sallitut skeemat http:n ja https:n lisäksi."
     embed_post_limit: "Upotettavien viestien maksimimäärä."
     embed_username_required: "Käyttäjätunnus vaaditaan ketjun luomiseksi."
-    notify_about_flags_after: "Jos merkintöjä on ollut käsittelemättä näin monen tunnin ajan, lähetä yksityisviesti valvojille. Poista käytöstä asettamalla 0."
     show_create_topics_notice: "Jos sivustolla on vähemmän kuin 5 julkista ketjua, kehota ylläpitäjiä aloittamaan ketjuja."
     delete_drafts_older_than_n_days: "Poista yli (n) päivää vanhat luonnokset."
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 0, tynkäketjuja ei poistetan koskaan."
@@ -2079,7 +2078,9 @@ fi:
     revoke_api_keys_days: "Kuinka monen päivän kuluttua käyttämätön API-avain mitätöidään automaattisesti (0 tarkoittaa ei koskaan)"
     allow_user_api_keys: "Salli käyttäjä-API-avainten muodostaminen"
     allow_user_api_key_scopes: "Luettelo käyttäjä-API-avaimiin liittyvistä oikeuksista"
-    min_trust_level_for_user_api_key: "Vähimmäisluottamustaso, joka vaaditaan käyttäjä-API-avainten muodostamiseen"
+    min_trust_level_for_user_api_key: |
+      Käyttäjän API-avaimien luomiseen vaadittu luottamustaso.<br>
+      <b>VAROITUS:</b> Luottamustason muuttaminen estää matalamman luottamustason käyttäjiä kirjautumasta sisään Discourse Hubin kautta.
     allowed_user_api_auth_redirects: "Sallittu URL-osoite käyttäjän API-avainten todennuksen uudelleenohjaukselle. Jokerimerkkiä * voidaan käyttää vastaamaan mitä tahansa sen osaa (esim. www.esimerkki.fi/*)."
     allowed_user_api_push_urls: "Sallitut URL-osoitteet palvelimen työnnöille käyttäjä-APIin"
     expire_user_api_keys_days: "Kuinka monessa päivässä käyttäjä-API-avain vanhenee automaattisesti (0 tarkoittaa ei koskaan)"

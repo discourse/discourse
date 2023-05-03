@@ -98,7 +98,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Yarn install
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
@@ -272,7 +272,7 @@ jobs:
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse

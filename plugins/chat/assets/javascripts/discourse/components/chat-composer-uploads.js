@@ -39,7 +39,7 @@ export default Component.extend(UppyUploadMixin, {
 
   didInsertElement() {
     this._super(...arguments);
-    this.composerInputEl = document.querySelector(".chat-composer__input");
+
     this.composerInputEl?.addEventListener("paste", this._pasteEventListener);
   },
 
@@ -67,8 +67,7 @@ export default Component.extend(UppyUploadMixin, {
     this.appEvents.trigger(`upload-mixin:${this.id}:cancel-upload`, {
       fileId: upload.id,
     });
-    this.uploads.removeObject(upload);
-    this._triggerUploadsChanged();
+    this.removeUpload(upload);
   },
 
   @action
@@ -125,8 +124,14 @@ export default Component.extend(UppyUploadMixin, {
     }
   },
 
+  onProgressUploadsChanged() {
+    this._triggerUploadsChanged(this.uploads, {
+      inProgressUploadsCount: this.inProgressUploads?.length,
+    });
+  },
+
   _triggerUploadsChanged() {
-    this.onUploadChanged(this.uploads, {
+    this.onUploadChanged?.(this.uploads, {
       inProgressUploadsCount: this.inProgressUploads?.length,
     });
   },

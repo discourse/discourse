@@ -247,6 +247,9 @@ class DiscoursePluginRegistry
   end
 
   def self.clear_modifiers!
+    if Rails.env.test? && GlobalSetting.load_plugins?
+      raise "Clearing modifiers during a plugin spec run will affect all future specs. Use unregister_modifier instead."
+    end
     @modifiers = nil
   end
 
@@ -254,6 +257,18 @@ class DiscoursePluginRegistry
     @modifiers ||= {}
     modifiers = @modifiers[name] ||= []
     modifiers << [plugin_instance, blk]
+  end
+
+  def self.unregister_modifier(plugin_instance, name, &blk)
+    raise "unregister_modifier can only be used in tests" if !Rails.env.test?
+
+    modifiers_for_name = @modifiers&.[](name)
+    raise "no #{name} modifiers found" if !modifiers_for_name
+
+    i = modifiers_for_name.find_index { |info| info == [plugin_instance, blk] }
+    raise "no modifier found for that plugin/block combination" if !i
+
+    modifiers_for_name.delete_at(i)
   end
 
   def self.apply_modifier(name, arg, *more_args)
