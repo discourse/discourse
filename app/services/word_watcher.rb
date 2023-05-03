@@ -59,10 +59,8 @@ class WordWatcher
 
     grouped_words = { case_sensitive: [], case_insensitive: [] }
 
-    words.each do |w, attrs|
-      word = word_to_regexp(w)
-      word = "(#{word})" if SiteSetting.watched_words_regular_expressions?
-
+    words.each do |word, attrs|
+      word = word_to_regexp(word, whole: SiteSetting.watched_words_regular_expressions?)
       group_key = attrs[:case_sensitive] ? :case_sensitive : :case_insensitive
       grouped_words[group_key] << word
     end
@@ -81,13 +79,13 @@ class WordWatcher
 
   def self.word_matcher_regexps(action, engine: :ruby)
     if words = get_cached_words(action)
-      words.map { |w, opts| [word_to_regexp(w, engine: engine, whole: true), opts] }.to_h
+      words.map { |word, attrs| [word_to_regexp(word, engine: engine), attrs] }.to_h
     end
   end
 
-  def self.word_to_regexp(word, engine: :ruby, whole: false)
+  def self.word_to_regexp(word, engine: :ruby, whole: true)
     if SiteSetting.watched_words_regular_expressions?
-      # Strip ruby regexp format if present
+      # Strip Ruby regexp format if present
       regexp = word.start_with?("(?-mix:") ? word[7..-2] : word
       regexp = "(#{regexp})" if whole
       return regexp
@@ -100,8 +98,8 @@ class WordWatcher
     # Handle wildcards
     regexp = regexp.gsub("\\*", '\S*')
 
-    regexp = wrap_regexp(regexp, engine: engine) if whole &&
-      !SiteSetting.watched_words_regular_expressions?
+    regexp = wrap_regexp(regexp, engine: engine) if whole
+
     regexp
   end
 
@@ -224,10 +222,8 @@ class WordWatcher
   end
 
   def word_matches?(word, case_sensitive: false)
-    Regexp.new(
-      WordWatcher.word_to_regexp(word, whole: true),
-      case_sensitive ? nil : Regexp::IGNORECASE,
-    ).match?(@raw)
+    options = case_sensitive ? nil : Regexp::IGNORECASE
+    Regexp.new(WordWatcher.word_to_regexp(word), options).match?(@raw)
   end
 
   def self.replace_text_with_regexp(text, regexp, replacement)
