@@ -2,65 +2,20 @@
 
 class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
   COMMUNITY_SECTION_LINKS = [
-    {
-      name: I18n.t("sidebar.sections.community.links.everything.content", default: "Everything"),
-      path: "/latest",
-      icon: "layer-group",
-      segment: SidebarUrl.segments["primary"],
-    },
-    {
-      name: I18n.t("sidebar.sections.community.links.my_posts.content", default: "My Posts"),
-      path: "/my/activity",
-      icon: "user",
-      segment: SidebarUrl.segments["primary"],
-    },
-    {
-      name: I18n.t("sidebar.sections.community.links.review.content", default: "Review"),
-      path: "/review",
-      icon: "flag",
-      segment: SidebarUrl.segments["primary"],
-    },
-    {
-      name: I18n.t("sidebar.sections.community.links.admin.content", default: "Admin"),
-      path: "/admin",
-      icon: "wrench",
-      segment: SidebarUrl.segments["primary"],
-    },
-    {
-      name: I18n.t("sidebar.sections.community.links.users.content", default: "Users"),
-      path: "/u",
-      icon: "users",
-      segment: SidebarUrl.segments["secondary"],
-    },
-    {
-      name: I18n.t("sidebar.sections.community.links.about.content", default: "About"),
-      path: "/about",
-      icon: "info-circle",
-      segment: SidebarUrl.segments["secondary"],
-    },
-    {
-      name: I18n.t("sidebar.sections.community.links.faq.content", default: "FAQ"),
-      path: "/faq",
-      icon: "question-circle",
-      segment: SidebarUrl.segments["secondary"],
-    },
-    {
-      name: I18n.t("sidebar.sections.community.links.groups.content", default: "Groups"),
-      path: "/g",
-      icon: "user-friends",
-      segment: SidebarUrl.segments["secondary"],
-    },
-    {
-      name: I18n.t("sidebar.sections.community.links.badges.content", default: "Badges"),
-      path: "/badges",
-      icon: "certificate",
-      segment: SidebarUrl.segments["secondary"],
-    },
+    { name: "Everything", path: "/latest", icon: "layer-group", segment: 0 },
+    { name: "My Posts", path: "/my/activity", icon: "user", segment: 0 },
+    { name: "Review", path: "/review", icon: "flag", segment: 0 },
+    { name: "Admin", path: "/admin", icon: "wrench", segment: 0 },
+    { name: "Users", path: "/u", icon: "users", segment: 1 },
+    { name: "About", path: "/about", icon: "info-circle", segment: 1 },
+    { name: "FAQ", path: "/faq", icon: "question-circle", segment: 1 },
+    { name: "Groups", path: "/g", icon: "user-friends", segment: 1 },
+    { name: "Badges", path: "/badges", icon: "certificate", segment: 1 },
   ]
   def up
     result = DB.query <<~SQL
       INSERT INTO sidebar_sections(user_id, title, public, section_type, created_at, updated_at)
-      VALUES (-1, 'Community', true, #{SidebarSection.section_types["community"]}, now(), now())
+      VALUES (-1, 'Community', true, 0, now(), now())
       RETURNING sidebar_sections.id
     SQL
 
@@ -91,7 +46,7 @@ class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
   def down
     result = DB.query <<~SQL
       DELETE FROM sidebar_sections
-      WHERE section_type = #{SidebarSection.section_types["community"]}
+      WHERE section_type = 000000000
       RETURNING sidebar_sections.id
     SQL
     community_section_id = result.last&.id

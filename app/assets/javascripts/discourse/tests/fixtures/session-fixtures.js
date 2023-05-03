@@ -27,7 +27,6 @@ export default {
       dismissed_banner_key: null,
       can_review: true,
       ignored_users: [],
-      sidebar_sections: [],
       groups: [
         {
           id: 10,
