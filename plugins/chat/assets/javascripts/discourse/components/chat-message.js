@@ -282,7 +282,7 @@ export default class ChatMessage extends Component {
   }
 
   get threadingEnabled() {
-    return this.args.channel?.threadingEnabled && this.args.message?.thread;
+    return this.args.channel?.threadingEnabled && !!this.args.message?.thread;
   }
 
   get showThreadIndicator() {

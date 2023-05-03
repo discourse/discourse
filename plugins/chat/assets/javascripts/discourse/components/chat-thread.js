@@ -7,6 +7,7 @@ import { bind, debounce } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 import { schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
+import { resetIdle } from "discourse/lib/desktop-notifications";
 
 const PAGE_SIZE = 50;
 
@@ -34,7 +35,7 @@ export default class ChatThreadPanel extends Component {
   }
 
   get channel() {
-    return this.args.thread.channel;
+    return this.thread?.channel;
   }
 
   @action
@@ -150,6 +151,8 @@ export default class ChatThreadPanel extends Component {
 
   @action
   onSendMessage(message) {
+    resetIdle();
+
     if (message.editing) {
       this.#sendEditMessage(message);
     } else {
@@ -170,26 +173,16 @@ export default class ChatThreadPanel extends Component {
   #sendNewMessage(message) {
     message.thread = this.thread;
 
-    // TODO (martin) For desktop notifications
-    // resetIdle()
     if (this.chatChannelThreadPane.sending) {
       return;
     }
 
     this.chatChannelThreadPane.sending = true;
 
-    // TODO (martin) Handling case when channel is not followed???? IDK if we
-    // even let people send messages in threads without this, seems weird.
-
     this.thread.stageMessage(message);
     const stagedMessage = message;
     this.resetComposer();
     this.thread.messagesManager.addMessages([stagedMessage]);
-
-    // TODO (martin) Scrolling!!
-    // if (!this.channel.canLoadMoreFuture) {
-    //   this.scrollToBottom();
-    // }
 
     return this.chatApi
       .sendMessage(this.channel.id, {

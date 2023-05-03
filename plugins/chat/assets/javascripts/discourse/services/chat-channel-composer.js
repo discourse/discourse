@@ -30,18 +30,23 @@ export default class ChatChannelComposer extends ChatComposer {
             "chat.channel.thread",
             ...[...channel.routeModels, thread.id]
           )
-          .then(() => {
-            next(() => {
-              message.thread = thread;
-
-              console.log(message.thread);
-              this.chatChannelThreadComposer.replyTo(message);
-            });
-          });
+          .catch((e) => {
+            // drawer aborts the transition for the custom router handling
+            if (e.message === "TransitionAborted") {
+              this._setReplyToAfterTransition(message, thread);
+            }
+          })
+          .then(() => this._setReplyToAfterTransition(message, thread));
       }
     } else {
-      console.log("nothread");
       this.message.inReplyTo = message;
     }
+  }
+
+  _setReplyToAfterTransition(message, thread) {
+    next(() => {
+      message.thread = thread;
+      this.chatChannelThreadComposer.replyTo(message);
+    });
   }
 }

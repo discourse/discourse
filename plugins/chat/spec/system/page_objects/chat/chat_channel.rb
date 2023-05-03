@@ -114,7 +114,7 @@ module PageObjects
       end
 
       def reply_to(message)
-        if page.find("html.mobile-view")
+        if page.has_css?("html.mobile-view", wait: 0)
           click_message_action_mobile(message, "reply")
         else
           hover_message(message)
@@ -171,14 +171,18 @@ module PageObjects
       def check_message_presence(exists: true, text: nil, id: nil)
         css_method = exists ? :has_css? : :has_no_css?
         if text
-          send(css_method, ".chat-message-text", text: text, wait: 5)
+          find(".chat-channel").send(css_method, ".chat-message-text", text: text, wait: 5)
         elsif id
-          send(css_method, ".chat-message-container[data-id=\"#{id}\"]", wait: 10)
+          find(".chat-channel").send(
+            css_method,
+            ".chat-message-container[data-id=\"#{id}\"]",
+            wait: 10,
+          )
         end
       end
 
-      def has_thread_indicator?(message)
-        has_css?("#{message_by_id_selector(message.id)} .chat-message-thread-indicator")
+      def has_thread_indicator?(message, **args)
+        has_css?("#{message_by_id_selector(message.id)} .chat-message-thread-indicator", **args)
       end
 
       def message_thread_indicator(message)
