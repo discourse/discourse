@@ -5,6 +5,11 @@ describe "User selector", type: :system, js: true do
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user) { Fabricate(:admin) }
 
+  fab!(:user) do
+    SearchIndexer.enable
+    Fabricate(:user, username: "someone")
+  end
+
   before do
     current_user.activate
     sign_in(current_user)
@@ -14,11 +19,11 @@ describe "User selector", type: :system, js: true do
     it "correctly shows the user" do
       visit("/t/-/#{topic.id}")
       find(".btn-primary.create").click
-      find(".d-editor-input").fill_in(with: "Hello @dis")
+      find(".d-editor-input").fill_in(with: "Hello @som")
 
       within(".autocomplete.ac-user") do |el|
-        expect(el).to have_selector(".selected .avatar[title=discobot]")
-        expect(el.find(".selected .username")).to have_content("discobot")
+        expect(el).to have_selector(".selected .avatar[title=someone]")
+        expect(el.find(".selected .username")).to have_content("someone")
       end
     end
   end
