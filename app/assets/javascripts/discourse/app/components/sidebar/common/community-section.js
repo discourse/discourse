@@ -12,6 +12,7 @@ export default class SidebarCommunitySection extends Component {
   @service topicTrackingState;
   @service currentUser;
   @service appEvents;
+  @service site;
   @service siteSettings;
 
   @tracked sectionLinks;
@@ -75,6 +76,13 @@ export default class SidebarCommunitySection extends Component {
   // Override in child
   get defaultMoreSecondarySectionLinks() {
     return [];
+  }
+
+  get isDesktopDropdownMode() {
+    const headerDropdownMode =
+      this.siteSettings.navigation_menu === "header dropdown";
+
+    return !this.site.mobileView && headerDropdownMode;
   }
 
   #initializeSectionLinks(sectionLinkClasses, { inMoreDrawer } = {}) {

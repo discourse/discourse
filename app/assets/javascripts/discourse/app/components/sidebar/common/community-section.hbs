@@ -33,8 +33,17 @@
     />
   {{/each}}
 
-  <Sidebar::MoreSectionLinks
-    @sectionLinks={{this.moreSectionLinks}}
-    @secondarySectionLinks={{this.moreSecondarySectionLinks}}
-  />
+  {{#if this.isDesktopDropdownMode}}
+    {{#each this.moreSectionLinks as |sectionLink|}}
+      <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
+    {{/each}}
+    {{#each this.moreSecondarySectionLinks as |sectionLink|}}
+      <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
+    {{/each}}
+  {{else}}
+    <Sidebar::MoreSectionLinks
+      @sectionLinks={{this.moreSectionLinks}}
+      @secondarySectionLinks={{this.moreSecondarySectionLinks}}
+    />
+  {{/if}}
 </Sidebar::Section>
