@@ -54,6 +54,8 @@ export default class AdminReportStackedChart extends Component {
 
     const context = chartCanvas.getContext("2d");
 
+    const colours = ["#1EB8D1", "#9BC53D", "#721D8D", "#E84A5F", "#8A6916"];
+
     const chartData = makeArray(model.chartData || model.data).map((cd) => {
       return {
         label: cd.label,
@@ -64,15 +66,31 @@ export default class AdminReportStackedChart extends Component {
 
     const data = {
       labels: chartData[0].data.mapBy("x"),
-      datasets: chartData.map((cd) => {
+      datasets: chartData.map((cd, index) => {
         return {
           label: cd.label,
           stack: "pageviews-stack",
           data: cd.data,
-          backgroundColor: cd.color,
+          backgroundColor: colours[index % colours.length],
         };
       }),
     };
+
+    if (chartData.length > colours.length) {
+      const fallbackColors = chartData.slice(colours.length).map(() => {
+        return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+      });
+
+      data.datasets = data.datasets.map((ds, index) => {
+        return {
+          ...ds,
+          backgroundColor:
+            index < colours.length
+              ? colours[index % colours.length]
+              : fallbackColors[index - colours.length],
+        };
+      });
+    }
 
     loadScript("/javascripts/Chart.min.js").then(() => {
       this._resetChart();
