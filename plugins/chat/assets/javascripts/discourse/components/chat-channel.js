@@ -8,7 +8,7 @@ import { action } from "@ember/object";
 import { handleStagedMessage } from "discourse/plugins/chat/discourse/services/chat-pane-base-subscriptions-manager";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cancel, schedule, throttle } from "@ember/runloop";
+import { cancel, later, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -86,6 +86,7 @@ export default class ChatLivePane extends Component {
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this._unsubscribeToUpdates(this._loadedChannelId);
     this.requestedTargetMessageId = null;
+    cancel(this._laterComputeHandler);
   }
 
   @action
@@ -862,7 +863,9 @@ export default class ChatLivePane extends Component {
 
   @action
   computeDatesSeparators() {
-    throttle(this, this._computeDatesSeparators, 50, true);
+    cancel(this._laterComputeHandler);
+    this._computeDatesSeparators();
+    this._laterComputeHandler = later(this, this.computeDatesSeparators, 100);
   }
 
   // A more consistent way to scroll to the bottom when we are sure this is our goal
