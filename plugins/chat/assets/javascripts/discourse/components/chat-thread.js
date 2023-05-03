@@ -8,6 +8,8 @@ import { inject as service } from "@ember/service";
 import { schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { resetIdle } from "discourse/lib/desktop-notifications";
+import DiscourseURL from "discourse/lib/url";
+import getURL from "discourse-common/lib/get-url";
 
 const PAGE_SIZE = 50;
 
@@ -52,6 +54,10 @@ export default class ChatThreadPanel extends Component {
 
   @action
   subscribeToUpdates() {
+    if (this.thread.staged) {
+      return;
+    }
+
     this.chatChannelThreadPaneSubscriptionsManager.subscribe(this.thread);
   }
 

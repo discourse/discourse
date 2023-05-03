@@ -5,14 +5,29 @@ export default class ChatChannelThread extends DiscourseRoute {
   @service router;
   @service chatStateManager;
   @service chat;
+  @service chatStagedThreadMapping;
 
-  async model(params) {
+  model(params, transition) {
     const channel = this.modelFor("chat.channel");
 
     return channel.threadsManager
       .find(channel.id, params.threadId)
       .catch((xhr) => {
         if (xhr.jqXHR.status === 404) {
+          // This is a very special logic to attempt to reconciliate a staged thread id
+          // it happens after creating a new thread and having a temp ID in the URL
+          // if users presses reload at this moment, we would have a 404
+          // replacing the ID in the URL sooner would also cause a reload
+          const mapping = this.chatStagedThreadMapping.getMapping();
+          if (mapping[params.threadId]) {
+            transition.abort();
+            this.router.transitionTo(
+              "chat.channel.thread",
+              ...[...channel.routeModels, mapping[params.threadId]]
+            );
+            return;
+          }
+
           // silently ignore 404s to close in after model
           return;
         }

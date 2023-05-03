@@ -17,21 +17,8 @@ export function handleStagedMessage(channel, messagesManager, data) {
   stagedMessage.id = data.chat_message.id;
   stagedMessage.staged = false;
   stagedMessage.excerpt = data.chat_message.excerpt;
-
-  if (stagedMessage.thread.id !== data.chat_message.thread_id) {
-    stagedMessage.thread.id = data.chat_message.thread_id;
-  }
-
   stagedMessage.channel = channel;
   stagedMessage.createdAt = data.chat_message.created_at;
-
-  const inReplyToMsg = messagesManager.findMessage(
-    data.chat_message.in_reply_to?.id
-  );
-  if (inReplyToMsg && !inReplyToMsg.thread) {
-    inReplyToMsg.thread.id = data.chat_message.thread_id;
-  }
-
   stagedMessage.cooked = data.chat_message.cooked;
 
   return stagedMessage;
@@ -52,6 +39,7 @@ export function handleStagedMessage(channel, messagesManager, data) {
 export default class ChatPaneBaseSubscriptionsManager extends Service {
   @service chat;
   @service currentUser;
+  @service chatStagedThreadMapping;
 
   get messageBusChannel() {
     throw "not implemented";
@@ -230,20 +218,35 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
 
   handleNewThreadCreated(data) {
     this.model.threadsManager
-      .find(this.model.id, data.staged_thread_id, { fetchIfNotFound: false })
+      .find(this.model.id, data.staged_thread_id, {
+        fetchIfNotFound: false,
+      })
       .then((stagedThread) => {
-        stagedThread.staged = false;
-        stagedThread.id = data.thread_id;
-        stagedThread.originalMessage.thread = stagedThread;
-        const channelOriginalMessage = this.model.messagesManager.findMessage(
-          stagedThread.originalMessage.id
-        );
-        channelOriginalMessage.thread = stagedThread;
-        channelOriginalMessage.threadReplyCount = 1;
-        const threadMessage = stagedThread.messagesManager.findMessage(
-          data.chat_message.id
-        );
-        threadMessage.tread = stagedThread;
+        if (stagedThread) {
+          this.chatStagedThreadMapping.setMapping(
+            data.thread_id,
+            stagedThread.id
+          );
+          stagedThread.staged = false;
+          stagedThread.id = data.thread_id;
+          stagedThread.originalMessage.thread = stagedThread;
+          stagedThread.originalMessage.threadReplyCount ??= 1;
+        } else if (data.thread_id) {
+          this.model.threadsManager
+            .find(this.model.id, data.thread_id, {
+              fetchIfNotFound: true,
+            })
+            .then((thread) => {
+              const channelOriginalMessage =
+                this.model.messagesManager.findMessage(
+                  thread.originalMessage.id
+                );
+
+              if (channelOriginalMessage) {
+                channelOriginalMessage.thread = thread;
+              }
+            });
+        }
       });
   }
 

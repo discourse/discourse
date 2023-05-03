@@ -26,15 +26,6 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneB
       data.chat_message
     );
     this.messagesManager.addMessages([message]);
-
-    // TODO (martin) All the scrolling and new message indicator shenanigans,
-    // as well as handling marking the thread as read.
-  }
-
-  // NOTE: noop, there is nothing to do when a thread is created
-  // inside the thread panel.
-  handleThreadCreated() {
-    return;
   }
 
   // NOTE: noop, there is nothing to do when a thread original message

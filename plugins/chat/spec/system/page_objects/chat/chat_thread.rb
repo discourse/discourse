@@ -37,7 +37,7 @@ module PageObjects
         find(".chat-thread .chat-composer__input").click # ensures autocomplete is closed and not masking anything
       end
 
-      def send_message(id, text = nil)
+      def send_message(text = nil)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         fill_composer(text)
         click_send_message
@@ -48,24 +48,21 @@ module PageObjects
         find(".chat-thread .chat-composer.is-send-enabled .chat-composer__send-btn").click
       end
 
-      def has_message?(text: nil, id: nil)
-        check_message_presence(exists: true, text: text, id: id)
+      def has_message?(text: nil, id: nil, thread_id: nil)
+        check_message_presence(exists: true, text: text, id: id, thread_id: thread_id)
       end
 
-      def has_no_message?(text: nil, id: nil)
-        check_message_presence(exists: false, text: text, id: id)
+      def has_no_message?(text: nil, id: nil, thread_id: nil)
+        check_message_presence(exists: false, text: text, id: id, thread_id: thread_id)
       end
 
-      def check_message_presence(exists: true, text: nil, id: nil)
+      def check_message_presence(exists: true, text: nil, id: nil, thread_id: nil)
         css_method = exists ? :has_css? : :has_no_css?
+        selector = thread_id ? ".chat-thread[data-id=\"#{thread_id}\"]" : ".chat-thread"
         if text
-          find(".chat-thread").send(css_method, ".chat-message-text", text: text, wait: 5)
+          find(selector).send(css_method, ".chat-message-text", text: text, wait: 5)
         elsif id
-          find(".chat-thread").send(
-            css_method,
-            ".chat-message-container[data-id=\"#{id}\"]",
-            wait: 10,
-          )
+          find(selector).send(css_method, ".chat-message-container[data-id=\"#{id}\"]", wait: 10)
         end
       end
 

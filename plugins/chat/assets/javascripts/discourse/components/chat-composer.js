@@ -238,7 +238,7 @@ export default class ChatComposer extends Component {
   }
 
   reportReplyingPresence() {
-    if (!this.args.channel) {
+    if (!this.args.channel || !this.currentMessage) {
       return;
     }
 
