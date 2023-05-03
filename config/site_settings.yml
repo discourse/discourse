@@ -2104,7 +2104,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-    hidden: true
 
 navigation:
   navigation_menu:
