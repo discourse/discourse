@@ -10,8 +10,6 @@ import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messa
 import { getOwner } from "discourse-common/lib/get-owner";
 import guid from "pretty-text/guid";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { cloneJSON } from "discourse-common/lib/object";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
