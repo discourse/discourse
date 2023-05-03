@@ -7,6 +7,10 @@ class PostMover
     @move_types ||= Enum.new(:new_topic, :existing_topic)
   end
 
+  def self.merge_types
+    @merge_types ||= Enum.new(:sequential, :chronological)
+  end
+
   def initialize(original_topic, user, post_ids, move_to_pm: false)
     @original_topic = original_topic
     @user = user
@@ -14,8 +18,9 @@ class PostMover
     @move_to_pm = move_to_pm
   end
 
-  def to_topic(id, participants: nil)
+  def to_topic(id, participants: nil, merge_type: nil)
     @move_type = PostMover.move_types[:existing_topic]
+    @merge_type = PostMover.merge_types[merge_type&.to_sym] || PostMover.merge_types[:sequential]
 
     topic = Topic.find_by_id(id)
     if topic.archetype != @original_topic.archetype &&
@@ -31,6 +36,7 @@ class PostMover
 
   def to_new_topic(title, category_id = nil, tags = nil)
     @move_type = PostMover.move_types[:new_topic]
+    @merge_type = PostMover.merge_types[:sequential]
 
     post = Post.find_by(id: post_ids.first)
     raise Discourse::InvalidParameters unless post
@@ -84,8 +90,13 @@ class PostMover
         .count
     moving_all_posts = original_topic_posts_count == posts.length
 
+    @first_post_number_moved =
+      posts.first.is_first_post? ? posts[1]&.post_number : posts.first.post_number
+
     create_temp_table
     move_each_post
+    handle_references_after_move
+
     create_moderator_post_in_original_topic
     update_statistics
     update_user_actions
@@ -118,7 +129,29 @@ class PostMover
     SQL
   end
 
+  def handle_references_after_move
+    move_incoming_emails
+    move_notifications
+    update_reply_counts
+    update_quotes
+    move_first_post_replies
+    delete_post_replies
+    delete_invalid_post_timings
+    move_post_timings
+    copy_first_post_timings
+    copy_topic_users
+  end
+
   def move_each_post
+    case @merge_type
+    when PostMover.merge_types[:chronological]
+      move_each_post_chronological
+    when PostMover.merge_types[:sequential]
+      move_each_post_sequential
+    end
+  end
+
+  def move_each_post_sequential
     max_post_number = destination_topic.max_post_number + 1
 
     @post_creator = nil
@@ -133,7 +166,7 @@ class PostMover
     end
 
     posts.each do |post|
-      metadata = movement_metadata(post)
+      metadata = movement_metadata(post, new_post_number: @move_map[post.post_number])
       new_post = post.is_first_post? ? create_first_post(post) : move(post)
 
       store_movement(metadata, new_post)
@@ -142,17 +175,69 @@ class PostMover
         destination_topic.topic_allowed_users.create!(user_id: post.user_id)
       end
     end
+  end
 
-    move_incoming_emails
-    move_notifications
-    update_reply_counts
-    update_quotes
-    move_first_post_replies
-    delete_post_replies
-    delete_invalid_post_timings
-    copy_first_post_timings
-    move_post_timings
-    copy_topic_users
+  def move_each_post_chronological
+    destination_posts = destination_topic.ordered_posts.with_deleted
+
+    # drops posts from destination_topic until it finds one that was created after posts.first
+    min_created_at = posts.first.created_at
+    moved_posts = destination_posts.drop_while { |post| post.created_at <= min_created_at }
+
+    # if no post in destination_topic was created after posts.first it's equal to sequential
+    if moved_posts.empty?
+      initial_post_number = destination_topic.max_post_number + 1
+    else
+      initial_post_number = moved_posts.first.post_number
+    end
+
+    last_index = 0
+    posts.each do |post|
+      while last_index < moved_posts.length && moved_posts[last_index].created_at <= post.created_at
+        last_index += 1
+      end
+
+      moved_posts.insert(last_index, post)
+    end
+
+    @post_creator = nil
+    @move_map = {}
+    @shift_map = {}
+    @reply_count = {}
+    next_post_number = initial_post_number
+    moved_posts.each do |post|
+      if post.topic_id == destination_topic.id
+        # avoid shifting to a lower post number
+        next_post_number = post.post_number if post.post_number > next_post_number
+
+        @shift_map[post.post_number] = next_post_number
+      else
+        @move_map[post.post_number] = next_post_number
+
+        if post.reply_to_post_number.present?
+          @reply_count[post.reply_to_post_number] = (@reply_count[post.reply_to_post_number] || 0) +
+            1
+        end
+      end
+
+      next_post_number += 1
+    end
+
+    moved_posts.reverse.each do |post|
+      if post.topic_id == destination_topic.id
+        metadata = movement_metadata(post, new_post_number: @shift_map[post.post_number])
+        new_post = move_same_topic(post)
+      else
+        metadata = movement_metadata(post, new_post_number: @move_map[post.post_number])
+        new_post = post.is_first_post? ? create_first_post(post) : move(post)
+
+        if @move_to_pm && !destination_topic.topic_allowed_users.exists?(user_id: post.user_id)
+          destination_topic.topic_allowed_users.create!(user_id: post.user_id)
+        end
+      end
+
+      store_movement(metadata, new_post)
+    end
   end
 
   def create_first_post(post)
@@ -175,6 +260,11 @@ class PostMover
     move_email_logs(post, new_post)
 
     PostAction.copy(post, new_post)
+
+    if new_post.post_number != @move_map[post.post_number]
+      new_post.update_column(:post_number, @move_map[post.post_number])
+    end
+
     new_post.update_column(:reply_count, @reply_count[1] || 0)
     new_post.custom_fields = post.custom_fields
     new_post.save_custom_fields
@@ -189,8 +279,6 @@ class PostMover
   end
 
   def move(post)
-    @first_post_number_moved ||= post.post_number
-
     update = {
       reply_count: @reply_count[post.post_number] || 0,
       post_number: @move_map[post.post_number],
@@ -213,13 +301,30 @@ class PostMover
     post
   end
 
-  def movement_metadata(post)
+  def move_same_topic(post)
+    update = {
+      post_number: @shift_map[post.post_number],
+      sort_order: @shift_map[post.post_number],
+      baked_version: nil,
+    }
+
+    if @shift_map[post.reply_to_post_number]
+      update[:reply_to_post_number] = @shift_map[post.reply_to_post_number]
+    end
+
+    post.attributes = update
+    post.save(validate: false)
+
+    post
+  end
+
+  def movement_metadata(post, new_post_number: nil)
     {
       old_topic_id: post.topic_id,
       old_post_id: post.id,
       old_post_number: post.post_number,
       new_topic_id: destination_topic.id,
-      new_post_number: @move_map[post.post_number],
+      new_post_number: new_post_number,
       new_topic_title: destination_topic.title,
     }
   end
@@ -240,6 +345,7 @@ class PostMover
           post_id = mp.new_post_id
       FROM moved_posts mp
       WHERE ie.topic_id = mp.old_topic_id AND ie.post_id = mp.old_post_id
+        AND mp.old_topic_id <> mp.new_topic_id
     SQL
   end
 
@@ -324,12 +430,16 @@ class PostMover
   end
 
   def delete_invalid_post_timings
-    DB.exec <<~SQL
+    params = {
+      new_topic_id: destination_topic.id,
+      old_highest_post_number: destination_topic.highest_post_number,
+    }
+
+    DB.exec(<<~SQL, params)
       DELETE
       FROM post_timings pt
-      USING moved_posts mp
-      WHERE pt.topic_id = mp.new_topic_id
-        AND pt.post_number = mp.new_post_number
+      WHERE pt.topic_id = :new_topic_id
+        AND pt.post_number > :old_highest_post_number
     SQL
   end
 
@@ -371,12 +481,14 @@ class PostMover
                FROM moved_posts lr
                WHERE lr.old_topic_id = tu.topic_id
                  AND lr.old_post_number <= tu.last_read_post_number
+                 AND lr.old_topic_id <> lr.new_topic_id
              )                                           AS last_read_post_number,
              (
                SELECT MAX(le.new_post_number)
                FROM moved_posts le
                WHERE le.old_topic_id = tu.topic_id
                  AND le.old_post_number <= tu.last_emailed_post_number
+                 AND le.old_topic_id <> le.new_topic_id
              )                                           AS last_emailed_post_number,
              GREATEST(tu.first_visited_at, t.created_at) AS first_visited_at,
              GREATEST(tu.last_visited_at, t.created_at)  AS last_visited_at,
@@ -389,7 +501,7 @@ class PostMover
         AND GREATEST(
                 tu.last_read_post_number,
                 tu.last_emailed_post_number
-              ) >= (SELECT MIN(old_post_number) FROM moved_posts)
+              ) >= (SELECT MIN(mp.old_post_number) FROM moved_posts mp WHERE mp.old_topic_id <> mp.new_topic_id)
       ON CONFLICT (topic_id, user_id) DO UPDATE
         SET posted                   = excluded.posted,
             last_read_post_number    = CASE

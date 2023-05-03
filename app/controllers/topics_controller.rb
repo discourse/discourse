@@ -824,6 +824,7 @@ class TopicsController < ApplicationController
 
     args = {}
     args[:destination_topic_id] = destination_topic_id.to_i
+    args[:merge_type] = params[:merge_type] if params[:merge_type].present?
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]
@@ -1265,6 +1266,7 @@ class TopicsController < ApplicationController
       :destination_topic_id
     ].present?
     args[:tags] = params[:tags] if params[:tags].present?
+    args[:merge_type] = params[:merge_type] if params[:merge_type].present?
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]

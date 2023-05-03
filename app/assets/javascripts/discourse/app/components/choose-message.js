@@ -9,6 +9,7 @@ export default Component.extend({
   loading: null,
   noResults: null,
   messages: null,
+  topicChangedCallback: null,
 
   @observes("messageTitle")
   messageTitleChanged() {
@@ -59,6 +60,11 @@ export default Component.extend({
     event?.preventDefault();
     const messageId = get(message, "id");
     this.set("selectedTopicId", messageId);
+
+    if (this.topicChangedCallback) {
+      this.topicChangedCallback(message);
+    }
+
     next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
   },
 });

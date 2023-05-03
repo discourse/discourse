@@ -60,6 +60,7 @@
         <ChooseMessage
           @currentTopicId={{this.model.id}}
           @selectedTopicId={{this.selectedTopicId}}
+          @topicChangedCallback={{action "newTopicSelected"}}
         />
 
         <label>{{i18n "topic.move_to_new_message.participants"}}</label>
@@ -117,6 +118,7 @@
         <ChooseTopic
           @currentTopicId={{this.model.id}}
           @selectedTopicId={{this.selectedTopicId}}
+          @topicChangedCallback={{action "newTopicSelected"}}
         />
       </form>
     {{/if}}

@@ -1236,7 +1236,8 @@ class Topic < ActiveRecord::Base
       )
 
     if opts[:destination_topic_id]
-      topic = post_mover.to_topic(opts[:destination_topic_id], participants: opts[:participants])
+      topic =
+        post_mover.to_topic(opts[:destination_topic_id], **opts.slice(:participants, :merge_type))
 
       DiscourseEvent.trigger(:topic_merged, post_mover.original_topic, post_mover.destination_topic)
 
