@@ -47,5 +47,6 @@ end
 #
 # Indexes
 #
+#  index_sidebar_sections_on_section_type       (section_type) UNIQUE
 #  index_sidebar_sections_on_user_id_and_title  (user_id,title) UNIQUE
 #
