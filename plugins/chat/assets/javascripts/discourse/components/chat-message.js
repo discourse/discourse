@@ -46,7 +46,7 @@ export default class ChatMessage extends Component {
 
   constructor() {
     super(...arguments);
-    this.#initMentionedUsers();
+    this.initMentionedUsers();
   }
 
   get pane() {
@@ -153,6 +153,18 @@ export default class ChatMessage extends Component {
       _chatMessageDecorators.forEach((decorator) => {
         decorator.call(this, this.messageContainer, this.args.message.channel);
       });
+    });
+  }
+
+  @action
+  initMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      if (user.isTrackingStatus()) {
+        return;
+      }
+
+      user.trackStatus();
+      user.on("status-changed", this, "refreshStatusOnMentions");
     });
   }
 
@@ -426,17 +438,6 @@ export default class ChatMessage extends Component {
   @action
   dismissMentionWarning() {
     this.args.message.mentionWarning = null;
-  }
-
-  #initMentionedUsers() {
-    this.args.message.mentionedUsers.forEach((user) => {
-      if (user.isTrackingStatus()) {
-        return;
-      }
-
-      user.trackStatus();
-      user.on("status-changed", this, "refreshStatusOnMentions");
-    });
   }
 
   #teardownMentionedUsers() {
