@@ -70,8 +70,15 @@ module Chat
       )
     end
 
-    def self.publish_thread_created!(chat_channel, chat_message)
-      publish_to_channel!(chat_channel, serialize_message_with_type(chat_message, :thread_created))
+    def self.publish_thread_created!(chat_channel, chat_message, thread_id, staged_thread_id)
+      publish_to_channel!(
+        chat_channel,
+        serialize_message_with_type(
+          chat_message,
+          :thread_created,
+          { thread_id: thread_id, staged_thread_id: staged_thread_id },
+        ),
+      )
     end
 
     def self.publish_processed!(chat_message)
@@ -215,11 +222,12 @@ module Chat
       end
     end
 
-    def self.serialize_message_with_type(chat_message, type)
+    def self.serialize_message_with_type(chat_message, type, options = {})
       Chat::MessageSerializer
         .new(chat_message, { scope: anonymous_guardian, root: :chat_message })
         .as_json
         .merge(type: type)
+        .merge(options)
     end
 
     def self.user_tracking_state_message_bus_channel(user_id)

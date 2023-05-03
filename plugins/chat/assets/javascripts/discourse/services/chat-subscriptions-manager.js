@@ -250,6 +250,7 @@ export default class ChatSubscriptionsManager extends Service {
 
   @bind
   _updateChannelTrackingData(channelId, trackingData) {
+    console.log("_updateChannelTrackingData", channelId, trackingData);
     this.chatChannelsManager.find(channelId).then((channel) => {
       if (
         !channel?.currentUserMembership?.last_read_message_id ||

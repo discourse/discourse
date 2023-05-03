@@ -6,7 +6,7 @@ import { bind } from "discourse-common/utils/decorators";
 
 // TODO (martin) This export can be removed once we move the handleSentMessage
 // code completely out of ChatLivePane
-export function handleStagedMessage(messagesManager, data) {
+export function handleStagedMessage(channel, messagesManager, data) {
   const stagedMessage = messagesManager.findStagedMessage(data.staged_id);
 
   if (!stagedMessage) {
@@ -17,15 +17,19 @@ export function handleStagedMessage(messagesManager, data) {
   stagedMessage.id = data.chat_message.id;
   stagedMessage.staged = false;
   stagedMessage.excerpt = data.chat_message.excerpt;
-  stagedMessage.threadId = data.chat_message.thread_id;
-  stagedMessage.channelId = data.chat_message.chat_channel_id;
+
+  if (data.chat_message.thread_id) {
+    stagedMessage.thread.id = data.chat_message.thread_id;
+  }
+
+  stagedMessage.channel = channel;
   stagedMessage.createdAt = data.chat_message.created_at;
 
   const inReplyToMsg = messagesManager.findMessage(
     data.chat_message.in_reply_to?.id
   );
-  if (inReplyToMsg && !inReplyToMsg.threadId) {
-    inReplyToMsg.threadId = data.chat_message.thread_id;
+  if (inReplyToMsg && !inReplyToMsg.thread) {
+    inReplyToMsg.thread.id = data.chat_message.thread_id;
   }
 
   stagedMessage.cooked = data.chat_message.cooked;
@@ -75,14 +79,15 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     if (!this.model) {
       return;
     }
+
     this.messageBus.unsubscribe(this.messageBusChannel, this.onMessage);
     this.model = null;
   }
 
   // TODO (martin) This can be removed once we move the handleSentMessage
   // code completely out of ChatLivePane
-  handleStagedMessageInternal(data) {
-    return handleStagedMessage(this.messagesManager, data);
+  handleStagedMessageInternal(channel, data) {
+    return handleStagedMessage(channel, this.messagesManager, data);
   }
 
   @bind
@@ -122,7 +127,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
         this.handleFlaggedMessage(busData);
         break;
       case "thread_created":
-        this.handleThreadCreated(busData);
+        this.handleNewThreadCreated(busData);
         break;
       case "update_thread_original_message":
         this.handleThreadOriginalMessageUpdate(busData);
@@ -223,8 +228,23 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     }
   }
 
-  handleThreadCreated() {
-    throw "not implemented";
+  handleNewThreadCreated(data) {
+    this.model.threadsManager
+      .find(this.model.id, data.staged_thread_id, { fetchIfNotFound: false })
+      .then((stagedThread) => {
+        stagedThread.staged = false;
+        stagedThread.id = data.thread_id;
+        stagedThread.originalMessage.thread = stagedThread;
+        const channelOriginalMessage = this.model.messagesManager.findMessage(
+          stagedThread.originalMessage.id
+        );
+        channelOriginalMessage.thread = stagedThread;
+        channelOriginalMessage.threadReplyCount = 1;
+        const threadMessage = stagedThread.messagesManager.findMessage(
+          data.chat_message.id
+        );
+        threadMessage.tread = stagedThread;
+      });
   }
 
   handleThreadOriginalMessageUpdate() {

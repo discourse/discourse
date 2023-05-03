@@ -1,60 +1,47 @@
-import { tracked } from "@glimmer/tracking";
-import Service, { inject as service } from "@ember/service";
+import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatComposer from "./chat-composer";
+import { next } from "@ember/runloop";
 
-export default class ChatChannelComposer extends Service {
+export default class ChatChannelComposer extends ChatComposer {
   @service chat;
-  @service chatApi;
-  @service chatComposerPresenceManager;
-  @service currentUser;
-
-  @tracked _message;
-
-  @action
-  cancel() {
-    if (this.message.editing) {
-      this.reset();
-    } else if (this.message.inReplyTo) {
-      this.message.inReplyTo = null;
-    }
-  }
-
-  @action
-  reset(channel) {
-    this.message = ChatMessage.createDraftMessage(channel, {
-      user: this.currentUser,
-    });
-  }
-
-  @action
-  clear() {
-    this.message.message = "";
-  }
-
-  @action
-  editMessage(message) {
-    this.chat.activeMessage = null;
-    message.editing = true;
-    this.message = message;
-  }
-
-  @action
-  onCancelEditing() {
-    this.reset();
-  }
+  @service chatChannelThreadComposer;
+  @service router;
 
   @action
   replyTo(message) {
     this.chat.activeMessage = null;
-    this.message.inReplyTo = message;
-  }
+    const channel = message.channel;
 
-  get message() {
-    return this._message;
-  }
+    if (
+      this.siteSettings.enable_experimental_chat_threaded_discussions &&
+      channel.threadingEnabled
+    ) {
+      if (message.thread?.id) {
+        this.router.transitionTo(
+          "chat.channel.thread",
+          ...[...channel.routeModels, message.thread.id]
+        );
+      } else {
+        const thread = channel.createStagedThread(message);
 
-  set message(message) {
-    this._message = message;
+        this.router
+          .transitionTo(
+            "chat.channel.thread",
+            ...[...channel.routeModels, thread.id]
+          )
+          .then(() => {
+            next(() => {
+              message.thread = thread;
+
+              console.log(message.thread);
+              this.chatChannelThreadComposer.replyTo(message);
+            });
+          });
+      }
+    } else {
+      console.log("nothread");
+      this.message.inReplyTo = message;
+    }
   }
 }

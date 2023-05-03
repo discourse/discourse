@@ -31,8 +31,6 @@ export default class ChatMessage {
   @tracked deletedAt;
   @tracked uploads;
   @tracked excerpt;
-  @tracked threadId;
-  @tracked threadReplyCount;
   @tracked reactions;
   @tracked reviewableId;
   @tracked user;
@@ -50,11 +48,12 @@ export default class ChatMessage {
   @tracked highlighted = false;
   @tracked firstOfResults = false;
   @tracked message;
-
+  @tracked thread;
+  @tracked threadReplyCount;
   @tracked _cooked;
 
   constructor(channel, args = {}) {
-    this.channel = channel;
+    // when modifying constructor, be sure to update duplicate function accordingly
     this.id = args.id;
     this.newest = args.newest;
     this.firstOfResults = args.firstOfResults;
@@ -62,23 +61,23 @@ export default class ChatMessage {
     this.edited = args.edited;
     this.availableFlags = args.availableFlags || args.available_flags;
     this.hidden = args.hidden;
-    this.threadId = args.threadId || args.thread_id;
     this.threadReplyCount = args.threadReplyCount || args.thread_reply_count;
-    this.channelId = args.channelId || args.chat_channel_id;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
     this.createdAt = args.createdAt || args.created_at;
     this.deletedAt = args.deletedAt || args.deleted_at;
     this.excerpt = args.excerpt;
     this.reviewableId = args.reviewableId || args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus || args.user_flag_status;
+    this.draft = args.draft;
+    this.message = args.message || "";
+    this._cooked = args.cooked || "";
+    this.thread = args.thread;
     this.inReplyTo =
       args.inReplyTo ||
       (args.in_reply_to || args.replyToMsg
         ? ChatMessage.create(channel, args.in_reply_to || args.replyToMsg)
         : null);
-    this.draft = args.draft;
-    this.message = args.message || "";
-    this._cooked = args.cooked || "";
+    this.channel = channel;
     this.reactions = this.#initChatMessageReactionModel(
       args.id,
       args.reactions
@@ -86,6 +85,39 @@ export default class ChatMessage {
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
+  }
+
+  duplicate() {
+    // This is important as a message can exist in the context of a channel or a thread
+    // The current strategy is to have a different message object in each cases to avoid
+    // side effects
+    const message = new ChatMessage(this.channel, {
+      id: this.id,
+      newest: this.newest,
+      staged: this.staged,
+      edited: this.edited,
+      availableFlags: this.availableFlags,
+      hidden: this.hidden,
+      threadReplyCount: this.threadReplyCount,
+      chatWebhookEvent: this.chatWebhookEvent,
+      createdAt: this.createdAt,
+      deletedAt: this.deletedAt,
+      excerpt: this.excerpt,
+      reviewableId: this.reviewableId,
+      userFlagStatus: this.userFlagStatus,
+      draft: this.draft,
+      message: this.message,
+      cooked: this.cooked,
+    });
+
+    message.thread = this.thread;
+    message.reactions = this.reactions;
+    message.user = this.user;
+    message.inReplyTo = this.inReplyTo;
+    message.bookmark = this.bookmark;
+    message.uploads = this.uploads;
+
+    return message;
   }
 
   get cooked() {
@@ -132,7 +164,7 @@ export default class ChatMessage {
   }
 
   get threadRouteModels() {
-    return [...this.channel.routeModels, this.threadId];
+    return [...this.channel.routeModels, this.thread.id];
   }
 
   get read() {

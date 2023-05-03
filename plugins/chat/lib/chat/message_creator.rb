@@ -13,6 +13,7 @@ module Chat
       chat_channel:,
       in_reply_to_id: nil,
       thread_id: nil,
+      staged_thread_id: nil,
       user:,
       content:,
       staged_id: nil,
@@ -31,6 +32,7 @@ module Chat
       @incoming_chat_webhook = incoming_chat_webhook
       @upload_ids = upload_ids || []
       @thread_id = thread_id
+      @staged_thread_id = staged_thread_id
       @error = nil
 
       @chat_message =
@@ -123,11 +125,15 @@ module Chat
     end
 
     def validate_existing_thread!
+      return if @staged_thread_id.present? && @thread_id.blank?
+
       return if @thread_id.blank?
       @existing_thread = Chat::Thread.find(@thread_id)
 
-      if @existing_thread.channel_id != @chat_channel.id
+      if @existing_thread && @existing_thread.channel_id != @chat_channel.id
         raise StandardError.new(I18n.t("chat.errors.thread_invalid_for_channel"))
+      elsif !@existing_thread
+        return
       end
 
       reply_to_thread_mismatch =
@@ -165,7 +171,7 @@ module Chat
 
     def create_thread
       return if @in_reply_to_id.blank?
-      return if @chat_message.in_thread?
+      return if @chat_message.in_thread? && !@staged_thread_id.present?
 
       if @original_message.thread
         thread = @original_message.thread
@@ -180,6 +186,8 @@ module Chat
         Chat::Publisher.publish_thread_created!(
           @chat_message.chat_channel,
           @chat_message.in_reply_to,
+          thread.id,
+          @staged_thread_id,
         )
       end
 

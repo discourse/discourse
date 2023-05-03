@@ -19,10 +19,6 @@ module PageObjects
         header.has_content?(content)
       end
 
-      def thread_selector_by_id(id)
-        ".chat-thread[data-id=\"#{id}\"]"
-      end
-
       def has_no_loading_skeleton?
         has_no_css?(".chat-thread__messages .chat-skeleton")
       end
@@ -44,35 +40,28 @@ module PageObjects
       def send_message(id, text = nil)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         fill_composer(text)
-        click_send_message(id)
+        click_send_message
         click_composer
       end
 
-      def click_send_message(id)
-        find(thread_selector_by_id(id)).find(
-          ".chat-composer.is-send-enabled .chat-composer__send-btn",
-        ).click
+      def click_send_message
+        find(".chat-thread .chat-composer--send-enabled .chat-composer__send-btn").click
       end
 
-      def has_message?(thread_id, text: nil, id: nil)
-        check_message_presence(thread_id, exists: true, text: text, id: id)
+      def has_message?(text: nil, id: nil)
+        check_message_presence(exists: true, text: text, id: id)
       end
 
-      def has_no_message?(thread_id, text: nil, id: nil)
-        check_message_presence(thread_id, exists: false, text: text, id: id)
+      def has_no_message?(text: nil, id: nil)
+        check_message_presence(exists: false, text: text, id: id)
       end
 
-      def check_message_presence(thread_id, exists: true, text: nil, id: nil)
+      def check_message_presence(exists: true, text: nil, id: nil)
         css_method = exists ? :has_css? : :has_no_css?
         if text
-          find(thread_selector_by_id(thread_id)).send(
-            css_method,
-            ".chat-message-text",
-            text: text,
-            wait: 5,
-          )
+          find(".chat-thread").send(css_method, ".chat-message-text", text: text, wait: 5)
         elsif id
-          find(thread_selector_by_id(thread_id)).send(
+          find(".chat-thread").send(
             css_method,
             ".chat-message-container[data-id=\"#{id}\"]",
             wait: 10,

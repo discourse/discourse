@@ -9,6 +9,9 @@ import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-thread
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import { getOwner } from "discourse-common/lib/get-owner";
 import guid from "pretty-text/guid";
+import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import { cloneJSON } from "discourse-common/lib/object";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -155,6 +158,23 @@ export default class ChatChannel extends RestModel {
     this.channelMessageBusLastId = details.channel_message_bus_last_id;
   }
 
+  createStagedThread(message) {
+    const clonedMessage = message.duplicate();
+
+    const thread = new ChatThread(this, {
+      id: guid(),
+      original_message: message,
+      staged: true,
+      created_at: moment.utc().format(),
+    });
+
+    clonedMessage.thread = thread;
+    this.threadsManager.store(this, thread);
+    thread.messagesManager.addMessages([clonedMessage]);
+
+    return thread;
+  }
+
   stageMessage(message) {
     message.id = guid();
     message.staged = true;
@@ -163,7 +183,7 @@ export default class ChatChannel extends RestModel {
     message.cook();
 
     if (message.inReplyTo) {
-      if (!message.inReplyTo.threadId) {
+      if (!message.inReplyTo.thread) {
         message.inReplyTo.threadId = guid();
         message.inReplyTo.threadReplyCount = 1;
       }

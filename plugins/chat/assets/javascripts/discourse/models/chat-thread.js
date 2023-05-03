@@ -4,6 +4,7 @@ import User from "discourse/models/user";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export const THREAD_STATUSES = {
   open: "open",
@@ -13,20 +14,25 @@ export const THREAD_STATUSES = {
 };
 
 export default class ChatThread {
+  @tracked id;
   @tracked title;
   @tracked status;
+  @tracked draft;
+  @tracked staged;
+  @tracked channel;
+  @tracked originalMessage;
+  @tracked threadMessageBusLastId;
 
   messagesManager = new ChatMessagesManager(getOwner(this));
 
-  constructor(args = {}) {
+  constructor(channel, args = {}) {
     this.title = args.title;
     this.id = args.id;
-    this.channelId = args.channel_id;
+    this.channel = channel;
     this.status = args.status;
-
-    this.originalMessageUser = this.#initUserModel(args.original_message_user);
-    this.originalMessage = args.original_message;
-    this.originalMessage.user = this.originalMessageUser;
+    this.draft = args.draft;
+    this.staged = args.staged;
+    this.originalMessage = ChatMessage.create(channel, args.original_message);
   }
 
   stageMessage(message) {

@@ -17,6 +17,8 @@ import I18n from "I18n";
 import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isEmpty, isPresent } from "@ember/utils";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import { Promise } from "rsvp";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -39,7 +41,10 @@ export default class ChatComposer extends Component {
   }
 
   get shouldRenderMessageDetails() {
-    return this.currentMessage?.editing || this.currentMessage?.inReplyTo;
+    return (
+      this.currentMessage?.editing ||
+      (this.context === "channel" && this.currentMessage?.inReplyTo)
+    );
   }
 
   get inlineButtons() {
@@ -68,6 +73,18 @@ export default class ChatComposer extends Component {
       !this.chat.userCanInteractWithChat ||
       !this.args.channel.canModifyMessages(this.currentUser)
     );
+  }
+
+  @action
+  sendMessage(raw) {
+    const message = ChatMessage.createDraftMessage(this.args.channel, {
+      user: this.currentUser,
+      message: raw,
+    });
+
+    this.args.onSendMessage(message);
+
+    return Promise.resolve();
   }
 
   @action

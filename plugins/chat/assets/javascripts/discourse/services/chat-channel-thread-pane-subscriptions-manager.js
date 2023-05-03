@@ -3,7 +3,7 @@ import ChatPaneBaseSubscriptionsManager from "./chat-pane-base-subscriptions-man
 
 export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneBaseSubscriptionsManager {
   get messageBusChannel() {
-    return `/chat/${this.model.channelId}/thread/${this.model.id}`;
+    return `/chat/${this.model.channel.id}/thread/${this.model.id}`;
   }
 
   get messageBusLastId() {
@@ -12,7 +12,10 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneB
 
   handleSentMessage(data) {
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
-      const stagedMessage = this.handleStagedMessageInternal(data);
+      const stagedMessage = this.handleStagedMessageInternal(
+        this.model.channel,
+        data
+      );
       if (stagedMessage) {
         return;
       }

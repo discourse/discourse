@@ -23,7 +23,7 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
   handleThreadCreated(data) {
     const message = this.messagesManager.findMessage(data.chat_message.id);
     if (message) {
-      message.threadId = data.chat_message.thread_id;
+      message.thread.id = data.chat_message.thread_id;
       message.threadReplyCount = 0;
     }
   }

@@ -49,7 +49,7 @@ module PageObjects
       def click_message_action_mobile(message, message_action)
         expand_message_actions_mobile(message, delay: 0.5)
         wait_for_animation(find(".chat-message-actions"), timeout: 5)
-        find(".chat-message-action-item[data-id=\"#{message_action}\"] button").click
+        find(".chat-message-actions [data-id=\"#{message_action}\"]").click
       end
 
       def hover_message(message)
@@ -114,8 +114,12 @@ module PageObjects
       end
 
       def reply_to(message)
-        hover_message(message)
-        find(".reply-btn").click
+        if page.find("html.mobile-view")
+          click_message_action_mobile(message, "reply")
+        else
+          hover_message(message)
+          find(".reply-btn").click
+        end
       end
 
       def has_bookmarked_message?(message)
