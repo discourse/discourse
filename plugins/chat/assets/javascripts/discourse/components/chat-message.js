@@ -430,6 +430,10 @@ export default class ChatMessage extends Component {
 
   #initMentionedUsers() {
     this.args.message.mentionedUsers.forEach((user) => {
+      if (user.isTrackingStatus()) {
+        return;
+      }
+
       user.trackStatus();
       user.on("status-changed", this, "refreshStatusOnMentions");
     });
