@@ -2418,6 +2418,7 @@ en:
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
     experimental_new_new_view_groups: "EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the \"Everything\" link in the sidebar link to it."
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
+    experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
