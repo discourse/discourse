@@ -254,6 +254,12 @@ RSpec.describe Report do
     page_view_anon
   ].each do |request_type|
     describe "#{request_type} request reports" do
+      before do
+        # on dev systems we may have some old data
+        # specifying a clean slate here ensures we get the correct results
+        ApplicationRequest.delete_all
+      end
+
       let(:report) do
         Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now)
       end
@@ -484,6 +490,11 @@ RSpec.describe Report do
 
   describe "trending search report" do
     let(:report) { Report.find("trending_search") }
+    before do
+      # sometimes background jobs in test may log data
+      # ensure we start from a clean slate
+      SearchLog.delete_all
+    end
 
     include_examples "no data"
 
@@ -1291,6 +1302,9 @@ RSpec.describe Report do
     before do
       freeze_time(Time.now.at_midnight)
       Theme.clear_default!
+      # on some dev systems data can leak in
+      # breaking the tests is not worth it
+      ApplicationRequest.delete_all
     end
 
     let(:reports) { Report.find("consolidated_page_views") }
@@ -1340,6 +1354,7 @@ RSpec.describe Report do
     before do
       freeze_time(Time.now.at_midnight)
       Theme.clear_default!
+      ApplicationRequest.delete_all
     end
 
     let(:reports) { Report.find("consolidated_api_requests") }

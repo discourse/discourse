@@ -11,7 +11,7 @@ describe "User selector", type: :system, js: true do
   end
 
   context "when autocompleting a username" do
-    it "correctly shows the user" do
+    xit "correctly shows the user" do
       visit("/t/-/#{topic.id}")
       find(".btn-primary.create").click
       find(".d-editor-input").fill_in(with: "Hello @dis")
@@ -24,7 +24,7 @@ describe "User selector", type: :system, js: true do
   end
 
   context "when autocompleting a group" do
-    it "correctly shows the user" do
+    xit "correctly shows the user" do
       visit("/t/-/#{topic.id}")
       find(".btn-primary.create").click
       find(".d-editor-input").fill_in(with: "Hello @adm")

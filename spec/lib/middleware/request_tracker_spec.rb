@@ -15,6 +15,8 @@ RSpec.describe Middleware::RequestTracker do
   end
 
   before do
+    ApplicationRequest.delete_all
+    WebCrawlerRequest.delete_all
     ApplicationRequest.enable
     CachedCounting.reset
     CachedCounting.enable

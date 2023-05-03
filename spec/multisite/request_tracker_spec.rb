@@ -6,8 +6,14 @@ RSpec.describe "RequestTracker in multisite", type: :multisite do
 
     RateLimiter.enable
 
-    test_multisite_connection("default") { RateLimiter.clear_all! }
-    test_multisite_connection("second") { RateLimiter.clear_all! }
+    test_multisite_connection("default") do
+      RateLimiter.clear_all!
+      ApplicationRequest.delete_all
+    end
+    test_multisite_connection("second") do
+      RateLimiter.clear_all!
+      ApplicationRequest.delete_all
+    end
     RateLimiter.clear_all_global!
   end
 
