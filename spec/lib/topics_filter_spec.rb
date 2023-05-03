@@ -668,7 +668,7 @@ RSpec.describe TopicsFilter do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("tags:#{tag.name}+#{tag2.name}")
+              .filter_from_query_string("tag:#{tag.name}+#{tag2.name}")
               .pluck(:id),
           ).to contain_exactly(topic_with_tag_and_tag2.id)
         end
