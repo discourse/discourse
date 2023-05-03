@@ -7,11 +7,13 @@ import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
 function ajax(opts, messageBusConnectivity) {
+  console.trace();
   if (opts.complete) {
     const oldComplete = opts.complete;
     opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
+      console.log(stat, xhr);
       messageBusConnectivity.setConnectivity(
         stat === "abort" || xhr.readyState === 4
       );
