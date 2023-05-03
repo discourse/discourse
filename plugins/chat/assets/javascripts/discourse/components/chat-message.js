@@ -46,11 +46,7 @@ export default class ChatMessage extends Component {
 
   constructor() {
     super(...arguments);
-
-    this.args.message.mentionedUsers.forEach((user) => {
-      user.trackStatus();
-      user.on("status-changed", this, "refreshStatusOnMentions");
-    });
+    this.#initMentionedUsers();
   }
 
   get pane() {
@@ -130,11 +126,7 @@ export default class ChatMessage extends Component {
   @action
   teardownChatMessage() {
     cancel(this._invitationSentTimer);
-
-    this.args.message.mentionedUsers.forEach((user) => {
-      user.stopTrackingStatus();
-      user.off("status-changed", this, "refreshStatusOnMentions");
-    });
+    this.#teardownMentionedUsers();
   }
 
   @action
@@ -434,5 +426,19 @@ export default class ChatMessage extends Component {
   @action
   dismissMentionWarning() {
     this.args.message.mentionWarning = null;
+  }
+
+  #initMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      user.trackStatus();
+      user.on("status-changed", this, "refreshStatusOnMentions");
+    });
+  }
+
+  #teardownMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      user.stopTrackingStatus();
+      user.off("status-changed", this, "refreshStatusOnMentions");
+    });
   }
 }
