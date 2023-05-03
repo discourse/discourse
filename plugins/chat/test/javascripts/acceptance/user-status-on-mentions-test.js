@@ -13,6 +13,10 @@ import {
 import pretender from "discourse/tests/helpers/create-pretender";
 
 acceptance("Chat | User status on mentions", function (needs) {
+  const actingUser = {
+    id: 1,
+    username: "acting_user",
+  };
   const channelId = 1;
   const mentionedUser1 = {
     id: 1000,
@@ -32,10 +36,7 @@ acceptance("Chat | User status on mentions", function (needs) {
         message: `Hey @${mentionedUser1.username}`,
         cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser1.username}">@${mentionedUser1.username}</a></p>`,
         mentioned_users: [mentionedUser1],
-        user: {
-          id: 1,
-          username: "jesse",
-        },
+        user: actingUser,
       },
     ],
   };
@@ -51,6 +52,7 @@ acceptance("Chat | User status on mentions", function (needs) {
   needs.settings({ chat_enabled: true });
 
   needs.user({
+    ...actingUser,
     has_chat_enabled: true,
     chat_channels: {
       public_channels: [
