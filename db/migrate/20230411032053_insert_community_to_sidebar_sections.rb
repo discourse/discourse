@@ -46,7 +46,7 @@ class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
   def down
     result = DB.query <<~SQL
       DELETE FROM sidebar_sections
-      WHERE section_type = 000000000
+      WHERE section_type = 0
       RETURNING sidebar_sections.id
     SQL
     community_section_id = result.last&.id
