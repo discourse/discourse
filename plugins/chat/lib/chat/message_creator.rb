@@ -130,10 +130,8 @@ module Chat
       return if @thread_id.blank?
       @existing_thread = Chat::Thread.find(@thread_id)
 
-      if @existing_thread && @existing_thread.channel_id != @chat_channel.id
+      if @existing_thread.channel_id != @chat_channel.id
         raise StandardError.new(I18n.t("chat.errors.thread_invalid_for_channel"))
-      elsif !@existing_thread
-        return
       end
 
       reply_to_thread_mismatch =
