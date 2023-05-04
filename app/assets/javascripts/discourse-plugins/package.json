@@ -17,7 +17,7 @@
     "webpack": "^5.82.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.4"
+    "@babel/core": "^7.21.8"
   },
   "engines": {
     "node": "16.* || >= 18",
