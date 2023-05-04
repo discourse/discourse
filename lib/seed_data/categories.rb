@@ -92,7 +92,7 @@ module SeedData
           permissions: {
             everyone: :full,
           },
-          force_permissions: true,
+          force_permissions: false,
           sidebar: true,
           default_composer_category: true,
         },
