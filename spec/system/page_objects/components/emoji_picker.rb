@@ -18,6 +18,10 @@ module PageObjects
       def has_emoji?(emoji_name)
         page.has_css?(emoji_button_selector(emoji_name))
       end
+
+      def has_no_emoji?(emoji_name)
+        page.has_no_css?(emoji_button_selector(emoji_name))
+      end
     end
   end
 end

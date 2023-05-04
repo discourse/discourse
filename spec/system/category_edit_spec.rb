@@ -28,7 +28,7 @@ describe "Edit Category", type: :system, js: true do
     it "should allow you to select and save a form template" do
       category_page.visit_edit_template(category)
       category_page.toggle_form_templates
-      expect(category_page).not_to have_d_editor
+      expect(category_page).to have_no_d_editor
       category_page.select_form_template(form_template.name)
       expect(category_page).to have_selected_template(form_template.name)
       category_page.save_settings
@@ -57,7 +57,7 @@ describe "Edit Category", type: :system, js: true do
     it "should have form templates enabled and showing the selected templates" do
       category_page.visit_edit_template(category)
       expect(category_page).to have_form_template_enabled
-      expect(category_page).not_to have_d_editor
+      expect(category_page).to have_no_d_editor
       selected_templates = "#{form_template.name},#{form_template_2.name}"
       expect(category_page).to have_selected_template(selected_templates)
     end
