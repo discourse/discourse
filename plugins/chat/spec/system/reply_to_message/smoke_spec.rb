@@ -8,9 +8,7 @@ RSpec.describe "Reply to message - smoke", type: :system, js: true do
   fab!(:user_1) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:category_channel) }
-  fab!(:original_message) do
-    Fabricate(:chat_message, chat_channel: channel_1, user: Fabricate(:user))
-  end
+  fab!(:original_message) { Fabricate(:chat_message, chat_channel: channel_1) }
 
   before do
     SiteSetting.enable_experimental_chat_threaded_discussions = true
@@ -38,39 +36,39 @@ RSpec.describe "Reply to message - smoke", type: :system, js: true do
         thread_page.fill_composer("user1reply")
         thread_page.click_send_message
 
-        expect(channel_page).to have_thread_indicator(original_message, text: "1")
+        expect(channel_page).to have_thread_indicator(original_message, text: 1)
 
         expect(thread_page).to have_message(text: "user1reply")
       end
 
       using_session(:user_2) do |session|
         expect(thread_page).to have_message(text: "user1reply")
-        expect(channel_page).to have_thread_indicator(original_message, text: "1")
+        expect(channel_page).to have_thread_indicator(original_message, text: 1)
 
         thread_page.fill_composer("user2reply")
         thread_page.click_send_message
 
         expect(thread_page).to have_message(text: "user2reply")
-        expect(channel_page).to have_thread_indicator(original_message, text: "2")
+        expect(channel_page).to have_thread_indicator(original_message, text: 2)
 
         refresh
 
         expect(thread_page).to have_message(text: "user1reply")
         expect(thread_page).to have_message(text: "user2reply")
-        expect(channel_page).to have_thread_indicator(original_message, text: "2")
+        expect(channel_page).to have_thread_indicator(original_message, text: 2)
 
         session.quit
       end
 
       using_session(:user_1) do |session|
         expect(thread_page).to have_message(text: "user2reply")
-        expect(channel_page).to have_thread_indicator(original_message, text: "2")
+        expect(channel_page).to have_thread_indicator(original_message, text: 2)
 
         refresh
 
         expect(thread_page).to have_message(text: "user1reply")
         expect(thread_page).to have_message(text: "user2reply")
-        expect(channel_page).to have_thread_indicator(original_message, text: "2")
+        expect(channel_page).to have_thread_indicator(original_message, text: 2)
 
         session.quit
       end
