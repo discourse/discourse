@@ -1,13 +1,16 @@
 {{#if (and this.site.desktopView this.chat.activeMessage.model.id)}}
   <div
-    {{did-insert this.setupPopper}}
-    {{did-update this.setupPopper this.chat.activeMessage.model.id}}
-    {{will-destroy this.teardownPopper}}
-    class="chat-message-actions-container"
+    {{did-insert this.setup}}
+    {{did-update this.setup this.chat.activeMessage.model.id}}
+    {{will-destroy this.teardown}}
+    class={{concat-class
+      "chat-message-actions-container"
+      (concat "is-size-" this.size)
+    }}
     data-id={{this.message.id}}
   >
     <div class="chat-message-actions">
-      {{#if this.chatStateManager.isFullPageActive}}
+      {{#if this.shouldRenderFavoriteReactions}}
         {{#each
           this.messageInteractor.emojiReactions
           key="emoji"
