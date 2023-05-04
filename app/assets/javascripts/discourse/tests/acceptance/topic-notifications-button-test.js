@@ -1,7 +1,7 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 
 acceptance("Topic Notifications button", function (needs) {
   needs.user();
@@ -56,6 +56,21 @@ acceptance("Topic Notifications button", function (needs) {
       notificationOptions.header().label(),
       "Muted",
       "it should display the right notification level"
+    );
+
+    await timelineNotificationOptions.expand();
+
+    assert.ok(
+      timelineNotificationOptions.isExpanded(),
+      "it should be expanded"
+    );
+
+    // clicking any element outside select-kit
+    await click(".toggle-summary p");
+
+    assert.notOk(
+      timelineNotificationOptions.isExpanded(),
+      "it should no longer be expanded"
     );
   });
 });

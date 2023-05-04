@@ -13,12 +13,16 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     this.element.style.position = "relative";
-    this.element.addEventListener("focusout", this._handleFocusOut, true);
+    this.selectKit
+      .mainElement()
+      .addEventListener("focusout", this._handleFocusOut, true);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.element.removeEventListener("focusout", this._handleFocusOut, true);
+    this.selectKit
+      .mainElement()
+      .removeEventListener("focusout", this._handleFocusOut, true);
   },
 
   @bind
