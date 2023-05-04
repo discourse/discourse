@@ -2128,13 +2128,6 @@ navigation:
       - "unread_new"
   enable_new_notifications_menu:
     default: true
-  enable_custom_sidebar_sections:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
 
 embedding:
   embed_by_username:

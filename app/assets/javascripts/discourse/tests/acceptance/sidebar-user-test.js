@@ -72,7 +72,7 @@ acceptance(
 acceptance(
   "Sidebar - Experimental sidebar and hamburger setting enabled - Sidebar enabled",
   function (needs) {
-    needs.user();
+    needs.user({});
 
     needs.settings({
       navigation_menu: "sidebar",

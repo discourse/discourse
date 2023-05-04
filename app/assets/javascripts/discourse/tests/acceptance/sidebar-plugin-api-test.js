@@ -15,7 +15,7 @@ import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sideb
 import { bind } from "discourse-common/utils/decorators";
 
 acceptance("Sidebar - Plugin API", function (needs) {
-  needs.user();
+  needs.user({});
 
   needs.settings({
     navigation_menu: "sidebar",
@@ -439,7 +439,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     const myCustomTopSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content-secondary .sidebar-section-link[data-link-name='my-custom-top']"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content-main .sidebar-section-link[data-link-name='my-custom-top']"
     );
 
     assert.ok(
