@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "@ember/runloop";
 import { computed } from "@ember/object";
 
 export default Component.extend({
@@ -10,41 +10,55 @@ export default Component.extend({
     return false;
   }),
 
+  rootEventType: "click",
+
+  init() {
+    this._super(...arguments);
+
+    this.handleRootMouseDownHandler = bind(this, this.handleRootMouseDown);
+  },
+
   didInsertElement() {
     this._super(...arguments);
+
     this.element.style.position = "relative";
-    this.element.addEventListener("focusout", this._handleFocusOut, true);
+
+    document.addEventListener(
+      this.rootEventType,
+      this.handleRootMouseDownHandler,
+      true
+    );
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.element.removeEventListener("focusout", this._handleFocusOut, true);
+
+    document.removeEventListener(
+      this.rootEventType,
+      this.handleRootMouseDownHandler,
+      true
+    );
   },
 
-  @bind
-  _handleFocusOut(event) {
+  handleRootMouseDown(event) {
     if (!this.selectKit.isExpanded) {
       return;
     }
 
-    if (!this.selectKit.mainElement()) {
+    const headerElement = document.querySelector(
+      `#${this.selectKit.uniqueID}-header`
+    );
+
+    if (headerElement && headerElement.contains(event.target)) {
       return;
     }
 
-    if (this.selectKit.mainElement().contains(event.relatedTarget)) {
+    if (this.element.contains(event.target)) {
       return;
     }
 
-    // We have to use a custom flag for multi-selects to keep UI visible.
-    // We can't rely on event.relatedTarget for these cases because,
-    // when adding/removing items in a multi-select, the DOM element
-    // has already been removed by this point, and therefore
-    // event.relatedTarget is going to be null.
-    if (this.selectKit.multiSelectInFocus) {
-      this.selectKit.set("multiSelectInFocus", false);
-      return;
+    if (this.selectKit.mainElement()) {
+      this.selectKit.close(event);
     }
-
-    this.selectKit.close(event);
   },
 });

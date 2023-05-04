@@ -113,12 +113,10 @@ acceptance("Category Edit", function (needs) {
     const allowedTagChooser = selectKit("#category-allowed-tags");
     await allowedTagChooser.expand();
     await allowedTagChooser.selectRowByValue("monkey");
-    await allowedTagChooser.collapse();
 
     const allowedTagGroupChooser = selectKit("#category-allowed-tag-groups");
     await allowedTagGroupChooser.expand();
     await allowedTagGroupChooser.selectRowByValue("TagGroup1");
-    await allowedTagGroupChooser.collapse();
 
     await click("#save-category");
 
@@ -131,7 +129,6 @@ acceptance("Category Edit", function (needs) {
 
     await allowedTagChooser.expand();
     await allowedTagChooser.deselectItemByValue("monkey");
-    await allowedTagChooser.collapse();
 
     await allowedTagGroupChooser.expand();
     await allowedTagGroupChooser.deselectItemByValue("TagGroup1");

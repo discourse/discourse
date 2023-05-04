@@ -219,8 +219,8 @@ export default class ChatChannel extends RestModel {
       return;
     }
 
-    // TODO (martin) Change this to use chatApi service once we change this
-    // class not to use RestModel
+    // TODO (martin) Change this to use chatApi service markChannelAsRead once we change this
+    // class not to use RestModel.
     return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
       method: "PUT",
     });

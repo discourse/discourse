@@ -64,23 +64,23 @@
           </div>
         </div>
       {{/if}}
-      {{#if this.previewingColorScheme}}
-        {{#if this.previewingColorScheme}}
-          <DButton
-            @action={{action "undoColorSchemePreview"}}
-            @label="user.color_schemes.undo"
-            @icon="undo"
-            @class="btn-default btn-small undo-preview"
-          />
-        {{/if}}
-        <div class="controls color-scheme-checkbox">
-          <PreferenceCheckbox
-            @labelKey="user.color_scheme_default_on_all_devices"
-            @checked={{this.makeColorSchemeDefault}}
-          />
-        </div>
-      {{/if}}
     </div>
+    {{#if this.previewingColorScheme}}
+      {{#if this.previewingColorScheme}}
+        <DButton
+          @action={{action "undoColorSchemePreview"}}
+          @label="user.color_schemes.undo"
+          @icon="undo"
+          @class="btn-default btn-small undo-preview"
+        />
+      {{/if}}
+      <div class="controls color-scheme-checkbox">
+        <PreferenceCheckbox
+          @labelKey="user.color_scheme_default_on_all_devices"
+          @checked={{this.makeColorSchemeDefault}}
+        />
+      </div>
+    {{/if}}
     {{#if this.showDarkColorSchemeSelector}}
       <div class="instructions">
         {{i18n "user.color_schemes.dark_instructions"}}

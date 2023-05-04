@@ -2,12 +2,18 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
-import Section from "discourse/components/sidebar/user/section";
+import { cached } from "@glimmer/tracking";
+import Section from "discourse/lib/sidebar/section";
+import CommunitySection from "discourse/lib/sidebar/community-section";
 
 export default class SidebarUserCustomSections extends Component {
   @service currentUser;
   @service router;
   @service messageBus;
+  @service appEvents;
+  @service topicTrackingState;
+  @service site;
+  @service siteSettings;
 
   constructor() {
     super(...arguments);
@@ -16,16 +22,41 @@ export default class SidebarUserCustomSections extends Component {
 
   willDestroy() {
     this.messageBus.unsubscribe("/refresh-sidebar-sections");
+    return this.sections.forEach((section) => {
+      section.teardown?.();
+    });
   }
 
+  @cached
   get sections() {
     return this.currentUser.sidebarSections.map((section) => {
-      return new Section({
-        section,
-        currentUser: this.currentUser,
-        router: this.router,
-      });
+      switch (section.section_type) {
+        case "community":
+          const systemSection = new CommunitySection({
+            section,
+            currentUser: this.currentUser,
+            router: this.router,
+            appEvents: this.appEvents,
+            topicTrackingState: this.topicTrackingState,
+            siteSettings: this.siteSettings,
+          });
+          return systemSection;
+          break;
+        default:
+          return new Section({
+            section,
+            currentUser: this.currentUser,
+            router: this.router,
+          });
+      }
     });
+  }
+
+  get isDesktopDropdownMode() {
+    const headerDropdownMode =
+      this.siteSettings.navigation_menu === "header dropdown";
+
+    return !this.site.mobileView && headerDropdownMode;
   }
 
   @bind

@@ -59,9 +59,16 @@ export default {
                   title: this.notification.data.chat_channel_title,
                   slug: this.notification.data.chat_channel_slug,
                 });
-                return `/chat/c/${slug || "-"}/${
+
+                let notificationRoute = `/chat/c/${slug || "-"}/${
                   this.notification.data.chat_channel_id
-                }/${this.notification.data.chat_message_id}`;
+                }`;
+                if (this.notification.data.chat_thread_id) {
+                  notificationRoute += `/t/${this.notification.data.chat_thread_id}`;
+                } else {
+                  notificationRoute += `/${this.notification.data.chat_message_id}`;
+                }
+                return notificationRoute;
               }
 
               get linkTitle() {

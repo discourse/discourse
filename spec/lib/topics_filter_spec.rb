@@ -694,6 +694,37 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_with_tag_and_tag2.id, topic_with_tag_and_tag2_and_tag3.id)
       end
 
+      describe "when query string is `tags:tag1,tag2,tag3`" do
+        it "should only return topics that are tagged with either tag1, tag2 or tag3" do
+          topic_with_tag3 = Fabricate(:topic, tags: [tag3])
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:#{tag.name},#{tag2.name},#{tag3.name}")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_tag.id,
+            topic_with_tag_and_tag2.id,
+            topic_with_tag2.id,
+            topic_with_tag3.id,
+          )
+        end
+      end
+
+      describe "when query string is `tags:tag1+tag2+tag3`" do
+        it "should only return topics that are tagged with tag1, tag2 and tag3" do
+          topic_with_tag_tag2_tag3 = Fabricate(:topic, tags: [tag, tag2, tag3])
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:#{tag.name}+#{tag2.name}+#{tag3.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag_tag2_tag3.id)
+        end
+      end
+
       it "should only return topics that are tagged with tag1 and tag2 but not tag3 when query string is `tags:tag1 tags:tag2 -tags:tag3`" do
         topic_with_tag_and_tag2_and_tag3 = Fabricate(:topic, tags: [tag, tag2, tag3])
 

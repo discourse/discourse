@@ -3538,16 +3538,6 @@ en:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
 
-    dashboard_problems:
-      title: "Dashboard Problems"
-      subject_template: "New advice on your site dashboard"
-      text_body_template: |
-        We have some new advice and recommendations for you based on your current site settings.
-
-        [Visit your site dashboard](%{base_url}/admin) to see it.
-
-        If nothing is visible on your dashboard, another staff member may have already acted on this advice. A list of staff actions can be found in your [Staff Action Logs](%{base_url}/admin/logs/staff_action_logs).
-
     new_user_of_the_month:
       title: "You're a New User of the Month!"
       subject_template: "You're a New User of the Month!"

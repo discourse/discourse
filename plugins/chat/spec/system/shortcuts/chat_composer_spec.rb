@@ -103,8 +103,6 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
     end
 
     context "when last message is not editable" do
-      after { page.driver.browser.network_conditions = { offline: false } }
-
       it "does not edit a message" do
         chat.visit_channel(channel_1)
         page.driver.browser.network_conditions = { offline: true }
@@ -113,6 +111,8 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
         find(".chat-composer__input").send_keys(:arrow_up)
 
         expect(page).to have_no_css(".chat-composer-message-details")
+
+        page.driver.browser.network_conditions = { offline: false }
       end
     end
 
