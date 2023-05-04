@@ -3,7 +3,7 @@
   data-id={{this.thread.id}}
   {{did-insert this.setUploadDropZone}}
   {{did-insert this.subscribeToUpdates}}
-  {{did-update this.subscribeToUpdates this.thread}}
+  {{did-update this.subscribeToUpdates this.thread.id}}
   {{did-insert this.loadMessages}}
   {{did-update this.loadMessages this.thread}}
   {{did-insert this.setupMessage}}
