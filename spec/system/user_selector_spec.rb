@@ -4,11 +4,7 @@ describe "User selector", type: :system, js: true do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user) { Fabricate(:admin) }
-
-  fab!(:user) do
-    SearchIndexer.enable
-    Fabricate(:user, username: "someone")
-  end
+  fab!(:user) { with_search_indexer_enabled { Fabricate(:user, username: "someone") } }
 
   before do
     current_user.activate
