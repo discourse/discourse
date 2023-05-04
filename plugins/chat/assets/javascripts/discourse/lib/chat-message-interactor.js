@@ -230,7 +230,7 @@ export default class ChatMessageInteractor {
   copyLink() {
     const { protocol, host } = window.location;
     const channelId = this.message.channel.id;
-    const threadId = this.message.thread.id;
+    const threadId = this.message.thread?.id;
 
     let url;
     if (threadId) {
