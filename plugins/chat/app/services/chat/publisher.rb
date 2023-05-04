@@ -35,7 +35,7 @@ module Chat
       SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
     end
 
-    def self.publish_new!(chat_channel, chat_message, staged_id, staged_thread_id)
+    def self.publish_new!(chat_channel, chat_message, staged_id, staged_thread_id: nil)
       message_bus_targets =
         calculate_publish_targets(chat_channel, chat_message, staged_thread_id: staged_thread_id)
       publish_to_targets!(
