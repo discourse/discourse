@@ -2104,7 +2104,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-    hidden: true
 
 navigation:
   navigation_menu:
@@ -2129,13 +2128,6 @@ navigation:
       - "unread_new"
   enable_new_notifications_menu:
     default: true
-  enable_custom_sidebar_sections:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
 
 embedding:
   embed_by_username:
@@ -2432,7 +2424,7 @@ uncategorized:
     default: ""
     validator: "DefaultComposerCategoryValidator"
 
-  notify_about_flags_after:
+  notify_about_reviewable_item_after:
     type: float
     default: 48
 

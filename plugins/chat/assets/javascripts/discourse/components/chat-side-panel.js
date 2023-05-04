@@ -33,6 +33,10 @@ export default class ChatSidePanel extends Component {
 
   @action
   didResize(element, size) {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     const parentWidth = element.parentElement.getBoundingClientRect().width;
     const mainPanelWidth = parentWidth - size.width;
 

@@ -1478,7 +1478,6 @@ lt:
     default_title_count_mode: "Numatytasis puslapio pavadinimo skaitiklio režimas"
     allow_user_api_keys: "Leisti generuoti vartotojo API raktus"
     allow_user_api_key_scopes: "Leidžiamų naudotojo API raktų apimčių sąrašas"
-    min_trust_level_for_user_api_key: "Patikimumo lygis, reikalingas generuoti vartotojo API raktus"
     allowed_user_api_auth_redirects: "Leidžiamas vartotojo API raktų autentifikavimo peradresavimo URL. Pakaitos simbolis * gali būti naudojamas norint atitikti bet kurią jo dalį (pvz., www.example.com/*)."
     allowed_user_api_push_urls: "Leidžiami serverio siuntimo naudotojui API URL adresai"
     tagging_enabled: "Įgalinti žymas temose?"

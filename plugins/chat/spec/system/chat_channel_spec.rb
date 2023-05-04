@@ -250,4 +250,28 @@ RSpec.describe "Chat channel", type: :system, js: true do
       expect(page).to have_selector("code.lang-ruby")
     end
   end
+
+  context "when scrolling" do
+    before do
+      channel_1.add(current_user)
+      50.times { Fabricate(:chat_message, chat_channel: channel_1) }
+      sign_in(current_user)
+    end
+
+    it "resets the active message" do
+      chat.visit_channel(channel_1)
+      last_message = find(".chat-message-container:last-child")
+      last_message.hover
+
+      expect(page).to have_css(
+        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
+
+      find(".chat-messages-scroll").scroll_to(0, -1000)
+
+      expect(page).to have_no_css(
+        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
+    end
+  end
 end

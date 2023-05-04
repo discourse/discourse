@@ -27,14 +27,6 @@
             <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
           {{/each}}
         </div>
-
-        {{#if (gt this.secondarySectionLinks.length 0)}}
-          <div class="sidebar-more-section-links-details-content-secondary">
-            {{#each this.secondarySectionLinks as |sectionLink|}}
-              <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
-            {{/each}}
-          </div>
-        {{/if}}
       </div>
     </div>
   {{/if}}

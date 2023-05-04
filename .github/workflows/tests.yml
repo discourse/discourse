@@ -98,7 +98,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Yarn install
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
@@ -197,11 +197,11 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec spec/system
+        run: PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --verbose spec/system
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec plugins/*/spec/system
+        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --verbose plugins/*/spec/system
         timeout-minutes: 30
 
       - name: Upload failed system test screenshots
@@ -272,7 +272,7 @@ jobs:
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse

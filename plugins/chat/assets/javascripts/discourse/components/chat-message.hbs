@@ -15,6 +15,7 @@
   {{on "touchend" this.handleTouchEnd passive=true}}
   {{on "mouseenter" this.onMouseEnter}}
   {{on "mouseleave" this.onMouseLeave}}
+  {{on "mousemove" this.onMouseMove}}
   class={{concat-class
     "chat-message-container"
     (if this.pane.selectingMessages "selecting-messages")

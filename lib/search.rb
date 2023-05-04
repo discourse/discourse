@@ -89,9 +89,25 @@ class Search
       Regexp.compile("[-–—―.。・（）()［］｛｝{}【】⟨⟩、､,，،…‥〽「」『』〜~！!：:？?\"'|_＿“”‘’;/⁄／«»]")
   end
 
+  def self.clean_term(term)
+    term = term.to_s.dup
+
+    # Removes any zero-width characters from search terms
+    term.gsub!(/[\u200B-\u200D\uFEFF]/, "")
+
+    # Replace curly quotes to regular quotes
+    term.gsub!(/[\u201c\u201d]/, '"')
+
+    # Replace fancy apostophes to regular apostophes
+    term.gsub!(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
+
+    term
+  end
+
   def self.prepare_data(search_data, purpose = nil)
     data = search_data.dup
     data.force_encoding("UTF-8")
+    data = clean_term(data)
 
     if purpose != :topic
       if segment_chinese?
@@ -214,12 +230,7 @@ class Search
     @page = @opts[:page]
     @search_all_pms = false
 
-    term = term.to_s.dup
-
-    # Removes any zero-width characters from search terms
-    term.gsub!(/[\u200B-\u200D\uFEFF]/, "")
-    # Replace curly quotes to regular quotes
-    term.gsub!(/[\u201c\u201d]/, '"')
+    term = Search.clean_term(term)
 
     @clean_term = term
     @in_title = false
@@ -1153,22 +1164,30 @@ class Search
         )
         SQL
 
+        rank_sort_priorities = [["topics.archived", 0.85], ["topics.closed", 0.9]]
+
+        rank_sort_priorities =
+          DiscoursePluginRegistry.apply_modifier(
+            :search_rank_sort_priorities,
+            rank_sort_priorities,
+            self,
+          )
+
         category_priority_weights = <<~SQL
-        (
-          CASE categories.search_priority
-          WHEN #{Searchable::PRIORITIES[:low]}
-          THEN #{SiteSetting.category_search_priority_low_weight}
-          WHEN #{Searchable::PRIORITIES[:high]}
-          THEN #{SiteSetting.category_search_priority_high_weight}
-          ELSE
-            CASE WHEN topics.archived
-            THEN 0.85
-            WHEN topics.closed
-            THEN 0.9
-            ELSE 1
+          (
+            CASE categories.search_priority
+              WHEN #{Searchable::PRIORITIES[:low]}
+              THEN #{SiteSetting.category_search_priority_low_weight.to_f}
+              WHEN #{Searchable::PRIORITIES[:high]}
+              THEN #{SiteSetting.category_search_priority_high_weight.to_f}
+              ELSE 1.0
             END
-          END
-        )
+            *
+            CASE
+              #{rank_sort_priorities.sort_by { |_, pri| -pri }.map { |k, v| "WHEN #{k} THEN #{v}" }.join("\n")}
+              ELSE 1.0
+            END
+          )
         SQL
 
         posts =
@@ -1276,12 +1295,6 @@ class Search
   end
 
   def self.escape_string(term)
-    # HACK: The ’ and other similar characters have to be "unaccented" before
-    # it is escaped or the resulting tsqueries will be invalid
-    if SiteSetting.search_ignore_accents
-      term = term.gsub(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
-    end
-
     PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end
 
@@ -1302,8 +1315,6 @@ class Search
   end
 
   def aggregate_post_sql(opts)
-    default_opts = { type_filter: opts[:type_filter] }
-
     min_id =
       if SiteSetting.search_recent_regular_posts_offset_post_id > 0
         if %w[all_topics private_message].include?(opts[:type_filter])

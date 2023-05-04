@@ -2031,7 +2031,6 @@ sv:
     allowed_href_schemes: "Scheman tillåtna i länkar förutom http och https."
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
-    notify_about_flags_after: "Om det finns flaggor som inte har hanterats efter detta antal timmar skickas ett personligt meddelande till moderatorerna. Inaktivera genom att ställa in till 0."
     show_create_topics_notice: "Visa ett meddelande som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
@@ -2106,7 +2105,9 @@ sv:
     revoke_api_keys_days: "Antal dagar innan en oanvänd API-nyckel automatiskt återkallas (0 för aldrig)"
     allow_user_api_keys: "Tillåt generering av API-nycklar för användare"
     allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API-nycklar"
-    min_trust_level_for_user_api_key: "Förtroendenivå som krävs för att generera användar-API-nycklar"
+    min_trust_level_for_user_api_key: |
+      Förtroendenivå som krävs för generering av användar-API-nycklar.<br>
+      <b>VARNING</b>: Ändring av förtroendenivån kommer att förhindra användare med en lägre förtroendenivå från att logga in via Discourse Hub
     allowed_user_api_auth_redirects: "Tillåten URL för omdirigering efter verifiering av användares API-nycklar. Jokersymbol * kan användas för att matcha vilken del som helst av denna (t.ex. www.exempel.se/*)."
     allowed_user_api_push_urls: "Tillåtna URL:er för serverframstötning till användar-API"
     expire_user_api_keys_days: "Antal dagar innan en användares API-nyckel automatiskt upphör (0 för aldrig)"
@@ -2161,7 +2162,6 @@ sv:
     enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn. Inaktivering av den här inställningen är föråldrat. Den nya aviseringsmenyn används alltid för icke-äldre \"navigeringsmeny\"-val. <a href='https://meta.discourse.org/t/260358'>Lär dig mer</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     experimental_new_new_view_groups: "EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken \"Allt\" i sidofältet länkar till den."
-    enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."

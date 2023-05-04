@@ -202,4 +202,11 @@ module Helpers
         ips.map { |ip| Addrinfo.new([IPAddr.new(ip).ipv6? ? "AF_INET6" : "AF_INET", 80, nil, ip]) },
       )
   end
+
+  def with_search_indexer_enabled
+    SearchIndexer.enable
+    yield
+  ensure
+    SearchIndexer.disable
+  end
 end

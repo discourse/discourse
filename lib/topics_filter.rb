@@ -9,7 +9,7 @@ class TopicsFilter
     @topic_notification_levels = Set.new
   end
 
-  FILTER_ALIASES = { "categories" => "category" }
+  FILTER_ALIASES = { "categories" => "category", "tags" => "tag" }
   private_constant :FILTER_ALIASES
 
   def filter_from_query_string(query_string)
@@ -74,7 +74,7 @@ class TopicsFilter
         filter_by_number_of_posters(max: filter_values)
       when "status"
         filter_values.each { |status| @scope = filter_status(status: status) }
-      when "tags"
+      when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
       when "views-min"
         filter_by_number_of_views(min: filter_values)
@@ -114,7 +114,7 @@ class TopicsFilter
   private
 
   YYYY_MM_DD_REGEXP =
-    /^(?<year>[12][0-9]{3})-(?<month>0?[1-9]|1[0-2])-(?<day>0?[1-9]|[12]\d|3[01])$/
+    /\A(?<year>[12][0-9]{3})-(?<month>0?[1-9]|1[0-2])-(?<day>0?[1-9]|[12]\d|3[01])\z/
   private_constant :YYYY_MM_DD_REGEXP
 
   def extract_and_validate_value_for(filter, values)
@@ -132,6 +132,10 @@ class TopicsFilter
          "posters-min", "posters-max", "views-min", "views-max"
       value = values.last
       value if value =~ /\A\d+\z/
+    when "order"
+      values.flat_map { |value| value.split(",") }
+    when "created-by"
+      values.flat_map { |value| value.split(",").map { |username| username.delete_prefix("@") } }
     else
       values
     end
@@ -190,7 +194,7 @@ class TopicsFilter
 
       value
         .scan(
-          /^(?<category_slugs>([a-zA-Z0-9\-:]+)(?<delimiter>[,])?([a-zA-Z0-9\-:]+)?(\k<delimiter>[a-zA-Z0-9\-:]+)*)$/,
+          /\A(?<category_slugs>([a-zA-Z0-9\-:]+)(?<delimiter>[,])?([a-zA-Z0-9\-:]+)?(\k<delimiter>[a-zA-Z0-9\-:]+)*)\z/,
         )
         .each do |category_slugs, delimiter|
           (
@@ -305,6 +309,7 @@ class TopicsFilter
         .filter_visible(Tag, @guardian)
         .where_name(tag_names)
         .pluck(:id, :target_tag_id)
+        .transpose
 
     tag_ids ||= []
     alias_tag_ids ||= []
@@ -329,7 +334,7 @@ class TopicsFilter
       break if key_prefix && key_prefix != "-"
 
       value.scan(
-        /^(?<tag_names>([a-zA-Z0-9\-]+)(?<delimiter>[,+])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)$/,
+        /\A(?<tag_names>([a-zA-Z0-9\-]+)(?<delimiter>[,+])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)\z/,
       ) do |tag_names, delimiter|
         match_all =
           if delimiter == ","
@@ -413,7 +418,7 @@ class TopicsFilter
 
   def include_topics_with_all_tags(tag_ids)
     tag_ids.each do |tag_id|
-      sql_alias = "tt#{topic_tags_alias}"
+      sql_alias = topic_tags_alias
 
       @scope =
         @scope.joins(
@@ -423,7 +428,13 @@ class TopicsFilter
   end
 
   def include_topics_with_any_tags(tag_ids)
-    @scope = @scope.joins(:topic_tags).where("topic_tags.tag_id IN (?)", tag_ids).distinct(:id)
+    sql_alias = topic_tags_alias
+
+    @scope =
+      @scope
+        .joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id")
+        .where("#{sql_alias}.tag_id IN (?)", tag_ids)
+        .distinct(:id)
   end
 
   ORDER_BY_MAPPINGS = {
@@ -456,7 +467,7 @@ class TopicsFilter
   }
   private_constant :ORDER_BY_MAPPINGS
 
-  ORDER_BY_REGEXP = /^(?<order_by>#{ORDER_BY_MAPPINGS.keys.join("|")})(?<asc>-asc)?$/
+  ORDER_BY_REGEXP = /\A(?<order_by>#{ORDER_BY_MAPPINGS.keys.join("|")})(?<asc>-asc)?\z/
   private_constant :ORDER_BY_REGEXP
 
   def order_by(values:)

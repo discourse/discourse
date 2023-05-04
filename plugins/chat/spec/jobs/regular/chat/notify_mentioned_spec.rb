@@ -21,9 +21,20 @@ describe Jobs::Chat::NotifyMentioned do
     end
   end
 
-  def create_chat_message(channel: public_channel, author: user_1, mentioned_user: user_2)
+  def create_chat_message(
+    channel: public_channel,
+    author: user_1,
+    mentioned_user: user_2,
+    thread: nil
+  )
     message =
-      Fabricate(:chat_message, chat_channel: channel, user: author, created_at: 10.minutes.ago)
+      Fabricate(
+        :chat_message,
+        chat_channel: channel,
+        user: author,
+        created_at: 10.minutes.ago,
+        thread: thread,
+      )
     Fabricate(:chat_mention, chat_message: message, user: mentioned_user)
     message
   end
@@ -406,6 +417,29 @@ describe Jobs::Chat::NotifyMentioned do
           track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
 
         expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
+      end
+
+      context "when the mention is within a thread" do
+        before do
+          SiteSetting.enable_experimental_chat_threaded_discussions = true
+          public_channel.update!(threading_enabled: true)
+        end
+
+        fab!(:thread) { Fabricate(:chat_thread, channel: public_channel) }
+
+        it "uses the thread URL for the post_url in the desktop notification" do
+          message = create_chat_message(thread: thread)
+          desktop_notification =
+            track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          expect(desktop_notification.data[:post_url]).to eq(thread.relative_url)
+        end
+
+        it "includes the thread ID in the core notification data" do
+          message = create_chat_message(thread: thread)
+          created_notification =
+            track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          expect(created_notification.data_hash[:chat_thread_id]).to eq(thread.id)
+        end
       end
 
       context "with private channels" do

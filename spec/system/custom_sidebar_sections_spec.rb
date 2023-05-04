@@ -6,14 +6,6 @@ describe "Custom sidebar sections", type: :system, js: true do
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
   let(:sidebar) { PageObjects::Components::Sidebar.new }
 
-  before do
-    ### TODO remove when enable_custom_sidebar_sections SiteSetting is removed
-    group = Fabricate(:group)
-    Fabricate(:group_user, group: group, user: user)
-    Fabricate(:group_user, group: group, user: admin)
-    SiteSetting.enable_custom_sidebar_sections = group.id.to_s
-  end
-
   it "allows the user to create custom section" do
     sign_in user
     visit("/latest")
@@ -112,11 +104,11 @@ describe "Custom sidebar sections", type: :system, js: true do
     sign_in user
     visit("/latest")
 
-    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(1)") do
+    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(1)") do
       expect(sidebar).to have_section_link("Sidebar Tags")
     end
 
-    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(2)") do
+    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(2)") do
       expect(sidebar).to have_section_link("Sidebar Categories")
     end
 
@@ -124,11 +116,11 @@ describe "Custom sidebar sections", type: :system, js: true do
     categories_link = find(".sidebar-section-link[data-link-name='Sidebar Categories']")
     tags_link.drag_to(categories_link, html5: true, delay: 0.4)
 
-    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(1)") do
+    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(1)") do
       expect(sidebar).to have_section_link("Sidebar Categories")
     end
 
-    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(2)") do
+    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(2)") do
       expect(sidebar).to have_section_link("Sidebar Tags")
     end
   end

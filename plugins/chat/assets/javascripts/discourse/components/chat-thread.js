@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { Promise } from "rsvp";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -93,7 +94,7 @@ export default class ChatThreadPanel extends Component {
   @debounce(100)
   fetchMessages() {
     if (this._selfDeleted) {
-      return;
+      return Promise.resolve();
     }
 
     this.loadingMorePast = true;
@@ -138,6 +139,8 @@ export default class ChatThreadPanel extends Component {
         // } else if (messages.length) {
         //   this.scrollToMessage(messages.lastObject.id);
         // }
+        //
+        this.markThreadAsRead();
       })
       .catch(this.#handleErrors)
       .finally(() => {
@@ -179,6 +182,13 @@ export default class ChatThreadPanel extends Component {
     return [messages, results.meta];
   }
 
+  // NOTE: At some point we want to do this based on visible messages
+  // and scrolling; for now it's enough to do it when the thread panel
+  // opens/messages are loaded since we have no pagination for threads.
+  markThreadAsRead() {
+    return this.chatApi.markThreadAsRead(this.channel.id, this.thread.id);
+  }
+
   @action
   onSendMessage(message) {
     if (message.editing) {
@@ -191,6 +201,11 @@ export default class ChatThreadPanel extends Component {
   @action
   resetComposer() {
     this.chatChannelThreadComposer.reset(this.channel);
+  }
+
+  @action
+  resetActiveMessage() {
+    this.chat.activeMessage = null;
   }
 
   #sendNewMessage(message) {

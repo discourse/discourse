@@ -11,7 +11,12 @@ import {
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { getApplication, settled } from "@ember/test-helpers";
+import {
+  fillIn,
+  getApplication,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
@@ -577,6 +582,16 @@ export async function paste(element, text, otherClipboardData = {}) {
   element.dispatchEvent(e);
   await settled();
   return e;
+}
+
+export async function emulateAutocomplete(inputSelector, text) {
+  await triggerKeyEvent(inputSelector, "keydown", "Backspace");
+  await fillIn(inputSelector, `${text} `);
+  await triggerKeyEvent(inputSelector, "keyup", "Backspace");
+
+  await triggerKeyEvent(inputSelector, "keydown", "Backspace");
+  await fillIn(inputSelector, text);
+  await triggerKeyEvent(inputSelector, "keyup", "Backspace");
 }
 
 // The order of attributes can vary in different browsers. When comparing

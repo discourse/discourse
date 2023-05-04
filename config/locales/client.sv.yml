@@ -4478,6 +4478,9 @@ sv:
         user_promoted_event:
           name: "Användarfrämjande händelse"
           details: "När en användare befordras från en förtroendenivå till en annan."
+        user_badge_event:
+          name: "Utmärkelsehändelse"
+          details: "När en utmärkelse beviljas eller återkallas."
         group_user_event:
           name: "Gruppanvändarhändelse"
           details: "När en användare läggs till i, eller tas bort från, en grupp."

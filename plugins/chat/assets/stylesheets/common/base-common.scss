@@ -582,6 +582,15 @@ html.has-full-page-chat {
     height: 100%;
     width: 100%;
 
+    &.footer-nav-ipad {
+      #main-outlet-wrapper {
+        grid-template-rows: calc(
+          var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+            var(--footer-nav-height, 0px)
+        );
+      }
+    }
+
     #main-outlet {
       display: flex;
       flex-direction: column;
@@ -617,13 +626,6 @@ html.has-full-page-chat {
       grid-template-rows: calc(
         var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px)
       );
-
-      .footer-nav-ipad & {
-        grid-template-rows: calc(
-          var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-            var(--footer-nav-height, 0px)
-        );
-      }
 
       .sidebar-wrapper {
         // prevents sidebar from overflowing behind the virtual keyboard

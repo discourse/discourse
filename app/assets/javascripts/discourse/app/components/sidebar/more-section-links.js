@@ -12,8 +12,6 @@ export default class SidebarMoreSectionLinks extends Component {
   @tracked shouldDisplaySectionLinks = false;
   @tracked activeSectionLink;
 
-  #allLinks = [...this.args.sectionLinks, ...this.args.secondarySectionLinks];
-
   constructor() {
     super(...arguments);
     this.#setActiveSectionLink();
@@ -92,7 +90,7 @@ export default class SidebarMoreSectionLinks extends Component {
   }
 
   #setActiveSectionLink() {
-    const activeSectionLink = this.#allLinks.find((sectionLink) => {
+    const activeSectionLink = this.args.sectionLinks.find((sectionLink) => {
       const args = [sectionLink.route];
 
       if (sectionLink.model) {

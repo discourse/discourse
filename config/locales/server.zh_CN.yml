@@ -1978,7 +1978,6 @@ zh_CN:
     allowed_href_schemes: "除了 http 和 https 之外，链接中允许的协议名称。"
     embed_post_limit: "要嵌入的最大帖子数。"
     embed_username_required: "创建话题需要用户名。"
-    notify_about_flags_after: "如果经过此小时数后仍有未处理的举报，向版主发送个人信息。设置为 0 将禁用。"
     show_create_topics_notice: "如果站点的公共话题少于 5 个，请显示通知，要求管理员创建一些话题。"
     delete_drafts_older_than_n_days: "删除超过 (n) 天的草稿。"
     delete_merged_stub_topics_after_days: "在自动删除完全合并的存根话题之前等待的天数。设置为 0 将从不删除存根话题。"
@@ -2053,7 +2052,6 @@ zh_CN:
     revoke_api_keys_days: "未使用的 API 密钥被自动撤消前的天数（0 表示从不撤消）"
     allow_user_api_keys: "允许生成用户 API 密钥"
     allow_user_api_key_scopes: "用户 API 密钥允许的范围列表"
-    min_trust_level_for_user_api_key: "生成用户 API 密钥所需的信任级别"
     allowed_user_api_auth_redirects: "用户 API 密钥身份验证重定向的允许 URL。通配符 * 可用于匹配它的任何部分（例如 www.example.com/*）。"
     allowed_user_api_push_urls: "服务器推送到用户 API 的允许 URL"
     expire_user_api_keys_days: "用户 API 密钥自动过期前的天数（0 表示从不过期）"
@@ -2108,7 +2106,6 @@ zh_CN:
     enable_new_notifications_menu: "启用新的通知菜单。已不能禁用此设置。新的通知菜单始终用于非传统“导航菜单”选项。 <a href='https://meta.discourse.org/t/260358'>了解更多</a>"
     enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
     experimental_new_new_view_groups: "试验性的：启用一个新的主题列表，将未读和新的主题合并，并使侧边栏中的 \"一切 \"链接指向它。"
-    enable_custom_sidebar_sections: "实验：启用自定义侧边栏部分"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"

@@ -2,7 +2,7 @@ import I18n from "I18n";
 import showModal from "discourse/lib/show-modal";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { htmlSafe } from "@ember/template";
-import SectionLink from "discourse/components/sidebar/user/section-link";
+import SectionLink from "discourse/lib/sidebar/section-link";
 import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
@@ -39,6 +39,10 @@ export default class Section {
         },
       ];
     }
+  }
+
+  get headerActionIcon() {
+    return "pencil-alt";
   }
 
   @bind

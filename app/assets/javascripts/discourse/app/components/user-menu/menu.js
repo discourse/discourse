@@ -277,6 +277,8 @@ export default class UserMenu extends Component {
       getOwner(this),
       tab.panelComponent
     );
+
+    this.appEvents.trigger("user-menu:tab-click", tab.id);
     this.currentNotificationTypes = tab.notificationTypes;
   }
 

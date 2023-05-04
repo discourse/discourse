@@ -27,11 +27,10 @@
     "ember-cli-htmlbars": "^6.2.0",
     "ember-resolver": "^10.0.0",
     "handlebars": "^4.7.0",
-    "truth-helpers": "1.0.0",
-    "webpack": "^5.81.0"
+    "truth-helpers": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.4",
+    "@babel/core": "^7.21.8",
     "@ember/optional-features": "^2.0.0",
     "@embroider/test-setup": "^2.1.1",
     "@glimmer/component": "^1.1.2",
@@ -45,7 +44,8 @@
     "ember-load-initializers": "^2.1.1",
     "ember-source": "~3.28.11",
     "ember-source-channel-url": "^3.0.0",
-    "loader.js": "^4.7.0"
+    "loader.js": "^4.7.0",
+    "webpack": "^5.82.0"
   },
   "engines": {
     "node": "16.* || >= 18",

@@ -222,6 +222,8 @@ de:
       close_full_page: "Vollbild-Chat schließen"
       open_message: "Nachricht im Chat öffnen"
       placeholder_self: "Etwas notieren"
+      placeholder_channel: "Chat in %{channelName}"
+      placeholder_thread: "Chat im Thread"
       placeholder_users: "Chat mit %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Der Kanal ist archiviert, du kannst im Moment keine neuen Nachrichten senden."
@@ -257,6 +259,8 @@ de:
       title: "Chat"
       title_capitalized: "Chat"
       upload: "Datei anhängen"
+      upload_to_channel: "Auf %{title}hochladen"
+      upload_to_thread: "In Thread hochladen"
       uploaded_files:
         one: "%{count} Datei"
         other: "%{count} Dateien"
@@ -513,6 +517,7 @@ de:
           one: "%{count} Antwort"
           other: "%{count} Antworten"
         label: Thread
+        close: "Thread schließen"
       threads:
         started_by: "Gestartet von"
         open: "Thread öffnen"

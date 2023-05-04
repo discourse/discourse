@@ -115,29 +115,6 @@
   }
 }
 
-.sidebar-hamburger-dropdown {
-  .discourse-no-touch & {
-    .sidebar-section-wrapper .sidebar-section-header-wrapper:hover,
-    .sidebar-section-wrapper .sidebar-section-header-wrapper:focus-within {
-      background: transparent;
-    }
-  }
-
-  .sidebar-footer-wrapper {
-    margin-top: 1em;
-    .sidebar-footer-container {
-      background: var(--secondary);
-      &:before {
-        background: linear-gradient(
-          to bottom,
-          transparent,
-          rgba(var(--secondary-rgb), 1)
-        );
-      }
-    }
-  }
-}
-
 .sidebar-section-form-modal {
   .modal-inner-container {
     width: var(--modal-max-width);
