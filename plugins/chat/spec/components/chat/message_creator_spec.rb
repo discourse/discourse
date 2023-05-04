@@ -454,7 +454,7 @@ describe Chat::MessageCreator do
       context "when a staged_thread_id is provided" do
         fab!(:existing_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
 
-        it "creates a thread" do
+        it "creates a thread and publishes with the staged id" do
           messages =
             MessageBus.track_publish do
               described_class.create(
@@ -466,9 +466,12 @@ describe Chat::MessageCreator do
               ).chat_message
             end
 
-          event = messages.find { |m| m.data["type"] == "thread_created" }
-          expect(event.data["staged_thread_id"]).to eq("stagedthreadid")
-          expect(Chat::Thread.find(event.data["thread_id"])).to be_persisted
+          thread_event = messages.find { |m| m.data["type"] == "thread_created" }
+          expect(thread_event.data["staged_thread_id"]).to eq("stagedthreadid")
+          expect(Chat::Thread.find(thread_event.data["thread_id"])).to be_persisted
+
+          send_event = messages.find { |m| m.data["type"] == "sent" }
+          expect(send_event.data["staged_thread_id"]).to eq("stagedthreadid")
         end
       end
 

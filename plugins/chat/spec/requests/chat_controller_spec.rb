@@ -386,7 +386,7 @@ RSpec.describe Chat::ChatController do
         end
 
         context "when sending a message in a staged thread" do
-          it "creates the thread" do
+          it "creates the thread and publishes with the staged id" do
             sign_in(user)
 
             messages =
@@ -400,9 +400,13 @@ RSpec.describe Chat::ChatController do
               end
 
             expect(response.status).to eq(200)
-            event = messages.find { |m| m.data["type"] == "thread_created" }
-            expect(event.data["staged_thread_id"]).to eq("stagedthreadid")
-            expect(Chat::Thread.find(event.data["thread_id"])).to be_persisted
+
+            thread_event = messages.find { |m| m.data["type"] == "thread_created" }
+            expect(thread_event.data["staged_thread_id"]).to eq("stagedthreadid")
+            expect(Chat::Thread.find(thread_event.data["thread_id"])).to be_persisted
+
+            sent_event = messages.find { |m| m.data["type"] == "sent" }
+            expect(sent_event.data["staged_thread_id"]).to eq("stagedthreadid")
           end
         end
 
