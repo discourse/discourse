@@ -309,6 +309,7 @@ class TopicsFilter
         .filter_visible(Tag, @guardian)
         .where_name(tag_names)
         .pluck(:id, :target_tag_id)
+        .transpose
 
     tag_ids ||= []
     alias_tag_ids ||= []
@@ -417,7 +418,7 @@ class TopicsFilter
 
   def include_topics_with_all_tags(tag_ids)
     tag_ids.each do |tag_id|
-      sql_alias = "tt#{topic_tags_alias}"
+      sql_alias = topic_tags_alias
 
       @scope =
         @scope.joins(
@@ -427,7 +428,13 @@ class TopicsFilter
   end
 
   def include_topics_with_any_tags(tag_ids)
-    @scope = @scope.joins(:topic_tags).where("topic_tags.tag_id IN (?)", tag_ids).distinct(:id)
+    sql_alias = topic_tags_alias
+
+    @scope =
+      @scope
+        .joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id")
+        .where("#{sql_alias}.tag_id IN (?)", tag_ids)
+        .distinct(:id)
   end
 
   ORDER_BY_MAPPINGS = {
