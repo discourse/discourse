@@ -38,19 +38,35 @@ module PageObjects
       end
 
       def has_section_link?(name, href: nil, active: false)
-        attributes = {}
-        attributes[:href] = href if href
-        attributes[:class] = SIDEBAR_SECTION_LINK_SELECTOR
-        attributes[:class] += "--active" if active
-        has_link?(name, **attributes)
+        section_link_present?(name, href: href, active: active, present: true)
+      end
+
+      def has_no_section_link?(name, href: nil, active: false)
+        section_link_present?(name, href: href, active: active, present: false)
       end
 
       def custom_section_modal_title
         find("#discourse-modal-title")
       end
 
+      SIDEBAR_WRAPPER_SELECTOR = ".sidebar-wrapper"
+
       def has_section?(name)
-        find(".sidebar-wrapper").has_button?(name)
+        find(SIDEBAR_WRAPPER_SELECTOR).has_button?(name)
+      end
+
+      def has_no_section?(name)
+        find(SIDEBAR_WRAPPER_SELECTOR).has_no_button?(name)
+      end
+
+      private
+
+      def section_link_present?(name, href: nil, active: false, present:)
+        attributes = {}
+        attributes[:href] = href if href
+        attributes[:class] = SIDEBAR_SECTION_LINK_SELECTOR
+        attributes[:class] += "--active" if active
+        page.public_send(present ? :has_link? : :has_no_link?, name, **attributes)
       end
     end
   end

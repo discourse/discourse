@@ -91,7 +91,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(sidebar).to have_section("Edited section")
     expect(sidebar).to have_section_link("Edited Tag")
 
-    expect(sidebar).not_to have_section_link("Sidebar Categories")
+    expect(sidebar).to have_no_section_link("Sidebar Categories")
   end
 
   it "allows the user to reorder links in custom section" do
@@ -161,7 +161,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.delete
     section_modal.confirm_delete
 
-    expect(sidebar).not_to have_section("My section")
+    expect(sidebar).to have_no_section("My section")
   end
 
   it "allows admin to create, edit and delete public section" do
@@ -188,7 +188,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.delete
     section_modal.confirm_delete
 
-    expect(sidebar).not_to have_section("Edited public section")
+    expect(sidebar).to have_no_section("Edited public section")
   end
 
   it "shows anonymous public sections" do

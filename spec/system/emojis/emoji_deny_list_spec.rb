@@ -54,19 +54,19 @@ describe "Emoji deny list", type: :system, js: true do
       composer.click_toolbar_button("insert-emoji")
       expect(composer.emoji_picker).to be_visible
 
-      expect(emoji_picker).not_to have_emoji("fu")
+      expect(emoji_picker).to have_no_emoji("fu")
     end
 
     it "should not show denied emojis and aliases in emoji autocomplete" do
       topic_page.visit_topic_and_open_composer(topic)
 
       composer.type_content(":poop") # shows no results
-      expect(composer).not_to have_emoji_autocomplete
+      expect(composer).to have_no_emoji_autocomplete
 
       composer.clear_content
 
       composer.type_content(":middle") # middle_finger is alias
-      expect(composer).not_to have_emoji_suggestion("fu")
+      expect(composer).to have_no_emoji_suggestion("fu")
     end
 
     it "should not show denied emoji in preview" do
@@ -78,7 +78,7 @@ describe "Emoji deny list", type: :system, js: true do
       composer.clear_content
 
       composer.fill_content(":fu:")
-      expect(composer).not_to have_emoji_preview("fu")
+      expect(composer).to have_no_emoji_preview("fu")
     end
   end
 
