@@ -1,11 +1,13 @@
 import {
   acceptance,
   loggedInUser,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import {
   click,
   fillIn,
+  triggerEvent,
   triggerKeyEvent,
   visit,
   waitFor,
@@ -146,6 +148,31 @@ acceptance("Chat | User status on mentions", function (needs) {
     await waitFor(selector, { count: 0 });
     assert.dom(selector).doesNotExist("status is deleted");
   });
+
+  test("it shows status on mentions on updated messages", async function (assert) {
+    await visit(`/chat/c/-/${channelId}`);
+
+    await editMessage(".chat-message-content");
+
+    assert
+      .dom(`.mention[href='/u/${mentionedUser2.username}'] .user-status`)
+      .exists("status is rendered")
+      .hasAttribute(
+        "title",
+        mentionedUser2.status.description,
+        "status description is correct"
+      )
+      .hasAttribute(
+        "src",
+        new RegExp(`${mentionedUser2.status.emoji}.png`),
+        "status emoji is updated"
+      );
+  });
+
+  async function editMessage(messageSelector) {
+    await triggerEvent(query(messageSelector), "mouseenter");
+    await click(".more-buttons");
+  }
 
   async function emulateAutocomplete(inputSelector, text) {
     await triggerKeyEvent(inputSelector, "keydown", "Backspace");
