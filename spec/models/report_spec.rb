@@ -1323,13 +1323,13 @@ RSpec.describe Report do
         page_view_logged_in_report = reports.data.find { |r| r[:req] == "page_view_logged_in" }
         page_view_anon_report = reports.data.find { |r| r[:req] == "page_view_anon" }
 
-        expect(page_view_crawler_report[:color]).to eql("rgba(200,0,1,0.75)")
+        expect(page_view_crawler_report[:color]).to eql("#721D8D")
         expect(page_view_crawler_report[:data][0][:y]).to eql(3)
 
-        expect(page_view_logged_in_report[:color]).to eql("rgba(0,136,204,1)")
+        expect(page_view_logged_in_report[:color]).to eql("#1EB8D1")
         expect(page_view_logged_in_report[:data][0][:y]).to eql(2)
 
-        expect(page_view_anon_report[:color]).to eql("#40c8ff")
+        expect(page_view_anon_report[:color]).to eql("#9BC53D")
         expect(page_view_anon_report[:data][0][:y]).to eql(1)
       ensure
       end
@@ -1371,10 +1371,10 @@ RSpec.describe Report do
         api_report = reports.data.find { |r| r[:req] == "api" }
         user_api_report = reports.data.find { |r| r[:req] == "user_api" }
 
-        expect(api_report[:color]).to eql("rgba(0,136,204,1)")
+        expect(api_report[:color]).to eql("#1EB8D1")
         expect(api_report[:data][0][:y]).to eql(2)
 
-        expect(user_api_report[:color]).to eql("rgba(200,0,1,1)")
+        expect(user_api_report[:color]).to eql("#9BC53D")
         expect(user_api_report[:data][0][:y]).to eql(1)
       ensure
       end
