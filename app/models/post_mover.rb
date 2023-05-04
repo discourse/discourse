@@ -137,6 +137,7 @@ class PostMover
     move_first_post_replies
     delete_post_replies
     delete_invalid_post_timings
+    shift_post_timings
     move_post_timings
     copy_first_post_timings
     copy_topic_users
@@ -338,6 +339,17 @@ class PostMover
     SQL
   end
 
+  def shift_post_timings
+    if @shift_map.present?
+      # Update post timings in reverse order to avoid conflicts
+      @shift_map.keys.reverse_each do |post_number|
+        PostTiming.where(topic_id: @destination_topic.id, post_number: post_number).update_all(
+          post_number: @shift_map[post_number],
+        )
+      end
+    end
+  end
+
   def move_incoming_emails
     DB.exec <<~SQL
       UPDATE incoming_emails ie
@@ -452,6 +464,7 @@ class PostMover
       WHERE pt.topic_id = mp.old_topic_id
         AND pt.post_number = mp.old_post_number
         AND mp.old_post_id = mp.new_post_id
+        AND mp.old_topic_id <> mp.new_topic_id
     SQL
   end
 

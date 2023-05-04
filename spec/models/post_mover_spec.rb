@@ -1773,13 +1773,33 @@ RSpec.describe PostMover do
             end
 
             it "moves timings when post timing exists in destination topic" do
+              destination_p2 =
+                Fabricate(
+                  :post,
+                  topic: destination_topic,
+                  user: another_user,
+                  created_at: destination_op.created_at + 10.minutes,
+                  post_number: 2,
+                )
+              destination_p3 =
+                Fabricate(
+                  :post,
+                  topic: destination_topic,
+                  user: another_user,
+                  created_at: destination_op.created_at + 15.minutes,
+                  post_number: 3,
+                )
+              destination_topic.update!(highest_post_number: 3)
+
               PostTiming.create!(
                 topic_id: destination_topic.id,
                 user_id: some_user.id,
-                post_number: 2,
+                post_number: 4,
                 msecs: 800,
               )
               create_post_timing(destination_op, some_user, 1500)
+              create_post_timing(destination_p2, some_user, 2000)
+              create_post_timing(destination_p3, some_user, 1250)
               create_post_timing(p1, some_user, 500)
 
               moved_to =
@@ -1795,7 +1815,7 @@ RSpec.describe PostMover do
                   :post_number,
                   :msecs,
                 ),
-              ).to contain_exactly([1, 500], [2, 1500])
+              ).to contain_exactly([1, 500], [2, 1500], [3, 2000], [4, 1250])
             end
           end
 
