@@ -49,7 +49,7 @@ export function defaultRenderTag(tag, params) {
     " class='" +
     classes.join(" ") +
     "'>" +
-    visibleName +
+    (escape(params.displayName) || visibleName) +
     "</" +
     tagName +
     ">";
