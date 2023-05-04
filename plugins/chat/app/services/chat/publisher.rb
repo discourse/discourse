@@ -14,7 +14,7 @@ module Chat
       "#{root_message_bus_channel(chat_channel_id)}/thread/#{thread_id}"
     end
 
-    def self.calculate_publish_targets(channel, message)
+    def self.calculate_publish_targets(channel, message, staged_thread_id: nil)
       return [root_message_bus_channel(channel.id)] if !allow_publish_to_thread?(channel)
 
       if message.thread_om?
@@ -22,8 +22,9 @@ module Chat
           root_message_bus_channel(channel.id),
           thread_message_bus_channel(channel.id, message.thread_id),
         ]
-      elsif message.thread_reply?
-        [thread_message_bus_channel(channel.id, message.thread_id)]
+      elsif staged_thread_id || message.thread_reply?
+        targets = [thread_message_bus_channel(channel.id, message.thread_id)]
+        targets << thread_message_bus_channel(channel.id, staged_thread_id) if staged_thread_id
       else
         [root_message_bus_channel(channel.id)]
       end
@@ -33,12 +34,16 @@ module Chat
       SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
     end
 
-    def self.publish_new!(chat_channel, chat_message, staged_id)
-      message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
+    def self.publish_new!(chat_channel, chat_message, staged_id, staged_thread_id)
+      message_bus_targets =
+        calculate_publish_targets(chat_channel, chat_message, staged_thread_id: staged_thread_id)
       publish_to_targets!(
         message_bus_targets,
         chat_channel,
-        serialize_message_with_type(chat_message, :sent).merge(staged_id: staged_id),
+        serialize_message_with_type(chat_message, :sent).merge(
+          staged_id: staged_id,
+          staged_thread_id: staged_thread_id,
+        ),
       )
 
       # NOTE: This means that the read count is only updated in the client

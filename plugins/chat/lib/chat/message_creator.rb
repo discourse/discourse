@@ -59,7 +59,7 @@ module Chat
         create_thread
         @chat_message.attach_uploads(uploads)
         Chat::Draft.where(user_id: @user.id, chat_channel_id: @chat_channel.id).destroy_all
-        Chat::Publisher.publish_new!(@chat_channel, @chat_message, @staged_id)
+        Chat::Publisher.publish_new!(@chat_channel, @chat_message, @staged_id, @staged_thread_id)
         resolved_thread&.increment_replies_count_cache
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
@@ -181,13 +181,14 @@ module Chat
             channel: @chat_message.chat_channel,
           )
         @chat_message.in_reply_to.thread_id = thread.id
-        Chat::Publisher.publish_thread_created!(
-          @chat_message.chat_channel,
-          @chat_message.in_reply_to,
-          thread.id,
-          @staged_thread_id,
-        )
       end
+
+      Chat::Publisher.publish_thread_created!(
+        @chat_message.chat_channel,
+        @chat_message.in_reply_to,
+        thread.id,
+        @staged_thread_id,
+      )
 
       @chat_message.thread_id = thread.id
 

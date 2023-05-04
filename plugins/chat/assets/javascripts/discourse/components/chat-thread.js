@@ -52,10 +52,6 @@ export default class ChatThreadPanel extends Component {
 
   @action
   subscribeToUpdates() {
-    if (this.thread.staged) {
-      return;
-    }
-
     this.chatChannelThreadPaneSubscriptionsManager.subscribe(this.thread);
   }
 

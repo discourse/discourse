@@ -218,9 +218,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
 
   handleNewThreadCreated(data) {
     this.model.threadsManager
-      .find(this.model.id, data.staged_thread_id, {
-        fetchIfNotFound: false,
-      })
+      .find(this.model.id, data.staged_thread_id, { fetchIfNotFound: false })
       .then((stagedThread) => {
         if (stagedThread) {
           this.chatStagedThreadMapping.setMapping(
@@ -233,9 +231,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
           stagedThread.originalMessage.threadReplyCount ??= 1;
         } else if (data.thread_id) {
           this.model.threadsManager
-            .find(this.model.id, data.thread_id, {
-              fetchIfNotFound: true,
-            })
+            .find(this.model.id, data.thread_id, { fetchIfNotFound: true })
             .then((thread) => {
               const channelOriginalMessage =
                 this.model.messagesManager.findMessage(

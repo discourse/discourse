@@ -72,6 +72,10 @@ export default class ChatChannel extends RestModel {
     return this.messages.findIndex((m) => m.id === message.id);
   }
 
+  findMessage(id) {
+    return this.messagesManager.findMessage(id);
+  }
+
   get messages() {
     return this.messagesManager.messages;
   }
@@ -160,7 +164,7 @@ export default class ChatChannel extends RestModel {
     const clonedMessage = message.duplicate();
 
     const thread = new ChatThread(this, {
-      id: guid(),
+      id: `staged-thread-${message.channel.id}-${message.id}`,
       original_message: message,
       staged: true,
       created_at: moment.utc().format(),
@@ -181,11 +185,6 @@ export default class ChatChannel extends RestModel {
     message.cook();
 
     if (message.inReplyTo) {
-      if (!message.inReplyTo.thread) {
-        message.inReplyTo.threadId = guid();
-        message.inReplyTo.threadReplyCount = 1;
-      }
-
       if (!this.threadingEnabled) {
         this.messagesManager.addMessages([message]);
       }

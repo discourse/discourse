@@ -1,6 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { inject as service } from "@ember/service";
-import { isValidUUIDV4 } from "pretty-text/guid";
 
 export default class ChatChannelThread extends DiscourseRoute {
   @service router;
@@ -41,7 +40,8 @@ export default class ChatChannelThread extends DiscourseRoute {
     // replacing the ID in the URL sooner would also cause a reload
     const params = this.paramsFor("chat.channel.thread");
     const threadId = params.threadId;
-    if (isValidUUIDV4(threadId)) {
+
+    if (threadId?.startsWith("staged-thread-")) {
       const mapping = this.chatStagedThreadMapping.getMapping();
 
       if (mapping[threadId]) {
