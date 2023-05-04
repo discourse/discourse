@@ -157,6 +157,8 @@ module Chat
 
       self.cooked = self.class.cook(self.message, user_id: self.last_editor_id)
       self.cooked_version = BAKED_VERSION
+
+      invalidate_parsed_mentions
     end
 
     def rebake!(invalidate_oneboxes: false, priority: nil)
@@ -287,7 +289,11 @@ module Chat
     end
 
     def parsed_mentions
-      Chat::MessageMentions.new(self)
+      @parsed_mentions ||= Chat::MessageMentions.new(self)
+    end
+
+    def invalidate_parsed_mentions
+      @parsed_mentions = nil
     end
 
     private
