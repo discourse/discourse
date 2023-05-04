@@ -289,7 +289,7 @@ module Chat
     end
 
     def parsed_mentions
-      @parsed_mentions ||= Chat::MessageMentions.new(self)
+      @parsed_mentions ||= Chat::ParsedMentions.new(self)
     end
 
     def invalidate_parsed_mentions

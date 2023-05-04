@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class MessageMentions
+  class ParsedMentions
     def initialize(message)
       @message = message
 
