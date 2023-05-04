@@ -831,10 +831,6 @@ posting:
       ja: 4
       zh_CN: 4
       zh_TW: 4
-  enable_personal_messages:
-    default: true
-    client: true
-    hidden: true
   enable_system_message_replies:
     default: true
   personal_message_enabled_groups:
@@ -1592,10 +1588,6 @@ trust:
   min_trust_to_allow_self_wiki:
     default: 3
     enum: "TrustLevelSetting"
-  min_trust_to_send_messages:
-    default: 1
-    enum: "TrustLevelSetting"
-    hidden: true
   min_trust_to_send_email_messages:
     default: "4"
     enum: "TrustLevelAndStaffSetting"

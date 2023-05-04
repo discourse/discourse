@@ -8,8 +8,6 @@ module SiteSettings::DeprecatedSettings
     # [<old setting>, <new_setting>, <override>, <version to drop>]
     ["search_tokenize_chinese_japanese_korean", "search_tokenize_chinese", true, "2.9"],
     ["default_categories_regular", "default_categories_normal", true, "3.0"],
-    ["min_trust_to_send_messages", "personal_message_enabled_groups", false, "3.0"],
-    ["enable_personal_messages", "personal_message_enabled_groups", false, "3.0"],
   ]
 
   def setup_deprecated_methods
