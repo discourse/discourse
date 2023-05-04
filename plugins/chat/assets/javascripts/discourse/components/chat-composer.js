@@ -150,13 +150,14 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  teardownAppEvents() {
+  teardown() {
     this.appEvents.off("chat:modify-selection", this, "modifySelection");
     this.appEvents.off(
       "chat:open-insert-link-modal",
       this,
       "openInsertLinkModal"
     );
+    this.pane.sending = false;
   }
 
   @action
