@@ -6,6 +6,7 @@ export default class ChatChannelThread extends DiscourseRoute {
   @service chatStateManager;
   @service chat;
   @service chatStagedThreadMapping;
+  @service chatChannelThreadPane;
 
   model(params, transition) {
     const channel = this.modelFor("chat.channel");
@@ -20,7 +21,7 @@ export default class ChatChannelThread extends DiscourseRoute {
   }
 
   deactivate() {
-    this.#closeThread();
+    this.chatChannelThreadPane.close();
   }
 
   beforeModel(transition) {
@@ -31,8 +32,6 @@ export default class ChatChannelThread extends DiscourseRoute {
       this.router.transitionTo("chat.channel", ...channel.routeModels);
       return;
     }
-
-    this.chatStateManager.closeSidePanel();
 
     // This is a very special logic to attempt to reconciliate a staged thread id
     // it happens after creating a new thread and having a temp ID in the URL
@@ -57,13 +56,6 @@ export default class ChatChannelThread extends DiscourseRoute {
   }
 
   afterModel(model) {
-    this.chat.activeChannel.activeThread = model;
-    this.chatStateManager.openSidePanel();
-  }
-
-  #closeThread() {
-    this.chat.activeChannel.activeThread?.messagesManager?.clearMessages();
-    this.chat.activeChannel.activeThread = null;
-    this.chatStateManager.closeSidePanel();
+    this.chatChannelThreadPane.open(model);
   }
 }
