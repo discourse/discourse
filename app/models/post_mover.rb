@@ -95,7 +95,7 @@ class PostMover
 
     create_temp_table
     move_each_post
-    handle_references_after_move
+    handle_moved_references
 
     create_moderator_post_in_original_topic
     update_statistics
@@ -129,15 +129,16 @@ class PostMover
     SQL
   end
 
-  def handle_references_after_move
+  def handle_moved_references
     move_incoming_emails
     move_notifications
     update_reply_counts
     update_quotes
     move_first_post_replies
     delete_post_replies
+    create_temp_post_timings
     delete_invalid_post_timings
-    shift_post_timings
+    insert_from_temp_post_timings
     move_post_timings
     copy_first_post_timings
     copy_topic_users
@@ -339,17 +340,6 @@ class PostMover
     SQL
   end
 
-  def shift_post_timings
-    if @shift_map.present?
-      # Update post timings in reverse order to avoid conflicts
-      @shift_map.keys.reverse_each do |post_number|
-        PostTiming.where(topic_id: @destination_topic.id, post_number: post_number).update_all(
-          post_number: @shift_map[post_number],
-        )
-      end
-    end
-  end
-
   def move_incoming_emails
     DB.exec <<~SQL
       UPDATE incoming_emails ie
@@ -429,6 +419,27 @@ class PostMover
     SQL
   end
 
+  def create_temp_post_timings
+    DB.exec("DROP TABLE IF EXISTS temp_post_timings") if Rails.env.test?
+    DB.exec <<~SQL
+      CREATE TEMPORARY TABLE temp_post_timings ON COMMIT DROP
+        AS (
+          SELECT pt.topic_id, mp.new_post_number, pt.user_id, pt.msecs
+          FROM post_timings pt
+          JOIN moved_posts mp
+            ON mp.old_topic_id = pt.topic_id
+              AND mp.old_post_number = pt.post_number
+              AND mp.old_topic_id = mp.new_topic_id
+        )
+    SQL
+  end
+
+  def insert_from_temp_post_timings
+    DB.exec <<~SQL
+      INSERT INTO post_timings SELECT * FROM temp_post_timings
+    SQL
+  end
+
   def copy_first_post_timings
     DB.exec <<~SQL
       INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
@@ -442,16 +453,12 @@ class PostMover
   end
 
   def delete_invalid_post_timings
-    params = {
-      new_topic_id: destination_topic.id,
-      old_highest_post_number: destination_topic.highest_post_number,
-    }
-
-    DB.exec(<<~SQL, params)
+    DB.exec <<~SQL
       DELETE
       FROM post_timings pt
-      WHERE pt.topic_id = :new_topic_id
-        AND pt.post_number > :old_highest_post_number
+      USING moved_posts mp
+      WHERE pt.topic_id = mp.new_topic_id
+        AND pt.post_number = mp.new_post_number
     SQL
   end
 
