@@ -61,14 +61,13 @@ module Chat
       @timestamp = timestamp
       @chat_channel = @chat_message.chat_channel
       @user = @chat_message.user
-      @mentions = Chat::MessageMentions.new(chat_message)
     end
 
     ### Public API
 
     def notify_new
-      if @mentions.all_mentioned_users_ids.present?
-        @chat_message.create_mentions(@mentions.all_mentioned_users_ids)
+      if @chat_message.parsed_mentions.all_mentioned_users_ids.present?
+        @chat_message.create_mentions(@chat_message.parsed_mentions.all_mentioned_users_ids)
       end
 
       to_notify = list_users_to_notify
@@ -87,7 +86,7 @@ module Chat
     end
 
     def notify_edit
-      @chat_message.update_mentions(@mentions.all_mentioned_users_ids)
+      @chat_message.update_mentions(@chat_message.parsed_mentions.all_mentioned_users_ids)
 
       already_notified_user_ids =
         Chat::Mention
@@ -108,7 +107,8 @@ module Chat
     private
 
     def list_users_to_notify
-      skip_notifications = @mentions.count > SiteSetting.max_mentions_per_chat_message
+      skip_notifications =
+        @chat_message.parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
 
       {}.tap do |to_notify|
         # The order of these methods is the precedence
@@ -130,10 +130,11 @@ module Chat
     end
 
     def expand_global_mention(to_notify, already_covered_ids)
-      has_all_mention = @mentions.has_global_mention
+      has_all_mention = @chat_message.parsed_mentions.has_global_mention
 
       if has_all_mention && @chat_channel.allow_channel_wide_mentions
-        to_notify[:global_mentions] = @mentions
+        to_notify[:global_mentions] = @chat_message
+          .parsed_mentions
           .global_mentions
           .not_suspended
           .where(user_options: { ignore_channel_wide_mention: [false, nil] })
@@ -147,10 +148,11 @@ module Chat
     end
 
     def expand_here_mention(to_notify, already_covered_ids)
-      has_here_mention = @mentions.has_here_mention
+      has_here_mention = @chat_message.parsed_mentions.has_here_mention
 
       if has_here_mention && @chat_channel.allow_channel_wide_mentions
-        to_notify[:here_mentions] = @mentions
+        to_notify[:here_mentions] = @chat_message
+          .parsed_mentions
           .here_mentions
           .not_suspended
           .where(user_options: { ignore_channel_wide_mention: [false, nil] })
@@ -190,7 +192,10 @@ module Chat
       if skip
         direct_mentions = []
       else
-        direct_mentions = @mentions.direct_mentions.not_suspended.where.not(id: already_covered_ids)
+        direct_mentions =
+          @chat_message.parsed_mentions.direct_mentions.not_suspended.where.not(
+            id: already_covered_ids,
+          )
       end
 
       grouped = group_users_to_notify(direct_mentions)
@@ -202,21 +207,24 @@ module Chat
     end
 
     def expand_group_mentions(to_notify, already_covered_ids)
-      return if @mentions.visible_groups.empty?
+      return if @chat_message.parsed_mentions.visible_groups.empty?
 
       reached_by_group =
-        @mentions
+        @chat_message
+          .parsed_mentions
           .group_mentions
           .not_suspended
           .where("user_count <= ?", SiteSetting.max_users_notified_per_group_mention)
           .where.not(id: already_covered_ids)
 
       too_many_members, mentionable =
-        @mentions.mentionable_groups.partition do |group|
+        @chat_message.parsed_mentions.mentionable_groups.partition do |group|
           group.user_count > SiteSetting.max_users_notified_per_group_mention
         end
 
-      mentions_disabled = @mentions.visible_groups - @mentions.mentionable_groups
+      mentions_disabled =
+        @chat_message.parsed_mentions.visible_groups -
+          @chat_message.parsed_mentions.mentionable_groups
       to_notify[:group_mentions_disabled] = mentions_disabled
       to_notify[:too_many_members] = too_many_members
       mentionable.each { |g| to_notify[g.name.downcase] = [] }
@@ -226,7 +234,8 @@ module Chat
         # When a user is a member of multiple mentioned groups,
         # the most far to the left should take precedence.
         ordered_group_names =
-          @mentions.parsed_group_mentions & mentionable.map { |mg| mg.name.downcase }
+          @chat_message.parsed_mentions.parsed_group_mentions &
+            mentionable.map { |mg| mg.name.downcase }
         user_group_names = user.groups.map { |ug| ug.name.downcase }
         group_name = ordered_group_names.detect { |gn| user_group_names.include?(gn) }
 

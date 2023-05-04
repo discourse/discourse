@@ -299,6 +299,10 @@ module Chat
       in_thread? && self.thread.original_message_id == self.id
     end
 
+    def parsed_mentions
+      Chat::MessageMentions.new(self)
+    end
+
     private
 
     def delete_mentions(user_ids)
