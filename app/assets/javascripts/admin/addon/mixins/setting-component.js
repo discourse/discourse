@@ -216,7 +216,7 @@ export default Mixin.create({
     } catch (e) {
       const json = e.jqXHR?.responseJSON;
       if (json?.errors) {
-        let errorString = e.jqXHR.responseJSON.errors[0];
+        let errorString = json.errors[0];
 
         if (json.html_message) {
           errorString = htmlSafe(errorString);
