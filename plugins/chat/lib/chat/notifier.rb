@@ -66,9 +66,7 @@ module Chat
     ### Public API
 
     def notify_new
-      if @chat_message.parsed_mentions.all_mentioned_users_ids.present?
-        @chat_message.create_mentions(@chat_message.parsed_mentions.all_mentioned_users_ids)
-      end
+      @chat_message.create_mentions
 
       to_notify = list_users_to_notify
       mentioned_user_ids = to_notify.extract!(:all_mentioned_user_ids)[:all_mentioned_user_ids]
@@ -86,7 +84,7 @@ module Chat
     end
 
     def notify_edit
-      @chat_message.update_mentions(@chat_message.parsed_mentions.all_mentioned_users_ids)
+      @chat_message.update_mentions
 
       already_notified_user_ids =
         Chat::Mention

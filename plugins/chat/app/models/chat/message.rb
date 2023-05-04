@@ -258,33 +258,20 @@ module Chat
       "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
     end
 
-    def create_mentions(user_ids)
-      return if user_ids.empty?
-
-      now = Time.zone.now
-      mentions = []
-      User
-        .where(id: user_ids)
-        .find_each do |user|
-          mentions << {
-            chat_message_id: self.id,
-            user_id: user.id,
-            created_at: now,
-            updated_at: now,
-          }
-        end
-
-      Chat::Mention.insert_all(mentions)
+    def create_mentions
+      insert_mentions(parsed_mentions.all_mentioned_users_ids)
     end
 
-    def update_mentions(mentioned_user_ids)
+    def update_mentions
+      mentioned_user_ids = parsed_mentions.all_mentioned_users_ids
+
       old_mentions = chat_mentions.pluck(:user_id)
       updated_mentions = mentioned_user_ids
       mentioned_user_ids_to_drop = old_mentions - updated_mentions
       mentioned_user_ids_to_add = updated_mentions - old_mentions
 
       delete_mentions(mentioned_user_ids_to_drop)
-      create_mentions(mentioned_user_ids_to_add)
+      insert_mentions(mentioned_user_ids_to_add)
     end
 
     def in_thread?
@@ -307,6 +294,25 @@ module Chat
 
     def delete_mentions(user_ids)
       chat_mentions.where(user_id: user_ids).destroy_all
+    end
+
+    def insert_mentions(user_ids)
+      return if user_ids.empty?
+
+      now = Time.zone.now
+      mentions = []
+      User
+        .where(id: user_ids)
+        .find_each do |user|
+          mentions << {
+            chat_message_id: self.id,
+            user_id: user.id,
+            created_at: now,
+            updated_at: now,
+          }
+        end
+
+      Chat::Mention.insert_all(mentions)
     end
 
     def message_too_short?
