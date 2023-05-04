@@ -106,7 +106,11 @@ export default class ChatThreadPanel extends Component {
           );
         }
 
-        const [messages, meta] = this.afterFetchCallback(this.channel, results);
+        const [messages, meta] = this.afterFetchCallback(
+          this.channel,
+          this.thread,
+          results
+        );
         this.thread.messagesManager.addMessages(messages);
         this.thread.details = meta;
         this.markThreadAsRead();
@@ -122,7 +126,7 @@ export default class ChatThreadPanel extends Component {
   }
 
   @bind
-  afterFetchCallback(channel, results) {
+  afterFetchCallback(channel, thread, results) {
     const messages = [];
 
     results.chat_messages.forEach((messageData) => {
@@ -136,7 +140,9 @@ export default class ChatThreadPanel extends Component {
       }
 
       messageData.expanded = !(messageData.hidden || messageData.deleted_at);
-      messages.push(ChatMessage.create(channel, messageData));
+      const message = ChatMessage.create(channel, messageData);
+      message.thread = thread;
+      messages.push(message);
     });
 
     return [messages, results.meta];
