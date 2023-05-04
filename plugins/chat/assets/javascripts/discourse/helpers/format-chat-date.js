@@ -17,12 +17,12 @@ registerUnbound("format-chat-date", function (message, mode) {
 
   if (message.staged) {
     return htmlSafe(
-      `<span title='${title}'  class='chat-time'>${display}</span>`
+      `<span title='${title}' tabindex="-1" class='chat-time'>${display}</span>`
     );
   } else {
     const url = getURL(`/chat/c/-/${message.channel.id}/${message.id}`);
     return htmlSafe(
-      `<a title='${title}' class='chat-time' href='${url}'>${display}</a>`
+      `<a title='${title}' tabindex="-1" class='chat-time' href='${url}'>${display}</a>`
     );
   }
 });
