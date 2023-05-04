@@ -25,6 +25,7 @@ module Chat
       elsif staged_thread_id || message.thread_reply?
         targets = [thread_message_bus_channel(channel.id, message.thread_id)]
         targets << thread_message_bus_channel(channel.id, staged_thread_id) if staged_thread_id
+        return targets
       else
         [root_message_bus_channel(channel.id)]
       end
