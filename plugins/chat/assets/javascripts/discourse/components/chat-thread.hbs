@@ -42,7 +42,7 @@
           @context="thread"
         />
       {{/each}}
-      {{#if (or this.loading)}}
+      {{#if this.loading}}
         <ChatSkeleton />
       {{/if}}
     </div>
