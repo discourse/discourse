@@ -3,6 +3,10 @@
 module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
+      def replying_to?(message)
+        find(".chat-channel .chat-reply", text: message.message)
+      end
+
       def type_in_composer(input)
         find(".chat-channel .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
         find(".chat-channel .chat-composer__input").send_keys(input)
