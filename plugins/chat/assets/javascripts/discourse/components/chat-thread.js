@@ -230,9 +230,9 @@ export default class ChatThreadPanel extends Component {
       return;
     }
 
-    this.scrollable.scrollTop = -1;
+    this.scrollable.scrollTop = this.scrollable.scrollHeight + 1;
     this.forceRendering(() => {
-      this.scrollable.scrollTop = 0;
+      this.scrollable.scrollTop = this.scrollable.scrollHeight;
     });
   }
 
