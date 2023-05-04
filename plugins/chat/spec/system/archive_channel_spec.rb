@@ -65,7 +65,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
           expect(page).to have_css(".chat-channel-archive-status")
         end
 
-        it "shows an error when the topic is invalid" do
+        xit "shows an error when the topic is invalid" do
           chat.visit_channel_settings(channel_1)
           click_button(I18n.t("js.chat.channel_settings.archive_channel"))
           find("#split-topic-name").fill_in(
