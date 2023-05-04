@@ -163,10 +163,6 @@ export default class ChatMessage {
     }
   }
 
-  get threadRouteModels() {
-    return [...this.channel.routeModels, this.thread.id];
-  }
-
   get read() {
     return this.channel.currentUserMembership?.last_read_message_id >= this.id;
   }

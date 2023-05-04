@@ -17,35 +17,24 @@ export default class ChatChannelComposer extends ChatComposer {
       this.siteSettings.enable_experimental_chat_threaded_discussions &&
       channel.threadingEnabled
     ) {
+      let thread;
       if (message.thread?.id) {
-        this.router.transitionTo(
-          "chat.channel.thread",
-          ...[...channel.routeModels, message.thread.id]
-        );
+        thread = message.thread;
       } else {
-        const thread = channel.createStagedThread(message);
-
-        this.router
-          .transitionTo(
-            "chat.channel.thread",
-            ...[...channel.routeModels, thread.id]
-          )
-          .catch((e) => {
-            // drawer aborts the transition for the custom router handling
-            if (e.message === "TransitionAborted") {
-              this._setReplyToAfterTransition(message, thread);
-            }
-          })
-          .then(() => this._setReplyToAfterTransition(message, thread));
+        thread = channel.createStagedThread(message);
+        message.thread = thread;
       }
+
+      this.router
+        .transitionTo("chat.channel.thread", ...thread.routeModels)
+        .finally(() => this._setReplyToAfterTransition(message));
     } else {
       this.message.inReplyTo = message;
     }
   }
 
-  _setReplyToAfterTransition(message, thread) {
+  _setReplyToAfterTransition(message) {
     next(() => {
-      message.thread = thread;
       this.chatChannelThreadComposer.replyTo(message);
     });
   }

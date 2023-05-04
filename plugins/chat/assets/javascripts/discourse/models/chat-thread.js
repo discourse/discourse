@@ -45,6 +45,10 @@ export default class ChatThread {
     this.messagesManager.addMessages([message]);
   }
 
+  get routeModels() {
+    return [...this.channel.routeModels, this.id];
+  }
+
   get messages() {
     return this.messagesManager.messages;
   }
