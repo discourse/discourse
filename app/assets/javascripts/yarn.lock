@@ -173,14 +173,7 @@
   dependencies:
     "@babel/types" "^7.21.0"
 
-"@babel/helper-module-imports@^7.12.13", "@babel/helper-module-imports@^7.13.12", "@babel/helper-module-imports@^7.16.7", "@babel/helper-module-imports@^7.8.3":
-  version "7.18.6"
-  resolved "https://registry.yarnpkg.com/@babel/helper-module-imports/-/helper-module-imports-7.18.6.tgz#1e3ebdbbd08aad1437b428c50204db13c5a3ca6e"
-  integrity sha512-0NFvs3VkuSYbFi1x2Vd6tKrywq+z/cLeYC/RJNFrIX/30Bf5aiGYbtvGXolEktzJH8o5E5KJ3tT+nkxuuZFVlA==
-  dependencies:
-    "@babel/types" "^7.18.6"
-
-"@babel/helper-module-imports@^7.21.4":
+"@babel/helper-module-imports@^7.12.13", "@babel/helper-module-imports@^7.13.12", "@babel/helper-module-imports@^7.16.7", "@babel/helper-module-imports@^7.21.4", "@babel/helper-module-imports@^7.8.3":
   version "7.21.4"
   resolved "https://registry.yarnpkg.com/@babel/helper-module-imports/-/helper-module-imports-7.21.4.tgz#ac88b2f76093637489e718a90cec6cf8a9b029af"
   integrity sha512-orajc5T2PsRYUN3ZryCEFeMDYwyw09c/pZeaQEZPH0MpKzSvn3e0uXsDBu3k03VI+9DBiRo+l22BfKTpKwa/Wg==
@@ -4363,10 +4356,10 @@ ember-source-channel-url@^3.0.0:
   dependencies:
     node-fetch "^2.6.0"
 
-ember-source@~3.28.11:
-  version "3.28.11"
-  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-3.28.11.tgz#7b1a7d0483c886af8f38cc058fd647c359803543"
-  integrity sha512-oM3X2lYUWJM+CJEdPvJGVZNUTzUAYbDeOOoAJW7im20LkQrv0ce0MAJ1Gf/SnI3H+ZL7lj8qggP+D9P7ZxBvsw==
+ember-source@~3.28.12:
+  version "3.28.12"
+  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-3.28.12.tgz#d8bb33d665d9c5adc858dce9d2d18be5ce58b2c0"
+  integrity sha512-HGrBpY6TN+MAi7F6BS8XYtNFG6vtbKE9ttPcyj0Ps+76kP7isCHyN0hk8ecKciLq7JYDqiPDNWjdIXAn2JfhZA==
   dependencies:
     "@babel/helper-module-imports" "^7.8.3"
     "@babel/plugin-transform-block-scoping" "^7.8.3"
