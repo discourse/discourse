@@ -53,7 +53,12 @@
         />
       {{/if}}
 
-      {{#if this.messageInteractor.secondaryButtons.length}}
+      {{#if
+        (and
+          this.messageInteractor.message
+          this.messageInteractor.secondaryButtons.length
+        )
+      }}
         <DropdownSelectBox
           @class="more-buttons"
           @options={{hash icon="ellipsis-v" placement="left"}}
