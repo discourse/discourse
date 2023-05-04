@@ -30,6 +30,7 @@ module Chat
       User
         .where(id: object.chat_mentions.pluck(:user_id))
         .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+        .as_json
     end
 
     def channel
