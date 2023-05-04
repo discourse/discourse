@@ -136,6 +136,19 @@ describe Chat::MessageCreator do
       expect(events.map { _1[:event_name] }).to include(:chat_message_created)
     end
 
+    it "publishes created message to message bus" do
+      content = "a test chat message"
+      messages =
+        MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+          described_class.create(chat_channel: public_chat_channel, user: user1, content: content)
+        end
+
+      expect(messages.count).to be(1)
+      message = messages[0].data
+      expect(message["chat_message"]["message"]).to eq(content)
+      expect(message["chat_message"]["user"]["id"]).to eq(user1.id)
+    end
+
     context "with mentions" do
       it "creates mentions and mention notifications for public chat" do
         message =
@@ -404,6 +417,52 @@ describe Chat::MessageCreator do
 
         mention = user2.chat_mentions.where(chat_message: message).first
         expect(mention.notification).to be_nil
+      end
+
+      it "adds mentioned user and their status to the message bus message" do
+        SiteSetting.enable_user_status = true
+        status = { description: "dentist", emoji: "tooth" }
+        user2.set_status!(status[:description], status[:emoji])
+
+        messages =
+          MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "Hey @#{user2.username}",
+            )
+          end
+
+        expect(messages.count).to be(1)
+        message = messages[0].data
+        expect(message["chat_message"]["mentioned_users"].count).to be(1)
+        mentioned_user = message["chat_message"]["mentioned_users"][0]
+
+        expect(mentioned_user["id"]).to eq(user2.id)
+        expect(mentioned_user["username"]).to eq(user2.username)
+        expect(mentioned_user["status"]).to be_present
+        expect(mentioned_user["status"].slice(:description, :emoji)).to eq(status)
+      end
+
+      it "doesn't add mentioned user's status to the message bus message when status is disabled" do
+        SiteSetting.enable_user_status = false
+        user2.set_status!("dentist", "tooth")
+
+        messages =
+          MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "Hey @#{user2.username}",
+            )
+          end
+
+        expect(messages.count).to be(1)
+        message = messages[0].data
+        expect(message["chat_message"]["mentioned_users"].count).to be(1)
+        mentioned_user = message["chat_message"]["mentioned_users"][0]
+
+        expect(mentioned_user["status"]).to be_blank
       end
     end
 
