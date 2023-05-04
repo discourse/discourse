@@ -10,20 +10,19 @@ RSpec.describe SearchController do
   end
 
   fab!(:awesome_post) do
-    SearchIndexer.enable
-    Fabricate(:post, topic: awesome_topic, raw: "this is my really awesome post")
+    with_search_indexer_enabled do
+      Fabricate(:post, topic: awesome_topic, raw: "this is my really awesome post")
+    end
   end
 
   fab!(:awesome_post_2) do
-    SearchIndexer.enable
-    Fabricate(:post, raw: "this is my really awesome post 2")
+    with_search_indexer_enabled { Fabricate(:post, raw: "this is my really awesome post 2") }
   end
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { with_search_indexer_enabled { Fabricate(:user) } }
 
   fab!(:user_post) do
-    SearchIndexer.enable
-    Fabricate(:post, raw: "#{user.username} is a cool person")
+    with_search_indexer_enabled { Fabricate(:post, raw: "#{user.username} is a cool person") }
   end
 
   context "with integration" do
@@ -470,35 +469,37 @@ RSpec.describe SearchController do
     fab!(:very_high_priority_topic) { Fabricate(:topic, category: very_high_priority_category) }
 
     fab!(:very_low_priority_post) do
-      SearchIndexer.enable
-      Fabricate(:post, topic: very_low_priority_topic, raw: "This is a very Low Priority Post")
+      with_search_indexer_enabled do
+        Fabricate(:post, topic: very_low_priority_topic, raw: "This is a very Low Priority Post")
+      end
     end
 
     fab!(:low_priority_post) do
-      SearchIndexer.enable
-
-      Fabricate(
-        :post,
-        topic: low_priority_topic,
-        raw: "This is a Low Priority Post",
-        created_at: 1.day.ago,
-      )
+      with_search_indexer_enabled do
+        Fabricate(
+          :post,
+          topic: low_priority_topic,
+          raw: "This is a Low Priority Post",
+          created_at: 1.day.ago,
+        )
+      end
     end
 
     fab!(:high_priority_post) do
-      SearchIndexer.enable
-      Fabricate(:post, topic: high_priority_topic, raw: "This is a High Priority Post")
+      with_search_indexer_enabled do
+        Fabricate(:post, topic: high_priority_topic, raw: "This is a High Priority Post")
+      end
     end
 
     fab!(:very_high_priority_post) do
-      SearchIndexer.enable
-
-      Fabricate(
-        :post,
-        topic: very_high_priority_topic,
-        raw: "This is a Old but Very High Priority Post",
-        created_at: 2.days.ago,
-      )
+      with_search_indexer_enabled do
+        Fabricate(
+          :post,
+          topic: very_high_priority_topic,
+          raw: "This is a Old but Very High Priority Post",
+          created_at: 2.days.ago,
+        )
+      end
     end
 
     it "sort posts with search priority when search term is empty" do
