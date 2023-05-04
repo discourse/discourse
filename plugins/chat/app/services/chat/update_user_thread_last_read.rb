@@ -43,7 +43,7 @@ module Chat
     end
 
     def mark_associated_mentions_as_read(thread:, guardian:, **)
-      Chat::Action::MarkMentionsRead.call(
+      ::Chat::Action::MarkMentionsRead.call(
         guardian.user,
         channel_ids: [thread.channel_id],
         thread_id: thread.id,
