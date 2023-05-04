@@ -66,8 +66,6 @@ module Chat
     ### Public API
 
     def notify_new
-      @chat_message.create_mentions
-
       to_notify = list_users_to_notify
       mentioned_user_ids = to_notify.extract!(:all_mentioned_user_ids)[:all_mentioned_user_ids]
 
@@ -84,8 +82,6 @@ module Chat
     end
 
     def notify_edit
-      @chat_message.update_mentions
-
       already_notified_user_ids =
         Chat::Mention
           .where(chat_message: @chat_message)
