@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { inject as service } from "@ember/service";
+import { isValidUUIDV4 } from "pretty-text/guid";
 
 export default class ChatChannelThread extends DiscourseRoute {
   @service router;
@@ -12,25 +13,10 @@ export default class ChatChannelThread extends DiscourseRoute {
 
     return channel.threadsManager
       .find(channel.id, params.threadId)
-      .catch((xhr) => {
-        if (xhr.jqXHR.status === 404) {
-          // This is a very special logic to attempt to reconciliate a staged thread id
-          // it happens after creating a new thread and having a temp ID in the URL
-          // if users presses reload at this moment, we would have a 404
-          // replacing the ID in the URL sooner would also cause a reload
-          const mapping = this.chatStagedThreadMapping.getMapping();
-          if (mapping[params.threadId]) {
-            transition.abort();
-            this.router.transitionTo(
-              "chat.channel.thread",
-              ...[...channel.routeModels, mapping[params.threadId]]
-            );
-            return;
-          }
-
-          // silently ignore 404s to close in after model
-          return;
-        }
+      .catch(() => {
+        transition.abort();
+        this.router.transitionTo("chat.channel", ...channel.routeModels);
+        return;
       });
   }
 
@@ -38,24 +24,39 @@ export default class ChatChannelThread extends DiscourseRoute {
     this.#closeThread();
   }
 
-  beforeModel() {
-    this.chatStateManager.closeSidePanel();
-  }
-
-  afterModel(model, transition) {
+  beforeModel(transition) {
     const channel = this.modelFor("chat.channel");
 
-    if (!model) {
+    if (!channel.threadingEnabled) {
       transition.abort();
       this.router.transitionTo("chat.channel", ...channel.routeModels);
       return;
     }
 
-    if (!channel.threadingEnabled) {
-      transition.abort();
-      return;
-    }
+    this.chatStateManager.closeSidePanel();
 
+    // This is a very special logic to attempt to reconciliate a staged thread id
+    // it happens after creating a new thread and having a temp ID in the URL
+    // if users presses reload at this moment, we would have a 404
+    // replacing the ID in the URL sooner would also cause a reload
+    const params = this.paramsFor("chat.channel.thread");
+    const threadId = params.threadId;
+    if (isValidUUIDV4(threadId)) {
+      const mapping = this.chatStagedThreadMapping.getMapping();
+
+      if (mapping[threadId]) {
+        transition.abort();
+
+        this.router.transitionTo(
+          "chat.channel.thread",
+          ...[...channel.routeModels, mapping[threadId]]
+        );
+        return;
+      }
+    }
+  }
+
+  afterModel(model) {
     this.chat.activeChannel.activeThread = model;
     this.chatStateManager.openSidePanel();
   }
