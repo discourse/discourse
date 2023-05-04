@@ -12,6 +12,7 @@ export default class SidebarUserCustomSections extends Component {
   @service messageBus;
   @service appEvents;
   @service topicTrackingState;
+  @service site;
   @service siteSettings;
 
   constructor() {
@@ -49,6 +50,13 @@ export default class SidebarUserCustomSections extends Component {
           });
       }
     });
+  }
+
+  get isDesktopDropdownMode() {
+    const headerDropdownMode =
+      this.siteSettings.navigation_menu === "header dropdown";
+
+    return !this.site.mobileView && headerDropdownMode;
   }
 
   @bind

@@ -57,8 +57,14 @@
         {{/if}}
       {{/each}}
 
-      {{#if section.moreLinks}}
-        <Sidebar::MoreSectionLinks @sectionLinks={{section.moreLinks}} />
+      {{#if this.isDesktopDropdownMode}}
+        {{#each section.moreLinks as |sectionLink|}}
+          <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
+        {{/each}}
+      {{else}}
+        {{#if section.moreLinks}}
+          <Sidebar::MoreSectionLinks @sectionLinks={{section.moreLinks}} />
+        {{/if}}
       {{/if}}
     </Sidebar::Section>
   {{/each}}
