@@ -41,6 +41,7 @@ after_initialize do
     lib/discourse_automation/scripts/append_last_checked_by
     lib/discourse_automation/scripts/append_last_edited_by
     lib/discourse_automation/scripts/auto_responder
+    lib/discourse_automation/scripts/auto_tag_topic
     lib/discourse_automation/scripts/banner_topic
     lib/discourse_automation/scripts/close_topic
     lib/discourse_automation/scripts/flag_post_on_words

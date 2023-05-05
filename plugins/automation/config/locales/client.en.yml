@@ -186,6 +186,11 @@ en:
             answering_user:
               label: Answering user
               description: Defaults to System user
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Tags
+              description: List of tags to add to the topic.
         post:
           fields:
             creator:

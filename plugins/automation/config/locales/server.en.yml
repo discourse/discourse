@@ -66,6 +66,9 @@ en:
       auto_responder:
         title: Auto Responder
         description: Posts a reply to a post including specified keywords
+      auto_tag_topic:
+        title: Auto Tag Topic
+        description: Automatically add tags to a topic
       pin_topic:
         title: Pin Topic
         description: Pins a specified topic at a given date
