@@ -233,7 +233,7 @@ export default class ChatMessageInteractor {
     const threadId = this.message.thread?.id;
 
     let url;
-    if (threadId) {
+    if (this.context === MESSAGE_CONTEXT_THREAD && threadId) {
       url = getURL(`/chat/c/-/${channelId}/t/${threadId}`);
     } else {
       url = getURL(`/chat/c/-/${channelId}/${this.message.id}`);
