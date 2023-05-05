@@ -68,12 +68,28 @@ export default class ChatChannel extends RestModel {
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
 
-  findIndexOfMessage(message) {
-    return this.messages.findIndex((m) => m.id === message.id);
+  findIndexOfMessage(id) {
+    return this.messagesManager.findIndexOfMessage(id);
+  }
+
+  findStagedMessage(id) {
+    return this.messagesManager.findStagedMessage(id);
   }
 
   findMessage(id) {
     return this.messagesManager.findMessage(id);
+  }
+
+  addMessages(messages) {
+    this.messagesManager.addMessages(messages);
+  }
+
+  clearMessages() {
+    this.messagesManager.clearMessages();
+  }
+
+  removeMessage(message) {
+    this.messagesManager.removeMessage(message);
   }
 
   get messages() {
@@ -86,6 +102,10 @@ export default class ChatChannel extends RestModel {
 
   get canLoadMoreFuture() {
     return this.messagesManager.canLoadMoreFuture;
+  }
+
+  get canLoadMorePast() {
+    return this.messagesManager.canLoadMorePast;
   }
 
   get escapedTitle() {
@@ -186,10 +206,10 @@ export default class ChatChannel extends RestModel {
 
     if (message.inReplyTo) {
       if (!this.threadingEnabled) {
-        this.messagesManager.addMessages([message]);
+        this.addMessages([message]);
       }
     } else {
-      this.messagesManager.addMessages([message]);
+      this.addMessages([message]);
     }
   }
 

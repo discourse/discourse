@@ -21,7 +21,10 @@ RSpec.describe "Deleted message", type: :system, js: true do
       last_message = find(".chat-message-container:last-child")
       channel_page.delete_message(OpenStruct.new(id: last_message["data-id"]))
 
-      expect(page).to have_content(I18n.t("js.chat.deleted"))
+      expect(channel_page).to have_deleted_message(
+        OpenStruct.new(id: last_message["data-id"]),
+        count: 1,
+      )
     end
   end
 
@@ -88,9 +91,9 @@ RSpec.describe "Deleted message", type: :system, js: true do
       )
 
       expect(channel_page).to have_no_message(id: message_1.id)
-      expect(channel_page).to have_no_message(id: message_2.id)
+      expect(channel_page).to have_deleted_message(message_2, count: 2)
       expect(open_thread).to have_no_message(thread_id: thread.id, id: message_4.id)
-      expect(open_thread).to have_no_message(thread_id: thread.id, id: message_5.id)
+      expect(open_thread).to have_deleted_message(message_5, count: 2)
     end
   end
 end
