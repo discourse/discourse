@@ -172,6 +172,13 @@ module PageObjects
         check_message_presence(exists: false, text: text, id: id)
       end
 
+      def has_deleted_message?(message, count: 1)
+        has_css?(
+          ".chat-channel .chat-message-container[data-id=\"#{message.id}\"] .chat-message-deleted",
+          text: I18n.t("js.chat.deleted", count: count),
+        )
+      end
+
       def check_message_presence(exists: true, text: nil, id: nil)
         css_method = exists ? :has_css? : :has_no_css?
         if text

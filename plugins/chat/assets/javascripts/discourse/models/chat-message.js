@@ -50,6 +50,8 @@ export default class ChatMessage {
   @tracked message;
   @tracked thread;
   @tracked threadReplyCount;
+  @tracked manager = null;
+
   @tracked _cooked;
 
   constructor(channel, args = {}) {
@@ -193,17 +195,17 @@ export default class ChatMessage {
 
   @cached
   get index() {
-    return this.channel.messages.indexOf(this);
+    return this.manager?.messages?.indexOf(this);
   }
 
   @cached
   get previousMessage() {
-    return this.channel?.messages?.objectAt?.(this.index - 1);
+    return this.manager?.messages?.objectAt?.(this.index - 1);
   }
 
   @cached
   get nextMessage() {
-    return this.channel?.messages?.objectAt?.(this.index + 1);
+    return this.manager?.messages?.objectAt?.(this.index + 1);
   }
 
   incrementVersion() {

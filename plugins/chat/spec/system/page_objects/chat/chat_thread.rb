@@ -77,6 +77,13 @@ module PageObjects
       def message_by_id_selector(id)
         ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
+
+      def has_deleted_message?(message, count: 1)
+        has_css?(
+          ".chat-thread .chat-message-container[data-id=\"#{message.id}\"] .chat-message-deleted",
+          text: I18n.t("js.chat.deleted", count: count),
+        )
+      end
     end
   end
 end

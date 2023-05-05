@@ -7,6 +7,10 @@
     color: var(--primary-low-mid);
     padding: 0.25em;
 
+    .d-button-label {
+      text-align: left;
+    }
+
     &:hover {
       background: inherit;
       color: inherit;
