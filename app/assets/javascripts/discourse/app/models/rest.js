@@ -113,7 +113,7 @@ RestModel.reopenClass({
       args.siteSettings = owner.lookup("service:site-settings");
     }
     if (!args.appEvents) {
-      args.appEvents = owner.lookup("service:appEvents");
+      args.appEvents = owner.lookup("service:app-events");
     }
 
     args.__munge = this.munge;
