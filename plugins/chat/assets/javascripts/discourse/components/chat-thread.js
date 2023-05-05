@@ -190,6 +190,8 @@ export default class ChatThreadPanel extends Component {
     this.resetComposer();
     this.thread.messagesManager.addMessages([stagedMessage]);
 
+    this.scrollToBottom();
+
     return this.chatApi
       .sendMessage(this.channel.id, {
         message: stagedMessage.message,
@@ -198,9 +200,6 @@ export default class ChatThreadPanel extends Component {
         upload_ids: stagedMessage.uploads.map((upload) => upload.id),
         thread_id: this.thread.staged ? null : stagedMessage.thread.id,
         staged_thread_id: this.thread.staged ? stagedMessage.thread.id : null,
-      })
-      .then(() => {
-        this.scrollToBottom();
       })
       .catch((error) => {
         this.#onSendError(stagedMessage.id, error);
