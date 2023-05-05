@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service from "@ember/service";
 import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, debounce, next, once, throttle } from "@ember/runloop";
@@ -14,7 +14,6 @@ import { bind } from "discourse-common/utils/decorators";
 import Evented from "@ember/object/evented";
 import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 const PRESENCE_INTERVAL_S = 30;
 const DEFAULT_PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
@@ -251,12 +250,7 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
   }
 }
 
-@disableImplicitInjections
 export default class PresenceService extends Service {
-  @service currentUser;
-  @service siteSettings;
-  @service messageBus;
-
   _presenceDebounceMs = DEFAULT_PRESENCE_DEBOUNCE_MS;
 
   init() {

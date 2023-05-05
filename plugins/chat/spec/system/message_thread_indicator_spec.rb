@@ -22,7 +22,7 @@ describe "Thread indicator for chat messages", type: :system, js: true do
     it "shows no thread indicators in the channel" do
       thread = chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
       chat_page.visit_channel(channel)
-      expect(channel_page).not_to have_thread_indicator(thread.original_message)
+      expect(channel_page).to have_no_thread_indicator(thread.original_message)
     end
   end
 
@@ -36,7 +36,7 @@ describe "Thread indicator for chat messages", type: :system, js: true do
     it "shows no thread inidcators in the channel" do
       thread = chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
       chat_page.visit_channel(channel)
-      expect(channel_page).not_to have_thread_indicator(thread.original_message)
+      expect(channel_page).to have_no_thread_indicator(thread.original_message)
     end
   end
 

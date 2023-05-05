@@ -421,6 +421,8 @@ RSpec.configure do |config|
       end
     end
 
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
     Discourse.redis.flushdb
   end
 
