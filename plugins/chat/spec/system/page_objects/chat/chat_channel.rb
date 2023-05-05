@@ -174,11 +174,21 @@ module PageObjects
       end
 
       def has_thread_indicator?(message)
-        has_css?("#{message_by_id_selector(message.id)} .chat-message-thread-indicator")
+        has_css?(message_thread_indicator_selector(message))
+      end
+
+      def has_no_thread_indicator?(message)
+        has_no_css?(message_thread_indicator_selector(message))
       end
 
       def message_thread_indicator(message)
-        find("#{message_by_id_selector(message.id)} .chat-message-thread-indicator")
+        find(message_thread_indicator_selector(message))
+      end
+
+      private
+
+      def message_thread_indicator_selector(message)
+        "#{message_by_id_selector(message.id)} .chat-message-thread-indicator"
       end
     end
   end
