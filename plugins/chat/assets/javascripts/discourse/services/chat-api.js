@@ -49,6 +49,25 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Loads all threads for a channel.
+   * For now we only get the 50 threads ordered
+   * by the last message sent by the user then the
+   * thread creation date, later we will paginate
+   * and add filters.
+   * @param {number} channelId - The ID of the channel.
+   * @returns {Promise}
+   */
+  threads(channelId) {
+    return this.#getRequest(`/channels/${channelId}/threads`).then((result) => {
+      return result.threads.map((thread) => {
+        return this.chat.activeChannel.threadsManager.store(
+          this.chat.activeChannel,
+          thread
+        );
+      });
+    });
+  }
+  /**
    * List all accessible category channels of the current user.
    * @returns {Collection}
    *

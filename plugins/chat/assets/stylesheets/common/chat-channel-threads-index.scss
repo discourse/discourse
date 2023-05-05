@@ -1,0 +1,18 @@
+.chat-channel-threads-index {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+
+  &__original-messages {
+    overflow-y: scroll;
+    @include chat-scrollbar();
+    margin: 2px;
+    padding-right: 2px;
+    box-sizing: border-box;
+    flex-grow: 1;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+  }
+}

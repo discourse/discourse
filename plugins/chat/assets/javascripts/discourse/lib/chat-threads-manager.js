@@ -34,6 +34,10 @@ export default class ChatThreadsManager {
     }
   }
 
+  async index(channelId) {
+    return this.#loadIndex(channelId);
+  }
+
   get threads() {
     return Object.values(this._cached);
   }
@@ -72,5 +76,9 @@ export default class ChatThreadsManager {
 
   #findStale(id) {
     return this._cached[id];
+  }
+
+  async #loadIndex(channelId) {
+    return this.chatApi.threads(channelId);
   }
 }

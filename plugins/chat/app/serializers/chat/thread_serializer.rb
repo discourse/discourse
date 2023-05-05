@@ -5,7 +5,7 @@ module Chat
     has_one :original_message_user, serializer: BasicUserWithStatusSerializer, embed: :objects
     has_one :original_message, serializer: Chat::ThreadOriginalMessageSerializer, embed: :objects
 
-    attributes :id, :title, :status, :channel_id, :meta
+    attributes :id, :title, :status, :channel_id, :meta, :reply_count
 
     def initialize(object, opts)
       super(object, opts)
@@ -14,6 +14,10 @@ module Chat
 
     def meta
       { message_bus_last_ids: { thread_message_bus_last_id: thread_message_bus_last_id } }
+    end
+
+    def reply_count
+      object.replies_count_cache || 0
     end
 
     private

@@ -22,6 +22,7 @@ export default class ChatThread {
   @tracked channel;
   @tracked originalMessage;
   @tracked threadMessageBusLastId;
+  @tracked replyCount;
 
   messagesManager = new ChatMessagesManager(getOwner(this));
 
@@ -32,7 +33,9 @@ export default class ChatThread {
     this.status = args.status;
     this.draft = args.draft;
     this.staged = args.staged;
+    this.replyCount = args.reply_count;
     this.originalMessage = ChatMessage.create(channel, args.original_message);
+    this.originalMessage.user = this.#initUserModel(args.original_message_user);
   }
 
   stageMessage(message) {

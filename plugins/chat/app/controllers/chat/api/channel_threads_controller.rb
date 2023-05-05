@@ -11,7 +11,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
             channel: result.channel,
           ),
           ::Chat::ThreadIndexSerializer,
-          root: "threads",
+          root: false,
         )
       end
       on_failed_policy(:threaded_discussions_enabled) { raise Discourse::NotFound }

@@ -54,11 +54,16 @@ module Chat
           original_message_user: :user_status,
           original_message: :chat_webhook_event,
         )
+        .select("chat_threads.*, MAX(chat_messages.created_at) AS last_posted_at")
+        .joins("LEFT JOIN chat_messages ON chat_threads.id = chat_messages.thread_id")
         .joins(
-          "LEFT JOIN chat_messages ON chat_messages.thread_id = chat_threads.id AND chat_messages.user_id = #{guardian.user.id}",
+          "LEFT JOIN chat_messages original_messages ON chat_threads.original_message_id = original_messages.id",
         )
-        .order("chat_messages.created_at DESC NULLS LAST, chat_threads.created_at DESC")
-        .where("chat_threads.channel_id = ?", channel.id)
+        .where("chat_messages.user_id = ? OR chat_messages.user_id IS NULL", guardian.user.id)
+        .where(channel_id: channel.id)
+        .where("original_messages.deleted_at IS NULL")
+        .group("chat_threads.id")
+        .order("last_posted_at DESC NULLS LAST")
         .limit(50)
     end
   end

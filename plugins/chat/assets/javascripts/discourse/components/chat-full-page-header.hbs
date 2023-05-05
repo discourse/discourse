@@ -37,6 +37,17 @@
             class="open-drawer-btn btn-flat no-text"
             @action={{@onCloseFullScreen}}
           />
+
+          {{#if @channel.threadingEnabled}}
+            <LinkTo
+              @route="chat.channel.threads"
+              @models={{@channel.routeModels}}
+              title={{i18n "chat.open_thread_index"}}
+              class="open-thread-index-btn btn btn-flat"
+            >
+              {{d-icon "stream"}}
+            </LinkTo>
+          {{/if}}
         </div>
       {{/if}}
     </div>
