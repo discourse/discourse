@@ -22,7 +22,7 @@
     (if @message.highlighted "highlighted")
   }}
   data-id={{@message.id}}
-  data-thread-id={{@message.threadId}}
+  data-thread-id={{@message.thread.id}}
   {{chat/track-message
     (hash
       didEnterViewport=(fn @messageDidEnterViewport @message)

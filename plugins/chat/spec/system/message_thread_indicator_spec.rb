@@ -86,8 +86,8 @@ describe "Thread indicator for chat messages", type: :system, js: true do
       message_without_thread = Fabricate(:chat_message, chat_channel: channel, user: other_user)
       chat_page.visit_channel(channel)
       channel_page.reply_to(message_without_thread)
-      channel_page.fill_composer("this is a reply to make a new thread")
-      channel_page.click_send_message
+      open_thread.fill_composer("this is a reply to make a new thread")
+      open_thread.click_send_message
 
       expect(channel_page).to have_thread_indicator(message_without_thread)
 
@@ -108,7 +108,7 @@ describe "Thread indicator for chat messages", type: :system, js: true do
       )
       channel_page.message_thread_indicator(thread_1.original_message).click
       expect(side_panel).to have_open_thread(thread_1)
-      open_thread.send_message(thread_1.id, "new thread message")
+      open_thread.send_message("new thread message")
       expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_css(
         ".chat-message-thread-indicator__replies-count",
         text: I18n.t("js.chat.thread.replies", count: 4),

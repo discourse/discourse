@@ -25,6 +25,7 @@ module PageObjects
 
       def visit_thread(thread)
         visit(thread.url)
+        has_no_css?(".chat-skeleton")
       end
 
       def visit_channel_settings(channel)

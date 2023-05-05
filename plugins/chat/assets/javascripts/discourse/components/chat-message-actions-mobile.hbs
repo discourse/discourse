@@ -64,6 +64,7 @@
               @icon="discourse-emojis"
               @title="chat.react"
               @forwardEvent={{true}}
+              data-id="react"
             />
           {{/if}}
 
@@ -71,6 +72,7 @@
             <DButton
               @class="btn-flat bookmark-btn"
               @action={{action this.actAndCloseMenu "toggleBookmark"}}
+              data-id="bookmark"
             >
               <BookmarkIcon @bookmark={{this.message.bookmark}} />
             </DButton>
@@ -82,6 +84,7 @@
               @action={{action this.actAndCloseMenu "reply"}}
               @icon="reply"
               @title="chat.reply"
+              data-id="reply"
             />
           {{/if}}
         </div>

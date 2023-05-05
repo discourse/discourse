@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat message - channel", type: :system, js: true do
+RSpec.describe "Chat message - thread", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
@@ -25,13 +25,13 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
 
   context "when hovering a message" do
     it "adds an active class" do
-      last_message = thread_1.chat_messages.last
+      first_message = thread_1.chat_messages.first
       chat.visit_thread(thread_1)
 
-      thread.hover_message(last_message)
+      thread.hover_message(first_message)
 
       expect(page).to have_css(
-        ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{last_message.id}'] .chat-message.is-active",
+        ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{first_message.id}'] .chat-message.is-active",
       )
     end
   end

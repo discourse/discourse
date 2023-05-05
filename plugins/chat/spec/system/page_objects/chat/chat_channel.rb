@@ -3,6 +3,10 @@
 module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
+      def replying_to?(message)
+        find(".chat-channel .chat-reply", text: message.message)
+      end
+
       def type_in_composer(input)
         find(".chat-channel .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
         find(".chat-channel .chat-composer__input").send_keys(input)
@@ -49,7 +53,7 @@ module PageObjects
       def click_message_action_mobile(message, message_action)
         expand_message_actions_mobile(message, delay: 0.5)
         wait_for_animation(find(".chat-message-actions"), timeout: 5)
-        find(".chat-message-action-item[data-id=\"#{message_action}\"] button").click
+        find(".chat-message-actions [data-id=\"#{message_action}\"]").click
       end
 
       def hover_message(message)
@@ -114,8 +118,12 @@ module PageObjects
       end
 
       def reply_to(message)
-        hover_message(message)
-        find(".reply-btn").click
+        if page.has_css?("html.mobile-view", wait: 0)
+          click_message_action_mobile(message, "reply")
+        else
+          hover_message(message)
+          find(".reply-btn").click
+        end
       end
 
       def has_bookmarked_message?(message)
@@ -167,18 +175,22 @@ module PageObjects
       def check_message_presence(exists: true, text: nil, id: nil)
         css_method = exists ? :has_css? : :has_no_css?
         if text
-          send(css_method, ".chat-message-text", text: text, wait: 5)
+          find(".chat-channel").send(css_method, ".chat-message-text", text: text, wait: 5)
         elsif id
-          send(css_method, ".chat-message-container[data-id=\"#{id}\"]", wait: 10)
+          find(".chat-channel").send(
+            css_method,
+            ".chat-message-container[data-id=\"#{id}\"]",
+            wait: 10,
+          )
         end
       end
 
-      def has_thread_indicator?(message)
-        has_css?(message_thread_indicator_selector(message))
+      def has_thread_indicator?(message, text: nil)
+        has_css?(message_thread_indicator_selector(message), text: text)
       end
 
-      def has_no_thread_indicator?(message)
-        has_no_css?(message_thread_indicator_selector(message))
+      def has_no_thread_indicator?(message, text: nil)
+        has_no_css?(message_thread_indicator_selector(message), text: text)
       end
 
       def message_thread_indicator(message)

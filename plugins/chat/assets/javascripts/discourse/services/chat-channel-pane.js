@@ -55,4 +55,8 @@ export default class ChatChannelPane extends Service {
 
     return lastCurrentUserMessage;
   }
+
+  get lastMessage() {
+    return this.chat.activeChannel.messages.lastObject;
+  }
 }

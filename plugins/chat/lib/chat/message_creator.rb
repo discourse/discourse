@@ -13,6 +13,7 @@ module Chat
       chat_channel:,
       in_reply_to_id: nil,
       thread_id: nil,
+      staged_thread_id: nil,
       user:,
       content:,
       staged_id: nil,
@@ -31,6 +32,7 @@ module Chat
       @incoming_chat_webhook = incoming_chat_webhook
       @upload_ids = upload_ids || []
       @thread_id = thread_id
+      @staged_thread_id = staged_thread_id
       @error = nil
 
       @chat_message =
@@ -57,7 +59,12 @@ module Chat
         create_thread
         @chat_message.attach_uploads(uploads)
         Chat::Draft.where(user_id: @user.id, chat_channel_id: @chat_channel.id).destroy_all
-        Chat::Publisher.publish_new!(@chat_channel, @chat_message, @staged_id)
+        Chat::Publisher.publish_new!(
+          @chat_channel,
+          @chat_message,
+          @staged_id,
+          staged_thread_id: @staged_thread_id,
+        )
         resolved_thread&.increment_replies_count_cache
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
@@ -123,6 +130,8 @@ module Chat
     end
 
     def validate_existing_thread!
+      return if @staged_thread_id.present? && @thread_id.blank?
+
       return if @thread_id.blank?
       @existing_thread = Chat::Thread.find(@thread_id)
 
@@ -165,7 +174,7 @@ module Chat
 
     def create_thread
       return if @in_reply_to_id.blank?
-      return if @chat_message.in_thread?
+      return if @chat_message.in_thread? && !@staged_thread_id.present?
 
       if @original_message.thread
         thread = @original_message.thread
@@ -177,11 +186,14 @@ module Chat
             channel: @chat_message.chat_channel,
           )
         @chat_message.in_reply_to.thread_id = thread.id
-        Chat::Publisher.publish_thread_created!(
-          @chat_message.chat_channel,
-          @chat_message.in_reply_to,
-        )
       end
+
+      Chat::Publisher.publish_thread_created!(
+        @chat_message.chat_channel,
+        @chat_message.in_reply_to,
+        thread.id,
+        @staged_thread_id,
+      )
 
       @chat_message.thread_id = thread.id
 
