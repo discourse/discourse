@@ -2,7 +2,6 @@
   @route="chat.channel.thread"
   @models={{@message.thread.routeModels}}
   class="chat-message-thread-indicator"
-  {{on "mouseenter" this.preloadThread}}
 >
   <span class="chat-message-thread-indicator__replies-count">
     {{i18n "chat.thread.replies" count=@message.threadReplyCount}}
