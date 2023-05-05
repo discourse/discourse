@@ -24,7 +24,11 @@ describe "Thread preload", type: :system, js: true do
 
       channel_page.message_thread_indicator(thread.original_message).hover
 
-      expect(page).to have_selector("link.is-prefetched", count: 2, visible: false)
+      expect(page).to have_selector("link#thread-preload-#{thread.id}.is-preloaded", visible: false)
+      expect(page).to have_selector(
+        "link#thread-preload-messages-#{thread.id}.is-preloaded",
+        visible: false,
+      )
 
       page.driver.browser.network_conditions = { offline: true }
 
