@@ -10,7 +10,7 @@ import { schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 
-export const PAGE_SIZE = 50;
+const PAGE_SIZE = 50;
 
 export default class ChatThreadPanel extends Component {
   @service siteSettings;
