@@ -451,6 +451,30 @@ describe Chat::MessageCreator do
         expect(thread_created_message.channel).to eq("/chat/#{public_chat_channel.id}")
       end
 
+      context "when a staged_thread_id is provided" do
+        fab!(:existing_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
+
+        it "creates a thread and publishes with the staged id" do
+          messages =
+            MessageBus.track_publish do
+              described_class.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                in_reply_to_id: reply_message.id,
+                staged_thread_id: "stagedthreadid",
+              ).chat_message
+            end
+
+          thread_event = messages.find { |m| m.data["type"] == "thread_created" }
+          expect(thread_event.data["staged_thread_id"]).to eq("stagedthreadid")
+          expect(Chat::Thread.find(thread_event.data["thread_id"])).to be_persisted
+
+          send_event = messages.find { |m| m.data["type"] == "sent" }
+          expect(send_event.data["staged_thread_id"]).to eq("stagedthreadid")
+        end
+      end
+
       context "when the thread_id is provided" do
         fab!(:existing_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
 

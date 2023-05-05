@@ -282,15 +282,15 @@ export default class ChatMessage extends Component {
   }
 
   get threadingEnabled() {
-    return this.args.channel?.threadingEnabled && this.args.message?.threadId;
+    return this.args.channel?.threadingEnabled && !!this.args.message?.thread;
   }
 
   get showThreadIndicator() {
     return (
       this.args.context !== MESSAGE_CONTEXT_THREAD &&
       this.threadingEnabled &&
-      this.args.message?.threadId !==
-        this.args.message?.previousMessage?.threadId
+      this.args.message?.thread &&
+      this.args.message?.threadReplyCount > 0
     );
   }
 
@@ -352,7 +352,7 @@ export default class ChatMessage extends Component {
   inviteMentioned() {
     const userIds = this.mentionWarning.without_membership.mapBy("id");
 
-    ajax(`/chat/${this.args.message.channelId}/invite`, {
+    ajax(`/chat/${this.args.message.channel.id}/invite`, {
       method: "PUT",
       data: { user_ids: userIds, chat_message_id: this.args.message.id },
     }).then(() => {

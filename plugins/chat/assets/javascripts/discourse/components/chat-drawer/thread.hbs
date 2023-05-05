@@ -24,7 +24,7 @@
     {{did-update this.fetchChannelAndThread @params.threadId}}
   >
     {{#if this.chat.activeChannel.activeThread}}
-      <ChatThread />
+      <ChatThread @thread={{this.chat.activeChannel.activeThread}} />
     {{/if}}
   </div>
 {{/if}}

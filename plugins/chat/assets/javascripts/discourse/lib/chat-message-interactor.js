@@ -229,8 +229,8 @@ export default class ChatMessageInteractor {
 
   copyLink() {
     const { protocol, host } = window.location;
-    const channelId = this.message.channelId;
-    const threadId = this.message.threadId;
+    const channelId = this.message.channel.id;
+    const threadId = this.message.thread?.id;
 
     let url;
     if (threadId) {
@@ -276,7 +276,7 @@ export default class ChatMessageInteractor {
 
     return this.chatApi
       .publishReaction(
-        this.message.channelId,
+        this.message.channel.id,
         this.message.id,
         emoji,
         reactAction
@@ -329,21 +329,21 @@ export default class ChatMessageInteractor {
   @action
   delete() {
     return this.chatApi
-      .trashMessage(this.message.channelId, this.message.id)
+      .trashMessage(this.message.channel.id, this.message.id)
       .catch(popupAjaxError);
   }
 
   @action
   restore() {
     return this.chatApi
-      .restoreMessage(this.message.channelId, this.message.id)
+      .restoreMessage(this.message.channel.id, this.message.id)
       .catch(popupAjaxError);
   }
 
   @action
   rebake() {
     return this.chatApi
-      .rebakeMessage(this.message.channelId, this.message.id)
+      .rebakeMessage(this.message.channel.id, this.message.id)
       .catch(popupAjaxError);
   }
 

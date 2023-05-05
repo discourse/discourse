@@ -3,8 +3,6 @@ import { inject as service } from "@ember/service";
 import I18n from "I18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { action } from "@ember/object";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { Promise } from "rsvp";
 
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;
@@ -13,18 +11,6 @@ export default class ChatComposerChannel extends ChatComposer {
   context = "channel";
 
   composerId = "channel-composer";
-
-  @action
-  sendMessage(raw) {
-    const message = ChatMessage.createDraftMessage(this.args.channel, {
-      user: this.currentUser,
-      message: raw,
-    });
-
-    this.args.onSendMessage(message);
-
-    return Promise.resolve();
-  }
 
   @action
   persistDraft() {

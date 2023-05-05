@@ -46,6 +46,7 @@ RSpec.describe "Deleted message", type: :system, js: true do
       channel_1.update!(threading_enabled: true)
       SiteSetting.enable_experimental_chat_threaded_discussions = true
       chat_system_user_bootstrap(user: other_user, channel: channel_1)
+      Chat::Thread.update_counts
     end
 
     it "hides the deleted messages" do
@@ -55,8 +56,8 @@ RSpec.describe "Deleted message", type: :system, js: true do
 
       expect(channel_page).to have_message(id: message_1.id)
       expect(channel_page).to have_message(id: message_2.id)
-      expect(open_thread).to have_message(thread.id, id: message_4.id)
-      expect(open_thread).to have_message(thread.id, id: message_5.id)
+      expect(open_thread).to have_message(thread_id: thread.id, id: message_4.id)
+      expect(open_thread).to have_message(thread_id: thread.id, id: message_5.id)
 
       Chat::Publisher.publish_bulk_delete!(
         channel_1,
@@ -65,8 +66,8 @@ RSpec.describe "Deleted message", type: :system, js: true do
 
       expect(channel_page).to have_no_message(id: message_1.id)
       expect(channel_page).to have_no_message(id: message_2.id)
-      expect(open_thread).to have_no_message(thread.id, id: message_4.id)
-      expect(open_thread).to have_no_message(thread.id, id: message_5.id)
+      expect(open_thread).to have_no_message(thread_id: thread.id, id: message_4.id)
+      expect(open_thread).to have_no_message(thread_id: thread.id, id: message_5.id)
     end
   end
 end

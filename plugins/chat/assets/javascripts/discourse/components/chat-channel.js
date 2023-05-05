@@ -1,5 +1,6 @@
 import { capitalize } from "@ember/string";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
@@ -352,7 +353,13 @@ export default class ChatLivePane extends Component {
         messageData.newest = true;
       }
 
-      messages.push(ChatMessage.create(channel, messageData));
+      const message = ChatMessage.create(channel, messageData);
+
+      if (messageData.thread_id) {
+        message.thread = new ChatThread(channel, { id: messageData.thread_id });
+      }
+
+      messages.push(message);
     });
 
     return [messages, results.meta];
@@ -548,7 +555,11 @@ export default class ChatLivePane extends Component {
     }
 
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
-      const stagedMessage = handleStagedMessage(this.#messagesManager, data);
+      const stagedMessage = handleStagedMessage(
+        this.args.channel,
+        this.#messagesManager,
+        data
+      );
       if (stagedMessage) {
         return;
       }

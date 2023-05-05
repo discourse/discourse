@@ -123,8 +123,8 @@ describe "Single thread in side panel", type: :system, js: true do
         chat_page.visit_channel(channel)
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel).to have_open_thread(thread)
-        thread_page.send_message(thread.id, "new thread message")
-        expect(thread_page).to have_message(thread.id, text: "new thread message")
+        thread_page.send_message("new thread message")
+        expect(thread_page).to have_message(thread_id: thread.id, text: "new thread message")
         thread_message = thread.replies.last
         expect(thread_message.chat_channel_id).to eq(channel.id)
         expect(thread_message.thread.channel_id).to eq(channel.id)
@@ -134,8 +134,8 @@ describe "Single thread in side panel", type: :system, js: true do
         chat_page.visit_channel(channel)
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel).to have_open_thread(thread)
-        thread_page.send_message(thread.id, "new thread message")
-        expect(thread_page).to have_message(thread.id, text: "new thread message")
+        thread_page.send_message("new thread message")
+        expect(thread_page).to have_message(thread_id: thread.id, text: "new thread message")
         thread_message = thread.reload.replies.last
         expect(channel_page).not_to have_css(channel_page.message_by_id_selector(thread_message.id))
       end
@@ -157,19 +157,19 @@ describe "Single thread in side panel", type: :system, js: true do
 
         using_session(:tab_2) do
           expect(side_panel).to have_open_thread(thread)
-          thread_page.send_message(thread.id, "the other user message")
-          expect(thread_page).to have_message(thread.id, text: "the other user message")
+          thread_page.send_message("the other user message")
+          expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
         end
 
         using_session(:tab_1) do
           expect(side_panel).to have_open_thread(thread)
-          expect(thread_page).to have_message(thread.id, text: "the other user message")
-          thread_page.send_message(thread.id, "this is a test message")
-          expect(thread_page).to have_message(thread.id, text: "this is a test message")
+          expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
+          thread_page.send_message("this is a test message")
+          expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
         end
 
         using_session(:tab_2) do
-          expect(thread_page).to have_message(thread.id, text: "this is a test message")
+          expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
         end
       end
 
