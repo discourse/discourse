@@ -36,6 +36,7 @@
       class="chat-messages-container"
       {{chat/on-resize this.didResizePane (hash delay=25 immediate=true)}}
     >
+
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
@@ -50,6 +51,10 @@
       {{else}}
         <ChatSkeleton />
       {{/if}}
+
+      <Chat::Thread::OriginalMessage
+        @message={{@channel.messages.lastObject}}
+      />
     </div>
 
     {{! at bottom even if shown at top due to column-reverse  }}

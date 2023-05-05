@@ -1,0 +1,25 @@
+.chat-thread-original-message {
+  background: var(--primary-low);
+  display: flex;
+
+  margin: 2rem;
+  width: 200px;
+
+  &__inner-container {
+    padding: 1rem;
+  }
+
+  &__excerpt {
+    padding-bottom: 1rem;
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-down-1);
+  }
+
+  &__avatar {
+    padding-inline: 0.25rem;
+  }
+}
