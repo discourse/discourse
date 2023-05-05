@@ -69,9 +69,43 @@ export default class ChatMessage extends Component {
     return !this.args.message?.expanded;
   }
 
+  get deletedMessageLabel() {
+    let count = 1;
+
+    const recursiveCount = (message) => {
+      const previousMessage = message.previousMessage;
+      if (previousMessage?.deletedAt) {
+        count++;
+        recursiveCount(previousMessage);
+      }
+    };
+
+    recursiveCount(this.args.message);
+
+    return I18n.t("chat.deleted", { count });
+  }
+
+  get shouldRender() {
+    return (
+      this.args.message.expanded ||
+      !this.args.message.deletedAt ||
+      (this.args.message.deletedAt && !this.args.message.nextMessage?.deletedAt)
+    );
+  }
+
   @action
   expand() {
+    const recursiveExpand = (message) => {
+      const previousMessage = message.previousMessage;
+      if (previousMessage?.deletedAt) {
+        previousMessage.expanded = true;
+        recursiveExpand(previousMessage);
+      }
+    };
+
     this.args.message.expanded = true;
+
+    recursiveExpand(this.args.message);
   }
 
   @action

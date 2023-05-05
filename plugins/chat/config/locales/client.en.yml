@@ -81,7 +81,10 @@ en:
       collapse: "Collapse Chat Drawer"
       expand: "Expand Chat Drawer"
       confirm_flag: "Are you sure you want to flag %{username}'s message?"
-      deleted: "A message was deleted. [view]"
+      deleted:
+        one: "A message was deleted. [view]"
+        other: "%{count} messages were deleted. [view all]"
+
       hidden: "A message was hidden. [view]"
       delete: "Delete"
       edited: "edited"

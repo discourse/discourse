@@ -4,7 +4,7 @@ RSpec.describe "Deleted message", type: :system, js: true do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user) { Fabricate(:admin) }
   fab!(:channel_1) { Fabricate(:category_channel) }
 
   before do
@@ -22,6 +22,29 @@ RSpec.describe "Deleted message", type: :system, js: true do
       channel_page.delete_message(OpenStruct.new(id: last_message["data-id"]))
 
       expect(page).to have_content(I18n.t("js.chat.deleted"))
+    end
+  end
+
+  context "when deleting multiple messages" do
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_3) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_4) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_5) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_6) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+    it "groups them" do
+      chat_page.visit_channel(channel_1)
+
+      channel_page.delete_message(message_1)
+      channel_page.delete_message(message_3)
+      channel_page.delete_message(message_4)
+      channel_page.delete_message(message_6)
+
+      expect(channel_page).to have_deleted_message(message_1)
+      expect(channel_page).to have_deleted_message(message_4, count: 2)
+      expect(channel_page).to have_deleted_message(message_6)
+      expect(channel_page).to have_no_message(id: message_3.id)
     end
   end
 
