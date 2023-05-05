@@ -185,12 +185,12 @@ module PageObjects
         end
       end
 
-      def has_thread_indicator?(message)
-        has_css?(message_thread_indicator_selector(message), **args)
+      def has_thread_indicator?(message, text: nil)
+        has_css?(message_thread_indicator_selector(message), text: text)
       end
 
-      def has_no_thread_indicator?(message)
-        has_no_css?(message_thread_indicator_selector(message), **args)
+      def has_no_thread_indicator?(message, text: nil)
+        has_no_css?(message_thread_indicator_selector(message), text: text)
       end
 
       def message_thread_indicator(message)
