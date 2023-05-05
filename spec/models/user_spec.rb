@@ -131,7 +131,7 @@ RSpec.describe User do
       it "should not create any sidebar section link records for staged users" do
         user = Fabricate(:user, staged: true)
 
-        expect(SidebarSectionLink.exists?).to eq(false)
+        expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
 
       it "should create sidebar section link records when user has been unstaged" do
@@ -144,7 +144,7 @@ RSpec.describe User do
       it "should not create any sidebar section link records for non human users" do
         user = Fabricate(:user, id: -Time.now.to_i)
 
-        expect(SidebarSectionLink.exists?).to eq(false)
+        expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
 
       it "should not create any tag sidebar section link records when tagging is disabled" do

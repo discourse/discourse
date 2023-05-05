@@ -21,7 +21,7 @@
     "xss": "^1.0.14"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.4",
+    "@babel/core": "^7.21.8",
     "@ember/optional-features": "^2.0.0",
     "@ember/string": "^3.0.1",
     "@embroider/test-setup": "^2.1.1",
@@ -35,10 +35,10 @@
     "ember-disable-prototype-extensions": "^1.1.3",
     "ember-load-initializers": "^2.1.1",
     "ember-resolver": "^10.0.0",
-    "ember-source": "~3.28.11",
+    "ember-source": "~3.28.12",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.81.0"
+    "webpack": "^5.82.0"
   },
   "engines": {
     "node": "16.* || >= 18",

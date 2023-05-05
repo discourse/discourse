@@ -1,13 +1,20 @@
-import ChatChannelComposer from "./chat-channel-composer";
+import ChatComposer from "./chat-composer";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { action } from "@ember/object";
 
-export default class extends ChatChannelComposer {
+export default class ChatChannelThreadComposer extends ChatComposer {
   @action
-  reset(channel) {
+  reset(channel, thread) {
     this.message = ChatMessage.createDraftMessage(channel, {
       user: this.currentUser,
-      thread_id: channel.activeThread.id,
     });
+    this.message.thread = thread;
+  }
+
+  @action
+  replyTo(message) {
+    this.chat.activeMessage = null;
+    this.message.thread = message.thread;
+    this.message.inReplyTo = message;
   }
 }

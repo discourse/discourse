@@ -75,7 +75,6 @@ export default SelectKitComponent.extend({
   },
 
   select(value, item) {
-    this.selectKit.set("multiSelectInFocus", true);
     if (this.selectKit.hasSelection && this.selectKit.options.maximum === 1) {
       this.selectKit.deselectByValue(
         this.getValue(this.selectedContent.firstObject)

@@ -87,8 +87,7 @@ RSpec.describe "Move message to channel", type: :system, js: true do
 
         chat.visit_channel(channel_1)
 
-        expect(page).to have_no_content(message_1.message)
-        expect(page).to have_content(I18n.t("js.chat.deleted"))
+        expect(channel).to have_deleted_message(message_1)
       end
     end
   end

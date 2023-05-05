@@ -157,6 +157,8 @@ module Chat
 
       self.cooked = self.class.cook(self.message, user_id: self.last_editor_id)
       self.cooked_version = BAKED_VERSION
+
+      invalidate_parsed_mentions
     end
 
     def rebake!(invalidate_oneboxes: false, priority: nil)
@@ -258,7 +260,49 @@ module Chat
       "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
     end
 
-    def create_mentions(user_ids)
+    def create_mentions
+      insert_mentions(parsed_mentions.all_mentioned_users_ids)
+    end
+
+    def update_mentions
+      mentioned_user_ids = parsed_mentions.all_mentioned_users_ids
+
+      old_mentions = chat_mentions.pluck(:user_id)
+      updated_mentions = mentioned_user_ids
+      mentioned_user_ids_to_drop = old_mentions - updated_mentions
+      mentioned_user_ids_to_add = updated_mentions - old_mentions
+
+      delete_mentions(mentioned_user_ids_to_drop)
+      insert_mentions(mentioned_user_ids_to_add)
+    end
+
+    def in_thread?
+      self.thread_id.present?
+    end
+
+    def thread_reply?
+      in_thread? && !thread_om?
+    end
+
+    def thread_om?
+      in_thread? && self.thread.original_message_id == self.id
+    end
+
+    def parsed_mentions
+      @parsed_mentions ||= Chat::ParsedMentions.new(self)
+    end
+
+    def invalidate_parsed_mentions
+      @parsed_mentions = nil
+    end
+
+    private
+
+    def delete_mentions(user_ids)
+      chat_mentions.where(user_id: user_ids).destroy_all
+    end
+
+    def insert_mentions(user_ids)
       return if user_ids.empty?
 
       now = Time.zone.now
@@ -275,34 +319,6 @@ module Chat
         end
 
       Chat::Mention.insert_all(mentions)
-    end
-
-    def update_mentions(mentioned_user_ids)
-      old_mentions = chat_mentions.pluck(:user_id)
-      updated_mentions = mentioned_user_ids
-      mentioned_user_ids_to_drop = old_mentions - updated_mentions
-      mentioned_user_ids_to_add = updated_mentions - old_mentions
-
-      delete_mentions(mentioned_user_ids_to_drop)
-      create_mentions(mentioned_user_ids_to_add)
-    end
-
-    def in_thread?
-      self.thread_id.present?
-    end
-
-    def thread_reply?
-      in_thread? && !thread_om?
-    end
-
-    def thread_om?
-      in_thread? && self.thread.original_message_id == self.id
-    end
-
-    private
-
-    def delete_mentions(user_ids)
-      chat_mentions.where(user_id: user_ids).destroy_all
     end
 
     def message_too_short?

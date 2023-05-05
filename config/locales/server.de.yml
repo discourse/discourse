@@ -2161,7 +2161,6 @@ de:
     default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     experimental_new_new_view_groups: "EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf."
-    enable_custom_sidebar_sections: "EXPERIMENTELL: Aktiviere benutzerdefinierte Seitenleistenabschnitte"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."

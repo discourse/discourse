@@ -371,12 +371,16 @@ class PostRevisor
 
   def should_create_new_version?
     return false if @skip_revision
-    edited_by_another_user? || !grace_period_edit? || owner_changed? || force_new_version? ||
-      edit_reason_specified?
+    edited_by_another_user? || flagged? || !grace_period_edit? || owner_changed? ||
+      force_new_version? || edit_reason_specified?
   end
 
   def edit_reason_specified?
     @fields[:edit_reason].present? && @fields[:edit_reason] != @post.edit_reason
+  end
+
+  def flagged?
+    @post.is_flagged?
   end
 
   def edited_by_another_user?
@@ -422,7 +426,6 @@ class PostRevisor
 
   def grace_period_edit?
     return false if (@revised_at - @last_version_at) > SiteSetting.editing_grace_period.to_i
-    return false if @post.reviewable_flag.present?
 
     if new_raw = @fields[:raw]
       max_diff = SiteSetting.editing_grace_period_max_diff.to_i

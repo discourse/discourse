@@ -43,7 +43,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     bookmark_modal.fill_name("something important")
     bookmark_modal.cancel
 
-    expect(topic_page).not_to have_post_bookmarked(post)
+    expect(topic_page).to have_no_post_bookmarked(post)
     expect(Bookmark.exists?(bookmarkable: post, user: user)).to eq(false)
   end
 

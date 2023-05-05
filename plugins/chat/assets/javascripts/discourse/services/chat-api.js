@@ -40,7 +40,11 @@ export default class ChatApi extends Service {
    */
   thread(channelId, threadId) {
     return this.#getRequest(`/channels/${channelId}/threads/${threadId}`).then(
-      (result) => this.chat.activeChannel.threadsManager.store(result.thread)
+      (result) =>
+        this.chat.activeChannel.threadsManager.store(
+          this.chat.activeChannel,
+          result.thread
+        )
     );
   }
 
@@ -405,6 +409,20 @@ export default class ChatApi extends Service {
    */
   markChannelAsRead(channelId, messageId = null) {
     return this.#putRequest(`/channels/${channelId}/read/${messageId}`);
+  }
+
+  /**
+   * Marks all messages and mentions in a thread as read. This is quite
+   * far-reaching for now, and is not granular since there is no membership/
+   * read state per-user for threads. In future this will be expanded to
+   * also pass message ID in the same way as markChannelAsRead
+   *
+   * @param {number} channelId - The ID of the channel for the thread being marked as read.
+   * @param {number} threadId - The ID of the thread being marked as read.
+   * @returns {Promise}
+   */
+  markThreadAsRead(channelId, threadId) {
+    return this.#putRequest(`/channels/${channelId}/threads/${threadId}/read`);
   }
 
   get #basePath() {

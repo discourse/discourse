@@ -122,10 +122,7 @@ export default Component.extend(UtilsMixin, {
       event.stopPropagation();
       event.preventDefault(); // prevents the space to trigger a scroll page-next
       this.selectKit.open(event);
-    } else if (
-      event.key === "Escape" ||
-      (event.shiftKey && event.key === "Tab")
-    ) {
+    } else if (event.key === "Escape") {
       event.stopPropagation();
       if (this.selectKit.isExpanded) {
         this.selectKit.close(event);

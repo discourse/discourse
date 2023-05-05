@@ -11,6 +11,7 @@ module("Unit | Route | review-index", function (hooks) {
     this.owner.register("service:current-user", currentUser, {
       instantiate: false,
     });
+    this.owner.inject("route", "currentUser", "service:current-user");
 
     const reviewIndexRoute = this.owner.lookup("route:review-index");
     const messageBus = this.owner.lookup("service:message-bus");
@@ -40,6 +41,7 @@ module("Unit | Route | review-index", function (hooks) {
     this.owner.register("service:current-user", currentUser, {
       instantiate: false,
     });
+    this.owner.inject("route", "currentUser", "service:current-user");
 
     const reviewIndexRoute = this.owner.lookup("route:review-index");
     const messageBus = this.owner.lookup("service:message-bus");

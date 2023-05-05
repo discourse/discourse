@@ -9,6 +9,7 @@ import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-thread
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import { getOwner } from "discourse-common/lib/get-owner";
 import guid from "pretty-text/guid";
+import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -67,8 +68,28 @@ export default class ChatChannel extends RestModel {
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
 
-  findIndexOfMessage(message) {
-    return this.messages.findIndex((m) => m.id === message.id);
+  findIndexOfMessage(id) {
+    return this.messagesManager.findIndexOfMessage(id);
+  }
+
+  findStagedMessage(id) {
+    return this.messagesManager.findStagedMessage(id);
+  }
+
+  findMessage(id) {
+    return this.messagesManager.findMessage(id);
+  }
+
+  addMessages(messages) {
+    this.messagesManager.addMessages(messages);
+  }
+
+  clearMessages() {
+    this.messagesManager.clearMessages();
+  }
+
+  removeMessage(message) {
+    this.messagesManager.removeMessage(message);
   }
 
   get messages() {
@@ -81,6 +102,10 @@ export default class ChatChannel extends RestModel {
 
   get canLoadMoreFuture() {
     return this.messagesManager.canLoadMoreFuture;
+  }
+
+  get canLoadMorePast() {
+    return this.messagesManager.canLoadMorePast;
   }
 
   get escapedTitle() {
@@ -155,6 +180,23 @@ export default class ChatChannel extends RestModel {
     this.channelMessageBusLastId = details.channel_message_bus_last_id;
   }
 
+  createStagedThread(message) {
+    const clonedMessage = message.duplicate();
+
+    const thread = new ChatThread(this, {
+      id: `staged-thread-${message.channel.id}-${message.id}`,
+      original_message: message,
+      staged: true,
+      created_at: moment.utc().format(),
+    });
+
+    clonedMessage.thread = thread;
+    this.threadsManager.store(this, thread);
+    thread.messagesManager.addMessages([clonedMessage]);
+
+    return thread;
+  }
+
   stageMessage(message) {
     message.id = guid();
     message.staged = true;
@@ -163,16 +205,11 @@ export default class ChatChannel extends RestModel {
     message.cook();
 
     if (message.inReplyTo) {
-      if (!message.inReplyTo.threadId) {
-        message.inReplyTo.threadId = guid();
-        message.inReplyTo.threadReplyCount = 1;
-      }
-
       if (!this.threadingEnabled) {
-        this.messagesManager.addMessages([message]);
+        this.addMessages([message]);
       }
     } else {
-      this.messagesManager.addMessages([message]);
+      this.addMessages([message]);
     }
   }
 
@@ -202,8 +239,8 @@ export default class ChatChannel extends RestModel {
       return;
     }
 
-    // TODO (martin) Change this to use chatApi service once we change this
-    // class not to use RestModel
+    // TODO (martin) Change this to use chatApi service markChannelAsRead once we change this
+    // class not to use RestModel.
     return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
       method: "PUT",
     });

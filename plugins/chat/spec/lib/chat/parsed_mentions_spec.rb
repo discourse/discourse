@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Chat::MessageMentions do
+RSpec.describe Chat::ParsedMentions do
   fab!(:channel_member_1) { Fabricate(:user) }
   fab!(:channel_member_2) { Fabricate(:user) }
   fab!(:channel_member_3) { Fabricate(:user) }
