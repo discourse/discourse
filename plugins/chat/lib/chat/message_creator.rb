@@ -52,9 +52,12 @@ module Chat
         validate_message!(has_uploads: uploads.any?)
         validate_reply_chain!
         validate_existing_thread!
+
         @chat_message.thread_id = @existing_thread&.id
         @chat_message.cook
         @chat_message.save!
+        @chat_message.create_mentions
+
         create_chat_webhook_event
         create_thread
         @chat_message.attach_uploads(uploads)
