@@ -223,11 +223,15 @@ export default class ChatChannel extends RestModel {
 
   updateMembership(membership) {
     this.currentUserMembership.following = membership.following;
-    this.currentUserMembership.muted = membership.muted;
+    this.currentUserMembership.last_read_message_id =
+      membership.last_read_message_id;
     this.currentUserMembership.desktop_notification_level =
       membership.desktop_notification_level;
     this.currentUserMembership.mobile_notification_level =
       membership.mobile_notification_level;
+    this.currentUserMembership.unread_count = membership.unread_count;
+    this.currentUserMembership.unread_mentions = membership.unread_mentions;
+    this.currentUserMembership.muted = membership.muted;
   }
 
   updateLastReadMessage(messageId) {

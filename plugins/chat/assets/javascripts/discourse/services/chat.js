@@ -9,6 +9,11 @@ import { and } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import discourseLater from "discourse-common/lib/later";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import {
+  onPresenceChange,
+  removeOnPresenceChange,
+} from "discourse/lib/user-presence";
+import { bind } from "discourse-common/utils/decorators";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -16,6 +21,7 @@ const CHAT_ONLINE_OPTIONS = {
 };
 
 export default class Chat extends Service {
+  @service chatApi;
   @service appEvents;
   @service currentUser;
   @service chatNotificationManager;
@@ -89,6 +95,36 @@ export default class Chat extends Service {
 
     if (this.userCanChat) {
       this.presenceChannel = this.presence.getChannel("/chat/online");
+
+      onPresenceChange({
+        callback: this.onPresenceChangeCallback,
+        browserHiddenTime: 150000,
+        userUnseenTime: 150000,
+      });
+    }
+  }
+
+  @bind
+  onPresenceChangeCallback(present) {
+    if (present) {
+      this.chatApi.listCurrentUserChannels().then((channels) => {
+        this.chatSubscriptionsManager.stopChannelsSubscriptions();
+
+        this.chatSubscriptionsManager.startChannelsSubscriptions(
+          channels.meta.message_bus_last_ids
+        );
+
+        [
+          ...channels.public_channels,
+          ...channels.direct_message_channels,
+        ].forEach((channelObject) => {
+          this.chatChannelsManager
+            .find(channelObject.id, { fetchIfNotFound: false })
+            .then((channel) => {
+              channel.updateMembership(channelObject.current_user_membership);
+            });
+        });
+      });
     }
   }
 
@@ -148,6 +184,7 @@ export default class Chat extends Service {
 
     if (this.userCanChat) {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
+      removeOnPresenceChange(this.onPresenceChangeCallback);
     }
   }
 
