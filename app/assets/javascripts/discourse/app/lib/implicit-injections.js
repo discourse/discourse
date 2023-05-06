@@ -17,7 +17,7 @@ const disableImplicitInjectionsKey = Symbol("DISABLE_IMPLICIT_INJECTIONS");
  *
  */
 function implicitInjectionShim(lookupName, key) {
-  let overrideKey = Symbol(`OVERRIDE_${key}`);
+  let overrideKey = `__OVERRIDE_${key}`;
 
   return computed(key, {
     get() {

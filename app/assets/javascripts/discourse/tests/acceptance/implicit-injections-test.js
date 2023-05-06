@@ -1,5 +1,6 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import RestModel from "discourse/models/rest";
 import Service, { inject as service } from "@ember/service";
 import { getOwner, setOwner } from "@ember/application";
 
@@ -32,5 +33,24 @@ acceptance("Implicit injections shims", function () {
     setOwner(serviceInstance, getOwner(this));
 
     assert.strictEqual(serviceInstance.session, "an override");
+  });
+
+  test("passes through assigned values when creating from another object", async function (assert) {
+    const initialModel = RestModel.create({
+      appEvents: "overridden app events",
+    });
+
+    assert.strictEqual(
+      initialModel.appEvents,
+      "overridden app events",
+      "overridden app events are set correctly"
+    );
+
+    const newModel = RestModel.create(initialModel);
+    assert.strictEqual(
+      newModel.appEvents,
+      "overridden app events",
+      "overriden app events are passed though when creating from another objects"
+    );
   });
 });
