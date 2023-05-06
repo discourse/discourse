@@ -108,9 +108,7 @@ export default class Chat extends Service {
   onPresenceChangeCallback(present) {
     if (present) {
       this.chatApi.listCurrentUserChannels().then((channels) => {
-        this.chatSubscriptionsManager.stopChannelsSubscriptions();
-
-        this.chatSubscriptionsManager.startChannelsSubscriptions(
+        this.chatSubscriptionsManager.restartChannelsSubscriptions(
           channels.meta.message_bus_last_ids
         );
 
