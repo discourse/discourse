@@ -119,7 +119,9 @@ export default class Chat extends Service {
           this.chatChannelsManager
             .find(channelObject.id, { fetchIfNotFound: false })
             .then((channel) => {
-              channel.updateMembership(channelObject.current_user_membership);
+              if (channel) {
+                channel.updateMembership(channelObject.current_user_membership);
+              }
             });
         });
       });
