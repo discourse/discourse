@@ -148,11 +148,11 @@ RSpec.describe EmbedController do
 
       it "disallows indexing the embed topic list for Googlebot" do
         topic = Fabricate(:topic)
-        get '/embed/topics?discourse_embed_id=de-1234', headers: {
-          'REFERER' => 'https://example.com/evil-trout'
+        get "/embed/topics?discourse_embed_id=de-1234", headers: {
+          "REFERER' => "https://example.com/evil-trout"
         }
         expect(response.status).to eq(200)
-        expect(response.headers['X-Robots-Tag']).to match(/googlebot:noindex/)
+        expect(response.headers["X-Robots-Tag"]).to match(/googlebot:noindex/)
       end      
     end
   end
