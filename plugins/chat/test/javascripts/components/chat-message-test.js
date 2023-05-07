@@ -11,8 +11,8 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   setupRenderingTest(hooks);
 
   function generateMessageProps(messageData = {}) {
-    const chatChannel = ChatChannel.create({
-      chatable: { id: 1 },
+    const channel = ChatChannel.create({
+      chatable_id: 1,
       chatable_type: "Category",
       id: 9,
       title: "Site",
@@ -21,15 +21,15 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
         unread_count: 0,
         muted: false,
       },
-      canDeleteSelf: true,
-      canDeleteOthers: true,
-      canFlag: true,
-      userSilenced: false,
-      canModerate: true,
+      can_delete_self: true,
+      can_delete_others: true,
+      can_flag: true,
+      user_silenced: false,
+      can_mdoerate: true,
     });
     return {
       message: ChatMessage.create(
-        chatChannel,
+        channel,
         Object.assign(
           {
             id: 178,
@@ -44,7 +44,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
           messageData
         )
       ),
-      chatChannel,
+      channel,
       afterExpand: () => {},
       onHoverMessage: () => {},
       messageDidEnterViewport: () => {},
@@ -55,7 +55,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   const template = hbs`
     <ChatMessage
       @message={{this.message}}
-      @channel={{this.chatChannel}}
+      @channel={{this.channel}}
       @messageDidEnterViewport={{this.messageDidEnterViewport}}
       @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
     />
@@ -64,6 +64,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   test("Message with edits", async function (assert) {
     this.setProperties(generateMessageProps({ edited: true }));
     await render(template);
+
     assert.true(
       exists(".chat-message-edited"),
       "has the correct edited css class"
@@ -83,6 +84,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   test("Hidden message", async function (assert) {
     this.setProperties(generateMessageProps({ hidden: true }));
     await render(template);
+
     assert.true(
       exists(".chat-message-hidden .chat-message-expand"),
       "has the correct hidden css class and expand button within"

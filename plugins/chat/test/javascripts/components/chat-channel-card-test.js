@@ -80,7 +80,7 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
 
     assert.strictEqual(
       query(".chat-channel-card__members").textContent.trim(),
-      I18n.t("chat.channel.membershipsCount", { count: 4 })
+      I18n.t("chat.channel.memberships_count", { count: 4 })
     );
   });
 
@@ -116,7 +116,7 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   });
 
   test("Read restricted chatable", async function (assert) {
-    this.channel.chatable.read_estricted = true;
+    this.channel.chatable.read_restricted = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
     assert.true(exists(".d-icon-lock"));

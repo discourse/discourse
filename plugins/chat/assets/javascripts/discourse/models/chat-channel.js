@@ -99,6 +99,11 @@ export default class ChatChannel {
     this.slug = args.slug;
     this.title = args.title;
     this.status = args.status;
+    this.canDeleteSelf = args.can_delete_self;
+    this.canDeleteOthers = args.can_delete_others;
+    this.canFlag = args.can_flag;
+    this.userSilenced = args.user_silenced;
+    this.canModerate = args.can_mdoerate;
     this.description = args.description;
     this.lastMessageSentAt = args.last_message_sent_at;
     this.threadingEnabled = args.threading_enabled;

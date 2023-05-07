@@ -6,7 +6,7 @@ export default class ChatChannelLeaveBtn extends Component {
   @service site;
 
   get shouldRender() {
-    return this.site.desktopView && isPresent(this.args.channel);
+    return !this.site.mobileView && isPresent(this.args.channel);
   }
 
   get leaveChatTitleKey() {
