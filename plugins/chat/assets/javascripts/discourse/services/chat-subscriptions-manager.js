@@ -120,13 +120,11 @@ export default class ChatSubscriptionsManager extends Service {
           return;
         }
 
-        channel.setProperties({
-          archive_failed: busData.archive_failed,
-          archive_completed: busData.archive_completed,
-          archived_messages: busData.archived_messages,
-          archive_topic_id: busData.archive_topic_id,
-          total_messages: busData.total_messages,
-        });
+        channel.archiveFailed = busData.archive_failed;
+        channel.archiveCompleted = busData.archive_completed;
+        channel.archivedMessages = busData.archived_messages;
+        channel.archiveTopic_id = busData.archive_topic_id;
+        channel.totalMessages = busData.total_messages;
       });
   }
 
@@ -342,9 +340,7 @@ export default class ChatSubscriptionsManager extends Service {
       .find(busData.chat_channel_id, { fetchIfNotFound: false })
       .then((channel) => {
         if (channel) {
-          channel.setProperties({
-            memberships_count: busData.memberships_count,
-          });
+          channel.membershipsCount = busData.memberships_count;
           this.appEvents.trigger("chat:refresh-channel-members");
         }
       });
@@ -354,11 +350,9 @@ export default class ChatSubscriptionsManager extends Service {
   _onChannelEdits(busData) {
     this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
       if (channel) {
-        channel.setProperties({
-          title: busData.name,
-          description: busData.description,
-          slug: busData.slug,
-        });
+        channel.title = busData.name;
+        channel.description = busData.description;
+        channel.slug = busData.slug;
       }
     });
   }
@@ -366,15 +360,15 @@ export default class ChatSubscriptionsManager extends Service {
   @bind
   _onChannelStatus(busData) {
     this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
-      channel.set("status", busData.status);
+      channel.status = busData.status;
 
       // it is not possible for the user to set their last read message id
       // if the channel has been archived, because all the messages have
       // been deleted. we don't want them seeing the blue dot anymore so
       // just completely reset the unreads
       if (busData.status === CHANNEL_STATUSES.archived) {
-        channel.currentUserMembership.unread_count = 0;
-        channel.currentUserMembership.unread_mentions = 0;
+        channel.currentUserMembership.unreadCount = 0;
+        channel.currentUserMembership.unreadMentions = 0;
       }
     });
   }

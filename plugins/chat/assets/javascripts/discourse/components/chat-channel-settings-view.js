@@ -79,29 +79,18 @@ export default class ChatChannelSettingsView extends Component {
   }
 
   @action
-  saveNotificationSettings(key, value) {
-    if (this.channel[key] === value) {
+  saveNotificationSettings(frontendKey, backendKey, newValue) {
+    if (this.channel.currentUserMembership[frontendKey] === newValue) {
       return;
     }
 
     const settings = {};
-    settings[key] = value;
+    settings[backendKey] = newValue;
     return this.chatApi
       .updateCurrentUserChannelNotificationsSettings(this.channel.id, settings)
       .then((result) => {
-        [
-          "muted",
-          "desktop_notification_level",
-          "mobile_notification_level",
-        ].forEach((property) => {
-          if (
-            result.membership[property] !==
-            this.channel.currentUserMembership[property]
-          ) {
-            this.channel.currentUserMembership[property] =
-              result.membership[property];
-          }
-        });
+        this.channel.currentUserMembership[frontendKey] =
+          result.membership[backendKey];
       });
   }
 
@@ -125,7 +114,7 @@ export default class ChatChannelSettingsView extends Component {
 
   @action
   onToggleAutoJoinUsers() {
-    if (!this.channel.auto_join_users) {
+    if (!this.channel.autoJoinUsers) {
       this.onEnableAutoJoinUsers();
     } else {
       this.onDisableAutoJoinUsers();
@@ -134,43 +123,61 @@ export default class ChatChannelSettingsView extends Component {
 
   @action
   onToggleChannelWideMentions() {
+    const newValue = !this.channel.allowChannelWideMentions;
+    if (this.channel.allowChannelWideMentions === newValue) {
+      return;
+    }
+
     return this._updateChannelProperty(
       this.channel,
       "allow_channel_wide_mentions",
-      !this.channel.allow_channel_wide_mentions
-    );
+      newValue
+    ).then((result) => {
+      this.channel.allowChannelWideMentions =
+        result.channel.allow_channel_wide_mentions;
+    });
   }
 
   onDisableAutoJoinUsers() {
-    return this._updateChannelProperty(this.channel, "auto_join_users", false);
+    if (this.channel.autoJoinUsers === false) {
+      return;
+    }
+
+    return this._updateChannelProperty(
+      this.channel,
+      "auto_join_users",
+      false
+    ).then((result) => {
+      this.channel.autoJoinUsers = result.channel.auto_join_users;
+    });
   }
 
   onEnableAutoJoinUsers() {
+    if (this.channel.autoJoinUsers === true) {
+      return;
+    }
+
     this.dialog.confirm({
       message: I18n.t("chat.settings.auto_join_users_warning", {
         category: this.channel.chatable.name,
       }),
       didConfirm: () =>
-        this._updateChannelProperty(this.channel, "auto_join_users", true),
+        this._updateChannelProperty(this.channel, "auto_join_users", true).then(
+          (result) => {
+            this.channel.autoJoinUsers = result.channel.auto_join_users;
+          }
+        ),
     });
   }
 
   _updateChannelProperty(channel, property, value) {
-    if (channel[property] === value) {
-      return Promise.resolve();
-    }
-
     const payload = {};
     payload[property] = value;
-    return this.chatApi
-      .updateChannel(channel.id, payload)
-      .then((result) => {
-        channel.set(property, result.channel[property]);
-      })
-      .catch((event) => {
-        if (event.jqXHR?.responseJSON?.errors) {
-          this.flash(event.jqXHR.responseJSON.errors.join("\n"), "error");
-        }
-      });
+
+    return this.chatApi.updateChannel(channel.id, payload).catch((event) => {
+      if (event.jqXHR?.responseJSON?.errors) {
+        this.flash(event.jqXHR.responseJSON.errors.join("\n"), "error");
+      }
+    });
   }
 }

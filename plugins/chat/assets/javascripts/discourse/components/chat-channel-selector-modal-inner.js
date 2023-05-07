@@ -83,11 +83,11 @@ export default Component.extend({
       const nextIndex = direction === "down" ? 1 : -1;
       const nextChannel = this.channels[indexOfFocused + nextIndex];
       if (nextChannel) {
-        this.channels[indexOfFocused].set("focused", false);
-        nextChannel.set("focused", true);
+        this.channels[indexOfFocused].focused = false;
+        nextChannel.focused = true;
       }
     } else {
-      this.channels[0].set("focused", true);
+      this.channels[0].focused = true;
     }
 
     schedule("afterRender", () => {
@@ -188,8 +188,10 @@ export default Component.extend({
   },
 
   focusFirstChannel(channels) {
-    channels.forEach((c) => c.set("focused", false));
-    channels[0]?.set("focused", true);
+    channels.forEach((c) => (c.focused = false));
+    if (channels[0]) {
+      channels[0].focused = true;
+    }
   },
 
   getChannelsWithFilter(filter, opts = { excludeActiveChannel: true }) {

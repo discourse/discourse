@@ -154,7 +154,7 @@ export default {
         }
 
         const highlightable = [`@${this.currentUser.username}`];
-        if (chatChannel.allow_channel_wide_mentions) {
+        if (chatChannel.allowChannelWideMentions) {
           highlightable.push(...MENTION_KEYWORDS.map((k) => `@${k}`));
         }
 
