@@ -3,7 +3,6 @@ import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import { reads } from "@ember/object/computed";
 
 const NOTIFICATION_LEVELS = [
