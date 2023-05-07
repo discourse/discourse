@@ -68,6 +68,7 @@ export default class ChatChannel {
   @tracked currentUserMembership = null;
   @tracked isDraft = false;
   @tracked title;
+  @tracked slug;
   @tracked description;
   @tracked status;
   @tracked activeThread = null;
@@ -95,6 +96,7 @@ export default class ChatChannel {
     this.chatableType = args.chatable_type;
     this.membershipsCount = args.memberships_count;
     this.meta = args.meta;
+    this.slug = args.slug;
     this.title = args.title;
     this.status = args.status;
     this.description = args.description;
