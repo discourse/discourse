@@ -3739,15 +3739,15 @@ electron-to-chromium@^1.4.202:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.250.tgz#e4535fc00d17b9a719bc688352c4a185acc2a347"
   integrity sha512-KDLKcPEKPK+Q3/LdKX6knDzqyh8B82EaHccTYuGJR2qp1ymyGAo5HMH2x2OwDgzOPHlINSLIIeVhlFdq6aJgNA==
 
-ember-auto-import-chunks-json-generator@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/ember-auto-import-chunks-json-generator/-/ember-auto-import-chunks-json-generator-1.0.0.tgz#c2ca9380854f3cfefc67e3a1bd7f7c7a124f45ec"
-  integrity sha512-4itBcVrK/oAjbS8rycgRFS/f07rGtRgliHQU4BLXGKFm5qPrB6D75H76yCY/tE9+R+yIBV8cfdkVhJcPR1jtwQ==
+ember-auto-import-chunks-json-generator@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ember-auto-import-chunks-json-generator/-/ember-auto-import-chunks-json-generator-1.1.0.tgz#9b3ee4b6e2f274fdbf722762fc9d72f13942a594"
+  integrity sha512-50JvuBVD5mLx+9YMcBLlV8HIVdtdHHzEfVwID8jo8yRo83x5SAKULdSH+ZwwNTYcUNI7amMKDl9RA5LBGzbDWA==
   dependencies:
     broccoli-merge-trees "^4.2.0"
     broccoli-plugin "^4.0.7"
-    ember-cli-babel "^7.26.6"
-    ember-cli-htmlbars "^5.7.1"
+    ember-cli-babel "^7.26.11"
+    ember-cli-htmlbars "^6.1.1"
 
 ember-auto-import@^2.2.3, ember-auto-import@^2.6.0, ember-auto-import@^2.6.3:
   version "2.6.3"
