@@ -1,10 +1,21 @@
-<div class="chat-replying-indicator">
-  {{#if this.shouldDisplay}}
-    <span class="chat-replying-indicator__text">{{this.text}}</span>
-    <span class="chat-replying-indicator__wave">
-      <span class="chat-replying-indicator__dot">.</span>
-      <span class="chat-replying-indicator__dot">.</span>
-      <span class="chat-replying-indicator__dot">.</span>
-    </span>
-  {{/if}}
-</div>
+{{#if @channel}}
+  <div
+    class={{concat-class
+      "chat-replying-indicator"
+      (if this.presenceChannel.subscribed "is-subscribed")
+    }}
+    {{did-insert this.subscribe}}
+    {{did-update this.handleDraft @channel.isDraft}}
+    {{did-update this.subscribe this.channelName}}
+    {{will-destroy this.teardown}}
+  >
+    {{#if this.shouldRender}}
+      <span class="chat-replying-indicator__text">{{this.text}}</span>
+      <span class="chat-replying-indicator__wave">
+        <span class="chat-replying-indicator__dot">.</span>
+        <span class="chat-replying-indicator__dot">.</span>
+        <span class="chat-replying-indicator__dot">.</span>
+      </span>
+    {{/if}}
+  </div>
+{{/if}}

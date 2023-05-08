@@ -1,61 +1,53 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import I18n from "I18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
 import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
+import { isPresent } from "@ember/utils";
 
-export default Component.extend({
-  channel: null,
-  tagName: "",
-  chatApi: service(),
+export default class ChatChannelArchiveStatus extends Component {
+  @service chatApi;
+  @service currentUser;
 
-  @discourseComputed(
-    "channel.status",
-    "channel.archived_messages",
-    "channel.total_messages",
-    "channel.archive_failed"
-  )
-  channelArchiveFailedMessage() {
-    const translationKey = !this.channel.archive_topic_id
+  get shouldRender() {
+    return this.currentUser.admin && isPresent(this.args.channel.archive);
+  }
+
+  get channelArchiveFailedMessage() {
+    const archive = this.args.channel.archive;
+    const translationKey = !archive.topicId
       ? "chat.channel_status.archive_failed_no_topic"
       : "chat.channel_status.archive_failed";
     return htmlSafe(
       I18n.t(translationKey, {
-        completed: this.channel.archived_messages,
-        total: this.channel.total_messages,
-        topic_url: this._getTopicUrl(),
+        completed: archive.messages,
+        total: archive.totalMessages,
+        topic_url: this.#getTopicUrl(),
       })
     );
-  },
+  }
 
-  @discourseComputed(
-    "channel.status",
-    "channel.archived_messages",
-    "channel.total_messages",
-    "channel.archive_completed"
-  )
-  channelArchiveCompletedMessage() {
+  get channelArchiveCompletedMessage() {
     return htmlSafe(
       I18n.t("chat.channel_status.archive_completed", {
-        topic_url: this._getTopicUrl(),
+        topic_url: this.#getTopicUrl(),
       })
     );
-  },
+  }
 
   @action
   retryArchive() {
     return this.chatApi
-      .createChannelArchive(this.channel.id)
+      .createChannelArchive(this.args.channel.id)
       .catch(popupAjaxError);
-  },
+  }
 
-  _getTopicUrl() {
-    if (!this.channel.archive_topic_id) {
+  get #getTopicUrl() {
+    if (!this.args.channel.archive.topicId) {
       return "";
     }
-    return getURL(`/t/-/${this.channel.archive_topic_id}`);
-  },
-});
+    return getURL(`/t/-/${this.args.channel.archive.topicId}`);
+  }
+}

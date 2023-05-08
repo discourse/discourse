@@ -88,13 +88,13 @@ export default {
             }
 
             get suffixValue() {
-              return this.channel.currentUserMembership.unread_count > 0
+              return this.channel.currentUserMembership.unreadCount > 0
                 ? "circle"
                 : "";
             }
 
             get suffixCSSClass() {
-              return this.channel.currentUserMembership.unread_mentions > 0
+              return this.channel.currentUserMembership.unreadMentions > 0
                 ? "urgent"
                 : "unread";
             }
@@ -282,7 +282,7 @@ export default {
             }
 
             get suffixValue() {
-              return this.channel.currentUserMembership.unread_count > 0
+              return this.channel.currentUserMembership.unreadCount > 0
                 ? "circle"
                 : "";
             }

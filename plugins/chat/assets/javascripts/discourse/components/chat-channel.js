@@ -165,7 +165,7 @@ export default class ChatLivePane extends Component {
       findArgs["targetMessageId"] = this.requestedTargetMessageId;
     } else if (fetchingFromLastRead) {
       findArgs["targetMessageId"] =
-        this.args.channel.currentUserMembership.last_read_message_id;
+        this.args.channel.currentUserMembership.lastReadMessageId;
     }
 
     return this.chatApi
@@ -346,7 +346,7 @@ export default class ChatLivePane extends Component {
       if (
         !foundFirstNew &&
         messageData.id >
-          this.args.channel.currentUserMembership.last_read_message_id &&
+          this.args.channel.currentUserMembership.lastReadMessageId &&
         !channel.messages.some((m) => m.newest)
       ) {
         foundFirstNew = true;
@@ -444,7 +444,7 @@ export default class ChatLivePane extends Component {
       }
 
       const lastReadId =
-        this.args.channel.currentUserMembership?.last_read_message_id;
+        this.args.channel.currentUserMembership?.lastReadMessageId;
       let lastUnreadVisibleMessage = this.args.channel.visibleMessages.findLast(
         (message) => !lastReadId || message.id > lastReadId
       );
