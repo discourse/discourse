@@ -455,7 +455,7 @@ GEM
       google-protobuf (~> 3.21)
     sass-embedded (1.62.1-x86_64-linux-gnu)
       google-protobuf (~> 3.21)
-    selenium-webdriver (4.9.0)
+    selenium-webdriver (4.9.1)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
