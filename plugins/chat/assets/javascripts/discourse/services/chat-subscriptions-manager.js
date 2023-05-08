@@ -51,6 +51,11 @@ export default class ChatSubscriptionsManager extends Service {
     this._channelSubscriptions.delete(channel.id);
   }
 
+  restartChannelsSubscriptions(messageBusIds) {
+    this.stopChannelsSubscriptions();
+    this.startChannelsSubscriptions(messageBusIds);
+  }
+
   startChannelsSubscriptions(messageBusIds) {
     this._startNewChannelSubscription(messageBusIds.new_channel);
     this._startChannelArchiveStatusSubscription(messageBusIds.archive_status);
@@ -251,17 +256,11 @@ export default class ChatSubscriptionsManager extends Service {
   @bind
   _updateChannelTrackingData(channelId, trackingData) {
     this.chatChannelsManager.find(channelId).then((channel) => {
-      if (
-        !channel?.currentUserMembership?.last_read_message_id ||
-        parseInt(channel?.currentUserMembership?.last_read_message_id, 10) <=
-          trackingData.last_read_message_id
-      ) {
-        channel.currentUserMembership.last_read_message_id =
-          trackingData.last_read_message_id;
-        channel.currentUserMembership.unread_count = trackingData.unread_count;
-        channel.currentUserMembership.unread_mentions =
-          trackingData.mention_count;
-      }
+      channel.currentUserMembership.last_read_message_id =
+        trackingData.last_read_message_id;
+      channel.currentUserMembership.unread_count = trackingData.unread_count;
+      channel.currentUserMembership.unread_mentions =
+        trackingData.mention_count;
     });
   }
 
