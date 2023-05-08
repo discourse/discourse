@@ -53,10 +53,13 @@ export default Component.extend({
       } else {
         channel = this.channels.find((c) => c.user && c.id === id);
       }
-      channel?.set("focused", true);
+      if (channel) {
+        channel.focused = true;
+      }
+
       this.channels.forEach((c) => {
         if (c !== channel) {
-          c.set("focused", false);
+          c.focused = false;
         }
       });
     }

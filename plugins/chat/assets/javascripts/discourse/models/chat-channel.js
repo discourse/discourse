@@ -87,6 +87,7 @@ export default class ChatChannel {
   @tracked allowChannelWideMentions = true;
   @tracked membershipsCount = 0;
   @tracked archive;
+  @tracked focused;
 
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
