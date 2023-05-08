@@ -58,9 +58,7 @@ module Chat
     end
 
     def update_tracking_state(message:, **)
-      Chat::UserChatChannelMembership.where(last_read_message_id: message.id).update_all(
-        last_read_message_id: nil,
-      )
+      ::Chat::Action::ResetUserLastReadChannelMessage.call([message.id], [message.chat_channel_id])
     end
 
     def update_thread_reply_cache(message:, **)

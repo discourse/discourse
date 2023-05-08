@@ -215,9 +215,9 @@ export default class ChatMessageInteractor {
   bulkSelect(checked) {
     const channel = this.message.channel;
     const lastSelectedIndex = channel.findIndexOfMessage(
-      this.pane.lastSelectedMessage
+      this.pane.lastSelectedMessage.id
     );
-    const newlySelectedIndex = channel.findIndexOfMessage(this.message);
+    const newlySelectedIndex = channel.findIndexOfMessage(this.message.id);
     const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(
       (a, b) => a - b
     );

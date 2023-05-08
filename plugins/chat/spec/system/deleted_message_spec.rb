@@ -4,7 +4,7 @@ RSpec.describe "Deleted message", type: :system, js: true do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user) { Fabricate(:admin) }
   fab!(:channel_1) { Fabricate(:category_channel) }
 
   before do
@@ -21,7 +21,33 @@ RSpec.describe "Deleted message", type: :system, js: true do
       last_message = find(".chat-message-container:last-child")
       channel_page.delete_message(OpenStruct.new(id: last_message["data-id"]))
 
-      expect(page).to have_content(I18n.t("js.chat.deleted"))
+      expect(channel_page).to have_deleted_message(
+        OpenStruct.new(id: last_message["data-id"]),
+        count: 1,
+      )
+    end
+  end
+
+  context "when deleting multiple messages" do
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_3) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_4) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_5) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_6) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+    it "groups them" do
+      chat_page.visit_channel(channel_1)
+
+      channel_page.delete_message(message_1)
+      channel_page.delete_message(message_3)
+      channel_page.delete_message(message_4)
+      channel_page.delete_message(message_6)
+
+      expect(channel_page).to have_deleted_message(message_1)
+      expect(channel_page).to have_deleted_message(message_4, count: 2)
+      expect(channel_page).to have_deleted_message(message_6)
+      expect(channel_page).to have_no_message(id: message_3.id)
     end
   end
 
@@ -65,9 +91,9 @@ RSpec.describe "Deleted message", type: :system, js: true do
       )
 
       expect(channel_page).to have_no_message(id: message_1.id)
-      expect(channel_page).to have_no_message(id: message_2.id)
+      expect(channel_page).to have_deleted_message(message_2, count: 2)
       expect(open_thread).to have_no_message(thread_id: thread.id, id: message_4.id)
-      expect(open_thread).to have_no_message(thread_id: thread.id, id: message_5.id)
+      expect(open_thread).to have_deleted_message(message_5, count: 2)
     end
   end
 end
