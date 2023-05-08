@@ -69,7 +69,6 @@ RSpec.describe "Channel selector modal", type: :system, js: true do
     fab!(:channel_1) { Fabricate(:private_category_channel, group: group_1) }
 
     it "it doesn’t include limited access channel" do
-      chat_page.visit_channel(channel_1)
       find("body").send_keys([key_modifier, "k"])
       find("#chat-channel-selector-input").fill_in(with: channel_1.title)
 

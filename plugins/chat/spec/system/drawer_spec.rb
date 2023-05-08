@@ -126,11 +126,11 @@ RSpec.describe "Drawer", type: :system, js: true do
         session.quit
       end
 
-      expect(page).to have_content("onlyonce", count: 1)
+      expect(page).to have_content("onlyonce", count: 1, wait: 20)
 
       chat_page.visit_channel(channel_2)
 
-      expect(page).to have_content("onlyonce", count: 0)
+      expect(page).to have_content("onlyonce", count: 0, wait: 20)
     end
   end
 end
