@@ -64,7 +64,7 @@ RSpec.describe WatchedWord do
       should_block_post(manager)
     end
 
-    it "look at title too" do
+    it "should handle UTF-8 characters" do
       block_word = Fabricate(:watched_word, action: WatchedWord.actions[:block], word: "abc")
       manager =
         NewPostManager.new(tl2_user, title: "Hello world", raw: "abcódef", topic_id: topic.id)
