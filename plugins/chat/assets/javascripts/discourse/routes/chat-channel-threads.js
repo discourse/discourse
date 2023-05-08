@@ -3,8 +3,6 @@ import { inject as service } from "@ember/service";
 
 export default class ChatChannelThreads extends DiscourseRoute {
   @service router;
-  @service chatStateManager;
-  @service chat;
   @service chatChannelThreadListPane;
 
   model() {
