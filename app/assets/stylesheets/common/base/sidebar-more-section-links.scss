@@ -35,9 +35,14 @@
     padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
   }
 }
+.sidebar-more-section-links-details-content-main {
+  position: sticky;
+}
 .sidebar-more-section-links-details-content-wrapper {
   position: absolute;
   width: 100%;
   z-index: z("modal", "content") + 1;
-  position: sticky;
+}
+.sidebar-more-section-links-details {
+  position: relative;
 }
