@@ -39,7 +39,24 @@ acceptance("Static", function () {
     );
     assert.ok(exists(".body-page"), "The content is present");
 
+  test("Login redirect", async function (assert) {
     await visit("/login");
+
+    assert.strictEqual(
+      currentRouteName(),
+      "discovery.latest",
+      "it redirects to /latest"
+    );
+  });
+
+  test("Login-required page", async function (assert) {
+    this.siteSettings.login_required = true;
+    await visit("/login");
+
+    assert.strictEqual(currentRouteName(), "login");
+    assert.true(exists(".body-page"), "The content is present");
+    // TODO: check the buttons
+  });
     assert.strictEqual(
       currentRouteName(),
       "discovery.latest",

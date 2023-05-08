@@ -1,17 +1,18 @@
-import buildStaticRoute from "discourse/routes/build-static-route";
+import DiscourseRoute from "discourse/routes/discourse";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { next } from "@ember/runloop";
+import StaticPage from "discourse/models/static-page";
 
-const LoginRoute = buildStaticRoute("login");
-
-LoginRoute.reopen({
+export default class LoginRoute extends DiscourseRoute {
   beforeModel() {
     if (!this.siteSettings.login_required) {
       this.replaceWith(`/${defaultHomepage()}`).then((e) => {
         next(() => e.send("showLogin"));
       });
     }
-  },
-});
+  }
 
-export default LoginRoute;
+  model() {
+    return StaticPage.find("login");
+  }
+}

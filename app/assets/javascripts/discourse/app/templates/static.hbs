@@ -1,4 +1,4 @@
-<DSection @bodyClass={{this.bodyClass}} @class="container">
+<DSection @bodyClass="static-{{this.model.path}}" @class="container">
   <div class="contents clearfix body-page">
     <span>
       <PluginOutlet
@@ -8,35 +8,12 @@
       />
     </span>
 
-    <div class="login-welcome">
-      {{html-safe this.model.html}}
+    {{html-safe this.model.html}}
 
-      <PluginOutlet
-        @name="below-static"
-        @connectorTagName="div"
-        @outletArgs={{hash model=this.model}}
-      />
-
-      {{#if this.anyButtons}}
-        <div class="body-page-button-container">
-          {{#if this.showSignupButton}}
-            <DButton
-              @action={{route-action "showCreateAccount"}}
-              @class="btn-primary sign-up-button"
-              @label="sign_up"
-            />
-          {{/if}}
-
-          {{#if this.showLoginButton}}
-            <DButton
-              @action={{route-action "showLogin"}}
-              @class="btn-primary login-button"
-              @icon="user"
-              @label="log_in"
-            />
-          {{/if}}
-        </div>
-      {{/if}}
-    </div>
+    <PluginOutlet
+      @name="below-static"
+      @connectorTagName="div"
+      @outletArgs={{hash model=this.model}}
+    />
   </div>
 </DSection>
