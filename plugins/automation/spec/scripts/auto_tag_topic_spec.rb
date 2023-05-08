@@ -29,7 +29,7 @@ describe "AutoTagTopic" do
       post = create_post(topic: topic)
       automation.trigger!("post" => post)
 
-      expect(topic.reload.tags.pluck(:name)).to eq(%w[tag1 tag2])
+      expect(topic.reload.tags.pluck(:name)).to match_array(%w[tag1 tag2])
     end
 
     it "does not remove existing tags" do
@@ -37,7 +37,7 @@ describe "AutoTagTopic" do
       DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), ["tag3"])
       automation.trigger!("post" => post)
 
-      expect(topic.reload.tags.pluck(:name).sort).to eq(%w[tag1 tag2 tag3])
+      expect(topic.reload.tags.pluck(:name).sort).to match_array(%w[tag1 tag2 tag3])
     end
   end
 end
