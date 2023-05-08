@@ -17,6 +17,7 @@ export default class UserChatChannelMembership {
 
   constructor(args = {}) {
     this.following = args.following;
+    this.muted = args.muted;
     this.unreadCount = args.unread_count;
     this.unreadMentions = args.unread_mentions;
     this.desktopNotificationLevel = args.desktop_notification_level;
