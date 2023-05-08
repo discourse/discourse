@@ -283,7 +283,7 @@ export default class Chat extends Service {
       const membership = channel.currentUserMembership;
 
       if (channel.isDirectMessageChannel) {
-        if (!dmChannelWithUnread && membership.unread_count > 0) {
+        if (!dmChannelWithUnread && membership.unreadCount > 0) {
           dmChannelWithUnread = channel.id;
         } else if (!dmChannel) {
           dmChannel = channel.id;
@@ -292,7 +292,7 @@ export default class Chat extends Service {
         if (membership.unread_mentions > 0) {
           publicChannelWithMention = channel.id;
           return; // <- We have a public channel with a mention. Break and return this.
-        } else if (!publicChannelWithUnread && membership.unread_count > 0) {
+        } else if (!publicChannelWithUnread && membership.unreadCount > 0) {
           publicChannelWithUnread = channel.id;
         } else if (
           !defaultChannel &&

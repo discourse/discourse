@@ -88,7 +88,7 @@
     "babel-plugin-ember-template-compilation": "^2.0.0",
     "broccoli-asset-rev": "^3.0.0",
     "ember-auto-import": "^2.6.3",
-    "ember-auto-import-chunks-json-generator": "^1.0.0",
+    "ember-auto-import-chunks-json-generator": "^1.1.0",
     "ember-cached-decorator-polyfill": "^1.0.1",
     "ember-cli": "~4.12.0",
     "ember-cli-app-version": "^6.0.0",

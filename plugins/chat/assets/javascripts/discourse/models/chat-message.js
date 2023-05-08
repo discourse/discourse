@@ -166,7 +166,7 @@ export default class ChatMessage {
   }
 
   get read() {
-    return this.channel.currentUserMembership?.last_read_message_id >= this.id;
+    return this.channel.currentUserMembership?.lastReadMessageId >= this.id;
   }
 
   get firstMessageOfTheDayAt() {
