@@ -9,6 +9,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import guid from "pretty-text/guid";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
+import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
 import Category from "discourse/models/category";
 
 export const CHATABLE_TYPES = {
@@ -85,6 +86,7 @@ export default class ChatChannel {
   @tracked autoJoinUsers = false;
   @tracked allowChannelWideMentions = true;
   @tracked membershipsCount = 0;
+  @tracked archive;
 
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
@@ -115,6 +117,10 @@ export default class ChatChannel {
     this.currentUserMembership = UserChatChannelMembership.create(
       args.current_user_membership
     );
+
+    if (args.archive_completed || args.archive_failed) {
+      this.archive = ChatChannelArchive.create(args);
+    }
   }
 
   findIndexOfMessage(id) {

@@ -2,6 +2,7 @@ import Service, { inject as service } from "@ember/service";
 import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatChannelArchive from "../models/chat-channel-archive";
 
 export default class ChatSubscriptionsManager extends Service {
   @service store;
@@ -125,11 +126,7 @@ export default class ChatSubscriptionsManager extends Service {
           return;
         }
 
-        channel.archiveFailed = busData.archive_failed;
-        channel.archiveCompleted = busData.archive_completed;
-        channel.archivedMessages = busData.archived_messages;
-        channel.archiveTopic_id = busData.archive_topic_id;
-        channel.totalMessages = busData.total_messages;
+        channel.archive = ChatChannelArchive.create(busData);
       });
   }
 
