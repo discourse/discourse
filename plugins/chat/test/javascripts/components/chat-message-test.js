@@ -25,7 +25,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       can_delete_others: true,
       can_flag: true,
       user_silenced: false,
-      can_mdoerate: true,
+      can_moderate: true,
     });
     return {
       message: ChatMessage.create(
