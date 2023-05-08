@@ -18,7 +18,7 @@ class TopicsFilter
     filters = {}
 
     query_string.scan(
-      /(?<key_prefix>[-=])?(?<key>[\w-]+):(?<value>[^\s]+)/,
+      /(?<key_prefix>(?:-|=|-=|=-))?(?<key>[\w-]+):(?<value>[^\s]+)/,
     ) do |key_prefix, key, value|
       key = FILTER_ALIASES[key] || key
 
@@ -186,51 +186,80 @@ class TopicsFilter
   end
 
   def filter_categories(values:)
-    exclude_subcategories_category_slugs = []
-    include_subcategories_category_slugs = []
+    category_slugs = {
+      include: {
+        with_subcategories: [],
+        without_subcategories: [],
+      },
+      exclude: {
+        with_subcategories: [],
+        without_subcategories: [],
+      },
+    }
 
     values.each do |key_prefix, value|
-      break if key_prefix && key_prefix != "="
+      exclude_categories = key_prefix&.include?("-") || false
+      exclude_subcategories = key_prefix&.include?("=") || false
 
       value
         .scan(
           /\A(?<category_slugs>([a-zA-Z0-9\-:]+)(?<delimiter>[,])?([a-zA-Z0-9\-:]+)?(\k<delimiter>[a-zA-Z0-9\-:]+)*)\z/,
         )
-        .each do |category_slugs, delimiter|
-          (
-            if key_prefix.presence
-              exclude_subcategories_category_slugs
-            else
-              include_subcategories_category_slugs
-            end
-          ).concat(category_slugs.split(delimiter))
+        .each do |category_slugs_match, delimiter|
+          slugs = category_slugs_match.split(delimiter)
+          type = exclude_categories ? :exclude : :include
+          subcategory_type = exclude_subcategories ? :without_subcategories : :with_subcategories
+          category_slugs[type][subcategory_type].concat(slugs)
         end
     end
 
-    category_ids = []
+    include_category_ids = []
 
-    if exclude_subcategories_category_slugs.present?
-      category_ids =
+    if category_slugs[:include][:without_subcategories].present?
+      include_category_ids =
         get_category_ids_from_slugs(
-          exclude_subcategories_category_slugs,
+          category_slugs[:include][:without_subcategories],
           exclude_subcategories: true,
         )
     end
 
-    if include_subcategories_category_slugs.present?
-      category_ids.concat(
+    if category_slugs[:include][:with_subcategories].present?
+      include_category_ids.concat(
         get_category_ids_from_slugs(
-          include_subcategories_category_slugs,
+          category_slugs[:include][:with_subcategories],
           exclude_subcategories: false,
         ),
       )
     end
 
-    if category_ids.present?
-      @scope = @scope.where("topics.category_id IN (?)", category_ids)
-    elsif exclude_subcategories_category_slugs.present? ||
-          include_subcategories_category_slugs.present?
+    if include_category_ids.present?
+      @scope = @scope.where("topics.category_id IN (?)", include_category_ids)
+    elsif category_slugs[:include].values.flatten.present?
       @scope = @scope.none
+      return
+    end
+
+    exclude_category_ids = []
+
+    if category_slugs[:exclude][:without_subcategories].present?
+      exclude_category_ids =
+        get_category_ids_from_slugs(
+          category_slugs[:exclude][:without_subcategories],
+          exclude_subcategories: true,
+        )
+    end
+
+    if category_slugs[:exclude][:with_subcategories].present?
+      exclude_category_ids.concat(
+        get_category_ids_from_slugs(
+          category_slugs[:exclude][:with_subcategories],
+          exclude_subcategories: false,
+        ),
+      )
+    end
+
+    if exclude_category_ids.present?
+      @scope = @scope.where("topics.category_id NOT IN (?)", exclude_category_ids)
     end
   end
 
