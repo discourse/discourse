@@ -205,12 +205,14 @@ export default function () {
   this.route("associate-account", { path: "/associate/:token" });
   this.route("login-preferences");
   this.route("forgot-password", { path: "/password-reset" });
+
   this.route("faq", { path: "/faq" });
+  this.route("guidelines", { path: "/guidelines" });
+  this.route("conduct", { path: "/conduct" });
+
   this.route("tos", { path: "/tos" });
   this.route("privacy", { path: "/privacy" });
-  this.route("guidelines", { path: "/guidelines" });
   this.route("rules", { path: "/rules" });
-  this.route("conduct", { path: "/conduct" });
 
   this.route("new-topic", { path: "/new-topic" });
   this.route("new-message", { path: "/new-message" });

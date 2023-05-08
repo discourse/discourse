@@ -33,8 +33,11 @@ export default function (page) {
     },
 
     setupController(controller, model) {
-      const controllerName = this.controllerName || "static";
-      this.controllerFor(controllerName).set("model", model);
+      if (this.controllerName) {
+        this.controllerFor(this.controllerName).set("model", model);
+      } else {
+        this._super(...arguments);
+      }
     },
 
     titleToken() {
