@@ -51,10 +51,6 @@
       {{else}}
         <ChatSkeleton />
       {{/if}}
-
-      <Chat::Thread::OriginalMessage
-        @message={{@channel.messages.lastObject}}
-      />
     </div>
 
     {{! at bottom even if shown at top due to column-reverse  }}

@@ -1,0 +1,16 @@
+.chat-thread-list-item {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__title {
+    flex: 1;
+    font-weight: bold;
+  }
+}

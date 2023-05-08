@@ -128,6 +128,24 @@ module Chat
       PrettyText.excerpt(message, max_length, { text_entities: true })
     end
 
+    # TODO (martin) Replace the above #ecerpt method usage with this one. The
+    # issue with the above one is that we cannot actually render nice HTML
+    # fore replies/excerpts in the UI because text_entitites: true will
+    # allow through even denied HTML because of 07ab20131a15ab907c1974fee405d9bdce0c0723.
+    #
+    # For now only the thread index uses this new version since it is not interactive,
+    # we can go back to the interactive reply/edit cases in another PR.
+    def rich_excerpt(max_length: 50)
+      # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
+      return message if UrlHelper.relaxed_parse(message).is_a?(URI)
+
+      # upload-only messages are better represented as the filename
+      return uploads.first.original_filename if cooked.blank? && uploads.present?
+
+      # this may return blank for some complex things like quotes, that is acceptable
+      PrettyText.excerpt(cooked, max_length)
+    end
+
     def cooked_for_excerpt
       (cooked.blank? && uploads.present?) ? "<p>#{uploads.first.original_filename}</p>" : cooked
     end

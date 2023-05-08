@@ -1,0 +1,17 @@
+<div class="chat-thread-list-item">
+  <div class="chat-thread-list-item__header">
+    <div class="chat-thread-list-item__title">
+      {{this.title}}
+    </div>
+    <div class="chat-thread-list-item__buttons">
+      <DButton
+        @action={{action this.openThreadSettings}}
+        @class="btn-flat chat-thread-list-item__settings"
+        @icon="cog"
+        @title="chat.thread.settings"
+        @disabled={{not this.canChangeThreadSettings}}
+      />
+    </div>
+  </div>
+  <Chat::Thread::OriginalMessage @message={{@thread.originalMessage}} />
+</div>

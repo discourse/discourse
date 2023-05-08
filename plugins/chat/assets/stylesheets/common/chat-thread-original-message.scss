@@ -1,12 +1,9 @@
 .chat-thread-original-message {
-  background: var(--primary-low);
   display: flex;
-
-  margin: 2rem;
-  width: 200px;
+  margin: 0.5rem 0rem;
 
   &__inner-container {
-    padding: 1rem;
+    width: 100%;
   }
 
   &__excerpt {

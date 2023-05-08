@@ -1,14 +1,11 @@
 <div class="chat-thread-original-message">
   <div class="chat-thread-original-message__inner-container">
-    <div class="chat-thread-original-message__title">
-      {{@message.threadReplyCount}}
-    </div>
     <div class="chat-thread-original-message__excerpt">
-      {{@message.excerpt}}
+      {{html-safe @message.excerpt}}
     </div>
     <div class="chat-thread-original-message__author">
       <span class="chat-thread-original-message__started-by">
-        Started by
+        {{i18n "chat.thread.original_message.started_by"}}
       </span>
       <span class="chat-thread-original-message__avatar">
         <ChatUserAvatar @user={{@message.user}} />

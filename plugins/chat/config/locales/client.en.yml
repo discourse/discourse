@@ -222,7 +222,6 @@ en:
       open: "Open chat"
       open_full_page: "Open full-screen chat"
       close_full_page: "Close full-screen chat"
-      open_thread_index: "View Threads"
       open_message: "Open message in chat"
       placeholder_self: "Jot something down"
       placeholder_channel: "Chat in %{channelName}"
@@ -543,15 +542,18 @@ en:
 
       thread:
         view_thread: View thread
+        default_title: "Thread %{thread_id}"
         replies:
           one: "%{count} reply"
           other: "%{count} replies"
         label: Thread
         close: "Close Thread"
+        original_message:
+          started_by: "Started by"
+        settings: "Settings"
       threads:
-        started_by: "Started by"
         open: "Open Thread"
-        index: "Threads"
+        index: "View Threads"
 
       draft_channel_screen:
         header: "New Message"

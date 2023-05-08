@@ -1,6 +1,6 @@
 import Service, { inject as service } from "@ember/service";
 
-export default class ChatChannelThreadIndexPane extends Service {
+export default class ChatChannelThreadListPane extends Service {
   @service chat;
   @service chatStateManager;
 
