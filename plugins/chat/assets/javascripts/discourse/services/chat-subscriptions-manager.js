@@ -258,7 +258,7 @@ export default class ChatSubscriptionsManager extends Service {
           trackingData.last_read_message_id;
         channel.currentUserMembership.unreadCount = trackingData.unread_count;
         channel.currentUserMembership.unreadMentions =
-          trackingData.mention_ount;
+          trackingData.mention_count;
       }
     });
   }
