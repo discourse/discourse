@@ -991,7 +991,7 @@ lt:
       title: "DAU/MAU"
       xaxis: "Diena"
       yaxis: "DAU/MAU"
-      description: "Paskutinę dieną prisijungusių narių skaičius, padalytas iš narių, prisijungusių per pastarąjį mėnesį, skaičiaus – pateikiamas %, kuris rodo bendruomenės „lipnumą“. Siekite >30 proc."
+      description: "Paskutinę dieną prisijungusių narių skaičius, padalytas iš narių, prisijungusių per pastarąjį mėnesį, skaičiaus – pateikiamas %, kuris rodo bendruomenės „lipnumą“. Siekite >20 proc."
     daily_engaged_users:
       title: "Kasdien dalyvaujantys vartotojai"
       xaxis: "Diena"
@@ -1478,7 +1478,6 @@ lt:
     default_title_count_mode: "Numatytasis puslapio pavadinimo skaitiklio režimas"
     allow_user_api_keys: "Leisti generuoti vartotojo API raktus"
     allow_user_api_key_scopes: "Leidžiamų naudotojo API raktų apimčių sąrašas"
-    min_trust_level_for_user_api_key: "Patikimumo lygis, reikalingas generuoti vartotojo API raktus"
     allowed_user_api_auth_redirects: "Leidžiamas vartotojo API raktų autentifikavimo peradresavimo URL. Pakaitos simbolis * gali būti naudojamas norint atitikti bet kurią jo dalį (pvz., www.example.com/*)."
     allowed_user_api_push_urls: "Leidžiami serverio siuntimo naudotojui API URL adresai"
     tagging_enabled: "Įgalinti žymas temose?"
@@ -2343,8 +2342,6 @@ lt:
   offline:
     title: "Nepavyko įkelti programos"
     offline_page_message: "Atrodo, kad esate neprisijungę! Patikrinkite tinklo ryšį ir bandykite dar kartą."
-  login_required:
-    welcome_message: "## [Sveiki atvykę į %{title}] (#sveiki atvykę)"
   upload:
     edit_reason: "atsiųsti mano pranešimų archyvą"
     unauthorized: "Atsiprašome, failas, kurį bandote įkelti, nėra autorizuotas (įgalioti plėtiniai: %{authorized_extensions})."

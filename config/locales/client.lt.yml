@@ -203,14 +203,6 @@ lt:
     software_update_prompt:
       message: "Mes atnaujinome šią svetainę. <span>prašome perkrauti puslapį</span>, kitaip galite patirti nenumatytas klaidas."
       dismiss: "Praleisti"
-    bootstrap_mode_enabled:
-      one: "Kad būtų lengviau paleisti naują svetainę, esate įkrovos režimu. Visiems naujiems vartotojams bus suteiktas 1 patikimumo lygis ir įjungti kasdieniai el. Laiškų suvestiniai el. Laiškai. Tai bus automatiškai išjungta, kai %{count} vartotojų."
-      few: "Norėdami palengvinti naujos svetainės paleidimą, jūs esate paleidimo režime. Visiems naujiems vartotojams bus suteiktas 1 lygio pasitikėjimas ir bus įgalinti kasdieniniai elektroninio pašto santraukos atnaujinimai. Tai bus automatiškai išjungta, kai pasieksite %{count} vartotojų ribą."
-      many: "Norėdami palengvinti naujos svetainės paleidimą, jūs esate paleidimo režime. Visiems naujiems vartotojams bus suteiktas 1 lygio pasitikėjimas ir bus įgalinti kasdieniniai elektroninio pašto santraukos atnaujinimai. Tai bus automatiškai išjungta, kai pasieksite %{count} vartotojų ribą."
-      other: "Norėdami palengvinti naujos svetainės paleidimą, jūs esate paleidimo režime. Visiems naujiems vartotojams bus suteiktas 1 lygio pasitikėjimas ir bus įgalinti kasdieniniai elektroninio pašto santraukos atnaujinimai. Tai bus automatiškai išjungta, kai pasieksite %{count} vartotojų ribą."
-    bootstrap_mode_disabled: "Paleidimo režimas bus išjungtas per 24 valandas."
-    bootstrap_invite_button_title: "Siųsti pakvietimą"
-    bootstrap_wizard_link_title: "Baigti sąrankos vedlį"
     themes:
       default_description: "Numatytasis"
       broken_theme_alert: "Jūsų svetainė gali neveikti, nes temoje / komponente yra klaidų."
@@ -373,7 +365,6 @@ lt:
       new_topic: "Naujos temos juodraštis"
       new_private_message: "Naujas asmeninės žinutės juodraštis"
       abandon:
-        confirm: "Jūs turite nebaigtą juodraštį šiai tema. Ką norėtumėte daryti su juo?"
         yes_value: "Išmesti"
         no_value: "Tęsti redagavimą"
     topic_count_categories:
@@ -1157,13 +1148,6 @@ lt:
       save_to_change_theme: 'Tema bus atnaujinta spustelėjus „%{save_text}“'
       home: "Numatytasis pagrindinis puslapis"
       staged: "Inscenizuotas"
-      staff_counters:
-        flags_given: "naudingos vėliavos"
-        flagged_posts: "įrašai su vėliavomis"
-        deleted_posts: "ištrinti įrašai"
-        suspensions: "nušalinimai"
-        warnings_received: "perspejimai"
-        rejected_posts: "atmesti įrašai"
       messages:
         all: "visos pašto dėžutes"
         inbox: "Pranešimų dežutė"
@@ -1216,8 +1200,6 @@ lt:
         title: "Dviejų veiksnių atsarginiai kodai"
         regenerate: "Pergeneruoti"
         disable: "Išjungti"
-        enable: "Įgalinti"
-        enable_long: "Įgalinti atsarginius kodus"
         copy_to_clipboard: "Nukopijuoti į iškarpinę"
         copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"
         copied_to_clipboard: "Nukopijuota į iškirptę"
@@ -3554,9 +3536,12 @@ lt:
           save: "Išsaugoti"
           delete: "Pašalinti"
           links:
-            icon: "Ikona"
-            name: "Vardas"
-            value: "nuoroda"
+            icon:
+              label: "Ikona"
+            name:
+              label: "Pavadinimas"
+            value:
+              label: "nuoroda"
         about:
           header_link_text: "Apie"
         messages:
@@ -3867,9 +3852,6 @@ lt:
         notification_event:
           name: "Pranešimo įvykis"
           details: "Kai vartotojas gauna pranešimą savo sklaidos kanale."
-        user_badge_event:
-          name: "Renginys dėl ženklelio suteikimo"
-          details: "Kai vartotojas gauna ženklelį."
         group_user_event:
           name: "Grupės vartotojo įvykis"
           details: "Kai vartotojas įtraukiamas arba pašalinamas iš grupės."
@@ -4447,12 +4429,7 @@ lt:
           silence: "Nutildyti"
           link: "Nuoroda"
         action_descriptions:
-          block: "Neleisti skelbti įrašų, kuriuose yra šie žodžiai. Vartotojas matys klaidos pranešimą, kai bandys pateikti savo įrašą."
-          censor: "Leiskite pranešimus, kuriuose yra šie žodžiai, bet pakeiskite juos simboliais, kurie slepia cenzūruotus žodžius."
-          require_approval: "Įrašams, kuriuose yra šie žodžiai, reikės darbuotojų patvirtinimo, kad jie būtų matomi."
-          flag: "Leisti įrašus, kuriuose yra šių žodžių, bet pažymėti juos kaip netinkamus, kad moderatoriai galėtų juos peržiūrėti."
-          replace: "Pakeiskite žodžius įrašuose kitais žodžiais"
-          tag: "Automatiškai žymėti temas pagal pirmąjį įrašą"
+          replace: "Pakeiskite žodžius įrašuose kitais žodžiais."
         form:
           label: "Turi žodį ar frazę"
           placeholder_regexp: "Įprasta išraiška"

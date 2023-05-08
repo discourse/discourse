@@ -184,12 +184,6 @@ nl:
     software_update_prompt:
       message: "We hebben deze site bijgewerkt, dus <span>vernieuw de pagina</span>, anders kan er onverwacht gedrag optreden."
       dismiss: "Negeren"
-    bootstrap_mode_enabled:
-      one: "Om het opzetten van je nieuwe website makkelijker te maken, bevind je je in de bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend en dagelijkse e-mailsamenvattingen zijn ingeschakeld voor hen. Dit wordt automatisch uitgeschakeld zodra %{count} gebruiker lid is geworden."
-      other: "Om het opzetten van je nieuwe website makkelijker te maken, bevind je je in de bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend en dagelijkse e-mailsamenvattingen zijn ingeschakeld voor hen. Dit wordt automatisch uitgeschakeld zodra %{count} gebruikers lid zijn geworden."
-    bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
-    bootstrap_invite_button_title: "Uitnodigingen sturen"
-    bootstrap_wizard_link_title: "Instelwizard voltooien"
     themes:
       default_description: "Standaard"
       broken_theme_alert: "Je website werkt mogelijk niet, omdat het thema/onderdeel fouten bevat."
@@ -348,7 +342,6 @@ nl:
       new_topic: "Nieuw topicconcept"
       new_private_message: "Nieuw privéberichtconcept"
       abandon:
-        confirm: "Je hebt een concept in uitvoering voor dit topic. Wat wil je ermee doen?"
         yes_value: "Weggooien"
         no_value: "Bewerken hervatten"
     topic_count_categories:
@@ -1170,13 +1163,6 @@ nl:
       save_to_change_theme: 'Thema wordt bijgewerkt nadat je op ''%{save_text}'' klikt'
       home: "Standaard startpagina"
       staged: "Gefaseerd"
-      staff_counters:
-        flags_given: "nuttige markeringen"
-        flagged_posts: "gemarkeerde berichten"
-        deleted_posts: "verwijderde berichten"
-        suspensions: "schorsingen"
-        warnings_received: "waarschuwingen"
-        rejected_posts: "geweigerde berichten"
       messages:
         all: "alle inboxen"
         inbox: "Inbox"
@@ -1283,11 +1269,9 @@ nl:
         title: "Back-upcodes voor tweeledige verificatie"
         regenerate: "Opnieuw genereren"
         disable: "Uitschakelen"
-        enable: "Inschakelen"
-        enable_long: "Back-upcodes inschakelen"
         manage:
-          one: "Back-upcodes beheren. Je hebt nog <strong>%{count}</strong> back-upcode over."
-          other: "Back-upcodes beheren. Je hebt nog <strong>%{count}</strong> back-upcodes over."
+          one: "Je hebt nog <strong>%{count}</strong> back-upcode over."
+          other: "Je hebt nog <strong>%{count}</strong> back-upcodes over."
         copy_to_clipboard: "Kopiëren naar klembord"
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
         copied_to_clipboard: "Gekopieerd naar klembord"
@@ -3993,9 +3977,12 @@ nl:
           save: "Opslaan"
           delete: "Verwijderen"
           links:
-            icon: "Pictogram"
-            name: "Naam"
-            value: "Link"
+            icon:
+              label: "Pictogram"
+            name:
+              label: "Naam"
+            value:
+              label: "Link"
         about:
           header_link_text: "Over"
         messages:
@@ -4389,9 +4376,6 @@ nl:
         user_promoted_event:
           name: "Door gebruiker gepromoot evenement"
           details: "Wanneer een gebruiker wordt gepromoveerd van het ene vertrouwensniveau naar het andere."
-        user_badge_event:
-          name: "Badgetoekenningsgebeurtenis"
-          details: "Wanneer een gebruiker een badge ontvangt."
         group_user_event:
           name: "Groepgebruikersgebeurtenis"
           details: "Wanneer een gebruiker wordt toegevoegd of verwijderd in een groep."
@@ -5051,14 +5035,8 @@ nl:
           silence: "Dempen"
           link: "Link"
         action_descriptions:
-          block: "Het plaatsen van berichten die deze woorden bevatten tegengaan. Gebruikers zien een foutbericht wanneer ze hun bericht proberen te verzenden."
-          censor: "Berichten met deze woorden toestaan, maar deze vervangen door tekens die de gecensureerde woorden verbergen."
-          require_approval: "Berichten die deze woorden bevatten, vereisen goedkeuring door medewerkers voordat ze kunnen worden bekeken."
-          flag: "Sta berichten met deze woorden toe, maar markeer ze als ongepast, zodat moderators ze kunnen beoordelen."
-          replace: "Vervang woorden in berichten door andere woorden"
-          tag: "Tag topics automatisch op basis van het eerste bericht"
-          silence: "Eerste berichten van gebruikers die deze woorden bevatten, moeten door een medewerker worden goedgekeurd voordat ze zichtbaar worden en de gebruiker wordt automatisch gedempt."
-          link: "Woorden in berichten vervangen door links"
+          replace: "Vervang woorden in berichten door andere woorden."
+          link: "Woorden in berichten vervangen door links."
         form:
           label: "Bevat woord of zin"
           placeholder: "Voer woord of zin in (* is een joker)"

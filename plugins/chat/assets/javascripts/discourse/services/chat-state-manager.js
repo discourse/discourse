@@ -21,9 +21,10 @@ export function resetChatDrawerStateCallbacks() {
 export default class ChatStateManager extends Service {
   @service chat;
   @service router;
-  isDrawerExpanded = false;
-  isDrawerActive = false;
-  isSidePanelExpanded = false;
+
+  @tracked isSidePanelExpanded = false;
+  @tracked isDrawerExpanded = false;
+  @tracked isDrawerActive = false;
   @tracked _chatURL = null;
   @tracked _appURL = null;
 
@@ -44,16 +45,16 @@ export default class ChatStateManager extends Service {
   }
 
   openSidePanel() {
-    this.set("isSidePanelExpanded", true);
+    this.isSidePanelExpanded = true;
   }
 
   closeSidePanel() {
-    this.set("isSidePanelExpanded", false);
+    this.isSidePanelExpanded = false;
   }
 
   didOpenDrawer(url = null) {
-    this.set("isDrawerActive", true);
-    this.set("isDrawerExpanded", true);
+    this.isDrawerActive = true;
+    this.isDrawerExpanded = true;
 
     if (url) {
       this.storeChatURL(url);
@@ -64,27 +65,27 @@ export default class ChatStateManager extends Service {
   }
 
   didCloseDrawer() {
-    this.set("isDrawerActive", false);
-    this.set("isDrawerExpanded", false);
+    this.isDrawerActive = false;
+    this.isDrawerExpanded = false;
     this.chat.updatePresence();
     this.#publishStateChange();
   }
 
   didExpandDrawer() {
-    this.set("isDrawerActive", true);
-    this.set("isDrawerExpanded", true);
+    this.isDrawerActive = true;
+    this.isDrawerExpanded = true;
     this.chat.updatePresence();
   }
 
   didCollapseDrawer() {
-    this.set("isDrawerActive", true);
-    this.set("isDrawerExpanded", false);
+    this.isDrawerActive = true;
+    this.isDrawerExpanded = false;
     this.#publishStateChange();
   }
 
   didToggleDrawer() {
-    this.set("isDrawerExpanded", !this.isDrawerExpanded);
-    this.set("isDrawerActive", true);
+    this.isDrawerExpanded = !this.isDrawerExpanded;
+    this.isDrawerActive = true;
     this.#publishStateChange();
   }
 
@@ -113,11 +114,17 @@ export default class ChatStateManager extends Service {
   }
 
   storeAppURL(url = null) {
-    this._appURL = url || this.router.currentURL;
+    if (url) {
+      this._appURL = url;
+    } else if (this.router.currentURL?.startsWith("/chat")) {
+      this._appURL = "/";
+    } else {
+      this._appURL = this.router.currentURL;
+    }
   }
 
-  storeChatURL(url = null) {
-    this._chatURL = url || this.router.currentURL;
+  storeChatURL(url) {
+    this._chatURL = url;
   }
 
   get lastKnownAppURL() {

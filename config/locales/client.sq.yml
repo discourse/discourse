@@ -138,7 +138,6 @@ sq:
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     software_update_prompt:
       dismiss: "Hiqe"
-    bootstrap_invite_button_title: "Dërgo ftesa"
     themes:
       default_description: "Paracaktuar"
     s3:
@@ -589,12 +588,6 @@ sq:
       api_approved: "Aprovuar më:"
       theme: "Tema"
       staged: "Staged"
-      staff_counters:
-        flags_given: "sinjalizime të dobishme"
-        flagged_posts: "postimet e sinjalizuara"
-        deleted_posts: "postimet e fshira"
-        suspensions: "pezullimet"
-        warnings_received: "paralajmërimet"
       messages:
         inbox: "Inbox"
         latest: "Të fundit"
@@ -636,7 +629,6 @@ sq:
       second_factor_backup:
         regenerate: "Rigjenero"
         disable: "Çaktivizo"
-        enable: "Aktivizo"
       second_factor:
         name: "Emri"
         disable: "Çaktivizo"
@@ -1938,8 +1930,10 @@ sq:
           save: "Ruaj"
           delete: "Fshij"
           links:
-            icon: "Ikonë"
-            name: "Emri"
+            icon:
+              label: "Ikonë"
+            name:
+              label: "Emri juaj"
         about:
           header_link_text: "Rreth"
         messages:

@@ -219,6 +219,29 @@ RSpec.describe WebHook do
       expect(payload["tags"]).to contain_exactly(tag.name)
     end
 
+    it "should not log a personal message view when processing new topic" do
+      SiteSetting.log_personal_messages_views = true
+      Fabricate(:topic_web_hook)
+
+      post =
+        PostCreator.create!(
+          user,
+          raw: "raw",
+          title: "title",
+          skip_validations: true,
+          archetype: Archetype.private_message,
+          target_usernames: user.username,
+        )
+      topic_id = post.topic.id
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(topic_id)
+
+      expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
+    end
+
     describe "when topic has been deleted" do
       it "should not enqueue a post/topic edited hooks" do
         topic.trash!
@@ -558,7 +581,10 @@ RSpec.describe WebHook do
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
       expect(job_args["event_name"]).to eq("user_added_to_group")
+      expect(job_args["group_ids"]).to contain_exactly(group.id)
+
       payload = JSON.parse(job_args["payload"])
+
       expect(payload["group_id"]).to eq(group.id)
       expect(payload["user_id"]).to eq(user.id)
       expect(payload["notification_level"]).to eq(group.default_notification_level)
@@ -577,7 +603,10 @@ RSpec.describe WebHook do
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
       expect(job_args["event_name"]).to eq("user_removed_from_group")
+      expect(job_args["group_ids"]).to contain_exactly(group.id)
+
       payload = JSON.parse(job_args["payload"])
+
       expect(payload["group_id"]).to eq(group.id)
       expect(payload["user_id"]).to eq(user.id)
     end

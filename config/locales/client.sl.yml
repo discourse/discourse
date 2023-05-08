@@ -202,8 +202,6 @@ sl:
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
     software_update_prompt:
       dismiss: "Opusti"
-    bootstrap_mode_disabled: "Zagonski način bo onemogočen v 24 urah."
-    bootstrap_invite_button_title: "Pošlji povabila"
     themes:
       default_description: "Privzeto"
     s3:
@@ -1070,13 +1068,6 @@ sl:
       save_to_change_theme: 'Tema bo posodobljena, ko kliknete "%{save_text}"'
       home: "Privzeta začetna stran"
       staged: "Prirejen"
-      staff_counters:
-        flags_given: "oznake v pomoč"
-        flagged_posts: "prijavljeni prispevki"
-        deleted_posts: "izbrisani prispevki"
-        suspensions: "suspendiranih"
-        warnings_received: "opozorila"
-        rejected_posts: "zavrnjene objave"
       messages:
         inbox: "Prejeto"
         latest: "Najnovejše"
@@ -1125,8 +1116,6 @@ sl:
         title: "Rezervne potrditvene kode za preverjanje v dveh korakih"
         regenerate: "Ponovno ustvari"
         disable: "Onemogoči"
-        enable: "Omogoči"
-        enable_long: "Omogočite rezervne potrditvene kode"
         copy_to_clipboard: "Kopiraj v odložišče"
         copy_to_clipboard_error: "Napaka pri prenosu na odlagališče"
         copied_to_clipboard: "Kopirano v odložišče"
@@ -3371,9 +3360,12 @@ sl:
           save: "Shrani"
           delete: "Izbriši"
           links:
-            icon: "Ikona"
-            name: "Ime"
-            value: "Povezava"
+            icon:
+              label: "Ikona"
+            name:
+              label: "Ime"
+            value:
+              label: "Povezava"
         about:
           header_link_text: "O nas"
         messages:
@@ -3906,11 +3898,6 @@ sl:
           replace: "Zamenjaj"
           silence: "Utišaj"
           link: "Povezava"
-        action_descriptions:
-          block: "Onemogoči objavo prispevkov, ki vsebujejo te besede. Uporabnik bo dobil sporočilo o napaki, ko bo hotel objaviti prispevek."
-          censor: "Dovoli prispevke s temi besedami, ampak jih zamenjaj z znaki, ki skrijejo cenzurirane besede."
-          require_approval: "Prispevki, ki vsebujejo te besede bodo zahtevali potrditev s strani osebja preden jih lahko kdo vidi."
-          flag: "Dovoli prispevke, ki vsebujejo te besede, vendar jih prijavi kot neprimerne, tako da jih lahko moderatorji preverijo."
         form:
           placeholder_regexp: "Regularni izraz"
           replace_label: "Zamenjava"

@@ -26,7 +26,7 @@ ru:
       chat_users_count: "Пользователи чата"
     chat:
       dates:
-        time_tiny: "ч:мм"
+        time_tiny: "h:mm"
       all_loaded: "Показать все сообщения"
       already_enabled: "Чат в этой теме уже включён . Обновите страницу."
       disabled_for_topic: "Чат в этой теме отключён."
@@ -253,6 +253,7 @@ ru:
         italic_text: "текст, выделенный курсивом"
         bold_text: "Жирный"
         code_text: "Код"
+        send: "Отправить"
       quote:
         original_channel: 'Первоначально отправлено в <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Цитата из чата скопирована в буфер обмена"
@@ -371,6 +372,12 @@ ru:
         symbols: "Символы"
         search_placeholder: "Поиск по названию эмодзи и псевдониму…"
         no_results: "Нет результатов"
+      thread:
+        replies:
+          one: "%{count} ответ"
+          few: "%{count} ответа"
+          many: "%{count} ответ"
+          other: "%{count} ответ"
       draft_channel_screen:
         header: "Новое сообщение"
         cancel: "Отмена"
@@ -415,9 +422,8 @@ ru:
       transcript:
         view: "Просмотр предыдущих сообщений"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Сообщение на премодерации"
-          flagged_by: "Кто пожаловался"
     keyboard_shortcuts_help:
       chat:
         title: "Чат"

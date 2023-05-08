@@ -8,9 +8,13 @@ acceptance("Opengraph Tag Updater", function (needs) {
       return helper.response({});
     });
   });
+  needs.site({});
 
   test("updates OG title and URL", async function (assert) {
     await visit("/");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+    );
     await click("a[href='/about']");
 
     assert.strictEqual(

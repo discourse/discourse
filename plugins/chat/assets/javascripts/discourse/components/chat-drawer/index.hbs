@@ -1,5 +1,10 @@
-<ChatDrawer::Header>
-  <ChatDrawer::Header::Title @title="chat.heading" />
+<ChatDrawer::Header @toggleExpand={{@drawerActions.toggleExpand}}>
+  <div class="chat-drawer-header__title">
+    <div class="chat-drawer-header__top-line">
+      {{i18n "chat.heading"}}
+    </div>
+  </div>
+
   <ChatDrawer::Header::RightActions @drawerActions={{@drawerActions}} />
 </ChatDrawer::Header>
 

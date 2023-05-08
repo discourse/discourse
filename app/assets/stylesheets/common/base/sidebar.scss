@@ -31,13 +31,21 @@
 
   @include unselectable;
 
+  // 100dvh with fallback for old browsers
+  --100dvh: 100vh;
+  @supports (height: 100dvh) {
+    --100dvh: 100dvh;
+  }
+
+  height: calc(var(--100dvh) - var(--header-offset, 0px));
+
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
     height: calc(
-      100vh - var(--header-offset, 0px) - var(--footer-nav-height, 0px)
+      var(--100dvh) - var(--header-offset, 0px) - var(--footer-nav-height, 0px)
     );
   }
-  height: calc(100vh - var(--header-offset, 0px));
+
   align-self: start;
   overflow-y: auto;
 
@@ -102,29 +110,6 @@
         svg {
           color: var(--primary-medium);
         }
-      }
-    }
-  }
-}
-
-.sidebar-hamburger-dropdown {
-  .discourse-no-touch & {
-    .sidebar-section-wrapper .sidebar-section-header-wrapper:hover,
-    .sidebar-section-wrapper .sidebar-section-header-wrapper:focus-within {
-      background: transparent;
-    }
-  }
-
-  .sidebar-footer-wrapper {
-    margin-top: 1em;
-    .sidebar-footer-container {
-      background: var(--secondary);
-      &:before {
-        background: linear-gradient(
-          to bottom,
-          transparent,
-          rgba(var(--secondary-rgb), 1)
-        );
       }
     }
   }

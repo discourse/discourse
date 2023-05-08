@@ -191,43 +191,25 @@ module Chat
     def self.decorate_memberships_with_tracking_data(guardian, channels, memberships)
       unread_counts_per_channel = unread_counts(channels, guardian.user.id)
 
-      mention_notifications =
-        Notification.unread.where(
-          user_id: guardian.user.id,
-          notification_type: Notification.types[:chat_mention],
-        )
-      mention_notification_data = mention_notifications.map { |m| JSON.parse(m.data) }
-
       channels.each do |channel|
         membership = memberships.find { |m| m.chat_channel_id == channel.id }
 
         if membership
-          membership.unread_mentions =
-            mention_notification_data.count do |data|
-              data["chat_channel_id"] == channel.id &&
-                data["chat_message_id"] > (membership.last_read_message_id || 0)
-            end
+          channel_unread_counts =
+            unread_counts_per_channel.find { |uc| uc.channel_id == channel.id }
 
-          membership.unread_count = unread_counts_per_channel[channel.id] if !membership.muted
+          membership.unread_mentions = channel_unread_counts.mention_count
+          membership.unread_count = channel_unread_counts.unread_count if !membership.muted
         end
       end
     end
 
     def self.unread_counts(channels, user_id)
-      unread_counts = DB.query_array(<<~SQL, channel_ids: channels.map(&:id), user_id: user_id).to_h
-      SELECT cc.id, COUNT(*) as count
-      FROM chat_messages cm
-      JOIN chat_channels cc ON cc.id = cm.chat_channel_id
-      JOIN user_chat_channel_memberships uccm ON uccm.chat_channel_id = cc.id
-      WHERE cc.id IN (:channel_ids)
-        AND cm.user_id != :user_id
-        AND uccm.user_id = :user_id
-        AND cm.id > COALESCE(uccm.last_read_message_id, 0)
-        AND cm.deleted_at IS NULL
-      GROUP BY cc.id
-    SQL
-      unread_counts.default = 0
-      unread_counts
+      Chat::ChannelUnreadsQuery.call(
+        channel_ids: channels.map(&:id),
+        user_id: user_id,
+        include_no_membership_channels: true,
+      )
     end
 
     def self.find_with_access_check(channel_id_or_name, guardian)

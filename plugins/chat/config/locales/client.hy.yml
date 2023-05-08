@@ -67,6 +67,7 @@ hy:
       composer:
         italic_text: "շեղ տեքստ"
         bold_text: "թավ տեքստ"
+        send: "Ուղարկել"
       notification_levels:
         never: "Երբեք"
       settings:
@@ -103,6 +104,10 @@ hy:
         activities: "Ակտիվություն"
         flags: "Դրոշակներ"
         symbols: "Նշաններ"
+      thread:
+        replies:
+          one: "%{count} պատասխան"
+          other: "%{count} պատասխան"
       draft_channel_screen:
         header: "Նոր Հաղորդագրություն"
         cancel: "Չեղարկել"
@@ -114,7 +119,3 @@ hy:
           fields:
             message:
               label: Նոր Հաղորդագրություն
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Դրոշակավորել է"

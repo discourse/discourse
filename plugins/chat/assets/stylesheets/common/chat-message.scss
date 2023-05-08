@@ -7,6 +7,10 @@
     color: var(--primary-low-mid);
     padding: 0.25em;
 
+    .d-button-label {
+      text-align: left;
+    }
+
     &:hover {
       background: inherit;
       color: inherit;
@@ -48,6 +52,23 @@
     grid-template-areas:
       "replyto replyto"
       "avatar message";
+
+    .chat-user-avatar {
+      grid-area: avatar;
+    }
+
+    .chat-message-content {
+      grid-area: message;
+    }
+  }
+
+  &.is-threaded {
+    display: grid;
+    grid-template-columns: var(--message-left-width) 1fr;
+    grid-template-rows: auto 32px;
+    grid-template-areas:
+      "avatar message"
+      "threadindicator threadindicator";
 
     .chat-user-avatar {
       grid-area: avatar;
@@ -131,6 +152,10 @@
       background: none;
       border: none;
 
+      > * {
+        pointer-events: none;
+      }
+
       .d-icon {
         color: var(--primary-high);
       }
@@ -181,26 +206,47 @@
 }
 
 .chat-messages-container {
-  .not-mobile-device & .chat-message:hover,
-  .chat-message.chat-message-selected {
-    background: var(--primary-very-low);
-  }
-
-  .chat-message.chat-message-bookmarked {
-    background: var(--highlight-bg);
-
-    &:hover {
-      background: var(--highlight-medium);
+  .chat-message {
+    &.chat-message-bookmarked {
+      background: var(--highlight-bg);
     }
-  }
 
-  .not-mobile-device & .chat-message-reaction-list .chat-message-react-btn {
-    display: none;
-  }
-
-  .not-mobile-device & .chat-message:hover {
     .chat-message-reaction-list .chat-message-react-btn {
-      display: inline-block;
+      display: none;
+    }
+
+    .touch & {
+      &:active {
+        background: var(--d-hover);
+        border-radius: 5px;
+      }
+
+      &.chat-message-bookmarked {
+        &:active {
+          background: var(--highlight-low);
+        }
+      }
+    }
+
+    .no-touch & {
+      &.is-active,
+      &:hover,
+      &:active {
+        background: var(--d-hover);
+      }
+
+      &:hover {
+        .chat-message-react-btn {
+          display: inline-block;
+        }
+      }
+
+      &.chat-message-bookmarked {
+        &.is-active,
+        &:hover {
+          background: var(--highlight-medium);
+        }
+      }
     }
   }
 }
@@ -220,15 +266,6 @@
 
 .chat-action-text {
   font-style: italic;
-}
-
-.chat-message-container.is-hovered,
-.chat-message.chat-message-selected {
-  background: var(--primary-very-low);
-}
-
-.chat-message.chat-message-bookmarked {
-  background: var(--highlight-bg);
 }
 
 .has-full-page-chat .chat-message .onebox:not(img),

@@ -45,6 +45,27 @@ acceptance(
       );
     });
 
+    test("viewing group messages on subfolder setup", async function (assert) {
+      const router = this.container.lookup("router:main");
+      const originalRootURL = router.rootURL;
+
+      try {
+        router.set("rootURL", "/forum/");
+
+        await visit("/forum/u/eviltrout/messages");
+
+        const messagesDropdown = selectKit(".user-nav-messages-dropdown");
+
+        assert.strictEqual(
+          messagesDropdown.header().name(),
+          I18n.t("user.messages.inbox"),
+          "User personal inbox is selected in dropdown"
+        );
+      } finally {
+        router.set("rootURL", originalRootURL);
+      }
+    });
+
     test("viewing messages of another user", async function (assert) {
       updateCurrentUser({ id: 5, username: "charlie" });
 
@@ -954,12 +975,28 @@ acceptance(
 acceptance(
   "User Private Messages - user with uppercase username",
   function (needs) {
-    needs.user();
+    needs.user({
+      groups: [{ id: 14, name: "awesome_group", has_messages: true }],
+    });
 
     needs.pretender((server, helper) => {
       const response = cloneJSON(userFixtures["/u/charlie.json"]);
       response.user.username = "chArLIe";
       server.get("/u/charlie.json", () => helper.response(response));
+
+      server.get(
+        "/topics/private-messages-group/:username/:group_name.json",
+        () => {
+          return helper.response({
+            topic_list: {
+              topics: [
+                { id: 1, posters: [] },
+                { id: 2, posters: [] },
+              ],
+            },
+          });
+        }
+      );
     });
 
     test("viewing inbox", async function (assert) {
@@ -969,6 +1006,16 @@ acceptance(
         query(".user-nav-messages-dropdown .selected-name").textContent.trim(),
         "Inbox",
         "menu defaults to Inbox"
+      );
+    });
+
+    test("viewing group inbox", async function (assert) {
+      await visit("/u/charlie/messages/group/awesome_group");
+
+      assert.strictEqual(
+        query(".user-nav-messages-dropdown .selected-name").textContent.trim(),
+        "awesome_group",
+        "dropdown menu displays the right group name"
       );
     });
   }

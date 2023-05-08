@@ -155,11 +155,6 @@ vi:
     software_update_prompt:
       message: "Chúng tôi đã cập nhật trang web này, <span>vui lòng làm mới</span>, nếu không bạn có thể gặp phải hành vi không mong muốn."
       dismiss: "Hủy bỏ"
-    bootstrap_mode_enabled:
-      other: "Để đơn giản hoá quá trình triển khai trang web, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{count}"
-    bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
-    bootstrap_invite_button_title: "Gửi Lời Mời"
-    bootstrap_wizard_link_title: "Hoàn tất trình hướng dẫn thiết lập"
     themes:
       default_description: "Mặc định"
       broken_theme_alert: "Trang web của bạn có thể không hoạt động vì một chủ đề / thành phần có lỗi."
@@ -313,7 +308,6 @@ vi:
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Bản nháp tin nhắn cá nhân mới"
       abandon:
-        confirm: "Bạn đang có một bản nháp cho chủ đề này. Bạn muốn làm gì với nó?"
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
     topic_count_categories:
@@ -1093,13 +1087,6 @@ vi:
       save_to_change_theme: 'Chủ đề sẽ được cập nhật sau khi bạn nhấp vào "%{save_text}"'
       home: "Trang chủ mặc định"
       staged: "Theo giai đoạn"
-      staff_counters:
-        flags_given: "cờ hữu ích"
-        flagged_posts: "bài viết gắn cờ"
-        deleted_posts: "bài viết bị xoá"
-        suspensions: "đình chỉ"
-        warnings_received: "cảnh báo"
-        rejected_posts: "bài viết bị từ chối"
       messages:
         all: "tất cả hộp thư đến"
         inbox: "Hộp thư"
@@ -1148,10 +1135,8 @@ vi:
         title: "Mã dự phòng đăng nhập hai yếu tố"
         regenerate: "Khởi tạo lại"
         disable: "Vô hiệu hóa"
-        enable: "Kích hoạt"
-        enable_long: "Bật backup codes"
         manage:
-          other: "Quản lý mã dự phòng. Bạn còn lại <strong>%{count}</strong> mã dự phòng."
+          other: "Bạn còn lại <strong>%{count}</strong> mã dự phòng."
         copy_to_clipboard: "Sao chép vào clipboard"
         copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"
         copied_to_clipboard: "Sao chép vào Clipboard"
@@ -3562,9 +3547,12 @@ vi:
           save: "Lưu lại"
           delete: "Xóa"
           links:
-            icon: "Biểu tượng"
-            name: "Tên"
-            value: "Liên kết"
+            icon:
+              label: "Biểu tượng"
+            name:
+              label: "T"
+            value:
+              label: "Liên kết"
         about:
           header_link_text: "Giới thiệu"
         messages:
@@ -3920,9 +3908,6 @@ vi:
         user_promoted_event:
           name: "Sự kiện do người dùng quảng cáo"
           details: "Khi người dùng được thăng cấp từ cấp độ tin cậy này sang cấp độ tin cậy khác."
-        user_badge_event:
-          name: "Sự kiện cấp huy hiệu"
-          details: "Khi người dùng nhận được một huy hiệu."
         group_user_event:
           name: "Sự kiện người dùng nhóm"
           details: "Khi một người dùng được thêm vào hoặc bị xóa trong một nhóm."
@@ -4547,10 +4532,6 @@ vi:
           replace: "Thay thế"
           silence: "Im lặng"
           link: "Liên kết"
-        action_descriptions:
-          censor: "Cho phép các bài đăng có chứa những từ này nhưng hãy thay thế chúng bằng các ký tự ẩn các từ đã được kiểm duyệt."
-          tag: "Tự động gắn thẻ các chủ đề dựa trên bài đăng đầu tiên"
-          silence: "Các bài đăng đầu tiên của người dùng có chứa những từ này sẽ yêu cầu nhân viên phê duyệt trước khi họ có thể được nhìn thấy và người dùng sẽ tự động bị tắt tiếng."
         form:
           replace_label: "Sự thay thế"
           replace_placeholder: "thí dụ"

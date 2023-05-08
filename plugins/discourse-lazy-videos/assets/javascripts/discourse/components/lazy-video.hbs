@@ -6,6 +6,7 @@
   }}
   data-video-id={{@videoAttributes.id}}
   data-video-title={{@videoAttributes.title}}
+  data-video-start-time={{@videoAttributes.startTime}}
   data-provider-name={{@videoAttributes.providerName}}
 >
   {{#if this.isLoaded}}
@@ -13,11 +14,13 @@
       @providerName={{@videoAttributes.providerName}}
       @title={{@videoAttributes.title}}
       @videoId={{@videoAttributes.id}}
+      @startTime={{@videoAttributes.startTime}}
     />
   {{else}}
     <div
       class={{concat-class "video-thumbnail" @videoAttributes.providerName}}
       tabindex="0"
+      style={{this.thumbnailStyle}}
       {{on "click" this.loadEmbed}}
       {{on "keypress" this.loadEmbed}}
     >

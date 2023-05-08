@@ -23,7 +23,7 @@ describe "Search", type: :system, js: true do
       expect(search_page.heading_text).not_to eq("Search")
 
       search_page.click_home_logo
-      expect(search_page.is_search_page).to be_falsey
+      expect(search_page).to be_not_active
 
       page.go_back
       # ensure results are still there when using browser's history
@@ -32,7 +32,7 @@ describe "Search", type: :system, js: true do
       search_page.click_home_logo
       search_page.click_search_icon
 
-      expect(search_page).not_to have_search_result
+      expect(search_page).to have_no_search_result
       expect(search_page.heading_text).to eq("Search")
     end
   end

@@ -875,7 +875,7 @@ ca:
       title: "DAU/MAU"
       xaxis: "Dia"
       yaxis: "DAU/MAU"
-      description: "Nombre de membres que han iniciat sessió el darrer dia dividit pel nombre de membres que ha iniciat sessió el darrer mes. Dóna un % que indica l'_adhesivitat_ de la comunitat. Objectiu >30%."
+      description: "Nombre de membres que han iniciat sessió el darrer dia dividit pel nombre de membres que ha iniciat sessió el darrer mes. Dóna un % que indica l'_adhesivitat_ de la comunitat. Objectiu >20%."
     daily_engaged_users:
       title: "Usuaris diaris compromesos"
       xaxis: "Dia"
@@ -1200,7 +1200,6 @@ ca:
     large_icon: "Imatge utilitzada com a base per a altres icones de metadades. Idealment hauria de ser superior a 512 x 512. Si es deixa en blanc, s'utilitzarà logo_small."
     manifest_icon: "Imatge utilitzada com a imatge de logo/splash en Android. Es redimensionarà automàticament a 512 × 512. Si es deixa en blanc, s'utilitzarà large_icon."
     favicon: "Icona per al vostre lloc web (favicon). Vegeu <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://ca.wikipedia.org/wiki/Icona_de_web</a>. Per a treballar correctament sobre un CDN, ha de ser PNG. Es redimensionarà a 32x32. Si es deixa en blanc, s'utilitzarà large_icon."
-    apple_touch_icon: "Icona utilitzada per als dispositius tàctils d'Apple. Es redimensionarà automàticament a 180x180. Si es deixa en blanc, s'utilitzarà large_icon."
     opengraph_image: "Imatge predeterminada opengraph, utilitzada quan la pàgina no té cap altra imatge adequada. Si es deixa en blanc, s'utilitzarà large_icon."
     notification_email: "Adreça de correu en el \"de:\" emprada en enviar tots els correus essencials de sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, configurats correctament perquè arribi el correu."
     email_custom_headers: "Llista de capçaleres de correu personalitzades, delimitada amb barres verticals"
@@ -1588,10 +1587,8 @@ ca:
     allowed_href_schemes: "Esquemes permesos en enllaços a més de http i https."
     embed_post_limit: "Nombre màxim de publicacions que s'incrusten."
     embed_username_required: "Cal un nom d'usuari per a crear un tema."
-    notify_about_flags_after: "Si hi ha banderes que no s'han gestionat després d'aquest nombre d'hores, envia un missatge personal als moderadors. 0 per desactivar."
     show_create_topics_notice: "Si el lloc web té menys de 5 temes públics, mostra un avís demanant als administradors que en creï uns quants. "
     delete_drafts_older_than_n_days: "Suprimeix esborranys amb més de (n) dies."
-    bootstrap_mode_min_users: "Nombre mínim d'usuaris necessaris per a desactivar el mode d'arrencada (deixeu-ho a 0 per a desactivar-lo)."
     slug_generation_method: "Trieu un mètode de generació de slugs (adreces amigables). 'encoded' generarà una cadena amb codificacions %. 'none' anul·larà totalment l'adreça amigable."
     enable_emoji: "Activa emojis"
     enable_emoji_shortcuts: "El text típic d'emojis com ara :): p :( serà convertit en emojis."
@@ -1643,7 +1640,6 @@ ca:
     revoke_api_keys_days: "Nombre de dies abans que una clau d’API no utilitzada sigui revocada  automàticament (0 per a mai)"
     allow_user_api_keys: "Permet la generació de claus API d'usuari"
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus d'API d'usuari"
-    min_trust_level_for_user_api_key: "Nivell de confiança necessari per a generar claus API d'usuari."
     allowed_user_api_auth_redirects: "URL permès per a la redirecció d'autenticació per a les claus de l'API d'usuari. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol part de l'URL (p. ex. www.example.com/*)."
     allowed_user_api_push_urls: "Adreces URL permeses per al 'server push' a l'API d'usuari"
     expire_user_api_keys_days: "Nombre de dies abans de l'extinció automàtica d'una clau d'API d'usuari (0 vol dir mai)"
@@ -2556,8 +2552,6 @@ ca:
   offline:
     title: "No es pot carregar l'aplicació"
     offline_page_message: "Sembla que esteu fora de línia! Comproveu la connexió de xarxa i torneu-ho a provar."
-  login_required:
-    welcome_message: "## [Benvingut a %{title}](#welcome)"
   upload:
     edit_reason: "còpia local d'imatges descarregada"
     unauthorized: "El fitxer que intenteu carregar no està autoritzat (extensions permeses: %{authorized_extensions})."

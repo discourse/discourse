@@ -161,9 +161,6 @@ el:
     emails_are_disabled_non_staff: "Τα εξερχόμενα email έχουν απενεργοποιηθεί για χρήστες εκτός του προσωπικού."
     software_update_prompt:
       dismiss: "Απόρριψη"
-    bootstrap_mode_disabled: "Η λειτουργία bootstrap θα απενεργοποιηθεί εντός 24 ωρών."
-    bootstrap_invite_button_title: "Αποστολή Προσκλήσεων"
-    bootstrap_wizard_link_title: "Ολοκλήρωση του οδηγού εγκατάστασης"
     themes:
       default_description: "Προεπιλογή"
     s3:
@@ -189,6 +186,7 @@ el:
         us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "Δυτικές ΗΠΑ (Β. Καλιφόρνια)"
         us_west_2: "Δυτικές ΗΠΑ (Όρεγκον)"
+    clear_input: "Εκκαθάριση εισόδου"
     edit: "επεξεργασία του τίτλου και της κατηγορίας αυτού του θέματος"
     expand: "Επέκταση"
     not_implemented: "Αυτή η λειτουργία δεν έχει υλοποιηθεί ακόμα, συγγνώμη!"
@@ -276,6 +274,7 @@ el:
       create: "Δημιουργία σελιδοδείκτη"
       edit: "Επεξεργασία σελιδοδείκτη"
       not_bookmarked: "προσθέστε σελιδοδείκτη σε αυτήν την ανάρτηση"
+      remove_reminder_keep_bookmark: "Αφαίρεση υπενθύμισης και διατήρηση σελιδοδείκτη"
       created_with_reminder: "Έχετε προσθέσει σελιδοδείκτη σε αυτήν την ανάρτηση με υπενθύμιση %{date}. %{name}"
       delete: "Διαγραφή σελιδοδείκτη"
       confirm_delete: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτόν τον σελιδοδείκτη; Η υπενθύμιση θα διαγραφεί επίσης."
@@ -311,7 +310,6 @@ el:
       new_topic: "Νέο προσχέδιο θέματος"
       new_private_message: "Νέο πρόχειρο προσωπικό μήνυμα"
       abandon:
-        confirm: "Έχετε ένα πρόχειρο σε εξέλιξη για αυτό το θέμα. Τι θα θέλατε να κάνετε με αυτό;"
         yes_value: "Απόρριψη"
         no_value: "Συνέχιση επεξεργασίας"
     topic_count_categories:
@@ -603,8 +601,11 @@ el:
       member_added: "Προστέθηκε"
       member_requested: "Ζητήθηκε στις"
       add_members:
+        description: "Εισαγάγετε μια λίστα χρηστών που θέλετε να προσκαλέσετε στην ομάδα ή επικολλήσετε σε μια λίστα διαχωρισμένη με κόμμα:"
+        usernames_placeholder: "ονόματα χρηστών"
         usernames_or_emails_placeholder: "ονόματα χρηστών ή email"
         notify_users: "Ειδοποίηση χρηστών"
+        set_owner: "Ορισμός χρηστών ως κατόχων αυτής της ομάδας"
       requests:
         title: "Αιτήματα"
         reason: "Αιτία"
@@ -1054,13 +1055,6 @@ el:
       save_to_change_theme: 'Το θέμα θα ενημερωθεί αφού κάνετε κλικ στο "%{save_text}"'
       home: "Προεπιλεγμένη Αρχική Σελίδα"
       staged: "Υπό μετάβαση"
-      staff_counters:
-        flags_given: "χρήσιμες σημάνσεις"
-        flagged_posts: "επισημασμένες αναρτήσεις"
-        deleted_posts: "διαγραμμένες αναρτήσεις"
-        suspensions: "αποβολές"
-        warnings_received: "προειδοποιήσεις"
-        rejected_posts: "απορριφθείσες αναρτήσεις"
       messages:
         inbox: "Εισερχόμενα"
         latest: "Πρόσφατες"
@@ -1105,8 +1099,6 @@ el:
       second_factor_backup:
         regenerate: "Αναδημιουγία"
         disable: "Απενεργοποίηση"
-        enable: "Ενεργοποίηση"
-        enable_long: "Ενεργοποίηση εφεδρικών κωδικών"
         copy_to_clipboard: "Αντιγραφή στο Clipboard"
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
         copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
@@ -1472,6 +1464,11 @@ el:
     user_status:
       save: "Αποθήκευση"
     user_tips:
+      first_notification:
+        title: "Η πρώτη σας ειδοποίηση!"
+        content: "Οι ειδοποιήσεις χρησιμοποιούνται για να σας κρατούν ενήμερους για το τι συμβαίνει στην κοινότητα."
+      topic_notification_levels:
+        title: "Τώρα παρακολουθείτε αυτό το θέμα"
       suggested_topics:
         title: "Συνεχίστε την ανάγνωση!"
         content: "Εδώ είναι μερικά θέματα που πιστεύουμε ότι θα θέλατε να διαβάσετε στη συνέχεια."
@@ -1499,6 +1496,7 @@ el:
       close: "κλείσιμο"
       dismiss_error: "Παράβλεψη σφάλματος"
     close: "Κλείσιμο"
+    assets_changed_confirm: "Αυτός ο ιστότοπος μόλις έλαβε μια αναβάθμιση λογισμικού. Λήψη της πιο πρόσφατης έκδοσης τώρα;"
     logout: "Αποσυνδέθηκες."
     refresh: "Ανανέωση"
     home: "Αρχική Σελίδα"
@@ -1867,6 +1865,8 @@ el:
           desc: "Απάντηση χωρίς αλλαγή της τελευταίας ημερομηνίας απάντησης"
       reload: "Ανανέωση"
       ignore: "Αγνόηση"
+      image_alt_text:
+        aria_label: Εναλλακτικό κείμενο για την εικόνα
       delete_image_button: Διαγραφή Εικόνας
     notifications:
       tooltip:
@@ -2065,18 +2065,26 @@ el:
             label: Αναρτήσεις
           min:
             placeholder: ελάχιστο
+          max:
+            placeholder: μέγιστο
           time:
             label: Αναρτήθηκε
             before: πριν
             after: μετά
         views:
           label: Προβολές
+        min_views:
+          placeholder: ελάχιστο
     new_item: "καινούριο"
     go_back: "επιστροφή"
     not_logged_in_user: "σελίδα λογαριασμού που περιέχει σύνοψη της τρέχουσας δραστηριότητας και τις προτιμήσεις"
     current_user: "πήγαινε στη σελίδα του λογαριασμού σου"
     user_menu:
+      view_all_notifications: "προβολή όλων των ειδοποιήσεων"
+      view_all_bookmarks: "προβολή όλων των σελιδοδεικτών"
+      view_all_messages: "προβολή όλων των προσωπικών μηνυμάτων"
       tabs:
+        all_notifications: "Όλες οι ειδοποιήσεις"
         replies: "Απαντήσεις"
         mentions: "Αναφορές"
         likes: "Μου αρέσει"
@@ -3015,6 +3023,7 @@ el:
       close: "Κλείσιμο (Esc)"
       content_load_error: 'Δεν ήταν δυνατή η φόρτωση <a href="%url%">του περιεχομένου</a>.'
       image_load_error: 'Δεν ήταν δυνατή η φόρτωση <a href="%url%">της εικόνας</a>.'
+    cannot_render_video: Αυτό το βίντεο δεν μπορεί να αποδοθεί επειδή το πρόγραμμα περιήγησής σας δεν υποστηρίζει τον κωδικοποιητή.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3215,7 +3224,10 @@ el:
           title: "Σίγαση"
           description: "Δε θα ειδοποιηθείτε για τίποτα σχετικά με νέα θέματα με αυτήν την ετικέτα και δε θα εμφανίζονται στην καρτέλα μη αναγνωσμένων σας."
       groups:
+        back_btn: "Επιστροφή σε όλες τις ετικέτες"
         title: "Ομάδες Ετικετών"
+        about_heading: "Επιλέξτε μια ομάδα ετικετών ή δημιουργήστε μια νέα"
+        about_heading_empty: "Δημιουργήστε μια νέα ομάδα ετικετών για να ξεκινήσετε"
         new: "Νέα Ομάδα"
         new_title: "Δημιουργία Νέας Ομάδας"
         edit_title: "Επεξεργασία Ομάδας Ετικετών"
@@ -3254,6 +3266,8 @@ el:
       enabled: "Η λειτουργία ασφαλείας είναι ενεργοποιημένη, για να εξέλθεις από τη λειτουργία ασφαλείας κλείσε το παράθυρο περιήγησης"
     image_removed: "(η εικόνα αφαιρέθηκε)"
     pause_notifications:
+      title: "Παύση ειδοποιήσεων για..."
+      label: "Παύση ειδοποιήσεων"
       options:
         half_hour: "30 λεπτά"
         one_hour: "1 ώρα"
@@ -3287,9 +3301,12 @@ el:
           save: "Αποθήκευση"
           delete: "Σβήσιμο"
           links:
-            icon: "Σύμβολο"
-            name: "Όνομα"
-            value: "Σύνδεσμος"
+            icon:
+              label: "Σύμβολο"
+            name:
+              label: "Πλήρες Όνομα"
+            value:
+              label: "Σύνδεσμος"
         about:
           header_link_text: "Σχετικά"
         messages:
@@ -3611,9 +3628,6 @@ el:
         notification_event:
           name: "Συμβάν ειδοποίησης"
           details: "Όταν ένας χρήστης λαμβάνει μια ειδοποίηση στη ροή του."
-        user_badge_event:
-          name: "Συμβάν απονομής σήματος"
-          details: "Όταν ένας χρήστης λαμβάνει ένα σήμα."
         delivery_status:
           title: "Κατάσταση διανομής"
           inactive: "Ανενεργό"
@@ -4208,11 +4222,6 @@ el:
           replace: "Αντικατάσταση"
           silence: "Σίγαση"
           link: "Σύνδεσμος"
-        action_descriptions:
-          block: "Αποτροπή της καταχώρησης αναρτήσεων που περιέχουν αυτές τις λέξεις. Ο χρήστης θα ενημερωθεί με μήνυμα λάθους όταν προσπαθήσει να καταχωρήσει την αναρτηση."
-          censor: "Επίτρεψε τις αναρτήσεις με αυτές τις λέξεις, αλλά αντικατέστησε τις λογοκριμένες λέξεις με άλλους χαρακτήρες."
-          require_approval: "Οι αναρτήσεις που περιέχουν αυτές τις λέξεις, χρειάζονται έγκριση από το προσωπικό πριν αναρτηθούν."
-          flag: "Επίτρεψε τις αναρτήσεις που περιέχουν αυτές τις λέξεις, αλλά επισήμανέ τες ως ανάρμοστες για έλεγχο από συντονιστή."
         form:
           placeholder_regexp: "regular expression"
           link_label: "Σύνδεσμος"

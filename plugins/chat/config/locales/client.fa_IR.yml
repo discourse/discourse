@@ -205,6 +205,7 @@ fa_IR:
       composer:
         italic_text: "متن تاکید شده"
         bold_text: "نوشته‌ی ضخیم "
+        send: "ارسال"
       quote:
         copy_success: "نقل قول گفتگو در کلیپ‌بورد کپی شد"
       notification_levels:
@@ -277,6 +278,11 @@ fa_IR:
         flags: "پرچم‌ها"
         symbols: "نشانه ها"
         no_results: "هیج نتیجه‌ای نداشت"
+      thread:
+        view_thread: مشاهده موضوع
+        replies:
+          one: "%{count} پاسخ"
+          other: "%{count} پاسخ"
       draft_channel_screen:
         header: "پیام جدید"
         cancel: "انصراف"
@@ -307,10 +313,6 @@ fa_IR:
     review:
       transcript:
         view: "مشاهده رونوشت متن پیام‌های قبلی"
-      types:
-        reviewable_chat_message:
-          title: "پیام گفتگوی پرچم گذاری شده"
-          flagged_by: "پرچم شده توسط"
     keyboard_shortcuts_help:
       chat:
         title: "گفتگو"

@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
-import { cloneJSON } from "discourse-common/lib/object";
-import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
+import { Promise } from "rsvp";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind, debounce } from "discourse-common/utils/decorators";
-import I18n from "I18n";
 import { inject as service } from "@ember/service";
+import { schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
+import { resetIdle } from "discourse/lib/desktop-notifications";
 
 const PAGE_SIZE = 50;
 
@@ -18,39 +19,62 @@ export default class ChatThreadPanel extends Component {
   @service router;
   @service chatApi;
   @service chatComposerPresenceManager;
+  @service chatChannelThreadComposer;
+  @service chatChannelThreadPane;
+  @service chatChannelThreadPaneSubscriptionsManager;
   @service appEvents;
+  @service capabilities;
 
   @tracked loading;
-  @tracked loadingMorePast;
+  @tracked uploadDropZone;
+
+  scrollable = null;
 
   get thread() {
-    return this.channel.activeThread;
+    return this.args.thread;
   }
 
   get channel() {
-    return this.chat.activeChannel;
+    return this.thread?.channel;
   }
 
-  get title() {
-    if (this.thread.title) {
-      this.thread.escapedTitle;
-    }
+  @action
+  setUploadDropZone(element) {
+    this.uploadDropZone = element;
+  }
 
-    return I18n.t("chat.threads.op_said");
+  @action
+  setupMessage() {
+    this.chatChannelThreadComposer.message = ChatMessage.createDraftMessage(
+      this.channel,
+      { user: this.currentUser, thread_id: this.thread.id }
+    );
+  }
+
+  @action
+  subscribeToUpdates() {
+    this.chatChannelThreadPaneSubscriptionsManager.subscribe(this.thread);
+  }
+
+  @action
+  unsubscribeFromUpdates() {
+    this.chatChannelThreadPaneSubscriptionsManager.unsubscribe();
+  }
+
+  @action
+  setScrollable(element) {
+    this.scrollable = element;
   }
 
   @action
   loadMessages() {
-    if (this.args.targetMessageId) {
-      this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
-    }
-
-    // TODO (martin) Loading/scrolling to selected message
-    // this.highlightOrFetchMessage(this.requestedTargetMessageId);
-    // if (this.requestedTargetMessageId) {
-    // } else {
+    this.thread.messagesManager.clearMessages();
     this.fetchMessages();
-    // }
+  }
+
+  @action
+  didResizePane() {
+    this.forceRendering();
   }
 
   get _selfDeleted() {
@@ -60,25 +84,17 @@ export default class ChatThreadPanel extends Component {
   @debounce(100)
   fetchMessages() {
     if (this._selfDeleted) {
-      return;
+      return Promise.resolve();
     }
 
-    this.loadingMorePast = true;
+    if (this.thread.staged) {
+      this.thread.messagesManager.addMessages([this.thread.originalMessage]);
+      return Promise.resolve();
+    }
+
     this.loading = true;
-    this.thread.messagesManager.clearMessages();
 
-    const findArgs = { pageSize: PAGE_SIZE };
-
-    // TODO (martin) Find arguments for last read etc.
-    // const fetchingFromLastRead = !options.fetchFromLastMessage;
-    // if (this.requestedTargetMessageId) {
-    //   findArgs["targetMessageId"] = this.requestedTargetMessageId;
-    // } else if (fetchingFromLastRead) {
-    //   findArgs["targetMessageId"] = this._getLastReadId();
-    // }
-    //
-    findArgs.threadId = this.thread.id;
-
+    const findArgs = { pageSize: PAGE_SIZE, threadId: this.thread.id };
     return this.chatApi
       .messages(this.channel.id, findArgs)
       .then((results) => {
@@ -90,25 +106,14 @@ export default class ChatThreadPanel extends Component {
           );
         }
 
-        const [messages, meta] = this.afterFetchCallback(this.channel, results);
+        const [messages, meta] = this.afterFetchCallback(
+          this.channel,
+          this.thread,
+          results
+        );
         this.thread.messagesManager.addMessages(messages);
-
-        // TODO (martin) ECHO MODE
-        this.channel.messagesManager.addMessages(messages);
-
-        // TODO (martin) details needed for thread??
         this.thread.details = meta;
-
-        // TODO (martin) Scrolling to particular messages
-        // if (this.requestedTargetMessageId) {
-        //   this.scrollToMessage(findArgs["targetMessageId"], {
-        //     highlight: true,
-        //   });
-        // } else if (fetchingFromLastRead) {
-        //   this.scrollToMessage(findArgs["targetMessageId"]);
-        // } else if (messages.length) {
-        //   this.scrollToMessage(messages.lastObject.id);
-        // }
+        this.markThreadAsRead();
       })
       .catch(this.#handleErrors)
       .finally(() => {
@@ -116,18 +121,13 @@ export default class ChatThreadPanel extends Component {
           return;
         }
 
-        this.requestedTargetMessageId = null;
         this.loading = false;
-        this.loadingMorePast = false;
-
-        // this.fillPaneAttempt();
       });
   }
 
   @bind
-  afterFetchCallback(channel, results) {
+  afterFetchCallback(channel, thread, results) {
     const messages = [];
-    let foundFirstNew = false;
 
     results.chat_messages.forEach((messageData) => {
       // If a message has been hidden it is because the current user is ignoring
@@ -139,105 +139,156 @@ export default class ChatThreadPanel extends Component {
         );
       }
 
-      if (this.requestedTargetMessageId === messageData.id) {
-        messageData.expanded = !messageData.hidden;
-      } else {
-        messageData.expanded = !(messageData.hidden || messageData.deleted_at);
-      }
-
-      // newest has to be in after fetch callback as we don't want to make it
-      // dynamic or it will make the pane jump around, it will disappear on reload
-      if (
-        !foundFirstNew &&
-        messageData.id > channel.currentUserMembership.last_read_message_id
-      ) {
-        foundFirstNew = true;
-        messageData.newest = true;
-      }
-
-      messages.push(ChatMessage.create(channel, messageData));
+      messageData.expanded = !(messageData.hidden || messageData.deleted_at);
+      const message = ChatMessage.create(channel, messageData);
+      message.thread = thread;
+      messages.push(message);
     });
 
     return [messages, results.meta];
   }
 
+  // NOTE: At some point we want to do this based on visible messages
+  // and scrolling; for now it's enough to do it when the thread panel
+  // opens/messages are loaded since we have no pagination for threads.
+  markThreadAsRead() {
+    return this.chatApi.markThreadAsRead(this.channel.id, this.thread.id);
+  }
+
   @action
-  sendMessage(message, uploads = []) {
-    // TODO (martin) For desktop notifications
-    // resetIdle()
-    if (this.sendingLoading) {
+  onSendMessage(message) {
+    resetIdle();
+
+    if (message.editing) {
+      this.#sendEditMessage(message);
+    } else {
+      this.#sendNewMessage(message);
+    }
+  }
+
+  @action
+  resetComposer() {
+    this.chatChannelThreadComposer.reset(this.channel, this.thread);
+  }
+
+  @action
+  resetActiveMessage() {
+    this.chat.activeMessage = null;
+  }
+
+  #sendNewMessage(message) {
+    message.thread = this.thread;
+
+    if (this.chatChannelThreadPane.sending) {
       return;
     }
 
-    this.sendingLoading = true;
-    this.channel.draft = ChatMessageDraft.create();
+    this.chatChannelThreadPane.sending = true;
 
-    // TODO (martin) Handling case when channel is not followed???? IDK if we
-    // even let people send messages in threads without this, seems weird.
-
-    const stagedMessage = ChatMessage.createStagedMessage(this.channel, {
-      message,
-      created_at: new Date(),
-      uploads: cloneJSON(uploads),
-      user: this.currentUser,
-      thread_id: this.thread.id,
-    });
-
+    this.thread.stageMessage(message);
+    const stagedMessage = message;
+    this.resetComposer();
     this.thread.messagesManager.addMessages([stagedMessage]);
 
-    // TODO (martin) Scrolling!!
-    // if (!this.channel.canLoadMoreFuture) {
-    //   this.scrollToBottom();
-    // }
+    this.scrollToBottom();
 
     return this.chatApi
       .sendMessage(this.channel.id, {
         message: stagedMessage.message,
         in_reply_to_id: stagedMessage.inReplyTo?.id,
-        staged_id: stagedMessage.stagedId,
+        staged_id: stagedMessage.id,
         upload_ids: stagedMessage.uploads.map((upload) => upload.id),
-        thread_id: stagedMessage.threadId,
-      })
-      .then(() => {
-        // TODO (martin) Scrolling!!
-        // this.scrollToBottom();
+        thread_id: this.thread.staged ? null : stagedMessage.thread.id,
+        staged_thread_id: this.thread.staged ? stagedMessage.thread.id : null,
       })
       .catch((error) => {
-        this.#onSendError(stagedMessage.stagedId, error);
+        this.#onSendError(stagedMessage.id, error);
       })
       .finally(() => {
         if (this._selfDeleted) {
           return;
         }
-        this.sendingLoading = false;
-        this.#resetAfterSend();
+        this.chatChannelThreadPane.sending = false;
       });
   }
 
-  @action
-  editMessage() {}
-  // editMessage(chatMessage, newContent, uploads) {}
+  #sendEditMessage(message) {
+    message.cook();
+    this.chatChannelThreadPane.sending = true;
 
-  @action
-  setReplyTo() {}
-  // setReplyTo(messageId) {}
+    const data = {
+      new_message: message.message,
+      upload_ids: message.uploads.map((upload) => upload.id),
+    };
 
+    this.resetComposer();
+
+    return this.chatApi
+      .editMessage(message.channel.id, message.id, data)
+      .catch(popupAjaxError)
+      .finally(() => {
+        this.chatChannelThreadPane.sending = false;
+      });
+  }
+
+  // A more consistent way to scroll to the bottom when we are sure this is our goal
+  // it will also limit issues with any element changing the height while we are scrolling
+  // to the bottom
   @action
-  setInReplyToMsg(inReplyMsg) {
-    this.replyToMsg = inReplyMsg;
+  scrollToBottom() {
+    if (!this.scrollable) {
+      return;
+    }
+
+    this.scrollable.scrollTop = this.scrollable.scrollHeight + 1;
+    this.forceRendering(() => {
+      this.scrollable.scrollTop = this.scrollable.scrollHeight;
+    });
+  }
+
+  // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
+  // we now use this hack to disable it
+  @bind
+  forceRendering(callback) {
+    schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
+      if (!this.scrollable) {
+        return;
+      }
+
+      if (this.capabilities.isIOS) {
+        this.scrollable.style.overflow = "hidden";
+      }
+
+      callback?.();
+
+      if (this.capabilities.isIOS) {
+        discourseLater(() => {
+          if (!this.scrollable) {
+            return;
+          }
+
+          this.scrollable.style.overflow = "auto";
+        }, 50);
+      }
+    });
   }
 
   @action
-  cancelEditing() {
-    this.editingMessage = null;
+  resendStagedMessage() {}
+
+  @action
+  messageDidEnterViewport(message) {
+    message.visible = true;
   }
 
   @action
-  editLastMessageRequested() {}
-
-  @action
-  composerValueChanged() {}
-  // composerValueChanged(value, uploads, replyToMsg) {}
+  messageDidLeaveViewport(message) {
+    message.visible = false;
+  }
 
   #handleErrors(error) {
     switch (error?.jqXHR?.status) {
@@ -262,17 +313,6 @@ export default class ChatThreadPanel extends Component {
       }
     }
 
-    this.#resetAfterSend();
-  }
-
-  #resetAfterSend() {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    this.replyToMsg = null;
-    this.editingMessage = null;
-    this.chatComposerPresenceManager.notifyState(this.channel.id, false);
-    this.appEvents.trigger("chat-composer:reply-to-set", null);
+    this.resetComposer();
   }
 }

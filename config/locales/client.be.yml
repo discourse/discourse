@@ -76,7 +76,6 @@ be:
       topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
       close: "схаваць"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
-    bootstrap_invite_button_title: "Адправіць запрашэнні"
     themes:
       default_description: "Default"
     s3:
@@ -514,7 +513,6 @@ be:
       second_factor_backup:
         regenerate: "Перагенераваць"
         disable: "Адключыць"
-        enable: "Уключыць"
       second_factor:
         name: "Імя"
         disable: "Адключыць"
@@ -1356,8 +1354,10 @@ be:
           save: "захаваць"
           delete: "выдаляць"
           links:
-            icon: "Абразка"
-            name: "імя"
+            icon:
+              label: "Абразка"
+            name:
+              label: "імя"
         about:
           header_link_text: "Аб тэме"
         messages:

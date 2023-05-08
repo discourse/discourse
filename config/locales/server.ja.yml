@@ -1053,7 +1053,7 @@ ja:
       title: "DAU/MAU"
       xaxis: "日"
       yaxis: "DAU/MAU"
-      description: "前日にログインしたメンバーの数を先月にログインしたメンバーの数で割った数 - コミュニティーの「粘着性」を示す割合 % を返します。30% 以上を目指してください。"
+      description: "前日にログインしたメンバーの数を先月にログインしたメンバーの数で割った数 - コミュニティーの「粘着性」を示す割合 % を返します。20% 以上を目指してください。"
     daily_engaged_users:
       title: "1 日のエンゲージユーザー"
       xaxis: "日"
@@ -1420,7 +1420,6 @@ ja:
     manifest_icon: "Android でロゴ/スプラッシュ画像として使用される画像。自動的に 512 × 512 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     manifest_screenshots: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
     favicon: "サイトのファビコン。<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> をご覧ください。CDN で正しく動作させるには、png である必要があります。32 x 32 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
-    apple_touch_icon: "Apple タッチデバイスに使用されるアイコン。自動的に 180x180 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     opengraph_image: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます"
     twitter_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があり、.svg を使用できません)。空のままにすると、.svg でない限り opengraph_image を使って通常のカードメタデータが生成されます。"
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
@@ -1564,7 +1563,6 @@ ja:
     discourse_connect_overrides_profile_background: "ユーザープロファイルの背景を DiscourseConnect ペイロードの値でオーバーライドする。"
     discourse_connect_overrides_card_background: "ユーザーカードの背景を DiscourseConnect ペイロードの値でオーバーライドする。"
     discourse_connect_not_approved_url: "未承認の DiscourseConnect アカウントをこの URL にリダイレクトする"
-    discourse_connect_allows_all_return_paths: "DiscourseConnect が指定する return_paths のドメインを制限しない (デフォルトでは、リターンパスは現在のサイトにある必要があります)"
     enable_local_logins: "ローカルのユーザー名とパスワードでログインするアカウントを有効にする。警告: 無効にすると、以前に少なくとも 1 つの代替ログイン方法を構成していない場合にログインできなくなる可能性があります。"
     enable_local_logins_via_email: "メールで送信されるワンクリックログインリンクをユーザーがリクエストすることを許可する。"
     allow_new_registrations: "新しいユーザーの登録を許可。新規アカウントを作成できないようにするには、これをオフにします。"
@@ -1946,11 +1944,9 @@ ja:
     allowed_href_schemes: "http と https のほかにリンクに使用できるスキーム。"
     embed_post_limit: "埋め込める投稿の最大数。"
     embed_username_required: "トピック作成用のユーザー名が必要です。"
-    notify_about_flags_after: "この時間の経過後に未処理の通報がある場合、モデレーターに個人メッセージを送信する。無効にするには 0 に設定します。"
     show_create_topics_notice: "サイトの公開トピック数が 5 件未満である場合、管理者にトピックを作成するかどうかを尋ねる通知を表示します。"
     delete_drafts_older_than_n_days: "(n) 日間経過した下書きを削除します。"
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまで待機する日数。0 に設定すると、スタブトピックは削除されません。"
-    bootstrap_mode_min_users: "ブートストラップモードを無効にするために必要な最低ユーザー数 (0 に設定すると無効になります)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
     secure_uploads: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/-/140017">メタに関するセキュリティで保護されたアップロードのトピック</a>をご覧ください。'
     secure_uploads_allow_embed_images_in_emails: "通常はメールで編集されるセキュリティで保護された画像のサイズが 'secure uploads max email embed image size kb' 設定よりも小さい場合、その埋め込みを許可します。"
@@ -2020,7 +2016,6 @@ ja:
     revoke_api_keys_days: "未使用の API キーが自動的に取り消されるまでの日数 (0 に設定すると取り消されません)"
     allow_user_api_keys: "ユーザー API キーの生成を許可する"
     allow_user_api_key_scopes: "ユーザー API キーに許可されるスコープのリスト"
-    min_trust_level_for_user_api_key: "ユーザー API キーの生成に必要な信頼レベル"
     allowed_user_api_auth_redirects: "ユーザー API キーの認証リダイレクトに許可された URL。任意の部分を照合するには、ワイルドカード記号 * を使用できます (例: www.example.com/*)。"
     allowed_user_api_push_urls: "ユーザー API へのサーバープッシュで許可される URL"
     expire_user_api_keys_days: "ユーザー API キーが自動的に期限切れになるまでの日数 (0 に設定すると期限切れになりません)"
@@ -2106,7 +2101,6 @@ ja:
       staged_users_disabled: "この設定を有効にする前に 'staged users' を有効にする必要があります。"
       reply_by_email_disabled: "この設定を有効にする前に 'reply by email' を有効にする必要があります。"
       discourse_connect_url_is_empty: "この設定を有効にする前に 'discourse connect url' を設定する必要があります。"
-      discourse_connect_invite_only: "DiscourseConnect と invite only を同時に有効にすることはできません。"
       enable_local_logins_disabled: "この設定を有効にする前に 'enable local logins' を有効にする必要があります。"
       min_username_length_exists: "最も短いユーザー名 (%{username}) を超える最小のユーザー名の長さを設定することはできません。"
       min_username_length_range: "最小値を最大値より上にすることはできません。"
@@ -3584,8 +3578,6 @@ ja:
   offline:
     title: "アプリを読み込めません"
     offline_page_message: "オフラインになっているようです！ネットワーク接続を確認して、もう一度お試しください。"
-  login_required:
-    welcome_message: "## [%{title} へようこそ](#welcome)"
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"

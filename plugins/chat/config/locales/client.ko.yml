@@ -173,6 +173,7 @@ ko:
         italic_text: "강조하기"
         bold_text: "굵게하기"
         code_text: "코드 텍스트"
+        send: "보내기"
       notification_levels:
         never: "알림 받지 않기"
       settings:
@@ -237,6 +238,9 @@ ko:
         symbols: "기호"
         search_placeholder: "이모티콘 이름과 별칭으로 검색..."
         no_results: "결과 없음"
+      thread:
+        replies:
+          other: "%{count} 댓글"
       draft_channel_screen:
         header: "새로운 메시지"
         cancel: "취소"
@@ -262,9 +266,8 @@ ko:
               description: 시스템 기본값
     review:
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "신고된 채팅 메시지"
-          flagged_by: "신고자"
     keyboard_shortcuts_help:
       chat:
         title: "채팅"

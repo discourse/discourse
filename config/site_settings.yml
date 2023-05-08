@@ -301,6 +301,7 @@ basic:
     default: 50
     min: 1
   top_page_default_timeframe:
+    client: true
     default: "yearly"
     type: enum
     choices:
@@ -384,7 +385,7 @@ basic:
     default: false
   enable_user_tips:
     client: true
-    default: false
+    default: true
 
 login:
   invite_only:
@@ -490,7 +491,10 @@ login:
     client: true
     default: false
     validator: "EnableSsoValidator"
-  discourse_connect_allows_all_return_paths: false
+  discourse_connect_allowed_redirect_domains:
+    default: ""
+    type: list
+    list_type: simple
   verbose_discourse_connect_logging: false
   verbose_upload_logging:
     hidden: true
@@ -1011,6 +1015,11 @@ posting:
       zh_TW: true
       ja: true
       ko: true
+  emoji_deny_list:
+    type: emoji_list
+    default: ""
+    client: true
+    refresh: true
   approve_post_count:
     default: 0
   approve_unless_trust_level:
@@ -1559,6 +1568,10 @@ files:
     default: false
     client: true
     hidden: true
+  video_thumbnails_enabled:
+    default: true
+    client: true
+    hidden: true
 
 trust:
   default_trust_level:
@@ -2091,7 +2104,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-    hidden: true
 
 navigation:
   navigation_menu:
@@ -2115,15 +2127,7 @@ navigation:
       - "default"
       - "unread_new"
   enable_new_notifications_menu:
-    default: false
-    validator: "EnableNewNotificationsMenuValidator"
-  enable_custom_sidebar_sections:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
+    default: true
 
 embedding:
   embed_by_username:
@@ -2382,6 +2386,7 @@ uncategorized:
   educate_until_posts: 2
   sequential_replies_threshold: 2
   get_a_room_threshold: 3
+  dont_feed_the_trolls_threshold: 2
   dominating_topic_minimum_percent: 40
   disable_avatar_education_message: false
   pm_warn_user_last_seen_months_ago: 24
@@ -2419,7 +2424,7 @@ uncategorized:
     default: ""
     validator: "DefaultComposerCategoryValidator"
 
-  notify_about_flags_after:
+  notify_about_reviewable_item_after:
     type: float
     default: 48
 
@@ -2788,6 +2793,8 @@ tags:
   force_lowercase_tags:
     default: true
     client: true
+  create_post_for_category_and_tag_changes:
+    default: false
 
 dashboard:
   dashboard_hidden_reports:

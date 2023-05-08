@@ -71,8 +71,6 @@ gem "rails_multisite"
 
 gem "fast_xs", platform: :ruby
 
-gem "xorcist"
-
 gem "fastimage"
 
 gem "aws-sdk-s3", require: false

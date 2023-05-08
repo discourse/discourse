@@ -1,6 +1,11 @@
-.chat-message *,
-.chat-composer-row,
-.chat-reply,
-.replying-text {
-  @include unselectable;
+.mobile-view.has-full-page-chat {
+  #skip-link,
+  .d-header,
+  .chat-message-actions-mobile-outlet,
+  .chat-channel,
+  .chat-thread {
+    > * {
+      @include user-select(none);
+    }
+  }
 }

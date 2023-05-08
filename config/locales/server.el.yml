@@ -1212,7 +1212,6 @@ el:
     embed_username_required: "Απαιτείται το όνομα χρήστη για τη δημιουργία νήματος."
     show_create_topics_notice: "Εάν η ιστοσελίδα έχει λιγότερα από 5 δημόσια νήματα, κάνε μια παρατήρηση ζητώντας από τον διαχειριστή να δημιουργήσει μερικά νήματα."
     delete_drafts_older_than_n_days: "Διαγραφή προχείρων παλαιότερα απο (ν) ημερων "
-    bootstrap_mode_min_users: "Μέγιστος αριθμός χρηστών που απαιτούνται για την απενεργοποίηση της κατάστασης bootstrap (0 για απενεργοποίηση)"
     slug_generation_method: "Επιλέξτε μια μέθοδο παραγωγής slug. «Κωδικοποιημένη» θα δημιουργήσει μια συμβολοσειρά για ποσοστιαία κωδικοποίηση. «Κανένα» θα απενεργοποιήσει τα slug."
     enable_emoji: "Ενεργοποίηση emoji"
     emoji_set: "Πως θα ήθελες το emoji σου;"
@@ -1246,7 +1245,6 @@ el:
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     allow_user_api_keys: "Επιτρέψτε την δημιουργία των user API keys"
     allow_user_api_key_scopes: "Λίστα των πεδίων που επιτρέπεται για τα user API keys"
-    min_trust_level_for_user_api_key: "Επίπεδο εμπιστοσύνης που απαιτείται για την δημιουργία user API keys. "
     allowed_user_api_push_urls: "Επιτρεπόμενοι συνδέσμοι για την ώθηση του διακομιστή στο user API"
     tagging_enabled: "Ενεργοποίηση ετικετών στα θέματα; "
     min_trust_to_create_tag: "Το ελάχιστο επίπεδο εμπιστοσύνης που απαιτείται για να δημιουργηθεί μία ετικέτα. "
@@ -2145,14 +2143,6 @@ el:
   offline:
     title: "Cannot load app"
     offline_page_message: "Πιθανώς βρίσκεσαι εκτός σύνδεσης! Έλεγξε την σύνδεσή σου και δοκίμασε ξανά."
-  login_required:
-    welcome_message: |2
-
-      ## [Καλώς ήρθατε στην %{title}](#welcome)
-
-      Είναι απαραίτητο να έχετε λογαριασμό χρήστη.
-
-      Παρακαλούμε δημιουργήστε έναν λογαριασμό ή συνδεθείτε για να συνεχίσετε..
   upload:
     edit_reason: "λήψη τοπικών αντιγράφων των εικόνων"
     unauthorized: "Λυπούμαστε, το αρχείο που προσπαθείτε να ανεβάσετε δεν είναι εγκεκριμένο (authorized extensions: %{authorized_extensions})."

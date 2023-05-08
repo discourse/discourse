@@ -251,6 +251,7 @@ es:
         italic_text: "texto enfatizado"
         bold_text: "texto fuerte"
         code_text: "texto del código"
+        send: "Enviar"
       quote:
         original_channel: 'Enviado originalmente en <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cita del chat copiada en el portapapeles"
@@ -361,6 +362,10 @@ es:
         symbols: "Símbolos"
         search_placeholder: "Busca por nombre de emoji y alias..."
         no_results: "No hay resultados"
+      thread:
+        replies:
+          one: "%{count} respuesta"
+          other: "%{count} respuestas"
       draft_channel_screen:
         header: "Nuevo mensaje"
         cancel: "Cancelar"
@@ -405,9 +410,8 @@ es:
       transcript:
         view: "Ver la transcripción de los mensajes anteriores"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Mensaje de chat denunciado"
-          flagged_by: "Denunciado por"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

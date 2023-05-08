@@ -852,7 +852,7 @@ export default Component.extend(
       this.clearErrors();
 
       const inModal = this.element.closest("#discourse-modal");
-      if (inModal && this?.site?.mobileView) {
+      if (inModal && this.site.mobileView) {
         const modalBody = inModal.querySelector(".modal-body");
         modalBody.style = "";
       }
@@ -1061,7 +1061,7 @@ export default Component.extend(
     handleDeprecations() {
       this._deprecateValueAttribute();
       this._deprecateMutations();
-      this._handleDeprecatdArgs();
+      this._handleDeprecatedArgs();
     },
 
     _computePlacementStrategy() {
@@ -1071,7 +1071,7 @@ export default Component.extend(
         return placementStrategy;
       }
 
-      if (this.capabilities?.isIpadOS || this.site?.mobileView) {
+      if (this.capabilities.isIpadOS || this.site.mobileView) {
         placementStrategy =
           this.selectKit.options.mobilePlacementStrategy || "absolute";
       } else {
@@ -1083,17 +1083,11 @@ export default Component.extend(
     },
 
     _deprecated(text) {
-      const discourseSetup = document.getElementById("data-discourse-setup");
-      if (
-        discourseSetup &&
-        discourseSetup.getAttribute("data-environment") === "development"
-      ) {
-        deprecated(text, {
-          since: "v2.4.0",
-          dropFrom: "2.9.0.beta1",
-          id: "discourse.select-kit",
-        });
-      }
+      deprecated(text, {
+        since: "v2.4.0",
+        dropFrom: "2.9.0.beta1",
+        id: "discourse.select-kit",
+      });
     },
 
     _deprecateValueAttribute() {
@@ -1160,7 +1154,7 @@ export default Component.extend(
       return resolvedDeprecations;
     },
 
-    _handleDeprecatdArgs() {
+    _handleDeprecatedArgs() {
       const migrations = {
         headerIcon: "icon",
         onExpand: "onOpen",

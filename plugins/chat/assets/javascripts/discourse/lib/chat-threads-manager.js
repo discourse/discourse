@@ -4,7 +4,6 @@ import Promise from "rsvp";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import { tracked } from "@glimmer/tracking";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 
 /*
   The ChatThreadsManager is responsible for managing the loaded chat threads
@@ -39,24 +38,32 @@ export default class ChatThreadsManager {
     return Object.values(this._cached);
   }
 
-  store(threadObject) {
+  store(channel, threadObject) {
     let model = this.#findStale(threadObject.id);
 
     if (!model) {
-      model = new ChatThread(threadObject);
+      if (threadObject instanceof ChatThread) {
+        model = threadObject;
+      } else {
+        model = new ChatThread(channel, threadObject);
+      }
+
       this.#cache(model);
+    }
+
+    if (
+      threadObject.meta?.message_bus_last_ids?.thread_message_bus_last_id !==
+      undefined
+    ) {
+      model.threadMessageBusLastId =
+        threadObject.meta.message_bus_last_ids.thread_message_bus_last_id;
     }
 
     return model;
   }
 
   async #find(channelId, threadId) {
-    return this.chatApi
-      .thread(channelId, threadId)
-      .catch(popupAjaxError)
-      .then((thread) => {
-        return thread;
-      });
+    return this.chatApi.thread(channelId, threadId);
   }
 
   #cache(thread) {

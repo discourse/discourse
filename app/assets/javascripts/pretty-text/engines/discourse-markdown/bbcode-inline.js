@@ -182,56 +182,88 @@ export function setup(helper) {
     const simpleUrlRegex = /^https?:\/\//;
     ruler.push("url", {
       tag: "url",
-      wrap(startToken, endToken, tagInfo, content, state) {
-        const url = (tagInfo.attrs["_default"] || content).trim();
-        let linkifyFound = false;
 
-        if (state.md.options.linkify) {
-          const tokens = state.tokens;
-          const startIndex = tokens.indexOf(startToken);
-          const endIndex = tokens.indexOf(endToken);
+      replace(state, tagInfo, content) {
+        let token;
 
-          // reuse existing tokens from linkify if they exist
-          for (let index = startIndex + 1; index < endIndex; index++) {
-            const token = tokens[index];
+        // we need to tokenize the content and reinsert tokens in the stream
+        // this is because we need to support nested bbcode
+        let tokens = [];
+        md.inline.parse(content, state.md, state.env, tokens);
 
-            if (
-              token.markup === "linkify" &&
-              token.info === "auto" &&
-              token.type === "link_open"
-            ) {
-              linkifyFound = true;
-              token.attrs.push(["data-bbcode", "true"]);
+        let url = tagInfo.attrs["_default"];
+
+        if (!url) {
+          // try to find the actual url in the tokens
+          for (let i = 0; i < tokens.length; i++) {
+            token = tokens[i];
+            // nested linkify or link, just pick it
+            if (token.type === "link_open") {
+              for (let j = 0; j < token.attrs.length; j++) {
+                if (token.attrs[j][0] === "href") {
+                  url = token.attrs[j][1];
+                  break;
+                }
+              }
+              if (url) {
+                break;
+              }
+            }
+            if (token.type === "text") {
+              url = token.content;
               break;
             }
           }
         }
 
-        if (!linkifyFound && simpleUrlRegex.test(url)) {
-          startToken.type = "link_open";
-          startToken.tag = "a";
-          startToken.attrs = [
+        if (md.linkify) {
+          let match = null;
+
+          // linkify has trouble with strings containing spaces, so just ban
+          // them outright
+          if (url && !url.includes(" ")) {
+            match = md.linkify.matchAtStart(url);
+            if (!match) {
+              match = md.linkify.matchAtStart("https://" + url);
+            }
+          }
+
+          if (match) {
+            url = match.url;
+          } else {
+            url = null;
+          }
+        } else if (!url.match(simpleUrlRegex)) {
+          url = "https://" + url;
+        }
+
+        if (url) {
+          token = state.push("link_open", "a", 0);
+          token.attrs = ["href", url];
+          token.attrs = [
             ["href", url],
             ["data-bbcode", "true"],
           ];
-          startToken.content = "";
-          startToken.nesting = 1;
-
-          endToken.type = "link_close";
-          endToken.tag = "a";
-          endToken.content = "";
-          endToken.nesting = -1;
-        } else {
-          // just strip the bbcode tag
-          endToken.content = "";
-          startToken.content = "";
-
-          // edge case, we don't want this detected as a onebox if auto linked
-          // this ensures it is not stripped
-          startToken.type = "html_inline";
+          token.content = "";
+          token.nesting = 1;
         }
 
-        return false;
+        for (let i = 0; i < tokens.length; i++) {
+          token = tokens[i];
+          if (token.type === "link_open" || token.type === "link_close") {
+            // linkify nested tokens, do nothing
+          } else {
+            state.tokens.push(token);
+          }
+        }
+
+        if (url) {
+          token = state.push("link_close", "a", 0);
+          token.nesting = -1;
+          token.content = "";
+        }
+
+        return true;
       },
     });
 

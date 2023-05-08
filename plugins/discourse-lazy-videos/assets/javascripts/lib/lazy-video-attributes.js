@@ -4,10 +4,13 @@ export default function getVideoAttributes(cooked) {
   }
 
   const url = cooked.querySelector("a")?.getAttribute("href");
-  const thumbnail = cooked.querySelector("img")?.getAttribute("src");
+  const img = cooked.querySelector("img");
+  const thumbnail = img?.getAttribute("src");
+  const dominantColor = img?.dataset?.dominantColor;
   const title = cooked.dataset.videoTitle;
+  const startTime = cooked.dataset.videoStartTime || 0;
   const providerName = cooked.dataset.providerName;
   const id = cooked.dataset.videoId;
 
-  return { url, thumbnail, title, providerName, id };
+  return { url, thumbnail, title, providerName, id, dominantColor, startTime };
 }

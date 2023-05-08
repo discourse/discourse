@@ -136,6 +136,7 @@ pt:
       composer:
         italic_text: "texto em itálico"
         bold_text: "texto em negrito"
+        send: "Enviar"
       notification_levels:
         never: "Nunca"
       settings:
@@ -174,6 +175,10 @@ pt:
         activities: "Atividades"
         flags: "Sinalizações"
         symbols: "Símbolos"
+      thread:
+        replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
       draft_channel_screen:
         header: "Nova Mensagem"
         cancel: "Cancelar"
@@ -185,7 +190,3 @@ pt:
           fields:
             message:
               label: Mensagem
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Sinalizado por"

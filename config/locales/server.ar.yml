@@ -52,6 +52,8 @@ ar:
   remove_posts_deleted_by_author: "تم الحذف بواسطة المؤلف"
   redirect_warning: "تعذَّر علينا التحقُّق من نشر الرابط الذي حدَّدته في المنتدى. إذا كنت تريد المتابعة على أي حال، فحدِّد الرابط أدناه."
   on_another_topic: "في موضوع آخر"
+  topic_tag_changed:
+    removed: "أزال %{removed} ‏في"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} بواسطة %{username}"
@@ -270,6 +272,7 @@ ar:
     user_exists: "ليست هناك حاجة لدعوة <b>%{email}</b>، فلديه حساب بالفعل!"
     invite_exists: "لقد أرسلت بالفعل دعوة إلى <b>%{email}</b>."
     invalid_email: "%{email} ليس عنوان بريد إلكتروني صالحًا."
+    generic_error_response: "كانت هناك مشكلة مع طلبك."
     rate_limit:
       zero: "لقد أرسلت بالفعل %{count} دعوة في اليوم الماضي، يُرجى الانتظار %{time_left} قبل إعادة المحاولة."
       one: "لقد أرسلت بالفعل دعوة واحدة (%{count}) في اليوم الماضي، يُرجى الانتظار %{time_left} قبل إعادة المحاولة."
@@ -483,6 +486,7 @@ ar:
   too_late_to_edit: "تم إنشاء هذا المنشور منذ فترة طويلة جدًا، ولم يعد من الممكن تعديله أو حذفه."
   edit_conflict: "تم تعديل هذا المنشور بواسطة مستخدم آخر ولم يعُد من الممكن حفظ تغييراتك."
   revert_version_same: "الإصدار الحالي هو الإصدار نفسه الذي تحاول استرجاعه."
+  reverted_to_version: "العودة إلى المراجعة %{version}"
   cannot_edit_on_slow_mode: "هذا الموضوع في الوضع البطيء. لتشجيع المناقشة عميقة الفكر والمدروسة، فإنه غير مسموح حاليًا بتعديل المنشورات القديمة في هذا الموضوع في أثناء تفعيل الوضع البطيء."
   excerpt_image: "صورة"
   bookmarks:
@@ -1308,7 +1312,7 @@ ar:
       title: "المستخدمون النشطون يوميًا/المستخدمون النشطون شهريًا"
       xaxis: "اليوم"
       yaxis: "المستخدمون النشطون يوميًا/المستخدمون النشطون شهريًا"
-      description: "عدد الأعضاء الذين سجَّلوا الدخول في اليوم الماضي مقسومًا على عدد الأعضاء الذين سجَّلوا الدخول في الشهر الماضي - يتم عرض نسبة مئوية تشير إلى \"الاستمرار في المتابعة\" للمجتمع. ننصحك بالبقاء فوق 30%."
+      description: "عدد الأعضاء الذين سجَّلوا الدخول في اليوم الماضي مقسومًا على عدد الأعضاء الذين سجَّلوا الدخول في الشهر الماضي - يتم عرض نسبة مئوية تشير إلى \"الاستمرار في المتابعة\" للمجتمع. ننصحك بالبقاء فوق 20%."
     daily_engaged_users:
       title: "المستخدمون المتفاعلون يوميًا"
       xaxis: "اليوم"
@@ -1680,7 +1684,6 @@ ar:
     manifest_icon: "الصورة المُستخدَمة كشعار/صورة البداية على Android. سيتم تغيير حجمها تلقائيًا إلى 512 × 512. وإذا تركتها فارغة، فسيتم استخدام large_icon."
     manifest_screenshots: "لقطات شاشة تعرض ميزات المثيل ووظيفته على صفحة رسالة التثبيت الخاصة به. يجب أن تكون جميع الصور من تحميلات محلية وبالأبعاد نفسها."
     favicon: "الرمز المفضَّل لموقعك، راجع <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> للعمل بشكلٍ صحيح على شبكة توصيل المحتوى، يجب أن تكون الصورة بتنسيق png. سيتم تغيير حجمها إلى 32 × 32. وإذا تركتها فارغة، فسيتم استخدام large_icon."
-    apple_touch_icon: "الصورة المُستخدَمة كشعار/صورة البداية على Android. سيتم تغيير حجمها تلقائيًا إلى 512 × 512. وإذا تركتها فارغة، فسيتم استخدام large_icon."
     opengraph_image: "صورة opengraph افتراضية، يتم استخدامها عندما لا تحتوي الصفحة على صورة أخرى مناسبة. وإذا تركتها فارغة، فسيتم استخدام large_icon."
     twitter_summary_large_image: "بطاقة Twitter 'summary large image' (ينبغي ألا يقل عرضها عن 280، وارتفاعها عن 150، وألا تكون بتنسيق .svg). في حال تركها فارغة، يتم إنشاء البيانات الوصفية التقليدية باستخدام opengraph_image ما دامت هي أيضًا ليست بتنسيق .svg"
     notification_email: "عنوان البريد الإلكتروني المُستخدَم في حقل \"من:\" عند إرسال جميع رسائل النظام الأساسية. يجب تعيين سجلات SPF وDKIM وreverse PTR للنطاق المحدَّد هنا بشكلٍ صحيح لتصل الرسالة الإلكترونية."
@@ -1824,7 +1827,6 @@ ar:
     discourse_connect_overrides_profile_background: "يستبدل خلفية الملف الشخصي للمستخدم بالصورة الرمزية للموقع الخارجي من حمولة DiscourseConnect."
     discourse_connect_overrides_card_background: "يستبدل خلفية بطاقة المستخدم بالصورة الرمزية للموقع الخارجي من حمولة DiscourseConnect."
     discourse_connect_not_approved_url: "إعادة توجيه حسابات DiscourseConnect غير المعتمدة إلى عنوان URL هذا"
-    discourse_connect_allows_all_return_paths: "عدم تقييد نطاق return_paths الذي يقدِّمه DiscourseConnect (يجب أن يكون مسار الإرجاع الافتراضي على الموقع الحالي)"
     enable_local_logins: "تفعيل الحسابات المحلية التي تعتمد على اسم المستخدم وكلمة المرور في تسجيل الدخول. تحذير: إذا تم إيقاف هذا الإعداد، فقد لا تتمكن من تسجيل الدخول إذا كنت لم تُعدَّ مسبقًا طريقة تسجيل دخول بديلة واحدة على الأقل."
     enable_local_logins_via_email: "السماح للمستخدمين بطلب رابط تسجيل الدخول بنقرة واحدة ليتم إرساله إليهم عبر البريد الإلكتروني"
     allow_new_registrations: "السماح بعمليات تسجيل جديدة من المستخدمين. يمكنك إلغاء تحديد هذا الإعداد لمنع أي شخص من إنشاء حساب جديد."
@@ -2211,11 +2213,9 @@ ar:
     allowed_href_schemes: "الأنظمة المسموح بها في الروابط بالإضافة إلى http وhttps"
     embed_post_limit: "الحد الأقصى لعدد المنشورات التي سيتم تضمينها"
     embed_username_required: "اسم المستخدم مطلوب لإنشاء الموضوع"
-    notify_about_flags_after: "إرسال رسالة خاصة إلى المشرفين إذا كانت هناك بلاغات لم يتم التعامل معها بعد هذا العدد من الساعات. اتعيين القيمة على 0 للإيقاف."
     show_create_topics_notice: "إظهار إشعار يطلب من المسؤولين إنشاء بعض الموضوعات إذا كان الموقع يحتوي على أقل من 5 موضوعات عامة"
     delete_drafts_older_than_n_days: "حذف المسودات الأقدم من (n) يوم"
     delete_merged_stub_topics_after_days: "عدد الأيام التي يجب انتظارها قبل حذف الموضوعات البديلة المدمجة بالكامل تلقائيًا. اتعيين القيمة على 0 لعدم حذف الموضوعات البديلة أبدًا."
-    bootstrap_mode_min_users: "الحد الأدنى لعدد المستخدمين المطلوب لإيقاف وضع التمهيد (اتعيين القيمة على 0 للإيقاف)"
     prevent_anons_from_downloading_files: "منع المستخدمين المجهولين من تنزيل المرفقات"
     secure_uploads: 'يقيِّد الوصول إلى كل التحميلات (الصور ومقاطع الفيديو والمقاطع الصوتية والنصوص وملفات PDF وملفات ZIP وغير ذلك). بخلاف ذلك، سيكون الوصول مقيَّدًا فقط لتحميلات الوسائط في الرسائل والفئات الخاصة. تحذير: هذا الإعداد معقَّد ويتطلب فهمًا إداريًا عميقًا. انظر <a target="_blank" href="https://meta.discourse.org/t/-/140017">موضوع التحميلات الآمنة على Meta</a> لمعرفة التفاصيل.'
     secure_uploads_allow_embed_images_in_emails: "يسمح بتضمين الصور الآمنة التي عادةً ما يتم تنقيحها في الرسائل الإلكترونية، إذا كان حجمها أصغر من الإعداد `secure uploads max email embed image size kb`."
@@ -2285,7 +2285,6 @@ ar:
     revoke_api_keys_days: "عدد الأيام قبل إلغاء مفتاح API غير المُستخدَم تلقائيًا (0 للتعيين على \"أبدًا\")"
     allow_user_api_keys: "السماح بإنشاء مفاتيح API للمستخدم"
     allow_user_api_key_scopes: "قائمة النطاقات المسموح بها لمفاتيح API للمستخدم"
-    min_trust_level_for_user_api_key: "مستوى الثقة المطلوب لإنشاء مفاتيح API للمستخدم"
     allowed_user_api_auth_redirects: "عنوان URL المسموح به لإعادة توجيه المصادقة لمفاتيح API للمستخدم. يمكن استخدام رمز البدل * لمطابقة أي جزء منه (على سبيل المثال،www.example.com/*)."
     allowed_user_api_push_urls: "عناوين URL المسموح لها بإرسال المعلومات إلى API للمستخدم قبل طلبها من الخادم"
     expire_user_api_keys_days: "عدد الأيام قبل انتهاء صلاحية مفتاح API للمستخدم تلقائيًا (0 للتعيين على \"أبدًا\")"
@@ -2336,7 +2335,6 @@ ar:
     navigation_menu: "تحديد قائمة التنقل التي سيتم استخدامها. يمكن للمستخدمين تخصيص الشريط الجانبي وقائمة التنقل في رأس الصفحة. يتوفَّر خيار \"القائمة القديمة\" للتوافق مع الإصدارات السابقة."
     default_sidebar_categories: "سيتم عرض الفئات المحدَّدة ضمن قسم فئات الشريط الجانبي بشكلٍ افتراضي."
     default_sidebar_tags: "سيتم عرض الوسوم المحدَّدة ضمن قسم فئات الشريط الجانبي بشكلٍ افتراضي."
-    enable_new_notifications_menu: "يمكِّن قائمة الإشعارات الجديدة لقائمة التنقل القديمة."
     enable_experimental_hashtag_autocomplete: "تجريبي: استخدم نظام الإكمال التلقائي #hashtag الجديد للفئات والوسوم التي تعرض العنصر المحدَّد بشكلٍ مختلف وحسَّنت نتائج البحث"
     errors:
       invalid_css_color: "لون غير صالح. أدخِل اسم لون أو قيمة سداسية عشرية."
@@ -2372,7 +2370,6 @@ ar:
       staged_users_disabled: "يجب عليك تفعيل `staged users` أولًا قبل تفعيل هذا الإعداد."
       reply_by_email_disabled: "يجب عليك تفعيل `reply by email` أولًا قبل تفعيل هذا الإعداد."
       discourse_connect_url_is_empty: "يجب عليك تعيين `discourse connect url` قبل تفعيل هذا الإعداد."
-      discourse_connect_invite_only: "لا يمكنك تفعيل DiscourseConnect والدعوة فقط في الوقت نفسه."
       enable_local_logins_disabled: "يجب عليك تفعيل `enable local logins` أولًا قبل تفعيل هذا الإعداد."
       min_username_length_exists: "لا يمكنك تعيين الحد الأدنى لطول اسم المستخدم على قيمة أطول من أقصر اسم مستخدم (%{username})."
       min_username_length_range: "لا يمكنك تعيين الحد الأدنى ليكون أكبر من الحد الأقصى."
@@ -2394,7 +2391,6 @@ ar:
       search_tokenize_japanese_enabled: "يجب عليك إيقاف 'search_tokenize_japanese' قبل تفعيل هذا الإعداد."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "لا يمكنك تفعيل DiscourseConnect في حال فرض المصادقة الثنائية."
       delete_rejected_email_after_days: "لا يمكن تعيين هذا الإعداد على أقل من الإعداد delete_email_logs_after_days أو أكثر من %{max}"
-      enable_new_notifications_menu_not_legacy_navigation_menu: "يجب عليك تعيين `navigation_menu` إلى `legacy` قبل تمكين هذا الإعداد."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3949,8 +3945,6 @@ ar:
   offline:
     title: "لا يمكن تحميل التطبيق"
     offline_page_message: "يبدو أنك غير متصل! يُرجى التحقُّق من اتصال الشبكة وإعادة المحاولة."
-  login_required:
-    welcome_message: "## [مرحبًا بك في %{title}](#welcome)"
   upload:
     edit_reason: "تم تنزيل نسخ محلية من الصور"
     unauthorized: "عذرًا، الملف الذي تحاول تحميله غير مسموح به (الامتدادات المسموح بها: %{authorized_extensions})."

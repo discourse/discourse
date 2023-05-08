@@ -1,0 +1,53 @@
+<div class="sidebar-custom-sections">
+  {{#each this.sections as |section|}}
+    <Sidebar::Section
+      @sectionName={{section.slug}}
+      @headerLinkText={{section.decoratedTitle}}
+      @collapsable={{true}}
+    >
+
+      {{#if section.displayShortSiteDescription}}
+        <Sidebar::SectionMessage>
+          {{section.siteSettings.short_site_description}}
+        </Sidebar::SectionMessage>
+      {{/if}}
+
+      {{#each section.links as |link|}}
+        {{#if link.shouldDisplay}}
+          {{#if link.external}}
+            <Sidebar::SectionLink
+              @linkName={{link.name}}
+              @content={{replace-emoji link.text}}
+              @prefixType="icon"
+              @prefixValue={{link.prefixValue}}
+              @href={{link.value}}
+            />
+          {{else}}
+            <Sidebar::SectionLink
+              @shouldDisplay={{link.shouldDisplay}}
+              @href={{link.href}}
+              @title={{link.title}}
+              @currentWhen={{link.currentWhen}}
+              @badgeText={{link.badgeText}}
+              @suffixCSSClass={{link.suffixCSSClass}}
+              @suffixValue={{link.suffixValue}}
+              @suffixType={{link.suffixType}}
+              @linkName={{link.name}}
+              @route={{link.route}}
+              @model={{link.model}}
+              @models={{link.models}}
+              @query={{link.query}}
+              @content={{replace-emoji link.text}}
+              @prefixType="icon"
+              @prefixValue={{link.prefixValue}}
+            />
+          {{/if}}
+        {{/if}}
+      {{/each}}
+
+      {{#if section.moreLinks}}
+        <Sidebar::MoreSectionLinks @sectionLinks={{section.moreLinks}} />
+      {{/if}}
+    </Sidebar::Section>
+  {{/each}}
+</div>

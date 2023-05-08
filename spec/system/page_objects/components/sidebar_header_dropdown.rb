@@ -31,10 +31,7 @@ module PageObjects
       end
 
       def click_everything_link
-        page.click_link(
-          I18n.t("js.sidebar.sections.community.links.everything.content"),
-          class: "sidebar-section-link-everything",
-        )
+        find(".sidebar-section-link[data-link-name='everything']").click
       end
 
       def click_toggle_to_desktop_view_button

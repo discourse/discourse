@@ -15,6 +15,7 @@ tr_TR:
           actions:
             chat_channel_status_change: "Sohbet kanalı durumu değişti"
             chat_channel_delete: "Sohbet kanalı silindi"
+            chat_auto_remove_membership: "Üyelikler kanallardan otomatik olarak kaldırıldı"
       api:
         scopes:
           descriptions:
@@ -38,6 +39,9 @@ tr_TR:
       browse_all_channels: "Tüm kanallara göz atın"
       move_to_channel:
         title: "Mesajları kanala taşı"
+        instructions:
+          one: "<strong>%{count}</strong> mesajı taşıyorsunuz. Bir hedef kanal seçin. Bu mesajın taşındığını belirtmek için <strong>%{channelTitle}</strong> kanalında bir yer tutucu mesaj oluşturulacak. Yanıt zincirlerinin yeni kanalda korunmayacağını ve eski kanaldaki iletilerin artık taşınan iletilere yanıt veriyormuş gibi görünmeyeceğini unutmayın."
+          other: "<strong>%{count}</strong> mesajı taşıyorsunuz. Bir hedef kanal seçin. Bu mesajın taşındığını belirtmek için <strong>%{channelTitle}</strong> kanalında bir yer tutucu mesaj oluşturulacak. Yanıt zincirlerinin yeni kanalda korunmayacağını ve eski kanaldaki iletilerin artık taşınan iletilere yanıt veriyormuş gibi görünmeyeceğini unutmayın."
         confirm_move: "Mesajları Taşı"
       channel_settings:
         title: "Kanal ayarları"
@@ -68,6 +72,7 @@ tr_TR:
         instructions: "Kanalın kapatılması, personel olmayan kullanıcıların yeni mesaj göndermesini veya mevcut mesajları düzenlemesini engeller. Bu kanalı kapatmak istediğinizden emin misiniz?"
       channel_delete:
         title: "Kanalı Sil"
+        instructions: "<p><strong>%{name}</strong> kanalını ve sohbet geçmişini siler. Tepkiler ve yüklemeler gibi tüm mesajlar ve ilgili veriler kalıcı olarak silinecektir. Kanal geçmişini korumak ve devre dışı bırakmak istiyorsanız, bunun yerine kanalı arşivlemek isteyebilirsiniz.</p> <p>Kanalı <strong>kalıcı olarak silmek</strong> istediğinizden emin misiniz? Onaylamak için aşağıdaki kutuya kanalın adını yazın.</p>"
         confirm: "Sonuçları anlıyorum, kanalı sil"
         confirm_channel_name: "Kanal adı girin"
         process_started: "Kanalı silme işlemi başladı. Bu mod kısa bir süre sonra kapanacak, silinen kanalı artık hiçbir yerde görmeyeceksiniz."
@@ -77,6 +82,7 @@ tr_TR:
       click_to_join: "Mevcut kanalları görüntülemek için buraya tıklayın."
       close: "Kapat"
       collapse: "Sohbet Çekmecesini Daralt"
+      expand: "Sohbet Çekmecesini Genişlet"
       confirm_flag: "%{username} adlı kullanıcının mesajına bayrak eklemek istediğinizden emin misiniz?"
       deleted: "Bir mesaj silindi. [görüntüleyin]"
       hidden: "Bir mesaj gizlendi. [görüntüleyin]"
@@ -110,23 +116,47 @@ tr_TR:
       last_visit: "son ziyaret"
       mention_warning:
         dismiss: "kapat"
+        cannot_see: "%{username} bu kanala erişemiyor ve bilgilendirilmedi."
+        cannot_see_multiple:
+          one: "%{username} ve diğer %{count} kullanıcı bu kanala erişemiyor ve bilgilendirilmediler."
+          other: "%{username} ve diğer %{count} kullanıcı bu kanala erişemiyor ve bilgilendirilmediler."
         invitations_sent:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
         without_membership: "%{username} bu kanala katılmadı."
+        without_membership_multiple:
+          one: "%{username} ve diğer %{count} kullanıcı bu kanala katılmadı."
+          other: "%{username} ve diğer %{count} kullanıcı bu kanala katılmadı."
         group_mentions_disabled: "%{group_name} bahsetmeye izin vermiyor."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} ve diğer %{count} grup bahsetmeye izin vermiyor."
+          other: "%{group_name} ve diğer %{count} grup bahsetmeye izin vermiyor."
         too_many_members: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi."
+        too_many_members_multiple:
+          one: "%{group_name} ve diğer %{count} grubun çok fazla üyesi var. Kimse bilgilendirilmedi."
+          other: "%{group_name} ve diğer %{count} grubun çok fazla üyesi var. Kimse bilgilendirilmedi."
         groups:
           header:
             some: "Bazı kullanıcılara bildirim gönderilmeyecek"
             all: "Kimseye bildirim gönderilmeyecek"
           unreachable_1: "@%{group} bahsetmeye izin vermiyor."
+          unreachable_2: "@%{group1} ve @%{group2} bahsetmeye izin vermiyor."
+          unreachable_multiple:
+            one: "@%{group} ve diğer %{count} grup bahsetmeye izin vermiyor."
+            other: "@%{group} ve diğer %{count} grup bahsetmeye izin vermiyor."
+        too_many_mentions:
+          one: "Bu mesaj, %{count} bahsetme bildirim sınırını aşıyor."
+          other: "Bu mesaj, %{count} bahsetme bildirim sınırını aşıyor."
+        too_many_mentions_admin:
+          one: 'Bu mesaj, %{count} bahsin <a href="%{siteSettingUrl}" target="_blank">bildirim sınırını</a> aşıyor.'
+          other: 'Bu mesaj, %{count} bahsin <a href="%{siteSettingUrl}" target="_blank">bildirim sınırını</a> aşıyor.'
       aria_roles:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
         channels_list: "Sohbet kanalları listesi"
       no_public_channels: "Hiçbir kanala katılmadınız."
+      kicked_from_channel: "Artık bu kanala erişemezsiniz."
       only_chat_push_notifications:
         title: "Yalnızca sohbet anlık bildirimleri gönder"
         description: "Tüm sohbet dışı anlık bildirimlerinin gönderilmesini engelle"
@@ -138,7 +168,13 @@ tr_TR:
       close_full_page: "Tam ekran sohbeti kapat"
       open_message: "Mesajı sohbette aç"
       placeholder_self: "Bir şeyler not edin"
+      placeholder_channel: "%{channelName} kanalında sohbet et"
+      placeholder_thread: "Konuda sohbet et"
       placeholder_users: "%{commaSeparatedNames} ile sohbet et"
+      placeholder_new_message_disallowed:
+        archived: "Kanal arşivlendi, şu anda yeni mesaj gönderemezsiniz."
+        closed: "Kanal kapalı, şu anda yeni mesaj gönderemezsiniz."
+        read_only: "Kanal salt okunurdur, şu anda yeni mesaj gönderemezsiniz."
       placeholder_silenced: "Şu anda mesaj gönderemezsiniz."
       placeholder_start_conversation: "Şu kişi ile bir sohbet başlatın:"
       placeholder_start_conversation_users: "%{commaSeparatedUsernames} ile bir konuşma başlat"
@@ -169,6 +205,8 @@ tr_TR:
       title: "sohbet"
       title_capitalized: "Sohbet"
       upload: "Dosya ekle"
+      upload_to_channel: "%{title} başlığına yükle"
+      upload_to_thread: "Konuya yükle"
       uploaded_files:
         one: "%{count} dosya"
         other: "%{count} dosya"
@@ -179,6 +217,8 @@ tr_TR:
         read_only: "Salt Okunur"
         archived_header: "Kanal arşivlendi"
         archived: "Arşivlendi"
+        archive_failed: "Arşiv kanalı başarısız oldu. %{completed}/%{total} mesaj arşivlendi. <a target=\"_blank\" href=\"%{topic_url}\">hedef konu</a>. Arşivi tamamlamayı denemek için yeniden dene'ye basın."
+        archive_failed_no_topic: "Arşiv kanalı başarısız oldu. %{completed}/%{total} mesaj arşivlendi, hedef konu oluşturulmadı. Arşivi tamamlamayı denemek için yeniden dene'ye basın."
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">Arşiv konusuna</a> bakın"
         closed_header: "Kanal kapalı"
         closed: "Kapalı"
@@ -213,7 +253,9 @@ tr_TR:
       channel_edit_name_slug_modal:
         title: Kanalı düzenle
         input_placeholder: Bir isim ekle
+        slug_description: URL'de kanal adı yerine bir kanal bilgisi kullanılmış
         name: Kanal adı
+        slug: Kanal slug (isteğe bağlı)
       channel_edit_description_modal:
         title: Açıklamayı düzenle
         input_placeholder: Açıklama ekle
@@ -239,9 +281,15 @@ tr_TR:
           label: "Kategori seçin"
           none: "birini seçin..."
           default_hint: <a href=%{link} target="_blank">%{category} güvenlik ayarlarını</a> ziyaret ederek erişimi yönetin
+          hint_1_group: '%{group} içindeki kullanıcılar <a href="%{settingLink}" target="_blank">güvenlik ayarlarına</a> göre bu kanala erişebilecek'
+          hint_2_groups: '%{group1} ve %{group2} içindeki kullanıcıların <a href="%{settingLink}" target="_blank">güvenlik ayarları</a> uyarınca bu kanala erişimi olacak'
+          hint_multiple_groups:
+            one: '%{group} ve diğer %{count} gruptaki kullanıcılar, <a href="%{settingLink}" target="_blank">güvenlik ayarlarına</a> göre bu kanala erişebilecek'
+            other: '%{group} ve diğer %{count} gruptaki kullanıcılar, <a href="%{settingLink}" target="_blank">güvenlik ayarlarına</a> göre bu kanala erişebilecek'
         create: "Kanal oluştur"
         description: "Açıklama (isteğe bağlı)"
         name: "Kanal adı"
+        slug: "Kanal slug (isteğe bağlı)"
         title: "Yeni kanal"
         type: "Tür"
         types:
@@ -251,12 +299,16 @@ tr_TR:
         type: "Sohbet mesajı"
       reactions:
         only_you: ":%{emoji}: ile tepki verdiniz"
+        you_and_single_user: "Siz ve %{username}, :%{emoji} ile tepki verdiniz:"
+        you_and_multiple_users: "Siz, %{commaSeparatedUsernames} ve %{username}, :%{emoji} ile tepki gösterdiniz:"
         single_user: "%{username} :%{emoji}: ile tepki verdi"
+        multiple_users: "%{commaSeparatedUsernames} ve %{username}, :%{emoji} ile tepki gösterdi:"
       composer:
         toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
         bold_text: "güçlü metin"
         code_text: "kod metni"
+        send: "Gönder"
       quote:
         original_channel: 'İlk olarak <a href="%{channelLink}">%{channel}</a> adlı kanalda gönderildi'
         copy_success: "Sohbet alıntısı panoya kopyalandı"
@@ -268,6 +320,8 @@ tr_TR:
         channel_wide_mentions_label: "@all ve @here bahsetmelerine izin ver"
         channel_wide_mentions_description: "Kullanıcıların @all ile #%{channel} kanalının tüm üyelerine veya @here ile yalnızca o anda aktif olanlara bildirim göndermelerine izin verin"
         auto_join_users_label: "Kullanıcıları otomatik olarak ekle"
+        auto_join_users_info: "Son 3 ayda hangi kullanıcıların aktif olduğunu saatlik olarak kontrol edin. %{category} kategorisine erişimleri varsa onları bu kanala ekleyin."
+        auto_join_users_info_no_category: "Son 3 ayda hangi kullanıcıların aktif olduğunu saatlik olarak kontrol edin. Seçilen kategoriye erişimleri varsa onları bu kanala ekleyin."
         auto_join_users_warning: "Bu kanala üye olmayan ve %{category} adlı kategoriye erişimi olan her kullanıcı katılacak. Emin misiniz?"
         desktop_notification_level: "Masaüstü bildirimleri"
         follow: "Katıl"
@@ -346,6 +400,9 @@ tr_TR:
         many_users:
           one: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
           other: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
+      retention_reminders:
+        public_none: "Kanal geçmişi süresiz olarak saklanır."
+        dm_none: "Kişisel sohbet geçmişi süresiz olarak saklanır."
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."
@@ -367,6 +424,15 @@ tr_TR:
         symbols: "Semboller"
         search_placeholder: "Emoji adına ve takma ada göre arama yapın..."
         no_results: "Sonuç yok"
+      thread:
+        view_thread: Konuyu görüntüle
+        replies:
+          one: "%{count} yanıt"
+          other: "%{count} yanıt"
+        close: "Konuyu Kapat"
+      threads:
+        started_by: "Başlatan"
+        open: "Konu Aç"
       draft_channel_screen:
         header: "Yeni Mesaj"
         cancel: "İptal et"
@@ -411,9 +477,8 @@ tr_TR:
       transcript:
         view: "Önceki mesajların dökümünü görüntüle"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Bayrak Eklenen Sohbet Mesajı"
-          flagged_by: "Bayrak Ekleyen Kişi"
     keyboard_shortcuts_help:
       chat:
         title: "Sohbet"
@@ -426,6 +491,7 @@ tr_TR:
           composer_code: "%{shortcut} Kod (yalnızca besteci)"
           drawer_open: "%{shortcut} Sohbet çekmecesini aç"
           drawer_close: "%{shortcut} Sohbet çekmecesini kapat"
+          mark_all_channels_read: "%{shortcut} Tüm kanalları okundu olarak işaretle"
     topic_statuses:
       chat:
         help: "Bu konu için sohbet etkinleştirildi"

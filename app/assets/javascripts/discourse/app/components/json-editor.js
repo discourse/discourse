@@ -53,7 +53,7 @@ export default Component.extend({
     const errors = this.editor.validate();
     if (!errors.length) {
       const fieldValue = JSON.stringify(this.editor.getValue());
-      this?.saveChangesCallback(fieldValue);
+      this.saveChangesCallback(fieldValue);
     } else {
       this.appEvents.trigger("modal-body:flash", {
         text: errors.mapBy("message").join("\n"),

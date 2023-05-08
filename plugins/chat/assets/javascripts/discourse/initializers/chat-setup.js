@@ -4,6 +4,7 @@ import { bind } from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { MENTION_KEYWORDS } from "discourse/plugins/chat/discourse/components/chat-message";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import { replaceIcon } from "discourse-common/lib/icon-library";
 
 let _lastForcedRefreshAt;
@@ -13,11 +14,12 @@ replaceIcon("d-chat", "comment");
 
 export default {
   name: "chat-setup",
+  before: "hashtag-css-generator",
 
   initialize(container) {
     this.chatService = container.lookup("service:chat");
     this.siteSettings = container.lookup("service:site-settings");
-    this.appEvents = container.lookup("service:appEvents");
+    this.appEvents = container.lookup("service:app-events");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
     if (!this.chatService.userCanChat) {
@@ -25,6 +27,8 @@ export default {
     }
 
     withPluginApi("0.12.1", (api) => {
+      api.registerHashtagType("channel", ChannelHashtagType);
+
       api.registerChatComposerButton({
         id: "chat-upload-btn",
         icon: "far-image",
@@ -56,11 +60,27 @@ export default {
         class: "chat-emoji-btn",
         icon: "discourse-emojis",
         position: "dropdown",
+        context: "channel",
         action() {
           const chatEmojiPickerManager = container.lookup(
             "service:chat-emoji-picker-manager"
           );
-          chatEmojiPickerManager.startFromComposer(this.didSelectEmoji);
+          chatEmojiPickerManager.open({ context: "channel" });
+        },
+      });
+
+      api.registerChatComposerButton({
+        label: "chat.emoji",
+        id: "channel-emoji",
+        class: "chat-emoji-btn",
+        icon: "discourse-emojis",
+        position: "dropdown",
+        context: "thread",
+        action() {
+          const chatEmojiPickerManager = container.lookup(
+            "service:chat-emoji-picker-manager"
+          );
+          chatEmojiPickerManager.open({ context: "thread" });
         },
       });
 
@@ -134,7 +154,7 @@ export default {
         }
 
         const highlightable = [`@${this.currentUser.username}`];
-        if (chatChannel.allow_channel_wide_mentions) {
+        if (chatChannel.allowChannelWideMentions) {
           highlightable.push(...MENTION_KEYWORDS.map((k) => `@${k}`));
         }
 

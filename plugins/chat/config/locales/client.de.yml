@@ -15,6 +15,7 @@ de:
           actions:
             chat_channel_status_change: "Chat-Kanal-Status geändert"
             chat_channel_delete: "Chat-Kanal gelöscht"
+            chat_auto_remove_membership: "Mitgliedschaften werden automatisch aus den Kanälen entfernt"
       api:
         scopes:
           descriptions:
@@ -81,6 +82,7 @@ de:
       click_to_join: "Klicke hier, um die verfügbaren Kanäle zu sehen."
       close: "Schließen"
       collapse: "Chat-Bereich ausblenden"
+      expand: "Chat-Übersicht erweitern"
       confirm_flag: "Bist du sicher, dass du die Nachricht von %{username} markieren möchtest?"
       deleted: "Eine Nachricht wurde gelöscht. [Anzeigen]"
       hidden: "Eine Nachricht wurde ausgeblendet. [Anzeigen]"
@@ -208,6 +210,7 @@ de:
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
       no_public_channels: "Du bist keinem Kanal beigetreten."
+      kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       only_chat_push_notifications:
         title: "Nur Chat-Push-Benachrichtigungen senden"
         description: "Alle Nicht-Chat-Push-Benachrichtigungen blockieren und nicht senden"
@@ -219,7 +222,8 @@ de:
       close_full_page: "Vollbild-Chat schließen"
       open_message: "Nachricht im Chat öffnen"
       placeholder_self: "Etwas notieren"
-      placeholder_channel: "Chatte mit %{channelName}"
+      placeholder_channel: "Chat in %{channelName}"
+      placeholder_thread: "Chat im Thread"
       placeholder_users: "Chat mit %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Der Kanal ist archiviert, du kannst im Moment keine neuen Nachrichten senden."
@@ -255,6 +259,8 @@ de:
       title: "Chat"
       title_capitalized: "Chat"
       upload: "Datei anhängen"
+      upload_to_channel: "Auf %{title}hochladen"
+      upload_to_thread: "In Thread hochladen"
       uploaded_files:
         one: "%{count} Datei"
         other: "%{count} Dateien"
@@ -383,6 +389,7 @@ de:
         italic_text: "hervorgehobener Text"
         bold_text: "fett gedruckter Text"
         code_text: "Code-Text"
+        send: "Senden"
       quote:
         original_channel: 'Ursprünglich gesendet in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat-Zitat in die Zwischenablage kopiert"
@@ -504,8 +511,14 @@ de:
         symbols: "Symbole"
         search_placeholder: "Nach Emoji-Namen und -Alias suchen …"
         no_results: "Keine Ergebnisse"
+      thread:
+        view_thread: Thread ansehen
+        replies:
+          one: "%{count} Antwort"
+          other: "%{count} Antworten"
+        label: Thread
+        close: "Thread schließen"
       threads:
-        op_said: "OP sagte:"
         started_by: "Gestartet von"
         open: "Thread öffnen"
       draft_channel_screen:
@@ -552,9 +565,8 @@ de:
       transcript:
         view: "Transkript früherer Nachrichten anzeigen"
       types:
-        reviewable_chat_message:
-          title: "Chat-Nachricht markiert"
-          flagged_by: "Markiert von"
+        chat_reviewable_message:
+          title: "Markierte Chat-Nachricht"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -567,6 +579,7 @@ de:
           composer_code: "%{shortcut} Code (nur Composer)"
           drawer_open: "%{shortcut} Chat-Bereich öffnen"
           drawer_close: "%{shortcut} Chat-Bereich schließen"
+          mark_all_channels_read: "%{shortcut} Alle Kanäle als gelesen markieren"
     topic_statuses:
       chat:
         help: "Der Chat ist für dieses Thema aktiviert"

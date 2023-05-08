@@ -47,7 +47,7 @@ export function registerCustomPostMessageCallback(type, callback) {
 }
 
 export default Controller.extend(bufferedProperty("model"), {
-  composer: controller(),
+  composer: service(),
   application: controller(),
   dialog: service(),
   documentTitle: service(),

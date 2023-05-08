@@ -67,6 +67,7 @@ th:
       composer:
         italic_text: "ตัวอักษรเอียง"
         bold_text: "ตัวอักษรหนา"
+        send: "ส่ง"
       notification_levels:
         never: "ไม่เคย"
       settings:
@@ -103,6 +104,9 @@ th:
         activities: "กิจกรรม"
         flags: "ธง"
         symbols: "สัญลักษณ์"
+      thread:
+        replies:
+          other: "%{count} ตอบ"
       draft_channel_screen:
         header: "สร้างข้อความใหม่"
         cancel: "ยกเลิก"
@@ -114,7 +118,3 @@ th:
           fields:
             message:
               label: ข้อความ
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "ถูกปักธงโดย"

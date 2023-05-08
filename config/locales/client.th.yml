@@ -153,7 +153,6 @@ th:
     software_update_prompt:
       message: "เราอัปเดตไซต์นี้เมื่อสักครู่ โปรด<span>รีเฟรช</span>หน้านี้ หรือคุณอาจเกิดเหตุการณ์ที่ไม่ตรงตามต้องการ"
       dismiss: "ซ่อน"
-    bootstrap_invite_button_title: "ส่งคำเชิญ"
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
@@ -811,13 +810,6 @@ th:
       theme: "ธีม"
       save_to_change_theme: 'ธีมจะถูกอัปเดตเมื่อคุณคลิก "%{save_text}"'
       home: "หน้าเริ่มต้น"
-      staff_counters:
-        flags_given: "ธงที่เป็นประโยชน์"
-        flagged_posts: "โพสต์ที่ปักธง"
-        deleted_posts: "โพสต์ที่ลบ"
-        suspensions: "ระงับการใช้งาน"
-        warnings_received: "คำเตือน"
-        rejected_posts: "โพสต์ที่ถูกปฏิเสธ"
       messages:
         inbox: "กล่องจดหมายเข้า"
         latest: "ล่าสุด"
@@ -856,7 +848,6 @@ th:
         choose: "เลือกรหัสผ่าน"
       second_factor_backup:
         disable: "ปิดใช้งาน"
-        enable: "เปิดใช้งาน"
       second_factor:
         forgot_password: "ลืมรหัสผ่านใช่ไหม"
         confirm_password_description: "กรุณายืนยันรหัสผ่านเพื่อดำเนินการต่อ"
@@ -2433,9 +2424,12 @@ th:
           save: "บันทึก"
           delete: "ลบ"
           links:
-            icon: "ไอคอน"
-            name: "ชื่อ"
-            value: "ลิงก์"
+            icon:
+              label: "ไอคอน"
+            name:
+              label: "ชื่อ"
+            value:
+              label: "ลิงก์"
         about:
           header_link_text: "เกี่ยวกับ"
         messages:
@@ -2604,8 +2598,6 @@ th:
         save: "บันทึก"
         wildcard_event: "ส่งทุกอย่างหาฉัน"
         active: "ใช้งานอยู่"
-        user_badge_event:
-          details: "เมื่อผู้ใช้ได้รับเหรียญ"
         delivery_status:
           title: "สถานะการส่ง"
           inactive: "ไม่ใช้งาน"

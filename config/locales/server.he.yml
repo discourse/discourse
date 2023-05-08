@@ -52,6 +52,11 @@ he:
   remove_posts_deleted_by_author: "נמחק על ידי הכותב"
   redirect_warning: "לא הצלחנו לאמת שהקישור שבחרת אכן פורסם לפורום. כדי להמשיך בכל אופן, נא לבחור בקישור שלהלן."
   on_another_topic: "בנושא אחר"
+  topic_category_changed: "מ־%{from} עד %{to}"
+  topic_tag_changed:
+    added_and_removed: "נוספו %{added} והוסרו %{removed}"
+    added: "נוספו %{added}"
+    removed: "הוסרו %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "מס׳ %{post_number}"
     topic_page_title_post_number_by_user: "מס׳ %{post_number} מאת %{username}"
@@ -200,6 +205,7 @@ he:
     embed:
       load_from_remote: "ארעה שגיאה בטעינת הפוסט הזה."
     site_settings:
+      invalid_site_setting: "לא קיימת הגדרה שנקראת ‚%{name}’"
       invalid_category_id: "ציינת קטגוריה שאינה קיימת"
       invalid_choice:
         one: "ציינת את הבחירה השגויה %{name}"
@@ -553,6 +559,7 @@ he:
       יותר קל לכולם לקרוא נושאים שיש בהם פחות תגובות עמוקות מאשר הרבה תגובות קטנות.
     dominating_topic: פרסמת המון בנושא הזה! אולי כדאי לתת גם לאחרים הזדמנות להגיב ולהחליף ביניהם דברים.
     get_a_room: הגבת ל־‎@%{reply_username} ‏%{count} פעמים, ידעת שניתן לשלוח הודעה פרטית במקום?
+    dont_feed_the_trolls: הפוסט הזה כבר סומן להסבת תשומת הלב של המפקחים. עדיין להגיב אליו? תגובות לתוכן שלילי מעודדות התנהגות שלילית קיצונית אף יותר.
     too_many_replies: |
       ### הגעת למספר התגובות המרבי לנושא זה
 
@@ -701,6 +708,7 @@ he:
       disallowed_tags_generic: "לנושא זה יש תגיות אסורות."
       slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"
       is_already_in_use: "כבר בשימוש"
+      move_topic_to_category_disallowed: "אין לך אפשרות להעביר את הנושא הזה לקטגוריה שאין לך הרשאה ליצור בה נושאים חדשים."
     cannot_delete:
       uncategorized: "קטגוריה זו נחשבת למיוחדת. היא מיועדת לשימוש כמתחם לנושאים מחוסרי קטגוריה, אין אפשרות למחוק אותה."
       has_subcategories: "לא ניתן להסיר קטגוריה זו משום שיש בה תת־קטגוריות."
@@ -812,17 +820,17 @@ he:
       about_x_years:
         one: "שנה"
         two: "שנתיים"
-        many: "%{count} שנים"
+        many: "%{count} שנה"
         other: "%{count} שנים"
       over_x_years:
         one: "למעלה משנה"
         two: "למעלה משנתיים"
-        many: "למעלה מ־%{count} שנים"
+        many: "למעלה מ־%{count} שנה"
         other: "למעלה מ־%{count} שנים"
       almost_x_years:
         one: "שנה"
         two: "שנתיים"
-        many: "%{count} שנים"
+        many: "%{count} שנה"
         other: "%{count} שנים"
     distance_in_words_verbose:
       half_a_minute: "ממש עכשיו"
@@ -865,17 +873,17 @@ he:
       about_x_years:
         one: "לפני שנה בערך"
         two: "לפני שנתיים בערך"
-        many: "לפני %{count} שנים בערך"
+        many: "לפני %{count} שנה בערך"
         other: "לפני %{count} שנים בערך"
       over_x_years:
         one: "לפני למעלה משנה"
         two: "לפני למעלה משנתיים"
-        many: "לפני למעלה מ־%{count} שנים"
+        many: "לפני למעלה מ־%{count} שנה"
         other: "לפני למעלה מ־%{count} שנים"
       almost_x_years:
         one: "לפני שנה כמעט"
         two: "לפני שנתיים כמעט"
-        many: "לפני %{count} שנים כמעט"
+        many: "לפני %{count} שנה כמעט"
         other: "לפני %{count} שנים כמעט"
   password_reset:
     no_token: 'אוי ויי! הקישור בו השתמשת לא פעיל עוד. אפשר <a href="%{base_url}/login">להיכנס</a> כעת. אם שכחת את הסיסמה שלך, אפשר <a href="%{base_url}/password-reset">לבקש קישור</a> כדי לאפס אותה.'
@@ -1216,7 +1224,7 @@ he:
       title: "יחס פעילות יומי/חודשי"
       xaxis: "יום"
       yaxis: "יחס פעילות יומי/חודשי"
-      description: "מספר החברים שנכנסו ביממה האחרונה לחלק במספר החברים שנכנסו בחודש האחרון – מחזירה אחוז שמציין את ‚דבקות’ הקהילה. עדיף לכוון לערך שעולה על 30%."
+      description: "מספר החברים שנכנסו ביממה האחרונה לחלק במספר החברים שנכנסו בחודש האחרון – מחזירה אחוז שמציין את ‚דבקות’ הקהילה. עדיף לכוון לערך שעולה על 20%."
     daily_engaged_users:
       title: "משתמשים מעורבים יומית"
       xaxis: "יום"
@@ -1498,6 +1506,7 @@ he:
     out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
     watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב ‚%{action}’ שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
+    v3_analytics_deprecated: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"
@@ -1586,7 +1595,7 @@ he:
     manifest_icon: "תמונה שתשמש בתור לוגו/תמונת פתיח ב־Android. גודלה ישתנה אוטומטית לכדי 512 × 512. במקרה של העדר בחירה, ייעשה שימוש ב־large_icon (סמל גדול)."
     manifest_screenshots: "צילומי מסך שמציגים לראווה את היכולות והתכונות של העותק שלך בעמוד תהליך ההתקנה. כל התמונות חייבות להיות העלאות מקומיות ובאותם הממדים."
     favicon: "סמל האתר שלך, לפרטים <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://he.wikipedia.org/wiki/Favicon</a>. כדי שהסמל יפעל כראוי גם דרך CDN עליו להיות מסוג png. גודל הסמל ישתנה לכדי 32×32. בהעדר בחירה, ייעשה שימוש ב־large_icon."
-    apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. גודלו ישתנה אוטומטית לכדי 180 × 180. במקרה של העדר בחירה ייעשה שימוש ב־large_icon (סמל גדול)."
+    apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. רקע שקוף לא מומלץ. הגודל ישתנה ל־180x180. אם יישאר ריק, ייעשה שימוש ב־large_icon (סמל גדול) במקום."
     opengraph_image: "תמונת opengraph כבררת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
     twitter_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמורה להיות ברוחב של 280 לפחות ובגובה של 150 לפחות, לא יכולה להיות ‎.svg). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ה־opengraph_image (תמונת opengraph) כל עוד זאת גם לא ‎.svg"
     notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
@@ -1736,7 +1745,7 @@ he:
     discourse_connect_overrides_profile_background: "דריסת רקע פרופיל המשתמש בערך ממטען ה־DiscourseConnect."
     discourse_connect_overrides_card_background: "דריסת רקע כרטיס המשתמש בערך ממטען ה־DiscourseConnect."
     discourse_connect_not_approved_url: "הפניית חשבונות DiscourseConnect ללא אישור לכתובת הזאת"
-    discourse_connect_allows_all_return_paths: "לא להגביל את שמות התחום של נתיבי החזרה (return_paths) שמסופקים על ידי DiscourseConnect (כבררת מחדל, נתיבי החזרה חייבים להיות באתר הנוכחי)"
+    discourse_connect_allowed_redirect_domains: "הגבלת שמות תחום אלו עבור return_paths (נתיבי חזרה) שסופקו על ידי DiscourseConnect (כברירת מחדל נתיב החזרה חייב להיות לאתר הנוכחי). אפשר להשתמש ב־* כדי שיהיה כל שם תחום בתור נתיב חזרה. אסור להשתמש בתווי־כל לתתי תחום (‎`*.foobar.com`)"
     enable_local_logins: "הפעלת חשבונות כניסה עם שם משתמש וססמה. אזהרה: השבתה עשויה למנוע את כניסתך אלמלא הגדרת לפחות שיטת כניסה חלופית אחת נוספת."
     enable_local_logins_via_email: "לאפשר למשתמשים לבקש לשלוח אליהם קישור לכניסה בלחיצה אחת בדוא״ל."
     allow_new_registrations: "לאפשר הרשמות של משתמשים חדשים. יש לבטל סימון זה כדי למנוע יצירת חשבונות חדשים."
@@ -1764,13 +1773,13 @@ he:
     discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
     allow_restore: "לאפשר שחזור, מה שיכול להחליף את כל (!) המידע באתר! יש להשבית אלא אם כן בכוונתך לשחזר גיבוי"
-    maximum_backups: "המספר המקסימלי של גיבויים לשמירה. גיבויים ישנים יותר ימחקו אוטומטית"
+    maximum_backups: "המספר המרבי של גיבויים לשמירה. גיבויים ישנים יותר יימחקו אוטומטית"
     automatic_backups_enabled: "הרץ גיבויים אוטומטים כמו שמוגדר בתדירות הגיבויים"
     backup_frequency: "מספר הימים בין גיבויים."
     s3_backup_bucket: "הדלי המרוחק שבו לשמור גיבויים. אזהרה: שימו לב שהוא דלי פרטי."
     s3_endpoint: "ניתן לערוך את נקודת הגישה לגיבוי כדי שתפנה לשירות תואם S3 כגון DigitalOcean Spaces או Minio. אזהרה: יש להשאיר ריק בעת שימוש ב־S3 מבית AWS."
     s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מושבתת, לא יפונה מקום לאחר מחיקת העלאות."
-    s3_disable_cleanup: "למנוע הסרה של גיבויים ישנים מ־S3 שיש יותר גיבויים מהמותר."
+    s3_disable_cleanup: "למנוע הסרה של גיבויים ישנים מ־S3 כשיש יותר גיבויים מהמותר."
     enable_s3_inventory: "יצירת דוחות ואימות העלאות באמצעות מאגר של Amazon S3. חשוב: נדרשים פרטי גישה תקפים ל־S3 (מזהה מפתח הגישה ומפתח הגישה הסודי)."
     backup_time_of_day: "הגדרת זמן לגיבוי לפי UTC."
     backup_with_uploads: "כללו העלאות בגיבויים התקופתיים. ביטול של אפשרות זו תגבה רק את בסיס הנתונים."
@@ -1820,7 +1829,7 @@ he:
     s3_access_key_id: "מזהה מפתח הגישה ל־Amazon S3 שישמש להעלאת תמונות, קבצים מצורפים וגיבויים."
     s3_secret_access_key: "מפתח סוד הגישה ל־Amazon S3 שישמש להעלאת תמונות, קבצים מצורפים וגיבויים."
     s3_region: "שם האזור ב־Amazon S3 שישמש להעלאת תמונות וגיבויים."
-    s3_cdn_url: "CDN URL לכל ה assets ב s3 (למשל: https://cdn.somewhere.com). א-ז-ה-ר-ה: לאחר שינוי של הגדרה זו עליכם לאפות מחדש את כל הפוסטים הישנים."
+    s3_cdn_url: "כתובת CDN לכל המשאבים ב־S3 (למשל: https://cdn.somewhere.com). א-ז-ה-ר-ה: לאחר שינוי של הגדרה זו יש לאפות מחדש את כל הפוסטים הישנים."
     avatar_sizes: "רשימה של גדלי דמויות שנוצרת אוטומטית."
     external_system_avatars_enabled: "שימוש בשירות של מערכת אווטארים חיצונית."
     external_system_avatars_url: "כתובת של שירות דמויות חיצוני. החלפות מותרות הן {username} {first_letter} {color} {size}"
@@ -2082,6 +2091,7 @@ he:
     allow_profile_backgrounds: "אפשרו למשתמשים להעלות רקעים לפרופיל."
     sequential_replies_threshold: "מספר הפוסטים שעל משתמש לפרסם אחד-לאחר-השני בנושא לפני שמזכירים לו שהוא משאיר יותר מידי תגובות ברצף."
     get_a_room_threshold: "מספר פוסטים שמשתמשים צריכים להכין לאותו אדם באותו הנושא לפני שהם מוזהרים."
+    dont_feed_the_trolls_threshold: "מספר הסימונים ממשתמשים אחרים בטרם אזהרה."
     enable_mobile_theme: "מכשירים ניידים משתמשים בערכת עיצוב מותאמת לניידים לצד האפשרות לעבור לאתר המלא. ניתן להשבית זאת כדי להשתמש בערכת סגנון מסתגלת לחלוטין."
     dominating_topic_minimum_percent: "איזה אחוז מהפוסטים משתמש צריך לייצר בנושא לפני שיקבל תזכורת לגבי שתלטנות יתר על הנושא."
     disable_avatar_education_message: "ניטרול הודעה שמלמדת על שינוי דמות."
@@ -2127,11 +2137,11 @@ he:
     allowed_href_schemes: "פרוטוקולים מותרים בלינקים בנוסף ל http ו https."
     embed_post_limit: "מספר מקסימלי של פוסטים להטמעה."
     embed_username_required: "נדרש שם משתמש ליצירת הנושא."
-    notify_about_flags_after: "אם יש דגלים שלא טופלו לאחר כמות זו של שעות, תישלח הודעה אישית אל המפקחים. 0 להשבתה."
+    notify_about_reviewable_item_after: "אם יש פריטים לסקירה שלא טופלו לאחר כמות זו של שעות, תישלח הודעה אישית אל המפקחים. 0 להשבתה."
     show_create_topics_notice: "אם לאתר פחות מ־5 נושאים פומביים, יש להציג מודעה המבקשת מהמנהלים ליצור נושאים נוספים."
     delete_drafts_older_than_n_days: "למחוק טיוטות שגילן עולה על (n) ימים."
     delete_merged_stub_topics_after_days: "מספר הימים להמתנה לפני מחיקה אוטומטית של נושאים מקוצרים שמוזגו במלואם. יש להגדיר ל־0 כדי לא למחוק נושאים מקוצרים לעולם."
-    bootstrap_mode_min_users: "מספר משתמשים מזערי שנדרש כדי להשבית מצב ראשוניות (0 להשבתה)"
+    bootstrap_mode_min_users: "מספר משתמשים מזערי שנדרש כדי להשבית מצב ראשוניות (0 להשבתה, יכול לארוך עד 24 שעות)"
     prevent_anons_from_downloading_files: "למנוע ממשתמשים אלמוניים להוריד קבצים מצורפים."
     secure_uploads: 'מגביל גישה לכל ההעלאות (תמונות, סרטונים, שמע, טקסט, קובצי PDF, ארכיוני zip ועוד). אם מופעלת האפשרות „דרישת כניסה”, רק משתמשים שנכנסו למערכת יכולים לגשת להעלאות. אחרת, הגישה תוגבל רק להעלאות מסוגי מדיה בהודעות פרטיות ובקטגוריות פרטיות. אזהרה: מדובר בהגדרה מסובכת שדורשת הבנה עמוקה בניהול המערכת. יש לעיין ב<a target="_blank" href="https://meta.discourse.org/t/-/140017">נושא ההעלאות המאובטחות ב־Meta</a> לקבלת פרטים נוספים.'
     secure_uploads_allow_embed_images_in_emails: "מאפשר להטמיע תמונות מאובטחות שבדרך כלל יידחסו אם הגודל שלהן קטן מההגדרה ‚secure uploads max email embed image size kb’ (גודל העלאות מרבי להטמעה כתמונה בקילובתים)."
@@ -2142,6 +2152,7 @@ he:
     emoji_set: "איך בא לך את האמוג׳י שלך?"
     emoji_autocomplete_min_chars: "מספר התווים המזערי שנדרש להקפצת חלונית השלמה אוטומטית של אמוג׳י"
     enable_inline_emoji_translation: "הפעלת תרגום לאמוג׳י כחלק מהשורה (ללא רווחים או סימני פיסוק לפני)."
+    emoji_deny_list: "סמלי האמוג׳י האלה לא יהיו זמינים לשימוש בתפריטים או בקודים מקוצרים."
     approve_post_count: "מספר הפוסטים ממשתמשים חדשים או בסיסיים שחייבים לאשר אותם"
     approve_unless_trust_level: "פוסטים של משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
     approve_new_topics_unless_trust_level: "נושאים חדשים של משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
@@ -2201,7 +2212,9 @@ he:
     revoke_api_keys_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API שלא היה בשימוש (0 - לעולם לא)."
     allow_user_api_keys: "לאפשר למשתמשים ליצור מפתחות API"
     allow_user_api_key_scopes: "רשימת אזורים מותרים למפתחות API של משתמשים"
-    min_trust_level_for_user_api_key: "דרגת האמון הנדרשת ליצירת מפתחות API למשתמש"
+    min_trust_level_for_user_api_key: |
+      נדרשת דרגת אמון ליצירת מפתחות API למשתמש.<br>
+      <b>אזהרה</b>: שינוי דרגת האמון ימנע ממשתמשים עם דרגת אמון נמוכה יותר להיכנס דרך Discourse Hub
     allowed_user_api_auth_redirects: "כתובת מורשית להפניית אימות למפתחות API של משתמש. בסימן התו־כל * ניתן להשתמש כדי ללכוד חלק ממנה (למשל: www.example.com/*‎)."
     allowed_user_api_push_urls: "URLים מורשים לדחיפת שרת ל API של משתמשים."
     expire_user_api_keys_days: "מספר הימים בטרם פקיעת תוקף מפתח ה־API של המשתמש אוטומטית (0 - לעולם לא)."
@@ -2219,6 +2232,7 @@ he:
     suppress_overlapping_tags_in_list: "אם תגיות תואמות מילים בכותרות נושאים באופן מדויק, לא להציג את התגית"
     remove_muted_tags_from_latest: "לא להציג נושאים שמתויגים רק בתגיות מושתקות ברשימת הנושאים האחרונים."
     force_lowercase_tags: "לאלץ את כל התגיות החדשות להיות באותיות קטנות בלבד."
+    create_post_for_category_and_tag_changes: "ליצור פוסט פעולה קטן כאשר קטגוריה או תגיות של נושא משתנים"
     company_name: "שם החברה"
     governing_law: "החוק המחייב"
     city_for_disputes: "עיר המחלוקת"
@@ -2252,10 +2266,9 @@ he:
     navigation_menu: "קביעת תפריט הניווט לשימוש. המשתמשים יכולים להתאים את הניווט מסרגל הצד והכותרת. האפשרות הישנה זמינה לטובת תאימות לאחור."
     default_sidebar_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של סרגל הצד כברירת מחדל."
     default_sidebar_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד כברירת מחדל."
-    enable_new_notifications_menu: "מפעיל את תפריט ההתראות החדש בתפריט הניווט הישן."
+    enable_new_notifications_menu: "מפעיל את תפריט ההתראות החדש. השבתת ההגדרה הזאת יצאה מכלל שימוש. תפריט ההתראות החדש תמיד ישמש לבחירות ‚תפריט ניווט’ שאינן מיושנות. <a href='https://meta.discourse.org/t/260358'>מידע נוסף</a>"
     enable_experimental_hashtag_autocomplete: "ניסיוני: ניתן להשתמש במערכת אוטומטית להשלמת #תגיות עבור קטגוריות ותגיות שמעבדת את הפריט הנבחר באופן שונה והחיפוש בה משופר"
     experimental_new_new_view_groups: "ניסיוני: לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד."
-    enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -2290,7 +2303,6 @@ he:
       staged_users_disabled: "עליך לאפשר ‚משתמשים מבוימים’ בטרם הפעלת הגדרה זו."
       reply_by_email_disabled: "עליך להפעיל את ‚תגובה בדוא״ל’ בטרם הפעלת הגדרה זו."
       discourse_connect_url_is_empty: "עליך להגדיר ‚כתובת discourse connect’ בטרם הפעלת הגדרה זו."
-      discourse_connect_invite_only: "לא ניתן להפעיל את DiscourseConnect ולסגור להזמנות בלבד בעת ובעונה אחת."
       enable_local_logins_disabled: "עליך תחילה להפעיל את ‚הפעלת כניסה מקומית’ בטרם הפעלת הגדרה זו."
       min_username_length_exists: "לא ניתן להגדיר את האורך המזערי לשם המשתמש לפחות תווים מאשר שם המשתמש הקצר ביותר במערכת (%{username})."
       min_username_length_range: "לא ניתן לקבוע את המינימום מעל המקסימום."
@@ -2313,7 +2325,6 @@ he:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
       delete_rejected_email_after_days: "הגדרה זו לא יכולה להיות קטנה מ־delete_email_logs_after_days (ימים שלאחריהם למחוק יומני דוא״ל) או גדולה מ־%{max}"
       invalid_uncategorized_category_setting: 'אי אפשר לבחור בקטגוריה „ללא קטגוריה” אם ‚הרשאת נושאים ללא קטגוריה’ אסורה.'
-      enable_new_notifications_menu_not_legacy_navigation_menu: "יש להגדיר את `navigation_menu` לערך `legacy` בטרם הפעלת הגדרה זו."
       invalid_search_ranking_weights: "הערך שגוי להגדרת האתר search_ranking_weights (משקלי דירוג חיפוש). למשל: ‚{0.1,0.2,0.3,1.0}’. נא לשים לב שהערך המרבי לכל משקל הוא 1.0."
     placeholder:
       discourse_connect_provider_secrets:
@@ -3296,7 +3307,7 @@ he:
         ניתן לשנות את הסף הזה בעזרת שינוי `silence_new_user` (השתקת משתמשים חדשים) בהגדרות האתר.
     spam_post_blocked:
       title: "פוסט ספאם נחסם"
-      subject_template: "עקב קישורים חוזרים ונשנים הופעלה חסימה על המשתמש/ת החדש/ה %{username}"
+      subject_template: "עקב קישורים חוזרים ונשנים המשתמש החדש %{username} נחסם"
       text_body_template: |
         זוהי הודעה אוטומטית.
 
@@ -3862,7 +3873,7 @@ he:
     title: "לא ניתן לטעון את היישום"
     offline_page_message: "נראה כאילו אין לך תקשורת לאינטרנט! נא לבדוק את חיבור הרשת שלך ולנסות שוב."
   login_required:
-    welcome_message: "## [ברוך בואך אל %{title}](#welcome)"
+    welcome_message: "# [ברוך בואך אל %{title}](#welcome)"
   upload:
     edit_reason: "עותקים מקומיים של תמונות שהורדו"
     unauthorized: "הקובץ שמועמד להעלאה אינו מורשה (סיומות מורשות: %{authorized_extensions}), עמך הסליחה."
@@ -4633,6 +4644,8 @@ he:
     title: "כנסו למצב בטוח"
     description: "\"מצב בטוח\" מאפשר לך לבחון את האתר מבלי לעלות ערכות נושא או תוספים בצד לקוח. תוספים בצד שרת נשארים מופעלים."
     no_themes: "השבתת ערכות עיצוב ורכיבי ערכת עיצוב"
+    no_unofficial_plugins: "השבתת התאמות התוספים הבלתי רשמיים מצד הלקוח"
+    no_plugins: "השבתת כל התאמות התוספים מצד הלקוח"
     enter: "כנסו למצב בטוח"
     must_select: "עליך לבחור באפשרות אחת לפחות כדי להיכנס למצב בטוח."
   wizard:
@@ -4832,17 +4845,21 @@ he:
         description: "יש לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
       agree_and_hide:
         title: "הסתרת פוסט"
+        description: "הסכמה עם הסימון והסתרת הפוסט הזה + שליחת הודעה אוטומטית למשתמש שמפצירה בו לערוך אותו."
       delete_single:
         title: "מחיקה"
       delete:
         title: "מחיקה…"
       delete_and_ignore:
         title: "התעלמות מהדגל ומחיקת הפוסט"
+        description: "התעלמות מהסימון על ידי הסרתו מהתור ומחיקת הפוסט, אם זה הפוסט הראשון, למחוק גם את הנושא. "
       delete_and_ignore_replies:
         title: "התעלמות מהסימון, למחוק את הפוסט והתגובות"
+        description: "התעלמות מהסימון על ידי הסרתו מהתור, מחיקת הפוסט וכל התגובות שלו, אם זה הפוסט הראשון, למחוק גם את הנושא"
         confirm: "למחוק גם את התגובות לפוסט?"
       delete_and_agree:
         title: "מחיקת פוסט"
+        description: "להסכים עם הסימון ולמחוק את הפוסט, אם זה הפוסט הראשון אז למחוק גם את הנושא."
       delete_and_agree_replies:
         title: "מחיקת הפוסט והתגובות"
         description: "להסכים עם הסימון ולמחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא."
@@ -4856,6 +4873,7 @@ he:
         title: "התעלמות"
       ignore_and_do_nothing:
         title: "לא לעשות דבר"
+        description: "התעלמות מהסימון על ידי הסרתו מהתור מבלי לנקוט בעמדה. פוסטים מוסתרים נשארים מוסתרים ויטופלו על ידי הכלים האוטומטיים."
       approve:
         title: "אשר"
       approve_post:

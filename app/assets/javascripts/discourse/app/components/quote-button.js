@@ -1,4 +1,3 @@
-import afterTransition from "discourse/lib/after-transition";
 import { propertyEqual } from "discourse/lib/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -17,12 +16,14 @@ import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 import Sharing from "discourse/lib/sharing";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { next, schedule } from "@ember/runloop";
 import toMarkdown from "discourse/lib/to-markdown";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
+import { createPopper } from "@popperjs/core";
+import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -55,6 +56,9 @@ export default Component.extend(KeyEnterEscape, {
   animated: false,
   privateCategory: alias("topic.category.read_restricted"),
   editPost: null,
+  _popper: null,
+  popperPlacement: "top-start",
+  popperOffset: [0, 3],
 
   _isFastEditable: false,
   _displayFastEditInput: false,
@@ -78,48 +82,12 @@ export default Component.extend(KeyEnterEscape, {
     this.set("_displayFastEditInput", false);
     this.set("_fastEditInitialSelection", null);
     this.set("_fastEditNewSelection", null);
-  },
-
-  _getRangeBoundaryRect(range, atEnd) {
-    // Don't mess with the original range as it results in weird behaviours
-    // where certain browsers will deselect the selection
-    const clone = range.cloneRange(range);
-
-    // create a marker element containing a single invisible character
-    const markerElement = document.createElement("span");
-    markerElement.appendChild(document.createTextNode("\ufeff"));
-
-    // on mobile, collapse the range at the end of the selection
-    if (atEnd) {
-      clone.collapse();
-    }
-    // insert the marker
-    clone.insertNode(markerElement);
-
-    // retrieve the position of the marker
-    const boundaryRect = markerElement.getBoundingClientRect();
-    boundaryRect.x += document.documentElement.scrollLeft;
-    boundaryRect.y += document.documentElement.scrollTop;
-
-    // remove the marker
-    const parent = markerElement.parentNode;
-    parent.removeChild(markerElement);
-
-    // merge back all text nodes so they don't get messed up
-    parent.normalize();
-
-    // work around Safari that would sometimes lose the selection
-    if (this.capabilities.isSafari) {
-      this._reselected = true;
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
-    }
-
-    return boundaryRect;
+    this._teardownSelectionListeners();
   },
 
   _selectionChanged() {
     if (this._displayFastEditInput) {
+      this.textRange = virtualElementFromTextRange();
       return;
     }
 
@@ -229,7 +197,10 @@ export default Component.extend(KeyEnterEscape, {
     const { isIOS, isAndroid, isOpera } = this.capabilities;
     const showAtEnd = isMobileDevice || isIOS || isAndroid || isOpera;
 
-    const boundaryPosition = this._getRangeBoundaryRect(firstRange, showAtEnd);
+    if (showAtEnd) {
+      this.popperPlacement = "bottom-start";
+      this.popperOffset = [0, 25];
+    }
 
     // change the position of the button
     schedule("afterRender", () => {
@@ -237,85 +208,26 @@ export default Component.extend(KeyEnterEscape, {
         return;
       }
 
-      let top = 0;
-      let left = 0;
-      const pxFromSelection = 5;
+      this.textRange = virtualElementFromTextRange();
+      this._setupSelectionListeners();
 
-      if (showAtEnd) {
-        // The selection-handles on iOS have a hit area of ~50px radius
-        // so we need to make sure our buttons are outside that radius
-        // Apply the same logic on all mobile devices for consistency
-
-        top = boundaryPosition.bottom + pxFromSelection;
-        left = boundaryPosition.left;
-
-        const safeRadius = 50;
-
-        const topicArea = document
-          .querySelector(".topic-area")
-          .getBoundingClientRect();
-        topicArea.x += document.documentElement.scrollLeft;
-        topicArea.y += document.documentElement.scrollTop;
-
-        const endHandlePosition = boundaryPosition;
-        const width = this.element.clientWidth;
-
-        const possiblePositions = [
+      this._popper = createPopper(this.textRange, this.element, {
+        placement: this.popperPlacement,
+        modifiers: [
           {
-            // move to left
-            top,
-            left: left - width - safeRadius,
+            name: "computeStyles",
+            options: {
+              adaptive: false,
+            },
           },
           {
-            // move to right
-            top,
-            left: left + safeRadius,
+            name: "offset",
+            options: {
+              offset: this.popperOffset,
+            },
           },
-          {
-            // centered below end handle
-            top: top + safeRadius,
-            left: left - width / 2,
-          },
-        ];
-
-        for (const pos of possiblePositions) {
-          // Ensure buttons are entirely within the .topic-area
-          pos.left = Math.max(topicArea.left, pos.left);
-          pos.left = Math.min(topicArea.right - width, pos.left);
-
-          let clearOfStartHandle = true;
-          if (isAndroid) {
-            // On android, the start-selection handle extends below the line, so we need to avoid it as well:
-            const startHandlePosition = this._getRangeBoundaryRect(
-              firstRange,
-              false
-            );
-
-            clearOfStartHandle =
-              pos.top - startHandlePosition.bottom >= safeRadius ||
-              pos.left + width <= startHandlePosition.left - safeRadius ||
-              pos.left >= startHandlePosition.left + safeRadius;
-          }
-
-          const clearOfEndHandle =
-            pos.top - endHandlePosition.top >= safeRadius ||
-            pos.left + width <= endHandlePosition.left - safeRadius ||
-            pos.left >= endHandlePosition.left + safeRadius;
-
-          if (clearOfStartHandle && clearOfEndHandle) {
-            left = pos.left;
-            top = pos.top;
-            break;
-          }
-        }
-      } else {
-        // Desktop
-        top =
-          boundaryPosition.top - this.element.clientHeight - pxFromSelection;
-        left = boundaryPosition.left;
-      }
-
-      Object.assign(this.element.style, { top: `${top}px`, left: `${left}px` });
+        ],
+      });
 
       if (!this.animated) {
         // We only enable CSS transitions after the initial positioning
@@ -323,6 +235,23 @@ export default Component.extend(KeyEnterEscape, {
         next(() => this.set("animated", true));
       }
     });
+  },
+
+  @bind
+  _updateRect() {
+    this.textRange?.updateRect();
+  },
+
+  _setupSelectionListeners() {
+    document.body.addEventListener("mouseup", this._updateRect);
+    window.addEventListener("scroll", this._updateRect);
+    document.scrollingElement.addEventListener("scroll", this._updateRect);
+  },
+
+  _teardownSelectionListeners() {
+    document.body.removeEventListener("mouseup", this._updateRect);
+    window.removeEventListener("scroll", this._updateRect);
+    document.scrollingElement.removeEventListener("scroll", this._updateRect);
   },
 
   didInsertElement() {
@@ -372,12 +301,14 @@ export default Component.extend(KeyEnterEscape, {
   },
 
   willDestroyElement() {
+    this._popper?.destroy();
     $(document)
       .off("mousedown.quote-button")
       .off("mouseup.quote-button")
       .off("selectionchange.quote-button");
     this.appEvents.off("quote-button:quote", this, "insertQuote");
     this.appEvents.off("quote-button:edit", this, "_toggleFastEditForm");
+    this._teardownSelectionListeners();
   },
 
   @discourseComputed("topic.{isPrivateMessage,invisible,category}")
@@ -473,27 +404,29 @@ export default Component.extend(KeyEnterEscape, {
             }
           });
 
-          this?.editPost(postModel);
+          this.editPost(postModel);
 
-          afterTransition(document.querySelector("#reply-control"), () => {
-            const textarea = document.querySelector(".d-editor-input");
-            if (!textarea || this.isDestroyed || this.isDestroying) {
-              return;
-            }
+          document
+            .querySelector("#reply-control")
+            ?.addEventListener("transitionend", () => {
+              const textarea = document.querySelector(".d-editor-input");
+              if (!textarea || this.isDestroyed || this.isDestroying) {
+                return;
+              }
 
-            // best index brings us to one row before as slice start from 1
-            // we add 1 to be at the beginning of next line, unless we start from top
-            setCaretPosition(
-              textarea,
-              rows.slice(0, bestIndex).join("\n").length +
-                (bestIndex > 0 ? 1 : 0)
-            );
+              // best index brings us to one row before as slice start from 1
+              // we add 1 to be at the beginning of next line, unless we start from top
+              setCaretPosition(
+                textarea,
+                rows.slice(0, bestIndex).join("\n").length +
+                  (bestIndex > 0 ? 1 : 0)
+              );
 
-            // ensures we correctly scroll to caret and reloads composer
-            // if we do another selection/edit
-            textarea.blur();
-            textarea.focus();
-          });
+              // ensures we correctly scroll to caret and reloads composer
+              // if we do another selection/edit
+              textarea.blur();
+              textarea.focus();
+            });
         }
       );
     }

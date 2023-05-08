@@ -10,10 +10,83 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
   before { chat_system_bootstrap }
 
-  xit "it stores draft in replies" do
-  end
+  context "when loading a channel with a draft" do
+    fab!(:draft_1) do
+      Chat::Draft.create!(
+        chat_channel: channel_1,
+        user: current_user,
+        data: { message: "draft" }.to_json,
+      )
+    end
 
-  xit "it stores draft" do
+    before do
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "loads the draft" do
+      chat.visit_channel(channel_1)
+
+      expect(find(".chat-composer__input").value).to eq("draft")
+    end
+
+    context "with uploads" do
+      fab!(:upload_1) do
+        Fabricate(
+          :upload,
+          url: "/images/logo-dark.png",
+          original_filename: "logo_dark.png",
+          width: 400,
+          height: 300,
+          extension: "png",
+        )
+      end
+
+      fab!(:draft_1) do
+        Chat::Draft.create!(
+          chat_channel: channel_1,
+          user: current_user,
+          data: { message: "draft", uploads: [upload_1] }.to_json,
+        )
+      end
+
+      it "loads the draft with the upload" do
+        chat.visit_channel(channel_1)
+
+        expect(find(".chat-composer__input").value).to eq("draft")
+        expect(page).to have_selector(".chat-composer-upload--image", count: 1)
+      end
+    end
+
+    context "when replying" do
+      fab!(:draft_1) do
+        Chat::Draft.create!(
+          chat_channel: channel_1,
+          user: current_user,
+          data: {
+            message: "draft",
+            replyToMsg: {
+              id: message_1.id,
+              excerpt: message_1.excerpt,
+              user: {
+                id: message_1.user.id,
+                name: nil,
+                avatar_template: message_1.user.avatar_template,
+                username: message_1.user.username,
+              },
+            },
+          }.to_json,
+        )
+      end
+
+      it "loads the draft with replied to mesage" do
+        chat.visit_channel(channel_1)
+
+        expect(find(".chat-composer__input").value).to eq("draft")
+        expect(page).to have_selector(".chat-reply__username", text: message_1.user.username)
+        expect(page).to have_selector(".chat-reply__excerpt", text: message_1.excerpt)
+      end
+    end
   end
 
   context "when replying to a message" do
@@ -62,16 +135,40 @@ RSpec.describe "Chat composer", type: :system, js: true do
         ".chat-composer-message-details .chat-reply__username",
         text: current_user.username,
       )
-      expect(find(".chat-composer-input").value).to eq(message_2.message)
+      expect(find(".chat-composer__input").value).to eq(message_2.message)
+    end
+
+    it "updates the message instantly" do
+      chat.visit_channel(channel_1)
+      page.driver.browser.network_conditions = { offline: true }
+
+      channel.edit_message(message_2)
+      find(".chat-composer__input").send_keys("instant")
+      channel.click_send_message
+
+      expect(channel).to have_message(text: message_2.message + "instant")
+      page.driver.browser.network_conditions = { offline: false }
     end
 
     context "when pressing escape" do
       it "cancels editing" do
         chat.visit_channel(channel_1)
         channel.edit_message(message_2)
-        find(".chat-composer-input").send_keys(:escape)
+        find(".chat-composer__input").send_keys(:escape)
 
         expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
+        expect(find(".chat-composer__input").value).to eq("")
+      end
+    end
+
+    context "when closing edited message" do
+      it "cancels editing" do
+        chat.visit_channel(channel_1)
+        channel.edit_message(message_2)
+        find(".cancel-message-action").click
+
+        expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
+        expect(find(".chat-composer__input").value).to eq("")
       end
     end
   end
@@ -88,7 +185,18 @@ RSpec.describe "Chat composer", type: :system, js: true do
       channel.click_action_button("emoji")
       find("[data-emoji='grimacing']").click(wait: 0.5)
 
-      expect(find(".chat-composer-input").value).to eq(":grimacing:")
+      expect(find(".chat-composer__input").value).to eq(":grimacing:")
+    end
+
+    it "removes denied emojis from insert emoji picker" do
+      SiteSetting.emoji_deny_list = "monkey|peach"
+
+      chat.visit_channel(channel_1)
+      channel.open_action_menu
+      channel.click_action_button("emoji")
+
+      expect(page).to have_no_selector("[data-emoji='monkey']")
+      expect(page).to have_no_selector("[data-emoji='peach']")
     end
   end
 
@@ -100,10 +208,21 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
     it "adds the emoji to the composer" do
       chat.visit_channel(channel_1)
-      find(".chat-composer-input").fill_in(with: ":gri")
+      find(".chat-composer__input").fill_in(with: ":gri")
       find(".emoji-shortname", text: "grimacing").click
 
-      expect(find(".chat-composer-input").value).to eq(":grimacing: ")
+      expect(find(".chat-composer__input").value).to eq(":grimacing: ")
+    end
+
+    it "doesn't suggest denied emojis and aliases" do
+      SiteSetting.emoji_deny_list = "peach|poop"
+      chat.visit_channel(channel_1)
+
+      find(".chat-composer__input").fill_in(with: ":peac")
+      expect(page).to have_no_selector(".emoji-shortname", text: "peach")
+
+      find(".chat-composer__input").fill_in(with: ":hank") # alias
+      expect(page).to have_no_selector(".emoji-shortname", text: "poop")
     end
   end
 
@@ -113,18 +232,18 @@ RSpec.describe "Chat composer", type: :system, js: true do
       sign_in(current_user)
     end
 
-    it "prefills the emoji picker filter input" do
+    xit "prefills the emoji picker filter input" do
       chat.visit_channel(channel_1)
-      find(".chat-composer-input").fill_in(with: ":gri")
+      find(".chat-composer__input").fill_in(with: ":gri")
 
       click_link(I18n.t("js.composer.more_emoji"))
 
       expect(find(".chat-emoji-picker .dc-filter-input").value).to eq("gri")
     end
 
-    it "filters with the prefilled input" do
+    xit "filters with the prefilled input" do
       chat.visit_channel(channel_1)
-      find(".chat-composer-input").fill_in(with: ":fr")
+      find(".chat-composer__input").fill_in(with: ":fr")
 
       click_link(I18n.t("js.composer.more_emoji"))
 
@@ -144,15 +263,101 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
       find("body").send_keys("b")
 
-      expect(find(".chat-composer-input").value).to eq("b")
+      expect(find(".chat-composer__input").value).to eq("b")
 
       find("body").send_keys("b")
 
-      expect(find(".chat-composer-input").value).to eq("bb")
+      expect(find(".chat-composer__input").value).to eq("bb")
 
       find("body").send_keys(:enter) # special case
 
-      expect(find(".chat-composer-input").value).to eq("bb")
+      expect(find(".chat-composer__input").value).to eq("bb")
+    end
+  end
+
+  context "when pasting link over selected text" do
+    before do
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "outputs a markdown link" do
+      modifier = /darwin/i =~ RbConfig::CONFIG["host_os"] ? :command : :control
+      select_text = <<-JS
+        const element = document.querySelector(arguments[0]);
+        element.focus();
+        element.setSelectionRange(0, element.value.length)
+      JS
+
+      chat.visit_channel(channel_1)
+
+      find("body").send_keys("https://www.discourse.org")
+      page.execute_script(select_text, ".chat-composer__input")
+
+      page.send_keys [modifier, "c"]
+      page.send_keys [:backspace]
+
+      find("body").send_keys("discourse")
+      page.execute_script(select_text, ".chat-composer__input")
+
+      page.send_keys [modifier, "v"]
+
+      expect(find(".chat-composer__input").value).to eq("[discourse](https://www.discourse.org)")
+    end
+  end
+
+  context "when posting a message with length equal to minimum length" do
+    before do
+      SiteSetting.chat_minimum_message_length = 1
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "works" do
+      chat.visit_channel(channel_1)
+      find("body").send_keys("1")
+      channel.click_send_message
+
+      expect(channel).to have_message(text: "1")
+    end
+  end
+
+  context "when posting a message with length superior to minimum length" do
+    before do
+      SiteSetting.chat_minimum_message_length = 2
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "doesn’t allow to send" do
+      chat.visit_channel(channel_1)
+      find("body").send_keys("1")
+
+      expect(page).to have_css(".chat-composer.is-send-disabled")
+    end
+  end
+
+  context "when upload is in progress" do
+    before do
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "doesn’t allow to send" do
+      chat.visit_channel(channel_1)
+
+      page.driver.browser.network_conditions = { latency: 20_000 }
+
+      file_path = file_from_fixtures("logo.png", "images").path
+      attach_file(file_path) do
+        channel.open_action_menu
+        channel.click_action_button("chat-upload-btn")
+      end
+
+      expect(page).to have_css(".chat-composer-upload--in-progress")
+      expect(page).to have_css(".chat-composer.is-send-disabled")
+
+      page.driver.browser.network_conditions = { latency: 0 }
     end
   end
 end

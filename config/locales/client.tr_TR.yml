@@ -155,6 +155,8 @@ tr_TR:
       removed_user: "%{who} adlı kullanıcıyı çıkardı, %{when}"
       removed_group: "%{who} adlı kullanıcıyı çıkardı, %{when}"
       autobumped: "Otomatik olarak üste sıçradı, %{when}"
+      tags_changed: "Etiketler güncellendi (%{when})"
+      category_changed: "Kategori güncellendi (%{when})"
       autoclosed:
         enabled: "Kapattı, %{when}"
         disabled: "Açtı, %{when}"
@@ -184,12 +186,7 @@ tr_TR:
     software_update_prompt:
       message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik davranışlarla karşılaşabilirsiniz."
       dismiss: "Kapat"
-    bootstrap_mode_enabled:
-      one: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara 1. güven seviyesi verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılır."
-      other: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara 1. güven seviyesi verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılır."
-    bootstrap_mode_disabled: "Önyükleme modu 24 saat içinde devre dışı bırakılır."
-    bootstrap_invite_button_title: "Davet Gönder"
-    bootstrap_wizard_link_title: "Kurulum sihirbazını bitir"
+    bootstrap_mode: "Bootstrap modu"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir temada / bileşende hata olduğu için siteniz çalışmayabilir."
@@ -348,7 +345,7 @@ tr_TR:
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni kişisel ileti taslağı"
       abandon:
-        confirm: "Bu konu için devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
+        confirm: "Halihazırda bir taslağınız var. Bununla ne yapmak istersiniz?"
         yes_value: "Kapat"
         no_value: "Düzenlemeyi sürdür"
     topic_count_categories:
@@ -1183,13 +1180,6 @@ tr_TR:
       save_to_change_theme: 'Tema "%{save_text}" düğmesine tıklandıktan sonra güncellenir'
       home: "Varsayılan Ana Sayfa"
       staged: "Aşamalı"
-      staff_counters:
-        flags_given: "yardımcı bayraklar"
-        flagged_posts: "bayrak eklenen gönderiler"
-        deleted_posts: "silinen gönderiler"
-        suspensions: "uzaklaştırmalar"
-        warnings_received: "uyarılar"
-        rejected_posts: "reddedilen gönderiler"
       messages:
         all: "tüm gelen kutuları"
         inbox: "Gelen Kutusu"
@@ -1296,11 +1286,12 @@ tr_TR:
         title: "İki Adımlı Yedek Kodları"
         regenerate: "Yeniden oluştur"
         disable: "Devre dışı bırak"
-        enable: "Etkinleştir"
-        enable_long: "Yedek kodları etkinleştir"
+        enable: "Yedek kodları oluştur"
+        enable_long: "Yedek kodları ekle"
+        not_enabled: "Henüz yedek kod oluşturmadınız."
         manage:
-          one: "Yedek kodları yönetin. <strong>%{count}</strong> yedek kodunuz kaldı."
-          other: "Yedek kodları yönetin. <strong>%{count}</strong> yedek kodunuz kaldı."
+          one: "<strong>%{count}</strong> yedek kodunuz kaldı."
+          other: "<strong>%{count}</strong> yedek kodunuz kaldı."
         copy_to_clipboard: "Panoya kopyala"
         copy_to_clipboard_error: "Veriler Panoya kopyalanırken hata oluştu"
         copied_to_clipboard: "Panoya kopyalandı"
@@ -1384,6 +1375,7 @@ tr_TR:
         success: "Adrese bir e-posta gönderdik. Lütfen onaylama talimatlarını izleyin."
         success_via_admin: "Bu adrese bir e-posta gönderdik. Kullanıcının e-postadaki onay talimatlarını izlemesi gerekiyor."
         success_staff: "Mevcut adresinize bir e-posta gönderdik. Lütfen onay talimatlarını izleyin."
+        back_to_preferences: "Tercihlere geri dön"
       change_avatar:
         title: "Profil resminizi değiştirin"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, şuna dayalı"
@@ -3988,9 +3980,27 @@ tr_TR:
           delete: "Sil"
           public: "Bu bölümü herkese açık ve herkes tarafından görülebilir hale getir"
           links:
-            icon: "Simge"
-            name: "Ad"
-            value: "Bağlantı"
+            icon:
+              label: "Simge"
+              validation:
+                blank: "Simge boş olamaz"
+                maximum: "Simge %{count} karakterden kısa olmalıdır"
+            name:
+              label: "Ad"
+              validation:
+                blank: "İsim boş olamaz"
+                maximum: "İsim %{count} karakterden kısa olmalıdır"
+            value:
+              label: "Bağlantı"
+              validation:
+                blank: "Bağlantı boş olamaz"
+                maximum: "Bağlantı %{count} karakterden kısa olmalıdır"
+                invalid: "Biçim geçersiz"
+          title:
+            label: "Bölüm başlığı"
+            validation:
+              blank: "Başlık boş olamaz"
+              maximum: "Başlık %{count} karakterden kısa olmalıdır"
         about:
           header_link_text: "Hakkında"
         messages:
@@ -4394,8 +4404,8 @@ tr_TR:
           name: "Kullanıcı Tarafından Tanıtılan Olay"
           details: "Bir kullanıcı bir güven seviyesinden diğerine terfi ettiğinde."
         user_badge_event:
-          name: "Rozet Verme Olayı"
-          details: "Bir kullanıcı bir rozet aldığında."
+          name: "Rozet Olayı"
+          details: "Bir rozet verildiğinde veya iptal edildiğinde."
         group_user_event:
           name: "Grup Kullanıcı Olayı"
           details: "Bir kullanıcı bir gruba eklendiğinde veya gruptan çıkarıldığında."
@@ -5058,14 +5068,8 @@ tr_TR:
           silence: "Sustur"
           link: "Bağlantı"
         action_descriptions:
-          block: "Bu kelimeleri içeren gönderilerin yayınlanmasını engelleyin. Kullanıcı, gönderisini göndermeye çalıştığında bir hata mesajı görür."
-          censor: "Bu kelimeleri içeren gönderilere izin verin, ancak bunları sansürlü kelimeleri gizleyen karakterlerle değiştirin."
-          require_approval: "Bu kelimeleri içeren gönderilerin görülebilmesi için personel tarafından onaylanması gerekir."
-          flag: "Bu kelimeleri içeren gönderilere izin verin, ancak moderatörlerin inceleyebilmesi için bunlara uygunsuz bayrağı ekleyin."
-          replace: "Gönderilerdeki kelimeleri başka kelimelerle değiştirin"
-          tag: "Konuları ilk gönderiye göre otomatik olarak etiketleyin"
-          silence: "Kullanıcıların bu kelimeleri içeren ilk gönderilerinin görülebilmesi için personel tarafından onaylanması gerekir ve kullanıcı otomatik olarak susturulur."
-          link: "Gönderilerdeki kelimeleri bağlantılarla değiştirin"
+          replace: "Gönderilerdeki kelimeleri başka kelimelerle değiştirin."
+          link: "Gönderilerdeki kelimeleri bağlantılarla değiştirin."
         form:
           label: "Kelime veya kelime öbeği içerir"
           placeholder: "Kelime veya kelime öbeği girin (* joker karakterdir)"

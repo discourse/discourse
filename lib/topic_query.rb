@@ -269,10 +269,19 @@ class TopicQuery
   end
 
   def list_filter
-    results =
-      TopicsFilter.new(guardian: @guardian, scope: latest_results).filter_from_query_string(
-        @options[:q],
+    topics_filter =
+      TopicsFilter.new(
+        guardian: @guardian,
+        scope: latest_results(include_muted: false, skip_ordering: true),
       )
+
+    results = topics_filter.filter_from_query_string(@options[:q])
+
+    if !topics_filter.topic_notification_levels.include?(NotificationLevels.all[:muted])
+      results = remove_muted_topics(results, @user)
+    end
+
+    results = apply_ordering(results) if results.order_values.empty?
 
     create_list(:filter, {}, results)
   end
@@ -460,6 +469,8 @@ class TopicQuery
     options[:filter] ||= filter
     topics ||= default_results(options)
     topics = yield(topics) if block_given?
+    topics =
+      DiscoursePluginRegistry.apply_modifier(:topic_query_create_list_topics, topics, options, self)
 
     options = options.merge(@options)
     if %w[activity default].include?(options[:order] || "activity") && !options[:unordered] &&
@@ -612,7 +623,7 @@ class TopicQuery
     result.where("topics.category_id != ?", drafts_category_id)
   end
 
-  def apply_ordering(result, options)
+  def apply_ordering(result, options = {})
     sort_column = SORTABLE_MAPPING[options[:order]] || "default"
     sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
 
@@ -721,8 +732,12 @@ class TopicQuery
       end
     end
 
-    result = filter_by_tags(result)
-    result = apply_ordering(result, options)
+    if SiteSetting.tagging_enabled
+      result = result.includes(:tags)
+      result = filter_by_tags(result)
+    end
+
+    result = apply_ordering(result, options) if !options[:skip_ordering]
 
     all_listable_topics =
       @guardian.filter_allowed_categories(
@@ -840,7 +855,11 @@ class TopicQuery
   end
 
   def remove_muted(list, user, options)
-    list = remove_muted_topics(list, user) unless options && options[:state] == "muted"
+    if options && (options[:include_muted].nil? || options[:include_muted]) &&
+         options[:state] != "muted"
+      list = remove_muted_topics(list, user)
+    end
+
     list = remove_muted_categories(list, user, exclude: options[:category])
     TopicQuery.remove_muted_tags(list, user, options)
   end
@@ -1151,8 +1170,6 @@ class TopicQuery
   end
 
   def filter_by_tags(result)
-    return result if !SiteSetting.tagging_enabled
-
     tags_arg = @options[:tags]
 
     if tags_arg && tags_arg.size > 0

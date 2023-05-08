@@ -58,12 +58,12 @@ acceptance("Discourse Chat - Composer", function (needs) {
     };
 
     document
-      .querySelector(".chat-composer-input")
+      .querySelector(".chat-composer__input")
       .dispatchEvent(clipboardEvent);
 
     await settled();
 
-    assert.equal(document.querySelector(".chat-composer-input").value, "Foo");
+    assert.equal(document.querySelector(".chat-composer__input").value, "Foo");
   });
 });
 
@@ -97,7 +97,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
 
   skip("Sending a message with unreliable network", async function (assert) {
     await visit("/chat/c/-/11");
-    await fillIn(".chat-composer-input", "network-error-message");
+    await fillIn(".chat-composer__input", "network-error-message");
     await click(".send-btn");
 
     assert.ok(
@@ -105,7 +105,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
       "it adds a retry button"
     );
 
-    await fillIn(".chat-composer-input", "network-error-message");
+    await fillIn(".chat-composer__input", "network-error-message");
     await click(".send-btn");
     await publishToMessageBus(`/chat/11`, {
       type: "sent",
@@ -126,7 +126,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
       "it sends the message"
     );
     assert.strictEqual(
-      query(".chat-composer-input").value,
+      query(".chat-composer__input").value,
       "",
       "it clears the input"
     );

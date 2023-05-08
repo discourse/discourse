@@ -147,6 +147,10 @@ html {
     color: var(--primary-high);
   }
 
+  .topic-list .posters a:first-child .avatar.latest:not(.single) {
+    box-shadow: 0 0 0 2px var(--tertiary);
+  }
+
   // Posts
 
   .discourse-no-touch .topic-body .actions .fade-out {
@@ -301,4 +305,24 @@ html {
   .d-editor-preview mark {
     background-color: yellow; // resets to browser default
   }
+}
+
+// chat
+
+.no-touch
+  .chat-messages-container
+  .chat-message:hover
+  .chat-message-react-btn:hover {
+  .d-icon {
+    color: var(--primary) !important;
+  }
+}
+
+// sidebar
+
+.sidebar-wrapper
+  .sidebar-sections
+  .sidebar-section-link-suffix.icon.unread
+  svg {
+  color: var(--tertiary);
 }

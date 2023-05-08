@@ -111,10 +111,10 @@ sk:
         many: príliiš dlhé (maximum je %{count} znakov)
         other: príliiš dlhé (maximum je %{count} znakov)
       too_short:
-        one: príliiš krátke (minimum je %{count} znak)
-        few: príliiš krátke (minimum je %{count} znaky)
-        many: príliiš krátke (minimum je %{count} znakov)
-        other: príliiš krátke (minimum je %{count} znakov)
+        one: príliš krátke (minimum je %{count} znak)
+        few: príliš krátke (minimum je %{count} znaky)
+        many: príliš krátke (minimum je %{count} znakov)
+        other: príliš krátke (minimum je %{count} znakov)
       wrong_length:
         one: nesprávna dĺžka (musí byť %{count} znak)
         few: nesprávna dĺžka (musí byť %{count} znaky)
@@ -261,6 +261,16 @@ sk:
       few: "%{count} príspevky"
       many: "%{count} príspevkov"
       other: "%{count} príspevkov"
+    "new-reply": |
+      Vitajte na stránke %{site_name} &mdash; **ďakujeme, že prispievate!**
+
+      - Buďte milí k ostatným členom komunity.
+
+      - Prispieva vaša odpoveď ku konverzácii?
+
+      - Konštruktívna kritika je vítaná, kritizujte však *myšlienky*, nie ľudí.
+
+      Pre viac informácií, [si prečítajte naše pokyny pre komunitu](%{base_path}/guidelines). Hneď potom, ako v rámci vášho nového účtu napíšete %{education_posts_text}, sa už tento panel viac nebude zobrazovať.
     avatar: |2
 
       ### Čo takto nastaviť svoj profilový obrázok?
@@ -1006,7 +1016,6 @@ sk:
     default_categories_watching: "Štandardný zoznam kategórií, ktoré sú pozerané."
     default_categories_tracking: "Štandardný zoznam kategórií, ktoré sú sledované."
     default_categories_muted: "Štandardný zoznam kategórií, ktoré sú vypnuté."
-    min_trust_level_for_user_api_key: "Stupeň dôvery potrebný na generovanie používateľských API kľúčov"
     min_trust_to_create_tag: "Minimálny stupeň dôvery potrebný na vytvorenie štítku"
     min_trust_level_to_tag_topics: "Minimálny stupeň dôvery potrebný na štítkovanie tém"
     errors:

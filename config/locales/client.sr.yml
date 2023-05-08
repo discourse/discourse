@@ -191,7 +191,6 @@ sr:
     software_update_prompt:
       message: "Ажурирали смо сајт. <span>Освежите страницу</span> да бисте избегли непријатности."
       dismiss: "Одбаци"
-    bootstrap_mode_disabled: "Режим покретања ће бити искључен у року од 24 сата."
     themes:
       default_description: "Подразумевано"
     s3:
@@ -332,7 +331,6 @@ sr:
       new_topic: "Novi nacrt teme"
       new_private_message: "Nacrt nove privatne poruke"
       abandon:
-        confirm: "Imate nacrt za ovu temu. Sta želite da učinite sa njim?"
         yes_value: "Odbaci"
         no_value: "Nastavi sa uređivanjem"
     topic_count_categories:
@@ -714,12 +712,6 @@ sr:
       muted_users: "Utišano"
       tracked_topics_link: "Prikaži"
       api_approved: "Potvrđenji:"
-      staff_counters:
-        flags_given: "pomoćne oznake"
-        flagged_posts: "označene poruke"
-        deleted_posts: "obrisane poruke"
-        suspensions: "suspenzije"
-        warnings_received: "upozorenja"
       messages:
         inbox: "Primljeno"
         latest: "Poslednje"
@@ -752,7 +744,6 @@ sr:
       second_factor_backup:
         regenerate: "Regeneriši"
         disable: "Onemogući"
-        enable: "Omogući"
       second_factor:
         name: "Ime foruma"
         disable: "Onemogući"
@@ -1822,8 +1813,10 @@ sr:
           save: "Sačuvaj"
           delete: "Obriši"
           links:
-            icon: "Ikona"
-            name: "Ime foruma"
+            icon:
+              label: "Ikona"
+            name:
+              label: "Ime"
         about:
           header_link_text: "O nama"
         messages:

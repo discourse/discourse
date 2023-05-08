@@ -42,7 +42,8 @@ export default {
       chatService.switchChannelUpOrDown("down");
     };
 
-    const isChatComposer = (el) => el.classList.contains("chat-composer-input");
+    const isChatComposer = (el) =>
+      el.classList.contains("chat-composer__input");
     const isInputSelection = (el) => {
       const inputs = ["input", "textarea", "select", "button"];
       const elementTagName = el?.tagName.toLowerCase();
@@ -58,7 +59,10 @@ export default {
       }
       event.preventDefault();
       event.stopPropagation();
-      appEvents.trigger("chat:modify-selection", { type });
+      appEvents.trigger("chat:modify-selection", event, {
+        type,
+        context: event.target.dataset.chatComposerContext,
+      });
     };
 
     const openInsertLinkModal = (event) => {
@@ -67,7 +71,9 @@ export default {
       }
       event.preventDefault();
       event.stopPropagation();
-      appEvents.trigger("chat:open-insert-link-modal", { event });
+      appEvents.trigger("chat:open-insert-link-modal", event, {
+        context: event.target.dataset.chatComposerContext,
+      });
     };
 
     const openChatDrawer = (event) => {

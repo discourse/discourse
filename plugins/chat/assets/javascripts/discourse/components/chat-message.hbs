@@ -1,227 +1,206 @@
 {{! template-lint-disable no-invalid-interactive }}
 
-<ChatMessageSeparatorDate @message={{@message}} />
-<ChatMessageSeparatorNew @message={{@message}} />
+{{#if this.shouldRender}}
+  {{#if (eq @context "channel")}}
+    <ChatMessageSeparatorDate @message={{@message}} />
+    <ChatMessageSeparatorNew @message={{@message}} />
+  {{/if}}
 
-{{#if
-  (and
-    this.showActions this.site.mobileView this.chatMessageActionsMobileAnchor
-  )
-}}
-  {{#in-element this.chatMessageActionsMobileAnchor}}
-    <ChatMessageActionsMobile
-      @message={{@message}}
-      @emojiReactions={{this.emojiReactions}}
-      @secondaryButtons={{this.secondaryButtons}}
-      @messageActions={{this.messageActions}}
-      @messageCapabilities={{this.messageCapabilities}}
-      @onHoverMessage={{@onHoverMessage}}
-    />
-  {{/in-element}}
-{{/if}}
-
-{{#if
-  (and
-    this.showActions this.site.desktopView this.chatMessageActionsDesktopAnchor
-  )
-}}
-  {{#in-element this.chatMessageActionsDesktopAnchor}}
-    <ChatMessageActionsDesktop
-      @message={{@message}}
-      @emojiReactions={{this.emojiReactions}}
-      @secondaryButtons={{this.secondaryButtons}}
-      @messageActions={{this.messageActions}}
-      @messageCapabilities={{this.messageCapabilities}}
-    />
-  {{/in-element}}
-{{/if}}
-
-<div
-  {{will-destroy this.teardownChatMessage}}
-  {{did-insert this.setMessageActionsAnchors}}
-  {{did-insert this.decorateCookedMessage}}
-  {{did-update this.decorateCookedMessage @message.id}}
-  {{did-update this.decorateCookedMessage @message.version}}
-  {{on "touchmove" this.handleTouchMove passive=true}}
-  {{on "touchstart" this.handleTouchStart passive=true}}
-  {{on "touchend" this.handleTouchEnd passive=true}}
-  {{on "mouseenter" (fn @onHoverMessage @message (hash desktopOnly=true))}}
-  {{on "mousemove" (fn @onHoverMessage @message (hash desktopOnly=true))}}
-  {{on "mouseleave" (fn @onHoverMessage null (hash desktopOnly=true))}}
-  class={{concat-class
-    "chat-message-container"
-    (if @isHovered "is-hovered")
-    (if @selectingMessages "selecting-messages")
-    (if @message.highlighted "highlighted")
-  }}
-  data-id={{@message.id}}
-  {{chat/track-message
-    (hash
-      didEnterViewport=(fn @messageDidEnterViewport @message)
-      didLeaveViewport=(fn @messageDidLeaveViewport @message)
-    )
-  }}
->
-  {{#if this.show}}
-    {{#if @selectingMessages}}
-      <Input
-        @type="checkbox"
-        class="chat-message-selector"
-        @checked={{@message.selected}}
-        {{on "click" this.toggleChecked}}
-      />
-    {{/if}}
-
-    {{#if this.deletedAndCollapsed}}
-      <div class="chat-message-deleted">
-        <DButton
-          @class="btn-flat chat-message-expand"
-          @action={{this.expand}}
-          @label="chat.deleted"
+  <div
+    {{will-destroy this.teardownChatMessage}}
+    {{did-insert this.decorateCookedMessage}}
+    {{did-update this.decorateCookedMessage @message.id}}
+    {{did-update this.decorateCookedMessage @message.version}}
+    {{on "touchmove" this.handleTouchMove passive=true}}
+    {{on "touchstart" this.handleTouchStart passive=true}}
+    {{on "touchend" this.handleTouchEnd passive=true}}
+    {{on "mouseenter" this.onMouseEnter}}
+    {{on "mouseleave" this.onMouseLeave}}
+    {{on "mousemove" this.onMouseMove}}
+    class={{concat-class
+      "chat-message-container"
+      (if this.pane.selectingMessages "selecting-messages")
+      (if @message.highlighted "highlighted")
+    }}
+    data-id={{@message.id}}
+    data-thread-id={{@message.thread.id}}
+    {{chat/track-message
+      (hash
+        didEnterViewport=(fn @messageDidEnterViewport @message)
+        didLeaveViewport=(fn @messageDidLeaveViewport @message)
+      )
+    }}
+  >
+    {{#if this.show}}
+      {{#if this.pane.selectingMessages}}
+        <Input
+          @type="checkbox"
+          class="chat-message-selector"
+          @checked={{@message.selected}}
+          {{on "click" this.toggleChecked}}
         />
-      </div>
-    {{else if this.hiddenAndCollapsed}}
-      <div class="chat-message-hidden">
-        <DButton
-          @class="btn-flat chat-message-expand"
-          @action={{this.expand}}
-          @label="chat.hidden"
-        />
-      </div>
-    {{else}}
-      <div
-        class={{concat-class
-          "chat-message"
-          (if @message.staged "chat-message-staged")
-          (if @message.deletedAt "deleted")
-          (if (and @message.inReplyTo (not this.hideReplyToInfo)) "is-reply")
-          (if this.hideUserInfo "user-info-hidden")
-          (if @message.error "errored")
-          (if @message.bookmark "chat-message-bookmarked")
-          (if @isHovered "chat-message-selected")
-        }}
-      >
-        {{#unless this.hideReplyToInfo}}
-          <ChatMessageInReplyToIndicator @message={{@message}} />
-        {{/unless}}
+      {{/if}}
 
-        {{#if this.hideUserInfo}}
-          <ChatMessageLeftGutter @message={{@message}} />
-        {{else}}
-          <ChatMessageAvatar @message={{@message}} />
-        {{/if}}
-
-        <div class="chat-message-content">
-          {{#unless this.hideUserInfo}}
-            <ChatMessageInfo @message={{@message}} />
+      {{#if this.deletedAndCollapsed}}
+        <div class="chat-message-deleted">
+          <DButton
+            @class="btn-flat chat-message-expand"
+            @action={{this.expand}}
+            @translatedLabel={{this.deletedMessageLabel}}
+          />
+        </div>
+      {{else if this.hiddenAndCollapsed}}
+        <div class="chat-message-hidden">
+          <DButton
+            @class="btn-flat chat-message-expand"
+            @action={{this.expand}}
+            @label="chat.hidden"
+          />
+        </div>
+      {{else}}
+        <div
+          class={{concat-class
+            "chat-message"
+            (if @message.staged "chat-message-staged")
+            (if @message.deletedAt "deleted")
+            (if (and @message.inReplyTo (not this.hideReplyToInfo)) "is-reply")
+            (if this.showThreadIndicator "is-threaded")
+            (if this.hideUserInfo "user-info-hidden")
+            (if @message.error "errored")
+            (if @message.bookmark "chat-message-bookmarked")
+            (if (eq @message.id this.chat.activeMessage.model.id) "is-active")
+          }}
+        >
+          {{#unless this.hideReplyToInfo}}
+            <ChatMessageInReplyToIndicator @message={{@message}} />
           {{/unless}}
 
-          <ChatMessageText
-            @cooked={{@message.cooked}}
-            @uploads={{@message.uploads}}
-            @edited={{@message.edited}}
-          >
-            {{#if @message.reactions.length}}
-              <div class="chat-message-reaction-list">
-                {{#if this.reactionLabel}}
-                  <div class="reaction-users-list">
-                    {{replace-emoji this.reactionLabel}}
-                  </div>
-                {{/if}}
+          {{#if this.hideUserInfo}}
+            <ChatMessageLeftGutter @message={{@message}} />
+          {{else}}
+            <ChatMessageAvatar @message={{@message}} />
+          {{/if}}
 
-                {{#each @message.reactions as |reaction|}}
-                  <ChatMessageReaction
-                    @reaction={{reaction}}
-                    @react={{this.react}}
-                    @showTooltip={{true}}
-                  />
-                {{/each}}
+          <div class="chat-message-content">
+            {{#unless this.hideUserInfo}}
+              <ChatMessageInfo @message={{@message}} />
+            {{/unless}}
 
-                {{#if @canInteractWithChat}}
-                  {{#unless this.site.mobileView}}
-                    <DButton
-                      @class="chat-message-react-btn"
-                      @action={{this.startReactionForReactionList}}
-                      @icon="discourse-emojis"
-                      @title="chat.react"
+            <ChatMessageText
+              @cooked={{@message.cooked}}
+              @uploads={{@message.uploads}}
+              @edited={{@message.edited}}
+            >
+              {{#if @message.reactions.length}}
+                <div class="chat-message-reaction-list">
+                  {{#if this.reactionLabel}}
+                    <div class="reaction-users-list">
+                      {{replace-emoji this.reactionLabel}}
+                    </div>
+                  {{/if}}
+
+                  {{#each @message.reactions as |reaction|}}
+                    <ChatMessageReaction
+                      @reaction={{reaction}}
+                      @onReaction={{this.messageInteractor.react}}
+                      @message={{@message}}
+                      @showTooltip={{true}}
                     />
-                  {{/unless}}
+                  {{/each}}
+
+                  {{#if this.chat.userCanInteractWithChat}}
+                    {{#unless this.site.mobileView}}
+                      <DButton
+                        @class="chat-message-react-btn"
+                        @action={{this.messageInteractor.openEmojiPicker}}
+                        @icon="discourse-emojis"
+                        @title="chat.react"
+                        @forwardEvent={{true}}
+                      />
+                    {{/unless}}
+                  {{/if}}
+                </div>
+              {{/if}}
+            </ChatMessageText>
+
+            {{#if @message.error}}
+              <div class="chat-send-error">
+                {{#if (eq @message.error "network_error")}}
+                  <DButton
+                    class="retry-staged-message-btn"
+                    @action={{fn @resendStagedMessage @message}}
+                    @icon="exclamation-circle"
+                  >
+                    <span class="retry-staged-message-btn__title">
+                      {{i18n "chat.retry_staged_message.title"}}
+                    </span>
+                    <span class="retry-staged-message-btn__action">
+                      {{i18n "chat.retry_staged_message.action"}}
+                    </span>
+                  </DButton>
+                {{else}}
+                  {{@message.error}}
                 {{/if}}
               </div>
             {{/if}}
-          </ChatMessageText>
 
-          {{#if @message.error}}
-            <div class="chat-send-error">
-              {{#if (eq @message.error "network_error")}}
-                <DButton
-                  class="retry-staged-message-btn"
-                  @action={{fn @resendStagedMessage @message}}
-                  @icon="exclamation-circle"
-                >
-                  <span class="retry-staged-message-btn__title">
-                    {{i18n "chat.retry_staged_message.title"}}
+            {{#if this.mentionWarning}}
+              <div class="alert alert-info chat-message-mention-warning">
+                {{#if this.mentionWarning.invitation_sent}}
+                  {{d-icon "check"}}
+                  <span>
+                    {{i18n
+                      "chat.mention_warning.invitations_sent"
+                      count=this.mentionWarning.without_membership.length
+                    }}
                   </span>
-                  <span class="retry-staged-message-btn__action">
-                    {{i18n "chat.retry_staged_message.action"}}
-                  </span>
-                </DButton>
-              {{else}}
-                {{@message.error}}
-              {{/if}}
-            </div>
-          {{/if}}
+                {{else}}
+                  <FlatButton
+                    @class="dismiss-mention-warning"
+                    @title="chat.mention_warning.dismiss"
+                    @action={{this.dismissMentionWarning}}
+                    @icon="times"
+                  />
 
-          {{#if this.mentionWarning}}
-            <div class="alert alert-info chat-message-mention-warning">
-              {{#if this.mentionWarning.invitation_sent}}
-                {{d-icon "check"}}
-                <span>
-                  {{i18n
-                    "chat.mention_warning.invitations_sent"
-                    count=this.mentionWarning.without_membership.length
-                  }}
-                </span>
-              {{else}}
-                <FlatButton
-                  @class="dismiss-mention-warning"
-                  @title="chat.mention_warning.dismiss"
-                  @action={{this.dismissMentionWarning}}
-                  @icon="times"
-                />
+                  {{#if this.mentionWarning.cannot_see}}
+                    <p class="warning-item cannot-see">
+                      {{this.mentionedCannotSeeText}}
+                    </p>
+                  {{/if}}
 
-                {{#if this.mentionWarning.cannot_see}}
-                  <p class="warning-item cannot-see">
-                    {{this.mentionedCannotSeeText}}
-                  </p>
-                {{/if}}
+                  {{#if this.mentionWarning.without_membership}}
+                    <p class="warning-item without-membership">
+                      <span>{{this.mentionedWithoutMembershipText}}</span>
+                      <a
+                        class="invite-link"
+                        href
+                        onclick={{this.inviteMentioned}}
+                      >
+                        {{i18n "chat.mention_warning.invite"}}
+                      </a>
+                    </p>
+                  {{/if}}
+                  {{#if this.mentionWarning.group_mentions_disabled}}
+                    <p class="warning-item">
+                      {{this.groupsWithDisabledMentions}}
+                    </p>
+                  {{/if}}
 
-                {{#if this.mentionWarning.without_membership}}
-                  <p class="warning-item without-membership">
-                    <span>{{this.mentionedWithoutMembershipText}}</span>
-                    <a
-                      class="invite-link"
-                      href
-                      onclick={{this.inviteMentioned}}
-                    >
-                      {{i18n "chat.mention_warning.invite"}}
-                    </a>
-                  </p>
+                  {{#if this.mentionWarning.groups_with_too_many_members}}
+                    <p
+                      class="warning-item"
+                    >{{this.groupsWithTooManyMembers}}</p>
+                  {{/if}}
                 {{/if}}
-                {{#if this.mentionWarning.group_mentions_disabled}}
-                  <p class="warning-item">
-                    {{this.groupsWithDisabledMentions}}
-                  </p>
-                {{/if}}
+              </div>
+            {{/if}}
+          </div>
 
-                {{#if this.mentionWarning.groups_with_too_many_members}}
-                  <p class="warning-item">{{this.groupsWithTooManyMembers}}</p>
-                {{/if}}
-              {{/if}}
-            </div>
+          {{#if this.showThreadIndicator}}
+            <ChatMessageThreadIndicator @message={{@message}} />
           {{/if}}
         </div>
-      </div>
+      {{/if}}
     {{/if}}
-  {{/if}}
-</div>
+  </div>
+{{/if}}

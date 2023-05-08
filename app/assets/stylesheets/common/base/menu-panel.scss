@@ -216,6 +216,12 @@
         margin: 0;
         padding: 0 0.5em;
       }
+      img.emoji {
+        height: 1em;
+        width: 1em;
+        padding-top: 0.2em;
+        margin-right: 0.5em;
+      }
       .d-icon {
         padding-top: 0;
       }
@@ -506,13 +512,6 @@
         padding-top: 0.2em;
         margin-right: 0.5em;
       }
-
-      img.emoji {
-        height: 1em;
-        width: 1em;
-        padding-top: 0.2em;
-        margin-right: 0.5em;
-      }
     }
     .is-warning {
       .d-icon-envelope {
@@ -712,6 +711,8 @@ body.footer-nav-ipad {
 .menu-panel.slide-in {
   top: var(--header-top);
   box-sizing: border-box;
+  // ensure there's always space to click outside on tiny devices
+  max-width: 90vw;
 
   --100dvh: 100%;
   @supports (height: 100dvh) {

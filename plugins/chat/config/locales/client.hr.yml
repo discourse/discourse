@@ -140,6 +140,7 @@ hr:
       composer:
         italic_text: "naglašen tekst"
         bold_text: "jaki text"
+        send: "Pošalji"
       notification_levels:
         never: "Nikad"
       settings:
@@ -178,6 +179,11 @@ hr:
         activities: "Aktivnosti"
         flags: "Oznake zastavicom"
         symbols: "Simboli"
+      thread:
+        replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
       draft_channel_screen:
         header: "Nova poruka"
         cancel: "Odustani"
@@ -190,10 +196,6 @@ hr:
           fields:
             message:
               label: Poruka
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Označio"
     keyboard_shortcuts_help:
       chat:
         title: "Čet"

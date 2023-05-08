@@ -152,6 +152,7 @@ zh_TW:
       composer:
         italic_text: "斜體字"
         bold_text: "粗體字"
+        send: "發送"
       notification_levels:
         never: "永不"
       settings:
@@ -191,6 +192,9 @@ zh_TW:
         flags: "投訴"
         symbols: "象徵<br>"
         no_results: "沒有結果"
+      thread:
+        replies:
+          other: "%{count}個回覆"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"
@@ -202,10 +206,6 @@ zh_TW:
           fields:
             message:
               label: 訊息
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "標記由"
     keyboard_shortcuts_help:
       chat:
         title: "聊天"

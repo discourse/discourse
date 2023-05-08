@@ -251,6 +251,7 @@ nl:
         italic_text: "Cursieve tekst"
         bold_text: "Vetgedrukte tekst"
         code_text: "codetekst"
+        send: "Verzenden"
       quote:
         original_channel: 'Oorspronkelijk gestuurd in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chatcitaat gekopieerd naar klembord"
@@ -361,6 +362,10 @@ nl:
         symbols: "Symbolen"
         search_placeholder: "Zoek op emojinaam en -alias..."
         no_results: "Geen resultaten"
+      thread:
+        replies:
+          one: "%{count} antwoord"
+          other: "%{count} antwoorden"
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"
@@ -405,9 +410,8 @@ nl:
       transcript:
         view: "Transcript van eerdere berichten weergeven"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Gemarkeerd chatbericht"
-          flagged_by: "Gemarkeerd door"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

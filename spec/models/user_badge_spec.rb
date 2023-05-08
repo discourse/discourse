@@ -31,6 +31,22 @@ RSpec.describe UserBadge do
     end
   end
 
+  describe "#destroy" do
+    it "triggers the 'user_badge_revoked' DiscourseEvent" do
+      user_badge =
+        UserBadge.create(
+          badge: badge,
+          user: user,
+          granted_at: Time.zone.now,
+          granted_by: Discourse.system_user,
+        )
+
+      event = DiscourseEvent.track(:user_badge_revoked) { user_badge.destroy! }
+
+      expect(event).to be_present
+    end
+  end
+
   describe "featured rank" do
     fab!(:user) { Fabricate(:user) }
     fab!(:user_badge_tl1) do

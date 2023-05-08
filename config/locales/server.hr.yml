@@ -1208,7 +1208,6 @@ hr:
     discourse_connect_overrides_profile_background: "Nadjačava pozadinu korisničkog profila vrijednošću iz nosivosti DiscourseConnecta."
     discourse_connect_overrides_card_background: "Zamjenjuje pozadinu korisničke kartice s vrijednošću iz sadržaja DiscourseConnect."
     discourse_connect_not_approved_url: "Preusmjerite neodobrene DiscourseConnect račune na ovaj URL"
-    discourse_connect_allows_all_return_paths: "Nemojte ograničavati domenu za return_paths koje pruža DiscourseConnect (prema zadanim postavkama povratna staza mora biti na trenutnom mjestu)"
     enable_local_logins: "Omogućite račune temeljene na prijavi s lokalnim korisničkim imenom i lozinkom. UPOZORENJE: ako je onemogućeno, možda se nećete moći prijaviti ako prethodno niste konfigurirali barem jedan alternativni način prijave."
     enable_local_logins_via_email: "Omogućite korisnicima da zatraže vezu za prijavu jednim klikom da im se pošalje putem e-pošte."
     allow_new_registrations: "Dopusti registracije novih korisnika. Poništite ovu opciju kako biste spriječili bilo koga da stvori novi račun."
@@ -1392,11 +1391,9 @@ hr:
     allowed_href_schemes: "Sheme dopuštene u vezama uz http i https."
     embed_post_limit: "Maksimalan broj postova za ugradnju."
     embed_username_required: "Potrebno je korisničko ime za kreiranje teme."
-    notify_about_flags_after: "Ako postoje zastavice koje nisu obrađene nakon toliko sati, pošaljite osobnu poruku moderatorima. Postavite na 0 za onemogućavanje."
     show_create_topics_notice: "Ako stranica ima manje od 5 javnih tema, pokažite obavijest u kojoj se od administratora traži da kreiraju neke teme."
     delete_drafts_older_than_n_days: "Izbriši skice starije od (n) dana."
     delete_merged_stub_topics_after_days: "Broj dana čekanja prije automatskog brisanja potpuno spojenih tema. Postavite na 0 da nikada ne brišete nezavršene teme."
-    bootstrap_mode_min_users: "Minimalan broj korisnika potreban za onemogućavanje načina pokretanja (postavite na 0 za onemogućavanje)"
     prevent_anons_from_downloading_files: "Spriječite anonimne korisnike u preuzimanju privitaka."
     secure_uploads: 'Ograničava pristup SVIM prijenosima (slike, video, audio, tekst, pdf-ovi, zipovi i ostalo). Ako je "potrebna prijava" omogućena, samo prijavljeni korisnici mogu pristupiti učitavanjima. U suprotnom, pristup će biti ograničen samo na učitavanje medija u privatnim porukama i privatnim kategorijama. UPOZORENJE: Ova je postavka složena i zahtijeva duboko administrativno razumijevanje. Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/140017">sigurnu učitava temu na Meta</a> za detalje.'
     secure_uploads_allow_embed_images_in_emails: "Omogućuje ugrađivanje sigurnih slika koje bi se inače redigirale u e-porukama, ako je njihova veličina manja od postavke 'maksimalna veličina slike za ugrađivanje e-pošte u sigurne prijenose kb'."
@@ -1793,8 +1790,6 @@ hr:
     see_more: "Više"
     search_title: "Pretraži ovu stranicu"
     search_button: "Pretraži"
-  login_required:
-    welcome_message: "## [Dobrodošli na %{title}](#welcome)"
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije autorizirana (autorizirana proširenja: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."

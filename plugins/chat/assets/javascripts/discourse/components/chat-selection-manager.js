@@ -10,11 +10,13 @@ import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 
-export default class AdminCustomizeColorsShowController extends Component {
+export default class ChatSelectionManager extends Component {
   @service router;
   tagName = "";
   chatChannel = null;
+  context = null;
   selectedMessageIds = null;
   chatCopySuccess = false;
   showChatCopySuccess = false;
@@ -28,7 +30,9 @@ export default class AdminCustomizeColorsShowController extends Component {
   @computed("chatChannel.isDirectMessageChannel", "chatChannel.canModerate")
   get showMoveMessageButton() {
     return (
-      !this.chatChannel.isDirectMessageChannel && this.chatChannel.canModerate
+      this.context !== MESSAGE_CONTEXT_THREAD &&
+      !this.chatChannel.isDirectMessageChannel &&
+      this.chatChannel.canModerate
     );
   }
 
@@ -71,14 +75,14 @@ export default class AdminCustomizeColorsShowController extends Component {
     const openOpts = {};
 
     if (this.chatChannel.isCategoryChannel) {
-      openOpts.categoryId = this.chatChannel.chatable_id;
+      openOpts.categoryId = this.chatChannel.chatableId;
     }
 
     if (this.site.mobileView) {
       // go to the relevant chatable (e.g. category) and open the
       // composer to insert text
-      if (this.chatChannel.chatable_url) {
-        this.router.transitionTo(this.chatChannel.chatable_url);
+      if (this.chatChannel.chatableUrl) {
+        this.router.transitionTo(this.chatChannel.chatableUrl);
       }
 
       await composer.focusComposer({

@@ -69,7 +69,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_category_ids,
              :sidebar_list_destination,
              :sidebar_sections,
-             :custom_sidebar_sections_enabled,
              :new_new_view_enabled?
 
   delegate :user_stat, to: :object, private: true
@@ -79,9 +78,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def sidebar_sections
     SidebarSection
+      .public_sections
+      .or(SidebarSection.where(user_id: object.id))
       .includes(sidebar_section_links: :linkable)
-      .where("public OR user_id = ?", object.id)
-      .order("(public IS TRUE) DESC")
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
 
@@ -299,13 +299,5 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_new_personal_messages_notifications_count?
     redesigned_user_menu_enabled
-  end
-
-  def custom_sidebar_sections_enabled
-    if SiteSetting.enable_custom_sidebar_sections.present?
-      object.in_any_groups?(SiteSetting.enable_custom_sidebar_sections_map)
-    else
-      false
-    end
   end
 end

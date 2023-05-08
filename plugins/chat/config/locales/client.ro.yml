@@ -67,6 +67,7 @@ ro:
       composer:
         italic_text: "text italic"
         bold_text: "text aldin"
+        send: "Trimite"
       notification_levels:
         never: "Niciodată"
       settings:
@@ -99,6 +100,11 @@ ro:
       emoji_picker:
         objects: "Obiecte"
         flags: "Marcaje de avertizare"
+      thread:
+        replies:
+          one: "%{count} răspuns"
+          few: "%{count} răspunsuri"
+          other: "%{count} răspunsuri"
       draft_channel_screen:
         header: "Mesaj nou"
         cancel: "Anulare"
@@ -110,7 +116,3 @@ ro:
           fields:
             message:
               label: Mesaj
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Semnalat de"

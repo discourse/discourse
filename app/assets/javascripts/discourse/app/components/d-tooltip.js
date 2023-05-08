@@ -17,6 +17,10 @@ export default class DiscourseTooltip extends Component {
     this._tippyInstance.destroy();
   }
 
+  stopPropagation(instance, event) {
+    event.stopPropagation();
+  }
+
   _initTippy() {
     schedule("afterRender", () => {
       // Ember.ViewUtils.getViewBounds is a private API,
@@ -33,6 +37,8 @@ export default class DiscourseTooltip extends Component {
         theme: "d-tooltip",
         arrow: false,
         placement: "bottom-start",
+        onTrigger: this.stopPropagation,
+        onUntrigger: this.stopPropagation,
       });
     });
   }

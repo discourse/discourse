@@ -8,7 +8,7 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import { inject as service } from "@ember/service";
 import { schedule } from "@ember/runloop";
 import { gt, not } from "@ember/object/computed";
-import { createDirectMessageChannelDraft } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default Component.extend({
   tagName: "",
@@ -29,7 +29,7 @@ export default Component.extend({
 
     this.set("users", []);
     this.set("selectedUsers", []);
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
   },
 
   didInsertElement() {
@@ -163,7 +163,7 @@ export default Component.extend({
   @action
   handleFilterKeyUp(event) {
     if (event.key === "Tab") {
-      const enabledComposer = document.querySelector(".chat-composer-input");
+      const enabledComposer = document.querySelector(".chat-composer__input");
       if (enabledComposer && !enabledComposer.disabled) {
         event.preventDefault();
         event.stopPropagation();

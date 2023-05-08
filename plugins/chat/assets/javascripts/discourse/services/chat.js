@@ -8,7 +8,12 @@ import { cancel, next } from "@ember/runloop";
 import { and } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import discourseLater from "discourse-common/lib/later";
-import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import {
+  onPresenceChange,
+  removeOnPresenceChange,
+} from "discourse/lib/user-presence";
+import { bind } from "discourse-common/utils/decorators";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -16,21 +21,41 @@ const CHAT_ONLINE_OPTIONS = {
 };
 
 export default class Chat extends Service {
+  @service chatApi;
   @service appEvents;
+  @service currentUser;
   @service chatNotificationManager;
   @service chatSubscriptionsManager;
   @service chatStateManager;
   @service presence;
   @service router;
   @service site;
+
   @service chatChannelsManager;
-  @tracked activeChannel = null;
+  @service chatChannelPane;
+  @service chatChannelThreadPane;
+
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
   isNetworkUnreliable = false;
 
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
+
+  @tracked _activeMessage = null;
+  @tracked _activeChannel = null;
+
+  get activeChannel() {
+    return this._activeChannel;
+  }
+
+  set activeChannel(channel) {
+    if (!channel) {
+      this._activeMessage = null;
+    }
+
+    this._activeChannel = channel;
+  }
 
   @computed("currentUser.staff", "currentUser.groups.[]")
   get userCanDirectMessage() {
@@ -48,11 +73,58 @@ export default class Chat extends Service {
     );
   }
 
+  @computed("activeChannel.userSilenced")
+  get userCanInteractWithChat() {
+    return !this.activeChannel?.userSilenced;
+  }
+
+  get activeMessage() {
+    return this._activeMessage;
+  }
+
+  set activeMessage(hash) {
+    if (hash) {
+      this._activeMessage = hash;
+    } else {
+      this._activeMessage = null;
+    }
+  }
+
   init() {
     super.init(...arguments);
 
     if (this.userCanChat) {
       this.presenceChannel = this.presence.getChannel("/chat/online");
+
+      onPresenceChange({
+        callback: this.onPresenceChangeCallback,
+        browserHiddenTime: 150000,
+        userUnseenTime: 150000,
+      });
+    }
+  }
+
+  @bind
+  onPresenceChangeCallback(present) {
+    if (present) {
+      this.chatApi.listCurrentUserChannels().then((channels) => {
+        this.chatSubscriptionsManager.restartChannelsSubscriptions(
+          channels.meta.message_bus_last_ids
+        );
+
+        [
+          ...channels.public_channels,
+          ...channels.direct_message_channels,
+        ].forEach((channelObject) => {
+          this.chatChannelsManager
+            .find(channelObject.id, { fetchIfNotFound: false })
+            .then((channel) => {
+              if (channel) {
+                channel.updateMembership(channelObject.current_user_membership);
+              }
+            });
+        });
+      });
     }
   }
 
@@ -90,8 +162,15 @@ export default class Chat extends Service {
           const storedDraft = this.currentUser.chat_drafts.find(
             (draft) => draft.channel_id === channel.id
           );
-          channel.draft = ChatMessageDraft.create(
-            storedDraft ? JSON.parse(storedDraft.data) : null
+
+          channel.draft = ChatMessage.createDraftMessage(
+            channel,
+            Object.assign(
+              {
+                user: this.currentUser,
+              },
+              storedDraft ? JSON.parse(storedDraft.data) : {}
+            )
           );
         }
 
@@ -105,12 +184,17 @@ export default class Chat extends Service {
 
     if (this.userCanChat) {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
+      removeOnPresenceChange(this.onPresenceChangeCallback);
     }
   }
 
   updatePresence() {
     next(() => {
       if (this.isDestroyed || this.isDestroying) {
+        return;
+      }
+
+      if (this.currentUser.user_option?.hide_profile_and_presence) {
         return;
       }
 
@@ -199,7 +283,7 @@ export default class Chat extends Service {
       const membership = channel.currentUserMembership;
 
       if (channel.isDirectMessageChannel) {
-        if (!dmChannelWithUnread && membership.unread_count > 0) {
+        if (!dmChannelWithUnread && membership.unreadCount > 0) {
           dmChannelWithUnread = channel.id;
         } else if (!dmChannel) {
           dmChannel = channel.id;
@@ -208,7 +292,7 @@ export default class Chat extends Service {
         if (membership.unread_mentions > 0) {
           publicChannelWithMention = channel.id;
           return; // <- We have a public channel with a mention. Break and return this.
-        } else if (!publicChannelWithUnread && membership.unread_count > 0) {
+        } else if (!publicChannelWithUnread && membership.unreadCount > 0) {
           publicChannelWithUnread = channel.id;
         } else if (
           !defaultChannel &&

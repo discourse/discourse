@@ -156,11 +156,6 @@ ja:
     software_update_prompt:
       message: "このサイトを更新したので、<span>再読み込みしてください</span>。再読み込みしない場合、予期しない動作が発生する可能性があります。"
       dismiss: "閉じる"
-    bootstrap_mode_enabled:
-      other: "新しいサイトを簡単に立ち上げられるように、ブートストラップモードになっています。すべての新規ユーザーの信頼レベルは 1 となり、要約メールを毎日受け取るように設定されています。この設定は %{count} 名のユーザーが参加すると自動的に無効になります。"
-    bootstrap_mode_disabled: "ブートストラップモードは 24 時間以内に無効になります。"
-    bootstrap_invite_button_title: "招待を送信"
-    bootstrap_wizard_link_title: "セットアップウィザードの終了"
     themes:
       default_description: "デフォルト"
       broken_theme_alert: "テーマ/コンポーネントにエラーがあるため、サイトが動作しない可能性があります。"
@@ -315,7 +310,6 @@ ja:
       new_topic: "新しいトピックの下書き"
       new_private_message: "新しい個人メッセージの下書き"
       abandon:
-        confirm: "このトピックの作成中の下書きがあります。どうしますか？"
         yes_value: "破棄"
         no_value: "編集を再開"
     topic_count_categories:
@@ -1112,13 +1106,6 @@ ja:
       save_to_change_theme: '「%{save_text}」をクリックするとテーマが更新されます'
       home: "デフォルトのホームページ"
       staged: "ステージング"
-      staff_counters:
-        flags_given: "役に立った通報"
-        flagged_posts: "通報された投稿"
-        deleted_posts: "削除された投稿"
-        suspensions: "凍結"
-        warnings_received: "警告"
-        rejected_posts: "拒否された投稿"
       messages:
         all: "すべての受信トレイ"
         inbox: "受信トレイ"
@@ -1215,10 +1202,8 @@ ja:
         title: "二要素認証のバックアップコード"
         regenerate: "再生成"
         disable: "無効化"
-        enable: "有効化"
-        enable_long: "バックアップコードを有効にする"
         manage:
-          other: "バックアップコードを管理してください。 <strong>%{count}</strong> 個のバックアップコードが残っています。"
+          other: "<strong>%{count}</strong> 個のバックアップコードが残っています。"
         copy_to_clipboard: "クリップボードにコピー"
         copy_to_clipboard_error: "データをクリップボードにコピーする際にエラーが発生しました"
         copied_to_clipboard: "クリップボードにコピーしました"
@@ -3789,9 +3774,12 @@ ja:
           save: "保存"
           delete: "削除"
           links:
-            icon: "アイコン"
-            name: "名前"
-            value: "リンク"
+            icon:
+              label: "アイコン"
+            name:
+              label: "名前"
+            value:
+              label: "リンク"
         about:
           header_link_text: "サイト情報"
         messages:
@@ -4182,9 +4170,6 @@ ja:
         user_promoted_event:
           name: "ユーザー昇格イベント"
           details: "ユーザーがある信頼レベルから別の信頼レベルに昇格したとき。"
-        user_badge_event:
-          name: "バッジ付与イベント"
-          details: "ユーザーがバッジを受け取った場合。"
         group_user_event:
           name: "グループユーザーイベント"
           details: "ユーザーがグループに追加またはグループから削除された場合。"
@@ -4840,14 +4825,8 @@ ja:
           silence: "投稿禁止"
           link: "リンク"
         action_descriptions:
-          block: "これらの語を含む投稿が投稿されないようにします。投稿しようとすると、エラーメッセージが表示されます。"
-          censor: "これらの語を含む投稿を許可しますが、検閲された語を非表示にする文字に置き換えられます。"
-          require_approval: "これらの語を含む投稿は、表示される前にスタッフによる承認が必要です。"
-          flag: "これらの言葉を含む投稿を許可しますが、モデレーターがこれをレビューできるよう、不適切として通報されます。"
-          replace: "投稿内の語を他の語に置き換えます"
-          tag: "最初の投稿に基づいてトピックに自動的にタグを付けます"
-          silence: "これらの語を含むユーザーの最初の投稿には、表示される前とユーザーが自動的に投稿禁止になる前にスタッフによる承認が必要です。"
-          link: "投稿内の語をリンクに置き換える"
+          replace: "投稿内の語を他の語に置き換えます."
+          link: "投稿内の語をリンクに置き換える."
         form:
           label: "語またはフレーズがある"
           placeholder: "語またはフレーズを入力してください (* はワイルカード)"

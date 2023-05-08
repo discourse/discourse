@@ -176,6 +176,7 @@ hu:
       banner:
         enabled: "Kiemelve ekkor: %{when}. Minden oldal tetején megjelenik, amíg a felhasználó nem törli."
         disabled: "Kiemelés eltávolítva ekkor: %{when}. Többé nem jelenik meg minden oldal tetején."
+      forwarded: "Továbbította a fenti e-mailt"
     topic_admin_menu: "témaműveletek"
     skip_to_main_content: "Ugrás a fő tartalomhoz"
     emails_are_disabled: "Egy adminisztrátor letiltotta a kimenő e-maileket. Semmilyen értesítő e-mail nem lesz elküldve."
@@ -183,12 +184,7 @@ hu:
     software_update_prompt:
       message: "Frissítettük a webhelyet, <span>frissítse az oldalt</span>, különben váratlan viselkedést tapasztalhat."
       dismiss: "Elvetés"
-    bootstrap_mode_enabled:
-      one: "Hogy könnyebbé tegyük az új oldala elindítását, most előkészítési módban van. Minden új felhasználó 1-es szintet kap, és be lesz állítva, hogy napi kivonat e-mailt kapjanak. Ez a beállítás automatikusan kikapcsol, ha legalább %{count} felhasználó regisztrált."
-      other: "Hogy könnyebbé tegyük az új oldala elindítását, most előkészítési módban van. Minden új felhasználó 1-es szintet kap, és be lesz állítva, hogy napi kivonat e-mailt kapjanak. Ez a beállítás automatikusan kikapcsol, ha legalább %{count} felhasználó regisztrált."
-    bootstrap_mode_disabled: "Az előkészítési mód 24 órán belül kikapcsol."
-    bootstrap_invite_button_title: "Meghívók küldése"
-    bootstrap_wizard_link_title: "Beállítási varázsló befejezése"
+    bootstrap_mode: "Bootstrap mód"
     themes:
       default_description: "Alapértelmezett"
       broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
@@ -349,7 +345,7 @@ hu:
       new_topic: "Új témavázlat"
       new_private_message: "Új személyesüzenet-vázlat"
       abandon:
-        confirm: "Van egy folyamatban lévő vázlata ehhez a témához. Mit szeretne vele tenni?"
+        confirm: "Már van egy folyamatban lévő tervezete. Mit szeretne vele kezdeni?"
         yes_value: "Elvetés"
         no_value: "Szerkesztés folytatása"
     topic_count_categories:
@@ -1017,6 +1013,7 @@ hu:
       notification_schedule:
         title: "Értesítési ütemterv"
         label: "Egyéni értesítési ütemterv engedélyezése"
+        tip: "Ezeken az órákon kívül az értesítések szünetelnek."
         midnight: "Éjfél"
         none: "Egyik sem"
         monday: "Hétfő"
@@ -1187,13 +1184,6 @@ hu:
       save_to_change_theme: 'A téma a „%{save_text}” gombra kattintás után frissül'
       home: "Alapértelmezett főoldal"
       staged: "Lépcsőzetes"
-      staff_counters:
-        flags_given: "hasznos megjelölések"
-        flagged_posts: "megjelölt bejegyzések"
-        deleted_posts: "törölt bejegyzések"
-        suspensions: "felfüggesztések"
-        warnings_received: "figyelmeztetések"
-        rejected_posts: "elutasított bejegyzések"
       messages:
         all: "összes bejövő postaláda"
         inbox: "Bejövő"
@@ -1244,11 +1234,12 @@ hu:
         title: "Kétfaktoros biztonsági kódok"
         regenerate: "Újragenerálás"
         disable: "Letiltás"
-        enable: "Engedélyezés"
-        enable_long: "Biztonsági kódok engedélyezése"
+        enable: "Biztonsági kódok létrehozása"
+        enable_long: "Biztonsági kódok hozzáadása"
+        not_enabled: "Még nem hoztál létre biztonsági kódokat."
         manage:
-          one: "Biztonsági kódok kezelése. <strong>%{count}</strong> biztonsági kód maradt."
-          other: "Biztonsági kódok kezelése. <strong>%{count}</strong> biztonsági kód maradt."
+          one: "<strong>%{count}</strong> biztonsági kódja maradt."
+          other: "<strong>%{count}</strong> biztonsági kódja maradt."
         copy_to_clipboard: "Vágólapra másolás"
         copy_to_clipboard_error: "Hiba az adatok vágólapra másolásakor"
         copied_to_clipboard: "Vágólapra másolva"
@@ -1330,6 +1321,7 @@ hu:
         success: "Küldtünk egy levelet a megadott e-mail-címre. Kövesse a megerősítési utasításokat."
         success_via_admin: "Küldtünk egy levelet a megadott e-mail-címre. A felhasználónak követnie kell a levélben szereplő megerősítési utasításokat."
         success_staff: "Küldtünk egy levelet a jelenlegi e-mail-címére. Kövesse a megerősítési utasításokat."
+        back_to_preferences: "Vissza a beállításokhoz"
       change_avatar:
         title: "Profilkép megváltoztatása"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, ez alapján:"
@@ -2841,6 +2833,9 @@ hu:
         message_title: "Új üzenet címe"
         radio_label: "Új üzenet"
         participants: "Résztvevők"
+        instructions:
+          one: "Új üzenet létrehozására készül, amelyet a kiválasztott <b>%{count}</b> bejegyzéssel fog megtölteni."
+          other: "Új üzenet létrehozására készül, amelyet a kiválasztott <b>%{count}</b> bejegyzéssel fog megtölteni."
       move_to_existing_message:
         title: "Áthelyezés egy meglévő üzenethez"
         action: "áthelyezés egy meglévő üzenethez"
@@ -2936,7 +2931,7 @@ hu:
         create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
         edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."
         upload: "Sajnos hiba történt a fájl feltöltése során. Próbálja újra."
-        file_too_large: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size_kb} kb). Töltse fel a nagyméretű fájlt egy felhőmegosztó szolgáltatásba, majd illessze be annak a linkjét."
+        file_too_large: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size_kb} kB). Töltse fel a nagyméretű fájlt egy felhős megosztási szolgáltatásba, majd illessze be annak a hivatkozását."
         file_size_zero: "Sajnos úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
         file_too_large_humanized: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size}). Töltse fel a nagyméretű fájlt egy felhőmegosztó szolgáltatásba, majd illessze be annak a linkjét."
         too_many_uploads: "Sajnos egyszerre csak egy fájlt tölthet fel."
@@ -2972,7 +2967,7 @@ hu:
         delete_replies:
           confirm: "A hozzászólásra adott válaszokat is törölni akarja?"
           just_the_post: "Nem, csak ezt a bejegyzést"
-        admin: "admin műveletek"
+        admin: "bejegyzés-adminisztrátori műveletek"
         permanently_delete: "Végleges törlés"
         permanently_delete_confirmation: "Biztos, hogy végleg törölni szeretné ezt a bejegyzést? Nem fogja tudni visszaállítani."
         wiki: "Wiki létrehozása"
@@ -3017,7 +3012,7 @@ hu:
           sr_post_readers_list_description: "felhasználók, akik elolvasták ezt a bejegyzést"
         by_you:
           off_topic: "Megjelölte nem a témához tartozóként"
-          spam: "Spam-ként jelölted"
+          spam: "Megjelölte kéretlenként"
           inappropriate: "Ezt ide nem illőnek jelölte."
           notify_moderators: "Moderálásra jelölted"
           notify_user: "Üzenetet küldtél ennek a felhasználónak"
@@ -3036,12 +3031,12 @@ hu:
           side_by_side:
             button: "HTML"
           side_by_side_markdown:
-            button: "Raw"
+            button: "Nyers"
       raw_email:
         displays:
           raw:
             title: "A nyers e-mail megjelenítése"
-            button: "Raw"
+            button: "Nyers"
           text_part:
             title: "Az e-mail szöveges részének megjelenítése"
             button: "Üzenet"
@@ -3101,7 +3096,7 @@ hu:
       background_color: "Háttér színe"
       foreground_color: "Előtér színe"
       name_placeholder: "Maximum egy vagy két szó"
-      color_placeholder: "Akármelyik web-es szín"
+      color_placeholder: "Bármilyen webes szín"
       delete_confirm: "Biztosan törölni szeretnéd ezt a kategóriát?"
       delete_error: "Hiba lépett fel a kategória törlése során!"
       list: "Kategóriák listázása"
@@ -3634,9 +3629,27 @@ hu:
           delete: "Törlés"
           public: "Tegye ezt a részt nyilvánossá és mindenki számára láthatóvá"
           links:
-            icon: "Ikon"
-            name: "Név"
-            value: "Hivatkozás"
+            icon:
+              label: "Ikon"
+              validation:
+                blank: "Az ikon nem lehet üres"
+                maximum: "Az ikonnak rövidebbnek kell lennie %{count} karakternél"
+            name:
+              label: "Név"
+              validation:
+                blank: "A név nem lehet üres"
+                maximum: "A névnek %{count} karakternél rövidebbnek kell lennie"
+            value:
+              label: "Hivatkozás"
+              validation:
+                blank: "A link nem lehet üres"
+                maximum: "A linknek %{count} karakternél rövidebbnek kell lennie"
+                invalid: "A formátum érvénytelen"
+          title:
+            label: "A szakasz címe"
+            validation:
+              blank: "A cím nem lehet üres"
+              maximum: "A címnek %{count} karakternél rövidebbnek kell lennie"
         about:
           header_link_text: "Névjegy"
         messages:
@@ -3738,11 +3751,11 @@ hu:
           title: "\U0001F381 Új funkciók"
           dismiss: "Elvetés"
           learn_more: "Tudjon meg többet"
-        last_checked: "Utoljára ellenőrizve: "
+        last_checked: "Utoljára ellenőrizve:"
         refresh_problems: "Újratöltés"
         no_problems: "Nem találtunk semmilyen problémát."
         moderators: "Moderátorok: "
-        admins: "Adminok: "
+        admins: "Adminisztrátorok:"
         silenced: "Hangtalan:"
         suspended: "Felfüggesztettek: "
         private_messages_short: "Üzenetek"
@@ -3761,8 +3774,8 @@ hu:
         page_views_short: "Oldalmegtekintések"
         show_traffic_report: "Részletes forgalom jelentés megtekintése"
         community_health: Szociális egészség
-        moderators_activity: Moderátok aktivitása
-        whats_new_in_discourse: Mi az új a Discourseban?
+        moderators_activity: Moderátorok tevékenysége
+        whats_new_in_discourse: Mik a Discourse újdonságai?
         activity_metrics: Aktivitás metrika
         all_reports: "Összes bejelentés"
         general_tab: "Általános"
@@ -3837,7 +3850,7 @@ hu:
             members_visibility_levels:
               title: "Ki láthatja ennek a csoportnak a tagjait?"
           membership:
-            automatic: Autómatikus
+            automatic: Automatikus
             trust_levels_title: "Új tagok hozzáadásakor automatikusan kapott Bizalmi szint: "
             trust_levels_none: "Egyik sem"
             automatic_membership_associated_groups: "Azok a felhasználók, akik egy itt felsorolt szolgáltatás csoportjának tagjai, automatikusan hozzáadódnak ehhez a csoporthoz, amikor bejelentkeznek a szolgáltatásba."
@@ -3984,6 +3997,9 @@ hu:
         reviewable_event:
           name: "Áttekinthető esemény"
           details: "Ha egy új elem készen áll a felülvizsgálatra és állapota frissül."
+        user_badge_event:
+          name: "Jelvény esemény"
+          details: "A jelvény megadásakor vagy visszavonásakor."
         delivery_status:
           title: "Kiszállítás állapota"
           inactive: "Inaktív"
@@ -4004,8 +4020,8 @@ hu:
           completion: "Elvégzési idő"
           actions: "Műveletek"
       plugins:
-        title: "Pluginok"
-        installed: "Telepített pluginek"
+        title: "Bővítmények"
+        installed: "Telepített bővítmények"
         name: "Név"
         none_installed: "Egy plugin sincs telepítve."
         version: "Verzió"
@@ -4015,7 +4031,7 @@ hu:
         change_settings: "Beépülő modul beállításai"
         change_settings_short: "Beállítások"
         howto: "Hogyan lehet plugin-eket telepíteni?"
-        official: "Hivatalos plugin"
+        official: "Hivatalos bővítmény"
       navigation_menu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"
@@ -4510,8 +4526,6 @@ hu:
           replace: "Csere"
           silence: "Elnémítás"
           link: "Hivatkozás"
-        action_descriptions:
-          flag: "Az ezen szavakat tartalmazó bejegyzések engedélyezése, de ide nem illőnek jelölése, hogy a moderátorok átnézhessék azokat."
         form:
           placeholder_regexp: "reguláris kifejezés"
           replace_placeholder: "példa"

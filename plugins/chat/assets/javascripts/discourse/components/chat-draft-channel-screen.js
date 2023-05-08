@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { cloneJSON } from "discourse-common/lib/object";
+
 export default class ChatDraftChannelScreen extends Component {
   @service chat;
   @service router;
@@ -20,7 +21,7 @@ export default class ChatDraftChannelScreen extends Component {
 
   @action
   onSwitchFromDraftChannel(channel) {
-    channel.set("isDraft", false);
+    channel.isDraft = false;
   }
 
   _fetchPreviewedChannel(users) {
@@ -29,20 +30,16 @@ export default class ChatDraftChannelScreen extends Component {
     return this.chat
       .getDmChannelForUsernames(users.mapBy("username"))
       .then((response) => {
-        this.set(
-          "previewedChannel",
-          ChatChannel.create(
-            Object.assign({}, response.channel, { isDraft: true })
-          )
-        );
+        const channel = ChatChannel.create(response.channel);
+        channel.isDraft = true;
+        this.set("previewedChannel", channel);
       })
       .catch((error) => {
         if (error?.jqXHR?.status === 404) {
           this.set(
             "previewedChannel",
-            ChatChannel.create({
-              chatable: { users: cloneJSON(users) },
-              isDraft: true,
+            ChatChannel.createDirectMessageChannelDraft({
+              users: cloneJSON(users),
             })
           );
         }

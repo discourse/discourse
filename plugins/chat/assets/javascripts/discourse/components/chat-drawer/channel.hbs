@@ -1,4 +1,4 @@
-<ChatDrawer::Header>
+<ChatDrawer::Header @toggleExpand={{@drawerActions.toggleExpand}}>
   <ChatDrawer::Header::LeftActions />
 
   <ChatDrawer::Header::ChannelTitle
@@ -16,7 +16,7 @@
     {{did-update this.fetchChannel @params.channelId}}
   >
     {{#if this.chat.activeChannel}}
-      <ChatLivePane
+      <ChatChannel
         @targetMessageId={{readonly @params.messageId}}
         @channel={{this.chat.activeChannel}}
       />

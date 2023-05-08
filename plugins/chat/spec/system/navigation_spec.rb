@@ -10,6 +10,7 @@ RSpec.describe "Navigation", type: :system, js: true do
   fab!(:message) { Fabricate(:chat_message, chat_channel: category_channel) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_component) { PageObjects::Components::Sidebar.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
@@ -134,7 +135,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         visit("/t/-/#{topic.id}")
         chat_page.open_from_header
         chat_drawer_page.close
-        find("a[class*='sidebar-section-link-#{category_channel.slug}']").click
+        sidebar_component.click_link(category_channel.name)
 
         expect(page).to have_css(".chat-message-container[data-id='#{message.id}']")
       end
@@ -146,7 +147,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         chat_page.open_from_header
         chat_drawer_page.maximize
         visit("/")
-        find("a[class*='sidebar-section-link-#{category_channel.slug}']").click
+        sidebar_component.click_link(category_channel.name)
 
         expect(page).to have_current_path(
           chat.channel_path(category_channel.slug, category_channel.id),
@@ -215,7 +216,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         visit("/")
         chat_page.open_from_header
         chat_drawer_page.open_channel(category_channel_2)
-        chat_drawer_page.open_index
+        chat_drawer_page.back
         chat_drawer_page.close
         chat_page.open_from_header
 
@@ -242,11 +243,24 @@ RSpec.describe "Navigation", type: :system, js: true do
     end
 
     context "when opening a channel in full page" do
+      fab!(:other_user) { Fabricate(:user) }
+      fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
+
       it "activates the channel in the sidebar" do
         visit("/chat/c/#{category_channel.slug}/#{category_channel.id}")
-        expect(page).to have_css(
-          ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
-        )
+
+        expect(sidebar_component).to have_section_link(category_channel.name, active: true)
+      end
+
+      it "does not have multiple channels marked active in the sidebar" do
+        chat_page.visit_channel(dm_channel)
+
+        expect(sidebar_component).to have_section_link(other_user.username, active: true)
+
+        sidebar_component.click_section_link(category_channel.name)
+
+        expect(sidebar_component).to have_section_link(category_channel.name, active: true)
+        expect(sidebar_component).to have_one_active_section_link
       end
     end
 
@@ -263,9 +277,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         visit("/chat/c/#{category_channel.slug}/#{category_channel.id}")
         find("#site-logo").click
 
-        expect(page).not_to have_css(
-          ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
-        )
+        expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
       end
     end
 
@@ -273,11 +285,9 @@ RSpec.describe "Navigation", type: :system, js: true do
       it "activates the channel in the sidebar" do
         visit("/")
         chat_page.open_from_header
-        find("a[class*='#{category_channel.slug}']").click
+        sidebar_component.click_link(category_channel.name)
 
-        expect(page).to have_css(
-          ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
-        )
+        expect(sidebar_component).to have_section_link(category_channel.name, active: true)
       end
     end
 
@@ -285,12 +295,11 @@ RSpec.describe "Navigation", type: :system, js: true do
       it "deactivates the channel in the sidebar" do
         visit("/")
         chat_page.open_from_header
-        find("a[class*='sidebar-section-link-#{category_channel.slug}']").click
+
+        sidebar_component.click_link(category_channel.name)
         chat_drawer_page.close
 
-        expect(page).not_to have_css(
-          ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
-        )
+        expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
       end
     end
   end

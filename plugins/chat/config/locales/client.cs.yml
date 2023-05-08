@@ -67,6 +67,7 @@ cs:
       composer:
         italic_text: "text kurzívou"
         bold_text: "tučný text"
+        send: "Poslat"
       notification_levels:
         never: "Nikdy"
       settings:
@@ -99,6 +100,12 @@ cs:
       emoji_picker:
         objects: "Objekty"
         flags: "Nahlášení"
+      thread:
+        replies:
+          one: "%{count} odpověď"
+          few: "%{count} odpovědí"
+          many: "%{count} odpovědí"
+          other: "%{count} odpovědí"
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"
@@ -110,7 +117,3 @@ cs:
           fields:
             message:
               label: Zpráva
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Nahlásil"

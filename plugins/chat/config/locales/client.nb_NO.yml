@@ -68,6 +68,7 @@ nb_NO:
       composer:
         italic_text: "kursiv tekst"
         bold_text: "sterk tekst"
+        send: "Send"
       notification_levels:
         never: "Aldri"
       settings:
@@ -106,6 +107,10 @@ nb_NO:
         activities: "Aktiviteter"
         flags: "Flagg"
         symbols: "Symboler"
+      thread:
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
       draft_channel_screen:
         header: "Ny Melding"
         cancel: "Avbryt"
@@ -117,7 +122,3 @@ nb_NO:
           fields:
             message:
               label: Send
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Rapportert av"

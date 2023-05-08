@@ -27,16 +27,6 @@ export default class SectionLink extends Component {
   get classNames() {
     let classNames = ["sidebar-section-link", "sidebar-row"];
 
-    if (this.args.linkName) {
-      classNames.push(
-        `sidebar-section-link-${this.args.linkName
-          .split(" ")
-          .filter((s) => s)
-          .join("-")
-          .toLowerCase()}`
-      );
-    }
-
     if (this.args.class) {
       classNames.push(this.args.class);
     }

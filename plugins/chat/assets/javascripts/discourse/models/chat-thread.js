@@ -3,6 +3,8 @@ import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messa
 import User from "discourse/models/user";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
+import guid from "pretty-text/guid";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export const THREAD_STATUSES = {
   open: "open",
@@ -12,22 +14,39 @@ export const THREAD_STATUSES = {
 };
 
 export default class ChatThread {
+  @tracked id;
   @tracked title;
   @tracked status;
+  @tracked draft;
+  @tracked staged;
+  @tracked channel;
+  @tracked originalMessage;
+  @tracked threadMessageBusLastId;
 
   messagesManager = new ChatMessagesManager(getOwner(this));
 
-  constructor(args = {}) {
+  constructor(channel, args = {}) {
     this.title = args.title;
     this.id = args.id;
+    this.channel = channel;
     this.status = args.status;
+    this.draft = args.draft;
+    this.staged = args.staged;
+    this.originalMessage = ChatMessage.create(channel, args.original_message);
+  }
 
-    this.originalMessageUser = this.#initUserModel(args.original_message_user);
+  stageMessage(message) {
+    message.id = guid();
+    message.staged = true;
+    message.draft = false;
+    message.createdAt ??= moment.utc().format();
+    message.cook();
 
-    // TODO (martin) Not sure if ChatMessage is needed here, original_message
-    // only has a small subset of message stuff.
-    this.originalMessage = args.original_message;
-    this.originalMessage.user = this.originalMessageUser;
+    this.messagesManager.addMessages([message]);
+  }
+
+  get routeModels() {
+    return [...this.channel.routeModels, this.id];
   }
 
   get messages() {
@@ -36,6 +55,10 @@ export default class ChatThread {
 
   set messages(messages) {
     this.messagesManager.messages = messages;
+  }
+
+  get selectedMessages() {
+    return this.messages.filter((message) => message.selected);
   }
 
   get escapedTitle() {

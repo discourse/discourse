@@ -180,8 +180,6 @@ bs_BA:
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Ni jedna notifikacija bilo koje vrste neće biti poslana."
     software_update_prompt:
       dismiss: "Odpusti"
-    bootstrap_mode_disabled: "Bootstrap način rada će biti isključen u toku 24 sata."
-    bootstrap_invite_button_title: "Pošalji Pozivnice"
     themes:
       default_description: "Uobičajen"
     s3:
@@ -999,13 +997,6 @@ bs_BA:
       save_to_change_theme: 'Tema će biti ažurirana nakon što kliknete "%{save_text}"'
       home: "Uobičajena početna stranica"
       staged: "Priređen"
-      staff_counters:
-        flags_given: "pomoćne prijave"
-        flagged_posts: "prijavljene objave"
-        deleted_posts: "obrisane objave"
-        suspensions: "suspenzije"
-        warnings_received: "upozorenja"
-        rejected_posts: "odbijeni postovi"
       messages:
         inbox: "Inbox"
         latest: "Zadnje"
@@ -1051,8 +1042,6 @@ bs_BA:
       second_factor_backup:
         regenerate: "Regenerate"
         disable: "Onemogući"
-        enable: "Omogući"
-        enable_long: "Omogućite rezervne kodove"
         copy_to_clipboard: "Kopirati u clipboard"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
         copied_to_clipboard: "Kopirano u međuspremnik"
@@ -3055,9 +3044,12 @@ bs_BA:
           save: "Save"
           delete: "Delete"
           links:
-            icon: "Icon"
-            name: "Ime"
-            value: "Link"
+            icon:
+              label: "Icon"
+            name:
+              label: "Ime"
+            value:
+              label: "Link"
         about:
           header_link_text: "O nama"
         messages:
@@ -3895,11 +3887,6 @@ bs_BA:
           replace: "Zamijeni"
           silence: "Stišaj"
           link: "Link"
-        action_descriptions:
-          block: "Spriječite postavljanje postova koji sadrže ove riječi. Korisnik će vidjeti poruku o pogrešci kada pokuša da pošalje svoj post."
-          censor: "Dopustite poruke koje sadrže te riječi, ali ih zamijenite znakovima koji kriju cenzurirane riječi."
-          require_approval: "Postovi koji sadrže ove riječi će zahtijevati odobrenje osoblja prije nego što se mogu vidjeti."
-          flag: "Dozvoli objave koje sadrže ove riječi, ali prijavi ih kao neadekvatne kako bi ih moderatori mogli analizirati gledajući na kontekst i značenje"
         form:
           placeholder_regexp: "regularni izraz"
           link_label: "Link"

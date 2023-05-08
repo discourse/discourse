@@ -55,12 +55,18 @@ end
   DiscourseEvent.on(event) { |tag| WebHook.enqueue_object_hooks(:tag, tag, event, TagSerializer) }
 end
 
-%i[user_badge_granted].each do |event|
-  # user_badge_revoked
-  DiscourseEvent.on(event) do |badge, user_id|
-    ub = UserBadge.find_by(badge: badge, user_id: user_id)
-    WebHook.enqueue_object_hooks(:user_badge, ub, event, UserBadgeSerializer)
-  end
+DiscourseEvent.on(:user_badge_granted) do |badge_id, user_id|
+  ub = UserBadge.find_by(badge_id: badge_id, user_id: user_id)
+  WebHook.enqueue_object_hooks(:user_badge, ub, :user_badge_granted, UserBadgeSerializer)
+end
+
+DiscourseEvent.on(:user_badge_revoked) do |args|
+  WebHook.enqueue_object_hooks(
+    :user_badge,
+    args[:user_badge],
+    :user_badge_revoked,
+    UserBadgeSerializer,
+  )
 end
 
 %i[reviewable_created reviewable_score_updated].each do |event|
@@ -94,6 +100,7 @@ DiscourseEvent.on(:user_added_to_group) do |user, group, options|
     group_user,
     :user_added_to_group,
     WebHookGroupUserSerializer,
+    group_ids: [group.id],
   )
 end
 

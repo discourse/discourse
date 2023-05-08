@@ -176,6 +176,7 @@ ko:
     embed:
       load_from_remote: "이 게시물을 로드하는 중에 오류가 발생했습니다."
     site_settings:
+      invalid_site_setting: "'%{name}' 라는 설정이 존재하지 않습니다."
       invalid_category_id: "존재하지 않는 카테고리를 지정했습니다"
       invalid_choice:
         other: "유효하지 않은 선택 항목을 지정했습니다. %{name}"
@@ -450,6 +451,7 @@ ko:
       이전 댓글을 편집하여 인용을 추가할 수 있습니다. 텍스트를 하이라이트하고 표시되는 '댓글 인용' 버튼을 누르면 됩니다.
 
       작은 개별 댓글을 여러 개 읽는 것 보다는, 깊이 있게 작성된 댓글 몇 개만 읽는 게 더 편리할 것입니다.
+    dont_feed_the_trolls: 이 게시물은 경고 상태(flag)로 지정되어 관리자의 처리를 기다리고 있습니다. 정말 답글을 작성하시겠습니까? 부정적인 콘텐츠에 대한 답글은 더 부정적인 행동을 조장할 수 있습니다.
     too_many_replies: |2
 
       ### 이 주제의 댓글 한도에 도달했습니다
@@ -1009,7 +1011,7 @@ ko:
       title: "DAU / MAU"
       xaxis: "일"
       yaxis: "DAU / MAU"
-      description: "마지막 날에 로그인한 회원 수를 지난 달에 로그인한 회원 수로 나눈 값 – 커뮤니티 '고착도'를 나타내는 %를 반환합니다. 30% 이상을 목표로 하세요."
+      description: "마지막 날에 로그인 한 회원 수를 지난 달에 로그인 한 회원 수로 나눈 값 – 커뮤니티 &#39;고착성&#39;을 나타내는 %를 반환합니다. 20 % 이상을 목표로하십시오."
     daily_engaged_users:
       title: "일일 참여 사용자"
       xaxis: "일"
@@ -1357,7 +1359,6 @@ ko:
     manifest_icon: "Android에서 로고/스플래시 이미지로 사용되는 이미지입니다. 512 × 512로 크기가 자동 조정됩니다. 비워두면 large_icon이 사용됩니다."
     manifest_screenshots: "설치 프롬프트 페이지에서 인스턴스 기능 및 함수 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
     favicon: "사이트의 즐겨찾기 아이콘은 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>을 참조하세요. CDN에서 올바르게 작동하려면 png여야 합니다. 32x32로 크기가 조정됩니다. 비워두면 large_icon이 사용됩니다."
-    apple_touch_icon: "Apple touch 디바이스에 사용되는 아이콘입니다. 180x180으로 크기가 자동 조정됩니다. 비워두면 large_icon이 사용됩니다."
     opengraph_image: "페이지에 다른 적절한 이미지가 없을 때 사용되는 디폴트 오픈그래프 이미지입니다. 비워두면 large_icon이 사용됩니다"
     notification_email: "from: 이메일 주소는 모든 필수 시스템 이메일을 전송하는 데 사용됩니다. 여기에 지정된 도메인은 SPF, DKIM이 있어야 하며, 리버스 PTR 레코드가 제대로 설정되어 있어야 메일이 도착할 수 있습니다."
     email_custom_headers: "사용자 지정 이메일 헤더의 파이프(|)로 구분된 목록"
@@ -1487,7 +1488,7 @@ ko:
     discourse_connect_overrides_profile_background: "DiscourseConnect 페이로드의 값으로 사용자 프로필 배경을 오버라이드합니다."
     discourse_connect_overrides_card_background: "사용자 카드 배경을 DiscourseConnect 페이로드의 값으로 오버라이드합니다."
     discourse_connect_not_approved_url: "승인되지 않은 DiscourseConnect 계정을 이 URL로 리디렉션"
-    discourse_connect_allows_all_return_paths: "DiscourseConnect에서 제공하는 return_paths에 대한 도메인을 제한하지 마세요(기본적으로 반환 경로는 현재 사이트에 있어야 합니다)"
+    discourse_connect_allowed_redirect_domains: "이러한 도메인들만을 DiscourseConnect에서 제공하는 반환 경로(return_paths)로 허용합니다(기본적으로 반환 경로는 현재 사이트의 경로만 허용합니다). 모든 도메인을 허용하려면 * 을 사용합니다. 하위 도메인 와일드카드(`*.foobar.com`)는 허용되지 않습니다."
     enable_local_logins: "로컬 아이디 및 비밀번호 로그인 기반 계정을 활성화합니다. 경고: 비활성화된 경우 이전에 하나 이상의 대체 로그인 방법을 구성하지 않았다면 로그인하지 못할 수 있습니다."
     enable_local_logins_via_email: "사용자가 원클릭 로그인 링크를 이메일로 보내도록 요청할 수 있습니다."
     allow_new_registrations: "신규 사용자 등록을 허용합니다. 모든 사용자의 새 계정 생성을 방지하려면 체크하지 마세요."
@@ -1809,6 +1810,7 @@ ko:
     allow_profile_backgrounds: "사용자가 프로필 배경을 업로드하도록 허용합니다."
     sequential_replies_threshold: "연속 댓글 과다 알림을 받기 전에 사용자가 한 주제에서 연속으로 작성해야 하는 게시물 수입니다."
     get_a_room_threshold: "사용자가 경고를 받기 전에 동일한 주제에서 동일한 사람에게 작성해야 하는 게시물 수입니다."
+    dont_feed_the_trolls_threshold: "경고를 받기 전, 다른 사용자로부터 받은 경고(flag)의 수"
     enable_mobile_theme: "모바일 디바이스는 모바일 환경에 친화적인 테마를 사용하며 PC용 화면으로 전환할 수 있습니다. 완전 반응형 사용자 지정 스타일시트를 사용하려면 이 기능을 비활성화하세요."
     dominating_topic_minimum_percent: "주제를 과도하게 점유한다는 알림을 받기 전에 사용자가 주제에서 작성해야 하는 게시물의 퍼센트입니다."
     disable_avatar_education_message: "아바타 변경 안내 메시지를 비활성화합니다."
@@ -1849,11 +1851,10 @@ ko:
     allowed_href_schemes: "http 및 https 외에도 링크에 허용되는 스키마입니다."
     embed_post_limit: "임베드할 최대 게시물 수입니다."
     embed_username_required: "주제 생성을 위해 아이디가 필요합니다."
-    notify_about_flags_after: "이 시간이 지나도 처리되지 않은 신고가 있으면 운영자에게 개인 메시지를 보냅니다. 비활성화하려면 0으로 설정하세요."
     show_create_topics_notice: "사이트에 5개 미만의 공개 주제가 있는 경우 관리자에게 주제를 만들도록 요청하는 공지를 표시합니다."
     delete_drafts_older_than_n_days: "(n)일 지난 초안을 삭제합니다."
     delete_merged_stub_topics_after_days: "완전히 병합된 스텁 주제를 자동으로 삭제하기 전에 대기할 일 수입니다. 스텁 주제를 삭제하지 않으려면 0으로 설정하세요."
-    bootstrap_mode_min_users: "부트스트랩 모드를 비활성화하기 위한 최소 사용자 수(비활성화하려면 0으로 설정)"
+    bootstrap_mode_min_users: "부트스트랩 모드를 비활성화하는 데 필요한 최소 사용자 수(비활성화하려면 0으로 설정, 최대 24시간이 소요될 수 있음)"
     prevent_anons_from_downloading_files: "익명 사용자가 첨부 파일을 다운로드하지 못하도록 합니다."
     slug_generation_method: "슬러그 생성 방법을 선택합니다. 'encoded'는 퍼센트 인코딩 스트링을 생성합니다. 'none'은 슬러그를 완전히 비활성화합니다."
     enable_emoji: "이모티콘 활성화"
@@ -1861,6 +1862,7 @@ ko:
     emoji_set: "이모티콘을 어떻게 사용할까요?"
     emoji_autocomplete_min_chars: "자동 완성 이모티콘 팝업을 실행하는 데 필요한 최소 문자 수"
     enable_inline_emoji_translation: "인라인 이모티콘 번역 활성화(앞에 공백이나 구두점 없이)."
+    emoji_deny_list: "이러한 이모티콘은 메뉴나 단축코드에 사용할 수 없습니다."
     approve_post_count: "승인을 받아야 하는 신규 또는 기본 사용자의 게시물 수"
     approve_unless_trust_level: "이 신뢰 수준 미만의 사용자 게시물은 승인되어야 합니다"
     approve_new_topics_unless_trust_level: "이 신뢰 수준 미만의 사용자 주제는 승인되어야 합니다"
@@ -1918,7 +1920,6 @@ ko:
     revoke_api_keys_days: "사용하지 않는 API 키가 자동으로 취소되기까지의 기간(일)(0은 취소 안 함)"
     allow_user_api_keys: "사용자 API 키 생성 허용"
     allow_user_api_key_scopes: "사용자 API 키에 허용되는 범위 목록"
-    min_trust_level_for_user_api_key: "사용자 API 키 생성을 위한 신뢰 레벨"
     allowed_user_api_auth_redirects: "사용자 API 키의 인증 리디렉션을 위해 허용된 URL입니다. 와일드 카드 기호 *를 사용하면 일부를 일치시킬 수 있습니다(예 : www.example.com/*)."
     allowed_user_api_push_urls: "사용자 API의 서버 푸시를 위한 허용된 URL"
     expire_user_api_keys_days: "사용자 API 키가 자동으로 만료되기까지의 기간(일)(0은 만료 안 함)"
@@ -1986,7 +1987,6 @@ ko:
       staged_users_disabled: "이 설정을 활성화하기 전에 먼저 '스테이징된 사용자'를 활성화해야 합니다."
       reply_by_email_disabled: "이 설정을 활성화하기 전에 먼저 '이메일로 회신'을 활성화해야 합니다."
       discourse_connect_url_is_empty: "이 설정을 활성화하기 전에 'discourse connect url'을 설정해야 합니다."
-      discourse_connect_invite_only: "DiscourseConnect와 초대를 동시에 활성화할 수는 없습니다."
       enable_local_logins_disabled: "이 설정을 활성화하기 전에 먼저 '로컬 로그인 활성화'를 활성화해야 합니다."
       min_username_length_exists: "최소 아이디 길이를 가장 짧은 아이디(%{username}) 이상으로 설정할 수 없습니다."
       min_username_length_range: "최솟값은 최댓값보다 크게 설정할 수 없습니다."
@@ -3383,8 +3383,6 @@ ko:
   offline:
     title: "앱을 로드할 수 없음"
     offline_page_message: "오프라인 상태인 것 같습니다. 네트워크 연결을 확인하고 다시 시도하세요."
-  login_required:
-    welcome_message: "## [%{title}에 오신 것을 환영합니다](#welcome)"
   upload:
     edit_reason: "이미지 로컬 사본 다운로드됨"
     unauthorized: "업로드하려는 파일 확장자는 허용되지 않습니다(허용 확장자: %{authorized_extensions})."

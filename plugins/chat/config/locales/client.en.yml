@@ -79,8 +79,12 @@ en:
       click_to_join: "Click here to view available channels."
       close: "Close"
       collapse: "Collapse Chat Drawer"
+      expand: "Expand Chat Drawer"
       confirm_flag: "Are you sure you want to flag %{username}'s message?"
-      deleted: "A message was deleted. [view]"
+      deleted:
+        one: "A message was deleted. [view]"
+        other: "%{count} messages were deleted. [view all]"
+
       hidden: "A message was hidden. [view]"
       delete: "Delete"
       edited: "edited"
@@ -220,7 +224,8 @@ en:
       close_full_page: "Close full-screen chat"
       open_message: "Open message in chat"
       placeholder_self: "Jot something down"
-      placeholder_channel: "Chat with %{channelName}"
+      placeholder_channel: "Chat in %{channelName}"
+      placeholder_thread: "Chat in thread"
       placeholder_users: "Chat with %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Channel is archived, you cannot send new messages right now."
@@ -256,6 +261,8 @@ en:
       title: "chat"
       title_capitalized: "Chat"
       upload: "Attach a file"
+      upload_to_channel: "Upload to %{title}"
+      upload_to_thread: "Upload to thread"
       uploaded_files:
         one: "%{count} file"
         other: "%{count} files"
@@ -398,6 +405,7 @@ en:
         italic_text: "emphasized text"
         bold_text: "strong text"
         code_text: "code text"
+        send: "Send"
 
       quote:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'
@@ -532,8 +540,14 @@ en:
         search_placeholder: "Search by emoji name and alias..."
         no_results: "No results"
 
+      thread:
+        view_thread: View thread
+        replies:
+          one: "%{count} reply"
+          other: "%{count} replies"
+        label: Thread
+        close: "Close Thread"
       threads:
-        op_said: "OP said:"
         started_by: "Started by"
         open: "Open Thread"
 

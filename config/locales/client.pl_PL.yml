@@ -241,14 +241,6 @@ pl_PL:
     software_update_prompt:
       message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
       dismiss: "Odrzuć"
-    bootstrap_mode_enabled:
-      one: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoba dołączy."
-      few: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoby dołączy."
-      many: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osób dołączy."
-      other: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osób dołączy."
-    bootstrap_mode_disabled: "Tryb bootstrap zostanie wyłączony w ciągu 24 godzin."
-    bootstrap_invite_button_title: "Wyślij zaproszenia"
-    bootstrap_wizard_link_title: "Zakończ kreator konfiguracji"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
@@ -414,7 +406,6 @@ pl_PL:
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości osobistej"
       abandon:
-        confirm: "Masz projekt w toku dla tego tematu. Co chcesz z nim zrobić?"
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
     topic_count_categories:
@@ -1293,12 +1284,11 @@ pl_PL:
       home: "Domyślna strona domowa"
       staged: "Wystawiany na scenie"
       staff_counters:
-        flags_given: "uczynnych oflagowań"
-        flagged_posts: "oflagowane wpisy"
-        deleted_posts: "usunięte wpisy"
-        suspensions: "zawieszone"
-        warnings_received: "otrzymanych ostrzeżeń"
-        rejected_posts: "odrzucone wpisy"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> pomocna flaga'
+          few: '<span class="%{className}">%{count}</span> pomocne flagi'
+          many: '<span class="%{className}">%{count}</span> pomocne flagi'
+          other: '<span class="%{className}">%{count}</span> pomocne flagi'
       messages:
         all: "wszystkie skrzynki odbiorcze"
         inbox: "Skrzynka odbiorcza"
@@ -1425,13 +1415,11 @@ pl_PL:
         title: "Kody zapasowe weryfikacji dwuskładnikowej"
         regenerate: "Odnów"
         disable: "Wyłącz"
-        enable: "Włącz"
-        enable_long: "Włącz kody zapasowe"
         manage:
-          one: "Zarządzaj kodami zapasowymi. Pozostał Ci <strong>%{count}</strong> kod zapasowy."
-          few: "Zarządzaj kodami zapasowymi. Pozostały Ci <strong>%{count}</strong> kody zapasowe."
-          many: "Zarządzaj kodami zapasowymi. Pozostało Ci <strong>%{count}</strong> kodów zapasowych."
-          other: "Zarządzaj kodami zapasowymi. Pozostało Ci <strong>%{count}</strong> kodów zapasowych."
+          one: "Pozostał Ci <strong>%{count}</strong> kod zapasowy."
+          few: "Pozostały Ci <strong>%{count}</strong> kody zapasowe."
+          many: "Pozostało Ci <strong>%{count}</strong> kodów zapasowych."
+          other: "Pozostało Ci <strong>%{count}</strong> kodów zapasowych."
         copy_to_clipboard: "Skopiuj do schowka"
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka"
         copied_to_clipboard: "Skopiowane do schowka"
@@ -4388,16 +4376,20 @@ pl_PL:
         custom:
           add: "Dodaj niestandardową sekcję"
           edit: "Edytuj niestandardową sekcję"
-          name: "Tytuł sekcji"
           save: "Zapisz"
           delete: "Usuń"
           delete_confirm: "Czy na pewno chcesz usunąć tę sekcję?"
           links:
-            icon: "Ikona"
-            name: "Nazwa"
-            value: "Odnośnik"
             add: "Dodaj kolejny link"
             delete: "Usuń link"
+            icon:
+              label: "Ikona"
+            name:
+              label: "Pełna nazwa"
+            value:
+              label: "Odnośnik"
+          title:
+            label: "Tytuł sekcji"
         about:
           header_link_text: "O stronie"
         messages:
@@ -4796,9 +4788,6 @@ pl_PL:
         user_promoted_event:
           name: "Wydarzenie promowania użytkownika"
           details: "Gdy użytkownik awansuje z jednego poziomu zaufania na inny."
-        user_badge_event:
-          name: "Wydarzenie przyznania odznak"
-          details: "Gdy użytkownik otrzymuje odznakę."
         group_user_event:
           name: "Grupowy event użytkownika"
           details: "Gdy użytkownik jest dodany lub usunięty w grupie."
@@ -5454,6 +5443,7 @@ pl_PL:
           few: "pokaż %{count} słowa"
           many: "pokaż %{count} słów"
           other: "pokaż %{count} słów"
+        case_sensitive: "(z uwzg. wielkości liter)"
         download: Pobierz
         clear_all: Wyczyść wszystko
         clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"
@@ -5469,14 +5459,9 @@ pl_PL:
           silence: "Wycisz"
           link: "Odnośnik"
         action_descriptions:
-          block: "Zapobiegaj publikacji postów zawierających te słowa. Użytkownicy zobaczą błąd próbując wysłać taki wpis."
-          censor: "Zezwalaj na wysyłanie wpisów zawierających te słowa, ale zamień na znaki ukrywające ocenzurowane słowa."
-          require_approval: "Wpisy zawierające te słowa będą wymagały zatwierdzenia przez członka zespołu zarządzającego zanim zostaną opublikowane."
-          flag: "Zezwalaj na publikację takich wpisów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
-          replace: "Zastąp słowa w postach innymi słowami"
-          tag: "Automatycznie otaguj tematy na podstawie pierwszego postu"
-          silence: "Pierwsze posty użytkowników zawierające te słowa będą wymagały zatwierdzenia przez personel, zanim będą widoczne, a użytkownik zostanie automatycznie wyciszony."
-          link: "Zastąp słowa w postach linkami"
+          block: "Komunikat o błędzie zostanie wyświetlony podczas próby utworzenia posta zawierającego te słowa."
+          replace: "Zastąp słowa w postach innymi słowami."
+          link: "Zastąp słowa w postach linkami."
         form:
           label: "Zawiera słowo lub frazę"
           placeholder: "Wpisz słowo lub frazę (* to symbol wieloznaczny)"

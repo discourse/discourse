@@ -157,6 +157,8 @@ de:
       removed_user: "Hat %{who} entfernt, %{when}"
       removed_group: "Hat %{who} entfernt, %{when}"
       autobumped: "Thema wurde automatisch nach oben geschoben, %{when}"
+      tags_changed: "Tags aktualisiert %{when}"
+      category_changed: "Kategorie aktualisiert %{when}"
       autoclosed:
         enabled: "Geschlossen, %{when}"
         disabled: "Geöffnet, %{when}"
@@ -187,12 +189,7 @@ de:
     software_update_prompt:
       message: "Wir haben ein Update dieser Website durchgeführt. <span>Bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
       dismiss: "Verwerfen"
-    bootstrap_mode_enabled:
-      one: "Damit du mit deiner Website einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert hat."
-      other: "Damit du mit deiner Website einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert haben."
-    bootstrap_mode_disabled: "Der Starthilfe-Modus wird in den nächsten 24 Stunden deaktiviert."
-    bootstrap_invite_button_title: "Einladungen versenden"
-    bootstrap_wizard_link_title: "Setup-Assistenten beenden"
+    bootstrap_mode: "Bootstrap-Modus"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil ein Theme/eine Komponente Fehler hat."
@@ -353,7 +350,7 @@ de:
       new_topic: "Neuer Entwurf für Thema"
       new_private_message: "Neuer Entwurf für persönliche Nachricht"
       abandon:
-        confirm: "Du hast einen Entwurf für dieses Thema in Arbeit. Was würdest du gerne damit machen?"
+        confirm: "Du hast bereits einen Entwurf in Arbeit. Was möchtest du gerne damit machen?"
         yes_value: "Verwerfen"
         no_value: "Bearbeitung fortsetzen"
     topic_count_categories:
@@ -1204,12 +1201,24 @@ de:
       home: "Standard-Startseite"
       staged: "Vorbereitet"
       staff_counters:
-        flags_given: "hilfreiche Meldungen"
-        flagged_posts: "gemeldete Beiträge"
-        deleted_posts: "gelöschte Beiträge"
-        suspensions: "Sperren"
-        warnings_received: "Warnungen"
-        rejected_posts: "abgelehnte Beiträge"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> hilfreiche Flagge'
+          other: '<span class="%{className}">%{count}</span> hilfreiche Flaggen'
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> gemeldeter Beitrag'
+          other: '<span class="%{className}">%{count}</span> gemeldete Beiträge'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> gelöschter Beitrag'
+          other: '<span class="%{className}">%{count}</span> gelöschte Beiträge'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> Suspendierung'
+          other: '<span class="%{className}">%{count}</span> Suspendierungen'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> Warnung'
+          other: '<span class="%{className}">%{count}</span> Warnungen'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> abgelehnter Beitrag'
+          other: '<span class="%{className}">%{count}</span> abgelehnte Beiträge'
       messages:
         all: "alle Posteingänge"
         inbox: "Posteingang"
@@ -1316,11 +1325,12 @@ de:
         title: "Wiederherstellungscodes für Zwei-Faktor-Authentifizierung"
         regenerate: "Erneuern"
         disable: "Deaktivieren"
-        enable: "Aktivieren"
-        enable_long: "Wiederherstellungscodes aktivieren"
+        enable: "Wiederherstellungscodes erstellen"
+        enable_long: "Wiederherstellungscodes hinzufügen"
+        not_enabled: "Du hast noch keine Wiederherstellungscodes erstellt."
         manage:
-          one: "Verwalte deine Wiederherstellungscodes. Du hast noch <strong>%{count}</strong> verbleibenden Wiederherstellungscode."
-          other: "Verwalte deine Wiederherstellungscodes. Du hast noch <strong>%{count}</strong> verbleibende Wiederherstellungscodes."
+          one: "Du hast noch <strong>%{count}</strong> verbleibenden Wiederherstellungscode."
+          other: "Du hast noch <strong>%{count}</strong> verbleibende Wiederherstellungscodes."
         copy_to_clipboard: "In Zwischenablage kopieren"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
@@ -1404,6 +1414,7 @@ de:
         success: "Wir haben eine E-Mail an die angegebene E-Mail-Adresse gesendet. Folge zur Bestätigung der Adresse bitte den darin enthaltenen Anweisungen."
         success_via_admin: "Wir haben eine E-Mail an diese Adresse gesendet. Der Benutzer muss den Bestätigungsanweisungen in der E-Mail folgen."
         success_staff: "Wir haben eine E-Mail an deine aktuelle Adresse geschickt. Bitte folge den Bestätigungsanweisungen."
+        back_to_preferences: "Zurück zu den Einstellungen"
       change_avatar:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basierend auf"
@@ -4044,17 +4055,34 @@ de:
         custom:
           add: "Benutzerdefinierten Abschnitt hinzufügen"
           edit: "Benutzerdefinierten Abschnitt bearbeiten"
-          name: "Titel des Abschnitts"
           save: "Speichern"
           delete: "Löschen"
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
           public: "Mache diesen Bereich öffentlich und für alle sichtbar"
           links:
-            icon: "Symbol"
-            name: "Name"
-            value: "Link"
             add: "Einen weiteren Link hinzufügen"
             delete: "Link löschen"
+            icon:
+              label: "Symbol"
+              validation:
+                blank: "Das Symbol darf nicht leer sein"
+                maximum: "Symbol muss kürzer als %{count} Zeichen sein"
+            name:
+              label: "Name"
+              validation:
+                blank: "Der Name darf nicht leer sein"
+                maximum: "Der Name muss kürzer als %{count} Zeichen sein"
+            value:
+              label: "Link"
+              validation:
+                blank: "Link darf nicht leer sein"
+                maximum: "Der Link muss kürzer als %{count} Zeichen sein"
+                invalid: "Format ist ungültig"
+          title:
+            label: "Titel des Abschnitts"
+            validation:
+              blank: "Der Titel darf nicht leer sein"
+              maximum: "Titel muss kürzer als %{count} Zeichen sein"
         about:
           header_link_text: "Über uns"
         messages:
@@ -4475,8 +4503,8 @@ de:
           name: "Benutzer-Beförderungs-Ereignis"
           details: "Wenn ein Benutzer von einer Vertrauensstufe zur nächsten befördert wird."
         user_badge_event:
-          name: "Abzeichen-Verleihungs-Ereignis"
-          details: "Wenn ein Benutzer ein Abzeichen erhält."
+          name: "Abzeichen-Ereignis"
+          details: "Wenn ein Abzeichen erteilt oder widerrufen wird."
         group_user_event:
           name: "Gruppenbenutzer-Ereignis"
           details: "Wenn ein Benutzer in einer Gruppe hinzugefügt oder entfernt wird."
@@ -5085,6 +5113,7 @@ de:
             create_public_sidebar_section: "Öffentlichen Seitenleistenbereich erstellen"
             update_public_sidebar_section: "Öffentlichen Seitenleistenbereich aktualisieren"
             destroy_public_sidebar_section: "Öffentlichen Seitenleistenbereich zerstören"
+            reset_bounce_score: "Bounce-Score zurücksetzen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -5148,14 +5177,14 @@ de:
           silence: "Stummschalten"
           link: "Link"
         action_descriptions:
-          block: "Verhindert, dass Beiträge mit diesen Wörtern abgeschickt werden. Benutzer werden eine Fehlermeldung sehen, wenn sie ihren Beitrag abschicken."
-          censor: "Erlaube Beiträge mit diesen Wörtern, aber ersetze sie mit Zeichen, die die zensierten Wörter verstecken."
-          require_approval: "Beiträge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind."
-          flag: "Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können."
-          replace: "Wörter in Beiträgen durch andere Wörter ersetzen"
-          tag: "Themen basierend auf dem ersten Beitrag automatisch mit Schlagwort versehen"
-          silence: "Erste Beiträge von Benutzern, die diese Wörter enthalten, müssen vom Team genehmigt werden, bevor sie gesehen werden können, und der Benutzer wird automatisch stummgeschaltet."
-          link: "Wörter in Beiträgen durch Links ersetzen"
+          block: "Beim Versuch, einen Beitrag zu erstellen, der diese Wörter enthält, wird eine Fehlermeldung angezeigt werden."
+          censor: "Erlaube Beiträge, die diese Wörter enthalten, aber ersetze sie durch Zeichen, die die zensierten Wörter verbergen."
+          require_approval: "Erfordere die Genehmigung der Mitarbeiter/innen für Beiträge, die diese Wörter enthalten, bevor sie für andere sichtbar sind."
+          flag: "Erlaube Beiträge, die diese Wörter enthalten, kennzeichne sie jedoch als unangemessen für die Überprüfung durch Moderatoren."
+          replace: "Wörter in Beiträgen durch andere Wörter ersetzen."
+          tag: "Themen automatisch markieren, wenn der erste Beitrag ein bestimmtes Wort enthält."
+          silence: "Bringe neue Konten zum Schweigen, wenn ihr allererster Beitrag eines dieser Wörter enthält. Der Beitrag wird automatisch ausgeblendet, bis Mitarbeiter ihn freigeben."
+          link: "Wörter in Beiträgen durch Links ersetzen."
         form:
           label: "Hat Wort oder Wortgruppe"
           placeholder: "Wort oder Ausdruck eingeben (* ist ein Platzhalter)"

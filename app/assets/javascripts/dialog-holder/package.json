@@ -9,12 +9,12 @@
   ],
   "dependencies": {
     "a11y-dialog": "7.5.2",
-    "ember-auto-import": "^2.6.1",
-    "ember-cli-babel": "^7.26.10",
+    "ember-auto-import": "^2.6.3",
+    "ember-cli-babel": "^7.26.11",
     "ember-cli-htmlbars": "^6.2.0"
   },
   "devDependencies": {
-    "webpack": "^5.77.0"
+    "webpack": "^5.82.0"
   },
   "engines": {
     "node": "16.* || >= 18",
