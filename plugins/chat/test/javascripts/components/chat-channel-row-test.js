@@ -131,7 +131,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert.dom(".chat-channel-row").doesNotHaveClass("has-unread");
 
-    this.categoryChatChannel.currentUserMembership.unread_count = 1;
+    this.categoryChatChannel.currentUserMembership.unreadCount = 1;
 
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 

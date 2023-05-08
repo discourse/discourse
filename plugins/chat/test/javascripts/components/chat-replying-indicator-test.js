@@ -39,9 +39,7 @@ module(
     test("displays indicator when 2 or 3 users are replying", async function (assert) {
       this.channel = fabricators.chatChannel();
 
-      await render(
-        hbs`<ChatReplyingIndicator @presenceChannel={{this.presenceChannel}} @channel={{this.channel}} />`
-      );
+      await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
 
       await joinChannel("/chat-reply/1", {
         id: 1,

@@ -408,6 +408,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   markChannelAsRead(channelId, messageId = null) {
+    console.trace();
     return this.#putRequest(`/channels/${channelId}/read/${messageId}`);
   }
 

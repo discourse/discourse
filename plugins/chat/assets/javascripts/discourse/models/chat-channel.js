@@ -284,7 +284,7 @@ export default class ChatChannel {
       return;
     }
 
-    if (this.currentUserMembership.last_read_message_id >= messageId) {
+    if (this.currentUserMembership.lastReadMessageId >= messageId) {
       return;
     }
 
