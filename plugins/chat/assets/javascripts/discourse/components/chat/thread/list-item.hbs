@@ -1,17 +1,29 @@
 <div class="chat-thread-list-item">
-  <div class="chat-thread-list-item__header">
-    <div class="chat-thread-list-item__title">
-      {{this.title}}
-    </div>
-    <div class="chat-thread-list-item__buttons">
-      <DButton
-        @action={{action this.openThreadSettings}}
-        @class="btn-flat chat-thread-list-item__settings"
-        @icon="cog"
-        @title="chat.thread.settings"
-        @disabled={{not this.canChangeThreadSettings}}
+  <div class="chat-thread-list-item__main">
+    <LinkTo
+      @route="chat.channel.thread"
+      @models={{@thread.routeModels}}
+      title={{i18n "chat.thread.view_thread"}}
+      class="chat-thread-list-item__open-button"
+    >
+      <div class="chat-thread-list-item__header">
+        <div class="chat-thread-list-item__title">
+          {{replace-emoji this.title}}
+        </div>
+        <div class="chat-thread-list-item__buttons">
+          <DButton
+            @action={{action this.openThreadSettings}}
+            @class="btn-flat chat-thread-list-item__settings"
+            @icon="cog"
+            @title="chat.thread.settings"
+            @disabled={{not this.canChangeThreadSettings}}
+          />
+        </div>
+      </div>
+      <Chat::Thread::OriginalMessage
+        @thread={{@thread}}
+        @message={{@thread.originalMessage}}
       />
-    </div>
+    </LinkTo>
   </div>
-  <Chat::Thread::OriginalMessage @message={{@thread.originalMessage}} />
 </div>

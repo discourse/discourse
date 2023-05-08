@@ -28,8 +28,9 @@ Chat::Engine.routes.draw do
     # Hints for JIT warnings.
     get "/mentions/groups" => "hints#check_group_mentions", :format => :json
 
-    get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
     get "/channels/:channel_id/threads" => "channel_threads#index"
+    put "/channels/:channel_id/threads/:thread_id" => "channel_threads#update"
+    get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
     put "/channels/:channel_id/threads/:thread_id/read" => "thread_reads#update"
 
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"

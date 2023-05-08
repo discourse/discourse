@@ -1,6 +1,5 @@
 import { getOwner } from "discourse-common/lib/get-owner";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
-import User from "discourse/models/user";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
@@ -35,7 +34,6 @@ export default class ChatThread {
     this.staged = args.staged;
     this.replyCount = args.reply_count;
     this.originalMessage = ChatMessage.create(channel, args.original_message);
-    this.originalMessage.user = this.#initUserModel(args.original_message_user);
   }
 
   stageMessage(message) {
@@ -66,13 +64,5 @@ export default class ChatThread {
 
   get escapedTitle() {
     return escapeExpression(this.title);
-  }
-
-  #initUserModel(user) {
-    if (!user || user instanceof User) {
-      return user;
-    }
-
-    return User.create(user);
   }
 }

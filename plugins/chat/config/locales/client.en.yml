@@ -541,6 +541,7 @@ en:
         no_results: "No results"
 
       thread:
+        title: "Title"
         view_thread: View thread
         default_title: "Thread %{thread_id}"
         replies:
@@ -553,7 +554,7 @@ en:
         settings: "Settings"
       threads:
         open: "Open Thread"
-        index: "View Threads"
+        list: "Ongoing discussions"
 
       draft_channel_screen:
         header: "New Message"

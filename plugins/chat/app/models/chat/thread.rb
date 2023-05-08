@@ -3,6 +3,7 @@
 module Chat
   class Thread < ActiveRecord::Base
     EXCERPT_LENGTH = 150
+    MAX_TITLE_LENGTH = 100
 
     include Chat::ThreadCache
 
@@ -23,6 +24,8 @@ module Chat
              class_name: "Chat::Message"
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
+
+    validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
 
     def replies
       self.chat_messages.where.not(id: self.original_message_id)

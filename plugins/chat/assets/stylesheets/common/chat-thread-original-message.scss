@@ -7,16 +7,15 @@
   }
 
   &__excerpt {
-    padding-bottom: 1rem;
+    padding-bottom: 0.25rem;
   }
 
   &__author {
     display: flex;
     align-items: center;
-    font-size: var(--font-down-1);
   }
 
   &__avatar {
-    padding-inline: 0.25rem;
+    padding: 0.25rem 0.25rem 0.25rem 0;
   }
 }

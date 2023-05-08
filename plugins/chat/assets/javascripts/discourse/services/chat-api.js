@@ -444,6 +444,18 @@ export default class ChatApi extends Service {
     return this.#putRequest(`/channels/${channelId}/threads/${threadId}/read`);
   }
 
+  /**
+   * Updates settings of a thread.
+   *
+   * @param {number} channelId - The ID of the channel for the thread being edited.
+   * @param {number} threadId - The ID of the thread being edited.
+   * @param {object} data - Params of the edit.
+   * @param {string} data.title - The new title for the thread.
+   */
+  editThread(channelId, threadId, data) {
+    return this.#putRequest(`/channels/${channelId}/threads/${threadId}`, data);
+  }
+
   get #basePath() {
     return "/chat/api";
   }

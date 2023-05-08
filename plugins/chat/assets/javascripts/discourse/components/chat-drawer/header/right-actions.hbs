@@ -6,6 +6,9 @@
     <ChatDrawer::Header::FullPageButton
       @openInFullPage={{@drawerActions.openInFullPage}}
     />
+    {{#if this.chat.activeChannel.threadingEnabled}}
+      <ChatDrawer::Header::ThreadListButton />
+    {{/if}}
     <ChatDrawer::Header::CloseButton @close={{@drawerActions.close}} />
   </div>
 </div>

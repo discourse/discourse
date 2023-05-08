@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import ChatDrawerDraftChannel from "discourse/plugins/chat/discourse/components/chat-drawer/draft-channel";
 import ChatDrawerChannel from "discourse/plugins/chat/discourse/components/chat-drawer/channel";
 import ChatDrawerThread from "discourse/plugins/chat/discourse/components/chat-drawer/thread";
+import ChatDrawerThreads from "discourse/plugins/chat/discourse/components/chat-drawer/threads";
 import ChatDrawerIndex from "discourse/plugins/chat/discourse/components/chat-drawer/index";
 
 const COMPONENTS_MAP = {
@@ -14,6 +15,14 @@ const COMPONENTS_MAP = {
       return {
         channelId: route.parent.params.channelId,
         threadId: route.params.threadId,
+      };
+    },
+  },
+  "chat.channel.threads": {
+    name: ChatDrawerThreads,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
       };
     },
   },

@@ -1,7 +1,20 @@
 .chat-thread-list-item {
   display: flex;
-  flex-direction: column;
-  padding: 1rem;
+  flex-direction: row;
+  padding: 0.5rem;
+  margin: 0.5rem 1rem;
+  border-radius: 6px;
+  background-color: var(--primary-very-low);
+  border: 1px solid transparent;
+
+  &:hover {
+    background-color: var(--primary-low);
+    border: 1px solid var(--primary-medium);
+  }
+
+  &__main {
+    flex: 1 1 100%;
+  }
 
   &__header {
     display: flex;
@@ -12,5 +25,18 @@
   &__title {
     flex: 1;
     font-weight: bold;
+  }
+
+  &__open-button {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    justify-content: center;
+    color: var(--primary);
+
+    &:hover,
+    &:visited {
+      color: var(--primary);
+    }
   }
 }

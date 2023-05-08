@@ -29,4 +29,12 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
       on_model_not_found(:thread) { raise Discourse::NotFound }
     end
   end
+
+  def update
+    with_service(::Chat::UpdateThread) do
+      on_failed_policy(:threaded_discussions_enabled) { raise Discourse::NotFound }
+      on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
+      on_model_not_found(:thread) { raise Discourse::NotFound }
+    end
+  end
 end

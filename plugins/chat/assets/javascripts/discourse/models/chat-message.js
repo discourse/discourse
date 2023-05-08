@@ -64,6 +64,7 @@ export default class ChatMessage {
     this.availableFlags = args.availableFlags || args.available_flags;
     this.hidden = args.hidden;
     this.threadReplyCount = args.threadReplyCount || args.thread_reply_count;
+    this.threadTitle = args.threadTitle || args.thread_title;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
     this.createdAt = args.createdAt || args.created_at;
     this.deletedAt = args.deletedAt || args.deleted_at;

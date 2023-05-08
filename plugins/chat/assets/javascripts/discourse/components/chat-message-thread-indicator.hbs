@@ -6,7 +6,8 @@
   <span class="chat-message-thread-indicator__replies-count">
     {{i18n "chat.thread.replies" count=@message.threadReplyCount}}
   </span>
-  <span class="chat-message-thread-indicator__view-thread">
-    {{i18n "chat.thread.view_thread"}}
+  <span class="chat-message-thread-indicator__view-thread overflow-ellipsis">
+    {{i18n "chat.thread.view_thread"}}:
+    {{replace-emoji @message.threadTitle}}
   </span>
 </LinkTo>

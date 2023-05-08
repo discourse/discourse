@@ -4,9 +4,6 @@
       {{html-safe @message.excerpt}}
     </div>
     <div class="chat-thread-original-message__author">
-      <span class="chat-thread-original-message__started-by">
-        {{i18n "chat.thread.original_message.started_by"}}
-      </span>
       <span class="chat-thread-original-message__avatar">
         <ChatUserAvatar @user={{@message.user}} />
       </span>
