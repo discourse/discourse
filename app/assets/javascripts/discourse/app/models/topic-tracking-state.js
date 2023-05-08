@@ -397,8 +397,9 @@ const TopicTrackingState = EmberObject.extend({
    * @method removeTopic
    */
   removeTopic(topicId) {
-    this.states.delete(this._stateKey(topicId));
-    this._afterStateChange();
+    if (this.states.delete(this._stateKey(topicId))) {
+      this._afterStateChange();
+    }
   },
 
   /**
