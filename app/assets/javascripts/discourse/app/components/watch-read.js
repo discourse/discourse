@@ -29,7 +29,9 @@ export default class WatchRead extends Component {
 
   @bind
   async _checkIfRead() {
-    const lastParagraph = document.querySelector(".contents p:last-child");
+    const lastParagraph = document.querySelector(
+      "[itemprop='mainContentOfPage'] > *:last-child"
+    );
 
     if (!isElementInViewport(lastParagraph)) {
       return;
