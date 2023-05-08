@@ -416,18 +416,17 @@ Discourse::Application.routes.draw do
     get "composer_messages" => "composer_messages#index"
     get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"
 
-    resources :static
     post "login" => "static#enter"
-    get "login" => "static#show", :id => "login"
-    get "password-reset" => "static#show", :id => "password_reset"
-    get "faq" => "static#show", :id => "faq"
-    get "tos" => "static#show", :id => "tos", :as => "tos"
-    get "privacy" => "static#show", :id => "privacy", :as => "privacy"
-    get "signup" => "static#show", :id => "signup"
-    get "login-preferences" => "static#show", :id => "login"
 
-    %w[guidelines rules conduct].each do |faq_alias|
-      get faq_alias => "static#show", :id => "guidelines", :as => faq_alias
+    get "login" => "static#show", :id => "login"
+    get "login-preferences" => "static#show", :id => "login"
+    get "signup" => "static#show", :id => "signup"
+    get "password-reset" => "static#show", :id => "password_reset"
+    get "privacy" => "static#show", :id => "privacy", :as => "privacy"
+    get "tos" => "static#show", :id => "tos", :as => "tos"
+    get "faq" => "static#show", :id => "faq"
+    %w[guidelines rules conduct].each do |guidelines_alias|
+      get guidelines_alias => "static#show", :id => "guidelines", :as => guidelines_alias
     end
 
     get "my/*path", to: "users#my_redirect"
