@@ -555,6 +555,7 @@ en:
       threads:
         open: "Open Thread"
         list: "Ongoing discussions"
+        none: "You are not participating in any threads in this channel."
 
       draft_channel_screen:
         header: "New Message"

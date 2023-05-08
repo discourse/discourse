@@ -15,4 +15,8 @@
     display: flex;
     flex-direction: column;
   }
+
+  &__no-threads {
+    @include thread-list-item;
+  }
 }

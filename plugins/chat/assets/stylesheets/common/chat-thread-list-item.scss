@@ -1,4 +1,4 @@
-.chat-thread-list-item {
+@mixin thread-list-item {
   display: flex;
   flex-direction: row;
   padding: 0.5rem;
@@ -6,6 +6,10 @@
   border-radius: 6px;
   background-color: var(--primary-very-low);
   border: 1px solid transparent;
+}
+
+.chat-thread-list-item {
+  @include thread-list-item;
 
   &:hover {
     background-color: var(--primary-low);

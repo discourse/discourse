@@ -17,5 +17,10 @@
     {{#each @threads as |thread|}}
       <Chat::Thread::ListItem @thread={{thread}} />
     {{/each}}
+    {{#unless @threads}}
+      <div class="chat-thread-list__no-threads">{{i18n
+          "chat.threads.none"
+        }}</div>
+    {{/unless}}
   </div>
 </div>
