@@ -1,23 +1,9 @@
 <DSection @bodyClass="static-login" @class="container">
   <div class="contents clearfix body-page">
-    <span>
-      <PluginOutlet
-        @name="above-static"
-        @connectorTagName="div"
-        @outletArgs={{hash model=this.model}}
-      />
-    </span>
-
     <div class="login-welcome">
       <PluginOutlet @name="above-login" @outletArgs={{hash model=this.model}} />
       {{html-safe this.model.html}}
       <PluginOutlet @name="below-login" @outletArgs={{hash model=this.model}} />
-
-      <PluginOutlet
-        @name="below-static"
-        @connectorTagName="div"
-        @outletArgs={{hash model=this.model}}
-      />
 
       <div class="body-page-button-container">
         {{! TODO: }}

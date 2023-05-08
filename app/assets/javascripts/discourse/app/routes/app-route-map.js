@@ -209,10 +209,10 @@ export default function () {
   this.route("faq", { path: "/faq" });
   this.route("guidelines", { path: "/guidelines" });
   this.route("conduct", { path: "/conduct" });
+  this.route("rules", { path: "/rules" });
 
   this.route("tos", { path: "/tos" });
   this.route("privacy", { path: "/privacy" });
-  this.route("rules", { path: "/rules" });
 
   this.route("new-topic", { path: "/new-topic" });
   this.route("new-message", { path: "/new-message" });
