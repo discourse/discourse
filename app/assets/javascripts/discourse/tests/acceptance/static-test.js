@@ -63,7 +63,8 @@ acceptance("Static", function () {
 
     assert.strictEqual(currentRouteName(), "login");
     assert.true(exists(".body-page"), "The content is present");
-    // TODO: check the buttons
+    assert.dom(".sign-up-button").exists();
+    assert.dom(".login-button").exists();
   });
 
   test("Signup redirect", async function (assert) {
