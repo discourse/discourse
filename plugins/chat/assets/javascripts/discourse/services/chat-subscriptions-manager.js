@@ -176,8 +176,6 @@ export default class ChatSubscriptionsManager extends Service {
 
   @bind
   _onNewMessages(busData) {
-    console.log("new message", busData);
-
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       if (busData.user_id === this.currentUser.id) {
         // User sent message, update tracking state to no unread

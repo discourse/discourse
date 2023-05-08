@@ -3,7 +3,7 @@ import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import fabricators from "../helpers/fabricators";
 import { module, test } from "qunit";
-import { settled, render } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
 import { joinChannel } from "discourse/tests/helpers/presence-pretender";
 
 module(
