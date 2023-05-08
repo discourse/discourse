@@ -38,6 +38,13 @@ acceptance("Static", function () {
       "has the body class"
     );
     assert.true(exists(".body-page"), "The content is present");
+
+    await visit("/rules");
+    assert.true(
+      document.body.classList.contains("static-rules"),
+      "has the body class"
+    );
+    assert.true(exists(".body-page"), "The content is present");
   });
 
   test("Login redirect", async function (assert) {
