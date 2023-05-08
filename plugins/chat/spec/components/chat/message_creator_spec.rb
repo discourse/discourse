@@ -482,6 +482,8 @@ describe Chat::MessageCreator do
         fab!(:existing_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
 
         it "creates a thread and publishes with the staged id" do
+          public_chat_channel.update!(threading_enabled: true)
+
           messages =
             MessageBus.track_publish do
               described_class.create(
