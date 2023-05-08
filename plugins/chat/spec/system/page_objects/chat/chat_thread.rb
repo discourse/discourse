@@ -66,6 +66,16 @@ module PageObjects
         end
       end
 
+      def copy_link(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='copyLink']").click
+      end
+
+      def click_more_button
+        find(".more-buttons").click
+      end
+
       def hover_message(message)
         message_by_id(message.id).hover
       end
