@@ -278,14 +278,14 @@ export default class ChatChannel {
 
   updateMembership(membership) {
     this.currentUserMembership.following = membership.following;
-    this.currentUserMembership.last_read_message_id =
+    this.currentUserMembership.lastReadMessage_id =
       membership.last_read_message_id;
-    this.currentUserMembership.desktop_notification_level =
+    this.currentUserMembership.desktopNotificationLevel =
       membership.desktop_notification_level;
-    this.currentUserMembership.mobile_notification_level =
+    this.currentUserMembership.mobileNotificationLevel =
       membership.mobile_notification_level;
-    this.currentUserMembership.unread_count = membership.unread_count;
-    this.currentUserMembership.unread_mentions = membership.unread_mentions;
+    this.currentUserMembership.unreadCount = membership.unread_count;
+    this.currentUserMembership.unreadMentions = membership.unread_mentions;
     this.currentUserMembership.muted = membership.muted;
   }
 

@@ -61,11 +61,10 @@ export default class ChatChannelsManager extends Service {
       return this.chatApi.followChannel(model.id).then((membership) => {
         model.currentUserMembership.following = membership.following;
         model.currentUserMembership.muted = membership.muted;
-        model.currentUserMembership.desktop_notification_level =
-          membership.desktop_notification_level;
-        model.currentUserMembership.mobile_notification_level =
-          membership.mobile_notification_level;
-
+        model.currentUserMembership.desktopNotificationLevel =
+          membership.desktopNotificationLevel;
+        model.currentUserMembership.mobileNotificationLevel =
+          membership.mobileNotificationLevel;
         return model;
       });
     } else {
