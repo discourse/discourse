@@ -46,7 +46,7 @@ module Chat
     # so this isn't too dangerous, if we end up wanting to change
     # more things in future we may want to re-evaluate to be staff-only here.
     def can_edit_thread?(thread)
-      is_staff? || (can_chat? && thread.original_message_user_id == @user.id)
+      is_staff? || thread.original_message_user_id == @user.id
     end
 
     def can_move_chat_messages?(channel)

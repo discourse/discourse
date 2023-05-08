@@ -25,6 +25,7 @@ module Chat
     policy :threaded_discussions_enabled
     contract
     model :thread, :fetch_thread
+    policy :can_view_channel
     policy :can_edit_thread
     policy :threading_enabled_for_channel
     step :update
@@ -47,6 +48,10 @@ module Chat
 
     def fetch_thread(contract:, **)
       Chat::Thread.find_by(id: contract.thread_id, channel_id: contract.channel_id)
+    end
+
+    def can_view_channel(guardian:, thread:, **)
+      guardian.can_preview_chat_channel?(thread.channel)
     end
 
     def can_edit_thread(guardian:, thread:, **)
