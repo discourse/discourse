@@ -128,7 +128,7 @@ module Chat
       PrettyText.excerpt(message, max_length, { text_entities: true })
     end
 
-    # TODO (martin) Replace the above #ecerpt method usage with this one. The
+    # TODO (martin) Replace the above #excerpt method usage with this one. The
     # issue with the above one is that we cannot actually render nice HTML
     # fore replies/excerpts in the UI because text_entitites: true will
     # allow through even denied HTML because of 07ab20131a15ab907c1974fee405d9bdce0c0723.

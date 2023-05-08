@@ -9,6 +9,7 @@ export default class ChatChannelThreadListPane extends Service {
   }
 
   open() {
+    this.chat.activeMessage = null;
     this.chatStateManager.openSidePanel();
   }
 }
