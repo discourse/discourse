@@ -83,10 +83,13 @@ module CachedCounting
   end
 
   def self.flush
-    if @thread
+    if @thread && @thread.alive?
       @flush = true
       @thread.wakeup
       sleep 0.001 while @flush
+    else
+      flush_in_memory
+      flush_to_db
     end
   end
 

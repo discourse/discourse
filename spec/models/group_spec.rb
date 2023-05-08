@@ -6,9 +6,9 @@ RSpec.describe Group do
   let(:group) { Fabricate(:group) }
 
   describe "Validations" do
-    it { is_expected.to allow_value("#{"a" * 96}.com").for(:automatic_membership_email_domains) }
+    it { is_expected.to allow_value("#{"a" * 996}.com").for(:automatic_membership_email_domains) }
     it do
-      is_expected.not_to allow_value("#{"a" * 97}.com").for(:automatic_membership_email_domains)
+      is_expected.not_to allow_value("#{"a" * 997}.com").for(:automatic_membership_email_domains)
     end
     it { is_expected.to validate_length_of(:bio_raw).is_at_most(3000) }
     it { is_expected.to validate_length_of(:membership_request_template).is_at_most(500) }

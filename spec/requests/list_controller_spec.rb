@@ -1130,10 +1130,10 @@ RSpec.describe ListController do
   end
 
   describe "#filter" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category, slug: "category-slug") }
     fab!(:tag) { Fabricate(:tag, name: "tag1") }
     fab!(:group) { Fabricate(:group) }
-    fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+    fab!(:private_category) { Fabricate(:private_category, group:, slug: "private-category-slug") }
     fab!(:private_message_topic) { Fabricate(:private_message_topic) }
     fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
 
@@ -1259,6 +1259,33 @@ RSpec.describe ListController do
         expect(
           response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
         ).to contain_exactly(topic.id, topic2.id)
+      end
+    end
+
+    describe "when filtering with the `category:<category_slug>` filter" do
+      fab!(:topic_in_category) { Fabricate(:topic, category:) }
+
+      it "does not return any topics when `q` query param is `category:private-category-slug` and user is not allowed to see category" do
+        sign_in(user)
+
+        get "/filter.json", params: { q: "category:private-category-slug" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }).to eq([])
+      end
+
+      it "returns only topics in the category when `q` query param is `category:private-category-slug` and user can see category" do
+        group.add(user)
+
+        sign_in(user)
+
+        get "/filter.json", params: { q: "category:private-category-slug" }
+
+        expect(response.status).to eq(200)
+
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+        ).to contain_exactly(topic_in_private_category.id)
       end
     end
 
