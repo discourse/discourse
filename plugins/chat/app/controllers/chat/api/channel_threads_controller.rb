@@ -16,6 +16,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
       end
       on_failed_policy(:threaded_discussions_enabled) { raise Discourse::NotFound }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
+      on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_model_not_found(:threads) { render json: success_json.merge(threads: []) }
     end

@@ -69,6 +69,11 @@ RSpec.describe Chat::LookupChannelThreads do
           expect(result.threads.map(&:id)).to eq([thread_1.id, thread_2.id])
         end
 
+        it "does not return threads from the channel where the user has not sent a message" do
+          Fabricate(:chat_thread, channel: channel)
+          expect(result.threads.map(&:id)).to eq([thread_3.id, thread_1.id, thread_2.id])
+        end
+
         it "does not return threads from another channel" do
           thread_4 = Fabricate(:chat_thread)
           Fabricate(
