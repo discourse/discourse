@@ -1,7 +1,4 @@
-import staticRouteBuilder from "discourse/lib/static-route-builder";
+import FaqRoute from "./faq";
 
-export default class ConductRoute extends staticRouteBuilder("conduct") {
-  // Conduct and faq share the template (and the implicit controller)
-  controllerName = "faq";
-  templateName = "faq";
-}
+// Conduct is a faq alias
+export default class ConductRoute extends FaqRoute {}
