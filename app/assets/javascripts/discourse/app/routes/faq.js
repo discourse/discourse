@@ -8,6 +8,7 @@ import { action } from "@ember/object";
 export default class FaqRoute extends DiscourseRoute {
   @service siteSettings;
 
+  pageId = "faq";
   templateName = "faq";
 
   activate() {
@@ -16,18 +17,18 @@ export default class FaqRoute extends DiscourseRoute {
   }
 
   beforeModel(transition) {
-    if (this.siteSettings["faq_url"]) {
+    if (this.pageId === "faq" && this.siteSettings["faq_url"]) {
       transition.abort();
       DiscourseURL.redirectTo(this.siteSettings["faq_url"]);
     }
   }
 
   model() {
-    return StaticPage.find("faq");
+    return StaticPage.find(this.pageId);
   }
 
   titleToken() {
-    return I18n.t("faq");
+    return I18n.t(this.pageId);
   }
 
   @action
