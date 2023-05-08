@@ -18,7 +18,8 @@ module Chat
       content:,
       staged_id: nil,
       incoming_chat_webhook: nil,
-      upload_ids: nil
+      upload_ids: nil,
+      streaming: false
     )
       @chat_channel = chat_channel
       @user = user
@@ -34,6 +35,7 @@ module Chat
       @thread_id = thread_id
       @staged_thread_id = staged_thread_id
       @error = nil
+      @streaming = streaming
 
       @chat_message =
         Chat::Message.new(
@@ -42,6 +44,7 @@ module Chat
           last_editor_id: @user.id,
           in_reply_to_id: @in_reply_to_id,
           message: @content,
+          streaming: @streaming,
         )
     end
 
@@ -67,11 +70,13 @@ module Chat
           @chat_message,
           @staged_id,
           staged_thread_id: @staged_thread_id,
+          streaming: @streaming,
         )
         post_process_resolved_thread
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
         @chat_channel.touch(:last_message_sent_at)
+
         DiscourseEvent.trigger(:chat_message_created, @chat_message, @chat_channel, @user)
       rescue => error
         @error = error

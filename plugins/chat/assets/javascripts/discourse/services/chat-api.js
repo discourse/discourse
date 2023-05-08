@@ -235,6 +235,16 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Stop streaming of a message
+   * @returns {Promise}
+   */
+  stopMessageStreaming(channelId, messageId) {
+    return this.#deleteRequest(
+      `/channels/${channelId}/messages/${messageId}/streaming`
+    );
+  }
+
+  /**
    * Makes current user follow a channel.
    * @param {number} channelId - The ID of the channel.
    * @returns {Promise}

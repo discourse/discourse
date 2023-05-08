@@ -148,7 +148,8 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
       message.cooked = data.chat_message.cooked;
       message.excerpt = data.chat_message.excerpt;
       message.uploads = cloneJSON(data.chat_message.uploads || []);
-      message.edited = true;
+      message.edited = message.streaming || data.streaming ? false : true;
+      message.streaming = data.streaming;
     }
   }
 

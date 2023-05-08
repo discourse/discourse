@@ -35,7 +35,13 @@ module Chat
       SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
     end
 
-    def self.publish_new!(chat_channel, chat_message, staged_id, staged_thread_id: nil)
+    def self.publish_new!(
+      chat_channel,
+      chat_message,
+      staged_id,
+      staged_thread_id: nil,
+      streaming: false
+    )
       message_bus_targets =
         calculate_publish_targets(chat_channel, chat_message, staged_thread_id: staged_thread_id)
       publish_to_targets!(
@@ -44,6 +50,7 @@ module Chat
         serialize_message_with_type(chat_message, :sent).merge(
           staged_id: staged_id,
           staged_thread_id: staged_thread_id,
+          streaming: streaming,
         ),
       )
 
@@ -98,12 +105,12 @@ module Chat
       )
     end
 
-    def self.publish_edit!(chat_channel, chat_message)
+    def self.publish_edit!(chat_channel, chat_message, streaming: false)
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
       publish_to_targets!(
         message_bus_targets,
         chat_channel,
-        serialize_message_with_type(chat_message, :edit),
+        serialize_message_with_type(chat_message, :edit).merge(streaming: streaming),
       )
     end
 

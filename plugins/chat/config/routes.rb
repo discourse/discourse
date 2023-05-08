@@ -13,6 +13,8 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id" => "channels#show"
     put "/channels/:channel_id/status" => "channels_status#update"
     post "/channels/:channel_id/messages/moves" => "channels_messages_moves#create"
+    delete "/channels/:channel_id/messages/:message_id/streaming" =>
+             "channels_messages_streaming#destroy"
     post "/channels/:channel_id/archives" => "channels_archives#create"
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
     delete "/channels/:channel_id/memberships/me" => "channels_current_user_membership#destroy"

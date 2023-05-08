@@ -63,6 +63,7 @@
           class={{concat-class
             "chat-message"
             (if @message.staged "chat-message-staged")
+            (if @message.streaming "is-streaming")
             (if @message.deletedAt "deleted")
             (if (and @message.inReplyTo (not this.hideReplyToInfo)) "is-reply")
             (if this.showThreadIndicator "is-threaded")
@@ -86,6 +87,12 @@
             {{#unless this.hideUserInfo}}
               <ChatMessageInfo @message={{@message}} />
             {{/unless}}
+
+            {{#if this.shouldRenderStopMessageStreamingButton}}
+              <DButton @action={{fn this.stopMessageStreaming @message}}>
+                Stop generating response
+              </DButton>
+            {{/if}}
 
             <ChatMessageText
               @cooked={{@message.cooked}}

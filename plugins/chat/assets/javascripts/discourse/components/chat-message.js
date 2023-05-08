@@ -93,6 +93,19 @@ export default class ChatMessage extends Component {
     );
   }
 
+  get shouldRenderStopMessageStreamingButton() {
+    return (
+      this.args.message.streaming &&
+      (this.currentUser.admin ||
+        this.args.message.user.id === this.currentUser.id)
+    );
+  }
+
+  @action
+  stopMessageStreaming(message) {
+    this.chatApi.stopMessageStreaming(message.channel.id, message.id);
+  }
+
   @action
   expand() {
     const recursiveExpand = (message) => {

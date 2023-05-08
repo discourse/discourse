@@ -317,6 +317,44 @@ after_initialize do
     )
   end
 
+  on(:chat_message_created) do |message, channel, user|
+    next if !message.parsed_mentions.parsed_direct_mentions.include?("discobot")
+
+    discobot = User.find_by(username: "discobot")
+    creator =
+      Chat::MessageCreator.create(
+        chat_channel: channel,
+        user: discobot,
+        in_reply_to_id: message.id,
+        content: " ",
+        streaming: true,
+      )
+
+    message = creator.chat_message
+
+    p message
+
+    10.times do |i|
+      next unless message.reload.streaming
+
+      updated =
+        Chat::MessageUpdater.update(
+          guardian: discobot.guardian,
+          chat_message: message,
+          new_content: message.message + ("aaa " * (i + 1)),
+          streaming: true,
+        )
+
+      p updated
+
+      sleep 2
+    end
+
+    if message.reload.streaming
+      Chat::Publisher.publish_edit!(message.chat_channel, message, streaming: false)
+    end
+  end
+
   register_presence_channel_prefix("chat") do |channel_name|
     next nil unless channel_name == "/chat/online"
     config = PresenceChannel::Config.new

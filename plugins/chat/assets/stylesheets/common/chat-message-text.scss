@@ -1,0 +1,20 @@
+.chat-message.is-streaming {
+  .chat-message-text {
+    @keyframes cursor-blink {
+      0% {
+        opacity: 0;
+      }
+    }
+
+    p::after {
+      margin-left: 2px;
+      margin-bottom: -4px;
+      content: "";
+      width: 8px;
+      height: 17px;
+      background: var(--tertiary);
+      display: inline-block;
+      animation: cursor-blink 1s steps(2) infinite;
+    }
+  }
+}

@@ -82,7 +82,7 @@ module Chat
         Chat::DuplicateMessageValidator.new(self).validate
       end
 
-      if !has_uploads && message_too_short?
+      if !streaming && !has_uploads && message_too_short?
         self.errors.add(
           :base,
           I18n.t(

@@ -10,7 +10,7 @@ module Chat
       instance
     end
 
-    def initialize(guardian:, chat_message:, new_content:, upload_ids: nil)
+    def initialize(guardian:, chat_message:, new_content:, upload_ids: nil, streaming: false)
       @guardian = guardian
       @user = guardian.user
       @chat_message = chat_message
@@ -19,6 +19,7 @@ module Chat
       @new_content = new_content
       @upload_ids = upload_ids
       @error = nil
+      @streaming = streaming
     end
 
     def update
@@ -29,17 +30,20 @@ module Chat
         @chat_message.last_editor_id = @user.id
         upload_info = get_upload_info
         validate_message!(has_uploads: upload_info[:uploads].any?)
+        @chat_message.streaming = @streaming
         @chat_message.cook
         @chat_message.save!
 
         @chat_message.update_mentions
         update_uploads(upload_info)
-        revision = save_revision!
+        revision = save_revision! unless @streaming
 
         @chat_message.reload
-        Chat::Publisher.publish_edit!(@chat_channel, @chat_message)
+        Chat::Publisher.publish_edit!(@chat_channel, @chat_message, streaming: @streaming)
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
-        Chat::Notifier.notify_edit(chat_message: @chat_message, timestamp: revision.created_at)
+        unless @streaming
+          Chat::Notifier.notify_edit(chat_message: @chat_message, timestamp: revision.created_at)
+        end
         DiscourseEvent.trigger(:chat_message_edited, @chat_message, @chat_channel, @user)
       rescue => error
         @error = error
