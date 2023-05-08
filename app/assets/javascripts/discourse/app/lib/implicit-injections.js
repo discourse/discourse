@@ -107,10 +107,10 @@ export function registerDiscourseImplicitInjections() {
 
   setInjections(Service, {
     session: "service:session",
-    messageBus: "service:messageBus",
+    messageBus: "service:message-bus",
     siteSettings: "service:site-settings",
     topicTrackingState: "service:topic-tracking-state",
-    keyValueStore: "service:keyValueStore",
+    keyValueStore: "service:key-value-store",
     currentUser: "service:current-user",
   });
 
