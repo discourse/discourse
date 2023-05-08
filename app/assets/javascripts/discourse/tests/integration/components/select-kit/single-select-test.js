@@ -73,35 +73,27 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     const content = this.subject.displayedContent();
     assert.strictEqual(content.length, 3, "it shows rows");
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".select-kit-header"),
-      "it should focus the header first"
-    );
+    assert
+      .dom(".select-kit-header")
+      .isFocused("it should focus the header first");
 
     await tab();
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".select-kit-row:first-child"),
-      "it should focus the first row next"
-    );
+    assert
+      .dom(".select-kit-row:first-child")
+      .isFocused("it should focus the first row next");
 
     await tab();
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".select-kit-row:nth-child(2)"),
-      "tab moves focus to 2nd row"
-    );
+    assert
+      .dom(".select-kit-row:nth-child(2)")
+      .isFocused("tab moves focus to 2nd row");
 
     await tab();
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".select-kit-row:nth-child(3)"),
-      "tab moves focus to 3rd row"
-    );
+    assert
+      .dom(".select-kit-row:nth-child(3)")
+      .isFocused("tab moves focus to 3rd row");
 
     await tab();
 

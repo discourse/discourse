@@ -15,51 +15,39 @@ acceptance("Select-kit - Composer - Accessibility", function (needs) {
     const tagChooser = selectKit(".mini-tag-chooser");
     await tagChooser.expand();
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".mini-tag-chooser .filter-input"),
-      "it should focus the filter by default"
-    );
+    assert
+      .dom(".mini-tag-chooser .filter-input")
+      .isFocused("it should focus the filter by default");
 
     await tab();
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".mini-tag-chooser .select-kit-row:first-child"),
-      "it should focus the first row next"
-    );
+    assert
+      .dom(".mini-tag-chooser .select-kit-row:first-child")
+      .isFocused("it should focus the first row next");
 
     await tab({ backwards: true });
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".mini-tag-chooser .filter-input"),
-      "it should focus the filter again when tabbing backwards"
-    );
+    assert
+      .dom(".mini-tag-chooser .filter-input")
+      .isFocused("it should focus the filter again when tabbing backwards");
 
     await tab({ backwards: true });
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".mini-tag-chooser .select-kit-header"),
-      "it should focus the tag chooser header next"
-    );
+    assert
+      .dom(".mini-tag-chooser .select-kit-header")
+      .isFocused("it should focus the tag chooser header next");
 
     await tab({ backwards: true });
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".category-chooser .select-kit-header"),
-      "it should focus the category chooser header next"
-    );
+    assert
+      .dom(".category-chooser .select-kit-header")
+      .isFocused("it should focus the category chooser header next");
 
     await tab();
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".mini-tag-chooser .select-kit-header"),
-      "it should focus the tag chooser again"
-    );
+    assert
+      .dom(".mini-tag-chooser .select-kit-header")
+      .isFocused("it should focus the tag chooser again");
 
     await tagChooser.expand();
 
