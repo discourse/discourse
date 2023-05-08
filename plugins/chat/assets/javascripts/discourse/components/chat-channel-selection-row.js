@@ -5,9 +5,11 @@ import { action } from "@ember/object";
 export default Component.extend({
   tagName: "",
 
-  @discourseComputed("model", "model.focused")
-  rowClassNames(model, focused) {
-    return `chat-channel-selection-row ${focused ? "focused" : ""} ${
+  isFocused: false,
+
+  @discourseComputed("model", "isFocused")
+  rowClassNames(model, isFocused) {
+    return `chat-channel-selection-row ${isFocused ? "focused" : ""} ${
       this.model.user ? "user-row" : "channel-row"
     }`;
   },

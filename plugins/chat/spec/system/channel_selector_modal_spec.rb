@@ -20,6 +20,7 @@ RSpec.describe "Channel selector modal", type: :system, js: true do
       find("body").send_keys([key_modifier, "k"])
       find("#chat-channel-selector-input").fill_in(with: channel_1.title)
       find(".chat-channel-selection-row[data-id='#{channel_1.id}']").click
+
       channel_page.send_message("Hello world")
 
       expect(channel_page).to have_message(text: "Hello world")
@@ -33,6 +34,7 @@ RSpec.describe "Channel selector modal", type: :system, js: true do
       find("body").send_keys([key_modifier, "k"])
       find("#chat-channel-selector-input").fill_in(with: user_1.username)
       find(".chat-channel-selection-row[data-id='#{user_1.id}']").click
+
       channel_page.send_message("Hello world")
 
       expect(channel_page).to have_message(text: "Hello world")
