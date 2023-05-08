@@ -198,8 +198,8 @@ class TopicsFilter
     }
 
     values.each do |key_prefix, value|
-      exclude_categories = key_prefix&.include?("-") || false
-      exclude_subcategories = key_prefix&.include?("=") || false
+      exclude_categories = key_prefix&.include?("-")
+      exclude_subcategories = key_prefix&.include?("=")
 
       value
         .scan(
