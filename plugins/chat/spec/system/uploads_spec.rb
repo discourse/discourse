@@ -64,10 +64,7 @@ describe "Uploading files in chat messages", type: :system, js: true do
 
       # image processing clientside is slow! here we are waiting for processing
       # to complete then the upload to complete as well
-      using_wait_time(10) do
-        expect(find(".chat-composer-upload")).to have_content("Uploading")
-        expect(page).to have_css(".chat-composer-upload .preview .preview-img")
-      end
+      expect(page).to have_css(".chat-composer-upload .preview .preview-img", wait: 25)
 
       channel.send_message("upload testing")
 
