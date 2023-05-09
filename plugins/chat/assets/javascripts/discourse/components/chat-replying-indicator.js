@@ -38,7 +38,7 @@ export default class ChatReplyingIndicator extends Component {
 
   @action
   handlePresenceChange(presenceChannel) {
-    this.users = presenceChannel.users;
+    this.users = presenceChannel.users || [];
   }
 
   get usernames() {
