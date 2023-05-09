@@ -212,6 +212,7 @@ ar:
     embed:
       load_from_remote: "حدث خطأ في أثناء تحميل هذا المنشور."
     site_settings:
+      invalid_site_setting: "لا يوجد إعداد باسم \"%{name}\" موجود"
       invalid_category_id: "الفئة التي حدَّدتها غير موجودة"
       invalid_choice:
         zero: "لقد حدَّدت الخيارات غير الصالحة %{name}"
