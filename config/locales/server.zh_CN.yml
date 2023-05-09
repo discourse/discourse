@@ -2103,6 +2103,7 @@ zh_CN:
     navigation_menu: "确定要使用的导航菜单。边栏和标题导航可由用户自定义。旧版选项用于向后兼容。"
     default_sidebar_categories: "所选类别将默认显示在边栏的“类别”版块下。"
     default_sidebar_tags: "所选标签将默认显示在边栏的“标签”版块下。"
+    enable_new_notifications_menu: "启用新的通知菜单。已不能禁用此设置。新的通知菜单始终用于非传统“导航菜单”选项。 <a href='https://meta.discourse.org/t/260358'>了解更多</a>"
     enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
     experimental_new_new_view_groups: "试验性的：启用一个新的主题列表，将未读和新的主题合并，并使侧边栏中的 \"一切 \"链接指向它。"
     errors:

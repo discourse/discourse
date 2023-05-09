@@ -2159,6 +2159,7 @@ sv:
     navigation_menu: "Bestäm vilken navigeringsmeny som ska användas. Sidofälts- och rubriknavigering kan anpassas av användare. Det äldre alternativet är tillgängligt för bakåtkompatibilitet."
     default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
+    enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn. Inaktivering av den här inställningen är föråldrat. Den nya aviseringsmenyn används alltid för icke-äldre \"navigeringsmeny\"-val. <a href='https://meta.discourse.org/t/260358'>Lär dig mer</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     experimental_new_new_view_groups: "EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken \"Allt\" i sidofältet länkar till den."
     errors:
