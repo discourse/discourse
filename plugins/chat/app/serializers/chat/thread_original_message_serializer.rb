@@ -21,5 +21,17 @@ module Chat
     def include_user_flag_status?
       false
     end
+
+    def include_uploads?
+      false
+    end
+
+    def include_bookmark?
+      false
+    end
+
+    def include_chat_webhook_event?
+      false
+    end
   end
 end
