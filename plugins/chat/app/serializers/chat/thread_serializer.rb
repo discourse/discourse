@@ -10,6 +10,7 @@ module Chat
     def initialize(object, opts)
       super(object, opts)
       @opts = opts
+      original_message.thread = object
     end
 
     def meta
