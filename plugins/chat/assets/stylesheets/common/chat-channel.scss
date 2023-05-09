@@ -29,6 +29,18 @@
     .d-icon {
       margin-right: 0;
     }
+
+    &:hover {
+      .discourse-touch & {
+        background: none !important;
+      }
+    }
+
+    &:active {
+      .discourse-touch & {
+        background: var(--secondary-very-high) !important;
+      }
+    }
   }
 
   .chat-messages-scroll {
