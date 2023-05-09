@@ -16,7 +16,7 @@ export default class TosRoute extends DiscourseRoute {
   beforeModel(transition) {
     if (this.siteSettings["tos_url"]) {
       transition.abort();
-      DiscourseURL.redirectTo(this.siteSettings["tos_url"]);
+      DiscourseURL.redirectTo(this.siteSettings.tos_url);
     }
   }
 
