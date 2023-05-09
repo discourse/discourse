@@ -6,8 +6,34 @@
 
 id:
   js:
+    admin:
+      site_settings:
+        categories:
+          chat: Obrolan
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Status kanal obrolan berubah"
+            chat_channel_delete: "Kanal obrolan dihapus"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Buat pesan obrolan di kanal tertentu"
+    about:
+      chat_messages_count: "Pesan Obrolan"
+      chat_channels_count: "Kanal Obrolan"
+      chat_users_count: "Pengguna Obrolan"
     chat:
+      dates:
+        time_tiny: "h:mm"
+      all_loaded: "Menampilkan semua pesan"
+      already_enabled: "Obrolan sudah diaktifkan pada topik ini. Segarkan."
+      disabled_for_topic: "Obrolan dinonaktifkan pada topik ini."
+      bot: "bot"
+      create: "Buat"
       cancel: "Batal"
+      cancel_reply: "Batalkan balasan"
       channel_settings:
         edit: "Ubah"
         add: "Menambahkan"
