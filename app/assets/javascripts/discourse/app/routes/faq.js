@@ -17,9 +17,9 @@ export default class FaqRoute extends DiscourseRoute {
   }
 
   beforeModel(transition) {
-    if (this.pageId === "faq" && this.siteSettings["faq_url"]) {
+    if (this.pageId === "faq" && this.siteSettings.faq_url) {
       transition.abort();
-      DiscourseURL.redirectTo(this.siteSettings["faq_url"]);
+      DiscourseURL.redirectTo(this.siteSettings.faq_url);
     }
   }
 
