@@ -25,9 +25,9 @@
       {{#each this.threads as |thread|}}
         <Chat::Thread::ListItem @thread={{thread}} />
       {{else}}
-        <div class="chat-thread-list__no-threads">{{i18n
-            "chat.threads.none"
-          }}</div>
+        <div class="chat-thread-list__no-threads">
+          {{i18n "chat.threads.none"}}
+        </div>
       {{/each}}
     {{/if}}
   </div>

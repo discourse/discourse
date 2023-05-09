@@ -7,13 +7,19 @@
   &__items {
     overflow-y: scroll;
     @include chat-scrollbar();
-    margin: 2px;
-    padding-right: 2px;
     box-sizing: border-box;
     flex-grow: 1;
     overscroll-behavior: contain;
     display: flex;
     flex-direction: column;
+
+    .chat-thread-list-item {
+      margin: 0.5rem 0.25rem 0.5rem 0.5rem;
+
+      & + .chat-thread-list-item {
+        margin-top: 0;
+      }
+    }
   }
 
   &__no-threads {
