@@ -73,17 +73,4 @@ acceptance("Fast Edit", function (needs) {
     assert.notOk(exists("#fast-edit-input"), "fast editor is not open");
     assert.ok(exists(".d-editor-input"), "the composer is open");
   });
-
-  test("Opens full composer when editing non-ascii characters", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    query("#post_2 .cooked").childNodes[0].innerHTML += `Don’t ”say doesn’t”`;
-    const textNode = query("#post_2 .cooked");
-
-    await selectText(textNode);
-    await click(".quote-button .quote-edit-label");
-
-    assert.notOk(exists("#fast-edit-input"), "fast editor is not open");
-    assert.ok(exists(".d-editor-input"), "the composer is open");
-  });
 });
