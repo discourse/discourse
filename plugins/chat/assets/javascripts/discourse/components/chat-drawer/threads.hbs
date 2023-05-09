@@ -22,8 +22,6 @@
     {{did-insert this.fetchChannelAndThreads}}
     {{did-update this.fetchChannelAndThreads @params.channelId}}
   >
-    {{#if this.threads}}
-      <Chat::Thread::List @threads={{this.threads}} @includeHeader={{false}} />
-    {{/if}}
+    <Chat::Thread::List @threads={{this.threads}} @includeHeader={{false}} />
   </div>
 {{/if}}
