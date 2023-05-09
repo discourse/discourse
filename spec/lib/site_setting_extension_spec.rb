@@ -885,4 +885,29 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.exclude_rel_nofollow_domains_map).to eq([])
     end
   end
+
+  describe "plugin modifier for site setting value" do
+    class TestFilterPlugInstance < Plugin::Instance
+    end
+
+    let(:plugin_instance) { TestFilterPlugInstance.new }
+
+    it "can temporarily alter the value of a site setting" do
+      settings.setting(:test_setting, 123)
+
+      begin
+        plugin_instance.register_modifier(:site_setting) do |value, name|
+          456 if name == :test_setting && value == 567
+        end
+
+        expect(settings.test_setting).to eq(123)
+
+        settings.test_setting = 567
+
+        expect(settings.test_setting).to eq(456)
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
+      end
+    end
+  end
 end

@@ -300,7 +300,6 @@ module SiteSettingExtension
       shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.public_send(ss) }
 
       changes, deletions = diff_hash(new_hash, current)
-
       changes.each { |name, val| current[name] = val }
       deletions.each { |name, _| current[name] = defaults_view[name] }
       uploads.clear
@@ -544,11 +543,11 @@ module SiteSettingExtension
       end
     else
       define_singleton_method clean_name do
-        if (c = current[name]).nil?
+        if (current_value = current[name]).nil?
           refresh!
           current[name]
         else
-          c
+          DiscoursePluginRegistry.apply_modifier(:site_setting, current_value, name)
         end
       end
     end
