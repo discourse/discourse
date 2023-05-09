@@ -30,7 +30,7 @@ export default class ChatReplyingIndicator extends Component {
   async unsubscribe() {
     this.users = [];
 
-    if (this.presenceChannel.suscribed) {
+    if (this.presenceChannel.subscribed) {
       this.presenceChannel.off("change", this.handlePresenceChange);
       await this.presenceChannel.unsubscribe();
     }
