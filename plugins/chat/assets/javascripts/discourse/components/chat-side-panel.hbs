@@ -13,6 +13,9 @@
     }}
   >
     {{yield}}
-    <ChatSidePanelResizer />
+
+    {{#if site.desktopView}}
+      <ChatSidePanelResizer />
+    {{/if}}
   </div>
 {{/if}}
