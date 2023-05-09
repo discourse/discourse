@@ -59,7 +59,6 @@ export default Component.extend({
     event?.preventDefault();
     const messageId = get(message, "id");
     this.set("selectedTopicId", messageId);
-
     next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
   },
 });
