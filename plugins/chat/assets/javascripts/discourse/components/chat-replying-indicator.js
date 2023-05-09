@@ -22,7 +22,7 @@ export default class ChatReplyingIndicator extends Component {
   async subscribe() {
     this.presenceChannel = this.presence.getChannel(this.channelName);
     await this.presenceChannel.subscribe();
-    this.users = this.presenceChannel.users;
+    this.users = this.presenceChannel.users || [];
     this.presenceChannel.on("change", this.handlePresenceChange);
   }
 
