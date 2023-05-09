@@ -229,7 +229,9 @@ class Category < ActiveRecord::Base
 
     sqls =
       slugs.map do |slug|
-        category_slugs = slug.split(":").first(SiteSetting.max_category_nesting)
+        category_slugs =
+          slug.split(":").first(SiteSetting.max_category_nesting).map { Slug.for(_1, "") }
+
         sql = ""
 
         if category_slugs.length == 1

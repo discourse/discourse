@@ -203,7 +203,7 @@ class TopicsFilter
 
       value
         .scan(
-          /\A(?<category_slugs>([a-zA-Z0-9\-:]+)(?<delimiter>[,])?([a-zA-Z0-9\-:]+)?(\k<delimiter>[a-zA-Z0-9\-:]+)*)\z/,
+          /\A(?<category_slugs>([\p{L}\p{N}\-:]+)(?<delimiter>[,])?([\p{L}\p{N}\-:]+)?(\k<delimiter>[\p{L}\p{N}\-:]+)*)\z/,
         )
         .each do |category_slugs_match, delimiter|
           slugs = category_slugs_match.split(delimiter)
