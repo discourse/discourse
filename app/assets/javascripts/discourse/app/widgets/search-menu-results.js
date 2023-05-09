@@ -772,10 +772,18 @@ createWidget("search-menu-assistant-item", {
 
   click(e) {
     const searchInput = document.querySelector("#search-term");
-    searchInput.value = this.attrs.slug;
+    const searchTerms = searchInput.value.trim().split(" ");
+
+    if (searchTerms.length > 1) {
+      searchTerms.pop();
+      searchInput.value = [...searchTerms, this.attrs.slug].join(" ");
+    } else {
+      searchInput.value = this.attrs.slug;
+    }
+
     searchInput.focus();
     this.sendWidgetAction("triggerAutocomplete", {
-      value: this.attrs.slug,
+      value: searchInput.value,
       searchTopics: true,
       setTopicContext: this.attrs.setTopicContext,
     });
