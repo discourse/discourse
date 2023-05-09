@@ -17,7 +17,9 @@ export default class ChatChannelThreads extends DiscourseRoute {
       this.router.transitionTo("chat.channel", ...channel.routeModels);
       return;
     }
+  }
 
+  activate() {
     this.chatChannelThreadListPane.open();
   }
 }

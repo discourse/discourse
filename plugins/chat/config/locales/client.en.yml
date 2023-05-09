@@ -250,6 +250,7 @@ en:
       save: "Save"
       select: "Select"
       return_to_list: "Return to channels list"
+      return_to_threads_list: "Return to ongoing discussions"
       scroll_to_bottom: "Scroll to bottom"
       scroll_to_new_messages: "See new messages"
       sound:
