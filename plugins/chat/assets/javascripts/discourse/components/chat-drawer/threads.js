@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
@@ -9,10 +8,8 @@ export default class ChatDrawerThreads extends Component {
   @service chatStateManager;
   @service chatChannelsManager;
 
-  @tracked threads;
-
   @action
-  fetchChannelAndThreads() {
+  fetchChannel() {
     if (!this.args.params?.channelId) {
       return;
     }
@@ -21,12 +18,6 @@ export default class ChatDrawerThreads extends Component {
       .find(this.args.params.channelId)
       .then((channel) => {
         this.chat.activeChannel = channel;
-
-        channel.threadsManager
-          .index(this.args.params.channelId)
-          .then((threads) => {
-            this.threads = threads;
-          });
       });
   }
 }

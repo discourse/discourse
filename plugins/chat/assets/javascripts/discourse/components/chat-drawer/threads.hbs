@@ -17,11 +17,12 @@
 </ChatDrawer::Header>
 
 {{#if this.chatStateManager.isDrawerExpanded}}
-  <div
-    class="chat-drawer-content"
-    {{did-insert this.fetchChannelAndThreads}}
-    {{did-update this.fetchChannelAndThreads @params.channelId}}
-  >
-    <Chat::Thread::List @threads={{this.threads}} @includeHeader={{false}} />
+  <div class="chat-drawer-content" {{did-insert this.fetchChannel}}>
+    {{#if this.chat.activeChannel}}
+      <Chat::Thread::List
+        @channel={{this.chat.activeChannel}}
+        @includeHeader={{false}}
+      />
+    {{/if}}
   </div>
 {{/if}}

@@ -11,11 +11,15 @@ export default class ChatThreadList extends Component {
 
   @action
   loadThreads() {
+    if (!this.args.channel) {
+      return;
+    }
+
     this.loading = true;
-    this.channel.threadsManager
-      .index(this.channel.id)
+    this.args.channel.threadsManager
+      .index(this.args.channel.id)
       .then((result) => {
-        if (result.meta.channel_id === this.channel.id) {
+        if (result.meta.channel_id === this.args.channel.id) {
           this.threads = result.threads;
         }
       })
@@ -28,9 +32,5 @@ export default class ChatThreadList extends Component {
   teardown() {
     this.loading = true;
     this.threads = null;
-  }
-
-  get channel() {
-    return this.chat.activeChannel;
   }
 }
