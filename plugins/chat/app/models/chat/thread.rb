@@ -40,7 +40,7 @@ module Chat
     end
 
     def excerpt
-      original_message.excerpt(max_length: EXCERPT_LENGTH)
+      original_message.rich_excerpt(max_length: EXCERPT_LENGTH)
     end
 
     def self.grouped_messages(thread_ids: nil, message_ids: nil, include_original_message: true)

@@ -13,7 +13,7 @@
     </div>
   {{/if}}
 
-  <div class="chat-thread-list__original-messages">
+  <div class="chat-thread-list__items">
     {{#each @threads as |thread|}}
       <Chat::Thread::ListItem @thread={{thread}} />
     {{/each}}

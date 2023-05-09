@@ -543,7 +543,7 @@ en:
       thread:
         title: "Title"
         view_thread: View thread
-        default_title: "Thread %{thread_id}"
+        default_title: "Thread #%{thread_id}"
         replies:
           one: "%{count} reply"
           other: "%{count} replies"
