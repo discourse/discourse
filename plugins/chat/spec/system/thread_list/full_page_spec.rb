@@ -74,5 +74,14 @@ describe "Thread list in side panel | full page", type: :system, js: true do
       thread_list_page.item_by_id(thread_1.id).click
       expect(side_panel).to have_open_thread(thread_1)
     end
+
+    it "allows updating the title" do
+      chat_page.visit_channel(channel)
+      chat_page.open_thread_list
+      thread_list_page.item_by_id(thread_1.id).find(".chat-thread-list-item__settings").click
+      find(".thread-title-input").fill_in(with: "wow new title!")
+      find(".modal-footer .btn-primary").click
+      expect(thread_list_page.item_by_id(thread_1.id)).to have_content("wow new title!")
+    end
   end
 end

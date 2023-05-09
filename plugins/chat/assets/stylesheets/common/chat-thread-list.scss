@@ -4,7 +4,7 @@
   height: 100%;
   position: relative;
 
-  &__original-messages {
+  &__items {
     overflow-y: scroll;
     @include chat-scrollbar();
     margin: 2px;
