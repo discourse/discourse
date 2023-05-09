@@ -64,6 +64,7 @@ module Chat
 
     def update(thread:, contract:, **)
       thread.update(title: contract.title)
+      fail!(thread.errors.full_messages.join(", ")) if thread.invalid?
     end
   end
 end

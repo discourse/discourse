@@ -5,7 +5,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
     with_service(::Chat::LookupChannelThreads) do
       on_success do
         render_serialized(
-          Chat::ThreadsView.new(
+          ::Chat::ThreadsView.new(
             user: guardian.user,
             threads: result.threads,
             channel: result.channel,
