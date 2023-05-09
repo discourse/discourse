@@ -14,9 +14,9 @@ export default class PrivacyRoute extends DiscourseRoute {
   }
 
   beforeModel(transition) {
-    if (this.siteSettings["privacy_policy_url"]) {
+    if (this.siteSettings.privacy_policy_url) {
       transition.abort();
-      DiscourseURL.redirectTo(this.siteSettings["privacy_policy_url"]);
+      DiscourseURL.redirectTo(this.siteSettings.privacy_policy_url);
     }
   }
 
