@@ -7,7 +7,6 @@ import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import QUnit, { test } from "qunit";
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
-import { injectServiceIntoService } from "discourse/pre-initializers/inject-discourse-objects";
 
 export function setupRenderingTest(hooks) {
   emberSetupRenderingTest(hooks);
@@ -50,12 +49,6 @@ export function setupRenderingTest(hooks) {
     this.owner.register("service:current-user", currentUser, {
       instantiate: false,
     });
-    this.owner.inject("component", "currentUser", "service:current-user");
-    injectServiceIntoService({
-      app: this.owner.application,
-      property: "currentUser",
-      specifier: "service:current-user",
-    });
 
     this.owner.unregister("service:topic-tracking-state");
     this.owner.register(
@@ -63,11 +56,6 @@ export function setupRenderingTest(hooks) {
       TopicTrackingState.create({ currentUser }),
       { instantiate: false }
     );
-    injectServiceIntoService({
-      app: this.owner.application,
-      property: "topicTrackingState",
-      specifier: "service:topic-tracking-state",
-    });
 
     autoLoadModules(this.owner, this.registry);
     this.owner.lookup("service:store");
