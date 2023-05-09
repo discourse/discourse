@@ -11,9 +11,19 @@
 .chat-thread-list-item {
   @include thread-list-item;
 
-  &:hover {
-    background-color: var(--primary-low);
-    border: 1px solid var(--primary-medium);
+  .touch & {
+    &:active {
+      background-color: var(--primary-low);
+      border: 1px solid var(--primary-medium);
+    }
+  }
+
+  .no-touch & {
+    &:hover,
+    &:active {
+      background-color: var(--primary-low);
+      border: 1px solid var(--primary-medium);
+    }
   }
 
   &__main {

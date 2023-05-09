@@ -58,15 +58,9 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   threads(channelId) {
-    return this.#getRequest(`/channels/${channelId}/threads`).then((result) => {
-      return result.threads.map((thread) => {
-        return this.chat.activeChannel.threadsManager.store(
-          this.chat.activeChannel,
-          thread
-        );
-      });
-    });
+    return this.#getRequest(`/channels/${channelId}/threads`);
   }
+
   /**
    * List all accessible category channels of the current user.
    * @returns {Collection}

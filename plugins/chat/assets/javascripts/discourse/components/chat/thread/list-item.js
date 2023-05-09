@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 
 export default class ChatThreadListItem extends Component {
   @service currentUser;
+  @service router;
 
   get title() {
     return (
@@ -27,5 +28,10 @@ export default class ChatThreadListItem extends Component {
   openThreadSettings() {
     const controller = showModal("chat-thread-settings-modal");
     controller.set("thread", this.args.thread);
+  }
+
+  @action
+  openThread(thread) {
+    this.router.transitionTo("chat.channel.thread", ...thread.routeModels);
   }
 }

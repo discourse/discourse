@@ -10,7 +10,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
             threads: result.threads,
             channel: result.channel,
           ),
-          ::Chat::ThreadIndexSerializer,
+          ::Chat::ThreadListSerializer,
           root: false,
         )
       end

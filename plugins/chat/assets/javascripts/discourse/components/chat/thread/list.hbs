@@ -1,4 +1,9 @@
-<div class="chat-thread-list">
+<div
+  class="chat-thread-list"
+  {{did-insert this.loadThreads}}
+  {{did-update this.loadThreads this.channel}}
+  {{will-destroy this.teardown}}
+>
   {{#if @includeHeader}}
     <div class="chat-thread__header">
       <span class="chat-thread__label">{{i18n "chat.threads.list"}}</span>
@@ -14,13 +19,16 @@
   {{/if}}
 
   <div class="chat-thread-list__items">
-    {{#each @threads as |thread|}}
-      <Chat::Thread::ListItem @thread={{thread}} />
-    {{/each}}
-    {{#unless @threads}}
-      <div class="chat-thread-list__no-threads">{{i18n
-          "chat.threads.none"
-        }}</div>
-    {{/unless}}
+    {{#if this.loading}}
+      {{loading-spinner size="medium"}}
+    {{else}}
+      {{#each this.threads as |thread|}}
+        <Chat::Thread::ListItem @thread={{thread}} />
+      {{else}}
+        <div class="chat-thread-list__no-threads">{{i18n
+            "chat.threads.none"
+          }}</div>
+      {{/each}}
+    {{/if}}
   </div>
 </div>

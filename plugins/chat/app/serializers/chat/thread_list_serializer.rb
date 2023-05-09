@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class ThreadIndexSerializer < ApplicationSerializer
+  class ThreadListSerializer < ApplicationSerializer
     attributes :meta, :threads
 
     def threads
@@ -13,7 +13,7 @@ module Chat
     end
 
     def meta
-      {}
+      { channel_id: object.channel.id }
     end
   end
 end

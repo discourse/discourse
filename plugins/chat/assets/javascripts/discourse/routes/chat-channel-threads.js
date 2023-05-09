@@ -5,26 +5,18 @@ export default class ChatChannelThreads extends DiscourseRoute {
   @service router;
   @service chatChannelThreadListPane;
 
-  model() {
-    const channel = this.modelFor("chat.channel");
-    return channel.threadsManager.index(channel.id);
-  }
-
   deactivate() {
     this.chatChannelThreadListPane.close();
   }
 
   beforeModel(transition) {
     const channel = this.modelFor("chat.channel");
+    this.chatChannelThreadListPane.open();
 
     if (!channel.threadingEnabled) {
       transition.abort();
       this.router.transitionTo("chat.channel", ...channel.routeModels);
       return;
     }
-  }
-
-  afterModel() {
-    this.chatChannelThreadListPane.open();
   }
 }

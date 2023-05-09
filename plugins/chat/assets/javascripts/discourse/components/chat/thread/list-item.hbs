@@ -1,10 +1,11 @@
 <div class="chat-thread-list-item" data-thread-id={{@thread.id}}>
   <div class="chat-thread-list-item__main">
-    <LinkTo
-      @route="chat.channel.thread"
-      @models={{@thread.routeModels}}
+    <div
       title={{i18n "chat.thread.view_thread"}}
+      role="button"
       class="chat-thread-list-item__open-button"
+      {{on "touchstart" (fn this.openThread @thread) passive=true}}
+      {{on "click" (fn this.openThread @thread) passive=true}}
     >
       <div class="chat-thread-list-item__header">
         <div class="chat-thread-list-item__title">
@@ -24,6 +25,6 @@
         @thread={{@thread}}
         @message={{@thread.originalMessage}}
       />
-    </LinkTo>
+    </div>
   </div>
 </div>
