@@ -184,7 +184,7 @@ jobs:
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: QUNIT_PARALLEL=8 bin/rake plugin:qunit['*','1200000']
+        run: QUNIT_PARALLEL=7 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
 
       - name: Ember Build for System Tests
@@ -282,7 +282,7 @@ jobs:
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=4  --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=3 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v3
