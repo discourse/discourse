@@ -680,39 +680,16 @@ en:
   discourse_welcome_topic:
     title: "Welcome to %{site_title}! :wave:"
     body: |
+      We're so glad you've joined us. %{site_description}
 
-      We're so glad you've joined us! %{site_description}
+      %{site_title} is powered by Discourse.org, the powerful, open platform for communities of all kinds. Here are some things you can do to get started:
 
-      ## Things you can do here
+      :speaking_head: **Introduce yourself** by adding your picture and information about yourself and your interests to [your profile](%{base_path}/my/profile). What is one thing you’d like to be asked about?
 
-      ### [:speech_balloon: Chat](%{base_path}/chat)
+      :open_book: **Get to know the community** by [browsing discussions](%{base_path}/top) that are already happening here. When you find a post interesting, informative, or entertaining, use the :heart: to show your appreciation or support!
 
-      Have real-time conversations. Perfect for casual discussions, quick questions, or sharing short updates that don't need to be kept long term.
+      :handshake: **Contribute** by commenting, sharing your own perspective, asking questions, or offering feedback in the discussion. Before replying or starting new topics, please review the [Community Guidelines](%{base_path}/faq).
 
-      ### [:scroll: Discussions](%{base_path}/top)
-
-      Topics are saved and can be referred to and revisited later. Ideal for bigger conversations, debates, or discussions that take place over time.
-
-      ## [:books: Documentation](%{base_path}/docs)
-
-      Create and maintain a shared knowledge base of information. Perfect for tutorials, resources, and other types of information that everyone finds helpful.
-
-      # What to do next
-
-      ## [:memo: Edit your member profile](%{base_path}/my/preferences)
-
-      Introduce yourself by adding your picture and information about yourself and your interests. What is one thing you'd like to be asked about?
-
-      ## [:open_book: Start reading](%{base_path}/top)
-
-      Get to know the community by browsing discussions that are already happening here. When you find a post interesting, informative, or entertaining, use the :heart: to show your appreciation or support!
-
-      ### :arrow_right_hook: Take part in conversations
-
-      Engage with other members by commenting, sharing your own perspective, asking questions, or offering feedback in the discussion. Before replying or starting new topics, please review the [Community Guidelines](%{base_path}/faq).
-
-      > ### Have a question?
-      >
       > If you need help or have a suggestion, feel free to ask in [#feedback](%{base_path}/c/site-feedback) or [contact the admins](%{base_path}/about).
 
   admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"

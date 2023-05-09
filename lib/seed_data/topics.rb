@@ -89,6 +89,7 @@ module SeedData
               I18n.t(
                 "discourse_welcome_topic.body",
                 base_path: Discourse.base_path,
+                site_title: SiteSetting.title,
                 site_description: SiteSetting.site_description,
               ),
             category: general_category,

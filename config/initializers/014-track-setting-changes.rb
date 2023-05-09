@@ -71,14 +71,15 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
        topic = Topic.find_by(id: SiteSetting.welcome_topic_id)
     attributes =
       if name == :title
-        { title: I18n.t("discourse_welcome_topic.title", site_title: new_value) }
+        { title: I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title) }
       else
         {
           raw:
             I18n.t(
               "discourse_welcome_topic.body",
               base_path: Discourse.base_path,
-              site_description: new_value,
+              site_title: SiteSetting.title,
+              site_description: SiteSetting.site_description,
             ),
         }
       end

@@ -26,6 +26,7 @@ RSpec.describe SeedData::Topics do
         I18n.t(
           "discourse_welcome_topic.body",
           base_path: Discourse.base_path,
+          site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
         ).rstrip,
       )
@@ -93,8 +94,8 @@ RSpec.describe SeedData::Topics do
       expect(topic.first_post.raw).to eq(
         I18n.t(
           "discourse_welcome_topic.body",
-          "discourse_welcome_topic.body",
           base_path: Discourse.base_path,
+          site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
         ).rstrip,
       )
