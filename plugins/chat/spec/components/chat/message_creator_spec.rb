@@ -440,25 +440,50 @@ describe Chat::MessageCreator do
         expect(message.thread.original_message_user).to eq(reply_message.user)
       end
 
-      it "publishes the new thread" do
-        messages =
-          MessageBus.track_publish do
-            described_class.create(
-              chat_channel: public_chat_channel,
-              user: user1,
-              content: "this is a message",
-              in_reply_to_id: reply_message.id,
-            ).chat_message
-          end
+      context "when threading is enabled" do
+        it "publishes the new thread" do
+          public_chat_channel.update!(threading_enabled: true)
 
-        thread_created_message = messages.find { |m| m.data["type"] == "thread_created" }
-        expect(thread_created_message.channel).to eq("/chat/#{public_chat_channel.id}")
+          messages =
+            MessageBus.track_publish do
+              described_class.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                in_reply_to_id: reply_message.id,
+              ).chat_message
+            end
+
+          thread_created_message = messages.find { |m| m.data["type"] == "thread_created" }
+          expect(thread_created_message.channel).to eq("/chat/#{public_chat_channel.id}")
+        end
+      end
+
+      context "when threading is disabled" do
+        it "doesn’t publish the new thread" do
+          public_chat_channel.update!(threading_enabled: false)
+
+          messages =
+            MessageBus.track_publish do
+              described_class.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                in_reply_to_id: reply_message.id,
+              ).chat_message
+            end
+
+          thread_created_message = messages.find { |m| m.data["type"] == "thread_created" }
+          expect(thread_created_message).to be_nil
+        end
       end
 
       context "when a staged_thread_id is provided" do
         fab!(:existing_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
 
         it "creates a thread and publishes with the staged id" do
+          public_chat_channel.update!(threading_enabled: true)
+
           messages =
             MessageBus.track_publish do
               described_class.create(

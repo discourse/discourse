@@ -388,6 +388,7 @@ RSpec.describe Chat::ChatController do
         context "when sending a message in a staged thread" do
           it "creates the thread and publishes with the staged id" do
             sign_in(user)
+            chat_channel.update!(threading_enabled: true)
 
             messages =
               MessageBus.track_publish do
