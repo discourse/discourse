@@ -14,9 +14,9 @@
     {{on "touchmove" this.handleTouchMove passive=true}}
     {{on "touchstart" this.handleTouchStart passive=true}}
     {{on "touchend" this.handleTouchEnd passive=true}}
-    {{on "mouseenter" this.onMouseEnter}}
-    {{on "mouseleave" this.onMouseLeave}}
-    {{on "mousemove" this.onMouseMove}}
+    {{on "mouseenter" this.onMouseEnter passive=true}}
+    {{on "mouseleave" this.onMouseLeave passive=true}}
+    {{on "mousemove" this.onMouseMove passive=true}}
     class={{concat-class
       "chat-message-container"
       (if this.pane.selectingMessages "selecting-messages")
