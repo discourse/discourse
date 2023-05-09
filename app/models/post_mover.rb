@@ -7,10 +7,6 @@ class PostMover
     @move_types ||= Enum.new(:new_topic, :existing_topic)
   end
 
-  def self.merge_types
-    @merge_types ||= Enum.new(:sequential, :chronological)
-  end
-
   def initialize(original_topic, user, post_ids, move_to_pm: false)
     @original_topic = original_topic
     @user = user
@@ -18,9 +14,9 @@ class PostMover
     @move_to_pm = move_to_pm
   end
 
-  def to_topic(id, participants: nil, merge_type: nil)
+  def to_topic(id, participants: nil, chronological_order: false)
     @move_type = PostMover.move_types[:existing_topic]
-    @merge_type = PostMover.merge_types[merge_type&.to_sym] || PostMover.merge_types[:sequential]
+    @chronological_order = chronological_order
 
     topic = Topic.find_by_id(id)
     if topic.archetype != @original_topic.archetype &&
@@ -36,7 +32,6 @@ class PostMover
 
   def to_new_topic(title, category_id = nil, tags = nil)
     @move_type = PostMover.move_types[:new_topic]
-    @merge_type = PostMover.merge_types[:sequential]
 
     post = Post.find_by(id: post_ids.first)
     raise Discourse::InvalidParameters unless post
@@ -145,10 +140,9 @@ class PostMover
   end
 
   def move_each_post
-    case @merge_type
-    when PostMover.merge_types[:chronological]
+    if @chronological_order
       move_each_post_chronological
-    when PostMover.merge_types[:sequential]
+    else
       move_each_post_sequential
     end
   end
@@ -263,11 +257,14 @@ class PostMover
 
     PostAction.copy(post, new_post)
 
+    attrs_to_update = { reply_count: @reply_count[1] || 0 }
+
     if new_post.post_number != @move_map[post.post_number]
-      new_post.update_column(:post_number, @move_map[post.post_number])
+      attrs_to_update[:post_number] = @move_map[post.post_number]
+      attrs_to_update[:sort_order] = @move_map[post.post_number]
     end
 
-    new_post.update_column(:reply_count, @reply_count[1] || 0)
+    new_post.update_columns(attrs_to_update)
     new_post.custom_fields = post.custom_fields
     new_post.save_custom_fields
 

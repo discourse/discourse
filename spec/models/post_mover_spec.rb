@@ -18,20 +18,6 @@ RSpec.describe PostMover do
     end
   end
 
-  describe "#merge_types" do
-    context "when verifying enum sequence" do
-      before { @merge_types = PostMover.merge_types }
-
-      it "'sequential' should be at 1st position" do
-        expect(@merge_types[:sequential]).to eq(1)
-      end
-
-      it "'chronological' should be at 2nd position" do
-        expect(@merge_types[:chronological]).to eq(2)
-      end
-    end
-  end
-
   describe "move_posts" do
     context "with topics" do
       before { freeze_time }
@@ -1339,7 +1325,7 @@ RSpec.describe PostMover do
                 user,
                 [p2.id, p3.id, p4.id],
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
             expect(moved_to).to eq(destination_topic)
 
@@ -1453,7 +1439,7 @@ RSpec.describe PostMover do
                 user,
                 [p3.id, p4.id],
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
             expect(moved_to).to eq(destination_topic)
 
@@ -1541,7 +1527,7 @@ RSpec.describe PostMover do
                 user,
                 [p6.id],
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
             }.to change { p6.reload.topic_id }.and change {
                     destination_p8.reload.post_number
@@ -1560,7 +1546,7 @@ RSpec.describe PostMover do
                 user,
                 posts_to_move,
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
             expect(moved_to).to be_present
 
@@ -1576,7 +1562,7 @@ RSpec.describe PostMover do
                 user,
                 posts_to_move,
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
             expect(moved_to).to be_present
 
@@ -1592,7 +1578,7 @@ RSpec.describe PostMover do
                 user,
                 posts_to_move,
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
             expect(moved_to).to be_present
 
@@ -1611,7 +1597,7 @@ RSpec.describe PostMover do
                 user,
                 posts_to_move,
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
             expect(moved_to).to be_present
 
@@ -1630,7 +1616,7 @@ RSpec.describe PostMover do
                 user,
                 posts_to_move,
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
             expect(moved_to).to be_present
 
@@ -1648,7 +1634,7 @@ RSpec.describe PostMover do
                 user,
                 posts_to_move,
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
             expect(moved_to).to be_present
 
@@ -1665,7 +1651,7 @@ RSpec.describe PostMover do
               user,
               posts_to_move,
               destination_topic_id: destination_topic.id,
-              merge_type: "chronological",
+              chronological_order: true,
             )
 
             topic.reload
@@ -1685,7 +1671,7 @@ RSpec.describe PostMover do
                 user,
                 [p1.id, p2.id, p3.id, p4.id, small_action.id],
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
 
             moved_to.reload
@@ -1706,7 +1692,7 @@ RSpec.describe PostMover do
                 user,
                 [p2.id],
                 destination_topic_id: destination_topic.id,
-                merge_type: "chronological",
+                chronological_order: true,
               )
 
             n2 = Notification.find(n2.id)
@@ -1733,7 +1719,7 @@ RSpec.describe PostMover do
               user,
               [p3.id],
               destination_topic_id: destination_topic.id,
-              merge_type: "chronological",
+              chronological_order: true,
             )
 
             expect(Notification.exists?(user_notification.id)).to eq(false)
@@ -1754,7 +1740,7 @@ RSpec.describe PostMover do
                   user,
                   [p1.id, p4.id],
                   destination_topic_id: destination_topic.id,
-                  merge_type: "chronological",
+                  chronological_order: true,
                 )
 
               expect(
@@ -1807,7 +1793,7 @@ RSpec.describe PostMover do
                   user,
                   [p1.id],
                   destination_topic_id: destination_topic.id,
-                  merge_type: "chronological",
+                  chronological_order: true,
                 )
 
               expect(
@@ -1836,7 +1822,7 @@ RSpec.describe PostMover do
               user,
               [p3.id],
               destination_topic_id: destination_topic.id,
-              merge_type: "chronological",
+              chronological_order: true,
             )
 
             expect(TopicUser.find_by(topic: topic, user: user).liked).to eq(false)
@@ -1918,7 +1904,7 @@ RSpec.describe PostMover do
                   user,
                   [p1.id, p2.id],
                   destination_topic_id: destination_topic.id,
-                  merge_type: "chronological",
+                  chronological_order: true,
                 )
 
               expect(TopicUser.find_by(topic: moved_to_topic, user: user1)).to have_attributes(
@@ -1988,7 +1974,7 @@ RSpec.describe PostMover do
                   user,
                   [p1.id, p2.id],
                   destination_topic_id: destination_topic.id,
-                  merge_type: "chronological",
+                  chronological_order: true,
                 )
 
               expect(TopicUser.find_by(topic: new_topic, user: user)).to have_attributes(
@@ -2285,7 +2271,7 @@ RSpec.describe PostMover do
             [p2.id, p5.id],
             destination_topic_id: another_personal_message.id,
             archetype: "private_message",
-            merge_type: "chronological",
+            chronological_order: true,
           )
 
           p2.reload
@@ -2307,7 +2293,7 @@ RSpec.describe PostMover do
             destination_topic_id: another_personal_message.id,
             participants: [regular_user.username],
             archetype: "private_message",
-            merge_type: "chronological",
+            chronological_order: true,
           )
 
           another_personal_message.reload
@@ -2330,7 +2316,7 @@ RSpec.describe PostMover do
               admin,
               [p2.id, p5.id],
               destination_topic_id: topic.id,
-              merge_type: "chronological",
+              chronological_order: true,
             )
           }.to raise_error(Discourse::InvalidParameters)
         end
@@ -2342,7 +2328,7 @@ RSpec.describe PostMover do
               [p1.id, p2.id, p3.id, p4.id, p5.id],
               destination_topic_id: another_personal_message.id,
               archetype: "private_message",
-              merge_type: "chronological",
+              chronological_order: true,
             )
           expect(moved_to).to be_present
 
@@ -2358,7 +2344,7 @@ RSpec.describe PostMover do
               [p2.id],
               destination_topic_id: another_personal_message.id,
               archetype: "private_message",
-              merge_type: "chronological",
+              chronological_order: true,
             )
           post = Post.find_by(topic_id: personal_message.id, post_type: Post.types[:whisper])
 

@@ -370,7 +370,7 @@ RSpec.describe TopicsController do
                params: {
                  post_ids: [p1.id],
                  destination_topic_id: dest_topic.id,
-                 merge_type: "chronological",
+                 chronological_order: "true",
                }
 
           expect(response.status).to eq(200)
@@ -456,7 +456,7 @@ RSpec.describe TopicsController do
              params: {
                post_ids: [p1.id],
                destination_topic_id: dest_topic.id,
-               merge_type: "chronological",
+               chronological_order: "true",
              }
 
         expect(response.status).to eq(200)
@@ -640,7 +640,7 @@ RSpec.describe TopicsController do
                  post_ids: [p2.id],
                  destination_topic_id: dest_message.id,
                  archetype: "private_message",
-                 merge_type: "chronological",
+                 chronological_order: "true",
                }
 
           expect(response.status).to eq(200)
@@ -697,7 +697,7 @@ RSpec.describe TopicsController do
           post "/t/#{topic.id}/merge-topic.json",
                params: {
                  destination_topic_id: dest_topic.id,
-                 merge_type: "chronological",
+                 chronological_order: "true",
                }
 
           expect(response.status).to eq(200)
@@ -776,7 +776,7 @@ RSpec.describe TopicsController do
         post "/t/#{topic.id}/merge-topic.json",
              params: {
                destination_topic_id: dest_topic.id,
-               merge_type: "chronological",
+               chronological_order: "true",
              }
 
         expect(response.status).to eq(200)
@@ -870,7 +870,7 @@ RSpec.describe TopicsController do
                params: {
                  destination_topic_id: dest_message.id,
                  archetype: "private_message",
-                 merge_type: "chronological",
+                 chronological_order: "true",
                }
 
           expect(response.status).to eq(200)

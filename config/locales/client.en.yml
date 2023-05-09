@@ -3304,12 +3304,7 @@ en:
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>%{count}</b> posts to."
-        merge_type:
-          title:
-            one: "Merge this post..."
-            other: "Merge these %{count} posts..."
-          sequential: "as one sequential block at the bottom of the topic"
-          chronological: "in time order throughout the topic"
+        chronological_order: "preserve chronological order after merging"
 
       move_to_new_message:
         title: "Move to New Message"
@@ -3329,12 +3324,6 @@ en:
         instructions:
           one: "Please choose the message you'd like to move that post to."
           other: "Please choose the message you'd like to move those <b>%{count}</b> posts to."
-        merge_type:
-          title:
-            one: "Merge this post..."
-            other: "Merge these %{count} posts..."
-          sequential: "as one sequential block at the bottom of the message"
-          chronological: "in time order throughout the message"
 
       merge_posts:
         title: "Merge Selected Posts"

@@ -60,7 +60,6 @@
         <ChooseMessage
           @currentTopicId={{this.model.id}}
           @selectedTopicId={{this.selectedTopicId}}
-          @topicChangedCallback={{action "newTopicSelected"}}
         />
 
         <label>{{i18n "topic.move_to_new_message.participants"}}</label>
@@ -69,6 +68,11 @@
           @value={{this.participants}}
           @onChange={{action (mut this.participants)}}
         />
+
+        <label class="checkbox-label">
+          <Input @type="checkbox" @checked={{this.chronologicalOrder}} />
+          {{i18n "topic.merge_topic.chronological_order"}}
+        </label>
       </form>
     {{/if}}
 
@@ -118,8 +122,12 @@
         <ChooseTopic
           @currentTopicId={{this.model.id}}
           @selectedTopicId={{this.selectedTopicId}}
-          @topicChangedCallback={{action "newTopicSelected"}}
         />
+
+        <label class="checkbox-label">
+          <Input @type="checkbox" @checked={{this.chronologicalOrder}} />
+          {{i18n "topic.merge_topic.chronological_order"}}
+        </label>
       </form>
     {{/if}}
 

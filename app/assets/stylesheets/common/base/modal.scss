@@ -372,23 +372,6 @@
   }
 }
 
-.merge-type-modal {
-  .dialog-content {
-    width: 100%;
-    min-width: unset;
-    max-width: 30em;
-  }
-
-  .btn {
-    display: block;
-    text-align: left;
-    margin-bottom: 0.75em;
-    margin-right: 0;
-    overflow: hidden;
-    width: 100%;
-  }
-}
-
 .admin-delete-user-posts-progress-modal {
   .progress-bar {
     height: 15px;
@@ -618,6 +601,14 @@
     }
     .topic-categories {
       width: 100%;
+    }
+  }
+
+  #choosing-topic {
+    form {
+      .participant-selector {
+        margin-bottom: 9px;
+      }
     }
   }
 }
