@@ -35,6 +35,7 @@ const SiteHeaderComponent = MountWidget.extend(
       "currentUser.unread_notifications",
       "currentUser.unread_high_priority_notifications",
       "currentUser.all_unread_notifications_count",
+      "currentUser.reviewable_count",
       "currentUser.unseen_reviewable_count",
       "session.defaultColorSchemeIsDark",
       "session.darkModeAvailable"
