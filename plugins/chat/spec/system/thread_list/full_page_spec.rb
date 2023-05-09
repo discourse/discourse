@@ -75,13 +75,42 @@ describe "Thread list in side panel | full page", type: :system, js: true do
       expect(side_panel).to have_open_thread(thread_1)
     end
 
-    it "allows updating the title" do
-      chat_page.visit_channel(channel)
-      chat_page.open_thread_list
-      thread_list_page.item_by_id(thread_1.id).find(".chat-thread-list-item__settings").click
-      find(".thread-title-input").fill_in(with: "wow new title!")
-      find(".modal-footer .btn-primary").click
-      expect(thread_list_page.item_by_id(thread_1.id)).to have_content("wow new title!")
+    describe "updating the title of the thread" do
+      let(:new_title) { "wow new title" }
+
+      def open_thread_list
+        chat_page.visit_channel(channel)
+        chat_page.open_thread_list
+        expect(side_panel).to have_open_thread_list
+      end
+
+      it "allows updating when user is admin" do
+        current_user.update!(admin: true)
+        open_thread_list
+        thread_list_page.item_by_id(thread_1.id).find(".chat-thread-list-item__settings").click
+        find(".thread-title-input").fill_in(with: new_title)
+        find(".modal-footer .btn-primary").click
+        expect(thread_list_page.item_by_id(thread_1.id)).to have_content(new_title)
+      end
+
+      it "allows updating when user is same as the chat original message user" do
+        thread_1.original_message.update!(user: current_user)
+        open_thread_list
+        thread_list_page.item_by_id(thread_1.id).find(".chat-thread-list-item__settings").click
+        find(".thread-title-input").fill_in(with: new_title)
+        find(".modal-footer .btn-primary").click
+        expect(thread_list_page.item_by_id(thread_1.id)).to have_content(new_title)
+      end
+
+      it "does not allow updating if user is neither admin nor original message user" do
+        thread_1.original_message.update!(user: other_user)
+        open_thread_list
+        expect(
+          thread_list_page.item_by_id(thread_1.id).find(".chat-thread-list-item__settings")[
+            :disabled
+          ],
+        ).to eq("true")
+      end
     end
   end
 end
