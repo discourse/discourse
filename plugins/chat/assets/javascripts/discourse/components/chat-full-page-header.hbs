@@ -29,27 +29,27 @@
         <ChatChannelTitle @channel={{@channel}} />
       </LinkTo>
 
-      {{#if @channel.threadingEnabled}}
+      {{#if (or @channel.threadingEnabled this.site.desktopView)}}
         <div class="chat-full-page-header__right-actions">
-          <LinkTo
-            @route="chat.channel.threads"
-            @models={{@channel.routeModels}}
-            title={{i18n "chat.threads.list"}}
-            class="open-thread-list-btn btn btn-flat"
-          >
-            {{d-icon "comments"}}
-          </LinkTo>
-        </div>
-      {{/if}}
+          {{#if @channel.threadingEnabled}}
+            <LinkTo
+              @route="chat.channel.threads"
+              @models={{@channel.routeModels}}
+              title={{i18n "chat.threads.list"}}
+              class="open-thread-list-btn btn btn-flat"
+            >
+              {{d-icon "comments"}}
+            </LinkTo>
+          {{/if}}
 
-      {{#if this.site.desktopView}}
-        <div class="chat-full-page-header__right-actions">
-          <DButton
-            @icon="discourse-compress"
-            @title="chat.close_full_page"
-            class="open-drawer-btn btn-flat no-text"
-            @action={{@onCloseFullScreen}}
-          />
+          {{#if this.site.desktopView}}
+            <DButton
+              @icon="discourse-compress"
+              @title="chat.close_full_page"
+              class="open-drawer-btn btn-flat no-text"
+              @action={{@onCloseFullScreen}}
+            />
+          {{/if}}
         </div>
       {{/if}}
     </div>
