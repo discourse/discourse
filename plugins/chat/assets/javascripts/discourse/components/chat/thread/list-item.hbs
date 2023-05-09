@@ -4,7 +4,6 @@
       title={{i18n "chat.thread.view_thread"}}
       role="button"
       class="chat-thread-list-item__open-button"
-      {{on "touchstart" (fn this.openThread @thread) passive=true}}
       {{on "click" (fn this.openThread @thread) passive=true}}
     >
       <div class="chat-thread-list-item__header">
