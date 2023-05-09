@@ -84,7 +84,9 @@ de:
       collapse: "Chat-Bereich ausblenden"
       expand: "Chat-Übersicht erweitern"
       confirm_flag: "Bist du sicher, dass du die Nachricht von %{username} markieren möchtest?"
-      deleted: "Eine Nachricht wurde gelöscht. [Anzeigen]"
+      deleted:
+        one: "Eine Nachricht wurde gelöscht. [Anzeigen]"
+        other: "%{count} Nachrichten wurden gelöscht. [alle anzeigen]"
       hidden: "Eine Nachricht wurde ausgeblendet. [Anzeigen]"
       delete: "Löschen"
       edited: "bearbeitet"

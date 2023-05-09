@@ -1295,9 +1295,6 @@ sl:
       title: "Prenos oddaljenih slik onemogočen"
       subject_template: "Prenos oddaljenih slik onemogočen"
       text_body_template: "Nastavitev `download_remote_images_to_local` je onemogočena, ker je bil dosežena `download_remote_images_threshold` omejitev prostora na disku ."
-    dashboard_problems:
-      title: "Težave nadzorne plošče"
-      subject_template: "Nov nasvet na vaši nadzorni plošči"
     new_user_of_the_month:
       title: "Vi ste nov uporabnik meseca!"
       subject_template: "Vi ste nov uporabnik meseca!"

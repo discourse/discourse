@@ -2720,6 +2720,7 @@ ar:
       reaction_2: "<span>%{username} و%{username2}</span> %{description}"
       votes_released: "%{description} - اكتمل"
       new_features: "تتوفر ميزات جديدة!"
+      admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
       dismiss_confirmation:
         body:
           default:

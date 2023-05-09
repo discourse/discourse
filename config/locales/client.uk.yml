@@ -2506,6 +2506,7 @@ uk:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - завершено"
       new_features: "Доступні нові функції!"
+      admin_problems: "Нова порада на інформаційній панелі вашого сайту"
       dismiss_confirmation:
         body:
           default:

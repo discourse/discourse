@@ -84,7 +84,9 @@ sv:
       collapse: "Komprimera chattruta"
       expand: "Expandera chattlådan"
       confirm_flag: "Är du säker på att du vill flagga %{username}:s meddelande?"
-      deleted: "Ett meddelande raderades. [view]"
+      deleted:
+        one: "Ett meddelande raderades. [view]"
+        other: "%{count} meddelanden raderades. [visa alla]"
       hidden: "Ett meddelande doldes. [view]"
       delete: "Radera"
       edited: "redigerad"
