@@ -29,6 +29,19 @@
         <ChatChannelTitle @channel={{@channel}} />
       </LinkTo>
 
+      {{#if @channel.threadingEnabled}}
+        <div class="chat-full-page-header__right-actions">
+          <LinkTo
+            @route="chat.channel.threads"
+            @models={{@channel.routeModels}}
+            title={{i18n "chat.threads.list"}}
+            class="open-thread-list-btn btn btn-flat"
+          >
+            {{d-icon "comments"}}
+          </LinkTo>
+        </div>
+      {{/if}}
+
       {{#if this.site.desktopView}}
         <div class="chat-full-page-header__right-actions">
           <DButton
@@ -37,17 +50,6 @@
             class="open-drawer-btn btn-flat no-text"
             @action={{@onCloseFullScreen}}
           />
-
-          {{#if @channel.threadingEnabled}}
-            <LinkTo
-              @route="chat.channel.threads"
-              @models={{@channel.routeModels}}
-              title={{i18n "chat.threads.list"}}
-              class="open-thread-list-btn btn btn-flat"
-            >
-              {{d-icon "comments"}}
-            </LinkTo>
-          {{/if}}
         </div>
       {{/if}}
     </div>
