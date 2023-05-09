@@ -607,7 +607,7 @@ class User < ActiveRecord::Base
     @muted_user_ids ||= muted_users.pluck(:id)
   end
 
-  def unread_notifications_of_type(notification_type)
+  def unread_notifications_of_type(notification_type, since: nil)
     # perf critical, much more efficient than AR
     sql = <<~SQL
         SELECT COUNT(*)
@@ -617,10 +617,11 @@ class User < ActiveRecord::Base
            AND n.notification_type = :notification_type
            AND n.user_id = :user_id
            AND NOT read
+           #{since ? "AND n.created_at > :since" : ""}
     SQL
 
     # to avoid coalesce we do to_i
-    DB.query_single(sql, user_id: id, notification_type: notification_type)[0].to_i
+    DB.query_single(sql, user_id: id, notification_type: notification_type, since: since)[0].to_i
   end
 
   def unread_notifications_of_priority(high_priority:)

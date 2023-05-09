@@ -214,6 +214,31 @@ RSpec.describe UserNotifications do
         expect(subject.subject).not_to match(/Discourse Meta/)
       end
 
+      it "includes unread likes received count within the since date" do
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:liked],
+          created_at: 2.months.ago,
+        )
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:liked],
+          read: true,
+        )
+        Fabricate(:notification, user: user, notification_type: Notification.types[:liked])
+        Fabricate(:notification, user: user, notification_type: Notification.types[:liked])
+        digest = UserNotifications.digest(user, since: 1.month.ago.to_date.to_s)
+        parsed_html = Nokogiri::HTML5.fragment(digest.html_part.body.to_s)
+        expect(parsed_html.css(".header-stat-count #likes_received_stat_count strong").text).to eq(
+          "2",
+        )
+        expect(
+          parsed_html.css(".header-stat-description #likes_received_stat_description strong").text,
+        ).to eq("Likes Received")
+      end
+
       it "excludes deleted topics and their posts" do
         deleted =
           Fabricate(
