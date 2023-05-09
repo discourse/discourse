@@ -1,4 +1,4 @@
-import { isBlank, isPresent } from "@ember/utils";
+import { isPresent } from "@ember/utils";
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import I18n from "I18n";
@@ -13,37 +13,32 @@ export default class ChatReplyingIndicator extends Component {
   @tracked users = [];
 
   @action
-  async subscribe() {
-    this.presenceChannel = this.presence.getChannel(this.channelName);
-    this.presenceChannel.on("change", this.handlePresenceChange);
-    await this.presenceChannel.subscribe();
+  async updateSubscription() {
+    await this.unsubscribe();
+    await this.subscribe();
   }
 
   @action
-  async resubscribe() {
-    await this.teardown();
-    await this.subscribe();
+  async subscribe() {
+    this.presenceChannel = this.presence.getChannel(this.channelName);
+    await this.presenceChannel.subscribe();
+    this.users = this.presenceChannel.users;
+    this.presenceChannel.on("change", this.handlePresenceChange);
+  }
+
+  @action
+  async unsubscribe() {
+    this.users = [];
+
+    if (this.presenceChannel.subscribed) {
+      this.presenceChannel.off("change", this.handlePresenceChange);
+      await this.presenceChannel.unsubscribe();
+    }
   }
 
   @action
   handlePresenceChange(presenceChannel) {
     this.users = presenceChannel.users || [];
-  }
-
-  @action
-  async handleDraft() {
-    if (this.args.channel.isDraft) {
-      await this.teardown();
-    } else {
-      await this.resubscribe();
-    }
-  }
-
-  @action
-  async teardown() {
-    if (this.presenceChannel) {
-      await this.presenceChannel.unsubscribe();
-    }
   }
 
   get usernames() {
@@ -53,10 +48,6 @@ export default class ChatReplyingIndicator extends Component {
   }
 
   get text() {
-    if (isBlank(this.usernames)) {
-      return;
-    }
-
     if (this.usernames.length === 1) {
       return I18n.t("chat.replying_indicator.single_user", {
         username: this.usernames[0],
