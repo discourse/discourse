@@ -869,6 +869,19 @@ RSpec.describe TopicsFilter do
             .pluck(:id),
         ).to contain_exactly(topic_without_tag.id, topic_with_group_only_tag.id)
       end
+
+      describe "when query string is tag:日べé1" do
+        before { tag.update!(name: "日べé1") }
+
+        it "should return topics that are tagged with the specified tag" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tag:日べé1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+      end
     end
 
     describe "when filtering by topic author" do
