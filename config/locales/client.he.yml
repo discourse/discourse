@@ -2548,6 +2548,7 @@ he:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - הסתיים"
       new_features: "יכולות חדשות זמינות!"
+      admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
       dismiss_confirmation:
         body:
           default:

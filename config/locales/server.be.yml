@@ -1651,9 +1651,6 @@ be:
       title: "Загрузіць выдаленыя выявы з абмежаванымі фізічнымі магчымасцямі"
       subject_template: "Загрузка аддаленых малюнкаў адключаная"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
-    dashboard_problems:
-      title: "праблемы Dashboard"
-      subject_template: "Новыя рэкамендацыі на вашым сайце прыборнай панэлі"
     new_user_of_the_month:
       title: "Вы новы карыстальнік месяцы!"
       subject_template: "Вы новы карыстальнік месяцы!"

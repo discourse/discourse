@@ -2114,7 +2114,7 @@ tr_TR:
     enable_sitemap: "Siteniz için bir site haritası oluşturun ve bunu robots.txt dosyasına ekleyin."
     sitemap_page_size: "Her site haritası sayfasına eklenecek URL sayısı. Maksimum 50.000"
     enable_user_status: "(deneysel) Kullanıcıların özel durum mesajı (emoji + açıklama) ayarlamasına izin verin."
-    enable_user_tips: "(deneysel) Kullanıcılara temel özellikleri açıklayan yeni kullanıcı ipuçlarını etkinleştirin"
+    enable_user_tips: "Kullanıcılara temel özellikleri açıklayan yeni kullanıcı ipuçlarını etkinleştirin"
     short_title: "Kısa başlık, kullanıcının ana ekranında, başlatıcısında veya alanın sınırlı olabileceği diğer yerlerde kullanılacak. Bu başlık 12 karakterle sınırlı olmalı."
     dashboard_hidden_reports: "Belirtilen raporların panodan gizlenmesine izin verin."
     dashboard_visible_tabs: "Hangi pano sekmelerinin görünür olacağını seçin."
@@ -2135,6 +2135,8 @@ tr_TR:
     default_sidebar_tags: "Seçilen etiketler varsayılan olarak Kenar Çubuğunun Etiketler bölümünde gösterilir."
     enable_experimental_hashtag_autocomplete: "DENEYSEL: Seçilen ögeyi farklı şekilde işleyen ve aramayı iyileştiren kategoriler ve etiketler için yeni #hashtag otomatik tamamlama sistemini kullanın"
     experimental_new_new_view_groups: "DENEYSEL: Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki \"Her şey\" bağlantısını buna bağlayın."
+    enable_custom_sidebar_sections: "DENEYSEL: Özel kenar çubuğu bölümlerini etkinleştir"
+    experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştirir"
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."
       invalid_email: "Geçersiz e-posta adresi."
@@ -3141,15 +3143,6 @@ tr_TR:
       title: "Uzak Görüntüleri İndir Devre Dışı"
       subject_template: "Uzak görüntüleri indirme devre dışı"
       text_body_template: "\"Download_remote_images_to_local\" ayarı, \"download_remote_images_threshold\" adresindeki disk alanı sınırına ulaşıldığı için devre dışı bırakıldı."
-    dashboard_problems:
-      title: "Pano Sorunları"
-      subject_template: "Sitenizin panosunda yeni tavsiye"
-      text_body_template: |
-        Mevcut site ayarlarınıza göre sizin için bazı yeni tavsiye ve önerilerimiz var.
-
-        Bunu görmek için [site panonuzu ziyaret edin](%{base_url}/admin).
-
-        Panonuzda hiçbir şey görünmüyorsa başka bir personel bu tavsiyeye göre zaten hareket etmiş olabilir. Personel eylemlerinin bir listesini [Personel Eylemi Günlükleri](%{base_url}/admin/logs/staff_action_logs) adresinde bulabilirsiniz.
     new_user_of_the_month:
       title: "Ayın Yeni Kullanıcısısınız!"
       subject_template: "Ayın Yeni Kullanıcısısınız!"

@@ -2106,7 +2106,6 @@ fr:
     enable_sitemap: "Générez un sitemap pour votre site et l'inclure dans le fichier robots.txt."
     sitemap_page_size: "Nombre d'URL à inclure dans chaque page de sitemap. Maximum 50 000"
     enable_user_status: "(expérimental) Autoriser les utilisateurs à définir un message d'état personnalisé (émoji + description)."
-    enable_user_tips: "(expérimental) Activer les nouveaux conseils d'utilisation qui décrivent les fonctionnalités clés aux utilisateurs"
     short_title: "Le titre court sera utilisé sur l'écran d'accueil de l'utilisateur, le lanceur d'applications ou d'autres endroits où la place disponible est limitée. Il devrait être limité à 12 caractères."
     dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
     dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
@@ -3147,15 +3146,6 @@ fr:
       title: "Téléchargement d'images distantes désactivé"
       subject_template: "Téléchargement d'images distantes désactivé"
       text_body_template: "Le paramètre « download_remote_images_to_local » a été désactivé car la limite (« download_remote_images_threshold ») d'espace disque utilisé par les images vient d'être dépassée."
-    dashboard_problems:
-      title: "Problèmes du tableau de bord"
-      subject_template: "Des nouveaux conseils sur votre tableau de bord"
-      text_body_template: |
-        Nous avons de nouveaux conseils et recommandations pour vous d'après vos paramètres actuels.
-
-        [Rendez-vous sur votre tableau de bord](%{base_url}/admin) pour les voir.
-
-        Si rien n'est visible sur votre tableau de bord, il est possible qu'un autre responsable ait déjà appliqué ces conseils. Une liste des actions réalisées par les responsables se trouve sur la page [Actions des responsables](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"
       subject_template: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"

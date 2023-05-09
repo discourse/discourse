@@ -78,7 +78,6 @@ ja:
       close: "閉じる"
       collapse: "チャットドロワーを折りたたむ"
       confirm_flag: "%{username} のメッセージを通報してよろしいですか？"
-      deleted: "メッセージは削除されました。[view]"
       hidden: "メッセージが非表示でした。[view]"
       delete: "削除"
       edited: "編集済み"

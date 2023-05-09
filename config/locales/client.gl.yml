@@ -1934,6 +1934,7 @@ gl:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
+      admin_problems: "Novo consello no seu panel de sitio"
       dismiss_confirmation:
         dismiss: "Desbotar"
         cancel: "Cancelar"
