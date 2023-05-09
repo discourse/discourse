@@ -237,11 +237,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   listCurrentUserChannels() {
-    return this.#getRequest("/channels/me").then((result) => {
-      return (result?.channels || []).map((channel) =>
-        this.chatChannelsManager.store(channel)
-      );
-    });
+    return this.#getRequest("/channels/me");
   }
 
   /**

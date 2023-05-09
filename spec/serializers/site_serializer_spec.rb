@@ -15,6 +15,8 @@ RSpec.describe SiteSerializer do
     end
 
     it "is not included if enable_user_tips is disabled" do
+      SiteSetting.enable_user_tips = false
+
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:user_tips]).to eq(nil)
     end

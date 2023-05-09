@@ -54,7 +54,7 @@
     "handlebars": "^4.7.7",
     "html-entities": "^2.3.3",
     "js-yaml": "^4.1.0",
-    "jsdom": "^21.1.1",
+    "jsdom": "^22.0.0",
     "markdown-it": "^13.0.1",
     "message-bus-client": "^4.3.2",
     "messageformat": "0.1.5",
@@ -88,7 +88,7 @@
     "babel-plugin-ember-template-compilation": "^2.0.0",
     "broccoli-asset-rev": "^3.0.0",
     "ember-auto-import": "^2.6.3",
-    "ember-auto-import-chunks-json-generator": "^1.0.0",
+    "ember-auto-import-chunks-json-generator": "^1.1.0",
     "ember-cached-decorator-polyfill": "^1.0.1",
     "ember-cli": "~4.12.0",
     "ember-cli-app-version": "^6.0.0",
@@ -102,7 +102,7 @@
     "ember-cli-terser": "^4.0.2",
     "ember-qunit": "^6.2.0",
     "ember-exam": "^8.0.0",
-    "eslint": "^8.39.0",
+    "eslint": "^8.40.0",
     "eslint-plugin-qunit": "^7.3.4",
     "imports-loader": "^4.0.1",
     "loader.js": "^4.7.0",
@@ -112,7 +112,7 @@
     "source-map": "^0.7.4",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
-    "terser": "^5.17.1",
+    "terser": "^5.17.2",
     "webpack": "^5.82.0"
   }
 }

@@ -434,6 +434,37 @@ RSpec.describe TopicsFilter do
         end
       end
 
+      describe "when `slug_generation_method` site setting is set to encoded" do
+        before do
+          SiteSetting.slug_generation_method = "encoded"
+          category.update!(name: "日本語", slug: "日本語")
+        end
+
+        describe "when query string is `category:日本語`" do
+          it 'should return topics from category with slug "日本語"' do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("category:日本語")
+                .pluck(:id),
+            ).to contain_exactly(topic_in_category.id, topic_in_category_subcategory.id)
+          end
+        end
+
+        describe "when query string is `category:日本語:안녕하세요`" do
+          before { category_subcategory.update!(name: "안녕하세요 ", slug: "안녕하세요 ") }
+
+          it "should return topics from category with slug '안녕하세요'" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("category:日本語:안녕하세요")
+                .pluck(:id),
+            ).to contain_exactly(topic_in_category_subcategory.id)
+          end
+        end
+      end
+
       describe "when multiple categories have subcategories with the same name" do
         fab!(:category_subcategory) do
           Fabricate(:category, parent_category: category, name: "subcategory")
@@ -868,6 +899,19 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("-tags:tag1,tag2")
             .pluck(:id),
         ).to contain_exactly(topic_without_tag.id, topic_with_group_only_tag.id)
+      end
+
+      describe "when query string is tag:日べé1" do
+        before { tag.update!(name: "日べé1") }
+
+        it "should return topics that are tagged with the specified tag" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tag:日べé1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
       end
     end
 

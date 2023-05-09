@@ -15,10 +15,9 @@ module(
         "channel",
         fabricators.chatChannel({ chatable_type: "Category" })
       );
-      this.channel.setProperties({
-        description: "Important stuff is announced here.",
-        title: "announcements",
-      });
+
+      this.channel.description = "Important stuff is announced here.";
+      this.channel.title = "announcements";
       this.currentUser.set("has_chat_enabled", true);
       this.siteSettings.chat_enabled = true;
     });
@@ -49,7 +48,7 @@ module(
     });
 
     test("no channel description", async function (assert) {
-      this.channel.set("description", null);
+      this.channel.description = null;
 
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
@@ -83,7 +82,7 @@ module(
     });
 
     test("closed channel", async function (assert) {
-      this.channel.set("status", "closed");
+      this.channel.status = "closed";
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
       assert.false(

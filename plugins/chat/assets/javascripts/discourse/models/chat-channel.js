@@ -1,5 +1,3 @@
-import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -10,6 +8,9 @@ import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messa
 import { getOwner } from "discourse-common/lib/get-owner";
 import guid from "pretty-text/guid";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
+import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
+import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
+import Category from "discourse/models/category";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -49,24 +50,78 @@ const READONLY_STATUSES = [
   CHANNEL_STATUSES.archived,
 ];
 
-export default class ChatChannel extends RestModel {
+export default class ChatChannel {
+  static create(args = {}) {
+    return new ChatChannel(args);
+  }
+
+  static createDirectMessageChannelDraft(args = {}) {
+    const channel = ChatChannel.create({
+      chatable_type: CHATABLE_TYPES.directMessageChannel,
+      chatable: {
+        users: args.users || [],
+      },
+    });
+    channel.isDraft = true;
+    return channel;
+  }
+
   @tracked currentUserMembership = null;
   @tracked isDraft = false;
   @tracked title;
+  @tracked slug;
   @tracked description;
-  @tracked chatableType;
   @tracked status;
-  @tracked activeThread;
+  @tracked activeThread = null;
   @tracked lastMessageSentAt;
   @tracked canDeleteOthers;
   @tracked canDeleteSelf;
   @tracked canFlag;
   @tracked canModerate;
   @tracked userSilenced;
-  @tracked draft;
+  @tracked draft = null;
+  @tracked meta;
+  @tracked chatableType;
+  @tracked chatableUrl;
+  @tracked autoJoinUsers = false;
+  @tracked allowChannelWideMentions = true;
+  @tracked membershipsCount = 0;
+  @tracked archive;
 
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
+
+  constructor(args = {}) {
+    this.id = args.id;
+    this.chatableId = args.chatable_id;
+    this.chatableUrl = args.chatable_url;
+    this.chatableType = args.chatable_type;
+    this.membershipsCount = args.memberships_count;
+    this.meta = args.meta;
+    this.slug = args.slug;
+    this.title = args.title;
+    this.status = args.status;
+    this.canDeleteSelf = args.can_delete_self;
+    this.canDeleteOthers = args.can_delete_others;
+    this.canFlag = args.can_flag;
+    this.userSilenced = args.user_silenced;
+    this.canModerate = args.can_moderate;
+    this.description = args.description;
+    this.lastMessageSentAt = args.last_message_sent_at;
+    this.threadingEnabled = args.threading_enabled;
+    this.autoJoinUsers = args.auto_join_users;
+    this.allowChannelWideMentions = args.allow_channel_wide_mentions;
+    this.chatable = this.isDirectMessageChannel
+      ? ChatDirectMessage.create(args)
+      : Category.create(args.chatable);
+    this.currentUserMembership = UserChatChannelMembership.create(
+      args.current_user_membership
+    );
+
+    if (args.archive_completed || args.archive_failed) {
+      this.archive = ChatChannelArchive.create(args);
+    }
+  }
 
   findIndexOfMessage(id) {
     return this.messagesManager.findIndexOfMessage(id);
@@ -223,11 +278,15 @@ export default class ChatChannel extends RestModel {
 
   updateMembership(membership) {
     this.currentUserMembership.following = membership.following;
-    this.currentUserMembership.muted = membership.muted;
-    this.currentUserMembership.desktop_notification_level =
+    this.currentUserMembership.lastReadMessage_id =
+      membership.last_read_message_id;
+    this.currentUserMembership.desktopNotificationLevel =
       membership.desktop_notification_level;
-    this.currentUserMembership.mobile_notification_level =
+    this.currentUserMembership.mobileNotificationLevel =
       membership.mobile_notification_level;
+    this.currentUserMembership.unreadCount = membership.unread_count;
+    this.currentUserMembership.unreadMentions = membership.unread_mentions;
+    this.currentUserMembership.muted = membership.muted;
   }
 
   updateLastReadMessage(messageId) {
@@ -235,7 +294,7 @@ export default class ChatChannel extends RestModel {
       return;
     }
 
-    if (this.currentUserMembership.last_read_message_id >= messageId) {
+    if (this.currentUserMembership.lastReadMessageId >= messageId) {
       return;
     }
 
@@ -245,60 +304,4 @@ export default class ChatChannel extends RestModel {
       method: "PUT",
     });
   }
-}
-
-ChatChannel.reopenClass({
-  create(args) {
-    args = args || {};
-
-    this._initUserModels(args);
-    this._initUserMembership(args);
-
-    this._remapKey(args, "chatable_type", "chatableType");
-    this._remapKey(args, "memberships_count", "membershipsCount");
-    this._remapKey(args, "last_message_sent_at", "lastMessageSentAt");
-    this._remapKey(args, "threading_enabled", "threadingEnabled");
-
-    return this._super(args);
-  },
-
-  _remapKey(obj, oldKey, newKey) {
-    delete Object.assign(obj, { [newKey]: obj[oldKey] })[oldKey];
-  },
-
-  _initUserModels(args) {
-    if (args.chatable?.users?.length) {
-      for (let i = 0; i < args.chatable?.users?.length; i++) {
-        const userData = args.chatable.users[i];
-        args.chatable.users[i] = User.create(userData);
-      }
-    }
-  },
-
-  _initUserMembership(args) {
-    if (args.currentUserMembership instanceof UserChatChannelMembership) {
-      return;
-    }
-
-    args.currentUserMembership = UserChatChannelMembership.create(
-      args.current_user_membership || {
-        following: false,
-        muted: false,
-        unread_count: 0,
-        unread_mentions: 0,
-      }
-    );
-
-    delete args.current_user_membership;
-  },
-});
-
-export function createDirectMessageChannelDraft() {
-  return ChatChannel.create({
-    isDraft: true,
-    chatable_type: CHATABLE_TYPES.directMessageChannel,
-    chatable: {
-      users: [],
-    },
-  });
 }

@@ -61,11 +61,10 @@ export default class ChatChannelsManager extends Service {
       return this.chatApi.followChannel(model.id).then((membership) => {
         model.currentUserMembership.following = membership.following;
         model.currentUserMembership.muted = membership.muted;
-        model.currentUserMembership.desktop_notification_level =
-          membership.desktop_notification_level;
-        model.currentUserMembership.mobile_notification_level =
-          membership.mobile_notification_level;
-
+        model.currentUserMembership.desktopNotificationLevel =
+          membership.desktopNotificationLevel;
+        model.currentUserMembership.mobileNotificationLevel =
+          membership.mobileNotificationLevel;
         return model;
       });
     } else {
@@ -97,7 +96,7 @@ export default class ChatChannelsManager extends Service {
   get unreadCount() {
     let count = 0;
     this.publicMessageChannels.forEach((channel) => {
-      count += channel.currentUserMembership.unread_count || 0;
+      count += channel.currentUserMembership.unreadCount || 0;
     });
     return count;
   }
@@ -106,9 +105,9 @@ export default class ChatChannelsManager extends Service {
     let count = 0;
     this.channels.forEach((channel) => {
       if (channel.isDirectMessageChannel) {
-        count += channel.currentUserMembership.unread_count || 0;
+        count += channel.currentUserMembership.unreadCount || 0;
       }
-      count += channel.currentUserMembership.unread_mentions || 0;
+      count += channel.currentUserMembership.unreadMentions || 0;
     });
     return count;
   }
@@ -159,8 +158,8 @@ export default class ChatChannelsManager extends Service {
 
   #sortDirectMessageChannels(channels) {
     return channels.sort((a, b) => {
-      const unreadCountA = a.currentUserMembership.unread_count || 0;
-      const unreadCountB = b.currentUserMembership.unread_count || 0;
+      const unreadCountA = a.currentUserMembership.unreadCount || 0;
+      const unreadCountB = b.currentUserMembership.unreadCount || 0;
       if (unreadCountA === unreadCountB) {
         return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
           ? -1

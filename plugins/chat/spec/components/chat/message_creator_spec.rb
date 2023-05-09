@@ -136,235 +136,239 @@ describe Chat::MessageCreator do
       expect(events.map { _1[:event_name] }).to include(:chat_message_created)
     end
 
-    it "creates mentions and mention notifications for public chat" do
-      message =
+    context "with mentions" do
+      it "creates mentions and mention notifications for public chat" do
+        message =
+          described_class.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content:
+              "this is a @#{user1.username} message with @system @mentions @#{user2.username} and @#{user3.username}",
+          ).chat_message
+
+        # a mention for the user himself wasn't created
+        user1_mention = user1.chat_mentions.where(chat_message: message).first
+        expect(user1_mention).to be_nil
+
+        system_user_mention = Discourse.system_user.chat_mentions.where(chat_message: message).first
+        expect(system_user_mention).to be_nil
+
+        user2_mention = user2.chat_mentions.where(chat_message: message).first
+        expect(user2_mention).to be_present
+        expect(user2_mention.notification).to be_present
+
+        user3_mention = user3.chat_mentions.where(chat_message: message).first
+        expect(user3_mention).to be_present
+        expect(user3_mention.notification).to be_present
+      end
+
+      it "mentions are case insensitive" do
+        expect {
+          described_class.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content: "Hey @#{user2.username.upcase}",
+          )
+        }.to change { user2.chat_mentions.count }.by(1)
+      end
+
+      it "notifies @all properly" do
+        expect {
+          described_class.create(chat_channel: public_chat_channel, user: user1, content: "@all")
+        }.to change { Chat::Mention.count }.by(4)
+
+        Chat::UserChatChannelMembership.where(
+          user: user2,
+          chat_channel: public_chat_channel,
+        ).update_all(following: false)
+        expect {
+          described_class.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content: "again! @all",
+          )
+        }.to change { Chat::Mention.count }.by(3)
+      end
+
+      it "notifies @here properly" do
+        admin1.update(last_seen_at: 1.year.ago)
+        admin2.update(last_seen_at: 1.year.ago)
+        user1.update(last_seen_at: Time.now)
+        user2.update(last_seen_at: Time.now)
+        user3.update(last_seen_at: Time.now)
+        expect {
+          described_class.create(chat_channel: public_chat_channel, user: user1, content: "@here")
+        }.to change { Chat::Mention.count }.by(2)
+      end
+
+      it "doesn't sent double notifications when '@here' is mentioned" do
+        user2.update(last_seen_at: Time.now)
+        expect {
+          described_class.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content: "@here @#{user2.username}",
+          )
+        }.to change { user2.chat_mentions.count }.by(1)
+      end
+
+      it "notifies @here plus other mentions" do
+        admin1.update(last_seen_at: Time.now)
+        admin2.update(last_seen_at: 1.year.ago)
+        user1.update(last_seen_at: 1.year.ago)
+        user2.update(last_seen_at: 1.year.ago)
+        user3.update(last_seen_at: 1.year.ago)
+        expect {
+          described_class.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content: "@here plus @#{user3.username}",
+          )
+        }.to change { user3.chat_mentions.count }.by(1)
+      end
+
+      it "doesn't create mention notifications for users without a membership record" do
+        message =
+          described_class.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content: "hello @#{user_without_memberships.username}",
+          ).chat_message
+
+        mention = user_without_memberships.chat_mentions.where(chat_message: message).first
+        expect(mention.notification).to be_nil
+      end
+
+      it "doesn't create mention notifications for users who cannot chat" do
+        new_group = Group.create
+        SiteSetting.chat_allowed_groups = new_group.id
+
+        message =
+          described_class.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content: "hi @#{user2.username} @#{user3.username}",
+          ).chat_message
+
+        user2_mention = user2.chat_mentions.where(chat_message: message).first
+        expect(user2_mention.notification).to be_nil
+
+        user3_mention = user2.chat_mentions.where(chat_message: message).first
+        expect(user3_mention.notification).to be_nil
+      end
+
+      it "doesn't create mentions for users with chat disabled" do
+        user2.user_option.update(chat_enabled: false)
+
+        message =
+          described_class.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content: "hi @#{user2.username}",
+          ).chat_message
+
+        mention = user2.chat_mentions.where(chat_message: message).first
+        expect(mention).to be_nil
+      end
+
+      it "creates only mention notifications for users with access in private chat" do
+        message =
+          described_class.create(
+            chat_channel: direct_message_channel,
+            user: user1,
+            content: "hello there @#{user2.username} and @#{user3.username}",
+          ).chat_message
+
+        # Only user2 should be notified
+        user2_mention = user2.chat_mentions.where(chat_message: message).first
+        expect(user2_mention.notification).to be_present
+
+        user3_mention = user3.chat_mentions.where(chat_message: message).first
+        expect(user3_mention.notification).to be_nil
+      end
+
+      it "creates a mention for group users even if they're not participating in private chat" do
+        expect {
+          described_class.create(
+            chat_channel: direct_message_channel,
+            user: user1,
+            content: "hello there @#{user_group.name}",
+          )
+        }.to change { user2.chat_mentions.count }.by(1).and change { user3.chat_mentions.count }.by(
+                1,
+              )
+      end
+
+      it "creates a mention notifications only for group users that are participating in private chat" do
+        message =
+          described_class.create(
+            chat_channel: direct_message_channel,
+            user: user1,
+            content: "hello there @#{user_group.name}",
+          ).chat_message
+
+        user2_mention = user2.chat_mentions.where(chat_message: message).first
+        expect(user2_mention.notification).to be_present
+
+        user3_mention = user3.chat_mentions.where(chat_message: message).first
+        expect(user3_mention.notification).to be_nil
+      end
+
+      it "publishes inaccessible mentions when user isn't aren't a part of the channel" do
+        Chat::Publisher.expects(:publish_inaccessible_mentions).once
         described_class.create(
           chat_channel: public_chat_channel,
-          user: user1,
-          content:
-            "this is a @#{user1.username} message with @system @mentions @#{user2.username} and @#{user3.username}",
-        ).chat_message
-
-      # a mention for the user himself wasn't created
-      user1_mention = user1.chat_mentions.where(chat_message: message).first
-      expect(user1_mention).to be_nil
-
-      system_user_mention = Discourse.system_user.chat_mentions.where(chat_message: message).first
-      expect(system_user_mention).to be_nil
-
-      user2_mention = user2.chat_mentions.where(chat_message: message).first
-      expect(user2_mention).to be_present
-      expect(user2_mention.notification).to be_present
-
-      user3_mention = user3.chat_mentions.where(chat_message: message).first
-      expect(user3_mention).to be_present
-      expect(user3_mention.notification).to be_present
-    end
-
-    it "mentions are case insensitive" do
-      expect {
-        described_class.create(
-          chat_channel: public_chat_channel,
-          user: user1,
-          content: "Hey @#{user2.username.upcase}",
+          user: admin1,
+          content: "hello @#{user4.username}",
         )
-      }.to change { user2.chat_mentions.count }.by(1)
-    end
+      end
 
-    it "notifies @all properly" do
-      expect {
-        described_class.create(chat_channel: public_chat_channel, user: user1, content: "@all")
-      }.to change { Chat::Mention.count }.by(4)
-
-      Chat::UserChatChannelMembership.where(
-        user: user2,
-        chat_channel: public_chat_channel,
-      ).update_all(following: false)
-      expect {
+      it "publishes inaccessible mentions when user doesn't have chat access" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+        Chat::Publisher.expects(:publish_inaccessible_mentions).once
         described_class.create(
           chat_channel: public_chat_channel,
-          user: user1,
-          content: "again! @all",
+          user: admin1,
+          content: "hello @#{user3.username}",
         )
-      }.to change { Chat::Mention.count }.by(3)
-    end
+      end
 
-    it "notifies @here properly" do
-      admin1.update(last_seen_at: 1.year.ago)
-      admin2.update(last_seen_at: 1.year.ago)
-      user1.update(last_seen_at: Time.now)
-      user2.update(last_seen_at: Time.now)
-      user3.update(last_seen_at: Time.now)
-      expect {
-        described_class.create(chat_channel: public_chat_channel, user: user1, content: "@here")
-      }.to change { Chat::Mention.count }.by(2)
-    end
-
-    it "doesn't sent double notifications when '@here' is mentioned" do
-      user2.update(last_seen_at: Time.now)
-      expect {
+      it "doesn't publish inaccessible mentions when user is following channel" do
+        Chat::Publisher.expects(:publish_inaccessible_mentions).never
         described_class.create(
           chat_channel: public_chat_channel,
-          user: user1,
-          content: "@here @#{user2.username}",
+          user: admin1,
+          content: "hello @#{admin2.username}",
         )
-      }.to change { user2.chat_mentions.count }.by(1)
-    end
+      end
 
-    it "notifies @here plus other mentions" do
-      admin1.update(last_seen_at: Time.now)
-      admin2.update(last_seen_at: 1.year.ago)
-      user1.update(last_seen_at: 1.year.ago)
-      user2.update(last_seen_at: 1.year.ago)
-      user3.update(last_seen_at: 1.year.ago)
-      expect {
-        described_class.create(
-          chat_channel: public_chat_channel,
-          user: user1,
-          content: "@here plus @#{user3.username}",
-        )
-      }.to change { user3.chat_mentions.count }.by(1)
-    end
+      it "creates mentions for suspended users" do
+        user2.update(suspended_till: Time.now + 10.years)
 
-    it "doesn't create mention notifications for users without a membership record" do
-      message =
-        described_class.create(
-          chat_channel: public_chat_channel,
-          user: user1,
-          content: "hello @#{user_without_memberships.username}",
-        ).chat_message
+        message =
+          described_class.create(
+            chat_channel: direct_message_channel,
+            user: user1,
+            content: "hello @#{user2.username}",
+          ).chat_message
 
-      mention = user_without_memberships.chat_mentions.where(chat_message: message).first
-      expect(mention.notification).to be_nil
-    end
+        mention = user2.chat_mentions.where(chat_message: message).first
+        expect(mention).to be_present
+      end
 
-    it "doesn't create mention notifications for users who cannot chat" do
-      new_group = Group.create
-      SiteSetting.chat_allowed_groups = new_group.id
+      it "does not create mention notifications for suspended users" do
+        user2.update(suspended_till: Time.now + 10.years)
 
-      message =
-        described_class.create(
-          chat_channel: public_chat_channel,
-          user: user1,
-          content: "hi @#{user2.username} @#{user3.username}",
-        ).chat_message
+        message =
+          described_class.create(
+            chat_channel: direct_message_channel,
+            user: user1,
+            content: "hello @#{user2.username}",
+          ).chat_message
 
-      user2_mention = user2.chat_mentions.where(chat_message: message).first
-      expect(user2_mention.notification).to be_nil
-
-      user3_mention = user2.chat_mentions.where(chat_message: message).first
-      expect(user3_mention.notification).to be_nil
-    end
-
-    it "doesn't create mentions for users with chat disabled" do
-      user2.user_option.update(chat_enabled: false)
-
-      message =
-        described_class.create(
-          chat_channel: public_chat_channel,
-          user: user1,
-          content: "hi @#{user2.username}",
-        ).chat_message
-
-      mention = user2.chat_mentions.where(chat_message: message).first
-      expect(mention).to be_nil
-    end
-
-    it "creates only mention notifications for users with access in private chat" do
-      message =
-        described_class.create(
-          chat_channel: direct_message_channel,
-          user: user1,
-          content: "hello there @#{user2.username} and @#{user3.username}",
-        ).chat_message
-
-      # Only user2 should be notified
-      user2_mention = user2.chat_mentions.where(chat_message: message).first
-      expect(user2_mention.notification).to be_present
-
-      user3_mention = user3.chat_mentions.where(chat_message: message).first
-      expect(user3_mention.notification).to be_nil
-    end
-
-    it "creates a mention for group users even if they're not participating in private chat" do
-      expect {
-        described_class.create(
-          chat_channel: direct_message_channel,
-          user: user1,
-          content: "hello there @#{user_group.name}",
-        )
-      }.to change { user2.chat_mentions.count }.by(1).and change { user3.chat_mentions.count }.by(1)
-    end
-
-    it "creates a mention notifications only for group users that are participating in private chat" do
-      message =
-        described_class.create(
-          chat_channel: direct_message_channel,
-          user: user1,
-          content: "hello there @#{user_group.name}",
-        ).chat_message
-
-      user2_mention = user2.chat_mentions.where(chat_message: message).first
-      expect(user2_mention.notification).to be_present
-
-      user3_mention = user3.chat_mentions.where(chat_message: message).first
-      expect(user3_mention.notification).to be_nil
-    end
-
-    it "publishes inaccessible mentions when user isn't aren't a part of the channel" do
-      Chat::Publisher.expects(:publish_inaccessible_mentions).once
-      described_class.create(
-        chat_channel: public_chat_channel,
-        user: admin1,
-        content: "hello @#{user4.username}",
-      )
-    end
-
-    it "publishes inaccessible mentions when user doesn't have chat access" do
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
-      Chat::Publisher.expects(:publish_inaccessible_mentions).once
-      described_class.create(
-        chat_channel: public_chat_channel,
-        user: admin1,
-        content: "hello @#{user3.username}",
-      )
-    end
-
-    it "doesn't publish inaccessible mentions when user is following channel" do
-      Chat::Publisher.expects(:publish_inaccessible_mentions).never
-      described_class.create(
-        chat_channel: public_chat_channel,
-        user: admin1,
-        content: "hello @#{admin2.username}",
-      )
-    end
-
-    it "creates mentions for suspended users" do
-      user2.update(suspended_till: Time.now + 10.years)
-
-      message =
-        described_class.create(
-          chat_channel: direct_message_channel,
-          user: user1,
-          content: "hello @#{user2.username}",
-        ).chat_message
-
-      mention = user2.chat_mentions.where(chat_message: message).first
-      expect(mention).to be_present
-    end
-
-    it "does not create mention notifications for suspended users" do
-      user2.update(suspended_till: Time.now + 10.years)
-
-      message =
-        described_class.create(
-          chat_channel: direct_message_channel,
-          user: user1,
-          content: "hello @#{user2.username}",
-        ).chat_message
-
-      mention = user2.chat_mentions.where(chat_message: message).first
-      expect(mention.notification).to be_nil
+        mention = user2.chat_mentions.where(chat_message: message).first
+        expect(mention.notification).to be_nil
+      end
     end
 
     context "when ignore_channel_wide_mention is enabled" do
@@ -436,25 +440,50 @@ describe Chat::MessageCreator do
         expect(message.thread.original_message_user).to eq(reply_message.user)
       end
 
-      it "publishes the new thread" do
-        messages =
-          MessageBus.track_publish do
-            described_class.create(
-              chat_channel: public_chat_channel,
-              user: user1,
-              content: "this is a message",
-              in_reply_to_id: reply_message.id,
-            ).chat_message
-          end
+      context "when threading is enabled" do
+        it "publishes the new thread" do
+          public_chat_channel.update!(threading_enabled: true)
 
-        thread_created_message = messages.find { |m| m.data["type"] == "thread_created" }
-        expect(thread_created_message.channel).to eq("/chat/#{public_chat_channel.id}")
+          messages =
+            MessageBus.track_publish do
+              described_class.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                in_reply_to_id: reply_message.id,
+              ).chat_message
+            end
+
+          thread_created_message = messages.find { |m| m.data["type"] == "thread_created" }
+          expect(thread_created_message.channel).to eq("/chat/#{public_chat_channel.id}")
+        end
+      end
+
+      context "when threading is disabled" do
+        it "doesn’t publish the new thread" do
+          public_chat_channel.update!(threading_enabled: false)
+
+          messages =
+            MessageBus.track_publish do
+              described_class.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                in_reply_to_id: reply_message.id,
+              ).chat_message
+            end
+
+          thread_created_message = messages.find { |m| m.data["type"] == "thread_created" }
+          expect(thread_created_message).to be_nil
+        end
       end
 
       context "when a staged_thread_id is provided" do
         fab!(:existing_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
 
         it "creates a thread and publishes with the staged id" do
+          public_chat_channel.update!(threading_enabled: true)
+
           messages =
             MessageBus.track_publish do
               described_class.create(

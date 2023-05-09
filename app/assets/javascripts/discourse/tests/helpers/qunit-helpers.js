@@ -326,7 +326,7 @@ export function acceptance(name, optionsOrCallback) {
           updateCurrentUser(userChanges);
         }
 
-        User.current().appEvents = getOwner(this).lookup("service:appEvents");
+        User.current().appEvents = getOwner(this).lookup("service:app-events");
         User.current().trackStatus();
       }
 
