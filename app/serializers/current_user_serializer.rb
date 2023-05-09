@@ -279,12 +279,4 @@ class CurrentUserSerializer < BasicUserSerializer
   def unseen_reviewable_count
     Reviewable.unseen_reviewable_count(object)
   end
-
-  def custom_sidebar_sections_enabled
-    if SiteSetting.enable_custom_sidebar_sections.present?
-      object.in_any_groups?(SiteSetting.enable_custom_sidebar_sections_map)
-    else
-      false
-    end
-  end
 end
