@@ -53,6 +53,9 @@ he:
         title: התליה של Zapier
       auto_responder:
         title: משיב אוטומטי
+      auto_tag_topic:
+        title: תיוג נושא אוטומטית
+        description: להוסיף תגיות לנושא אוטומטית
       pin_topic:
         title: נעיצת נושא
       banner_topic:

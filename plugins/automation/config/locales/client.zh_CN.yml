@@ -189,6 +189,10 @@ zh_CN:
             answering_user:
               label: 回答用户
               description: 默认为系统用户
+        auto_tag_topic:
+          fields:
+            tags:
+              label: 标签
         post:
           fields:
             creator:

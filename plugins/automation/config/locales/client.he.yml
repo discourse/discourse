@@ -182,6 +182,11 @@ he:
             answering_user:
               label: משתמש שענה
               description: ברירת המחדל היא משתמש המערכת
+        auto_tag_topic:
+          fields:
+            tags:
+              label: תגיות
+              description: רשימת תגיות להוספה לנושא.
         post:
           fields:
             creator:

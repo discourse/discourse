@@ -191,6 +191,10 @@ ru:
             answering_user:
               label: Отвечающий пользователь
               description: Пользователь по умолчанию — система
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Теги
         post:
           fields:
             creator:

@@ -189,6 +189,10 @@ ar:
             answering_user:
               label: المستخدم المجيب
               description: يتم تعيينه افتراضيًا إلى مستخدم النظام
+        auto_tag_topic:
+          fields:
+            tags:
+              label: الوسوم
         post:
           fields:
             creator:

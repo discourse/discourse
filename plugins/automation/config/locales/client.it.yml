@@ -189,6 +189,10 @@ it:
             answering_user:
               label: Utente che risponde
               description: Ripristina impostazione predefinita Utente di sistema
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Tag
         post:
           fields:
             creator:

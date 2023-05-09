@@ -189,6 +189,10 @@ ja:
             answering_user:
               label: 回答するユーザー
               description: デフォルトでシステムユーザー
+        auto_tag_topic:
+          fields:
+            tags:
+              label: タグ
         post:
           fields:
             creator:

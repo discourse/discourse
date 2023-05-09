@@ -191,6 +191,10 @@ tr_TR:
             answering_user:
               label: Yanıtlayan kullanıcı
               description: Varsayılan olarak Sistem kullanıcısını ayarlar
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Etiketler
         post:
           fields:
             creator:

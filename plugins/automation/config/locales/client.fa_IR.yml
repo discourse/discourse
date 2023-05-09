@@ -103,6 +103,10 @@ fa_IR:
             once:
               label: یک بار
               description: فقط یک بار بر اساس موضوع پاسخ می‌دهد
+        auto_tag_topic:
+          fields:
+            tags:
+              label: برچسب‌ها
         post:
           fields:
             creator:

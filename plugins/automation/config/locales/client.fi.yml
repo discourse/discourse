@@ -189,6 +189,10 @@ fi:
             answering_user:
               label: Vastaava käyttäjä
               description: Oletuksena järjestelmäkäyttäjä
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Tunnisteet
         post:
           fields:
             creator:

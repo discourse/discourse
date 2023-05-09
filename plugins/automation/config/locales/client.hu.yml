@@ -170,6 +170,10 @@ hu:
             answering_user:
               label: Válaszoló felhasználó
               description: Alapértelmezetten a rendszerfelhasználó
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Címkék
         post:
           fields:
             topic:

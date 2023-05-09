@@ -189,6 +189,10 @@ fr:
             answering_user:
               label: Utilisateur qui répond
               description: Par défaut, utilisateur système
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Étiquettes
         post:
           fields:
             creator:

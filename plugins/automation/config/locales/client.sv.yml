@@ -186,6 +186,10 @@ sv:
             answering_user:
               label: Svarande användare
               description: Standard är systemanvändaren
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Taggar
         post:
           fields:
             topic:

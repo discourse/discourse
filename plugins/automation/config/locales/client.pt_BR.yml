@@ -189,6 +189,10 @@ pt_BR:
             answering_user:
               label: Respondendo ao usuário
               description: Padrões para o usuário do Sistema
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Tags
         post:
           fields:
             creator:

@@ -189,6 +189,10 @@ nl:
             answering_user:
               label: Antwoordende gebruiker
               description: Standaard ingesteld op Systeemgebruiker
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Tags
         post:
           fields:
             creator:

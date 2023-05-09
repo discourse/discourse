@@ -189,6 +189,10 @@ de:
             answering_user:
               label: Antwortender Benutzer
               description: Standardmäßig Systembenutzer
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Tags
         post:
           fields:
             creator:
