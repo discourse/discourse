@@ -51,6 +51,7 @@ export default class ChatMessage {
   @tracked thread;
   @tracked threadReplyCount;
   @tracked manager = null;
+  @tracked threadTitle = null;
 
   @tracked _cooked;
 
