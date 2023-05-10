@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class Chat::UserChatThreadMembership < ActiveRecord::Base
+  class UserChatThreadMembership < ActiveRecord::Base
     self.table_name = "user_chat_thread_memberships"
 
     belongs_to :user
