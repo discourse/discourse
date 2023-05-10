@@ -29,6 +29,7 @@ module Chat
     policy :can_edit_thread
     policy :threading_enabled_for_channel
     step :update
+    step :publish_metadata
 
     # @!visibility private
     class Contract
@@ -65,6 +66,10 @@ module Chat
     def update(thread:, contract:, **)
       thread.update(title: contract.title)
       fail!(thread.errors.full_messages.join(", ")) if thread.invalid?
+    end
+
+    def publish_metadata(thread:, **)
+      Chat::Publisher.publish_thread_original_message_metadata!(thread)
     end
   end
 end

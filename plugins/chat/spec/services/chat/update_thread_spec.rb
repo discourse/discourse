@@ -39,6 +39,16 @@ RSpec.describe Chat::UpdateThread do
           result
           expect(thread.reload.title).to eq(title)
         end
+
+        it "publishes a MessageBus message" do
+          message =
+            MessageBus
+              .track_publish(Chat::Publisher.root_message_bus_channel(thread.channel_id)) { result }
+              .first
+
+          expect(message.data["type"]).to eq("update_thread_original_message")
+          expect(message.data["title"]).to eq(title)
+        end
       end
 
       context "when params are not valid" do
