@@ -62,7 +62,15 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         chat_page.visit_channel(channel_1)
 
         click_link(link)
+
+        expect(page).to have_css(
+          ".chat-message-container.highlighted[data-id='#{first_message.id}']",
+        )
+
         click_button(class: "chat-scroll-to-bottom")
+
+        expect(page).to have_content(link)
+
         click_link(link)
 
         expect(page).to have_css(
