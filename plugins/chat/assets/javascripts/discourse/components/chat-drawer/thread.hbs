@@ -2,19 +2,11 @@
   {{#if (and this.chatStateManager.isDrawerExpanded this.chat.activeChannel)}}
     <div class="chat-drawer-header__left-actions">
       <div class="chat-drawer-header__top-line">
-        {{#if this.chat.activeChannel.activeThread}}
-          <ChatDrawer::Header::BackLink
-            @route="chat.channel.threads"
-            @title={{i18n "chat.return_to_list"}}
-            @routeModels={{this.chat.activeChannel.routeModels}}
-          />
-        {{else}}
-          <ChatDrawer::Header::BackLink
-            @route="chat.channel"
-            @title={{i18n "chat.return_to_threads_list"}}
-            @routeModels={{this.chat.activeChannel.routeModels}}
-          />
-        {{/if}}
+        <ChatDrawer::Header::BackLink
+          @route={{this.backLink.route}}
+          @title={{i18n this.backLink.title}}
+          @routeModels={{this.backLink.models}}
+        />
       </div>
     </div>
   {{/if}}
