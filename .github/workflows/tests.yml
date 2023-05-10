@@ -201,7 +201,7 @@ jobs:
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=7 bin/turbo_rspec --verbose plugins/*/spec/system
+        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=8 bin/turbo_rspec --verbose plugins/*/spec/system
         timeout-minutes: 30
 
       - name: Upload failed system test screenshots
