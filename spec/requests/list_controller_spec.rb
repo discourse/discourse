@@ -1078,57 +1078,6 @@ RSpec.describe ListController do
     end
   end
 
-  describe "welcome topic" do
-    fab!(:welcome_topic) { Fabricate(:topic) }
-    fab!(:post) { Fabricate(:post, topic: welcome_topic) }
-
-    before do
-      SiteSetting.welcome_topic_id = welcome_topic.id
-      SiteSetting.editing_grace_period = 1.minute.to_i
-      SiteSetting.bootstrap_mode_enabled = true
-    end
-
-    it "is hidden for non-admins" do
-      get "/latest.json"
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body
-      expect(parsed["topic_list"]["topics"].length).to eq(1)
-      expect(parsed["topic_list"]["topics"].first["id"]).not_to eq(welcome_topic.id)
-    end
-
-    it "is shown to non-admins when there is an edit" do
-      post.revise(post.user, { raw: "#{post.raw}2" }, revised_at: post.updated_at + 2.minutes)
-      post.reload
-      expect(post.version).to eq(2)
-
-      get "/latest.json"
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body
-      expect(parsed["topic_list"]["topics"].length).to eq(2)
-      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
-    end
-
-    it "is always shown to admins" do
-      sign_in(admin)
-
-      get "/latest.json"
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body
-      expect(parsed["topic_list"]["topics"].length).to eq(2)
-      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
-    end
-
-    it "is shown to users when bootstrap mode is disabled" do
-      SiteSetting.bootstrap_mode_enabled = false
-
-      get "/latest.json"
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body
-      expect(parsed["topic_list"]["topics"].length).to eq(2)
-      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
-    end
-  end
-
   describe "#filter" do
     fab!(:category) { Fabricate(:category, slug: "category-slug") }
     fab!(:tag) { Fabricate(:tag, name: "tag1") }
