@@ -1554,6 +1554,7 @@ en:
 
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     topic_excerpt_maxlength: "Maximum length of a topic excerpt / summary, generated from the first post in a topic."
+    default_subcategory_on_read_only_category: "Enables 'New Topic' button and selects a default subcategory to post on categories where the user is not allowed to create a new topic."
     show_pinned_excerpt_mobile: "Show excerpt on pinned topics in mobile view."
     show_pinned_excerpt_desktop: "Show excerpt on pinned topics in desktop view."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
