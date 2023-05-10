@@ -54,7 +54,15 @@ module TurboTests
   end
 
   FakeExample =
-    Struct.new(:execution_result, :location, :full_description, :metadata, :location_rerun_argument)
+    Struct.new(
+      :execution_result,
+      :location,
+      :description,
+      :full_description,
+      :metadata,
+      :location_rerun_argument,
+    )
+
   class FakeExample
     def self.from_obj(obj)
       obj = obj.symbolize_keys
