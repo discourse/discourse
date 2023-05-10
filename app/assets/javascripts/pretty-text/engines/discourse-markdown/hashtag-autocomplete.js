@@ -59,8 +59,6 @@ function addHashtag(buffer, matches, state) {
     token.attrs = [["class", "hashtag-raw"]];
     buffer.push(token);
 
-    addIconPlaceholder(buffer, state);
-
     token = new state.Token("span_open", "span", 1);
     token = new state.Token("text", "", 0);
     token.content = matches[0];
@@ -88,23 +86,6 @@ function addIconPlaceholder(buffer, state) {
 }
 
 export function setup(helper) {
-  const opts = helper.getOptions();
-
-  // we do this because plugins can register their own hashtag data
-  // sources which specify an icon, and each icon must be allowlisted
-  // or it will not render in the markdown pipeline
-  const hashtagIconAllowList = opts.hashtagIcons
-    ? Object.values(opts.hashtagIcons)
-        .concat(["hashtag"])
-        .map((icon) => {
-          return [
-            `svg[class=fa d-icon d-icon-${icon} svg-icon svg-node]`,
-            `use[href=#${icon}]`,
-          ];
-        })
-        .flat()
-    : [];
-
   helper.registerPlugin((md) => {
     if (
       md.options.discourse.limitedSiteSettings
@@ -119,15 +100,13 @@ export function setup(helper) {
     }
   });
 
-  helper.allowList(
-    hashtagIconAllowList.concat([
-      "a.hashtag-cooked",
-      "span.hashtag-raw",
-      "span.hashtag-icon-placeholder",
-      "a[data-type]",
-      "a[data-slug]",
-      "a[data-ref]",
-      "a[data-id]",
-    ])
-  );
+  helper.allowList([
+    "a.hashtag-cooked",
+    "span.hashtag-raw",
+    "span.hashtag-icon-placeholder",
+    "a[data-type]",
+    "a[data-slug]",
+    "a[data-ref]",
+    "a[data-id]",
+  ]);
 }

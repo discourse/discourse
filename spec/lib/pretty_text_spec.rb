@@ -1715,19 +1715,20 @@ RSpec.describe PrettyText do
     category2 = Fabricate(:category, name: "known", slug: "known")
     group = Fabricate(:group)
     private_category = Fabricate(:private_category, name: "secret", group: group, slug: "secret")
-    Fabricate(:topic, tags: [Fabricate(:tag, name: "known")])
+    tag = Fabricate(:tag, name: "known")
+    Fabricate(:topic, tags: [tag])
 
     cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing #secret", user_id: user.id)
 
     expect(cooked).to include("<span class=\"hashtag-raw\">#unknown::tag</span>")
     expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>known</span></a>",
+      "<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\" data-id=\"#{category2.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>known</span></a>",
     )
     expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\" data-ref=\"known::tag\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>known</span></a>",
+      "<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\" data-id=\"#{tag.id}\" data-ref=\"known::tag\"><span class=\"hashtag-icon-placeholder\"></span><span>known</span></a>",
     )
     expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>testing</span></a>",
+      "<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\" data-id=\"#{category.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>testing</span></a>",
     )
     expect(cooked).to include("<span class=\"hashtag-raw\">#secret</span>")
 
@@ -1735,7 +1736,7 @@ RSpec.describe PrettyText do
     group.add(user)
     cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing #secret", user_id: user.id)
     expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"#{private_category.url}\" data-type=\"category\" data-slug=\"secret\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>secret</span></a>",
+      "<a class=\"hashtag-cooked\" href=\"#{private_category.url}\" data-type=\"category\" data-slug=\"secret\" data-id=\"#{private_category.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>secret</span></a>",
     )
 
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)", user_id: user.id)
@@ -1753,7 +1754,7 @@ RSpec.describe PrettyText do
 
     cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag", user_id: user.id)
     html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag-cooked" href="/tag/known" data-type="tag" data-slug="known" data-ref="known::tag"><svg class="fa d-icon d-icon-tag svg-icon svg-node"><use href="#tag"></use></svg><span>known</span></a></p>
+      <p><a href="/a">test</a> <a class="hashtag-cooked" href="/tag/known" data-type="tag" data-slug="known" data-id=\"#{tag.id}\" data-ref="known::tag"><span class=\"hashtag-icon-placeholder\"></span><span>known</span></a></p>
     HTML
     expect(cooked).to eq(html.strip)
 
@@ -2006,7 +2007,7 @@ HTML
       expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
         <p>
           <a class="mention" href="/u/test">@test</a>
-          <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="test"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg><span>test</span></a>
+          <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="test" data-id="#{category.id}"><span class="hashtag-icon-placeholder"></span><span>test</span></a>
           tdiscourset
         </p>
       HTML

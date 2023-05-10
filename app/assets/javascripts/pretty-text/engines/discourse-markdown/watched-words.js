@@ -43,6 +43,7 @@ const NONE = 0;
 const MENTION = 1;
 const HASHTAG_LINK = 2;
 const HASHTAG_SPAN = 3;
+const HASHTAG_ICON_SPAN = 4;
 
 export function setup(helper) {
   const opts = helper.getOptions();
@@ -97,6 +98,7 @@ export function setup(helper) {
         // We scan once to mark tokens that must be skipped because they are
         // mentions or hashtags
         let lastType = NONE;
+        let currentType = NONE;
         for (let i = 0; i < tokens.length; ++i) {
           const currentToken = tokens[i];
 
@@ -109,12 +111,24 @@ export function setup(helper) {
             currentToken.attrs.some(
               (attr) =>
                 attr[0] === "class" &&
-                (attr[1].includes("hashtag") ||
-                  attr[1].includes("hashtag-cooked"))
+                (attr[1] === "hashtag" ||
+                  attr[1] === "hashtag-cooked" ||
+                  attr[1] === "hashtag-raw")
             )
           ) {
             lastType =
               currentToken.type === "link_open" ? HASHTAG_LINK : HASHTAG_SPAN;
+          }
+
+          if (
+            currentToken.type === "span_open" &&
+            currentToken.attrs &&
+            currentToken.attrs.some(
+              (attr) =>
+                attr[0] === "class" && attr[1] === "hashtag-icon-placeholder"
+            )
+          ) {
+            currentType = HASHTAG_ICON_SPAN;
           }
 
           if (lastType !== NONE) {
@@ -124,7 +138,9 @@ export function setup(helper) {
           if (
             (lastType === MENTION && currentToken.type === "mention_close") ||
             (lastType === HASHTAG_LINK && currentToken.type === "link_close") ||
-            (lastType === HASHTAG_SPAN && currentToken.type === "span_close")
+            (lastType === HASHTAG_SPAN &&
+              currentToken.type === "span_close" &&
+              currentType !== HASHTAG_ICON_SPAN)
           ) {
             lastType = NONE;
           }
