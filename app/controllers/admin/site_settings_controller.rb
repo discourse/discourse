@@ -265,10 +265,8 @@ class Admin::SiteSettingsController < Admin::AdminController
       raise Discourse::InvalidParameters, "You are not allowed to change hidden settings"
     end
 
-    if SiteSetting.plugins[id]
-      if !Discourse.plugins_by_name[SiteSetting.plugins[id]].configurable?
-        raise Discourse::InvalidParameters, "You are not allowed to change unconfigurable settings"
-      end
+    if SiteSetting.plugins[id] && !Discourse.plugins_by_name[SiteSetting.plugins[id]].configurable?
+      raise Discourse::InvalidParameters, "You are not allowed to change unconfigurable settings"
     end
   end
 
