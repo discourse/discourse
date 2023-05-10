@@ -27,9 +27,29 @@
     padding: 5px;
   }
 
-  #revisions .row:first-of-type {
-    margin-top: 10px;
+  #revisions {
+    .row:first-of-type {
+      margin-top: 10px;
+    }
+    table {
+      thead {
+        th {
+          text-align: left;
+          padding-bottom: 2px;
+          font-weight: bold;
+          color: var(--primary);
+        }
+      }
+
+      td {
+        padding: 3px 3px 3px 0.5em;
+        img {
+          max-width: none;
+        }
+      }
+    }
   }
+
   ins,
   .diff-ins {
     code,
