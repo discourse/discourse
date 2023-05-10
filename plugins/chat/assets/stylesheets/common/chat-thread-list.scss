@@ -1,0 +1,29 @@
+.chat-thread-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+
+  &__items {
+    overflow-y: scroll;
+    @include chat-scrollbar();
+    box-sizing: border-box;
+    flex-grow: 1;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+
+    .chat-thread-list-item {
+      margin: 0.5rem 0.25rem 0.5rem 0.5rem;
+
+      & + .chat-thread-list-item {
+        margin-top: 0;
+      }
+    }
+  }
+
+  &__no-threads {
+    @include thread-list-item;
+    margin: 0.5rem 0rem 0.5rem 0.5rem;
+  }
+}

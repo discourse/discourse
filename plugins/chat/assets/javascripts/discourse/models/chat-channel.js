@@ -215,6 +215,10 @@ export default class ChatChannel {
     return this.currentUserMembership.following;
   }
 
+  get canJoin() {
+    return this.meta.can_join_chat_channel;
+  }
+
   get visibleMessages() {
     return this.messages.filter((message) => message.visible);
   }

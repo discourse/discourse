@@ -42,6 +42,13 @@ module Chat
       is_staff?
     end
 
+    # The only part of the thread that can be changed is the title
+    # so this isn't too dangerous, if we end up wanting to change
+    # more things in future we may want to re-evaluate to be staff-only here.
+    def can_edit_thread?(thread)
+      is_staff? || thread.original_message_user_id == @user.id
+    end
+
     def can_move_chat_messages?(channel)
       can_moderate_chat?(channel.chatable)
     end

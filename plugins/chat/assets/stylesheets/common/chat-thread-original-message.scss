@@ -1,0 +1,26 @@
+.chat-thread-original-message {
+  display: flex;
+  margin: 0.5rem 0rem;
+
+  &__inner-container {
+    width: 100%;
+  }
+
+  &__excerpt {
+    padding-bottom: 0.25rem;
+    word-break: break-all;
+
+    > * {
+      pointer-events: none;
+    }
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+  }
+
+  &__avatar {
+    padding: 0.25rem 0.25rem 0.25rem 0;
+  }
+}

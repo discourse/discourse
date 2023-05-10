@@ -1,6 +1,5 @@
 import Component from "@ember/component";
-import { bind } from "discourse-common/utils/decorators";
-import { later } from "@ember/runloop";
+import { bind } from "@ember/runloop";
 import { computed } from "@ember/object";
 
 export default Component.extend({
@@ -11,53 +10,55 @@ export default Component.extend({
     return false;
   }),
 
+  rootEventType: "click",
+
+  init() {
+    this._super(...arguments);
+
+    this.handleRootMouseDownHandler = bind(this, this.handleRootMouseDown);
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
     this.element.style.position = "relative";
-    document.addEventListener("click", this.handleClick, true);
-    this.selectKit
-      .mainElement()
-      .addEventListener("keydown", this._handleKeydown, true);
+
+    document.addEventListener(
+      this.rootEventType,
+      this.handleRootMouseDownHandler,
+      true
+    );
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    document.removeEventListener("click", this.handleClick, true);
-    this.selectKit
-      .mainElement()
-      .removeEventListener("keydown", this._handleKeydown, true);
+
+    document.removeEventListener(
+      this.rootEventType,
+      this.handleRootMouseDownHandler,
+      true
+    );
   },
 
-  @bind
-  handleClick(event) {
-    if (!this.selectKit.isExpanded || !this.selectKit.mainElement()) {
+  handleRootMouseDown(event) {
+    if (!this.selectKit.isExpanded) {
       return;
     }
 
-    if (this.selectKit.mainElement().contains(event.target)) {
+    const headerElement = document.querySelector(
+      `#${this.selectKit.uniqueID}-header`
+    );
+
+    if (headerElement && headerElement.contains(event.target)) {
       return;
     }
 
-    this.selectKit.close(event);
-  },
-
-  @bind
-  _handleKeydown(event) {
-    if (!this.selectKit.isExpanded || event.key !== "Tab") {
+    if (this.element.contains(event.target)) {
       return;
     }
 
-    later(() => {
-      if (
-        this.isDestroying ||
-        this.isDestroyed ||
-        this.selectKit.mainElement().contains(document.activeElement)
-      ) {
-        return;
-      }
-
+    if (this.selectKit.mainElement()) {
       this.selectKit.close(event);
-    }, 50);
+    }
   },
 });

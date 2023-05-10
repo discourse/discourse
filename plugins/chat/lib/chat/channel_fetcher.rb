@@ -238,7 +238,7 @@ module Chat
       end
 
       raise Discourse::NotFound if chat_channel.blank?
-      raise Discourse::InvalidAccess if !guardian.can_join_chat_channel?(chat_channel)
+      raise Discourse::InvalidAccess if !guardian.can_preview_chat_channel?(chat_channel)
       chat_channel
     end
   end
