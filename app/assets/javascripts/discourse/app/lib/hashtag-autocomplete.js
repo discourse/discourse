@@ -1,4 +1,5 @@
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import domFromString from "discourse-common/lib/dom-from-string";
 import discourseLater from "discourse-common/lib/later";
 import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import { cancel } from "@ember/runloop";
@@ -23,6 +24,24 @@ export function cleanUpHashtagTypeClasses() {
 }
 export function getHashtagTypeClasses() {
   return hashtagTypeClasses;
+}
+export function replaceHashtagIconPlaceholder(element, site) {
+  element.querySelectorAll(".hashtag-cooked").forEach((hashtagEl) => {
+    const iconPlaceholderEl = hashtagEl.querySelector(
+      ".hashtag-icon-placeholder"
+    );
+    const hashtagType = hashtagEl.dataset.type;
+    const hashtagTypeClass = getHashtagTypeClasses()[hashtagType];
+    if (iconPlaceholderEl && hashtagTypeClass) {
+      const hashtagIconHTML = hashtagTypeClass
+        .generateIconHTML({
+          icon: site.hashtag_icons[hashtagType],
+          id: hashtagEl.dataset.id,
+        })
+        .trim();
+      iconPlaceholderEl.replaceWith(domFromString(hashtagIconHTML)[0]);
+    }
+  });
 }
 
 /**
