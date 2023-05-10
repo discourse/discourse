@@ -50,10 +50,12 @@ describe "Thread list in side panel | full page", type: :system, js: true do
     end
 
     it "shows an excerpt of the original message of the thread" do
+      thread_1.original_message.update!(message: "This is a long message for the excerpt")
+      thread_1.original_message.rebake!
       chat_page.visit_channel(channel)
       chat_page.open_thread_list
       expect(thread_list_page.item_by_id(thread_1.id)).to have_content(
-        thread_1.excerpt.gsub("&hellip;", "…"),
+        "This is a long message for the excerpt",
       )
     end
 
@@ -94,6 +96,7 @@ describe "Thread list in side panel | full page", type: :system, js: true do
       end
 
       it "allows updating when user is same as the chat original message user" do
+        thread_1.update!(original_message_user: current_user)
         thread_1.original_message.update!(user: current_user)
         open_thread_list
         thread_list_page.item_by_id(thread_1.id).find(".chat-thread-list-item__settings").click
@@ -103,6 +106,7 @@ describe "Thread list in side panel | full page", type: :system, js: true do
       end
 
       it "does not allow updating if user is neither admin nor original message user" do
+        thread_1.update!(original_message_user: other_user)
         thread_1.original_message.update!(user: other_user)
         open_thread_list
         expect(
