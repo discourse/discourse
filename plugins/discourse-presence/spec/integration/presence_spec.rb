@@ -66,7 +66,9 @@ RSpec.describe "discourse-presence" do
     end
 
     it "handles category moderators for edit" do
-      SiteSetting.trusted_users_can_edit_others = false
+      # SiteSetting.trusted_users_can_edit_others = false
+      SiteSetting.edit_all_topic_groups = nil
+      SiteSetting.edit_all_post_groups = nil
       p = Fabricate(:post, topic: private_topic, user: private_topic.user)
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
@@ -136,7 +138,10 @@ RSpec.describe "discourse-presence" do
     end
 
     it "allows only author and staff when editing a public post with tl4 editing disabled" do
-      SiteSetting.trusted_users_can_edit_others = false
+      # SiteSetting.trusted_users_can_edit_others = false
+
+      SiteSetting.edit_all_topic_groups = nil
+      SiteSetting.edit_all_post_groups = nil
 
       p = Fabricate(:post, topic: public_topic, user: user)
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
@@ -148,7 +153,9 @@ RSpec.describe "discourse-presence" do
     it "follows the wiki edit trust level site setting" do
       p = Fabricate(:post, topic: public_topic, user: user, wiki: true)
       SiteSetting.min_trust_to_edit_wiki_post = TrustLevel.levels[:basic]
-      SiteSetting.trusted_users_can_edit_others = false
+      # SiteSetting.trusted_users_can_edit_others = false
+      SiteSetting.edit_all_topic_groups = nil
+      SiteSetting.edit_all_post_groups = nil
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)

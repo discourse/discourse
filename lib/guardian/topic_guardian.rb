@@ -121,16 +121,21 @@ module TopicGuardian
 
     # TL4 users can edit archived topics, but can not edit private messages
     if (
-         SiteSetting.trusted_users_can_edit_others? && topic.archived && !topic.private_message? &&
-           user.has_trust_level?(TrustLevel[4]) && can_create_post?(topic)
+         can_edit_all_regular_posts? && topic.archived && !topic.private_message? &&
+           can_create_post?(topic)
        )
       return true
     end
 
+    def can_edit_all_regular_topics?
+      SiteSetting.edit_all_topic_groups.present? &&
+        user.in_any_groups?(SiteSetting.edit_all_topic_groups.split("|").map(&:to_i))
+    end
+
     # TL3 users can not edit archived topics and private messages
     if (
-         SiteSetting.trusted_users_can_edit_others? && !topic.archived && !topic.private_message? &&
-           user.has_trust_level?(TrustLevel[3]) && can_create_post?(topic)
+         can_edit_all_regular_topics? && !topic.archived && !topic.private_message? &&
+           can_create_post?(topic)
        )
       return true
     end

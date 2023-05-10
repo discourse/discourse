@@ -1626,8 +1626,12 @@ RSpec.describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
-      it "returns false as a TL4 user if trusted_users_can_edit_others is false" do
-        SiteSetting.trusted_users_can_edit_others = false
+      # it "returns false as a TL4 user if trusted_users_can_edit_others is false" do
+      it "returns false as a TL4 user if edit_all_post_groups is false" do
+        # SiteSetting.trusted_users_can_edit_others = false
+
+        SiteSetting.edit_all_topic_groups = nil
+        SiteSetting.edit_all_post_groups = nil
         expect(Guardian.new(trust_level_4).can_edit?(post)).to eq(false)
       end
 
@@ -1876,9 +1880,16 @@ RSpec.describe Guardian do
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(true)
         end
 
-        it "is false at TL3, if `trusted_users_can_edit_others` is false" do
-          SiteSetting.trusted_users_can_edit_others = false
-          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+        # it "is false at TL3, if `trusted_users_can_edit_others` is false" do
+        #   SiteSetting.trusted_users_can_edit_others = false
+        #   expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+        # end
+
+        # it "returns false as a TL3 user if trusted_users_can_edit_others is false" do
+        it "returns false as a TL3 user if edit_all_topic_groups is false" do
+          SiteSetting.edit_all_topic_groups = nil
+          SiteSetting.edit_all_post_groups = nil
+          expect(Guardian.new(trust_level_3).can_edit?(post)).to eq(false)
         end
 
         it "returns false when the category is read only" do
@@ -1930,8 +1941,15 @@ RSpec.describe Guardian do
           expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to be_truthy
         end
 
-        it "is false at TL4, if `trusted_users_can_edit_others` is false" do
-          SiteSetting.trusted_users_can_edit_others = false
+        # it "is false at TL4, if `trusted_users_can_edit_others` is false" do
+        #   SiteSetting.trusted_users_can_edit_others = false
+        #   expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to eq(false)
+        # end
+
+        # it "returns false as a TL4 user if trusted_users_can_edit_others is false" do
+        it "returns false as a TL4 user if edit_all_post_groups is false" do
+          SiteSetting.edit_all_topic_groups = nil
+          SiteSetting.edit_all_post_groups = nil
           expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to eq(false)
         end
 

@@ -1679,8 +1679,12 @@ trust:
   tl4_delete_posts_and_topics:
     default: false
     client: true
-  trusted_users_can_edit_others:
-    default: true
+  edit_all_topic_groups:
+    default: "13"
+    type: group_list
+  edit_all_post_groups:
+    default: "14"
+    type: group_list
 
 security:
   detailed_404: false

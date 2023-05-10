@@ -130,8 +130,7 @@ module PostGuardian
     return false if post.locked? && !is_staff?
 
     if (
-         is_staff? ||
-           (SiteSetting.trusted_users_can_edit_others? && @user.has_trust_level?(TrustLevel[4])) ||
+         is_staff? || can_edit_all_regular_posts? ||
            is_category_group_moderator?(post.topic&.category)
        )
       return can_create_post?(post.topic)
@@ -171,6 +170,11 @@ module PostGuardian
     end
 
     false
+  end
+
+  def can_edit_all_regular_posts?
+    SiteSetting.edit_all_post_groups.present? &&
+      user.in_any_groups?(SiteSetting.edit_all_post_groups.split("|").map(&:to_i))
   end
 
   def can_edit_hidden_post?(post)
