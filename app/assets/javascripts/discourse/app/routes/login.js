@@ -7,6 +7,8 @@ import StaticPage from "discourse/models/static-page";
 export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;
 
+  // `login-page` because `login` controller is the one for
+  // the login modal
   controllerName = "login-page";
 
   beforeModel() {
@@ -17,10 +19,7 @@ export default class LoginRoute extends DiscourseRoute {
     }
   }
 
-  async model() {
-    return {
-      page: await StaticPage.find("login"),
-      canSignUp: this.controllerFor("application").canSignUp,
-    };
+  model() {
+    return StaticPage.find("login");
   }
 }
