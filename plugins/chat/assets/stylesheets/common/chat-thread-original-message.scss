@@ -8,7 +8,7 @@
 
   &__excerpt {
     padding-bottom: 0.25rem;
-    word-break: break-all;
+    word-break: break-word;
 
     > * {
       pointer-events: none;
