@@ -1,6 +1,5 @@
 import {
   acceptance,
-  exists,
   query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -28,7 +27,7 @@ acceptance("Fast Edit", function (needs) {
     await selectText(textNode, 9);
     await click(".quote-button .quote-edit-label");
 
-    assert.ok(exists("#fast-edit-input"), "fast editor is open");
+    assert.dom("#fast-edit-input").exists();
     assert.strictEqual(
       query("#fast-edit-input").value,
       "Any plans",
@@ -38,7 +37,7 @@ acceptance("Fast Edit", function (needs) {
     await fillIn("#fast-edit-input", "My edit");
     await click(".save-fast-edit");
 
-    assert.notOk(exists("#fast-edit-input"), "fast editor is closed");
+    assert.dom("#fast-edit-input").doesNotExist();
   });
 
   test("Works with keyboard shortcut", async function (assert) {
@@ -49,7 +48,7 @@ acceptance("Fast Edit", function (needs) {
     await selectText(textNode, 9);
     await triggerKeyEvent(document, "keypress", "E");
 
-    assert.ok(exists("#fast-edit-input"), "fast editor is open");
+    assert.dom("#fast-edit-input").exists();
     assert.strictEqual(
       query("#fast-edit-input").value,
       "Any plans",
@@ -59,7 +58,7 @@ acceptance("Fast Edit", function (needs) {
     await fillIn("#fast-edit-input", "My edit");
     await click(".save-fast-edit");
 
-    assert.notOk(exists("#fast-edit-input"), "fast editor is closed");
+    assert.dom("#fast-edit-input").doesNotExist();
   });
 
   test("Opens full composer for multi-line selection", async function (assert) {
@@ -70,7 +69,22 @@ acceptance("Fast Edit", function (needs) {
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
 
-    assert.notOk(exists("#fast-edit-input"), "fast editor is not open");
-    assert.ok(exists(".d-editor-input"), "the composer is open");
+    assert.dom("#fast-edit-input").doesNotExist();
+    assert.dom(".d-editor-input").exists();
+  });
+
+  test("Opens full composer when editing non-ascii characters", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    query("#post_2 .cooked").append(
+      `Je suis désolé, ”comment ça va”? A bientôt!`
+    );
+    const textNode = query("#post_2 .cooked").childNodes[2];
+
+    await selectText(textNode);
+    await click(".quote-button .quote-edit-label");
+
+    assert.dom("#fast-edit-input").doesNotExist();
+    assert.dom(".d-editor-input").exists();
   });
 });
