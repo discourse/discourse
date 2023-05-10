@@ -153,4 +153,76 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       end
     end
   end
+
+  describe "update" do
+    let(:title) { "New title" }
+    let(:params) { { title: title } }
+    fab!(:thread) do
+      Fabricate(:chat_thread, channel: public_channel, original_message_user: current_user)
+    end
+
+    context "when thread does not exist" do
+      it "returns 404" do
+        thread.destroy!
+        put "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}", params: params
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when thread exists" do
+      it "updates the title" do
+        put "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}", params: params
+        expect(response.status).to eq(200)
+        expect(thread.reload.title).to eq(title)
+      end
+
+      context "when user cannot view the channel" do
+        before { thread.update!(channel: Fabricate(:private_category_channel)) }
+
+        it "returns 403" do
+          put "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}", params: params
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context "when the user is not the original message user" do
+        before { thread.update!(original_message_user: Fabricate(:user)) }
+
+        it "returns 403" do
+          put "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}", params: params
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context "when the title is too long" do
+        let(:title) { "x" * Chat::Thread::MAX_TITLE_LENGTH + "x" }
+
+        it "returns 400" do
+          put "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}", params: params
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"]).to eq(
+            ["Title is too long (maximum is #{Chat::Thread::MAX_TITLE_LENGTH} characters)"],
+          )
+        end
+      end
+    end
+
+    context "when channel does not have threading enabled" do
+      before { public_channel.update!(threading_enabled: false) }
+
+      it "returns 404" do
+        put "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}", params: params
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when enable_experimental_chat_threaded_discussions is disabled" do
+      before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
+
+      it "returns 404" do
+        put "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}", params: params
+        expect(response.status).to eq(404)
+      end
+    end
+  end
 end

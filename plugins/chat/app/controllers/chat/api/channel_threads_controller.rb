@@ -35,7 +35,12 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
     with_service(::Chat::UpdateThread) do
       on_failed_policy(:threaded_discussions_enabled) { raise Discourse::NotFound }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
+      on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_edit_thread) { raise Discourse::InvalidAccess }
       on_model_not_found(:thread) { raise Discourse::NotFound }
+      on_failed_step(:update) do
+        render json: failed_json.merge(errors: [result["result.step.update"].error]), status: 422
+      end
     end
   end
 end
