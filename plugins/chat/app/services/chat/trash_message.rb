@@ -22,7 +22,7 @@ module Chat
     policy :invalid_access
     transaction do
       step :trash_message
-      step :destroy_mentions
+      step :destroy_notifications
       step :update_tracking_state
       step :update_thread_reply_cache
     end
@@ -53,8 +53,9 @@ module Chat
       message.trash!
     end
 
-    def destroy_mentions(message:, **)
-      Chat::Mention.where(chat_message: message).destroy_all
+    def destroy_notifications(message:, **)
+      ids = Chat::Mention.where(chat_message: message).pluck(:notification_id)
+      Notification.where(id: ids).destroy_all
     end
 
     def update_tracking_state(message:, **)
