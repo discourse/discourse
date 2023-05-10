@@ -67,7 +67,11 @@ class TagHashtagDataSource
     TagsController
       .tag_counts_json(tags_with_counts, guardian)
       .take(limit)
-      .map { |tag| tag_to_hashtag_item(tag, guardian) }
+      .map do |tag|
+        # We want the actual ID here not the `name` as tag_counts_json gives us.
+        tag[:id] = tags_with_counts.find { |t| t.name == tag[:name] }.id
+        tag_to_hashtag_item(tag, guardian)
+      end
   end
 
   def self.search_sort(search_results, _)
