@@ -49,6 +49,7 @@ RSpec.describe Jobs::Chat::UpdateThreadReplyCount do
         "original_message_id" => thread.original_message_id,
         "replies_count" => 2,
         "type" => "update_thread_original_message",
+        "title" => thread.title,
       },
     )
   end

@@ -52,6 +52,10 @@ module PageObjects
         find(".open-drawer-btn").click
       end
 
+      def open_thread_list
+        find(".open-thread-list-btn").click
+      end
+
       def has_message?(message)
         container = find(".chat-message-container[data-id=\"#{message.id}\"")
         container.has_content?(message.message)

@@ -72,6 +72,7 @@ module Chat
           type: :update_thread_original_message,
           original_message_id: thread.original_message_id,
           replies_count: thread.replies_count_cache,
+          title: thread.title,
         },
       )
     end
