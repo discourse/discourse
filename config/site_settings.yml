@@ -386,6 +386,7 @@ basic:
   enable_user_tips:
     client: true
     default: true
+    refresh: true
 
 login:
   invite_only:
