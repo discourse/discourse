@@ -154,3 +154,5 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
 
   after_create { |thread| thread.original_message.update!(thread_id: thread.id) }
 end
+
+Fabricator(:user_chat_thread_membership, class_name: "Chat::UserChatThreadMembership") { user }
