@@ -6,16 +6,20 @@ import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
+let requestId = 0
 function ajax(opts, messageBusConnectivity) {
+
+  requestId++;
+  let thisRequestId = requestId
   opts.beforeSend = function(xhr) {
-    console.log("SENDING", xhr)
+    console.log(`SENDING ${thisRequestId}`, )
   };
   if (opts.complete) {
     const oldComplete = opts.complete;
     opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
-      console.log(stat, xhr.readyState, xhr);
+      console.log(`DONE: ${thisRequestId}`, stat, xhr.readyState)
       messageBusConnectivity.setConnectivity(
         stat === "abort" || xhr.readyState === 4
       );
