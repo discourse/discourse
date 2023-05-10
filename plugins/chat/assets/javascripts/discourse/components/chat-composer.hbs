@@ -93,7 +93,9 @@
 
   {{#if this.shouldRenderReplyingIndicator}}
     <div class="chat-replying-indicator-container">
-      <ChatReplyingIndicator @channel={{@channel}} />
+      <ChatReplyingIndicator
+        @presenceChannelName={{this.presenceChannelName}}
+      />
     </div>
   {{/if}}
 
