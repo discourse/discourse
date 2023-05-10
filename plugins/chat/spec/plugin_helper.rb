@@ -49,7 +49,7 @@ module ChatSystemHelpers
       last_message = creator.chat_message
     end
 
-    last_message.thread.update!(replies_count: messages_count - 1)
+    last_message.thread.set_replies_count_cache(messages_count - 1, update_db: true)
     last_message.thread
   end
 end

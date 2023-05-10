@@ -67,6 +67,7 @@ bs_BA:
       composer:
         italic_text: "ukošen tekst"
         bold_text: "bold tekst"
+        send: "Pošalji"
       notification_levels:
         never: "Nikad"
       settings:
@@ -103,6 +104,11 @@ bs_BA:
         activities: "Aktivnosti"
         flags: "Flags"
         symbols: "Simboli"
+      thread:
+        replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
       draft_channel_screen:
         header: "Nova poruka"
         cancel: "Odustani"

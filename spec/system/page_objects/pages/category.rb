@@ -40,8 +40,14 @@ module PageObjects
         find(".d-toggle-switch .toggle-template-type", visible: false)["aria-checked"] == "true"
       end
 
+      D_EDITOR_SELECTOR = ".d-editor"
+
       def has_d_editor?
-        page.has_selector?(".d-editor")
+        page.has_selector?(D_EDITOR_SELECTOR)
+      end
+
+      def has_no_d_editor?
+        page.has_no_selector?(D_EDITOR_SELECTOR)
       end
 
       def has_selected_template?(template_name)

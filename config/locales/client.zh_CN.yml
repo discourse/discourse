@@ -506,11 +506,11 @@ zh_CN:
         rejected_post:
           title: "帖子被拒绝"
         ignored:
-          title: "忽略的标记"
+          title: "被忽略的标记"
         deleted:
           title: "话题或帖子已被删除"
         reviewed:
-          title: "所有审核"
+          title: "所有已审核"
         all:
           title: "一切"
       context_question:
@@ -1147,11 +1147,16 @@ zh_CN:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> 有用的举报'
-        flagged_posts: "被举报的帖子"
-        deleted_posts: "已删除的帖子"
-        suspensions: "封禁"
-        warnings_received: "警告"
-        rejected_posts: "被拒绝的帖子"
+        flagged_posts:
+          other: '<span class="%{className}">%{count}</span> 标记的帖子'
+        deleted_posts:
+          other: '<span class="%{className}">%{count}</span> 删除的帖子'
+        suspensions:
+          other: '<span class="%{className}">%{count}</span> 暂停'
+        warnings_received:
+          other: '<span class="%{className}">%{count}</span> 警告'
+        rejected_posts:
+          other: '<span class="%{className}">%{count}</span> 被拒绝的帖子'
       messages:
         all: "所有收件箱"
         inbox: "收件箱"
@@ -1248,10 +1253,11 @@ zh_CN:
         title: "双重备份代码"
         regenerate: "重新生成"
         disable: "禁用"
-        enable: "启用"
-        enable_long: "启用备份代码"
+        enable: "创建备份代码"
+        enable_long: "添加备份代码"
+        not_enabled: "你还没有创建任何备份代码。"
         manage:
-          other: "管理备份代码。您还有 <strong>%{count}</strong> 个备份代码。"
+          other: "您还有 <strong>%{count}</strong> 个备份代码。"
         copy_to_clipboard: "复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
         copied_to_clipboard: "已复制到剪贴板"
@@ -1334,6 +1340,7 @@ zh_CN:
         success: "我们已向该地址发送一封电子邮件。请按照确认说明进行操作。"
         success_via_admin: "我们已向该地址发送一封电子邮件。用户需要按照电子邮件中的确认说明进行操作。"
         success_staff: "我们已向您当前的地址发送一封电子邮件。请按照确认说明进行操作。"
+        back_to_preferences: "返回偏好设置"
       change_avatar:
         title: "更改个人资料照片"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>，基于"
@@ -2228,6 +2235,7 @@ zh_CN:
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
+      admin_problems: "站点信息中心的新建议"
       dismiss_confirmation:
         body:
           default:
@@ -4282,8 +4290,8 @@ zh_CN:
           name: "用户信任级别提升事件"
           details: "当用户从一个信任级别提升到另一个信任级别时。"
         user_badge_event:
-          name: "徽章授予事件"
-          details: "当用户收到徽章时。"
+          name: "徽章活动"
+          details: "当徽章被授予或撤销时。"
         group_user_event:
           name: "群组用户事件"
           details: "在群组中添加或移除用户时。"
@@ -4579,6 +4587,7 @@ zh_CN:
             title: "输入要随嵌入式版本的注释传送的自定义 CSS"
           embedded_header:
             text: "嵌入式页眉/标题/标头"
+            title: "输入在嵌入式评论的上方显示的 HTML"
           color_definitions:
             text: "颜色定义"
             title: "输入自定义颜色定义（仅限高级用户）"
@@ -4659,8 +4668,10 @@ zh_CN:
             description: "点赞按钮的颜色。"
           selected:
             name: "已选择"
+            description: "元素（例如列表项）在被框选或被激活时的背景色。"
           hover:
             name: "悬停"
+            description: "元素（例如列表项）在鼠标悬停或具有键盘焦点时的背景色。"
         robots:
           title: "替换您的站点的 robots.txt 文件："
           warning: "这将永久替换任何相关的站点设置。"

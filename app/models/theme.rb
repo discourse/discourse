@@ -494,11 +494,11 @@ class Theme < ActiveRecord::Base
 
     value ||= ""
 
-    field =
-      theme_fields.find { |f| f.name == name && f.target_id == target_id && f.type_id == type_id }
+    field = theme_fields.find_by(name: name, target_id: target_id, type_id: type_id)
+
     if field
       if value.blank? && !upload_id
-        theme_fields.delete field.destroy
+        field.destroy
       else
         if field.value != value || field.upload_id != upload_id
           field.value = value

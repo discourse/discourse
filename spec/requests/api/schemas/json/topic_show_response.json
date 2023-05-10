@@ -828,6 +828,12 @@
                     "null"
                   ]
                 },
+                "flair_group_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "admin": {
                   "type": "boolean"
                 },

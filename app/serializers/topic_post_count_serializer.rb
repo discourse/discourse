@@ -7,6 +7,7 @@ class TopicPostCountSerializer < BasicUserSerializer
              :flair_url,
              :flair_color,
              :flair_bg_color,
+             :flair_group_id,
              :admin,
              :moderator,
              :trust_level
@@ -42,6 +43,10 @@ class TopicPostCountSerializer < BasicUserSerializer
 
   def flair_color
     object[:user]&.flair_group&.flair_color
+  end
+
+  def flair_group_id
+    object[:user]&.flair_group_id
   end
 
   def include_admin?

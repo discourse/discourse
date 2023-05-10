@@ -1289,11 +1289,6 @@ pl_PL:
           few: '<span class="%{className}">%{count}</span> pomocne flagi'
           many: '<span class="%{className}">%{count}</span> pomocne flagi'
           other: '<span class="%{className}">%{count}</span> pomocne flagi'
-        flagged_posts: "oflagowane wpisy"
-        deleted_posts: "usunięte wpisy"
-        suspensions: "zawieszone"
-        warnings_received: "otrzymanych ostrzeżeń"
-        rejected_posts: "odrzucone wpisy"
       messages:
         all: "wszystkie skrzynki odbiorcze"
         inbox: "Skrzynka odbiorcza"
@@ -1420,13 +1415,11 @@ pl_PL:
         title: "Kody zapasowe weryfikacji dwuskładnikowej"
         regenerate: "Odnów"
         disable: "Wyłącz"
-        enable: "Włącz"
-        enable_long: "Włącz kody zapasowe"
         manage:
-          one: "Zarządzaj kodami zapasowymi. Pozostał Ci <strong>%{count}</strong> kod zapasowy."
-          few: "Zarządzaj kodami zapasowymi. Pozostały Ci <strong>%{count}</strong> kody zapasowe."
-          many: "Zarządzaj kodami zapasowymi. Pozostało Ci <strong>%{count}</strong> kodów zapasowych."
-          other: "Zarządzaj kodami zapasowymi. Pozostało Ci <strong>%{count}</strong> kodów zapasowych."
+          one: "Pozostał Ci <strong>%{count}</strong> kod zapasowy."
+          few: "Pozostały Ci <strong>%{count}</strong> kody zapasowe."
+          many: "Pozostało Ci <strong>%{count}</strong> kodów zapasowych."
+          other: "Pozostało Ci <strong>%{count}</strong> kodów zapasowych."
         copy_to_clipboard: "Skopiuj do schowka"
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka"
         copied_to_clipboard: "Skopiowane do schowka"
@@ -2505,6 +2498,7 @@ pl_PL:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - zakończone"
       new_features: "Dostępne są nowe funkcje!"
+      admin_problems: "Nowe porady w panelu administratora"
       dismiss_confirmation:
         body:
           default:
@@ -4795,9 +4789,6 @@ pl_PL:
         user_promoted_event:
           name: "Wydarzenie promowania użytkownika"
           details: "Gdy użytkownik awansuje z jednego poziomu zaufania na inny."
-        user_badge_event:
-          name: "Wydarzenie przyznania odznak"
-          details: "Gdy użytkownik otrzymuje odznakę."
         group_user_event:
           name: "Grupowy event użytkownika"
           details: "Gdy użytkownik jest dodany lub usunięty w grupie."
@@ -5453,6 +5444,7 @@ pl_PL:
           few: "pokaż %{count} słowa"
           many: "pokaż %{count} słów"
           other: "pokaż %{count} słów"
+        case_sensitive: "(z uwzg. wielkości liter)"
         download: Pobierz
         clear_all: Wyczyść wszystko
         clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"

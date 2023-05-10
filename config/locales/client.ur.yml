@@ -1110,12 +1110,6 @@ ur:
       save_to_change_theme: 'آپ کے "%{save_text}" پر کلک کرنے کے بعد تھیم کو اپ ڈیٹ کر دیا جائے گا۔'
       home: "ڈیفالٹ ہوم پیج"
       staged: "سٹَیجڈ"
-      staff_counters:
-        flagged_posts: "فلَیگ کی گئی پوسٹس"
-        deleted_posts: "مٹائی گئی پوسٹس"
-        suspensions: "معطلیاں"
-        warnings_received: "تنبیہات"
-        rejected_posts: "مسترد شدہ پوسٹس"
       messages:
         all: "تمام ان باکسز"
         inbox: "اِن باکس"
@@ -1165,11 +1159,9 @@ ur:
         title: "دو فیکٹر بیک اپ کوڈز"
         regenerate: "دوبارہ تخلیق کریں"
         disable: "غیر فعال کریں"
-        enable: "فعال کریں"
-        enable_long: "بیک اپ کوڈ فعال کریں"
         manage:
-          one: "بیک اپ کوڈز کا نظم کریں۔ آپ کے پاس <strong>%{count}</strong> بیک اپ کوڈ باقی ہے۔"
-          other: "بیک اپ کوڈز کا نظم کریں۔ آپ کے پاس <strong>%{count}</strong> بیک اپ کوڈز باقی ہیں۔"
+          one: "آپ کے <strong>%{count}</strong> بیک اپ کوڈ باقی ہے۔"
+          other: "آپ کے <strong>%{count}</strong> بیک اپ کوڈز باقی ہیں۔"
         copy_to_clipboard: "کلِپ بورڈ میں کاپی کریں"
         copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"
         copied_to_clipboard: "کلِپ بورڈ میں کاپی کر لیا گیا"
@@ -2060,6 +2052,7 @@ ur:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - مکمل"
+      admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
       dismiss_confirmation:
         body:
           default:
@@ -3952,9 +3945,6 @@ ur:
         user_promoted_event:
           name: "یوزر پروموٹڈ ایونٹ"
           details: "جب کسی صارف کو ایک اعتماد کی سطح سے دوسری سطح پر ترقی دی جاتی ہے۔"
-        user_badge_event:
-          name: "بیج گرانٹ ایونٹ"
-          details: "جب صارف کو بیج ملتا ہے۔"
         group_user_event:
           name: "گروپ یوزر ایونٹ"
           details: "جب کسی صارف کو گروپ میں شامل یا ہٹا دیا جاتا ہے۔"

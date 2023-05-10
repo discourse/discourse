@@ -1,15 +1,20 @@
-import ChatChannelComposer from "./chat-channel-composer";
+import ChatComposer from "./chat-composer";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import { action } from "@ember/object";
 
-export default class extends ChatChannelComposer {
-  get model() {
-    return this.chat.activeChannel.activeThread;
+export default class ChatChannelThreadComposer extends ChatComposer {
+  @action
+  reset(channel, thread) {
+    this.message = ChatMessage.createDraftMessage(channel, {
+      user: this.currentUser,
+    });
+    this.message.thread = thread;
   }
 
-  _persistDraft() {
-    // eslint-disable-next-line no-console
-    console.debug(
-      "Drafts are unsupported for chat threads at this point in time"
-    );
-    return;
+  @action
+  replyTo(message) {
+    this.chat.activeMessage = null;
+    this.message.thread = message.thread;
+    this.message.inReplyTo = message;
   }
 }

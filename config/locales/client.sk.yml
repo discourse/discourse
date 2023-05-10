@@ -781,11 +781,6 @@ sk:
       theme: "Téma"
       home: "Predvolená domovská stránka"
       staged: "Dočasný"
-      staff_counters:
-        flagged_posts: "označkované príspevky"
-        deleted_posts: "vymazané príspevky"
-        suspensions: "pozastavenia"
-        warnings_received: "varovania"
       messages:
         inbox: "Prijatá pošta"
         latest: "Najnovšie"
@@ -832,8 +827,6 @@ sk:
       second_factor_backup:
         regenerate: "Znovu vygenerovať"
         disable: "Zakázať"
-        enable: "Povoliť"
-        enable_long: "Povoliť kódy zálohy"
         copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
         copied_to_clipboard: "Skopírované do schránky"
         codes:

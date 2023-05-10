@@ -31,12 +31,16 @@ module PageObjects
         find("#{VISIBLE_DRAWER} .chat-drawer-header__full-screen-btn").click
       end
 
-      def has_open_thread?(thread)
-        has_css?("#{VISIBLE_DRAWER} .chat-thread[data-id='#{thread.id}']")
+      def has_open_thread?(thread = nil)
+        if thread
+          has_css?("#{VISIBLE_DRAWER} .chat-thread[data-id='#{thread.id}']")
+        else
+          has_css?("#{VISIBLE_DRAWER} .chat-thread")
+        end
       end
 
       def has_open_channel?(channel)
-        has_css?("#{VISIBLE_DRAWER} .chat-live-pane[data-id='#{channel.id}']")
+        has_css?("#{VISIBLE_DRAWER} .chat-channel[data-id='#{channel.id}']")
       end
     end
   end

@@ -1208,7 +1208,6 @@ hr:
     discourse_connect_overrides_profile_background: "Nadjačava pozadinu korisničkog profila vrijednošću iz nosivosti DiscourseConnecta."
     discourse_connect_overrides_card_background: "Zamjenjuje pozadinu korisničke kartice s vrijednošću iz sadržaja DiscourseConnect."
     discourse_connect_not_approved_url: "Preusmjerite neodobrene DiscourseConnect račune na ovaj URL"
-    discourse_connect_allows_all_return_paths: "Nemojte ograničavati domenu za return_paths koje pruža DiscourseConnect (prema zadanim postavkama povratna staza mora biti na trenutnom mjestu)"
     enable_local_logins: "Omogućite račune temeljene na prijavi s lokalnim korisničkim imenom i lozinkom. UPOZORENJE: ako je onemogućeno, možda se nećete moći prijaviti ako prethodno niste konfigurirali barem jedan alternativni način prijave."
     enable_local_logins_via_email: "Omogućite korisnicima da zatraže vezu za prijavu jednim klikom da im se pošalje putem e-pošte."
     allow_new_registrations: "Dopusti registracije novih korisnika. Poništite ovu opciju kako biste spriječili bilo koga da stvori novi račun."
@@ -1392,11 +1391,9 @@ hr:
     allowed_href_schemes: "Sheme dopuštene u vezama uz http i https."
     embed_post_limit: "Maksimalan broj postova za ugradnju."
     embed_username_required: "Potrebno je korisničko ime za kreiranje teme."
-    notify_about_flags_after: "Ako postoje zastavice koje nisu obrađene nakon toliko sati, pošaljite osobnu poruku moderatorima. Postavite na 0 za onemogućavanje."
     show_create_topics_notice: "Ako stranica ima manje od 5 javnih tema, pokažite obavijest u kojoj se od administratora traži da kreiraju neke teme."
     delete_drafts_older_than_n_days: "Izbriši skice starije od (n) dana."
     delete_merged_stub_topics_after_days: "Broj dana čekanja prije automatskog brisanja potpuno spojenih tema. Postavite na 0 da nikada ne brišete nezavršene teme."
-    bootstrap_mode_min_users: "Minimalan broj korisnika potreban za onemogućavanje načina pokretanja (postavite na 0 za onemogućavanje)"
     prevent_anons_from_downloading_files: "Spriječite anonimne korisnike u preuzimanju privitaka."
     secure_uploads: 'Ograničava pristup SVIM prijenosima (slike, video, audio, tekst, pdf-ovi, zipovi i ostalo). Ako je "potrebna prijava" omogućena, samo prijavljeni korisnici mogu pristupiti učitavanjima. U suprotnom, pristup će biti ograničen samo na učitavanje medija u privatnim porukama i privatnim kategorijama. UPOZORENJE: Ova je postavka složena i zahtijeva duboko administrativno razumijevanje. Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/140017">sigurnu učitava temu na Meta</a> za detalje.'
     secure_uploads_allow_embed_images_in_emails: "Omogućuje ugrađivanje sigurnih slika koje bi se inače redigirale u e-porukama, ako je njihova veličina manja od postavke 'maksimalna veličina slike za ugrađivanje e-pošte u sigurne prijenose kb'."
@@ -1448,7 +1445,6 @@ hr:
     enable_sitemap: "Generirajte kartu web stranice za svoju web stranicu i uključite je u datoteku robots.txt."
     sitemap_page_size: "Broj URL-ova koje treba uključiti u svaku stranicu karte web-lokacije. Najviše 50.000"
     enable_user_status: "(eksperimentalno) Omogućuje korisnicima postavljanje prilagođene statusne poruke (emoji + opis)."
-    enable_user_tips: "(eksperimentalno) Omogućite nove korisničke savjete koji korisnicima opisuju ključne značajke"
     short_title: "Kratki naslov koristit će se na korisničkom početnom zaslonu, pokretaču ili drugim mjestima gdje je prostor ograničen. Trebao bi biti ograničen na 12 znakova."
     dashboard_hidden_reports: "Omogućuje skrivanje navedenih izvješća s nadzorne ploče."
     dashboard_visible_tabs: "Odaberite koje su kartice nadzorne ploče vidljive."
@@ -1770,9 +1766,6 @@ hr:
       subject_template: "Dobrodošli na %{site_name}"
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}"
-    dashboard_problems:
-      title: "Problemi nadzorne ploče"
-      subject_template: "Novi savjeti na vašoj nadzornoj ploči"
   user_notifications:
     user_quoted:
       title: "Korisnik je citirao"

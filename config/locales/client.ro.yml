@@ -1052,12 +1052,6 @@ ro:
       save_to_change_theme: 'Tema va fi actualizată după ce faceți clic pe „%{save_text}”'
       home: "Pagina inițială implicită"
       staged: "Pus în scenă"
-      staff_counters:
-        flagged_posts: "Postări marcate"
-        deleted_posts: "Postări șterse"
-        suspensions: "Suspendări"
-        warnings_received: "Avertizări"
-        rejected_posts: "postări respinse"
       messages:
         inbox: "Primite"
         latest: "Cele mai recente"
@@ -1102,7 +1096,6 @@ ro:
       second_factor_backup:
         regenerate: "Regenerare"
         disable: "Dezactivează"
-        enable: "Activează"
         copy_to_clipboard: "Copiază în clipboard"
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
         copied_to_clipboard: "Copiat în clipboard"

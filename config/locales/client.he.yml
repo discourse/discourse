@@ -1313,11 +1313,36 @@ he:
       home: "דף בית ברירת מחדל"
       staged: "מבוים"
       staff_counters:
-        flagged_posts: "פסטים מדוגלים"
-        deleted_posts: "פוסטים שנמחקו"
-        suspensions: "השעיות"
-        warnings_received: "אזהרות"
-        rejected_posts: "פוסטים שנדחו"
+        flags_given:
+          one: 'סימון <span class="%{className}">%{count}</span> מועיל'
+          two: '<span class="%{className}">%{count}</span> סימונים מועילים'
+          many: '<span class="%{className}">%{count}</span> סימונים מועילים'
+          other: '<span class="%{className}">%{count}</span> סימונים מועילים'
+        flagged_posts:
+          one: 'פוסט <span class="%{className}">%{count}</span> מסומן'
+          two: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
+          many: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
+          other: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
+        deleted_posts:
+          one: 'פוסט <span class="%{className}">%{count}</span> נמחק'
+          two: '<span class="%{className}">%{count}</span> פוסטים נמחקו'
+          many: '<span class="%{className}">%{count}</span> פוסטים נמחקו'
+          other: '<span class="%{className}">%{count}</span> פוסטים נמחקו'
+        suspensions:
+          one: 'השעיה <span class="%{className}">%{count}</span>'
+          two: '<span class="%{className}">%{count}</span> השעיות'
+          many: '<span class="%{className}">%{count}</span> השעיות'
+          other: '<span class="%{className}">%{count}</span> השעיות'
+        warnings_received:
+          one: 'אזהרה <span class="%{className}">%{count}</span>'
+          two: '<span class="%{className}">%{count}</span> אזהרות'
+          many: '<span class="%{className}">%{count}</span> אזהרות'
+          other: '<span class="%{className}">%{count}</span> אזהרות'
+        rejected_posts:
+          one: 'פוסט <span class="%{className}">%{count}</span> נדחה'
+          two: '<span class="%{className}">%{count}</span> פוסטים נדחו'
+          many: '<span class="%{className}">%{count}</span> פוסטים נדחו'
+          other: '<span class="%{className}">%{count}</span> פוסטים נדחו'
       messages:
         all: "כל תיבות הדואר הנכנס"
         inbox: "דואר נכנס"
@@ -1444,13 +1469,14 @@ he:
         title: "קודים כגיבוי לאימות דו־שלבי"
         regenerate: "חדש"
         disable: "בטל"
-        enable: "הפעלה"
-        enable_long: "הפעלת קודים לגיבוי"
+        enable: "יצירת קודים לגיבוי"
+        enable_long: "הוספת קודים לגיבוי"
+        not_enabled: "לא יצרת קודים לגיבוי עדיין."
         manage:
-          one: "ניהול קודים כגיבוי. נותר לרשותך קוד <strong>%{count}</strong> כגיבוי."
-          two: "ניהול קודים כגיבוי. נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
-          many: "ניהול קודים כגיבוי. נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
-          other: "ניהול קודים כגיבוי. נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
+          one: "נותר לרשותך קוד <strong>%{count}</strong> כגיבוי."
+          two: "נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
+          many: "נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
+          other: "נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
         copy_to_clipboard: "העתקה ללוח"
         copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"
         copied_to_clipboard: "הועתק ללוח"
@@ -1536,6 +1562,7 @@ he:
         success: "שלחנו דואר אלקטרוני לכתובת הדואר הזו. בבקשה עיקבו אחרי הוראות האישור שם."
         success_via_admin: "שלחנו הודעה לכתובת הדוא״ל הזו. על המשתמש יהיה לעקוב אחר הוראות האישור שבהודעה."
         success_staff: "שלחנו דואר אלקטרוני לכתובת הדואר הזו. אנא עיקבו אחרי הוראות האישור."
+        back_to_preferences: "חזרה להעדפות"
       change_avatar:
         title: "שינוי תמונת הפרופיל"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, מבוסס על"
@@ -2521,6 +2548,7 @@ he:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - הסתיים"
       new_features: "יכולות חדשות זמינות!"
+      admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
       dismiss_confirmation:
         body:
           default:
@@ -4866,8 +4894,8 @@ he:
           name: "אירוע שקודם על ידי משתמש"
           details: "כאשר משתמש מקודם מדרגת אמון אחת לאחרת."
         user_badge_event:
-          name: "אירוע הענקת עיטור"
-          details: "כמשתמש מקבל עיטור."
+          name: "אירוע עיטור"
+          details: "מתי עיטור מוענק או נשלל."
         group_user_event:
           name: "אירוע משתמש בקבוצה"
           details: "כאשר משתמש מתווסף או נגרע מקבוצה."

@@ -3,7 +3,7 @@
 module Chat
   module Publisher
     def self.new_messages_message_bus_channel(chat_channel_id)
-      "/chat/#{chat_channel_id}/new-messages"
+      "#{root_message_bus_channel(chat_channel_id)}/new-messages"
     end
 
     def self.root_message_bus_channel(chat_channel_id)
@@ -14,7 +14,7 @@ module Chat
       "#{root_message_bus_channel(chat_channel_id)}/thread/#{thread_id}"
     end
 
-    def self.calculate_publish_targets(channel, message)
+    def self.calculate_publish_targets(channel, message, staged_thread_id: nil)
       return [root_message_bus_channel(channel.id)] if !allow_publish_to_thread?(channel)
 
       if message.thread_om?
@@ -22,8 +22,10 @@ module Chat
           root_message_bus_channel(channel.id),
           thread_message_bus_channel(channel.id, message.thread_id),
         ]
-      elsif message.thread_reply?
-        [thread_message_bus_channel(channel.id, message.thread_id)]
+      elsif staged_thread_id || message.thread_reply?
+        targets = [thread_message_bus_channel(channel.id, message.thread_id)]
+        targets << thread_message_bus_channel(channel.id, staged_thread_id) if staged_thread_id
+        targets
       else
         [root_message_bus_channel(channel.id)]
       end
@@ -33,33 +35,17 @@ module Chat
       SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
     end
 
-    def self.publish_new!(chat_channel, chat_message, staged_id)
-      message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
-
-      content =
-        Chat::MessageSerializer.new(
-          chat_message,
-          { scope: anonymous_guardian, root: :chat_message },
-        ).as_json
-      content[:type] = :sent
-      content[:staged_id] = staged_id
-      permissions = permissions(chat_channel)
-
-      message_bus_targets.each do |message_bus_channel|
-        MessageBus.publish(message_bus_channel, content.as_json, permissions)
-      end
-
-      if chat_message.thread_reply?
-        MessageBus.publish(
-          root_message_bus_channel(chat_channel.id),
-          {
-            type: :update_thread_original_message,
-            original_message_id: chat_message.thread.original_message_id,
-            action: :increment_reply_count,
-          }.as_json,
-          permissions,
-        )
-      end
+    def self.publish_new!(chat_channel, chat_message, staged_id, staged_thread_id: nil)
+      message_bus_targets =
+        calculate_publish_targets(chat_channel, chat_message, staged_thread_id: staged_thread_id)
+      publish_to_targets!(
+        message_bus_targets,
+        chat_channel,
+        serialize_message_with_type(chat_message, :sent).merge(
+          staged_id: staged_id,
+          staged_thread_id: staged_thread_id,
+        ),
+      )
 
       # NOTE: This means that the read count is only updated in the client
       # for new messages in the main channel stream, maybe in future we want to
@@ -74,84 +60,74 @@ module Chat
             username: chat_message.user.username,
             thread_id: chat_message.thread_id,
           },
-          permissions,
+          permissions(chat_channel),
         )
       end
     end
 
-    def self.publish_thread_created!(chat_channel, chat_message)
-      content =
-        Chat::MessageSerializer.new(
-          chat_message,
-          { scope: anonymous_guardian, root: :chat_message },
-        ).as_json
-      content[:type] = :thread_created
-      permissions = permissions(chat_channel)
+    def self.publish_thread_original_message_metadata!(thread)
+      publish_to_channel!(
+        thread.channel,
+        {
+          type: :update_thread_original_message,
+          original_message_id: thread.original_message_id,
+          replies_count: thread.replies_count_cache,
+        },
+      )
+    end
 
-      MessageBus.publish(root_message_bus_channel(chat_channel.id), content.as_json, permissions)
+    def self.publish_thread_created!(chat_channel, chat_message, thread_id, staged_thread_id)
+      publish_to_channel!(
+        chat_channel,
+        serialize_message_with_type(
+          chat_message,
+          :thread_created,
+          { thread_id: thread_id, staged_thread_id: staged_thread_id },
+        ),
+      )
     end
 
     def self.publish_processed!(chat_message)
       chat_channel = chat_message.chat_channel
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
-
-      content = {
-        type: :processed,
-        chat_message: {
-          id: chat_message.id,
-          cooked: chat_message.cooked,
-        },
-      }
-
-      message_bus_targets.each do |message_bus_channel|
-        MessageBus.publish(message_bus_channel, content.as_json, permissions(chat_channel))
-      end
+      publish_to_targets!(
+        message_bus_targets,
+        chat_channel,
+        { type: :processed, chat_message: { id: chat_message.id, cooked: chat_message.cooked } },
+      )
     end
 
     def self.publish_edit!(chat_channel, chat_message)
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
-
-      content =
-        Chat::MessageSerializer.new(
-          chat_message,
-          { scope: anonymous_guardian, root: :chat_message },
-        ).as_json
-      content[:type] = :edit
-
-      message_bus_targets.each do |message_bus_channel|
-        MessageBus.publish(message_bus_channel, content.as_json, permissions(chat_channel))
-      end
+      publish_to_targets!(
+        message_bus_targets,
+        chat_channel,
+        serialize_message_with_type(chat_message, :edit),
+      )
     end
 
     def self.publish_refresh!(chat_channel, chat_message)
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
-
-      content =
-        Chat::MessageSerializer.new(
-          chat_message,
-          { scope: anonymous_guardian, root: :chat_message },
-        ).as_json
-      content[:type] = :refresh
-
-      message_bus_targets.each do |message_bus_channel|
-        MessageBus.publish(message_bus_channel, content.as_json, permissions(chat_channel))
-      end
+      publish_to_targets!(
+        message_bus_targets,
+        chat_channel,
+        serialize_message_with_type(chat_message, :refresh),
+      )
     end
 
     def self.publish_reaction!(chat_channel, chat_message, action, user, emoji)
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
-
-      content = {
-        action: action,
-        user: BasicUserSerializer.new(user, root: false).as_json,
-        emoji: emoji,
-        type: :reaction,
-        chat_message_id: chat_message.id,
-      }
-
-      message_bus_targets.each do |message_bus_channel|
-        MessageBus.publish(message_bus_channel, content.as_json, permissions(chat_channel))
-      end
+      publish_to_targets!(
+        message_bus_targets,
+        chat_channel,
+        {
+          action: action,
+          user: BasicUserSerializer.new(user, root: false).as_json,
+          emoji: emoji,
+          type: :reaction,
+          chat_message_id: chat_message.id,
+        },
+      )
     end
 
     def self.publish_presence!(chat_channel, user, typ)
@@ -160,28 +136,26 @@ module Chat
 
     def self.publish_delete!(chat_channel, chat_message)
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
-
-      message_bus_targets.each do |message_bus_channel|
-        MessageBus.publish(
-          message_bus_channel,
-          { type: "delete", deleted_id: chat_message.id, deleted_at: chat_message.deleted_at },
-          permissions(chat_channel),
-        )
-      end
+      publish_to_targets!(
+        message_bus_targets,
+        chat_channel,
+        { type: "delete", deleted_id: chat_message.id, deleted_at: chat_message.deleted_at },
+      )
     end
 
     def self.publish_bulk_delete!(chat_channel, deleted_message_ids)
+      channel_permissions = permissions(chat_channel)
       Chat::Thread
         .grouped_messages(message_ids: deleted_message_ids)
         .each do |group|
           MessageBus.publish(
             thread_message_bus_channel(chat_channel.id, group.thread_id),
             {
-              type: "bulk_delete",
+              type: :bulk_delete,
               deleted_ids: group.thread_message_ids,
               deleted_at: Time.zone.now,
             },
-            permissions(chat_channel),
+            channel_permissions,
           )
 
           # Don't need to publish to the main channel if the messages deleted
@@ -193,52 +167,73 @@ module Chat
 
       return if deleted_message_ids.empty?
 
-      MessageBus.publish(
-        root_message_bus_channel(chat_channel.id),
-        { type: "bulk_delete", deleted_ids: deleted_message_ids, deleted_at: Time.zone.now },
-        permissions(chat_channel),
+      publish_to_channel!(
+        chat_channel,
+        { type: :bulk_delete, deleted_ids: deleted_message_ids, deleted_at: Time.zone.now },
       )
     end
 
     def self.publish_restore!(chat_channel, chat_message)
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
-
-      content =
-        Chat::MessageSerializer.new(
-          chat_message,
-          { scope: anonymous_guardian, root: :chat_message },
-        ).as_json
-      content[:type] = :restore
-
-      message_bus_targets.each do |message_bus_channel|
-        MessageBus.publish(message_bus_channel, content.as_json, permissions(chat_channel))
-      end
+      publish_to_targets!(
+        message_bus_targets,
+        chat_channel,
+        serialize_message_with_type(chat_message, :restore),
+      )
     end
 
     def self.publish_flag!(chat_message, user, reviewable, score)
       message_bus_targets = calculate_publish_targets(chat_message.chat_channel, chat_message)
 
-      message_bus_targets.each do |message_bus_channel|
-        # Publish to user who created flag
-        MessageBus.publish(
-          message_bus_channel,
-          {
-            type: "self_flagged",
-            user_flag_status: score.status_for_database,
-            chat_message_id: chat_message.id,
-          }.as_json,
+      # Publish to user who created flag
+      publish_to_targets!(
+        message_bus_targets,
+        chat_message.chat_channel,
+        {
+          type: :self_flagged,
+          user_flag_status: score.status_for_database,
+          chat_message_id: chat_message.id,
+        },
+        permissions: {
           user_ids: [user.id],
-        )
-      end
+        },
+      )
 
-      message_bus_targets.each do |message_bus_channel|
-        # Publish flag with link to reviewable to staff
+      # Publish flag with link to reviewable to staff
+      publish_to_targets!(
+        message_bus_targets,
+        chat_message.chat_channel,
+        { type: :flag, chat_message_id: chat_message.id, reviewable_id: reviewable.id },
+        permissions: {
+          group_ids: [Group::AUTO_GROUPS[:staff]],
+        },
+      )
+    end
+
+    def self.publish_to_channel!(channel, payload)
+      MessageBus.publish(
+        root_message_bus_channel(channel.id),
+        payload.as_json,
+        permissions(channel),
+      )
+    end
+
+    def self.publish_to_targets!(targets, channel, payload, permissions: nil)
+      targets.each do |message_bus_channel|
         MessageBus.publish(
           message_bus_channel,
-          { type: "flag", chat_message_id: chat_message.id, reviewable_id: reviewable.id }.as_json,
-          group_ids: [Group::AUTO_GROUPS[:staff]],
+          payload.as_json,
+          permissions || permissions(channel),
         )
       end
+    end
+
+    def self.serialize_message_with_type(chat_message, type, options = {})
+      Chat::MessageSerializer
+        .new(chat_message, { scope: anonymous_guardian, root: :chat_message })
+        .as_json
+        .merge(type: type)
+        .merge(options)
     end
 
     def self.user_tracking_state_message_bus_channel(user_id)

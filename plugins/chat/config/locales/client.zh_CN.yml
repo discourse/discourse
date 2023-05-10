@@ -83,7 +83,8 @@ zh_CN:
       collapse: "收起聊天抽屉"
       expand: "展开聊天栏"
       confirm_flag: "确定要举报 %{username} 的消息吗？"
-      deleted: "一条消息已被删除。[查看]"
+      deleted:
+        other: "%{count} 条消息已被删除。[查看全部]"
       hidden: "一条消息已被隐藏。[查看]"
       delete: "删除"
       edited: "已编辑"
@@ -160,6 +161,7 @@ zh_CN:
       open_message: "在聊天中打开消息"
       placeholder_self: "做些记录"
       placeholder_channel: "在 %{channelName} 聊天"
+      placeholder_thread: "在话题中聊天"
       placeholder_users: "在 %{commaSeparatedNames} 聊天"
       placeholder_new_message_disallowed:
         archived: "频道已归档，你无法在此发送新信息。"
@@ -195,6 +197,8 @@ zh_CN:
       title: "聊天"
       title_capitalized: "聊天"
       upload: "附加文件"
+      upload_to_channel: "上传到 %{title}"
+      upload_to_thread: "上传到话题"
       uploaded_files:
         other: "%{count} 个文件"
       you_flagged: "您已举报此消息"
@@ -271,6 +275,10 @@ zh_CN:
           label: "选择一个类别"
           none: "选择一个…"
           default_hint: 访问<a href=%{link} target="_blank">%{category}安全设置</a>管理访问权限
+          hint_1_group: '%{group} 中的用户根据 <a href="%{settingLink}" target="_blank">安全设置</a>可以访问这个频道'
+          hint_2_groups: '%{group1} 和 %{group2} 中的用户根据 <a href="%{settingLink}" target="_blank">安全设置</a>可以访问这个频道'
+          hint_multiple_groups:
+            other: '%{group} 和 %{count} 其他组的用户根据 <a href="%{settingLink}" target="_blank">安全</a>可以设置访问这个频道'
         create: "创建频道"
         description: "描述（可选）"
         name: "频道名称"
@@ -284,9 +292,12 @@ zh_CN:
         type: "聊天消息"
       reactions:
         only_you: "您回应了 :%{emoji}:"
+        you_and_single_user: "你和 %{username} 的回应了: %{emoji}:"
+        you_and_multiple_users: "你、%{commaSeparatedUsernames} 和 %{username} 回应了 :%{emoji}:"
         you_multiple_users_and_more:
           other: "您、%{commaSeparatedUsernames} 和其他 %{count} 人回应了 :%{emoji}:"
         single_user: "%{username} 回应了 :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} 和 %{username} 回应 :%{emoji}:"
         multiple_users_and_more:
           other: "%{commaSeparatedUsernames} 和其他 %{count} 人回应了 :%{emoji}:"
       composer:
@@ -294,6 +305,7 @@ zh_CN:
         italic_text: "斜体"
         bold_text: "粗体"
         code_text: "代码文本"
+        send: "发送"
       quote:
         original_channel: '最初在<a href="%{channelLink}">%{channel}</a>中发送。'
         copy_success: "聊天引用已复制到剪贴板"
@@ -410,7 +422,11 @@ zh_CN:
         search_placeholder: "按表情符号名称和别名搜索…"
         no_results: "没有结果"
       thread:
+        view_thread: 查看对话
+        replies:
+          other: "%{count} 个回复"
         label: 话题
+        close: "关闭话题"
       threads:
         started_by: "开始于"
         open: "打开主题"

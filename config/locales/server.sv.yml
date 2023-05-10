@@ -193,6 +193,7 @@ sv:
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av inlägget."
     site_settings:
+      invalid_site_setting: "Det finns ingen inställning med namnet '%{name}'"
       invalid_category_id: "Du angav en kategori som inte finns"
       invalid_choice:
         one: "Du angav det ogiltiga valet %{name}"
@@ -508,6 +509,7 @@ sv:
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
     dominating_topic: Du har skrivit mycket i det här ämnet! Tänk på att ge andra en möjlighet att svara här och diskutera med andra också.
     get_a_room: Du har svarat @%{reply_username} %{count} gånger. Visste du att du istället kunde skicka ett personligt meddelande till henne/honom?
+    dont_feed_the_trolls: Det här inlägget har redan flaggats för moderatorns uppmärksamhet. Är du säker på att du vill svara på det? Svar på negativt innehåll tenderar att uppmuntra till mer negativt beteende.
     too_many_replies: |
       ### Du har nått svarsgränsen för detta ämne
 
@@ -1637,7 +1639,7 @@ sv:
     discourse_connect_overrides_profile_background: "Åsidosätter användarprofilbakgrund med värde från DiscourseConnect-nyttolast."
     discourse_connect_overrides_card_background: "Åsidosätter användarkortsbakgrund med värde från DiscourseConnect-nyttolast."
     discourse_connect_not_approved_url: "Omdirigera icke-godkända DiscourseConnect-konton till den här URL:en"
-    discourse_connect_allows_all_return_paths: "Begränsa inte domänen för return_paths som tillhandahålls av DiscourseConnect (som standard måste retursökvägen finnas på den aktuella webbplatsen)"
+    discourse_connect_allowed_redirect_domains: "Begränsa till dessa domäner för return_paths som tillhandahålls av DiscourseConnect (som standard måste retursökvägen finnas på den aktuella webbplatsen). Använd * för att tillåta valfri domän för returvägen. Jokertecken för underdomän (`*.foobar.com`) tillåts inte."
     enable_local_logins: "Aktivera konton baserade på lokala användarnamn och lösenordsinloggning. VARNING: om detta har inaktiverats kan du kanske inte logga in om du inte tidigare har konfigurerat minst en alternativ inloggningsmetod."
     enable_local_logins_via_email: "Tillåt användare att begära en engångsinloggningslänk som skickas till dem via e-post."
     allow_new_registrations: "Tillåt nya användarregistreringar. Avbocka detta för att förhindra vem som helst från att skapa ett nytt konto."
@@ -1983,6 +1985,7 @@ sv:
     allow_profile_backgrounds: "Tillåt användare att ladda upp profilbakgrunder."
     sequential_replies_threshold: "Antal inlägg en användare måste ha skrivit i rad i ett ämne innan användaren blir påmind om för många svar i sekvens."
     get_a_room_threshold: "Antalet inlägg en användare kan göra till samma person inom samma ämne innan det ges en varning."
+    dont_feed_the_trolls_threshold: "Antal flaggor från andra användare innan du varnas."
     enable_mobile_theme: "Mobila enheter använder ett mobilvänligt tema, med möjligheten att byta till standardsidan. Inaktivera detta om du vill använda en anpassad stilmall som är helt responsiv."
     dominating_topic_minimum_percent: "Procentandel av antalet inlägg som en användare måste skriva i ett ämne innan de påminns om att de är för dominerande."
     disable_avatar_education_message: "Inaktivera hjälpmeddelande för byte av avatar."
@@ -2028,11 +2031,11 @@ sv:
     allowed_href_schemes: "Scheman tillåtna i länkar förutom http och https."
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
-    notify_about_flags_after: "Om det finns flaggor som inte har hanterats efter detta antal timmar skickas ett personligt meddelande till moderatorerna. Inaktivera genom att ställa in till 0."
+    notify_about_reviewable_item_after: "Om det finns granskningsbara objekt som inte har hanterats efter så många timmar, skicka ett personligt meddelande till moderatorer. Ställ in på 0 för att inaktivera."
     show_create_topics_notice: "Visa ett meddelande som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
-    bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
+    bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ställ in på 0 för att inaktivera, kan ta upp till 24 timmar)"
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
     secure_uploads: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "login required" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/-/140017">ämnet för säkra uppladdningar i Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure uploads max email embed image size kb'."
@@ -2043,6 +2046,7 @@ sv:
     emoji_set: "Hur skulle du vilja ha din emoji?"
     emoji_autocomplete_min_chars: "Minsta antal tecken som krävs för att utlösa popupfönstret för emoji-autoifyllning"
     enable_inline_emoji_translation: "Aktiverar översättning för infogade emojier (utan mellanslag eller skiljetecken framför)"
+    emoji_deny_list: "Dessa emojier kommer inte att vara tillgängliga för användning i menyer eller kortkoder."
     approve_post_count: "Antalet inlägg från en ny användare eller basanvändare som måste godkännas"
     approve_unless_trust_level: "Inlägg för användare under den här förtroendenivån måste godkännas"
     approve_new_topics_unless_trust_level: "Nya ämnen för användare under denna förtroendenivå måste godkännas"
@@ -2102,7 +2106,9 @@ sv:
     revoke_api_keys_days: "Antal dagar innan en oanvänd API-nyckel automatiskt återkallas (0 för aldrig)"
     allow_user_api_keys: "Tillåt generering av API-nycklar för användare"
     allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API-nycklar"
-    min_trust_level_for_user_api_key: "Förtroendenivå som krävs för att generera användar-API-nycklar"
+    min_trust_level_for_user_api_key: |
+      Förtroendenivå som krävs för generering av användar-API-nycklar.<br>
+      <b>VARNING</b>: Ändring av förtroendenivån kommer att förhindra användare med en lägre förtroendenivå från att logga in via Discourse Hub
     allowed_user_api_auth_redirects: "Tillåten URL för omdirigering efter verifiering av användares API-nycklar. Jokersymbol * kan användas för att matcha vilken del som helst av denna (t.ex. www.exempel.se/*)."
     allowed_user_api_push_urls: "Tillåtna URL:er för serverframstötning till användar-API"
     expire_user_api_keys_days: "Antal dagar innan en användares API-nyckel automatiskt upphör (0 för aldrig)"
@@ -2135,7 +2141,6 @@ sv:
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
     sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
     enable_user_status: "(experimentell) Tillåt användare att ställa in anpassat statusmeddelande (emoji + beskrivning)."
-    enable_user_tips: "(experimentell) Aktivera nya användartips som beskriver nyckelfunktioner för användare"
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2154,10 +2159,11 @@ sv:
     navigation_menu: "Bestäm vilken navigeringsmeny som ska användas. Sidofälts- och rubriknavigering kan anpassas av användare. Det äldre alternativet är tillgängligt för bakåtkompatibilitet."
     default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
-    enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn för den gamla navigeringsmenyn."
+    enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn. Inaktivering av den här inställningen är föråldrat. Den nya aviseringsmenyn används alltid för icke-äldre \"navigeringsmeny\"-val. <a href='https://meta.discourse.org/t/260358'>Lär dig mer</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     experimental_new_new_view_groups: "EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken \"Allt\" i sidofältet länkar till den."
     enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
+    experimental_topics_filter: "EXPERIMENTELLT: Aktiverar den experimentella ämnesfiltervägen vid /filter"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2214,7 +2220,6 @@ sv:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
       invalid_uncategorized_category_setting: 'Kategorin "Okategoriserade" kan inte väljas om inte "tillåt okategoriserade ämnen" har aktiverats.'
-      enable_new_notifications_menu_not_legacy_navigation_menu: "Du måste ställa in `navigation_menu` till `legacy` innan du aktiverar den här inställningen."
       invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
     placeholder:
       discourse_connect_provider_secrets:
@@ -3092,15 +3097,6 @@ sv:
       title: "Hämtning av externa bilder är inaktiverad"
       subject_template: "Hämtning av externa bilder har inaktiverats"
       text_body_template: "Inställningen `download_remote_images_to_local` har inaktiverats eftersom diskutrymmet har nått sin övre gräns."
-    dashboard_problems:
-      title: "Problem med instrumentpanel"
-      subject_template: "Nytt råd på din webbplats översiktspanel"
-      text_body_template: |
-        Vi har några nya råd och rekommendationer för dig baserat på dina aktuella webbplatsinställningar.
-
-         [Gå till din översiktspanel](%{base_url}/admin) för att se dessa.
-
-        Om inget är synligt från din panel har förmodligen någon annan ur personalen redan agerat på detta råd. En lista över personalåtgärder kan hittas genom [Personalens händelselogg](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Du är Månadens nya användare!"
       subject_template: "Grattis, du har tilldelats utmärkelsen ** Månadens nya användare för %{month_year}**. : Trofén:\n\nDenna utmärkelse beviljas endast till två nya användare per månad och den kommer att visas permanent på [sidan för utmärkelser] (%{url}).\n\nDu har snabbt blivit en värdefull medlem i vår gemenskap. Tack för att du gick med och fortsätt med det fantastiska arbetet!"

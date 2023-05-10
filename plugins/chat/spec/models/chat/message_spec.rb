@@ -552,17 +552,22 @@ describe Chat::Message do
     fab!(:user1) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
 
-    it "creates mentions for passed user ids" do
-      mentioned_user_ids = [user1.id, user2.id]
-      message.create_mentions(mentioned_user_ids)
+    it "creates mentions for mentioned  usernames" do
+      message.message = "Mentioning @#{user1.username} and @#{user2.username}"
+      message.cook
+
+      message.create_mentions
       message.reload
 
-      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:user_id)).to match_array([user1.id, user2.id])
     end
 
-    it "ignores duplicates in passed user ids" do
-      mentioned_user_ids = [user1.id, user1.id, user1.id, user1.id, user1.id]
-      message.create_mentions(mentioned_user_ids)
+    it "ignores duplicated mentions" do
+      message.message =
+        "Mentioning @#{user1.username} @#{user1.username} @#{user1.username} @#{user1.username}"
+      message.cook
+
+      message.create_mentions
       message.reload
 
       expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
@@ -570,28 +575,36 @@ describe Chat::Message do
   end
 
   describe "#update_mentions" do
-    fab!(:message) { Fabricate(:chat_message) }
     fab!(:user1) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:user3) { Fabricate(:user) }
     fab!(:user4) { Fabricate(:user) }
+    fab!(:message) do
+      Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
+    end
     let(:already_mentioned) { [user1.id, user2.id] }
 
-    before { message.create_mentions(already_mentioned) }
+    before { message.create_mentions }
 
     it "creates newly added mentions" do
       existing_mention_ids = message.chat_mentions.pluck(:id)
+      message.message = message.message + " @#{user3.username} @#{user4.username} "
+      message.cook
 
-      mentioned_user_ids = [*already_mentioned, user3.id, user4.id]
-      message.update_mentions(mentioned_user_ids)
+      message.update_mentions
       message.reload
 
-      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(
+        [user1.id, user2.id, user3.id, user4.id],
+      )
       expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
     end
 
     it "drops removed mentions" do
-      message.update_mentions([user1.id]) # user 2 is not mentioned anymore
+      message.message = "Hey @#{user1.username}" # user 2 is not mentioned anymore
+      message.cook
+
+      message.update_mentions
       message.reload
 
       expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
@@ -599,12 +612,13 @@ describe Chat::Message do
 
     it "changes nothing if passed mentions are identical to existing mentions" do
       existing_mention_ids = message.chat_mentions.pluck(:id)
+      message.message = message.message
+      message.cook
 
-      mentioned_user_ids = [*already_mentioned]
-      message.update_mentions(mentioned_user_ids)
+      message.update_mentions
       message.reload
 
-      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(already_mentioned)
       expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
     end
   end

@@ -395,6 +395,11 @@ RSpec.describe ComposerMessagesFinder do
         )
       expect(finder.check_dont_feed_the_trolls).to be_present
     end
+
+    it "safely returns from not finding a post" do
+      finder = ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: nil)
+      expect(finder.check_dont_feed_the_trolls).to be_blank
+    end
   end
 
   describe ".check_get_a_room" do

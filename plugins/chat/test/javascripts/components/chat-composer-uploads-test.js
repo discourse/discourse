@@ -66,7 +66,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
     `);
 
     const done = assert.async();
-    this.appEvents = this.container.lookup("service:appEvents");
+    this.appEvents = this.container.lookup("service:app-events");
     this.appEvents.on(
       "upload-mixin:chat-composer-uploader:upload-success",
       (fileName, upload) => {
@@ -97,7 +97,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
 
     assert.dom(".chat-composer-upload").exists({ count: 1 });
 
-    await click(".remove-upload");
+    await click(".chat-composer-upload__remove-btn");
 
     assert.dom(".chat-composer-upload").exists({ count: 0 });
   });
@@ -116,7 +116,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
 
     const image = createFile("avatar.png");
     const done = assert.async();
-    this.appEvents = this.container.lookup("service:appEvents");
+    this.appEvents = this.container.lookup("service:app-events");
 
     this.appEvents.on(
       `upload-mixin:chat-composer-uploader:upload-cancelled`,
@@ -138,7 +138,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
     await waitFor(".chat-composer-upload");
     assert.strictEqual(count(".chat-composer-upload"), 1);
 
-    await click(".remove-upload");
+    await click(".chat-composer-upload__remove-btn");
     assert.strictEqual(count(".chat-composer-upload"), 0);
   });
 });

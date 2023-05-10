@@ -1,10 +1,9 @@
 import Component from "@ember/component";
-import { bind } from "@ember/runloop";
+import { bind } from "discourse-common/utils/decorators";
+import { later } from "@ember/runloop";
 import { computed } from "@ember/object";
-import layout from "select-kit/templates/components/select-kit/select-kit-body";
 
 export default Component.extend({
-  layout,
   classNames: ["select-kit-body"],
   classNameBindings: ["emptyBody:empty-body"],
 
@@ -12,55 +11,53 @@ export default Component.extend({
     return false;
   }),
 
-  rootEventType: "click",
-
-  init() {
-    this._super(...arguments);
-
-    this.handleRootMouseDownHandler = bind(this, this.handleRootMouseDown);
-  },
-
   didInsertElement() {
     this._super(...arguments);
 
     this.element.style.position = "relative";
-
-    document.addEventListener(
-      this.rootEventType,
-      this.handleRootMouseDownHandler,
-      true
-    );
+    document.addEventListener("click", this.handleClick, true);
+    this.selectKit
+      .mainElement()
+      .addEventListener("keydown", this._handleKeydown, true);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-
-    document.removeEventListener(
-      this.rootEventType,
-      this.handleRootMouseDownHandler,
-      true
-    );
+    document.removeEventListener("click", this.handleClick, true);
+    this.selectKit
+      .mainElement()
+      .removeEventListener("keydown", this._handleKeydown, true);
   },
 
-  handleRootMouseDown(event) {
-    if (!this.selectKit.isExpanded) {
+  @bind
+  handleClick(event) {
+    if (!this.selectKit.isExpanded || !this.selectKit.mainElement()) {
       return;
     }
 
-    const headerElement = document.querySelector(
-      `#${this.selectKit.uniqueID}-header`
-    );
-
-    if (headerElement && headerElement.contains(event.target)) {
+    if (this.selectKit.mainElement().contains(event.target)) {
       return;
     }
 
-    if (this.element.contains(event.target)) {
+    this.selectKit.close(event);
+  },
+
+  @bind
+  _handleKeydown(event) {
+    if (!this.selectKit.isExpanded || event.key !== "Tab") {
       return;
     }
 
-    if (this.selectKit.mainElement()) {
+    later(() => {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        this.selectKit.mainElement().contains(document.activeElement)
+      ) {
+        return;
+      }
+
       this.selectKit.close(event);
-    }
+    }, 50);
   },
 });

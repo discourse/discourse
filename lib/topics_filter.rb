@@ -9,7 +9,7 @@ class TopicsFilter
     @topic_notification_levels = Set.new
   end
 
-  FILTER_ALIASES = { "categories" => "category" }
+  FILTER_ALIASES = { "categories" => "category", "tags" => "tag" }
   private_constant :FILTER_ALIASES
 
   def filter_from_query_string(query_string)
@@ -18,7 +18,7 @@ class TopicsFilter
     filters = {}
 
     query_string.scan(
-      /(?<key_prefix>[-=])?(?<key>[\w-]+):(?<value>[^\s]+)/,
+      /(?<key_prefix>(?:-|=|-=|=-))?(?<key>[\w-]+):(?<value>[^\s]+)/,
     ) do |key_prefix, key, value|
       key = FILTER_ALIASES[key] || key
 
@@ -36,12 +36,24 @@ class TopicsFilter
       filter_values = extract_and_validate_value_for(filter, values)
 
       case filter
+      when "activity-before"
+        filter_by_activity(before: filter_values)
+      when "activity-after"
+        filter_by_activity(after: filter_values)
       when "category"
         filter_categories(values: key_prefixes.zip(filter_values))
+      when "created-after"
+        filter_by_created(after: filter_values)
+      when "created-before"
+        filter_by_created(before: filter_values)
       when "created-by"
         filter_created_by_user(usernames: filter_values.flat_map { |value| value.split(",") })
       when "in"
         filter_in(values: filter_values)
+      when "latest-post-after"
+        filter_by_latest_post(after: filter_values)
+      when "latest-post-before"
+        filter_by_latest_post(before: filter_values)
       when "likes-min"
         filter_by_number_of_likes(min: filter_values)
       when "likes-max"
@@ -50,6 +62,8 @@ class TopicsFilter
         filter_by_number_of_likes_in_first_post(min: filter_values)
       when "likes-op-max"
         filter_by_number_of_likes_in_first_post(max: filter_values)
+      when "order"
+        order_by(values: filter_values)
       when "posts-min"
         filter_by_number_of_posts(min: filter_values)
       when "posts-max"
@@ -60,7 +74,7 @@ class TopicsFilter
         filter_by_number_of_posters(max: filter_values)
       when "status"
         filter_values.each { |status| @scope = filter_status(status: status) }
-      when "tags"
+      when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
       when "views-min"
         filter_by_number_of_views(min: filter_values)
@@ -99,12 +113,29 @@ class TopicsFilter
 
   private
 
+  YYYY_MM_DD_REGEXP =
+    /\A(?<year>[12][0-9]{3})-(?<month>0?[1-9]|1[0-2])-(?<day>0?[1-9]|[12]\d|3[01])\z/
+  private_constant :YYYY_MM_DD_REGEXP
+
   def extract_and_validate_value_for(filter, values)
     case filter
+    when "activity-before", "activity-after", "created-before", "created-after",
+         "latest-post-before", "latest-post-after"
+      value = values.last
+
+      if match_data = value.match(YYYY_MM_DD_REGEXP)
+        Time.zone.parse(
+          "#{match_data[:year].to_i}-#{match_data[:month].to_i}-#{match_data[:day].to_i}",
+        )
+      end
     when "likes-min", "likes-max", "likes-op-min", "likes-op-max", "posts-min", "posts-max",
          "posters-min", "posters-max", "views-min", "views-max"
       value = values.last
       value if value =~ /\A\d+\z/
+    when "order"
+      values.flat_map { |value| value.split(",") }
+    when "created-by"
+      values.flat_map { |value| value.split(",").map { |username| username.delete_prefix("@") } }
     else
       values
     end
@@ -115,6 +146,18 @@ class TopicsFilter
       next if !value
       @scope = (scope || @scope).where("#{column_name} #{operator} ?", value)
     end
+  end
+
+  def filter_by_activity(before: nil, after: nil)
+    filter_by_topic_range(column_name: "topics.bumped_at", min: after, max: before)
+  end
+
+  def filter_by_created(before: nil, after: nil)
+    filter_by_topic_range(column_name: "topics.created_at", min: after, max: before)
+  end
+
+  def filter_by_latest_post(before: nil, after: nil)
+    filter_by_topic_range(column_name: "topics.last_posted_at", min: after, max: before)
   end
 
   def filter_by_number_of_posts(min: nil, max: nil)
@@ -134,10 +177,7 @@ class TopicsFilter
       column_name: "first_posts.like_count",
       min:,
       max:,
-      scope:
-        @scope.joins(
-          "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
-        ),
+      scope: self.joins_first_posts(@scope),
     )
   end
 
@@ -146,51 +186,80 @@ class TopicsFilter
   end
 
   def filter_categories(values:)
-    exclude_subcategories_category_slugs = []
-    include_subcategories_category_slugs = []
+    category_slugs = {
+      include: {
+        with_subcategories: [],
+        without_subcategories: [],
+      },
+      exclude: {
+        with_subcategories: [],
+        without_subcategories: [],
+      },
+    }
 
     values.each do |key_prefix, value|
-      break if key_prefix && key_prefix != "="
+      exclude_categories = key_prefix&.include?("-")
+      exclude_subcategories = key_prefix&.include?("=")
 
       value
         .scan(
-          /^(?<category_slugs>([a-zA-Z0-9\-:]+)(?<delimiter>[,])?([a-zA-Z0-9\-:]+)?(\k<delimiter>[a-zA-Z0-9\-:]+)*)$/,
+          /\A(?<category_slugs>([\p{L}\p{N}\-:]+)(?<delimiter>[,])?([\p{L}\p{N}\-:]+)?(\k<delimiter>[\p{L}\p{N}\-:]+)*)\z/,
         )
-        .each do |category_slugs, delimiter|
-          (
-            if key_prefix.presence
-              exclude_subcategories_category_slugs
-            else
-              include_subcategories_category_slugs
-            end
-          ).concat(category_slugs.split(delimiter))
+        .each do |category_slugs_match, delimiter|
+          slugs = category_slugs_match.split(delimiter)
+          type = exclude_categories ? :exclude : :include
+          subcategory_type = exclude_subcategories ? :without_subcategories : :with_subcategories
+          category_slugs[type][subcategory_type].concat(slugs)
         end
     end
 
-    category_ids = []
+    include_category_ids = []
 
-    if exclude_subcategories_category_slugs.present?
-      category_ids =
+    if category_slugs[:include][:without_subcategories].present?
+      include_category_ids =
         get_category_ids_from_slugs(
-          exclude_subcategories_category_slugs,
+          category_slugs[:include][:without_subcategories],
           exclude_subcategories: true,
         )
     end
 
-    if include_subcategories_category_slugs.present?
-      category_ids.concat(
+    if category_slugs[:include][:with_subcategories].present?
+      include_category_ids.concat(
         get_category_ids_from_slugs(
-          include_subcategories_category_slugs,
+          category_slugs[:include][:with_subcategories],
           exclude_subcategories: false,
         ),
       )
     end
 
-    if category_ids.present?
-      @scope = @scope.where("topics.category_id IN (?)", category_ids)
-    elsif exclude_subcategories_category_slugs.present? ||
-          include_subcategories_category_slugs.present?
+    if include_category_ids.present?
+      @scope = @scope.where("topics.category_id IN (?)", include_category_ids)
+    elsif category_slugs[:include].values.flatten.present?
       @scope = @scope.none
+      return
+    end
+
+    exclude_category_ids = []
+
+    if category_slugs[:exclude][:without_subcategories].present?
+      exclude_category_ids =
+        get_category_ids_from_slugs(
+          category_slugs[:exclude][:without_subcategories],
+          exclude_subcategories: true,
+        )
+    end
+
+    if category_slugs[:exclude][:with_subcategories].present?
+      exclude_category_ids.concat(
+        get_category_ids_from_slugs(
+          category_slugs[:exclude][:with_subcategories],
+          exclude_subcategories: false,
+        ),
+      )
+    end
+
+    if exclude_category_ids.present?
+      @scope = @scope.where("topics.category_id NOT IN (?)", exclude_category_ids)
     end
   end
 
@@ -269,6 +338,7 @@ class TopicsFilter
         .filter_visible(Tag, @guardian)
         .where_name(tag_names)
         .pluck(:id, :target_tag_id)
+        .transpose
 
     tag_ids ||= []
     alias_tag_ids ||= []
@@ -293,7 +363,7 @@ class TopicsFilter
       break if key_prefix && key_prefix != "-"
 
       value.scan(
-        /^(?<tag_names>([a-zA-Z0-9\-]+)(?<delimiter>[,+])?([a-zA-Z0-9\-]+)?(\k<delimiter>[a-zA-Z0-9\-]+)*)$/,
+        /\A(?<tag_names>([\p{N}\p{L}\-]+)(?<delimiter>[,+])?([\p{N}\p{L}\-]+)?(\k<delimiter>[\p{N}\p{L}\-]+)*)\z/,
       ) do |tag_names, delimiter|
         match_all =
           if delimiter == ","
@@ -377,7 +447,7 @@ class TopicsFilter
 
   def include_topics_with_all_tags(tag_ids)
     tag_ids.each do |tag_id|
-      sql_alias = "tt#{topic_tags_alias}"
+      sql_alias = topic_tags_alias
 
       @scope =
         @scope.joins(
@@ -387,6 +457,65 @@ class TopicsFilter
   end
 
   def include_topics_with_any_tags(tag_ids)
-    @scope = @scope.joins(:topic_tags).where("topic_tags.tag_id IN (?)", tag_ids).distinct(:id)
+    sql_alias = topic_tags_alias
+
+    @scope =
+      @scope
+        .joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id")
+        .where("#{sql_alias}.tag_id IN (?)", tag_ids)
+        .distinct(:id)
+  end
+
+  ORDER_BY_MAPPINGS = {
+    "activity" => {
+      column: "topics.bumped_at",
+    },
+    "category" => {
+      column: "categories.name",
+      scope: -> { @scope.joins(:category) },
+    },
+    "created" => {
+      column: "topics.created_at",
+    },
+    "latest-post" => {
+      column: "topics.last_posted_at",
+    },
+    "likes" => {
+      column: "topics.like_count",
+    },
+    "likes-op" => {
+      column: "first_posts.like_count",
+      scope: -> { joins_first_posts(@scope) },
+    },
+    "posters" => {
+      column: "topics.participant_count",
+    },
+    "views" => {
+      column: "topics.views",
+    },
+  }
+  private_constant :ORDER_BY_MAPPINGS
+
+  ORDER_BY_REGEXP = /\A(?<order_by>#{ORDER_BY_MAPPINGS.keys.join("|")})(?<asc>-asc)?\z/
+  private_constant :ORDER_BY_REGEXP
+
+  def order_by(values:)
+    values.each do |value|
+      match_data = value.match(ORDER_BY_REGEXP)
+
+      if match_data && column_name = ORDER_BY_MAPPINGS.dig(match_data[:order_by], :column)
+        if scope = ORDER_BY_MAPPINGS.dig(match_data[:order_by], :scope)
+          @scope = instance_exec(&scope)
+        end
+
+        @scope = @scope.order(column_name => match_data[:asc] ? :asc : :desc)
+      end
+    end
+  end
+
+  def joins_first_posts(scope)
+    scope.joins(
+      "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
+    )
   end
 end

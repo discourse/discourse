@@ -193,6 +193,7 @@ fi:
     embed:
       load_from_remote: "Viestin lataamisessa tapahtui virhe."
     site_settings:
+      invalid_site_setting: "Asetusta nimeltä \"%{name}\" ei ole olemassa"
       invalid_category_id: "Määritit alueen, jota ei ole olemassa"
       invalid_choice:
         one: "Määrittämäsi valinta ei kelpaa %{name}"
@@ -506,6 +507,7 @@ fi:
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
     dominating_topic: Olet kirjoittanut paljon tähän ketjuun! Voisit antaa muille mahdollisuuden vastata täällä ja keskustella asioista myös keskenään.
     get_a_room: Olet vastannut käyttäjälle @%{reply_username} %{count} kertaa, tiesitkö, että voit lähettää hänelle yksityisviestin?
+    dont_feed_the_trolls: Tästä viestistä on jo ilmoitettu ylläpidolle. Haluatko varmasti vastata siihen? Vastaukset negatiiviseen sisältöön rohkaisevat negatiivisempaan käyttäytymiseen.
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
 
@@ -1620,7 +1622,6 @@ fi:
     discourse_connect_overrides_profile_background: "Korvaa käyttäjän profiilin taustakuvan arvolla DiscourseConnectin tiedoista."
     discourse_connect_overrides_card_background: "Korvaa käyttäjän kortin taustakuvan arvolla DiscourseConnectin tiedoista."
     discourse_connect_not_approved_url: "Uudelleenohjaa hyväksymättömät DiscourseConnect-tilit tähän URL-osoitteeseen"
-    discourse_connect_allows_all_return_paths: "Älä rajoita DiscourseConnectin antamien palautuspolkujen verkkotunnusta (oletuksena palautuspolun on oltava nykyisellä sivustolla)"
     enable_local_logins: "Salli kirjautuminen paikallisesti käyttäjätunnuksen ja salasanan avulla. VAROITUS: jos tämä ei ole käytössä, voi sinun olla mahdotonta kirjautua sisään, jollet ole aiemmin määritellyt ainakin yhtä muuta kirjautumistapaa."
     enable_local_logins_via_email: "Salli käyttäjän pyytää klikattava kirjautumislinkki, joka lähetetään hänen sähköpostiinsa."
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Poista tämä asetus käytöstä estääksesi uusien tilien luomisen."
@@ -1959,6 +1960,7 @@ fi:
     allow_profile_backgrounds: "Salli käyttäjien ladata profiilin taustakuva."
     sequential_replies_threshold: "Kuinka monen peräkkäisen viestin jälkeen yhdessä ketjussa käyttäjää muistutetaan liian monesta peräkkäisestä vastauksesta."
     get_a_room_threshold: "Kuinka monta viestiä tulee kohdistaa samalle käyttäjälle samassa ketjussa, jotta näytetään varoitus."
+    dont_feed_the_trolls_threshold: "Muiden käyttäjien tekemä ilmoitusmäärä, josta seuraa varoitus."
     enable_mobile_theme: "Mobiililaitteet käyttävät mobiiliystävällistä teemaa, jonka voi vaihtaa koko sivustoon. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
     dominating_topic_minimum_percent: "Kuinka monta prosenttia ketjun viesteistä käyttäjän täytyy kirjoittaa, ennen kuin häntä muistutetaan ketjun dominoinnista."
     disable_avatar_education_message: "Poista opastusviesti käytöstä, joka näytetään kun profiilikuvaa vaihdetaan."
@@ -2002,11 +2004,11 @@ fi:
     allowed_href_schemes: "Linkeissä sallitut skeemat http:n ja https:n lisäksi."
     embed_post_limit: "Upotettavien viestien maksimimäärä."
     embed_username_required: "Käyttäjätunnus vaaditaan ketjun luomiseksi."
-    notify_about_flags_after: "Jos merkintöjä on ollut käsittelemättä näin monen tunnin ajan, lähetä yksityisviesti valvojille. Poista käytöstä asettamalla 0."
+    notify_about_reviewable_item_after: "Jos tarkastettavia kohteita ei ole käsitelty määritetyn tuntimäärän sisällä, ilmoita valvojille yksityisviesteillä. Poista käytöstä arvolla 0."
     show_create_topics_notice: "Jos sivustolla on vähemmän kuin 5 julkista ketjua, kehota ylläpitäjiä aloittamaan ketjuja."
     delete_drafts_older_than_n_days: "Poista yli (n) päivää vanhat luonnokset."
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 0, tynkäketjuja ei poistetan koskaan."
-    bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
+    bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (poista käytöstä arvolla 0, voi kestää jopa 24 tuntia)"
     prevent_anons_from_downloading_files: "Estä tuntemattomia käyttäjiä lataamasta liitteitä."
     secure_uploads: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain yksityisviesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/140017">turvallisia latauksia palvelimeen käsittelevästä ketjusta Metassa</a>.'
     secure_uploads_allow_embed_images_in_emails: "Sallii turvallisten kuvien upottamisen, jotka normaalisti karsittaisiin sähköposteissa, jos niiden koko on pienempi kuin \"secure uploads max email embed image size kb\" -asetus."
@@ -2017,6 +2019,7 @@ fi:
     emoji_set: "Millaiset emojit haluat?"
     emoji_autocomplete_min_chars: "Kuinka monta merkkiä vaaditaan, jotta sanantäydentävä emojivalitsin aukeaa"
     enable_inline_emoji_translation: "Ota käyttöön emojien kääntäminen merkkijonojen keskeltä (ei väliä tai välimerkkejä ennen emojia)"
+    emoji_deny_list: "Nämä emojit eivät ole käytettävissä valikoista tai lyhytkoodeilla."
     approve_post_count: "Viestien lukumäärä, joka uusilta käyttäjiltä ja haastajilta täytyy hyväksyä"
     approve_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien viestit täytyy hyväksyä"
     approve_new_topics_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien aloittamat ketjut täytyy hyväksyä"
@@ -2076,7 +2079,9 @@ fi:
     revoke_api_keys_days: "Kuinka monen päivän kuluttua käyttämätön API-avain mitätöidään automaattisesti (0 tarkoittaa ei koskaan)"
     allow_user_api_keys: "Salli käyttäjä-API-avainten muodostaminen"
     allow_user_api_key_scopes: "Luettelo käyttäjä-API-avaimiin liittyvistä oikeuksista"
-    min_trust_level_for_user_api_key: "Vähimmäisluottamustaso, joka vaaditaan käyttäjä-API-avainten muodostamiseen"
+    min_trust_level_for_user_api_key: |
+      Käyttäjän API-avaimien luomiseen vaadittu luottamustaso.<br>
+      <b>VAROITUS:</b> Luottamustason muuttaminen estää matalamman luottamustason käyttäjiä kirjautumasta sisään Discourse Hubin kautta.
     allowed_user_api_auth_redirects: "Sallittu URL-osoite käyttäjän API-avainten todennuksen uudelleenohjaukselle. Jokerimerkkiä * voidaan käyttää vastaamaan mitä tahansa sen osaa (esim. www.esimerkki.fi/*)."
     allowed_user_api_push_urls: "Sallitut URL-osoitteet palvelimen työnnöille käyttäjä-APIin"
     expire_user_api_keys_days: "Kuinka monessa päivässä käyttäjä-API-avain vanhenee automaattisesti (0 tarkoittaa ei koskaan)"
@@ -2109,7 +2114,6 @@ fi:
     enable_sitemap: "Luo sivustokartta sivustollesi ja sisällytä se robots.txt-tiedostoon."
     sitemap_page_size: "Kuhunkin sivustokartan sivuun lisättävien URL-osoitteiden määrä. Enintään 50 000."
     enable_user_status: "(kokeellinen) Salli käyttäjien asettaa mukautettu tilaviesti (emoji + kuvaus)."
-    enable_user_tips: "(kokeellinen) Ota käyttöön uuden käyttäjän vinkit, jotka kuvaavat keskeisiä ominaisuuksia käyttäjille"
     short_title: "Lyhyttä nimeä käytetään käyttäjän aloitusnäytöllä, käynnistysruudussa ja muissa tilanteissa, joissa tilaa on rajallisesti. Sen tulisi olla enintään 12 merkin pituinen."
     dashboard_hidden_reports: "Salli tiettyjen raporttien piilottaminen hallintapaneelista."
     dashboard_visible_tabs: "Valitse mitkä hallintapaneelin välilehdet ovat näkyvillä."
@@ -2129,6 +2133,7 @@ fi:
     default_sidebar_categories: "Valitut alueet näkyvät sivupalkin Alueet-osiossa oletuksena."
     default_sidebar_tags: "Valitut tunnisteet näkyvät sivupalkin Tunnisteet-osiossa oletuksena."
     enable_experimental_hashtag_autocomplete: "KOKEELLINEN: käytä alueille ja tunnisteille uutta automaattista #hashtag-täydennysjärjestelmää, jotka hahmontaa valitun kohteen eri tavalla ja on parantanut hakua"
+    experimental_topics_filter: "KOKEELLINEN: Ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
       invalid_email: "Sähköpostiosoite ei kelpaa."
@@ -3144,15 +3149,6 @@ fi:
       title: "Linkattujen kuvien lataaminen on poistettu käytöstä"
       subject_template: "Linkattujen kuvien lataaminen on poistettu käytöstä"
       text_body_template: "Asetus `download_remote_images_to_local` on poistettu käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
-    dashboard_problems:
-      title: "Hallintapaneelissa ongelmia"
-      subject_template: "Uusia neuvoja sivustosi hallintapaneelissa"
-      text_body_template: |
-        Meillä on joitakin neuvoja ja suosituksiasi nykyisiin sivustoasetuksiisi pohjautuen.
-
-        Katsele niitä [sivustosi hallintapaneelissa](%{base_url}/admin).
-
-        Jos hallintapaneelissa ei näy mitään, toinen henkilökuntalainen on voinut jo ottaa vinkistä vaarin. Luettelo henkilökunnan toimista löytyy [henkilökuntalokista](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Olet kuukauden tulokas!"
       subject_template: "Olet kuukauden tulokas!"
@@ -4366,14 +4362,17 @@ fi:
       agree:
         title: "Kyllä"
       agree_and_suspend:
+        title: "Jäädytä käyttäjä"
         description: "Hyväksy merkintä ja hyllytä käyttäjä."
       agree_and_silence:
         title: "Hiljennä käyttäjä"
         description: "Hyväksy merkintä ja hiljennä käyttäjä."
       agree_and_restore:
+        title: "Palauta viesti"
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       agree_and_hide:
         title: "Piilota viesti"
+        description: "Hyväksy liputtamalla ja piilota julkaisu + lähetä käyttäjälle automattisesti yksityisviesti, jossa häntä pyydetään muokkaamaan sitä."
       delete_single:
         title: "Poista"
       delete:

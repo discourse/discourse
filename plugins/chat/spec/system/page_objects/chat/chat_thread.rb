@@ -11,12 +11,12 @@ module PageObjects
         header.find(".chat-thread__omu")
       end
 
-      def has_header_content?(content)
-        header.has_content?(content)
+      def close
+        header.find(".chat-thread__close").click
       end
 
-      def thread_selector_by_id(id)
-        ".chat-thread[data-id=\"#{id}\"]"
+      def has_header_content?(content)
+        header.has_content?(content)
       end
 
       def has_no_loading_skeleton?
@@ -24,54 +24,75 @@ module PageObjects
       end
 
       def type_in_composer(input)
-        find(".chat-composer-input--thread").click # makes helper more reliable by ensuring focus is not lost
-        find(".chat-composer-input--thread").send_keys(input)
+        find(".chat-thread .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-thread .chat-composer__input").send_keys(input)
       end
 
       def fill_composer(input)
-        find(".chat-composer-input--thread").click # makes helper more reliable by ensuring focus is not lost
-        find(".chat-composer-input--thread").fill_in(with: input)
+        find(".chat-thread .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
+        find(".chat-thread .chat-composer__input").fill_in(with: input)
       end
 
       def click_composer
-        find(".chat-composer-input--thread").click # ensures autocomplete is closed and not masking anything
+        find(".chat-thread .chat-composer__input").click # ensures autocomplete is closed and not masking anything
       end
 
-      def send_message(id, text = nil)
+      def send_message(text = nil)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         fill_composer(text)
-        click_send_message(id)
+        click_send_message
         click_composer
       end
 
-      def click_send_message(id)
-        find(thread_selector_by_id(id)).find(".chat-composer .send-btn:enabled").click
+      def click_send_message
+        find(".chat-thread .chat-composer.is-send-enabled .chat-composer__send-btn").click
       end
 
-      def has_message?(thread_id, text: nil, id: nil)
-        check_message_presence(thread_id, exists: true, text: text, id: id)
+      def has_message?(text: nil, id: nil, thread_id: nil)
+        check_message_presence(exists: true, text: text, id: id, thread_id: thread_id)
       end
 
-      def has_no_message?(thread_id, text: nil, id: nil)
-        check_message_presence(thread_id, exists: false, text: text, id: id)
+      def has_no_message?(text: nil, id: nil, thread_id: nil)
+        check_message_presence(exists: false, text: text, id: id, thread_id: thread_id)
       end
 
-      def check_message_presence(thread_id, exists: true, text: nil, id: nil)
+      def check_message_presence(exists: true, text: nil, id: nil, thread_id: nil)
         css_method = exists ? :has_css? : :has_no_css?
+        selector = thread_id ? ".chat-thread[data-id=\"#{thread_id}\"]" : ".chat-thread"
         if text
-          find(thread_selector_by_id(thread_id)).send(
-            css_method,
-            ".chat-message-text",
-            text: text,
-            wait: 5,
-          )
+          find(selector).send(css_method, ".chat-message-text", text: text, wait: 5)
         elsif id
-          find(thread_selector_by_id(thread_id)).send(
-            css_method,
-            ".chat-message-container[data-id=\"#{id}\"]",
-            wait: 10,
-          )
+          find(selector).send(css_method, ".chat-message-container[data-id=\"#{id}\"]", wait: 10)
         end
+      end
+
+      def copy_link(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='copyLink']").click
+      end
+
+      def click_more_button
+        find(".more-buttons").click
+      end
+
+      def hover_message(message)
+        message_by_id(message.id).hover
+      end
+
+      def message_by_id(id)
+        find(message_by_id_selector(id))
+      end
+
+      def message_by_id_selector(id)
+        ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
+      end
+
+      def has_deleted_message?(message, count: 1)
+        has_css?(
+          ".chat-thread .chat-message-container[data-id=\"#{message.id}\"] .chat-message-deleted",
+          text: I18n.t("js.chat.deleted", count: count),
+        )
       end
     end
   end

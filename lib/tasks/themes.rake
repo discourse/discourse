@@ -62,7 +62,7 @@ def update_themes
     .includes(:remote_theme)
     .where(enabled: true, auto_update: true)
     .find_each do |theme|
-      begin
+      theme.transaction do
         remote_theme = theme.remote_theme
         next if remote_theme.blank? || remote_theme.remote_url.blank?
 

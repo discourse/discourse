@@ -15,6 +15,8 @@ RSpec.describe SiteSerializer do
     end
 
     it "is not included if enable_user_tips is disabled" do
+      SiteSetting.enable_user_tips = false
+
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:user_tips]).to eq(nil)
     end
@@ -209,7 +211,9 @@ RSpec.describe SiteSerializer do
 
     it "includes only public sidebar sections serialised object when user is anonymous" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_sidebar_sections].map(&:title)).to eq(["Public section"])
+      expect(serialized[:anonymous_sidebar_sections].map(&:title)).to eq(
+        ["Community", "Public section"],
+      )
     end
 
     it "eager loads sidebar_urls" do
@@ -222,11 +226,9 @@ RSpec.describe SiteSerializer do
         track_sql_queries do
           serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-          expect(
-            serialized[:anonymous_sidebar_sections].map { |sidebar_section| sidebar_section.id },
-          ).to eq([public_sidebar_section.id])
+          expect(serialized[:anonymous_sidebar_sections].count).to eq(2)
 
-          expect(serialized[:anonymous_sidebar_sections].first.links.map { |link| link.id }).to eq(
+          expect(serialized[:anonymous_sidebar_sections].last.links.map { |link| link.id }).to eq(
             [public_section_link.linkable.id],
           )
         end.count
@@ -240,11 +242,9 @@ RSpec.describe SiteSerializer do
         track_sql_queries do
           serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-          expect(
-            serialized[:anonymous_sidebar_sections].map { |sidebar_section| sidebar_section.id },
-          ).to eq([public_sidebar_section.id])
+          expect(serialized[:anonymous_sidebar_sections].count).to eq(2)
 
-          expect(serialized[:anonymous_sidebar_sections].first.links.map { |link| link.id }).to eq(
+          expect(serialized[:anonymous_sidebar_sections].last.links.map { |link| link.id }).to eq(
             [
               public_section_link.linkable.id,
               public_section_link_2.linkable.id,

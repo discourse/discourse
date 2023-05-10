@@ -24,6 +24,7 @@ module Chat
       step :trash_message
       step :destroy_mentions
       step :update_tracking_state
+      step :update_thread_reply_cache
     end
     step :publish_events
 
@@ -57,9 +58,11 @@ module Chat
     end
 
     def update_tracking_state(message:, **)
-      Chat::UserChatChannelMembership.where(last_read_message_id: message.id).update_all(
-        last_read_message_id: nil,
-      )
+      ::Chat::Action::ResetUserLastReadChannelMessage.call([message.id], [message.chat_channel_id])
+    end
+
+    def update_thread_reply_cache(message:, **)
+      message.thread&.decrement_replies_count_cache
     end
 
     def publish_events(guardian:, message:, **)

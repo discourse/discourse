@@ -25,7 +25,6 @@ describe "Uploading files in chat messages", type: :system, js: true do
       end
 
       expect(page).to have_css(".chat-composer-upload .preview .preview-img")
-      expect(page).to have_content(File.basename(file_path))
 
       channel.send_message("upload testing")
 
@@ -61,15 +60,11 @@ describe "Uploading files in chat messages", type: :system, js: true do
         channel.click_action_button("chat-upload-btn")
       end
 
-      expect(page).to have_content(File.basename(file_path))
       expect(find(".chat-composer-upload")).to have_content("Processing")
 
       # image processing clientside is slow! here we are waiting for processing
       # to complete then the upload to complete as well
-      using_wait_time(10) do
-        expect(find(".chat-composer-upload")).to have_content("Uploading")
-        expect(page).to have_css(".chat-composer-upload .preview .preview-img")
-      end
+      expect(page).to have_css(".chat-composer-upload .preview .preview-img", wait: 25)
 
       channel.send_message("upload testing")
 
@@ -101,10 +96,11 @@ describe "Uploading files in chat messages", type: :system, js: true do
     it "allows deleting uploads" do
       chat.visit_channel(channel_1)
       channel.open_edit_message(message_2)
-      find(".chat-composer-upload").find(".remove-upload").click
+      find(".chat-composer-upload").hover
+      find(".chat-composer-upload__remove-btn").click
       channel.click_send_message
       expect(channel.message_by_id(message_2.id)).not_to have_css(".chat-uploads")
-      expect(message_2.reload.uploads).to be_empty
+      try_until_success(timeout: 5) { expect(message_2.reload.uploads).to be_empty }
     end
 
     it "allows adding more uploads" do
@@ -118,13 +114,13 @@ describe "Uploading files in chat messages", type: :system, js: true do
       end
 
       expect(page).to have_css(".chat-composer-upload .preview .preview-img", count: 2)
-      expect(page).to have_content(File.basename(file_path))
 
       channel.click_send_message
 
       expect(page).not_to have_css(".chat-composer-upload")
       expect(page).to have_css(".chat-img-upload", count: 2)
-      expect(message_2.reload.uploads.count).to eq(2)
+
+      try_until_success(timeout: 5) { expect(message_2.reload.uploads.count).to eq(2) }
     end
   end
 

@@ -98,6 +98,12 @@ sk:
       emoji_picker:
         objects: "Objekty"
         flags: "Označenia"
+      thread:
+        replies:
+          one: "%{count} odpoveď"
+          few: "%{count} odpovede"
+          many: "%{count} odpovedí"
+          other: "%{count} odpovedí"
       draft_channel_screen:
         header: "Nová správa"
         cancel: "Zrušiť"

@@ -111,6 +111,32 @@ describe Chat::Publisher do
         end
       end
 
+      context "when a staged thread has been provided" do
+        fab!(:thread) do
+          Fabricate(
+            :chat_thread,
+            original_message: Fabricate(:chat_message, chat_channel: channel),
+            channel: channel,
+          )
+        end
+
+        before { message.update!(thread: thread) }
+
+        it "generates the correct targets" do
+          targets =
+            described_class.calculate_publish_targets(
+              channel,
+              message,
+              staged_thread_id: "stagedthreadid",
+            )
+
+          expect(targets).to contain_exactly(
+            "/chat/#{channel.id}/thread/#{thread.id}",
+            "/chat/#{channel.id}/thread/stagedthreadid",
+          )
+        end
+      end
+
       context "when the message is a thread reply" do
         fab!(:thread) do
           Fabricate(

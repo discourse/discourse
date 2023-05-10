@@ -319,7 +319,7 @@
               {{#if this.displayTopLevelAdminButton}}
                 <li><a
                     href={{this.model.adminPath}}
-                    class="btn btn-default"
+                    class="btn btn-default user-admin"
                   >{{d-icon "wrench"}}<span class="d-button-label">{{i18n
                         "admin.user.show_admin_profile"
                       }}</span></a></li>
@@ -452,6 +452,8 @@
     <div class="new-user-wrapper">
       <UserNav
         @user={{this.model}}
+        @isStaff={{this.currentUser.staff}}
+        @isMobileView={{this.site.mobileView}}
         @showNotificationsTab={{this.showNotificationsTab}}
         @showPrivateMessages={{this.showPrivateMessages}}
         @canInviteToForum={{this.canInviteToForum}}

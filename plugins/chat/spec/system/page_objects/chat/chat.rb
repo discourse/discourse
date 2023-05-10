@@ -19,12 +19,13 @@ module PageObjects
 
       def visit_channel(channel, mobile: false)
         visit(channel.url + (mobile ? "?mobile_view=1" : ""))
-        has_no_css?(".not-loaded-once")
+        has_no_css?(".chat-channel--not-loaded-once")
         has_no_css?(".chat-skeleton")
       end
 
       def visit_thread(thread)
         visit(thread.url)
+        has_no_css?(".chat-skeleton")
       end
 
       def visit_channel_settings(channel)
@@ -57,12 +58,18 @@ module PageObjects
         container.has_content?(message.user.username)
       end
 
+      NEW_CHANNEL_BUTTON_SELECTOR = ".new-channel-btn"
+
       def new_channel_button
-        find(".new-channel-btn")
+        find(NEW_CHANNEL_BUTTON_SELECTOR)
       end
 
       def has_new_channel_button?
-        has_css?(".new-channel-btn")
+        has_css?(NEW_CHANNEL_BUTTON_SELECTOR)
+      end
+
+      def has_no_new_channel_button?
+        has_no_css?(NEW_CHANNEL_BUTTON_SELECTOR)
       end
     end
   end

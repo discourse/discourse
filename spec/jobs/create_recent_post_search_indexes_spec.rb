@@ -3,15 +3,8 @@
 RSpec.describe Jobs::CreateRecentPostSearchIndexes do
   subject { described_class.new }
 
-  fab!(:post) do
-    SearchIndexer.enable
-    Fabricate(:post)
-  end
-
-  fab!(:post_2) do
-    SearchIndexer.enable
-    Fabricate(:post)
-  end
+  fab!(:post) { with_search_indexer_enabled { Fabricate(:post) } }
+  fab!(:post_2) { with_search_indexer_enabled { Fabricate(:post) } }
 
   before { SearchIndexer.enable }
 

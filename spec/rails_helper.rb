@@ -296,7 +296,7 @@ RSpec.configure do |config|
       Selenium::WebDriver::Chrome::Options
         .new(logging_prefs: { "browser" => "INFO", "driver" => "ALL" })
         .tap do |options|
-          options.add_argument("--window-size=390,950")
+          options.add_argument("--window-size=390,960")
           options.add_argument("--no-sandbox")
           options.add_argument("--disable-dev-shm-usage")
           options.add_emulation(device_name: "iPhone 12 Pro")
@@ -421,6 +421,8 @@ RSpec.configure do |config|
       end
     end
 
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
     Discourse.redis.flushdb
   end
 

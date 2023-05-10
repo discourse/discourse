@@ -84,7 +84,9 @@ de:
       collapse: "Chat-Bereich ausblenden"
       expand: "Chat-Übersicht erweitern"
       confirm_flag: "Bist du sicher, dass du die Nachricht von %{username} markieren möchtest?"
-      deleted: "Eine Nachricht wurde gelöscht. [Anzeigen]"
+      deleted:
+        one: "Eine Nachricht wurde gelöscht. [Anzeigen]"
+        other: "%{count} Nachrichten wurden gelöscht. [alle anzeigen]"
       hidden: "Eine Nachricht wurde ausgeblendet. [Anzeigen]"
       delete: "Löschen"
       edited: "bearbeitet"
@@ -222,7 +224,8 @@ de:
       close_full_page: "Vollbild-Chat schließen"
       open_message: "Nachricht im Chat öffnen"
       placeholder_self: "Etwas notieren"
-      placeholder_channel: "Chatte mit %{channelName}"
+      placeholder_channel: "Chat in %{channelName}"
+      placeholder_thread: "Chat im Thread"
       placeholder_users: "Chat mit %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Der Kanal ist archiviert, du kannst im Moment keine neuen Nachrichten senden."
@@ -258,6 +261,8 @@ de:
       title: "Chat"
       title_capitalized: "Chat"
       upload: "Datei anhängen"
+      upload_to_channel: "Auf %{title}hochladen"
+      upload_to_thread: "In Thread hochladen"
       uploaded_files:
         one: "%{count} Datei"
         other: "%{count} Dateien"
@@ -386,6 +391,7 @@ de:
         italic_text: "hervorgehobener Text"
         bold_text: "fett gedruckter Text"
         code_text: "Code-Text"
+        send: "Senden"
       quote:
         original_channel: 'Ursprünglich gesendet in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat-Zitat in die Zwischenablage kopiert"
@@ -508,7 +514,12 @@ de:
         search_placeholder: "Nach Emoji-Namen und -Alias suchen …"
         no_results: "Keine Ergebnisse"
       thread:
+        view_thread: Thread ansehen
+        replies:
+          one: "%{count} Antwort"
+          other: "%{count} Antworten"
         label: Thread
+        close: "Thread schließen"
       threads:
         started_by: "Gestartet von"
         open: "Thread öffnen"

@@ -883,12 +883,6 @@ hy:
       theme: "Թեմա"
       home: "Լռելյայն Գլխավոր Էջ"
       staged: "Աստիճանավորված (Staged)"
-      staff_counters:
-        flagged_posts: "դրոշակավորված գրառում"
-        deleted_posts: "ջնջված գրառում"
-        suspensions: "սառեցում"
-        warnings_received: "զգուշացում"
-        rejected_posts: "մերժված հաղորդագրություներ"
       messages:
         inbox: "Մուտքերի արկղ"
         latest: "Վերջինները"
@@ -932,8 +926,6 @@ hy:
       second_factor_backup:
         regenerate: "Վերագեներացնել"
         disable: "Անջատել"
-        enable: "Միացնել"
-        enable_long: "Միացնել պահուստային կոդերը"
         copy_to_clipboard: "Կրկնօրինակել Փոխանակման Հարթակում"
         copy_to_clipboard_error: "Փոխանակման հարթակում տվյալների կրկնօրինակման սխալ"
         copied_to_clipboard: "Կրնօրինակված է Փոխանակման հարթակում"
@@ -1642,6 +1634,7 @@ hy:
       membership_request_accepted: "Անդամակցության հարցումը ընդունվել է՝ '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      admin_problems: "Նոր խորհուրդ Ձեր կայքի կառավարման հարթակում"
       dismiss_confirmation:
         dismiss: "Չեղարկել"
         cancel: "Չեղարկել"
@@ -3148,9 +3141,6 @@ hy:
         notification_event:
           name: "Ծանուցման Իրադարձություն"
           details: "Երբ օգտատերը ծանուցումների ժապավենին նոր էլեմենտի ավելացման մասին ծանուցում է ստանում:"
-        user_badge_event:
-          name: "Կրծքանշանի Պարգևատրման Իրադարձություն"
-          details: "Երբ օգտատերը ստանում է կրծքանշան:"
         delivery_status:
           title: "Ուղարկման Կարգավիճակը"
           inactive: "Ոչ ակտիվ"

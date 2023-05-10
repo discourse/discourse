@@ -40,7 +40,11 @@ export default class ChatApi extends Service {
    */
   thread(channelId, threadId) {
     return this.#getRequest(`/channels/${channelId}/threads/${threadId}`).then(
-      (result) => this.chat.activeChannel.threadsManager.store(result.thread)
+      (result) =>
+        this.chat.activeChannel.threadsManager.store(
+          this.chat.activeChannel,
+          result.thread
+        )
     );
   }
 
@@ -214,11 +218,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   listCurrentUserChannels() {
-    return this.#getRequest("/channels/me").then((result) => {
-      return (result?.channels || []).map((channel) =>
-        this.chatChannelsManager.store(channel)
-      );
-    });
+    return this.#getRequest("/channels/me");
   }
 
   /**
@@ -299,7 +299,7 @@ export default class ChatApi extends Service {
   /**
    * Saves a draft for the channel, which includes message contents and uploads.
    * @param {number} channelId - The ID of the channel.
-   * @param {object} data - The draft data, see ChatMessageDraft.toJSON() for more details.
+   * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
    * @returns {Promise}
    */
   saveDraft(channelId, data) {
@@ -350,10 +350,9 @@ export default class ChatApi extends Service {
    * @param {number} messageId - The ID of the message being restored.
    */
   restoreMessage(channelId, messageId) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
-    return ajax(`/chat/${channelId}/restore/${messageId}`, {
-      type: "PUT",
-    });
+    return this.#putRequest(
+      `/channels/${channelId}/messages/${messageId}/restore`
+    );
   }
 
   /**
@@ -406,6 +405,20 @@ export default class ChatApi extends Service {
    */
   markChannelAsRead(channelId, messageId = null) {
     return this.#putRequest(`/channels/${channelId}/read/${messageId}`);
+  }
+
+  /**
+   * Marks all messages and mentions in a thread as read. This is quite
+   * far-reaching for now, and is not granular since there is no membership/
+   * read state per-user for threads. In future this will be expanded to
+   * also pass message ID in the same way as markChannelAsRead
+   *
+   * @param {number} channelId - The ID of the channel for the thread being marked as read.
+   * @param {number} threadId - The ID of the thread being marked as read.
+   * @returns {Promise}
+   */
+  markThreadAsRead(channelId, threadId) {
+    return this.#putRequest(`/channels/${channelId}/threads/${threadId}/read`);
   }
 
   get #basePath() {

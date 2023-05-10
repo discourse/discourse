@@ -1148,12 +1148,6 @@ lt:
       save_to_change_theme: 'Tema bus atnaujinta spustelėjus „%{save_text}“'
       home: "Numatytasis pagrindinis puslapis"
       staged: "Inscenizuotas"
-      staff_counters:
-        flagged_posts: "įrašai su vėliavomis"
-        deleted_posts: "ištrinti įrašai"
-        suspensions: "nušalinimai"
-        warnings_received: "perspejimai"
-        rejected_posts: "atmesti įrašai"
       messages:
         all: "visos pašto dėžutes"
         inbox: "Pranešimų dežutė"
@@ -1206,8 +1200,6 @@ lt:
         title: "Dviejų veiksnių atsarginiai kodai"
         regenerate: "Pergeneruoti"
         disable: "Išjungti"
-        enable: "Įgalinti"
-        enable_long: "Įgalinti atsarginius kodus"
         copy_to_clipboard: "Nukopijuoti į iškarpinę"
         copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"
         copied_to_clipboard: "Nukopijuota į iškirptę"
@@ -2043,6 +2035,7 @@ lt:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - baigtas"
+      admin_problems: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
       dismiss_confirmation:
         body:
           default:
@@ -3860,9 +3853,6 @@ lt:
         notification_event:
           name: "Pranešimo įvykis"
           details: "Kai vartotojas gauna pranešimą savo sklaidos kanale."
-        user_badge_event:
-          name: "Renginys dėl ženklelio suteikimo"
-          details: "Kai vartotojas gauna ženklelį."
         group_user_event:
           name: "Grupės vartotojo įvykis"
           details: "Kai vartotojas įtraukiamas arba pašalinamas iš grupės."

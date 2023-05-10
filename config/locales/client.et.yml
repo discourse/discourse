@@ -833,12 +833,6 @@ et:
       save_to_change_theme: 'Teema uuendatakse pärast seda, kui klõpsad "%{save_text}”'
       home: "aikimisi avaleht"
       staged: "Ettevalmistamisel"
-      staff_counters:
-        flagged_posts: "tähistatud postitused"
-        deleted_posts: "kustutatud postitused"
-        suspensions: "ajutised peatamised"
-        warnings_received: "hoiatused"
-        rejected_posts: "tagasilükatud postitused"
       messages:
         inbox: "Postkast"
         latest: "Viimased"
@@ -882,8 +876,6 @@ et:
         title: "Kahefaktorilise autentimise varukoodid"
         regenerate: "Genereeri uus"
         disable: "Keela"
-        enable: "Luba"
-        enable_long: "Lülita varukoodid sisse"
         copy_to_clipboard: "Kopeeri lõikelauale"
         copy_to_clipboard_error: "Tõrge kopeerimisel"
         copied_to_clipboard: "Kopeeritud lõikelauale"

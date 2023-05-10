@@ -35,39 +35,36 @@
 {{#if this.showColorSchemeSelector}}
   <fieldset class="control-group color-scheme">
     <legend class="control-label">{{i18n "user.color_scheme"}}</legend>
-    <div class="control-subgroup light-color-scheme">
-      {{#if this.showDarkColorSchemeSelector}}
-        <div class="instructions">{{i18n "user.color_schemes.regular"}}</div>
-      {{/if}}
-      <div class="controls">
-        <ComboBox
-          @content={{this.userSelectableColorSchemes}}
-          @value={{this.selectedColorSchemeId}}
-          @onChange={{action "loadColorScheme"}}
-          @options={{hash
-            translatedNone=this.selectedColorSchemeNoneLabel
-            autoInsertNoneItem=this.showColorSchemeNoneItem
-          }}
-        />
-      </div>
-    </div>
-    {{#if this.showDarkColorSchemeSelector}}
-      <div class="control-subgroup dark-color-scheme">
-        <div class="instructions">{{i18n "user.color_schemes.dark"}}</div>
+    <div class="controls">
+      <div class="control-subgroup light-color-scheme">
+        {{#if this.showDarkColorSchemeSelector}}
+          <div class="instructions">{{i18n "user.color_schemes.regular"}}</div>
+        {{/if}}
         <div class="controls">
           <ComboBox
-            @content={{this.userSelectableDarkColorSchemes}}
-            @value={{this.selectedDarkColorSchemeId}}
-            @onChange={{action "loadDarkColorScheme"}}
+            @content={{this.userSelectableColorSchemes}}
+            @value={{this.selectedColorSchemeId}}
+            @onChange={{action "loadColorScheme"}}
+            @options={{hash
+              translatedNone=this.selectedColorSchemeNoneLabel
+              autoInsertNoneItem=this.showColorSchemeNoneItem
+            }}
           />
         </div>
       </div>
-
-      <div class="instructions">
-        {{i18n "user.color_schemes.dark_instructions"}}
-      </div>
-    {{/if}}
-
+      {{#if this.showDarkColorSchemeSelector}}
+        <div class="control-subgroup dark-color-scheme">
+          <div class="instructions">{{i18n "user.color_schemes.dark"}}</div>
+          <div class="controls">
+            <ComboBox
+              @content={{this.userSelectableDarkColorSchemes}}
+              @value={{this.selectedDarkColorSchemeId}}
+              @onChange={{action "loadDarkColorScheme"}}
+            />
+          </div>
+        </div>
+      {{/if}}
+    </div>
     {{#if this.previewingColorScheme}}
       {{#if this.previewingColorScheme}}
         <DButton
@@ -77,12 +74,16 @@
           @class="btn-default btn-small undo-preview"
         />
       {{/if}}
-
       <div class="controls color-scheme-checkbox">
         <PreferenceCheckbox
           @labelKey="user.color_scheme_default_on_all_devices"
           @checked={{this.makeColorSchemeDefault}}
         />
+      </div>
+    {{/if}}
+    {{#if this.showDarkColorSchemeSelector}}
+      <div class="instructions">
+        {{i18n "user.color_schemes.dark_instructions"}}
       </div>
     {{/if}}
   </fieldset>

@@ -966,11 +966,6 @@ ca:
       theme: "Aparença"
       home: "Pàgina d'inici per defecte"
       staged: "Fictici"
-      staff_counters:
-        flagged_posts: "publicacions amb banderes"
-        deleted_posts: "publicacions suprimides"
-        suspensions: "suspensions"
-        warnings_received: "avisos"
       messages:
         inbox: "Safata d'entrada"
         latest: "Més recents"
@@ -1013,8 +1008,6 @@ ca:
       second_factor_backup:
         regenerate: "Regenera"
         disable: "Desactiva"
-        enable: "Activa"
-        enable_long: "Activa els codis de còpia de seguretat"
         copy_to_clipboard: "Copia al porta-retalls"
         copy_to_clipboard_error: "Error copiant dades al porta-retalls"
         copied_to_clipboard: "Copiat al porta-retalls."
@@ -1722,6 +1715,7 @@ ca:
       membership_request_accepted: "Membre acceptat en '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      admin_problems: "Nou consell al tauler de control del vostre lloc web"
       dismiss_confirmation:
         dismiss: "Descarta-ho"
         cancel: "Cancel·la"

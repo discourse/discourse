@@ -1617,7 +1617,6 @@ it:
     discourse_connect_overrides_profile_background: "Sostituisce lo sfondo del profilo utente con il valore dal payload DiscourseConnect."
     discourse_connect_overrides_card_background: "Sostituisce lo sfondo della scheda utente con il valore dal payload DiscourseConnect."
     discourse_connect_not_approved_url: "Reindirizza gli account DiscourseConnect non approvati a questo URL"
-    discourse_connect_allows_all_return_paths: "Non restringere il dominio per i return_paths forniti da DiscourseConnect (per impostazione predefinita il percorso di ritorno deve essere sul sito corrente)"
     enable_local_logins: "Abilita gli account di accesso basati su nome utente e password locali. ATTENZIONE: se questa impostazione è disabilitata, potrebbe essere impossibile accedere senza aver precedentemente configurato almeno un metodo di accesso alternativo."
     enable_local_logins_via_email: "Consenti agli utenti di richiedere un collegamento di accesso usa e getta, che gli verrà inviato tramite email."
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se l'opzione è deselezionata, non sarà possibile creare nuovi account."
@@ -1999,11 +1998,9 @@ it:
     allowed_href_schemes: "Schemi consentiti nei collegamenti in aggiunta a http e https."
     embed_post_limit: "Numero massimo di messaggi da incorporare."
     embed_username_required: "Il nome utente è obbligatorio per la creazione di argomenti."
-    notify_about_flags_after: "Se ci sono segnalazioni che non sono state gestite dopo tale numero di ore, invia un messaggio personale ai moderatori. Impostare su 0 per disabilitare."
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
     delete_drafts_older_than_n_days: "Elimina bozze più vecchie di (n) giorni."
     delete_merged_stub_topics_after_days: "Numero di giorni di attesa prima di eliminare automaticamente gli argomenti stub completamente uniti. Impostare a 0 per non eliminare mai gli argomenti stub."
-    bootstrap_mode_min_users: "Numero minimo di utenti richiesto per disabilitare la modalità bootstrap (imposta a 0 per disattivare)"
     prevent_anons_from_downloading_files: "Impedisci agli utenti anonimi di scaricare allegati."
     secure_uploads: 'Limita l''accesso a TUTTI i caricamenti (immagini, video, audio, testo, pdf, zip, ecc.). Se l''opzione “accesso richiesto” è attivata, solo gli utenti registrati possono accedere ai caricamenti. In caso contrario, l''accesso sarà limitato solo per i media caricati in messaggi privati e categorie private. ATTENZIONE: Questa impostazione è complessa e richiede una profonda competenza amministrativa. Per maggiori dettagli visita <a target="_blank" href="https://meta.discourse.org/t/-/140017">l''argomento sui caricamenti sicuri su Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Consente l'integrazione di immagini sicure che normalmente verrebbero oscurate nelle e-mail, se la loro dimensione è inferiore al valore dell'i'impostazione 'dimensione max in kb immagini da integrare nelle email per caricamenti protetti'."
@@ -2073,7 +2070,6 @@ it:
     revoke_api_keys_days: "Numero di giorni prima che una chiave API non utilizzata sia revocata automaticamente (0 per non avere mai revoca)"
     allow_user_api_keys: "Consenti la generazione di chiavi API utente"
     allow_user_api_key_scopes: "Elenco di ambiti consentiti per le chiavi API utente"
-    min_trust_level_for_user_api_key: "Livello di attendibilità richiesto per la generazione di chiavi API utente"
     allowed_user_api_auth_redirects: "URL consentito per il reindirizzamento dell'autenticazione per le chiavi API utente. Il simbolo jolly * può essere utilizzato per abbinare qualsiasi parte di esso (ad esempio www.example.com/*)."
     allowed_user_api_push_urls: "URL consentiti per il push del server alle API utente"
     expire_user_api_keys_days: "Numero di giorni prima che una chiave API utente scada automaticamente (0 per non avere scadenza)"
@@ -2105,7 +2101,6 @@ it:
     enable_sitemap: "Genera una mappa per il tuo sito e includila nel file robots.txt."
     sitemap_page_size: "Numero di URL da includere in ciascuna pagina della mappa del sito. Massimo 50.000"
     enable_user_status: "(sperimentale) Consenti agli utenti di impostare un messaggio di stato personalizzato (emoji + descrizione)."
-    enable_user_tips: "(sperimentale) Abilita i nuovi suggerimenti che descrivono le funzionalità chiave per gli utenti"
     short_title: "Il titolo breve verrà utilizzato nella schermata iniziale dell'utente, nel programma di avvio o in altri contesti in cui lo spazio potrebbe essere limitato. Dovrebbe essere limitato a 12 caratteri."
     dashboard_hidden_reports: "Consenti di nascondere i report specificati dal dashboard."
     dashboard_visible_tabs: "Scegli quali schede del dashboard sono visibili."
@@ -3029,15 +3024,6 @@ it:
       title: "Scaricamento Immagini Remote Disabilitato"
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché è stato raggiunto il limite di spazio su disco definito in `download_remote_images_threshold`."
-    dashboard_problems:
-      title: "Problemi dashboard"
-      subject_template: "Nuovo avviso sul dashboard del tuo sito"
-      text_body_template: |
-        Abbiamo alcuni nuovi consigli e raccomandazioni per te in base alle attuali impostazioni del sito.
-
-        [Visita il dashboard del tuo sito](%{base_url}/admin) per vederli.
-
-        Se sul dashboard non è visibile nulla, è possibile che un altro membro del personale abbia già agito su questo avviso. Un elenco delle azioni dello staff è disponibile nei [Log delle Azioni Staff](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Sei il Nuovo Utente del Mese!"
       subject_template: "Sei il Nuovo Utente del Mese!"

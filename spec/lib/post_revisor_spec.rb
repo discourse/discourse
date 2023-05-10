@@ -388,6 +388,25 @@ RSpec.describe PostRevisor do
         expect(post.revisions.count).to eq(1)
       end
 
+      it "creates a new version when the post is flagged" do
+        SiteSetting.editing_grace_period = 1.minute
+
+        post = Fabricate(:post, raw: "hello world")
+
+        Fabricate(:flag, post: post, user: user)
+
+        revisor = PostRevisor.new(post)
+        revisor.revise!(
+          post.user,
+          { raw: "hello world, JK" },
+          revised_at: post.updated_at + 1.second,
+        )
+
+        post.reload
+        expect(post.version).to eq(2)
+        expect(post.revisions.count).to eq(1)
+      end
+
       it "doesn't create a new version" do
         SiteSetting.editing_grace_period = 1.minute
         SiteSetting.editing_grace_period_max_diff = 100
@@ -420,6 +439,20 @@ RSpec.describe PostRevisor do
             revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
           )
         }.to change { post.topic.bumped_at }
+      end
+
+      it "should bump topic when no topic category" do
+        topic_with_no_category = Fabricate(:topic, category_id: nil)
+        post_from_topic_with_no_category = Fabricate(:post, topic: topic_with_no_category)
+        expect {
+          result =
+            subject.revise!(
+              Fabricate(:admin),
+              raw: post_from_topic_with_no_category.raw,
+              tags: ["foo"],
+            )
+          expect(result).to eq(true)
+        }.to change { topic.reload.bumped_at }
       end
 
       it "should send muted and latest message" do

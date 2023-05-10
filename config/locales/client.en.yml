@@ -2580,6 +2580,7 @@ en:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
       new_features: "New features available!"
+      admin_problems: "New advice on your site dashboard"
       dismiss_confirmation:
         body:
           default:
@@ -4867,8 +4868,8 @@ en:
           name: "User Promoted Event"
           details: "When a user is promoted from one trust level to another."
         user_badge_event:
-          name: "Badge Grant Event"
-          details: "When a user receives a badge."
+          name: "Badge Event"
+          details: "When a badge is granted or revoked."
         group_user_event:
           name: "Group User Event"
           details: "When a user is added or removed in a group."

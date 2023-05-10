@@ -1219,12 +1219,6 @@ hr:
       save_to_change_theme: 'Tema će biti ažurirana nakon što kliknete "%{save_text}"'
       home: "Zadana početna stranica"
       staged: "Priređen"
-      staff_counters:
-        flagged_posts: "označene objave"
-        deleted_posts: "obrisane objave"
-        suspensions: "suspenzije"
-        warnings_received: "upozorenja"
-        rejected_posts: "odbijenih postova"
       messages:
         all: "sve pristigle pošte"
         inbox: "Primljeno"
@@ -1341,12 +1335,10 @@ hr:
         title: "Dva faktorski rezervni kodovi"
         regenerate: "Regeneriraj"
         disable: "Onemogući"
-        enable: "Omogući"
-        enable_long: "Omogući rezervu sigurnosni kodova"
         manage:
-          one: "Upravljanje rezervnim kopijama kodova. Preostale su vam <strong>%{count}</strong> sigurnosne kopija."
-          few: "Upravljanje rezervnim kopijama kodova. Preostale su vam <strong>%{count}</strong> sigurnosne kopija."
-          other: "Upravljanje rezervnim kopijama kodova. Preostale su vam <strong>%{count}</strong> sigurnosne kopija."
+          one: "Preostalo vam je <strong>%{count}</strong> rezervni kodova."
+          few: "Preostalo vam je <strong>%{count}</strong> rezervni kodova."
+          other: "Preostalo vam je <strong>%{count}</strong> rezervni kodova."
         copy_to_clipboard: "Kopirati u međuspremnik"
         copy_to_clipboard_error: "Greška pri kopiranju podataka u međuspremnik"
         copied_to_clipboard: "Kopirano u međuspremnik"
@@ -2403,6 +2395,7 @@ hr:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - dovršeno"
       new_features: "Dostupne su nove značajke!"
+      admin_problems: "Novi savjeti na vašoj nadzornoj ploči"
       dismiss_confirmation:
         body:
           default:
@@ -4583,9 +4576,6 @@ hr:
         user_promoted_event:
           name: "Događaj koji promovira korisnik"
           details: "Kada se korisnik unaprijedi s jedne razine povjerenja na drugu."
-        user_badge_event:
-          name: "Događaj za dodjelu značke"
-          details: "Kada korisnik dobije značku."
         group_user_event:
           name: "Grupni korisnički događaj"
           details: "Kada se korisnik doda ili ukloni u grupi."

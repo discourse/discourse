@@ -78,7 +78,6 @@ pt_BR:
       close: "Fechar"
       collapse: "Recolher gaveta de chat"
       confirm_flag: "Tem certeza de que deseja sinalizar a mensagem de %{username}?"
-      deleted: "Uma mensagem foi excluída. [view]"
       hidden: "Uma mensagem foi ocultada. [view]"
       delete: "Excluir"
       edited: "editou"
@@ -94,6 +93,8 @@ pt_BR:
         title: "Notificações por e-mail"
         when_away: "Só quando estiver ausente"
       header_indicator_preference:
+        all_new: "Todas as Novas Mensagens"
+        dm_and_mentions: "Mensagens Diretas e Menções"
         never: "Nunca"
       enable: "Ativar chat"
       flag: "Sinalizar"
@@ -253,6 +254,7 @@ pt_BR:
         italic_text: "texto enfatizado"
         bold_text: "texto forte"
         code_text: "texto do código"
+        send: "Enviar"
       quote:
         original_channel: 'Originalmente enviado em <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Citação do chat copiada para área de transferência"
@@ -363,6 +365,14 @@ pt_BR:
         symbols: "Símbolos"
         search_placeholder: "Pesquisar por nome de emoji e codinomes..."
         no_results: "Nenhum resultado"
+      thread:
+        replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        label: Tópico
+      threads:
+        started_by: "Iniciado por"
+        open: "Tópico Aberto"
       draft_channel_screen:
         header: "Novas mensagens"
         cancel: "Cancelar"
@@ -421,6 +431,7 @@ pt_BR:
           composer_code: "%{shortcut} Código (somente compositor)"
           drawer_open: "%{shortcut} Abrir a gaveta do chat"
           drawer_close: "%{shortcut} Fechar a gaveta do chat"
+          mark_all_channels_read: "%{shortcut} Marcar todos os canais como lidos"
     topic_statuses:
       chat:
         help: "O chat está ativado para este tópico"

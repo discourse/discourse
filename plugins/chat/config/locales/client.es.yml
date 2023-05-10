@@ -78,7 +78,6 @@ es:
       close: "Cerrar"
       collapse: "Contraer contenedor del chat"
       confirm_flag: "¿Seguro que quieres denunciar el mensaje de %{username}?"
-      deleted: "Se eliminó un mensaje. [ver]"
       hidden: "Se ha ocultado un mensaje. [ver]"
       delete: "Eliminar"
       edited: "editado"
@@ -251,6 +250,7 @@ es:
         italic_text: "texto enfatizado"
         bold_text: "texto fuerte"
         code_text: "texto del código"
+        send: "Enviar"
       quote:
         original_channel: 'Enviado originalmente en <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cita del chat copiada en el portapapeles"
@@ -361,6 +361,10 @@ es:
         symbols: "Símbolos"
         search_placeholder: "Busca por nombre de emoji y alias..."
         no_results: "No hay resultados"
+      thread:
+        replies:
+          one: "%{count} respuesta"
+          other: "%{count} respuestas"
       draft_channel_screen:
         header: "Nuevo mensaje"
         cancel: "Cancelar"

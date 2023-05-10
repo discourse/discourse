@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat message - channel", type: :system, js: true do
+RSpec.describe "Chat message - thread", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
@@ -10,7 +10,7 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
 
   let(:cdp) { PageObjects::CDP.new }
   let(:chat) { PageObjects::Pages::Chat.new }
-  let(:channel) { PageObjects::Pages::ChatChannel.new }
+  let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:message_1) { thread_1.chat_messages.first }
 
   before do
@@ -24,12 +24,13 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
 
   context "when hovering a message" do
     it "adds an active class" do
+      first_message = thread_1.chat_messages.first
       chat.visit_thread(thread_1)
 
-      channel.hover_message(message_1)
+      thread_page.hover_message(first_message)
 
       expect(page).to have_css(
-        ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{message_1.id}'] .chat-message.is-active",
+        ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{first_message.id}'] .chat-message.is-active",
       )
     end
   end
@@ -40,7 +41,7 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
     it "copies the link to the thread" do
       chat.visit_thread(thread_1)
 
-      channel.copy_link(message_1)
+      thread_page.copy_link(message_1)
 
       expect(cdp.read_clipboard).to include("/chat/c/-/#{channel_1.id}/t/#{thread_1.id}")
     end

@@ -51,6 +51,11 @@ id:
   remove_posts_deleted_by_author: "Dihapus oleh penulis"
   redirect_warning: "Kami tidak dapat memverifikasi bahwa tautan yang Anda pilih benar-benar diposkan ke forum. Jika Anda tetap ingin melanjutkan, pilih tautan di bawah ini."
   on_another_topic: "Di topik lain"
+  topic_category_changed: "Dari %{from} ke %{to}"
+  topic_tag_changed:
+    added_and_removed: "Ditambahkan %{added} dan dihapus %{removed}"
+    added: "Ditambahkan %{added}"
+    removed: "Dihapus %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} oleh %{username}"
@@ -712,12 +717,25 @@ id:
     actions:
       agree:
         title: "Ya"
+      agree_and_suspend:
+        title: "Tangguhkan pengguna"
+      agree_and_hide:
+        title: "Sembunyikan pos"
       delete_single:
         title: "Hapus"
+      delete_and_agree:
+        title: "Hapus postingan"
+        description: "Setuju dengan menandai dan menghapus postingan ini; jika postingan pertama, hapus juga topiknya."
+      delete_and_agree_replies:
+        title: "Hapus postingan dan balasan"
+      disagree_and_restore:
+        title: "Tidak, pulihkan postingan"
       disagree:
         title: "Tidak"
       ignore:
         title: "Abaikan"
+      ignore_and_do_nothing:
+        title: "Tidak melakukan apapun"
       approve:
         title: "Terima"
       reject_user:

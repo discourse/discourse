@@ -19,13 +19,12 @@ jobs:
   build:
     if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
-    runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
+    runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || (matrix.target == 'plugins') && (matrix.build_type == 'system') && 'buildjet-16vcpu-ubuntu-2204' || 'buildjet-8vcpu-ubuntu-2204' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
-      RUBY_GLOBAL_METHOD_CACHE_SIZE: 131072
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
@@ -99,7 +98,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Yarn install
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
@@ -185,7 +184,7 @@ jobs:
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
+        run: QUNIT_PARALLEL=4 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
 
       - name: Ember Build for System Tests
@@ -198,11 +197,12 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: bin/rspec spec/system --format documentation
+        run: PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --verbose spec/system
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system --format documentation
+        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=7 bin/turbo_rspec --verbose plugins/*/spec/system
+        timeout-minutes: 30
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
@@ -231,7 +231,7 @@ jobs:
   core_frontend_tests:
     if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: core frontend (${{ matrix.browser }})
-    runs-on: ubuntu-20.04-8core
+    runs-on: buildjet-4vcpu-ubuntu-2204
     container:
       image: discourse/discourse_test:slim-browsers
       options: --user discourse
@@ -272,7 +272,7 @@ jobs:
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
@@ -282,7 +282,7 @@ jobs:
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5  --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=3 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v3

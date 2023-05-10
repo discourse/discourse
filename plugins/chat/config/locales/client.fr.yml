@@ -78,7 +78,6 @@ fr:
       close: "Fermer"
       collapse: "Réduire le tiroir de discussion"
       confirm_flag: "Voulez-vous vraiment signaler le message de %{username} ?"
-      deleted: "Un message a été supprimé. [view]"
       hidden: "Un message a été masqué. [view]"
       delete: "Supprimer"
       edited: "modifié"
@@ -253,6 +252,7 @@ fr:
         italic_text: "texte souligné"
         bold_text: "texte gras"
         code_text: "texte codé"
+        send: "Envoyer"
       quote:
         original_channel: 'Envoyé à l''origine dans le canal <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Citation de discussion copiée dans le presse-papiers"
@@ -363,6 +363,10 @@ fr:
         symbols: "Symboles"
         search_placeholder: "Recherche par nom d'émoji et alias…"
         no_results: "Aucun résultat"
+      thread:
+        replies:
+          one: "%{count} réponse"
+          other: "%{count} réponses"
       draft_channel_screen:
         header: "Nouveau message"
         cancel: "Annuler"

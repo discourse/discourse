@@ -1424,7 +1424,6 @@ da:
     discourse_connect_overrides_bio: "Tilsidesætter brugerbio i brugerprofilen og forhindrer brugeren i at ændre den"
     discourse_connect_overrides_groups: "Synkronisér alle manuelle gruppemedlemskaber med grupper angivet i grupper-attributten (ADVARSEL: hvis du ikke angiver grupper, vil alle manuelle gruppemedlemmer blive ryddet for brugeren)"
     discourse_connect_not_approved_url: "Omdiriger ikke-godkendte DiscourseConnect konti til denne URL"
-    discourse_connect_allows_all_return_paths: "Begræns ikke domænet for retur_stier leveret af DiscourseConnect (som standard skal retur_sti være på nuværende websted)"
     enable_local_logins: "Aktivér lokale \"brugernavn og adgangskode\" login-baserede konti. ADVARSEL: Hvis deaktiveret, kan du muligvis ikke logge ind, hvis du ikke tidligere har konfigureret mindst én alternativ loginmetode."
     enable_local_logins_via_email: "Tillad brugere at anmode om et enkelt-klik login link bliver sendt til dem via e-mail."
     allow_new_registrations: "Tillad nye brugerregistreringer. Fjern markeringen for at forhindre enhver i at oprette en ny konto."
@@ -1614,7 +1613,6 @@ da:
     allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
     embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
     embed_username_required: "Brugernavnet til oprettelse af emne er påkrævet."
-    notify_about_flags_after: "Hvis der er anmeldelser, der ikke er blevet håndteret efter mange timer, skal der sendes en personlig besked til moderatorer. Sæt til 0 for at deaktivere."
     delete_drafts_older_than_n_days: "Slet kladder, der er ældre end (n) dage."
     delete_merged_stub_topics_after_days: "Antal dage, der skal ventes, før automatisk sletning af fuldt sammenflettede stub emner. Sæt til 0 for aldrig at slette stub emner."
     enable_emoji: "Aktivér humørikon"
@@ -1646,7 +1644,6 @@ da:
     default_tags_watching_first_post: "Liste over mærker, hvor første indlæg i hvert nyt emne vil blive overvåget som standard."
     allow_user_api_keys: "Tillad generering af bruger API nøgler"
     allow_user_api_key_scopes: "Liste over tilladte anvendelsesområder for bruger-API-nøgler"
-    min_trust_level_for_user_api_key: "Tillidsniveau påkrævet til generering af bruger API-nøgler"
     expire_user_api_keys_days: "Antal dage før en bruger API-nøgle automatisk udløber (0 for aldrig)"
     tagging_enabled: "Aktivér mærker på emner?"
     max_tags_per_topic: "Det maksimale antal mærker, der kan anvendes i et emne."
@@ -2382,13 +2379,6 @@ da:
     download_remote_images_disabled:
       subject_template: "Download af eksterne billeder er slået fra"
       text_body_template: "Indstillingen `download_remote_images_to_local` blev slået fra fordi grænsen for bug af diskplads i `download_remote_images_threshold` blev nået."
-    dashboard_problems:
-      text_body_template: |
-        Vi har nogle nye råd og anbefalinger til dig baseret på dine nuværende webstedsindstillinger.
-
-        [Besøg dit webside dashboard](%{base_url}/admin) for at se det.
-
-        Hvis intet er synligt på dit dashboard, kan en anden medarbejder muligvis allerede have handlet på dette råd. En liste over medarbejderhandlinger kan findes under dine [Personale Handlingslogs] (%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Du er månedens nye bruger!"
       subject_template: "Du er månedens nye bruger!"

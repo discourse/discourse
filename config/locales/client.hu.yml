@@ -1184,12 +1184,6 @@ hu:
       save_to_change_theme: 'A téma a „%{save_text}” gombra kattintás után frissül'
       home: "Alapértelmezett főoldal"
       staged: "Lépcsőzetes"
-      staff_counters:
-        flagged_posts: "megjelölt bejegyzések"
-        deleted_posts: "törölt bejegyzések"
-        suspensions: "felfüggesztések"
-        warnings_received: "figyelmeztetések"
-        rejected_posts: "elutasított bejegyzések"
       messages:
         all: "összes bejövő postaláda"
         inbox: "Bejövő"
@@ -1240,11 +1234,12 @@ hu:
         title: "Kétfaktoros biztonsági kódok"
         regenerate: "Újragenerálás"
         disable: "Letiltás"
-        enable: "Engedélyezés"
-        enable_long: "Biztonsági kódok engedélyezése"
+        enable: "Biztonsági kódok létrehozása"
+        enable_long: "Biztonsági kódok hozzáadása"
+        not_enabled: "Még nem hoztál létre biztonsági kódokat."
         manage:
-          one: "Biztonsági kódok kezelése. <strong>%{count}</strong> biztonsági kód maradt."
-          other: "Biztonsági kódok kezelése. <strong>%{count}</strong> biztonsági kód maradt."
+          one: "<strong>%{count}</strong> biztonsági kódja maradt."
+          other: "<strong>%{count}</strong> biztonsági kódja maradt."
         copy_to_clipboard: "Vágólapra másolás"
         copy_to_clipboard_error: "Hiba az adatok vágólapra másolásakor"
         copied_to_clipboard: "Vágólapra másolva"
@@ -1326,6 +1321,7 @@ hu:
         success: "Küldtünk egy levelet a megadott e-mail-címre. Kövesse a megerősítési utasításokat."
         success_via_admin: "Küldtünk egy levelet a megadott e-mail-címre. A felhasználónak követnie kell a levélben szereplő megerősítési utasításokat."
         success_staff: "Küldtünk egy levelet a jelenlegi e-mail-címére. Kövesse a megerősítési utasításokat."
+        back_to_preferences: "Vissza a beállításokhoz"
       change_avatar:
         title: "Profilkép megváltoztatása"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, ez alapján:"
@@ -2215,6 +2211,7 @@ hu:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – kész"
       new_features: "Új funkciók érhetők el!"
+      admin_problems: "Új tanácsok a webhely irányítópultján"
       dismiss_confirmation:
         body:
           default:
@@ -4001,6 +3998,9 @@ hu:
         reviewable_event:
           name: "Áttekinthető esemény"
           details: "Ha egy új elem készen áll a felülvizsgálatra és állapota frissül."
+        user_badge_event:
+          name: "Jelvény esemény"
+          details: "A jelvény megadásakor vagy visszavonásakor."
         delivery_status:
           title: "Kiszállítás állapota"
           inactive: "Inaktív"

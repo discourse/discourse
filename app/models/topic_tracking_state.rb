@@ -579,6 +579,8 @@ class TopicTrackingState
   def self.secure_category_group_ids(topic)
     category = topic.category
 
+    return [Group::AUTO_GROUPS[:admins]] if category.nil?
+
     if category.read_restricted
       ids = [Group::AUTO_GROUPS[:admins]]
       ids.push(*category.secure_group_ids)

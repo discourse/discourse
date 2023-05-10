@@ -76,7 +76,6 @@ hu:
       collapse: "Csevegőfiók összecsukása"
       expand: "Chat fiók bővítése"
       confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"
-      deleted: "Egy üzenet törölve lett. [megtekintés]"
       hidden: "Egy üzenet el lett rejtve. [megtekintés]"
       delete: "Törlés"
       edited: "szerkesztve"
@@ -129,6 +128,7 @@ hu:
       close_full_page: "Teljes képernyős csevegés bezárása"
       open_message: "Üzenet megnyitása a csevegésben"
       placeholder_self: "Jegyezzen le valamit"
+      placeholder_channel: "Csevegés %{channelName}"
       placeholder_silenced: "Jelenleg nem küldhet üzeneteket."
       remove_upload: "Fájl eltávolítása"
       react: "Reagálás emodzsival"
@@ -157,6 +157,7 @@ hu:
       title: "csevegés"
       title_capitalized: "Csevegés"
       upload: "Fájl csatolása"
+      upload_to_channel: "Feltöltés %{title} címre"
       uploaded_files:
         one: "%{count} fájl"
         other: "%{count} fájl"
@@ -244,6 +245,7 @@ hu:
         italic_text: "dőlt szöveg"
         bold_text: "félkövér szöveg"
         code_text: "kódszöveg"
+        send: "Küldés"
       quote:
         copy_success: "Csevegési idézet a vágólapra másolva"
       notification_levels:
@@ -345,6 +347,10 @@ hu:
         symbols: "Szimbólumok"
         no_results: "Nincs találat"
       thread:
+        view_thread: Téma megtekintése
+        replies:
+          one: "%{count} válasz"
+          other: "%{count} válasz"
         label: Szál
       draft_channel_screen:
         header: "Új üzenet"

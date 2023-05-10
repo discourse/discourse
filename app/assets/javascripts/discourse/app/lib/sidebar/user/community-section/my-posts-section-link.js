@@ -7,13 +7,19 @@ import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sideb
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
 export default class MyPostsSectionLink extends BaseSectionLink {
-  @tracked draftCount = this.currentUser.draft_count;
+  @tracked draftCount = this.currentUser?.draft_count;
   @tracked hideCount =
     this.currentUser?.sidebarListDestination !== UNREAD_LIST_DESTINATION;
 
   constructor() {
     super(...arguments);
-    this.appEvents.on(USER_DRAFTS_CHANGED_EVENT, this, this._updateDraftCount);
+    if (this.shouldDisplay) {
+      this.appEvents.on(
+        USER_DRAFTS_CHANGED_EVENT,
+        this,
+        this._updateDraftCount
+      );
+    }
   }
 
   teardown() {
@@ -96,5 +102,9 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     if (this._hasDraft && this.hideCount) {
       return "circle";
     }
+  }
+
+  get shouldDisplay() {
+    return this.currentUser;
   }
 }

@@ -144,6 +144,8 @@ pt_BR:
       facebook: "Compartilhar no Facebook"
       email: "Enviar por e-mail"
       url: "Copiar e compartilhar a URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Tornou este tópico público %{when}"
       open_topic: "Converteu isto em um tópico %{when}"
@@ -155,6 +157,8 @@ pt_BR:
       removed_user: "Removeu %{who} %{when}"
       removed_group: "Removeu %{who} %{when}"
       autobumped: "Automaticamente promovido %{when}"
+      tags_changed: "Etiquetas atualizadas em %{when}"
+      category_changed: "Categoria atualizada em %{when}"
       autoclosed:
         enabled: "Fechado %{when}"
         disabled: "Aberto %{when}"
@@ -514,22 +518,40 @@ pt_BR:
       scores:
         about: "Esta pontuação é calculada com base no nível de confiança do relator, na precisão de suas sinalizações anteriores e na prioridade do item que está sendo relatado."
         score: "Pontuação"
+        date: "Data do relatório"
         type: "Motivo"
         status: "Status"
         submitted_by: "Relatado por"
+        reviewed_by: "Revisado por"
       statuses:
         pending:
           title: "Pendentes"
         approved:
           title: "Aprovado"
+        approved_user:
+          title: "Usuário aprovado"
+        approved_post:
+          title: "Publicação aprovada"
         rejected:
           title: "Rejeitado"
+        rejected_flag:
+          title: "Sinalização recusada"
+        rejected_user:
+          title: "Usuário(a) recusado(a)"
+        rejected_post:
+          title: "Publicação recusada"
+        ignored:
+          title: "Sinalizador ignorado"
+        deleted:
+          title: "Tópico ou publicação excluído"
         reviewed:
           title: "Tudo revisado"
         all:
           title: "Tudo"
       context_question:
+        is_this_post: "Essa publicação é %{reviewable_human_score_types}?"
         delimiter: "ou"
+        something_else_wrong: "Existe algo errado com essa publicação?"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
@@ -964,6 +986,9 @@ pt_BR:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar preferências"
+      download_archive:
+        title: "Exportar seus dados"
+        button_text: "Solicitar arquivo"
       new_private_message: "Nova mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -1163,12 +1188,6 @@ pt_BR:
       save_to_change_theme: 'O tema será atualizado quando você clicar em "%{save_text}"'
       home: "Página inicial padrão"
       staged: "Encenado(a)"
-      staff_counters:
-        flagged_posts: "postagens sinalizadas"
-        deleted_posts: "postagens excluídas"
-        suspensions: "suspensões"
-        warnings_received: "avisos"
-        rejected_posts: "postagens rejeitadas"
       messages:
         all: "todas as caixas de entrada"
         inbox: "Caixa de entrada"
@@ -1275,11 +1294,9 @@ pt_BR:
         title: "Códigos de backup de dois fatores"
         regenerate: "Gerar novamente"
         disable: "Desativar"
-        enable: "Ativar"
-        enable_long: "Ativar códigos de backup"
         manage:
-          one: "Gerenciar códigos de backup. Você tem <strong>%{count}</strong> código de backup restante."
-          other: "Gerenciar códigos de backup. Você tem <strong>%{count}</strong> códigos de backup restantes."
+          one: "Você tem <strong>%{count}</strong> código de backup restante."
+          other: "Você tem <strong>%{count}</strong> códigos de backup restantes."
         copy_to_clipboard: "Copiar para área de transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"
         copied_to_clipboard: "Copiou para a área de transferência"
@@ -2300,6 +2317,7 @@ pt_BR:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - concluído(a)"
       new_features: "Novos recursos disponíveis!"
+      admin_problems: "Nova recomendação no painel de controle do seu site"
       dismiss_confirmation:
         body:
           default:
@@ -2602,6 +2620,7 @@ pt_BR:
         bookmarks: "Você ainda não tem nenhum tópico favorito."
         category: "Não há tópicos na categoria %{category}."
         top: "Não há melhores tópicos."
+        filter: "Não existem tópicos."
         educate:
           new: '<p>Seus novos tópicos serão exibidos aqui. Por padrão, os tópicos serão considerados novos e exibirão um <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador se tiverem tido criados nos últimos dois dias.</p><p>Acesse suas <a href="%{userPrefsUrl}">preferências</a> para alterar essa configuração.</p>'
           unread: "<p>Seus tópicos não lidos são exibidos aqui.</p><p>Por padrão, os tópicos são considerados como não lidos e exibirão contadores <span class=\"badge unread-posts badge-notification\">1</span> se você tiver:</p><ul><li>criado o tópico</li><li>respondido ao tópico</li><li>lido o tópico por mais de 4 minutos</li></ul><p>ou marcado o tópico como Monitorado ou Acompanhado pelo \U0001F514 em cada tópico.</p><p>Acesse suas <a href=\"%{userPrefsUrl}\">preferências</a> para alterar essa configuração.</p>"
@@ -2616,11 +2635,13 @@ pt_BR:
         tag: "Não há mais tópicos na categoria %{tag}."
         top: "Não há mais melhores tópicos."
         bookmarks: "Não há mais tópicos favoritos."
+        filter: "Não existem mais tópicos."
     topic:
       filter_to:
         one: "%{count} postagem no tópico"
         other: "%{count} postagens no tópico"
       create: "Novo tópico"
+      create_disabled_category: "Você não possui permissão para criar tópicos nesta categoria"
       create_long: "Criar um novo tópico"
       open_draft: "Rascunho aberto"
       private_message: "Iniciar uma mensagem"
@@ -2707,6 +2728,7 @@ pt_BR:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Navegue por todas as categorias</a>, <a href='%{basePath}/latest'>veja os tópicos mais recentes</a> ou veja os principais:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Navegue por todas as etiquetas</a> ou <a href='%{basePath}/latest'>visualize os tópicos mais recentes</a>."
       suggest_create_topic: Tudo pronto para <a href>começar uma nova conversa?</a>
+      jump_reply: "Ir para o local da publicação original"
       deleted: "Este tópico foi excluído"
       slow_mode_update:
         title: "Modo lento"
@@ -3061,6 +3083,7 @@ pt_BR:
       ignored: "Conteúdo ignorado"
       wiki_last_edited_on: "última edição do wiki em %{dateTime}"
       last_edited_on: "última edição da postagem em %{dateTime}"
+      edit_history: "histórico de edição da publicação"
       reply_as_new_topic: "Responder como um tópico vinculado"
       reply_as_new_private_message: "Responder como nova mensagem aos mesmos destinatários"
       continue_discussion: "Continuando a discussão de %{postLink}:"
@@ -3071,6 +3094,9 @@ pt_BR:
       collapse: "recolher"
       sr_collapse_replies: "Recolher respostas incorporadas"
       sr_date: "Data da postagem"
+      sr_expand_replies:
+        one: "Esta publicação tem %{count} resposta"
+        other: "Esta publicação tem %{count} respostas"
       expand_collapse: "expandir/recolher"
       sr_below_embedded_posts_description: "poste #%{post_number} respostas"
       sr_embedded_reply_description: "resposta por @%{username} à postagem #%{post_number}"
@@ -3228,6 +3254,7 @@ pt_BR:
           last: "Última revisão"
           hide: "Ocultar revisão"
           show: "Exibir revisão"
+          destroy: "Excluir revisões"
           revert: "Reverter para a revisão %{revision}"
           edit_wiki: "Editar wiki"
           edit_post: "Editar postagem"
@@ -3985,8 +4012,12 @@ pt_BR:
           save: "Salvar"
           delete: "Excluir"
           links:
+            add: "Adicionar outro link"
+            delete: "Excluir link"
             icon:
               label: "Ícone"
+              validation:
+                blank: "O ícone não pode estar em branco"
             name:
               label: "Nome"
             value:
@@ -4385,9 +4416,6 @@ pt_BR:
         user_promoted_event:
           name: "Evento promovido pelo usuário"
           details: "Quando um usuário é promovido de um nível de confiança para outro."
-        user_badge_event:
-          name: "Evento de concessão de emblema"
-          details: "Quando um(a) usuário(a) recebe um emblema."
         group_user_event:
           name: "Evento de usuário(a) em grupo"
           details: "Quando um(a) usuário(a) for adicionado(a) ou removido(a) em um grupo."

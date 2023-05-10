@@ -225,54 +225,10 @@ RSpec.describe TopicsFilter do
         Fabricate(:category, parent_category: category2, name: "category2 subcategory")
       end
 
-      fab!(:private_category) do
-        Fabricate(:private_category, group: group, slug: "private-category")
-      end
-
       fab!(:topic_in_category) { Fabricate(:topic, category: category) }
       fab!(:topic_in_category_subcategory) { Fabricate(:topic, category: category_subcategory) }
       fab!(:topic_in_category2) { Fabricate(:topic, category: category2) }
       fab!(:topic_in_category2_subcategory) { Fabricate(:topic, category: category2_subcategory) }
-      fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
-
-      describe "when query string is `-category:category`" do
-        it "ignores the filter because the prefix is invalid" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("-category:category")
-              .pluck(:id),
-          ).to contain_exactly(
-            topic_in_category.id,
-            topic_in_category_subcategory.id,
-            topic_in_category2.id,
-            topic_in_category2_subcategory.id,
-            topic_in_private_category.id,
-          )
-        end
-      end
-
-      describe "when query string is `category:private-category`" do
-        it "should not return any topics when user does not have access to specified category" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("category:private-category")
-              .pluck(:id),
-          ).to eq([])
-        end
-
-        it "should return topics from specified category when user has access to specified category" do
-          group.add(user)
-
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new(user))
-              .filter_from_query_string("category:private-category")
-              .pluck(:id),
-          ).to contain_exactly(topic_in_private_category.id)
-        end
-      end
 
       describe "when query string is `category:category`" do
         it "should return topics from specified category and its subcategories" do
@@ -357,6 +313,65 @@ RSpec.describe TopicsFilter do
         end
       end
 
+      describe "when query string is `-category:category`" do
+        it "should not return any topics from specified category or its subcategories" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-category:category")
+              .pluck(:id),
+          ).to contain_exactly(topic_in_category2.id, topic_in_category2_subcategory.id)
+        end
+      end
+
+      describe "when query string is `-category:category2,category`" do
+        it "should not return any topics from either specified categories or their subcategories" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-category:category2,category")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+
+      describe "when query string is `-category:category -category:category2-subcategory`" do
+        it "should not return any topics from either specified category or their subcategories" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-category:category -category:category2-subcategory")
+              .pluck(:id),
+          ).to contain_exactly(topic_in_category2.id)
+        end
+      end
+
+      describe "when query string is `-=category:category`" do
+        it "should not return any topics from the specified category only" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-=category:category")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_in_category_subcategory.id,
+            topic_in_category2.id,
+            topic_in_category2_subcategory.id,
+          )
+        end
+      end
+
+      describe "when query string is `-=category:category,category2`" do
+        it "should not return any topics from the specified categories only" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-=category:category,category2")
+              .pluck(:id),
+          ).to contain_exactly(topic_in_category_subcategory.id, topic_in_category2_subcategory.id)
+        end
+      end
+
       describe "when query string is `=category:category`" do
         it "should not return topics from subcategories`" do
           expect(
@@ -376,6 +391,77 @@ RSpec.describe TopicsFilter do
               .filter_from_query_string("=category:category,category2")
               .pluck(:id),
           ).to contain_exactly(topic_in_category.id, topic_in_category2.id)
+        end
+      end
+
+      describe "when query string is `category:category2 -=category:category2-subcategory`" do
+        it "should return topics from category2 and its subcategories but not from the category2-subcategory" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string(
+                "category:category2 -=category:category2:category2-subcategory",
+              )
+              .pluck(:id),
+          ).to contain_exactly(topic_in_category2.id)
+        end
+
+        describe "when max category nesting is 3" do
+          fab!(:category2_subcategory_subcategory) do
+            SiteSetting.max_category_nesting = 3
+            Fabricate(:category, parent_category: category2_subcategory, name: "sub-subcategory")
+          end
+
+          fab!(:topic_in_category2_subcategory_subcategory) do
+            Fabricate(:topic, category: category2_subcategory_subcategory)
+          end
+
+          before { SiteSetting.max_category_nesting = 3 }
+
+          it "should return topics from category2, category2's sub-categories and category2's sub-sub-categories but not from the category2-subcategory only" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string(
+                  "category:category2 -=category:category2:category2-subcategory",
+                )
+                .pluck(:id),
+            ).to contain_exactly(
+              topic_in_category2.id,
+              topic_in_category2_subcategory_subcategory.id,
+            )
+          end
+        end
+      end
+
+      describe "when `slug_generation_method` site setting is set to encoded" do
+        before do
+          SiteSetting.slug_generation_method = "encoded"
+          category.update!(name: "日本語", slug: "日本語")
+        end
+
+        describe "when query string is `category:日本語`" do
+          it 'should return topics from category with slug "日本語"' do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("category:日本語")
+                .pluck(:id),
+            ).to contain_exactly(topic_in_category.id, topic_in_category_subcategory.id)
+          end
+        end
+
+        describe "when query string is `category:日本語:안녕하세요`" do
+          before { category_subcategory.update!(name: "안녕하세요 ", slug: "안녕하세요 ") }
+
+          it "should return topics from category with slug '안녕하세요'" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("category:日本語:안녕하세요")
+                .pluck(:id),
+            ).to contain_exactly(topic_in_category_subcategory.id)
+          end
         end
       end
 
@@ -663,6 +749,17 @@ RSpec.describe TopicsFilter do
         )
       end
 
+      describe "when query string is `tag:tag1+tag2`" do
+        it "should only return topics that are tagged with all of the specified tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tag:#{tag.name}+#{tag2.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag_and_tag2.id)
+        end
+      end
+
       it "should only return topics that are tagged with all of the specified tags when query string is `tags:tag1+tag2`" do
         expect(
           TopicsFilter
@@ -681,6 +778,37 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("tags:#{tag.name} tags:#{tag2.name}")
             .pluck(:id),
         ).to contain_exactly(topic_with_tag_and_tag2.id, topic_with_tag_and_tag2_and_tag3.id)
+      end
+
+      describe "when query string is `tags:tag1,tag2,tag3`" do
+        it "should only return topics that are tagged with either tag1, tag2 or tag3" do
+          topic_with_tag3 = Fabricate(:topic, tags: [tag3])
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:#{tag.name},#{tag2.name},#{tag3.name}")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_with_tag.id,
+            topic_with_tag_and_tag2.id,
+            topic_with_tag2.id,
+            topic_with_tag3.id,
+          )
+        end
+      end
+
+      describe "when query string is `tags:tag1+tag2+tag3`" do
+        it "should only return topics that are tagged with tag1, tag2 and tag3" do
+          topic_with_tag_tag2_tag3 = Fabricate(:topic, tags: [tag, tag2, tag3])
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:#{tag.name}+#{tag2.name}+#{tag3.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag_tag2_tag3.id)
+        end
       end
 
       it "should only return topics that are tagged with tag1 and tag2 but not tag3 when query string is `tags:tag1 tags:tag2 -tags:tag3`" do
@@ -772,6 +900,19 @@ RSpec.describe TopicsFilter do
             .pluck(:id),
         ).to contain_exactly(topic_without_tag.id, topic_with_group_only_tag.id)
       end
+
+      describe "when query string is tag:日べé1" do
+        before { tag.update!(name: "日べé1") }
+
+        it "should return topics that are tagged with the specified tag" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tag:日べé1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+      end
     end
 
     describe "when filtering by topic author" do
@@ -780,74 +921,76 @@ RSpec.describe TopicsFilter do
       fab!(:topic2_by_user) { Fabricate(:topic, user: user) }
       fab!(:topic_by_user2) { Fabricate(:topic, user: user2) }
 
-      describe "when query string is `created-by:username`" do
+      describe "when query string is `created-by:@username`" do
         it "should return the topics created by the specified user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:#{user.username}")
+              .filter_from_query_string("created-by:@#{user.username}")
               .pluck(:id),
           ).to contain_exactly(topic_by_user.id, topic2_by_user.id)
         end
       end
 
-      describe "when query string is `created-by:username2`" do
+      describe "when query string is `created-by:@username2`" do
         it "should return the topics created by the specified user" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:#{user2.username}")
+              .filter_from_query_string("created-by:@#{user2.username}")
               .pluck(:id),
           ).to contain_exactly(topic_by_user2.id)
         end
       end
 
-      describe "when query string is `created-by:username created-by:username2`" do
+      describe "when query string is `created-by:@username created-by:@username2`" do
         it "should return the topics created by either of the specified users" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:#{user.username} created-by:#{user2.username}")
+              .filter_from_query_string(
+                "created-by:@#{user.username} created-by:@#{user2.username}",
+              )
               .pluck(:id),
           ).to contain_exactly(topic_by_user.id, topic2_by_user.id, topic_by_user2.id)
         end
       end
 
-      describe "when query string is `created-by:username,invalid`" do
+      describe "when query string is `created-by:@username,invalid`" do
         it "should only return the topics created by the user with the valid username" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:#{user.username},invalid")
+              .filter_from_query_string("created-by:@#{user.username},invalid")
               .pluck(:id),
           ).to contain_exactly(topic_by_user.id, topic2_by_user.id)
         end
       end
 
-      describe "when query string is `created-by:username,username2`" do
+      describe "when query string is `created-by:@username,@username2`" do
         it "should return the topics created by either of the specified users" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:#{user.username},#{user2.username}")
+              .filter_from_query_string("created-by:@#{user.username},@#{user2.username}")
               .pluck(:id),
           ).to contain_exactly(topic_by_user.id, topic2_by_user.id, topic_by_user2.id)
         end
       end
 
-      describe "when query string is `created-by:invalid`" do
+      describe "when query string is `created-by:@invalid`" do
         it "should not return any topics" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
-              .filter_from_query_string("created-by:invalid")
+              .filter_from_query_string("created-by:@invalid")
               .pluck(:id),
           ).to eq([])
         end
       end
     end
 
-    shared_examples "filtering for topics by range" do |filter|
+    shared_examples "filtering for topics by counts" do |filter|
       describe "when query string is `#{filter}-min:1`" do
         it "should only return topics with at least 1 #{filter}" do
           expect(
@@ -933,7 +1076,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_2_count) { Fabricate(:topic, like_count: 2) }
       fab!(:topic_with_3_count) { Fabricate(:topic, like_count: 3) }
 
-      include_examples("filtering for topics by range", "likes")
+      include_examples("filtering for topics by counts", "likes")
     end
 
     describe "when filtering by number of posters in a topic" do
@@ -941,7 +1084,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_2_count) { Fabricate(:topic, participant_count: 2) }
       fab!(:topic_with_3_count) { Fabricate(:topic, participant_count: 3) }
 
-      include_examples("filtering for topics by range", "posters")
+      include_examples("filtering for topics by counts", "posters")
     end
 
     describe "when filtering by number of posts in a topic" do
@@ -949,7 +1092,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_2_count) { Fabricate(:topic, posts_count: 2) }
       fab!(:topic_with_3_count) { Fabricate(:topic, posts_count: 3) }
 
-      include_examples("filtering for topics by range", "posts")
+      include_examples("filtering for topics by counts", "posts")
     end
 
     describe "when filtering by number of views in a topic" do
@@ -957,7 +1100,7 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_2_count) { Fabricate(:topic, views: 2) }
       fab!(:topic_with_3_count) { Fabricate(:topic, views: 3) }
 
-      include_examples("filtering for topics by range", "views")
+      include_examples("filtering for topics by counts", "views")
     end
 
     describe "when filtering by number of likes in the first post of a topic" do
@@ -976,7 +1119,264 @@ RSpec.describe TopicsFilter do
         post.topic
       end
 
-      include_examples("filtering for topics by range", "likes-op")
+      include_examples("filtering for topics by counts", "likes-op")
+    end
+
+    shared_examples "filtering for topics by date column" do |filter, column, description|
+      fab!(:topic) { Fabricate(:topic, column => Time.zone.local(2022, 1, 1)) }
+      fab!(:topic2) { Fabricate(:topic, column => Time.zone.local(2023, 5, 12)) }
+
+      describe "when query string is `#{filter}-after:invalid-date-test`" do
+        it "should ignore the filter" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-after:invalid-date-test")
+              .pluck(:id),
+          ).to contain_exactly(topic.id, topic2.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-after:2022-01-01`" do
+        it "should only return topics with #{description} after 2022-01-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-after:2022-01-01")
+              .pluck(:id),
+          ).to contain_exactly(topic.id, topic2.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-after:2023-01-1`" do
+        it "should only return topics with #{description} after 2023-01-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-after:2023-01-1")
+              .pluck(:id),
+          ).to contain_exactly(topic2.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-after:2023-6-01`" do
+        it "should only return topics with #{description} after 2023-06-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-after:2023-6-01")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+
+      describe "when query string is `#{filter}-before:2023-01-01`" do
+        it "should only return topics with #{description} before 2023-01-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-before:2023-01-01")
+              .pluck(:id),
+          ).to contain_exactly(topic.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-before:2023-1-1`" do
+        it "should only return topics with #{description} before 2023-01-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-before:2023-1-1")
+              .pluck(:id),
+          ).to contain_exactly(topic.id)
+        end
+      end
+
+      describe "when query string is `#{filter}-before:2000-01-01`" do
+        it "should only return topics with #{description} before 2000-01-01" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("#{filter}-before:2000-01-01")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+    end
+
+    describe "when filtering by activity of topics" do
+      include_examples "filtering for topics by date column", "activity", :bumped_at, "bumped date"
+    end
+
+    describe "when filtering by creation date of topics" do
+      include_examples "filtering for topics by date column", "created", :created_at, "created date"
+    end
+
+    describe "when filtering by last post date of topics" do
+      include_examples "filtering for topics by date column",
+                       "latest-post",
+                       :last_posted_at,
+                       "last posted date"
+    end
+
+    describe "ordering topics filter" do
+      # Requires the fabrication of `topic`, `topic2` and `topic3` such that the order of the topics is `topic2`, `topic1`, `topic3`
+      # when ordered by the given filter in descending order.
+      shared_examples "ordering topics filters" do |order, order_description|
+        describe "when query string is `order:#{order}`" do
+          it "should return topics ordered by #{order_description} in descending order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:#{order}")
+                .pluck(:id),
+            ).to eq([topic2.id, topic.id, topic3.id])
+          end
+        end
+
+        describe "when query string is `order:#{order}-asc`" do
+          it "should return topics ordered by #{order_description} in ascending order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:#{order}-asc")
+                .pluck(:id),
+            ).to eq([topic3.id, topic.id, topic2.id])
+          end
+        end
+
+        describe "when query string is `order:#{order}-invalid`" do
+          it "should return topics ordered by the default order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:#{order}-invalid")
+                .pluck(:id),
+            ).to eq(Topic.all.order(:id).pluck(:id))
+          end
+        end
+      end
+
+      describe "when ordering topics by creation date" do
+        fab!(:topic) { Fabricate(:topic, created_at: Time.zone.local(2023, 1, 1)) }
+        fab!(:topic2) { Fabricate(:topic, created_at: Time.zone.local(2024, 1, 1)) }
+        fab!(:topic3) { Fabricate(:topic, created_at: Time.zone.local(2022, 1, 1)) }
+
+        include_examples "ordering topics filters", "created", "creation date"
+      end
+
+      describe "when ordering topics by last activity date" do
+        fab!(:topic) { Fabricate(:topic, bumped_at: Time.zone.local(2023, 1, 1)) }
+        fab!(:topic2) { Fabricate(:topic, bumped_at: Time.zone.local(2024, 1, 1)) }
+        fab!(:topic3) { Fabricate(:topic, bumped_at: Time.zone.local(2022, 1, 1)) }
+
+        include_examples "ordering topics filters", "activity", "bumped date"
+      end
+
+      describe "when ordering topics by number of likes in the topic" do
+        fab!(:topic) { Fabricate(:topic, like_count: 2) }
+        fab!(:topic2) { Fabricate(:topic, like_count: 3) }
+        fab!(:topic3) { Fabricate(:topic, like_count: 1) }
+
+        include_examples "ordering topics filters", "likes", "number of likes in the topic"
+      end
+
+      describe "when ordering topics by number of participants in the topic" do
+        fab!(:topic) { Fabricate(:topic, participant_count: 2) }
+        fab!(:topic2) { Fabricate(:topic, participant_count: 3) }
+        fab!(:topic3) { Fabricate(:topic, participant_count: 1) }
+
+        include_examples "ordering topics filters", "posters", "number of participants in the topic"
+      end
+
+      describe "when ordering topics by number of topics views" do
+        fab!(:topic) { Fabricate(:topic, views: 2) }
+        fab!(:topic2) { Fabricate(:topic, views: 3) }
+        fab!(:topic3) { Fabricate(:topic, views: 1) }
+
+        include_examples "ordering topics filters", "views", "number of views"
+      end
+
+      describe "when ordering topics by latest post creation date" do
+        fab!(:topic) { Fabricate(:topic, last_posted_at: Time.zone.local(2023, 1, 1)) }
+        fab!(:topic2) { Fabricate(:topic, last_posted_at: Time.zone.local(2024, 1, 1)) }
+        fab!(:topic3) { Fabricate(:topic, last_posted_at: Time.zone.local(2022, 1, 1)) }
+
+        include_examples "ordering topics filters", "latest-post", "latest post creation date"
+      end
+
+      describe "when ordering topics by number of likes in the first post" do
+        fab!(:topic) do
+          post = Fabricate(:post, like_count: 2)
+          post.topic
+        end
+
+        fab!(:topic2) do
+          post = Fabricate(:post, like_count: 3)
+          post.topic
+        end
+
+        fab!(:topic3) do
+          post = Fabricate(:post, like_count: 1)
+          post.topic
+        end
+
+        include_examples "ordering topics filters", "likes-op", "number of likes in the first post"
+      end
+
+      describe "when ordering by topics's category name" do
+        fab!(:category) { Fabricate(:category, name: "Category 1") }
+        fab!(:category2) { Fabricate(:category, name: "Category 2") }
+        fab!(:category3) { Fabricate(:category, name: "Category 3") }
+
+        fab!(:topic) { Fabricate(:topic, category: category2) }
+        fab!(:topic2) { Fabricate(:topic, category: category3) }
+        fab!(:topic3) { Fabricate(:topic, category: category) }
+
+        include_examples "ordering topics filters", "category", "category name"
+
+        describe "when query string is `order:category` and there are multiple topics in a category" do
+          fab!(:topic4) { Fabricate(:topic, category: category) }
+          fab!(:topic5) { Fabricate(:topic, category: category2) }
+
+          it "should return topics ordered by category name in descending order and then topic id in ascending order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:category")
+                .pluck(:id),
+            ).to eq([topic2.id, topic.id, topic5.id, topic3.id, topic4.id])
+          end
+        end
+      end
+
+      describe "composing multiple order filters" do
+        fab!(:topic) { Fabricate(:topic, created_at: Time.zone.local(2023, 1, 1), views: 2) }
+        fab!(:topic2) { Fabricate(:topic, created_at: Time.zone.local(2024, 1, 1), views: 2) }
+        fab!(:topic3) { Fabricate(:topic, created_at: Time.zone.local(2024, 1, 1), views: 1) }
+
+        describe "when query string is `order:created,views`" do
+          it "should return topics ordered by creation date in descending order and then number of views in descending order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:created,views")
+                .pluck(:id),
+            ).to eq([topic2.id, topic3.id, topic.id])
+          end
+        end
+
+        describe "when query string is `order:created order:views`" do
+          it "should return topics ordered by creation date in descending order and then number of views in descending order" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:created order:views")
+                .pluck(:id),
+            ).to eq([topic2.id, topic3.id, topic.id])
+          end
+        end
+      end
     end
   end
 end

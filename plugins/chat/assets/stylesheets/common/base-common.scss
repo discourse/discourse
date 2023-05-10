@@ -145,13 +145,9 @@ $float-height: 530px;
   word-wrap: break-word;
   white-space: normal;
   position: relative;
-  will-change: transform;
-  transform: translateZ(0);
 
   .chat-message-container {
     display: grid;
-    will-change: transform;
-    transform: translateZ(0);
 
     &.selecting-messages {
       grid-template-columns: 1.5em 1fr;
@@ -256,7 +252,7 @@ $float-height: 530px;
   }
 }
 
-.chat-live-pane {
+.chat-channel {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -432,9 +428,8 @@ body.has-full-page-chat {
     }
   }
 
-  .chat-live-pane,
   .chat-messages-scroll,
-  .chat-live-pane {
+  .chat-channel {
     box-sizing: border-box;
     height: 100%;
   }
@@ -587,6 +582,15 @@ html.has-full-page-chat {
     height: 100%;
     width: 100%;
 
+    &.footer-nav-ipad {
+      #main-outlet-wrapper {
+        grid-template-rows: calc(
+          var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+            var(--footer-nav-height, 0px)
+        );
+      }
+    }
+
     #main-outlet {
       display: flex;
       flex-direction: column;
@@ -622,6 +626,7 @@ html.has-full-page-chat {
       grid-template-rows: calc(
         var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px)
       );
+
       .sidebar-wrapper {
         // prevents sidebar from overflowing behind the virtual keyboard
         height: 100%;
@@ -629,7 +634,7 @@ html.has-full-page-chat {
     }
 
     .full-page-chat,
-    .chat-live-pane,
+    .chat-channel,
     #main-outlet {
       // allows containers to shrink to fit
       min-height: 0;

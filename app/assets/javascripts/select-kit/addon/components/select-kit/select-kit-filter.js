@@ -4,11 +4,9 @@ import UtilsMixin from "select-kit/mixins/utils";
 import { action, computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isPresent } from "@ember/utils";
-import layout from "select-kit/templates/components/select-kit/select-kit-filter";
 import { not } from "@ember/object/computed";
 
 export default Component.extend(UtilsMixin, {
-  layout,
   classNames: ["select-kit-filter"],
   classNameBindings: ["isExpanded:is-expanded"],
   attributeBindings: ["role"],
@@ -96,6 +94,8 @@ export default Component.extend(UtilsMixin, {
     if (event.key === "Escape") {
       this.selectKit.close(event);
       this.selectKit.headerElement().focus();
+      event.preventDefault();
+      event.stopPropagation();
       return false;
     }
 

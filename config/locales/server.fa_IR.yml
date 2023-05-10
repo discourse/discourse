@@ -1197,7 +1197,6 @@ fa_IR:
     embed_username_required: "نام‌کاربری برای ایجاد تاپیک مورد نیاز است."
     show_create_topics_notice: "اگر سایت کمتر از 5 موضوع عمومی دارد٬ مدیران اطلاع بده تا موضوعات بیشتری بسازند."
     delete_drafts_older_than_n_days: "پیش‌نویس‌های قدیمی‌تر از (n) روز را حذف کن"
-    bootstrap_mode_min_users: "حداقل تعداد کاربرانی که نیاز است تا حالت خود‌راه‌انداز غیر‌فعال شود (0 برای غیر‌فعال)"
     slug_generation_method: "یک روش ایجاد نام یکتا انتخاب کنید. 'encoded' رشته‌ای شامل درصد ایجاد می‌کند. 'none' اسم یکتا را به صورت کلی غیر‌فعال می‌نماید."
     enable_emoji: "فعالسازی شکلک"
     emoji_set: "می‌خواهید شکلک شما چطور باشد؟"
@@ -1227,7 +1226,6 @@ fa_IR:
     default_categories_watching_first_post: "لیست دسته‌بندی‌هایی که نوشته‌هایشان در هر موضوع به صورت پیشفرض تحت نظر هستند."
     allow_user_api_keys: "اجازه‌ی ساخت کلید‌های API"
     allow_user_api_key_scopes: "لیست حوزه‌های مجاز برای کلید‌های API کاربری"
-    min_trust_level_for_user_api_key: "سطح اعتماد مورد نیاز برای ایجاد کلید API کاربر"
     allowed_user_api_push_urls: "لینک‌های مجاز برای سرور و ارسال به API کاربری"
     tagging_enabled: "فعالسازی برچسب در موضوعات؟"
     min_trust_to_create_tag: "حداقل سطح اعتماد مورد نیاز برای ایجاد برچسب."
@@ -1671,8 +1669,6 @@ fa_IR:
       title: "دانلود تصاویر خارجی غیر‌فعال شد"
       subject_template: "دانلود کردن عکس‌های خارجی از کار افتاده"
       text_body_template: " تنظیمات `download_remote_images_to_local` غیرفعال شده زیرا به محدودیت فضای دیسک در `download_remote_images_threshold` رسیده شده است. "
-    dashboard_problems:
-      title: "مشکلات داشبورد"
     new_user_of_the_month:
       title: "شما کاربر جدید ماه هستید!"
       subject_template: "شما کاربر جدید ماه هستید!"

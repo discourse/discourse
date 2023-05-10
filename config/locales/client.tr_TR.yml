@@ -1180,12 +1180,6 @@ tr_TR:
       save_to_change_theme: 'Tema "%{save_text}" düğmesine tıklandıktan sonra güncellenir'
       home: "Varsayılan Ana Sayfa"
       staged: "Aşamalı"
-      staff_counters:
-        flagged_posts: "bayrak eklenen gönderiler"
-        deleted_posts: "silinen gönderiler"
-        suspensions: "uzaklaştırmalar"
-        warnings_received: "uyarılar"
-        rejected_posts: "reddedilen gönderiler"
       messages:
         all: "tüm gelen kutuları"
         inbox: "Gelen Kutusu"
@@ -1292,11 +1286,12 @@ tr_TR:
         title: "İki Adımlı Yedek Kodları"
         regenerate: "Yeniden oluştur"
         disable: "Devre dışı bırak"
-        enable: "Etkinleştir"
-        enable_long: "Yedek kodları etkinleştir"
+        enable: "Yedek kodları oluştur"
+        enable_long: "Yedek kodları ekle"
+        not_enabled: "Henüz yedek kod oluşturmadınız."
         manage:
-          one: "Yedek kodları yönetin. <strong>%{count}</strong> yedek kodunuz kaldı."
-          other: "Yedek kodları yönetin. <strong>%{count}</strong> yedek kodunuz kaldı."
+          one: "<strong>%{count}</strong> yedek kodunuz kaldı."
+          other: "<strong>%{count}</strong> yedek kodunuz kaldı."
         copy_to_clipboard: "Panoya kopyala"
         copy_to_clipboard_error: "Veriler Panoya kopyalanırken hata oluştu"
         copied_to_clipboard: "Panoya kopyalandı"
@@ -1380,6 +1375,7 @@ tr_TR:
         success: "Adrese bir e-posta gönderdik. Lütfen onaylama talimatlarını izleyin."
         success_via_admin: "Bu adrese bir e-posta gönderdik. Kullanıcının e-postadaki onay talimatlarını izlemesi gerekiyor."
         success_staff: "Mevcut adresinize bir e-posta gönderdik. Lütfen onay talimatlarını izleyin."
+        back_to_preferences: "Tercihlere geri dön"
       change_avatar:
         title: "Profil resminizi değiştirin"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, şuna dayalı"
@@ -2293,6 +2289,7 @@ tr_TR:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - tamamlandı"
       new_features: "Yeni özellikler mevcut!"
+      admin_problems: "Sitenizin kontrol panelinde yeni öneriler mevcut"
       dismiss_confirmation:
         body:
           default:
@@ -4408,8 +4405,8 @@ tr_TR:
           name: "Kullanıcı Tarafından Tanıtılan Olay"
           details: "Bir kullanıcı bir güven seviyesinden diğerine terfi ettiğinde."
         user_badge_event:
-          name: "Rozet Verme Olayı"
-          details: "Bir kullanıcı bir rozet aldığında."
+          name: "Rozet Olayı"
+          details: "Bir rozet verildiğinde veya iptal edildiğinde."
         group_user_event:
           name: "Grup Kullanıcı Olayı"
           details: "Bir kullanıcı bir gruba eklendiğinde veya gruptan çıkarıldığında."

@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
@@ -9,6 +8,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { isPresent } from "@ember/utils";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
+import User from "discourse/models/user";
 
 export default Component.extend({
   chat: service(),
@@ -19,6 +20,7 @@ export default Component.extend({
   loading: false,
   chatChannelsManager: service(),
   router: service(),
+  focusedRow: null,
 
   didInsertElement() {
     this._super(...arguments);
@@ -53,19 +55,16 @@ export default Component.extend({
       } else {
         channel = this.channels.find((c) => c.user && c.id === id);
       }
-      channel?.set("focused", true);
-      this.channels.forEach((c) => {
-        if (c !== channel) {
-          c.set("focused", false);
-        }
-      });
+      if (channel) {
+        this.set("focusedRow", channel);
+      }
     }
   },
 
   @bind
   onKeyUp(e) {
     if (e.key === "Enter") {
-      let focusedChannel = this.channels.find((c) => c.focused);
+      let focusedChannel = this.channels.find((c) => c === this.focusedRow);
       this.switchChannel(focusedChannel);
       e.preventDefault();
     } else if (e.key === "ArrowDown") {
@@ -78,16 +77,17 @@ export default Component.extend({
   },
 
   arrowNavigateChannels(direction) {
-    const indexOfFocused = this.channels.findIndex((c) => c.focused);
+    const indexOfFocused = this.channels.findIndex(
+      (c) => c === this.focusedRow
+    );
     if (indexOfFocused > -1) {
       const nextIndex = direction === "down" ? 1 : -1;
       const nextChannel = this.channels[indexOfFocused + nextIndex];
       if (nextChannel) {
-        this.channels[indexOfFocused].set("focused", false);
-        nextChannel.set("focused", true);
+        this.set("focusedRow", nextChannel);
       }
     } else {
-      this.channels[0].set("focused", true);
+      this.set("focusedRow", this.channels[0]);
     }
 
     schedule("afterRender", () => {
@@ -100,7 +100,7 @@ export default Component.extend({
 
   @action
   switchChannel(channel) {
-    if (channel.user) {
+    if (channel instanceof User) {
       return this.fetchOrCreateChannelForUser(channel).then((response) => {
         const newChannel = this.chatChannelsManager.store(response.channel);
         return this.chatChannelsManager.follow(newChannel).then((c) => {
@@ -145,21 +145,21 @@ export default Component.extend({
       .then((searchModel) => {
         if (this.searchIndex === thisSearchIndex) {
           this.set("searchModel", searchModel);
-          const channels = searchModel.public_channels.concat(
-            searchModel.direct_message_channels,
-            searchModel.users
-          );
-          channels.forEach((c) => {
-            if (c.username) {
-              c.user = true; // This is used by the `chat-channel-selection-row` component
-            }
-          });
+          let channels = searchModel.public_channels
+            .concat(searchModel.direct_message_channels, searchModel.users)
+            .map((c) => {
+              if (
+                c.chatable_type === "DirectMessage" ||
+                c.chatable_type === "Category"
+              ) {
+                return ChatChannel.create(c);
+              }
+
+              return User.create(c);
+            });
+
           this.setProperties({
-            channels: channels.map((channel) => {
-              return channel.user
-                ? ChatChannel.create(channel)
-                : this.chatChannelsManager.store(channel);
-            }),
+            channels,
             loading: false,
           });
           this.focusFirstChannel(this.channels);
@@ -188,8 +188,11 @@ export default Component.extend({
   },
 
   focusFirstChannel(channels) {
-    channels.forEach((c) => c.set("focused", false));
-    channels[0]?.set("focused", true);
+    if (channels[0]) {
+      this.set("focusedRow", channels[0]);
+    } else {
+      this.set("focusedRow", null);
+    }
   },
 
   getChannelsWithFilter(filter, opts = { excludeActiveChannel: true }) {

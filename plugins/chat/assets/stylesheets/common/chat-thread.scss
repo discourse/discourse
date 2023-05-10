@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 
   &__header {
     height: var(--chat-header-offset);
@@ -24,7 +25,10 @@
     flex-grow: 1;
     overscroll-behavior: contain;
     display: flex;
-    flex-direction: column-reverse;
-    will-change: transform;
+    flex-direction: column;
+  }
+
+  .chat-composer__wrapper {
+    padding-bottom: 27px;
   }
 }

@@ -1456,7 +1456,6 @@ gl:
     auth_overrides_username: "Sobrescribe o nome de usuario local co nome de usuario do sitio externo en cada inicio de sesión e evita os cambios locais. Aplícase a todos os fornecedores de autenticación. (AVISO: poden producirse discrepancias debido á normalización dos enderezos de correo locais)"
     auth_overrides_name: "Sobrescribe o nome completo co nome completo do sitio externo en cada inicio de sesión e evita os cambios locais. Aplícase a todos os fornecedores de autenticación."
     discourse_connect_not_approved_url: "Redireccionar contas de DiscourseConnect sen aprobar a este URL"
-    discourse_connect_allows_all_return_paths: "Non restrinxa o dominio para return_paths fornecidos por DiscourseConnect (o camiño de devolución debe estar no sitio actual, de modo predeterminado)"
     enable_local_logins: "Active as contas co nome de usuario local e o contrasinal de inicio de sesión. ATENCIÓN: de estar desactivado, quizais non poida iniciar sesión se non configurou previamente cando menos unha método de inicio alternativo."
     enable_local_logins_via_email: "Permitir que os usuarios soliciten unha ligazón de inicio de sesión que se lles enviará por correo electrónico."
     allow_new_registrations: "Permitir o rexistro de novos usuarios. Desactive esta opción para evitar que alguén cree unha nova conta."
@@ -1806,10 +1805,8 @@ gl:
     allowed_href_schemes: "Esquemas permitidos en ligazóns ademais de http e https."
     embed_post_limit: "Número máximo de publicacións que incorporar."
     embed_username_required: "O nome de usuario para a creación de temas é obrigatorio."
-    notify_about_flags_after: "Se hai alertas que non se manexaron despois destas horas, envíelles unha mensaxe persoal aos moderadores. Estabelecer en 0 para desactivar."
     show_create_topics_notice: "Se o sitio ten menos de 5 temas públicos, amosará un aviso pedindo aos administradores que creen algúns temas."
     delete_drafts_older_than_n_days: "Eliminar borradores con máis de (n) días de antigüidade."
-    bootstrap_mode_min_users: "Número mínimo de usuarios necesarios para desactivar o modo de arranque (estabelecer en 0 para desactivar)"
     prevent_anons_from_downloading_files: "Evitar que usuarios anónimos descarguen anexos."
     slug_generation_method: "Escolla un método de xeración de abreviacións. Con «codificado» xerarase unha cadea con codificación porcentual, con «ningún» desactivarase a abreviación amigábel."
     enable_emoji: "Activar emojis"
@@ -1874,7 +1871,6 @@ gl:
     revoke_api_keys_days: "Número de días antes de que unha chave API sen usar sexa revogada automaticamente (0 para nunca)"
     allow_user_api_keys: "Permitir a xeración de chaves API de usuario"
     allow_user_api_key_scopes: "Listaxe de ámbitos permitidos para as chaves API de usuario"
-    min_trust_level_for_user_api_key: "Nivel de confianza necesario para xerar chaves API de usuario"
     allowed_user_api_auth_redirects: "URL permitido para redireccionar a autenticación das chaves API de usuario. O símbolo do comodín pódese utilizar para que coincida calquera parte súa (ex.: www.exemplo.com/*)."
     allowed_user_api_push_urls: "Enderezos URL permitidos para que servidor envíe á API de usuario"
     expire_user_api_keys_days: "Número de días antes de que a chave API de usuario caduque automaticamente (0 para nunca)"
@@ -2770,15 +2766,6 @@ gl:
       title: "Descarga de imaxes remotas desactivada"
       subject_template: "A descarga de imaxes remotas foi desactivada"
       text_body_template: "O axuste `download_remote_images_to_local` foi desactivada porque se alcanzou o límite do espazo do disco configurado en `download_remote_images_threshold`."
-    dashboard_problems:
-      title: "Problemas do panel"
-      subject_template: "Novo consello no seu panel de sitio"
-      text_body_template: |
-        Temos algúns novos consellos e recomendacións con base na configuración actual do seu sitio.
-
-        [Visite o seu panel](%{base_url}/admin) e bótelles un ollo.
-
-        Se non ve nada no seu panel, pode ser porque outro membro do equipo xa actuara sobre el. Pode atopar unha listaxe de accións nos seus [rexistros de accións do equipo](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "É o usuario novo do mes!"
       subject_template: "É o usuario novo do mes!"
