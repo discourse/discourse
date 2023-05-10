@@ -344,7 +344,6 @@ module Discourse
 
   def self.activate_plugins!
     @plugins = []
-    @plugins_by_name = {}
     Plugin::Instance
       .find_all("#{Rails.root}/plugins")
       .each do |p|
@@ -352,7 +351,6 @@ module Discourse
         if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
           p.activate!
           @plugins << p
-          @plugins_by_name[p.name] = p
         else
           STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
         end
@@ -360,16 +358,20 @@ module Discourse
     DiscourseEvent.trigger(:after_plugin_activation)
   end
 
+  def self.disabled_plugin_names
+    plugins.select { |p| !p.enabled? }.map(&:name)
+  end
+
   def self.plugins
     @plugins ||= []
   end
 
-  def self.plugins_by_name
-    @plugins_by_name ||= {}
+  def self.hidden_plugins
+    @hidden_plugins ||= []
   end
 
   def self.visible_plugins
-    plugins.filter(&:visible?)
+    self.plugins - self.hidden_plugins
   end
 
   def self.plugin_themes

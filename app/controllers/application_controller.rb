@@ -346,11 +346,7 @@ class ApplicationController < ActionController::Base
   # disabled. This allows plugins to be disabled programmatically.
   def self.requires_plugin(plugin_name)
     before_action do
-      if plugin = Discourse.plugins_by_name[plugin_name]
-        raise PluginDisabled.new if !plugin.enabled?
-      else
-        Rails.logger.warn("Required plugin '#{plugin_name}' not found")
-      end
+      raise PluginDisabled.new if Discourse.disabled_plugin_names.include?(plugin_name)
     end
   end
 

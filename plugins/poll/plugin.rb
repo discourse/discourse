@@ -20,7 +20,7 @@ hide_plugin
 
 after_initialize do
   module ::DiscoursePoll
-    PLUGIN_NAME ||= "poll"
+    PLUGIN_NAME ||= "discourse_poll"
     DATA_PREFIX ||= "data-poll-"
     HAS_POLLS ||= "has_polls"
     DEFAULT_POLL_NAME ||= "poll"

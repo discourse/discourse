@@ -259,17 +259,9 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def raise_access_hidden_setting(id)
-    id = id.to_sym
-
-    if SiteSetting.hidden_settings.include?(id)
+    # note, as of Ruby 2.3 symbols are GC'd so this is considered safe
+    if SiteSetting.hidden_settings.include?(id.to_sym)
       raise Discourse::InvalidParameters, "You are not allowed to change hidden settings"
-    end
-
-    if SiteSetting.plugins[id]
-      plugin = Discourse.plugins_by_name[SiteSetting.plugins[id]]
-      if !plugin.configurable?
-        raise Discourse::InvalidParameters, "You are not allowed to change unconfigurable settings"
-      end
     end
   end
 
