@@ -67,7 +67,6 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   Emoji.clear_cache && Discourse.request_refresh! if name == :emoji_deny_list
 
   if (name == :title || name == :site_description) &&
-       Site.welcome_topic_exists_and_is_not_edited? &&
        topic = Topic.find_by(id: SiteSetting.welcome_topic_id)
     attributes =
       if name == :title
