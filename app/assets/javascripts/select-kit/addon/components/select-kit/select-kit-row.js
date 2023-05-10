@@ -41,6 +41,7 @@ export default Component.extend(UtilsMixin, {
     if (!this.site.mobileView) {
       this.element.addEventListener("mouseenter", this.handleMouseEnter);
       this.element.addEventListener("focus", this.handleMouseEnter);
+      this.element.addEventListener("blur", this.handleBlur);
     }
   },
 
@@ -48,8 +49,9 @@ export default Component.extend(UtilsMixin, {
     this._super(...arguments);
 
     if (!this.site.mobileView) {
-      this.element.removeEventListener("mouseenter", this.handleMouseEnter);
+      this.element.removeEventListener("mouseenter", this.handleBlur);
       this.element.removeEventListener("focus", this.handleMouseEnter);
+      this.element.removeEventListener("blur", this.handleMouseEnter);
     }
   },
 
@@ -132,6 +134,20 @@ export default Component.extend(UtilsMixin, {
     return false;
   },
 
+  @action
+  handleBlur(event) {
+    if (
+      (!this.isDestroying || !this.isDestroyed) &&
+      event.target &&
+      this.selectKit.mainElement()
+    ) {
+      if (!this.selectKit.mainElement().contains(event.target)) {
+        this.selectKit.close(event);
+      }
+    }
+    return false;
+  },
+
   click(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -177,8 +193,6 @@ export default Component.extend(UtilsMixin, {
       } else if (event.key === "Escape") {
         this.selectKit.close(event);
         this.selectKit.headerElement().focus();
-        event.preventDefault();
-        event.stopPropagation();
       } else {
         if (this.isValidInput(event.key)) {
           this.selectKit.set("filter", event.key);
