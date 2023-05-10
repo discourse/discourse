@@ -64,7 +64,9 @@ module Chat
         )
         .where("chat_messages.user_id = ? OR chat_messages.user_id IS NULL", guardian.user.id)
         .where(channel_id: channel.id)
-        .where("original_messages.deleted_at IS NULL AND chat_messages.deleted_at IS NULL")
+        .where(
+          "original_messages.deleted_at IS NULL AND chat_messages.deleted_at IS NULL AND original_messages.id IS NOT NULL",
+        )
         .group("chat_threads.id")
         .order("last_posted_at DESC NULLS LAST")
         .limit(50)

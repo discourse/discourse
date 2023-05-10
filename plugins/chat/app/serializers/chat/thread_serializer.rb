@@ -10,7 +10,9 @@ module Chat
     def initialize(object, opts)
       super(object, opts)
       @opts = opts
-      original_message.thread = object
+
+      # Avoids an N1 to re-load the thread in the serializer for original_message.
+      object.original_message.thread = object
     end
 
     def meta
