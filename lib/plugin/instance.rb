@@ -103,7 +103,16 @@ class Plugin::Instance
     @admin_route = { label: label, location: location }
   end
 
+  def configurable?
+    true
+  end
+
+  def visible?
+    configurable? && !@hidden
+  end
+
   def enabled?
+    return false if !configurable?
     @enabled_site_setting ? SiteSetting.get(@enabled_site_setting) : true
   end
 
@@ -825,11 +834,7 @@ class Plugin::Instance
   end
 
   def hide_plugin
-    Discourse.hidden_plugins << self
-  end
-
-  def enabled_site_setting_filter(filter = nil)
-    STDERR.puts("`enabled_site_setting_filter` is deprecated")
+    @hidden = true
   end
 
   def enabled_site_setting(setting = nil)
