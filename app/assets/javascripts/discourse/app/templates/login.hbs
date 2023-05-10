@@ -2,7 +2,9 @@
   <div class="contents clearfix body-page">
     <div class="login-welcome">
       <PluginOutlet @name="above-login" @outletArgs={{hash model=this.model}} />
-      {{html-safe this.model.html}}
+      <div class="login-content">
+        {{html-safe this.model.html}}
+      </div>
       <PluginOutlet @name="below-login" @outletArgs={{hash model=this.model}} />
 
       <div class="body-page-button-container">
