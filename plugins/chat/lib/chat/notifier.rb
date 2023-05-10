@@ -132,7 +132,7 @@ module Chat
           .global_mentions
           .not_suspended
           .where(user_options: { ignore_channel_wide_mention: [false, nil] })
-          .where.not(username_lower: @user.username.downcase)
+          .where.not(username_lower: @user.username_lower)
           .where.not(id: already_covered_ids)
           .pluck(:id)
 
@@ -151,7 +151,7 @@ module Chat
           .here_mentions
           .not_suspended
           .where(user_options: { ignore_channel_wide_mention: [false, nil] })
-          .where.not(username_lower: @user.username.downcase)
+          .where.not(username_lower: @user.username_lower)
           .where.not(id: already_covered_ids)
           .pluck(:id)
 
@@ -193,7 +193,7 @@ module Chat
             .parsed_mentions
             .direct_mentions
             .not_suspended
-            .where.not(username_lower: @user.username.downcase)
+            .where.not(username_lower: @user.username_lower)
             .where.not(id: already_covered_ids)
       end
 
@@ -214,7 +214,7 @@ module Chat
           .group_mentions
           .not_suspended
           .where("user_count <= ?", SiteSetting.max_users_notified_per_group_mention)
-          .where.not(username_lower: @user.username.downcase)
+          .where.not(username_lower: @user.username_lower)
           .where.not(id: already_covered_ids)
 
       too_many_members, mentionable =
