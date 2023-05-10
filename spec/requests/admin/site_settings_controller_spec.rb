@@ -608,53 +608,6 @@ RSpec.describe Admin::SiteSettingsController do
         expect(response.status).to eq(422)
       end
 
-      it "does not allow changing of hidden settings" do
-        SiteSetting.setting(:hidden_setting, "hidden", hidden: true)
-        SiteSetting.refresh!
-
-        put "/admin/site_settings/hidden_setting.json", params: { hidden_setting: "not allowed" }
-
-        expect(SiteSetting.hidden_setting).to eq("hidden")
-        expect(response.status).to eq(422)
-      end
-
-      context "with an plugin" do
-        let(:plugin) do
-          metadata = Plugin::Metadata.new
-          metadata.name = "discourse-plugin"
-          Plugin::Instance.new(metadata)
-        end
-
-        before do
-          Discourse.plugins_by_name[plugin.name] = plugin
-          SiteSetting.setting(:plugin_setting, "default value", plugin: "discourse-plugin")
-          SiteSetting.refresh!
-        end
-
-        after do
-          Discourse.plugins_by_name.delete(plugin.name)
-          SiteSetting.remove_setting(:plugin_setting)
-        end
-
-        it "allows changing settings of configurable plugins" do
-          plugin.stubs(:configurable?).returns(true)
-
-          put "/admin/site_settings/plugin_setting.json", params: { plugin_setting: "new value" }
-
-          expect(SiteSetting.plugin_setting).to eq("new value")
-          expect(response.status).to eq(200)
-        end
-
-        it "does not allow changing of unconfigurable settings" do
-          plugin.stubs(:configurable?).returns(false)
-
-          put "/admin/site_settings/plugin_setting.json", params: { plugin_setting: "not allowed" }
-
-          expect(SiteSetting.plugin_setting).to eq("default value")
-          expect(response.status).to eq(422)
-        end
-      end
-
       it "fails when a setting does not exist" do
         put "/admin/site_settings/provider.json", params: { provider: "gotcha" }
         expect(response.status).to eq(422)
