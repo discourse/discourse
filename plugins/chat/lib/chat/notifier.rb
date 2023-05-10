@@ -95,7 +95,7 @@ module Chat
       notify_creator_of_inaccessible_mentions(to_notify)
       notify_mentioned_users(to_notify, already_notified_user_ids: already_notified_user_ids)
 
-      to_notify.except(:all_mentioned_user_ids)
+      to_notify
     end
 
     private
