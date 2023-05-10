@@ -2178,9 +2178,6 @@ zh_TW:
       title: "停用遠端圖片下載"
       subject_template: "停用下載遠端圖片"
       text_body_template: "`download_remote_images_to_local` 設定已被禁用，因為已經達到 ``download_remote_images_threshold` 設定中的磁碟空間限制。"
-    dashboard_problems:
-      title: "控制台問題"
-      subject_template: "有新的建議出現在後台儀表板"
     new_user_of_the_month:
       title: "你是本月最佳新人！"
       subject_template: "你是本月最佳新人！"

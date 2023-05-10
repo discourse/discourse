@@ -78,7 +78,6 @@ es:
       close: "Cerrar"
       collapse: "Contraer contenedor del chat"
       confirm_flag: "¿Seguro que quieres denunciar el mensaje de %{username}?"
-      deleted: "Se eliminó un mensaje. [ver]"
       hidden: "Se ha ocultado un mensaje. [ver]"
       delete: "Eliminar"
       edited: "editado"

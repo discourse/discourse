@@ -2180,6 +2180,7 @@ ja:
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 完了"
       new_features: "新機能が公開されました！"
+      admin_problems: "サイトダッシュボードに関する新しいアドバイス"
       dismiss_confirmation:
         body:
           default:

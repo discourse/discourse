@@ -24,6 +24,10 @@ export default class ChatChannelThread extends DiscourseRoute {
     this.chatChannelThreadPane.close();
   }
 
+  activate() {
+    this.chatChannelThreadPane.open(this.currentModel);
+  }
+
   beforeModel(transition) {
     const channel = this.modelFor("chat.channel");
 
@@ -53,9 +57,5 @@ export default class ChatChannelThread extends DiscourseRoute {
         return;
       }
     }
-  }
-
-  afterModel(model) {
-    this.chatChannelThreadPane.open(model);
   }
 }

@@ -1,10 +1,18 @@
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import fabricators from "../helpers/fabricators";
 import { module, test } from "qunit";
-import { render, settled } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { joinChannel } from "discourse/tests/helpers/presence-pretender";
+
+async function addUserToChannel(channelId, id, username) {
+  await joinChannel(`/chat-reply/${channelId}`, {
+    id,
+    avatar_template: "/images/avatar.png",
+    username,
+  });
+}
 
 module(
   "Discourse Chat | Component | chat-replying-indicator",
@@ -16,7 +24,7 @@ module(
 
       await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
 
-      assert.false(exists(".chat-replying-indicator__text"));
+      assert.dom(".chat-replying-indicator__text").doesNotExist();
     });
 
     test("displays indicator when user is replying", async function (assert) {
@@ -24,11 +32,7 @@ module(
 
       await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
 
-      await joinChannel("/chat-reply/1", {
-        id: 1,
-        avatar_template: "/images/avatar.png",
-        username: "sam",
-      });
+      await addUserToChannel(1, 1, "sam");
 
       assert.strictEqual(
         query(".chat-replying-indicator__text").innerText,
@@ -41,22 +45,12 @@ module(
 
       await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
 
-      await joinChannel("/chat-reply/1", {
-        id: 1,
-        avatar_template: "/images/avatar.png",
-        username: "sam",
-      });
+      await addUserToChannel(1, 1, "sam");
+      await addUserToChannel(1, 2, "mark");
 
-      await joinChannel("/chat-reply/1", {
-        id: 2,
-        avatar_template: "/images/avatar.png",
-        username: "mark",
-      });
-
-      assert.strictEqual(
-        query(".chat-replying-indicator__text").innerText,
-        `sam and mark are typing`
-      );
+      assert
+        .dom(".chat-replying-indicator__text")
+        .hasText("sam and mark are typing");
     });
 
     test("displays indicator when 3 users are replying", async function (assert) {
@@ -64,28 +58,13 @@ module(
 
       await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
 
-      await joinChannel("/chat-reply/1", {
-        id: 1,
-        avatar_template: "/images/avatar.png",
-        username: "sam",
-      });
+      await addUserToChannel(1, 1, "sam");
+      await addUserToChannel(1, 2, "mark");
+      await addUserToChannel(1, 3, "joffrey");
 
-      await joinChannel("/chat-reply/1", {
-        id: 2,
-        avatar_template: "/images/avatar.png",
-        username: "mark",
-      });
-
-      await joinChannel("/chat-reply/1", {
-        id: 3,
-        avatar_template: "/images/avatar.png",
-        username: "joffrey",
-      });
-
-      assert.strictEqual(
-        query(".chat-replying-indicator__text").innerText,
-        `sam, mark and joffrey are typing`
-      );
+      assert
+        .dom(".chat-replying-indicator__text")
+        .hasText("sam, mark and joffrey are typing");
     });
 
     test("displays indicator when more than 3 users are replying", async function (assert) {
@@ -93,34 +72,14 @@ module(
 
       await render(hbs`<ChatReplyingIndicator  @channel={{this.channel}} />`);
 
-      await joinChannel("/chat-reply/1", {
-        id: 1,
-        avatar_template: "/images/avatar.png",
-        username: "sam",
-      });
+      await addUserToChannel(1, 1, "sam");
+      await addUserToChannel(1, 2, "mark");
+      await addUserToChannel(1, 3, "joffrey");
+      await addUserToChannel(1, 4, "taylor");
 
-      await joinChannel("/chat-reply/1", {
-        id: 2,
-        avatar_template: "/images/avatar.png",
-        username: "mark",
-      });
-
-      await joinChannel("/chat-reply/1", {
-        id: 3,
-        avatar_template: "/images/avatar.png",
-        username: "joffrey",
-      });
-
-      await joinChannel("/chat-reply/1", {
-        id: 4,
-        avatar_template: "/images/avatar.png",
-        username: "taylor",
-      });
-
-      assert.strictEqual(
-        query(".chat-replying-indicator__text").innerText,
-        `sam, mark and 2 others are typing`
-      );
+      assert
+        .dom(".chat-replying-indicator__text")
+        .hasText("sam, mark and 2 others are typing");
     });
 
     test("filters current user from list of repliers", async function (assert) {
@@ -128,32 +87,24 @@ module(
 
       await render(hbs`<ChatReplyingIndicator  @channel={{this.channel}} />`);
 
-      await joinChannel("/chat-reply/1", {
-        id: 1,
-        avatar_template: "/images/avatar.png",
-        username: "sam",
-      });
+      await addUserToChannel(1, 1, "sam");
+      await addUserToChannel(1, this.currentUser.id, this.currentUser.username);
 
-      await joinChannel("/chat-reply/1", this.currentUser);
-
-      assert.strictEqual(
-        query(".chat-replying-indicator__text").innerText,
-        `sam is typing`
-      );
+      assert.dom(".chat-replying-indicator__text").hasText("sam is typing");
     });
 
-    test("resets presence when channel is draft", async function (assert) {
-      this.channel = fabricators.chatChannel();
+    test("resets presence when channel changes", async function (assert) {
+      this.set("channel", fabricators.chatChannel());
+
+      await addUserToChannel(1, 1, "sam");
 
       await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
 
-      assert.dom(".chat-replying-indicator.is-subscribed").exists();
+      assert.dom(".chat-replying-indicator__text").hasText("sam is typing");
 
-      this.channel.isDraft = true;
+      this.set("channel", fabricators.chatChannel({ id: 2 }));
 
-      await settled();
-
-      assert.dom(".chat-replying-indicator.is-subscribed").doesNotExist();
+      assert.dom(".chat-replying-indicator__text").doesNotExist();
     });
   }
 );

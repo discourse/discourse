@@ -116,7 +116,15 @@ module Chat
       }
 
       ids[:kick] = kick_message_bus_id if !object.direct_message_channel?
-      { message_bus_last_ids: ids }
+      data = { message_bus_last_ids: ids }
+
+      if @opts.key?(:can_join_chat_channel)
+        data[:can_join_chat_channel] = @opts[:can_join_chat_channel]
+      else
+        data[:can_join_chat_channel] = scope.can_join_chat_channel?(object)
+      end
+
+      data
     end
 
     alias_method :include_archive_topic_id?, :include_archive_status?

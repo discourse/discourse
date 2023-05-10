@@ -191,12 +191,14 @@ module Chat
         @chat_message.in_reply_to.thread_id = thread.id
       end
 
-      Chat::Publisher.publish_thread_created!(
-        @chat_message.chat_channel,
-        @chat_message.in_reply_to,
-        thread.id,
-        @staged_thread_id,
-      )
+      if @chat_message.chat_channel.threading_enabled
+        Chat::Publisher.publish_thread_created!(
+          @chat_message.chat_channel,
+          @chat_message.in_reply_to,
+          thread.id,
+          @staged_thread_id,
+        )
+      end
 
       @chat_message.thread_id = thread.id
 

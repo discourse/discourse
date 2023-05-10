@@ -2280,6 +2280,7 @@ it:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completato"
       new_features: "Nuove funzionalità disponibili!"
+      admin_problems: "Nuovo avviso sul dashboard del tuo sito"
       dismiss_confirmation:
         body:
           default:

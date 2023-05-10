@@ -53,6 +53,8 @@ ar:
   redirect_warning: "تعذَّر علينا التحقُّق من نشر الرابط الذي حدَّدته في المنتدى. إذا كنت تريد المتابعة على أي حال، فحدِّد الرابط أدناه."
   on_another_topic: "في موضوع آخر"
   topic_tag_changed:
+    added_and_removed: "تمت إضافة %{added} وإزالة %{removed}"
+    added: "تمت إضافة %{added}"
     removed: "أزال %{removed} ‏في"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
@@ -214,6 +216,7 @@ ar:
     embed:
       load_from_remote: "حدث خطأ في أثناء تحميل هذا المنشور."
     site_settings:
+      invalid_site_setting: "لا يوجد إعداد باسم \"%{name}\" موجود"
       invalid_category_id: "الفئة التي حدَّدتها غير موجودة"
       invalid_choice:
         zero: "لقد حدَّدت الخيارات غير الصالحة %{name}"
@@ -2316,7 +2319,6 @@ ar:
     enable_sitemap: "إنشاء خريطة موقع لموقعك وتضمينها في ملف robots.txt."
     sitemap_page_size: "عدد عناوين URL المراد تضمينها في كل صفحة من خريطة الموقع. الحد الأقصى: 50.000"
     enable_user_status: "(تجريبي) السماح للمستخدمين بتحديد رسالة حالة مخصَّصة (رمز تعبيري + وصف)."
-    enable_user_tips: "(تجريبي) تفعيل نصائح المستخدم الجديدة التي توضِّح الميزات الرئيسية للمستخدمين"
     short_title: "سيتم استخدام العنوان القصير على الشاشة الرئيسية للمستخدم، أو المشغِّل، أو الأماكن الأخرى التي قد تكون المساحة فيها محدودة. يجب أن يقتصر على 12 حرفًا."
     dashboard_hidden_reports: "السماح بإخفاء التقارير المحدَّدة من لوحة المعلومات"
     dashboard_visible_tabs: "اختيار علامات التبويب المرئية في لوحة المعلومات"
@@ -3408,15 +3410,6 @@ ar:
       title: "تم إيقاف تنزيل الصور البعيدة"
       subject_template: "تم إيقاف تنزيل الصور البعيدة"
       text_body_template: "تم إيقاف الإعداد \"download_remote_images_to_local\" بسبب الوصول إلى حد مساحة القرص في \"download_remote_images_threshold\"."
-    dashboard_problems:
-      title: "مشاكل لوحة المعلومات"
-      subject_template: "نصيحة جديدة بشأن لوحة معلومات موقعك"
-      text_body_template: |
-        لدينا بعض النصائح والتوصيات الجديدة لك بناءً على إعدادات موقعك الحالية.
-
-        [انتقل إلى لوحة معلومات موقعك](%{base_url}/admin) لرؤيتها
-
-        إذا لم ترَ شيئًا في لوحة معلوماتك، فربما يكون عضو آخر في فريق العمل قد اتخذ إجراءً بناءً على هذه النصيحة. يمكن العثور على قائمة بإجراءات فريق العمل في [سجلات إجراءات فريق العمل](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "أنت المستخدم الجديد لهذا الشهر!"
       subject_template: "أنت المستخدم الجديد لهذا الشهر!"
@@ -4570,6 +4563,8 @@ ar:
         title: "حذف"
       delete:
         title: "الحذف..."
+      delete_and_ignore:
+        title: "تجاهل العلامة وحذف المنشور"
       delete_and_ignore_replies:
         confirm: "هل تريد بالتأكيد حذف الردود على المنشور أيضًا؟"
       delete_and_agree_replies:

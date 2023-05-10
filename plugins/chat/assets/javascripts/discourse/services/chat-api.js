@@ -49,6 +49,19 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Loads all threads for a channel.
+   * For now we only get the 50 threads ordered
+   * by the last message sent by the user then the
+   * thread creation date, later we will paginate
+   * and add filters.
+   * @param {number} channelId - The ID of the channel.
+   * @returns {Promise}
+   */
+  threads(channelId) {
+    return this.#getRequest(`/channels/${channelId}/threads`);
+  }
+
+  /**
    * List all accessible category channels of the current user.
    * @returns {Collection}
    *
@@ -419,6 +432,18 @@ export default class ChatApi extends Service {
    */
   markThreadAsRead(channelId, threadId) {
     return this.#putRequest(`/channels/${channelId}/threads/${threadId}/read`);
+  }
+
+  /**
+   * Updates settings of a thread.
+   *
+   * @param {number} channelId - The ID of the channel for the thread being edited.
+   * @param {number} threadId - The ID of the thread being edited.
+   * @param {object} data - Params of the edit.
+   * @param {string} data.title - The new title for the thread.
+   */
+  editThread(channelId, threadId, data) {
+    return this.#putRequest(`/channels/${channelId}/threads/${threadId}`, data);
   }
 
   get #basePath() {
