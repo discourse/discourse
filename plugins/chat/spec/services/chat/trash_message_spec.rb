@@ -124,6 +124,35 @@ RSpec.describe Chat::TrashMessage do
             result
             expect(thread.replies_count_cache).to eq(4)
           end
+
+          it "updates the tracking to the last non-deleted thread message for users whose last_read_message_id was the trashed message" do
+            other_message =
+              Fabricate(:chat_message, chat_channel: message.chat_channel, thread: thread)
+            membership_1 =
+              Fabricate(:user_chat_thread_membership, thread: thread, last_read_message: message)
+            membership_2 =
+              Fabricate(:user_chat_thread_membership, thread: thread, last_read_message: message)
+            membership_3 =
+              Fabricate(
+                :user_chat_thread_membership,
+                thread: thread,
+                last_read_message: other_message,
+              )
+            result
+            expect(membership_1.reload.last_read_message_id).to eq(other_message.id)
+            expect(membership_2.reload.last_read_message_id).to eq(other_message.id)
+            expect(membership_3.reload.last_read_message_id).to eq(other_message.id)
+          end
+
+          it "updates the tracking to nil when there are no other messages left in the thread" do
+            membership_1 =
+              Fabricate(:user_chat_thread_membership, thread: thread, last_read_message: message)
+            membership_2 =
+              Fabricate(:user_chat_thread_membership, thread: thread, last_read_message: message)
+            result
+            expect(membership_1.reload.last_read_message_id).to be_nil
+            expect(membership_2.reload.last_read_message_id).to be_nil
+          end
         end
 
         context "when message is already deleted" do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class Chat::UserChatChannelMembership < ActiveRecord::Base
+  class UserChatChannelMembership < ActiveRecord::Base
     self.table_name = "user_chat_channel_memberships"
 
     NOTIFICATION_LEVELS = { never: 0, mention: 1, always: 2 }

@@ -958,6 +958,9 @@ posting:
       ja: 120
       zh_CN: 120
       zh_TW: 120
+  default_subcategory_on_read_only_category:
+    client: true
+    default: false
   show_pinned_excerpt_mobile:
     client: true
     default: true

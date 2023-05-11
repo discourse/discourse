@@ -4,7 +4,7 @@ module Chat
   module Action
     class ResetUserLastReadChannelMessage
       # @param [Array] last_read_message_ids The message IDs to match with the
-      #   last_read_message_ids in UserChannelMembership which will be reset
+      #   last_read_message_ids in UserChatChannelMembership which will be reset
       #   to NULL or the most recent non-deleted message in the channel to
       #   update read state.
       # @param [Integer] channel_ids The channel IDs of the memberships to update,

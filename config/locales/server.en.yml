@@ -1554,6 +1554,7 @@ en:
 
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     topic_excerpt_maxlength: "Maximum length of a topic excerpt / summary, generated from the first post in a topic."
+    default_subcategory_on_read_only_category: "Enables 'New Topic' button and selects a default subcategory to post on categories where the user is not allowed to create a new topic."
     show_pinned_excerpt_mobile: "Show excerpt on pinned topics in mobile view."
     show_pinned_excerpt_desktop: "Show excerpt on pinned topics in desktop view."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
@@ -2094,7 +2095,7 @@ en:
     pop3_polling_password: "The password for the POP3 account to poll for email."
     pop3_polling_delete_from_server: "Delete emails from server. NOTE: If you disable this you should manually clean your mail inbox"
     log_mail_processing_failures: "Log all email processing failures to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Allow users to post new topics via email (requires manual or pop3 polling). Configure the addresses in the "Settings" tab of each category.'
+    email_in: 'Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories.'
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
     email_in_spam_header: "The email header to detect spam."
