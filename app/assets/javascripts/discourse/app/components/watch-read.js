@@ -1,39 +1,43 @@
-import { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import { ajax } from "discourse/lib/ajax";
+import { userPath } from "discourse/lib/url";
 
-export default Component.extend({
+export default class WatchRead extends Component {
+  @service currentUser;
+
   didInsertElement() {
-    this._super(...arguments);
-    const currentUser = this.currentUser;
-    if (!currentUser) {
+    super.didInsertElement(...arguments);
+
+    if (!this.currentUser || this.currentUser.read_faq) {
       return;
     }
 
-    const path = this.path;
-    if (path === "faq" || path === "guidelines") {
-      this._markRead();
-      window.addEventListener("resize", this._markRead, false);
-      window.addEventListener("scroll", this._markRead, false);
-    }
-  },
+    this._checkIfRead();
+    window.addEventListener("resize", this._checkIfRead, false);
+    window.addEventListener("scroll", this._checkIfRead, false);
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
-    window.removeEventListener("resize", this._markRead);
-    window.removeEventListener("scroll", this._markRead);
-  },
+    window.removeEventListener("resize", this._checkIfRead);
+    window.removeEventListener("scroll", this._checkIfRead);
+  }
 
   @bind
-  _markRead() {
-    const faqUnread = !this.currentUser.read_faq;
+  async _checkIfRead() {
+    const lastParagraph = document.querySelector(
+      "[itemprop='mainContentOfPage'] > *:last-child"
+    );
 
-    if (
-      faqUnread &&
-      isElementInViewport(document.querySelector(".contents p:last-child"))
-    ) {
-      this.action();
+    if (!isElementInViewport(lastParagraph)) {
+      return;
     }
-  },
-});
+
+    await ajax(userPath("read-faq"), { type: "POST" });
+    this.currentUser.set("read_faq", true);
+  }
+}
