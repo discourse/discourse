@@ -57,9 +57,8 @@ after_initialize do
         ]
       end
 
-      # if !topic.private_message? && SiteSetting.trusted_users_can_edit_others?
       if !topic.private_message? && SiteSetting.edit_all_post_groups.present?
-        config.allowed_group_ids << SiteSetting.edit_all_post_groups.to_i
+        config.allowed_group_ids += SiteSetting.edit_all_post_groups.split("|").map(&:to_i)
       end
 
       if SiteSetting.enable_category_group_moderation? &&

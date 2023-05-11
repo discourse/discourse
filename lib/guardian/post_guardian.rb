@@ -173,6 +173,7 @@ module PostGuardian
   end
 
   def can_edit_all_regular_posts?
+    puts SiteSetting.edit_all_post_groups.inspect
     SiteSetting.edit_all_post_groups.present? &&
       user.in_any_groups?(SiteSetting.edit_all_post_groups.split("|").map(&:to_i))
   end
