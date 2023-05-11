@@ -163,6 +163,18 @@ module DiscourseTagging
     false
   end
 
+  def self.validate_category_tags(guardian, model, category, tags = [])
+    existing_tags = tags.present? ? Tag.where(name: tags) : []
+    valid_tags = guardian.can_create_tag? ? tags : existing_tags
+
+    # all add to model (topic) errors
+    valid = validate_min_required_tags_for_category(guardian, model, category, valid_tags)
+    valid &&= validate_required_tags_from_group(guardian, model, category, existing_tags)
+    valid &&= validate_category_restricted_tags(guardian, model, category, valid_tags)
+
+    valid
+  end
+
   def self.validate_min_required_tags_for_category(guardian, model, category, tags = [])
     if !guardian.is_staff? && category && category.minimum_required_tags > 0 &&
          tags.length < category.minimum_required_tags
