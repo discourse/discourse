@@ -62,7 +62,7 @@ export default class ChatVh extends Component {
 
     pendingUpdate = true;
 
-    const { height } = event.target.boundingClientRect;
+    const { height } = event.target.boundingRect;
 
     requestAnimationFrame(() => {
       const vhInPixels =
