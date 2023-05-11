@@ -264,6 +264,8 @@ jobs:
       - name: Yarn cache
         uses: actions/cache@v3
         id: yarn-cache
+        timeout-minutes: 3
+        continue-on-error: true
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
