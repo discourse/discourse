@@ -56,7 +56,7 @@ RSpec.describe "Dates separators", type: :system, js: true do
       end
 
       chat_page.visit_channel(channel_1)
-      pause_test
+
       expect(page).to have_css(
         ".chat-message-separator__text-container",
         text: I18n.t("js.chat.last_visit"),
