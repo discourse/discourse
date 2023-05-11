@@ -168,11 +168,12 @@ task "plugin:install_gems", :plugin do |t, args|
   puts "Done"
 end
 
-def spec(plugin, parallel: false)
+def spec(plugin, parallel: false, argv: nil)
   params = []
   params << "--profile" if !parallel
   params << "--fail-fast" if ENV["RSPEC_FAILFAST"]
   params << "--seed #{ENV["RSPEC_SEED"]}" if Integer(ENV["RSPEC_SEED"], exception: false)
+  params += argv if argv
 
   # reject system specs as they are slow and need dedicated setup
   files =
@@ -188,13 +189,13 @@ end
 desc "run plugin specs"
 task "plugin:spec", :plugin do |t, args|
   args.with_defaults(plugin: "*")
-  spec(args[:plugin])
+  spec(args[:plugin], argv: ARGV[1..])
 end
 
 desc "run plugin specs in parallel"
 task "plugin:turbo_spec", :plugin do |t, args|
   args.with_defaults(plugin: "*")
-  spec(args[:plugin], parallel: true)
+  spec(args[:plugin], parallel: true, argv: ARGV[1..])
 end
 
 desc "run plugin qunit tests"
