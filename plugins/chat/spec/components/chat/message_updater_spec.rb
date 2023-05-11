@@ -213,6 +213,21 @@ describe Chat::MessageUpdater do
       expect(mention.notification).to be_nil
     end
 
+    it "creates a chat_mention record without notification when self mentioning" do
+      chat_message = create_chat_message(user1, "I will mention myself soon", public_chat_channel)
+      new_content = "hello @#{user1.username}"
+
+      described_class.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: new_content,
+      )
+
+      mention = user1.chat_mentions.where(chat_message: chat_message).first
+      expect(mention).to be_present
+      expect(mention.notification).to be_nil
+    end
+
     context "when updating a mentioned user" do
       it "updates the mention record" do
         chat_message = create_chat_message(user1, "ping @#{user2.username}", public_chat_channel)
