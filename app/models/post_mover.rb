@@ -219,7 +219,7 @@ class PostMover
       next_post_number += 1
     end
 
-    moved_posts.reverse.each do |post|
+    moved_posts.reverse_each do |post|
       if post.topic_id == destination_topic.id
         metadata = movement_metadata(post, new_post_number: @shift_map[post.post_number])
         new_post = move_same_topic(post)
@@ -234,6 +234,9 @@ class PostMover
 
       store_movement(metadata, new_post)
     end
+
+    # change topic owner if there's a new first post
+    destination_topic.update_column(:user_id, posts.first.user_id) if initial_post_number == 1
   end
 
   def create_first_post(post)

@@ -1287,12 +1287,12 @@ RSpec.describe PostMover do
         end
 
         context "when moving chronologically to an existing topic" do
-          fab!(:destination_topic) { Fabricate(:topic, user: another_user) }
+          fab!(:destination_topic) { Fabricate(:topic, user: user) }
           fab!(:destination_op) do
             Fabricate(
               :post,
               topic: destination_topic,
-              user: another_user,
+              user: user,
               created_at: p2.created_at + 30.minutes,
             )
           end
@@ -1333,7 +1333,7 @@ RSpec.describe PostMover do
             moved_to.reload
             expect(moved_to.posts_count).to eq(6)
             expect(moved_to.highest_post_number).to eq(8)
-            expect(moved_to.user_id).to eq(destination_op.user_id)
+            expect(moved_to.user_id).to eq(p2.user_id)
             expect(moved_to.like_count).to eq(1)
             expect(moved_to.category_id).to eq(SiteSetting.uncategorized_category_id)
             p4.reload
@@ -1500,6 +1500,56 @@ RSpec.describe PostMover do
             expect(
               TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number,
             ).to eq(p2.post_number)
+          end
+
+          it "works correctly when moving the first post" do
+            # forcing a different user_id than p1.user_id
+            destination_topic.update_column(:user_id, another_user.id)
+            destination_op.update_column(:user_id, another_user.id)
+
+            # after: p1(-3h) destination_op
+
+            topic.expects(:add_moderator_post).once
+            moved_to =
+              topic.move_posts(
+                user,
+                [p1.id],
+                destination_topic_id: destination_topic.id,
+                chronological_order: true,
+              )
+            expect(moved_to).to eq(destination_topic)
+
+            # Check out destination topic
+            moved_to.reload
+            expect(moved_to.posts_count).to eq(2)
+            expect(moved_to.highest_post_number).to eq(2)
+            expect(moved_to.user_id).to eq(p1.user_id)
+            expect(moved_to.like_count).to eq(0)
+
+            # First post didn't move
+            p1.reload
+            expect(p1.sort_order).to eq(1)
+            expect(p1.post_number).to eq(1)
+            expect(p1.topic_id).to eq(topic.id)
+            expect(p1.reply_count).to eq(2)
+
+            # New first post
+            new_first = moved_to.posts.where(post_number: 1).first
+            expect(new_first.sort_order).to eq(1)
+            expect(new_first.reply_count).to eq(0)
+            expect(new_first.created_at).to eq_time(p1.created_at)
+
+            destination_op.reload
+            expect(destination_op.sort_order).to eq(2)
+            expect(destination_op.post_number).to eq(2)
+
+            # Check out the original topic
+            topic.reload
+            expect(topic.posts_count).to eq(4)
+            expect(topic.featured_user1_id).to eq(p2.user_id)
+            expect(topic.like_count).to eq(1)
+            expect(topic.posts.by_post_number).to match_array([p1, p2, p3, p4])
+            expect(topic.highest_post_number).to eq(p4.post_number)
           end
 
           it "correctly remaps quotes for shifted posts on destination topic" do
