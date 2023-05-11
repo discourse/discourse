@@ -187,13 +187,13 @@ def spec(plugin, parallel: false, argv: nil)
 end
 
 desc "run plugin specs"
-task "plugin:spec", :plugin, :argv do |t, args|
+task "plugin:spec", %i[plugin argv] do |_, args|
   args.with_defaults(plugin: "*")
   spec(args[:plugin], argv: args[:argv])
 end
 
 desc "run plugin specs in parallel"
-task "plugin:turbo_spec", :plugin, :argv do |t, args|
+task "plugin:turbo_spec", %i[plugin argv] do |_, args|
   args.with_defaults(plugin: "*")
   spec(args[:plugin], parallel: true, argv: args[:argv])
 end
