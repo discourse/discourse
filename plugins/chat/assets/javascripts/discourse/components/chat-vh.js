@@ -11,16 +11,16 @@ export default class ChatVh extends Component {
   didInsertElement() {
     this._super(...arguments);
 
+    this.setVHFromVisualViewPort();
+
     if ("virtualKeyboard" in navigator) {
-      this.setVHFromKeyboard();
+      navigator.virtualKeyboard.overlaysContent = true;
 
       navigator.virtualKeyboard.addEventListener(
         "geometrychange",
         this.setVHFromKeyboard
       );
     } else {
-      this.setVHFromVisualViewPort();
-
       (window?.visualViewport || window).addEventListener(
         "resize",
         this.setVHFromVisualViewPort
@@ -62,8 +62,9 @@ export default class ChatVh extends Component {
 
     pendingUpdate = true;
 
+    const { height } = event.target.boundingClientRect;
+
     requestAnimationFrame(() => {
-      const { height } = event.target.boundingRect;
       const vhInPixels =
         ((window.visualViewport?.height || window.innerHeight) - height) * 0.01;
       document.documentElement.style.setProperty(CSS_VAR, `${vhInPixels}px`);
