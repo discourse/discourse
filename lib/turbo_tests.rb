@@ -79,6 +79,7 @@ module TurboTests
       new(
         FakeExecutionResult.from_obj(obj[:execution_result]),
         obj[:location],
+        obj[:description],
         obj[:full_description],
         metadata,
         obj[:location_rerun_argument],
