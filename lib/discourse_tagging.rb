@@ -457,7 +457,7 @@ module DiscourseTagging
 
       if !one_tag_per_group_ids.empty?
         builder.where(
-          "tag_group_id IS NULL OR tag_group_id NOT IN (?) OR id IN (:selected_tag_ids)",
+          "t.id NOT IN (SELECT DISTINCT tag_id FROM tag_group_restrictions WHERE tag_group_id IN (?)) OR id IN (:selected_tag_ids)",
           one_tag_per_group_ids,
         )
       end

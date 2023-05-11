@@ -317,6 +317,139 @@ RSpec.describe DiscourseTagging do
         end
       end
 
+      context "with tag groups restricted to the category in which the number of tags per topic is limited to one" do
+        fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2, tag3], one_per_topic: true) }
+        fab!(:tag_group2) { Fabricate(:tag_group, tags: [tag1, tag2], one_per_topic: true) }
+
+        it "doesn't return tags leaked from other tag groups containing the same tags" do
+          # this tests covers the bug described in
+          # https://meta.discourse.org/t/limiting-tags-to-categories-not-working-as-expected/263143
+
+          category = Fabricate(:category, tag_groups: [tag_group])
+
+          # In the beginning, show tags for tag_group
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+            ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
+
+          # Once a tag has been selected it should not return any tags from the same group
+          # this is where the problem reported in the bug linked above was happening
+          # If the user selected a tag that belonged only to the tag group restricted to the category but other tags
+          # from the same tag group were also present in other tag groups, they were being returned because they were
+          # bleeding from the tag list as the filter performed in the query was scoping only the category to apply the
+          # restriction. Since the join was done on tag_id, it was returning all tags with the same ids even if they
+          # actually belonged to other tag groups that should not be returned because the category was not restricted
+          # to them
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: [tag3.name],
+            ).to_a
+          expect(sorted_tag_names(tags)).to be_empty
+        end
+
+        it "doesn't return a tag excluded from a tag group even if also belongs to another allowed one" do
+          tag4 = Fabricate(:tag)
+          tag5 = Fabricate(:tag)
+          tag_group3 = Fabricate(:tag_group, tags: [tag3, tag4], one_per_topic: true)
+
+          category = Fabricate(:category, tag_groups: [tag_group, tag_group2, tag_group3])
+
+          # In the beginning, show all expected tags
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+            ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3, tag4]))
+
+          # tag3 belongs to tag_group1 and tag_group3. no tags from both groups should be returned
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: [tag3.name],
+            ).to_a
+          expect(sorted_tag_names(tags)).to be_empty
+
+          # tag4 only belong belongs to tag_group3. tag1 and tag2 should be returned because they belong to tag_group1
+          # and tag_group2 but don't belong to tag_group3
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: [tag4.name],
+            ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2]))
+        end
+
+        it "returns correctly tags from other restricted tag groups when they're not limited to one" do
+          tag4 = Fabricate(:tag, name: "fun4")
+          tag5 = Fabricate(:tag, name: "fun5")
+          tag_group3 = Fabricate(:tag_group, tags: [tag4, tag5])
+
+          category = Fabricate(:category, tag_groups: [tag_group, tag_group2, tag_group3])
+
+          # In the beginning, show all expected tags
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+            ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3, tag4, tag5]))
+
+          # Once a tag from a limited group has been selected it should not return any tags from the same group
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: [tag1.name],
+            ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag4, tag5]))
+
+          # if a tag from the group not limited to one tag is also selected the other should be returned
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: [tag1.name, tag4.name],
+            ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag5]))
+
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: [tag1.name, tag5.name],
+            ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag4]))
+
+          # finally if all the tags from the group not limited to one tag are also selected, then there is no other
+          # tag to return
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: [tag1.name, tag4.name, tag5.name],
+            ).to_a
+          expect(sorted_tag_names(tags)).to be_empty
+        end
+      end
+
       context "with many required tags in a tag group" do
         fab!(:tag4) { Fabricate(:tag, name: "T4") }
         fab!(:tag5) { Fabricate(:tag, name: "T5") }
