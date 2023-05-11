@@ -878,20 +878,10 @@ RSpec.describe Stylesheet::Manager do
   end
 
   describe ".precompile css" do
-    before do
-      class << STDERR
-        alias_method :orig_write, :write
-        def write(x)
-        end
-      end
-    end
+    before { STDERR.stubs(:write) }
 
     after do
-      class << STDERR
-        def write(x)
-          orig_write(x)
-        end
-      end
+      STDERR.unstub(:write)
       FileUtils.rm_rf("tmp/stylesheet-cache")
     end
 
