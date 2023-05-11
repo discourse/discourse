@@ -16,6 +16,7 @@ module TurboTests
     end
 
     def example_pending(notification)
+      message = notification.example.execution_result.pending_message
       output.puts RSpec::Core::Formatters::ConsoleCodes.wrap(
                     "[#{notification.example.process_id}] #{notification.example.full_description}" \
                       "(PENDING: #{message})",
