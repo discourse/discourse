@@ -742,12 +742,33 @@ export default Component.extend(
       );
     },
 
+    @bind
+    _handleGalleryToggleClick(event) {
+      if (!event.target.classList.contains("image-grid-toggle")) {
+        return;
+      }
+
+      const imageGrid = '<div data-disable-image-grid="true"></div>';
+      const matchingPlaceholder =
+        this.get("composer.reply").includes(imageGrid);
+
+      if (matchingPlaceholder) {
+        this.appEvents.trigger("composer:replace-text", imageGrid, "");
+      } else {
+        this.appEvents.trigger("composer:insert-block", imageGrid);
+      }
+    },
+
     _registerImageAltTextButtonClick(preview) {
       preview.addEventListener("click", this._handleAltTextEditButtonClick);
       preview.addEventListener("click", this._handleAltTextOkButtonClick);
       preview.addEventListener("click", this._handleAltTextCancelButtonClick);
       preview.addEventListener("click", this._handleImageDeleteButtonClick);
       preview.addEventListener("keypress", this._handleAltTextInputKeypress);
+
+      if (this.siteSettings.experimental_post_image_grid) {
+        preview.addEventListener("click", this._handleGalleryToggleClick);
+      }
     },
 
     @on("willDestroyElement")
@@ -781,6 +802,10 @@ export default Component.extend(
         "keypress",
         this._handleAltTextInputKeypress
       );
+
+      if (this.siteSettings.experimental_post_image_grid) {
+        preview?.removeEventListener("click", this._handleGalleryToggleClick);
+      }
     },
 
     onExpandPopupMenuOptions(toolbarEvent) {

@@ -1701,3 +1701,65 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     opacity: 100%;
   }
 }
+
+div.auto-image-grid {
+  position: relative;
+}
+
+div[data-auto-image-grid="on"] {
+  > .lightbox-wrapper,
+  > span.image-wrapper,
+  > img {
+    position: absolute;
+  }
+
+  > .lightbox-wrapper {
+    display: blocks;
+    .meta .informations {
+      display: none;
+    }
+    .meta .filename {
+      flex-grow: 3;
+    }
+    a.lightbox {
+      display: block;
+    }
+  }
+
+  .desktop-view .d-editor-preview & {
+    .image-wrapper {
+      padding-bottom: 0em;
+      margin-bottom: 0em;
+    }
+
+    .scale-btn-container {
+      display: none;
+    }
+  }
+}
+
+.image-grid-toggle {
+  height: 2.5em;
+  margin-bottom: -2.5em;
+  z-index: 1;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  z-index: 1;
+  background-color: rgba(var(--secondary-rgb), 0.75);
+  color: var(--tertiary);
+  padding: 0.5em;
+  font-size: var(--font-down-1);
+  cursor: pointer;
+  visibility: hidden;
+
+  .d-icon {
+    color: var(--tertiary);
+    pointer-events: none;
+  }
+}
+
+.d-editor-preview:hover .image-grid-toggle {
+  visibility: visible;
+}

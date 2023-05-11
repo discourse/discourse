@@ -75,6 +75,7 @@ def dependencies
     { source: "chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js", public: true },
     { source: "diffhtml/dist/diffhtml.min.js", public: true },
     { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
+    { source: "minimasonry/build/minimasonry.min.js", public: true },
     { source: "pikaday/pikaday.js", public: true },
     { source: "@highlightjs/cdn-assets/.", destination: "highlightjs" },
     { source: "moment/moment.js" },

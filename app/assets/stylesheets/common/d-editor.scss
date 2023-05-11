@@ -184,10 +184,11 @@
 
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0 0.5em;
 
     position: absolute;
-    height: var(--resizer-height);
+    height: calc(var(--resizer-height) + 0.5em);
     bottom: 0;
     left: 0;
     opacity: 0;
@@ -256,9 +257,9 @@
     }
 
     .alt-text-edit-container {
-      margin-top: 0.25em;
       gap: 0 0.25em;
       flex: 1;
+      max-width: 100%;
 
       .alt-text-input,
       .alt-text-edit-ok,
@@ -267,11 +268,13 @@
       }
 
       .alt-text-input {
+        display: inline-flex;
         flex: 1;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         margin: 0;
+        padding-left: 0.25em;
       }
 
       .alt-text-edit-ok,
