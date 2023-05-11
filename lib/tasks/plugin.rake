@@ -195,6 +195,7 @@ end
 
 desc "run plugin specs in parallel"
 task "plugin:turbo_spec", :plugin do |t, args|
+  puts "\n\nARGC: #{ARGV.inspect}\n\n"
   args.with_defaults(plugin: "*")
   argv = ARGV.partition { |arg| arg == "--" }.last if ARGV.include?("--")
   spec(args[:plugin], parallel: true, argv:)
