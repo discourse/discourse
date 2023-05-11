@@ -69,10 +69,17 @@
           @onChange={{action (mut this.participants)}}
         />
 
-        <label class="checkbox-label">
-          <Input @type="checkbox" @checked={{this.chronologicalOrder}} />
-          {{i18n "topic.merge_topic.chronological_order"}}
-        </label>
+        {{#if this.selectedTopicId}}
+          <hr />
+          <label for="chronological-order" class="checkbox-label">
+            <Input
+              id="chronological-order"
+              @type="checkbox"
+              @checked={{this.chronologicalOrder}}
+            />
+            {{i18n "topic.merge_topic.chronological_order"}}
+          </label>
+        {{/if}}
       </form>
     {{/if}}
 
@@ -124,10 +131,17 @@
           @selectedTopicId={{this.selectedTopicId}}
         />
 
-        <label class="checkbox-label">
-          <Input @type="checkbox" @checked={{this.chronologicalOrder}} />
-          {{i18n "topic.merge_topic.chronological_order"}}
-        </label>
+        {{#if this.selectedTopicId}}
+          <hr />
+          <label for="chronological-order" class="checkbox-label">
+            <Input
+              id="chronological-order"
+              @type="checkbox"
+              @checked={{this.chronologicalOrder}}
+            />
+            {{i18n "topic.merge_topic.chronological_order"}}
+          </label>
+        {{/if}}
       </form>
     {{/if}}
 

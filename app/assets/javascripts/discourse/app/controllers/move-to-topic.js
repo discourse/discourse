@@ -82,6 +82,7 @@ export default Controller.extend(ModalFunctionality, {
       topicName: "",
       tags: null,
       participants: [],
+      selectedTopicId: null,
       chronologicalOrder: false,
     });
 
