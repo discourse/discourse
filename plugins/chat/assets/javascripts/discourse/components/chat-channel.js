@@ -85,7 +85,7 @@ export default class ChatLivePane extends Component {
   teardownListeners() {
     document.removeEventListener("scroll", this._forceBodyScroll);
     removeOnPresenceChange(this.onPresenceChangeCallback);
-    this._unsubscribeToUpdates(this._loadedChannelId);
+    this.unsubscribeToUpdates(this._loadedChannelId);
     this.requestedTargetMessageId = null;
     cancel(this._laterComputeHandler);
   }
@@ -111,7 +111,7 @@ export default class ChatLivePane extends Component {
     this.args.channel?.clearMessages();
 
     if (this._loadedChannelId !== this.args.channel?.id) {
-      this._unsubscribeToUpdates(this._loadedChannelId);
+      this.unsubscribeToUpdates(this._loadedChannelId);
       this.chatChannelPane.selectingMessages = false;
       this.chatChannelComposer.message =
         this.args.channel.draft ||
@@ -123,7 +123,6 @@ export default class ChatLivePane extends Component {
     }
 
     this.loadMessages();
-    this._subscribeToUpdates(this.args.channel);
   }
 
   @action
@@ -215,6 +214,7 @@ export default class ChatLivePane extends Component {
         this.loadingMorePast = false;
         this.fillPaneAttempt();
         this.updateLastReadMessage();
+        this.subscribeToUpdates(this.args.channel);
       });
   }
 
@@ -766,7 +766,7 @@ export default class ChatLivePane extends Component {
     });
   }
 
-  _unsubscribeToUpdates(channelId) {
+  unsubscribeToUpdates(channelId) {
     if (!channelId) {
       return;
     }
@@ -775,12 +775,12 @@ export default class ChatLivePane extends Component {
     this.messageBus.unsubscribe(`/chat/${channelId}`, this.onMessage);
   }
 
-  _subscribeToUpdates(channel) {
+  subscribeToUpdates(channel) {
     if (!channel) {
       return;
     }
 
-    this._unsubscribeToUpdates(channel.id);
+    this.unsubscribeToUpdates(channel.id);
     this.messageBus.subscribe(
       `/chat/${channel.id}`,
       this.onMessage,
