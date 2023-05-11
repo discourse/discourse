@@ -1739,20 +1739,19 @@ div[data-auto-image-grid="on"] {
 }
 
 .image-grid-toggle {
+  position: relative;
+  z-index: 1;
   height: 2.5em;
   margin-bottom: -2.5em;
-  z-index: 1;
-  position: relative;
-  box-sizing: border-box;
+  padding: 0.5em;
   width: 100%;
+  box-sizing: border-box;
   text-align: center;
-  z-index: 1;
   background-color: rgba(var(--secondary-rgb), 0.75);
   color: var(--tertiary);
-  padding: 0.5em;
   font-size: var(--font-down-1);
-  cursor: pointer;
   visibility: hidden;
+  cursor: pointer;
 
   .d-icon {
     color: var(--tertiary);
