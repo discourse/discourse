@@ -173,7 +173,7 @@ def spec(plugin, parallel: false, argv: nil)
   params << "--profile" if !parallel
   params << "--fail-fast" if ENV["RSPEC_FAILFAST"]
   params << "--seed #{ENV["RSPEC_SEED"]}" if Integer(ENV["RSPEC_SEED"], exception: false)
-  params += argv if argv
+  params << argv if argv
 
   # reject system specs as they are slow and need dedicated setup
   files =
@@ -187,17 +187,15 @@ def spec(plugin, parallel: false, argv: nil)
 end
 
 desc "run plugin specs"
-task "plugin:spec", :plugin do |t, args|
+task "plugin:spec", :plugin, :argv do |t, args|
   args.with_defaults(plugin: "*")
-  argv = ARGV.slice_after("--").to_a.last if ARGV.include?("--")
-  spec(args[:plugin], argv:)
+  spec(args[:plugin], argv: args[:argv])
 end
 
 desc "run plugin specs in parallel"
-task "plugin:turbo_spec", :plugin do |t, args|
+task "plugin:turbo_spec", :plugin, :argv do |t, args|
   args.with_defaults(plugin: "*")
-  argv = ARGV.slice_after("--").to_a.last if ARGV.include?("--")
-  spec(args[:plugin], parallel: true, argv:)
+  spec(args[:plugin], parallel: true, argv: args[:argv])
 end
 
 desc "run plugin qunit tests"
