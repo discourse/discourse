@@ -5,7 +5,6 @@ class Notification < ActiveRecord::Base
   belongs_to :topic
 
   has_one :shelved_notification
-  has_many :chat_mentions, dependent: :nullify, class_name: "Chat::Mention"
 
   MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS = 24
 
