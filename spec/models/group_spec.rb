@@ -579,6 +579,23 @@ RSpec.describe Group do
     expect(group.id).to eq Group[group.name.to_sym].id
   end
 
+  it "allows you to lookup a group by integer id" do
+    group = Fabricate(:group)
+    expect(group.id).to eq Group.lookup_groups(group_ids: group.id).first.id
+  end
+
+  it "allows you to lookup groups by comma separated string" do
+    group1 = Fabricate(:group)
+    group2 = Fabricate(:group)
+    expect([group1, group2]).to eq Group.lookup_groups(group_ids: "#{group1.id},#{group2.id}")
+  end
+
+  it "allows you to lookup groups by array" do
+    group1 = Fabricate(:group)
+    group2 = Fabricate(:group)
+    expect([group1, group2]).to eq Group.lookup_groups(group_ids: [group1.id, group2.id])
+  end
+
   it "can find desired groups correctly" do
     expect(Group.desired_trust_level_groups(2).sort).to eq [10, 11, 12]
   end
