@@ -12,7 +12,7 @@ module Chat
       @opts = {}
 
       cooked = Chat::Message.cook(chat_message.message, user_id: chat_message.last_editor_id)
-      @doc = Loofah.fragment(cooked)
+      @doc = Loofah.html5_fragment(cooked)
     end
 
     def run!

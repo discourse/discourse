@@ -788,7 +788,8 @@ RSpec.describe Oneboxer do
     it "does keeps SVGs valid" do
       raw = "Onebox\n\nhttps://example.com"
       cooked = PrettyText.cook(raw)
-      cooked = Oneboxer.apply(Loofah.fragment(cooked)) { "<div><svg><path></path></svg></div>" }
+      cooked =
+        Oneboxer.apply(Loofah.html5_fragment(cooked)) { "<div><svg><path></path></svg></div>" }
       doc = Nokogiri::HTML5.fragment(cooked.to_html)
       expect(doc.to_html).to match_html <<~HTML
         <p>Onebox</p>
