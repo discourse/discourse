@@ -188,14 +188,18 @@ end
 
 desc "run plugin specs"
 task "plugin:spec", :plugin do |t, args|
+  argv = ARGV[1..]
+  ARGV.clear
   args.with_defaults(plugin: "*")
-  spec(args[:plugin], argv: ARGV[1..])
+  spec(args[:plugin], argv:)
 end
 
 desc "run plugin specs in parallel"
 task "plugin:turbo_spec", :plugin do |t, args|
+  argv = ARGV[1..]
+  ARGV.clear
   args.with_defaults(plugin: "*")
-  spec(args[:plugin], parallel: true, argv: ARGV[1..])
+  spec(args[:plugin], parallel: true, argv:)
 end
 
 desc "run plugin qunit tests"
