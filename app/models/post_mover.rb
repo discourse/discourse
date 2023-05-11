@@ -424,7 +424,7 @@ class PostMover
     DB.exec <<~SQL
       CREATE TEMPORARY TABLE temp_post_timings ON COMMIT DROP
         AS (
-          SELECT pt.topic_id, mp.new_post_number, pt.user_id, pt.msecs
+          SELECT pt.topic_id, mp.new_post_number as post_number, pt.user_id, pt.msecs
           FROM post_timings pt
           JOIN moved_posts mp
             ON mp.old_topic_id = pt.topic_id
@@ -436,7 +436,8 @@ class PostMover
 
   def insert_from_temp_post_timings
     DB.exec <<~SQL
-      INSERT INTO post_timings SELECT * FROM temp_post_timings
+      INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
+      SELECT topic_id, user_id, post_number, msecs FROM temp_post_timings
     SQL
   end
 
