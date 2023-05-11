@@ -1,13 +1,9 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { inject as service } from "@ember/service";
-
+import { action } from "@ember/object";
 export default class ChatChannelThreads extends DiscourseRoute {
   @service router;
   @service chatChannelThreadListPane;
-
-  deactivate() {
-    this.chatChannelThreadListPane.close();
-  }
 
   beforeModel(transition) {
     const channel = this.modelFor("chat.channel");
@@ -17,6 +13,11 @@ export default class ChatChannelThreads extends DiscourseRoute {
       this.router.transitionTo("chat.channel", ...channel.routeModels);
       return;
     }
+  }
+
+  @action
+  willTransition() {
+    this.chatChannelThreadListPane.close();
   }
 
   activate() {
