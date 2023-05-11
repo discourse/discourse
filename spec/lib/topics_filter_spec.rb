@@ -1345,7 +1345,7 @@ RSpec.describe TopicsFilter do
                 .new(guardian: Guardian.new)
                 .filter_from_query_string("order:category")
                 .pluck(:id),
-            ).to eq([topic2.id, topic.id, topic5.id, topic3.id, topic4.id])
+            ).to eq([topic2.id, [topic.id, topic5.id].sort, [topic3.id, topic4.id].sort].flatten)
           end
         end
       end
