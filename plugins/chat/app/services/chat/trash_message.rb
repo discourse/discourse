@@ -59,6 +59,9 @@ module Chat
 
     def update_tracking_state(message:, **)
       ::Chat::Action::ResetUserLastReadChannelMessage.call([message.id], [message.chat_channel_id])
+      if message.thread_id.present?
+        ::Chat::Action::ResetUserLastReadThreadMessage.call([message.id], [message.thread_id])
+      end
     end
 
     def update_thread_reply_cache(message:, **)

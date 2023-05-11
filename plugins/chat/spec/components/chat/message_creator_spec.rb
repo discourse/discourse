@@ -440,6 +440,23 @@ describe Chat::MessageCreator do
         expect(message.thread.original_message_user).to eq(reply_message.user)
       end
 
+      it "creates a user thread membership" do
+        message = nil
+        expect {
+          message =
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+        }.to change { Chat::UserChatThreadMembership.count }
+
+        expect(
+          Chat::UserChatThreadMembership.exists?(user: user1, thread: message.thread),
+        ).to be_truthy
+      end
+
       context "when threading is enabled" do
         it "publishes the new thread" do
           public_chat_channel.update!(threading_enabled: true)
@@ -520,6 +537,33 @@ describe Chat::MessageCreator do
           }.not_to change { Chat::Thread.count }
 
           expect(message.reload.thread).to eq(existing_thread)
+        end
+
+        it "creates a user thread membership if one does not exist" do
+          expect {
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              thread_id: existing_thread.id,
+            ).chat_message
+          }.to change { Chat::UserChatThreadMembership.count }
+
+          expect(
+            Chat::UserChatThreadMembership.exists?(user: user1, thread: existing_thread),
+          ).to be_truthy
+        end
+
+        it "does not create a thread membership if one exists" do
+          Fabricate(:user_chat_thread_membership, user: user1, thread: existing_thread)
+          expect {
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              thread_id: existing_thread.id,
+            ).chat_message
+          }.not_to change { Chat::UserChatThreadMembership.count }
         end
 
         it "errors when the thread ID is for a different channel" do
