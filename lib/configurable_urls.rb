@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module ConfigurableUrls
-
   def faq_path
     SiteSetting.faq_url.blank? ? "#{Discourse.base_path}/faq" : SiteSetting.faq_url
   end
@@ -11,7 +10,10 @@ module ConfigurableUrls
   end
 
   def privacy_path
-    SiteSetting.privacy_policy_url.blank? ? "#{Discourse.base_path}/privacy" : SiteSetting.privacy_policy_url
+    if SiteSetting.privacy_policy_url.blank?
+      "#{Discourse.base_path}/privacy"
+    else
+      SiteSetting.privacy_policy_url
+    end
   end
-
 end

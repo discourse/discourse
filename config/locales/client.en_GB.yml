@@ -30,7 +30,6 @@ en_GB:
         date_year: "MMM 'YY"
       medium:
         date_year: "D MMM 'YY"
-    bootstrap_invite_button_title: "Send invitations"
     groups:
       manage:
         email:
@@ -106,7 +105,6 @@ en_GB:
         button_title: "Send invitations"
       customize:
         title: "Customise"
-        long_title: "Site customisations"
         color: "Colour"
         theme:
           customize_desc: "Customise:"

@@ -6,9 +6,7 @@ class CategoryRequiredTagGroup < ActiveRecord::Base
 
   validates :min_count, numericality: { only_integer: true, greater_than: 0 }
 
-  after_commit do
-    Site.clear_cache
-  end
+  after_commit { Site.clear_cache }
 end
 
 # == Schema Information

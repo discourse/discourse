@@ -66,8 +66,8 @@ class IncomingLinkNormalization < ActiveRecord::Migration[4.2]
 
     change_column :incoming_referers, :incoming_domain_id, :integer, null: false
 
-    add_index :incoming_referers, [:path, :incoming_domain_id], unique: true
-    add_index :incoming_domains, [:name, :https, :port], unique: true
+    add_index :incoming_referers, %i[path incoming_domain_id], unique: true
+    add_index :incoming_domains, %i[name https port], unique: true
 
     remove_column :incoming_links, :referer
   end

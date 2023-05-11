@@ -37,35 +37,34 @@ class BootstrapController < ApplicationController
       assets_fake_request.env["QUERY_STRING"] = query
     end
 
-    Discourse.find_plugin_css_assets(
-      include_official: allow_plugins?,
-      include_unofficial: allow_third_party_plugins?,
-      mobile_view: mobile_view?,
-      desktop_view: !mobile_view?,
-      request: assets_fake_request
-    ).each do |file|
-      add_style(file, plugin: true)
-    end
+    Discourse
+      .find_plugin_css_assets(
+        include_official: allow_plugins?,
+        include_unofficial: allow_third_party_plugins?,
+        mobile_view: mobile_view?,
+        desktop_view: !mobile_view?,
+        request: assets_fake_request,
+      )
+      .each { |file| add_style(file, plugin: true) }
     add_style(mobile_view? ? :mobile_theme : :desktop_theme) if theme_id.present?
 
     extra_locales = []
     if ExtraLocalesController.client_overrides_exist?
-      extra_locales << ExtraLocalesController.url('overrides')
+      extra_locales << ExtraLocalesController.url("overrides")
     end
 
-    if staff?
-      extra_locales << ExtraLocalesController.url('admin')
-    end
+    extra_locales << ExtraLocalesController.url("admin") if staff?
 
-    if admin?
-      extra_locales << ExtraLocalesController.url('wizard')
-    end
+    extra_locales << ExtraLocalesController.url("wizard") if admin?
 
-    plugin_js = Discourse.find_plugin_js_assets(
-      include_official: allow_plugins?,
-      include_unofficial: allow_third_party_plugins?,
-      request: assets_fake_request
-    ).map { |f| script_asset_path(f) }
+    plugin_js =
+      Discourse
+        .find_plugin_js_assets(
+          include_official: allow_plugins?,
+          include_unofficial: allow_third_party_plugins?,
+          request: assets_fake_request,
+        )
+        .map { |f| script_asset_path(f) }
 
     plugin_test_js =
       if Rails.env != "production"
@@ -76,7 +75,7 @@ class BootstrapController < ApplicationController
 
     bootstrap = {
       theme_id: theme_id,
-      theme_color: "##{ColorScheme.hex_for_name('header_background', scheme_id)}",
+      theme_color: "##{ColorScheme.hex_for_name("header_background", scheme_id)}",
       title: SiteSetting.title,
       current_homepage: current_homepage,
       locale_script: locale,
@@ -90,7 +89,7 @@ class BootstrapController < ApplicationController
       html_classes: html_classes,
       html_lang: html_lang,
       login_path: main_app.login_path,
-      authentication_data: authentication_data
+      authentication_data: authentication_data,
     }
     bootstrap[:extra_locales] = extra_locales if extra_locales.present?
     bootstrap[:csrf_token] = form_authenticity_token if current_user
@@ -99,39 +98,44 @@ class BootstrapController < ApplicationController
   end
 
   def plugin_css_for_tests
-    urls = Discourse.find_plugin_css_assets(
-      include_disabled: true,
-      desktop_view: true,
-    ).map do |target|
-      details = Stylesheet::Manager.new().stylesheet_details(target, 'all')
-      details[0][:new_href]
-    end
+    urls =
+      Discourse
+        .find_plugin_css_assets(include_disabled: true, desktop_view: true)
+        .map do |target|
+          details = Stylesheet::Manager.new().stylesheet_details(target, "all")
+          details[0][:new_href]
+        end
 
     stylesheet = <<~CSS
       /* For use in tests only - `@import`s all plugin stylesheets */
-      #{urls.map { |url| "@import \"#{url}\";" }.join("\n") }
+      #{urls.map { |url| "@import \"#{url}\";" }.join("\n")}
     CSS
 
-    render plain: stylesheet, content_type: 'text/css'
+    render plain: stylesheet, content_type: "text/css"
   end
 
-private
+  private
+
   def add_scheme(scheme_id, media, css_class)
     return if scheme_id.to_i == -1
 
-    if style = Stylesheet::Manager.new(theme_id: theme_id).color_scheme_stylesheet_details(scheme_id, media)
+    if style =
+         Stylesheet::Manager.new(theme_id: theme_id).color_scheme_stylesheet_details(
+           scheme_id,
+           media,
+         )
       @stylesheets << { href: style[:new_href], media: media, class: css_class }
     end
   end
 
   def add_style(target, opts = nil)
-    if styles = Stylesheet::Manager.new(theme_id: theme_id).stylesheet_details(target, 'all')
+    if styles = Stylesheet::Manager.new(theme_id: theme_id).stylesheet_details(target, "all")
       styles.each do |style|
         @stylesheets << {
           href: style[:new_href],
-          media: 'all',
+          media: "all",
           theme_id: style[:theme_id],
-          target: style[:target]
+          target: style[:target],
         }.merge(opts || {})
       end
     end
@@ -150,7 +154,11 @@ private
   end
 
   def add_plugin_html(html, key)
-    add_if_present(html, key, DiscoursePluginRegistry.build_html("server:#{key.to_s.dasherize}", self))
+    add_if_present(
+      html,
+      key,
+      DiscoursePluginRegistry.build_html("server:#{key.to_s.dasherize}", self),
+    )
   end
 
   def create_theme_html
@@ -159,10 +167,14 @@ private
 
     theme_view = mobile_view? ? :mobile : :desktop
 
-    add_if_present(theme_html, :body_tag, Theme.lookup_field(theme_id, theme_view, 'body_tag'))
-    add_if_present(theme_html, :head_tag, Theme.lookup_field(theme_id, theme_view, 'head_tag'))
-    add_if_present(theme_html, :header, Theme.lookup_field(theme_id, theme_view, 'header'))
-    add_if_present(theme_html, :translations, Theme.lookup_field(theme_id, :translations, I18n.locale))
+    add_if_present(theme_html, :body_tag, Theme.lookup_field(theme_id, theme_view, "body_tag"))
+    add_if_present(theme_html, :head_tag, Theme.lookup_field(theme_id, theme_view, "head_tag"))
+    add_if_present(theme_html, :header, Theme.lookup_field(theme_id, theme_view, "header"))
+    add_if_present(
+      theme_html,
+      :translations,
+      Theme.lookup_field(theme_id, :translations, I18n.locale),
+    )
     add_if_present(theme_html, :js, Theme.lookup_field(theme_id, :extra_js, nil))
 
     theme_html
@@ -171,5 +183,4 @@ private
   def add_if_present(hash, key, val)
     hash[key] = val if val.present?
   end
-
 end

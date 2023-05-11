@@ -7,23 +7,36 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      DEFAULTS = {
-        MAX_DESCRIPTION_CHARS: 500
-      }
+      DEFAULTS = { MAX_DESCRIPTION_CHARS: 500 }
 
-      matches_regexp(/^https?:\/\/play\.(?:(?:\w)+\.)?(google)\.com(?:\/)?\/store\/apps\//)
+      matches_regexp(%r{^https?://play\.(?:(?:\w)+\.)?(google)\.com(?:/)?/store/apps/})
       always_https
 
       private
 
       def data
-        price = raw.css("meta[itemprop=price]").first["content"] rescue "Free"
+        price =
+          begin
+            raw.css("meta[itemprop=price]").first["content"]
+          rescue StandardError
+            "Free"
+          end
         {
           link: link,
-          title: raw.css("meta[property='og:title']").first["content"].gsub(" - Apps on Google Play", ""),
-          image: ::Onebox::Helpers.normalize_url_for_output(raw.css("meta[property='og:image']").first["content"]),
-          description: raw.css("meta[name=description]").first["content"][0..DEFAULTS[:MAX_DESCRIPTION_CHARS]].chop + "...",
-          price: price == "0" ? "Free" : price
+          title:
+            raw.css("meta[property='og:title']").first["content"].gsub(
+              " - Apps on Google Play",
+              "",
+            ),
+          image:
+            ::Onebox::Helpers.normalize_url_for_output(
+              raw.css("meta[property='og:image']").first["content"],
+            ),
+          description:
+            raw.css("meta[name=description]").first["content"][
+              0..DEFAULTS[:MAX_DESCRIPTION_CHARS]
+            ].chop + "...",
+          price: price == "0" ? "Free" : price,
         }
       end
     end

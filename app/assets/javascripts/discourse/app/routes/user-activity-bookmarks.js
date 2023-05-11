@@ -2,6 +2,7 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 import { Promise } from "rsvp";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   templateName: "user_bookmarks",
@@ -46,6 +47,10 @@ export default DiscourseRoute.extend({
       })
       .catch(() => controller.set("permissionDenied", true))
       .finally(() => controller.set("loading", false));
+  },
+
+  titleToken() {
+    return I18n.t("user_action_groups.3");
   },
 
   @action

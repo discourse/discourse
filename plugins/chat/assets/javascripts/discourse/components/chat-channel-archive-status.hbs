@@ -1,15 +1,25 @@
-{{#if (and this.channel.archive_failed this.currentUser.admin)}}
-  <div class="alert alert-warn chat-channel-retry-archive">
-    <div class="chat-channel-archive-failed-message">
-      {{this.channelArchiveFailedMessage}}
-    </div>
+{{#if this.shouldRender}}
+  {{#if @channel.archive.failed}}
+    <div
+      class={{concat-class
+        "alert alert-warn chat-channel-retry-archive"
+        @channel.status
+      }}
+    >
+      <div class="chat-channel-archive-failed-message">
+        {{this.channelArchiveFailedMessage}}
+      </div>
 
-    <div class="chat-channel-archive-failed-retry">
-      <DButton @action={{action "retryArchive"}} @label="chat.channel_archive.retry" />
+      <div class="chat-channel-archive-failed-retry">
+        <DButton
+          @action={{this.retryArchive}}
+          @label="chat.channel_archive.retry"
+        />
+      </div>
     </div>
-  </div>
-{{else if (and this.channel.archive_completed this.currentUser.admin)}}
-  <div class="chat-channel-archive-status">
-    {{this.channelArchiveCompletedMessage}}
-  </div>
+  {{else if @channel.archive.completed}}
+    <div class={{concat-class "chat-channel-archive-status" @channel.status}}>
+      {{this.channelArchiveCompletedMessage}}
+    </div>
+  {{/if}}
 {{/if}}

@@ -17,33 +17,56 @@
     <div class="control-group">
       <div class="controls">
         <div class="qr-code">
-          <img src={{html-safe this.secondFactorImage}}>
+          <img src={{html-safe this.secondFactorImage}} />
         </div>
         <p>
           {{#if this.showSecondFactorKey}}
             {{this.secondFactorKey}}
           {{else}}
-            <a href {{on "click" this.enableShowSecondFactorKey}}>{{i18n "user.second_factor.show_key_description"}}</a>
+            <a href {{on "click" this.enableShowSecondFactorKey}}>{{i18n
+                "user.second_factor.show_key_description"
+              }}</a>
           {{/if}}
         </p>
       </div>
     </div>
 
     <div class="control-group">
-      <label class="control-label input-prepend">{{i18n "user.second_factor.name"}}</label>
+      <label class="control-label input-prepend">{{i18n
+          "user.second_factor.name"
+        }}</label>
       <div class="controls">
-        <SecondFactorInput @value={{this.secondFactorName}} @inputId="second-factor-name" @placeholder={{i18n "user.second_factor.totp.default_name"}} />
+        <SecondFactorInput
+          @value={{this.secondFactorName}}
+          @inputId="second-factor-name"
+          @placeholder={{i18n "user.second_factor.totp.default_name"}}
+        />
       </div>
 
-      <label class="control-label input-prepend">{{i18n "user.second_factor.label"}}</label>
+      <label class="control-label input-prepend">{{i18n
+          "user.second_factor.label"
+        }}</label>
       <div class="controls">
-        <TextField @class="second-factor-token-input" @maxlength={{6}} @value={{this.secondFactorToken}} @inputId="second-factor-token" @placeholder="123456" @autocorrect="off" @autocapitalize="off" @autofocus="autofocus" />
+        <TextField
+          @class="second-factor-token-input"
+          @maxlength={{6}}
+          @value={{this.secondFactorToken}}
+          @inputId="second-factor-token"
+          @placeholder="123456"
+          @autocorrect="off"
+          @autocapitalize="off"
+          @autofocus="autofocus"
+        />
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
-        <DButton @class="btn-primary add-totp" @action={{action "enableSecondFactor"}} @label="enable" />
+        <DButton
+          @class="btn-primary add-totp"
+          @action={{action "enableSecondFactor"}}
+          @label="enable"
+        />
       </div>
     </div>
   </ConditionalLoadingSpinner>

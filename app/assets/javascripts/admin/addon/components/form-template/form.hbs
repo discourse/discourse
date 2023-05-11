@@ -1,0 +1,71 @@
+<div class="form-templates__form">
+  <div class="control-group">
+    <label for="template-name">
+      {{i18n "admin.form_templates.new_template_form.name.label"}}
+    </label>
+    <TextField
+      @value={{this.templateName}}
+      @name="template-name"
+      @class="form-templates__form-name-input"
+      @placeholderKey="admin.form_templates.new_template_form.name.placeholder"
+    />
+  </div>
+  <div class="control-group form-templates__editor">
+    <div class="form-templates__quick-insert-field-buttons">
+      <span>
+        {{I18n "admin.form_templates.quick_insert_fields.add_new_field"}}
+      </span>
+      {{#each this.quickInsertFields as |field|}}
+        <DButton
+          @class="btn-flat btn-icon-text quick-insert-{{field.type}}"
+          @icon={{field.icon}}
+          @label="admin.form_templates.quick_insert_fields.{{field.type}}"
+          @action={{this.onInsertField}}
+          @actionParam={{field.type}}
+        />
+      {{/each}}
+      <DButton
+        class="btn-flat btn-icon-text form-templates__validations-modal-button"
+        @label="admin.form_templates.validations_modal.button_title"
+        @icon="check-circle"
+        @action={{this.showValidationOptionsModal}}
+      />
+    </div>
+    <DButton
+      @class="form-templates__preview-button"
+      @icon="eye"
+      @label="admin.form_templates.new_template_form.preview"
+      @action={{this.showPreview}}
+      @disabled={{this.disablePreviewButton}}
+    />
+  </div>
+
+  <div class="control-group">
+    <AceEditor @content={{this.templateContent}} @mode="yaml" />
+  </div>
+
+  <div class="footer-buttons">
+    <DButton
+      @class="btn-primary"
+      @label="admin.form_templates.new_template_form.submit"
+      @icon="check"
+      @action={{this.onSubmit}}
+      @disabled={{this.disableSubmitButton}}
+    />
+
+    <DButton
+      @label="admin.form_templates.new_template_form.cancel"
+      @icon="times"
+      @action={{this.onCancel}}
+    />
+
+    {{#if this.isEditing}}
+      <DButton
+        @class="btn-danger"
+        @label="admin.form_templates.view_template.delete"
+        @icon="trash-alt"
+        @action={{this.onDelete}}
+      />
+    {{/if}}
+  </div>
+</div>

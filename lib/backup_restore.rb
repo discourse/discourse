@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module BackupRestore
-
-  class OperationRunningError < RuntimeError; end
+  class OperationRunningError < RuntimeError
+  end
 
   VERSION_PREFIX = "v"
   DUMP_FILE = "dump.sql.gz"
@@ -22,9 +22,7 @@ module BackupRestore
 
   def self.rollback!
     raise BackupRestore::OperationRunningError if BackupRestore.is_operation_running?
-    if can_rollback?
-      move_tables_between_schemas("backup", "public")
-    end
+    move_tables_between_schemas("backup", "public") if can_rollback?
   end
 
   def self.cancel!
@@ -58,7 +56,7 @@ module BackupRestore
     {
       is_operation_running: is_operation_running?,
       can_rollback: can_rollback?,
-      allow_restore: Rails.env.development? || SiteSetting.allow_restore
+      allow_restore: Rails.env.development? || SiteSetting.allow_restore,
     }
   end
 
@@ -133,7 +131,7 @@ module BackupRestore
       config["backup_port"] || config["port"],
       config["username"] || username || ENV["USER"] || "postgres",
       config["password"] || password,
-      config["database"]
+      config["database"],
     )
   end
 
@@ -194,7 +192,11 @@ module BackupRestore
   end
 
   def self.backup_tables_count
-    DB.query_single("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = 'backup'").first.to_i
+    DB
+      .query_single(
+        "SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = 'backup'",
+      )
+      .first
+      .to_i
   end
-
 end

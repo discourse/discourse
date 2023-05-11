@@ -1,0 +1,38 @@
+.chat-message-thread-indicator {
+  align-items: center;
+  display: grid;
+  grid: 1fr / auto-flow;
+  display: flex;
+  cursor: pointer;
+  grid-area: threadindicator;
+  background-color: var(--primary-very-low);
+  margin: 4px 0 -2px calc(var(--message-left-width) - 0.25rem);
+  padding-block: 0.25rem;
+  padding-inline: 0.5rem;
+  max-width: 500px;
+  border-radius: 4px;
+
+  &__replies-count {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    max-width: 60px;
+    flex: 1;
+  }
+
+  &__view-thread {
+    font-size: var(--font-down-1);
+    flex: 1;
+
+    .chat-message-thread-indicator:hover & {
+      text-decoration: underline;
+    }
+  }
+
+  &__replies-count + &__view-thread {
+    padding-left: 0.25rem;
+  }
+
+  &__separator {
+    margin: 0 0.5em;
+  }
+}

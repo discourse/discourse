@@ -39,6 +39,7 @@ module("Integration | Component | site-header", function (hooks) {
   });
 
   test("hamburger menu icon shows pending reviewables count", async function (assert) {
+    this.siteSettings.navigation_menu = "legacy";
     this.currentUser.set("reviewable_count", 1);
     await render(hbs`<SiteHeader />`);
     let pendingReviewablesBadge = query(
@@ -47,9 +48,9 @@ module("Integration | Component | site-header", function (hooks) {
     assert.strictEqual(pendingReviewablesBadge.textContent, "1");
   });
 
-  test("hamburger menu icon doesn't show pending reviewables count when revamped user menu is enabled", async function (assert) {
+  test("hamburger menu icon doesn't show pending reviewables count for non-legacy navigation menu", async function (assert) {
     this.currentUser.set("reviewable_count", 1);
-    this.currentUser.set("redesigned_user_menu_enabled", true);
+    this.siteSettings.navigation_menu = "sidebar";
     await render(hbs`<SiteHeader />`);
     assert.ok(!exists(".hamburger-dropdown .badge-notification"));
   });

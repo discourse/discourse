@@ -5,8 +5,8 @@ module Onebox
     class ImageOnebox
       include Engine
 
-      matches_content_type(/^image\/(png|jpg|jpeg|gif|bmp|tif|tiff)$/)
-      matches_regexp(/^(https?:)?\/\/.+\.(png|jpg|jpeg|gif|bmp|tif|tiff)(\?.*)?$/i)
+      matches_content_type(%r{^image/(png|jpg|jpeg|gif|bmp|tif|tiff)$})
+      matches_regexp(%r{^(https?:)?//.+\.(png|jpg|jpeg|gif|bmp|tif|tiff)(\?.*)?$}i)
 
       def always_https?
         AllowlistedGenericOnebox.host_matches(uri, AllowlistedGenericOnebox.https_hosts)
@@ -14,7 +14,7 @@ module Onebox
 
       def to_html
         # Fix Dropbox image links
-        if @url[/^https:\/\/www.dropbox.com\/s\//]
+        if @url[%r{^https://www.dropbox.com/s/}]
           @url.sub!("https://www.dropbox.com", "https://dl.dropboxusercontent.com")
         end
 

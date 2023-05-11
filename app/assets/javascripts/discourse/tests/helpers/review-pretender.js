@@ -214,6 +214,7 @@ export default function (helpers) {
           is_new_topic: false,
         },
       ],
+      reviewable_count: 8,
       __rest_serializer: "1",
     });
   });

@@ -1,7 +1,16 @@
-<div class="user-menu revamped menu-panel drop-down" data-max-width="320" {{did-insert this.triggerRenderedAppEvent}}>
+<div
+  class="user-menu revamped menu-panel drop-down"
+  data-max-width="320"
+  {{did-insert this.triggerRenderedAppEvent}}
+>
   <div class="panel-body">
     <div class="panel-body-contents">
-      <div class="menu-tabs-container" role="tablist" aria-orientation="vertical" aria-label={{i18n "user_menu.sr_menu_tabs"}}>
+      <div
+        class="menu-tabs-container"
+        role="tablist"
+        aria-orientation="vertical"
+        aria-label={{i18n "user_menu.sr_menu_tabs"}}
+      >
         <div class="top-tabs tabs-list" {{did-insert this.focusFirstTab}}>
           {{#each this.topTabs as |tab|}}
             <UserMenu::MenuTab
@@ -24,13 +33,13 @@
       <div
         id={{concat "quick-access-" this.currentTabId}}
         class="quick-access-panel"
-        tabindex="-1">
-        {{component
-          this.currentPanelComponent
-          closeUserMenu=@closeUserMenu
-          filterByTypes=this.currentNotificationTypes
-          ariaLabelledby=(concat "user-menu-button-" this.currentTabId)
-        }}
+        tabindex="-1"
+      >
+        <this.currentPanelComponent
+          @closeUserMenu={{@closeUserMenu}}
+          @filterByTypes={{this.currentNotificationTypes}}
+          @ariaLabelledby={{concat "user-menu-button-" this.currentTabId}}
+        />
       </div>
     </div>
   </div>

@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'uri'
+require "uri"
 
 class TopicLink < ActiveRecord::Base
-
   def self.max_domain_length
     100
   end
@@ -15,14 +14,14 @@ class TopicLink < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user
   belongs_to :post
-  belongs_to :link_topic, class_name: 'Topic'
-  belongs_to :link_post, class_name: 'Post'
+  belongs_to :link_topic, class_name: "Topic"
+  belongs_to :link_post, class_name: "Post"
 
   validates_presence_of :url
 
   validates_length_of :url, maximum: 500
 
-  validates_uniqueness_of :url, scope: [:topic_id, :post_id]
+  validates_uniqueness_of :url, scope: %i[topic_id post_id]
 
   has_many :topic_link_clicks, dependent: :destroy
 
@@ -36,7 +35,6 @@ class TopicLink < ActiveRecord::Base
   end
 
   def self.topic_map(guardian, topic_id)
-
     # Sam: complicated reports are really hard in AR
     builder = DB.build(<<~SQL)
       SELECT ftl.url,
@@ -56,17 +54,18 @@ class TopicLink < ActiveRecord::Base
       LIMIT 50
     SQL
 
-    builder.where('ftl.topic_id = :topic_id', topic_id: topic_id)
-    builder.where('ft.deleted_at IS NULL')
-    # note that ILIKE means "case insensitive LIKE"
-    builder.where("NOT(ftl.url ILIKE '%.png' OR ftl.url ILIKE '%.jpg' OR ftl.url ILIKE '%.gif')")
-    builder.where("COALESCE(ft.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
+    builder.where("ftl.topic_id = :topic_id", topic_id: topic_id)
+    builder.where("ft.deleted_at IS NULL")
+    builder.where("ftl.extension IS NULL OR ftl.extension NOT IN ('png','jpg','gif')")
+    builder.where(
+      "COALESCE(ft.archetype, 'regular') <> :archetype",
+      archetype: Archetype.private_message,
+    )
     builder.where("clicks > 0")
 
     builder.secure_category(guardian.secure_category_ids)
 
     builder.query
-
   end
 
   def self.counts_for(guardian, topic, posts)
@@ -74,7 +73,9 @@ class TopicLink < ActiveRecord::Base
 
     # Sam: this is not tidy in AR and also happens to be a critical path
     # for topic view
-    builder = DB.build("SELECT
+    builder =
+      DB.build(
+        "SELECT
                       l.post_id,
                       l.url,
                       l.clicks,
@@ -87,28 +88,39 @@ class TopicLink < ActiveRecord::Base
               LEFT JOIN categories AS c ON c.id = t.category_id
               /*left_join*/
               /*where*/
-              ORDER BY reflection ASC, clicks DESC")
+              ORDER BY reflection ASC, clicks DESC",
+      )
 
-    builder.where('t.deleted_at IS NULL')
-    builder.where("COALESCE(t.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
+    builder.where("t.deleted_at IS NULL")
+    builder.where(
+      "COALESCE(t.archetype, 'regular') <> :archetype",
+      archetype: Archetype.private_message,
+    )
 
     if guardian.authenticated?
-      builder.left_join("topic_users AS tu ON (t.id = tu.topic_id AND tu.user_id = #{guardian.user.id.to_i})")
-      builder.where('COALESCE(tu.notification_level,1) > :muted', muted: TopicUser.notification_levels[:muted])
+      builder.left_join(
+        "topic_users AS tu ON (t.id = tu.topic_id AND tu.user_id = #{guardian.user.id.to_i})",
+      )
+      builder.where(
+        "COALESCE(tu.notification_level,1) > :muted",
+        muted: TopicUser.notification_levels[:muted],
+      )
     end
 
     # not certain if pluck is right, cause it may interfere with caching
-    builder.where('l.post_id in (:post_ids)', post_ids: posts.map(&:id))
+    builder.where("l.post_id in (:post_ids)", post_ids: posts.map(&:id))
     builder.secure_category(guardian.secure_category_ids)
 
     result = {}
     builder.query.each do |l|
       result[l.post_id] ||= []
-      result[l.post_id] << { url: l.url,
-                             clicks: l.clicks,
-                             title: l.title,
-                             internal: l.internal,
-                             reflection: l.reflection }
+      result[l.post_id] << {
+        url: l.url,
+        clicks: l.clicks,
+        title: l.title,
+        internal: l.internal,
+        reflection: l.reflection,
+      }
     end
     result
   end
@@ -128,22 +140,20 @@ class TopicLink < ActiveRecord::Base
       .reject { |_, p| p.nil? || "mailto" == p.scheme }
       .uniq { |_, p| p }
       .each do |link, parsed|
-
-      TopicLink.transaction do
-        begin
-          url, reflected_id = self.ensure_entry_for(post, link, parsed)
-          current_urls << url unless url.nil?
-          reflected_ids << reflected_id unless reflected_id.nil?
-        rescue URI::Error
-          # if the URI is invalid, don't store it.
-        rescue ActionController::RoutingError
-          # If we can't find the route, no big deal
+        TopicLink.transaction do
+          begin
+            url, reflected_id = self.ensure_entry_for(post, link, parsed)
+            current_urls << url unless url.nil?
+            reflected_ids << reflected_id unless reflected_id.nil?
+          rescue URI::Error
+            # if the URI is invalid, don't store it.
+          rescue ActionController::RoutingError
+            # If we can't find the route, no big deal
+          end
         end
       end
-    end
 
     self.cleanup_entries(post, current_urls, reflected_ids)
-
   end
 
   def self.crawl_link_title(topic_link_id)
@@ -155,20 +165,23 @@ class TopicLink < ActiveRecord::Base
   end
 
   def self.duplicate_lookup(topic)
-    results = TopicLink
-      .includes(:post, :user)
-      .joins(:post, :user)
-      .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
-      .where(topic_id: topic.id, reflection: false)
-      .last(200)
+    results =
+      TopicLink
+        .includes(:post, :user)
+        .joins(:post, :user)
+        .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
+        .where(topic_id: topic.id, reflection: false)
+        .last(200)
 
     lookup = {}
     results.each do |tl|
-      normalized = tl.url.downcase.sub(/^https?:\/\//, '').sub(/\/$/, '')
-      lookup[normalized] = { domain: tl.domain,
-                             username: tl.user.username_lower,
-                             posted_at: tl.post.created_at,
-                             post_number: tl.post.post_number }
+      normalized = tl.url.downcase.sub(%r{\Ahttps?://}, "").sub(%r{/\z}, "")
+      lookup[normalized] = {
+        domain: tl.domain,
+        username: tl.user.username_lower,
+        posted_at: tl.post.created_at,
+        post_number: tl.post.post_number,
+      }
     end
 
     lookup
@@ -200,7 +213,6 @@ class TopicLink < ActiveRecord::Base
     extension: nil,
     reflection: false
   )
-
     domain ||= Discourse.current_hostname
 
     sql = <<~SQL
@@ -243,26 +255,24 @@ class TopicLink < ActiveRecord::Base
       ), (SELECT id FROM new_row) IS NOT NULL
     SQL
 
-    topic_link_id, new_record = DB.query_single(sql,
-      post_id: post_id,
-      user_id: user_id,
-      topic_id: topic_id,
-      url: url,
-      domain: domain,
-      internal: internal,
-      link_topic_id: link_topic_id,
-      link_post_id: link_post_id,
-      quote: quote,
-      extension: extension,
-      reflection: reflection,
-      now: Time.now
-    )
+    topic_link_id, new_record =
+      DB.query_single(
+        sql,
+        post_id: post_id,
+        user_id: user_id,
+        topic_id: topic_id,
+        url: url,
+        domain: domain,
+        internal: internal,
+        link_topic_id: link_topic_id,
+        link_post_id: link_post_id,
+        quote: quote,
+        extension: extension,
+        reflection: reflection,
+        now: Time.now,
+      )
 
-    if new_record
-      DB.after_commit do
-        crawl_link_title(topic_link_id)
-      end
-    end
+    DB.after_commit { crawl_link_title(topic_link_id) } if new_record
 
     topic_link_id
   end
@@ -315,7 +325,8 @@ class TopicLink < ActiveRecord::Base
     url = url[0...TopicLink.max_url_length]
     return nil if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
 
-    file_extension = File.extname(parsed.path)[1..10].downcase unless parsed.path.nil? || File.extname(parsed.path).empty?
+    file_extension = File.extname(parsed.path)[1..10].downcase unless parsed.path.nil? ||
+      File.extname(parsed.path).empty?
 
     safe_create_topic_link(
       post_id: post.id,
@@ -333,22 +344,23 @@ class TopicLink < ActiveRecord::Base
     reflected_id = nil
 
     # Create the reflection if we can
-    if topic && post.topic && topic.archetype != 'private_message' && post.topic.archetype != 'private_message' && post.topic.visible?
+    if topic && post.topic && topic.archetype != "private_message" &&
+         post.topic.archetype != "private_message" && post.topic.visible?
       prefix = Discourse.base_url_no_prefix
       reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
 
-      reflected_id = safe_create_topic_link(
-        user_id: post.user_id,
-        topic_id: topic&.id,
-        post_id: reflected_post&.id,
-        url: reflected_url,
-        domain: Discourse.current_hostname,
-        reflection: true,
-        internal: true,
-        link_topic_id: post.topic_id,
-        link_post_id: post.id
-      )
-
+      reflected_id =
+        safe_create_topic_link(
+          user_id: post.user_id,
+          topic_id: topic&.id,
+          post_id: reflected_post&.id,
+          url: reflected_url,
+          domain: Discourse.current_hostname,
+          reflection: true,
+          internal: true,
+          link_topic_id: post.topic_id,
+          link_post_id: post.id,
+        )
     end
 
     [url, reflected_id]
@@ -359,27 +371,25 @@ class TopicLink < ActiveRecord::Base
     if current_urls.present?
       TopicLink.where(
         "(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)",
-        urls: current_urls, post_id: post.id
+        urls: current_urls,
+        post_id: post.id,
       ).delete_all
 
       current_reflected_ids.compact!
       if current_reflected_ids.present?
         TopicLink.where(
           "(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
-          reflected_ids: current_reflected_ids, post_id: post.id
+          reflected_ids: current_reflected_ids,
+          post_id: post.id,
         ).delete_all
       else
-        TopicLink
-          .where("link_post_id = :post_id AND reflection", post_id: post.id)
-          .delete_all
+        TopicLink.where("link_post_id = :post_id AND reflection", post_id: post.id).delete_all
       end
     else
-      TopicLink
-        .where(
-          "(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)",
-          post_id: post.id
-        )
-        .delete_all
+      TopicLink.where(
+        "(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)",
+        post_id: post.id,
+      ).delete_all
     end
   end
 end

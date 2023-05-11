@@ -36,7 +36,7 @@ RSpec.describe ReviewableScore, type: :model do
     end
 
     it "increases the score by the post action type's score bonus" do
-      PostActionType.where(name_key: 'spam').update_all(score_bonus: 2.25)
+      PostActionType.where(name_key: "spam").update_all(score_bonus: 2.25)
       reviewable = PostActionCreator.spam(user, post).reviewable
       score = reviewable.reviewable_scores.find_by(user: user)
       expect(score).to be_pending
@@ -54,12 +54,13 @@ RSpec.describe ReviewableScore, type: :model do
     let(:topic) { post.topic }
 
     it "gives a bonus for take_action" do
-      result = PostActionCreator.new(
-        moderator,
-        post,
-        PostActionType.types[:spam],
-        take_action: true
-      ).perform
+      result =
+        PostActionCreator.new(
+          moderator,
+          post,
+          PostActionType.types[:spam],
+          take_action: true,
+        ).perform
 
       expect(result.reviewable_score.take_action_bonus).to eq(5.0)
       expect(result.reviewable.score).to eq(11.0)
@@ -162,7 +163,9 @@ RSpec.describe ReviewableScore, type: :model do
       end
 
       it "returns 6.0 for staff" do
-        expect(ReviewableScore.user_flag_score(Fabricate.build(:moderator, trust_level: 2))).to eq(6.0)
+        expect(ReviewableScore.user_flag_score(Fabricate.build(:moderator, trust_level: 2))).to eq(
+          6.0,
+        )
         expect(ReviewableScore.user_flag_score(Fabricate.build(:admin, trust_level: 1))).to eq(6.0)
       end
     end
@@ -185,7 +188,7 @@ RSpec.describe ReviewableScore, type: :model do
     fab!(:user) { Fabricate(:user) }
     let(:user_stat) { user.user_stat }
 
-    it 'never returns less than 0' do
+    it "never returns less than 0" do
       user.trust_level = 2
       user_stat.flags_agreed = 1
       user_stat.flags_disagreed = 1000
@@ -194,7 +197,7 @@ RSpec.describe ReviewableScore, type: :model do
       expect(ReviewableScore.calculate_score(user, 5, 5)).to eq(0)
     end
 
-    it 'returns user_flag_score + type_bonus + take_action_bonus' do
+    it "returns user_flag_score + type_bonus + take_action_bonus" do
       user.trust_level = 2
       user_stat.flags_agreed = 12
       user_stat.flags_disagreed = 2

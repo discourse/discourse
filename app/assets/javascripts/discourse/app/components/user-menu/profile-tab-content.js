@@ -2,6 +2,17 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
+import DoNotDisturb from "discourse/lib/do-not-disturb";
+
+const _extraItems = [];
+
+export function addUserMenuProfileTabItem(item) {
+  _extraItems.push(item);
+}
+
+export function resetUserMenuProfileTabItems() {
+  _extraItems.clear();
+}
 
 export default class UserMenuProfileTabContent extends Component {
   @service currentUser;
@@ -25,6 +36,16 @@ export default class UserMenuProfileTabContent extends Component {
 
   get doNotDisturbDateTime() {
     return this.#doNotDisturbUntilDate.getTime();
+  }
+
+  get showDoNotDisturbEndDate() {
+    return !DoNotDisturb.isEternal(
+      this.currentUser.get("do_not_disturb_until")
+    );
+  }
+
+  get extraItems() {
+    return _extraItems;
   }
 
   get #doNotDisturbUntilDate() {
@@ -63,7 +84,9 @@ export default class UserMenuProfileTabContent extends Component {
       modalClass: "user-status",
       model: {
         status: this.currentUser.status,
-        saveAction: (status) => this.userStatus.set(status),
+        pauseNotifications: this.currentUser.isInDoNotDisturb(),
+        saveAction: (status, pauseNotifications) =>
+          this.userStatus.set(status, pauseNotifications),
         deleteAction: () => this.userStatus.clear(),
       },
     });

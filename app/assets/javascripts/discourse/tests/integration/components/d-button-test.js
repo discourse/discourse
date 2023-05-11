@@ -312,4 +312,10 @@ module("Integration | Component | d-button", function (hooks) {
 
     assert.strictEqual(this.foo, "bar");
   });
+
+  test("ellipses", async function (assert) {
+    await render(hbs`<DButton @translatedLabel="test label" @ellipsis=true />`);
+
+    assert.dom(".d-button-label").hasText("test label…");
+  });
 });

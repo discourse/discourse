@@ -16,18 +16,35 @@ module PageObjects
         find("#{VISIBLE_DRAWER} .chat-drawer-header__close-btn").click
       end
 
-      def open_index
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__return-to-channels-btn").click
+      def back
+        find("#{VISIBLE_DRAWER} .chat-drawer-header__back-btn").click
       end
 
       def open_channel(channel)
         find(
           "#{VISIBLE_DRAWER} .channels-list .chat-channel-row[data-chat-channel-id='#{channel.id}']",
         ).click
+        has_no_css?(".chat-skeleton")
       end
 
       def maximize
         find("#{VISIBLE_DRAWER} .chat-drawer-header__full-screen-btn").click
+      end
+
+      def has_open_thread?(thread = nil)
+        if thread
+          has_css?("#{VISIBLE_DRAWER} .chat-thread[data-id='#{thread.id}']")
+        else
+          has_css?("#{VISIBLE_DRAWER} .chat-thread")
+        end
+      end
+
+      def has_open_channel?(channel)
+        has_css?("#{VISIBLE_DRAWER} .chat-channel[data-id='#{channel.id}']")
+      end
+
+      def has_open_thread_list?
+        has_css?("#{VISIBLE_DRAWER} .chat-thread-list")
       end
     end
   end

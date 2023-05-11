@@ -14,6 +14,6 @@ class DefaultComposerCategoryValidator
   end
 
   def error_message
-    I18n.t('site_settings.errors.invalid_uncategorized_category_setting')
+    I18n.t("site_settings.errors.invalid_uncategorized_category_setting")
   end
 end

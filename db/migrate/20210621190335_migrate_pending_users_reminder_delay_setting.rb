@@ -2,7 +2,10 @@
 
 class MigratePendingUsersReminderDelaySetting < ActiveRecord::Migration[6.1]
   def up
-    setting_value = DB.query_single("SELECT value FROM site_settings WHERE name = 'pending_users_reminder_delay'").first
+    setting_value =
+      DB.query_single(
+        "SELECT value FROM site_settings WHERE name = 'pending_users_reminder_delay'",
+      ).first
 
     if setting_value.present?
       new_value = setting_value.to_i

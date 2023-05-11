@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class StaffConstraint
-
   def matches?(request)
     current_user = CurrentUser.lookup_from_env(request.env)
     current_user&.staff? && custom_staff_check(request)
@@ -14,5 +13,4 @@ class StaffConstraint
   def custom_staff_check(request)
     true
   end
-
 end

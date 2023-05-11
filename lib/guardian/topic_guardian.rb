@@ -3,13 +3,11 @@
 #mixin for all guardian methods dealing with topic permissions
 module TopicGuardian
   def can_remove_allowed_users?(topic, target_user = nil)
-    is_staff? ||
-    (topic.user == @user && @user.has_trust_level?(TrustLevel[2])) ||
-    (
-      topic.allowed_users.count > 1 &&
-      topic.user != target_user &&
-      !!(target_user && user == target_user)
-    )
+    is_staff? || (topic.user == @user && @user.has_trust_level?(TrustLevel[2])) ||
+      (
+        topic.allowed_users.count > 1 && topic.user != target_user &&
+          !!(target_user && user == target_user)
+      )
   end
 
   def can_review_topic?(topic)
@@ -49,10 +47,10 @@ module TopicGuardian
   # Creating Methods
   def can_create_topic?(parent)
     is_staff? ||
-    (user &&
-      user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i &&
-      can_create_post?(parent) &&
-      Category.topic_create_allowed(self).limit(1).count == 1)
+      (
+        user && user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i &&
+          can_create_post?(parent) && Category.topic_create_allowed(self).limit(1).count == 1
+      )
   end
 
   def can_create_topic_on_category?(category)
@@ -60,11 +58,18 @@ module TopicGuardian
     category_id = Category === category ? category.id : category
 
     can_create_topic?(nil) &&
-    (!category || Category.topic_create_allowed(self).where(id: category_id).count == 1)
+      (!category || Category.topic_create_allowed(self).where(id: category_id).count == 1)
   end
 
   def can_move_topic_to_category?(category)
-    category = Category === category ? category : Category.find(category || SiteSetting.uncategorized_category_id)
+    category =
+      (
+        if Category === category
+          category
+        else
+          Category.find(category || SiteSetting.uncategorized_category_id)
+        end
+      )
 
     is_staff? || (can_create_topic_on_category?(category) && !category.require_topic_approval?)
   end
@@ -75,7 +80,9 @@ module TopicGuardian
     return false if topic.trashed?
     return true if is_admin?
 
-    trusted = (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator? || can_perform_action_available_to_group_moderators?(topic)
+    trusted =
+      (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator? ||
+        can_perform_action_available_to_group_moderators?(topic)
 
     (!(topic.closed? || topic.archived?) || trusted) && can_create_post?(topic)
   end
@@ -97,50 +104,46 @@ module TopicGuardian
     # except for a tiny edge case where the topic is uncategorized and you are trying
     # to fix it but uncategorized is disabled
     if (
-      SiteSetting.allow_uncategorized_topics ||
-      topic.category_id != SiteSetting.uncategorized_category_id
-    )
+         SiteSetting.allow_uncategorized_topics ||
+           topic.category_id != SiteSetting.uncategorized_category_id
+       )
       return false if !can_create_topic_on_category?(topic.category)
     end
 
     # Editing a shared draft.
-    return true if (
-      !topic.archived &&
-      !topic.private_message? &&
-      topic.category_id == SiteSetting.shared_drafts_category.to_i &&
-      can_see_category?(topic.category) &&
-      can_see_shared_draft? &&
-      can_create_post?(topic)
-    )
+    if (
+         !topic.archived && !topic.private_message? &&
+           topic.category_id == SiteSetting.shared_drafts_category.to_i &&
+           can_see_category?(topic.category) && can_see_shared_draft? && can_create_post?(topic)
+       )
+      return true
+    end
 
     # TL4 users can edit archived topics, but can not edit private messages
-    return true if (
-      SiteSetting.trusted_users_can_edit_others? &&
-      topic.archived &&
-      !topic.private_message? &&
-      user.has_trust_level?(TrustLevel[4]) &&
-      can_create_post?(topic)
-    )
+    if (
+         SiteSetting.trusted_users_can_edit_others? && topic.archived && !topic.private_message? &&
+           user.has_trust_level?(TrustLevel[4]) && can_create_post?(topic)
+       )
+      return true
+    end
 
     # TL3 users can not edit archived topics and private messages
-    return true if (
-      SiteSetting.trusted_users_can_edit_others? &&
-      !topic.archived &&
-      !topic.private_message? &&
-      user.has_trust_level?(TrustLevel[3]) &&
-      can_create_post?(topic)
-    )
+    if (
+         SiteSetting.trusted_users_can_edit_others? && !topic.archived && !topic.private_message? &&
+           user.has_trust_level?(TrustLevel[3]) && can_create_post?(topic)
+       )
+      return true
+    end
 
     return false if topic.archived
 
-    is_my_own?(topic) &&
-      !topic.edit_time_limit_expired?(user) &&
-      !first_post&.locked? &&
+    is_my_own?(topic) && !topic.edit_time_limit_expired?(user) && !first_post&.locked? &&
       (!first_post&.hidden? || can_edit_hidden_post?(first_post))
   end
 
   def can_recover_topic?(topic)
-    if is_staff? || (topic&.category && is_category_group_moderator?(topic.category))
+    if is_staff? || (topic&.category && is_category_group_moderator?(topic.category)) ||
+         (SiteSetting.tl4_delete_posts_and_topics && user&.has_trust_level?(TrustLevel[4]))
       !!(topic && topic.deleted_at)
     else
       topic && can_recover_post?(topic.ordered_posts.first)
@@ -149,9 +152,14 @@ module TopicGuardian
 
   def can_delete_topic?(topic)
     !topic.trashed? &&
-    (is_staff? || (is_my_own?(topic) && topic.posts_count <= 1 && topic.created_at && topic.created_at > 24.hours.ago) || is_category_group_moderator?(topic.category)) &&
-    !topic.is_category_topic? &&
-    !Discourse.static_doc_topic_ids.include?(topic.id)
+      (
+        is_staff? ||
+          (
+            is_my_own?(topic) && topic.posts_count <= 1 && topic.created_at &&
+              topic.created_at > 24.hours.ago
+          ) || is_category_group_moderator?(topic.category) ||
+          (SiteSetting.tl4_delete_posts_and_topics && user.has_trust_level?(TrustLevel[4]))
+      ) && !topic.is_category_topic? && !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
   def can_permanently_delete_topic?(topic)
@@ -165,15 +173,21 @@ module TopicGuardian
     # All other posts that were deleted still must be permanently deleted
     # before the topic can be deleted with the exception of small action
     # posts that will be deleted right before the topic is.
-    all_posts_count = Post.with_deleted
-      .where(topic_id: topic.id)
-      .where(post_type: [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]])
-      .count
+    all_posts_count =
+      Post
+        .with_deleted
+        .where(topic_id: topic.id)
+        .where(
+          post_type: [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]],
+        )
+        .count
     return false if all_posts_count > 1
 
     return false if !is_admin? || !can_see_topic?(topic)
     return false if !topic.deleted_at
-    return false if topic.deleted_by_id == @user.id && topic.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+    if topic.deleted_by_id == @user.id && topic.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+      return false
+    end
     true
   end
 
@@ -181,7 +195,7 @@ module TopicGuardian
     can_moderate?(topic) || can_perform_action_available_to_group_moderators?(topic)
   end
 
-  alias :can_create_unlisted_topic? :can_toggle_topic_visibility?
+  alias can_create_unlisted_topic? can_toggle_topic_visibility?
 
   def can_convert_topic?(topic)
     return false unless @user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
@@ -197,7 +211,8 @@ module TopicGuardian
   end
 
   def can_see_deleted_topics?(category)
-    is_staff? || is_category_group_moderator?(category)
+    is_staff? || is_category_group_moderator?(category) ||
+      (SiteSetting.tl4_delete_posts_and_topics && user&.has_trust_level?(TrustLevel[4]))
   end
 
   # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can see.
@@ -228,13 +243,16 @@ module TopicGuardian
 
     # Filter out topics with shared drafts if user cannot see shared drafts
     if !can_see_shared_draft?
-      default_scope = default_scope.left_outer_joins(:shared_draft).where("shared_drafts.id IS NULL")
+      default_scope =
+        default_scope.left_outer_joins(:shared_draft).where("shared_drafts.id IS NULL")
     end
 
     all_topics_scope =
       if authenticated?
         Topic.unscoped.merge(
-          secured_regular_topic_scope(default_scope, topic_ids: topic_ids).or(private_message_topic_scope(default_scope))
+          secured_regular_topic_scope(default_scope, topic_ids: topic_ids).or(
+            private_message_topic_scope(default_scope),
+          ),
         )
       else
         Topic.unscoped.merge(secured_regular_topic_scope(default_scope, topic_ids: topic_ids))
@@ -256,27 +274,43 @@ module TopicGuardian
 
     category = topic.category
     can_see_category?(category) &&
-      (!category.read_restricted || !is_staged? || secure_category_ids.include?(category.id) || topic.user == user)
+      (
+        !category.read_restricted || !is_staged? || secure_category_ids.include?(category.id) ||
+          topic.user == user
+      )
+  end
+
+  def can_see_unlisted_topics?
+    is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
   def can_get_access_to_topic?(topic)
     topic&.access_topic_via_group.present? && authenticated?
   end
 
-  def filter_allowed_categories(records)
+  def filter_allowed_categories(records, category_id_column: "topics.category_id")
     return records if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
 
-    records = allowed_category_ids.size == 0 ?
-      records.where('topics.category_id IS NULL') :
-      records.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_category_ids)
+    records =
+      if allowed_category_ids.size == 0
+        records.where("#{category_id_column} IS NULL")
+      else
+        records.where(
+          "#{category_id_column} IS NULL or #{category_id_column} IN (?)",
+          allowed_category_ids,
+        )
+      end
 
     records.references(:categories)
   end
 
   def can_edit_featured_link?(category_id)
     return false unless SiteSetting.topic_featured_link_enabled
-    return false unless @user.trust_level >= TrustLevel.levels[:basic]
-    Category.where(id: category_id || SiteSetting.uncategorized_category_id, topic_featured_link_allowed: true).exists?
+    return false if @user.trust_level == TrustLevel.levels[:newuser]
+    Category.where(
+      id: category_id || SiteSetting.uncategorized_category_id,
+      topic_featured_link_allowed: true,
+    ).exists?
   end
 
   def can_update_bumped_at?
@@ -292,7 +326,8 @@ module TopicGuardian
     return false if topic.private_message? && !can_tag_pms?
     return true if can_edit_topic?(topic)
 
-    if topic&.first_post&.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
+    if topic&.first_post&.wiki &&
+         (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
       return can_create_post?(topic)
     end
 
@@ -306,12 +341,12 @@ module TopicGuardian
 
     is_category_group_moderator?(topic.category)
   end
-  alias :can_archive_topic? :can_perform_action_available_to_group_moderators?
-  alias :can_close_topic? :can_perform_action_available_to_group_moderators?
-  alias :can_open_topic? :can_perform_action_available_to_group_moderators?
-  alias :can_split_merge_topic? :can_perform_action_available_to_group_moderators?
-  alias :can_edit_staff_notes? :can_perform_action_available_to_group_moderators?
-  alias :can_pin_unpin_topic? :can_perform_action_available_to_group_moderators?
+  alias can_archive_topic? can_perform_action_available_to_group_moderators?
+  alias can_close_topic? can_perform_action_available_to_group_moderators?
+  alias can_open_topic? can_perform_action_available_to_group_moderators?
+  alias can_split_merge_topic? can_perform_action_available_to_group_moderators?
+  alias can_edit_staff_notes? can_perform_action_available_to_group_moderators?
+  alias can_pin_unpin_topic? can_perform_action_available_to_group_moderators?
 
   def can_move_posts?(topic)
     return false if is_silenced?
@@ -327,12 +362,10 @@ module TopicGuardian
   def private_message_topic_scope(scope)
     pm_scope = scope.private_messages_for_user(user)
 
-    if is_moderator?
-      pm_scope = pm_scope.or(scope.where(<<~SQL))
+    pm_scope = pm_scope.or(scope.where(<<~SQL)) if is_moderator?
         topics.subtype = '#{TopicSubtype.moderator_warning}'
         OR topics.id IN (#{Topic.has_flag_scope.select(:topic_id).to_sql})
       SQL
-    end
 
     pm_scope
   end
@@ -357,7 +390,8 @@ module TopicGuardian
       )
       SQL
 
-      secured_scope = secured_scope.or(Topic.unscoped.where(sql, user_id: user.id, topic_ids: topic_ids))
+      secured_scope =
+        secured_scope.or(Topic.unscoped.where(sql, user_id: user.id, topic_ids: topic_ids))
     end
 
     scope.listable_topics.merge(secured_scope)

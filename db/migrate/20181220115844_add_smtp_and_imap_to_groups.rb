@@ -10,7 +10,7 @@ class AddSmtpAndImapToGroups < ActiveRecord::Migration[5.2]
     add_column :groups, :imap_port, :integer
     add_column :groups, :imap_ssl, :boolean
 
-    add_column :groups, :imap_mailbox_name, :string, default: '', null: false
+    add_column :groups, :imap_mailbox_name, :string, default: "", null: false
     add_column :groups, :imap_uid_validity, :integer, default: 0, null: false
     add_column :groups, :imap_last_uid, :integer, default: 0, null: false
 

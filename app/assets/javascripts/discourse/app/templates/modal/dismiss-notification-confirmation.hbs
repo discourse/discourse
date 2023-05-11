@@ -3,6 +3,15 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @icon="check" @class="btn-primary" @action={{action "dismiss"}} @label="notifications.dismiss_confirmation.dismiss" />
-  <DButton @action={{route-action "closeModal"}} @label="notifications.dismiss_confirmation.cancel" @class="btn-default" />
+  <DButton
+    @icon="check"
+    @class="btn-primary"
+    @action={{action "dismiss"}}
+    @label="notifications.dismiss_confirmation.dismiss"
+  />
+  <DButton
+    @action={{route-action "closeModal"}}
+    @label="notifications.dismiss_confirmation.cancel"
+    @class="btn-default"
+  />
 </div>

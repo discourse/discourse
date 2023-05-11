@@ -3,15 +3,27 @@
     <div class="contents clearfix body-page">
 
       <ul class="nav-pills">
-        <li class="nav-item-about"><LinkTo @route="about" class="active">{{i18n "about.simple_title"}}</LinkTo></li>
+        <li class="nav-item-about"><LinkTo @route="about" class="active">{{i18n
+              "about.simple_title"
+            }}</LinkTo></li>
         {{#if this.faqOverridden}}
-          <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n "guidelines"}}</LinkTo></li>
-          <li class="nav-item-faq"><LinkTo @route="faq">{{i18n "faq"}}</LinkTo></li>
+          <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n
+                "guidelines"
+              }}</LinkTo></li>
+          <li class="nav-item-faq"><LinkTo @route="faq">{{i18n
+                "faq"
+              }}</LinkTo></li>
         {{else}}
-          <li class="nav-item-faq"><LinkTo @route="faq">{{i18n "faq"}}</LinkTo></li>
+          <li class="nav-item-faq"><LinkTo @route="faq">{{i18n
+                "faq"
+              }}</LinkTo></li>
         {{/if}}
-        <li class="nav-item-tos"><LinkTo @route="tos">{{i18n "tos"}}</LinkTo></li>
-        <li class="nav-item-privacy"><LinkTo @route="privacy">{{i18n "privacy"}}</LinkTo></li>
+        <li class="nav-item-tos"><LinkTo @route="tos">{{i18n
+              "tos"
+            }}</LinkTo></li>
+        <li class="nav-item-privacy"><LinkTo @route="privacy">{{i18n
+              "privacy"
+            }}</LinkTo></li>
       </ul>
 
       <section class="about description">
@@ -19,7 +31,11 @@
         <p>{{this.model.description}}</p>
       </section>
 
-      <PluginOutlet @name="about-after-description" @connectorTagName="section" @args={{hash model=this.model}} />
+      <PluginOutlet
+        @name="about-after-description"
+        @connectorTagName="section"
+        @outletArgs={{hash model=this.model}}
+      />
 
       {{#if this.model.admins}}
         <section class="about admins">
@@ -30,7 +46,13 @@
         </section>
       {{/if}}
 
-      <PluginOutlet @name="about-after-admins" @tagName="span" @connectorTagName="section" @args={{hash model=this.model}} />
+      <span>
+        <PluginOutlet
+          @name="about-after-admins"
+          @connectorTagName="section"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
 
       {{#if this.model.moderators}}
         <section class="about moderators">
@@ -43,11 +65,19 @@
         </section>
       {{/if}}
 
-      <PluginOutlet @name="about-after-moderators" @tagName="span" @connectorTagName="section" @args={{hash model=this.model}} />
+      <span>
+        <PluginOutlet
+          @name="about-after-moderators"
+          @connectorTagName="section"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
 
       {{#if this.model.category_moderators.length}}
         {{#each this.model.category_moderators as |cm|}}
-          <section class="about category-moderators moderators-{{cm.category.slug}}">
+          <section
+            class="about category-moderators moderators-{{cm.category.slug}}"
+          >
             <h3>{{category-link cm.category}}{{i18n "about.moderators"}}</h3>
             <div class="users">
               <AboutPageUsers @users={{cm.moderators}} />
@@ -58,7 +88,7 @@
       {{/if}}
       {{#if this.model.can_see_about_stats}}
         <section class="about stats">
-          <h3>{{d-icon "far-chart-bar"}}  {{i18n "about.stats"}}</h3>
+          <h3>{{d-icon "far-chart-bar"}} {{i18n "about.stats"}}</h3>
 
           <table class="table">
             <tbody>
@@ -104,13 +134,24 @@
                 <td>{{number this.model.stats.likes_30_days}}</td>
                 <td>{{number this.model.stats.like_count}}</td>
               </tr>
-              {{#each this.site.displayed_about_plugin_stat_groups as |statGroupName|}}
+              {{#each
+                this.site.displayed_about_plugin_stat_groups
+                as |statGroupName|
+              }}
                 <tr class={{concat "about-" statGroupName "-count"}}>
                   <td>{{i18n (concat "about." statGroupName "_count")}}</td>
-                  <td>{{number (get this.model.stats (concat statGroupName "_last_day"))}}</td>
-                  <td>{{number (get this.model.stats (concat statGroupName "_7_days"))}}</td>
-                  <td>{{number (get this.model.stats (concat statGroupName "_30_days"))}}</td>
-                  <td>{{number (get this.model.stats (concat statGroupName "_count"))}}</td>
+                  <td>{{number
+                      (get this.model.stats (concat statGroupName "_last_day"))
+                    }}</td>
+                  <td>{{number
+                      (get this.model.stats (concat statGroupName "_7_days"))
+                    }}</td>
+                  <td>{{number
+                      (get this.model.stats (concat statGroupName "_30_days"))
+                    }}</td>
+                  <td>{{number
+                      (get this.model.stats (concat statGroupName "_count"))
+                    }}</td>
                 </tr>
               {{/each}}
             </tbody>

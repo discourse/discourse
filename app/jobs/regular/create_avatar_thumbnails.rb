@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module Jobs
-
   class CreateAvatarThumbnails < ::Jobs::Base
-    sidekiq_options queue: 'low'
+    sidekiq_options queue: "low"
 
     def execute(args)
       return if Rails.env.test?
@@ -13,11 +12,7 @@ module Jobs
 
       return unless upload = Upload.find_by(id: upload_id)
 
-      Discourse.avatar_sizes.each do |size|
-        OptimizedImage.create_for(upload, size, size)
-      end
+      Discourse.avatar_sizes.each { |size| OptimizedImage.create_for(upload, size, size) }
     end
-
   end
-
 end

@@ -267,6 +267,10 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       });
     });
 
+    if (this.siteSettings.enable_upload_debug_mode) {
+      this._instrumentUploadTimings();
+    }
+
     // TODO (martin) preventDirectS3Uploads is necessary because some of
     // the current upload mixin components, for example the emoji uploader,
     // send the upload to custom endpoints that do fancy things in the rails
@@ -314,6 +318,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   _triggerInProgressUploadsEvent() {
+    this.onProgressUploadsChanged?.(this.inProgressUploads);
     this.appEvents.trigger(
       `upload-mixin:${this.id}:in-progress-uploads`,
       this.inProgressUploads

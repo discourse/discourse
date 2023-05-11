@@ -39,6 +39,7 @@ import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/inde
 import SiteSettingService from "discourse/services/site-settings";
 import jQuery from "jquery";
 import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
+import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -201,6 +202,7 @@ export default function setupTests(config) {
   setupDeprecationCounter(QUnit);
 
   QUnit.config.hidepassed = true;
+  QUnit.config.testTimeout = 60_000;
 
   sinon.config = {
     injectIntoThis: false,
@@ -386,6 +388,13 @@ export default function setupTests(config) {
   setupToolbar();
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
+
+  const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
+  const hasThemeJs = !!document.querySelector("script[data-theme-id]");
+
+  if (!hasPluginJs && !hasThemeJs) {
+    configureRaiseOnDeprecation();
+  }
 }
 
 function getUrlParameter(name) {

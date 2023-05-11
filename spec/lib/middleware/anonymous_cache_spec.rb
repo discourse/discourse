@@ -4,7 +4,7 @@ RSpec.describe Middleware::AnonymousCache do
   let(:middleware) { Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] }) }
 
   def env(opts = {})
-    create_request_env(path: "http://test.com/path?bla=1").merge(opts)
+    create_request_env(path: opts.delete(:path) || "http://test.com/path?bla=1").merge(opts)
   end
 
   describe Middleware::AnonymousCache::Helper do
@@ -18,7 +18,9 @@ RSpec.describe Middleware::AnonymousCache do
       end
 
       it "is false for non GET" do
-        expect(new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?).to eq(false)
+        expect(
+          new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?,
+        ).to eq(false)
       end
 
       it "is false if it has a valid auth cookie" do
@@ -35,6 +37,18 @@ RSpec.describe Middleware::AnonymousCache do
 
       it "is false for srv/status routes" do
         expect(new_helper("PATH_INFO" => "/srv/status").cacheable?).to eq(false)
+      end
+
+      it "is false for API requests using header" do
+        expect(new_helper("HTTP_API_KEY" => "abcde").cacheable?).to eq(false)
+      end
+
+      it "is false for API requests using parameter" do
+        expect(new_helper(path: "/path?api_key=abc").cacheable?).to eq(false)
+      end
+
+      it "is false for User API requests using header" do
+        expect(new_helper("HTTP_USER_API_KEY" => "abcde").cacheable?).to eq(false)
       end
     end
 
@@ -97,12 +111,13 @@ RSpec.describe Middleware::AnonymousCache do
     end
 
     context "when cached" do
-      let!(:helper) do
-        new_helper("ANON_CACHE_DURATION" => 10)
-      end
+      let!(:helper) { new_helper("ANON_CACHE_DURATION" => 10) }
 
       let!(:crawler) do
-        new_helper("ANON_CACHE_DURATION" => 10, "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)")
+        new_helper(
+          "ANON_CACHE_DURATION" => 10,
+          "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)",
+        )
       end
 
       after do
@@ -110,9 +125,7 @@ RSpec.describe Middleware::AnonymousCache do
         crawler.clear_cache
       end
 
-      before do
-        global_setting :anon_cache_store_threshold, 1
-      end
+      before { global_setting :anon_cache_store_threshold, 1 }
 
       it "compresses body on demand" do
         global_setting :compress_anon_cache, true
@@ -121,7 +134,9 @@ RSpec.describe Middleware::AnonymousCache do
         helper.cache([200, { "HELLO" => "WORLD" }, [payload]])
 
         helper = new_helper("ANON_CACHE_DURATION" => 10)
-        expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, [payload]])
+        expect(helper.cached).to eq(
+          [200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, [payload]],
+        )
 
         # depends on i7z implementation, but lets assume it is stable unless we discover
         # otherwise
@@ -132,7 +147,9 @@ RSpec.describe Middleware::AnonymousCache do
         helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
 
         helper = new_helper("ANON_CACHE_DURATION" => 10)
-        expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]])
+        expect(helper.cached).to eq(
+          [200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]],
+        )
 
         helper = new_helper("ANON_CACHE_DURATION" => 10, "HTTP_ACCEPT_ENCODING" => "gz, br")
         expect(helper.cached).to eq(nil)
@@ -145,35 +162,35 @@ RSpec.describe Middleware::AnonymousCache do
 
         helper = new_helper("ANON_CACHE_DURATION" => 10)
         helper.is_mobile = true
-        expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]])
+        expect(helper.cached).to eq(
+          [200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]],
+        )
 
         expect(crawler.cached).to eq(nil)
         crawler.cache([200, { "HELLO" => "WORLD" }, ["hello ", "world"]])
-        expect(crawler.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]])
+        expect(crawler.cached).to eq(
+          [200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]],
+        )
       end
     end
   end
 
-  describe 'background request rate limit' do
-    it 'will rate limit background requests' do
-
-      app = Middleware::AnonymousCache.new(
-        lambda do |env|
-          [200, {}, ["ok"]]
-        end
-      )
+  describe "background request rate limit" do
+    it "will rate limit background requests" do
+      app = Middleware::AnonymousCache.new(lambda { |env| [200, {}, ["ok"]] })
 
       global_setting :background_requests_max_queue_length, "0.5"
 
       cookie = create_auth_cookie(token: SecureRandom.hex)
-      env = create_request_env.merge(
-        "HTTP_COOKIE" => "_t=#{cookie}",
-        "HOST" => "site.com",
-        "REQUEST_METHOD" => "GET",
-        "REQUEST_URI" => "/somewhere/rainbow",
-        "REQUEST_QUEUE_SECONDS" => 2.1,
-        "rack.input" => StringIO.new
-      )
+      env =
+        create_request_env.merge(
+          "HTTP_COOKIE" => "_t=#{cookie}",
+          "HOST" => "site.com",
+          "REQUEST_METHOD" => "GET",
+          "REQUEST_URI" => "/somewhere/rainbow",
+          "REQUEST_QUEUE_SECONDS" => 2.1,
+          "rack.input" => StringIO.new,
+        )
 
       # non background ... long request
       env["REQUEST_QUEUE_SECONDS"] = 2
@@ -193,41 +210,39 @@ RSpec.describe Middleware::AnonymousCache do
 
       status, _ = app.call(env.dup)
       expect(status).to eq(200)
-
     end
   end
 
-  describe '#force_anonymous!' do
-    before do
-      RateLimiter.enable
-    end
+  describe "#force_anonymous!" do
+    before { RateLimiter.enable }
 
-    it 'will revert to anonymous once we reach the limit' do
-
+    it "will revert to anonymous once we reach the limit" do
       RateLimiter.clear_all!
 
       is_anon = false
 
-      app = Middleware::AnonymousCache.new(
-        lambda do |env|
-          is_anon = env["HTTP_COOKIE"].nil? && env["HTTP_DISCOURSE_LOGGED_IN"].nil?
-          [200, {}, ["ok"]]
-        end
-      )
+      app =
+        Middleware::AnonymousCache.new(
+          lambda do |env|
+            is_anon = env["HTTP_COOKIE"].nil? && env["HTTP_DISCOURSE_LOGGED_IN"].nil?
+            [200, {}, ["ok"]]
+          end,
+        )
 
       global_setting :force_anonymous_min_per_10_seconds, 2
       global_setting :force_anonymous_min_queue_seconds, 1
 
       cookie = create_auth_cookie(token: SecureRandom.hex)
-      env = create_request_env.merge(
-        "HTTP_COOKIE" => "_t=#{cookie}",
-        "HTTP_DISCOURSE_LOGGED_IN" => "true",
-        "HOST" => "site.com",
-        "REQUEST_METHOD" => "GET",
-        "REQUEST_URI" => "/somewhere/rainbow",
-        "REQUEST_QUEUE_SECONDS" => 2.1,
-        "rack.input" => StringIO.new
-      )
+      env =
+        create_request_env.merge(
+          "HTTP_COOKIE" => "_t=#{cookie}",
+          "HTTP_DISCOURSE_LOGGED_IN" => "true",
+          "HOST" => "site.com",
+          "REQUEST_METHOD" => "GET",
+          "REQUEST_URI" => "/somewhere/rainbow",
+          "REQUEST_QUEUE_SECONDS" => 2.1,
+          "rack.input" => StringIO.new,
+        )
 
       is_anon = false
       app.call(env.dup)
@@ -244,7 +259,7 @@ RSpec.describe Middleware::AnonymousCache do
       is_anon = false
       _status, headers, _body = app.call(env.dup)
       expect(is_anon).to eq(true)
-      expect(headers['Set-Cookie']).to eq('dosp=1; Path=/')
+      expect(headers["Set-Cookie"]).to eq("dosp=1; Path=/")
 
       # tricky change, a 50ms delay still will trigger protection
       # once it is tripped
@@ -263,11 +278,10 @@ RSpec.describe Middleware::AnonymousCache do
     end
   end
 
-  describe 'invalid request payload' do
-    it 'returns 413 for GET request with payload' do
-      status, headers, _ = middleware.call(env.tap do |environment|
-        environment[Rack::RACK_INPUT].write("test")
-      end)
+  describe "invalid request payload" do
+    it "returns 413 for GET request with payload" do
+      status, headers, _ =
+        middleware.call(env.tap { |environment| environment[Rack::RACK_INPUT].write("test") })
 
       expect(status).to eq(413)
       expect(headers["Cache-Control"]).to eq("private, max-age=0, must-revalidate")
@@ -278,104 +292,108 @@ RSpec.describe Middleware::AnonymousCache do
     let :non_crawler do
       {
         "HTTP_USER_AGENT" =>
-        "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
+          "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       }
     end
 
     def get(path, options)
-      @env = env({
-        "REQUEST_URI" => path,
-        "PATH_INFO" => path,
-        "REQUEST_PATH" => path
-      }.merge(options[:headers]))
+      @env =
+        env(
+          { "REQUEST_URI" => path, "PATH_INFO" => path, "REQUEST_PATH" => path }.merge(
+            options[:headers],
+          ),
+        )
       @status, @response_header, @response = middleware.call(@env)
     end
 
     it "applies allowed_crawler_user_agents correctly" do
-      SiteSetting.allowed_crawler_user_agents = 'Googlebot'
+      SiteSetting.allowed_crawler_user_agents = "Googlebot"
 
-      get '/', headers: {
-        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
-      }
+      get "/", headers: { "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
 
       expect(@status).to eq(200)
 
-      get '/', headers: {
-        'HTTP_USER_AGENT' => 'Anotherbot/2.1 (+http://www.notgoogle.com/bot.html)'
-      }
+      get "/",
+          headers: {
+            "HTTP_USER_AGENT" => "Anotherbot/2.1 (+http://www.notgoogle.com/bot.html)",
+          }
 
       expect(@status).to eq(403)
       expect(@response).to be_an(Array)
 
-      get '/', headers: non_crawler
+      get "/", headers: non_crawler
       expect(@status).to eq(200)
     end
 
     it "doesn't block api requests" do
-      SiteSetting.allowed_crawler_user_agents = 'Googlebot'
+      SiteSetting.allowed_crawler_user_agents = "Googlebot"
       api_key = Fabricate(:api_key)
 
-      get "/latest?api_key=#{api_key.key}&api_username=system", headers: {
-        "QUERY_STRING" => "api_key=#{api_key.key}&api_username=system"
-      }
+      get "/latest?api_key=#{api_key.key}&api_username=system",
+          headers: {
+            "QUERY_STRING" => "api_key=#{api_key.key}&api_username=system",
+          }
+      expect(@status).to eq(200)
+
+      get "/latest", headers: { "HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => "system" }
       expect(@status).to eq(200)
     end
 
     it "applies blocked_crawler_user_agents correctly" do
-      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
-      get '/', headers: non_crawler
+      get "/", headers: non_crawler
       expect(@status).to eq(200)
 
-      get '/', headers: {
-        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
-      }
+      get "/", headers: { "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
 
       expect(@status).to eq(403)
 
-      get '/', headers: {
-        'HTTP_USER_AGENT' => 'Twitterbot/2.1 (+http://www.notgoogle.com/bot.html)'
-      }
+      get "/",
+          headers: {
+            "HTTP_USER_AGENT" => "Twitterbot/2.1 (+http://www.notgoogle.com/bot.html)",
+          }
 
       expect(@status).to eq(200)
     end
 
     it "should never block robots.txt" do
-      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
-      get '/robots.txt', headers: {
-        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
-      }
+      get "/robots.txt",
+          headers: {
+            "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
 
       expect(@status).to eq(200)
     end
 
     it "should never block srv/status" do
-      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
-      get '/srv/status', headers: {
-        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
-      }
+      get "/srv/status",
+          headers: {
+            "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
 
       expect(@status).to eq(200)
     end
 
     it "blocked crawlers shouldn't log page views" do
-      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
-      get '/', headers: {
-        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
-      }
+      get "/", headers: { "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
 
       expect(@env["discourse.request_tracker.skip"]).to eq(true)
     end
 
     it "blocks json requests" do
-      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
-      get '/srv/status.json', headers: {
-        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
-      }
+      get "/srv/status.json",
+          headers: {
+            "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
 
       expect(@status).to eq(403)
     end

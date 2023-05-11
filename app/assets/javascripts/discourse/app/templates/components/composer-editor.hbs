@@ -1,7 +1,0 @@
-<DEditor @value={{this.composer.reply}} @placeholder={{this.replyPlaceholder}} @previewUpdated={{action "previewUpdated"}} @markdownOptions={{this.markdownOptions}} @extraButtons={{action "extraButtons"}} @importQuote={{action "importQuote"}} @showUploadModal={{this.showUploadModal}} @togglePreview={{action "togglePreview"}} @processPreview={{this.processPreview}} @validation={{this.validation}} @loading={{this.composer.loading}} @forcePreview={{this.forcePreview}} @showLink={{this.showLink}} @composerEvents={{true}} @onExpandPopupMenuOptions={{action "onExpandPopupMenuOptions"}} @onPopupMenuAction={{this.onPopupMenuAction}} @popupMenuOptions={{this.popupMenuOptions}} @disabled={{this.disableTextarea}} @outletArgs={{hash composer=this.composer editorType="composer"}}>
-  {{yield}}
-</DEditor>
-
-{{#if this.allowUpload}}
-  <PickFilesButton @fileInputId="file-uploader" @allowMultiple={{true}} />
-{{/if}}

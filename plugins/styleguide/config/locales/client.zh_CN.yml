@@ -92,3 +92,6 @@ zh_CN:
           description: "描述"
           header: "标头"
           hover_to_see: "悬停以查看工具提示"
+        char_counter:
+          title: "字符计数器"
+          placeholder: "在这里输入你的文字..."

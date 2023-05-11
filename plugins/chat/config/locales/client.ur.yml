@@ -21,14 +21,13 @@ ur:
       joined: "شمولیت اختیار کی"
       email_frequency:
         never: "کبھی نہیں"
+      header_indicator_preference:
+        never: "کبھی نہیں"
       flag: "فلَیگ"
       join: "شمولیت اختیار کریں"
+      last_visit: "آخری وزٹ"
       mention_warning:
         dismiss: "بر خاست کریں"
-        groups:
-          users_limit:
-            one: "%{count} صارف"
-            other: "%{count} صارفین"
       reply: "جواب"
       edit: "ترمیم کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"
@@ -50,6 +49,7 @@ ur:
         yesterday: کَل
       about_view:
         title: عنوان
+        name: نام
         description: تفصیل
       channel_info:
         back_to_channel: "واپس"
@@ -68,6 +68,7 @@ ur:
       composer:
         italic_text: "زور دیا گیا ٹَیکسٹ"
         bold_text: "گہرا ٹَیکسٹ"
+        send: "بھیجیں"
       notification_levels:
         never: "کبھی نہیں"
       settings:
@@ -104,6 +105,10 @@ ur:
         activities: "سرگرمیاں"
         flags: "فلَیگز"
         symbols: "علامات"
+      thread:
+        replies:
+          one: "%{count} جواب"
+          other: "%{count} جوابات"
       draft_channel_screen:
         header: "نیا پیغام"
         cancel: "منسوخ"
@@ -115,7 +120,3 @@ ur:
           fields:
             message:
               label: پیغام
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "کی طرف سے فلَیگ کردہ"

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class NotificationEmailer
-
   class EmailUser
     attr_reader :notification, :no_delay
 
@@ -84,7 +83,6 @@ class NotificationEmailer
     end
 
     def enqueue_private(type, delay = private_delay)
-
       if notification.user.user_option.nil?
         # this can happen if we roll back user creation really early
         # or delete user
@@ -92,7 +90,9 @@ class NotificationEmailer
         return
       end
 
-      return if notification.user.user_option.email_messages_level == UserOption.email_level_types[:never]
+      if notification.user.user_option.email_messages_level == UserOption.email_level_types[:never]
+        return
+      end
       perform_enqueue(type, delay)
     end
 
@@ -116,13 +116,13 @@ class NotificationEmailer
     end
 
     def post_type
-      @post_type ||= begin
-        type = notification.data_hash["original_post_type"] if notification.data_hash
-        type ||= notification.post.try(:post_type)
-        type
-      end
+      @post_type ||=
+        begin
+          type = notification.data_hash["original_post_type"] if notification.data_hash
+          type ||= notification.post.try(:post_type)
+          type
+        end
     end
-
   end
 
   def self.disable
@@ -136,9 +136,8 @@ class NotificationEmailer
   def self.process_notification(notification, no_delay: false)
     return if @disabled
 
-    email_user   = EmailUser.new(notification, no_delay: no_delay)
+    email_user = EmailUser.new(notification, no_delay: no_delay)
     email_method = Notification.types[notification.notification_type]
     email_user.public_send(email_method) if email_user.respond_to? email_method
   end
-
 end

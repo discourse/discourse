@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
@@ -9,6 +8,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { isPresent } from "@ember/utils";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
+import User from "discourse/models/user";
 
 export default Component.extend({
   chat: service(),
@@ -17,24 +18,26 @@ export default Component.extend({
   channels: null,
   searchIndex: 0,
   loading: false,
-
-  init() {
-    this._super(...arguments);
-    this.appEvents.on("chat-channel-selector-modal:close", this.close);
-    this.getInitialChannels();
-  },
+  chatChannelsManager: service(),
+  router: service(),
+  focusedRow: null,
 
   didInsertElement() {
     this._super(...arguments);
+
+    this.appEvents.on("chat-channel-selector-modal:close", this.close);
     document.addEventListener("keyup", this.onKeyUp);
     document
       .getElementById("chat-channel-selector-modal-inner")
       ?.addEventListener("mouseover", this.mouseover);
     document.getElementById("chat-channel-selector-input")?.focus();
+
+    this.getInitialChannels();
   },
 
   willDestroyElement() {
     this._super(...arguments);
+
     this.appEvents.off("chat-channel-selector-modal:close", this.close);
     document.removeEventListener("keyup", this.onKeyUp);
     document
@@ -52,19 +55,16 @@ export default Component.extend({
       } else {
         channel = this.channels.find((c) => c.user && c.id === id);
       }
-      channel?.set("focused", true);
-      this.channels.forEach((c) => {
-        if (c !== channel) {
-          c.set("focused", false);
-        }
-      });
+      if (channel) {
+        this.set("focusedRow", channel);
+      }
     }
   },
 
   @bind
   onKeyUp(e) {
     if (e.key === "Enter") {
-      let focusedChannel = this.channels.find((c) => c.focused);
+      let focusedChannel = this.channels.find((c) => c === this.focusedRow);
       this.switchChannel(focusedChannel);
       e.preventDefault();
     } else if (e.key === "ArrowDown") {
@@ -77,16 +77,17 @@ export default Component.extend({
   },
 
   arrowNavigateChannels(direction) {
-    const indexOfFocused = this.channels.findIndex((c) => c.focused);
+    const indexOfFocused = this.channels.findIndex(
+      (c) => c === this.focusedRow
+    );
     if (indexOfFocused > -1) {
       const nextIndex = direction === "down" ? 1 : -1;
       const nextChannel = this.channels[indexOfFocused + nextIndex];
       if (nextChannel) {
-        this.channels[indexOfFocused].set("focused", false);
-        nextChannel.set("focused", true);
+        this.set("focusedRow", nextChannel);
       }
     } else {
-      this.channels[0].set("focused", true);
+      this.set("focusedRow", this.channels[0]);
     }
 
     schedule("afterRender", () => {
@@ -99,18 +100,19 @@ export default Component.extend({
 
   @action
   switchChannel(channel) {
-    if (channel.user) {
+    if (channel instanceof User) {
       return this.fetchOrCreateChannelForUser(channel).then((response) => {
-        this.chat
-          .startTrackingChannel(ChatChannel.create(response.chat_channel))
-          .then((newlyTracked) => {
-            this.chat.openChannel(newlyTracked);
-            this.close();
-          });
+        const newChannel = this.chatChannelsManager.store(response.channel);
+        return this.chatChannelsManager.follow(newChannel).then((c) => {
+          this.router.transitionTo("chat.channel", ...c.routeModels);
+          this.close();
+        });
       });
     } else {
-      this.chat.openChannel(channel);
-      this.close();
+      return this.chatChannelsManager.follow(channel).then((c) => {
+        this.router.transitionTo("chat.channel", ...c.routeModels);
+        this.close();
+      });
     }
   },
 
@@ -130,26 +132,34 @@ export default Component.extend({
 
   @action
   fetchChannelsFromServer(filter) {
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
     this.setProperties({
       loading: true,
       searchIndex: this.searchIndex + 1,
     });
     const thisSearchIndex = this.searchIndex;
-    ajax("/chat/chat_channels/search", { data: { filter } })
+    ajax("/chat/api/chatables", { data: { filter } })
       .then((searchModel) => {
         if (this.searchIndex === thisSearchIndex) {
           this.set("searchModel", searchModel);
-          const channels = searchModel.public_channels.concat(
-            searchModel.direct_message_channels,
-            searchModel.users
-          );
-          channels.forEach((c) => {
-            if (c.username) {
-              c.user = true; // This is used by the `chat-channel-selection-row` component
-            }
-          });
+          let channels = searchModel.public_channels
+            .concat(searchModel.direct_message_channels, searchModel.users)
+            .map((c) => {
+              if (
+                c.chatable_type === "DirectMessage" ||
+                c.chatable_type === "Category"
+              ) {
+                return ChatChannel.create(c);
+              }
+
+              return User.create(c);
+            });
+
           this.setProperties({
-            channels: channels.map((channel) => ChatChannel.create(channel)),
+            channels,
             loading: false,
           });
           this.focusFirstChannel(this.channels);
@@ -160,10 +170,13 @@ export default Component.extend({
 
   @action
   getInitialChannels() {
-    return this.chat.getChannelsWithFilter(this.filter).then((channels) => {
-      this.focusFirstChannel(channels);
-      this.set("channels", channels);
-    });
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
+    const channels = this.getChannelsWithFilter(this.filter);
+    this.set("channels", channels);
+    this.focusFirstChannel(channels);
   },
 
   @action
@@ -175,7 +188,48 @@ export default Component.extend({
   },
 
   focusFirstChannel(channels) {
-    channels.forEach((c) => c.set("focused", false));
-    channels[0]?.set("focused", true);
+    if (channels[0]) {
+      this.set("focusedRow", channels[0]);
+    } else {
+      this.set("focusedRow", null);
+    }
+  },
+
+  getChannelsWithFilter(filter, opts = { excludeActiveChannel: true }) {
+    let sortedChannels = this.chatChannelsManager.channels.sort((a, b) => {
+      return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
+        ? -1
+        : 1;
+    });
+
+    const trimmedFilter = filter.trim();
+    const lowerCasedFilter = filter.toLowerCase();
+
+    return sortedChannels.filter((channel) => {
+      if (
+        opts.excludeActiveChannel &&
+        this.chat.activeChannel?.id === channel.id
+      ) {
+        return false;
+      }
+      if (!trimmedFilter.length) {
+        return true;
+      }
+
+      if (channel.isDirectMessageChannel) {
+        let userFound = false;
+        channel.chatable.users.forEach((user) => {
+          if (
+            user.username.toLowerCase().includes(lowerCasedFilter) ||
+            user.name?.toLowerCase().includes(lowerCasedFilter)
+          ) {
+            return (userFound = true);
+          }
+        });
+        return userFound;
+      } else {
+        return channel.title.toLowerCase().includes(lowerCasedFilter);
+      }
+    });
   },
 });

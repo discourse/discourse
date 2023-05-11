@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe UserMerger do
-  fab!(:target_user) { Fabricate(:user, username: 'alice', email: 'alice@example.com') }
-  fab!(:source_user) { Fabricate(:user, username: 'alice1', email: 'alice@work.com') }
+  fab!(:target_user) { Fabricate(:user, username: "alice", email: "alice@example.com") }
+  fab!(:source_user) { Fabricate(:user, username: "alice1", email: "alice@work.com") }
   fab!(:walter) { Fabricate(:walter_white) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
@@ -13,11 +13,9 @@ RSpec.describe UserMerger do
   fab!(:p5) { Fabricate(:post) }
   fab!(:p6) { Fabricate(:post) }
 
-  before do
-    Group.refresh_automatic_groups!
-  end
+  before { Group.refresh_automatic_groups! }
 
-  def merge_users!(source = nil, target =  nil)
+  def merge_users!(source = nil, target = nil)
     source ||= source_user
     target ||= target_user
     UserMerger.new(source, target).merge!
@@ -42,17 +40,19 @@ RSpec.describe UserMerger do
       expect(x.reload.user).to eq(target_user)
     end
 
-    [post2, post4, topic2, post6].each do |x|
-      expect(x.reload.user).to eq(walter)
-    end
+    [post2, post4, topic2, post6].each { |x| expect(x.reload.user).to eq(walter) }
   end
 
   it "changes owner of personal messages" do
-    pm_topic = Fabricate(:private_message_topic, topic_allowed_users: [
-      Fabricate.build(:topic_allowed_user, user: target_user),
-      Fabricate.build(:topic_allowed_user, user: walter),
-      Fabricate.build(:topic_allowed_user, user: source_user)
-    ])
+    pm_topic =
+      Fabricate(
+        :private_message_topic,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: target_user),
+          Fabricate.build(:topic_allowed_user, user: walter),
+          Fabricate.build(:topic_allowed_user, user: source_user),
+        ],
+      )
 
     post1 = Fabricate(:post, topic: pm_topic, user: source_user)
     post2 = Fabricate(:post, topic: pm_topic, user: walter)
@@ -93,10 +93,12 @@ RSpec.describe UserMerger do
 
     merge_users!
 
-    category_ids = CategoryUser.where(user_id: target_user.id, notification_level: watching).pluck(:category_id)
+    category_ids =
+      CategoryUser.where(user_id: target_user.id, notification_level: watching).pluck(:category_id)
     expect(category_ids).to contain_exactly(category1.id, category2.id, category3.id)
 
-    category_ids = CategoryUser.where(user_id: source_user.id, notification_level: watching).pluck(:category_id)
+    category_ids =
+      CategoryUser.where(user_id: source_user.id, notification_level: watching).pluck(:category_id)
     expect(category_ids).to be_empty
   end
 
@@ -134,16 +136,16 @@ RSpec.describe UserMerger do
       key_topic_17 = "#{Draft::EXISTING_TOPIC}#{17}"
       key_topic_19 = "#{Draft::EXISTING_TOPIC}#{19}"
 
-      create_draft(source_user, Draft::NEW_TOPIC, 'new topic draft by alice1')
-      create_draft(source_user, key_topic_17, 'draft by alice1')
-      create_draft(source_user, key_topic_19,  'draft by alice1')
-      create_draft(target_user, key_topic_19,  'draft by alice')
+      create_draft(source_user, Draft::NEW_TOPIC, "new topic draft by alice1")
+      create_draft(source_user, key_topic_17, "draft by alice1")
+      create_draft(source_user, key_topic_19, "draft by alice1")
+      create_draft(target_user, key_topic_19, "draft by alice")
 
       merge_users!
 
-      expect(current_target_user_draft(Draft::NEW_TOPIC)).to eq('new topic draft by alice1')
-      expect(current_target_user_draft(key_topic_17)).to eq('draft by alice1')
-      expect(current_target_user_draft(key_topic_19)).to eq('draft by alice')
+      expect(current_target_user_draft(Draft::NEW_TOPIC)).to eq("new topic draft by alice1")
+      expect(current_target_user_draft(key_topic_17)).to eq("draft by alice1")
+      expect(current_target_user_draft(key_topic_19)).to eq("draft by alice")
 
       expect(DraftSequence.where(user_id: source_user.id).count).to eq(0)
       expect(Draft.where(user_id: source_user.id).count).to eq(0)
@@ -231,7 +233,7 @@ RSpec.describe UserMerger do
     [group1, group2, group3].each do |g|
       owner = [group1, group3].include?(g)
       expect(GroupUser.where(group_id: g.id, user_id: target_user.id, owner: owner).count).to eq(1)
-      expect(Group.where(id: g.id).pluck_first(:user_count)).to eq(2)
+      expect(Group.where(id: g.id).pick(:user_count)).to eq(2)
     end
     expect(GroupUser.where(user_id: source_user.id).count).to eq(0)
   end
@@ -316,7 +318,9 @@ RSpec.describe UserMerger do
     expect(IgnoredUser.where(user_id: source_user.id).count).to eq(0)
 
     expect(IgnoredUser.where(user_id: walter.id, ignored_user_id: target_user.id).count).to eq(1)
-    expect(IgnoredUser.where(user_id: coding_horror.id, ignored_user_id: target_user.id).count).to eq(1)
+    expect(
+      IgnoredUser.where(user_id: coding_horror.id, ignored_user_id: target_user.id).count,
+    ).to eq(1)
     expect(IgnoredUser.where(ignored_user_id: source_user.id).count).to eq(0)
   end
 
@@ -347,8 +351,9 @@ RSpec.describe UserMerger do
       merge_users!
 
       type_ids.each do |type|
-        expect(PostAction.where(user_id: target_user.id, post_action_type_id: type)
-                 .pluck(:post_id)).to contain_exactly(p1.id, p2.id, p3.id)
+        expect(
+          PostAction.where(user_id: target_user.id, post_action_type_id: type).pluck(:post_id),
+        ).to contain_exactly(p1.id, p2.id, p3.id)
       end
 
       expect(PostAction.where(user_id: source_user.id).count).to eq(0)
@@ -390,7 +395,7 @@ RSpec.describe UserMerger do
         topic_id: post.topic_id,
         post_number: post.post_number,
         user_id: user.id,
-        msecs: msecs
+        msecs: msecs,
       )
     end
 
@@ -398,8 +403,10 @@ RSpec.describe UserMerger do
       PostTiming.where(
         topic_id: post.topic_id,
         post_number: post.post_number,
-        user_id: user.id
-      ).pluck(:msecs)[0] || 0
+        user_id: user.id,
+      ).pluck(:msecs)[
+        0
+      ] || 0
     end
 
     it "merges post timings" do
@@ -408,18 +415,18 @@ RSpec.describe UserMerger do
       post3 = p3
       post4 = p4
 
-      create_post_timing(post1, source_user, 12345)
+      create_post_timing(post1, source_user, 12_345)
       create_post_timing(post2, source_user, 9876)
       create_post_timing(post4, source_user, 2**31 - 100)
       create_post_timing(post2, target_user, 3333)
-      create_post_timing(post3, target_user, 10000)
+      create_post_timing(post3, target_user, 10_000)
       create_post_timing(post4, target_user, 5000)
 
       merge_users!
 
-      expect(post_timing_msecs_for(post1, target_user)).to eq(12345)
-      expect(post_timing_msecs_for(post2, target_user)).to eq(13209)
-      expect(post_timing_msecs_for(post3, target_user)).to eq(10000)
+      expect(post_timing_msecs_for(post1, target_user)).to eq(12_345)
+      expect(post_timing_msecs_for(post2, target_user)).to eq(13_209)
+      expect(post_timing_msecs_for(post3, target_user)).to eq(10_000)
       expect(post_timing_msecs_for(post4, target_user)).to eq(2**31 - 1)
 
       expect(PostTiming.where(user_id: source_user.id).count).to eq(0)
@@ -474,16 +481,34 @@ RSpec.describe UserMerger do
     expect(reviewable.reviewable_histories.first.created_by).to eq(target_user)
   end
 
-  describe 'search logs' do
-    after do
-      SearchLog.clear_debounce_cache!
-    end
+  describe "search logs" do
+    after { SearchLog.clear_debounce_cache! }
 
     it "updates search log entries" do
-      SearchLog.log(term: 'hello', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
-      SearchLog.log(term: 'world', search_type: :full_page, ip_address: '192.168.0.1', user_id: source_user.id)
-      SearchLog.log(term: 'star trek', search_type: :full_page, ip_address: '192.168.0.2', user_id: target_user.id)
-      SearchLog.log(term: 'bad', search_type: :full_page, ip_address: '192.168.0.3', user_id: walter.id)
+      SearchLog.log(
+        term: "hello",
+        search_type: :full_page,
+        ip_address: "192.168.0.1",
+        user_id: source_user.id,
+      )
+      SearchLog.log(
+        term: "world",
+        search_type: :full_page,
+        ip_address: "192.168.0.1",
+        user_id: source_user.id,
+      )
+      SearchLog.log(
+        term: "star trek",
+        search_type: :full_page,
+        ip_address: "192.168.0.2",
+        user_id: target_user.id,
+      )
+      SearchLog.log(
+        term: "bad",
+        search_type: :full_page,
+        ip_address: "192.168.0.3",
+        user_id: walter.id,
+      )
 
       merge_users!
 
@@ -519,16 +544,24 @@ RSpec.describe UserMerger do
   end
 
   it "merges allowed users for topics" do
-    pm_topic1 = Fabricate(:private_message_topic, topic_allowed_users: [
-      Fabricate.build(:topic_allowed_user, user: target_user),
-      Fabricate.build(:topic_allowed_user, user: walter),
-      Fabricate.build(:topic_allowed_user, user: source_user)
-    ])
+    pm_topic1 =
+      Fabricate(
+        :private_message_topic,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: target_user),
+          Fabricate.build(:topic_allowed_user, user: walter),
+          Fabricate.build(:topic_allowed_user, user: source_user),
+        ],
+      )
 
-    pm_topic2 = Fabricate(:private_message_topic, topic_allowed_users: [
-      Fabricate.build(:topic_allowed_user, user: walter),
-      Fabricate.build(:topic_allowed_user, user: source_user)
-    ])
+    pm_topic2 =
+      Fabricate(
+        :private_message_topic,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: walter),
+          Fabricate.build(:topic_allowed_user, user: source_user),
+        ],
+      )
 
     merge_users!
 
@@ -552,9 +585,9 @@ RSpec.describe UserMerger do
     TopicLink.extract_from(post)
     link = topic.topic_links.first
 
-    TopicLinkClick.create!(topic_link_id: link.id, user_id: source_user.id, ip_address: '127.0.0.1')
-    TopicLinkClick.create!(topic_link_id: link.id, user_id: target_user.id, ip_address: '127.0.0.1')
-    TopicLinkClick.create!(topic_link_id: link.id, user_id: walter.id, ip_address: '127.0.0.1')
+    TopicLinkClick.create!(topic_link_id: link.id, user_id: source_user.id, ip_address: "127.0.0.1")
+    TopicLinkClick.create!(topic_link_id: link.id, user_id: target_user.id, ip_address: "127.0.0.1")
+    TopicLinkClick.create!(topic_link_id: link.id, user_id: walter.id, ip_address: "127.0.0.1")
 
     merge_users!
 
@@ -568,7 +601,13 @@ RSpec.describe UserMerger do
 
   context "with topic timers" do
     def create_topic_timer(topic, user, status_type, deleted_by = nil)
-      timer = Fabricate(:topic_timer, topic: topic, user: user, status_type: TopicTimer.types[status_type])
+      timer =
+        Fabricate(
+          :topic_timer,
+          topic: topic,
+          user: user,
+          status_type: TopicTimer.types[status_type],
+        )
       timer.trash!(deleted_by) if deleted_by
       timer.reload
     end
@@ -611,10 +650,12 @@ RSpec.describe UserMerger do
 
     merge_users!
 
-    topic_ids = TopicUser.where(user_id: target_user.id, notification_level: watching).pluck(:topic_id)
+    topic_ids =
+      TopicUser.where(user_id: target_user.id, notification_level: watching).pluck(:topic_id)
     expect(topic_ids).to contain_exactly(topic1.id, topic2.id, topic3.id)
 
-    topic_ids = TopicUser.where(user_id: source_user.id, notification_level: watching).pluck(:topic_id)
+    topic_ids =
+      TopicUser.where(user_id: source_user.id, notification_level: watching).pluck(:topic_id)
     expect(topic_ids).to be_empty
   end
 
@@ -622,7 +663,7 @@ RSpec.describe UserMerger do
     topic1 = Fabricate(:topic)
     topic2 = Fabricate(:topic)
     topic3 = Fabricate(:topic)
-    ip = '127.0.0.1'
+    ip = "127.0.0.1"
 
     TopicViewItem.add(topic1.id, ip, source_user.id)
     TopicViewItem.add(topic2.id, ip, source_user.id)
@@ -679,19 +720,23 @@ RSpec.describe UserMerger do
     fab!(:post2) { p2 }
 
     def log_like_action(acting_user, user, post)
-      UserAction.log_action!(action_type: UserAction::LIKE,
-                             user_id: user.id,
-                             acting_user_id: acting_user.id,
-                             target_topic_id: post.topic_id,
-                             target_post_id: post.id)
+      UserAction.log_action!(
+        action_type: UserAction::LIKE,
+        user_id: user.id,
+        acting_user_id: acting_user.id,
+        target_topic_id: post.topic_id,
+        target_post_id: post.id,
+      )
     end
 
     def log_got_private_message(acting_user, user, topic)
-      UserAction.log_action!(action_type: UserAction::GOT_PRIVATE_MESSAGE,
-                             user_id: user.id,
-                             acting_user_id: acting_user.id,
-                             target_topic_id: topic.id,
-                             target_post_id: -1)
+      UserAction.log_action!(
+        action_type: UserAction::GOT_PRIVATE_MESSAGE,
+        user_id: user.id,
+        acting_user_id: acting_user.id,
+        target_topic_id: topic.id,
+        target_post_id: -1,
+      )
     end
 
     it "merges when target_post_id is set" do
@@ -703,29 +748,44 @@ RSpec.describe UserMerger do
 
       expect(UserAction.count).to eq(2)
 
-      action_ids = UserAction.where(action_type: UserAction::LIKE,
-                                    user_id: walter.id,
-                                    acting_user_id: target_user.id).pluck(:id)
+      action_ids =
+        UserAction.where(
+          action_type: UserAction::LIKE,
+          user_id: walter.id,
+          acting_user_id: target_user.id,
+        ).pluck(:id)
       expect(action_ids).to contain_exactly(a2.id, a3.id)
     end
 
     it "merges when acting_user is neither source_user nor target_user" do
-      pm_topic1 = Fabricate(:private_message_topic, topic_allowed_users: [
-        Fabricate.build(:topic_allowed_user, user: walter),
-        Fabricate.build(:topic_allowed_user, user: source_user),
-        Fabricate.build(:topic_allowed_user, user: target_user),
-        Fabricate.build(:topic_allowed_user, user: coding_horror),
-      ])
+      pm_topic1 =
+        Fabricate(
+          :private_message_topic,
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: walter),
+            Fabricate.build(:topic_allowed_user, user: source_user),
+            Fabricate.build(:topic_allowed_user, user: target_user),
+            Fabricate.build(:topic_allowed_user, user: coding_horror),
+          ],
+        )
 
-      pm_topic2 = Fabricate(:private_message_topic, topic_allowed_users: [
-        Fabricate.build(:topic_allowed_user, user: walter),
-        Fabricate.build(:topic_allowed_user, user: source_user)
-      ])
+      pm_topic2 =
+        Fabricate(
+          :private_message_topic,
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: walter),
+            Fabricate.build(:topic_allowed_user, user: source_user),
+          ],
+        )
 
-      pm_topic3 = Fabricate(:private_message_topic, topic_allowed_users: [
-        Fabricate.build(:topic_allowed_user, user: walter),
-        Fabricate.build(:topic_allowed_user, user: target_user)
-      ])
+      pm_topic3 =
+        Fabricate(
+          :private_message_topic,
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: walter),
+            Fabricate.build(:topic_allowed_user, user: target_user),
+          ],
+        )
 
       _a1 = log_got_private_message(walter, source_user, pm_topic1)
       a2 = log_got_private_message(walter, target_user, pm_topic1)
@@ -737,24 +797,35 @@ RSpec.describe UserMerger do
 
       expect(UserAction.count).to eq(4)
 
-      action_ids = UserAction.where(action_type: UserAction::GOT_PRIVATE_MESSAGE,
-                                    user_id: target_user.id,
-                                    acting_user_id: walter.id).pluck(:id)
+      action_ids =
+        UserAction.where(
+          action_type: UserAction::GOT_PRIVATE_MESSAGE,
+          user_id: target_user.id,
+          acting_user_id: walter.id,
+        ).pluck(:id)
       expect(action_ids).to contain_exactly(a2.id, a4.id, a5.id)
     end
   end
 
   it "merges archived messages" do
-    pm_topic1 = Fabricate(:private_message_topic, topic_allowed_users: [
-      Fabricate.build(:topic_allowed_user, user: target_user),
-      Fabricate.build(:topic_allowed_user, user: walter),
-      Fabricate.build(:topic_allowed_user, user: source_user)
-    ])
+    pm_topic1 =
+      Fabricate(
+        :private_message_topic,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: target_user),
+          Fabricate.build(:topic_allowed_user, user: walter),
+          Fabricate.build(:topic_allowed_user, user: source_user),
+        ],
+      )
 
-    pm_topic2 = Fabricate(:private_message_topic, topic_allowed_users: [
-      Fabricate.build(:topic_allowed_user, user: walter),
-      Fabricate.build(:topic_allowed_user, user: source_user)
-    ])
+    pm_topic2 =
+      Fabricate(
+        :private_message_topic,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: walter),
+          Fabricate.build(:topic_allowed_user, user: source_user),
+        ],
+      )
 
     UserArchivedMessage.archive!(source_user.id, pm_topic1)
     UserArchivedMessage.archive!(target_user.id, pm_topic1)
@@ -776,7 +847,7 @@ RSpec.describe UserMerger do
         granted_by: opts[:granted_by] || Discourse.system_user,
         granted_at: opts[:granted_at] || Time.now,
         post: opts[:post],
-        seq: opts[:seq] || 0
+        seq: opts[:seq] || 0,
       )
     end
 
@@ -801,7 +872,7 @@ RSpec.describe UserMerger do
     end
 
     it "updates granted_by for user badges" do
-      badge = Badge.create!(name: 'Hero', badge_type_id: BadgeType::Gold)
+      badge = Badge.create!(name: "Hero", badge_type_id: BadgeType::Gold)
       user_badge = create_badge(badge, walter, seq: 1, granted_by: source_user)
 
       merge_users!
@@ -811,16 +882,16 @@ RSpec.describe UserMerger do
   end
 
   it "merges user custom fields" do
-    UserCustomField.create!(user_id: source_user.id, name: 'foo', value: '123')
-    UserCustomField.create!(user_id: source_user.id, name: 'bar', value: '456')
-    UserCustomField.create!(user_id: source_user.id, name: 'duplicate', value: 'source')
-    UserCustomField.create!(user_id: target_user.id, name: 'duplicate', value: 'target')
-    UserCustomField.create!(user_id: target_user.id, name: 'baz', value: '789')
+    UserCustomField.create!(user_id: source_user.id, name: "foo", value: "123")
+    UserCustomField.create!(user_id: source_user.id, name: "bar", value: "456")
+    UserCustomField.create!(user_id: source_user.id, name: "duplicate", value: "source")
+    UserCustomField.create!(user_id: target_user.id, name: "duplicate", value: "target")
+    UserCustomField.create!(user_id: target_user.id, name: "baz", value: "789")
 
     merge_users!
 
     fields = UserCustomField.where(user_id: target_user.id).pluck(:name, :value)
-    expect(fields).to contain_exactly(['foo', '123'], ['bar', '456'], ['duplicate', 'target'], ['baz', '789'])
+    expect(fields).to contain_exactly(%w[foo 123], %w[bar 456], %w[duplicate target], %w[baz 789])
     expect(UserCustomField.where(user_id: source_user.id).count).to eq(0)
   end
 
@@ -828,18 +899,18 @@ RSpec.describe UserMerger do
     merge_users!
 
     emails = UserEmail.where(user_id: target_user.id).pluck(:email, :primary)
-    expect(emails).to contain_exactly(['alice@example.com', true], ['alice@work.com', false])
+    expect(emails).to contain_exactly(["alice@example.com", true], ["alice@work.com", false])
     expect(UserEmail.where(user_id: source_user.id).count).to eq(0)
   end
 
   it "skips merging email addresses when a secondary email address exists" do
     merge_users!(source_user, target_user)
 
-    alice2 = Fabricate(:user, username: 'alice2', email: 'alice@foo.com')
+    alice2 = Fabricate(:user, username: "alice2", email: "alice@foo.com")
     merge_users!(alice2, target_user)
 
     emails = UserEmail.where(user_id: target_user.id).pluck(:email, :primary)
-    expect(emails).to contain_exactly(['alice@example.com', true], ['alice@work.com', false])
+    expect(emails).to contain_exactly(["alice@example.com", true], ["alice@work.com", false])
     expect(UserEmail.where(user_id: source_user.id).count).to eq(0)
   end
 
@@ -862,11 +933,21 @@ RSpec.describe UserMerger do
   end
 
   it "updates user history" do
-    UserHistory.create(action: UserHistory.actions[:notified_about_get_a_room], target_user_id: source_user.id)
-    UserHistory.create(action: UserHistory.actions[:anonymize_user], target_user_id: walter.id, acting_user_id: source_user.id)
+    UserHistory.create(
+      action: UserHistory.actions[:notified_about_get_a_room],
+      target_user_id: source_user.id,
+    )
+    UserHistory.create(
+      action: UserHistory.actions[:anonymize_user],
+      target_user_id: walter.id,
+      acting_user_id: source_user.id,
+    )
 
     merge_users!
-    UserHistory.where(action: UserHistory.actions[:merge_user], target_user_id: target_user.id).delete_all
+    UserHistory.where(
+      action: UserHistory.actions[:merge_user],
+      target_user_id: target_user.id,
+    ).delete_all
 
     expect(UserHistory.where(target_user_id: target_user.id).count).to eq(1)
     expect(UserHistory.where(target_user_id: source_user.id).count).to eq(0)
@@ -876,7 +957,7 @@ RSpec.describe UserMerger do
   end
 
   it "updates user profile views" do
-    ip = '127.0.0.1'
+    ip = "127.0.0.1"
     UserProfileView.add(source_user.id, ip, walter.id, Time.now, true)
     UserProfileView.add(source_user.id, ip, target_user.id, Time.now, true)
     UserProfileView.add(target_user.id, ip, source_user.id, Time.now, true)
@@ -894,21 +975,69 @@ RSpec.describe UserMerger do
   end
 
   it "merges user visits" do
-    freeze_time DateTime.parse('2010-01-01 12:00')
+    freeze_time DateTime.parse("2010-01-01 12:00")
 
-    UserVisit.create!(user_id: source_user.id, visited_at: 2.days.ago, posts_read: 22, mobile: false, time_read: 400)
-    UserVisit.create!(user_id: source_user.id, visited_at: Date.yesterday, posts_read: 8, mobile: false, time_read: 100)
-    UserVisit.create!(user_id: target_user.id, visited_at: Date.yesterday, posts_read: 12, mobile: true, time_read: 270)
-    UserVisit.create!(user_id: target_user.id, visited_at: Date.today, posts_read: 10, mobile: true, time_read: 150)
+    UserVisit.create!(
+      user_id: source_user.id,
+      visited_at: 2.days.ago,
+      posts_read: 22,
+      mobile: false,
+      time_read: 400,
+    )
+    UserVisit.create!(
+      user_id: source_user.id,
+      visited_at: Date.yesterday,
+      posts_read: 8,
+      mobile: false,
+      time_read: 100,
+    )
+    UserVisit.create!(
+      user_id: target_user.id,
+      visited_at: Date.yesterday,
+      posts_read: 12,
+      mobile: true,
+      time_read: 270,
+    )
+    UserVisit.create!(
+      user_id: target_user.id,
+      visited_at: Date.today,
+      posts_read: 10,
+      mobile: true,
+      time_read: 150,
+    )
 
     merge_users!
 
     expect(UserVisit.where(user_id: target_user.id).count).to eq(3)
     expect(UserVisit.where(user_id: source_user.id).count).to eq(0)
 
-    expect(UserVisit.where(user_id: target_user.id, visited_at: 2.days.ago, posts_read: 22, mobile: false, time_read: 400).count).to eq(1)
-    expect(UserVisit.where(user_id: target_user.id, visited_at: Date.yesterday, posts_read: 20, mobile: true, time_read: 370).count).to eq(1)
-    expect(UserVisit.where(user_id: target_user.id, visited_at: Date.today, posts_read: 10, mobile: true, time_read: 150).count).to eq(1)
+    expect(
+      UserVisit.where(
+        user_id: target_user.id,
+        visited_at: 2.days.ago,
+        posts_read: 22,
+        mobile: false,
+        time_read: 400,
+      ).count,
+    ).to eq(1)
+    expect(
+      UserVisit.where(
+        user_id: target_user.id,
+        visited_at: Date.yesterday,
+        posts_read: 20,
+        mobile: true,
+        time_read: 370,
+      ).count,
+    ).to eq(1)
+    expect(
+      UserVisit.where(
+        user_id: target_user.id,
+        visited_at: Date.today,
+        posts_read: 10,
+        mobile: true,
+        time_read: 150,
+      ).count,
+    ).to eq(1)
   end
 
   it "updates user warnings" do
@@ -926,9 +1055,7 @@ RSpec.describe UserMerger do
   end
 
   it "triggers :merging_users event" do
-    events = DiscourseEvent.track_events do
-      merge_users!
-    end
+    events = DiscourseEvent.track_events { merge_users! }
 
     expect(events).to include(event_name: :merging_users, params: [source_user, target_user])
   end
@@ -1004,8 +1131,16 @@ RSpec.describe UserMerger do
   end
 
   it "deletes external auth infos of source user" do
-    UserAssociatedAccount.create(user_id: source_user.id, provider_name: "facebook", provider_uid: "1234")
-    SingleSignOnRecord.create(user_id: source_user.id, external_id: "example", last_payload: "looks good")
+    UserAssociatedAccount.create(
+      user_id: source_user.id,
+      provider_name: "facebook",
+      provider_uid: "1234",
+    )
+    SingleSignOnRecord.create(
+      user_id: source_user.id,
+      external_id: "example",
+      last_payload: "looks good",
+    )
 
     merge_users!
 
@@ -1047,14 +1182,17 @@ RSpec.describe UserMerger do
   end
 
   it "updates the username" do
-    Jobs::UpdateUsername.any_instance
+    Jobs::UpdateUsername
+      .any_instance
       .expects(:execute)
-      .with({
-        user_id: source_user.id,
-        old_username: 'alice1',
-        new_username: 'alice',
-        avatar_template: target_user.avatar_template
-      })
+      .with(
+        {
+          user_id: source_user.id,
+          old_username: "alice1",
+          new_username: "alice",
+          avatar_template: target_user.avatar_template,
+        },
+      )
       .once
 
     merge_users!
@@ -1067,7 +1205,9 @@ RSpec.describe UserMerger do
     expect(log_entry.action).to eq(UserHistory.actions[:merge_user])
     expect(log_entry.acting_user_id).to eq(Discourse::SYSTEM_USER_ID)
     expect(log_entry.target_user_id).to eq(target_user.id)
-    expect(log_entry.context).to eq(I18n.t("staff_action_logs.user_merged", username: source_user.username))
+    expect(log_entry.context).to eq(
+      I18n.t("staff_action_logs.user_merged", username: source_user.username),
+    )
     expect(log_entry.email).to eq("alice@work.com")
   end
 end

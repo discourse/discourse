@@ -7,42 +7,103 @@
 pt:
   js:
     chat:
+      dates:
+        time_tiny: "hh:mm"
+      all_loaded: "Mostrando todas as mensagens"
+      already_enabled: "O Chat já está ativado neste tópico. Por favor atualize."
+      disabled_for_topic: "O Chat está desativado neste tópico."
+      bot: "bot"
       create: "Criar"
       cancel: "Cancelar"
+      cancel_reply: "Cancelar resposta"
+      chat_channels: "Canais"
+      browse_all_channels: "Navegar todos os canais"
+      move_to_channel:
+        title: "Mover mensagens para o canal"
+        confirm_move: "Mover mensagens"
       channel_settings:
+        title: "Configurações do canal"
         edit: "Editar"
         add: "Adicionar"
+        close_channel: "Fechar canal"
+        open_channel: "Abrir canal"
+        archive_channel: "Arquivar canal"
+        delete_channel: "Apagar canal"
+        join_channel: "Aderir ao canal"
+        leave_channel: "Sair do canal"
         join: "Entrar"
         leave: "Sair"
+        save_label:
+          mute_channel: "Preferência de canal silenciado salva"
+          desktop_notification: "Preferência de notificação na área de trabalho salva"
+          mobile_notification: "Preferência de notificação móvel salva"
+      channel_archive:
+        title: "Arquivar canal"
+        retry: "Tentar novamente"
+      channel_open:
+        title: "Abrir canal"
+        instructions: "Reabre o canal, todos os utilizadores poderão enviar mensagens e editar as suas mensagens existentes."
+      channel_close:
+        title: "Fechar canal"
+        instructions: "Fechar o canal impede que utilizadores não membros da equipa enviem novas mensagens ou editem mensagens existentes. Tem certeza de que deseja fechar este canal?"
+      channel_delete:
+        title: "Apagar canal"
+      channels_list_popup:
+        browse: "Navegar canais"
+        create: "Novo canal"
+      click_to_join: "Clique aqui para ver canais disponíveis."
       close: "Fechar"
+      collapse: "Colapsar gaveta de Chat"
+      confirm_flag: "Tem certeza de que deseja sinalizar a mensagem de %{username}?"
+      hidden: "Uma mensagem foi ocultada. [view]"
       delete: "Eliminar"
       edited: "editado"
       muted: "silenciado"
       joined: "juntou-se"
+      empty_state:
+        direct_message_cta: "Iniciar um Chat pessoal"
+        direct_message: "Você também pode iniciar um Chat pessoal com um ou mais utilizadores."
       email_frequency:
+        never: "Nunca"
+      header_indicator_preference:
         never: "Nunca"
       flag: "Denunciar"
       join: "Entrar"
+      last_visit: "última visita"
       mention_warning:
         dismiss: "marcar Visto"
-        groups:
-          users_limit:
-            one: "%{count} usuário"
-            other: "%{count} usuários"
+      only_chat_push_notifications:
+        title: "Enviar notificações push apenas para chat"
       reply: "Responder"
       edit: "Editar"
+      copy_link: "Copiar link"
       rebake_message: "Reconstruir HTML"
+      retry_staged_message:
+        title: "Erro de rede"
+        action: "Enviar novamente?"
+      unreliable_network: "A rede não é confiável. Enviar mensagens e salvar rascunhos poderá não funcionar"
       bookmark_message: "Adicionar Marcador"
       bookmark_message_edit: "Editar Favorito"
+      restore: "Restaurar mensagem apagada"
       save: "Guardar"
+      select: "Selecionar"
+      return_to_list: "Voltar à lista de canais"
+      scroll_to_bottom: "Rolar até o final"
+      scroll_to_new_messages: "Ver novas mensagens"
+      sound:
+        title: "Som de notificação de Chat na área de trabalho"
       sounds:
         none: "Nenhuma"
+        bell: "Sino"
       exit: "retroceder"
       channel_status:
+        archive_failed: "O canal de arquivo falhou. %{completed}/%{total} mensagens foram arquivadas. <a target=\"_blank\" href=\"%{topic_url}\">o tópico de destino</a>. Clica Tentar de novo para tentar completar o arquivo."
+        archive_failed_no_topic: "O canal de arquivo falhou. %{completed}/%{total} mensagens foram arquivadas, o tópico de destino não foi criado. Clica Tentar de novo para tentar completar o arquivo."
         closed: "Fechado"
         open: "Abrir"
       browse:
         back: "Retroceder"
+        title: Canais
         filter_all: Tudo
         filter_closed: Fechado
       chat_message_separator:
@@ -50,6 +111,7 @@ pt:
         yesterday: Ontem
       about_view:
         title: Título
+        name: Nome
         description: Descrição
       channel_info:
         back_to_channel: "Retroceder"
@@ -57,10 +119,15 @@ pt:
           about: Sobre
           members: Membros
           settings: Configurações
+      channel_edit_name_slug_modal:
+        input_placeholder: Adicionar um nome
+        slug: Slug do canal (opcional)
       direct_message_creator:
         title: Nova Mensagem
         prefix: "Para:"
       create_channel:
+        slug: "Slug do canal (opcional)"
+        title: "Novo canal"
         type: "Tipo"
         types:
           category: "Categoria"
@@ -68,9 +135,12 @@ pt:
       composer:
         italic_text: "texto em itálico"
         bold_text: "texto em negrito"
+        send: "Enviar"
       notification_levels:
         never: "Nunca"
       settings:
+        auto_join_users_info: "Verificar de hora em hora quais os utilizadores que estiveram activos nos últimos 3 meses. Adicione-os a este canal se tiverem acesso à categoria %{category} ."
+        auto_join_users_info_no_category: "Verificar de hora em hora quais os utilizadores que estiveram activos nos últimos 3 meses. Adicione-os a este canal se tiverem acesso à categoria seleccionada."
         follow: "Entrar"
         followed: "Juntou-se"
         notifications: "Notificações"
@@ -104,6 +174,10 @@ pt:
         activities: "Atividades"
         flags: "Sinalizações"
         symbols: "Símbolos"
+      thread:
+        replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
       draft_channel_screen:
         header: "Nova Mensagem"
         cancel: "Cancelar"
@@ -115,7 +189,3 @@ pt:
           fields:
             message:
               label: Mensagem
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Sinalizado por"

@@ -3,26 +3,27 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import UtilsMixin from "select-kit/mixins/utils";
 import { guidFor } from "@ember/object/internals";
-import layout from "select-kit/templates/components/select-kit/select-kit-row";
 import { makeArray } from "discourse-common/lib/helpers";
 import { reads } from "@ember/object/computed";
 import { dasherize } from "@ember/string";
 
 export default Component.extend(UtilsMixin, {
-  layout,
   classNames: ["select-kit-row"],
   tagName: "li",
   tabIndex: 0,
+
   attributeBindings: [
     "tabIndex",
     "title",
     "rowValue:data-value",
     "rowName:data-name",
+    "index:data-index",
     "role",
     "ariaChecked:aria-checked",
     "guid:data-guid",
     "rowLang:lang",
   ],
+
   classNameBindings: [
     "isHighlighted",
     "isSelected",
@@ -31,12 +32,13 @@ export default Component.extend(UtilsMixin, {
     "item.classNames",
   ],
 
+  index: 0,
   role: "menuitemradio",
 
   didInsertElement() {
     this._super(...arguments);
 
-    if (!this?.site?.mobileView) {
+    if (!this.site.mobileView) {
       this.element.addEventListener("mouseenter", this.handleMouseEnter);
       this.element.addEventListener("focus", this.handleMouseEnter);
       this.element.addEventListener("blur", this.handleBlur);
@@ -45,7 +47,8 @@ export default Component.extend(UtilsMixin, {
 
   willDestroyElement() {
     this._super(...arguments);
-    if (!this?.site?.mobileView && this.element) {
+
+    if (!this.site.mobileView) {
       this.element.removeEventListener("mouseenter", this.handleBlur);
       this.element.removeEventListener("focus", this.handleMouseEnter);
       this.element.removeEventListener("blur", this.handleMouseEnter);
@@ -126,7 +129,6 @@ export default Component.extend(UtilsMixin, {
   @action
   handleMouseEnter() {
     if (!this.isDestroying || !this.isDestroyed) {
-      this.element.focus({ preventScroll: true });
       this.selectKit.onHover(this.rowValue, this.item);
     }
     return false;

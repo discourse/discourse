@@ -5,6 +5,7 @@ import Ember from "ember";
 
 export default class DiscourseTooltip extends Component {
   tagName = "";
+  interactive = false;
 
   didInsertElement() {
     this._super(...arguments);
@@ -16,6 +17,10 @@ export default class DiscourseTooltip extends Component {
     this._tippyInstance.destroy();
   }
 
+  stopPropagation(instance, event) {
+    event.stopPropagation();
+  }
+
   _initTippy() {
     schedule("afterRender", () => {
       // Ember.ViewUtils.getViewBounds is a private API,
@@ -24,12 +29,16 @@ export default class DiscourseTooltip extends Component {
       const viewBounds = Ember.ViewUtils.getViewBounds(this);
       const element = viewBounds.firstNode;
       const parent = viewBounds.parentElement;
+      const interactive = this.interactive;
       this._tippyInstance = tippy(parent, {
+        interactive,
         content: element,
         trigger: this.capabilities.touch ? "click" : "mouseenter",
         theme: "d-tooltip",
         arrow: false,
         placement: "bottom-start",
+        onTrigger: this.stopPropagation,
+        onUntrigger: this.stopPropagation,
       });
     });
   }

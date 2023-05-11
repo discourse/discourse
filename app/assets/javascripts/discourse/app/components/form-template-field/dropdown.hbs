@@ -1,0 +1,15 @@
+<div class="control-group form-template-field" data-field-type="dropdown">
+  {{#if @attributes.label}}
+    <label class="form-template-field__label">{{@attributes.label}}</label>
+  {{/if}}
+  <ComboBox
+    @class="form-template-field__dropdown"
+    @content={{@choices}}
+    @nameProperty={{null}}
+    @valueProperty={{null}}
+    @options={{hash
+      translatedNone=@attributes.none_label
+      filterable=@attributes.filterable
+    }}
+  />
+</div>

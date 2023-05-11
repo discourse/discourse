@@ -2,6 +2,6 @@
 
 class AddIndexToTopicViewItems < ActiveRecord::Migration[4.2]
   def change
-    add_index :topic_views, [:user_id, :viewed_at]
+    add_index :topic_views, %i[user_id viewed_at]
   end
 end

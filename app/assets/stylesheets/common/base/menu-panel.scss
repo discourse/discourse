@@ -29,6 +29,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+
   hr {
     margin: 3px 0;
   }
@@ -90,6 +92,10 @@
   }
 }
 
+.search-menu .menu-panel {
+  width: 500px;
+}
+
 .user-menu.revamped {
   right: 0;
   width: 320px;
@@ -105,6 +111,7 @@
     border-left: 1px solid var(--primary-low);
     padding: 0.75em 0 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .tabs-list {
@@ -129,10 +136,10 @@
       }
 
       &.active {
-        background-color: var(--tertiary-low);
+        background-color: var(--d-selected);
       }
       &:hover {
-        background-color: var(--highlight-medium);
+        background-color: var(--d-hover);
       }
     }
   }
@@ -149,6 +156,7 @@
   .quick-access-panel {
     width: 320px;
     padding: 0.75em;
+    padding-bottom: max(env(safe-area-inset-bottom), 0.75em);
     justify-content: space-between;
     box-sizing: border-box;
     min-width: 0; // makes sure menu tabs don't go off screen
@@ -159,6 +167,9 @@
     }
 
     .item-label {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       color: var(--primary);
     }
 
@@ -171,12 +182,12 @@
       }
 
       &:hover {
-        background-color: var(--highlight-medium);
+        background-color: var(--d-hover);
         outline: none;
       }
 
       &:focus-within {
-        background: var(--highlight-medium);
+        background: var(--d-hover);
         a {
           // we don't need the link focus because we're styling the parent
           outline: 0;
@@ -204,6 +215,12 @@
         align-items: center;
         margin: 0;
         padding: 0 0.5em;
+      }
+      img.emoji {
+        height: 1em;
+        width: 1em;
+        padding-top: 0.2em;
+        margin-right: 0.5em;
       }
       .d-icon {
         padding-top: 0;
@@ -280,7 +297,7 @@
     color: var(--primary);
     &:hover,
     &:focus {
-      background-color: var(--highlight-medium);
+      background-color: var(--d-hover);
       outline: none;
     }
 
@@ -398,7 +415,7 @@
     }
 
     li {
-      background-color: var(--tertiary-low);
+      background-color: var(--d-selected);
       box-sizing: border-box;
       list-style-type: none;
 
@@ -441,12 +458,12 @@
       }
 
       &:hover {
-        background-color: var(--highlight-medium);
+        background-color: var(--d-hover);
         outline: none;
       }
 
       &:focus-within {
-        background: var(--highlight-medium);
+        background: var(--d-hover);
         a {
           // we don't need the link focus because we're styling the parent
           outline: 0;
@@ -492,13 +509,6 @@
       align-self: flex-start;
       width: 100%;
       .d-icon {
-        padding-top: 0.2em;
-        margin-right: 0.5em;
-      }
-
-      img.emoji {
-        height: 1em;
-        width: 1em;
         padding-top: 0.2em;
         margin-right: 0.5em;
       }
@@ -686,7 +696,7 @@ body.footer-nav-ipad {
   background-color: black;
   --opacity: 0.5;
   opacity: var(--opacity);
-  top: 0;
+  top: var(--header-top);
   left: 0;
   display: none;
   touch-action: pan-y pinch-zoom;
@@ -699,6 +709,24 @@ body.footer-nav-ipad {
 }
 
 .menu-panel.slide-in {
+  top: var(--header-top);
+  box-sizing: border-box;
+  // ensure there's always space to click outside on tiny devices
+  max-width: 90vw;
+
+  --100dvh: 100%;
+  @supports (height: 100dvh) {
+    --100dvh: 100dvh;
+  }
+
+  --base-height: calc(var(--100dvh) - var(--header-top));
+
+  height: var(--base-height);
+
+  body.footer-nav-ipad & {
+    height: calc(var(--base-height) - var(--footer-nav-height));
+  }
+
   transform: translateX(var(--offset));
   @media (prefers-reduced-motion: no-preference) {
     &.animate {

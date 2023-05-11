@@ -5,13 +5,23 @@
         {{d-icon "search"}}
       </span>
 
-      <Input id="chat-channel-selector-input" @type="text" @value={{this.filter}} autocomplete="off" {{on "input" (action "search" value="target.value")}} />
+      <Input
+        id="chat-channel-selector-input"
+        @type="text"
+        @value={{this.filter}}
+        autocomplete="off"
+        {{on "input" (action "search" value="target.value")}}
+      />
     </div>
 
     <div class="channels">
       <ConditionalLoadingSpinner @condition={{this.loading}}>
         {{#each this.channels as |channel|}}
-          <ChatChannelSelectionRow @model={{channel}} @onClick={{this.switchChannel}} />
+          <ChatChannelSelectionRow
+            @isFocused={{eq channel this.focusedRow}}
+            @model={{channel}}
+            @onClick={{this.switchChannel}}
+          />
         {{else}}
           <div class="no-channels-notice">
             {{i18n "chat.channel_selector.no_channels"}}

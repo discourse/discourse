@@ -4,7 +4,12 @@ RSpec.describe Jobs::PendingReviewablesReminder do
   let(:job) { described_class.new }
 
   def create_flag(created_at)
-    PostActionCreator.create(Fabricate(:user), Fabricate(:post), :spam, created_at: created_at).reviewable
+    PostActionCreator.create(
+      Fabricate(:user),
+      Fabricate(:post),
+      :spam,
+      created_at: created_at,
+    ).reviewable
   end
 
   def execute
@@ -15,8 +20,8 @@ RSpec.describe Jobs::PendingReviewablesReminder do
     expect(execute.sent_reminder).to eq(false)
   end
 
-  context "when notify_about_flags_after is 0" do
-    before { SiteSetting.notify_about_flags_after = 0 }
+  context "when notify_about_reviewable_item_after is 0" do
+    before { SiteSetting.notify_about_reviewable_item_after = 0 }
 
     it "never notifies" do
       create_flag(50.hours.ago)
@@ -24,8 +29,8 @@ RSpec.describe Jobs::PendingReviewablesReminder do
     end
   end
 
-  context "when notify_about_flags_after accepts a float" do
-    before { SiteSetting.notify_about_flags_after = 0.25 }
+  context "when notify_about_reviewable_item_after accepts a float" do
+    before { SiteSetting.notify_about_reviewable_item_after = 0.25 }
 
     it "doesn't send message when flags are less than 15 minutes old" do
       create_flag(14.minutes.ago)
@@ -38,15 +43,13 @@ RSpec.describe Jobs::PendingReviewablesReminder do
     end
   end
 
-  context "when notify_about_flags_after is 48" do
+  context "when notify_about_reviewable_item_after is 48" do
     before do
-      SiteSetting.notify_about_flags_after = 48
+      SiteSetting.notify_about_reviewable_item_after = 48
       described_class.clear_key
     end
 
-    after do
-      described_class.clear_key
-    end
+    after { described_class.clear_key }
 
     it "doesn't send message when flags are less than 48 hours old" do
       create_flag(47.hours.ago)
@@ -76,27 +79,30 @@ RSpec.describe Jobs::PendingReviewablesReminder do
 
       it "doesn't send a message when `reviewable_default_visibility` is not met" do
         Reviewable.set_priorities(medium: 3.0)
-        SiteSetting.reviewable_default_visibility = 'medium'
+        SiteSetting.reviewable_default_visibility = "medium"
         expect(execute.sent_reminder).to eq(false)
       end
 
       it "sends a message when `reviewable_default_visibility` is met" do
         Reviewable.set_priorities(medium: 2.0)
-        SiteSetting.reviewable_default_visibility = 'medium'
+        SiteSetting.reviewable_default_visibility = "medium"
         expect(execute.sent_reminder).to eq(true)
       end
     end
 
-    it 'deletes previous messages' do
+    it "deletes previous messages" do
       GroupMessage.create(
-        Group[:moderators].name, 'reviewables_reminder',
-        { limit_once_per: false, message_params: { mentions: '', count: 1 } }
+        Group[:moderators].name,
+        "reviewables_reminder",
+        { limit_once_per: false, message_params: { mentions: "", count: 1 } },
       )
 
       create_flag(49.hours.ago)
       execute
 
-      expect(Topic.where(title: I18n.t("system_messages.reviewables_reminder.subject_template")).count).to eq(1)
+      expect(
+        Topic.where(title: I18n.t("system_messages.reviewables_reminder.subject_template")).count,
+      ).to eq(1)
     end
   end
 end

@@ -5,7 +5,16 @@ class Report
   # and you want to ensure cache is reset
   SCHEMA_VERSION = 4
 
-  FILTERS = [:name, :start_date, :end_date, :category, :group, :trust_level, :file_extension, :include_subcategories]
+  FILTERS = %i[
+    name
+    start_date
+    end_date
+    category
+    group
+    trust_level
+    file_extension
+    include_subcategories
+  ]
 
   include Reports::PostEdits
   include Reports::TopTrafficSources
@@ -51,11 +60,30 @@ class Report
   include Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
   include Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
 
-  attr_accessor :type, :data, :total, :prev30Days, :start_date,
-                :end_date, :labels, :prev_period, :facets, :limit, :average,
-                :percent, :higher_is_better, :icon, :modes, :prev_data,
-                :prev_start_date, :prev_end_date, :dates_filtering, :error,
-                :primary_color, :secondary_color, :filters, :available_filters
+  attr_accessor :type,
+                :data,
+                :total,
+                :prev30Days,
+                :start_date,
+                :end_date,
+                :labels,
+                :prev_period,
+                :facets,
+                :limit,
+                :average,
+                :percent,
+                :higher_is_better,
+                :icon,
+                :modes,
+                :prev_data,
+                :prev_start_date,
+                :prev_end_date,
+                :dates_filtering,
+                :error,
+                :primary_color,
+                :secondary_color,
+                :filters,
+                :available_filters
 
   def self.default_days
     30
@@ -63,16 +91,8 @@ class Report
 
   def self.default_labels
     [
-      {
-        type: :date,
-        property: :x,
-        title: I18n.t("reports.default.labels.day")
-      },
-      {
-        type: :number,
-        property: :y,
-        title: I18n.t("reports.default.labels.count")
-      },
+      { type: :date, property: :x, title: I18n.t("reports.default.labels.day") },
+      { type: :number, property: :y, title: I18n.t("reports.default.labels.count") },
     ]
   end
 
@@ -84,13 +104,13 @@ class Report
     @average = false
     @percent = false
     @higher_is_better = true
-    @modes = [:table, :chart]
+    @modes = %i[table chart]
     @prev_data = nil
     @dates_filtering = true
     @available_filters = {}
     @filters = {}
 
-    tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
+    tertiary = ColorScheme.hex_for_name("tertiary") || "0088cc"
     @primary_color = rgba_color(tertiary)
     @secondary_color = rgba_color(tertiary, 0.1)
   end
@@ -105,13 +125,16 @@ class Report
       report.limit,
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
-    ].compact.map(&:to_s).join(':')
+    ].compact.map(&:to_s).join(":")
   end
 
   def add_filter(name, options = {})
     if options[:type].blank?
       options[:type] = name
-      Discourse.deprecate("#{name} filter should define a `:type` option. Temporarily setting type to #{name}.", drop_from: '2.9.0')
+      Discourse.deprecate(
+        "#{name} filter should define a `:type` option. Temporarily setting type to #{name}.",
+        drop_from: "2.9.0",
+      )
     end
 
     available_filters[name] = options
@@ -123,12 +146,12 @@ class Report
 
   def add_category_filter
     category_id = filters[:category].to_i if filters[:category].present?
-    add_filter('category', type: 'category', default: category_id)
+    add_filter("category", type: "category", default: category_id)
     return if category_id.blank?
 
     include_subcategories = filters[:include_subcategories]
     include_subcategories = !!ActiveRecord::Type::Boolean.new.cast(include_subcategories)
-    add_filter('include_subcategories', type: 'bool', default: include_subcategories)
+    add_filter("include_subcategories", type: "bool", default: include_subcategories)
 
     [category_id, include_subcategories]
   end
@@ -136,12 +159,10 @@ class Report
   def self.clear_cache(type = nil)
     pattern = type ? "reports:#{type}:*" : "reports:*"
 
-    Discourse.cache.keys(pattern).each do |key|
-      Discourse.cache.redis.del(key)
-    end
+    Discourse.cache.keys(pattern).each { |key| Discourse.cache.redis.del(key) }
   end
 
-  def self.wrap_slow_query(timeout = 20000)
+  def self.wrap_slow_query(timeout = 20_000)
     ActiveRecord::Base.connection.transaction do
       # Allows only read only transactions
       DB.exec "SET TRANSACTION READ ONLY"
@@ -195,8 +216,12 @@ class Report
       json[:prev30Days] = self.prev30Days if self.prev30Days
       json[:limit] = self.limit if self.limit
 
-      if type == 'page_view_crawler_reqs'
-        json[:related_report] = Report.find('web_crawlers', start_date: start_date, end_date: end_date)&.as_json
+      if type == "page_view_crawler_reqs"
+        json[:related_report] = Report.find(
+          "web_crawlers",
+          start_date: start_date,
+          end_date: end_date,
+        )&.as_json
       end
     end
   end
@@ -212,7 +237,7 @@ class Report
     report = Report.new(type)
     report.start_date = opts[:start_date] if opts[:start_date]
     report.end_date = opts[:end_date] if opts[:end_date]
-    report.facets = opts[:facets] || [:total, :prev30Days]
+    report.facets = opts[:facets] || %i[total prev30Days]
     report.limit = opts[:limit] if opts[:limit]
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
@@ -243,8 +268,8 @@ class Report
         wrap_slow_query do
           if respond_to?(report_method)
             public_send(report_method, report)
-          elsif type =~ /_reqs$/
-            req_report(report, type.split(/_reqs$/)[0].to_sym)
+          elsif type =~ /_reqs\z/
+            req_report(report, type.split(/_reqs\z/)[0].to_sym)
           else
             return nil
           end
@@ -268,7 +293,9 @@ class Report
       # given reports can be added by plugins we don’t want dashboard failures
       # on report computation, however we do want to log which report is provoking
       # an error
-      Rails.logger.error("Error while computing report `#{report.type}`: #{e.message}\n#{e.backtrace.join("\n")}")
+      Rails.logger.error(
+        "Error while computing report `#{report.type}`: #{e.message}\n#{e.backtrace.join("\n")}",
+      )
     end
 
     report
@@ -277,32 +304,35 @@ class Report
   def self.req_report(report, filter = nil)
     data =
       if filter == :page_view_total
-        ApplicationRequest.where(req_type: [
-          ApplicationRequest.req_types.reject { |k, v| k =~ /mobile/ }.map { |k, v| v if k =~ /page_view/ }.compact
-        ].flatten)
+        ApplicationRequest.where(
+          req_type: [
+            ApplicationRequest
+              .req_types
+              .reject { |k, v| k =~ /mobile/ }
+              .map { |k, v| v if k =~ /page_view/ }
+              .compact,
+          ].flatten,
+        )
       else
         ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
       end
 
-    if filter == :page_view_total
-      report.icon = 'file'
-    end
+    report.icon = "file" if filter == :page_view_total
 
     report.data = []
-    data.where('date >= ? AND date <= ?', report.start_date, report.end_date)
+    data
+      .where("date >= ? AND date <= ?", report.start_date, report.end_date)
       .order(date: :asc)
       .group(:date)
       .sum(:count)
-      .each do |date, count|
-      report.data << { x: date, y: count }
-    end
+      .each { |date, count| report.data << { x: date, y: count } }
 
     report.total = data.sum(:count)
 
-    report.prev30Days = data.where(
-        'date >= ? AND date < ?',
-        (report.start_date - 31.days), report.start_date
-      ).sum(:count)
+    report.prev30Days =
+      data.where("date >= ? AND date < ?", (report.start_date - 31.days), report.start_date).sum(
+        :count,
+      )
   end
 
   def self.report_about(report, subject_class, report_method = :count_per_day)
@@ -313,9 +343,9 @@ class Report
   def self.basic_report_about(report, subject_class, report_method, *args)
     report.data = []
 
-    subject_class.public_send(report_method, *args).each do |date, count|
-      report.data << { x: date, y: count }
-    end
+    subject_class
+      .public_send(report_method, *args)
+      .each { |date, count| report.data << { x: date, y: count } }
   end
 
   def self.add_prev_data(report, subject_class, report_method, *args)
@@ -325,25 +355,27 @@ class Report
     end
   end
 
-  def self.add_counts(report, subject_class, query_column = 'created_at')
+  def self.add_counts(report, subject_class, query_column = "created_at")
     if report.facets.include?(:prev_period)
-      prev_data = subject_class
-        .where("#{query_column} >= ? and #{query_column} < ?",
+      prev_data =
+        subject_class.where(
+          "#{query_column} >= ? and #{query_column} < ?",
           report.prev_start_date,
-          report.prev_end_date)
+          report.prev_end_date,
+        )
 
       report.prev_period = prev_data.count
     end
 
-    if report.facets.include?(:total)
-      report.total = subject_class.count
-    end
+    report.total = subject_class.count if report.facets.include?(:total)
 
     if report.facets.include?(:prev30Days)
-      report.prev30Days = subject_class
-        .where("#{query_column} >= ? and #{query_column} < ?",
+      report.prev30Days =
+        subject_class.where(
+          "#{query_column} >= ? and #{query_column} < ?",
           report.start_date - 30.days,
-          report.start_date).count
+          report.start_date,
+        ).count
     end
   end
 
@@ -351,66 +383,72 @@ class Report
     category_id, include_subcategories = report.add_category_filter
 
     report.data = []
-    PostAction.count_per_day_for_type(post_action_type, category_id: category_id, include_subcategories: include_subcategories, start_date: report.start_date, end_date: report.end_date).each do |date, count|
-      report.data << { x: date, y: count }
-    end
+    PostAction
+      .count_per_day_for_type(
+        post_action_type,
+        category_id: category_id,
+        include_subcategories: include_subcategories,
+        start_date: report.start_date,
+        end_date: report.end_date,
+      )
+      .each { |date, count| report.data << { x: date, y: count } }
 
     countable = PostAction.unscoped.where(post_action_type_id: post_action_type)
     if category_id
       if include_subcategories
-        countable = countable.joins(post: :topic).where('topics.category_id IN (?)', Category.subcategory_ids(category_id))
+        countable =
+          countable.joins(post: :topic).where(
+            "topics.category_id IN (?)",
+            Category.subcategory_ids(category_id),
+          )
       else
-        countable = countable.joins(post: :topic).where('topics.category_id = ?', category_id)
+        countable = countable.joins(post: :topic).where("topics.category_id = ?", category_id)
       end
     end
 
-    add_counts report, countable, 'post_actions.created_at'
+    add_counts report, countable, "post_actions.created_at"
   end
 
   def self.private_messages_report(report, topic_subtype)
-    report.icon = 'envelope'
-    subject = Topic.where('topics.user_id > 0')
-    basic_report_about report, subject, :private_message_topics_count_per_day, report.start_date, report.end_date, topic_subtype
-    subject = Topic.private_messages.where('topics.user_id > 0').with_subtype(topic_subtype)
-    add_counts report, subject, 'topics.created_at'
-  end
-
-  def lighten_color(hex, amount)
-    hex = adjust_hex(hex)
-    rgb = hex.scan(/../).map { |color| color.hex }
-    rgb[0] = [(rgb[0].to_i + 255 * amount).round, 255].min
-    rgb[1] = [(rgb[1].to_i + 255 * amount).round, 255].min
-    rgb[2] = [(rgb[2].to_i + 255 * amount).round, 255].min
-    "#%02x%02x%02x" % rgb
+    report.icon = "envelope"
+    subject = Topic.where("topics.user_id > 0")
+    basic_report_about report,
+                       subject,
+                       :private_message_topics_count_per_day,
+                       report.start_date,
+                       report.end_date,
+                       topic_subtype
+    subject = Topic.private_messages.where("topics.user_id > 0").with_subtype(topic_subtype)
+    add_counts report, subject, "topics.created_at"
   end
 
   def rgba_color(hex, opacity = 1)
     rgbs = hex_to_rgbs(adjust_hex(hex))
-    "rgba(#{rgbs.join(',')},#{opacity})"
+    "rgba(#{rgbs.join(",")},#{opacity})"
+  end
+
+  def colors
+    %w[#1EB8D1 #9BC53D #721D8D #E84A5F #8A6916]
   end
 
   private
 
   def adjust_hex(hex)
-    hex = hex.gsub('#', '')
+    hex = hex.gsub("#", "")
 
     if hex.size == 3
       chars = hex.scan(/\w/)
       hex = chars.zip(chars).flatten.join
     end
 
-    if hex.size < 3
-      hex = hex.ljust(6, hex.last)
-    end
+    hex = hex.ljust(6, hex.last) if hex.size < 3
 
     hex
   end
 
   def hex_to_rgbs(hex_color)
-    hex_color = hex_color.gsub('#', '')
+    hex_color = hex_color.gsub("#", "")
     rgbs = hex_color.scan(/../)
-    rgbs
-      .map! { |color| color.hex }
-      .map! { |rgb| rgb.to_i }
+    rgbs.map! { |color| color.hex }.map! { |rgb| rgb.to_i }
   end
 end

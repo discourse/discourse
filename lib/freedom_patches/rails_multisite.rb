@@ -19,12 +19,10 @@ module RailsMultisite
             handler
           end
 
-          ActiveRecord::Base.connected_to(role: reading_role) do
-            yield(db) if block_given?
-          end
+          ActiveRecord::Base.connected_to(role: reading_role) { yield(db) if block_given? }
         rescue => e
-          STDERR.puts "URGENT: Failed to initialize site #{db}: "\
-            "#{e.class} #{e.message}\n#{e.backtrace.join("\n")}"
+          STDERR.puts "URGENT: Failed to initialize site #{db}: " \
+                        "#{e.class} #{e.message}\n#{e.backtrace.join("\n")}"
 
           # the show must go on, don't stop startup if multisite fails
         end
@@ -34,11 +32,7 @@ module RailsMultisite
 
   class DiscoursePatches
     def self.config
-      {
-        db_lookup: lambda do |env|
-          env["PATH_INFO"] == "/srv/status" ? "default" : nil
-        end
-      }
+      { db_lookup: lambda { |env| env["PATH_INFO"] == "/srv/status" ? "default" : nil } }
     end
   end
 end

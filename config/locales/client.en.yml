@@ -161,42 +161,48 @@ en:
       email: "Send via email"
       url: "Copy and share URL"
 
+    word_connector:
+      comma: ", "
+
     action_codes:
-      public_topic: "made this topic public %{when}"
-      open_topic: "converted this to a topic %{when}"
-      private_topic: "made this topic a personal message %{when}"
-      split_topic: "split this topic %{when}"
-      invited_user: "invited %{who} %{when}"
-      invited_group: "invited %{who} %{when}"
+      public_topic: "Made this topic public %{when}"
+      open_topic: "Converted this to a topic %{when}"
+      private_topic: "Made this topic a personal message %{when}"
+      split_topic: "Split this topic %{when}"
+      invited_user: "Invited %{who} %{when}"
+      invited_group: "Invited %{who} %{when}"
       user_left: "%{who} removed themselves from this message %{when}"
-      removed_user: "removed %{who} %{when}"
-      removed_group: "removed %{who} %{when}"
-      autobumped: "automatically bumped %{when}"
+      removed_user: "Removed %{who} %{when}"
+      removed_group: "Removed %{who} %{when}"
+      autobumped: "Automatically bumped %{when}"
+      tags_changed: "Tags updated %{when}"
+      category_changed: "Category updated %{when}"
       autoclosed:
-        enabled: "closed %{when}"
-        disabled: "opened %{when}"
+        enabled: "Closed %{when}"
+        disabled: "Opened %{when}"
       closed:
-        enabled: "closed %{when}"
-        disabled: "opened %{when}"
+        enabled: "Closed %{when}"
+        disabled: "Opened %{when}"
       archived:
-        enabled: "archived %{when}"
-        disabled: "unarchived %{when}"
+        enabled: "Archived %{when}"
+        disabled: "Unarchived %{when}"
       pinned:
-        enabled: "pinned %{when}"
-        disabled: "unpinned %{when}"
+        enabled: "Pinned %{when}"
+        disabled: "Unpinned %{when}"
       pinned_globally:
-        enabled: "pinned globally %{when}"
-        disabled: "unpinned %{when}"
+        enabled: "Pinned globally %{when}"
+        disabled: "Unpinned %{when}"
       visible:
-        enabled: "listed %{when}"
-        disabled: "unlisted %{when}"
+        enabled: "Listed %{when}"
+        disabled: "Unlisted %{when}"
       banner:
-        enabled: "made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user."
-        disabled: "removed this banner %{when}. It will no longer appear at the top of every page."
-      forwarded: "forwarded the above email"
+        enabled: "Made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user."
+        disabled: "Removed this banner %{when}. It will no longer appear at the top of every page."
+      forwarded: "Forwarded the above email"
 
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
+    skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
@@ -205,12 +211,7 @@ en:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
       dismiss: "Dismiss"
 
-    bootstrap_mode_enabled:
-      one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
-      other: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} users have joined."
-    bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
-    bootstrap_invite_button_title: "Send Invites"
-    bootstrap_wizard_link_title: "Finish setup wizard"
+    bootstrap_mode: "Bootstrap mode"
 
     themes:
       default_description: "Default"
@@ -331,11 +332,11 @@ en:
       edit_bookmark: "Edit Bookmark"
       clear_bookmarks: "Clear Bookmarks"
       help:
-        bookmark: "Click to bookmark the first post on this topic"
-        edit_bookmark: "Click to edit the bookmark on this topic"
+        bookmark: "Click to bookmark this topic"
+        edit_bookmark: "Click to edit the bookmark on a post in this topic"
         edit_bookmark_for_topic: "Click to edit the bookmark for this topic"
         unbookmark: "Click to remove all bookmarks in this topic"
-        unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic."
+        unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic"
 
     bookmarks:
       created: "You've bookmarked this post. %{name}"
@@ -346,7 +347,6 @@ en:
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       created_with_reminder_generic: "You've bookmarked this with a reminder %{date}. %{name}"
-      remove: "Remove Bookmark"
       delete: "Delete Bookmark"
       confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
@@ -383,7 +383,7 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       abandon:
-        confirm: "You have a draft in progress for this topic. What would you like to do with it?"
+        confirm: "You already have a draft in progress. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
 
@@ -429,7 +429,6 @@ en:
     enable: "Enable"
     disable: "Disable"
     continue: "Continue"
-    undo: "Undo"
 
     switch_to_anon: "Enter Anonymous Mode"
     switch_from_anon: "Exit Anonymous Mode"
@@ -579,27 +578,45 @@ en:
       scores:
         about: "This score is calculated based on the trust level of the reporter, the accuracy of their previous flags, and the priority of the item being reported."
         score: "Score"
-        date: "Date"
-        type: "Type"
+        date: "Report date"
+        type: "Reason"
         status: "Status"
-        submitted_by: "Submitted By"
-        reviewed_by: "Reviewed By"
+        submitted_by: "Reported by"
+        reviewed_by: "Reviewed by"
+        reviewed_timestamp: "Review date"
 
       statuses:
         pending:
           title: "Pending"
         approved:
           title: "Approved"
+        approved_flag:
+          title: "Flag approved"
+        approved_user:
+          title: "User approved"
+        approved_post:
+          title: "Post approved"
         rejected:
           title: "Rejected"
+        rejected_flag:
+          title: "Flag rejected"
+        rejected_user:
+          title: "User rejected"
+        rejected_post:
+          title: "Post rejected"
         ignored:
-          title: "Ignored"
+          title: "Flag ignored"
         deleted:
-          title: "Deleted"
+          title: "Topic or post deleted"
         reviewed:
-          title: "(all reviewed)"
+          title: "All reviewed"
         all:
-          title: "(everything)"
+          title: "Everything"
+
+      context_question:
+        is_this_post: "Is this post %{reviewable_human_score_types}?"
+        delimiter: "or"
+        something_else_wrong: "Is there something wrong with this post?"
 
       types:
         reviewable_flagged_post:
@@ -747,6 +764,7 @@ en:
         denied: "denied"
         undone: "request undone"
         handle: "handle membership request"
+        undo: "Undo"
       manage:
         title: "Manage"
         name: "Name"
@@ -914,6 +932,7 @@ en:
         make_all_primary_description: "Make this the primary group for all selected users"
         remove_all_primary: "Remove as Primary"
         remove_all_primary_description: "Remove this group as primary"
+        status: "Status"
         owner: "Owner"
         primary: "Primary"
         forbidden: "You're not allowed to view the members."
@@ -1047,10 +1066,12 @@ en:
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
-        button_text: "Download All"
-        confirm: "Are you sure you want to download your posts?"
-        success: "Download initiated, you will be notified via message when the process is complete."
-        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
+        title: "Export your data"
+        description: "Download an archive of your account activity and preferences."
+        button_text: "Request archive"
+        confirm: "Do you really want to download an archive of your account activity and preferences?"
+        success: "We've started collecting your archive, you will receive a message when the process is complete."
+        rate_limit_error: "Account archives can be downloaded once per day, please try again tomorrow."
       new_private_message: "New Message"
       private_message: "Message"
       private_messages: "Messages"
@@ -1078,7 +1099,7 @@ en:
       notification_schedule:
         title: "Notification Schedule"
         label: "Enable custom notification schedule"
-        tip: "Outside of these hours you will be put in 'do not disturb' automatically."
+        tip: "Outside of these hours your notifications will be paused."
         midnight: "Midnight"
         none: "None"
         monday: "Monday"
@@ -1122,7 +1143,7 @@ en:
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
         enable: "Enable Notifications"
-        each_browser_note: 'Note: You have to change this setting on every browser you use. All notifications will be disabled when in "do not disturb", regardless of this setting.'
+        each_browser_note: "Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
@@ -1260,12 +1281,24 @@ en:
       staged: "Staged"
 
       staff_counters:
-        flags_given: "helpful flags"
-        flagged_posts: "flagged posts"
-        deleted_posts: "deleted posts"
-        suspensions: "suspensions"
-        warnings_received: "warnings"
-        rejected_posts: "rejected posts"
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> helpful flag'
+          other: '<span class="%{className}">%{count}</span> helpful flags'
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> flagged post'
+          other: '<span class="%{className}">%{count}</span> flagged posts'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> deleted post'
+          other: '<span class="%{className}">%{count}</span> deleted posts'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> suspension'
+          other: '<span class="%{className}">%{count}</span> suspensions'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> warning'
+          other: '<span class="%{className}">%{count}</span> warnings'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> rejected post'
+          other: '<span class="%{className}">%{count}</span> rejected posts'
 
       messages:
         all: "all inboxes"
@@ -1386,11 +1419,12 @@ en:
         title: "Two-Factor Backup Codes"
         regenerate: "Regenerate"
         disable: "Disable"
-        enable: "Enable"
-        enable_long: "Enable backup codes"
+        enable: "Create backup codes"
+        enable_long: "Add backup codes"
+        not_enabled: "You haven't created any backup codes yet."
         manage:
-          one: "Manage backup codes. You have <strong>%{count}</strong> backup code remaining."
-          other: "Manage backup codes. You have <strong>%{count}</strong> backup codes remaining."
+          one: "You have <strong>%{count}</strong> backup code remaining."
+          other: "You have <strong>%{count}</strong> backup codes remaining."
         copy_to_clipboard: "Copy to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
@@ -1479,6 +1513,7 @@ en:
         success: "We've sent an email to that address. Please follow the confirmation instructions."
         success_via_admin: "We've sent an email to that address. The user will need to follow the confirmation instructions in the email."
         success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
+        back_to_preferences: "Back to preferences"
 
       change_avatar:
         title: "Change your profile picture"
@@ -1618,6 +1653,8 @@ en:
         title: "Background page title displays count of:"
         notifications: "New notifications"
         contextual: "New page content"
+      bookmark_after_notification:
+        title: "After a bookmark reminder notification is sent:"
 
       like_notification_frequency:
         title: "Notify when liked"
@@ -1866,6 +1903,7 @@ en:
       save: "Save"
       set_custom_status: "Set custom status"
       what_are_you_doing: "What are you doing?"
+      pause_notifications: "Pause notifications"
       remove_status: "Remove status"
 
     user_tips:
@@ -2121,6 +2159,10 @@ en:
       title: "Log in"
       username: "User"
       password: "Password"
+      show_password: "Show"
+      hide_password: "Hide"
+      show_password_title: "Show password"
+      hide_password_title: "Hide password"
       second_factor_title: "Two-Factor Authentication"
       second_factor_description: "Please enter the authentication code from your app:"
       second_factor_backup: "Log in using a backup code"
@@ -2366,8 +2408,6 @@ en:
 
       save_edit: "Save Edit"
       overwrite_edit: "Overwrite Edit"
-      reply_original: "Reply on Original Topic"
-      reply_here: "Reply Here"
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
@@ -2539,6 +2579,8 @@ en:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
+      new_features: "New features available!"
+      admin_problems: "New advice on your site dashboard"
       dismiss_confirmation:
         body:
           default:
@@ -2596,6 +2638,7 @@ en:
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
         votes_released: "Vote was released"
+        new_features: "new Discourse features have been released!"
 
     upload_selector:
       uploading: "Uploading"
@@ -2852,6 +2895,7 @@ en:
         bookmarks: "You have no bookmarked topics yet."
         category: "There are no %{category} topics."
         top: "There are no top topics."
+        filter: "There are no topics."
         educate:
           new: '<p>Your new topics will appear here. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
           unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge unread-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
@@ -2866,12 +2910,14 @@ en:
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
+        filter: "There are no more topics."
 
     topic:
       filter_to:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
       create: "New Topic"
+      create_disabled_category: "You're not allowed to create topics in this category"
       create_long: "Create a new Topic"
       open_draft: "Open Draft"
       private_message: "Start a message"
@@ -2967,8 +3013,8 @@ en:
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
 
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
+      jump_reply: "Jump to post's original location"
+      jump_reply_aria: "Jump to @%{username}'s post in its original location"
       deleted: "The topic has been deleted"
 
       slow_mode_update:
@@ -3353,6 +3399,7 @@ en:
       ignored: "Ignored content"
       wiki_last_edited_on: "wiki last edited on %{dateTime}"
       last_edited_on: "post last edited on %{dateTime}"
+      edit_history: "post edit history"
       reply_as_new_topic: "Reply as linked Topic"
       reply_as_new_private_message: "Reply as new message to the same recipients"
       continue_discussion: "Continuing the discussion from %{postLink}:"
@@ -3364,8 +3411,8 @@ en:
       sr_collapse_replies: "Collapse embedded replies"
       sr_date: "Post date"
       sr_expand_replies:
-        one: "This post has %{count} reply. Click to expand"
-        other: "This post has %{count} replies. Click to expand"
+        one: "This post has %{count} reply"
+        other: "This post has %{count} replies"
       expand_collapse: "expand/collapse"
       sr_below_embedded_posts_description: "post #%{post_number} replies"
       sr_embedded_reply_description: "reply by @%{username} to post #%{post_number}"
@@ -3438,6 +3485,7 @@ en:
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
       whisper: "this post is a private whisper for moderators"
+      whisper_groups: "this post is a private whisper only visible to %{groupNames}"
 
       wiki:
         about: "this post is a wiki"
@@ -3539,6 +3587,8 @@ en:
           last: "Last revision"
           hide: "Hide revision"
           show: "Show revision"
+          destroy: "Delete revisions"
+          destroy_confirm: "Are you sure you want to delete all of the revisions on this post? This action is permanent."
           revert: "Revert to revision %{revision}"
           edit_wiki: "Edit Wiki"
           edit_post: "Edit Post"
@@ -3571,10 +3621,10 @@ en:
         create_for_topic: "Create bookmark for topic"
         edit: "Edit bookmark"
         edit_for_topic: "Edit bookmark for topic"
-        created: "Created"
         updated: "Updated"
         name: "Name"
         name_placeholder: "What is this bookmark for?"
+        name_input_label: "Bookmark name"
         set_reminder: "Remind me"
         options: "Options"
         actions:
@@ -3616,7 +3666,7 @@ en:
       back: "Back to category"
       general: "General"
       settings: "Settings"
-      topic_template: "Topic Template"
+      topic_template: "Template"
       tags: "Tags"
       tags_allowed_tags: "Restrict these tags to this category:"
       tags_allowed_tag_groups: "Restrict these tag groups to this category:"
@@ -3675,8 +3725,7 @@ en:
       email_in: "Custom incoming email address:"
       email_in_tooltip: "You can separate multiple email addresses with the | character."
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
-      email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
-      email_in_disabled_click: 'enable the "email in" setting.'
+      email_in_disabled: "Posting new topics via email is disabled. To enable posting new topics via email, enable the <a href='%{setting_url}'>'email in'</a> setting."
       mailinglist_mirror: "Category mirrors a mailing list"
       show_subcategory_list: "Show subcategory list above topics in this category."
       read_only_banner: "Banner text when a user cannot create a topic in this category:"
@@ -3703,6 +3752,7 @@ en:
       default_slow_mode: 'Enable "Slow Mode" for new topics in this category.'
       parent: "Parent Category"
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
+      auto_bump_cooldown_days: "Minimum days before bumping the same topic again:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
       notifications:
         title: "change notification level for this category"
@@ -3798,7 +3848,9 @@ en:
         inappropriate: "It's Inappropriate"
         spam: "It's Spam"
       custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
+      notify_user_textarea_label: "Message for the user"
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
+      notify_moderators_textarea_label: "Message for the moderators"
       custom_message:
         at_least:
           one: "enter at least %{count} character"
@@ -3897,7 +3949,6 @@ en:
     category_title: "Category"
     history_capped_revisions: "History, last 100 revisions"
     history: "History"
-    changed_by: "by %{author}"
 
     raw_email:
       title: "Incoming Email"
@@ -3908,6 +3959,10 @@ en:
     filters:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Latest"
         title_with_count:
@@ -3980,8 +4035,6 @@ en:
 
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
-    safari_13_warning: This site will soon remove support for iOS and Safari versions 13 and below. A simplified read-only version will remain available. (<a href="https://meta.discourse.org/t/224747">more information</a>)
-
     permission_types:
       full: "Create / Reply / See"
       create_post: "Reply / See"
@@ -4047,6 +4100,7 @@ en:
         title: "Composing"
         return: "%{shortcut} Return to composer"
         fullscreen: "%{shortcut} Fullscreen composer"
+        insert_current_time: "%{shortcut} Insert current time"
       bookmarks:
         title: "Bookmarking"
         enter: "%{shortcut} Save and close"
@@ -4106,6 +4160,7 @@ en:
       granted:
         one: "%{count} granted"
         other: "%{count} granted"
+      awarded: awarded
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
       successfully_granted: "Successfully granted %{badge} to %{username}"
@@ -4284,16 +4339,14 @@ en:
 
     image_removed: "(image removed)"
 
-    do_not_disturb:
-      title: "Do not disturb for..."
-      label: "Do not disturb"
-      remaining: "%{remaining} remaining"
+    pause_notifications:
+      title: "Pause notifications for..."
+      label: "Pause notifications"
       options:
         half_hour: "30 minutes"
         one_hour: "1 hour"
         two_hours: "2 hours"
         tomorrow: "Until tomorrow"
-        custom: "Custom"
       set_schedule: "Set a notification schedule"
 
     trust_levels:
@@ -4345,16 +4398,47 @@ en:
       new_count:
         one: "%{count} new"
         other: "%{count} new"
-      toggle_section: "toggle section"
+      toggle_section: "Toggle section"
       more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
       sections:
+        custom:
+          add: "Add custom section"
+          edit: "Edit custom section"
+          save: "Save"
+          delete: "Delete"
+          delete_confirm: "Are you sure you want to delete this section?"
+          public: "Make this section public and visible to everyone"
+          links:
+            add: "Add another link"
+            delete: "Delete link"
+            icon:
+              label: "Icon"
+              validation:
+                blank: "Icon cannot be blank"
+                maximum: "Icon must be shorter than %{count} characters"
+            name:
+              label: "Name"
+              validation:
+                blank: "Name cannot be blank"
+                maximum: "Name must be shorter than %{count} characters"
+            value:
+              label: "Link"
+              validation:
+                blank: "Link cannot be blank"
+                maximum: "Link must be shorter than %{count} characters"
+                invalid: "Format is invalid"
+          title:
+            label: "Section title"
+            validation:
+              blank: "Title cannot be blank"
+              maximum: "Title must be shorter than %{count} characters"
         about:
           header_link_text: "About"
         messages:
           header_link_text: "Messages"
-          header_action_title: "create a personal message"
+          header_action_title: "Create a personal message"
           links:
             inbox: "Inbox"
             sent: "Sent"
@@ -4371,7 +4455,7 @@ en:
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
-          header_action_title: "edit your sidebar tags"
+          header_action_title: "Edit your sidebar tags"
           configure_defaults: "Configure defaults"
         categories:
           links:
@@ -4381,31 +4465,36 @@ en:
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
-          header_action_title: "edit your sidebar categories"
+          header_action_title: "Edit your sidebar categories"
           configure_defaults: "Configure defaults"
         community:
           header_link_text: "Community"
-          header_action_title: "create a new topic"
+          header_action_title: "Create a topic"
           links:
             about:
               content: "About"
+              title: "More details about this site"
             admin:
               content: "Admin"
+              title: "Site settings and reports"
             badges:
               content: "Badges"
+              title: "All the badges available to earn"
             everything:
               content: "Everything"
               title: "All topics"
             faq:
               content: "FAQ"
+              title: "Guidelines for using this site"
             groups:
               content: "Groups"
-              title: "All groups"
+              title: "List of available user groups"
             users:
               content: "Users"
-              title: "All users"
+              title: "List of all users"
             my_posts:
               content: "My Posts"
+              content_drafts: "My Drafts"
               title: "My recent topic activity"
               title_drafts: "My unposted drafts"
               draft_count:
@@ -4413,7 +4502,7 @@ en:
                 other: "%{count} drafts"
             review:
               content: "Review"
-              title: "review"
+              title: "Flagged posts and other queued items"
               pending_count: "%{count} pending"
 
     welcome_topic_banner:
@@ -4422,6 +4511,9 @@ en:
       button_title: "Start Editing"
 
     until: "Until:"
+
+    char_counter:
+      exceeded: "The maximum number of characters allowed has been exceeded."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4577,6 +4669,9 @@ en:
               other: "%{count} users have the new email domains and will be added to the group."
             automatic_membership_associated_groups: "Users who are members of a group on a service listed here will be automatically added to this group when they log in with the service."
             primary_group: "Automatically set as primary group"
+          alert:
+            primary_group: "Since this is a primary group, the name '%{group_name}' will be used in CSS classes which can be viewed by anyone."
+            flair_group: "Since this group has flair for its members, the name '%{group_name}' will be visible to anyone."
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
         no_primary: "(no primary group)"
@@ -4586,10 +4681,14 @@ en:
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
-        delete_confirm: "Are you sure you want to delete this group?"
+        delete_confirm: "Are you sure you want to delete %{group}?"
+        delete_details:
+          one: "%{count} person will lose access to this group"
+          other: "%{count} people will lose access to this group"
         delete_with_messages_confirm:
-          one: "Deleting this group will cause %{count} message to be orphaned, group members will no longer have access to it."
-          other: "Deleting this group will cause %{count} messages to be orphaned, group members will no longer have access to them."
+          one: "%{count} message will become inaccessible to group members"
+          other: "%{count} messages will become inaccessible to group members"
+        delete_warning: "Deleted groups can not be recovered"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_automatic_group: This is an automatic group and cannot be deleted.
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
@@ -4656,10 +4755,15 @@ en:
             topics:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
-              update: Update a topic. Change the title, category, tags, etc.
+              update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
+              delete: Delete a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
+              status: "Update a topic's status. Status: closed, archive, visisble, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
+              delete: Delete a post.
+            tags:
+              list: List tags.
             categories:
               list: Get a list of categories.
               show: Get a single category by id.
@@ -4673,6 +4777,7 @@ en:
               update: Update user profile information.
               log_out: Log out all sessions for a user.
               anonymize: Anonymize user accounts.
+              suspend: Suspend user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
             user_status:
@@ -4680,6 +4785,8 @@ en:
               update: Update user status.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
+            invites:
+              create: Send email invites or generate invite links.
             badges:
               create: Create a new badge.
               show: Obtain information about a badge.
@@ -4688,6 +4795,12 @@ en:
               list_user_badges: List user badges.
               assign_badge_to_user: Assign a badge to a user.
               revoke_badge_from_user: Revoke a badge from a user.
+            groups:
+              manage_groups: List, add, and remove group members.
+              administer_groups: List, show, create, update, and delete groups.
+            search:
+              show: Search using the `/search.json?q=term` endpoint.
+              query: Search using the `/search/query?term=term` endpoint.
             wordpress:
               publishing: Necessary for the WP Discourse plugin publishing features (required).
               commenting: Necessary for the WP Discourse plugin commenting features.
@@ -4755,8 +4868,8 @@ en:
           name: "User Promoted Event"
           details: "When a user is promoted from one trust level to another."
         user_badge_event:
-          name: "Badge Grant Event"
-          details: "When a user receives a badge."
+          name: "Badge Event"
+          details: "When a badge is granted or revoked."
         group_user_event:
           name: "Group User Event"
           details: "When a user is added or removed in a group."
@@ -4799,7 +4912,7 @@ en:
         enabled: "Enabled?"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "Change Settings"
+        change_settings: "Plugin Settings"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
         official: "Official Plugin"
@@ -4888,7 +5001,6 @@ en:
 
       customize:
         title: "Customize"
-        long_title: "Site Customizations"
         preview: "preview"
         explain_preview: "See the site with this theme enabled"
         save: "Save"
@@ -5060,6 +5172,9 @@ en:
           embedded_scss:
             text: "Embedded CSS"
             title: "Enter custom CSS to deliver with embedded version of comments"
+          embedded_header:
+            text: "Embedded Header"
+            title: "Enter HTML to display above the embedded version of comments"
           color_definitions:
             text: "Color Definitions"
             title: "Enter custom color definitions (advanced users only)"
@@ -5094,9 +5209,9 @@ en:
           new_name: "New Color Palette"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color palette?"
-          undo: "undo"
+          undo: "Undo"
           undo_title: "Undo your changes to this color since the last time it was saved."
-          revert: "revert"
+          revert: "Revert"
           revert_title: "Reset this color to Discourse's default color palette."
           primary:
             name: "primary"
@@ -5143,6 +5258,12 @@ en:
           love:
             name: "love"
             description: "The like button's color."
+          selected:
+            name: "selected"
+            description: "The background-color of elements such as list-items when they are selected/active."
+          hover:
+            name: "hover"
+            description: "The background-color of elements such as list-items when they are hovered on or have keyboard focus."
         robots:
           title: "Override your site's robots.txt file:"
           warning: "This will permanently override any related site settings."
@@ -5276,6 +5397,7 @@ en:
           no_previous: "There is no previous value."
           deleted: "No new value. The record was deleted."
           actions:
+            permanently_delete_post_revisions: "permanently delete post revisions"
             delete_user: "delete user"
             change_trust_level: "change trust level"
             change_username: "change username"
@@ -5367,6 +5489,10 @@ en:
             delete_group: "delete group"
             watched_word_create: "add watched word"
             watched_word_destroy: "delete watched word"
+            create_public_sidebar_section: "create public sidebar section"
+            update_public_sidebar_section: "update public sidebar section"
+            destroy_public_sidebar_section: "destroy public sidebar section"
+            reset_bounce_score: "reset bounce score"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -5431,14 +5557,14 @@ en:
           silence: "Silence"
           link: "Link"
         action_descriptions:
-          block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
-          censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
-          require_approval: "Posts containing these words will require approval by staff before they can be seen."
-          flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
-          replace: "Replace words in posts with other words"
-          tag: "Automatically tag topics based on first post"
-          silence: "First posts of users containing these words will require approval by staff before they can be seen and the user will be automatically silenced."
-          link: "Replace words in posts with links"
+          block: "An error message will be displayed when attempting to create a post containing these words."
+          censor: "Allow posts that contain these words, but replace them with characters that hide the censored words."
+          require_approval: "Require staff approval for posts that contain these words before they can be visible to others."
+          flag: "Allow posts that contain these words, but flag them as inappropriate for review by moderators."
+          replace: "Replace words in posts with other words."
+          tag: "Automatically tag topics if the first post contains a specific word."
+          silence: "Silence new accounts if their very first post contains any of these words. The post will be automatically hidden until staff approves it."
+          link: "Replace words in posts with links."
         form:
           label: "Has word or phrase"
           placeholder: "Enter word or phrase (* is a wildcard)"
@@ -5462,6 +5588,85 @@ en:
           found_matches: "Found matches:"
           no_matches: "No matches found"
 
+      form_templates:
+        nav_title: "Templates"
+        title: "Form Templates"
+        help: "Create a template structure that can be used to create new topics, posts, and messages."
+        new_template: "New Template"
+        list_table:
+          headings:
+            name: "Name"
+            active_categories: "Active Categories"
+            actions: "Actions"
+          actions:
+            view: "View Template"
+            edit: "Edit Template"
+            delete: "Delete Template"
+        view_template:
+          close: "Close"
+          edit: "Edit"
+          delete: "Delete"
+          toggle_preview: "Toggle Preview"
+        new_template_form:
+          submit: "Save"
+          cancel: "Cancel"
+          name:
+            label: "Template Name"
+            placeholder: "Enter a name for this template..."
+          template:
+            label: "Template"
+            placeholder: "Create a YAML template here..."
+          preview: "Preview"
+        delete_confirm: "Are you sure you would like to delete this template?"
+        quick_insert_fields:
+          add_new_field: "Add"
+          checkbox: "Checkbox"
+          input: "Short answer"
+          textarea: "Long answer"
+          dropdown: "Dropdown"
+          upload: "Upload a file"
+          multiselect: "Multiple choice"
+        validations_modal:
+          button_title: "Validations"
+          modal_title: "Validation Options"
+          table_headers:
+            key: "Key"
+            type: "Type"
+            description: "Description"
+          validations:
+            required:
+              key: "required"
+              type: "boolean"
+              description: "Requires the field to be completed to submit the form."
+            minimum:
+              key: "minimum"
+              type: "integer"
+              description: "In text fields, specifies the minimum number of characters allowed."
+            maximum:
+              key: "maximum"
+              type: "integer"
+              description: "In text fields, specifies the maximum number of characters allowed. In multi select dropdowns, specifies the maximum number of options that can be selected."
+            pattern:
+              key: "pattern"
+              type: "regex string"
+              description: "In text fields, a regular expression specifying the allowed input."
+        preview_modal:
+          title: "Preview Template"
+        field_placeholders:
+          validations: "enter validations here"
+          label: "Enter label here"
+          placeholder: "Enter placeholder here"
+          none_label: "Select an item"
+          choices:
+            first: "Option 1"
+            second: "Option 2"
+            third: "Option 3"
+        edit_category:
+          toggle_freeform: "form template disabled"
+          toggle_form_template: "form template enabled"
+          select_template: "Select form templates"
+          select_template_help: "Add/Edit Form Templates"
+
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -5475,6 +5680,7 @@ en:
         not_found: "Sorry, that username doesn't exist in our system."
         id_not_found: "Sorry, that user id doesn't exist in our system."
         active: "Activated"
+        status: "Status"
         show_emails: "Show Emails"
         hide_emails: "Hide Emails"
         nav:
@@ -5511,7 +5717,7 @@ en:
       user:
         suspend_failed: "Something went wrong suspending this user %{error}"
         unsuspend_failed: "Something went wrong unsuspending this user %{error}"
-        suspend_duration: "How long will the user be suspended for?"
+        suspend_duration: "Suspend user until:"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Why are you suspending? This text will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
@@ -5535,7 +5741,9 @@ en:
         silence_message: "Email Message"
         silence_message_placeholder: "(leave blank to send default message)"
         suspended_until: "(until %{until})"
+        suspend_forever: "Suspend forever"
         cant_suspend: "This user cannot be suspended."
+        cant_silence: "This user cannot be silenced."
 
         delete_posts_failed: "There was a problem deleting the posts."
         post_edits: "Post Edits"
@@ -5546,7 +5754,19 @@ en:
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
         penalty_count: "Penalty Count"
-        penalty_history: "Penalty History"
+
+        # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
+        penalty_history_MF: >-
+          In the past 6 months this user has been <b>suspended
+          { SUSPENDED, plural,
+                  one {# time}
+                other {# times}
+          }</b> and <b>silenced
+          { SILENCED, plural,
+                  one {# time}
+                other {# times}
+          }</b>.
+
         clear_penalty_history:
           title: "Clear Penalty History"
           description: "users with penalties cannot reach TL3"
@@ -5571,7 +5791,6 @@ en:
         show_admin_profile: "Admin"
         manage_user: "Manage user"
         show_public_profile: "Show Public Profile"
-        impersonate: "Impersonate"
         action_logs: "Action Logs"
         ip_lookup: "IP Lookup"
         log_out: "Log Out"
@@ -5716,8 +5935,8 @@ en:
         suspended_count: "Suspended"
         last_six_months: "Last 6 months"
         other_matches:
-          one: "There is %{count} other user with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
-          other: "There are %{count} other users with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
+          one: "There is <b>%{count} other user</b> with the same IP address. Review and select the suspicious ones to penalize along with %{username}."
+          other: "There are <b>%{count} other users</b> with the same IP address. Review and select the suspicious ones to penalize along with %{username}."
         other_matches_list:
           username: "Username"
           trust_level: "Trust Level"
@@ -5918,7 +6137,8 @@ en:
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
         listable: Show badge on the public badges page
-        enabled: Enable badge
+        enabled: enabled
+        disabled: disabled
         icon: Icon
         image: Image
         graphic: Graphic
@@ -5990,10 +6210,14 @@ en:
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Are you sure you want to delete that host?"
-        sample: "Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        sample: |
+          <p>Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>EMBED_URL</b> with the canonical URL of the page you are embedding it on.</p>
+
+          <p>If you want to customize the style, uncomment and replace <b>CLASS_NAME</b> with a CSS class defined in the <i>Embedded CSS</i> of your theme.</p>
+
+          <p>Replace <b>DISCOURSE_USERNAME</b> with the Discourse username of the author that should create the topic. Discourse will automatically lookup the user by the <code>content</code> attribute of the <code>&lt;meta&gt;</code> tags with <code>name</code> attribute set to <code>discourse-username</code> or <code>author</code>. The <code>discourseUserName</code> parameter has been deprecated and will be removed in Discourse 3.2.</p>
         title: "Embedding"
         host: "Allowed Hosts"
-        class_name: "Class Name"
         allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"
@@ -6051,10 +6275,10 @@ en:
       finish: "Exit setup"
       back: "Back"
       next: "Next"
-      configure_more: "Configure More..."
+      configure_more: "Configure more..."
       step-text: "Step"
       step: "%{current} of %{total}"
-      upload: "Upload"
+      upload: "Upload file"
       uploading: "Uploading..."
       upload_error: "Sorry, there was an error uploading that file. Please try again."
 

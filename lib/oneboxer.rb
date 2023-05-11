@@ -1,47 +1,78 @@
 # frozen_string_literal: true
 
-require 'uri'
+require "uri"
 
 Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
 
 module Oneboxer
   ONEBOX_CSS_CLASS = "onebox"
-  AUDIO_REGEX = /^\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)$/i
-  VIDEO_REGEX = /^\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)$/i
+  AUDIO_REGEX = /\A\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)\z/i
+  VIDEO_REGEX = /\A\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)\z/i
 
   # keep reloaders happy
-  unless defined? Oneboxer::Result
-    Result = Struct.new(:doc, :changed) do
-      def to_html
-        doc.to_html
-      end
+  unless defined?(Oneboxer::Result)
+    Result =
+      Struct.new(:doc, :changed) do
+        def to_html
+          doc.to_html
+        end
 
-      def changed?
-        changed
+        def changed?
+          changed
+        end
       end
-    end
   end
 
   def self.ignore_redirects
-    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', 'http://vimeo.com', 'https://www.youtube.com', Discourse.base_url]
+    @ignore_redirects ||= [
+      "http://www.dropbox.com",
+      "http://store.steampowered.com",
+      "http://vimeo.com",
+      "https://www.youtube.com",
+      Discourse.base_url,
+    ]
   end
 
   def self.amazon_domains
-    amazon_suffixes = %w(com com.br ca cn fr de in it co.jp com.mx nl pl sa sg es se com.tr ae co.uk)
+    amazon_suffixes = %w[
+      com
+      com.br
+      ca
+      cn
+      fr
+      de
+      in
+      it
+      co.jp
+      com.mx
+      nl
+      pl
+      sa
+      sg
+      es
+      se
+      com.tr
+      ae
+      co.uk
+    ]
     amazon_suffixes.collect { |suffix| "https://www.amazon.#{suffix}" }
   end
 
   def self.force_get_hosts
     hosts = []
-    hosts += SiteSetting.force_get_hosts.split('|').collect { |domain| "https://#{domain}" }
-    hosts += SiteSetting.cache_onebox_response_body_domains.split('|').collect { |domain| "https://www.#{domain}" }
+    hosts += SiteSetting.force_get_hosts.split("|").collect { |domain| "https://#{domain}" }
+    hosts +=
+      SiteSetting
+        .cache_onebox_response_body_domains
+        .split("|")
+        .collect { |domain| "https://www.#{domain}" }
     hosts += amazon_domains
 
     hosts.uniq
   end
 
   def self.force_custom_user_agent_hosts
-    SiteSetting.force_custom_user_agent_hosts.split('|')
+    SiteSetting.force_custom_user_agent_hosts.split("|")
   end
 
   def self.allowed_post_types
@@ -97,7 +128,10 @@ module Oneboxer
     uri = URI.parse(uri) if uri.is_a?(String)
 
     if SiteSetting.cache_onebox_response_body?
-      SiteSetting.cache_onebox_response_body_domains.split("|").any? { |domain| uri.hostname.ends_with?(domain) }
+      SiteSetting
+        .cache_onebox_response_body_domains
+        .split("|")
+        .any? { |domain| uri.hostname.ends_with?(domain) }
     end
   end
 
@@ -124,15 +158,51 @@ module Oneboxer
   def self.each_onebox_link(doc, extra_paths: [])
     onebox_links = doc.css("a.#{ONEBOX_CSS_CLASS}", *extra_paths)
     if onebox_links.present?
-      onebox_links.each do |link|
-        yield(link['href'], link) if link['href'].present?
-      end
+      onebox_links.each { |link| yield(link["href"], link) if link["href"].present? }
     end
 
     doc
   end
 
-  HTML5_BLOCK_ELEMENTS ||= %w{address article aside blockquote canvas center dd div dl dt fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 header hgroup hr li main nav noscript ol output p pre section table tfoot ul video}
+  HTML5_BLOCK_ELEMENTS ||= %w[
+    address
+    article
+    aside
+    blockquote
+    canvas
+    center
+    dd
+    div
+    dl
+    dt
+    fieldset
+    figcaption
+    figure
+    footer
+    form
+    h1
+    h2
+    h3
+    h4
+    h5
+    h6
+    header
+    hgroup
+    hr
+    li
+    main
+    nav
+    noscript
+    ol
+    output
+    p
+    pre
+    section
+    table
+    tfoot
+    ul
+    video
+  ]
 
   def self.apply(string_or_doc, extra_paths: nil)
     doc = string_or_doc
@@ -150,8 +220,9 @@ module Oneboxer
 
       parent = element.parent
       if parent&.node_name&.downcase == "p" &&
-        parsed_onebox.children.any? { |child| HTML5_BLOCK_ELEMENTS.include?(child.node_name.downcase) }
-
+           parsed_onebox.children.any? { |child|
+             HTML5_BLOCK_ELEMENTS.include?(child.node_name.downcase)
+           }
         siblings = parent.children
         element_idx = siblings.find_index(element)
         before_idx = first_significant_element_index(siblings, element_idx - 1, -1)
@@ -184,8 +255,13 @@ module Oneboxer
 
   def self.first_significant_element_index(elements, index, step)
     while index >= 0 && index < elements.size &&
-      (elements[index].node_name.downcase == "br" ||
-        (elements[index].node_name.downcase == "text" && elements[index].to_html.strip.blank?))
+            (
+              elements[index].node_name.downcase == "br" ||
+                (
+                  elements[index].node_name.downcase == "text" &&
+                    elements[index].to_html.strip.blank?
+                )
+            )
       index = index + step
     end
 
@@ -205,9 +281,10 @@ module Oneboxer
   end
 
   def self.engine(url)
-    Onebox::Matcher.new(url, {
-      allowed_iframe_regexes: Onebox::Engine.origins_to_regexes(allowed_iframe_origins)
-    }).oneboxed
+    Onebox::Matcher.new(
+      url,
+      { allowed_iframe_regexes: Onebox::Engine.origins_to_regexes(allowed_iframe_origins) },
+    ).oneboxed
   end
 
   def self.recently_failed?(url)
@@ -252,40 +329,55 @@ module Oneboxer
 
     html =
       case route[:controller]
-      when "uploads" then local_upload_html(url)
-      when "topics"  then local_topic_html(url, route, opts)
-      when "users"   then local_user_html(url, route)
-      when "list"    then local_category_html(url, route)
+      when "uploads"
+        local_upload_html(url)
+      when "topics"
+        local_topic_html(url, route, opts)
+      when "users"
+        local_user_html(url, route)
+      when "list"
+        local_category_html(url, route)
       else
         if handler = local_handlers[route[:controller]]
           handler.call(url, route)
         end
       end
 
-    html = html.presence || "<a href='#{URI(url).to_s}'>#{URI(url).to_s}</a>"
+    normalized_url = ::Onebox::Helpers.normalize_url_for_output(URI(url).to_s)
+    html = html.presence || "<a href='#{normalized_url}'>#{normalized_url}</a>"
     { onebox: html, preview: html }
   end
 
   def self.local_upload_html(url)
-    additional_controls = \
+    additional_controls =
       if SiteSetting.disable_onebox_media_download_controls
         "controlslist='nodownload'"
       else
         ""
       end
 
+    normalized_url = ::Onebox::Helpers.normalize_url_for_output(url)
     case File.extname(URI(url).path || "")
     when VIDEO_REGEX
       <<~HTML
         <div class="onebox video-onebox">
           <video #{additional_controls} width="100%" height="100%" controls="">
-            <source src='#{url}'>
-            <a href='#{url}'>#{url}</a>
+            <source src='#{normalized_url}'>
+            <a href='#{normalized_url}'>
+              #{normalized_url}
+            </a>
           </video>
         </div>
       HTML
     when AUDIO_REGEX
-      "<audio #{additional_controls} controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
+      <<~HTML
+        <audio #{additional_controls} controls>
+          <source src='#{normalized_url}'>
+          <a href='#{normalized_url}'>
+            #{normalized_url}
+          </a>
+        </audio>
+      HTML
     end
   end
 
@@ -315,9 +407,14 @@ module Oneboxer
 
     post_number = route[:post_number].to_i
 
-    post = post_number > 1 ?
-      topic.posts.where(post_number: post_number).first :
-      topic.ordered_posts.first
+    post =
+      (
+        if post_number > 1
+          topic.posts.where(post_number: post_number).first
+        else
+          topic.ordered_posts.first
+        end
+      )
 
     return if !post || post.hidden || !allowed_post_types.include?(post.post_type)
 
@@ -326,7 +423,8 @@ module Oneboxer
       excerpt.gsub!(/[\r\n]+/, " ")
       excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
 
-      quote = "[quote=\"#{post.user.username}, topic:#{topic.id}, post:#{post.post_number}\"]\n#{excerpt}\n[/quote]"
+      quote =
+        "[quote=\"#{post.user.username}, topic:#{topic.id}, post:#{post.post_number}\"]\n#{excerpt}\n[/quote]"
 
       PrettyText.cook(quote)
     else
@@ -335,9 +433,12 @@ module Oneboxer
         post_number: post.post_number,
         avatar: PrettyText.avatar_img(post.user.avatar_template_url, "tiny"),
         original_url: url,
-        title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
+        title: PrettyText.unescape_emoji(CGI.escapeHTML(topic.title)),
         category_html: CategoryBadge.html_for(topic.category),
-        quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength, keep_svg: true)),
+        quote:
+          PrettyText.unescape_emoji(
+            post.excerpt(SiteSetting.post_onebox_maxlength, keep_svg: true),
+          ),
       }
 
       template = template("discourse_topic_onebox")
@@ -349,21 +450,23 @@ module Oneboxer
     username = route[:username] || ""
 
     if user = User.find_by(username_lower: username.downcase)
-
       name = user.name if SiteSetting.enable_names
 
       args = {
         user_id: user.id,
         username: user.username,
-        avatar: PrettyText.avatar_img(user.avatar_template, "extra_large"),
+        avatar: PrettyText.avatar_img(user.avatar_template, "huge"),
         name: name,
         bio: user.user_profile.bio_excerpt(230),
         location: Onebox::Helpers.sanitize(user.user_profile.location),
-        joined: I18n.t('joined'),
-        created_at: user.created_at.strftime(I18n.t('datetime_formats.formats.date_only')),
+        joined:
+          I18n.t(
+            "onebox.discourse.user_joined_community",
+            date: user.created_at.strftime(I18n.t("datetime_formats.formats.date_only")),
+          ),
         website: user.user_profile.website,
         website_name: UserSerializer.new(user).website_name,
-        original_url: url
+        original_url: url,
       }
 
       Mustache.render(template("discourse_user_onebox"), args)
@@ -384,7 +487,8 @@ module Oneboxer
         logo_url: category.uploaded_logo&.url,
         description: category.description,
         has_subcategories: category.subcategories.present?,
-        subcategories: category.subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } }
+        subcategories:
+          category.subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } },
       }
 
       Mustache.render(template("discourse_category_onebox"), args)
@@ -392,107 +496,116 @@ module Oneboxer
   end
 
   def self.preserve_fragment_url_hosts
-    @preserve_fragment_url_hosts ||= ['http://github.com']
+    @preserve_fragment_url_hosts ||= ["http://github.com"]
   end
 
   def self.allowed_iframe_origins
     allowed = SiteSetting.allowed_onebox_iframes.split("|")
-    if allowed.include?("*")
-      allowed = Onebox::Engine.all_iframe_origins
-    end
+    allowed = Onebox::Engine.all_iframe_origins if allowed.include?("*")
     allowed += SiteSetting.allowed_iframes.split("|")
   end
 
   def self.external_onebox(url, available_strategies = nil)
-    Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-      uri = URI(url)
-      available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
-      strategy = available_strategies.shift
+    Discourse
+      .cache
+      .fetch(onebox_cache_key(url), expires_in: 1.day) do
+        uri = URI(url)
+        available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
+        strategy = available_strategies.shift
 
-      if SiteSetting.block_onebox_on_redirect
-        max_redirects = 0
-      end
-      fd = FinalDestination.new(
-        url,
-        get_final_destination_options(url, strategy).merge(
-          stop_at_blocked_pages: true,
-          max_redirects: max_redirects,
-          initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect
-        )
-      )
-      uri = fd.resolve
+        max_redirects = 0 if SiteSetting.block_onebox_on_redirect
+        fd =
+          FinalDestination.new(
+            url,
+            get_final_destination_options(url, strategy).merge(
+              stop_at_blocked_pages: true,
+              max_redirects: max_redirects,
+              initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect,
+            ),
+          )
+        uri = fd.resolve
 
-      return blank_onebox if fd.status == :blocked_page
+        return blank_onebox if fd.status == :blocked_page
 
-      if fd.status != :resolved
-        args = { link: url }
-        if fd.status == :invalid_address
-          args[:error_message] = I18n.t("errors.onebox.invalid_address", hostname: fd.hostname)
-        elsif (fd.status_code || uri.nil?) && available_strategies.present?
-          # Try a different oneboxing strategy, if we have any options left:
-          return external_onebox(url, available_strategies)
-        elsif fd.status_code
-          args[:error_message] = I18n.t("errors.onebox.error_response", status_code: fd.status_code)
+        if fd.status != :resolved
+          args = { link: url }
+          if fd.status == :invalid_address
+            args[:error_message] = I18n.t("errors.onebox.invalid_address", hostname: fd.hostname)
+          elsif (fd.status_code || uri.nil?) && available_strategies.present?
+            # Try a different oneboxing strategy, if we have any options left:
+            return external_onebox(url, available_strategies)
+          elsif fd.status_code
+            args[:error_message] = I18n.t(
+              "errors.onebox.error_response",
+              status_code: fd.status_code,
+            )
+          end
+
+          error_box = blank_onebox
+          error_box[:preview] = preview_error_onebox(args)
+          return error_box
         end
 
-        error_box = blank_onebox
-        error_box[:preview] = preview_error_onebox(args)
-        return error_box
-      end
+        return blank_onebox if uri.blank?
 
-      return blank_onebox if uri.blank?
+        onebox_options = {
+          max_width: 695,
+          sanitize_config: Onebox::SanitizeConfig::DISCOURSE_ONEBOX,
+          allowed_iframe_origins: allowed_iframe_origins,
+          hostname: GlobalSetting.hostname,
+          facebook_app_access_token: SiteSetting.facebook_app_access_token,
+          disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls,
+          body_cacher: self,
+          content_type: fd.content_type,
+        }
 
-      onebox_options = {
-        max_width: 695,
-        sanitize_config: Onebox::SanitizeConfig::DISCOURSE_ONEBOX,
-        allowed_iframe_origins: allowed_iframe_origins,
-        hostname: GlobalSetting.hostname,
-        facebook_app_access_token: SiteSetting.facebook_app_access_token,
-        disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls,
-        body_cacher: self,
-        content_type: fd.content_type
-      }
+        onebox_options[:cookie] = fd.cookie if fd.cookie
 
-      onebox_options[:cookie] = fd.cookie if fd.cookie
+        user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(
+          url,
+        ) && SiteSetting.cache_onebox_user_agent.present?
+        onebox_options[:user_agent] = user_agent_override if user_agent_override
 
-      user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(url) && SiteSetting.cache_onebox_user_agent.present?
-      onebox_options[:user_agent] = user_agent_override if user_agent_override
+        preview_result = Onebox.preview(uri.to_s, onebox_options)
+        result = {
+          onebox: WordWatcher.censor(preview_result.to_s),
+          preview: WordWatcher.censor(preview_result.placeholder_html.to_s),
+        }
 
-      preview_result = Onebox.preview(uri.to_s, onebox_options)
-      result = {
-        onebox: WordWatcher.censor(preview_result.to_s),
-        preview: WordWatcher.censor(preview_result.placeholder_html.to_s)
-      }
+        # NOTE: Call preview_result.errors after calling placeholder_html
+        if preview_result.errors.any?
+          error_keys = preview_result.errors.keys
+          skip_if_only_error = [:image]
+          unless error_keys.length == 1 && skip_if_only_error.include?(error_keys.first)
+            missing_attributes = error_keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
+            error_message =
+              I18n.t(
+                "errors.onebox.missing_data",
+                missing_attributes: missing_attributes,
+                count: error_keys.size,
+              )
+            args = preview_result.verified_data.merge(error_message: error_message)
 
-      # NOTE: Call preview_result.errors after calling placeholder_html
-      if preview_result.errors.any?
-        error_keys = preview_result.errors.keys
-        skip_if_only_error = [:image]
-        unless error_keys.length == 1 && skip_if_only_error.include?(error_keys.first)
-          missing_attributes = error_keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
-          error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes, count: error_keys.size)
-          args = preview_result.verified_data.merge(error_message: error_message)
+            if result[:preview].blank?
+              result[:preview] = preview_error_onebox(args)
+            else
+              doc = Nokogiri::HTML5.fragment(result[:preview])
+              aside = doc.at("aside")
 
-          if result[:preview].blank?
-            result[:preview] = preview_error_onebox(args)
-          else
-            doc = Nokogiri::HTML5::fragment(result[:preview])
-            aside = doc.at('aside')
-
-            if aside
-              # Add an error message to the preview that was returned
-              error_fragment = preview_error_onebox_fragment(args)
-              aside.add_child(error_fragment)
-              result[:preview] = doc.to_html
+              if aside
+                # Add an error message to the preview that was returned
+                error_fragment = preview_error_onebox_fragment(args)
+                aside.add_child(error_fragment)
+                result[:preview] = doc.to_html
+              end
             end
           end
         end
+
+        Oneboxer.cache_preferred_strategy(uri.hostname, strategy)
+
+        result
       end
-
-      Oneboxer.cache_preferred_strategy(uri.hostname, strategy)
-
-      result
-    end
   end
 
   def self.preview_error_onebox(args, is_fragment = false)
@@ -526,7 +639,8 @@ module Oneboxer
 
   def self.strategies
     {
-      default: {}, # don't override anything by default
+      default: {
+      }, # don't override anything by default
       force_get_and_ua: {
         force_get_host: true,
         force_custom_user_agent_host: true,
@@ -561,14 +675,12 @@ module Oneboxer
       force_get_hosts: force_get_hosts,
       force_custom_user_agent_hosts: force_custom_user_agent_hosts,
       preserve_fragment_url_hosts: preserve_fragment_url_hosts,
-      timeout: 5
+      timeout: 5,
     }
 
     uri = URI(url)
 
-    if strategy.blank?
-      strategy = Oneboxer.ordered_strategies(uri.hostname).shift
-    end
+    strategy = Oneboxer.ordered_strategies(uri.hostname).shift if strategy.blank?
 
     if strategy && Oneboxer.strategies[strategy][:force_get_host]
       fd_options[:force_get_hosts] = ["https://#{uri.hostname}"]
@@ -577,7 +689,9 @@ module Oneboxer
       fd_options[:force_custom_user_agent_hosts] = ["https://#{uri.hostname}"]
     end
 
-    user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(url) && SiteSetting.cache_onebox_user_agent.present?
+    user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(
+      url,
+    ) && SiteSetting.cache_onebox_user_agent.present?
     fd_options[:default_user_agent] = user_agent_override if user_agent_override
 
     fd_options

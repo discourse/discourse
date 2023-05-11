@@ -1,27 +1,43 @@
-<DModalBody @title="admin.reseed.modal.title" @subtitle="admin.reseed.modal.subtitle" @class="reseed-modal">
+<DModalBody
+  @title="admin.reseed.modal.title"
+  @subtitle="admin.reseed.modal.subtitle"
+  @class="reseed-modal"
+>
   <ConditionalLoadingSpinner @condition={{this.loading}}>
     {{#if this.categories}}
       <fieldset>
-        <legend class="options-group-title">{{i18n "admin.reseed.modal.categories"}}</legend>
+        <legend class="options-group-title">{{i18n
+            "admin.reseed.modal.categories"
+          }}</legend>
 
         {{#each this.categories as |category|}}
           <label>
-            <Input class="option" @type="checkbox" @checked={{category.selected}} />
+            <Input
+              class="option"
+              @type="checkbox"
+              @checked={{category.selected}}
+            />
             <span>{{category.name}}</span>
           </label>
         {{/each}}
       </fieldset>
     {{/if}}
 
-    <br>
+    <br />
 
     {{#if this.topics}}
       <fieldset>
-        <legend class="options-group-title">{{i18n "admin.reseed.modal.topics"}}</legend>
+        <legend class="options-group-title">{{i18n
+            "admin.reseed.modal.topics"
+          }}</legend>
 
         {{#each this.topics as |topic|}}
           <label>
-            <Input class="option" @type="checkbox" @checked={{topic.selected}} />
+            <Input
+              class="option"
+              @type="checkbox"
+              @checked={{topic.selected}}
+            />
             <span>{{topic.name}}</span>
           </label>
         {{/each}}
@@ -32,7 +48,12 @@
 
 <div class="modal-footer">
   <ConditionalLoadingSpinner @condition={{this.reseeding}} @size="small" />
-  <DButton @action={{action "reseed"}} @class="btn-danger" @label="admin.reseed.modal.replace" @disabled={{this.reseeding}} />
+  <DButton
+    @action={{action "reseed"}}
+    @class="btn-danger"
+    @label="admin.reseed.modal.replace"
+    @disabled={{this.reseeding}}
+  />
 
   {{#unless this.reseeding}}
     <DModalCancel @close={{route-action "closeModal"}} />

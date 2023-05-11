@@ -68,7 +68,8 @@ acceptance("Admin - Users List", function (needs) {
     await click(".hide-emails");
 
     assert.strictEqual(
-      query(".users-list .user:nth-child(1) .email").innerText,
+      query(".users-list .user:nth-child(1) .email .directory-table__value")
+        .innerText,
       "",
       "hides the emails"
     );

@@ -6,16 +6,16 @@ class UpdatePostReplyIndexes < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
   def up
-    if !index_exists?(:post_replies, [:post_id, :reply_post_id])
-      add_index :post_replies, [:post_id, :reply_post_id], unique: true, algorithm: :concurrently
+    if !index_exists?(:post_replies, %i[post_id reply_post_id])
+      add_index :post_replies, %i[post_id reply_post_id], unique: true, algorithm: :concurrently
     end
 
     if !index_exists?(:post_replies, [:reply_post_id])
       add_index :post_replies, [:reply_post_id], algorithm: :concurrently
     end
 
-    if index_exists?(:post_replies, [:post_id, :reply_id])
-      remove_index :post_replies, column: [:post_id, :reply_id], algorithm: :concurrently
+    if index_exists?(:post_replies, %i[post_id reply_id])
+      remove_index :post_replies, column: %i[post_id reply_id], algorithm: :concurrently
     end
 
     if index_exists?(:post_replies, [:reply_id])

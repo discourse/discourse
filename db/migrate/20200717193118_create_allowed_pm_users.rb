@@ -7,7 +7,7 @@ class CreateAllowedPmUsers < ActiveRecord::Migration[6.0]
       t.timestamps null: false
     end
 
-    add_index :allowed_pm_users, [:user_id, :allowed_pm_user_id], unique: true
-    add_index :allowed_pm_users, [:allowed_pm_user_id, :user_id], unique: true
+    add_index :allowed_pm_users, %i[user_id allowed_pm_user_id], unique: true
+    add_index :allowed_pm_users, %i[allowed_pm_user_id user_id], unique: true
   end
 end

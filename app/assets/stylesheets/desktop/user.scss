@@ -88,6 +88,8 @@
 }
 
 .user-content {
+  padding: 0;
+  margin-top: 2em;
   padding-bottom: 12px;
   margin-bottom: 12px;
   background-color: var(--secondary);
@@ -95,10 +97,6 @@
 
   .btn.right {
     float: right;
-  }
-
-  h2 {
-    margin-bottom: 10px;
   }
 }
 
@@ -158,30 +156,12 @@ table.user-invite-list {
         margin: 0 20px 10px 0;
       }
 
-      .primary {
-        .primary-textual {
-          padding: 0 4px 4px;
-          h1 {
-            max-width: 100%;
-            @include ellipsis;
-          }
-          .location-and-website {
-            display: flex;
-            max-width: 100%;
-            @include ellipsis;
-            .user-profile-location {
-              margin-right: 1em;
-            }
-          }
-        }
-
-        .bio {
-          max-width: 750px;
-        }
+      .primary-textual {
+        padding: 0 0 0.5em;
       }
 
-      .secondary {
-        margin-top: 16px;
+      .bio {
+        max-width: 750px;
       }
     }
 
@@ -198,8 +178,6 @@ table.user-invite-list {
     }
 
     .controls {
-      padding: 0 0 12px 0;
-      float: right;
       max-width: 13.5em;
 
       li {
@@ -275,17 +253,9 @@ table.user-invite-list {
 }
 
 .user-preferences {
-  padding-top: 10px;
-  padding-left: 30px;
-
   .form-vertical {
     width: 500px;
     max-width: 100%;
-  }
-
-  h3 {
-    color: var(--primary);
-    margin: 20px 0 10px 0;
   }
 
   .category-selector,

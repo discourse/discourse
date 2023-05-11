@@ -1,0 +1,21 @@
+#main-chat-outlet.chat-view {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-areas: "main threads";
+  grid-template-columns: 1fr auto;
+}
+
+.chat-side-panel {
+  grid-area: threads;
+  min-height: 100%;
+  box-sizing: border-box;
+  border-left: 1px solid var(--primary-low);
+  position: relative;
+  min-width: 250px;
+
+  &__list {
+    flex-grow: 1;
+    padding: 0 1.5em 1em;
+  }
+}

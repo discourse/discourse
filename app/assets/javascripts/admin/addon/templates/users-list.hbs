@@ -1,22 +1,64 @@
 <div class="admin-controls">
   <nav>
     <ul class="nav nav-pills">
-      <NavItem @route="adminUsersList.show" @routeParam="active" @label="admin.users.nav.active" @class="active-users" />
-      <NavItem @route="adminUsersList.show" @routeParam="new" @label="admin.users.nav.new" @class="new-users" />
-      <NavItem @route="adminUsersList.show" @routeParam="staff" @label="admin.users.nav.staff" @class="staff-users" />
-      <NavItem @route="adminUsersList.show" @routeParam="suspended" @label="admin.users.nav.suspended" @class="suspended-users" />
-      <NavItem @route="adminUsersList.show" @routeParam="silenced" @label="admin.users.nav.silenced" @class="silenced-users" />
-      <NavItem @route="adminUsersList.show" @routeParam="staged" @label="admin.users.nav.staged" @class="staged-users" />
+      <NavItem
+        @route="adminUsersList.show"
+        @routeParam="active"
+        @label="admin.users.nav.active"
+        @class="active-users"
+      />
+      <NavItem
+        @route="adminUsersList.show"
+        @routeParam="new"
+        @label="admin.users.nav.new"
+        @class="new-users"
+      />
+      <NavItem
+        @route="adminUsersList.show"
+        @routeParam="staff"
+        @label="admin.users.nav.staff"
+        @class="staff-users"
+      />
+      <NavItem
+        @route="adminUsersList.show"
+        @routeParam="suspended"
+        @label="admin.users.nav.suspended"
+        @class="suspended-users"
+      />
+      <NavItem
+        @route="adminUsersList.show"
+        @routeParam="silenced"
+        @label="admin.users.nav.silenced"
+        @class="silenced-users"
+      />
+      <NavItem
+        @route="adminUsersList.show"
+        @routeParam="staged"
+        @label="admin.users.nav.staged"
+        @class="staged-users"
+      />
       <NavItem @route="groups" @label="groups.index.title" @class="groups" />
       <PluginOutlet @name="admin-users-list-nav-after" />
 
       <li class="admin-actions">
         {{#if this.currentUser.can_invite_to_forum}}
-          <DButton @class="btn-flat" @action={{route-action "sendInvites"}} @title="admin.invite.button_title" @icon="user-plus" @label="admin.invite.button_text" />
+          <DButton
+            @class="btn-flat"
+            @action={{route-action "sendInvites"}}
+            @title="admin.invite.button_title"
+            @icon="user-plus"
+            @label="admin.invite.button_text"
+          />
         {{/if}}
 
         {{#if this.currentUser.admin}}
-          <DButton @class="btn-flat" @action={{route-action "exportUsers"}} @title="admin.export_csv.button_title.user" @icon="download" @label="admin.export_csv.button_text" />
+          <DButton
+            @class="btn-flat"
+            @action={{route-action "exportUsers"}}
+            @title="admin.export_csv.button_title.user"
+            @icon="download"
+            @label="admin.export_csv.button_text"
+          />
         {{/if}}
       </li>
     </ul>

@@ -9,7 +9,7 @@ module TopicPostBookmarkableHelper
       TopicUser.change(
         user.id,
         topic.id,
-        bookmarked: Bookmark.for_user_in_topic(user.id, topic).exists?
+        bookmarked: Bookmark.for_user_in_topic(user.id, topic).exists?,
       )
     end
   end

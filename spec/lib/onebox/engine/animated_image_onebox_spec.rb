@@ -13,9 +13,7 @@ RSpec.describe Onebox::Engine::AnimatedImageOnebox do
     stub_request(:get, tenor).to_return(status: 200, body: onebox_response("tenor"))
   end
 
-  after do
-    Onebox.options = @previous_options
-  end
+  after { Onebox.options = @previous_options }
 
   it "works for giphy short URLs" do
     html = described_class.new(giphy).to_html

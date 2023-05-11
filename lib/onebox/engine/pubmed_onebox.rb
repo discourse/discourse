@@ -6,22 +6,22 @@ module Onebox
       include Engine
       include LayoutSupport
 
-      matches_regexp(/^https?:\/\/(?:(?:\w)+\.)?(www.ncbi.nlm.nih)\.gov(?:\/)?\/pubmed\/\d+/)
+      matches_regexp(%r{^https?://(?:(?:\w)+\.)?(www.ncbi.nlm.nih)\.gov(?:/)?/pubmed/\d+})
 
       private
 
       def xml
         return @xml if defined?(@xml)
-        doc = Nokogiri::XML(URI.join(@url, "?report=xml&format=text").open)
+        doc = Nokogiri.XML(URI.join(@url, "?report=xml&format=text").open)
         pre = doc.xpath("//pre")
-        @xml = Nokogiri::XML("<root>" + pre.text + "</root>")
+        @xml = Nokogiri.XML("<root>" + pre.text + "</root>")
       end
 
       def authors
         initials = xml.css("Initials").map { |x| x.content }
         last_names = xml.css("LastName").map { |x| x.content }
         author_list = (initials.zip(last_names)).map { |i, l| i + " " + l }
-        if author_list.length > 1 then
+        if author_list.length > 1
           author_list[-2] = author_list[-2] + " and " + author_list[-1]
           author_list.pop
         end
@@ -29,7 +29,8 @@ module Onebox
       end
 
       def date
-        xml.css("PubDate")
+        xml
+          .css("PubDate")
           .children
           .map { |x| x.content }
           .select { |s| !s.match(/^\s+$/) }
@@ -48,7 +49,7 @@ module Onebox
           abstract: xml.css("AbstractText").text,
           date: date,
           link: @url,
-          pmid: match[:pmid]
+          pmid: match[:pmid],
         }
       end
 

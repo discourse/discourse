@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class SpamRule::FlagSockpuppets
-
   def initialize(post)
     @post = post
   end
@@ -21,23 +20,20 @@ class SpamRule::FlagSockpuppets
     return false if @post.try(:post_number) == 1
     return false if first_post.user.nil?
 
-    !first_post.user.staff? &&
-    !@post.user.staff? &&
-    !first_post.user.staged? &&
-    !@post.user.staged? &&
-    @post.user != first_post.user &&
-    @post.user.ip_address == first_post.user.ip_address &&
-    @post.user.new_user? &&
-    !ScreenedIpAddress.is_allowed?(@post.user.ip_address)
+    !first_post.user.staff? && !@post.user.staff? && !first_post.user.staged? &&
+      !@post.user.staged? && @post.user != first_post.user &&
+      @post.user.ip_address == first_post.user.ip_address && @post.user.new_user? &&
+      !ScreenedIpAddress.is_allowed?(@post.user.ip_address)
   end
 
   def flag_sockpuppet_users
-    message = I18n.t(
-      'flag_reason.sockpuppet',
-      ip_address: @post.user.ip_address,
-      base_path: Discourse.base_path,
-      locale: SiteSetting.default_locale
-    )
+    message =
+      I18n.t(
+        "flag_reason.sockpuppet",
+        ip_address: @post.user.ip_address,
+        base_path: Discourse.base_path,
+        locale: SiteSetting.default_locale,
+      )
 
     flag_post(@post, message)
 
@@ -55,5 +51,4 @@ class SpamRule::FlagSockpuppets
   def first_post
     @first_post ||= @post.topic.posts.by_post_number.first
   end
-
 end

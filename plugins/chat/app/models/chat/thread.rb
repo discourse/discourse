@@ -1,0 +1,116 @@
+# frozen_string_literal: true
+
+module Chat
+  class Thread < ActiveRecord::Base
+    EXCERPT_LENGTH = 150
+    MAX_TITLE_LENGTH = 100
+
+    include Chat::ThreadCache
+
+    self.table_name = "chat_threads"
+
+    belongs_to :channel, foreign_key: "channel_id", class_name: "Chat::Channel"
+    belongs_to :original_message_user, foreign_key: "original_message_user_id", class_name: "User"
+    belongs_to :original_message, foreign_key: "original_message_id", class_name: "Chat::Message"
+
+    has_many :chat_messages,
+             -> {
+               where("deleted_at IS NULL").order(
+                 "chat_messages.created_at ASC, chat_messages.id ASC",
+               )
+             },
+             foreign_key: :thread_id,
+             primary_key: :id,
+             class_name: "Chat::Message"
+    has_many :user_chat_thread_memberships
+
+    enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
+
+    validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
+
+    def replies
+      self.chat_messages.where.not(id: self.original_message_id)
+    end
+
+    def url
+      "#{channel.url}/t/#{self.id}"
+    end
+
+    def relative_url
+      "#{channel.relative_url}/t/#{self.id}"
+    end
+
+    def excerpt
+      original_message.rich_excerpt(max_length: EXCERPT_LENGTH)
+    end
+
+    def self.grouped_messages(thread_ids: nil, message_ids: nil, include_original_message: true)
+      DB.query(<<~SQL, message_ids: message_ids, thread_ids: thread_ids)
+        SELECT thread_id,
+          array_agg(chat_messages.id ORDER BY chat_messages.created_at, chat_messages.id) AS thread_message_ids,
+          chat_threads.original_message_id
+        FROM chat_messages
+        INNER JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
+        WHERE thread_id IS NOT NULL
+        #{thread_ids ? "AND thread_id IN (:thread_ids)" : ""}
+        #{message_ids ? "AND chat_messages.id IN (:message_ids)" : ""}
+        #{include_original_message ? "" : "AND chat_messages.id != chat_threads.original_message_id"}
+        GROUP BY thread_id, chat_threads.original_message_id;
+      SQL
+    end
+
+    def self.ensure_consistency!
+      return if !SiteSetting.enable_experimental_chat_threaded_discussions
+      update_counts
+    end
+
+    def self.update_counts
+      # NOTE: Chat::Thread#replies_count is not updated every time
+      # a message is created or deleted in a channel, the UI will lag
+      # behind unless it is kept in sync with MessageBus. The count
+      # has 1 subtracted from it to account for the original message.
+      #
+      # It is updated eventually via Jobs::Chat::PeriodicalUpdates. In
+      # future we may want to update this more frequently.
+      updated_thread_ids = DB.query_single <<~SQL
+        UPDATE chat_threads threads
+        SET replies_count = subquery.replies_count
+        FROM (
+          SELECT COUNT(*) - 1 AS replies_count, thread_id
+          FROM chat_messages
+          WHERE chat_messages.deleted_at IS NULL AND thread_id IS NOT NULL
+          GROUP BY thread_id
+        ) subquery
+        WHERE threads.id = subquery.thread_id
+        AND subquery.replies_count != threads.replies_count
+        RETURNING threads.id AS thread_id;
+      SQL
+      return if updated_thread_ids.empty?
+      self.clear_caches!(updated_thread_ids)
+    end
+  end
+end
+
+# == Schema Information
+#
+# Table name: chat_threads
+#
+#  id                       :bigint           not null, primary key
+#  channel_id               :integer          not null
+#  original_message_id      :integer          not null
+#  original_message_user_id :integer          not null
+#  status                   :integer          default("open"), not null
+#  title                    :string
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  replies_count            :integer          default(0), not null
+#
+# Indexes
+#
+#  index_chat_threads_on_channel_id                (channel_id)
+#  index_chat_threads_on_channel_id_and_status     (channel_id,status)
+#  index_chat_threads_on_original_message_id       (original_message_id)
+#  index_chat_threads_on_original_message_user_id  (original_message_user_id)
+#  index_chat_threads_on_replies_count             (replies_count)
+#  index_chat_threads_on_status                    (status)
+#

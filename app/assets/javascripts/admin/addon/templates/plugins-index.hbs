@@ -16,16 +16,22 @@
         <tr data-plugin-name={{plugin.name}}>
           <td>
             {{#if plugin.is_official}}
-              {{d-icon "check-circle"
-                  title="admin.plugins.official"
-                  class="admin-plugins-official-badge"}}
+              {{d-icon
+                "check-circle"
+                title="admin.plugins.official"
+                class="admin-plugins-official-badge"
+              }}
             {{/if}}
           </td>
 
           <td class="plugin-name">
             <div class="name">
               {{#if plugin.url}}
-                <a href={{plugin.url}} rel="noopener noreferrer" target="_blank">{{plugin.name}}</a>
+                <a
+                  href={{plugin.url}}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >{{plugin.name}}</a>
               {{else}}
                 {{plugin.name}}
               {{/if}}
@@ -53,7 +59,13 @@
           <td class="settings">
             {{#if this.currentUser.admin}}
               {{#if plugin.has_settings}}
-                <DButton @class="btn-default" @action={{route-action "showSettings"}} @actionParam={{plugin}} @icon="cog" @label="admin.plugins.change_settings_short" />
+                <DButton
+                  @class="btn-default"
+                  @action={{route-action "showSettings"}}
+                  @actionParam={{plugin}}
+                  @icon="cog"
+                  @label="admin.plugins.change_settings_short"
+                />
               {{/if}}
             {{/if}}
           </td>
@@ -65,6 +77,14 @@
   <p>{{i18n "admin.plugins.none_installed"}}</p>
 {{/if}}
 
-<p class="admin-plugins-howto"><a href="https://meta.discourse.org/t/install-a-plugin/19157">{{i18n "admin.plugins.howto"}}</a></p>
+<p class="admin-plugins-howto"><a
+    href="https://meta.discourse.org/t/install-a-plugin/19157"
+  >{{i18n "admin.plugins.howto"}}</a></p>
 
-<PluginOutlet @name="admin-below-plugins-index" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+<span>
+  <PluginOutlet
+    @name="admin-below-plugins-index"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>

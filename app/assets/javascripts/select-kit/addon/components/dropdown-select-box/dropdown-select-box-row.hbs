@@ -1,0 +1,13 @@
+{{#if this.icons}}
+  <div class="icons">
+    <span class="selection-indicator"></span>
+    {{#each this.icons as |icon|}}
+      {{d-icon icon translatedTitle=(dasherize this.title)}}
+    {{/each}}
+  </div>
+{{/if}}
+
+<div class="texts">
+  <span class="name">{{html-safe this.label}}</span>
+  <span class="desc">{{html-safe this.description}}</span>
+</div>

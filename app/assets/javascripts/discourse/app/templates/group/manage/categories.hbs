@@ -1,13 +1,20 @@
 <form class="groups-form form-vertical groups-notifications-form">
   <div class="control-group">
-    <label class="control-label">{{i18n "groups.manage.categories.long_title"}}</label>
+    <label class="control-label">{{i18n
+        "groups.manage.categories.long_title"
+      }}</label>
     <div>{{i18n "groups.manage.categories.description"}}</div>
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-watching"}} {{i18n "groups.notifications.watching.title"}}</label>
+    <label>{{d-icon "d-watching"}}
+      {{i18n "groups.notifications.watching.title"}}</label>
 
-    <CategorySelector @categories={{this.model.watchingCategories}} @blockedCategories={{this.selectedCategories}} @onChange={{action (mut this.model.watchingCategories)}} />
+    <CategorySelector
+      @categories={{this.model.watchingCategories}}
+      @blockedCategories={{this.selectedCategories}}
+      @onChange={{action (mut this.model.watchingCategories)}}
+    />
 
     <div class="control-instructions">
       {{i18n "groups.manage.categories.watched_categories_instructions"}}
@@ -15,9 +22,14 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-tracking"}} {{i18n "groups.notifications.tracking.title"}}</label>
+    <label>{{d-icon "d-tracking"}}
+      {{i18n "groups.notifications.tracking.title"}}</label>
 
-    <CategorySelector @categories={{this.model.trackingCategories}} @blockedCategories={{this.selectedCategories}} @onChange={{action (mut this.model.trackingCategories)}} />
+    <CategorySelector
+      @categories={{this.model.trackingCategories}}
+      @blockedCategories={{this.selectedCategories}}
+      @onChange={{action (mut this.model.trackingCategories)}}
+    />
 
     <div class="control-instructions">
       {{i18n "groups.manage.categories.tracked_categories_instructions"}}
@@ -25,19 +37,31 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-watching-first"}} {{i18n "groups.notifications.watching_first_post.title"}}</label>
+    <label>{{d-icon "d-watching-first"}}
+      {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
-    <CategorySelector @categories={{this.model.watchingFirstPostCategories}} @blockedCategories={{this.selectedCategories}} @onChange={{action (mut this.model.watchingFirstPostCategories)}} />
+    <CategorySelector
+      @categories={{this.model.watchingFirstPostCategories}}
+      @blockedCategories={{this.selectedCategories}}
+      @onChange={{action (mut this.model.watchingFirstPostCategories)}}
+    />
 
     <div class="control-instructions">
-      {{i18n "groups.manage.categories.watching_first_post_categories_instructions"}}
+      {{i18n
+        "groups.manage.categories.watching_first_post_categories_instructions"
+      }}
     </div>
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-regular"}} {{i18n "groups.notifications.regular.title"}}</label>
+    <label>{{d-icon "d-regular"}}
+      {{i18n "groups.notifications.regular.title"}}</label>
 
-    <CategorySelector @categories={{this.model.regularCategories}} @blockedCategories={{this.selectedCategories}} @onChange={{action (mut this.model.regularCategories)}} />
+    <CategorySelector
+      @categories={{this.model.regularCategories}}
+      @blockedCategories={{this.selectedCategories}}
+      @onChange={{action (mut this.model.regularCategories)}}
+    />
 
     <div class="control-instructions">
       {{i18n "groups.manage.categories.regular_categories_instructions"}}
@@ -45,9 +69,14 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-muted"}} {{i18n "groups.notifications.muted.title"}}</label>
+    <label>{{d-icon "d-muted"}}
+      {{i18n "groups.notifications.muted.title"}}</label>
 
-    <CategorySelector @categories={{this.model.mutedCategories}} @blockedCategories={{this.selectedCategories}} @onChange={{action (mut this.model.mutedCategories)}} />
+    <CategorySelector
+      @categories={{this.model.mutedCategories}}
+      @blockedCategories={{this.selectedCategories}}
+      @onChange={{action (mut this.model.mutedCategories)}}
+    />
 
     <div class="control-instructions">
       {{i18n "groups.manage.categories.muted_categories_instructions"}}

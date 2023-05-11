@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-discobot_username = 'discobot'
+discobot_username = "discobot"
 
 def seed_primary_email
   UserEmail.seed do |ue|
@@ -42,15 +42,13 @@ bot.create_user_option! if !bot.user_option
 
 bot.user_option.update!(
   email_messages_level: UserOption.email_level_types[:never],
-  email_level: UserOption.email_level_types[:never]
+  email_level: UserOption.email_level_types[:never],
 )
 
 bot.create_user_profile! if !bot.user_profile
 
 if !bot.user_profile.bio_raw
-  bot.user_profile.update!(
-    bio_raw: I18n.t('discourse_narrative_bot.bio')
-  )
+  bot.user_profile.update!(bio_raw: I18n.t("discourse_narrative_bot.bio"))
 end
 
 Group.user_trust_level_change!(DiscourseNarrativeBot::BOT_USER_ID, TrustLevel[4])

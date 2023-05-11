@@ -211,10 +211,7 @@ export default Component.extend({
       return false;
     }
 
-    this.set(
-      "hoveredEmoji",
-      this._codeWithDiversity(event.target.title, this.selectedDiversity)
-    );
+    this._updateEmojiPreview(event.target.title);
   },
 
   @action
@@ -255,15 +252,11 @@ export default Component.extend({
 
     let currentEmoji;
 
-    this.set(
-      "hoveredEmoji",
-      this._codeWithDiversity(event.target.title, this.selectedDiversity)
-    );
-
     if (
       event.key === "ArrowDown" &&
       this._focusedOn(this.elements.searchInput)
     ) {
+      this._updateEmojiPreview(emojis[0].title);
       emojis[0].focus();
       event.preventDefault();
       return false;
@@ -284,7 +277,7 @@ export default Component.extend({
       if (fromTopicComposer) {
         document.querySelector(".d-editor-input")?.focus();
       } else if (fromChatComposer) {
-        document.querySelector(".chat-composer-input")?.focus();
+        document.querySelector(".chat-composer__input")?.focus();
       } else {
         document.querySelector("textarea")?.focus();
       }
@@ -306,8 +299,10 @@ export default Component.extend({
         let nextEmoji = currentEmoji + 1;
 
         if (nextEmoji < emojis.length) {
+          this._updateEmojiPreview(emojis[nextEmoji].title);
           emojis[nextEmoji].focus();
         } else if (nextEmoji >= emojis.length) {
+          this._updateEmojiPreview(emojis[0].title);
           emojis[0].focus();
         }
       }
@@ -315,6 +310,7 @@ export default Component.extend({
       if (event.key === "ArrowLeft") {
         const previousEmoji = currentEmoji - 1;
         if (currentEmoji > 0) {
+          this._updateEmojiPreview(emojis[previousEmoji].title);
           emojis[previousEmoji].focus();
         }
       }
@@ -329,7 +325,7 @@ export default Component.extend({
         const emojiBelow = [...emojis]
           .filter((c) => c.offsetTop > active.offsetTop)
           .find((c) => c.offsetLeft === active.offsetLeft);
-
+        this._updateEmojiPreview(emojiBelow.title);
         emojiBelow?.focus();
       }
 
@@ -343,8 +339,10 @@ export default Component.extend({
           .find((c) => c.offsetLeft === active.offsetLeft);
 
         if (emojiAbove) {
+          this._updateEmojiPreview(emojiAbove.title);
           emojiAbove.focus();
         } else {
+          this.set("hoveredEmoji", null);
           document.querySelector(this.elements.searchInput).focus();
         }
       }
@@ -382,6 +380,7 @@ export default Component.extend({
     if (filter) {
       results.innerHTML = emojiSearch(filter.toLowerCase(), {
         diversity: this.emojiStore.diversity,
+        exclude: this.site.denied_emojis,
       })
         .map(this._replaceEmoji)
         .join("");
@@ -464,6 +463,13 @@ export default Component.extend({
     return (
       document.querySelector(".emoji-picker-anchor") ??
       document.querySelector(".d-editor-textarea-wrapper")
+    );
+  },
+
+  _updateEmojiPreview(title) {
+    return this.set(
+      "hoveredEmoji",
+      this._codeWithDiversity(title, this.selectedDiversity)
     );
   },
 

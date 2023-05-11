@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe HighlightJs do
-  it 'can list languages' do
-    expect(HighlightJs.languages).to include('thrift')
+  it "can list languages" do
+    expect(HighlightJs.languages).to include("thrift")
   end
 
-  it 'can generate a packed bundle' do
-    bundle = HighlightJs.bundle(["thrift", "http"])
+  it "can generate a packed bundle" do
+    bundle = HighlightJs.bundle(%w[thrift http])
     expect(bundle).to match(/thrift/)
     expect(bundle).to match(/http/)
     expect(bundle).not_to match(/applescript/)
   end
 
-  it 'can get a version string' do
+  it "can get a version string" do
     version1 = HighlightJs.version("http|cpp")
     version2 = HighlightJs.version("rust|cpp|fake")
 

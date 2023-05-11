@@ -379,6 +379,10 @@ export class Tag {
         }
 
         if (cssClass?.includes("emoji")) {
+          if (cssClass.includes("user-status")) {
+            return "";
+          }
+
           return attr.title || pAttr.title;
         }
 

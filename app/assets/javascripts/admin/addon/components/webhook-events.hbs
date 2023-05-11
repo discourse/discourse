@@ -1,4 +1,5 @@
-<div class="web-hook-events-listing"
+<div
+  class="web-hook-events-listing"
   {{did-insert this.subscribe}}
   {{will-destroy this.unsubscribe}}
 >
@@ -14,16 +15,34 @@
     <LoadMore @selector=".web-hook-events li" @action={{this.loadMore}}>
       <div class="web-hook-events content-list">
         <div class="heading-container">
-          <div class="col heading first status">{{i18n "admin.web_hooks.events.status"}}</div>
-          <div class="col heading event-id">{{i18n "admin.web_hooks.events.event_id"}}</div>
-          <div class="col heading timestamp">{{i18n "admin.web_hooks.events.timestamp"}}</div>
-          <div class="col heading completion">{{i18n "admin.web_hooks.events.completion"}}</div>
-          <div class="col heading actions">{{i18n "admin.web_hooks.events.actions"}}</div>
+          <div class="col heading first status">
+            {{i18n "admin.web_hooks.events.status"}}
+          </div>
+          <div class="col heading event-id">
+            {{i18n "admin.web_hooks.events.event_id"}}
+          </div>
+          <div class="col heading timestamp">
+            {{i18n "admin.web_hooks.events.timestamp"}}
+          </div>
+          <div class="col heading completion">
+            {{i18n "admin.web_hooks.events.completion"}}
+          </div>
+          <div class="col heading actions">
+            {{i18n "admin.web_hooks.events.actions"}}
+          </div>
         </div>
 
         {{#if this.hasIncoming}}
-          <a href tabindex="0" {{on "click" this.showInserted}} class="alert alert-info clickable">
-            <CountI18n @key="admin.web_hooks.events.incoming" @count={{this.incomingCount}} />
+          <a
+            href
+            tabindex="0"
+            {{on "click" this.showInserted}}
+            class="alert alert-info clickable"
+          >
+            <CountI18n
+              @key="admin.web_hooks.events.incoming"
+              @count={{this.incomingCount}}
+            />
           </a>
         {{/if}}
 

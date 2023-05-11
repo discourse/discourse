@@ -1,7 +1,11 @@
 <div
   style={{this.style}}
   class="timeline-scroller"
-  {{draggable didStartDrag=@didStartDrag didEndDrag=@didEndDrag dragMove=@dragMove }}
+  {{draggable
+    didStartDrag=@didStartDrag
+    didEndDrag=@didEndDrag
+    dragMove=@dragMove
+  }}
 >
   {{#if @fullscreen}}
     <div class="timeline-scroller-content">
@@ -13,13 +17,13 @@
           {{this.timelineAgo}}
         </div>
       {{/if}}
-      {{#if (and @showDockedButton (not @dragging)) }}
-        <TopicTimeline::BackButton @onClick={{@goBack}}/>
+      {{#if (and @showDockedButton (not @dragging))}}
+        <TopicTimeline::BackButton @onGoBack={{@onGoBack}} />
       {{/if}}
     </div>
-    <div class="timeline-handle" />
+    <div class="timeline-handle"></div>
   {{else}}
-    <div class="timeline-handle" />
+    <div class="timeline-handle"></div>
     <div class="timeline-scroller-content">
       <div class="timeline-replies">
         {{this.repliesShort}}
@@ -29,8 +33,8 @@
           {{this.timelineAgo}}
         </div>
       {{/if}}
-      {{#if (and @showDockedButton (not @dragging)) }}
-        <TopicTimeline::BackButton @onClick={{@goBack}}/>
+      {{#if (and @showDockedButton (not @dragging))}}
+        <TopicTimeline::BackButton @onGoBack={{@onGoBack}} />
       {{/if}}
     </div>
   {{/if}}

@@ -1,81 +1,57 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { click } from "@ember/test-helpers";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, render } from "@ember/test-helpers";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import pretender from "discourse/tests/helpers/create-pretender";
 import I18n from "I18n";
-import { module } from "qunit";
+import { module, test } from "qunit";
+import fabricators from "../helpers/fabricators";
 
 module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("accepts an optional onLeaveChannel callback", {
-    template: hbs`{{chat-channel-leave-btn channel=channel onLeaveChannel=onLeaveChannel}}`,
+  test("accepts an optional onLeaveChannel callback", async function (assert) {
+    this.foo = 1;
+    this.onLeaveChannel = () => (this.foo = 2);
+    this.channel = fabricators.directMessageChatChannel({ users: [{ id: 1 }] });
 
-    beforeEach() {
-      this.set("foo", 1);
-      this.set("onLeaveChannel", () => this.set("foo", 2));
-      this.set("channel", {
-        id: 1,
-        chatable_type: "DirectMessage",
-        chatable: {
-          users: [{ id: 1 }],
-        },
-      });
-    },
+    await render(
+      hbs`<ChatChannelLeaveBtn @channel={{this.channel}} @onLeaveChannel={{this.onLeaveChannel}} />`
+    );
 
-    async test(assert) {
-      pretender.post("/chat/chat_channels/:chatChannelId/unfollow", () => {
-        return [200, { current_user_membership: { following: false } }, {}];
-      });
-      assert.equal(this.foo, 1);
+    pretender.post("/chat/chat_channels/:chatChannelId/unfollow", () => {
+      return [200, { current_user_membership: { following: false } }, {}];
+    });
+    assert.strictEqual(this.foo, 1);
 
-      await click(".chat-channel-leave-btn");
-
-      assert.equal(this.foo, 2);
-    },
+    await click(".chat-channel-leave-btn");
+    assert.strictEqual(this.foo, 2);
   });
 
-  componentTest("has a specific title for direct message channel", {
-    template: hbs`{{chat-channel-leave-btn channel=channel}}`,
+  test("has a specific title for direct message channel", async function (assert) {
+    this.channel = fabricators.directMessageChatChannel();
 
-    beforeEach() {
-      this.set("channel", { chatable_type: "DirectMessage" });
-    },
+    await render(hbs`<ChatChannelLeaveBtn @channel={{this.channel}} />`);
 
-    async test(assert) {
-      const btn = query(".chat-channel-leave-btn");
-
-      assert.equal(btn.title, I18n.t("chat.direct_messages.leave"));
-    },
+    const btn = query(".chat-channel-leave-btn");
+    assert.strictEqual(btn.title, I18n.t("chat.direct_messages.leave"));
   });
 
-  componentTest("has a specific title for message channel", {
-    template: hbs`{{chat-channel-leave-btn channel=channel}}`,
+  test("has a specific title for message channel", async function (assert) {
+    this.channel = fabricators.chatChannel();
 
-    beforeEach() {
-      this.set("channel", { chatable_type: "Topic" });
-    },
+    await render(hbs`<ChatChannelLeaveBtn @channel={{this.channel}} />`);
 
-    async test(assert) {
-      const btn = query(".chat-channel-leave-btn");
-
-      assert.equal(btn.title, I18n.t("chat.leave"));
-    },
+    const btn = query(".chat-channel-leave-btn");
+    assert.strictEqual(btn.title, I18n.t("chat.leave"));
   });
 
-  componentTest("is not visible on mobile", {
-    template: hbs`{{chat-channel-leave-btn channel=channel}}`,
+  test("is not visible on mobile", async function (assert) {
+    this.site.mobileView = true;
+    this.channel = fabricators.chatChannel();
 
-    beforeEach() {
-      this.site.mobileView = true;
-      this.set("channel", { chatable_type: "Topic" });
-    },
+    await render(hbs`<ChatChannelLeaveBtn @channel={{this.channel}} />`);
 
-    async test(assert) {
-      assert.notOk(exists(".chat-channel-leave-btn"));
-    },
+    assert.false(exists(".chat-channel-leave-btn"));
   });
 });

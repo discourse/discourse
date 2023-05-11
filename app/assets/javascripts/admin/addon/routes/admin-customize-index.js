@@ -1,10 +1,11 @@
 import Route from "@ember/routing/route";
-export default Route.extend({
+
+export default class AdminCustomizeIndexRoute extends Route {
   beforeModel() {
     if (this.currentUser.admin) {
       this.transitionTo("adminCustomizeThemes");
     } else {
       this.transitionTo("adminWatchedWords");
     }
-  },
-});
+  }
+}

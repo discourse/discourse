@@ -2,7 +2,7 @@
 
 class PostReply < ActiveRecord::Base
   belongs_to :post
-  belongs_to :reply, foreign_key: :reply_post_id, class_name: 'Post'
+  belongs_to :reply, foreign_key: :reply_post_id, class_name: "Post"
 
   validates_uniqueness_of :reply_post_id, scope: :post_id
   validate :ensure_same_topic
@@ -11,10 +11,7 @@ class PostReply < ActiveRecord::Base
 
   def ensure_same_topic
     if post.topic_id != reply.topic_id
-      self.errors.add(
-        :base,
-        I18n.t("activerecord.errors.models.post_reply.base.different_topic")
-      )
+      self.errors.add(:base, I18n.t("activerecord.errors.models.post_reply.base.different_topic"))
     end
   end
 end

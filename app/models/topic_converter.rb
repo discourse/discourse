@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopicConverter
-
   attr_reader :topic
 
   def initialize(topic, user)
@@ -17,16 +16,17 @@ class TopicConverter
         elsif SiteSetting.allow_uncategorized_topics
           SiteSetting.uncategorized_category_id
         else
-          Category.where(read_restricted: false)
+          Category
+            .where(read_restricted: false)
             .where.not(id: SiteSetting.uncategorized_category_id)
-            .order('id asc')
-            .pluck_first(:id)
+            .order("id asc")
+            .pick(:id)
         end
 
       PostRevisor.new(@topic.first_post, @topic).revise!(
         @user,
         category_id: category_id,
-        archetype: Archetype.default
+        archetype: Archetype.default,
       )
 
       update_user_stats
@@ -45,7 +45,7 @@ class TopicConverter
       PostRevisor.new(@topic.first_post, @topic).revise!(
         @user,
         category_id: nil,
-        archetype: Archetype.private_message
+        archetype: Archetype.private_message,
       )
 
       add_allowed_users
@@ -63,9 +63,12 @@ class TopicConverter
   private
 
   def posters
-    @posters ||= @topic.posts
-      .where.not(post_type: [Post.types[:small_action], Post.types[:whisper]])
-      .distinct.pluck(:user_id)
+    @posters ||=
+      @topic
+        .posts
+        .where.not(post_type: [Post.types[:small_action], Post.types[:whisper]])
+        .distinct
+        .pluck(:user_id)
   end
 
   def increment_users_post_count
@@ -134,8 +137,6 @@ class TopicConverter
   end
 
   def update_post_uploads_secure_status
-    DB.after_commit do
-      Jobs.enqueue(:update_topic_upload_security, topic_id: @topic.id)
-    end
+    DB.after_commit { Jobs.enqueue(:update_topic_upload_security, topic_id: @topic.id) }
   end
 end

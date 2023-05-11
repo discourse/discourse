@@ -8,6 +8,9 @@ class CreateCategoryFeaturedThreads < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :category_featured_threads, [:category_id, :forum_thread_id], unique: true, name: 'cat_featured_threads'
+    add_index :category_featured_threads,
+              %i[category_id forum_thread_id],
+              unique: true,
+              name: "cat_featured_threads"
   end
 end

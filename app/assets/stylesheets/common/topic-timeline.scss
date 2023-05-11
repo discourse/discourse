@@ -139,7 +139,7 @@
       .timeline-scrollarea-wrapper {
         display: table-cell;
         padding-right: 1.5em;
-        width: 100px;
+        width: 7em;
       }
       .timeline-scrollarea {
         border-right: 1px solid var(--tertiary-low-or-tertiary-high);
@@ -251,6 +251,7 @@
       float: left;
       z-index: z("base") + 1;
       outline: 1px solid transparent;
+      margin-left: 0.5px;
     }
 
     .timeline-scroller-content {
@@ -259,11 +260,12 @@
       overflow: hidden;
       padding-left: 1em;
       position: absolute; // prevents text length from impacting width
+      max-height: 3em; // this hides the date when the count + date would wrap to more than 2 lines
     }
 
     .timeline-ago {
       color: var(--primary-med-or-secondary-med);
-      max-width: 70px;
+      max-width: 4.6em;
       overflow: hidden;
       text-overflow: ellipsis;
     }

@@ -11,9 +11,18 @@
     <tbody>
       <tr class="filters">
         <td>{{i18n "admin.email.logs.filters.title"}}</td>
-        <td><TextField @value={{this.filter.user}} @placeholderKey="admin.email.logs.filters.user_placeholder" /></td>
-        <td><TextField @value={{this.filter.address}} @placeholderKey="admin.email.logs.filters.address_placeholder" /></td>
-        <td colspan="2"><TextField @value={{this.filter.type}} @placeholderKey="admin.email.logs.filters.type_placeholder" /></td>
+        <td><TextField
+            @value={{this.filter.user}}
+            @placeholderKey="admin.email.logs.filters.user_placeholder"
+          /></td>
+        <td><TextField
+            @value={{this.filter.address}}
+            @placeholderKey="admin.email.logs.filters.address_placeholder"
+          /></td>
+        <td colspan="2"><TextField
+            @value={{this.filter.type}}
+            @placeholderKey="admin.email.logs.filters.type_placeholder"
+          /></td>
       </tr>
 
       {{#each this.model as |l|}}
@@ -21,13 +30,21 @@
           <td>{{format-date l.created_at}}</td>
           <td>
             {{#if l.user}}
-              <LinkTo @route="adminUser" @model={{l.user}}>{{avatar l.user imageSize="tiny"}}</LinkTo>
-              <LinkTo @route="adminUser" @model={{l.user}}>{{l.user.username}}</LinkTo>
+              <LinkTo @route="adminUser" @model={{l.user}}>{{avatar
+                  l.user
+                  imageSize="tiny"
+                }}</LinkTo>
+              <LinkTo
+                @route="adminUser"
+                @model={{l.user}}
+              >{{l.user.username}}</LinkTo>
             {{else}}
               &mdash;
             {{/if}}
           </td>
-          <td class="email-address"><a href="mailto:{{l.to_address}}">{{l.to_address}}</a></td>
+          <td class="email-address"><a
+              href="mailto:{{l.to_address}}"
+            >{{l.to_address}}</a></td>
           <td>
             {{#if l.has_bounce_key}}
               <a href {{on "click" (fn this.handleShowIncomingEmail l.id)}}>
@@ -39,7 +56,11 @@
           </td>
           <td class="email-details">
             {{#if l.has_bounce_key}}
-              <a href {{on "click" (fn this.handleShowIncomingEmail l.id)}} title={{i18n "admin.email.details_title"}}>
+              <a
+                href
+                {{on "click" (fn this.handleShowIncomingEmail l.id)}}
+                title={{i18n "admin.email.details_title"}}
+              >
                 {{d-icon "info-circle"}}
               </a>
             {{/if}}

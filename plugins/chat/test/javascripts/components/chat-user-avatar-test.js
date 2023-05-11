@@ -1,9 +1,8 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { module } from "qunit";
+import { module, test } from "qunit";
+import { render } from "@ember/test-helpers";
 
 const user = {
   id: 1,
@@ -15,41 +14,37 @@ const user = {
 module("Discourse Chat | Component | chat-user-avatar", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("user is not online", {
-    template: hbs`{{chat-user-avatar chat=chat user=user}}`,
+  test("user is not online", async function (assert) {
+    this.set("user", user);
+    this.set("chat", { presenceChannel: { users: [] } });
 
-    async beforeEach() {
-      this.set("user", user);
-      this.set("chat", { presenceChannel: { users: [] } });
-    },
+    await render(
+      hbs`<ChatUserAvatar @chat={{this.chat}} @user={{this.user}} />`
+    );
 
-    async test(assert) {
-      assert.ok(
-        exists(
-          `.chat-user-avatar .chat-user-avatar-container[data-user-card=${user.username}] .avatar[title=${user.username}]`
-        )
-      );
-      assert.notOk(exists(".chat-user-avatar.is-online"));
-    },
+    assert.true(
+      exists(
+        `.chat-user-avatar .chat-user-avatar-container[data-user-card=${user.username}] .avatar[title=${user.username}]`
+      )
+    );
+    assert.false(exists(".chat-user-avatar.is-online"));
   });
 
-  componentTest("user is online", {
-    template: hbs`{{chat-user-avatar chat=chat user=user}}`,
+  test("user is online", async function (assert) {
+    this.set("user", user);
+    this.set("chat", {
+      presenceChannel: { users: [{ id: user.id }] },
+    });
 
-    async beforeEach() {
-      this.set("user", user);
-      this.set("chat", {
-        presenceChannel: { users: [{ id: user.id }] },
-      });
-    },
+    await render(
+      hbs`<ChatUserAvatar @chat={{this.chat}} @user={{this.user}} />`
+    );
 
-    async test(assert) {
-      assert.ok(
-        exists(
-          `.chat-user-avatar .chat-user-avatar-container[data-user-card=${user.username}] .avatar[title=${user.username}]`
-        )
-      );
-      assert.ok(exists(".chat-user-avatar.is-online"));
-    },
+    assert.true(
+      exists(
+        `.chat-user-avatar .chat-user-avatar-container[data-user-card=${user.username}] .avatar[title=${user.username}]`
+      )
+    );
+    assert.true(exists(".chat-user-avatar.is-online"));
   });
 });

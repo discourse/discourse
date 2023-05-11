@@ -7,9 +7,9 @@ class UnsubscribeKey < ActiveRecord::Base
 
   before_create :generate_random_key
 
-  ALL_TYPE = 'all'
-  DIGEST_TYPE = 'digest'
-  TOPIC_TYPE = 'topic'
+  ALL_TYPE = "all"
+  DIGEST_TYPE = "digest"
+  TOPIC_TYPE = "topic"
 
   class << self
     def create_key_for(user, type, post: nil)
@@ -32,7 +32,7 @@ class UnsubscribeKey < ActiveRecord::Base
       strategies = {
         DIGEST_TYPE => EmailControllerHelper::DigestEmailUnsubscriber,
         TOPIC_TYPE => EmailControllerHelper::TopicEmailUnsubscriber,
-        ALL_TYPE => EmailControllerHelper::BaseEmailUnsubscriber
+        ALL_TYPE => EmailControllerHelper::BaseEmailUnsubscriber,
       }
 
       DiscoursePluginRegistry.email_unsubscribers.each do |unsubcriber|

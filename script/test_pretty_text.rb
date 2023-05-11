@@ -9,7 +9,7 @@ puts PrettyText.cook "test"
   # JS
   PrettyText.cook "test"
 
-  PrettyText.v8.eval('gc()')
+  PrettyText.v8.eval("gc()")
 
   # if i % 500 == 0
   #p PrettyText.v8.heap_stats

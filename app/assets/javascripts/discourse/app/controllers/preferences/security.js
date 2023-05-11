@@ -15,7 +15,7 @@ const DEFAULT_AUTH_TOKENS_COUNT = 2;
 
 export default Controller.extend(CanCheckEmails, {
   passwordProgress: null,
-
+  subpageTitle: I18n.t("user.preferences_nav.security"),
   showAllAuthTokens: false,
 
   @discourseComputed("model.is_anonymous")

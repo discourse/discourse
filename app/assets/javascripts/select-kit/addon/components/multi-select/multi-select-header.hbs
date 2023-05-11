@@ -1,0 +1,12 @@
+<div class="select-kit-header-wrapper">
+  {{#each this.icons as |icon|}}
+    {{d-icon icon}}
+  {{/each}}
+
+  <MultiSelect::FormatSelectedContent
+    @content={{or this.selectedContent this.selectKit.noneItem}}
+    @selectKit={{this.selectKit}}
+  />
+
+  {{d-icon this.caretIcon class="caret-icon"}}
+</div>

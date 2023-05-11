@@ -6,14 +6,14 @@ class Developer < ActiveRecord::Base
   after_save :rebuild_cache
   after_destroy :rebuild_cache
 
-  @id_cache = DistributedCache.new('developer_ids')
+  @id_cache = DistributedCache.new("developer_ids")
 
   def self.user_ids
-    @id_cache["ids"] || rebuild_cache
+    @id_cache.defer_get_set("ids") { Set.new(Developer.pluck(:user_id)) }
   end
 
   def self.rebuild_cache
-    @id_cache["ids"] = Set.new(Developer.pluck(:user_id))
+    @id_cache.clear
   end
 
   def rebuild_cache

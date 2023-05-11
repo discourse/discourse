@@ -5,25 +5,37 @@ module Plugin
     begin
       block.call
     rescue => error
-      plugins_directory = Rails.root + 'plugins'
+      plugins_directory = Rails.root + "plugins"
 
       if error.backtrace && error.backtrace_locations
-        plugin_path = error.backtrace_locations.lazy.map do |location|
-          Pathname.new(location.absolute_path)
-            .ascend
+        plugin_path =
+          error
+            .backtrace_locations
             .lazy
-            .find { |path| path.parent == plugins_directory }
-        end.next
+            .map do |location|
+              Pathname
+                .new(location.absolute_path)
+                .ascend
+                .lazy
+                .find { |path| path.parent == plugins_directory }
+            end
+            .next
 
         raise unless plugin_path
 
-        stack_trace = error.backtrace.each_with_index.inject([]) do |messages, (line, index)|
-          if index == 0
-            messages << "#{line}: #{error} (#{error.class})"
-          else
-            messages << "\t#{index}: from #{line}"
-          end
-        end.reverse.join("\n")
+        stack_trace =
+          error
+            .backtrace
+            .each_with_index
+            .inject([]) do |messages, (line, index)|
+              if index == 0
+                messages << "#{line}: #{error} (#{error.class})"
+              else
+                messages << "\t#{index}: from #{line}"
+              end
+            end
+            .reverse
+            .join("\n")
 
         STDERR.puts <<~TEXT
           #{stack_trace}

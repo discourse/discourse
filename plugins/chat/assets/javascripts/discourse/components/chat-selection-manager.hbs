@@ -1,19 +1,55 @@
-<div class="chat-selection-management">
+<div
+  class={{concat-class
+    "chat-selection-management"
+    (if this.chatCopySuccess "chat-copy-success")
+  }}
+>
   <div class="chat-selection-management-buttons">
-    <DButton @id="chat-quote-btn" @class="btn-secondary" @icon="quote-left" @label="chat.selection.quote_selection" @title="chat.selection.quote_selection" @disabled={{not this.anyMessagesSelected}} @action={{action "quoteMessages"}} />
+    <DButton
+      @id="chat-quote-btn"
+      @class="btn-secondary"
+      @icon="quote-left"
+      @label="chat.selection.quote_selection"
+      @title="chat.selection.quote_selection"
+      @disabled={{not this.anyMessagesSelected}}
+      @action={{action "quoteMessages"}}
+    />
 
     {{#if this.site.desktopView}}
-      <DButton @id="chat-copy-btn" @class="btn-secondary" @icon="copy" @label="chat.selection.copy" @title="chat.selection.copy" @disabled={{not this.anyMessagesSelected}} @action={{action "copyMessages"}} />
+      <DButton
+        @id="chat-copy-btn"
+        @class="btn-secondary"
+        @icon="copy"
+        @label="chat.selection.copy"
+        @title="chat.selection.copy"
+        @disabled={{not this.anyMessagesSelected}}
+        @action={{action "copyMessages"}}
+      />
     {{/if}}
 
     {{#if this.showMoveMessageButton}}
-      <DButton @id="chat-move-to-channel-btn" @class="btn-secondary" @icon="sign-out-alt" @label="chat.selection.move_selection_to_channel" @title="chat.selection.move_selection_to_channel" @disabled={{not this.anyMessagesSelected}} @action={{action "openMoveMessageModal"}} />
+      <DButton
+        @id="chat-move-to-channel-btn"
+        @class="btn-secondary"
+        @icon="sign-out-alt"
+        @label="chat.selection.move_selection_to_channel"
+        @title="chat.selection.move_selection_to_channel"
+        @disabled={{not this.anyMessagesSelected}}
+        @action={{action "openMoveMessageModal"}}
+      />
     {{/if}}
 
-    <DButton @icon="times" @class="btn-secondary cancel-btn" @label="chat.selection.cancel" @title="chat.selection.cancel" @action={{this.cancelSelecting}} />
+    <DButton
+      @id="chat-cancel-selection-btn"
+      @icon="times"
+      @class="btn-secondary cancel-btn"
+      @label="chat.selection.cancel"
+      @title="chat.selection.cancel"
+      @action={{this.cancelSelecting}}
+    />
   </div>
 
-  {{#if this.showChatQuoteSuccess}}
+  {{#if this.showChatCopySuccess}}
     <div class="chat-selection-message">
       {{i18n "chat.quote.copy_success"}}
     </div>

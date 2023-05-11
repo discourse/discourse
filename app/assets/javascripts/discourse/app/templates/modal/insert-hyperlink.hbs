@@ -1,7 +1,13 @@
 <DModalBody @title="composer.link_dialog_title" @class="insert-link">
   <form id="insert-hyperlink-form" {{on "submit" (action "ok")}}>
     <div class="inputs">
-      <TextField @value={{this.linkUrl}} @placeholderKey="composer.link_url_placeholder" @class="link-url" @key-up={{action "search"}} @autofocus="autofocus" />
+      <TextField
+        @value={{this.linkUrl}}
+        @placeholderKey="composer.link_url_placeholder"
+        @class="link-url"
+        @key-up={{action "search"}}
+        @autofocus="autofocus"
+      />
       {{#if this.searchLoading}}
         {{loading-spinner}}
       {{/if}}
@@ -15,7 +21,7 @@
               data-title={{result.fancy_title}}
             >
               <TopicStatus @topic={{result}} @disableActions={{true}} />
-              {{replace-emoji result.fancy_title}}
+              {{replace-emoji result.title}}
               <div class="search-category">
                 {{#if result.category.parentCategory}}
                   {{category-link result.category.parentCategory}}
@@ -29,13 +35,27 @@
       {{/if}}
     </div>
     <div class="inputs">
-      <TextField @value={{this.linkText}} @placeholderKey="composer.link_optional_text" @class="link-text" />
+      <TextField
+        @value={{this.linkText}}
+        @placeholderKey="composer.link_optional_text"
+        @class="link-text"
+      />
     </div>
   </form>
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary" @label="composer.modal_ok" @action={{action "ok"}} @type="submit" @form="insert-hyperlink-form" />
+  <DButton
+    @class="btn-primary"
+    @label="composer.modal_ok"
+    @action={{action "ok"}}
+    @type="submit"
+    @form="insert-hyperlink-form"
+  />
 
-  <DButton @class="btn-danger" @label="composer.modal_cancel" @action={{action "cancel"}} />
+  <DButton
+    @class="btn-danger"
+    @label="composer.modal_cancel"
+    @action={{action "cancel"}}
+  />
 </div>

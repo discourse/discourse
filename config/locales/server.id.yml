@@ -51,6 +51,11 @@ id:
   remove_posts_deleted_by_author: "Dihapus oleh penulis"
   redirect_warning: "Kami tidak dapat memverifikasi bahwa tautan yang Anda pilih benar-benar diposkan ke forum. Jika Anda tetap ingin melanjutkan, pilih tautan di bawah ini."
   on_another_topic: "Di topik lain"
+  topic_category_changed: "Dari %{from} ke %{to}"
+  topic_tag_changed:
+    added_and_removed: "Ditambahkan %{added} dan dihapus %{removed}"
+    added: "Ditambahkan %{added}"
+    removed: "Dihapus %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} oleh %{username}"
@@ -322,10 +327,6 @@ id:
       almost_x_years:
         other: "hampir %{count} tahun yang lalu"
   password_reset:
-    choose_new: "Pilih kata sandi baru"
-    choose: "Pilih kata sandi"
-    update: "Perbaharui Kata Sandi"
-    save: "Atur Kata Sandi"
     title: "Atur Ulang Kata Sandi"
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
     success_unapproved: "Anda telah mengubah kata sandi dengan sukses."
@@ -589,6 +590,7 @@ id:
       min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
   search:
+    within_post: "#%{post_number} oleh %{username}"
     types:
       category: "Kategori"
       topic: "Hasil"
@@ -643,8 +645,6 @@ id:
     page_title: "Halaman Tidak Ditemukan"
     see_more: "Selengkapnya"
     search_button: "Cari"
-  deleted: "dihapus"
-  image: "gambar"
   upload:
     images:
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"
@@ -667,6 +667,8 @@ id:
   badges:
     member:
       name: Anggota
+    regular:
+      name: Umum
     first_quote:
       name: Kutipan Pertama
     read_guidelines:
@@ -702,22 +704,42 @@ id:
                 label: "Kategori dan Topik Terbaru"
               categories_and_top_topics:
                 label: "Kategori dan Topik Teratas"
-  joined: "Joined"
   reviewables:
     priorities:
+      low: "Rendah"
       medium: "Sedang"
       high: "Tinggi"
     sensitivity:
+      disabled: "Dinonaktifkan"
+      low: "Rendah"
       medium: "Sedang"
       high: "Tinggi"
     actions:
+      agree:
+        title: "Ya"
+      agree_and_suspend:
+        title: "Tangguhkan pengguna"
+      agree_and_hide:
+        title: "Sembunyikan pos"
       delete_single:
         title: "Hapus"
+      delete_and_agree:
+        title: "Hapus postingan"
+        description: "Setuju dengan menandai dan menghapus postingan ini; jika postingan pertama, hapus juga topiknya."
+      delete_and_agree_replies:
+        title: "Hapus postingan dan balasan"
+      disagree_and_restore:
+        title: "Tidak, pulihkan postingan"
+      disagree:
+        title: "Tidak"
       ignore:
         title: "Abaikan"
+      ignore_and_do_nothing:
+        title: "Tidak melakukan apapun"
       approve:
         title: "Terima"
       reject_user:
+        title: "Hapus Pengguna..."
         delete:
           title: "Hapus Pengguna"
       reject:

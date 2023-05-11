@@ -3,10 +3,10 @@
 RSpec.describe Admin::BadgesController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user, email: 'user1@test.com', username: 'username1') }
+  fab!(:user) { Fabricate(:user, email: "user1@test.com", username: "username1") }
   fab!(:badge) { Fabricate(:badge) }
 
-  describe '#index' do
+  describe "#index" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -38,27 +38,29 @@ RSpec.describe Admin::BadgesController do
     end
   end
 
-  describe '#preview' do
+  describe "#preview" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'allows preview enable_badge_sql is enabled' do
+      it "allows preview enable_badge_sql is enabled" do
         SiteSetting.enable_badge_sql = true
 
-        post "/admin/badges/preview.json", params: {
-          sql: 'select id as user_id, created_at granted_at from users'
-        }
+        post "/admin/badges/preview.json",
+             params: {
+               sql: "select id as user_id, created_at granted_at from users",
+             }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["grant_count"]).to be > 0
       end
 
-      it 'does not allow anything if enable_badge_sql is disabled' do
+      it "does not allow anything if enable_badge_sql is disabled" do
         SiteSetting.enable_badge_sql = false
 
-        post "/admin/badges/preview.json", params: {
-          sql: 'select id as user_id, created_at granted_at from users'
-        }
+        post "/admin/badges/preview.json",
+             params: {
+               sql: "select id as user_id, created_at granted_at from users",
+             }
 
         expect(response.status).to eq(403)
       end
@@ -68,9 +70,10 @@ RSpec.describe Admin::BadgesController do
       it "denies access to badge preview with a 404 response" do
         SiteSetting.enable_badge_sql = true
 
-        post "/admin/badges/preview.json", params: {
-          sql: 'select id as user_id, created_at granted_at from users'
-        }
+        post "/admin/badges/preview.json",
+             params: {
+               sql: "select id as user_id, created_at granted_at from users",
+             }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -90,23 +93,31 @@ RSpec.describe Admin::BadgesController do
     end
   end
 
-  describe '#create' do
+  describe "#create" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'can create badges correctly' do
+      it "can create badges correctly" do
         SiteSetting.enable_badge_sql = true
 
-        post "/admin/badges.json", params: {
-          name: 'test', query: 'select 1 as user_id, null as granted_at', badge_type_id: 1
-        }
+        post "/admin/badges.json",
+             params: {
+               name: "test",
+               query: "select 1 as user_id, null as granted_at",
+               badge_type_id: 1,
+             }
 
         json = response.parsed_body
         expect(response.status).to eq(200)
-        expect(json["badge"]["name"]).to eq('test')
-        expect(json["badge"]["query"]).to eq('select 1 as user_id, null as granted_at')
+        expect(json["badge"]["name"]).to eq("test")
+        expect(json["badge"]["query"]).to eq("select 1 as user_id, null as granted_at")
 
-        expect(UserHistory.where(acting_user_id: admin.id, action: UserHistory.actions[:create_badge]).exists?).to eq(true)
+        expect(
+          UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:create_badge],
+          ).exists?,
+        ).to eq(true)
       end
     end
 
@@ -114,9 +125,12 @@ RSpec.describe Admin::BadgesController do
       it "prevents badge creation with a 404 response" do
         SiteSetting.enable_badge_sql = true
 
-        post "/admin/badges.json", params: {
-          name: 'test', query: 'select 1 as user_id, null as granted_at', badge_type_id: 1
-        }
+        post "/admin/badges.json",
+             params: {
+               name: "test",
+               query: "select 1 as user_id, null as granted_at",
+               badge_type_id: 1,
+             }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -136,14 +150,14 @@ RSpec.describe Admin::BadgesController do
     end
   end
 
-  describe '#save_badge_groupings' do
+  describe "#save_badge_groupings" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'can save badge groupings' do
+      it "can save badge groupings" do
         groupings = BadgeGrouping.all.order(:position).to_a
-        groupings << BadgeGrouping.new(name: 'Test 1')
-        groupings << BadgeGrouping.new(name: 'Test 2')
+        groupings << BadgeGrouping.new(name: "Test 1")
+        groupings << BadgeGrouping.new(name: "Test 2")
 
         groupings.shuffle!
 
@@ -192,11 +206,11 @@ RSpec.describe Admin::BadgesController do
     end
   end
 
-  describe '#badge_types' do
+  describe "#badge_types" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'returns JSON' do
+      it "returns JSON" do
         get "/admin/badges/types.json"
 
         expect(response.status).to eq(200)
@@ -226,15 +240,20 @@ RSpec.describe Admin::BadgesController do
     end
   end
 
-  describe '#destroy' do
+  describe "#destroy" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'deletes the badge' do
+      it "deletes the badge" do
         delete "/admin/badges/#{badge.id}.json"
         expect(response.status).to eq(200)
         expect(Badge.where(id: badge.id).exists?).to eq(false)
-        expect(UserHistory.where(acting_user_id: admin.id, action: UserHistory.actions[:delete_badge]).exists?).to eq(true)
+        expect(
+          UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:delete_badge],
+          ).exists?,
+        ).to eq(true)
       end
     end
 
@@ -261,89 +280,93 @@ RSpec.describe Admin::BadgesController do
     end
   end
 
-  describe '#update' do
+  describe "#update" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'does not update the name of system badges' do
+      it "does not update the name of system badges" do
         editor_badge = Badge.find(Badge::Editor)
         editor_badge_name = editor_badge.name
 
-        put "/admin/badges/#{editor_badge.id}.json", params: {
-          name: "123456"
-        }
+        put "/admin/badges/#{editor_badge.id}.json", params: { name: "123456" }
 
         expect(response.status).to eq(200)
         editor_badge.reload
         expect(editor_badge.name).to eq(editor_badge_name)
 
-        expect(UserHistory.where(acting_user_id: admin.id, action: UserHistory.actions[:change_badge]).exists?).to eq(true)
+        expect(
+          UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:change_badge],
+          ).exists?,
+        ).to eq(true)
       end
 
-      it 'does not allow query updates if badge_sql is disabled' do
+      it "does not allow query updates if badge_sql is disabled" do
         badge.query = "select 123"
         badge.save
 
         SiteSetting.enable_badge_sql = false
 
-        put "/admin/badges/#{badge.id}.json", params: {
-          name: "123456",
-          query: "select id user_id, created_at granted_at from users",
-          badge_type_id: badge.badge_type_id,
-          allow_title: false,
-          multiple_grant: false,
-          enabled: true
-        }
+        put "/admin/badges/#{badge.id}.json",
+            params: {
+              name: "123456",
+              query: "select id user_id, created_at granted_at from users",
+              badge_type_id: badge.badge_type_id,
+              allow_title: false,
+              multiple_grant: false,
+              enabled: true,
+            }
 
         expect(response.status).to eq(200)
         badge.reload
-        expect(badge.name).to eq('123456')
-        expect(badge.query).to eq('select 123')
+        expect(badge.name).to eq("123456")
+        expect(badge.query).to eq("select 123")
       end
 
-      it 'updates the badge' do
+      it "updates the badge" do
         SiteSetting.enable_badge_sql = true
         sql = "select id user_id, created_at granted_at from users"
         image = Fabricate(:upload)
 
-        put "/admin/badges/#{badge.id}.json", params: {
-          name: "123456",
-          query: sql,
-          badge_type_id: badge.badge_type_id,
-          allow_title: false,
-          multiple_grant: false,
-          enabled: true,
-          image_upload_id: image.id,
-          icon: "fa-rocket",
-        }
+        put "/admin/badges/#{badge.id}.json",
+            params: {
+              name: "123456",
+              query: sql,
+              badge_type_id: badge.badge_type_id,
+              allow_title: false,
+              multiple_grant: false,
+              enabled: true,
+              image_upload_id: image.id,
+              icon: "fa-rocket",
+            }
 
         expect(response.status).to eq(200)
         badge.reload
-        expect(badge.name).to eq('123456')
+        expect(badge.name).to eq("123456")
         expect(badge.query).to eq(sql)
         expect(badge.image_upload.id).to eq(image.id)
         expect(badge.icon).to eq("fa-rocket")
       end
 
-      context 'when there is a user with a title granted using the badge' do
+      context "when there is a user with a title granted using the badge" do
         fab!(:user_with_badge_title) { Fabricate(:active_user) }
-        fab!(:badge) { Fabricate(:badge, name: 'Oathbreaker', allow_title: true) }
+        fab!(:badge) { Fabricate(:badge, name: "Oathbreaker", allow_title: true) }
 
         before do
           BadgeGranter.grant(badge, user_with_badge_title)
-          user_with_badge_title.update(title: 'Oathbreaker')
+          user_with_badge_title.update(title: "Oathbreaker")
         end
 
-        it 'updates the user title in a job' do
-          expect_enqueued_with(job: :bulk_user_title_update, args: {
-            new_title: 'Shieldbearer',
-            granted_badge_id: badge.id,
-            action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
-          }) do
-            put "/admin/badges/#{badge.id}.json", params: {
-              name: "Shieldbearer"
-            }
-          end
+        it "updates the user title in a job" do
+          expect_enqueued_with(
+            job: :bulk_user_title_update,
+            args: {
+              new_title: "Shieldbearer",
+              granted_badge_id: badge.id,
+              action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION,
+            },
+          ) { put "/admin/badges/#{badge.id}.json", params: { name: "Shieldbearer" } }
         end
       end
     end
@@ -355,21 +378,22 @@ RSpec.describe Admin::BadgesController do
         sql = "select id user_id, created_at granted_at from users"
         image = Fabricate(:upload)
 
-        put "/admin/badges/#{badge.id}.json", params: {
-          name: "123456",
-          query: sql,
-          badge_type_id: badge.badge_type_id,
-          allow_title: false,
-          multiple_grant: false,
-          enabled: true,
-          image_upload_id: image.id,
-          icon: "fa-rocket",
-        }
+        put "/admin/badges/#{badge.id}.json",
+            params: {
+              name: "123456",
+              query: sql,
+              badge_type_id: badge.badge_type_id,
+              allow_title: false,
+              multiple_grant: false,
+              enabled: true,
+              image_upload_id: image.id,
+              icon: "fa-rocket",
+            }
 
         badge.reload
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
-        expect(badge.name).not_to eq('123456')
+        expect(badge.name).not_to eq("123456")
         expect(badge.query).not_to eq(sql)
         expect(badge.icon).not_to eq("fa-rocket")
       end
@@ -388,34 +412,34 @@ RSpec.describe Admin::BadgesController do
     end
   end
 
-  describe '#mass_award' do
+  describe "#mass_award" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'does nothing when there is no file' do
-        post "/admin/badges/award/#{badge.id}.json", params: { file: '' }
+      it "does nothing when there is no file" do
+        post "/admin/badges/award/#{badge.id}.json", params: { file: "" }
 
         expect(response.status).to eq(400)
       end
 
-      it 'does nothing when the badge id is not valid' do
-        post '/admin/badges/award/fake_id.json', params: { file: fixture_file_upload(Tempfile.new) }
+      it "does nothing when the badge id is not valid" do
+        post "/admin/badges/award/fake_id.json", params: { file: fixture_file_upload(Tempfile.new) }
 
         expect(response.status).to eq(400)
       end
 
-      it 'does nothing when the file is not a csv' do
-        file = file_from_fixtures('cropped.png')
+      it "does nothing when the file is not a csv" do
+        file = file_from_fixtures("cropped.png")
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
         expect(response.status).to eq(400)
       end
 
-      it 'awards the badge using a list of user emails' do
+      it "awards the badge using a list of user emails" do
         Jobs.run_immediately!
 
-        file = file_from_fixtures('user_emails.csv', 'csv')
+        file = file_from_fixtures("user_emails.csv", "csv")
 
         UserBadge.destroy_all
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
@@ -425,10 +449,10 @@ RSpec.describe Admin::BadgesController do
         expect(UserBadge.where(user: user, badge: badge).first.seq).to eq(0)
       end
 
-      it 'awards the badge using a list of usernames' do
+      it "awards the badge using a list of usernames" do
         Jobs.run_immediately!
 
-        file = file_from_fixtures('usernames.csv', 'csv')
+        file = file_from_fixtures("usernames.csv", "csv")
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
@@ -436,10 +460,10 @@ RSpec.describe Admin::BadgesController do
         expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
-      it 'works with a CSV containing nil values' do
+      it "works with a CSV containing nil values" do
         Jobs.run_immediately!
 
-        file = file_from_fixtures('usernames_with_nil_values.csv', 'csv')
+        file = file_from_fixtures("usernames_with_nil_values.csv", "csv")
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
@@ -447,13 +471,13 @@ RSpec.describe Admin::BadgesController do
         expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
-      it 'does not grant the badge again to a user if they already have the badge' do
+      it "does not grant the badge again to a user if they already have the badge" do
         Jobs.run_immediately!
         badge.update!(multiple_grant: true)
         BadgeGranter.grant(badge, user)
         user.reload
 
-        file = file_from_fixtures('usernames_with_nil_values.csv', 'csv')
+        file = file_from_fixtures("usernames_with_nil_values.csv", "csv")
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
@@ -461,10 +485,10 @@ RSpec.describe Admin::BadgesController do
         expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
-      it 'fails when the badge is disabled' do
+      it "fails when the badge is disabled" do
         badge.update!(enabled: false)
 
-        file = file_from_fixtures('usernames_with_nil_values.csv', 'csv')
+        file = file_from_fixtures("usernames_with_nil_values.csv", "csv")
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
@@ -473,17 +497,18 @@ RSpec.describe Admin::BadgesController do
 
       context "when grant_existing_holders is true" do
         it "fails when the badge cannot be granted multiple times" do
-          file = file_from_fixtures('user_emails.csv', 'csv')
+          file = file_from_fixtures("user_emails.csv", "csv")
           badge.update!(multiple_grant: false)
-          post "/admin/badges/award/#{badge.id}.json", params: {
-            file: fixture_file_upload(file),
-            grant_existing_holders: true
-          }
+          post "/admin/badges/award/#{badge.id}.json",
+               params: {
+                 file: fixture_file_upload(file),
+                 grant_existing_holders: true,
+               }
 
           expect(response.status).to eq(422)
-          expect(response.parsed_body['errors']).to eq([
-            I18n.t("badges.mass_award.errors.cant_grant_multiple_times", badge_name: badge.name)
-          ])
+          expect(response.parsed_body["errors"]).to eq(
+            [I18n.t("badges.mass_award.errors.cant_grant_multiple_times", badge_name: badge.name)],
+          )
         end
 
         it "fails when CSV file contains more entries that it's allowed" do
@@ -492,13 +517,16 @@ RSpec.describe Admin::BadgesController do
           csv.write("#{user.username}\n" * 11)
           csv.rewind
           stub_const(Admin::BadgesController, "MAX_CSV_LINES", 10) do
-            post "/admin/badges/award/#{badge.id}.json", params: {
-              file: fixture_file_upload(csv),
-              grant_existing_holders: true
-            }
+            post "/admin/badges/award/#{badge.id}.json",
+                 params: {
+                   file: fixture_file_upload(csv),
+                   grant_existing_holders: true,
+                 }
           end
           expect(response.status).to eq(400)
-          expect(response.parsed_body["errors"]).to include(I18n.t("badges.mass_award.errors.too_many_csv_entries", count: 10))
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("badges.mass_award.errors.too_many_csv_entries", count: 10),
+          )
         ensure
           csv&.close
           csv&.unlink
@@ -508,26 +536,23 @@ RSpec.describe Admin::BadgesController do
           Jobs.run_immediately!
           badge.update!(multiple_grant: true)
           csv = Tempfile.new
-          content = [
-            "nonexistentuser",
-            "nonexistentuser",
-            "nonexistentemail@discourse.fake"
-          ]
+          content = %w[nonexistentuser nonexistentuser nonexistentemail@discourse.fake]
           content << user.username
           content << user.username
           csv.write(content.join("\n"))
           csv.rewind
-          post "/admin/badges/award/#{badge.id}.json", params: {
-            file: fixture_file_upload(csv),
-            grant_existing_holders: true
-          }
+          post "/admin/badges/award/#{badge.id}.json",
+               params: {
+                 file: fixture_file_upload(csv),
+                 grant_existing_holders: true,
+               }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['unmatched_entries']).to contain_exactly(
+          expect(response.parsed_body["unmatched_entries"]).to contain_exactly(
             "nonexistentuser",
-            "nonexistentemail@discourse.fake"
+            "nonexistentemail@discourse.fake",
           )
-          expect(response.parsed_body['matched_users_count']).to eq(1)
-          expect(response.parsed_body['unmatched_entries_count']).to eq(2)
+          expect(response.parsed_body["matched_users_count"]).to eq(1)
+          expect(response.parsed_body["unmatched_entries_count"]).to eq(2)
           expect(UserBadge.where(user: user, badge: badge).count).to eq(2)
         ensure
           csv&.close
@@ -540,24 +565,26 @@ RSpec.describe Admin::BadgesController do
           user_without_badge = Fabricate(:user)
           user_with_badge = Fabricate(:user).tap { |u| BadgeGranter.grant(badge, u) }
 
-          csv_content = [
-            user_with_badge.email.titlecase,
-            user_with_badge.username.titlecase,
-            user_without_badge.email.titlecase,
-            user_without_badge.username.titlecase
-          ] * 20
+          csv_content =
+            [
+              user_with_badge.email.titlecase,
+              user_with_badge.username.titlecase,
+              user_without_badge.email.titlecase,
+              user_without_badge.username.titlecase,
+            ] * 20
 
           csv = Tempfile.new
           csv.write(csv_content.join("\n"))
           csv.rewind
-          post "/admin/badges/award/#{badge.id}.json", params: {
-            file: fixture_file_upload(csv),
-            grant_existing_holders: true
-          }
+          post "/admin/badges/award/#{badge.id}.json",
+               params: {
+                 file: fixture_file_upload(csv),
+                 grant_existing_holders: true,
+               }
           expect(response.status).to eq(200)
-          expect(response.parsed_body['unmatched_entries']).to eq([])
-          expect(response.parsed_body['matched_users_count']).to eq(2)
-          expect(response.parsed_body['unmatched_entries_count']).to eq(0)
+          expect(response.parsed_body["unmatched_entries"]).to eq([])
+          expect(response.parsed_body["matched_users_count"]).to eq(2)
+          expect(response.parsed_body["unmatched_entries_count"]).to eq(0)
           sequence = UserBadge.where(user: user_with_badge, badge: badge).pluck(:seq)
           expect(sequence.sort).to eq((0...(40 + 1)).to_a)
           sequence = UserBadge.where(user: user_without_badge, badge: badge).pluck(:seq)
@@ -571,7 +598,7 @@ RSpec.describe Admin::BadgesController do
 
     shared_examples "mass badge award not allowed" do
       it "prevents mass badge award with a 404 response" do
-        file = file_from_fixtures('user_emails.csv', 'csv')
+        file = file_from_fixtures("user_emails.csv", "csv")
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 

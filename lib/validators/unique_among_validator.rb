@@ -3,17 +3,13 @@
 class UniqueAmongValidator < ActiveRecord::Validations::UniquenessValidator
   def validate_each(record, attribute, value)
     old_errors = []
-    record.errors.each do |error|
-      old_errors << error if error.attribute == attribute
-    end
+    record.errors.each { |error| old_errors << error if error.attribute == attribute }
 
     # look for any duplicates at all
     super
 
     new_errors = []
-    record.errors.each do |error|
-      new_errors << error if error.attribute == attribute
-    end
+    record.errors.each { |error| new_errors << error if error.attribute == attribute }
 
     # do nothing further unless there were some duplicates.
     if new_errors.size - old_errors.size != 0
@@ -24,15 +20,8 @@ class UniqueAmongValidator < ActiveRecord::Validations::UniquenessValidator
       # pop off the error, if it was a false positive
       if !dupes.exists?
         record.errors.delete(attribute)
-        old_errors.each do |error|
-          record.errors.add(
-            error.attribute,
-            error.type,
-            **error.options
-          )
-        end
+        old_errors.each { |error| record.errors.add(error.attribute, error.type, **error.options) }
       end
     end
   end
-
 end

@@ -10,7 +10,7 @@ module DiscourseNarrativeBot
         begin
           Date.parse(date)
         rescue ArgumentError => e
-          if e.message == 'invalid date'
+          if e.message == "invalid date"
             Date.parse(Date.today.to_s)
           else
             raise e
@@ -25,14 +25,20 @@ module DiscourseNarrativeBot
       svg_default_width = 538.583
       logo_container = logo_group(55, svg_default_width, 280)
 
-      ApplicationController.render(inline: read_template('new_user'), assigns: assign_options(svg_default_width, logo_container))
+      ApplicationController.render(
+        inline: read_template("new_user"),
+        assigns: assign_options(svg_default_width, logo_container),
+      )
     end
 
     def advanced_user_track
       svg_default_width = 722.8
       logo_container = logo_group(40, svg_default_width, 350)
 
-      ApplicationController.render(inline: read_template('advanced_user'), assigns: assign_options(svg_default_width, logo_container))
+      ApplicationController.render(
+        inline: read_template("advanced_user"),
+        assigns: assign_options(svg_default_width, logo_container),
+      )
     end
 
     private
@@ -48,7 +54,7 @@ module DiscourseNarrativeBot
         date: @date,
         avatar_url: @avatar_url,
         logo_group: logo_group,
-        name: name
+        name: name,
       }
     end
 

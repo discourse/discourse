@@ -21,7 +21,11 @@ class MovePostNoticesToJson < ActiveRecord::Migration[6.0]
 
     execute "DELETE FROM post_custom_fields WHERE name = 'notice_type' OR name = 'notice_args'"
 
-    add_index :post_custom_fields, :post_id, unique: true, name: "index_post_custom_fields_on_notice", where: "name = 'notice'"
+    add_index :post_custom_fields,
+              :post_id,
+              unique: true,
+              name: "index_post_custom_fields_on_notice",
+              where: "name = 'notice'"
 
     remove_index :post_custom_fields, name: "index_post_custom_fields_on_notice_type"
     remove_index :post_custom_fields, name: "index_post_custom_fields_on_notice_args"
@@ -44,8 +48,16 @@ class MovePostNoticesToJson < ActiveRecord::Migration[6.0]
 
     execute "DELETE FROM post_custom_fields WHERE name = 'notice'"
 
-    add_index :post_custom_fields, :post_id, unique: true, name: "index_post_custom_fields_on_notice_type", where: "name = 'notice_type'"
-    add_index :post_custom_fields, :post_id, unique: true, name: "index_post_custom_fields_on_notice_args", where: "name = 'notice_args'"
+    add_index :post_custom_fields,
+              :post_id,
+              unique: true,
+              name: "index_post_custom_fields_on_notice_type",
+              where: "name = 'notice_type'"
+    add_index :post_custom_fields,
+              :post_id,
+              unique: true,
+              name: "index_post_custom_fields_on_notice_args",
+              where: "name = 'notice_args'"
 
     remove_index :index_post_custom_fields_on_notice
   end

@@ -3,9 +3,7 @@
 class AddImageUploadIdToBadges < ActiveRecord::Migration[6.0]
   def change
     add_column :badges, :image_upload_id, :integer
-    reversible do |dir|
-      dir.up do
-        DB.exec <<~SQL
+    reversible { |dir| dir.up { DB.exec <<~SQL } }
           UPDATE badges b1
           SET image_upload_id = u.id
           FROM (
@@ -19,7 +17,5 @@ class AddImageUploadIdToBadges < ActiveRecord::Migration[6.0]
           WHERE
             b1.id = b2.id
         SQL
-      end
-    end
   end
 end

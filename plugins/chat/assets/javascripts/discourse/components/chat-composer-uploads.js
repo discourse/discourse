@@ -5,6 +5,7 @@ import { inject as service } from "@ember/service";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
+import { cloneJSON } from "discourse-common/lib/object";
 
 export default Component.extend(UppyUploadMixin, {
   classNames: ["chat-composer-uploads"],
@@ -12,27 +13,39 @@ export default Component.extend(UppyUploadMixin, {
   chatStateManager: service(),
   id: "chat-composer-uploader",
   type: "chat-composer",
+  existingUploads: null,
   uploads: null,
   useMultipartUploadsIfAvailable: true,
+  uploadDropZone: null,
 
   init() {
     this._super(...arguments);
     this.setProperties({
-      uploads: [],
       fileInputSelector: `#${this.fileUploadElementId}`,
     });
-    this.appEvents.on("chat-composer:load-uploads", this, "_loadUploads");
+  },
+
+  didReceiveAttrs() {
+    this._super(...arguments);
+    if (this.inProgressUploads?.length > 0) {
+      this._uppyInstance?.cancelAll();
+    }
+
+    this.set(
+      "uploads",
+      this.existingUploads ? cloneJSON(this.existingUploads) : []
+    );
   },
 
   didInsertElement() {
     this._super(...arguments);
-    this.composerInputEl = document.querySelector(".chat-composer-input");
+
     this.composerInputEl?.addEventListener("paste", this._pasteEventListener);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.appEvents.off("chat-composer:load-uploads", this, "_loadUploads");
+
     this.composerInputEl?.removeEventListener(
       "paste",
       this._pasteEventListener
@@ -41,7 +54,7 @@ export default Component.extend(UppyUploadMixin, {
 
   uploadDone(upload) {
     this.uploads.pushObject(upload);
-    this.onUploadChanged(this.uploads);
+    this._triggerUploadsChanged();
   },
 
   @discourseComputed("uploads.length", "inProgressUploads.length")
@@ -54,36 +67,19 @@ export default Component.extend(UppyUploadMixin, {
     this.appEvents.trigger(`upload-mixin:${this.id}:cancel-upload`, {
       fileId: upload.id,
     });
-    this.uploads.removeObject(upload);
-    this.onUploadChanged(this.uploads);
+    this.removeUpload(upload);
   },
 
   @action
   removeUpload(upload) {
     this.uploads.removeObject(upload);
-    this.onUploadChanged(this.uploads);
+    this._triggerUploadsChanged();
   },
 
   _uploadDropTargetOptions() {
-    let targetEl;
-    if (this.chatStateManager.isFullPageActive) {
-      targetEl = document.querySelector(".full-page-chat");
-    } else {
-      targetEl = document.querySelector(".chat-drawer.is-expanded");
-    }
-
-    if (!targetEl) {
-      return this._super();
-    }
-
     return {
-      target: targetEl,
+      target: this.uploadDropZone || document.body,
     };
-  },
-
-  _loadUploads(uploads) {
-    this._uppyInstance?.cancelAll();
-    this.set("uploads", uploads);
   },
 
   _uppyReady() {
@@ -126,5 +122,17 @@ export default Component.extend(UppyUploadMixin, {
     if (event && event.clipboardData && event.clipboardData.files) {
       this._addFiles([...event.clipboardData.files], { pasted: true });
     }
+  },
+
+  onProgressUploadsChanged() {
+    this._triggerUploadsChanged(this.uploads, {
+      inProgressUploadsCount: this.inProgressUploads?.length,
+    });
+  },
+
+  _triggerUploadsChanged() {
+    this.onUploadChanged?.(this.uploads, {
+      inProgressUploadsCount: this.inProgressUploads?.length,
+    });
   },
 });

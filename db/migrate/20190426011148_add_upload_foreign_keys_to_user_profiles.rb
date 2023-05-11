@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'migration/column_dropper'
+require "migration/column_dropper"
 
 class AddUploadForeignKeysToUserProfiles < ActiveRecord::Migration[5.2]
   def up
-    %i{profile_background card_background}.each do |column|
+    %i[profile_background card_background].each do |column|
       Migration::ColumnDropper.mark_readonly(:user_profiles, column)
     end
 

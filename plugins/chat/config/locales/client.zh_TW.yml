@@ -72,14 +72,15 @@ zh_TW:
         direct_message: "您還可以與一個或多個使用者開始個人聊天。"
       email_frequency:
         never: "永不"
+      header_indicator_preference:
+        never: "永不"
       flag: "檢舉"
+      heading: "聊天"
       join: "加入"
+      last_visit: "上次到訪"
       mention_warning:
         dismiss: "忽略"
-        groups:
-          users_limit:
-            other: "%{count} 個使用者"
-      placeholder_start_conversation: 從 %{usernames}開始對話
+      placeholder_start_conversation_users: "從 %{commaSeparatedUsernames}開始對話"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
       reply: "回覆"
@@ -94,13 +95,14 @@ zh_TW:
       restore: "還原已刪除的訊息"
       save: "保存"
       select: "選擇"
-      silence: "使用者靜音"
       scroll_to_bottom: "捲動到底部"
       scroll_to_new_messages: "查看新訊息"
       sound:
         title: "桌面聊天通知聲音"
       sounds:
         none: "無"
+      title: "聊天"
+      title_capitalized: "聊天"
       exit: "上一步"
       channel_status:
         read_only_header: "頻道為唯讀"
@@ -123,6 +125,7 @@ zh_TW:
         associated_topic: 連結的主題
         associated_category: 連結的類別
         title: 標題
+        name: 名字
         description: 簡述
       channel_info:
         back_to_all_channels: "所有頻道"
@@ -131,9 +134,6 @@ zh_TW:
           about: 關於
           members: 成員
           settings: 設定
-      channel_edit_title_modal:
-        title: 編輯標題
-        input_placeholder: 新增標題
       channel_edit_description_modal:
         title: 編輯描述
         input_placeholder: 新增描述
@@ -152,6 +152,7 @@ zh_TW:
       composer:
         italic_text: "斜體字"
         bold_text: "粗體字"
+        send: "發送"
       notification_levels:
         never: "永不"
       settings:
@@ -163,6 +164,8 @@ zh_TW:
         saved: "已儲存"
         unfollow: "離開"
         admin_title: "管理員"
+      admin:
+        title: "聊天"
       incoming_webhooks:
         back: "上一步"
         description: "簡述"
@@ -188,6 +191,10 @@ zh_TW:
         activities: "活動"
         flags: "投訴"
         symbols: "象徵<br>"
+        no_results: "沒有結果"
+      thread:
+        replies:
+          other: "%{count}個回覆"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"
@@ -199,7 +206,6 @@ zh_TW:
           fields:
             message:
               label: 訊息
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "標記由"
+    keyboard_shortcuts_help:
+      chat:
+        title: "聊天"

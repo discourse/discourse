@@ -1,0 +1,8 @@
+{{#each this.messages as |message|}}
+  <ComposerMessage
+    @message={{message}}
+    @closeMessage={{action "closeMessage"}}
+    @shareModal={{action "shareModal"}}
+    @switchPM={{action "switchPM"}}
+  />
+{{/each}}

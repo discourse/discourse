@@ -58,18 +58,21 @@ import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import {
   addComposerSaveErrorCallback,
   addPopupMenuOptionsCallback,
-} from "discourse/controllers/composer";
+} from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
+  addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
+import { addTopicSummaryCallback } from "discourse/widgets/toggle-topic-summary";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
+import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import deprecated from "discourse-common/lib/deprecated";
@@ -103,17 +106,21 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { registerCustomCountable as registerUserCategorySectionLinkCountable } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
+import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
+import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.5.0";
+const PLUGIN_API_VERSION = "1.6.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -180,11 +187,15 @@ class PluginApi {
   _resolveClass(resolverName, opts) {
     opts = opts || {};
 
-    if (this.container.cache[resolverName]) {
+    if (
+      this.container.cache[resolverName] ||
+      (resolverName === "model:user" &&
+        this.container.lookup("service:current-user"))
+    ) {
       // eslint-disable-next-line no-console
       console.warn(
         consolePrefix(),
-        `"${resolverName}" was already cached in the container. Changes won't be applied.`
+        `"${resolverName}" has already been initialized and registered as a singleton. Move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
       );
     }
 
@@ -933,6 +944,22 @@ class PluginApi {
   }
 
   /**
+   * Adds a callback to be called before rendering any small action post
+   * that returns custom classes to add to the small action post
+   *
+   * ```javascript
+   * addPostSmallActionClassesCallback(post => {
+   *   if (post.actionCode.includes("group")) {
+   *     return ["group-small-post"];
+   *   }
+   * });
+   * ```
+   **/
+  addPostSmallActionClassesCallback(callback) {
+    addPostSmallActionClassesCallback(callback);
+  }
+
+  /**
    * Register an additional query param with topic discovery,
    * this allows for filters on the topic list
    *
@@ -960,7 +987,7 @@ class PluginApi {
   }
 
   /**
-   * Adds a glyph to user menu after bookmarks
+   * Adds a glyph to the legacy user menu after bookmarks
    * WARNING: there is limited space there
    *
    * example:
@@ -972,6 +999,7 @@ class PluginApi {
    *    data: { url: `/some/path` },
    * });
    *
+   * To customize the new user menu, see api.registerUserMenuTab
    */
   addUserMenuGlyph(glyph) {
     addUserMenuGlyph(glyph);
@@ -999,6 +1027,28 @@ class PluginApi {
    **/
   addTopicParticipantClassesCallback(callback) {
     addTopicParticipantClassesCallback(callback);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a callback to be topic summary widget markup that can be used, for example,
+   * to add an extra button to the topic summary widget.
+   *
+   * Example:
+   *
+   *  api.addTopicSummaryCallback((html, attrs, widget) => {
+   *    html.push(
+   *      widget.attach("button", {
+   *        className: "btn btn-primary",
+   *        icon: "magic",
+   *        title: "discourse_ai.ai_helper.title",
+   *        label: "discourse_ai.ai_helper.title",
+   *        action: "showAiSummary",
+   *     })
+   *   );
+   **/
+  addTopicSummaryCallback(callback) {
+    addTopicSummaryCallback(callback);
   }
 
   /**
@@ -1541,6 +1591,7 @@ class PluginApi {
    **/
   addQuickAccessProfileItem(item) {
     addQuickAccessProfileItem(item);
+    addUserMenuProfileTabItem(item);
   }
 
   addFeaturedLinkMetaDecorator(decorator) {
@@ -1794,6 +1845,87 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
+   * Registers a new countable for section links under Sidebar Categories section on top of the default countables of
+   * unread topics count and new topics count.
+   *
+   * ```
+   * api.registerUserCategorySectionLinkCountable({
+   *   badgeTextFunction: (count) => {
+   *     return I18n.t("custom.open_count", count: count");
+   *   },
+   *   route: "discovery.openCategory",
+   *   shouldRegister: ({ category } => {
+   *     return category.custom_fields.enable_open_topics_count;
+   *   }),
+   *   refreshCountFunction: ({ _topicTrackingState, category } => {
+   *     return category.open_topics_count;
+   *   }),
+   *   prioritizeDefaults: ({ currentUser, category } => {
+   *     return category.custom_fields.show_open_topics_count_first;
+   *   })
+   * })
+   * ```
+   *
+   * @callback badgeTextFunction
+   * @param {Integer} count - The count as given by the `refreshCountFunction`.
+   * @returns {String} - Text for the badge displayed in the section link.
+   *
+   * @callback shouldRegister
+   * @param {Object} arg
+   * @param {Category} arg.category - The category model for the sidebar section link.
+   * @returns {Boolean} - Whether the countable should be registered for the sidebar section link.
+   *
+   * @callback refreshCountFunction
+   * @param {Object} arg
+   * @param {Category} arg.category - The category model for the sidebar section link.
+   * @returns {integer} - The value used to set the property for the count.
+   *
+   * @callback prioritizeOverDefaults
+   * @param {Object} arg
+   * @param {Category} arg.category - The category model for the sidebar section link.
+   * @param {User} arg.currentUser - The user model for the current user.
+   * @returns {boolean} - Whether the countable should be prioritized over the defaults.
+   *
+   * @param {Object} arg - An object
+   * @param {string} arg.badgeTextFunction - Function used to generate the text for the badge displayed in the section link.
+   * @param {string} arg.route - The Ember route name to generate the href attribute for the link.
+   * @param {Object=} arg.routeQuery - Object representing the query params that should be appended to the route generated.
+   * @param {shouldRegister} arg.shouldRegister - Function used to determine if the countable should be registered for the category.
+   * @param {refreshCountFunction} arg.refreshCountFunction - Function used to calculate the value used to set the property for the count whenever the sidebar section link refreshes.
+   * @param {prioritizeOverDefaults} args.prioritizeOverDefaults - Function used to determine whether the countable should be prioritized over the default countables of unread/new.
+   */
+  registerUserCategorySectionLinkCountable({
+    badgeTextFunction,
+    route,
+    routeQuery,
+    shouldRegister,
+    refreshCountFunction,
+    prioritizeOverDefaults,
+  }) {
+    registerUserCategorySectionLinkCountable({
+      badgeTextFunction,
+      route,
+      routeQuery,
+      shouldRegister,
+      refreshCountFunction,
+      prioritizeOverDefaults,
+    });
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Triggers a refresh of the counts for all category section links under the categories section for a logged in user.
+   */
+  refreshUserSidebarCategoriesSectionCounts() {
+    const appEvents = this._lookupContainer("service:app-events");
+
+    appEvents?.trigger(
+      REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME
+    );
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
    * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
    * class interface. See `lib/sidebar/user/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
    * interface.
@@ -1947,7 +2079,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for
@@ -1956,9 +2087,9 @@ class PluginApi {
    * ```
    * api.registerUserMenuTab((UserMenuTab) => {
    *   return class extends UserMenuTab {
-   *     get id() {
-   *       return "custom-tab-id";
-   *     }
+   *     id = "custom-tab-id";
+   *     panelComponent = MyCustomPanelGlimmerComponent;
+   *     icon = "some-fa5-icon";
    *
    *     get shouldDisplay() {
    *       return this.siteSettings.enable_custom_tab && this.currentUser.admin;
@@ -1966,14 +2097,6 @@ class PluginApi {
    *
    *     get count() {
    *       return this.currentUser.my_custom_notification_count;
-   *     }
-   *
-   *     get panelComponent() {
-   *       return "your-custom-glimmer-component";
-   *     }
-   *
-   *     get icon() {
-   *       return "some-fa5-icon";
    *     }
    *   }
    * });
@@ -2031,6 +2154,29 @@ class PluginApi {
    */
   addUserMessagesNavigationDropdownRow(routeName, name, icon) {
     registerCustomUserNavMessagesDropdownRow(routeName, name, icon);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a new search type which can be selected when visiting the full page search UI.
+   *
+   * @param {string} translationKey
+   * @param {string} searchTypeId
+   * @param {function} searchFunc - Available arguments: fullPage controller, search args, searchKey.
+   */
+  addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
+    registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
+  }
+
+  /**
+   * Registers a hastag type and its corresponding class.
+   * This is used when generating CSS classes in the hashtag-css-generator.
+   *
+   * @param {string} type - The type of the hashtag.
+   * @param {Class} typeClass - The class of the hashtag type.
+   */
+  registerHashtagType(type, typeClass) {
+    registerHashtagType(type, typeClass);
   }
 }
 

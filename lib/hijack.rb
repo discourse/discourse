@@ -1,19 +1,17 @@
 # frozen_string_literal: true
 
-require 'method_profiler'
+require "method_profiler"
 
 # This module allows us to hijack a request and send it to the client in the deferred job queue
 # For cases where we are making remote calls like onebox or proxying files and so on this helps
 # free up a unicorn worker while the remote IO is happening
 module Hijack
-
   def hijack(info: nil, &blk)
     controller_class = self.class
 
-    if hijack = request.env['rack.hijack']
-
-      request.env['discourse.request_tracker.skip'] = true
-      request_tracker = request.env['discourse.request_tracker']
+    if hijack = request.env["rack.hijack"]
+      request.env["discourse.request_tracker.skip"] = true
+      request_tracker = request.env["discourse.request_tracker"]
 
       # in the past unicorn would recycle env, this is not longer the case
       env = request.env
@@ -32,7 +30,6 @@ module Hijack
       original_headers = response.headers.dup
 
       Scheduler::Defer.later("hijack #{params["controller"]} #{params["action"]} #{info}") do
-
         MethodProfiler.start(transfer_timings)
         begin
           Thread.current[Logster::Logger::LOGSTER_ENV] = env
@@ -47,22 +44,22 @@ module Hijack
           instance.response = response
 
           instance.request = request_copy
-          original_headers&.each do |k, v|
-            instance.response.headers[k] = v
-          end
+          original_headers&.each { |k, v| instance.response.headers[k] = v }
 
           view_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
           begin
             instance.instance_eval(&blk)
           rescue => e
             # TODO we need to reuse our exception handling in ApplicationController
-            Discourse.warn_exception(e, message: "Failed to process hijacked response correctly", env: env)
+            Discourse.warn_exception(
+              e,
+              message: "Failed to process hijacked response correctly",
+              env: env,
+            )
           end
           view_runtime = Process.clock_gettime(Process::CLOCK_MONOTONIC) - view_start
 
-          unless instance.response_body || response.committed?
-            instance.status = 500
-          end
+          instance.status = 500 unless instance.response_body || response.committed?
 
           response.commit!
 
@@ -74,13 +71,11 @@ module Hijack
             Discourse::Cors.apply_headers(cors_origins, env, headers)
           end
 
-          headers['Content-Type'] ||= response.content_type || "text/plain"
-          headers['Content-Length'] = body.bytesize
-          headers['Connection'] = "close"
+          headers["Content-Type"] ||= response.content_type || "text/plain"
+          headers["Content-Length"] = body.bytesize
+          headers["Connection"] = "close"
 
-          if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN]
-            headers['Discourse-Logged-Out'] = '1'
-          end
+          headers["Discourse-Logged-Out"] = "1" if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN]
 
           status_string = Rack::Utils::HTTP_STATUS_CODES[response.status.to_i] || "Unknown"
           io.write "#{response.status} #{status_string}\r\n"
@@ -90,9 +85,7 @@ module Hijack
             headers["X-Runtime"] = "#{"%0.6f" % duration}"
           end
 
-          headers.each do |name, val|
-            io.write "#{name}: #{val}\r\n"
-          end
+          headers.each { |name, val| io.write "#{name}: #{val}\r\n" }
 
           io.write "\r\n"
           io.write body
@@ -100,30 +93,35 @@ module Hijack
           # happens if client terminated before we responded, ignore
           io = nil
         ensure
-
           if Rails.configuration.try(:lograge).try(:enabled)
             if timings
               db_runtime = 0
-              if timings[:sql]
-                db_runtime = timings[:sql][:duration]
-              end
+              db_runtime = timings[:sql][:duration] if timings[:sql]
 
               subscriber = Lograge::LogSubscribers::ActionController.new
-              payload = ActiveSupport::HashWithIndifferentAccess.new(
-                controller: self.class.name,
-                action: action_name,
-                params: request.filtered_parameters,
-                headers: request.headers,
-                format: request.format.ref,
-                method: request.request_method,
-                path: request.fullpath,
-                view_runtime: view_runtime * 1000.0,
-                db_runtime: db_runtime * 1000.0,
-                timings: timings,
-                status: response.status
-              )
+              payload =
+                ActiveSupport::HashWithIndifferentAccess.new(
+                  controller: self.class.name,
+                  action: action_name,
+                  params: request.filtered_parameters,
+                  headers: request.headers,
+                  format: request.format.ref,
+                  method: request.request_method,
+                  path: request.fullpath,
+                  view_runtime: view_runtime * 1000.0,
+                  db_runtime: db_runtime * 1000.0,
+                  timings: timings,
+                  status: response.status,
+                )
 
-              event = ActiveSupport::Notifications::Event.new("hijack", Time.now, Time.now + timings[:total_duration], "", payload)
+              event =
+                ActiveSupport::Notifications::Event.new(
+                  "hijack",
+                  Time.now,
+                  Time.now + timings[:total_duration],
+                  "",
+                  payload,
+                )
               subscriber.process_action(event)
             end
           end
@@ -131,10 +129,19 @@ module Hijack
           MethodProfiler.clear
           Thread.current[Logster::Logger::LOGSTER_ENV] = nil
 
-          io.close if io rescue nil
+          begin
+            io.close if io
+          rescue StandardError
+            nil
+          end
 
           if request_tracker
-            status = response.status rescue 500
+            status =
+              begin
+                response.status
+              rescue StandardError
+                500
+              end
             request_tracker.log_request_info(env, [status, headers || {}, []], timings)
           end
 

@@ -12,7 +12,7 @@ import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import { test } from "qunit";
-import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import { toggleCheckDraftPopup } from "discourse/services/composer";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
@@ -25,7 +25,6 @@ acceptance("Composer Actions", function (needs) {
   needs.settings({
     prioritize_username_in_ux: true,
     display_name_on_posts: false,
-    enable_whispers: true,
   });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
@@ -412,10 +411,7 @@ function stubDraftResponse() {
 }
 
 acceptance("Composer Actions With New Topic Draft", function (needs) {
-  needs.user();
-  needs.settings({
-    enable_whispers: true,
-  });
+  needs.user({ whisperer: true });
   needs.site({
     can_tag_topics: true,
   });
@@ -522,11 +518,11 @@ acceptance("Prioritize Full Name", function (needs) {
 
   test("Reply to post use full name", async function (assert) {
     await visit("/t/short-topic-with-two-posts/54079");
-    await click("article#post_2 button.reply");
+    await click("article#post_3 button.reply");
 
     assert.strictEqual(
-      query(".action-title .user-link").innerText.trim(),
-      "james, john, the third"
+      query(".action-title .user-link").innerHTML.trim(),
+      "&lt;h1&gt;Tim Stone&lt;/h1&gt;"
     );
   });
 

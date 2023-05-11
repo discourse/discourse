@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'quote_comparer'
+require "quote_comparer"
 
 RSpec.describe QuoteComparer do
-
   describe "#missing?" do
     fab!(:post) { Fabricate(:post, raw: "This has **text** we _are_ matching") }
 

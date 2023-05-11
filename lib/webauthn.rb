@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-require 'webauthn/challenge_generator'
-require 'webauthn/security_key_base_validation_service'
-require 'webauthn/security_key_registration_service'
-require 'webauthn/security_key_authentication_service'
+require "webauthn/challenge_generator"
+require "webauthn/security_key_base_validation_service"
+require "webauthn/security_key_registration_service"
+require "webauthn/security_key_authentication_service"
 
 module Webauthn
   ACCEPTABLE_REGISTRATION_TYPE = "webauthn.create"
@@ -11,23 +11,37 @@ module Webauthn
   # -7   - ES256
   # -257 - RS256 (Windows Hello supported alg.)
   SUPPORTED_ALGORITHMS = COSE::Algorithm.registered_algorithm_ids.freeze
-  VALID_ATTESTATION_FORMATS = ['none', 'packed', 'fido-u2f'].freeze
+  VALID_ATTESTATION_FORMATS = %w[none packed fido-u2f].freeze
 
-  class SecurityKeyError < StandardError; end
+  class SecurityKeyError < StandardError
+  end
 
-  class InvalidOriginError < SecurityKeyError; end
-  class InvalidRelyingPartyIdError < SecurityKeyError; end
-  class UserVerificationError < SecurityKeyError; end
-  class ChallengeMismatchError < SecurityKeyError; end
-  class InvalidTypeError < SecurityKeyError; end
-  class UnsupportedPublicKeyAlgorithmError < SecurityKeyError; end
-  class UnsupportedAttestationFormatError < SecurityKeyError; end
-  class CredentialIdInUseError < SecurityKeyError; end
-  class MalformedAttestationError < SecurityKeyError; end
-  class NotFoundError < SecurityKeyError; end
-  class OwnershipError < SecurityKeyError; end
-  class PublicKeyError < SecurityKeyError; end
-  class UnknownCOSEAlgorithmError < SecurityKeyError; end
+  class InvalidOriginError < SecurityKeyError
+  end
+  class InvalidRelyingPartyIdError < SecurityKeyError
+  end
+  class UserVerificationError < SecurityKeyError
+  end
+  class ChallengeMismatchError < SecurityKeyError
+  end
+  class InvalidTypeError < SecurityKeyError
+  end
+  class UnsupportedPublicKeyAlgorithmError < SecurityKeyError
+  end
+  class UnsupportedAttestationFormatError < SecurityKeyError
+  end
+  class CredentialIdInUseError < SecurityKeyError
+  end
+  class MalformedAttestationError < SecurityKeyError
+  end
+  class NotFoundError < SecurityKeyError
+  end
+  class OwnershipError < SecurityKeyError
+  end
+  class PublicKeyError < SecurityKeyError
+  end
+  class UnknownCOSEAlgorithmError < SecurityKeyError
+  end
 
   ##
   # Usage:
@@ -45,9 +59,8 @@ module Webauthn
     credential_ids = user.second_factor_security_key_credential_ids
     {
       allowed_credential_ids: credential_ids,
-      challenge: secure_session[
-        Webauthn::ChallengeGenerator::ChallengeSession.session_challenge_key(user)
-      ]
+      challenge:
+        secure_session[Webauthn::ChallengeGenerator::ChallengeSession.session_challenge_key(user)],
     }
   end
 

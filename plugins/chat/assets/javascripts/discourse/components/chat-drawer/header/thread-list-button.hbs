@@ -1,0 +1,9 @@
+<LinkTo
+  @route="chat.channel.threads"
+  @models={{this.chat.activeChannel.routeModels}}
+  title={{i18n "chat.threads.list"}}
+  class="open-thread-list-btn btn btn-flat"
+  {{on "click" this.stopPropagation}}
+>
+  {{d-icon "comments"}}
+</LinkTo>

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AdminUserListSerializer < BasicUserSerializer
-
   attributes :email,
              :secondary_emails,
              :active,
@@ -28,7 +27,7 @@ class AdminUserListSerializer < BasicUserSerializer
              :staged,
              :second_factor_enabled
 
-  [:days_visited, :posts_read_count, :topics_entered, :post_count].each do |sym|
+  %i[days_visited posts_read_count topics_entered post_count].each do |sym|
     attributes sym
     define_method sym do
       object.user_stat.public_send(sym)
@@ -106,13 +105,11 @@ class AdminUserListSerializer < BasicUserSerializer
   end
 
   def include_second_factor_enabled?
-    !SiteSetting.enable_discourse_connect &&
-      SiteSetting.enable_local_logins &&
+    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
       object.has_any_second_factor_methods_enabled?
   end
 
   def second_factor_enabled
     true
   end
-
 end

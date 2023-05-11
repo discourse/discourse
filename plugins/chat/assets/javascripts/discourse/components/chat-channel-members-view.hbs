@@ -1,6 +1,6 @@
 {{#if this.chatProgressBarContainer}}
   {{#in-element this.chatProgressBarContainer}}
-    <DProgressBar @key="members-view" @isLoading={{this.isFetchingMembers}} />
+    <DProgressBar @key="members-view" @isLoading={{this.members.loading}} />
   {{/in-element}}
 {{/if}}
 
@@ -12,7 +12,13 @@
         (if this.isSearchFocused " is-focused")
       }}
     >
-      <Input class={{this.inputSelector}} placeholder={{i18n "chat.members_view.filter_placeholder"}} {{on "input" (action "onFilterMembers" value="target.value")}} {{on "focusin" (action (mut this.isSearchFocused) true)}} {{on "focusout" (action (mut this.isSearchFocused) false)}} />
+      <Input
+        class={{this.inputSelector}}
+        placeholder={{i18n "chat.members_view.filter_placeholder"}}
+        {{on "input" (action "onFilterMembers" value="target.value")}}
+        {{on "focusin" (action (mut this.isSearchFocused) true)}}
+        {{on "focusout" (action (mut this.isSearchFocused) false)}}
+      />
       {{d-icon "search"}}
     </div>
 
@@ -22,16 +28,10 @@
     >
 
       <div role="list" class="channel-members-view__list">
-        {{#each this.members as |member|}}
-          <a
-            class="channel-members-view__list-item"
-            href={{member.user.userPath}}
-            data-user-card={{member.user.username}}
-            tabindex="0"
-          >
-            <ChatUserAvatar @user={{member.user}} @avatarSize="medium" />
-            <ChatUserDisplayName @user={{member.user}} />
-          </a>
+        {{#each this.members as |membership|}}
+          <div class="channel-members-view__list-item">
+            <ChatUserInfo @user={{membership.user}} />
+          </div>
         {{else}}
           {{#unless this.isFetchingMembers}}
             {{i18n "chat.channel.no_memberships_found"}}

@@ -6,7 +6,18 @@ RSpec.describe UserSerializer do
   context "with a TL0 user seen as anonymous" do
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
-    let(:untrusted_attributes) { %i{bio_raw bio_cooked bio_excerpt location website website_name profile_background card_background} }
+    let(:untrusted_attributes) do
+      %i[
+        bio_raw
+        bio_cooked
+        bio_excerpt
+        location
+        website
+        website_name
+        profile_background
+        card_background
+      ]
+    end
 
     it "doesn't serialize untrusted attributes" do
       untrusted_attributes.each { |attr| expect(json).not_to have_key(attr) }
@@ -20,11 +31,8 @@ RSpec.describe UserSerializer do
 
   context "as moderator" do
     it "serializes correctly" do
-      json = UserSerializer.new(
-        user,
-        scope: Guardian.new(Fabricate(:moderator)),
-        root: false
-      ).as_json
+      json =
+        UserSerializer.new(user, scope: Guardian.new(Fabricate(:moderator)), root: false).as_json
 
       expect(json[:group_users]).to eq(nil)
       expect(json[:second_factor_enabled]).to eq(nil)
@@ -70,14 +78,46 @@ RSpec.describe UserSerializer do
         category2 = Fabricate(:category)
         category3 = Fabricate(:category)
         category4 = Fabricate(:category)
-        CategoryUser.create(category: category1, user: user, notification_level: CategoryUser.notification_levels[:muted])
-        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:muted])
-        CategoryUser.create(category: category2, user: user, notification_level: CategoryUser.notification_levels[:tracking])
-        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:tracking])
-        CategoryUser.create(category: category3, user: user, notification_level: CategoryUser.notification_levels[:watching])
-        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:watching])
-        CategoryUser.create(category: category4, user: user, notification_level: CategoryUser.notification_levels[:regular])
-        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:regular])
+        CategoryUser.create(
+          category: category1,
+          user: user,
+          notification_level: CategoryUser.notification_levels[:muted],
+        )
+        CategoryUser.create(
+          category: Fabricate(:category),
+          user: admin_user,
+          notification_level: CategoryUser.notification_levels[:muted],
+        )
+        CategoryUser.create(
+          category: category2,
+          user: user,
+          notification_level: CategoryUser.notification_levels[:tracking],
+        )
+        CategoryUser.create(
+          category: Fabricate(:category),
+          user: admin_user,
+          notification_level: CategoryUser.notification_levels[:tracking],
+        )
+        CategoryUser.create(
+          category: category3,
+          user: user,
+          notification_level: CategoryUser.notification_levels[:watching],
+        )
+        CategoryUser.create(
+          category: Fabricate(:category),
+          user: admin_user,
+          notification_level: CategoryUser.notification_levels[:watching],
+        )
+        CategoryUser.create(
+          category: category4,
+          user: user,
+          notification_level: CategoryUser.notification_levels[:regular],
+        )
+        CategoryUser.create(
+          category: Fabricate(:category),
+          user: admin_user,
+          notification_level: CategoryUser.notification_levels[:regular],
+        )
 
         expect(json[:muted_category_ids]).to eq([category1.id])
         expect(json[:tracked_category_ids]).to eq([category2.id])
@@ -90,14 +130,46 @@ RSpec.describe UserSerializer do
         tag2 = Fabricate(:tag)
         tag3 = Fabricate(:tag)
         tag4 = Fabricate(:tag)
-        TagUser.create(tag: tag1, user: user, notification_level: TagUser.notification_levels[:muted])
-        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:muted])
-        TagUser.create(tag: tag2, user: user, notification_level: TagUser.notification_levels[:tracking])
-        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:tracking])
-        TagUser.create(tag: tag3, user: user, notification_level: TagUser.notification_levels[:watching])
-        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:watching])
-        TagUser.create(tag: tag4, user: user, notification_level: TagUser.notification_levels[:watching_first_post])
-        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:watching_first_post])
+        TagUser.create(
+          tag: tag1,
+          user: user,
+          notification_level: TagUser.notification_levels[:muted],
+        )
+        TagUser.create(
+          tag: Fabricate(:tag),
+          user: admin_user,
+          notification_level: TagUser.notification_levels[:muted],
+        )
+        TagUser.create(
+          tag: tag2,
+          user: user,
+          notification_level: TagUser.notification_levels[:tracking],
+        )
+        TagUser.create(
+          tag: Fabricate(:tag),
+          user: admin_user,
+          notification_level: TagUser.notification_levels[:tracking],
+        )
+        TagUser.create(
+          tag: tag3,
+          user: user,
+          notification_level: TagUser.notification_levels[:watching],
+        )
+        TagUser.create(
+          tag: Fabricate(:tag),
+          user: admin_user,
+          notification_level: TagUser.notification_levels[:watching],
+        )
+        TagUser.create(
+          tag: tag4,
+          user: user,
+          notification_level: TagUser.notification_levels[:watching_first_post],
+        )
+        TagUser.create(
+          tag: Fabricate(:tag),
+          user: admin_user,
+          notification_level: TagUser.notification_levels[:watching_first_post],
+        )
 
         expect(json[:muted_tags]).to eq([tag1.name])
         expect(json[:tracked_tags]).to eq([tag2.name])
@@ -107,9 +179,7 @@ RSpec.describe UserSerializer do
     end
 
     context "with `enable_names` true" do
-      before do
-        SiteSetting.enable_names = true
-      end
+      before { SiteSetting.enable_names = true }
 
       it "has a name" do
         expect(json[:name]).to be_present
@@ -117,9 +187,7 @@ RSpec.describe UserSerializer do
     end
 
     context "with `enable_names` false" do
-      before do
-        SiteSetting.enable_names = false
-      end
+      before { SiteSetting.enable_names = false }
 
       it "has a name" do
         expect(json[:name]).to be_blank
@@ -140,68 +208,58 @@ RSpec.describe UserSerializer do
 
     context "with filled out website" do
       context "when website has a path" do
-        before do
-          user.user_profile.website = 'http://example.com/user'
-        end
+        before { user.user_profile.website = "http://example.com/user" }
 
         it "has a website with a path" do
-          expect(json[:website]).to eq 'http://example.com/user'
+          expect(json[:website]).to eq "http://example.com/user"
         end
 
         it "returns complete website name with path" do
-          expect(json[:website_name]).to eq 'example.com/user'
+          expect(json[:website_name]).to eq "example.com/user"
         end
       end
 
       context "when website has a subdomain" do
-        before do
-          user.user_profile.website = 'http://subdomain.example.com/user'
-        end
+        before { user.user_profile.website = "http://subdomain.example.com/user" }
 
         it "has a website with a subdomain" do
-          expect(json[:website]).to eq 'http://subdomain.example.com/user'
+          expect(json[:website]).to eq "http://subdomain.example.com/user"
         end
 
         it "returns website name with the subdomain" do
-          expect(json[:website_name]).to eq 'subdomain.example.com/user'
+          expect(json[:website_name]).to eq "subdomain.example.com/user"
         end
       end
 
       context "when website has www" do
-        before do
-          user.user_profile.website = 'http://www.example.com/user'
-        end
+        before { user.user_profile.website = "http://www.example.com/user" }
 
         it "has a website with the www" do
-          expect(json[:website]).to eq 'http://www.example.com/user'
+          expect(json[:website]).to eq "http://www.example.com/user"
         end
 
         it "returns website name without the www" do
-          expect(json[:website_name]).to eq 'example.com/user'
+          expect(json[:website_name]).to eq "example.com/user"
         end
       end
 
       context "when website includes query parameters" do
-        before do
-          user.user_profile.website = 'http://example.com/user?ref=payme'
-        end
+        before { user.user_profile.website = "http://example.com/user?ref=payme" }
 
         it "has a website with query params" do
-          expect(json[:website]).to eq 'http://example.com/user?ref=payme'
+          expect(json[:website]).to eq "http://example.com/user?ref=payme"
         end
 
         it "has a website name without query params" do
-          expect(json[:website_name]).to eq 'example.com/user'
+          expect(json[:website_name]).to eq "example.com/user"
         end
       end
 
       context "when website is not a valid url" do
-        before do
-          user.user_profile.website = 'invalid-url'
-        end
+        before { user.user_profile.website = "invalid-url" }
 
         it "has a website with the invalid url" do
-          expect(json[:website]).to eq 'invalid-url'
+          expect(json[:website]).to eq "invalid-url"
         end
 
         it "has a nil website name" do
@@ -212,16 +270,16 @@ RSpec.describe UserSerializer do
 
     context "with filled out bio" do
       before do
-        user.user_profile.bio_raw = 'my raw bio'
-        user.user_profile.bio_cooked = 'my cooked bio'
+        user.user_profile.bio_raw = "my raw bio"
+        user.user_profile.bio_cooked = "my cooked bio"
       end
 
       it "has a bio" do
-        expect(json[:bio_raw]).to eq 'my raw bio'
+        expect(json[:bio_raw]).to eq "my raw bio"
       end
 
       it "has a cooked bio" do
-        expect(json[:bio_cooked]).to eq 'my cooked bio'
+        expect(json[:bio_cooked]).to eq "my cooked bio"
       end
     end
 
@@ -232,9 +290,7 @@ RSpec.describe UserSerializer do
       end
 
       context "when totp enabled" do
-        before do
-          User.any_instance.stubs(:totp_enabled?).returns(true)
-        end
+        before { User.any_instance.stubs(:totp_enabled?).returns(true) }
 
         it "is true" do
           expect(json[:second_factor_enabled]).to eq(true)
@@ -242,9 +298,7 @@ RSpec.describe UserSerializer do
       end
 
       context "when security_keys enabled" do
-        before do
-          User.any_instance.stubs(:security_keys_enabled?).returns(true)
-        end
+        before { User.any_instance.stubs(:security_keys_enabled?).returns(true) }
 
         it "is true" do
           expect(json[:second_factor_enabled]).to eq(true)
@@ -256,35 +310,34 @@ RSpec.describe UserSerializer do
       fab!(:viewing_user) { Fabricate(:user) }
       let(:scope) { Guardian.new(viewing_user) }
 
-      it 'returns false values for muted and ignored' do
+      it "returns false values for muted and ignored" do
         expect(json[:ignored]).to eq(false)
         expect(json[:muted]).to eq(false)
       end
 
-      context 'when ignored' do
+      context "when ignored" do
         before do
           Fabricate(:ignored_user, user: viewing_user, ignored_user: user)
           viewing_user.reload
         end
 
-        it 'returns true for ignored' do
+        it "returns true for ignored" do
           expect(json[:ignored]).to eq(true)
           expect(json[:muted]).to eq(false)
         end
       end
 
-      context 'when muted' do
+      context "when muted" do
         before do
           Fabricate(:muted_user, user: viewing_user, muted_user: user)
           viewing_user.reload
         end
 
-        it 'returns true for muted' do
+        it "returns true for muted" do
           expect(json[:muted]).to eq(true)
           expect(json[:ignored]).to eq(false)
         end
       end
-
     end
   end
 
@@ -293,8 +346,8 @@ RSpec.describe UserSerializer do
     let(:json) { UserSerializer.new(user, scope: Guardian.new, root: false).as_json }
 
     before do
-      user.custom_fields['secret_field'] = 'Only for me to know'
-      user.custom_fields['public_field'] = 'Everyone look here'
+      user.custom_fields["secret_field"] = "Only for me to know"
+      user.custom_fields["public_field"] = "Everyone look here"
       user.save
     end
 
@@ -304,9 +357,9 @@ RSpec.describe UserSerializer do
     end
 
     it "serializes the fields listed in public_user_custom_fields site setting" do
-      SiteSetting.public_user_custom_fields = 'public_field'
-      expect(json[:custom_fields]['public_field']).to eq(user.custom_fields['public_field'])
-      expect(json[:custom_fields]['secret_field']).to eq(nil)
+      SiteSetting.public_user_custom_fields = "public_field"
+      expect(json[:custom_fields]["public_field"]).to eq(user.custom_fields["public_field"])
+      expect(json[:custom_fields]["secret_field"]).to eq(nil)
     end
 
     context "with user custom field" do
@@ -315,13 +368,11 @@ RSpec.describe UserSerializer do
         plugin.allow_public_user_custom_field :public_field
       end
 
-      after do
-        DiscoursePluginRegistry.reset!
-      end
+      after { DiscoursePluginRegistry.reset! }
 
       it "serializes the fields listed in public_user_custom_fields" do
-        expect(json[:custom_fields]['public_field']).to eq(user.custom_fields['public_field'])
-        expect(json[:custom_fields]['secret_field']).to eq(nil)
+        expect(json[:custom_fields]["public_field"]).to eq(user.custom_fields["public_field"])
+        expect(json[:custom_fields]["secret_field"]).to eq(nil)
       end
     end
   end
@@ -335,20 +386,25 @@ RSpec.describe UserSerializer do
         Fabricate(:user_field),
         Fabricate(:user_field, show_on_profile: true),
         Fabricate(:user_field, show_on_user_card: true),
-        Fabricate(:user_field, show_on_user_card: true, show_on_profile: true)
+        Fabricate(:user_field, show_on_user_card: true, show_on_profile: true),
       ]
     end
 
-    let(:other_user_json) { UserSerializer.new(user, scope: Guardian.new(Fabricate(:user)), root: false).as_json }
+    let(:other_user_json) do
+      UserSerializer.new(user, scope: Guardian.new(Fabricate(:user)), root: false).as_json
+    end
     let(:self_json) { UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json }
-    let(:admin_json) { UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json }
+    let(:admin_json) do
+      UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+    end
 
     it "includes the correct fields for each audience" do
       expect(admin_json[:user_fields].keys).to contain_exactly(*fields.map { |f| f.id.to_s })
-      expect(other_user_json[:user_fields].keys).to contain_exactly(*fields[2..5].map { |f| f.id.to_s })
+      expect(other_user_json[:user_fields].keys).to contain_exactly(
+        *fields[2..5].map { |f| f.id.to_s },
+      )
       expect(self_json[:user_fields].keys).to contain_exactly(*fields.map { |f| f.id.to_s })
     end
-
   end
 
   context "with user_api_keys" do
@@ -357,10 +413,22 @@ RSpec.describe UserSerializer do
     it "sorts keys by last used time" do
       freeze_time
 
-      user_api_key_0 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 2.days.ago, revoked_at: Time.zone.now)
+      user_api_key_0 =
+        Fabricate(
+          :readonly_user_api_key,
+          user: user,
+          last_used_at: 2.days.ago,
+          revoked_at: Time.zone.now,
+        )
       user_api_key_1 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 7.days.ago)
       user_api_key_2 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 1.days.ago)
-      user_api_key_3 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 4.days.ago, revoked_at: Time.zone.now)
+      user_api_key_3 =
+        Fabricate(
+          :readonly_user_api_key,
+          user: user,
+          last_used_at: 4.days.ago,
+          revoked_at: Time.zone.now,
+        )
       user_api_key_4 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 3.days.ago)
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
@@ -372,53 +440,17 @@ RSpec.describe UserSerializer do
     end
   end
 
-  describe '#sidebar_tags' do
-    fab!(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user) }
-    fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user) }
+  context "for user sidebar attributes" do
+    include_examples "User Sidebar Serializer Attributes", described_class
 
-    context 'when viewing self' do
-      subject(:json) { UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json }
+    it "does not include attributes when scoped to user that cannot edit user" do
+      user2 = Fabricate(:user)
+      serializer = described_class.new(user, scope: Guardian.new(user2), root: false)
 
-      it "is not included when navigation menu is set to legacy" do
-        SiteSetting.navigation_menu = "legacy"
-        SiteSetting.tagging_enabled = true
-
-        expect(json[:sidebar_tags]).to eq(nil)
-      end
-
-      it "is not included when SiteSetting.tagging_enabled is false" do
-        SiteSetting.navigation_menu = "sidebar"
-        SiteSetting.tagging_enabled = false
-
-        expect(json[:sidebar_tags]).to eq(nil)
-      end
-
-      it "is present when sidebar and tagging has been enabled" do
-        SiteSetting.navigation_menu = "sidebar"
-        SiteSetting.tagging_enabled = true
-
-        tag_sidebar_section_link_2.linkable.update!(pm_topic_count: 5, topic_count: 0)
-
-        expect(json[:sidebar_tags]).to contain_exactly(
-          { name: tag_sidebar_section_link.linkable.name, pm_only: false },
-          { name: tag_sidebar_section_link_2.linkable.name, pm_only: true }
-        )
-      end
-    end
-
-    context 'when viewing another user' do
-      fab!(:user2) { Fabricate(:user) }
-
-      subject(:json) { UserSerializer.new(user, scope: Guardian.new(user2), root: false).as_json }
-
-      it "is not present even when sidebar and tagging has been enabled" do
-        SiteSetting.navigation_menu = "sidebar"
-        SiteSetting.tagging_enabled = true
-
-        expect(json[:sidebar_tags]).to eq(nil)
-      end
+      expect(serializer.as_json[:sidebar_category_ids]).to eq(nil)
+      expect(serializer.as_json[:sidebar_tags]).to eq(nil)
+      expect(serializer.as_json[:sidebar_list_destination]).to eq(nil)
+      expect(serializer.as_json[:display_sidebar_tags]).to eq(nil)
     end
   end
-
-  include_examples "#display_sidebar_tags", UserSerializer
 end

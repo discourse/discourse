@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 RSpec.describe ThemeModifierHelper do
-  fab!(:theme) { Fabricate(:theme).tap { |t| t.theme_modifier_set.update!(serialize_topic_excerpts: true) } }
+  fab!(:theme) do
+    Fabricate(:theme).tap { |t| t.theme_modifier_set.update!(serialize_topic_excerpts: true) }
+  end
 
   it "defines a getter for modifiers" do
     tmh = ThemeModifierHelper.new(theme_ids: [theme.id])

@@ -1,27 +1,71 @@
-<div class="chat-message-actions-container" data-id={{this.message.id}}>
-  <div class="chat-message-actions">
-    {{#if this.chatStateManager.isFullPageActive}}
-      {{#each this.emojiReactions as |reaction|}}
-        <ChatMessageReaction @reaction={{reaction}} @react={{this.messageActions.react}} @class="show" />
-      {{/each}}
-    {{/if}}
+{{#if (and this.site.desktopView this.chat.activeMessage.model.id)}}
+  <div
+    {{did-insert this.setup}}
+    {{did-update this.setup this.chat.activeMessage.model.id}}
+    {{will-destroy this.teardown}}
+    class={{concat-class
+      "chat-message-actions-container"
+      (concat "is-size-" this.size)
+    }}
+    data-id={{this.message.id}}
+  >
+    <div class="chat-message-actions">
+      {{#if this.shouldRenderFavoriteReactions}}
+        {{#each
+          this.messageInteractor.emojiReactions
+          key="emoji"
+          as |reaction|
+        }}
+          <ChatMessageReaction
+            @reaction={{reaction}}
+            @onReaction={{this.messageInteractor.react}}
+            @message={{this.message}}
+            @showCount={{false}}
+          />
+        {{/each}}
+      {{/if}}
 
-    {{#if this.messageCapabilities.canReact}}
-      <DButton @class="btn-flat react-btn" @action={{this.messageActions.startReactionForMessageActions}} @icon="discourse-emojis" @title="chat.react" />
-    {{/if}}
+      {{#if this.messageInteractor.canInteractWithMessage}}
+        <DButton
+          @class="btn-flat react-btn"
+          @action={{this.messageInteractor.openEmojiPicker}}
+          @icon="discourse-emojis"
+          @title="chat.react"
+          @forwardEvent={{true}}
+        />
+      {{/if}}
 
-    {{#if this.messageCapabilities.canBookmark}}
-      <DButton @class="btn-flat bookmark-btn" @action={{this.messageActions.toggleBookmark}}>
-        <BookmarkIcon @bookmark={{this.message.bookmark}} />
-      </DButton>
-    {{/if}}
+      {{#if this.messageInteractor.canBookmark}}
+        <DButton
+          @class="btn-flat bookmark-btn"
+          @action={{this.messageInteractor.toggleBookmark}}
+        >
+          <BookmarkIcon @bookmark={{this.message.bookmark}} />
+        </DButton>
+      {{/if}}
 
-    {{#if this.messageCapabilities.canReply}}
-      <DButton @class="btn-flat reply-btn" @action={{this.messageActions.reply}} @icon="reply" @title="chat.reply" />
-    {{/if}}
+      {{#if this.messageInteractor.canReply}}
+        <DButton
+          @class="btn-flat reply-btn"
+          @action={{this.messageInteractor.reply}}
+          @icon="reply"
+          @title="chat.reply"
+        />
+      {{/if}}
 
-    {{#if this.secondaryButtons.length}}
-      <DropdownSelectBox @class="more-buttons" @options={{hash icon="ellipsis-v" placement="left"}} @content={{this.secondaryButtons}} @onChange={{action "handleSecondaryButtons"}} />
-    {{/if}}
+      {{#if
+        (and
+          this.messageInteractor.message
+          this.messageInteractor.secondaryButtons.length
+        )
+      }}
+        <DropdownSelectBox
+          @class="more-buttons"
+          @options={{hash icon="ellipsis-v" placement="left"}}
+          @content={{this.messageInteractor.secondaryButtons}}
+          @onChange={{action this.messageInteractor.handleSecondaryButtons}}
+        />
+      {{/if}}
+    </div>
   </div>
-</div>
+{{/if}}

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-module ThemeStore; end
+module ThemeStore
+end
 
 class ThemeStore::GitImporter
   COMMAND_TIMEOUT_SECONDS = 20
@@ -21,7 +22,8 @@ class ThemeStore::GitImporter
       begin
         execute "git", "cat-file", "-e", version
       rescue RuntimeError => e
-        tracking_ref = execute "git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"
+        tracking_ref =
+          execute "git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"
         remote_name = tracking_ref.split("/", 2)[0]
         execute "git", "fetch", remote_name, "#{version}:#{version}"
       end
@@ -29,7 +31,9 @@ class ThemeStore::GitImporter
       begin
         execute "git", "reset", "--hard", version
       rescue RuntimeError
-        raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git_ref_not_found", ref: version))
+        raise RemoteTheme::ImportError.new(
+                I18n.t("themes.import_error.git_ref_not_found", ref: version),
+              )
       end
     end
   end
@@ -38,7 +42,12 @@ class ThemeStore::GitImporter
     commit_hash, commits_behind = nil
 
     commit_hash = execute("git", "rev-parse", "HEAD").strip
-    commits_behind = execute("git", "rev-list", "#{hash}..HEAD", "--count").strip rescue -1
+    commits_behind =
+      begin
+        execute("git", "rev-list", "#{hash}..HEAD", "--count").strip
+      rescue StandardError
+        -1
+      end
 
     [commit_hash, commits_behind]
   end
@@ -79,20 +88,20 @@ class ThemeStore::GitImporter
 
   def redirected_uri
     first_clone_uri = @uri.dup
-    first_clone_uri.path.gsub!(/\/\z/, "")
+    first_clone_uri.path.gsub!(%r{/\z}, "")
     first_clone_uri.path += "/info/refs"
     first_clone_uri.query = "service=git-upload-pack"
 
     redirected_uri = FinalDestination.resolve(first_clone_uri.to_s, http_verb: :get)
 
     if redirected_uri&.path.ends_with?("/info/refs")
-      redirected_uri.path.gsub!(/\/info\/refs\z/, "")
+      redirected_uri.path.gsub!(%r{/info/refs\z}, "")
       redirected_uri.query = nil
       redirected_uri
     else
       @uri
     end
-  rescue
+  rescue StandardError
     @uri
   end
 
@@ -120,15 +129,11 @@ class ThemeStore::GitImporter
   def clone_args(url, config = {})
     args = ["git"]
 
-    config.each do |key, value|
-      args.concat(['-c', "#{key}=#{value}"])
-    end
+    config.each { |key, value| args.concat(["-c", "#{key}=#{value}"]) }
 
     args << "clone"
 
-    if @branch.present?
-      args.concat(['--single-branch', "-b", @branch])
-    end
+    args.concat(["--single-branch", "-b", @branch]) if @branch.present?
 
     args.concat([url, @temp_folder])
 
@@ -138,20 +143,19 @@ class ThemeStore::GitImporter
   def clone_http!
     uri = redirected_uri
 
-    unless ["http", "https"].include?(@uri.scheme)
-      raise_import_error!
-    end
+    raise_import_error! unless %w[http https].include?(@uri.scheme)
 
     addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(uri.host)
 
     unless addresses.empty?
       env = { "GIT_TERMINAL_PROMPT" => "0" }
 
-      args = clone_args(
-        uri.to_s,
-        "http.followRedirects" => "false",
-        "http.curloptResolve" => "#{uri.host}:#{uri.port}:#{addresses.join(',')}",
-      )
+      args =
+        clone_args(
+          uri.to_s,
+          "http.followRedirects" => "false",
+          "http.curloptResolve" => "#{uri.host}:#{uri.port}:#{addresses.join(",")}",
+        )
 
       begin
         Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
@@ -161,13 +165,14 @@ class ThemeStore::GitImporter
   end
 
   def clone_ssh!
-    unless @private_key.present?
-      raise_import_error!
-    end
+    raise_import_error! unless @private_key.present?
 
     with_ssh_private_key do |ssh_folder|
       # Use only the specified SSH key
-      env = { 'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o IdentitiesOnly=yes -o IdentityFile=#{ssh_folder}/id_rsa -o StrictHostKeyChecking=no" }
+      env = {
+        "GIT_SSH_COMMAND" =>
+          "ssh -i #{ssh_folder}/id_rsa -o IdentitiesOnly=yes -o IdentityFile=#{ssh_folder}/id_rsa -o StrictHostKeyChecking=no",
+      }
       args = clone_args(@url)
 
       begin

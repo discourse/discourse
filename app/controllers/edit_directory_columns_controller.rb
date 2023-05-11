@@ -18,14 +18,20 @@ class EditDirectoryColumnsController < ApplicationController
     directory_column_params = params.permit(directory_columns: {})
     directory_columns = DirectoryColumn.all
 
-    has_enabled_column = directory_column_params[:directory_columns].values.any? do |column_data|
-      column_data[:enabled].to_s == "true"
+    has_enabled_column =
+      directory_column_params[:directory_columns].values.any? do |column_data|
+        column_data[:enabled].to_s == "true"
+      end
+    unless has_enabled_column
+      raise Discourse::InvalidParameters, "Must have at least one column enabled"
     end
-    raise Discourse::InvalidParameters, "Must have at least one column enabled" unless has_enabled_column
 
     directory_column_params[:directory_columns].values.each do |column_data|
       existing_column = directory_columns.detect { |c| c.id == column_data[:id].to_i }
-      if (existing_column.enabled != column_data[:enabled] || existing_column.position != column_data[:position].to_i)
+      if (
+           existing_column.enabled != column_data[:enabled] ||
+             existing_column.position != column_data[:position].to_i
+         )
         existing_column.update(enabled: column_data[:enabled], position: column_data[:position])
       end
     end
@@ -37,22 +43,25 @@ class EditDirectoryColumnsController < ApplicationController
 
   def ensure_user_fields_have_columns
     user_fields_without_column =
-      UserField.left_outer_joins(:directory_column)
+      UserField
+        .left_outer_joins(:directory_column)
         .where(directory_column: { user_field_id: nil })
         .where("show_on_profile=? OR show_on_user_card=?", true, true)
 
-    return unless user_fields_without_column.count > 0
+    return if user_fields_without_column.count <= 0
 
     next_position = DirectoryColumn.maximum("position") + 1
 
     new_directory_column_attrs = []
     user_fields_without_column.each do |user_field|
-      new_directory_column_attrs.push({
-        user_field_id: user_field.id,
-        enabled: false,
-        type: DirectoryColumn.types[:user_field],
-        position: next_position
-      })
+      new_directory_column_attrs.push(
+        {
+          user_field_id: user_field.id,
+          enabled: false,
+          type: DirectoryColumn.types[:user_field],
+          position: next_position,
+        },
+      )
 
       next_position += 1
     end

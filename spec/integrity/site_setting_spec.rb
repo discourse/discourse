@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe "site setting integrity checks" do
-  let(:site_setting_file) { File.join(Rails.root, 'config', 'site_settings.yml') }
+  let(:site_setting_file) { File.join(Rails.root, "config", "site_settings.yml") }
   let(:yaml) { YAML.load_file(site_setting_file) }
 
-  %w(hidden client).each do |property|
+  %w[hidden client].each do |property|
     it "set #{property} value as true or not set" do
       yaml.each_value do |category|
         category.each_value do |setting|
@@ -24,16 +24,16 @@ RSpec.describe "site setting integrity checks" do
     yaml.each_value do |category|
       category.each do |setting_name, setting|
         next unless setting.is_a?(Hash)
-        if setting['locale_default']
-          setting['locale_default'].each_pair do |k, v|
+        if setting["locale_default"]
+          setting["locale_default"].each_pair do |k, v|
             expect(LocaleSiteSetting.valid_value?(k.to_s)).to be_truthy,
-              "'#{k}' is not a valid locale_default key for '#{setting_name}' site setting"
+            "'#{k}' is not a valid locale_default key for '#{setting_name}' site setting"
 
-            case setting['default']
+            case setting["default"]
             when TrueClass, FalseClass
               expect(v.class == TrueClass || v.class == FalseClass).to be_truthy
             else
-              expect(v).to be_a_kind_of(setting['default'].class)
+              expect(v).to be_a_kind_of(setting["default"].class)
             end
           end
         end

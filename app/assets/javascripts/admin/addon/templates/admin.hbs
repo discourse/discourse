@@ -5,7 +5,10 @@
         <ul class="nav nav-pills">
           <NavItem @route="admin.dashboard" @label="admin.dashboard.title" />
           {{#if this.currentUser.admin}}
-            <NavItem @route="adminSiteSettings" @label="admin.site_settings.title" />
+            <NavItem
+              @route="adminSiteSettings"
+              @label="admin.site_settings.title"
+            />
           {{/if}}
           <NavItem @route="adminUsers" @label="admin.users.title" />
           {{#if this.showGroups}}
@@ -24,8 +27,8 @@
             {{#if this.siteSettings.enable_backups}}
               <NavItem @route="admin.backups" @label="admin.backups.title" />
             {{/if}}
+            <NavItem @route="adminPlugins" @label="admin.plugins.title" />
           {{/if}}
-          <NavItem @route="adminPlugins" @label="admin.plugins.title" />
           <PluginOutlet @name="admin-menu" />
         </ul>
       </div>

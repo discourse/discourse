@@ -15,6 +15,7 @@ permissions:
 
 jobs:
   build:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: run
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim

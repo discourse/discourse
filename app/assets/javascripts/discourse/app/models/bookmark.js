@@ -166,6 +166,15 @@ Bookmark.reopenClass({
     return this._super(args);
   },
 
+  createFor(user, bookmarkableType, bookmarkableId) {
+    return Bookmark.create({
+      bookmarkable_type: bookmarkableType,
+      bookmarkable_id: bookmarkableId,
+      user_id: user.id,
+      auto_delete_preference: user.user_option.bookmark_auto_delete_preference,
+    });
+  },
+
   async applyTransformations(bookmarks) {
     await applyModelTransformations("bookmark", bookmarks);
   },

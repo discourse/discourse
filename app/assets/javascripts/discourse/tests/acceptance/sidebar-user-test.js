@@ -52,23 +52,19 @@ acceptance(
       );
     });
 
-    test("'enable_sidebar' query param override to enable sidebar", async function (assert) {
-      await visit("/?enable_sidebar=1");
+    test("'more' dropdown should display as regular list items in header dropdown mode", async function (assert) {
+      await visit("/");
+      await click(".hamburger-dropdown");
 
-      assert.ok(exists(".sidebar-container"), "sidebar is displayed");
-
-      await click(".btn-sidebar-toggle");
-
-      assert.notOk(
-        exists(".sidebar-hamburger-dropdown"),
-        "does not display the sidebar dropdown"
+      assert.ok(
+        exists("[data-link-name='admin']"),
+        "the admin link is not within the 'more' dropdown"
       );
 
-      assert.notOk(exists(".sidebar-container"), "sidebar is hidden");
-
-      await click(".btn-sidebar-toggle");
-
-      assert.ok(exists(".sidebar-container"), "sidebar is displayed");
+      assert.notOk(
+        exists(".sidebar-more-section-links-details-summary"),
+        "the 'more' dropdown should not be present in header dropdown mode"
+      );
     });
   }
 );
@@ -76,7 +72,7 @@ acceptance(
 acceptance(
   "Sidebar - Experimental sidebar and hamburger setting enabled - Sidebar enabled",
   function (needs) {
-    needs.user();
+    needs.user({});
 
     needs.settings({
       navigation_menu: "sidebar",
@@ -132,28 +128,8 @@ acceptance(
       assert.ok(exists(".sidebar-container"), "displays the sidebar");
     });
 
-    test("'enable_sidebar' query param override to disable sidebar", async function (assert) {
-      await visit("/?enable_sidebar=0");
-
-      assert.notOk(exists(".sidebar-container"), "sidebar is not displayed");
-
-      await click(".hamburger-dropdown");
-
-      assert.ok(
-        exists(".sidebar-hamburger-dropdown"),
-        "displays the sidebar dropdown"
-      );
-
-      await click(".hamburger-dropdown");
-
-      assert.notOk(
-        exists(".sidebar-hamburger-dropdown"),
-        "hides the sidebar dropdown"
-      );
-    });
-
     test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {
-      const capabilities = this.container.lookup("capabilities:main");
+      const capabilities = this.container.lookup("service:capabilities");
       capabilities.touch = true;
 
       await visit("/");
@@ -200,7 +176,7 @@ acceptance(
 
       assert.ok(
         exists(
-          ".sidebar-section-community .sidebar-section-header[aria-expanded='true'][aria-controls='sidebar-section-content-community']"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-header[aria-expanded='true'][aria-controls='sidebar-section-content-community']"
         ),
         "accessibility attributes are set correctly on sidebar section header when section is expanded"
       );
@@ -209,7 +185,7 @@ acceptance(
 
       assert.ok(
         exists(
-          ".sidebar-section-community .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-community']"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-community']"
         ),
         "accessibility attributes are set correctly on sidebar section header when section is collapsed"
       );

@@ -5,7 +5,6 @@ class UpdatePrivateMessageOnPostSearchData < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
   def update_private_message_flag
-
     sql = <<~SQL
       UPDATE post_search_data
       SET private_message = X.private_message

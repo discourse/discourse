@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableUser < Reviewable
-
   def self.create_for(user)
-    create(
-      created_by_id: Discourse.system_user.id,
-      target: user
-    )
+    create(created_by_id: Discourse.system_user.id, target: user)
   end
 
   def build_actions(actions, guardian, args)
@@ -14,7 +10,7 @@ class ReviewableUser < Reviewable
 
     if guardian.can_approve?(target)
       actions.add(:approve_user) do |a|
-        a.icon = 'user-plus'
+        a.icon = "user-plus"
         a.label = "reviewables.actions.approve_user.title"
       end
     end
@@ -29,11 +25,7 @@ class ReviewableUser < Reviewable
     DiscourseEvent.trigger(:user_approved, target)
 
     if args[:send_email] != false && SiteSetting.must_approve_users?
-      Jobs.enqueue(
-        :critical_user_email,
-        type: "signup_after_approval",
-        user_id: target.id
-      )
+      Jobs.enqueue(:critical_user_email, type: "signup_after_approval", user_id: target.id)
     end
     StaffActionLogger.new(performed_by).log_user_approve(target)
 
@@ -52,11 +44,9 @@ class ReviewableUser < Reviewable
 
         if args[:send_email] && SiteSetting.must_approve_users?
           # Execute job instead of enqueue because user has to exists to send email
-          Jobs::CriticalUserEmail.new.execute({
-            type: :signup_after_reject,
-            user_id: target.id,
-            reject_reason: self.reject_reason
-          })
+          Jobs::CriticalUserEmail.new.execute(
+            { type: :signup_after_reject, user_id: target.id, reject_reason: self.reject_reason },
+          )
         end
 
         delete_args = {}
@@ -95,7 +85,7 @@ class ReviewableUser < Reviewable
   end
 
   def is_a_suspect_user?
-    reviewable_scores.any? { |rs| rs.reason == 'suspect_user' }
+    reviewable_scores.any? { |rs| rs.reason == "suspect_user" }
   end
 end
 

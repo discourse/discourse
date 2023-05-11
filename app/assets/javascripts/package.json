@@ -1,19 +1,31 @@
 {
   "private": true,
+  "scripts": {
+    "postinstall": "patch-package"
+  },
   "workspaces": [
     "admin",
     "bootstrap-json",
     "dialog-holder",
     "discourse",
     "discourse-common",
-    "discourse-ensure-deprecation-order",
     "discourse-hbr",
     "discourse-plugins",
     "discourse-widget-hbs",
     "ember-cli-progress-ci",
+    "ember-production-deprecations",
     "pretty-text",
     "select-kit",
     "truth-helpers",
     "wizard"
-  ]
+  ],
+  "resolutions": {
+    "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1",
+    "**/babel-plugin-ember-template-compilation": "2.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "patch-package": "^7.0.0",
+    "postinstall-postinstall": "^2.1.0"
+  }
 }

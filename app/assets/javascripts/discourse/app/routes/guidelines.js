@@ -1,3 +1,6 @@
-import staticRouteBuilder from "discourse/lib/static-route-builder";
+import FaqRoute from "./faq";
 
-export default staticRouteBuilder("guidelines");
+// Guidelines is a faq alias
+export default class GuidelinesRoute extends FaqRoute {
+  pageId = "guidelines";
+}

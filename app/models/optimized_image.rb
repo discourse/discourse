@@ -6,7 +6,7 @@ class OptimizedImage < ActiveRecord::Base
 
   # BUMP UP if optimized image algorithm changes
   VERSION = 2
-  URL_REGEX ||= /(\/optimized\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
+  URL_REGEX ||= %r{(/optimized/\dX[/\.\w]*/([a-zA-Z0-9]+)[\.\w]*)}
 
   def self.lock(upload_id, width, height)
     @hostname ||= Discourse.os_hostname
@@ -15,26 +15,20 @@ class OptimizedImage < ActiveRecord::Base
     #
     # we can not afford this blocking in Sidekiq cause it can lead to starvation
     if Sidekiq.server?
-      DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") do
-        yield
-      end
+      DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") { yield }
     else
       DistributedMutex.synchronize("optimized_image_host_#{@hostname}") do
-        DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") do
-          yield
-        end
+        DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") { yield }
       end
     end
   end
 
   def self.create_for(upload, width, height, opts = {})
-    return unless width > 0 && height > 0
+    return if width <= 0 || height <= 0
     return if upload.try(:sha1).blank?
 
     # no extension so try to guess it
-    if (!upload.extension)
-      upload.fix_image_extension
-    end
+    upload.fix_image_extension if (!upload.extension)
 
     if !upload.extension.match?(IM_DECODERS) && upload.extension != "svg"
       if !opts[:raise_on_error]
@@ -61,8 +55,8 @@ class OptimizedImage < ActiveRecord::Base
 
     if original_path.blank?
       # download is protected with a DistributedMutex
-      external_copy = Discourse.store.download(upload) rescue nil
-      original_path = external_copy.try(:path)
+      external_copy = Discourse.store.download_safe(upload)
+      original_path = external_copy&.path
     end
 
     lock(upload.id, width, height) do
@@ -78,15 +72,15 @@ class OptimizedImage < ActiveRecord::Base
         # create a temp file with the same extension as the original
         extension = ".#{opts[:format] || upload.extension}"
 
-        if extension.length == 1
-          return nil
-        end
+        return nil if extension.length == 1
 
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
         temp_path = temp_file.path
 
-        target_quality = upload.target_image_quality(original_path, SiteSetting.image_preview_jpg_quality)
+        target_quality =
+          upload.target_image_quality(original_path, SiteSetting.image_preview_jpg_quality)
         opts = opts.merge(quality: target_quality) if target_quality
+        opts = opts.merge(upload_id: upload.id)
 
         if upload.extension == "svg"
           FileUtils.cp(original_path, temp_path)
@@ -98,25 +92,29 @@ class OptimizedImage < ActiveRecord::Base
         end
 
         if resized
-          thumbnail = OptimizedImage.create!(
-            upload_id: upload.id,
-            sha1: Upload.generate_digest(temp_path),
-            extension: extension,
-            width: width,
-            height: height,
-            url: "",
-            filesize: File.size(temp_path),
-            version: VERSION
-          )
+          thumbnail =
+            OptimizedImage.create!(
+              upload_id: upload.id,
+              sha1: Upload.generate_digest(temp_path),
+              extension: extension,
+              width: width,
+              height: height,
+              url: "",
+              filesize: File.size(temp_path),
+              version: VERSION,
+            )
 
           # store the optimized image and update its url
           File.open(temp_path) do |file|
-            url = Discourse.store.store_optimized_image(file, thumbnail, nil, secure: upload.secure?)
+            url =
+              Discourse.store.store_optimized_image(file, thumbnail, nil, secure: upload.secure?)
             if url.present?
               thumbnail.url = url
               thumbnail.save
             else
-              Rails.logger.error("Failed to store optimized image of size #{width}x#{height} from url: #{upload.url}\nTemp image path: #{temp_path}")
+              Rails.logger.error(
+                "Failed to store optimized image of size #{width}x#{height} from url: #{upload.url}\nTemp image path: #{temp_path}",
+              )
             end
           end
         end
@@ -126,9 +124,7 @@ class OptimizedImage < ActiveRecord::Base
       end
 
       # make sure we remove the cached copy from external stores
-      if Discourse.store.external?
-        external_copy&.close
-      end
+      external_copy&.close if Discourse.store.external?
 
       thumbnail
     end
@@ -142,7 +138,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def local?
-    !(url =~ /^(https?:)?\/\//)
+    !(url =~ %r{\A(https?:)?//})
   end
 
   def calculate_filesize
@@ -162,9 +158,7 @@ class OptimizedImage < ActiveRecord::Base
       size = calculate_filesize
 
       write_attribute(:filesize, size)
-      if !new_record?
-        update_columns(filesize: size)
-      end
+      update_columns(filesize: size) if !new_record?
       size
     end
   end
@@ -173,14 +167,12 @@ class OptimizedImage < ActiveRecord::Base
     # this matches instructions which call #to_s
     path = path.to_s
     return false if path != File.expand_path(path)
-    return false if path !~ /\A[\w\-\.\/]+\z/m
+    return false if path !~ %r{\A[\w\-\./]+\z}m
     true
   end
 
   def self.ensure_safe_paths!(*paths)
-    paths.each do |path|
-      raise Discourse::InvalidAccess unless safe_path?(path)
-    end
+    paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
   end
 
   IM_DECODERS ||= /\A(jpe?g|png|ico|gif|webp)\z/i
@@ -215,29 +207,35 @@ class OptimizedImage < ActiveRecord::Base
     from = prepend_decoder!(from, to, opts)
     to = prepend_decoder!(to, to, opts)
 
-    instructions = ['convert', "#{from}[0]"]
+    instructions = ["convert", "#{from}[0]"]
 
-    if opts[:colors]
-      instructions << "-colors" << opts[:colors].to_s
-    end
+    instructions << "-colors" << opts[:colors].to_s if opts[:colors]
 
-    if opts[:quality]
-      instructions << "-quality" << opts[:quality].to_s
-    end
+    instructions << "-quality" << opts[:quality].to_s if opts[:quality]
 
     # NOTE: ORDER is important!
-    instructions.concat(%W{
-      -auto-orient
-      -gravity center
-      -background transparent
-      -#{thumbnail_or_resize} #{dimensions}^
-      -extent #{dimensions}
-      -interpolate catrom
-      -unsharp 2x0.5+0.7+0
-      -interlace none
-      -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
-      #{to}
-    })
+    instructions.concat(
+      %W[
+        -auto-orient
+        -gravity
+        center
+        -background
+        transparent
+        -#{thumbnail_or_resize}
+        #{dimensions}^
+        -extent
+        #{dimensions}
+        -interpolate
+        catrom
+        -unsharp
+        2x0.5+0.7+0
+        -interlace
+        none
+        -profile
+        #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
+        #{to}
+      ],
+    )
   end
 
   def self.crop_instructions(from, to, dimensions, opts = {})
@@ -250,18 +248,23 @@ class OptimizedImage < ActiveRecord::Base
       convert
       #{from}[0]
       -auto-orient
-      -gravity north
-      -background transparent
-      -#{thumbnail_or_resize} #{dimensions}^
-      -crop #{dimensions}+0+0
-      -unsharp 2x0.5+0.7+0
-      -interlace none
-      -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
+      -gravity
+      north
+      -background
+      transparent
+      -#{thumbnail_or_resize}
+      #{dimensions}^
+      -crop
+      #{dimensions}+0+0
+      -unsharp
+      2x0.5+0.7+0
+      -interlace
+      none
+      -profile
+      #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
     }
 
-    if opts[:quality]
-      instructions << "-quality" << opts[:quality].to_s
-    end
+    instructions << "-quality" << opts[:quality].to_s if opts[:quality]
 
     instructions << to
   end
@@ -276,11 +279,16 @@ class OptimizedImage < ActiveRecord::Base
       convert
       #{from}[0]
       -auto-orient
-      -gravity center
-      -background transparent
-      -interlace none
-      -resize #{dimensions}
-      -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
+      -gravity
+      center
+      -background
+      transparent
+      -interlace
+      none
+      -resize
+      #{dimensions}
+      -profile
+      #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
       #{to}
     }
   end
@@ -308,7 +316,13 @@ class OptimizedImage < ActiveRecord::Base
   MAX_CONVERT_SECONDS = 20
 
   def self.convert_with(instructions, to, opts = {})
-    Discourse::Utils.execute_command("nice", "-n", "10", *instructions, timeout: MAX_CONVERT_SECONDS)
+    Discourse::Utils.execute_command(
+      "nice",
+      "-n",
+      "10",
+      *instructions,
+      timeout: MAX_CONVERT_SECONDS,
+    )
 
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
     FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
@@ -319,13 +333,19 @@ class OptimizedImage < ActiveRecord::Base
     else
       error = +"Failed to optimize image:"
 
-      if e.message =~ /^convert:([^`]+)/
+      if e.message =~ /\Aconvert:([^`]+)/
         error << $1
       else
         error << " unknown reason"
       end
 
-      Discourse.warn(error, location: to, error_message: e.message, instructions: instructions)
+      Discourse.warn(
+        error,
+        upload_id: opts[:upload_id],
+        location: to,
+        error_message: e.message,
+        instructions: instructions,
+      )
       false
     end
   end

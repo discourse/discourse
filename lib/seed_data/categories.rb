@@ -28,16 +28,14 @@ module SeedData
 
     def reseed_options
       I18n.with_locale(@locale) do
-        categories.map do |params|
-          category = find_category(params[:site_setting_name])
-          next unless category
+        categories
+          .map do |params|
+            category = find_category(params[:site_setting_name])
+            next unless category
 
-          {
-            id: params[:site_setting_name],
-            name: category.name,
-            selected: unchanged?(category)
-          }
-        end.compact
+            { id: params[:site_setting_name], name: category.name, selected: unchanged?(category) }
+          end
+          .compact
       end
     end
 
@@ -46,50 +44,58 @@ module SeedData
     def categories(site_setting_names = nil)
       categories = [
         {
-          site_setting_name: 'uncategorized_category_id',
-          name: I18n.t('uncategorized_category_name'),
+          site_setting_name: "uncategorized_category_id",
+          name: I18n.t("uncategorized_category_name"),
           description: nil,
           position: 0,
-          color: '0088CC',
-          text_color: 'FFFFFF',
-          permissions: { everyone: :full },
+          color: "0088CC",
+          text_color: "FFFFFF",
+          permissions: {
+            everyone: :full,
+          },
           force_permissions: true,
-          force_existence: true
+          force_existence: true,
         },
         {
-          site_setting_name: 'meta_category_id',
-          name: I18n.t('meta_category_name'),
-          description: I18n.t('meta_category_description'),
+          site_setting_name: "meta_category_id",
+          name: I18n.t("meta_category_name"),
+          description: I18n.t("meta_category_description"),
           position: 1,
-          color: '808281',
-          text_color: 'FFFFFF',
-          permissions: { everyone: :full },
-          force_permissions: true,
-          sidebar: true
-        },
-        {
-          site_setting_name: 'staff_category_id',
-          name: I18n.t('staff_category_name'),
-          description: I18n.t('staff_category_description'),
-          position: 2,
-          color: 'E45735',
-          text_color: 'FFFFFF',
-          permissions: { staff: :full },
-          force_permissions: true,
-          sidebar: true
-        },
-        {
-          site_setting_name: 'general_category_id',
-          name: I18n.t('general_category_name'),
-          description: I18n.t('general_category_description'),
-          position: 3,
-          color: '25AAE2',
-          text_color: 'FFFFFF',
-          permissions: { everyone: :full },
+          color: "808281",
+          text_color: "FFFFFF",
+          permissions: {
+            everyone: :full,
+          },
           force_permissions: true,
           sidebar: true,
-          default_composer_category: true
-        }
+        },
+        {
+          site_setting_name: "staff_category_id",
+          name: I18n.t("staff_category_name"),
+          description: I18n.t("staff_category_description"),
+          position: 2,
+          color: "E45735",
+          text_color: "FFFFFF",
+          permissions: {
+            staff: :full,
+          },
+          force_permissions: true,
+          sidebar: true,
+        },
+        {
+          site_setting_name: "general_category_id",
+          name: I18n.t("general_category_name"),
+          description: I18n.t("general_category_description"),
+          position: 3,
+          color: "25AAE2",
+          text_color: "FFFFFF",
+          permissions: {
+            everyone: :full,
+          },
+          force_permissions: false,
+          sidebar: true,
+          default_composer_category: true,
+        },
       ]
 
       if site_setting_names
@@ -99,19 +105,31 @@ module SeedData
       categories
     end
 
-    def create_category(site_setting_name:, name:, description:, position:, color:, text_color:,
-                        permissions:, force_permissions:, force_existence: false, sidebar: false, default_composer_category: false)
+    def create_category(
+      site_setting_name:,
+      name:,
+      description:,
+      position:,
+      color:,
+      text_color:,
+      permissions:,
+      force_permissions:,
+      force_existence: false,
+      sidebar: false,
+      default_composer_category: false
+    )
       category_id = SiteSetting.get(site_setting_name)
 
       if should_create_category?(category_id, force_existence)
-        category = Category.new(
-          name: unused_category_name(category_id, name),
-          description: description,
-          user_id: Discourse::SYSTEM_USER_ID,
-          position: position,
-          color: color,
-          text_color: text_color
-        )
+        category =
+          Category.new(
+            name: unused_category_name(category_id, name),
+            description: description,
+            user_id: Discourse::SYSTEM_USER_ID,
+            position: position,
+            color: color,
+            text_color: text_color,
+          )
 
         category.skip_category_definition = true if description.blank?
         category.set_permissions(permissions)
@@ -120,14 +138,12 @@ module SeedData
         SiteSetting.set(site_setting_name, category.id)
 
         if sidebar
-          sidebar_categories = SiteSetting.default_sidebar_categories.split('|')
+          sidebar_categories = SiteSetting.default_sidebar_categories.split("|")
           sidebar_categories << category.id
-          SiteSetting.set('default_sidebar_categories', sidebar_categories.join('|'))
+          SiteSetting.set("default_sidebar_categories", sidebar_categories.join("|"))
         end
 
-        if default_composer_category
-          SiteSetting.set('default_composer_category', category.id)
-        end
+        SiteSetting.set("default_composer_category", category.id) if default_composer_category
       elsif category = Category.find_by(id: category_id)
         if description.present? && (category.topic_id.blank? || !Topic.exists?(category.topic_id))
           category.description = description
@@ -152,11 +168,12 @@ module SeedData
     end
 
     def unused_category_name(category_id, name)
-      category_exists = Category.where(
-        'id <> :id AND LOWER(name) = :name',
-        id: category_id,
-        name: name.downcase
-      ).exists?
+      category_exists =
+        Category.where(
+          "id <> :id AND LOWER(name) = :name",
+          id: category_id,
+          name: name.downcase,
+        ).exists?
 
       category_exists ? "#{name}#{SecureRandom.hex}" : name
     end
@@ -167,7 +184,7 @@ module SeedData
 
       name = unused_category_name(category.id, name)
       category.name = name
-      category.slug = Slug.for(name, '')
+      category.slug = Slug.for(name, "")
       category.save!
 
       if description.present? && description_post = category&.topic&.first_post

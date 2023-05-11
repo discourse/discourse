@@ -39,7 +39,6 @@ RSpec.describe CachedCounting do
       end
 
       it "can dispatch counts to backing class" do
-
         CachedCounting.queue("a,a", TestCachedCounting)
         CachedCounting.queue("a,a", TestCachedCounting)
         CachedCounting.queue("b", TestCachedCounting)
@@ -48,7 +47,6 @@ RSpec.describe CachedCounting do
         CachedCounting.flush_to_db
 
         expect(TestCachedCounting.data).to eq({ "a,a" => 2, "b" => 1 })
-
       end
     end
   end
@@ -76,35 +74,25 @@ RSpec.describe CachedCounting do
       CachedCounting.enable
     end
 
-    after do
-      CachedCounting.disable
-    end
+    after { CachedCounting.disable }
 
     it "can dispatch data via background thread" do
-
       freeze_time
       d1 = Time.now.utc.to_date
 
-      RailsCacheCounter.perform_increment!("a,a")
-      RailsCacheCounter.perform_increment!("b")
-      20.times do
-        RailsCacheCounter.perform_increment!("a,a")
-      end
+      RailsCacheCounter.perform_increment!("a,a", async: true)
+      RailsCacheCounter.perform_increment!("b", async: true)
+      20.times { RailsCacheCounter.perform_increment!("a,a", async: true) }
 
       freeze_time 2.days.from_now
       d2 = Time.now.utc.to_date
 
-      RailsCacheCounter.perform_increment!("a,a")
-      RailsCacheCounter.perform_increment!("d")
+      RailsCacheCounter.perform_increment!("a,a", async: true)
+      RailsCacheCounter.perform_increment!("d", async: true)
 
       CachedCounting.flush
 
-      expected = {
-        ["a,a", d1] => 21,
-        ["b", d1] => 1,
-        ["a,a", d2] => 1,
-        ["d", d2] => 1,
-      }
+      expected = { ["a,a", d1] => 21, ["b", d1] => 1, ["a,a", d2] => 1, ["d", d2] => 1 }
 
       expect(RailsCacheCounter.cache_data).to eq(expected)
     end

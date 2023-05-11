@@ -1,5 +1,7 @@
 const handlers = [];
 const disabledDeprecations = new Set();
+const emberCliDeprecationWorkflows =
+  window.deprecationWorkflow?.config?.workflow;
 
 /**
  * Display a deprecation warning with the provided message. The warning will be prefixed with the theme/plugin name
@@ -47,7 +49,13 @@ export default function deprecated(msg, options = {}) {
     throw msg;
   }
 
-  console.warn(...[consolePrefix, msg].filter(Boolean)); //eslint-disable-line no-console
+  const matchedWorkflow = emberCliDeprecationWorkflows?.find(
+    (w) => w.matchId === id
+  );
+
+  if (matchedWorkflow?.handler !== "silence") {
+    console.warn(...[consolePrefix, msg].filter(Boolean)); //eslint-disable-line no-console
+  }
 }
 
 /**

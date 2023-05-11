@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'migration/base_dropper'
+require "migration/base_dropper"
 
 module Migration
-  class Migration::TableDropper
+  class TableDropper
     def self.read_only_table(table_name)
       BaseDropper.create_readonly_function(table_name)
 

@@ -276,6 +276,11 @@ export default Component.extend(TextareaTextManipulation, {
     this._itsatrap.bind("tab", () => this.indentSelection("right"));
     this._itsatrap.bind("shift+tab", () => this.indentSelection("left"));
 
+    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const mod = mac ? "meta" : "ctrl";
+
+    this._itsatrap.bind(`${mod}+shift+.`, () => this.send("insertCurrentTime"));
+
     // disable clicking on links in the preview
     this.element
       .querySelector(".d-editor-preview")
@@ -525,7 +530,11 @@ export default Component.extend(TextareaTextManipulation, {
 
           if (term === "") {
             if (this.emojiStore.favorites.length) {
-              return resolve(this.emojiStore.favorites.slice(0, 5));
+              return resolve(
+                this.emojiStore.favorites
+                  .filter((f) => !this.site.denied_emojis?.includes(f))
+                  .slice(0, 5)
+              );
             } else {
               return resolve([
                 "slight_smile",
@@ -550,12 +559,13 @@ export default Component.extend(TextareaTextManipulation, {
             return resolve([allTranslations[full]]);
           }
 
+          const emojiDenied = this.get("site.denied_emojis") || [];
           const match = term.match(/^:?(.*?):t([2-6])?$/);
           if (match) {
             const name = match[1];
             const scale = match[2];
 
-            if (isSkinTonableEmoji(name)) {
+            if (isSkinTonableEmoji(name) && !emojiDenied.includes(name)) {
               if (scale) {
                 return resolve([`${name}:t${scale}`]);
               } else {
@@ -567,6 +577,7 @@ export default Component.extend(TextareaTextManipulation, {
           const options = emojiSearch(term, {
             maxResults: 5,
             diversity: this.emojiStore.diversity,
+            exclude: emojiDenied,
           });
 
           return resolve(options);
@@ -761,6 +772,15 @@ export default Component.extend(TextareaTextManipulation, {
           );
         }
       }
+    },
+
+    insertCurrentTime() {
+      const sel = this.getSelected("", { lineVal: true });
+      const timezone = this.currentUser.user_option.timezone;
+      const time = moment().format("HH:mm:ss");
+      const date = moment().format("YYYY-MM-DD");
+
+      this.addText(sel, `[date=${date} time=${time} timezone="${timezone}"]`);
     },
 
     focusIn() {

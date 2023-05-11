@@ -5,6 +5,8 @@
 // Media queries
 // --------------------------------------------------
 
+@use "sass:math";
+
 $breakpoints: (
   mobile-small: 320px,
   mobile-medium: 350px,
@@ -124,7 +126,7 @@ $hpad: 0.65em;
 
 // Stuff we repeat
 @mixin post-aside {
-  border-left: 5px solid var(--primary-low);
+  border-left: 5px solid var(--primary-300);
   background-color: var(--blend-primary-secondary-5);
 }
 
@@ -162,7 +164,7 @@ $hpad: 0.65em;
   $encoded: "";
   $slice: 2000;
   $index: 0;
-  $loops: ceil(str-length($svg) / $slice);
+  $loops: ceil(math.div(str-length($svg), $slice));
 
   @for $i from 1 through $loops {
     $chunk: str-slice($svg, $index, $index + $slice - 1);

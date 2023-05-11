@@ -1,0 +1,30 @@
+<ChatDrawer::Header @toggleExpand={{@drawerActions.toggleExpand}}>
+  {{#if (and this.chatStateManager.isDrawerExpanded this.chat.activeChannel)}}
+    <div class="chat-drawer-header__left-actions">
+      <div class="chat-drawer-header__top-line">
+        <ChatDrawer::Header::BackLink
+          @route={{this.backLink.route}}
+          @title={{i18n this.backLink.title}}
+          @routeModels={{this.backLink.models}}
+        />
+      </div>
+    </div>
+  {{/if}}
+
+  <ChatDrawer::Header::Title @title="chat.thread.label" />
+
+  <ChatDrawer::Header::RightActions @drawerActions={{@drawerActions}} />
+</ChatDrawer::Header>
+
+{{#if this.chatStateManager.isDrawerExpanded}}
+  <div
+    class="chat-drawer-content"
+    {{did-insert this.fetchChannelAndThread}}
+    {{did-update this.fetchChannelAndThread @params.channelId}}
+    {{did-update this.fetchChannelAndThread @params.threadId}}
+  >
+    {{#if this.chat.activeChannel.activeThread}}
+      <ChatThread @thread={{this.chat.activeChannel.activeThread}} />
+    {{/if}}
+  </div>
+{{/if}}

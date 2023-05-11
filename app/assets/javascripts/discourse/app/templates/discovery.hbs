@@ -1,14 +1,22 @@
 <div class="container">
   <DiscourseBanner @user={{this.currentUser}} @banner={{this.site.banner}} />
   {{#unless this.viewingCategoriesList}}
-    <CategoryReadOnlyBanner @category={{this.category}} @readOnly={{this.navigationCategory.cannotCreateTopicOnCategory}} />
+    <CategoryReadOnlyBanner
+      @category={{this.category}}
+      @readOnly={{this.navigationCategory.cannotCreateTopicOnCategory}}
+    />
   {{/unless}}
 </div>
 
-<PluginOutlet @name="discovery-list-controls-above" @tagName="span" @connectorTagName="div" />
+<span>
+  <PluginOutlet @name="discovery-list-controls-above" @connectorTagName="div" />
+</span>
 
 <div class="list-controls">
-  <PluginOutlet @name="discovery-navigation-bar-above" @connectorTagName="div" />
+  <PluginOutlet
+    @name="discovery-navigation-bar-above"
+    @connectorTagName="div"
+  />
   <div class="container">
     {{outlet "navigation-bar"}}
   </div>
@@ -16,18 +24,23 @@
 
 <ConditionalLoadingSpinner @condition={{this.loading}} />
 
-<PluginOutlet @name="discovery-above" @tagName="span" @connectorTagName="div" />
+<span>
+  <PluginOutlet @name="discovery-above" @connectorTagName="div" />
+</span>
 
 {{#if this.showEditWelcomeTopicBanner}}
   <WelcomeTopicBanner />
 {{/if}}
 
-<div class="container list-container {{if this.loading "hidden"}}">
+<div class="container list-container {{if this.loading 'hidden'}}">
   <div class="row">
     <div class="full-width">
       <div id="header-list-area">
         {{outlet "header-list-container"}}
-        <PluginOutlet @name="header-list-container-bottom" @args={{hash category=this.category}} />
+        <PluginOutlet
+          @name="header-list-container-bottom"
+          @outletArgs={{hash category=this.category}}
+        />
       </div>
     </div>
   </div>
@@ -35,11 +48,17 @@
     <div class="full-width">
       <PluginOutlet @name="before-list-area" />
       <div id="list-area">
-        <PluginOutlet @name="discovery-list-container-top" @tagName="" @connectorTagName="span" @args={{hash category=this.category listLoading=this.loading}} />
+        <PluginOutlet
+          @name="discovery-list-container-top"
+          @connectorTagName="span"
+          @outletArgs={{hash category=this.category listLoading=this.loading}}
+        />
         {{outlet "list-container"}}
       </div>
     </div>
   </div>
 </div>
 
-<PluginOutlet @name="discovery-below" @tagName="span" @connectorTagName="div" />
+<span>
+  <PluginOutlet @name="discovery-below" @connectorTagName="div" />
+</span>

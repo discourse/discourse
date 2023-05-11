@@ -11,7 +11,7 @@ let _renderers = [];
 let warnMissingIcons = true;
 let _iconList;
 
-const REPLACEMENTS = {
+export const REPLACEMENTS = {
   "d-tracking": "bell",
   "d-muted": "discourse-bell-slash",
   "d-regular": "far-bell",

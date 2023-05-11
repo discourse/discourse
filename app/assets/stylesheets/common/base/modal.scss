@@ -221,7 +221,7 @@
             display: block;
             &:hover,
             &:focus {
-              background-color: var(--highlight-medium);
+              background-color: var(--highlight-bg);
             }
             .search-category {
               display: flex;
@@ -279,6 +279,12 @@
 }
 
 .reply-where-modal {
+  .dialog-content {
+    width: 100%;
+    min-width: unset;
+    max-width: 30em;
+  }
+
   .dialog-footer {
     display: block;
   }
@@ -291,19 +297,69 @@
     overflow: hidden;
     width: 100%;
 
-    &:first-of-type {
-      margin-top: 0.25em;
+    &.dialog-close {
+      display: none;
     }
 
-    &.btn-reply-on-original,
+    &.btn-reply-on-original {
+      --text-color: var(--secondary);
+    }
+
+    &.btn-reply-where__cancel {
+      padding-left: 0;
+      margin: 0;
+    }
+
     &.btn-reply-here {
-      font-size: var(--font-up-1);
-      line-height: var(--line-height-medium);
-      font-weight: bold;
+      --text-color: var(--primary);
+      .discourse-no-touch & {
+        &:hover {
+          --text-color: var(--secondary);
+        }
+      }
+    }
+
+    &.btn-reply-where {
+      min-height: 3em; // for situations when there are no categories/tags
     }
 
     .topic-title {
-      font-weight: normal;
+      .d-icon {
+        color: var(--text-color);
+        margin: 0;
+      }
+    }
+
+    .fancy-title {
+      display: inline-block;
+      width: 100%;
+
+      @include ellipsis;
+    }
+
+    .topic-title__top-line {
+      display: flex;
+      align-items: baseline;
+      color: var(--text-color);
+      font-size: var(--font-up-1);
+    }
+
+    .topic-statuses {
+      display: flex;
+      font-size: 0.95em;
+    }
+
+    .topic-title__bottom-line {
+      margin-top: 0.15em;
+      display: flex;
+      align-items: baseline;
+      .discourse-tags {
+        font-size: var(--font-down-1);
+      }
+      .category-name,
+      .discourse-tag {
+        color: var(--text-color);
+      }
     }
   }
 }
@@ -636,36 +692,21 @@
 }
 
 .topic-bulk-actions-modal {
+  .modal-inner-container {
+    min-width: 0;
+    width: 100%;
+  }
   p {
     margin-top: 0;
   }
-  &.full .modal-body {
-    height: 400px;
-    max-height: 400px;
-  }
-
   .bulk-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    margin-right: -1%;
-
-    .btn {
-      flex: 1 0 30%;
-      margin-bottom: 1em;
-      margin-right: 1%;
-      white-space: nowrap;
-      overflow: hidden;
-      max-width: 33%;
-
-      @media screen and (max-width: 767px) {
-        flex: 1 0 48%;
-        max-width: 48%;
-      }
-
-      @include breakpoint(mobile-extra-large) {
-        flex: 1 1 auto;
-        min-width: 49%;
-      }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12em, 1fr));
+    gap: 0.5em;
+    max-width: 100%;
+    min-width: 0;
+    .d-button-label {
+      @include ellipsis;
     }
   }
 }
@@ -718,4 +759,15 @@
   button {
     top: 21px;
   }
+}
+
+.json-editor-btn-delete {
+  @extend .btn-danger;
+  @extend .no-text;
+}
+
+.json-editor-btn-collapse {
+  @extend .no-text;
+  @extend .btn-flat;
+  @extend .btn-small;
 }

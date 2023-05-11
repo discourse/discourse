@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'seed_data/topics'
+require "seed_data/topics"
 
 RSpec.describe SeedData::Topics do
   subject { SeedData::Topics.with_default_locale }
@@ -16,13 +16,13 @@ RSpec.describe SeedData::Topics do
 
   describe "#create" do
     it "creates a missing topic" do
-      expect { create_topic }
-        .to change { Topic.count }.by(1)
-        .and change { Post.count }.by(1)
+      expect { create_topic }.to change { Topic.count }.by(1).and change { Post.count }.by(1)
 
       topic = Topic.last
       expect(topic.title).to eq(I18n.t("discourse_welcome_topic.title"))
-      expect(topic.first_post.raw).to eq(I18n.t('discourse_welcome_topic.body', base_path: Discourse.base_path).rstrip)
+      expect(topic.first_post.raw).to eq(
+        I18n.t("discourse_welcome_topic.body", base_path: Discourse.base_path).rstrip,
+      )
       expect(topic.category_id).to eq(SiteSetting.general_category_id)
       expect(topic.user_id).to eq(Discourse::SYSTEM_USER_ID)
       expect(topic.pinned_globally).to eq(true)
@@ -35,9 +35,9 @@ RSpec.describe SeedData::Topics do
       staff_category = Fabricate(:category, name: "Staff")
       SiteSetting.staff_category_id = staff_category.id
 
-      expect { create_topic("privacy_topic_id") }
-        .to change { Topic.count }.by(1)
-        .and change { Post.count }.by(2)
+      expect { create_topic("privacy_topic_id") }.to change { Topic.count }.by(1).and change {
+              Post.count
+            }.by(2)
 
       topic = Topic.last
       expect(topic.category_id).to eq(SiteSetting.staff_category_id)
@@ -82,7 +82,9 @@ RSpec.describe SeedData::Topics do
       topic.reload
 
       expect(topic.title).to eq(I18n.t("discourse_welcome_topic.title"))
-      expect(topic.first_post.raw).to eq(I18n.t('discourse_welcome_topic.body', base_path: Discourse.base_path).rstrip)
+      expect(topic.first_post.raw).to eq(
+        I18n.t("discourse_welcome_topic.body", base_path: Discourse.base_path).rstrip,
+      )
     end
 
     it "updates an existing first reply when `static_first_reply` is true" do
@@ -94,7 +96,9 @@ RSpec.describe SeedData::Topics do
       update_topic("privacy_topic_id")
       post.reload
 
-      expect(post.raw).to eq(I18n.t("static_topic_first_reply", page_name: I18n.t('privacy_topic.title')).rstrip)
+      expect(post.raw).to eq(
+        I18n.t("static_topic_first_reply", page_name: I18n.t("privacy_topic.title")).rstrip,
+      )
     end
 
     it "does not update a change topic and `skip_changed` is true" do
@@ -119,7 +123,7 @@ RSpec.describe SeedData::Topics do
 
       expected_options = [
         { id: "guidelines_topic_id", name: I18n.t("guidelines_topic.title"), selected: true },
-        { id: "welcome_topic_id", name: "Changed Topic Title", selected: false }
+        { id: "welcome_topic_id", name: "Changed Topic Title", selected: false },
       ]
 
       expect(subject.reseed_options).to eq(expected_options)

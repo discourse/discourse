@@ -10,16 +10,17 @@ class AllowNullIpUserProfileView < ActiveRecord::Migration[5.1]
     end
 
     remove_index :user_profile_views,
-      column: [:viewed_at, :ip_address, :user_profile_id],
-      name: :unique_profile_view_ip,
-      unique: true
+                 column: %i[viewed_at ip_address user_profile_id],
+                 name: :unique_profile_view_ip,
+                 unique: true
     remove_index :user_profile_views,
-      column: [:viewed_at, :user_id, :user_profile_id],
-      name: :unique_profile_view_user,
-      unique: true
-    add_index :user_profile_views, [:viewed_at, :user_id, :ip_address, :user_profile_id],
-      name: :unique_profile_view_user_or_ip,
-      unique: true
+                 column: %i[viewed_at user_id user_profile_id],
+                 name: :unique_profile_view_user,
+                 unique: true
+    add_index :user_profile_views,
+              %i[viewed_at user_id ip_address user_profile_id],
+              name: :unique_profile_view_user_or_ip,
+              unique: true
   end
 
   def down

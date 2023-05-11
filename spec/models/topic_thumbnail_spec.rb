@@ -63,7 +63,7 @@ RSpec.describe "TopicThumbnail" do
 
   it "cleans up unneeded sizes" do
     expect(topic.topic_thumbnails.length).to eq(1)
-    topic.topic_thumbnails[0].update_column(:max_width, 999999)
+    topic.topic_thumbnails[0].update_column(:max_width, 999_999)
 
     TopicThumbnail.ensure_consistency!
     topic.reload

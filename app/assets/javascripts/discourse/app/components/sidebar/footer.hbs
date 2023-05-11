@@ -3,12 +3,25 @@
     <div class="sidebar-footer-actions">
       <PluginOutlet @name="sidebar-footer-actions" />
 
-      {{#if (or this.site.mobileView (and this.siteSettings.enable_mobile_theme this.capabilities.touch))}}
+      <DButton
+        @icon="plus"
+        @action={{action this.addSection}}
+        @class="btn-flat add-section"
+        @title="sidebar.sections.custom.add"
+      />
+
+      {{#if
+        (or
+          this.site.mobileView
+          (and this.siteSettings.enable_mobile_theme this.capabilities.touch)
+        )
+      }}
         <DButton
           @action={{route-action "toggleMobileView"}}
           @title={{if this.site.mobileView "desktop_view" "mobile_view"}}
           @icon={{if this.site.mobileView "desktop" "mobile-alt"}}
-          @class="sidebar-footer-actions-button sidebar-footer-actions-toggle-mobile-view" />
+          @class="sidebar-footer-actions-button sidebar-footer-actions-toggle-mobile-view"
+        />
       {{/if}}
 
       {{#if this.site.desktopView}}
@@ -16,7 +29,8 @@
           @action={{route-action "showKeyboardShortcutsHelp"}}
           @title="keyboard_shortcuts_help.title"
           @icon="keyboard"
-          @class="sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts" />
+          @class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts"
+        />
       {{/if}}
     </div>
   </div>

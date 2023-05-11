@@ -8,7 +8,7 @@ class AddGroupMentions < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :group_mentions, [:post_id, :group_id], unique: true
-    add_index :group_mentions, [:group_id, :post_id], unique: true
+    add_index :group_mentions, %i[post_id group_id], unique: true
+    add_index :group_mentions, %i[group_id post_id], unique: true
   end
 end

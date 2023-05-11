@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'sqlite3'
+require "sqlite3"
 
 module ImportScripts::Mbox
   class Database
@@ -23,8 +23,7 @@ module ImportScripts::Mbox
       @db.transaction
       yield self
       @db.commit
-
-    rescue
+    rescue StandardError
       @db.rollback
     end
 
@@ -60,9 +59,7 @@ module ImportScripts::Mbox
       SQL
 
       @db.prepare(sql) do |stmt|
-        reply_message_ids.each do |in_reply_to|
-          stmt.execute(msg_id, in_reply_to)
-        end
+        reply_message_ids.each { |in_reply_to| stmt.execute(msg_id, in_reply_to) }
       end
     end
 
@@ -95,7 +92,7 @@ module ImportScripts::Mbox
     end
 
     def sort_emails_by_date_and_reply_level
-      @db.execute 'DELETE FROM email_order'
+      @db.execute "DELETE FROM email_order"
 
       @db.execute <<-SQL
         WITH RECURSIVE
@@ -117,7 +114,7 @@ module ImportScripts::Mbox
     end
 
     def sort_emails_by_subject
-      @db.execute 'DELETE FROM email_order'
+      @db.execute "DELETE FROM email_order"
 
       @db.execute <<-SQL
         INSERT INTO email_order (msg_id)
@@ -128,7 +125,7 @@ module ImportScripts::Mbox
     end
 
     def fill_users_from_emails
-      @db.execute 'DELETE FROM user'
+      @db.execute "DELETE FROM user"
 
       @db.execute <<-SQL
         INSERT INTO user (email, name, date_of_first_message)
@@ -172,7 +169,7 @@ module ImportScripts::Mbox
         LIMIT #{@batch_size}
       SQL
 
-      add_last_column_value(rows, 'email')
+      add_last_column_value(rows, "email")
     end
 
     def count_messages
@@ -193,14 +190,14 @@ module ImportScripts::Mbox
         LIMIT #{@batch_size}
       SQL
 
-      add_last_column_value(rows, 'rowid')
+      add_last_column_value(rows, "rowid")
     end
 
     private
 
     def configure_database
-      @db.execute 'PRAGMA journal_mode = OFF'
-      @db.execute 'PRAGMA locking_mode = EXCLUSIVE'
+      @db.execute "PRAGMA journal_mode = OFF"
+      @db.execute "PRAGMA locking_mode = EXCLUSIVE"
     end
 
     def upgrade_schema_version
@@ -260,10 +257,10 @@ module ImportScripts::Mbox
         )
       SQL
 
-      @db.execute 'CREATE INDEX IF NOT EXISTS email_by_from ON email (from_email)'
-      @db.execute 'CREATE INDEX IF NOT EXISTS email_by_subject ON email (subject)'
-      @db.execute 'CREATE INDEX IF NOT EXISTS email_by_in_reply_to ON email (in_reply_to)'
-      @db.execute 'CREATE INDEX IF NOT EXISTS email_by_date ON email (email_date)'
+      @db.execute "CREATE INDEX IF NOT EXISTS email_by_from ON email (from_email)"
+      @db.execute "CREATE INDEX IF NOT EXISTS email_by_subject ON email (subject)"
+      @db.execute "CREATE INDEX IF NOT EXISTS email_by_in_reply_to ON email (in_reply_to)"
+      @db.execute "CREATE INDEX IF NOT EXISTS email_by_date ON email (email_date)"
 
       @db.execute <<-SQL
         CREATE TABLE IF NOT EXISTS email_order (
@@ -282,7 +279,7 @@ module ImportScripts::Mbox
         )
       SQL
 
-      @db.execute 'CREATE INDEX IF NOT EXISTS reply_by_in_reply_to ON reply (in_reply_to)'
+      @db.execute "CREATE INDEX IF NOT EXISTS reply_by_in_reply_to ON reply (in_reply_to)"
     end
 
     def create_table_for_users

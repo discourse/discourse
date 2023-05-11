@@ -3,30 +3,32 @@
 RSpec.describe GroupMessage do
   let(:moderators_group) { Group[:moderators].name }
 
-  let!(:admin)     { Fabricate.build(:admin, id: 999) }
-  let!(:user)      { Fabricate.build(:user, id: 111) }
+  let!(:admin) { Fabricate.build(:admin, id: 999) }
+  let!(:user) { Fabricate.build(:user, id: 111) }
 
-  before do
-    Discourse.stubs(:system_user).returns(admin)
+  before { Discourse.stubs(:system_user).returns(admin) }
+
+  subject(:send_group_message) do
+    GroupMessage.create(moderators_group, :user_automatically_silenced, user: user)
   end
 
-  subject(:send_group_message) { GroupMessage.create(moderators_group, :user_automatically_silenced, user: user) }
-
-  describe 'not sent recently' do
+  describe "not sent recently" do
     before { GroupMessage.any_instance.stubs(:sent_recently?).returns(false) }
 
-    it 'should send a private message to the given group' do
-      PostCreator.expects(:create).with do |from_user, opts|
-        from_user.id == (admin.id) &&
-          opts[:target_group_names] && opts[:target_group_names].include?(Group[:moderators].name) &&
-          opts[:archetype] == (Archetype.private_message) &&
-          opts[:title].present? &&
-          opts[:raw].present?
-      end.returns(stub_everything)
+    it "should send a private message to the given group" do
+      PostCreator
+        .expects(:create)
+        .with do |from_user, opts|
+          from_user.id == (admin.id) && opts[:target_group_names] &&
+            opts[:target_group_names].include?(Group[:moderators].name) &&
+            opts[:archetype] == (Archetype.private_message) && opts[:title].present? &&
+            opts[:raw].present?
+        end
+        .returns(stub_everything)
       send_group_message
     end
 
-    it 'returns whatever PostCreator returns' do
+    it "returns whatever PostCreator returns" do
       the_output = stub_everything
       PostCreator.stubs(:create).returns(the_output)
       expect(send_group_message).to eq(the_output)
@@ -39,79 +41,103 @@ RSpec.describe GroupMessage do
     end
   end
 
-  describe 'sent recently' do
-    before  { GroupMessage.any_instance.stubs(:sent_recently?).returns(true) }
+  describe "sent recently" do
+    before { GroupMessage.any_instance.stubs(:sent_recently?).returns(true) }
     subject { GroupMessage.create(moderators_group, :user_automatically_silenced, user: user) }
 
     it { is_expected.to eq(false) }
 
-    it 'should not send the same notification again' do
+    it "should not send the same notification again" do
       PostCreator.expects(:create).never
       subject
     end
   end
 
-  describe 'message_params' do
-    let(:user) { Fabricate.build(:user, id: 123123) }
-    shared_examples 'common message params for group messages' do
-      it 'returns the correct params' do
+  describe "message_params" do
+    let(:user) { Fabricate.build(:user, id: 123_123) }
+    shared_examples "common message params for group messages" do
+      it "returns the correct params" do
         expect(subject[:username]).to eq(user.username)
         expect(subject[:user_url]).to be_present
       end
     end
 
-    context 'with user_automatically_silenced' do
-      subject { GroupMessage.new(moderators_group, :user_automatically_silenced, user: user).message_params }
-      include_examples 'common message params for group messages'
+    context "with user_automatically_silenced" do
+      subject do
+        GroupMessage.new(moderators_group, :user_automatically_silenced, user: user).message_params
+      end
+      include_examples "common message params for group messages"
     end
 
-    context 'with spam_post_blocked' do
+    context "with spam_post_blocked" do
       subject { GroupMessage.new(moderators_group, :spam_post_blocked, user: user).message_params }
-      include_examples 'common message params for group messages'
+      include_examples "common message params for group messages"
     end
   end
 
-  describe 'methods that use redis' do
-    let(:user)              { Fabricate.build(:user, id: 123123) }
-    subject(:group_message) { GroupMessage.new(moderators_group, :user_automatically_silenced, user: user) }
+  describe "methods that use redis" do
+    let(:user) { Fabricate.build(:user, id: 123_123) }
+    subject(:group_message) do
+      GroupMessage.new(moderators_group, :user_automatically_silenced, user: user)
+    end
     before do
       PostCreator.stubs(:create).returns(stub_everything)
-      group_message.stubs(:sent_recently_key).returns('the_key')
+      group_message.stubs(:sent_recently_key).returns("the_key")
     end
 
-    describe 'sent_recently?' do
-      it 'returns true if redis says so' do
-        Discourse.redis.stubs(:get).with(group_message.sent_recently_key).returns('1')
+    describe "sent_recently?" do
+      it "returns true if redis says so" do
+        Discourse.redis.stubs(:get).with(group_message.sent_recently_key).returns("1")
         expect(group_message.sent_recently?).to be_truthy
       end
 
-      it 'returns false if redis returns nil' do
+      it "returns false if redis returns nil" do
         Discourse.redis.stubs(:get).with(group_message.sent_recently_key).returns(nil)
         expect(group_message.sent_recently?).to be_falsey
       end
 
-      it 'always returns false if limit_once_per is false' do
-        gm = GroupMessage.new(moderators_group, :user_automatically_silenced, user: user, limit_once_per: false)
-        gm.stubs(:sent_recently_key).returns('the_key')
-        Discourse.redis.stubs(:get).with(gm.sent_recently_key).returns('1')
+      it "always returns false if limit_once_per is false" do
+        gm =
+          GroupMessage.new(
+            moderators_group,
+            :user_automatically_silenced,
+            user: user,
+            limit_once_per: false,
+          )
+        gm.stubs(:sent_recently_key).returns("the_key")
+        Discourse.redis.stubs(:get).with(gm.sent_recently_key).returns("1")
         expect(gm.sent_recently?).to be_falsey
       end
     end
 
-    describe 'remember_message_sent' do
-      it 'stores a key in redis that expires after 24 hours' do
-        Discourse.redis.expects(:setex).with(group_message.sent_recently_key, 24 * 60 * 60, anything).returns('OK')
+    describe "remember_message_sent" do
+      it "stores a key in redis that expires after 24 hours" do
+        Discourse
+          .redis
+          .expects(:setex)
+          .with(group_message.sent_recently_key, 24 * 60 * 60, anything)
+          .returns("OK")
         group_message.remember_message_sent
       end
 
-      it 'can use a given expiry time' do
-        Discourse.redis.expects(:setex).with(anything, 30 * 60, anything).returns('OK')
-        GroupMessage.new(moderators_group, :user_automatically_silenced, user: user, limit_once_per: 30.minutes).remember_message_sent
+      it "can use a given expiry time" do
+        Discourse.redis.expects(:setex).with(anything, 30 * 60, anything).returns("OK")
+        GroupMessage.new(
+          moderators_group,
+          :user_automatically_silenced,
+          user: user,
+          limit_once_per: 30.minutes,
+        ).remember_message_sent
       end
 
-      it 'can be disabled' do
+      it "can be disabled" do
         Discourse.redis.expects(:setex).never
-        GroupMessage.new(moderators_group, :user_automatically_silenced, user: user, limit_once_per: false).remember_message_sent
+        GroupMessage.new(
+          moderators_group,
+          :user_automatically_silenced,
+          user: user,
+          limit_once_per: false,
+        ).remember_message_sent
       end
     end
   end

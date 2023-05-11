@@ -1,0 +1,34 @@
+{{#each this.usersTemplates as |userTemplate|}}
+  <div data-username={{userTemplate.username}} class="user-info small">
+    <div class="user-image">
+      <div class="user-image-inner">
+        <a
+          href={{userTemplate.userPath}}
+          data-user-card={{userTemplate.username}}
+        >
+          {{html-safe userTemplate.avatar}}
+        </a>
+      </div>
+    </div>
+    <div class="user-detail">
+      <div class="name-line">
+        <span class="username">
+          <a
+            href={{userTemplate.userPath}}
+            data-user-card={{userTemplate.username}}
+          >
+            {{#if
+              userTemplate.prioritizeName
+            }}{{userTemplate.name}}{{else}}{{userTemplate.username}}{{/if}}
+          </a>
+        </span>
+        <span class="name">
+          {{#if
+            userTemplate.prioritizeName
+          }}{{userTemplate.username}}{{else}}{{userTemplate.name}}{{/if}}
+        </span>
+      </div>
+      <div class="title">{{userTemplate.title}}</div>
+    </div>
+  </div>
+{{/each}}

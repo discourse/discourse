@@ -26,7 +26,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
 
     this.totalUnread = this.topicTrackingState.countUnread();
 
-    if (this.totalUnread === 0) {
+    if (this.totalUnread === 0 || this.#linkToNew) {
       this.totalNew = this.topicTrackingState.countNew();
     }
   }
@@ -52,6 +52,12 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get badgeText() {
+    if (this.#linkToNew) {
+      if (this.#unreadAndNewCount > 0) {
+        return this.#unreadAndNewCount.toString();
+      }
+      return;
+    }
     if (this.hideCount) {
       return;
     }
@@ -63,13 +69,19 @@ export default class EverythingSectionLink extends BaseSectionLink {
       return I18n.t("sidebar.new_count", {
         count: this.totalNew,
       });
-    } else {
-      return;
     }
   }
 
   get route() {
-    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+    if (this.#linkToNew) {
+      if (this.#unreadAndNewCount > 0) {
+        return "discovery.new";
+      } else {
+        return "discovery.latest";
+      }
+    } else if (
+      this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION
+    ) {
       if (this.totalUnread > 0) {
         return "discovery.unread";
       }
@@ -93,8 +105,20 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get suffixValue() {
-    if (this.hideCount && (this.totalUnread || this.totalNew)) {
+    if (
+      this.hideCount &&
+      (this.totalUnread || this.totalNew) &&
+      !this.#linkToNew
+    ) {
       return "circle";
     }
+  }
+
+  get #unreadAndNewCount() {
+    return this.totalUnread + this.totalNew;
+  }
+
+  get #linkToNew() {
+    return !!this.currentUser?.new_new_view_enabled;
   }
 }

@@ -15,6 +15,7 @@ sv:
           actions:
             chat_channel_status_change: "Chattkanalens status har ändrats"
             chat_channel_delete: "Chattkanal raderad"
+            chat_auto_remove_membership: "Medlemskap tas automatiskt bort från kanaler"
       api:
         scopes:
           descriptions:
@@ -39,8 +40,8 @@ sv:
       move_to_channel:
         title: "Flytta meddelanden till kanal"
         instructions:
-          one: "Du flyttar <strong>%{count}</strong> meddelande. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att detta meddelande har flyttats."
-          other: "Du flyttar <strong>%{count}</strong> meddelanden. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att dessa meddelanden har flyttats."
+          one: "Du flyttar <strong>%{count}</strong> meddelande. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att detta meddelande har flyttats. Observera att svarskedjor inte kommer att bevaras i den nya kanalen, och meddelanden i den gamla kanalen kommer inte längre att visas som svar på flyttade meddelanden."
+          other: "Du flyttar <strong>%{count}</strong> meddelanden. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att dessa meddelanden har flyttats. Observera att svarskedjor inte kommer att bevaras i den nya kanalen, och meddelanden i den gamla kanalen kommer inte längre att visas som svar på flyttade meddelanden."
         confirm_move: "Flytta meddelanden"
       channel_settings:
         title: "Kanalinställningar"
@@ -71,7 +72,7 @@ sv:
         instructions: "Genom att stänga kanalen hindras användare som inte är personal att skicka nya meddelanden eller redigera befintliga meddelanden. Är du säker på att du vill stänga denna kanal?"
       channel_delete:
         title: "Radera kanal"
-        instructions: "<p>Tar bort <strong>%{name}</strong> kanalen och chatthistoriken. Alla meddelanden och relaterad data, såsom reaktioner och uppladdningar, kommer att raderas permanent. Om du vill bevara kanalhistoriken men avveckla den, kanske du vill arkivera kanalen istället.</p> <p>Är du säker på att du <strong>permanent vill ta bort</strong> kanalen? För att bekräfta, skriv in namnet på kanalen i rutan nedan.</p>"
+        instructions: "<p>Tar bort kanalen <strong>%{name}</strong> och chatthistoriken. Alla meddelanden och relaterad data, såsom reaktioner och uppladdningar, kommer att raderas permanent. Om du vill bevara kanalhistoriken och avveckla den, kanske du vill arkivera kanalen istället.</p> <p>Är du säker på att du vill <strong>ta bort kanalen permanent</strong>? Bekräfta genom att skriva in kanalens namn i rutan nedan.</p>"
         confirm: "Jag förstår konsekvenserna, radera kanalen"
         confirm_channel_name: "Ange kanalnamn"
         process_started: "Processen för att radera kanalen har påbörjats. Denna modal kommer att stängas inom kort och du kommer inte längre att se den raderade kanalen någonstans."
@@ -81,8 +82,11 @@ sv:
       click_to_join: "Klicka här för att se tillgängliga kanaler."
       close: "Stäng"
       collapse: "Komprimera chattruta"
+      expand: "Expandera chattlådan"
       confirm_flag: "Är du säker på att du vill flagga %{username}:s meddelande?"
-      deleted: "Ett meddelande raderades. [view]"
+      deleted:
+        one: "Ett meddelande raderades. [view]"
+        other: "%{count} meddelanden raderades. [visa alla]"
       hidden: "Ett meddelande doldes. [view]"
       delete: "Radera"
       edited: "redigerad"
@@ -97,6 +101,11 @@ sv:
         never: "Aldrig"
         title: "E-postaviseringar"
         when_away: "Endast när du är borta"
+      header_indicator_preference:
+        title: "Visa aktivitetsindikator i sidhuvudet"
+        all_new: "Alla nya meddelanden"
+        dm_and_mentions: "Direktmeddelanden och omnämnanden"
+        never: "Aldrig"
       enable: "Aktivera chatt"
       flag: "Flagga"
       emoji: "Infoga emoji"
@@ -106,53 +115,104 @@ sv:
       in_reply_to: "Som svar på"
       heading: "Chatt"
       join: "Gå med"
-      new_messages: "nya meddelanden"
+      last_visit: "senaste besök"
       mention_warning:
         dismiss: "avfärda"
-        cannot_see:
-          one: "%{username} kan inte komma åt den här kanalen och har inte aviserats."
-          other: "%{username} och %{others} kan inte komma åt den här kanalen och har inte aviserats."
+        cannot_see: "%{username} kan inte komma åt den här kanalen och har inte aviserats."
+        cannot_see_multiple:
+          one: "%{username} och %{count} annan användare kan inte komma åt den här kanalen och har inte aviserats."
+          other: "%{username} och %{count} andra användare kan inte komma åt den här kanalen och har inte aviserats."
         invitations_sent:
           one: "Inbjudan skickad"
           other: "Inbjudningar skickade"
         invite: "Bjud in till kanal"
-        without_membership:
-          one: "%{username} har inte gått med i den här kanalen."
-          other: "%{username} och %{others} har inte gått med i den här kanalen."
-        group_mentions_disabled:
-          one: "%{group_name} tillåter inte omnämnanden"
-          other: "%{group_name} och %{others} tillåter inte omnämnanden"
-        too_many_members:
-          one: "%{group_name} har för många medlemmar. Ingen aviserades"
-          other: "%{group_name} och %{others} har för många medlemmar. Ingen aviserades"
-        warning_multiple:
-          one: "%{count} annan"
-          other: "%{count} andra"
+        without_membership: "%{username} har inte gått med i den här kanalen."
+        without_membership_multiple:
+          one: "%{username} och %{count} annan användare har inte gått med i den här kanalen."
+          other: "%{username} och %{count} andra användare har inte gått med i den här kanalen."
+        group_mentions_disabled: "%{group_name} tillåter inte omnämnanden."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} och ytterligare %{count} grupp tillåter inte omnämnanden."
+          other: "%{group_name} och ytterligare %{count} grupper tillåter inte omnämnanden."
+        too_many_members: "%{group_name} har för många medlemmar. Ingen aviserades."
+        too_many_members_multiple:
+          one: "%{group_name} och %{count} annan grupp har för många medlemmar. Ingen aviserades."
+          other: "%{group_name} och %{count} andra grupper har för många medlemmar. Ingen aviserades."
         groups:
           header:
             some: "Vissa användare kommer inte att aviseras"
             all: "Ingen kommer att aviseras"
-          unreachable:
-            one: "@%{group} tillåter inte omnämnanden"
-            other: "@%{group} och @%{group_2} tillåter inte omnämnanden"
-          unreachable_multiple: "@%{group} och ytterligare %{count} tillåter inte omnämnanden"
-          too_many_members:
-            one: "Att nämna @%{group} överstiger %{notification_limit} av %{limit}"
-            other: "Att nämna både @%{group} eller @%{group_2} överstiger %{notification_limit} av %{limit}"
-          too_many_members_multiple: "Dessa %{count} grupper överstiger %{notification_limit} av %{limit}"
-          users_limit:
-            one: "%{count} användare"
-            other: "%{count} användare"
-          notification_limit: "aviseringsgräns"
-        too_many_mentions: "Detta meddelande överstiger %{notification_limit} av %{limit}"
-        mentions_limit:
-          one: "%{count} omnämnande"
-          other: "%{count} omnämnanden"
+          unreachable_1: "@%{group} tillåter inte omnämnanden."
+          unreachable_2: "@%{group1} och @%{group2} tillåter inte omnämnanden."
+          unreachable_multiple:
+            one: "@%{group} och ytterligare %{count} grupp tillåter inte omnämnanden."
+            other: "@%{group} och ytterligare %{count} grupper tillåter inte omnämnanden."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                              other {Att nämna @{group1} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} överstiger aviseringsgränsen som är # användare.}
+                              other {Att nämna @{group1} överstiger aviseringsgränsen som är # användare.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} och @{group2} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                            other {Att nämna @{group1} och @{group2} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} och @{group2} överstiger aviseringsgränsen som är # användare.}
+                            other {Att nämna @{group1} och @{group2} överstiger aviseringsgränsen som är # användare.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Att nämna dessa {groupCount} grupper överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                            other {Att nämna dessa {groupCount} grupper överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Att nämna dessa {groupCount} grupper överstiger aviseringsgränsen som är # användare.}
+                            other {Att nämna dessa {groupCount} grupper överstiger aviseringsgränsen som är # användare.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          one: "Detta meddelande överstiger aviseringsgränsen, som är %{count} omnämnande."
+          other: "Detta meddelande överstiger aviseringsgränsen, som är %{count} omnämnanden."
+        too_many_mentions_admin:
+          one: 'Det här meddelandet överstiger <a href="%{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är %{count} omnämnande.'
+          other: 'Det här meddelandet överstiger <a href="%{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är %{count} omnämnanden.'
       aria_roles:
         header: "Chatthuvud"
         composer: "Chattkompositör"
         channels_list: "Lista över chattkanaler"
       no_public_channels: "Du har inte gått med i några kanaler."
+      kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
       only_chat_push_notifications:
         title: "Skicka bara push-meddelanden för chatt"
         description: "Blockera alla push-meddelanden som inte är chattmeddelanden från att skickas"
@@ -164,10 +224,16 @@ sv:
       close_full_page: "Stäng helskärmschatt"
       open_message: "Öppna meddelande i chatten"
       placeholder_self: "Gör en anteckning"
-      placeholder_others: "Chatta med %{messageRecipient}"
-      placeholder_new_message_disallowed: "Kanalen är %{status}, du kan inte skicka nya meddelanden just nu."
+      placeholder_channel: "Chatta i %{channelName}"
+      placeholder_thread: "Chatta i tråden"
+      placeholder_users: "Chatta med %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "Kanalen är arkiverad, och du kan inte skicka nya meddelanden just nu."
+        closed: "Kanalen är stängd, och du kan inte skicka nya meddelanden just nu."
+        read_only: "Kanalen är lässkyddad, och du kan inte skicka nya meddelanden just nu."
       placeholder_silenced: "Du kan inte skicka meddelanden just nu."
-      placeholder_start_conversation: Starta en konversation med %{usernames}
+      placeholder_start_conversation: "Inled ett samtal med ..."
+      placeholder_start_conversation_users: "Inled ett samtal med %{commaSeparatedUsernames}"
       remove_upload: "Ta bort fil"
       react: "Reagera med emoji"
       reply: "Svara"
@@ -183,7 +249,6 @@ sv:
       restore: "Återställ raderat meddelande"
       save: "Spara"
       select: "Välj"
-      silence: "Tysta användare"
       return_to_list: "Återgå till listan över kanaler"
       scroll_to_bottom: "Scrolla till botten"
       scroll_to_new_messages: "Se nya meddelanden"
@@ -196,6 +261,8 @@ sv:
       title: "chatt"
       title_capitalized: "Chatt"
       upload: "Bifoga en fil"
+      upload_to_channel: "Ladda upp till %{title}"
+      upload_to_thread: "Ladda upp till tråd"
       uploaded_files:
         one: "%{count} fil"
         other: "%{count} filer"
@@ -206,12 +273,13 @@ sv:
         read_only: "Endast läsning"
         archived_header: "Kanalen är arkiverad"
         archived: "Arkiverad"
-        archive_failed: "Arkivering av kanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats i <a target=\"_blank\" href=\"%{topic_url}\">destinationsämnet</a>. Tryck på försök igen för att försöka slutföra arkivet."
+        archive_failed: "Arkivkanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. <a target=\"_blank\" href=\"%{topic_url}\">målämnet</a>. Tryck på försök igen för att försöka slutföra arkiveringen."
+        archive_failed_no_topic: "Arkivkanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. Målämnet skapades inte. Tryck på försök igen för att försöka slutföra arkiveringen."
         archive_completed: "Se det <a target=\"_blank\" href=\"%{topic_url}\">arkiverade ämnet</a>"
         closed_header: "Kanalen är stängd"
         closed: "Stängd"
         open_header: "Kanalen är öppen"
-        open: "Öppna"
+        open: "Öppen"
       browse:
         back: "Tillbaka"
         title: Kanaler
@@ -229,6 +297,7 @@ sv:
         associated_topic: Länkat ämne
         associated_category: Länkad kategori
         title: Rubrik
+        name: Namn
         description: Beskrivning
       channel_info:
         back_to_all_channels: "Alla kanaler"
@@ -237,10 +306,12 @@ sv:
           about: Om
           members: Medlemmar
           settings: Inställningar
-      channel_edit_title_modal:
-        title: Redigera titel
-        input_placeholder: Lägg till en titel
-        description: Ge en kort beskrivande titel till din kanal
+      channel_edit_name_slug_modal:
+        title: Redigera kanal
+        input_placeholder: Lägg till ett namn
+        slug_description: Ett dynamiskt kanalfält används i URL:en istället för kanalnamnet
+        name: Kanalnamn
+        slug: Dynamiskt kanalfält (valfritt)
       channel_edit_description_modal:
         title: Redigera beskrivning
         input_placeholder: Lägg till en beskrivning
@@ -262,21 +333,40 @@ sv:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} är en offentlig kategori. Vill du automatiskt lägga till alla nyligen aktiva användare till den här kanalen?"
-          warning_groups:
-            one: Lägg automatiskt till %{members_count} användare från %{group}?
-            other: Lägg automatiskt till %{members_count} användare från %{group} och %{group_2}?
-          warning_multiple_groups: Lägg automatiskt till %{members_count} användare från %{group_1} och %{count} andra?
+          warning_1_group:
+            one: "Vill du automatiskt lägga till %{count} användare från %{group}?"
+            other: "Vill du automatiskt lägga till %{count} användare från %{group}?"
+          warning_2_groups:
+            one: "Vill du automatiskt lägga till %{count} användare från %{group1} och %{group2}?"
+            other: "Vill du automatiskt lägga till %{count} användare från %{group1} och %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupp?}
+                        other {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupp?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupper?}
+                        other {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupper?}
+                      }
+                    }
+            }
         choose_category:
           label: "Välj en kategori"
           none: "Välj en..."
           default_hint: Hantera åtkomst genom att besöka <a href=%{link} target="_blank">%{category} säkerhetsinställningar</a>
-          hint_groups:
-            one: Användare i %{hint} kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningar</a>
-            other: Användare i %{hint} och %{hint_2} kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningarna</a>
-          hint_multiple_groups: Användare i %{hint_1} och %{count} andra grupper kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningarna</a>
+          hint_1_group: 'Användare i %{group} kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningar</a>'
+          hint_2_groups: 'Användare i %{group1} och %{group2} kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningar</a>'
+          hint_multiple_groups:
+            one: 'Användare i %{group} och ytterligare %{count} grupp kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
+            other: 'Användare i %{group} och ytterligare %{count} grupper kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
         create: "Skapa kanal"
         description: "Beskrivning (valfritt)"
         name: "Kanalnamn"
+        slug: "Dynamiskt kanalfält (valfritt)"
         title: "Ny kanal"
         type: "Typ"
         types:
@@ -286,15 +376,22 @@ sv:
         type: "Chatt meddelande"
       reactions:
         only_you: "Du reagerade med :%{emoji}:"
-        and_others: "Du, %{usernames} reagerade med :%{emoji}:"
-        only_others: "%{usernames} reagerade med :%{emoji}:"
-        others_and_more: "%{usernames} och %{more} andra reagerade med :%{emoji}:"
-        you_others_and_more: "Du, %{usernames} och %{more} andra reagerade med :%{emoji}:"
+        you_and_single_user: "Du och %{username} reagerade med :%{emoji}:"
+        you_and_multiple_users: "Du, %{commaSeparatedUsernames} och %{username} reagerade med :%{emoji}:"
+        you_multiple_users_and_more:
+          one: "Du, %{commaSeparatedUsernames} och %{count} till reagerade med :%{emoji}:"
+          other: "Du, %{commaSeparatedUsernames} och %{count} till reagerade med :%{emoji}:"
+        single_user: "%{username} reagerade med :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} och %{username} reagerade med :%{emoji}:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} och ytterligare %{count} reagerade med :%{emoji}:"
+          other: "%{commaSeparatedUsernames} och ytterligare %{count} reagerade med :%{emoji}:"
       composer:
         toggle_toolbar: "Växla verktygsfält"
         italic_text: "kursiv text"
         bold_text: "fet text"
         code_text: "kod text"
+        send: "Skicka"
       quote:
         original_channel: 'Ursprungligen skickad i <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chattcitat kopierat till urklipp"
@@ -306,8 +403,8 @@ sv:
         channel_wide_mentions_label: "Tillåt @all och @here omnämnanden"
         channel_wide_mentions_description: "Tillåt användare att avisera alla #%{channel}-medlemmar med @all eller bara de som är aktiva för tillfället med @here"
         auto_join_users_label: "Lägg till användare automatiskt"
-        auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna och, om de har tillgång till kategorin %{category}, lägg till dem i den här kanalen."
-        enable_auto_join_users: "Lägg automatiskt till alla nyligen aktiva användare"
+        auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till kategorin %{category}."
+        auto_join_users_info_no_category: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till vald kategori."
         auto_join_users_warning: "Varje användare som inte är medlem i den här kanalen och har tillgång till kategorin %{category} kommer att gå med. Är du säker?"
         desktop_notification_level: "Skrivbordsaviseringar"
         follow: "Gå med"
@@ -322,12 +419,11 @@ sv:
         saved: "Sparad"
         unfollow: "Lämna"
         admin_title: "Admin"
-        retention_info: "Chatthistoriken sparas i %{days} dagar."
       admin:
         title: "Chatt"
       direct_messages:
         title: "Personlig chatt"
-        new: "Ny personlig chatt"
+        new: "Skapa en personlig chatt"
         create: "Kör"
         leave: "Lämna den här personliga chatten"
         cannot_create: "Tyvärr kan du inte skicka direktmeddelanden."
@@ -388,8 +484,14 @@ sv:
           one: "%{commaSeparatedUsernames} och %{count} skriver"
           other: "%{commaSeparatedUsernames} och %{count} andra skriver"
       retention_reminders:
-        public: "Kanalhistoriken behålls i %{days} dagar."
-        dm: "Personlig chatthistorik behålls i %{days} dagar."
+        public_none: "Kanalhistoriken bevaras på obestämd tid."
+        public:
+          one: "Kanalhistoriken bevaras %{count} dag."
+          other: "Kanalhistoriken bevaras %{count} dagar."
+        dm_none: "Personlig chatthistorik bevaras på obestämd tid."
+        dm:
+          one: "Personlig chatthistorik bevaras %{count} dag."
+          other: "Personlig chatthistorik bevaras %{count} dagar."
       flags:
         off_topic: "Det här meddelandet är inte relevant för den aktuella diskussionen enligt kanaltiteln och bör förmodligen flyttas någon annanstans."
         inappropriate: "Detta meddelande innehåller saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href=\"%{basePath}/guidelines\">vårt forums riktlinjer</a>."
@@ -411,6 +513,16 @@ sv:
         symbols: "Symboler"
         search_placeholder: "Sök efter emojinamn och alias..."
         no_results: "Inga resultat"
+      thread:
+        view_thread: Visa tråd
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        label: Tråd
+        close: "Stäng tråd"
+      threads:
+        started_by: "Startad av"
+        open: "Öppna tråd"
       draft_channel_screen:
         header: "Nytt meddelande"
         cancel: "Avbryt"
@@ -455,9 +567,8 @@ sv:
       transcript:
         view: "Visa tidigare meddelandens avskrift"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Flaggat chattmeddelande"
-          flagged_by: "Flaggat av"
     keyboard_shortcuts_help:
       chat:
         title: "Chatt"
@@ -470,6 +581,7 @@ sv:
           composer_code: "%{shortcut} Kod (endast kompositör)"
           drawer_open: "%{shortcut} Öppna chattmenyn"
           drawer_close: "%{shortcut} Stäng chattmenyn"
+          mark_all_channels_read: "%{shortcut} Markera alla kanaler som lästa"
     topic_statuses:
       chat:
         help: "Chatt är aktiverat för detta ämne"

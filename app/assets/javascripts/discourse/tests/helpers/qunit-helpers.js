@@ -11,7 +11,12 @@ import {
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { getApplication, settled } from "@ember/test-helpers";
+import {
+  fillIn,
+  getApplication,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
@@ -35,7 +40,9 @@ import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetUserSearchCache } from "discourse/lib/user-search";
 import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { resetComposerCustomizations } from "discourse/models/composer";
+import { resetQuickAccessProfileItems } from "discourse/widgets/quick-access-profile";
 import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
+import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import {
   resetHighestReadCache,
@@ -45,13 +52,13 @@ import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearExtraKeyboardShortcutHelp } from "discourse/lib/keyboard-shortcuts";
 import { clearResolverOptions } from "discourse-common/resolver";
-import { clearResolverOptions as clearLegacyResolverOptions } from "discourse-common/lib/legacy-resolver";
 import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
+import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-autocomplete";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
@@ -178,8 +185,10 @@ export function testCleanup(container, app) {
   resetHighestReadCache();
   resetCardClickListenerSelector();
   resetComposerCustomizations();
+  resetQuickAccessProfileItems();
   resetQuickSearchRandomTips();
   resetPostMenuExtraButtons();
+  resetUserMenuProfileTabItems();
   clearExtraKeyboardShortcutHelp();
   clearNavItems();
   setTopicList(null);
@@ -190,6 +199,7 @@ export function testCleanup(container, app) {
   clearTopicFooterDropdowns();
   clearTopicFooterButtons();
   clearDesktopNotificationHandlers();
+  cleanUpHashtagTypeClasses();
   resetLastEditNotificationClick();
   clearAuthMethods();
   setTestPresence(true);
@@ -200,7 +210,6 @@ export function testCleanup(container, app) {
   clearBlockDecorateCallbacks();
   clearTextDecorateCallbacks();
   clearResolverOptions();
-  clearLegacyResolverOptions();
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
   resetSidebarSection();
@@ -211,6 +220,12 @@ export function testCleanup(container, app) {
   resetModelTransformers();
   resetMentions();
   cleanupTemporaryModuleRegistrations();
+  cleanupCssGeneratorTags();
+}
+
+function cleanupCssGeneratorTags() {
+  document.querySelector("style#category-color-css-generator")?.remove();
+  document.querySelector("style#hashtag-css-generator")?.remove();
 }
 
 export function discourseModule(name, options) {
@@ -311,7 +326,7 @@ export function acceptance(name, optionsOrCallback) {
           updateCurrentUser(userChanges);
         }
 
-        User.current().appEvents = getOwner(this).lookup("service:appEvents");
+        User.current().appEvents = getOwner(this).lookup("service:app-events");
         User.current().trackStatus();
       }
 
@@ -397,6 +412,14 @@ export function acceptance(name, optionsOrCallback) {
 }
 
 export function controllerFor(controller, model) {
+  deprecated(
+    'controllerFor is deprecated. Use the standard `getOwner(this).lookup("controller:NAME")` instead',
+    {
+      id: "controller-for",
+      since: "3.0.0.beta14",
+    }
+  );
+
   controller = getOwner(this).lookup("controller:" + controller);
   if (model) {
     controller.set("model", model);
@@ -412,7 +435,7 @@ export function fixture(selector) {
 }
 
 QUnit.assert.not = function (actual, message) {
-  deprecated("assert.not() is deprecated. Use assert.notOk() instead.", {
+  deprecated("assert.not() is deprecated. Use assert.false() instead.", {
     since: "2.9.0.beta1",
     dropFrom: "2.10.0.beta1",
     id: "discourse.qunit.assert-not",
@@ -559,6 +582,16 @@ export async function paste(element, text, otherClipboardData = {}) {
   element.dispatchEvent(e);
   await settled();
   return e;
+}
+
+export async function emulateAutocomplete(inputSelector, text) {
+  await triggerKeyEvent(inputSelector, "keydown", "Backspace");
+  await fillIn(inputSelector, `${text} `);
+  await triggerKeyEvent(inputSelector, "keyup", "Backspace");
+
+  await triggerKeyEvent(inputSelector, "keydown", "Backspace");
+  await fillIn(inputSelector, text);
+  await triggerKeyEvent(inputSelector, "keyup", "Backspace");
 }
 
 // The order of attributes can vary in different browsers. When comparing

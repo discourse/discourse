@@ -13,9 +13,6 @@ export default Component.extend({
 
   role: "region",
 
-  // Allow us to extend it
-  layoutName: "components/topic-footer-buttons",
-
   @discourseComputed("canSendPms", "topic.isPrivateMessage")
   canArchive(canSendPms, isPM) {
     return canSendPms && isPM;

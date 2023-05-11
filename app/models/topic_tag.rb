@@ -9,14 +9,18 @@ class TopicTag < ActiveRecord::Base
       if topic.archetype == Archetype.private_message
         tag.increment!(:pm_topic_count)
       else
-        tag.increment!(:topic_count)
+        counters_to_update = { staff_topic_count: 1 }
 
-        if topic.category_id
-          if stat = CategoryTagStat.find_by(tag_id: tag_id, category_id: topic.category_id)
-            stat.increment!(:topic_count)
-          else
-            CategoryTagStat.create(tag_id: tag_id, category_id: topic.category_id, topic_count: 1)
-          end
+        if Category.exists?(id: topic.category_id, read_restricted: false)
+          counters_to_update[:public_topic_count] = 1
+        end
+
+        Tag.update_counters(tag.id, counters_to_update)
+
+        if stat = CategoryTagStat.find_by(tag_id: tag_id, category_id: topic.category_id)
+          stat.increment!(:topic_count)
+        else
+          CategoryTagStat.create!(tag_id: tag_id, category_id: topic.category_id, topic_count: 1)
         end
       end
     end
@@ -27,11 +31,17 @@ class TopicTag < ActiveRecord::Base
       if topic.archetype == Archetype.private_message
         tag.decrement!(:pm_topic_count)
       else
-        if topic.category_id && stat = CategoryTagStat.find_by(tag_id: tag_id, category: topic.category_id)
-          stat.topic_count == 1 ? stat.destroy : stat.decrement!(:topic_count)
+        if stat = CategoryTagStat.find_by(tag_id: tag_id, category: topic.category_id)
+          stat.topic_count == 1 ? stat.destroy! : stat.decrement!(:topic_count)
         end
 
-        tag.decrement!(:topic_count)
+        counters_to_update = { staff_topic_count: -1 }
+
+        if Category.exists?(id: topic.category_id, read_restricted: false)
+          counters_to_update[:public_topic_count] = -1
+        end
+
+        Tag.update_counters(tag.id, counters_to_update)
       end
     end
   end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-module SiteSettings; end
+module SiteSettings
+end
 
 module SiteSettings::Validations
   PROHIBITED_USER_AGENT_STRINGS = %w[
@@ -30,13 +31,17 @@ module SiteSettings::Validations
   end
 
   def validate_category_ids(category_ids)
-    category_ids = category_ids.split('|').map(&:to_i).to_set
-    validate_error :invalid_category_id if Category.where(id: category_ids).count != category_ids.size
+    category_ids = category_ids.split("|").map(&:to_i).to_set
+    if Category.where(id: category_ids).count != category_ids.size
+      validate_error :invalid_category_id
+    end
     category_ids
   end
 
   def validate_default_categories(category_ids, default_categories_selected)
-    validate_error :default_categories_already_selected if (category_ids & default_categories_selected).size > 0
+    if (category_ids & default_categories_selected).size > 0
+      validate_error :default_categories_already_selected
+    end
   end
 
   def validate_default_categories_watching(new_val)
@@ -46,7 +51,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|"),
-      SiteSetting.default_categories_normal.split("|")
+      SiteSetting.default_categories_normal.split("|"),
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -59,7 +64,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_muted.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|"),
-      SiteSetting.default_categories_normal.split("|")
+      SiteSetting.default_categories_normal.split("|"),
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -72,7 +77,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|"),
-      SiteSetting.default_categories_normal.split("|")
+      SiteSetting.default_categories_normal.split("|"),
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -85,20 +90,20 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
-      SiteSetting.default_categories_normal.split("|")
+      SiteSetting.default_categories_normal.split("|"),
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
   end
 
-  def validate_default_categories_regular(new_val)
+  def validate_default_categories_normal(new_val)
     category_ids = validate_category_ids(new_val)
 
     default_categories_selected = [
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
-      SiteSetting.default_categories_watching_first_post.split("|")
+      SiteSetting.default_categories_watching_first_post.split("|"),
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -109,48 +114,48 @@ module SiteSettings::Validations
   end
 
   def validate_default_tags_watching(new_val)
-    tag_names = new_val.split('|').to_set
+    tag_names = new_val.split("|").to_set
 
     default_tags_selected = [
       SiteSetting.default_tags_tracking.split("|"),
       SiteSetting.default_tags_muted.split("|"),
-      SiteSetting.default_tags_watching_first_post.split("|")
+      SiteSetting.default_tags_watching_first_post.split("|"),
     ].flatten.to_set
 
     validate_default_tags(tag_names, default_tags_selected)
   end
 
   def validate_default_tags_tracking(new_val)
-    tag_names = new_val.split('|').to_set
+    tag_names = new_val.split("|").to_set
 
     default_tags_selected = [
       SiteSetting.default_tags_watching.split("|"),
       SiteSetting.default_tags_muted.split("|"),
-      SiteSetting.default_tags_watching_first_post.split("|")
+      SiteSetting.default_tags_watching_first_post.split("|"),
     ].flatten.to_set
 
     validate_default_tags(tag_names, default_tags_selected)
   end
 
   def validate_default_tags_muted(new_val)
-    tag_names = new_val.split('|').to_set
+    tag_names = new_val.split("|").to_set
 
     default_tags_selected = [
       SiteSetting.default_tags_watching.split("|"),
       SiteSetting.default_tags_tracking.split("|"),
-      SiteSetting.default_tags_watching_first_post.split("|")
+      SiteSetting.default_tags_watching_first_post.split("|"),
     ].flatten.to_set
 
     validate_default_tags(tag_names, default_tags_selected)
   end
 
   def validate_default_tags_watching_first_post(new_val)
-    tag_names = new_val.split('|').to_set
+    tag_names = new_val.split("|").to_set
 
     default_tags_selected = [
       SiteSetting.default_tags_watching.split("|"),
       SiteSetting.default_tags_tracking.split("|"),
-      SiteSetting.default_tags_muted.split("|")
+      SiteSetting.default_tags_muted.split("|"),
     ].flatten.to_set
 
     validate_default_tags(tag_names, default_tags_selected)
@@ -163,7 +168,9 @@ module SiteSettings::Validations
   end
 
   def validate_secure_uploads(new_val)
-    validate_error :secure_uploads_requirements if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
+    if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
+      validate_error :secure_uploads_requirements
+    end
   end
 
   def validate_enable_page_publishing(new_val)
@@ -171,27 +178,39 @@ module SiteSettings::Validations
   end
 
   def validate_share_quote_buttons(new_val)
-    validate_error :share_quote_facebook_requirements if new_val.include?("facebook") && SiteSetting.facebook_app_id.blank?
+    if new_val.include?("facebook") && SiteSetting.facebook_app_id.blank?
+      validate_error :share_quote_facebook_requirements
+    end
   end
 
   def validate_enable_s3_inventory(new_val)
-    validate_error :enable_s3_uploads_is_required if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
+    if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
+      validate_error :enable_s3_uploads_is_required
+    end
   end
 
   def validate_backup_location(new_val)
     return unless new_val == BackupLocationSiteSetting::S3
-    validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_backup_bucket") if SiteSetting.s3_backup_bucket.blank?
+    if SiteSetting.s3_backup_bucket.blank?
+      validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_backup_bucket")
+    end
 
     unless SiteSetting.s3_use_iam_profile
-      validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_access_key_id") if SiteSetting.s3_access_key_id.blank?
-      validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
+      if SiteSetting.s3_access_key_id.blank?
+        validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_access_key_id")
+      end
+      if SiteSetting.s3_secret_access_key.blank?
+        validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_secret_access_key")
+      end
     end
   end
 
   def validate_s3_upload_bucket(new_val)
     validate_bucket_setting("s3_upload_bucket", new_val, SiteSetting.s3_backup_bucket)
 
-    validate_error(:s3_upload_bucket_is_required, setting_name: 's3_upload_bucket') if new_val.blank? && SiteSetting.enable_s3_uploads?
+    if new_val.blank? && SiteSetting.enable_s3_uploads?
+      validate_error(:s3_upload_bucket_is_required, setting_name: "s3_upload_bucket")
+    end
   end
 
   def validate_s3_backup_bucket(new_val)
@@ -204,7 +223,12 @@ module SiteSettings::Validations
     end
     if new_val == "all" && Discourse.enabled_auth_providers.count > 0
       auth_provider_names = Discourse.enabled_auth_providers.map(&:name).join(", ")
-      return validate_error(:second_factor_cannot_enforce_with_socials, auth_provider_names: auth_provider_names)
+      return(
+        validate_error(
+          :second_factor_cannot_enforce_with_socials,
+          auth_provider_names: auth_provider_names,
+        )
+      )
     end
     return if SiteSetting.enable_local_logins
     return if new_val == "no"
@@ -219,24 +243,27 @@ module SiteSettings::Validations
 
   def validate_cors_origins(new_val)
     return if new_val.blank?
-    return unless new_val.split('|').any?(/\/$/)
+    return if new_val.split("|").none?(%r{/\z})
     validate_error :cors_origins_should_not_have_trailing_slash
   end
 
   def validate_slow_down_crawler_user_agents(new_val)
     return if new_val.blank?
 
-    new_val.downcase.split("|").each do |crawler|
-      if crawler.size < 3
-        validate_error(:slow_down_crawler_user_agent_must_be_at_least_3_characters)
+    new_val
+      .downcase
+      .split("|")
+      .each do |crawler|
+        if crawler.size < 3
+          validate_error(:slow_down_crawler_user_agent_must_be_at_least_3_characters)
+        end
+        if PROHIBITED_USER_AGENT_STRINGS.any? { |c| c.include?(crawler) }
+          validate_error(
+            :slow_down_crawler_user_agent_cannot_be_popular_browsers,
+            values: PROHIBITED_USER_AGENT_STRINGS.join(I18n.t("word_connector.comma")),
+          )
+        end
       end
-      if PROHIBITED_USER_AGENT_STRINGS.any? { |c| c.include?(crawler) }
-        validate_error(
-          :slow_down_crawler_user_agent_cannot_be_popular_browsers,
-          values: PROHIBITED_USER_AGENT_STRINGS.join(I18n.t("word_connector.comma"))
-        )
-      end
-    end
   end
 
   def validate_strip_image_metadata(new_val)
@@ -261,7 +288,8 @@ module SiteSettings::Validations
 
     return if backup_bucket_name != upload_bucket_name
 
-    if backup_prefix == upload_prefix || backup_prefix.blank? || upload_prefix&.start_with?(backup_prefix)
+    if backup_prefix == upload_prefix || backup_prefix.blank? ||
+         upload_prefix&.start_with?(backup_prefix)
       validate_error(:s3_bucket_reused, setting_name: setting_name)
     end
   end

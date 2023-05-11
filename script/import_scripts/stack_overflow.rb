@@ -5,18 +5,18 @@ require "tiny_tds"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::StackOverflow < ImportScripts::Base
-
   BATCH_SIZE ||= 1000
 
   def initialize
     super
 
-    @client = TinyTds::Client.new(
-      host: ENV["DB_HOST"],
-      username: ENV["DB_USERNAME"],
-      password: ENV["DB_PASSWORD"],
-      database: ENV["DB_NAME"],
-    )
+    @client =
+      TinyTds::Client.new(
+        host: ENV["DB_HOST"],
+        username: ENV["DB_USERNAME"],
+        password: ENV["DB_PASSWORD"],
+        database: ENV["DB_NAME"],
+      )
   end
 
   def execute
@@ -36,7 +36,7 @@ class ImportScripts::StackOverflow < ImportScripts::Base
     total = query("SELECT COUNT(*) count FROM Users WHERE Id > 0").first["count"]
 
     batches(BATCH_SIZE) do |offset|
-      users = query(<<~SQL
+      users = query(<<~SQL).to_a
         SELECT TOP #{BATCH_SIZE}
                Id
              , UserTypeId
@@ -55,7 +55,6 @@ class ImportScripts::StackOverflow < ImportScripts::Base
            AND Id > #{last_user_id}
          ORDER BY Id
       SQL
-      ).to_a
 
       break if users.empty?
 
@@ -77,11 +76,16 @@ class ImportScripts::StackOverflow < ImportScripts::Base
           name: u["RealName"],
           location: u["Location"],
           date_of_birth: u["Birthday"],
-          post_create_action: proc do |user|
-            if u["ProfileImageUrl"].present?
-              UserAvatar.import_url_for_user(u["ProfileImageUrl"], user) rescue nil
-            end
-          end
+          post_create_action:
+            proc do |user|
+              if u["ProfileImageUrl"].present?
+                begin
+                  UserAvatar.import_url_for_user(u["ProfileImageUrl"], user)
+                rescue StandardError
+                  nil
+                end
+              end
+            end,
         }
       end
     end
@@ -91,11 +95,16 @@ class ImportScripts::StackOverflow < ImportScripts::Base
     puts "", "Importing posts..."
 
     last_post_id = -1
-    total = query("SELECT COUNT(*) count FROM Posts WHERE PostTypeId IN (1,2,3)").first["count"] +
-      query("SELECT COUNT(*) count FROM PostComments WHERE PostId IN (SELECT Id FROM Posts WHERE PostTypeId IN (1,2,3))").first["count"]
+    total =
+      query("SELECT COUNT(*) count FROM Posts WHERE PostTypeId IN (1,2,3)").first["count"] +
+        query(
+          "SELECT COUNT(*) count FROM PostComments WHERE PostId IN (SELECT Id FROM Posts WHERE PostTypeId IN (1,2,3))",
+        ).first[
+          "count"
+        ]
 
     batches(BATCH_SIZE) do |offset|
-      posts = query(<<~SQL
+      posts = query(<<~SQL).to_a
         SELECT TOP #{BATCH_SIZE}
                Id
              , PostTypeId
@@ -113,14 +122,13 @@ class ImportScripts::StackOverflow < ImportScripts::Base
            AND Id > #{last_post_id}
          ORDER BY Id
       SQL
-      ).to_a
 
       break if posts.empty?
 
       last_post_id = posts[-1]["Id"]
       post_ids = posts.map { |p| p["Id"] }
 
-      comments = query(<<~SQL
+      comments = query(<<~SQL).to_a
         SELECT CONCAT('Comment-', Id) AS Id
              , PostId AS ParentId
              , Text
@@ -130,7 +138,6 @@ class ImportScripts::StackOverflow < ImportScripts::Base
          WHERE PostId IN (#{post_ids.join(",")})
          ORDER BY Id
       SQL
-      ).to_a
 
       posts_and_comments = (posts + comments).sort_by { |p| p["CreationDate"] }
       post_and_comment_ids = posts_and_comments.map { |p| p["Id"] }
@@ -173,7 +180,7 @@ class ImportScripts::StackOverflow < ImportScripts::Base
     last_like_id = -1
 
     batches(BATCH_SIZE) do |offset|
-      likes = query(<<~SQL
+      likes = query(<<~SQL).to_a
         SELECT TOP #{BATCH_SIZE}
                Id
              , PostId
@@ -185,7 +192,6 @@ class ImportScripts::StackOverflow < ImportScripts::Base
            AND Id > #{last_like_id}
          ORDER BY Id
       SQL
-      ).to_a
 
       break if likes.empty?
 
@@ -196,17 +202,26 @@ class ImportScripts::StackOverflow < ImportScripts::Base
         next unless post_id = post_id_from_imported_post_id(l["PostId"])
         next unless user = User.find_by(id: user_id)
         next unless post = Post.find_by(id: post_id)
-        PostActionCreator.like(user, post) rescue nil
+        begin
+          PostActionCreator.like(user, post)
+        rescue StandardError
+          nil
+        end
       end
     end
 
     puts "", "Importing comment likes..."
 
     last_like_id = -1
-    total = query("SELECT COUNT(*) count FROM Comments2Votes WHERE VoteTypeId = 2 AND DeletionDate IS NULL").first["count"]
+    total =
+      query(
+        "SELECT COUNT(*) count FROM Comments2Votes WHERE VoteTypeId = 2 AND DeletionDate IS NULL",
+      ).first[
+        "count"
+      ]
 
     batches(BATCH_SIZE) do |offset|
-      likes = query(<<~SQL
+      likes = query(<<~SQL).to_a
         SELECT TOP #{BATCH_SIZE}
                Id
              , CONCAT('Comment-', PostCommentId) AS PostCommentId
@@ -218,7 +233,6 @@ class ImportScripts::StackOverflow < ImportScripts::Base
            AND Id > #{last_like_id}
          ORDER BY Id
       SQL
-      ).to_a
 
       break if likes.empty?
 
@@ -229,7 +243,11 @@ class ImportScripts::StackOverflow < ImportScripts::Base
         next unless post_id = post_id_from_imported_post_id(l["PostCommentId"])
         next unless user = User.find_by(id: user_id)
         next unless post = Post.find_by(id: post_id)
-        PostActionCreator.like(user, post) rescue nil
+        begin
+          PostActionCreator.like(user, post)
+        rescue StandardError
+          nil
+        end
       end
     end
   end
@@ -249,7 +267,6 @@ class ImportScripts::StackOverflow < ImportScripts::Base
   def query(sql)
     @client.execute(sql)
   end
-
 end
 
 ImportScripts::StackOverflow.new.perform

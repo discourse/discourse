@@ -1,5 +1,4 @@
-<button
-  type="button"
+<a
   role="tab"
   class={{this.classNames}}
   id={{this.id}}
@@ -8,12 +7,12 @@
   aria-selected={{if this.isActive "true" "false"}}
   aria-controls={{this.ariaControls}}
   data-tab-number={{@tab.position}}
+  href={{@tab.linkWhenActive}}
   {{on "click" @onTabClick}}
-  {{!-- template-lint-disable require-context-role --}}
 >
   {{d-icon @tab.icon}}
   {{#if @tab.count}}
     <span aria-hidden="true" class="badge-notification">{{@tab.count}}</span>
   {{/if}}
   {{yield}}
-</button>
+</a>

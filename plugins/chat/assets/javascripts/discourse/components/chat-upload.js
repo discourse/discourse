@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 
 import { inject as service } from "@ember/service";
-import { isImage, isVideo } from "discourse/lib/uploads";
+import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
@@ -13,6 +13,7 @@ export default class extends Component {
 
   IMAGE_TYPE = "image";
   VIDEO_TYPE = "video";
+  AUDIO_TYPE = "audio";
   ATTACHMENT_TYPE = "attachment";
 
   get type() {
@@ -22,6 +23,10 @@ export default class extends Component {
 
     if (isVideo(this.args.upload.original_filename)) {
       return this.VIDEO_TYPE;
+    }
+
+    if (isAudio(this.args.upload.original_filename)) {
+      return this.AUDIO_TYPE;
     }
 
     return this.ATTACHMENT_TYPE;

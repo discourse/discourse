@@ -11,5 +11,4 @@ class CreateMessageBus < ActiveRecord::Migration[4.2]
 
     add_index :message_bus, [:created_at]
   end
-
 end

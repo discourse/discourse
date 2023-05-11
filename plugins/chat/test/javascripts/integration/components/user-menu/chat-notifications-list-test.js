@@ -21,7 +21,7 @@ module(
 
     test("empty state when there are no notifications", async function (assert) {
       await render(template);
-      assert.ok(exists(".empty-state .empty-state-body"));
+      assert.true(exists(".empty-state .empty-state-body"));
       assert.strictEqual(
         query(".empty-state .empty-state-title").textContent.trim(),
         I18n.t("user_menu.no_chat_notifications_title")

@@ -18,7 +18,6 @@ class ArchiveSystemMessagesWithNoReplies < ActiveRecord::Migration[4.2]
           p.topic_id IS NOT NULL AND
           p.post_number = 1
 SQL
-
   end
 
   def down

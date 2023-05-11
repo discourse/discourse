@@ -1,0 +1,10 @@
+{{#if this.routeParam}}
+  <LinkTo
+    @route={{this.route}}
+    @model={{this.routeParam}}
+  >{{this.contents}}</LinkTo>
+{{else if this.route}}
+  <LinkTo @route={{this.route}}>{{this.contents}}</LinkTo>
+{{else}}
+  <a href={{get-url this.path}} data-auto-route="true">{{this.contents}}</a>
+{{/if}}

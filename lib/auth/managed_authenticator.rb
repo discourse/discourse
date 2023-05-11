@@ -32,7 +32,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
   def primary_email_verified?(auth_token)
     # Omniauth providers should only provide verified emails in the :info hash.
     # This method allows additional checks to be added
-    true
+    false
   end
 
   def can_revoke?
@@ -56,28 +56,27 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
   def after_authenticate(auth_token, existing_account: nil)
     # Try and find an association for this account
-    association = UserAssociatedAccount.find_or_initialize_by(provider_name: auth_token[:provider], provider_uid: auth_token[:uid])
+    association =
+      UserAssociatedAccount.find_or_initialize_by(
+        provider_name: auth_token[:provider],
+        provider_uid: auth_token[:uid],
+      )
 
     # Reconnecting to existing account
-    if can_connect_existing_user? && existing_account && (association.user.nil? || existing_account.id != association.user_id)
+    if can_connect_existing_user? && existing_account &&
+         (association.user.nil? || existing_account.id != association.user_id)
       association.user = existing_account
     end
 
     # Matching an account by email
-    if match_by_email &&
-        association.user.nil? &&
-        (user = find_user_by_email(auth_token))
-
+    if match_by_email && association.user.nil? && (user = find_user_by_email(auth_token))
       UserAssociatedAccount.where(user: user, provider_name: auth_token[:provider]).destroy_all # Destroy existing associations for the new user
       association.user = user
     end
 
     # Matching an account by username
-    if match_by_username &&
-        association.user.nil? &&
-        SiteSetting.username_change_period.zero? &&
-        (user = find_user_by_username(auth_token))
-
+    if match_by_username && association.user.nil? && SiteSetting.username_change_period.zero? &&
+         (user = find_user_by_username(auth_token))
       UserAssociatedAccount.where(user: user, provider_name: auth_token[:provider]).destroy_all # Destroy existing associations for the new user
       association.user = user
     end
@@ -100,7 +99,14 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result = Auth::Result.new
     info = auth_token[:info]
     result.email = info[:email]
-    result.name = (info[:first_name] && info[:last_name]) ? "#{info[:first_name]} #{info[:last_name]}" : info[:name]
+    result.name =
+      (
+        if (info[:first_name] && info[:last_name])
+          "#{info[:first_name]} #{info[:last_name]}"
+        else
+          info[:name]
+        end
+      )
     if result.name.present? && result.name == result.email
       # Some IDPs send the email address in the name parameter (e.g. Auth0 with default configuration)
       # We add some generic protection here, so that users don't accidently make their email addresses public
@@ -109,10 +115,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result.username = info[:nickname]
     result.email_valid = primary_email_verified?(auth_token) if result.email.present?
     result.overrides_email = always_update_user_email?
-    result.extra_data = {
-      provider: auth_token[:provider],
-      uid: auth_token[:uid]
-    }
+    result.extra_data = { provider: auth_token[:provider], uid: auth_token[:uid] }
     result.user = association.user
 
     result
@@ -120,7 +123,11 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
   def after_create_account(user, auth_result)
     auth_token = auth_result[:extra_data]
-    association = UserAssociatedAccount.find_or_initialize_by(provider_name: auth_token[:provider], provider_uid: auth_token[:uid])
+    association =
+      UserAssociatedAccount.find_or_initialize_by(
+        provider_name: auth_token[:provider],
+        provider_uid: auth_token[:uid],
+      )
     association.user = user
     association.save!
 
@@ -132,16 +139,12 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
   def find_user_by_email(auth_token)
     email = auth_token.dig(:info, :email)
-    if email && primary_email_verified?(auth_token)
-      User.find_by_email(email)
-    end
+    User.find_by_email(email) if email && primary_email_verified?(auth_token)
   end
 
   def find_user_by_username(auth_token)
     username = auth_token.dig(:info, :nickname)
-    if username
-      User.find_by_username(username)
-    end
+    User.find_by_username(username) if username
   end
 
   def retrieve_avatar(user, url)
@@ -158,7 +161,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
     if bio || location
       profile = user.user_profile
-      profile.bio_raw  = bio      unless profile.bio_raw.present?
+      profile.bio_raw = bio unless profile.bio_raw.present?
       profile.location = location unless profile.location.present?
       profile.save
     end

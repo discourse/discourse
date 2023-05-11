@@ -8,10 +8,18 @@ import lightbox from "discourse/lib/lightbox";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
+import I18n from "I18n";
 
 export default Component.extend(UppyUploadMixin, {
   classNames: ["image-uploader"],
   disabled: or("notAllowed", "uploading", "processing"),
+
+  @discourseComputed("disabled", "notAllowed")
+  disabledReason(disabled, notAllowed) {
+    if (disabled && notAllowed) {
+      return I18n.t("post.errors.no_uploads_authorized");
+    }
+  },
 
   @discourseComputed(
     "currentUser.staff",

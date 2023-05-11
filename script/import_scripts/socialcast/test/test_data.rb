@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-USERS = '{
+USERS =
+  '{
     "users": [
         {
             "contact_info": {
@@ -1082,7 +1083,8 @@ USERS = '{
     ]
 }'
 
-MESSAGES = '{
+MESSAGES =
+  '{
     "messages": [
         {
             "id": 426,
@@ -5429,7 +5431,8 @@ MESSAGES = '{
     "messages_next_page": 2
 }'
 
-MESSAGES_PG_2 = '{
+MESSAGES_PG_2 =
+  '{
     "messages": [
         {
             "id": 386,

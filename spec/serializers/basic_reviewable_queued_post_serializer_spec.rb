@@ -6,7 +6,10 @@ describe BasicReviewableQueuedPostSerializer do
     ReviewableQueuedPost.create!(
       created_by: Discourse.system_user,
       topic_id: topic.id,
-      payload: { raw: "new post 123", title: "unsafe title <a>" }
+      payload: {
+        raw: "new post 123",
+        title: "unsafe title <a>",
+      },
     )
   end
 

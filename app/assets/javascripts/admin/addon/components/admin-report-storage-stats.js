@@ -1,43 +1,45 @@
+import { classNames } from "@ember-decorators/component";
+import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import I18n from "I18n";
-import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { setting } from "discourse/lib/computed";
 
-export default Component.extend({
-  classNames: ["admin-report-storage-stats"],
+@classNames("admin-report-storage-stats")
+export default class AdminReportStorageStats extends Component {
+  @setting("backup_location") backupLocation;
 
-  backupLocation: setting("backup_location"),
-  backupStats: alias("model.data.backups"),
-  uploadStats: alias("model.data.uploads"),
+  @alias("model.data.backups") backupStats;
+
+  @alias("model.data.uploads") uploadStats;
 
   @discourseComputed("backupStats")
   showBackupStats(stats) {
     return stats && this.currentUser.admin;
-  },
+  }
 
   @discourseComputed("backupLocation")
   backupLocationName(backupLocation) {
     return I18n.t(`admin.backups.location.${backupLocation}`);
-  },
+  }
 
   @discourseComputed("backupStats.used_bytes")
   usedBackupSpace(bytes) {
     return I18n.toHumanSize(bytes);
-  },
+  }
 
   @discourseComputed("backupStats.free_bytes")
   freeBackupSpace(bytes) {
     return I18n.toHumanSize(bytes);
-  },
+  }
 
   @discourseComputed("uploadStats.used_bytes")
   usedUploadSpace(bytes) {
     return I18n.toHumanSize(bytes);
-  },
+  }
 
   @discourseComputed("uploadStats.free_bytes")
   freeUploadSpace(bytes) {
     return I18n.toHumanSize(bytes);
-  },
-});
+  }
+}

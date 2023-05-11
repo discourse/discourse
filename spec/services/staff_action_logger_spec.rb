@@ -1,34 +1,33 @@
 # frozen_string_literal: true
 
 RSpec.describe StaffActionLogger do
-
-  fab!(:admin)  { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
   let(:logger) { described_class.new(admin) }
 
-  describe 'new' do
-    it 'raises an error when user is nil' do
+  describe "new" do
+    it "raises an error when user is nil" do
       expect { described_class.new(nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    it 'raises an error when user is not a User' do
+    it "raises an error when user is not a User" do
       expect { described_class.new(5) }.to raise_error(Discourse::InvalidParameters)
     end
   end
 
-  describe 'log_user_deletion' do
+  describe "log_user_deletion" do
     fab!(:deleted_user) { Fabricate(:user) }
 
     subject(:log_user_deletion) { described_class.new(admin).log_user_deletion(deleted_user) }
 
-    it 'raises an error when user is nil' do
+    it "raises an error when user is nil" do
       expect { logger.log_user_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    it 'raises an error when user is not a User' do
+    it "raises an error when user is not a User" do
       expect { logger.log_user_deletion(1) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    it 'creates a new UserHistory record' do
+    it "creates a new UserHistory record" do
       expect { log_user_deletion }.to change { UserHistory.count }.by(1)
     end
   end
@@ -47,24 +46,24 @@ RSpec.describe StaffActionLogger do
     end
   end
 
-  describe 'log_post_deletion' do
+  describe "log_post_deletion" do
     fab!(:deleted_post) { Fabricate(:post) }
 
     subject(:log_post_deletion) { described_class.new(admin).log_post_deletion(deleted_post) }
 
-    it 'raises an error when post is nil' do
+    it "raises an error when post is nil" do
       expect { logger.log_post_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    it 'raises an error when post is not a Post' do
+    it "raises an error when post is not a Post" do
       expect { logger.log_post_deletion(1) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    it 'creates a new UserHistory record' do
+    it "creates a new UserHistory record" do
       expect { log_post_deletion }.to change { UserHistory.count }.by(1)
     end
 
-    it 'does not explode if post does not have a user' do
+    it "does not explode if post does not have a user" do
       expect {
         deleted_post.update_columns(user_id: nil)
         log_post_deletion
@@ -72,65 +71,85 @@ RSpec.describe StaffActionLogger do
     end
   end
 
-  describe 'log_topic_delete_recover' do
+  describe "log_topic_delete_recover" do
     fab!(:topic) { Fabricate(:topic) }
 
     context "when deleting topic" do
-      subject(:log_topic_delete_recover) { described_class.new(admin).log_topic_delete_recover(topic) }
+      subject(:log_topic_delete_recover) do
+        described_class.new(admin).log_topic_delete_recover(topic)
+      end
 
-      it 'raises an error when topic is nil' do
+      it "raises an error when topic is nil" do
         expect { logger.log_topic_delete_recover(nil) }.to raise_error(Discourse::InvalidParameters)
       end
 
-      it 'raises an error when topic is not a Topic' do
+      it "raises an error when topic is not a Topic" do
         expect { logger.log_topic_delete_recover(1) }.to raise_error(Discourse::InvalidParameters)
       end
 
-      it 'creates a new UserHistory record' do
+      it "creates a new UserHistory record" do
         expect { log_topic_delete_recover }.to change { UserHistory.count }.by(1)
       end
     end
 
     context "when recovering topic" do
-      subject(:log_topic_delete_recover) { described_class.new(admin).log_topic_delete_recover(topic, "recover_topic") }
-
-      it 'raises an error when topic is nil' do
-        expect { logger.log_topic_delete_recover(nil, "recover_topic") }.to raise_error(Discourse::InvalidParameters)
+      subject(:log_topic_delete_recover) do
+        described_class.new(admin).log_topic_delete_recover(topic, "recover_topic")
       end
 
-      it 'raises an error when topic is not a Topic' do
-        expect { logger.log_topic_delete_recover(1, "recover_topic") }.to raise_error(Discourse::InvalidParameters)
+      it "raises an error when topic is nil" do
+        expect { logger.log_topic_delete_recover(nil, "recover_topic") }.to raise_error(
+          Discourse::InvalidParameters,
+        )
       end
 
-      it 'creates a new UserHistory record' do
+      it "raises an error when topic is not a Topic" do
+        expect { logger.log_topic_delete_recover(1, "recover_topic") }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+
+      it "creates a new UserHistory record" do
         expect { log_topic_delete_recover }.to change { UserHistory.count }.by(1)
       end
     end
   end
 
-  describe 'log_trust_level_change' do
+  describe "log_trust_level_change" do
     fab!(:user) { Fabricate(:user) }
     let(:old_trust_level) { TrustLevel[0] }
     let(:new_trust_level) { TrustLevel[1] }
 
-    subject(:log_trust_level_change) { described_class.new(admin).log_trust_level_change(user, old_trust_level, new_trust_level) }
-
-    it 'raises an error when user or trust level is nil' do
-      expect { logger.log_trust_level_change(nil, old_trust_level, new_trust_level) }.to raise_error(Discourse::InvalidParameters)
-      expect { logger.log_trust_level_change(user, nil, new_trust_level) }.to raise_error(Discourse::InvalidParameters)
-      expect { logger.log_trust_level_change(user, old_trust_level, nil) }.to raise_error(Discourse::InvalidParameters)
+    subject(:log_trust_level_change) do
+      described_class.new(admin).log_trust_level_change(user, old_trust_level, new_trust_level)
     end
 
-    it 'raises an error when user is not a User' do
-      expect { logger.log_trust_level_change(1, old_trust_level, new_trust_level) }.to raise_error(Discourse::InvalidParameters)
+    it "raises an error when user or trust level is nil" do
+      expect {
+        logger.log_trust_level_change(nil, old_trust_level, new_trust_level)
+      }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_trust_level_change(user, nil, new_trust_level) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+      expect { logger.log_trust_level_change(user, old_trust_level, nil) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
     end
 
-    it 'raises an error when new trust level is not a Trust Level' do
+    it "raises an error when user is not a User" do
+      expect { logger.log_trust_level_change(1, old_trust_level, new_trust_level) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "raises an error when new trust level is not a Trust Level" do
       max_level = TrustLevel.valid_range.max
-      expect { logger.log_trust_level_change(user, old_trust_level, max_level + 1) }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_trust_level_change(user, old_trust_level, max_level + 1) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
     end
 
-    it 'creates a new UserHistory record' do
+    it "creates a new UserHistory record" do
       expect { log_trust_level_change }.to change { UserHistory.count }.by(1)
       expect(UserHistory.last.previous_value).to eq(old_trust_level.to_s)
       expect(UserHistory.last.new_value).to eq(new_trust_level.to_s)
@@ -139,12 +158,18 @@ RSpec.describe StaffActionLogger do
 
   describe "log_site_setting_change" do
     it "raises an error when params are invalid" do
-      expect { logger.log_site_setting_change(nil, '1', '2') }.to raise_error(Discourse::InvalidParameters)
-      expect { logger.log_site_setting_change('i_am_a_site_setting_that_will_never_exist', '1', '2') }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_site_setting_change(nil, "1", "2") }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+      expect {
+        logger.log_site_setting_change("i_am_a_site_setting_that_will_never_exist", "1", "2")
+      }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "creates a new UserHistory record" do
-      expect { logger.log_site_setting_change('title', 'Discourse', 'My Site') }.to change { UserHistory.count }.by(1)
+      expect { logger.log_site_setting_change("title", "Discourse", "My Site") }.to change {
+        UserHistory.count
+      }.by(1)
     end
 
     it "logs boolean values" do
@@ -161,7 +186,6 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_theme_change" do
-
     it "raises an error when params are invalid" do
       expect { logger.log_theme_change(nil, nil) }.to raise_error(Discourse::InvalidParameters)
     end
@@ -171,14 +195,13 @@ RSpec.describe StaffActionLogger do
     end
 
     it "logs new site customizations" do
-
       log_record = logger.log_theme_change(nil, theme)
       expect(log_record.subject).to eq(theme.name)
       expect(log_record.previous_value).to eq(nil)
       expect(log_record.new_value).to be_present
 
       json = ::JSON.parse(log_record.new_value)
-      expect(json['name']).to eq(theme.name)
+      expect(json["name"]).to eq(theme.name)
     end
 
     it "logs updated site customizations" do
@@ -191,7 +214,16 @@ RSpec.describe StaffActionLogger do
       expect(log_record.previous_value).to be_present
 
       json = ::JSON.parse(log_record.new_value)
-      expect(json['theme_fields']).to eq([{ "name" => "scss", "target" => "common", "value" => "body{margin: 10px;}", "type_id" => 1 }])
+      expect(json["theme_fields"]).to eq(
+        [
+          {
+            "name" => "scss",
+            "target" => "common",
+            "value" => "body{margin: 10px;}",
+            "type_id" => 1,
+          },
+        ],
+      )
     end
   end
 
@@ -209,14 +241,24 @@ RSpec.describe StaffActionLogger do
       expect(log_record.new_value).to eq(nil)
       json = ::JSON.parse(log_record.previous_value)
 
-      expect(json['theme_fields']).to eq([{ "name" => "scss", "target" => "common", "value" => "body{margin: 10px;}", "type_id" => 1 }])
+      expect(json["theme_fields"]).to eq(
+        [
+          {
+            "name" => "scss",
+            "target" => "common",
+            "value" => "body{margin: 10px;}",
+            "type_id" => 1,
+          },
+        ],
+      )
     end
   end
 
   describe "log_theme_setting_change" do
-
     it "raises an error when params are invalid" do
-      expect { logger.log_theme_setting_change(nil, nil, nil, nil) }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_theme_setting_change(nil, nil, nil, nil) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
     end
 
     let! :theme do
@@ -229,11 +271,14 @@ RSpec.describe StaffActionLogger do
     end
 
     it "raises an error when theme setting is invalid" do
-      expect { logger.log_theme_setting_change(:inexistent_setting, nil, nil, theme) }.to raise_error(Discourse::InvalidParameters)
+      expect {
+        logger.log_theme_setting_change(:inexistent_setting, nil, nil, theme)
+      }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "logs theme setting changes" do
-      log_record = logger.log_theme_setting_change(:custom_setting, "special", "notsospecial", theme)
+      log_record =
+        logger.log_theme_setting_change(:custom_setting, "special", "notsospecial", theme)
       expect(log_record.subject).to eq("#{theme.name}: custom_setting")
       expect(log_record.previous_value).to eq("special")
       expect(log_record.new_value).to eq("notsospecial")
@@ -242,11 +287,15 @@ RSpec.describe StaffActionLogger do
 
   describe "log_site_text_change" do
     it "raises an error when params are invalid" do
-      expect { logger.log_site_text_change(nil, 'new text', 'old text') }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_site_text_change(nil, "new text", "old text") }.to raise_error(
+        Discourse::InvalidParameters,
+      )
     end
 
     it "creates a new UserHistory record" do
-      expect { logger.log_site_text_change('created', 'new text', 'old text') }.to change { UserHistory.count }.by(1)
+      expect { logger.log_site_text_change("created", "new text", "old text") }.to change {
+        UserHistory.count
+      }.by(1)
     end
   end
 
@@ -255,7 +304,9 @@ RSpec.describe StaffActionLogger do
 
     it "raises an error when arguments are missing" do
       expect { logger.log_user_suspend(nil, nil) }.to raise_error(Discourse::InvalidParameters)
-      expect { logger.log_user_suspend(nil, "He was bad.") }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_user_suspend(nil, "He was bad.") }.to raise_error(
+        Discourse::InvalidParameters,
+      )
     end
 
     it "reason arg is optional" do
@@ -319,122 +370,123 @@ RSpec.describe StaffActionLogger do
     end
   end
 
-  describe 'log_roll_up' do
+  describe "log_roll_up" do
     let(:subnet) { "1.2.3.0/24" }
-    let(:ips) { ["1.2.3.4", "1.2.3.100"] }
+    let(:ips) { %w[1.2.3.4 1.2.3.100] }
 
     subject(:log_roll_up) { described_class.new(admin).log_roll_up(subnet, ips) }
 
-    it 'creates a new UserHistory record' do
+    it "creates a new UserHistory record" do
       log_record = logger.log_roll_up(subnet, ips)
       expect(log_record).to be_valid
       expect(log_record.details).to eq("#{subnet} from #{ips.join(", ")}")
     end
   end
 
-  describe 'log_custom' do
+  describe "log_custom" do
     it "raises an error when `custom_type` is missing" do
       expect { logger.log_custom(nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "creates the UserHistory record" do
-      logged = logger.log_custom('clicked_something',         evil: 'trout',
-                                                              clicked_on: 'thing',
-                                                              topic_id: 1234)
+      logged =
+        logger.log_custom("clicked_something", evil: "trout", clicked_on: "thing", topic_id: 1234)
       expect(logged).to be_valid
       expect(logged.details).to eq("evil: trout\nclicked_on: thing")
       expect(logged.action).to eq(UserHistory.actions[:custom_staff])
-      expect(logged.custom_type).to eq('clicked_something')
+      expect(logged.custom_type).to eq("clicked_something")
       expect(logged.topic_id).to be === 1234
     end
   end
 
-  describe 'log_category_settings_change' do
-    let(:category) { Fabricate(:category, name: 'haha') }
+  describe "log_category_settings_change" do
+    let(:category) { Fabricate(:category, name: "haha") }
     let(:category_group) { Fabricate(:category_group, category: category, permission_type: 1) }
 
     it "raises an error when category is missing" do
-      expect { logger.log_category_settings_change(nil, nil) }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_category_settings_change(nil, nil) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
     end
 
     it "creates new UserHistory records" do
-      attributes = {
-        name: 'new_name',
-        permissions: { category_group.group_name => 2 }
-      }
+      attributes = { name: "new_name", permissions: { category_group.group_name => 2 } }
 
       category.update!(attributes)
 
       logger.log_category_settings_change(
         category,
         attributes,
-        old_permissions: { category_group.group_name => category_group.permission_type }
+        old_permissions: {
+          category_group.group_name => category_group.permission_type,
+        },
       )
 
       expect(UserHistory.count).to eq(2)
 
-      permission_user_history = UserHistory.find_by_subject('permissions')
+      permission_user_history = UserHistory.find_by_subject("permissions")
       expect(permission_user_history.category_id).to eq(category.id)
-      expect(permission_user_history.previous_value).to eq({ category_group.group_name => 1 }.to_json)
+      expect(permission_user_history.previous_value).to eq(
+        { category_group.group_name => 1 }.to_json,
+      )
       expect(permission_user_history.new_value).to eq({ category_group.group_name => 2 }.to_json)
       expect(permission_user_history.action).to eq(UserHistory.actions[:change_category_settings])
       expect(permission_user_history.context).to eq(category.url)
 
-      name_user_history = UserHistory.find_by_subject('name')
+      name_user_history = UserHistory.find_by_subject("name")
       expect(name_user_history.category).to eq(category)
-      expect(name_user_history.previous_value).to eq('haha')
-      expect(name_user_history.new_value).to eq('new_name')
+      expect(name_user_history.previous_value).to eq("haha")
+      expect(name_user_history.new_value).to eq("new_name")
     end
 
-    it "does not log permissions changes for category visible to everyone" do
-      attributes = { name: 'new_name' }
-      old_permission = category.permissions_params
+    it "logs permissions changes even if the category is visible to everyone" do
+      attributes = { name: "new_name" }
+      old_permission = { "everyone" => 1 }
       category.update!(attributes)
 
       logger.log_category_settings_change(
         category,
-        attributes.merge(permissions: { "everyone" => 1 }),
-        old_permissions: old_permission
+        attributes.merge(permissions: { "trust_level_3" => 1 }),
+        old_permissions: old_permission,
       )
 
-      expect(UserHistory.count).to eq(1)
-      expect(UserHistory.find_by_subject('name').category).to eq(category)
+      expect(UserHistory.count).to eq(2)
+      expect(UserHistory.find_by_subject("name").category).to eq(category)
     end
 
     it "logs custom fields changes" do
-      attributes = {
-        custom_fields: { "auto_populated" => "t" }
-      }
+      attributes = { custom_fields: { "auto_populated" => "t" } }
       category.update!(attributes)
 
       logger.log_category_settings_change(
         category,
         attributes,
         old_permissions: category.permissions_params,
-        old_custom_fields: {}
+        old_custom_fields: {
+        },
       )
 
       expect(UserHistory.count).to eq(1)
     end
 
     it "does not log custom fields changes if value is unchanged" do
-      attributes = {
-        custom_fields: { "auto_populated" => "t" }
-      }
+      attributes = { custom_fields: { "auto_populated" => "t" } }
       category.update!(attributes)
 
       logger.log_category_settings_change(
         category,
         attributes,
         old_permissions: category.permissions_params,
-        old_custom_fields: { "auto_populated" => "t" }
+        old_custom_fields: {
+          "auto_populated" => "t",
+        },
       )
 
       expect(UserHistory.count).to eq(0)
     end
   end
 
-  describe 'log_category_deletion' do
+  describe "log_category_deletion" do
     fab!(:parent_category) { Fabricate(:category) }
     fab!(:category) { Fabricate(:category, parent_category: parent_category) }
 
@@ -456,7 +508,7 @@ RSpec.describe StaffActionLogger do
     end
   end
 
-  describe 'log_category_creation' do
+  describe "log_category_creation" do
     fab!(:category) { Fabricate(:category) }
 
     it "raises an error when category is missing" do
@@ -475,7 +527,7 @@ RSpec.describe StaffActionLogger do
     end
   end
 
-  describe 'log_lock_trust_level' do
+  describe "log_lock_trust_level" do
     fab!(:user) { Fabricate(:user) }
 
     it "raises an error when argument is missing" do
@@ -495,7 +547,7 @@ RSpec.describe StaffActionLogger do
     end
   end
 
-  describe 'log_user_activate' do
+  describe "log_user_activate" do
     fab!(:user) { Fabricate(:user) }
 
     it "raises an error when argument is missing" do
@@ -504,86 +556,92 @@ RSpec.describe StaffActionLogger do
 
     it "creates a new UserHistory record" do
       reason = "Staff activated from admin"
-      expect {
-        logger.log_user_activate(user, reason)
-      }.to change { UserHistory.count }.by(1)
+      expect { logger.log_user_activate(user, reason) }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:activate_user])
       expect(user_history.details).to eq(reason)
     end
   end
 
-  describe '#log_readonly_mode' do
+  describe "#log_readonly_mode" do
     it "creates a new record" do
       expect { logger.log_change_readonly_mode(true) }.to change { UserHistory.count }.by(1)
 
       user_history = UserHistory.last
 
       expect(user_history.action).to eq(UserHistory.actions[:change_readonly_mode])
-      expect(user_history.new_value).to eq('t')
-      expect(user_history.previous_value).to eq('f')
+      expect(user_history.new_value).to eq("t")
+      expect(user_history.previous_value).to eq("f")
 
       expect { logger.log_change_readonly_mode(false) }.to change { UserHistory.count }.by(1)
 
       user_history = UserHistory.last
 
       expect(user_history.action).to eq(UserHistory.actions[:change_readonly_mode])
-      expect(user_history.new_value).to eq('f')
-      expect(user_history.previous_value).to eq('t')
+      expect(user_history.new_value).to eq("f")
+      expect(user_history.previous_value).to eq("t")
     end
   end
 
-  describe 'log_check_personal_message' do
+  describe "log_check_personal_message" do
     fab!(:personal_message) { Fabricate(:private_message_topic) }
 
-    subject(:log_check_personal_message) { described_class.new(admin).log_check_personal_message(personal_message) }
+    subject(:log_check_personal_message) do
+      described_class.new(admin).log_check_personal_message(personal_message)
+    end
 
-    it 'raises an error when topic is nil' do
+    it "raises an error when topic is nil" do
       expect { logger.log_check_personal_message(nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    it 'raises an error when topic is not a Topic' do
+    it "raises an error when topic is not a Topic" do
       expect { logger.log_check_personal_message(1) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    it 'creates a new UserHistory record' do
+    it "creates a new UserHistory record" do
       expect { log_check_personal_message }.to change { UserHistory.count }.by(1)
     end
   end
 
-  describe 'log_post_approved' do
+  describe "log_post_approved" do
     fab!(:approved_post) { Fabricate(:post) }
 
     subject(:log_post_approved) { described_class.new(admin).log_post_approved(approved_post) }
 
-    it 'raises an error when post is nil' do
+    it "raises an error when post is nil" do
       expect { logger.log_post_approved(nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    it 'raises an error when post is not a Post' do
+    it "raises an error when post is not a Post" do
       expect { logger.log_post_approved(1) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    it 'creates a new UserHistory record' do
+    it "creates a new UserHistory record" do
       expect { log_post_approved }.to change { UserHistory.count }.by(1)
     end
   end
 
-  describe 'log_post_rejected' do
+  describe "log_post_rejected" do
     fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
 
-    subject(:log_post_rejected) { described_class.new(admin).log_post_rejected(reviewable, DateTime.now) }
-
-    it 'raises an error when reviewable not supplied' do
-      expect { logger.log_post_rejected(nil, DateTime.now) }.to raise_error(Discourse::InvalidParameters)
-      expect { logger.log_post_rejected(1, DateTime.now) }.to raise_error(Discourse::InvalidParameters)
+    subject(:log_post_rejected) do
+      described_class.new(admin).log_post_rejected(reviewable, DateTime.now)
     end
 
-    it 'creates a new UserHistory record' do
+    it "raises an error when reviewable not supplied" do
+      expect { logger.log_post_rejected(nil, DateTime.now) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+      expect { logger.log_post_rejected(1, DateTime.now) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "creates a new UserHistory record" do
       expect { log_post_rejected }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:post_rejected])
-      expect(user_history.details).to include(reviewable.payload['raw'])
+      expect(user_history.details).to include(reviewable.payload["raw"])
     end
 
     it "works if the user was destroyed" do
@@ -593,11 +651,11 @@ RSpec.describe StaffActionLogger do
       expect { log_post_rejected }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:post_rejected])
-      expect(user_history.details).to include(reviewable.payload['raw'])
+      expect(user_history.details).to include(reviewable.payload["raw"])
     end
   end
 
-  describe 'log_topic_closed' do
+  describe "log_topic_closed" do
     fab!(:topic) { Fabricate(:topic) }
 
     it "raises an error when argument is missing" do
@@ -605,12 +663,16 @@ RSpec.describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      expect { logger.log_topic_closed(topic, closed: true) }.to change { UserHistory.where(action: UserHistory.actions[:topic_closed]).count }.by(1)
-      expect { logger.log_topic_closed(topic, closed: false) }.to change { UserHistory.where(action: UserHistory.actions[:topic_opened]).count }.by(1)
+      expect { logger.log_topic_closed(topic, closed: true) }.to change {
+        UserHistory.where(action: UserHistory.actions[:topic_closed]).count
+      }.by(1)
+      expect { logger.log_topic_closed(topic, closed: false) }.to change {
+        UserHistory.where(action: UserHistory.actions[:topic_opened]).count
+      }.by(1)
     end
   end
 
-  describe 'log_topic_archived' do
+  describe "log_topic_archived" do
     fab!(:topic) { Fabricate(:topic) }
 
     it "raises an error when argument is missing" do
@@ -618,12 +680,16 @@ RSpec.describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      expect { logger.log_topic_archived(topic, archived: true) }.to change { UserHistory.where(action: UserHistory.actions[:topic_archived]).count }.by(1)
-      expect { logger.log_topic_archived(topic, archived: false) }.to change { UserHistory.where(action: UserHistory.actions[:topic_unarchived]).count }.by(1)
+      expect { logger.log_topic_archived(topic, archived: true) }.to change {
+        UserHistory.where(action: UserHistory.actions[:topic_archived]).count
+      }.by(1)
+      expect { logger.log_topic_archived(topic, archived: false) }.to change {
+        UserHistory.where(action: UserHistory.actions[:topic_unarchived]).count
+      }.by(1)
     end
   end
 
-  describe 'log_post_staff_note' do
+  describe "log_post_staff_note" do
     fab!(:post) { Fabricate(:post) }
 
     it "raises an error when argument is missing" do
@@ -631,21 +697,25 @@ RSpec.describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      expect { logger.log_post_staff_note(post, { new_value: 'my note', old_value: nil }) }.to change { UserHistory.count }.by(1)
+      expect {
+        logger.log_post_staff_note(post, { new_value: "my note", old_value: nil })
+      }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:post_staff_note_create])
-      expect(user_history.new_value).to eq('my note')
+      expect(user_history.new_value).to eq("my note")
       expect(user_history.previous_value).to eq(nil)
 
-      expect { logger.log_post_staff_note(post, { new_value: '', old_value: 'my note' }) }.to change { UserHistory.count }.by(1)
+      expect {
+        logger.log_post_staff_note(post, { new_value: "", old_value: "my note" })
+      }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:post_staff_note_destroy])
       expect(user_history.new_value).to eq(nil)
-      expect(user_history.previous_value).to eq('my note')
+      expect(user_history.previous_value).to eq("my note")
     end
   end
 
-  describe 'log_post_staff_note' do
+  describe "log_post_staff_note" do
     fab!(:post) { Fabricate(:post) }
 
     it "raises an error when argument is missing" do
@@ -653,21 +723,25 @@ RSpec.describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      expect { logger.log_post_staff_note(post, { new_value: 'my note', old_value: nil }) }.to change { UserHistory.count }.by(1)
+      expect {
+        logger.log_post_staff_note(post, { new_value: "my note", old_value: nil })
+      }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:post_staff_note_create])
-      expect(user_history.new_value).to eq('my note')
+      expect(user_history.new_value).to eq("my note")
       expect(user_history.previous_value).to eq(nil)
 
-      expect { logger.log_post_staff_note(post, { new_value: nil, old_value: 'my note' }) }.to change { UserHistory.count }.by(1)
+      expect {
+        logger.log_post_staff_note(post, { new_value: nil, old_value: "my note" })
+      }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:post_staff_note_destroy])
       expect(user_history.new_value).to eq(nil)
-      expect(user_history.previous_value).to eq('my note')
+      expect(user_history.previous_value).to eq("my note")
     end
   end
 
-  describe '#log_watched_words_creation' do
+  describe "#log_watched_words_creation" do
     fab!(:watched_word) { Fabricate(:watched_word, action: WatchedWord.actions[:block]) }
 
     it "raises an error when watched_word is missing" do
@@ -687,7 +761,7 @@ RSpec.describe StaffActionLogger do
     end
   end
 
-  describe '#log_watched_words_deletion' do
+  describe "#log_watched_words_deletion" do
     fab!(:watched_word) { Fabricate(:watched_word, action: WatchedWord.actions[:block]) }
 
     it "raises an error when watched_word is missing" do

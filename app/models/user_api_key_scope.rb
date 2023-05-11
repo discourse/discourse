@@ -2,26 +2,33 @@
 
 class UserApiKeyScope < ActiveRecord::Base
   SCOPES = {
-    read: [ RouteMatcher.new(methods: :get) ],
-    write: [ RouteMatcher.new(methods: [:get, :post, :patch, :put, :delete]) ],
-    message_bus: [ RouteMatcher.new(methods: :post, actions: 'message_bus') ],
+    read: [RouteMatcher.new(methods: :get)],
+    write: [RouteMatcher.new(methods: %i[get post patch put delete])],
+    message_bus: [RouteMatcher.new(methods: :post, actions: "message_bus")],
     push: [],
     one_time_password: [],
     notifications: [
-      RouteMatcher.new(methods: :post, actions: 'message_bus'),
-      RouteMatcher.new(methods: :get, actions: 'notifications#index'),
-      RouteMatcher.new(methods: :put, actions: 'notifications#mark_read')
+      RouteMatcher.new(methods: :post, actions: "message_bus"),
+      RouteMatcher.new(methods: :get, actions: "notifications#index"),
+      RouteMatcher.new(methods: :put, actions: "notifications#mark_read"),
     ],
     session_info: [
-      RouteMatcher.new(methods: :get, actions: 'session#current'),
-      RouteMatcher.new(methods: :get, actions: 'users#topic_tracking_state')
+      RouteMatcher.new(methods: :get, actions: "session#current"),
+      RouteMatcher.new(methods: :get, actions: "users#topic_tracking_state"),
     ],
-    bookmarks_calendar: [ RouteMatcher.new(methods: :get, actions: 'users#bookmarks', formats: :ics, params: %i[username]) ],
+    bookmarks_calendar: [
+      RouteMatcher.new(
+        methods: :get,
+        actions: "users#bookmarks",
+        formats: :ics,
+        params: %i[username],
+      ),
+    ],
     user_status: [
-      RouteMatcher.new(methods: :get, actions: 'user_status#get'),
-      RouteMatcher.new(methods: :put, actions: 'user_status#set'),
-      RouteMatcher.new(methods: :delete, actions: 'user_status#clear')
-    ]
+      RouteMatcher.new(methods: :get, actions: "user_status#get"),
+      RouteMatcher.new(methods: :put, actions: "user_status#set"),
+      RouteMatcher.new(methods: :delete, actions: "user_status#clear"),
+    ],
   }
 
   def self.all_scopes

@@ -201,38 +201,38 @@ ru:
       email: "Отправить по электронной почте"
       url: "Копировать ссылку и поделиться"
     action_codes:
-      public_topic: "сделал(а) тему публичной %{when}"
-      open_topic: "преобразовал(а) это в тему %{when}"
-      private_topic: "сделал(а) тему личным сообщением %{when}"
-      split_topic: "разделил(а) эту тему %{when}"
-      invited_user: "пригласил(а) %{who} %{when}"
-      invited_group: "пригласил(а) %{who} %{when}"
+      public_topic: "Сделал(а) тему публичной %{when}"
+      open_topic: "Преобразовал(а) это в тему %{when}"
+      private_topic: "Сделал(а) тему личным сообщением %{when}"
+      split_topic: "Разделил(а) эту тему %{when}"
+      invited_user: "Пригласил(а) %{who} %{when}"
+      invited_group: "Пригласил(а) %{who} %{when}"
       user_left: "%{who} удалил(а) себя из этого сообщения %{when}"
-      removed_user: "удалил(а) %{who} %{when}"
-      removed_group: "удалил(а) %{who} %{when}"
-      autobumped: "автоматически поднято %{when}"
+      removed_user: "Удалил(а) %{who} %{when}"
+      removed_group: "Удалил(а) %{who} %{when}"
+      autobumped: "Автоматически поднято %{when}"
       autoclosed:
-        enabled: "закрыл(а) тему %{when}"
-        disabled: "открыл(а) тему %{when}"
+        enabled: "Закрыл(а) тему %{when}"
+        disabled: "Открыл(а) тему %{when}"
       closed:
-        enabled: "закрыл(а) тему %{when}"
-        disabled: "открыл(а) тему %{when}"
+        enabled: "Закрыл(а) тему %{when}"
+        disabled: "Открыл(а) тему %{when}"
       archived:
-        enabled: "архивировал(а) тему %{when}"
-        disabled: "разархивировал(а) тему %{when}"
+        enabled: "Архивировал(а) тему %{when}"
+        disabled: "Разархивировал(а) тему %{when}"
       pinned:
-        enabled: "закрепил(а) тему %{when}"
-        disabled: "открепил(а) тему %{when}"
+        enabled: "Закрепил(а) тему %{when}"
+        disabled: "Открепил(а) тему глобально %{when}"
       pinned_globally:
-        enabled: "закрепил(а) тему глобально %{when}"
-        disabled: "открепил(а) тему глобально %{when}"
+        enabled: "Закрепил(а) тему глобально %{when}"
+        disabled: "Открепил(а) тему глобально %{when}"
       visible:
-        enabled: "включил(а) отображение темы %{when}"
-        disabled: "выключил(а) отображение темы %{when}"
+        enabled: "Включил(а) отображение темы %{when}"
+        disabled: "Выключил(а) отображение темы %{when}"
       banner:
-        enabled: "создал(а) баннер %{when}, который будет отображаться сверху на всех страницах, пока пользователь не скроет его."
-        disabled: "удалил(а) баннер %{when}. Он не будет отображаться вверху каждой страницы."
-      forwarded: "переадресовал(а) вышеуказанное письмо"
+        enabled: "Создал(а) баннер %{when}, который будет отображаться сверху на всех страницах, пока пользователь не скроет его."
+        disabled: "Удалил(а) баннер %{when}. Он не будет отображаться вверху каждой страницы."
+      forwarded: "Переадресовал(а) вышеуказанное письмо"
     topic_admin_menu: "действия администратора над темой"
     skip_to_main_content: "Перейти к основному контенту"
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Никакие уведомления по электронной почте отправляться не будут."
@@ -240,14 +240,6 @@ ru:
     software_update_prompt:
       message: "Сайт обновлён. <span>Перезагрузите страницу</span> (иначе вы можете столкнуться с неожиданным поведением)."
       dismiss: "Закрыть"
-    bootstrap_mode_enabled:
-      one: "Для скорейшего развития сайта был включен специальный режим работы. В этом режиме всем новым пользователям присваивается 1-й уровень доверия и включается ежедневная почтовая рассылка сводки новостей. Этот режим будет автоматически выключен, как только количество зарегистрированных пользователей достигнет %{count}."
-      few: "Для скорейшего развития сайта был включен специальный режим работы. В этом режиме всем новым пользователям присваивается 1-й уровень доверия и включается ежедневная почтовая рассылка сводки новостей. Этот режим будет автоматически выключен, как только количество зарегистрированных пользователей достигнет %{count}."
-      many: "Для скорейшего развития сайта был включен специальный режим работы. В этом режиме всем новым пользователям присваивается 1-й уровень доверия и включается ежедневная почтовая рассылка сводки новостей. Этот режим будет автоматически выключен, как только количество зарегистрированных пользователей достигнет %{count}."
-      other: "Для скорейшего развития сайта был включен специальный режим работы. В этом режиме всем новым пользователям присваивается 1-й уровень доверия и включается ежедневная почтовая рассылка сводки новостей. Этот режим будет автоматически выключен, как только количество зарегистрированных пользователей достигнет %{count}."
-    bootstrap_mode_disabled: "Специальный режим будет отключён в течение 24 часов."
-    bootstrap_invite_button_title: "Отправить приглашения"
-    bootstrap_wizard_link_title: "Завершить работу мастера настройки"
     themes:
       default_description: "По умолчанию"
       broken_theme_alert: "Сайт может не работать: в теме (компоненте) есть ошибки."
@@ -290,6 +282,7 @@ ru:
     delete: "Удалить"
     generic_error: "Произошла ошибка."
     generic_error_with_reason: "Произошла ошибка: %{error}"
+    multiple_errors: "Произошло несколько ошибок: %{errors}"
     sign_up: "Регистрация"
     log_in: "Вход"
     age: "Возраст"
@@ -356,6 +349,7 @@ ru:
       like_count: "Лайки"
       topic_count: "Темы"
       post_count: "Записи"
+      user_count: "Регистрации"
       active_user_count: "Активные пользователи"
       contact: "Контакты"
       contact_info: "В случае возникновения критической ошибки или срочного вопроса, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
@@ -364,11 +358,9 @@ ru:
       edit_bookmark: "Изменить закладку"
       clear_bookmarks: "Очистить закладки"
       help:
-        bookmark: "Добавить первую запись темы в закладки"
-        edit_bookmark: "Изменить закладку в этой теме"
         edit_bookmark_for_topic: "Изменить закладку для этой темы"
         unbookmark: "Удалить все закладки в этой теме"
-        unbookmark_with_reminder: "Удалить все закладки и напоминания из этой темы."
+        unbookmark_with_reminder: "Удалить все закладки и напоминания из этой темы"
     bookmarks:
       created: "Вы добавили эту запись в закладки: «%{name}»"
       created_generic: "Добавлено в закладки: «%{name}»"
@@ -378,7 +370,6 @@ ru:
       remove_reminder_keep_bookmark: "Удалить напоминание, но оставить закладку"
       created_with_reminder: "Вы добавили эту запись в закладки с напоминанием %{date}: «%{name}»"
       created_with_reminder_generic: "Добавлено в закладки с напоминанием %{date}: «%{name}»"
-      remove: "Удаление закладки"
       delete: "Удалить закладку"
       confirm_delete: "Действительно удалить эту закладку? Напоминание также будет удалено."
       confirm_clear: "Действительно удалить все ваши закладки из этой темы?"
@@ -413,7 +404,6 @@ ru:
       new_topic: "Черновик новой темы"
       new_private_message: "Черновик нового личного сообщения"
       abandon:
-        confirm: "По этой теме есть сохранённый черновик. Что с ним сделать?"
         yes_value: "Удалить"
         no_value: "Возобновить редактирование"
     topic_count_categories:
@@ -458,9 +448,6 @@ ru:
     enable: "Включить"
     disable: "Отключить"
     continue: "Продолжить"
-    undo: "Отменить"
-    revert: "Вернуть"
-    failed: "Проблема"
     switch_to_anon: "Войти в анонимный режим"
     switch_from_anon: "Выйти из анонимного режима"
     banner:
@@ -548,7 +535,7 @@ ru:
         reject_reason: "Причина"
       user_percentage:
         summary:
-          one: "%{agreed}, %{disagreed}, %{ignored}"
+          one: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалобы)"
           few: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалоб)"
           many: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалоб)"
           other: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалобы)"
@@ -613,11 +600,9 @@ ru:
       scores:
         about: "Оценка рассчитывается на основе уровня доверия сообщающего, точности его предыдущих жалоб и приоритета предмета жалобы."
         score: "Оценка"
-        date: "Дата"
-        type: "Тип"
+        type: "Причина"
         status: "Статус"
-        submitted_by: "Отправлено"
-        reviewed_by: "Проверено"
+        submitted_by: "Жалоба от"
       statuses:
         pending:
           title: "В ожидании"
@@ -625,14 +610,12 @@ ru:
           title: "Одобренные"
         rejected:
           title: "Отклонённые"
-        ignored:
-          title: "Проигнорированные"
-        deleted:
-          title: "Удалённые"
         reviewed:
-          title: "(все рассмотренные)"
+          title: "Все рассмотренные"
         all:
-          title: "(все)"
+          title: "Все"
+      context_question:
+        delimiter: "или"
       types:
         reviewable_flagged_post:
           title: "На эту запись поступила жалоба"
@@ -785,6 +768,7 @@ ru:
         denied: "отказано"
         undone: "запрос отменён"
         handle: "обрабатывать запрос на вступление"
+        undo: "Отменить"
       manage:
         title: "Управление"
         name: "Имя"
@@ -954,6 +938,7 @@ ru:
         make_all_primary_description: "Сделать основной группой для всех выбранных пользователей"
         remove_all_primary: "Удалить как основную"
         remove_all_primary_description: "Удалить как основную группу"
+        status: "Статус"
         owner: "Владелец"
         primary: "Основная"
         forbidden: "Вы не можете просматривать участников."
@@ -1068,7 +1053,7 @@ ru:
     ip_lookup:
       title: Поиск IP-адреса
       hostname: Название хоста
-      location: Расположение
+      location: Местонахождение
       location_not_found: (расположение неизвестно)
       organisation: Организация
       phone: Телефон
@@ -1091,11 +1076,6 @@ ru:
       profile: "Профиль"
       mute: "Отключить"
       edit: "Изменить настройки"
-      download_archive:
-        button_text: "Скачать всё"
-        confirm: "Действительно скачать записи?"
-        success: "Скачивание началось, вы будете уведомлены об окончании процесса."
-        rate_limit_error: "Записи могут быть скачаны лишь раз в день, попробуйте завтра."
       new_private_message: "Новое сообщение"
       private_message: "Сообщение"
       private_messages: "Сообщения"
@@ -1123,7 +1103,7 @@ ru:
       notification_schedule:
         title: "Расписание уведомлений"
         label: "Включить расписание уведомлений"
-        tip: "Вне указанных здесь часов автоматически включается режим «Не беспокоить»."
+        tip: "Вне указанных здесь часов уведомления приостанавливаются."
         midnight: "Полночь"
         none: "Уведомления отключены"
         monday: "Понедельник"
@@ -1167,13 +1147,16 @@ ru:
         perm_denied_expl: "Вы запретили уведомления в браузере. Разрешите уведомления в настройках браузера."
         disable: "Отключить уведомления"
         enable: "Включить уведомления"
-        each_browser_note: 'Примечание: этот параметр необходимо изменить в каждом используемом браузере. В режиме «Не беспокоить» все уведомления, касающиеся форума, будут отключены, вне зависимости от значения этого параметра.'
+        each_browser_note: "Примечание: этот параметр необходимо изменить в каждом используемом браузере. Если приостановить уведомления в меню пользователя, они будут отключены независимо от этого параметра."
         consent_prompt: "Вы хотите получать уведомления в реальном времени, когда пользователи отвечают на ваши записи?"
       dismiss: "Пометить прочитанными"
       dismiss_notifications: "Отклонить всё"
       dismiss_notifications_tooltip: "Пометить все непрочитанные уведомления прочитанными"
       dismiss_bookmarks_tooltip: "Пометить все непрочитанные напоминания о закладках как прочитанные"
       dismiss_messages_tooltip: "Отметить все уведомления о непрочитанных личных сообщениях как прочитанные"
+      no_likes_title: "Вы еще не получили ни одного лайка"
+      no_likes_body: >
+        Когда кому-то из пользователей понравится одна из ваших записей, здесь появится уведомление. Когда вы поставите лайк кому-то, этот пользователь получит аналогичное уведомление. <br><br>Уведомления о лайках на почту не приходят. Изменить способ получения уведомлений о лайках можно в <a href='%{preferencesUrl}'>настройках уведомлений</a>.
       no_messages_title: "У вас нет сообщений"
       no_messages_body: >
         Необходимо непубличное общение с кем-то из участников форума? Напишите сообщение, кликнув на аватар участника и нажав на кнопку %{icon}.<br><br> Если нужна помощь, можете <a href='%{aboutUrl}'>написать нашему сотруднику</a>.
@@ -1193,6 +1176,7 @@ ru:
       dynamic_favicon: "Показывать количество на значке браузера"
       skip_new_user_tips:
         description: "Не выдавать награды и не показывать советы новым пользователям"
+      reset_seen_user_tips: "Показать советы для пользователей еще раз"
       theme_default_on_all_devices: "Сделать эту тему темой по умолчанию на всех моих устройствах"
       color_scheme_default_on_all_devices: "Установить цветовую схему по умолчанию на всех моих устройствах"
       color_scheme: "Цветовая схема"
@@ -1219,6 +1203,9 @@ ru:
         tags_section: "Раздел тегов"
         tags_section_instruction: "Выбранные теги будут отображаться в соответствующем разделе боковой панели."
         navigation_section: "Навигация"
+        list_destination_instruction: "Когда на боковой панели появляется новый контент…"
+        list_destination_default: "использовать ссылку по умолчанию и показать значок для нового"
+        list_destination_unread_new: "использовать ссылку на непрочитанные (новые) и показать количество нового"
       change: "изменить"
       featured_topic: "Избранная тема"
       moderator: "%{user} — модератор"
@@ -1288,13 +1275,6 @@ ru:
       save_to_change_theme: 'Тема будет обновлена после нажатия на кнопку «%{save_text}».'
       home: "Домашняя страница"
       staged: "Сымитированный"
-      staff_counters:
-        flags_given: "полезные жалобы"
-        flagged_posts: "записи с жалобами"
-        deleted_posts: "удалённые записи"
-        suspensions: "заморозки"
-        warnings_received: "предупреждения"
-        rejected_posts: "отклонённые записи"
       messages:
         all: "все"
         inbox: "Входящие"
@@ -1323,12 +1303,85 @@ ru:
         warnings: "Официальные предупреждения"
         read_more_in_group: "Хотите почитать ещё? Просмотрите другие сообщения в группе %{groupLink}."
         read_more: "Хотите почитать ещё? Просмотрите другие сообщения в разделе «<a href='%{basePath}/u/%{username}/messages'>Личные сообщения</a>»."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанное</a>}
+                   few {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a>}
+                   many {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a>}
+                other {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанного</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { и <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новое</a> сообщение, вы также можете посмотреть другие сообщения в группе {groupLink}}
+                   few { и <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
+                   many { и <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщений, вы также можете посмотреть другие сообщения в группе {groupLink}}
+                other { и <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нового</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанное</a> сообщение, вы также можете посмотреть другие сообщения в группе {groupLink}}
+                   few {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
+                   many {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a> сообщений, вы также можете посмотреть другие сообщения в группе {groupLink}}
+                other {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанного</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новое</a> сообщение, вы также можете посмотреть другие сообщения в группе {groupLink}}
+                   few {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
+                   many {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщений, вы также можете посмотреть другие сообщения в группе {groupLink}}
+                other {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нового</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанное</a>}
+                   few {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a>}
+                   many {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a>}
+                other {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанного</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { и <a href='{basePath}/u/{username}/messages/new'># новое</a> сообщение, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+                   few { и <a href='{basePath}/u/{username}/messages/new'># новых</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+                   many { и <a href='{basePath}/u/{username}/messages/new'># новых</a> сообщений, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+                other { и <a href='{basePath}/u/{username}/messages/new'># нового</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанное</a> сообщение, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+                   few {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+                   many {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a> сообщений, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+                other {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанного</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Осталось <a href='{basePath}/u/{username}/messages/new'># новое</a> сообщение, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+                   few {Осталось <a href='{basePath}/u/{username}/messages/new'># новых</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+                   many {Осталось <a href='{basePath}/u/{username}/messages/new'># новых</a> сообщений, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+                other {Осталось <a href='{basePath}/u/{username}/messages/new'># нового</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Аккаунт"
         security: "Безопасность"
         profile: "Профиль"
         emails: "Письма"
         notifications: "Уведомления"
+        tracking: "Следить"
         categories: "Категории"
         users: "Пользователи"
         tags: "Теги"
@@ -1348,13 +1401,11 @@ ru:
         title: "Резервные коды двухфакторной аутентификации"
         regenerate: "Сгенерировать заново"
         disable: "Отключить"
-        enable: "Включить"
-        enable_long: "Включить резервные коды"
         manage:
-          one: "Управление резервными кодами. У вас остался <strong>%{count}</strong> резервный код."
-          few: "Управление резервными кодами. У вас осталось <strong>%{count}</strong> резервных кода."
-          many: "Управление резервными кодами. У вас осталось <strong>%{count}</strong> резервных кодов."
-          other: "Управление резервными кодами. У вас осталось <strong>%{count}</strong> резервного кода."
+          one: "У вас остался <strong>%{count}</strong> резервный код."
+          few: "У вас осталось <strong>%{count}</strong> резервных кода."
+          many: "У вас осталось <strong>%{count}</strong> резервных кодов."
+          other: "У вас осталось <strong>%{count}</strong> резервного кода."
         copy_to_clipboard: "Скопировать в буфер"
         copy_to_clipboard_error: "Ошибка при копировании данных в буфер обмена"
         copied_to_clipboard: "Скопировано в буфер"
@@ -1390,6 +1441,14 @@ ru:
         use: "Используйте приложение аутентификации"
         enforced_notice: "Перед входом на сайт вы должны включить двухфакторную аутентификацию."
         disable: "Отключить"
+        disable_confirm: "Действительно отключить двухфакторную аутентификацию?"
+        delete: "Удалить"
+        delete_confirm_header: "Следующие аутентификаторы на токенах и физические электронные ключи будут удалены:"
+        delete_confirm_instruction: "Для подтверждения введите <strong>%{confirm}</strong> в поле ниже."
+        delete_single_confirm_title: "Удаление аутентификатора"
+        delete_single_confirm_message: "Вы удаляете аутентификатор «%{name}». Это действие отменить нельзя. Если вы передумаете, его придется зарегистрировать заново."
+        delete_backup_codes_confirm_title: "Удаление резервных кодов"
+        delete_backup_codes_confirm_message: "Вы удаляете резервные коды. Это действие отменить нельзя. Если вы передумаете, их придется сгенерировать заново."
         save: "Сохранить"
         edit: "Изменить"
         edit_title: "Изменить приложение аутентификации"
@@ -1404,16 +1463,16 @@ ru:
         security_key:
           register: "Зарегистрировать"
           title: "Физические ключи безопасности"
-          add: "Добавить физический ключ безопасности"
-          default_name: "Главный ключ безопасности"
+          add: "Добавить физический электронный ключ"
+          default_name: "Главный электронный ключ"
           iphone_default_name: "iPhone"
           android_default_name: "Android"
-          not_allowed_error: "Время регистрации ключа безопасности истекло или регистрация была отменена."
-          already_added_error: "Вы уже зарегистрировали этот ключ безопасности. Вам не нужно регистрировать его снова."
-          edit: "Изменить физический ключ безопасности"
+          not_allowed_error: "Время регистрации электронного ключа истекло или регистрация была отменена."
+          already_added_error: "Вы уже зарегистрировали этот электронный ключ. Вам не нужно регистрировать его снова."
+          edit: "Изменить физический электронный ключ"
           save: "Сохранить"
           edit_description: "Название ключа физической безопасности"
-          name_required_error: "Укажите название ключа безопасности"
+          name_required_error: "Укажите название электронного ключа."
       change_about:
         title: "Изменить информацию обо мне"
         error: "При изменении значения произошла ошибка."
@@ -1558,6 +1617,8 @@ ru:
         title: "В заголовке фоновой страницы отображать:"
         notifications: "Количество новых уведомлений"
         contextual: "Количество контента новой страницы"
+      bookmark_after_notification:
+        title: "После отправки напоминания о закладке:"
       like_notification_frequency:
         title: "Уведомлять при получении лайка"
         always: "Всегда"
@@ -1587,6 +1648,7 @@ ru:
       email_in_reply_to: "Включать в письмо выдержку из ответов на запись"
       other_settings: "Прочее"
       categories_settings: "Категории"
+      topics_settings: "Темы"
       new_topic_duration:
         label: "Считать темы новыми, если они"
         not_viewed: "ещё не просмотрены"
@@ -1702,7 +1764,7 @@ ru:
         instructions: "минимум символов: %{count}"
         required: "Введите пароль"
       summary:
-        title: "Спойлер"
+        title: "Сводка"
         stats: "Статистика"
         time_read: "время чтения"
         time_read_title: "%{duration} (за всё время)"
@@ -1792,7 +1854,7 @@ ru:
       filters:
         all: "Все"
       stream:
-        posted_by: "Опубликовано"
+        posted_by: "Автор"
         sent_by: "Отправлено"
         private_message: "сообщение"
         the_topic: "тема"
@@ -1800,7 +1862,26 @@ ru:
       save: "Сохранить"
       set_custom_status: "Поменять статус"
       what_are_you_doing: "Что вы сейчас делаете?"
+      pause_notifications: "Приостановить уведомления"
       remove_status: "Удалить статус"
+    user_tips:
+      primary: "Понятно!"
+      secondary: "Не показывать советы"
+      first_notification:
+        title: "Ваше первое уведомление!"
+        content: "Уведомления используются для того, чтобы держать вас в курсе происходящего в сообществе."
+      topic_timeline:
+        title: "Шкала времени"
+        content: "Вы можете быстро прокрутить запись, используя шкалу времени."
+      post_menu:
+        title: "Меню записи"
+        content: "Нажав на три точки, вы увидите дополнительные варианты действий с записью."
+      topic_notification_levels:
+        title: "Теперь эта тема у вас в отслеживаемых"
+        content: "Этот колокольчик позволяет настроить уведомления для конкретных тем и целых категорий."
+      suggested_topics:
+        title: "Читайте еще!"
+        content: "Вот темы, которые вам может быть интересно прочитать в следующий раз."
     loading: "Загрузка…"
     errors:
       prev_page: "при попытке загрузки"
@@ -1835,6 +1916,52 @@ ru:
       logout_disabled: "Выход отключён, пока сайт находится в режиме «только для чтения»"
     staff_writes_only_mode:
       enabled: "Сайт находится в режиме «только для персонала». Продолжайте просмотр, но отвечать, ставить лайки и выполнять другие действия, влияющие на контент, могут только сотрудники."
+    too_few_topics_and_posts_notice_MF: |
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">приступим к обсуждению!</a> Есть { currentTopics, plural,
+          one {<strong>#</strong> тема}
+          few {<strong>#</strong> темы}
+          many {<strong>#</strong> тем}
+        other {<strong>#</strong> темы}
+      } и { currentPosts, plural,
+          one {<strong>#</strong> запись}
+          few {<strong>#</strong> записи}
+          many {<strong>#</strong> записей}
+        other {<strong>#</strong> записи}
+      }. Пользователи должны больше читать и отвечать — мы рекомендуем по крайней мере {requiredTopics, plural,
+          one {<strong>#</strong> тему}
+          few {<strong>#</strong> темы}
+          many {<strong>#</strong> тем}
+        other {<strong>#</strong> темы}
+      } и { requiredPosts, plural,
+          one {<strong>#</strong> запись}
+          few {<strong>#</strong> записи}
+          many {<strong>#</strong> записей}
+        other {<strong>#</strong> записи}
+      }. Только персонал может видеть это сообщение.
+    too_few_topics_notice_MF: |
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">приступим к обсуждению!</a> Есть { currentTopics, plural,
+          one {<strong>#</strong> тема}
+          few {<strong>#</strong> темы}
+          many {<strong>#</strong> тем}
+        other {<strong>#</strong> темы}
+      }. Пользователи должны больше читать и отвечать — мы рекомендуем по крайней мере {requiredTopics, plural,
+          one {<strong>#</strong> тему}
+          few {<strong>#</strong> темы}
+          many {<strong>#</strong> тем}
+        other {<strong>#</strong> темы}
+      }. Только персонал может видеть это сообщение.
+    too_few_posts_notice_MF: |
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">приступим к обсуждению!</a> Есть { currentPosts, plural,
+          one {<strong>#</strong> запись}
+          few {<strong>#</strong> записи}
+          many {<strong>#</strong> записей}
+        other {<strong>#</strong> записи}
+      }. Пользователи должны больше читать и отвечать — мы рекомендуем по крайней мере {requiredPosts, plural,
+          one {<strong>#</strong> запись}
+          few {<strong>#</strong> записи}
+          many {<strong>#</strong> записей}
+        other {<strong>#</strong> записи}
+      }. Только персонал может видеть это сообщение.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# ошибка в час} few {# ошибки в час} many {# ошибок в час} other {# ошибки в час}}</a>: достигнут предел для настроек сайта — {limit, plural, one {# ошибка в час} few {# ошибки в час} many {# ошибок в час} other {# ошибки в час}}.
@@ -1912,7 +2039,7 @@ ru:
       associate: "Уже есть аккаунт? <a href='%{associate_link}'>Войдите в систему</a> для привязки аккаунта %{provider}."
     forgot_password:
       title: "Сброс пароля"
-      action: "Я забыл(-а) свой пароль"
+      action: "Пароль утерян"
       invite: "Введите имя пользователя или адрес электронной почты, и мы отправим вам ссылку для сброса пароля."
       invite_no_username: "Введите адрес электронной почты, и мы отправим вам ссылку для сброса пароля."
       reset: "Сбросить пароль"
@@ -1945,6 +2072,10 @@ ru:
       title: "Войти"
       username: "Пользователь"
       password: "Пароль"
+      show_password: "Показать"
+      hide_password: "Скрыть"
+      show_password_title: "Показать пароль"
+      hide_password_title: "Скрыть пароль"
       second_factor_title: "Двухфакторная аутентификация"
       second_factor_description: "Введите код аутентификации из приложения:"
       second_factor_backup: "Войти с помощью резервного кода"
@@ -1966,6 +2097,7 @@ ru:
       blank_username_or_password: "Введите эл. почту или имя пользователя и пароль."
       reset_password: "Сбросить пароль"
       logging_in: "Вход…"
+      previous_sign_up: "Уже есть аккаунт?"
       or: "или"
       authenticating: "Проверка…"
       awaiting_activation: "Аккаунт ожидает активации через ссылку, указанную в отправленном письме. Чтобы повторно выслать активационное письмо, используйте кнопку сброса пароля."
@@ -1984,7 +2116,7 @@ ru:
       sent_activation_email_again_generic: "Мы отправили ещё одно письмо для активации. Доставка сообщения может занять несколько минут; не забудьте проверить папку со спамом."
       to_continue: "Войдите"
       preferences: "Для изменения параметров пользователя необходимо войти на сайт."
-      not_approved: "Ваш аккаунт ещё не одобрен. Когда появится возможность войти, вы получите письмо."
+      not_approved: "Аккаунт ещё не одобрен. Когда появится возможность войти, вы получите письмо."
       google_oauth2:
         name: "Google"
         title: "Войти через Google"
@@ -2024,6 +2156,7 @@ ru:
       success: "Аккаунт создан и вы вошли в него."
       name_label: "Имя"
       password_label: "Пароль"
+      existing_user_can_redeem: "Примите приглашение в тему или группу."
     password_reset:
       continue: "Перейти на %{site_name}"
     emoji_set:
@@ -2155,12 +2288,21 @@ ru:
         private: "Вы упомянули @%{username}, но уведомление отправлено не будет, потому что пользователь не может видеть это личное сообщение. Вам нужно пригласить его в это личное сообщение."
         muted_topic: "Вы упомянули @%{username}, но уведомление отправлено не будет, потому что пользователь отключил уведомления в этой теме."
         not_allowed: "Вы упомянули @%{username}, но уведомление отправлено не будет, потому что пользователь не был приглашен в эту тему."
+      cannot_see_group_mention:
+        not_mentionable: "Вы не можете упоминать группу «@%{group}»."
+        some_not_allowed:
+          one: "Вы упомянули группу «@%{group}», но уведомлен будет только %{count} пользователь: остальные не могут видеть это личное сообщение. Вам нужно пригласить их в это личное сообщение."
+          few: "Вы упомянули группу «@%{group}», но уведомлены будут только %{count} пользователя: остальные не могут видеть это личное сообщение. Вам нужно пригласить их в это личное сообщение."
+          many: "Вы упомянули группу «@%{group}», но уведомлены будут только %{count} пользователей: остальные не могут видеть это личное сообщение. Вам нужно пригласить их в это личное сообщение."
+          other: "Вы упомянули группу «@%{group}», но уведомлены будут только %{count} пользователя: остальные не могут видеть это личное сообщение. Вам нужно пригласить их в это личное сообщение."
+        not_allowed: "Вы упомянули группу «@%{group}», но никто из ее участников уведомлен не будет: они не могут видеть это личное сообщение. Вам нужно пригласить их в это личное сообщение."
       here_mention:
         one: "Упоминая <b>@%{here}</b>, вы уведомите %{count} пользователя — вы уверены?"
         few: "Упоминая <b>@%{here}</b>, вы уведомите %{count} пользователей — вы уверены?"
         many: "Упоминая <b>@%{here}</b>, вы уведомите %{count} пользователей — вы уверены?"
         other: "Упоминая <b>@%{here}</b>, вы уведомите %{count} пользователя — вы уверены?"
       duplicate_link: "Ссылка на <b>%{domain}</b> уже была размещена пользователем <b>@%{username}</b> в <a href='%{post_url}'>этом ответе %{ago}</a>. Разместить её ещё раз?"
+      duplicate_link_same_user: "Ссылка на <b>%{domain}</b> уже была размещена вами здесь в <a href='%{post_url}'>этом ответе %{ago}</a>. Разместить её ещё раз?"
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Требуется название темы"
@@ -2190,8 +2332,6 @@ ru:
         topic_template_not_modified: "Впишите подробности темы в шаблон."
       save_edit: "Сохранить"
       overwrite_edit: "Перезаписать"
-      reply_original: "Ответить в первоначальной теме"
-      reply_here: "Ответить в текущей теме"
       reply: "Ответить"
       cancel: "Отмена"
       create_topic: "Создать тему"
@@ -2310,10 +2450,20 @@ ru:
           few: "%{count} непрочитанных уведомления с высоким приоритетом"
           many: "%{count} непрочитанных уведомлений с высоким приоритетом"
           other: "%{count} непрочитанного уведомления с высоким приоритетом"
+        new_message_notification:
+          one: "%{count} уведомление о новых сообщениях"
+          few: "%{count} уведомления о новых сообщениях"
+          many: "%{count} уведомлений о новых сообщениях"
+          other: "%{count} уведомления о новых сообщениях"
+        new_reviewable:
+          one: "%{count} новый элемент на проверку"
+          few: "%{count} новых элемента на проверку"
+          many: "%{count} новых элементов на проверку"
+          other: "%{count} нового элемента на проверку"
       title: "уведомления об упоминании @имени, об ответах на ваши записи, темы, сообщения и т. д."
       none: "Не удается загрузить уведомления."
       empty: "Уведомления не найдены."
-      post_approved: "Ваша запись одобрена"
+      post_approved: "Запись одобрена"
       reviewable_items: "элементы, требующие проверки"
       watching_first_post_label: "Новая тема"
       user_moved_post: "%{username} — перемещено"
@@ -2323,6 +2473,7 @@ ru:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2362,6 +2513,8 @@ ru:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} — завершено"
+      new_features: "Появились новые функции!"
+      admin_problems: "Новые советы в панели администратора"
       dismiss_confirmation:
         body:
           default:
@@ -2408,6 +2561,7 @@ ru:
         invited_to_private_message: "Приглашен(а) в личное сообщение"
         invitee_accepted: "Приглашение принято"
         posted: "новая запись"
+        watching_category_or_tag: "новая запись"
         moved_post: "запись перемещена"
         linked: "Опубликована ссылка"
         bookmark_reminder: "Напоминание о закладке"
@@ -2423,6 +2577,7 @@ ru:
         membership_request_consolidated: "новые запросы на членство"
         reaction: "Новая реакция"
         votes_released: "Голосование опубликовано"
+        new_features: "появились новые функции Discourse!"
     upload_selector:
       uploading: "Загрузка"
       processing: "Обработка загружаемого контента"
@@ -2436,7 +2591,7 @@ ru:
       most_viewed: "По количеству просмотров"
       most_liked: "По количеству лайков"
       select_all: "Выбрать всё"
-      clear_all: "Сбросить всё"
+      clear_all: "Отменить выбор"
       too_short: "Слишком короткое слово для поиска."
       open_advanced: "Расширенный поиск"
       clear_search: "Очистить"
@@ -2448,6 +2603,7 @@ ru:
         other: "<span>%{count}%{plus} результата по запросу </span><span class='term'>%{term}</span>"
       title: "Поиск"
       full_page_title: "Поиск"
+      results: "результаты"
       no_results: "Ничего не найдено."
       no_more_results: "Больше ничего не найдено."
       post_format: "#%{post_number} от пользователя %{username}"
@@ -2492,6 +2648,7 @@ ru:
         status: "Фильтр по статусу темы"
         full_search: "Запуск поиска по всей странице"
         full_search_key: "%{modifier} + Enter"
+        me: "показывает только ваши записи"
       advanced:
         title: Расширенный поиск
         posted_by:
@@ -2770,10 +2927,57 @@ ru:
       show_links: "Показать ссылки в теме"
       collapse_details: "Скрыть подробную информацию о теме"
       expand_details: "Показать подробную информацию о теме"
+      read_more_in_category: "Хотите почитать что-нибудь ещё? Можно просмотреть темы в категории %{categoryLink} или <a href='%{latestLink}'>ознакомиться с последними темами</a>."
+      read_more: "Хотите почитать что-нибудь ещё? Можно <a href='%{categoryLink}'>просмотреть все категории</a> или <a href='%{latestLink}'>ознакомиться с последними темами</a>."
       unread_indicator: "Никто ещё не дочитал до конца этой темы."
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {Осталась <a href="{basePath}/unread"># непрочитанная</a>}
+                 few {Остались <a href="{basePath}/unread"># непрочитанные</a>}
+                 many {Осталось <a href="{basePath}/unread"># непрочитанных</a>}
+              other {Остались <a href="{basePath}/unread"># непрочитанной</a>}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { и <a href="{basePath}/new"># новая</a> тема,}
+                 few { и <a href="{basePath}/new"># новые</a> темы,}
+                 many { и <a href="{basePath}/new"># новых</a> тем,}
+              other { и <a href="{basePath}/new"># новой</a> темы,}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {Осталась <a href="{basePath}/unread"># непрочитанная</a> тема,}
+                 few {Остались <a href="{basePath}/unread"># непрочитанные</a> темы,}
+                 many {Осталось <a href="{basePath}/unread"># непрочитанных</a> тем,}
+              other {Остались <a href="{basePath}/unread"># непрочитанной</a> темы,}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {Осталась <a href="{basePath}/new"># новая</a> тема,}
+                 few {Остались <a href="{basePath}/new"># новые</a> темы,}
+                 many {Осталось <a href="{basePath}/new"># новых</a> тем,}
+              other {Остались <a href="{basePath}/new"># новой</a> темы,}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { вы также можете посмотреть другие темы в категории {categoryLink}}
+          false { вы также можете <a href="{basePath}/latest">просмотреть последние темы</a>}
+          other {}
+        }
+      bumped_at_title: |
+        Первая запись: %{createdAtDate}
+        Последняя запись: %{bumpedAtDate}
+      browse_all_categories_latest: "<a href='%{basePath}/categories'>Просмотрите все категории</a> или <a href='%{basePath}/latest'>ознакомьтесь с последними темами</a>."
+      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Просмотрите все категории</a>, <a href='%{basePath}/latest'>ознакомьтесь с последними</a> или самыми популярными темами:"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Просмотрите все теги</a> или <a href='%{basePath}/latest'>ознакомьтесь с последними темами</a>."
       suggest_create_topic: Готовы <a href>начать новое обсуждение</a>?
-      jump_reply_up: Перейти к более ранним ответам
-      jump_reply_down: Перейти к более поздним ответам
       deleted: "Тема удалена"
       slow_mode_update:
         title: "Замедленный режим"
@@ -2856,7 +3060,7 @@ ru:
         many: "Последняя запись в этой теме отправлена %{count} часов назад, поэтому тема будет закрыта."
         other: "Последняя запись в этой теме отправлена %{count} часа назад, поэтому тема будет закрыта."
       timeline:
-        back: "Вернуться"
+        back: "Назад"
         back_description: "Перейти к последней непрочитанной записи"
         replies_short: "%{current} из %{total}"
       progress:
@@ -3168,11 +3372,6 @@ ru:
       collapse: "свернуть"
       sr_collapse_replies: "Свернуть встроенные ответы"
       sr_date: "Дата записи"
-      sr_expand_replies:
-        one: "На эту запись есть %{count} ответ. Нажмите для просмотра."
-        few: "На эту запись есть %{count} ответа. Нажмите для просмотра."
-        many: "На эту запись есть %{count} ответов. Нажмите для просмотра."
-        other: "На эту запись есть %{count} ответа. Нажмите для просмотра."
       expand_collapse: "развернуть/свернуть"
       sr_below_embedded_posts_description: "ответы на запись #%{post_number}"
       sr_embedded_reply_description: "ответ пользователя @%{username} на запись #%{post_number}"
@@ -3232,7 +3431,7 @@ ru:
         edit: "Не удалось изменить запись. Попробуйте ещё раз."
         upload: "Не удалось загрузить файл. Попробуйте ещё раз."
         file_too_large: "Этот файл слишком большой (максимально допустимый размер %{max_size_kb} КБ). Почему бы не загрузить этот файл в облако, а затем поделиться ссылкой?"
-        file_size_zero: "Похоже, что-то пошло не так, файл, который вы пытаетесь загрузить, имеет нулевой размер. Попробуйте ещё раз."
+        file_size_zero: "Ошибка. Файл, который вы пытаетесь загрузить, имеет нулевой размер. Попробуйте ещё раз."
         file_too_large_humanized: "Этот файл слишком большой (максимально допустимый размер — %{max_size}). Почему бы не загрузить этот файл в облако, а затем поделиться ссылкой?"
         too_many_uploads: "За один раз можно загрузить только одно изображение."
         too_many_dragged_and_dropped_files:
@@ -3241,6 +3440,7 @@ ru:
           many: "За раз можно загрузить не более %{count} файлов."
           other: "За раз можно загрузить не более %{count} файла."
         upload_not_authorized: "Вы не можете загрузить файл данного типа (список разрешённых типов файлов: %{authorized_extensions})."
+        no_uploads_authorized: "Загрузка файлов не разрешена."
         image_upload_not_allowed_for_new_user: "Загрузка изображений недоступна новым пользователям."
         attachment_upload_not_allowed_for_new_user: "Загрузка файлов недоступна новым пользователям."
         attachment_download_requires_login: "Войдите, чтобы скачать прикреплённые файлы."
@@ -3252,6 +3452,7 @@ ru:
       via_email: "Это сообщение получено по электронной почте"
       via_auto_generated_email: "Это автоматическое сообщение получено по электронной почте"
       whisper: "Это скрытое сообщение и оно доступно только модераторам"
+      whisper_groups: "это скрытая запись, доступная только группам %{groupNames}"
       wiki:
         about: "Это вики-запись"
       few_likes_left: "Спасибо, что делитесь любовью. На сегодня у вас осталось несколько лайков."
@@ -3312,7 +3513,7 @@ ru:
         add_post_notice: "Сообщение от модератора…"
         change_post_notice: "Изменить сообщение модератора…"
         delete_post_notice: "Удалить сообщение модератора"
-        remove_timer: "Отменить таймер"
+        remove_timer: "удалить таймер"
         edit_timer: "Изменить таймер"
       actions:
         people:
@@ -3394,7 +3595,6 @@ ru:
         create_for_topic: "Создать закладку для темы"
         edit: "Изменить закладку"
         edit_for_topic: "Изменить закладку для темы"
-        created: "Создана"
         updated: "Обновлена"
         name: "Название"
         name_placeholder: "Для чего эта закладка?"
@@ -3436,7 +3636,6 @@ ru:
       back: "Вернуться в категорию"
       general: "Основная"
       settings: "Настройки"
-      topic_template: "Шаблон темы"
       tags: "Теги"
       tags_allowed_tags: "Ограничить теги этой категорией:"
       tags_allowed_tag_groups: "Ограничить группы тегов этой категорией:"
@@ -3493,9 +3692,8 @@ ru:
       pending_permission_change_alert: "Вы не добавили %{group} в эту категорию; нажмите эту кнопку для добавления."
       images: "Изображения"
       email_in: "Специальный адрес для входящих писем:"
+      email_in_tooltip: "Адреса электронной почты разделяются символом вертикальной черты «|»."
       email_in_allow_strangers: "Принимать письма от анонимных пользователей, не имеющих аккаунтов"
-      email_in_disabled: "Создание новых тем через электронную почту отключено в настройках сайта. Чтобы разрешить создание новых тем через электронную почту, "
-      email_in_disabled_click: 'включите настройку «email in».'
       mailinglist_mirror: "Категория отражает список рассылки"
       show_subcategory_list: "Показывать список подкатегорий над списком тем в этой категории."
       read_only_banner: "Текст баннера, когда пользователь не может создавать темы в этой категории:"
@@ -3517,6 +3715,7 @@ ru:
       this_year: "за год"
       position: "Позиция на странице категорий:"
       default_position: "Позиция по умолчанию"
+      position_disabled: "Категории будут отображаться в порядке активности. Чтобы настроить их порядок в списках, включите настройку <a href='%{url}'>fixed category positions</a>."
       minimum_required_tags: "Минимальное количество тегов, требуемых в теме:"
       default_slow_mode: 'Включать замедленный режим для тем, создаваемых в этой категории.'
       parent: "Родительская категория"
@@ -3542,7 +3741,7 @@ ru:
       search_priority:
         label: "Приоритет поиска"
         options:
-          normal: "Нормальный"
+          normal: "Обычный"
           ignore: "Игнорировать"
           very_low: "Очень низкий"
           low: "Низкий"
@@ -3646,7 +3845,7 @@ ru:
         other: "ещё %{count}"
     topic_statuses:
       warning:
-        help: "Это официальное предупреждение."
+        help: "Официальное предупреждение."
       bookmarked:
         help: "Вы добавили тему в закладки"
       locked:
@@ -3713,7 +3912,6 @@ ru:
     category_title: "Категория"
     history_capped_revisions: "История, последние 100 изменений"
     history: "История"
-    changed_by: "автором %{author}"
     raw_email:
       title: "Входящее письмо"
       not_available: "Недоступно!"
@@ -3721,6 +3919,10 @@ ru:
     filters:
       with_topics: "%{filter} темы"
       with_category: "%{category} — %{filter} темы"
+      filter:
+        title: "Фильтр"
+        button:
+          label: "Фильтр"
       latest:
         title: "Последние"
         title_with_count:
@@ -3803,7 +4005,6 @@ ru:
         this_week: "За неделю"
         today: "Сегодня"
     browser_update: '<a href="https://www.discourse.org/faq/#browser">Ваш браузер не поддерживается</a>. <a href="https://browsehappy.com">Обновите его</a> для полноценной работы с сайтом.'
-    safari_13_warning: Этот сайт скоро прекратит поддержку iOS и Safari версии 13 и ниже. Упрощённая версия только для чтения останется доступной. (<a href="https://meta.discourse.org/t/224747">больше информации</a>)
     permission_types:
       full: "Создавать / Отвечать / Просматривать"
       create_post: "Отвечать / Просматривать"
@@ -4116,16 +4317,14 @@ ru:
     safe_mode:
       enabled: "Включён безопасный режим. Чтобы выйти из него, закройте это окно браузера."
     image_removed: "(изображение удалено)"
-    do_not_disturb:
-      title: "Не беспокоить…"
-      label: "Не беспокоить"
-      remaining: "Осталось %{remaining}"
+    pause_notifications:
+      title: "Приостановить уведомления на…"
+      label: "Приостановить уведомления"
       options:
         half_hour: "В течение 30 минут"
         one_hour: "В течение 1 часа"
         two_hours: "В течение 2 часов"
         tomorrow: "До завтра"
-        custom: "Указать продолжительность"
       set_schedule: "Настроить расписание уведомлений"
     trust_levels:
       names:
@@ -4162,6 +4361,8 @@ ru:
     second_factor_auth:
       redirect_after_success: "Двухфакторная аутентификация выполнена. Перенаправление на предыдущую страницу…"
     sidebar:
+      show_sidebar: "Показать боковую панель"
+      hide_sidebar: "Скрыть боковую панель"
       unread_count:
         one: "%{count} непрочитанная"
         few: "%{count} непрочитанные"
@@ -4172,16 +4373,26 @@ ru:
         few: "%{count} новые"
         many: "%{count} новых"
         other: "%{count} новой"
-      toggle_section: "свернуть / развернуть раздел"
+      toggle_section: "Свернуть / развернуть раздел"
       more: "Ещё"
       all_categories: "Все категории"
       all_tags: "Все теги"
       sections:
+        custom:
+          save: "Сохранить"
+          delete: "Удалить"
+          links:
+            icon:
+              label: "Иконка"
+            name:
+              label: "Название"
+            value:
+              label: "Ссылки"
         about:
           header_link_text: "Информация"
         messages:
           header_link_text: "Личные сообщения"
-          header_action_title: "создать личное сообщение"
+          header_action_title: "Создать личное сообщение"
           links:
             inbox: "Входящие"
             sent: "Отправленные"
@@ -4191,12 +4402,20 @@ ru:
             unread_with_count: "Непрочитанные (%{count})"
             archive: "Архив"
         tags:
+          links:
+            add_tags:
+              content: "Добавить теги"
+              title: "Вы не добавили ни одного тега. Чтобы добавить их, нажмите сюда."
           none: "Вы не добавили ни одного тега."
           click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_text: "Теги"
           header_action_title: "Редактировать теги боковой панели"
           configure_defaults: "Настроить значения по умолчанию"
         categories:
+          links:
+            add_categories:
+              content: "Добавить категории"
+              title: "Вы не добавили ни одной категории. Чтобы добавить их, нажмите сюда."
           none: "Вы не добавили ни одной категории."
           click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_text: "Категории"
@@ -4204,27 +4423,33 @@ ru:
           configure_defaults: "Настроить значения по умолчанию"
         community:
           header_link_text: "Сообщество"
-          header_action_title: "Cоздать новую тему"
+          header_action_title: "Создать тему"
           links:
             about:
               content: "О форуме"
+              title: "Подробнее об этом сайте"
             admin:
               content: "Администратор"
+              title: "Отчеты и настройки сайта"
             badges:
               content: "Награды"
+              title: "Все награды, которые можно получить"
             everything:
               content: "Все"
               title: "Все темы"
             faq:
               content: "Ответы на вопросы"
+              title: "Рекомендации по использованию сайта"
             groups:
               content: "Группы"
-              title: "Все группы"
+              title: "Список доступных групп пользователей"
             users:
               content: "Пользователи"
-              title: "Все пользователи"
+              title: "Список пользователей"
             my_posts:
               content: "Мои записи"
+              title: "Мои недавняя активность в темах"
+              title_drafts: "Мои неопубликованные черновики"
               draft_count:
                 one: "%{count} черновик"
                 few: "%{count} черновика"
@@ -4232,7 +4457,7 @@ ru:
                 other: "%{count} черновика"
             review:
               content: "Очередь проверки"
-              title: "очередь проверки записей"
+              title: "Записи, на которые поступили жалобы, и другие элементы в очереди"
               pending_count: "В ожидании: %{count}"
     welcome_topic_banner:
       title: "Создать приветственную тему"
@@ -4242,7 +4467,7 @@ ru:
   admin_js:
     type_to_filter: "Фильтрация настроек…"
     admin:
-      title: "Discourse Admin"
+      title: "Администратор Discourse"
       moderator: "Модератор"
       tags:
         remove_muted_tags_from_latest:
@@ -4300,7 +4525,7 @@ ru:
         whats_new_in_discourse: Что нового в Discourse?
         activity_metrics: Метрики активности
         all_reports: "Все отчёты"
-        general_tab: "Основной"
+        general_tab: "Основное"
         moderation_tab: "Модерация"
         security_tab: "Безопасность"
         reports_tab: "Отчёты"
@@ -4335,7 +4560,7 @@ ru:
           total: "Всего за всё время"
           no_data: "Нет данных для отображения."
           trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Поисковые логи</a>'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Журналы поиска</a>'
             disabled: 'Отчёт о поисковых запросах отключён. Включить <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">журнал поисковых запросов</a> для сбора данных.'
           average_chart_label: Среднее
           filters:
@@ -4389,6 +4614,9 @@ ru:
               other: "Следующее количество пользователей с новыми почтовыми доменами будут добавлены в группу: %{count}."
             automatic_membership_associated_groups: "Пользователи, являющиеся членами группы в службе, указанной здесь, будут автоматически добавлены в эту группу при входе в систему с помощью указанной службы."
             primary_group: "Автоматически устанавливается в качестве основной группы"
+          alert:
+            primary_group: "Это основная группа, поэтому название «%{group_name}» будет использоваться в классах CSS, которые могут просматривать все."
+            flair_group: "У этой группы есть отметка для участников, поэтому название «%{group_name}» будет видно всем."
         name_placeholder: "Без пробелов, по тем же правилам, что и для имен пользователей"
         primary: "Основная группа"
         no_primary: "(нет основной группы)"
@@ -4463,7 +4691,6 @@ ru:
             topics:
               read: Чтение темы или конкретного сообщения в ней. RSS также поддерживается.
               write: Создание новой темы или записи в уже существующей теме.
-              update: Обновление темы. Изменение названия, категории, тегов и т. д.
               read_lists: Чтение тем в разделах «Последние», «Новые», «Обсуждаемые» и т. д. RSS также поддерживается.
             posts:
               edit: Редактирование записи.
@@ -4482,6 +4709,9 @@ ru:
               anonymize: Анонимизация аккаунтов пользователей.
               delete: Удаление аккаунтов пользователей.
               list: Получение списка пользователей.
+            user_status:
+              read: Чтение статуса пользователя.
+              update: Обновление статуса пользователя.
             email:
               receive_emails: Объединение этой области действия с получателем почты для обработки входящих писем.
             badges:
@@ -4504,7 +4734,9 @@ ru:
         detailed_instruction: "При наступлении выбранного события на соответствующий URL будет отправлен POST-запрос."
         new: "Добавить вебхук"
         create: "Создать"
+        edit: "Изменить"
         save: "Сохранить"
+        description_label: "Активаторы событий"
         controls: "Управление"
         go_back: "Вернуться к списку"
         payload_url: "Ссылка для отправки"
@@ -4555,9 +4787,6 @@ ru:
         user_promoted_event:
           name: "Событие повышения уровня доверия"
           details: "При повышении уровня доверия пользователя."
-        user_badge_event:
-          name: "Событие награждения"
-          details: "При получении пользователем награды."
         group_user_event:
           name: "Событие группового пользователя"
           details: "При добавлении или удалении пользователя из группы."
@@ -4604,10 +4833,14 @@ ru:
         enabled: "Включён?"
         is_enabled: "Д"
         not_enabled: "Н"
-        change_settings: "Настроить"
         change_settings_short: "Настройки"
         howto: "Как установить плагин?"
         official: "Официальный плагин"
+        broken_route: "Не удается настроить ссылку на «%{name}». Отключите блокировщики рекламы и попробуйте перезагрузить страницу."
+      navigation_menu:
+        sidebar: "Боковая панель"
+        header_dropdown: "Выпадающий список заголовка"
+        legacy: "Старая версия"
       backups:
         title: "Резервные копии"
         menu:
@@ -4683,7 +4916,6 @@ ru:
         button_title: "Отправить приглашения"
       customize:
         title: "Оформление"
-        long_title: "Стили и заголовки"
         preview: "предпросмотр"
         explain_preview: "Предпросмотр сайта с новым оформлением"
         save: "Сохранить"
@@ -4821,7 +5053,6 @@ ru:
             error: "Тема была автоматически отключена, поскольку она несовместима с этой версией Discourse."
             minimum: "Требуется версия Discourse %{version} или выше."
             maximum: "Требуется версия Discourse %{version} или ниже."
-          component_of: "Компонент:"
           update_to_latest: "Обновить"
           check_for_updates: "Проверить обновления"
           updating: "Обновляемся…"
@@ -4846,7 +5077,7 @@ ru:
             text: "CSS"
             title: "Введите CSS; допускаются все стили CSS и SCSS"
           header:
-            text: "Шапка"
+            text: "Заголовок"
             title: "Введите HTML для размещения над шапкой сайта"
           after_header:
             text: "Под шапкой"
@@ -4893,7 +5124,7 @@ ru:
           delete_confirm: "Удалить эту цветовую палитру?"
           undo: "Отменить"
           undo_title: "Отменить изменения этого цвета с момента последнего сохранения."
-          revert: "Восстановить"
+          revert: "Вернуть"
           revert_title: "Сброс этого цвета на значение по умолчанию."
           primary:
             name: "Первичный"
@@ -4935,6 +5166,8 @@ ru:
           love:
             name: "лайки"
             description: "Цвет кнопки «Лайк»."
+          selected:
+            name: "выбрано"
         robots:
           title: "Изменить настройки в файле robots.txt:"
           warning: "Это повлияет на соответствующие настройки сайта."
@@ -5017,7 +5250,7 @@ ru:
           filters:
             title: "Фильтр"
             user_placeholder: "имя пользователя"
-            address_placeholder: "имя@пример.com"
+            address_placeholder: "name@example.com"
             type_placeholder: "дайджест, подписка…"
             reply_key_placeholder: "Ключ ответа"
             smtp_transaction_response_placeholder: "SMTP ID"
@@ -5034,7 +5267,7 @@ ru:
       logs:
         title: "Журналы"
         action: "Действие"
-        created_at: "Создана"
+        created_at: "Создано"
         last_match_at: "Последнее совпадение"
         match_count: "Совпадения"
         ip_address: "IP"
@@ -5174,7 +5407,7 @@ ru:
           actions:
             block: "Заблокировать"
             do_nothing: "Разрешить"
-            allow_admin: "Разрешить админов"
+            allow_admin: "Разрешить администраторов"
           form:
             label: "Новое правило:"
             ip_address: "IP-адрес"
@@ -5201,9 +5434,9 @@ ru:
         search: "поиск"
         clear_filter: "Очистить"
         show_words:
-          one: "показать %{count} слово"
-          few: "показать %{count} слова"
-          many: "показать %{count} слов"
+          one: "Показать %{count} слово"
+          few: "Показать %{count} слова"
+          many: "Показать %{count} слов"
           other: "Показать %{count} слова"
         case_sensitive: "(с учётом регистра)"
         download: Скачать слова
@@ -5220,15 +5453,6 @@ ru:
           tag: "Теги"
           silence: "Блок. первых"
           link: "Ссылки"
-        action_descriptions:
-          block: "Запретить публикацию сообщений, содержащих эти слова. Пользователь увидит сообщение об ошибке при попытке отправить своё сообщение."
-          censor: "Разрешить сообщения, содержащие эти слова, но заменять их символами, которые скрывают нецензурные выражения."
-          require_approval: "Сообщения, содержащие эти слова, будут требовать одобрения персонала, прежде чем их можно будет увидеть."
-          flag: "Разрешить сообщения, содержащие эти слова, но помечать их как неприемлемые, чтобы модераторы могли их оценить."
-          replace: "Заменить слова в сообщениях другими словами."
-          tag: "Автоматически помечать тегами темы, содержащие эти слова в первом сообщении."
-          silence: "Первые сообщения пользователя, содержащие эти слова, потребуют одобрения персонала, прежде чем они будут доступны; пользователь будет автоматически заблокирован."
-          link: "Заменить слова в сообщениях ссылками."
         form:
           label: "Слово или фраза"
           placeholder: "Введите слово или фразу (* — подстановочный знак)"
@@ -5239,10 +5463,10 @@ ru:
           link_label: "Ссылка"
           link_placeholder: "https://example.com"
           add: "Добавить"
-          success: "Слово успешно добавлено"
+          success: "Слово добавлено"
           exists: "Уже существует"
           upload: "Добавить из файла"
-          upload_successful: "Загрузка прошла успешна. Слова добавлены."
+          upload_successful: "Загрузка выполнена. Слова добавлены."
           case_sensitivity_label: "С учётом регистра"
           case_sensitivity_description: "Только слова с соответствующим регистром символов"
         test:
@@ -5251,9 +5475,38 @@ ru:
           description: "Введите текст, чтобы проверить совпадения с контролируемыми словами:"
           found_matches: "Найденные совпадения:"
           no_matches: "Совпадений не найдено"
+      form_templates:
+        nav_title: "Шаблоны"
+        list_table:
+          headings:
+            name: "Название"
+            actions: "Темы"
+        view_template:
+          close: "Завершить"
+          edit: "Отредактировать"
+          delete: "Удалить"
+        new_template_form:
+          submit: "Сохранить"
+          cancel: "Нет"
+          preview: "Предпросмотр"
+        quick_insert_fields:
+          add_new_field: "Добавить"
+          dropdown: "Выпадающий список"
+        validations_modal:
+          table_headers:
+            key: "Ключ"
+            type: "Тип опроса"
+            description: "Описание"
+          validations:
+            required:
+              key: "Обязательное"
+            minimum:
+              key: "минимум"
+            maximum:
+              key: "максимум"
       impersonate:
         title: "Войти от имени пользователя"
-        help: "Используйте этот инструмент, чтобы войти от имени пользователя в целях отладки. По окончании отладки необходимо выйти из системы и зайти снова под своим аккаунтом."
+        help: "Позволяет войти от имени пользователя в целях отладки. По окончании отладки необходимо выйти из системы и зайти снова под своим аккаунтом."
         not_found: "Пользователь не найден."
         invalid: "Вы не можете выдавать себя за этого пользователя."
       users:
@@ -5263,6 +5516,7 @@ ru:
         not_found: "Такое имя пользователя не зарегистрировано."
         id_not_found: "Этот пользователь не зарегистрирован."
         active: "Активирован"
+        status: "Статус"
         show_emails: "Показать адреса эл. почты"
         hide_emails: "Скрыть адреса эл. почты"
         nav:
@@ -5277,11 +5531,11 @@ ru:
           active: "Активные пользователи"
           new: "Новые пользователи"
           pending: "Пользователи, ожидающие одобрения"
-          newuser: "Пользователи с уровнем доверия 0 (Новички)"
-          basic: "Пользователи с уровнем доверия 1 (Обычные пользователи)"
-          member: "Пользователи с уровнем доверия 2 (Постоянные пользователи)"
-          regular: "Пользователи с уровнем доверия 3 (Активные пользователи)"
-          leader: "Пользователи с уровнем доверия 4 (Лидеры)"
+          newuser: "Пользователи с уровнем доверия 0 (новички)"
+          basic: "Пользователи с уровнем доверия 1 (обычные пользователи)"
+          member: "Пользователи с уровнем доверия 2 (постоянные пользователи)"
+          regular: "Пользователи с уровнем доверия 3 (активные пользователи)"
+          leader: "Пользователи с уровнем доверия 4 (лидеры)"
           staff: "Персонал"
           admins: "Администраторы"
           moderators: "Модераторы"
@@ -5298,9 +5552,9 @@ ru:
       user:
         suspend_failed: "Ошибка заморозки пользователя: %{error}"
         unsuspend_failed: "Ошибка разморозки пользователя: %{error}"
-        suspend_duration: "На сколько времени заморозить пользователя?"
-        suspend_reason_label: "Причина заморозки? Данный текст <b>будет виден всем</b> на странице профиля пользователя и будет показан пользователю, когда он попытается войти в систему. Введите краткое описание."
-        suspend_reason_hidden_label: "Причина заморозки? Этот текст будет показан пользователю, когда он попытается войти в систему. Введите краткое описание."
+        suspend_duration: "Заморозка пользователя до:"
+        suspend_reason_label: "Укажите причину заморозки. Данный текст <b>будет виден всем</b> на странице профиля пользователя и будет показан пользователю, когда он попытается войти в систему. Введите краткое описание."
+        suspend_reason_hidden_label: "Укажите причину заморозку. Этот текст будет показан пользователю, когда он попытается войти в систему. Введите краткое описание."
         suspend_reason: "Причина"
         suspend_reason_title: "Причина заморозки"
         suspend_reasons:
@@ -5315,29 +5569,42 @@ ru:
         suspended_by: "Кем заморожен"
         silence_reason: "Причина"
         silenced_by: "Кем заблокирован"
-        silence_modal_title: "Заблокировать пользователя"
+        silence_modal_title: "Блокировка пользователя"
         silence_duration: "Как долго пользователь будет заблокирован?"
-        silence_reason_label: "Почему вы собираетесь заблокировать пользователя?"
+        silence_reason_label: "Почему вы блокируете пользователя?"
         silence_reason_placeholder: "Причина блокировки"
         silence_message: "Сообщение на электронную почту"
         silence_message_placeholder: "(оставьте незаполненным, если необходимо отправить стандартное сообщение)"
         suspended_until: "(заморожен до %{until})"
+        suspend_forever: "Бессрочная заморозка"
         cant_suspend: "Этого пользователя нельзя заморозить."
-        delete_posts_failed: "При удалении сообщений возникла ошибка."
+        cant_silence: "Этого пользователя нельзя заблокировать."
+        delete_posts_failed: "При удалении записей возникла ошибка."
         post_edits: "Правки записей"
         view_edits: "Просмотр правок"
-        penalty_post_actions: "Что нужно сделать со связанным сообщением?"
-        penalty_post_delete: "Удалить сообщение"
-        penalty_post_delete_replies: "Удалить сообщение + все ответы"
+        penalty_post_actions: "Что сделать со связанной записью?"
+        penalty_post_delete: "Удалить запись"
+        penalty_post_delete_replies: "Удалить запись + все ответы"
         penalty_post_edit: "Редактировать запись"
         penalty_post_none: "Ничего не делать"
         penalty_count: "Количество нарушений"
-        penalty_history: "История нарушений"
+        penalty_history_MF: >-
+          За последние шесть месяцев этот пользователь был <b>заморожен { SUSPENDED, plural, one {# раз} few {# раза} many {# раз} other {# раза} }</b> и <b>заблокирован { SILENCED, plural, one {# раз} few {# раза} many {# раз} other {# раза} }</b>.
         clear_penalty_history:
           title: "Очистить историю нарушений"
-          description: "Пользователи с нарушениями не могут достичь 3 уровня доверия"
+          description: "Пользователи с нарушениями не могут достичь третьего уровня доверия"
         delete_all_posts_confirm_MF: |
-          Вы собираетесь удалить {POSTS, plural, one {# сообщение} few {# сообщения} other {# сообщений}} и {TOPICS, plural, one {# тему} few {# темы} other {# тем}}. Продолжить?
+          Вы собираетесь удалить { POSTS, plural,
+              one {# запись}
+              few {# записи}
+              many {# записей}
+            other {# записи}
+          } и { TOPICS, plural,
+              one {# тему}
+              few {# темы}
+              many {# тем}
+            other {# темы}
+          }. Продолжить?
         silence: "Заблокировать"
         unsilence: "Разблокировать"
         silenced: "Заблокирован?"
@@ -5348,13 +5615,12 @@ ru:
         show_admin_profile: "Администратор"
         manage_user: "Управление пользователем"
         show_public_profile: "Показать публичный профиль"
-        impersonate: "Войти от имени пользователя"
         action_logs: "Журналы действий"
         ip_lookup: "Поиск IP"
         log_out: "Выйти"
         logged_out: "Пользователь вышел с сайта на всех устройствах"
-        revoke_admin: "Лишить прав Администратора"
-        grant_admin: "Выдать права Администратора"
+        revoke_admin: "Лишить прав администратора"
+        grant_admin: "Выдать права администратора"
         grant_admin_success: "Новый администратор подтверждён."
         grant_admin_confirm: "Мы отправили письмо с инструкциями по подтверждению нового администратора. Следуйте указаниям в письме."
         revoke_moderation: "Лишить прав модератора"
@@ -5378,7 +5644,7 @@ ru:
         flags_received_count: Получено жалоб
         warnings_received_count: Получено предупреждений
         warnings_list_warning: |
-          Как модератор вы, возможно, не сможете просматривать все эти темы. В случае необходимости попросите администратора или модератора, проверяющего сообщение, предоставить <b>необходимый доступ</b> к этому сообщению.
+          Как модератор вы, возможно, не сможете просматривать все эти темы. В случае необходимости попросите администратора или модератора, проверяющего сообщение, предоставить <b>необходимый доступ</b> к нему.
         flags_given_received_count: "Жалоб отправлено / получено"
         approve: "Одобрить"
         approved_by: "кем одобрено"
@@ -5392,20 +5658,20 @@ ru:
         anonymize_failed: "Не удалось анонимизировать аккаунт."
         delete: "Удалить пользователя"
         delete_posts:
-          button: "Удалить все сообщения"
+          button: "Удалить все записи"
           progress:
-            title: "Удаление сообщений"
-            description: "Удаление сообщений…"
+            title: "Удаление записей"
+            description: "Удаление записей…"
           confirmation:
-            title: "Удалить все сообщения от пользователя @%{username}"
+            title: "Удалить все записи от пользователя @%{username}"
             description: |
-              <p>Действительно удалить <b>%{post_count}</b> сообщений от пользователя @%{username}?
+              <p>Действительно удалить записи (<b>%{post_count}</b>) от пользователя @%{username}?
 
               <p><b>Это действие нельзя отменить!</b></p>
 
               <p><p>Для продолжения введите: <code>%{text}</code>.</p></p>
-            text: "удалить все сообщения от пользователя @%{username}"
-            delete: "Удалить все сообщения от пользователя @%{username}"
+            text: "удалить все записи от пользователя @%{username}"
+            delete: "Удалить все записи от пользователя @%{username}"
             cancel: "Отменить"
         merge:
           button: "Объединить пользователей"
@@ -5414,7 +5680,7 @@ ru:
             description: |
               <p>Выберите нового владельца для контента пользователя <b>@%{username}</b>.</p>
 
-              <p>Все темы, сообщения, личные сообщения и другой контент, созданный пользователем <b>@%{username}</b>, будут переданы новому владельцу.</p>
+              <p>Все темы, записи, сообщения и другой контент, созданный пользователем <b>@%{username}</b>, будут переданы новому владельцу.</p>
             target_username_placeholder: "Имя пользователя нового владельца"
             transfer_and_delete: "Объединить контент и удалить пользователя @%{username}"
             cancel: "Отмена"
@@ -5434,29 +5700,29 @@ ru:
         merging_user: "Объединение пользователей…"
         merge_failed: "В процессе объединения пользователей произошла ошибка."
         delete_forbidden_because_staff: "Администраторы и модераторы не могут быть удалены."
-        delete_posts_forbidden_because_staff: "Сообщения администраторов и модераторов не могут быть удалены."
+        delete_posts_forbidden_because_staff: "Записи администраторов и модераторов не могут быть удалены."
         delete_forbidden:
-          one: "Пользователи не могут быть удалены, если у них есть сообщения. Перед удалением пользователя удалите все его сообщения. (Сообщения старше %{count} дня не могут быть удалены.)"
-          few: "Пользователи не могут быть удалены, если у них есть сообщения. Перед удалением пользователя удалите все его сообщения. (Сообщения старше %{count} дней не могут быть удалены.)"
-          many: "Пользователи не могут быть удалены, если у них есть сообщения. Перед удалением пользователя удалите все его сообщения. (Сообщения старше %{count} дней не могут быть удалены.)"
-          other: "Пользователи не могут быть удалены, если у них есть сообщения. Перед удалением пользователя удалите все его сообщения. (Сообщения старше %{count} дней не могут быть удалены.)"
+          one: "Пользователи не могут быть удалены, если у них есть записи. Перед удалением пользователя удалите все его записи. (Записи старше %{count} дня не могут быть удалены.)"
+          few: "Пользователи не могут быть удалены, если у них есть записи. Перед удалением пользователя удалите все его записи. (Записи старше %{count} дней не могут быть удалены.)"
+          many: "Пользователи не могут быть удалены, если у них есть записи. Перед удалением пользователя удалите все его записи. (Записи старше %{count} дней не могут быть удалены.)"
+          other: "Пользователи не могут быть удалены, если у них есть записи. Перед удалением пользователя удалите все его записи. (Записи старше %{count} дня не могут быть удалены.)"
         cant_delete_all_posts:
-          one: "Не удаётся удалить все сообщения. Некоторые сообщения старше %{count} дня. (см. параметр delete_user_max_post_age)"
-          few: "Не удаётся удалить все сообщения. Некоторые сообщения старше %{count} дней. (см. параметр delete_user_max_post_age)"
-          many: "Не удаётся удалить все сообщения. Некоторые сообщения старше %{count} дней. (см. параметр delete_user_max_post_age)"
-          other: "Не удаётся удалить все сообщения. Некоторые сообщения старше %{count} дней. (см. параметр delete_user_max_post_age)"
+          one: "Не удаётся удалить все записи: некоторые старше %{count} дня. (См. параметр «delete_user_max_post_age».)"
+          few: "Не удаётся удалить все записи: некоторые старше %{count} дней. (См. параметр «delete_user_max_post_age».)"
+          many: "Не удаётся удалить все записи: некоторые старше %{count} дней. (См. параметр «delete_user_max_post_age».)"
+          other: "Не удаётся удалить все записи: некоторые старше %{count} дня. (См. параметр «delete_user_max_post_age».)"
         cant_delete_all_too_many_posts:
-          one: "Не удаётся удалить все сообщения, потому что у пользователя более %{count} сообщения. (Настройка delete_all_posts_max.)"
-          few: "Не удаётся удалить все сообщения, потому что у пользователя более %{count} сообщений. (Настройка delete_all_posts_max.)"
-          many: "Не удаётся удалить все сообщения, потому что у пользователя более %{count} сообщений. (Настройка delete_all_posts_max.)"
-          other: "Не удаётся удалить все сообщения, потому что у пользователя более %{count} сообщений. (Настройка delete_all_posts_max.)"
-        delete_confirm_title: "Вы ДЕЙСТВИТЕЛЬНО хотите удалить этого пользователя? Этот пользователь будет удалён безвозвратно!"
+          one: "Не удаётся удалить все записи: у пользователя более %{count} записи. (Параметр «delete_all_posts_max».)"
+          few: "Не удаётся удалить все записи: у пользователя более %{count} записей. (Параметр «delete_all_posts_max».)"
+          many: "Не удаётся удалить все записи: у пользователя более %{count} записей. (Параметр «delete_all_posts_max».)"
+          other: "Не удаётся удалить все записи: у пользователя более %{count} записи. (Параметр «delete_all_posts_max».)"
+        delete_confirm_title: "ДЕЙСТВИТЕЛЬНО удалить пользователя? Это действие безвозвратно!"
         delete_confirm: "Как правило, предпочтительнее анонимизировать пользователей, а не удалять их, чтобы избежать удаления контента из существующих обсуждений."
         delete_and_block: "Удалить и <b>заблокировать</b> эту эл. почту и IP-адрес"
         delete_dont_block: "Только удалить"
         deleting_user: "Удаление пользователя …"
         deleted: "Пользователь удалён."
-        delete_failed: "При удалении пользователя возникла ошибка. Для удаления пользователя необходимо сначала удалить все его сообщения."
+        delete_failed: "При удалении пользователя возникла ошибка. Для удаления пользователя необходимо сначала удалить все его записи."
         send_activation_email: "Отправить письмо для активации аккаунта"
         activation_email_sent: "Письмо для активации аккаунта отправлено."
         send_activation_email_failed: "Возникла ошибка при повторной отправке активационного письма. %{error}"
@@ -5466,17 +5732,17 @@ ru:
         deactivate_failed: "Во время деактивации пользователя произошла ошибка."
         unsilence_failed: "При разблокировке этого пользователя произошла ошибка."
         silence_failed: "При блокировке этого пользователя произошла ошибка."
-        silence_confirm: "Действительно заблокировать этого пользователя? Он не сможет создавать новые темы или сообщения."
+        silence_confirm: "Действительно заблокировать этого пользователя? Он не сможет создавать новые темы и записи."
         silence_accept: "Да, заблокировать этого пользователя"
-        bounce_score: "Возвратов писем"
+        bounce_score: "Число возвратов писем"
         reset_bounce_score:
           label: "Сбросить"
-          title: "сбросить карму к 0"
+          title: "Сбросить число возвратов на 0"
         visit_profile: "Посетите <a href='%{url}'> страницу настроек этого пользователя</a>, чтобы отредактировать его профиль"
         deactivate_explanation: "Выключенный пользователь должен заново подтвердить свою эл. почту."
         suspended_explanation: "Замороженный пользователь не может войти в систему."
-        silence_explanation: "Заблокированный пользователь не может создавать темы или отвечать на сообщения."
-        staged_explanation: "Сымитированный пользователь может отправлять сообщения только по электронной почте и только в определённые темы."
+        silence_explanation: "Заблокированный пользователь не может создавать темы и отвечать на записи."
+        staged_explanation: "Сымитированный пользователь может отправлять записи только по электронной почте и только в определённые темы."
         bounce_score_explanation:
           none: "Нет возвратов, полученных недавно с этого адреса электронной почты."
           some: "Несколько возвратов получено недавно с этого адреса электронной почты."
@@ -5484,16 +5750,28 @@ ru:
         trust_level_change_failed: "Возникла ошибка при изменении уровня доверия пользователя."
         suspend_modal_title: "Заморозить пользователя"
         confirm_cancel_penalty: "Действительно закрыть окно без сохранения введённой информации?"
-        trust_level_2_users: "Пользователи с 2 уровнем доверия"
-        trust_level_3_requirements: "Требования для 3 уровня доверия"
+        trust_level_2_users: "Пользователи с уровнем доверия 2"
+        trust_level_3_requirements: "Требования для уровня доверия 3"
         trust_level_locked_tip: "Уровень доверия заблокирован, система не сможет изменять уровень доверия пользователя"
+        trust_level_unlocked_tip: "уровень доверия разблокирован, система может изменять уровень доверия пользователя"
         lock_trust_level: "Заблокировать изменение уровня доверия"
         unlock_trust_level: "Разблокировать изменение уровня доверия"
         silenced_count: "Заблокированные"
         suspended_count: "Замороженные"
         last_six_months: "За последние 6 месяцев"
+        other_matches:
+          one: "Есть еще <b>%{count} пользователь</b> с таким же IP-адресом. Проверьте и выберите, кого еще наказать вместе с пользователем %{username}."
+          few: "Есть еще <b>%{count} пользователя</b> с таким же IP-адресом. Проверьте и выберите, кого еще наказать вместе с пользователем %{username}."
+          many: "Есть еще <b>%{count} пользователей</b> с таким же IP-адресом. Проверьте и выберите, кого еще наказать вместе с пользователем %{username}."
+          other: "Есть еще <b>%{count} пользователя</b> с таким же IP-адресом. Проверьте и выберите, кого еще наказать вместе с пользователем %{username}."
+        other_matches_list:
+          username: "Имя пользователя"
+          trust_level: "Уровень доверия"
+          read_time: "Время чтения"
+          topics_entered: "Посещено тем"
+          posts: "Записи"
         tl3_requirements:
-          title: "Требования для 3 уровня доверия"
+          title: "Требования для уровня доверия 3"
           table_title:
             one: "За последний %{count} день:"
             few: "За последние %{count} дня:"
@@ -5507,8 +5785,8 @@ ru:
           topics_viewed: "Просмотров тем"
           topics_viewed_all_time: "Просмотров тем (за всё время)"
           posts_read: "Прочитано записей"
-          posts_read_all_time: "Прочитано сообщений (за всё время)"
-          flagged_posts: "Сообщений с жалобами"
+          posts_read_all_time: "Прочитано записей (за всё время)"
+          flagged_posts: "Записей с жалобами"
           flagged_by_users: "Пользователей, подавших жалобы"
           likes_given: "Лайков поставлено"
           likes_received: "Полученные лайки"
@@ -5548,25 +5826,30 @@ ru:
         delete_confirm: "Действительно удалить это поле?"
         options: "Параметры"
         required:
+          title: "Обязательное при регистрации"
           enabled: "Обязательное"
           disabled: "Необязательное"
         editable:
+          title: "Редактируемое после регистрации"
           enabled: "Редактируемое"
           disabled: "Нередактируемое"
         show_on_profile:
+          title: "Показывать в публичном профиле"
           enabled: "Показывать в профиле"
           disabled: "Не показывать в профиле"
         show_on_user_card:
+          title: "Показывать в карточке пользователя"
           enabled: "Показывать в карточке пользователя"
           disabled: "Не показывать в карточке пользователя"
         searchable:
+          title: "Доступно для поиска"
           enabled: "Доступно для поиска"
           disabled: "Не доступно для поиска"
         field_types:
           text: "Текстовое поле"
           confirm: "Подтверждение"
           dropdown: "Выпадающий список"
-          multiselect: "Мультивыбор"
+          multiselect: "Множественный выбор"
       site_text:
         description: "Вы можете отредактировать любой текст на форуме. Начните с поиска:"
         search: "Найдите текст, который вы хотите отредактировать"
@@ -5598,7 +5881,7 @@ ru:
         add_group: "Добавить группу"
         uploaded_image_list:
           label: "Изменить список"
-          empty: "Изображений пока нет. Загрузите одно."
+          empty: "Изображений пока нет — загрузите что-нибудь."
           upload:
             label: "Загрузить"
             title: "Загрузка изображений"
@@ -5624,7 +5907,7 @@ ru:
           legal: "Юридическое"
           api: "API"
           user_api: "Пользовательский API"
-          uncategorized: "Прочее"
+          uncategorized: "Разное"
           backups: "Резервные копии"
           login: "Аккаунты"
           plugins: "Плагины"
@@ -5633,6 +5916,7 @@ ru:
           search: "Поиск"
           groups: "Группы"
           dashboard: "Панель управления"
+          navigation: "Навигация"
         secret_list:
           invalid_input: "Поля ввода не могут быть пустыми или содержать символ вертикальной черты."
         default_categories:
@@ -5645,99 +5929,100 @@ ru:
           edit: Открыть редактор
           modal_title: "Редактировать %{name}"
       badges:
-        title: Значки
-        new_badge: Новый значок
+        title: Награды
+        new_badge: Новая награда
         new: Новая
         name: Название
-        badge: Значок
+        badge: Награда
         display_name: Отображаемое название
         description: Описание
         long_description: Подробное описание
-        badge_type: Тип значка
+        badge_type: Тип награды
         badge_grouping: Группа
         badge_groupings:
-          modal_title: Группы значков
-        granted_by: Кем выдан
-        granted_at: Когда выдан
+          modal_title: Группы наград
+        granted_by: Кем выдана
+        granted_at: Когда выдана
         reason_help: (Ссылка на запись или тему)
         save: Сохранить
         delete: Удалить
-        delete_confirm: Действительно удалить этот значок?
+        delete_confirm: Действительно удалить эту награду?
         revoke: Отозвать
         reason: Причина
-        expand: Развернуть &hellip;
-        revoke_confirm: Действительно отозвать этот значок?
-        edit_badges: Редактировать значки
-        grant_badge: Выдать значок
-        granted_badges: Выданные значки
+        expand: Развернуть&hellip;
+        revoke_confirm: Действительно отозвать эту награду?
+        edit_badges: Редактировать награды
+        grant_badge: Выдать награду
+        granted_badges: Выданные награды
         grant: Выдать
-        no_user_badges: "У %{name} нет ни одного значка."
-        no_badges: Нет значков, которые можно было бы выдать.
-        none_selected: "Выберите значок в списке слева"
-        allow_title: Разрешить использовать название значка в качестве титула
+        no_user_badges: "У %{name} нет ни одной награды."
+        no_badges: Нет наград, которые можно было бы выдать.
+        none_selected: "Выберите награду в списке слева"
+        allow_title: Разрешить использовать название награды в качестве титула
         multiple_grant: Может быть предоставлена несколько раз
-        listable: Отображать значок на публичной странице значков
-        enabled: Активировать использование этого значка
-        icon: Значок
+        listable: Отображать награду на публичной странице наград
+        enabled: включён
+        disabled: отключён
+        icon: Иконка
         image: Изображение
-        graphic: Графическое изображение
-        icon_help: "Введите имя значка из коллекции Font Awesome (используйте префикс «far-» для обычных значков и «fab-» для значков брендов)"
-        image_help: "Вместо значка будет использоваться загруженное изображение, если используются обе настройки."
-        select_an_icon: "Выбрать значок"
+        graphic: Иконка награды
+        icon_help: "Введите имя иконки из коллекции Font Awesome (используйте префикс «far-» для обычных значков и «fab-» для значков брендов)"
+        image_help: "Вместо иконки будет использоваться загруженное изображение, если используются обе настройки."
+        select_an_icon: "Выбрать иконку"
         upload_an_image: "Загрузить изображение"
         read_only_setting_help: "Настроить текст"
         query: Выборка награды (SQL)
-        target_posts: Выборка целевых сообщений
+        target_posts: Выборка целевых записей
         auto_revoke: Запускать ежедневно запрос на отзыв
-        show_posts: Показывать на странице значков сообщение, на основе которого была выдана награда
+        show_posts: Показывать на странице наград запись, на основе которой она была выдана
         trigger: Запуск
         trigger_type:
           none: "Обновлять ежедневно"
-          post_action: "Когда пользователь совершает действие над сообщением"
-          post_revision: "Когда пользователь редактирует или создаёт сообщение"
+          post_action: "Когда пользователь совершает действие над записью"
+          post_revision: "Когда пользователь редактирует или создаёт запись"
           trust_level_change: "Когда пользователь меняет уровень доверия"
           user_change: "Когда создаётся или редактируется пользователь"
         preview:
-          link_text: "Предпросмотр выданных значков"
+          link_text: "Предпросмотр выданных наград"
           plan_text: "Предпросмотр с анализом быстродействия"
-          modal_title: "Предосмотр запроса награды"
+          modal_title: "Предпросмотр запроса награды"
           sql_error_header: "В запросе произошла ошибка."
-          error_help: "См. следующую ссылку с информацией по запросам для значков."
+          error_help: "См. следующую ссылку с информацией по запросам для наград."
           bad_count_warning:
-            header: "ПРЕДУПРЕЖДЕНИЕ!"
-            text: "Обнаружены несуществующие примеры выдачи значков. Это может произойти, когда запрос возвращает несуществующие идентификаторы ID пользователей или сообщений. Это может привести к неожиданным проблемам со временем, поэтому внимательно проверьте ваш запрос."
-          no_grant_count: "Нет значков для выдачи."
+            header: "ВНИМАНИЕ!"
+            text: "Обнаружены несуществующие примеры выдачи наград. Это может произойти, когда запрос возвращает несуществующие идентификаторы ID пользователей или записей. Со временем это может привести к неожиданным проблемам, поэтому внимательно проверьте запрос."
+          no_grant_count: "Нет наград для выдачи."
           grant_count:
             one: "Будет выдана <b>%{count}</b> награда."
             few: "Будут выданы <b>%{count}</b> награды."
             many: "Будут выданы <b>%{count}</b> наград."
-            other: "Будут выданы <b>%{count}</b> наград."
+            other: "Будут выданы <b>%{count}</b> награды."
           sample: "Пример:"
           grant:
             with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> за сообщение в %{link}
-            with_post_time: <span class="username">%{username}</span> за сообщение в %{link} в <span class="time">%{time}</span>
+            with_post: <span class="username">%{username}</span> за запись в %{link}
+            with_post_time: <span class="username">%{username}</span> за запись в %{link} в <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> в <span class="time">%{time}</span>
         badge_intro:
           title: "Выберите существующую награду или создайте новую, чтобы начать работу"
-          emoji: "woman student emoji"
+          emoji: "эмодзи «студентка»"
           what_are_badges_title: "Что такое награды?"
           badge_query_examples_title: "Примеры запроса награды"
         mass_award:
           title: Массовое награждение
           description: Присуждение награды сразу нескольким пользователям.
-          no_badge_selected: Выберите значок.
+          no_badge_selected: Выберите награду.
           perform: "Наградить пользователей"
           upload_csv: Загрузите файл в формате CSV с адресами электронной почты или именами пользователей
           aborted: Загрузите файл в формате CSV, содержащий адреса электронной почты или имена пользователей
-          success: Файл успешно загружен и %{count} пользователей получат награды в ближайшее время.
+          success: Файл CSV получен. Пользователи (%{count}) получат награды в ближайшее время.
           csv_has_unmatched_users: "Следующие записи находятся в CSV-файле, но они не могут быть сопоставлены с существующими пользователями, поэтому указанные пользователи не получат награду:"
-          csv_has_unmatched_users_truncated_list: "В CSV-файле %{count} записей, которые не удалось сопоставить с существующими пользователями, поэтому эти пользователи не получат награду. Из-за большого количества несовпадающих записей отображаются только первые 100 значений:"
-          replace_owners: Удалять этот значок у предыдущих владельцев
-          grant_existing_holders: Предоставление награждённым дополнительных значков
+          csv_has_unmatched_users_truncated_list: "В CSV-файле есть записи (%{count}), которые не удалось сопоставить с существующими пользователями, поэтому эти пользователи не получат награду. Из-за большого количества несовпадающих записей отображаются только первые 100 значений:"
+          replace_owners: Удалять эту награду у предыдущих владельцев
+          grant_existing_holders: Предоставление награждённым дополнительных наград
       emoji:
         title: "Эмодзи"
-        help: "Добавляйте новые эмодзи, которые будут доступны всем. Перетащите несколько файлов одновременно, не указывая имени, чтобы создать эмодзи, используя имена файлов. Выбранная группа будет использоваться для всех добавляемых одновременно файлов. Вы также можете нажать на кнопку «Добавить новый эмодзи», чтобы добавить новые эмодзи через диалог открытия файлов."
+        help: "Добавляйте новые эмодзи, которые будут доступны всем. Перетащите несколько файлов одновременно, не указывая имени, чтобы создать эмодзи, используя имена файлов. Выбранная группа будет использоваться для всех добавляемых одновременно файлов. Вы также можете нажать на кнопку «Добавить новые эмодзи», чтобы добавить новые эмодзи через диалог открытия файлов."
         add: "Добавить новые эмодзи"
         choose_files: "Выберите файлы"
         uploading: "Загрузка…"
@@ -5748,25 +6033,23 @@ ru:
         delete_confirm: "Действительно удалить эмодзи :%{name}:?"
       embedding:
         get_started: "Для встраивания на другой сайт необходимо добавить соответствующий хост."
-        confirm_delete: "Действительно удалить это поле?"
-        sample: "Используйте следующий HTML-код на своём сайте для создания и встраивания тем Discourse. Замените <b>REPLACE_ME</b> канонической ссылкой страницы, в которую производится встраивание."
+        confirm_delete: "Действительно удалить этот хост?"
         title: "Встраивание"
         host: "Разрешённые хосты"
-        class_name: "Имя класса"
         allowed_paths: "Список разрешённых путей"
         edit: "изменить"
-        category: "Опубликовать в разделе"
+        category: "Опубликовать в категории"
         add_host: "Добавить хост"
         settings: "Настройки встраивания"
         crawling_settings: "Настройки поискового робота"
-        crawling_description: "Если RSS/ATOM не поддерживается, то при создании тем Discourse попытается разобрать содержимое из HTML. В некоторых случаях извлечение содержимого оказывается сложным, поэтому мы предоставляем возможность задавать правила CSS, чтобы сделать извлечение проще."
+        crawling_description: "Если RSS/ATOM не поддерживается, то при создании тем Discourse попытается проанализировать содержимое из HTML. В некоторых случаях извлечение содержимого оказывается сложным, поэтому мы предоставляем возможность задавать правила CSS, чтобы сделать извлечение проще."
         embed_by_username: "Имя пользователя, которое будет использоваться при создании темы"
-        embed_post_limit: "Максимальное количество встроенных сообщений"
-        embed_title_scrubber: "Регулярное выражение, используемое для очистки заголовка сообщений"
-        embed_truncate: "Обрезать встроенные сообщения."
+        embed_post_limit: "Максимальное количество встроенных записей"
+        embed_title_scrubber: "Регулярное выражение, используемое для очистки заголовка записей"
+        embed_truncate: "Обрезать встроенные записи"
         embed_unlisted: "Импортированные темы будут отображаться в списке тем только после добавления в них ответа."
-        allowed_embed_selectors: "Селекторы CSS которые разрешены для использования."
-        blocked_embed_selectors: "CSS селектор для элементов, которые удалены из встраивания"
+        allowed_embed_selectors: "CSS-селектор для элементов, разрешенных во встраивании"
+        blocked_embed_selectors: "CSS-селектор для элементов, удаленных из встраивания"
         allowed_embed_classnames: "Разрешённые имена классов CSS"
         save: "Сохранить настройки встраивания"
       permalink:
@@ -5775,15 +6058,16 @@ ru:
         url: "URL"
         topic_id: "ID темы"
         topic_title: "Тема"
-        post_id: "ID сообщения"
+        post_id: "ID записи"
         post_title: "Запись"
-        category_id: "ID раздела"
+        category_id: "ID категории"
         category_title: "Категория"
         tag_name: "Имя тега"
         external_url: "Внешняя или относительная ссылка"
         destination: "Назначения"
         copy_to_clipboard: "Скопировать ссылку в буфер обмена"
         delete_confirm: Удалить эту постоянную ссылку?
+        no_permalinks: "У вас ещё нет постоянных ссылок. Как только вы создадите постоянную ссылку (см. выше), здесь появится список ваших постоянных ссылок."
         form:
           label: "Новая постоянная ссылка:"
           add: "Добавить"
@@ -5800,14 +6084,14 @@ ru:
           replace: "Заменить"
   wizard_js:
     wizard:
-      jump_in: "Готово"
+      jump_in: "Приступим!"
       finish: "Выйти из настройки"
       back: "Назад"
       next: "Далее"
-      configure_more: "Больше настроек…"
+      configure_more: "Другие настройки…"
       step-text: "Шаг"
       step: "%{current} из %{total}"
-      upload: "Загрузить"
+      upload: "Загрузить файл"
       uploading: "Загрузка…"
       upload_error: "Не удалось загрузить файл. Попробуйте ещё раз."
       staff_count:

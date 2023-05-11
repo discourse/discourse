@@ -7,7 +7,7 @@
 tr_TR:
   js:
     details:
-      title: Detayları Gizle
+      title: Ayrıntıları Gizle
     composer:
       details_title: Özet
       details_text: "Bu metin gizlenecek"

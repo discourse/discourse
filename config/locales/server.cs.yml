@@ -387,6 +387,7 @@ cs:
       email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."
       email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
       description_incomplete: "Příspěvek s popisem kategorie musí obsahovat alespoň jeden odstavec."
+      disallowed_tags_generic: "Toto téma obsahuje nedovolené štítky."
     cannot_delete:
       has_subcategories: "Tato kategorie nejde smazat protože obsahuje podkategorie."
       topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
@@ -526,10 +527,6 @@ cs:
         many: "téměř před %{count} roky"
         other: "téměř před %{count} roky"
   password_reset:
-    choose_new: "Vyberte si nové heslo"
-    choose: "Vybrat heslo"
-    update: "změnit heslo"
-    save: "Nastavit heslo"
     title: "Resetovat heslo"
     success: "Heslo bylo úspěšně změněno a nyní jste přihlášeni."
     success_unapproved: "Heslo bylo úšpěšně změněno."
@@ -580,9 +577,11 @@ cs:
       long_form: "označeno jako spam"
     inappropriate:
       title: "Nevhodné"
+      description: 'Toto téma obsahuje obsah, který by rozumná osoba mohla považovat za urážlivý, zneužívající, za nenávistné chování nebo za porušení <a href="%{base_path}/guidelines">našich komunitních zásad</a>.'
       long_form: "nahlášeno jako nevhodné"
     notify_moderators:
       title: "Něco jiného"
+      description: 'Toto téma vyžaduje obecnou pozornost redakce na základě <a href="%{base_path}/guidelines">pokynů</a>, <a href="%{tos_url}">podmínek použití</a>nebo z jiného důvodu, který není uveden výše.'
       long_form: "nahlášeno moderátorům"
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\n\\n%{message}\n"
@@ -814,7 +813,7 @@ cs:
     staff_logins:
       labels:
         user: Uživatel
-        location: Lokace
+        location: Poloha
     top_uploads:
       labels:
         filename: Název souboru
@@ -847,6 +846,7 @@ cs:
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."
     enable_badges: "Povolit odznaky"
+    version_checks: "Odešlete příkaz ping na Discourse Hub pro aktualizace verzí a zobrazte zprávy o nových verzích na <a href='%{base_path}/admin' target='_blank'>/admin</a> nástěnce"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
     min_password_length: "Minimální povolená délka hesla."
     min_admin_password_length: "Minimální délka heslo pro administrátora."
@@ -877,6 +877,9 @@ cs:
     embed_truncate: "Useknout zabudované příspěvky."
     embed_post_limit: "Maximální počet příspěvků k zabudování."
     tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
+    force_lowercase_tags: "Vynutit, aby všechny nové štítky byly psány výhradně malými písmeny."
+    dashboard_hidden_reports: "Povolit skrytí zadaných přehledů z administrační nástěnky."
+    dashboard_visible_tabs: "Vyberte, které záložky administrační nástěnky budou viditelné."
     errors:
       invalid_email: "Neplatná emailová adresa."
       invalid_integer: "Hodnota musí být celé číslo."
@@ -967,9 +970,6 @@ cs:
     Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
   user_notifications:
     previous_discussion: "Předchozí diskuze"
-    unsubscribe:
-      title: "Odhlásit z odběru emailů"
-      description: "Nechcete již od nás dostávat emaily? Žádný problém! Klikněte na odkaz níže pro okamžité odhlášení z odběru emailů:"
     reply_by_email: "K odpovědi [navštivte téma](%{base_url}%{url}) nebo odepište na tento email."
     visit_link_to_respond: "K odpovědi [navštivte téma](%{base_url}%{url})."
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
@@ -1008,8 +1008,6 @@ cs:
     see_more: "Více"
     search_title: "Hledat na tomto webu"
     search_button: "Vyhledat"
-  deleted: "smazáno"
-  image: "obrázek"
   upload:
     unauthorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: %{authorized_extensions})."
     pasted_image_filename: "Vložený obrázek"
@@ -1114,7 +1112,7 @@ cs:
     success: "E-mail odeslán"
     submit_button: "Odeslat e-mail"
   tags:
-    title: "Tagy"
+    title: "Štítky"
   finish_installation:
     register:
       button: "Registrovat"
@@ -1126,10 +1124,6 @@ cs:
         fields:
           login_required:
             placeholder: "Soukromé"
-          must_approve_users:
-            placeholder: "Vyžádat schválení"
-      ready:
-        title: "Váš Discourse je připraven!"
       styling:
         fields:
           styling_preview:
@@ -1146,19 +1140,14 @@ cs:
                 label: "Kategorie a nejnovější témata"
               categories_and_top_topics:
                 label: "Kategorie a populární témata"
-      branding:
-        fields:
-          logo:
-            label: "Primární loga"
       corporate:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
       invites:
-        title: "Pozvi redakci"
+        title: "Pozvi redaktory"
       finished:
         title: "Váš Discourse je připraven!"
-  joined: "Účet vytvořen"
   discourse_push_notifications:
     popup:
       mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'
@@ -1177,31 +1166,28 @@ cs:
       medium: "Střední"
       high: "Vysoká"
     actions:
-      agree_and_keep:
-        title: "Uchovat příspěvek"
-        description: "Schválit nahlášení a zanechat příspěvek nepozměněný. "
+      agree:
+        title: "Ano"
       agree_and_suspend:
-        title: "Zakázat uživatele"
         description: "Schválit nahlášení a pozastavit uživatele."
       agree_and_silence:
-        title: "Ztišit uživatele"
         description: "Schválit nahlášení a ztišit uživatele."
       agree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
-      agree_and_hide:
-        title: "Schovat příspěvek"
-        description: "Schovat tento příspěvek a automaticky poslat uživateli zprávu, aby ho urychleně upravil."
       delete_single:
         title: "Smazat"
       disagree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
       disagree:
-        title: "Neschvaluji"
+        title: "Ne"
       ignore:
         title: "ignorovat"
+      ignore_and_do_nothing:
+        title: "Nic nedělat"
       approve:
         title: "Schválit"
       reject_user:
+        title: "Smazat uživatele..."
         delete:
           title: "Smazat uživatele"
       reject:

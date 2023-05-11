@@ -434,10 +434,6 @@ ca:
           attributes:
             execute_at:
               in_the_past: "ha de ser en el futur."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Les claus d''interpolació següents no són vàlides: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -585,10 +581,6 @@ ca:
         one: "fa gairebé %{count} any"
         other: "fa gairebé %{count} any"
   password_reset:
-    choose_new: "Trieu una contrasenya nova"
-    choose: "Trieu una contrasenya"
-    update: "Actualitza la contrasenya"
-    save: "Estableix la contrasenya"
     title: "Reinicia la contrasenya"
     success: "Heu canviat la contrasenya satisfactòriament i ara heu iniciat la sessió."
     success_unapproved: "Heu canviat la contrasenya satisfactòriament."
@@ -883,7 +875,7 @@ ca:
       title: "DAU/MAU"
       xaxis: "Dia"
       yaxis: "DAU/MAU"
-      description: "Nombre de membres que han iniciat sessió el darrer dia dividit pel nombre de membres que ha iniciat sessió el darrer mes. Dóna un % que indica l'_adhesivitat_ de la comunitat. Objectiu >30%."
+      description: "Nombre de membres que han iniciat sessió el darrer dia dividit pel nombre de membres que ha iniciat sessió el darrer mes. Dóna un % que indica l'_adhesivitat_ de la comunitat. Objectiu >20%."
     daily_engaged_users:
       title: "Usuaris diaris compromesos"
       xaxis: "Dia"
@@ -1208,7 +1200,6 @@ ca:
     large_icon: "Imatge utilitzada com a base per a altres icones de metadades. Idealment hauria de ser superior a 512 x 512. Si es deixa en blanc, s'utilitzarà logo_small."
     manifest_icon: "Imatge utilitzada com a imatge de logo/splash en Android. Es redimensionarà automàticament a 512 × 512. Si es deixa en blanc, s'utilitzarà large_icon."
     favicon: "Icona per al vostre lloc web (favicon). Vegeu <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://ca.wikipedia.org/wiki/Icona_de_web</a>. Per a treballar correctament sobre un CDN, ha de ser PNG. Es redimensionarà a 32x32. Si es deixa en blanc, s'utilitzarà large_icon."
-    apple_touch_icon: "Icona utilitzada per als dispositius tàctils d'Apple. Es redimensionarà automàticament a 180x180. Si es deixa en blanc, s'utilitzarà large_icon."
     opengraph_image: "Imatge predeterminada opengraph, utilitzada quan la pàgina no té cap altra imatge adequada. Si es deixa en blanc, s'utilitzarà large_icon."
     notification_email: "Adreça de correu en el \"de:\" emprada en enviar tots els correus essencials de sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, configurats correctament perquè arribi el correu."
     email_custom_headers: "Llista de capçaleres de correu personalitzades, delimitada amb barres verticals"
@@ -1279,10 +1270,7 @@ ca:
     enable_rich_text_paste: "Habilita la conversió automàtica d'HTML a Markdown quan s'enganxa text en el tauler de redacció (experimental)"
     email_token_valid_hours: "Els testimonis (tokens) de contrasenya oblidada i activació de compte són vàlids durant (n) hores."
     enable_badges: "Activa el sistema d'insígnies."
-    enable_whispers: "Permet la comunicació privada de l'equip responsable dins dels temes."
     allow_index_in_robots_txt: "Especifiqueu en robots.txt que els motors de cerca web poden indexar aquest lloc. En casos excepcionals, podeu <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a> de manera permanent."
-    blocked_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals  els usuaris no poden registrar comptes. Exemple: mailinator.com|trashmail.net"
-    allowed_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals els usuaris HAN DE registrar els comptes. ATENCIÓ: Els usuaris amb dominis de correu diferents dels llistats no són autoritzats!"
     log_out_strict: "Quan es tanca la sessió, tanca TOTES les sessions de l'usuari en tots els dispositius"
     version_checks: "Fes ping al Discourse Hub per a actualitzacions de versions i per a mostrar missatges de versió nova en el tauler <a href='%{base_path}/admin' target='_blank'>/admin</a>."
     new_version_emails: "Envia un correu a contact_email address quan hi hagi una nova versió del Discourse disponible."
@@ -1577,8 +1565,6 @@ ca:
     automatically_unpin_topics: "Desafixa temes automàticament quan l'usuari arribi al capdavall."
     read_time_word_count: "Recompte de paraules per minut per a calcular el temps estimat de lectura."
     topic_page_title_includes_category: "L'<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del títol</a>  de la pàgina del tema inclou el nom de la categoria."
-    native_app_install_banner_ios: "Mostra el bàner de l'aplicació DiscourseHub en els dispositius iOS a usuaris habituals (nivell de confiança 1 i superior)."
-    native_app_install_banner_android: "Mostra el bàner de l'aplicació DiscourseHub en els dispositius Android a usuaris habituals (nivell de confiança 1 i superior)."
     app_association_android: "Contingut del punt final (endpoint) <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilitzat per a l’API de Digital Asset Links de Google."
     app_association_ios: "Contingut del punt final (endpoint) <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilitzat per a crear enllaços universals entre aquest lloc i les aplicacions iOS."
     share_anonymized_statistics: "Comparteix estadístiques d'ús anonimitzades."
@@ -1601,10 +1587,8 @@ ca:
     allowed_href_schemes: "Esquemes permesos en enllaços a més de http i https."
     embed_post_limit: "Nombre màxim de publicacions que s'incrusten."
     embed_username_required: "Cal un nom d'usuari per a crear un tema."
-    notify_about_flags_after: "Si hi ha banderes que no s'han gestionat després d'aquest nombre d'hores, envia un missatge personal als moderadors. 0 per desactivar."
     show_create_topics_notice: "Si el lloc web té menys de 5 temes públics, mostra un avís demanant als administradors que en creï uns quants. "
     delete_drafts_older_than_n_days: "Suprimeix esborranys amb més de (n) dies."
-    bootstrap_mode_min_users: "Nombre mínim d'usuaris necessaris per a desactivar el mode d'arrencada (deixeu-ho a 0 per a desactivar-lo)."
     slug_generation_method: "Trieu un mètode de generació de slugs (adreces amigables). 'encoded' generarà una cadena amb codificacions %. 'none' anul·larà totalment l'adreça amigable."
     enable_emoji: "Activa emojis"
     enable_emoji_shortcuts: "El text típic d'emojis com ara :): p :( serà convertit en emojis."
@@ -1656,7 +1640,6 @@ ca:
     revoke_api_keys_days: "Nombre de dies abans que una clau d’API no utilitzada sigui revocada  automàticament (0 per a mai)"
     allow_user_api_keys: "Permet la generació de claus API d'usuari"
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus d'API d'usuari"
-    min_trust_level_for_user_api_key: "Nivell de confiança necessari per a generar claus API d'usuari."
     allowed_user_api_auth_redirects: "URL permès per a la redirecció d'autenticació per a les claus de l'API d'usuari. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol part de l'URL (p. ex. www.example.com/*)."
     allowed_user_api_push_urls: "Adreces URL permeses per al 'server push' a l'API d'usuari"
     expire_user_api_keys_days: "Nombre de dies abans de l'extinció automàtica d'una clau d'API d'usuari (0 vol dir mai)"
@@ -1868,7 +1851,6 @@ ca:
     deactivated_by_staff: "Desactivat per l'equip responsable"
     activated_by_staff: "Activat per l'equip responsable"
     new_user_typed_too_fast: "Un usuari nou ha teclejat massa de pressa"
-    content_matches_auto_block_regex: "El contingut coincideix amb l'expressió regular (regex) de blocatge automàtic"
     username:
       short: "ha de tenir almenys %{min} caràcters"
       long: "no ha de ser més llarg de %{max} caràcters"
@@ -2198,7 +2180,6 @@ ca:
     user_automatically_silenced:
       title: "Usuari silenciat automàticament"
       subject_template: "El nou usuari %{username} ha estat silenciat per banderes de la comunitat"
-      text_body_template: "Això és un missatge automàtic. \n\nEl nou usuari [%{username}](%{user_url}) ha estat silenciat automàticament perquè diversos usuaris han marcat amb bandera les publicacions de %{username}. \n\n[Reviseu les banderes](%{base_url}/admin/flags). Si %{username} ha estat silenciat de manera incorrecta, feu clic en el botó de 'Desfés el silenciament' en [la pàgina d'administració per a aquest usuari](%{user_url}). \n\nAquest llindar es pot canviar mitjançant el paràmetre de configuració del lloc web `silence_new_user`.\n"
     spam_post_blocked:
       title: "Publicació de brossa blocada"
       subject_template: "L'usuari nou %{username} té entrades blocades a causa d'enllaços repetits."
@@ -2216,10 +2197,6 @@ ca:
       title: "Descarrega imatges remotes inhabilitades"
       subject_template: "Descarregant imatges remotes inhabilitades"
       text_body_template: "S'ha inhabilitat el paràmetre `download_remote_images_to_local` perquè s'ha arribat al límit d'espai de disc en `download_remote_images_threshold`."
-    dashboard_problems:
-      title: "Problemes del tauler de control"
-      subject_template: "Nou consell al tauler de control del vostre lloc web"
-      text_body_template: "Tenim uns quants consells i recomanacions basats en la configuració actual del lloc web. \n\nVisiteu el [tauler de control del lloc web](%{base_url}/admin) per a veure-ho.\n\nSi no hi ha res visible en el tauler de control, algun altre membre del personal responsable pot haver actuat segons aquestes recomanacions. Es pot veure una llista d'accions de l'equip responsable en el [registre d'accions de l'equip responsable](%{base_url}/admin/logs/staff_action_logs).\n"
     new_user_of_the_month:
       title: "Sou el nou usuari del mes!"
       subject_template: "Sou un nou usuari del mes!"
@@ -2252,9 +2229,6 @@ ca:
       one: "Alerta! Hem superat el màxim de %{count} correu diari. Comproveu el lloc web per a veure els que poden haver quedat retinguts. PS: Gràcies per ser popular!"
       other: "Alerta! Hem superat el màxim de %{count} correus diaris. Comproveu el lloc web per a veure els que poden haver quedat retinguts. PS: Gràcies per ser popular!"
     in_reply_to: "En resposta a "
-    unsubscribe:
-      title: "Cancel·la la subscripció!"
-      description: "No us interessa rebre aquests correus? Cap problema! Feu clic ací per a cancel·lar la subscripció de seguida:"
     reply_by_email: "[Visita el tema](%{base_url}%{url}) o respon a aquest correu per a contestar."
     reply_by_email_pm: "[Visiteu el missatge](%{base_url}%{url}) o responeu a aquest correu per a respondre a %{participants}."
     only_reply_by_email: "Responeu a aquest correu per a contestar."
@@ -2436,6 +2410,16 @@ ca:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "L'usuari està vigilant la primera publicació"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2488,7 +2472,6 @@ ca:
       liked_received: "M'agrades rebuts"
       new_users: "Usuaris nous"
       popular_topics: "Temes populars"
-      follow_topic: "Segueix aquest tema"
       join_the_discussion: "Llegeix-ne més"
       popular_posts: "Publicacions populars"
       more_new: "Nou per a vós"
@@ -2565,15 +2548,6 @@ ca:
   offline:
     title: "No es pot carregar l'aplicació"
     offline_page_message: "Sembla que esteu fora de línia! Comproveu la connexió de xarxa i torneu-ho a provar."
-  login_required:
-    welcome_message: |
-      ## [Benvingut a %{title}](#welcome)
-      Cal tenir un compte. Creeu un compte o inicieu sessió per a continuar.
-    welcome_message_invite_only: |
-      ## [Benvingut a %{title}](#welcome)
-      Cal tenir un compte. Demaneu a un membre existent una invitació o inicieu sessió per a continuar.
-  deleted: "suprimit"
-  image: "imatge"
   upload:
     edit_reason: "còpia local d'imatges descarregada"
     unauthorized: "El fitxer que intenteu carregar no està autoritzat (extensions permeses: %{authorized_extensions})."
@@ -2650,7 +2624,6 @@ ca:
     title: "Condicions del servei"
   privacy_topic:
     title: "Política de privacitat"
-    body: "<a name=\"collect\"></a> \n\n## [Quina informació recopilem?](#collect)\n\nRecopilem informació quan us registreu en el nostre lloc web i recopilem dades quan participeu en el fòrum llegint, escrivint i avaluant el contingut que s'hi comparteix. \n\nQuan us registreu en el nostre lloc web, se us pot demanar que introduïu el nom i l'adreça de correu electrònic. Així i tot, podeu visitar el lloc web sense registrar-vos. La vostra adreça de correu electrònic es verificarà mitjançant un correu electrònic que conté un enllaç únic. Si es visita aquest enllaç, sabem que controleu l'adreça de correu. \n\nEn registrar-vos i publicar, registrem l'adreça IP des de la qual s'origina la publicació. També podem conservar els registres (logs) del servidor que incloguin l'adreça IP de cada sol·licitud al nostre servidor. \n\n<a name=\"use\"></a> \n\n## [Per a què utilitzem la vostra informació?](#use)\n\nQualsevol de les informacions que recopilem es poden utilitzar d'una de les maneres següents: \n\n* Per a personalitzar la vostra experiència: la vostra informació ens ajuda a respondre millor a les vostres necessitats individuals. \n* Per a millorar el nostre lloc web: ens esforcem contínuament per millorar el que oferim basant-nos en la informació i els comentaris que rebem de vosaltres. \n* Per a millorar el servei al client: la vostra informació ens ajuda a respondre amb més eficàcia a les vostres peticions d'atenció al client i a les vostres necessitats de suport. \n* Per a enviar correus electrònics periòdics: l'adreça de correu electrònic que proporcioneu pot utilitzar-se per a enviar-vos informació, notificacions que sol·liciteu sobre canvis en temes o en resposta al vostre nom d'usuari, respondre a consultes o altres sol·licituds o preguntes. \n\n<a name=\"protect\"></a> \n\n## [Com protegim la vostra informació?](#protect) \n\nImplementem diverses mesures de seguretat per a mantenir segura la vostra informació personal quan introduïu, envieu o accediu a la vostra informació personal. \n\n<a name=\"data-retention\"></a> \n\n## [Quina és la vostra política de retenció de dades?](#data-retention)\n\nFarem un esforç de bona fe per a: \n* Conservar els registres del servidor que continguin l'adreça IP de totes les sol·licituds a aquest servidor no més enllà de 90 dies. \n* Conservar les adreces IP associades amb els usuaris registrats i les seves publicacions no més enllà de 5 anys. \n\n<a name=\"cookies\"></a> \n\n## [Utilitzem galetes?](#cookies)\n\nSí. Les galetes (cookies) són petits fitxers que un lloc web o el seu proveïdor de serveis transfereixen al disc dur del vostre ordinador per mitjà del navegador web (si ho permeteu). Aquestes galetes permeten al lloc web reconèixer el vostre navegador i, si teniu un compte registrat, associar-lo amb el vostre compte registrat. Utilitzem galetes per a entendre i desar les vostres preferències per a visites futures i compilar dades agregades sobre el tràfic i les interaccions del lloc web de manera que puguem oferir millors experiències i eines en el futur. Podem contractar amb proveïdors de serveis de tercers per a ajudar-nos a entendre millor els visitants del nostre lloc web. Aquests proveïdors de serveis no estan autoritzats a utilitzar la informació recopilada en el nostre nom excepte per a ajudar-nos a dur a terme i millorar el nostre negoci. \n\n<a name=\"disclose\"></a>\n\n## [¿Revelem cap informació a parts externes?](#disclose)\n\nNo venem, comercialitzem ni transferim a tercers les vostres dades d'identificació personal. Això no inclou terceres parts de confiança que ens ajudin a operar el lloc web, dur a terme el nostre negoci o atendre-us, sempre que aquestes parts acordin mantenir confidencial aquesta informació. També podem publicar la vostra informació quan creiem que la publicació és adequada per a complir amb la llei, fer complir les polítiques del lloc web o protegir els nostres drets, propietat o seguretat, o els d'altri. Tanmateix, es pot proporcionar informació sobre visitants no identificables individualment a altres parts per a màrqueting, publicitat o altres usos. \n\n<a name=\"third-party\"></a> \n\n## [Enllaços de tercers](#third-party) \n\nA vegades, a la nostra discreció, podem incloure o oferir productes o serveis de tercers en el nostre lloc web. Aquests llocs de tercers tenen polítiques de privacitat separades i independents. Per tant, no tenim cap responsabilitat  pel contingut i les activitats d'aquests llocs enllaçats. Tot i això, mirem de protegir la integritat del nostre lloc web i qualsevol comentari sobre aquests llocs és benvingut. \n\n<a name=\"coppa\"></a> \n\n## [Children's Online Privacy Protection Act Compliance](#coppa) \n\nEl nostre lloc web, els nostres productes i serveis estan dirigits a persones que tinguin almenys 13 anys o més. Si aquest servidor es troba als Estats Units i teniu menys de 13 anys, segons els requisits de COPPA ([Llei de protecció de la privacitat en línia de l'infant](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), no utilitzeu aquest lloc web. \n\n<a name=\"online\"></a>\n\n## [Política de privacitat sols en línia només](#online)\n\nAquesta política de privacitat en línia només s'aplica a la informació recopilada per mitjà del nostre lloc web i no a la informació recopilada fora de línia. \n\n<a name=\"consent\"></a>\n\n## [El vostre consentiment](#consent)\n\nEn utilitzar el nostre lloc web, accepteu la nostra política de privacitat del lloc web. \n\n<a name=\"changes\"></a>\n\n## [Canvis en la nostra política de privacitat](#changes)\n\nSi decidim canviar la nostra política de privacitat, publicarem els canvis en aquesta pàgina. Aquest document és CC-BY-SA. Es va actualitzar per darrera vegada el 31 de maig de 2013.\n"
   badges:
     editor:
       name: Editor
@@ -2928,8 +2901,6 @@ ca:
       message: "<p>Hem tornat a enviar el correu d'activació a <b>%{email}</b>"
   safe_mode:
     title: "Entra en mode segur"
-    no_unofficial_plugins: "Inhabilita tots els connectors no oficials"
-    no_plugins: "Inhabilita tots els connectors"
     enter: "Entra en mode segur"
     must_select: "Cal seleccionar almenys una opció per a entrar en mode segur."
   wizard:
@@ -2946,10 +2917,6 @@ ca:
           login_required:
             placeholder: "Privat"
             extra_description: "Sols els usuaris que han iniciat la sessió poden accedir a aquesta comunitat"
-          must_approve_users:
-            placeholder: "Requereix aprovació"
-      ready:
-        title: "El vostre Discourse està a punt!"
       styling:
         fields:
           styling_preview:
@@ -2966,29 +2933,15 @@ ca:
                 label: "Categories i temes més recents"
               categories_and_top_topics:
                 label: "Categories i temes principals"
-      branding:
-        fields:
-          logo:
-            label: "Logo principal"
-          logo_small:
-            label: "Logotip quadrat"
       corporate:
         fields:
-          company_name:
-            label: "Nom de l'empresa"
-            placeholder: "Organització d'exemple"
           governing_law:
-            label: "Llei que regeix"
             placeholder: "Jurisdicció de Califòrnia"
           contact_url:
-            label: "Pàgina web"
             placeholder: "https://www.example.com/contact-us"
-            description: "Pàgina web general de contacte per a vós o la vostra organització. Es mostrarà en <a href='%{base_path}/about' target='_blank'>la vostra pàgina 'quant a'</a>."
           city_for_disputes:
-            label: "Ciutat per a les disputes"
             placeholder: "San Francisco, Califòrnia"
           site_contact:
-            label: "Missatges automàtics"
             description: "Tots els missatges personals automatitzats de Discourse s'enviaran des d'aquest usuari, com ara avisos de bandera i avisos de finalització de còpies de seguretat."
       invites:
         title: "Convida l'equip responsable"
@@ -2998,7 +2951,6 @@ ca:
         title: "El vostre Discourse està a punt!"
   search_logs:
     graph_title: "Recompte de cerques"
-  joined: "Registrat"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} us ha mencionat en "%{topic}" - %{site_title}'
@@ -3040,50 +2992,29 @@ ca:
     conflict: "Hi ha hagut un conflicte d'actualització que us impedeix fer això."
     actions:
       agree:
-        title: "D'acord..."
-      agree_and_keep:
-        title: "Manté la publicació"
-        description: "D'acord amb la bandera i manté la publicació sense canviar. "
-      agree_and_keep_hidden:
-        title: "Manté la publicació oculta"
-        description: "D’acord amb la bandera i deixa la publicació oculta."
+        title: "Sí"
       agree_and_suspend:
-        title: "Suspèn l'usuari"
         description: "D'acord amb la bandera i suspèn l'usuari. "
       agree_and_silence:
-        title: "Silencia l'usuari"
         description: "D'acord amb la bandera i silencia l'usuari. "
       agree_and_restore:
-        title: "Restaura la publicació"
         description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
-      agree_and_hide:
-        title: "Amaga la publicació"
-        description: "Amaga aquesta publicació i envia automàticament a l'usuari un missatge que l'insti a editar-la."
       delete_single:
         title: "Suprimeix"
       delete:
         title: "Suprimeix ..."
-      delete_and_ignore:
-        title: "Elimina la publicació i ignora-la"
-        description: "Suprimeix la publicació; si és la primera, suprimeix també el tema"
       delete_and_ignore_replies:
-        title: "Suprimeix publicacions + respostes i ignora"
-        description: "Suprimeix la publicació i totes les respostes; si és la primera publicació, elimina també el tema."
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
-      delete_and_agree:
-        title: "Suprimeix la publicació i accepta"
-        description: "Suprimeix la publicació; si és la primera, suprimeix també el tema"
       delete_and_agree_replies:
-        title: "Elimina publicació + respostes i accepta"
-        description: "Suprimeix la publicació i totes les respostes; si és la primera publicació, suprimeix també el tema."
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
       disagree_and_restore:
-        title: "No estic d'acord i restaura la publicació"
         description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
       disagree:
-        title: "En desacord"
+        title: "No"
       ignore:
         title: "Ignora"
+      ignore_and_do_nothing:
+        title: "No facis res"
       approve:
         title: "Aprova"
       approve_post:

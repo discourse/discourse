@@ -1,10 +1,11 @@
 .chat-channel-preview-card {
   margin: 1rem 1rem 2rem 1rem;
   padding: 1.5rem 1rem;
-  background-color: var(--primary-50);
+  background-color: var(--secondary-very-high);
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 3;
 
   &.-no-description {
     .chat-channel-title {
@@ -12,9 +13,17 @@
     }
   }
 
+  &.-no-button {
+    .chat-channel-preview-card__browse-all {
+      margin-top: 0;
+    }
+  }
+
   &__description {
     color: var(--primary-600);
     text-align: center;
+    overflow-wrap: break-word;
+    max-width: 100%;
   }
 
   .chat-channel-title__name {

@@ -1,0 +1,40 @@
+@mixin chat-reaction {
+  align-items: center;
+  display: inline-flex;
+  padding: 0.3em 0.6em;
+  margin: 1px 0.25em 1px 0;
+  font-size: var(--font-down-2);
+  border-radius: 4px;
+  border: 1px solid var(--primary-300);
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s, border-color 0.2s;
+
+  &.reacted {
+    border-color: var(--tertiary-medium);
+    background: var(--tertiary-very-low);
+    color: var(--tertiary-hover);
+
+    &:hover {
+      background: var(--tertiary-low);
+    }
+  }
+
+  &:not(.reacted) {
+    &:hover {
+      background: var(--primary-low);
+      border-color: var(--primary-low-mid);
+    }
+
+    &:focus {
+      background: none;
+    }
+  }
+
+  .emoji {
+    height: 15px;
+    margin-right: 4px;
+    width: auto;
+  }
+}

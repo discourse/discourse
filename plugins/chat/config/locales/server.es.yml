@@ -23,7 +23,9 @@ es:
     default_emoji_reactions: "Reacciones emoji por defecto para los mensajes de chat. Añade hasta 5 emojis para una reacción rápida."
     direct_message_enabled_groups: "Permite a los usuarios de estos grupos crear Chats Personales de usuario a usuario. Nota: el personal siempre puede crear Chats Personales, y los usuarios podrán responder a los Chats Personales iniciados por los usuarios que tienen permiso para crearlos."
     chat_message_flag_allowed_groups: "Los usuarios de estos grupos pueden marcar los mensajes del chat."
+    max_mentions_per_chat_message: "Número máximo de notificaciones de @name que un usuario puede usar en un mensaje de chat."
     chat_max_direct_message_users: "Los usuarios no pueden añadir más de este número de otros usuarios al crear un nuevo mensaje directo. Establece el valor 0 para permitir solo los mensajes a uno mismo. El personal está exento de este ajuste."
+    chat_allow_archiving_channels: "Permitir al personal archivar mensajes en un tema al cerrar un canal."
     errors:
       chat_default_channel: "El canal de chat por defecto debe ser un canal público."
       direct_message_enabled_groups_invalid: "Debes especificar al menos un grupo para esta configuración. Si no quieres que nadie, excepto el personal, envíe mensajes directos, elige el grupo del personal."
@@ -32,26 +34,25 @@ es:
     chat_channel_archive_complete:
       title: "Archivado del canal de chat completado"
       subject_template: "El archivado del canal de chat se ha completado con éxito"
-      text_body_template: |
-        El archivado del canal de chat **\#%{channel_name}** se completó con éxito. Los mensajes se copiaron en el tema [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "No se pudo archivar el canal"
       subject_template: "No se pudo archivar el canal"
-      text_body_template: |
-        El archivo del canal de chat **\#%{channel_name}** ha fallado. Se han archivado los mensajes de %{messages_archived}. Los mensajes parcialmente archivados se han copiado en el tema [%{topic_title}](%{topic_url}). Visita el canal en %{channel_url} para volver a intentarlo.
+    chat_channel_archive_failed_no_topic:
+      title: "No se pudo archivar el canal"
+      subject_template: "No se pudo archivar el canal"
   chat:
     deleted_chat_username: eliminado
     errors:
       channel_exists_for_category: "Ya existe un canal para esta categoría y nombre"
-      channel_new_message_disallowed: "El canal es %{status}, no se pueden enviar nuevos mensajes"
-      channel_modify_message_disallowed: "El canal está %{status}, no se pueden editar ni eliminar mensajes"
       user_cannot_send_message: "No puedes enviar mensajes en este momento."
       rate_limit_exceeded: "Se ha superado el límite de mensajes de chat que se pueden enviar en 30 segundos"
       auto_silence_from_flags: "Mensaje de chat marcado con una puntuación lo suficientemente alta como para silenciar al usuario."
       channel_cannot_be_archived: "El canal no se puede archivar en este momento, debe estar cerrado o abierto para ser archivado."
       duplicate_message: "Tú también publicaste un mensaje idéntico hace poco."
       delete_channel_failed: "No se pudo eliminar el canal, inténtalo de nuevo."
-      minimum_length_not_met: "El mensaje es demasiado corto, debe tener un mínimo de %{minimum} caracteres."
+      message_too_long:
+        one: "El mensaje es demasiado largo, los mensajes deben tener un máximo de %{count} caracteres."
+        other: "El mensaje es demasiado largo, los mensajes deben tener un máximo de %{count} caracteres."
       max_reactions_limit_reached: "No se permiten nuevas reacciones en este mensaje."
       message_move_invalid_channel: "El canal de origen y el de destino deben ser canales públicos."
       message_move_no_messages_found: "No se ha encontrado ningún mensaje con los identificadores de mensaje proporcionados."
@@ -62,9 +63,7 @@ es:
       actor_disallowed_dms: "Has elegido impedir que los usuarios te envíen mensajes privados y directos, por lo que no puedes crear nuevos mensajes directos."
       actor_preventing_target_user_from_dm: "Has elegido impedir que %{username} te envíe mensajes privados y directos, por lo que no puedes crear nuevos mensajes directos para ellos."
       user_cannot_send_direct_messages: "Lo sentimos, no puedes enviar mensajes directos."
-      over_chat_max_direct_message_users:
-        one: "Solo puedes crear un mensaje directo contigo mismo."
-        other: "No puedes crear un mensaje directo con más de %{count} usuarios."
+      over_chat_max_direct_message_users_allow_self: "Solo puedes crear un mensaje directo contigo mismo."
     reviewables:
       message_already_handled: "Gracias, pero ya hemos revisado este mensaje y hemos determinado que no es necesario marcarlo de nuevo."
       actions:
@@ -101,20 +100,16 @@ es:
         transcript_title: "Transcripción de los mensajes anteriores en %{channel_name}"
         transcript_body: "Para darte más contexto, incluimos una transcripción de los mensajes anteriores de esta conversación (hasta diez):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Solo lectura"
-        archived: "Archivado"
-        closed: "Cerrado"
-        open: "Abierto"
       archive:
         first_post_raw: "Este tema es un archivo del canal de chat de [%{channel_name}](%{channel_url})."
       messages_moved:
         one: "@%{acting_username} movió un mensaje al canal [%{channel_name}](%{first_moved_message_url})."
         other: "@%{acting_username} movió %{count} mensajes al canal [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} y %{leftover} otros"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} y %{count} más"
+          other: "%{comma_separated_usernames} y %{count} otros"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "contiene caracteres no ascii"
@@ -165,6 +160,18 @@ es:
         one: "Tienes un nuevo mensaje de chat"
         other: "Tienes nuevos mensajes de chat"
       from: "%{site_name}"
+      subject:
+        direct_message_from_1: "[%{email_prefix}] Nuevo mensaje de %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nuevo mensaje de %{username1} y %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nuevo mensaje de %{username} y %{count}"
+          other: "[%{email_prefix}] Nuevo mensaje de %{username} y otros %{count}"
+        chat_channel_1: "[%{email_prefix}] Nuevo mensaje en %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nuevo mensaje en %{channel1} y %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nuevo mensaje en %{channel} y %{count}"
+          other: "[%{email_prefix}] Nuevo mensaje en %{channel} y otros %{count}"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nuevo mensaje en %{channel} y de %{username}"
       unsubscribe: "Este resumen del chat se envía desde %{site_link} cuando estás fuera. Cambia tu %{email_preferences_link}, o %{unsubscribe_link} para darte de baja."
       unsubscribe_no_link: "Este resumen del chat se envía desde %{site_link} cuando estás fuera. Cambia tu %{email_preferences_link}."
       view_messages:

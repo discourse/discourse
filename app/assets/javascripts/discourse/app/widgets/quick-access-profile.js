@@ -12,6 +12,10 @@ export function addQuickAccessProfileItem(item) {
   _extraItems.push(item);
 }
 
+export function resetQuickAccessProfileItems() {
+  _extraItems.clear();
+}
+
 createWidgetFrom(QuickAccessItem, "logout-item", {
   tagName: "li.logout",
 
@@ -44,7 +48,9 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
       modalClass: "user-status",
       model: {
         status: this.currentUser.status,
-        saveAction: (status) => this.userStatus.set(status),
+        pauseNotifications: this.currentUser.isInDoNotDisturb(),
+        saveAction: (status, pauseNotifications) =>
+          this.userStatus.set(status, pauseNotifications),
         deleteAction: () => this.userStatus.clear(),
       },
     });

@@ -12,6 +12,21 @@ export function setNewCategoryDefaultColors(backgroundColor, textColor) {
 }
 
 export default DiscourseRoute.extend({
+  beforeModel() {
+    if (!this.currentUser) {
+      this.replaceWith("/404");
+      return;
+    }
+    if (!this.currentUser.admin) {
+      if (
+        !this.currentUser.moderator ||
+        this.siteSettings.moderators_manage_categories_and_groups === false
+      ) {
+        this.replaceWith("/404");
+      }
+    }
+  },
+
   model() {
     return Promise.resolve(this.groupPermissions())
       .then((permissions) => {
@@ -31,7 +46,10 @@ export default DiscourseRoute.extend({
       allow_badges: true,
       topic_featured_link_allowed: true,
       custom_fields: {},
+      category_setting: {},
       search_priority: SEARCH_PRIORITIES.normal,
+      required_tag_groups: [],
+      form_template_ids: [],
     });
   },
 

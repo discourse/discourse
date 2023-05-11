@@ -34,16 +34,16 @@ RSpec.describe UserApiKeysController do
 
   let :args do
     {
-      scopes: 'read',
+      scopes: "read",
       client_id: "x" * 32,
-      auth_redirect: 'http://over.the/rainbow',
-      application_name: 'foo',
+      auth_redirect: "http://over.the/rainbow",
+      application_name: "foo",
       public_key: public_key,
-      nonce: SecureRandom.hex
+      nonce: SecureRandom.hex,
     }
   end
 
-  describe '#new' do
+  describe "#new" do
     it "supports a head request cleanly" do
       head "/user-api-key/new"
       expect(response.status).to eq(200)
@@ -51,7 +51,7 @@ RSpec.describe UserApiKeysController do
     end
   end
 
-  describe '#create' do
+  describe "#create" do
     it "does not allow anon" do
       post "/user-api-key.json", params: args
       expect(response.status).to eq(403)
@@ -112,8 +112,12 @@ RSpec.describe UserApiKeysController do
       key2 = Fabricate(:readonly_user_api_key)
 
       post "/user-api-key/revoke.json",
-        params: { id: key2.id },
-        headers: { HTTP_USER_API_KEY: key1.key }
+           params: {
+             id: key2.id,
+           },
+           headers: {
+             HTTP_USER_API_KEY: key1.key,
+           }
 
       expect(response.status).to eq(403)
     end
@@ -121,8 +125,12 @@ RSpec.describe UserApiKeysController do
     it "will allow readonly api keys to revoke self" do
       key = Fabricate(:readonly_user_api_key)
       post "/user-api-key/revoke.json",
-        params: { id: key.id },
-        headers: { HTTP_USER_API_KEY: key.key }
+           params: {
+             id: key.id,
+           },
+           headers: {
+             HTTP_USER_API_KEY: key.key,
+           }
 
       expect(response.status).to eq(200)
       key.reload
@@ -134,8 +142,7 @@ RSpec.describe UserApiKeysController do
       acting_user = Fabricate(:user)
       sign_in(acting_user)
 
-      post "/user-api-key/revoke.json",
-        params: { id: key.id }
+      post "/user-api-key/revoke.json", params: { id: key.id }
 
       expect(response.status).to eq(403)
       key.reload
@@ -204,7 +211,9 @@ RSpec.describe UserApiKeysController do
       api_key = UserApiKey.with_key(parsed["key"]).first
 
       expect(api_key.user_id).to eq(user.id)
-      expect(api_key.scopes.map(&:name).sort).to eq(["push", "message_bus", "notifications", "session_info", "one_time_password"].sort)
+      expect(api_key.scopes.map(&:name).sort).to eq(
+        %w[push message_bus notifications session_info one_time_password].sort,
+      )
       expect(api_key.push_url).to eq("https://push.it/here")
 
       uri.query = ""
@@ -234,7 +243,7 @@ RSpec.describe UserApiKeysController do
       SiteSetting.min_trust_level_for_user_api_key = 0
       post "/user-api-key", params: args
       expect(response.status).not_to eq(302)
-      payload = Nokogiri::HTML5(response.body).at('code').content
+      payload = Nokogiri.HTML5(response.body).at("code").content
       encrypted = Base64.decode64(payload)
       key = OpenSSL::PKey::RSA.new(private_key)
       parsed = JSON.parse(key.private_decrypt(encrypted))
@@ -257,12 +266,11 @@ RSpec.describe UserApiKeysController do
       parsed = JSON.parse(key.private_decrypt(encrypted))
       api_key = UserApiKey.with_key(parsed["key"]).first
       expect(api_key.user_id).to eq(user.id)
-
     end
 
     it "will allow redirect to wildcard urls" do
-      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + '/*'
-      args[:auth_redirect] = args[:auth_redirect] + '/bluebirds/fly'
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
+      args[:auth_redirect] = args[:auth_redirect] + "/bluebirds/fly"
 
       sign_in(Fabricate(:user))
 
@@ -270,7 +278,7 @@ RSpec.describe UserApiKeysController do
       expect(response.status).to eq(302)
     end
 
-    it 'will keep query_params added in auth_redirect' do
+    it "will keep query_params added in auth_redirect" do
       SiteSetting.min_trust_level_for_user_api_key = 0
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
 
@@ -288,12 +296,12 @@ RSpec.describe UserApiKeysController do
     end
   end
 
-  describe '#create-one-time-password' do
+  describe "#create-one-time-password" do
     let :otp_args do
       {
-        auth_redirect: 'http://somewhere.over.the/rainbow',
-        application_name: 'foo',
-        public_key: public_key
+        auth_redirect: "http://somewhere.over.the/rainbow",
+        application_name: "foo",
+        public_key: public_key,
       }
     end
 

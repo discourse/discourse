@@ -23,6 +23,9 @@ RSpec.describe "S3Inventory", type: :multisite do
 
     expect(db1.lines.count).to eq(3)
     expect(db2.lines.count).to eq(1)
-    files.values.each { |f| f.close; f.unlink }
+    files.values.each do |f|
+      f.close
+      f.unlink
+    end
   end
 end

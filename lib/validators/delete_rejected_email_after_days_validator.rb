@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DeleteRejectedEmailAfterDaysValidator
-  MAX = 36500
+  MAX = 36_500
 
   def initialize(opts = {})
     @opts = opts

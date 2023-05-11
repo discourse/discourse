@@ -1,0 +1,35 @@
+<div class="flagged-post-header">
+  <ReviewableTopicLink @reviewable={{this.reviewable}} @tagName="" />
+  <ReviewablePostEdits @reviewable={{this.reviewable}} @tagName="" />
+</div>
+
+<div class="post-contents-wrapper">
+  <ReviewableCreatedBy
+    @user={{this.reviewable.target_created_by}}
+    @tagName=""
+  />
+  <div class="post-contents">
+    <ReviewablePostHeader
+      @reviewable={{this.reviewable}}
+      @createdBy={{this.reviewable.target_created_by}}
+      @tagName=""
+    />
+    <div class="post-body">
+      <div class="post-body__scroll">
+        {{#if this.reviewable.blank_post}}
+          <p>{{i18n "review.deleted_post"}}</p>
+        {{else}}
+          {{html-safe this.reviewable.cooked}}
+        {{/if}}
+      </div>
+    </div>
+    <span>
+      <PluginOutlet
+        @name="after-reviewable-flagged-post-body"
+        @connectorTagName="div"
+        @outletArgs={{hash model=this.reviewable}}
+      />
+    </span>
+    {{yield}}
+  </div>
+</div>

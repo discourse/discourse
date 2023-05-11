@@ -19,27 +19,27 @@ module Reports::UserFlaggingRatio
             id: :user_id,
             avatar: :avatar_template,
           },
-          title: I18n.t("reports.user_flagging_ratio.labels.user")
+          title: I18n.t("reports.user_flagging_ratio.labels.user"),
         },
         {
           type: :number,
           property: :disagreed_flags,
-          title: I18n.t("reports.user_flagging_ratio.labels.disagreed_flags")
+          title: I18n.t("reports.user_flagging_ratio.labels.disagreed_flags"),
         },
         {
           type: :number,
           property: :agreed_flags,
-          title: I18n.t("reports.user_flagging_ratio.labels.agreed_flags")
+          title: I18n.t("reports.user_flagging_ratio.labels.agreed_flags"),
         },
         {
           type: :number,
           property: :ignored_flags,
-          title: I18n.t("reports.user_flagging_ratio.labels.ignored_flags")
+          title: I18n.t("reports.user_flagging_ratio.labels.ignored_flags"),
         },
         {
           type: :number,
           property: :score,
-          title: I18n.t("reports.user_flagging_ratio.labels.score")
+          title: I18n.t("reports.user_flagging_ratio.labels.score"),
         },
       ]
 
@@ -74,18 +74,20 @@ module Reports::UserFlaggingRatio
         LIMIT 100
         SQL
 
-      DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
-        flagger = {}
-        flagger[:user_id] = row.id
-        flagger[:username] = row.username
-        flagger[:avatar_template] = User.avatar_template(row.username, row.avatar_id)
-        flagger[:disagreed_flags] = row.disagreed_flags
-        flagger[:ignored_flags] = row.ignored_flags
-        flagger[:agreed_flags] = row.agreed_flags
-        flagger[:score] = row.score
+      DB
+        .query(sql, start_date: report.start_date, end_date: report.end_date)
+        .each do |row|
+          flagger = {}
+          flagger[:user_id] = row.id
+          flagger[:username] = row.username
+          flagger[:avatar_template] = User.avatar_template(row.username, row.avatar_id)
+          flagger[:disagreed_flags] = row.disagreed_flags
+          flagger[:ignored_flags] = row.ignored_flags
+          flagger[:agreed_flags] = row.agreed_flags
+          flagger[:score] = row.score
 
-        report.data << flagger
-      end
+          report.data << flagger
+        end
     end
   end
 end

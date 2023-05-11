@@ -10,6 +10,6 @@ class NotUsernameValidator
   end
 
   def error_message
-    I18n.t('site_settings.errors.valid_username')
+    I18n.t("site_settings.errors.valid_username")
   end
 end

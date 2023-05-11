@@ -12,6 +12,7 @@ export default class extends Controller {
   @tracked saved = false;
   @tracked selectedSidebarCategories = [];
   @tracked selectedSidebarTagNames = [];
+  subpageTitle = I18n.t("user.preferences_nav.sidebar");
 
   saveAttrNames = [
     "sidebar_category_ids",

@@ -9,21 +9,18 @@ RSpec.describe Jobs::MigrateBadgeImageToUploads do
     Rails.logger = @fake_logger = FakeLogger.new
   end
 
-  after do
-    Rails.logger = @orig_logger
-  end
+  after { Rails.logger = @orig_logger }
 
-  it 'should migrate to the new badge `image_upload_id` column correctly' do
+  it "should migrate to the new badge `image_upload_id` column correctly" do
     stub_request(:get, image_url).to_return(
-      status: 200, body: file_from_fixtures("smallest.png").read
+      status: 200,
+      body: file_from_fixtures("smallest.png").read,
     )
     DB.exec(<<~SQL, flair_url: image_url, id: badge.id)
       UPDATE badges SET image = :flair_url WHERE id = :id
     SQL
 
-    expect do
-      described_class.new.execute_onceoff({})
-    end.to change { Upload.count }.by(1)
+    expect do described_class.new.execute_onceoff({}) end.to change { Upload.count }.by(1)
 
     badge.reload
     upload = Upload.last
@@ -32,7 +29,7 @@ RSpec.describe Jobs::MigrateBadgeImageToUploads do
     expect(badge[:image]).to eq(nil)
   end
 
-  it 'should skip badges with invalid flair URLs' do
+  it "should skip badges with invalid flair URLs" do
     DB.exec("UPDATE badges SET image = 'abc' WHERE id = ?", badge.id)
     described_class.new.execute_onceoff({})
     expect(@fake_logger.warnings.count).to eq(0)
@@ -41,7 +38,7 @@ RSpec.describe Jobs::MigrateBadgeImageToUploads do
 
   # this case has a couple of hacks that are needed to test this behavior, so if it
   # starts failing randomly in the future, I'd just delete it and not bother with it
-  it 'should not keep retrying forever if download fails' do
+  it "should not keep retrying forever if download fails" do
     stub_request(:get, image_url).to_return(status: 403)
     instance = described_class.new
     instance.expects(:sleep).times(2)
@@ -50,9 +47,7 @@ RSpec.describe Jobs::MigrateBadgeImageToUploads do
       UPDATE badges SET image = :flair_url WHERE id = :id
     SQL
 
-    expect do
-      instance.execute_onceoff({})
-    end.not_to change { Upload.count }
+    expect do instance.execute_onceoff({}) end.not_to change { Upload.count }
 
     badge.reload
     expect(badge.image_upload).to eq(nil)

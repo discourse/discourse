@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Sidekiq::Pausable do
-  after do
-    Sidekiq.unpause_all!
-  end
+  after { Sidekiq.unpause_all! }
 
   it "can still run heartbeats when paused" do
     Sidekiq.pause!
@@ -14,9 +12,7 @@ RSpec.describe Sidekiq::Pausable do
     jobs.clear
     middleware = Sidekiq::Pausable.new
 
-    middleware.call(Jobs::RunHeartbeat.new, { "args" => [{}] }, "critical") do
-      "done"
-    end
+    middleware.call(Jobs::RunHeartbeat.new, { "args" => [{}] }, "critical") { "done" }
 
     jobs = Sidekiq::ScheduledSet.new
     expect(jobs.size).to eq(0)

@@ -310,10 +310,6 @@ bs_BA:
         few: "prije %{count} mjeseca"
         other: "prije %{count} mjeseci"
   password_reset:
-    choose_new: "Izaberite novu šifru"
-    choose: "Izaberite šifru"
-    update: "Obnovi Šifru"
-    save: "Namjesti Šifru"
     title: "Resetuj Šifru"
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
@@ -652,8 +648,6 @@ bs_BA:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     enable_badges: "Enable the badge system"
-    blocked_email_domains: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
-    allowed_email_domains: "A list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
@@ -907,9 +901,6 @@ bs_BA:
   subject_pm: "[PM] "
   user_notifications:
     previous_discussion: "Prošli Postovi"
-    unsubscribe:
-      title: "Odjavi se"
-      description: "Niste zainteresovani za ove email-e? Nema problema! Kliknite ovdje da se odjavite:"
     posted_by: "Kreirano od %{username} na dan %{post_date}"
     digest:
       why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
@@ -938,8 +929,6 @@ bs_BA:
     see_more: "Više"
     search_title: "Pretraži stranicu"
     search_button: "Pretraži"
-  deleted: "obrisano"
-  image: "slika"
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -1045,8 +1034,6 @@ bs_BA:
         fields:
           login_required:
             placeholder: "Privatno"
-          must_approve_users:
-            placeholder: "Zahtjeva Dozvolu"
       styling:
         fields:
           styling_preview:
@@ -1065,7 +1052,6 @@ bs_BA:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
-  joined: "Registrovan"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'
@@ -1089,23 +1075,24 @@ bs_BA:
       medium: "Srednije"
       high: "Visoko"
     actions:
-      agree_and_keep:
-        description: "Složij se sa prijavom ali ostavi prijavljenu objavu neizmjenjenom"
+      agree:
+        title: "Da"
       agree_and_suspend:
-        title: "Suspend User"
         description: "Složij se sa prijavom i suspendiraj prijavljenog korisnika (suspend)"
       agree_and_silence:
-        title: "Stišaj korisnika"
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
       delete_single:
         title: "Delete"
       disagree:
-        title: "Disagree"
+        title: "Ne"
       ignore:
         title: "Zanemari"
+      ignore_and_do_nothing:
+        title: "Ne radi ništa"
       approve:
         title: "Odobri"
       reject_user:
+        title: "Delete User..."
         delete:
           title: "Delete User"
       reject:

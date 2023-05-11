@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 require "edit_rate_limiter"
-require 'post_locker'
+require "post_locker"
 
 class PostRevisor
-
   # Helps us track changes to a topic.
   #
   # It's passed to `track_topic_fields` callbacks so they can record if they
@@ -41,7 +40,7 @@ class PostRevisor
     end
   end
 
-  POST_TRACKED_FIELDS = %w{raw cooked edit_reason user_id wiki post_type}
+  POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type]
 
   attr_reader :category_changed, :post_revision
 
@@ -68,11 +67,7 @@ class PostRevisor
   end
 
   def self.track_and_revise(topic_changes, field, attribute)
-    topic_changes.record_change(
-      field,
-      topic_changes.topic.public_send(field),
-      attribute
-    )
+    topic_changes.record_change(field, topic_changes.topic.public_send(field), attribute)
     topic_changes.topic.public_send("#{field}=", attribute)
   end
 
@@ -84,19 +79,35 @@ class PostRevisor
     track_and_revise topic_changes, :archetype, attribute
   end
 
-  track_topic_field(:category_id) do |tc, category_id, fields|
-    if category_id == 0 && tc.topic.private_message?
-      tc.record_change('category_id', tc.topic.category_id, nil)
+  track_topic_field(:category_id) do |tc, new_category_id, fields|
+    current_category = tc.topic.category
+    new_category =
+      (new_category_id.nil? || new_category_id.zero?) ? nil : Category.find(new_category_id)
+
+    if new_category.nil? && tc.topic.private_message?
+      tc.record_change("category_id", current_category.id, nil)
       tc.topic.category_id = nil
-    elsif category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
+    elsif new_category.nil? || tc.guardian.can_move_topic_to_category?(new_category_id)
       tags = fields[:tags] || tc.topic.tags.map(&:name)
-      if category_id != 0 && !DiscourseTagging.validate_min_required_tags_for_category(tc.guardian, tc.topic, Category.find(category_id), tags)
+      if new_category &&
+           !DiscourseTagging.validate_min_required_tags_for_category(
+             tc.guardian,
+             tc.topic,
+             new_category,
+             tags,
+           )
         tc.check_result(false)
         next
       end
 
-      tc.record_change('category_id', tc.topic.category_id, category_id)
-      tc.check_result(tc.topic.change_category_to_id(category_id))
+      tc.record_change("category_id", current_category&.id, new_category&.id)
+      tc.check_result(tc.topic.change_category_to_id(new_category_id))
+      create_small_action_for_category_change(
+        topic: tc.topic,
+        user: tc.user,
+        old_category: current_category,
+        new_category: new_category,
+      )
     end
   end
 
@@ -109,18 +120,29 @@ class PostRevisor
         next
       end
       if prev_tags.sort != tags.sort
-        tc.record_change('tags', prev_tags, tags)
+        tc.record_change("tags", prev_tags, tags)
         DB.after_commit do
           post = tc.topic.ordered_posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
+
+          added_tags = tags - prev_tags
+          removed_tags = prev_tags - tags
+
           if !SiteSetting.disable_tags_edit_notifications
             Jobs.enqueue(
               :notify_tag_change,
               post_id: post.id,
               notified_user_ids: notified_user_ids,
-              diff_tags: ((tags - prev_tags) | (prev_tags - tags))
+              diff_tags: (added_tags | removed_tags),
             )
           end
+
+          create_small_action_for_tag_changes(
+            topic: tc.topic,
+            user: tc.user,
+            added_tags: added_tags,
+            removed_tags: removed_tags,
+          )
         end
       end
     end
@@ -128,12 +150,64 @@ class PostRevisor
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
     if !SiteSetting.topic_featured_link_enabled ||
-      !topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
+         !topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
       topic_changes.check_result(false)
     else
-      topic_changes.record_change('featured_link', topic_changes.topic.featured_link, featured_link)
+      topic_changes.record_change("featured_link", topic_changes.topic.featured_link, featured_link)
       topic_changes.topic.featured_link = featured_link
     end
+  end
+
+  def self.create_small_action_for_category_change(topic:, user:, old_category:, new_category:)
+    return if !SiteSetting.create_post_for_category_and_tag_changes
+
+    topic.add_moderator_post(
+      user,
+      I18n.t(
+        "topic_category_changed",
+        from: category_name_raw(old_category),
+        to: category_name_raw(new_category),
+      ),
+      post_type: Post.types[:small_action],
+      action_code: "category_changed",
+    )
+  end
+
+  def self.category_name_raw(category)
+    "##{CategoryHashtagDataSource.category_to_hashtag_item(category).ref}"
+  end
+
+  def self.create_small_action_for_tag_changes(topic:, user:, added_tags:, removed_tags:)
+    return if !SiteSetting.create_post_for_category_and_tag_changes
+
+    topic.add_moderator_post(
+      user,
+      tags_changed_raw(added: added_tags, removed: removed_tags),
+      post_type: Post.types[:small_action],
+      action_code: "tags_changed",
+      custom_fields: {
+        tags_added: added_tags,
+        tags_removed: removed_tags,
+      },
+    )
+  end
+
+  def self.tags_changed_raw(added:, removed:)
+    if removed.present? && added.present?
+      I18n.t(
+        "topic_tag_changed.added_and_removed",
+        added: tag_list_to_raw(added),
+        removed: tag_list_to_raw(removed),
+      )
+    elsif added.present?
+      I18n.t("topic_tag_changed.added", added: tag_list_to_raw(added))
+    elsif removed.present?
+      I18n.t("topic_tag_changed.removed", removed: tag_list_to_raw(removed))
+    end
+  end
+
+  def self.tag_list_to_raw(tag_list)
+    tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
   end
 
   # AVAILABLE OPTIONS:
@@ -161,9 +235,7 @@ class PostRevisor
     @fields.delete(:edit_reason) if @fields[:edit_reason].blank?
 
     Post.plugin_permitted_update_params.each do |field, val|
-      if @fields.key?(field) && val[:plugin].enabled?
-        val[:handler].call(@post, @fields[field])
-      end
+      val[:handler].call(@post, @fields[field]) if @fields.key?(field) && val[:plugin].enabled?
     end
 
     if !should_revise?
@@ -182,7 +254,8 @@ class PostRevisor
     @revised_at = @opts[:revised_at] || Time.now
     @last_version_at = @post.last_version_at || Time.now
 
-    if guardian.affected_by_slow_mode?(@topic) && !grace_period_edit? && SiteSetting.slow_mode_prevents_editing
+    if guardian.affected_by_slow_mode?(@topic) && !grace_period_edit? &&
+         SiteSetting.slow_mode_prevents_editing
       @post.errors.add(:base, I18n.t("cannot_edit_on_slow_mode"))
       return false
     end
@@ -201,9 +274,7 @@ class PostRevisor
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
 
-    if @post.incoming_email&.imap_uid
-      @post.incoming_email&.update(imap_sync: true)
-    end
+    @post.incoming_email&.update(imap_sync: true) if @post.incoming_email&.imap_uid
 
     old_raw = @post.raw
 
@@ -225,27 +296,23 @@ class PostRevisor
 
     # Lock the post by default if the appropriate setting is true
     if (
-      SiteSetting.staff_edit_locks_post? &&
-      !@post.wiki? &&
-      @fields.has_key?('raw') &&
-      @editor.staff? &&
-      @editor != Discourse.system_user &&
-      !@post.user&.staff?
-    )
+         SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
+           @editor.staff? && @editor != Discourse.system_user && !@post.user&.staff?
+       )
       PostLocker.new(@post, @editor).lock
     end
 
     # We log staff/group moderator edits to posts
     if (
-      (@editor.staff? || (@post.is_category_description? && guardian.can_edit_category_description?(@post.topic.category))) &&
-      @editor.id != @post.user_id &&
-      @fields.has_key?('raw') &&
-      !@opts[:skip_staff_log]
-    )
-      StaffActionLogger.new(@editor).log_post_edit(
-        @post,
-        old_raw: old_raw
-      )
+         (
+           @editor.staff? ||
+             (
+               @post.is_category_description? &&
+                 guardian.can_edit_category_description?(@post.topic.category)
+             )
+         ) && @editor.id != @post.user_id && @fields.has_key?("raw") && !@opts[:skip_staff_log]
+       )
+      StaffActionLogger.new(@editor).log_post_edit(@post, old_raw: old_raw)
     end
 
     # WARNING: do not pull this into the transaction
@@ -266,15 +333,13 @@ class PostRevisor
 
     TopicLink.extract_from(@post)
 
-    if should_create_new_version?
-      ReviewablePost.queue_for_review_if_possible(@post, @editor)
-    end
+    ReviewablePost.queue_for_review_if_possible(@post, @editor) if should_create_new_version?
 
     successfully_saved_post_and_topic
   end
 
   def cleanup_whitespaces(raw)
-    raw.present? ? TextCleaner.normalize_whitespaces(raw).gsub(/\s+\z/, "") : ""
+    raw.present? ? TextCleaner.normalize_whitespaces(raw).rstrip : ""
   end
 
   def should_revise?
@@ -283,9 +348,7 @@ class PostRevisor
 
   def post_changed?
     POST_TRACKED_FIELDS.each do |field|
-      if @fields.has_key?(field) && @fields[field] != @post.public_send(field)
-        return true
-      end
+      return true if @fields.has_key?(field) && @fields[field] != @post.public_send(field)
     end
     false
   end
@@ -308,11 +371,16 @@ class PostRevisor
 
   def should_create_new_version?
     return false if @skip_revision
-    edited_by_another_user? || !grace_period_edit? || owner_changed? || force_new_version? || edit_reason_specified?
+    edited_by_another_user? || flagged? || !grace_period_edit? || owner_changed? ||
+      force_new_version? || edit_reason_specified?
   end
 
   def edit_reason_specified?
     @fields[:edit_reason].present? && @fields[:edit_reason] != @post.edit_reason
+  end
+
+  def flagged?
+    @post.is_flagged?
   end
 
   def edited_by_another_user?
@@ -350,26 +418,23 @@ class PostRevisor
   end
 
   def diff_size(before, after)
-    @diff_size ||= begin
-      ONPDiff.new(before, after).short_diff.sum do |str, type|
-        type == :common ? 0 : str.size
+    @diff_size ||=
+      begin
+        ONPDiff.new(before, after).short_diff.sum { |str, type| type == :common ? 0 : str.size }
       end
-    end
   end
 
   def grace_period_edit?
     return false if (@revised_at - @last_version_at) > SiteSetting.editing_grace_period.to_i
-    return false if @post.reviewable_flag.present?
 
     if new_raw = @fields[:raw]
-
       max_diff = SiteSetting.editing_grace_period_max_diff.to_i
       if @editor.staff? || (@editor.trust_level > 1)
         max_diff = SiteSetting.editing_grace_period_max_diff_high_trust.to_i
       end
 
       if (original_raw.size - new_raw.size).abs > max_diff ||
-        diff_size(original_raw, new_raw) > max_diff
+           diff_size(original_raw, new_raw) > max_diff
         return false
       end
     end
@@ -410,13 +475,15 @@ class PostRevisor
       prev_owner = User.find(@post.user_id)
       new_owner = User.find(@fields["user_id"])
 
-      UserAction.where(target_post_id: @post.id)
+      UserAction
+        .where(target_post_id: @post.id)
         .where(user_id: prev_owner.id)
         .where(action_type: USER_ACTIONS_TO_REMOVE)
         .update_all(user_id: new_owner.id)
 
       if @post.post_number == 1
-        UserAction.where(target_topic_id: @post.topic_id)
+        UserAction
+          .where(target_topic_id: @post.topic_id)
           .where(user_id: prev_owner.id)
           .where(action_type: UserAction::NEW_TOPIC)
           .update_all(user_id: new_owner.id)
@@ -424,15 +491,13 @@ class PostRevisor
     end
 
     POST_TRACKED_FIELDS.each do |field|
-      if @fields.has_key?(field)
-        @post.public_send("#{field}=", @fields[field])
-      end
+      @post.public_send("#{field}=", @fields[field]) if @fields.has_key?(field)
     end
 
-    @post.edit_reason    = @fields[:edit_reason] if should_create_new_version?
+    @post.edit_reason = @fields[:edit_reason] if should_create_new_version?
     @post.last_editor_id = @editor.id
-    @post.word_count     = @fields[:raw].scan(/[[:word:]]+/).size if @fields.has_key?(:raw)
-    @post.self_edits    += 1 if self_edit?
+    @post.word_count = @fields[:raw].scan(/[[:word:]]+/).size if @fields.has_key?(:raw)
+    @post.self_edits += 1 if self_edit?
 
     @post.extract_quoted_post_numbers
 
@@ -444,10 +509,12 @@ class PostRevisor
 
     # post owner changed
     if prev_owner && new_owner && prev_owner != new_owner
-      likes = UserAction.where(target_post_id: @post.id)
-        .where(user_id: prev_owner.id)
-        .where(action_type: UserAction::WAS_LIKED)
-        .update_all(user_id: new_owner.id)
+      likes =
+        UserAction
+          .where(target_post_id: @post.id)
+          .where(user_id: prev_owner.id)
+          .where(action_type: UserAction::WAS_LIKED)
+          .update_all(user_id: new_owner.id)
 
       private_message = @topic.private_message?
 
@@ -459,7 +526,9 @@ class PostRevisor
       end
 
       if @post.created_at == prev_owner.user_stat.first_post_created_at
-        prev_owner_user_stat.update!(first_post_created_at: prev_owner.posts.order('created_at ASC').first.try(:created_at))
+        prev_owner_user_stat.update!(
+          first_post_created_at: prev_owner.posts.order("created_at ASC").first.try(:created_at),
+        )
       end
 
       new_owner_user_stat = new_owner.user_stat
@@ -480,19 +549,21 @@ class PostRevisor
     return unless editing_a_flagged_and_hidden_post?
 
     flaggers = []
-    @post.post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values).each do |action|
-      flaggers << action.user if action.user
-      action.remove_act!(Discourse.system_user)
-    end
+    @post
+      .post_actions
+      .where(post_action_type_id: PostActionType.flag_types_without_custom.values)
+      .each do |action|
+        flaggers << action.user if action.user
+        action.remove_act!(Discourse.system_user)
+      end
 
     @post.unhide!
     PostActionNotifier.after_post_unhide(@post, flaggers)
   end
 
   def editing_a_flagged_and_hidden_post?
-    self_edit? &&
-    @post.hidden &&
-    @post.hidden_reason_id == Post.hidden_reasons[:flag_threshold_reached]
+    self_edit? && @post.hidden &&
+      @post.hidden_reason_id == Post.hidden_reasons[:flag_threshold_reached]
   end
 
   def update_topic
@@ -519,21 +590,20 @@ class PostRevisor
   def create_revision
     modifications = post_changes.merge(@topic_changes.diff)
 
-    if modifications["raw"]
-      modifications["raw"][0] = cached_original_raw || modifications["raw"][0]
-    end
+    modifications["raw"][0] = cached_original_raw || modifications["raw"][0] if modifications["raw"]
 
     if modifications["cooked"]
       modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
     end
 
-    @post_revision = PostRevision.create!(
-      user_id: @post.last_editor_id,
-      post_id: @post.id,
-      number: @post.version,
-      modifications: modifications,
-      hidden: only_hidden_tags_changed?
-    )
+    @post_revision =
+      PostRevision.create!(
+        user_id: @post.last_editor_id,
+        post_id: @post.id,
+        number: @post.version,
+        modifications: modifications,
+        hidden: only_hidden_tags_changed?,
+      )
   end
 
   def update_revision
@@ -557,7 +627,8 @@ class PostRevisor
     # should probably do this before saving the post!
     if revision.modifications.empty?
       revision.destroy
-      @post.last_editor_id = PostRevision.where(post_id: @post.id).order(number: :desc).pluck_first(:user_id) || @post.user_id
+      @post.last_editor_id =
+        PostRevision.where(post_id: @post.id).order(number: :desc).pick(:user_id) || @post.user_id
       @post.version -= 1
       @post.public_version -= 1
       @post.save(validate: @validate_post)
@@ -592,11 +663,8 @@ class PostRevisor
   end
 
   def bypass_bump?
-    !@post_successfully_saved ||
-      @topic_changes.errored? ||
-      @opts[:bypass_bump] == true ||
-      @post.whisper? ||
-      only_hidden_tags_changed?
+    !@post_successfully_saved || @topic_changes.errored? || @opts[:bypass_bump] == true ||
+      @post.whisper? || only_hidden_tags_changed?
   end
 
   def only_hidden_tags_changed?
@@ -606,18 +674,14 @@ class PostRevisor
     if modifications.keys.size == 1 && (tags_diff = modifications["tags"]).present?
       a, b = tags_diff[0] || [], tags_diff[1] || []
       changed_tags = ((a + b) - (a & b)).map(&:presence).compact
-      if (changed_tags - hidden_tag_names).empty?
-        return true
-      end
+      return true if (changed_tags - hidden_tag_names).empty?
     end
 
     false
   end
 
   def is_last_post?
-    !Post.where(topic_id: @topic.id)
-      .where("post_number > ?", @post.post_number)
-      .exists?
+    !Post.where(topic_id: @topic.id).where("post_number > ?", @post.post_number).exists?
   end
 
   def plugin_callbacks
@@ -672,13 +736,16 @@ class PostRevisor
   end
 
   def update_topic_word_counts
-    DB.exec("UPDATE topics
+    DB.exec(
+      "UPDATE topics
                     SET word_count = (
                       SELECT SUM(COALESCE(posts.word_count, 0))
                       FROM posts
                       WHERE posts.topic_id = :topic_id
                     )
-                    WHERE topics.id = :topic_id", topic_id: @topic.id)
+                    WHERE topics.id = :topic_id",
+      topic_id: @topic.id,
+    )
   end
 
   def alert_users
@@ -710,5 +777,4 @@ class PostRevisor
   def guardian
     @guardian ||= Guardian.new(@editor)
   end
-
 end

@@ -7,13 +7,23 @@ import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import {
   caretPosition,
-  caretRowCol,
   escapeExpression,
   inCodeBlock,
 } from "discourse/lib/utilities";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { emojiUnescape } from "discourse/lib/text";
 import { htmlSafe } from "@ember/template";
+
+let hashtagTypeClasses = {};
+export function registerHashtagType(type, typeClass) {
+  hashtagTypeClasses[type] = typeClass;
+}
+export function cleanUpHashtagTypeClasses() {
+  hashtagTypeClasses = {};
+}
+export function getHashtagTypeClasses() {
+  return hashtagTypeClasses;
+}
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
@@ -54,20 +64,7 @@ export function setupHashtagAutocomplete(
   }
 }
 
-export function hashtagTriggerRule(textarea, opts) {
-  const result = caretRowCol(textarea);
-  const row = result.rowNum;
-  let line = textarea.value.split("\n")[row - 1];
-
-  if (opts && opts.backSpace) {
-    line = line.slice(0, line.length - 1);
-
-    // Don't trigger autocomplete when backspacing into a `#category |` => `#category|`
-    if (/^#{1}\w+/.test(line)) {
-      return false;
-    }
-  }
-
+export function hashtagTriggerRule(textarea) {
   if (inCodeBlock(textarea.value, caretPosition(textarea))) {
     return false;
   }
@@ -137,6 +134,7 @@ function _setupExperimental(
     key: "#",
     afterComplete: autocompleteOptions.afterComplete,
     treatAsTextarea: autocompleteOptions.treatAsTextarea,
+    scrollElementSelector: ".hashtag-autocomplete__fadeout",
     autoSelectFirstSuggestion: true,
     transformComplete: (obj) => obj.ref,
     dataSource: (term) => {

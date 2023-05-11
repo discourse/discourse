@@ -292,7 +292,7 @@ registerButton("replies", (attrs, state, siteSettings) => {
       ? state.filteredRepliesShown
         ? "post.view_all_posts"
         : "post.filtered_replies_hint"
-      : "post.has_replies",
+      : "",
     labelOptions: { count: replyCount },
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
     iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
@@ -300,7 +300,12 @@ registerButton("replies", (attrs, state, siteSettings) => {
     translatedAriaLabel: I18n.t("post.sr_expand_replies", {
       count: replyCount,
     }),
+    ariaExpanded:
+      !siteSettings.enable_filtered_replies_view && state.repliesShown
+        ? "true"
+        : "false",
     ariaPressed,
+    ariaControls: `embedded-posts__bottom--${attrs.post_number}`,
   };
 });
 

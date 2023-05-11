@@ -2,7 +2,7 @@
 
 class CurrentUserSerializer < BasicUserSerializer
   include UserTagNotificationsMixin
-  include UserSidebarTagsMixin
+  include UserSidebarMixin
 
   attributes :name,
              :unread_notifications,
@@ -62,26 +62,40 @@ class CurrentUserSerializer < BasicUserSerializer
              :draft_count,
              :pending_posts_count,
              :status,
-             :sidebar_category_ids,
              :grouped_unread_notifications,
              :redesigned_user_menu_enabled,
-             :redesigned_user_page_nav_enabled,
+             :display_sidebar_tags,
+             :sidebar_tags,
+             :sidebar_category_ids,
              :sidebar_list_destination,
-             :redesigned_topic_timeline_enabled
+             :sidebar_sections,
+             :new_new_view_enabled?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
   has_one :user_option, embed: :object, serializer: CurrentUserOptionSerializer
 
+  def sidebar_sections
+    SidebarSection
+      .public_sections
+      .or(SidebarSection.where(user_id: object.id))
+      .includes(sidebar_section_links: :linkable)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
+      .map { |section| SidebarSectionSerializer.new(section, root: false) }
+  end
+
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
 
-    object.visible_groups.pluck(:id, :name, :has_messages).map do |id, name, has_messages|
-      group = { id: id, name: name, has_messages: has_messages }
-      group[:owner] = true if owned_group_ids.include?(id)
-      group
-    end
+    object
+      .visible_groups
+      .pluck(:id, :name, :has_messages)
+      .map do |id, name, has_messages|
+        group = { id: id, name: name, has_messages: has_messages }
+        group[:owner] = true if owned_group_ids.include?(id)
+        group
+      end
   end
 
   def link_posting_access
@@ -98,10 +112,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_create_group?
     scope.can_create_group?
-  end
-
-  def sidebar_list_destination
-    object.user_option.sidebar_list_none_selected? ? SiteSetting.default_sidebar_list_destination : object.user_option.sidebar_list_destination
   end
 
   def can_send_private_email_messages
@@ -143,7 +153,7 @@ class CurrentUserSerializer < BasicUserSerializer
   def custom_fields
     fields = nil
     if SiteSetting.public_user_custom_fields.present?
-      fields = SiteSetting.public_user_custom_fields.split('|')
+      fields = SiteSetting.public_user_custom_fields.split("|")
     end
     DiscoursePluginRegistry.serialized_current_user_fields.each do |f|
       fields ||= []
@@ -186,15 +196,21 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def top_category_ids
-    omitted_notification_levels = [CategoryUser.notification_levels[:muted], CategoryUser.notification_levels[:regular]]
-    CategoryUser.where(user_id: object.id)
+    omitted_notification_levels = [
+      CategoryUser.notification_levels[:muted],
+      CategoryUser.notification_levels[:regular],
+    ]
+    CategoryUser
+      .where(user_id: object.id)
       .where.not(notification_level: omitted_notification_levels)
-      .order("
+      .order(
+        "
         CASE
           WHEN notification_level = 3 THEN 1
           WHEN notification_level = 2 THEN 2
           WHEN notification_level = 4 THEN 3
-        END")
+        END",
+      )
       .pluck(:category_id)
       .slice(0, SiteSetting.header_dropdown_category_count)
   end
@@ -253,14 +269,6 @@ class CurrentUserSerializer < BasicUserSerializer
     Draft.has_topic_draft(object)
   end
 
-  def sidebar_category_ids
-    object.category_sidebar_section_links.pluck(:linkable_id) & scope.allowed_category_ids
-  end
-
-  def include_sidebar_category_ids?
-    !SiteSetting.legacy_navigation_menu?
-  end
-
   def include_status?
     SiteSetting.enable_user_status && object.has_status?
   end
@@ -291,21 +299,5 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_new_personal_messages_notifications_count?
     redesigned_user_menu_enabled
-  end
-
-  def redesigned_user_page_nav_enabled
-    if SiteSetting.enable_new_user_profile_nav_groups.present?
-      object.in_any_groups?(SiteSetting.enable_new_user_profile_nav_groups_map)
-    else
-      false
-    end
-  end
-
-  def redesigned_topic_timeline_enabled
-    if SiteSetting.enable_experimental_topic_timeline_groups.present?
-      object.in_any_groups?(SiteSetting.enable_experimental_topic_timeline_groups.split("|").map(&:to_i))
-    else
-      false
-    end
   end
 end

@@ -5,9 +5,7 @@ RSpec.describe Jobs::CleanUpEmailLogs do
   fab!(:email_log2) { Fabricate(:email_log, created_at: 2.weeks.ago) }
   fab!(:email_log3) { Fabricate(:email_log, created_at: 2.days.ago) }
 
-  let!(:skipped_email_log) do
-    Fabricate(:skipped_email_log, created_at: 2.years.ago)
-  end
+  let!(:skipped_email_log) { Fabricate(:skipped_email_log, created_at: 2.years.ago) }
 
   fab!(:skipped_email_log2) { Fabricate(:skipped_email_log) }
 
@@ -23,10 +21,6 @@ RSpec.describe Jobs::CleanUpEmailLogs do
 
     expect(EmailLog.all).to contain_exactly(email_log, email_log2, email_log3)
 
-    expect(SkippedEmailLog.all).to contain_exactly(
-      skipped_email_log,
-      skipped_email_log2
-    )
+    expect(SkippedEmailLog.all).to contain_exactly(skipped_email_log, skipped_email_log2)
   end
-
 end

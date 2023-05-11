@@ -12,7 +12,11 @@
           <td class="topic-title">
             <div class="combined-title">
               <TopicStatus @topic={{rt}} />
-              <a href={{rt.relative_url}} rel="noopener noreferrer" target="_blank">{{replace-emoji rt.fancy_title}}</a>
+              <a
+                href={{rt.relative_url}}
+                rel="noopener noreferrer"
+                target="_blank"
+              >{{replace-emoji rt.title}}</a>
             </div>
           </td>
           <td class="reviewable-count">
@@ -22,8 +26,15 @@
             {{i18n "review.topics.unique_users" count=rt.stats.unique_users}}
           </td>
           <td class="reviewable-details">
-            <ReviewableClaimedTopic @topicId={{rt.id}} @claimedBy={{rt.claimed_by}} />
-            <LinkTo @route="review.index" @query={{hash topic_id=rt.id}} class="btn btn-primary btn-small">
+            <ReviewableClaimedTopic
+              @topicId={{rt.id}}
+              @claimedBy={{rt.claimed_by}}
+            />
+            <LinkTo
+              @route="review.index"
+              @query={{hash topic_id=rt.id}}
+              class="btn btn-primary btn-small"
+            >
               {{d-icon "list"}}
               <span>{{i18n "review.topics.details"}}</span>
             </LinkTo>

@@ -15,11 +15,14 @@ import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
 import TopicList from "discourse/models/topic-list";
 import { action } from "@ember/object";
+import PreloadStore from "discourse/lib/preload-store";
+import { inject as service } from "@ember/service";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
   return DiscourseRoute.extend({
     queryParams,
+    composer: service(),
 
     model(modelParams) {
       const category = Category.findBySlugPathWithID(
@@ -59,10 +62,12 @@ export default (filterArg, params) => {
         filterArg === "default" &&
         modelParams
       ) {
-        return this.replaceWith("discovery.categoryNone", {
-          category,
-          category_slug_path_with_id: modelParams.category_slug_path_with_id,
-        });
+        // TODO: avoid throwing away preload data by redirecting on the server
+        PreloadStore.getAndRemove("topic_list");
+        return this.replaceWith(
+          "discovery.categoryNone",
+          modelParams.category_slug_path_with_id
+        );
       }
 
       this._setupNavigation(category);
@@ -148,14 +153,33 @@ export default (filterArg, params) => {
     setupController(controller, model) {
       const topics = this.topics,
         category = model.category,
-        canCreateTopic = topics.get("can_create_topic"),
-        canCreateTopicOnCategory =
-          canCreateTopic && category.get("permission") === PermissionType.FULL;
+        canCreateTopic = topics.get("can_create_topic");
+
+      let canCreateTopicOnCategory =
+        canCreateTopic && category.get("permission") === PermissionType.FULL;
+
+      let defaultSubcategory;
+      let canCreateTopicOnSubCategory;
+
+      if (
+        !canCreateTopicOnCategory &&
+        this.siteSettings.default_subcategory_on_read_only_category
+      ) {
+        defaultSubcategory = category.subcategories.find((subcategory) => {
+          return subcategory.get("permission") === PermissionType.FULL;
+        });
+
+        canCreateTopicOnSubCategory = !!defaultSubcategory;
+      }
 
       this.controllerFor("navigation/category").setProperties({
         canCreateTopicOnCategory,
-        cannotCreateTopicOnCategory: !canCreateTopicOnCategory,
+        cannotCreateTopicOnCategory: !(
+          canCreateTopicOnCategory || canCreateTopicOnSubCategory
+        ),
         canCreateTopic,
+        canCreateTopicOnSubCategory,
+        defaultSubcategory,
       });
 
       let topicOpts = {
@@ -169,6 +193,8 @@ export default (filterArg, params) => {
         expandAllPinned: true,
         canCreateTopic,
         canCreateTopicOnCategory,
+        canCreateTopicOnSubCategory,
+        defaultSubcategory,
       };
 
       const p = category.get("params");
@@ -206,7 +232,7 @@ export default (filterArg, params) => {
     deactivate() {
       this._super(...arguments);
 
-      this.controllerFor("composer").set("prioritizedCategoryId", null);
+      this.composer.set("prioritizedCategoryId", null);
       this.searchService.set("searchContext", null);
     },
 

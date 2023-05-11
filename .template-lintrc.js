@@ -15,11 +15,17 @@ module.exports = {
         "directory-item-value",
         "directory-table-header-title",
         "loading-spinner",
-        "mobile-directory-item-label",
+        "directory-item-label",
       ],
     },
     "no-implicit-this": {
       allow: ["loading-spinner"],
     },
+    // Begin prettier compatibility
+    "eol-last": false,
+    "self-closing-void-elements": false,
+    "block-indentation": false,
+    quotes: false,
+    // End prettier compatibility
   },
 };
