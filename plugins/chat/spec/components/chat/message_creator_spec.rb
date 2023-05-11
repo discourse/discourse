@@ -146,9 +146,10 @@ describe Chat::MessageCreator do
               "this is a @#{user1.username} message with @system @mentions @#{user2.username} and @#{user3.username}",
           ).chat_message
 
-        # a mention for the user himself wasn't created
+        # a mention for the user himself was created, but a notification wasn't
         user1_mention = user1.chat_mentions.where(chat_message: message).first
-        expect(user1_mention).to be_nil
+        expect(user1_mention).to be_present
+        expect(user1_mention.notification).to be_nil
 
         system_user_mention = Discourse.system_user.chat_mentions.where(chat_message: message).first
         expect(system_user_mention).to be_nil
@@ -172,59 +173,94 @@ describe Chat::MessageCreator do
         }.to change { user2.chat_mentions.count }.by(1)
       end
 
-      it "notifies @all properly" do
-        expect {
-          described_class.create(chat_channel: public_chat_channel, user: user1, content: "@all")
-        }.to change { Chat::Mention.count }.by(4)
+      context "when mentioning @all" do
+        it "creates a chat mention record for every user" do
+          expect {
+            described_class.create(chat_channel: public_chat_channel, user: user1, content: "@all")
+          }.to change { Chat::Mention.count }.by(5)
 
-        Chat::UserChatChannelMembership.where(
-          user: user2,
-          chat_channel: public_chat_channel,
-        ).update_all(following: false)
-        expect {
-          described_class.create(
+          Chat::UserChatChannelMembership.where(
+            user: user2,
             chat_channel: public_chat_channel,
-            user: user1,
-            content: "again! @all",
-          )
-        }.to change { Chat::Mention.count }.by(3)
+          ).update_all(following: false)
+
+          expect {
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "again! @all",
+            )
+          }.to change { Chat::Mention.count }.by(4)
+        end
+
+        it "does not create a notification for acting user" do
+          message =
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "@all",
+            ).chat_message
+
+          mention = user1.chat_mentions.where(chat_message: message).first
+          expect(mention).to be_present
+          expect(mention.notification).to be_blank
+        end
       end
 
-      it "notifies @here properly" do
-        admin1.update(last_seen_at: 1.year.ago)
-        admin2.update(last_seen_at: 1.year.ago)
-        user1.update(last_seen_at: Time.now)
-        user2.update(last_seen_at: Time.now)
-        user3.update(last_seen_at: Time.now)
-        expect {
-          described_class.create(chat_channel: public_chat_channel, user: user1, content: "@here")
-        }.to change { Chat::Mention.count }.by(2)
-      end
+      context "when mentioning @here" do
+        it "creates a chat mention record for every active user" do
+          admin1.update(last_seen_at: 1.year.ago)
+          admin2.update(last_seen_at: 1.year.ago)
 
-      it "doesn't sent double notifications when '@here' is mentioned" do
-        user2.update(last_seen_at: Time.now)
-        expect {
-          described_class.create(
-            chat_channel: public_chat_channel,
-            user: user1,
-            content: "@here @#{user2.username}",
-          )
-        }.to change { user2.chat_mentions.count }.by(1)
-      end
+          user1.update(last_seen_at: Time.now)
+          user2.update(last_seen_at: Time.now)
+          user3.update(last_seen_at: Time.now)
 
-      it "notifies @here plus other mentions" do
-        admin1.update(last_seen_at: Time.now)
-        admin2.update(last_seen_at: 1.year.ago)
-        user1.update(last_seen_at: 1.year.ago)
-        user2.update(last_seen_at: 1.year.ago)
-        user3.update(last_seen_at: 1.year.ago)
-        expect {
-          described_class.create(
-            chat_channel: public_chat_channel,
-            user: user1,
-            content: "@here plus @#{user3.username}",
-          )
-        }.to change { user3.chat_mentions.count }.by(1)
+          expect {
+            described_class.create(chat_channel: public_chat_channel, user: user1, content: "@here")
+          }.to change { Chat::Mention.count }.by(3)
+        end
+
+        it "does not create a notification for acting user" do
+          user1.update(last_seen_at: Time.now)
+
+          message =
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "@here",
+            ).chat_message
+
+          mention = user1.chat_mentions.where(chat_message: message).first
+          expect(mention).to be_present
+          expect(mention.notification).to be_blank
+        end
+
+        it "doesn't send double notifications" do
+          user2.update(last_seen_at: Time.now)
+          expect {
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "@here @#{user2.username}",
+            )
+          }.to change { user2.chat_mentions.count }.by(1)
+        end
+
+        it "notifies @here plus other mentions" do
+          admin1.update(last_seen_at: Time.now)
+          admin2.update(last_seen_at: 1.year.ago)
+          user1.update(last_seen_at: 1.year.ago)
+          user2.update(last_seen_at: 1.year.ago)
+          user3.update(last_seen_at: 1.year.ago)
+          expect {
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "@here plus @#{user3.username}",
+            )
+          }.to change { user3.chat_mentions.count }.by(1)
+        end
       end
 
       it "doesn't create mention notifications for users without a membership record" do
@@ -369,6 +405,19 @@ describe Chat::MessageCreator do
         mention = user2.chat_mentions.where(chat_message: message).first
         expect(mention.notification).to be_nil
       end
+    end
+
+    it "creates a chat_mention record without notification when self mentioning" do
+      message =
+        described_class.create(
+          chat_channel: direct_message_channel,
+          user: user1,
+          content: "hello @#{user1.username}",
+        ).chat_message
+
+      mention = user1.chat_mentions.where(chat_message: message).first
+      expect(mention).to be_present
+      expect(mention.notification).to be_nil
     end
 
     context "when ignore_channel_wide_mention is enabled" do
@@ -886,6 +935,19 @@ describe Chat::MessageCreator do
             content: "hello @#{admin_group.name}",
           )
         }.not_to change { Chat::Mention.count }
+      end
+
+      it "creates a chat mention without notification for acting user" do
+        message =
+          described_class.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content: "@#{user_group.name}",
+          ).chat_message
+
+        mention = user1.chat_mentions.where(chat_message: message).first
+        expect(mention).to be_present
+        expect(mention.notification).to be_blank
       end
     end
 
