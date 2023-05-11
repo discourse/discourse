@@ -141,6 +141,10 @@ class Admin::SiteSettingsController < Admin::AdminController
           previous_value: previous_value,
           new_value: new_value,
         )
+      elsif id == "enable_user_tips"
+        if ActiveModel::Type::Boolean.new.cast(new_value)
+          veteran_user_options.update_all(seen_popups: User.user_tips.values)
+        end
       end
     end
 
@@ -150,12 +154,12 @@ class Admin::SiteSettingsController < Admin::AdminController
   def user_count
     params.require(:site_setting_id)
     id = params[:site_setting_id]
-    raise Discourse::NotFound unless id.start_with?("default_")
+    raise Discourse::NotFound unless id.start_with?("default_") || id == "enable_user_tips"
     new_value = value_or_default(params[id])
 
     raise_access_hidden_setting(id)
     previous_value = value_or_default(SiteSetting.public_send(id))
-    json = {}
+    json = { user_count: 0 }
 
     if (user_option = user_options[id.to_sym]).present?
       if user_option == "text_size_key"
@@ -221,12 +225,25 @@ class Admin::SiteSettingsController < Admin::AdminController
         previous_value: previous_value,
         new_value: new_value,
       ).number_of_users_to_backfill
+    elsif id == "enable_user_tips"
+      if ActiveModel::Type::Boolean.new.cast(new_value)
+        json[:user_count] = veteran_user_options.size
+      end
     end
 
     render json: json
   end
 
   private
+
+  def veteran_user_options
+    veteran_users = User.joins(:user_stat).real.activated.not_staged.where("post_count > 10")
+
+    UserOption
+      .where(user_id: veteran_users.select(:id))
+      .where("coalesce(-1 != ALL(seen_popups), true)")
+      .where("coalesce(array_length(seen_popups, 1), 0) < ?", User.user_tips.size)
+  end
 
   def is_sidebar_default_setting?(setting_name)
     %w[default_sidebar_categories default_sidebar_tags].include?(setting_name.to_s)

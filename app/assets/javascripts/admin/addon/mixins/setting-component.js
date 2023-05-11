@@ -68,6 +68,7 @@ const DEFAULT_USER_PREFERENCES = [
   "default_title_count_mode",
   "default_sidebar_categories",
   "default_sidebar_tags",
+  "enable_user_tips",
 ];
 
 export default Mixin.create({

@@ -101,6 +101,34 @@ RSpec.describe Admin::SiteSettingsController do
         SiteSetting.setting(:default_tags_watching, "")
       end
 
+      it "should return correct user count for user tips" do
+        # Disabled user tips
+        admin.user_option.update!(seen_popups: [-1])
+
+        # Dismissed each user tip individually
+        moderator.user_option.update!(seen_popups: User.user_tips.values)
+
+        # Dismissed just one user tip, but has many posts
+        user.user_option.update!(seen_popups: [User.user_tips[:first_notification]])
+        user.user_stat.update!(post_count: 100)
+
+        put "/admin/site_settings/enable_user_tips/user_count.json",
+            params: {
+              enable_user_tips: "true",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_count"]).to eq(1)
+
+        put "/admin/site_settings/enable_user_tips/user_count.json",
+            params: {
+              enable_user_tips: "false",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_count"]).to eq(0)
+      end
+
       context "for sidebar defaults" do
         it "returns the right count for the default_sidebar_categories site setting" do
           category = Fabricate(:category)
