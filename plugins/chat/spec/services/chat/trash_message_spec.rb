@@ -43,10 +43,15 @@ RSpec.describe Chat::TrashMessage do
           expect(Chat::Message.find_by(id: message.id)).to be_nil
         end
 
-        it "destroys associated mentions" do
-          mention = Fabricate(:chat_mention, chat_message: message)
+        it "destroys notifications for mentions" do
+          notification = Fabricate(:notification)
+          mention = Fabricate(:chat_mention, chat_message: message, notification: notification)
+
           result
-          expect(Chat::Mention.find_by(id: mention.id)).to be_nil
+
+          mention = Chat::Mention.find_by(id: mention.id)
+          expect(mention).to be_present
+          expect(mention.notification_id).to be_nil
         end
 
         it "publishes associated Discourse and MessageBus events" do
