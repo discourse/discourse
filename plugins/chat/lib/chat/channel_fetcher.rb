@@ -190,16 +190,21 @@ module Chat
 
     def self.decorate_memberships_with_tracking_data(guardian, channels, memberships)
       unread_counts_per_channel = unread_counts(channels, guardian.user.id)
+      channel_unreads = unread_counts_per_channel[:channel_unreads]
+      thread_unreads = unread_counts_per_channel[:thread_unreads]
 
       channels.each do |channel|
         membership = memberships.find { |m| m.chat_channel_id == channel.id }
 
         if membership
-          channel_unread_counts =
-            unread_counts_per_channel.find { |uc| uc.channel_id == channel.id }
-
+          channel_unread_counts = channel_unreads.find { |uc| uc.channel_id == channel.id }
           membership.unread_mentions = channel_unread_counts.mention_count
           membership.unread_count = channel_unread_counts.unread_count if !membership.muted
+
+          thread_unread_counts = thread_unreads.find { |uc| uc.channel_id == channel.id }
+          if thread_unread_counts
+            membership.thread_unread_count = thread_unread_counts.thread_unread_count
+          end
         end
       end
     end

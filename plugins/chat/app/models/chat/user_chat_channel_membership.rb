@@ -16,6 +16,7 @@ module Chat
 
     attribute :unread_count, default: 0
     attribute :unread_mentions, default: 0
+    attribute :thread_unread_count, default: 0
   end
 end
 

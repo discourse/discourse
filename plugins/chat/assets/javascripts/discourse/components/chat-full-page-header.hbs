@@ -32,14 +32,7 @@
       {{#if (or @channel.threadingEnabled this.site.desktopView)}}
         <div class="chat-full-page-header__right-actions">
           {{#if @channel.threadingEnabled}}
-            <LinkTo
-              @route="chat.channel.threads"
-              @models={{@channel.routeModels}}
-              title={{i18n "chat.threads.list"}}
-              class="open-thread-list-btn btn btn-flat"
-            >
-              {{d-icon "comments"}}
-            </LinkTo>
+            <Chat::Thread::HeaderIcon @channel={{@channel}} />
           {{/if}}
 
           {{#if this.site.desktopView}}

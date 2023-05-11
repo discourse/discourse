@@ -26,8 +26,21 @@
   }
 
   .open-thread-list-btn {
+    position: relative;
+
     .d-icon {
       margin-right: 0;
+    }
+
+    .chat-thread-unread-indicator {
+      @extend .chat-channel-unread-indicator;
+      border: 2px solid var(--header_background);
+      position: absolute;
+      right: 6px;
+      bottom: 16px;
+      width: 7px;
+      height: 7px;
+      transition: border-color linear 0.15s;
     }
 
     &:hover {

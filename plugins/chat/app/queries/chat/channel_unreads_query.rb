@@ -6,6 +6,9 @@ module Chat
   # This is used for unread indicators in the chat UI. By default only the
   # channels that the user is a member of will be counted and returned in
   # the result.
+  #
+  # This also counts the number of unread mesasges in threads for each channel
+  # that has threading enabled.
   class ChannelUnreadsQuery
     ##
     # @param channel_ids [Array<Integer>] The IDs of the channels to count.
@@ -50,16 +53,60 @@ module Chat
         FROM chat_channels
         LEFT JOIN user_chat_channel_memberships ON user_chat_channel_memberships.chat_channel_id = chat_channels.id
           AND user_chat_channel_memberships.user_id = :user_id
-        WHERE chat_channels.id IN (:channel_ids) AND user_chat_channel_memberships.id IS NULL
+        WHERE chat_channels.id IN (:channel_ids) AND (user_chat_channel_memberships.id IS NULL)
         GROUP BY chat_channels.id
       SQL
 
-      DB.query(
-        sql,
-        channel_ids: channel_ids,
-        user_id: user_id,
-        notification_type: Notification.types[:chat_mention],
-      )
+      channel_unreads =
+        DB.query(
+          sql,
+          channel_ids: channel_ids,
+          user_id: user_id,
+          notification_type: Notification.types[:chat_mention],
+        )
+
+      sql2 = <<~SQL
+        SELECT (
+          SELECT COUNT(*) AS thread_unread_count
+          FROM chat_messages
+          INNER JOIN chat_channels ON chat_channels.id = chat_messages.chat_channel_id
+          INNER JOIN chat_threads ON chat_threads.id = chat_messages.thread_id AND chat_threads.channel_id = chat_channels.id
+          INNER JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id
+          WHERE chat_channels.id = chat_threads.channel_id
+          AND chat_messages.user_id != :user_id
+          AND user_chat_thread_memberships.user_id = :user_id
+          AND chat_messages.id > COALESCE(user_chat_thread_memberships.last_read_message_id, 0)
+          AND chat_messages.deleted_at IS NULL
+          AND chat_messages.thread_id IS NOT NULL
+          AND chat_channels.threading_enabled
+        ) AS thread_unread_count,
+        chat_threads.channel_id
+        FROM user_chat_thread_memberships AS memberships
+        INNER JOIN chat_threads ON chat_threads.id = memberships.thread_id
+        WHERE memberships.user_id = :user_id AND chat_threads.channel_id IN (:channel_ids)
+        GROUP BY chat_threads.channel_id
+      SQL
+
+      sql2 += <<~SQL if include_no_membership_channels
+        UNION ALL
+        SELECT 0 AS thread_unread_count, chat_channels.id AS channel_id
+        FROM chat_channels
+        INNER JOIN chat_threads ON chat_threads.channel_id = chat_channels.id
+        LEFT JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id
+          AND user_chat_thread_memberships.user_id = :user_id
+        WHERE chat_channels.id IN (:channel_ids) AND (user_chat_thread_memberships.id IS NULL)
+        GROUP BY chat_channels.id
+      SQL
+
+      channel_thread_unreads =
+        DB.query(
+          sql2,
+          channel_ids: channel_ids,
+          user_id: user_id,
+          notification_type: Notification.types[:chat_mention],
+        )
+
+      { channel_unreads: channel_unreads, thread_unreads: channel_thread_unreads }
     end
   end
 end

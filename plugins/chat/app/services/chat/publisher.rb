@@ -250,7 +250,9 @@ module Chat
         chat_channel_id: chat_channel_id,
         chat_message_id: chat_message_id,
       }.merge(
-        Chat::ChannelUnreadsQuery.call(channel_ids: [chat_channel_id], user_id: user.id).first.to_h,
+        Chat::ChannelUnreadsQuery.call(channel_ids: [chat_channel_id], user_id: user.id)[
+          :channel_unreads
+        ].first.to_h,
       )
 
       MessageBus.publish(
@@ -266,10 +268,9 @@ module Chat
 
     def self.publish_bulk_user_tracking_state(user, channel_last_read_map)
       unread_data =
-        Chat::ChannelUnreadsQuery.call(
-          channel_ids: channel_last_read_map.keys,
-          user_id: user.id,
-        ).map(&:to_h)
+        Chat::ChannelUnreadsQuery.call(channel_ids: channel_last_read_map.keys, user_id: user.id)[
+          :channel_unreads
+        ].map(&:to_h)
 
       channel_last_read_map.each do |key, value|
         channel_last_read_map[key] = value.merge(

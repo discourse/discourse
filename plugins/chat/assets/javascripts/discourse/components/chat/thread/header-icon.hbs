@@ -1,0 +1,12 @@
+<LinkTo
+  @route="chat.channel.threads"
+  @models={{@channel.routeModels}}
+  title={{i18n "chat.threads.list"}}
+  class="open-thread-list-btn btn btn-flat"
+>
+  {{d-icon "comments"}}
+
+  {{#unless this.currentUserInDnD}}
+    <Chat::Thread::HeaderUnreadIndicator @channel={{@channel}} />
+  {{/unless}}
+</LinkTo>

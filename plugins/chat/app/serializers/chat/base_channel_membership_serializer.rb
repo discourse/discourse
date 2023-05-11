@@ -9,6 +9,7 @@ module Chat
                :chat_channel_id,
                :last_read_message_id,
                :unread_count,
-               :unread_mentions
+               :unread_mentions,
+               :thread_unread_count
   end
 end

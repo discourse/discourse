@@ -77,6 +77,30 @@ describe "Thread list in side panel | full page", type: :system, js: true do
       expect(side_panel).to have_open_thread(thread_1)
     end
 
+    context "when the user has unread activity on some thread" do
+      let!(:membership) { thread_1.user_chat_thread_memberships.find_by(user: current_user) }
+
+      it "shows an unread indicator over the thread list button in the header" do
+        chat_page.visit_channel(channel)
+        expect(find(".open-thread-list-btn")).to have_css(".chat-thread-unread-indicator")
+      end
+
+      it "shows an unread indicator on the relevant thread list item" do
+        chat_page.visit_channel(channel)
+        chat_page.open_thread_list
+        expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
+          ".chat-thread-unread-indicator",
+        )
+      end
+
+      it "marks the thread as read when opening it and no longer displays the indicator" do
+        chat_page.visit_channel(channel)
+        chat_page.open_thread_list
+        thread_list_page.item_by_id(thread_1.id).click
+        expect(find(".open-thread-list-btn")).not_to have_css(".chat-thread-unread-indicator")
+      end
+    end
+
     describe "updating the title of the thread" do
       let(:new_title) { "wow new title" }
 
