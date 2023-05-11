@@ -188,17 +188,15 @@ end
 
 desc "run plugin specs"
 task "plugin:spec", :plugin do |t, args|
-  argv = ARGV[1..]
-  ARGV.clear
   args.with_defaults(plugin: "*")
+  argv = ARGV.partition { |arg| arg == "--" }.last if ARGV.include?("--")
   spec(args[:plugin], argv:)
 end
 
 desc "run plugin specs in parallel"
 task "plugin:turbo_spec", :plugin do |t, args|
-  argv = ARGV[1..]
-  ARGV.clear
   args.with_defaults(plugin: "*")
+  argv = ARGV.partition { |arg| arg == "--" }.last if ARGV.include?("--")
   spec(args[:plugin], parallel: true, argv:)
 end
 
