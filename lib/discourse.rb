@@ -344,6 +344,7 @@ module Discourse
 
   def self.activate_plugins!
     @plugins = []
+    @plugins_by_name = {}
     Plugin::Instance
       .find_all("#{Rails.root}/plugins")
       .each do |p|
@@ -351,6 +352,18 @@ module Discourse
         if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
           p.activate!
           @plugins << p
+          @plugins_by_name[p.name] = p
+
+          # The plugin directory name and metadata name should match, but that
+          # is not always the case
+          dir_name = p.path.split("/")[-2]
+          if p.name != dir_name
+            STDERR.puts "Plugin name is '#{p.name}', but plugin directory is named '#{dir_name}'"
+            # Plugins are looked up by directory name in SiteSettingExtension
+            # because SiteSetting.load_settings uses directory name as plugin
+            # name. We alias the two names just to make sure the look up works
+            @plugins_by_name[dir_name] = p
+          end
         else
           STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
         end
@@ -358,20 +371,16 @@ module Discourse
     DiscourseEvent.trigger(:after_plugin_activation)
   end
 
-  def self.disabled_plugin_names
-    plugins.select { |p| !p.enabled? }.map(&:name)
-  end
-
   def self.plugins
     @plugins ||= []
   end
 
-  def self.hidden_plugins
-    @hidden_plugins ||= []
+  def self.plugins_by_name
+    @plugins_by_name ||= {}
   end
 
   def self.visible_plugins
-    self.plugins - self.hidden_plugins
+    plugins.filter(&:visible?)
   end
 
   def self.plugin_themes

@@ -16,6 +16,7 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 export default class ChatThreadsManager {
   @service chatSubscriptionsManager;
   @service chatApi;
+  @service chat;
   @service currentUser;
   @tracked _cached = new TrackedObject();
 
@@ -32,6 +33,18 @@ export default class ChatThreadsManager {
     } else {
       return Promise.resolve();
     }
+  }
+
+  async index(channelId) {
+    return this.#loadIndex(channelId).then((result) => {
+      const threads = result.threads.map((thread) => {
+        return this.chat.activeChannel.threadsManager.store(
+          this.chat.activeChannel,
+          thread
+        );
+      });
+      return { threads, meta: result.meta };
+    });
   }
 
   get threads() {
@@ -72,5 +85,9 @@ export default class ChatThreadsManager {
 
   #findStale(id) {
     return this._cached[id];
+  }
+
+  async #loadIndex(channelId) {
+    return this.chatApi.threads(channelId);
   }
 }

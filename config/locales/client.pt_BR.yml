@@ -2317,6 +2317,7 @@ pt_BR:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - concluído(a)"
       new_features: "Novos recursos disponíveis!"
+      admin_problems: "Nova recomendação no painel de controle do seu site"
       dismiss_confirmation:
         body:
           default:

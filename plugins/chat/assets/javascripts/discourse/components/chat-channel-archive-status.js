@@ -24,7 +24,7 @@ export default class ChatChannelArchiveStatus extends Component {
       I18n.t(translationKey, {
         completed: archive.messages,
         total: archive.totalMessages,
-        topic_url: this.#getTopicUrl(),
+        topic_url: this.topicUrl,
       })
     );
   }
@@ -32,7 +32,7 @@ export default class ChatChannelArchiveStatus extends Component {
   get channelArchiveCompletedMessage() {
     return htmlSafe(
       I18n.t("chat.channel_status.archive_completed", {
-        topic_url: this.#getTopicUrl(),
+        topic_url: this.topicUrl,
       })
     );
   }
@@ -44,7 +44,7 @@ export default class ChatChannelArchiveStatus extends Component {
       .catch(popupAjaxError);
   }
 
-  get #getTopicUrl() {
+  get topicUrl() {
     if (!this.args.channel.archive.topicId) {
       return "";
     }

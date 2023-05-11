@@ -6,7 +6,6 @@
   {{did-update this.subscribeToUpdates this.thread.id}}
   {{did-insert this.loadMessages}}
   {{did-update this.loadMessages this.thread}}
-  {{did-insert this.setupMessage}}
   {{will-destroy this.unsubscribeFromUpdates}}
 >
   {{#if @includeHeader}}
@@ -61,6 +60,7 @@
   {{else}}
     <Chat::Composer::Thread
       @channel={{this.channel}}
+      @thread={{this.thread}}
       @onSendMessage={{this.onSendMessage}}
       @uploadDropZone={{this.uploadDropZone}}
     />

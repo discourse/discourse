@@ -142,10 +142,17 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
   end
 
   transient :channel
+  transient :original_message_user
 
   original_message do |attrs|
-    Fabricate(:chat_message, chat_channel: attrs[:channel] || Fabricate(:chat_channel))
+    Fabricate(
+      :chat_message,
+      chat_channel: attrs[:channel] || Fabricate(:chat_channel),
+      user: attrs[:original_message_user] || Fabricate(:user),
+    )
   end
 
   after_create { |thread| thread.original_message.update!(thread_id: thread.id) }
 end
+
+Fabricator(:user_chat_thread_membership, class_name: "Chat::UserChatThreadMembership") { user }

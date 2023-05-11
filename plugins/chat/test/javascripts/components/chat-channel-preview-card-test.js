@@ -18,6 +18,7 @@ module(
 
       this.channel.description = "Important stuff is announced here.";
       this.channel.title = "announcements";
+      this.channel.meta = { can_join_chat_channel: true };
       this.currentUser.set("has_chat_enabled", true);
       this.siteSettings.chat_enabled = true;
     });

@@ -1,4 +1,4 @@
-import { isBlank, isPresent } from "@ember/utils";
+import { isPresent } from "@ember/utils";
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import I18n from "I18n";
@@ -10,53 +10,41 @@ export default class ChatReplyingIndicator extends Component {
   @service presence;
 
   @tracked presenceChannel = null;
-  @tracked users = [];
 
   @action
-  async subscribe() {
-    this.presenceChannel = this.presence.getChannel(this.channelName);
-    this.presenceChannel.on("change", this.handlePresenceChange);
-    await this.presenceChannel.subscribe();
-  }
-
-  @action
-  async resubscribe() {
-    await this.teardown();
+  async updateSubscription() {
+    await this.unsubscribe();
     await this.subscribe();
   }
 
   @action
-  handlePresenceChange(presenceChannel) {
-    this.users = presenceChannel.users || [];
+  async subscribe() {
+    this.presenceChannel = this.presence.getChannel(
+      this.args.presenceChannelName
+    );
+    await this.presenceChannel.subscribe();
   }
 
   @action
-  async handleDraft() {
-    if (this.args.channel.isDraft) {
-      await this.teardown();
-    } else {
-      await this.resubscribe();
-    }
-  }
-
-  @action
-  async teardown() {
-    if (this.presenceChannel) {
+  async unsubscribe() {
+    if (this.presenceChannel?.subscribed) {
       await this.presenceChannel.unsubscribe();
     }
   }
 
+  get users() {
+    return (
+      this.presenceChannel
+        ?.get("users")
+        ?.filter((u) => u.id !== this.currentUser.id) || []
+    );
+  }
+
   get usernames() {
-    return this.users
-      .filter((u) => u.id !== this.currentUser.id)
-      .mapBy("username");
+    return this.users.mapBy("username");
   }
 
   get text() {
-    if (isBlank(this.usernames)) {
-      return;
-    }
-
     if (this.usernames.length === 1) {
       return I18n.t("chat.replying_indicator.single_user", {
         username: this.usernames[0],
@@ -85,9 +73,5 @@ export default class ChatReplyingIndicator extends Component {
 
   get shouldRender() {
     return isPresent(this.usernames);
-  }
-
-  get channelName() {
-    return `/chat-reply/${this.args.channel.id}`;
   }
 }

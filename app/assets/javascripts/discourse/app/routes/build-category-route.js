@@ -153,14 +153,33 @@ export default (filterArg, params) => {
     setupController(controller, model) {
       const topics = this.topics,
         category = model.category,
-        canCreateTopic = topics.get("can_create_topic"),
-        canCreateTopicOnCategory =
-          canCreateTopic && category.get("permission") === PermissionType.FULL;
+        canCreateTopic = topics.get("can_create_topic");
+
+      let canCreateTopicOnCategory =
+        canCreateTopic && category.get("permission") === PermissionType.FULL;
+
+      let defaultSubcategory;
+      let canCreateTopicOnSubCategory;
+
+      if (
+        !canCreateTopicOnCategory &&
+        this.siteSettings.default_subcategory_on_read_only_category
+      ) {
+        defaultSubcategory = category.subcategories.find((subcategory) => {
+          return subcategory.get("permission") === PermissionType.FULL;
+        });
+
+        canCreateTopicOnSubCategory = !!defaultSubcategory;
+      }
 
       this.controllerFor("navigation/category").setProperties({
         canCreateTopicOnCategory,
-        cannotCreateTopicOnCategory: !canCreateTopicOnCategory,
+        cannotCreateTopicOnCategory: !(
+          canCreateTopicOnCategory || canCreateTopicOnSubCategory
+        ),
         canCreateTopic,
+        canCreateTopicOnSubCategory,
+        defaultSubcategory,
       });
 
       let topicOpts = {
@@ -174,6 +193,8 @@ export default (filterArg, params) => {
         expandAllPinned: true,
         canCreateTopic,
         canCreateTopicOnCategory,
+        canCreateTopicOnSubCategory,
+        defaultSubcategory,
       };
 
       const p = category.get("params");

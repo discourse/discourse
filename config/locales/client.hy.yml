@@ -1634,6 +1634,7 @@ hy:
       membership_request_accepted: "Անդամակցության հարցումը ընդունվել է՝ '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      admin_problems: "Նոր խորհուրդ Ձեր կայքի կառավարման հարթակում"
       dismiss_confirmation:
         dismiss: "Չեղարկել"
         cancel: "Չեղարկել"

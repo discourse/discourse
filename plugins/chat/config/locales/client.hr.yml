@@ -65,7 +65,6 @@ hr:
       close: "Zatvori"
       collapse: "Sažmi ladicu za chat"
       confirm_flag: "Jeste li sigurni da želite označiti poruku korisnika %{username}?"
-      deleted: "Poruka je izbrisana. [pogledaj]"
       delete: "Pobriši"
       edited: "uredio"
       muted: "utišano"

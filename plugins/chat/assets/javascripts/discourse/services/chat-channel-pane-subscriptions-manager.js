@@ -26,6 +26,7 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
       if (data.replies_count) {
         message.threadReplyCount = data.replies_count;
       }
+      message.threadTitle = data.title;
     }
   }
 }

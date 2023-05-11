@@ -1,13 +1,12 @@
-{{#if @channel}}
+{{#if @presenceChannelName}}
   <div
     class={{concat-class
       "chat-replying-indicator"
       (if this.presenceChannel.subscribed "is-subscribed")
     }}
     {{did-insert this.subscribe}}
-    {{did-update this.handleDraft @channel.isDraft}}
-    {{did-update this.subscribe this.channelName}}
-    {{will-destroy this.teardown}}
+    {{did-update this.updateSubscription @presenceChannelName}}
+    {{will-destroy this.unsubscribe}}
   >
     {{#if this.shouldRender}}
       <span class="chat-replying-indicator__text">{{this.text}}</span>

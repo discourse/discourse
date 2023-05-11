@@ -3,7 +3,6 @@ import Component from "@ember/component";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 
 const CSS_VAR = "--chat-vh";
-let pendingUpdate = false;
 
 export default class ChatVh extends Component {
   tagName = "";
@@ -13,15 +12,17 @@ export default class ChatVh extends Component {
 
     this.setVHFromVisualViewPort();
 
-    (window?.visualViewport || window).addEventListener(
-      "resize",
-      this.setVHFromVisualViewPort
-    );
-
     if ("virtualKeyboard" in navigator) {
+      navigator.virtualKeyboard.overlaysContent = true;
+
       navigator.virtualKeyboard.addEventListener(
         "geometrychange",
         this.setVHFromKeyboard
+      );
+    } else {
+      (window?.visualViewport || window).addEventListener(
+        "resize",
+        this.setVHFromVisualViewPort
       );
     }
   }
@@ -40,16 +41,10 @@ export default class ChatVh extends Component {
         this.setVHFromVisualViewPort
       );
     }
-
-    pendingUpdate = false;
   }
 
   @bind
   setVHFromKeyboard(event) {
-    if (pendingUpdate) {
-      return;
-    }
-
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
@@ -58,24 +53,20 @@ export default class ChatVh extends Component {
       return;
     }
 
-    pendingUpdate = true;
-
     requestAnimationFrame(() => {
-      const { height } = event.target.boundingRect;
-      const vhInPixels =
-        ((window.visualViewport?.height || window.innerHeight) - height) * 0.01;
-      document.documentElement.style.setProperty(CSS_VAR, `${vhInPixels}px`);
+      requestAnimationFrame(() => {
+        const keyboardHeight = event.target.boundingRect.height;
+        const viewportHeight =
+          window.visualViewport?.height || window.innerHeight;
 
-      pendingUpdate = false;
+        const vhInPixels = (viewportHeight - keyboardHeight) * 0.01;
+        document.documentElement.style.setProperty(CSS_VAR, `${vhInPixels}px`);
+      });
     });
   }
 
   @bind
   setVHFromVisualViewPort() {
-    if (pendingUpdate) {
-      return;
-    }
-
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
@@ -84,14 +75,10 @@ export default class ChatVh extends Component {
       return;
     }
 
-    pendingUpdate = true;
-
     requestAnimationFrame(() => {
       const vhInPixels =
         (window.visualViewport?.height || window.innerHeight) * 0.01;
       document.documentElement.style.setProperty(CSS_VAR, `${vhInPixels}px`);
-
-      pendingUpdate = false;
     });
   }
 }

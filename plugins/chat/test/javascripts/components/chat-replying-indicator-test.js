@@ -1,10 +1,27 @@
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import fabricators from "../helpers/fabricators";
 import { module, test } from "qunit";
-import { render, settled } from "@ember/test-helpers";
-import { joinChannel } from "discourse/tests/helpers/presence-pretender";
+import { render } from "@ember/test-helpers";
+import {
+  joinChannel,
+  leaveChannel,
+} from "discourse/tests/helpers/presence-pretender";
+
+async function addUser(id, username, channelName = "/chat-reply/1") {
+  await joinChannel(channelName, {
+    id,
+    avatar_template: "/images/avatar.png",
+    username,
+  });
+}
+
+async function removeUser(id, channelName = "/chat-reply/1") {
+  await leaveChannel(channelName, {
+    id,
+  });
+}
 
 module(
   "Discourse Chat | Component | chat-replying-indicator",
@@ -12,23 +29,56 @@ module(
     setupRenderingTest(hooks);
 
     test("not displayed when no one is replying", async function (assert) {
-      this.channel = fabricators.chatChannel();
+      await render(
+        hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
+      );
 
-      await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
+      assert.dom(".chat-replying-indicator__text").doesNotExist();
+    });
 
-      assert.false(exists(".chat-replying-indicator__text"));
+    test("working for thread", async function (assert) {
+      await render(
+        hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1/thread/1" />`
+      );
+
+      await addUser(1, "sam", "/chat-reply/1/thread/1");
+
+      assert.strictEqual(
+        query(".chat-replying-indicator__text").innerText,
+        "sam is typing"
+      );
+    });
+
+    test("doesn’t leak in other indicators", async function (assert) {
+      await render(
+        hbs`
+          <div class="channel"><ChatReplyingIndicator @presenceChannelName="/chat-reply/1" /></div>
+          <div class="thread"><ChatReplyingIndicator @presenceChannelName="/chat-reply/1/thread/1" /></div>
+        `
+      );
+
+      await addUser(1, "sam");
+
+      assert
+        .dom(".channel .chat-replying-indicator__text")
+        .hasText("sam is typing");
+      assert.dom(".thread .chat-replying-indicator__text").doesNotExist();
+
+      await addUser(2, "mark", "/chat-reply/1/thread/1");
+      await removeUser(1);
+
+      assert.dom(".channel .chat-replying-indicator__text").doesNotExist();
+      assert
+        .dom(".thread .chat-replying-indicator__text")
+        .hasText("mark is typing");
     });
 
     test("displays indicator when user is replying", async function (assert) {
-      this.channel = fabricators.chatChannel();
+      await render(
+        hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
+      );
 
-      await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
-
-      await joinChannel("/chat-reply/1", {
-        id: 1,
-        avatar_template: "/images/avatar.png",
-        username: "sam",
-      });
+      await addUser(1, "sam");
 
       assert.strictEqual(
         query(".chat-replying-indicator__text").innerText,
@@ -39,121 +89,78 @@ module(
     test("displays indicator when 2 or 3 users are replying", async function (assert) {
       this.channel = fabricators.chatChannel();
 
-      await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
-
-      await joinChannel("/chat-reply/1", {
-        id: 1,
-        avatar_template: "/images/avatar.png",
-        username: "sam",
-      });
-
-      await joinChannel("/chat-reply/1", {
-        id: 2,
-        avatar_template: "/images/avatar.png",
-        username: "mark",
-      });
-
-      assert.strictEqual(
-        query(".chat-replying-indicator__text").innerText,
-        `sam and mark are typing`
+      await render(
+        hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
       );
+
+      await addUser(1, "sam");
+      await addUser(2, "mark");
+
+      assert
+        .dom(".chat-replying-indicator__text")
+        .hasText("sam and mark are typing");
     });
 
     test("displays indicator when 3 users are replying", async function (assert) {
       this.channel = fabricators.chatChannel();
 
-      await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
-
-      await joinChannel("/chat-reply/1", {
-        id: 1,
-        avatar_template: "/images/avatar.png",
-        username: "sam",
-      });
-
-      await joinChannel("/chat-reply/1", {
-        id: 2,
-        avatar_template: "/images/avatar.png",
-        username: "mark",
-      });
-
-      await joinChannel("/chat-reply/1", {
-        id: 3,
-        avatar_template: "/images/avatar.png",
-        username: "joffrey",
-      });
-
-      assert.strictEqual(
-        query(".chat-replying-indicator__text").innerText,
-        `sam, mark and joffrey are typing`
+      await render(
+        hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
       );
+
+      await addUser(1, "sam");
+      await addUser(2, "mark");
+      await addUser(3, "joffrey");
+
+      assert
+        .dom(".chat-replying-indicator__text")
+        .hasText("sam, mark and joffrey are typing");
     });
 
     test("displays indicator when more than 3 users are replying", async function (assert) {
       this.channel = fabricators.chatChannel();
 
-      await render(hbs`<ChatReplyingIndicator  @channel={{this.channel}} />`);
-
-      await joinChannel("/chat-reply/1", {
-        id: 1,
-        avatar_template: "/images/avatar.png",
-        username: "sam",
-      });
-
-      await joinChannel("/chat-reply/1", {
-        id: 2,
-        avatar_template: "/images/avatar.png",
-        username: "mark",
-      });
-
-      await joinChannel("/chat-reply/1", {
-        id: 3,
-        avatar_template: "/images/avatar.png",
-        username: "joffrey",
-      });
-
-      await joinChannel("/chat-reply/1", {
-        id: 4,
-        avatar_template: "/images/avatar.png",
-        username: "taylor",
-      });
-
-      assert.strictEqual(
-        query(".chat-replying-indicator__text").innerText,
-        `sam, mark and 2 others are typing`
+      await render(
+        hbs`<ChatReplyingIndicator  @presenceChannelName="/chat-reply/1" />`
       );
+
+      await addUser(1, "sam");
+      await addUser(2, "mark");
+      await addUser(3, "joffrey");
+      await addUser(4, "taylor");
+
+      assert
+        .dom(".chat-replying-indicator__text")
+        .hasText("sam, mark and 2 others are typing");
     });
 
     test("filters current user from list of repliers", async function (assert) {
       this.channel = fabricators.chatChannel();
 
-      await render(hbs`<ChatReplyingIndicator  @channel={{this.channel}} />`);
-
-      await joinChannel("/chat-reply/1", {
-        id: 1,
-        avatar_template: "/images/avatar.png",
-        username: "sam",
-      });
-
-      await joinChannel("/chat-reply/1", this.currentUser);
-
-      assert.strictEqual(
-        query(".chat-replying-indicator__text").innerText,
-        `sam is typing`
+      await render(
+        hbs`<ChatReplyingIndicator  @presenceChannelName="/chat-reply/1" />`
       );
+
+      await addUser(1, "sam");
+      await addUser(this.currentUser.id, this.currentUser.username);
+
+      assert.dom(".chat-replying-indicator__text").hasText("sam is typing");
     });
 
-    test("resets presence when channel is draft", async function (assert) {
-      this.channel = fabricators.chatChannel();
+    test("resets presence when channel changes", async function (assert) {
+      this.set("presenceChannelName", "/chat-reply/1");
 
-      await render(hbs`<ChatReplyingIndicator @channel={{this.channel}} />`);
+      await addUser(1, "sam");
 
-      assert.dom(".chat-replying-indicator.is-subscribed").exists();
+      await render(
+        hbs`<ChatReplyingIndicator @presenceChannelName={{this.presenceChannelName}} />`
+      );
 
-      this.channel.isDraft = true;
+      assert.dom(".chat-replying-indicator__text").hasText("sam is typing");
 
-      await settled();
+      this.set("presenceChannelName", "/chat-reply/2");
 
-      assert.dom(".chat-replying-indicator.is-subscribed").doesNotExist();
+      assert.dom(".chat-replying-indicator__text").doesNotExist();
     });
   }
 );
