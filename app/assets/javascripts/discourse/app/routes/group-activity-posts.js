@@ -6,6 +6,7 @@ export function buildGroupPage(type) {
   return DiscourseRoute.extend({
     type,
     templateName: "group-activity-posts",
+    controllerName: "group-activity-posts",
 
     titleToken() {
       return I18n.t(`groups.${type}`);
