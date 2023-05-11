@@ -22,6 +22,7 @@ module Chat
              foreign_key: :thread_id,
              primary_key: :id,
              class_name: "Chat::Message"
+    has_many :user_chat_thread_memberships
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
 

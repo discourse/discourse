@@ -59,8 +59,13 @@ RSpec.describe Chat::LookupChannelThreads do
           expect(result.threads.map(&:id)).to eq([thread_3.id, thread_1.id, thread_2.id])
         end
 
-        it "does not return threads where the original message is deleted" do
+        it "does not return threads where the original message is trashed" do
           thread_1.original_message.trash!
+          expect(result.threads.map(&:id)).to eq([thread_3.id, thread_2.id])
+        end
+
+        it "does not return threads where the original message is deleted" do
+          thread_1.original_message.destroy
           expect(result.threads.map(&:id)).to eq([thread_3.id, thread_2.id])
         end
 

@@ -8,6 +8,11 @@
 
   &__excerpt {
     padding-bottom: 0.25rem;
+    word-break: break-word;
+
+    > * {
+      pointer-events: none;
+    }
   }
 
   &__author {
