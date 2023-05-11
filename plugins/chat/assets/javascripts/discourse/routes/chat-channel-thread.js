@@ -20,12 +20,12 @@ export default class ChatChannelThread extends DiscourseRoute {
       });
   }
 
-  deactivate() {
-    this.chatChannelThreadPane.close();
+  afterModel(model) {
+    this.chatChannelThreadPane.open(model);
   }
 
-  activate() {
-    this.chatChannelThreadPane.open(this.currentModel);
+  deactivate() {
+    this.chatChannelThreadPane.close();
   }
 
   beforeModel(transition) {
