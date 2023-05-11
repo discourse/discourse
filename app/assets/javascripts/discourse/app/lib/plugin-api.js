@@ -1097,7 +1097,7 @@ class PluginApi {
    *   customFilter: (category, args, router) => { return category && category.name !== 'bug' }
    *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') return "/a-feature"; },
    *   before: "top",
-   *   forceActive(category, args, router) => router.currentURL === "/a/b/c/d";
+   *   forceActive: (category, args, router) => { return router.currentURL === "/a/b/c/d";},
    * })
    */
   addNavigationBarItem(item) {
