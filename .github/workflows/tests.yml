@@ -180,7 +180,7 @@ jobs:
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec
+        run: bin/rake plugin:turbo_spec --verbose --format documentation
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
