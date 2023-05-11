@@ -10,7 +10,6 @@ export default class ChatReplyingIndicator extends Component {
   @service presence;
 
   @tracked presenceChannel = null;
-  @tracked users = [];
 
   @action
   async updateSubscription() {
@@ -20,31 +19,29 @@ export default class ChatReplyingIndicator extends Component {
 
   @action
   async subscribe() {
-    this.presenceChannel = this.presence.getChannel(this.channelName);
+    this.presenceChannel = this.presence.getChannel(
+      this.args.presenceChannelName
+    );
     await this.presenceChannel.subscribe();
-    this.users = this.presenceChannel.users || [];
-    this.presenceChannel.on("change", this.handlePresenceChange);
   }
 
   @action
   async unsubscribe() {
-    this.users = [];
-
-    if (this.presenceChannel.subscribed) {
-      this.presenceChannel.off("change", this.handlePresenceChange);
+    if (this.presenceChannel?.subscribed) {
       await this.presenceChannel.unsubscribe();
     }
   }
 
-  @action
-  handlePresenceChange(presenceChannel) {
-    this.users = presenceChannel.users || [];
+  get users() {
+    return (
+      this.presenceChannel
+        ?.get("users")
+        ?.filter((u) => u.id !== this.currentUser.id) || []
+    );
   }
 
   get usernames() {
-    return this.users
-      .filter((u) => u.id !== this.currentUser.id)
-      .mapBy("username");
+    return this.users.mapBy("username");
   }
 
   get text() {
@@ -76,9 +73,5 @@ export default class ChatReplyingIndicator extends Component {
 
   get shouldRender() {
     return isPresent(this.usernames);
-  }
-
-  get channelName() {
-    return `/chat-reply/${this.args.channel.id}`;
   }
 }

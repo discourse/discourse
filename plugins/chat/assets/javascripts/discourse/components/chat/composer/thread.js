@@ -13,6 +13,10 @@ export default class ChatComposerThread extends ChatComposer {
 
   composerId = "thread-composer";
 
+  get presenceChannelName() {
+    return `/chat-reply/${this.args.channel.id}/thread/${this.args.thread.id}`;
+  }
+
   get placeholder() {
     return I18n.t("chat.placeholder_thread");
   }

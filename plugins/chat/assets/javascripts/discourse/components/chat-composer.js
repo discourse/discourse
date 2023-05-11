@@ -35,9 +35,10 @@ export default class ChatComposer extends Component {
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
+  @tracked presenceChannelName;
 
   get shouldRenderReplyingIndicator() {
-    return this.context === "channel" && !this.args.channel?.isDraft;
+    return !this.args.channel?.isDraft;
   }
 
   get shouldRenderMessageDetails() {
@@ -248,7 +249,7 @@ export default class ChatComposer extends Component {
     }
 
     this.chatComposerPresenceManager.notifyState(
-      this.args.channel.id,
+      this.presenceChannelName,
       !this.currentMessage.editing && this.hasContent
     );
   }
