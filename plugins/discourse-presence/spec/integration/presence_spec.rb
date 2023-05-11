@@ -86,7 +86,11 @@ RSpec.describe "discourse-presence" do
       SiteSetting.edit_all_post_groups = "#{Group::AUTO_GROUPS[:trust_level_1]}|#{g.id}"
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
-      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff], Group::AUTO_GROUPS[:trust_level_1], g.id)
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:staff],
+        Group::AUTO_GROUPS[:trust_level_1],
+        g.id,
+      )
     end
 
     it "handles permissions for a public topic" do
