@@ -1,37 +1,41 @@
+import {
+  attributeBindings,
+  classNameBindings,
+} from "@ember-decorators/component";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { next, schedule } from "@ember/runloop";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  classNameBindings: [
-    ":modal",
-    ":d-modal",
-    "modalClass",
-    "modalStyle",
-    "hasPanels",
-  ],
-  attributeBindings: [
-    "data-keyboard",
-    "aria-modal",
-    "role",
-    "ariaLabelledby:aria-labelledby",
-  ],
-  submitOnEnter: true,
-  dismissable: true,
-  title: null,
-  titleAriaElementId: null,
-  subtitle: null,
-  role: "dialog",
-  headerClass: null,
+@classNameBindings(
+  ":modal",
+  ":d-modal",
+  "modalClass",
+  "modalStyle",
+  "hasPanels"
+)
+@attributeBindings(
+  "dataKeyboard:data-keyboard",
+  "ariaModal:aria-modal",
+  "role",
+  "ariaLabelledby:aria-labelledby"
+)
+export default class DModal extends Component {
+  submitOnEnter = true;
+  dismissable = true;
+  title = null;
+  titleAriaElementId = null;
+  subtitle = null;
+  role = "dialog";
+  headerClass = null;
 
-  // We handle ESC ourselves
-  "data-keyboard": "false",
-  // Inform screen readers of the modal
-  "aria-modal": "true",
+  // // We handle ESC ourselves
+  dataKeyboard = "false";
+  // // Inform screen readers of the modal
+  ariaModal = "true";
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     // If we need to render a second modal for any reason, we can't
     // use `elementId`
@@ -39,27 +43,27 @@ export default Component.extend({
       this.set("elementId", "discourse-modal");
       this.set("modalStyle", "fixed-modal");
     }
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this.appEvents.on("modal:body-shown", this, "_modalBodyShown");
     document.documentElement.addEventListener(
       "keydown",
       this._handleModalEvents
     );
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this.appEvents.off("modal:body-shown", this, "_modalBodyShown");
     document.documentElement.removeEventListener(
       "keydown",
       this._handleModalEvents
     );
-  },
+  }
 
   @discourseComputed("title", "titleAriaElementId")
   ariaLabelledby(title, titleAriaElementId) {
@@ -71,7 +75,7 @@ export default Component.extend({
     }
 
     return;
-  },
+  }
 
   triggerClickOnEnter(e) {
     if (!this.submitOnEnter) {
@@ -87,7 +91,7 @@ export default Component.extend({
     }
 
     return true;
-  },
+  }
 
   mouseDown(e) {
     if (!this.dismissable) {
@@ -103,7 +107,7 @@ export default Component.extend({
       // it unclickable.
       return this.attrs.closeModal?.("initiatedByClickOut");
     }
-  },
+  }
 
   _modalBodyShown(data) {
     if (this.isDestroying || this.isDestroyed) {
@@ -145,7 +149,7 @@ export default Component.extend({
     schedule("afterRender", () => {
       this._trapTab();
     });
-  },
+  }
 
   @bind
   _handleModalEvents(event) {
@@ -165,7 +169,7 @@ export default Component.extend({
     if (event.key === "Tab") {
       this._trapTab(event);
     }
-  },
+  }
 
   _trapTab(event) {
     if (this.element.classList.contains("hidden")) {
@@ -221,5 +225,5 @@ export default Component.extend({
         event.preventDefault();
       }
     }
-  },
-});
+  }
+}
