@@ -131,19 +131,6 @@ RSpec.describe SiteSerializer do
     expect(serialized[:shared_drafts_category_id]).to eq(nil)
   end
 
-  it "includes show_welcome_topic_banner" do
-    admin = Fabricate(:admin)
-    admin_guardian = Guardian.new(admin)
-    UserAuthToken.generate!(user_id: admin.id)
-
-    first_post = Fabricate(:post, created_at: 25.days.ago)
-    SiteSetting.welcome_topic_id = first_post.topic.id
-
-    serialized =
-      described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
-    expect(serialized[:show_welcome_topic_banner]).to eq(true)
-  end
-
   describe "#anonymous_default_sidebar_tags" do
     fab!(:user) { Fabricate(:user) }
     fab!(:tag) { Fabricate(:tag, name: "dev") }

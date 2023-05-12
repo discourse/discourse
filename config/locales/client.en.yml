@@ -1930,6 +1930,10 @@ en:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
 
+      welcome_topic:
+        title: "Edit the welcome topic"
+        content: "Help new members feel at home by customizing this topic to suit your community's needs."
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"

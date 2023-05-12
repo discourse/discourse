@@ -678,21 +678,19 @@ en:
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
 
   discourse_welcome_topic:
-    title: "Welcome to our community!"
+    title: "Welcome to %{site_title}! :wave:"
     body: |
+      We're so glad you've joined us. %{site_description}
 
-      The first paragraph of this pinned topic will be visible as a welcome message to all new visitors on your homepage. It's important!
+      %{site_title} is powered by Discourse.org, the powerful, open platform for communities of all kinds. Here are some things you can do to get started:
 
-      **Edit this** into a brief description of your community:
+      :speaking_head: **Introduce yourself** by adding your picture and information about yourself and your interests to [your profile](%{base_path}/my/profile). What is one thing you’d like to be asked about?
 
-      - Who is it for?
-      - What can they find here?
-      - Why should they come here?
-      - Where can they read more (links, resources, etc)?
+      :open_book: **Get to know the community** by [browsing discussions](%{base_path}/top) that are already happening here. When you find a post interesting, informative, or entertaining, use the :heart: to show your appreciation or support!
 
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      :handshake: **Contribute** by commenting, sharing your own perspective, asking questions, or offering feedback in the discussion. Before replying or starting new topics, please review the [Community Guidelines](%{base_path}/faq).
 
-      You may want to close this topic via the admin :wrench: (at the upper right and bottom), so that replies don't pile up on an announcement.
+      > If you need help or have a suggestion, feel free to ask in [#feedback](%{base_path}/c/site-feedback) or [contact the admins](%{base_path}/about).
 
   admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
 
