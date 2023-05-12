@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { scheduleOnce } from "@ember/runloop";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
@@ -31,25 +30,6 @@ export default class DModalBody extends Component {
       $(fixedParent).modal("show");
     }
 
-    scheduleOnce("afterRender", () => this._afterFirstRender(element));
-  }
-
-  @action
-  willDestroy() {
-    this.appEvents.trigger("modal:body-dismissed");
-  }
-
-  _afterFirstRender(element) {
-    const maxHeight = this.args.maxHeight;
-    if (maxHeight) {
-      const maxHeightFloat = parseFloat(maxHeight) / 100.0;
-      if (maxHeightFloat > 0) {
-        const viewPortHeight = $(window).height();
-        element.style.maxHeight =
-          Math.floor(maxHeightFloat * viewPortHeight) + "px";
-      }
-    }
-
     this.appEvents.trigger(
       "modal:body-shown",
       pick(this.args, [
@@ -63,5 +43,10 @@ export default class DModalBody extends Component {
         "headerClass",
       ])
     );
+  }
+
+  @action
+  willDestroy() {
+    this.appEvents.trigger("modal:body-dismissed");
   }
 }
