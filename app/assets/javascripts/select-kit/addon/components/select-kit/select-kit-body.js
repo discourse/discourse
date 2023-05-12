@@ -26,7 +26,7 @@ export default Component.extend({
     document.removeEventListener("click", this.handleClick, true);
     this.selectKit
       .mainElement()
-      .removeEventListener("keydown", this._handleKeydown, true);
+      ?.removeEventListener("keydown", this._handleKeydown, true);
   },
 
   @bind
@@ -52,7 +52,7 @@ export default Component.extend({
       if (
         this.isDestroying ||
         this.isDestroyed ||
-        this.selectKit.mainElement().contains(document.activeElement)
+        this.selectKit.mainElement()?.contains(document.activeElement)
       ) {
         return;
       }
