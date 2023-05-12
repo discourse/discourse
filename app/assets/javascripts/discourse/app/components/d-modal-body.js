@@ -1,54 +1,63 @@
-import { attributeBindings, classNames } from "@ember-decorators/component";
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { scheduleOnce } from "@ember/runloop";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
 
-@classNames("modal-body")
-@attributeBindings("tabindex")
+function pick(object, keys) {
+  const result = {};
+  for (const key of keys) {
+    if (key in object) {
+      result[key] = object[key];
+    }
+  }
+  return result;
+}
+
+@disableImplicitInjections
 export default class DModalBody extends Component {
-  fixed = false;
-  submitOnEnter = true;
-  dismissable = true;
-  tabindex = -1;
+  @service appEvents;
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
+  @tracked fixed = false;
+
+  @action
+  didInsert(element) {
     this._modalAlertElement = document.getElementById("modal-alert");
     if (this._modalAlertElement) {
       this._clearFlash();
     }
 
-    let fixedParent = this.element.closest(".d-modal.fixed-modal");
+    const fixedParent = element.closest(".d-modal.fixed-modal");
     if (fixedParent) {
-      this.set("fixed", true);
+      this.fixed = true;
       $(fixedParent).modal("show");
     }
 
-    scheduleOnce("afterRender", this, this._afterFirstRender);
-    this.appEvents.on("modal-body:flash", this, "_flash");
-    this.appEvents.on("modal-body:clearFlash", this, "_clearFlash");
+    scheduleOnce("afterRender", () => this._afterFirstRender(element));
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
+  @action
+  willDestroy() {
     this.appEvents.off("modal-body:flash", this, "_flash");
     this.appEvents.off("modal-body:clearFlash", this, "_clearFlash");
     this.appEvents.trigger("modal:body-dismissed");
   }
 
-  _afterFirstRender() {
-    const maxHeight = this.maxHeight;
+  _afterFirstRender(element) {
+    const maxHeight = this.args.maxHeight;
     if (maxHeight) {
       const maxHeightFloat = parseFloat(maxHeight) / 100.0;
       if (maxHeightFloat > 0) {
         const viewPortHeight = $(window).height();
-        this.element.style.maxHeight =
+        element.style.maxHeight =
           Math.floor(maxHeightFloat * viewPortHeight) + "px";
       }
     }
 
     this.appEvents.trigger(
       "modal:body-shown",
-      this.getProperties(
+      pick(this.args, [
         "title",
         "rawTitle",
         "fixed",
@@ -56,8 +65,8 @@ export default class DModalBody extends Component {
         "rawSubtitle",
         "submitOnEnter",
         "dismissable",
-        "headerClass"
-      )
+        "headerClass",
+      ])
     );
   }
 

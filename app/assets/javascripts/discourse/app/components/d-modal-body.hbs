@@ -1,0 +1,10 @@
+<div
+  id={{@id}}
+  class={{concat-class "modal-body" @class}}
+  tabindex="-1"
+  {{did-insert this.didInsert}}
+  {{will-destroy this.willDestroy}}
+  ...attributes
+>
+  {{yield}}
+</div>
