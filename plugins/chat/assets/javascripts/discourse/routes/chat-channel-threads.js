@@ -1,6 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+
 export default class ChatChannelThreads extends DiscourseRoute {
   @service router;
   @service chatChannelThreadListPane;
@@ -19,8 +20,10 @@ export default class ChatChannelThreads extends DiscourseRoute {
   }
 
   @action
-  willTransition() {
-    this.chatChannelThreadListPane.close();
+  willTransition(transition) {
+    if (transition.targetName !== "chat.channel.thread") {
+      this.chatChannelThreadListPane.close();
+    }
   }
 
   activate() {
