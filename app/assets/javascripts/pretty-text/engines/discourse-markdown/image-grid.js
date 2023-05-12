@@ -66,21 +66,24 @@ export function setup(helper) {
     opts.enableImageGrid = !!siteSettings.experimental_post_image_grid;
   });
 
-  helper.allowList([
-    "div.auto-image-grid",
-    "div.image-grid-toggle",
-    "svg[class=fa d-icon d-icon-th svg-icon svg-string]",
-    "use[href=#th]",
-    "span.enable",
-    "span.disable",
-  ]);
+  helper.allowList(["div.auto-image-grid"]);
+
+  const opts = helper.getOptions();
+  if (opts.previewing) {
+    helper.allowList([
+      "div.image-grid-toggle",
+      "svg[class=fa d-icon d-icon-th svg-icon svg-string]",
+      "use[href=#th]",
+      "span.enable",
+      "span.disable",
+    ]);
+  }
 
   helper.registerPlugin((md) => {
     if (!md.options.discourse.enableImageGrid) {
       return;
     }
 
-    const opts = helper.getOptions();
     md.core.ruler.after("inline", "image_grid", imageGridRule);
 
     const proxy = (tokens, idx, options, env, self) =>
@@ -94,7 +97,7 @@ export function setup(helper) {
       env,
       self
     ) {
-      if (opts.previewing) {
+      if (options.discourse.previewing) {
         return `${buildImageToggleButtons(tokens)} ${gridRenderer(
           tokens,
           idx,
