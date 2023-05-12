@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim
@@ -39,8 +39,7 @@ jobs:
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gem-
+          restore-keys: ${{ runner.os }}-gem-
 
       - name: Setup gems
         run: |
@@ -61,8 +60,7 @@ jobs:
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          restore-keys: ${{ runner.os }}-yarn-
 
       - name: Yarn install
         run: yarn install --frozen-lockfile
