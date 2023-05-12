@@ -35,7 +35,7 @@ module TurboTests
         formatter_class =
           case name
           when "p", "progress"
-            RSpec::Core::Formatters::ProgressFormatter
+            TurboTests::ProgressFormatter
           when "d", "documentation"
             TurboTests::DocumentationFormatter
           else
