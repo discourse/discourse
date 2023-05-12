@@ -1112,6 +1112,15 @@ RSpec.describe TagsController do
         )
       end
 
+      it "returns error 400 for suspicious limit" do
+        get "/tags/filter/search.json", params: { q: "", limit: "1; SELECT 1" }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("invalid_params", message: "limit"),
+        )
+      end
+
       it "includes required tag group information" do
         tag1 = Fabricate(:tag)
         tag2 = Fabricate(:tag)
