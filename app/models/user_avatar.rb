@@ -179,7 +179,8 @@ class UserAvatar < ActiveRecord::Base
       DB.query_single(<<~SQL, sizes: Discourse.avatar_sizes, limit: max_optimized_avatars_to_remove)
       SELECT oi.id FROM user_avatars a
       JOIN optimized_images oi ON oi.upload_id = a.custom_upload_id
-      WHERE oi.width not in (:sizes) AND oi.height not in (:sizes)
+      LEFT JOIN upload_references ur ON ur.upload_id = a.custom_upload_id and ur.target_type <> 'UserAvatar'
+      WHERE oi.width not in (:sizes) AND oi.height not in (:sizes) AND ur.upload_id IS NULL
       LIMIT :limit
     SQL
 

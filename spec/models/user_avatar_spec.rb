@@ -200,6 +200,16 @@ RSpec.describe UserAvatar do
       expect(OptimizedImage.where(upload_id: upload.id).pluck(:width, :height).sort).to eq(
         [[10, 10], [20, 20]],
       )
+
+      # will not clean up if referenced
+      Fabricate(:optimized_image, upload: upload, width: 15, height: 15)
+      UploadReference.create!(upload: upload, target: Fabricate(:post))
+
+      UserAvatar.ensure_consistency!
+
+      expect(OptimizedImage.where(upload_id: upload.id).pluck(:width, :height).sort).to eq(
+        [[10, 10], [15, 15], [20, 20]],
+      )
     end
 
     it "will clean up dangling avatars" do
