@@ -163,7 +163,8 @@ export default (filterArg, params) => {
 
       if (
         !canCreateTopicOnCategory &&
-        this.siteSettings.default_subcategory_on_read_only_category
+        this.siteSettings.default_subcategory_on_read_only_category &&
+        category.subcategories
       ) {
         defaultSubcategory = category.subcategories.find((subcategory) => {
           return subcategory.get("permission") === PermissionType.FULL;
