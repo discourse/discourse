@@ -20,11 +20,9 @@ jobs:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
-    container: >-
-      discourse/discourse_test:slim
-      ${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
-      ${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
+    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
+
     env:
       DISCOURSE_HOSTNAME: www.example.com
       RAILS_ENV: test
