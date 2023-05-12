@@ -311,7 +311,7 @@ module PrettyText
     add_mentions(doc, user_id: opts[:user_id]) if SiteSetting.enable_mentions
 
     scrubber = Loofah::Scrubber.new { |node| node.remove if node.name == "script" }
-    loofah_fragment = Loofah.fragment(doc.to_html)
+    loofah_fragment = Loofah.html5_fragment(doc.to_html)
     loofah_fragment.scrub!(scrubber).to_html
   end
 

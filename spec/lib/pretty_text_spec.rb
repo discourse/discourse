@@ -2574,4 +2574,18 @@ HTML
       expect(cooked).to eq("<p>:grin: <span class=\"mention\">@mention</span></p>")
     end
   end
+
+  it "does not amend HTML when scrubbing" do
+    md = <<~MD
+      <s>\n\nhello\n\n</s>
+    MD
+
+    html = <<~HTML
+      <s>\n<p>hello</p>\n</s>
+    HTML
+
+    cooked = PrettyText.cook(md)
+
+    expect(cooked.strip).to eq(html.strip)
+  end
 end
