@@ -3,6 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | ComposerEditor", function (hooks) {
   setupRenderingTest(hooks);
@@ -42,5 +43,23 @@ module("Integration | Component | ComposerEditor", function (hooks) {
     `);
 
     await fillIn("textarea", "@user-no @user-ok @user-nope");
+  });
+
+  test("preview sanitizes HTML", async function (assert) {
+    this.set("model", {});
+    this.set("noop", () => {});
+
+    await render(hbs`
+      <ComposerEditor
+        @composer={{this.model}}
+        @afterRefresh={{this.noop}}
+      />
+    `);
+
+    await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
+    assert.strictEqual(
+      query(".d-editor-preview").innerHTML.trim(),
+      '<p>"&gt;<svg></svg></p>'
+    );
   });
 });
