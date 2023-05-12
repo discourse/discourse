@@ -158,14 +158,16 @@ module DiscourseTagging
           end
 
           # replaces the added missing parent tags with the original tag
-          parent_tag_conflicts.map do |conflicting_tags|
+          parent_tag_conflicts.map do |_, conflicting_tags|
             topic.errors.add(
               :base,
               I18n.t(
                 "tags.limited_to_one_tag_from_group",
                 tags:
                   conflicting_tags
-                    .map do |tag_name|
+                    .map do |tag|
+                      tag_name = tag.name
+
                       if parent_child_names_map[tag_name].present?
                         parent_child_names_map[tag_name]
                       else
@@ -316,10 +318,13 @@ module DiscourseTagging
 
     return true if tags_cant_be_used.blank?
 
-    tags_cant_be_used.each do |incompatible_tags_set|
+    tags_cant_be_used.each do |_, incompatible_tags|
       model.errors.add(
         :base,
-        I18n.t("tags.limited_to_one_tag_from_group", tags: incompatible_tags_set.sort.join(", ")),
+        I18n.t(
+          "tags.limited_to_one_tag_from_group",
+          tags: incompatible_tags.map(&:name).sort.join(", "),
+        ),
       )
     end
 
@@ -369,13 +374,33 @@ module DiscourseTagging
   SQL
 
   def self.filter_tags_violating_one_tag_from_group_per_topic(category, tags = [])
-    return [] if tags.size < 2 || category.blank?
+    return [] if tags.size < 2
 
+    # ensures that tags are a list of tag names
     tags = tags.map(&:name) if Tag === tags[0]
 
-    DB
-      .query(ONE_PER_TOPIC_SQL, { category_id: category.id, tags: tags })
-      .map { |row| row.incompatible_tags }
+    allowed_tags =
+      filter_allowed_tags(
+        nil,
+        category: category,
+        only_tag_names: tags,
+        for_topic: true,
+        order_search_results: true,
+      )
+
+    return {} if allowed_tags.size < 2
+
+    tags_by_group_map =
+      allowed_tags
+        .sort_by { |tag| [tag.tag_group_id || -1, tag.name] }
+        .inject({}) do |hash, tag|
+          next hash unless tag.one_per_topic
+
+          hash[tag.tag_group_id] = (hash[tag.tag_group_id] || []) << tag
+          hash
+        end
+
+    tags_by_group_map.select { |_, group_tags| group_tags.size > 1 }
   end
 
   TAG_GROUP_RESTRICTIONS_SQL ||= <<~SQL

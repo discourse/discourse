@@ -4917,7 +4917,7 @@ en:
     required_tags_from_group:
       one: "You must include at least %{count} %{tag_group_name} tag. The tags in this group are: %{tags}."
       other: "You must include at least %{count} %{tag_group_name} tags. The tags in this group are: %{tags}."
-    limited_to_one_tag_from_group: "The tags %{tags} cannot be used at the same time. Please include only one of them."
+    limited_to_one_tag_from_group: "The tags %{tags} cannot be used simultaneously. Please include only one of them."
     invalid_target_tag: "cannot be a synonym of a synonym"
     synonyms_exist: "is not allowed while synonyms exist"
   rss_by_tag: "Topics tagged %{tag}"
