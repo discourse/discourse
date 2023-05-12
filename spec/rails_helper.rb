@@ -181,7 +181,11 @@ RSpec.configure do |config|
   config.mock_framework = :mocha
   config.order = "random"
   config.infer_spec_type_from_file_location!
-  config.color_mode = :on if ENV["CI"] # Enable color output in GitHub Actions
+
+  # Enable color output in GitHub Actions
+  # This eventually will be `config.color_mode = :on` in RSpec 4?
+  config.tty = true
+  config.color = true
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
