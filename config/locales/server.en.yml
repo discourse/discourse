@@ -652,8 +652,8 @@ en:
           attributes:
             value:
               invalid_interpolation_keys:
-                one: 'The following interpolation key is invalid: %{keys}'
-                other: 'The following interpolation keys are invalid: %{keys}'
+                one: "The following interpolation key is invalid: %{keys}"
+                other: "The following interpolation keys are invalid: %{keys}"
         watched_word:
           attributes:
             word:
@@ -2416,7 +2416,7 @@ en:
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
     enable_new_notifications_menu: "Enables the new notifications menu. Disabling this setting is deprecated. The new notifications menu is always used for non-legacy 'navigation menu' choices. <a href='https://meta.discourse.org/t/260358'>Learn more</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
-    experimental_new_new_view_groups: "EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the \"Everything\" link in the sidebar link to it."
+    experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
 
@@ -4917,6 +4917,7 @@ en:
     required_tags_from_group:
       one: "You must include at least %{count} %{tag_group_name} tag. The tags in this group are: %{tags}."
       other: "You must include at least %{count} %{tag_group_name} tags. The tags in this group are: %{tags}."
+    limited_to_one_tag_from_group: "The tags %{tags} cannot be used at the same time. Please include only one of them."
     invalid_target_tag: "cannot be a synonym of a synonym"
     synonyms_exist: "is not allowed while synonyms exist"
   rss_by_tag: "Topics tagged %{tag}"

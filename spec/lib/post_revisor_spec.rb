@@ -141,8 +141,8 @@ RSpec.describe PostRevisor do
 
       tag1 = Fabricate(:tag)
       tag2 = Fabricate(:tag)
-      tag_group = Fabricate(:tag_group, tags: [tag1], one_per_topic: true)
-      tag_group2 = Fabricate(:tag_group, tags: [tag2], one_per_topic: true)
+      tag_group = Fabricate(:tag_group, tags: [tag1])
+      tag_group2 = Fabricate(:tag_group, tags: [tag2])
 
       old_category = Fabricate(:category, tag_groups: [tag_group])
       new_category = Fabricate(:category, tag_groups: [tag_group2])
@@ -168,7 +168,7 @@ RSpec.describe PostRevisor do
       SiteSetting.min_trust_level_to_tag_topics = 0
 
       tag1 = Fabricate(:tag)
-      tag_group = Fabricate(:tag_group, tags: [tag1], one_per_topic: true)
+      tag_group = Fabricate(:tag_group, tags: [tag1])
 
       old_category = Fabricate(:category)
       new_category =

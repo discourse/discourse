@@ -97,6 +97,364 @@ RSpec.describe DiscourseTagging do
     end
   end
 
+  describe "#validate_one_tag_from_group_per_topic" do
+    fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2, tag3], one_per_topic: true) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:category) { Fabricate(:category, allowed_tag_groups: [tag_group.name]) }
+
+    it "returns true if the topic doesn't belong to a category" do
+      result = DiscourseTagging.validate_one_tag_from_group_per_topic(nil, topic, nil, [tag1, tag2])
+      expect(result).to eq(true)
+    end
+
+    it "returns true if only one tag is provided" do
+      result = DiscourseTagging.validate_one_tag_from_group_per_topic(nil, topic, category, [tag1])
+      expect(result).to eq(true)
+
+      result = DiscourseTagging.validate_one_tag_from_group_per_topic(nil, topic, category, [tag2])
+      expect(result).to eq(true)
+    end
+
+    it "returns true if only one tag in the group matches" do
+      tag4 = Fabricate(:tag, name: "fun4")
+
+      result =
+        DiscourseTagging.validate_one_tag_from_group_per_topic(nil, topic, category, [tag1, tag4])
+      expect(result).to eq(true)
+    end
+
+    context "when it fails" do
+      it "returns false if more than one tag from the group is provided" do
+        result =
+          DiscourseTagging.validate_one_tag_from_group_per_topic(nil, topic, category, [tag1, tag2])
+
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.limited_to_one_tag_from_group",
+            tags: [tag1.name, tag2.name].sort.join(", "),
+          ),
+        )
+        expect(result).to eq(false)
+      end
+
+      it "returns multiple errors when incompatible sets from more then one group are detected" do
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+        tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], one_per_topic: true)
+        category2 = Fabricate(:category, allowed_tag_groups: [tag_group.name, tag_group2.name])
+
+        result =
+          DiscourseTagging.validate_one_tag_from_group_per_topic(
+            nil,
+            topic,
+            category2,
+            [tag1, tag2, tag4, tag5],
+          )
+
+        expect(topic.errors[:base]).to contain_exactly(
+          *[[tag1.name, tag2.name], [tag4.name, tag5.name]].map do |failed_set|
+            I18n.t("tags.limited_to_one_tag_from_group", tags: failed_set.sort.join(", "))
+          end,
+        )
+        expect(result).to eq(false)
+      end
+    end
+  end
+
+  describe "#filter_tags_violating_one_tag_from_group_per_topic" do
+    fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2, tag3], one_per_topic: true) }
+
+    it "returns and empty array if the topic doesn't belong to a category" do
+      invalid_tags =
+        DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(nil, [tag1, tag2])
+      expect(invalid_tags).to be_empty
+    end
+
+    context "when the category only allows tags from some tag groups" do
+      it "returns tags that are violating the one tag from group per topic rule when there is only one group" do
+        category = Fabricate(:category, allowed_tag_groups: [tag_group.name])
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag2],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag2.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag3.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag2, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag2.name, tag3.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag2, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag2.name, tag3.name)
+      end
+
+      it "returns tags that are violating the one tag from group per topic rule when there are multiple groups" do
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], one_per_topic: true)
+
+        category = Fabricate(:category, allowed_tag_groups: [tag_group.name, tag_group2.name])
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag2],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag2.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag3.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag2, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag2.name, tag3.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag2, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag2.name, tag3.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag4, tag5],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag4.name, tag5.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag2, tag4, tag5],
+          )
+        expect(invalid_tags[0]).to contain_exactly(tag1.name, tag2.name)
+        expect(invalid_tags[1]).to contain_exactly(tag4.name, tag5.name)
+      end
+
+      it "returns an empty array when only one tag is provided" do
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], one_per_topic: true)
+
+        category = Fabricate(:category, allowed_tag_groups: [tag_group.name, tag_group2.name])
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag1])
+        expect(invalid_tags).to be_empty
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag2])
+        expect(invalid_tags).to be_empty
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag3])
+        expect(invalid_tags).to be_empty
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag4])
+        expect(invalid_tags).to be_empty
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag5])
+        expect(invalid_tags).to be_empty
+      end
+
+      it "returns and empty array if the tags don't belong to a tag group" do
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        category = Fabricate(:category, allowed_tag_groups: [tag_group.name])
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag4, tag5],
+          )
+        expect(invalid_tags).to be_empty
+      end
+    end
+
+    context "when some tag groups are required in the category" do
+      it "returns tags that are violating the one tag from group per topic rule when there is only one group" do
+        category =
+          Fabricate(
+            :category,
+            category_required_tag_groups: [
+              CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1),
+            ],
+          )
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag2],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag2.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag3.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag2, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag2.name, tag3.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag2, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag2.name, tag3.name)
+      end
+
+      it "returns tags that are violating the one tag from group per topic rule when there are multiple groups" do
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], one_per_topic: true)
+
+        category =
+          Fabricate(
+            :category,
+            category_required_tag_groups: [
+              CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1),
+              CategoryRequiredTagGroup.new(tag_group: tag_group2, min_count: 1),
+            ],
+          )
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag2],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag2.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag3.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag2, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag2.name, tag3.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag2, tag3],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag1.name, tag2.name, tag3.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag4, tag5],
+          ).first
+        expect(invalid_tags).to contain_exactly(tag4.name, tag5.name)
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag1, tag2, tag4, tag5],
+          )
+        expect(invalid_tags[0]).to contain_exactly(tag1.name, tag2.name)
+        expect(invalid_tags[1]).to contain_exactly(tag4.name, tag5.name)
+      end
+
+      it "returns an empty array when only one tag is provided" do
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], one_per_topic: true)
+
+        category =
+          Fabricate(
+            :category,
+            category_required_tag_groups: [
+              CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1),
+              CategoryRequiredTagGroup.new(tag_group: tag_group2, min_count: 1),
+            ],
+          )
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag1])
+        expect(invalid_tags).to be_empty
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag2])
+        expect(invalid_tags).to be_empty
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag3])
+        expect(invalid_tags).to be_empty
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag4])
+        expect(invalid_tags).to be_empty
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag5])
+        expect(invalid_tags).to be_empty
+      end
+
+      it "returns and empty array if the tags don't belong to a tag group" do
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        category =
+          Fabricate(
+            :category,
+            category_required_tag_groups: [
+              CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1),
+            ],
+          )
+
+        invalid_tags =
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            category,
+            [tag4, tag5],
+          )
+        expect(invalid_tags).to be_empty
+      end
+    end
+  end
+
   describe "filter_allowed_tags" do
     context "for input fields" do
       it "doesn't return selected tags if there's a search term" do
@@ -815,6 +1173,194 @@ RSpec.describe DiscourseTagging do
         )
       end
 
+      it "fails when parent tag missing will conflict with another tag from tag group set to one tag per topic" do
+        parent_tag = Fabricate(:tag, name: "parent-1")
+        parent_tag2 = Fabricate(:tag, name: "parent-2")
+        parent_tag_group =
+          Fabricate(:tag_group, tags: [parent_tag, parent_tag2], one_per_topic: true)
+
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        child_tag_group =
+          Fabricate(:tag_group, tags: [tag1, tag2, tag3], parent_tag_id: parent_tag.id)
+        child_tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], parent_tag_id: parent_tag2.id)
+
+        tag_limited_category =
+          Fabricate(
+            :category,
+            allowed_tag_groups: [
+              parent_tag_group.name,
+              child_tag_group.name,
+              child_tag_group2.name,
+            ],
+          )
+
+        topic = Fabricate(:topic, category: tag_limited_category)
+
+        # tag2 will insert parent_tag which is missing. parent_tag will conflict with parent_tag2
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic,
+            Guardian.new(user),
+            [parent_tag2.name, tag2.name],
+          )
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.limited_to_one_tag_from_group",
+            tags: [parent_tag2.name, tag2.name].sort.join(", "),
+          ),
+        )
+
+        topic = Fabricate(:topic, category: tag_limited_category)
+
+        # tag4 will insert parent_tag2 which is missing. parent_tag will conflict with parent_tag2
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic,
+            Guardian.new(user),
+            [parent_tag.name, tag1.name, tag4.name],
+          )
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.limited_to_one_tag_from_group",
+            tags: [parent_tag.name, tag4.name].sort.join(", "),
+          ),
+        )
+      end
+
+      it "fails when multiple parent tag missing will conflict with another tag from tag group set to one tag per topic" do
+        parent_tag = Fabricate(:tag, name: "parent-1")
+        parent_tag2 = Fabricate(:tag, name: "parent-2")
+        parent_tag3 = Fabricate(:tag, name: "parent-3")
+        parent_tag_group =
+          Fabricate(:tag_group, tags: [parent_tag, parent_tag2, parent_tag3], one_per_topic: true)
+
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        child_tag_group =
+          Fabricate(:tag_group, tags: [tag1, tag2, tag3], parent_tag_id: parent_tag.id)
+        child_tag_group2 = Fabricate(:tag_group, tags: [tag4], parent_tag_id: parent_tag2.id)
+        child_tag_group3 = Fabricate(:tag_group, tags: [tag5], parent_tag_id: parent_tag3.id)
+
+        tag_limited_category =
+          Fabricate(
+            :category,
+            allowed_tag_groups: [
+              parent_tag_group.name,
+              child_tag_group.name,
+              child_tag_group2.name,
+              child_tag_group3.name,
+            ],
+          )
+
+        topic = Fabricate(:topic, category: tag_limited_category)
+
+        # tag4 and tag5 will insert parent_tag2 and parent_tag3 which are missing. they will conflict with parent_tag
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic,
+            Guardian.new(user),
+            [parent_tag.name, tag4.name, tag5.name],
+          )
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.limited_to_one_tag_from_group",
+            tags: [parent_tag.name, tag4.name, tag5.name].sort.join(", "),
+          ),
+        )
+      end
+
+      it "fails when multiple parent tag missing will conflict in tag group set to one tag per topic" do
+        parent_tag = Fabricate(:tag, name: "parent-1")
+        parent_tag2 = Fabricate(:tag, name: "parent-2")
+        parent_tag_group =
+          Fabricate(:tag_group, tags: [parent_tag, parent_tag2], one_per_topic: true)
+
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        child_tag_group =
+          Fabricate(:tag_group, tags: [tag1, tag2, tag3], parent_tag_id: parent_tag.id)
+        child_tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], parent_tag_id: parent_tag2.id)
+
+        tag_limited_category =
+          Fabricate(
+            :category,
+            allowed_tag_groups: [
+              parent_tag_group.name,
+              child_tag_group.name,
+              child_tag_group2.name,
+            ],
+          )
+
+        topic = Fabricate(:topic, category: tag_limited_category)
+
+        # tag1 and tag4 will insert parent_tag and parent_tag2 which are missing. they will conflict with each other
+        valid =
+          DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag4.name])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.limited_to_one_tag_from_group",
+            tags: [tag1.name, tag4.name].sort.join(", "),
+          ),
+        )
+      end
+
+      it "fails with multiple errors when parent tag missing will conflict in more than one tag group set to one tag per topic" do
+        parent_tag = Fabricate(:tag, name: "parent-1")
+        parent_tag2 = Fabricate(:tag, name: "parent-2")
+        parent_tag_group =
+          Fabricate(:tag_group, tags: [parent_tag, parent_tag2], one_per_topic: true)
+
+        parent_tag3 = Fabricate(:tag, name: "parent-3")
+        parent_tag4 = Fabricate(:tag, name: "parent-4")
+        parent_tag_group2 =
+          Fabricate(:tag_group, tags: [parent_tag3, parent_tag4], one_per_topic: true)
+
+        tag4 = Fabricate(:tag, name: "fun4")
+
+        child_tag_group = Fabricate(:tag_group, tags: [tag1], parent_tag_id: parent_tag.id)
+        child_tag_group2 = Fabricate(:tag_group, tags: [tag2], parent_tag_id: parent_tag2.id)
+        child_tag_group3 = Fabricate(:tag_group, tags: [tag3], parent_tag_id: parent_tag3.id)
+        child_tag_group4 = Fabricate(:tag_group, tags: [tag4], parent_tag_id: parent_tag4.id)
+
+        tag_limited_category =
+          Fabricate(
+            :category,
+            allowed_tag_groups: [
+              parent_tag_group.name,
+              parent_tag_group2.name,
+              child_tag_group.name,
+              child_tag_group2.name,
+              child_tag_group3.name,
+              child_tag_group4.name,
+            ],
+          )
+
+        topic = Fabricate(:topic, category: tag_limited_category)
+
+        # tag2 will insert parent_tag2 which is missing. it will conflict with parent_tag
+        # tag4 will insert parent_tag4 which is missing. it will conflict with parent_tag3
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic,
+            Guardian.new(user),
+            [parent_tag.name, tag2.name, parent_tag3.name, tag4.name],
+          )
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]).to contain_exactly(
+          *[[parent_tag.name, tag2.name], [parent_tag3.name, tag4.name]].map do |conflicting_tags|
+            I18n.t("tags.limited_to_one_tag_from_group", tags: conflicting_tags.sort.join(", "))
+          end,
+        )
+      end
+
       it "adds only the necessary parent tags" do
         common = Fabricate(:tag, name: "common")
         tag_group.tags = [tag3, common]
@@ -965,7 +1511,8 @@ RSpec.describe DiscourseTagging do
         )
       end
 
-      it "only sanitizes new tags" do # for backwards compat
+      it "only sanitizes new tags" do
+        # for backwards compat
         Tag.new(name: "math=fun").save(validate: false)
         expect(
           described_class.tags_for_saving(%w[math=fun fun*2@gmail.com], guardian).try(:sort),

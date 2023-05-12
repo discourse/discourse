@@ -102,6 +102,11 @@ module DiscourseTagging
           end
         end
 
+        # tests if there are conflicts between tags on tag groups that only allow one tag from the group before adding
+        # mandatory parent tags because later we want to test if the mandatory parent tags introduce any conflicts
+        # and be able to pinpoint the tag that is introducing it
+        return false unless validate_one_tag_from_group_per_topic(guardian, topic, category, tags)
+
         # add missing mandatory parent tags
         tag_ids = tags.map(&:id)
 
@@ -132,7 +137,50 @@ module DiscourseTagging
             .compact
             .uniq
 
-        tags = tags + Tag.where(id: missing_parent_tag_ids).all unless missing_parent_tag_ids.empty?
+        missing_parent_tags = Tag.where(id: missing_parent_tag_ids).all
+
+        tags = tags + missing_parent_tags unless missing_parent_tags.empty?
+
+        parent_tag_conflicts =
+          filter_tags_violating_one_tag_from_group_per_topic(topic.category, tags)
+        if parent_tag_conflicts.present?
+          # we need to get the original tag names that introduced conflicting missing parent tags to return an useful
+          # error message
+          parent_child_names_map = {}
+          parent_tags_map.each do |tag_id, parent_tag_ids|
+            next if (tag_ids & parent_tag_ids).size > 0 # tag already has a parent tag
+
+            parent_tag = tags.select { |t| t.id == parent_tag_ids.first }.first
+            original_child_tag = tags.select { |t| t.id == tag_id }.first
+
+            next unless parent_tag.present? && original_child_tag.present?
+            parent_child_names_map[parent_tag.name] = original_child_tag.name
+          end
+
+          # replaces the added missing parent tags with the original tag
+          parent_tag_conflicts.map do |conflicting_tags|
+            topic.errors.add(
+              :base,
+              I18n.t(
+                "tags.limited_to_one_tag_from_group",
+                tags:
+                  conflicting_tags
+                    .map do |tag_name|
+                      if parent_child_names_map[tag_name].present?
+                        parent_child_names_map[tag_name]
+                      else
+                        tag_name
+                      end
+                    end
+                    .uniq
+                    .sort
+                    .join(", "),
+              ),
+            )
+          end
+
+          return false
+        end
 
         return false unless validate_min_required_tags_for_category(guardian, topic, category, tags)
         return false unless validate_required_tags_from_group(guardian, topic, category, tags)
@@ -171,6 +219,7 @@ module DiscourseTagging
     valid = validate_min_required_tags_for_category(guardian, model, category, valid_tags)
     valid &&= validate_required_tags_from_group(guardian, model, category, existing_tags)
     valid &&= validate_category_restricted_tags(guardian, model, category, valid_tags)
+    valid &&= validate_one_tag_from_group_per_topic(guardian, model, category, valid_tags)
 
     valid
   end
@@ -260,6 +309,73 @@ module DiscourseTagging
       end
     end
     true
+  end
+
+  def self.validate_one_tag_from_group_per_topic(guardian, model, category, tags = [])
+    tags_cant_be_used = filter_tags_violating_one_tag_from_group_per_topic(category, tags)
+
+    return true if tags_cant_be_used.blank?
+
+    tags_cant_be_used.each do |incompatible_tags_set|
+      model.errors.add(
+        :base,
+        I18n.t("tags.limited_to_one_tag_from_group", tags: incompatible_tags_set.sort.join(", ")),
+      )
+    end
+
+    false
+  end
+
+  ONE_PER_TOPIC_SQL ||= <<~SQL
+    SELECT ARRAY_AGG(tag_name ORDER BY (tag_name)) AS incompatible_tags
+    FROM
+        (
+            SELECT ctg.tag_group_id, t.name AS tag_name
+            FROM
+                category_tag_groups ctg
+                INNER JOIN tag_groups tg
+                ON tg.id = ctg.tag_group_id
+                INNER JOIN tag_group_memberships tgm
+                ON tgm.tag_group_id = tg.id
+                INNER JOIN tags t
+                ON tgm.tag_id = t.id
+
+            WHERE
+                tg.one_per_topic
+                AND t.name IN (:tags)
+                AND ctg.category_id = :category_id
+
+            UNION
+
+            SELECT crtg.tag_group_id, t.name
+            FROM
+                category_required_tag_groups crtg
+                INNER JOIN tag_groups tg
+                ON tg.id = crtg.tag_group_id
+                INNER JOIN tag_group_memberships tgm
+                ON tgm.tag_group_id = tg.id
+                INNER JOIN tags t
+                ON tgm.tag_id = t.id
+
+            WHERE
+                tg.one_per_topic
+                AND t.name IN (:tags)
+                AND crtg.category_id = :category_id
+        ) AS one_per_topic
+    GROUP BY
+        tag_group_id
+    HAVING
+        CARDINALITY(ARRAY_AGG(tag_name)) > 1
+  SQL
+
+  def self.filter_tags_violating_one_tag_from_group_per_topic(category, tags = [])
+    return [] if tags.size < 2 || category.blank?
+
+    tags = tags.map(&:name) if Tag === tags[0]
+
+    DB
+      .query(ONE_PER_TOPIC_SQL, { category_id: category.id, tags: tags })
+      .map { |row| row.incompatible_tags }
   end
 
   TAG_GROUP_RESTRICTIONS_SQL ||= <<~SQL
