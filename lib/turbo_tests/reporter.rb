@@ -35,6 +35,8 @@ module TurboTests
           case name
           when "p", "progress"
             RSpec::Core::Formatters::ProgressFormatter
+          when "d", "documentation"
+            TurboTests::DocumentationFormatter
           else
             Kernel.const_get(name)
           end
