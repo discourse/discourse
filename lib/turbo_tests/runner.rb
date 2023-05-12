@@ -14,11 +14,13 @@ module TurboTests
 
       reporter = Reporter.from_config(formatters, start_time)
 
-      RSpec.configure do |config|
-        # Enable color output in GitHub Actions
-        # This eventually will be `config.color_mode = :on` in RSpec 4?
-        config.tty = true
-        config.color = true
+      if ENV["GITHUB_ACTIONS"]
+        RSpec.configure do |config|
+          # Enable color output in GitHub Actions
+          # This eventually will be `config.color_mode = :on` in RSpec 4?
+          config.tty = true
+          config.color = true
+        end
       end
 
       new(
