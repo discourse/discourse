@@ -12,17 +12,17 @@ export default class ChatVh extends Component {
 
     this.setVHFromVisualViewPort();
 
+    (window?.visualViewport || window).addEventListener(
+      "resize",
+      this.setVHFromVisualViewPort
+    );
+
     if ("virtualKeyboard" in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
 
       navigator.virtualKeyboard.addEventListener(
         "geometrychange",
         this.setVHFromKeyboard
-      );
-    } else {
-      (window?.visualViewport || window).addEventListener(
-        "resize",
-        this.setVHFromVisualViewPort
       );
     }
   }
