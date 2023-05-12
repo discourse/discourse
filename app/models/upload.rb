@@ -156,13 +156,8 @@ class Upload < ActiveRecord::Base
       # this is relatively cheap once cached
       original_path = Discourse.store.path_for(self)
       if original_path.blank?
-        external_copy =
-          begin
-            Discourse.store.download(self)
-          rescue StandardError
-            nil
-          end
-        original_path = external_copy.try(:path)
+        external_copy = Discourse.store.download_safe(self)
+        original_path = external_copy&.path
       end
 
       image_info =
@@ -357,13 +352,7 @@ class Upload < ActiveRecord::Base
         if local?
           Discourse.store.path_for(self)
         else
-          begin
-            Discourse.store.download(self)&.path
-          rescue OpenURI::HTTPError => e
-            # Some issue with downloading the image from a remote store.
-            # Assume the upload is broken and save an empty string to prevent re-evaluation
-            nil
-          end
+          Discourse.store.download_safe(self)&.path
         end
 
       if local_path.nil?
