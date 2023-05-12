@@ -49,7 +49,6 @@ module TurboTests
       {
         execution_result: execution_result_to_json(example.execution_result),
         location: example.location,
-        description: example.description,
         full_description: example.full_description,
         metadata: {
           shared_group_inclusion_backtrace:

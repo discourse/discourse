@@ -14,6 +14,15 @@ module TurboTests
 
       reporter = Reporter.from_config(formatters, start_time)
 
+      if ENV["GITHUB_ACTIONS"]
+        RSpec.configure do |config|
+          # Enable color output in GitHub Actions
+          # This eventually will be `config.color_mode = :on` in RSpec 4?
+          config.tty = true
+          config.color = true
+        end
+      end
+
       new(
         reporter: reporter,
         files: files,
@@ -166,7 +175,9 @@ module TurboTests
             [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].select { |x| x.size > 0 }
               .join(" ")
 
+          STDERR.puts "::group::[#{process_id}] Run RSpec" if ENV["CI"]
           STDERR.puts "Process #{process_id}: #{command_str}"
+          STDERR.puts "::endgroup::" if ENV["CI"]
         end
 
         stdin, stdout, stderr, wait_thr = Open3.popen3(env, *command)
@@ -237,7 +248,11 @@ module TurboTests
             @error = true
           when "exit"
             exited += 1
-            @reporter.message("[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1})")
+
+            if @reporter.formatters.any? { |f| f.is_a?(DocumentationFormatter) }
+              @reporter.message("[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1})")
+            end
+
             break if exited == @num_processes + 1
           else
             STDERR.puts("Unhandled message in main process: #{message}")

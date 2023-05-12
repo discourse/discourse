@@ -182,6 +182,13 @@ RSpec.configure do |config|
   config.order = "random"
   config.infer_spec_type_from_file_location!
 
+  if ENV["GITHUB_ACTIONS"]
+    # Enable color output in GitHub Actions
+    # This eventually will be `config.color_mode = :on` in RSpec 4?
+    config.tty = true
+    config.color = true
+  end
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
