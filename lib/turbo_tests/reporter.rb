@@ -18,6 +18,7 @@ module TurboTests
 
     attr_reader :pending_examples
     attr_reader :failed_examples
+    attr_reader :formatters
 
     def initialize(start_time)
       @formatters = []

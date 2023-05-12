@@ -237,7 +237,11 @@ module TurboTests
             @error = true
           when "exit"
             exited += 1
-            @reporter.message("[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1})")
+
+            if @reporter.formatters.any? { |f| f.is_a?(DocumentationFormatter) }
+              @reporter.message("[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1})")
+            end
+
             break if exited == @num_processes + 1
           else
             STDERR.puts("Unhandled message in main process: #{message}")
