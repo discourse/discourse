@@ -879,26 +879,6 @@ RSpec.describe PostRevisor do
       end
     end
 
-    describe "welcome topic" do
-      before { SiteSetting.welcome_topic_id = topic.id }
-
-      it "should publish welcome topic edit message" do
-        revisor = PostRevisor.new(post)
-        first_post = topic.first_post
-        UserAuthToken.generate!(user_id: admin.id)
-        Discourse.cache.write(Site.welcome_topic_banner_cache_key(admin.id), true)
-
-        messages =
-          MessageBus.track_publish("/site/welcome-topic-banner") do
-            revisor.revise!(admin, { raw: "updated welcome topic body" })
-          end
-        welcome_topic_banner_message =
-          messages.find { |message| message.channel == "/site/welcome-topic-banner" }
-        expect(welcome_topic_banner_message).to be_present
-        expect(welcome_topic_banner_message.data).to eq(false)
-      end
-    end
-
     it "doesn't strip starting whitespaces" do
       subject.revise!(post.user, raw: "    <-- whitespaces -->    ")
       post.reload

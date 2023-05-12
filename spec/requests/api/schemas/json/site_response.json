@@ -241,6 +241,9 @@
         },
         "suggested_topics": {
           "type": "integer"
+        },
+        "welcome_topic": {
+          "type": "integer"
         }
       },
       "required": [
@@ -751,9 +754,6 @@
             "can_edit"
           ]
         }
-    },
-    "show_welcome_topic_banner": {
-      "type": "boolean"
     },
     "archetypes": {
       "type": "array",

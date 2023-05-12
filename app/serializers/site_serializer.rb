@@ -37,7 +37,6 @@ class SiteSerializer < ApplicationSerializer
     :hashtag_configurations,
     :hashtag_icons,
     :displayed_about_plugin_stat_groups,
-    :show_welcome_topic_banner,
     :anonymous_default_sidebar_tags,
     :anonymous_sidebar_sections,
     :whispers_allowed_groups_names,
@@ -247,10 +246,6 @@ class SiteSerializer < ApplicationSerializer
 
   def displayed_about_plugin_stat_groups
     About.displayed_plugin_stat_groups
-  end
-
-  def show_welcome_topic_banner
-    Site.show_welcome_topic_banner?(scope)
   end
 
   def anonymous_default_sidebar_tags
