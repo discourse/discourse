@@ -124,7 +124,8 @@ describe Chat::Notifier do
       describe "editing a direct mention into a global mention" do
         let(:mention) { "hello @#{user_2.username}!" }
 
-        it "doesn't return :all_mentioned_user_ids" do
+        it "doesn't send notifications with :all_mentioned_user_ids as an identifier" do
+          Jobs.run_immediately!
           msg = build_cooked_msg(mention, user_1)
 
           Chat::MessageUpdater.update(
@@ -133,8 +134,12 @@ describe Chat::Notifier do
             new_content: "hello @all",
           )
 
-          to_notify = described_class.new(msg, msg.created_at).notify_edit
-          expect(to_notify[:all_mentioned_user_ids]).not_to be_present
+          described_class.new(msg, msg.created_at).notify_edit
+
+          notifications = Notification.where(user: user_2)
+          notifications.each do |notification|
+            expect(notification.data).not_to include("\"identifier\":\"all_mentioned_user_ids\"")
+          end
         end
       end
 
