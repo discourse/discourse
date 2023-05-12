@@ -94,6 +94,8 @@ export default Component.extend(UtilsMixin, {
     if (event.key === "Escape") {
       this.selectKit.close(event);
       this.selectKit.headerElement().focus();
+      event.preventDefault();
+      event.stopPropagation();
       return false;
     }
 

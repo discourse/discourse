@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
+import { render, tab } from "@ember/test-helpers";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -61,6 +61,54 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
       null,
       "it doesn't set a value from the content"
     );
+  });
+
+  test("accessibility", async function (assert) {
+    setDefaultState(this);
+
+    await render(hbs`<SingleSelect @content={{this.content}} />`);
+
+    await this.subject.expand();
+
+    const content = this.subject.displayedContent();
+    assert.strictEqual(content.length, 3, "it shows rows");
+
+    assert
+      .dom(".select-kit-header")
+      .isFocused("it should focus the header first");
+
+    await tab();
+
+    assert
+      .dom(".select-kit-row:first-child")
+      .isFocused("it should focus the first row next");
+
+    await tab();
+
+    assert
+      .dom(".select-kit-row:nth-child(2)")
+      .isFocused("tab moves focus to 2nd row");
+
+    await tab();
+
+    assert
+      .dom(".select-kit-row:nth-child(3)")
+      .isFocused("tab moves focus to 3rd row");
+
+    await tab();
+
+    assert.notOk(
+      this.subject.isExpanded(),
+      "when there are no more rows, Tab collapses the dropdown"
+    );
+
+    await this.subject.expand();
+
+    assert.ok(this.subject.isExpanded(), "dropdown is expanded again");
+
+    await tab({ backwards: true });
+
+    assert.notOk(this.subject.isExpanded(), "Shift+Tab collapses the dropdown");
   });
 
   test("value", async function (assert) {
