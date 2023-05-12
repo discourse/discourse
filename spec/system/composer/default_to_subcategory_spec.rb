@@ -10,19 +10,29 @@ describe "Default to Subcategory when parent Category doesn't allow posting",
   fab!(:subcategory) do
     Fabricate(:private_category, parent_category_id: category.id, group: group, permission_type: 1)
   end
+  fab!(:category_with_no_subcategory) do
+    Fabricate(:private_category, group: group, permission_type: 3)
+  end
   let(:category_page) { PageObjects::Pages::Category.new }
   before { sign_in(user) }
 
   describe "Setting enabled and can't post on parent category" do
     before { SiteSetting.default_subcategory_on_read_only_category = true }
-
-    it "should have 'New Topic' button enabled and default Subcategory set in the composer" do
-      category_page.visit(category)
-      expect(category_page).to have_button("New Topic", disabled: false)
-      category_page.new_topic_button.click
-      select_kit =
-        PageObjects::Components::SelectKit.new(page.find("#reply-control.open .category-chooser"))
-      expect(select_kit).to have_selected_value(subcategory.id)
+    describe "Category has subcategory" do
+      it "should have 'New Topic' button enabled and default Subcategory set in the composer" do
+        category_page.visit(category)
+        expect(category_page).to have_button("New Topic", disabled: false)
+        category_page.new_topic_button.click
+        select_kit =
+          PageObjects::Components::SelectKit.new(page.find("#reply-control.open .category-chooser"))
+        expect(select_kit).to have_selected_value(subcategory.id)
+      end
+    end
+  end
+  describe "Category does not have subcategory" do
+    it "should have the 'New Topic' button disabled" do
+      category_page.visit(category_with_no_subcategory)
+      expect(category_page).to have_button("New Topic", disabled: true)
     end
   end
 
