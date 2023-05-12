@@ -19,7 +19,7 @@ module TurboTests
       message = notification.example.execution_result.pending_message
       output.puts RSpec::Core::Formatters::ConsoleCodes.wrap(
                     "[#{notification.example.process_id}] #{notification.example.full_description}" \
-                      "(PENDING: #{message})",
+                      " (PENDING: #{message})",
                     :pending,
                   )
       output.flush
@@ -28,7 +28,7 @@ module TurboTests
     def example_failed(notification)
       output.puts RSpec::Core::Formatters::ConsoleCodes.wrap(
                     "[#{notification.example.process_id}] #{notification.example.full_description}" \
-                      "(FAILED - #{next_failure_index})",
+                      " (FAILED - #{next_failure_index})",
                     :failure,
                   )
       output.flush
