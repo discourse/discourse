@@ -1470,6 +1470,7 @@ files:
     default: "24|48|72|96|144|288"
     type: list
     list_type: compact
+    client: true
   external_system_avatars_enabled:
     default: true
     client: true
