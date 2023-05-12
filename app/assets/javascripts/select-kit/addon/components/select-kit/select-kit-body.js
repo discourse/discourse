@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { bind } from "discourse-common/utils/decorators";
-import { later } from "@ember/runloop";
+import { next } from "@ember/runloop";
 import { computed } from "@ember/object";
 
 export default Component.extend({
@@ -48,7 +48,7 @@ export default Component.extend({
       return;
     }
 
-    later(() => {
+    next(() => {
       if (
         this.isDestroying ||
         this.isDestroyed ||
@@ -58,6 +58,6 @@ export default Component.extend({
       }
 
       this.selectKit.close(event);
-    }, 50);
+    });
   },
 });
