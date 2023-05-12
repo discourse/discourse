@@ -171,6 +171,10 @@ jobs:
             exit 1
           fi
 
+      - name: spec debug
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: bin/rspec spec/requests/posts_controller_spec.rb
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --verbose
