@@ -4,7 +4,7 @@ RSpec::Support.require_rspec_core "formatters/base_text_formatter"
 
 module TurboTests
   # An RSpec formatter that prepends the process id to all messages
-  class DocumentationFormatter < ::RSpec::Core::Formatters::BaseTextFormatter
+  class DocumentationFormatter < RSpec::Core::Formatters::BaseTextFormatter
     RSpec::Core::Formatters.register(self, :example_failed, :example_passed, :example_pending)
 
     def example_passed(notification)
@@ -19,7 +19,7 @@ module TurboTests
       message = notification.example.execution_result.pending_message
       output.puts RSpec::Core::Formatters::ConsoleCodes.wrap(
                     "[#{notification.example.process_id}] #{notification.example.full_description}" \
-                      "(PENDING: #{message})",
+                      " (PENDING: #{message})",
                     :pending,
                   )
       output.flush
@@ -28,7 +28,7 @@ module TurboTests
     def example_failed(notification)
       output.puts RSpec::Core::Formatters::ConsoleCodes.wrap(
                     "[#{notification.example.process_id}] #{notification.example.full_description}" \
-                      "(FAILED - #{next_failure_index})",
+                      " (FAILED - #{next_failure_index})",
                     :failure,
                   )
       output.flush
