@@ -215,13 +215,13 @@ module TurboTests
           message = @messages.pop
           case message[:type]
           when "example_passed"
-            example = FakeExample.from_obj(message[:example])
+            example = FakeExample.from_obj(message[:example], message[:process_id])
             @reporter.example_passed(example)
           when "example_pending"
-            example = FakeExample.from_obj(message[:example])
+            example = FakeExample.from_obj(message[:example], message[:process_id])
             @reporter.example_pending(example)
           when "example_failed"
-            example = FakeExample.from_obj(message[:example])
+            example = FakeExample.from_obj(message[:example], message[:process_id])
             @reporter.example_failed(example)
             @failure_count += 1
             if fail_fast_met
@@ -237,6 +237,7 @@ module TurboTests
             @error = true
           when "exit"
             exited += 1
+            @reporter.message("[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1})")
             break if exited == @num_processes + 1
           else
             STDERR.puts("Unhandled message in main process: #{message}")

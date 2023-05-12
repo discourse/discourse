@@ -15,6 +15,7 @@ require "parallel_tests/rspec/runner"
 require "./lib/turbo_tests/reporter"
 require "./lib/turbo_tests/runner"
 require "./lib/turbo_tests/json_rows_formatter"
+require "./lib/turbo_tests/documentation_formatter"
 
 module TurboTests
   FakeException = Struct.new(:backtrace, :message, :cause)
@@ -54,9 +55,18 @@ module TurboTests
   end
 
   FakeExample =
-    Struct.new(:execution_result, :location, :full_description, :metadata, :location_rerun_argument)
+    Struct.new(
+      :execution_result,
+      :location,
+      :description,
+      :full_description,
+      :metadata,
+      :location_rerun_argument,
+      :process_id,
+    )
+
   class FakeExample
-    def self.from_obj(obj)
+    def self.from_obj(obj, process_id)
       obj = obj.symbolize_keys
       metadata = obj[:metadata].symbolize_keys
 
@@ -71,9 +81,11 @@ module TurboTests
       new(
         FakeExecutionResult.from_obj(obj[:execution_result]),
         obj[:location],
+        obj[:description],
         obj[:full_description],
         metadata,
         obj[:location_rerun_argument],
+        process_id,
       )
     end
 
