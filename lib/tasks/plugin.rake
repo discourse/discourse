@@ -180,7 +180,9 @@ def spec(plugin, parallel: false, argv: nil)
     Dir.glob("./plugins/#{plugin}/spec/**/*_spec.rb").reject { |f| f.include?("spec/system/") }.sort
   if files.length > 0
     cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
-    sh "LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}"
+    puts cmd if !parallel
+
+    system("LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}")
   else
     abort "No specs found."
   end

@@ -173,9 +173,9 @@ module TurboTests
             [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].select { |x| x.size > 0 }
               .join(" ")
 
-          STDERR.puts "::group::{[#{process_id}] rspec}"
+          STDERR.puts "::group::[#{process_id}] Run RSpec" if ENV["CI"]
           STDERR.puts "Process #{process_id}: #{command_str}"
-          STDERR.puts "::endgroup::"
+          STDERR.puts "::endgroup::" if ENV["CI"]
         end
 
         stdin, stdout, stderr, wait_thr = Open3.popen3(env, *command)
