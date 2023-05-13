@@ -1,6 +1,7 @@
 import { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { inject as service } from "@ember/service";
+import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 
 const CSS_VAR = "--chat-vh";
 let lastVH;
@@ -31,6 +32,10 @@ export default class ChatVh extends Component {
 
   @bind
   setVH() {
+    if (isZoomed()) {
+      return;
+    }
+
     const vh = (this.activeWindow?.height || window.innerHeight) * 0.01;
 
     if (lastVH === vh) {
