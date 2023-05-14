@@ -1,1 +1,13 @@
-<ChannelsList />
+<div class="chat-index">
+  <ChannelsList />
+
+  {{#if this.showMobileDirectMessageButton}}
+    <LinkTo
+      @route="chat.draft-channel"
+      class="btn-flat open-draft-channel-page-btn keep-mobile-sidebar-open btn-floating"
+      title={{i18n "chat.direct_messages.new"}}
+    >
+      {{d-icon "plus"}}
+    </LinkTo>
+  {{/if}}
+</div>

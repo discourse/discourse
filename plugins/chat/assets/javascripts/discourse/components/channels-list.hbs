@@ -1,15 +1,3 @@
-{{#if
-  (and this.showMobileDirectMessageButton this.canCreateDirectMessageChannel)
-}}
-  <LinkTo
-    @route="chat.draft-channel"
-    class="btn-flat open-draft-channel-page-btn keep-mobile-sidebar-open btn-floating"
-    title={{i18n this.createDirectMessageChannelLabel}}
-  >
-    {{d-icon "plus"}}
-  </LinkTo>
-{{/if}}
-
 <div
   role="region"
   aria-label={{i18n "chat.aria_roles.channels_list"}}
@@ -89,21 +77,6 @@
         </span>
       {{/if}}
       <span class="channel-title">{{i18n "chat.direct_messages.title"}}</span>
-
-      {{#if
-        (and
-          this.canCreateDirectMessageChannel
-          (not this.showMobileDirectMessageButton)
-        )
-      }}
-        <LinkTo
-          @route="chat.draft-channel"
-          class="btn no-text btn-flat open-draft-channel-page-btn"
-          title={{i18n this.createDirectMessageChannelLabel}}
-        >
-          {{d-icon "plus"}}
-        </LinkTo>
-      {{/if}}
     </div>
   {{/if}}
 

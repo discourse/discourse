@@ -1,5 +1,37 @@
 @import "common/foundation/mixins";
 
+.chat-index {
+  position: relative;
+
+  .btn-floating.open-draft-channel-page-btn {
+    position: fixed;
+    background: var(--tertiary);
+    bottom: 2rem;
+    right: 2rem;
+    border-radius: 50%;
+    font-size: var(--font-up-4);
+    padding: 1rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    z-index: z("usercard");
+    box-shadow: 0px 5px 5px -1px rgba(0, 0, 0, 0.25);
+
+    .d-icon {
+      color: var(--primary-very-low);
+    }
+
+    &:active {
+      box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.25);
+      transform: scale(0.9);
+    }
+
+    &:focus {
+      @include default-focus;
+      border-color: var(--quaternary);
+      outline-color: var(--quaternary);
+    }
+  }
+}
+
 .full-page-chat {
   overflow: hidden; //prevents double scroll
 
@@ -74,34 +106,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-    }
-  }
-
-  .btn-floating.open-draft-channel-page-btn {
-    position: absolute;
-    background: var(--tertiary);
-    bottom: 2.5rem;
-    right: 2.5rem;
-    border-radius: 50%;
-    font-size: var(--font-up-4);
-    padding: 1rem;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    z-index: z("usercard");
-    box-shadow: 0px 5px 5px -1px rgba(0, 0, 0, 0.25);
-
-    .d-icon {
-      color: var(--primary-very-low);
-    }
-
-    &:active {
-      box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.25);
-      transform: scale(0.9);
-    }
-
-    &:focus {
-      @include default-focus;
-      border-color: var(--quaternary);
-      outline-color: var(--quaternary);
     }
   }
 }
