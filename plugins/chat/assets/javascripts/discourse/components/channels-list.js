@@ -25,6 +25,10 @@ export default class ChannelsList extends Component {
     this.computeHasScrollbar(entries[0].target);
   }
 
+  get showMobileDirectMessageButton() {
+    return this.site.mobileView && this.canCreateDirectMessageChannel;
+  }
+
   get inSidebar() {
     return this.args.inSidebar ?? false;
   }
