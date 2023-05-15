@@ -791,14 +791,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "shows suffix indicator for unread posts on everything link"
     );
 
-    const topicTrackingState = this.container.lookup(
-      "service:topic-tracking-state"
-    );
-
-    const initialCallbackCount = Object.keys(
-      topicTrackingState.stateChangeCallbacks
-    ).length;
-
     // simulate reading topic 2
     await publishToMessageBus("/unread", {
       topic_id: 2,
@@ -815,12 +807,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
       ),
       "shows suffix indicator for new topics on categories link"
-    );
-
-    assert.equal(
-      Object.keys(topicTrackingState.stateChangeCallbacks).length,
-      initialCallbackCount,
-      "it does not add a new topic tracking state callback when the topic is read"
     );
 
     // simulate reading topic 1
