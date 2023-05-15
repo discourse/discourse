@@ -14,8 +14,8 @@ class TrackingState {
   @tracked mentionCount = 0;
 
   constructor(params) {
-    this.unreadCount = params.unreadCount;
-    this.mentionCount = params.mentionCount;
+    this.unreadCount = params.unreadCount || 0;
+    this.mentionCount = params.mentionCount || 0;
   }
 }
 
@@ -45,27 +45,20 @@ export default class ChatTrackingState extends Service {
   }
 
   get publicChannelUnreadCount() {
-    const publicChannelIds =
-      this.chatChannelsManager.publicMessageChannels.mapBy("id");
-    return publicChannelIds.reduce((unreadCount, channelId) => {
+    return this.#publicChannelIds().reduce((unreadCount, channelId) => {
       return unreadCount + this.getChannelState(channelId).unreadCount;
     }, 0);
   }
 
   get allChannelUrgentCount() {
-    const publicChannelIds =
-      this.chatChannelsManager.publicMessageChannels.mapBy("id");
-    const directMessageChannelIds =
-      this.chatChannelsManager.directMessageChannels.mapBy("id");
-
-    let publicChannelMentionCount = publicChannelIds.reduce(
+    let publicChannelMentionCount = this.#publicChannelIds().reduce(
       (unreadCount, channelId) => {
         return unreadCount + this.getChannelState(channelId).mentionCount;
       },
       0
     );
 
-    let dmChannelUnreadCount = directMessageChannelIds.reduce(
+    let dmChannelUnreadCount = this.#directMessageChannelIds().reduce(
       (unreadCount, channelId) => {
         return unreadCount + this.getChannelState(channelId).unreadCount;
       },
@@ -92,18 +85,40 @@ export default class ChatTrackingState extends Service {
     this.#setState(channelId, "_channels", state);
   }
 
+  /**
+   * We want to return a default zeroed-out tracking state
+   * for channels which we are not yet tracking, e.g. in
+   * some scenarios we may be getting the state for a newly
+   * joined channel and we don't want to have to null check
+   * everywhere in the app.
+   */
   getChannelState(channelId) {
-    return this._channels[channelId];
+    return (
+      this._channels[channelId] ||
+      new TrackingState({ unreadCount: 0, mentionCount: 0 })
+    );
   }
 
   setThreadState(threadId, state) {
     this.#setState(threadId, "_threads", state);
   }
 
+  /**
+   * See getChannelState docs.
+   */
   getThreadState(threadId) {
-    return this._threads[threadId];
+    return (
+      this._threads[threadId] ||
+      new TrackingState({ unreadCount: 0, mentionCount: 0 })
+    );
   }
 
+  /**
+   * Some reactivity in the app such as the document title
+   * updates are only done via appEvents -- rather than
+   * sprinkle this appEvent call everywhere we just define
+   * it here so it can be changed as required.
+   */
   triggerNotificationsChanged() {
     this.appEvents.trigger("notifications:changed");
   }
@@ -137,5 +152,13 @@ export default class ChatTrackingState extends Service {
     }
 
     return newState;
+  }
+
+  #publicChannelIds() {
+    return this.chatChannelsManager.publicMessageChannels.mapBy("id");
+  }
+
+  #directMessageChannelIds() {
+    return this.chatChannelsManager.directMessageChannels.mapBy("id");
   }
 }

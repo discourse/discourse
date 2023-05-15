@@ -28,6 +28,14 @@ module Chat
 
     validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
 
+    def add(user)
+      Chat::UserChatThreadMembership.find_or_create_by!(user: user, thread: self)
+    end
+
+    def remove(user)
+      Chat::UserChatThreadMembership.find_by(user: user, thread: self)&.destroy
+    end
+
     def replies
       self.chat_messages.where.not(id: self.original_message_id)
     end
