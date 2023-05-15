@@ -41,6 +41,8 @@ export default class DModalBody extends Component {
         "submitOnEnter",
         "dismissable",
         "headerClass",
+        "modalClass",
+        "titleAriaElementId",
       ])
     );
   }
