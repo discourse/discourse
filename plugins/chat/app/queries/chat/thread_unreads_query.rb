@@ -4,19 +4,24 @@ module Chat
   ##
   # Handles counting unread messages and mentions scoped to threads for a list
   # of channels. A list of thread IDs can be provided to further focus the query.
+  # Alternatively, a list of thread IDs can be provided by itself to only get
+  # specific threads regardless of channel.
   #
   # This is used for unread indicators in the chat UI. By default only the
   # threads that the user is a member of will be counted and returned in
   # the result. Only threads inside a channel that has threading_enabled
-  # will be returned.
+  # will be counted.
   class ThreadUnreadsQuery
     ##
     # @param channel_ids [Array<Integer>] (Optional) The IDs of the channels to count threads for.
-    # @param thread_ids [Array<Integer>] (Optional) The IDs of the threads to count.
+    #  If only this is provided, all threads across the channels provided will be counted.
+    # @param thread_ids [Array<Integer>] (Optional) The IDs of the threads to count. If this
+    #  is used in tandem with channel_ids, it will just further filter the results of
+    #  the thread counts from those channels.
     # @param user_id [Integer] The ID of the user to count for.
     # @param include_missing_memberships [Boolean] Whether to include threads
     #   that the user is not a member of. These counts will always be 0.
-    def self.call(channel_ids: nil, thread_ids: nil, user_id:, include_missing_memberships: false)
+    def self.call(channel_ids: [], thread_ids: [], user_id:, include_missing_memberships: false)
       raise Discourse::InvalidParameters if channel_ids.empty? && thread_ids.empty?
 
       sql = <<~SQL
