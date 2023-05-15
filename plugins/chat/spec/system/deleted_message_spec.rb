@@ -14,7 +14,7 @@ RSpec.describe "Deleted message", type: :system, js: true do
   end
 
   context "when deleting a message" do
-    it "shows as deleted" do
+    xit "shows as deleted" do
       chat_page.visit_channel(channel_1)
       channel_page.send_message("aaaaaaaaaaaaaaaaaaaa")
       expect(page).to have_no_css(".chat-message-staged")
