@@ -11,6 +11,6 @@ export default class ChatChannelUnreadIndicator extends Component {
 
   get channelMentionCount() {
     return this.chatTrackingState.getChannelState(this.args.channel.id)
-      .unreadCount;
+      .mentionCount;
   }
 }

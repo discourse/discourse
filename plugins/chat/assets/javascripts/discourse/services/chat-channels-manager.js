@@ -142,14 +142,12 @@ export default class ChatChannelsManager extends Service {
     return channels.sort((a, b) => {
       const trackingA = this.chatTrackingState.getChannelState(a.id);
       const trackingB = this.chatTrackingState.getChannelState(b.id);
-      const unreadCountA = trackingA.unreadCount || 0;
-      const unreadCountB = trackingB.unreadCount || 0;
-      if (unreadCountA === unreadCountB) {
+      if (trackingA.unreadCount === trackingB.unreadCount) {
         return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
           ? -1
           : 1;
       } else {
-        return unreadCountA > unreadCountB ? -1 : 1;
+        return trackingA.unreadCount > trackingB.unreadCount ? -1 : 1;
       }
     });
   }
