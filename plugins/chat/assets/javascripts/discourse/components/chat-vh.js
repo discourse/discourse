@@ -15,7 +15,8 @@ export default class ChatVh extends Component {
     this._super(...arguments);
 
     if ("virtualKeyboard" in navigator) {
-      navigator.virtualKeyboard.overlaysContent = false;
+      navigator.virtualKeyboard.overlaysContent = true;
+      navigator.virtualKeyboard.addEventListener("geometrychange", this.setVH);
     }
 
     this.activeWindow = window.visualViewport || window;
@@ -28,6 +29,13 @@ export default class ChatVh extends Component {
 
     this.activeWindow?.removeEventListener("resize", this.setVH);
     lastVH = null;
+
+    if ("virtualKeyboard" in navigator) {
+      navigator.virtualKeyboard.removeEventListener(
+        "geometrychange",
+        this.setVH
+      );
+    }
   }
 
   @bind
@@ -36,14 +44,20 @@ export default class ChatVh extends Component {
       return;
     }
 
-    const vh = (this.activeWindow?.height || window.innerHeight) * 0.01;
+    let height;
+    if (navigator.virtualKeyboard) {
+      height =
+        window.visualViewport.height -
+        navigator.virtualKeyboard.boundingRect.height;
+    } else {
+      height = this.activeWindow?.height || window.innerHeight;
+    }
+
+    const vh = height * 0.01;
 
     if (lastVH === vh) {
       return;
-    } else if (this.capabilities.touch && lastVH < vh && vh - lastVH > 1) {
-      this.#blurActiveElement();
     }
-
     lastVH = vh;
 
     document.documentElement.style.setProperty(CSS_VAR, `${vh}px`);
