@@ -1,4 +1,4 @@
-.chat-thread {
+.chat-thread-list {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -19,27 +19,26 @@
     );
   }
 
-  &__header {
-    height: var(--chat-header-offset);
-    min-height: var(--chat-header-offset);
-    border-bottom: 1px solid var(--primary-low);
-    border-top: 1px solid var(--primary-low);
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-inline: 1rem;
-  }
-
-  &__body {
+  &__items {
     overflow-y: scroll;
     @include chat-scrollbar();
-    margin: 2px;
-    padding-right: 2px;
     box-sizing: border-box;
     flex-grow: 1;
     overscroll-behavior: contain;
     display: flex;
     flex-direction: column;
+
+    .chat-thread-list-item {
+      margin: 0.75rem 0.25rem 0.75rem 0.5rem;
+
+      & + .chat-thread-list-item {
+        margin-top: 0;
+      }
+    }
+  }
+
+  &__no-threads {
+    @include thread-list-item;
+    margin: 0.5rem 0rem 0.5rem 0.5rem;
   }
 }
