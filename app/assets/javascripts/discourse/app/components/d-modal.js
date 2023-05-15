@@ -71,6 +71,8 @@ export default class DModal extends Component {
 
   @action
   setupListeners(element) {
+    element.classList.add("hidden");
+
     this.appEvents.on("modal:body-shown", this._modalBodyShown);
     this.appEvents.on("modal-body:flash", this._flash);
     this.appEvents.on("modal-body:clearFlash", this._clearFlash);
