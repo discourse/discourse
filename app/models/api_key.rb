@@ -17,6 +17,8 @@ class ApiKey < ActiveRecord::Base
           where(key_hash: hashed)
         }
 
+  validates :description, length: { maximum: 255 }
+
   after_initialize :generate_key
 
   def generate_key
