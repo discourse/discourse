@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::TwitchClipsOnebox do
-  let(:hostname) { "www.example.com" }
+  let(:hostname) { Discourse.current_hostname }
   let(:options) { { hostname: hostname } }
 
   it "has the iframe with the correct channel" do
