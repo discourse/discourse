@@ -1017,8 +1017,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       reviewable_count: 34,
     });
 
-    await this.pauseTest();
-
     assert.ok(
       exists(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review']"
