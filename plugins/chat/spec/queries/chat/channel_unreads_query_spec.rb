@@ -21,6 +21,21 @@ describe Chat::ChannelUnreadsQuery do
       ).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
     end
 
+    context "when the membership has been muted" do
+      before do
+        channel_1
+          .user_chat_channel_memberships
+          .find_by(user_id: current_user.id)
+          .update!(muted: true)
+      end
+
+      it "returns a zeroed unread count" do
+        expect(
+          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
+        ).to eq({ mention_count: 0, unread_count: 0, channel_id: channel_1.id })
+      end
+    end
+
     context "for unread messages in a thread" do
       fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel_1) }
       fab!(:thread) { Fabricate(:chat_thread, channel: channel_1, original_message: thread_om) }

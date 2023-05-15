@@ -45,7 +45,7 @@ describe Chat::ChannelFetcher do
     end
   end
 
-  describe ".unread_counts" do
+  describe ".tracking_state" do
     context "when user is member of the channel" do
       before do
         Fabricate(:user_chat_channel_membership, chat_channel: category_channel, user: user1)
@@ -58,15 +58,17 @@ describe Chat::ChannelFetcher do
         end
 
         it "returns the correct count" do
-          unread_counts = described_class.unread_counts([category_channel], Guardian.new(user1))
-          expect(unread_counts.find_channel(category_channel.id).unread_count).to eq(2)
+          tracking_state =
+            described_class.tracking_state([category_channel.id], Guardian.new(user1))
+          expect(tracking_state.find_channel(category_channel.id).unread_count).to eq(2)
         end
       end
 
       context "with no unread messages" do
         it "returns the correct count" do
-          unread_counts = described_class.unread_counts([category_channel], Guardian.new(user1))
-          expect(unread_counts.find_channel(category_channel.id).unread_count).to eq(0)
+          tracking_state =
+            described_class.tracking_state([category_channel.id], Guardian.new(user1))
+          expect(tracking_state.find_channel(category_channel.id).unread_count).to eq(0)
         end
       end
 
@@ -78,8 +80,9 @@ describe Chat::ChannelFetcher do
         before { last_unread.update!(deleted_at: Time.zone.now) }
 
         it "returns the correct count" do
-          unread_counts = described_class.unread_counts([category_channel], Guardian.new(user1))
-          expect(unread_counts.find_channel(category_channel.id).unread_count).to eq(0)
+          tracking_state =
+            described_class.tracking_state([category_channel.id], Guardian.new(user1))
+          expect(tracking_state.find_channel(category_channel.id).unread_count).to eq(0)
         end
       end
     end
@@ -91,8 +94,9 @@ describe Chat::ChannelFetcher do
         end
 
         it "returns the correct count" do
-          unread_counts = described_class.unread_counts([category_channel], Guardian.new(user1))
-          expect(unread_counts.find_channel(category_channel.id).unread_count).to eq(0)
+          tracking_state =
+            described_class.tracking_state([category_channel.id], Guardian.new(user1))
+          expect(tracking_state.find_channel(category_channel.id).unread_count).to eq(0)
         end
       end
     end
@@ -328,32 +332,17 @@ describe Chat::ChannelFetcher do
         Fabricate(:chat_message, user: user2, chat_channel: category_channel)
 
         resolved_memberships = memberships
-        described_class.secured_public_channels(
-          guardian,
-          resolved_memberships,
-          following: following,
-        )
+        result =
+          described_class.tracking_state(resolved_memberships.map(&:chat_channel_id), guardian)
 
-        expect(
-          resolved_memberships
-            .find { |membership| membership.chat_channel_id == category_channel.id }
-            .unread_count,
-        ).to eq(2)
-
-        resolved_memberships.last.update!(muted: true)
+        expect(result.channel_tracking[category_channel.id][:unread_count]).to eq(2)
 
         resolved_memberships = memberships
-        described_class.secured_public_channels(
-          guardian,
-          resolved_memberships,
-          following: following,
-        )
+        resolved_memberships.last.update!(muted: true)
+        result =
+          described_class.tracking_state(resolved_memberships.map(&:chat_channel_id), guardian)
 
-        expect(
-          resolved_memberships
-            .find { |membership| membership.chat_channel_id == category_channel.id }
-            .unread_count,
-        ).to eq(0)
+        expect(result.channel_tracking[category_channel.id][:unread_count]).to eq(0)
       end
     end
   end
@@ -414,17 +403,17 @@ describe Chat::ChannelFetcher do
       Fabricate(:chat_message, user: user2, chat_channel: direct_message_channel1)
       resolved_memberships = memberships
 
-      described_class.secured_direct_message_channels(user1.id, resolved_memberships, guardian)
       target_membership =
         resolved_memberships.find { |mem| mem.chat_channel_id == direct_message_channel1.id }
-      expect(target_membership.unread_count).to eq(2)
+      result = described_class.tracking_state([direct_message_channel1.id], guardian)
+      expect(result.channel_tracking[target_membership.chat_channel_id][:unread_count]).to eq(2)
 
       resolved_memberships = memberships
       target_membership =
         resolved_memberships.find { |mem| mem.chat_channel_id == direct_message_channel1.id }
       target_membership.update!(muted: true)
-      described_class.secured_direct_message_channels(user1.id, resolved_memberships, guardian)
-      expect(target_membership.unread_count).to eq(0)
+      result = described_class.tracking_state([direct_message_channel1.id], guardian)
+      expect(result.channel_tracking[target_membership.chat_channel_id][:unread_count]).to eq(0)
     end
   end
 

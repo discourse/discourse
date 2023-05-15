@@ -29,6 +29,7 @@ module Chat
           AND chat_messages.id > COALESCE(user_chat_channel_memberships.last_read_message_id, 0)
           AND chat_messages.deleted_at IS NULL
           AND (chat_messages.thread_id IS NULL OR chat_messages.id = chat_threads.original_message_id)
+          AND NOT user_chat_channel_memberships.muted
         ) AS unread_count,
         (
           SELECT COUNT(*) AS mention_count
@@ -45,7 +46,7 @@ module Chat
         FROM user_chat_channel_memberships AS memberships
         WHERE memberships.user_id = :user_id AND memberships.chat_channel_id IN (:channel_ids)
         GROUP BY memberships.chat_channel_id
-        LIMIT :limit
+        #{include_missing_memberships ? "" : "LIMIT :limit"}
       SQL
 
       sql += <<~SQL if include_missing_memberships

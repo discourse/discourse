@@ -42,6 +42,7 @@ module Chat
           AND chat_messages.thread_id IS NOT NULL
           AND chat_messages.id != chat_threads.original_message_id
           AND chat_channels.threading_enabled
+          AND user_chat_thread_memberships.notification_level != :muted_notification_level
         ) AS unread_count,
         0 AS mention_count,
         chat_threads.channel_id,
@@ -52,7 +53,7 @@ module Chat
         #{channel_ids.present? ? "AND chat_threads.channel_id IN (:channel_ids)" : ""}
         #{thread_ids.present? ? "AND chat_threads.id IN (:thread_ids)" : ""}
         GROUP BY memberships.thread_id, chat_threads.channel_id
-        LIMIT :limit
+        #{include_missing_memberships ? "" : "LIMIT :limit"}
       SQL
 
       sql += <<~SQL if include_missing_memberships
@@ -74,8 +75,9 @@ module Chat
         channel_ids: channel_ids,
         thread_ids: thread_ids,
         user_id: user_id,
-        notification_type: Notification.types[:chat_mention],
+        notification_type: ::Notification.types[:chat_mention],
         limit: MAX_THREADS,
+        muted_notification_level: ::Chat::UserChatThreadMembership.notification_levels[:muted],
       )
     end
   end
