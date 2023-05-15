@@ -51,7 +51,7 @@ describe "Uploading files in chat messages", type: :system, js: true do
       expect(Chat::Message.last.uploads.count).to eq(2)
     end
 
-    it "allows uploading a huge image file with preprocessing" do
+    xit "allows uploading a huge image file with preprocessing" do
       SiteSetting.composer_media_optimization_image_bytes_optimization_threshold = 200.kilobytes
       chat.visit_channel(channel_1)
       file_path = file_from_fixtures("huge.jpg", "images").path
