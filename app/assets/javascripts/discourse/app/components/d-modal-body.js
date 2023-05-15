@@ -23,10 +23,7 @@ export default class DModalBody extends Component {
 
   @action
   didInsert(element) {
-    this._modalAlertElement = document.getElementById("modal-alert");
-    if (this._modalAlertElement) {
-      this._clearFlash();
-    }
+    this.appEvents.trigger("modal-body:clearFlash");
 
     const fixedParent = element.closest(".d-modal.fixed-modal");
     if (fixedParent) {
@@ -39,8 +36,6 @@ export default class DModalBody extends Component {
 
   @action
   willDestroy() {
-    this.appEvents.off("modal-body:flash", this, "_flash");
-    this.appEvents.off("modal-body:clearFlash", this, "_clearFlash");
     this.appEvents.trigger("modal:body-dismissed");
   }
 
@@ -68,31 +63,5 @@ export default class DModalBody extends Component {
         "headerClass",
       ])
     );
-  }
-
-  _clearFlash() {
-    if (this._modalAlertElement) {
-      this._modalAlertElement.innerHTML = "";
-      this._modalAlertElement.classList.remove(
-        "alert",
-        "alert-error",
-        "alert-info",
-        "alert-success",
-        "alert-warning"
-      );
-    }
-  }
-
-  _flash(msg) {
-    this._clearFlash();
-    if (!this._modalAlertElement) {
-      return;
-    }
-
-    this._modalAlertElement.classList.add(
-      "alert",
-      `alert-${msg.messageClass || "success"}`
-    );
-    this._modalAlertElement.innerHTML = msg.text || "";
   }
 }

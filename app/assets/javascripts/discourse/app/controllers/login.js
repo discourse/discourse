@@ -19,6 +19,7 @@ import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -157,22 +158,28 @@ export default Controller.extend(ModalFunctionality, {
       .then((data) => {
         const loginName = escapeExpression(this.loginName);
         const isEmail = loginName.match(/@/);
-        let key = `email_login.complete_${isEmail ? "email" : "username"}`;
+        let key = isEmail
+          ? "email_login.complete_email"
+          : "email_login.complete_username";
         if (data.user_found === false) {
           this.flash(
-            I18n.t(`${key}_not_found`, {
-              email: loginName,
-              username: loginName,
-            }),
+            htmlSafe(
+              I18n.t(`${key}_not_found`, {
+                email: loginName,
+                username: loginName,
+              })
+            ),
             "error"
           );
         } else {
           let postfix = data.hide_taken ? "" : "_found";
           this.flash(
-            I18n.t(`${key}${postfix}`, {
-              email: loginName,
-              username: loginName,
-            })
+            htmlSafe(
+              I18n.t(`${key}${postfix}`, {
+                email: loginName,
+                username: loginName,
+              })
+            )
           );
         }
       })
