@@ -207,8 +207,8 @@ en:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
       invalid_choice:
-        one: "%{name} is an invalid choice."
-        other: "%{name} are invalid choices."
+        one: "'%{name}' is an invalid choice."
+        other: "'%{name}' are invalid choices."
       default_categories_already_selected: "You cannot select a category used in another list."
       default_tags_already_selected: "You cannot select a tag used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
