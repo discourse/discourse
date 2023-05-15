@@ -6102,6 +6102,10 @@ en:
           modal_description: "Would you like to apply this change historically? This will change preferences for %{count} existing users."
           modal_yes: "Yes"
           modal_no: "No, only apply change going forward"
+        skip_new_user_tips:
+          modal_description: "Do you want to hide user tips for existing users? This will change preferences for %{count} users who have not seen all user tips. Users signing up now or those who have less than 10 posts will still see new user tips."
+          modal_yes: "Yes"
+          modal_no: "No, do not hide user tips for any user"
         simple_list:
           add_item: "Add item..."
         json_schema:

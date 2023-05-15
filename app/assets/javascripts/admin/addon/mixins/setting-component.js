@@ -190,7 +190,12 @@ export default Mixin.create({
     const count = result.user_count;
 
     if (count > 0) {
-      const controller = showModal("site-setting-default-categories", {
+      let modalName = "site-setting-default-categories";
+      if (key === "enable_user_tips") {
+        modalName = "site-setting-user-tips";
+      }
+
+      const controller = showModal(modalName, {
         model: { count, key: key.replaceAll("_", " ") },
         admin: true,
       });

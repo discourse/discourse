@@ -1,0 +1,18 @@
+<DModalBody @class="incoming-emails" @rawTitle={{this.model.key}}>
+  {{i18n
+    "admin.site_settings.skip_new_user_tips.modal_description"
+    count=this.model.count
+  }}
+</DModalBody>
+
+<div class="modal-footer">
+  <DButton
+    @action={{action "updateExistingUsers"}}
+    @class="btn-primary"
+    @label="admin.site_settings.skip_new_user_tips.modal_yes"
+  />
+  <DButton
+    @action={{action "cancel"}}
+    @label="admin.site_settings.skip_new_user_tips.modal_no"
+  />
+</div>
