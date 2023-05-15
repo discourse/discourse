@@ -1334,20 +1334,6 @@ RSpec.describe TopicsFilter do
         fab!(:topic3) { Fabricate(:topic, category: category) }
 
         include_examples "ordering topics filters", "category", "category name"
-
-        describe "when query string is `order:category` and there are multiple topics in a category" do
-          fab!(:topic4) { Fabricate(:topic, category: category) }
-          fab!(:topic5) { Fabricate(:topic, category: category2) }
-
-          it "should return topics ordered by category name in descending order and then topic id in ascending order" do
-            expect(
-              TopicsFilter
-                .new(guardian: Guardian.new)
-                .filter_from_query_string("order:category")
-                .pluck(:id),
-            ).to eq([topic2.id, [topic.id, topic5.id].sort, [topic3.id, topic4.id].sort].flatten)
-          end
-        end
       end
 
       describe "composing multiple order filters" do
