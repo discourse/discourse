@@ -171,7 +171,8 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
         font-weight: bold;
       }
     }
-    .profile-hidden {
+    .profile-hidden,
+    .inactive-user {
       font-size: var(--font-up-1);
       margin-top: 0.5em;
     }
