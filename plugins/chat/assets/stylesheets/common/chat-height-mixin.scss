@@ -1,0 +1,39 @@
+@mixin chat-height {
+  // desktop and mobile
+  height: calc(
+    var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+      var(--chat-draft-header-height, 0px) -
+      var(--chat-direct-message-creator-height, 0px) -
+      env(safe-area-inset-bottom)
+  );
+
+  // mobile with keyboard opened
+  .keyboard-visible & {
+    height: calc(
+      var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+        var(--chat-draft-header-height, 0px) -
+        var(--chat-direct-message-creator-height, 0px)
+    );
+  }
+
+  // ipad
+  .footer-nav-ipad & {
+    height: calc(
+      var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+        var(--footer-nav-height, 0px) - var(--chat-draft-header-height, 0px) -
+        var(--chat-direct-message-creator-height, 0px) -
+        env(safe-area-inset-bottom)
+    );
+  }
+
+  // ipad with keyboard opened
+  .keyboard-visible & {
+    .footer-nav-ipad & {
+      height: calc(
+        var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+          var(--footer-nav-height, 0px) - var(--chat-draft-header-height, 0px) -
+          var(--chat-direct-message-creator-height, 0px)
+      );
+    }
+  }
+}
