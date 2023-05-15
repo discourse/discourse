@@ -9,6 +9,8 @@
     class="direct-message-creator"
     {{did-insert this.setDirectMessageCreatorHeight}}
     {{will-destroy this.unsetDirectMessageCreatorHeight}}
+    {{did-update this.setDirectMessageCreatorHeight this.selectedUsers}}
+    {{did-update this.setDirectMessageCreatorHeight this.users}}
   >
     <div
       class="filter-area {{if this.isFilterFocused 'is-focused'}}"
