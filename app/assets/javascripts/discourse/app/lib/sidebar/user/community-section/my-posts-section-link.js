@@ -23,7 +23,13 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   teardown() {
-    this.appEvents.off(USER_DRAFTS_CHANGED_EVENT, this, this._updateDraftCount);
+    if (this.shouldDisplay) {
+      this.appEvents.off(
+        USER_DRAFTS_CHANGED_EVENT,
+        this,
+        this._updateDraftCount
+      );
+    }
   }
 
   _updateDraftCount() {

@@ -19,6 +19,8 @@ import {
   customSectionLinks,
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
+import { setOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
 
 const LINKS_IN_BOTH_SEGMENTS = ["/review"];
 const SPECIAL_LINKS_MAP = {
@@ -35,24 +37,20 @@ const SPECIAL_LINKS_MAP = {
 };
 
 export default class CommunitySection {
+  @service router;
+  @service currentUser;
+  @service topicTrackingState;
+  @service appEvents;
+  @service siteSettings;
+
   @tracked links;
   @tracked moreLinks;
 
-  constructor({
-    section,
-    currentUser,
-    router,
-    topicTrackingState,
-    appEvents,
-    siteSettings,
-  }) {
+  constructor({ section, owner }) {
+    setOwner(this, owner);
+
     this.section = section;
-    this.router = router;
-    this.currentUser = currentUser;
     this.slug = section.slug;
-    this.topicTrackingState = topicTrackingState;
-    this.appEvents = appEvents;
-    this.siteSettings = siteSettings;
     this.section_type = section.section_type;
 
     this.callbackId = this.topicTrackingState?.onStateChange(() => {

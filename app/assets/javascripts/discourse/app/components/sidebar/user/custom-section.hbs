@@ -1,0 +1,68 @@
+<Sidebar::Section
+  @sectionName={{this.section.slug}}
+  @headerLinkText={{this.section.decoratedTitle}}
+  @collapsable={{true}}
+  @headerActions={{this.section.headerActions}}
+  @headerActionsIcon={{this.section.headerActionIcon}}
+  @class={{this.section.dragCss}}
+  {{did-update this.refreshSection @sectionConfig}}
+>
+  {{#each this.section.links as |link|}}
+    {{#if link.shouldDisplay}}
+      {{#if link.external}}
+        <Sidebar::SectionLink
+          @linkName={{link.name}}
+          @content={{replace-emoji link.text}}
+          @prefixType="icon"
+          @prefixValue={{link.prefixValue}}
+          @href={{link.value}}
+          @class={{link.linkDragCss}}
+          {{draggable
+            didStartDrag=link.didStartDrag
+            didEndDrag=link.didEndDrag
+            dragMove=link.dragMove
+          }}
+        />
+      {{else}}
+        <Sidebar::SectionLink
+          @shouldDisplay={{link.shouldDisplay}}
+          @href={{link.href}}
+          @title={{link.title}}
+          @linkName={{link.name}}
+          @route={{link.route}}
+          @model={{link.model}}
+          @models={{link.models}}
+          @query={{link.query}}
+          @content={{replace-emoji link.text}}
+          @badgeText={{link.badgeText}}
+          @prefixType="icon"
+          @prefixValue={{link.prefixValue}}
+          @suffixCSSClass={{link.suffixCSSClass}}
+          @suffixValue={{link.suffixValue}}
+          @suffixType={{link.suffixType}}
+          @currentWhen={{link.currentWhen}}
+          @class={{link.linkDragCss}}
+          {{(if
+            link.didStartDrag
+            (modifier
+              "draggable"
+              didStartDrag=link.didStartDrag
+              didEndDrag=link.didEndDrag
+              dragMove=link.dragMove
+            )
+          )}}
+        />
+      {{/if}}
+    {{/if}}
+  {{/each}}
+
+  {{#if this.isDesktopDropdownMode}}
+    {{#each this.section.moreLinks as |sectionLink|}}
+      <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
+    {{/each}}
+  {{else}}
+    {{#if this.section.moreLinks}}
+      <Sidebar::MoreSectionLinks @sectionLinks={{this.section.moreLinks}} />
+    {{/if}}
+  {{/if}}
+</Sidebar::Section>

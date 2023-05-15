@@ -6,15 +6,21 @@ import SectionLink from "discourse/lib/sidebar/section-link";
 import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
+import { inject as service } from "@ember/service";
+import { setOwner } from "@ember/application";
 
 export default class Section {
+  @service currentUser;
+  @service router;
+
   @tracked dragCss;
   @tracked links;
 
-  constructor({ section, currentUser, router }) {
+  constructor({ section, owner }) {
+    setOwner(this, owner);
+
     this.section = section;
-    this.router = router;
-    this.currentUser = currentUser;
+
     this.slug = section.slug;
 
     this.links = this.section.links.map((link) => {
