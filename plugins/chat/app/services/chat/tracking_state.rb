@@ -141,6 +141,8 @@ module Chat
               end
               .to_h
         end
+      else
+        report.thread_tracking = {}
       end
 
       report

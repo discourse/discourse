@@ -39,6 +39,14 @@ acceptance("Chat | Hashtag CSS Generator", function (needs) {
       ],
       direct_message_channels: [],
       meta: { message_bus_last_ids: {} },
+      tracking: {
+        channel_tracking: {
+          44: { unread_count: 0, mention_count: 0 },
+          74: { unread_count: 0, mention_count: 0 },
+          88: { unread_count: 0, mention_count: 0 },
+        },
+        thread_tracking: {},
+      },
     },
   });
   needs.site({
