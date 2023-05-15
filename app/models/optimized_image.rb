@@ -146,7 +146,7 @@ class OptimizedImage < ActiveRecord::Base
       if local?
         Discourse.store.path_for(self)
       else
-        Discourse.store.download(self).path
+        Discourse.store.download!(self).path
       end
     File.size(path)
   end
