@@ -297,5 +297,9 @@ export default Component.extend({
         return this._performConfirmed(performableAction);
       }
     },
+    toggleContent(id) {
+      const content = document.getElementById("reviewable-" + id);
+      content.classList.toggle("is-collapsed");
+    },
   },
 });

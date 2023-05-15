@@ -59,10 +59,13 @@
       </div>
     {{else}}
       {{#component
-        this.reviewableComponent
-        reviewable=this.reviewable
-        tagName=""
+        this.reviewableComponent reviewable=this.reviewable tagName=""
       }}
+        <DButton
+          @class="btn-default"
+          @action={{action "toggleContent" this.reviewable.id}}
+          @label="Show more"
+        />
         <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
       {{/component}}
     {{/if}}

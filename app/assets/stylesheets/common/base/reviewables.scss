@@ -469,6 +469,11 @@
     max-width: var(--topic-body-width);
     margin-top: 0.5em;
 
+    &.is-collapsed {
+      max-height: 50vh;
+      overflow: hidden;
+    }
+
     &__scroll {
       max-height: 300px;
       overflow-y: auto;

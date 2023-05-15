@@ -20,7 +20,7 @@
       @tagName=""
     />
 
-    <div class="post-body">
+    <div class="post-body is-collapsed" id="reviewable-{{@reviewable.id}}">
       {{html-safe (or @reviewable.payload.message_cooked @reviewable.cooked)}}
     </div>
 
