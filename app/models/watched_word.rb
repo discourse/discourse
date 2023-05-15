@@ -37,6 +37,8 @@ class WatchedWord < ActiveRecord::Base
     end
   end
 
+  belongs_to :watched_word_group
+
   after_save :clear_cache
   after_destroy :clear_cache
 
@@ -101,15 +103,17 @@ end
 #
 # Table name: watched_words
 #
-#  id             :integer          not null, primary key
-#  word           :string           not null
-#  action         :integer          not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  replacement    :string
-#  case_sensitive :boolean          default(FALSE), not null
+#  id                    :integer          not null, primary key
+#  word                  :string           not null
+#  action                :integer          not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  replacement           :string
+#  case_sensitive        :boolean          default(FALSE), not null
+#  watched_word_group_id :bigint
 #
 # Indexes
 #
-#  index_watched_words_on_action_and_word  (action,word) UNIQUE
+#  index_watched_words_on_action_and_word        (action,word) UNIQUE
+#  index_watched_words_on_watched_word_group_id  (watched_word_group_id)
 #
