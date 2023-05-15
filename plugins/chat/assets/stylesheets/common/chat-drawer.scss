@@ -94,7 +94,9 @@ html.rtl {
     height: auto !important;
   }
 
-  .chat-channel {
+  .chat-channel,
+  .chat-thread,
+  .chat-thread-list {
     height: 100%;
   }
 }
