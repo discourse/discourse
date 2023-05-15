@@ -51,6 +51,7 @@ import {
   showUserTip,
 } from "discourse/lib/user-tips";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { REFRESH_CUSTOM_SIDEBAR_SECTIONS_APP_EVENT_NAME } from "discourse/components/sidebar/user/custom-sections";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -1159,6 +1160,11 @@ const User = RestModel.extend({
   updateReviewableCount(count) {
     this.set("reviewable_count", count);
     this.appEvents.trigger("user-reviewable-count:changed", count);
+  },
+
+  updateSidebarSections(sections) {
+    this.set("sidebar_sections", sections);
+    this.appEvents.trigger(REFRESH_CUSTOM_SIDEBAR_SECTIONS_APP_EVENT_NAME);
   },
 
   isInDoNotDisturb() {
