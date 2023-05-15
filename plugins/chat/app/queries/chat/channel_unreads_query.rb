@@ -7,6 +7,10 @@ module Chat
   # channels that the user is a member of will be counted and returned in
   # the result.
   class ChannelUnreadsQuery
+    # NOTE: This is arbitrary at this point in time, we may want to increase
+    # or decrease this as we find performance issues.
+    MAX_CHANNELS = 1000
+
     ##
     # @param channel_ids [Array<Integer>] The IDs of the channels to count.
     # @param user_id [Integer] The ID of the user to count for.
@@ -41,6 +45,7 @@ module Chat
         FROM user_chat_channel_memberships AS memberships
         WHERE memberships.user_id = :user_id AND memberships.chat_channel_id IN (:channel_ids)
         GROUP BY memberships.chat_channel_id
+        LIMIT :limit
       SQL
 
       sql += <<~SQL if include_missing_memberships
@@ -51,6 +56,7 @@ module Chat
           AND user_chat_channel_memberships.user_id = :user_id
         WHERE chat_channels.id IN (:channel_ids) AND user_chat_channel_memberships.id IS NULL
         GROUP BY chat_channels.id
+        LIMIT :limit
       SQL
 
       DB.query(
@@ -58,6 +64,7 @@ module Chat
         channel_ids: channel_ids,
         user_id: user_id,
         notification_type: Notification.types[:chat_mention],
+        limit: MAX_CHANNELS,
       )
     end
   end

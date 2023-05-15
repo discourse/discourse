@@ -6,9 +6,12 @@ import { tracked } from "@glimmer/tracking";
  * This service is used to track the state of channels and threads.
  * It is used to determine if a channel or thread is unread, and if so,
  * how many unread messages and mentions there are, based on the unread_count
- * and mention_count.
+ * and mention_count (converted to unreadCount and mentionCount respectively).
+ *
+ * Any and all state changes to the tracking state should be done via this
+ * service, otherwise it is easy to have unintended side effects within
+ * chat.
  */
-
 class TrackingState {
   @tracked unreadCount = 0;
   @tracked mentionCount = 0;
@@ -25,15 +28,6 @@ export default class ChatTrackingState extends Service {
 
   @tracked _channels = new TrackedObject();
   @tracked _threads = new TrackedObject();
-
-  // channel_tracking: {
-  //   1: { unreadCount: 1, mentionCount: 2 },
-  //   2: { unreadCount: 1, mentionCount: 2 }
-  // }
-  // thread_tracking: {
-  //   1: { unreadCount: 1, mentionCount: 2 },
-  //   2: { unreadCount: 1, mentionCount: 2 }
-  // }
 
   setupWithPreloadedState({ channel_tracking, thread_tracking }) {
     for (const [channelId, state] of Object.entries(channel_tracking)) {
@@ -139,8 +133,14 @@ export default class ChatTrackingState extends Service {
 
   #conformState(state) {
     const newState = {
-      unreadCount: state.unreadCount || state.unread_count,
-      mentionCount: state.mentionCount || state.mention_count,
+      unreadCount:
+        state.unreadCount !== undefined
+          ? state.unreadCount
+          : state.unread_count,
+      mentionCount:
+        state.mentionCount !== undefined
+          ? state.mentionCount
+          : state.mention_count,
     };
 
     if (newState.unreadCount === undefined) {

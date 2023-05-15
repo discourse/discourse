@@ -83,6 +83,10 @@ RSpec.describe "Archive channel", type: :system, js: true do
 
           it "clears unread indicators" do
             Jobs.run_immediately!
+            stub_request(:get, /letter_avatar/).to_return(
+              status: 200,
+              body: "http://test.localhost/avatar.png",
+            )
 
             other_user = Fabricate(:user)
             channel_1.add(other_user)

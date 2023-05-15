@@ -12,6 +12,10 @@ module Chat
   # the result. Only threads inside a channel that has threading_enabled
   # will be counted.
   class ThreadUnreadsQuery
+    # NOTE: This is arbitrary at this point in time, we may want to increase
+    # or decrease this as we find performance issues.
+    MAX_THREADS = 3000
+
     ##
     # @param channel_ids [Array<Integer>] (Optional) The IDs of the channels to count threads for.
     #  If only this is provided, all threads across the channels provided will be counted.
@@ -48,6 +52,7 @@ module Chat
         #{channel_ids.present? ? "AND chat_threads.channel_id IN (:channel_ids)" : ""}
         #{thread_ids.present? ? "AND chat_threads.id IN (:thread_ids)" : ""}
         GROUP BY memberships.thread_id, chat_threads.channel_id
+        LIMIT :limit
       SQL
 
       sql += <<~SQL if include_missing_memberships
@@ -61,6 +66,7 @@ module Chat
         #{channel_ids.present? ? "AND chat_threads.channel_id IN (:channel_ids)" : ""}
         #{thread_ids.present? ? "AND chat_threads.id IN (:thread_ids)" : ""}
         GROUP BY chat_threads.id
+        LIMIT :limit
       SQL
 
       DB.query(
@@ -69,6 +75,7 @@ module Chat
         thread_ids: thread_ids,
         user_id: user_id,
         notification_type: Notification.types[:chat_mention],
+        limit: MAX_THREADS,
       )
     end
   end
