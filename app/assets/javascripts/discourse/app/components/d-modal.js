@@ -147,7 +147,7 @@ export default class DModal extends Component {
     }
 
     if (data.fixed) {
-      getOwner(this).lookup("controller:modal").set("hidden", false);
+      getOwner(this).lookup("controller:modal").hidden = false;
     }
 
     this.modalBodyData = data;

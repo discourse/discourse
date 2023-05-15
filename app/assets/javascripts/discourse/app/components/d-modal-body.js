@@ -29,7 +29,7 @@ export default class DModalBody extends Component {
     if (fixedParent) {
       this.fixed = true;
       $(fixedParent).modal("show");
-      getOwner(this).lookup("controller:modal").set("hidden", false);
+      getOwner(this).lookup("controller:modal").hidden = false;
     }
 
     this.appEvents.trigger(

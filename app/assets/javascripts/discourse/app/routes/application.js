@@ -190,7 +190,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         }
         modalController.set("name", null);
       }
-      modalController.set("hidden", true);
+      modalController.hidden = true;
     },
 
     /**
