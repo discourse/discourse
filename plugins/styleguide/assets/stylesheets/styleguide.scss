@@ -96,26 +96,27 @@
         }
         .color-row {
           display: flex;
+          border: 1px solid black;
 
           .color-example {
             flex: 1;
             display: flex;
             flex-direction: column;
             height: 120px;
-            margin: 0.5em 0.5em 0.5em 0;
-            border: 1px solid var(--primary-300);
+            // margin: 0.5em 0.5em 0.5em 0;
+            // border: 1px solid black;
 
             .color-bg {
               flex: 4;
-              border-bottom: 1px solid var(--primary-300);
+              // border-bottom: 1px solid var(--primary-300);
             }
             .color-name {
               flex: 1;
               display: flex;
               align-items: center;
-              padding: 0.25em 0.5em;
-              font-weight: 700;
-              font-size: var(--font-down-1);
+              // padding: 0.25em 0.5em;
+              // font-weight: 700;
+              font-size: var(--font-down-2);
             }
           }
         }
