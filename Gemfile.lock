@@ -411,7 +411,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.0)
       mini_racer (~> 0.6.3)
-    rubocop (1.50.2)
+    rubocop (1.51.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.2.0.0)
