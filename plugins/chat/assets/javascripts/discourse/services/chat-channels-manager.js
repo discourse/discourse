@@ -16,6 +16,7 @@ const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 
 export default class ChatChannelsManager extends Service {
   @service chatSubscriptionsManager;
+  @service chatTrackingState;
   @service chatApi;
   @service currentUser;
   @tracked _cached = new TrackedObject();
