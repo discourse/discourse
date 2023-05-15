@@ -108,12 +108,12 @@ describe "Thread list in side panel | full page", type: :system, js: true do
       it "does not allow updating if user is neither admin nor original message user" do
         thread_1.update!(original_message_user: other_user)
         thread_1.original_message.update!(user: other_user)
+
         open_thread_list
-        expect(
-          thread_list_page.item_by_id(thread_1.id).find(".chat-thread-list-item__settings")[
-            :disabled
-          ],
-        ).to eq("true")
+
+        expect(thread_list_page.item_by_id(thread_1.id)).to have_no_css(
+          ".chat-thread-list-item__settings",
+        )
       end
     end
   end
