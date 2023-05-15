@@ -680,11 +680,11 @@ en:
   discourse_welcome_topic:
     title: "Welcome to %{site_title}! :wave:"
     body: |
-      We're so glad you've joined us. %{site_description}
+      We are so glad you joined us. %{site_description}
+      
+      Here are some things you can do to get started:
 
-      %{site_title} is powered by Discourse.org, the powerful, open platform for communities of all kinds. Here are some things you can do to get started:
-
-      :speaking_head: **Introduce yourself** by adding your picture and information about yourself and your interests to [your profile](%{base_path}/my/profile). What is one thing you’d like to be asked about?
+      :speaking_head: **Introduce yourself** by adding your picture and information about yourself and your interests to [your profile](%{base_path}/my/preferences/account). What is one thing you’d like to be asked about?
 
       :open_book: **Get to know the community** by [browsing discussions](%{base_path}/top) that are already happening here. When you find a post interesting, informative, or entertaining, use the :heart: to show your appreciation or support!
 
