@@ -110,6 +110,9 @@ export default class ChatMessage extends Component {
     };
 
     this.args.message.expanded = true;
+    schedule("afterRender", () => {
+      this.refreshStatusOnMentions();
+    });
 
     recursiveExpand(this.args.message);
   }
@@ -131,6 +134,10 @@ export default class ChatMessage extends Component {
 
   @action
   refreshStatusOnMentions() {
+    if (!this.messageContainer) {
+      return;
+    }
+
     this.args.message.mentionedUsers.forEach((user) => {
       const href = `/u/${user.username.toLowerCase()}`;
       const mentions = this.messageContainer.querySelectorAll(
