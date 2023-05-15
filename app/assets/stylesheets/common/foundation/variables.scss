@@ -7,6 +7,9 @@
 // --------------------------------------------------
 
 @use "sass:math";
+@use "hsluv-sass" as hsluv;
+@use "hsluv-sass/src/_conversions" as hsluv-conv;
+@use "sass:map";
 
 $small-width: 800px !default;
 $medium-width: 995px !default;
@@ -200,6 +203,7 @@ $box-shadow: (
   $lightness,
   $darkness
 ) {
+  // CHANGE hsluv-scale-color to scale-color to go back to old implementation
   @if dc-color-brightness($adjusted-color) <
     dc-color-brightness($comparison-color)
   {
@@ -208,6 +212,33 @@ $box-shadow: (
     @return scale-color($adjusted-color, $lightness: $darkness);
   }
 }
+
+@function hsluv-scale-color($color, $lightness: 0) {
+  $current-hsluv: hsluv-conv.rgb-hsluv(
+    (
+      r: red($color),
+      g: green($color),
+      b: blue($color),
+    )
+  );
+
+  $current-lightness: map.get($current-hsluv, "l");
+
+  $new-lightness: null;
+  @if ($lightness > 0) {
+    $new-lightness: $current-lightness +
+      ((100 - $current-lightness) * math.div($lightness, 100%));
+  } @else {
+    $new-lightness: $current-lightness +
+      ($current-lightness * math.div($lightness, 100%));
+  }
+
+  $transformed-hsluv: map.set($current-hsluv, "l", $new-lightness);
+  $transformed-rgb: hsluv.hsluv($transformed-hsluv);
+
+  @return hsluv.hsluv($transformed-hsluv);
+}
+
 @function dark-light-choose($light-theme-result, $dark-theme-result) {
   @if is-light-color-scheme() {
     @return $light-theme-result;

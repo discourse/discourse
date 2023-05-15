@@ -11,16 +11,16 @@ $primary-high: dark-light-diff($primary, $secondary, 30%, -25%) !default;
 $primary-very-high: dark-light-diff($primary, $secondary, 15%, -10%) !default;
 
 //primary-numbers
-$primary-50: dark-light-diff($primary, $secondary, 97%, -82%) !default;
-$primary-100: dark-light-diff($primary, $secondary, 94%, -80%) !default;
-$primary-200: dark-light-diff($primary, $secondary, 90%, -78%) !default;
-$primary-300: dark-light-diff($primary, $secondary, 80%, -60%) !default;
-$primary-400: dark-light-diff($primary, $secondary, 70%, -45%) !default;
-$primary-500: dark-light-diff($primary, $secondary, 60%, -40%) !default;
-$primary-600: dark-light-diff($primary, $secondary, 50%, -35%) !default;
-$primary-700: dark-light-diff($primary, $secondary, 38%, -30%) !default;
-$primary-800: dark-light-diff($primary, $secondary, 30%, -25%) !default;
-$primary-900: dark-light-diff($primary, $secondary, 15%, -10%) !default;
+$primary-50: dark-light-diff($primary, $secondary, 95%, -95%) !default;
+$primary-100: dark-light-diff($primary, $secondary, 90%, -90%) !default;
+$primary-200: dark-light-diff($primary, $secondary, 80%, -80%) !default;
+$primary-300: dark-light-diff($primary, $secondary, 70%, -70%) !default;
+$primary-400: dark-light-diff($primary, $secondary, 60%, -60%) !default;
+$primary-500: dark-light-diff($primary, $secondary, 50%, -50%) !default;
+$primary-600: dark-light-diff($primary, $secondary, 40%, -40%) !default;
+$primary-700: dark-light-diff($primary, $secondary, 30%, -30%) !default;
+$primary-800: dark-light-diff($primary, $secondary, 20%, -20%) !default;
+$primary-900: dark-light-diff($primary, $secondary, 10%, -10%) !default;
 
 $header_primary-low: blend-header-primary-background(10%) !default;
 $header_primary-low-mid: blend-header-primary-background(35%) !default;
@@ -45,16 +45,16 @@ $tertiary-hover: dark-light-choose(
 ) !default;
 
 //tertiary-numbers
-$tertiary-50: dark-light-diff($tertiary, $secondary, 90%, -75%) !default;
-$tertiary-100: dark-light-diff($tertiary, $secondary, 88%, -72%) !default;
-$tertiary-200: dark-light-diff($tertiary, $secondary, 87%, -69%) !default;
-$tertiary-300: dark-light-diff($tertiary, $secondary, 85%, -65%) !default;
-$tertiary-400: dark-light-diff($tertiary, $secondary, 74%, -58%) !default;
-$tertiary-500: dark-light-diff($tertiary, $secondary, 63%, -52%) !default;
-$tertiary-600: dark-light-diff($tertiary, $secondary, 50%, -45%) !default;
-$tertiary-700: dark-light-diff($tertiary, $secondary, 40%, -38%) !default;
-$tertiary-800: dark-light-diff($tertiary, $secondary, 30%, -31%) !default;
-$tertiary-900: dark-light-diff($tertiary, $secondary, 20%, -25%) !default;
+$tertiary-50: dark-light-diff($tertiary, $secondary, 95%, -95%) !default;
+$tertiary-100: dark-light-diff($tertiary, $secondary, 90%, -90%) !default;
+$tertiary-200: dark-light-diff($tertiary, $secondary, 80%, -80%) !default;
+$tertiary-300: dark-light-diff($tertiary, $secondary, 70%, -70%) !default;
+$tertiary-400: dark-light-diff($tertiary, $secondary, 60%, -60%) !default;
+$tertiary-500: dark-light-diff($tertiary, $secondary, 50%, -50%) !default;
+$tertiary-600: dark-light-diff($tertiary, $secondary, 40%, -40%) !default;
+$tertiary-700: dark-light-diff($tertiary, $secondary, 30%, -30%) !default;
+$tertiary-800: dark-light-diff($tertiary, $secondary, 20%, -20%) !default;
+$tertiary-900: dark-light-diff($tertiary, $secondary, 10%, -10%) !default;
 
 //quaternary
 $quaternary-low: dark-light-diff($quaternary, $secondary, 70%, -70%) !default;
