@@ -58,19 +58,15 @@ describe Chat::ChannelFetcher do
         end
 
         it "returns the correct count" do
-          unread_counts = described_class.unread_counts([category_channel], user1)
-          expect(
-            unread_counts.find { |uc| uc.channel_id == category_channel.id }.unread_count,
-          ).to eq(2)
+          unread_counts = described_class.unread_counts([category_channel], Guardian.new(user1))
+          expect(unread_counts.find_channel(category_channel.id).unread_count).to eq(2)
         end
       end
 
       context "with no unread messages" do
         it "returns the correct count" do
-          unread_counts = described_class.unread_counts([category_channel], user1)
-          expect(
-            unread_counts.find { |uc| uc.channel_id == category_channel.id }.unread_count,
-          ).to eq(0)
+          unread_counts = described_class.unread_counts([category_channel], Guardian.new(user1))
+          expect(unread_counts.find_channel(category_channel.id).unread_count).to eq(0)
         end
       end
 
@@ -82,10 +78,8 @@ describe Chat::ChannelFetcher do
         before { last_unread.update!(deleted_at: Time.zone.now) }
 
         it "returns the correct count" do
-          unread_counts = described_class.unread_counts([category_channel], user1)
-          expect(
-            unread_counts.find { |uc| uc.channel_id == category_channel.id }.unread_count,
-          ).to eq(0)
+          unread_counts = described_class.unread_counts([category_channel], Guardian.new(user1))
+          expect(unread_counts.find_channel(category_channel.id).unread_count).to eq(0)
         end
       end
     end
@@ -97,10 +91,8 @@ describe Chat::ChannelFetcher do
         end
 
         it "returns the correct count" do
-          unread_counts = described_class.unread_counts([category_channel], user1)
-          expect(
-            unread_counts.find { |uc| uc.channel_id == category_channel.id }.unread_count,
-          ).to eq(0)
+          unread_counts = described_class.unread_counts([category_channel], Guardian.new(user1))
+          expect(unread_counts.find_channel(category_channel.id).unread_count).to eq(0)
         end
       end
     end

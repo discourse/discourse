@@ -189,14 +189,13 @@ module Chat
     end
 
     def self.decorate_memberships_with_tracking_data(guardian, channels, memberships)
-      unread_counts_per_channel = unread_counts(channels, guardian.user.id)
+      unread_counts_per_channel = unread_counts(channels, guardian)
 
       channels.each do |channel|
         membership = memberships.find { |m| m.chat_channel_id == channel.id }
 
         if membership
-          channel_unread_counts =
-            unread_counts_per_channel.find { |uc| uc.channel_id == channel.id }
+          channel_unread_counts = unread_counts_per_channel.find_channel(channel.id)
 
           membership.unread_mentions = channel_unread_counts.mention_count
           membership.unread_count = channel_unread_counts.unread_count if !membership.muted
@@ -204,12 +203,12 @@ module Chat
       end
     end
 
-    def self.unread_counts(channels, user_id)
-      Chat::ChannelUnreadsQuery.call(
+    def self.unread_counts(channels, guardian)
+      Chat::TrackingState.call(
         channel_ids: channels.map(&:id),
-        user_id: user_id,
-        include_no_membership_channels: true,
-      )
+        guardian: guardian,
+        include_missing_memberships: true,
+      ).report
     end
 
     def self.find_with_access_check(channel_id_or_name, guardian)

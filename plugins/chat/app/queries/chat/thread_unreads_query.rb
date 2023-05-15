@@ -1,0 +1,71 @@
+# frozen_string_literal: true
+
+module Chat
+  ##
+  # Handles counting unread messages and mentions scoped to threads for a list
+  # of channels. A list of thread IDs can be provided to further focus the query.
+  #
+  # This is used for unread indicators in the chat UI. By default only the
+  # threads that the user is a member of will be counted and returned in
+  # the result. Only threads inside a channel that has threading_enabled
+  # will be returned.
+  class ThreadUnreadsQuery
+    ##
+    # @param channel_ids [Array<Integer>] (Optional) The IDs of the channels to count threads for.
+    # @param thread_ids [Array<Integer>] (Optional) The IDs of the threads to count.
+    # @param user_id [Integer] The ID of the user to count for.
+    # @param include_no_membership_threads [Boolean] Whether to include threads
+    #   that the user is not a member of. These counts will always be 0.
+    def self.call(channel_ids: nil, thread_ids: nil, user_id:, include_no_membership_threads: false)
+      raise Discourse::InvalidParameters if channel_ids.empty? && thread_ids.empty?
+
+      sql = <<~SQL
+        SELECT (
+          SELECT COUNT(*) AS unread_count
+          FROM chat_messages
+          INNER JOIN chat_channels ON chat_channels.id = chat_messages.chat_channel_id
+          INNER JOIN chat_threads ON chat_threads.id = chat_messages.thread_id AND chat_threads.channel_id = chat_messages.chat_channel_id
+          INNER JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id
+          WHERE chat_messages.user_id != :user_id
+          AND chat_messages.thread_id = memberships.thread_id
+          AND user_chat_thread_memberships.user_id = :user_id
+          AND chat_messages.id > COALESCE(user_chat_thread_memberships.last_read_message_id, 0)
+          AND chat_messages.deleted_at IS NULL
+          AND chat_messages.thread_id IS NOT NULL
+          AND chat_messages.id != chat_threads.original_message_id
+          AND chat_channels.threading_enabled
+        ) AS unread_count,
+        0 AS mention_count,
+        chat_threads.channel_id,
+        memberships.thread_id
+        FROM user_chat_thread_memberships AS memberships
+        INNER JOIN chat_threads ON chat_threads.id = memberships.thread_id
+        WHERE memberships.user_id = :user_id
+        #{channel_ids.present? ? "AND chat_threads.channel_id IN (:channel_ids)" : ""}
+        #{thread_ids.present? ? "AND chat_threads.id IN (:thread_ids)" : ""}
+        GROUP BY memberships.thread_id, chat_threads.channel_id
+      SQL
+
+      sql += <<~SQL if include_no_membership_threads
+        UNION ALL
+        SELECT 0 AS unread_count, 0 AS mention_count, chat_threads.channel_id, chat_threads.id AS thread_id
+        FROM chat_channels
+        INNER JOIN chat_threads ON chat_threads.channel_id = chat_channels.id
+        LEFT JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id
+          AND user_chat_thread_memberships.user_id = :user_id
+        WHERE user_chat_thread_memberships.id IS NULL
+        #{channel_ids.present? ? "AND chat_threads.channel_id IN (:channel_ids)" : ""}
+        #{thread_ids.present? ? "AND chat_threads.id IN (:thread_ids)" : ""}
+        GROUP BY chat_threads.id
+      SQL
+
+      DB.query(
+        sql,
+        channel_ids: channel_ids,
+        thread_ids: thread_ids,
+        user_id: user_id,
+        notification_type: Notification.types[:chat_mention],
+      )
+    end
+  end
+end
