@@ -75,7 +75,6 @@ module Chat
 
     contract
     policy :threaded_discussions_settings_ok
-    policy :must_have_thread_ids_or_channel_ids
     step :cast_thread_and_channel_ids_to_integer
     model :report
 
@@ -94,10 +93,6 @@ module Chat
       SiteSetting.enable_experimental_chat_threaded_discussions
     end
 
-    def must_have_thread_ids_or_channel_ids(contract:, **)
-      contract.thread_ids.any? || contract.channel_ids.any?
-    end
-
     def cast_thread_and_channel_ids_to_integer(contract:, **)
       contract.thread_ids = contract.thread_ids.map(&:to_i)
       contract.channel_ids = contract.channel_ids.map(&:to_i)
@@ -105,38 +100,47 @@ module Chat
 
     def fetch_report(contract:, guardian:, **)
       report = TrackingStateReport.new
-      report.channel_tracking =
-        ::Chat::ChannelUnreadsQuery
-          .call(
-            channel_ids: contract.channel_ids,
-            user_id: guardian.user.id,
-            include_missing_memberships: contract.include_missing_memberships,
-          )
-          .map do |ct|
-            [ct.channel_id, { mention_count: ct.mention_count, unread_count: ct.unread_count }]
-          end
-          .to_h
 
-      if contract.include_threads
-        report.thread_tracking =
-          ::Chat::ThreadUnreadsQuery
+      if contract.channel_ids.empty?
+        report.channel_tracking = {}
+      else
+        report.channel_tracking =
+          ::Chat::ChannelUnreadsQuery
             .call(
               channel_ids: contract.channel_ids,
-              thread_ids: contract.thread_ids,
               user_id: guardian.user.id,
               include_missing_memberships: contract.include_missing_memberships,
             )
-            .map do |tt|
-              [
-                tt.thread_id,
-                {
-                  channel_id: tt.channel_id,
-                  mention_count: tt.mention_count,
-                  unread_count: tt.unread_count,
-                },
-              ]
+            .map do |ct|
+              [ct.channel_id, { mention_count: ct.mention_count, unread_count: ct.unread_count }]
             end
             .to_h
+      end
+
+      if contract.include_threads
+        if contract.thread_ids.empty? && contract.channel_ids.empty?
+          report.thread_tracking = {}
+        else
+          report.thread_tracking =
+            ::Chat::ThreadUnreadsQuery
+              .call(
+                channel_ids: contract.channel_ids,
+                thread_ids: contract.thread_ids,
+                user_id: guardian.user.id,
+                include_missing_memberships: contract.include_missing_memberships,
+              )
+              .map do |tt|
+                [
+                  tt.thread_id,
+                  {
+                    channel_id: tt.channel_id,
+                    mention_count: tt.mention_count,
+                    unread_count: tt.unread_count,
+                  },
+                ]
+              end
+              .to_h
+        end
       end
 
       report

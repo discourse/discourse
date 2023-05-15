@@ -52,12 +52,6 @@ RSpec.describe ::Chat::TrackingState do
         Fabricate(:user_chat_thread_membership, thread: thread_2, user: current_user)
       end
 
-      context "when neither thread_ids nor channel_ids are provided" do
-        let(:id_params) { {} }
-
-        it { is_expected.to fail_a_policy(:must_have_thread_ids_or_channel_ids) }
-      end
-
       context "when not including channels and threads where the user is not a member" do
         context "when only channel_ids are provided" do
           let(:id_params) { { channel_ids: [channel_1.id, channel_2.id] } }

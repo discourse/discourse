@@ -80,13 +80,13 @@ describe Chat::ChannelUnreadsQuery do
           ).to match_array([{ mention_count: 0, unread_count: 1, channel_id: channel_1.id }])
         end
 
-        context "when include_no_membership_channels is true" do
+        context "when include_missing_memberships is true" do
           it "does return zeroed counts for the channels" do
             expect(
               described_class.call(
                 channel_ids: [channel_1.id, channel_2.id],
                 user_id: current_user.id,
-                include_no_membership_channels: true,
+                include_missing_memberships: true,
               ).map(&:to_h),
             ).to match_array(
               [
