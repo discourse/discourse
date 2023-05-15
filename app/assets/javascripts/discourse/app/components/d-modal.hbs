@@ -57,7 +57,18 @@
           {{/if}}
         </div>
 
-        <div id="modal-alert" role="alert"></div>
+        <div
+          id="modal-alert"
+          role="alert"
+          class={{if
+            this.flash
+            (concat-class
+              "alert" (concat "alert-" (or this.flash.messageClass "success"))
+            )
+          }}
+        >
+          {{this.flash.text}}
+        </div>
 
         {{yield}}
 
