@@ -49,7 +49,7 @@
     "ember-on-resize-modifier": "^1.1.0",
     "ember-production-deprecations": "1.0.0",
     "ember-rfc176-data": "^0.3.18",
-    "ember-source": "~3.28.12",
+    "ember-source": "~5.0.0",
     "ember-test-selectors": "^6.0.0",
     "handlebars": "^4.7.7",
     "html-entities": "^2.3.3",
