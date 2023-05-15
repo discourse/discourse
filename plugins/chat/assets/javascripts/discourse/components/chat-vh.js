@@ -45,7 +45,7 @@ export default class ChatVh extends Component {
     }
 
     let height;
-    if (navigator.virtualKeyboard) {
+    if ("virtualKeyboard" in navigator) {
       height =
         window.visualViewport.height -
         navigator.virtualKeyboard.boundingRect.height;
