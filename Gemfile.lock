@@ -213,7 +213,7 @@ GEM
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
     logster (2.12.2)
-    loofah (2.21.2)
+    loofah (2.21.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     lru_redux (1.1.0)
