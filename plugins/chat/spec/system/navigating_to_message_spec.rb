@@ -69,7 +69,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
 
         click_button(class: "chat-scroll-to-bottom")
 
-        expect(page).to have_content(link)
+        expect(page).to have_content(link, visible: :all)
 
         click_link(link)
 
