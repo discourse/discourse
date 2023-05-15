@@ -1,6 +1,10 @@
 <div class="chat-draft">
   {{#if this.site.mobileView}}
-    <header class="chat-draft-header">
+    <header
+      class="chat-draft-header"
+      {{did-insert this.setChatDraftHeaderHeight}}
+      {{will-destroy this.unsetChatDraftHeaderHeight}}
+    >
       <FlatButton
         @class="chat-draft-header__btn btn"
         @icon="chevron-left"

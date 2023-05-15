@@ -26,7 +26,7 @@ export default class ChannelsList extends Component {
   }
 
   get showMobileDirectMessageButton() {
-    return this.site.mobileView && this.showDirectMessageChannels;
+    return this.site.mobileView && this.canCreateDirectMessageChannel;
   }
 
   get inSidebar() {
