@@ -9,10 +9,8 @@
   <div
     {{will-destroy this.teardownChatMessage}}
     {{did-insert this.decorateCookedMessage}}
-    {{did-insert this.refreshStatusOnMentions}}
     {{did-update this.decorateCookedMessage @message.id}}
     {{did-update this.decorateCookedMessage @message.version}}
-    {{did-update this.refreshStatusOnMentions @message.version}}
     {{on "touchmove" this.handleTouchMove passive=true}}
     {{on "touchstart" this.handleTouchStart passive=true}}
     {{on "touchend" this.handleTouchEnd passive=true}}
@@ -61,6 +59,9 @@
         </div>
       {{else}}
         <div
+          {{did-insert this.refreshStatusOnMentions}}
+          {{did-update this.refreshStatusOnMentions @message.version}}
+          {{did-update this.initMentionedUsers @message.version}}
           class={{concat-class
             "chat-message"
             (if @message.staged "chat-message-staged")
