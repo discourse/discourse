@@ -1,2 +1,6 @@
 import Controller from "@ember/controller";
-export default Controller.extend();
+import { tracked } from "@glimmer/tracking";
+
+export default class ModalController extends Controller {
+  @tracked hidden;
+}
