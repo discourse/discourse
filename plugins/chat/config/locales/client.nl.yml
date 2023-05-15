@@ -78,7 +78,6 @@ nl:
       close: "Sluiten"
       collapse: "Chatlade samenvouwen"
       confirm_flag: "Weet je zeker dat je het bericht van %{username} wilt markeren?"
-      deleted: "Er is een bericht verwijderd. [weergeven]"
       hidden: "Er is een bericht verborgen. [weergeven]"
       delete: "Verwijderen"
       edited: "bewerkt"

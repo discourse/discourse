@@ -52,7 +52,10 @@ es:
   remove_posts_deleted_by_author: "Eliminado por el autor"
   redirect_warning: "No pudimos verificar que el enlace que seleccionaste realmente se haya publicado en el foro. Si deseas continuar de todos modos, selecciona el siguiente enlace."
   on_another_topic: "En otro tema"
+  topic_category_changed: "De %{from} a %{to}"
   topic_tag_changed:
+    added_and_removed: "Añadido %{added} y eliminado %{removed}"
+    added: "Añadido %{added}"
     removed: "Eliminó a %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "nº %{post_number}"
@@ -190,6 +193,7 @@ es:
     embed:
       load_from_remote: "Se produjo un error al cargar esta publicación."
     site_settings:
+      invalid_site_setting: "No existe ningún ajuste llamado '%{name}'."
       invalid_category_id: "Especificaste una categoría que no existe"
       invalid_choice:
         one: "Has especificado la opción no válida %{name}"
@@ -240,6 +244,7 @@ es:
     user_exists: "No hace falta que invites a <b>%{email}</b>, ¡ya tienen una cuenta!"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
     invalid_email: "%{email} no es un correo electrónico válido."
+    generic_error_response: "Ha habido un problema con tu solicitud."
     rate_limit:
       one: "Ya has enviado %{count} invitación en el último día, espera %{time_left} antes de volverlo a intentar."
       other: "Ya has enviado %{count} invitaciones en el último día, espera %{time_left} antes de volverlo a intentar."
@@ -401,6 +406,7 @@ es:
   too_late_to_edit: "Esa publicación se publicó hace demasiado tiempo. No se puede editar ni eliminar."
   edit_conflict: "La publicación ha sido editada por otro usuario y tus cambios no se pueden guardar."
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
+  reverted_to_version: "revertido a la versión #%{version}"
   cannot_edit_on_slow_mode: "Este tema está en modo lento. Mientras dure, no se pueden editar mensajes antiguos, para animar a que la conversación sea considerada y apropiada."
   excerpt_image: "imagen"
   bookmarks:
@@ -503,6 +509,7 @@ es:
       Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
     dominating_topic: '¡Has publicado mucho en este tema! Considera la posibilidad de dar a los demás la oportunidad de responder aquí y debatir también entre ellos.'
     get_a_room: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje personal directamente?
+    dont_feed_the_trolls: Este mensaje ya ha sido marcado para llamar la atención del moderador. ¿Estás seguro de que deseas responder a él? Las respuestas a contenido negativo tienden a fomentar un comportamiento más negativo.
     too_many_replies: |
       ### Has llegado al límite de respuestas en este tema
 
@@ -643,6 +650,7 @@ es:
       disallowed_tags_generic: "Este tema tiene etiquetas no permitidas."
       slug_contains_non_ascii_chars: "contiene caracteres no ascii"
       is_already_in_use: "ya está en uso"
+      move_topic_to_category_disallowed: "No puedes mover este tema a una categoría en la que no tengas permiso para crear nuevos temas."
     cannot_delete:
       uncategorized: "Esta categoría es especial Se usa para agrupar los temas que no tienen ninguna categoría asignada. No se puede eliminar."
       has_subcategories: "No se puede eliminar esta categoría porque tiene subcategorías."
@@ -1386,6 +1394,7 @@ es:
     out_of_date_themes: "Hay actualizaciones disponibles para los siguientes temas:"
     unreachable_themes: "No pudimos verificar actualizaciones de los siguientes temas:"
     watched_word_regexp_error: "Expresión regular no válida para las palabras vigiladas con acción de «%{action}». Por favor, revisa los <a href='%{base_path}/admin/customize/watched_words'>ajustes sobre palabras vigiladas</a> o desactiva el ajuste «watched words regular expressions»."
+    v3_analytics_deprecated: "Tu discourse utiliza actualmente Google Analytics 3, que dejará de recibir soporte después de julio de 2023. <a href='https://meta.discourse.org/t/260498'>Actualiza ahora a Google Analytics 4</a> para seguir recibiendo información y análisis valiosos sobre el rendimiento de tu sitio web."
   site_settings:
     allow_bulk_invite: "Permitir invitaciones en masa subiendo un archivo CSV"
     disabled: "desactivado"
@@ -1554,6 +1563,7 @@ es:
     content_security_policy_frame_ancestors: "Restringir quién puede incrustar este sitio en iframes a través de CSP. Controla los hosts permitidos en <a href='%{base_path}/admin/customize/embedding'>Insertado</a>"
     content_security_policy_script_src: "Fuentes de script adicionales en la lista de permitidos. El host actual y CDN se incluyen por defecto. Leer <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar ataques XSS con la Política de Seguridad de Contenidos.</a>"
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
+    display_personal_messages_tag_counts: "Si está activada, se mostrará el recuento de mensajes personales etiquetados con una etiqueta determinada."
     top_menu: "Determinar los elementos que aparecen en el menú de navegación de la página de inicio y su orden. Ejemplo últimos|nuevos|no leídos|categorías|destacados|leídos|publicados|marcadores"
     post_menu: "Determinar los elementos que aparecen en el menú de publicación y su orden. Ejemplo: me gusta|editar|denunciar|eliminar|compartir|guardar en marcadores|responder"
     post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
@@ -1583,6 +1593,7 @@ es:
     whispers_allowed_groups: "Permitir la comunicación privada dentro de los temas para los miembros de los grupos especificados."
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     normalize_emails: "Comprobar si la dirección de correo normalizada es única. Para normalizar las direcciones se eliminan los puntos y todo lo que haya entre los caracteres + y @."
+    auto_approve_email_domains: "Los usuarios con direcciones de correo electrónico de esta lista de dominios serán aprobados automáticamente. Los subdominios se gestionan automáticamente para los dominios especificados. No se admiten los símbolos comodín * y ?"
     hide_email_address_taken: "No informar a los usuarios si ya existe una cuenta con un correo electrónico al registrarse o al restablecer la contraseña. Pedir la dirección de correo completa para solicitudes de restablecimiento de contraseña."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el Discourse Hub para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard <a href='<a href='%{base_path}/admin' target='_blank'>/admin' target='_blank'>/admin</a>."
@@ -1720,6 +1731,7 @@ es:
     composer_media_optimization_image_bytes_optimization_threshold: "Tamaño mínimo del archivo de imagen para activar la optimización del lado del cliente"
     composer_media_optimization_image_resize_dimensions_threshold: "Ancho mínimo de la imagen para activar el redimensionamiento del lado del cliente"
     composer_media_optimization_image_resize_width_target: "Las imágenes con una anchura mayor que «composer_media_optimization_image_dimensions_resize_threshold» serán redimensionadas a esta anchura. Debe ser >= que «composer_media_optimization_image_dimensions_resize_threshold»."
+    composer_media_optimization_image_encode_quality: "Calidad de codificación JPG utilizada en el proceso de recodificación."
     min_ratio_to_crop: "Proporción utilizada para recortar imágenes altas. Introduce el resultado de anchura / altura."
     simultaneous_uploads: "Número máximo de archivos que se pueden arrastrar y soltar en el editor"
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
@@ -1748,6 +1760,7 @@ es:
     tl3_requires_likes_given: "El número mínimo de me gusta que un usuario debe dar en los últimos (período nc3) días para calificar al nivel de confianza 3."
     tl3_requires_likes_received: "El número mínimo de me gusta que un usuario debe recibir en los últimos (período nc3) días para calificar al nivel de confianza 3."
     tl3_links_no_follow: "No quitar rel=nofollow de los enlaces publicados por usuarios con nivel de confianza 3."
+    tl4_delete_posts_and_topics: "Permitir a los usuarios de TL4 borrar mensajes y temas creados por otros usuarios. Los usuarios de TL4 también podrán ver los temas y mensajes eliminados."
     trusted_users_can_edit_others: "Permitir a los usuarios con alto nivel de confianza editar el contenido de otros usuarios"
     min_trust_to_create_topic: "El nivel mínimo de confianza requerido para crear un nuevo tema."
     allow_flagging_staff: "Si está activado, los usuarios pueden denunciar publicaciones hechas desde cuentas del personal."
@@ -1955,6 +1968,7 @@ es:
     allow_profile_backgrounds: "Permitir a los usuarios subir fondos de perfil."
     sequential_replies_threshold: "Número de mensajes seguidos que un usuario tiene que publicar antes de que se le recuerde que son demasiadas respuestas consecutivas."
     get_a_room_threshold: "Número de publicaciones que un usuario deber hacer a la misma persona en un mismo tema para recibir una advertencia."
+    dont_feed_the_trolls_threshold: "Número de banderas de otros usuarios antes de ser advertido."
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Desactiva esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
     dominating_topic_minimum_percent: "Porcentaje de publicaciones que un usuario debe hacer en un mismo tema antes de que se le muestre un recordatorio acerca de dominar en demasía un tema."
     disable_avatar_education_message: "Desactivar mensaje educacional para que los usuarios cambien su foto de perfil."
@@ -1971,6 +1985,8 @@ es:
     automatically_unpin_topics: "Desanclar automáticamente cuando el usuario llega al final del tema."
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
     topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del título</a> de la página del tema incluye el nombre de la categoría."
+    native_app_install_banner_ios: "Muestra el banner de la aplicación DiscourseHub en dispositivos iOS a usuarios básicos (nivel de confianza 1) y superiores."
+    native_app_install_banner_android: "Muestra el banner de la aplicación DiscourseHub en dispositivos Android para usuarios básicos (nivel de confianza 1) y superior."
     app_association_android: "Los contenidos del extremo <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilizado por la API de «Digital Asset Links» de Google."
     app_association_ios: "Los contenidos del extremo <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilizado para crear enlaces universales entre este sitio y las aplicacios iOS."
     share_anonymized_statistics: "Compartir estadísticas de uso anonimizadas."
@@ -1998,10 +2014,11 @@ es:
     allowed_href_schemes: "Esquemas permitidos en enlaces además de http y https."
     embed_post_limit: "Número máximo de publicaciones que se pueden insertar."
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
-    notify_about_flags_after: "Si hay denuncias que no han sido revisadas después de este número de horas, enviar un mensaje personal a los moderadores. Establece el valor en 0 para desactivar."
+    notify_about_reviewable_item_after: "Si hay elementos revisables que no se han tratado después estas horas, envía un mensaje personal a los moderadores. Ponlo a 0 para desactivarlo."
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: "Eliminar borradores de más de (n) días de antigüedad."
     delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Poner a 0 para no eliminar nunca los temas pendientes."
+    bootstrap_mode_min_users: "Número mínimo de usuarios necesarios para desactivar el modo de arranque (ponlo a 0 para desactivarlo, puede tardar hasta 24 horas)"
     prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
     secure_uploads: 'Limita el acceso a TODAS las subidas (imágenes, vídeo, audio, texto, pdfs, zips y otros). Si se activa la opción de «inicio de sesión obligatorio», solo los usuarios que hayan iniciado sesión podrán acceder a las subidas. De lo contrario, el acceso se limitará solo a las subidas de medios en los mensajes privados y en las categorías privadas. ADVERTENCIA: Esta configuración es compleja y requiere un profundo conocimiento administrativo. Consulta <a target="_blank" href="https://meta.discourse.org/t/-/140017">el tema de subidas seguras en Meta</a> para más detalles.'
     secure_uploads_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente estarían redactadas en los correos electrónicos, si su tamaño es menor que el ajuste de «tamaño máximo de la imagen incrustada en el correo electrónico»."
@@ -2071,7 +2088,9 @@ es:
     revoke_api_keys_days: "Número de días antes de que una clave de API sin usar sea revocada automáticamente (0 para nunca)"
     allow_user_api_keys: "Permitir que se generen claves de API de usuario"
     allow_user_api_key_scopes: "Lista de ámbitos permitidos para las claves API de usuario"
-    min_trust_level_for_user_api_key: "Nivel de confianza necesario para generar claves API de usuario"
+    min_trust_level_for_user_api_key: |
+      Nivel de confianza requerido para la generación de claves API de usuario.<br>
+      <b>ADVERTENCIA</b>: Cambiar el nivel de confianza impedirá a los usuarios con un nivel de confianza inferior iniciar sesión a través de Discourse Hub
     allowed_user_api_auth_redirects: "URL permitida para autenticar redirección para claves API de usuario. Símbolo comodín * puede ser usado para que coincida cualquier parte de la misma (por ejemplo www.ejemplo.com/*)."
     allowed_user_api_push_urls: "URLs permitidas para el push del servidor al API de usuario"
     expire_user_api_keys_days: "Número de días antes de que la clave API del usuario caduque automáticamente (0 para nunca)"
@@ -2089,6 +2108,7 @@ es:
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coincide con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No muestre temas etiquetados unicamente con etiquetas silenciadas en la lista de temas más reciente."
     force_lowercase_tags: "Forzar que todas las etiquetas estén completamente en minúscula"
+    create_post_for_category_and_tag_changes: "Crea un pequeño post de acción cuando cambie la categoría o las etiquetas de un tema"
     company_name: "Nombre de la compañía"
     governing_law: "Ley que rige"
     city_for_disputes: "Ciudad para disputas"
@@ -2103,7 +2123,7 @@ es:
     enable_sitemap: "Generar un sitemap para el sitio e incluirlo en el archivo robots.txt."
     sitemap_page_size: "Número de URLs que incluir en cada página del sitemap. Máximo de 50.000"
     enable_user_status: "(experimental) Permitir a los usuarios establecer un mensaje de estado personalizado (emoji + descripción)."
-    enable_user_tips: "(experimental) Habilitar nuevos consejos de usuario que describan las características clave para los usuarios"
+    enable_user_tips: "Enable new user tips that describe key features to users"
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio puede ser limitado. Debe limitarse a 12 caracteres."
     dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
     dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
@@ -2122,6 +2142,7 @@ es:
     navigation_menu: "Determina qué menú de navegación utilizar. La barra lateral y la navegación del encabezado son personalizables por los usuarios. La opción heredada está disponible para compatibilidad con versiones anteriores."
     default_sidebar_categories: "Las categorías seleccionadas aparecerán por defecto en la sección de categorías de la barra lateral."
     default_sidebar_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas de la barra lateral."
+    enable_new_notifications_menu: "Activa el nuevo menú de notificaciones. Desactivar esta opción está obsoleto. El nuevo menú de notificaciones se utiliza siempre para las opciones del \"menú de navegación\" no heredadas. <a href='https://meta.discourse.org/t/260358'>Más información</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Utiliza el nuevo sistema de autocompletado #hashtag para categorías y etiquetas que muestra el elemento seleccionado de forma diferente y ha mejorado la búsqueda"
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
@@ -3143,15 +3164,6 @@ es:
       title: "Descarga de imágenes remotas desactivada"
       subject_template: "La descarga de imágenes remotas fue desactivada"
       text_body_template: "La opción «download_remote_images_to_local» ha sido desactivada porque se ha llegado al límite de espacio en disco configurado en «download_remote_images_threshold»."
-    dashboard_problems:
-      title: "Problemas del panel"
-      subject_template: "Nuevos consejos en tu panel del sitio"
-      text_body_template: |
-        Tenemos nuevos consejos y recomendaciones para ti basados en tus ajustes del sitio actuales.
-
-        [Visita el panel de control de tu sitio](%{base_url}/admin) para verlos.
-
-        Si no hay nada visible en tu panel de control, otro miembro del equipo podría haber actuado ya sobre este consejo. Puedes encontrar una lista de acciones del personal en tus [registros de acciones del personal](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "¡Eres el usuario nuevo del mes!"
       subject_template: "¡Eres el usuario nuevo del mes!"

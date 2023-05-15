@@ -107,6 +107,7 @@ module Chat
           staged_id: params[:staged_id],
           upload_ids: params[:upload_ids],
           thread_id: params[:thread_id],
+          staged_thread_id: params[:staged_thread_id],
         )
 
       return render_json_error(chat_message_creator.error) if chat_message_creator.failed?

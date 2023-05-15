@@ -1449,14 +1449,6 @@ hu:
     download_remote_images_disabled:
       subject_template: "A távoli képek letöltése le lett tiltva"
       text_body_template: "A `download_remote_images_to_local` beállítás le lett tiltva, mert az erre szánt `download_remote_image_threshold` tárhelykorlát elérésre került."
-    dashboard_problems:
-      subject_template: "Új tanácsok a webhely irányítópultján"
-      text_body_template: |
-        Van néhány új tanácsunk és javaslatunk a jelenlegi webhelybeállításaid alapján.
-
-        [Látogasd meg a webhely irányítópultját] (%{base_url}/ admin) ezek megtekintéséhez.
-
-        Ha semmi nem látható az irányítópulton, lehet, hogy egy másik munkatársunk már eljárt aktivizálta magát. A személyzeti műveletek listája megtalálható a [Staff Action Logs] (%{base_url}/ admin / logs / staff_action_logs) könyvtárban.
     new_user_of_the_month:
       text_body_template: |
         Elnyerted ** A hónap új felhasználója %{month_year}** díjat. :trophy:

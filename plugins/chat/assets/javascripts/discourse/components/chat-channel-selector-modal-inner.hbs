@@ -18,6 +18,7 @@
       <ConditionalLoadingSpinner @condition={{this.loading}}>
         {{#each this.channels as |channel|}}
           <ChatChannelSelectionRow
+            @isFocused={{eq channel this.focusedRow}}
             @model={{channel}}
             @onClick={{this.switchChannel}}
           />

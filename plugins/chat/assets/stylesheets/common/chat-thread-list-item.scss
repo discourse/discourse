@@ -1,0 +1,60 @@
+@mixin thread-list-item {
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: var(--primary-very-low);
+  border: 1px solid transparent;
+}
+
+.chat-thread-list-item {
+  @include thread-list-item;
+  cursor: pointer;
+
+  .touch & {
+    &:active {
+      background-color: var(--d-hover);
+      border: 1px solid var(--primary-300);
+    }
+  }
+
+  .no-touch & {
+    &:hover,
+    &:active {
+      background-color: var(--d-hover);
+      border: 1px solid var(--primary-300);
+    }
+  }
+
+  &__main {
+    flex: 1 1 100%;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__title {
+    flex: 1;
+    font-weight: bold;
+  }
+
+  &__settings[disabled] {
+    display: none;
+  }
+
+  &__open-button {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    justify-content: center;
+    color: var(--primary);
+
+    &:hover,
+    &:visited {
+      color: var(--primary);
+    }
+  }
+}

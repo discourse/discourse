@@ -4,7 +4,6 @@ import Promise from "rsvp";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import { tracked } from "@glimmer/tracking";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 
 /*
   The ChatThreadsManager is responsible for managing the loaded chat threads
@@ -17,6 +16,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export default class ChatThreadsManager {
   @service chatSubscriptionsManager;
   @service chatApi;
+  @service chat;
   @service currentUser;
   @tracked _cached = new TrackedObject();
 
@@ -35,15 +35,32 @@ export default class ChatThreadsManager {
     }
   }
 
+  async index(channelId) {
+    return this.#loadIndex(channelId).then((result) => {
+      const threads = result.threads.map((thread) => {
+        return this.chat.activeChannel.threadsManager.store(
+          this.chat.activeChannel,
+          thread
+        );
+      });
+      return { threads, meta: result.meta };
+    });
+  }
+
   get threads() {
     return Object.values(this._cached);
   }
 
-  store(threadObject) {
+  store(channel, threadObject) {
     let model = this.#findStale(threadObject.id);
 
     if (!model) {
-      model = new ChatThread(threadObject);
+      if (threadObject instanceof ChatThread) {
+        model = threadObject;
+      } else {
+        model = new ChatThread(channel, threadObject);
+      }
+
       this.#cache(model);
     }
 
@@ -59,12 +76,7 @@ export default class ChatThreadsManager {
   }
 
   async #find(channelId, threadId) {
-    return this.chatApi
-      .thread(channelId, threadId)
-      .catch(popupAjaxError)
-      .then((thread) => {
-        return thread;
-      });
+    return this.chatApi.thread(channelId, threadId);
   }
 
   #cache(thread) {
@@ -73,5 +85,9 @@ export default class ChatThreadsManager {
 
   #findStale(id) {
     return this._cached[id];
+  }
+
+  async #loadIndex(channelId) {
+    return this.chatApi.threads(channelId);
   }
 }

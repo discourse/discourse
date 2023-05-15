@@ -207,8 +207,8 @@ en:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
       invalid_choice:
-        one: "You specified the invalid choice %{name}"
-        other: "You specified the invalid choices %{name}"
+        one: "'%{name}' is an invalid choice."
+        other: "'%{name}' are invalid choices."
       default_categories_already_selected: "You cannot select a category used in another list."
       default_tags_already_selected: "You cannot select a tag used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
@@ -652,8 +652,8 @@ en:
           attributes:
             value:
               invalid_interpolation_keys:
-                one: 'The following interpolation key is invalid: %{keys}'
-                other: 'The following interpolation keys are invalid: %{keys}'
+                one: "The following interpolation key is invalid: %{keys}"
+                other: "The following interpolation keys are invalid: %{keys}"
         watched_word:
           attributes:
             word:
@@ -678,21 +678,19 @@ en:
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
 
   discourse_welcome_topic:
-    title: "Welcome to our community!"
+    title: "Welcome to %{site_title}! :wave:"
     body: |
+      We're so glad you've joined us. %{site_description}
 
-      The first paragraph of this pinned topic will be visible as a welcome message to all new visitors on your homepage. It's important!
+      %{site_title} is powered by Discourse.org, the powerful, open platform for communities of all kinds. Here are some things you can do to get started:
 
-      **Edit this** into a brief description of your community:
+      :speaking_head: **Introduce yourself** by adding your picture and information about yourself and your interests to [your profile](%{base_path}/my/profile). What is one thing you’d like to be asked about?
 
-      - Who is it for?
-      - What can they find here?
-      - Why should they come here?
-      - Where can they read more (links, resources, etc)?
+      :open_book: **Get to know the community** by [browsing discussions](%{base_path}/top) that are already happening here. When you find a post interesting, informative, or entertaining, use the :heart: to show your appreciation or support!
 
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      :handshake: **Contribute** by commenting, sharing your own perspective, asking questions, or offering feedback in the discussion. Before replying or starting new topics, please review the [Community Guidelines](%{base_path}/faq).
 
-      You may want to close this topic via the admin :wrench: (at the upper right and bottom), so that replies don't pile up on an announcement.
+      > If you need help or have a suggestion, feel free to ask in [#feedback](%{base_path}/c/site-feedback) or [contact the admins](%{base_path}/about).
 
   admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
 
@@ -1554,6 +1552,7 @@ en:
 
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     topic_excerpt_maxlength: "Maximum length of a topic excerpt / summary, generated from the first post in a topic."
+    default_subcategory_on_read_only_category: "Enables 'New Topic' button and selects a default subcategory to post on categories where the user is not allowed to create a new topic."
     show_pinned_excerpt_mobile: "Show excerpt on pinned topics in mobile view."
     show_pinned_excerpt_desktop: "Show excerpt on pinned topics in desktop view."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
@@ -1576,7 +1575,7 @@ en:
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
     manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
-    apple_touch_icon: "Icon used for Apple touch devices. A transparent backround is not reccomended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
+    apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not reccomended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
     twitter_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
@@ -2094,7 +2093,7 @@ en:
     pop3_polling_password: "The password for the POP3 account to poll for email."
     pop3_polling_delete_from_server: "Delete emails from server. NOTE: If you disable this you should manually clean your mail inbox"
     log_mail_processing_failures: "Log all email processing failures to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Allow users to post new topics via email (requires manual or pop3 polling). Configure the addresses in the "Settings" tab of each category.'
+    email_in: "Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
     email_in_spam_header: "The email header to detect spam."
@@ -2250,7 +2249,7 @@ en:
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
-    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
+    notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
@@ -2388,7 +2387,7 @@ en:
     sitemap_page_size: "Number of URLs to include in each sitemap page. Max 50.000"
 
     enable_user_status: "(experimental) Allow users to set custom status message (emoji + description)."
-    enable_user_tips: "(experimental) Enable new user tips that describe key features to users"
+    enable_user_tips: "Enable new user tips that describe key features to users"
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
@@ -2416,8 +2415,9 @@ en:
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
     enable_new_notifications_menu: "Enables the new notifications menu. Disabling this setting is deprecated. The new notifications menu is always used for non-legacy 'navigation menu' choices. <a href='https://meta.discourse.org/t/260358'>Learn more</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
-    experimental_new_new_view_groups: "EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the \"Everything\" link in the sidebar link to it."
+    experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
+    experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -3536,16 +3536,6 @@ en:
       title: "Download Remote Images Disabled"
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
-
-    dashboard_problems:
-      title: "Dashboard Problems"
-      subject_template: "New advice on your site dashboard"
-      text_body_template: |
-        We have some new advice and recommendations for you based on your current site settings.
-
-        [Visit your site dashboard](%{base_url}/admin) to see it.
-
-        If nothing is visible on your dashboard, another staff member may have already acted on this advice. A list of staff actions can be found in your [Staff Action Logs](%{base_url}/admin/logs/staff_action_logs).
 
     new_user_of_the_month:
       title: "You're a New User of the Month!"

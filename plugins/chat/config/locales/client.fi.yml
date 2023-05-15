@@ -79,7 +79,9 @@ fi:
       collapse: "Tiivistä chat-laatikko"
       expand: "Laajenna chat-laatikko"
       confirm_flag: "Haluatko varmasti liputtaa käyttäjän %{username} viestin?"
-      deleted: "Viesti poistettiin. [näytä]"
+      deleted:
+        one: "Viesti poistettiin. [näytä]"
+        other: "%{count} viestiä poistettiin. [näytä kaikki]"
       hidden: "Viesti piilotettiin. [näytä]"
       delete: "Poista"
       edited: "muokattu"

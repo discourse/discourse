@@ -55,13 +55,8 @@ class OptimizedImage < ActiveRecord::Base
 
     if original_path.blank?
       # download is protected with a DistributedMutex
-      external_copy =
-        begin
-          Discourse.store.download(upload)
-        rescue StandardError
-          nil
-        end
-      original_path = external_copy.try(:path)
+      external_copy = Discourse.store.download_safe(upload)
+      original_path = external_copy&.path
     end
 
     lock(upload.id, width, height) do

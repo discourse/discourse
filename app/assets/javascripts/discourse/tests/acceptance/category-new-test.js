@@ -10,6 +10,33 @@ import sinon from "sinon";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
+acceptance("New category access for moderators", function (needs) {
+  needs.user({ moderator: true, admin: false, trust_level: 1 });
+
+  test("Authorizes access based on site setting", async function (assert) {
+    this.siteSettings.moderators_manage_categories_and_groups = false;
+    await visit("/new-category");
+
+    assert.strictEqual(currentURL(), "/404");
+
+    this.siteSettings.moderators_manage_categories_and_groups = true;
+    await visit("/new-category");
+
+    assert.strictEqual(
+      currentURL(),
+      "/new-category",
+      "it allows access to new category when site setting is enabled"
+    );
+  });
+});
+
+acceptance("New category access for non authorized users", function () {
+  test("Prevents access when not signed in", async function (assert) {
+    await visit("/new-category");
+    assert.strictEqual(currentURL(), "/404");
+  });
+});
+
 acceptance("Category New", function (needs) {
   needs.user();
 

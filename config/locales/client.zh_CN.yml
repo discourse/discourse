@@ -506,11 +506,11 @@ zh_CN:
         rejected_post:
           title: "帖子被拒绝"
         ignored:
-          title: "忽略的标记"
+          title: "被忽略的标记"
         deleted:
           title: "话题或帖子已被删除"
         reviewed:
-          title: "所有审核"
+          title: "所有已审核"
         all:
           title: "一切"
       context_question:
@@ -2235,6 +2235,7 @@ zh_CN:
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
+      admin_problems: "站点信息中心的新建议"
       dismiss_confirmation:
         body:
           default:
@@ -4586,6 +4587,7 @@ zh_CN:
             title: "输入要随嵌入式版本的注释传送的自定义 CSS"
           embedded_header:
             text: "嵌入式页眉/标题/标头"
+            title: "输入在嵌入式评论的上方显示的 HTML"
           color_definitions:
             text: "颜色定义"
             title: "输入自定义颜色定义（仅限高级用户）"
@@ -4666,8 +4668,10 @@ zh_CN:
             description: "点赞按钮的颜色。"
           selected:
             name: "已选择"
+            description: "元素（例如列表项）在被框选或被激活时的背景色。"
           hover:
             name: "悬停"
+            description: "元素（例如列表项）在鼠标悬停或具有键盘焦点时的背景色。"
         robots:
           title: "替换您的站点的 robots.txt 文件："
           warning: "这将永久替换任何相关的站点设置。"

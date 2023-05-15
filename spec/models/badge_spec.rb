@@ -5,7 +5,7 @@ RSpec.describe Badge do
     subject(:badge) { Fabricate.build(:badge) }
 
     it { is_expected.to validate_length_of(:name).is_at_most(100) }
-    it { is_expected.to validate_length_of(:description).is_at_most(250) }
+    it { is_expected.to validate_length_of(:description).is_at_most(500) }
     it { is_expected.to validate_length_of(:long_description).is_at_most(1000) }
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:badge_type) }

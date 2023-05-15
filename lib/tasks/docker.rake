@@ -215,7 +215,7 @@ task "docker:test" do
 
           if ENV["RUN_SYSTEM_TESTS"]
             @good &&= run_or_fail("bin/ember-cli --build")
-            @good &&= run_or_fail("timeout --verbose 1200 bundle exec rspec spec/system")
+            @good &&= run_or_fail("timeout --verbose 1800 bundle exec rspec spec/system")
           end
         end
 
@@ -230,7 +230,7 @@ task "docker:test" do
           if ENV["RUN_SYSTEM_TESTS"]
             @good &&=
               run_or_fail(
-                "LOAD_PLUGINS=1 timeout --verbose 1200 bundle exec rspec plugins/*/spec/system".strip,
+                "LOAD_PLUGINS=1 timeout --verbose 1600 bundle exec rspec plugins/*/spec/system".strip,
               )
           end
         end

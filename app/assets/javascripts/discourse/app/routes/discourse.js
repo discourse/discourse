@@ -75,15 +75,6 @@ const DiscourseRoute = Route.extend({
     }
   },
 
-  // deprecated, use isCurrentUser() instead
-  isAnotherUsersPage(user) {
-    if (!this.currentUser) {
-      return true;
-    }
-
-    return user.username !== this.currentUser.username;
-  },
-
   isCurrentUser(user) {
     if (!this.currentUser) {
       return false; // the current user is anonymous

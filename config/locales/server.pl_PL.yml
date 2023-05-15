@@ -2098,7 +2098,6 @@ pl_PL:
     allowed_href_schemes: "Projekty dozwolone w linkach jako dodatek do http i https."
     embed_post_limit: "Maksymalna liczba wpisów do osadzenia."
     embed_username_required: "W celu stworzenia tematu potrzebna jest nazwa użytkownika."
-    notify_about_flags_after: "Jeśli istnieją flagi, które nie zostały sprawdzone po tylu godzinach, wyślij osobistą wiadomość do moderatorów. Ustaw na 0, aby wyłączyć."
     show_create_topics_notice: "Jeśli na stronie jest mniej niż 5 publicznych tematów, pokaż powiadomienie proszące adminów, aby stworzyli nowe tematy."
     delete_drafts_older_than_n_days: "Usuń projekty starsze niż (n) dni."
     delete_merged_stub_topics_after_days: "Liczba dni, po których wątki, z których zostały przeniesione wszystkie posty, zostaną automatycznie usunięte. Aby to wyłączyć, ustaw wartość na 0."
@@ -2172,7 +2171,6 @@ pl_PL:
     revoke_api_keys_days: "Liczba dni do automatycznego unieważnienia nieużywanego klucza API (0 oznacza brak)"
     allow_user_api_keys: "Pozwól na generację kluczy API użytkownika."
     allow_user_api_key_scopes: "Lista zakresów dozwolona dla kluczy API użytkownika."
-    min_trust_level_for_user_api_key: "Poziom zaufania wymagany dla generacji kluczy API użytkownika."
     allowed_user_api_auth_redirects: "Dozwolony adres URL do przekierowania uwierzytelniania dla kluczy interfejsu API użytkownika. Symbol wieloznaczny * może być użyty do dopasowania dowolnej jego części (np. www.example.com/*)."
     allowed_user_api_push_urls: "Dozwolone URLs dla serwera push do API użytkownika"
     expire_user_api_keys_days: "Liczba dni do automatycznego wygaśnięcia klucza API użytkownika (0 oznacza brak)"
@@ -2203,7 +2201,6 @@ pl_PL:
     enable_sitemap: "Wygeneruj mapę witryny dla swojej strony i umieść ją w pliku robots.txt."
     sitemap_page_size: "Liczba adresów URL do uwzględnienia na każdej stronie mapy witryny. Maksymalnie 50.000"
     enable_user_status: "(eksperymentalne) Zezwól użytkownikom na ustawienie niestandardowego statusu (emoji + opis)."
-    enable_user_tips: "(eksperymentalne) Włącz nowe wskazówki dla użytkowników, które opisują najważniejsze funkcje witryny"
     short_title: "Krótki tytuł będzie używany na ekranie głównym użytkownika, launcherze lub w innych miejscach, gdzie przestrzeń może być ograniczona. Powinien składać się maksymalnie z 12 znaków."
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
@@ -3286,15 +3283,6 @@ pl_PL:
       title: "Pobieranie Zdalne Obrazów Wyłączone"
       subject_template: "Pobieranie zdalne obrazów wyłączone"
       text_body_template: "Ustawienie `download_remote_images_to_local` zostało dezaktywowane ponieważ został osiągnięty limit miejsca na dysku `download_remote_images_threshold`."
-    dashboard_problems:
-      title: "Problemy tablicy"
-      subject_template: "Nowe porady w panelu administratora"
-      text_body_template: |
-        Mamy dla Ciebie nowe porady i zalecenia oparte na aktualnych ustawieniach Twojej witryny.
-
-        [Odwiedź panel swojej witryny](%{base_url}/admin), aby je zobaczyć.
-
-        Jeśli nic nie jest widoczne w panelu, inny członek personelu mógł/mogła już skorzystać z tej porady. Listę działań personelu można znaleźć w [dziennikach działań personelu](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Jesteś nowym użytkownikiem miesiąca!"
       subject_template: "Jesteś nowym użytkownikiem miesiąca!"

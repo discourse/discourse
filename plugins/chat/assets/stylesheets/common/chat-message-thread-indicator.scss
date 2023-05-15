@@ -19,6 +19,7 @@
 
   &__view-thread {
     font-size: var(--font-down-1);
+    flex: 1;
 
     .chat-message-thread-indicator:hover & {
       text-decoration: underline;

@@ -17,6 +17,8 @@ import I18n from "I18n";
 import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isEmpty, isPresent } from "@ember/utils";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import { Promise } from "rsvp";
 import User from "discourse/models/user";
 
 export default class ChatComposer extends Component {
@@ -33,13 +35,18 @@ export default class ChatComposer extends Component {
   @service chatApi;
 
   @tracked isFocused = false;
+  @tracked inProgressUploadsCount = 0;
+  @tracked presenceChannelName;
 
   get shouldRenderReplyingIndicator() {
-    return this.context === "channel" && !this.args.channel?.isDraft;
+    return !this.args.channel?.isDraft;
   }
 
   get shouldRenderMessageDetails() {
-    return this.currentMessage?.editing || this.currentMessage?.inReplyTo;
+    return (
+      this.currentMessage?.editing ||
+      (this.context === "channel" && this.currentMessage?.inReplyTo)
+    );
   }
 
   get inlineButtons() {
@@ -68,6 +75,18 @@ export default class ChatComposer extends Component {
       !this.chat.userCanInteractWithChat ||
       !this.args.channel.canModifyMessages(this.currentUser)
     );
+  }
+
+  @action
+  sendMessage(raw) {
+    const message = ChatMessage.createDraftMessage(this.args.channel, {
+      user: this.currentUser,
+      message: raw,
+    });
+
+    this.args.onSendMessage(message);
+
+    return Promise.resolve();
   }
 
   @action
@@ -117,7 +136,9 @@ export default class ChatComposer extends Component {
   }
 
   get sendEnabled() {
-    return this.hasContent && !this.pane.sending;
+    return (
+      this.hasContent && !this.pane.sending && !this.inProgressUploadsCount > 0
+    );
   }
 
   @action
@@ -131,13 +152,14 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  teardownAppEvents() {
+  teardown() {
     this.appEvents.off("chat:modify-selection", this, "modifySelection");
     this.appEvents.off(
       "chat:open-insert-link-modal",
       this,
       "openInsertLinkModal"
     );
+    this.pane.sending = false;
   }
 
   @action
@@ -176,6 +198,12 @@ export default class ChatComposer extends Component {
 
   @action
   onUploadChanged(uploads, { inProgressUploadsCount }) {
+    if (!this.args.channel) {
+      return;
+    }
+
+    this.inProgressUploadsCount = inProgressUploadsCount || 0;
+
     if (
       typeof uploads !== "undefined" &&
       inProgressUploadsCount !== "undefined" &&
@@ -213,7 +241,7 @@ export default class ChatComposer extends Component {
   }
 
   reportReplyingPresence() {
-    if (!this.args.channel) {
+    if (!this.args.channel || !this.currentMessage) {
       return;
     }
 
@@ -222,7 +250,7 @@ export default class ChatComposer extends Component {
     }
 
     this.chatComposerPresenceManager.notifyState(
-      this.args.channel.id,
+      this.presenceChannelName,
       !this.currentMessage.editing && this.hasContent
     );
   }
@@ -297,9 +325,13 @@ export default class ChatComposer extends Component {
       !this.hasContent &&
       !this.currentMessage.editing
     ) {
-      const editableMessage = this.pane?.lastCurrentUserMessage;
-      if (editableMessage) {
-        this.composer.editMessage(editableMessage);
+      if (event.shiftKey) {
+        this.composer.replyTo(this.pane?.lastMessage);
+      } else {
+        const editableMessage = this.pane?.lastCurrentUserMessage;
+        if (editableMessage) {
+          this.composer.editMessage(editableMessage);
+        }
       }
     }
 

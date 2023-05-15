@@ -2395,6 +2395,7 @@ hr:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - dovršeno"
       new_features: "Dostupne su nove značajke!"
+      admin_problems: "Novi savjeti na vašoj nadzornoj ploči"
       dismiss_confirmation:
         body:
           default:

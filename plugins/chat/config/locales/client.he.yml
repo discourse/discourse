@@ -86,7 +86,11 @@ he:
       collapse: "צמצום מגירת צ׳אט"
       expand: "הרחבת מגירת הצ׳אט"
       confirm_flag: "לסמן את ההודעה של %{username}?"
-      deleted: "הודעה נמחקה. [צפייה]"
+      deleted:
+        one: "הודעה נמחקה. [הצגה]"
+        two: "%{count} הודעות נמחקו. [הצגה של הכול]"
+        many: "%{count} הודעות נמחקו. [הצגה של הכול]"
+        other: "%{count} הודעות נמחקו. [הצגה של הכול]"
       hidden: "הודעה הוסתרה. [צפייה]"
       delete: "מחיקה"
       edited: "נערך"
@@ -240,6 +244,8 @@ he:
       close_full_page: "סגירת צ׳אט במסך מלא"
       open_message: "פתיחת הודעה בצ׳אט"
       placeholder_self: "לקשקש משהו"
+      placeholder_channel: "צ׳אט ב־%{channelName}"
+      placeholder_thread: "צ'אט בשרשור"
       placeholder_users: "צ׳אט עם %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "הערוץ הועבר לארכיון, אי אפשר לשלוח אליו הודעות חדשות כעת."
@@ -275,6 +281,8 @@ he:
       title: "צ׳אט"
       title_capitalized: "צ׳אט"
       upload: "צירוף קובץ"
+      upload_to_channel: "העלאה אל %{title}"
+      upload_to_thread: "העלאה לשרשור"
       uploaded_files:
         one: "קובץ %{count}"
         two: "%{count} קבצים"
@@ -559,6 +567,7 @@ he:
           many: "%{count} תגובות"
           other: "%{count} תגובות"
         label: שרשור
+        close: "סגירת שרשור"
       threads:
         started_by: "נפתח ע״י"
         open: "פתיחת שרשור"

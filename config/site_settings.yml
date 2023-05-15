@@ -385,7 +385,8 @@ basic:
     default: false
   enable_user_tips:
     client: true
-    default: false
+    default: true
+    refresh: true
 
 login:
   invite_only:
@@ -958,6 +959,9 @@ posting:
       ja: 120
       zh_CN: 120
       zh_TW: 120
+  default_subcategory_on_read_only_category:
+    client: true
+    default: false
   show_pinned_excerpt_mobile:
     client: true
     default: true
@@ -1708,7 +1712,9 @@ security:
   allow_indexing_non_canonical_urls:
     default: true
     hidden: true
-  moderators_manage_categories_and_groups: false
+  moderators_manage_categories_and_groups:
+    default: false
+    client: true
   moderators_change_post_ownership:
     client: true
     default: false
@@ -2104,7 +2110,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-    hidden: true
 
 navigation:
   navigation_menu:
@@ -2129,13 +2134,6 @@ navigation:
       - "unread_new"
   enable_new_notifications_menu:
     default: true
-  enable_custom_sidebar_sections:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
 
 embedding:
   embed_by_username:
@@ -2432,7 +2430,7 @@ uncategorized:
     default: ""
     validator: "DefaultComposerCategoryValidator"
 
-  notify_about_flags_after:
+  notify_about_reviewable_item_after:
     type: float
     default: 48
 

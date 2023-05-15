@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { Promise } from "rsvp";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -7,6 +8,7 @@ import { bind, debounce } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 import { schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
+import { resetIdle } from "discourse/lib/desktop-notifications";
 
 const PAGE_SIZE = 50;
 
@@ -24,22 +26,16 @@ export default class ChatThreadPanel extends Component {
   @service capabilities;
 
   @tracked loading;
-  @tracked loadingMorePast;
   @tracked uploadDropZone;
 
   scrollable = null;
 
   get thread() {
-    return this.channel.activeThread;
+    return this.args.thread;
   }
 
   get channel() {
-    return this.chat.activeChannel;
-  }
-
-  @action
-  subscribeToUpdates() {
-    this.chatChannelThreadPaneSubscriptionsManager.subscribe(this.thread);
+    return this.thread?.channel;
   }
 
   @action
@@ -48,11 +44,8 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
-  setupMessage() {
-    this.chatChannelThreadComposer.message = ChatMessage.createDraftMessage(
-      this.channel,
-      { user: this.currentUser, thread_id: this.thread.id }
-    );
+  subscribeToUpdates() {
+    this.chatChannelThreadPaneSubscriptionsManager.subscribe(this.thread);
   }
 
   @action
@@ -67,18 +60,15 @@ export default class ChatThreadPanel extends Component {
 
   @action
   loadMessages() {
+    const message = ChatMessage.createDraftMessage(this.channel, {
+      user: this.currentUser,
+    });
+    message.thread = this.thread;
+    message.inReplyTo = this.thread.originalMessage;
+    this.chatChannelThreadComposer.message = message;
+
     this.thread.messagesManager.clearMessages();
-
-    if (this.args.targetMessageId) {
-      this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
-    }
-
-    // TODO (martin) Loading/scrolling to selected message
-    // this.highlightOrFetchMessage(this.requestedTargetMessageId);
-    // if (this.requestedTargetMessageId) {
-    // } else {
     this.fetchMessages();
-    // }
   }
 
   @action
@@ -93,24 +83,17 @@ export default class ChatThreadPanel extends Component {
   @debounce(100)
   fetchMessages() {
     if (this._selfDeleted) {
-      return;
+      return Promise.resolve();
     }
 
-    this.loadingMorePast = true;
+    if (this.thread.staged) {
+      this.thread.messagesManager.addMessages([this.thread.originalMessage]);
+      return Promise.resolve();
+    }
+
     this.loading = true;
 
-    const findArgs = { pageSize: PAGE_SIZE };
-
-    // TODO (martin) Find arguments for last read etc.
-    // const fetchingFromLastRead = !options.fetchFromLastMessage;
-    // if (this.requestedTargetMessageId) {
-    //   findArgs["targetMessageId"] = this.requestedTargetMessageId;
-    // } else if (fetchingFromLastRead) {
-    //   findArgs["targetMessageId"] = this._getLastReadId();
-    // }
-    //
-    findArgs.threadId = this.thread.id;
-
+    const findArgs = { pageSize: PAGE_SIZE, threadId: this.thread.id };
     return this.chatApi
       .messages(this.channel.id, findArgs)
       .then((results) => {
@@ -122,22 +105,14 @@ export default class ChatThreadPanel extends Component {
           );
         }
 
-        const [messages, meta] = this.afterFetchCallback(this.channel, results);
+        const [messages, meta] = this.afterFetchCallback(
+          this.channel,
+          this.thread,
+          results
+        );
         this.thread.messagesManager.addMessages(messages);
-
-        // TODO (martin) details needed for thread??
         this.thread.details = meta;
-
-        // TODO (martin) Scrolling to particular messages
-        // if (this.requestedTargetMessageId) {
-        //   this.scrollToMessage(findArgs["targetMessageId"], {
-        //     highlight: true,
-        //   });
-        // } else if (fetchingFromLastRead) {
-        //   this.scrollToMessage(findArgs["targetMessageId"]);
-        // } else if (messages.length) {
-        //   this.scrollToMessage(messages.lastObject.id);
-        // }
+        this.markThreadAsRead();
       })
       .catch(this.#handleErrors)
       .finally(() => {
@@ -145,16 +120,12 @@ export default class ChatThreadPanel extends Component {
           return;
         }
 
-        this.requestedTargetMessageId = null;
         this.loading = false;
-        this.loadingMorePast = false;
-
-        // this.fillPaneAttempt();
       });
   }
 
   @bind
-  afterFetchCallback(channel, results) {
+  afterFetchCallback(channel, thread, results) {
     const messages = [];
 
     results.chat_messages.forEach((messageData) => {
@@ -167,20 +138,26 @@ export default class ChatThreadPanel extends Component {
         );
       }
 
-      if (this.requestedTargetMessageId === messageData.id) {
-        messageData.expanded = !messageData.hidden;
-      } else {
-        messageData.expanded = !(messageData.hidden || messageData.deleted_at);
-      }
-
-      messages.push(ChatMessage.create(channel, messageData));
+      messageData.expanded = !(messageData.hidden || messageData.deleted_at);
+      const message = ChatMessage.create(channel, messageData);
+      message.thread = thread;
+      messages.push(message);
     });
 
     return [messages, results.meta];
   }
 
+  // NOTE: At some point we want to do this based on visible messages
+  // and scrolling; for now it's enough to do it when the thread panel
+  // opens/messages are loaded since we have no pagination for threads.
+  markThreadAsRead() {
+    return this.chatApi.markThreadAsRead(this.channel.id, this.thread.id);
+  }
+
   @action
   onSendMessage(message) {
+    resetIdle();
+
     if (message.editing) {
       this.#sendEditMessage(message);
     } else {
@@ -190,30 +167,29 @@ export default class ChatThreadPanel extends Component {
 
   @action
   resetComposer() {
-    this.chatChannelThreadComposer.reset(this.channel);
+    this.chatChannelThreadComposer.reset(this.channel, this.thread);
+  }
+
+  @action
+  resetActiveMessage() {
+    this.chat.activeMessage = null;
   }
 
   #sendNewMessage(message) {
-    // TODO (martin) For desktop notifications
-    // resetIdle()
+    message.thread = this.thread;
+
     if (this.chatChannelThreadPane.sending) {
       return;
     }
 
     this.chatChannelThreadPane.sending = true;
 
-    // TODO (martin) Handling case when channel is not followed???? IDK if we
-    // even let people send messages in threads without this, seems weird.
-
     this.thread.stageMessage(message);
     const stagedMessage = message;
     this.resetComposer();
     this.thread.messagesManager.addMessages([stagedMessage]);
 
-    // TODO (martin) Scrolling!!
-    // if (!this.channel.canLoadMoreFuture) {
-    //   this.scrollToBottom();
-    // }
+    this.scrollToBottom();
 
     return this.chatApi
       .sendMessage(this.channel.id, {
@@ -221,10 +197,8 @@ export default class ChatThreadPanel extends Component {
         in_reply_to_id: stagedMessage.inReplyTo?.id,
         staged_id: stagedMessage.id,
         upload_ids: stagedMessage.uploads.map((upload) => upload.id),
-        thread_id: stagedMessage.threadId,
-      })
-      .then(() => {
-        this.scrollToBottom();
+        thread_id: this.thread.staged ? null : stagedMessage.thread.id,
+        staged_thread_id: this.thread.staged ? stagedMessage.thread.id : null,
       })
       .catch((error) => {
         this.#onSendError(stagedMessage.id, error);
@@ -249,7 +223,7 @@ export default class ChatThreadPanel extends Component {
     this.resetComposer();
 
     return this.chatApi
-      .editMessage(message.channelId, message.id, data)
+      .editMessage(message.channel.id, message.id, data)
       .catch(popupAjaxError)
       .finally(() => {
         this.chatChannelThreadPane.sending = false;
@@ -265,9 +239,9 @@ export default class ChatThreadPanel extends Component {
       return;
     }
 
-    this.scrollable.scrollTop = -1;
+    this.scrollable.scrollTop = this.scrollable.scrollHeight + 1;
     this.forceRendering(() => {
-      this.scrollable.scrollTop = 0;
+      this.scrollable.scrollTop = this.scrollable.scrollHeight;
     });
   }
 
@@ -304,7 +278,6 @@ export default class ChatThreadPanel extends Component {
 
   @action
   resendStagedMessage() {}
-  // resendStagedMessage(stagedMessage) {}
 
   @action
   messageDidEnterViewport(message) {

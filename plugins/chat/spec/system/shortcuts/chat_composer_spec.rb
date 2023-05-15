@@ -92,11 +92,10 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
     fab!(:message_1) do
       Fabricate(:chat_message, message: "message 1", chat_channel: channel_1, user: current_user)
     end
-    before { Fabricate(:chat_message, message: "message 2", chat_channel: channel_1) }
+    fab!(:message_2) { Fabricate(:chat_message, message: "message 2", chat_channel: channel_1) }
 
     it "edits last editable message" do
       chat.visit_channel(channel_1)
-      expect(channel_page).to have_message(id: message_1.id)
 
       find(".chat-composer__input").send_keys(:arrow_up)
 
@@ -104,8 +103,6 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
     end
 
     context "when last message is not editable" do
-      after { page.driver.browser.network_conditions = { offline: false } }
-
       it "does not edit a message" do
         chat.visit_channel(channel_1)
         page.driver.browser.network_conditions = { offline: true }
@@ -114,6 +111,18 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
         find(".chat-composer__input").send_keys(:arrow_up)
 
         expect(page).to have_no_css(".chat-composer-message-details")
+
+        page.driver.browser.network_conditions = { offline: false }
+      end
+    end
+
+    context "with shift" do
+      it "starts replying to the last message" do
+        chat.visit_channel(channel_1)
+
+        find(".chat-composer__input").send_keys(%i[shift arrow_up])
+
+        expect(channel_page).to be_replying_to(message_2)
       end
     end
   end

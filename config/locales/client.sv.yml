@@ -2328,6 +2328,7 @@ sv:
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
       votes_released: "%{description} - slutförd"
       new_features: "Nya funktioner tillgängliga!"
+      admin_problems: "Nytt råd på din webbplats översiktspanel"
       dismiss_confirmation:
         body:
           default:
@@ -4478,6 +4479,9 @@ sv:
         user_promoted_event:
           name: "Användarfrämjande händelse"
           details: "När en användare befordras från en förtroendenivå till en annan."
+        user_badge_event:
+          name: "Utmärkelsehändelse"
+          details: "När en utmärkelse beviljas eller återkallas."
         group_user_event:
           name: "Gruppanvändarhändelse"
           details: "När en användare läggs till i, eller tas bort från, en grupp."

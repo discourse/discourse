@@ -247,13 +247,17 @@ class TagsController < ::ApplicationController
     filter_params = {
       for_input: params[:filterForInput],
       selected_tags: params[:selected_tags],
-      limit: params[:limit],
       exclude_synonyms: params[:excludeSynonyms],
       exclude_has_synonyms: params[:excludeHasSynonyms],
     }
 
-    if filter_params[:limit] && filter_params[:limit].to_i < 0
-      raise Discourse::InvalidParameters.new(:limit)
+    if params[:limit]
+      begin
+        filter_params[:limit] = Integer(params[:limit])
+        raise Discourse::InvalidParameters.new(:limit) if !filter_params[:limit].positive?
+      rescue ArgumentError
+        raise Discourse::InvalidParameters.new(:limit)
+      end
     end
 
     filter_params[:category] = Category.find_by_id(params[:categoryId]) if params[:categoryId]

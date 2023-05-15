@@ -1391,7 +1391,6 @@ hr:
     allowed_href_schemes: "Sheme dopuštene u vezama uz http i https."
     embed_post_limit: "Maksimalan broj postova za ugradnju."
     embed_username_required: "Potrebno je korisničko ime za kreiranje teme."
-    notify_about_flags_after: "Ako postoje zastavice koje nisu obrađene nakon toliko sati, pošaljite osobnu poruku moderatorima. Postavite na 0 za onemogućavanje."
     show_create_topics_notice: "Ako stranica ima manje od 5 javnih tema, pokažite obavijest u kojoj se od administratora traži da kreiraju neke teme."
     delete_drafts_older_than_n_days: "Izbriši skice starije od (n) dana."
     delete_merged_stub_topics_after_days: "Broj dana čekanja prije automatskog brisanja potpuno spojenih tema. Postavite na 0 da nikada ne brišete nezavršene teme."
@@ -1446,7 +1445,6 @@ hr:
     enable_sitemap: "Generirajte kartu web stranice za svoju web stranicu i uključite je u datoteku robots.txt."
     sitemap_page_size: "Broj URL-ova koje treba uključiti u svaku stranicu karte web-lokacije. Najviše 50.000"
     enable_user_status: "(eksperimentalno) Omogućuje korisnicima postavljanje prilagođene statusne poruke (emoji + opis)."
-    enable_user_tips: "(eksperimentalno) Omogućite nove korisničke savjete koji korisnicima opisuju ključne značajke"
     short_title: "Kratki naslov koristit će se na korisničkom početnom zaslonu, pokretaču ili drugim mjestima gdje je prostor ograničen. Trebao bi biti ograničen na 12 znakova."
     dashboard_hidden_reports: "Omogućuje skrivanje navedenih izvješća s nadzorne ploče."
     dashboard_visible_tabs: "Odaberite koje su kartice nadzorne ploče vidljive."
@@ -1768,9 +1766,6 @@ hr:
       subject_template: "Dobrodošli na %{site_name}"
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}"
-    dashboard_problems:
-      title: "Problemi nadzorne ploče"
-      subject_template: "Novi savjeti na vašoj nadzornoj ploči"
   user_notifications:
     user_quoted:
       title: "Korisnik je citirao"

@@ -1,3 +1,4 @@
+@import "chat-height-mixin";
 @import "base-common";
 @import "sidebar-extensions";
 @import "chat-browse";
@@ -47,3 +48,6 @@
 @import "full-page-chat-header";
 @import "incoming-chat-webhooks";
 @import "reviewable-chat-message";
+@import "chat-thread-list-item";
+@import "chat-threads-list";
+@import "chat-thread-original-message";

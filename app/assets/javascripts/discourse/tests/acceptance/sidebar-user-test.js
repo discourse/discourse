@@ -51,13 +51,28 @@ acceptance(
         "hides the sidebar dropdown"
       );
     });
+
+    test("'more' dropdown should display as regular list items in header dropdown mode", async function (assert) {
+      await visit("/");
+      await click(".hamburger-dropdown");
+
+      assert.ok(
+        exists("[data-link-name='admin']"),
+        "the admin link is not within the 'more' dropdown"
+      );
+
+      assert.notOk(
+        exists(".sidebar-more-section-links-details-summary"),
+        "the 'more' dropdown should not be present in header dropdown mode"
+      );
+    });
   }
 );
 
 acceptance(
   "Sidebar - Experimental sidebar and hamburger setting enabled - Sidebar enabled",
   function (needs) {
-    needs.user();
+    needs.user({});
 
     needs.settings({
       navigation_menu: "sidebar",

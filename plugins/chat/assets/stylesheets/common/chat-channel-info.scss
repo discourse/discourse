@@ -101,10 +101,6 @@ input.channel-members-view__search-input {
   flex-direction: column;
   margin-top: 1em;
   box-sizing: border-box;
-  min-height: 1px;
-  overflow-y: auto;
-  height: 100%;
-  @include chat-scrollbar();
 }
 
 .channel-members-view__list-item {

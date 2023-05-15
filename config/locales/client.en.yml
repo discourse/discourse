@@ -1930,6 +1930,10 @@ en:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
 
+      welcome_topic:
+        title: "Edit the welcome topic"
+        content: "Help new members feel at home by customizing this topic to suit your community's needs."
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"
@@ -2064,10 +2068,6 @@ en:
       hidden_for_session: "OK, we'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
       value_prop: "Tired of scrolling through the same posts? When you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
-
-    offline_indicator:
-      no_internet: "No internet connection."
-      refresh_page: "Refresh page"
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
@@ -2584,6 +2584,7 @@ en:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
       new_features: "New features available!"
+      admin_problems: "New advice on your site dashboard"
       dismiss_confirmation:
         body:
           default:
@@ -4150,7 +4151,9 @@ en:
         one: "Earned this badge %{count} time"
         other: "Earned this badge %{count} times"
       granted_on: "Granted %{date}"
-      others_count: "Others with this badge (%{count})"
+      others_count:
+        one: "Granted to others %{count} time"
+        other: "Granted to others %{count} times"
       title: Badges
       allow_title: "You can use this badge as a title"
       multiple_grant: "You can earn this multiple times"

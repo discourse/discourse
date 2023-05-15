@@ -509,6 +509,7 @@ de:
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
     dominating_topic: Du hast in diesem Thema schon eine Menge gepostet! Gib doch auch anderen die Möglichkeit, hier zu antworten und miteinander zu diskutieren.
     get_a_room: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
+    dont_feed_the_trolls: Dieser Beitrag wurde bereits für die Moderation markiert. Bist du sicher, dass du darauf antworten möchtest? Antworten auf negative Inhalte ermutigen eher zu noch mehr negativem Verhalten.
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
 
@@ -1984,6 +1985,7 @@ de:
     allow_profile_backgrounds: "Benutzern erlauben, Profilhintergründe hochzuladen."
     sequential_replies_threshold: "Anzahl an aufeinanderfolgenden Beiträgen, die ein Benutzer in einem Thema schreiben kann, bevor er eine entsprechende Benachrichtigung diesbezüglich erhält."
     get_a_room_threshold: "Anzahl an Beiträgen, die ein Benutzer im selben Thema an dieselbe Person schreiben kann, bevor er gewarnt wird."
+    dont_feed_the_trolls_threshold: "Anzahl der Flaggen von anderen Nutzern, bevor sie verwarnt werden."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit, zur vollständigen Website zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Fully-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Beiträge eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     disable_avatar_education_message: "Deaktiviert den Hinweis für Benutzer, dass sie ihren Avatar ändern können."
@@ -2029,10 +2031,11 @@ de:
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
     embed_post_limit: "Maximale Anzahl der Beiträge, die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig."
-    notify_about_flags_after: "Wenn es Meldungen gibt, die nicht innerhalb der angegebenen Anzahl von Stunden bearbeitet wurden, sende eine persönliche Nachricht an die Moderatoren. Zum Deaktivieren auf 0 setzen."
+    notify_about_reviewable_item_after: "Wenn es überprüfbare Beiträge gibt, die nach so vielen Stunden noch nicht bearbeitet wurden, schicke eine persönliche Nachricht an die Moderatoren. Zum Deaktivieren auf 0 setzen."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die älter als (n) Tage sind."
     delete_merged_stub_topics_after_days: "Anzahl der abzuwartenden Tage, bevor vollständig zusammengeführte Stub-Themen automatisch gelöscht werden. Auf 0 setzen, um Stub-Themen nie zu löschen."
+    bootstrap_mode_min_users: "Mindestanzahl der Benutzer, die erforderlich ist, um den Bootstrap-Modus zu deaktivieren (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern)"
     prevent_anons_from_downloading_files: "Verhindern, dass anonyme Benutzer Anhänge herunterladen können."
     secure_uploads: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, ZIPs und andere). Wenn „Anmeldung erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienuploads in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein umfassendes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/-/140017">das Thema „Sichere Uploads“ auf Meta</a> für Details.'
     secure_uploads_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung „secure uploads max email embed image size kb“."
@@ -2103,7 +2106,9 @@ de:
     revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API-Schlüssel automatisch widerrufen wird (0 für niemals)"
     allow_user_api_keys: "Erlaube das Generieren von Benutzer-API-Schlüsseln"
     allow_user_api_key_scopes: "Liste erlaubter Bereiche für Benutzer-API-Schlüssel"
-    min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API-Schlüsseln"
+    min_trust_level_for_user_api_key: |
+      Vertrauensstufe, die für die Generierung von Benutzer-API-Schlüsseln erforderlich ist.<br>
+      <b>WARNUNG</b>: Die Änderung der Vertrauensstufe verhindert, dass sich Nutzer mit einer niedrigeren Vertrauensstufe über Discourse Hub anmelden können.
     allowed_user_api_auth_redirects: "Zulässige URL für Authentifizierungs-Umleitung für Benutzer-API-Schlüssel. Das Platzhaltersymbol * kann verwendet werden, um jeden Bestandteil der Adresse zu ersetzen (z. B. www.example.com/*)."
     allowed_user_api_push_urls: "Erlaubte URLs für Server-Push zur Benutzer-API"
     expire_user_api_keys_days: "Anzahl der Tage, bevor ein Benutzer-API-Schlüssel automatisch abläuft (0 für niemals)"
@@ -2136,7 +2141,7 @@ de:
     enable_sitemap: "Generiere eine Sitemap für deine Website und füge sie in die robots.txt-Datei ein."
     sitemap_page_size: "Anzahl der URLs, die auf jeder Sitemap-Seite enthalten sein sollen. Max 50.000"
     enable_user_status: "(Experimentell) Erlaubt es Benutzern, eine eigene Statusnachricht (Emoji + Beschreibung) einzustellen."
-    enable_user_tips: "(Experimentell) Tipps für neue Benutzer aktivieren, die den Benutzern wichtige Funktionen beschreiben"
+    enable_user_tips: "Aktiviere neue Benutzertipps, die Benutzern die wichtigsten Funktionen beschreiben"
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
@@ -2159,6 +2164,7 @@ de:
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     experimental_new_new_view_groups: "EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf."
     enable_custom_sidebar_sections: "EXPERIMENTELL: Aktiviere benutzerdefinierte Seitenleistenabschnitte"
+    experimental_topics_filter: "EXPERIMENTELL: Aktiviert die Filterroute für experimentelle Themen unter /filter"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -3189,15 +3195,6 @@ de:
       title: "Download von externen Bildern deaktiviert"
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die Einstellung `download_remote_images_to_local` wurde deaktiviert, da das Speicherplatzlimit von `download_remote_images_threshold` erreicht wurde."
-    dashboard_problems:
-      title: "Dashboard-Probleme"
-      subject_template: "Neue Ratschläge auf deinem Website-Dashboard"
-      text_body_template: |
-        Basierend auf deinen aktuellen Website-Einstellungen haben wir einige neue Ratschläge und Empfehlungen für dich.
-
-        [Besuche das Dashboard deiner Website](%{base_url}/admin), um sie zu sehen.
-
-        Sollte im Dashboard nichts sichtbar sein, hat bereits ein anderes Team-Mitglied auf die Ratschläge reagiert. Eine Liste der Team-Aktionen findest du in den [Protokollen für Team-Aktionen](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Du bist ein neuer Benutzer des Monats!"
       subject_template: "Du bist ein neuer Benutzer des Monats!"

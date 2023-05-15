@@ -2,6 +2,7 @@ import Service, { inject as service } from "@ember/service";
 import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatChannelArchive from "../models/chat-channel-archive";
 
 export default class ChatSubscriptionsManager extends Service {
   @service store;
@@ -49,6 +50,11 @@ export default class ChatSubscriptionsManager extends Service {
     }
 
     this._channelSubscriptions.delete(channel.id);
+  }
+
+  restartChannelsSubscriptions(messageBusIds) {
+    this.stopChannelsSubscriptions();
+    this.startChannelsSubscriptions(messageBusIds);
   }
 
   startChannelsSubscriptions(messageBusIds) {
@@ -120,13 +126,7 @@ export default class ChatSubscriptionsManager extends Service {
           return;
         }
 
-        channel.setProperties({
-          archive_failed: busData.archive_failed,
-          archive_completed: busData.archive_completed,
-          archived_messages: busData.archived_messages,
-          archive_topic_id: busData.archive_topic_id,
-          total_messages: busData.total_messages,
-        });
+        channel.archive = ChatChannelArchive.create(busData);
       });
   }
 
@@ -134,8 +134,8 @@ export default class ChatSubscriptionsManager extends Service {
   _onNewMentions(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       const membership = channel.currentUserMembership;
-      if (busData.message_id > membership?.last_read_message_id) {
-        membership.unread_mentions = (membership.unread_mentions || 0) + 1;
+      if (busData.message_id > membership?.lastReadMessageId) {
+        membership.unreadMentions = (membership.unreadMentions || 0) + 1;
       }
     });
   }
@@ -181,20 +181,18 @@ export default class ChatSubscriptionsManager extends Service {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       if (busData.user_id === this.currentUser.id) {
         // User sent message, update tracking state to no unread
-        channel.currentUserMembership.last_read_message_id = busData.message_id;
+        channel.currentUserMembership.lastReadMessageId = busData.message_id;
       } else {
         // Ignored user sent message, update tracking state to no unread
         if (this.currentUser.ignored_users.includes(busData.username)) {
-          channel.currentUserMembership.last_read_message_id =
-            busData.message_id;
+          channel.currentUserMembership.lastReadMessageId = busData.message_id;
         } else {
           // Message from other user. Increment trackings state
           if (
             busData.message_id >
-            (channel.currentUserMembership.last_read_message_id || 0)
+            (channel.currentUserMembership.lastReadMessageId || 0)
           ) {
-            channel.currentUserMembership.unread_count =
-              channel.currentUserMembership.unread_count + 1;
+            channel.currentUserMembership.unreadCount++;
           }
         }
       }
@@ -251,17 +249,10 @@ export default class ChatSubscriptionsManager extends Service {
   @bind
   _updateChannelTrackingData(channelId, trackingData) {
     this.chatChannelsManager.find(channelId).then((channel) => {
-      if (
-        !channel?.currentUserMembership?.last_read_message_id ||
-        parseInt(channel?.currentUserMembership?.last_read_message_id, 10) <=
-          trackingData.last_read_message_id
-      ) {
-        channel.currentUserMembership.last_read_message_id =
-          trackingData.last_read_message_id;
-        channel.currentUserMembership.unread_count = trackingData.unread_count;
-        channel.currentUserMembership.unread_mentions =
-          trackingData.mention_count;
-      }
+      channel.currentUserMembership.lastReadMessageId =
+        trackingData.last_read_message_id;
+      channel.currentUserMembership.unreadCount = trackingData.unread_count;
+      channel.currentUserMembership.unreadMentions = trackingData.mention_count;
     });
   }
 
@@ -290,7 +281,7 @@ export default class ChatSubscriptionsManager extends Service {
         channel.isDirectMessageChannel &&
         !channel.currentUserMembership.following
       ) {
-        channel.currentUserMembership.unread_count = 1;
+        channel.currentUserMembership.unreadCount = 1;
       }
 
       this.chatChannelsManager.follow(channel);
@@ -342,9 +333,7 @@ export default class ChatSubscriptionsManager extends Service {
       .find(busData.chat_channel_id, { fetchIfNotFound: false })
       .then((channel) => {
         if (channel) {
-          channel.setProperties({
-            memberships_count: busData.memberships_count,
-          });
+          channel.membershipsCount = busData.memberships_count;
           this.appEvents.trigger("chat:refresh-channel-members");
         }
       });
@@ -354,11 +343,9 @@ export default class ChatSubscriptionsManager extends Service {
   _onChannelEdits(busData) {
     this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
       if (channel) {
-        channel.setProperties({
-          title: busData.name,
-          description: busData.description,
-          slug: busData.slug,
-        });
+        channel.title = busData.name;
+        channel.description = busData.description;
+        channel.slug = busData.slug;
       }
     });
   }
@@ -366,15 +353,15 @@ export default class ChatSubscriptionsManager extends Service {
   @bind
   _onChannelStatus(busData) {
     this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
-      channel.set("status", busData.status);
+      channel.status = busData.status;
 
       // it is not possible for the user to set their last read message id
       // if the channel has been archived, because all the messages have
       // been deleted. we don't want them seeing the blue dot anymore so
       // just completely reset the unreads
       if (busData.status === CHANNEL_STATUSES.archived) {
-        channel.currentUserMembership.unread_count = 0;
-        channel.currentUserMembership.unread_mentions = 0;
+        channel.currentUserMembership.unreadCount = 0;
+        channel.currentUserMembership.unreadMentions = 0;
       }
     });
   }

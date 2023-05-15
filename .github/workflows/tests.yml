@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   build:
-    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
@@ -29,7 +29,7 @@ jobs:
       PGUSER: discourse
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
-      CAPBYARA_DEFAULT_MAX_WAIT_TIME: 4
+      CABPYARA_DEFAULT_MAX_WAIT_TIME: 4
 
     strategy:
       fail-fast: false
@@ -37,7 +37,7 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins]
-        ruby: ['3.2']
+        ruby: ["3.2"]
         exclude:
           - build_type: annotations
             target: plugins
@@ -72,8 +72,7 @@ jobs:
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.ruby }}-gem-
+          restore-keys: ${{ runner.os }}-${{ matrix.ruby }}-gem-
 
       - name: Setup gems
         run: |
@@ -94,11 +93,10 @@ jobs:
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          restore-keys: ${{ runner.os }}-yarn-
 
       - name: Yarn install
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
@@ -113,10 +111,9 @@ jobs:
         id: app-cache
         with:
           path: tmp/app-cache
-          key: >- # postgres version, hash of migrations, "parallel?"
+          key: >-
             ${{ runner.os }}-
             ${{ hashFiles('.github/workflows/tests.yml') }}-
-            ${{ matrix.postgres }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
             ${{ env.USES_PARALLEL_DATABASES }}
 
@@ -180,7 +177,7 @@ jobs:
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec
+        run: bin/rake plugin:turbo_spec['*','--verbose --format documentation']
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
@@ -197,11 +194,11 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec spec/system
+        run: PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --verbose --format documentation spec/system
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec plugins/*/spec/system
+        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --verbose --format documentation plugins/*/spec/system
         timeout-minutes: 30
 
       - name: Upload failed system test screenshots
@@ -229,7 +226,7 @@ jobs:
         timeout-minutes: 30
 
   core_frontend_tests:
-    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: core frontend (${{ matrix.browser }})
     runs-on: ubuntu-20.04-8core
     container:
@@ -267,26 +264,25 @@ jobs:
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          restore-keys: ${{ runner.os }}-yarn-
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
         run: |
           mkdir /tmp/emberbuild
-          yarn ember build --environment=test  -o /tmp/emberbuild
+          yarn ember build --environment=test -o /tmp/emberbuild
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5  --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
-          name: ember-exam-execution-${{matrix.browser}}
+          name: ember-exam-execution-${{ matrix.browser }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json

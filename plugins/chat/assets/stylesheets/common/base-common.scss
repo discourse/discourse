@@ -428,8 +428,7 @@ body.has-full-page-chat {
     }
   }
 
-  .chat-messages-scroll,
-  .chat-channel {
+  .chat-messages-scroll {
     box-sizing: border-box;
     height: 100%;
   }
@@ -574,10 +573,6 @@ html.has-full-page-chat {
   height: 100%;
   width: 100%;
 
-  &.keyboard-visible body #main-outlet .full-page-chat {
-    padding-bottom: 0.2rem;
-  }
-
   body {
     height: 100%;
     width: 100%;
@@ -585,10 +580,6 @@ html.has-full-page-chat {
     #main-outlet {
       display: flex;
       flex-direction: column;
-      max-height: calc(
-        var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-          var(--composer-height, 0px)
-      );
 
       .full-page-chat {
         height: 100%;
@@ -611,38 +602,11 @@ html.has-full-page-chat {
 
   // these need to apply to desktop too, because iPads
   &.discourse-touch {
-    // iPad web
-    #main-outlet-wrapper {
-      // restrict the row height, including when virtual keyboard is open
-      grid-template-rows: calc(
-        var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px)
-      );
-
-      .footer-nav-ipad & {
-        grid-template-rows: calc(
-          var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-            var(--footer-nav-height, 0px)
-        );
-      }
-
-      .sidebar-wrapper {
-        // prevents sidebar from overflowing behind the virtual keyboard
-        height: 100%;
-      }
-    }
-
     .full-page-chat,
     .chat-channel,
     #main-outlet {
       // allows containers to shrink to fit
       min-height: 0;
-    }
-
-    #main-outlet {
-      // limits height for iPad
-      max-height: calc(
-        100vh - calc(var(--header-offset) + var(--composer-ipad-padding))
-      );
     }
   }
   [data-popper-reference-hidden] {

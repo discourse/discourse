@@ -3,10 +3,9 @@
   data-id={{this.thread.id}}
   {{did-insert this.setUploadDropZone}}
   {{did-insert this.subscribeToUpdates}}
-  {{did-insert this.loadMessages}}
   {{did-update this.subscribeToUpdates this.thread.id}}
-  {{did-update this.loadMessages this.thread.id}}
-  {{did-insert this.setupMessage}}
+  {{did-insert this.loadMessages}}
+  {{did-update this.loadMessages this.thread}}
   {{will-destroy this.unsubscribeFromUpdates}}
 >
   {{#if @includeHeader}}
@@ -26,6 +25,7 @@
   <div
     class="chat-thread__body popper-viewport"
     {{did-insert this.setScrollable}}
+    {{on "scroll" this.resetActiveMessage passive=true}}
   >
     <div
       class="chat-thread__messages chat-messages-container"
@@ -41,7 +41,7 @@
           @context="thread"
         />
       {{/each}}
-      {{#if (or this.loading this.loadingMoreFuture)}}
+      {{#if this.loading}}
         <ChatSkeleton />
       {{/if}}
     </div>
@@ -60,6 +60,7 @@
   {{else}}
     <Chat::Composer::Thread
       @channel={{this.channel}}
+      @thread={{this.thread}}
       @onSendMessage={{this.onSendMessage}}
       @uploadDropZone={{this.uploadDropZone}}
     />

@@ -8,7 +8,7 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import { inject as service } from "@ember/service";
 import { schedule } from "@ember/runloop";
 import { gt, not } from "@ember/object/computed";
-import { createDirectMessageChannelDraft } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default Component.extend({
   tagName: "",
@@ -29,7 +29,7 @@ export default Component.extend({
 
     this.set("users", []);
     this.set("selectedUsers", []);
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
   },
 
   didInsertElement() {
@@ -124,6 +124,22 @@ export default Component.extend({
     schedule("afterRender", () => {
       document.querySelector(".filter-usernames")?.focus();
     });
+  },
+
+  @action
+  setDirectMessageCreatorHeight(element) {
+    document.documentElement.style.setProperty(
+      "--chat-direct-message-creator-height",
+      `${element.clientHeight}px`
+    );
+  },
+
+  @action
+  unsetDirectMessageCreatorHeight() {
+    document.documentElement.style.setProperty(
+      "--chat-direct-message-creator-height",
+      "0px"
+    );
   },
 
   @action

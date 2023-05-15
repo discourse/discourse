@@ -1851,7 +1851,6 @@ ko:
     allowed_href_schemes: "http 및 https 외에도 링크에 허용되는 스키마입니다."
     embed_post_limit: "임베드할 최대 게시물 수입니다."
     embed_username_required: "주제 생성을 위해 아이디가 필요합니다."
-    notify_about_flags_after: "이 시간이 지나도 처리되지 않은 신고가 있으면 운영자에게 개인 메시지를 보냅니다. 비활성화하려면 0으로 설정하세요."
     show_create_topics_notice: "사이트에 5개 미만의 공개 주제가 있는 경우 관리자에게 주제를 만들도록 요청하는 공지를 표시합니다."
     delete_drafts_older_than_n_days: "(n)일 지난 초안을 삭제합니다."
     delete_merged_stub_topics_after_days: "완전히 병합된 스텁 주제를 자동으로 삭제하기 전에 대기할 일 수입니다. 스텁 주제를 삭제하지 않으려면 0으로 설정하세요."
@@ -1921,7 +1920,6 @@ ko:
     revoke_api_keys_days: "사용하지 않는 API 키가 자동으로 취소되기까지의 기간(일)(0은 취소 안 함)"
     allow_user_api_keys: "사용자 API 키 생성 허용"
     allow_user_api_key_scopes: "사용자 API 키에 허용되는 범위 목록"
-    min_trust_level_for_user_api_key: "사용자 API 키 생성을 위한 신뢰 레벨"
     allowed_user_api_auth_redirects: "사용자 API 키의 인증 리디렉션을 위해 허용된 URL입니다. 와일드 카드 기호 *를 사용하면 일부를 일치시킬 수 있습니다(예 : www.example.com/*)."
     allowed_user_api_push_urls: "사용자 API의 서버 푸시를 위한 허용된 URL"
     expire_user_api_keys_days: "사용자 API 키가 자동으로 만료되기까지의 기간(일)(0은 만료 안 함)"
@@ -2857,15 +2855,6 @@ ko:
       title: "원격 이미지 다운로드 비활성화됨"
       subject_template: "원격 이미지 다운로드 비활성화됨"
       text_body_template: "`download_remote_images_threshold` 디스크 용량 한도에 도달하여 `download_remote_images_to_local` 설정이 비활성화되었습니다."
-    dashboard_problems:
-      title: "대시보드 문제"
-      subject_template: "사이트 대시보드에 대한 새로운 조언"
-      text_body_template: |
-        현재 사이트 설정과 관련하여 새로운 조언과 권장 사항이 있습니다.
-
-        [사이트 대시보드를 방문](%{base_url}/admin)하여 확인하세요.
-
-        대시보드에 아무것도 표시되지 않으면 다른 운영진이 이미 이 조언에 따라 조치를 취했을 수 있습니다. 운영진의 작업 목록은 [운영진 작업 로그](%{base_url}/admin/logs/staff_action_logs)를 확인하세요.
     new_user_of_the_month:
       title: "이달의 신규 사용자로 선정되었습니다!"
       subject_template: "이달의 신규 사용자로 선정되었습니다!"

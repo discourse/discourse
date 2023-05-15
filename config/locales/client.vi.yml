@@ -2024,6 +2024,7 @@ vi:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - hoàn thành"
+      admin_problems: "Lời khuyên mới trên bảng điều khiển trang web của bạn"
       dismiss_confirmation:
         body:
           default:

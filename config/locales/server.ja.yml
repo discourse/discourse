@@ -1944,7 +1944,6 @@ ja:
     allowed_href_schemes: "http と https のほかにリンクに使用できるスキーム。"
     embed_post_limit: "埋め込める投稿の最大数。"
     embed_username_required: "トピック作成用のユーザー名が必要です。"
-    notify_about_flags_after: "この時間の経過後に未処理の通報がある場合、モデレーターに個人メッセージを送信する。無効にするには 0 に設定します。"
     show_create_topics_notice: "サイトの公開トピック数が 5 件未満である場合、管理者にトピックを作成するかどうかを尋ねる通知を表示します。"
     delete_drafts_older_than_n_days: "(n) 日間経過した下書きを削除します。"
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまで待機する日数。0 に設定すると、スタブトピックは削除されません。"
@@ -2017,7 +2016,6 @@ ja:
     revoke_api_keys_days: "未使用の API キーが自動的に取り消されるまでの日数 (0 に設定すると取り消されません)"
     allow_user_api_keys: "ユーザー API キーの生成を許可する"
     allow_user_api_key_scopes: "ユーザー API キーに許可されるスコープのリスト"
-    min_trust_level_for_user_api_key: "ユーザー API キーの生成に必要な信頼レベル"
     allowed_user_api_auth_redirects: "ユーザー API キーの認証リダイレクトに許可された URL。任意の部分を照合するには、ワイルドカード記号 * を使用できます (例: www.example.com/*)。"
     allowed_user_api_push_urls: "ユーザー API へのサーバープッシュで許可される URL"
     expire_user_api_keys_days: "ユーザー API キーが自動的に期限切れになるまでの日数 (0 に設定すると期限切れになりません)"
@@ -2049,7 +2047,6 @@ ja:
     enable_sitemap: "サイトのサイトマップを生成し、robots.txt ファイルに含めます。"
     sitemap_page_size: "各サイトマップページに含める URL の数。最大 50,000"
     enable_user_status: "(実験的) ユーザーがカスタムステータスメッセージ (絵文字 + 説明) を設定できるようにします。"
-    enable_user_tips: "(実験的) 重要な機能をユーザーに説明する新しいユーザーヒントを有効にする"
     short_title: "短いタイトルはユーザーのホーム画面、ランチャー、またはスペースが限られている場所に使用されます。12 文字に制限する必要があります。"
     dashboard_hidden_reports: "ダッシュボードから指定されたレポートを非表示にすることを許可する。"
     dashboard_visible_tabs: "表示するダッシュボードのタブを選択します。"
@@ -3058,15 +3055,6 @@ ja:
       title: "リモート画像のダウンロードは無効化されています"
       subject_template: "リモート画像のダウンロードは無効化されました"
       text_body_template: "`download_remote_images_threshold` のディスク空き容量制限に達したため、`download_remote_images_to_local` 設定は無効になりました。"
-    dashboard_problems:
-      title: "ダッシュボードの問題"
-      subject_template: "サイトダッシュボードに関する新しいアドバイス"
-      text_body_template: |
-        あなたの現在のサイト設定に基づき、新しいアドバイスと推奨事項がいくつかあります。
-
-        [サイトダッシュボードにアクセス](%{base_url}/admin)して、それらをご覧ください。
-
-        ダッシュボードに何も表示されない場合は、別のスタッフメンバーがすでにこのアドバイスに対応した可能性があります。スタッフ操作のリストは[スタッフ操作ログ](%{base_url}/admin/logs/staff_action_logs)をご覧ください。
     new_user_of_the_month:
       title: "あなたは今月の新規ユーザーです！"
       subject_template: "あなたは今月の新規ユーザーです！"

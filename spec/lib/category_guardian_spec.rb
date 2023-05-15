@@ -39,6 +39,19 @@ RSpec.describe CategoryGuardian do
         expect(Guardian.new(user).can_post_in_category?(category)).to eq(false)
       end
 
+      it "returns false if everyone has readonly access" do
+        everyone = Group.find(Group::AUTO_GROUPS[:everyone])
+        everyone.add(user)
+        category = Fabricate(:category)
+        Fabricate(
+          :category_group,
+          category: category,
+          group: everyone,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+        expect(Guardian.new(user).can_post_in_category?(category)).to eq(false)
+      end
+
       it "returns true for admin" do
         expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
       end

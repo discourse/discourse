@@ -7,7 +7,7 @@
         this.currentMessage
         this.currentMessage.inReplyTo
       }}
-      @icon="pencil-alt"
+      @icon={{if this.currentMessage.editing "pencil-alt" "reply"}}
       @cancelAction={{this.onCancel}}
     />
   {{/if}}
@@ -25,7 +25,7 @@
     {{did-update this.didUpdateMessage this.currentMessage}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
     {{did-insert this.setupAppEvents}}
-    {{will-destroy this.teardownAppEvents}}
+    {{will-destroy this.teardown}}
     {{will-destroy this.cancelPersistDraft}}
   >
     <div class="chat-composer__outer-container">
@@ -93,7 +93,9 @@
 
   {{#if this.shouldRenderReplyingIndicator}}
     <div class="chat-replying-indicator-container">
-      <ChatReplyingIndicator @chatChannel={{@channel}} />
+      <ChatReplyingIndicator
+        @presenceChannelName={{this.presenceChannelName}}
+      />
     </div>
   {{/if}}
 

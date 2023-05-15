@@ -75,14 +75,14 @@ export default class ChatSelectionManager extends Component {
     const openOpts = {};
 
     if (this.chatChannel.isCategoryChannel) {
-      openOpts.categoryId = this.chatChannel.chatable_id;
+      openOpts.categoryId = this.chatChannel.chatableId;
     }
 
     if (this.site.mobileView) {
       // go to the relevant chatable (e.g. category) and open the
       // composer to insert text
-      if (this.chatChannel.chatable_url) {
-        this.router.transitionTo(this.chatChannel.chatable_url);
+      if (this.chatChannel.chatableUrl) {
+        this.router.transitionTo(this.chatChannel.chatableUrl);
       }
 
       await composer.focusComposer({

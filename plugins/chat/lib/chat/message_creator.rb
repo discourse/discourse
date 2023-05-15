@@ -13,6 +13,7 @@ module Chat
       chat_channel:,
       in_reply_to_id: nil,
       thread_id: nil,
+      staged_thread_id: nil,
       user:,
       content:,
       staged_id: nil,
@@ -31,6 +32,7 @@ module Chat
       @incoming_chat_webhook = incoming_chat_webhook
       @upload_ids = upload_ids || []
       @thread_id = thread_id
+      @staged_thread_id = staged_thread_id
       @error = nil
 
       @chat_message =
@@ -50,15 +52,23 @@ module Chat
         validate_message!(has_uploads: uploads.any?)
         validate_reply_chain!
         validate_existing_thread!
+
         @chat_message.thread_id = @existing_thread&.id
         @chat_message.cook
         @chat_message.save!
+        @chat_message.create_mentions
+
         create_chat_webhook_event
         create_thread
         @chat_message.attach_uploads(uploads)
         Chat::Draft.where(user_id: @user.id, chat_channel_id: @chat_channel.id).destroy_all
-        Chat::Publisher.publish_new!(@chat_channel, @chat_message, @staged_id)
-        resolved_thread&.increment_replies_count_cache
+        Chat::Publisher.publish_new!(
+          @chat_channel,
+          @chat_message,
+          @staged_id,
+          staged_thread_id: @staged_thread_id,
+        )
+        post_process_resolved_thread
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
         @chat_channel.touch(:last_message_sent_at)
@@ -123,6 +133,8 @@ module Chat
     end
 
     def validate_existing_thread!
+      return if @staged_thread_id.present? && @thread_id.blank?
+
       return if @thread_id.blank?
       @existing_thread = Chat::Thread.find(@thread_id)
 
@@ -165,7 +177,7 @@ module Chat
 
     def create_thread
       return if @in_reply_to_id.blank?
-      return if @chat_message.in_thread?
+      return if @chat_message.in_thread? && !@staged_thread_id.present?
 
       if @original_message.thread
         thread = @original_message.thread
@@ -177,9 +189,14 @@ module Chat
             channel: @chat_message.chat_channel,
           )
         @chat_message.in_reply_to.thread_id = thread.id
+      end
+
+      if @chat_message.chat_channel.threading_enabled
         Chat::Publisher.publish_thread_created!(
           @chat_message.chat_channel,
           @chat_message.in_reply_to,
+          thread.id,
+          @staged_thread_id,
         )
       end
 
@@ -210,6 +227,12 @@ module Chat
 
     def resolved_thread
       @existing_thread || @chat_message.thread
+    end
+
+    def post_process_resolved_thread
+      return if resolved_thread.blank?
+      resolved_thread.increment_replies_count_cache
+      Chat::UserChatThreadMembership.find_or_create_by!(user: @user, thread: resolved_thread)
     end
   end
 end

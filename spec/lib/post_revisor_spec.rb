@@ -388,6 +388,25 @@ RSpec.describe PostRevisor do
         expect(post.revisions.count).to eq(1)
       end
 
+      it "creates a new version when the post is flagged" do
+        SiteSetting.editing_grace_period = 1.minute
+
+        post = Fabricate(:post, raw: "hello world")
+
+        Fabricate(:flag, post: post, user: user)
+
+        revisor = PostRevisor.new(post)
+        revisor.revise!(
+          post.user,
+          { raw: "hello world, JK" },
+          revised_at: post.updated_at + 1.second,
+        )
+
+        post.reload
+        expect(post.version).to eq(2)
+        expect(post.revisions.count).to eq(1)
+      end
+
       it "doesn't create a new version" do
         SiteSetting.editing_grace_period = 1.minute
         SiteSetting.editing_grace_period_max_diff = 100
@@ -857,26 +876,6 @@ RSpec.describe PostRevisor do
           PostRevisor.new(second_post).revise!(second_post.user, raw: "Edit the 2nd post")
           topic.reload
         }.to_not change { topic.excerpt }
-      end
-    end
-
-    describe "welcome topic" do
-      before { SiteSetting.welcome_topic_id = topic.id }
-
-      it "should publish welcome topic edit message" do
-        revisor = PostRevisor.new(post)
-        first_post = topic.first_post
-        UserAuthToken.generate!(user_id: admin.id)
-        Discourse.cache.write(Site.welcome_topic_banner_cache_key(admin.id), true)
-
-        messages =
-          MessageBus.track_publish("/site/welcome-topic-banner") do
-            revisor.revise!(admin, { raw: "updated welcome topic body" })
-          end
-        welcome_topic_banner_message =
-          messages.find { |message| message.channel == "/site/welcome-topic-banner" }
-        expect(welcome_topic_banner_message).to be_present
-        expect(welcome_topic_banner_message.data).to eq(false)
       end
     end
 

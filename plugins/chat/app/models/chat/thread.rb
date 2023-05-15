@@ -3,6 +3,7 @@
 module Chat
   class Thread < ActiveRecord::Base
     EXCERPT_LENGTH = 150
+    MAX_TITLE_LENGTH = 100
 
     include Chat::ThreadCache
 
@@ -21,8 +22,11 @@ module Chat
              foreign_key: :thread_id,
              primary_key: :id,
              class_name: "Chat::Message"
+    has_many :user_chat_thread_memberships
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
+
+    validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
 
     def replies
       self.chat_messages.where.not(id: self.original_message_id)
@@ -37,7 +41,7 @@ module Chat
     end
 
     def excerpt
-      original_message.excerpt(max_length: EXCERPT_LENGTH)
+      original_message.rich_excerpt(max_length: EXCERPT_LENGTH)
     end
 
     def self.grouped_messages(thread_ids: nil, message_ids: nil, include_original_message: true)

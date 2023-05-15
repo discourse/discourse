@@ -84,7 +84,9 @@ sv:
       collapse: "Komprimera chattruta"
       expand: "Expandera chattlådan"
       confirm_flag: "Är du säker på att du vill flagga %{username}:s meddelande?"
-      deleted: "Ett meddelande raderades. [view]"
+      deleted:
+        one: "Ett meddelande raderades. [view]"
+        other: "%{count} meddelanden raderades. [visa alla]"
       hidden: "Ett meddelande doldes. [view]"
       delete: "Radera"
       edited: "redigerad"
@@ -222,6 +224,8 @@ sv:
       close_full_page: "Stäng helskärmschatt"
       open_message: "Öppna meddelande i chatten"
       placeholder_self: "Gör en anteckning"
+      placeholder_channel: "Chatta i %{channelName}"
+      placeholder_thread: "Chatta i tråden"
       placeholder_users: "Chatta med %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Kanalen är arkiverad, och du kan inte skicka nya meddelanden just nu."
@@ -257,6 +261,8 @@ sv:
       title: "chatt"
       title_capitalized: "Chatt"
       upload: "Bifoga en fil"
+      upload_to_channel: "Ladda upp till %{title}"
+      upload_to_thread: "Ladda upp till tråd"
       uploaded_files:
         one: "%{count} fil"
         other: "%{count} filer"
@@ -513,6 +519,7 @@ sv:
           one: "%{count} svar"
           other: "%{count} svar"
         label: Tråd
+        close: "Stäng tråd"
       threads:
         started_by: "Startad av"
         open: "Öppna tråd"

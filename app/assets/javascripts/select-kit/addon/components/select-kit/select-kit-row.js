@@ -3,16 +3,15 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import UtilsMixin from "select-kit/mixins/utils";
 import { guidFor } from "@ember/object/internals";
-import layout from "select-kit/templates/components/select-kit/select-kit-row";
 import { makeArray } from "discourse-common/lib/helpers";
 import { reads } from "@ember/object/computed";
 import { dasherize } from "@ember/string";
 
 export default Component.extend(UtilsMixin, {
-  layout,
   classNames: ["select-kit-row"],
   tagName: "li",
   tabIndex: 0,
+
   attributeBindings: [
     "tabIndex",
     "title",
@@ -24,6 +23,7 @@ export default Component.extend(UtilsMixin, {
     "guid:data-guid",
     "rowLang:lang",
   ],
+
   classNameBindings: [
     "isHighlighted",
     "isSelected",
@@ -31,8 +31,8 @@ export default Component.extend(UtilsMixin, {
     "isNone:none",
     "item.classNames",
   ],
-  index: 0,
 
+  index: 0,
   role: "menuitemradio",
 
   didInsertElement() {

@@ -7,8 +7,10 @@
   grid-area: main;
   width: 100%;
   min-width: 250px;
+  @include chat-height;
 
-  .open-drawer-btn {
+  .open-drawer-btn,
+  .open-thread-list-btn {
     color: var(--primary-low-mid);
 
     &:visited {
@@ -21,6 +23,24 @@
 
     > * {
       pointer-events: none;
+    }
+  }
+
+  .open-thread-list-btn {
+    .d-icon {
+      margin-right: 0;
+    }
+
+    &:hover {
+      .discourse-touch & {
+        background: none !important;
+      }
+    }
+
+    &:active {
+      .discourse-touch & {
+        background: var(--secondary-very-high) !important;
+      }
     }
   }
 

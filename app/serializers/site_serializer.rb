@@ -37,7 +37,6 @@ class SiteSerializer < ApplicationSerializer
     :hashtag_configurations,
     :hashtag_icons,
     :displayed_about_plugin_stat_groups,
-    :show_welcome_topic_banner,
     :anonymous_default_sidebar_tags,
     :anonymous_sidebar_sections,
     :whispers_allowed_groups_names,
@@ -206,7 +205,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def censored_regexp
-    WordWatcher.serializable_word_matcher_regexp(:censor)
+    WordWatcher.serializable_word_matcher_regexp(:censor, engine: :js)
   end
 
   def custom_emoji_translation
@@ -222,11 +221,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def watched_words_replace
-    WordWatcher.word_matcher_regexps(:replace)
+    WordWatcher.word_matcher_regexps(:replace, engine: :js)
   end
 
   def watched_words_link
-    WordWatcher.word_matcher_regexps(:link)
+    WordWatcher.word_matcher_regexps(:link, engine: :js)
   end
 
   def categories
@@ -249,10 +248,6 @@ class SiteSerializer < ApplicationSerializer
     About.displayed_plugin_stat_groups
   end
 
-  def show_welcome_topic_banner
-    Site.show_welcome_topic_banner?(scope)
-  end
-
   def anonymous_default_sidebar_tags
     SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
   end
@@ -266,6 +261,7 @@ class SiteSerializer < ApplicationSerializer
     SidebarSection
       .public_sections
       .includes(sidebar_section_links: :linkable)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
 
