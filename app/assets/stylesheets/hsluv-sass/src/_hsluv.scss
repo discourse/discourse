@@ -1,0 +1,40 @@
+@use './conversions' as conv;
+@use './conversions/xyz' as xyz;
+
+@function hsluv($hue, $saturation: null, $lightness: null) {
+  $hsluv: conv.args-hsl($hue, $saturation, $lightness);
+  $rgb: conv.hsluv-rgb($hsluv);
+
+  @return rgb(map-get($rgb, "r"), map-get($rgb, "g"), map-get($rgb, "b"));
+}
+
+@function hpluv($hue, $saturation: null, $lightness: null) {
+  $hpluv: conv.args-hsl($hue, $saturation, $lightness);
+  $rgb: conv.hpluv-rgb($hpluv);
+
+  @return rgb(map-get($rgb, "r"), map-get($rgb, "g"), map-get($rgb, "b"));
+}
+
+@function hsluva($hue, $saturation: null, $lightness: null, $alpha: 1) {
+  $hsluv: conv.args-hsl($hue, $saturation, $lightness);
+  $rgb: conv.hsluv-rgb($hsluv);
+
+  @return rgba(
+    map-get($rgb, "r"),
+    map-get($rgb, "g"),
+    map-get($rgb, "b"),
+    $alpha
+  );
+}
+
+@function hpluva($hue, $saturation: null, $lightness: null, $alpha: 1) {
+  $hpluv: conv.args-hsl($hue, $saturation, $lightness);
+  $rgb: conv.hpluv-rgb($hpluv);
+
+  @return rgba(
+    map-get($rgb, "r"),
+    map-get($rgb, "g"),
+    map-get($rgb, "b"),
+    $alpha
+  );
+}

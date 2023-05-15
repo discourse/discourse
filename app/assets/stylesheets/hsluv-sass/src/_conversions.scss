@@ -1,0 +1,71 @@
+@use 'sass:math';
+@use 'sass:map';
+
+@use './conversions/lch' as lch;
+@use './conversions/luv' as luv;
+@use './conversions/xyz' as xyz;
+@use './conversions/rgb' as rgb;
+
+@function args-hsl($hue, $saturation, $lightness) {
+  $hsl: $hue;
+
+  @if ($saturation and $lightness) {
+    @if unitless($hue) {
+      $hue: $hue * 1deg;
+    }
+    @if unit($saturation) == "%" {
+      $saturation: math.div($saturation, 1%);
+    }
+    @if unit($lightness) == "%" {
+      $lightness: math.div($lightness, 1%);
+    }
+
+    $hsl: (
+      h: $hue,
+      s: $saturation,
+      l: $lightness,
+    );
+  } @else if (type-of($value: $hsl) != map) {
+    @error "hsluv function with a single parameter must be called with a map of the form (h: $hue, s: $saturation, l: $lightness)";
+  } @else if not (map.get($hsl, h) and map.get($hsl, s) and map.get($hsl, l)) {
+    @error "hsluv function with a single parameter must be called with a map of the form (h: $hue, s: $saturation, l: $lightness)";
+  }
+
+  @return $hsl;
+}
+
+@function hsluv-rgb($hsluv) {
+  $lch: lch.from-hsluv($hsluv);
+  $luv: luv.from-lch($lch);
+  $xyz: xyz.from-luv($luv);
+  $rgb: rgb.from-xyz($xyz);
+
+  @return $rgb;
+}
+
+@function hpluv-rgb($hpluv) {
+  $lch: lch.from-hpluv($hpluv);
+  $luv: luv.from-lch($lch);
+  $xyz: xyz.from-luv($luv);
+  $rgb: rgb.from-xyz($xyz);
+
+  @return $rgb;
+}
+
+@function rgb-hsluv($rgb) {
+  $xyz: rgb.to-xyz($rgb);
+  $luv: xyz.to-luv($xyz);
+  $lch: luv.to-lch($luv);
+  $hsluv: lch.to-hsluv($lch);
+
+  @return $hsluv;
+}
+
+@function rgb-hpluv($rgb) {
+  $xyz: rgb.to-xyz($rgb);
+  $luv: xyz.to-luv($xyz);
+  $lch: luv.to-lch($luv);
+  $hpluv: lch.to-hpluv($lch);
+
+  @return $hpluv;
+}

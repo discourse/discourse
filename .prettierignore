@@ -30,3 +30,5 @@ tmp/
 **/*.html
 **/*.json
 **/*.md
+
+app/assets/stylesheets/hsluv-sass/*

@@ -1,0 +1,172 @@
+@use 'sass:map';
+@use 'sass:math';
+
+@use '../constants' as const;
+
+@function from-hsluv($hsluv) {
+  $h: map.get($hsluv, "h");
+  $s: map.get($hsluv, "s");
+  $l: map.get($hsluv, "l");
+
+  $c: 0;
+  // white and black: disambiguate chroma
+  @if not($l > 99.9999999 or $l < 0.00000001) {
+    $max: max-chroma-for-l-h($l, $h);
+    $c: math.div($max, 100) * $s;
+  }
+
+  @return ("l": $l, "c": $c, "h": $h);
+}
+
+@function from-hpluv($hpluv) {
+  $h: map.get($hpluv, "h");
+  $s: map.get($hpluv, "s");
+  $l: map.get($hpluv, "l");
+
+  $c: 0;
+  // white and black: disambiguate chroma
+  @if not($l > 99.9999999 or $l < 0.00000001) {
+    $max: max-safe-chroma-for-l($l);
+    $c: math.div($max, 100) * $s;
+  }
+  @return ("l": $l, "c": $c, "h": $h);
+}
+
+@function to-hsluv($lch) {
+  $l: map.get($lch, "l");
+  $c: map.get($lch, "c");
+  $h: map.get($lch, "h");
+
+  $s: 0;
+  // white and black: disambiguate saturation
+  @if not($l > 99.9999999 or $l < 0.00000001) {
+    $max: max-chroma-for-l-h($l, $h);
+    $s: math.div($c, $max) * 100;
+  }
+  @return ("h": $h, "s": $s, "l": $l);
+}
+
+@function to-hpluv($lch) {
+  $l: map.get($lch, "l");
+  $c: map.get($lch, "c");
+  $h: map.get($lch, "h");
+
+  $s: 0;
+  // white and black: disambiguate saturation
+  @if not($l > 99.9999999 or $l < 0.00000001) {
+    $max: max-safe-chroma-for-l($l);
+    $s: math.div($c, $max) * 100;
+  }
+  @return ("h": $h, "s": $s, "l": $l);
+}
+
+// For a given lightness and hue, return the maximum chroma that fits in
+// the RGB gamut.
+// @param {number[][2]} $l
+// @param {number} $h
+// @return {number}
+@function max-chroma-for-l-h($l, $h) {
+  $lengths: ();
+
+  @each $line in get-bounds($l) {
+    $l: length-of-ray-until-intersect($h, $line);
+    @if $l != null {
+      $lengths: append($lengths, $l);
+    }
+  }
+
+  @return min($lengths...);
+}
+
+// For given lightness, returns the maximum chroma. Keeping the chroma value
+// below this number will ensure that for any hue, the color is within the RGB
+// gamut.
+// @param {number[][2]} $l
+// @return {number}
+@function max-safe-chroma-for-l($l) {
+  $lengths: ();
+
+  @each $point in get-bounds($l) {
+    $m1: nth($point, 1);
+    $b1: nth($point, 2);
+    // x where line intersects with perpendicular running though (0, 0)
+    $x: intersect-line-line(($m1, $b1), (math.div(-1, $m1), 0));
+    $lengths: append($lengths, distance-from-pole(($x, $b1 + $x * $m1)));
+  }
+
+  @return min($lengths...);
+}
+
+// For a given lightness, return a list of 6 lines in slope-intercept
+// form that represent the bounds in CIELUV, stepping over which will
+// push a value out of the RGB gamut
+// @param {number} $l
+// @return {number[][2]}
+@function get-bounds($l) {
+  $sub1: math.div(math.pow($l + 16, 3), 1560896);
+  $sub2: if($sub1 > const.$epsilon, $sub1, math.div($l, const.$kappa));
+  $ret: ();
+  @each $channel in (r, g, b) {
+    $m_: map.get(const.$m, $channel);
+    $m1: nth($m_, 1);
+    $m2: nth($m_, 2);
+    $m3: nth($m_, 3);
+    @for $t from 0 through 1 {
+      $top1: (284517 * $m1 - 94839 * $m3) * $sub2;
+      $top2: (838422 * $m3 + 769860 * $m2 + 731718 * $m1) *
+        $l *
+        $sub2 -
+        769860 *
+        $t *
+        $l;
+      $bottom: (632260 * $m3 - 126452 * $m2) * $sub2 + 126452 * $t;
+
+      $ret: append($ret, (math.div($top1, $bottom), math.div($top2, $bottom)));
+    }
+  }
+
+  @return $ret;
+}
+
+// @param {number} $theta
+// @param {number[2]} $line
+// @return {number?}
+@function length-of-ray-until-intersect($theta, $line) {
+  // theta  -- angle of ray starting at (0, 0)
+  // m, b   -- slope and intercept of line
+  // x1, y1 -- coordinates of intersection
+  // len    -- length of ray until it intersects with line
+  //
+  // b + m * x1        = y1
+  // len              >= 0
+  // len * cos(theta)  = x1
+  // len * sin(theta)  = y1
+  //
+  //
+  // b + m * (len * cos(theta)) = len * sin(theta)
+  // b = len * sin(hrad) - m * len * cos(theta)
+  // b = len * (sin(hrad) - m * cos(hrad))
+  // len = b / (sin(hrad) - m * cos(hrad))
+
+  $m1: nth($line, 1);
+  $b1: nth($line, 2);
+  $len: math.div($b1, math.sin($theta) - $m1 * math.cos($theta));
+
+  @return if($len < 0, null, $len);
+}
+
+// @param {number[2]} $point
+// @return {number}
+@function distance-from-pole($point) {
+  @return math.sqrt(math.pow(nth($point, 1), 2) + math.pow(nth($point, 2), 2));
+}
+
+// @param {number[2]} $line1
+// @param {number[2]} $line2
+// @return {number}
+@function intersect-line-line($line1, $line2) {
+  @return math.div(
+    nth($line1, 2) - nth($line2, 2),
+    nth($line2, 1) - nth($line1, 1)
+  );
+}

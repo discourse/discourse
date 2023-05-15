@@ -1,0 +1,29 @@
+@use 'sass:map';
+@use 'sass:math';
+
+@function from-lch($lch) {
+  $l: map.get($lch, "l");
+  $c: map.get($lch, "c");
+  $h: map.get($lch, "h");
+
+  @return ("l": $l, "u": math.cos($h) * $c, "v": math.sin($h) * $c);
+}
+
+@function to-lch($luv) {
+  $l: map.get($luv, "l");
+  $u: map.get($luv, "u");
+  $v: map.get($luv, "v");
+
+  $c: math.sqrt(math.pow($u, 2) + math.pow($v, 2));
+  $h: 0;
+  // greys: disambiguate hue
+  @if $c >= 0.00000001 {
+    $h: math.atan2($v, $u);
+
+    @if $h < 0deg {
+      $h: 360deg + $h;
+    }
+  }
+
+  @return ("l": $l, "c": $c, "h": $h);
+}

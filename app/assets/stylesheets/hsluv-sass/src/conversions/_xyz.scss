@@ -1,0 +1,69 @@
+@use 'sass:map';
+@use 'sass:math';
+
+@use '../constants' as const;
+
+@function from-luv($luv) {
+  $l: map.get($luv, "l");
+  $u: map.get($luv, "u");
+  $v: map.get($luv, "v");
+
+  // black will create a divide-by-zero error
+  @if $l == 0 {
+    @return ("x": 0, "y": 0, "z": 0);
+  }
+
+  $var-u: math.div($u, 13 * $l) + const.$ref-u;
+  $var-v: math.div($v, 13 * $l) + const.$ref-v;
+
+  $y: l-to-y($l);
+  $x: 0 - math.div(9 * $y * $var-u, ($var-u - 4) * $var-v - $var-u * $var-v);
+  $z: math.div(9 * $y - (15 * $var-v * $y) - ($var-v * $x), 3 * $var-v);
+
+  @return ("x": $x, "y": $y, "z": $z);
+}
+
+@function to-luv($xyz) {
+  $x: map.get($xyz, "x");
+  $y: map.get($xyz, "y");
+  $z: map.get($xyz, "z");
+
+  // black will create a divide-by-zero error
+  @if $y == 0 {
+    @return ("l": 0, "u": 0, "v": 0);
+  }
+
+  $l: y-to-l($y);
+
+  $var-u: math.div(4 * $x, $x + (15 * $y) + (3 * $z));
+  $var-v: math.div(9 * $y, $x + (15 * $y) + (3 * $z));
+
+  $u: 13 * $l * ($var-u - const.$ref-u);
+  $v: 13 * $l * ($var-v - const.$ref-v);
+
+  @return ("l": $l, "u": $u, "v": $v);
+}
+
+// http://en.wikipedia.org/wiki/CIELUV
+// In these formulas, Yn refers to the reference white point. We are using
+// illuminant D65, so Yn (see refY in Maxima file) equals 1. The formula is
+// simplified accordingly.
+// @param {number} $y
+// @return {number}
+@function y-to-l($y) {
+  @if $y <= const.$epsilon {
+    @return $y * const.$kappa;
+  } @else {
+    @return 116 * math.pow($y, math.div(1, 3)) - 16;
+  }
+}
+
+// @param {number} $l
+// @return {number}
+@function l-to-y($l) {
+  @if $l <= 8 {
+    @return math.div($l, const.$kappa);
+  } @else {
+    @return math.pow(math.div($l + 16, 116), 3);
+  }
+}
