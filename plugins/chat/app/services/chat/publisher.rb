@@ -247,12 +247,16 @@ module Chat
           guardian: Guardian.new(user),
           channel_ids: [chat_channel_id],
           include_missing_memberships: true,
-        ).report
+        )
+      if tracking_data.failure?
+        raise StandardError,
+              "Tracking service failed when trying to publish user tracking state:\n\n#{tracking_data.inspect_steps}"
+      end
 
       MessageBus.publish(
         self.user_tracking_state_message_bus_channel(user.id),
         { channel_id: chat_channel_id, last_read_message_id: chat_message_id }.merge(
-          tracking_data.find_channel(chat_channel_id),
+          tracking_data.report.find_channel(chat_channel_id),
         ).as_json,
         user_ids: [user.id],
       )
@@ -263,17 +267,19 @@ module Chat
     end
 
     def self.publish_bulk_user_tracking_state(user, channel_last_read_map)
-      # NOTE: (martin) Potentially this service can fail...not sure how to handle
-      # it inside the Chat::Publisher.
       tracking_data =
         Chat::TrackingState.call(
           guardian: Guardian.new(user),
           channel_ids: channel_last_read_map.keys,
           include_missing_memberships: true,
-        ).report
+        )
+      if tracking_data.failure?
+        raise StandardError,
+              "Tracking service failed when trying to publish bulk tracking state:\n\n#{tracking_data.inspect_steps}"
+      end
 
       channel_last_read_map.each do |key, value|
-        channel_last_read_map[key] = value.merge(tracking_data.find_channel(key))
+        channel_last_read_map[key] = value.merge(tracking_data.report.find_channel(key))
       end
 
       MessageBus.publish(
