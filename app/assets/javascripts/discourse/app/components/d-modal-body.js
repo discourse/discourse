@@ -3,6 +3,7 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
+import { getOwner } from "@ember/application";
 
 function pick(object, keys) {
   const result = {};
@@ -28,6 +29,7 @@ export default class DModalBody extends Component {
     if (fixedParent) {
       this.fixed = true;
       $(fixedParent).modal("show");
+      getOwner(this).lookup("controller:modal").set("hidden", false);
     }
 
     this.appEvents.trigger(

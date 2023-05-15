@@ -8,6 +8,7 @@
     this.modalClass
     this.modalStyle
     (if this.hasPanels "has-panels")
+    (if @hidden "hidden")
   }}
   id={{if (not-eq this.modalStyle "inline-modal") "discourse-modal"}}
   data-keyboard="false"
