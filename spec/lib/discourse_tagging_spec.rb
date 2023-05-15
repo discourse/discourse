@@ -103,15 +103,18 @@ RSpec.describe DiscourseTagging do
     fab!(:category) { Fabricate(:category, allowed_tag_groups: [tag_group.name]) }
 
     it "returns true if the topic doesn't belong to a category" do
-      result = DiscourseTagging.validate_one_tag_from_group_per_topic(nil, topic, nil, [tag1, tag2])
+      result =
+        DiscourseTagging.validate_one_tag_from_group_per_topic(guardian, topic, nil, [tag1, tag2])
       expect(result).to eq(true)
     end
 
     it "returns true if only one tag is provided" do
-      result = DiscourseTagging.validate_one_tag_from_group_per_topic(nil, topic, category, [tag1])
+      result =
+        DiscourseTagging.validate_one_tag_from_group_per_topic(guardian, topic, category, [tag1])
       expect(result).to eq(true)
 
-      result = DiscourseTagging.validate_one_tag_from_group_per_topic(nil, topic, category, [tag2])
+      result =
+        DiscourseTagging.validate_one_tag_from_group_per_topic(guardian, topic, category, [tag2])
       expect(result).to eq(true)
     end
 
@@ -119,14 +122,24 @@ RSpec.describe DiscourseTagging do
       tag4 = Fabricate(:tag, name: "fun4")
 
       result =
-        DiscourseTagging.validate_one_tag_from_group_per_topic(nil, topic, category, [tag1, tag4])
+        DiscourseTagging.validate_one_tag_from_group_per_topic(
+          guardian,
+          topic,
+          category,
+          [tag1, tag4],
+        )
       expect(result).to eq(true)
     end
 
     context "when it fails" do
       it "returns false if more than one tag from the group is provided" do
         result =
-          DiscourseTagging.validate_one_tag_from_group_per_topic(nil, topic, category, [tag1, tag2])
+          DiscourseTagging.validate_one_tag_from_group_per_topic(
+            guardian,
+            topic,
+            category,
+            [tag1, tag2],
+          )
 
         expect(topic.errors[:base]&.first).to eq(
           I18n.t(
@@ -145,7 +158,7 @@ RSpec.describe DiscourseTagging do
 
         result =
           DiscourseTagging.validate_one_tag_from_group_per_topic(
-            nil,
+            guardian,
             topic,
             category2,
             [tag1, tag2, tag4, tag5],
@@ -170,14 +183,18 @@ RSpec.describe DiscourseTagging do
         tag5 = Fabricate(:tag, name: "fun5")
 
         invalid_tags =
-          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(nil, [tag4, tag5])
+          DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+            guardian,
+            nil,
+            [tag4, tag5],
+          )
         expect(invalid_tags).to be_empty
       end
 
       it "returns tags that are violating the one tag from group per topic rule when there is only one group" do
         invalid_tags =
           DiscourseTagging
-            .filter_tags_violating_one_tag_from_group_per_topic(nil, [tag1, tag2])
+            .filter_tags_violating_one_tag_from_group_per_topic(guardian, nil, [tag1, tag2])
             .values
             .first
             .map(&:name)
@@ -193,7 +210,7 @@ RSpec.describe DiscourseTagging do
           [[tag1, tag2], [tag1, tag3], [tag2, tag3], [tag1, tag2, tag3]].each do |test_values|
             invalid_tags =
               DiscourseTagging
-                .filter_tags_violating_one_tag_from_group_per_topic(category, test_values)
+                .filter_tags_violating_one_tag_from_group_per_topic(guardian, category, test_values)
                 .values
                 .first
                 .map(&:name)
@@ -218,7 +235,7 @@ RSpec.describe DiscourseTagging do
           ].each do |test_values|
             invalid_tags =
               DiscourseTagging
-                .filter_tags_violating_one_tag_from_group_per_topic(category, test_values)
+                .filter_tags_violating_one_tag_from_group_per_topic(guardian, category, test_values)
                 .values
                 .first
                 .map(&:name)
@@ -228,6 +245,7 @@ RSpec.describe DiscourseTagging do
           invalid_tags =
             DiscourseTagging
               .filter_tags_violating_one_tag_from_group_per_topic(
+                guardian,
                 category,
                 [tag1, tag2, tag4, tag5],
               )
@@ -246,7 +264,11 @@ RSpec.describe DiscourseTagging do
 
           [tag1, tag2, tag3, tag4, tag5].each do |tag|
             invalid_tags =
-              DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag])
+              DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+                guardian,
+                category,
+                [tag],
+              )
             expect(invalid_tags).to be_empty
           end
         end
@@ -259,6 +281,7 @@ RSpec.describe DiscourseTagging do
 
           invalid_tags =
             DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+              guardian,
               category,
               [tag4, tag5],
             )
@@ -279,7 +302,7 @@ RSpec.describe DiscourseTagging do
           [[tag1, tag2], [tag1, tag3], [tag2, tag3], [tag1, tag2, tag3]].each do |test_values|
             invalid_tags =
               DiscourseTagging
-                .filter_tags_violating_one_tag_from_group_per_topic(category, test_values)
+                .filter_tags_violating_one_tag_from_group_per_topic(guardian, category, test_values)
                 .values
                 .first
                 .map(&:name)
@@ -311,7 +334,7 @@ RSpec.describe DiscourseTagging do
           ].each do |test_values|
             invalid_tags =
               DiscourseTagging
-                .filter_tags_violating_one_tag_from_group_per_topic(category, test_values)
+                .filter_tags_violating_one_tag_from_group_per_topic(guardian, category, test_values)
                 .values
                 .first
                 .map(&:name)
@@ -321,6 +344,7 @@ RSpec.describe DiscourseTagging do
           invalid_tags =
             DiscourseTagging
               .filter_tags_violating_one_tag_from_group_per_topic(
+                guardian,
                 category,
                 [tag1, tag2, tag4, tag5],
               )
@@ -346,7 +370,11 @@ RSpec.describe DiscourseTagging do
 
           [tag1, tag2, tag3, tag4, tag5].each do |tag|
             invalid_tags =
-              DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(category, [tag])
+              DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+                guardian,
+                category,
+                [tag],
+              )
             expect(invalid_tags).to be_empty
           end
         end
@@ -365,6 +393,7 @@ RSpec.describe DiscourseTagging do
 
           invalid_tags =
             DiscourseTagging.filter_tags_violating_one_tag_from_group_per_topic(
+              guardian,
               category,
               [tag4, tag5],
             )

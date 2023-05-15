@@ -105,7 +105,8 @@ module DiscourseTagging
         # tests if there are conflicts between tags on tag groups that only allow one tag from the group before adding
         # mandatory parent tags because later we want to test if the mandatory parent tags introduce any conflicts
         # and be able to pinpoint the tag that is introducing it
-        return false unless validate_one_tag_from_group_per_topic(guardian, topic, category, tags)
+        # guardian like above is nil to prevent stripping tags that already passed validation
+        return false unless validate_one_tag_from_group_per_topic(nil, topic, category, tags)
 
         # add missing mandatory parent tags
         tag_ids = tags.map(&:id)
@@ -142,7 +143,12 @@ module DiscourseTagging
         tags = tags + missing_parent_tags unless missing_parent_tags.empty?
 
         parent_tag_conflicts =
-          filter_tags_violating_one_tag_from_group_per_topic(topic.category, tags)
+          filter_tags_violating_one_tag_from_group_per_topic(
+            nil, # guardian like above is nil to prevent stripping tags that already passed validation
+            topic.category,
+            tags,
+          )
+
         if parent_tag_conflicts.present?
           # we need to get the original tag names that introduced conflicting missing parent tags to return an useful
           # error message
@@ -314,7 +320,7 @@ module DiscourseTagging
   end
 
   def self.validate_one_tag_from_group_per_topic(guardian, model, category, tags = [])
-    tags_cant_be_used = filter_tags_violating_one_tag_from_group_per_topic(category, tags)
+    tags_cant_be_used = filter_tags_violating_one_tag_from_group_per_topic(guardian, category, tags)
 
     return true if tags_cant_be_used.blank?
 
@@ -331,49 +337,7 @@ module DiscourseTagging
     false
   end
 
-  ONE_PER_TOPIC_SQL ||= <<~SQL
-    SELECT ARRAY_AGG(tag_name ORDER BY (tag_name)) AS incompatible_tags
-    FROM
-        (
-            SELECT ctg.tag_group_id, t.name AS tag_name
-            FROM
-                category_tag_groups ctg
-                INNER JOIN tag_groups tg
-                ON tg.id = ctg.tag_group_id
-                INNER JOIN tag_group_memberships tgm
-                ON tgm.tag_group_id = tg.id
-                INNER JOIN tags t
-                ON tgm.tag_id = t.id
-
-            WHERE
-                tg.one_per_topic
-                AND t.name IN (:tags)
-                AND ctg.category_id = :category_id
-
-            UNION
-
-            SELECT crtg.tag_group_id, t.name
-            FROM
-                category_required_tag_groups crtg
-                INNER JOIN tag_groups tg
-                ON tg.id = crtg.tag_group_id
-                INNER JOIN tag_group_memberships tgm
-                ON tgm.tag_group_id = tg.id
-                INNER JOIN tags t
-                ON tgm.tag_id = t.id
-
-            WHERE
-                tg.one_per_topic
-                AND t.name IN (:tags)
-                AND crtg.category_id = :category_id
-        ) AS one_per_topic
-    GROUP BY
-        tag_group_id
-    HAVING
-        CARDINALITY(ARRAY_AGG(tag_name)) > 1
-  SQL
-
-  def self.filter_tags_violating_one_tag_from_group_per_topic(category, tags = [])
+  def self.filter_tags_violating_one_tag_from_group_per_topic(guardian, category, tags = [])
     return [] if tags.size < 2
 
     # ensures that tags are a list of tag names
@@ -381,7 +345,7 @@ module DiscourseTagging
 
     allowed_tags =
       filter_allowed_tags(
-        nil,
+        guardian,
         category: category,
         only_tag_names: tags,
         for_topic: true,
