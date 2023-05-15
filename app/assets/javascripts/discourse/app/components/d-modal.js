@@ -93,7 +93,9 @@ export default class DModal extends Component {
   }
 
   get ariaLabelledby() {
-    if (this.args.titleAriaElementId) {
+    if (this.modalBodyData.titleAriaElementId) {
+      return this.modalBodyData.titleAriaElementId;
+    } else if (this.args.titleAriaElementId) {
       return this.args.titleAriaElementId;
     } else if (this.args.title) {
       return "discourse-modal-title";
