@@ -6,12 +6,16 @@ module Chat
 
     def self.structured(guardian)
       memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
+      public_channels =
+        secured_public_channels(guardian, memberships, status: :open, following: true)
+      direct_message_channels =
+        secured_direct_message_channels(guardian.user.id, memberships, guardian)
       {
-        public_channels:
-          secured_public_channels(guardian, memberships, status: :open, following: true),
-        direct_message_channels:
-          secured_direct_message_channels(guardian.user.id, memberships, guardian),
+        public_channels: public_channels,
+        direct_message_channels: direct_message_channels,
         memberships: memberships,
+        tracking:
+          tracking_state(public_channels.map(&:id) + direct_message_channels.map(&:id), guardian),
       }
     end
 
@@ -151,7 +155,6 @@ module Chat
           options.merge(include_archives: true, filter_on_category_name: true),
         )
 
-      decorate_memberships_with_tracking_data(guardian, channels, memberships)
       channels = channels.to_a
       preload_custom_fields_for(channels)
       channels
@@ -184,30 +187,15 @@ module Chat
         User.allowed_user_custom_fields(guardian) +
           UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
       User.preload_custom_fields(channels.map { |c| c.chatable.users }.flatten, preload_fields)
-
-      decorate_memberships_with_tracking_data(guardian, channels, memberships)
+      channels
     end
 
-    def self.decorate_memberships_with_tracking_data(guardian, channels, memberships)
-      unread_counts_per_channel = unread_counts(channels, guardian)
-
-      channels.each do |channel|
-        membership = memberships.find { |m| m.chat_channel_id == channel.id }
-
-        if membership
-          channel_unread_counts = unread_counts_per_channel.find_channel(channel.id)
-
-          membership.unread_mentions = channel_unread_counts.mention_count
-          membership.unread_count = channel_unread_counts.unread_count if !membership.muted
-        end
-      end
-    end
-
-    def self.unread_counts(channels, guardian)
+    def self.tracking_state(channel_ids, guardian)
       Chat::TrackingState.call(
-        channel_ids: channels.map(&:id),
+        channel_ids: channel_ids,
         guardian: guardian,
         include_missing_memberships: true,
+        include_threads: SiteSetting.enable_experimental_chat_threaded_discussions,
       ).report
     end
 

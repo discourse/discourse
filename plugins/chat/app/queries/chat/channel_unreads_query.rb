@@ -10,9 +10,9 @@ module Chat
     ##
     # @param channel_ids [Array<Integer>] The IDs of the channels to count.
     # @param user_id [Integer] The ID of the user to count for.
-    # @param include_no_membership_channels [Boolean] Whether to include channels
+    # @param include_missing_memberships [Boolean] Whether to include channels
     #   that the user is not a member of. These counts will always be 0.
-    def self.call(channel_ids:, user_id:, include_no_membership_channels: false)
+    def self.call(channel_ids:, user_id:, include_missing_memberships: false)
       sql = <<~SQL
         SELECT (
           SELECT COUNT(*) AS unread_count
@@ -21,7 +21,6 @@ module Chat
           INNER JOIN user_chat_channel_memberships ON user_chat_channel_memberships.chat_channel_id = chat_channels.id
           LEFT JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
           WHERE chat_channels.id = memberships.chat_channel_id
-          AND chat_messages.user_id != :user_id
           AND user_chat_channel_memberships.user_id = :user_id
           AND chat_messages.id > COALESCE(user_chat_channel_memberships.last_read_message_id, 0)
           AND chat_messages.deleted_at IS NULL
@@ -44,7 +43,7 @@ module Chat
         GROUP BY memberships.chat_channel_id
       SQL
 
-      sql += <<~SQL if include_no_membership_channels
+      sql += <<~SQL if include_missing_memberships
         UNION ALL
         SELECT 0 AS unread_count, 0 AS mention_count, chat_channels.id AS channel_id
         FROM chat_channels

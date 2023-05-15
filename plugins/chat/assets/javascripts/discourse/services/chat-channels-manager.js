@@ -93,25 +93,6 @@ export default class ChatChannelsManager extends Service {
     delete this._cached[model.id];
   }
 
-  get unreadCount() {
-    let count = 0;
-    this.publicMessageChannels.forEach((channel) => {
-      count += channel.currentUserMembership.unreadCount || 0;
-    });
-    return count;
-  }
-
-  get unreadUrgentCount() {
-    let count = 0;
-    this.channels.forEach((channel) => {
-      if (channel.isDirectMessageChannel) {
-        count += channel.currentUserMembership.unreadCount || 0;
-      }
-      count += channel.currentUserMembership.unreadMentions || 0;
-    });
-    return count;
-  }
-
   get publicMessageChannels() {
     return this.channels
       .filter(
@@ -158,8 +139,10 @@ export default class ChatChannelsManager extends Service {
 
   #sortDirectMessageChannels(channels) {
     return channels.sort((a, b) => {
-      const unreadCountA = a.currentUserMembership.unreadCount || 0;
-      const unreadCountB = b.currentUserMembership.unreadCount || 0;
+      const trackingA = this.chatTrackingState.getChannelState(a.id);
+      const trackingB = this.chatTrackingState.getChannelState(b.id);
+      const unreadCountA = trackingA.unreadCount || 0;
+      const unreadCountB = trackingB.unreadCount || 0;
       if (unreadCountA === unreadCountB) {
         return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
           ? -1

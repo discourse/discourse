@@ -14,9 +14,9 @@ module Chat
     # @param channel_ids [Array<Integer>] (Optional) The IDs of the channels to count threads for.
     # @param thread_ids [Array<Integer>] (Optional) The IDs of the threads to count.
     # @param user_id [Integer] The ID of the user to count for.
-    # @param include_no_membership_threads [Boolean] Whether to include threads
+    # @param include_missing_memberships [Boolean] Whether to include threads
     #   that the user is not a member of. These counts will always be 0.
-    def self.call(channel_ids: nil, thread_ids: nil, user_id:, include_no_membership_threads: false)
+    def self.call(channel_ids: nil, thread_ids: nil, user_id:, include_missing_memberships: false)
       raise Discourse::InvalidParameters if channel_ids.empty? && thread_ids.empty?
 
       sql = <<~SQL
@@ -26,7 +26,6 @@ module Chat
           INNER JOIN chat_channels ON chat_channels.id = chat_messages.chat_channel_id
           INNER JOIN chat_threads ON chat_threads.id = chat_messages.thread_id AND chat_threads.channel_id = chat_messages.chat_channel_id
           INNER JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id
-          WHERE chat_messages.user_id != :user_id
           AND chat_messages.thread_id = memberships.thread_id
           AND user_chat_thread_memberships.user_id = :user_id
           AND chat_messages.id > COALESCE(user_chat_thread_memberships.last_read_message_id, 0)
@@ -46,7 +45,7 @@ module Chat
         GROUP BY memberships.thread_id, chat_threads.channel_id
       SQL
 
-      sql += <<~SQL if include_no_membership_threads
+      sql += <<~SQL if include_missing_memberships
         UNION ALL
         SELECT 0 AS unread_count, 0 AS mention_count, chat_threads.channel_id, chat_threads.id AS thread_id
         FROM chat_channels

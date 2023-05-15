@@ -7,6 +7,7 @@ export default class ChatChannelRow extends Component {
   @service chat;
   @service currentUser;
   @service site;
+  @service chatTrackingState;
 
   @action
   startTrackingStatus() {
@@ -19,7 +20,10 @@ export default class ChatChannelRow extends Component {
   }
 
   get channelHasUnread() {
-    return this.args.channel.currentUserMembership.unreadCount > 0;
+    return (
+      this.chatTrackingState.getChannelState(this.args.channel.id).unreadCount >
+      0
+    );
   }
 
   get #firstDirectMessageUser() {

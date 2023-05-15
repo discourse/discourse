@@ -288,8 +288,6 @@ export default class ChatChannel {
       membership.desktop_notification_level;
     this.currentUserMembership.mobileNotificationLevel =
       membership.mobile_notification_level;
-    this.currentUserMembership.unreadCount = membership.unread_count;
-    this.currentUserMembership.unreadMentions = membership.unread_mentions;
     this.currentUserMembership.muted = membership.muted;
   }
 

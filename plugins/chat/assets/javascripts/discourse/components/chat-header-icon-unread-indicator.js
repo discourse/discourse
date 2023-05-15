@@ -7,12 +7,12 @@ import {
 } from "../controllers/preferences-chat";
 
 export default class ChatHeaderIconUnreadIndicator extends Component {
-  @service chatChannelsManager;
+  @service chatTrackingState;
   @service currentUser;
 
   get showUrgentIndicator() {
     return (
-      this.chatChannelsManager.unreadUrgentCount > 0 &&
+      this.chatTrackingState.allChannelUrgentCount > 0 &&
       this.#hasAnyIndicatorPreference([
         HEADER_INDICATOR_PREFERENCE_ALL_NEW,
         HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
@@ -22,7 +22,7 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
 
   get showUnreadIndicator() {
     return (
-      this.chatChannelsManager.unreadCount > 0 &&
+      this.chatTrackingState.publicChannelUnreadCount > 0 &&
       this.#hasAnyIndicatorPreference([HEADER_INDICATOR_PREFERENCE_ALL_NEW])
     );
   }

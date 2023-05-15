@@ -110,7 +110,7 @@ module Chat
           .call(
             channel_ids: contract.channel_ids,
             user_id: guardian.user.id,
-            include_no_membership_channels: contract.include_missing_memberships,
+            include_missing_memberships: contract.include_missing_memberships,
           )
           .map do |ct|
             [ct.channel_id, { mention_count: ct.mention_count, unread_count: ct.unread_count }]
@@ -124,7 +124,7 @@ module Chat
               channel_ids: contract.channel_ids,
               thread_ids: contract.thread_ids,
               user_id: guardian.user.id,
-              include_no_membership_threads: contract.include_missing_memberships,
+              include_missing_memberships: contract.include_missing_memberships,
             )
             .map do |tt|
               [

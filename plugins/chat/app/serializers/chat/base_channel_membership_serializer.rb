@@ -7,8 +7,6 @@ module Chat
                :desktop_notification_level,
                :mobile_notification_level,
                :chat_channel_id,
-               :last_read_message_id,
-               :unread_count,
-               :unread_mentions
+               :last_read_message_id
   end
 end

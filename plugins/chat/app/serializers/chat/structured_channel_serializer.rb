@@ -2,7 +2,11 @@
 
 module Chat
   class StructuredChannelSerializer < ApplicationSerializer
-    attributes :public_channels, :direct_message_channels, :meta
+    attributes :public_channels, :direct_message_channels, :tracking, :meta
+
+    def tracking
+      object[:tracking]
+    end
 
     def public_channels
       object[:public_channels].map do |channel|

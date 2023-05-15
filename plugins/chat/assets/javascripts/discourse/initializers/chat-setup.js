@@ -122,6 +122,9 @@ export default {
       document.body.classList.add("chat-enabled");
 
       const currentUser = api.getCurrentUser();
+
+      // NOTE: chat_channels is more than a simple array, it also contains
+      // tracking and membership data, see Chat::StructuredChannelSerializer
       if (currentUser?.chat_channels) {
         this.chatService.setupWithPreloadedChannels(currentUser.chat_channels);
       }

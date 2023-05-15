@@ -7,6 +7,7 @@ import ChatChannelArchive from "../models/chat-channel-archive";
 export default class ChatSubscriptionsManager extends Service {
   @service store;
   @service chatChannelsManager;
+  @service chatTrackingState;
   @service currentUser;
   @service appEvents;
   @service chat;
@@ -135,7 +136,7 @@ export default class ChatSubscriptionsManager extends Service {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       const membership = channel.currentUserMembership;
       if (busData.message_id > membership?.lastReadMessageId) {
-        membership.unreadMentions = (membership.unreadMentions || 0) + 1;
+        this.chatTrackingState.incrementChannelMention(channel.id);
       }
     });
   }
@@ -192,7 +193,10 @@ export default class ChatSubscriptionsManager extends Service {
             busData.message_id >
             (channel.currentUserMembership.lastReadMessageId || 0)
           ) {
-            channel.currentUserMembership.unreadCount++;
+            this.chatTrackingState.incrementChannelUnread(channel.id);
+            if (channel.isDirectMessageChannel) {
+              this.chatTrackingState.triggerNotificationsChanged();
+            }
           }
         }
       }
@@ -239,11 +243,13 @@ export default class ChatSubscriptionsManager extends Service {
     Object.keys(busData).forEach((channelId) => {
       this._updateChannelTrackingData(channelId, busData[channelId]);
     });
+    this.chatTrackingState.triggerNotificationsChanged();
   }
 
   @bind
   _onUserTrackingStateUpdate(busData) {
     this._updateChannelTrackingData(busData.channel_id, busData);
+    this.chatTrackingState.triggerNotificationsChanged();
   }
 
   @bind
@@ -251,8 +257,8 @@ export default class ChatSubscriptionsManager extends Service {
     this.chatChannelsManager.find(channelId).then((channel) => {
       channel.currentUserMembership.lastReadMessageId =
         trackingData.last_read_message_id;
-      channel.currentUserMembership.unreadCount = trackingData.unread_count;
-      channel.currentUserMembership.unreadMentions = trackingData.mention_count;
+
+      this.chatTrackingState.setChannelState(channel.id, trackingData);
     });
   }
 
@@ -281,7 +287,7 @@ export default class ChatSubscriptionsManager extends Service {
         channel.isDirectMessageChannel &&
         !channel.currentUserMembership.following
       ) {
-        channel.currentUserMembership.unreadCount = 1;
+        this.chatTrackingState.setChannelState(channel.id, { unreadCount: 1 });
       }
 
       this.chatChannelsManager.follow(channel);
@@ -360,8 +366,10 @@ export default class ChatSubscriptionsManager extends Service {
       // been deleted. we don't want them seeing the blue dot anymore so
       // just completely reset the unreads
       if (busData.status === CHANNEL_STATUSES.archived) {
-        channel.currentUserMembership.unreadCount = 0;
-        channel.currentUserMembership.unreadMentions = 0;
+        this.chatTrackingState.setChannelState(channel.id, {
+          unreadCount: 0,
+          mentionCount: 0,
+        });
       }
     });
   }
