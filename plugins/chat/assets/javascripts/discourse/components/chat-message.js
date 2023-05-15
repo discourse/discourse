@@ -110,6 +110,9 @@ export default class ChatMessage extends Component {
     };
 
     this.args.message.expanded = true;
+    schedule("afterRender", () => {
+      this.refreshStatusOnMentions();
+    });
 
     recursiveExpand(this.args.message);
   }
