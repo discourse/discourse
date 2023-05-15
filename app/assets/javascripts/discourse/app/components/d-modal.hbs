@@ -1,56 +1,89 @@
-<div class="modal-outer-container">
-  <div class="modal-middle-container">
-    <div class="modal-inner-container">
-      <PluginOutlet @name="above-modal-header" @connectorTagName="div" />
-      <div class="modal-header {{this.headerClass}}">
-        {{#if this.dismissable}}
-          <DButton
-            @icon="times"
-            @action={{route-action "closeModal" "initiatedByCloseButton"}}
-            @class="btn-flat modal-close close"
-            @title="modal.close"
-          />
-        {{/if}}
+{{! template-lint-disable no-down-event-binding }}
+{{! template-lint-disable no-invalid-interactive }}
 
-        {{#if this.title}}
-          <div class="title">
-            <h3 id="discourse-modal-title">{{this.title}}</h3>
+<div
+  class={{concat-class
+    "modal"
+    "d-modal"
+    this.modalClass
+    this.modalStyle
+    (if this.hasPanels "has-panels")
+  }}
+  id={{if (not-eq this.modalStyle "inline-modal") "discourse-modal"}}
+  data-keyboard="false"
+  aria-modal="true"
+  role="dialog"
+  aria-labelledby={{this.ariaLabelledby}}
+  ...attributes
+  {{did-insert this.setupListeners}}
+  {{will-destroy this.cleanupListeners}}
+  {{on "mousedown" this.handleMouseDown}}
+>
+  <div class="modal-outer-container">
+    <div class="modal-middle-container">
+      <div class="modal-inner-container">
+        <PluginOutlet @name="above-modal-header" @connectorTagName="div" />
+        <div class="modal-header {{this.headerClass}}">
+          {{#if this.dismissable}}
+            <DButton
+              @icon="times"
+              @action={{route-action "closeModal" "initiatedByCloseButton"}}
+              @class="btn-flat modal-close close"
+              @title="modal.close"
+            />
+          {{/if}}
 
-            {{#if this.subtitle}}
-              <p class="subtitle">{{this.subtitle}}</p>
-            {{/if}}
-          </div>
-        {{/if}}
+          {{#if this.title}}
+            <div class="title">
+              <h3 id="discourse-modal-title">{{this.title}}</h3>
 
-        {{#if this.panels}}
-          <ul class="modal-tabs">
-            {{#each this.panels as |panel|}}
-              <ModalTab
-                @panel={{panel}}
-                @panelsLength={{this.panels.length}}
-                @selectedPanel={{this.selectedPanel}}
-                @onSelectPanel={{this.onSelectPanel}}
-              />
-            {{/each}}
-          </ul>
-        {{/if}}
-      </div>
+              {{#if this.subtitle}}
+                <p class="subtitle">{{this.subtitle}}</p>
+              {{/if}}
+            </div>
+          {{/if}}
 
-      <div id="modal-alert" role="alert"></div>
-
-      {{yield}}
-
-      {{#each this.errors as |error|}}
-        <div class="alert alert-error">
-          <button
-            type="button"
-            class="close"
-            data-dismiss="alert"
-            aria-label={{i18n "modal.dismiss_error"}}
-          >×</button>
-          {{error}}
+          {{#if this.panels}}
+            <ul class="modal-tabs">
+              {{#each this.panels as |panel|}}
+                <ModalTab
+                  @panel={{panel}}
+                  @panelsLength={{this.panels.length}}
+                  @selectedPanel={{@selectedPanel}}
+                  @onSelectPanel={{@onSelectPanel}}
+                />
+              {{/each}}
+            </ul>
+          {{/if}}
         </div>
-      {{/each}}
+
+        <div
+          id="modal-alert"
+          role="alert"
+          class={{if
+            this.flash
+            (concat-class
+              "alert" (concat "alert-" (or this.flash.messageClass "success"))
+            )
+          }}
+        >
+          {{this.flash.text}}
+        </div>
+
+        {{yield}}
+
+        {{#each this.errors as |error|}}
+          <div class="alert alert-error">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label={{i18n "modal.dismiss_error"}}
+            >×</button>
+            {{error}}
+          </div>
+        {{/each}}
+      </div>
     </div>
   </div>
 </div>

@@ -1,16 +1,7 @@
 .chat-browse-view {
   position: relative;
-  height: calc(100vh - var(--header-offset) - var(--chat-header-offset));
-  padding-top: 1em;
-  padding-bottom: 41px;
   box-sizing: border-box;
-  overflow-y: scroll;
-
-  @include chat-scrollbar();
-
-  @include breakpoint(mobile-large) {
-    padding-right: 1rem; //fix for different scroll behaviour on mobile where overflow-y:scroll acts like auto
-  }
+  padding: 1rem;
 
   &__header {
     display: flex;
@@ -28,18 +19,14 @@
   }
 
   &__content_wrapper {
-    margin: 2rem 0 0 1rem;
     box-sizing: border-box;
-
-    @include breakpoint(tablet) {
-      margin-top: 1rem;
-    }
+    margin-top: 1rem;
   }
 
   &__cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2.5rem;
+    grid-gap: 2rem;
 
     @include breakpoint(tablet) {
       grid-template-columns: repeat(1, 1fr);
@@ -51,7 +38,6 @@
     display: flex;
     justify-content: space-between;
     align-items: end;
-    margin: 0 0 0 1rem;
 
     @include breakpoint(tablet) {
       flex-direction: column;

@@ -1,77 +1,110 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import I18n from "I18n";
 import { next, schedule } from "@ember/runloop";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
 
-export default Component.extend({
-  classNameBindings: [
-    ":modal",
-    ":d-modal",
-    "modalClass",
-    "modalStyle",
-    "hasPanels",
-  ],
-  attributeBindings: [
-    "data-keyboard",
-    "aria-modal",
-    "role",
-    "ariaLabelledby:aria-labelledby",
-  ],
-  submitOnEnter: true,
-  dismissable: true,
-  title: null,
-  titleAriaElementId: null,
-  subtitle: null,
-  role: "dialog",
-  headerClass: null,
+@disableImplicitInjections
+export default class DModal extends Component {
+  @service appEvents;
 
-  // We handle ESC ourselves
-  "data-keyboard": "false",
-  // Inform screen readers of the modal
-  "aria-modal": "true",
+  @tracked wrapperElement;
+  @tracked modalBodyData = {};
+  @tracked flash;
 
-  init() {
-    this._super(...arguments);
-
-    // If we need to render a second modal for any reason, we can't
-    // use `elementId`
-    if (this.modalStyle !== "inline-modal") {
-      this.set("elementId", "discourse-modal");
-      this.set("modalStyle", "fixed-modal");
+  get modalStyle() {
+    if (this.args.modalStyle === "inline-modal") {
+      return "inline-modal";
+    } else {
+      return "fixed-modal";
     }
-  },
+  }
 
-  didInsertElement() {
-    this._super(...arguments);
+  get submitOnEnter() {
+    if ("submitOnEnter" in this.modalBodyData) {
+      return this.modalBodyData.submitOnEnter;
+    } else {
+      return true;
+    }
+  }
 
-    this.appEvents.on("modal:body-shown", this, "_modalBodyShown");
+  get dismissable() {
+    if ("dismissable" in this.modalBodyData) {
+      return this.modalBodyData.dismissable;
+    } else {
+      return true;
+    }
+  }
+
+  get title() {
+    if (this.modalBodyData.title) {
+      return I18n.t(this.modalBodyData.title);
+    } else if (this.modalBodyData.rawTitle) {
+      return this.modalBodyData.rawTitle;
+    } else {
+      return this.args.title;
+    }
+  }
+
+  get subtitle() {
+    if (this.modalBodyData.subtitle) {
+      return I18n.t(this.modalBodyData.subtitle);
+    }
+
+    return this.modalBodyData.rawSubtitle || this.args.subtitle;
+  }
+
+  get headerClass() {
+    return this.modalBodyData.headerClass;
+  }
+
+  get panels() {
+    return this.args.panels;
+  }
+
+  get errors() {
+    return this.args.errors;
+  }
+
+  @action
+  setupListeners(element) {
+    this.appEvents.on("modal:body-shown", this._modalBodyShown);
+    this.appEvents.on("modal-body:flash", this._flash);
+    this.appEvents.on("modal-body:clearFlash", this._clearFlash);
     document.documentElement.addEventListener(
       "keydown",
       this._handleModalEvents
     );
-  },
+    this.wrapperElement = element;
+  }
 
-  willDestroyElement() {
-    this._super(...arguments);
-
-    this.appEvents.off("modal:body-shown", this, "_modalBodyShown");
+  @action
+  cleanupListeners() {
+    this.appEvents.off("modal:body-shown", this._modalBodyShown);
+    this.appEvents.off("modal-body:flash", this._flash);
+    this.appEvents.off("modal-body:clearFlash", this._clearFlash);
     document.documentElement.removeEventListener(
       "keydown",
       this._handleModalEvents
     );
-  },
+  }
 
-  @discourseComputed("title", "titleAriaElementId")
-  ariaLabelledby(title, titleAriaElementId) {
-    if (titleAriaElementId) {
-      return titleAriaElementId;
-    }
-    if (title) {
+  get ariaLabelledby() {
+    if (this.modalBodyData.titleAriaElementId) {
+      return this.modalBodyData.titleAriaElementId;
+    } else if (this.args.titleAriaElementId) {
+      return this.args.titleAriaElementId;
+    } else if (this.args.title) {
       return "discourse-modal-title";
     }
+  }
 
-    return;
-  },
+  get modalClass() {
+    return this.modalBodyData.modalClass || this.args.modalClass;
+  }
 
   triggerClickOnEnter(e) {
     if (!this.submitOnEnter) {
@@ -87,9 +120,10 @@ export default Component.extend({
     }
 
     return true;
-  },
+  }
 
-  mouseDown(e) {
+  @action
+  handleMouseDown(e) {
     if (!this.dismissable) {
       return;
     }
@@ -101,78 +135,55 @@ export default Component.extend({
       // Send modal close (which bubbles to ApplicationRoute) if clicked outside.
       // We do this because some CSS of ours seems to cover the backdrop and makes
       // it unclickable.
-      return this.attrs.closeModal?.("initiatedByClickOut");
+      return this.args.closeModal?.("initiatedByClickOut");
     }
-  },
+  }
 
+  @bind
   _modalBodyShown(data) {
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
 
     if (data.fixed) {
-      this.element.classList.remove("hidden");
+      this.wrapperElement.classList.remove("hidden");
     }
 
-    if (data.title) {
-      this.set("title", I18n.t(data.title));
-    } else if (data.rawTitle) {
-      this.set("title", data.rawTitle);
-    }
-
-    if (data.subtitle) {
-      this.set("subtitle", I18n.t(data.subtitle));
-    } else if (data.rawSubtitle) {
-      this.set("subtitle", data.rawSubtitle);
-    } else {
-      // if no subtitle provided, makes sure the previous subtitle
-      // of another modal is not used
-      this.set("subtitle", null);
-    }
-
-    if ("submitOnEnter" in data) {
-      this.set("submitOnEnter", data.submitOnEnter);
-    }
-
-    if ("dismissable" in data) {
-      this.set("dismissable", data.dismissable);
-    } else {
-      this.set("dismissable", true);
-    }
-
-    this.set("headerClass", data.headerClass || null);
+    this.modalBodyData = data;
 
     schedule("afterRender", () => {
       this._trapTab();
     });
-  },
+  }
 
   @bind
   _handleModalEvents(event) {
-    if (this.element.classList.contains("hidden")) {
+    if (this.wrapperElement.classList.contains("hidden")) {
       return;
     }
 
     if (event.key === "Escape" && this.dismissable) {
-      next(() => this.attrs.closeModal("initiatedByESC"));
+      next(() => this.args.closeModal("initiatedByESC"));
     }
 
     if (event.key === "Enter" && this.triggerClickOnEnter(event)) {
-      this.element.querySelector(".modal-footer .btn-primary")?.click();
+      this.wrapperElement.querySelector(".modal-footer .btn-primary")?.click();
       event.preventDefault();
     }
 
     if (event.key === "Tab") {
       this._trapTab(event);
     }
-  },
+  }
 
   _trapTab(event) {
-    if (this.element.classList.contains("hidden")) {
+    if (this.wrapperElement.classList.contains("hidden")) {
       return true;
     }
 
-    const innerContainer = this.element.querySelector(".modal-inner-container");
+    const innerContainer = this.wrapperElement.querySelector(
+      ".modal-inner-container"
+    );
     if (!innerContainer) {
       return;
     }
@@ -221,5 +232,15 @@ export default Component.extend({
         event.preventDefault();
       }
     }
-  },
-});
+  }
+
+  @bind
+  _clearFlash() {
+    this.flash = null;
+  }
+
+  @bind
+  _flash(msg) {
+    this.flash = msg;
+  }
+}

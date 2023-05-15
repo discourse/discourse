@@ -1,6 +1,10 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
 .modal.history-modal {
+  .modal-body {
+    max-height: 70vh;
+  }
+
   #revision-numbers {
     display: inline-block;
     min-width: 96px;

@@ -8,6 +8,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { flashAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
+import { htmlSafe } from "@ember/template";
 
 export default Controller.extend(ModalFunctionality, {
   offerHelp: null,
@@ -70,10 +71,12 @@ export default Controller.extend(ModalFunctionality, {
             key += "_not_found";
 
             this.flash(
-              I18n.t(key, {
-                email: accountEmailOrUsername,
-                username: accountEmailOrUsername,
-              }),
+              htmlSafe(
+                I18n.t(key, {
+                  email: accountEmailOrUsername,
+                  username: accountEmailOrUsername,
+                })
+              ),
               "error"
             );
           } else {

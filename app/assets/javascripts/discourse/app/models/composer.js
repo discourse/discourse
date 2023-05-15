@@ -925,7 +925,6 @@ const Composer = RestModel.extend({
         if (!this.canEditTopicFeaturedLink) {
           this.set("featuredLink", null);
         }
-
         return this.editingPost ? this.editPost(opts) : this.createPost(opts);
       }
     });
@@ -1065,6 +1064,7 @@ const Composer = RestModel.extend({
       wiki: false,
       typingTime: this.typingTime,
       composerTime: this.composerTime,
+      metaData: this.metaData,
     });
 
     this.serialize(_create_serializer, createdPost);

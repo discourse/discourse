@@ -7,6 +7,21 @@
   grid-area: main;
   width: 100%;
   min-width: 250px;
+  height: calc(
+    var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+      var(--composer-height, 0px) - var(--chat-draft-header-height, 0px) -
+      var(--chat-direct-message-creator-height, 0px) -
+      env(safe-area-inset-bottom)
+  );
+
+  .footer-nav-ipad & {
+    height: calc(
+      var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+        var(--footer-nav-height, 0px) - var(--chat-draft-header-height, 0px) -
+        var(--chat-direct-message-creator-height, 0px) -
+        env(safe-area-inset-bottom)
+    );
+  }
 
   .open-drawer-btn,
   .open-thread-list-btn {

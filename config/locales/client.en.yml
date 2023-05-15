@@ -4151,7 +4151,9 @@ en:
         one: "Earned this badge %{count} time"
         other: "Earned this badge %{count} times"
       granted_on: "Granted %{date}"
-      others_count: "Others with this badge (%{count})"
+      others_count:
+        one: "Granted to others %{count} time"
+        other: "Granted to others %{count} times"
       title: Badges
       allow_title: "You can use this badge as a title"
       multiple_grant: "You can earn this multiple times"

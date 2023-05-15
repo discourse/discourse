@@ -5,7 +5,11 @@
 {{/if}}
 
 {{#if (and this.channel.isDraft (not this.isLoading))}}
-  <div class="direct-message-creator">
+  <div
+    class="direct-message-creator"
+    {{did-insert this.setDirectMessageCreatorHeight}}
+    {{will-destroy this.unsetDirectMessageCreatorHeight}}
+  >
     <div
       class="filter-area {{if this.isFilterFocused 'is-focused'}}"
       role="button"

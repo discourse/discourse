@@ -392,6 +392,8 @@
 }
 
 .incoming-email-modal {
+  max-height: 80vh;
+
   .btn {
     transition: none;
     background-color: transparent;

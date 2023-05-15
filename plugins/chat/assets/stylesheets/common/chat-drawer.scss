@@ -94,7 +94,9 @@ html.rtl {
     height: auto !important;
   }
 
-  .chat-channel {
+  .chat-channel,
+  .chat-thread,
+  .chat-thread-list {
     height: 100%;
   }
 }
@@ -251,4 +253,5 @@ a.chat-drawer-header__title {
   height: 100%;
   min-height: 1px;
   padding-bottom: 0.25em;
+  position: relative;
 }

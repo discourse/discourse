@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: row;
   padding: 0.5rem;
-  border-radius: 6px;
-  background-color: var(--d-selected);
+  border-radius: 4px;
+  background-color: var(--primary-very-low);
   border: 1px solid transparent;
 }
 
@@ -14,7 +14,7 @@
   .touch & {
     &:active {
       background-color: var(--d-hover);
-      border: 1px solid var(--primary-medium);
+      border: 1px solid var(--primary-300);
     }
   }
 
@@ -22,7 +22,7 @@
     &:hover,
     &:active {
       background-color: var(--d-hover);
-      border: 1px solid var(--primary-medium);
+      border: 1px solid var(--primary-300);
     }
   }
 
@@ -39,6 +39,10 @@
   &__title {
     flex: 1;
     font-weight: bold;
+  }
+
+  &__settings[disabled] {
+    display: none;
   }
 
   &__open-button {

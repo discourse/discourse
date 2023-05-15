@@ -12,21 +12,18 @@ export default class ReviewSectionLink extends BaseSectionLink {
     super(...arguments);
 
     this._refreshCanDisplay();
-    if (this.shouldDisplay) {
-      this.appEvents.on(
-        "user-reviewable-count:changed",
-        this._refreshCanDisplay
-      );
-    }
+
+    this.appEvents?.on(
+      "user-reviewable-count:changed",
+      this._refreshCanDisplay
+    );
   }
 
   teardown() {
-    if (this.shouldDisplay) {
-      this.appEvents.off(
-        "user-reviewable-count:changed",
-        this._refreshCanDisplay
-      );
-    }
+    this.appEvents?.off(
+      "user-reviewable-count:changed",
+      this._refreshCanDisplay
+    );
   }
 
   @bind

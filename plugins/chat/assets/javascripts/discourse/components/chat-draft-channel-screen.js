@@ -15,6 +15,22 @@ export default class ChatDraftChannelScreen extends Component {
   }
 
   @action
+  setChatDraftHeaderHeight(element) {
+    document.documentElement.style.setProperty(
+      "--chat-draft-header-height",
+      `${element.clientHeight}px`
+    );
+  }
+
+  @action
+  unsetChatDraftHeaderHeight() {
+    document.documentElement.style.setProperty(
+      "--chat-draft-header-height",
+      "0px"
+    );
+  }
+
+  @action
   onChangeSelectedUsers(users) {
     this._fetchPreviewedChannel(users);
   }

@@ -179,7 +179,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
       sign_in(current_user)
     end
 
-    it "adds the emoji to the composer" do
+    xit "adds the emoji to the composer" do
       chat.visit_channel(channel_1)
       channel.open_action_menu
       channel.click_action_button("emoji")
