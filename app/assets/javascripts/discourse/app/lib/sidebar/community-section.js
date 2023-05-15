@@ -95,7 +95,6 @@ export default class CommunitySection {
     if (this.callbackId) {
       this.topicTrackingState.offStateChange(this.callbackId);
     }
-
     [...this.links, ...this.moreLinks].forEach((sectionLink) => {
       sectionLink.teardown?.();
     });
