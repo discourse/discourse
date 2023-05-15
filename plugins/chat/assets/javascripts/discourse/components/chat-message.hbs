@@ -62,6 +62,7 @@
         </div>
       {{else}}
         <div
+          {{did-insert this.refreshStatusOnMentions}}
           class={{concat-class
             "chat-message"
             (if @message.staged "chat-message-staged")
