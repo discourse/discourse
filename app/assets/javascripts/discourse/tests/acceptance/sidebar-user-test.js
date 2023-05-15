@@ -27,7 +27,7 @@ acceptance(
 );
 
 acceptance(
-  "Sidebar - Logged on user - Experimental sidebar and hamburger setting enabled - Sidebar disabled",
+  "Sidebar - Logged on user - header dropdown navigation menu enabled",
   function (needs) {
     needs.user();
 

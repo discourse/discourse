@@ -4,17 +4,22 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { htmlSafe } from "@ember/template";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import { tracked } from "@glimmer/tracking";
+import { setOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 
 export default class Section {
+  @service currentUser;
+  @service router;
+
   @tracked dragCss;
   @tracked links;
 
-  constructor({ section, currentUser, router }) {
+  constructor({ section, owner }) {
+    setOwner(this, owner);
+
     this.section = section;
-    this.router = router;
-    this.currentUser = currentUser;
     this.slug = section.slug;
 
     this.links = this.section.links.map((link) => {
