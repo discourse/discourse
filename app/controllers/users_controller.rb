@@ -110,12 +110,15 @@ class UsersController < ApplicationController
 
     @user =
       fetch_user_from_params(
-        include_inactive:
-          current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts),
+        include_inactive: current_user&.staff? || for_card || SiteSetting.show_inactive_accounts,
       )
 
     user_serializer = nil
-    if guardian.can_see_profile?(@user)
+    if !current_user&.staff? && !@user.active?
+      user_serializer = InactiveUserSerializer.new(@user, scope: guardian, root: "user")
+    elsif !guardian.can_see_profile?(@user)
+      user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
+    else
       serializer_class = for_card ? UserCardSerializer : UserSerializer
       user_serializer = serializer_class.new(@user, scope: guardian, root: "user")
 
@@ -125,8 +128,6 @@ class UsersController < ApplicationController
           topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count,
         }
       end
-    else
-      user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
     end
 
     track_visit_to_user_profile if !params[:skip_track_visit] && (@user != current_user)
