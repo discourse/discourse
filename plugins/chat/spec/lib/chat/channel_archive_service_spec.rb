@@ -195,7 +195,7 @@ describe Chat::ChannelArchiveService do
           expect(@channel_archive.reload.complete?).to eq(true)
           pm_topic = Topic.private_messages.last
           expect(pm_topic.first_post.cooked).to include(
-            "<a class=\"hashtag-cooked\" href=\"#{channel.relative_url}\" data-type=\"channel\" data-slug=\"#{channel.slug}\" data-ref=\"#{channel.slug}::channel\"><svg class=\"fa d-icon d-icon-comment svg-icon svg-node\"><use href=\"#comment\"></use></svg><span>#{channel.title(user)}</span></a>",
+            "<a class=\"hashtag-cooked\" href=\"#{channel.relative_url}\" data-type=\"channel\" data-slug=\"#{channel.slug}\" data-id=\"#{channel.id}\" data-ref=\"#{channel.slug}::channel\"><span class=\"hashtag-icon-placeholder\"></span><span>#{channel.title(user)}</span></a>",
           )
         end
       end
