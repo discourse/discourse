@@ -452,24 +452,21 @@ export default SiteHeaderComponent.extend({
 
   @bind
   updateHeaderOffset() {
-    // check offset from top of the page, in case there's a custom header above
-    // and adjust on scroll in case it's not sticky
-    if (this.scrollAnimationFrame) {
-      cancelAnimationFrame(this.scrollAnimationFrame);
+    const headerWrapTop = this.headerWrap.getBoundingClientRect().top;
+
+    const documentStyle = document.documentElement.style;
+
+    const currentValue = documentStyle.getPropertyValue("--header-offset");
+    const newValue = `${this.headerWrap.offsetHeight + headerWrapTop}px`;
+
+    if (currentValue !== newValue) {
+      documentStyle.setProperty("--header-offset", newValue);
     }
+  },
 
-    this.scrollAnimationFrame = requestAnimationFrame(() => {
-      const headerWrapTop = this.headerWrap.getBoundingClientRect().top;
-
-      const documentStyle = document.documentElement.style;
-
-      const currentValue = documentStyle.getPropertyValue("--header-offset");
-      const newValue = `${this.headerWrap.offsetHeight + headerWrapTop}px`;
-
-      if (currentValue !== newValue) {
-        documentStyle.setProperty("--header-offset", newValue);
-      }
-    });
+  @bind
+  onScroll() {
+    schedule("afterRender", this.updateHeaderOffset);
   },
 
   didInsertElement() {
@@ -490,7 +487,7 @@ export default SiteHeaderComponent.extend({
         );
       });
 
-      window.addEventListener("scroll", this.updateHeaderOffset, {
+      window.addEventListener("scroll", this.onScroll, {
         passive: true,
       });
     }
@@ -520,7 +517,7 @@ export default SiteHeaderComponent.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    window.removeEventListener("scroll", this.updateHeaderOffset);
+    window.removeEventListener("scroll", this.onScroll);
     this._resizeObserver?.disconnect();
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
