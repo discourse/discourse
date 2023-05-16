@@ -367,7 +367,7 @@ export default class ChatSubscriptionsManager extends Service {
       // been deleted. we don't want them seeing the blue dot anymore so
       // just completely reset the unreads
       if (busData.status === CHANNEL_STATUSES.archived) {
-        this.channel.tracking.reset();
+        channel.tracking.reset();
       }
     });
   }
