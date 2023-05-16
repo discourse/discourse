@@ -55,10 +55,6 @@ module Stylesheet
           style: :compressed,
           source_map_file: source_map_file,
           source_map_contents: true,
-          theme_id: options[:theme_id],
-          theme: options[:theme],
-          theme_field: options[:theme_field],
-          color_scheme_id: options[:color_scheme_id],
           load_paths: load_paths,
           validate_source_map_path: false,
         )
