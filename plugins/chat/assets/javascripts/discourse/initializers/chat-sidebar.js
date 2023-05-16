@@ -14,7 +14,6 @@ export default {
   name: "chat-sidebar",
   initialize(container) {
     this.chatService = container.lookup("service:chat");
-    this.chatTrackingState = container.lookup("service:chat-tracking-state");
 
     if (!this.chatService.userCanChat) {
       return;
@@ -24,11 +23,10 @@ export default {
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           const SidebarChatChannelsSectionLink = class extends BaseCustomSidebarSectionLink {
-            constructor({ channel, chatService, chatTrackingState }) {
+            constructor({ channel, chatService }) {
               super(...arguments);
               this.channel = channel;
               this.chatService = chatService;
-              this.chatTrackingState = chatTrackingState;
             }
 
             get name() {
@@ -113,9 +111,6 @@ export default {
                 return;
               }
               this.chatService = container.lookup("service:chat");
-              this.chatTrackingState = container.lookup(
-                "service:chat-tracking-state"
-              );
               this.chatChannelsManager = container.lookup(
                 "service:chat-channels-manager"
               );
@@ -128,7 +123,6 @@ export default {
                   new SidebarChatChannelsSectionLink({
                     channel,
                     chatService: this.chatService,
-                    chatTrackingState: this.chatTrackingState,
                   })
               );
             }
@@ -178,11 +172,10 @@ export default {
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           const SidebarChatDirectMessagesSectionLink = class extends BaseCustomSidebarSectionLink {
-            constructor({ channel, chatService, chatTrackingState }) {
+            constructor({ channel, chatService }) {
               super(...arguments);
               this.channel = channel;
               this.chatService = chatService;
-              this.chatTrackingState = chatTrackingState;
 
               if (this.oneOnOneMessage) {
                 this.channel.chatable.users[0].trackStatus();
@@ -351,9 +344,6 @@ export default {
                 return;
               }
               this.chatService = container.lookup("service:chat");
-              this.chatTrackingState = container.lookup(
-                "service:chat-tracking-state"
-              );
               this.chatChannelsManager = container.lookup(
                 "service:chat-channels-manager"
               );
@@ -365,7 +355,6 @@ export default {
                   new SidebarChatDirectMessagesSectionLink({
                     channel,
                     chatService: this.chatService,
-                    chatTrackingState: this.chatTrackingState,
                   })
               );
             }

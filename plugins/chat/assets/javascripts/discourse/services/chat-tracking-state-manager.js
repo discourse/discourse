@@ -11,17 +11,17 @@ export class ChatTrackingState {
 
   constructor(owner, params = {}) {
     setOwner(this, owner);
-    this.unreadCount = params.hasOwnProperty("unreadCount")
+    this._unreadCount = params.hasOwnProperty("unreadCount")
       ? params.unreadCount
       : 0;
-    this.mentionCount = params.hasOwnProperty("mentionCount")
+    this._mentionCount = params.hasOwnProperty("mentionCount")
       ? params.mentionCount
       : 0;
   }
 
   reset() {
-    this.unreadCount = 0;
-    this.mentionCount = 0;
+    this._unreadCount = 0;
+    this._mentionCount = 0;
   }
 
   get unreadCount() {
