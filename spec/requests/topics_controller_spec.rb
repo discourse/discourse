@@ -4841,4 +4841,45 @@ RSpec.describe TopicsController do
       expect(body["group_name"]).to eq(group.name)
     end
   end
+
+  describe "#set_notifications" do
+    describe "initiated by admin" do
+      it "allows fetches user from params if the request is_api? " do
+        api_key = Fabricate(:api_key, user: admin)
+        post "/t/#{topic.id}/notifications",
+             params: {
+               username: user.username,
+               notification_level: NotificationLevels.topic_levels[:watching],
+             },
+             headers: {
+               HTTP_API_KEY: api_key.key,
+               HTTP_API_USERNAME: admin.username,
+             }
+        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
+          NotificationLevels.topic_levels[:watching],
+        )
+      end
+    end
+
+    describe "initiated by non-admin" do
+      it "only acts on current_user and ignores `username` param" do
+        sign_in(user)
+        TopicUser.create!(
+          user: user,
+          topic: topic,
+          notification_level: NotificationLevels.topic_levels[:tracking],
+        )
+        post "/t/#{topic.id}/notifications.json",
+             params: {
+               username: user_2.username,
+               notification_level: NotificationLevels.topic_levels[:watching],
+             }
+
+        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
+          NotificationLevels.topic_levels[:watching],
+        )
+        expect(TopicUser.find_by(user: user_2, topic: topic)).to be_blank
+      end
+    end
+  end
 end
