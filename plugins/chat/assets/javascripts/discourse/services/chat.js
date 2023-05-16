@@ -108,6 +108,8 @@ export default class Chat extends Service {
   @bind
   onPresenceChangeCallback(present) {
     if (present) {
+      // NOTE: channels is more than a simple array, it also contains
+      // tracking and membership data, see Chat::StructuredChannelSerializer
       this.chatApi.listCurrentUserChannels().then((channels) => {
         this.chatSubscriptionsManager.restartChannelsSubscriptions(
           channels.meta.message_bus_last_ids
@@ -122,6 +124,13 @@ export default class Chat extends Service {
             .then((channel) => {
               if (channel) {
                 channel.updateMembership(channelObject.current_user_membership);
+
+                const channelTrackingState =
+                  channels.tracking.channel_tracking[channel.id];
+                channel.tracking.unreadCount =
+                  channelTrackingState.unread_count;
+                channel.tracking.mentionCount =
+                  channelTrackingState.mention_count;
               }
             });
         });
