@@ -205,12 +205,13 @@ pl_PL:
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
     site_settings:
+      invalid_site_setting: "Brak ustawienia o nazwie '%{name}'."
       invalid_category_id: "Podana kategoria nie istnieje"
       invalid_choice:
-        one: "Podano nieprawidłowy wybór %{name}"
-        few: "Podano nieprawidłowe opcje %{name}"
-        many: "Podano nieprawidłowe opcje %{name}"
-        other: "Podano nieprawidłowe opcje %{name}"
+        one: "'%{name}' jest nieprawidłowym wyborem."
+        few: "'%{name}' są nieprawidłowym wyborem."
+        many: "'%{name}' są nieprawidłowym wyborem."
+        other: "'%{name}' są nieprawidłowym wyborem."
       default_categories_already_selected: "Nie możesz wybrać kategorii użytej w innej liście."
       default_tags_already_selected: "Nie można wybrać znacznika używanego z innej listy."
       s3_upload_bucket_is_required: "Nie możesz wysyłać na S3 jeżeli nie podasz 's3_upload_bucket'."
@@ -559,6 +560,7 @@ pl_PL:
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
     dominating_topic: Dużo pisałeś w tym temacie! Zastanów się, czy nie dać innym możliwości odpowiadania tutaj i dyskutowania ze sobą.
     get_a_room: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
+    dont_feed_the_trolls: Ten post został już oznaczony jako wymagający uwagi moderatora. Czy na pewno chcesz na niego odpowiedzieć? Odpowiedzi na negatywne treści zachęcają do jeszcze bardziej negatywnych zachowań.
     too_many_replies: |
       ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
 
@@ -645,6 +647,14 @@ pl_PL:
             duration_minutes:
               cannot_be_zero: "musi być większa niż 0."
               exceeds_maximum: "nie może przekraczać 20 lat."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys:
+                one: "Następujący klucz interpolacji jest nieprawidłowy: %{keys}"
+                few: "Następujące klucze interpolacji są nieprawidłowe: %{keys}"
+                many: "Następujące klucze interpolacji są nieprawidłowe: %{keys}"
+                other: "Następujące klucze interpolacji są nieprawidłowe: %{keys}"
         watched_word:
           attributes:
             word:
@@ -665,21 +675,19 @@ pl_PL:
   staff_category_name: "Zespół"
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
   discourse_welcome_topic:
-    title: "Witamy w naszej społeczności!"
-    body: |2
+    title: "Witamy w %{site_title}! :wave:"
+    body: |
+      Bardzo się cieszymy, że do nas dołączyłeś. %{site_description}
 
-      Pierwszy paragraf tego przypiętego tematu będzie widoczny jako wiadomość powitalna dla wszystkich odwiedzających stronę główną. Jest bardzo ważny!
+      Oto kilka rzeczy, które możesz zrobić, aby zacząć:
 
-      **Edytuj go** żeby zwięźle opisać swoje społeczeństwo.
+      :speaking_head: **Przedstaw się**, dodając swoje zdjęcie oraz informacje o sobie i swoich zainteresowaniach do [swojego profilu](%{base_path}/my/preferences/account). Jaka jest jedna rzecz, o którą chciałbyś zostać zapytany?
 
-      - Dla kogo jest?
-      - Co mogą tutaj znaleźć?
-      - Dlaczego powinni tutaj przychodzić?
-      - Gdzie mogą przeczytać więcej (link, zasoby, itp.)?
+      :open_book: **Poznaj społeczność**, [przeglądając dyskusje](%{base_path}/top), które już się tutaj toczą. Gdy uznasz post za interesujący, pouczający lub zabawny, użyj :heart:, aby okazać uznanie lub wsparcie!
 
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      :handshake: **Wnieś swój wkład**, komentując, dzieląc się własną perspektywą, zadając pytania lub wyrażając opinie w dyskusji. Przed udzieleniem odpowiedzi lub rozpoczęciem nowych tematów zapoznaj się z [wytycznymi dla społeczności](%{base_path}/faq).
 
-      Rozważ zamknięcie tego tematu poprzez administracyjny :wrench: (w prawym górnym i dolnym rogu), aby zapobiec niepotrzebnym odpowiedziom do ogłoszenia.
+      > Jeśli potrzebujesz pomocy lub masz sugestie, możesz zapytać [#feedback](%{base_path}/c/site-feedback) lub [skontaktuj się z administratorami](%{base_path}/about).
   admin_quick_start_title: "README: Skrócony poradnik administratora"
   category:
     topic_prefix: "O kategorii %{category}"
@@ -699,6 +707,7 @@ pl_PL:
       disallowed_tags_generic: "W tym temacie niedozwolone są tagi."
       slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"
       is_already_in_use: "jest już w użyciu"
+      move_topic_to_category_disallowed: "Nie możesz przenieść tego tematu do kategorii, w której nie masz uprawnień do tworzenia nowych tematów."
     cannot_delete:
       uncategorized: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nieprzypisanych do żadnej kategorii i jako taka nie może zostać usunięta."
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "
@@ -1495,6 +1504,7 @@ pl_PL:
     out_of_date_themes: "Aktualizacje są dostępne dla następujących motywów:"
     unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
     watched_word_regexp_error: "Wyrażenie regularne dla '%{action}' jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a> lub wyłącz ustawienie witryny „obserwowane słowa regularne”."
+    v3_analytics_deprecated: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -1560,6 +1570,7 @@ pl_PL:
     exclude_rel_nofollow_domains: "Lista domen, w których nofollow nie powinien być dodawany do linków. example.com automatycznie zezwoli również na sub.example.com. Jako minimum należy dodać domenę tej witryny, aby roboty indeksujące mogły znaleźć całą treść. Jeśli inne części witryny znajdują się w innych domenach, dodaj je również."
     post_excerpt_maxlength: "Maksymalna długość podsumowania / streszczenia wpisu."
     topic_excerpt_maxlength: "Maksymalna długość fragmentu/podsumowania tematu, wygenerowana z pierwszego posta w temacie."
+    default_subcategory_on_read_only_category: "Włącza przycisk „Nowy temat” i wybiera domyślną podkategorię do publikowania w kategoriach, w których użytkownik nie może tworzyć nowych tematów."
     show_pinned_excerpt_mobile: "Pokaż fragment przypiętych tematów w widoku mobilnym"
     show_pinned_excerpt_desktop: "Pokaż fragment przypiętych tematów w widoku \"wersja komputerowa\""
     post_onebox_maxlength: "Maksymalna długość (ilość znaków) treści wpisu osadzonego via Onebox"
@@ -1581,6 +1592,7 @@ pl_PL:
     manifest_icon: "Obraz używany jako logo / obraz powitalny na Androidzie. Zostanie automatycznie przeskalowany do rozmiaru 512 × 512. Jeśli pozostanie puste, zostanie użyty large_icon."
     manifest_screenshots: "Zrzuty ekranu, które pokazują możliwości i funkcjonalność Twojej instancji na stronie instalacyjnej. Wszystkie obrazy powinny być przesłane lokalnie i o tych samych wymiarach."
     favicon: "Favicona dla Twojej strony, zobacz <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby działała poprawnie poprzez CDN, musi to być w formacie png. Zostanie przeskalowana do 32x32. Jeśli pozostanie pusta, zostanie użyte large_icon."
+    apple_touch_icon: "Ikona używana w urządzeniach dotykowych Apple. Przezroczyste tło nie jest zalecane. Zostanie automatycznie zmniejszona do rozmiaru 180x180. Jeśli pozostanie pusta, użyta zostanie ikona large_icon."
     opengraph_image: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon"
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -1820,6 +1832,7 @@ pl_PL:
     composer_media_optimization_image_bytes_optimization_threshold: "Minimalny rozmiar pliku obrazu do uruchomienia optymalizacji po stronie klienta"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimalna szerokość obrazu, aby wywołać zmianę rozmiaru po stronie klienta"
     composer_media_optimization_image_resize_width_target: "Obrazy o szerokości większej niż `composer_media_optimization_image_dimensions_resize_threshold` zostaną przeskalowane do tej szerokości. Musi być >= niż `composer_media_optimization_image_dimensions_resize_threshold`."
+    composer_media_optimization_image_encode_quality: "Jakość kodowania JPG używana w procesie ponownego kodowania."
     min_ratio_to_crop: "Współczynnik stosowany do przycinania wysokich zdjęć. Wpisz wynik szerokości / wysokości."
     simultaneous_uploads: "Maksymalna liczba plików, które można przeciągnąć i upuścić w kompozytorze"
     default_invitee_trust_level: "Domyślny poziom zaufania (0-4) dla zaproszonych użytkowników."
@@ -1848,6 +1861,7 @@ pl_PL:
     tl3_requires_likes_given: "Minimalna liczba polubień, które muszą zostać rozdane w ostatnich (tl3 okres) dniach, aby zakwalifikować się do awansu na poziom zaufania 3."
     tl3_requires_likes_received: "Minimalna liczba polubień, które użytkownik musi otrzymać w ostatnich (tl3 okres) dniach, aby zakwalifikować się do awansu na poziom zaufania 3."
     tl3_links_no_follow: "Nie usuwaj rel=nofollow z linków od użytkowników z trzecim poziomem zaufania."
+    tl4_delete_posts_and_topics: "Zezwól użytkownikom TL4 na usuwanie postów i tematów utworzonych przez innych użytkowników. Użytkownicy TL4 będą również mogli zobaczyć usunięte tematy i posty."
     trusted_users_can_edit_others: "Zezwalaj użytkownikom o wysokim poziomie zaufania na edycję treści od innych użytkowników"
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     allow_flagging_staff: "Jeżeli włączone, użytkownicy mogą flagować wpisy członków zespołu."
@@ -1964,6 +1978,11 @@ pl_PL:
     block_auto_generated_emails: "Odrzucaj przychodzące e-maile zidentyfikowane jako generowane automatycznie."
     ignore_by_title: "Ignoruj przychodzące wiadomości e-mail w oparciu o ich tytuł."
     mailgun_api_key: "Klucz Mailgun Secret API używany do weryfikacji wiadomości webhook."
+    sendgrid_verification_key: "Klucz weryfikacyjny Sendgrid używany do weryfikacji wiadomości webhook."
+    mailjet_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "Klucz uwierzytelniania Mandrill używany do weryfikowania wiadomości webhook."
+    postmark_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/sparkpost?t=supersecret"
     soft_bounce_score: "Wynik odrzucania dodany do użytkownika, gdy ma miejsce tymczasowe odrzucanie."
     hard_bounce_score: "Wynik odrzucania dodany do użytkownika, gdy ma miejsce stałe odrzucanie."
     bounce_score_threshold: "Maksymalny wynik odrzucania przed końcem wysyłania emaili do użytkownika."
@@ -1991,7 +2010,7 @@ pl_PL:
     pop3_polling_password: "Hasło dla konta POP3 do cyklicznego pobierania e-maili."
     pop3_polling_delete_from_server: "Usuń wiadomości e-mail z serwera. UWAGA: Jeśli to wyłączysz, powinieneś ręcznie wyczyścić swoją skrzynkę pocztową"
     log_mail_processing_failures: "Zapisz wszystkie błędy przetwarzania wiadomości e-mail w <a href='%{base_path}/logs' target='_blank'>/ logs</a>"
-    email_in: 'Zezwalaj użytkownikom na publikowanie nowych tematów za pośrednictwem poczty e-mail (wymaga sondowania ręcznego lub pop3). Skonfiguruj adresy w zakładce „Ustawienia” każdej kategorii.'
+    email_in: "Zezwalaj użytkownikom na publikowanie nowych tematów za pośrednictwem poczty e-mail. Po włączeniu tego ustawienia będziesz mógł skonfigurować przychodzące adresy e-mail dla grup i kategorii."
     email_in_min_trust: "Minimalny poziom zaufania, który musi posiadać użytkownik, aby móc dodawać nowe wpisy w tematach poprzez email."
     email_in_authserv_id: "Identyfikator usługi sprawdzającej autentyczność przychodzących wiadomości e-mail. Instrukcje dotyczące konfigurowania znajdują się na <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> ."
     email_in_spam_header: "Nagłówek e-maila do wykrywania spamu."
@@ -2055,6 +2074,7 @@ pl_PL:
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
     sequential_replies_threshold: "Liczba wpisów dodanych przez użytkownika jeden pod drugim w jednym temacie, po której zostanie on upomniany."
     get_a_room_threshold: "Liczba wpisów dodanych przez użytkownika w odpowiedzi na wpisy tej samej osoby w jednym temacie, po której zostanie on ostrzeżony."
+    dont_feed_the_trolls_threshold: "Liczba flag od innych użytkowników przed otrzymaniem ostrzeżenia."
     enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
     dominating_topic_minimum_percent: "Odsetek (%) wpisów dodanych przez użytkownika w jednym temacie, po którym otrzyma on upomnienie, że nadmiernie go dominuje."
     disable_avatar_education_message: "Wyłącz wiadomość edukacyjną dla zmiany avataru."
@@ -2071,6 +2091,8 @@ pl_PL:
     automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy użytkownik dotknie dna."
     read_time_word_count: "Licznik słów na minutę dla kalkulacji szacowanego czasu czytania."
     topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>Tytuł strony</a> zawiera nazwę kategorii."
+    native_app_install_banner_ios: "Wyświetla baner aplikacji DiscourseHub na urządzeniach z systemem iOS dla zwykłych użytkowników (poziom zaufania 1) i wyższych."
+    native_app_install_banner_android: "Wyświetla baner aplikacji DiscourseHub na urządzeniach z Androidem dla zwykłych użytkowników (poziom zaufania 1) i wyższych."
     app_association_android: "Zawartość punktu końcowego <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, używanego przez interfejs Google Digital Asset Links API."
     app_association_ios: "Zawartość punktu końcowego <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> używana do tworzenia uniwersalnych linków między tą stroną a aplikacjami iOS."
     share_anonymized_statistics: "Udostępnij anonimowe statystyki użytkowania."
@@ -2098,9 +2120,11 @@ pl_PL:
     allowed_href_schemes: "Projekty dozwolone w linkach jako dodatek do http i https."
     embed_post_limit: "Maksymalna liczba wpisów do osadzenia."
     embed_username_required: "W celu stworzenia tematu potrzebna jest nazwa użytkownika."
+    notify_about_reviewable_item_after: "Jeśli po tylu godzinach są elementy do przejrzenia, które jeszcze nie zostały sprawdzone, wyślij wiadomość do moderatorów. Ustaw na 0, aby wyłączyć."
     show_create_topics_notice: "Jeśli na stronie jest mniej niż 5 publicznych tematów, pokaż powiadomienie proszące adminów, aby stworzyli nowe tematy."
     delete_drafts_older_than_n_days: "Usuń projekty starsze niż (n) dni."
     delete_merged_stub_topics_after_days: "Liczba dni, po których wątki, z których zostały przeniesione wszystkie posty, zostaną automatycznie usunięte. Aby to wyłączyć, ustaw wartość na 0."
+    bootstrap_mode_min_users: "Minimalna liczba użytkowników wymagana do wyłączenia trybu bootstrap (ustaw 0, aby wyłączyć, może to potrwać do 24 godzin)"
     prevent_anons_from_downloading_files: "Zablokuj możliwość pobierania załączników przez anonimowych użytkowników."
     secure_uploads: 'Ograniczenie dostępu do WSZYSTKICH przesyłanych plików (obrazów, filmów, audio, tekstów, plików pdf, zipów i innych). Jeśli włączona jest opcja "Wymagane logowanie", tylko zalogowani użytkownicy będą mieli dostęp do przesyłanych materiałów. W przeciwnym razie dostęp będzie ograniczony tylko do przesyłania mediów w prywatnych wiadomościach i prywatnych kategoriach. UWAGA: To ustawienie jest skomplikowane i wymaga głębokiej wiedzy administracyjnej. Szczegóły znajdziesz na stronie <a target="_blank" href="https://meta.discourse.org/t/-/140017">w temacie bezpieczne przesyłanie plików na Meta</a> .'
     secure_uploads_allow_embed_images_in_emails: "Umożliwia osadzanie w wiadomościach e-mail bezpiecznych obrazów, które normalnie byłyby pominięte, jeśli ich rozmiar jest mniejszy niż ustawienie 'secure uploads max email embed image size kb'."
@@ -2171,6 +2195,9 @@ pl_PL:
     revoke_api_keys_days: "Liczba dni do automatycznego unieważnienia nieużywanego klucza API (0 oznacza brak)"
     allow_user_api_keys: "Pozwól na generację kluczy API użytkownika."
     allow_user_api_key_scopes: "Lista zakresów dozwolona dla kluczy API użytkownika."
+    min_trust_level_for_user_api_key: |
+      Poziom zaufania wymagany do generowania kluczy API użytkownika.<br>
+      <b>OSTRZEŻENIE</b>: Zmiana poziomu zaufania uniemożliwi użytkownikom o niższym poziomie zaufania logowanie się przez Discourse Hub
     allowed_user_api_auth_redirects: "Dozwolony adres URL do przekierowania uwierzytelniania dla kluczy interfejsu API użytkownika. Symbol wieloznaczny * może być użyty do dopasowania dowolnej jego części (np. www.example.com/*)."
     allowed_user_api_push_urls: "Dozwolone URLs dla serwera push do API użytkownika"
     expire_user_api_keys_days: "Liczba dni do automatycznego wygaśnięcia klucza API użytkownika (0 oznacza brak)"
@@ -2187,6 +2214,7 @@ pl_PL:
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
     remove_muted_tags_from_latest: "Nie pokazuj tematów oznaczonych tylko wyciszonymi tagami na najnowszej liście tematów."
     force_lowercase_tags: "Wymuś, aby wszystkie nowe tagi były małymi literami."
+    create_post_for_category_and_tag_changes: "Utwórz mały post akcji, gdy zmieni się kategoria tematu lub tagi"
     company_name: "Nazwa firmy"
     governing_law: "Obowiązujące prawo"
     city_for_disputes: "Miasto sporów"
@@ -2201,6 +2229,7 @@ pl_PL:
     enable_sitemap: "Wygeneruj mapę witryny dla swojej strony i umieść ją w pliku robots.txt."
     sitemap_page_size: "Liczba adresów URL do uwzględnienia na każdej stronie mapy witryny. Maksymalnie 50.000"
     enable_user_status: "(eksperymentalne) Zezwól użytkownikom na ustawienie niestandardowego statusu (emoji + opis)."
+    enable_user_tips: "Włącz nowe wskazówki dla użytkowników, które opisują najważniejsze funkcje witryny"
     short_title: "Krótki tytuł będzie używany na ekranie głównym użytkownika, launcherze lub w innych miejscach, gdzie przestrzeń może być ograniczona. Powinien składać się maksymalnie z 12 znaków."
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
@@ -2220,8 +2249,9 @@ pl_PL:
     default_sidebar_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji Kategorie paska bocznego."
     default_sidebar_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi paska bocznego."
     enable_experimental_hashtag_autocomplete: "EKSPERYMENTALNIE: Użyj nowego systemu autouzupełniania #hashtagów dla kategorii i tagów, który inaczej renderuje wybrany element i usprawnia wyszukiwanie"
-    experimental_new_new_view_groups: "EKSPERYMENTALNE: Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i utwórz link \"Wszystko\" na pasku bocznym."
+    experimental_new_new_view_groups: 'EKSPERYMENTALNE: Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i utwórz link "Wszystko" na pasku bocznym.'
     enable_custom_sidebar_sections: "EKSPERYMENTALNIE: Włącz niestandardowe sekcje paska bocznego"
+    experimental_topics_filter: "EKSPERYMENTALNE: Włącza eksperymentalną ścieżkę filtrowania tematów w /filter"
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
@@ -2275,6 +2305,7 @@ pl_PL:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Nie można włączyć DiscourseConnect, jeśli wymuszono 2FA."
       delete_rejected_email_after_days: "To ustawienie nie może być niższe niż ustawienie delete_email_logs_after_days ani większe niż %{max}"
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
+      invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4009,6 +4040,182 @@ pl_PL:
       Tak, język prawniczy jest nudny, ale musimy się chronić &ndash; co za tym idzie, Ciebie i Twoje dane &ndash; przeciwko nieprzyjaznym ludziom. Mamy [Warunki korzystania z usługi](%{base_path}/tos) opisujące Twoje (i nasze) zachowanie oraz prawa związane z treścią, prywatnością i przepisami. Aby korzystać z tej usługi, musisz zgodzić się na przestrzeganie naszych[TOS](%{base_path}/tos).
   tos_topic:
     title: "Warunki użytkowania"
+    body: |
+      <h2 id="heading--change-me"><a href="#heading--change-me">Zmień mnie</a></h2>
+
+      Administratorze forum, poniżej znajdziesz przykładowy szablon polityki prywatności, który powinieneś dostosować do potrzeb swojej strony.
+
+      Te warunki nie dotyczą, ale mogą kiedyś dotyczyć korzystania z forum internetowego pod adresem <%{base_url}>. W takim przypadku, aby korzystać z forum, musisz uzgodnić te warunki z firmą %{company_name}, która prowadzi forum.
+
+      Firma ta może oferować inne produkty i usługi, na innych warunkach. Te warunki dotyczą tylko korzystania z forum.
+
+      Przejdź do:
+
+      - Ważne warunki](#heading--important-terms)
+      - [Twoje pozwolenie na korzystanie z forum](#heading--permission)
+      - [Warunki korzystania z forum](#heading--conditions)
+      - [Dopuszczalne użytkowanie](#heading--acceptable-use)
+      - [Standardy treści](#heading--content-standards)
+      - [Egzekwowanie](#heading--enforcement)
+      - [Twoje konto](#heading--your-account)
+      - [Twoja treść](#heading--your-content)
+      - [Twoja odpowiedzialność](#heading--responsibility)
+      - [Zastrzeżenia](#heading--disclaimers)
+      - [Ograniczenia odpowiedzialności](#heading--liability)
+      - [Informacje zwrotne](#heading--feedback)
+      - [Wypowiedzenie](#heading--termination)
+      - [Spory](#heading--disputes)
+      - [Warunki ogólne](#heading--general)
+      - [Kontakt](#heading--contact)
+      - [Zmiany](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Ważne warunki</a></h2>
+
+      ***Te warunki zawierają wiele ważnych postanowień, które wpływają na Twoje prawa i obowiązki, takich jak zastrzeżenia w [Zastrzeżenia](#heading--disclaimers), ograniczenia odpowiedzialności firmy wobec Ciebie w [Ograniczenia odpowiedzialności](#heading--liability), Twoja zgoda na pokrycie strat spowodowanych przez niewłaściwe korzystanie z forum w [Ograniczenia odpowiedzialności](#heading--responsibility) oraz umowa o arbitrażu sporów w [Spory](#heading--disputes).***
+
+      <h2 id="heading--permission"><a href="#heading--permission">Twoje pozwolenie na korzystanie z forum</a></h2>
+
+      Zgodnie z tymi warunkami firma udziela ci pozwolenia na korzystanie z forum. Każdy musi wyrazić zgodę na te warunki, aby móc korzystać z forum.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Warunki korzystania z forum</a></h2>
+
+      Twoje pozwolenie na korzystanie z forum podlega następującym warunkom:
+
+      1. Musisz mieć co najmniej trzynaście lat.
+
+      2. Nie możesz dłużej korzystać z forum, jeśli firma skontaktuje się z Tobą bezpośrednio i powie, że nie możesz.
+
+      3. Musisz korzystać z forum zgodnie z zasadami [Dopuszczalne użytkowanie](#heading--acceptable-use) i [Standardy zawartości](#heading--content-standards).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Dopuszczalne użytkowanie</a></h2>
+
+      1. Nie możesz łamać prawa używając forum.
+
+      2. Nie możesz używać lub próbować używać konta innej osoby na forum bez jej zgody.
+
+      3. Nie możesz kupować, sprzedawać lub w inny sposób handlować nazwami użytkowników lub innymi unikalnymi identyfikatorami na forum.
+
+      4. Nie wolno Ci wysyłać reklam, łańcuszków lub innych ogłoszeń za pośrednictwem forum, ani wykorzystywać forum do zbierania adresów lub innych danych osobowych do komercyjnych list mailingowych lub baz danych.
+
+      5. Nie możesz zautomatyzować dostępu do forum ani monitorować go, np. za pomocą przeglądarki internetowej, wtyczki lub dodatku do przeglądarki lub innego programu komputerowego, który nie jest przeglądarką internetową. Możesz przeszukiwać forum w celu indeksowania go w publicznie dostępnych wyszukiwarkach, jeśli taką prowadzisz.
+
+      6. Nie możesz używać forum do wysyłania wiadomości na listy dystrybucyjne, grupy dyskusyjne lub aliasy grupowe.
+
+      7. Nie możesz fałszywie sugerować, że jesteś związany z firmą lub przez nią wspierany.
+
+      8. Nie możesz umieszczać na innych stronach internetowych hiperłączy do obrazów lub innych niehipertekstowych treści na forum.
+
+      9. Nie możesz usuwać żadnych znaków wskazujących na własność z materiałów pobranych z forum.
+
+      10. Nie możesz pokazywać żadnej części forum na innych stronach internetowych przez tag `<iframe>`.
+
+      11. Nie wolno Ci wyłączać, unikać lub obchodzić jakichkolwiek zabezpieczeń lub ograniczeń dostępu do forum.
+
+      12. Nie możesz obciążać infrastruktury forum nadmierną ilością żądań lub żądań mających na celu nadmierne obciążenie systemów informatycznych, na których opiera się forum.
+
+      13. Nie możesz podszywać się pod inne osoby za pośrednictwem forum.
+
+      14. Nie możesz zachęcać ani pomagać nikomu w naruszeniu tych zasad.
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Standardy dotyczące treści</a></h2>
+
+      1. Nie możesz umieszczać na forum treści nielegalnych, obraźliwych lub w inny sposób szkodliwych dla innych. Dotyczy to również treści nękających, nieodpowiednich, obraźliwych i nienawistnych.
+
+      2. Nie możesz umieszczać na forum treści, które naruszają prawo, naruszają czyjeś prawa własności intelektualnej, naruszają czyjąś prywatność lub łamią umowy zawarte z innymi osobami.
+
+      3. Nie możesz umieszczać na forum treści zawierających złośliwy kod komputerowy, taki jak wirusy komputerowe lub oprogramowanie szpiegujące.
+
+      4. Nie wolno Ci umieszczać na forum treści, które są jedynie miejscem przechowywania określonego adresu, nazwy użytkownika lub innego unikalnego identyfikatora.
+
+      5. Nie możesz używać forum do ujawniania informacji, których nie masz prawa ujawniać, takich jak poufne lub osobiste informacje innych osób.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Egzekwowanie prawa</a></h2>
+
+      Firma może badać i ścigać naruszenia tych warunków w pełnym zakresie prawnym. Spółka może powiadomić organy ścigania i współpracować z nimi w ściganiu naruszeń prawa i niniejszych warunków.
+
+      Firma zastrzega sobie prawo do zmiany, przeredagowania i usunięcia treści na forum z dowolnego powodu. Jeśli uważasz, że ktoś umieścił na forum treści naruszające te warunki, [skontaktuj się z nami natychmiast](#heading--contact).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">Twoje konto</a></h2>
+
+      Aby korzystać z niektórych funkcji forum, musisz utworzyć i zalogować się na konto.
+
+      Aby utworzyć konto, musisz podać kilka informacji o sobie. Zakładając konto, zobowiązujesz się do podania co najmniej poprawnego adresu e-mail oraz do aktualizowania tego adresu. Możesz zamknąć swoje konto w dowolnym momencie, wysyłając e-mail na adres <%{contact_email}>.
+
+      Zgadzasz się ponosić odpowiedzialność za wszystkie działania podejmowane przy użyciu twojego konta, niezależnie od tego, czy zostały one przez ciebie autoryzowane, czy też nie, do momentu zamknięcia konta lub powiadomienia firmy o naruszeniu dostępu do konta. Zobowiązujesz się do natychmiastowego powiadomienia firmy, jeśli podejrzewasz, że dostęp do twojego konta został naruszony. Zgadzasz się wybrać bezpieczne hasło do swojego konta i zachować je w tajemnicy.
+
+      Firma może ograniczyć, zawiesić lub zamknąć Twoje konto na forum zgodnie z jej zasadami postępowania z prośbami o usunięcie treści związanych z prawami autorskimi lub jeśli firma ma podstawy sądzić, że złamano którąś z zasad zawartych w tym regulaminie.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">Twoje treści</a></h2>
+
+      Żaden z zapisów tego regulaminu nie daje firmie prawa własności do własności intelektualnej, którą dzielisz z forum, takiej jak informacje o Twoim koncie, posty lub inne treści, które przesyłasz na forum. Żaden z zapisów tego regulaminu nie daje Ci również żadnych praw własności do własności intelektualnej firmy.
+
+      Ty i firma ponosicie wyłączną odpowiedzialność za treści umieszczane przez Ciebie na forum. Zgadzasz się nie sugerować, że treści zamieszczane na forum są sponsorowane lub zatwierdzone przez firmę. Niniejsze warunki nie zobowiązują firmy do przechowywania, utrzymywania lub dostarczania kopii treści przesłanych przez Ciebie oraz do ich zmiany zgodnie z tymi warunkami.
+
+      Treść, którą przesyłasz na forum, należy do Ciebie i to Ty decydujesz, jakie pozwolenie udzielisz innym na jej wykorzystanie. Jednak w minimalnym zakresie udzielasz firmie licencji na udostępnianie treści przesłanych przez Ciebie na forum innym użytkownikom forum. Ta specjalna licencja pozwala firmie na kopiowanie, publikowanie i analizowanie treści, które zamieszczasz na forum.
+
+      W momencie usunięcia treści z forum, czy to przez Ciebie, czy przez firmę, licencja specjalna firmy wygasa w momencie, gdy ostatnia kopia zniknie z kopii zapasowych, pamięci podręcznej i innych systemów firmy. Inne licencje, które stosujesz do przesyłanych przez siebie treści, takie jak licencje [Creative Commons](https://creativecommons.org), mogą obowiązywać również po ich usunięciu. Licencje te mogą dawać innym osobom lub samej firmie prawo do ponownego udostępniania Twoich treści na forum.
+
+      Inne osoby, które otrzymają treści przesłane przez Ciebie na forum, mogą naruszyć warunki, na jakich udzielasz licencji na swoje treści. Zgadzasz się, że firma nie będzie ponosić odpowiedzialności za takie naruszenia lub ich konsekwencje.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Twoja odpowiedzialność</a></h2>
+
+      Zgadzasz się zabezpieczyć firmę przed roszczeniami prawnymi innych osób związanymi z naruszeniem przez Ciebie niniejszych warunków lub naruszeniem tych warunków przez inne osoby korzystające z Twojego konta na forum. Zarówno Ty, jak i firma zgadzacie się na jak najszybsze powiadomienie drugiej strony o wszelkich roszczeniach prawnych, w związku z którymi firma może być zmuszona do wypłaty odszkodowania. Jeśli firma nie powiadomi Cię o roszczeniach prawnych bezzwłocznie, nie będziesz musiał wypłacać firmie odszkodowania za szkody, przed którymi mógłbyś się bronić lub które mógłbyś ograniczyć, gdybyś został niezwłocznie powiadomiony. Zgadzasz się zezwolić firmie na kontrolowanie dochodzenia, obrony i rozstrzygania roszczeń prawnych, za które musiałbyś wypłacić odszkodowanie, oraz na współpracę przy tych działaniach. Firma zobowiązuje się nie zgadzać na żadne ugody, które przyznają się do winy lub nakładają na Ciebie zobowiązania bez Twojej wcześniejszej zgody.
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Zastrzeżenia</a></h2>
+
+      ***Akceptujesz całe ryzyko związane z korzystaniem z forum i treści na nim zawartych. O ile pozwala na to prawo, firma i jej dostawcy dostarczają forum w takim stanie, w jakim jest, bez jakiejkolwiek gwarancji.***
+
+      Forum może zawierać hiperłącza i integrować fora i usługi prowadzone przez inne podmioty. Firma nie udziela żadnej gwarancji na usługi prowadzone przez inne podmioty ani na treści przez nie dostarczane. Korzystanie z serwisów prowadzonych przez inne podmioty może być regulowane przez inne warunki zawarte pomiędzy Tobą a podmiotem prowadzącym serwis.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Ograniczenia odpowiedzialności</a></h2>
+
+      ***Ani firma, ani jej dostawcy nie będą odpowiedzialni wobec Ciebie za szkody wynikające z naruszenia umowy, których ich personel nie mógł przewidzieć, gdy zgodziłeś się na te warunki.***
+
+      ***W zakresie, w jakim pozwala na to prawo, całkowita odpowiedzialność wobec Ciebie za wszelkiego rodzaju roszczenia związane z forum lub treściami na nim zamieszczonymi będzie ograniczona do 50 dolarów.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Informacje zwrotne</a></h2>
+
+      Firma z radością przyjmuje Twoje opinie i sugestie dotyczące forum. Zobacz sekcję [Kontakt](#heading--contact) poniżej, aby dowiedzieć się, jak się z nami skontaktować.
+
+      Zgadzasz się, że firma będzie miała swobodę działania w oparciu o dostarczone przez Ciebie opinie i sugestie oraz że firma nie będzie musiała Cię informować o tym, że Twoje opinie zostały wykorzystane, uzyskiwać Twojej zgody na ich wykorzystanie ani płacić Ci za to. Zgadzasz się nie przesyłać opinii lub sugestii, które Twoim zdaniem mogą być poufne lub zastrzeżone dla Ciebie lub innych osób.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Wypowiedzenie</a></h2>
+
+      Zarówno Ty, jak i spółka możecie w każdej chwili zakończyć umowę zawartą w niniejszym regulaminie. Kiedy nasza umowa wygasa, wygasa również Twoje pozwolenie na korzystanie z forum.
+
+      Następujące postanowienia pozostają w mocy po zakończeniu naszej umowy: [Twoja treść](#heading--your-content), [Feedback](#heading--feedback), [Twoja odpowiedzialność](#heading--responsibility), [Zastrzeżenia](#heading--disclaimers), [Ograniczenia odpowiedzialności](#heading--liability) oraz [Warunki ogólne](#heading--general).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Spory</a></h2>
+
+      %{governing_law} reguluje wszelkie spory związane z tymi warunkami lub korzystaniem z forum przez użytkownika.
+
+      Ty i firma zgadzacie się na dochodzenie nakazów sądowych związanych z tymi warunkami tylko w sądzie okręgowym lub rejonowym w %{city_for_disputes}. Ani Ty, ani firma nie będziecie sprzeciwiać się jurysdykcji, forum lub miejscu w tych sądach.
+
+      ***Z wyjątkiem dochodzenia nakazu sądowego lub roszczeń wynikających z ustawy o oszustwach i nadużyciach komputerowych, użytkownik i spółka będą rozstrzygać wszelkie spory w drodze wiążącego arbitrażu. Arbitraż będzie przebiegał według zasad arbitrażu handlowego AAA oraz procedur uzupełniających dla sporów konsumenckich. Arbitraż odbędzie się w %{city_for_disputes}. Wszelkie spory będziesz rozstrzygać indywidualnie, a nie w ramach pozwu zbiorowego lub innego postępowania reprezentacyjnego, czy to jako powód, czy członek klasy. Żaden arbiter nie będzie łączył sporu z innym arbitrażem bez zgody firmy.***
+
+      Każde orzeczenie arbitrażowe będzie zawierało koszty arbitrażu, uzasadnione honoraria adwokackie oraz uzasadnione koszty świadków. Zarówno Ty, jak i spółka możecie wnieść orzeczenie arbitrażowe do dowolnego właściwego sądu.
+
+      <h2 id="heading--general"><a href="#heading--general">Warunki ogólne</a></h2>
+
+      Jeśli jakieś postanowienie niniejszych warunków jest niewykonalne w formie pisemnej, ale można je zmienić tak, aby było wykonalne, należy je zmodyfikować w minimalnym stopniu, aby było wykonalne. W przeciwnym razie postanowienie to powinno zostać usunięte.
+
+      Nie możesz przenieść swojej umowy z firmą. Firma może przenieść Twoją umowę na dowolny oddział firmy, dowolną inną firmę, która uzyska kontrolę nad firmą lub dowolną inną firmę, która kupi aktywa firmy związane z forum. Wszelkie próby cesji wbrew tym warunkom nie mają mocy prawnej.
+
+      Ani wykonanie jakiegokolwiek prawa wynikającego z niniejszej Umowy, ani zrzeczenie się jakiegokolwiek naruszenia niniejszej Umowy nie uchyla jakiegokolwiek innego naruszenia niniejszej Umowy.
+
+      Niniejszy regulamin zawiera wszystkie warunki umowy pomiędzy Tobą a firmą dotyczące korzystania z forum. Niniejsze warunki całkowicie zastępują wszelkie inne umowy dotyczące korzystania z forum, pisemne lub nie.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Kontakt</a></h2>
+
+      Możesz powiadomić firmę na mocy tych warunków i wysłać pytania do firmy na adres <%{contact_email}>.
+
+      Firma może powiadomić Cię zgodnie z tymi warunkami używając adresu e-mail, który podałeś dla swojego konta na forum, lub umieszczając wiadomość na stronie głównej forum lub stronie Twojego konta.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Zmiany</a></h2>
+
+      Firma ostatnio zaktualizowała te warunki w dniu [WSTAW TUTAJ DATĘ OSTATNIEJ AKTUALIZACJI] i może je ponownie zaktualizować. Firma będzie umieszczać wszystkie aktualizacje na forum. W przypadku aktualizacji zawierających istotne zmiany, firma zgodzi się wysłać do ciebie e-mail, jeśli założysz konto i podasz prawidłowy adres e-mail. Firma może również informować o aktualizacjach za pomocą specjalnych wiadomości lub alertów na forum.
+
+      Po otrzymaniu powiadomienia o aktualizacji warunków, musisz zgodzić się na nowe warunki, aby nadal korzystać z forum.
   privacy_topic:
     title: "Polityka prywatności"
   badges:
@@ -4328,6 +4535,7 @@ pl_PL:
       message: "<p>Powtórnie przesłaliśmy e-maila aktywacyjnego do <b>%{email}</b>"
   safe_mode:
     title: "Wejście w tryb bezpieczny"
+    description: "Tryb bezpieczny umożliwia testowanie witryny bez ładowania motywów i wtyczek po stronie klienta. Wtyczki po stronie serwera pozostają włączone."
     no_themes: "Wyłącz motywy i komponenty motywu"
     enter: "Włącz Tryb Bezpieczny"
     must_select: "Musisz wybrać przynajmniej jedną opcję, by wejść do trybu bezpiecznego."

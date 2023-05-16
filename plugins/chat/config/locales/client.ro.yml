@@ -101,10 +101,12 @@ ro:
         objects: "Obiecte"
         flags: "Marcaje de avertizare"
       thread:
+        title: "Titlu"
         replies:
           one: "%{count} răspuns"
           few: "%{count} răspunsuri"
           other: "%{count} răspunsuri"
+        settings: "Opțiuni"
       draft_channel_screen:
         header: "Mesaj nou"
         cancel: "Anulare"

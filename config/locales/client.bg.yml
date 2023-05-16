@@ -3134,7 +3134,6 @@ bg:
         mark_watching: "%{shortcut} Наблюдаване на темата"
     badges:
       granted_on: "Разрешен %{date}"
-      others_count: "Други са такава значка (%{count})"
       title: Значки
       allow_title: "Може да използвате тази значка като титла."
       more_badges:
@@ -4046,7 +4045,6 @@ bg:
       site_settings:
         title: "Настройки"
         no_results: "Няма резултати"
-        more_than_30_results: "Има повече от 30 резултата. Моля, прецизирайте търсенето си или изберете категория."
         clear_filter: "Изчисти"
         add_url: "добавяне на URL"
         add_host: "добави хост"

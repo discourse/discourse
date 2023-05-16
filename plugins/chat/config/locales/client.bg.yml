@@ -135,9 +135,11 @@ bg:
         flags: "Сигнали"
         symbols: "Символи"
       thread:
+        title: "Заглавие"
         replies:
           one: "%{count} отговор"
           other: "%{count} отговора"
+        settings: "Настройки"
       draft_channel_screen:
         header: "Ново Съобщение"
         cancel: "Прекрати"

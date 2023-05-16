@@ -178,8 +178,6 @@ ko:
     site_settings:
       invalid_site_setting: "'%{name}' 라는 설정이 존재하지 않습니다."
       invalid_category_id: "존재하지 않는 카테고리를 지정했습니다"
-      invalid_choice:
-        other: "유효하지 않은 선택 항목을 지정했습니다. %{name}"
       default_categories_already_selected: "다른 목록에서 사용된 카테고리는 선택할 수 없습니다."
       default_tags_already_selected: "다른 목록에서 사용된 태그는 선택할 수 없습니다."
       s3_upload_bucket_is_required: "'s3_upload_bucket'을 제공하지 않으면 S3 업로드를 활성화할 수 없습니다."
@@ -551,22 +549,6 @@ ko:
   meta_category_description: "사이트, 조직, 운영 방식, 개선 방안에 대해 토론하는 곳입니다."
   staff_category_name: "운영진"
   staff_category_description: "운영진 토론을 위한 비공개 카테고리입니다. 관리자 및 운영자에게만 보입니다."
-  discourse_welcome_topic:
-    body: |2
-
-      고정된 주제의 첫 문단은 홈페이지 방문자에게 환영 메시지로 표시되므로 매우 중요합니다!
-
-      커뮤니티를 간단히 소개할 수 있도록 **이 주제를 편집하세요**
-
-      -  누구를 위한 커뮤니티인가요?
-
-      - 여기에 어떤 정보가 있나요?
-
-      - 이곳만의 특징은 무엇인가요?
-
-      - 자세한 내용은 어디에 있나요(링크, 리소스 등)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
   admin_quick_start_title: "먼저 읽어보기: 관리 퀵스타트 가이드"
   category:
     topic_prefix: "%{category} 카테고리 정보"
@@ -1746,7 +1728,6 @@ ko:
     pop3_polling_password: "이메일을 가져올 POP3 계정의 비밀번호"
     pop3_polling_delete_from_server: "서버에서 이메일을 삭제하세요. 참고: 이 기능을 비활성화하면 받은 편지함을 수동으로 정리해야 합니다."
     log_mail_processing_failures: "모든 이메일 처리 실패를 <a href='%{base_path}/logs' target='_blank'>/logs</a>에 기록"
-    email_in: '사용자가 이메일을 통해 새 주제를 게시할 수 있도록 허용합니다(수동 또는 pop3 폴링 필요). 각 카테고리의 ''설정'' 탭에서 주소를 환경설정합니다.'
     email_in_min_trust: "이메일을 통해 새 주제를 게시하기 위한 사용자의 최소 신뢰 레벨"
     email_in_authserv_id: "수신 이메일에 대한 인증 확인을 수행하는 서비스의 식별자입니다. 이를 환경설정하는 방법에 대한 지침은 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>을 참조하세요."
     email_in_spam_header: "스팸을 탐지하는 이메일 헤더입니다."

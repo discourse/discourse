@@ -195,9 +195,6 @@ sv:
     site_settings:
       invalid_site_setting: "Det finns ingen inställning med namnet '%{name}'"
       invalid_category_id: "Du angav en kategori som inte finns"
-      invalid_choice:
-        one: "Du angav det ogiltiga valet %{name}"
-        other: "Du angav de ogiltiga valen %{name}"
       default_categories_already_selected: "Du kan inte välja en kategori som används i en annan lista."
       default_tags_already_selected: "Du kan inte välja en etikett som används i en annan lista."
       s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
@@ -600,8 +597,8 @@ sv:
           attributes:
             value:
               invalid_interpolation_keys:
-                one: 'Följande interpolationsnyckel är ogiltig: %{keys}'
-                other: 'Följande interpolationsnycklar är ogiltiga: %{keys}'
+                one: "Följande interpolationsnyckel är ogiltig: %{keys}"
+                other: "Följande interpolationsnycklar är ogiltiga: %{keys}"
         watched_word:
           attributes:
             word:
@@ -622,21 +619,7 @@ sv:
   staff_category_name: "Personal"
   staff_category_description: "Privat kategori för personaldiskussioner. Ämnen är bara synliga för administratörer och moderatorer."
   discourse_welcome_topic:
-    title: "Välkommen till vårt forum!"
-    body: |2
-
-      Det första stycket i detta fästa ämne kommer att visas som ett välkomstmeddelande för alla nya besökare på din hemsida. Det är viktigt!
-
-      **Ändra detta** till en kort beskrivning av ditt forum:
-
-      -Vem är det till för?
-      -Vad kan de hitta här?
-      -Varför ska de komma hit?
-      -Var kan de läsa mer (länkar, resurser, etc)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Det vore kanske bra att stänga det här ämnet via admin :wrench: (längst upp till höger eller i botten), så att inte svar läggs på hög vid ett meddelande.
+    title: "Välkommen till %{site_title}! :wave:"
   admin_quick_start_title: "LÄS MIG FÖRST: Administratörers Snabbstartsguide"
   category:
     topic_prefix: "Om kategorin %{category}"
@@ -1468,6 +1451,7 @@ sv:
     exclude_rel_nofollow_domains: "En lista av alla domän där nofollow inte bör läggas till länkarna. exempel.se kommer automatiskt tillåta underdomän.exempel.se också. Du bör lägga till top-level-domänen för den här webbplatsen för att hjälpa sökrobotar hitta allt innehåll. Om andra delar av din webbplats finns på andra domäner så bör du lägga till dem också."
     post_excerpt_maxlength: "Maxlängd på ett inläggs utdrag/sammanfattning."
     topic_excerpt_maxlength: "Maxlängd på ett inläggs utdrag/sammanfattning, genererat från det första inlägget i ett ämne."
+    default_subcategory_on_read_only_category: "Aktiverar knappen \"Nytt ämne\" och väljer en standardunderkategori för att göra inlägg i kategorier där användaren inte får skapa ett nytt ämne."
     show_pinned_excerpt_mobile: "Visa utdrag för fästa ämnen i mobilen."
     show_pinned_excerpt_desktop: "Visa utdrag för fästa ämnen på datorn."
     post_onebox_maxlength: "Maximal teckenlängd för ett Discourse-inlägg i onebox."
@@ -1921,7 +1905,7 @@ sv:
     pop3_polling_password: "Lösenord för POP3-kontot där e-post ska sökas."
     pop3_polling_delete_from_server: "Ta bort e-postmeddelanden från servern. NOTERA! Om du inaktiverar detta bör du rensa din inkorg manuellt"
     log_mail_processing_failures: "Logga alla behandlingsfel för e-post till <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Tillåt att användare publicerar nya ämnen via e-post (kräver manuell eller pop3-sökning). Konfigurera adresserna på fliken "Inställningar" för varje kategori.'
+    email_in: "Tillåt användare att lägga upp nya ämnen via e-post. När du har aktiverat den här inställningen kan du konfigurera inkommande e-postadresser för grupper och kategorier."
     email_in_min_trust: "Minsta förtroendenivå en användare behöver för att tillåtas skapa nya ämnen via e-post."
     email_in_authserv_id: "Identifieraren för tjänsten som utför autentiseringskontroller av inkommande e-postmeddelanden. Se <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> för instruktioner om hur du konfigurerar detta."
     email_in_spam_header: "E-postrubrik för att upptäcka skräppost."
@@ -2141,6 +2125,7 @@ sv:
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
     sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
     enable_user_status: "(experimentell) Tillåt användare att ställa in anpassat statusmeddelande (emoji + beskrivning)."
+    enable_user_tips: "Aktivera tips för nya användare som beskriver viktiga funktioner för användare"
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2161,7 +2146,7 @@ sv:
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
     enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn. Inaktivering av den här inställningen är föråldrat. Den nya aviseringsmenyn används alltid för icke-äldre \"navigeringsmeny\"-val. <a href='https://meta.discourse.org/t/260358'>Lär dig mer</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
-    experimental_new_new_view_groups: "EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken \"Allt\" i sidofältet länkar till den."
+    experimental_new_new_view_groups: 'EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken "Allt" i sidofältet länkar till den.'
     enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
     experimental_topics_filter: "EXPERIMENTELLT: Aktiverar den experimentella ämnesfiltervägen vid /filter"
     errors:

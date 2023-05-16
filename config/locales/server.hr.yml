@@ -195,10 +195,6 @@ hr:
       load_from_remote: "Dogodila se greška pri učitavanju objave."
     site_settings:
       invalid_category_id: "Naveli ste kategoriju koja ne postoji"
-      invalid_choice:
-        one: "Naveli ste nevažeći izbor %{name}"
-        few: "Naveli ste nevažeći izbor %{name}"
-        other: "Naveli ste nevažeće izbore %{name}"
       default_categories_already_selected: "Ne možete odabrati kategoriju koja se koristi na drugom popisu."
       default_tags_already_selected: "Ne možete odabrati oznaku koja se koristi na drugom popisu."
       s3_upload_bucket_is_required: "Ne možete omogućiti prijenose na S3 osim ako niste naveli 's3_upload_bucket'."
@@ -1332,7 +1328,6 @@ hr:
     pop3_polling_password: "Lozinka za POP3 račun za anketu za e-poštu."
     pop3_polling_delete_from_server: "Izbrišite e-poštu s poslužitelja. NAPOMENA: Ako ovo onemogućite, trebali biste ručno očistiti svoj poštanski sandučić"
     log_mail_processing_failures: "Zabilježite sve pogreške obrade e-pošte na <a href='%{base_path}/logs' target='_blank'>/zapisi</a>"
-    email_in: 'Omogućite korisnicima objavljivanje novih tema putem e-pošte (zahtijeva ručno ili pop3 prozivanje). Konfigurirajte adrese u kartici "Postavke" svake kategorije.'
     email_in_min_trust: "Minimalna razina povjerenja koju korisnik mora imati da bi mu se omogućilo objavljivanje novih tema putem e-pošte."
     email_in_authserv_id: "Identifikator usluge koja vrši provjeru autentičnosti dolazne e-pošte. Pogledajte <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> za upute o tome kako to konfigurirati."
     email_in_spam_header: "Zaglavlje e-pošte za otkrivanje neželjene pošte."

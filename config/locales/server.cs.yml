@@ -361,21 +361,6 @@ cs:
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze redakce. Témata jsou viditelná pouze pro moderátory a správce."
-  discourse_welcome_topic:
-    body: |2
-
-      První odstavec tohoto připnutého tématu se zobrazí na domovské stránce jako uvítací zpráva pro všechny nové návštěvníky. Je to důležité!
-
-      **Upravte tento text** do stručného popisu Vaší komunity:
-
-      - Pro koho tu je?
-      - Co zde lze nalézt?
-      - Proč by sem měli lidé chodit?
-      - Kde se lze dozvědět víc (odkazy, zdroje, atd.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Možná budete chtít toto téma v administraci (vpravo nahoře a dole) zavřít, aby se nehromadily odpovědi na oznámeních.
   category:
     topic_prefix: "O kategorii %{category}"
     post_template: "%{replace_paragraph}\n\nPoužijte následující odstavce pro delší popis, nebo pro vytvoření pokynů ke kategorii nebo pravidel:\n\n- Proč by lidé měli používat tuto kategorii? K čemu slouží?\n\n- Jak přesně je tato kategorie odlišná od ostatních, které již máme?\n\n- Co by měly témata v této kategorii obvykle obsahovat?\n\n- Potřebujeme tuto kategorii? Můžeme ji sloučit s jinou kategorií nebo subkategorií?\n"

@@ -193,8 +193,10 @@ zh_TW:
         symbols: "象徵<br>"
         no_results: "沒有結果"
       thread:
+        title: "標題"
         replies:
           other: "%{count}個回覆"
+        settings: "設定"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"

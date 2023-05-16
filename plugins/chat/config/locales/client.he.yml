@@ -270,6 +270,7 @@ he:
       save: "שמירה"
       select: "בחירה"
       return_to_list: "חזרה לרשימת הערוצים"
+      return_to_threads_list: "חזרה לדיונים שמתקיימים כרגע"
       scroll_to_bottom: "גלילה לתחתית"
       scroll_to_new_messages: "הצגת הודעות חדשות"
       sound:
@@ -560,7 +561,9 @@ he:
         search_placeholder: "חיפוש לפי שם וכינוי של האמוג׳י…"
         no_results: "אין תוצאות"
       thread:
+        title: "כותרת"
         view_thread: הצגת שרשור
+        default_title: "שרשור מס׳ %{thread_id}"
         replies:
           one: "תגובה אחת"
           two: "%{count} תגובות"
@@ -568,9 +571,13 @@ he:
           other: "%{count} תגובות"
         label: שרשור
         close: "סגירת שרשור"
+        original_message:
+          started_by: "נפתח ע״י"
+        settings: "הגדרות"
       threads:
-        started_by: "נפתח ע״י"
         open: "פתיחת שרשור"
+        list: "דיונים שמתקיימים כרגע"
+        none: "אין לך חלק באף אחד מהשרשורים בערוץ הזה."
       draft_channel_screen:
         header: "הודעה חדשה"
         cancel: "ביטול"

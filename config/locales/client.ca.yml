@@ -2745,7 +2745,6 @@ ca:
         one: "Ha rebut aquesta insígnia %{count} vegada."
         other: "Ha rebut aquesta insígnia%{count} vegades."
       granted_on: "Concedit %{date}"
-      others_count: "Altres amb aquesta insígnia (%{count})"
       title: Insígnies
       allow_title: "Podeu fer servir aquesta insígnia com a títol"
       multiple_grant: "Podeu guanyar-la diverses vegades"
@@ -4034,7 +4033,6 @@ ca:
       site_settings:
         title: "Configuració"
         no_results: "Sense resultats"
-        more_than_30_results: "Hi ha més de 30 resultats. Restringiu la cerca o seleccioneu una categoria."
         clear_filter: "Neteja"
         add_url: "afegeix URL"
         add_host: "afegeix amfitrió"

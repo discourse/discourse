@@ -362,9 +362,11 @@ it:
         search_placeholder: "Cerca per nome emoji e alias..."
         no_results: "Nessun risultato"
       thread:
+        title: "Titolo"
         replies:
           one: "%{count} risposta"
           other: "%{count} risposte"
+        settings: "Impostazioni"
       draft_channel_screen:
         header: "Nuovo messaggio"
         cancel: "Annulla"

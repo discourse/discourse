@@ -431,6 +431,7 @@ uk:
         search_placeholder: "Пошук за назвою та псевдонімом emoji..."
         no_results: "Немає результатів"
       thread:
+        title: "Назва"
         view_thread: Відкрити діалог
         replies:
           one: "%{count} відповідь"
@@ -439,8 +440,10 @@ uk:
           other: "%{count} відповідь"
         label: Нитка
         close: "Закрити тему"
+        original_message:
+          started_by: "Розпочато"
+        settings: "Налаштування"
       threads:
-        started_by: "Розпочато"
         open: "Відкрийте тему"
       draft_channel_screen:
         header: "Нове повідомлення"

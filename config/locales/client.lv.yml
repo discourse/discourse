@@ -2671,7 +2671,6 @@ lv:
         one: "Nopelnīja šo žetonu %{count} reizi"
         other: "Nopelnīja šo žetonu %{count} reizes"
       granted_on: "Piešķirts %{date}"
-      others_count: "Citi ar šo žetonu (%{count})"
       title: Žetoni
       allow_title: "Jūs varat izmantot šo žetonu kā titulu"
       multiple_grant: "Jūs esat nopelnījis šo vairākkārt"

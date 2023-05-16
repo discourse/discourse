@@ -35,10 +35,14 @@ id:
           title: "Dropdown"
         categories:
           title: "Kategori"
+        bread_crumbs:
+          title: "Bread Crumbs"
         navigation:
           title: "Navigasi"
         navigation_bar:
           title: "Bilah Navigasi"
+        navigation_stacked:
+          title: "Navigasi Bertumpuk"
         categories_list:
           title: "Daftar Kategori"
         topic_link:
@@ -49,11 +53,45 @@ id:
           title: "Status Topik"
         topic_list:
           title: "Daftar Topik"
+        basic_topic_list:
+          title: "Daftar Topik Dasar"
+        footer_message:
+          title: "Pesan Footer"
+        signup_cta:
+          title: "CTA Pendaftaran"
+        topic_timer_info:
+          title: "Pengatur Waktu Topik"
+        topic_footer_buttons:
+          title: "Tombol Footer Topik"
+        topic_notifications:
+          title: "Notifikasi Topik"
         post:
           title: "Postingan"
         topic_map:
           title: "Peta Topik"
+        site_header:
+          title: "Header Situs"
         suggested_topics:
           title: "Topik Yang Disarankan"
+        post_menu:
+          title: "Menu Post"
+        modal:
+          title: "Modal"
+          header: "Judul Modal"
+          footer: "Footer Modal"
+        user_about:
+          title: "Kotak Tentang Pengguna"
         header_icons:
           title: "Ikon Header"
+        spinners:
+          title: "Spinners"
+        empty_state:
+          title: "Keadaan Kosong"
+        rich_tooltip:
+          title: "Tooltip yang beragam"
+          description: "Deskripsi"
+          header: "Header"
+          hover_to_see: "Arahkan kursor untuk melihat tooltip"
+        char_counter:
+          title: "Penghitung Karakter"
+          placeholder: "Masukkan teks Anda di sini..."

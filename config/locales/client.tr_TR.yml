@@ -1747,6 +1747,9 @@ tr_TR:
       suggested_topics:
         title: "Okumaya devam edin!"
         content: "İşte daha sonra okumak isteyebileceğinizi düşündüğümüz bazı konular."
+      welcome_topic:
+        title: "Hoş geldin konusunu düzenleyin"
+        content: "Bu konuyu topluluğunuzun ihtiyaçlarına göre özelleştirerek yeni üyelerin kendilerini evlerinde hissetmelerine yardımcı olun."
     loading: "Yükleniyor..."
     errors:
       prev_page: "şunu yüklemeye çalışırken:"
@@ -3738,7 +3741,9 @@ tr_TR:
         one: "Bu rozeti %{count} kez kazandı"
         other: "Bu rozeti %{count} kez kazandı"
       granted_on: "%{date} tarihinde verildi"
-      others_count: "Bu rozete sahip diğer kişiler (%{count})"
+      others_count:
+        one: "Başkalarına %{count} kez verildi"
+        other: "Başkalarına %{count} kez verildi"
       title: Rozetler
       allow_title: "Bu rozeti başlık olarak kullanabilirsiniz"
       multiple_grant: "Bunu birden çok kez kazanabilirsiniz"
@@ -5494,7 +5499,6 @@ tr_TR:
             label: "Emoji ekle"
         title: "Ayarlar"
         no_results: "Sonuç bulunamadı."
-        more_than_30_results: "30'dan fazla sonuç var. Lütfen aramanızı daraltın veya bir kategori seçin."
         clear_filter: "Temizle"
         add_url: "URL ekle"
         add_host: "sunucu ekle"

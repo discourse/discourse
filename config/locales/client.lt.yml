@@ -3333,7 +3333,6 @@ lt:
         full_page_search: "%{shortcut} Paleidžiama viso puslapio paieška"
     badges:
       granted_on: "Suteikta %{date}"
-      others_count: "Kiti, turintys šį ženklelį (%{count})"
       title: Ženkleliai
       allow_title: "Šį ženklelį galite naudoti kaip pavadinimą"
       multiple_grant: "Jūs galite uždirbti šį kelis kartus"
@@ -4785,7 +4784,6 @@ lt:
             label: "Pridėti jaustukus"
         title: "Nustatymai"
         no_results: "Nerasta jokių rezultatų."
-        more_than_30_results: "Yra daugiau nei 30 rezultatų. Patikslinkite paiešką arba pasirinkite kategoriją."
         clear_filter: "Išvalyti"
         add_url: "pridėti URL"
         add_host: "pridėti šeimininką"

@@ -183,8 +183,6 @@ ja:
       load_from_remote: "投稿を読み込み中にエラーが発生しました。"
     site_settings:
       invalid_category_id: "存在しないカテゴリを指定しました"
-      invalid_choice:
-        other: "無効な選択肢 %{name} を指定しました"
       default_categories_already_selected: "他のリストで使われているカテゴリは選択できません。"
       default_tags_already_selected: "別のリストに使用されているタグを選択できません。"
       s3_upload_bucket_is_required: "'s3_upload_bucket' を入力しない限り、S3 へのアップロードを有効にすることはできません。"
@@ -581,22 +579,6 @@ ja:
   meta_category_description: "このサイト、組織、仕組み、および改善に関するディスカッションです。"
   staff_category_name: "スタッフ"
   staff_category_description: "スタッフディスカッション用の非公開カテゴリです。トピックは管理者とモデレーターのみが閲覧できます。"
-  discourse_welcome_topic:
-    title: "コミュニティーへようこそ！"
-    body: |2
-
-      この固定トピックの最初の写真は、ようこそメッセージとしてホームページを初めて訪問するすべてのユーザーに表示されるものであるため、重要です！
-
-      コミュニティーの簡単な説明になるように、**これを編集**しましょう。
-
-      - これは誰のためのコミュニティーですか？
-      - どのような情報を得られますか？
-      - 参加するメリットは何ですか？
-      - 詳細 (リンク、リソースなど) はどこに記載されていますか？
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      お知らせに返信が溜まらないように、管理からこのトピックをクローズすることができます :wrench: (右上と下)。
   admin_quick_start_title: "最初にお読みください: 管理者クイックスタートガイド"
   category:
     topic_prefix: "%{category} カテゴリについて"
@@ -1837,7 +1819,6 @@ ja:
     pop3_polling_password: "ポーリングを行う POP3 アカウントのパスワードです。"
     pop3_polling_delete_from_server: "サーバーからメールを削除する。注意: これを無効にした場合、メールの受信トレイを手動でクリーンアップする必要があります"
     log_mail_processing_failures: "すべてのメール処理の失敗を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
-    email_in: 'ユーザーがメールによって新規トピックを投稿することを許可する (手動または pop3 ポーリングが必要です)。各カテゴリの "設定" タブでアドレスを構成します。'
     email_in_min_trust: "メールでのトピック作成を許可する最低信頼レベル"
     email_in_authserv_id: "受信メールに認証チェックを実行するサービスの識別子。この構成方法については、<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> をご覧ください。"
     email_in_spam_header: "迷惑を検出するためのメールヘッダー。"

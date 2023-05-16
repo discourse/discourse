@@ -195,9 +195,6 @@ es:
     site_settings:
       invalid_site_setting: "No existe ningún ajuste llamado '%{name}'."
       invalid_category_id: "Especificaste una categoría que no existe"
-      invalid_choice:
-        one: "Has especificado la opción no válida %{name}"
-        other: "Has especificado las opciones no válidas %{name}"
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
       default_tags_already_selected: "No puedes seleccionar una etiqueta utilizada en otra lista."
       s3_upload_bucket_is_required: "No se pueden activar las subidas a S3 a menos que se haya proporcionado un valor a «s3_upload_bucket»."
@@ -616,21 +613,18 @@ es:
   staff_category_name: "Personal"
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del equipo."
   discourse_welcome_topic:
-    title: "¡Te damos la bienvenida a nuestra comunidad!"
-    body: |2
+    body: |
+      Nos alegra mucho que te hayas unido a nosotros. %{site_description}
 
-      El primer párrafo de este tema anclado será visible para todos los usuarios como mensaje de bienvenida en tu página principal. ¡Es importante!
+      Aquí tienes algunas cosas que puedes hacer para empezar:
 
-      **Edita esto** y describe brevemente a tu comunidad:
+      :speaking_head: **Preséntate** añadiendo tu foto e información sobre ti y tus intereses a [tu perfil](%{base_path}/my/preferences/account). ¿Qué te gustaría que te preguntaran?
 
-      - ¿Para quién es?
-      - ¿Qué se puede encontrar aquí?
-      - ¿Por qué deben venir aquí?
-      - ¿Dónde pueden leer más sobre la comunidad (enlaces, recursos, etc.)?
+      :open_book: **Conoce a la comunidad** [navegando por los debates](%{base_path}/top) que ya se están produciendo aquí. Cuando encuentres una publicación interesante, informativa o entretenida, utiliza :heart: para mostrar tu agradecimiento o apoyo.
 
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      :handshake: **Contribuye** comentando, compartiendo tu propia perspectiva, haciendo preguntas u ofreciendo tu opinión en el debate. Antes de responder o iniciar nuevos temas, revisa las [Directrices de la Comunidad](%{base_path}/faq).
 
-      Quizás quieras cerrar este tema a través del administrador :wrench: (en la parte superior derecha o en la parte de abajo), para que las respuestas nuevas no se acumulen en un anuncio.
+      > Si necesitas ayuda o tienes alguna sugerencia, no dudes en preguntar en [#feedback](%{base_path}/c/site-feedback) o [contacta con los administradores](%{base_path}/about).
   admin_quick_start_title: "LEER PRIMERO: Guía rápida de inicio para administradores"
   category:
     topic_prefix: "Acerca de la categoría %{category}"
@@ -1904,7 +1898,6 @@ es:
     pop3_polling_password: "La contraseña de la cuenta POP3 para hacer polling de correos electrónicos."
     pop3_polling_delete_from_server: "Eliminar correos electrónicos del servidor. NOTA: si desactivas esto, debes limpiar manualmente su bandeja de entrada de correo"
     log_mail_processing_failures: "Registra todos los fallos de procesamiento de correo electrónico en <a href='%{base_path}/logs' target='_blank'>/registros</a>"
-    email_in: 'Permitir a los usuarios crear nuevos temas por correo electrónico (requiere el polling manual o pop3). Configura las direcciones en la pestaña «ajustes» de cada categoría.'
     email_in_min_trust: "El nivel de confianza mínimo requerido para poder publicar temas nuevos por correo electrónico."
     email_in_authserv_id: "El identificador del servicio realizando revisiones de autenticación en correos electrónicos entrantes. Consulta: <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obtener instrucciones sobre cómo configurar esto."
     email_in_spam_header: "El encabezado del correo electrónico para detectar spam."
@@ -4177,6 +4170,7 @@ es:
     required_tags_from_group:
       one: "Debes incluir al menos %{count} etiqueta de %{tag_group_name}. Las etiquetas en este grupo son: %{tags}."
       other: "Debes incluir al menos %{count} etiquetas de %{tag_group_name}. Las etiquetas en este grupo son: %{tags}."
+    limited_to_one_tag_from_group: "Las etiquetas %{tags} no pueden utilizarse simultáneamente. Por favor, incluye sólo una de ellas."
     invalid_target_tag: "no puede ser el sinónimo de un sinónimo"
     synonyms_exist: "no está permitido mientras existan sinónimos"
   rss_by_tag: "Temas con la etiqueta %{tag}"

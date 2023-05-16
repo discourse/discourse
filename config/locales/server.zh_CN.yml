@@ -190,7 +190,7 @@ zh_CN:
       invalid_site_setting: "不存在名为'%{name}' 的设置"
       invalid_category_id: "您指定了一个不存在的类别"
       invalid_choice:
-        other: "您指定了无效的选择 %{name}"
+        other: "“%{name}” 是无效的选择。"
       default_categories_already_selected: "您不能选择其他列表中使用的类别。"
       default_tags_already_selected: "您不能选择在另一个列表中使用的标签。"
       s3_upload_bucket_is_required: "除非提供 's3_upload_bucket'，否则您无法启用上传到 S3。"
@@ -575,7 +575,7 @@ zh_CN:
           attributes:
             value:
               invalid_interpolation_keys:
-                other: '以下插值键无效： %{keys}'
+                other: "以下插值键无效： %{keys}"
         watched_word:
           attributes:
             word:
@@ -596,21 +596,7 @@ zh_CN:
   staff_category_name: "管理人员"
   staff_category_description: "适用于管理人员讨论的不公开类别。话题仅对管理员和版主可见。"
   discourse_welcome_topic:
-    title: "欢迎来到我们的社区！"
-    body: |2
-
-      此置顶话题的第一段是所有新访客在首页看到的欢迎消息。这很重要！
-
-      **编辑**它，作为您的社区的简要介绍：
-
-      - 您的社区面向哪些人？
-      - 他们能在这里找到什么？
-      - 为什么他们要来这？
-      - 他们能在哪里阅读更多内容（链接、资源等）？
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      您可能需要通过管理员设置 :wrench: （右上角和底部）关闭此话题，这样回复就不会积压在此公告下。
+    title: "欢迎来到 %{site_title}! :wave:"
   admin_quick_start_title: "首先阅读：管理员快速入门指南"
   category:
     topic_prefix: "关于“%{category}”类别"
@@ -1868,7 +1854,7 @@ zh_CN:
     pop3_polling_password: "用于轮询电子邮件的 POP3 帐户的密码。"
     pop3_polling_delete_from_server: "从服务器删除电子邮件。注意：如果您禁用此功能，您应该手动清理您的邮件收件箱"
     log_mail_processing_failures: "将所有电子邮件处理失败记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: '允许用户通过电子邮件发布新话题（需要手动或 pop3 轮询）。在每个类别的“设置”标签页中配置地址。'
+    email_in: "允许用户通过电子邮件发布新主题。启用此设置后，你将能为组和类别配置传入电子邮件地址。"
     email_in_min_trust: "用户要被允许通过电子邮件发布新话题所需的最低信任级别。"
     email_in_authserv_id: "对传入电子邮件进行身份验证检查的服务的标识符。请参阅 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 了解配置说明"
     email_in_spam_header: "用于检测垃圾信息的电子邮件标头。"
@@ -1978,6 +1964,7 @@ zh_CN:
     allowed_href_schemes: "除了 http 和 https 之外，链接中允许的协议名称。"
     embed_post_limit: "要嵌入的最大帖子数。"
     embed_username_required: "创建话题需要用户名。"
+    notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的标记，请向版主发送个人信息。设置为 0 将禁用。"
     show_create_topics_notice: "如果站点的公共话题少于 5 个，请显示通知，要求管理员创建一些话题。"
     delete_drafts_older_than_n_days: "删除超过 (n) 天的草稿。"
     delete_merged_stub_topics_after_days: "在自动删除完全合并的存根话题之前等待的天数。设置为 0 将从不删除存根话题。"
@@ -2052,6 +2039,9 @@ zh_CN:
     revoke_api_keys_days: "未使用的 API 密钥被自动撤消前的天数（0 表示从不撤消）"
     allow_user_api_keys: "允许生成用户 API 密钥"
     allow_user_api_key_scopes: "用户 API 密钥允许的范围列表"
+    min_trust_level_for_user_api_key: |
+      生成用户 API 密钥所需的信任级别。<br>
+      <b>警告</b>：改变信任等级将阻止信任等级较低的用户通过 Discourse Hub 登录。
     allowed_user_api_auth_redirects: "用户 API 密钥身份验证重定向的允许 URL。通配符 * 可用于匹配它的任何部分（例如 www.example.com/*）。"
     allowed_user_api_push_urls: "服务器推送到用户 API 的允许 URL"
     expire_user_api_keys_days: "用户 API 密钥自动过期前的天数（0 表示从不过期）"
@@ -2084,6 +2074,7 @@ zh_CN:
     enable_sitemap: "为您的站点生成站点地图并将其包含在 robots.txt 文件中。"
     sitemap_page_size: "每个站点地图页面中包含的 URL 数量。最大 50.000"
     enable_user_status: "（实验性）允许用户设置自定义状态消息（表情符号 + 描述）。"
+    enable_user_tips: "启用向用户描述关键功能的新用户提示"
     short_title: "短标题将用于用户的主屏幕、启动器或其他空间可能有限的地方。应被限制为 12 个字符。"
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
@@ -2104,7 +2095,7 @@ zh_CN:
     default_sidebar_tags: "所选标签将默认显示在边栏的“标签”版块下。"
     enable_new_notifications_menu: "启用新的通知菜单。已不能禁用此设置。新的通知菜单始终用于非传统“导航菜单”选项。 <a href='https://meta.discourse.org/t/260358'>了解更多</a>"
     enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
-    experimental_new_new_view_groups: "试验性的：启用一个新的主题列表，将未读和新的主题合并，并使侧边栏中的 \"一切 \"链接指向它。"
+    experimental_new_new_view_groups: '试验性的：启用一个新的主题列表，将未读和新的主题合并，并使侧边栏中的 "一切 "链接指向它。'
     enable_custom_sidebar_sections: "实验：启用自定义侧边栏部分"
     experimental_topics_filter: "实验性：在 /filter 启用实验性主题过滤器"
     errors:

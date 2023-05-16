@@ -3760,7 +3760,6 @@ fi:
         one: "On ansainnut tämän kunniamerkin %{count} kerran"
         other: "On ansainnut tämän kunniamerkin %{count} kertaa"
       granted_on: "Myönnetty %{date}"
-      others_count: "Muita, joilla on tämä kunniamerkki (%{count})"
       title: Kunniamerkit
       allow_title: "Voit käyttää tätä kunniamerkkiä tittelinä"
       multiple_grant: "Voit ansaita tämän useasti"
@@ -5464,7 +5463,6 @@ fi:
             label: "Lisää Emoji"
         title: "Asetukset"
         no_results: "Ei tuloksia."
-        more_than_30_results: "Tuloksia on yli 30. Rajaa hakuasi tai valitse luokka."
         clear_filter: "Tyhjennä"
         add_url: "lisää URL"
         add_host: "lisää isäntä"

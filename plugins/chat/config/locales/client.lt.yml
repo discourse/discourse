@@ -106,11 +106,13 @@ lt:
         flags: "Pažymėk!"
         symbols: "Simboliai"
       thread:
+        title: "Antraštė"
         replies:
           one: "%{count} atsakymas"
           few: "%{count} atsakymai"
           many: "%{count} atsakymai"
           other: "%{count} atsakymai"
+        settings: "Nustatymai"
       draft_channel_screen:
         header: "Nauja žinutė"
         cancel: "Atšaukti"
