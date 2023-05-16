@@ -5348,7 +5348,7 @@ ru:
             removed_unsuspend_user: "Удаление размороженного пользователя"
             grant_badge: "Выдача награды"
             revoke_badge: "Отзыв награды"
-            check_email: "доступ к адресу эл. почты"
+            check_email: "Доступ к адресу эл. почты"
             delete_topic: "удаление темы"
             recover_topic: "Восстановление удалённой темы"
             delete_post: "Удаление записи"

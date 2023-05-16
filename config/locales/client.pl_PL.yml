@@ -2425,7 +2425,7 @@ pl_PL:
           label: "Udostępniony projekt"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
         toggle_topic_bump:
-          label: "Przełącz wypukłość tematu"
+          label: "Przełącz podbicie tematu"
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
       reload: "Przeładuj"
       ignore: "Ignoruj"
@@ -4348,6 +4348,7 @@ pl_PL:
       no_activity_body: "Witaj w naszej społeczności! Jesteś tu zupełnie nowy(-a) i nie uczestniczyłeś(-aś) jeszcze w żadnych dyskusjach. Jako pierwszy krok, odwiedź <a href='%{topUrl}'>Popularne</a> lub <a href='%{categoriesUrl}'>Kategorie</a> i po prostu zacznij czytać! Kliknij w %{heartIcon} przy postach, które lubisz lub chcesz dowiedzieć się więcej. Gdy bierzesz udział w dyskusji, Twoja aktywność zostanie wymieniona tutaj."
       no_replies_title: "Nie odpowiedziałeś jeszcze na żadne tematy"
       no_replies_title_others: "%{username} nie odpowiedział jeszcze na żaden temat"
+      no_replies_body: "Kiedy <a href='%{searchUrl}'>odkryjesz</a> interesującą rozmowę, w której chcesz wziąć udział, naciśnij przycisk <kbd>Odpowiedz</kbd> znajdujący się bezpośrednio pod każdym postem, aby rozpocząć odpowiadanie na ten konkretny post. Jeśli wolisz odpowiedzieć na ogólny temat, a nie na poszczególne posty lub osoby, poszukaj przycisku <kbd>Odpowiedz</kbd> na samym dole tematu lub pod osią czasu tematu."
       no_drafts_title: "Nie rozpocząłeś żadnych szkiców"
       no_drafts_body: "Nie jesteś gotowy do opublikowania? Automatycznie zapiszemy nową wersję roboczą i wyświetlimy ją tutaj za każdym razem, gdy zaczniesz pisać temat, odpowiedź lub wiadomość osobistą. Wybierz przycisk anulowania, aby odrzucić lub zapisać wersję roboczą, aby kontynuować później."
       no_likes_title: "Nie polubiłeś jeszcze żadnych tematów"
@@ -4453,6 +4454,7 @@ pl_PL:
                 other: "%{count} szkice"
             review:
               content: "Sprawdź"
+              title: "Oflagowane posty i inne elementy w kolejce"
               pending_count: "%{count} oczekujących"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
@@ -4609,6 +4611,8 @@ pl_PL:
               other: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."
             automatic_membership_associated_groups: "Użytkownicy, którzy są członkami grupy w wymienionej tutaj usłudze, zostaną automatycznie dodani do tej grupy po zalogowaniu się do usługi."
             primary_group: "Automatycznie ustawiaj jako główną grupę"
+          alert:
+            primary_group: "Ponieważ jest to grupa podstawowa, nazwa '%{group_name}' będzie używana w klasach CSS, które każdy może zobaczyć."
         name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
         primary: "Główna grupa"
         no_primary: "(brak podstawowej grupy)"
@@ -4618,6 +4622,7 @@ pl_PL:
         about: "Tu możesz edytować przypisania do grup oraz ich nazwy"
         group_members: "Członkowie grupy"
         delete: "Usuń"
+        delete_confirm: "Czy na pewno chcesz usunąć tę grupę?"
         delete_with_messages_confirm:
           one: "Usunięcie tej grupy spowoduje osierocenie %{count} wiadomości, a członkowie grupy utracą do niej dostęp."
           few: "Usunięcie tej grupy spowoduje osierocenie %{count} wiadomości, a członkowie grupy utracą do niej dostęp."
@@ -5477,6 +5482,7 @@ pl_PL:
           upload: "Dodaj z pliku"
           upload_successful: "Przesyłanie zakończone sukcesem. Słowa zostały dodane."
           case_sensitivity_label: "Rozróżniana jest wielkość liter"
+          case_sensitivity_description: "Tylko słowa z dopasowaną wielkością liter"
         test:
           button_label: "Sprawdź"
           modal_title: "%{action}: Testuj obserwowane słowa"
