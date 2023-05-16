@@ -11,7 +11,7 @@ RSpec.describe Group do
       is_expected.not_to allow_value("#{"a" * 997}.com").for(:automatic_membership_email_domains)
     end
     it { is_expected.to validate_length_of(:bio_raw).is_at_most(3000) }
-    it { is_expected.to validate_length_of(:membership_request_template).is_at_most(500) }
+    it { is_expected.to validate_length_of(:membership_request_template).is_at_most(5000) }
     it { is_expected.to validate_length_of(:full_name).is_at_most(100) }
 
     describe "#grant_trust_level" do
