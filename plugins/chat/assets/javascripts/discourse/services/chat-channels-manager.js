@@ -16,7 +16,6 @@ const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 
 export default class ChatChannelsManager extends Service {
   @service chatSubscriptionsManager;
-  @service chatTrackingState;
   @service chatApi;
   @service currentUser;
   @tracked _cached = new TrackedObject();
@@ -140,14 +139,12 @@ export default class ChatChannelsManager extends Service {
 
   #sortDirectMessageChannels(channels) {
     return channels.sort((a, b) => {
-      const trackingA = this.chatTrackingState.getChannelState(a.id);
-      const trackingB = this.chatTrackingState.getChannelState(b.id);
-      if (trackingA.unreadCount === trackingB.unreadCount) {
+      if (a.tracking.unreadCount === b.tracking.unreadCount) {
         return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
           ? -1
           : 1;
       } else {
-        return trackingA.unreadCount > trackingB.unreadCount ? -1 : 1;
+        return a.tracking.unreadCount > b.tracking.unreadCount ? -1 : 1;
       }
     });
   }

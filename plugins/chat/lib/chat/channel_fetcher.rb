@@ -4,7 +4,7 @@ module Chat
   class ChannelFetcher
     MAX_PUBLIC_CHANNEL_RESULTS = 50
 
-    def self.structured(guardian)
+    def self.structured(guardian, include_threads: false)
       memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
       public_channels =
         secured_public_channels(guardian, memberships, status: :open, following: true)
@@ -15,7 +15,11 @@ module Chat
         direct_message_channels: direct_message_channels,
         memberships: memberships,
         tracking:
-          tracking_state(public_channels.map(&:id) + direct_message_channels.map(&:id), guardian),
+          tracking_state(
+            public_channels.map(&:id) + direct_message_channels.map(&:id),
+            guardian,
+            include_threads: include_threads,
+          ),
       }
     end
 
@@ -190,12 +194,13 @@ module Chat
       channels
     end
 
-    def self.tracking_state(channel_ids, guardian)
+    def self.tracking_state(channel_ids, guardian, include_threads: false)
       Chat::TrackingState.call(
         channel_ids: channel_ids,
         guardian: guardian,
         include_missing_memberships: true,
-        include_threads: SiteSetting.enable_experimental_chat_threaded_discussions,
+        include_threads:
+          SiteSetting.enable_experimental_chat_threaded_discussions && include_threads,
       ).report
     end
 

@@ -11,6 +11,7 @@ import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
 import Category from "discourse/models/category";
+import { ChatTrackingState } from "discourse/plugins/chat/discourse/services/chat-tracking-state-manager";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -91,6 +92,8 @@ export default class ChatChannel {
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
 
+  @tracked _tracking;
+
   constructor(args = {}) {
     this.id = args.id;
     this.chatableId = args.chatable_id;
@@ -121,6 +124,20 @@ export default class ChatChannel {
     if (args.archive_completed || args.archive_failed) {
       this.archive = ChatChannelArchive.create(args);
     }
+  }
+
+  /**
+   * We want to return a default zeroed-out tracking state
+   * for channels which we are not yet tracking, e.g. in
+   * some scenarios we may be getting the state for a newly
+   * joined channel and we don't want to have to null check
+   * everywhere in the app.
+   */
+  get tracking() {
+    if (!this._tracking) {
+      this._tracking = new ChatTrackingState(getOwner(this));
+    }
+    return this._tracking;
   }
 
   findIndexOfMessage(id) {
