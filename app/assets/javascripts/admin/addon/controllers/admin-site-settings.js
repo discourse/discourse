@@ -49,8 +49,15 @@ export default class AdminSiteSettingsController extends Controller {
     };
 
     const matchesGroupedByCategory = [all];
-
     const matches = [];
+
+    const strippedQuery = filter.replace(/[^a-z0-9]/gi, "");
+    let fuzzyRegex;
+
+    if (strippedQuery.length > 2) {
+      fuzzyRegex = new RegExp(strippedQuery.split("").join(".*"), "i");
+    }
+
     allSiteSettings.forEach((settingsCategory) => {
       let fuzzyMatches = [];
 
@@ -68,7 +75,7 @@ export default class AdminSiteSettingsController extends Controller {
             setting.replace(/_/g, " ").includes(filter) ||
             item.get("description").toLowerCase().includes(filter) ||
             (item.get("value") || "").toString().toLowerCase().includes(filter);
-          if (!filterResult && this.fuzzySearch(filter, setting)) {
+          if (!filterResult && fuzzyRegex && fuzzyRegex.test(setting)) {
             fuzzyMatches.push(item);
           }
           return filterResult;
@@ -135,17 +142,6 @@ export default class AdminSiteSettingsController extends Controller {
       "adminSiteSettingsCategory",
       category || "all_results"
     );
-  }
-
-  fuzzySearch(query, item) {
-    const strippedQuery = query.replace(/[^a-z0-9]/gi, "");
-
-    if (strippedQuery.length > 2) {
-      const regex = new RegExp(strippedQuery.split("").join(".*"), "i");
-      return regex.test(item);
-    }
-
-    return false;
   }
 
   @observes("filter", "onlyOverridden", "model")
