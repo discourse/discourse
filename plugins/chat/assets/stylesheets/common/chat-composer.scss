@@ -3,8 +3,8 @@
     display: flex;
     flex-direction: column;
     z-index: 3;
-    background-color: var(--secondary);
-    margin-top: 0.1rem;
+    background-color: var(--primary-very-low);
+    padding: 12px 10px 0 10px;
 
     #chat-full-page-uploader,
     #chat-widget-uploader {
@@ -16,10 +16,14 @@
     }
   }
 
+  .chat-composer-button,
+  .chat-composer-separator {
+    align-self: stretch;
+  }
+
   &__outer-container {
     display: flex;
     align-items: center;
-    padding-inline: 0.25rem;
     box-sizing: border-box;
     width: 100%;
   }
@@ -30,11 +34,12 @@
     box-sizing: border-box;
     width: 100%;
     flex-direction: row;
-    border: 1px solid var(--primary-low-mid);
-    border-radius: 5px;
+    border: 1px solid var(--primary-medium);
+    border-radius: 10px;
     background-color: var(--secondary);
-    padding-inline: 0.25rem;
-    min-height: 42px;
+    min-height: 50px;
+    box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 
     .chat-composer.is-focused & {
       border-color: var(--primary-medium);
@@ -50,8 +55,6 @@
   }
 
   &__send-btn {
-    border-radius: 3px;
-    background: none;
     will-change: scale;
 
     @keyframes sendingScales {
@@ -65,23 +68,38 @@
         transform: scale(0.9);
       }
     }
+
     .chat-composer.is-sending & {
       animation: sendingScales 1s infinite linear;
     }
 
+    .d-icon {
+      background: none !important;
+    }
+
     .chat-composer.is-send-enabled & {
-      background: var(--tertiary-50);
-      &:focus {
-        outline: auto;
+      .d-icon {
+        color: var(--tertiary);
       }
 
-      .d-icon {
-        color: var(--tertiary) !important;
+      &:hover {
+        .d-icon {
+          transform: scale(1.2);
+        }
+      }
+
+      &:focus {
+        outline: auto;
       }
     }
 
     .chat-composer.is-send-disabled & {
       cursor: default;
+
+      .d-icon {
+        color: var(--primary-high);
+      }
+
       &:hover {
         background: none !important;
       }
@@ -89,41 +107,14 @@
 
     .chat-composer.is-disabled & {
       opacity: 0.4;
+
       &:hover {
         background: none !important;
       }
     }
 
-    > * {
-      pointer-events: none;
-    }
-
     .d-icon {
-      color: var(--primary) !important;
-    }
-  }
-
-  &__close-emoji-picker-btn {
-    margin-left: 0.2rem;
-    padding: 5px !important;
-    border-radius: 100%;
-    background: var(--primary-med-or-secondary-high);
-    border: 1px solid transparent;
-    display: flex;
-
-    .d-icon {
-      color: var(--secondary-very-high);
-    }
-
-    &:focus {
-      border-color: var(--tertiary);
-    }
-
-    .discourse-no-touch &:hover {
-      background: var(--primary-high);
-      .d-icon {
-        color: var(--primary-low);
-      }
+      color: var(--primary);
     }
   }
 
@@ -132,6 +123,8 @@
     align-items: center;
     box-sizing: border-box;
     width: 100%;
+    padding: 0 5px;
+    align-self: stretch;
   }
 
   &__input {
@@ -144,7 +137,7 @@
     max-height: 125px;
     background: none;
     margin: 0;
-    padding: 0.25rem 0.5rem;
+    padding: 0;
     text-overflow: ellipsis;
     cursor: inherit;
 
