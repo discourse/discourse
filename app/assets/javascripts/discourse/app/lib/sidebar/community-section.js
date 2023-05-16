@@ -1,7 +1,8 @@
 import I18n from "I18n";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import Composer from "discourse/models/composer";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner, setOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
@@ -21,6 +22,7 @@ import {
 } from "discourse/lib/sidebar/custom-community-section-links";
 
 const LINKS_IN_BOTH_SEGMENTS = ["/review"];
+
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
   "/new": EverythingSectionLink,
@@ -35,25 +37,20 @@ const SPECIAL_LINKS_MAP = {
 };
 
 export default class CommunitySection {
+  @service appEvents;
+  @service currentUser;
+  @service router;
+  @service topicTrackingState;
+  @service siteSettings;
+
   @tracked links;
   @tracked moreLinks;
 
-  constructor({
-    section,
-    currentUser,
-    router,
-    topicTrackingState,
-    appEvents,
-    siteSettings,
-  }) {
+  constructor({ section, owner }) {
+    setOwner(this, owner);
+
     this.section = section;
-    this.router = router;
-    this.currentUser = currentUser;
     this.slug = section.slug;
-    this.topicTrackingState = topicTrackingState;
-    this.appEvents = appEvents;
-    this.siteSettings = siteSettings;
-    this.section_type = section.section_type;
 
     this.callbackId = this.topicTrackingState?.onStateChange(() => {
       this.links.forEach((link) => {
@@ -67,28 +64,37 @@ export default class CommunitySection {
       .concat(secondaryCustomSectionLinks)
       .map((link) => this.#initializeSectionLink(link, { inMoreDrawer: true }));
 
-    this.links = this.section.links
-      .filter(
-        (link) =>
-          link.segment === "primary" ||
-          LINKS_IN_BOTH_SEGMENTS.includes(link.value)
-      )
-      .map((link) => {
-        return this.#generateLink(link);
-      })
-      .filter((link) => link);
+    this.links = this.section.links.reduce((filtered, link) => {
+      if (
+        link.segment === "primary" ||
+        LINKS_IN_BOTH_SEGMENTS.includes(link.value)
+      ) {
+        const generatedLink = this.#generateLink(link);
+
+        if (generatedLink) {
+          filtered.push(generatedLink);
+        }
+      }
+
+      return filtered;
+    }, []);
 
     this.moreLinks = this.section.links
-      .filter(
-        (link) =>
+      .reduce((filtered, link) => {
+        if (
           link.segment === "secondary" ||
           LINKS_IN_BOTH_SEGMENTS.includes(link.value)
-      )
-      .map((link) => {
-        return this.#generateLink(link, true);
-      })
-      .concat(this.apiLinks)
-      .filter((link) => link);
+        ) {
+          const generatedLink = this.#generateLink(link, true);
+
+          if (generatedLink) {
+            filtered.push(generatedLink);
+          }
+        }
+
+        return filtered;
+      }, [])
+      .concat(this.apiLinks);
   }
 
   teardown() {
@@ -103,6 +109,7 @@ export default class CommunitySection {
 
   #generateLink(link, inMoreDrawer = false) {
     const sectionLinkClass = SPECIAL_LINKS_MAP[link.value];
+
     if (sectionLinkClass) {
       return this.#initializeSectionLink(sectionLinkClass, inMoreDrawer);
     } else {
