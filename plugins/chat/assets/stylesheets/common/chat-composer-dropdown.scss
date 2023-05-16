@@ -7,32 +7,27 @@
 }
 
 .chat-composer-dropdown__trigger-btn {
-  padding: 5px !important; // overwrite ios rule
-  border-radius: 100%;
-  background: var(--primary-med-or-secondary-high);
-  border: 1px solid transparent;
-  display: flex;
-
   .d-icon {
-    color: var(--secondary-very-high);
+    padding: 5px;
+    transition: transform 0.1s ease-in-out;
+    color: var(--primary-high);
+    background: var(--secondary-very-high);
+    border-radius: 100%;
   }
 
-  &:focus {
-    border-color: var(--tertiary);
-  }
-
-  .discourse-no-touch &:hover {
-    background: var(--primary-high);
-    .d-icon {
-      color: var(--primary-low);
+  .no-touch & {
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      .d-icon {
+        color: var(--primary);
+      }
     }
   }
 
-  .chat-composer.is-disabled & {
-    background: var(--primary-400);
-
-    &:hover {
-      cursor: not-allowed;
+  &.has-active-panel {
+    .d-icon {
+      transform: rotate(45deg);
     }
   }
 }

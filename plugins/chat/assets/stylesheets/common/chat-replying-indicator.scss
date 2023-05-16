@@ -1,12 +1,7 @@
-.chat-replying-indicator-container {
-  padding: 0 0.5rem;
-}
-
 .chat-replying-indicator {
   color: var(--primary-medium);
   display: inline-flex;
   font-size: var(--font-down-2);
-  padding-bottom: unquote("max(0px, 0.5rem - env(safe-area-inset-bottom, 0))");
 
   &:before {
     // unicode zero width space character

@@ -1,0 +1,14 @@
+.chat-composer-button {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__btn {
+    box-sizing: border-box;
+    width: 50px;
+    border: 0;
+    height: 100%;
+    background: none;
+  }
+}
