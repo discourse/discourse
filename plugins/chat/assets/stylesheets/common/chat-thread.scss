@@ -19,8 +19,6 @@
   &__body {
     overflow-y: scroll;
     @include chat-scrollbar();
-    margin: 2px;
-    padding-right: 2px;
     box-sizing: border-box;
     flex-grow: 1;
     overscroll-behavior: contain;
