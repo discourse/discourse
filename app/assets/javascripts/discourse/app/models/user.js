@@ -99,9 +99,14 @@ let userFields = [
   "sidebar_tag_names",
   "status",
 ];
+const customUserFields = [];
 
 export function addSaveableUserField(fieldName) {
-  userFields.push(fieldName);
+  customUserFields.push(fieldName);
+}
+
+export function resetSaveableUserField() {
+  customUserFields.clear();
 }
 
 let userOptionFields = [
@@ -139,9 +144,14 @@ let userOptionFields = [
   "bookmark_auto_delete_preference",
   "sidebar_list_destination",
 ];
+const customUserOptionFields = [];
 
 export function addSaveableUserOptionField(fieldName) {
-  userOptionFields.push(fieldName);
+  customUserOptionFields.push(fieldName);
+}
+
+export function resetSaveableUserOptionField() {
+  customUserOptionFields.clear();
 }
 
 function userOption(userOptionKey) {
@@ -439,12 +449,16 @@ const User = RestModel.extend({
 
   save(fields) {
     const data = this.getProperties(
-      userFields.filter((uf) => !fields || fields.includes(uf))
+      userFields
+        .concat(customUserFields)
+        .filter((uf) => !fields || fields.includes(uf))
     );
 
     const filteredUserOptionFields = fields
-      ? userOptionFields.filter((uo) => fields.includes(uo))
-      : userOptionFields;
+      ? userOptionFields
+          .concat(customUserOptionFields)
+          .filter((uo) => fields.includes(uo))
+      : userOptionFields.concat(customUserOptionFields);
 
     filteredUserOptionFields.forEach((s) => {
       data[s] = this.get(`user_option.${s}`);

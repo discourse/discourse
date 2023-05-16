@@ -15,6 +15,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { reload } from "discourse/helpers/page-reloader";
 import { propertyEqual } from "discourse/lib/computed";
+import { getSaveAttributeForPreferencesController } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 const USER_HOMES = {
   1: "latest",
@@ -303,7 +304,11 @@ export default Controller.extend({
       }
 
       return this.model
-        .save(this.saveAttrNames)
+        .save(
+          this.saveAttrNames.concat(
+            getSaveAttributeForPreferencesController("interface")
+          )
+        )
         .then(() => {
           this.set("saved", true);
 

@@ -118,6 +118,7 @@ import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
+import { addSaveAttributeToPreferencesController } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -2264,6 +2265,38 @@ class PluginApi {
    */
   registerHashtagType(type, typeClassInstance) {
     registerHashtagType(type, typeClassInstance);
+  }
+
+  /**
+   * Indicates that the given attribute can be included in the request payload
+   * when a preferences section (i.e. controller) is saved. Example of
+   * preferences sections are `emails`, `interface` and `profile`.
+   *
+   * For example, if you have a attribute named `subscribe_to_newsletter` that
+   * you want to include in the request payload when a user saves their Emails
+   * preferences (`/my/preferences/emails`), you can use this API to signal to
+   * the `emails` preferences controller that it should treat your attribute as
+   * saveable, like so:
+   *
+   * ```
+   * api.addSaveAttributeToPreferencesController("emails", "subscribe_to_newsletter");
+   * ```
+   *
+   * There's an additional step required to include your attribute in the
+   * request payload which is to call the `addSaveableUserField` or
+   * `addSaveableUserOptionField` APIs to teach the User model where it should
+   * retrieve the value of your attribute from. If your attribute is a direct
+   * property of the user object, then use the `addSaveableUserField` API. But
+   * if it's a property of the user_options object, then you need to use the
+   * `addSaveableUserOptionField` API.
+   *
+   * @param {string} controllerName - The name of the preferences controller
+   *   that should treat the attribute as saveable. E.g., `profile`, `interface`,
+   *   `emails`.
+   * @param {string} attribute - The attribute name.
+   */
+  addSaveAttributeToPreferencesController(controllerName, attribute) {
+    addSaveAttributeToPreferencesController(controllerName, attribute);
   }
 }
 

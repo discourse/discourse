@@ -13,6 +13,9 @@ import pretender, {
   response,
 } from "discourse/tests/helpers/create-pretender";
 import { cloneJSON } from "discourse-common/lib/object";
+import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper";
+import { hbs } from "ember-cli-htmlbars";
 
 acceptance("User Preferences - Account", function (needs) {
   needs.user();
@@ -305,6 +308,36 @@ acceptance("User Preferences - Account", function (needs) {
       },
       "includes the right pick avatar request params"
     );
+  });
+
+  test("addSaveAttributeToPreferencesController plugin API", async function (assert) {
+    let expectedRequestSent = false;
+
+    pretender.put("/u/eviltrout.json", (request) => {
+      expectedRequestSent = request.requestBody.includes(
+        "some_plugin_prop=true"
+      );
+      return response({ user: { bio_excerpt: "" } });
+    });
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSaveableUserField("some_plugin_prop");
+      api.addSaveAttributeToPreferencesController(
+        "account",
+        "some_plugin_prop"
+      );
+    });
+
+    registerTemporaryModule(
+      "discourse/test-plugin-custom-preferences-control/templates/connectors/user-preferences-account/custom-control",
+      hbs`<PreferenceCheckbox @labelKey="save" @class="custom-test-checkbox" @checked={{@outletArgs.model.some_plugin_prop}}/>`
+    );
+
+    await visit("/u/eviltrout/preferences/account");
+    await click(".custom-test-checkbox input");
+    await click("#user-content .save-changes");
+
+    assert.ok(expectedRequestSent, "request payload includes custom property");
   });
 });
 

@@ -4,6 +4,7 @@ import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getSaveAttributeForPreferencesController } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 export default Controller.extend({
   ignoredUsernames: alias("model.ignored_usernames"),
@@ -78,7 +79,11 @@ export default Controller.extend({
     this.set("saved", false);
 
     return this.model
-      .save(this.saveAttrNames)
+      .save(
+        this.saveAttrNames.concat(
+          getSaveAttributeForPreferencesController("users")
+        )
+      )
       .then(() => this.set("saved", true))
       .catch(popupAjaxError);
   },

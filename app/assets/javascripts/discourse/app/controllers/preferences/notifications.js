@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getSaveAttributeForPreferencesController } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 export default Controller.extend({
   subpageTitle: I18n.t("user.preferences_nav.notifications"),
@@ -34,7 +35,11 @@ export default Controller.extend({
     save() {
       this.set("saved", false);
       return this.model
-        .save(this.saveAttrNames)
+        .save(
+          this.saveAttrNames.concat(
+            getSaveAttributeForPreferencesController("notifications")
+          )
+        )
         .then(() => {
           this.set("saved", true);
         })

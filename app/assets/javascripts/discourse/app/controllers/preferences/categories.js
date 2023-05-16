@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getSaveAttributeForPreferencesController } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 export default Controller.extend({
   @discourseComputed("siteSettings.mute_all_categories_by_default")
@@ -57,7 +58,11 @@ export default Controller.extend({
     save() {
       this.set("saved", false);
       return this.model
-        .save(this.saveAttrNames)
+        .save(
+          this.saveAttrNames.concat(
+            getSaveAttributeForPreferencesController("categories")
+          )
+        )
         .then(() => {
           this.set("saved", true);
         })

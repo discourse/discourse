@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getSaveAttributeForPreferencesController } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 export default Controller.extend({
   init() {
@@ -28,7 +29,11 @@ export default Controller.extend({
     save() {
       this.set("saved", false);
       return this.model
-        .save(this.saveAttrNames)
+        .save(
+          this.saveAttrNames.concat(
+            getSaveAttributeForPreferencesController("tags")
+          )
+        )
         .then(() => {
           this.set("saved", true);
         })

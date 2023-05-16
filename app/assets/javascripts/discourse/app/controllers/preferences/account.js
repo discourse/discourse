@@ -13,6 +13,7 @@ import { inject as service } from "@ember/service";
 import { next } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 import { exportUserArchive } from "discourse/lib/export-csv";
+import { getSaveAttributeForPreferencesController } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -181,7 +182,11 @@ export default Controller.extend(CanCheckEmails, {
       });
 
       return this.model
-        .save(this.saveAttrNames)
+        .save(
+          this.saveAttrNames.concat(
+            getSaveAttributeForPreferencesController("account")
+          )
+        )
         .then(() => this.set("saved", true))
         .catch(popupAjaxError);
     },

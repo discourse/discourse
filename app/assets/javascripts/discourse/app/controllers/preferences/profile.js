@@ -9,6 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { readOnly } from "@ember/object/computed";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
+import { getSaveAttributeForPreferencesController } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 export default Controller.extend({
   dialog: service(),
@@ -124,7 +125,11 @@ export default Controller.extend({
       this.send("_updateUserFields");
 
       return model
-        .save(this.saveAttrNames)
+        .save(
+          this.saveAttrNames.concat(
+            getSaveAttributeForPreferencesController("profile")
+          )
+        )
         .then(() => {
           cookAsync(model.get("bio_raw"))
             .then(() => {

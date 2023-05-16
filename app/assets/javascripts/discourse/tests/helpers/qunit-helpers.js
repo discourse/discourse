@@ -21,7 +21,10 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
 import Site from "discourse/models/site";
-import User from "discourse/models/user";
+import User, {
+  resetSaveableUserField,
+  resetSaveableUserOptionField,
+} from "discourse/models/user";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import deprecated from "discourse-common/lib/deprecated";
@@ -84,6 +87,7 @@ import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetMentions } from "discourse/lib/link-mentions";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
+import { resetPreferencesControllersSaveAttrs } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -219,6 +223,9 @@ export function testCleanup(container, app) {
   resetMentions();
   cleanupTemporaryModuleRegistrations();
   cleanupCssGeneratorTags();
+  resetPreferencesControllersSaveAttrs();
+  resetSaveableUserField();
+  resetSaveableUserOptionField();
 }
 
 function cleanupCssGeneratorTags() {

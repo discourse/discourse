@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getSaveAttributeForPreferencesController } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 export const DEFAULT_LIST_DESTINATION = "default";
 export const UNREAD_LIST_DESTINATION = "unread_new";
@@ -49,7 +50,11 @@ export default class extends Controller {
     );
 
     this.model
-      .save(this.saveAttrNames)
+      .save(
+        this.saveAttrNames.concat(
+          getSaveAttributeForPreferencesController("sidebar")
+        )
+      )
       .then((result) => {
         if (result.user.sidebar_tags) {
           this.model.set("sidebar_tags", result.user.sidebar_tags);

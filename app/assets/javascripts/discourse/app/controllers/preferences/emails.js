@@ -3,6 +3,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getSaveAttributeForPreferencesController } from "discourse/lib/preferences-controllers-save-attrs-register";
 
 const EMAIL_LEVELS = {
   ALWAYS: 0,
@@ -94,7 +95,11 @@ export default Controller.extend({
     save() {
       this.set("saved", false);
       return this.model
-        .save(this.saveAttrNames)
+        .save(
+          this.saveAttrNames.concat(
+            getSaveAttributeForPreferencesController("emails")
+          )
+        )
         .then(() => {
           this.set("saved", true);
         })
