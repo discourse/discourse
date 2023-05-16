@@ -1124,6 +1124,7 @@ en:
           warning: "Are you sure you want to clear your featured topic?"
       use_current_timezone: "Use Current Timezone"
       profile_hidden: "This user's public profile is hidden."
+      inactive_user: "This user is no longer active."
       expand_profile: "Expand"
       sr_expand_profile: "Expand profile details"
       collapse_profile: "Collapse"
@@ -6055,7 +6056,9 @@ en:
             label: "Add Emoji"
         title: "Settings"
         no_results: "No results found."
-        more_than_30_results: "There are more than 30 results. Please refine your search or select a category."
+        more_site_setting_results:
+          one: "There is more than %{count} result. Please refine your search or select a category."
+          other: "There are more than %{count} results. Please refine your search or select a category."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"

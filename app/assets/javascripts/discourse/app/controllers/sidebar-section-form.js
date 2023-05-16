@@ -268,7 +268,8 @@ export default Controller.extend(ModalFunctionality, {
       }),
     })
       .then((data) => {
-        this.currentUser.updateSidebarSections(
+        this.currentUser.set(
+          "sidebar_sections",
           this.currentUser.sidebar_sections.concat(data.sidebar_section)
         );
         this.send("closeModal");
@@ -309,7 +310,7 @@ export default Controller.extend(ModalFunctionality, {
             return section;
           }
         );
-        this.currentUser.updateSidebarSections(newSidebarSections);
+        this.currentUser.set("sidebar_sections", newSidebarSections);
         this.send("closeModal");
       })
       .catch((e) =>
@@ -359,7 +360,7 @@ export default Controller.extend(ModalFunctionality, {
                 this.currentUser.sidebar_sections.filter((section) => {
                   return section.id !== data["sidebar_section"].id;
                 });
-              this.currentUser.updateSidebarSections(newSidebarSections);
+              this.currentUser.set("sidebar_sections", newSidebarSections);
               this.send("closeModal");
             })
             .catch((e) =>

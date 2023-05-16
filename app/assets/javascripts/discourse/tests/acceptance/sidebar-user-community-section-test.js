@@ -47,6 +47,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("clicking on section header button", async function (assert) {
     await visit("/");
+
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-section-header-button"
     );

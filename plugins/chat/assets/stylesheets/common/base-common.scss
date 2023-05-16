@@ -8,6 +8,14 @@ $float-height: 530px;
   --chat-header-offset: 50px;
 }
 
+// Very specific hack to ensure the contextual menu (copy/paste/...) is
+// not completly over the textarea, the rules to position this menu are quite obscure
+// and under DiscourseHUB the space between the textarea and the keyboard is so small that
+// it sometimes prefer to appear on top of the textarea, making any gesture very complicated
+html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
+  padding-bottom: 0.2rem;
+}
+
 .chat-message-move-to-channel-modal-modal {
   .modal-inner-container {
     .chat-move-message-channel-chooser {
