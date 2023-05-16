@@ -25,13 +25,7 @@ export default class ChatTrackingStateManager extends Service {
   // as well, but for now we do that on demand when the user opens a channel,
   // to avoid having to load all the threads across all channels into memory at once.
   setupWithPreloadedState({ channel_tracking = {} }) {
-    this.#publicChannels().forEach((channel) => {
-      if (channel_tracking[channel.id.toString()]) {
-        this.#setState(channel, channel_tracking[channel.id.toString()]);
-      }
-    });
-
-    this.#directMessageChannels().forEach((channel) => {
+    this.chatChannelsManager.channels.forEach((channel) => {
       if (channel_tracking[channel.id.toString()]) {
         this.#setState(channel, channel_tracking[channel.id.toString()]);
       }
