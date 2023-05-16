@@ -40,7 +40,10 @@
           @onCloseActivePanel={{this.chatEmojiPickerManager.close}}
         />
 
-        <div class="chat-composer__input-container">
+        <div
+          class="chat-composer__input-container"
+          {{on "click" this.focusTextarea}}
+        >
           <DTextarea
             id={{this.composerId}}
             value={{readonly this.currentMessage.message}}
@@ -62,12 +65,12 @@
           />
         </div>
 
-        <DButton
-          @action={{this.onSend}}
+        <Chat::Composer::Button
+          {{on "click" this.onSend}}
           @icon="paper-plane"
-          class="chat-composer__send-btn icon-only"
-          @title="chat.composer.send"
-          @disabled={{or this.disabled (not this.sendEnabled)}}
+          class="chat-composer__send-btn"
+          title="chat.composer.send"
+          disabled={{or this.disabled (not this.sendEnabled)}}
           tabindex={{if this.sendEnabled 0 -1}}
           {{on "focus" (fn this.computeIsFocused true)}}
           {{on "blur" (fn this.computeIsFocused false)}}
@@ -77,7 +80,6 @@
           <ChatComposerInlineButtons @buttons={{this.inlineButtons}} />
         {{/unless}}
       </div>
-
     </div>
   </div>
 
