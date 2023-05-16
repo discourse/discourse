@@ -202,7 +202,6 @@ TopicList.reopenClass({
         id: "topic-list-find",
         since: "3.1.0.beta5",
         dropFrom: "3.2.0.beta1",
-        raiseError: true,
       }
     );
 
