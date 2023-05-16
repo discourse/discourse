@@ -323,13 +323,6 @@
       min-height: 3em; // for situations when there are no categories/tags
     }
 
-    .topic-title {
-      .d-icon {
-        color: var(--text-color);
-        margin: 0;
-      }
-    }
-
     .fancy-title {
       display: inline-block;
       width: 100%;
@@ -342,6 +335,10 @@
       align-items: baseline;
       color: var(--text-color);
       font-size: var(--font-up-1);
+      .d-icon {
+        color: var(--text-color);
+        margin: 0;
+      }
     }
 
     .topic-statuses {
