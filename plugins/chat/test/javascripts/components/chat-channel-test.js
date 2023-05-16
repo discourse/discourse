@@ -41,6 +41,7 @@ module(
       this.channel = fabricators.channel({
         id: channelId,
         currentUserMembership: { following: true },
+        meta: { can_join_chat_channel: false },
       });
 
       pretender.get(`/chat/${channelId}/messages`, () => {
