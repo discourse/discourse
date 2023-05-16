@@ -65,7 +65,6 @@ import {
   addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
-import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
@@ -1592,7 +1591,6 @@ class PluginApi {
    *
    **/
   addQuickAccessProfileItem(item) {
-    addQuickAccessProfileItem(item);
     addUserMenuProfileTabItem(item);
   }
 
