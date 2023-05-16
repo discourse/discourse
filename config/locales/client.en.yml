@@ -6049,7 +6049,9 @@ en:
             label: "Add Emoji"
         title: "Settings"
         no_results: "No results found."
-        more_than_30_results: "There are more than 30 results. Please refine your search or select a category."
+        more_site_setting_results:
+          one: "There is more than 1 result. Please refine your search or select a category."
+          other: "There are more than %{count} results. Please refine your search or select a category."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"

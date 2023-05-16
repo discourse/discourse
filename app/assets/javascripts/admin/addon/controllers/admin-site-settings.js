@@ -15,15 +15,15 @@ export default class AdminSiteSettingsController extends Controller {
   visibleSiteSettings = null;
   onlyOverridden = false;
 
-  filterContentNow(category) {
-    // If we have no content, don't bother filtering anything
-    if (isEmpty(this.allSiteSettings)) {
-      return;
-    }
+  get maxResults() {
+    return 100;
+  }
 
-    let filter, pluginFilter;
-    if (this.filter) {
-      filter = this.filter
+  performSearch(filter, allSiteSettings, onlyOverridden) {
+    let pluginFilter;
+
+    if (filter) {
+      filter = filter
         .toLowerCase()
         .split(" ")
         .filter((word) => {
@@ -42,29 +42,20 @@ export default class AdminSiteSettingsController extends Controller {
         .trim();
     }
 
-    if (
-      (!filter || 0 === filter.length) &&
-      (!pluginFilter || 0 === pluginFilter.length) &&
-      !this.onlyOverridden
-    ) {
-      this.set("visibleSiteSettings", this.allSiteSettings);
-      if (this.categoryNameKey === "all_results") {
-        this.transitionToRoute("adminSiteSettings");
-      }
-      return;
-    }
-
     const all = {
       nameKey: "all_results",
       name: I18n.t("admin.site_settings.categories.all_results"),
       siteSettings: [],
     };
+
     const matchesGroupedByCategory = [all];
 
     const matches = [];
-    this.allSiteSettings.forEach((settingsCategory) => {
+    allSiteSettings.forEach((settingsCategory) => {
+      let fuzzyMatches = [];
+
       const siteSettings = settingsCategory.siteSettings.filter((item) => {
-        if (this.onlyOverridden && !item.get("overridden")) {
+        if (onlyOverridden && !item.get("overridden")) {
           return false;
         }
         if (pluginFilter && item.plugin !== pluginFilter) {
@@ -72,16 +63,24 @@ export default class AdminSiteSettingsController extends Controller {
         }
         if (filter) {
           const setting = item.get("setting").toLowerCase();
-          return (
+          let filterResult =
             setting.includes(filter) ||
             setting.replace(/_/g, " ").includes(filter) ||
             item.get("description").toLowerCase().includes(filter) ||
-            (item.get("value") || "").toString().toLowerCase().includes(filter)
-          );
+            (item.get("value") || "").toString().toLowerCase().includes(filter);
+          if (!filterResult && this.fuzzySearch(filter, setting)) {
+            fuzzyMatches.push(item);
+          }
+          return filterResult;
         } else {
           return true;
         }
       });
+
+      if (fuzzyMatches.length > 0) {
+        siteSettings.pushObjects(fuzzyMatches);
+      }
+
       if (siteSettings.length > 0) {
         matches.pushObjects(siteSettings);
         matchesGroupedByCategory.pushObject({
@@ -95,14 +94,38 @@ export default class AdminSiteSettingsController extends Controller {
       }
     });
 
-    all.siteSettings.pushObjects(matches.slice(0, 30));
-    all.hasMore = matches.length > 30;
-    all.count = all.hasMore ? "30+" : matches.length;
+    all.siteSettings.pushObjects(matches.slice(0, this.maxResults));
+    all.hasMore = matches.length > this.maxResults;
+    all.count = all.hasMore ? `${this.maxResults}+` : matches.length;
+    all.maxResults = this.maxResults;
+
+    return matchesGroupedByCategory;
+  }
+
+  filterContentNow(category) {
+    if (isEmpty(this.allSiteSettings)) {
+      return;
+    }
+
+    if (isEmpty(this.filter) && !this.onlyOverridden) {
+      this.set("visibleSiteSettings", this.allSiteSettings);
+      if (this.categoryNameKey === "all_results") {
+        this.transitionToRoute("adminSiteSettings");
+      }
+      return;
+    }
+
+    const matchesGroupedByCategory = this.performSearch(
+      this.filter,
+      this.allSiteSettings,
+      this.onlyOverridden
+    );
 
     const categoryMatches = matchesGroupedByCategory.findBy(
       "nameKey",
       category
     );
+
     if (!categoryMatches || categoryMatches.count === 0) {
       category = "all_results";
     }
@@ -112,6 +135,17 @@ export default class AdminSiteSettingsController extends Controller {
       "adminSiteSettingsCategory",
       category || "all_results"
     );
+  }
+
+  fuzzySearch(query, item) {
+    const strippedQuery = query.replace(/[^a-z0-9]/gi, "");
+
+    if (strippedQuery.length > 2) {
+      const regex = new RegExp(strippedQuery.split("").join(".*"), "i");
+      return regex.test(item);
+    }
+
+    return false;
   }
 
   @observes("filter", "onlyOverridden", "model")
@@ -124,7 +158,9 @@ export default class AdminSiteSettingsController extends Controller {
     if (this._skipBounce) {
       this.set("_skipBounce", false);
     } else {
-      this.filterContentNow(this.categoryNameKey);
+      if (!this.isDestroyed) {
+        this.filterContentNow(this.categoryNameKey);
+      }
     }
   }
 
