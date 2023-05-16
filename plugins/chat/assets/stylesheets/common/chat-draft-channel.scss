@@ -37,7 +37,9 @@
     }
   }
 
-  .chat-composer__wrapper {
-    padding-bottom: 0.5em;
+  .ios-device.keyboard-visible & {
+    .chat-composer__wrapper {
+      padding-bottom: 1rem;
+    }
   }
 }
