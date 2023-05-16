@@ -200,6 +200,7 @@ pl_PL:
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
     site_settings:
+      invalid_site_setting: "Brak ustawienia o nazwie '%{name}'."
       invalid_category_id: "Podana kategoria nie istnieje"
       invalid_choice:
         one: "Podano nieprawidłowy wybór %{name}"

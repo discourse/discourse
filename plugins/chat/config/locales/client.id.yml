@@ -34,9 +34,19 @@ id:
       create: "Buat"
       cancel: "Batal"
       cancel_reply: "Batalkan balasan"
+      chat_channels: "Kanal"
+      browse_all_channels: "Jelajahi semua kanal"
+      move_to_channel:
+        title: "Pindahkan pesan ke kanal"
+        instructions:
+          other: "Anda memindahkan <strong>%{count}</strong> pesan. Pilih kanal tujuan. Pesan placeholder akan dibuat di kanal <strong>%{channelTitle}</strong> untuk menunjukkan bahwa pesan ini telah dipindahkan."
+        confirm_move: "Pindahkan Pesan"
       channel_settings:
+        title: "Pengaturan kanal"
         edit: "Ubah"
         add: "Menambahkan"
+        close_channel: "Tutup kanal"
+        open_channel: "Buka kanal"
         join: "Gabung"
         leave: "Keluar"
       close: "Tutup"
