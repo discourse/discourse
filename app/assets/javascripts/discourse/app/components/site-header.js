@@ -452,7 +452,13 @@ export default SiteHeaderComponent.extend({
 
   @bind
   updateHeaderOffset() {
-    const headerWrapTop = this.headerWrap.getBoundingClientRect().top;
+    let headerWrapTop = this.headerWrap.getBoundingClientRect().top;
+
+    if (DEBUG && isTesting()) {
+      headerWrapTop -= document
+        .getElementById("ember-testing-container")
+        .getBoundingClientRect().top;
+    }
 
     const documentStyle = document.documentElement.style;
 
