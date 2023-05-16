@@ -378,9 +378,10 @@ export default Component.extend(KeyEnterEscape, {
 
       schedule("afterRender", () => {
         if (this.site.mobileView) {
-          this.element.style.left = `${
-            (window.innerWidth - this.element.clientWidth) / 2
-          }px`;
+          this.textRange = window
+            .getSelection()
+            .anchorNode.parentElement.closest(".topic-post");
+          this._popper?.update();
         }
         document.querySelector("#fast-edit-input")?.focus();
       });
