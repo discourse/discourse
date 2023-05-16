@@ -312,7 +312,7 @@
 }
 
 .reviewable-scores {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   min-width: 50%;
   color: var(--primary-high);
 
@@ -472,6 +472,45 @@
     &.is-collapsed {
       max-height: 50vh;
       overflow: hidden;
+
+      &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 25%;
+        width: 100%;
+        background: linear-gradient(to bottom, transparent, var(--secondary));
+      }
+
+      + .post-body__toggle-btn {
+        transform: translateX(-50%) translateY(-50%);
+      }
+    }
+    p {
+      margin-bottom: 0;
+    }
+    &__toggle-btn {
+      background: var(--primary-very-low);
+      color: var(--primary-high);
+      font-size: var(--font-down-2);
+      box-shadow: shadow("dropdown-lite");
+      margin-left: 50%;
+      transform: translateX(-50%);
+      border-radius: 4px;
+
+      .d-icon {
+        color: var(--primary-high);
+      }
+
+      &:hover {
+        background: var(--primary-very-low);
+        color: var(--tertiary);
+
+        .d-icon {
+          color: var(--tertiary);
+        }
+      }
     }
 
     &__scroll {
@@ -491,7 +530,6 @@
       }
     }
 
-    p,
     aside {
       margin: 0 0 1em 0;
     }
