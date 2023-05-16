@@ -10,7 +10,6 @@ requires = []
 formatters = []
 verbose = false
 fail_fast = nil
-random = true
 seed = rand(2**16)
 
 OptionParser
@@ -36,19 +35,6 @@ OptionParser
           nil
         end
       fail_fast = (n.nil? || n < 1) ? 1 : n
-    end
-
-    opts.on(
-      "--order TYPE",
-      "Run examples by the specified order type. ('random', 'defined')",
-    ) do |order|
-      if order == "random"
-        random = true
-      elsif order == "defined"
-        random = false
-      else
-        raise "Incorrect order: #{order} (expected: 'random', 'defined')"
-      end
     end
 
     opts.on("--seed SEED", "The seed for the random order") { |s| seed = s.to_i }
@@ -80,7 +66,6 @@ success =
     verbose: verbose,
     fail_fast: fail_fast,
     use_runtime_info: use_runtime_info,
-    random: random,
     seed: seed.to_s,
   )
 
