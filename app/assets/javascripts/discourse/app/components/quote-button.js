@@ -24,6 +24,7 @@ import toMarkdown from "discourse/lib/to-markdown";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
 import { createPopper } from "@popperjs/core";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
+import discourseLater from "discourse-common/lib/later";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -378,12 +379,13 @@ export default Component.extend(KeyEnterEscape, {
 
       schedule("afterRender", () => {
         if (this.site.mobileView) {
-          this.textRange = window
-            .getSelection()
-            .anchorNode.parentElement.closest(".topic-post");
+          this.textRange = document.querySelector("#main-outlet");
           this._popper?.update();
         }
-        document.querySelector("#fast-edit-input")?.focus();
+        discourseLater(() => {
+          const fastEditinput = document.querySelector("#fast-edit-input");
+          fastEditinput?.focus();
+        }, 50);
       });
     } else {
       const postId = this.quoteState.postId;
