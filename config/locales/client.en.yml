@@ -6050,7 +6050,7 @@ en:
         title: "Settings"
         no_results: "No results found."
         more_site_setting_results:
-          one: "There is more than 1 result. Please refine your search or select a category."
+          one: "There is more than %{count} result. Please refine your search or select a category."
           other: "There are more than %{count} results. Please refine your search or select a category."
         clear_filter: "Clear"
         add_url: "add URL"
