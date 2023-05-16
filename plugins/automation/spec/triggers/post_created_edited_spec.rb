@@ -101,5 +101,45 @@ describe "PostCreatedEdited" do
         end
       end
     end
+
+    context "when action_type is set to create" do
+      before do
+        automation.upsert_field!("action_type", "choices", { value: "created" }, target: "trigger")
+      end
+
+      it "fires the trigger only for create" do
+        post = nil
+
+        list = capture_contexts { post = PostCreator.create(user, basic_topic_params) }
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+        expect(list[0]["action"].to_s).to eq("create")
+
+        list = capture_contexts { post.revise(post.user, raw: "this is another cool topic") }
+
+        expect(list.length).to eq(0)
+      end
+    end
+
+    context "when action_type is set to edit" do
+      before do
+        automation.upsert_field!("action_type", "choices", { value: "edited" }, target: "trigger")
+      end
+
+      it "fires the trigger only for edit" do
+        post = nil
+
+        list = capture_contexts { post = PostCreator.create(user, basic_topic_params) }
+
+        expect(list.length).to eq(0)
+
+        list = capture_contexts { post.revise(post.user, raw: "this is another cool topic") }
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+        expect(list[0]["action"].to_s).to eq("edit")
+      end
+    end
   end
 end

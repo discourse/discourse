@@ -135,12 +135,17 @@ en:
               label: Topic ID
         post_created_edited:
           fields:
+            action_type:
+              label: Action type
+              description: "Optional, limit triggering to only created or edited events"
             valid_trust_levels:
               label: Valid trust levels
               description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
             restricted_category:
               label: Category
               description: Optional, allows to limit trigger execution to this category
+          created: Created
+          edited: Edited
         category_created_edited:
           fields:
             restricted_category:

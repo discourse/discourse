@@ -21,6 +21,13 @@ module DiscourseAutomation
             next if restricted_category["value"] != category_id
           end
 
+          action_type = automation.trigger_field("action_type")
+          selected_action = action_type["value"]&.to_sym
+
+          if selected_action
+            next if selected_action == :created && action != :create
+            next if selected_action == :edited && action != :edit
+          end
           automation.trigger!("kind" => name, "action" => action, "post" => post)
         end
     end
