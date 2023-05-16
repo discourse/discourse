@@ -1118,10 +1118,10 @@
     ember-cli-babel "^7.26.11"
     ember-modifier-manager-polyfill "^1.2.0"
 
-"@ember/string@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@ember/string/-/string-3.1.0.tgz#aa810f284489fb5810f47c43c06ffd013cee46f5"
-  integrity sha512-kIV8E/OH+QdbUJiMIs2BvzxbVbRGiCjf/cgEhlXEaIMISnkwZdCB/KcywrD21ZApG1A0U8IUSrNox8JojK7ceA==
+"@ember/string@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@ember/string/-/string-3.1.1.tgz#0a5ac0d1e4925259e41d5c8d55ef616117d47ff0"
+  integrity sha512-UbXJ+k3QOrYN4SRPHgXCqYIJ+yWWUg1+vr0H4DhdQPTy8LJfyqwZ2tc5uqpSSnEXE+/1KopHBE5J8GDagAg5cg==
   dependencies:
     ember-cli-babel "^7.26.6"
 
