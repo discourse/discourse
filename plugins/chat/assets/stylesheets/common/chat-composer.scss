@@ -4,7 +4,11 @@
     flex-direction: column;
     z-index: 3;
     background-color: var(--primary-very-low);
-    padding: 12px 10px 0 10px;
+    padding: 12px 10px env(safe-area-inset-bottom) 10px;
+
+    .keyboard-visible & {
+      padding-bottom: 0;
+    }
 
     #chat-full-page-uploader,
     #chat-widget-uploader {
