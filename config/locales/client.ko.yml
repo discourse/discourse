@@ -2035,6 +2035,7 @@ ko:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - 완료됨"
+      admin_problems: "사이트 대시 보드에 대한 새로운 조언"
       dismiss_confirmation:
         body:
           default:

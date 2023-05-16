@@ -2292,6 +2292,7 @@ nl:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - voltooid"
       new_features: "Nieuwe functies beschikbaar!"
+      admin_problems: "Nieuw advies op je websitedashboard"
       dismiss_confirmation:
         body:
           default:

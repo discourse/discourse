@@ -2,7 +2,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, fillIn, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { createDirectMessageChannelDraft } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { Promise } from "rsvp";
 import fabricators from "../helpers/fabricators";
 import { module, test } from "qunit";
@@ -25,7 +25,7 @@ module("Discourse Chat | Component | direct-message-creator", function (hooks) {
 
   test("search", async function (assert) {
     this.set("chat", mockChat(this));
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
 
     await render(
       hbs`<DirectMessageCreator @channel={{this.channel}} @chat={{this.chat}} />`
@@ -37,7 +37,7 @@ module("Discourse Chat | Component | direct-message-creator", function (hooks) {
 
   test("select/deselect", async function (assert) {
     this.set("chat", mockChat(this));
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
 
     await render(
       hbs`<DirectMessageCreator @channel={{this.channel}} @chat={{this.chat}} />`
@@ -54,7 +54,7 @@ module("Discourse Chat | Component | direct-message-creator", function (hooks) {
 
   test("no search results", async function (assert) {
     this.set("chat", mockChat(this, { users: [] }));
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
 
     await render(
       hbs`<DirectMessageCreator @channel={{this.channel}} @chat={{this.chat}} />`
@@ -66,7 +66,7 @@ module("Discourse Chat | Component | direct-message-creator", function (hooks) {
 
   test("loads user on first load", async function (assert) {
     this.set("chat", mockChat(this));
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
 
     await render(
       hbs`<DirectMessageCreator @channel={{this.channel}} @chat={{this.chat}} />`
@@ -78,7 +78,7 @@ module("Discourse Chat | Component | direct-message-creator", function (hooks) {
 
   test("do not load more users after selection", async function (assert) {
     this.set("chat", mockChat(this));
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
 
     await render(
       hbs`<DirectMessageCreator @channel={{this.channel}} @chat={{this.chat}} />`
@@ -90,7 +90,7 @@ module("Discourse Chat | Component | direct-message-creator", function (hooks) {
 
   test("apply is-focused to filter-area on focus input", async function (assert) {
     this.set("chat", mockChat(this));
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
 
     await render(
       hbs`<DirectMessageCreator @channel={{this.channel}} @chat={{this.chat}} /><button class="test-blur">blur</button>`
@@ -105,7 +105,7 @@ module("Discourse Chat | Component | direct-message-creator", function (hooks) {
 
   test("state is reset on channel change", async function (assert) {
     this.set("chat", mockChat(this));
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
 
     await render(
       hbs`<DirectMessageCreator @channel={{this.channel}} @chat={{this.chat}} />`
@@ -115,7 +115,7 @@ module("Discourse Chat | Component | direct-message-creator", function (hooks) {
     assert.strictEqual(query(".filter-usernames").value, "hawk");
 
     this.set("channel", fabricators.chatChannel());
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
 
     assert.strictEqual(query(".filter-usernames").value, "");
     assert.true(exists(".filter-area.is-focused"));
@@ -129,7 +129,7 @@ module("Discourse Chat | Component | direct-message-creator", function (hooks) {
     };
     const chat = mockChat(this, { users: [userWithStatus] });
     this.set("chat", chat);
-    this.set("channel", createDirectMessageChannelDraft());
+    this.set("channel", ChatChannel.createDirectMessageChannelDraft());
 
     await render(
       hbs`<DirectMessageCreator @channel={{this.channel}} @chat={{this.chat}} />`

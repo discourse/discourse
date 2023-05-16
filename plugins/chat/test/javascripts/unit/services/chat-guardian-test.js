@@ -83,12 +83,12 @@ acceptance("Discourse Chat | Unit | Service | chat-guardian", function (needs) {
     set(this.currentUser, "admin", true);
     set(this.currentUser, "moderator", true);
 
-    channel.set("status", "read_only");
+    channel.status = "read_only";
     assert.notOk(this.chatGuardian.canArchiveChannel(channel));
-    channel.set("status", "open");
+    channel.status = "open";
 
-    channel.set("status", "archived");
+    channel.status = "archived";
     assert.notOk(this.chatGuardian.canArchiveChannel(channel));
-    channel.set("status", "open");
+    channel.status = "open";
   });
 });

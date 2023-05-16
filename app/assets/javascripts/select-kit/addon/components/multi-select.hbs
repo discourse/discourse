@@ -30,32 +30,24 @@
       </div>
     {{/if}}
 
-    {{#if this.selectKit.isLoading}}
-      <span class="is-loading">
-        {{#if this.site}}
-          {{loading-spinner size="small"}}
-        {{/if}}
-      </span>
-    {{else}}
-      {{#each this.collections as |collection|}}
-        {{component
-          (component-for-collection collection.identifier this.selectKit)
-          collection=collection
-          selectKit=this.selectKit
-          value=this.value
-        }}
-      {{/each}}
+    {{#each this.collections as |collection|}}
+      {{component
+        (component-for-collection collection.identifier this.selectKit)
+        collection=collection
+        selectKit=this.selectKit
+        value=this.value
+      }}
+    {{/each}}
 
-      {{#if this.selectKit.filter}}
-        {{#if this.selectKit.hasNoContent}}
-          <span class="no-content" role="alert">
-            {{i18n "select_kit.no_content"}}
-          </span>
-        {{else}}
-          <span class="results-count" role="alert">
-            {{i18n "select_kit.results_count" count=this.mainCollection.length}}
-          </span>
-        {{/if}}
+    {{#if this.selectKit.filter}}
+      {{#if this.selectKit.hasNoContent}}
+        <span class="no-content" role="alert">
+          {{i18n "select_kit.no_content"}}
+        </span>
+      {{else}}
+        <span class="results-count" role="alert">
+          {{i18n "select_kit.results_count" count=this.mainCollection.length}}
+        </span>
       {{/if}}
     {{/if}}
   </SelectKit::SelectKitBody>

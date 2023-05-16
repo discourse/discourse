@@ -66,6 +66,16 @@ module PageObjects
         end
       end
 
+      def copy_link(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='copyLink']").click
+      end
+
+      def click_more_button
+        find(".more-buttons").click
+      end
+
       def hover_message(message)
         message_by_id(message.id).hover
       end
@@ -76,6 +86,12 @@ module PageObjects
 
       def message_by_id_selector(id)
         ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
+      end
+
+      def select_message(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='select']").click
       end
 
       def has_deleted_message?(message, count: 1)

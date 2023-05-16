@@ -68,7 +68,7 @@ module Chat
           @staged_id,
           staged_thread_id: @staged_thread_id,
         )
-        resolved_thread&.increment_replies_count_cache
+        post_process_resolved_thread
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
         @chat_channel.touch(:last_message_sent_at)
@@ -191,12 +191,14 @@ module Chat
         @chat_message.in_reply_to.thread_id = thread.id
       end
 
-      Chat::Publisher.publish_thread_created!(
-        @chat_message.chat_channel,
-        @chat_message.in_reply_to,
-        thread.id,
-        @staged_thread_id,
-      )
+      if @chat_message.chat_channel.threading_enabled
+        Chat::Publisher.publish_thread_created!(
+          @chat_message.chat_channel,
+          @chat_message.in_reply_to,
+          thread.id,
+          @staged_thread_id,
+        )
+      end
 
       @chat_message.thread_id = thread.id
 
@@ -225,6 +227,12 @@ module Chat
 
     def resolved_thread
       @existing_thread || @chat_message.thread
+    end
+
+    def post_process_resolved_thread
+      return if resolved_thread.blank?
+      resolved_thread.increment_replies_count_cache
+      Chat::UserChatThreadMembership.find_or_create_by!(user: @user, thread: resolved_thread)
     end
   end
 end

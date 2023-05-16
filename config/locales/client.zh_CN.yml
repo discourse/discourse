@@ -2235,6 +2235,7 @@ zh_CN:
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
+      admin_problems: "站点信息中心的新建议"
       dismiss_confirmation:
         body:
           default:

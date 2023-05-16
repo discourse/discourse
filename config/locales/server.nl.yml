@@ -2099,7 +2099,6 @@ nl:
     enable_sitemap: "Genereer een sitemap voor je website en neem deze op in het bestand robots.txt."
     sitemap_page_size: "Aantal URL's om op te nemen in elke sitemappagina. Maximaal 50.000"
     enable_user_status: "(experimenteel) Sta gebruikers toe om een aangepast statusbericht in te stellen (emoji + beschrijving)."
-    enable_user_tips: "(experimenteel) Schakel nieuwe gebruikerstips in die belangrijke functies beschrijven"
     short_title: "De korte titel wordt gebruikt op het startscherm van de gebruiker, de starter, of andere plaatsen waar ruimte beperkt kan zijn. Beperk de naam tot 12 tekens."
     dashboard_hidden_reports: "Toestaan dat de opgegeven rapporten worden verborgen op het dashboard."
     dashboard_visible_tabs: "Kiezen welke dashboardtabbladen zichtbaar zijn."
@@ -3137,15 +3136,6 @@ nl:
       title: "Externe afbeeldingen downloaden uitgeschakeld"
       subject_template: "Het downloaden van externe afbeeldingen is uitgeschakeld"
       text_body_template: "De instelling 'download_remote_images_to_local' is uitgeschakeld omdat de schijfruimtelimiet van 'download_remote_images_threshold' is bereikt."
-    dashboard_problems:
-      title: "Dashboardproblemen"
-      subject_template: "Nieuw advies op je websitedashboard"
-      text_body_template: |
-        We hebben nieuw advies en aanbevelingen voor je op basis van je huidige website-instellingen.
-
-        [Ga naar het websitedashboard](%{base_url}/admin) om het te bekijken.
-
-        Als er niets te zien is op je dashboard, kan het zijn dat een ander medewerker al iets heeft gedaan met dit advies. Een lijst met medewerkeracties is te vinden in je [medewerkeractielogs](%{base_url}/admin/logs/medewerkerf_action_logs).
     new_user_of_the_month:
       title: "Je bent een nieuwe gebruiker van de maand!"
       subject_template: "Je bent een nieuwe gebruiker van de maand!"

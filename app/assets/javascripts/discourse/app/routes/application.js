@@ -129,7 +129,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     ),
 
     showForgotPassword() {
-      this.controllerFor("forgot-password").setProperties({
+      getOwner(this).lookup("controller:forgot-password").setProperties({
         offerHelp: null,
         helpSeen: false,
       });
@@ -190,6 +190,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         }
         modalController.set("name", null);
       }
+      modalController.hidden = true;
     },
 
     /**
@@ -259,7 +260,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
       this._autoLogin("login", {
-        notAuto: () => this.controllerFor("login").resetForm(),
+        notAuto: () => getOwner(this).lookup("controller:login").resetForm(),
       });
     }
   },
@@ -289,9 +290,11 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      this.controllerFor("login").send("externalLogin", methods[0], {
-        signup,
-      });
+      getOwner(this)
+        .lookup("controller:login")
+        .send("externalLogin", methods[0], {
+          signup,
+        });
     } else {
       showModal(modal, { modalClass, titleAriaElementId });
       notAuto?.();

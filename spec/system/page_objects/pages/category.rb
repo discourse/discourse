@@ -65,6 +65,10 @@ module PageObjects
         find(".select-category-template").click
       end
 
+      def new_topic_button
+        find("#create-topic")
+      end
+
       CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR = ".category-navigation .nav-item_new"
 
       def has_no_new_topics?

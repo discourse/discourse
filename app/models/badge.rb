@@ -119,7 +119,7 @@ class Badge < ActiveRecord::Base
   validates :badge_type, presence: true
   validates :allow_title, inclusion: [true, false]
   validates :multiple_grant, inclusion: [true, false]
-  validates :description, length: { maximum: 250 }
+  validates :description, length: { maximum: 500 }
   validates :long_description, length: { maximum: 1000 }
 
   scope :enabled, -> { where(enabled: true) }

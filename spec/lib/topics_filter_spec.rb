@@ -225,54 +225,10 @@ RSpec.describe TopicsFilter do
         Fabricate(:category, parent_category: category2, name: "category2 subcategory")
       end
 
-      fab!(:private_category) do
-        Fabricate(:private_category, group: group, slug: "private-category")
-      end
-
       fab!(:topic_in_category) { Fabricate(:topic, category: category) }
       fab!(:topic_in_category_subcategory) { Fabricate(:topic, category: category_subcategory) }
       fab!(:topic_in_category2) { Fabricate(:topic, category: category2) }
       fab!(:topic_in_category2_subcategory) { Fabricate(:topic, category: category2_subcategory) }
-      fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
-
-      describe "when query string is `-category:category`" do
-        it "ignores the filter because the prefix is invalid" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("-category:category")
-              .pluck(:id),
-          ).to contain_exactly(
-            topic_in_category.id,
-            topic_in_category_subcategory.id,
-            topic_in_category2.id,
-            topic_in_category2_subcategory.id,
-            topic_in_private_category.id,
-          )
-        end
-      end
-
-      describe "when query string is `category:private-category`" do
-        it "should not return any topics when user does not have access to specified category" do
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new)
-              .filter_from_query_string("category:private-category")
-              .pluck(:id),
-          ).to eq([])
-        end
-
-        it "should return topics from specified category when user has access to specified category" do
-          group.add(user)
-
-          expect(
-            TopicsFilter
-              .new(guardian: Guardian.new(user))
-              .filter_from_query_string("category:private-category")
-              .pluck(:id),
-          ).to contain_exactly(topic_in_private_category.id)
-        end
-      end
 
       describe "when query string is `category:category`" do
         it "should return topics from specified category and its subcategories" do
@@ -357,6 +313,65 @@ RSpec.describe TopicsFilter do
         end
       end
 
+      describe "when query string is `-category:category`" do
+        it "should not return any topics from specified category or its subcategories" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-category:category")
+              .pluck(:id),
+          ).to contain_exactly(topic_in_category2.id, topic_in_category2_subcategory.id)
+        end
+      end
+
+      describe "when query string is `-category:category2,category`" do
+        it "should not return any topics from either specified categories or their subcategories" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-category:category2,category")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+
+      describe "when query string is `-category:category -category:category2-subcategory`" do
+        it "should not return any topics from either specified category or their subcategories" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-category:category -category:category2-subcategory")
+              .pluck(:id),
+          ).to contain_exactly(topic_in_category2.id)
+        end
+      end
+
+      describe "when query string is `-=category:category`" do
+        it "should not return any topics from the specified category only" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-=category:category")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_in_category_subcategory.id,
+            topic_in_category2.id,
+            topic_in_category2_subcategory.id,
+          )
+        end
+      end
+
+      describe "when query string is `-=category:category,category2`" do
+        it "should not return any topics from the specified categories only" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-=category:category,category2")
+              .pluck(:id),
+          ).to contain_exactly(topic_in_category_subcategory.id, topic_in_category2_subcategory.id)
+        end
+      end
+
       describe "when query string is `=category:category`" do
         it "should not return topics from subcategories`" do
           expect(
@@ -376,6 +391,77 @@ RSpec.describe TopicsFilter do
               .filter_from_query_string("=category:category,category2")
               .pluck(:id),
           ).to contain_exactly(topic_in_category.id, topic_in_category2.id)
+        end
+      end
+
+      describe "when query string is `category:category2 -=category:category2-subcategory`" do
+        it "should return topics from category2 and its subcategories but not from the category2-subcategory" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string(
+                "category:category2 -=category:category2:category2-subcategory",
+              )
+              .pluck(:id),
+          ).to contain_exactly(topic_in_category2.id)
+        end
+
+        describe "when max category nesting is 3" do
+          fab!(:category2_subcategory_subcategory) do
+            SiteSetting.max_category_nesting = 3
+            Fabricate(:category, parent_category: category2_subcategory, name: "sub-subcategory")
+          end
+
+          fab!(:topic_in_category2_subcategory_subcategory) do
+            Fabricate(:topic, category: category2_subcategory_subcategory)
+          end
+
+          before { SiteSetting.max_category_nesting = 3 }
+
+          it "should return topics from category2, category2's sub-categories and category2's sub-sub-categories but not from the category2-subcategory only" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string(
+                  "category:category2 -=category:category2:category2-subcategory",
+                )
+                .pluck(:id),
+            ).to contain_exactly(
+              topic_in_category2.id,
+              topic_in_category2_subcategory_subcategory.id,
+            )
+          end
+        end
+      end
+
+      describe "when `slug_generation_method` site setting is set to encoded" do
+        before do
+          SiteSetting.slug_generation_method = "encoded"
+          category.update!(name: "日本語", slug: "日本語")
+        end
+
+        describe "when query string is `category:日本語`" do
+          it 'should return topics from category with slug "日本語"' do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("category:日本語")
+                .pluck(:id),
+            ).to contain_exactly(topic_in_category.id, topic_in_category_subcategory.id)
+          end
+        end
+
+        describe "when query string is `category:日本語:안녕하세요`" do
+          before { category_subcategory.update!(name: "안녕하세요 ", slug: "안녕하세요 ") }
+
+          it "should return topics from category with slug '안녕하세요'" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("category:日本語:안녕하세요")
+                .pluck(:id),
+            ).to contain_exactly(topic_in_category_subcategory.id)
+          end
         end
       end
 
@@ -814,6 +900,19 @@ RSpec.describe TopicsFilter do
             .pluck(:id),
         ).to contain_exactly(topic_without_tag.id, topic_with_group_only_tag.id)
       end
+
+      describe "when query string is tag:日べé1" do
+        before { tag.update!(name: "日べé1") }
+
+        it "should return topics that are tagged with the specified tag" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tag:日べé1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+      end
     end
 
     describe "when filtering by topic author" do
@@ -1235,20 +1334,6 @@ RSpec.describe TopicsFilter do
         fab!(:topic3) { Fabricate(:topic, category: category) }
 
         include_examples "ordering topics filters", "category", "category name"
-
-        describe "when query string is `order:category` and there are multiple topics in a category" do
-          fab!(:topic4) { Fabricate(:topic, category: category) }
-          fab!(:topic5) { Fabricate(:topic, category: category2) }
-
-          it "should return topics ordered by category name in descending order and then topic id in ascending order" do
-            expect(
-              TopicsFilter
-                .new(guardian: Guardian.new)
-                .filter_from_query_string("order:category")
-                .pluck(:id),
-            ).to eq([topic2.id, topic.id, topic5.id, topic3.id, topic4.id])
-          end
-        end
       end
 
       describe "composing multiple order filters" do

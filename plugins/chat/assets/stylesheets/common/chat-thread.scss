@@ -1,8 +1,8 @@
 .chat-thread {
   display: flex;
   flex-direction: column;
-  height: 100%;
   position: relative;
+  @include chat-height;
 
   &__header {
     height: var(--chat-header-offset);
@@ -26,9 +26,5 @@
     overscroll-behavior: contain;
     display: flex;
     flex-direction: column;
-  }
-
-  .chat-composer__wrapper {
-    padding-bottom: 28px;
   }
 }

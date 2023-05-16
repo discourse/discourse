@@ -204,9 +204,9 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.emojiDenyList = #{Emoji.denied.to_json};
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor).to_json};
-        __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
-        __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
+        __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor, engine: :js).to_json};
+        __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace, engine: :js).to_json};
+        __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link, engine: :js).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
       JS
 

@@ -79,7 +79,11 @@ pl_PL:
       collapse: "Zwiń szufladę czatu"
       expand: "Rozwiń szufladę czatu"
       confirm_flag: "Czy na pewno chcesz oflagować wiadomość od %{username}?"
-      deleted: "Wiadomość została usunięta. [view]"
+      deleted:
+        one: "Wiadomość została usunięta. [view]"
+        few: "%{count} wiadomości zostały usunięte. [view all]"
+        many: "%{count} wiadomości zostało usuniętych. [view all]"
+        other: "%{count} wiadomości zostało usuniętych. [view all]"
       hidden: "Wiadomość została ukryta. [view]"
       delete: "Usuń"
       edited: "edytowane"

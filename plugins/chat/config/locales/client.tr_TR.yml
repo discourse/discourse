@@ -84,7 +84,9 @@ tr_TR:
       collapse: "Sohbet Çekmecesini Daralt"
       expand: "Sohbet Çekmecesini Genişlet"
       confirm_flag: "%{username} adlı kullanıcının mesajına bayrak eklemek istediğinizden emin misiniz?"
-      deleted: "Bir mesaj silindi. [görüntüleyin]"
+      deleted:
+        one: "Bir mesaj silindi. [görüntüleyin]"
+        other: "%{count} mesaj silindi. [tümünü görüntüle]"
       hidden: "Bir mesaj gizlendi. [görüntüleyin]"
       delete: "Sil"
       edited: "düzenlendi"

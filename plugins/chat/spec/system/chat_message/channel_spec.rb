@@ -37,5 +37,30 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
 
       expect(cdp.read_clipboard).to include("/chat/c/-/#{channel_1.id}/#{message_1.id}")
     end
+
+    context "when the message is part of a thread" do
+      before do
+        SiteSetting.enable_experimental_chat_threaded_discussions = true
+        channel_1.update!(threading_enabled: true)
+      end
+
+      fab!(:thread_1) do
+        chat_thread_chain_bootstrap(
+          channel: channel_1,
+          users: [current_user, Fabricate(:user)],
+          messages_count: 2,
+        )
+      end
+
+      it "copies the link to the message and not to the thread" do
+        chat.visit_channel(channel_1)
+
+        channel.copy_link(thread_1.original_message)
+
+        expect(cdp.read_clipboard).to include(
+          "/chat/c/-/#{channel_1.id}/#{thread_1.original_message.id}",
+        )
+      end
+    end
   end
 end

@@ -2514,6 +2514,7 @@ ru:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} — завершено"
       new_features: "Появились новые функции!"
+      admin_problems: "Новые советы в панели администратора"
       dismiss_confirmation:
         body:
           default:

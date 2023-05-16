@@ -2047,7 +2047,6 @@ ja:
     enable_sitemap: "サイトのサイトマップを生成し、robots.txt ファイルに含めます。"
     sitemap_page_size: "各サイトマップページに含める URL の数。最大 50,000"
     enable_user_status: "(実験的) ユーザーがカスタムステータスメッセージ (絵文字 + 説明) を設定できるようにします。"
-    enable_user_tips: "(実験的) 重要な機能をユーザーに説明する新しいユーザーヒントを有効にする"
     short_title: "短いタイトルはユーザーのホーム画面、ランチャー、またはスペースが限られている場所に使用されます。12 文字に制限する必要があります。"
     dashboard_hidden_reports: "ダッシュボードから指定されたレポートを非表示にすることを許可する。"
     dashboard_visible_tabs: "表示するダッシュボードのタブを選択します。"
@@ -3056,15 +3055,6 @@ ja:
       title: "リモート画像のダウンロードは無効化されています"
       subject_template: "リモート画像のダウンロードは無効化されました"
       text_body_template: "`download_remote_images_threshold` のディスク空き容量制限に達したため、`download_remote_images_to_local` 設定は無効になりました。"
-    dashboard_problems:
-      title: "ダッシュボードの問題"
-      subject_template: "サイトダッシュボードに関する新しいアドバイス"
-      text_body_template: |
-        あなたの現在のサイト設定に基づき、新しいアドバイスと推奨事項がいくつかあります。
-
-        [サイトダッシュボードにアクセス](%{base_url}/admin)して、それらをご覧ください。
-
-        ダッシュボードに何も表示されない場合は、別のスタッフメンバーがすでにこのアドバイスに対応した可能性があります。スタッフ操作のリストは[スタッフ操作ログ](%{base_url}/admin/logs/staff_action_logs)をご覧ください。
     new_user_of_the_month:
       title: "あなたは今月の新規ユーザーです！"
       subject_template: "あなたは今月の新規ユーザーです！"

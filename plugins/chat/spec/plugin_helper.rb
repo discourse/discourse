@@ -27,7 +27,7 @@ module ChatSystemHelpers
     Fabricate(:user_chat_channel_membership, chat_channel: channel, user: user)
   end
 
-  def chat_thread_chain_bootstrap(channel:, users:, messages_count: 4)
+  def chat_thread_chain_bootstrap(channel:, users:, messages_count: 4, thread_attrs: {})
     last_user = nil
     last_message = nil
 
@@ -50,6 +50,7 @@ module ChatSystemHelpers
     end
 
     last_message.thread.set_replies_count_cache(messages_count - 1, update_db: true)
+    last_message.thread.update!(thread_attrs) if thread_attrs.any?
     last_message.thread
   end
 end

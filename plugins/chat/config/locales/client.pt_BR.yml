@@ -78,7 +78,6 @@ pt_BR:
       close: "Fechar"
       collapse: "Recolher gaveta de chat"
       confirm_flag: "Tem certeza de que deseja sinalizar a mensagem de %{username}?"
-      deleted: "Uma mensagem foi excluída. [view]"
       hidden: "Uma mensagem foi ocultada. [view]"
       delete: "Excluir"
       edited: "editou"

@@ -29,7 +29,6 @@ RSpec.describe Chat::AutoRemove::HandleChatAllowedGroupsChange do
 
       context "when new_allowed_groups is empty" do
         let(:new_allowed_groups) { "" }
-        let(:action) { UserHistory.where(custom_type: "chat_auto_remove_membership").last }
 
         before do
           public_channel_1.add(user_1)
@@ -95,11 +94,26 @@ RSpec.describe Chat::AutoRemove::HandleChatAllowedGroupsChange do
 
         it "logs a staff action" do
           result
-          expect(action).to have_attributes(
-            details:
-              "users_removed: 2\nchannel_id: #{public_channel_2.id}\nevent: chat_allowed_groups_changed",
-            acting_user_id: Discourse.system_user.id,
-            custom_type: "chat_auto_remove_membership",
+
+          changes =
+            UserHistory
+              .where(custom_type: "chat_auto_remove_membership")
+              .all
+              .map { |uh| uh.slice(:details, :acting_user_id) }
+
+          expect(changes).to match_array(
+            [
+              {
+                details:
+                  "users_removed: 2\nchannel_id: #{public_channel_1.id}\nevent: chat_allowed_groups_changed",
+                acting_user_id: Discourse.system_user.id,
+              },
+              {
+                details:
+                  "users_removed: 2\nchannel_id: #{public_channel_2.id}\nevent: chat_allowed_groups_changed",
+                acting_user_id: Discourse.system_user.id,
+              },
+            ],
           )
         end
       end

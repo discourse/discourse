@@ -846,6 +846,7 @@ cs:
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."
     enable_badges: "Povolit odznaky"
+    version_checks: "Odešlete příkaz ping na Discourse Hub pro aktualizace verzí a zobrazte zprávy o nových verzích na <a href='%{base_path}/admin' target='_blank'>/admin</a> nástěnce"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
     min_password_length: "Minimální povolená délka hesla."
     min_admin_password_length: "Minimální délka heslo pro administrátora."
@@ -877,6 +878,8 @@ cs:
     embed_post_limit: "Maximální počet příspěvků k zabudování."
     tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
     force_lowercase_tags: "Vynutit, aby všechny nové štítky byly psány výhradně malými písmeny."
+    dashboard_hidden_reports: "Povolit skrytí zadaných přehledů z administrační nástěnky."
+    dashboard_visible_tabs: "Vyberte, které záložky administrační nástěnky budou viditelné."
     errors:
       invalid_email: "Neplatná emailová adresa."
       invalid_integer: "Hodnota musí být celé číslo."
@@ -957,14 +960,6 @@ cs:
         few: "%{count} users waiting for approval"
         many: "%{count} users waiting for approval"
         other: "%{count} users waiting for approval"
-    dashboard_problems:
-      subject_template: "Nové rady na řídicím panelu vašeho webu"
-      text_body_template: |
-        Máme pro vás několik nových rad a doporučení na základě aktuálního nastavení webu.
-
-        [Navštivte řídicí panel webu] (%{base_url}/admin), abyste si je mohli prohlédnout.
-
-        Pokud na vašem řídicím panelu není nic vidět, možná již podle této rady postupoval jiný člen redakce. Seznam akcí redaktorů najdete ve vašich [protokolech akcí redakce] (%{base_url}/admin/logs/staff_action_logs).
   unsubscribe_link: |
     Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |

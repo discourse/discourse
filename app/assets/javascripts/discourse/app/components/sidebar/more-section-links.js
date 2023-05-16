@@ -9,8 +9,8 @@ import Component from "@glimmer/component";
 export default class SidebarMoreSectionLinks extends Component {
   @service router;
 
-  @tracked shouldDisplaySectionLinks = false;
   @tracked activeSectionLink;
+  @tracked open = false;
 
   constructor() {
     super(...arguments);
@@ -47,15 +47,13 @@ export default class SidebarMoreSectionLinks extends Component {
 
   @bind
   closeDetails(event) {
-    if (this.shouldDisplaySectionLinks) {
+    if (this.open) {
       const isLinkClick = event.target.className.includes(
         "sidebar-section-link"
       );
 
       if (isLinkClick || this.#isOutsideDetailsClick(event)) {
-        document
-          .querySelector(".sidebar-more-section-links-details")
-          ?.removeAttribute("open");
+        this.open = false;
       }
     }
   }
@@ -71,8 +69,8 @@ export default class SidebarMoreSectionLinks extends Component {
   }
 
   @action
-  toggleSectionLinks(element) {
-    this.shouldDisplaySectionLinks = element.target.hasAttribute("open");
+  toggleSectionLinks() {
+    this.open = !this.open;
   }
 
   #removeClickEventListener() {

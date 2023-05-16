@@ -64,7 +64,6 @@ fa_IR:
       click_to_join: "برای مشاهده کانال‌های موجود، اینجا را کلیک کنید."
       close: "بستن"
       confirm_flag: "آیا برای پرچم گذاری پیام %{username} مطمئن هستید؟"
-      deleted: "یک پیام حذف شد. [view]"
       hidden: "یک پیام پنهان شده است. [view]"
       delete: "حذف"
       edited: "ویرایش شده"

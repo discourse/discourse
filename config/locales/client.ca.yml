@@ -1715,6 +1715,7 @@ ca:
       membership_request_accepted: "Membre acceptat en '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      admin_problems: "Nou consell al tauler de control del vostre lloc web"
       dismiss_confirmation:
         dismiss: "Descarta-ho"
         cancel: "Cancel·la"

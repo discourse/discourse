@@ -213,17 +213,17 @@ export default class ChatMessageInteractor {
   }
 
   bulkSelect(checked) {
-    const channel = this.message.channel;
-    const lastSelectedIndex = channel.findIndexOfMessage(
+    const manager = this.message.manager;
+    const lastSelectedIndex = manager.findIndexOfMessage(
       this.pane.lastSelectedMessage.id
     );
-    const newlySelectedIndex = channel.findIndexOfMessage(this.message.id);
+    const newlySelectedIndex = manager.findIndexOfMessage(this.message.id);
     const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(
       (a, b) => a - b
     );
 
     for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
-      channel.messages[i].selected = checked;
+      manager.messages[i].selected = checked;
     }
   }
 
@@ -233,7 +233,7 @@ export default class ChatMessageInteractor {
     const threadId = this.message.thread?.id;
 
     let url;
-    if (threadId) {
+    if (this.context === MESSAGE_CONTEXT_THREAD && threadId) {
       url = getURL(`/chat/c/-/${channelId}/t/${threadId}`);
     } else {
       url = getURL(`/chat/c/-/${channelId}/${this.message.id}`);

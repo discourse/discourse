@@ -2211,6 +2211,7 @@ hu:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – kész"
       new_features: "Új funkciók érhetők el!"
+      admin_problems: "Új tanácsok a webhely irányítópultján"
       dismiss_confirmation:
         body:
           default:

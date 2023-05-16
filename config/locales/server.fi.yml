@@ -2004,6 +2004,7 @@ fi:
     allowed_href_schemes: "Linkeissä sallitut skeemat http:n ja https:n lisäksi."
     embed_post_limit: "Upotettavien viestien maksimimäärä."
     embed_username_required: "Käyttäjätunnus vaaditaan ketjun luomiseksi."
+    notify_about_reviewable_item_after: "Jos tarkastettavia kohteita ei ole käsitelty määritetyn tuntimäärän sisällä, ilmoita valvojille yksityisviesteillä. Poista käytöstä arvolla 0."
     show_create_topics_notice: "Jos sivustolla on vähemmän kuin 5 julkista ketjua, kehota ylläpitäjiä aloittamaan ketjuja."
     delete_drafts_older_than_n_days: "Poista yli (n) päivää vanhat luonnokset."
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 0, tynkäketjuja ei poistetan koskaan."
@@ -2113,7 +2114,6 @@ fi:
     enable_sitemap: "Luo sivustokartta sivustollesi ja sisällytä se robots.txt-tiedostoon."
     sitemap_page_size: "Kuhunkin sivustokartan sivuun lisättävien URL-osoitteiden määrä. Enintään 50 000."
     enable_user_status: "(kokeellinen) Salli käyttäjien asettaa mukautettu tilaviesti (emoji + kuvaus)."
-    enable_user_tips: "(kokeellinen) Ota käyttöön uuden käyttäjän vinkit, jotka kuvaavat keskeisiä ominaisuuksia käyttäjille"
     short_title: "Lyhyttä nimeä käytetään käyttäjän aloitusnäytöllä, käynnistysruudussa ja muissa tilanteissa, joissa tilaa on rajallisesti. Sen tulisi olla enintään 12 merkin pituinen."
     dashboard_hidden_reports: "Salli tiettyjen raporttien piilottaminen hallintapaneelista."
     dashboard_visible_tabs: "Valitse mitkä hallintapaneelin välilehdet ovat näkyvillä."
@@ -2133,6 +2133,7 @@ fi:
     default_sidebar_categories: "Valitut alueet näkyvät sivupalkin Alueet-osiossa oletuksena."
     default_sidebar_tags: "Valitut tunnisteet näkyvät sivupalkin Tunnisteet-osiossa oletuksena."
     enable_experimental_hashtag_autocomplete: "KOKEELLINEN: käytä alueille ja tunnisteille uutta automaattista #hashtag-täydennysjärjestelmää, jotka hahmontaa valitun kohteen eri tavalla ja on parantanut hakua"
+    experimental_topics_filter: "KOKEELLINEN: Ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
       invalid_email: "Sähköpostiosoite ei kelpaa."
@@ -3148,15 +3149,6 @@ fi:
       title: "Linkattujen kuvien lataaminen on poistettu käytöstä"
       subject_template: "Linkattujen kuvien lataaminen on poistettu käytöstä"
       text_body_template: "Asetus `download_remote_images_to_local` on poistettu käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
-    dashboard_problems:
-      title: "Hallintapaneelissa ongelmia"
-      subject_template: "Uusia neuvoja sivustosi hallintapaneelissa"
-      text_body_template: |
-        Meillä on joitakin neuvoja ja suosituksiasi nykyisiin sivustoasetuksiisi pohjautuen.
-
-        Katsele niitä [sivustosi hallintapaneelissa](%{base_url}/admin).
-
-        Jos hallintapaneelissa ei näy mitään, toinen henkilökuntalainen on voinut jo ottaa vinkistä vaarin. Luettelo henkilökunnan toimista löytyy [henkilökuntalokista](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Olet kuukauden tulokas!"
       subject_template: "Olet kuukauden tulokas!"
@@ -4370,14 +4362,17 @@ fi:
       agree:
         title: "Kyllä"
       agree_and_suspend:
+        title: "Jäädytä käyttäjä"
         description: "Hyväksy merkintä ja hyllytä käyttäjä."
       agree_and_silence:
         title: "Hiljennä käyttäjä"
         description: "Hyväksy merkintä ja hiljennä käyttäjä."
       agree_and_restore:
+        title: "Palauta viesti"
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       agree_and_hide:
         title: "Piilota viesti"
+        description: "Hyväksy liputtamalla ja piilota julkaisu + lähetä käyttäjälle automattisesti yksityisviesti, jossa häntä pyydetään muokkaamaan sitä."
       delete_single:
         title: "Poista"
       delete:

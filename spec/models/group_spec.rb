@@ -6,9 +6,9 @@ RSpec.describe Group do
   let(:group) { Fabricate(:group) }
 
   describe "Validations" do
-    it { is_expected.to allow_value("#{"a" * 96}.com").for(:automatic_membership_email_domains) }
+    it { is_expected.to allow_value("#{"a" * 996}.com").for(:automatic_membership_email_domains) }
     it do
-      is_expected.not_to allow_value("#{"a" * 97}.com").for(:automatic_membership_email_domains)
+      is_expected.not_to allow_value("#{"a" * 997}.com").for(:automatic_membership_email_domains)
     end
     it { is_expected.to validate_length_of(:bio_raw).is_at_most(3000) }
     it { is_expected.to validate_length_of(:membership_request_template).is_at_most(500) }
@@ -577,6 +577,23 @@ RSpec.describe Group do
     group = Fabricate(:group)
     expect(group.id).to eq Group[group.name].id
     expect(group.id).to eq Group[group.name.to_sym].id
+  end
+
+  it "allows you to lookup a group by integer id" do
+    group = Fabricate(:group)
+    expect(group.id).to eq Group.lookup_groups(group_ids: group.id).first.id
+  end
+
+  it "allows you to lookup groups by comma separated string" do
+    group1 = Fabricate(:group)
+    group2 = Fabricate(:group)
+    expect([group1, group2]).to eq Group.lookup_groups(group_ids: "#{group1.id},#{group2.id}")
+  end
+
+  it "allows you to lookup groups by array" do
+    group1 = Fabricate(:group)
+    group2 = Fabricate(:group)
+    expect([group1, group2]).to eq Group.lookup_groups(group_ids: [group1.id, group2.id])
   end
 
   it "can find desired groups correctly" do

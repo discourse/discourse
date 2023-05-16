@@ -76,7 +76,6 @@ hu:
       collapse: "Csevegőfiók összecsukása"
       expand: "Chat fiók bővítése"
       confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"
-      deleted: "Egy üzenet törölve lett. [megtekintés]"
       hidden: "Egy üzenet el lett rejtve. [megtekintés]"
       delete: "Törlés"
       edited: "szerkesztve"

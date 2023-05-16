@@ -2766,15 +2766,6 @@ gl:
       title: "Descarga de imaxes remotas desactivada"
       subject_template: "A descarga de imaxes remotas foi desactivada"
       text_body_template: "O axuste `download_remote_images_to_local` foi desactivada porque se alcanzou o límite do espazo do disco configurado en `download_remote_images_threshold`."
-    dashboard_problems:
-      title: "Problemas do panel"
-      subject_template: "Novo consello no seu panel de sitio"
-      text_body_template: |
-        Temos algúns novos consellos e recomendacións con base na configuración actual do seu sitio.
-
-        [Visite o seu panel](%{base_url}/admin) e bótelles un ollo.
-
-        Se non ve nada no seu panel, pode ser porque outro membro do equipo xa actuara sobre el. Pode atopar unha listaxe de accións nos seus [rexistros de accións do equipo](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "É o usuario novo do mes!"
       subject_template: "É o usuario novo do mes!"

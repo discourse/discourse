@@ -12,6 +12,8 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel) }
     fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+    fab!(:thread_reply_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
+    fab!(:thread_reply_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:params) { { guardian: guardian, channel_id: channel.id, thread_id: thread.id } }
@@ -84,6 +86,17 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
         it "publishes new last read to clients" do
           expect(messages.map(&:channel)).to include("/chat/user-tracking-state/#{current_user.id}")
+        end
+
+        context "when the user is a member of the thread" do
+          fab!(:membership) do
+            Fabricate(:user_chat_thread_membership, user: current_user, thread: thread)
+          end
+
+          it "updates the last_read_message_id of the thread" do
+            result
+            expect(membership.reload.last_read_message_id).to eq(thread.replies.last.id)
+          end
         end
       end
     end

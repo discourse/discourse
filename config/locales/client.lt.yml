@@ -2035,6 +2035,7 @@ lt:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - baigtas"
+      admin_problems: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
       dismiss_confirmation:
         body:
           default:

@@ -78,7 +78,6 @@ it:
       close: "Chiudi"
       collapse: "Comprimi il cassetto della chat"
       confirm_flag: "Vuoi segnalare il messaggio di %{username}?"
-      deleted: "Un messaggio è stato eliminato. [visualizza]"
       hidden: "Un messaggio è stato nascosto. [visualizza]"
       delete: "Elimina"
       edited: "modificato"

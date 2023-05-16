@@ -2279,6 +2279,7 @@ es:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
       new_features: "¡Nuevas características disponibles!"
+      admin_problems: "Nuevos consejos en tu panel del sitio"
       dismiss_confirmation:
         body:
           default:

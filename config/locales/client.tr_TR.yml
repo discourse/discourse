@@ -2289,6 +2289,7 @@ tr_TR:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - tamamlandı"
       new_features: "Yeni özellikler mevcut!"
+      admin_problems: "Sitenizin kontrol panelinde yeni öneriler mevcut"
       dismiss_confirmation:
         body:
           default:

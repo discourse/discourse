@@ -1309,9 +1309,11 @@ RSpec.describe Report do
       end
 
       after do
+        CachedCounting.reset
         ApplicationRequest.disable
         CachedCounting.disable
       end
+
       it "works" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         2.times { ApplicationRequest.increment!(:page_view_logged_in) }

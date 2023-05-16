@@ -1775,8 +1775,6 @@ el:
       title: "Η λήψη απομακρυσμένων εικόνων απενεργοποιήθηκε"
       subject_template: "Η λήψη απομακρυσμένων εικόνων απενεργοποιήθηκε"
       text_body_template: "Η ρύθμιση `download_remote_images_to_local` απενεργοποιήθηκε επειδή το όριο χώρου στο δίσκο του `download_remote_images_threshold` έχει ξεπεραστεί"
-    dashboard_problems:
-      title: "Προβλήματα Πίνακα"
     new_user_of_the_month:
       title: "Έχεις επιλεχθεί ως Χρήστης του Μήνα!"
       subject_template: "Έχεις επιλεχθεί ως Χρήστης του Μήνα!"

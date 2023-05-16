@@ -10,8 +10,7 @@ RSpec.describe "Chat message - thread", type: :system, js: true do
 
   let(:cdp) { PageObjects::CDP.new }
   let(:chat) { PageObjects::Pages::Chat.new }
-  let(:channel) { PageObjects::Pages::ChatChannel.new }
-  let(:thread) { PageObjects::Pages::ChatThread.new }
+  let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:message_1) { thread_1.chat_messages.first }
 
   before do
@@ -28,7 +27,7 @@ RSpec.describe "Chat message - thread", type: :system, js: true do
       first_message = thread_1.chat_messages.first
       chat.visit_thread(thread_1)
 
-      thread.hover_message(first_message)
+      thread_page.hover_message(first_message)
 
       expect(page).to have_css(
         ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{first_message.id}'] .chat-message.is-active",
@@ -42,7 +41,7 @@ RSpec.describe "Chat message - thread", type: :system, js: true do
     it "copies the link to the thread" do
       chat.visit_thread(thread_1)
 
-      channel.copy_link(message_1)
+      thread_page.copy_link(message_1)
 
       expect(cdp.read_clipboard).to include("/chat/c/-/#{channel_1.id}/t/#{thread_1.id}")
     end

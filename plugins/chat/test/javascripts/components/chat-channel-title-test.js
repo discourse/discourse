@@ -10,12 +10,9 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   setupRenderingTest(hooks);
 
   test("category channel", async function (assert) {
-    this.set(
-      "channel",
-      fabricators.chatChannel({
-        chatable_type: CHATABLE_TYPES.categoryChannel,
-      })
-    );
+    this.channel = fabricators.chatChannel({
+      chatable_type: CHATABLE_TYPES.categoryChannel,
+    });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -30,13 +27,10 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("category channel - escapes title", async function (assert) {
-    this.set(
-      "channel",
-      fabricators.chatChannel({
-        chatable_type: CHATABLE_TYPES.categoryChannel,
-        title: "<div class='xss'>evil</div>",
-      })
-    );
+    this.channel = fabricators.chatChannel({
+      chatable_type: CHATABLE_TYPES.categoryChannel,
+      title: "<div class='xss'>evil</div>",
+    });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -44,13 +38,10 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("category channel - read restricted", async function (assert) {
-    this.set(
-      "channel",
-      fabricators.chatChannel({
-        chatable_type: CHATABLE_TYPES.categoryChannel,
-        chatable: { read_restricted: true },
-      })
-    );
+    this.channel = fabricators.chatChannel({
+      chatable_type: CHATABLE_TYPES.categoryChannel,
+      chatable: { read_restricted: true },
+    });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -58,13 +49,10 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("category channel - not read restricted", async function (assert) {
-    this.set(
-      "channel",
-      fabricators.chatChannel({
-        chatable_type: CHATABLE_TYPES.categoryChannel,
-        chatable: { read_restricted: false },
-      })
-    );
+    this.channel = fabricators.chatChannel({
+      chatable_type: CHATABLE_TYPES.categoryChannel,
+      chatable: { read_restricted: false },
+    });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -72,7 +60,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("direct message channel - one user", async function (assert) {
-    this.set("channel", fabricators.directMessageChatChannel());
+    this.channel = fabricators.directMessageChatChannel();
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -98,7 +86,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
       avatar_template: "/letter_avatar_proxy/v3/letter/t/31188e/{size}.png",
     });
 
-    this.set("channel", channel);
+    this.channel = channel;
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
