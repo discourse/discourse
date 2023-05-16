@@ -1013,7 +1013,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "review link is displayed in the more drawer"
     );
 
-    await publishToMessageBus("/reviewable_counts", {
+    await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
       reviewable_count: 34,
     });
 
