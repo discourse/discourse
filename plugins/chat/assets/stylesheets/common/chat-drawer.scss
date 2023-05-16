@@ -208,6 +208,7 @@ a.chat-drawer-header__title {
   &__close-btn,
   &__back-btn,
   &__full-screen-btn,
+  &__thread-list-btn,
   &__expand-btn {
     height: 30px;
     width: 30px;
@@ -222,6 +223,7 @@ a.chat-drawer-header__title {
 
     .d-icon {
       color: var(--primary-low-mid);
+      margin-right: 0;
     }
 
     &:visited {
