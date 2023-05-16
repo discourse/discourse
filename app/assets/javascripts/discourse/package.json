@@ -17,7 +17,7 @@
     "postinstall": "yarn --silent --cwd .. patch-package"
   },
   "dependencies": {
-    "@ember/string": "^3.0.1",
+    "@ember/string": "^3.1.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
