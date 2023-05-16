@@ -130,6 +130,12 @@ pl_PL:
         composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
       no_public_channels: "Nie dołączyłeś do żadnego kanału."
+      only_chat_push_notifications:
+        title: "Wysyłaj tylko powiadomienia push czatu"
+        description: "Zablokuj wysyłanie wszystkich powiadomień push niezwiązanych z czatem"
+      ignore_channel_wide_mention:
+        title: "Ignoruj wzmianki dotyczące całego kanału"
+        description: "Nie wysyłaj powiadomień dla wzmianek dotyczących całego kanału (@here i @all)"
       open: "Otwórz czat"
       open_full_page: "Otwórz czat na pełnym ekranie"
       close_full_page: "Zamknij czat pełnoekranowy"
@@ -152,6 +158,7 @@ pl_PL:
       retry_staged_message:
         title: "Błąd sieci"
         action: "Wyślij ponownie?"
+      unreliable_network: "Sieć jest zawodna, wysyłanie wiadomości i zapisywanie wersji roboczej może nie działać"
       bookmark_message: "Zakładka"
       bookmark_message_edit: "Edytuj zakładkę"
       restore: "Przywróć usuniętą wiadomość"
@@ -181,6 +188,7 @@ pl_PL:
         read_only: "Tylko do odczytu"
         archived_header: "Kanał został zarchiwizowany"
         archived: "Zarchiwizowany"
+        archive_completed: "Zobacz <a target=\"_blank\" href=\"%{topic_url}\">temat archiwum</a>"
         closed_header: "Kanał jest zamknięty"
         closed: "Zamknięta"
         open_header: "Kanał jest otwarty"
@@ -238,6 +246,8 @@ pl_PL:
           many: "%{count} członków"
           other: "%{count} członków"
       create_channel:
+        auto_join_users:
+          public_category_warning: "%{category} to kategoria publiczna. Automatycznie dodać wszystkich ostatnio aktywnych użytkowników do tego kanału?"
         choose_category:
           label: "Wybierz kategorię"
           none: "wybierz jeden..."
@@ -337,6 +347,18 @@ pl_PL:
       replying_indicator:
         single_user: "%{username} pisze"
         multiple_users: "%{commaSeparatedUsernames} i %{lastUsername} piszą"
+        many_users:
+          one: "%{commaSeparatedUsernames} i %{count} inny pisze"
+          few: "%{commaSeparatedUsernames} i %{count} inni piszą"
+          many: "%{commaSeparatedUsernames} i %{count} inni piszą"
+          other: "%{commaSeparatedUsernames} i %{count} innych piszą"
+      flags:
+        off_topic: "Ta wiadomość nie jest związana z bieżącą dyskusją określoną w tytule kanału i prawdopodobnie powinna zostać przeniesiona w inne miejsce."
+        inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."
+        spam: "Ta wiadomość to reklama lub akt wandalizmu. Nie jest przydatna ani istotna dla bieżącego kanału."
+        notify_user: "Chcę porozmawiać z tą osobą bezpośrednio i osobiście o jej przesłaniu."
+      flagging:
+        action: "Oflaguj wiadomość"
       emoji_picker:
         favorites: "Często używane"
         smileys_&_emotion: "Buźki i emocje"
@@ -351,11 +373,23 @@ pl_PL:
         search_placeholder: "Szukaj według nazwy emoji i aliasu..."
         no_results: "Brak wyników"
       thread:
+        title: "Tytuł"
+        view_thread: Zobacz wątek
+        default_title: "Wątek #%{thread_id}"
         replies:
           one: "%{count} odpowiedź"
           few: "%{count} odpowiedzi"
           many: "%{count} odpowiedzi"
           other: "%{count} odpowiedzi"
+        label: Wątek
+        close: "Zamknij wątek"
+        original_message:
+          started_by: "Rozpoczęty przez"
+        settings: "Ustawienia"
+      threads:
+        open: "Otwórz wątek"
+        list: "Trwające dyskusje"
+        none: "Nie uczestniczysz w żadnych wątkach na tym kanale."
       draft_channel_screen:
         header: "Nowa wiadomość"
         cancel: "Anuluj"
@@ -395,6 +429,10 @@ pl_PL:
               label: Wiadomość
             sender:
               label: Nadawca
+    review:
+      types:
+        chat_reviewable_message:
+          title: "Oflagowana wiadomość na czacie"
     keyboard_shortcuts_help:
       chat:
         title: "Czat"

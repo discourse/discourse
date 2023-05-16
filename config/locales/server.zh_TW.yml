@@ -157,8 +157,6 @@ zh_TW:
     embed:
       load_from_remote: "載入貼文時發生了錯誤"
     site_settings:
-      invalid_choice:
-        other: "您定義了無效的選擇%{name}"
       default_categories_already_selected: "不能選擇一個已經用於另一個列表的分類。"
       s3_upload_bucket_is_required: "你沒有填寫“s3_upload_bucket”，不能開啟上傳至 S3。"
       enable_s3_uploads_is_required: "您無法啟用資料庫到 S3，除非您已啟用了 S3 的上傳檔案。"
@@ -429,22 +427,6 @@ zh_TW:
   meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
-  discourse_welcome_topic:
-    title: "歡迎來到我們的社群！"
-    body: |2
-
-      置頂主題的第一段是訪客在主頁看到的歡迎消息。這很重要！
-
-      **編輯**它作為社群的簡要介紹：
-
-      - 什麼人想參與？
-      - 他們能在這找到什麼？
-      - 為什麼他們要來這？
-      - 他們能在哪裡閲讀更多的內容（連結、資源等）？
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      你可能想要在管理 :wrench: （右上角）中關閉這個主題，這樣回覆就不會積壓在這個通告下。
   admin_quick_start_title: "請先閱讀這個：管理員快速啟用導覽"
   category:
     topic_prefix: "對於分類：%{category} 的定義"
@@ -1403,7 +1385,6 @@ zh_TW:
     pop3_polling_password: "POP3 帳戶用來輪詢電子郵件的密碼。"
     pop3_polling_delete_from_server: "從Server端刪除電子郵件。注意：如果禁用此功能，則需要手動清理收件匣。"
     log_mail_processing_failures: "將所有電子郵件處理失敗記錄到<a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: '允許使用者通過電子郵件建立討論話題（需要手動設定或定期從pop3向伺服器擷取訊息）。在每個類別的“設定”選項中設定地址。'
     email_in_min_trust: "能使用 EMail 發表新話題的最低的使用者信任等級"
     email_in_spam_header: "電子郵件標頭以偵測垃圾郵件"
     email_prefix: "EMail主題中使用的 [ 標籤 ]，留空將預設使用 'title'"

@@ -1053,6 +1053,7 @@ de:
           warning: "Bist du sicher, dass du dein hervorgehobenes Thema löschen möchtest?"
       use_current_timezone: "Aktuelle Zeitzone verwenden"
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
+      inactive_user: "Dieser Benutzer ist nicht mehr aktiv."
       expand_profile: "Erweitern"
       sr_expand_profile: "Profildetails erweitern"
       collapse_profile: "Zuklappen"
@@ -1786,6 +1787,9 @@ de:
       suggested_topics:
         title: "Lies weiter!"
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
+      welcome_topic:
+        title: "Das Willkommensthema bearbeiten"
+        content: "Hilf neuen Mitgliedern, sich wie zu Hause zu fühlen, indem du dieses Thema an die Bedürfnisse deiner Gemeinde anpasst."
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -3815,7 +3819,9 @@ de:
         one: "Abzeichen %{count}-mal erhalten"
         other: "Abzeichen %{count}-mal erhalten"
       granted_on: "Verliehen %{date}"
-      others_count: "Andere mit diesem Abzeichen (%{count})"
+      others_count:
+        one: "%{count} Mal an andere vergeben"
+        other: "%{count} Mal an andere vergeben"
       title: Abzeichen
       allow_title: "Du kannst dieses Abzeichen als Titel verwenden"
       multiple_grant: "Du kannst dieses Abzeichen mehrmals verliehen bekommen"
@@ -5636,7 +5642,6 @@ de:
             label: "Emoji hinzufügen"
         title: "Einstellungen"
         no_results: "Keine Ergebnisse gefunden."
-        more_than_30_results: "Es gibt mehr als 30 Ergebnisse. Bitte grenze deine Suche weiter ein oder wähle eine Kategorie aus."
         clear_filter: "Filter zurücksetzen"
         add_url: "URL hinzufügen"
         add_host: "Host hinzufügen"

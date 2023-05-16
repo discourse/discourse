@@ -179,9 +179,6 @@ da:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
     site_settings:
       invalid_category_id: "Du angav en kategori, der ikke findes"
-      invalid_choice:
-        one: "Du angav det ugyldige valg %{name}"
-        other: "Du angav de ugyldige valg %{name}"
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       default_tags_already_selected: "Du kan ikke vælge et mærke, der bruges i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke aktivere overførsler til S3 med mindre du har angivet 's3_upload_bucket'."
@@ -561,20 +558,6 @@ da:
   meta_category_description: "Diskussion om dette websted, hvordan det er organiseret, hvordan det virker og hvordan vi kan forbedre det."
   staff_category_name: "Personale"
   staff_category_description: "Privat kategori for personale diskussioner. Emner er kun synlige for administratorer og moderatorer."
-  discourse_welcome_topic:
-    body: |2
-
-      Det første afsnit af dette fastgjorte emne vil kunne ses som en velkomstbesked for alle nye besøgende på din hjemmeside. Dette er vigtigt!
-
-      **Redigér dette** til en kortfattet beskrivelse af dit fællesskab:
-
-      - Hvem er det rettet mod?
-      - Hvad kan de finde her?
-      - Hvorfor bør de komme her?
-      - Hvor finde de mere information (links, ressourcer, osv.)?
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
   admin_quick_start_title: "LÆS ME FØRST: Admin Quick Start Guide"
   category:
     topic_prefix: "Kategoridefinition for %{category}"

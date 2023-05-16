@@ -347,11 +347,13 @@ hu:
         symbols: "Szimbólumok"
         no_results: "Nincs találat"
       thread:
+        title: "Cím"
         view_thread: Téma megtekintése
         replies:
           one: "%{count} válasz"
           other: "%{count} válasz"
         label: Szál
+        settings: "Beállítások"
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"

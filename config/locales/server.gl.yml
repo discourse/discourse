@@ -178,9 +178,6 @@ gl:
       load_from_remote: "Produciuse un erro ao cargar esta publicación."
     site_settings:
       invalid_category_id: "Especificou unha categoría que non existe"
-      invalid_choice:
-        one: "Especificou a opción non válida %{name}"
-        other: "Especificou opcións non válidas %{name}"
       default_categories_already_selected: "Non pode seleccionar unha categoría utilizada noutra listaxe."
       default_tags_already_selected: "Non pode seleccionar unha etiqueta utilizada noutra listaxe."
       s3_upload_bucket_is_required: "Non se poden activar as cargas a S3 a menos que proporcione un valor 's3_upload_bucket'."
@@ -550,21 +547,6 @@ gl:
   meta_category_description: "Discusións sobre este sitio, a súa organización, como funciona e como se pode mellorar."
   staff_category_name: "Equipo"
   staff_category_description: "Categoría privada para discusións do equipo. Os temas son visíbeis unicamente para administradores e moderadores."
-  discourse_welcome_topic:
-    body: |2
-
-      O primeiro parágrafo deste tema pegado será visible como mensaxe de benvida para todos os novos visitantes na súa páxina de inicio. É, pois, importante!
-
-      **Edite isto** e describa brevemente a súa comunidade:
-
-      - Para quen é?
-      - Que van poder atopar aquí?
-      - Por que deberían vir aquí?
-      - Onde poden ler máis sobre a comunidade (ligazóns, recursos etc)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Quizais queira pechar este tema a través do administrador :wrench: (na parte superior dereita ou na parte inferior) para que as respostas non se acumulen no anuncio.
   admin_quick_start_title: "LER PRIMEIRO: Guía de comezo rápido para administradores"
   category:
     topic_prefix: "Acerca da categoría %{category}"
@@ -1704,7 +1686,6 @@ gl:
     pop3_polling_password: "O contrasinal da conta POP3 na que recoller o correo."
     pop3_polling_delete_from_server: "Eliminar correos do servidor. NOTA: se desactiva isto, deberá limpar manualmente a caixa de entrada"
     log_mail_processing_failures: "Rexistrar todos os erros de procesamento do correo en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Permitir aos usuarios publicar temas novos por correo electrónico (require unha recollida manual ou con pop3). Configure os enderezos na lapela «Configuración» de cada categoría.'
     email_in_min_trust: "O nivel de confianza mínimo requirido para poder publicar vía correo electrónico."
     email_in_authserv_id: "O identificador do servizo que realiza revisións de autenticación no correo entrante. Revisa <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instrucións sobre como configurar isto."
     email_in_spam_header: "A cabeceira de correo para detectar correo lixo."

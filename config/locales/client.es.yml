@@ -1016,6 +1016,7 @@ es:
           warning: "¿Estás seguro de que quieres quitar tu tema destacado?"
       use_current_timezone: "Usar zona horaria actual"
       profile_hidden: "El perfil público de este usuario está oculto."
+      inactive_user: "Este usuario está inactivo"
       expand_profile: "Expandir"
       sr_expand_profile: "Expandir detalles del perfil"
       collapse_profile: "Contraer"
@@ -3724,7 +3725,9 @@ es:
         one: "Insignia ganada %{count} vez"
         other: "Insignia ganada %{count} veces"
       granted_on: "Concedido hace %{date}"
-      others_count: "Otras personas con esta insignia (%{count})"
+      others_count:
+        one: "Concedido a otros %{count} vez"
+        other: "Concedido a otros %{count} veces"
       title: Insignias
       allow_title: "Puedes usar esta insignia como título"
       multiple_grant: "Puedes ganar esta insignia varias veces"
@@ -5425,7 +5428,6 @@ es:
             label: "Añadir emoji"
         title: "Ajustes"
         no_results: "No se encontró ningún resultado."
-        more_than_30_results: "Hay más de 30 resultados. Por favor, afina tu búsqueda o selecciona una categoría."
         clear_filter: "Quitar filtros"
         add_url: "añadir URL"
         add_host: "añadir host"

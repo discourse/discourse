@@ -196,8 +196,8 @@ de:
       invalid_site_setting: "Es ist keine Einstellung mit dem Namen '%{name}' vorhanden"
       invalid_category_id: "Du hast eine Kategorie angegeben, die nicht existiert"
       invalid_choice:
-        one: "Du hast die ungültige Auswahl %{name} getroffen"
-        other: "Du hast die ungültigen Auswahlen %{name} getroffen"
+        one: "'%{name}' ist eine ungültige Wahl."
+        other: "'%{name}' sind ungültige Optionen."
       default_categories_already_selected: "Du kannst keine Kategorie auswählen, welche bereits in einer anderen Liste benutzt wird."
       default_tags_already_selected: "Du kannst kein Schlagwort wählen, das in einer anderen Liste verwendet wird."
       s3_upload_bucket_is_required: "Uploads auf S3 können nicht aktiviert werden, bevor der „s3_upload_bucket“ eingetragen wurde."
@@ -600,8 +600,8 @@ de:
           attributes:
             value:
               invalid_interpolation_keys:
-                one: 'Der folgende Variablenname ist ungültig: %{keys}'
-                other: 'Die folgenden Variablennamen sind ungültig: %{keys}'
+                one: "Der folgende Variablenname ist ungültig: %{keys}"
+                other: "Die folgenden Variablennamen sind ungültig: %{keys}"
         watched_word:
           attributes:
             word:
@@ -622,21 +622,19 @@ de:
   staff_category_name: "Team"
   staff_category_description: "Private Kategorie für Team-Diskussionen. Themen sind nur für Administratoren und Moderatoren sichtbar."
   discourse_welcome_topic:
-    title: "Willkommen in unserer Community!"
-    body: |2
+    title: "Willkommen bei %{site_title}! :wave:"
+    body: |
+      Wir freuen uns, dass du dich uns angeschlossen hast. %{site_description}
 
-      Der erste Absatz dieses angehefteten Themas wird allen neuen Besuchern als Begrüßungsnachricht angezeigt. Er ist wichtig!
+      Hier sind einige Dinge, die du tun kannst, um loszulegen:
 
-      **Bearbeite dies** und erstelle eine kurze Beschreibung deiner Community:
+      :speaking_head: **Stelle dich vor**, indem du dein Bild und Informationen über dich und deine Interessen in [dein Profil](%{base_path}/my/preferences/account) einträgst. Worüber würdest du gerne gefragt werden?
 
-      - Für wen ist sie?
-      - Was findet man hier?
-      - Warum sollte man hier vorbeischauen?
-      - Wo kann man mehr erfahren (Links, Dokumente usw.)?
+      :open_book: **Lerne die Gemeinschaft** kennen, indem du [in den Diskussionen](%{base_path}/top) stöberst, die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze die :heart: , um deine Wertschätzung oder Unterstützung zu zeigen!
 
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      :handshake: **Beitrage** bei, indem du kommentierst, deine eigene Sichtweise mitteilst, Fragen stellst oder in der Diskussion Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community Guidelines](%{base_path}/faq).
 
-      Du solltest dieses Thema eventuell mittels Themen-Administration :wrench: (oben rechts oder unten) schließen, damit sich bei dieser Ankündigung nicht die Antworten anhäufen.
+      > Wenn du Hilfe brauchst oder einen Vorschlag hast, kannst du unter [#feedback](%{base_path}/c/site-feedback) oder [contact the admins](%{base_path}/about) fragen.
   admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
   category:
     topic_prefix: "Über die Kategorie %{category}"
@@ -1468,6 +1466,7 @@ de:
     exclude_rel_nofollow_domains: "Eine Liste von Domains, bei denen nofollow bei Links nicht hinzugefügt werden soll. example.com wird automatisch auch Subdomains wie sub.example.com erlauben. Zumindest solltest du die Domain dieser Website hinzufügen, um Webcrawlern zu helfen, alle Inhalte zu finden. Wenn andere Teile der Website auf anderen Domains liegen, füge auch diese hinzu."
     post_excerpt_maxlength: "Maximale Länge eines Beitrags-Auszuges bzw. -Zusammfassung."
     topic_excerpt_maxlength: "Maximale Länge eines Themenauszugs/einer Zusammenfassung, generiert aus dem ersten Beitrag eines Themas."
+    default_subcategory_on_read_only_category: "Aktiviert die Schaltfläche \"Neues Thema\" und wählt eine Standard-Unterkategorie aus, um in Kategorien zu posten, in denen der Nutzer kein neues Thema erstellen darf."
     show_pinned_excerpt_mobile: "Zeige einen Auszug angehefteter Themen in der mobilen Ansicht."
     show_pinned_excerpt_desktop: "Zeige einen Auszug angehefteter Themen in der Desktop-Ansicht."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
@@ -1921,7 +1920,7 @@ de:
     pop3_polling_password: "Passwort für die POP3-Abfrage."
     pop3_polling_delete_from_server: "E-Mails vom Server löschen. HINWEIS: Wenn du dies deaktivierst, solltest du deinen E-Mail-Posteingang manuell aufräumen"
     log_mail_processing_failures: "Protokolliere alle Fehler bei der E-Mail-Verarbeitung unter <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Erlaube Benutzern, neue Themen per E-Mail einzutragen (erfordert manuelles oder POP3-Polling). Konfiguriere die Adressen in der „Einstellungen“-Registerkarte in jeder Kategorie.'
+    email_in: "Erlaube Benutzern, neue Themen per E-Mail zu posten. Nachdem du diese Einstellung aktiviert hast, kannst du eingehende E-Mail-Adressen für Gruppen und Kategorien konfigurieren."
     email_in_min_trust: "Minimale Vertrauensstufe, um neue Themen per E-Mail erstellen zu können."
     email_in_authserv_id: "Die Kennung des Dienstes, der Authentifizierungsprüfungen für eingehende E-Mails durchführt. Siehe <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> für Hinweise zur Konfiguration."
     email_in_spam_header: "Die E-Mail-Kopfzeile, um Spam zu erkennen."
@@ -2162,7 +2161,7 @@ de:
     default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
     enable_new_notifications_menu: "Aktiviert das neue Benachrichtigungsmenü. Das Deaktivieren dieser Einstellung ist veraltet. Das neue Benachrichtigungsmenü wird immer für Optionen im Navigationsmenü verwendet, die nicht aus den älteren Versionen stammen. <a href='https://meta.discourse.org/t/260358'>Erfahren Sie mehr</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
-    experimental_new_new_view_groups: "EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf."
+    experimental_new_new_view_groups: 'EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf.'
     enable_custom_sidebar_sections: "EXPERIMENTELL: Aktiviere benutzerdefinierte Seitenleistenabschnitte"
     experimental_topics_filter: "EXPERIMENTELL: Aktiviert die Filterroute für experimentelle Themen unter /filter"
     errors:
@@ -4470,6 +4469,7 @@ de:
     required_tags_from_group:
       one: "Du musst mindestens %{count} „%{tag_group_name}“-Schlagwort hinzufügen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
       other: "Du musst mindestens %{count} „%{tag_group_name}“-Schlagwörter hinzufügen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
+    limited_to_one_tag_from_group: "Die Tags %{tags} können nicht gleichzeitig verwendet werden. Bitte füge nur einen von ihnen ein."
     invalid_target_tag: "kann kein Synonym für ein Synonym sein"
     synonyms_exist: "ist nicht erlaubt, solange Synonyme existieren"
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"

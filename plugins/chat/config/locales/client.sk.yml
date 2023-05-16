@@ -99,11 +99,13 @@ sk:
         objects: "Objekty"
         flags: "Označenia"
       thread:
+        title: "Názov"
         replies:
           one: "%{count} odpoveď"
           few: "%{count} odpovede"
           many: "%{count} odpovedí"
           other: "%{count} odpovedí"
+        settings: "Nastavenia"
       draft_channel_screen:
         header: "Nová správa"
         cancel: "Zrušiť"

@@ -3193,7 +3193,6 @@ nb_NO:
         one: "Har gjort seg fortjent til dette merket"
         other: "Har gjort seg fortjent til dette merket %{count} ganger"
       granted_on: "Tildelt %{date}"
-      others_count: "(%{count}) andre har dette merket"
       title: Merker
       allow_title: "Du kan bruke dette merket som tittel"
       multiple_grant: "Du kan oppnå dette flere ganger"
@@ -4511,7 +4510,6 @@ nb_NO:
       site_settings:
         title: "Innstillinger"
         no_results: "Ingen treff funnet."
-        more_than_30_results: "Det er over 30 resultater. Vennligst skjerp søket eller velg en kategori."
         clear_filter: "Tøm"
         add_url: "legg til URL"
         add_host: "legg til vert"

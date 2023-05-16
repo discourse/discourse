@@ -87,6 +87,9 @@ be:
           title: "Перанос наяўнай тэмы"
       emoji_picker:
         flags: "сцягі"
+      thread:
+        title: "Загаловак"
+        settings: "Налады"
       draft_channel_screen:
         header: "новае паведамленне"
         cancel: "адмяніць"

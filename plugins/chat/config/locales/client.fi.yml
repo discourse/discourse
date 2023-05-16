@@ -372,11 +372,13 @@ fi:
         search_placeholder: "Hae emojin nimen ja aliaksen mukaan..."
         no_results: "Ei tuloksia"
       thread:
+        title: "Otsikko"
         view_thread: Näytä ketju
         replies:
           one: "%{count} vastaus"
           other: "%{count} vastausta"
         close: "Sulje ketju"
+        settings: "Asetukset"
       threads:
         open: "Avaa ketju"
       draft_channel_screen:

@@ -1702,6 +1702,9 @@ zh_CN:
       suggested_topics:
         title: "继续阅读！"
         content: "下面是我们认为您接下来可能想要阅读的一些话题。"
+      welcome_topic:
+        title: "编辑欢迎话题"
+        content: "通过自定义此话题以满足你社区的需求，帮助新成员有宾至如归的感觉。"
     loading: "正在加载…"
     errors:
       prev_page: "无法加载"
@@ -3620,7 +3623,8 @@ zh_CN:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
       granted_on: "%{date}授予"
-      others_count: "其他拥有此徽章的人 (%{count})"
+      others_count:
+        other: "授予他人 %{count} 次"
       title: 徽章
       allow_title: "您可以将此徽章用作头衔"
       multiple_grant: "您可以多次获得"
@@ -5411,7 +5415,6 @@ zh_CN:
             label: "添加表情符号"
         title: "设置"
         no_results: "找不到结果。"
-        more_than_30_results: "结果超过 30 个。请优化您的搜索或选择一个类别。"
         clear_filter: "清除"
         add_url: "添加 URL"
         add_host: "添加主机"

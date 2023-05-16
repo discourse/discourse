@@ -101,11 +101,13 @@ cs:
         objects: "Objekty"
         flags: "Nahlášení"
       thread:
+        title: "Nadpis"
         replies:
           one: "%{count} odpověď"
           few: "%{count} odpovědí"
           many: "%{count} odpovědí"
           other: "%{count} odpovědí"
+        settings: "Nastavení"
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"

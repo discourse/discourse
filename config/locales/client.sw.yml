@@ -2142,7 +2142,6 @@ sw:
         print: "%{shortcut} Chapisha mada:"
     badges:
       granted_on: "Imetolewa %{date}"
-      others_count: "Wengine wenye hii beji (%{count})"
       title: Beji
       allow_title: "Unaweza kutumia beji hii kama cheo"
       multiple_grant: "Unaweza kuipata mara nyingi"

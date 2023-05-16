@@ -116,6 +116,8 @@ id:
       facebook: "Bagikan di Facebook"
       email: "Kirim lewat email"
       url: "Salin dan bagikan URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Membuat topik ini umum %{when}"
       open_topic: "Diubah menjadi topik ini %{when}"
@@ -126,6 +128,8 @@ id:
       removed_user: "%{who}Dikeluarkan %{when}"
       removed_group: "%{who}Dikeluarkan %{when}"
       autobumped: "Otomatis dibenturkan %{when}"
+      tags_changed: "Tag diperbarui %{when}"
+      category_changed: "Kategori diperbarui %{when}"
       autoclosed:
         enabled: "Ditutup %{when}"
         disabled: "Dibuka %{when}"
@@ -149,11 +153,13 @@ id:
         disabled: "Hilangkan spanduk ini %{when}. Spanduk tidak akan lagi tampil pada bagian teratas di tiap halaman."
     topic_admin_menu: "tindakan topik"
     skip_to_main_content: "Lewati ke konten utama"
+    skip_user_nav: "Lewati ke konten profil"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
     emails_are_disabled_non_staff: "Surel keluar telah dimatikan untuk pengguna yang bukan staf."
     software_update_prompt:
       message: "Kami telah memperbarui situs ini, <span>silakan refresh</span>, atau Anda mungkin mengalami perilaku yang tidak terduga."
       dismiss: "Bubar"
+    bootstrap_mode: "Mode bootstrap"
     themes:
       default_description: "Asal"
       broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena suatu tema/komponen memiliki masalah."
@@ -261,6 +267,8 @@ id:
       edit_bookmark: "Edit Bookmark"
       clear_bookmarks: "Bersihkan Penandaan"
       help:
+        bookmark: "Klik untuk bookmark topik ini"
+        edit_bookmark: "Klik untuk mengedit bookmark pada post di topik ini"
         edit_bookmark_for_topic: "Klik untuk menyunting penanda pada topik ini"
         unbookmark: "Klik untuk menghapus semua penandaan di topik ini"
         unbookmark_with_reminder: "Klik untuk menghapus semua penanda dan pengingat pada topik ini"
@@ -307,6 +315,7 @@ id:
       new_topic: "Konsep topik baru"
       new_private_message: "Rancangan pesan pribadi baru"
       abandon:
+        confirm: "Anda sudah memiliki draf yang sedang diproses. Apa yang ingin Anda lakukan dengannya?"
         yes_value: "Batalkan"
         no_value: "Lanjut menyunting"
     topic_count_categories:
@@ -467,22 +476,43 @@ id:
       scores:
         about: "Skor ini dihitung berdasarkan tingkat kepercayaan pelapor, keakuratan bendera mereka sebelumnya, dan tingkat prioritas butir yang dilaporkan."
         score: "Skor"
+        date: "Tanggal laporan"
         type: "Alasan"
         status: "Status"
         submitted_by: "Dilaporkan oleh"
+        reviewed_by: "Diperiksa oleh"
+        reviewed_timestamp: "Tanggal pemeriksaan"
       statuses:
         pending:
           title: "Tertunda"
         approved:
           title: "Disetujui"
+        approved_flag:
+          title: "Penanda disetujui"
+        approved_user:
+          title: "Pengguna disetujui"
+        approved_post:
+          title: "Post disetujui"
         rejected:
           title: "Ditolak"
+        rejected_flag:
+          title: "Penanda ditolak"
+        rejected_user:
+          title: "Pengguna ditolak"
+        rejected_post:
+          title: "Post ditolak"
+        ignored:
+          title: "Penandaan diabaikan"
+        deleted:
+          title: "Topik atau posti dihapus"
         reviewed:
           title: "Semua ditinjau"
         all:
           title: "Semuanya"
       context_question:
+        is_this_post: "Apakah postingan ini %{reviewable_human_score_types}?"
         delimiter: "atau"
+        something_else_wrong: "Apakah ada yang salah dengan post ini?"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
@@ -825,6 +855,13 @@ id:
       profile: "Profil"
       mute: "Redam"
       edit: "Ubah Preferensi"
+      download_archive:
+        title: "Ekspor data Anda"
+        description: "Unduh arsip aktivitas dan preferensi akun Anda."
+        button_text: "Permintaan arsip"
+        confirm: "Apakah Anda benar-benar ingin mengunduh arsip aktivitas dan preferensi akun Anda?"
+        success: "Kami telah mulai mengumpulkan arsip Anda, Anda akan menerima pesan saat proses selesai."
+        rate_limit_error: "Arsip akun dapat diunduh sekali per hari, silakan coba lagi besok."
       new_private_message: "Pesan Baru"
       private_message: "pesan"
       private_messages: "Messages"
@@ -871,6 +908,7 @@ id:
           warning: "Yakin ingin menghapus topik unggulan Anda?"
       use_current_timezone: "Gunakan Zona Waktu Saat Ini"
       profile_hidden: "Profil publik pengguna ini disembunyikan."
+      inactive_user: "Pengguna ini sudah tidak aktif lagi."
       expand_profile: "Perluas"
       collapse_profile: "Persempit"
       bookmarks: "Markah"
@@ -961,6 +999,19 @@ id:
       api_last_used_at: "Terakhir digunakan pada:"
       theme: "Tema"
       home: "Halaman Utama"
+      staff_counters:
+        flags_given:
+          other: '<span class="%{className}">%{count}</span> penanda yang membantu'
+        flagged_posts:
+          other: '<span class="%{className}">%{count}</span> post yang ditandai'
+        deleted_posts:
+          other: '<span class="%{className}">%{count}</span> post dihapus'
+        suspensions:
+          other: '<span class="%{className}">%{count}</span> penangguhan'
+        warnings_received:
+          other: '<span class="%{className}">%{count}</span> peringatan'
+        rejected_posts:
+          other: '<span class="%{className}">%{count}</span> post ditolak'
       messages:
         inbox: "Kotak Masuk"
         latest: "Terbaru"
@@ -996,6 +1047,11 @@ id:
         choose: "Pilih kata sandi"
       second_factor_backup:
         disable: "Nonaktifkan"
+        enable: "Buat kode cadangan"
+        enable_long: "Tambah kode cadangan"
+        not_enabled: "Anda belum membuat kode cadangan apa pun."
+        manage:
+          other: "Anda memiliki sisa <strong>%{count}</strong> kode cadangan."
         use: "Gunakan kode cadangan"
         codes:
           title: "Kode Cadangan Dibuat"
@@ -1025,6 +1081,7 @@ id:
         taken: "Maaf, alamat surel tersebut tidak tersedia."
         error: "Ada kesalahan dalam merubah alamat email Anda. Alamat ini telah digunakan oleh pengguna lain?"
         success: "Kami telah mengirimkan surel kepada alamat itu. Silahkan mengikuti petunjuk konfirmasi didalamnya."
+        back_to_preferences: "Kembali ke preferensi"
       change_avatar:
         title: "Ganti gambar profil anda"
         uploaded_avatar: "Gambar kustom"
@@ -1230,6 +1287,10 @@ id:
         the_topic: "Topik"
     user_status:
       save: "Simpan"
+    user_tips:
+      welcome_topic:
+        title: "Edit topik sambutan"
+        content: "Bantu anggota baru agar merasa betah dengan menyesuaikan topik ini agar sesuai dengan kebutuhan komunitas Anda."
     loading: "Diproses..."
     errors:
       reasons:
@@ -1462,6 +1523,7 @@ id:
         other: "menyukai %{count} dari tulisan Anda"
       invitee_accepted: "<span>%{username}</span> menerima undangan Anda"
       granted_badge: "Mendapatkan &#39;%{description}&#39;"
+      admin_problems: "Saran baru di dasbor situs Anda"
       dismiss_confirmation:
         dismiss: "Bubar"
         cancel: "Batal"
@@ -1519,6 +1581,7 @@ id:
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
       none:
         new: "Anda tidak memiliki topik baru"
+        filter: "Tidak ada topik."
       bottom:
         new: "Tidak ada topik baru lagi"
     topic:
@@ -1749,6 +1812,8 @@ id:
       actions:
         title: "Aksi"
     badges:
+      others_count:
+        other: "Diberi kepada orang lain %{count} kali"
       more_badges:
         other: "+%{count} lainnya"
       none: "(kosong)"
@@ -1905,6 +1970,8 @@ id:
         edit: "Ubah"
         save: "Simpan"
         active: "Aktif"
+        user_badge_event:
+          details: "Ketika badge diberikan atau dicabut."
         delivery_status:
           failed: "Gagal"
           disabled: "Dinonaktifkan"

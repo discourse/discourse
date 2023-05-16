@@ -196,8 +196,8 @@ tr_TR:
       invalid_site_setting: "'%{name}' adında bir ayar mevcut değil"
       invalid_category_id: "Mevcut olmayan bir kategori belirttiniz"
       invalid_choice:
-        one: "Geçersiz bir seçim belirttiniz %{name}"
-        other: "Geçersiz seçimler belirttiniz %{name}"
+        one: "'%{name}' geçersiz bir seçimdir."
+        other: "'%{name}' geçersiz bir seçimdir."
       default_categories_already_selected: "Başka bir listede kullanılan bir kategoriyi seçemezsiniz."
       default_tags_already_selected: "Başka bir listede kullanılan bir etiketi seçemezsiniz."
       s3_upload_bucket_is_required: "\"s3_upload_bucket\" değerini sağlamadığınız sürece S3'e yüklemeleri etkinleştiremezsiniz."
@@ -592,8 +592,8 @@ tr_TR:
           attributes:
             value:
               invalid_interpolation_keys:
-                one: 'Aşağıdaki enterpolasyon anahtarı geçersizdir: %{keys}'
-                other: 'Aşağıdaki enterpolasyon anahtarları geçersizdir: %{keys}'
+                one: "Aşağıdaki enterpolasyon anahtarı geçersizdir: %{keys}"
+                other: "Aşağıdaki enterpolasyon anahtarları geçersizdir: %{keys}"
         watched_word:
           attributes:
             word:
@@ -614,21 +614,7 @@ tr_TR:
   staff_category_name: "Personel"
   staff_category_description: "Personel tartışmaları için özel kategori. Konular sadece yöneticiler ve moderatörler tarafından görülebilir."
   discourse_welcome_topic:
-    title: "Topluluğumuza hoş geldiniz!"
-    body: |2
-
-      Bu sabitlenmiş konunun ilk paragrafı, ana sayfanızdaki tüm yeni ziyaretçilere karşılama mesajı olarak görünecek. Bu çok önemli!
-
-      Topluluğunuzun kısa bir açıklaması olarak **bunu düzenleyin**:
-
-      - Kimin için?
-      - Burada ne bulabilirler?
-      - Neden buraya gelmeliler?
-      - Daha fazla bilgiyi nerede bulabilirler (bağlantılar, kaynaklar vb.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Bu konuyu yönetici :wrench: (sağ üstte ve altta) aracılığıyla kapatmak isteyebilirsiniz, böylece yanıtlar bir duyuruda birikmez.
+    title: "Burası %{site_title}, hoş geldiniz! :wave:"
   admin_quick_start_title: "ÖNCE BURAYI OKUYUN: Yönetici Hızlı Başlangıç Kılavuzu"
   category:
     topic_prefix: "%{category} kategorisi hakkında"
@@ -1900,7 +1886,7 @@ tr_TR:
     pop3_polling_password: "E-posta için yoklanacak POP3 hesabının şifresi."
     pop3_polling_delete_from_server: "E-postaları sunucudan silin. NOT: Bunu devre dışı bırakırsanız posta gelen kutunuzu manuel olarak temizlemelisiniz"
     log_mail_processing_failures: "Tüm e-posta işleme hatalarını <a href='%{base_path}/logs' target='_blank'>/logs</a> bölümüne kaydedin"
-    email_in: 'Kullanıcıların yeni konuları e-posta yoluyla göndermesine izin verin (manuel veya pop3 yoklaması gerektirir). Adresleri her kategorinin "Ayarlar" sekmesinde yapılandırın.'
+    email_in: "Kullanıcıların e-posta yoluyla yeni konular oluşturmasına izin verin. Bu ayarı etkinleştirdikten sonra, gruplar ve kategoriler için gelen e-posta adreslerini yapılandırabileceksiniz."
     email_in_min_trust: "Bir kullanıcının e-posta yoluyla yeni konular göndermesine izin verilmesi için gereken minimum güven seviyesi."
     email_in_authserv_id: "Gelen e-postalarda kimlik doğrulaması kontrolleri yapan hizmetin tanımlayıcısı. Bunun nasıl yapılandırılacağına ilişkin talimatlar için <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> adresine bakın."
     email_in_spam_header: "Spam algılamak için e-posta başlığı."
@@ -2134,7 +2120,7 @@ tr_TR:
     default_sidebar_categories: "Seçilen kategoriler varsayılan olarak Kenar Çubuğunun Kategoriler bölümünde gösterilir."
     default_sidebar_tags: "Seçilen etiketler varsayılan olarak Kenar Çubuğunun Etiketler bölümünde gösterilir."
     enable_experimental_hashtag_autocomplete: "DENEYSEL: Seçilen ögeyi farklı şekilde işleyen ve aramayı iyileştiren kategoriler ve etiketler için yeni #hashtag otomatik tamamlama sistemini kullanın"
-    experimental_new_new_view_groups: "DENEYSEL: Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki \"Her şey\" bağlantısını buna bağlayın."
+    experimental_new_new_view_groups: 'DENEYSEL: Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
     enable_custom_sidebar_sections: "DENEYSEL: Özel kenar çubuğu bölümlerini etkinleştir"
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştirir"
     errors:

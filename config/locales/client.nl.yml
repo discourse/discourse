@@ -3737,7 +3737,6 @@ nl:
         one: "Deze badge is %{count} keer verdiend"
         other: "Deze badge is %{count} keer verdiend"
       granted_on: "Toegekend op %{date}"
-      others_count: "Anderen met deze badge (%{count})"
       title: Badges
       allow_title: "Je kunt deze badge als een titel gebruiken"
       multiple_grant: "Je kunt dit meerdere keren verdienen"
@@ -5439,7 +5438,6 @@ nl:
             label: "Emoji toevoegen"
         title: "Instellingen"
         no_results: "Geen resultaten gevonden."
-        more_than_30_results: "Er zijn meer dan 30 resultaten. Verfijn je zoekopdracht of selecteer een categorie."
         clear_filter: "Wissen"
         add_url: "URL toevoegen"
         add_host: "host toevoegen"

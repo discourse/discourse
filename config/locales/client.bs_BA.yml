@@ -2872,7 +2872,6 @@ bs_BA:
         few: "Zaradili ste ovu oznaku %{count} puta"
         other: "Zaradili ste ovu oznaku %{count} puta"
       granted_on: "Odobren %{date}"
-      others_count: "Ostale sa ovom značkom (%{count}) \\ t"
       title: Bedž
       allow_title: "Ovu značku možete koristiti kao naslov"
       multiple_grant: "To možete zaraditi više puta"
@@ -4190,7 +4189,6 @@ bs_BA:
       site_settings:
         title: "Postavke"
         no_results: "No results found."
-        more_than_30_results: "Postoji više od 30 rezultata. Pročistite pretraživanje ili odaberite kategoriju."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
