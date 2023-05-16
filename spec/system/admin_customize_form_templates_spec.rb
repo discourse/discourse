@@ -112,6 +112,7 @@ describe "Admin Customize Form Templates", type: :system, js: true do
       )
       form_template_page.click_preview_button
       expect(form_template_page).to have_input_field("input")
+      expect(form_template_page).to have_input_field("searchlocation")
       expect(form_template_page).to have_input_field("textarea")
       expect(form_template_page).to have_input_field("checkbox")
       expect(form_template_page).to have_input_field("dropdown")
@@ -133,6 +134,18 @@ describe "Admin Customize Form Templates", type: :system, js: true do
     it "should allow quick insertion of short answer field" do
       quick_insertion_test(
         "input",
+        '- type: input
+  attributes:
+    label: "Enter label here"
+    placeholder: "Enter placeholder here"
+  validations:
+    # enter validations here',
+      )
+    end
+
+    it "should allow quick insertion of short answer field" do
+      quick_insertion_test(
+        "searchlocation",
         '- type: input
   attributes:
     label: "Enter label here"

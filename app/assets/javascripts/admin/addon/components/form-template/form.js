@@ -25,6 +25,10 @@ export default class FormTemplateForm extends Component {
       icon: "grip-lines",
     },
     {
+      type: "searchlocation",
+      icon: "grip-lines",
+    },
+    {
       type: "textarea",
       icon: "align-left",
     },

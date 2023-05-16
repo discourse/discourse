@@ -10,6 +10,7 @@ export default class UserField extends RestModel {
         UserFieldType.create({ id: "confirm" }),
         UserFieldType.create({ id: "dropdown", hasOptions: true }),
         UserFieldType.create({ id: "multiselect", hasOptions: true }),
+        UserFieldType.create({ id: "searchlocation" }),
       ];
     }
 

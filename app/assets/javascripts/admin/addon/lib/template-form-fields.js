@@ -21,6 +21,17 @@ export const templateFormFields = [
     # ${I18n.t("admin.form_templates.field_placeholders.validations")}`,
   },
   {
+    type: "searchlocation",
+    structure: `- type: input
+  attributes:
+    label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
+    placeholder: "${I18n.t(
+      "admin.form_templates.field_placeholders.placeholder"
+    )}"
+  validations:
+    # ${I18n.t("admin.form_templates.field_placeholders.validations")}`,
+  },
+  {
     type: "textarea",
     structure: `- type: textarea
   attributes:
