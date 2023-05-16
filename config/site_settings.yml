@@ -2493,7 +2493,6 @@ uncategorized:
   welcome_topic_id:
     default: -1
     hidden: true
-    client: true
   admin_quick_start_topic_id:
     default: -1
     hidden: true
